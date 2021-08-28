@@ -2,167 +2,200 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 082FAC4320A
-	for <linux-perf-users@archiver.kernel.org>; Fri, 27 Aug 2021 21:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9889FC432BE
+	for <linux-perf-users@archiver.kernel.org>; Sat, 28 Aug 2021 00:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA83960EBD
-	for <linux-perf-users@archiver.kernel.org>; Fri, 27 Aug 2021 21:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A77560FD9
+	for <linux-perf-users@archiver.kernel.org>; Sat, 28 Aug 2021 00:36:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231840AbhH0VL5 (ORCPT
+        id S232720AbhH1AhQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 27 Aug 2021 17:11:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51192 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231570AbhH0VL4 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 27 Aug 2021 17:11:56 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3821B60E78;
-        Fri, 27 Aug 2021 21:11:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630098667;
-        bh=0J24TIWf8un+7BNgVI6ycuS4d2s9YAG3kZ6HY1i/HO0=;
-        h=In-Reply-To:References:Date:From:To:Cc:Subject:From;
-        b=Um3Zag09FUrqeeBy8h8bw/Dq9pfj83Oac5gjtk2iNXPqrbZRBiHAzbJb6Ne+f9mKF
-         dxwifgj7U1VMFioh1/McZPcjNt/H08BTn5z0UGYzJv70mhfjeQ2qvNQoup2k6dBmmb
-         nEvxJCfcWDQwMYszsMOyv3EwycPOruIhvFILTselPDsguTo956zceTgD5/ac8VzrBv
-         hM75CBvFavx+J1j/gcIwvaFNYmWoKJ1ZzdPCdCa2CUG19Q5MyAVQA4Fuy+EwcsOqUS
-         b9qwAChEu3uLyyUYCgMfP0w0xISCnwPx6KnxRfrgFcPhI+/XMlp/WSw8fkhBIVieNK
-         3RXhLEbuenPSA==
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 5560927C0054;
-        Fri, 27 Aug 2021 17:11:05 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute6.internal (MEProxy); Fri, 27 Aug 2021 17:11:05 -0400
-X-ME-Sender: <xms:51QpYSOvkzC3y8P2Oa9yoZBPh34Vg5W_CdmhzjqOedvLTMePf8evyQ>
-    <xme:51QpYQ8gdXSppk5nkco8dlBhM-Lh8DktuirAOSY3J2aj0WsdmdJRgsqRZ31Cq8j9r
-    DE2PPBfbF3McxtuFME>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddruddufedgudehkecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvufgtgfesthhqredtreerjeenucfhrhhomhepfdet
-    nhguhicunfhuthhomhhirhhskhhifdcuoehluhhtoheskhgvrhhnvghlrdhorhhgqeenuc
-    ggtffrrghtthgvrhhnpeefheekleetudffieethedtkeegfeevjefgvedugeevgefhtdek
-    jeevhfdutedugfenucffohhmrghinhepghhithhhuhgsrdgtohhmpdhkvghrnhgvlhdroh
-    hrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegr
-    nhguhidomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudduiedukeehieefvd
-    dqvdeifeduieeitdekqdhluhhtoheppehkvghrnhgvlhdrohhrgheslhhinhhugidrlhhu
-    thhordhush
-X-ME-Proxy: <xmx:51QpYZR44FeWE4zFCjnX2BuNYRwwk6WYni5WIDNLgPMe7fJiQDeKwQ>
-    <xmx:51QpYSu7O9wIsvP6qkcxwxNgNXXUYHKjJqraqGnnrKH3eJ2kYlreqQ>
-    <xmx:51QpYacXf4F-fD_eZ6rg7CcWXFqJXWaVrdhIoG5SKxmE84sVPsbLIQ>
-    <xmx:6VQpYV3LBRZ9QVC2-ieZi_Y7JTuc_OtcKILAVABxXW5ee_cCBIp7IXjIubc>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 2F5CAA0378F; Fri, 27 Aug 2021 17:11:03 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.5.0-alpha0-1125-g685cec594c-fm-20210825.001-g685cec59
+        Fri, 27 Aug 2021 20:37:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46196 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232503AbhH1AhP (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 27 Aug 2021 20:37:15 -0400
+Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EC1BC0613D9
+        for <linux-perf-users@vger.kernel.org>; Fri, 27 Aug 2021 17:36:26 -0700 (PDT)
+Received: by mail-qv1-xf4a.google.com with SMTP id y1-20020a0cec01000000b00375e130950fso1542083qvo.14
+        for <linux-perf-users@vger.kernel.org>; Fri, 27 Aug 2021 17:36:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=reply-to:date:message-id:mime-version:subject:from:to:cc;
+        bh=xh3b83AHgc+X5acCCZf2iVRK+ee8SLHX2uHx4t+xrBY=;
+        b=FsrBDBj81I24PUYsfqY9aNe2Br6Cge4C10V9fErKyzcL9jN9JzP/kqqqUHGaBFgQcQ
+         0U9g5lP31TKw2LT3YjTlFAgoG4AS3SMwwYaB+iZ9VL+rH1PuDacZvkVF5TZDPvt+SCVp
+         hoVnB9YrhsLy30buyfkioR3VRr/U9QgKrM+qQnkI0aZ8yrDkdgGSixnrY69JIAMGRumH
+         CIa10muamcOBBpjShGeSCvzY0V1rXxFeRJk/BexUgt5cyg06R0PXRjlCeTWZrE9Yduwb
+         tvUde2o7UVIgOctvxLjj8VW7xpdvOez/m4ccG77zN+autZ2tCUck8ZbNdlcpaKwRcScv
+         Xlrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:date:message-id:mime-version:subject
+         :from:to:cc;
+        bh=xh3b83AHgc+X5acCCZf2iVRK+ee8SLHX2uHx4t+xrBY=;
+        b=cZ7+Z7gn2XsfYQlxlZ/7kYBe6++JqVWV7JnxfdeXwX+wn7Eo39N+djADZjaeUqy6c0
+         F63LlnDfAbHFIdZ9hro8D+/HCJPGYIOPYv7jgor0cJDTCG/+LBC7bReUVL+XWZ39cn3G
+         2b9ImaIfv4P005u+gPje0J44fQpW8eoMvzJKncAuWg3E3YCIv5u1cZUwtOSqEawyrc/x
+         4sngLU/mCh2101Aye3FI52xFn4BEVXGFiZKHvn1n/BbFS2Dn2ZIJcW/QklTBvCLOATZz
+         Vn8Tj4MVbCzdUr1qKxDPwV7H4HmGKSNcZCZoBvLIhfzKvH3m2AAk+aLigZqc5J3ITBQs
+         lJig==
+X-Gm-Message-State: AOAM532gbSz7YgNaskTLze6rZKFdFDZdOxy3H1i5rpBaBYwVn59/COsQ
+        6freKre47UTecIpiOWqOQql7s29vWqI=
+X-Google-Smtp-Source: ABdhPJzkOydjwKSx1IUjIGSvBy+QMF11RiN4xe9UgjoUhzwRgFrcyVUOeAZyVTnBYwiNIqVlWoCONvUze1Q=
+X-Received: from seanjc798194.pdx.corp.google.com ([2620:15c:90:200:f66c:b851:7e79:7ed4])
+ (user=seanjc job=sendgmr) by 2002:a05:6214:10c4:: with SMTP id
+ r4mr12642407qvs.58.1630110985252; Fri, 27 Aug 2021 17:36:25 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date:   Fri, 27 Aug 2021 17:35:45 -0700
+Message-Id: <20210828003558.713983-1-seanjc@google.com>
 Mime-Version: 1.0
-Message-Id: <43b3a838-da8a-4733-9832-f3d5f990ec13@www.fastmail.com>
-In-Reply-To: <CAL_JsqKpT93W6nBj68DykEJzjFYOPG=8PGShsh2QZVzHq5N3fQ@mail.gmail.com>
-References: <20210728230230.1911468-1-robh@kernel.org>
- <20210728230230.1911468-3-robh@kernel.org>
- <d720903c-926e-f57a-0862-4e5d76db763a@kernel.org>
- <CAL_JsqLRv9ugKJcn4dq_ps0JMt74Y7PKA=5yySYxvftdQWzzPA@mail.gmail.com>
- <de97454b-9b4d-492f-a435-6a5e33889219@www.fastmail.com>
- <CAL_JsqKpT93W6nBj68DykEJzjFYOPG=8PGShsh2QZVzHq5N3fQ@mail.gmail.com>
-Date:   Fri, 27 Aug 2021 14:10:42 -0700
-From:   "Andy Lutomirski" <luto@kernel.org>
-To:     "Rob Herring" <robh@kernel.org>
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Will Deacon" <will@kernel.org>,
-        "Kan Liang" <kan.liang@linux.intel.com>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        "Ingo Molnar" <mingo@redhat.com>,
-        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
-        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
-        "Jiri Olsa" <jolsa@redhat.com>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Borislav Petkov" <bp@alien8.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
+X-Mailer: git-send-email 2.33.0.259.gc128427fd7-goog
+Subject: [PATCH v2 00/13] perf: KVM: Fix, optimize, and clean up callbacks
+From:   Sean Christopherson <seanjc@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>, Guo Ren <guoren@kernel.org>,
+        Nick Hu <nickhu@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
         "H. Peter Anvin" <hpa@zytor.com>,
-        "Dave Hansen" <dave.hansen@linux.intel.com>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [RFC 2/3] perf/x86: Control RDPMC access from .enable() hook
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org,
+        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Artem Kashkanov <artem.kashkanov@intel.com>,
+        Like Xu <like.xu.linux@gmail.com>,
+        Zhu Lingshan <lingshan.zhu@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+This is a combination of ~2 series to fix bugs in the perf+KVM callbacks,
+optimize the callbacks by employing static_call, and do a variety of
+cleanup in both perf and KVM.
 
+Patch 1 fixes a mostly-theoretical bug where perf can deref a NULL
+pointer if KVM unregisters its callbacks while they're being accessed.
+In practice, compilers tend to avoid problematic reloads of the pointer
+and the PMI handler doesn't lose the race against module unloading,
+i.e doesn't hit a use-after-free.
 
-On Thu, Aug 26, 2021, at 12:09 PM, Rob Herring wrote:
-> On Thu, Aug 26, 2021 at 1:13 PM Andy Lutomirski <luto@kernel.org> wrot=
-e:
-> >
-> >
-> >
-> > On Thu, Aug 12, 2021, at 11:16 AM, Rob Herring wrote:
-> > > On Thu, Aug 12, 2021 at 11:50 AM Andy Lutomirski <luto@kernel.org>=
- wrote:
-> > > >
-> > > > On 7/28/21 4:02 PM, Rob Herring wrote:
-> > > > > Rather than controlling RDPMC access behind the scenes from sw=
-itch_mm(),
-> > > > > move RDPMC access controls to the PMU .enable() hook. The .ena=
-ble() hook
-> > > > > is called whenever the perf CPU or task context changes which =
-is when
-> > > > > the RDPMC access may need to change.
-> > > > >
-> > > > > This is the first step in moving the RDPMC state tracking out =
-of the mm
-> > > > > context to the perf context.
-> > > >
-> > > > Is this series supposed to be a user-visible change or not?  I'm=
- confused.
-> > >
-> > > It should not be user-visible. Or at least not user-visible for wh=
-at
-> > > any user would notice. If an event is not part of the perf context=
- on
-> > > another thread sharing the mm, does that thread need rdpmc access?=
- No
-> > > access would be a user-visible change, but I struggle with how tha=
-t's
-> > > a useful scenario?
-> > >
-> >
-> > This is what I mean by user-visible -- it changes semantics in a way=
- that a user program could detect.  I'm not saying it's a problem, but I=
- do think you need to document the new semantics.
->=20
-> After testing some scenarios and finding perf_event_tests[1], this
-> series isn't going to work for x86 unless rdpmc is restricted to task
-> events only or allowed to segfault on CPU events when read on the
-> wrong CPU rather than just returning garbage. It's been discussed
-> before here[2].
->=20
-> Ultimately, I'm just trying to define the behavior for arm64 where we
-> don't have an existing ABI to maintain and don't have to recreate the
-> mistakes of x86 rdpmc ABI. Tying the access to mmap is messy. As we
-> explicitly request user access on perf_event_open(), I think it may be
-> better to just enable access when the event's context is active and
-> ignore mmap(). Maybe you have an opinion there since you added the
-> mmap() part?
+Patches 2 and 3 fix an Intel PT handling bug where KVM incorrectly
+eats PT interrupts when PT is supposed to be owned entirely by the host.
 
-That makes sense to me. The mmap() part was always a giant kludge.
+Patches 4-7 clean up perf's callback infrastructure and switch to
+static_call for arm64 and x86 (the only survivors).
 
-There is fundamentally a race, at least if rseq isn=E2=80=99t used: if y=
-ou check that you=E2=80=99re on the right CPU, do RDPMC, and throw out t=
-he result if you were on the wrong CPU (determined by looking at the mma=
-p), you still would very much prefer not to fault.
+Patches 8-13 clean up related KVM code and unify the arm64/x86 callbacks.
 
-Maybe rseq or a vDSO helper is the right solution for ARM.
+Based on "git://git.kernel.org/pub/scm/virt/kvm/kvm.git queue", commit
+680c7e3be6a3 ("KVM: x86: Exit to userspace ...").
 
->=20
-> Rob
->=20
-> [1] https://github.com/deater/perf_event_tests
-> [2] https://lore.kernel.org/lkml/alpine.DEB.2.21.1901101229010.3358@ma=
-cbook-air/
->=20
+v2 (relatively to static_call v10)
+  - Split the patch into the semantic change (multiplexed ->state) and
+    introduction of static_call.
+  - Don't use '0' for "not a guest RIP".
+  - Handle unregister path.
+  - Drop changes for architectures that can be culled entirely.
+
+v2 (relative to v1)
+  - Drop per-cpu approach. [Peter]
+  - Fix mostly-theoretical reload and use-after-free with READ_ONCE(),
+    WRITE_ONCE(), and synchronize_rcu(). [Peter]
+  - Avoid new exports like the plague. [Peter]
+
+v1:
+  - https://lkml.kernel.org/r/20210827005718.585190-1-seanjc@google.com
+
+v10 static_call:
+  - https://lkml.kernel.org/r/20210806133802.3528-2-lingshan.zhu@intel.com
+
+Like Xu (2):
+  perf/core: Rework guest callbacks to prepare for static_call support
+  perf/core: Use static_call to optimize perf_guest_info_callbacks
+
+Sean Christopherson (11):
+  perf: Ensure perf_guest_cbs aren't reloaded between !NULL check and
+    deref
+  KVM: x86: Register perf callbacks after calling vendor's
+    hardware_setup()
+  KVM: x86: Register Processor Trace interrupt hook iff PT enabled in
+    guest
+  perf: Stop pretending that perf can handle multiple guest callbacks
+  perf: Force architectures to opt-in to guest callbacks
+  KVM: x86: Drop current_vcpu for kvm_running_vcpu + kvm_arch_vcpu
+    variable
+  KVM: x86: More precisely identify NMI from guest when handling PMI
+  KVM: Move x86's perf guest info callbacks to generic KVM
+  KVM: x86: Move Intel Processor Trace interrupt handler to vmx.c
+  KVM: arm64: Convert to the generic perf callbacks
+  KVM: arm64: Drop perf.c and fold its tiny bits of code into arm.c /
+    pmu.c
+
+ arch/arm/kernel/perf_callchain.c   | 28 ++------------
+ arch/arm64/Kconfig                 |  1 +
+ arch/arm64/include/asm/kvm_host.h  | 13 ++++++-
+ arch/arm64/kernel/perf_callchain.c | 28 +++++++++++---
+ arch/arm64/kvm/Makefile            |  2 +-
+ arch/arm64/kvm/arm.c               | 11 +++++-
+ arch/arm64/kvm/perf.c              | 62 ------------------------------
+ arch/arm64/kvm/pmu.c               |  8 ++++
+ arch/csky/kernel/perf_callchain.c  | 10 -----
+ arch/nds32/kernel/perf_event_cpu.c | 29 ++------------
+ arch/riscv/kernel/perf_callchain.c | 10 -----
+ arch/x86/Kconfig                   |  1 +
+ arch/x86/events/core.c             | 36 ++++++++++++++---
+ arch/x86/events/intel/core.c       |  7 ++--
+ arch/x86/include/asm/kvm_host.h    |  8 +++-
+ arch/x86/kvm/pmu.c                 |  2 +-
+ arch/x86/kvm/svm/svm.c             |  2 +-
+ arch/x86/kvm/vmx/vmx.c             | 25 +++++++++++-
+ arch/x86/kvm/x86.c                 | 58 +++++-----------------------
+ arch/x86/kvm/x86.h                 | 17 ++++++--
+ arch/x86/xen/pmu.c                 | 32 +++++++--------
+ include/kvm/arm_pmu.h              |  1 +
+ include/linux/kvm_host.h           | 10 +++++
+ include/linux/perf_event.h         | 26 ++++++++-----
+ init/Kconfig                       |  3 ++
+ kernel/events/core.c               | 24 ++++++------
+ virt/kvm/kvm_main.c                | 40 +++++++++++++++++++
+ 27 files changed, 245 insertions(+), 249 deletions(-)
+ delete mode 100644 arch/arm64/kvm/perf.c
+
+-- 
+2.33.0.259.gc128427fd7-goog
+
