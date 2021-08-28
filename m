@@ -2,242 +2,154 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EAAC432BE
-	for <linux-perf-users@archiver.kernel.org>; Sat, 28 Aug 2021 08:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB453C432BE
+	for <linux-perf-users@archiver.kernel.org>; Sat, 28 Aug 2021 19:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC1B561058
-	for <linux-perf-users@archiver.kernel.org>; Sat, 28 Aug 2021 08:06:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC88460EBC
+	for <linux-perf-users@archiver.kernel.org>; Sat, 28 Aug 2021 19:45:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233400AbhH1IHg (ORCPT
+        id S231810AbhH1TqT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 28 Aug 2021 04:07:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60304 "EHLO
+        Sat, 28 Aug 2021 15:46:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230208AbhH1IHg (ORCPT
+        with ESMTP id S230253AbhH1TqT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 28 Aug 2021 04:07:36 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB91CC0613D9;
-        Sat, 28 Aug 2021 01:06:45 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id z2so19659901lft.1;
-        Sat, 28 Aug 2021 01:06:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=VV3OwnMmYtHsdtjbnEj4H2sv1uJ0Sm9kswbc7APspic=;
-        b=BnG05y8O/9yTk/I6r7fwhcthX4+G0KoNRJ3KxEBC9fZLaL0tW9Ie9BBMzdFLmrf1OC
-         /3TBsJgq7IDnDD207Mz9U9qjhSbMvHuQnhSyLgizPnkHXPvEwoKhwQL/xSN41GMPATOh
-         nNCXSF2uRLLwD+5/uStLCdsJtzpR7fG9G1EOC7OigDo+ixhS+BuVhc6y3Z2/4h/82S6Z
-         47TBxh6KQTrGoFETq8OwY+QiOE9PQF1Dy4Aujg6zS1UkNmBEGv3XQZMYRSTElzXZeVZW
-         zsuirGVcWrfT9vTEbM0gfPAfH7H4jTPzhaDbZa9HyMqxK+WN7L6gu7zYu1lnek7ir8Qw
-         TTvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=VV3OwnMmYtHsdtjbnEj4H2sv1uJ0Sm9kswbc7APspic=;
-        b=NzwJ27/4a0XfCqPGMEN0EkKyCwKjLkm3RKy498cUhXYzdKwV123rN2d0jiq9cpYnlg
-         1Ma351d3+qYhp51/LFGRnNJQdK/CbHvf+Pv3lzILzJfkecTluW21gGOeKzh5p/zecmAp
-         WDVkCIOoHK6Xe3HQeGk/q3J1UmAL6v+3znnRQcBaiykVs0vw7SiMZteIgYYZfjZ60Nix
-         anM98RBdgF/Jd7h1RyFBTn8eHbO3YrW2EaxyyqfbTXFAJLHIHHySE5GV/JjsVk6/R9KD
-         7QEeswmerXRqHo3U4MsFopcywuctard6fuqA9tNWgmrJNy4/QTmBzviqBPr7qJr+lgUg
-         r8dw==
-X-Gm-Message-State: AOAM532X/6gLL054c5abyChWUXnZl8sI/4KtHT1i9innMf/KQrpEQzeL
-        dlhZStqvS9CP2E1bQNG9l559Yl7rTFgGrxeES94=
-X-Google-Smtp-Source: ABdhPJxOswsBNBZYDtsf9sm+49xTJAJsXz2fWoi1cjbZBgNXtALBPBNLpi4H4SbLnynCMyD657KfyoEg61zeUVqBI5E=
-X-Received: by 2002:a05:6512:3187:: with SMTP id i7mr1022527lfe.104.1630138004056;
- Sat, 28 Aug 2021 01:06:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAAo+4rXNLdgvAiT2-B8cWtLNPnWoGo9RWMW=8SPchzRgxJ4BhA@mail.gmail.com>
-In-Reply-To: <CAAo+4rXNLdgvAiT2-B8cWtLNPnWoGo9RWMW=8SPchzRgxJ4BhA@mail.gmail.com>
-From:   =?UTF-8?B?5Y+25r6E6ZSL?= <dg573847474@gmail.com>
-Date:   Sat, 28 Aug 2021 16:06:33 +0800
-Message-ID: <CAAo+4rVJg--eTqsMPDHtpD2dCnivgWs0xc4eCty3eW05BTJRhw@mail.gmail.com>
-Subject: Re: Possible deadlock errors in tools/perf/builtin-sched.c
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org
-Cc:     mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
+        Sat, 28 Aug 2021 15:46:19 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 389A5C061756;
+        Sat, 28 Aug 2021 12:45:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=XaDJo/Xp/thzakG+AyFw4gfOeYqXSd+OvToP2IAZADw=; b=iaSYaDXqR2I0RfntlzqVugj0Nj
+        rXYt5kYTwyGKSPywFnw4fyUzTY9LAxxbRjtQkmlvftPwsUj5uPz2F5YspCjIPUg0EU+uNCyGQ3m1z
+        lWBYQwuSheYbXudKlCIc8TNjxaN9C6VQgIvcLqNM4nad3zEOcmW0XTeahuIU8N5XEWm3P7Ut9+abN
+        Q8fQ7zTfRTZ3R7RoF/QygqFwsUOnFQLkR+lOFf7wq4T+6b6moR3EFv7YMAVF9pd5Ox3uQjzGFISAV
+        ivzAchA/SXjNJ8WNIC5WtqGO0JdesSU+G3xE61VeRun7z2ArlsfJGMdbJCaLwzEcpgePCOVpe7U2B
+        vRqaWBQQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mK4Fb-00Dvei-M3; Sat, 28 Aug 2021 19:44:23 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A026C98679D; Sat, 28 Aug 2021 21:44:21 +0200 (CEST)
+Date:   Sat, 28 Aug 2021 21:44:21 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Sean Christopherson <seanjc@google.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>, Guo Ren <guoren@kernel.org>,
+        Nick Hu <nickhu@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Stefano Stabellini <sstabellini@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        CAI Yuandao <ycaibb@cse.ust.hk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org,
+        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Artem Kashkanov <artem.kashkanov@intel.com>,
+        Like Xu <like.xu.linux@gmail.com>,
+        Zhu Lingshan <lingshan.zhu@intel.com>
+Subject: Re: [PATCH v2 01/13] perf: Ensure perf_guest_cbs aren't reloaded
+ between !NULL check and deref
+Message-ID: <20210828194421.GB4353@worktop.programming.kicks-ass.net>
+References: <20210828003558.713983-1-seanjc@google.com>
+ <20210828003558.713983-2-seanjc@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210828003558.713983-2-seanjc@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Dear developers:
+On Fri, Aug 27, 2021 at 05:35:46PM -0700, Sean Christopherson wrote:
 
-Thank you for your checking.
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 2d510ad750ed..6b0405e578c1 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -1237,6 +1237,14 @@ extern void perf_event_bpf_event(struct bpf_prog *prog,
+>  				 u16 flags);
+>  
+>  extern struct perf_guest_info_callbacks *perf_guest_cbs;
+> +static inline struct perf_guest_info_callbacks *perf_get_guest_cbs(void)
+> +{
+> +	/* Reg/unreg perf_guest_cbs waits for readers via synchronize_rcu(). */
+> +	lockdep_assert_preemption_disabled();
+> +
+> +	/* Prevent reloading between a !NULL check and dereferences. */
+> +	return READ_ONCE(perf_guest_cbs);
+> +}
 
-It seems there are two deadlock errors on the
-locksched->work_done_wait_mutexandsched->start_work_mutex.
+Nice..
 
-They are triggered due to one thread(A) runs function run_one_test
-locating in a loop and unreleasing the two locks in
-thewait_for_tasksfunction, and another thread(B) runs function
-thread_func acquiring the two locks.
+>  extern int perf_register_guest_info_callbacks(struct perf_guest_info_callbacks *callbacks);
+>  extern int perf_unregister_guest_info_callbacks(struct perf_guest_info_callbacks *callbacks);
+>  
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 464917096e73..2126f6327321 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -6491,14 +6491,19 @@ struct perf_guest_info_callbacks *perf_guest_cbs;
+>  
+>  int perf_register_guest_info_callbacks(struct perf_guest_info_callbacks *cbs)
+>  {
+> -	perf_guest_cbs = cbs;
+> +	if (WARN_ON_ONCE(perf_guest_cbs))
+> +		return -EBUSY;
+> +
+> +	WRITE_ONCE(perf_guest_cbs, cbs);
+> +	synchronize_rcu();
 
-Because the two locks are not properly released in thread A, there
-will be a  deadlock problem if thread B acquires the two locks.
+You're waiting for all NULL users to go away? :-) IOW, we can do without
+this synchronize_rcu() call.
 
-The related codes are below:
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(perf_register_guest_info_callbacks);
+>  
+>  int perf_unregister_guest_info_callbacks(struct perf_guest_info_callbacks *cbs)
+>  {
+> -	perf_guest_cbs = NULL;
 
-Thread A:
+	if (WARN_ON_ONCE(perf_guest_cbs != cbs))
+		return -EBUSY;
 
-static void create_tasks(struct perf_sched *sched)
-{
-     ...;
-    err =3D pthread_mutex_lock(&sched->start_work_mutex);
-    ...;
-    err =3D pthread_mutex_lock(&sched->work_done_wait_mutex);
-    ...;
-}
+?
 
-static int perf_sched__replay(struct perf_sched *sched)
-{
-   ...;
-     create_tasks(sched);
-     printf("------------------------------------------------------------\n=
-");
-     for (i =3D 0; i < sched->replay_repeat; i++)
-          run_one_test(sched);   // multiple reacquisition on the lock
-sched->work_done_wait_mutex and sched->start_work_mutex
+> +	WRITE_ONCE(perf_guest_cbs, NULL);
+> +	synchronize_rcu();
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(perf_unregister_guest_info_callbacks);
 
-   return 0;
-}
-
-static void run_one_test(struct perf_sched *sched)
-{
-        ...;
-      wait_for_tasks(sched);
-        ...;
-}
-
-static void wait_for_tasks(struct perf_sched *sched)
-{
-      ...;
-     pthread_mutex_unlock(&sched->work_done_wait_mutex);
-      ...;
-     ret =3D pthread_mutex_lock(&sched->work_done_wait_mutex);
-     ...;
-     pthread_mutex_unlock(&sched->start_work_mutex);
-     ...;
-
-    ret =3D pthread_mutex_lock(&sched->start_work_mutex);
-    ....;
-}
-
-Thread B:
-static void *thread_func(void *ctx)
-{
-...;
-ret =3D pthread_mutex_lock(&sched->start_work_mutex);
-...;
-ret =3D pthread_mutex_unlock(&sched->start_work_mutex);
-
-...;
-
-ret =3D pthread_mutex_lock(&sched->work_done_wait_mutex);
-...;
-ret =3D pthread_mutex_unlock(&sched->work_done_wait_mutex);
-..;
-
-}
-
-PS: The previous email fails to reach the maillist, so I send it again.
-
-Thanks,
-
-=E5=8F=B6=E6=BE=84=E9=94=8B <dg573847474@gmail.com> =E4=BA=8E2021=E5=B9=B48=
-=E6=9C=8828=E6=97=A5=E5=91=A8=E5=85=AD =E4=B8=8B=E5=8D=883:57=E5=86=99=E9=
-=81=93=EF=BC=9A
->
-> Dear developers:
->
-> Thank you for your checking.
->
-> It seems there are two deadlock errors on the locksched->work_done_wait_m=
-utexandsched->start_work_mutex.
->
-> They are triggered due to one thread(A) runs function run_one_test locati=
-ng in a loop and unreleasing the two locks in thewait_for_tasksfunction, an=
-d another thread(B) runs function thread_func acquiring the two locks.
->
-> Because the two locks are not properly released in thread A, there will b=
-e a  deadlock problem if thread B acquires the two locks.
->
-> The related codes are below:
->
-> Thread A:
->
-> static void create_tasks(struct perf_sched *sched)
-> {
->      ...;
->   err =3D pthread_mutex_lock(&sched->start_work_mutex);
->     ...;
->  err =3D pthread_mutex_lock(&sched->work_done_wait_mutex);
->        ...;
-> }
-> static int perf_sched__replay(struct perf_sched *sched)
-> {
->    ...;
->
->         create_tasks(sched);
->      printf("------------------------------------------------------------=
-\n");
->      for (i =3D 0; i < sched->replay_repeat; i++)
->           run_one_test(sched);   // multiple reacquisition on the lock sc=
-hed->work_done_wait_mutex and sched->start_work_mutex
->
->    return 0;
-> }
->
-> static void run_one_test(struct perf_sched *sched)
-> {
->  ...;
->       wait_for_tasks(sched);
->         ...;
-> }
-> static void wait_for_tasks(struct perf_sched *sched)
-> {
->        ...;
->     pthread_mutex_unlock(&sched->work_done_wait_mutex);
->
->   ...;
->        ret =3D pthread_mutex_lock(&sched->work_done_wait_mutex);
->      ...;
->   pthread_mutex_unlock(&sched->start_work_mutex);
->
->     ...;
->
->  ret =3D pthread_mutex_lock(&sched->start_work_mutex);
->    ....;
-> }
->
-> Thread B:
->
-> static void *thread_func(void *ctx)
-> {
->
-> ...;
-> ret =3D pthread_mutex_lock(&sched->start_work_mutex);
-> ...;
-> ret =3D pthread_mutex_unlock(&sched->start_work_mutex);
->
-> ...;
->
-> ret =3D pthread_mutex_lock(&sched->work_done_wait_mutex);
-> ...;
-> ret =3D pthread_mutex_unlock(&sched->work_done_wait_mutex);
-> ..;
->
-> }
->
->
-> Thanks,
+Yes, this ought to work fine.
