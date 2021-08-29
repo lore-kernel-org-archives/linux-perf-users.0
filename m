@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44334C4320A
-	for <linux-perf-users@archiver.kernel.org>; Sun, 29 Aug 2021 10:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A96C432BE
+	for <linux-perf-users@archiver.kernel.org>; Sun, 29 Aug 2021 10:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0430360FC0
-	for <linux-perf-users@archiver.kernel.org>; Sun, 29 Aug 2021 10:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B147A60F39
+	for <linux-perf-users@archiver.kernel.org>; Sun, 29 Aug 2021 10:55:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235099AbhH2Kwc (ORCPT
+        id S235054AbhH2K4C (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 29 Aug 2021 06:52:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44024 "EHLO
+        Sun, 29 Aug 2021 06:56:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235046AbhH2Kwc (ORCPT
+        with ESMTP id S235019AbhH2K4B (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 29 Aug 2021 06:52:32 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E6DBC061756
-        for <linux-perf-users@vger.kernel.org>; Sun, 29 Aug 2021 03:51:40 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id d17so6801126plr.12
-        for <linux-perf-users@vger.kernel.org>; Sun, 29 Aug 2021 03:51:40 -0700 (PDT)
+        Sun, 29 Aug 2021 06:56:01 -0400
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27929C061756
+        for <linux-perf-users@vger.kernel.org>; Sun, 29 Aug 2021 03:55:10 -0700 (PDT)
+Received: by mail-pj1-x1034.google.com with SMTP id f11-20020a17090aa78b00b0018e98a7cddaso8000883pjq.4
+        for <linux-perf-users@vger.kernel.org>; Sun, 29 Aug 2021 03:55:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=lFzFG2XeopOOy6Mnz/fganlfwA/D8OqBSKpVQIaiZig=;
-        b=z8B6S7DTFgi69OBaCjTUZIAvdGWjOqopBYd0e5b9wfD2TYtv2Yz7XF/0ZRYVqqNYTA
-         aWoYGt03eFil1j1RR4ERTcZZ4ASU0Si4zjY5c7tC26ybatnYAC/mwwyYYif1XIpTpeKW
-         JdoULIRhDxxRQcum/i3YpDF2O0uVsT87MeHqFMF4ilYgqX5g995JNn3uSkMNVEChUdBo
-         012nXR3PXMSqYj0q3rIPSC3rTvoKbxZPI9hcwAeVI53GvfrBV6JZS2QRb508mW3YiNHT
-         so9SNsPLO9MSMM+LCVhZ8o3odbtaprHf/TkbuRcA6e+b3I6MMoKanzWdbgFceCXVd55T
-         WFYQ==
+        bh=CuDrEYU1TGpB0c6uwd1ZNHwHEuDsZ2GreT0CBPG8RhI=;
+        b=qMXNvM4HR2ycfB8cf5whuw2XTsE0w0S8Kg7tcQYelCfD2Ov0LWEDUmV5hFfnJR+S49
+         d772PbQOD31c737kSZjXMkTJZe2oJpVtWHDSMYDLD9oghK2V1k+IJT7UT7Tbhps5cuk2
+         kIc9flBBAfsEVGgWCq2hbFeBE5PmHRzuhWNMzequugSxu42BoE6E21aVBnxeghxayeh8
+         SDaj2a6Yj3KcTf8zzecDpjpwij8m/qYGZowrt3lfr3q+8lNwTaa5/cYjPCRpgfBJCKY0
+         bwwOILcwvroinQ9LG/badgZp8SFy0KPREjcdfTtF7O28DmnpskCEcb/Gvqiucr1A6DjY
+         skCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=lFzFG2XeopOOy6Mnz/fganlfwA/D8OqBSKpVQIaiZig=;
-        b=MCPWW+BzGuMJ21HFmkiVcq+QLcuim/wq+VPWMQjxsJf1ZShq/k4IZuMh45RHB523N3
-         V4QhobFPrAebGHa9gNT7did+9qgcUu4/ds93iyhLLA2XL2cbfE8s8XzO/U8V1FhaJIAf
-         RWBmB8oYXeyERHiCm3vurz24Xe+8HlRiRD5EREJI2Pa5IjhNOlP+Sz2MSYD3p+HPhX5b
-         Gv56cmJ/h+qy2XyPy1MJQZ/+rZgbHpnZqHcHyqltys0rOz0Ju//YgqkgTWNi85o/wxqV
-         /ocl9mdLw4baL0m4RRLyKe6ocrIet6VVKrglGJ99kapgrZtFzQwK1hTqNQfnb/+2b1Xk
-         7XUQ==
-X-Gm-Message-State: AOAM5338btl3ANVtRlSs2HZAZEzScOQwuw878HSEH8edoiFVMXlqeRpp
-        i7guP9yAr3UtB5TGX+dZe2jfiA==
-X-Google-Smtp-Source: ABdhPJwjWsoF+6aTXesS8YJ625+DMN9GCiyDBwQ7qEmqcmLQGPVUk4SlInxmsMvfuMy9p1LbnGbAdg==
-X-Received: by 2002:a17:90b:3b82:: with SMTP id pc2mr20677208pjb.224.1630234299731;
-        Sun, 29 Aug 2021 03:51:39 -0700 (PDT)
+        bh=CuDrEYU1TGpB0c6uwd1ZNHwHEuDsZ2GreT0CBPG8RhI=;
+        b=PHqsp19PA0Zr7ZB3n3BUWuT3+6NpW/4/yfqZI/cTlaRvvqD6Zw7xL3PPBN1ZXnKBdw
+         x952H306fhVyeYahpIoWdhNLLS9tLx66KZ66+11Od58S52Zdd7TyA3adGcSdFm1om0uj
+         M5zBwvcFtPawAVx2eri/Owwg2266XtBhdXvKSKLCQzFF1+4lzAAKmkS6zF91aWtKiIqp
+         VZ5jjGzJKQcCBt/MZ9RV3JKrnCS0KWrcZIHbZ3JjhLDH6Loza8M7fHKWnnHQmtGzyPfV
+         8mhf8tehhgoN6oM6ok7KFhWwoGTawTXRrX41a3S9u7CIzKxDWT4Ers/trwhJnVHLim5x
+         HNOA==
+X-Gm-Message-State: AOAM531J8PPO4/DYwlo0V9RTOHtIHGELg+WsudB1JTwJfS8BsVeRGkDU
+        Xo51vsnPIAv+mS6kmgI91qB7sg==
+X-Google-Smtp-Source: ABdhPJxb+YwSW5sulq0PfaREnttI5UqvdpA6jz4l6GfS8qGqUzeXhA+GkBweb1zefOGCCrulngIdqw==
+X-Received: by 2002:a17:90a:2b89:: with SMTP id u9mr20939389pjd.116.1630234509366;
+        Sun, 29 Aug 2021 03:55:09 -0700 (PDT)
 Received: from leoy-ThinkPad-X240s ([134.195.101.46])
-        by smtp.gmail.com with ESMTPSA id 15sm7641004pjw.39.2021.08.29.03.51.32
+        by smtp.gmail.com with ESMTPSA id i1sm17575257pjs.31.2021.08.29.03.55.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Aug 2021 03:51:39 -0700 (PDT)
-Date:   Sun, 29 Aug 2021 18:51:30 +0800
+        Sun, 29 Aug 2021 03:55:08 -0700 (PDT)
+Date:   Sun, 29 Aug 2021 18:55:00 +0800
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -83,62 +83,59 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Andi Kleen <ak@linux.intel.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         coresight@lists.linaro.org
-Subject: Re: [PATCH v5 1/9] perf/ring_buffer: Add comment for barriers on AUX
- ring buffer
-Message-ID: <20210829105130.GA14461@leoy-ThinkPad-X240s>
+Subject: Re: [PATCH v5 2/9] coresight: tmc-etr: Add barrier after updating
+ AUX ring buffer
+Message-ID: <20210829105500.GB14461@leoy-ThinkPad-X240s>
 References: <20210809111407.596077-1-leo.yan@linaro.org>
- <20210809111407.596077-2-leo.yan@linaro.org>
+ <20210809111407.596077-3-leo.yan@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210809111407.596077-2-leo.yan@linaro.org>
+In-Reply-To: <20210809111407.596077-3-leo.yan@linaro.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Peter,
+Hi Mathieu, Suzuki,
 
-On Mon, Aug 09, 2021 at 07:13:59PM +0800, Leo Yan wrote:
-> AUX ring buffer applies almost the same barriers as perf ring buffer,
-> but there has an exception for ordering between writing the AUX trace
-> data and updating user_page::aux_head.
-> 
-> This patch adds comment for how to use the barriers on AUX ring buffer,
-> and gives comment to ask the drivers to flush the trace data into AUX
-> ring buffer prior to updating user_page::aux_head.
+On Mon, Aug 09, 2021 at 07:14:00PM +0800, Leo Yan wrote:
+> Since a memory barrier is required between AUX trace data store and
+> aux_head store, and the AUX trace data is filled with memcpy(), it's
+> sufficient to use smp_wmb() so can ensure the trace data is visible
+> prior to updating aux_head.
 > 
 > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-You have given the ACK tag before, could you pick up this patch?
+Could you pick up patches 02 and 03 in this series?  Please note,
+patch 02 has the review tag from Suzuki, but I didn't receive the
+review tag for patch 03.
 
-Thanks,
-Leo
+If anything need to follow up, just let me know.  Thanks!
 
 > ---
->  kernel/events/ring_buffer.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
+>  drivers/hwtracing/coresight/coresight-tmc-etr.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-> index 52868716ec35..5cf6579be05e 100644
-> --- a/kernel/events/ring_buffer.c
-> +++ b/kernel/events/ring_buffer.c
-> @@ -509,6 +509,15 @@ void perf_aux_output_end(struct perf_output_handle *handle, unsigned long size)
->  		perf_event_aux_event(handle->event, aux_head, size,
->  				     handle->aux_flags);
->  
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> index acdb59e0e661..13fd1fc730ed 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> @@ -1563,6 +1563,14 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
+>  	 */
+>  	if (etr_perf->snapshot)
+>  		handle->head += size;
+> +
 > +	/*
-> +	 * See perf_output_put_handle(), AUX ring buffer applies the same
-> +	 * barrier pairing as the perf ring buffer; except for B, since
-> +	 * AUX ring buffer is written by hardware trace, we cannot simply
-> +	 * use the generic memory barrier (like smp_wmb()) prior to update
-> +	 * user_page::aux_head, the hardware trace driver takes the
-> +	 * responsibility to ensure the trace data has been flushed into
-> +	 * the AUX buffer before calling perf_aux_output_end().
+> +	 * Ensure that the AUX trace data is visible before the aux_head
+> +	 * is updated via perf_aux_output_end(), as expected by the
+> +	 * perf ring buffer.
 > +	 */
->  	WRITE_ONCE(rb->user_page->aux_head, rb->aux_head);
->  	if (rb_need_aux_wakeup(rb))
->  		wakeup = true;
+> +	smp_wmb();
+> +
+>  out:
+>  	/*
+>  	 * Don't set the TRUNCATED flag in snapshot mode because 1) the
 > -- 
 > 2.25.1
 > 
