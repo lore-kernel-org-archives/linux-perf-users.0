@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5335FC4320E
-	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Aug 2021 12:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42253C4320E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Aug 2021 12:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F44360E73
-	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Aug 2021 12:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B49D6023F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Aug 2021 12:02:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236832AbhH3MDb (ORCPT
+        id S236727AbhH3MB0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 30 Aug 2021 08:03:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49694 "EHLO mail.kernel.org"
+        Mon, 30 Aug 2021 08:01:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236817AbhH3MBd (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 30 Aug 2021 08:01:33 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4AB6C61178;
-        Mon, 30 Aug 2021 12:00:39 +0000 (UTC)
+        id S236649AbhH3MAt (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 30 Aug 2021 08:00:49 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CB8766112F;
+        Mon, 30 Aug 2021 11:59:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630324840;
-        bh=WQr0dZkc4fUjh/wEOZBMMW1kns32kSyQ/oC1W+ZaZkQ=;
+        s=k20201202; t=1630324795;
+        bh=XTeGxOIsRjhNchLp8E3OiO0GBydqMgFT84tuT1oUj0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fvZiDfX4bV2i67J2LtW4ih2hqhy+VA9eWzOHiQkJ9st9J0OpHZrbHy5x7wvH86qAJ
-         WO1JQ8ByCOAdtBxjncazSShG8enILQ7W5XvSxjTcJxoWyQR14/6GuQ79D6mw9kDQDu
-         W3G4RdtCVmG4rWcS44ltwMEp5pc8qyIS1jm14y9IWEgWFQ6kyr02wy4qcMxHvOYN4u
-         V6H+UCJErbl7VXJ5+2MhsdfBQ+T3H1/NdpKDYVebUIoUYsCqElsvB5LJT5pfq47kzM
-         kUVhAtZ/Yl5Ys/EWeFVUp+Lk4zdTCnQWFgPxRtMqSAixN9K+XTqWRFNxwdOdxrWjpL
-         HxWPVrmAdlN9Q==
+        b=KQbSIL1hyvMjQNTwylPOqeTf+6V0lmG4c+H6domFW6IZBq20oDdQuNM3+6VQAMZBl
+         wfKspbmLCfrLHjRc7KRbPwaZb+7cttSs3g5RMjzSnnjjhxV7vX0hJmrfJ3SWbaYlZ5
+         Mo8YMdth7At8HXlVlpF+ZB5JBe7xdinjAVZiJZL/lVFcqJfWbr5ZqVLf3Qm23z0/Kj
+         cHB98fvGdzr361FiCE7X+ObpU5ks8ZTzxkAoBZj/7ThcLNRBu/RG/I9N4CENbNZGm4
+         Eb2oV5XQ5wOMhFi0qmONfixfZCRMVPzvJSmxDlF8/SOICaeQCtZGlRYgCb7R9LWIiq
+         EJyy/lO4jQxOg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kim Phillips <kim.phillips@amd.com>,
+Cc:     Xiaoyao Li <xiaoyao.li@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>,
         linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 6/8] perf/x86/amd/ibs: Work around erratum #1197
-Date:   Mon, 30 Aug 2021 08:00:29 -0400
-Message-Id: <20210830120031.1017977-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.13 09/14] perf/x86/intel/pt: Fix mask of num_address_ranges
+Date:   Mon, 30 Aug 2021 07:59:37 -0400
+Message-Id: <20210830115942.1017300-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210830120031.1017977-1-sashal@kernel.org>
-References: <20210830120031.1017977-1-sashal@kernel.org>
+In-Reply-To: <20210830115942.1017300-1-sashal@kernel.org>
+References: <20210830115942.1017300-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -53,62 +53,35 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+From: Xiaoyao Li <xiaoyao.li@intel.com>
 
-[ Upstream commit 26db2e0c51fe83e1dd852c1321407835b481806e ]
+[ Upstream commit c53c6b7409f4cd9e542991b53d597fbe2751d7db ]
 
-Erratum #1197 "IBS (Instruction Based Sampling) Register State May be
-Incorrect After Restore From CC6" is published in a document:
+Per SDM, bit 2:0 of CPUID(0x14,1).EAX[2:0] reports the number of
+configurable address ranges for filtering, not bit 1:0.
 
-  "Revision Guide for AMD Family 19h Models 00h-0Fh Processors" 56683 Rev. 1.04 July 2021
-
-  https://bugzilla.kernel.org/show_bug.cgi?id=206537
-
-Implement the erratum's suggested workaround and ignore IBS samples if
-MSRC001_1031 == 0.
-
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20210817221048.88063-3-kim.phillips@amd.com
+Acked-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Link: https://lkml.kernel.org/r/20210824040622.4081502-1-xiaoyao.li@intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/amd/ibs.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/x86/events/intel/pt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 2410bd4bb48f..2d9e1372b070 100644
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -90,6 +90,7 @@ struct perf_ibs {
- 	unsigned long			offset_mask[1];
- 	int				offset_max;
- 	unsigned int			fetch_count_reset_broken : 1;
-+	unsigned int			fetch_ignore_if_zero_rip : 1;
- 	struct cpu_perf_ibs __percpu	*pcpu;
- 
- 	struct attribute		**format_attrs;
-@@ -674,6 +675,10 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
- 	if (check_rip && (ibs_data.regs[2] & IBS_RIP_INVALID)) {
- 		regs.flags &= ~PERF_EFLAGS_EXACT;
- 	} else {
-+		/* Workaround for erratum #1197 */
-+		if (perf_ibs->fetch_ignore_if_zero_rip && !(ibs_data.regs[1]))
-+			goto out;
-+
- 		set_linear_ip(&regs, ibs_data.regs[1]);
- 		regs.flags |= PERF_EFLAGS_EXACT;
- 	}
-@@ -767,6 +772,9 @@ static __init void perf_event_ibs_init(void)
- 	if (boot_cpu_data.x86 >= 0x16 && boot_cpu_data.x86 <= 0x18)
- 		perf_ibs_fetch.fetch_count_reset_broken = 1;
- 
-+	if (boot_cpu_data.x86 == 0x19 && boot_cpu_data.x86_model < 0x10)
-+		perf_ibs_fetch.fetch_ignore_if_zero_rip = 1;
-+
- 	perf_ibs_pmu_init(&perf_ibs_fetch, "ibs_fetch");
- 
- 	if (ibs_caps & IBS_CAPS_OPCNT) {
+diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+index 915847655c06..b044577785bb 100644
+--- a/arch/x86/events/intel/pt.c
++++ b/arch/x86/events/intel/pt.c
+@@ -62,7 +62,7 @@ static struct pt_cap_desc {
+ 	PT_CAP(single_range_output,	0, CPUID_ECX, BIT(2)),
+ 	PT_CAP(output_subsys,		0, CPUID_ECX, BIT(3)),
+ 	PT_CAP(payloads_lip,		0, CPUID_ECX, BIT(31)),
+-	PT_CAP(num_address_ranges,	1, CPUID_EAX, 0x3),
++	PT_CAP(num_address_ranges,	1, CPUID_EAX, 0x7),
+ 	PT_CAP(mtc_periods,		1, CPUID_EAX, 0xffff0000),
+ 	PT_CAP(cycle_thresholds,	1, CPUID_EBX, 0xffff),
+ 	PT_CAP(psb_periods,		1, CPUID_EBX, 0xffff0000),
 -- 
 2.30.2
 
