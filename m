@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED6AAC4320A
-	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Aug 2021 12:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C60DC432BE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Aug 2021 12:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D40226115C
-	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Aug 2021 12:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2168A60240
+	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Aug 2021 12:02:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236981AbhH3MCI (ORCPT
+        id S237302AbhH3MCv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 30 Aug 2021 08:02:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50264 "EHLO mail.kernel.org"
+        Mon, 30 Aug 2021 08:02:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236974AbhH3MBn (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 30 Aug 2021 08:01:43 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9677461159;
-        Mon, 30 Aug 2021 12:00:49 +0000 (UTC)
+        id S237050AbhH3MBv (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 30 Aug 2021 08:01:51 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 54FBB6023F;
+        Mon, 30 Aug 2021 12:00:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630324850;
-        bh=azX6HPHRCwzj4NaEWidL0BFd7dzgOdWj38vLO5cN6vE=;
+        s=k20201202; t=1630324858;
+        bh=iDRoLL5VqnlS/aZYHzep0NwRLh4BbPXHYpr+LxlY+L8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m6lylMFyZhfMWiKJhrhtHHV0QxYsV0f7THO0fRCxmmZf1baNpAqObC7VSN2nBxnTg
-         HZ62h9m6ljDO2trn5QzYg3KGeeICk2iJON0Ygoz+z0wqe+2Kz0kHpbEuNVPp7LbucF
-         cdJ8bXt+zZ8zBcIiO+19Xj29b5AOF/E3hIXsJ+J0pLOFpB0XgkOyOSVojgmlzfpy0Q
-         cNjR56UGKaUrR2YrSR8y1U2+aXsyYerGfkeGiz8J5Tc+ZbDNV/ha6tga0P5vNzLya+
-         SZFACR7sxgJ0+i/WSH+Pt4CWfIv23UolGh4ENDwZV76RIBjlT2l1l7ip04Q94uzHuY
-         D40GZDICcDKOw==
+        b=hATqY/nEAexO6/e1aBJbexndF4vF4kzH//mqQwcLWFLJEmolUmspsCckBt2bBYYJD
+         0C65do1UoEwUnQAzXa4nGU7eKL0V6hJr49BYDK3227MToEFzGK0Tcku3ffdLzkzc1n
+         MIgrUYTOHbxK2D4Y1clqIEJ4K10e93tPV3RlEAr1rNLmqJb4PjpU58OV4uLlw9rbUZ
+         uVmOVMX3HN8VC9adoph2kaFd8GhJ9zkA5lm8SLt015XUfGUZeu1aVWUNSZ/sAH1rKn
+         LjQVfiZIvu+c64xKgKMKDUKGOmAzurD3VBKVb8z1YeMvXwSx7SvkFFuJ6h6bgi6LUG
+         Hskm/ueDd0rQg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Kim Phillips <kim.phillips@amd.com>,
@@ -39,12 +39,12 @@ Cc:     Kim Phillips <kim.phillips@amd.com>,
         Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
         linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 5/7] perf/x86/amd/ibs: Work around erratum #1197
-Date:   Mon, 30 Aug 2021 08:00:41 -0400
-Message-Id: <20210830120043.1018096-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 3/5] perf/x86/amd/ibs: Work around erratum #1197
+Date:   Mon, 30 Aug 2021 08:00:51 -0400
+Message-Id: <20210830120053.1018205-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210830120043.1018096-1-sashal@kernel.org>
-References: <20210830120043.1018096-1-sashal@kernel.org>
+In-Reply-To: <20210830120053.1018205-1-sashal@kernel.org>
+References: <20210830120053.1018205-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -77,10 +77,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 8 insertions(+)
 
 diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 3fe68f7f9d5e..5043425ced6b 100644
+index f6e57bebbc6b..5c6aad14cdd9 100644
 --- a/arch/x86/events/amd/ibs.c
 +++ b/arch/x86/events/amd/ibs.c
-@@ -90,6 +90,7 @@ struct perf_ibs {
+@@ -89,6 +89,7 @@ struct perf_ibs {
  	unsigned long			offset_mask[1];
  	int				offset_max;
  	unsigned int			fetch_count_reset_broken : 1;
@@ -88,7 +88,7 @@ index 3fe68f7f9d5e..5043425ced6b 100644
  	struct cpu_perf_ibs __percpu	*pcpu;
  
  	struct attribute		**format_attrs;
-@@ -674,6 +675,10 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
+@@ -673,6 +674,10 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
  	if (check_rip && (ibs_data.regs[2] & IBS_RIP_INVALID)) {
  		regs.flags &= ~PERF_EFLAGS_EXACT;
  	} else {
@@ -99,7 +99,7 @@ index 3fe68f7f9d5e..5043425ced6b 100644
  		set_linear_ip(&regs, ibs_data.regs[1]);
  		regs.flags |= PERF_EFLAGS_EXACT;
  	}
-@@ -767,6 +772,9 @@ static __init void perf_event_ibs_init(void)
+@@ -766,6 +771,9 @@ static __init void perf_event_ibs_init(void)
  	if (boot_cpu_data.x86 >= 0x16 && boot_cpu_data.x86 <= 0x18)
  		perf_ibs_fetch.fetch_count_reset_broken = 1;
  
