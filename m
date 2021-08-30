@@ -5,43 +5,43 @@ X-Spam-Level:
 X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 374BFC43216
-	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Aug 2021 12:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0660DC4320E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Aug 2021 12:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AD6860E77
-	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Aug 2021 12:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3F8561168
+	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Aug 2021 12:03:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237371AbhH3MDp (ORCPT
+        id S237385AbhH3MDr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 30 Aug 2021 08:03:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49404 "EHLO mail.kernel.org"
+        Mon, 30 Aug 2021 08:03:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236848AbhH3MB3 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        id S236843AbhH3MB3 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
         Mon, 30 Aug 2021 08:01:29 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C0E1061205;
-        Mon, 30 Aug 2021 12:00:27 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5FA3761156;
+        Mon, 30 Aug 2021 12:00:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630324828;
-        bh=X3bhiUlAufGCTM6lTGf8Zx8nIqp8Pnl4bDwRLSOpxMY=;
+        s=k20201202; t=1630324826;
+        bh=eNN5EXQyt5NYdF4AJTV+MGkspv1HLaw9fe4Y2KyXb4Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K2ILfCmfO3bYCRiGl1tEkurY9d163KKxV9SyHMA/nFn5EK6waYdBeR88E6keVA/tv
-         OIQJqVgDW8NlElKIxBLbi0EzbB1hcziud2g0eEkV63BB0pe56hkOSG9pUIdN5+9BaX
-         HRu74P7rKUfPDoGABhL21C/IVlx0Poktbjpv+jgAY8k/rXk+hKP+l8ealOwqJm3R/j
-         mszxoxqNDZbtwKEIumGkXvjgnsKGXWe9X+/J+lvwDts6V5A/S+DLuS8l6tv2pT1d1O
-         HMnYBGTvUPCcoO0YLNkydQT9FNPkzN6qhmcbUQDZn1uSMZrR6cpki2MB0+QHPe4GIx
-         6+v+LQoAmlPTw==
+        b=QUSebiwvx8GAtVov3hrouF3ZD+p8+gdz4MdF6tYz8MNOk1TXU5MJvG/FgQ7p7ebWM
+         S4DL+s5+xBEoGfWG5/gDr9yY9tRI9RZHfHOE/ekqo6zI9QyRErEfu2o0kmzP0HlF+E
+         aFGYBGjI4guQ/kEOhOr8W8cl562i8CVRkn7EthMdnpxWBego+0guTN4kWpEzDkHgm9
+         XKQHddpn9V2MHw+TS/Ln+xaK8+lndmsJ37JnOevnujxqCYxqhwD9qZyMhrg9hcsoR1
+         oa4VG2kel4H1xXX/iixA7dhK3n3lFShFeFR2Axh0Cl+GekFZdP2iJ4+QIs1Jl719so
+         uKele3+OKfS0g==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kim Phillips <kim.phillips@amd.com>,
+Cc:     Xiaoyao Li <xiaoyao.li@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>,
         linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 08/10] perf/x86/amd/power: Assign pmu.module
-Date:   Mon, 30 Aug 2021 08:00:15 -0400
-Message-Id: <20210830120018.1017841-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 06/10] perf/x86/intel/pt: Fix mask of num_address_ranges
+Date:   Mon, 30 Aug 2021 08:00:13 -0400
+Message-Id: <20210830120018.1017841-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210830120018.1017841-1-sashal@kernel.org>
 References: <20210830120018.1017841-1-sashal@kernel.org>
@@ -53,33 +53,35 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+From: Xiaoyao Li <xiaoyao.li@intel.com>
 
-[ Upstream commit ccf26483416a339c114409f6e7cd02abdeaf8052 ]
+[ Upstream commit c53c6b7409f4cd9e542991b53d597fbe2751d7db ]
 
-Assign pmu.module so the driver can't be unloaded whilst in use.
+Per SDM, bit 2:0 of CPUID(0x14,1).EAX[2:0] reports the number of
+configurable address ranges for filtering, not bit 1:0.
 
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20210817221048.88063-4-kim.phillips@amd.com
+Acked-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Link: https://lkml.kernel.org/r/20210824040622.4081502-1-xiaoyao.li@intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/amd/power.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/events/intel/pt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/amd/power.c b/arch/x86/events/amd/power.c
-index abef51320e3a..c4892b7d0c36 100644
---- a/arch/x86/events/amd/power.c
-+++ b/arch/x86/events/amd/power.c
-@@ -217,6 +217,7 @@ static struct pmu pmu_class = {
- 	.stop		= pmu_event_stop,
- 	.read		= pmu_event_read,
- 	.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
-+	.module		= THIS_MODULE,
- };
- 
- static int power_cpu_exit(unsigned int cpu)
+diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+index 05e43d0f430b..da289a44d511 100644
+--- a/arch/x86/events/intel/pt.c
++++ b/arch/x86/events/intel/pt.c
+@@ -62,7 +62,7 @@ static struct pt_cap_desc {
+ 	PT_CAP(single_range_output,	0, CPUID_ECX, BIT(2)),
+ 	PT_CAP(output_subsys,		0, CPUID_ECX, BIT(3)),
+ 	PT_CAP(payloads_lip,		0, CPUID_ECX, BIT(31)),
+-	PT_CAP(num_address_ranges,	1, CPUID_EAX, 0x3),
++	PT_CAP(num_address_ranges,	1, CPUID_EAX, 0x7),
+ 	PT_CAP(mtc_periods,		1, CPUID_EAX, 0xffff0000),
+ 	PT_CAP(cycle_thresholds,	1, CPUID_EBX, 0xffff),
+ 	PT_CAP(psb_periods,		1, CPUID_EBX, 0xffff0000),
 -- 
 2.30.2
 
