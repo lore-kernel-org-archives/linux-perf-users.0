@@ -2,232 +2,268 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7088AC25AEB
-	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Aug 2021 16:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 944FDC4320A
+	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Aug 2021 16:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D47561029
-	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Aug 2021 16:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79D0E60F5E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Aug 2021 16:48:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237816AbhH3QQC (ORCPT
+        id S237954AbhH3Qsz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 30 Aug 2021 12:16:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45768 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237684AbhH3QQB (ORCPT
+        Mon, 30 Aug 2021 12:48:55 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:39397 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237806AbhH3Qsv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 30 Aug 2021 12:16:01 -0400
-Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F38C1C061575;
-        Mon, 30 Aug 2021 09:15:07 -0700 (PDT)
-Received: by mail-il1-x134.google.com with SMTP id y3so16671165ilm.6;
-        Mon, 30 Aug 2021 09:15:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GhKUe4sY5cAgiX1Wxl3GBHv3n5YxRNpzvVmXtwnuGY4=;
-        b=lZ5JIDAIvMH1bn0GyyIwGJzjkKJly2L1NnX7D03RF5pWTooEsBq35Rwz2vDXePVYxV
-         ySrNPRN1A85RbqzGt2hnt9ebYCHdZ8dRFmITuOygDl0nR/FiHp9Osw8JXTHzSbWoiRvf
-         mq/yeCc4uLU1N0KwCF87Zk0ABXOK82p4zfov8FzE8WiYgx3RcO1Wo4rY9oMQyoE2PejT
-         kfu8hy0Jd4fcm3VPyrUIPuP7AUGeSnhN3C3mUd8+6ZfMYzLEYxDXMjc6QHc/Gbp087p+
-         sm0ktT40qSU7fbxjZHqlC3UE3V44VhLnM5Aj3jMnyc4jRD6C4Z1xDAbJTemyB2iano1O
-         QLAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GhKUe4sY5cAgiX1Wxl3GBHv3n5YxRNpzvVmXtwnuGY4=;
-        b=SlpTobIzprQ/7avnKA5EZp7hmeBQ6Qgv4F4qKXQAnh3VRmDx1sN9rCZ41cCd9/Sz7L
-         Oc427/GW6c+w5ShGYa/3U+8MBwWJkyzOW5KKBoeS6JETNhagcrwNK9a/MVUj4+U4VczU
-         eLJun5EGjgZt0kL9Vm8wGGDchILnG28nIpsPdVazuStJHvLW6ZjGe5G3GBb/AYKPd0C1
-         KbhFE6Ndm/KTot3JxBd363TRyxM4wAfhLGPQ60e1O4PeC7ov3pxLCZYffXRgBgRzWbVn
-         W8DsaDa7O0kWSHAfKB5krV3hwomRin5R7wQCVFkXG/y+Eubx91SQ6VTiSca36KbReYNY
-         2bLg==
-X-Gm-Message-State: AOAM530AWYfnl5kw7ZQpZO9JnL+kLUCfDPvSte1evM+bYFwPV7PQTIaC
-        MaI+WNV3JfHa1Aql4RI7zwA=
-X-Google-Smtp-Source: ABdhPJwxkbCyha7cYpvLZzKHL2Lfna1L4W4YWJVKcyWABsDUOERWY9jkBV1Blkt6UoLPnMuuz4Q21w==
-X-Received: by 2002:a92:c8c4:: with SMTP id c4mr13278453ilq.137.1630340107235;
-        Mon, 30 Aug 2021 09:15:07 -0700 (PDT)
-Received: from localhost ([12.28.44.171])
-        by smtp.gmail.com with ESMTPSA id f17sm8267384ion.51.2021.08.30.09.15.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Aug 2021 09:15:06 -0700 (PDT)
-Date:   Mon, 30 Aug 2021 09:15:05 -0700
-From:   Yury Norov <yury.norov@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Alexander Lobakin <alobakin@pm.me>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Klimov <aklimov@redhat.com>,
-        Andrea Merello <andrea.merello@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, Ben Gardon <bgardon@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Brian Cain <bcain@codeaurora.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Lameter <cl@linux.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dennis Zhou <dennis@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Joe Perches <joe@perches.com>, Jonas Bonn <jonas@southpole.se>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Peter Xu <peterx@redhat.com>,
+        Mon, 30 Aug 2021 12:48:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1630342077;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=f4OufpH9qoeJgHD/9Z6IN4NJ6YC/PYNscmRgK19yIN8=;
+        b=Cm79XzUCrWhpn9fi3xFr18TbjLnXYEPN55arQVoaNmNPzDgXtUqjDDJ4Tb/nTEHcKpZusP
+        5ADOzyJvH5384EWhPHk+Xn63JlmIq9HYjktW/jDgI2au8e/AP+aHRrWPP9hKJGjomJQjpm
+        BK4HB7HQKiCcxsrD7kAsBZP09F7Z+EA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-471-mSQZjJqNN0eoQjhy8iHHGA-1; Mon, 30 Aug 2021 12:47:53 -0400
+X-MC-Unique: mSQZjJqNN0eoQjhy8iHHGA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EE305185302A;
+        Mon, 30 Aug 2021 16:47:51 +0000 (UTC)
+Received: from agerstmayr-thinkpad.admin.vie.andihit.net (unknown [10.40.195.91])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3AA545D9F4;
+        Mon, 30 Aug 2021 16:47:44 +0000 (UTC)
+From:   Andreas Gerstmayr <agerstmayr@redhat.com>
+To:     linux-perf-users@vger.kernel.org
+Cc:     Andreas Gerstmayr <agerstmayr@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Rich Felker <dalias@libc.org>,
-        Samuel Mendoza-Jonas <sam@mendozajonas.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>
-Subject: Re: [PATCH 11/17] find: micro-optimize for_each_{set,clear}_bit()
-Message-ID: <YS0ECS2Lb4rwqJ4b@yury-ThinkPad>
-References: <20210814211713.180533-1-yury.norov@gmail.com>
- <20210814211713.180533-12-yury.norov@gmail.com>
- <YSeduU41Ef568xhS@alley>
- <YSgDI9NpC51GhB/2@yury-ThinkPad>
- <20210830121249.2fgyvf47py2tz5s5@pathway.suse.cz>
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] perf: flamegraph.py script improvements
+Date:   Mon, 30 Aug 2021 18:47:27 +0200
+Message-Id: <20210830164729.116049-1-agerstmayr@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210830121249.2fgyvf47py2tz5s5@pathway.suse.cz>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Aug 30, 2021 at 02:12:49PM +0200, Petr Mladek wrote:
-> On Thu 2021-08-26 14:09:55, Yury Norov wrote:
-> > On Thu, Aug 26, 2021 at 03:57:13PM +0200, Petr Mladek wrote:
-> > > On Sat 2021-08-14 14:17:07, Yury Norov wrote:
-> > > > The macros iterate thru all set/clear bits in a bitmap. They search a
-> > > > first bit using find_first_bit(), and the rest bits using find_next_bit().
-> > > > 
-> > > > Since find_next_bit() is called shortly after find_first_bit(), we can
-> > > > save few lines of I-cache by not using find_first_bit().
-> > > 
-> > > Is this only a speculation or does it fix a real performance problem?
-> > > 
-> > > The macro is used like:
-> > > 
-> > > 	for_each_set_bit(bit, addr, size) {
-> > > 		fn(bit);
-> > > 	}
-> > > 
-> > > IMHO, the micro-opimization does not help when fn() is non-trivial.
-> >  
-> > The effect is measurable:
-> > 
-> > Start testing for_each_bit()
-> > for_each_set_bit:                15296 ns,   1000 iterations
-> > for_each_set_bit_from:           15225 ns,   1000 iterations
-> > 
-> > Start testing for_each_bit() with cash flushing
-> > for_each_set_bit:               547626 ns,   1000 iterations
-> > for_each_set_bit_from:          497899 ns,   1000 iterations
-> > 
-> > Refer this:
-> > 
-> > https://www.mail-archive.com/dri-devel@lists.freedesktop.org/msg356151.html
-> 
-> I see. The results look convincing on the first look.
-> 
-> But I am still not sure. This patch is basically contradicting many
-> other patches from this patchset:
-> 
->   + 5th patch optimizes find_first_and_bit() and proves that it is
->     much faster:
-> 
->     Before (#define find_first_and_bit(...) find_next_and_bit(..., 0):
->     Start testing find_bit() with random-filled bitmap
->     [  140.291468] find_first_and_bit:           46890919 ns,  32671 iterations
->     Start testing find_bit() with sparse bitmap
->     [  140.295028] find_first_and_bit:               7103 ns,      1 iterations
-> 
->     After:
->     Start testing find_bit() with random-filled bitmap
->     [  162.574907] find_first_and_bit:           25045813 ns,  32846 iterations
->     Start testing find_bit() with sparse bitmap
->     [  162.578458] find_first_and_bit:               4900 ns,      1 iterations
-> 
->        => saves 46% in random bitmap
-> 	  saves 31% in sparse bitmap
-> 
-> 
->   + 6th, 7th, and 9th patch makes the code use find_first_bit()
->     because it is faster than find_next_bit(mask, size, 0);
-> 
->   + Now, 11th (this) patch replaces find_first_bit() with
->     find_next_bit(mask, size, 0) because find_first_bit()
->     makes things slower. It is suspicious at minimum.
-> 
-> 
-> By other words. The I-cache could safe 10% in one case.
-> But find_first_bit() might safe 46% in random case.
+* display perf.data header
+* display PIDs of user stacks
+* added option to change color scheme
+* default to blue/green color scheme to improve accessibility
+* correctly identify kernel stacks when kernel-debuginfo is installed
 
-Those are different cases. find_first_bit() is approximately twice
-faster than find_next_bit, and much smaller. The conclusion is simple:
-use 'first' version whenever possible if there's no other considerations.
+Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
+---
+Tested with Fedora 34, RHEL 8.5 & 9-beta, and Ubuntu 20.04.
 
-In case of for_each_bit() macros, however, we have such a consideration.
-In contrast to regular pattern, where user calls either first, or next
-versions N times, here we call find_first_bit once, and then find_next_bit
-N-1 times.
+The updated flamegraph.py script works with the current d3-flame-graph template, but in order to use the new features (perf header, new color scheme), please run `wget -O /usr/share/d3-flame-graph/d3-flamegraph-base.html https://gist.githubusercontent.com/andreasgerstmayr/1f84a6ac04e6391bfc653a546cf3e1aa/raw/f67accc1873be66d14e90360c9b8cd15faa551f6/d3-flamegraph-base.html`
+I'll update the js-d3-flame-graph package soon.
 
-Because we know for sure that we'll call find_next_bit shortly, we can
-benefit from locality under heavy pressure on I-cache, if replace 'first'
-with 'next'. Consider it as a prefetch mechanism for the following calls
-to find_next_bit().
 
-> Does I-cache cost more than the faster code?
+ tools/perf/scripts/python/flamegraph.py | 108 ++++++++++++++++++------
+ 1 file changed, 81 insertions(+), 27 deletions(-)
+
+diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts/python/flamegraph.py
+index 65780013f745..b6af1dd5f816 100755
+--- a/tools/perf/scripts/python/flamegraph.py
++++ b/tools/perf/scripts/python/flamegraph.py
+@@ -13,6 +13,10 @@
+ # Written by Andreas Gerstmayr <agerstmayr@redhat.com>
+ # Flame Graphs invented by Brendan Gregg <bgregg@netflix.com>
+ # Works in tandem with d3-flame-graph by Martin Spier <mspier@netflix.com>
++#
++# pylint: disable=missing-module-docstring
++# pylint: disable=missing-class-docstring
++# pylint: disable=missing-function-docstring
  
-In this case cache miss is more expensive.
+ from __future__ import print_function
+ import sys
+@@ -20,16 +24,19 @@ import os
+ import io
+ import argparse
+ import json
++import subprocess
+ 
+-
++# pylint: disable=too-few-public-methods
+ class Node:
+-    def __init__(self, name, libtype=""):
++    def __init__(self, name, libtype):
+         self.name = name
++        # "root" | "kernel" | ""
++        # "" indicates user space
+         self.libtype = libtype
+         self.value = 0
+         self.children = []
+ 
+-    def toJSON(self):
++    def to_json(self):
+         return {
+             "n": self.name,
+             "l": self.libtype,
+@@ -41,7 +48,7 @@ class Node:
+ class FlameGraphCLI:
+     def __init__(self, args):
+         self.args = args
+-        self.stack = Node("root")
++        self.stack = Node("all", "root")
+ 
+         if self.args.format == "html" and \
+                 not os.path.isfile(self.args.template):
+@@ -53,13 +60,21 @@ class FlameGraphCLI:
+                   file=sys.stderr)
+             sys.exit(1)
+ 
+-    def find_or_create_node(self, node, name, dso):
+-        libtype = "kernel" if dso == "[kernel.kallsyms]" else ""
+-        if name is None:
+-            name = "[unknown]"
++    @staticmethod
++    def get_libtype_from_dso(dso):
++        """
++        when kernel-debuginfo is installed,
++        dso points to /usr/lib/debug/lib/modules/*/vmlinux
++        """
++        if dso and (dso == "[kernel.kallsyms]" or dso.endswith("/vmlinux")):
++            return "kernel"
+ 
++        return ""
++
++    @staticmethod
++    def find_or_create_node(node, name, libtype):
+         for child in node.children:
+-            if child.name == name and child.libtype == libtype:
++            if child.name == name:
+                 return child
+ 
+         child = Node(name, libtype)
+@@ -67,30 +82,65 @@ class FlameGraphCLI:
+         return child
+ 
+     def process_event(self, event):
+-        node = self.find_or_create_node(self.stack, event["comm"], None)
++        pid = event.get("sample", {}).get("pid", 0)
++        # event["dso"] sometimes contains /usr/lib/debug/lib/modules/*/vmlinux
++        # for user-space processes; let's use pid for kernel or user-space distinction
++        if pid == 0:
++            comm = event["comm"]
++            libtype = "kernel"
++        else:
++            comm = "{} ({})".format(event["comm"], pid)
++            libtype = ""
++        node = self.find_or_create_node(self.stack, comm, libtype)
++
+         if "callchain" in event:
+-            for entry in reversed(event['callchain']):
+-                node = self.find_or_create_node(
+-                    node, entry.get("sym", {}).get("name"), event.get("dso"))
++            for entry in reversed(event["callchain"]):
++                name = entry.get("sym", {}).get("name", "[unknown]")
++                libtype = self.get_libtype_from_dso(entry.get("dso"))
++                node = self.find_or_create_node(node, name, libtype)
+         else:
+-            node = self.find_or_create_node(
+-                node, entry.get("symbol"), event.get("dso"))
++            name = event.get("symbol", "[unknown]")
++            libtype = self.get_libtype_from_dso(event.get("dso"))
++            node = self.find_or_create_node(node, name, libtype)
+         node.value += 1
+ 
++    def get_report_header(self):
++        if self.args.input == "-":
++            # when this script is invoked with "perf script flamegraph",
++            # no perf.data is created and we cannot read the header of it
++            return ""
++
++        try:
++            output = subprocess.check_output(["perf", "report", "--header-only"])
++            return output.decode("utf-8")
++        except Exception as err:  # pylint: disable=broad-except
++            print("Error reading report header: {}".format(err), file=sys.stderr)
++            return ""
++
+     def trace_end(self):
+-        json_str = json.dumps(self.stack, default=lambda x: x.toJSON())
++        stacks_json = json.dumps(self.stack, default=lambda x: x.to_json())
+ 
+         if self.args.format == "html":
++            report_header = self.get_report_header()
++            options = {
++                "colorscheme": self.args.colorscheme,
++                "context": report_header
++            }
++            options_json = json.dumps(options)
++
+             try:
+-                with io.open(self.args.template, encoding="utf-8") as f:
+-                    output_str = f.read().replace("/** @flamegraph_json **/",
+-                                                  json_str)
+-            except IOError as e:
+-                print("Error reading template file: {}".format(e), file=sys.stderr)
++                with io.open(self.args.template, encoding="utf-8") as template:
++                    output_str = (
++                        template.read()
++                        .replace("/** @options_json **/", options_json)
++                        .replace("/** @flamegraph_json **/", stacks_json)
++                    )
++            except IOError as err:
++                print("Error reading template file: {}".format(err), file=sys.stderr)
+                 sys.exit(1)
+             output_fn = self.args.output or "flamegraph.html"
+         else:
+-            output_str = json_str
++            output_str = stacks_json
+             output_fn = self.args.output or "stacks.json"
+ 
+         if output_fn == "-":
+@@ -101,8 +151,8 @@ class FlameGraphCLI:
+             try:
+                 with io.open(output_fn, "w", encoding="utf-8") as out:
+                     out.write(output_str)
+-            except IOError as e:
+-                print("Error writing output file: {}".format(e), file=sys.stderr)
++            except IOError as err:
++                print("Error writing output file: {}".format(err), file=sys.stderr)
+                 sys.exit(1)
+ 
+ 
+@@ -115,12 +165,16 @@ if __name__ == "__main__":
+                         help="output file name")
+     parser.add_argument("--template",
+                         default="/usr/share/d3-flame-graph/d3-flamegraph-base.html",
+-                        help="path to flamegraph HTML template")
++                        help="path to flame graph HTML template")
++    parser.add_argument("--colorscheme",
++                        default="blue-green",
++                        help="flame graph color scheme",
++                        choices=["blue-green", "orange"])
+     parser.add_argument("-i", "--input",
+                         help=argparse.SUPPRESS)
+ 
+-    args = parser.parse_args()
+-    cli = FlameGraphCLI(args)
++    cli_args = parser.parse_args()
++    cli = FlameGraphCLI(cli_args)
+ 
+     process_event = cli.process_event
+     trace_end = cli.trace_end
+-- 
+2.31.1
 
-> Or was for_each_set_bit() tested only with a bitmap
-> where find_first_bit() optimization did not help much?
-
-I tried to ensure that the effect of I-cache is real and in this case
-more important than code performance, so in the test I called 'first'
-once and 'next' twice.
-
-> How would for_each_set_bit() work with random bitmap?
-
-It would work for all bitmaps.
-
-> How does it work with larger bitmaps?
-
-Percentage gain (but not absolute) will decrease proportionally to the
-number of calls of find_next_bit() for big N.
-
-Thanks,
-Yury
-
-> Best Regards,
-> Petr
