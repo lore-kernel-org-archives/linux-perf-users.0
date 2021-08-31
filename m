@@ -2,90 +2,125 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D714C432BE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 31 Aug 2021 18:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF362C432BE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 31 Aug 2021 18:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0314C61008
-	for <linux-perf-users@archiver.kernel.org>; Tue, 31 Aug 2021 18:44:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCD236103D
+	for <linux-perf-users@archiver.kernel.org>; Tue, 31 Aug 2021 18:46:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232968AbhHaSpy (ORCPT
+        id S238877AbhHaSrN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 31 Aug 2021 14:45:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56106 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229483AbhHaSpv (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 31 Aug 2021 14:45:51 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 95D2D60FF2;
-        Tue, 31 Aug 2021 18:44:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630435495;
-        bh=IWw13YnK9rW1CKWgDL11yNR61oOp+iBIT8indqr3iGI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Bpk668iWJmNVqL5ZBx+tRbvzuKrwQ4OoASsSwqNTDThTxEYQ1+CKxW7pcCjiUyx3g
-         +vDU+Z6pfmNrNV3yt9yOdCrW1BO5GtyU/5qYemUP+XE5d+lmzhMQFoOk6Eclv0FgXg
-         kl+c6oadqi3XRfKGojpBYgP8bGLljNGwnmLWDCXSa7WswmBMlKqG9Yur8lGpS7vB6S
-         b2IdR4rsOyUtLnw3cEQ8pic0dCF7lj1sjMji8RrqhzSGTwABRUPXQR0Mu7cS+X0ivT
-         zxXqSmHKT39hddwGqHb631iWlC8/Upy9xCIvXjuUh7soJ04BFoi3JpzHiFjKPXMxBy
-         qnovK6eHeKG4w==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A4C7A4007E; Tue, 31 Aug 2021 15:44:52 -0300 (-03)
-Date:   Tue, 31 Aug 2021 15:44:52 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Riccardo Mancini <rickyman7@gmail.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [RFC PATCH v1 31/37] tools lib/subcmd: add OPT_UINTEGER_OPTARG
- option type
-Message-ID: <YS54pArzp3mKKZzM@kernel.org>
-References: <cover.1629490974.git.rickyman7@gmail.com>
- <c46749b3dff796729078352ff164d363457a3587.1629490974.git.rickyman7@gmail.com>
+        Tue, 31 Aug 2021 14:47:13 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:34546 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S238869AbhHaSrN (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 31 Aug 2021 14:47:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1630435576;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=aKcTGiFsWzKoWPb2efbYmLLsKlRKKqNkhKpgg+hore4=;
+        b=CSVTOLJ2tkhIybKC+2rImwmqorrZkgPJLTTu9f9n3Vrv9JxRM8xHlOdX4jIhb8p1OGY4Y7
+        wop1vyk4rrBvGUCEZmhLfl3IvsDlM81Puul0LTJXa5mWFtYNp1ZFuQnzSDgkHt57vs3KaH
+        Gc+z0rdiKBGfGigLEuMNeguM/1Zpny8=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-358-Un9TMKptPmuv-JU2M7bPSg-1; Tue, 31 Aug 2021 14:46:15 -0400
+X-MC-Unique: Un9TMKptPmuv-JU2M7bPSg-1
+Received: by mail-ej1-f72.google.com with SMTP id gw26-20020a170906f15a00b005c48318c60eso184285ejb.7
+        for <linux-perf-users@vger.kernel.org>; Tue, 31 Aug 2021 11:46:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aKcTGiFsWzKoWPb2efbYmLLsKlRKKqNkhKpgg+hore4=;
+        b=Zp90JnH4+mvysnhqkRpIPCLiBa6LYIMPy1sjDeYxBXdjBlXXYC+zL/A/89j0eelbxt
+         6DKl0hHVkiKMTJfWnLC7HHRVGXCKqewJxIlCPu4K/lGTmdEAw+s6LRDOAEQ2Txh5aFxC
+         YEx0/xX3GD+NKypFAh1Ef6kx+tN7dL+GrOH1cnrxXI+s8MwGn8ju8LZpPAQhHXjucD4D
+         dBngFQzmo5bHbkHw9esWsDnjClELdV0pNu+pm45iuuP/ZfF/D5gaIMgCEq6u252w3fhc
+         rafeUa3w+caPhEVs4mgl1IBczt5acdYuFn0VycCiu2IkR+BnxhgjX0tAWo9Lc9LcW5fc
+         l9ag==
+X-Gm-Message-State: AOAM531oNHkgH5shSfFWhJMfUEpWY3MxVWUT4mmOMKVfzlGgqjWi/biF
+        wOKSQXa9cWnzX8URJfPASkgNV6YcVI0cIvC7eVhsegkEs88YoOuURYMShKZw6awO6rvj/BnoEhn
+        FwkExK+n2rjZsR7G13+jgSgod1Qaeew==
+X-Received: by 2002:a17:906:d94:: with SMTP id m20mr31718169eji.445.1630435573922;
+        Tue, 31 Aug 2021 11:46:13 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwgz47gn0Ne+Pgmnr8XYaA3F89DZ8Js6DWXL1ELRxbfhkR/w3QWctD0/e02pyVnHFM0C8OkfQ==
+X-Received: by 2002:a17:906:d94:: with SMTP id m20mr31718163eji.445.1630435573768;
+        Tue, 31 Aug 2021 11:46:13 -0700 (PDT)
+Received: from krava ([2a00:102a:4005:bb4:e4bf:9f13:dbe6:2d14])
+        by smtp.gmail.com with ESMTPSA id y32sm9960176ede.22.2021.08.31.11.46.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Aug 2021 11:46:13 -0700 (PDT)
+Date:   Tue, 31 Aug 2021 20:46:10 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     James Clark <james.clark@arm.com>
+Cc:     acme@kernel.org, jolsa@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tools build: Fix feature detect clean for out of source
+ builds
+Message-ID: <YS548qYreGLtabs4@krava>
+References: <20210816130705.1331868-1-james.clark@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c46749b3dff796729078352ff164d363457a3587.1629490974.git.rickyman7@gmail.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20210816130705.1331868-1-james.clark@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Sat, Aug 21, 2021 at 11:19:37AM +0200, Riccardo Mancini escreveu:
-> This patch adds OPT_UINTEGER_OPTARG, which is the same as OPT_UINTEGER,
-> but also makes it possible to use the option without any value, setting
-> the variable to a default value, d.
-
-Thanks, applied, just to erode a bit the patch kit.
-
-- Arnaldo
-
- 
-> Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
-> ---
->  tools/lib/subcmd/parse-options.h | 1 +
->  1 file changed, 1 insertion(+)
+On Mon, Aug 16, 2021 at 02:07:05PM +0100, James Clark wrote:
+> Currently the clean target when using O= isn't cleaning the feature
+> detect output. This is because O= and OUTPUT= are set to canonical
+> paths. For example in tools/perf/Makefile:
 > 
-> diff --git a/tools/lib/subcmd/parse-options.h b/tools/lib/subcmd/parse-options.h
-> index d2414144eb8c9927..41b9b942504d398e 100644
-> --- a/tools/lib/subcmd/parse-options.h
-> +++ b/tools/lib/subcmd/parse-options.h
-> @@ -133,6 +133,7 @@ struct option {
->  #define OPT_SET_PTR(s, l, v, h, p)  { .type = OPTION_SET_PTR, .short_name = (s), .long_name = (l), .value = (v), .help = (h), .defval = (p) }
->  #define OPT_INTEGER(s, l, v, h)     { .type = OPTION_INTEGER, .short_name = (s), .long_name = (l), .value = check_vtype(v, int *), .help = (h) }
->  #define OPT_UINTEGER(s, l, v, h)    { .type = OPTION_UINTEGER, .short_name = (s), .long_name = (l), .value = check_vtype(v, unsigned int *), .help = (h) }
-> +#define OPT_UINTEGER_OPTARG(s, l, v, d, h)    { .type = OPTION_UINTEGER, .short_name = (s), .long_name = (l), .value = check_vtype(v, unsigned int *), .help = (h), .flags = PARSE_OPT_OPTARG, .defval = (intptr_t)(d) }
->  #define OPT_LONG(s, l, v, h)        { .type = OPTION_LONG, .short_name = (s), .long_name = (l), .value = check_vtype(v, long *), .help = (h) }
->  #define OPT_ULONG(s, l, v, h)        { .type = OPTION_ULONG, .short_name = (s), .long_name = (l), .value = check_vtype(v, unsigned long *), .help = (h) }
->  #define OPT_U64(s, l, v, h)         { .type = OPTION_U64, .short_name = (s), .long_name = (l), .value = check_vtype(v, u64 *), .help = (h) }
-> -- 
-> 2.31.1
+>   FULL_O := $(shell cd $(PWD); readlink -f $(O) || echo $(O))
+> 
+> This means that OUTPUT ends in a / and most usages prepend it to a file
+> without adding an extra /. This line that was changed adds an extra /
+> before the 'feature' folder but not to the end, resulting in a clean
+> command like this:
+> 
+>   rm -f /tmp/build//featuretest-all.bin ...
+> 
+> After the change the clean command looks like this:
+> 
+>   rm -f /tmp/build/feature/test-all.bin ...
+> 
+> Signed-off-by: James Clark <james.clark@arm.com>
 
--- 
+nice catch!
+
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+
+thanks,
+jirka
+
+> ---
+>  tools/build/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/build/Makefile b/tools/build/Makefile
+> index 5ed41b96fcde..6f11e6fc9ffe 100644
+> --- a/tools/build/Makefile
+> +++ b/tools/build/Makefile
+> @@ -32,7 +32,7 @@ all: $(OUTPUT)fixdep
+>  
+>  # Make sure there's anything to clean,
+>  # feature contains check for existing OUTPUT
+> -TMP_O := $(if $(OUTPUT),$(OUTPUT)/feature,./)
+> +TMP_O := $(if $(OUTPUT),$(OUTPUT)feature/,./)
+>  
+>  clean:
+>  	$(call QUIET_CLEAN, fixdep)
+> -- 
+> 2.28.0
+> 
+
