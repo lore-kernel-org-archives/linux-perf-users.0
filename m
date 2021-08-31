@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D46C43214
-	for <linux-perf-users@archiver.kernel.org>; Tue, 31 Aug 2021 19:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC42C432BE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 31 Aug 2021 19:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC5A61074
-	for <linux-perf-users@archiver.kernel.org>; Tue, 31 Aug 2021 19:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4332D61057
+	for <linux-perf-users@archiver.kernel.org>; Tue, 31 Aug 2021 19:31:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240804AbhHaT2j (ORCPT
+        id S230024AbhHaTcC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 31 Aug 2021 15:28:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42268 "EHLO mail.kernel.org"
+        Tue, 31 Aug 2021 15:32:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240813AbhHaT2h (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 31 Aug 2021 15:28:37 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 05A5B61053;
-        Tue, 31 Aug 2021 19:27:42 +0000 (UTC)
+        id S234139AbhHaTcB (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 31 Aug 2021 15:32:01 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D0F6260F91;
+        Tue, 31 Aug 2021 19:31:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630438062;
-        bh=1hz+rLyf4P3BZ3OMt88NDe8EDolggy1OIHQDfSHHPc8=;
+        s=k20201202; t=1630438266;
+        bh=NFwDSnpklMxKC8EPBXBrgV0olmRU2p/XdOiop04+OXY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Drl5/ExfkJPnxheBzwCx81pEtdrxwdXzNuBv+1v2hTUn68ldoOmV22x/cSICSOb3y
-         CvE7ijrYwvZEzK3I9ApsBqvcl054Ej0X0szhXsp879WYoQM8eMzpEa0XMzjHnmPDwq
-         lNVkspNiciUAUcbCs8ZmAy+gQr6DUbq372RZHazVwcmgLJfDJ2QbEdFIUs+b3IHtVp
-         hyF7v+J2jNvmtpXyg7p0EKlnMXgftfLe7HZ/QIzaFEsg4LObcEBQng7ExAuc3A4wo/
-         0KgOA4kyJg2VS4FABGfJrgKJRAlfWQUKKmr0JIzzGe5omNEbU7XtyNbTrcd8vfzrT0
-         C/rRWNbr1hFfQ==
+        b=ZmEuKQQCj4tfmsYyd5IsPjxYsRUf3ApRsmYdwQ6q3/qUi76aR0LmiwGmXuyVQPjdB
+         CNGvHoIM5ZEqHo8f9lc31czbFDwjIY01Chxsghw6C9Q1LfFs/BUofJrztjHzJVun+j
+         0Niqp6lNuaGceUIjD66H5UXzQ+OdNFltfUTCO+EmkcjcwyDFpeRYsN6lQTu1z3SfYw
+         P3inIZDD0vBMtQSlToI4yXOvx228cHUkBtjLXLoa09050UQb3QIj9wOvAqkefAVeKu
+         dokUAuH8DUqskf5u0K3XtWkXRxiKK0pRRVEiK4Kh1VFJqnTHwSwKjdLz1J4gRT0YPm
+         tFM5+VinuW+BQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D73E74007E; Tue, 31 Aug 2021 16:27:39 -0300 (-03)
-Date:   Tue, 31 Aug 2021 16:27:39 -0300
+        id 720894007E; Tue, 31 Aug 2021 16:31:03 -0300 (-03)
+Date:   Tue, 31 Aug 2021 16:31:03 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Riccardo Mancini <rickyman7@gmail.com>
 Cc:     Ian Rogers <irogers@google.com>,
@@ -44,116 +44,144 @@ Cc:     Ian Rogers <irogers@google.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org
-Subject: Re: [RFC PATCH v1 15/37] perf evsel: separate open preparation from
- open itself
-Message-ID: <YS6Cqw8oHJ72zIRK@kernel.org>
+Subject: Re: [RFC PATCH v1 16/37] perf evsel: save open flags in evsel
+Message-ID: <YS6Dd6lZoftrKGXl@kernel.org>
 References: <cover.1629490974.git.rickyman7@gmail.com>
- <e14118b934c338dbbf68b8677f20d0d7dbf9359a.1629490974.git.rickyman7@gmail.com>
+ <d9f63159098e56fa518eecf25171d72e6f74df37.1629490974.git.rickyman7@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e14118b934c338dbbf68b8677f20d0d7dbf9359a.1629490974.git.rickyman7@gmail.com>
+In-Reply-To: <d9f63159098e56fa518eecf25171d72e6f74df37.1629490974.git.rickyman7@gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Sat, Aug 21, 2021 at 11:19:21AM +0200, Riccardo Mancini escreveu:
-> This is a preparatory patch for the following patches with the goal to
-> separate in evlist__open_cpu the actual perf_event_open, which could be
-> performed in parallel, from the existing fallback mechanisms, which
-> should be handled sequentially.
+Em Sat, Aug 21, 2021 at 11:19:22AM +0200, Riccardo Mancini escreveu:
+> This patch caches the flags used in perf_event_open inside evsel, so
+> that they can be set in __evsel__prepare_open (this will be useful
+> in following patches, when the fallback mechanisms will be handled
+> outside the open itself).
+> This also optimizes the code, by not having to recompute them everytime.
 
-Thanks, applied as the end result is equivalent and we erode this
-patchkit a bit more.
+Nice, thanks, applied, I'll make available what I have in tmp.perf/core
+so that you can take a look before I push it all to Linus, this week.
 
 - Arnaldo
  
-> This patch separates the first lines of evsel__open_cpu into a new
-> __evsel__prepare_open function.
+> Since flags are now saved in evsel, the flags argument in
+> perf_event_open is removed.
 > 
 > Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
 > ---
->  tools/perf/util/evsel.c | 45 +++++++++++++++++++++++++++++++----------
->  1 file changed, 34 insertions(+), 11 deletions(-)
+>  tools/perf/util/evsel.c | 24 ++++++++++++------------
+>  tools/perf/util/evsel.h |  1 +
+>  2 files changed, 13 insertions(+), 12 deletions(-)
 > 
 > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 7b4bb3229a16524e..ddf324e2e17a0951 100644
+> index ddf324e2e17a0951..509a2970a94b3142 100644
 > --- a/tools/perf/util/evsel.c
 > +++ b/tools/perf/util/evsel.c
-> @@ -1746,22 +1746,20 @@ static int perf_event_open(struct evsel *evsel,
->  	return fd;
+> @@ -1710,17 +1710,16 @@ static void display_attr(struct perf_event_attr *attr)
 >  }
 >  
-> -static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
-> -		struct perf_thread_map *threads,
-> -		int start_cpu, int end_cpu)
-> +
-> +static struct perf_cpu_map *empty_cpu_map;
-> +static struct perf_thread_map *empty_thread_map;
-> +
-> +static int __evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
-> +		struct perf_thread_map *threads)
+>  static int perf_event_open(struct evsel *evsel,
+> -			   pid_t pid, int cpu, int group_fd,
+> -			   unsigned long flags)
+> +			   pid_t pid, int cpu, int group_fd)
 >  {
-> -	int cpu, thread, nthreads;
-> -	unsigned long flags = PERF_FLAG_FD_CLOEXEC;
-> -	int pid = -1, err, old_errno;
-> -	enum { NO_CHANGE, SET_TO_MAX, INCREASED_MAX } set_rlimit = NO_CHANGE;
-> +	int nthreads;
+>  	int precise_ip = evsel->core.attr.precise_ip;
+>  	int fd;
 >  
->  	if ((perf_missing_features.write_backward && evsel->core.attr.write_backward) ||
->  	    (perf_missing_features.aux_output     && evsel->core.attr.aux_output))
->  		return -EINVAL;
+>  	while (1) {
+>  		pr_debug2_peo("sys_perf_event_open: pid %d  cpu %d  group_fd %d  flags %#lx",
+> -			  pid, cpu, group_fd, flags);
+> +			  pid, cpu, group_fd, evsel->open_flags);
 >  
->  	if (cpus == NULL) {
-> -		static struct perf_cpu_map *empty_cpu_map;
-> -
->  		if (empty_cpu_map == NULL) {
->  			empty_cpu_map = perf_cpu_map__dummy_new();
->  			if (empty_cpu_map == NULL)
-> @@ -1772,8 +1770,6 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
->  	}
+> -		fd = sys_perf_event_open(&evsel->core.attr, pid, cpu, group_fd, flags);
+> +		fd = sys_perf_event_open(&evsel->core.attr, pid, cpu, group_fd, evsel->open_flags);
+>  		if (fd >= 0)
+>  			break;
 >  
->  	if (threads == NULL) {
-> -		static struct perf_thread_map *empty_thread_map;
-> -
->  		if (empty_thread_map == NULL) {
->  			empty_thread_map = thread_map__new_by_tid(-1);
->  			if (empty_thread_map == NULL)
-> @@ -1792,6 +1788,33 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+> @@ -1788,6 +1787,10 @@ static int __evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
 >  	    perf_evsel__alloc_fd(&evsel->core, cpus->nr, nthreads) < 0)
 >  		return -ENOMEM;
 >  
-> +	return 0;
-> +}
+> +	evsel->open_flags = PERF_FLAG_FD_CLOEXEC;
+> +	if (evsel->cgrp)
+> +		evsel->open_flags |= PERF_FLAG_PID_CGROUP;
 > +
-> +static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
-> +		struct perf_thread_map *threads,
-> +		int start_cpu, int end_cpu)
-> +{
-> +	int cpu, thread, nthreads;
-> +	unsigned long flags = PERF_FLAG_FD_CLOEXEC;
-> +	int pid = -1, err, old_errno;
-> +	enum { NO_CHANGE, SET_TO_MAX, INCREASED_MAX } set_rlimit = NO_CHANGE;
-> +
-> +	err = __evsel__prepare_open(evsel, cpus, threads);
-> +	if (err)
-> +		return err;
-> +
-> +	if (cpus == NULL)
-> +		cpus = empty_cpu_map;
-> +
-> +	if (threads == NULL)
-> +		threads = empty_thread_map;
-> +
-> +	if (evsel->core.system_wide)
-> +		nthreads = 1;
-> +	else
-> +		nthreads = threads->nr;
-> +
->  	if (evsel->cgrp) {
->  		flags |= PERF_FLAG_PID_CGROUP;
+>  	return 0;
+>  }
+>  
+> @@ -1796,7 +1799,6 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+>  		int start_cpu, int end_cpu)
+>  {
+>  	int cpu, thread, nthreads;
+> -	unsigned long flags = PERF_FLAG_FD_CLOEXEC;
+>  	int pid = -1, err, old_errno;
+>  	enum { NO_CHANGE, SET_TO_MAX, INCREASED_MAX } set_rlimit = NO_CHANGE;
+>  
+> @@ -1815,10 +1817,8 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+>  	else
+>  		nthreads = threads->nr;
+>  
+> -	if (evsel->cgrp) {
+> -		flags |= PERF_FLAG_PID_CGROUP;
+> +	if (evsel->cgrp)
 >  		pid = evsel->cgrp->fd;
+> -	}
+>  
+>  fallback_missing_features:
+>  	if (perf_missing_features.weight_struct) {
+> @@ -1832,7 +1832,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+>  		evsel->core.attr.clockid = 0;
+>  	}
+>  	if (perf_missing_features.cloexec)
+> -		flags &= ~(unsigned long)PERF_FLAG_FD_CLOEXEC;
+> +		evsel->open_flags &= ~(unsigned long)PERF_FLAG_FD_CLOEXEC;
+>  	if (perf_missing_features.mmap2)
+>  		evsel->core.attr.mmap2 = 0;
+>  	if (perf_missing_features.exclude_guest)
+> @@ -1866,7 +1866,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+>  			test_attr__ready();
+>  
+>  			fd = perf_event_open(evsel, pid, cpus->map[cpu],
+> -					     group_fd, flags);
+> +					     group_fd);
+>  
+>  			FD(evsel, cpu, thread) = fd;
+>  
+> @@ -1874,7 +1874,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+>  
+>  			if (unlikely(test_attr__enabled)) {
+>  				test_attr__open(&evsel->core.attr, pid, cpus->map[cpu],
+> -						fd, group_fd, flags);
+> +						fd, group_fd, evsel->open_flags);
+>  			}
+>  
+>  			if (fd < 0) {
+> @@ -2012,7 +2012,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+>  		perf_missing_features.clockid = true;
+>  		pr_debug2_peo("switching off use_clockid\n");
+>  		goto fallback_missing_features;
+> -	} else if (!perf_missing_features.cloexec && (flags & PERF_FLAG_FD_CLOEXEC)) {
+> +	} else if (!perf_missing_features.cloexec && (evsel->open_flags & PERF_FLAG_FD_CLOEXEC)) {
+>  		perf_missing_features.cloexec = true;
+>  		pr_debug2_peo("switching off cloexec flag\n");
+>  		goto fallback_missing_features;
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index eabccce406886320..1c0057e80d080f2f 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -149,6 +149,7 @@ struct evsel {
+>  		struct bperf_leader_bpf *leader_skel;
+>  		struct bperf_follower_bpf *follower_skel;
+>  	};
+> +	unsigned long		open_flags;
+>  };
+>  
+>  struct perf_missing_features {
 > -- 
 > 2.31.1
 
