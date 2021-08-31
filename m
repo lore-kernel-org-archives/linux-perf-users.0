@@ -2,281 +2,107 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0FE9C432BE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 31 Aug 2021 19:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7D5C432BE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 31 Aug 2021 19:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A961061053
-	for <linux-perf-users@archiver.kernel.org>; Tue, 31 Aug 2021 19:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAA3960234
+	for <linux-perf-users@archiver.kernel.org>; Tue, 31 Aug 2021 19:25:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231634AbhHaTZ6 (ORCPT
+        id S240748AbhHaT0A (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 31 Aug 2021 15:25:58 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:59648 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234488AbhHaTZ5 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 31 Aug 2021 15:25:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1630437902;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+mfiKI+dVq/0fOyIQdZHURaT6pEsc/teGujD3MLQREU=;
-        b=PEhODMs0pbVEz/yNxwXLs3WgRdpoY+gOO0jni4scKV+4OCJHzqX6oQNcdoywaelZndv55v
-        4t1acnZvYLm7whKoHbK7dmarArWFuo8KIVkRvOAVsNE+lADTWHSUQ7MBgeW9GinENwQu68
-        HiZacafOLA9k55z1U7GSXhrB4FzvPnY=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-309-Eo9Dd5FwO1eiOA8D2rP_Hw-1; Tue, 31 Aug 2021 15:25:00 -0400
-X-MC-Unique: Eo9Dd5FwO1eiOA8D2rP_Hw-1
-Received: by mail-wr1-f72.google.com with SMTP id k8-20020a5d5248000000b00157b9110fb5so162162wrc.11
-        for <linux-perf-users@vger.kernel.org>; Tue, 31 Aug 2021 12:25:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+mfiKI+dVq/0fOyIQdZHURaT6pEsc/teGujD3MLQREU=;
-        b=J6PrgwGD4eJgzFM2QIbAhttBqcSE0c2P0cqXtmQSIPqHE3q5E8pOaIoQePyBbvfC0u
-         cTnMH/z8IcY81OTYP4+cBwC4ffgg4NUfDArQJ2OyZku2jioWEcGM7gaZeGLuv3ajL1OQ
-         Muobf+2aPEhMjAwh5Wb67ySELHQGz4TzrBpRAtT1/G4G2NjVmSR4l7OsQ6Yh3KFTHQBP
-         zEZehawXvhimeOvjOYEjXbjp6xzOO0WgXxxj+jv2kN4OLEgFfE6lVZ8KGNQ7RDSuQg1l
-         5SfJuYGO1lELhRZB+IbQLIqurL0OKZfn0JzLNkQDy2meYzzWYENGg5Mj8dUw1ajgED79
-         BPoQ==
-X-Gm-Message-State: AOAM531lCMDfC0cZQyoijDinIwrnglaYEasHE4Jatd4sdurcFnsYR9iX
-        Y/M1yO33gpz8udah7iILynMWs3BOmSnYoS3kqewteSIpnKryRPW09F0uGcBMcFvO3Pkp5t5tTCN
-        vhkmflVtssW1ZkMr7R938Ggrqrs6Bvg==
-X-Received: by 2002:a05:6000:1623:: with SMTP id v3mr12262671wrb.288.1630437899248;
-        Tue, 31 Aug 2021 12:24:59 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxUVGowJrtnaxcQbQMyQXH6CiWJxED7wCvN+o9zdMRdCvgtWUW8DRXAcVVXhRQ6qagQLIpbZw==
-X-Received: by 2002:a05:6000:1623:: with SMTP id v3mr12262647wrb.288.1630437899049;
-        Tue, 31 Aug 2021 12:24:59 -0700 (PDT)
-Received: from krava ([94.113.247.3])
-        by smtp.gmail.com with ESMTPSA id z14sm3201145wmi.24.2021.08.31.12.24.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Aug 2021 12:24:58 -0700 (PDT)
-Date:   Tue, 31 Aug 2021 21:24:56 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com,
-        rickyman7@gmail.com, john.garry@huawei.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: Re: [PATCH v5 1/2] perf pmu: Add PMU alias support
-Message-ID: <YS6CCNpd3+557fQZ@krava>
-References: <20210817051933.16978-1-yao.jin@linux.intel.com>
- <20210817051933.16978-2-yao.jin@linux.intel.com>
+        Tue, 31 Aug 2021 15:26:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41216 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231952AbhHaT0A (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 31 Aug 2021 15:26:00 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4D26F61041;
+        Tue, 31 Aug 2021 19:25:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1630437904;
+        bh=LfTYo29aM8dEHYTzt+wGMSKyqaEeeay0p+2H1UYZ30c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ib9VzZNveg+hsvzL/JD6x5/M7xGvAuvxiaLDW+1jn5cH2+jZnpQDMAZuSf9LfaNH/
+         o4cQbgmANz+9SeYrQmA0/HUb9W/MUsJBN+AwTAme2tL9lWJoBzc22lq6/C501pR3MK
+         r0pw3c2xAlfBLNCe//MLtNNTSe7FXVHHbpvWWWKpXMe89xdTFCECdumqfZUyfjavPZ
+         I9Vl/Y9f7RpB1WRYG2MvuAn/8uKKMeFMb3PkxTrsgWFpZURNzQ80dJD7a4KBaNeYFd
+         VWy5HobBZAqBuvFyAQg8F7yHKRkkFjCkMRXx3fVy68OTalDS3DU5sF8ni/lFls+S0M
+         9ZOa6X5NDhowA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id DE65B4007E; Tue, 31 Aug 2021 16:25:01 -0300 (-03)
+Date:   Tue, 31 Aug 2021 16:25:01 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Riccardo Mancini <rickyman7@gmail.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [RFC PATCH v1 14/37] perf evsel: remove retry_sample_id goto
+ label
+Message-ID: <YS6CDRKiZ7CpVZYD@kernel.org>
+References: <cover.1629490974.git.rickyman7@gmail.com>
+ <340af0d03408d6621fd9c742e311db18b3585b3b.1629490974.git.rickyman7@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210817051933.16978-2-yao.jin@linux.intel.com>
+In-Reply-To: <340af0d03408d6621fd9c742e311db18b3585b3b.1629490974.git.rickyman7@gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Aug 17, 2021 at 01:19:32PM +0800, Jin Yao wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
+Em Sat, Aug 21, 2021 at 11:19:20AM +0200, Riccardo Mancini escreveu:
+> As far as I can tell, there is no good reason, apart from optimization
+> to have the retry_sample_id separate from fallback_missing_features.
+> Probably, this label was added to avoid reapplying patches for missing
+> features that had already been applied.
+> However, missing features that have been added later have not used this
+> optimization, always jumping to fallback_missing_features and reapplying
+> all missing features.
 > 
-> A perf uncore PMU may have two PMU names, a real name and an alias. The
-> alias is exported at /sys/bus/event_source/devices/uncore_*/alias.
-> The perf tool should support the alias as well.
-> 
-> Add alias_name in the struct perf_pmu to store the alias. For the PMU
-> which doesn't have an alias. It's NULL.
-> 
-> Introduce two X86 specific functions to retrieve the real name and the
-> alias separately.
-> 
-> Only go through the sysfs to retrieve the mapping between the real name
-> and the alias once. The result is cached in a list, uncore_pmu_list.
-> 
-> Nothing changed for the other ARCHs.
-> 
-> With the patch, the perf tool can monitor the PMU with either the real
-> name or the alias.
-> 
-> Use the real name,
->  $ perf stat -e uncore_cha_2/event=1/ -x,
->    4044879584,,uncore_cha_2/event=1/,2528059205,100.00,,
-> 
-> Use the alias,
->  $ perf stat -e uncore_type_0_2/event=1/ -x,
->    3659675336,,uncore_type_0_2/event=1/,2287306455,100.00,,
-> 
-> Co-developed-by: Jin Yao <yao.jin@linux.intel.com>
-> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> Reviewed-by: Andi Kleen <ak@linux.intel.com>
+> This patch removes that label, replacing it with
+> fallback_missing_features.
 
-SNIP
+Fair enough, applied,
 
-> +static char *__pmu_find_real_name(const char *name)
-> +{
-> +	struct perf_pmu_alias_name *pmu;
-> +
-> +	list_for_each_entry(pmu, &pmu_alias_name_list, list) {
-> +		if (!strcmp(name, pmu->alias))
-> +			return pmu->name;
-> +	}
-> +
-> +	return (char *)name;
-> +}
-> +
-> +char *pmu_find_real_name(const char *name)
-> +{
-> +	static bool cached_list;
-> +
-> +	if (cached_list)
-> +		return __pmu_find_real_name(name);
-> +
-> +	setup_pmu_alias_list();
-> +	cached_list = true;
-> +
-> +	return __pmu_find_real_name(name);
-> +}
-> +
-> +char *pmu_find_alias_name(const char *name)
-> +{
-> +	struct perf_pmu_alias_name *pmu;
-
-should this one call setup_pmu_alias_list as well?
-
-> +
-> +	list_for_each_entry(pmu, &pmu_alias_name_list, list) {
-> +		if (!strcmp(name, pmu->name))
-> +			return pmu->alias;
-> +	}
-> +	return NULL;
-> +}
-> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-> index 9321bd0e2f76..d94e48e1ff9b 100644
-> --- a/tools/perf/util/parse-events.y
-> +++ b/tools/perf/util/parse-events.y
-> @@ -316,7 +316,8 @@ event_pmu_name opt_pmu_config
->  			if (!strncmp(name, "uncore_", 7) &&
->  			    strncmp($1, "uncore_", 7))
->  				name += 7;
-> -			if (!perf_pmu__match(pattern, name, $1)) {
-> +			if (!perf_pmu__match(pattern, name, $1) ||
-> +			    !perf_pmu__match(pattern, pmu->alias_name, $1)) {
->  				if (parse_events_copy_term_list(orig_terms, &terms))
->  					CLEANUP_YYABORT;
->  				if (!parse_events_add_pmu(_parse_state, list, pmu->name, terms, true, false))
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 6cdbee8a12e7..9df874155370 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -945,6 +945,18 @@ perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
->  	return NULL;
->  }
+- Arnaldo
+ 
+> Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
+> ---
+>  tools/perf/util/evsel.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index f61e5dd53f5d2859..7b4bb3229a16524e 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -1825,7 +1825,6 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+>  		evsel->core.attr.bpf_event = 0;
+>  	if (perf_missing_features.branch_hw_idx)
+>  		evsel->core.attr.branch_sample_type &= ~PERF_SAMPLE_BRANCH_HW_INDEX;
+> -retry_sample_id:
+>  	if (perf_missing_features.sample_id_all)
+>  		evsel->core.attr.sample_id_all = 0;
 >  
-> +char * __weak
-> +pmu_find_real_name(const char *name)
-> +{
-> +	return (char *)name;
-> +}
-> +
-> +char * __weak
-> +pmu_find_alias_name(const char *name __maybe_unused)
-> +{
-> +	return NULL;
-> +}
-> +
->  static int pmu_max_precise(const char *name)
->  {
->  	char path[PATH_MAX];
-> @@ -958,13 +970,15 @@ static int pmu_max_precise(const char *name)
->  	return max_precise;
->  }
->  
-> -static struct perf_pmu *pmu_lookup(const char *name)
-> +static struct perf_pmu *pmu_lookup(const char *lookup_name)
->  {
->  	struct perf_pmu *pmu;
->  	LIST_HEAD(format);
->  	LIST_HEAD(aliases);
->  	__u32 type;
-> +	char *name = pmu_find_real_name(lookup_name);
->  	bool is_hybrid = perf_pmu__hybrid_mounted(name);
-> +	char *alias_name;
->  
->  	/*
->  	 * Check pmu name for hybrid and the pmu may be invalid in sysfs
-> @@ -995,6 +1009,9 @@ static struct perf_pmu *pmu_lookup(const char *name)
->  
->  	pmu->cpus = pmu_cpumask(name);
->  	pmu->name = strdup(name);
-> +	alias_name = pmu_find_alias_name(name);
-> +	if (alias_name)
-> +		pmu->alias_name = strdup(alias_name);
-
-please add pmu->name and pmu->alias_name check
-
-thanks,
-jirka
-
->  	pmu->type = type;
->  	pmu->is_uncore = pmu_is_uncore(name);
->  	if (pmu->is_uncore)
-> @@ -1023,9 +1040,11 @@ static struct perf_pmu *pmu_find(const char *name)
->  {
->  	struct perf_pmu *pmu;
->  
-> -	list_for_each_entry(pmu, &pmus, list)
-> -		if (!strcmp(pmu->name, name))
-> +	list_for_each_entry(pmu, &pmus, list) {
-> +		if (!strcmp(pmu->name, name) ||
-> +		    (pmu->alias_name && !strcmp(pmu->alias_name, name)))
->  			return pmu;
-> +	}
->  
->  	return NULL;
->  }
-> @@ -1919,6 +1938,9 @@ bool perf_pmu__has_hybrid(void)
->  
->  int perf_pmu__match(char *pattern, char *name, char *tok)
->  {
-> +	if (!name)
-> +		return -1;
-> +
->  	if (fnmatch(pattern, name, 0))
->  		return -1;
->  
-> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-> index 033e8211c025..6b122f97acf3 100644
-> --- a/tools/perf/util/pmu.h
-> +++ b/tools/perf/util/pmu.h
-> @@ -21,6 +21,7 @@ enum {
->  #define PERF_PMU_FORMAT_BITS 64
->  #define EVENT_SOURCE_DEVICE_PATH "/bus/event_source/devices/"
->  #define CPUS_TEMPLATE_CPU	"%s/bus/event_source/devices/%s/cpus"
-> +#define MAX_PMU_NAME_LEN 128
->  
->  struct perf_event_attr;
->  
-> @@ -32,6 +33,7 @@ struct perf_pmu_caps {
->  
->  struct perf_pmu {
->  	char *name;
-> +	char *alias_name;
->  	char *id;
->  	__u32 type;
->  	bool selectable;
-> @@ -136,4 +138,7 @@ void perf_pmu__warn_invalid_config(struct perf_pmu *pmu, __u64 config,
->  bool perf_pmu__has_hybrid(void);
->  int perf_pmu__match(char *pattern, char *name, char *tok);
->  
-> +char *pmu_find_real_name(const char *name);
-> +char *pmu_find_alias_name(const char *name);
-> +
->  #endif /* __PMU_H */
+> @@ -2006,7 +2005,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+>  	} else if (!perf_missing_features.sample_id_all) {
+>  		perf_missing_features.sample_id_all = true;
+>  		pr_debug2_peo("switching off sample_id_all\n");
+> -		goto retry_sample_id;
+> +		goto fallback_missing_features;
+>  	} else if (!perf_missing_features.lbr_flags &&
+>  			(evsel->core.attr.branch_sample_type &
+>  			 (PERF_SAMPLE_BRANCH_NO_CYCLES |
 > -- 
-> 2.17.1
-> 
+> 2.31.1
 
+-- 
+
+- Arnaldo
