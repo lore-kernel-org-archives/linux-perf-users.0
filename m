@@ -2,99 +2,79 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E35C432BE
-	for <linux-perf-users@archiver.kernel.org>; Wed,  1 Sep 2021 09:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED243C4320E
+	for <linux-perf-users@archiver.kernel.org>; Wed,  1 Sep 2021 10:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7967D60FED
-	for <linux-perf-users@archiver.kernel.org>; Wed,  1 Sep 2021 09:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D481D6101A
+	for <linux-perf-users@archiver.kernel.org>; Wed,  1 Sep 2021 10:43:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231387AbhIAKAL (ORCPT
+        id S237141AbhIAKoj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 1 Sep 2021 06:00:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51046 "EHLO
+        Wed, 1 Sep 2021 06:44:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229662AbhIAKAK (ORCPT
+        with ESMTP id S237132AbhIAKoi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 1 Sep 2021 06:00:10 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 361A4C061575;
-        Wed,  1 Sep 2021 02:59:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=SAtktkGm7H51tdkwrltXh8zGCu8BIrDGrCMNYgtiUbQ=; b=pVh08Jvjlw96GrrYnVagrJUfrL
-        iyp677uLnCHcyP1uZoQkNFWYc3vr940CZD/xiHlAjnml8D81oRQKU3seQeWWj84xBjO2o1zPNxSlJ
-        /Vfht0d3ONEDrZPrh46KjvaA4o1vrJWPsNqMYCYOJQZrLdwG6Qz5BqFD2bAOUd4Vlw6BQ4477L4UC
-        t9tWlciPPggLh+5VyUwUS5jgJDubBRWnXeJ3xw0DoZrSBQJeanQKPjwgC+hNrHBWCT/sCTzq2OPkO
-        PJJTYzXFv5tFsVGgrSFpeg+RGvPFLcgKeuWHeQrdLUhHL0yyYjgxQWri8e8fh7mMXQtylK3ckDAWg
-        y0JiIE7A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mLN0K-0027UN-OS; Wed, 01 Sep 2021 09:58:09 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3EE483003FE;
-        Wed,  1 Sep 2021 11:57:59 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E53FE2DD4238C; Wed,  1 Sep 2021 11:57:58 +0200 (CEST)
-Date:   Wed, 1 Sep 2021 11:57:58 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "nakamura.shun@fujitsu.com" <nakamura.shun@fujitsu.com>
-Cc:     "mingo@redhat.com" <mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-Subject: Re: libperf: lack of interface
-Message-ID: <YS9OpunoSHpNPA3/@hirez.programming.kicks-ass.net>
-References: <OSBPR01MB460016842A4310264B1CC5A0F7CD9@OSBPR01MB4600.jpnprd01.prod.outlook.com>
+        Wed, 1 Sep 2021 06:44:38 -0400
+X-Greylist: delayed 417 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 01 Sep 2021 03:43:41 PDT
+Received: from forward107j.mail.yandex.net (forward107j.mail.yandex.net [IPv6:2a02:6b8:0:801:2::252])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCB45C061575;
+        Wed,  1 Sep 2021 03:43:41 -0700 (PDT)
+Received: from myt6-ecec3fffc7db.qloud-c.yandex.net (myt6-ecec3fffc7db.qloud-c.yandex.net [IPv6:2a02:6b8:c12:4681:0:640:ecec:3fff])
+        by forward107j.mail.yandex.net (Yandex) with ESMTP id AE866886488;
+        Wed,  1 Sep 2021 13:36:40 +0300 (MSK)
+Received: from myt3-5a0d70690205.qloud-c.yandex.net (myt3-5a0d70690205.qloud-c.yandex.net [2a02:6b8:c12:4f2b:0:640:5a0d:7069])
+        by myt6-ecec3fffc7db.qloud-c.yandex.net (mxback/Yandex) with ESMTP id 1fZrkdnbPm-adH4Jkep;
+        Wed, 01 Sep 2021 13:36:40 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1630492600;
+        bh=bJRqLiOEp8JXTGlpq3+JJAn5wnhGgMPYEfxoudaUc8g=;
+        h=In-Reply-To:Message-Id:References:Date:Subject:To:From:Cc;
+        b=DwvxWzy8/FIiSbgtrncqM9p7Q32h5dWjPq1krdFgsqH/bnpE/scvmCLeuVHPVscxQ
+         sGsDwCTvss2J0yq2kkjk2TMtVqWLK5+rtiiC56H31xhJ/ZQ0rT50fnjGPgKTx3YzLm
+         Hu/880HcH/uUoaFfHCg9GdodZhTtlR/omQ1vnMMg=
+Authentication-Results: myt6-ecec3fffc7db.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
+Received: by myt3-5a0d70690205.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id Z5XXDbYXRx-acB8hfbS;
+        Wed, 01 Sep 2021 13:36:38 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+From:   Nikita Shubin <nikita.shubin@maquefel.me>
+To:     atish.patra@wdc.com
+Cc:     alankao@andestech.com, anup.patel@wdc.com, bpf@vger.kernel.org,
+        daniel.lezcano@linaro.org, guoren@linux.alibaba.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+        mick@ics.forth.gr, nickhu@andestech.com, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, vincent.chen@sifive.com,
+        wangkefeng.wang@huawei.com, xypron.glpk@gmx.de
+Subject: Not compiling with CONFIG_BPF_SYSCALL enabled
+Date:   Wed,  1 Sep 2021 13:36:34 +0300
+Message-Id: <20210901103634.26558-1-nikita.shubin@maquefel.me>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210528184405.1793783-2-atish.patra@wdc.com>
+References: <20210528184405.1793783-2-atish.patra@wdc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <OSBPR01MB460016842A4310264B1CC5A0F7CD9@OSBPR01MB4600.jpnprd01.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 01, 2021 at 09:45:10AM +0000, nakamura.shun@fujitsu.com wrote:
-> Hello.
-> 
-> I'm trying to change rdpmc test in perf_event_tests[1] to use libperf, but libperf doesn't have enough interfaces.
-> Does anyone plan to implement any of these libperf features?
-> 
-> - Interfaces that can run ioctl (PERF_EVENT_IOC_RESET) from userland
-> - Interfaces that can run fcntl (SIGIO) from userland
-> 
-> [1] https://github.com/deater/perf_event_tests/tree/master/tests/rdpmc
+Hello, Atish.
 
-While IOC_RESET has it's uses, it really shouldn't be used in
-combination with RDPMC, it destroys the whole 'dont do
-syscalls'/performance thing.
+The above series won't compile with CONFIG_BPF_SYSCALL set:
 
-The typical RDPMC usage is:
+linux/kernel/events/core.c:9912:18: error: assignment to 
+'bpf_user_pt_regs_t *' {aka 'struct user_regs_struct *'} 
+from incompatible pointer type 'struct pt_regs *' 
+[-Werror=incompatible-pointer-types]
+ 9912 |         ctx.regs = perf_arch_bpf_user_pt_regs(regs);
 
-	/* setup counter on self */
+Just informing you - hope this is helpful.
 
-	...
+Yours,
+Nikita Shubin
 
-	start = RDPMC
-	/* your code */
-	end = RDPMC
-	delta = end - start;
-
-	...
-
-Nowhere do we need a reset...
