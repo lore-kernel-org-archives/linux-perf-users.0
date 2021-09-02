@@ -2,208 +2,112 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 110F9C43214
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Sep 2021 07:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06290C432BE
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Sep 2021 07:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8E80600EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Sep 2021 07:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB631610CC
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Sep 2021 07:44:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242654AbhIBHCw (ORCPT
+        id S233626AbhIBHpR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Sep 2021 03:02:52 -0400
-Received: from mga17.intel.com ([192.55.52.151]:4566 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242646AbhIBHCv (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Sep 2021 03:02:51 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10094"; a="199225923"
-X-IronPort-AV: E=Sophos;i="5.84,371,1620716400"; 
-   d="scan'208";a="199225923"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2021 00:01:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,371,1620716400"; 
-   d="scan'208";a="467243135"
-Received: from kbl-ppc.sh.intel.com ([10.239.159.163])
-  by orsmga007.jf.intel.com with ESMTP; 02 Sep 2021 00:01:50 -0700
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com,
-        rickyman7@gmail.com, john.garry@huawei.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v7 2/2] perf tests: Test for PMU alias
-Date:   Thu,  2 Sep 2021 14:59:55 +0800
-Message-Id: <20210902065955.1299-3-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210902065955.1299-1-yao.jin@linux.intel.com>
-References: <20210902065955.1299-1-yao.jin@linux.intel.com>
+        Thu, 2 Sep 2021 03:45:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243668AbhIBHpO (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 2 Sep 2021 03:45:14 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01FB6C061575
+        for <linux-perf-users@vger.kernel.org>; Thu,  2 Sep 2021 00:44:17 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id j2so657262pll.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 Sep 2021 00:44:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AZUk9y2sN7eMTc0e2t5VRlkEt6cGkUIJV1VN0ho5bQg=;
+        b=D4F0q5mStXuTWiMTYq8qcr8a/9gvezDDS3wSCmjLLtRmepOErjDgDo0eLs+mjkcSMy
+         q/KQD3YWUDEQjJFiRjfi9EXQYrVWfcrmyxTzBoRqncH333sb+hv9UqJnCFoeZcVn8/vd
+         nKPfWuhvrwhFVLU2oEoosczR8H+wFPzLp9yEx4WCo5jXeTvP+2NhI5V2/s39yLwr2Ehc
+         KF/vZy/m2TKvRs1DrFKk1WzNpf5YNmT822pZTXxjuTPHb43A66JFN4hK+Lch44rEk5Xh
+         evP+cAoJ4h9yMZ2hq/CWo+sxZ6+f/dPNuU/kVYpEOkPhI4A0CzlGychNK1XFApu9hlnG
+         wSLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AZUk9y2sN7eMTc0e2t5VRlkEt6cGkUIJV1VN0ho5bQg=;
+        b=PwEVQitpsj/MTYCfz+46O6duQ6duaDSYGcMtuVpGK/r9baY+OIgo/DiAw7gU++bBMD
+         wVnZBXXmzMIy24OB21ugd3JOWhmpPvjFFTOw7vIMs8d7BfW5NQMb2rt9FkdxbLOA0hSN
+         Wp25bRkIJAw43M3an1Q2NKDwFqItPl5Zg1QTl0Axi68AtJfhce58bzSsZNGc6XcdgdxE
+         zS+DFiPSsijS9PBZTh5DsgaabOUYjoJ9iybFe38EKRYtjOvW5XOoBUQKxkNKHioCyM6m
+         5XUtXckTnU7jINbUyKscsxNSMw5XASM1Tl+NG5Ra6QzOMYfq3Xj/UIY6isjKNddhjDl2
+         39pA==
+X-Gm-Message-State: AOAM532zAdBvMei2XE5fB35Oo9AbPygq37zf1pFK1HojA85TrjnmMInl
+        5OmYq9ScxtSnCfjP07y+17MamMMnony8RCxNR+I=
+X-Google-Smtp-Source: ABdhPJyB+2ldaTd3k72K7+4suFtazNybjpsGv1F95SxuSPJCxKnqYzpPL979hOrQLyVQ0PZiHUI4fQ==
+X-Received: by 2002:a17:90a:a581:: with SMTP id b1mr2252406pjq.153.1630568656433;
+        Thu, 02 Sep 2021 00:44:16 -0700 (PDT)
+Received: from localhost ([204.124.181.224])
+        by smtp.gmail.com with ESMTPSA id j23sm1275257pjn.12.2021.09.02.00.44.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Sep 2021 00:44:15 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        James Clark <james.clark@arm.com>, mathieu.poirier@linaro.org,
+        coresight@lists.linaro.org, linux-perf-users@vger.kernel.org,
+        mike.leach@linaro.org, suzuki.poulose@arm.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH] perf build: Report failure for testing feature libopencsd
+Date:   Thu,  2 Sep 2021 15:44:03 +0800
+Message-Id: <20210902074403.545225-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-A perf uncore PMU may have two PMU names, a real name and an alias
-name. Add one test case to verify the real name and alias name having
-the same effect.
+When build perf tool with passing option 'CORESIGHT=1' explicitly, if
+the feature test fails for library libopencsd, the build doesn't
+complain the feature failure and continue to build the tool with
+disabling the CoreSight feature insteadly.
 
-Iterate the sysfs to get one event which has an alias and create
-evlist by adding two evsels. Evsel1 is created by event and evsel2
-is created by alias.
+This patch changes the building behaviour, when build perf tool with the
+option 'CORESIGHT=1' and detect the failure for testing feature
+libopencsd, the build process will be aborted and it shows the complaint
+info.
 
-Test asserts:
-evsel1->core.attr.type == evsel2->core.attr.type
-evsel1->core.attr.config == evsel2->core.attr.config
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
-v7:
- - No change.
+ tools/perf/Makefile.config | 2 ++
+ 1 file changed, 2 insertions(+)
 
-v6:
- - No change.
-
-v5:
- - No change.
-
-v4:
- - Rebase to perf/core.
-
-v3:
- - Use fgets to read alias string from sysfs.
- - Resource cleanup.
-
-v2:
- - New in v2.
-
- tools/perf/tests/parse-events.c | 92 +++++++++++++++++++++++++++++++++
- 1 file changed, 92 insertions(+)
-
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 8d4866739255..fd3556cc9ad4 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -9,6 +9,7 @@
- #include "pmu-hybrid.h"
- #include <dirent.h>
- #include <errno.h>
-+#include "fncache.h"
- #include <sys/types.h>
- #include <sys/stat.h>
- #include <unistd.h>
-@@ -2194,9 +2195,91 @@ static int test_pmu_events(void)
- 	return ret;
- }
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 4a0d9a6defc7..5df79538486b 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -489,6 +489,8 @@ ifdef CORESIGHT
+         CFLAGS += -DCS_RAW_PACKED
+       endif
+     endif
++  else
++    dummy := $(error Error: No libopencsd library found or the version is not up-to-date. Please install recent libopencsd to build with COREISGHT=1)
+   endif
+ endif
  
-+static bool test_alias(char **event, char **alias)
-+{
-+	char path[PATH_MAX];
-+	DIR *dir;
-+	struct dirent *dent;
-+	const char *sysfs = sysfs__mountpoint();
-+	char buf[128];
-+	FILE *file;
-+
-+	if (!sysfs)
-+		return false;
-+
-+	snprintf(path, PATH_MAX, "%s/bus/event_source/devices/", sysfs);
-+	dir = opendir(path);
-+	if (!dir)
-+		return false;
-+
-+	while ((dent = readdir(dir))) {
-+		if (!strcmp(dent->d_name, ".") ||
-+		    !strcmp(dent->d_name, ".."))
-+			continue;
-+
-+		snprintf(path, PATH_MAX, "%s/bus/event_source/devices/%s/alias",
-+			 sysfs, dent->d_name);
-+
-+		if (!file_available(path))
-+			continue;
-+
-+		file = fopen(path, "r");
-+		if (!file)
-+			continue;
-+
-+		if (!fgets(buf, sizeof(buf), file)) {
-+			fclose(file);
-+			continue;
-+		}
-+
-+		/* Remove the last '\n' */
-+		buf[strlen(buf) - 1] = 0;
-+
-+		fclose(file);
-+		*event = strdup(dent->d_name);
-+		*alias = strdup(buf);
-+		closedir(dir);
-+
-+		if (*event == NULL || *alias == NULL) {
-+			free(*event);
-+			free(*alias);
-+			return false;
-+		}
-+
-+		return true;
-+	}
-+
-+	closedir(dir);
-+	return false;
-+}
-+
-+static int test__checkevent_pmu_events_alias(struct evlist *evlist)
-+{
-+	struct evsel *evsel1 = evlist__first(evlist);
-+	struct evsel *evsel2 = evlist__last(evlist);
-+
-+	TEST_ASSERT_VAL("wrong type", evsel1->core.attr.type == evsel2->core.attr.type);
-+	TEST_ASSERT_VAL("wrong config", evsel1->core.attr.config == evsel2->core.attr.config);
-+	return 0;
-+}
-+
-+static int test_pmu_events_alias(char *event, char *alias)
-+{
-+	struct evlist_test e = { .id = 0, };
-+	char name[2 * NAME_MAX + 20];
-+
-+	snprintf(name, sizeof(name), "%s/event=1/,%s/event=1/",
-+		 event, alias);
-+
-+	e.name  = name;
-+	e.check = test__checkevent_pmu_events_alias;
-+	return test_event(&e);
-+}
-+
- int test__parse_events(struct test *test __maybe_unused, int subtest __maybe_unused)
- {
- 	int ret1, ret2 = 0;
-+	char *event, *alias;
- 
- #define TEST_EVENTS(tests)				\
- do {							\
-@@ -2221,6 +2304,15 @@ do {							\
- 			return ret;
- 	}
- 
-+	if (test_alias(&event, &alias)) {
-+		int ret = test_pmu_events_alias(event, alias);
-+
-+		free(event);
-+		free(alias);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	ret1 = test_terms(test__terms, ARRAY_SIZE(test__terms));
- 	if (!ret2)
- 		ret2 = ret1;
 -- 
-2.17.1
+2.25.1
 
