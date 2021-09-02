@@ -7,40 +7,39 @@ X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F20D1C4320A
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Sep 2021 07:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 110F9C43214
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Sep 2021 07:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D62DB6108E
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Sep 2021 07:01:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8E80600EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Sep 2021 07:01:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242571AbhIBHCt (ORCPT
+        id S242654AbhIBHCw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Sep 2021 03:02:49 -0400
+        Thu, 2 Sep 2021 03:02:52 -0400
 Received: from mga17.intel.com ([192.55.52.151]:4566 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242613AbhIBHCs (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Sep 2021 03:02:48 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10094"; a="199225909"
+        id S242646AbhIBHCv (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 2 Sep 2021 03:02:51 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10094"; a="199225923"
 X-IronPort-AV: E=Sophos;i="5.84,371,1620716400"; 
-   d="scan'208";a="199225909"
+   d="scan'208";a="199225923"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2021 00:01:50 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2021 00:01:53 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.84,371,1620716400"; 
-   d="scan'208";a="467243088"
+   d="scan'208";a="467243135"
 Received: from kbl-ppc.sh.intel.com ([10.239.159.163])
-  by orsmga007.jf.intel.com with ESMTP; 02 Sep 2021 00:01:46 -0700
+  by orsmga007.jf.intel.com with ESMTP; 02 Sep 2021 00:01:50 -0700
 From:   Jin Yao <yao.jin@linux.intel.com>
 To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
         mingo@redhat.com, alexander.shishkin@linux.intel.com
 Cc:     Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com,
         rickyman7@gmail.com, john.garry@huawei.com,
-        Kan Liang <kan.liang@linux.intel.com>,
         Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v7 1/2] perf pmu: Add PMU alias support
-Date:   Thu,  2 Sep 2021 14:59:54 +0800
-Message-Id: <20210902065955.1299-2-yao.jin@linux.intel.com>
+Subject: [PATCH v7 2/2] perf tests: Test for PMU alias
+Date:   Thu,  2 Sep 2021 14:59:55 +0800
+Message-Id: <20210902065955.1299-3-yao.jin@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20210902065955.1299-1-yao.jin@linux.intel.com>
 References: <20210902065955.1299-1-yao.jin@linux.intel.com>
@@ -48,57 +47,31 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+A perf uncore PMU may have two PMU names, a real name and an alias
+name. Add one test case to verify the real name and alias name having
+the same effect.
 
-A perf uncore PMU may have two PMU names, a real name and an alias. The
-alias is exported at /sys/bus/event_source/devices/uncore_*/alias.
-The perf tool should support the alias as well.
+Iterate the sysfs to get one event which has an alias and create
+evlist by adding two evsels. Evsel1 is created by event and evsel2
+is created by alias.
 
-Add alias_name in the struct perf_pmu to store the alias. For the PMU
-which doesn't have an alias. It's NULL.
+Test asserts:
+evsel1->core.attr.type == evsel2->core.attr.type
+evsel1->core.attr.config == evsel2->core.attr.config
 
-Introduce two X86 specific functions to retrieve the real name and the
-alias separately.
-
-Only go through the sysfs to retrieve the mapping between the real name
-and the alias once. The result is cached in a list, uncore_pmu_list.
-
-Nothing changed for the other ARCHs.
-
-With the patch, the perf tool can monitor the PMU with either the real
-name or the alias.
-
-Use the real name,
- $ perf stat -e uncore_cha_2/event=1/ -x,
-   4044879584,,uncore_cha_2/event=1/,2528059205,100.00,,
-
-Use the alias,
- $ perf stat -e uncore_type_0_2/event=1/ -x,
-   3659675336,,uncore_type_0_2/event=1/,2287306455,100.00,,
-
-Co-developed-by: Jin Yao <yao.jin@linux.intel.com>
-Co-developed-by: Arnaldo Carvalho de Melo <acme@kernel.org>
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Reviewed-by: Andi Kleen <ak@linux.intel.com>
 ---
 v7:
- - Create 'struct perf_pmu_alias_name' constructor/destructor.
- - Return '-errno' if opendir() is failed.
+ - No change.
 
 v6:
- - Call setup_pmu_alias_list in pmu_find_alias_name.
- - Check pmu->name and pmu->alias_name after strdup in pmu_lookup.
+ - No change.
 
 v5:
- - Don't use strdup in pmu_find_real_name and pmu_find_alias_name.
-   Just return name and keep the 'pmu->name = strdup(name);' in
-   pmu_lookup.
-
- - Remove invalid comment for alias_name in struct perf_pmu.
+ - No change.
 
 v4:
- - Fix memory leaks in pmu_lookup.
  - Rebase to perf/core.
 
 v3:
@@ -106,113 +79,51 @@ v3:
  - Resource cleanup.
 
 v2:
- - No change.
+ - New in v2.
 
- tools/perf/arch/x86/util/pmu.c | 155 ++++++++++++++++++++++++++++++++-
- tools/perf/util/parse-events.y |   3 +-
- tools/perf/util/pmu.c          |  40 ++++++++-
- tools/perf/util/pmu.h          |   5 ++
- 4 files changed, 198 insertions(+), 5 deletions(-)
+ tools/perf/tests/parse-events.c | 92 +++++++++++++++++++++++++++++++++
+ 1 file changed, 92 insertions(+)
 
-diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
-index d48d608517fd..d4554b58c889 100644
---- a/tools/perf/arch/x86/util/pmu.c
-+++ b/tools/perf/arch/x86/util/pmu.c
-@@ -1,12 +1,30 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <string.h>
--
-+#include <stdio.h>
-+#include <sys/types.h>
-+#include <dirent.h>
-+#include <fcntl.h>
- #include <linux/stddef.h>
- #include <linux/perf_event.h>
-+#include <linux/zalloc.h>
-+#include <api/fs/fs.h>
-+#include <errno.h>
- 
- #include "../../../util/intel-pt.h"
- #include "../../../util/intel-bts.h"
- #include "../../../util/pmu.h"
-+#include "../../../util/fncache.h"
-+
-+#define TEMPLATE_ALIAS	"%s/bus/event_source/devices/%s/alias"
-+
-+struct perf_pmu_alias_name {
-+	char *name;
-+	char *alias;
-+	struct list_head list;
-+};
-+
-+static LIST_HEAD(pmu_alias_name_list);
-+static bool cached_list;
- 
- struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
- {
-@@ -18,3 +36,138 @@ struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu __mayb
- #endif
- 	return NULL;
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index 8d4866739255..fd3556cc9ad4 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -9,6 +9,7 @@
+ #include "pmu-hybrid.h"
+ #include <dirent.h>
+ #include <errno.h>
++#include "fncache.h"
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <unistd.h>
+@@ -2194,9 +2195,91 @@ static int test_pmu_events(void)
+ 	return ret;
  }
-+
-+static void pmu_alias__delete(struct perf_pmu_alias_name *pmu)
-+{
-+	if (!pmu)
-+		return;
-+
-+	zfree(&pmu->name);
-+	zfree(&pmu->alias);
-+	free(pmu);
-+}
-+
-+static struct perf_pmu_alias_name *pmu_alias__new(char *name, char *alias)
-+{
-+	struct perf_pmu_alias_name *pmu = zalloc(sizeof(*pmu));
-+
-+	if (pmu) {
-+		pmu->name = strdup(name);
-+		if (!pmu->name)
-+			goto out_delete;
-+
-+		pmu->alias = strdup(alias);
-+		if (!pmu->alias)
-+			goto out_delete;
-+	}
-+	return pmu;
-+
-+out_delete:
-+	pmu_alias__delete(pmu);
-+	return NULL;
-+}
-+
-+static int setup_pmu_alias_list(void)
+ 
++static bool test_alias(char **event, char **alias)
 +{
 +	char path[PATH_MAX];
 +	DIR *dir;
 +	struct dirent *dent;
 +	const char *sysfs = sysfs__mountpoint();
-+	struct perf_pmu_alias_name *pmu;
-+	char buf[MAX_PMU_NAME_LEN];
++	char buf[128];
 +	FILE *file;
-+	int ret = -ENOMEM;
 +
 +	if (!sysfs)
-+		return -1;
++		return false;
 +
-+	snprintf(path, PATH_MAX,
-+		 "%s" EVENT_SOURCE_DEVICE_PATH, sysfs);
-+
++	snprintf(path, PATH_MAX, "%s/bus/event_source/devices/", sysfs);
 +	dir = opendir(path);
 +	if (!dir)
-+		return -errno;
++		return false;
 +
 +	while ((dent = readdir(dir))) {
 +		if (!strcmp(dent->d_name, ".") ||
 +		    !strcmp(dent->d_name, ".."))
 +			continue;
 +
-+		snprintf(path, PATH_MAX,
-+			 TEMPLATE_ALIAS, sysfs, dent->d_name);
++		snprintf(path, PATH_MAX, "%s/bus/event_source/devices/%s/alias",
++			 sysfs, dent->d_name);
 +
 +		if (!file_available(path))
 +			continue;
@@ -226,203 +137,73 @@ index d48d608517fd..d4554b58c889 100644
 +			continue;
 +		}
 +
-+		fclose(file);
-+
 +		/* Remove the last '\n' */
 +		buf[strlen(buf) - 1] = 0;
 +
-+		pmu = pmu_alias__new(dent->d_name, buf);
-+		if (!pmu)
-+			goto close_dir;
++		fclose(file);
++		*event = strdup(dent->d_name);
++		*alias = strdup(buf);
++		closedir(dir);
 +
-+		list_add_tail(&pmu->list, &pmu_alias_name_list);
++		if (*event == NULL || *alias == NULL) {
++			free(*event);
++			free(*alias);
++			return false;
++		}
++
++		return true;
 +	}
 +
-+	ret = 0;
-+
-+close_dir:
 +	closedir(dir);
-+	return ret;
++	return false;
 +}
 +
-+static char *__pmu_find_real_name(const char *name)
++static int test__checkevent_pmu_events_alias(struct evlist *evlist)
 +{
-+	struct perf_pmu_alias_name *pmu;
++	struct evsel *evsel1 = evlist__first(evlist);
++	struct evsel *evsel2 = evlist__last(evlist);
 +
-+	list_for_each_entry(pmu, &pmu_alias_name_list, list) {
-+		if (!strcmp(name, pmu->alias))
-+			return pmu->name;
++	TEST_ASSERT_VAL("wrong type", evsel1->core.attr.type == evsel2->core.attr.type);
++	TEST_ASSERT_VAL("wrong config", evsel1->core.attr.config == evsel2->core.attr.config);
++	return 0;
++}
++
++static int test_pmu_events_alias(char *event, char *alias)
++{
++	struct evlist_test e = { .id = 0, };
++	char name[2 * NAME_MAX + 20];
++
++	snprintf(name, sizeof(name), "%s/event=1/,%s/event=1/",
++		 event, alias);
++
++	e.name  = name;
++	e.check = test__checkevent_pmu_events_alias;
++	return test_event(&e);
++}
++
+ int test__parse_events(struct test *test __maybe_unused, int subtest __maybe_unused)
+ {
+ 	int ret1, ret2 = 0;
++	char *event, *alias;
+ 
+ #define TEST_EVENTS(tests)				\
+ do {							\
+@@ -2221,6 +2304,15 @@ do {							\
+ 			return ret;
+ 	}
+ 
++	if (test_alias(&event, &alias)) {
++		int ret = test_pmu_events_alias(event, alias);
++
++		free(event);
++		free(alias);
++		if (ret)
++			return ret;
 +	}
 +
-+	return (char *)name;
-+}
-+
-+char *pmu_find_real_name(const char *name)
-+{
-+	if (cached_list)
-+		return __pmu_find_real_name(name);
-+
-+	setup_pmu_alias_list();
-+	cached_list = true;
-+
-+	return __pmu_find_real_name(name);
-+}
-+
-+static char *__pmu_find_alias_name(const char *name)
-+{
-+	struct perf_pmu_alias_name *pmu;
-+
-+	list_for_each_entry(pmu, &pmu_alias_name_list, list) {
-+		if (!strcmp(name, pmu->name))
-+			return pmu->alias;
-+	}
-+	return NULL;
-+}
-+
-+char *pmu_find_alias_name(const char *name)
-+{
-+	if (cached_list)
-+		return __pmu_find_alias_name(name);
-+
-+	setup_pmu_alias_list();
-+	cached_list = true;
-+
-+	return __pmu_find_alias_name(name);
-+}
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 9321bd0e2f76..d94e48e1ff9b 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -316,7 +316,8 @@ event_pmu_name opt_pmu_config
- 			if (!strncmp(name, "uncore_", 7) &&
- 			    strncmp($1, "uncore_", 7))
- 				name += 7;
--			if (!perf_pmu__match(pattern, name, $1)) {
-+			if (!perf_pmu__match(pattern, name, $1) ||
-+			    !perf_pmu__match(pattern, pmu->alias_name, $1)) {
- 				if (parse_events_copy_term_list(orig_terms, &terms))
- 					CLEANUP_YYABORT;
- 				if (!parse_events_add_pmu(_parse_state, list, pmu->name, terms, true, false))
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 6cdbee8a12e7..1a35915edf68 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -945,6 +945,18 @@ perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
- 	return NULL;
- }
- 
-+char * __weak
-+pmu_find_real_name(const char *name)
-+{
-+	return (char *)name;
-+}
-+
-+char * __weak
-+pmu_find_alias_name(const char *name __maybe_unused)
-+{
-+	return NULL;
-+}
-+
- static int pmu_max_precise(const char *name)
- {
- 	char path[PATH_MAX];
-@@ -958,13 +970,15 @@ static int pmu_max_precise(const char *name)
- 	return max_precise;
- }
- 
--static struct perf_pmu *pmu_lookup(const char *name)
-+static struct perf_pmu *pmu_lookup(const char *lookup_name)
- {
- 	struct perf_pmu *pmu;
- 	LIST_HEAD(format);
- 	LIST_HEAD(aliases);
- 	__u32 type;
-+	char *name = pmu_find_real_name(lookup_name);
- 	bool is_hybrid = perf_pmu__hybrid_mounted(name);
-+	char *alias_name;
- 
- 	/*
- 	 * Check pmu name for hybrid and the pmu may be invalid in sysfs
-@@ -995,6 +1009,16 @@ static struct perf_pmu *pmu_lookup(const char *name)
- 
- 	pmu->cpus = pmu_cpumask(name);
- 	pmu->name = strdup(name);
-+	if (!pmu->name)
-+		goto err;
-+
-+	alias_name = pmu_find_alias_name(name);
-+	if (alias_name) {
-+		pmu->alias_name = strdup(alias_name);
-+		if (!pmu->alias_name)
-+			goto err;
-+	}
-+
- 	pmu->type = type;
- 	pmu->is_uncore = pmu_is_uncore(name);
- 	if (pmu->is_uncore)
-@@ -1017,15 +1041,22 @@ static struct perf_pmu *pmu_lookup(const char *name)
- 	pmu->default_config = perf_pmu__get_default_config(pmu);
- 
- 	return pmu;
-+err:
-+	if (pmu->name)
-+		free(pmu->name);
-+	free(pmu);
-+	return NULL;
- }
- 
- static struct perf_pmu *pmu_find(const char *name)
- {
- 	struct perf_pmu *pmu;
- 
--	list_for_each_entry(pmu, &pmus, list)
--		if (!strcmp(pmu->name, name))
-+	list_for_each_entry(pmu, &pmus, list) {
-+		if (!strcmp(pmu->name, name) ||
-+		    (pmu->alias_name && !strcmp(pmu->alias_name, name)))
- 			return pmu;
-+	}
- 
- 	return NULL;
- }
-@@ -1919,6 +1950,9 @@ bool perf_pmu__has_hybrid(void)
- 
- int perf_pmu__match(char *pattern, char *name, char *tok)
- {
-+	if (!name)
-+		return -1;
-+
- 	if (fnmatch(pattern, name, 0))
- 		return -1;
- 
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 033e8211c025..6b122f97acf3 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -21,6 +21,7 @@ enum {
- #define PERF_PMU_FORMAT_BITS 64
- #define EVENT_SOURCE_DEVICE_PATH "/bus/event_source/devices/"
- #define CPUS_TEMPLATE_CPU	"%s/bus/event_source/devices/%s/cpus"
-+#define MAX_PMU_NAME_LEN 128
- 
- struct perf_event_attr;
- 
-@@ -32,6 +33,7 @@ struct perf_pmu_caps {
- 
- struct perf_pmu {
- 	char *name;
-+	char *alias_name;
- 	char *id;
- 	__u32 type;
- 	bool selectable;
-@@ -136,4 +138,7 @@ void perf_pmu__warn_invalid_config(struct perf_pmu *pmu, __u64 config,
- bool perf_pmu__has_hybrid(void);
- int perf_pmu__match(char *pattern, char *name, char *tok);
- 
-+char *pmu_find_real_name(const char *name);
-+char *pmu_find_alias_name(const char *name);
-+
- #endif /* __PMU_H */
+ 	ret1 = test_terms(test__terms, ARRAY_SIZE(test__terms));
+ 	if (!ret2)
+ 		ret2 = ret1;
 -- 
 2.17.1
 
