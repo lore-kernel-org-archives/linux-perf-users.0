@@ -2,401 +2,239 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 103B0C432BE
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Sep 2021 01:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1813C432BE
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Sep 2021 01:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9FFE61074
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Sep 2021 01:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FCCB610C8
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Sep 2021 01:33:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231616AbhIBBWu (ORCPT
+        id S232716AbhIBBes (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 1 Sep 2021 21:22:50 -0400
-Received: from mga06.intel.com ([134.134.136.31]:43676 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229606AbhIBBWs (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 1 Sep 2021 21:22:48 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10094"; a="279931423"
-X-IronPort-AV: E=Sophos;i="5.84,370,1620716400"; 
-   d="scan'208";a="279931423"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2021 18:21:50 -0700
-X-IronPort-AV: E=Sophos;i="5.84,370,1620716400"; 
-   d="scan'208";a="532551860"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.2.86]) ([10.238.2.86])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2021 18:21:46 -0700
-Subject: Re: [PATCH v6 1/2] perf pmu: Add PMU alias support
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        Wed, 1 Sep 2021 21:34:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42062 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232530AbhIBBer (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 1 Sep 2021 21:34:47 -0400
+Received: from mail-qv1-xf34.google.com (mail-qv1-xf34.google.com [IPv6:2607:f8b0:4864:20::f34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1DACC061575;
+        Wed,  1 Sep 2021 18:33:49 -0700 (PDT)
+Received: by mail-qv1-xf34.google.com with SMTP id bn14so256826qvb.12;
+        Wed, 01 Sep 2021 18:33:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:user-agent:in-reply-to:references
+         :message-id:mime-version:content-transfer-encoding;
+        bh=OBRd3M7mqtl/UMuNIfJ5th/5maECeKKKCWieM6ZDbl4=;
+        b=iLZyRJ7J8UaAQY3ExzbROyTuA2Z9BP6k4rYYpq2TZuwhnR60BQD0hxyNH2wLW7fRMo
+         AHxpBBFgopjLavq8yjEV3J6k3cDNyiZ9jBiwL1smnJKk8Mvek3eGDwtSsNR418Csmfqd
+         Q7HBVRx9ogrrFAPdwg6+pdjrqNInnNVJrAZIpMNnFWA2kQk24I/uWksTUj9vvXXqw/DW
+         Lqu7xWGXltoTU2BH6IkU2L1IlkQ6EyNTkumrzGlWYrsxexKeX5YCDdJgDcsj0cCy8TuF
+         g1V+Lm4luIFZ6s115g9JQU/0hRNwa+6Yii6AIwGgPm4s6LxMgQBX+CSKNKr+j9Tjl2Jn
+         a2Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:user-agent:in-reply-to
+         :references:message-id:mime-version:content-transfer-encoding;
+        bh=OBRd3M7mqtl/UMuNIfJ5th/5maECeKKKCWieM6ZDbl4=;
+        b=L9ZziR84bU7FgeCP1F82JUcovm1thQNQwfICaz7z3g2BbW0QIcZuduQOM+ld3yzV4V
+         zWSNiUn8HsQIPL/xpAVjO0C+Z3qOUEqCAW71xOKRVDdwsS9O9hfg3bGJWDDFeb2ocCIs
+         kXZgt69pBHzOHP5unh+sUc0J62k1bEOkCtbpGWJZP9SID0eK/AF0/msJiYxdl21TPA73
+         W9gs6PKat4YOsTDzC3QXAClhXU3Vs43iL48T9swGZVFeaacxJNM8GMaeUCNyPTHyfcGh
+         kXFPAHwQqtBwJ4ETGREFAOsWJzP+6JrXtwhF4erV3s7Q/KbW0MHfwVrtnil6GnUdXOUP
+         e5zw==
+X-Gm-Message-State: AOAM5315xfGQUxEkiJxdNUtACzxR1ZClUKjYM9V1uJnVKc7wdeDx/uKm
+        BIlelXtPlgUhbRvLFYP7OY0=
+X-Google-Smtp-Source: ABdhPJyZRmncWfwuNXcHcLV7d8ixfPdy79i6O29Z3TlCwTFWiUgH+dD+SELU9MaNal37Rb3EZblQag==
+X-Received: by 2002:a0c:cc8f:: with SMTP id f15mr855868qvl.47.1630546428767;
+        Wed, 01 Sep 2021 18:33:48 -0700 (PDT)
+Received: from [127.0.0.1] ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id w20sm159079qtj.72.2021.09.01.18.33.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Sep 2021 18:33:48 -0700 (PDT)
+Date:   Wed, 01 Sep 2021 22:33:38 -0300
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+To:     "Jin, Yao" <yao.jin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
         alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org, ak@linux.intel.com,
         kan.liang@intel.com, yao.jin@intel.com, rickyman7@gmail.com,
         john.garry@huawei.com, Kan Liang <kan.liang@linux.intel.com>
-References: <20210901054602.17010-1-yao.jin@linux.intel.com>
- <20210901054602.17010-2-yao.jin@linux.intel.com>
- <YS+G5s41RWX0GIqG@kernel.org>
- <298a4efe-72f3-f99a-3923-939eab44885a@linux.intel.com>
-Message-ID: <b54eb67e-cbf3-8c7d-2fea-4c1d4abc5aba@linux.intel.com>
-Date:   Thu, 2 Sep 2021 09:21:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
-MIME-Version: 1.0
+Subject: Re: [PATCH v6 1/2] perf pmu: Add PMU alias support
+User-Agent: K-9 Mail for Android
 In-Reply-To: <298a4efe-72f3-f99a-3923-939eab44885a@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20210901054602.17010-1-yao.jin@linux.intel.com> <20210901054602.17010-2-yao.jin@linux.intel.com> <YS+G5s41RWX0GIqG@kernel.org> <298a4efe-72f3-f99a-3923-939eab44885a@linux.intel.com>
+Message-ID: <59B604C2-8E26-4B11-A9E7-F0885058D990@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Arnaldo,
 
-On 9/2/2021 8:58 AM, Jin, Yao wrote:
-> Hi Arnaldo,
-> 
-> On 9/1/2021 9:57 PM, Arnaldo Carvalho de Melo wrote:
+
+On September 1, 2021 9:58:16 PM GMT-03:00, "Jin, Yao" <yao=2Ejin@linux=2Ei=
+ntel=2Ecom> wrote:
+>Hi Arnaldo,
+>
+>On 9/1/2021 9:57 PM, Arnaldo Carvalho de Melo wrote:
 >> Em Wed, Sep 01, 2021 at 01:46:01PM +0800, Jin Yao escreveu:
 >> <SNIP>
->>
->>> +++ b/tools/perf/arch/x86/util/pmu.c
->>
+>>=20
+>>> +++ b/tools/perf/arch/x86/util/pmu=2Ec
+>>=20
 >> <SNIP>
->>
+>>=20
 >>> +static int setup_pmu_alias_list(void)
 >>> +{
->>> +    char path[PATH_MAX];
->>> +    DIR *dir;
->>> +    struct dirent *dent;
->>> +    const char *sysfs = sysfs__mountpoint();
->>> +    struct perf_pmu_alias_name *pmu;
->>> +    char buf[MAX_PMU_NAME_LEN];
->>> +    FILE *file;
->>> +    int ret = 0;
+>>> +	char path[PATH_MAX];
+>>> +	DIR *dir;
+>>> +	struct dirent *dent;
+>>> +	const char *sysfs =3D sysfs__mountpoint();
+>>> +	struct perf_pmu_alias_name *pmu;
+>>> +	char buf[MAX_PMU_NAME_LEN];
+>>> +	FILE *file;
+>>> +	int ret =3D 0;
 >>> +
->>> +    if (!sysfs)
->>> +        return -1;
+>>> +	if (!sysfs)
+>>> +		return -1;
 >>> +
->>> +    snprintf(path, PATH_MAX,
->>> +         "%s" EVENT_SOURCE_DEVICE_PATH, sysfs);
+>>> +	snprintf(path, PATH_MAX,
+>>> +		 "%s" EVENT_SOURCE_DEVICE_PATH, sysfs);
 >>> +
->>> +    dir = opendir(path);
->>> +    if (!dir)
->>> +        return -1;
+>>> +	dir =3D opendir(path);
+>>> +	if (!dir)
+>>> +		return -1;
 >>> +
->>> +    while ((dent = readdir(dir))) {
->>> +        if (!strcmp(dent->d_name, ".") ||
->>> +            !strcmp(dent->d_name, ".."))
->>> +            continue;
+>>> +	while ((dent =3D readdir(dir))) {
+>>> +		if (!strcmp(dent->d_name, "=2E") ||
+>>> +		    !strcmp(dent->d_name, "=2E=2E"))
+>>> +			continue;
 >>> +
->>> +        snprintf(path, PATH_MAX,
->>> +             TEMPLATE_ALIAS, sysfs, dent->d_name);
+>>> +		snprintf(path, PATH_MAX,
+>>> +			 TEMPLATE_ALIAS, sysfs, dent->d_name);
 >>> +
->>> +        if (!file_available(path))
->>> +            continue;
+>>> +		if (!file_available(path))
+>>> +			continue;
 >>> +
->>> +        file = fopen(path, "r");
->>> +        if (!file)
->>> +            continue;
+>>> +		file =3D fopen(path, "r");
+>>> +		if (!file)
+>>> +			continue;
 >>> +
->>> +        if (!fgets(buf, sizeof(buf), file)) {
->>> +            fclose(file);
->>> +            continue;
->>> +        }
+>>> +		if (!fgets(buf, sizeof(buf), file)) {
+>>> +			fclose(file);
+>>> +			continue;
+>>> +		}
 >>> +
->>> +        fclose(file);
+>>> +		fclose(file);
 >>> +
->>> +        pmu = zalloc(sizeof(*pmu));
->>> +        if (!pmu) {
->>> +            ret = -ENOMEM;
->>> +            break;
->>> +        }
+>>> +		pmu =3D zalloc(sizeof(*pmu));
+>>> +		if (!pmu) {
+>>> +			ret =3D -ENOMEM;
+>>> +			break;
+>>> +		}
 >>> +
->>> +        /* Remove the last '\n' */
->>> +        buf[strlen(buf) - 1] = 0;
+>>> +		/* Remove the last '\n' */
+>>> +		buf[strlen(buf) - 1] =3D 0;
 >>> +
->>> +        pmu->alias = strdup(buf);
->>> +        if (!pmu->alias)
->>> +            goto mem_err;
->>
->> This isn't returning -ENOMEM like when zalloc() fails above. Also you're
->> mixing 'return -1' with 'return -ENOMEM', please be consistent. Please
+>>> +		pmu->alias =3D strdup(buf);
+>>> +		if (!pmu->alias)
+>>> +			goto mem_err;
+>>=20
+>> This isn't returning -ENOMEM like when zalloc() fails above=2E Also you=
+'re
+>> mixing 'return -1' with 'return -ENOMEM', please be consistent=2E Pleas=
+e
 >> find some -E errno for the !sysfs case, perhaps -ENODEV?
->>
-> 
-> For opendir() error, can we just return -errno?
-> 
-> dir = opendir(path);
-> if (!dir)
->      return -errno;
-> 
+>>=20
+>
+>For opendir() error, can we just return -errno?
+>
+>dir =3D opendir(path);
+>if (!dir)
+>	return -errno;
+
+Yeah
+
+>
 >>> +
->>> +        pmu->name = strdup(dent->d_name);
->>> +        if (!pmu->name)
->>> +            goto mem_err;
+>>> +		pmu->name =3D strdup(dent->d_name);
+>>> +		if (!pmu->name)
+>>> +			goto mem_err;
 >>> +
->>> +        list_add_tail(&pmu->list, &pmu_alias_name_list);
->>> +        continue;
->>
->>
->> Don't we have a 'struct pmu' constructor/destructor pair? I.e. instead
+>>> +		list_add_tail(&pmu->list, &pmu_alias_name_list);
+>>> +		continue;
+>>=20
+>>=20
+>> Don't we have a 'struct pmu' constructor/destructor pair? I=2Ee=2E inst=
+ead
 >> of doing all this in an open coded way as above, why not have:
->>
+>>=20
 >> void pmu__delete(struct pmu *pmu)
 >> {
->>     if (!pmu)
->>         return;
->>
->>     zfree(&pmu->name);
->>     zfree(&pmu->alias);
->>     free(pmu);
+>> 	if (!pmu)
+>> 		return;
+>>=20
+>> 	zfree(&pmu->name);
+>> 	zfree(&pmu->alias);
+>> 	free(pmu);
 >> }
->>
+>>=20
 >> struct pmu *pmu__new(const char *name, const char *alias)
 >> {
->>     struct pmu *pmu = zalloc(sizeof(*pmu));
->>
->>     if (pmu) {
->>         pmu->name = strdup(name);
->>         if (!pmu->name)
->>             goto out_delete;
->>
->>         pmu->alias = strdup(alias);
->>         if (!pmu->alias)
->>             goto out_delete;
->>     }
->>
->>     return pmu;
+>> 	struct pmu *pmu =3D zalloc(sizeof(*pmu));
+>>=20
+>> 	if (pmu) {
+>> 		pmu->name =3D strdup(name);
+>> 		if (!pmu->name)
+>> 			goto out_delete;
+>>=20
+>> 		pmu->alias =3D strdup(alias);
+>> 		if (!pmu->alias)
+>> 			goto out_delete;
+>> 	}
+>>=20
+>> 	return pmu;
 >> out_err:
->>     pmu__delete(pmu);
->>     return NULL;
+>> 	pmu__delete(pmu);
+>> 	return NULL;
 >> }
->>
->>     And then just:
->>
->>     pmu = pmu__new(dent->d_name, buf);
->>     if (!pmu)
->>         goto out_closedir;
->>
->>     list_add_tail(&pmu->list, &pmu_alias_name_list);
->>
+>>=20
+>> 	And then just:
+>>=20
+>> 	pmu =3D pmu__new(dent->d_name, buf);
+>> 	if (!pmu)
+>> 		goto out_closedir;
+>>=20
+>> 	list_add_tail(&pmu->list, &pmu_alias_name_list);
+>>=20
 >> And then you don't need the 'continue', as this is the end of the loop
->> block.
->>
+>> block=2E
+>> 	=09
 >> That 'ret' probably should start with -ENOMEM and you end the function
 >> with:
->>
->>     ret = 0;
+>>=20
+>> 	ret =3D 0;
 >> out_closedir:
->>     closedir(dir);
->>     return ret;
+>> 	closedir(dir);
+>> 	return ret;
 >> }
-> 
-> Yes, using 'struct pmu' constructor/destructor is absolutely a good design.
-> 
-> I will follow this approach.
-> 
+>
+>Yes, using 'struct pmu' constructor/destructor is absolutely a good desig=
+n=2E
+>
+>I will follow this approach=2E
 
-Strictly, it's not 'struct pmu' constructor/destructor. It's actually the 'struct 
-perf_pmu_alias_name' constructor/destructor.
 
-We are both confused by the variable name 'pmu'. :(
+I've read the other message you sent, so do the constructor/destructor for=
+ the right struct, that long named one=2E
 
-Thanks
-Jin Yao
-
->>
->>
->> The pmu__delete() should be used in perf's shutdown when running it
->> using memory leak detectors, when not using it, its ok to just leave it
->> as is to speed up the shutdown.
->>
->> - Arnaldo
->>
-> 
-> Yes, agree. I will create a separate patch to implement the 'struct pmu' constructor/destructor.
-> 
-> Thanks
-> Jin Yao
-> 
->>> +mem_err:
->>> +        free(pmu->alias);
->>> +        free(pmu->name);
->>> +        free(pmu);
->>> +        break;
->>> +    }
->>> +
->>> +    closedir(dir);
->>> +    return ret;
->>> +}
->>> +
->>> +static char *__pmu_find_real_name(const char *name)
->>> +{
->>> +    struct perf_pmu_alias_name *pmu;
->>> +
->>> +    list_for_each_entry(pmu, &pmu_alias_name_list, list) {
->>> +        if (!strcmp(name, pmu->alias))
->>> +            return pmu->name;
->>> +    }
->>> +
->>> +    return (char *)name;
->>> +}
->>> +
->>> +char *pmu_find_real_name(const char *name)
->>> +{
->>> +    if (cached_list)
->>> +        return __pmu_find_real_name(name);
->>> +
->>> +    setup_pmu_alias_list();
->>> +    cached_list = true;
->>> +
->>> +    return __pmu_find_real_name(name);
->>> +}
->>> +
->>> +static char *__pmu_find_alias_name(const char *name)
->>> +{
->>> +    struct perf_pmu_alias_name *pmu;
->>> +
->>> +    list_for_each_entry(pmu, &pmu_alias_name_list, list) {
->>> +        if (!strcmp(name, pmu->name))
->>> +            return pmu->alias;
->>> +    }
->>> +    return NULL;
->>> +}
->>> +
->>> +char *pmu_find_alias_name(const char *name)
->>> +{
->>> +    if (cached_list)
->>> +        return __pmu_find_alias_name(name);
->>> +
->>> +    setup_pmu_alias_list();
->>> +    cached_list = true;
->>> +
->>> +    return __pmu_find_alias_name(name);
->>> +}
->>> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
->>> index 9321bd0e2f76..d94e48e1ff9b 100644
->>> --- a/tools/perf/util/parse-events.y
->>> +++ b/tools/perf/util/parse-events.y
->>> @@ -316,7 +316,8 @@ event_pmu_name opt_pmu_config
->>>               if (!strncmp(name, "uncore_", 7) &&
->>>                   strncmp($1, "uncore_", 7))
->>>                   name += 7;
->>> -            if (!perf_pmu__match(pattern, name, $1)) {
->>> +            if (!perf_pmu__match(pattern, name, $1) ||
->>> +                !perf_pmu__match(pattern, pmu->alias_name, $1)) {
->>>                   if (parse_events_copy_term_list(orig_terms, &terms))
->>>                       CLEANUP_YYABORT;
->>>                   if (!parse_events_add_pmu(_parse_state, list, pmu->name, terms, true, false))
->>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
->>> index 6cdbee8a12e7..1a35915edf68 100644
->>> --- a/tools/perf/util/pmu.c
->>> +++ b/tools/perf/util/pmu.c
->>> @@ -945,6 +945,18 @@ perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
->>>       return NULL;
->>>   }
->>> +char * __weak
->>> +pmu_find_real_name(const char *name)
->>> +{
->>> +    return (char *)name;
->>> +}
->>> +
->>> +char * __weak
->>> +pmu_find_alias_name(const char *name __maybe_unused)
->>> +{
->>> +    return NULL;
->>> +}
->>> +
->>>   static int pmu_max_precise(const char *name)
->>>   {
->>>       char path[PATH_MAX];
->>> @@ -958,13 +970,15 @@ static int pmu_max_precise(const char *name)
->>>       return max_precise;
->>>   }
->>> -static struct perf_pmu *pmu_lookup(const char *name)
->>> +static struct perf_pmu *pmu_lookup(const char *lookup_name)
->>>   {
->>>       struct perf_pmu *pmu;
->>>       LIST_HEAD(format);
->>>       LIST_HEAD(aliases);
->>>       __u32 type;
->>> +    char *name = pmu_find_real_name(lookup_name);
->>>       bool is_hybrid = perf_pmu__hybrid_mounted(name);
->>> +    char *alias_name;
->>>       /*
->>>        * Check pmu name for hybrid and the pmu may be invalid in sysfs
->>> @@ -995,6 +1009,16 @@ static struct perf_pmu *pmu_lookup(const char *name)
->>>       pmu->cpus = pmu_cpumask(name);
->>>       pmu->name = strdup(name);
->>> +    if (!pmu->name)
->>> +        goto err;
->>> +
->>> +    alias_name = pmu_find_alias_name(name);
->>> +    if (alias_name) {
->>> +        pmu->alias_name = strdup(alias_name);
->>> +        if (!pmu->alias_name)
->>> +            goto err;
->>> +    }
->>> +
->>>       pmu->type = type;
->>>       pmu->is_uncore = pmu_is_uncore(name);
->>>       if (pmu->is_uncore)
->>> @@ -1017,15 +1041,22 @@ static struct perf_pmu *pmu_lookup(const char *name)
->>>       pmu->default_config = perf_pmu__get_default_config(pmu);
->>>       return pmu;
->>> +err:
->>> +    if (pmu->name)
->>> +        free(pmu->name);
->>> +    free(pmu);
->>> +    return NULL;
->>>   }
->>>   static struct perf_pmu *pmu_find(const char *name)
->>>   {
->>>       struct perf_pmu *pmu;
->>> -    list_for_each_entry(pmu, &pmus, list)
->>> -        if (!strcmp(pmu->name, name))
->>> +    list_for_each_entry(pmu, &pmus, list) {
->>> +        if (!strcmp(pmu->name, name) ||
->>> +            (pmu->alias_name && !strcmp(pmu->alias_name, name)))
->>>               return pmu;
->>> +    }
->>>       return NULL;
->>>   }
->>> @@ -1919,6 +1950,9 @@ bool perf_pmu__has_hybrid(void)
->>>   int perf_pmu__match(char *pattern, char *name, char *tok)
->>>   {
->>> +    if (!name)
->>> +        return -1;
->>> +
->>>       if (fnmatch(pattern, name, 0))
->>>           return -1;
->>> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
->>> index 033e8211c025..6b122f97acf3 100644
->>> --- a/tools/perf/util/pmu.h
->>> +++ b/tools/perf/util/pmu.h
->>> @@ -21,6 +21,7 @@ enum {
->>>   #define PERF_PMU_FORMAT_BITS 64
->>>   #define EVENT_SOURCE_DEVICE_PATH "/bus/event_source/devices/"
->>>   #define CPUS_TEMPLATE_CPU    "%s/bus/event_source/devices/%s/cpus"
->>> +#define MAX_PMU_NAME_LEN 128
->>>   struct perf_event_attr;
->>> @@ -32,6 +33,7 @@ struct perf_pmu_caps {
->>>   struct perf_pmu {
->>>       char *name;
->>> +    char *alias_name;
->>>       char *id;
->>>       __u32 type;
->>>       bool selectable;
->>> @@ -136,4 +138,7 @@ void perf_pmu__warn_invalid_config(struct perf_pmu *pmu, __u64 config,
->>>   bool perf_pmu__has_hybrid(void);
->>>   int perf_pmu__match(char *pattern, char *name, char *tok);
->>> +char *pmu_find_real_name(const char *name);
->>> +char *pmu_find_alias_name(const char *name);
->>> +
->>>   #endif /* __PMU_H */
->>> -- 
->>> 2.17.1
+- Arnaldo 
