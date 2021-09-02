@@ -2,65 +2,66 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC05EC432BE
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Sep 2021 12:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF002C432BE
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Sep 2021 13:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CABF3610D2
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Sep 2021 12:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FA1D610F7
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Sep 2021 13:00:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234098AbhIBMqf (ORCPT
+        id S1344882AbhIBNBI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Sep 2021 08:46:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52662 "EHLO
+        Thu, 2 Sep 2021 09:01:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344508AbhIBMqe (ORCPT
+        with ESMTP id S1344837AbhIBNBI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Sep 2021 08:46:34 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD047C061575
-        for <linux-perf-users@vger.kernel.org>; Thu,  2 Sep 2021 05:45:35 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id d17so1094984plr.12
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 Sep 2021 05:45:35 -0700 (PDT)
+        Thu, 2 Sep 2021 09:01:08 -0400
+Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 539F5C061575;
+        Thu,  2 Sep 2021 06:00:10 -0700 (PDT)
+Received: by mail-qt1-x82b.google.com with SMTP id g11so1397444qtk.5;
+        Thu, 02 Sep 2021 06:00:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=aLUCaxfHoqaYw4dc2BPnEWZ4Nj1yQ7MkEOLJcpw995o=;
-        b=pRDMNEmiII3b8vVMf6cC55QX+Rhpnv2tcvRa9eaLtVUbY+dipRcupJvD96OeOfBIcH
-         VEckmb5wWhnU/Gn7K4EKCJlmRxzhn4p++hfMqzbKYLlVJ8Yo0NTIPJqgXp/GvaY0nR/W
-         Pm24e76co7SMNlD/02EIWaT2uC1lrf1ZYbp4LJHT2MoRLfvmSTVVJTh4cD3g4whWmzMW
-         KrXPHbfsx9B2mJXtmUf2YxEJZkKEyUWE/WnNT5WeKNtiNxHqaX846sAxIabLhfvg6zT8
-         mGUsGlMcYJR9Yb4RQx5n2HMbdUoyp1bvTFle96hvwU3RrpPIKWuZGEWAxCQRTSU/3OpQ
-         bNHA==
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:user-agent:in-reply-to:references
+         :message-id:mime-version:content-transfer-encoding;
+        bh=x+AdKYfLS9gT5WYJ+/3I2JYeGx2UYT4j4GN/VwqgiDA=;
+        b=o8414Dn50uOcxjeLrFnHQAKeFhImw3kIzv22tJEnODvDa4fPJD3olcX5TDLeLnLAhg
+         PQ1Ins/gsDK1SPGH9FqkuZ1JgDsmEvhF3k00pXitjTZFBFRWznaCWuGgeiNe9jFq+7wz
+         fBMQ1e4lVu7kWN5ONmYXJwKroZQQhuhX46yN6cGmJCWQ23k1r7UACscXIXspUnrD3hTi
+         GuRpAPksxUtCy1ba43dpphMiuKe21O2Ak5xceFmDfNnXLCrCV+IINpIrYqjek7nSDRtA
+         Np/ZZgnzmE8I5i1wHEU+5eD3bVFg5VsdJLyfg9G8NHPzMSaIFiRcZ2O0gI9VtOEKPUih
+         x4Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=aLUCaxfHoqaYw4dc2BPnEWZ4Nj1yQ7MkEOLJcpw995o=;
-        b=V39voxRO9aoVN+s+TOr36XJ+If0WbWa8oCEHttH5WOoLiGZ1NWoq8KCSmvwX4tWUxb
-         2KiM+6rRF4O7hdX5SynhR8PrJm5estCyoj1iUH4ZTigjgOeMsh4kYygT0buz31F3niQu
-         yi39zsysT4jMIPdwiwMPDuGPMmoPYzUSNgpXR/sE7/C6QXENaZbaQqjSm6diyMK9DlI4
-         6efevnkskKPKHzLjOMiPtz243nnMFtZJkMl2o1yMtYLSBDixj7fJGXEGQlcWTmaCt6XM
-         8HQM58w4uDO3KiTb/MtvHsZn1crrS9jQDKKjtj8toDciZI/mAEjjqcrWFBpe9V/dWZrr
-         it+g==
-X-Gm-Message-State: AOAM532aTuBYouzY7QGmUrNLt+M6xYUgkCV3SD0E2FFxbPBg0TYIGKiC
-        zgU/n3P/cqpCRRxJIH1x9J7xmQ==
-X-Google-Smtp-Source: ABdhPJxvnnsb9uBsZrCGXpIlWksIuIjmbrcDWBBd8+sJmXUkAzCqvtsV38cL+n+ih00t9/6e4/C/JA==
-X-Received: by 2002:a17:902:724b:b0:131:ab33:1e4e with SMTP id c11-20020a170902724b00b00131ab331e4emr2779233pll.12.1630586735126;
-        Thu, 02 Sep 2021 05:45:35 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([213.173.35.225])
-        by smtp.gmail.com with ESMTPSA id s192sm2763072pgc.23.2021.09.02.05.45.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Sep 2021 05:45:34 -0700 (PDT)
-Date:   Thu, 2 Sep 2021 20:45:29 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     James Clark <james.clark@arm.com>, mathieu.poirier@linaro.org,
+        h=x-gm-message-state:date:from:to:cc:subject:user-agent:in-reply-to
+         :references:message-id:mime-version:content-transfer-encoding;
+        bh=x+AdKYfLS9gT5WYJ+/3I2JYeGx2UYT4j4GN/VwqgiDA=;
+        b=VL81kyCL7+trCKZRQteNK30NSqUIrcKukDo/tn2wKt3ikekoYuJO3igexFwyxTiVn0
+         TznhwoW/6+Q+J8ffgdd/EVVdcq+MLTUdQp8e4MI554vtvYxEAGDzxlpEL3lwvEch0Zv1
+         w37YHNAy80K3t+yEYCpidonnB/g+dPUp9iRxuBHRw+u+MMZhhENaONI0043ZohjqfYYt
+         En1CAM7FjcAWhKicFDEDAVBY22ieDhjkUYIa6SIxqhrtFyCMtM7B3wb1wEbYhctOglEg
+         TJ+FVAlM/PhA2OQen1fouziuQXKKVDAC8MaDA7OUk7V3WxAZi3GpINICXgHlRlR0ZHBK
+         UpUQ==
+X-Gm-Message-State: AOAM530bGUC5MRqR5R6W0vCFS04ZdHxAnKjxDKncQWqABrLELUEQiW6K
+        7MUX4tR/bOB6v1enZxfNFow=
+X-Google-Smtp-Source: ABdhPJykUoUEFCgvE/svMKUSpLP7SjXCDNgcB2TOqzY49Ef641MRjV+dLI3R/t8ZvyYvWwiIFO99OQ==
+X-Received: by 2002:ac8:7ca3:: with SMTP id z3mr2799229qtv.109.1630587609377;
+        Thu, 02 Sep 2021 06:00:09 -0700 (PDT)
+Received: from [127.0.0.1] ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id t8sm977226qtn.37.2021.09.02.06.00.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Sep 2021 06:00:08 -0700 (PDT)
+Date:   Thu, 02 Sep 2021 10:00:03 -0300
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+To:     Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     James Clark <james.clark@arm.com>, mathieu.poirier@linaro.org,
         coresight@lists.linaro.org, linux-perf-users@vger.kernel.org,
         mike.leach@linaro.org, suzuki.poulose@arm.com,
         Peter Zijlstra <peterz@infradead.org>,
@@ -70,123 +71,81 @@ Cc:     James Clark <james.clark@arm.com>, mathieu.poirier@linaro.org,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf build: Report failure for testing feature
- libopencsd
-Message-ID: <20210902124529.GH303522@leoy-ThinkPad-X240s>
-References: <20210902081800.550016-1-leo.yan@linaro.org>
- <YTDB/VuANx5c+5sk@kernel.org>
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2=5D_perf_build=3A_Report_fa?= =?US-ASCII?Q?ilure_for_testing_feature_libopencsd?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20210902124529.GH303522@leoy-ThinkPad-X240s>
+References: <20210902081800.550016-1-leo.yan@linaro.org> <YTDB/VuANx5c+5sk@kernel.org> <20210902124529.GH303522@leoy-ThinkPad-X240s>
+Message-ID: <BBAFF70C-3E2B-4AFC-8229-857ED5BA15CC@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YTDB/VuANx5c+5sk@kernel.org>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 02, 2021 at 09:22:21AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Sep 02, 2021 at 04:18:00PM +0800, Leo Yan escreveu:
-> > When build perf tool with passing option 'CORESIGHT=1' explicitly, if
-> > the feature test fails for library libopencsd, the build doesn't
-> > complain the feature failure and continue to build the tool with
-> > disabling the CoreSight feature insteadly.
-> > 
-> > This patch changes the building behaviour, when build perf tool with the
-> > option 'CORESIGHT=1' and detect the failure for testing feature
-> > libopencsd, the build process will be aborted and it shows the complaint
-> > info.
-> 
-> Thanks, added some committer notes to show that it now works:
-> 
-> commit 8fb36b1f54873870262810d3db10526559e1d6c2
-> Author: Leo Yan <leo.yan@linaro.org>
-> Date:   Thu Sep 2 16:18:00 2021 +0800
-> 
->     perf build: Report failure for testing feature libopencsd
->     
->     When build perf tool with passing option 'CORESIGHT=1' explicitly, if
->     the feature test fails for library libopencsd, the build doesn't
->     complain the feature failure and continue to build the tool with
->     disabling the CoreSight feature insteadly.
->     
->     This patch changes the building behaviour, when build perf tool with the
->     option 'CORESIGHT=1' and detect the failure for testing feature
->     libopencsd, the build process will be aborted and it shows the complaint
->     info.
->     
->     Committer testing:
->     
->     First make sure there is no opencsd library installed:
->     
->       $ rpm -qa | grep -i csd
->       $ sudo rm -rf `find /usr/local -name "*csd*"`
->       $ find /usr/local -name "*csd*"
->       $
->     
->     Then cleanup the perf build output directory:
->     
->       $ rm -rf /tmp/build/perf ; mkdir -p /tmp/build/perf ;
->       $
->     
->     And try to build explicitely asking for coresight:
->     
->       $ make O=/tmp/build/perf CORESIGHT=1 O=/tmp/build/perf -C tools/perf install-bin
 
-The build command contains duplicate 'O=/tmp/build/perf'.
 
->       make: Entering directory '/var/home/acme/git/perf/tools/perf'
->         BUILD:   Doing 'make -j24' parallel build
->         HOSTCC  /tmp/build/perf/fixdep.o
->         HOSTLD  /tmp/build/perf/fixdep-in.o
->         LINK    /tmp/build/perf/fixdep
->       Makefile.config:493: *** Error: No libopencsd library found or the version is not up-to-date. Please install recent libopencsd to build with CORESIGHT=1.  Stop.
->       make[1]: *** [Makefile.perf:238: sub-make] Error 2
->       make: *** [Makefile:113: install-bin] Error 2
->       make: Leaving directory '/var/home/acme/git/perf/tools/perf'
->       $
->     
->     Now install the opencsd library present in Fedora 34:
->     
->       $ sudo dnf install opencsd-devel
->       <SNIP>
->       Installed:
->         opencsd-1.0.0-1.fc34.x86_64 opencsd-devel-1.0.0-1.fc34.x86_64
->       Complete!
->       $
->     
->     Try again building with coresight:
->     
->       $ make O=/tmp/build/perf CORESIGHT=1 O=/tmp/build/perf -C tools/perf install-bin
->       make: Entering directory '/var/home/acme/git/perf/tools/perf'
->         BUILD:   Doing 'make -j24' parallel build
->       Makefile.config:493: *** Error: No libopencsd library found or the version is not up-to-date. Please install recent libopencsd to build with CORESIGHT=1.  Stop.
->       make[1]: *** [Makefile.perf:238: sub-make] Error 2
->       make: *** [Makefile:113: install-bin] Error 2
->       make: Leaving directory '/var/home/acme/git/perf/tools/perf'
->       $
->     
->     Since Fedora 34 is pretty recent, one assumes we need to get it from its
->     upstream git repository, use rpm to find where that is:
->     
->       $ rpm -q --qf "%{URL}\n" opencsd
->       https://github.com/Linaro/OpenCSD
->       $
->     
->     Go there, clone the repo, build it and install into /usr/local, then try
->     again:
->     
->       $ cd ~acme/git/perf
->       $ make O=/tmp/build/perf VF=1 CORESIGHT=1 O=/tmp/build/perf -C tools/perf install-bin | grep -i opencsd
->       ...                    libopencsd: [ on  ]
->         PERF_VERSION = 5.14.g454719f67a3d
->       $ export LD_LIBRARY_PATH=/usr/local/lib
->       $ ldd ~/bin/perf | grep opencsd
->             libopencsd_c_api.so.1 => /usr/local/lib/libopencsd_c_api.so.1 (0x00007f28f78a4000)
->             libopencsd.so.1 => /usr/local/lib/libopencsd.so.1 (0x00007f28f6a2e000)
->       $
->     
->     Now it works.
+On September 2, 2021 9:45:29 AM GMT-03:00, Leo Yan <leo=2Eyan@linaro=2Eorg=
+> wrote:
+>On Thu, Sep 02, 2021 at 09:22:21AM -0300, Arnaldo Carvalho de Melo wrote:
+>> Em Thu, Sep 02, 2021 at 04:18:00PM +0800, Leo Yan escreveu:
+>> > When build perf tool with passing option 'CORESIGHT=3D1' explicitly, =
+if
+>> > the feature test fails for library libopencsd, the build doesn't
+>> > complain the feature failure and continue to build the tool with
+>> > disabling the CoreSight feature insteadly=2E
+>> >=20
+>> > This patch changes the building behaviour, when build perf tool with =
+the
+>> > option 'CORESIGHT=3D1' and detect the failure for testing feature
+>> > libopencsd, the build process will be aborted and it shows the compla=
+int
+>> > info=2E
+>>=20
+>> Thanks, added some committer notes to show that it now works:
+>>=20
+>> commit 8fb36b1f54873870262810d3db10526559e1d6c2
+>> Author: Leo Yan <leo=2Eyan@linaro=2Eorg>
+>> Date:   Thu Sep 2 16:18:00 2021 +0800
+>>=20
+>>     perf build: Report failure for testing feature libopencsd
+>>    =20
+>>     When build perf tool with passing option 'CORESIGHT=3D1' explicitly=
+, if
+>>     the feature test fails for library libopencsd, the build doesn't
+>>     complain the feature failure and continue to build the tool with
+>>     disabling the CoreSight feature insteadly=2E
+>>    =20
+>>     This patch changes the building behaviour, when build perf tool wit=
+h the
+>>     option 'CORESIGHT=3D1' and detect the failure for testing feature
+>>     libopencsd, the build process will be aborted and it shows the comp=
+laint
+>>     info=2E
+>>    =20
+>>     Committer testing:
+>>    =20
+>>     First make sure there is no opencsd library installed:
+>>    =20
+>>       $ rpm -qa | grep -i csd
+>>       $ sudo rm -rf `find /usr/local -name "*csd*"`
+>>       $ find /usr/local -name "*csd*"
+>>       $
+>>    =20
+>>     Then cleanup the perf build output directory:
+>>    =20
+>>       $ rm -rf /tmp/build/perf ; mkdir -p /tmp/build/perf ;
+>>       $
+>>    =20
+>>     And try to build explicitely asking for coresight:
+>>    =20
+>>       $ make O=3D/tmp/build/perf CORESIGHT=3D1 O=3D/tmp/build/perf -C t=
+ools/perf install-bin
+>
+>The build command contains duplicate 'O=3D/tmp/build/perf'=2E
 
-Good to know the very detailed steps.  Thanks a lot for writing up
-this!
+Oops, I'll fix it, thanks=2E
 
-Leo
+- Arnaldo
+
