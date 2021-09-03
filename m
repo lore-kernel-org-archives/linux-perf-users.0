@@ -2,475 +2,82 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A27EC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Sep 2021 11:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE3FC433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Sep 2021 11:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6999261058
-	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Sep 2021 11:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55D60610A1
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Sep 2021 11:52:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235313AbhICLxG (ORCPT
+        id S1348736AbhICLxk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 3 Sep 2021 07:53:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60130 "EHLO mail.kernel.org"
+        Fri, 3 Sep 2021 07:53:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235208AbhICLxE (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 3 Sep 2021 07:53:04 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A46AA60FDC;
-        Fri,  3 Sep 2021 11:52:04 +0000 (UTC)
+        id S1348327AbhICLxi (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 3 Sep 2021 07:53:38 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E825B61051;
+        Fri,  3 Sep 2021 11:52:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630669925;
-        bh=JLH7380KKsaPspHQdBWeNXmLd5/fcjI+qAeG3cuRSLU=;
+        s=k20201202; t=1630669959;
+        bh=5uV5HsdHqpi6ab5zduY3M2CmfjbUKO0yFISfC5Acogk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vA2R4tGab/TRWqao6HM6BTVO+SjZPzx+1+0SbDMc5sSqiwPPp2QLvzNlLf1ckNKqR
-         PYHNcmYrFvG8Oq+ticu+G3Kci9g0owR6Ih7aTLGiv7reiTtBvDulFCjP1WAc4isfIj
-         0An/lFXoN1ZFTCS3bs+OfvDXZc3AeooxKqNy4I+v6BZCYliB+E03ERJI33kUYx8XWy
-         IqJ/EUx7/8ILNKLE/gA5rwExfhssDQryZKJ6/HU9yb95urbfa4d+awZccu/vHX9/mW
-         BsLxPo3JlG2udVtP4Q1G5qHUBNeK4+iRSnncrubQk49hLJaQr66//SC0XesfGfMdei
-         zk38YC7rBmIAA==
+        b=ePxiu9eCdu1F10nH37TEiX2xziCgffkmaZ4qh2nKO+PArT6cao1yRiZsaMz96WfJt
+         zVKcrh3nfkVxZVMU237XD5kNuZy/VoFfPVpTxaEgYTpGeaXhNmxbEgGfAvZpEA+PcU
+         WifnpEU8ioLMbcEN5vfqNTBWd3btCAJQCwoVl8V4a8Mz3g5ckvPY/krskz1qbaUALz
+         NNROpimLHWItypKvwzHIfx8w7kyy3UhtSpeMyQu6JLzHVX0Kx5uL9VJHfu4T2z7lNE
+         o4hrg1JYMHeI+7rvqFjgshs0v5Z6p0lRbZMT6MNxAzTM/8azrIjhJ8rAjmIZYSEwxq
+         fouPOfMBVNyaQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 29DDB4007E; Fri,  3 Sep 2021 08:52:02 -0300 (-03)
-Date:   Fri, 3 Sep 2021 08:52:02 -0300
+        id B958C400FE; Fri,  3 Sep 2021 08:52:36 -0300 (-03)
+Date:   Fri, 3 Sep 2021 08:52:36 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com, rickyman7@gmail.com,
-        john.garry@huawei.com, Kan Liang <kan.liang@linux.intel.com>
-Subject: Re: [PATCH v7 1/2] perf pmu: Add PMU alias support
-Message-ID: <YTIMYlsUD0cqAYUA@kernel.org>
-References: <20210902065955.1299-1-yao.jin@linux.intel.com>
- <20210902065955.1299-2-yao.jin@linux.intel.com>
- <YTIJLyL4Ba7wuZqs@kernel.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     James Clark <james.clark@arm.com>, mathieu.poirier@linaro.org,
+        leo.yan@linaro.org, coresight@lists.linaro.org,
+        linux-perf-users@vger.kernel.org, mike.leach@linaro.org,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 8/9] perf cs-etm: Print the decoder name
+Message-ID: <YTIMhNAAtm/s2gjV@kernel.org>
+References: <20210806134109.1182235-1-james.clark@arm.com>
+ <20210806134109.1182235-9-james.clark@arm.com>
+ <de23e803-3840-501e-87a8-39eed7ba434b@arm.com>
+ <YTIElk3Zv3VNJU+q@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YTIJLyL4Ba7wuZqs@kernel.org>
+In-Reply-To: <YTIElk3Zv3VNJU+q@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Sep 03, 2021 at 08:38:23AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Thu, Sep 02, 2021 at 02:59:54PM +0800, Jin Yao escreveu:
-> > From: Kan Liang <kan.liang@linux.intel.com>
+Em Fri, Sep 03, 2021 at 08:18:46AM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Fri, Sep 03, 2021 at 10:17:25AM +0100, Suzuki K Poulose escreveu:
+> > On 06/08/2021 14:41, James Clark wrote:
+> > > Use the real name of the decoder instead of hard-coding "ETM" to avoid
+> > > confusion when the trace is ETE. This also now distinguishes between
+> > > ETMv3 and ETMv4.
+> > > 
+> > > Reviewed-by: Leo Yan <leo.yan@linaro.org>
+> > > Signed-off-by: James Clark <james.clark@arm.com>
 > > 
-> > A perf uncore PMU may have two PMU names, a real name and an alias. The
-> > alias is exported at /sys/bus/event_source/devices/uncore_*/alias.
-> > The perf tool should support the alias as well.
-> > 
-> > Add alias_name in the struct perf_pmu to store the alias. For the PMU
-> > which doesn't have an alias. It's NULL.
-> > 
-> > Introduce two X86 specific functions to retrieve the real name and the
-> > alias separately.
-> > 
-> > Only go through the sysfs to retrieve the mapping between the real name
-> > and the alias once. The result is cached in a list, uncore_pmu_list.
-> > 
-> > Nothing changed for the other ARCHs.
-> > 
-> > With the patch, the perf tool can monitor the PMU with either the real
-> > name or the alias.
-> > 
-> > Use the real name,
-> >  $ perf stat -e uncore_cha_2/event=1/ -x,
-> >    4044879584,,uncore_cha_2/event=1/,2528059205,100.00,,
-> > 
-> > Use the alias,
-> >  $ perf stat -e uncore_type_0_2/event=1/ -x,
-> >    3659675336,,uncore_type_0_2/event=1/,2287306455,100.00,,
-> > 
-> > Co-developed-by: Jin Yao <yao.jin@linux.intel.com>
-> > Co-developed-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-> > Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> > Reviewed-by: Andi Kleen <ak@linux.intel.com>
-> > ---
-> > v7:
-> >  - Create 'struct perf_pmu_alias_name' constructor/destructor.
-> >  - Return '-errno' if opendir() is failed.
+> > Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 > 
-> Thanks for addressing those, I did a v8 here with the changes described
-> in my Committer notes below, please holler if you disagree.
+> Thanks, collected the Reviewed-by.
 
-Please take a look at my tmp.perf/core branch, it has the patch below
-and the test one plus what I'm about to push to Linus.
-
-- Arnaldo
- 
-> commit 13d60ba0738b0532edab3e1492b2005d36ba0802
-> Author: Kan Liang <kan.liang@linux.intel.com>
-> Date:   Thu Sep 2 14:59:54 2021 +0800
-> 
->     perf pmu: Add PMU alias support
->     
->     A perf uncore PMU may have two PMU names, a real name and an alias. The
->     alias is exported at /sys/bus/event_source/devices/uncore_*/alias.
->     The perf tool should support the alias as well.
->     
->     Add alias_name in the struct perf_pmu to store the alias. For the PMU
->     which doesn't have an alias. It's NULL.
->     
->     Introduce two X86 specific functions to retrieve the real name and the
->     alias separately.
->     
->     Only go through the sysfs to retrieve the mapping between the real name
->     and the alias once. The result is cached in a list, uncore_pmu_list.
->     
->     Nothing changed for the other ARCHs.
->     
->     With the patch, the perf tool can monitor the PMU with either the real
->     name or the alias.
->     
->     Use the real name,
->      $ perf stat -e uncore_cha_2/event=1/ -x,
->        4044879584,,uncore_cha_2/event=1/,2528059205,100.00,,
->     
->     Use the alias,
->      $ perf stat -e uncore_type_0_2/event=1/ -x,
->        3659675336,,uncore_type_0_2/event=1/,2287306455,100.00,,
->     
->     Committer notes:
->     
->     Rename 'struct perf_pmu_alias_name' to 'pmu_alias', the 'perf_' prefix
->     should be used for libperf, things inside just tools/perf/ are being
->     moved away from that prefix.
->     
->     Also 'pmu_alias' is shorter and reflects the abstraction.
->     
->     Also don't use 'pmu' as the name for variables for that type, we should
->     use that for the 'struct perf_pmu' variables, avoiding confusion. Use
->     'pmu_alias' for 'struct pmu_alias' variables.
->     
->     Co-developed-by: Jin Yao <yao.jin@linux.intel.com>
->     Co-developed-by: Arnaldo Carvalho de Melo <acme@kernel.org>
->     Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->     Reviewed-by: Andi Kleen <ak@linux.intel.com>
->     Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
->     Cc: Jiri Olsa <jolsa@kernel.org>
->     Cc: John Garry <john.garry@huawei.com>
->     Cc: Peter Zijlstra <peterz@infradead.org>
->     Cc: Riccardo Mancini <rickyman7@gmail.com>
->     Link: http://lore.kernel.org/lkml/20210902065955.1299-2-yao.jin@linux.intel.com
->     Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
->     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
-> index d48d608517fd2732..74d69db1ea99df17 100644
-> --- a/tools/perf/arch/x86/util/pmu.c
-> +++ b/tools/perf/arch/x86/util/pmu.c
-> @@ -1,12 +1,30 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <string.h>
-> -
-> +#include <stdio.h>
-> +#include <sys/types.h>
-> +#include <dirent.h>
-> +#include <fcntl.h>
->  #include <linux/stddef.h>
->  #include <linux/perf_event.h>
-> +#include <linux/zalloc.h>
-> +#include <api/fs/fs.h>
-> +#include <errno.h>
->  
->  #include "../../../util/intel-pt.h"
->  #include "../../../util/intel-bts.h"
->  #include "../../../util/pmu.h"
-> +#include "../../../util/fncache.h"
-> +
-> +#define TEMPLATE_ALIAS	"%s/bus/event_source/devices/%s/alias"
-> +
-> +struct pmu_alias {
-> +	char *name;
-> +	char *alias;
-> +	struct list_head list;
-> +};
-> +
-> +static LIST_HEAD(pmu_alias_name_list);
-> +static bool cached_list;
->  
->  struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
->  {
-> @@ -18,3 +36,138 @@ struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu __mayb
->  #endif
->  	return NULL;
->  }
-> +
-> +static void pmu_alias__delete(struct pmu_alias *pmu_alias)
-> +{
-> +	if (!pmu_alias)
-> +		return;
-> +
-> +	zfree(&pmu_alias->name);
-> +	zfree(&pmu_alias->alias);
-> +	free(pmu_alias);
-> +}
-> +
-> +static struct pmu_alias *pmu_alias__new(char *name, char *alias)
-> +{
-> +	struct pmu_alias *pmu_alias = zalloc(sizeof(*pmu_alias));
-> +
-> +	if (pmu_alias) {
-> +		pmu_alias->name = strdup(name);
-> +		if (!pmu_alias->name)
-> +			goto out_delete;
-> +
-> +		pmu_alias->alias = strdup(alias);
-> +		if (!pmu_alias->alias)
-> +			goto out_delete;
-> +	}
-> +	return pmu_alias;
-> +
-> +out_delete:
-> +	pmu_alias__delete(pmu_alias);
-> +	return NULL;
-> +}
-> +
-> +static int setup_pmu_alias_list(void)
-> +{
-> +	char path[PATH_MAX];
-> +	DIR *dir;
-> +	struct dirent *dent;
-> +	const char *sysfs = sysfs__mountpoint();
-> +	struct pmu_alias *pmu_alias;
-> +	char buf[MAX_PMU_NAME_LEN];
-> +	FILE *file;
-> +	int ret = -ENOMEM;
-> +
-> +	if (!sysfs)
-> +		return -1;
-> +
-> +	snprintf(path, PATH_MAX,
-> +		 "%s" EVENT_SOURCE_DEVICE_PATH, sysfs);
-> +
-> +	dir = opendir(path);
-> +	if (!dir)
-> +		return -errno;
-> +
-> +	while ((dent = readdir(dir))) {
-> +		if (!strcmp(dent->d_name, ".") ||
-> +		    !strcmp(dent->d_name, ".."))
-> +			continue;
-> +
-> +		snprintf(path, PATH_MAX,
-> +			 TEMPLATE_ALIAS, sysfs, dent->d_name);
-> +
-> +		if (!file_available(path))
-> +			continue;
-> +
-> +		file = fopen(path, "r");
-> +		if (!file)
-> +			continue;
-> +
-> +		if (!fgets(buf, sizeof(buf), file)) {
-> +			fclose(file);
-> +			continue;
-> +		}
-> +
-> +		fclose(file);
-> +
-> +		/* Remove the last '\n' */
-> +		buf[strlen(buf) - 1] = 0;
-> +
-> +		pmu_alias = pmu_alias__new(dent->d_name, buf);
-> +		if (!pmu_alias)
-> +			goto close_dir;
-> +
-> +		list_add_tail(&pmu_alias->list, &pmu_alias_name_list);
-> +	}
-> +
-> +	ret = 0;
-> +
-> +close_dir:
-> +	closedir(dir);
-> +	return ret;
-> +}
-> +
-> +static char *__pmu_find_real_name(const char *name)
-> +{
-> +	struct pmu_alias *pmu_alias;
-> +
-> +	list_for_each_entry(pmu_alias, &pmu_alias_name_list, list) {
-> +		if (!strcmp(name, pmu_alias->alias))
-> +			return pmu_alias->name;
-> +	}
-> +
-> +	return (char *)name;
-> +}
-> +
-> +char *pmu_find_real_name(const char *name)
-> +{
-> +	if (cached_list)
-> +		return __pmu_find_real_name(name);
-> +
-> +	setup_pmu_alias_list();
-> +	cached_list = true;
-> +
-> +	return __pmu_find_real_name(name);
-> +}
-> +
-> +static char *__pmu_find_alias_name(const char *name)
-> +{
-> +	struct pmu_alias *pmu_alias;
-> +
-> +	list_for_each_entry(pmu_alias, &pmu_alias_name_list, list) {
-> +		if (!strcmp(name, pmu_alias->name))
-> +			return pmu_alias->alias;
-> +	}
-> +	return NULL;
-> +}
-> +
-> +char *pmu_find_alias_name(const char *name)
-> +{
-> +	if (cached_list)
-> +		return __pmu_find_alias_name(name);
-> +
-> +	setup_pmu_alias_list();
-> +	cached_list = true;
-> +
-> +	return __pmu_find_alias_name(name);
-> +}
-> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-> index 9321bd0e2f76321a..d94e48e1ff9b22dd 100644
-> --- a/tools/perf/util/parse-events.y
-> +++ b/tools/perf/util/parse-events.y
-> @@ -316,7 +316,8 @@ event_pmu_name opt_pmu_config
->  			if (!strncmp(name, "uncore_", 7) &&
->  			    strncmp($1, "uncore_", 7))
->  				name += 7;
-> -			if (!perf_pmu__match(pattern, name, $1)) {
-> +			if (!perf_pmu__match(pattern, name, $1) ||
-> +			    !perf_pmu__match(pattern, pmu->alias_name, $1)) {
->  				if (parse_events_copy_term_list(orig_terms, &terms))
->  					CLEANUP_YYABORT;
->  				if (!parse_events_add_pmu(_parse_state, list, pmu->name, terms, true, false))
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 5f486ccb6fe67b58..bdabd62170d2cf1f 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -945,6 +945,18 @@ perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
->  	return NULL;
->  }
->  
-> +char * __weak
-> +pmu_find_real_name(const char *name)
-> +{
-> +	return (char *)name;
-> +}
-> +
-> +char * __weak
-> +pmu_find_alias_name(const char *name __maybe_unused)
-> +{
-> +	return NULL;
-> +}
-> +
->  static int pmu_max_precise(const char *name)
->  {
->  	char path[PATH_MAX];
-> @@ -958,13 +970,15 @@ static int pmu_max_precise(const char *name)
->  	return max_precise;
->  }
->  
-> -static struct perf_pmu *pmu_lookup(const char *name)
-> +static struct perf_pmu *pmu_lookup(const char *lookup_name)
->  {
->  	struct perf_pmu *pmu;
->  	LIST_HEAD(format);
->  	LIST_HEAD(aliases);
->  	__u32 type;
-> +	char *name = pmu_find_real_name(lookup_name);
->  	bool is_hybrid = perf_pmu__hybrid_mounted(name);
-> +	char *alias_name;
->  
->  	/*
->  	 * Check pmu name for hybrid and the pmu may be invalid in sysfs
-> @@ -995,6 +1009,16 @@ static struct perf_pmu *pmu_lookup(const char *name)
->  
->  	pmu->cpus = pmu_cpumask(name);
->  	pmu->name = strdup(name);
-> +	if (!pmu->name)
-> +		goto err;
-> +
-> +	alias_name = pmu_find_alias_name(name);
-> +	if (alias_name) {
-> +		pmu->alias_name = strdup(alias_name);
-> +		if (!pmu->alias_name)
-> +			goto err;
-> +	}
-> +
->  	pmu->type = type;
->  	pmu->is_uncore = pmu_is_uncore(name);
->  	if (pmu->is_uncore)
-> @@ -1017,15 +1041,22 @@ static struct perf_pmu *pmu_lookup(const char *name)
->  	pmu->default_config = perf_pmu__get_default_config(pmu);
->  
->  	return pmu;
-> +err:
-> +	if (pmu->name)
-> +		free(pmu->name);
-> +	free(pmu);
-> +	return NULL;
->  }
->  
->  static struct perf_pmu *pmu_find(const char *name)
->  {
->  	struct perf_pmu *pmu;
->  
-> -	list_for_each_entry(pmu, &pmus, list)
-> -		if (!strcmp(pmu->name, name))
-> +	list_for_each_entry(pmu, &pmus, list) {
-> +		if (!strcmp(pmu->name, name) ||
-> +		    (pmu->alias_name && !strcmp(pmu->alias_name, name)))
->  			return pmu;
-> +	}
->  
->  	return NULL;
->  }
-> @@ -1919,6 +1950,9 @@ bool perf_pmu__has_hybrid(void)
->  
->  int perf_pmu__match(char *pattern, char *name, char *tok)
->  {
-> +	if (!name)
-> +		return -1;
-> +
->  	if (fnmatch(pattern, name, 0))
->  		return -1;
->  
-> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-> index 5133bc45603492f7..394898b07fd9874b 100644
-> --- a/tools/perf/util/pmu.h
-> +++ b/tools/perf/util/pmu.h
-> @@ -22,6 +22,7 @@ enum {
->  #define PERF_PMU_FORMAT_BITS 64
->  #define EVENT_SOURCE_DEVICE_PATH "/bus/event_source/devices/"
->  #define CPUS_TEMPLATE_CPU	"%s/bus/event_source/devices/%s/cpus"
-> +#define MAX_PMU_NAME_LEN 128
->  
->  struct perf_event_attr;
->  
-> @@ -33,6 +34,7 @@ struct perf_pmu_caps {
->  
->  struct perf_pmu {
->  	char *name;
-> +	char *alias_name;
->  	char *id;
->  	__u32 type;
->  	bool selectable;
-> @@ -140,4 +142,7 @@ int perf_pmu__match(char *pattern, char *name, char *tok);
->  int perf_pmu__cpus_match(struct perf_pmu *pmu, struct perf_cpu_map *cpus,
->  			 struct perf_cpu_map **mcpus_ptr,
->  			 struct perf_cpu_map **ucpus_ptr);
-> +
-> +char *pmu_find_real_name(const char *name);
-> +char *pmu_find_alias_name(const char *name);
->  #endif /* __PMU_H */
-
--- 
+Everything is in my tmp.perf/core branch now, pending test build in my
+containers.
 
 - Arnaldo
