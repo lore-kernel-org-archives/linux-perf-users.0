@@ -7,34 +7,35 @@ X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC794C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Sep 2021 11:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D61C433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Sep 2021 11:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 841F861057
-	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Sep 2021 11:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CED761057
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Sep 2021 11:18:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235145AbhICLSA (ORCPT
+        id S1349188AbhICLTu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 3 Sep 2021 07:18:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60722 "EHLO mail.kernel.org"
+        Fri, 3 Sep 2021 07:19:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235054AbhICLR7 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 3 Sep 2021 07:17:59 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 361776108E;
-        Fri,  3 Sep 2021 11:16:59 +0000 (UTC)
+        id S1349206AbhICLTs (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 3 Sep 2021 07:19:48 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A3B9861056;
+        Fri,  3 Sep 2021 11:18:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630667819;
-        bh=Cjn7X7A3BpFfVL6dP/OzgR8L7zue/gSjphoKmihKcyE=;
+        s=k20201202; t=1630667928;
+        bh=srUw3/8a9bDyIO1KrzQ9s3Vpff74UdYRjHWRZ0pzbmQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OJYqO6APl2Irus+PJhaKIo8uDvnMM3fTJR77mxpXLPzhFfX4Ma4DdJdcUYuGmdg9z
-         n21b5TFqLeAyYrM7L8tDBj5DOas+hM8OtJZkeryAtaADmJXeES/flV/IIQfEGV1XCU
-         qiSQk2OJTGafE6yaVuf2CO/7ag+KECkjkBcs+LEdiocs8eqbtTYv0ploNuaXhR3O5w
-         gFTyLLTB+o/cH8jtHU5YAJh2B9iQlhyUjUkTxs5z/UHE6H/4Re1XEGfgfsRgevnhRp
-         oALTBt1QQXQnGmRNlx0zW+ZuPOifiSEz+QvdFNy/ebF5iqQtGqoAWlFygkgeUC7SCB
-         CXtOSrWH7AEsA==
+        b=XAr4+/eCBv+FBmPAU8ZcH04uejkm12w4p1f86r9ApaNA6sjBSn2FOK6SeYMcyzILa
+         x4YrLTx0m0B2CDnqOrC35IybMuHCapZiWIMM04J5GbxigG/OUWWQQeVsW/JyoBzVoS
+         tQXzWVJnHq+GRXj1JOZamJVuuTChXOl8BCrJeU9pNgeawRo/CSmisj2dVUr4Qy1+uB
+         R33QkSYmZ9fTTq07+J8Q+6RbMeYaa893spL94Aq4rzOgzLhSta1qB0mvx5SxpncmYi
+         F/k4TvWiHoUsdhIanqWIm5gL3eO1mV1wOJaxb13I8maYJ9uFHvOJyFbAF9dOoP9MSS
+         qh3EDCUL501Eg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id DD28B4034A; Fri,  3 Sep 2021 08:16:56 -0300 (-03)
-Date:   Fri, 3 Sep 2021 08:16:56 -0300
+        id 4B9F24007E; Fri,  3 Sep 2021 08:18:46 -0300 (-03)
+Date:   Fri, 3 Sep 2021 08:18:46 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Suzuki K Poulose <suzuki.poulose@arm.com>
 Cc:     James Clark <james.clark@arm.com>, mathieu.poirier@linaro.org,
@@ -47,44 +48,31 @@ Cc:     James Clark <james.clark@arm.com>, mathieu.poirier@linaro.org,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 7/9] perf cs-etm: Create ETE decoder
-Message-ID: <YTIEKG6Qv6YQwiw3@kernel.org>
+Subject: Re: [PATCH v2 8/9] perf cs-etm: Print the decoder name
+Message-ID: <YTIElk3Zv3VNJU+q@kernel.org>
 References: <20210806134109.1182235-1-james.clark@arm.com>
- <20210806134109.1182235-8-james.clark@arm.com>
- <4da533c0-8da6-00d4-1849-e210e163d326@arm.com>
+ <20210806134109.1182235-9-james.clark@arm.com>
+ <de23e803-3840-501e-87a8-39eed7ba434b@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4da533c0-8da6-00d4-1849-e210e163d326@arm.com>
+In-Reply-To: <de23e803-3840-501e-87a8-39eed7ba434b@arm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Sep 03, 2021 at 10:15:07AM +0100, Suzuki K Poulose escreveu:
+Em Fri, Sep 03, 2021 at 10:17:25AM +0100, Suzuki K Poulose escreveu:
 > On 06/08/2021 14:41, James Clark wrote:
-> > If the magic number indicates ETE instantiate a OCSD_BUILTIN_DCD_ETE
-> > decoder instead of OCSD_BUILTIN_DCD_ETMV4I. ETE is the new trace feature
-> > for Armv9.
+> > Use the real name of the decoder instead of hard-coding "ETM" to avoid
+> > confusion when the trace is ETE. This also now distinguishes between
+> > ETMv3 and ETMv4.
 > > 
-> > Testing performed
-> > =================
-> > 
-> > * Old files with v0 and v1 headers for ETMv4 still open correctly
-> > * New files with new magic number open on new versions of perf
-> > * New files with new magic number fail to open on old versions of perf
-> > * Decoding with the ETE decoder results in the same output as the ETMv4
-> >    decoder as long as there are no new ETE packet types
-> > 
+> > Reviewed-by: Leo Yan <leo.yan@linaro.org>
 > > Signed-off-by: James Clark <james.clark@arm.com>
 > 
-> Changes look good to me with my limited knowledge about the decoder
-> facing code.
-> 
-> FWIW,
-> 
-> Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-Thanks, collected the Acked-by.
+Thanks, collected the Reviewed-by.
 
 - Arnaldo
