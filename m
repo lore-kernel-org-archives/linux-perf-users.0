@@ -2,151 +2,384 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC50C4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Sep 2021 19:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B498C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Sep 2021 02:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5100E61056
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Sep 2021 19:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1A1860E0B
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Sep 2021 02:54:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347381AbhIBT0a (ORCPT
+        id S234355AbhICCz0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Sep 2021 15:26:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33094 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347345AbhIBT01 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Sep 2021 15:26:27 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BEA2C061757
-        for <linux-perf-users@vger.kernel.org>; Thu,  2 Sep 2021 12:25:28 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id bg1so1824015plb.13
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 Sep 2021 12:25:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BnVhNIbGlKGak3XUFpWItnxtP9vjaQcFKKMfs02t0ko=;
-        b=NQO63Zw3lPiXaCe4+R3t5zLirkM1Q+hRzLz250CvZjgasbhHlPfVBnTfR8IrMqbtba
-         YNumR4ljpgTJC1LsUDUIUE7XrkU0yRAl0RuY8IoGD+lj/mhpWayAh0CzwnPF9SOxT5wC
-         0lqbw61jvC2Z2hmv5muSvQ4bk+Aw4mh2Zrq+T9Qtut+eWzNtuCuGE2ihly9IxrPhprLC
-         +TLvYiyEjgtWPXAJwAtgUnz9QVAKZhn745qOkf4ZWbjs0lY2nsl9m1Z2726c6DHJprCl
-         KVRUyFmYB7OHa5fyO/+nKvLXQd6Qemm8PE8DrikGiajmNSlIXYRSalErqeGjT1P/cntY
-         2KrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BnVhNIbGlKGak3XUFpWItnxtP9vjaQcFKKMfs02t0ko=;
-        b=LAdJvkmt2quzNSsT88fg9udjSaiGcg/LX2Q5D1mp6+5m+8dSAaELBR3e/trEjHviu6
-         IKbfUJ1VViDAfXaoFhxRia/IjX3bHD4WgvfYPFNQfpW5lJcvXMm/V38v1ABLhLlY5byK
-         NfZVAAB3EvyS/WEypIM+68GhY3JZ1MtDDTjsHCCfALGRRsUldW53erTr3pkZ8IpIqvp5
-         yKi8ON1FLHmDSFCKPFzQHTkJQtelCLbkcCy9xWanMjF45oEgEKfSFC6qLCig4LqvBmMr
-         3hXmZg1N7baa054CBotcASSGpk6BYOSWJ7D3B/bq6AISWBV+bZP70kQNyPKvZJNGOc65
-         ZEyw==
-X-Gm-Message-State: AOAM533cnw1gCQWZK5HnjeW4qVMIKwytlMH4mI95T9eLmOndnnJkQWZj
-        anQS6FR1abMQt7BoARYdysa7Xw==
-X-Google-Smtp-Source: ABdhPJwnkW8PNY8V3HGOTna3CrVpQ1v3790I+xpRNH1h13oZ4nJKNCeVP71ugrCcBqT1Wu0Kg9GVyw==
-X-Received: by 2002:a17:90a:284e:: with SMTP id p14mr5697668pjf.196.1630610728133;
-        Thu, 02 Sep 2021 12:25:28 -0700 (PDT)
-Received: from p14s (S0106889e681aac74.cg.shawcable.net. [68.147.0.187])
-        by smtp.gmail.com with ESMTPSA id j6sm2976065pfi.220.2021.09.02.12.25.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Sep 2021 12:25:22 -0700 (PDT)
-Date:   Thu, 2 Sep 2021 13:25:20 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-kernel@lists.infradead.org, mike.leach@linaro.org,
-        coresight@lists.linaro.org, James Clark <james.clark@arm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: Re: [PATCH] tools: perf: Report collisions in AUX records
-Message-ID: <20210902192520.GD1078000@p14s>
-References: <20210723124456.3828769-1-suzuki.poulose@arm.com>
- <20210728091219.527886-1-suzuki.poulose@arm.com>
- <20210731013847.GA91194@leoy-ThinkPad-X240s>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210731013847.GA91194@leoy-ThinkPad-X240s>
+        Thu, 2 Sep 2021 22:55:26 -0400
+Received: from mga06.intel.com ([134.134.136.31]:65273 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230499AbhICCz0 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 2 Sep 2021 22:55:26 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10095"; a="280322164"
+X-IronPort-AV: E=Sophos;i="5.85,264,1624345200"; 
+   d="scan'208";a="280322164"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2021 19:54:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,264,1624345200"; 
+   d="scan'208";a="500101861"
+Received: from kbl-ppc.sh.intel.com ([10.239.159.163])
+  by fmsmga008.fm.intel.com with ESMTP; 02 Sep 2021 19:54:23 -0700
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH v2] perf list: Display hybrid pmu events with cpu type
+Date:   Fri,  3 Sep 2021 10:52:39 +0800
+Message-Id: <20210903025239.22754-1-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Jul 31, 2021 at 09:38:47AM +0800, Leo Yan wrote:
-> On Wed, Jul 28, 2021 at 10:12:19AM +0100, Suzuki Kuruppassery Poulose wrote:
-> > Just like the other flags in the AUX records, report a summary
-> > of the Collisions if there were any.
-> > 
-> > Cc: Mike Leach <mike.leach@linaro.org>
-> > Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > Cc: Leo Yan <leo.yan@linaro.org>
-> > Cc: James Clark <james.clark@arm.com>
-> > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Jiri Olsa <jolsa@redhat.com>
-> > Cc: linux-perf-users@vger.kernel.org
-> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> 
-> The change looks good to me:
-> 
-> Reviewed-by: Leo Yan <leo.yan@linaro.org>
+Add a new option '--cputype' to perf-list to display core-only pmu events
+or atom-only pmu events.
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Each hybrid pmu event has been assigned with a pmu name, this patch
+compares the pmu name before listing the result.
 
-> 
-> > ---
-> >  tools/perf/util/events_stats.h | 1 +
-> >  tools/perf/util/session.c      | 9 +++++++++
-> >  2 files changed, 10 insertions(+)
-> > 
-> > diff --git a/tools/perf/util/events_stats.h b/tools/perf/util/events_stats.h
-> > index 3480bafd414b..1b0006092265 100644
-> > --- a/tools/perf/util/events_stats.h
-> > +++ b/tools/perf/util/events_stats.h
-> > @@ -30,6 +30,7 @@ struct events_stats {
-> >  	u64 total_lost_samples;
-> >  	u64 total_aux_lost;
-> >  	u64 total_aux_partial;
-> > +	u64 total_aux_collision;
-> >  	u64 total_invalid_chains;
-> >  	u32 nr_events[PERF_RECORD_HEADER_MAX];
-> >  	u32 nr_lost_warned;
-> > diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> > index 51f727402912..59b6c3fe0d01 100644
-> > --- a/tools/perf/util/session.c
-> > +++ b/tools/perf/util/session.c
-> > @@ -1540,6 +1540,8 @@ static int machines__deliver_event(struct machines *machines,
-> >  				evlist->stats.total_aux_lost += 1;
-> >  			if (event->aux.flags & PERF_AUX_FLAG_PARTIAL)
-> >  				evlist->stats.total_aux_partial += 1;
-> > +			if (event->aux.flags & PERF_AUX_FLAG_COLLISION)
-> > +				evlist->stats.total_aux_collision += 1;
-> >  		}
-> >  		return tool->aux(tool, event, sample, machine);
-> >  	case PERF_RECORD_ITRACE_START:
-> > @@ -1895,6 +1897,13 @@ static void perf_session__warn_about_errors(const struct perf_session *session)
-> >  			    "");
-> >  	}
-> >  
-> > +	if (session->tool->aux == perf_event__process_aux &&
-> > +	    stats->total_aux_collision != 0) {
-> > +		ui__warning("AUX data detected collision  %" PRIu64 " times out of %u!\n\n",
-> > +			    stats->total_aux_collision,
-> > +			    stats->nr_events[PERF_RECORD_AUX]);
-> > +	}
-> > +
-> >  	if (stats->nr_unknown_events != 0) {
-> >  		ui__warning("Found %u unknown events!\n\n"
-> >  			    "Is this an older tool processing a perf.data "
-> > -- 
-> > 2.24.1
-> > 
+For example,
+
+perf list --cputype atom
+...
+cache:
+  core_reject_l2q.any
+       [Counts the number of request that were not accepted into the L2Q because the L2Q is FULL. Unit: cpu_atom]
+...
+
+The "Unit: cpu_atom" is displayed in the brief description section
+to indicate this is an atom event.
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+---
+v2:
+ - Rebase to perf/core branch.
+
+ tools/perf/Documentation/perf-list.txt |  4 +++
+ tools/perf/builtin-list.c              | 42 ++++++++++++++++++--------
+ tools/perf/util/metricgroup.c          |  7 ++++-
+ tools/perf/util/metricgroup.h          |  2 +-
+ tools/perf/util/parse-events.c         |  8 +++--
+ tools/perf/util/parse-events.h         |  3 +-
+ tools/perf/util/pmu.c                  | 29 +++++++++++++++---
+ tools/perf/util/pmu.h                  |  2 +-
+ 8 files changed, 73 insertions(+), 24 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
+index 4c7db1da8fcc..4dc8d0af19df 100644
+--- a/tools/perf/Documentation/perf-list.txt
++++ b/tools/perf/Documentation/perf-list.txt
+@@ -39,6 +39,10 @@ any extra expressions computed by perf stat.
+ --deprecated::
+ Print deprecated events. By default the deprecated events are hidden.
+ 
++--cputype::
++Print events applying cpu with this type for hybrid platform
++(e.g. --cputype core or --cputype atom)
++
+ [[EVENT_MODIFIERS]]
+ EVENT MODIFIERS
+ ---------------
+diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+index 10ab5e40a34f..468958154ed9 100644
+--- a/tools/perf/builtin-list.c
++++ b/tools/perf/builtin-list.c
+@@ -12,6 +12,7 @@
+ 
+ #include "util/parse-events.h"
+ #include "util/pmu.h"
++#include "util/pmu-hybrid.h"
+ #include "util/debug.h"
+ #include "util/metricgroup.h"
+ #include <subcmd/pager.h>
+@@ -20,13 +21,15 @@
+ 
+ static bool desc_flag = true;
+ static bool details_flag;
++static const char *hybrid_type;
+ 
+ int cmd_list(int argc, const char **argv)
+ {
+-	int i;
++	int i, ret = 0;
+ 	bool raw_dump = false;
+ 	bool long_desc_flag = false;
+ 	bool deprecated = false;
++	char *pmu_name = NULL;
+ 	struct option list_options[] = {
+ 		OPT_BOOLEAN(0, "raw-dump", &raw_dump, "Dump raw events"),
+ 		OPT_BOOLEAN('d', "desc", &desc_flag,
+@@ -37,6 +40,9 @@ int cmd_list(int argc, const char **argv)
+ 			    "Print information on the perf event names and expressions used internally by events."),
+ 		OPT_BOOLEAN(0, "deprecated", &deprecated,
+ 			    "Print deprecated events."),
++		OPT_STRING(0, "cputype", &hybrid_type, "hybrid cpu type",
++			   "Print events applying cpu with this type for hybrid platform "
++			   "(e.g. core or atom)"),
+ 		OPT_INCR(0, "debug", &verbose,
+ 			     "Enable debugging output"),
+ 		OPT_END()
+@@ -56,10 +62,16 @@ int cmd_list(int argc, const char **argv)
+ 	if (!raw_dump && pager_in_use())
+ 		printf("\nList of pre-defined events (to be used in -e):\n\n");
+ 
++	if (hybrid_type) {
++		pmu_name = perf_pmu__hybrid_type_to_pmu(hybrid_type);
++		if (!pmu_name)
++			pr_warning("WARNING: hybrid cputype is not supported!\n");
++	}
++
+ 	if (argc == 0) {
+ 		print_events(NULL, raw_dump, !desc_flag, long_desc_flag,
+-				details_flag, deprecated);
+-		return 0;
++				details_flag, deprecated, pmu_name);
++		goto out;
+ 	}
+ 
+ 	for (i = 0; i < argc; ++i) {
+@@ -82,25 +94,27 @@ int cmd_list(int argc, const char **argv)
+ 		else if (strcmp(argv[i], "pmu") == 0)
+ 			print_pmu_events(NULL, raw_dump, !desc_flag,
+ 						long_desc_flag, details_flag,
+-						deprecated);
++						deprecated, pmu_name);
+ 		else if (strcmp(argv[i], "sdt") == 0)
+ 			print_sdt_events(NULL, NULL, raw_dump);
+ 		else if (strcmp(argv[i], "metric") == 0 || strcmp(argv[i], "metrics") == 0)
+-			metricgroup__print(true, false, NULL, raw_dump, details_flag);
++			metricgroup__print(true, false, NULL, raw_dump, details_flag, pmu_name);
+ 		else if (strcmp(argv[i], "metricgroup") == 0 || strcmp(argv[i], "metricgroups") == 0)
+-			metricgroup__print(false, true, NULL, raw_dump, details_flag);
++			metricgroup__print(false, true, NULL, raw_dump, details_flag, pmu_name);
+ 		else if ((sep = strchr(argv[i], ':')) != NULL) {
+ 			int sep_idx;
+ 
+ 			sep_idx = sep - argv[i];
+ 			s = strdup(argv[i]);
+-			if (s == NULL)
+-				return -1;
++			if (s == NULL) {
++				ret = -1;
++				goto out;
++			}
+ 
+ 			s[sep_idx] = '\0';
+ 			print_tracepoint_events(s, s + sep_idx + 1, raw_dump);
+ 			print_sdt_events(s, s + sep_idx + 1, raw_dump);
+-			metricgroup__print(true, true, s, raw_dump, details_flag);
++			metricgroup__print(true, true, s, raw_dump, details_flag, pmu_name);
+ 			free(s);
+ 		} else {
+ 			if (asprintf(&s, "*%s*", argv[i]) < 0) {
+@@ -116,12 +130,16 @@ int cmd_list(int argc, const char **argv)
+ 			print_pmu_events(s, raw_dump, !desc_flag,
+ 						long_desc_flag,
+ 						details_flag,
+-						deprecated);
++						deprecated,
++						pmu_name);
+ 			print_tracepoint_events(NULL, s, raw_dump);
+ 			print_sdt_events(NULL, s, raw_dump);
+-			metricgroup__print(true, true, s, raw_dump, details_flag);
++			metricgroup__print(true, true, s, raw_dump, details_flag, pmu_name);
+ 			free(s);
+ 		}
+ 	}
+-	return 0;
++
++out:
++	free(pmu_name);
++	return ret;
+ }
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 99d047c5ead0..ad2587079689 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -11,6 +11,7 @@
+ #include "evsel.h"
+ #include "strbuf.h"
+ #include "pmu.h"
++#include "pmu-hybrid.h"
+ #include "expr.h"
+ #include "rblist.h"
+ #include <string.h>
+@@ -616,7 +617,7 @@ static int metricgroup__print_sys_event_iter(struct pmu_event *pe, void *data)
+ }
+ 
+ void metricgroup__print(bool metrics, bool metricgroups, char *filter,
+-			bool raw, bool details)
++			bool raw, bool details, const char *pmu_name)
+ {
+ 	struct pmu_events_map *map = pmu_events_map__find();
+ 	struct pmu_event *pe;
+@@ -642,6 +643,10 @@ void metricgroup__print(bool metrics, bool metricgroups, char *filter,
+ 			break;
+ 		if (!pe->metric_expr)
+ 			continue;
++		if (pmu_name && perf_pmu__is_hybrid(pe->pmu) &&
++		    strcmp(pmu_name, pe->pmu)) {
++			continue;
++		}
+ 		if (metricgroup__print_pmu_event(pe, metricgroups, filter,
+ 						 raw, details, &groups,
+ 						 metriclist) < 0)
+diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
+index cc4a92492a61..9deee6691f2e 100644
+--- a/tools/perf/util/metricgroup.h
++++ b/tools/perf/util/metricgroup.h
+@@ -53,7 +53,7 @@ int metricgroup__parse_groups_test(struct evlist *evlist,
+ 				   struct rblist *metric_events);
+ 
+ void metricgroup__print(bool metrics, bool groups, char *filter,
+-			bool raw, bool details);
++			bool raw, bool details, const char *pmu_name);
+ bool metricgroup__has_metric(const char *metric);
+ int arch_get_runtimeparam(struct pmu_event *pe __maybe_unused);
+ void metricgroup__rblist_exit(struct rblist *metric_events);
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index e5eae23cfceb..f36e748ad715 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -2995,7 +2995,8 @@ void print_symbol_events(const char *event_glob, unsigned type,
+  * Print the help text for the event symbols:
+  */
+ void print_events(const char *event_glob, bool name_only, bool quiet_flag,
+-			bool long_desc, bool details_flag, bool deprecated)
++			bool long_desc, bool details_flag, bool deprecated,
++			const char *pmu_name)
+ {
+ 	print_symbol_events(event_glob, PERF_TYPE_HARDWARE,
+ 			    event_symbols_hw, PERF_COUNT_HW_MAX, name_only);
+@@ -3007,7 +3008,7 @@ void print_events(const char *event_glob, bool name_only, bool quiet_flag,
+ 	print_hwcache_events(event_glob, name_only);
+ 
+ 	print_pmu_events(event_glob, name_only, quiet_flag, long_desc,
+-			details_flag, deprecated);
++			details_flag, deprecated, pmu_name);
+ 
+ 	if (event_glob != NULL)
+ 		return;
+@@ -3033,7 +3034,8 @@ void print_events(const char *event_glob, bool name_only, bool quiet_flag,
+ 
+ 	print_sdt_events(NULL, NULL, name_only);
+ 
+-	metricgroup__print(true, true, NULL, name_only, details_flag);
++	metricgroup__print(true, true, NULL, name_only, details_flag,
++			   pmu_name);
+ 
+ 	print_libpfm_events(name_only, long_desc);
+ }
+diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+index bf6e41aa9b6a..ce0c910163d1 100644
+--- a/tools/perf/util/parse-events.h
++++ b/tools/perf/util/parse-events.h
+@@ -219,7 +219,8 @@ void parse_events_evlist_error(struct parse_events_state *parse_state,
+ 			       int idx, const char *str);
+ 
+ void print_events(const char *event_glob, bool name_only, bool quiet,
+-		  bool long_desc, bool details_flag, bool deprecated);
++		  bool long_desc, bool details_flag, bool deprecated,
++		  const char *pmu_name);
+ 
+ struct event_symbol {
+ 	const char	*symbol;
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 6cdbee8a12e7..77204c5af29c 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -1577,6 +1577,7 @@ static int cmp_sevent(const void *a, const void *b)
+ {
+ 	const struct sevent *as = a;
+ 	const struct sevent *bs = b;
++	int ret;
+ 
+ 	/* Put extra events last */
+ 	if (!!as->desc != !!bs->desc)
+@@ -1592,7 +1593,13 @@ static int cmp_sevent(const void *a, const void *b)
+ 	if (as->is_cpu != bs->is_cpu)
+ 		return bs->is_cpu - as->is_cpu;
+ 
+-	return strcmp(as->name, bs->name);
++	ret = strcmp(as->name, bs->name);
++	if (!ret) {
++		if (as->pmu && bs->pmu)
++			return strcmp(as->pmu, bs->pmu);
++	}
++
++	return ret;
+ }
+ 
+ static void wordwrap(char *s, int start, int max, int corr)
+@@ -1622,7 +1629,8 @@ bool is_pmu_core(const char *name)
+ }
+ 
+ void print_pmu_events(const char *event_glob, bool name_only, bool quiet_flag,
+-			bool long_desc, bool details_flag, bool deprecated)
++			bool long_desc, bool details_flag, bool deprecated,
++			const char *pmu_name)
+ {
+ 	struct perf_pmu *pmu;
+ 	struct perf_pmu_alias *alias;
+@@ -1648,10 +1656,16 @@ void print_pmu_events(const char *event_glob, bool name_only, bool quiet_flag,
+ 	pmu = NULL;
+ 	j = 0;
+ 	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
++		if (pmu_name && perf_pmu__is_hybrid(pmu->name) &&
++		    strcmp(pmu_name, pmu->name)) {
++			continue;
++		}
++
+ 		list_for_each_entry(alias, &pmu->aliases, list) {
+ 			char *name = alias->desc ? alias->name :
+ 				format_alias(buf, sizeof(buf), pmu, alias);
+-			bool is_cpu = is_pmu_core(pmu->name);
++			bool is_cpu = is_pmu_core(pmu->name) ||
++				      perf_pmu__is_hybrid(pmu->name);
+ 
+ 			if (alias->deprecated && !deprecated)
+ 				continue;
+@@ -1699,8 +1713,13 @@ void print_pmu_events(const char *event_glob, bool name_only, bool quiet_flag,
+ 	qsort(aliases, len, sizeof(struct sevent), cmp_sevent);
+ 	for (j = 0; j < len; j++) {
+ 		/* Skip duplicates */
+-		if (j > 0 && !strcmp(aliases[j].name, aliases[j - 1].name))
+-			continue;
++		if (j > 0 && !strcmp(aliases[j].name, aliases[j - 1].name)) {
++			if (!aliases[j].pmu || !aliases[j - 1].pmu ||
++			    !strcmp(aliases[j].pmu, aliases[j - 1].pmu)) {
++				continue;
++			}
++		}
++
+ 		if (name_only) {
+ 			printf("%s ", aliases[j].name);
+ 			continue;
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index 033e8211c025..91fc0de892f5 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -108,7 +108,7 @@ struct perf_pmu *perf_pmu__scan(struct perf_pmu *pmu);
+ bool is_pmu_core(const char *name);
+ void print_pmu_events(const char *event_glob, bool name_only, bool quiet,
+ 		      bool long_desc, bool details_flag,
+-		      bool deprecated);
++		      bool deprecated, const char *pmu_name);
+ bool pmu_have_event(const char *pname, const char *name);
+ 
+ int perf_pmu__scan_file(struct perf_pmu *pmu, const char *name, const char *fmt, ...) __scanf(3, 4);
+-- 
+2.27.0
+
