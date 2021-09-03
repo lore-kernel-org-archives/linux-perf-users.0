@@ -2,64 +2,87 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66602C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Sep 2021 09:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9EDC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Sep 2021 11:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BE9C61057
-	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Sep 2021 09:17:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92B526109E
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Sep 2021 11:02:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348728AbhICJS2 (ORCPT
+        id S1348412AbhICLDA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 3 Sep 2021 05:18:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:39362 "EHLO foss.arm.com"
+        Fri, 3 Sep 2021 07:03:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232257AbhICJS2 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 3 Sep 2021 05:18:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9A52D1FB;
-        Fri,  3 Sep 2021 02:17:28 -0700 (PDT)
-Received: from [10.57.92.220] (unknown [10.57.92.220])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 66A523F7D7;
-        Fri,  3 Sep 2021 02:17:26 -0700 (PDT)
-Subject: Re: [PATCH v2 8/9] perf cs-etm: Print the decoder name
-To:     James Clark <james.clark@arm.com>, mathieu.poirier@linaro.org,
-        leo.yan@linaro.org, coresight@lists.linaro.org,
-        linux-perf-users@vger.kernel.org, mike.leach@linaro.org
-Cc:     acme@kernel.org, John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
+        id S235107AbhICLC7 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 3 Sep 2021 07:02:59 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 17E1E6108E;
+        Fri,  3 Sep 2021 11:01:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1630666919;
+        bh=lgby07MWvfG1oz4/DDBlgxOw0pRbSFIwjvNEtZHL2KY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rnyl8jIJptFDaTNx8CtamNAwBx/V/GzvltogCPOMpgU7hLkcruXkvLT6QDAxXmjl2
+         WVkxX15ieuQ6wmA1uskPvjhesNu9Mx5C6if6j2Aaz7QIt4id1VzkAFSg8eZOSiaWzS
+         Z+23DNZI/5FL31dyDM3RRRKDhFtrOnBgyqmG0ZzZfxbhsB1hrxy8Tv7fmS4zK5MvQ0
+         ozY9rVn2+AHGV62gt8koJdD8XgBmEiYZf269CRI3bYP/Y8jS/1TkCwotoHZnNBvD0Y
+         C9Q50snZzO6lrvRIDKQ0fEBVd56fB6gt7HGvVrKdI2tH0/bLRGujrFU40VP5HHfwNl
+         XHplGGacZO19w==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 658514007E; Fri,  3 Sep 2021 08:01:56 -0300 (-03)
+Date:   Fri, 3 Sep 2021 08:01:56 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Leo Yan <leo.yan@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org, mike.leach@linaro.org,
+        coresight@lists.linaro.org, James Clark <james.clark@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20210806134109.1182235-1-james.clark@arm.com>
- <20210806134109.1182235-9-james.clark@arm.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <de23e803-3840-501e-87a8-39eed7ba434b@arm.com>
-Date:   Fri, 3 Sep 2021 10:17:25 +0100
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.13.0
+        Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: Re: [PATCH] tools: perf: Report collisions in AUX records
+Message-ID: <YTIApA/jrFPoDz74@kernel.org>
+References: <20210723124456.3828769-1-suzuki.poulose@arm.com>
+ <20210728091219.527886-1-suzuki.poulose@arm.com>
+ <20210731013847.GA91194@leoy-ThinkPad-X240s>
+ <20210902192520.GD1078000@p14s>
 MIME-Version: 1.0
-In-Reply-To: <20210806134109.1182235-9-james.clark@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210902192520.GD1078000@p14s>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 06/08/2021 14:41, James Clark wrote:
-> Use the real name of the decoder instead of hard-coding "ETM" to avoid
-> confusion when the trace is ETE. This also now distinguishes between
-> ETMv3 and ETMv4.
+Em Thu, Sep 02, 2021 at 01:25:20PM -0600, Mathieu Poirier escreveu:
+> On Sat, Jul 31, 2021 at 09:38:47AM +0800, Leo Yan wrote:
+> > On Wed, Jul 28, 2021 at 10:12:19AM +0100, Suzuki Kuruppassery Poulose wrote:
+> > > Just like the other flags in the AUX records, report a summary
+> > > of the Collisions if there were any.
+> > > 
+> > > Cc: Mike Leach <mike.leach@linaro.org>
+> > > Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > > Cc: Leo Yan <leo.yan@linaro.org>
+> > > Cc: James Clark <james.clark@arm.com>
+> > > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > Cc: Jiri Olsa <jolsa@redhat.com>
+> > > Cc: linux-perf-users@vger.kernel.org
+> > > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > > Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > 
+> > The change looks good to me:
+> > 
+> > Reviewed-by: Leo Yan <leo.yan@linaro.org>
 > 
-> Reviewed-by: Leo Yan <leo.yan@linaro.org>
-> Signed-off-by: James Clark <james.clark@arm.com>
+> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Thanks, applied.
+
+- Arnaldo
 
