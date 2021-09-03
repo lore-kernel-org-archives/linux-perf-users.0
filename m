@@ -2,40 +2,39 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65622C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Sep 2021 11:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68173C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Sep 2021 11:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 490BB6108E
-	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Sep 2021 11:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 522A1610C8
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Sep 2021 11:07:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234932AbhICLGL (ORCPT
+        id S235243AbhICLI2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 3 Sep 2021 07:06:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51138 "EHLO mail.kernel.org"
+        Fri, 3 Sep 2021 07:08:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1348487AbhICLGJ (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 3 Sep 2021 07:06:09 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 41F106101A;
-        Fri,  3 Sep 2021 11:05:09 +0000 (UTC)
+        id S235183AbhICLI2 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 3 Sep 2021 07:08:28 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 591D161057;
+        Fri,  3 Sep 2021 11:07:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630667109;
-        bh=ZYJJfNfDBDoEd9auwZs1I3zRjMJaKASoHmWShb2DHD8=;
+        s=k20201202; t=1630667248;
+        bh=wWeivC5PqODTu3my4qvaLE+osJF8nYHfV2kWPsQjtd8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y6OjZ+ui3ulw9uaS74ytWqqRvhHTsFdgUizXzu8tn3dghLK6Dq4TP7yl+lNmFaaB4
-         +4w5u9+OFRLrg5pgz75abQjlmvRcpItiigCrNkTaCrZoxxVIjrxjhL3bsTwszO7zBM
-         +9DnMcRekOhFqiAF8fCnkRjNJn8DrjOEcvtcaF4U1L3ol3bBPTZQtuY4qtRAYxG4jt
-         W8XDYPbIS6l5r8eXnprF3lUqRHV2ltQ19H4M3E2+2Pnl9CKDn0qo6rReDQ9JWaDdDZ
-         tBtWTFrHo7ugboOkBK2r8aPCYDWw2SG/ae01MDSjZUw7WZjDFVNEle7Jtgzlsu+n06
-         2gy1fFp6dKxcg==
+        b=ORu8PBv5iYBY4R9dsltKS6/P1JZ+Q6yigbCRaJ8GgMwBmPI0N+RlMk4e3xKfiFF29
+         dEX8C2Ul2gYHgDJyYQQ5+9fj6Z3GshebKcMwAtIKgbGswBoVT33jEXrA7XCRJKU7uR
+         yewEqfLEqoLyao6yyzGzdsu8Cmbz8Mh3xXe2i4Ocq9TqK82Dm85fdFYsa6sUaQr+G5
+         HhgJ4n3ZIkrsGrgqWnNVpb/ZRR1PtlVIIlC+f6oD7+SAKcHJI0/O232l7fbTu7U1c5
+         BPlFQZ+1Q1oQj7anji6hIIKWM0ncy070GMx+Nb2WC9unRoO/2I6m+97cslaYfvFJ+q
+         IgI9s4t6xW1hw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C59ED4007E; Fri,  3 Sep 2021 08:05:06 -0300 (-03)
-Date:   Fri, 3 Sep 2021 08:05:06 -0300
+        id D05C74007E; Fri,  3 Sep 2021 08:07:25 -0300 (-03)
+Date:   Fri, 3 Sep 2021 08:07:25 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Suzuki K Poulose <suzuki.poulose@arm.com>
 Cc:     James Clark <james.clark@arm.com>, mathieu.poirier@linaro.org,
@@ -48,33 +47,61 @@ Cc:     James Clark <james.clark@arm.com>, mathieu.poirier@linaro.org,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/9] perf cs-etm: Refactor initialisation of decoder
- params.
-Message-ID: <YTIBYkU281/di+vD@kernel.org>
+Subject: Re: [PATCH v2 2/9] perf cs-etm: Initialise architecture based on
+ TRCIDR1
+Message-ID: <YTIB7aNBErDCK+sf@kernel.org>
 References: <20210806134109.1182235-1-james.clark@arm.com>
- <20210806134109.1182235-2-james.clark@arm.com>
- <ca0f3d7c-2420-fcab-0c48-57225ed15b00@arm.com>
+ <20210806134109.1182235-3-james.clark@arm.com>
+ <d2379e72-a285-c63f-8c32-806e412458a3@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ca0f3d7c-2420-fcab-0c48-57225ed15b00@arm.com>
+In-Reply-To: <d2379e72-a285-c63f-8c32-806e412458a3@arm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Sep 03, 2021 at 09:52:14AM +0100, Suzuki K Poulose escreveu:
+Em Fri, Sep 03, 2021 at 09:55:37AM +0100, Suzuki K Poulose escreveu:
 > On 06/08/2021 14:41, James Clark wrote:
-> > The initialisation of the decoder params is duplicated between
-> > creation of the packet printer and packet decoder. Put them both
-> > into one function so that future changes only need to be made in one
-> > place.
+> > Currently the architecture is hard coded as ARCH_V8, but from ETMv4.4
+> > onwards this should be ARCH_AA64.
 > > 
-> > Reviewed-by: Leo Yan <leo.yan@linaro.org>
 > > Signed-off-by: James Clark <james.clark@arm.com>
+> > ---
+> >   tools/perf/util/cs-etm-decoder/cs-etm-decoder.c | 16 +++++++++++++++-
+> >   1 file changed, 15 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> > index 187c038caa19..787b19642e78 100644
+> > --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> > +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> > @@ -126,6 +126,20 @@ static int cs_etm_decoder__gen_etmv3_config(struct cs_etm_trace_params *params,
+> >   	return 0;
+> >   }
+> > +#define TRCIDR1_TRCARCHMIN_SHIFT 4
+> > +#define TRCIDR1_TRCARCHMIN_MASK  GENMASK(7, 4)
+> > +#define TRCIDR1_TRCARCHMIN(x)    (((x) & TRCIDR1_TRCARCHMIN_MASK) >> TRCIDR1_TRCARCHMIN_SHIFT)
 > 
-> Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> minor nit: Please add a blank line here
 
-Thanks, collected the Acked-by.
+Fixed it
+ 
+> > +static enum _ocsd_arch_version cs_etm_decoder__get_etmv4_arch_ver(u32 reg_idr1)
+> > +{
+> > +	/*
+> > +	 * For ETMv4 if the trace minor version is 4 or more then we can assume
+> > +	 * the architecture is ARCH_AA64 rather than just V8.
+> > +	 * ARCH_V8 = V8 architecture
+> > +	 * ARCH_AA64 = Min v8r3 plus additional AA64 PE features
+> 
+> Does this need to be >= 3 then, to be accurate ?
+> 
+> The comment "reads", minimum v8.3 and any additional features.
+> 
+> Otherwise looks good to me.
+
+Didn't have enough coffee, I think, can you please provide this as a
+patch? :)
 
 - Arnaldo
