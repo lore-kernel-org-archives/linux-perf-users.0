@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69078C433FE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF8A4C4332F
 	for <linux-perf-users@archiver.kernel.org>; Sun,  5 Sep 2021 21:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 533A66103B
+	by mail.kernel.org (Postfix) with ESMTP id 95C5560F5E
 	for <linux-perf-users@archiver.kernel.org>; Sun,  5 Sep 2021 21:25:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238290AbhIEV0J (ORCPT
+        id S238321AbhIEV0K (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 5 Sep 2021 17:26:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57048 "EHLO
+        Sun, 5 Sep 2021 17:26:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238335AbhIEVZ7 (ORCPT
+        with ESMTP id S238328AbhIEVZ6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 5 Sep 2021 17:25:59 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FE74C06179A
-        for <linux-perf-users@vger.kernel.org>; Sun,  5 Sep 2021 14:24:55 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id n5so6774713wro.12
-        for <linux-perf-users@vger.kernel.org>; Sun, 05 Sep 2021 14:24:55 -0700 (PDT)
+        Sun, 5 Sep 2021 17:25:58 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 988F4C0613D9
+        for <linux-perf-users@vger.kernel.org>; Sun,  5 Sep 2021 14:24:51 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id i6so6822601wrv.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 05 Sep 2021 14:24:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=U3Ro53yz8uw6vk4h4zC5lI6ueqo991M4PwceXdZ+bXY=;
-        b=vQ8N7ru7WahMrJRdMS90zF/LDCNk/RYQV9OofxORJyliNuh5Gh6yaPmND+PUS0T0bK
-         UP8514godi00eChnDkrSAUjxHUMderXcNW0jBsBfsDSR86clxCPxPB0O5NmvLjnp5BVf
-         MIGFuabyVniHnpIPdxCh5O4r3SfvTNvPA+LPKOz10jDLcJJenMxqPIDm7dxaStXwCAE9
-         sIZK5dK9KPL68594iLPsh7PDYzOUWXcatIxXvbWPPGAJkgOlcf3HzCB3v546IY2pxwpN
-         k25em+rs9WQEOGy/szRbjWiAerQC9Y2InEpKalEySYG/DSov2i9j+Xkw2XPtrzR5qibR
-         2yhQ==
+        bh=F1e0hbv3ZsiJNNAHKyqEnrPS9MqX6cUig82FuR1+yU4=;
+        b=wVGZAh4ytWMN/R/wB6lATwcSZgUDP8NwEYQyuIHXnQXXF4mGYHBthshCs0RCobdwtF
+         i0bPxTtRbONrs85UFIYny393EZRpCEDxNspp3Ic7TcBlRz9xmDJByXi5CpcVL7alE39u
+         NjzZaZ9AMafDLj9U0+XeGIJdjxQ5koq47chWwA9CZBzQPU9po8ik129DrMVqaRco76d7
+         hGAq95+PCjOyFJDGb5e9BhLdd+S9/ZBUN9AXsxRWb5KkB5kedUs/9QMSCLEmksHe5fPL
+         2cYx7YBQGmm+Sqz3MItdKjRYJ9LcDN+FKXMP9XUDtDUefIIVNY+UY/UzTToKU2Z/UEHl
+         d+FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=U3Ro53yz8uw6vk4h4zC5lI6ueqo991M4PwceXdZ+bXY=;
-        b=D/gTcdZS2cRXB3Msz1AfNxSvSwZmjUyiog6qjdNpmodMu9RYM4xgVkC+arqwwyJANT
-         BJrN8dUBhmXknf3feTV7OIDcsm+fWNJbmLSpdcoZat3xNifq9yTWTnw4M8kx1tubIapf
-         YmySc2AndyV29KiXK5FjVV09Ztfa0Mfi6i9+pZir85hz1Cf2nesnreMMNOStgrASDq+b
-         xSm4ivXFvp3kJsugP43hu8X+cyW8F/FpW9TCbRk1C/Kv5VQnQ4sFoCpEtsGDAtlMGglE
-         fpTzlM95c4Rq7uztvZaLsLBP/XSuMu/IvvnbCCkNPuqNJ9mX+qrkv+h1pFZ1eyVgUWVW
-         /pMg==
-X-Gm-Message-State: AOAM530E4vp3drHxOtjpK51k67h1J8zYp1qPwx3rvDFqx53YAE58sTdn
-        uvoiivOgusYWIBtnkxguGCiU5wJvsVIu1OgAYRZr4A==
-X-Google-Smtp-Source: ABdhPJyJEJvlxVUrEiEYvPim72MfF6HcVKkJK+/ZbECHn7x8no3FMAchzagrpcHRErlr4pLxjvDOSsBw2laSTnMlU2I=
-X-Received: by 2002:a05:6000:160c:: with SMTP id u12mr9848692wrb.128.1630877093840;
- Sun, 05 Sep 2021 14:24:53 -0700 (PDT)
+        bh=F1e0hbv3ZsiJNNAHKyqEnrPS9MqX6cUig82FuR1+yU4=;
+        b=j31YRO0eLQfhAI72MqrBExpKS6lJRIEERhoC9yuu90NxeFNmUOGz0rVTdLJl7O3Drg
+         vZMphGovCipidhj5PAV/arUrKgTZ2v9D6S3nAZ66rPtyczdFAIRQGvWJ2IVtSzItCqlz
+         1reUB0qUOutFm6Q7Zt7EO8f5/+lCxyqXoztaI0fimKHlDNJOsLr+XL2rQagJ/SdtIJrl
+         1JAuS9tHVbC7MywRWtJn6Er4Itb9cTsTWoJPNJ4T9PzI0gI1nZDByWlqIPlwQJDFM+GW
+         ZpPiqa3vaIh8At+9a2cvDoCNrm1G3l7+OM/UFLucTg8MG9YJKrdIOE95Ex/+2YxT1MTy
+         PFBw==
+X-Gm-Message-State: AOAM532xSAX7KWlomlApoj3//GIQ3t+8xQFxK/Yw99XvqHpQVkyXpa6K
+        Yc3CnW1qOEMBKfNcRKP55oYptEpzINuCx7MzQd0qgw==
+X-Google-Smtp-Source: ABdhPJzZ8iRqYHJstJBoyH7sckuZt82cSSeCX+52p0ngldq9SUEOXAYxUMBGzcCj0RPX02xBkR3mXtNJE06Jo1I1G1k=
+X-Received: by 2002:adf:e449:: with SMTP id t9mr9880840wrm.135.1630877090158;
+ Sun, 05 Sep 2021 14:24:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210806134109.1182235-1-james.clark@arm.com> <20210806134109.1182235-9-james.clark@arm.com>
- <de23e803-3840-501e-87a8-39eed7ba434b@arm.com> <YTIElk3Zv3VNJU+q@kernel.org> <YTIMhNAAtm/s2gjV@kernel.org>
-In-Reply-To: <YTIMhNAAtm/s2gjV@kernel.org>
+References: <20210806134109.1182235-1-james.clark@arm.com> <20210806134109.1182235-8-james.clark@arm.com>
+ <4da533c0-8da6-00d4-1849-e210e163d326@arm.com> <YTIEKG6Qv6YQwiw3@kernel.org>
+In-Reply-To: <YTIEKG6Qv6YQwiw3@kernel.org>
 From:   Mike Leach <mike.leach@linaro.org>
-Date:   Sun, 5 Sep 2021 22:24:43 +0100
-Message-ID: <CAJ9a7Vg_hNPugGBNnZCQ=eewqcoxjH=sCr0_wMW4yaCfJYyEXQ@mail.gmail.com>
-Subject: Re: [PATCH v2 8/9] perf cs-etm: Print the decoder name
+Date:   Sun, 5 Sep 2021 22:24:39 +0100
+Message-ID: <CAJ9a7VhF2xPC70GG_66Q-jduYuit3YUBVUKLE=gNp2JXj_9jVg@mail.gmail.com>
+Subject: Re: [PATCH v2 7/9] perf cs-etm: Create ETE decoder
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
         James Clark <james.clark@arm.com>,
@@ -84,24 +84,33 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 Reviewed-by: Mike Leach <mike.leach@linaro.org>
 
 
-On Fri, 3 Sept 2021 at 12:52, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+On Fri, 3 Sept 2021 at 12:16, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 >
-> Em Fri, Sep 03, 2021 at 08:18:46AM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Fri, Sep 03, 2021 at 10:17:25AM +0100, Suzuki K Poulose escreveu:
-> > > On 06/08/2021 14:41, James Clark wrote:
-> > > > Use the real name of the decoder instead of hard-coding "ETM" to avoid
-> > > > confusion when the trace is ETE. This also now distinguishes between
-> > > > ETMv3 and ETMv4.
-> > > >
-> > > > Reviewed-by: Leo Yan <leo.yan@linaro.org>
-> > > > Signed-off-by: James Clark <james.clark@arm.com>
+> Em Fri, Sep 03, 2021 at 10:15:07AM +0100, Suzuki K Poulose escreveu:
+> > On 06/08/2021 14:41, James Clark wrote:
+> > > If the magic number indicates ETE instantiate a OCSD_BUILTIN_DCD_ETE
+> > > decoder instead of OCSD_BUILTIN_DCD_ETMV4I. ETE is the new trace feature
+> > > for Armv9.
 > > >
-> > > Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > > Testing performed
+> > > =================
+> > >
+> > > * Old files with v0 and v1 headers for ETMv4 still open correctly
+> > > * New files with new magic number open on new versions of perf
+> > > * New files with new magic number fail to open on old versions of perf
+> > > * Decoding with the ETE decoder results in the same output as the ETMv4
+> > >    decoder as long as there are no new ETE packet types
+> > >
+> > > Signed-off-by: James Clark <james.clark@arm.com>
 > >
-> > Thanks, collected the Reviewed-by.
+> > Changes look good to me with my limited knowledge about the decoder
+> > facing code.
+> >
+> > FWIW,
+> >
+> > Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 >
-> Everything is in my tmp.perf/core branch now, pending test build in my
-> containers.
+> Thanks, collected the Acked-by.
 >
 > - Arnaldo
 
