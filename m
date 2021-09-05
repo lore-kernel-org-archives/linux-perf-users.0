@@ -7,67 +7,67 @@ X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF27BC4332F
-	for <linux-perf-users@archiver.kernel.org>; Sun,  5 Sep 2021 21:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A30C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun,  5 Sep 2021 21:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FA0660E52
-	for <linux-perf-users@archiver.kernel.org>; Sun,  5 Sep 2021 21:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDE3D60F5E
+	for <linux-perf-users@archiver.kernel.org>; Sun,  5 Sep 2021 21:24:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238278AbhIEVZv (ORCPT
+        id S238301AbhIEVZx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 5 Sep 2021 17:25:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56992 "EHLO
+        Sun, 5 Sep 2021 17:25:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238273AbhIEVZu (ORCPT
+        with ESMTP id S238291AbhIEVZw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 5 Sep 2021 17:25:50 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6FAFC061796
-        for <linux-perf-users@vger.kernel.org>; Sun,  5 Sep 2021 14:24:45 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id u15-20020a05600c19cf00b002f6445b8f55so3452202wmq.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 05 Sep 2021 14:24:45 -0700 (PDT)
+        Sun, 5 Sep 2021 17:25:52 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62F7BC061757
+        for <linux-perf-users@vger.kernel.org>; Sun,  5 Sep 2021 14:24:48 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id e26so3209340wmk.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 05 Sep 2021 14:24:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=E4YpvGUOv+fAgJ5K+5ei4WUi6BOg1OIJGekXtN39xjs=;
-        b=dXVMRi3zMhjmJvVW0ztKYFLIH9hwW71q3rSoiBhuX2JAew7WG/mNKSlPSH44skCBxp
-         vBjN0SR0fACkQVr2RnkwK3jnJw+sHwzaPJt5brAEpo1EUz0q8j2fv3x7QXq+GJ1wGZbJ
-         I+fqR0tk/CWzgIdAzTi0fnfenkSlFORyRAxecmJnCp0Qu3ICJvCYQm/nxBDtXa+Tmo/+
-         qIw0dYcsow9BgDsFoqWEcsErz9rCYXoHIslSrBgiM7OJg1RWHq4nw90H9fCVBd9EX11X
-         zm2RwN4olK5YUFB+zEmUczZsdNp9l8ced7oQ5MheNOfCViey1uOJZUi0vSPIJERMZh75
-         7JyQ==
+        bh=IzMnieHj8CQ0BE7oCVu9Qby1qRbJ4iUQix525l8uDPE=;
+        b=xLIPObrB2QPf9oWi8YMS3tfoo2dLtzgZXok0V8QGIh9uExEgirOpec0D/NqchG1Uv4
+         tLklJ2EPANmnkEEGFi/nAN7wxc+BM3qx0/G0T310hPMV7uPs0x+nZVbgQR1Kz2vJ3B54
+         e9cRn3M8qeo8kr5t1vT9Vgx2ZoQmAfd4MC9LcEJ10lS6RdoY+hU+K28c2hCsgdscCzO8
+         /R81n9BPnGvVo8jaLRhO3kcU1pbipkGL5/7T403dwismDoC+KaesWNhUsqcTCN9Jc1n6
+         5ck06m+H3IrWLcVdGZWYgwJxyZ4Th1Estg7sa1gzmktARmtt4Ch/K8E4ySgWxFx/hoWL
+         B7bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=E4YpvGUOv+fAgJ5K+5ei4WUi6BOg1OIJGekXtN39xjs=;
-        b=qFgp/YxPwZvZKc8AZQMUO9RwTG3q+SOBG0nt+JCiX7JuFvIIJ3RmUDr9LaZn/CQT13
-         bfMU1em3/b2/inmf5VtfwppBE/rGZVhvk2SotToLC1ggCJ+VhRDkBzBBf2J0Fs9x6NS9
-         wNWygUzic86pAG+bEALRjeWdC1xyht+VIy8/tEAMTcSzxNyeZfZ8wNY6cklMhGtL5kax
-         fPAuEKUWIBSN2u6uqqG+vQQPj9VumrP74uUClr6H1o3i5oA4Hkk133R0WfBfiae88YRs
-         SS2NQ03WK608izTUM6+QJwc07UdTLXcLjIrxx3Xe0+2RyZ+LPU5cMb7FGlbeB3Xs+lSW
-         fLoQ==
-X-Gm-Message-State: AOAM533ujJRO2zej/k6ahDAjcqHzrY8JBoJ59OrQORRYsLX6PmnSTWKp
-        C/dAlqPOB0R/4otkqjhkWbtyt2HEhKzdrwhEZuSIDA==
-X-Google-Smtp-Source: ABdhPJxQpNtJ2bb0D/m2IMW40sK7zBgzK/0MOUJ/OwkKrz2JETDgarpa+KQ2ucuqANQYhBp2nt4/XW3KC3r6Ivzr1Jc=
-X-Received: by 2002:a1c:1bc7:: with SMTP id b190mr8648358wmb.57.1630877083849;
- Sun, 05 Sep 2021 14:24:43 -0700 (PDT)
+        bh=IzMnieHj8CQ0BE7oCVu9Qby1qRbJ4iUQix525l8uDPE=;
+        b=Dq00Hf/E32k4Lq0TqrnrPU+dj9p4CsfJjjNiY79D6SzLiSHeo7wq1Q7XAEf0ilgEJH
+         vKydCK7H01Gi0BXhrBsXtFcocK+v6Tqv+WJ6Gq8L1s74+PO4a45Iur61DKXYcS6qIupk
+         +TQ071JI/eDb0Gr/cFPor/KryprFXrqSBHzx+9jChIpo3D9lQzUHXhYts4cRGrkgHm9v
+         dVNUW/ZsGJBIUnYo23F/5WAK1Y+eQpEbQVzHuarVLTL9ExQ393LLDXnqS7PqeUIEh43h
+         xd8buZhtVt0EdHF9JMsPBGfzgCOC1ERGwIpWAhGxkj66PncAn2u/lCxUw7iHHebg/UYV
+         fiPQ==
+X-Gm-Message-State: AOAM531tH3Hx32FJ6d+2fKj49ANBEE6uRggzzgfA52iCyY/cHQbz9llN
+        SeVoZ00aW90lLIrW9Q03kXAA073AyZD85lWB3cTEZA==
+X-Google-Smtp-Source: ABdhPJxYsade69aYn0KH+yIJSt7Vq7VLiTvS8bBvcW8iIn+jft9ImdyuA1gNMMfKpPvk5quvMLwcULgoawAy45mcfNM=
+X-Received: by 2002:a7b:cb09:: with SMTP id u9mr8450444wmj.63.1630877087046;
+ Sun, 05 Sep 2021 14:24:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210806134109.1182235-1-james.clark@arm.com> <20210806134109.1182235-6-james.clark@arm.com>
- <5679e1e1-b5c4-b763-2fe7-7dd8b7ef1a9d@arm.com>
-In-Reply-To: <5679e1e1-b5c4-b763-2fe7-7dd8b7ef1a9d@arm.com>
+References: <20210806134109.1182235-1-james.clark@arm.com> <20210806134109.1182235-7-james.clark@arm.com>
+ <63c17023-7451-6445-2110-f1f92b06dd41@arm.com> <YTIEDp9hFNNi0cB1@kernel.org>
+In-Reply-To: <YTIEDp9hFNNi0cB1@kernel.org>
 From:   Mike Leach <mike.leach@linaro.org>
-Date:   Sun, 5 Sep 2021 22:24:33 +0100
-Message-ID: <CAJ9a7ViotCWg4r+XgTtpmEpUJ2Gq4y7wpL7HCvcFWnToj=h8Cw@mail.gmail.com>
-Subject: Re: [PATCH v2 5/9] perf cs-etm: Fix typo
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     James Clark <james.clark@arm.com>,
+Date:   Sun, 5 Sep 2021 22:24:36 +0100
+Message-ID: <CAJ9a7VgjvD0_TN7F70px45Gzh0_txQNUG7s4DDV79E2eQMvcRQ@mail.gmail.com>
+Subject: Re: [PATCH v2 6/9] perf cs-etm: Update OpenCSD decoder for ETE
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        James Clark <james.clark@arm.com>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
         Leo Yan <leo.yan@linaro.org>,
         Coresight ML <coresight@lists.linaro.org>,
         linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         John Garry <john.garry@huawei.com>,
         Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -84,14 +84,22 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 Reviewed-by: Mike Leach <mike.leach@linaro.org>
 
 
-On Fri, 3 Sept 2021 at 10:09, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+On Fri, 3 Sept 2021 at 12:16, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 >
-> On 06/08/2021 14:41, James Clark wrote:
-> > TRCIRD2 should be TRCIDR2
+> Em Fri, Sep 03, 2021 at 10:10:01AM +0100, Suzuki K Poulose escreveu:
+> > On 06/08/2021 14:41, James Clark wrote:
+> > > OpenCSD v1.1.1 has a bug fix for the installation of the ETE decoder
+> > > headers. This also means that including headers separately for each
+> > > decoder is unnecessary so remove these.
+> > >
+> > > Reviewed-by: Leo Yan <leo.yan@linaro.org>
+> > > Signed-off-by: James Clark <james.clark@arm.com>
 > >
-> > Signed-off-by: James Clark <james.clark@arm.com>
+> > Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 >
-> Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Thanks, collected the Acked-by.
+>
+> - Arnaldo
 
 
 
