@@ -2,120 +2,109 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A89BBC433F5
-	for <linux-perf-users@archiver.kernel.org>; Sun,  5 Sep 2021 20:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6081DC433F5
+	for <linux-perf-users@archiver.kernel.org>; Sun,  5 Sep 2021 21:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B66B60F5E
-	for <linux-perf-users@archiver.kernel.org>; Sun,  5 Sep 2021 20:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35D8460F45
+	for <linux-perf-users@archiver.kernel.org>; Sun,  5 Sep 2021 21:24:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231354AbhIEUfE (ORCPT
+        id S234644AbhIEVZh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 5 Sep 2021 16:35:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45534 "EHLO
+        Sun, 5 Sep 2021 17:25:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230217AbhIEUfD (ORCPT
+        with ESMTP id S229510AbhIEVZg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 5 Sep 2021 16:35:03 -0400
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53432C061575
-        for <linux-perf-users@vger.kernel.org>; Sun,  5 Sep 2021 13:34:00 -0700 (PDT)
-Received: by mail-wr1-x432.google.com with SMTP id z4so6655397wrr.6
-        for <linux-perf-users@vger.kernel.org>; Sun, 05 Sep 2021 13:34:00 -0700 (PDT)
+        Sun, 5 Sep 2021 17:25:36 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA04CC061575
+        for <linux-perf-users@vger.kernel.org>; Sun,  5 Sep 2021 14:24:30 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id m9so6830011wrb.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 05 Sep 2021 14:24:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-transfer-encoding:content-language;
-        bh=HB5rxAe7Wj5sveWljQWfJe52FTr93PInI+zChOxlc44=;
-        b=WlTTufSfqNzVqxLndBdYlQCS3Zs7Q75ghpDw5g9abdu1yoUUzRcPUJ8JNlqG5EaCxS
-         at89kl5JHh+4/kIYwwrryUOamMo2HhZtnb2h4H5Ggye0w02PL2i/zLZ+saqe4YhISdZ+
-         xs3nlY8UUBuz+uBSlEqJdjGOhCC6IXPNztxuni+GcqSB50ykZfWUrGIMNlQRa+ZhtbsC
-         5x8w8e5akMRlLzvcBFpLOVizdbXCjfNeqv8uBXIe5jMGpu8l0XRg0666mgAtaiLkW4b7
-         ecuEQotaI1Fi5v6KTMgWOJyiiYCQOrY1mtY2ZEvLzQXP+MxHH5OyuduriaKqdXXeX2mj
-         ARnA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nIHzJG4x/c4ord8UABpO4rbP8CYuI6K54GyJYQGHzAI=;
+        b=agFpB5V2LHqzN/WezZ45hmFy4eBJHgY3DPmoBc44zGmhj33+AZZCgnrpKbPmJz4e11
+         NBHmwMKDeExPU7oEMWbaVuy1aCHK9lhgc8gu+UYy9mjhSkO10zItI7ROzm5hkmbO642Z
+         0efQFFVJ5Oj6zxG/lI2hWyi2EegTlN0Ot6uAmswavxPOMFRpL179Gxf2IxRsPqUV8A0P
+         XF3cUKBUiOoFjn6e7r+oJ1NCG6Xyk/E7exg+mQN86kN6HHyhYHiiT7M5++SM5Ozr3cfM
+         XnPvGrUtkEL9DI9Iqc5uCjhwTeS5YueFH8pnSNetCc8rvZW95MvLaY4N9QhxqdeQbIHm
+         PwOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=HB5rxAe7Wj5sveWljQWfJe52FTr93PInI+zChOxlc44=;
-        b=CS7C8bCqAEC+5vHcO2LOA85BWbe25Vn+qVdU1SrHAh9OiLbYgmyroHe12oXC8jmNVu
-         vMTiArn3fMT/0JzfaY8WpcaUh7N7R+GSQYvlqyJPwCuFurLhDPaJeai6r+c0carh8B71
-         EDdX79s+ehthhaBAC3f+7as8/RSVsMeEaESkDW4bfFXWonfXWSETDq90c6hEOyOVbeyy
-         JXDOjLgIznKqStwKbpylMPCNwsRzQDDvvaLv553a+sBidltAYdiIJYDJeA+z0x2Hgr8B
-         I2A9gLGJTRCOF1cRtka48TAMiDv6TR/JiBHO8jPxwXZ+7bzEQIHnbhzHPqNiqrZCZUIk
-         WjQQ==
-X-Gm-Message-State: AOAM530KTj7swkoL0cEeJ9kt7iHvSxdPOZo0zig9RWxdmM5LQV70JZSX
-        fgwfC8SByFqrDoU5sCxlJS3HaQ3rw/xT
-X-Google-Smtp-Source: ABdhPJx+RG2r+IfpB2VTL8ChxDhmuaRzzehEXL8kcy/Ea1pfwy/5VVwIa4g3aSsO/PstB49TKdzv7w==
-X-Received: by 2002:adf:cf0b:: with SMTP id o11mr9661524wrj.72.1630874037587;
-        Sun, 05 Sep 2021 13:33:57 -0700 (PDT)
-Received: from [192.168.1.99] (i5C75B6C9.versanet.de. [92.117.182.201])
-        by smtp.googlemail.com with ESMTPSA id s7sm5957009wra.75.2021.09.05.13.33.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 Sep 2021 13:33:57 -0700 (PDT)
-Subject: Re: A list of visual Profiler UIs for linux perf
-To:     Mark Hansen <mark@markhansen.co.nz>,
-        linux-perf-users@vger.kernel.org
-References: <CAM07o6QB9rUgzxHxR=sdwTddn+2GxeK5Uwj9QeCVMyEiD5SRdA@mail.gmail.com>
-From:   Viktor Rosendahl <viktor.rosendahl@gmail.com>
-Message-ID: <fe56fd75-a51b-3e3d-8747-1640685b8d5d@gmail.com>
-Date:   Sun, 5 Sep 2021 22:33:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nIHzJG4x/c4ord8UABpO4rbP8CYuI6K54GyJYQGHzAI=;
+        b=QkamuOlmvth+0ZcQWwghg2KUXtK1sQVFEblT70uScgzcFtPbPIPY4t8BH3GdeDmrUZ
+         /2QxG5uPwKIgioIHGIqwMN29gS71hk3AkRbZ+9uOap4/3hrJac5qYRN6URnf4+Tuceif
+         K/zLPJetCaFY4qXDL05ePZ+zTgIAfULzlgBIIjH42Nvhhif10VelAXClL4VWLj1Sa12K
+         epYDzQdBROnCQ9/b6epSPIM0QbvEpsNfNfzESd4rk8mTrgRO1mQE3iM6syVEP5Iv+otp
+         Xb9zFqH5Vw7JCNcGQn2b03lMYhw5jvOic8kiEgv2g3mWol2MXUdGiw8CsmPt566jU0Lu
+         iaUA==
+X-Gm-Message-State: AOAM531VVM1K6/XA33/yY6qA3MKfuM3oDa1QH2MjRoQhsl49wgfDjI35
+        ybxjt5GlW4DCQsT7RnIaNV82ZHTC1RaAhGzyku0mJ4YFB6I=
+X-Google-Smtp-Source: ABdhPJy3s/jbX+WLj0q9CVzf3rldsR+LVYL/ZwbCD1eARpWjluKyEpxWEa8hk9QBc1/qGZ/UDenX0U9L8fdkQV0rreE=
+X-Received: by 2002:a5d:56c9:: with SMTP id m9mr9838565wrw.134.1630877069272;
+ Sun, 05 Sep 2021 14:24:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAM07o6QB9rUgzxHxR=sdwTddn+2GxeK5Uwj9QeCVMyEiD5SRdA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20210806134109.1182235-1-james.clark@arm.com> <20210806134109.1182235-2-james.clark@arm.com>
+ <ca0f3d7c-2420-fcab-0c48-57225ed15b00@arm.com> <YTIBYkU281/di+vD@kernel.org>
+In-Reply-To: <YTIBYkU281/di+vD@kernel.org>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Sun, 5 Sep 2021 22:24:18 +0100
+Message-ID: <CAJ9a7Vix0zO_AG=zq5iqx+FaG_ZDaj_wZ6ZQ+==tYSXneO4_cg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/9] perf cs-etm: Refactor initialisation of decoder params.
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Coresight ML <coresight@lists.linaro.org>,
+        linux-perf-users@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Mark,
+Reviewed-by: Mike Leach <mike.leach@linaro.org>
 
-On 9/5/21 8:19 AM, Mark Hansen wrote:
-> Hi perf-toolers,
+
+On Fri, 3 Sept 2021 at 12:05, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 >
-> I wrote a quick literature-review of profiler user interfaces
-> available for analysing the output of Linux perf:
-> https://www.markhansen.co.nz/profiler-uis/
+> Em Fri, Sep 03, 2021 at 09:52:14AM +0100, Suzuki K Poulose escreveu:
+> > On 06/08/2021 14:41, James Clark wrote:
+> > > The initialisation of the decoder params is duplicated between
+> > > creation of the packet printer and packet decoder. Put them both
+> > > into one function so that future changes only need to be made in one
+> > > place.
+> > >
+> > > Reviewed-by: Leo Yan <leo.yan@linaro.org>
+> > > Signed-off-by: James Clark <james.clark@arm.com>
+> >
+> > Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 >
-> I couldn't find a similar list of profiler UIs online. Hopefully this
-> can help people find the profiler UI that's right for them.
+> Thanks, collected the Acked-by.
 >
-> I'd appreciate any feedback; in particular: did I miss any great perf UIs?
-
-I am not sure if it qualifies as great perf UI but there is traceshark:
-
-https://github.com/cunctator/traceshark
-
-It's a visualizer with a focus on visualizing things like scheduling and 
-wakeup events. I guess it's mostly useful to see what a task has been 
-waiting for but it's also possible to see which tasks are burning CPU 
-time. It doesn't support perf.data files, it read files generated with 
-"perf script -f".
-
-It has the possibility of filtering and saving the filtered output, so 
-it's possible to filter on various things, for example a certain task, 
-or set of tasks, for a certain time window. It's then possible to save 
-the filtered cycles events and use Brendan Gregg's flamegraph tools to 
-generate a flamegraph.
-
-In case you decide to try it out, I recommend building it from source, 
-since the binary packages in Debian/Ubuntu don't have OpenGL support. 
-For some older versions, that is older than what is currently in 
-Debian/testing, there is also an OpenGL configuration mismatch issue 
-between the application and a library that makes scrolling and zooming 
-painfully slow.
-
-best regards,
-
-Viktor
+> - Arnaldo
 
 
+
+--
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
