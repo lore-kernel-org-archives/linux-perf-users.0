@@ -7,67 +7,68 @@ X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF8A4C4332F
-	for <linux-perf-users@archiver.kernel.org>; Sun,  5 Sep 2021 21:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4851DC433FE
+	for <linux-perf-users@archiver.kernel.org>; Sun,  5 Sep 2021 21:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95C5560F5E
-	for <linux-perf-users@archiver.kernel.org>; Sun,  5 Sep 2021 21:25:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 300C060F5E
+	for <linux-perf-users@archiver.kernel.org>; Sun,  5 Sep 2021 21:25:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238321AbhIEV0K (ORCPT
+        id S238421AbhIEV0N (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 5 Sep 2021 17:26:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57040 "EHLO
+        Sun, 5 Sep 2021 17:26:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238328AbhIEVZ6 (ORCPT
+        with ESMTP id S238289AbhIEV0F (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 5 Sep 2021 17:25:58 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 988F4C0613D9
-        for <linux-perf-users@vger.kernel.org>; Sun,  5 Sep 2021 14:24:51 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id i6so6822601wrv.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 05 Sep 2021 14:24:51 -0700 (PDT)
+        Sun, 5 Sep 2021 17:26:05 -0400
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0405C0617AE
+        for <linux-perf-users@vger.kernel.org>; Sun,  5 Sep 2021 14:24:58 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id b10so6863451wru.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 05 Sep 2021 14:24:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=F1e0hbv3ZsiJNNAHKyqEnrPS9MqX6cUig82FuR1+yU4=;
-        b=wVGZAh4ytWMN/R/wB6lATwcSZgUDP8NwEYQyuIHXnQXXF4mGYHBthshCs0RCobdwtF
-         i0bPxTtRbONrs85UFIYny393EZRpCEDxNspp3Ic7TcBlRz9xmDJByXi5CpcVL7alE39u
-         NjzZaZ9AMafDLj9U0+XeGIJdjxQ5koq47chWwA9CZBzQPU9po8ik129DrMVqaRco76d7
-         hGAq95+PCjOyFJDGb5e9BhLdd+S9/ZBUN9AXsxRWb5KkB5kedUs/9QMSCLEmksHe5fPL
-         2cYx7YBQGmm+Sqz3MItdKjRYJ9LcDN+FKXMP9XUDtDUefIIVNY+UY/UzTToKU2Z/UEHl
-         d+FA==
+        bh=jIKy04n4SEct/kBbtr4jBMWbMzYLLzxmc9yw++ulVoU=;
+        b=N86W1IJOKcV1SWTuhSmRlI5f79Nw7JC6F4ceQ/Ln9kz/BYw523ugT825Kz8NTbj2VJ
+         Crzbo9kRW3fOSx1/YJX2cbCVDP4qSKRNNLFiyGa0qgRYfsyREy+GeviXzVaLD4syt5dd
+         q1fAf1/Ffo1HEv9VynbKrlvhVsweqb9DgkyZS+4fAXSk7fStMFVWVueqUaVr9d/BILri
+         zuqIcBp1psUJ7MxYrltDKT0tuuazHRi1UF7xbvtZKa823O68Hn24UfQFP2/gWiDOylV3
+         eMhkR1BdSmnNy1TEOMm17gH08mSMmmqMiOcR3fJWFegqGP7D73PE3ZhOff43L2tq8nDU
+         tZWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=F1e0hbv3ZsiJNNAHKyqEnrPS9MqX6cUig82FuR1+yU4=;
-        b=j31YRO0eLQfhAI72MqrBExpKS6lJRIEERhoC9yuu90NxeFNmUOGz0rVTdLJl7O3Drg
-         vZMphGovCipidhj5PAV/arUrKgTZ2v9D6S3nAZ66rPtyczdFAIRQGvWJ2IVtSzItCqlz
-         1reUB0qUOutFm6Q7Zt7EO8f5/+lCxyqXoztaI0fimKHlDNJOsLr+XL2rQagJ/SdtIJrl
-         1JAuS9tHVbC7MywRWtJn6Er4Itb9cTsTWoJPNJ4T9PzI0gI1nZDByWlqIPlwQJDFM+GW
-         ZpPiqa3vaIh8At+9a2cvDoCNrm1G3l7+OM/UFLucTg8MG9YJKrdIOE95Ex/+2YxT1MTy
-         PFBw==
-X-Gm-Message-State: AOAM532xSAX7KWlomlApoj3//GIQ3t+8xQFxK/Yw99XvqHpQVkyXpa6K
-        Yc3CnW1qOEMBKfNcRKP55oYptEpzINuCx7MzQd0qgw==
-X-Google-Smtp-Source: ABdhPJzZ8iRqYHJstJBoyH7sckuZt82cSSeCX+52p0ngldq9SUEOXAYxUMBGzcCj0RPX02xBkR3mXtNJE06Jo1I1G1k=
-X-Received: by 2002:adf:e449:: with SMTP id t9mr9880840wrm.135.1630877090158;
- Sun, 05 Sep 2021 14:24:50 -0700 (PDT)
+        bh=jIKy04n4SEct/kBbtr4jBMWbMzYLLzxmc9yw++ulVoU=;
+        b=dGRoG4E6nlqzw3JhFUCuflpNwYuhWcz8FvBDvVu49/7fa32o3GmgjYbsVa3EbgtKFm
+         hkWlcMSfdykxn26TQlal7h7K7JpesJWe9GK/TA+E6sm0ysAZOMfd+QuTAU3v3inEcvBH
+         tV1hji2FXuNGoH/DqECnRa6R4XGqEvKhjGoH8nIw1iuFe4Ib2VeFtaBLB/QbI7mlkbKh
+         gT6BBCXNk4xUu9hytFHe1WKWFVvmkJtspv4G8odC7r8bRFv5woPKjDZHTsr5143fBn3T
+         6O3XN0JZ9HWKHiVxJQFg54dx5H7XdQuLBf59sNrMYWnZdWPeQ+7YX9jLKa01+MQ5ioBP
+         Q5pw==
+X-Gm-Message-State: AOAM530FLJXaZRvrX0+FCQkEq29byU00OoGPFx0l23cazAQMopeh4O1K
+        n75bDDFs5A9pPruz0rKA6WG+i/I6H8Tth0UF7HdVXg==
+X-Google-Smtp-Source: ABdhPJyHhGbGj5/aBMqLo8ftUlD+qEetFvZ8k0dh0n4d01mLIXJijTpRitU0QwB/MbTek9ZpkSOtY9r9e3sc4Yvxwko=
+X-Received: by 2002:a5d:4a08:: with SMTP id m8mr9717729wrq.263.1630877097634;
+ Sun, 05 Sep 2021 14:24:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210806134109.1182235-1-james.clark@arm.com> <20210806134109.1182235-8-james.clark@arm.com>
- <4da533c0-8da6-00d4-1849-e210e163d326@arm.com> <YTIEKG6Qv6YQwiw3@kernel.org>
-In-Reply-To: <YTIEKG6Qv6YQwiw3@kernel.org>
+References: <20210806134109.1182235-1-james.clark@arm.com> <20210806134109.1182235-10-james.clark@arm.com>
+ <20210824083615.GF204566@leoy-ThinkPad-X240s> <YS+iOrcPTzQfmbqU@kernel.org>
+ <20210902174851.GB1078000@p14s> <YTEVwVCWoS8cgqql@kernel.org> <CANLsYkxhj1RkJ+BYLGBZ=c=VHT6ayfHvP_T68xGxcnsKQXEVxA@mail.gmail.com>
+In-Reply-To: <CANLsYkxhj1RkJ+BYLGBZ=c=VHT6ayfHvP_T68xGxcnsKQXEVxA@mail.gmail.com>
 From:   Mike Leach <mike.leach@linaro.org>
-Date:   Sun, 5 Sep 2021 22:24:39 +0100
-Message-ID: <CAJ9a7VhF2xPC70GG_66Q-jduYuit3YUBVUKLE=gNp2JXj_9jVg@mail.gmail.com>
-Subject: Re: [PATCH v2 7/9] perf cs-etm: Create ETE decoder
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        James Clark <james.clark@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
+Date:   Sun, 5 Sep 2021 22:24:47 +0100
+Message-ID: <CAJ9a7Vh48zXnh8Wq8FDAik2GbX6JCnoq=h7B6wokkht0KRb7WA@mail.gmail.com>
+Subject: Re: [PATCH v2 9/9] perf cs-etm: Show a warning for an unknown magic number
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Leo Yan <leo.yan@linaro.org>,
+        James Clark <james.clark@arm.com>,
         Coresight ML <coresight@lists.linaro.org>,
         linux-perf-users@vger.kernel.org,
+        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
         John Garry <john.garry@huawei.com>,
         Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -84,35 +85,40 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 Reviewed-by: Mike Leach <mike.leach@linaro.org>
 
 
-On Fri, 3 Sept 2021 at 12:16, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+On Thu, 2 Sept 2021 at 20:22, Mathieu Poirier
+<mathieu.poirier@linaro.org> wrote:
 >
-> Em Fri, Sep 03, 2021 at 10:15:07AM +0100, Suzuki K Poulose escreveu:
-> > On 06/08/2021 14:41, James Clark wrote:
-> > > If the magic number indicates ETE instantiate a OCSD_BUILTIN_DCD_ETE
-> > > decoder instead of OCSD_BUILTIN_DCD_ETMV4I. ETE is the new trace feature
-> > > for Armv9.
-> > >
-> > > Testing performed
-> > > =================
-> > >
-> > > * Old files with v0 and v1 headers for ETMv4 still open correctly
-> > > * New files with new magic number open on new versions of perf
-> > > * New files with new magic number fail to open on old versions of perf
-> > > * Decoding with the ETE decoder results in the same output as the ETMv4
-> > >    decoder as long as there are no new ETE packet types
-> > >
-> > > Signed-off-by: James Clark <james.clark@arm.com>
+> On Thu, 2 Sept 2021 at 12:19, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 > >
-> > Changes look good to me with my limited knowledge about the decoder
-> > facing code.
+> > Em Thu, Sep 02, 2021 at 11:48:51AM -0600, Mathieu Poirier escreveu:
+> > > Hi Arnaldo,
+> > >
+> > > On Wed, Sep 01, 2021 at 12:54:34PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > Em Tue, Aug 24, 2021 at 04:36:15PM +0800, Leo Yan escreveu:
+> > > > > On Fri, Aug 06, 2021 at 02:41:09PM +0100, James Clark wrote:
+> > > > > > Currently perf reports "Cannot allocate memory" which isn't very helpful
+> > > > > > for a potentially user facing issue. If we add a new magic number in
+> > > > > > the future, perf will be able to report unrecognised magic numbers.
+> > > > > >
+> > > > > > Signed-off-by: James Clark <james.clark@arm.com>
+> > > > >
+> > > > > Reviewed-by: Leo Yan <leo.yan@linaro.org>
+> > > >
+> > > > Applies cleanly to my tree, test building it now, holler if there is
+> > > > something that prevents it from being merged.
+> > >
+> > > Have you already merged this?
+> > >
+> > > If so than let it be.  Otherwise please hold off as I'd like to take a look,
+> > > something I intend on doing next week.
 > >
-> > FWIW,
+> > Ok, I can remove them from my local branch, but this may make this miss
+> > the v5.15 merge window, please advise.
 > >
-> > Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 >
-> Thanks, collected the Acked-by.
+> Nah, leave it in your branch and proceed for this merge window.
 >
-> - Arnaldo
+> > - Arnaldo
 
 
 
