@@ -4,30 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 287B3C433F5
-	for <linux-perf-users@archiver.kernel.org>; Sun,  5 Sep 2021 09:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D2BC433FE
+	for <linux-perf-users@archiver.kernel.org>; Sun,  5 Sep 2021 09:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F26AA60E52
-	for <linux-perf-users@archiver.kernel.org>; Sun,  5 Sep 2021 09:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2223760E97
+	for <linux-perf-users@archiver.kernel.org>; Sun,  5 Sep 2021 09:36:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236394AbhIEJMI (ORCPT
+        id S236696AbhIEJhi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 5 Sep 2021 05:12:08 -0400
-Received: from mga02.intel.com ([134.134.136.20]:52572 "EHLO mga02.intel.com"
+        Sun, 5 Sep 2021 05:37:38 -0400
+Received: from mga12.intel.com ([192.55.52.136]:54823 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229691AbhIEJMI (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 5 Sep 2021 05:12:08 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10097"; a="206980093"
+        id S231977AbhIEJhi (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Sun, 5 Sep 2021 05:37:38 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10097"; a="199295143"
 X-IronPort-AV: E=Sophos;i="5.85,269,1624345200"; 
-   d="scan'208";a="206980093"
+   d="scan'208";a="199295143"
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2021 02:11:05 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2021 02:36:35 -0700
 X-IronPort-AV: E=Sophos;i="5.85,269,1624345200"; 
-   d="scan'208";a="535866588"
+   d="scan'208";a="535871124"
 Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.249.168.84]) ([10.249.168.84])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2021 02:11:01 -0700
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2021 02:36:31 -0700
 Subject: Re: [PATCH v7 1/2] perf pmu: Add PMU alias support
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
@@ -37,13 +38,14 @@ Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
         john.garry@huawei.com, Kan Liang <kan.liang@linux.intel.com>
 References: <20210902065955.1299-1-yao.jin@linux.intel.com>
  <20210902065955.1299-2-yao.jin@linux.intel.com> <YTIJLyL4Ba7wuZqs@kernel.org>
+ <YTIMYlsUD0cqAYUA@kernel.org>
 From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <ce0e8ecd-94fc-886d-665a-744ceff5a129@linux.intel.com>
-Date:   Sun, 5 Sep 2021 17:10:58 +0800
+Message-ID: <f1eae329-8561-7340-0464-e9a73aba89b1@linux.intel.com>
+Date:   Sun, 5 Sep 2021 17:36:28 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.13.0
 MIME-Version: 1.0
-In-Reply-To: <YTIJLyL4Ba7wuZqs@kernel.org>
+In-Reply-To: <YTIMYlsUD0cqAYUA@kernel.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -53,20 +55,13 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hi Arnaldo,
 
-On 9/3/2021 7:38 PM, Arnaldo Carvalho de Melo wrote:
->      Committer notes:
->      
->      Rename 'struct perf_pmu_alias_name' to 'pmu_alias', the 'perf_' prefix
->      should be used for libperf, things inside just tools/perf/ are being
->      moved away from that prefix.
->      
->      Also 'pmu_alias' is shorter and reflects the abstraction.
->      
->      Also don't use 'pmu' as the name for variables for that type, we should
->      use that for the 'struct perf_pmu' variables, avoiding confusion. Use
->      'pmu_alias' for 'struct pmu_alias' variables.
+On 9/3/2021 7:52 PM, Arnaldo Carvalho de Melo wrote:
+> Please take a look at my tmp.perf/core branch, it has the patch below
+> and the test one plus what I'm about to push to Linus.
+> 
+> - Arnaldo
 
-I fully agree your recommended changes. I think Kan will agree too. :) Thanks so much!
+I've pulled tmp.perf/core branch and checked the patch. It looks good to me.
 
 Thanks
 Jin Yao
