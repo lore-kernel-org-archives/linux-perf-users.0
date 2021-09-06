@@ -2,127 +2,106 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4851DC433FE
-	for <linux-perf-users@archiver.kernel.org>; Sun,  5 Sep 2021 21:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC354C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Sep 2021 01:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 300C060F5E
-	for <linux-perf-users@archiver.kernel.org>; Sun,  5 Sep 2021 21:25:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 853E960C3E
+	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Sep 2021 01:53:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238421AbhIEV0N (ORCPT
+        id S231178AbhIFByY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 5 Sep 2021 17:26:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57084 "EHLO
+        Sun, 5 Sep 2021 21:54:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238289AbhIEV0F (ORCPT
+        with ESMTP id S233866AbhIFByX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 5 Sep 2021 17:26:05 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0405C0617AE
-        for <linux-perf-users@vger.kernel.org>; Sun,  5 Sep 2021 14:24:58 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id b10so6863451wru.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 05 Sep 2021 14:24:58 -0700 (PDT)
+        Sun, 5 Sep 2021 21:54:23 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32012C061757;
+        Sun,  5 Sep 2021 18:53:20 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id q68so5187507pga.9;
+        Sun, 05 Sep 2021 18:53:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jIKy04n4SEct/kBbtr4jBMWbMzYLLzxmc9yw++ulVoU=;
-        b=N86W1IJOKcV1SWTuhSmRlI5f79Nw7JC6F4ceQ/Ln9kz/BYw523ugT825Kz8NTbj2VJ
-         Crzbo9kRW3fOSx1/YJX2cbCVDP4qSKRNNLFiyGa0qgRYfsyREy+GeviXzVaLD4syt5dd
-         q1fAf1/Ffo1HEv9VynbKrlvhVsweqb9DgkyZS+4fAXSk7fStMFVWVueqUaVr9d/BILri
-         zuqIcBp1psUJ7MxYrltDKT0tuuazHRi1UF7xbvtZKa823O68Hn24UfQFP2/gWiDOylV3
-         eMhkR1BdSmnNy1TEOMm17gH08mSMmmqMiOcR3fJWFegqGP7D73PE3ZhOff43L2tq8nDU
-         tZWQ==
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id;
+        bh=4PiiYlxPArRq5bNiMMjosViIZMKcElEur95zboCrNWc=;
+        b=UYSqN8uax4LRLi39QFa8Mz7ABGfHZ8ewGHROQoxi4wsxiwgIK0YIdBZ7M35lGC3r81
+         Iwo2dw3LWZYTjTXTLm2D5jktMsJEAjQW0aIBWYYhJzrUc0o1pMo/avnBYhGqvdu7pQC1
+         BcS5x1Kfa62L6YEeD6uw3nBds9PNbqbT3G/8bjb6bvtqPSaW41CT5mRu0ovlOIrXcO/K
+         gXgeRukSwoE/MypUVWUvh9i/gw8em85bfudqRPZeym813AMv2JH6Si+bB4vkj6kbdQu3
+         xqlndXQI2xbhNESwujcp4fO3751E0exp4jnbvVbFOFaHehvVlN7/S2IRFYuSBteOrzmz
+         4kQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jIKy04n4SEct/kBbtr4jBMWbMzYLLzxmc9yw++ulVoU=;
-        b=dGRoG4E6nlqzw3JhFUCuflpNwYuhWcz8FvBDvVu49/7fa32o3GmgjYbsVa3EbgtKFm
-         hkWlcMSfdykxn26TQlal7h7K7JpesJWe9GK/TA+E6sm0ysAZOMfd+QuTAU3v3inEcvBH
-         tV1hji2FXuNGoH/DqECnRa6R4XGqEvKhjGoH8nIw1iuFe4Ib2VeFtaBLB/QbI7mlkbKh
-         gT6BBCXNk4xUu9hytFHe1WKWFVvmkJtspv4G8odC7r8bRFv5woPKjDZHTsr5143fBn3T
-         6O3XN0JZ9HWKHiVxJQFg54dx5H7XdQuLBf59sNrMYWnZdWPeQ+7YX9jLKa01+MQ5ioBP
-         Q5pw==
-X-Gm-Message-State: AOAM530FLJXaZRvrX0+FCQkEq29byU00OoGPFx0l23cazAQMopeh4O1K
-        n75bDDFs5A9pPruz0rKA6WG+i/I6H8Tth0UF7HdVXg==
-X-Google-Smtp-Source: ABdhPJyHhGbGj5/aBMqLo8ftUlD+qEetFvZ8k0dh0n4d01mLIXJijTpRitU0QwB/MbTek9ZpkSOtY9r9e3sc4Yvxwko=
-X-Received: by 2002:a5d:4a08:: with SMTP id m8mr9717729wrq.263.1630877097634;
- Sun, 05 Sep 2021 14:24:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210806134109.1182235-1-james.clark@arm.com> <20210806134109.1182235-10-james.clark@arm.com>
- <20210824083615.GF204566@leoy-ThinkPad-X240s> <YS+iOrcPTzQfmbqU@kernel.org>
- <20210902174851.GB1078000@p14s> <YTEVwVCWoS8cgqql@kernel.org> <CANLsYkxhj1RkJ+BYLGBZ=c=VHT6ayfHvP_T68xGxcnsKQXEVxA@mail.gmail.com>
-In-Reply-To: <CANLsYkxhj1RkJ+BYLGBZ=c=VHT6ayfHvP_T68xGxcnsKQXEVxA@mail.gmail.com>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Sun, 5 Sep 2021 22:24:47 +0100
-Message-ID: <CAJ9a7Vh48zXnh8Wq8FDAik2GbX6JCnoq=h7B6wokkht0KRb7WA@mail.gmail.com>
-Subject: Re: [PATCH v2 9/9] perf cs-etm: Show a warning for an unknown magic number
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        James Clark <james.clark@arm.com>,
-        Coresight ML <coresight@lists.linaro.org>,
-        linux-perf-users@vger.kernel.org,
-        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4PiiYlxPArRq5bNiMMjosViIZMKcElEur95zboCrNWc=;
+        b=Ngl8JuJzZtoWrRT/e2Xbxf2d7jlDPHqnr2rV/Z8RHgWg9GgnHN/g4R54oYJ8Kk4a/z
+         rlGV9S/1uPCZcrbx+qQjp/IdsQci4tkpMsznoBJhqZLXLWYlc8SXPvKVuoxyLEbwB0BD
+         zjd4kTdkI+1mpkHTqlRZfNzoHG9BkOE+kjDuwDwalFquSZHVld3Y2jOV4iG16NOhmWSl
+         SiExaWwykv9w7TeYE/3FzFe3h0Y5Pzupdvnlbm+9VnGhhi+1R2BbAuLgG5AaUvoHYMDD
+         c2QbbJM7ihGt9uuRuEpWsDDL31KUlMNMpOhGNFzNA31VUcVyJca9/VMcb485XNKwYSon
+         68Mw==
+X-Gm-Message-State: AOAM530PXWcYwtOmVvM6v2RwPBHwPNqCr9W91hKtm9I8jQOfvQsRBKHP
+        T86w5+tpoWNcN/IXzz5D/kk=
+X-Google-Smtp-Source: ABdhPJwKyfZj/OJzI6XVdM1fGek0xGS2IzGTAr1CMphTAX1ZnA9VVy/1yw1xZJK1eWqDSTBaTo9ThA==
+X-Received: by 2002:a63:3753:: with SMTP id g19mr9479040pgn.328.1630893199578;
+        Sun, 05 Sep 2021 18:53:19 -0700 (PDT)
+Received: from localhost (natp-s01-129-78-56-229.gw.usyd.edu.au. [129.78.56.229])
+        by smtp.gmail.com with ESMTPSA id g7sm5704777pfr.126.2021.09.05.18.53.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 05 Sep 2021 18:53:19 -0700 (PDT)
+From:   Baptiste Lepers <baptiste.lepers@gmail.com>
+Cc:     Baptiste Lepers <baptiste.lepers@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] events: Reuse value read using READ_ONCE instead of re-reading it
+Date:   Mon,  6 Sep 2021 11:53:10 +1000
+Message-Id: <20210906015310.12802-1-baptiste.lepers@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Reviewed-by: Mike Leach <mike.leach@linaro.org>
+In perf_event_addr_filters_apply, the task associated with
+the event (event->ctx->task) is read using READ_ONCE at the beginning
+of the function, checked, and then re-read from event->ctx->task,
+voiding all guarantees of the checks. Reuse the value that was read by
+READ_ONCE to ensure the consistency of the task struct throughout the
+function.
 
+Signed-off-by: Baptiste Lepers <baptiste.lepers@gmail.com>
+Fixes: 375637bc52495 ("perf/core: Introduce address range filtering")
+---
+ kernel/events/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Thu, 2 Sept 2021 at 20:22, Mathieu Poirier
-<mathieu.poirier@linaro.org> wrote:
->
-> On Thu, 2 Sept 2021 at 12:19, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> >
-> > Em Thu, Sep 02, 2021 at 11:48:51AM -0600, Mathieu Poirier escreveu:
-> > > Hi Arnaldo,
-> > >
-> > > On Wed, Sep 01, 2021 at 12:54:34PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > Em Tue, Aug 24, 2021 at 04:36:15PM +0800, Leo Yan escreveu:
-> > > > > On Fri, Aug 06, 2021 at 02:41:09PM +0100, James Clark wrote:
-> > > > > > Currently perf reports "Cannot allocate memory" which isn't very helpful
-> > > > > > for a potentially user facing issue. If we add a new magic number in
-> > > > > > the future, perf will be able to report unrecognised magic numbers.
-> > > > > >
-> > > > > > Signed-off-by: James Clark <james.clark@arm.com>
-> > > > >
-> > > > > Reviewed-by: Leo Yan <leo.yan@linaro.org>
-> > > >
-> > > > Applies cleanly to my tree, test building it now, holler if there is
-> > > > something that prevents it from being merged.
-> > >
-> > > Have you already merged this?
-> > >
-> > > If so than let it be.  Otherwise please hold off as I'd like to take a look,
-> > > something I intend on doing next week.
-> >
-> > Ok, I can remove them from my local branch, but this may make this miss
-> > the v5.15 merge window, please advise.
-> >
->
-> Nah, leave it in your branch and proceed for this merge window.
->
-> > - Arnaldo
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 744e8726c5b2..0c000cb01eeb 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -10193,7 +10193,7 @@ static void perf_event_addr_filters_apply(struct perf_event *event)
+ 		return;
+ 
+ 	if (ifh->nr_file_filters) {
+-		mm = get_task_mm(event->ctx->task);
++		mm = get_task_mm(task);
+ 		if (!mm)
+ 			goto restart;
+ 
+-- 
+2.17.1
 
-
-
---
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
