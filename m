@@ -2,98 +2,102 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCECBC433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Sep 2021 14:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CE4C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Sep 2021 15:22:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFEFF60F14
-	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Sep 2021 14:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC3DA60F13
+	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Sep 2021 15:22:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243348AbhIFO1p (ORCPT
+        id S229531AbhIFPXy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 6 Sep 2021 10:27:45 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:44355 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S243326AbhIFO1o (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 6 Sep 2021 10:27:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1630938397;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Pa5lyXJkuizLFBwGfxieATj3aTl2wYZdhrQMYfu5ilI=;
-        b=TdeZtMW4szplGy9jaCN4hYfuLQr1AD7RE6fEElyfpTDrkDY9UL0AdHO5TRBdXLYjo1lfr1
-        nH3U6rMW3b1P0Eu82XIHLAc8dKunIO67LM8EtwJZll+3tvYx2HkjvQ8IU68D9obmo3h3jJ
-        VhRXoIv8yteLkMSD/BgpTMswP+TG72I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-299-pV4q-AshMhiHcUdQZrJcQg-1; Mon, 06 Sep 2021 10:26:36 -0400
-X-MC-Unique: pV4q-AshMhiHcUdQZrJcQg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1DB2E81431C;
-        Mon,  6 Sep 2021 14:26:35 +0000 (UTC)
-Received: from Diego (unknown [10.39.208.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9662118761;
-        Mon,  6 Sep 2021 14:26:33 +0000 (UTC)
-Date:   Mon, 6 Sep 2021 16:26:31 +0200 (CEST)
-From:   Michael Petlan <mpetlan@redhat.com>
-X-X-Sender: Michael@Diego
-To:     acme@redhat.com
-cc:     linux-perf-users@vger.kernel.org, jolsa@redhat.com,
-        sumanthk@linux.ibm.com
-Subject: Re: [PATCH] perf test: Fix bpf test sample mismatch reporting
-In-Reply-To: <20210805160611.5542-1-mpetlan@redhat.com>
-Message-ID: <alpine.LRH.2.20.2109061625540.27231@Diego>
-References: <20210805160611.5542-1-mpetlan@redhat.com>
-User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
+        Mon, 6 Sep 2021 11:23:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:56682 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233929AbhIFPXy (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 6 Sep 2021 11:23:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1CA3A31B;
+        Mon,  6 Sep 2021 08:22:49 -0700 (PDT)
+Received: from e121896.arm.com (unknown [10.57.47.83])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B7C3E3F766;
+        Mon,  6 Sep 2021 08:22:47 -0700 (PDT)
+From:   James Clark <james.clark@arm.com>
+To:     acme@kernel.org, linux-perf-users@vger.kernel.org
+Cc:     James Clark <james.clark@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] perf tests: Fix flaky test 'Object code reading'
+Date:   Mon,  6 Sep 2021 16:22:38 +0100
+Message-Id: <20210906152238.3415467-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Arnaldo, please have a look.
-This is still valid.
-Thanks.
-Michael
+This test occasionally fails on aarch64 when a sample is taken in
+free@plt and it fails with "Bytes read differ from those read by
+objdump". This is because that symbol is near a section boundary in the
+elf file. Despite the -z option to always output zeros, objdump uses
+bfd_map_over_sections() to iterate through the elf file so it doesn't
+see outside of the sections where these zeros are and can't print them.
 
-On Thu, 5 Aug 2021, Michael Petlan wrote:
-> When the expected sample count in the condition changed, the message
-> needs to be changed too, otherwise we'll get:
-> 
->   0x1001f2091d8: mmap mask[0]:
->   BPF filter result incorrect, expected 56, got 56 samples
-> 
-> Fixes: 4b04e0decd25 ("perf test: Fix basic bpf filtering test")
-> 
-> Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-> ---
->  tools/perf/tests/bpf.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
-> index dbf5f5215abe..fa03ff0dc083 100644
-> --- a/tools/perf/tests/bpf.c
-> +++ b/tools/perf/tests/bpf.c
-> @@ -192,7 +192,7 @@ static int do_test(struct bpf_object *obj, int (*func)(void),
->  	}
->  
->  	if (count != expect * evlist->core.nr_entries) {
-> -		pr_debug("BPF filter result incorrect, expected %d, got %d samples\n", expect, count);
-> +		pr_debug("BPF filter result incorrect, expected %d, got %d samples\n", expect * evlist->core.nr_entries, count);
->  		goto out_delete_evlist;
->  	}
->  
-> -- 
-> 2.18.4
-> 
-> 
+For example this boundary proceeds free@plt in libc with a gap of 48
+bytes between .plt and .text:
+
+  objdump -d -z --start-address=0x23cc8 --stop-address=0x23d08 libc-2.30.so
+
+  libc-2.30.so:     file format elf64-littleaarch64
+
+  Disassembly of section .plt:
+
+  0000000000023cc8 <*ABS*+0x7fd00@plt+0x8>:
+     23cc8:	91018210 	add	x16, x16, #0x60
+     23ccc:	d61f0220 	br	x17
+
+  Disassembly of section .text:
+
+  0000000000023d00 <abort@@GLIBC_2.17-0x98>:
+     23d00:	a9bf7bfd 	stp	x29, x30, [sp, #-16]!
+     23d04:	910003fd 	mov	x29, sp
+
+Taking a sample in free@plt is very rare because it is so small, but the
+test can be forced to fail almost every time on any platform by linking
+the test with a shared library that has a single empty function and
+calling it in a loop.
+
+The fix is to zero the buffers so that when there is a jump in the
+addresses output by objdump, zeros are already filled in between.
+
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ tools/perf/tests/code-reading.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
+index 9866cddebf23..9b4a765e4b73 100644
+--- a/tools/perf/tests/code-reading.c
++++ b/tools/perf/tests/code-reading.c
+@@ -229,8 +229,8 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
+ 			    struct thread *thread, struct state *state)
+ {
+ 	struct addr_location al;
+-	unsigned char buf1[BUFSZ];
+-	unsigned char buf2[BUFSZ];
++	unsigned char buf1[BUFSZ] = {0};
++	unsigned char buf2[BUFSZ] = {0};
+ 	size_t ret_len;
+ 	u64 objdump_addr;
+ 	const char *objdump_name;
+-- 
+2.28.0
 
