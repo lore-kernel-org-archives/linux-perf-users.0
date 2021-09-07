@@ -7,29 +7,30 @@ X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E62BC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Sep 2021 16:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4FEDC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Sep 2021 16:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 601BD61102
-	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Sep 2021 16:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABE6D61090
+	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Sep 2021 16:41:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344244AbhIGQma (ORCPT
+        id S231347AbhIGQme (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 7 Sep 2021 12:42:30 -0400
+        Tue, 7 Sep 2021 12:42:34 -0400
 Received: from mga07.intel.com ([134.134.136.100]:27264 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231347AbhIGQma (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 7 Sep 2021 12:42:30 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10099"; a="283959474"
+        id S1344690AbhIGQmd (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 7 Sep 2021 12:42:33 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10099"; a="283959502"
 X-IronPort-AV: E=Sophos;i="5.85,274,1624345200"; 
-   d="scan'208";a="283959474"
+   d="scan'208";a="283959502"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2021 09:38:42 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2021 09:38:46 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.85,274,1624345200"; 
-   d="scan'208";a="430979265"
+   d="scan'208";a="430979291"
 Received: from ahunter-desktop.fi.intel.com ([10.237.72.174])
-  by orsmga003.jf.intel.com with ESMTP; 07 Sep 2021 09:38:39 -0700
+  by orsmga003.jf.intel.com with ESMTP; 07 Sep 2021 09:38:43 -0700
 From:   Adrian Hunter <adrian.hunter@intel.com>
 To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     Ingo Molnar <mingo@redhat.com>,
@@ -39,9 +40,9 @@ Cc:     Ingo Molnar <mingo@redhat.com>,
         Jiri Olsa <jolsa@redhat.com>, Leo Yan <leo.yan@linaro.org>,
         Kan Liang <kan.liang@linux.intel.com>, x86@kernel.org,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V3 1/3] perf/x86: Add new event for AUX output counter index
-Date:   Tue,  7 Sep 2021 19:39:01 +0300
-Message-Id: <20210907163903.11820-2-adrian.hunter@intel.com>
+Subject: [PATCH V3 2/3] perf tools: Add support for PERF_RECORD_AUX_OUTPUT_HW_ID
+Date:   Tue,  7 Sep 2021 19:39:02 +0300
+Message-Id: <20210907163903.11820-3-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20210907163903.11820-1-adrian.hunter@intel.com>
 References: <20210907163903.11820-1-adrian.hunter@intel.com>
@@ -49,141 +50,30 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-PEBS-via-PT records contain a mask of applicable counters. To identify
-which event belongs to which counter, a side-band event is needed. Until
-now, there has been no side-band event, and consequently users were limited
-to using a single event.
-
-Add such a side-band event. Note the event is optimised to output only
-when the counter index changes for an event. That works only so long as
-all PEBS-via-PT events are scheduled together, which they are for a
-recording session because they are in a single group.
-
-Also no attribute bit is used to select the new event, so a new
-kernel is not compatible with older perf tools.  The assumption
-being that PEBS-via-PT is sufficiently esoteric that users will not
-be troubled by this.
+The PERF_RECORD_AUX_OUTPUT_HW_ID event provides a way to match AUX output
+data like Intel PT PEBS-via-PT back to the event that it came from, by
+providing a hardware ID that is present in the AUX output.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Reviewed-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
 ---
+ tools/include/uapi/linux/perf_event.h | 15 +++++++++++++++
+ tools/lib/perf/include/perf/event.h   |  6 ++++++
+ tools/perf/builtin-inject.c           |  4 +++-
+ tools/perf/builtin-record.c           |  2 +-
+ tools/perf/util/event.c               | 18 ++++++++++++++++++
+ tools/perf/util/event.h               |  5 +++++
+ tools/perf/util/machine.c             | 10 ++++++++++
+ tools/perf/util/machine.h             |  2 ++
+ tools/perf/util/session.c             |  5 +++++
+ tools/perf/util/tool.h                |  1 +
+ 10 files changed, 66 insertions(+), 2 deletions(-)
 
-Changes in V3:
-	Do not set assign callback unless x86_pmu.intel_cap.pebs_output_pt_available
-
-Changes in V2:
-	Use callback from x86_assign_hw_event
-
-
- arch/x86/events/core.c          |  6 ++++++
- arch/x86/events/intel/core.c    | 16 ++++++++++++++++
- arch/x86/events/perf_event.h    |  1 +
- include/linux/perf_event.h      |  1 +
- include/uapi/linux/perf_event.h | 15 +++++++++++++++
- kernel/events/core.c            | 30 ++++++++++++++++++++++++++++++
- 6 files changed, 69 insertions(+)
-
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 2a57dbed4894..be33423e9762 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -66,6 +66,8 @@ DEFINE_STATIC_CALL_NULL(x86_pmu_enable_all,  *x86_pmu.enable_all);
- DEFINE_STATIC_CALL_NULL(x86_pmu_enable,	     *x86_pmu.enable);
- DEFINE_STATIC_CALL_NULL(x86_pmu_disable,     *x86_pmu.disable);
- 
-+DEFINE_STATIC_CALL_NULL(x86_pmu_assign, *x86_pmu.assign);
-+
- DEFINE_STATIC_CALL_NULL(x86_pmu_add,  *x86_pmu.add);
- DEFINE_STATIC_CALL_NULL(x86_pmu_del,  *x86_pmu.del);
- DEFINE_STATIC_CALL_NULL(x86_pmu_read, *x86_pmu.read);
-@@ -1215,6 +1217,8 @@ static inline void x86_assign_hw_event(struct perf_event *event,
- 	hwc->last_cpu = smp_processor_id();
- 	hwc->last_tag = ++cpuc->tags[i];
- 
-+	static_call_cond(x86_pmu_assign)(event, idx);
-+
- 	switch (hwc->idx) {
- 	case INTEL_PMC_IDX_FIXED_BTS:
- 	case INTEL_PMC_IDX_FIXED_VLBR:
-@@ -2005,6 +2009,8 @@ static void x86_pmu_static_call_update(void)
- 	static_call_update(x86_pmu_enable, x86_pmu.enable);
- 	static_call_update(x86_pmu_disable, x86_pmu.disable);
- 
-+	static_call_update(x86_pmu_assign, x86_pmu.assign);
-+
- 	static_call_update(x86_pmu_add, x86_pmu.add);
- 	static_call_update(x86_pmu_del, x86_pmu.del);
- 	static_call_update(x86_pmu_read, x86_pmu.read);
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 7011e87be6d0..a555e7c2dce9 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -2402,6 +2402,12 @@ static void intel_pmu_disable_event(struct perf_event *event)
- 		intel_pmu_pebs_disable(event);
- }
- 
-+static void intel_pmu_assign_event(struct perf_event *event, int idx)
-+{
-+	if (is_pebs_pt(event))
-+		perf_report_aux_output_id(event, idx);
-+}
-+
- static void intel_pmu_del_event(struct perf_event *event)
- {
- 	if (needs_branch_stack(event))
-@@ -4494,8 +4500,16 @@ static int intel_pmu_check_period(struct perf_event *event, u64 value)
- 	return intel_pmu_has_bts_period(event, value) ? -EINVAL : 0;
- }
- 
-+static void intel_aux_output_init(void)
-+{
-+	/* Refer also intel_pmu_aux_output_match() */
-+	if (x86_pmu.intel_cap.pebs_output_pt_available)
-+		x86_pmu.assign = intel_pmu_assign_event;
-+}
-+
- static int intel_pmu_aux_output_match(struct perf_event *event)
- {
-+	/* intel_pmu_assign_event() is needed, refer intel_aux_output_init() */
- 	if (!x86_pmu.intel_cap.pebs_output_pt_available)
- 		return 0;
- 
-@@ -6301,6 +6315,8 @@ __init int intel_pmu_init(void)
- 	if (is_hybrid())
- 		intel_pmu_check_hybrid_pmus((u64)fixed_mask);
- 
-+	intel_aux_output_init();
-+
- 	return 0;
- }
- 
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index e3ac05c97b5e..76436a55d9ba 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -726,6 +726,7 @@ struct x86_pmu {
- 	void		(*enable_all)(int added);
- 	void		(*enable)(struct perf_event *);
- 	void		(*disable)(struct perf_event *);
-+	void		(*assign)(struct perf_event *event, int idx);
- 	void		(*add)(struct perf_event *);
- 	void		(*del)(struct perf_event *);
- 	void		(*read)(struct perf_event *event);
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index fe156a8170aa..6f4a15660651 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1398,6 +1398,7 @@ perf_event_addr_filters(struct perf_event *event)
- }
- 
- extern void perf_event_addr_filters_sync(struct perf_event *event);
-+extern void perf_report_aux_output_id(struct perf_event *event, u64 hw_id);
- 
- extern int perf_output_begin(struct perf_output_handle *handle,
- 			     struct perf_sample_data *data,
-diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
 index f92880a15645..c89535de1ec8 100644
---- a/include/uapi/linux/perf_event.h
-+++ b/include/uapi/linux/perf_event.h
+--- a/tools/include/uapi/linux/perf_event.h
++++ b/tools/include/uapi/linux/perf_event.h
 @@ -1141,6 +1141,21 @@ enum perf_event_type {
  	 */
  	PERF_RECORD_TEXT_POKE			= 20,
@@ -206,47 +96,221 @@ index f92880a15645..c89535de1ec8 100644
  	PERF_RECORD_MAX,			/* non-ABI */
  };
  
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 744e8726c5b2..79241b6e57c7 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -9073,6 +9073,36 @@ static void perf_log_itrace_start(struct perf_event *event)
- 	perf_output_end(&handle);
+diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
+index 095d60144a70..acc4fa065ec7 100644
+--- a/tools/lib/perf/include/perf/event.h
++++ b/tools/lib/perf/include/perf/event.h
+@@ -289,6 +289,11 @@ struct perf_record_itrace_start {
+ 	__u32			 tid;
+ };
+ 
++struct perf_record_aux_output_hw_id {
++	struct perf_event_header header;
++	__u64			hw_id;
++};
++
+ struct perf_record_thread_map_entry {
+ 	__u64			 pid;
+ 	char			 comm[16];
+@@ -414,6 +419,7 @@ union perf_event {
+ 	struct perf_record_auxtrace_error	auxtrace_error;
+ 	struct perf_record_aux			aux;
+ 	struct perf_record_itrace_start		itrace_start;
++	struct perf_record_aux_output_hw_id	aux_output_hw_id;
+ 	struct perf_record_switch		context_switch;
+ 	struct perf_record_thread_map		thread_map;
+ 	struct perf_record_cpu_map		cpu_map;
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 6ad191e731fc..ac6c570029e3 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -815,7 +815,8 @@ static int __cmd_inject(struct perf_inject *inject)
+ 		inject->tool.auxtrace_info  = perf_event__process_auxtrace_info;
+ 		inject->tool.auxtrace	    = perf_event__process_auxtrace;
+ 		inject->tool.aux	    = perf_event__drop_aux;
+-		inject->tool.itrace_start   = perf_event__drop_aux,
++		inject->tool.itrace_start   = perf_event__drop_aux;
++		inject->tool.aux_output_hw_id = perf_event__drop_aux;
+ 		inject->tool.ordered_events = true;
+ 		inject->tool.ordering_requires_timestamps = true;
+ 		/* Allow space in the header for new attributes */
+@@ -882,6 +883,7 @@ int cmd_inject(int argc, const char **argv)
+ 			.lost_samples	= perf_event__repipe,
+ 			.aux		= perf_event__repipe,
+ 			.itrace_start	= perf_event__repipe,
++			.aux_output_hw_id = perf_event__repipe,
+ 			.context_switch	= perf_event__repipe,
+ 			.throttle	= perf_event__repipe,
+ 			.unthrottle	= perf_event__repipe,
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index b3509d9d20cc..71a08eeea252 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1409,7 +1409,7 @@ static int record__synthesize(struct record *rec, bool tail)
+ 		goto out;
+ 
+ 	/* Synthesize id_index before auxtrace_info */
+-	if (rec->opts.auxtrace_sample_mode) {
++	if (rec->opts.auxtrace_sample_mode || rec->opts.full_auxtrace) {
+ 		err = perf_event__synthesize_id_index(tool,
+ 						      process_synthesized_event,
+ 						      session->evlist, machine);
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index ac706304afe9..fe24801f8e9f 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -57,6 +57,7 @@ static const char *perf_event__names[] = {
+ 	[PERF_RECORD_BPF_EVENT]			= "BPF_EVENT",
+ 	[PERF_RECORD_CGROUP]			= "CGROUP",
+ 	[PERF_RECORD_TEXT_POKE]			= "TEXT_POKE",
++	[PERF_RECORD_AUX_OUTPUT_HW_ID]		= "AUX_OUTPUT_HW_ID",
+ 	[PERF_RECORD_HEADER_ATTR]		= "ATTR",
+ 	[PERF_RECORD_HEADER_EVENT_TYPE]		= "EVENT_TYPE",
+ 	[PERF_RECORD_HEADER_TRACING_DATA]	= "TRACING_DATA",
+@@ -237,6 +238,14 @@ int perf_event__process_itrace_start(struct perf_tool *tool __maybe_unused,
+ 	return machine__process_itrace_start_event(machine, event);
  }
  
-+void perf_report_aux_output_id(struct perf_event *event, u64 hw_id)
++int perf_event__process_aux_output_hw_id(struct perf_tool *tool __maybe_unused,
++					 union perf_event *event,
++					 struct perf_sample *sample __maybe_unused,
++					 struct machine *machine)
 +{
-+	struct perf_output_handle handle;
-+	struct perf_sample_data sample;
-+	struct perf_aux_event {
-+		struct perf_event_header        header;
-+		u64				hw_id;
-+	} rec;
-+	int ret;
-+
-+	if (event->parent)
-+		event = event->parent;
-+
-+	rec.header.type	= PERF_RECORD_AUX_OUTPUT_HW_ID;
-+	rec.header.misc	= 0;
-+	rec.header.size	= sizeof(rec);
-+	rec.hw_id	= hw_id;
-+
-+	perf_event_header__init_id(&rec.header, &sample, event);
-+	ret = perf_output_begin(&handle, &sample, event, rec.header.size);
-+
-+	if (ret)
-+		return;
-+
-+	perf_output_put(&handle, rec);
-+	perf_event__output_id_sample(event, &handle, &sample);
-+
-+	perf_output_end(&handle);
++	return machine__process_aux_output_hw_id_event(machine, event);
 +}
 +
- static int
- __perf_event_account_interrupt(struct perf_event *event, int throttle)
+ int perf_event__process_lost_samples(struct perf_tool *tool __maybe_unused,
+ 				     union perf_event *event,
+ 				     struct perf_sample *sample,
+@@ -407,6 +416,12 @@ size_t perf_event__fprintf_itrace_start(union perf_event *event, FILE *fp)
+ 		       event->itrace_start.pid, event->itrace_start.tid);
+ }
+ 
++size_t perf_event__fprintf_aux_output_hw_id(union perf_event *event, FILE *fp)
++{
++	return fprintf(fp, " hw_id: %#"PRI_lx64"\n",
++		       event->aux_output_hw_id.hw_id);
++}
++
+ size_t perf_event__fprintf_switch(union perf_event *event, FILE *fp)
  {
+ 	bool out = event->header.misc & PERF_RECORD_MISC_SWITCH_OUT;
+@@ -534,6 +549,9 @@ size_t perf_event__fprintf(union perf_event *event, struct machine *machine, FIL
+ 	case PERF_RECORD_TEXT_POKE:
+ 		ret += perf_event__fprintf_text_poke(event, machine, fp);
+ 		break;
++	case PERF_RECORD_AUX_OUTPUT_HW_ID:
++		ret += perf_event__fprintf_aux_output_hw_id(event, fp);
++		break;
+ 	default:
+ 		ret += fprintf(fp, "\n");
+ 	}
+diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+index 19ad64f2bd83..95ffed66369c 100644
+--- a/tools/perf/util/event.h
++++ b/tools/perf/util/event.h
+@@ -330,6 +330,10 @@ int perf_event__process_itrace_start(struct perf_tool *tool,
+ 				     union perf_event *event,
+ 				     struct perf_sample *sample,
+ 				     struct machine *machine);
++int perf_event__process_aux_output_hw_id(struct perf_tool *tool,
++					 union perf_event *event,
++					 struct perf_sample *sample,
++					 struct machine *machine);
+ int perf_event__process_switch(struct perf_tool *tool,
+ 			       union perf_event *event,
+ 			       struct perf_sample *sample,
+@@ -397,6 +401,7 @@ size_t perf_event__fprintf_mmap2(union perf_event *event, FILE *fp);
+ size_t perf_event__fprintf_task(union perf_event *event, FILE *fp);
+ size_t perf_event__fprintf_aux(union perf_event *event, FILE *fp);
+ size_t perf_event__fprintf_itrace_start(union perf_event *event, FILE *fp);
++size_t perf_event__fprintf_aux_output_hw_id(union perf_event *event, FILE *fp);
+ size_t perf_event__fprintf_switch(union perf_event *event, FILE *fp);
+ size_t perf_event__fprintf_thread_map(union perf_event *event, FILE *fp);
+ size_t perf_event__fprintf_cpu_map(union perf_event *event, FILE *fp);
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index da19be7da284..c6b11cd82009 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -755,6 +755,14 @@ int machine__process_itrace_start_event(struct machine *machine __maybe_unused,
+ 	return 0;
+ }
+ 
++int machine__process_aux_output_hw_id_event(struct machine *machine __maybe_unused,
++					    union perf_event *event)
++{
++	if (dump_trace)
++		perf_event__fprintf_aux_output_hw_id(event, stdout);
++	return 0;
++}
++
+ int machine__process_switch_event(struct machine *machine __maybe_unused,
+ 				  union perf_event *event)
+ {
+@@ -2028,6 +2036,8 @@ int machine__process_event(struct machine *machine, union perf_event *event,
+ 		ret = machine__process_bpf(machine, event, sample); break;
+ 	case PERF_RECORD_TEXT_POKE:
+ 		ret = machine__process_text_poke(machine, event, sample); break;
++	case PERF_RECORD_AUX_OUTPUT_HW_ID:
++		ret = machine__process_aux_output_hw_id_event(machine, event); break;
+ 	default:
+ 		ret = -1;
+ 		break;
+diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
+index 7377ed6efdf1..a143087eeb47 100644
+--- a/tools/perf/util/machine.h
++++ b/tools/perf/util/machine.h
+@@ -124,6 +124,8 @@ int machine__process_aux_event(struct machine *machine,
+ 			       union perf_event *event);
+ int machine__process_itrace_start_event(struct machine *machine,
+ 					union perf_event *event);
++int machine__process_aux_output_hw_id_event(struct machine *machine,
++					    union perf_event *event);
+ int machine__process_switch_event(struct machine *machine,
+ 				  union perf_event *event);
+ int machine__process_namespaces_event(struct machine *machine,
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 069c2cfdd3be..bdf1da9ea418 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -509,6 +509,8 @@ void perf_tool__fill_defaults(struct perf_tool *tool)
+ 		tool->bpf = perf_event__process_bpf;
+ 	if (tool->text_poke == NULL)
+ 		tool->text_poke = perf_event__process_text_poke;
++	if (tool->aux_output_hw_id == NULL)
++		tool->aux_output_hw_id = perf_event__process_aux_output_hw_id;
+ 	if (tool->read == NULL)
+ 		tool->read = process_event_sample_stub;
+ 	if (tool->throttle == NULL)
+@@ -1000,6 +1002,7 @@ static perf_event__swap_op perf_event__swap_ops[] = {
+ 	[PERF_RECORD_NAMESPACES]	  = perf_event__namespaces_swap,
+ 	[PERF_RECORD_CGROUP]		  = perf_event__cgroup_swap,
+ 	[PERF_RECORD_TEXT_POKE]		  = perf_event__text_poke_swap,
++	[PERF_RECORD_AUX_OUTPUT_HW_ID]	  = perf_event__all64_swap,
+ 	[PERF_RECORD_HEADER_ATTR]	  = perf_event__hdr_attr_swap,
+ 	[PERF_RECORD_HEADER_EVENT_TYPE]	  = perf_event__event_type_swap,
+ 	[PERF_RECORD_HEADER_TRACING_DATA] = perf_event__tracing_data_swap,
+@@ -1556,6 +1559,8 @@ static int machines__deliver_event(struct machines *machines,
+ 		return tool->bpf(tool, event, sample, machine);
+ 	case PERF_RECORD_TEXT_POKE:
+ 		return tool->text_poke(tool, event, sample, machine);
++	case PERF_RECORD_AUX_OUTPUT_HW_ID:
++		return tool->aux_output_hw_id(tool, event, sample, machine);
+ 	default:
+ 		++evlist->stats.nr_unknown_events;
+ 		return -1;
+diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
+index bbbc0dcd461f..ef873f2cc38f 100644
+--- a/tools/perf/util/tool.h
++++ b/tools/perf/util/tool.h
+@@ -53,6 +53,7 @@ struct perf_tool {
+ 			lost_samples,
+ 			aux,
+ 			itrace_start,
++			aux_output_hw_id,
+ 			context_switch,
+ 			throttle,
+ 			unthrottle,
 -- 
 2.17.1
 
