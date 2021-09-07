@@ -2,102 +2,113 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CE4C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Sep 2021 15:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D524EC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Sep 2021 16:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC3DA60F13
-	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Sep 2021 15:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB60860F13
+	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Sep 2021 16:41:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229531AbhIFPXy (ORCPT
+        id S244083AbhIGQm1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 6 Sep 2021 11:23:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:56682 "EHLO foss.arm.com"
+        Tue, 7 Sep 2021 12:42:27 -0400
+Received: from mga07.intel.com ([134.134.136.100]:27264 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233929AbhIFPXy (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 6 Sep 2021 11:23:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1CA3A31B;
-        Mon,  6 Sep 2021 08:22:49 -0700 (PDT)
-Received: from e121896.arm.com (unknown [10.57.47.83])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B7C3E3F766;
-        Mon,  6 Sep 2021 08:22:47 -0700 (PDT)
-From:   James Clark <james.clark@arm.com>
-To:     acme@kernel.org, linux-perf-users@vger.kernel.org
-Cc:     James Clark <james.clark@arm.com>,
+        id S231347AbhIGQm0 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 7 Sep 2021 12:42:26 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10099"; a="283959445"
+X-IronPort-AV: E=Sophos;i="5.85,274,1624345200"; 
+   d="scan'208";a="283959445"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2021 09:38:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,274,1624345200"; 
+   d="scan'208";a="430979243"
+Received: from ahunter-desktop.fi.intel.com ([10.237.72.174])
+  by orsmga003.jf.intel.com with ESMTP; 07 Sep 2021 09:38:36 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] perf tests: Fix flaky test 'Object code reading'
-Date:   Mon,  6 Sep 2021 16:22:38 +0100
-Message-Id: <20210906152238.3415467-1-james.clark@arm.com>
-X-Mailer: git-send-email 2.28.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Jiri Olsa <jolsa@redhat.com>, Leo Yan <leo.yan@linaro.org>,
+        Kan Liang <kan.liang@linux.intel.com>, x86@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V3 0/3] perf intel-pt: Add PEBS-via-PT side-band
+Date:   Tue,  7 Sep 2021 19:39:00 +0300
+Message-Id: <20210907163903.11820-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.17.1
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This test occasionally fails on aarch64 when a sample is taken in
-free@plt and it fails with "Bytes read differ from those read by
-objdump". This is because that symbol is near a section boundary in the
-elf file. Despite the -z option to always output zeros, objdump uses
-bfd_map_over_sections() to iterate through the elf file so it doesn't
-see outside of the sections where these zeros are and can't print them.
+Hi
 
-For example this boundary proceeds free@plt in libc with a gap of 48
-bytes between .plt and .text:
+PEBS output to Intel Processor Trace was introduced with Atom
+processors based on Tremont.  Currently there is software support
+only for a single PEBS-via-PT event.
 
-  objdump -d -z --start-address=0x23cc8 --stop-address=0x23d08 libc-2.30.so
+Here is support for multiple PEBS-via-PT events.
 
-  libc-2.30.so:     file format elf64-littleaarch64
+The first patch is the kernel change which adds a new event,
+namely PERF_RECORD_AUX_OUTPUT_HW_ID which contains the counter
+index.  That is output when the PEBS-via-PT event is enabled in hardware.
+There is an optimization, to report the index only when it changes
+for the event.  That will work only so long as all PEBS-via-PT
+events are scheduled together, which they are for a recording
+session because they are in a single group.
 
-  Disassembly of section .plt:
+Also no attribute bit is used to select the new event, so a new
+kernel is not compatible with older perf tools.  The assumption
+being that PEBS-via-PT is sufficiently esoteric that users will not
+be troubled by this.
 
-  0000000000023cc8 <*ABS*+0x7fd00@plt+0x8>:
-     23cc8:	91018210 	add	x16, x16, #0x60
-     23ccc:	d61f0220 	br	x17
+The second patch adds the usual boiler plate to perf tools for
+a new event.
 
-  Disassembly of section .text:
+The third patch adds support for processing the new event by
+perf tool's Intel PT decoder.
 
-  0000000000023d00 <abort@@GLIBC_2.17-0x98>:
-     23d00:	a9bf7bfd 	stp	x29, x30, [sp, #-16]!
-     23d04:	910003fd 	mov	x29, sp
 
-Taking a sample in free@plt is very rare because it is so small, but the
-test can be forced to fail almost every time on any platform by linking
-the test with a shared library that has a single empty function and
-calling it in a loop.
+Changes in V3:
+    perf/x86: Add new event for AUX output counter index
+	Do not set assign callback unless x86_pmu.intel_cap.pebs_output_pt_available
 
-The fix is to zero the buffers so that when there is a jump in the
-addresses output by objdump, zeros are already filled in between.
+Changes in V2:
+    perf/x86: Add new event for AUX output counter index
+	Use callback from x86_assign_hw_event
 
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/tests/code-reading.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
-index 9866cddebf23..9b4a765e4b73 100644
---- a/tools/perf/tests/code-reading.c
-+++ b/tools/perf/tests/code-reading.c
-@@ -229,8 +229,8 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
- 			    struct thread *thread, struct state *state)
- {
- 	struct addr_location al;
--	unsigned char buf1[BUFSZ];
--	unsigned char buf2[BUFSZ];
-+	unsigned char buf1[BUFSZ] = {0};
-+	unsigned char buf2[BUFSZ] = {0};
- 	size_t ret_len;
- 	u64 objdump_addr;
- 	const char *objdump_name;
--- 
-2.28.0
+Adrian Hunter (3):
+      perf/x86: Add new event for AUX output counter index
+      perf tools: Add support for PERF_RECORD_AUX_OUTPUT_HW_ID
+      perf intel-pt: Add support for PERF_RECORD_AUX_OUTPUT_HW_ID
 
+ arch/x86/events/core.c                     |  6 +++
+ arch/x86/events/intel/core.c               | 16 ++++++
+ arch/x86/events/perf_event.h               |  1 +
+ include/linux/perf_event.h                 |  1 +
+ include/uapi/linux/perf_event.h            | 15 ++++++
+ kernel/events/core.c                       | 30 +++++++++++
+ tools/include/uapi/linux/perf_event.h      | 15 ++++++
+ tools/lib/perf/include/perf/event.h        |  6 +++
+ tools/perf/Documentation/perf-intel-pt.txt |  7 ++-
+ tools/perf/builtin-inject.c                |  4 +-
+ tools/perf/builtin-record.c                |  2 +-
+ tools/perf/util/event.c                    | 18 +++++++
+ tools/perf/util/event.h                    |  5 ++
+ tools/perf/util/intel-pt.c                 | 85 ++++++++++++++++++++++++++++--
+ tools/perf/util/machine.c                  | 10 ++++
+ tools/perf/util/machine.h                  |  2 +
+ tools/perf/util/session.c                  |  5 ++
+ tools/perf/util/tool.h                     |  1 +
+ 18 files changed, 222 insertions(+), 7 deletions(-)
+
+
+Regards
+Adrian
