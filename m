@@ -4,122 +4,139 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC0BC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Sep 2021 07:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD11C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Sep 2021 09:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4679361155
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Sep 2021 07:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80EF461153
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Sep 2021 09:28:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349554AbhIHHTN (ORCPT
+        id S244643AbhIHJ3J (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Sep 2021 03:19:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45560 "EHLO
+        Wed, 8 Sep 2021 05:29:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347425AbhIHHTM (ORCPT
+        with ESMTP id S234476AbhIHJ3I (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Sep 2021 03:19:12 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F7BCC061575;
-        Wed,  8 Sep 2021 00:18:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-        s=201909; t=1631085481;
-        bh=w0M7G5ASfYWvcGPFot2QE8lkLjYhB1FteWbIE/Al0E0=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=hJ1SCoiuc/gGNb5N/rFfi2g/aqxg8B78zb3TwGnFoFZM/cKl+h8o/XIWGfDtaK5E6
-         IeADsfIMT7wh7KtJgtWYN/FYdS5z6dnrIyAsnwsEPGCFuQEoljwSSZIVPgv1i/Xnnm
-         X1ZApP5T0twDD7BLnNGjjcsvNyhsmZ1WMhNShuHbEKBI3rNfm1UZaX2wKYSPICtTn2
-         NfFZHSJelK9CM1AuDOoIaHC58EUACOT484+1j2K4DJIKJFWCHu+6ShjO/2DF6NCHWI
-         nyXDuwcOISS6459NjcXgreseilBHUSIvjobTuEb03Ix8AifL+aW3wCQu1rOKn+UR39
-         aAxpXX3Z4t1Gw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        Wed, 8 Sep 2021 05:29:08 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4279DC061575;
+        Wed,  8 Sep 2021 02:28:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=XkMsv0U5b8POCiXTPKYIykquQ4WRiqRp/+CywSEeQKM=; b=cvLwcnMFIGRllbKwXrEE+bZePC
+        SYvAY+GPndlL+z/BcUJ5g7TXR6D+jeHVQwudTo2w1fts68ld4gkSXBWBDP8SDpbQo3/Gu1Ju2rxSa
+        88VOQH2p6jhfjx6OjpoxugebWvkdYzRT+t3JOT83V/fEFHSXf6zkibnsgNIGH1X6RV5Zdo3kvZYeN
+        JWNLj2Uo4fevyhsDOSzFQPF/YfDMDDcQccDOypH0pbyyPdXBPGqwUynNSVCuE66r0AE1txVfiYvYB
+        zdYHsarQN8cplUpL3q+ADQW2Df6fofzCT0p8uI9x66u+CKrT0XAfYBoLEc78n80+fy6YfBczbiEsD
+        JV9U0Csg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mNtqG-008gZD-Tx; Wed, 08 Sep 2021 09:26:15 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4H4D4Q54S8z9sW5;
-        Wed,  8 Sep 2021 17:17:58 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Kajol Jain <kjain@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, jolsa@kernel.org,
-        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
-        ak@linux.intel.com
-Cc:     maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
-        kjain@linux.ibm.com, rnsastry@linux.ibm.com,
-        yao.jin@linux.intel.com, ast@kernel.org, daniel@iogearbox.net,
-        songliubraving@fb.com, kan.liang@linux.intel.com,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        paulus@samba.org
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0975F300454;
+        Wed,  8 Sep 2021 11:26:01 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 90263212EAB70; Wed,  8 Sep 2021 11:26:01 +0200 (CEST)
+Date:   Wed, 8 Sep 2021 11:26:01 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Kajol Jain <kjain@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, mingo@redhat.com, acme@kernel.org,
+        jolsa@kernel.org, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, ak@linux.intel.com,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+        rnsastry@linux.ibm.com, yao.jin@linux.intel.com, ast@kernel.org,
+        daniel@iogearbox.net, songliubraving@fb.com,
+        kan.liang@linux.intel.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, paulus@samba.org
 Subject: Re: [PATCH 1/3] perf: Add macros to specify onchip L2/L3 accesses
-In-Reply-To: <20210904064932.307610-1-kjain@linux.ibm.com>
+Message-ID: <YTiBqbxe7ieqY2OE@hirez.programming.kicks-ass.net>
 References: <20210904064932.307610-1-kjain@linux.ibm.com>
-Date:   Wed, 08 Sep 2021 17:17:53 +1000
-Message-ID: <87ilzbmt7i.fsf@mpe.ellerman.id.au>
+ <87ilzbmt7i.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87ilzbmt7i.fsf@mpe.ellerman.id.au>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Kajol Jain <kjain@linux.ibm.com> writes:
-> Add couple of new macros to represent onchip L2 and onchip L3 accesses.
+On Wed, Sep 08, 2021 at 05:17:53PM +1000, Michael Ellerman wrote:
+> Kajol Jain <kjain@linux.ibm.com> writes:
 
-It would be "on chip". But I think this needs much more explanation,
-this is a generic header so these definitions need to make sense, and
-have an understood meaning, across all architectures.
+> > diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> > index f92880a15645..030b3e990ac3 100644
+> > --- a/include/uapi/linux/perf_event.h
+> > +++ b/include/uapi/linux/perf_event.h
+> > @@ -1265,7 +1265,9 @@ union perf_mem_data_src {
+> >  #define PERF_MEM_LVLNUM_L2	0x02 /* L2 */
+> >  #define PERF_MEM_LVLNUM_L3	0x03 /* L3 */
+> >  #define PERF_MEM_LVLNUM_L4	0x04 /* L4 */
+> > -/* 5-0xa available */
+> > +#define PERF_MEM_LVLNUM_OC_L2	0x05 /* On Chip L2 */
+> > +#define PERF_MEM_LVLNUM_OC_L3	0x06 /* On Chip L3 */
+> 
+> The obvious use for 5 is for "L5" and so on.
+> 
+> I'm not sure adding new levels is the best idea, because these don't fit
+> neatly into the hierarchy, they are off to the side.
+> 
+> 
+> I wonder if we should use the remote field.
+> 
+> ie. for another core's L2 we set:
+> 
+>   mem_lvl = PERF_MEM_LVL_L2
+>   mem_remote = 1
 
-I think most people are going to read "on chip" as differentiating
-between an L2/L3 that is "on chip" vs "off chip".
+This mixes APIs (see below), IIUC the correct usage would be something
+like: lvl_num=L2 remote=1
 
-But the case you're trying to express is "another core's L2/L3 on the
-same chip as the CPU", vs "the current CPU's L2/L3".
+> Which would mean "remote L2", but not remote enough to be
+> lvl = PERF_MEM_LVL_REM_CCE1.
+> 
+> It would be printed by the existing tools/perf code as "Remote L2", vs
+> "Remote cache (1 hop)", which seems OK.
+> 
+> 
+> ie. we'd be able to express:
+> 
+>   Current core's L2: LVL_L2
+>   Other core's L2:   LVL_L2 | REMOTE
+>   Other chip's L2:   LVL_REM_CCE1 | REMOTE
+> 
+> And similarly for L3.
+> 
+> I think that makes sense? Unless people think remote should be reserved
+> to mean on another chip, though we already have REM_CCE1 for that.
 
+IIRC the PERF_MEM_LVL_* namespace is somewhat depricated in favour of
+the newer composite PERF_MEM_{LVLNUM_,REMOTE_,SNOOPX_} fields. Of
+course, ABIs being what they are, we get to support both :/ But I'm not
+sure mixing them is a great idea.
 
-> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-> index f92880a15645..030b3e990ac3 100644
-> --- a/include/uapi/linux/perf_event.h
-> +++ b/include/uapi/linux/perf_event.h
-> @@ -1265,7 +1265,9 @@ union perf_mem_data_src {
->  #define PERF_MEM_LVLNUM_L2	0x02 /* L2 */
->  #define PERF_MEM_LVLNUM_L3	0x03 /* L3 */
->  #define PERF_MEM_LVLNUM_L4	0x04 /* L4 */
-> -/* 5-0xa available */
-> +#define PERF_MEM_LVLNUM_OC_L2	0x05 /* On Chip L2 */
-> +#define PERF_MEM_LVLNUM_OC_L3	0x06 /* On Chip L3 */
+Also, clearly this could use a comment...
 
-The obvious use for 5 is for "L5" and so on.
+The 'new' composite doesnt have a hops field because the hardware that
+nessecitated that change doesn't report it, but we could easily add a
+field there.
 
-I'm not sure adding new levels is the best idea, because these don't fit
-neatly into the hierarchy, they are off to the side.
+Suppose we add, mem_hops:3 (would 6 hops be too small?) and the
+corresponding PERF_MEM_HOPS_{NA, 0..6}
 
+Then I suppose you can encode things like:
 
-I wonder if we should use the remote field.
+	L2			- local L2
+	L2 | REMOTE		- remote L2 at an unspecified distance (NA)
+	L2 | REMOTE | HOPS_0	- remote L2 on the same node
+	L2 | REMOTE | HOPS_1	- remote L2 on a node 1 removed
 
-ie. for another core's L2 we set:
-
-  mem_lvl = PERF_MEM_LVL_L2
-  mem_remote = 1
-
-Which would mean "remote L2", but not remote enough to be
-lvl = PERF_MEM_LVL_REM_CCE1.
-
-It would be printed by the existing tools/perf code as "Remote L2", vs
-"Remote cache (1 hop)", which seems OK.
-
-
-ie. we'd be able to express:
-
-  Current core's L2: LVL_L2
-  Other core's L2:   LVL_L2 | REMOTE
-  Other chip's L2:   LVL_REM_CCE1 | REMOTE
-
-And similarly for L3.
-
-I think that makes sense? Unless people think remote should be reserved
-to mean on another chip, though we already have REM_CCE1 for that.
-
-cheers
-
-
+Would that work?
