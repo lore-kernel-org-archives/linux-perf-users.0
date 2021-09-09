@@ -2,126 +2,103 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCFCC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Sep 2021 14:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BF8C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Sep 2021 16:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF6C61101
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Sep 2021 14:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7CF61100
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Sep 2021 16:52:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237549AbhIIOrq (ORCPT
+        id S237092AbhIIQxs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Sep 2021 10:47:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47438 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230399AbhIIOrc (ORCPT
+        Thu, 9 Sep 2021 12:53:48 -0400
+Received: from sonic315-54.consmr.mail.gq1.yahoo.com ([98.137.65.30]:38479
+        "EHLO sonic315-54.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236918AbhIIQxs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Sep 2021 10:47:32 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A462C04CC25;
-        Thu,  9 Sep 2021 07:37:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=miXXbNQp7caQxshcYtg01AumgMhcOjaj3/whiABmZ9w=; b=KE8n8IolslkEzrZGA5k4fhia4/
-        1+5m+Aymfe1VeQT9vjj17rJoJ2zZ75I3vM7dg/Bemu6d66krYhf8TND3wPCbj/cVYN9x5rdomH/rI
-        G//1dQ4M2YKdkWIpYvjzA6SrnVAljknsqq6dq5JdvPGWHCWCbUzoMf3iDfDohROi9nKfTQx9NW5MR
-        DDDU1mbZ4P+sKN8/SvbfWutM60cttZ0fJPya+8nKMLOO/PGya5vuB5nuglLmQmJLZyQMU4blv4Vjn
-        ZIjlkkQ0tgYG+RXrykuhE7UIukgt5pAMK5n2JwERzDeseNUuGKOyu9TfZ2MSgnH5e13khcd61LbEI
-        kRINjKNQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mOLAX-001t5Y-BC; Thu, 09 Sep 2021 14:36:49 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 020CB300094;
-        Thu,  9 Sep 2021 16:36:47 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B1C6420D13710; Thu,  9 Sep 2021 16:36:47 +0200 (CEST)
-Date:   Thu, 9 Sep 2021 16:36:47 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Kajol Jain <kjain@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, acme@kernel.org,
-        jolsa@kernel.org, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org, ak@linux.intel.com,
-        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
-        rnsastry@linux.ibm.com, yao.jin@linux.intel.com, ast@kernel.org,
-        daniel@iogearbox.net, songliubraving@fb.com,
-        kan.liang@linux.intel.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, paulus@samba.org
-Subject: Re: [PATCH 1/3] perf: Add macros to specify onchip L2/L3 accesses
-Message-ID: <YTob/xfn1gt901K4@hirez.programming.kicks-ass.net>
-References: <20210904064932.307610-1-kjain@linux.ibm.com>
- <87ilzbmt7i.fsf@mpe.ellerman.id.au>
- <YTiBqbxe7ieqY2OE@hirez.programming.kicks-ass.net>
- <87czphnchp.fsf@mpe.ellerman.id.au>
+        Thu, 9 Sep 2021 12:53:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.ca; s=s2048; t=1631206358; bh=w6am0YTX4LjQs02fccvUWvEzwMflQN4w2b6r3isVzhY=; h=Date:From:Subject:To:Cc:References:In-Reply-To:From:Subject:Reply-To; b=RYOkmD1d/s6XepUNSG6CHdgQiljwADstdE02fdqR3cJItPfnXxqsUIjD7gUY5IG/LPU4KtmNhrwhXHZu8S5aD2KfPV1M1JAQyYz/4oBum6/SPHuy92lAJMfrKxZ3+Q8UGRicw3eqRL2kVlib5psWC7dUHj9FTa40j23i3bsC7YCCo8T9IrycQOCXX8zrikpvtRVhdyI4Y83mbUkNUZzrUHKXYGYZasG++S49E39q2DeI/YlGBjpB0tTYQ5dsX7+TTcGRjbGUT5VNxaJ1aSsPndSfUmUdGuEBJ24MOxqM/vyfum//U43RJBpugmVKCZNU4b3KuBVlwsqr8kxQw6J4Qw==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1631206358; bh=o6WEezQ1Ng6dXCSb4hbMGnr3BNGntkjakFCF9BWslOU=; h=X-Sonic-MF:Date:From:Subject:To:From:Subject; b=PLUUGOoAyUqzzyCgcROPYkY+JRoj+WuDs0zDWAAdvatq18tpBNKqiayHJxGXGed+8lYwOhe6PvLYTGgEXwk1h3rO6AbkwVWET7ZGMdoZ9hoNYbryTDAFzPlW99hevz02JXkDaNp9e4o/wkORs9KiBcobxE5a6tNOApakiuQ+z3hUuUk4koP0eApdLskFe4li9mkeKN8i4+JCRA3gn1N9eF0Ers9twKGlSTHvkrWoxHL02CyBx6CyZtvwWuatyh8vMhzkzMZnM+ueJQsQQW0QlGUukqNNobm4OEC4U2rWHBh3/hjrCs/L7v776E4pbEUwKVHgBpc4ZnrNcYCcUxp/bQ==
+X-YMail-OSG: ZfBOQd0VM1mqAQbbeMdoPYZ_nEFwtADzgnsZFiO9WE54weudrFnl1wRxzUZSXCT
+ OtIFGqr_u_cX7XxN_vxVD3CB_LcCJRD7q7ogyO1oZleEL3oZz9LCCblzSXa4SdBZetgcYdAyRdFY
+ xDMXwBJbkwBd2GG5lnJqjJd8f5gDqpWI.RgXT3RyhPFvG9CRT_RUndchCdpEdJGZCjKClqGkpfg6
+ XGmh3vGhafbfFS7yG9TIn_uh3YY6nwhfMYVbC5bpL00.tNgth8FXrZ323Wzmu5XtogqnXUESLKEH
+ uTocNZqtkDsDp_yXpU1NjId1pRan3VBUrkEOyfmjRT.ruxb.p2ZCfaQSB26dyCwRK6YfBstP4Fkp
+ JFl_4jz4mL5Pbn5BbFKKhreFTx6Z7CtTbEF2evvayD9dYrkww4LDIsY5Y8DsYygM_jCYKo_CM8Da
+ zoiPJdhkJ7sBlDOleGCrcSFfTyBK9x5Y0hhpJW1QHasP.m.5YB_9DGmCG3fKOmeCvd9tKRhE7uEp
+ RT.dymLT46RTyUJytvIeR1ysYZQDtEayto8pVpsv2IOlWfE_zhQWmlv0CWFyyvyZrcLEcizqzsdq
+ N0R84CT8IFVnn4r1PWVqm46OsY199t5eWNN.1vv14jpJ3oHMXjw0xDoJZIrY1lrd0COHl55gQcJL
+ rMke83U9XaV9TmqfRpvYeN8hcvG14qyBKPzxv44dfM496_.sdLJEMj.0HFrWXDcR_6HJTJGkdEon
+ pEfjYrvoeF3wOWEwC5dBSvb6yYpHgOCI2Sn7O32qOvExwDgCkZeEEd8dUCr8cwf5UjWUp6Vg_.Vj
+ dF6p6OPIgsoWwUuV_IwoyUwZRAjAjiuqvqCn_wobLr8IiuJdhlyK496.t6O_4wV0SmWg_avpowgu
+ YfsZ36mMJfE8nhrrxZmMq2pTp9l8vW.JWBK7L4RM4UzxM3OtQvzY0oaQiyMl7oPku0sEebsK4OHm
+ yGU5OBSPXO4e3Ysx2JR72Nn8X2.32ehhYjoj20G7Kz9bzGE2kyi8g8KNl1SbsOBnpQton6zTsWke
+ FAg_aNadZ6A4HNH9818Kt7aqKitWGgNcnfErQltGX0ijEDzrJs1rcBeCHsq6CKLeWrZHwPrlOH5G
+ 5tGxIXSyPS6JlBiL8_ggwtVT8KL9uDVSVgF.7jRrfsHpaDwWFybTlDRIE.fCpKq.Y9XCUys9eY_F
+ 9HmQC7d01oUZNxTbuwajtEYKxpCaO_Sfa9V_xNchM.Y5tADb1euunei7BZhnRdfArhLxMRg5yE3h
+ SLG80hYWKKlMuOdT68b9fVmsRiWQrCKPfpn3gC9O8uF4HXXadzJebAAmZqO52_VZcQZ8tSck_NXl
+ FYaNy45lsAuLdKNkKXjx7T4_DyiDvgJMg_orIizjBi2YNgI8eRrkVlEQ6ffzyBxJawiCoVeZ5QLP
+ ZTkQB0Y.sfsImCH9ZxzaWFsZsBRRCTqy557WL8Di8SNI9JGo7KkN0HNpFNlx7TlJeh_4uMG9THBD
+ PVdW.pg0KYspaimxogcnfSnSadaHRgRWiQ9nILgbaJWdZdimLd7XiMqNW4UJlGdkmNLAktjwlrsQ
+ pL4BKHpP0sDdYrC1zAOCM_4vQbBH9HvP_W.a3WHqhRnkP6yudE3_1rSn.l23it8KpCHxWoYTM5mi
+ JHgwbTyIC3uLiqgWNzzCugps0F6KmNF5gn6PMb9axNF7aUD1kS7y78upt_0k5RW34t6DUXkPl_G9
+ eKP78AizLkpzO8cEadRwBhBtuczNcd_TZ138hyJlIWRXw02QLmcvP25VBCf96b5m5uICRyceHAdt
+ 7mOQ8jtrlMOpKCbjuhYiMcAJidrQIOaZqZRgteUpyQO6WsS6jbweglP3lnMBQm028AUz7_OS9Xqc
+ UxI5WIf.GesMORKMGMjYU5tlDSkK5yHHc2U1C0GPblYmiTb8EMKLXflrJ5ydb4tckXnXIHzLVT4c
+ nozRl9ljsR0TdEymfLK4wOVuRQAYv6hIOkP74gLOwSOvExO_v2660ChegrfHXCXTE7ytIhoLyWZU
+ DEaMDFg94RFR2eFDEu4lzzUTPFBgA0GoaczXMNNeraGgF6VFceaSxA.ogXkPOelY0KgIObPZWkVq
+ 9tExO44umBgMRHSVOByyVg4IW1K.kdYfNuxcEAHoUmd.VkJZPiJAEp1kFy7XbjoNeKCZV.yduUBO
+ 8apTABXrrukUuly65oAlXImH585W0aChgWsLTb_oPlEf87RwDB0AICFh9C8pyknJBsJxexK9xaQQ
+ tWudxEh6H7gKniyZVVK.qZ1QRX1V7jPCK.0dW2_EgEt.MZRXiU3GZIIlSLKuwojaTlMzKFDriMrS
+ eyZyXaiqikl.qpX8esVmFVsvH82x_CsE094Ty8EItheGQz0kTZe4-
+X-Sonic-MF: <alex_y_xu@yahoo.ca>
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic315.consmr.mail.gq1.yahoo.com with HTTP; Thu, 9 Sep 2021 16:52:38 +0000
+Received: by kubenode542.mail-prod1.omega.bf1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 872e521b2f971154906dd636fbfc4cca;
+          Thu, 09 Sep 2021 16:52:35 +0000 (UTC)
+Date:   Thu, 09 Sep 2021 12:52:31 -0400
+From:   "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
+Subject: Re: [PATCH] tools/perf: Use long-running addr2line per dso
+To:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
+        Tony Garnock-Jones <tonyg@leastfixedpoint.com>
+Cc:     linux-perf-users@vger.kernel.org
+References: <20210909112202.1947499-1-tonyg@leastfixedpoint.com>
+In-Reply-To: <20210909112202.1947499-1-tonyg@leastfixedpoint.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87czphnchp.fsf@mpe.ellerman.id.au>
+Message-Id: <1631205749.uhek9ofd69.none@localhost>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: WebService/1.1.18924 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 09, 2021 at 10:45:54PM +1000, Michael Ellerman wrote:
+Excerpts from Tony Garnock-Jones's message of September 9, 2021 7:22 am:
+> Invoking addr2line in a separate subprocess, one for each required
+> lookup, takes a terribly long time. This patch introduces a
+> long-running addr2line process for each dso, *DRAMATICALLY* speeding
+> up runs of perf. What used to take tens of minutes now takes tens of
+> seconds.
+>=20
+> Debian bug report about this issue:
+> https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D911815
+>=20
+> Signed-off-by: Tony Garnock-Jones <tonyg@leastfixedpoint.com>
 
-> > The 'new' composite doesnt have a hops field because the hardware that
-> > nessecitated that change doesn't report it, but we could easily add a
-> > field there.
-> >
-> > Suppose we add, mem_hops:3 (would 6 hops be too small?) and the
-> > corresponding PERF_MEM_HOPS_{NA, 0..6}
-> 
-> It's really 7 if we use remote && hop = 0 to mean the first hop.
+This patch seems awfully complicated, especially considering it still=20
+uses relatively slow stdio instead of direct library calls. Did you look=20
+into calling elfutils instead of libbfd if the latter is not available?=20
+It is GPLv2 compatible, so can be linked against perf for distribution.=20
+Additionally, elfutils is already used by perf for unwinding, but not=20
+addr2line.
 
-I don't think we can do that, becaus of backward compat. Currently:
+On the patch specifically, why was popen changed to socketpair? It looks=20
+like it adds significant complexity, and the advanced features of=20
+socketpair are not being used (SOCK_DGRAM/SOCK_SEQPACKET, SCM_RIGHTS).
 
-  lvl_num=DRAM, remote=1
-
-denites: "Remote DRAM of any distance". Effectively it would have the new
-hops field filled with zeros though, so if you then decode with the hops
-field added it suddenly becomes:
-
- lvl_num=DRAM, remote=1, hops=0
-
-and reads like: "Remote DRAM of 0 hops" which is quite daft. Therefore 0
-really must denote a 'N/A'.
-
-> If we're wanting to use some of the hop levels to represent
-> intra-chip/package hops then we could possibly use them all on a really
-> big system.
-> 
-> eg. you could imagine something like:
-> 
->  L2 | 		        - local L2
->  L2 | REMOTE | HOPS_0	- L2 of neighbour core
->  L2 | REMOTE | HOPS_1	- L2 of near core on same chip (same 1/2 of chip)
->  L2 | REMOTE | HOPS_2	- L2 of far core on same chip (other 1/2 of chip)
->  L2 | REMOTE | HOPS_3	- L2 of sibling chip in same package
->  L2 | REMOTE | HOPS_4	- L2 on separate package 1 hop away
->  L2 | REMOTE | HOPS_5	- L2 on separate package 2 hops away
->  L2 | REMOTE | HOPS_6	- L2 on separate package 3 hops away
-> 
-> 
-> Whether it's useful to represent all those levels I'm not sure, but it's
-> probably good if we have the ability.
-
-I'm thinking we ought to keep hops as steps along the NUMA fabric, with
-0 hops being the local node. That only gets us:
-
- L2, remote=0, hops=HOPS_0 -- our L2
- L2, remote=1, hops=HOPS_0 -- L2 on the local node but not ours
- L2, remote=1, hops!=HOPS_0 -- L2 on a remote node
-
-> I guess I'm 50/50 on whether that's enough levels, or whether we want
-> another bit to allow for future growth.
-
-Right, possibly safer to add one extra bit while we can.... I suppose.
-
+Regards,
+Alex.
