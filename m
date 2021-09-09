@@ -4,145 +4,179 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73697C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Sep 2021 20:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB94C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Sep 2021 20:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5069C611CB
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Sep 2021 20:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 442E66113A
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Sep 2021 20:33:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344847AbhIIU3L (ORCPT
+        id S1345422AbhIIUeW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Sep 2021 16:29:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33150 "EHLO mail.kernel.org"
+        Thu, 9 Sep 2021 16:34:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1345119AbhIIU3K (ORCPT
+        id S1343998AbhIIUeJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Sep 2021 16:29:10 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id EBD93611AD;
-        Thu,  9 Sep 2021 20:28:00 +0000 (UTC)
+        Thu, 9 Sep 2021 16:34:09 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 187266113A;
+        Thu,  9 Sep 2021 20:32:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631219281;
-        bh=jPUN6W/xkG1ppfaJb7l4yOz/5ULBSSfyBuZRaP9ZWNg=;
+        s=k20201202; t=1631219579;
+        bh=Od4Fq70WNP3iP34ZfifIEzSkTAKKdivcDjSccTDCtpQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OroZwrt/xO67l+KPDGQZnDSbMNhRWXA1aSxjgglTXHGuIhw0x8hh6q6p61tKBmRlj
-         JBYGHg/xeYw2hL0DOogBvcOgS99RqGasvJiGmX5ZuvuWVRDOKjLIwPEfxdQYDeIiXF
-         Q0O8IDWdxzitPgv6M3jomBGcvEQcjFp2GmD27DN0mi/SrDF5BC0k3gd1smguOyOWaP
-         o0QSNNFCzgfGu+c1BXs8vQG7RZjtwGc26W9VzmfSH5UL2AxyGDUSGjEn94sugQk+sW
-         t0eOB9VtVq8eBCAnLon7zteskAxOdPZnddkq5FViNh25/2BFe/6DA+L8yEFpiTuv9m
-         3gEdyU32h6f2g==
+        b=S1EtcmenQYwvmsjH0Bj9pNuSkS12U9UghOifQEe0cHCbkMi1tefTN7yGhHc2zUKTj
+         NJRcuICrenALQ3hEUiN2AVL1/PJh9wH+UPZCQhi9LD4fMrxNzq97J05WATCXT13Q3Y
+         QVfGGR68cPq932RsX6h+NxgJ412EIPLak9fOsYPGjX4jhpG4qUaP6FVCUPcr8h5DdK
+         ATTkmmhJhXJDareS/2bjVlSIpxVU4BdrCFXgu1G5UY3tENRUQC/aLW0oM62GuRWusT
+         4tiFVd91Hm8G2PlJ0JCgulVbO97gesKU2biSAfMGDU9f9f+76O/bmtvuOyJFoajKo8
+         cUH7O1wEBu5OA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 869DC4038F; Thu,  9 Sep 2021 17:27:58 -0300 (-03)
-Date:   Thu, 9 Sep 2021 17:27:58 -0300
+        id 6EAE74038F; Thu,  9 Sep 2021 17:32:56 -0300 (-03)
+Date:   Thu, 9 Sep 2021 17:32:56 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Remi Bernon <rbernon@codeweavers.com>,
-        Nicholas Fraser <nfraser@codeweavers.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf symbol: Look for ImageBase in PE file to compute
- .text offset
-Message-ID: <YTpuTiYzkTKbUM/l@kernel.org>
-References: <20210909192637.4139125-1-rbernon@codeweavers.com>
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, yao.jin@linux.intel.com, namhyung@kernel.org,
+        kim.phillips@amd.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] perf annotate: Add fusion logic for AMD microarchs
+Message-ID: <YTpveO0qqKFTaxTk@kernel.org>
+References: <20210906105640.1040-1-ravi.bangoria@amd.com>
+ <20210906105640.1040-2-ravi.bangoria@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210909192637.4139125-1-rbernon@codeweavers.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210906105640.1040-2-ravi.bangoria@amd.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Sep 09, 2021 at 09:26:36PM +0200, Remi Bernon escreveu:
-> Instead of using the file offset in the debug file.
+Em Mon, Sep 06, 2021 at 04:26:40PM +0530, Ravi Bangoria escreveu:
+> AMD family 15h and above microarchs fuse a subset of cmp/test/ALU
+> instructions with branch instructions[1][2]. Add perf annotate
+> fused instruction support for these microarchs.
 > 
-> This fixes a regression from 00a3423492bc90be99e529a64f13fdd80a0e8c0a,
-> causing incorrect symbol resolution when debug file have been stripped
-> from non-debug sections (in which case its .text section is empty and
-> doesn't have any file position).
+> Before:
+>          │       testb  $0x80,0x51(%rax)
+>          │    ┌──jne    5b3
+>     0.78 │    │  mov    %r13,%rdi
+>          │    │→ callq  mark_page_accessed
+>     1.08 │5b3:└─→mov    0x8(%r13),%rax
 > 
-> The debug files could also be created with a different file alignment,
-> and have different file positions from the mmap-ed binary, or have the
-> section reordered.
+> After:
+>          │    ┌──testb  $0x80,0x51(%rax)
+>          │    ├──jne    5b3
+>     0.78 │    │  mov    %r13,%rdi
+>          │    │→ callq  mark_page_accessed
+>     1.08 │5b3:└─→mov    0x8(%r13),%rax
 > 
-> This instead looks for the file image base, using the corresponding bfd
-> *ABS* symbols. As PE symbols only have 4 bytes, it also needs to keep
-> .text section vma high bits.
-
-I added a:
-
-Fixes: 00a3423492bc90be ("perf symbols: Make dso__load_bfd_symbols() load PE files from debug cache only")
-
-To help stable@kernel.org to pick it, its on my local tree now.
-
-It would be great to get a:
-
-Reviewed-by: Nicholas Fraser <nfraser@codeweavers.com> 
-
-Can we have it, please?
-
-- Arnaldo
-
-> Signed-off-by: Remi Bernon <rbernon@codeweavers.com>
+> [1] https://bugzilla.kernel.org/attachment.cgi?id=298553
+> [2] https://bugzilla.kernel.org/attachment.cgi?id=298555
+> 
+> Reported-by: Kim Phillips <kim.phillips@amd.com>
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
 > ---
+>  tools/perf/arch/x86/annotate/instructions.c | 37 ++++++++++++++++++++-
+>  tools/perf/util/annotate.c                  |  1 +
+>  2 files changed, 37 insertions(+), 1 deletion(-)
 > 
-> Hi!
-> 
-> As I'm not updating it often I only recently realized that perf had a
-> regression when using stripped debug info files, and all symbols from
-> PE files are off. This should make things better.
-> 
-> Cheers,
-> 
->  tools/perf/util/symbol.c | 20 ++++++++++++++++----
->  1 file changed, 16 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 77fc46ca07c0..0fc9a5410739 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -1581,10 +1581,6 @@ int dso__load_bfd_symbols(struct dso *dso, const char *debugfile)
->  	if (bfd_get_flavour(abfd) == bfd_target_elf_flavour)
->  		goto out_close;
+> diff --git a/tools/perf/arch/x86/annotate/instructions.c b/tools/perf/arch/x86/annotate/instructions.c
+> index 24ea12ec7e02..46d7124cc4e1 100644
+> --- a/tools/perf/arch/x86/annotate/instructions.c
+> +++ b/tools/perf/arch/x86/annotate/instructions.c
+> @@ -144,8 +144,31 @@ static struct ins x86__instructions[] = {
+>  	{ .name = "xorps",	.ops = &mov_ops, },
+>  };
 >  
-> -	section = bfd_get_section_by_name(abfd, ".text");
-> -	if (section)
-> -		dso->text_offset = section->vma - section->filepos;
-> -
->  	symbols_size = bfd_get_symtab_upper_bound(abfd);
->  	if (symbols_size == 0) {
->  		bfd_close(abfd);
-> @@ -1602,6 +1598,22 @@ int dso__load_bfd_symbols(struct dso *dso, const char *debugfile)
->  	if (symbols_count < 0)
->  		goto out_free;
->  
-> +	section = bfd_get_section_by_name(abfd, ".text");
-> +	if (section) {
-> +		for (i = 0; i < symbols_count; ++i) {
-> +			if (!strcmp(bfd_asymbol_name(symbols[i]), "__ImageBase") ||
-> +			    !strcmp(bfd_asymbol_name(symbols[i]), "__image_base__"))
-> +				break;
-> +		}
-> +		if (i < symbols_count) {
-> +			/* PE symbols can only have 4 bytes, so use .text high bits */
-> +			dso->text_offset = section->vma - (u32)section->vma;
-> +			dso->text_offset += (u32)bfd_asymbol_value(symbols[i]);
-> +		} else {
-> +			dso->text_offset = section->vma - section->filepos;
-> +		}
+> -static bool x86__ins_is_fused(struct arch *arch, const char *ins1,
+> +static bool amd__ins_is_fused(struct arch *arch, const char *ins1,
+>  			      const char *ins2)
+> +{
+> +	if (strstr(ins2, "jmp"))
+> +		return false;
+> +
+> +	/* Family >= 15h supports cmp/test + branch fusion */
+> +	if (arch->family >= 0x15 && (strstarts(ins1, "test") ||
+> +	    (strstarts(ins1, "cmp") && !strstr(ins1, "xchg")))) {
+> +		return true;
 > +	}
 > +
->  	qsort(symbols, symbols_count, sizeof(asymbol *), bfd_symbols__cmpvalue);
+> +	/* Family >= 19h supports some ALU + branch fusion */
+> +	if (arch->family >= 0x19 && (strstarts(ins1, "add") ||
+> +	    strstarts(ins1, "sub") || strstarts(ins1, "and") ||
+> +	    strstarts(ins1, "inc") || strstarts(ins1, "dec") ||
+> +	    strstarts(ins1, "or") || strstarts(ins1, "xor"))) {
+> +		return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +static bool intel__ins_is_fused(struct arch *arch, const char *ins1,
+> +				const char *ins2)
+>  {
+>  	if (arch->family != 6 || arch->model < 0x1e || strstr(ins2, "jmp"))
+>  		return false;
+> @@ -172,6 +195,15 @@ static bool x86__ins_is_fused(struct arch *arch, const char *ins1,
+>  	return false;
+>  }
 >  
->  #ifdef bfd_get_section
+> +static bool x86__ins_is_fused(struct arch *arch, const char *ins1,
+> +			      const char *ins2)
+> +{
+> +	if (strstarts(arch->vendor, "AuthenticAMD"))
+> +		return amd__ins_is_fused(arch, ins1, ins2);
+> +
+> +	return intel__ins_is_fused(arch, ins1, ins2);
+> +}
+> +
+
+Can we instead make x86__ins_is_fused be a pointer and instead of
+storing arch->vendor we set it to one of amd__ins_is_fused() or
+intel__ins_is_fused()?
+
+I.e. here:
+
+>  static int x86__cpuid_parse(struct arch *arch, char *cpuid)
+>  {
+>  	unsigned int family, model, stepping;
+> @@ -184,6 +216,9 @@ static int x86__cpuid_parse(struct arch *arch, char *cpuid)
+>  	if (ret == 3) {
+>  		arch->family = family;
+>  		arch->model = model;
+> +		arch->vendor = strndup(cpuid, 12);
+
+		x86__ins_is_fused = strstarts(cpuid, "AuthenticAMD") ?
+					amd__ins_is_fused :
+					intel__ins_is_fused;
+
+
+?
+
+> +		if (!arch->vendor)
+> +			return -1;
+>  		return 0;
+>  	}
+>  
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index 0bae061b2d6d..88326bb990b5 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -77,6 +77,7 @@ struct arch {
+>  	bool		sorted_instructions;
+>  	bool		initialized;
+>  	void		*priv;
+> +	char		*vendor;
+>  	unsigned int	model;
+>  	unsigned int	family;
+>  	int		(*init)(struct arch *arch, char *cpuid);
 > -- 
-> 2.33.0
+> 2.27.0
 
 -- 
 
