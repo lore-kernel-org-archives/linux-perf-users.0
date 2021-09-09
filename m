@@ -7,97 +7,272 @@ X-Spam-Status: No, score=-18.2 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2A0C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Sep 2021 19:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C43AEC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Sep 2021 19:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 023746113E
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Sep 2021 19:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9512B6105A
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Sep 2021 19:28:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237322AbhIITUG (ORCPT
+        id S236112AbhIIT3e (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Sep 2021 15:20:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55286 "EHLO
+        Thu, 9 Sep 2021 15:29:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232712AbhIITUF (ORCPT
+        with ESMTP id S235517AbhIIT3d (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Sep 2021 15:20:05 -0400
-Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3C19C061574
-        for <linux-perf-users@vger.kernel.org>; Thu,  9 Sep 2021 12:18:54 -0700 (PDT)
-Received: by mail-io1-xd31.google.com with SMTP id a15so3753931iot.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Sep 2021 12:18:54 -0700 (PDT)
+        Thu, 9 Sep 2021 15:29:33 -0400
+Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43A6BC061574
+        for <linux-perf-users@vger.kernel.org>; Thu,  9 Sep 2021 12:28:23 -0700 (PDT)
+Received: by mail-io1-xd35.google.com with SMTP id b7so3801869iob.4
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Sep 2021 12:28:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=i0bP0XSSfAPFk4Oz4Dkuk1H78oVXFRCfNxSLlkfEhdY=;
-        b=WkSgUkHu8tv1JztfKXNjYiMAjK4Eq84+K0bHsaXuhxIdeThY5SewxUHqDSeJPkig2/
-         7HqCQ3sLyQKbUdm1n0Kx2MbOq9T8hED2m4cA3II8bzTy5ftV0Q6/z5Sejna2F8cbZIdk
-         y+J513RZ71ftmsvmRK6cxzvXyZcnusaDm2tYazafRGSxaE46R9QjexJvC2BDvoZEE5n0
-         N7u0FQhEfxvPKg5KrMwYsc5aT7AWH/CsunhkwZ9ybD0ZORM21ZwGqr9mt1YCv1aejjQw
-         4QznVmV2XUZZkrd+nQr1IH8813UZJmcF5VIGNHVEkpIvM4E1WMsDK1u4QqP1ZIoi+T1B
-         GUQQ==
+        bh=iyUni6LmOYZWnZ48HHLaTgVGJ1zgyIbKqjsxu/4oTB4=;
+        b=ED7fCdLnG3Dk/iu2u/OoNxpj4HmfOmJBTR6q+nkkrhkrxox6GJNlam6e0Y3++dW+uC
+         ST01NklL77bJaaESw/viFhKCqAb/q1Nn961cWkWF//foXgbTWuLIzJxRu+FwnOGNv9Bh
+         hkTZ7lUR7kAjeMN5L1KPqb5Cv6Tb0bisXv3+Cxe0Ps8QgIXajkzHLEehajD30jW7cJTp
+         OpVo4bf2TgvlhAAcQgjX+OU6qi84x+R2nUX3K+/hEh3tS9idnxn/0+hkwfQLLpLLUktO
+         Z0t4VBi8vwfBXQnMRc2ir611A9TWPA7m9WXIe4/KzRRhi6nXycKlU/+vuKuWtfJgsuFf
+         OlGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=i0bP0XSSfAPFk4Oz4Dkuk1H78oVXFRCfNxSLlkfEhdY=;
-        b=zSYLklrjfQ6+kRI2B74gMT9cfyLbahf74vWBDPHCAHnVJPF+81BDAWjQMhuvaoU4t0
-         +gaVfjq2vqz9qmPEqIYsSlUsm4dtOGw4E6Yc3VRX1RpANTthzPyMFfG9Qg6TqpnRdZXA
-         4B3rOsyVMf6G75vAJgSDOTUFJJ0/X3d7iCGQtMF71sPlEg55QX9/kbuCudvC0N1Rryq9
-         XOnzuCTSTNVxqyVyuzYrHamubld8NPaFIC2XGmR8WIixsUn5L7bWp+ym094LQJ52sXUl
-         RthUiYxRRbV3HZb2J5b4L70zd0s1qWMGEWOpC4W2raMcnsVNhw3HT658aw6zZks5MQfK
-         63/A==
-X-Gm-Message-State: AOAM532dTkrH9+SE+kaPHpQm8ofI/y0u/gZ8AeibUQg1XITWOy/wNWVk
-        Xa1S6ow8xuv4cIlFcLG6sqz+9zUh9rsE/azFN9OyFEcwYmD8YA==
-X-Google-Smtp-Source: ABdhPJyg71Wnt0IOgR3XKnYzPjz8oSAohvdvJ1Mg9Nad4xEyWmUKtECDeAC6k06bEC4+bwIFxjPQMVf9maL99wZuhQ8=
-X-Received: by 2002:a6b:8b4b:: with SMTP id n72mr3887575iod.18.1631215133443;
- Thu, 09 Sep 2021 12:18:53 -0700 (PDT)
+        bh=iyUni6LmOYZWnZ48HHLaTgVGJ1zgyIbKqjsxu/4oTB4=;
+        b=7L5fChCPwQJRQ2cPe5KO0W8GHOFeRPUoKlQPD8pOc7SGW1/Zu1LHcAuRhgizokcUBd
+         ymQ+Z+OJLqaf7whusmVL/4u7y76+7ei5+WKYB9RxkbqnsPZOi5uk2dEE1Oyf9NSxY5z8
+         km0QMcQy6tWtmxs1RJpdYQs/CBNVwEuqhFOlXFuWK379bh7XKe7XzWaCTFjYzvYW9r1J
+         p/7ufQOV4PZGAk1L/YcmPFqk9cX5T12FTScpgu2Mx+7vyVkYC16hx9IROB5Dnx4SpaIs
+         quoGvoastPafYt0iPjBX/AjmWxJsQzEM+voBYA1DGYTiY4GfN/yFV8Ty8qE3M2envAWf
+         inQQ==
+X-Gm-Message-State: AOAM532Uq0F76uHGJmhT+EYLZJqWjXIxPvJIsioGJZMEnpX2zaSihj22
+        LGN6X+6irv1CjD038f3XEyiCJxflxxbpGiI+zQvCEA==
+X-Google-Smtp-Source: ABdhPJyK0OsNXPiCw7dp7T7UbGPAvDP4GSvG9yFOhs4AVF1MRjYtLR77urZgjFjczLnnVT3czfepMbOWN6ROGiq+q+U=
+X-Received: by 2002:a05:6638:d0a:: with SMTP id q10mr1349337jaj.14.1631215702379;
+ Thu, 09 Sep 2021 12:28:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <cdf5252d-76af-9fb5-522f-206572b21807@wakelift.de>
-In-Reply-To: <cdf5252d-76af-9fb5-522f-206572b21807@wakelift.de>
+References: <9270373.m2mTvpyXtE@milian-workstation>
+In-Reply-To: <9270373.m2mTvpyXtE@milian-workstation>
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 9 Sep 2021 12:18:41 -0700
-Message-ID: <CAP-5=fVes7=aLS3GM15zxyjRpAJXtkqbxPUtYqHeXRy74Zz_xw@mail.gmail.com>
-Subject: Re: Make jitted assembly code available for annotation in "perf report"?
-To:     Timo Paulssen <timo@wakelift.de>
-Cc:     linux-perf-users@vger.kernel.org
+Date:   Thu, 9 Sep 2021 12:28:10 -0700
+Message-ID: <CAP-5=fVM8oxmMzx4VhoCPp=t=vR3W-MT72MRL7pVsjJR9YtxXA@mail.gmail.com>
+Subject: Re: Reducing impact of IO/CPU overload during `perf record` - bad
+ handling of excessive yield?
+To:     Milian Wolff <milian.wolff@kdab.com>
+Cc:     linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 9, 2021 at 12:09 PM Timo Paulssen <timo@wakelift.de> wrote:
+On Thu, Sep 9, 2021 at 7:14 AM Milian Wolff <milian.wolff@kdab.com> wrote:
 >
-> Hello perf users and devs,
+> Hey there!
 >
-> I'm a contributor to the MoarVM project, which is the interpreter and
-> jit runtime that powers the Rakudo compiler of the Raku language, which
-> you may have heard of back when it was still called Perl 6.
+> I'm trying to profile an application that suffers from overcommit and
+> excessive calls to `yield` (via OMP). Generally, it is putting a lot of strain
+> on the system. Sadly, I cannot make `perf record` work without dropping (a lot
+> of) chunks / events.
 >
-> We already output a file `/tmp/perf-%d.map` that contains the start and
-> end addresses of jit-generated symbols, but I don't know how to tell
-> perf where to look for the binary. Our current code will dump each
-> compiled piece of code to a folder with an incrementing number. The perf
-> report frontend will in its current implementation answer the request to
-> annotate a function by just running objdump against the perf-%d.map
-> file, which unsurprisingly doesn't work.
+> Usually I'm using this command line:
 >
-> I would be glad to hear suggestions, especially ones that don't require
-> me to generate a full elf file or similar to hold the symbols.
+> ```
+> perf record --call-graph dwarf -z -m 16M ...
+> ```
+>
+> But this is not enough in this case. What other alternatives are there? Is
+> there a `perf record` mode which never drops events, at the cost of maybe
+> stalling the profiled application?
+>
+> Generally though, looking at the (partial) data I get from perf, it seems like
+> it does not cope well in the face of excessive calls to `yield`. Take this
+> example code here:
+>
+> ```
+> #include <thread>
+> #include <vector>
+> #include <algorithm>
+>
+> void yieldALot()
+> {
+>     for (int i = 0; i < 1000000; ++i) {
+>         std::this_thread::yield();
+>     }
+> }
+>
+> int main()
+> {
+>     std::vector<std::thread> threads(std::thread::hardware_concurrency() * 2);
+>     std::generate(threads.begin(), threads.end(), []() {
+>         return std::thread(&yieldALot);
+>     });
+>
+>     for (auto &thread : threads)
+>         thread.join();
+>
+>     return 0;
+> }
+> ```
+>
+> When I compile this with `g++ test.cpp -pthread -O2 -g` and run it on my
+> system with a AMD Ryzen 9 3900X with 12 cores and 24 SMT cores, then I observe
+> the following behavior:
+>
+> ```
+> perf stat -r 5 ./a.out
+>
+>  Performance counter stats for './a.out' (5 runs):
+>
+>          18,570.71 msec task-clock                #   19.598 CPUs utilized
+> ( +-  1.27% )
+>          2,717,136      context-switches          #  145.447 K/sec
+> ( +-  3.26% )
+>                 55      cpu-migrations            #    2.944 /sec
+> ( +-  3.79% )
+>                222      page-faults               #   11.884 /sec
+> ( +-  0.49% )
+>     61,223,010,902      cycles                    #    3.277 GHz
+> ( +-  0.54% )  (83.33%)
+>      1,259,821,397      stalled-cycles-frontend   #    2.07% frontend cycles
+> idle     ( +-  1.54% )  (83.16%)
+>      9,001,394,333      stalled-cycles-backend    #   14.81% backend cycles
+> idle      ( +-  0.79% )  (83.25%)
+>     65,746,848,695      instructions              #    1.08  insn per cycle
+>                                                   #    0.14  stalled cycles
+> per insn  ( +-  0.26% )  (83.40%)
+>     14,474,862,454      branches                  #  774.830 M/sec
+> ( +-  0.36% )  (83.49%)
+>        114,518,545      branch-misses             #    0.79% of all branches
+> ( +-  0.71% )  (83.67%)
+>
+>            0.94761 +- 0.00935 seconds time elapsed  ( +-  0.99% )
+> ```
+>
+> Now compare this to what happens when I enable perf recording:
+>
+> ```
+>  Performance counter stats for 'perf record --call-graph dwarf -z ./a.out' (5
+> runs):
+>
+>          19,928.28 msec task-clock                #    9.405 CPUs utilized
+> ( +-  2.74% )
+>          3,026,081      context-switches          #  142.538 K/sec
+> ( +-  7.48% )
+>                120      cpu-migrations            #    5.652 /sec
+> ( +-  3.18% )
+>              5,509      page-faults               #  259.491 /sec
+> ( +-  0.01% )
+>     65,393,592,529      cycles                    #    3.080 GHz
+> ( +-  1.81% )  (71.81%)
+>      1,445,203,862      stalled-cycles-frontend   #    2.13% frontend cycles
+> idle     ( +-  2.01% )  (71.60%)
+>      9,701,321,165      stalled-cycles-backend    #   14.29% backend cycles
+> idle      ( +-  1.28% )  (71.62%)
+>     69,967,062,730      instructions              #    1.03  insn per cycle
+>                                                   #    0.14  stalled cycles
+> per insn  ( +-  0.74% )  (71.83%)
+>     15,376,981,968      branches                  #  724.304 M/sec
+> ( +-  0.83% )  (72.00%)
+>        127,934,194      branch-misses             #    0.81% of all branches
+> ( +-  1.29% )  (72.07%)
+>
+>           2.118881 +- 0.000496 seconds time elapsed  ( +-  0.02% )
+> ```
+>
+> Note how the CPU utilization drops dramatically by roughly a factor of 2x,
+> which correlates with the increase in overall runtime.
+>
+> From the data obtained here I see:
+> ```
+>     98.49%     0.00%  a.out    libc-2.33.so        [.] __GI___sched_yield
+> (inlined)
+>             |
+>             ---__GI___sched_yield (inlined)
+>                |
+>                |--89.93%--entry_SYSCALL_64_after_hwframe
+>                |          |
+>                |           --89.32%--do_syscall_64
+>                |                     |
+>                |                     |--71.70%--__ia32_sys_sched_yield
+>                |                     |          |
+>                |                     |          |--64.36%--schedule
+>                |                     |          |          |
+>                |                     |          |           --63.42%--
+> __schedule
+>                |                     |          |                     |
+>                |                     |          |
+> |--32.56%--__perf_event_task_sched_out
+>                |                     |          |                     |
+> |
+>                |                     |          |                     |
+> --32.07%--amd_pmu_disable_all
+>                |                     |          |                     |
+> |
+>                |                     |          |                     |
+> |--23.54%--x86_pmu_disable_all
+>                |                     |          |                     |
+> |          |
+>                |                     |          |                     |
+> |          |--12.81%--native_write_msr
+>                |                     |          |                     |
+> |          |
+>                |                     |          |                     |
+> |          |--8.24%--native_read_msr
+>                |                     |          |                     |
+> |          |
+>                |                     |          |                     |
+> |           --1.25%--amd_pmu_addr_offset
+>                |                     |          |                     |
+> |
+>                |                     |          |                     |
+> --8.19%--amd_pmu_wait_on_overflow
+>                |                     |          |                     |
+> |
+>                |                     |          |                     |
+> |--5.00%--native_read_msr
+>                |                     |          |                     |
+> |
+>                |                     |          |                     |
+> |--2.20%--delay_halt
+>                |                     |          |                     |
+> |          |
+>                |                     |          |                     |
+> |           --1.99%--delay_halt_mwaitx
+>                |                     |          |                     |
+> |
+>                |                     |          |                     |
+> --0.55%--amd_pmu_addr_offset
+>
+> ```
+>
+> Is this a dificiency with the AMD perf subsystem? Or is this a generic issue
+> with perf? I understand that it has to enable/disable the PMU when it's
+> switching tasks, but potentially there are some ways to optimize this
+> behavior?
 
-Hi Timo,
+Hi Milian,
 
-Did you look into jitdump? It requires the perf.data file be processed
-by perf inject, see the -j option in:
-https://man7.org/linux/man-pages/man1/perf-inject.1.html
+By using dwarf call graphs your samples are writing a dump of the
+stack into the perf event ring buffer that will be processed in the
+userspace perf command. The default stack dump size is 8kb and you can
+lower it - for example with "--call-graph dwarf,4096". I suspect that
+most of the overhead you are seeing is from these stack dumps. There
+is a more complete description in the man page:
+https://man7.org/linux/man-pages/man1/perf-record.1.htm
 
-An example JIT agent is provided for JVMTI:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/jvmti?h=perf/core
+Which are always worth improving:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/Documentation/perf-record.txt?h=perf/core
 
 Thanks,
 Ian
-
-> Thanks in advance
->    - Timo
+> Thanks
 >
+> --
+> Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
+> KDAB (Deutschland) GmbH, a KDAB Group company
+> Tel: +49-30-521325470
+> KDAB - The Qt, C++ and OpenGL Experts
