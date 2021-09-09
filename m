@@ -7,228 +7,186 @@ X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03014C433F5
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD7AC4167E
 	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Sep 2021 06:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF76C61139
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Sep 2021 06:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98C9761101
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Sep 2021 06:52:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352227AbhIIGVm (ORCPT
+        id S1352540AbhIIGZS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Sep 2021 02:21:42 -0400
-Received: from mga01.intel.com ([192.55.52.88]:54028 "EHLO mga01.intel.com"
+        Thu, 9 Sep 2021 02:25:18 -0400
+Received: from mga09.intel.com ([134.134.136.24]:61778 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244314AbhIIGVl (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Sep 2021 02:21:41 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10101"; a="243004509"
+        id S1352517AbhIIGZQ (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 9 Sep 2021 02:25:16 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10101"; a="220727885"
 X-IronPort-AV: E=Sophos;i="5.85,279,1624345200"; 
-   d="scan'208";a="243004509"
+   d="scan'208";a="220727885"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2021 23:20:31 -0700
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2021 23:24:07 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.85,279,1624345200"; 
-   d="scan'208";a="479489279"
+   d="scan'208";a="479491328"
 Received: from kbl-ppc.sh.intel.com ([10.239.159.163])
-  by orsmga008.jf.intel.com with ESMTP; 08 Sep 2021 23:20:28 -0700
+  by orsmga008.jf.intel.com with ESMTP; 08 Sep 2021 23:24:04 -0700
 From:   Jin Yao <yao.jin@linux.intel.com>
 To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
         mingo@redhat.com, alexander.shishkin@linux.intel.com
 Cc:     Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com,
         Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH] perf list: Display pmu prefix for partially supported hybrid cache events
-Date:   Thu,  9 Sep 2021 14:18:44 +0800
-Message-Id: <20210909061844.10221-1-yao.jin@linux.intel.com>
+Subject: [PATCH] perf stat: Support --cputype option for hybrid events
+Date:   Thu,  9 Sep 2021 14:22:15 +0800
+Message-Id: <20210909062215.10278-1-yao.jin@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Part of hardware cache events are only available on one CPU PMU.
-For example, 'L1-dcache-load-misses' is only available on cpu_core.
-perf list should clearly report this info.
+In previous patch, we have supported the syntax which enables
+the event on a specified pmu, such as:
 
-root@otcpl-adl-s-2:~# ./perf list
+cpu_core/<event>/
+cpu_atom/<event>/
 
-Before:
-  L1-dcache-load-misses                              [Hardware cache event]
-  L1-dcache-loads                                    [Hardware cache event]
-  L1-dcache-stores                                   [Hardware cache event]
-  L1-icache-load-misses                              [Hardware cache event]
-  L1-icache-loads                                    [Hardware cache event]
-  LLC-load-misses                                    [Hardware cache event]
-  LLC-loads                                          [Hardware cache event]
-  LLC-store-misses                                   [Hardware cache event]
-  LLC-stores                                         [Hardware cache event]
-  branch-load-misses                                 [Hardware cache event]
-  branch-loads                                       [Hardware cache event]
-  dTLB-load-misses                                   [Hardware cache event]
-  dTLB-loads                                         [Hardware cache event]
-  dTLB-store-misses                                  [Hardware cache event]
-  dTLB-stores                                        [Hardware cache event]
-  iTLB-load-misses                                   [Hardware cache event]
-  node-load-misses                                   [Hardware cache event]
-  node-loads                                         [Hardware cache event]
-  node-store-misses                                  [Hardware cache event]
-  node-stores                                        [Hardware cache event]
+While this syntax is not very easy for applying on a set of
+events or applying on a group. In following example, we have to
+explicitly assign the pmu prefix.
 
-After:
-  L1-dcache-loads                                    [Hardware cache event]
-  L1-dcache-stores                                   [Hardware cache event]
-  L1-icache-load-misses                              [Hardware cache event]
-  LLC-load-misses                                    [Hardware cache event]
-  LLC-loads                                          [Hardware cache event]
-  LLC-store-misses                                   [Hardware cache event]
-  LLC-stores                                         [Hardware cache event]
-  branch-load-misses                                 [Hardware cache event]
-  branch-loads                                       [Hardware cache event]
-  cpu_atom/L1-icache-loads/                          [Hardware cache event]
-  cpu_core/L1-dcache-load-misses/                    [Hardware cache event]
-  cpu_core/node-load-misses/                         [Hardware cache event]
-  cpu_core/node-loads/                               [Hardware cache event]
-  dTLB-load-misses                                   [Hardware cache event]
-  dTLB-loads                                         [Hardware cache event]
-  dTLB-store-misses                                  [Hardware cache event]
-  dTLB-stores                                        [Hardware cache event]
-  iTLB-load-misses                                   [Hardware cache event]
+  # ./perf stat -e '{cpu_core/cycles/,cpu_core/instructions/}' -- sleep 1
 
-Now we can clearly see 'L1-dcache-load-misses' is only available
-on cpu_core.
+   Performance counter stats for 'sleep 1':
 
-If without pmu prefix, it indicates the event is available on both
-cpu_core and cpu_atom.
+           1,158,545      cpu_core/cycles/
+           1,003,113      cpu_core/instructions/
+
+         1.002428712 seconds time elapsed
+
+A much easier way is:
+
+  # ./perf stat --cputype core -e '{cycles,instructions}' -- sleep 1
+
+   Performance counter stats for 'sleep 1':
+
+           1,101,071      cpu_core/cycles/
+             939,892      cpu_core/instructions/
+
+         1.002363142 seconds time elapsed
+
+For this example, the '--cputype' enables the events from specified
+pmu (cpu_core).
+
+If '--cputype' conflicts with pmu prefix, '--cputype' is ignored.
+
+  # ./perf stat --cputype core -e cycles,cpu_atom/instructions/ -a -- sleep 1
+
+   Performance counter stats for 'system wide':
+
+          21,003,407      cpu_core/cycles/
+             367,886      cpu_atom/instructions/
+
+         1.002203520 seconds time elapsed
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 ---
- tools/perf/util/parse-events.c | 76 ++++++++++++++++++++++++++++++----
- 1 file changed, 68 insertions(+), 8 deletions(-)
+ tools/perf/Documentation/perf-stat.txt |  4 ++++
+ tools/perf/builtin-stat.c              | 24 ++++++++++++++++++++++++
+ tools/perf/util/evlist.h               |  1 +
+ tools/perf/util/parse-events-hybrid.c  |  9 ++++++---
+ 4 files changed, 35 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index e5eae23cfceb..579fd654cb11 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -2704,7 +2704,7 @@ int is_valid_tracepoint(const char *event_string)
- 	return 0;
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index 4c9310be6acc..33da737161a6 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -493,6 +493,10 @@ This option can be enabled in perf config by setting the variable
+ 
+ $ perf config stat.no-csv-summary=true
+ 
++--cputype::
++Only enable events on applying cpu with this type for hybrid platform
++(e.g. core or atom)"
++
+ EXAMPLES
+ --------
+ 
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index f6e87b7be5fa..752e2bf1029f 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1168,6 +1168,26 @@ static int parse_stat_cgroups(const struct option *opt,
+ 	return parse_cgroups(opt, str, unset);
  }
  
--static bool is_event_supported(u8 type, unsigned config)
-+static bool is_event_supported(u8 type, u64 config)
- {
- 	bool ret = true;
- 	int open_return;
-@@ -2824,10 +2824,18 @@ void print_sdt_events(const char *subsys_glob, const char *event_glob,
- 
- int print_hwcache_events(const char *event_glob, bool name_only)
- {
--	unsigned int type, op, i, evt_i = 0, evt_num = 0;
--	char name[64];
--	char **evt_list = NULL;
-+	unsigned int type, op, i, evt_i = 0, evt_num = 0, npmus = 0;
-+	char name[64], new_name[128];
-+	char **evt_list = NULL, **evt_pmus = NULL;
- 	bool evt_num_known = false;
-+	struct perf_pmu *pmu = NULL;
++static int parse_hybrid_type(const struct option *opt,
++			     const char *str,
++			     int unset __maybe_unused)
++{
++	struct evlist *evlist = *(struct evlist **)opt->value;
 +
-+	if (perf_pmu__has_hybrid()) {
-+		npmus = perf_pmu__hybrid_pmu_num();
-+		evt_pmus = zalloc(sizeof(char *) * npmus);
-+		if (!evt_pmus)
-+			goto out_enomem;
-+	}
- 
- restart:
- 	if (evt_num_known) {
-@@ -2843,20 +2851,61 @@ int print_hwcache_events(const char *event_glob, bool name_only)
- 				continue;
- 
- 			for (i = 0; i < PERF_COUNT_HW_CACHE_RESULT_MAX; i++) {
-+				unsigned int hybrid_supported = 0, j;
-+				bool supported;
-+
- 				__evsel__hw_cache_type_op_res_name(type, op, i, name, sizeof(name));
- 				if (event_glob != NULL && !strglobmatch(name, event_glob))
- 					continue;
- 
--				if (!is_event_supported(PERF_TYPE_HW_CACHE,
--							type | (op << 8) | (i << 16)))
--					continue;
-+				if (!perf_pmu__has_hybrid()) {
-+					if (!is_event_supported(PERF_TYPE_HW_CACHE,
-+								type | (op << 8) | (i << 16))) {
-+						continue;
-+					}
-+				} else {
-+					perf_pmu__for_each_hybrid_pmu(pmu) {
-+						if (!evt_num_known) {
-+							evt_num++;
-+							continue;
-+						}
-+
-+						supported = is_event_supported(
-+									PERF_TYPE_HW_CACHE,
-+									type | (op << 8) | (i << 16) |
-+									((__u64)pmu->type << PERF_PMU_TYPE_SHIFT));
-+						if (supported) {
-+							snprintf(new_name, sizeof(new_name), "%s/%s/",
-+								 pmu->name, name);
-+							evt_pmus[hybrid_supported] = strdup(new_name);
-+							hybrid_supported++;
-+						}
-+					}
-+
-+					if (hybrid_supported == 0)
-+						continue;
-+				}
- 
- 				if (!evt_num_known) {
- 					evt_num++;
- 					continue;
- 				}
- 
--				evt_list[evt_i] = strdup(name);
-+				if ((hybrid_supported == 0) ||
-+				    (hybrid_supported == npmus)) {
-+					evt_list[evt_i] = strdup(name);
-+					if (npmus > 0) {
-+						for (j = 0; j < npmus; j++)
-+							zfree(&evt_pmus[j]);
-+					}
-+				} else {
-+					for (j = 0; j < hybrid_supported; j++) {
-+						evt_list[evt_i++] = evt_pmus[j];
-+						evt_pmus[j] = NULL;
-+					}
-+					continue;
-+				}
-+
- 				if (evt_list[evt_i] == NULL)
- 					goto out_enomem;
- 				evt_i++;
-@@ -2868,6 +2917,13 @@ int print_hwcache_events(const char *event_glob, bool name_only)
- 		evt_num_known = true;
- 		goto restart;
- 	}
-+
-+	for (evt_i = 0; evt_i < evt_num; evt_i++) {
-+		if (!evt_list[evt_i])
-+			break;
++	if (!list_empty(&evlist->core.entries)) {
++		fprintf(stderr, "Must define cputype before events/metrics\n");
++		return -1;
 +	}
 +
-+	evt_num = evt_i;
- 	qsort(evt_list, evt_num, sizeof(char *), cmp_string);
- 	evt_i = 0;
- 	while (evt_i < evt_num) {
-@@ -2886,6 +2942,10 @@ int print_hwcache_events(const char *event_glob, bool name_only)
- 	for (evt_i = 0; evt_i < evt_num; evt_i++)
- 		zfree(&evt_list[evt_i]);
- 	zfree(&evt_list);
++	evlist->hybrid_pmu_name = perf_pmu__hybrid_type_to_pmu(str);
++	if (!evlist->hybrid_pmu_name) {
++		fprintf(stderr, "--cputype %s is not supported!\n", str);
++		return -1;
++	}
 +
-+	for (evt_i = 0; evt_i < npmus; evt_i++)
-+		zfree(&evt_pmus[evt_i]);
-+	zfree(&evt_pmus);
- 	return evt_num;
++	return 0;
++}
++
+ static struct option stat_options[] = {
+ 	OPT_BOOLEAN('T', "transaction", &transaction_run,
+ 		    "hardware transaction statistics"),
+@@ -1282,6 +1302,10 @@ static struct option stat_options[] = {
+ 		       "don't print 'summary' for CSV summary output"),
+ 	OPT_BOOLEAN(0, "quiet", &stat_config.quiet,
+ 			"don't print output (useful with record)"),
++	OPT_CALLBACK(0, "cputype", &evsel_list, "hybrid cpu type",
++		     "Only enable events on applying cpu with this type "
++		     "for hybrid platform (e.g. core or atom)",
++		     parse_hybrid_type),
+ #ifdef HAVE_LIBPFM
+ 	OPT_CALLBACK(0, "pfm-events", &evsel_list, "event",
+ 		"libpfm4 event selector. use 'perf list' to list available events",
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 97bfb8d0be4f..7af5b247e319 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -64,6 +64,7 @@ struct evlist {
+ 	struct evsel *selected;
+ 	struct events_stats stats;
+ 	struct perf_env	*env;
++	const char *hybrid_pmu_name;
+ 	void (*trace_event_sample_raw)(struct evlist *evlist,
+ 				       union perf_event *event,
+ 				       struct perf_sample *sample);
+diff --git a/tools/perf/util/parse-events-hybrid.c b/tools/perf/util/parse-events-hybrid.c
+index 10160ab126f9..3875a8d086e4 100644
+--- a/tools/perf/util/parse-events-hybrid.c
++++ b/tools/perf/util/parse-events-hybrid.c
+@@ -62,10 +62,13 @@ static int create_event_hybrid(__u32 config_type, int *idx,
+ static int pmu_cmp(struct parse_events_state *parse_state,
+ 		   struct perf_pmu *pmu)
+ {
+-	if (!parse_state->hybrid_pmu_name)
+-		return 0;
++	if (parse_state->evlist && parse_state->evlist->hybrid_pmu_name)
++		return strcmp(parse_state->evlist->hybrid_pmu_name, pmu->name);
++
++	if (parse_state->hybrid_pmu_name)
++		return strcmp(parse_state->hybrid_pmu_name, pmu->name);
  
- out_enomem:
+-	return strcmp(parse_state->hybrid_pmu_name, pmu->name);
++	return 0;
+ }
+ 
+ static int add_hw_hybrid(struct parse_events_state *parse_state,
 -- 
 2.17.1
 
