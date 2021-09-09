@@ -2,166 +2,99 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED21EC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Sep 2021 12:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF766C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Sep 2021 13:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D65AF611AD
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Sep 2021 12:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B89ED60E94
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Sep 2021 13:21:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343978AbhIIM4u (ORCPT
+        id S1355108AbhIINWi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Sep 2021 08:56:50 -0400
-Received: from ozlabs.org ([203.11.71.1]:36395 "EHLO ozlabs.org"
+        Thu, 9 Sep 2021 09:22:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1354153AbhIIMrR (ORCPT
+        id S1355402AbhIINNm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Sep 2021 08:47:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-        s=201909; t=1631191563;
-        bh=+HVI0XghzcJKkgiW87QzoZzI0ZQ7j9m77j9OMcB3aro=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=C2InCR5mGc1TG/bT5ZgNme4RPUeuOzrkaEQxsyWUaEs1qnzjuOFtd0L+biCl0slwl
-         fIrDvqD6ZvXUBI/7MWk1eH7MO33l+QcFMeY/imehorEQe0RMrBl0IkItYV/bRIdvja
-         GVkphSFtzmQrlncOXtLRqHnlmKJey4mKwHugBJ2q42Hi2VYxWNf4wQAFW2EXZhILUs
-         qvBhYfMbBSGUVjI/hneDEjfdBjOqGFPUTTkNwjJCJUqExiii+CGSp+8l4b9dleVf0L
-         o6ZzXTzstX+fyHxeC8wllyrRHvnstabNMve1/K22KImd4g1lMJk3kXBLIixoquxayT
-         EOJFMf7wBCT6g==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4H4zJS6KZGz9vDS;
-        Thu,  9 Sep 2021 22:46:00 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Kajol Jain <kjain@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, acme@kernel.org,
-        jolsa@kernel.org, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org, ak@linux.intel.com,
-        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
-        rnsastry@linux.ibm.com, yao.jin@linux.intel.com, ast@kernel.org,
-        daniel@iogearbox.net, songliubraving@fb.com,
-        kan.liang@linux.intel.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, paulus@samba.org
-Subject: Re: [PATCH 1/3] perf: Add macros to specify onchip L2/L3 accesses
-In-Reply-To: <YTiBqbxe7ieqY2OE@hirez.programming.kicks-ass.net>
-References: <20210904064932.307610-1-kjain@linux.ibm.com>
- <87ilzbmt7i.fsf@mpe.ellerman.id.au>
- <YTiBqbxe7ieqY2OE@hirez.programming.kicks-ass.net>
-Date:   Thu, 09 Sep 2021 22:45:54 +1000
-Message-ID: <87czphnchp.fsf@mpe.ellerman.id.au>
+        Thu, 9 Sep 2021 09:13:42 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3B61560FDA;
+        Thu,  9 Sep 2021 12:42:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1631191333;
+        bh=laRVYVuDgyl6pUUGhtgE2ffQq061G7xDKK4KK8DRMp8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FAtmdsvWx0eoSFpsBvbMkg+lZu6MpAo0lXWpEBvUjTPRU9iNHMQmM+LWEzVG5kQFL
+         GHWGIg7YZ97QdWn73Vxs2POtx0eJE8o+AP0K87oT7eIvzH639a1VQKqZQWxvcxwtz2
+         OPWKJD8MhnIvoQsm8NzGYJZwHinJbZ6XgJygOlW4n1LHPDmMpjplOANS7251DUVlYG
+         +pvKGH/3N+j8aciDxpU3ZLwSroR7MMf815dz1JbDW92cM94AZpU7gq50Pj/mMvj3rB
+         83K+m3MGTdjsVTWPydikCFD09ZdfcuGVOfezmU8+X9xTbrAl4LjjUUQbEu2aZOJKtt
+         Wh0q8RGv+Gmcg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id E12374038F; Thu,  9 Sep 2021 09:42:09 -0300 (-03)
+Date:   Thu, 9 Sep 2021 09:42:09 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Michael Petlan <mpetlan@redhat.com>
+Cc:     acme@redhat.com, linux-perf-users@vger.kernel.org,
+        jolsa@redhat.com, sumanthk@linux.ibm.com
+Subject: Re: [PATCH] perf test: Fix bpf test sample mismatch reporting
+Message-ID: <YToBIaDvsW0BQKTE@kernel.org>
+References: <20210805160611.5542-1-mpetlan@redhat.com>
+ <alpine.LRH.2.20.2109061625540.27231@Diego>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LRH.2.20.2109061625540.27231@Diego>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Peter Zijlstra <peterz@infradead.org> writes:
-> On Wed, Sep 08, 2021 at 05:17:53PM +1000, Michael Ellerman wrote:
->> Kajol Jain <kjain@linux.ibm.com> writes:
->
->> > diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
->> > index f92880a15645..030b3e990ac3 100644
->> > --- a/include/uapi/linux/perf_event.h
->> > +++ b/include/uapi/linux/perf_event.h
->> > @@ -1265,7 +1265,9 @@ union perf_mem_data_src {
->> >  #define PERF_MEM_LVLNUM_L2	0x02 /* L2 */
->> >  #define PERF_MEM_LVLNUM_L3	0x03 /* L3 */
->> >  #define PERF_MEM_LVLNUM_L4	0x04 /* L4 */
->> > -/* 5-0xa available */
->> > +#define PERF_MEM_LVLNUM_OC_L2	0x05 /* On Chip L2 */
->> > +#define PERF_MEM_LVLNUM_OC_L3	0x06 /* On Chip L3 */
->> 
->> The obvious use for 5 is for "L5" and so on.
->> 
->> I'm not sure adding new levels is the best idea, because these don't fit
->> neatly into the hierarchy, they are off to the side.
->> 
->> 
->> I wonder if we should use the remote field.
->> 
->> ie. for another core's L2 we set:
->> 
->>   mem_lvl = PERF_MEM_LVL_L2
->>   mem_remote = 1
->
-> This mixes APIs (see below), IIUC the correct usage would be something
-> like: lvl_num=L2 remote=1
+Em Mon, Sep 06, 2021 at 04:26:31PM +0200, Michael Petlan escreveu:
+> Hi Arnaldo, please have a look.
+> This is still valid.
+> Thanks.
+> Michael
 
-Aha, I was wondering how lvl and lvl_num were supposed to interact.
+Looks correct, thanks for resending, applied.
 
->> Which would mean "remote L2", but not remote enough to be
->> lvl = PERF_MEM_LVL_REM_CCE1.
->> 
->> It would be printed by the existing tools/perf code as "Remote L2", vs
->> "Remote cache (1 hop)", which seems OK.
->> 
->> 
->> ie. we'd be able to express:
->> 
->>   Current core's L2: LVL_L2
->>   Other core's L2:   LVL_L2 | REMOTE
->>   Other chip's L2:   LVL_REM_CCE1 | REMOTE
->> 
->> And similarly for L3.
->> 
->> I think that makes sense? Unless people think remote should be reserved
->> to mean on another chip, though we already have REM_CCE1 for that.
->
-> IIRC the PERF_MEM_LVL_* namespace is somewhat depricated in favour of
-> the newer composite PERF_MEM_{LVLNUM_,REMOTE_,SNOOPX_} fields. Of
-> course, ABIs being what they are, we get to support both :/ But I'm not
-> sure mixing them is a great idea.
+- Arnaldo
+ 
+> On Thu, 5 Aug 2021, Michael Petlan wrote:
+> > When the expected sample count in the condition changed, the message
+> > needs to be changed too, otherwise we'll get:
+> > 
+> >   0x1001f2091d8: mmap mask[0]:
+> >   BPF filter result incorrect, expected 56, got 56 samples
+> > 
+> > Fixes: 4b04e0decd25 ("perf test: Fix basic bpf filtering test")
+> > 
+> > Signed-off-by: Michael Petlan <mpetlan@redhat.com>
+> > ---
+> >  tools/perf/tests/bpf.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
+> > index dbf5f5215abe..fa03ff0dc083 100644
+> > --- a/tools/perf/tests/bpf.c
+> > +++ b/tools/perf/tests/bpf.c
+> > @@ -192,7 +192,7 @@ static int do_test(struct bpf_object *obj, int (*func)(void),
+> >  	}
+> >  
+> >  	if (count != expect * evlist->core.nr_entries) {
+> > -		pr_debug("BPF filter result incorrect, expected %d, got %d samples\n", expect, count);
+> > +		pr_debug("BPF filter result incorrect, expected %d, got %d samples\n", expect * evlist->core.nr_entries, count);
+> >  		goto out_delete_evlist;
+> >  	}
+> >  
+> > -- 
+> > 2.18.4
+> > 
+> > 
 
-OK.
+-- 
 
-> Also, clearly this could use a comment...
->
-> The 'new' composite doesnt have a hops field because the hardware that
-> nessecitated that change doesn't report it, but we could easily add a
-> field there.
->
-> Suppose we add, mem_hops:3 (would 6 hops be too small?) and the
-> corresponding PERF_MEM_HOPS_{NA, 0..6}
-
-It's really 7 if we use remote && hop = 0 to mean the first hop.
-
-If we're wanting to use some of the hop levels to represent
-intra-chip/package hops then we could possibly use them all on a really
-big system.
-
-eg. you could imagine something like:
-
- L2 | 		        - local L2
- L2 | REMOTE | HOPS_0	- L2 of neighbour core
- L2 | REMOTE | HOPS_1	- L2 of near core on same chip (same 1/2 of chip)
- L2 | REMOTE | HOPS_2	- L2 of far core on same chip (other 1/2 of chip)
- L2 | REMOTE | HOPS_3	- L2 of sibling chip in same package
- L2 | REMOTE | HOPS_4	- L2 on separate package 1 hop away
- L2 | REMOTE | HOPS_5	- L2 on separate package 2 hops away
- L2 | REMOTE | HOPS_6	- L2 on separate package 3 hops away
-
-
-Whether it's useful to represent all those levels I'm not sure, but it's
-probably good if we have the ability.
-
-I guess I'm 50/50 on whether that's enough levels, or whether we want
-another bit to allow for future growth.
-
-> Then I suppose you can encode things like:
-> 
-> 	L2			- local L2
-> 	L2 | REMOTE		- remote L2 at an unspecified distance (NA)
-> 	L2 | REMOTE | HOPS_0	- remote L2 on the same node
-> 	L2 | REMOTE | HOPS_1	- remote L2 on a node 1 removed
-> 
-> Would that work?
-
-Yeah that looks good to me.
-
-cheers
+- Arnaldo
