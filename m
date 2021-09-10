@@ -6,43 +6,44 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1791CC433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Sep 2021 08:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C93C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Sep 2021 08:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2791611C5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Sep 2021 08:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DD0461153
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Sep 2021 08:58:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231731AbhIJI6w (ORCPT
+        id S231815AbhIJI74 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 10 Sep 2021 04:58:52 -0400
-Received: from smoke.leastfixedpoint.com ([81.4.107.66]:37662 "EHLO
+        Fri, 10 Sep 2021 04:59:56 -0400
+Received: from smoke.leastfixedpoint.com ([81.4.107.66]:37674 "EHLO
         mail.leastfixedpoint.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231771AbhIJI6w (ORCPT
+        with ESMTP id S231771AbhIJI7z (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Sep 2021 04:58:52 -0400
+        Fri, 10 Sep 2021 04:59:55 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.leastfixedpoint.com (Postfix) with ESMTPSA id 5BBEE67EB0;
-        Fri, 10 Sep 2021 09:57:40 +0100 (BST)
+        by mail.leastfixedpoint.com (Postfix) with ESMTPSA id 8676967EB0;
+        Fri, 10 Sep 2021 09:58:43 +0100 (BST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=leastfixedpoint.com;
-        s=default; t=1631264260;
-        bh=0sqfmE4alz8WzJPy5hKzsRjOVj0a0R7i3bjjbCRAnlQ=;
+        s=default; t=1631264323;
+        bh=/QjilGm/828vFR7BmizfNo3owyGsgFba5tc8qcwLGDQ=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=LQEdGiOwm7jWKTvdwU/LdVOp24Ub9hk+xMJsCYhZjcUSaw6Uo4B2wyaF474JdzelR
-         aL7F/vbZZRY9LYfhnxVuAeHdU6JcxCrc8nwxGrRwIL1Px9PgYDTaJ0gjlmlMphmPP/
-         tuwWDSFzZ9854IDWzzRbduwQxd2A793nx+PcI7qI=
+        b=ocoSzs1Kde+8hzq+bEpwbE+GIAWPG7O3Dw7xuozKm8aA5XP+b0NuetjSIw6RtMPd7
+         Fmw69mfPP/g6EfSR95EX7dKb/t06Q9KFTDJeRDDeVfpmioq3KtrhbghHHdBNpTbUIF
+         mQYkbTgyYq7gaD2GbgWjcsXrq6dQ27ck2OjVhDyc=
 Subject: Re: [PATCH] tools/perf: Use long-running addr2line per dso
-To:     Ian Rogers <irogers@google.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
+Cc:     mingo@redhat.com, peterz@infradead.org,
         linux-perf-users@vger.kernel.org
 References: <20210909112202.1947499-1-tonyg@leastfixedpoint.com>
- <CAP-5=fVOSzzsDfzYYm_GOAVrAEtGrre1KgjA0rSnQAgmnf9c7Q@mail.gmail.com>
+ <1631205749.uhek9ofd69.none@localhost> <YTpsTpyczphPtADn@kernel.org>
 From:   Tony Garnock-Jones <tonyg@leastfixedpoint.com>
-Message-ID: <a18ec37c-77a5-2538-5278-fab9b9100f75@leastfixedpoint.com>
-Date:   Fri, 10 Sep 2021 10:57:40 +0200
+Message-ID: <213c29ab-5d17-82f7-7f56-b9b70f750fd9@leastfixedpoint.com>
+Date:   Fri, 10 Sep 2021 10:58:43 +0200
 MIME-Version: 1.0
-In-Reply-To: <CAP-5=fVOSzzsDfzYYm_GOAVrAEtGrre1KgjA0rSnQAgmnf9c7Q@mail.gmail.com>
+In-Reply-To: <YTpsTpyczphPtADn@kernel.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -50,18 +51,18 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 9/9/21 9:05 PM, Ian Rogers wrote:
-> This is very cool and the performance wins in the bug report are
-> impressive! Could some of the process management functionality in the
-> change make use of start_command and similar code in
-> tools/lib/subcmd/run-command.h ?
+On 9/9/21 10:19 PM, Arnaldo Carvalho de Melo wrote:
+> That would be better, indeed, but since nobody has worked on this area
+> for white some time and we have it in a far worse shape right now, I'm
+> inclined to accept his work after I have time to review it.
 
-Excellent! I didn't know that was there. Yes, that would be a good idea, 
-and would remove much of the popen(3) ~reimplementation code from the 
-patch. In fact, looking at the code, it's the same general shape, and 
-has improved error handling around waitpid(2) (though it's not critical 
-in this case), so the patch would certainly be better expressed with 
-that code. Thanks for the pointer, I'll revise and resubmit.
+I'd like to see the patch land and *then* be replaced with something 
+even better, so that sounds good to me :-)
+
+> Valid questions, perhaps we can get what Tony did and improve it and
+> then try working with the library.
+
+(See my reply to Alex for answers!)
 
 Regards,
    Tony
