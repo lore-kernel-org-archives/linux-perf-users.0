@@ -2,121 +2,95 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2ACEC433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Sep 2021 15:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F4DC433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Sep 2021 16:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B107E60295
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Sep 2021 15:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5530F61205
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Sep 2021 16:04:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234516AbhIJPkT (ORCPT
+        id S229475AbhIJQFg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 10 Sep 2021 11:40:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44852 "EHLO
+        Fri, 10 Sep 2021 12:05:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234604AbhIJPkP (ORCPT
+        with ESMTP id S229466AbhIJQFf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Sep 2021 11:40:15 -0400
+        Fri, 10 Sep 2021 12:05:35 -0400
 Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26DDDC0613C1;
-        Fri, 10 Sep 2021 08:39:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A131C061574;
+        Fri, 10 Sep 2021 09:04:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=beG8h/qzme+fTyiQhIuWR7Lf7uWlwUHjpcQJDRpcyHY=; b=RzOxiElj7RvGJsvpuwvBFOJxSH
-        JvA723cw93ZhYz4BqLFZ5UiChcpd3271tdgSuwoIHjgjVQac3h0sX9KKijsN3andNdq3r3OKBuWni
-        mQoUnbC2CkaUxu2RPKi/KfVvQ3JDNnvIlM3fadP1QGXjtHr3zKvqVzh6B51v3wc1m2l/gBjPyzqXK
-        eSpXkntybGl0vmDeU7iQjRyRs0hPpKGio2D7vb0Ib5kGimJvSAgr8A6R0XnLe+BY4y0yz/kXHjgtW
-        /DyW6KJpTaEHYFMHXMX5jHhgBdNtDKnKqodXfWo7bHCUreEo29yTheeMuJgsgvv1EBTQoAlQKvRQ2
-        x0EOtq0A==;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Tyk8o/8ik0HvgtJvAG8QDKH8qje+2yOdy4HREGr2Dio=; b=jcT61RbAD7oS1dnY0sD6IXVzXr
+        WzvPZqjv83FvgGnt7fKKlQOe+gHSxD0AO21ayQyvWRr2w51OmkCLh1/PUSMSZ1q8gBMPpnrTKM5jc
+        zi9qE2tncHb9zgGykiFwbdkV+KDfHtBohngHueORVwc9rsj39Rj/XJlcxi0mUET/VzwignyjysK5g
+        xHl8XRX4+mKxR9OlSAQL9ihhmxWT1/iSZ0J9Gy64D+gZ2cxGYblAd5w2Xrlucfu3oXTGnd4QTiBfs
+        rlswXCeSswKHQ71X5fcRCFNBdluYPulrKsv/Kd0s/BLEXyKUtBEd0N7jLvkTTobRemgMCwismAhtY
+        Nr3O2OBw==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
         by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mOibw-002AHo-S3; Fri, 10 Sep 2021 15:38:41 +0000
+        id 1mOj0c-002AaZ-Tf; Fri, 10 Sep 2021 16:04:11 +0000
 Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DBA9F98627A; Fri, 10 Sep 2021 17:38:39 +0200 (CEST)
-Date:   Fri, 10 Sep 2021 17:38:39 +0200
+        id 116DC98627A; Fri, 10 Sep 2021 18:04:10 +0200 (CEST)
+Date:   Fri, 10 Sep 2021 18:04:09 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
-To:     =?utf-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-perf-users@vger.kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-kernel@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <netdev@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <bpf@vger.kernel.org>
-Subject: Re: [RFC PATCH] perf: fix panic by mark recursion inside
- perf_log_throttle
-Message-ID: <20210910153839.GH4323@worktop.programming.kicks-ass.net>
-References: <ff979a43-045a-dc56-64d1-2c31dd4db381@linux.alibaba.com>
+        Jiri Olsa <jolsa@redhat.com>, Leo Yan <leo.yan@linaro.org>,
+        x86@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 1/3] perf/x86: Add new event for AUX output counter
+ index
+Message-ID: <20210910160409.GI4323@worktop.programming.kicks-ass.net>
+References: <20210907163903.11820-1-adrian.hunter@intel.com>
+ <20210907163903.11820-2-adrian.hunter@intel.com>
+ <ab6f9ec2-2571-de5a-d44a-427851b08d19@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ff979a43-045a-dc56-64d1-2c31dd4db381@linux.alibaba.com>
+In-Reply-To: <ab6f9ec2-2571-de5a-d44a-427851b08d19@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 09, 2021 at 11:13:21AM +0800, 王贇 wrote:
-> When running with ftrace function enabled, we observed panic
-> as below:
+On Tue, Sep 07, 2021 at 01:45:22PM -0400, Liang, Kan wrote:
+> On 9/7/2021 12:39 PM, Adrian Hunter wrote:
+
+> > @@ -4494,8 +4500,16 @@ static int intel_pmu_check_period(struct perf_event *event, u64 value)
+> >   	return intel_pmu_has_bts_period(event, value) ? -EINVAL : 0;
+> >   }
+> > +static void intel_aux_output_init(void)
+> > +{
+> > +	/* Refer also intel_pmu_aux_output_match() */
+> > +	if (x86_pmu.intel_cap.pebs_output_pt_available)
+> > +		x86_pmu.assign = intel_pmu_assign_event;
+> > +}
 > 
->   traps: PANIC: double fault, error_code: 0x0
->   [snip]
->   RIP: 0010:perf_swevent_get_recursion_context+0x0/0x70
->   [snip]
->   Call Trace:
->    <NMI>
->    perf_trace_buf_alloc+0x26/0xd0
->    perf_ftrace_function_call+0x18f/0x2e0
->    kernelmode_fixup_or_oops+0x5/0x120
->    __bad_area_nosemaphore+0x1b8/0x280
->    do_user_addr_fault+0x410/0x920
->    exc_page_fault+0x92/0x300
->    asm_exc_page_fault+0x1e/0x30
->   RIP: 0010:__get_user_nocheck_8+0x6/0x13
->    perf_callchain_user+0x266/0x2f0
->    get_perf_callchain+0x194/0x210
->    perf_callchain+0xa3/0xc0
->    perf_prepare_sample+0xa5/0xa60
->    perf_event_output_forward+0x7b/0x1b0
->    __perf_event_overflow+0x67/0x120
->    perf_swevent_overflow+0xcb/0x110
->    perf_swevent_event+0xb0/0xf0
->    perf_tp_event+0x292/0x410
->    perf_trace_run_bpf_submit+0x87/0xc0
->    perf_trace_lock_acquire+0x12b/0x170
->    lock_acquire+0x1bf/0x2e0
->    perf_output_begin+0x70/0x4b0
->    perf_log_throttle+0xe2/0x1a0
->    perf_event_nmi_handler+0x30/0x50
->    nmi_handle+0xba/0x2a0
->    default_do_nmi+0x45/0xf0
->    exc_nmi+0x155/0x170
->    end_repeat_nmi+0x16/0x55
+> For a hybrid machine, x86_pmu.intel_cap.pebs_output_pt_available is always
+> cleared. We probably need the PMU specific
+> pmu->intel_cap.pebs_output_pt_available here.
+> 
+> > +
+> >   static int intel_pmu_aux_output_match(struct perf_event *event)
+> >   {
+> > +	/* intel_pmu_assign_event() is needed, refer intel_aux_output_init() */
+> >   	if (!x86_pmu.intel_cap.pebs_output_pt_available)
+> >   		return 0;
+> > 
+> 
+> For a hybrid machine, this always return 0. I think we need to fix it first?
 
-kernel/events/Makefile has:
+AFAICT the patch is correct for !hybrid, and the hybrid PT muck can then
+also fix this up, right?
 
-ifdef CONFIG_FUNCTION_TRACER
-CFLAGS_REMOVE_core.o = $(CC_FLAGS_FTRACE)
-endif
-
-Which, afaict, should avoid the above, no?
