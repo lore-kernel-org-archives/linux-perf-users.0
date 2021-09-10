@@ -2,151 +2,569 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NUMERIC_HTTP_ADDR,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-23.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E81C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Sep 2021 21:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1749DC433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Sep 2021 22:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 891896120A
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Sep 2021 21:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1822611EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Sep 2021 22:45:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229669AbhIJVle (ORCPT
+        id S231379AbhIJWrC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 10 Sep 2021 17:41:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36208 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229543AbhIJVld (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Sep 2021 17:41:33 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A2C6A611F0;
-        Fri, 10 Sep 2021 21:40:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631310022;
-        bh=iVEY9VLFCJeYEo9jsUnCHylE3ARaYTaAKIEjcJoUS7U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Gbq9zpY6ve25Xt9LOF9kuB3SjMvkFDq+YC2o8dQM3UyRDO2D3qXijc58rtyQS6grU
-         RZqhUjD7qe9x/5iVPcIvkCxT4FQntuDs3RuQSxzuh+14FyiSk6RjWAw36rTzsONutj
-         b30+nhJmfeGWbEpSAwouNfJmFu4jBzEUcyy+Exh2CnqjcI/CkacpcUEs9Zq8RANniU
-         p3MHPRWD6ttqYSKu1DVstJv4f3mkKqvp/4eSFyYuRvWDNBJOpDKRtK3vPp1Y/JVeRK
-         uuxl08dSYA8KAqwd8ThrRo9Hh+1lFcqYjq+52WFm+uiNF1kbcs/shbxmHptZbb/JwT
-         160qzuCPabpWA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C3AB04038F; Fri, 10 Sep 2021 18:40:17 -0300 (-03)
-Date:   Fri, 10 Sep 2021 18:40:17 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Kim Phillips <kim.phillips@amd.com>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
-        Joao Martins <joao.m.martins@oracle.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Robert Richter <robert.richter@amd.com>,
-        Stephane Eranian <eranian@google.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: Another bug: Re: [PATCH 0/3] perf report: Add support to print a
- textual representation of IBS raw sample data
-Message-ID: <YTvQwQk91tM/ag0f@kernel.org>
-References: <20210817221509.88391-1-kim.phillips@amd.com>
- <c4979e5c-13b8-0311-0660-355551ce45f2@amd.com>
- <YTth5DLWGbyAzxvQ@kernel.org>
- <YTtmwrZ6iy0TzG3l@kernel.org>
- <YTtnpAcaCNYozoJF@kernel.org>
- <YTto5xw/XSMuiGrG@kernel.org>
- <YTu2mu6a4lkx92ee@kernel.org>
- <YTvG5ndtSQtRHte2@kernel.org>
+        Fri, 10 Sep 2021 18:47:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56470 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231225AbhIJWq6 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 10 Sep 2021 18:46:58 -0400
+Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28228C061574
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 Sep 2021 15:45:47 -0700 (PDT)
+Received: by mail-io1-xd30.google.com with SMTP id y18so4337221ioc.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 Sep 2021 15:45:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pBNSyG+y29ltQAMwkK/embxT0gINqOpJik3DWJdAWyM=;
+        b=diJjgxDi6MpqY6LkgJ9XRqs+j6IUYxy0r/1sXEQ9IR0da2SSWAzNeeiSNrjT5vu4DQ
+         EhBlCmcbX/JfLmNv69lyP7xmBfmDMRe01eKtrtjCt4sIPt7oqjgtgJqneAKys3nR9zH4
+         VNhb9FyEBv5PM9V3OAmPdTV7yhwsNX68UePxrJKZTCFzymJpjZRYR0t1isYalIkHS/Kl
+         YSeRii5ImGE3D6GME5VEFRdILt7yq08cL4PB8Ht3uIgdDjThk6nMtYy794w86XLEHQnV
+         hI/bTUriWyl+aJOpkA2oplTB8hsli1bGfU8ZO1fgzBM1JIuUrIgeApfjHhAh36MI7sey
+         aFJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pBNSyG+y29ltQAMwkK/embxT0gINqOpJik3DWJdAWyM=;
+        b=HrDER9ZADAJZ09WH7Q0KVZSGbSPSbN42YTABngbsFTkuZQ+bUrqv6/jPFPZHAUm7QI
+         ARyCAKnKhnMz1q6Nw/Qa7G9NEp9BzJ8BthbMk7/mpI9ldep7Ro7c7LEq8PWxIDHq9piG
+         v1Bld3m92pUgsrxfS5VdayIVKTQEGdxvt2nrUUO58S5FCocXfka8/L6PlOnYKr1yysZN
+         xqFfc8bv7PntacoO5+fxrPaugNRk/80cb3c0UHp013/zNAlFKFzApj3NSQzQgr7h4N3v
+         RX/2nz9TyvTwomso4jdFYSNzGE+sHhmxHBl5k20LFCCb8p3FdZqc8gPI6QjNWbymFqjH
+         6fxw==
+X-Gm-Message-State: AOAM530vkGrYxZQQj7kuvVL+4F5stm5liHMbZ47JS+3Z1Z5CaEG5hjS6
+        yQnE675hffGbmT9ZcR+S3bXCGXdzmUPIcJ0ynNARw0sDOsM=
+X-Google-Smtp-Source: ABdhPJx8HmGdYt15GQN+JurULp3nhTT52X0fb6ITCNgKPq/ozLHzHbvpxpOsEupZKwV6xkhQcwu5kiLQsU/2H9duYoE=
+X-Received: by 2002:a6b:8b4b:: with SMTP id n72mr94298iod.18.1631313946266;
+ Fri, 10 Sep 2021 15:45:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YTvG5ndtSQtRHte2@kernel.org>
-X-Url:  http://acmel.wordpress.com
+References: <20210909112202.1947499-1-tonyg@leastfixedpoint.com> <20210910102307.2055484-1-tonyg@leastfixedpoint.com>
+In-Reply-To: <20210910102307.2055484-1-tonyg@leastfixedpoint.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 10 Sep 2021 15:45:33 -0700
+Message-ID: <CAP-5=fXXyfWJLDMKZEfgu2RAkJrE45m3+3FYzE5xceMjcm1TEg@mail.gmail.com>
+Subject: Re: [PATCH v2] tools/perf: Use long-running addr2line per dso
+To:     Tony Garnock-Jones <tonyg@leastfixedpoint.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Sep 10, 2021 at 05:58:14PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Fri, Sep 10, 2021 at 04:48:42PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > 
-> > All the cross builds are failing:
-> > 
-> >   28     9.20 debian:experimental-x-arm64   : FAIL gcc version 10.2.1 20210110 (Debian 10.2.1-6)
-> >     util/amd-sample-raw.c:12:10: fatal error: asm/amd-ibs.h: No such file or directory
-> >        12 | #include <asm/amd-ibs.h>
-> >           |          ^~~~~~~~~~~~~~~
-> >     compilation terminated.
-> 
-> Trying with the same trick used by intel-pt to build on all arches:
-> 
-> diff --git a/tools/perf/util/amd-sample-raw.c b/tools/perf/util/amd-sample-raw.c
-> index fbb7d61c50489374..d19d765195c54b79 100644
-> --- a/tools/perf/util/amd-sample-raw.c
-> +++ b/tools/perf/util/amd-sample-raw.c
-> @@ -9,7 +9,7 @@
+On Fri, Sep 10, 2021 at 3:23 AM Tony Garnock-Jones
+<tonyg@leastfixedpoint.com> wrote:
+>
+> Invoking addr2line in a separate subprocess, one for each required
+> lookup, takes a terribly long time. This patch introduces a
+> long-running addr2line process for each dso, *DRAMATICALLY* speeding
+> up runs of perf. What used to take tens of minutes now takes tens of
+> seconds.
+>
+> Debian bug report about this issue:
+> https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=911815
+>
+> Signed-off-by: Tony Garnock-Jones <tonyg@leastfixedpoint.com>
+
+I tested with memory sanitizer and no issues.
+
+> ---
+> Changes since v1:
+>  - use "subcmd/run-command.h" machinery instead of socketpair/fork/exec directly
+>
+>
+>  tools/perf/util/srcline.c | 384 ++++++++++++++++++++++++++++----------
+>  1 file changed, 284 insertions(+), 100 deletions(-)
+>
+> diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+> index 5b7d6c16d33f..1e0b0be4de04 100644
+> --- a/tools/perf/util/srcline.c
+> +++ b/tools/perf/util/srcline.c
+> @@ -1,8 +1,10 @@
+>  // SPDX-License-Identifier: GPL-2.0
 >  #include <inttypes.h>
->  
+> +#include <signal.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+>  #include <string.h>
+> +#include <sys/types.h>
+>
+>  #include <linux/kernel.h>
 >  #include <linux/string.h>
-> -#include <asm/amd-ibs.h>
-> +#include "../../arch/x86/include/asm/amd-ibs.h"
->  
->  #include "debug.h"
->  #include "session.h"
+> @@ -15,6 +17,7 @@
+>  #include "srcline.h"
+>  #include "string2.h"
+>  #include "symbol.h"
+> +#include "subcmd/run-command.h"
+>
+>  bool srcline_full_filename;
+>
+> @@ -119,6 +122,8 @@ static struct symbol *new_inline_sym(struct dso *dso,
+>         return inline_sym;
+>  }
+>
+> +#define MAX_INLINE_NEST 1024
+> +
+>  #ifdef HAVE_LIBBFD_SUPPORT
+>
+>  /*
+> @@ -273,8 +278,6 @@ static void addr2line_cleanup(struct a2l_data *a2l)
+>         free(a2l);
+>  }
+>
+> -#define MAX_INLINE_NEST 1024
+> -
+>  static int inline_list__append_dso_a2l(struct dso *dso,
+>                                        struct inline_node *node,
+>                                        struct symbol *sym)
+> @@ -361,26 +364,14 @@ void dso__free_a2l(struct dso *dso)
+>         dso->a2l = NULL;
+>  }
+>
+> -static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
+> -                                       struct dso *dso, struct symbol *sym)
+> -{
+> -       struct inline_node *node;
+> -
+> -       node = zalloc(sizeof(*node));
+> -       if (node == NULL) {
+> -               perror("not enough memory for the inline node");
+> -               return NULL;
+> -       }
+> -
+> -       INIT_LIST_HEAD(&node->val);
+> -       node->addr = addr;
+> -
+> -       addr2line(dso_name, addr, NULL, NULL, dso, true, node, sym);
+> -       return node;
+> -}
+> -
+>  #else /* HAVE_LIBBFD_SUPPORT */
+>
+> +struct a2l_subprocess {
+> +       struct child_process addr2line;
+> +       FILE *to_child;
+> +       FILE *from_child;
+> +};
+> +
+>  static int filename_split(char *filename, unsigned int *line_nr)
+>  {
+>         char *sep;
+> @@ -402,114 +393,307 @@ static int filename_split(char *filename, unsigned int *line_nr)
+>         return 0;
+>  }
+>
+> +static void addr2line_subprocess_cleanup(struct a2l_subprocess *a2l)
+> +{
+> +       if (a2l->addr2line.pid != -1) {
+> +               kill(a2l->addr2line.pid, SIGKILL);
+> +               finish_command(&a2l->addr2line); /* ignore result, we don't care */
+> +               a2l->addr2line.pid = -1;
+> +       }
+> +
+> +       if (a2l->to_child != NULL) {
+> +               fclose(a2l->to_child);
+> +               a2l->to_child = NULL;
+> +       }
+> +
+> +       if (a2l->from_child != NULL) {
+> +               fclose(a2l->from_child);
+> +               a2l->from_child = NULL;
+> +       }
+> +
+> +       free(a2l);
+> +}
+> +
+> +static struct a2l_subprocess *addr2line_subprocess_init(const char *path)
+> +{
+> +       const char *argv[] = { "addr2line", "-e", path, "-i", "-f", NULL };
+> +       struct a2l_subprocess *a2l = NULL;
+> +       int start_command_status = 0;
+> +
+> +       a2l = zalloc(sizeof(*a2l));
+> +       if (a2l == NULL)
+> +               goto out;
+> +
+> +       a2l->to_child = NULL;
+> +       a2l->from_child = NULL;
+> +
+> +       a2l->addr2line.pid = -1;
+> +       a2l->addr2line.in = -1;
+> +       a2l->addr2line.out = -1;
+> +       a2l->addr2line.err = 0;
+> +       a2l->addr2line.dir = NULL;
+> +       a2l->addr2line.env = NULL;
+> +       a2l->addr2line.no_stdin = 0;
+> +       a2l->addr2line.no_stdout = 0;
+> +       a2l->addr2line.no_stderr = 1;
+> +       a2l->addr2line.exec_cmd = 0;
+> +       a2l->addr2line.stdout_to_stderr = 0;
+> +       a2l->addr2line.preexec_cb = NULL;
 
-Not enough, this one is needed for msr-index.h, same reason, a bit more
-involved, but check-patch.h has a few entries like that, see below.
+The assignments of 0 and NULL here are redundant.
 
-Now it seems to be ok:
+> +
+> +       a2l->addr2line.argv = argv;
+> +       start_command_status = start_command(&a2l->addr2line);
+> +       a2l->addr2line.argv = NULL; /* it's not used after start_command; avoid dangling pointers */
+> +
+> +       if (start_command_status != 0) {
+> +               pr_warning("could not start addr2line for %s: start_command return code %d\n",
+> +                          path,
+> +                          start_command_status);
+> +               goto out;
+> +       }
+> +
+> +       a2l->to_child = fdopen(a2l->addr2line.in, "w");
+> +       if (a2l->to_child == NULL) {
+> +               pr_warning("could not open write-stream to addr2line of %s\n", path);
+> +               goto out;
+> +       }
+> +
+> +       a2l->from_child = fdopen(a2l->addr2line.out, "r");
+> +       if (a2l->from_child == NULL) {
+> +               pr_warning("could not open read-stream from addr2line of %s\n", path);
+> +               goto out;
+> +       }
+> +
+> +       return a2l;
+> +
+> +out:
+> +       if (a2l)
+> +               addr2line_subprocess_cleanup(a2l);
+> +
+> +       return NULL;
+> +}
+> +
 
-# export BUILD_TARBALL=http://192.168.100.2/perf/perf-5.14.0.tar.xz
-# dm  android-ndk:r12b-arm android-ndk:r15c-arm debian:experimental-x-arm64 debian:experimental-x-mips debian:experimental-x-mips64 debian:experimental-x-mipsel fedora:24-x-ARC-uClibc fedora:34-x-ARC-glibc fedora:34-x-ARC-uClibc mageia:7 openmandriva:cooker ubuntu:16.04-x-arm ubuntu:16.04-x-arm64 ubuntu:16.04-x-powerpc ubuntu:16.04-x-powerpc64 ubuntu:16.04-x-powerpc64el ubuntu:16.04-x-s390 ubuntu:18.04-x-arm ubuntu:18.04-x-arm64 ubuntu:18.04-x-m68k ubuntu:18.04-x-powerpc ubuntu:18.04-x-powerpc64 ubuntu:18.04-x-powerpc64el ubuntu:18.04-x-riscv64 ubuntu:18.04-x-s390 ubuntu:18.04-x-sh4 ubuntu:18.04-x-sparc64 ubuntu:20.04-x-powerpc64el ubuntu:20.04-x-s390 ubuntu:21.04-x-mips ubuntu:21.04-x-mips64
-   1    29.83 android-ndk:r12b-arm          : Ok   arm-linux-androideabi-gcc (GCC) 4.9.x 20150123 (prerelease)
-   2    40.15 android-ndk:r15c-arm          : Ok   arm-linux-androideabi-gcc (GCC) 4.9.x 20150123 (prerelease)
-   3    49.76 debian:experimental-x-arm64   : Ok   aarch64-linux-gnu-gcc (Debian 10.2.1-6) 10.2.1 20210110
-   4    38.37 debian:experimental-x-mips    : Ok   mips-linux-gnu-gcc (Debian 10.2.1-6) 10.2.1 20210110
-   5    45.28 debian:experimental-x-mips64  : Ok   mips64-linux-gnuabi64-gcc (Debian 10.2.1-6) 10.2.1 20210110
-   6    45.15 debian:experimental-x-mipsel  : Ok   mipsel-linux-gnu-gcc (Debian 10.2.1-6) 10.2.1 20210110
-   7: fedora:24-x-ARC-uClibc
+I'm not clear on the use of stanza here, it seems to imply reading >1
+line but the out arguments/function don't agree with this. I think
+this would read better by just dropping the word stanza.
 
-Some more to go, but should be ok by now.
+Thanks,
+Ian
 
-- Arnaldo
-
-diff --git a/tools/arch/x86/include/asm/amd-ibs.h b/tools/arch/x86/include/asm/amd-ibs.h
-index 46e1df45efc04627..174e7d83fcbdb22f 100644
---- a/tools/arch/x86/include/asm/amd-ibs.h
-+++ b/tools/arch/x86/include/asm/amd-ibs.h
-@@ -4,7 +4,7 @@
-  * 55898 Rev 0.35 - Feb 5, 2021
-  */
- 
--#include <asm/msr-index.h>
-+#include "msr-index.h"
- 
- /*
-  * IBS Hardware MSRs
-diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index 4a6b2b4ec5074a49..f1e46277e8226b5a 100755
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -34,7 +34,6 @@ arch/x86/include/asm/inat_types.h
- arch/x86/include/asm/emulate_prefix.h
- arch/x86/include/asm/irq_vectors.h
- arch/x86/include/asm/msr-index.h
--arch/x86/include/asm/amd-ibs.h
- arch/x86/include/uapi/asm/prctl.h
- arch/x86/lib/x86-opcode-map.txt
- arch/x86/tools/gen-insn-attr-x86.awk
-@@ -145,6 +144,7 @@ done
- # diff with extra ignore lines
- check arch/x86/lib/memcpy_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/export.h>" -I"^SYM_FUNC_START\(_LOCAL\)*(memcpy_\(erms\|orig\))"'
- check arch/x86/lib/memset_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/export.h>" -I"^SYM_FUNC_START\(_LOCAL\)*(memset_\(erms\|orig\))"'
-+check arch/x86/include/asm/amd-ibs.h  '-I "^#include [<\"]\(asm/\)*msr-index.h"'
- check include/uapi/asm-generic/mman.h '-I "^#include <\(uapi/\)*asm-generic/mman-common\(-tools\)*.h>"'
- check include/uapi/linux/mman.h       '-I "^#include <\(uapi/\)*asm/mman.h>"'
- check include/linux/build_bug.h       '-I "^#\(ifndef\|endif\)\( \/\/\)* static_assert$"'
+> +static int read_addr2line_stanza(struct a2l_subprocess *a2l,
+> +                                char **function,
+> +                                char **filename,
+> +                                unsigned int *line_nr)
+> +{
+> +       /*
+> +        * Returns:
+> +        * -1 ==> error
+> +        * 0 ==> sentinel (or other ill-formed) stanza read
+> +        * 1 ==> a genuine stanza read
+> +        */
+> +       char *line = NULL;
+> +       size_t line_len = 0;
+> +       unsigned int dummy_line_nr = 0;
+> +       int ret = -1;
+> +
+> +       if (function != NULL && *function != NULL) {
+> +               free(*function);
+> +               *function = NULL;
+> +       }
+> +
+> +       if (filename != NULL && *filename != NULL) {
+> +               free(*filename);
+> +               *filename = NULL;
+> +       }
+> +
+> +       if (line_nr != NULL)
+> +               *line_nr = 0;
+> +
+> +       if (getline(&line, &line_len, a2l->from_child) < 0 || !line_len)
+> +               goto error;
+> +
+> +       if (function != NULL)
+> +               *function = strdup(strim(line));
+> +
+> +       free(line);
+> +       line = NULL;
+> +       line_len = 0;
+> +
+> +       if (getline(&line, &line_len, a2l->from_child) < 0 || !line_len)
+> +               goto error;
+> +
+> +       if (filename_split(line, line_nr == NULL ? &dummy_line_nr : line_nr) == 0) {
+> +               ret = 0;
+> +               goto error;
+> +       }
+> +
+> +       if (filename != NULL)
+> +               *filename = strdup(line);
+> +
+> +       free(line);
+> +       line = NULL;
+> +       line_len = 0;
+> +
+> +       return 1;
+> +
+> +error:
+> +       if (line != NULL)
+> +               free(line);
+> +       if (function != NULL && *function != NULL) {
+> +               free(*function);
+> +               *function = NULL;
+> +       }
+> +       if (filename != NULL && *filename != NULL) {
+> +               free(*filename);
+> +               *filename = NULL;
+> +       }
+> +       return ret;
+> +}
+> +
+> +static int inline_list__append_stanza(struct dso *dso,
+> +                                     struct inline_node *node,
+> +                                     struct symbol *sym,
+> +                                     const char *function,
+> +                                     const char *filename,
+> +                                     unsigned int line_nr)
+> +{
+> +       struct symbol *inline_sym = new_inline_sym(dso, sym, function);
+> +
+> +       return inline_list__append(inline_sym, srcline_from_fileline(filename, line_nr), node);
+> +}
+> +
+>  static int addr2line(const char *dso_name, u64 addr,
+>                      char **file, unsigned int *line_nr,
+> -                    struct dso *dso __maybe_unused,
+> -                    bool unwind_inlines __maybe_unused,
+> -                    struct inline_node *node __maybe_unused,
+> +                    struct dso *dso,
+> +                    bool unwind_inlines,
+> +                    struct inline_node *node,
+>                      struct symbol *sym __maybe_unused)
+>  {
+> -       FILE *fp;
+> -       char cmd[PATH_MAX];
+> -       char *filename = NULL;
+> -       size_t len;
+> +       struct a2l_subprocess *a2l = dso->a2l;
+> +       char *stanza_function = NULL;
+> +       char *stanza_filename = NULL;
+> +       unsigned int stanza_line_nr = 0;
+> +       int stanza_status = -1;
+>         int ret = 0;
+> +       size_t inline_count = 0;
+>
+> -       scnprintf(cmd, sizeof(cmd), "addr2line -e %s %016"PRIx64,
+> -                 dso_name, addr);
+> +       if (!a2l) {
+> +               dso->a2l = addr2line_subprocess_init(dso_name);
+> +               a2l = dso->a2l;
+> +       }
+>
+> -       fp = popen(cmd, "r");
+> -       if (fp == NULL) {
+> -               pr_warning("popen failed for %s\n", dso_name);
+> -               return 0;
+> +       if (a2l == NULL) {
+> +               if (!symbol_conf.disable_add2line_warn)
+> +                       pr_warning("%s %s: addr2line_subprocess_init failed\n", __func__, dso_name);
+> +               goto out;
+>         }
+>
+> -       if (getline(&filename, &len, fp) < 0 || !len) {
+> -               pr_warning("addr2line has no output for %s\n", dso_name);
+> +       /*
+> +        * Send our request and then *deliberately* send something that can't be interpreted as
+> +        * a valid address to ask addr2line about (namely, ","). This causes addr2line to first
+> +        * write out the answer to our request, in an unbounded/unknown number of stanzas, and
+> +        * then to write out the lines "??" and "??:0", so that we can detect when it has
+> +        * finished giving us anything useful. We have to be careful about the first stanza,
+> +        * though, because it may be genuinely unknown, in which case we'll get two sets of
+> +        * "??"/"??:0" lines.
+> +        */
+> +       if (fprintf(a2l->to_child, "%016"PRIx64"\n,\n", addr) < 0 || fflush(a2l->to_child) != 0) {
+> +               pr_warning("%s %s: could not send request\n", __func__, dso_name);
+>                 goto out;
+>         }
+>
+> -       ret = filename_split(filename, line_nr);
+> -       if (ret != 1) {
+> -               free(filename);
+> +       switch (read_addr2line_stanza(a2l, &stanza_function, &stanza_filename, &stanza_line_nr)) {
+> +       case -1:
+> +               pr_warning("%s %s: could not read first stanza\n", __func__, dso_name);
+>                 goto out;
+> +       case 0:
+> +               /*
+> +                * The first stanza was invalid, so return failure, but first read another
+> +                * stanza, since we asked a junk question and have to clear the answer out.
+> +                */
+> +               switch (read_addr2line_stanza(a2l, NULL, NULL, NULL)) {
+> +               case -1:
+> +                       pr_warning("%s %s: could not read delimiter stanza\n", __func__, dso_name);
+> +                       break;
+> +               case 0:
+> +                       /* As expected. */
+> +                       break;
+> +               default:
+> +                       pr_warning("%s %s: unexpected stanza instead of sentinel",
+> +                                  __func__, dso_name);
+> +                       break;
+> +               }
+> +               goto out;
+> +       default:
+> +               break;
+> +       }
+> +
+> +       if (file) {
+> +               *file = strdup(stanza_filename);
+> +               ret = 1;
+> +       }
+> +       if (line_nr)
+> +               *line_nr = stanza_line_nr;
+> +
+> +       if (unwind_inlines) {
+> +               if (node && inline_list__append_stanza(dso, node, sym,
+> +                                                      stanza_function,
+> +                                                      stanza_filename,
+> +                                                      stanza_line_nr)) {
+> +                       ret = 0;
+> +                       goto out;
+> +               }
+>         }
+>
+> -       *file = filename;
+> +       /* We have to read the stanzas even if we don't care about the inline info. */
+> +       while ((stanza_status = read_addr2line_stanza(a2l,
+> +                                                     &stanza_function,
+> +                                                     &stanza_filename,
+> +                                                     &stanza_line_nr)) == 1) {
+> +               if (unwind_inlines && node && inline_count++ < MAX_INLINE_NEST) {
+> +                       if (inline_list__append_stanza(dso, node, sym,
+> +                                                      stanza_function,
+> +                                                      stanza_filename,
+> +                                                      stanza_line_nr)) {
+> +                               ret = 0;
+> +                               goto out;
+> +                       }
+> +                       ret = 1; /* found at least one inline frame */
+> +               }
+> +       }
+>
+>  out:
+> -       pclose(fp);
+> +       if (stanza_function != NULL)
+> +               free(stanza_function);
+> +       if (stanza_filename != NULL)
+> +               free(stanza_filename);
+>         return ret;
+>  }
+>
+> -void dso__free_a2l(struct dso *dso __maybe_unused)
+> +void dso__free_a2l(struct dso *dso)
+>  {
+> -}
+> +       struct a2l_subprocess *a2l = dso->a2l;
+>
+> -static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
+> -                                       struct dso *dso __maybe_unused,
+> -                                       struct symbol *sym)
+> -{
+> -       FILE *fp;
+> -       char cmd[PATH_MAX];
+> -       struct inline_node *node;
+> -       char *filename = NULL;
+> -       char *funcname = NULL;
+> -       size_t filelen, funclen;
+> -       unsigned int line_nr = 0;
+> -
+> -       scnprintf(cmd, sizeof(cmd), "addr2line -e %s -i -f %016"PRIx64,
+> -                 dso_name, addr);
+> -
+> -       fp = popen(cmd, "r");
+> -       if (fp == NULL) {
+> -               pr_err("popen failed for %s\n", dso_name);
+> -               return NULL;
+> -       }
+> -
+> -       node = zalloc(sizeof(*node));
+> -       if (node == NULL) {
+> -               perror("not enough memory for the inline node");
+> -               goto out;
+> -       }
+> -
+> -       INIT_LIST_HEAD(&node->val);
+> -       node->addr = addr;
+> -
+> -       /* addr2line -f generates two lines for each inlined functions */
+> -       while (getline(&funcname, &funclen, fp) != -1) {
+> -               char *srcline;
+> -               struct symbol *inline_sym;
+> -
+> -               strim(funcname);
+> -
+> -               if (getline(&filename, &filelen, fp) == -1)
+> -                       goto out;
+> -
+> -               if (filename_split(filename, &line_nr) != 1)
+> -                       goto out;
+> -
+> -               srcline = srcline_from_fileline(filename, line_nr);
+> -               inline_sym = new_inline_sym(dso, sym, funcname);
+> -
+> -               if (inline_list__append(inline_sym, srcline, node) != 0) {
+> -                       free(srcline);
+> -                       if (inline_sym && inline_sym->inlined)
+> -                               symbol__delete(inline_sym);
+> -                       goto out;
+> -               }
+> -       }
+> +       if (!a2l)
+> +               return;
+>
+> -out:
+> -       pclose(fp);
+> -       free(filename);
+> -       free(funcname);
+> +       addr2line_subprocess_cleanup(a2l);
+>
+> -       return node;
+> +       dso->a2l = NULL;
+>  }
+>
+>  #endif /* HAVE_LIBBFD_SUPPORT */
+>
+> +static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
+> +                                       struct dso *dso, struct symbol *sym)
+> +{
+> +       struct inline_node *node;
+> +
+> +       node = zalloc(sizeof(*node));
+> +       if (node == NULL) {
+> +               perror("not enough memory for the inline node");
+> +               return NULL;
+> +       }
+> +
+> +       INIT_LIST_HEAD(&node->val);
+> +       node->addr = addr;
+> +
+> +       addr2line(dso_name, addr, NULL, NULL, dso, true, node, sym);
+> +       return node;
+> +}
+> +
+>  /*
+>   * Number of addr2line failures (without success) before disabling it for that
+>   * dso.
+> --
+> 2.33.0
+>
