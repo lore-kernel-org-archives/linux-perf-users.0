@@ -2,94 +2,121 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18756C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Sep 2021 14:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2ACEC433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Sep 2021 15:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED28D61059
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Sep 2021 14:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B107E60295
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Sep 2021 15:39:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232790AbhIJOUS (ORCPT
+        id S234516AbhIJPkT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 10 Sep 2021 10:20:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33880 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233952AbhIJOUQ (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Sep 2021 10:20:16 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E7AB561026;
-        Fri, 10 Sep 2021 14:19:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631283545;
-        bh=i6M0iOLrjNvAS8282FvsD30z58/M3IiYRbF0ZxjnaSU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=alhM4CKRWKUCoOGJYCkIp8kgoQlSnvxGHjuF4yHPFDlHTBUPzjtiO2dCSObASqIMb
-         XOyOxteJLhrpUXnEkQCUbr7KmZ4+2ZDkb0O/Zq939QYu+YaWmFDHO7uTxCtvK7AzjE
-         X2ASN96cMo4bHVIKSpELEjY1OKI+rkv6lbmEBmo3aozGw7q1+d5g9mhqBwxJo3u0+e
-         tdcB78c5etBQ3TOiTFUgUAFicspFp3Xor+clJtulkyQaef5yIlA65ZOWvqx8o3rIhz
-         abhkRDEkcYp2Y8xgEdRuC4ufImwTl2O6BKV3enrBKirC/48fLLKwqdsxhUY8yQ87mT
-         1XbDcikcI/lkA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 0EA204038F; Fri, 10 Sep 2021 11:19:02 -0300 (-03)
-Date:   Fri, 10 Sep 2021 11:19:02 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, yao.jin@linux.intel.com, namhyung@kernel.org,
-        kim.phillips@amd.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] perf annotate: Add fusion logic for AMD microarchs
-Message-ID: <YTtpVpo3d/h5YkVc@kernel.org>
-References: <20210906105640.1040-1-ravi.bangoria@amd.com>
- <20210906105640.1040-2-ravi.bangoria@amd.com>
- <YTpveO0qqKFTaxTk@kernel.org>
- <6a987cad-6c46-280e-f791-6c59b6628a45@amd.com>
+        Fri, 10 Sep 2021 11:40:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44852 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234604AbhIJPkP (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 10 Sep 2021 11:40:15 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26DDDC0613C1;
+        Fri, 10 Sep 2021 08:39:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=beG8h/qzme+fTyiQhIuWR7Lf7uWlwUHjpcQJDRpcyHY=; b=RzOxiElj7RvGJsvpuwvBFOJxSH
+        JvA723cw93ZhYz4BqLFZ5UiChcpd3271tdgSuwoIHjgjVQac3h0sX9KKijsN3andNdq3r3OKBuWni
+        mQoUnbC2CkaUxu2RPKi/KfVvQ3JDNnvIlM3fadP1QGXjtHr3zKvqVzh6B51v3wc1m2l/gBjPyzqXK
+        eSpXkntybGl0vmDeU7iQjRyRs0hPpKGio2D7vb0Ib5kGimJvSAgr8A6R0XnLe+BY4y0yz/kXHjgtW
+        /DyW6KJpTaEHYFMHXMX5jHhgBdNtDKnKqodXfWo7bHCUreEo29yTheeMuJgsgvv1EBTQoAlQKvRQ2
+        x0EOtq0A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mOibw-002AHo-S3; Fri, 10 Sep 2021 15:38:41 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DBA9F98627A; Fri, 10 Sep 2021 17:38:39 +0200 (CEST)
+Date:   Fri, 10 Sep 2021 17:38:39 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     =?utf-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-perf-users@vger.kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-kernel@vger.kernel.org>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <netdev@vger.kernel.org>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <bpf@vger.kernel.org>
+Subject: Re: [RFC PATCH] perf: fix panic by mark recursion inside
+ perf_log_throttle
+Message-ID: <20210910153839.GH4323@worktop.programming.kicks-ass.net>
+References: <ff979a43-045a-dc56-64d1-2c31dd4db381@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <6a987cad-6c46-280e-f791-6c59b6628a45@amd.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ff979a43-045a-dc56-64d1-2c31dd4db381@linux.alibaba.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Sep 10, 2021 at 04:47:31PM +0530, Ravi Bangoria escreveu:
+On Thu, Sep 09, 2021 at 11:13:21AM +0800, 王贇 wrote:
+> When running with ftrace function enabled, we observed panic
+> as below:
 > 
-> >> +static bool x86__ins_is_fused(struct arch *arch, const char *ins1,
-> >> +			      const char *ins2)
-> >> +{
-> >> +	if (strstarts(arch->vendor, "AuthenticAMD"))
-> >> +		return amd__ins_is_fused(arch, ins1, ins2);
-> >> +
-> >> +	return intel__ins_is_fused(arch, ins1, ins2);
-> >> +}
-> >> +
-> > 
-> > Can we instead make x86__ins_is_fused be a pointer and instead of
-> > storing arch->vendor we set it to one of amd__ins_is_fused() or
-> > intel__ins_is_fused()?
-> > 
-> > I.e. here:
-> > 
-> >>  static int x86__cpuid_parse(struct arch *arch, char *cpuid)
-> >>  {
-> >>  	unsigned int family, model, stepping;
-> >> @@ -184,6 +216,9 @@ static int x86__cpuid_parse(struct arch *arch, char *cpuid)
-> >>  	if (ret == 3) {
-> >>  		arch->family = family;
-> >>  		arch->model = model;
-> >> +		arch->vendor = strndup(cpuid, 12);
-> > 
-> > 		x86__ins_is_fused = strstarts(cpuid, "AuthenticAMD") ?
-> > 					amd__ins_is_fused :
-> > 					intel__ins_is_fused;
-> 
-> Sure. Will post v2.
+>   traps: PANIC: double fault, error_code: 0x0
+>   [snip]
+>   RIP: 0010:perf_swevent_get_recursion_context+0x0/0x70
+>   [snip]
+>   Call Trace:
+>    <NMI>
+>    perf_trace_buf_alloc+0x26/0xd0
+>    perf_ftrace_function_call+0x18f/0x2e0
+>    kernelmode_fixup_or_oops+0x5/0x120
+>    __bad_area_nosemaphore+0x1b8/0x280
+>    do_user_addr_fault+0x410/0x920
+>    exc_page_fault+0x92/0x300
+>    asm_exc_page_fault+0x1e/0x30
+>   RIP: 0010:__get_user_nocheck_8+0x6/0x13
+>    perf_callchain_user+0x266/0x2f0
+>    get_perf_callchain+0x194/0x210
+>    perf_callchain+0xa3/0xc0
+>    perf_prepare_sample+0xa5/0xa60
+>    perf_event_output_forward+0x7b/0x1b0
+>    __perf_event_overflow+0x67/0x120
+>    perf_swevent_overflow+0xcb/0x110
+>    perf_swevent_event+0xb0/0xf0
+>    perf_tp_event+0x292/0x410
+>    perf_trace_run_bpf_submit+0x87/0xc0
+>    perf_trace_lock_acquire+0x12b/0x170
+>    lock_acquire+0x1bf/0x2e0
+>    perf_output_begin+0x70/0x4b0
+>    perf_log_throttle+0xe2/0x1a0
+>    perf_event_nmi_handler+0x30/0x50
+>    nmi_handle+0xba/0x2a0
+>    default_do_nmi+0x45/0xf0
+>    exc_nmi+0x155/0x170
+>    end_repeat_nmi+0x16/0x55
 
-Thanks, if you're quick we may get this into this merge window :-)
+kernel/events/Makefile has:
 
-> Thanks for the review Arnaldo,
+ifdef CONFIG_FUNCTION_TRACER
+CFLAGS_REMOVE_core.o = $(CC_FLAGS_FTRACE)
+endif
 
-- Arnaldo
+Which, afaict, should avoid the above, no?
