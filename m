@@ -2,198 +2,162 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C5EC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat, 11 Sep 2021 04:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7118C433F5
+	for <linux-perf-users@archiver.kernel.org>; Sat, 11 Sep 2021 04:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D2EE611C0
-	for <linux-perf-users@archiver.kernel.org>; Sat, 11 Sep 2021 04:39:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E6D5611BF
+	for <linux-perf-users@archiver.kernel.org>; Sat, 11 Sep 2021 04:42:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230321AbhIKEkn (ORCPT
+        id S229627AbhIKEoG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 11 Sep 2021 00:40:43 -0400
-Received: from mail-bn8nam11on2054.outbound.protection.outlook.com ([40.107.236.54]:52417
+        Sat, 11 Sep 2021 00:44:06 -0400
+Received: from mail-bn8nam11on2051.outbound.protection.outlook.com ([40.107.236.51]:21600
         "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229559AbhIKEkm (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 11 Sep 2021 00:40:42 -0400
+        id S229559AbhIKEoF (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Sat, 11 Sep 2021 00:44:05 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MH8ATSW76CPaTWkrVn06w/GBvZQRU3AyvxojxRx9VFBPCnwDInInCjCqxxSKD/jLsFcbxo1S0kY5Hp03eJwFaglLMLeQQdhn3ARVWSwqr0Y70mknaBr2oD0BZaNNg0pC8xjqHa94Cxriwcy/49dW4V2VyRrA56ZDe8tXQmPAOpQrJ+XeB3VEosfIo3yCZXtXxLV4pwrFDXL5rOngdPkh3qXYYJ3emQLhVcBHrIbZirDWcXIhCdR0EskP8gBIRbqGuMxjUewEPcJ6Hu2q5GwPJ+GKWnjDg+bgnjMyQK54pRqysus/sdQxNgLXoAepfxBWD70UnAuMkl6+ZqFQKb0Psg==
+ b=YwWXtg5EYeLlyIYls5ZKFNyYgg8cB6Nm01/wssgma/s9tqpUsUgQPTazmHdCwHpWe2Mt++PpzU0SWXBgw4jwbXue/TTjmhYYJlX64RY9oSc2Hjo68G9vpQbVD1/wI8luahR1sb25KH8cWwClp13RPVYgoRKPe2uRwsazbqwE8oW6/wikrZ9L06AJIo1kl38GY7MTd8vPVFtgCTHwVFlxjzzkCJJHSMg7C0kDpczVEflxbuoytVK6fHl4d59ATNjTgwu4oIzK/ruHpib9y8J5jP2p9mFontdtAtBpeR6dlRsTPyJNB+2ikGBnSxSS+9h+VLYRb6S0Yb6tTuYJLi7B0A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=3g+E+Gu6rnhhOZDh617tYJptj3P12EuKShXz4ge4kws=;
- b=PguxLWK9WAxnh70+qWp4fVHPDHwOKznqsL7uIjawvcJzlRGkJzfR/20X6TYH8pHYE6ypVIr7Q3IdccnB3BYPpn2Qe3kVzYFdKQwwFLc2TjupXSL3jhNBmufsB2c55xi+xWQSIqICsApIRti6KFsopjiOWecFuV1VrMrsU9WaPAh1LffvhWsplamlgSMcLQeo/paZsYcZ4sfKVoE0P3f0/V8V6fMpnDxNFMSs/HQtFwnfaQhrFukwPy7X9DP5+frKgXBXwrcDIu/Teu2r6xqSQfCj8U4LWM3KR4PtxM/J6f+ATH1idixmH3CuOk4uEXwN6rYV3y9zATJO6luZODfQkw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
+ bh=dHkxzMEv8ly1TDIeyfqESLcznNYfgcWq2+h2VwaZzzg=;
+ b=nfp54jgLOeDKseqfFBCNFsYBGya/pLCe44HRhFUjVkcsix/UdvKPNXEkjxZRVjDwSS/aOusuCmP4MwkSmYYmB3/sUwb0Hrf1635vPar/uzL7+YQ5LRYPqduLvrqFviYg3QzH8sC5RToAFIXcJ7CxMEBl6dBIAyBOVvcuCgx4ywhWGVvdtN17QNCT+SSM0Y6aC0IZ6nhpKutK2OL+2BDtV13udJK0k543AHjtRtCcRqWd3iwgzYqJhDD+wTHV+hmY8/frLjh/XoAqc7X7lhtFzS5HUgRAqE/Pmw31o0JTx4BDoadN81PgSxDszZDGZ85a0IZqwX5iJZ+rzdrCwR5Wag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3g+E+Gu6rnhhOZDh617tYJptj3P12EuKShXz4ge4kws=;
- b=Ua0nDvW5jd0kGiPF78Lk2A3v6uhv8/V7BgmtPT7TbNk3Tv1+68ms5mqNxSJzrVABeFeZjY9bVjaPUZeNWV13U4acAQockr3k7IAPkng+vK4nqqnKVlqj/t1jJmgtGUOGfietA2LpnxG1oCfZCF16P+ThMeVQWpCauf2xBkYlmTU=
-Received: from DM6PR11CA0043.namprd11.prod.outlook.com (2603:10b6:5:14c::20)
- by BN8PR12MB3058.namprd12.prod.outlook.com (2603:10b6:408:66::17) with
+ bh=dHkxzMEv8ly1TDIeyfqESLcznNYfgcWq2+h2VwaZzzg=;
+ b=CgEHm8yujuEM/sQpBM7glNgEHwbVbul2J5i/XQ+cfmhvu7mn0yIrJi/os4tySkgPcsmd40xPQ0enpkQ+QH2/fhiCKt8LrXO7Rxppw3DgI+Q8EWAtYjWO5GRx0oqz/jVhB5zWE3Qg5BplaMzuIayQoT/A+9bvniWtzxUuwuh/xTg=
+Authentication-Results: amd.com; dkim=none (message not signed)
+ header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
+Received: from BN7PR12MB2643.namprd12.prod.outlook.com (2603:10b6:408:29::21)
+ by BN6PR12MB1780.namprd12.prod.outlook.com (2603:10b6:404:107::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4500.17; Sat, 11 Sep
- 2021 04:39:29 +0000
-Received: from DM6NAM11FT063.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:14c:cafe::dc) by DM6PR11CA0043.outlook.office365.com
- (2603:10b6:5:14c::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4500.14 via Frontend
- Transport; Sat, 11 Sep 2021 04:39:28 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT063.mail.protection.outlook.com (10.13.172.219) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4500.14 via Frontend Transport; Sat, 11 Sep 2021 04:39:28 +0000
-Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Fri, 10 Sep
- 2021 23:39:24 -0500
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4500.16; Sat, 11 Sep
+ 2021 04:42:49 +0000
+Received: from BN7PR12MB2643.namprd12.prod.outlook.com
+ ([fe80::f565:ee0f:eac1:de2a]) by BN7PR12MB2643.namprd12.prod.outlook.com
+ ([fe80::f565:ee0f:eac1:de2a%7]) with mapi id 15.20.4500.018; Sat, 11 Sep 2021
+ 04:42:49 +0000
+Subject: Re: [PATCH 2/2] perf annotate: Add fusion logic for AMD microarchs
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, yao.jin@linux.intel.com, namhyung@kernel.org,
+        kim.phillips@amd.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20210906105640.1040-1-ravi.bangoria@amd.com>
+ <20210906105640.1040-2-ravi.bangoria@amd.com> <YTpveO0qqKFTaxTk@kernel.org>
+ <6a987cad-6c46-280e-f791-6c59b6628a45@amd.com> <YTtpVpo3d/h5YkVc@kernel.org>
 From:   Ravi Bangoria <ravi.bangoria@amd.com>
-To:     <acme@kernel.org>
-CC:     <ravi.bangoria@amd.com>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
-        <yao.jin@linux.intel.com>, <namhyung@kernel.org>,
-        <kim.phillips@amd.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 2/2] perf annotate: Add fusion logic for AMD microarchs
-Date:   Sat, 11 Sep 2021 10:08:54 +0530
-Message-ID: <20210911043854.8373-2-ravi.bangoria@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210911043854.8373-1-ravi.bangoria@amd.com>
-References: <20210911043854.8373-1-ravi.bangoria@amd.com>
+Message-ID: <e9525e3c-f0e6-e9ed-6ce5-fc207742c9d4@amd.com>
+Date:   Sat, 11 Sep 2021 10:12:28 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
+In-Reply-To: <YTtpVpo3d/h5YkVc@kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BMXPR01CA0030.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:c::16) To BN7PR12MB2643.namprd12.prod.outlook.com
+ (2603:10b6:408:29::21)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
+Received: from [172.31.158.202] (165.204.158.249) by BMXPR01CA0030.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:c::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4500.16 via Frontend Transport; Sat, 11 Sep 2021 04:42:44 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d945320f-de5f-445d-e5de-08d974de242d
-X-MS-TrafficTypeDiagnostic: BN8PR12MB3058:
-X-Microsoft-Antispam-PRVS: <BN8PR12MB305835F6DAEBAD7A24FA4D93E0D79@BN8PR12MB3058.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:962;
+X-MS-Office365-Filtering-Correlation-Id: 589e1ef3-60bd-44b8-9157-08d974de9b4e
+X-MS-TrafficTypeDiagnostic: BN6PR12MB1780:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN6PR12MB17809136EEF82F01F0FFE875E0D79@BN6PR12MB1780.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0YDkUq87AmsqR0VmKEWOvz2KwpaM9+bBvJzEaQLaq+jRB3ugcpNCNjmSkdtY42tEjw/hw8EOlFEwdqoXpvmklI59pzjd0E+sjd/K91j0vkNQEXZQdmfsotyT04mXeKv2a3oB5KM1HXu9AiSlSi2jetuKjL674HYD4tEOAAOZt7LijVuwgM7epIN1Xr0l5mmHLaCnQPA+2vwL/v9MdxYaLDf1nuiJ5cU9+AdZBmALIhP+8Oq9IXb41V/tz0oFN2LVtYoC2h5xlgtc3X4jJT58f0QP+M+p11B/TombijpktBHlHzMJ18lo753vWd0e+yKNG85nEd4L3/F2/3/HDfCXq4aRWnWJC/s2Gpji5kObBkw9b1Dsta47oG7TIX4DQwIacNzAPNFg4rTmyTfNXMQQdI91WkT1J+QWYzArI8EApdNPSkaQ7dzpE6jiY/hdSZkwNt+GeDQwc18Wlol75AYkBo+Bjh1/dpijw5qfsWf6MKV7nD2RLRCeaT0qtcGsAwzH0QEH4EVta9bjCEUd2drbS9nrn69083omX1FPNxx1hU6hCGFT4S+lxDwuwHBbEr1Zy/3ylcr897AcKBYu2QZlVwvrE+yo4xdx8aGpckMW1T4cj+BcsejzlY6jDfPZxvWbetQq+EW1NQHWEmiO7lwYOIedua/kQxLLNw/NYxuEoBbfi8DgZxkZlSakH5ikTEA6hXuWymSF8BYzPs+I8NKJSGxhtqJvl9VJMZNCdm8+drf4NWnqjnCF6Dq2agHRLUvLJ7V2nJfeXF8cHpW+gUTr7ZWLTBpFjb8OBWMpZYLjHDGy+l+M2jdIXgk4+KxkahmxqIaURWeZkzPIBmxvnUGWXkTVh5SL+WVplw4bBLSlEeY=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(47076005)(7696005)(54906003)(356005)(70586007)(16526019)(508600001)(70206006)(8676002)(36860700001)(336012)(6916009)(426003)(8936002)(26005)(4326008)(6666004)(316002)(82310400003)(36756003)(83380400001)(81166007)(2906002)(2616005)(1076003)(966005)(44832011)(5660300002)(86362001)(186003)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: JBGMeYP7b1LKZiu5d/72CnRh7Ba/QBvgTfv3J4Gj4nOhZTbsjUEGGNCBaI/hbXA3jLAJp/RR7lFQQEZ4uUdH0xr6towmsykHUyDgzpxstIVZQAgU3GcMKAcgIu5EZFxFi5y+Kj2qvDHZbapmhFIyjzT3/uLPiwYu6iECYeTIn2tTTowmORGdBbnq1zL1GN2u/ZDqEyJnR7P7L+y3XINsVVIp6RQrzzo9uxIYL/rhFR5Fa7ZJiirJhDeFSdIMqGuYcOt07tvTOJj+SxmI+0PgcHlweRqysdF5g+aVzeAQwr+7ThsVjZO+3+vsuVMcMt9G3TuZJ18kCKuKs4Ecch8mpZxSIygynaRuIUBqdyZBjylwC7jN9aYNBm4p+Tj5B78U7GamP0Y3ZhPWSzsXctpKkTDj1ZxU4ufarsKPBac16KR+AoXZnN24t2QSq8UaKYOC0w/FNXRfNGYNko1opuq9VJCd3a6qqp2b4WC89qGJc2uxxrsXroMyCzZHL3pxlaRe6p8ZG/j1AlJ0S18ibPaqc7/KLZew2DHGm3398UMUc20DICdG3EDHN0Ei0xlZOeDblYoJZjRQVAp1QtbvxoG/eFoon82l/AkqJ2Maoqik02naG8hW4tKh+Ozc0AIL5nGfIfjLmW7ibWo1/F3Q+iE2OgaTULtkCVyjMT2EWqtZI5w6zcws6fVZxyTqofb1mZxPPZXKaveh8WyFvy6k7bwAbSOc8C2HO3ozd1pP+Y1ZdAv+fx496fpkxY245qLnZtqPZ6t3vCnriuukDfEp2ufRmXsDk2D21hQ5bAe6T43+kG1mQiXVOXXD/wE+028/+eos
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN7PR12MB2643.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(346002)(376002)(366004)(396003)(39860400002)(66946007)(6486002)(4326008)(38100700002)(44832011)(186003)(31696002)(31686004)(66556008)(16576012)(316002)(66476007)(966005)(8936002)(8676002)(36756003)(2906002)(6666004)(5660300002)(6916009)(2616005)(956004)(53546011)(86362001)(26005)(478600001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?Windows-1252?Q?FHwxpKDok7dlrM9xmG38hDE3lwRoEWyOOM/KO59eZ/kGYT0i4Bb+q5BH?=
+ =?Windows-1252?Q?22YWubF7oJ+Pa25NxAWZH4P96jTglJdP4kAQUGyeXoCVCWaHSI0s3v7j?=
+ =?Windows-1252?Q?LFI1ZsQnwhaagyofPlaFRtsGpSgyCrmtjhhL4hDYqln5k7KTS5u481qx?=
+ =?Windows-1252?Q?uvcNE07KJd1ZYk9pXw5Es17+gGSVdx0rfq0l47Gtbnj67RXdh0hal1ve?=
+ =?Windows-1252?Q?dIOY35Vg1pP+OIac0Yo9obxq4UFDNqIkdilgzT95qTXka6k4jaNp1vVX?=
+ =?Windows-1252?Q?VqwRKtBko2SPJ0FckEdB6uuJs3ziL0YpeE3kAb4hPRgLb5euLo04xGmi?=
+ =?Windows-1252?Q?QabtFzR0sv5HOMeAcrvzMijAOQkZim3+QQx8DuxuUazWBmKfD8ke2mJv?=
+ =?Windows-1252?Q?2DYb7qCs063OWN6xmDHFXzXBpQgAylX2OtmaoOIzv8LlK0/iStm2LvCm?=
+ =?Windows-1252?Q?zhllGh8zjnVYmBZojspoHpeFc7czHLwvnGpdi8W+ZdLbLCvNl89jk2Ey?=
+ =?Windows-1252?Q?N1rrSEWp/Tjf8cnPgz9gXsh38+ExX229t/oOjvZtKubDEe/YUjJV0imu?=
+ =?Windows-1252?Q?HZMl0+e5u2nhpxBqFIlZNLIEFV2N+T9Ru/Ix19lS6rzzgagk6Zeq4AKH?=
+ =?Windows-1252?Q?QcLJOKq1I9O7CUEYTVi1fm4ECzgMOu7OEny1IdLSy9tA3d+pFjhE3JZf?=
+ =?Windows-1252?Q?r9+oA9IXEWmPXT+/o7565fxyKqUTV+MRRRTJxm6IodSvz2sHw3WQbAXs?=
+ =?Windows-1252?Q?tZI4PyyzCCj8LgmE+d1HgE7fuQZwVCNK9pjQ+Uigr4Gwbt1yg4vlp9J5?=
+ =?Windows-1252?Q?D2gi5lZFM81hP0YxK0sd/sy7R49DVv/TPVE9Yl7f/Kzy6ZrR0j8WLWDM?=
+ =?Windows-1252?Q?wWS5F9YurMGnHpalfcFIgPFQcVlAbjnRxsVmzpkqz71YOFb0FelRFAFu?=
+ =?Windows-1252?Q?kl1d6b7cFr+9nheYoZXrmvJWwUxvG7u4gtFvLiNwuzz6t3I7jY2+ehlU?=
+ =?Windows-1252?Q?TsAGezstSg1zF6HXkrkd3SGzt0LttHeck77U271F/5i18Ry1bzOK5EkA?=
+ =?Windows-1252?Q?fU7vzkrg0rupCPruVxgq7moeqBlmkFOyseLeV/0PLpxMnvh8FngRSco9?=
+ =?Windows-1252?Q?P8NRC2PJZzkkHE9e5QAz+uw7fxd/5Mw9uybSZQGQGQd/JAGO3JT+Kkkr?=
+ =?Windows-1252?Q?cXgvEnpgJU2KvQGoS4o8/fSNNagvNTaYZ+2IdClyneYlvEzA55YEqvfR?=
+ =?Windows-1252?Q?2Cy+AOrr0QMf/UpMLfgD00vFNMlxgSLj9ofY2G6gjsdyTXXoJ4jnXy+w?=
+ =?Windows-1252?Q?P/GKPNBnO8OZo+ZAORzjCqIQdFXMqhxhvinjwvduOXC7DeJb69hlw/an?=
+ =?Windows-1252?Q?1IVkzUH5uYNiRpQ4UHVCSeP/FyAy3MZ3x452CTvD4395IVv6JyYuFG9w?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Sep 2021 04:39:28.7215
+X-MS-Exchange-CrossTenant-Network-Message-Id: 589e1ef3-60bd-44b8-9157-08d974de9b4e
+X-MS-Exchange-CrossTenant-AuthSource: BN7PR12MB2643.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Sep 2021 04:42:48.9003
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d945320f-de5f-445d-e5de-08d974de242d
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT063.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3058
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kBC4//dWVL+RE83tW+dB5E6ZtM1Ki7aFdn6/TzROealOH9HLxYy7llTUGfExTBYjy0EyrRqePQwM9Q0952alPQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1780
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-AMD family 15h and above microarchs fuse a subset of cmp/test/ALU
-instructions with branch instructions[1][2]. Add perf annotate
-fused instruction support for these microarchs.
 
-Before:
-         │       testb  $0x80,0x51(%rax)
-         │    ┌──jne    5b3
-    0.78 │    │  mov    %r13,%rdi
-         │    │→ callq  mark_page_accessed
-    1.08 │5b3:└─→mov    0x8(%r13),%rax
 
-After:
-         │    ┌──testb  $0x80,0x51(%rax)
-         │    ├──jne    5b3
-    0.78 │    │  mov    %r13,%rdi
-         │    │→ callq  mark_page_accessed
-    1.08 │5b3:└─→mov    0x8(%r13),%rax
+On 10-Sep-21 7:49 PM, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Sep 10, 2021 at 04:47:31PM +0530, Ravi Bangoria escreveu:
+>>
+>>>> +static bool x86__ins_is_fused(struct arch *arch, const char *ins1,
+>>>> +			      const char *ins2)
+>>>> +{
+>>>> +	if (strstarts(arch->vendor, "AuthenticAMD"))
+>>>> +		return amd__ins_is_fused(arch, ins1, ins2);
+>>>> +
+>>>> +	return intel__ins_is_fused(arch, ins1, ins2);
+>>>> +}
+>>>> +
+>>>
+>>> Can we instead make x86__ins_is_fused be a pointer and instead of
+>>> storing arch->vendor we set it to one of amd__ins_is_fused() or
+>>> intel__ins_is_fused()?
+>>>
+>>> I.e. here:
+>>>
+>>>>  static int x86__cpuid_parse(struct arch *arch, char *cpuid)
+>>>>  {
+>>>>  	unsigned int family, model, stepping;
+>>>> @@ -184,6 +216,9 @@ static int x86__cpuid_parse(struct arch *arch, char *cpuid)
+>>>>  	if (ret == 3) {
+>>>>  		arch->family = family;
+>>>>  		arch->model = model;
+>>>> +		arch->vendor = strndup(cpuid, 12);
+>>>
+>>> 		x86__ins_is_fused = strstarts(cpuid, "AuthenticAMD") ?
+>>> 					amd__ins_is_fused :
+>>> 					intel__ins_is_fused;
+>>
+>> Sure. Will post v2.
+> 
+> Thanks, if you're quick we may get this into this merge window :-)
 
-[1] https://bugzilla.kernel.org/attachment.cgi?id=298553
-[2] https://bugzilla.kernel.org/attachment.cgi?id=298555
+v2 Posted: https://lore.kernel.org/lkml/20210911043854.8373-1-ravi.bangoria@amd.com
 
-Reported-by: Kim Phillips <kim.phillips@amd.com>
-Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
----
-v1->v2:
-  - Don't store vendor id. Instead, directly assign function pointer
-    based on verndor id. (acme)
-
- tools/perf/arch/x86/annotate/instructions.c | 28 ++++++++++++++++++++-
- tools/perf/util/annotate.c                  |  1 -
- 2 files changed, 27 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/arch/x86/annotate/instructions.c b/tools/perf/arch/x86/annotate/instructions.c
-index 24ea12ec7e02..305872692bfd 100644
---- a/tools/perf/arch/x86/annotate/instructions.c
-+++ b/tools/perf/arch/x86/annotate/instructions.c
-@@ -144,8 +144,31 @@ static struct ins x86__instructions[] = {
- 	{ .name = "xorps",	.ops = &mov_ops, },
- };
- 
--static bool x86__ins_is_fused(struct arch *arch, const char *ins1,
-+static bool amd__ins_is_fused(struct arch *arch, const char *ins1,
- 			      const char *ins2)
-+{
-+	if (strstr(ins2, "jmp"))
-+		return false;
-+
-+	/* Family >= 15h supports cmp/test + branch fusion */
-+	if (arch->family >= 0x15 && (strstarts(ins1, "test") ||
-+	    (strstarts(ins1, "cmp") && !strstr(ins1, "xchg")))) {
-+		return true;
-+	}
-+
-+	/* Family >= 19h supports some ALU + branch fusion */
-+	if (arch->family >= 0x19 && (strstarts(ins1, "add") ||
-+	    strstarts(ins1, "sub") || strstarts(ins1, "and") ||
-+	    strstarts(ins1, "inc") || strstarts(ins1, "dec") ||
-+	    strstarts(ins1, "or") || strstarts(ins1, "xor"))) {
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
-+static bool intel__ins_is_fused(struct arch *arch, const char *ins1,
-+				const char *ins2)
- {
- 	if (arch->family != 6 || arch->model < 0x1e || strstr(ins2, "jmp"))
- 		return false;
-@@ -184,6 +207,9 @@ static int x86__cpuid_parse(struct arch *arch, char *cpuid)
- 	if (ret == 3) {
- 		arch->family = family;
- 		arch->model = model;
-+		arch->ins_is_fused = strstarts(cpuid, "AuthenticAMD") ?
-+					amd__ins_is_fused :
-+					intel__ins_is_fused;
- 		return 0;
- 	}
- 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 0bae061b2d6d..b55f35485e43 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -183,7 +183,6 @@ static struct arch architectures[] = {
- 		.init = x86__annotate_init,
- 		.instructions = x86__instructions,
- 		.nr_instructions = ARRAY_SIZE(x86__instructions),
--		.ins_is_fused = x86__ins_is_fused,
- 		.objdump =  {
- 			.comment_char = '#',
- 		},
--- 
-2.27.0
-
+Thanks,
+Ravi
