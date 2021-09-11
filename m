@@ -2,559 +2,275 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-23.2 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A3AAC433F5
-	for <linux-perf-users@archiver.kernel.org>; Sat, 11 Sep 2021 00:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B127C433FE
+	for <linux-perf-users@archiver.kernel.org>; Sat, 11 Sep 2021 04:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FA1C611BF
-	for <linux-perf-users@archiver.kernel.org>; Sat, 11 Sep 2021 00:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FC1660FE6
+	for <linux-perf-users@archiver.kernel.org>; Sat, 11 Sep 2021 04:39:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234950AbhIKA1B (ORCPT
+        id S229623AbhIKEkk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 10 Sep 2021 20:27:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50368 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232897AbhIKA1A (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Sep 2021 20:27:00 -0400
-Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28941C061574
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Sep 2021 17:25:49 -0700 (PDT)
-Received: by mail-io1-xd29.google.com with SMTP id b7so4512407iob.4
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Sep 2021 17:25:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hCi+FSXuMFO5C/vJ5PT0v5a6Y0AXptA2KpTJT1N4wno=;
-        b=grQTG7OsZXarlXzYU4iNrhtN4RwC3FmQIJrKyQ/ei84RoHt+2OHtSW11kbkmrsnFO5
-         oAix+AawKxAaqYYRLE7Y5yshoStPbCgZiOgqahLxAmkKoL6SclD9SyPC3+uXaME0gLQn
-         yIuDie+pttT6lyFYkYbtyP+zLx3rHi1kk2FSDykD+sV/A3eZQtOkgUWeCi5EI+d7J6P2
-         SgAVo5dVdhNl26mIuOoC6kRs5ZcN1p4Bd5Xugp/Axl50PnF87aLz0iuaZKIDofYk8J3M
-         GqhkxG/WF/b8uvPV2ngUwbalKiWZv5wFQhuLzRTuavVINMYZHUYFgOFqTvgXjU6+3IQ9
-         osmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hCi+FSXuMFO5C/vJ5PT0v5a6Y0AXptA2KpTJT1N4wno=;
-        b=Z/aK8WC+R2BDVSdNfeAmjeiLAMeyKrxR4TUswb+XKVVd1rtjAjjn5eQ01GPeie3CAY
-         2skTS27FQ+/gYEWBKg5y1q6Qkc3M+WLKl4YdODbRXkFscRC4rnX3BEeamoF5SKbw/Lz1
-         ZvM6q0wO8viFj61EWaT7z1ACxs3C8RuL90/W3Yq3mNJK0TVQRRvV+kkdIe8a3QJh4Adc
-         g60LihYVsQnRU6yzz7zcrMCLtIwU0F34ZBHmcTQYQ53M3wOmvlJNHnDw25lTO0gLi6ve
-         4IpU+2bILsTfRi1ffQ/1UXbw7m0/JaaftfB2g+35VJD3NMLAjhcnmcZF9k8x67MCnXnp
-         Vnvg==
-X-Gm-Message-State: AOAM5303ZQE/UxTlV3ufTmwGA7BAXHNMUEACvWhClYRfADRz5VlA+W7Q
-        clvhl7ZlHxl0N3WQ0JdGLkWXD/C2LPj1RBNfEpaGSw==
-X-Google-Smtp-Source: ABdhPJww5VBuDtsutQEer5IInfyocHFjXpTY4p2HEfIV/2lqajddW8mf9T9SmYauTBdG9bswjB0S9Eed3TwXx9q3dS8=
-X-Received: by 2002:a6b:f203:: with SMTP id q3mr341221ioh.32.1631319948301;
- Fri, 10 Sep 2021 17:25:48 -0700 (PDT)
+        Sat, 11 Sep 2021 00:40:40 -0400
+Received: from mail-co1nam11on2080.outbound.protection.outlook.com ([40.107.220.80]:44352
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229559AbhIKEkj (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Sat, 11 Sep 2021 00:40:39 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XAzrHPXXAnf8kfUQkYqn9BIQvAzq46y4lQ/E+HrYNto7wLS7tgJXHwdsj3v7EfC0kvnz/9EmvPA9Shld/lerfNVVxthuaxvhkYfVQPZ4mSiA/H+IS6PNqojai7WC6dz+Dd4h0fMPPFUG8eGWryU9IYZjVSnpS4TjnYDhiEXOhKAo7W8zljqztiPJJdXoVNbPdkkil+JqoCiLomc7HRA7xeWR3ho1gfgi9SQHC0vf2uq3mKNq8ULZzUS9h8Y9+6o50zvgmQ1qeJUsSv69qGDcPb3vrhvu9/u2zlMRKBPexL0ly6Q3opXZ9EmQYF+wGa2Mdcqh8J6omkVmPbqMIgGaCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
+ bh=H/09r11XljhQiAxoULbvozhZfYx6gfON+wmakDIQlQE=;
+ b=fLG6K3eNA05ifMPL29Hdy6hNDNo8DxHAZHCya5C7hx5/fnVsgM1ZvdVDQQxWM1jOtFK0MsL+e32LI/TFHcz17wZ1jmp095/GCWIK1kNBCvHQd0wJev4PSObRSxAJo4aYymY+8tewf6IZMqk9m7NJrTAqEBfg5VLeB9Emei/e/bormO53U+HVUen53t4OewV+g/q9VakTtil3/aRR7JHscuermi2gKxnarskF67dqRB09UGO8nhOZ81tQEigciW5HNHbKhDN2uC0F2GY+khEk0+pV2iKNV21m0M6M9U3jZoYCeEL/0k2r9ANhhlbu8Hb5vQnqkq06D9EGA6zn6kIPIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H/09r11XljhQiAxoULbvozhZfYx6gfON+wmakDIQlQE=;
+ b=BSj4wWjtFKUYHMbF8Tlf4IgUP3gpNg0jYYq/0hK2Ss/E49Rqk4geEHWy6lwkCnC9sue1z2nv4Fms0wVeOXB8YyU+ZHu8xl4/0f3QcydYtmHxsDoEMpAX0F9N3e0BIR5fVIyMkNMIquLZHvdwFnimx7ycwpwpv7ZOXPEjvUWBm8c=
+Received: from DM5PR1401CA0014.namprd14.prod.outlook.com (2603:10b6:4:4a::24)
+ by BN6PR1201MB0148.namprd12.prod.outlook.com (2603:10b6:405:55::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4500.17; Sat, 11 Sep
+ 2021 04:39:24 +0000
+Received: from DM6NAM11FT022.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:4:4a:cafe::34) by DM5PR1401CA0014.outlook.office365.com
+ (2603:10b6:4:4a::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4500.14 via Frontend
+ Transport; Sat, 11 Sep 2021 04:39:24 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT022.mail.protection.outlook.com (10.13.172.210) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4500.14 via Frontend Transport; Sat, 11 Sep 2021 04:39:24 +0000
+Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Fri, 10 Sep
+ 2021 23:39:19 -0500
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+To:     <acme@kernel.org>
+CC:     <ravi.bangoria@amd.com>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
+        <yao.jin@linux.intel.com>, <namhyung@kernel.org>,
+        <kim.phillips@amd.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 1/2] perf annotate: Fix fused instr logic for assembly functions
+Date:   Sat, 11 Sep 2021 10:08:53 +0530
+Message-ID: <20210911043854.8373-1-ravi.bangoria@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20210910102307.2055484-1-tonyg@leastfixedpoint.com> <20210910225557.21651-1-tonyg@leastfixedpoint.com>
-In-Reply-To: <20210910225557.21651-1-tonyg@leastfixedpoint.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 10 Sep 2021 17:25:36 -0700
-Message-ID: <CAP-5=fXnf2e5DwTXMHVNhZPraQN7dpVwE1Wo+3DSC0PAHamecA@mail.gmail.com>
-Subject: Re: [PATCH v3] tools/perf: Use long-running addr2line per dso
-To:     Tony Garnock-Jones <tonyg@leastfixedpoint.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: df7eda01-fba1-4d21-24ec-08d974de2170
+X-MS-TrafficTypeDiagnostic: BN6PR1201MB0148:
+X-Microsoft-Antispam-PRVS: <BN6PR1201MB014892A5CC3B5629EC709813E0D79@BN6PR1201MB0148.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: GgIZ8kMVhk0fNG6OcrkQlLz3wSeHIFf447AKSzEVlbzHZCm2mLtts+PCQ3lwz0I1R3doZHQv2LkphTPqYSFIkCGfTcXwlRrazN2XB5BOzqZ2lujM1hCZom7/Vs9OvEqvttwgqW8QUK86hBfjhycOmvD9PAL8jEfpDcEXoqwAk/VHUn4xLqBSuxu8LOX74a34bYTR5ghvccuNSD8E14USx0ucKbXwHahdX67A8XLlYdhYegWwZwNB7spIk69rM/3h+LBGI3bRRG3SeH8P4mzRod7Er8v7B+TJFgsQletC9LwTFdEI4u1167PXFNkBnFZnCd1HPYQkRUj3+ndDst/Fw7mSM7ocZG7R/djcF+/q04NL/jWwyWd6oXu0fLc3sUvWtpxz79VBUP9sl98dT3lw6aGNs+NCvC+MjkFU0jjw6wfVdOHV13hwKEI1ah0hOm2d4JjAQGOxzdNS4MMcc00XK+dEuSdH6ojk2Go0qhvC8Z8cqcjCgNDtZVRluJgLmA23UI6gZkuceUgfhH7ILJhPwAbjUekyJNgd2vL2DhUvFhKY4WOjGb8j2RaBs9edGmhQP3n1Q5PJRAfb4oeTfbTsrR5JHG/lPK0HR2wcITuTWA2W4mIjq6o5/+oNHY2JZf1XX7E6E3hrqL43O03nT6pw480lWpcHLvq7tch4E9+wP6sEir6w/Y8xkx8CbkmNvGEMMrx5P3Encg0wECyPc/yEam9BPD5m6fywWIC/lMZJsz4=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(39860400002)(396003)(136003)(346002)(376002)(46966006)(36840700001)(2616005)(4326008)(66574015)(36860700001)(47076005)(426003)(16526019)(186003)(356005)(26005)(44832011)(70586007)(8936002)(8676002)(82740400003)(478600001)(316002)(6916009)(336012)(7696005)(2906002)(83380400001)(70206006)(81166007)(1076003)(6666004)(54906003)(36756003)(82310400003)(5660300002)(86362001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Sep 2021 04:39:24.1265
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: df7eda01-fba1-4d21-24ec-08d974de2170
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT022.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1201MB0148
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Sep 10, 2021 at 3:56 PM Tony Garnock-Jones
-<tonyg@leastfixedpoint.com> wrote:
->
-> Invoking addr2line in a separate subprocess, one for each required
-> lookup, takes a terribly long time. This patch introduces a
-> long-running addr2line process for each dso, *DRAMATICALLY* speeding
-> up runs of perf. What used to take tens of minutes now takes tens of
-> seconds.
->
-> Debian bug report about this issue:
-> https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=911815
->
-> Signed-off-by: Tony Garnock-Jones <tonyg@leastfixedpoint.com>
+Some x86 microarchitectures fuse a subset of cmp/test/ALU instructions
+with branch instructions, and thus perf annotate highlight such valid
+pairs as fused.
 
-Looks good to me, thanks!
+When annotated with source, perf uses struct disasm_line to contain
+either source or instruction line from objdump output. Usually, a C
+statement generates multiple instructions which include such
+cmp/test/ALU + branch instruction pairs. But in case of assembly
+function, each individual assembly source line generate one
+instruction. Perf annotate instruction fusion logic assumes previous
+disasm_line as previous instruction line, which is wrong because,
+for assembly function, previous disasm_line contains source line.
+And thus perf fails to highlight valid fused instruction pairs for
+assembly functions.
 
-Tested-by: Ian Rogers <irogers@google.com>
+Fix it by searching backward until we find an instruction line and
+consider that disasm_line as fused with current branch instruction.
 
-Ian
+Before:
+         │    cmpq    %rcx, RIP+8(%rsp)
+    0.00 │      cmp    %rcx,0x88(%rsp)
+         │    je      .Lerror_bad_iret      <--- Source line
+    0.14 │   ┌──je     b4                   <--- Instruction line
+         │   │movl    %ecx, %eax
 
-> ---
-> Changes since v2:
->  - remove redundant initializations to 0 and NULL
->  - use terminology "record" instead of "stanza" for input from addr2line
->
-> Changes since v1:
->  - use "subcmd/run-command.h" machinery instead of socketpair/fork/exec directly
->
->
->  tools/perf/util/srcline.c | 376 ++++++++++++++++++++++++++++----------
->  1 file changed, 276 insertions(+), 100 deletions(-)
->
-> diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-> index 5b7d6c16d33f..3e591bd0b7c4 100644
-> --- a/tools/perf/util/srcline.c
-> +++ b/tools/perf/util/srcline.c
-> @@ -1,8 +1,10 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <inttypes.h>
-> +#include <signal.h>
->  #include <stdio.h>
->  #include <stdlib.h>
->  #include <string.h>
-> +#include <sys/types.h>
->
->  #include <linux/kernel.h>
->  #include <linux/string.h>
-> @@ -15,6 +17,7 @@
->  #include "srcline.h"
->  #include "string2.h"
->  #include "symbol.h"
-> +#include "subcmd/run-command.h"
->
->  bool srcline_full_filename;
->
-> @@ -119,6 +122,8 @@ static struct symbol *new_inline_sym(struct dso *dso,
->         return inline_sym;
->  }
->
-> +#define MAX_INLINE_NEST 1024
-> +
->  #ifdef HAVE_LIBBFD_SUPPORT
->
->  /*
-> @@ -273,8 +278,6 @@ static void addr2line_cleanup(struct a2l_data *a2l)
->         free(a2l);
->  }
->
-> -#define MAX_INLINE_NEST 1024
-> -
->  static int inline_list__append_dso_a2l(struct dso *dso,
->                                        struct inline_node *node,
->                                        struct symbol *sym)
-> @@ -361,26 +364,14 @@ void dso__free_a2l(struct dso *dso)
->         dso->a2l = NULL;
->  }
->
-> -static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
-> -                                       struct dso *dso, struct symbol *sym)
-> -{
-> -       struct inline_node *node;
-> -
-> -       node = zalloc(sizeof(*node));
-> -       if (node == NULL) {
-> -               perror("not enough memory for the inline node");
-> -               return NULL;
-> -       }
-> -
-> -       INIT_LIST_HEAD(&node->val);
-> -       node->addr = addr;
-> -
-> -       addr2line(dso_name, addr, NULL, NULL, dso, true, node, sym);
-> -       return node;
-> -}
-> -
->  #else /* HAVE_LIBBFD_SUPPORT */
->
-> +struct a2l_subprocess {
-> +       struct child_process addr2line;
-> +       FILE *to_child;
-> +       FILE *from_child;
-> +};
-> +
->  static int filename_split(char *filename, unsigned int *line_nr)
->  {
->         char *sep;
-> @@ -402,114 +393,299 @@ static int filename_split(char *filename, unsigned int *line_nr)
->         return 0;
->  }
->
-> +static void addr2line_subprocess_cleanup(struct a2l_subprocess *a2l)
-> +{
-> +       if (a2l->addr2line.pid != -1) {
-> +               kill(a2l->addr2line.pid, SIGKILL);
-> +               finish_command(&a2l->addr2line); /* ignore result, we don't care */
-> +               a2l->addr2line.pid = -1;
-> +       }
-> +
-> +       if (a2l->to_child != NULL) {
-> +               fclose(a2l->to_child);
-> +               a2l->to_child = NULL;
-> +       }
-> +
-> +       if (a2l->from_child != NULL) {
-> +               fclose(a2l->from_child);
-> +               a2l->from_child = NULL;
-> +       }
-> +
-> +       free(a2l);
-> +}
-> +
-> +static struct a2l_subprocess *addr2line_subprocess_init(const char *path)
-> +{
-> +       const char *argv[] = { "addr2line", "-e", path, "-i", "-f", NULL };
-> +       struct a2l_subprocess *a2l = NULL;
-> +       int start_command_status = 0;
-> +
-> +       a2l = zalloc(sizeof(*a2l));
-> +       if (a2l == NULL)
-> +               goto out;
-> +
-> +       a2l->to_child = NULL;
-> +       a2l->from_child = NULL;
-> +
-> +       a2l->addr2line.pid = -1;
-> +       a2l->addr2line.in = -1;
-> +       a2l->addr2line.out = -1;
-> +       a2l->addr2line.no_stderr = 1;
-> +
-> +       a2l->addr2line.argv = argv;
-> +       start_command_status = start_command(&a2l->addr2line);
-> +       a2l->addr2line.argv = NULL; /* it's not used after start_command; avoid dangling pointers */
-> +
-> +       if (start_command_status != 0) {
-> +               pr_warning("could not start addr2line for %s: start_command return code %d\n",
-> +                          path,
-> +                          start_command_status);
-> +               goto out;
-> +       }
-> +
-> +       a2l->to_child = fdopen(a2l->addr2line.in, "w");
-> +       if (a2l->to_child == NULL) {
-> +               pr_warning("could not open write-stream to addr2line of %s\n", path);
-> +               goto out;
-> +       }
-> +
-> +       a2l->from_child = fdopen(a2l->addr2line.out, "r");
-> +       if (a2l->from_child == NULL) {
-> +               pr_warning("could not open read-stream from addr2line of %s\n", path);
-> +               goto out;
-> +       }
-> +
-> +       return a2l;
-> +
-> +out:
-> +       if (a2l)
-> +               addr2line_subprocess_cleanup(a2l);
-> +
-> +       return NULL;
-> +}
-> +
-> +static int read_addr2line_record(struct a2l_subprocess *a2l,
-> +                                char **function,
-> +                                char **filename,
-> +                                unsigned int *line_nr)
-> +{
-> +       /*
-> +        * Returns:
-> +        * -1 ==> error
-> +        * 0 ==> sentinel (or other ill-formed) record read
-> +        * 1 ==> a genuine record read
-> +        */
-> +       char *line = NULL;
-> +       size_t line_len = 0;
-> +       unsigned int dummy_line_nr = 0;
-> +       int ret = -1;
-> +
-> +       if (function != NULL && *function != NULL) {
-> +               free(*function);
-> +               *function = NULL;
-> +       }
-> +
-> +       if (filename != NULL && *filename != NULL) {
-> +               free(*filename);
-> +               *filename = NULL;
-> +       }
-> +
-> +       if (line_nr != NULL)
-> +               *line_nr = 0;
-> +
-> +       if (getline(&line, &line_len, a2l->from_child) < 0 || !line_len)
-> +               goto error;
-> +
-> +       if (function != NULL)
-> +               *function = strdup(strim(line));
-> +
-> +       free(line);
-> +       line = NULL;
-> +       line_len = 0;
-> +
-> +       if (getline(&line, &line_len, a2l->from_child) < 0 || !line_len)
-> +               goto error;
-> +
-> +       if (filename_split(line, line_nr == NULL ? &dummy_line_nr : line_nr) == 0) {
-> +               ret = 0;
-> +               goto error;
-> +       }
-> +
-> +       if (filename != NULL)
-> +               *filename = strdup(line);
-> +
-> +       free(line);
-> +       line = NULL;
-> +       line_len = 0;
-> +
-> +       return 1;
-> +
-> +error:
-> +       if (line != NULL)
-> +               free(line);
-> +       if (function != NULL && *function != NULL) {
-> +               free(*function);
-> +               *function = NULL;
-> +       }
-> +       if (filename != NULL && *filename != NULL) {
-> +               free(*filename);
-> +               *filename = NULL;
-> +       }
-> +       return ret;
-> +}
-> +
-> +static int inline_list__append_record(struct dso *dso,
-> +                                     struct inline_node *node,
-> +                                     struct symbol *sym,
-> +                                     const char *function,
-> +                                     const char *filename,
-> +                                     unsigned int line_nr)
-> +{
-> +       struct symbol *inline_sym = new_inline_sym(dso, sym, function);
-> +
-> +       return inline_list__append(inline_sym, srcline_from_fileline(filename, line_nr), node);
-> +}
-> +
->  static int addr2line(const char *dso_name, u64 addr,
->                      char **file, unsigned int *line_nr,
-> -                    struct dso *dso __maybe_unused,
-> -                    bool unwind_inlines __maybe_unused,
-> -                    struct inline_node *node __maybe_unused,
-> +                    struct dso *dso,
-> +                    bool unwind_inlines,
-> +                    struct inline_node *node,
->                      struct symbol *sym __maybe_unused)
->  {
-> -       FILE *fp;
-> -       char cmd[PATH_MAX];
-> -       char *filename = NULL;
-> -       size_t len;
-> +       struct a2l_subprocess *a2l = dso->a2l;
-> +       char *record_function = NULL;
-> +       char *record_filename = NULL;
-> +       unsigned int record_line_nr = 0;
-> +       int record_status = -1;
->         int ret = 0;
-> +       size_t inline_count = 0;
->
-> -       scnprintf(cmd, sizeof(cmd), "addr2line -e %s %016"PRIx64,
-> -                 dso_name, addr);
-> +       if (!a2l) {
-> +               dso->a2l = addr2line_subprocess_init(dso_name);
-> +               a2l = dso->a2l;
-> +       }
->
-> -       fp = popen(cmd, "r");
-> -       if (fp == NULL) {
-> -               pr_warning("popen failed for %s\n", dso_name);
-> -               return 0;
-> +       if (a2l == NULL) {
-> +               if (!symbol_conf.disable_add2line_warn)
-> +                       pr_warning("%s %s: addr2line_subprocess_init failed\n", __func__, dso_name);
-> +               goto out;
->         }
->
-> -       if (getline(&filename, &len, fp) < 0 || !len) {
-> -               pr_warning("addr2line has no output for %s\n", dso_name);
-> +       /*
-> +        * Send our request and then *deliberately* send something that can't be interpreted as
-> +        * a valid address to ask addr2line about (namely, ","). This causes addr2line to first
-> +        * write out the answer to our request, in an unbounded/unknown number of records, and
-> +        * then to write out the lines "??" and "??:0", so that we can detect when it has
-> +        * finished giving us anything useful. We have to be careful about the first record,
-> +        * though, because it may be genuinely unknown, in which case we'll get two sets of
-> +        * "??"/"??:0" lines.
-> +        */
-> +       if (fprintf(a2l->to_child, "%016"PRIx64"\n,\n", addr) < 0 || fflush(a2l->to_child) != 0) {
-> +               pr_warning("%s %s: could not send request\n", __func__, dso_name);
->                 goto out;
->         }
->
-> -       ret = filename_split(filename, line_nr);
-> -       if (ret != 1) {
-> -               free(filename);
-> +       switch (read_addr2line_record(a2l, &record_function, &record_filename, &record_line_nr)) {
-> +       case -1:
-> +               pr_warning("%s %s: could not read first record\n", __func__, dso_name);
->                 goto out;
-> +       case 0:
-> +               /*
-> +                * The first record was invalid, so return failure, but first read another
-> +                * record, since we asked a junk question and have to clear the answer out.
-> +                */
-> +               switch (read_addr2line_record(a2l, NULL, NULL, NULL)) {
-> +               case -1:
-> +                       pr_warning("%s %s: could not read delimiter record\n", __func__, dso_name);
-> +                       break;
-> +               case 0:
-> +                       /* As expected. */
-> +                       break;
-> +               default:
-> +                       pr_warning("%s %s: unexpected record instead of sentinel",
-> +                                  __func__, dso_name);
-> +                       break;
-> +               }
-> +               goto out;
-> +       default:
-> +               break;
-> +       }
-> +
-> +       if (file) {
-> +               *file = strdup(record_filename);
-> +               ret = 1;
-> +       }
-> +       if (line_nr)
-> +               *line_nr = record_line_nr;
-> +
-> +       if (unwind_inlines) {
-> +               if (node && inline_list__append_record(dso, node, sym,
-> +                                                      record_function,
-> +                                                      record_filename,
-> +                                                      record_line_nr)) {
-> +                       ret = 0;
-> +                       goto out;
-> +               }
->         }
->
-> -       *file = filename;
-> +       /* We have to read the records even if we don't care about the inline info. */
-> +       while ((record_status = read_addr2line_record(a2l,
-> +                                                     &record_function,
-> +                                                     &record_filename,
-> +                                                     &record_line_nr)) == 1) {
-> +               if (unwind_inlines && node && inline_count++ < MAX_INLINE_NEST) {
-> +                       if (inline_list__append_record(dso, node, sym,
-> +                                                      record_function,
-> +                                                      record_filename,
-> +                                                      record_line_nr)) {
-> +                               ret = 0;
-> +                               goto out;
-> +                       }
-> +                       ret = 1; /* found at least one inline frame */
-> +               }
-> +       }
->
->  out:
-> -       pclose(fp);
-> +       if (record_function != NULL)
-> +               free(record_function);
-> +       if (record_filename != NULL)
-> +               free(record_filename);
->         return ret;
->  }
->
-> -void dso__free_a2l(struct dso *dso __maybe_unused)
-> +void dso__free_a2l(struct dso *dso)
->  {
-> -}
-> +       struct a2l_subprocess *a2l = dso->a2l;
->
-> -static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
-> -                                       struct dso *dso __maybe_unused,
-> -                                       struct symbol *sym)
-> -{
-> -       FILE *fp;
-> -       char cmd[PATH_MAX];
-> -       struct inline_node *node;
-> -       char *filename = NULL;
-> -       char *funcname = NULL;
-> -       size_t filelen, funclen;
-> -       unsigned int line_nr = 0;
-> -
-> -       scnprintf(cmd, sizeof(cmd), "addr2line -e %s -i -f %016"PRIx64,
-> -                 dso_name, addr);
-> -
-> -       fp = popen(cmd, "r");
-> -       if (fp == NULL) {
-> -               pr_err("popen failed for %s\n", dso_name);
-> -               return NULL;
-> -       }
-> -
-> -       node = zalloc(sizeof(*node));
-> -       if (node == NULL) {
-> -               perror("not enough memory for the inline node");
-> -               goto out;
-> -       }
-> -
-> -       INIT_LIST_HEAD(&node->val);
-> -       node->addr = addr;
-> -
-> -       /* addr2line -f generates two lines for each inlined functions */
-> -       while (getline(&funcname, &funclen, fp) != -1) {
-> -               char *srcline;
-> -               struct symbol *inline_sym;
-> -
-> -               strim(funcname);
-> -
-> -               if (getline(&filename, &filelen, fp) == -1)
-> -                       goto out;
-> -
-> -               if (filename_split(filename, &line_nr) != 1)
-> -                       goto out;
-> -
-> -               srcline = srcline_from_fileline(filename, line_nr);
-> -               inline_sym = new_inline_sym(dso, sym, funcname);
-> -
-> -               if (inline_list__append(inline_sym, srcline, node) != 0) {
-> -                       free(srcline);
-> -                       if (inline_sym && inline_sym->inlined)
-> -                               symbol__delete(inline_sym);
-> -                       goto out;
-> -               }
-> -       }
-> +       if (!a2l)
-> +               return;
->
-> -out:
-> -       pclose(fp);
-> -       free(filename);
-> -       free(funcname);
-> +       addr2line_subprocess_cleanup(a2l);
->
-> -       return node;
-> +       dso->a2l = NULL;
->  }
->
->  #endif /* HAVE_LIBBFD_SUPPORT */
->
-> +static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
-> +                                       struct dso *dso, struct symbol *sym)
-> +{
-> +       struct inline_node *node;
-> +
-> +       node = zalloc(sizeof(*node));
-> +       if (node == NULL) {
-> +               perror("not enough memory for the inline node");
-> +               return NULL;
-> +       }
-> +
-> +       INIT_LIST_HEAD(&node->val);
-> +       node->addr = addr;
-> +
-> +       addr2line(dso_name, addr, NULL, NULL, dso, true, node, sym);
-> +       return node;
-> +}
-> +
->  /*
->   * Number of addr2line failures (without success) before disabling it for that
->   * dso.
-> --
-> 2.33.0
->
+After:
+         │    cmpq    %rcx, RIP+8(%rsp)
+    0.00 │   ┌──cmp    %rcx,0x88(%rsp)
+         │   │je      .Lerror_bad_iret
+    0.14 │   ├──je     b4
+         │   │movl    %ecx, %eax
+
+Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+---
+ tools/perf/ui/browser.c           | 33 ++++++++++++++++++++++---------
+ tools/perf/ui/browser.h           |  2 +-
+ tools/perf/ui/browsers/annotate.c | 24 +++++++++++++++-------
+ 3 files changed, 42 insertions(+), 17 deletions(-)
+
+diff --git a/tools/perf/ui/browser.c b/tools/perf/ui/browser.c
+index 781afe42e90e..fa5bd5c20e96 100644
+--- a/tools/perf/ui/browser.c
++++ b/tools/perf/ui/browser.c
+@@ -757,25 +757,40 @@ void __ui_browser__line_arrow(struct ui_browser *browser, unsigned int column,
+ }
+ 
+ void ui_browser__mark_fused(struct ui_browser *browser, unsigned int column,
+-			    unsigned int row, bool arrow_down)
++			    unsigned int row, int diff, bool arrow_down)
+ {
+-	unsigned int end_row;
++	int end_row;
+ 
+-	if (row >= browser->top_idx)
+-		end_row = row - browser->top_idx;
+-	else
++	if (diff <= 0)
+ 		return;
+ 
+ 	SLsmg_set_char_set(1);
+ 
+ 	if (arrow_down) {
++		if (row + diff <= browser->top_idx)
++			return;
++
++		end_row = row + diff - browser->top_idx;
+ 		ui_browser__gotorc(browser, end_row, column - 1);
+-		SLsmg_write_char(SLSMG_ULCORN_CHAR);
+-		ui_browser__gotorc(browser, end_row, column);
+-		SLsmg_draw_hline(2);
+-		ui_browser__gotorc(browser, end_row + 1, column - 1);
+ 		SLsmg_write_char(SLSMG_LTEE_CHAR);
++
++		while (--end_row >= 0 && end_row > (int)(row - browser->top_idx)) {
++			ui_browser__gotorc(browser, end_row, column - 1);
++			SLsmg_draw_vline(1);
++		}
++
++		end_row = (int)(row - browser->top_idx);
++		if (end_row >= 0) {
++			ui_browser__gotorc(browser, end_row, column - 1);
++			SLsmg_write_char(SLSMG_ULCORN_CHAR);
++			ui_browser__gotorc(browser, end_row, column);
++			SLsmg_draw_hline(2);
++		}
+ 	} else {
++		if (row < browser->top_idx)
++			return;
++
++		end_row = row - browser->top_idx;
+ 		ui_browser__gotorc(browser, end_row, column - 1);
+ 		SLsmg_write_char(SLSMG_LTEE_CHAR);
+ 		ui_browser__gotorc(browser, end_row, column);
+diff --git a/tools/perf/ui/browser.h b/tools/perf/ui/browser.h
+index 3678eb88f119..510ce4554050 100644
+--- a/tools/perf/ui/browser.h
++++ b/tools/perf/ui/browser.h
+@@ -51,7 +51,7 @@ void ui_browser__write_graph(struct ui_browser *browser, int graph);
+ void __ui_browser__line_arrow(struct ui_browser *browser, unsigned int column,
+ 			      u64 start, u64 end);
+ void ui_browser__mark_fused(struct ui_browser *browser, unsigned int column,
+-			    unsigned int row, bool arrow_down);
++			    unsigned int row, int diff, bool arrow_down);
+ void __ui_browser__show_title(struct ui_browser *browser, const char *title);
+ void ui_browser__show_title(struct ui_browser *browser, const char *title);
+ int ui_browser__show(struct ui_browser *browser, const char *title,
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index ef4da4295bf7..e81c2493efdf 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -125,13 +125,20 @@ static void annotate_browser__write(struct ui_browser *browser, void *entry, int
+ 		ab->selection = al;
+ }
+ 
+-static bool is_fused(struct annotate_browser *ab, struct disasm_line *cursor)
++static int is_fused(struct annotate_browser *ab, struct disasm_line *cursor)
+ {
+ 	struct disasm_line *pos = list_prev_entry(cursor, al.node);
+ 	const char *name;
++	int diff = 1;
++
++	while (pos && pos->al.offset == -1) {
++		pos = list_prev_entry(pos, al.node);
++		if (!ab->opts->hide_src_code)
++			diff++;
++	}
+ 
+ 	if (!pos)
+-		return false;
++		return 0;
+ 
+ 	if (ins__is_lock(&pos->ins))
+ 		name = pos->ops.locked.ins.name;
+@@ -139,9 +146,11 @@ static bool is_fused(struct annotate_browser *ab, struct disasm_line *cursor)
+ 		name = pos->ins.name;
+ 
+ 	if (!name || !cursor->ins.name)
+-		return false;
++		return 0;
+ 
+-	return ins__is_fused(ab->arch, name, cursor->ins.name);
++	if (ins__is_fused(ab->arch, name, cursor->ins.name))
++		return diff;
++	return 0;
+ }
+ 
+ static void annotate_browser__draw_current_jump(struct ui_browser *browser)
+@@ -155,6 +164,7 @@ static void annotate_browser__draw_current_jump(struct ui_browser *browser)
+ 	struct annotation *notes = symbol__annotation(sym);
+ 	u8 pcnt_width = annotation__pcnt_width(notes);
+ 	int width;
++	int diff = 0;
+ 
+ 	/* PLT symbols contain external offsets */
+ 	if (strstr(sym->name, "@plt"))
+@@ -205,11 +215,11 @@ static void annotate_browser__draw_current_jump(struct ui_browser *browser)
+ 				 pcnt_width + 2 + notes->widths.addr + width,
+ 				 from, to);
+ 
+-	if (is_fused(ab, cursor)) {
++	diff = is_fused(ab, cursor);
++	if (diff > 0) {
+ 		ui_browser__mark_fused(browser,
+ 				       pcnt_width + 3 + notes->widths.addr + width,
+-				       from - 1,
+-				       to > from);
++				       from - diff, diff, to > from);
+ 	}
+ }
+ 
+-- 
+2.27.0
+
