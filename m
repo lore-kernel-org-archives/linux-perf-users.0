@@ -2,139 +2,88 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C79C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Sep 2021 03:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A04C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Sep 2021 08:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A91E60F4C
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Sep 2021 03:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A733760D42
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Sep 2021 08:11:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238378AbhIMDWu (ORCPT
+        id S234684AbhIMIMr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 12 Sep 2021 23:22:50 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:47051 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S238372AbhIMDWt (ORCPT
+        Mon, 13 Sep 2021 04:12:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43374 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237869AbhIMIMq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 12 Sep 2021 23:22:49 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R481e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0Uo6s7Rx_1631503290;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0Uo6s7Rx_1631503290)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 13 Sep 2021 11:21:31 +0800
-Subject: Re: [RFC PATCH] perf: fix panic by mark recursion inside
- perf_log_throttle
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-perf-users@vger.kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-kernel@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <netdev@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <bpf@vger.kernel.org>
-References: <ff979a43-045a-dc56-64d1-2c31dd4db381@linux.alibaba.com>
- <20210910153839.GH4323@worktop.programming.kicks-ass.net>
- <f38987a5-dc36-a20d-8c5e-81e8ead5b4dc@linux.alibaba.com>
-Message-ID: <7aa8133d-a9e4-f0ae-7c98-4a38f0ca25d9@linux.alibaba.com>
-Date:   Mon, 13 Sep 2021 11:21:30 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:78.0)
- Gecko/20100101 Thunderbird/78.13.0
+        Mon, 13 Sep 2021 04:12:46 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA851C061760;
+        Mon, 13 Sep 2021 01:11:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Zj9bDVh8bECevuh3HQ4f7aL+kfMosy058ZyQYs/papg=; b=lcO2BiA5Fd8VL1xe9MvMXEHx0w
+        rkHg+B7zS01dliDC40Yb8MlXRuOACJ36VL/2WIDM5863mBT3TcGl3uCANsjvCrk7HRNcRTcGA+XBn
+        v0dWdjYT9r8dc1typAVrUTzDL5PmPHtwjP8rWP3ojKpQvQW40qsI8mLL6ka/d47QChXc/AQORHlqA
+        D1S7byoUL3xy5fUc16UxdWU2I2YUYnXRMOVg7A0Y2CE8fl7z1K/zsOj+mpoXC9GDDIcjFqtNUV/GK
+        kWadPBi0BW8I2cgnAjAIVg4K5KxEIh7dYtdZQ3VBh9FBVEsCQtQMYQiGQi4HHlM19c2rKdBJOVmaP
+        ulVwuDNg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mPh3Y-002mSL-PU; Mon, 13 Sep 2021 08:11:13 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0F81530003A;
+        Mon, 13 Sep 2021 10:11:10 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A02B72BD296B7; Mon, 13 Sep 2021 10:11:10 +0200 (CEST)
+Date:   Mon, 13 Sep 2021 10:11:10 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Hao Sun <sunhao.th@gmail.com>
+Cc:     acme@kernel.org, linux-perf-users@vger.kernel.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, john.fastabend@gmail.com, jolsa@redhat.com,
+        kafai@fb.com, kpsingh@kernel.org, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, namhyung@kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, yhs@fb.com
+Subject: Re: possible deadlock in __perf_event_task_sched_out
+Message-ID: <YT8HngbIcqA4Tfac@hirez.programming.kicks-ass.net>
+References: <CACkBjsYnr4_uucVqvBpfDAgcnQqA6oneD1mHYe-TcLtDxuUs2A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <f38987a5-dc36-a20d-8c5e-81e8ead5b4dc@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACkBjsYnr4_uucVqvBpfDAgcnQqA6oneD1mHYe-TcLtDxuUs2A@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 2021/9/13 上午11:00, 王贇 wrote:
+On Mon, Sep 13, 2021 at 10:39:10AM +0800, Hao Sun wrote:
+> Hello,
 > 
+> When using Healer to fuzz the latest Linux kernel, the following crash
+> was triggered.
 > 
-> On 2021/9/10 下午11:38, Peter Zijlstra wrote:
->> On Thu, Sep 09, 2021 at 11:13:21AM +0800, 王贇 wrote:
->>> When running with ftrace function enabled, we observed panic
->>> as below:
->>>
->>>   traps: PANIC: double fault, error_code: 0x0
->>>   [snip]
->>>   RIP: 0010:perf_swevent_get_recursion_context+0x0/0x70
->>>   [snip]
->>>   Call Trace:
->>>    <NMI>
->>>    perf_trace_buf_alloc+0x26/0xd0
->>>    perf_ftrace_function_call+0x18f/0x2e0
->>>    kernelmode_fixup_or_oops+0x5/0x120
->>>    __bad_area_nosemaphore+0x1b8/0x280
->>>    do_user_addr_fault+0x410/0x920
->>>    exc_page_fault+0x92/0x300
->>>    asm_exc_page_fault+0x1e/0x30
->>>   RIP: 0010:__get_user_nocheck_8+0x6/0x13
->>>    perf_callchain_user+0x266/0x2f0
->>>    get_perf_callchain+0x194/0x210
->>>    perf_callchain+0xa3/0xc0
->>>    perf_prepare_sample+0xa5/0xa60
->>>    perf_event_output_forward+0x7b/0x1b0
->>>    __perf_event_overflow+0x67/0x120
->>>    perf_swevent_overflow+0xcb/0x110
->>>    perf_swevent_event+0xb0/0xf0
->>>    perf_tp_event+0x292/0x410
->>>    perf_trace_run_bpf_submit+0x87/0xc0
->>>    perf_trace_lock_acquire+0x12b/0x170
->>>    lock_acquire+0x1bf/0x2e0
->>>    perf_output_begin+0x70/0x4b0
->>>    perf_log_throttle+0xe2/0x1a0
->>>    perf_event_nmi_handler+0x30/0x50
->>>    nmi_handle+0xba/0x2a0
->>>    default_do_nmi+0x45/0xf0
->>>    exc_nmi+0x155/0x170
->>>    end_repeat_nmi+0x16/0x55
->>
->> kernel/events/Makefile has:
->>
->> ifdef CONFIG_FUNCTION_TRACER
->> CFLAGS_REMOVE_core.o = $(CC_FLAGS_FTRACE)
->> endif
->>
->> Which, afaict, should avoid the above, no?
+> HEAD commit: 4b93c544e90e-thunderbolt: test: split up test cases
+> git tree: upstream
+> console output:
+> https://drive.google.com/file/d/1Gy99NMo9JxZF6dHPdxnnb91n_jPJUQnA/view?usp=sharing
+> kernel config: https://drive.google.com/file/d/1c0u2EeRDhRO-ZCxr9MP2VvAtJd6kfg-p/view?usp=sharing
 > 
-> I'm afraid it's not working for this case, the
-> start point of tracing is at lock_acquire() which
-> is not from 'kernel/events/core', the following PF
-> related function are also not from 'core', prevent
-> ftrace on 'core' can't prevent this from happen...
+> Sorry, I don't have a reproducer for this crash, hope the symbolized
+> report can help.
+> If you fix this issue, please add the following tag to the commit:
 
-By a second thinking, I think you're right about the
-way it should be fixed, since disabling ftrace on
-'arch/x86/mm/fault.c' could also fix the problem.
+This reads like a very badly configured VM, in part because the console
+output is partial. That first Call trace: is ex_handler_wrmsr_unsafe,
+but it is truncated, also the pr_warn_once() went missing.
 
-Will send a formal patch later :-)
-
-Regards,
-Michael Wang
-
-> 
-> Regards,
-> Michael Wang
-> 
->>
+Please take more care in configuring your VM before sending out more
+bogus messages like this.
