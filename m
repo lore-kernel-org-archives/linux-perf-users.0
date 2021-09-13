@@ -7,95 +7,88 @@ X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66930C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Sep 2021 19:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAEDC433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Sep 2021 19:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46747610D1
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Sep 2021 19:25:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90BFF61106
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Sep 2021 19:53:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242134AbhIMT0P (ORCPT
+        id S1347629AbhIMTyw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Sep 2021 15:26:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42304 "EHLO mail.kernel.org"
+        Mon, 13 Sep 2021 15:54:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240264AbhIMT0P (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Sep 2021 15:26:15 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D049E610CE;
-        Mon, 13 Sep 2021 19:24:58 +0000 (UTC)
+        id S1347625AbhIMTyv (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 13 Sep 2021 15:54:51 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id DA966610F9;
+        Mon, 13 Sep 2021 19:53:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631561099;
-        bh=fuaKDvVAdX8JJK/kmv1HD2KrOMdsK0/f1EDonGzUoQQ=;
+        s=k20201202; t=1631562815;
+        bh=gja3Lq8kJyo0jFxR+Lk017Y+M1k5exr3M+MtPxjCvPM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TaafJSlSrVh51ckSolLgnHFZjBdhNPxrTi9rsDe8Praik1ijV4XDPiTeWou17Hhma
-         Ln0FkKfYaKVUm2vWOp4K6pu6hm/KsJEx/oYhJsjdsLc8LbiZ5Q0W+RiSBdC9NFpJOo
-         9YG4lh4Vs87d/uVgs103D9fMKqWcmreHVTBD1zX6rhz87mVpwmUctTKE8P3ShqGoW0
-         lqmLlOIoabUqZDvifisD9x8jLswby6nP8j+2mEQ21M5Bia6Jvz0JIRsS5iMzF3dEdE
-         +YSGPdtsp1wAsm6vc5PVan84IJAFaykHA7UuyKaYG8/9nEXQsaA5supwyFP8dHoGxQ
-         CSfh66lXtlzaw==
+        b=oeCBVhTnmsUkwtZb5jl1TrqeQ4Q4/S1Wz/03BQq2hCy34Nkr51d5nVRkEY22pM1jg
+         XqdwhpwcFuo48DVKP+avNqreyakJw0QF2bHiPMoTzqT5BWi8ejGs1+gkN82UeyQVCz
+         EuTTDz8tWOdqQoijUAQHqlVvLEm/4w3yE9wiJ6/qexYijhUOBu4GaLhOPRQ0IWQNgV
+         3jx+6sLv2kYrhXggLjdpAWuuJCA+LOyFlv67Iy2ngck/ErFJhX6zT9K4mQHDecrrWz
+         G6fD2KbJwtZjxapeYB1/xHvsKfnxPOHqt+f41UAmko6xV8i3msu+mHGA0k/FMo9nc3
+         k9WSd7JgbYDcw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CBF754038F; Mon, 13 Sep 2021 16:24:52 -0300 (-03)
-Date:   Mon, 13 Sep 2021 16:24:52 -0300
+        id 280E84038F; Mon, 13 Sep 2021 16:53:31 -0300 (-03)
+Date:   Mon, 13 Sep 2021 16:53:31 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     =?iso-8859-1?Q?R=E9mi?= Bernon <rbernon@codeweavers.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+To:     "Jin, Yao" <yao.jin@linux.intel.com>
+Cc:     Ravi Bangoria <ravi.bangoria@amd.com>, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, kim.phillips@amd.com,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf symbol: Look for ImageBase in PE file to compute
- .text offset
-Message-ID: <YT+lhAhBGprnMT7P@kernel.org>
-References: <20210909192637.4139125-1-rbernon@codeweavers.com>
- <YTpuTiYzkTKbUM/l@kernel.org>
- <e8ae2882-12cd-0fe1-b5e6-da9fc286b821@codeweavers.com>
+Subject: Re: [PATCH v2 1/2] perf annotate: Fix fused instr logic for assembly
+ functions
+Message-ID: <YT+sOxJeEplSm2pl@kernel.org>
+References: <20210911043854.8373-1-ravi.bangoria@amd.com>
+ <YTz9nfyXOSXDdpSE@kernel.org>
+ <211bb79d-80ff-e9b6-1851-1aaed987301d@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e8ae2882-12cd-0fe1-b5e6-da9fc286b821@codeweavers.com>
+In-Reply-To: <211bb79d-80ff-e9b6-1851-1aaed987301d@linux.intel.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Sun, Sep 12, 2021 at 10:25:26AM +0200, Rémi Bernon escreveu:
-> On 9/9/21 10:27 PM, Arnaldo Carvalho de Melo wrote:
-> > Em Thu, Sep 09, 2021 at 09:26:36PM +0200, Remi Bernon escreveu:
-> > > Instead of using the file offset in the debug file.
-> > > 
-> > > This fixes a regression from 00a3423492bc90be99e529a64f13fdd80a0e8c0a,
-> > > causing incorrect symbol resolution when debug file have been stripped
-> > > from non-debug sections (in which case its .text section is empty and
-> > > doesn't have any file position).
-> > > 
-> > > The debug files could also be created with a different file alignment,
-> > > and have different file positions from the mmap-ed binary, or have the
-> > > section reordered.
-> > > 
-> > > This instead looks for the file image base, using the corresponding bfd
-> > > *ABS* symbols. As PE symbols only have 4 bytes, it also needs to keep
-> > > .text section vma high bits.
-> > 
-> > I added a:
-> > 
-> > Fixes: 00a3423492bc90be ("perf symbols: Make dso__load_bfd_symbols() load PE files from debug cache only")
-> > 
-> > To help stable@kernel.org to pick it, its on my local tree now.
-> > 
-> > It would be great to get a:
-> > 
-> > Reviewed-by: Nicholas Fraser <nfraser@codeweavers.com>
-> > 
-> > Can we have it, please?
-> > 
+Em Mon, Sep 13, 2021 at 09:54:00AM +0800, Jin, Yao escreveu:
+> Hi Arnaldo, Ravi
 > 
-> Well, Nicholas doesn't work with us anymore. I've reached them separately
-> but didn't get any answer so I'm thinking they may not be interested.
+> On 9/12/2021 3:03 AM, Arnaldo Carvalho de Melo wrote:
+> > Em Sat, Sep 11, 2021 at 10:08:53AM +0530, Ravi Bangoria escreveu:
+> > > Some x86 microarchitectures fuse a subset of cmp/test/ALU instructions
+> > > with branch instructions, and thus perf annotate highlight such valid
+> > > pairs as fused.
+> > 
+> > Jin, are you ok with this? Can I have your reviewed-by?
+> > 
+> > - Arnaldo
+> 
+> Oh, my original patch could only handle the case like:
+> 
+> cmp xxx
+> je  aaa
+> 
+> But it didn't consider Ravi's case something like:
+> 
+> cmp xxx
+> cmp yyy
+> je  aaa
+> je  bbb
+> 
+> Thanks for Ravi fixing this issue! Backward searching is probably a better solution.
+> 
+> Frankly I can't reproduce Ravi's case, but for my test suite, Ravi's patch works as well.
+> 
+> Reviewed-by: Jin Yao <yao.jin@linux.intel.com>
 
-No problem, its already upstream now.
-
-Thanks,
+Thanks, applied.
 
 - Arnaldo
+
