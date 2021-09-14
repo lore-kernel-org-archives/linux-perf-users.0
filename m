@@ -2,380 +2,225 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF63C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 20:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C15C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 21:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EAE260187
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 20:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DBA761209
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 21:21:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234382AbhINUt0 (ORCPT
+        id S235014AbhINVWs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Sep 2021 16:49:26 -0400
-Received: from mail-oi1-f176.google.com ([209.85.167.176]:34772 "EHLO
-        mail-oi1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234189AbhINUtY (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Sep 2021 16:49:24 -0400
-Received: by mail-oi1-f176.google.com with SMTP id p2so1069906oif.1;
-        Tue, 14 Sep 2021 13:48:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3HFIhER9emt5uPB1/5TLsC6QTqnojQ3bLGzt38DSqOE=;
-        b=GOoJICCmirfQsJt+G7Xdh0WHe6kUFxAYjaJxSKzdgUh7MGSdIirSbJVCiPDtAv44BY
-         JC5L/iebOu31WIQ3ntWI9Sd7wgZhP/Ve28pfmZ4hH7sjr/EIrVGAsVqNYCfzGv8rgEjN
-         a+HUPhFaVDc6sn5t0/xIdiWnvnnXcsibgH+QZEa/JiRxrl62MTZZeOqBiKY9Jh3EIRPv
-         d1faYID/Uo6VvHla+5LuFDyZlaH2Ze5gRyPwwJdKBX7GBms3zxbruLT1d8zG4pOr/1Rf
-         fJHghnIjB/0XLzthp0RpbnCOsUpbfr7WSRwjPVCdq+8wBVM3xAY2/IEusgtPj05/ENxi
-         dAUg==
-X-Gm-Message-State: AOAM533tNYDuX1bQdSlW3Wv37LyhAfjkBqPLVSkY1dKxLWP6mR6XljCa
-        41/PzRhunklUlUww5nOtJGswBxQ9hQ==
-X-Google-Smtp-Source: ABdhPJw2C68YIthLWSsEtCfwOg23qsrjc0FHMu8l/Dk9d2n+jA/SHwVbtfuY3UhvlaCJ4DsMqxYaXw==
-X-Received: by 2002:a05:6808:b21:: with SMTP id t1mr2911761oij.165.1631652486221;
-        Tue, 14 Sep 2021 13:48:06 -0700 (PDT)
-Received: from xps15.herring.priv (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.googlemail.com with ESMTPSA id y14sm2883236oti.69.2021.09.14.13.48.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Sep 2021 13:48:05 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        honnappa.nagarahalli@arm.com, Zachary.Leaf@arm.com,
-        Raphael Gault <raphael.gault@arm.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Itaru Kitayama <itaru.kitayama@gmail.com>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH v10 4/5] arm64: perf: Enable PMU counter userspace access for perf event
-Date:   Tue, 14 Sep 2021 15:47:59 -0500
-Message-Id: <20210914204800.3945732-5-robh@kernel.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210914204800.3945732-1-robh@kernel.org>
-References: <20210914204800.3945732-1-robh@kernel.org>
+        Tue, 14 Sep 2021 17:22:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34944 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234866AbhINVWm (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 14 Sep 2021 17:22:42 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1DC5461209;
+        Tue, 14 Sep 2021 21:21:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1631654484;
+        bh=/XicsGZc2g3wu3bXlK+QfX1UuqeEudR+OFBINtUeNJU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=r5Y2YLMAwHiDaghA7XreWpoiYZrUuguvSr9sGxWEcT8iPAQSGGzTVCrtI1hU1mWUm
+         bvhuBvTYe/uI+fH0c7j7AzB6QTjaAKLjc3Iw40Ppg+g0hz12CxtbSROGoVUjxvWeTt
+         vYkzBmg2NSNhdBfIyyI24Z9U35EbmDZ97EP+WyTogVI/syXZdOjespJQckRmS8aai8
+         Mu+ee3pozLu8aff2n+V22O7yzaFq0k+Yxemj93MUi3nBF51I2SYALMVlav12aiWd+Z
+         5We6PrJQ+66yfdPD5s0saTlRy6SPs3QuGP7xDNfU03t81Azhyy/OnuBdIC8DH/6ifq
+         yMX6brrMzgJ9g==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id AE71F4038F; Tue, 14 Sep 2021 18:21:20 -0300 (-03)
+Date:   Tue, 14 Sep 2021 18:21:20 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Michael Petlan <mpetlan@redhat.com>
+Cc:     acme@redhat.com, linux-perf-users@vger.kernel.org,
+        jolsa@redhat.com, jlelli@redhat.com, milian.wolff@kdab.com
+Subject: Re: [PATCH] perf machine: Initialize srcline string member in
+ add_location struct
+Message-ID: <YUESUBs5STNG2sIT@kernel.org>
+References: <20210719145332.29747-1-mpetlan@redhat.com>
+ <YToIuTUuudHKZmN2@kernel.org>
+ <alpine.LRH.2.20.2109131651090.27231@Diego>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LRH.2.20.2109131651090.27231@Diego>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Arm PMUs can support direct userspace access of counters which allows for
-low overhead (i.e. no syscall) self-monitoring of tasks. The same feature
-exists on x86 called 'rdpmc'. Unlike x86, userspace access will only be
-enabled for thread bound events. This could be extended if needed, but
-simplifies the implementation and reduces the chances for any
-information leaks (which the x86 implementation suffers from).
+Em Mon, Sep 13, 2021 at 05:13:12PM +0200, Michael Petlan escreveu:
+> On Thu, 9 Sep 2021, Arnaldo Carvalho de Melo wrote:
+> > Em Mon, Jul 19, 2021 at 04:53:32PM +0200, Michael Petlan escreveu:
+> > > It's later supposed to be either a correct address or NULL. Without the
+> > > initialization, it may contain an undefined value which results in the
+> > > following segmentation fault:
+> > > 
+> > >   # perf top --sort comm -g --ignore-callees=do_idle
+> > 
+> > Later where? The backtrace below is unresolved, I couldn't reproduce it
+> > here, that al variable is local to add_callchain_ip(), and is then
+> > passed to several places where I couldn't find al->srcline being used,
+> > can you state where it is used and causes the segfault?
+> > 
+> 
+> Here is a better backtrace of a segfault:
+ 
+> #0  0x00007ffff56b7685 in __strlen_avx2 () from /lib64/libc.so.6
+> #1  0x00007ffff55e3802 in strdup () from /lib64/libc.so.6
+> #2  0x00005555558cb139 in hist_entry__init (callchain_size=<optimized out>, sample_self=true, template=0x7fffde7fb110, he=0x7fffd801c250) at util/hist.c:489
+> #3  hist_entry__new (template=template@entry=0x7fffde7fb110, sample_self=sample_self@entry=true) at util/hist.c:564
+> #4  0x00005555558cb4ba in hists__findnew_entry (hists=hists@entry=0x5555561d9e38, entry=entry@entry=0x7fffde7fb110, al=al@entry=0x7fffde7fb420, 
+>     sample_self=sample_self@entry=true) at util/hist.c:657
+> #5  0x00005555558cba1b in __hists__add_entry (hists=hists@entry=0x5555561d9e38, al=0x7fffde7fb420, sym_parent=<optimized out>, bi=bi@entry=0x0, mi=mi@entry=0x0, 
+>     sample=sample@entry=0x7fffde7fb4b0, sample_self=true, ops=0x0, block_info=0x0) at util/hist.c:288
+> #6  0x00005555558cbb70 in hists__add_entry (sample_self=true, sample=0x7fffde7fb4b0, mi=0x0, bi=0x0, sym_parent=<optimized out>, al=<optimized out>, hists=0x5555561d9e38)
+>     at util/hist.c:1056
+> #7  iter_add_single_cumulative_entry (iter=0x7fffde7fb460, al=<optimized out>) at util/hist.c:1056
+> #8  0x00005555558cc8a4 in hist_entry_iter__add (iter=iter@entry=0x7fffde7fb460, al=al@entry=0x7fffde7fb420, max_stack_depth=<optimized out>, arg=arg@entry=0x7fffffff7db0)
+>     at util/hist.c:1231
+> #9  0x00005555557cdc9a in perf_event__process_sample (machine=<optimized out>, sample=0x7fffde7fb4b0, evsel=<optimized out>, event=<optimized out>, tool=0x7fffffff7db0)
+>     at builtin-top.c:842
+> #10 deliver_event (qe=<optimized out>, qevent=<optimized out>) at builtin-top.c:1202
+> #11 0x00005555558a9318 in do_flush (show_progress=false, oe=0x7fffffff80e0) at util/ordered-events.c:244
+> #12 __ordered_events__flush (oe=oe@entry=0x7fffffff80e0, how=how@entry=OE_FLUSH__TOP, timestamp=timestamp@entry=0) at util/ordered-events.c:323
+> #13 0x00005555558a9789 in __ordered_events__flush (timestamp=<optimized out>, how=<optimized out>, oe=<optimized out>) at util/ordered-events.c:339
+> #14 ordered_events__flush (how=OE_FLUSH__TOP, oe=0x7fffffff80e0) at util/ordered-events.c:341
+> #15 ordered_events__flush (oe=oe@entry=0x7fffffff80e0, how=how@entry=OE_FLUSH__TOP) at util/ordered-events.c:339
+> #16 0x00005555557cd631 in process_thread (arg=0x7fffffff7db0) at builtin-top.c:1114
+> #17 0x00007ffff7bb817a in start_thread () from /lib64/libpthread.so.0
+> #18 0x00007ffff5656dc3 in clone () from /lib64/libc.so.6
+> 
+> If you look at the frame #2, the code is:
+> 
+> 488      if (he->srcline) {
+> 489          he->srcline = strdup(he->srcline);
+> 490          if (he->srcline == NULL)
+> 491              goto err_rawdata;
+> 492      }
+> 
+> If he->srcline is not NULL (it is not NULL if it is uninitialized rubbish),
+> it gets strdupped and strdupping a rubbish random string causes the problem.
+> 
+> Also, if you look at the commit 1fb7d06a509e, it adds the srcline property
+> into the struct, but not initializing it everywhere needed.
 
-PMU EL0 access will be enabled when an event with userspace access is
-part of the thread's context. This includes when the event is not
-scheduled on the PMU. There's some additional overhead clearing
-dirty counters when access is enabled in order to prevent leaking
-disabled counter data from other tasks.
+Now I see, when using --ignore-callees=do_idle we end up here in
+add_callchain_ip():
 
-Unlike x86, enabling of userspace access must be requested with a new
-attr bit: config1:1. If the user requests userspace access and 64-bit
-counters, then chaining will be disabled and the user will get the
-maximum size counter the underlying h/w can support. The modes for
-config1 are as follows:
+2181         if (al.sym != NULL) {
+2182                 if (perf_hpp_list.parent && !*parent &&
+2183                     symbol__match_regex(al.sym, &parent_regex))
+2184                         *parent = al.sym;
+2185                 else if (have_ignore_callees && root_al &&
+2186                   symbol__match_regex(al.sym, &ignore_callees_regex)) {
+2187                         /* Treat this symbol as the root,
+2188                            forgetting its callees. */
+2189                         *root_al = al;
+2190                         callchain_cursor_reset(cursor);
+2191                 }
+2192         }
 
-config1 = 0 : user access disabled and always 32-bit
-config1 = 1 : user access disabled and always 64-bit (using chaining if needed)
-config1 = 2 : user access enabled and always 32-bit
-config1 = 3 : user access enabled and counter size matches underlying counter.
+And the al that doesn't have the ->srcline field initialized will be
+copied to the root_al, so then, back to:
 
-Based on work by Raphael Gault <raphael.gault@arm.com>, but has been
-completely re-written.
+1211 int hist_entry_iter__add(struct hist_entry_iter *iter, struct addr_location *al,
+1212                          int max_stack_depth, void *arg)
+1213 {
+1214         int err, err2;
+1215         struct map *alm = NULL;
+1216
+1217         if (al)
+1218                 alm = map__get(al->map);
+1219
+1220         err = sample__resolve_callchain(iter->sample, &callchain_cursor, &iter->parent,
+1221                                         iter->evsel, al, max_stack_depth);
+1222         if (err) {
+1223                 map__put(alm);
+1224                 return err;
+1225         }
+1226
+1227         err = iter->ops->prepare_entry(iter, al);
+1228         if (err)
+1229                 goto out;
+1230
+1231         err = iter->ops->add_single_entry(iter, al);
+1232         if (err)
+1233                 goto out;
+1234
 
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-perf-users@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
+That al at line 1221 is what hist_entry_iter__add() (called from
+sample__resolve_callchain()) saw as 'root_al', and then:
 
----
-v10:
- - Don't control enabling user access based on mmap(). Changing the
-   event_(un)mapped to run on the event's cpu doesn't work for x86.
-   Triggering on mmap() doesn't limit access in any way and complicates
-   the implementation.
- - Drop dirty counter tracking and just clear all unused counters.
- - Make the sysctl immediately disable access via IPI.
- - Merge armv8pmu_event_is_chained() and armv8pmu_event_can_chain()
+	iter->ops->add_single_entry(iter, al);
 
-v9:
- - Enabling/disabling of user access is now controlled in .start() and
-   mmap hooks which are now called on CPUs that the event is on.
-   Depends on rework of perf core and x86 RDPMC code posted here:
-   https://lore.kernel.org/lkml/20210728230230.1911468-1-robh@kernel.org/
+will go on with al->srcline with a bogus value, I'll add the above
+sequence to the cset and apply, thanks!
 
-v8:
- - Rework user access tracking and enabling to be done on task
-   context changes using sched_task() hook. This avoids the need for any
-   IPIs, mm_switch hooks or undef instr handler.
- - Only support user access when explicitly requested on open and
-   only for a thread bound events. This avoids some of the information
-   leaks x86 has and simplifies the implementation.
+- Arnaldo
 
-v7:
- - Clear disabled counters when user access is enabled for a task to
-   avoid leaking other tasks counter data.
- - Rework context switch handling utilizing sched_task callback
- - Add armv8pmu_event_can_chain() helper
- - Rework config1 flags handling structure
- - Use ARMV8_IDX_CYCLE_COUNTER_USER define for remapped user cycle
-   counter index
+ 
+> Michael
+> 
+> > - Arnaldo
+> >  
+> > > terminates with
+> > > 
+> > >   perf: Segmentation fault
+> > >   -------- backtrace --------
+> > >   perf(+0x417b26)[0x557794f1fb26]
+> > >   /lib64/libc.so.6(+0x37400)[0x7f62a0194400]
+> > >   /lib64/libc.so.6(+0x15d685)[0x7f62a02ba685]
+> > >   /lib64/libc.so.6(__strdup+0x12)[0x7f62a01e6802]
+> > >   perf(+0x3769d9)[0x557794e7e9d9]
+> > >   perf(+0x376d3a)[0x557794e7ed3a]
+> > >   perf(+0x377284)[0x557794e7f284]
+> > >   perf(+0x3773e0)[0x557794e7f3e0]
+> > >   perf(hist_entry_iter__add+0xc4)[0x557794e80114]
+> > >   perf(+0x2799aa)[0x557794d819aa]
+> > >   perf(+0x354ec8)[0x557794e5cec8]
+> > >   perf(+0x279341)[0x557794d81341]
+> > >   /lib64/libpthread.so.0(+0x814a)[0x7f62a27b514a]
+> > >   /lib64/libc.so.6(clone+0x43)[0x7f62a0259dc3]
+> > > 
+> > > Fixes: 1fb7d06a509e ("perf report: Use srcline from callchain for hist entries")
+> > > 
+> > > Signed-off-by: Michael Petlan <mpetlan@redhat.com>
+> > > Reported-by: Juri Lelli <jlelli@redhat.com>
+> > > CC: Milian Wolff <milian.wolff@kdab.com>
+> > > Cc: Jiri Olsa <jolsa@kernel.org>
+> > > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > ---
+> > >  tools/perf/util/machine.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > > 
+> > > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> > > index da19be7da284..44e40bad0e33 100644
+> > > --- a/tools/perf/util/machine.c
+> > > +++ b/tools/perf/util/machine.c
+> > > @@ -2149,6 +2149,7 @@ static int add_callchain_ip(struct thread *thread,
+> > >  
+> > >  	al.filtered = 0;
+> > >  	al.sym = NULL;
+> > > +	al.srcline = NULL;
+> > >  	if (!cpumode) {
+> > >  		thread__find_cpumode_addr_location(thread, ip, &al);
+> > >  	} else {
+> > > -- 
+> > > 2.18.4
+> > > 
+> > 
+> > -- 
+> > 
+> > - Arnaldo
+> > 
+> > 
 
-v6:
- - Add new attr.config1 rdpmc bit for userspace to hint it wants
-   userspace access when also requesting 64-bit counters.
-
-v5:
- - Only set cap_user_rdpmc if event is on current cpu
- - Limit enabling/disabling access to CPUs associated with the PMU
-   (supported_cpus) and with the mm_struct matching current->active_mm.
-
-v2:
- - Move mapped/unmapped into arm64 code. Fixes arm32.
- - Rebase on cap_user_time_short changes
-
-Changes from Raphael's v4:
-  - Drop homogeneous check
-  - Disable access for chained counters
-  - Set pmc_width in user page
----
- arch/arm64/kernel/perf_event.c | 99 +++++++++++++++++++++++++++++++---
- 1 file changed, 92 insertions(+), 7 deletions(-)
-
-diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-index a8f8dd741aeb..91af3d1c254b 100644
---- a/arch/arm64/kernel/perf_event.c
-+++ b/arch/arm64/kernel/perf_event.c
-@@ -285,6 +285,7 @@ static const struct attribute_group armv8_pmuv3_events_attr_group = {
- 
- PMU_FORMAT_ATTR(event, "config:0-15");
- PMU_FORMAT_ATTR(long, "config1:0");
-+PMU_FORMAT_ATTR(rdpmc, "config1:1");
- 
- static int sysctl_perf_user_access __read_mostly;
- 
-@@ -293,9 +294,15 @@ static inline bool armv8pmu_event_is_64bit(struct perf_event *event)
- 	return event->attr.config1 & 0x1;
- }
- 
-+static inline bool armv8pmu_event_want_user_access(struct perf_event *event)
-+{
-+	return event->attr.config1 & 0x2;
-+}
-+
- static struct attribute *armv8_pmuv3_format_attrs[] = {
- 	&format_attr_event.attr,
- 	&format_attr_long.attr,
-+	&format_attr_rdpmc.attr,
- 	NULL,
- };
- 
-@@ -364,7 +371,7 @@ static const struct attribute_group armv8_pmuv3_caps_attr_group = {
-  */
- #define	ARMV8_IDX_CYCLE_COUNTER	0
- #define	ARMV8_IDX_COUNTER0	1
--
-+#define	ARMV8_IDX_CYCLE_COUNTER_USER	32
- 
- /*
-  * We unconditionally enable ARMv8.5-PMU long event counter support
-@@ -379,15 +386,14 @@ static bool armv8pmu_has_long_event(struct arm_pmu *cpu_pmu)
- /*
-  * We must chain two programmable counters for 64 bit events,
-  * except when we have allocated the 64bit cycle counter (for CPU
-- * cycles event). This must be called only when the event has
-- * a counter allocated.
-+ * cycles event) or when user space counter access is enabled.
-  */
- static inline bool armv8pmu_event_is_chained(struct perf_event *event)
- {
- 	int idx = event->hw.idx;
- 	struct arm_pmu *cpu_pmu = to_arm_pmu(event->pmu);
- 
--	return !WARN_ON(idx < 0) &&
-+	return !(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT) &&
- 	       armv8pmu_event_is_64bit(event) &&
- 	       !armv8pmu_has_long_event(cpu_pmu) &&
- 	       (idx != ARMV8_IDX_CYCLE_COUNTER);
-@@ -720,6 +726,27 @@ static inline u32 armv8pmu_getreset_flags(void)
- 	return value;
- }
- 
-+static void armv8pmu_disable_user_access(void)
-+{
-+	write_sysreg(0, pmuserenr_el0);
-+}
-+
-+static void armv8pmu_enable_user_access(struct arm_pmu *cpu_pmu)
-+{
-+	int i;
-+	struct pmu_hw_events *cpuc = this_cpu_ptr(cpu_pmu->hw_events);
-+
-+	/* Clear any unused counters to avoid leaking their contents */
-+	for_each_clear_bit(i, cpuc->used_mask, cpu_pmu->num_events) {
-+		if (i == ARMV8_IDX_CYCLE_COUNTER)
-+			write_sysreg(0, pmccntr_el0);
-+		else
-+			armv8pmu_write_evcntr(i, 0);
-+	}
-+
-+	write_sysreg(ARMV8_PMU_USERENR_ER | ARMV8_PMU_USERENR_CR, pmuserenr_el0);
-+}
-+
- static void armv8pmu_enable_event(struct perf_event *event)
- {
- 	/*
-@@ -763,6 +790,14 @@ static void armv8pmu_disable_event(struct perf_event *event)
- 
- static void armv8pmu_start(struct arm_pmu *cpu_pmu)
- {
-+	struct perf_event_context *task_ctx =
-+		this_cpu_ptr(cpu_pmu->pmu.pmu_cpu_context)->task_ctx;
-+
-+	if (sysctl_perf_user_access && task_ctx && task_ctx->nr_user)
-+		armv8pmu_enable_user_access(cpu_pmu);
-+	else
-+		armv8pmu_disable_user_access();
-+
- 	/* Enable all counters */
- 	armv8pmu_pmcr_write(armv8pmu_pmcr_read() | ARMV8_PMU_PMCR_E);
- }
-@@ -880,13 +915,16 @@ static int armv8pmu_get_event_idx(struct pmu_hw_events *cpuc,
- 	if (evtype == ARMV8_PMUV3_PERFCTR_CPU_CYCLES) {
- 		if (!test_and_set_bit(ARMV8_IDX_CYCLE_COUNTER, cpuc->used_mask))
- 			return ARMV8_IDX_CYCLE_COUNTER;
-+		else if (armv8pmu_event_is_64bit(event) &&
-+			   armv8pmu_event_want_user_access(event) &&
-+			   !armv8pmu_has_long_event(cpu_pmu))
-+				return -EAGAIN;
- 	}
- 
- 	/*
- 	 * Otherwise use events counters
- 	 */
--	if (armv8pmu_event_is_64bit(event) &&
--	    !armv8pmu_has_long_event(cpu_pmu))
-+	if (armv8pmu_event_is_chained(event))
- 		return	armv8pmu_get_chain_idx(cpuc, cpu_pmu);
- 	else
- 		return armv8pmu_get_single_idx(cpuc, cpu_pmu);
-@@ -902,6 +940,23 @@ static void armv8pmu_clear_event_idx(struct pmu_hw_events *cpuc,
- 		clear_bit(idx - 1, cpuc->used_mask);
- }
- 
-+static int armv8pmu_access_event_idx(struct perf_event *event)
-+{
-+	if (!sysctl_perf_user_access ||
-+	    !(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT))
-+		return 0;
-+
-+	/*
-+	 * We remap the cycle counter index to 32 to
-+	 * match the offset applied to the rest of
-+	 * the counter indices.
-+	 */
-+	if (event->hw.idx == ARMV8_IDX_CYCLE_COUNTER)
-+		return ARMV8_IDX_CYCLE_COUNTER_USER;
-+
-+	return event->hw.idx;
-+}
-+
- /*
-  * Add an event filter to a given event.
-  */
-@@ -995,9 +1050,23 @@ static int __armv8_pmuv3_map_event(struct perf_event *event,
- 				       &armv8_pmuv3_perf_cache_map,
- 				       ARMV8_PMU_EVTYPE_EVENT);
- 
--	if (armv8pmu_event_is_64bit(event))
-+	/*
-+	 * At this point, the counter is not assigned. If a 64-bit counter is
-+	 * requested, we must make sure the h/w has 64-bit counters if we set
-+	 * the event size to 64-bit because chaining is not supported with
-+	 * userspace access. This may still fail later on if the CPU cycle
-+	 * counter is in use.
-+	 */
-+	if (armv8pmu_event_is_64bit(event) &&
-+	    (!armv8pmu_event_want_user_access(event) ||
-+	     armv8pmu_has_long_event(armpmu) || (hw_event_id == ARMV8_PMUV3_PERFCTR_CPU_CYCLES)))
- 		event->hw.flags |= ARMPMU_EVT_64BIT;
- 
-+	/* Userspace counter access only enabled if requested and a per task event */
-+	if (sysctl_perf_user_access && armv8pmu_event_want_user_access(event) &&
-+	    (event->attach_state & PERF_ATTACH_TASK))
-+		event->hw.flags |= PERF_EVENT_FLAG_USER_READ_CNT;
-+
- 	/* Only expose micro/arch events supported by this PMU */
- 	if ((hw_event_id > 0) && (hw_event_id < ARMV8_PMUV3_MAX_COMMON_EVENTS)
- 	    && test_bit(hw_event_id, armpmu->pmceid_bitmap)) {
-@@ -1106,6 +1175,11 @@ static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
- 	return probe.present ? 0 : -ENODEV;
- }
- 
-+static void armv8pmu_disable_user_access_ipi(void *unused)
-+{
-+	armv8pmu_disable_user_access();
-+}
-+
- int armv8pmu_proc_user_access_handler(struct ctl_table *table, int write,
-                 void *buffer, size_t *lenp, loff_t *ppos)
- {
-@@ -1113,6 +1187,7 @@ int armv8pmu_proc_user_access_handler(struct ctl_table *table, int write,
- 	if (ret || !write || sysctl_perf_user_access)
- 		return ret;
- 
-+	on_each_cpu(armv8pmu_disable_user_access_ipi, NULL, 1);
- 	return 0;
- }
- 
-@@ -1152,6 +1227,8 @@ static int armv8_pmu_init(struct arm_pmu *cpu_pmu, char *name,
- 	cpu_pmu->set_event_filter	= armv8pmu_set_event_filter;
- 	cpu_pmu->filter_match		= armv8pmu_filter_match;
- 
-+	cpu_pmu->pmu.event_idx		= armv8pmu_access_event_idx;
-+
- 	cpu_pmu->name			= name;
- 	cpu_pmu->map_event		= map_event;
- 	cpu_pmu->attr_groups[ARMPMU_ATTR_GROUP_EVENTS] = events ?
-@@ -1328,6 +1405,14 @@ void arch_perf_update_userpage(struct perf_event *event,
- 	userpg->cap_user_time = 0;
- 	userpg->cap_user_time_zero = 0;
- 	userpg->cap_user_time_short = 0;
-+	userpg->cap_user_rdpmc = !!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT);
-+
-+	if (userpg->cap_user_rdpmc) {
-+		if (event->hw.flags & ARMPMU_EVT_64BIT)
-+			userpg->pmc_width = 64;
-+		else
-+			userpg->pmc_width = 32;
-+	}
- 
- 	do {
- 		rd = sched_clock_read_begin(&seq);
 -- 
-2.30.2
 
+- Arnaldo
