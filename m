@@ -2,109 +2,169 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E30C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Sep 2021 20:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C27FC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 01:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D75B2610D1
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Sep 2021 20:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 469F261157
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 01:58:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243626AbhIMUjM (ORCPT
+        id S230109AbhINCAE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Sep 2021 16:39:12 -0400
-Received: from mail.codeweavers.com ([50.203.203.244]:53440 "EHLO
-        mail.codeweavers.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244320AbhIMUjJ (ORCPT
+        Mon, 13 Sep 2021 22:00:04 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:50482 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229778AbhINCAE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Sep 2021 16:39:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=codeweavers.com; s=6377696661; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Gr4tu8HL0LPIK1UHaWWMS5kFGSRxISYuGj7WDrWaFQc=; b=pFw2Bff4GikPYfMzG1nSW7F4ef
-        7vArlttfCua0OGECiZW0RebPuo6FCHxo8VZtu0DwZBrfSU948WhNMW9VQjcrzNfAAOpnUcBLA57Gx
-        DSraboJCV80X6cwLTeKKFFJGyVOSfNRBDh6M0kdhgzTUtFPyvCBk0iP9k7+/jI9YxvTM=;
-Received: from [10.69.139.42]
-        by mail.codeweavers.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <rbernon@codeweavers.com>)
-        id 1mPsi6-0006XL-BK; Mon, 13 Sep 2021 15:37:50 -0500
-Subject: Re: [PATCH] perf symbol: Look for ImageBase in PE file to compute
- .text offset
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Mon, 13 Sep 2021 22:00:04 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R291e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=alimailimapcm10staff010182156082;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0UoKP4AU_1631584724;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0UoKP4AU_1631584724)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 14 Sep 2021 09:58:45 +0800
+Subject: Re: [RFC PATCH] perf: fix panic by mark recursion inside
+ perf_log_throttle
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210909192637.4139125-1-rbernon@codeweavers.com>
- <YTpuTiYzkTKbUM/l@kernel.org>
- <e8ae2882-12cd-0fe1-b5e6-da9fc286b821@codeweavers.com>
- <YT+lhAhBGprnMT7P@kernel.org>
-From:   =?UTF-8?Q?R=c3=a9mi_Bernon?= <rbernon@codeweavers.com>
-Message-ID: <bca46af1-e2b8-a92b-c796-86d21bfecec6@codeweavers.com>
-Date:   Mon, 13 Sep 2021 22:37:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-perf-users@vger.kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-kernel@vger.kernel.org>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <netdev@vger.kernel.org>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <bpf@vger.kernel.org>
+References: <ff979a43-045a-dc56-64d1-2c31dd4db381@linux.alibaba.com>
+ <20210910153839.GH4323@worktop.programming.kicks-ass.net>
+ <f38987a5-dc36-a20d-8c5e-81e8ead5b4dc@linux.alibaba.com>
+ <YT8m2B6D2yWc5Umq@hirez.programming.kicks-ass.net>
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Message-ID: <3fb7c51f-696b-da70-1965-1dda9910cb14@linux.alibaba.com>
+Date:   Tue, 14 Sep 2021 09:58:44 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:78.0)
+ Gecko/20100101 Thunderbird/78.14.0
 MIME-Version: 1.0
-In-Reply-To: <YT+lhAhBGprnMT7P@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <YT8m2B6D2yWc5Umq@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 9/13/21 9:24 PM, Arnaldo Carvalho de Melo wrote:
-> Em Sun, Sep 12, 2021 at 10:25:26AM +0200, Rémi Bernon escreveu:
->> On 9/9/21 10:27 PM, Arnaldo Carvalho de Melo wrote:
->>> Em Thu, Sep 09, 2021 at 09:26:36PM +0200, Remi Bernon escreveu:
->>>> Instead of using the file offset in the debug file.
->>>>
->>>> This fixes a regression from 00a3423492bc90be99e529a64f13fdd80a0e8c0a,
->>>> causing incorrect symbol resolution when debug file have been stripped
->>>> from non-debug sections (in which case its .text section is empty and
->>>> doesn't have any file position).
->>>>
->>>> The debug files could also be created with a different file alignment,
->>>> and have different file positions from the mmap-ed binary, or have the
->>>> section reordered.
->>>>
->>>> This instead looks for the file image base, using the corresponding bfd
->>>> *ABS* symbols. As PE symbols only have 4 bytes, it also needs to keep
->>>> .text section vma high bits.
->>>
->>> I added a:
->>>
->>> Fixes: 00a3423492bc90be ("perf symbols: Make dso__load_bfd_symbols() load PE files from debug cache only")
->>>
->>> To help stable@kernel.org to pick it, its on my local tree now.
->>>
->>> It would be great to get a:
->>>
->>> Reviewed-by: Nicholas Fraser <nfraser@codeweavers.com>
->>>
->>> Can we have it, please?
->>>
->>
->> Well, Nicholas doesn't work with us anymore. I've reached them separately
->> but didn't get any answer so I'm thinking they may not be interested.
-> 
-> No problem, its already upstream now.
-> 
-> Thanks,
-> 
-> - Arnaldo
-> 
 
-Awesome, thanks!
--- 
-Rémi Bernon <rbernon@codeweavers.com>
+
+On 2021/9/13 下午6:24, Peter Zijlstra wrote:
+> On Mon, Sep 13, 2021 at 11:00:47AM +0800, 王贇 wrote:
+>>
+>>
+>> On 2021/9/10 下午11:38, Peter Zijlstra wrote:
+>>> On Thu, Sep 09, 2021 at 11:13:21AM +0800, 王贇 wrote:
+>>>> When running with ftrace function enabled, we observed panic
+>>>> as below:
+>>>>
+>>>>   traps: PANIC: double fault, error_code: 0x0
+>>>>   [snip]
+>>>>   RIP: 0010:perf_swevent_get_recursion_context+0x0/0x70
+>>>>   [snip]
+>>>>   Call Trace:
+>>>>    <NMI>
+>>>>    perf_trace_buf_alloc+0x26/0xd0
+>>>>    perf_ftrace_function_call+0x18f/0x2e0
+>>>>    kernelmode_fixup_or_oops+0x5/0x120
+>>>>    __bad_area_nosemaphore+0x1b8/0x280
+>>>>    do_user_addr_fault+0x410/0x920
+>>>>    exc_page_fault+0x92/0x300
+>>>>    asm_exc_page_fault+0x1e/0x30
+>>>>   RIP: 0010:__get_user_nocheck_8+0x6/0x13
+>>>>    perf_callchain_user+0x266/0x2f0
+>>>>    get_perf_callchain+0x194/0x210
+>>>>    perf_callchain+0xa3/0xc0
+>>>>    perf_prepare_sample+0xa5/0xa60
+>>>>    perf_event_output_forward+0x7b/0x1b0
+>>>>    __perf_event_overflow+0x67/0x120
+>>>>    perf_swevent_overflow+0xcb/0x110
+>>>>    perf_swevent_event+0xb0/0xf0
+>>>>    perf_tp_event+0x292/0x410
+>>>>    perf_trace_run_bpf_submit+0x87/0xc0
+>>>>    perf_trace_lock_acquire+0x12b/0x170
+>>>>    lock_acquire+0x1bf/0x2e0
+>>>>    perf_output_begin+0x70/0x4b0
+>>>>    perf_log_throttle+0xe2/0x1a0
+>>>>    perf_event_nmi_handler+0x30/0x50
+>>>>    nmi_handle+0xba/0x2a0
+>>>>    default_do_nmi+0x45/0xf0
+>>>>    exc_nmi+0x155/0x170
+>>>>    end_repeat_nmi+0x16/0x55
+>>>
+>>> kernel/events/Makefile has:
+>>>
+>>> ifdef CONFIG_FUNCTION_TRACER
+>>> CFLAGS_REMOVE_core.o = $(CC_FLAGS_FTRACE)
+>>> endif
+>>>
+>>> Which, afaict, should avoid the above, no?
+>>
+>> I'm afraid it's not working for this case, the
+>> start point of tracing is at lock_acquire() which
+>> is not from 'kernel/events/core', the following PF
+>> related function are also not from 'core', prevent
+>> ftrace on 'core' can't prevent this from happen...
+> 
+> I'm confused tho; where does the #DF come from? Because taking a #PF
+> from NMI should be perfectly fine.
+> 
+> AFAICT that callchain is something like:
+> 
+> 	NMI
+> 	  perf_event_nmi_handler()
+> 	    (part of the chain is missing here)
+> 	      perf_log_throttle()
+> 	        perf_output_begin() /* events/ring_buffer.c */
+> 		  rcu_read_lock()
+> 		    rcu_lock_acquire()
+> 		      lock_acquire()
+> 		        trace_lock_acquire() --> perf_trace_foo
+> 
+> 			  ...
+> 			    perf_callchain()
+> 			      perf_callchain_user()
+> 			        #PF (fully expected during a userspace callchain)
+> 				  (some stuff, until the first __fentry)
+> 				    perf_trace_function_call
+> 				      perf_trace_buf_alloc()
+> 				        perf_swevent_get_recursion_context()
+> 					  *BOOM*
+> 
+> Now, supposedly we then take another #PF from get_recursion_context() or
+> something, but that doesn't make sense. That should just work...
+> 
+> Can you figure out what's going wrong there? going with the RIP, this
+> almost looks like 'swhash->recursion' goes splat, but again that makes
+> no sense, that's a per-cpu variable.
+
+That's true, I actually have tried several approach to avoid the issue, but
+it trigger panic as long as we access 'swhash->recursion', the array should
+be accessible but somehow broken, that's why I consider this a suspected
+stack overflow, since nmi repeated and trace seems very long, but just a
+suspect...
+
+Regards,
+Michael Wang
+
+> 
