@@ -2,225 +2,194 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C15C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 21:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE82C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 21:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DBA761209
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 21:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98BB761183
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 21:38:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235014AbhINVWs (ORCPT
+        id S234918AbhINVkA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Sep 2021 17:22:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34944 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234866AbhINVWm (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Sep 2021 17:22:42 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1DC5461209;
-        Tue, 14 Sep 2021 21:21:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631654484;
-        bh=/XicsGZc2g3wu3bXlK+QfX1UuqeEudR+OFBINtUeNJU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r5Y2YLMAwHiDaghA7XreWpoiYZrUuguvSr9sGxWEcT8iPAQSGGzTVCrtI1hU1mWUm
-         bvhuBvTYe/uI+fH0c7j7AzB6QTjaAKLjc3Iw40Ppg+g0hz12CxtbSROGoVUjxvWeTt
-         vYkzBmg2NSNhdBfIyyI24Z9U35EbmDZ97EP+WyTogVI/syXZdOjespJQckRmS8aai8
-         Mu+ee3pozLu8aff2n+V22O7yzaFq0k+Yxemj93MUi3nBF51I2SYALMVlav12aiWd+Z
-         5We6PrJQ+66yfdPD5s0saTlRy6SPs3QuGP7xDNfU03t81Azhyy/OnuBdIC8DH/6ifq
-         yMX6brrMzgJ9g==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id AE71F4038F; Tue, 14 Sep 2021 18:21:20 -0300 (-03)
-Date:   Tue, 14 Sep 2021 18:21:20 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Michael Petlan <mpetlan@redhat.com>
-Cc:     acme@redhat.com, linux-perf-users@vger.kernel.org,
-        jolsa@redhat.com, jlelli@redhat.com, milian.wolff@kdab.com
-Subject: Re: [PATCH] perf machine: Initialize srcline string member in
- add_location struct
-Message-ID: <YUESUBs5STNG2sIT@kernel.org>
-References: <20210719145332.29747-1-mpetlan@redhat.com>
- <YToIuTUuudHKZmN2@kernel.org>
- <alpine.LRH.2.20.2109131651090.27231@Diego>
+        Tue, 14 Sep 2021 17:40:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55240 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234675AbhINVkA (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 14 Sep 2021 17:40:00 -0400
+Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A68BC061574;
+        Tue, 14 Sep 2021 14:38:42 -0700 (PDT)
+Received: by mail-yb1-xb2d.google.com with SMTP id r4so1211473ybp.4;
+        Tue, 14 Sep 2021 14:38:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Z3lBJBQ/Bym47HMSsBvnUhCPMDKAk/Fy6PETEvHswtY=;
+        b=U7AjMScwlGaDda8rOD3Ew1z/BLQP9jGIALjueaI4LnUyGmZmesnVY7T6RsCOKO+h1Y
+         Os3xWmWSLiF+Se8ZlFUSCu9t8wN8SgRact8yqkMcYsYIDdUUtulXca5kC5HsY9VYEE1W
+         kfHQfuK55NhQ5Kn7jxJswTa8erc+J9sYzr57tQLUInuE66BRjjQnoTcg0RLMp2W2Qu0L
+         jFRueHtBPhB5RwnweTPTFHM6xobHC3GdWTAUEbPpIOQh0zuQWaAFbqcaddaKKhGWJtDg
+         9jxqhC+DkB/2Tr9y8fBmqQINmkwPzPU0u8YaMg4oHcP7EnzOhVeAzV0w7Lt4QfgNvPmY
+         6MOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Z3lBJBQ/Bym47HMSsBvnUhCPMDKAk/Fy6PETEvHswtY=;
+        b=2Vn6TuleelAP4ThPJB1GUmJ8Upb+5TlnvWOyAntlTsMEAt1gtS3fWW4sLpAVihHW1i
+         hBl0lnP+yJn3d5hCkZYNyO2C4QBYmLNxqH2w8k8Et6qbRlL9eDPrH9l+HPkz8lGp/eu8
+         RKF4b1Xxz2Wv5yGhFjARB9b59F2bRuElQ5nplD/s3lkbzq4o6Ldm1dwIoLCqX4461eFh
+         Ng1j3e9c5sBoKXN1vbciL8uat5bZF53V8aBzzdfrkTDWpyQxBgFF0wUEU8zGMoGX4QCG
+         0VtaL2us5f9SuUXuLt4pFxvubY+rbd2egRcxh+3WhUWYgnzGyLuPRZFpT/71ZT7cdImP
+         vFNw==
+X-Gm-Message-State: AOAM532xwkroJWjLWNS6DMxvrPbp0UKHydyby2jLgTXKIx+1fjqwPBRh
+        FxQ2YVMQoxo4uAkfFc9bMBZjXen/Wcgc3TjkU/s=
+X-Google-Smtp-Source: ABdhPJwZP+i+J9MDvy08tXxR3yDToL69p2/DLL43tHRaYgiftJ/mrbifatbneOiA1S9SUUUaMnIFXs2GByvWsFpwFc8=
+X-Received: by 2002:a05:6902:724:: with SMTP id l4mr1610635ybt.433.1631655521470;
+ Tue, 14 Sep 2021 14:38:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.20.2109131651090.27231@Diego>
-X-Url:  http://acmel.wordpress.com
+References: <20210914170004.4185659-1-andrii@kernel.org> <YUDoNX0eUndsPCu+@krava>
+ <CAEf4BzbU8Ok-7Fsp1uGZ4F6b5GPb58fk1YKgnGwx9+sUBq71tA@mail.gmail.com> <YUDxqnJhjnpdl6vv@kernel.org>
+In-Reply-To: <YUDxqnJhjnpdl6vv@kernel.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 14 Sep 2021 14:38:30 -0700
+Message-ID: <CAEf4BzYzCQ4yuNKi3OCNqTXGXJQXt1XXNuhCT5oVF=khx85bXQ@mail.gmail.com>
+Subject: Re: [PATCH perf] perf: ignore deprecation warning when using libbpf's btf__get_from_id()
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Andrii Nakryiko <andrii@kernel.org>,
+        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Sep 13, 2021 at 05:13:12PM +0200, Michael Petlan escreveu:
-> On Thu, 9 Sep 2021, Arnaldo Carvalho de Melo wrote:
-> > Em Mon, Jul 19, 2021 at 04:53:32PM +0200, Michael Petlan escreveu:
-> > > It's later supposed to be either a correct address or NULL. Without the
-> > > initialization, it may contain an undefined value which results in the
-> > > following segmentation fault:
-> > > 
-> > >   # perf top --sort comm -g --ignore-callees=do_idle
-> > 
-> > Later where? The backtrace below is unresolved, I couldn't reproduce it
-> > here, that al variable is local to add_callchain_ip(), and is then
-> > passed to several places where I couldn't find al->srcline being used,
-> > can you state where it is used and causes the segfault?
-> > 
-> 
-> Here is a better backtrace of a segfault:
- 
-> #0  0x00007ffff56b7685 in __strlen_avx2 () from /lib64/libc.so.6
-> #1  0x00007ffff55e3802 in strdup () from /lib64/libc.so.6
-> #2  0x00005555558cb139 in hist_entry__init (callchain_size=<optimized out>, sample_self=true, template=0x7fffde7fb110, he=0x7fffd801c250) at util/hist.c:489
-> #3  hist_entry__new (template=template@entry=0x7fffde7fb110, sample_self=sample_self@entry=true) at util/hist.c:564
-> #4  0x00005555558cb4ba in hists__findnew_entry (hists=hists@entry=0x5555561d9e38, entry=entry@entry=0x7fffde7fb110, al=al@entry=0x7fffde7fb420, 
->     sample_self=sample_self@entry=true) at util/hist.c:657
-> #5  0x00005555558cba1b in __hists__add_entry (hists=hists@entry=0x5555561d9e38, al=0x7fffde7fb420, sym_parent=<optimized out>, bi=bi@entry=0x0, mi=mi@entry=0x0, 
->     sample=sample@entry=0x7fffde7fb4b0, sample_self=true, ops=0x0, block_info=0x0) at util/hist.c:288
-> #6  0x00005555558cbb70 in hists__add_entry (sample_self=true, sample=0x7fffde7fb4b0, mi=0x0, bi=0x0, sym_parent=<optimized out>, al=<optimized out>, hists=0x5555561d9e38)
->     at util/hist.c:1056
-> #7  iter_add_single_cumulative_entry (iter=0x7fffde7fb460, al=<optimized out>) at util/hist.c:1056
-> #8  0x00005555558cc8a4 in hist_entry_iter__add (iter=iter@entry=0x7fffde7fb460, al=al@entry=0x7fffde7fb420, max_stack_depth=<optimized out>, arg=arg@entry=0x7fffffff7db0)
->     at util/hist.c:1231
-> #9  0x00005555557cdc9a in perf_event__process_sample (machine=<optimized out>, sample=0x7fffde7fb4b0, evsel=<optimized out>, event=<optimized out>, tool=0x7fffffff7db0)
->     at builtin-top.c:842
-> #10 deliver_event (qe=<optimized out>, qevent=<optimized out>) at builtin-top.c:1202
-> #11 0x00005555558a9318 in do_flush (show_progress=false, oe=0x7fffffff80e0) at util/ordered-events.c:244
-> #12 __ordered_events__flush (oe=oe@entry=0x7fffffff80e0, how=how@entry=OE_FLUSH__TOP, timestamp=timestamp@entry=0) at util/ordered-events.c:323
-> #13 0x00005555558a9789 in __ordered_events__flush (timestamp=<optimized out>, how=<optimized out>, oe=<optimized out>) at util/ordered-events.c:339
-> #14 ordered_events__flush (how=OE_FLUSH__TOP, oe=0x7fffffff80e0) at util/ordered-events.c:341
-> #15 ordered_events__flush (oe=oe@entry=0x7fffffff80e0, how=how@entry=OE_FLUSH__TOP) at util/ordered-events.c:339
-> #16 0x00005555557cd631 in process_thread (arg=0x7fffffff7db0) at builtin-top.c:1114
-> #17 0x00007ffff7bb817a in start_thread () from /lib64/libpthread.so.0
-> #18 0x00007ffff5656dc3 in clone () from /lib64/libc.so.6
-> 
-> If you look at the frame #2, the code is:
-> 
-> 488      if (he->srcline) {
-> 489          he->srcline = strdup(he->srcline);
-> 490          if (he->srcline == NULL)
-> 491              goto err_rawdata;
-> 492      }
-> 
-> If he->srcline is not NULL (it is not NULL if it is uninitialized rubbish),
-> it gets strdupped and strdupping a rubbish random string causes the problem.
-> 
-> Also, if you look at the commit 1fb7d06a509e, it adds the srcline property
-> into the struct, but not initializing it everywhere needed.
+On Tue, Sep 14, 2021 at 12:02 PM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Tue, Sep 14, 2021 at 11:28:28AM -0700, Andrii Nakryiko escreveu:
+> > On Tue, Sep 14, 2021 at 11:21 AM Jiri Olsa <jolsa@redhat.com> wrote:
+> > >
+> > > On Tue, Sep 14, 2021 at 10:00:04AM -0700, Andrii Nakryiko wrote:
+> > > > Perf code re-implements libbpf's btf__load_from_kernel_by_id() API =
+as
+> > > > a weak function, presumably to dynamically link against old version=
+ of
+> > > > libbpf shared library. Unfortunately this causes compilation warnin=
+g
+> > > > when perf is compiled against libbpf v0.6+.
+> > > >
+> > > > For now, just ignore deprecation warning, but there might be a bett=
+er
+> > > > solution, depending on perf's needs.
+> > >
+> > > HI,
+> > > the problem we tried to solve is when perf is using symbols
+> > > which are not yet available in released libbpf.. but it all
+> > > linkes in default perf build because it's linked statically
+> > > libbpf.a in the tree
+> > >
+> >
+> > If you are always statically linking libbpf into perf, there is no
+> > need to implement this __weak shim. Libbpf is never going to deprecate
+> > an API if a new/replacement API hasn't been at least in a previous
+> > released version. So in this case btf__load_from_kernel_by_id() was
+> > added in libbpf 0.5, and btf__get_from_id() was marked deprecated in
+> > libbpf 0.6 (not yet released, of course). So with that, do you still
+> > think we need this __weak re-implementation?
+> >
+> > I was wondering if this was done to make latest perf code compile
+> > against some old libbpf source code or dynamically linked against old
+> > libbpf. But if that's not the case, the fix should be a removal of
+> > __weak btf__load_from_kernel_by_id().
+>
+> It was made to build against the libbpf that comes with fedora 34, the
+> distro I'm using, which is:
+>
+> =E2=AC=A2[acme@toolbox perf]$ sudo dnf install libbpf-devel
+> Package libbpf-devel-2:0.4.0-1.fc34.x86_64 is already installed.
+> Dependencies resolved.
+> Nothing to do.
+> Complete!
+> =E2=AC=A2[acme@toolbox perf]$ cat /etc/redhat-release
+> Fedora release 34 (Thirty Four)
+>
+> And we have 'make -C tools/perf build-test' that has one entry to build
+> with LIBBPF_EXTERNAL=3D1, i.e. using whatever libbpf-devel package is
+> installed in the distro, in addtion to statically linking with the
+> libbpf in the kernel sources.
+>
+> That is done because several distros are linking perf with the libbpf
+> they ship.
+>
+> When I merged the latest upstream this test failed, and I realized that
+> some files in tools/perf/ had changed to make use of a new function and
+> that was the reason for the build test failure.
+>
+> So I tried to provide a transition help for these cases, initially as a
+> feature test that would look if that new function was available and if
+> not, provide the fallback, but then ended up following Jiri's suggestion
+> for a __weak function, as that involved less coding.
+>
 
-Now I see, when using --ignore-callees=do_idle we end up here in
-add_callchain_ip():
+Ok, that's cool, then my "fix" should be fine for now. Can you please
+land it in perf/core to unblock Stephen's (cc'ed) build failure when
+merging perf and bpf-next trees?
 
-2181         if (al.sym != NULL) {
-2182                 if (perf_hpp_list.parent && !*parent &&
-2183                     symbol__match_regex(al.sym, &parent_regex))
-2184                         *parent = al.sym;
-2185                 else if (have_ignore_callees && root_al &&
-2186                   symbol__match_regex(al.sym, &ignore_callees_regex)) {
-2187                         /* Treat this symbol as the root,
-2188                            forgetting its callees. */
-2189                         *root_al = al;
-2190                         callchain_cursor_reset(cursor);
-2191                 }
-2192         }
+Also it's good to keep in mind that libbpf is now providing
+LIBBPF_MAJOR_VERSION and LIBBPF_MINOR_VERSION macro, so when
+statically linking you should be able to use that to detect libbpf
+version. For shared library cases we should probably also add runtime
+APIs (e.g., int libbpf_major_version(void), int
+libbpf_minor_version(void), const char *libbpf_version(void)) so that
+you can do more detection based on libbpf version at runtime. Let me
+know if it's something that would be helpful.
 
-And the al that doesn't have the ->srcline field initialized will be
-copied to the root_al, so then, back to:
-
-1211 int hist_entry_iter__add(struct hist_entry_iter *iter, struct addr_location *al,
-1212                          int max_stack_depth, void *arg)
-1213 {
-1214         int err, err2;
-1215         struct map *alm = NULL;
-1216
-1217         if (al)
-1218                 alm = map__get(al->map);
-1219
-1220         err = sample__resolve_callchain(iter->sample, &callchain_cursor, &iter->parent,
-1221                                         iter->evsel, al, max_stack_depth);
-1222         if (err) {
-1223                 map__put(alm);
-1224                 return err;
-1225         }
-1226
-1227         err = iter->ops->prepare_entry(iter, al);
-1228         if (err)
-1229                 goto out;
-1230
-1231         err = iter->ops->add_single_entry(iter, al);
-1232         if (err)
-1233                 goto out;
-1234
-
-That al at line 1221 is what hist_entry_iter__add() (called from
-sample__resolve_callchain()) saw as 'root_al', and then:
-
-	iter->ops->add_single_entry(iter, al);
-
-will go on with al->srcline with a bogus value, I'll add the above
-sequence to the cset and apply, thanks!
-
-- Arnaldo
-
- 
-> Michael
-> 
-> > - Arnaldo
-> >  
-> > > terminates with
-> > > 
-> > >   perf: Segmentation fault
-> > >   -------- backtrace --------
-> > >   perf(+0x417b26)[0x557794f1fb26]
-> > >   /lib64/libc.so.6(+0x37400)[0x7f62a0194400]
-> > >   /lib64/libc.so.6(+0x15d685)[0x7f62a02ba685]
-> > >   /lib64/libc.so.6(__strdup+0x12)[0x7f62a01e6802]
-> > >   perf(+0x3769d9)[0x557794e7e9d9]
-> > >   perf(+0x376d3a)[0x557794e7ed3a]
-> > >   perf(+0x377284)[0x557794e7f284]
-> > >   perf(+0x3773e0)[0x557794e7f3e0]
-> > >   perf(hist_entry_iter__add+0xc4)[0x557794e80114]
-> > >   perf(+0x2799aa)[0x557794d819aa]
-> > >   perf(+0x354ec8)[0x557794e5cec8]
-> > >   perf(+0x279341)[0x557794d81341]
-> > >   /lib64/libpthread.so.0(+0x814a)[0x7f62a27b514a]
-> > >   /lib64/libc.so.6(clone+0x43)[0x7f62a0259dc3]
-> > > 
-> > > Fixes: 1fb7d06a509e ("perf report: Use srcline from callchain for hist entries")
-> > > 
-> > > Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-> > > Reported-by: Juri Lelli <jlelli@redhat.com>
-> > > CC: Milian Wolff <milian.wolff@kdab.com>
-> > > Cc: Jiri Olsa <jolsa@kernel.org>
-> > > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > ---
-> > >  tools/perf/util/machine.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > > 
-> > > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> > > index da19be7da284..44e40bad0e33 100644
-> > > --- a/tools/perf/util/machine.c
-> > > +++ b/tools/perf/util/machine.c
-> > > @@ -2149,6 +2149,7 @@ static int add_callchain_ip(struct thread *thread,
-> > >  
-> > >  	al.filtered = 0;
-> > >  	al.sym = NULL;
-> > > +	al.srcline = NULL;
-> > >  	if (!cpumode) {
-> > >  		thread__find_cpumode_addr_location(thread, ip, &al);
-> > >  	} else {
-> > > -- 
-> > > 2.18.4
-> > > 
-> > 
-> > -- 
-> > 
-> > - Arnaldo
-> > 
-> > 
-
--- 
-
-- Arnaldo
+> - Arnaldo
+>
+> > > so now we have weak function with that warning disabled locally,
+> > > which I guess could work?  also for future cases like that
+> > >
+> > > jirka
+> > >
+> > > >
+> > > > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> > > > ---
+> > > >  tools/perf/util/bpf-event.c | 3 +++
+> > > >  1 file changed, 3 insertions(+)
+> > > >
+> > > > diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-even=
+t.c
+> > > > index 683f6d63560e..1a7112a87736 100644
+> > > > --- a/tools/perf/util/bpf-event.c
+> > > > +++ b/tools/perf/util/bpf-event.c
+> > > > @@ -24,7 +24,10 @@
+> > > >  struct btf * __weak btf__load_from_kernel_by_id(__u32 id)
+> > > >  {
+> > > >         struct btf *btf;
+> > > > +#pragma GCC diagnostic push
+> > > > +#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+> > > >         int err =3D btf__get_from_id(id, &btf);
+> > > > +#pragma GCC diagnostic pop
+> > > >
+> > > >         return err ? ERR_PTR(err) : btf;
+> > > >  }
+> > > > --
+> > > > 2.30.2
+> > > >
+> > >
+>
+> --
+>
+> - Arnaldo
