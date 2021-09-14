@@ -2,220 +2,135 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2C0C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 10:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF31EC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 10:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3149660F21
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 10:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1ECC6112D
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 10:40:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231617AbhINKaQ (ORCPT
+        id S231420AbhINKmC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Sep 2021 06:30:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38052 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229591AbhINKaP (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Sep 2021 06:30:15 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7647FC061760;
-        Tue, 14 Sep 2021 03:28:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=AkAmP+XwbC3u2EnOmWg1+d8TikSHpIOHKHRYg4gt8m4=; b=foLIYWAOURNP6S9e3efY4E2F63
-        /ox7MO547cQ0+xsln+MJfQULrWJ3p8DKN6l1dYf0D2gYrzNijDm0oJupoPwgLFjDKxNHJx82oZ8ea
-        Vx2NaDdVnJ+mGD/aME4xaVWc+g/zGrJyh7t0UXvIvzkaRH8aTb1ut08L+/jQ2YS9fCQ3WP8gAZV71
-        JNB5NeMRR3ImOff6K1MWJTb2mpaxLMaEC0Cc4fxlz3YKggS9uuHjzeOkVbRsJZyPzTLA10doxV47p
-        7LCBYC3gln9qFgg0U7JKAnlgz9zo6Jkqx7tZcPnbIZO4bUSeMrJbUvl74P3qckqsjcdymZEPcJeBu
-        4Gut303g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mQ5g7-0037U7-35; Tue, 14 Sep 2021 10:28:39 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Tue, 14 Sep 2021 06:42:02 -0400
+Received: from ozlabs.org ([203.11.71.1]:49355 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231650AbhINKmB (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 14 Sep 2021 06:42:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+        s=201909; t=1631616042;
+        bh=PgQZCFTfY6IZcgN58w46zz5hDYowlMLp1ghqMp4Hbg4=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=EGrBq3KtE7FY3m14RhG6YIW5oblfrdOfbZhgOWEM5IeSyeUFIJ/avloWh8HYU8BZR
+         qGyKeFE5BzeOYdOA91GJ1LyYSmusJ/TOmpQ/UoD/omsdookewViKftpBRcpdfsLpbY
+         exiKjbh9JeJQg4kTbRhRvIp0aDJCYPZKjjicwvtmICoEXJv0K68ZHNbzdhNTbJMw28
+         WvcQcT7a4jwDunE0OxcRi6S2CNSbtr2eR6EqOJYveDylZ0larAzxpFey4n1PDxGnK6
+         wckS1WiwMl7tmNDJ46aTSixUN725HjtzMzygV8R2h3/QO4HT10SAF3onZXTjvdc3oQ
+         7a8E1Gxc5VDoA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6F2E2300255;
-        Tue, 14 Sep 2021 12:28:37 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 579792D0615D5; Tue, 14 Sep 2021 12:28:37 +0200 (CEST)
-Date:   Tue, 14 Sep 2021 12:28:37 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     =?utf-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-perf-users@vger.kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-kernel@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <netdev@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <bpf@vger.kernel.org>
-Subject: Re: [RFC PATCH] perf: fix panic by mark recursion inside
- perf_log_throttle
-Message-ID: <YUB5VchM3a/MiZpX@hirez.programming.kicks-ass.net>
-References: <ff979a43-045a-dc56-64d1-2c31dd4db381@linux.alibaba.com>
- <20210910153839.GH4323@worktop.programming.kicks-ass.net>
- <f38987a5-dc36-a20d-8c5e-81e8ead5b4dc@linux.alibaba.com>
- <YT8m2B6D2yWc5Umq@hirez.programming.kicks-ass.net>
- <3fb7c51f-696b-da70-1965-1dda9910cb14@linux.alibaba.com>
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4H80HX53Zzz9sSn;
+        Tue, 14 Sep 2021 20:40:40 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Kajol Jain <kjain@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, mingo@redhat.com, acme@kernel.org,
+        jolsa@kernel.org, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, ak@linux.intel.com,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+        rnsastry@linux.ibm.com, yao.jin@linux.intel.com, ast@kernel.org,
+        daniel@iogearbox.net, songliubraving@fb.com,
+        kan.liang@linux.intel.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, paulus@samba.org
+Subject: Re: [PATCH 1/3] perf: Add macros to specify onchip L2/L3 accesses
+In-Reply-To: <YTob/xfn1gt901K4@hirez.programming.kicks-ass.net>
+References: <20210904064932.307610-1-kjain@linux.ibm.com>
+ <87ilzbmt7i.fsf@mpe.ellerman.id.au>
+ <YTiBqbxe7ieqY2OE@hirez.programming.kicks-ass.net>
+ <87czphnchp.fsf@mpe.ellerman.id.au>
+ <YTob/xfn1gt901K4@hirez.programming.kicks-ass.net>
+Date:   Tue, 14 Sep 2021 20:40:38 +1000
+Message-ID: <87k0jjl9sp.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3fb7c51f-696b-da70-1965-1dda9910cb14@linux.alibaba.com>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Sep 14, 2021 at 09:58:44AM +0800, 王贇 wrote:
-> On 2021/9/13 下午6:24, Peter Zijlstra wrote:
+Peter Zijlstra <peterz@infradead.org> writes:
+> On Thu, Sep 09, 2021 at 10:45:54PM +1000, Michael Ellerman wrote:
+>
+>> > The 'new' composite doesnt have a hops field because the hardware that
+>> > nessecitated that change doesn't report it, but we could easily add a
+>> > field there.
+>> >
+>> > Suppose we add, mem_hops:3 (would 6 hops be too small?) and the
+>> > corresponding PERF_MEM_HOPS_{NA, 0..6}
+>> 
+>> It's really 7 if we use remote && hop = 0 to mean the first hop.
+>
+> I don't think we can do that, becaus of backward compat. Currently:
+>
+>   lvl_num=DRAM, remote=1
+>
+> denites: "Remote DRAM of any distance". Effectively it would have the new
+> hops field filled with zeros though, so if you then decode with the hops
+> field added it suddenly becomes:
+>
+>  lvl_num=DRAM, remote=1, hops=0
+>
+> and reads like: "Remote DRAM of 0 hops" which is quite daft. Therefore 0
+> really must denote a 'N/A'.
 
-> > I'm confused tho; where does the #DF come from? Because taking a #PF
-> > from NMI should be perfectly fine.
-> > 
-> > AFAICT that callchain is something like:
-> > 
-> > 	NMI
-> > 	  perf_event_nmi_handler()
-> > 	    (part of the chain is missing here)
-> > 	      perf_log_throttle()
-> > 	        perf_output_begin() /* events/ring_buffer.c */
-> > 		  rcu_read_lock()
-> > 		    rcu_lock_acquire()
-> > 		      lock_acquire()
-> > 		        trace_lock_acquire() --> perf_trace_foo
-> > 
-> > 			  ...
-> > 			    perf_callchain()
-> > 			      perf_callchain_user()
-> > 			        #PF (fully expected during a userspace callchain)
-> > 				  (some stuff, until the first __fentry)
-> > 				    perf_trace_function_call
-> > 				      perf_trace_buf_alloc()
-> > 				        perf_swevent_get_recursion_context()
-> > 					  *BOOM*
-> > 
-> > Now, supposedly we then take another #PF from get_recursion_context() or
-> > something, but that doesn't make sense. That should just work...
-> > 
-> > Can you figure out what's going wrong there? going with the RIP, this
-> > almost looks like 'swhash->recursion' goes splat, but again that makes
-> > no sense, that's a per-cpu variable.
-> 
-> That's true, I actually have tried several approach to avoid the issue, but
-> it trigger panic as long as we access 'swhash->recursion', the array should
-> be accessible but somehow broken, that's why I consider this a suspected
-> stack overflow, since nmi repeated and trace seems very long, but just a
-> suspect...
+Ah yeah, duh, it needs to be backward compatible.
 
-You can simply increase the exception stack size to test this:
+>> If we're wanting to use some of the hop levels to represent
+>> intra-chip/package hops then we could possibly use them all on a really
+>> big system.
+>> 
+>> eg. you could imagine something like:
+>> 
+>>  L2 | 		        - local L2
+>>  L2 | REMOTE | HOPS_0	- L2 of neighbour core
+>>  L2 | REMOTE | HOPS_1	- L2 of near core on same chip (same 1/2 of chip)
+>>  L2 | REMOTE | HOPS_2	- L2 of far core on same chip (other 1/2 of chip)
+>>  L2 | REMOTE | HOPS_3	- L2 of sibling chip in same package
+>>  L2 | REMOTE | HOPS_4	- L2 on separate package 1 hop away
+>>  L2 | REMOTE | HOPS_5	- L2 on separate package 2 hops away
+>>  L2 | REMOTE | HOPS_6	- L2 on separate package 3 hops away
+>> 
+>> 
+>> Whether it's useful to represent all those levels I'm not sure, but it's
+>> probably good if we have the ability.
+>
+> I'm thinking we ought to keep hops as steps along the NUMA fabric, with
+> 0 hops being the local node. That only gets us:
+>
+>  L2, remote=0, hops=HOPS_0 -- our L2
+>  L2, remote=1, hops=HOPS_0 -- L2 on the local node but not ours
+>  L2, remote=1, hops!=HOPS_0 -- L2 on a remote node
 
-diff --git a/arch/x86/include/asm/page_64_types.h b/arch/x86/include/asm/page_64_types.h
-index a8d4ad856568..e9e2c3ba5923 100644
---- a/arch/x86/include/asm/page_64_types.h
-+++ b/arch/x86/include/asm/page_64_types.h
-@@ -15,7 +15,7 @@
- #define THREAD_SIZE_ORDER	(2 + KASAN_STACK_ORDER)
- #define THREAD_SIZE  (PAGE_SIZE << THREAD_SIZE_ORDER)
- 
--#define EXCEPTION_STACK_ORDER (0 + KASAN_STACK_ORDER)
-+#define EXCEPTION_STACK_ORDER (1 + KASAN_STACK_ORDER)
- #define EXCEPTION_STKSZ (PAGE_SIZE << EXCEPTION_STACK_ORDER)
- 
- #define IRQ_STACK_ORDER (2 + KASAN_STACK_ORDER)
+Hmm. I'm not sure about tying it directly to NUMA hops. I worry we're
+going to see more and more systems where there's a hierarchy within the
+chip/package, in addition to the traditional NUMA hierarchy.
 
+Although then I guess it becomes a question of what exactly is a NUMA
+hop, maybe the answer is that on those future systems those
+intra-chip/package hops should be represented as NUMA hops.
 
+It's not like we have a hard definition of what a NUMA hop is?
 
-Also, something like this might be useful:
+>> I guess I'm 50/50 on whether that's enough levels, or whether we want
+>> another bit to allow for future growth.
+>
+> Right, possibly safer to add one extra bit while we can.... I suppose.
 
+Equally it's not _that_ hard to add another bit later (if there's still
+one free), makes the API a little uglier to use, but not the end of the
+world.
 
-diff --git a/arch/x86/include/asm/stacktrace.h b/arch/x86/include/asm/stacktrace.h
-index f248eb2ac2d4..4dfdbb9395eb 100644
---- a/arch/x86/include/asm/stacktrace.h
-+++ b/arch/x86/include/asm/stacktrace.h
-@@ -33,6 +33,8 @@ bool in_task_stack(unsigned long *stack, struct task_struct *task,
- 
- bool in_entry_stack(unsigned long *stack, struct stack_info *info);
- 
-+bool in_exception_stack_guard(unsigned long *stack);
-+
- int get_stack_info(unsigned long *stack, struct task_struct *task,
- 		   struct stack_info *info, unsigned long *visit_mask);
- bool get_stack_info_noinstr(unsigned long *stack, struct task_struct *task,
-diff --git a/arch/x86/kernel/dumpstack_64.c b/arch/x86/kernel/dumpstack_64.c
-index 5601b95944fa..056cf4f31599 100644
---- a/arch/x86/kernel/dumpstack_64.c
-+++ b/arch/x86/kernel/dumpstack_64.c
-@@ -126,6 +126,39 @@ static __always_inline bool in_exception_stack(unsigned long *stack, struct stac
- 	return true;
- }
- 
-+noinstr bool in_exception_stack_guard(unsigned long *stack)
-+{
-+	unsigned long begin, end, stk = (unsigned long)stack;
-+	const struct estack_pages *ep;
-+	unsigned int k;
-+
-+	BUILD_BUG_ON(N_EXCEPTION_STACKS != 6);
-+
-+	begin = (unsigned long)__this_cpu_read(cea_exception_stacks);
-+	/*
-+	 * Handle the case where stack trace is collected _before_
-+	 * cea_exception_stacks had been initialized.
-+	 */
-+	if (!begin)
-+		return false;
-+
-+	end = begin + sizeof(struct cea_exception_stacks);
-+	/* Bail if @stack is outside the exception stack area. */
-+	if (stk < begin || stk >= end)
-+		return false;
-+
-+	/* Calc page offset from start of exception stacks */
-+	k = (stk - begin) >> PAGE_SHIFT;
-+	/* Lookup the page descriptor */
-+	ep = &estack_pages[k];
-+	/* Guard page? */
-+	if (!ep->size)
-+		return true;
-+
-+	return false;
-+}
-+
-+
- static __always_inline bool in_irq_stack(unsigned long *stack, struct stack_info *info)
- {
- 	unsigned long *end = (unsigned long *)this_cpu_read(hardirq_stack_ptr);
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index a58800973aed..8b043ed02c0d 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -459,6 +459,9 @@ DEFINE_IDTENTRY_DF(exc_double_fault)
- 		handle_stack_overflow("kernel stack overflow (double-fault)",
- 				      regs, address);
- 	}
-+
-+	if (in_exception_stack_guard((void *)address))
-+		pr_emerg("PANIC: exception stack guard: 0x%lx\n", address);
- #endif
- 
- 	pr_emerg("PANIC: double fault, error_code: 0x%lx\n", error_code);
+cheers
