@@ -2,120 +2,220 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E60C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 10:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2C0C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 10:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B9B1610A6
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 10:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3149660F21
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 10:29:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229907AbhINKGq (ORCPT
+        id S231617AbhINKaQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Sep 2021 06:06:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60922 "EHLO
+        Tue, 14 Sep 2021 06:30:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230223AbhINKGp (ORCPT
+        with ESMTP id S229591AbhINKaP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Sep 2021 06:06:45 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69C95C061574
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Sep 2021 03:05:28 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id f3-20020a17090a638300b00199097ddf1aso1759949pjj.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Sep 2021 03:05:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=z1muzdOPWzB0ytDKcRa+QFyNrcjjCHiCUrUvKj8zYFM=;
-        b=ZV9YpuPTdGrvhLZWC7YTDjzQ+oyE4Tnvnl2GIQvc69ojO1KtUMsUfiP9jbd3N04ASM
-         JSv+PVbTCW622AwkynaZ0Dj/sHs9nNGOzTgnmEOuguzXMzE+UMuDLtnQA+7BM07LZfB6
-         q5TmSMD1rnsXyGKCFILbsVrXFHZn1SlA0lfUa4GVO25uojNy0n+O0Y7EMjBj8B0HaVFX
-         0r81qzhcYX1QCmSPgFTKdnq6ytpycu4hgs/q7/XFqfX/4g8tGPY2dALaQtmcn44vk8I+
-         DPDSduio6Ba8YeMc1isvG99CxKGYwUeAoBDymzxWpAI2oHcMj/2uqQduBfu6/o7PUv61
-         NS2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=z1muzdOPWzB0ytDKcRa+QFyNrcjjCHiCUrUvKj8zYFM=;
-        b=cAw3toRRgy/+gImYrMgfSEk1QVpepOLuBOZQ3dRhzVVddbc1L3qsbzj/QCLAfMm919
-         d4Vh+4QVekZMehPe8gS0RD3EKTBMC6QZ/pUtjQnjkvMgLrT483sH+SmSByXfB9z2qZeM
-         ZTOKz7hu9wa92UJMMrk1VpncLTt/t1rJhpD1n5MIC8WbHbWx5IZ9NlYjFCCNVIgzptc2
-         pS84VNnldV/naPwa+/fX1HNibeXe6V/H8hZsgKoZfBzLSJMWyGbd/gdfONiYDkG1MZBf
-         QcrW5pcUcz6ayarEgC/nnSI0OV7xctJW2U0T6OHp4c0hB5xuZCfp6CAAjzAmgk/whQRO
-         +unw==
-X-Gm-Message-State: AOAM532fv6z7YtyEDJjynLiZnbKZDALKQSSA2Hc5DWDSza/Mt2MTqv2o
-        x8DGu3G2Y107aF3FAHqrHOfYig==
-X-Google-Smtp-Source: ABdhPJw9bLFl5o1rEO6GGn86+0NLilPqU7PnCPV4PRYgtLRqPF5710VvVQ1ig7++JmoZFGHm1n8mQQ==
-X-Received: by 2002:a17:90a:b392:: with SMTP id e18mr1151791pjr.205.1631613927864;
-        Tue, 14 Sep 2021 03:05:27 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([204.124.181.224])
-        by smtp.gmail.com with ESMTPSA id d5sm1082133pjs.53.2021.09.14.03.05.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Sep 2021 03:05:27 -0700 (PDT)
-Date:   Tue, 14 Sep 2021 18:05:17 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
+        Tue, 14 Sep 2021 06:30:15 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7647FC061760;
+        Tue, 14 Sep 2021 03:28:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=AkAmP+XwbC3u2EnOmWg1+d8TikSHpIOHKHRYg4gt8m4=; b=foLIYWAOURNP6S9e3efY4E2F63
+        /ox7MO547cQ0+xsln+MJfQULrWJ3p8DKN6l1dYf0D2gYrzNijDm0oJupoPwgLFjDKxNHJx82oZ8ea
+        Vx2NaDdVnJ+mGD/aME4xaVWc+g/zGrJyh7t0UXvIvzkaRH8aTb1ut08L+/jQ2YS9fCQ3WP8gAZV71
+        JNB5NeMRR3ImOff6K1MWJTb2mpaxLMaEC0Cc4fxlz3YKggS9uuHjzeOkVbRsJZyPzTLA10doxV47p
+        7LCBYC3gln9qFgg0U7JKAnlgz9zo6Jkqx7tZcPnbIZO4bUSeMrJbUvl74P3qckqsjcdymZEPcJeBu
+        4Gut303g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mQ5g7-0037U7-35; Tue, 14 Sep 2021 10:28:39 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6F2E2300255;
+        Tue, 14 Sep 2021 12:28:37 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 579792D0615D5; Tue, 14 Sep 2021 12:28:37 +0200 (CEST)
+Date:   Tue, 14 Sep 2021 12:28:37 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     =?utf-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Michael Petlan <mpetlan@redhat.com>,
-        "Frank Ch. Eigler" <fche@redhat.com>,
-        Song Liu <songliubraving@fb.com>, x86@kernel.org,
-        Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>,
-        Andrii Nakryiko <andriin@fb.com>,
         Alexei Starovoitov <ast@kernel.org>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org
-Subject: Re: [PATCH v5 4/9] perf/x86: Add compiler barrier after updating BTS
-Message-ID: <20210914100517.GC1538480@leoy-ThinkPad-X240s>
-References: <20210809111407.596077-1-leo.yan@linaro.org>
- <20210809111407.596077-5-leo.yan@linaro.org>
- <20210829105657.GC14461@leoy-ThinkPad-X240s>
- <YUBwqGuQskkw328z@hirez.programming.kicks-ass.net>
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-perf-users@vger.kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-kernel@vger.kernel.org>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <netdev@vger.kernel.org>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <bpf@vger.kernel.org>
+Subject: Re: [RFC PATCH] perf: fix panic by mark recursion inside
+ perf_log_throttle
+Message-ID: <YUB5VchM3a/MiZpX@hirez.programming.kicks-ass.net>
+References: <ff979a43-045a-dc56-64d1-2c31dd4db381@linux.alibaba.com>
+ <20210910153839.GH4323@worktop.programming.kicks-ass.net>
+ <f38987a5-dc36-a20d-8c5e-81e8ead5b4dc@linux.alibaba.com>
+ <YT8m2B6D2yWc5Umq@hirez.programming.kicks-ass.net>
+ <3fb7c51f-696b-da70-1965-1dda9910cb14@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <YUBwqGuQskkw328z@hirez.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3fb7c51f-696b-da70-1965-1dda9910cb14@linux.alibaba.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Peter,
+On Tue, Sep 14, 2021 at 09:58:44AM +0800, 王贇 wrote:
+> On 2021/9/13 下午6:24, Peter Zijlstra wrote:
 
-On Tue, Sep 14, 2021 at 11:51:36AM +0200, Peter Zijlstra wrote:
-> On Sun, Aug 29, 2021 at 06:56:57PM +0800, Leo Yan wrote:
-> > Hi Peter, or any x86 maintainer,
+> > I'm confused tho; where does the #DF come from? Because taking a #PF
+> > from NMI should be perfectly fine.
 > > 
-> > On Mon, Aug 09, 2021 at 07:14:02PM +0800, Leo Yan wrote:
-> > > Since BTS is coherent, simply add a compiler barrier to separate the BTS
-> > > update and aux_head store.
+> > AFAICT that callchain is something like:
 > > 
-> > Could you reivew this patch and check if BTS needs the comipler
-> > barrier in this case?  Thanks.
+> > 	NMI
+> > 	  perf_event_nmi_handler()
+> > 	    (part of the chain is missing here)
+> > 	      perf_log_throttle()
+> > 	        perf_output_begin() /* events/ring_buffer.c */
+> > 		  rcu_read_lock()
+> > 		    rcu_lock_acquire()
+> > 		      lock_acquire()
+> > 		        trace_lock_acquire() --> perf_trace_foo
+> > 
+> > 			  ...
+> > 			    perf_callchain()
+> > 			      perf_callchain_user()
+> > 			        #PF (fully expected during a userspace callchain)
+> > 				  (some stuff, until the first __fentry)
+> > 				    perf_trace_function_call
+> > 				      perf_trace_buf_alloc()
+> > 				        perf_swevent_get_recursion_context()
+> > 					  *BOOM*
+> > 
+> > Now, supposedly we then take another #PF from get_recursion_context() or
+> > something, but that doesn't make sense. That should just work...
+> > 
+> > Can you figure out what's going wrong there? going with the RIP, this
+> > almost looks like 'swhash->recursion' goes splat, but again that makes
+> > no sense, that's a per-cpu variable.
 > 
-> Yes, a compiler barrier is sufficient.
-> 
-> You want me to pick it up?
+> That's true, I actually have tried several approach to avoid the issue, but
+> it trigger panic as long as we access 'swhash->recursion', the array should
+> be accessible but somehow broken, that's why I consider this a suspected
+> stack overflow, since nmi repeated and trace seems very long, but just a
+> suspect...
 
-Maybe other maintainers are more suitable than me to answer this :)
+You can simply increase the exception stack size to test this:
 
-Yeah, I think it's great if you could pick it.
+diff --git a/arch/x86/include/asm/page_64_types.h b/arch/x86/include/asm/page_64_types.h
+index a8d4ad856568..e9e2c3ba5923 100644
+--- a/arch/x86/include/asm/page_64_types.h
++++ b/arch/x86/include/asm/page_64_types.h
+@@ -15,7 +15,7 @@
+ #define THREAD_SIZE_ORDER	(2 + KASAN_STACK_ORDER)
+ #define THREAD_SIZE  (PAGE_SIZE << THREAD_SIZE_ORDER)
+ 
+-#define EXCEPTION_STACK_ORDER (0 + KASAN_STACK_ORDER)
++#define EXCEPTION_STACK_ORDER (1 + KASAN_STACK_ORDER)
+ #define EXCEPTION_STKSZ (PAGE_SIZE << EXCEPTION_STACK_ORDER)
+ 
+ #define IRQ_STACK_ORDER (2 + KASAN_STACK_ORDER)
 
-Thanks,
-Leo
+
+
+Also, something like this might be useful:
+
+
+diff --git a/arch/x86/include/asm/stacktrace.h b/arch/x86/include/asm/stacktrace.h
+index f248eb2ac2d4..4dfdbb9395eb 100644
+--- a/arch/x86/include/asm/stacktrace.h
++++ b/arch/x86/include/asm/stacktrace.h
+@@ -33,6 +33,8 @@ bool in_task_stack(unsigned long *stack, struct task_struct *task,
+ 
+ bool in_entry_stack(unsigned long *stack, struct stack_info *info);
+ 
++bool in_exception_stack_guard(unsigned long *stack);
++
+ int get_stack_info(unsigned long *stack, struct task_struct *task,
+ 		   struct stack_info *info, unsigned long *visit_mask);
+ bool get_stack_info_noinstr(unsigned long *stack, struct task_struct *task,
+diff --git a/arch/x86/kernel/dumpstack_64.c b/arch/x86/kernel/dumpstack_64.c
+index 5601b95944fa..056cf4f31599 100644
+--- a/arch/x86/kernel/dumpstack_64.c
++++ b/arch/x86/kernel/dumpstack_64.c
+@@ -126,6 +126,39 @@ static __always_inline bool in_exception_stack(unsigned long *stack, struct stac
+ 	return true;
+ }
+ 
++noinstr bool in_exception_stack_guard(unsigned long *stack)
++{
++	unsigned long begin, end, stk = (unsigned long)stack;
++	const struct estack_pages *ep;
++	unsigned int k;
++
++	BUILD_BUG_ON(N_EXCEPTION_STACKS != 6);
++
++	begin = (unsigned long)__this_cpu_read(cea_exception_stacks);
++	/*
++	 * Handle the case where stack trace is collected _before_
++	 * cea_exception_stacks had been initialized.
++	 */
++	if (!begin)
++		return false;
++
++	end = begin + sizeof(struct cea_exception_stacks);
++	/* Bail if @stack is outside the exception stack area. */
++	if (stk < begin || stk >= end)
++		return false;
++
++	/* Calc page offset from start of exception stacks */
++	k = (stk - begin) >> PAGE_SHIFT;
++	/* Lookup the page descriptor */
++	ep = &estack_pages[k];
++	/* Guard page? */
++	if (!ep->size)
++		return true;
++
++	return false;
++}
++
++
+ static __always_inline bool in_irq_stack(unsigned long *stack, struct stack_info *info)
+ {
+ 	unsigned long *end = (unsigned long *)this_cpu_read(hardirq_stack_ptr);
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index a58800973aed..8b043ed02c0d 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -459,6 +459,9 @@ DEFINE_IDTENTRY_DF(exc_double_fault)
+ 		handle_stack_overflow("kernel stack overflow (double-fault)",
+ 				      regs, address);
+ 	}
++
++	if (in_exception_stack_guard((void *)address))
++		pr_emerg("PANIC: exception stack guard: 0x%lx\n", address);
+ #endif
+ 
+ 	pr_emerg("PANIC: double fault, error_code: 0x%lx\n", error_code);
