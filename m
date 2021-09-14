@@ -2,155 +2,93 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C23C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 15:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4C4C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 17:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B05161247
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 15:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5842B61165
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 17:00:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235185AbhINPwV (ORCPT
+        id S229785AbhINRCJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Sep 2021 11:52:21 -0400
-Received: from mail-ot1-f53.google.com ([209.85.210.53]:39707 "EHLO
-        mail-ot1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234974AbhINPvy (ORCPT
+        Tue, 14 Sep 2021 13:02:09 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:58697 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229612AbhINRCJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Sep 2021 11:51:54 -0400
-Received: by mail-ot1-f53.google.com with SMTP id m7-20020a9d4c87000000b0051875f56b95so19086814otf.6;
-        Tue, 14 Sep 2021 08:50:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rnTeP9MXgZMY0ccObwY7v7BGqeBnLTs9n9kuMAleLtU=;
-        b=uMrQXwPkwZQI4u+fgY8x57N5Sf+XGFPy3a8dSWB+Q9NcZRmI6ihQh2yirR+Kw1z8wb
-         S8foRUr6DmH56Gf9Al9phiQ8tmlTb6RdYCeYhQeM1ENspC71mqbXTPVweD9wvJhfJckZ
-         oYy9Di6Yiy2kJ9eGCVAqN0tYECNV7FxYYEGu3tbVCEtkm9FOa3Cd0zCHlfpd6RYdbwgl
-         MdzjbEH4v9mdLQcBKOF6cKLjlYfiYkdocHc+Pto+rsMuey9sxsI3/Qe5zzgaIZT85UzM
-         8BrVvb+kFknkVNqmqiDNx9wa8cKiDgEuJQulv2HGZ5z0Ddkg0wXoeMy/Kt5Gj8lKN2Zn
-         dMnA==
-X-Gm-Message-State: AOAM531M2yFKqmvqKmA147eth7VylNoymW4pLD4038jkFlI6qi70G2Bu
-        xEJkvsG1hW/4035MUTneUQ==
-X-Google-Smtp-Source: ABdhPJyt6EAx6ms2TgwhAmHferJKtGDUssDln1uxGGEcAReE4RxZo6WxwJ5mhvyQn7pkyGrkHd3kuw==
-X-Received: by 2002:a05:6830:4124:: with SMTP id w36mr15592836ott.72.1631634636081;
-        Tue, 14 Sep 2021 08:50:36 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id a13sm2726549oos.4.2021.09.14.08.50.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Sep 2021 08:50:35 -0700 (PDT)
-Received: (nullmailer pid 3462681 invoked by uid 1000);
-        Tue, 14 Sep 2021 15:50:33 -0000
-Date:   Tue, 14 Sep 2021 10:50:33 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Anup Patel <anup.patel@wdc.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Darrick J. Wong" <djwong@kernel.org>, devicetree@vger.kernel.org,
-        Guo Ren <guoren@linux.alibaba.com>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Jiri Olsa <jolsa@redhat.com>,
-        John Garry <john.garry@huawei.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-        Nick Kossifidis <mick@ics.forth.gr>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Vincent Chen <vincent.chen@sifive.com>
-Subject: Re: [v3 06/10] dt-binding: pmu: Add RISC-V PMU DT bindings
-Message-ID: <YUDEyYQvjCo83h5B@robh.at.kernel.org>
-References: <20210910192757.2309100-1-atish.patra@wdc.com>
- <20210910192757.2309100-7-atish.patra@wdc.com>
+        Tue, 14 Sep 2021 13:02:09 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.1.2/8.16.0.43) with SMTP id 18EG1xvg032065
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Sep 2021 10:00:51 -0700
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 3b2kgac7mg-14
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Sep 2021 10:00:50 -0700
+Received: from intmgw002.48.prn1.facebook.com (2620:10d:c085:108::4) by
+ mail.thefacebook.com (2620:10d:c085:11d::5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.14; Tue, 14 Sep 2021 10:00:12 -0700
+Received: by devbig019.vll3.facebook.com (Postfix, from userid 137359)
+        id 2F3B540712A4; Tue, 14 Sep 2021 10:00:09 -0700 (PDT)
+From:   Andrii Nakryiko <andrii@kernel.org>
+To:     <bpf@vger.kernel.org>, <ast@kernel.org>, <daniel@iogearbox.net>,
+        <linux-perf-users@vger.kernel.org>, <acme@kernel.org>
+CC:     <andrii@kernel.org>, <kernel-team@fb.com>
+Subject: [PATCH perf] perf: ignore deprecation warning when using libbpf's btf__get_from_id()
+Date:   Tue, 14 Sep 2021 10:00:04 -0700
+Message-ID: <20210914170004.4185659-1-andrii@kernel.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210910192757.2309100-7-atish.patra@wdc.com>
+Content-Transfer-Encoding: 8BIT
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-FB-Source: Intern
+X-Proofpoint-ORIG-GUID: wuuMyuD17TwmdlT2AjLvXxg6aoGPIlWm
+X-Proofpoint-GUID: wuuMyuD17TwmdlT2AjLvXxg6aoGPIlWm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.391,FMLib:17.0.607.475
+ definitions=2021-09-14_07,2021-09-14_01,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0 bulkscore=0
+ mlxscore=0 priorityscore=1501 suspectscore=0 adultscore=0 malwarescore=0
+ mlxlogscore=957 lowpriorityscore=0 impostorscore=0 clxscore=1011
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2109030001 definitions=main-2109140099
+X-FB-Internal: deliver
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Sep 10, 2021 at 12:27:53PM -0700, Atish Patra wrote:
-> This patch adds the DT bindings for RISC-V PMU driver. It also defines
-> the interrupt related properties to allow counter overflow interrupt.
-> 
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> ---
->  .../devicetree/bindings/perf/riscv,pmu.yaml   | 51 +++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/perf/riscv,pmu.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/perf/riscv,pmu.yaml b/Documentation/devicetree/bindings/perf/riscv,pmu.yaml
-> new file mode 100644
-> index 000000000000..497caad63f16
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/perf/riscv,pmu.yaml
-> @@ -0,0 +1,51 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pmu/riscv,pmu.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: RISC-V PMU
-> +
-> +maintainers:
-> +  - Atish Patra <atish.patra@wdc.com>
-> +
-> +description:
-> +  The "Sscofpmf" extension allows the RISC-V PMU counters to overflow and
-> +  generate a local interrupt so that event sampling can be done from user-space.
-> +  The above said ISA extension is an optional extension to maintain backward
-> +  compatibility and will be included in privilege specification v1.12 . That's
-> +  why the interrupt property is marked as optional. The platforms with sscofpmf
-> +  extension should add this property to enable event sampling.
-> +  The device tree node with the compatible string is mandatory for any platform
-> +  that wants to use pmu counter start/stop methods using SBI PMU extension.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - riscv,pmu
-> +
-> +    description:
-> +      Should be "riscv,pmu".
+Perf code re-implements libbpf's btf__load_from_kernel_by_id() API as
+a weak function, presumably to dynamically link against old version of
+libbpf shared library. Unfortunately this causes compilation warning
+when perf is compiled against libbpf v0.6+.
 
-The schema already says this.
+For now, just ignore deprecation warning, but there might be a better
+solution, depending on perf's needs.
 
-Just 'pmu' isn't very specific. No version to attach here?
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+---
+ tools/perf/util/bpf-event.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> +
-> +  interrupts-extended:
-> +    minItems: 1
-> +    maxItems: 4095
-> +
-> +additionalProperties: false
-> +
-> +required:
-> +  - None
-> +optional:
-> +  - compatible
+diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+index 683f6d63560e..1a7112a87736 100644
+--- a/tools/perf/util/bpf-event.c
++++ b/tools/perf/util/bpf-event.c
+@@ -24,7 +24,10 @@
+ struct btf * __weak btf__load_from_kernel_by_id(__u32 id)
+ {
+        struct btf *btf;
++#pragma GCC diagnostic push
++#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+        int err = btf__get_from_id(id, &btf);
++#pragma GCC diagnostic pop
+ 
+        return err ? ERR_PTR(err) : btf;
+ }
+-- 
+2.30.2
 
-Besides 'optional' not being the in vocabulary, 'compatible' is never 
-optional.
-
-> +  - interrupts-extended
-> +
-> +examples:
-> +  - |
-> +    pmu {
-> +      compatible = "riscv,pmu";
-> +      interrupts-extended = <&cpu0intc 13>,
-> +                            <&cpu1intc 13>,
-> +                            <&cpu2intc 13>,
-> +                            <&cpu3intc 13>;
-> +    };
-> +...
-> -- 
-> 2.31.1
-> 
-> 
