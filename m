@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,
 	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C27FC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 01:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2B8C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 02:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 469F261157
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 01:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25CC260F51
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 02:02:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230109AbhINCAE (ORCPT
+        id S235869AbhINCDj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Sep 2021 22:00:04 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:50482 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229778AbhINCAE (ORCPT
+        Mon, 13 Sep 2021 22:03:39 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:45460 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235913AbhINCD2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Sep 2021 22:00:04 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R291e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=alimailimapcm10staff010182156082;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0UoKP4AU_1631584724;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0UoKP4AU_1631584724)
+        Mon, 13 Sep 2021 22:03:28 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0UoJjVVb_1631584927;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0UoJjVVb_1631584927)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 14 Sep 2021 09:58:45 +0800
+          Tue, 14 Sep 2021 10:02:08 +0800
 Subject: Re: [RFC PATCH] perf: fix panic by mark recursion inside
  perf_log_throttle
 To:     Peter Zijlstra <peterz@infradead.org>
@@ -53,13 +53,14 @@ References: <ff979a43-045a-dc56-64d1-2c31dd4db381@linux.alibaba.com>
  <20210910153839.GH4323@worktop.programming.kicks-ass.net>
  <f38987a5-dc36-a20d-8c5e-81e8ead5b4dc@linux.alibaba.com>
  <YT8m2B6D2yWc5Umq@hirez.programming.kicks-ass.net>
+ <YT8ptOoN0age04PQ@hirez.programming.kicks-ass.net>
 From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Message-ID: <3fb7c51f-696b-da70-1965-1dda9910cb14@linux.alibaba.com>
-Date:   Tue, 14 Sep 2021 09:58:44 +0800
+Message-ID: <6aefb972-3691-2b66-a189-97815df10a12@linux.alibaba.com>
+Date:   Tue, 14 Sep 2021 10:02:07 +0800
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:78.0)
  Gecko/20100101 Thunderbird/78.14.0
 MIME-Version: 1.0
-In-Reply-To: <YT8m2B6D2yWc5Umq@hirez.programming.kicks-ass.net>
+In-Reply-To: <YT8ptOoN0age04PQ@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -69,102 +70,56 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 2021/9/13 下午6:24, Peter Zijlstra wrote:
-> On Mon, Sep 13, 2021 at 11:00:47AM +0800, 王贇 wrote:
+On 2021/9/13 下午6:36, Peter Zijlstra wrote:
+> On Mon, Sep 13, 2021 at 12:24:24PM +0200, Peter Zijlstra wrote:
+> 
+> FWIW:
+> 
+>> I'm confused tho; where does the #DF come from? Because taking a #PF
+>> from NMI should be perfectly fine.
 >>
+>> AFAICT that callchain is something like:
 >>
->> On 2021/9/10 下午11:38, Peter Zijlstra wrote:
->>> On Thu, Sep 09, 2021 at 11:13:21AM +0800, 王贇 wrote:
->>>> When running with ftrace function enabled, we observed panic
->>>> as below:
->>>>
->>>>   traps: PANIC: double fault, error_code: 0x0
->>>>   [snip]
->>>>   RIP: 0010:perf_swevent_get_recursion_context+0x0/0x70
->>>>   [snip]
->>>>   Call Trace:
->>>>    <NMI>
->>>>    perf_trace_buf_alloc+0x26/0xd0
->>>>    perf_ftrace_function_call+0x18f/0x2e0
->>>>    kernelmode_fixup_or_oops+0x5/0x120
->>>>    __bad_area_nosemaphore+0x1b8/0x280
->>>>    do_user_addr_fault+0x410/0x920
->>>>    exc_page_fault+0x92/0x300
->>>>    asm_exc_page_fault+0x1e/0x30
->>>>   RIP: 0010:__get_user_nocheck_8+0x6/0x13
->>>>    perf_callchain_user+0x266/0x2f0
->>>>    get_perf_callchain+0x194/0x210
->>>>    perf_callchain+0xa3/0xc0
->>>>    perf_prepare_sample+0xa5/0xa60
->>>>    perf_event_output_forward+0x7b/0x1b0
->>>>    __perf_event_overflow+0x67/0x120
->>>>    perf_swevent_overflow+0xcb/0x110
->>>>    perf_swevent_event+0xb0/0xf0
->>>>    perf_tp_event+0x292/0x410
->>>>    perf_trace_run_bpf_submit+0x87/0xc0
->>>>    perf_trace_lock_acquire+0x12b/0x170
->>>>    lock_acquire+0x1bf/0x2e0
->>>>    perf_output_begin+0x70/0x4b0
->>>>    perf_log_throttle+0xe2/0x1a0
->>>>    perf_event_nmi_handler+0x30/0x50
->>>>    nmi_handle+0xba/0x2a0
->>>>    default_do_nmi+0x45/0xf0
->>>>    exc_nmi+0x155/0x170
->>>>    end_repeat_nmi+0x16/0x55
->>>
->>> kernel/events/Makefile has:
->>>
->>> ifdef CONFIG_FUNCTION_TRACER
->>> CFLAGS_REMOVE_core.o = $(CC_FLAGS_FTRACE)
->>> endif
->>>
->>> Which, afaict, should avoid the above, no?
+>> 	NMI
+>> 	  perf_event_nmi_handler()
+>> 	    (part of the chain is missing here)
+>> 	      perf_log_throttle()
+>> 	        perf_output_begin() /* events/ring_buffer.c */
+>> 		  rcu_read_lock()
+>> 		    rcu_lock_acquire()
+>> 		      lock_acquire()
+>> 		        trace_lock_acquire() --> perf_trace_foo
+> 
+> This function also calls perf_trace_buf_alloc(), and will have
+> incremented the recursion count, such that:
+> 
 >>
->> I'm afraid it's not working for this case, the
->> start point of tracing is at lock_acquire() which
->> is not from 'kernel/events/core', the following PF
->> related function are also not from 'core', prevent
->> ftrace on 'core' can't prevent this from happen...
+>> 			  ...
+>> 			    perf_callchain()
+>> 			      perf_callchain_user()
+>> 			        #PF (fully expected during a userspace callchain)
+>> 				  (some stuff, until the first __fentry)
+>> 				    perf_trace_function_call
+>> 				      perf_trace_buf_alloc()
+>> 				        perf_swevent_get_recursion_context()
+>> 					  *BOOM*
 > 
-> I'm confused tho; where does the #DF come from? Because taking a #PF
-> from NMI should be perfectly fine.
-> 
-> AFAICT that callchain is something like:
-> 
-> 	NMI
-> 	  perf_event_nmi_handler()
-> 	    (part of the chain is missing here)
-> 	      perf_log_throttle()
-> 	        perf_output_begin() /* events/ring_buffer.c */
-> 		  rcu_read_lock()
-> 		    rcu_lock_acquire()
-> 		      lock_acquire()
-> 		        trace_lock_acquire() --> perf_trace_foo
-> 
-> 			  ...
-> 			    perf_callchain()
-> 			      perf_callchain_user()
-> 			        #PF (fully expected during a userspace callchain)
-> 				  (some stuff, until the first __fentry)
-> 				    perf_trace_function_call
-> 				      perf_trace_buf_alloc()
-> 				        perf_swevent_get_recursion_context()
-> 					  *BOOM*
-> 
-> Now, supposedly we then take another #PF from get_recursion_context() or
-> something, but that doesn't make sense. That should just work...
-> 
-> Can you figure out what's going wrong there? going with the RIP, this
-> almost looks like 'swhash->recursion' goes splat, but again that makes
-> no sense, that's a per-cpu variable.
+> this one, if it wouldn't mysteriously explode, would find recursion and
+> terminate, except that seems to be going side-ways.
 
-That's true, I actually have tried several approach to avoid the issue, but
-it trigger panic as long as we access 'swhash->recursion', the array should
-be accessible but somehow broken, that's why I consider this a suspected
-stack overflow, since nmi repeated and trace seems very long, but just a
-suspect...
+Yes, it supposed to avoid recursion in the same context, but it never got
+chance to do that, the function and struct should all be fine, any idea
+in such situation what can trigger this kind of double fault?
 
 Regards,
 Michael Wang
 
 > 
+>> Now, supposedly we then take another #PF from get_recursion_context() or
+>> something, but that doesn't make sense. That should just work...
+>>
+>> Can you figure out what's going wrong there? going with the RIP, this
+>> almost looks like 'swhash->recursion' goes splat, but again that makes
+>> no sense, that's a per-cpu variable.
+>>
+>>
