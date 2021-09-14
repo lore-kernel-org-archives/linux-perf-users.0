@@ -7,26 +7,27 @@ X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25754C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 08:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD5EFC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 09:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EADAF60F24
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 08:24:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4DF661108
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 09:08:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229562AbhINIZl (ORCPT
+        id S230049AbhINJKL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Sep 2021 04:25:41 -0400
-Received: from foss.arm.com ([217.140.110.172]:40964 "EHLO foss.arm.com"
+        Tue, 14 Sep 2021 05:10:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:41602 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229458AbhINIZk (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Sep 2021 04:25:40 -0400
+        id S229656AbhINJKL (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 14 Sep 2021 05:10:11 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E0A61FB;
-        Tue, 14 Sep 2021 01:24:23 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 393A21FB;
+        Tue, 14 Sep 2021 02:08:54 -0700 (PDT)
 Received: from [10.57.94.84] (unknown [10.57.94.84])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 617863F719;
-        Tue, 14 Sep 2021 01:24:19 -0700 (PDT)
-Subject: Re: [PATCH v5 3/9] coresight: tmc-etf: Add comment for store ordering
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7A2F43F719;
+        Tue, 14 Sep 2021 02:08:50 -0700 (PDT)
+Subject: Re: [PATCH v5 2/9] coresight: tmc-etr: Add barrier after updating AUX
+ ring buffer
 To:     Leo Yan <leo.yan@linaro.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -52,14 +53,15 @@ To:     Leo Yan <leo.yan@linaro.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         coresight@lists.linaro.org
 References: <20210809111407.596077-1-leo.yan@linaro.org>
- <20210809111407.596077-4-leo.yan@linaro.org>
+ <20210809111407.596077-3-leo.yan@linaro.org>
+ <20210829105500.GB14461@leoy-ThinkPad-X240s>
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <60c20d8e-4386-5c54-4607-d9399713d2ef@arm.com>
-Date:   Tue, 14 Sep 2021 09:24:18 +0100
+Message-ID: <1aa47806-30a7-9a23-7c16-5a1665d20469@arm.com>
+Date:   Tue, 14 Sep 2021 10:08:49 +0100
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
  Gecko/20100101 Thunderbird/78.14.0
 MIME-Version: 1.0
-In-Reply-To: <20210809111407.596077-4-leo.yan@linaro.org>
+In-Reply-To: <20210829105500.GB14461@leoy-ThinkPad-X240s>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
@@ -67,37 +69,54 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 09/08/2021 12:14, Leo Yan wrote:
-> Since the function CS_LOCK() has contained memory barrier mb(), it
-> ensures the visibility of the AUX trace data before updating the
-> aux_head, thus it's needless to add any explicit barrier anymore.
+On 29/08/2021 11:55, Leo Yan wrote:
+> Hi Mathieu, Suzuki,
 > 
-> Add comment to make clear for the barrier usage for ETF.
+> On Mon, Aug 09, 2021 at 07:14:00PM +0800, Leo Yan wrote:
+>> Since a memory barrier is required between AUX trace data store and
+>> aux_head store, and the AUX trace data is filled with memcpy(), it's
+>> sufficient to use smp_wmb() so can ensure the trace data is visible
+>> prior to updating aux_head.
+>>
+>> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+>> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 > 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->   drivers/hwtracing/coresight/coresight-tmc-etf.c | 5 +++++
->   1 file changed, 5 insertions(+)
+> Could you pick up patches 02 and 03 in this series?  Please note,
+> patch 02 has the review tag from Suzuki, but I didn't receive the
+> review tag for patch 03.
 > 
-> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-> index cd0fb7bfba68..8debd4f40f06 100644
-> --- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
-> +++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-> @@ -553,6 +553,11 @@ static unsigned long tmc_update_etf_buffer(struct coresight_device *csdev,
->   	if (buf->snapshot)
->   		handle->head += to_read;
->   
-> +	/*
-> +	 * CS_LOCK() contains mb() so it can ensure visibility of the AUX trace
-> +	 * data before the aux_head is updated via perf_aux_output_end(), which
-> +	 * is expected by the perf ring buffer.
-> +	 */
->   	CS_LOCK(drvdata->base);
->   out:
->   	spin_unlock_irqrestore(&drvdata->spinlock, flags);
-> 
+> If anything need to follow up, just let me know.  Thanks!
 
-I will queue this.
+I have picked up both the patches.
 
 Thanks
 Suzuki
+
+> 
+>> ---
+>>   drivers/hwtracing/coresight/coresight-tmc-etr.c | 8 ++++++++
+>>   1 file changed, 8 insertions(+)
+>>
+>> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+>> index acdb59e0e661..13fd1fc730ed 100644
+>> --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
+>> +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+>> @@ -1563,6 +1563,14 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
+>>   	 */
+>>   	if (etr_perf->snapshot)
+>>   		handle->head += size;
+>> +
+>> +	/*
+>> +	 * Ensure that the AUX trace data is visible before the aux_head
+>> +	 * is updated via perf_aux_output_end(), as expected by the
+>> +	 * perf ring buffer.
+>> +	 */
+>> +	smp_wmb();
+>> +
+>>   out:
+>>   	/*
+>>   	 * Don't set the TRUNCATED flag in snapshot mode because 1) the
+>> -- 
+>> 2.25.1
+>>
+
