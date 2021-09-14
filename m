@@ -2,109 +2,155 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF140C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 11:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C23C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 15:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97CFB610D1
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 11:55:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B05161247
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Sep 2021 15:51:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232220AbhINL42 (ORCPT
+        id S235185AbhINPwV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Sep 2021 07:56:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57958 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232065AbhINL41 (ORCPT
+        Tue, 14 Sep 2021 11:52:21 -0400
+Received: from mail-ot1-f53.google.com ([209.85.210.53]:39707 "EHLO
+        mail-ot1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234974AbhINPvy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Sep 2021 07:56:27 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF365C061574;
-        Tue, 14 Sep 2021 04:55:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=lbaft6YWSRLzOdeUu5YKqGNKfNQ5U+1pdUU605d2s14=; b=k+cQuR4jbwUsDsSB8nX4cD+lbc
-        OYvYy290iOuaYRLCcT1sFLq7nAjtnal2BkG2YV9KirKJI+I0voCzFBvyb9PzN9v4ZpHJIqQsMh1uH
-        tUmPemdwiEWChCa37euQu1pg6OhFqcFmNASQ656X8gfDaq//ko0a8SSzdHVHToUjzH79nSbuzcvhV
-        LsZG4wbEyQ+arPzXSsgUPfi4HpKJmJ32NZS1caiA1osta3yCcqsPTg9mVCH6y1t1niZNo4jWpJCQf
-        uCOCJ68KZcSTwI+smqFTFHdYFykwIJz14BZWumWjnnYrfTQ7hYTVcQ/OOiMlQ9p6Oc5Jq5EGmy63r
-        fmAJx00Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mQ6uN-00EcUW-PY; Tue, 14 Sep 2021 11:47:51 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 69F2D30003A;
-        Tue, 14 Sep 2021 13:47:26 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5911A2D1FEA08; Tue, 14 Sep 2021 13:47:26 +0200 (CEST)
-Date:   Tue, 14 Sep 2021 13:47:26 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Tue, 14 Sep 2021 11:51:54 -0400
+Received: by mail-ot1-f53.google.com with SMTP id m7-20020a9d4c87000000b0051875f56b95so19086814otf.6;
+        Tue, 14 Sep 2021 08:50:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rnTeP9MXgZMY0ccObwY7v7BGqeBnLTs9n9kuMAleLtU=;
+        b=uMrQXwPkwZQI4u+fgY8x57N5Sf+XGFPy3a8dSWB+Q9NcZRmI6ihQh2yirR+Kw1z8wb
+         S8foRUr6DmH56Gf9Al9phiQ8tmlTb6RdYCeYhQeM1ENspC71mqbXTPVweD9wvJhfJckZ
+         oYy9Di6Yiy2kJ9eGCVAqN0tYECNV7FxYYEGu3tbVCEtkm9FOa3Cd0zCHlfpd6RYdbwgl
+         MdzjbEH4v9mdLQcBKOF6cKLjlYfiYkdocHc+Pto+rsMuey9sxsI3/Qe5zzgaIZT85UzM
+         8BrVvb+kFknkVNqmqiDNx9wa8cKiDgEuJQulv2HGZ5z0Ddkg0wXoeMy/Kt5Gj8lKN2Zn
+         dMnA==
+X-Gm-Message-State: AOAM531M2yFKqmvqKmA147eth7VylNoymW4pLD4038jkFlI6qi70G2Bu
+        xEJkvsG1hW/4035MUTneUQ==
+X-Google-Smtp-Source: ABdhPJyt6EAx6ms2TgwhAmHferJKtGDUssDln1uxGGEcAReE4RxZo6WxwJ5mhvyQn7pkyGrkHd3kuw==
+X-Received: by 2002:a05:6830:4124:: with SMTP id w36mr15592836ott.72.1631634636081;
+        Tue, 14 Sep 2021 08:50:36 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id a13sm2726549oos.4.2021.09.14.08.50.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Sep 2021 08:50:35 -0700 (PDT)
+Received: (nullmailer pid 3462681 invoked by uid 1000);
+        Tue, 14 Sep 2021 15:50:33 -0000
+Date:   Tue, 14 Sep 2021 10:50:33 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     linux-kernel@vger.kernel.org,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Anup Patel <anup.patel@wdc.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Darrick J. Wong" <djwong@kernel.org>, devicetree@vger.kernel.org,
+        Guo Ren <guoren@linux.alibaba.com>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
         Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Michael Petlan <mpetlan@redhat.com>,
-        "Frank Ch. Eigler" <fche@redhat.com>,
-        Song Liu <songliubraving@fb.com>, x86@kernel.org,
-        Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org
-Subject: Re: [PATCH v5 4/9] perf/x86: Add compiler barrier after updating BTS
-Message-ID: <YUCLzrMyx2yhBE7E@hirez.programming.kicks-ass.net>
-References: <20210809111407.596077-1-leo.yan@linaro.org>
- <20210809111407.596077-5-leo.yan@linaro.org>
- <20210829105657.GC14461@leoy-ThinkPad-X240s>
- <YUBwqGuQskkw328z@hirez.programming.kicks-ass.net>
- <20210914100517.GC1538480@leoy-ThinkPad-X240s>
+        John Garry <john.garry@huawei.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+        Nick Kossifidis <mick@ics.forth.gr>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Vincent Chen <vincent.chen@sifive.com>
+Subject: Re: [v3 06/10] dt-binding: pmu: Add RISC-V PMU DT bindings
+Message-ID: <YUDEyYQvjCo83h5B@robh.at.kernel.org>
+References: <20210910192757.2309100-1-atish.patra@wdc.com>
+ <20210910192757.2309100-7-atish.patra@wdc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210914100517.GC1538480@leoy-ThinkPad-X240s>
+In-Reply-To: <20210910192757.2309100-7-atish.patra@wdc.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Sep 14, 2021 at 06:05:17PM +0800, Leo Yan wrote:
-> Hi Peter,
+On Fri, Sep 10, 2021 at 12:27:53PM -0700, Atish Patra wrote:
+> This patch adds the DT bindings for RISC-V PMU driver. It also defines
+> the interrupt related properties to allow counter overflow interrupt.
 > 
-> On Tue, Sep 14, 2021 at 11:51:36AM +0200, Peter Zijlstra wrote:
-> > On Sun, Aug 29, 2021 at 06:56:57PM +0800, Leo Yan wrote:
-> > > Hi Peter, or any x86 maintainer,
-> > > 
-> > > On Mon, Aug 09, 2021 at 07:14:02PM +0800, Leo Yan wrote:
-> > > > Since BTS is coherent, simply add a compiler barrier to separate the BTS
-> > > > update and aux_head store.
-> > > 
-> > > Could you reivew this patch and check if BTS needs the comipler
-> > > barrier in this case?  Thanks.
-> > 
-> > Yes, a compiler barrier is sufficient.
-> > 
-> > You want me to pick it up?
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> ---
+>  .../devicetree/bindings/perf/riscv,pmu.yaml   | 51 +++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/perf/riscv,pmu.yaml
 > 
-> Maybe other maintainers are more suitable than me to answer this :)
-> 
-> Yeah, I think it's great if you could pick it.
+> diff --git a/Documentation/devicetree/bindings/perf/riscv,pmu.yaml b/Documentation/devicetree/bindings/perf/riscv,pmu.yaml
+> new file mode 100644
+> index 000000000000..497caad63f16
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/perf/riscv,pmu.yaml
+> @@ -0,0 +1,51 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pmu/riscv,pmu.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: RISC-V PMU
+> +
+> +maintainers:
+> +  - Atish Patra <atish.patra@wdc.com>
+> +
+> +description:
+> +  The "Sscofpmf" extension allows the RISC-V PMU counters to overflow and
+> +  generate a local interrupt so that event sampling can be done from user-space.
+> +  The above said ISA extension is an optional extension to maintain backward
+> +  compatibility and will be included in privilege specification v1.12 . That's
+> +  why the interrupt property is marked as optional. The platforms with sscofpmf
+> +  extension should add this property to enable event sampling.
+> +  The device tree node with the compatible string is mandatory for any platform
+> +  that wants to use pmu counter start/stop methods using SBI PMU extension.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - riscv,pmu
+> +
+> +    description:
+> +      Should be "riscv,pmu".
 
-OK, done.
+The schema already says this.
+
+Just 'pmu' isn't very specific. No version to attach here?
+
+> +
+> +  interrupts-extended:
+> +    minItems: 1
+> +    maxItems: 4095
+> +
+> +additionalProperties: false
+> +
+> +required:
+> +  - None
+> +optional:
+> +  - compatible
+
+Besides 'optional' not being the in vocabulary, 'compatible' is never 
+optional.
+
+> +  - interrupts-extended
+> +
+> +examples:
+> +  - |
+> +    pmu {
+> +      compatible = "riscv,pmu";
+> +      interrupts-extended = <&cpu0intc 13>,
+> +                            <&cpu1intc 13>,
+> +                            <&cpu2intc 13>,
+> +                            <&cpu3intc 13>;
+> +    };
+> +...
+> -- 
+> 2.31.1
+> 
+> 
