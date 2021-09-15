@@ -2,235 +2,162 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-21.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 712E0C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Sep 2021 15:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A21C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Sep 2021 20:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5379C61247
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Sep 2021 15:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D4F561108
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Sep 2021 20:56:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238034AbhIOPTS (ORCPT
+        id S232073AbhIOU5t (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Sep 2021 11:19:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42774 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234219AbhIOPTG (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Sep 2021 11:19:06 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79441C061574;
-        Wed, 15 Sep 2021 08:17:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=lE5kf7OISKlmTZmmgfiMeKh8f7VRtSv6f6uAFhkQPd8=; b=DTnmtBm9d6aGHwLICCv1Mnk1Tl
-        0rdkj6iZwR7Ylr4AsvspVewzAMlj7CHujgfTbyerJW03D+ClesOlIPv020grFF39Pbn6CXcyNKgIY
-        UUYmrSv8oK1Tl0HwYwgVWJZzk/umB9Z1ntJiUn0pgNo7Ibih5RtXkhD3OZbBnL2NYC61PVv6mqdpI
-        9bh8KjBdnJLXsORzvImv2pbm9UeMhhTMP5aXtrk16Jm+QkOZNXa3caoNnfIyOodp/A2vxhWJcz4++
-        tFrHDYrthotUHlTI5mI5zjChbBp4s+TdGfs0jFaaMdQgFXKSuAtNHgLhU0AjbfDbnSgTBBkC1mDXl
-        N9Psv2UQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mQWf6-003QAE-CY; Wed, 15 Sep 2021 15:17:24 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 45A7730003A;
-        Wed, 15 Sep 2021 17:17:22 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1D05220CB3027; Wed, 15 Sep 2021 17:17:22 +0200 (CEST)
-Date:   Wed, 15 Sep 2021 17:17:22 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     =?utf-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Wed, 15 Sep 2021 16:57:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43720 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231830AbhIOU5t (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 15 Sep 2021 16:57:49 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 549B06108F;
+        Wed, 15 Sep 2021 20:56:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1631739389;
+        bh=pBGc6MBPlKmkYJWBqJlD5hd44E7P23W0e7q7BSRmPAg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gdelZNiZUfwtatkAqqlDS+KgxqYlzfFAGkky5/chQnW925kMBiym+E7CESFMuS2oP
+         ZeVHIAbY2L6Yxe2aWUH3HTuNb+cY5xuHubt6aDW157N2m744v6no2zmmwP471++hjA
+         kbo++TRHNhRO6B4b8BxGuv3iWnHuWuVUBG+K17cLMNBWSpCx5jgBd8t/U4K5vc+Jfu
+         JZVzGxJoE+EhcUGhxZoeBGAp43b54VMdKX1wUbd9NSiXdtWRDbZy3RGHYize1VR/GB
+         Osmrp14v5ZtDFYfqzLzxS3OL2lIOEx5mjL+4NiA3G93jusVnA3igALWNRH9m358/tx
+         q8rFkSPYqhCvg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 40F894038F; Wed, 15 Sep 2021 17:56:26 -0300 (-03)
+Date:   Wed, 15 Sep 2021 17:56:26 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Muhammad Falak R Wani <falakreyaz@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
         Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Song Liu <songliubraving@fb.com>,
         John Fastabend <john.fastabend@gmail.com>,
         KP Singh <kpsingh@kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-perf-users@vger.kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-kernel@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <netdev@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <bpf@vger.kernel.org>, jroedel@suse.de, x86@kernel.org
-Subject: [PATCH] x86/dumpstack/64: Add guard pages to stack_info
-Message-ID: <YUIOgmOfnOqPrE+z@hirez.programming.kicks-ass.net>
-References: <ff979a43-045a-dc56-64d1-2c31dd4db381@linux.alibaba.com>
- <20210910153839.GH4323@worktop.programming.kicks-ass.net>
- <f38987a5-dc36-a20d-8c5e-81e8ead5b4dc@linux.alibaba.com>
- <YT8m2B6D2yWc5Umq@hirez.programming.kicks-ass.net>
- <3fb7c51f-696b-da70-1965-1dda9910cb14@linux.alibaba.com>
- <YUB5VchM3a/MiZpX@hirez.programming.kicks-ass.net>
- <3f26f7a2-0a09-056a-3a7a-4795b6723b60@linux.alibaba.com>
+        Quentin Monnet <quentin@isovalent.com>,
+        Yu Kuai <yukuai3@huawei.com>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Subject: Re: [PATCH] perflib: deprecate bpf_map__resize in favor of
+ bpf_map_set_max_entries
+Message-ID: <YUJd+jo1W+mdK0Fv@kernel.org>
+References: <20210815103610.27887-1-falakreyaz@gmail.com>
+ <CAEf4BzZ+3hM9oPxdXsxXRKJD2TCmpXPnkWz1LPnP7mDagprdyA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3f26f7a2-0a09-056a-3a7a-4795b6723b60@linux.alibaba.com>
+In-Reply-To: <CAEf4BzZ+3hM9oPxdXsxXRKJD2TCmpXPnkWz1LPnP7mDagprdyA@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 15, 2021 at 09:51:57AM +0800, 王贇 wrote:
-
-> > +
-> > +	if (in_exception_stack_guard((void *)address))
-> > +		pr_emerg("PANIC: exception stack guard: 0x%lx\n", address);
-> >  #endif
-> >  
-> >  	pr_emerg("PANIC: double fault, error_code: 0x%lx\n", error_code);
-> > 
+Em Mon, Aug 16, 2021 at 12:28:14PM -0700, Andrii Nakryiko escreveu:
+> On Sun, Aug 15, 2021 at 3:36 AM Muhammad Falak R Wani
+> <falakreyaz@gmail.com> wrote:
+> >
+> > As a part of libbpf 1.0 plan[0], this patch deprecates use of
+> > bpf_map__resize in favour of bpf_map__set_max_entries.
+> >
+> > Reference: https://github.com/libbpf/libbpf/issues/304
+> > [0]: https://github.com/libbpf/libbpf/wiki/Libbpf:-the-road-to-v1.0#libbpfh-high-level-apis
+> >
+> > Signed-off-by: Muhammad Falak R Wani <falakreyaz@gmail.com>
+> > ---
 > 
-> The panic triggered as below after the stack size recovered, I found this info
-> could be helpful, maybe we should keep it?
+> All looks good, there is an opportunity to simplify the code a bit (see below).
+> 
+> Arnaldo, I assume you'll take this through your tree or you'd like us
 
-Could you please test this?
+Yeah, I'll take the opportunity to try to improve that detection of
+libbpf version, etc.
 
----
-Subject: x86/dumpstack/64: Add guard pages to stack_info
-From: Peter Zijlstra <peterz@infradead.org>
-Date: Wed Sep 15 17:12:59 CEST 2021
+- Arnaldo
 
-Explicitly add the exception stack guard pages to stack_info and
-report on them from #DF.
+> to take it through bpf-next?
+> 
+> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> 
+> >  tools/perf/util/bpf_counter.c        | 8 ++++----
+> >  tools/perf/util/bpf_counter_cgroup.c | 8 ++++----
+> >  2 files changed, 8 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
+> > index ba0f20853651..ced2dac31dcf 100644
+> > --- a/tools/perf/util/bpf_counter.c
+> > +++ b/tools/perf/util/bpf_counter.c
+> > @@ -127,9 +127,9 @@ static int bpf_program_profiler_load_one(struct evsel *evsel, u32 prog_id)
+> >
+> >         skel->rodata->num_cpu = evsel__nr_cpus(evsel);
+> >
+> > -       bpf_map__resize(skel->maps.events, evsel__nr_cpus(evsel));
+> > -       bpf_map__resize(skel->maps.fentry_readings, 1);
+> > -       bpf_map__resize(skel->maps.accum_readings, 1);
+> > +       bpf_map__set_max_entries(skel->maps.events, evsel__nr_cpus(evsel));
+> > +       bpf_map__set_max_entries(skel->maps.fentry_readings, 1);
+> > +       bpf_map__set_max_entries(skel->maps.accum_readings, 1);
+> >
+> >         prog_name = bpf_target_prog_name(prog_fd);
+> >         if (!prog_name) {
+> > @@ -399,7 +399,7 @@ static int bperf_reload_leader_program(struct evsel *evsel, int attr_map_fd,
+> >                 return -1;
+> >         }
+> >
+> > -       bpf_map__resize(skel->maps.events, libbpf_num_possible_cpus());
+> > +       bpf_map__set_max_entries(skel->maps.events, libbpf_num_possible_cpus());
+> 
+> If you set max_entries to 0 (or just skip specifying it) for events
+> map in util/bpf_skel/bperf_cgroup.bpf.c, you won't need to resize it,
+> libbpf will automatically size it to number of possible CPUs.
+> 
+> >         err = bperf_leader_bpf__load(skel);
+> >         if (err) {
+> >                 pr_err("Failed to load leader skeleton\n");
+> > diff --git a/tools/perf/util/bpf_counter_cgroup.c b/tools/perf/util/bpf_counter_cgroup.c
+> > index 89aa5e71db1a..cbc6c2bca488 100644
+> > --- a/tools/perf/util/bpf_counter_cgroup.c
+> > +++ b/tools/perf/util/bpf_counter_cgroup.c
+> > @@ -65,14 +65,14 @@ static int bperf_load_program(struct evlist *evlist)
+> >
+> >         /* we need one copy of events per cpu for reading */
+> >         map_size = total_cpus * evlist->core.nr_entries / nr_cgroups;
+> > -       bpf_map__resize(skel->maps.events, map_size);
+> > -       bpf_map__resize(skel->maps.cgrp_idx, nr_cgroups);
+> > +       bpf_map__set_max_entries(skel->maps.events, map_size);
+> > +       bpf_map__set_max_entries(skel->maps.cgrp_idx, nr_cgroups);
+> >         /* previous result is saved in a per-cpu array */
+> >         map_size = evlist->core.nr_entries / nr_cgroups;
+> > -       bpf_map__resize(skel->maps.prev_readings, map_size);
+> > +       bpf_map__set_max_entries(skel->maps.prev_readings, map_size);
+> >         /* cgroup result needs all events (per-cpu) */
+> >         map_size = evlist->core.nr_entries;
+> > -       bpf_map__resize(skel->maps.cgrp_readings, map_size);
+> > +       bpf_map__set_max_entries(skel->maps.cgrp_readings, map_size);
+> >
+> >         set_max_rlimit();
+> >
+> > --
+> > 2.17.1
+> >
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- arch/x86/include/asm/cpu_entry_area.h |    3 +++
- arch/x86/include/asm/stacktrace.h     |    3 ++-
- arch/x86/kernel/dumpstack_64.c        |   17 ++++++++++++++++-
- arch/x86/kernel/traps.c               |   17 ++++++++++++++++-
- 4 files changed, 37 insertions(+), 3 deletions(-)
+-- 
 
---- a/arch/x86/include/asm/cpu_entry_area.h
-+++ b/arch/x86/include/asm/cpu_entry_area.h
-@@ -61,6 +61,9 @@ enum exception_stack_ordering {
- #define CEA_ESTACK_OFFS(st)					\
- 	offsetof(struct cea_exception_stacks, st## _stack)
- 
-+#define CEA_EGUARD_OFFS(st)					\
-+	offsetof(struct cea_exception_stacks, st## _stack_guard)
-+
- #define CEA_ESTACK_PAGES					\
- 	(sizeof(struct cea_exception_stacks) / PAGE_SIZE)
- 
---- a/arch/x86/include/asm/stacktrace.h
-+++ b/arch/x86/include/asm/stacktrace.h
-@@ -14,13 +14,14 @@
- #include <asm/switch_to.h>
- 
- enum stack_type {
--	STACK_TYPE_UNKNOWN,
-+	STACK_TYPE_UNKNOWN = 0,
- 	STACK_TYPE_TASK,
- 	STACK_TYPE_IRQ,
- 	STACK_TYPE_SOFTIRQ,
- 	STACK_TYPE_ENTRY,
- 	STACK_TYPE_EXCEPTION,
- 	STACK_TYPE_EXCEPTION_LAST = STACK_TYPE_EXCEPTION + N_EXCEPTION_STACKS-1,
-+	STACK_TYPE_GUARD = 0x80,
- };
- 
- struct stack_info {
---- a/arch/x86/kernel/dumpstack_64.c
-+++ b/arch/x86/kernel/dumpstack_64.c
-@@ -32,9 +32,15 @@ const char *stack_type_name(enum stack_t
- {
- 	BUILD_BUG_ON(N_EXCEPTION_STACKS != 6);
- 
-+	if (type == STACK_TYPE_TASK)
-+		return "TASK";
-+
- 	if (type == STACK_TYPE_IRQ)
- 		return "IRQ";
- 
-+	if (type == STACK_TYPE_SOFTIRQ)
-+		return "SOFTIRQ";
-+
- 	if (type == STACK_TYPE_ENTRY) {
- 		/*
- 		 * On 64-bit, we have a generic entry stack that we
-@@ -63,6 +69,11 @@ struct estack_pages {
- };
- 
- #define EPAGERANGE(st)							\
-+	[PFN_DOWN(CEA_EGUARD_OFFS(st))] = {				\
-+		.offs	= CEA_EGUARD_OFFS(st),				\
-+		.size	= PAGE_SIZE,					\
-+		.type	= STACK_TYPE_GUARD +				\
-+			  STACK_TYPE_EXCEPTION + ESTACK_ ##st, },	\
- 	[PFN_DOWN(CEA_ESTACK_OFFS(st)) ...				\
- 	 PFN_DOWN(CEA_ESTACK_OFFS(st) + CEA_ESTACK_SIZE(st) - 1)] = {	\
- 		.offs	= CEA_ESTACK_OFFS(st),				\
-@@ -111,10 +122,11 @@ static __always_inline bool in_exception
- 	k = (stk - begin) >> PAGE_SHIFT;
- 	/* Lookup the page descriptor */
- 	ep = &estack_pages[k];
--	/* Guard page? */
-+	/* unknown entry */
- 	if (!ep->size)
- 		return false;
- 
-+
- 	begin += (unsigned long)ep->offs;
- 	end = begin + (unsigned long)ep->size;
- 	regs = (struct pt_regs *)end - 1;
-@@ -193,6 +205,9 @@ int get_stack_info(unsigned long *stack,
- 	if (!get_stack_info_noinstr(stack, task, info))
- 		goto unknown;
- 
-+	if (info->type & STACK_TYPE_GUARD)
-+		goto unknown;
-+
- 	/*
- 	 * Make sure we don't iterate through any given stack more than once.
- 	 * If it comes up a second time then there's something wrong going on:
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -461,6 +461,19 @@ DEFINE_IDTENTRY_DF(exc_double_fault)
- 	}
- #endif
- 
-+#ifdef CONFIG_X86_64
-+	{
-+		struct stack_info info;
-+
-+		if (get_stack_info_noinstr((void *)address, current, &info) &&
-+		    info.type & STACK_TYPE_GUARD) {
-+			const char *name = stack_type_name(info.type & ~STACK_TYPE_GUARD);
-+			pr_emerg("BUG: %s stack guard hit at %p (stack is %p..%p)\n",
-+				 name, (void *)address, info.begin, info.end);
-+		}
-+	}
-+#endif
-+
- 	pr_emerg("PANIC: double fault, error_code: 0x%lx\n", error_code);
- 	die("double fault", regs, error_code);
- 	panic("Machine halted.");
-@@ -708,7 +721,9 @@ asmlinkage __visible noinstr struct pt_r
- 	sp    = regs->sp;
- 	stack = (unsigned long *)sp;
- 
--	if (!get_stack_info_noinstr(stack, current, &info) || info.type == STACK_TYPE_ENTRY ||
-+	if (!get_stack_info_noinstr(stack, current, &info) ||
-+	    info.type & STACK_TYPE_GUARD ||
-+	    info.type == STACK_TYPE_ENTRY ||
- 	    info.type >= STACK_TYPE_EXCEPTION_LAST)
- 		sp = __this_cpu_ist_top_va(VC2);
- 
+- Arnaldo
