@@ -2,215 +2,182 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B5D2C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Sep 2021 01:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A915C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Sep 2021 10:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 379F261216
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Sep 2021 01:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E8B861279
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Sep 2021 10:55:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231421AbhIOBxT (ORCPT
+        id S232433AbhIOK4X (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Sep 2021 21:53:19 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:34217 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229489AbhIOBxS (ORCPT
+        Wed, 15 Sep 2021 06:56:23 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:56689 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232424AbhIOK4X (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Sep 2021 21:53:18 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=alimailimapcm10staff010182156082;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0UoQhdYh_1631670717;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0UoQhdYh_1631670717)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 15 Sep 2021 09:51:58 +0800
-Subject: Re: [RFC PATCH] perf: fix panic by mark recursion inside
- perf_log_throttle
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
+        Wed, 15 Sep 2021 06:56:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1631703304;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=k6aRK0JmCvGFVEbgpz/kyUiWETl6aFzhRXtN8PVxUb8=;
+        b=GO7C4To77CVdLvHWxAvdFMfWSMxSPCPvwrXyEsr73BfzsqaL9XffR6s4VPl+MXE4peLQ1Y
+        WAwydLZyjjjsQ9nwY8EYpe/8dGivYclWIbyUsF3iK78d9tfkIAnZGVX5oVaBCw8BmSuWqy
+        AiKqop3y31eNQJKHF9q8j6zagBgAvf0=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-415-0cr3qQ13MvuDLcXvshG3QQ-1; Wed, 15 Sep 2021 06:55:03 -0400
+X-MC-Unique: 0cr3qQ13MvuDLcXvshG3QQ-1
+Received: by mail-ed1-f72.google.com with SMTP id v13-20020a056402174d00b003c25d6b2f13so1388233edx.4
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Sep 2021 03:55:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=k6aRK0JmCvGFVEbgpz/kyUiWETl6aFzhRXtN8PVxUb8=;
+        b=50O03pB/PV2Ux1F4CRdrOhaUDac4JQnxPsh8tCqg+shniXVMzvpXesVqaaLQ7uS/AO
+         NWcqcyLDYK8//8h8S4a6GQVIm0h8Sj8ekCzzkWCVaFZ4/tFzFoBq2hbuo3XsCRe8io7U
+         KadC1ujvESUOSC4+KzLT/eDfM7uY52j8iXUxDDzS/27gMHGhL6eb+SfY/rf5X21Tj7Df
+         2T6SEyR4U3JGu1JbP48tCAejkxBH5td7KOV+CULRDHWS3OtpL08GHsmbcjBdDCyVPT9R
+         f7QX49XRW8c8J7ihaL3uwXK9s8wqL0ezhO6yKl5C1tRPcFOq4r8DBg0JqRKzg4FZUMOs
+         Faig==
+X-Gm-Message-State: AOAM5307U+GnsK4h0AS/0C5s+uB+NHd2qr8Zr7uhAZBVVfpYI4wBwE6W
+        pVffCogvPgh7RGTQ4ITmx9JXn4zVPHkbtAYK2NkdySnyI7U3DkqGLhL7oFTgG41Jp1JFDw+qOke
+        5Ve2EFy5ijdlGqHHwcn/yOXfRS9ptJg==
+X-Received: by 2002:aa7:cad0:: with SMTP id l16mr17582607edt.16.1631703301959;
+        Wed, 15 Sep 2021 03:55:01 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz4t55aAkeNk6nM18qjvbS2OL7h+fFzS0jLz2fm5kg2tg67M4vRbbrMKMgG904mzqZi6lW0Xg==
+X-Received: by 2002:aa7:cad0:: with SMTP id l16mr17582585edt.16.1631703301655;
+        Wed, 15 Sep 2021 03:55:01 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
+        by smtp.gmail.com with ESMTPSA id r16sm6963174edt.15.2021.09.15.03.55.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Sep 2021 03:55:00 -0700 (PDT)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 38B8618033D; Wed, 15 Sep 2021 12:55:00 +0200 (CEST)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Andrii Nakryiko <andrii@kernel.org>,
+        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-perf-users@vger.kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-kernel@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <netdev@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <bpf@vger.kernel.org>
-References: <ff979a43-045a-dc56-64d1-2c31dd4db381@linux.alibaba.com>
- <20210910153839.GH4323@worktop.programming.kicks-ass.net>
- <f38987a5-dc36-a20d-8c5e-81e8ead5b4dc@linux.alibaba.com>
- <YT8m2B6D2yWc5Umq@hirez.programming.kicks-ass.net>
- <3fb7c51f-696b-da70-1965-1dda9910cb14@linux.alibaba.com>
- <YUB5VchM3a/MiZpX@hirez.programming.kicks-ass.net>
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Message-ID: <3f26f7a2-0a09-056a-3a7a-4795b6723b60@linux.alibaba.com>
-Date:   Wed, 15 Sep 2021 09:51:57 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:78.0)
- Gecko/20100101 Thunderbird/78.14.0
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH perf] perf: ignore deprecation warning when using
+ libbpf's btf__get_from_id()
+In-Reply-To: <CAEf4BzYzCQ4yuNKi3OCNqTXGXJQXt1XXNuhCT5oVF=khx85bXQ@mail.gmail.com>
+References: <20210914170004.4185659-1-andrii@kernel.org>
+ <YUDoNX0eUndsPCu+@krava>
+ <CAEf4BzbU8Ok-7Fsp1uGZ4F6b5GPb58fk1YKgnGwx9+sUBq71tA@mail.gmail.com>
+ <YUDxqnJhjnpdl6vv@kernel.org>
+ <CAEf4BzYzCQ4yuNKi3OCNqTXGXJQXt1XXNuhCT5oVF=khx85bXQ@mail.gmail.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Wed, 15 Sep 2021 12:55:00 +0200
+Message-ID: <87y27y5csb.fsf@toke.dk>
 MIME-Version: 1.0
-In-Reply-To: <YUB5VchM3a/MiZpX@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Andrii Nakryiko <andrii.nakryiko@gmail.com> writes:
 
+> On Tue, Sep 14, 2021 at 12:02 PM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+>>
+>> Em Tue, Sep 14, 2021 at 11:28:28AM -0700, Andrii Nakryiko escreveu:
+>> > On Tue, Sep 14, 2021 at 11:21 AM Jiri Olsa <jolsa@redhat.com> wrote:
+>> > >
+>> > > On Tue, Sep 14, 2021 at 10:00:04AM -0700, Andrii Nakryiko wrote:
+>> > > > Perf code re-implements libbpf's btf__load_from_kernel_by_id() API=
+ as
+>> > > > a weak function, presumably to dynamically link against old versio=
+n of
+>> > > > libbpf shared library. Unfortunately this causes compilation warni=
+ng
+>> > > > when perf is compiled against libbpf v0.6+.
+>> > > >
+>> > > > For now, just ignore deprecation warning, but there might be a bet=
+ter
+>> > > > solution, depending on perf's needs.
+>> > >
+>> > > HI,
+>> > > the problem we tried to solve is when perf is using symbols
+>> > > which are not yet available in released libbpf.. but it all
+>> > > linkes in default perf build because it's linked statically
+>> > > libbpf.a in the tree
+>> > >
+>> >
+>> > If you are always statically linking libbpf into perf, there is no
+>> > need to implement this __weak shim. Libbpf is never going to deprecate
+>> > an API if a new/replacement API hasn't been at least in a previous
+>> > released version. So in this case btf__load_from_kernel_by_id() was
+>> > added in libbpf 0.5, and btf__get_from_id() was marked deprecated in
+>> > libbpf 0.6 (not yet released, of course). So with that, do you still
+>> > think we need this __weak re-implementation?
+>> >
+>> > I was wondering if this was done to make latest perf code compile
+>> > against some old libbpf source code or dynamically linked against old
+>> > libbpf. But if that's not the case, the fix should be a removal of
+>> > __weak btf__load_from_kernel_by_id().
+>>
+>> It was made to build against the libbpf that comes with fedora 34, the
+>> distro I'm using, which is:
+>>
+>> =E2=AC=A2[acme@toolbox perf]$ sudo dnf install libbpf-devel
+>> Package libbpf-devel-2:0.4.0-1.fc34.x86_64 is already installed.
+>> Dependencies resolved.
+>> Nothing to do.
+>> Complete!
+>> =E2=AC=A2[acme@toolbox perf]$ cat /etc/redhat-release
+>> Fedora release 34 (Thirty Four)
+>>
+>> And we have 'make -C tools/perf build-test' that has one entry to build
+>> with LIBBPF_EXTERNAL=3D1, i.e. using whatever libbpf-devel package is
+>> installed in the distro, in addtion to statically linking with the
+>> libbpf in the kernel sources.
+>>
+>> That is done because several distros are linking perf with the libbpf
+>> they ship.
+>>
+>> When I merged the latest upstream this test failed, and I realized that
+>> some files in tools/perf/ had changed to make use of a new function and
+>> that was the reason for the build test failure.
+>>
+>> So I tried to provide a transition help for these cases, initially as a
+>> feature test that would look if that new function was available and if
+>> not, provide the fallback, but then ended up following Jiri's suggestion
+>> for a __weak function, as that involved less coding.
+>>
+>
+> Ok, that's cool, then my "fix" should be fine for now. Can you please
+> land it in perf/core to unblock Stephen's (cc'ed) build failure when
+> merging perf and bpf-next trees?
+>
+> Also it's good to keep in mind that libbpf is now providing
+> LIBBPF_MAJOR_VERSION and LIBBPF_MINOR_VERSION macro, so when
+> statically linking you should be able to use that to detect libbpf
+> version. For shared library cases we should probably also add runtime
+> APIs (e.g., int libbpf_major_version(void), int
+> libbpf_minor_version(void), const char *libbpf_version(void)) so that
+> you can do more detection based on libbpf version at runtime. Let me
+> know if it's something that would be helpful.
 
-On 2021/9/14 下午6:28, Peter Zijlstra wrote:
-[snip]
-> 
-> You can simply increase the exception stack size to test this:
-> 
-> diff --git a/arch/x86/include/asm/page_64_types.h b/arch/x86/include/asm/page_64_types.h
-> index a8d4ad856568..e9e2c3ba5923 100644
-> --- a/arch/x86/include/asm/page_64_types.h
-> +++ b/arch/x86/include/asm/page_64_types.h
-> @@ -15,7 +15,7 @@
->  #define THREAD_SIZE_ORDER	(2 + KASAN_STACK_ORDER)
->  #define THREAD_SIZE  (PAGE_SIZE << THREAD_SIZE_ORDER)
->  
-> -#define EXCEPTION_STACK_ORDER (0 + KASAN_STACK_ORDER)
-> +#define EXCEPTION_STACK_ORDER (1 + KASAN_STACK_ORDER)
->  #define EXCEPTION_STKSZ (PAGE_SIZE << EXCEPTION_STACK_ORDER)
->  
->  #define IRQ_STACK_ORDER (2 + KASAN_STACK_ORDER)
+Yes, please! We're currently using this horror to be able to print the
+libbpf version being used by xdp-tools:
 
-It's working in this case, no more panic.
+https://github.com/xdp-project/xdp-tools/blob/master/lib/util/util.c#L100
 
-> 
-> 
-> 
-> Also, something like this might be useful:
-> 
-> 
-> diff --git a/arch/x86/include/asm/stacktrace.h b/arch/x86/include/asm/stacktrace.h
-> index f248eb2ac2d4..4dfdbb9395eb 100644
-> --- a/arch/x86/include/asm/stacktrace.h
-> +++ b/arch/x86/include/asm/stacktrace.h
-> @@ -33,6 +33,8 @@ bool in_task_stack(unsigned long *stack, struct task_struct *task,
->  
->  bool in_entry_stack(unsigned long *stack, struct stack_info *info);
->  
-> +bool in_exception_stack_guard(unsigned long *stack);
-> +
->  int get_stack_info(unsigned long *stack, struct task_struct *task,
->  		   struct stack_info *info, unsigned long *visit_mask);
->  bool get_stack_info_noinstr(unsigned long *stack, struct task_struct *task,
-> diff --git a/arch/x86/kernel/dumpstack_64.c b/arch/x86/kernel/dumpstack_64.c
-> index 5601b95944fa..056cf4f31599 100644
-> --- a/arch/x86/kernel/dumpstack_64.c
-> +++ b/arch/x86/kernel/dumpstack_64.c
-> @@ -126,6 +126,39 @@ static __always_inline bool in_exception_stack(unsigned long *stack, struct stac
->  	return true;
->  }
->  
-> +noinstr bool in_exception_stack_guard(unsigned long *stack)
-> +{
-> +	unsigned long begin, end, stk = (unsigned long)stack;
-> +	const struct estack_pages *ep;
-> +	unsigned int k;
-> +
-> +	BUILD_BUG_ON(N_EXCEPTION_STACKS != 6);
-> +
-> +	begin = (unsigned long)__this_cpu_read(cea_exception_stacks);
-> +	/*
-> +	 * Handle the case where stack trace is collected _before_
-> +	 * cea_exception_stacks had been initialized.
-> +	 */
-> +	if (!begin)
-> +		return false;
-> +
-> +	end = begin + sizeof(struct cea_exception_stacks);
-> +	/* Bail if @stack is outside the exception stack area. */
-> +	if (stk < begin || stk >= end)
-> +		return false;
-> +
-> +	/* Calc page offset from start of exception stacks */
-> +	k = (stk - begin) >> PAGE_SHIFT;
-> +	/* Lookup the page descriptor */
-> +	ep = &estack_pages[k];
-> +	/* Guard page? */
-> +	if (!ep->size)
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
-> +
->  static __always_inline bool in_irq_stack(unsigned long *stack, struct stack_info *info)
->  {
->  	unsigned long *end = (unsigned long *)this_cpu_read(hardirq_stack_ptr);
-> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-> index a58800973aed..8b043ed02c0d 100644
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-> @@ -459,6 +459,9 @@ DEFINE_IDTENTRY_DF(exc_double_fault)
->  		handle_stack_overflow("kernel stack overflow (double-fault)",
->  				      regs, address);
->  	}
-> +
-> +	if (in_exception_stack_guard((void *)address))
-> +		pr_emerg("PANIC: exception stack guard: 0x%lx\n", address);
->  #endif
->  
->  	pr_emerg("PANIC: double fault, error_code: 0x%lx\n", error_code);
-> 
+Would be awesome to have an API function we could just call instead :)
 
-The panic triggered as below after the stack size recovered, I found this info
-could be helpful, maybe we should keep it?
-
-Regards,
-Michael Wang
-
-[   30.515200][    C0] traps: PANIC: exception stack guard: 0xfffffe000000aff8
-[   30.515206][    C0] traps: PANIC: double fault, error_code: 0x0
-[   30.515216][    C0] double fault: 0000 [#1] SMP PTI
-[   30.515223][    C0] CPU: 0 PID: 702 Comm: a.out Not tainted 5.14.0-next-20210913+ #524
-[   30.515230][    C0] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
-[   30.515233][    C0] RIP: 0010:perf_swevent_get_recursion_context+0x0/0x70
-[   30.515246][    C0] Code: 48 03 43 28 48 8b 0c 24 bb 01 00 00 00 4c 29 f0 48 39 c8 48 0f 47 c1 49 89 45 08 e9 48 ff ff ff 66 2e 0f 1f 84 00 00 00 00 00 <55> 53 e8 09 20 f2 ff 48 c7 c2 20 4d 03 00 65 48 03 15 5a 3b d2 7e
-[   30.515253][    C0] RSP: 0018:fffffe000000b000 EFLAGS: 00010046
-[   30.515259][    C0] RAX: 0000000080120008 RBX: fffffe000000b050 RCX: 0000000000000000
-[   30.515264][    C0] RDX: ffff88810cbf2180 RSI: ffffffff81269031 RDI: 000000000000001c
-[   30.515268][    C0] RBP: 000000000000001c R08: 0000000000000001 R09: 0000000000000000
-[   30.515272][    C0] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-[   30.515275][    C0] R13: fffffe000000b044 R14: 0000000000000001 R15: 0000000000000001
-[   30.515280][    C0] FS:  00007fa1b01f4740(0000) GS:ffff88813bc00000(0000) knlGS:0000000000000000
-[   30.515286][    C0] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   30.515290][    C0] CR2: fffffe000000aff8 CR3: 000000010e26a003 CR4: 00000000003606f0
-[   30.515294][    C0] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   30.515298][    C0] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   30.515302][    C0] Call Trace:
-[   30.515305][    C0]  <NMI>
-[   30.515308][    C0]  perf_trace_buf_alloc+0x26/0xd0
-[   30.515321][    C0]  ? is_prefetch.isra.25+0x260/0x260
-[   30.515329][    C0]  ? __bad_area_nosemaphore+0x1b8/0x280
-[   30.515336][    C0]  perf_ftrace_function_call+0x18f/0x2e0
-[   30.515347][    C0]  ? perf_trace_buf_alloc+0xbf/0xd0
-[   30.515385][    C0]  ? 0xffffffffa0106083
-[   30.515412][    C0]  0xffffffffa0106083
-[   30.515431][    C0]  ? 0xffffffffa0106083
-[   30.515452][    C0]  ? kernelmode_fixup_or_oops+0x5/0x120
-[   30.515465][    C0]  kernelmode_fixup_or_oops+0x5/0x120
-[   30.515472][    C0]  __bad_area_nosemaphore+0x1b8/0x280
-[   30.515492][    C0]  do_user_addr_fault+0x410/0x920
-[   30.515508][    C0]  ? 0xffffffffa0106083
-[   30.515525][    C0]  exc_page_fault+0x92/0x300
-[   30.515542][    C0]  asm_exc_page_fault+0x1e/0x30
-[   30.515551][    C0] RIP: 0010:__get_user_nocheck_8+0x6/0x13
+-Toke
 
