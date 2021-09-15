@@ -2,162 +2,125 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A21C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Sep 2021 20:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EAAC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Sep 2021 21:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D4F561108
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Sep 2021 20:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 606D060F70
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Sep 2021 21:14:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232073AbhIOU5t (ORCPT
+        id S231543AbhIOVP5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Sep 2021 16:57:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43720 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231830AbhIOU5t (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Sep 2021 16:57:49 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 549B06108F;
-        Wed, 15 Sep 2021 20:56:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631739389;
-        bh=pBGc6MBPlKmkYJWBqJlD5hd44E7P23W0e7q7BSRmPAg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gdelZNiZUfwtatkAqqlDS+KgxqYlzfFAGkky5/chQnW925kMBiym+E7CESFMuS2oP
-         ZeVHIAbY2L6Yxe2aWUH3HTuNb+cY5xuHubt6aDW157N2m744v6no2zmmwP471++hjA
-         kbo++TRHNhRO6B4b8BxGuv3iWnHuWuVUBG+K17cLMNBWSpCx5jgBd8t/U4K5vc+Jfu
-         JZVzGxJoE+EhcUGhxZoeBGAp43b54VMdKX1wUbd9NSiXdtWRDbZy3RGHYize1VR/GB
-         Osmrp14v5ZtDFYfqzLzxS3OL2lIOEx5mjL+4NiA3G93jusVnA3igALWNRH9m358/tx
-         q8rFkSPYqhCvg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 40F894038F; Wed, 15 Sep 2021 17:56:26 -0300 (-03)
-Date:   Wed, 15 Sep 2021 17:56:26 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Muhammad Falak R Wani <falakreyaz@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Wed, 15 Sep 2021 17:15:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40430 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230382AbhIOVP5 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 15 Sep 2021 17:15:57 -0400
+Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDC60C061574
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Sep 2021 14:14:37 -0700 (PDT)
+Received: by mail-qk1-x749.google.com with SMTP id 21-20020a370815000000b003d5a81a4d12so9468560qki.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Sep 2021 14:14:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=k/ci0x8Pob6HrJahPR/bxUPeBFawoqrCO14kks/Ud10=;
+        b=bXn4abxHwa9qsWASljO8uildDNkGyRGViMNwGmCUfo4LpAut/q0yhENfjylj/aPthp
+         Rbtg1Cijyunpu9V/WVFbWdeESv6BHYwk9JCiE17qqmaIjExPPhIpw8iR4Yy5W8T+1O5s
+         pAQuzyYJhvsh5UXUh42IRK2fmYNNJbQyd0BBlIbwfD3Ace/NRm59W8TpRXaec1OSk8Bi
+         dMzqtjRLKJMerskYkecd/ng4T13rEvkopFF3bMUTdtEm9KFnxsU8n+v+x3w0g7XPsr8K
+         l83+Qicst5jwvh7FvqVGCFIW74FN9M/0cuy88tXREWXug9qtAspouaBvyGxpNeBw7b+w
+         qTxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=k/ci0x8Pob6HrJahPR/bxUPeBFawoqrCO14kks/Ud10=;
+        b=yzChMU6NSjN9yGWSZQn9KZgYtnPhyhKaEu82rab9wvbGkHQ9RAoH+ntpNz8zKN5ytx
+         LCVFlVI27Js+MyTaCyZHMxKSHt6EtkWWek/pRKnSJKufTXGZ577nuQQrZ/iEufHyH9W4
+         nsz1D44q2K+mqJsPeTlcse9iYqx2OhN3czNN+kGBRLPlc/GvIv14WNxtipyhIJ9McLOv
+         a+56O+s0a5Z0HRR997/+7lIVubMUHaa2SXOyT95auAxFV9pEIg1mlIxSYyHq6yNuf5CK
+         aT/Jr2un2LBmYIvOenfubom6NzDSv/504vL8wb9KIHmUAekOlb5AELeY6aXoX1i1Uq86
+         mHrA==
+X-Gm-Message-State: AOAM532dgpvDmZqQEVESXLswaPR+VRnAkeOhkU+CArGXZrh7nZcDWkxj
+        x2fZKm/Kz0VkBJiCMx9Tscfot3Ia6zRv
+X-Google-Smtp-Source: ABdhPJze96Gku2BQ+17hp0+ZDvvc3Q21O0RePgKvPHGBY3bEGcU+SMN/8Z//ptjGYkgfPuEV3oHxwJxPI7KB
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:7b71:ab93:de5f:617b])
+ (user=irogers job=sendgmr) by 2002:a0c:fb4f:: with SMTP id
+ b15mr2058639qvq.44.1631740476965; Wed, 15 Sep 2021 14:14:36 -0700 (PDT)
+Date:   Wed, 15 Sep 2021 14:14:28 -0700
+Message-Id: <20210915211428.1773567-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.33.0.309.g3052b89438-goog
+Subject: [PATCH] perf parse-events: Avoid enum forward declaration.
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Yu Kuai <yukuai3@huawei.com>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
-Subject: Re: [PATCH] perflib: deprecate bpf_map__resize in favor of
- bpf_map_set_max_entries
-Message-ID: <YUJd+jo1W+mdK0Fv@kernel.org>
-References: <20210815103610.27887-1-falakreyaz@gmail.com>
- <CAEf4BzZ+3hM9oPxdXsxXRKJD2TCmpXPnkWz1LPnP7mDagprdyA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzZ+3hM9oPxdXsxXRKJD2TCmpXPnkWz1LPnP7mDagprdyA@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Aug 16, 2021 at 12:28:14PM -0700, Andrii Nakryiko escreveu:
-> On Sun, Aug 15, 2021 at 3:36 AM Muhammad Falak R Wani
-> <falakreyaz@gmail.com> wrote:
-> >
-> > As a part of libbpf 1.0 plan[0], this patch deprecates use of
-> > bpf_map__resize in favour of bpf_map__set_max_entries.
-> >
-> > Reference: https://github.com/libbpf/libbpf/issues/304
-> > [0]: https://github.com/libbpf/libbpf/wiki/Libbpf:-the-road-to-v1.0#libbpfh-high-level-apis
-> >
-> > Signed-off-by: Muhammad Falak R Wani <falakreyaz@gmail.com>
-> > ---
-> 
-> All looks good, there is an opportunity to simplify the code a bit (see below).
-> 
-> Arnaldo, I assume you'll take this through your tree or you'd like us
+Enum forward declarations aren't allowed as the size can't be implied.
+Switch to just using an int. This fixes a clang warning:
 
-Yeah, I'll take the opportunity to try to improve that detection of
-libbpf version, etc.
+In file included from tools/perf/bench/evlist-open-close.c:13:
+tools/perf/bench/../util/parse-events.h:185:6: error: redeclaration of already-defined enum 'perf_tool_event' is a GNU extension [-Werror,-Wgnu-redeclared-enum]
+enum perf_tool_event;
+     ^
+tools/perf/bench/../util/evsel.h:28:6: note: previous definition is here
+enum perf_tool_event {
+     ^
 
-- Arnaldo
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/parse-events.c | 2 +-
+ tools/perf/util/parse-events.h | 3 +--
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
-> to take it through bpf-next?
-> 
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> 
-> >  tools/perf/util/bpf_counter.c        | 8 ++++----
-> >  tools/perf/util/bpf_counter_cgroup.c | 8 ++++----
-> >  2 files changed, 8 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
-> > index ba0f20853651..ced2dac31dcf 100644
-> > --- a/tools/perf/util/bpf_counter.c
-> > +++ b/tools/perf/util/bpf_counter.c
-> > @@ -127,9 +127,9 @@ static int bpf_program_profiler_load_one(struct evsel *evsel, u32 prog_id)
-> >
-> >         skel->rodata->num_cpu = evsel__nr_cpus(evsel);
-> >
-> > -       bpf_map__resize(skel->maps.events, evsel__nr_cpus(evsel));
-> > -       bpf_map__resize(skel->maps.fentry_readings, 1);
-> > -       bpf_map__resize(skel->maps.accum_readings, 1);
-> > +       bpf_map__set_max_entries(skel->maps.events, evsel__nr_cpus(evsel));
-> > +       bpf_map__set_max_entries(skel->maps.fentry_readings, 1);
-> > +       bpf_map__set_max_entries(skel->maps.accum_readings, 1);
-> >
-> >         prog_name = bpf_target_prog_name(prog_fd);
-> >         if (!prog_name) {
-> > @@ -399,7 +399,7 @@ static int bperf_reload_leader_program(struct evsel *evsel, int attr_map_fd,
-> >                 return -1;
-> >         }
-> >
-> > -       bpf_map__resize(skel->maps.events, libbpf_num_possible_cpus());
-> > +       bpf_map__set_max_entries(skel->maps.events, libbpf_num_possible_cpus());
-> 
-> If you set max_entries to 0 (or just skip specifying it) for events
-> map in util/bpf_skel/bperf_cgroup.bpf.c, you won't need to resize it,
-> libbpf will automatically size it to number of possible CPUs.
-> 
-> >         err = bperf_leader_bpf__load(skel);
-> >         if (err) {
-> >                 pr_err("Failed to load leader skeleton\n");
-> > diff --git a/tools/perf/util/bpf_counter_cgroup.c b/tools/perf/util/bpf_counter_cgroup.c
-> > index 89aa5e71db1a..cbc6c2bca488 100644
-> > --- a/tools/perf/util/bpf_counter_cgroup.c
-> > +++ b/tools/perf/util/bpf_counter_cgroup.c
-> > @@ -65,14 +65,14 @@ static int bperf_load_program(struct evlist *evlist)
-> >
-> >         /* we need one copy of events per cpu for reading */
-> >         map_size = total_cpus * evlist->core.nr_entries / nr_cgroups;
-> > -       bpf_map__resize(skel->maps.events, map_size);
-> > -       bpf_map__resize(skel->maps.cgrp_idx, nr_cgroups);
-> > +       bpf_map__set_max_entries(skel->maps.events, map_size);
-> > +       bpf_map__set_max_entries(skel->maps.cgrp_idx, nr_cgroups);
-> >         /* previous result is saved in a per-cpu array */
-> >         map_size = evlist->core.nr_entries / nr_cgroups;
-> > -       bpf_map__resize(skel->maps.prev_readings, map_size);
-> > +       bpf_map__set_max_entries(skel->maps.prev_readings, map_size);
-> >         /* cgroup result needs all events (per-cpu) */
-> >         map_size = evlist->core.nr_entries;
-> > -       bpf_map__resize(skel->maps.cgrp_readings, map_size);
-> > +       bpf_map__set_max_entries(skel->maps.cgrp_readings, map_size);
-> >
-> >         set_max_rlimit();
-> >
-> > --
-> > 2.17.1
-> >
-
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 51a2219df601..5d1346aa0627 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1471,7 +1471,7 @@ int parse_events_add_numeric(struct parse_events_state *parse_state,
+ 
+ int parse_events_add_tool(struct parse_events_state *parse_state,
+ 			  struct list_head *list,
+-			  enum perf_tool_event tool_event)
++			  int tool_event)
+ {
+ 	return add_event_tool(list, &parse_state->idx, tool_event);
+ }
+diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+index bf6e41aa9b6a..b32ed3064c49 100644
+--- a/tools/perf/util/parse-events.h
++++ b/tools/perf/util/parse-events.h
+@@ -182,10 +182,9 @@ int parse_events_add_numeric(struct parse_events_state *parse_state,
+ 			     struct list_head *list,
+ 			     u32 type, u64 config,
+ 			     struct list_head *head_config);
+-enum perf_tool_event;
+ int parse_events_add_tool(struct parse_events_state *parse_state,
+ 			  struct list_head *list,
+-			  enum perf_tool_event tool_event);
++			  int tool_event);
+ int parse_events_add_cache(struct list_head *list, int *idx,
+ 			   char *type, char *op_result1, char *op_result2,
+ 			   struct parse_events_error *error,
 -- 
+2.33.0.309.g3052b89438-goog
 
-- Arnaldo
