@@ -2,253 +2,128 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1320DC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 03:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB83C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 06:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E30C86120C
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 03:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10FAB611C6
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 06:05:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234154AbhIPDtR (ORCPT
+        id S233878AbhIPGGx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Sep 2021 23:49:17 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:51809 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234265AbhIPDtO (ORCPT
+        Thu, 16 Sep 2021 02:06:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44944 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232714AbhIPGGw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Sep 2021 23:49:14 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0UoXWzBQ_1631764069;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0UoXWzBQ_1631764069)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 16 Sep 2021 11:47:50 +0800
-Subject: Re: [PATCH] x86/dumpstack/64: Add guard pages to stack_info
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
+        Thu, 16 Sep 2021 02:06:52 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC3D8C061764
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Sep 2021 23:05:32 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id b84-20020a253457000000b0059e6b730d45so11236880yba.6
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Sep 2021 23:05:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=D0r7TBMbEZnc2Tmp30aYQUE/VFgDrqrZPzYpb/fCP9U=;
+        b=Jt6MQlFhyIvw2VNWhD8wr04h95Ttto+QvH0023lhvq/waQF7PhGlzEKlb/Ni0DzroC
+         Q3IDXtN/LWMYLuhf7nu3BtFAyi/EKZzD7mXFtD8CgCVLz5kOiq/EvBQYYb5MAy0gMOxg
+         jsshIRdhhE41Uz5g4i3Oq805XRY1W9vUMUJVLCn5SaMdSdYO8ILVvn8WpZTog3fxlplq
+         +6FfLMK012Jpb8BuKgM/HYPTUTU34bJ607tph5E3fsSYGHJ10sfuJT7nfB0jBkivcyOl
+         MVU7LV3b3BQmLMRmYUaIMHuJHxhWzjgAa8o7jc3jY/BOBhRyS36k8nnKqvfzeiVKtpA5
+         RBdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=D0r7TBMbEZnc2Tmp30aYQUE/VFgDrqrZPzYpb/fCP9U=;
+        b=NKnZocaU2DiOKUCjkxwKMWLlJiYIBlUpYRLHmLx1hBHRpIQ/RjQg8rkiL42LRvZElk
+         wrOm/lMJjisECyqVVAko489gRcrrUeIUAH06LT8KLdFNzpQiAZcnyqxCEVzLQd1vvbSK
+         6q7j4c8erMtuajv8FOLknn+DKBbPqcQ0OuZfi0wwKNbMFHMkEftLgO+MrXCewDHMhG9C
+         C1b2OSqSKY3lrF2sALyZz+GA0SCkhvlGvuTDwwDx9gu9YVq7SlepdymPtbGTZboTCtnf
+         Sfnu7lRP29uZPrhfQAoyRdirmwjJRI5zvc7LYPtzXM9Qem5eR0Wj3BCEWBOyU4yEPCBb
+         j6Zw==
+X-Gm-Message-State: AOAM533Jng3maM25eWvjlddj8s7BioLzUJ1d3bHdKJkRsO3xTxjY36rg
+        wSosqyZzfoQahUWCmVnDfCA6LsNVIiwM
+X-Google-Smtp-Source: ABdhPJx5FbJpBunw6Fx0AcOekAy/kFV87vGAH5kU3v7Yt5ESkUQLPihxEJSoyk0TUWgEcCgAoWj7Pr3U/1p7
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:7b71:ab93:de5f:617b])
+ (user=irogers job=sendgmr) by 2002:a5b:f03:: with SMTP id x3mr5069739ybr.546.1631772331782;
+ Wed, 15 Sep 2021 23:05:31 -0700 (PDT)
+Date:   Wed, 15 Sep 2021 23:05:25 -0700
+Message-Id: <20210916060525.1890638-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.33.0.309.g3052b89438-goog
+Subject: [PATCH v2] perf test: Workload test of metric and metricgroups
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-perf-users@vger.kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-kernel@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <netdev@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <bpf@vger.kernel.org>, jroedel@suse.de, x86@kernel.org
-References: <ff979a43-045a-dc56-64d1-2c31dd4db381@linux.alibaba.com>
- <20210910153839.GH4323@worktop.programming.kicks-ass.net>
- <f38987a5-dc36-a20d-8c5e-81e8ead5b4dc@linux.alibaba.com>
- <YT8m2B6D2yWc5Umq@hirez.programming.kicks-ass.net>
- <3fb7c51f-696b-da70-1965-1dda9910cb14@linux.alibaba.com>
- <YUB5VchM3a/MiZpX@hirez.programming.kicks-ass.net>
- <3f26f7a2-0a09-056a-3a7a-4795b6723b60@linux.alibaba.com>
- <YUIOgmOfnOqPrE+z@hirez.programming.kicks-ass.net>
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Message-ID: <76de02b7-4d87-4a3a-e4d4-048829749887@linux.alibaba.com>
-Date:   Thu, 16 Sep 2021 11:47:49 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:78.0)
- Gecko/20100101 Thunderbird/78.14.0
-MIME-Version: 1.0
-In-Reply-To: <YUIOgmOfnOqPrE+z@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Jin Yao <yao.jin@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     eranian@google.com, Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Test every metric and metricgroup with 'true' as a workload.
 
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/shell/stat_all_metricgroups.sh | 12 ++++++++++++
+ tools/perf/tests/shell/stat_all_metrics.sh      | 16 ++++++++++++++++
+ 2 files changed, 28 insertions(+)
+ create mode 100755 tools/perf/tests/shell/stat_all_metricgroups.sh
+ create mode 100755 tools/perf/tests/shell/stat_all_metrics.sh
 
-On 2021/9/15 下午11:17, Peter Zijlstra wrote:
-> On Wed, Sep 15, 2021 at 09:51:57AM +0800, 王贇 wrote:
-> 
->>> +
->>> +	if (in_exception_stack_guard((void *)address))
->>> +		pr_emerg("PANIC: exception stack guard: 0x%lx\n", address);
->>>  #endif
->>>  
->>>  	pr_emerg("PANIC: double fault, error_code: 0x%lx\n", error_code);
->>>
->>
->> The panic triggered as below after the stack size recovered, I found this info
->> could be helpful, maybe we should keep it?
-> 
-> Could you please test this?
-
-I did some debug and found the issue, we are missing:
-
-@@ -122,7 +137,10 @@ static __always_inline bool in_exception_stack(unsigned long *stack, struct stac
-        info->type      = ep->type;
-        info->begin     = (unsigned long *)begin;
-        info->end       = (unsigned long *)end;
--       info->next_sp   = (unsigned long *)regs->sp;
+diff --git a/tools/perf/tests/shell/stat_all_metricgroups.sh b/tools/perf/tests/shell/stat_all_metricgroups.sh
+new file mode 100755
+index 000000000000..de24d374ce24
+--- /dev/null
++++ b/tools/perf/tests/shell/stat_all_metricgroups.sh
+@@ -0,0 +1,12 @@
++#!/bin/sh
++# perf all metricgroups test
++# SPDX-License-Identifier: GPL-2.0
 +
-+       if (!(ep->type & STACK_TYPE_GUARD))
-+               info->next_sp   = (unsigned long *)regs->sp;
++set -e
 +
-        return true;
- }
++for m in $(perf list --raw-dump metricgroups); do
++  echo "Testing $m"
++  perf stat -M "$m" true
++done
++
++exit 0
+diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/tests/shell/stat_all_metrics.sh
+new file mode 100755
+index 000000000000..81b19ba27e68
+--- /dev/null
++++ b/tools/perf/tests/shell/stat_all_metrics.sh
+@@ -0,0 +1,16 @@
++#!/bin/sh
++# perf all metrics test
++# SPDX-License-Identifier: GPL-2.0
++
++set -e
++
++for m in `perf list --raw-dump metrics`; do
++  echo "Testing $m"
++  result=$(perf stat -M "$m" true)
++  if [[ "$result" =~ "$m" ]]; then
++    echo "Metric not printed: $m"
++    exit 1
++  fi
++done
++
++exit 0
+-- 
+2.33.0.309.g3052b89438-goog
 
-as the guard page are not working as real stack I guess?
-
-With that one things going on correctly, and some trivials below.
-
-> 
-> ---
-> Subject: x86/dumpstack/64: Add guard pages to stack_info
-> From: Peter Zijlstra <peterz@infradead.org>
-> Date: Wed Sep 15 17:12:59 CEST 2021
-> 
-> Explicitly add the exception stack guard pages to stack_info and
-> report on them from #DF.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  arch/x86/include/asm/cpu_entry_area.h |    3 +++
->  arch/x86/include/asm/stacktrace.h     |    3 ++-
->  arch/x86/kernel/dumpstack_64.c        |   17 ++++++++++++++++-
->  arch/x86/kernel/traps.c               |   17 ++++++++++++++++-
->  4 files changed, 37 insertions(+), 3 deletions(-)
-> 
-> --- a/arch/x86/include/asm/cpu_entry_area.h
-> +++ b/arch/x86/include/asm/cpu_entry_area.h
-> @@ -61,6 +61,9 @@ enum exception_stack_ordering {
->  #define CEA_ESTACK_OFFS(st)					\
->  	offsetof(struct cea_exception_stacks, st## _stack)
->  
-> +#define CEA_EGUARD_OFFS(st)					\
-> +	offsetof(struct cea_exception_stacks, st## _stack_guard)
-> +
->  #define CEA_ESTACK_PAGES					\
->  	(sizeof(struct cea_exception_stacks) / PAGE_SIZE)
->  
-> --- a/arch/x86/include/asm/stacktrace.h
-> +++ b/arch/x86/include/asm/stacktrace.h
-> @@ -14,13 +14,14 @@
->  #include <asm/switch_to.h>
->  
->  enum stack_type {
-> -	STACK_TYPE_UNKNOWN,
-> +	STACK_TYPE_UNKNOWN = 0,
-
-Is this necessary?
-
->  	STACK_TYPE_TASK,
->  	STACK_TYPE_IRQ,
->  	STACK_TYPE_SOFTIRQ,
->  	STACK_TYPE_ENTRY,
->  	STACK_TYPE_EXCEPTION,
->  	STACK_TYPE_EXCEPTION_LAST = STACK_TYPE_EXCEPTION + N_EXCEPTION_STACKS-1,
-> +	STACK_TYPE_GUARD = 0x80,
->  };
->  
->  struct stack_info {
-> --- a/arch/x86/kernel/dumpstack_64.c
-> +++ b/arch/x86/kernel/dumpstack_64.c
-> @@ -32,9 +32,15 @@ const char *stack_type_name(enum stack_t
->  {
->  	BUILD_BUG_ON(N_EXCEPTION_STACKS != 6);
->  
-> +	if (type == STACK_TYPE_TASK)
-> +		return "TASK";
-> +
->  	if (type == STACK_TYPE_IRQ)
->  		return "IRQ";
->  
-> +	if (type == STACK_TYPE_SOFTIRQ)
-> +		return "SOFTIRQ";
-> +
-
-Do we need one for GUARD too?
-
->  	if (type == STACK_TYPE_ENTRY) {
->  		/*
->  		 * On 64-bit, we have a generic entry stack that we
-> @@ -63,6 +69,11 @@ struct estack_pages {
->  };
->  
->  #define EPAGERANGE(st)							\
-> +	[PFN_DOWN(CEA_EGUARD_OFFS(st))] = {				\
-> +		.offs	= CEA_EGUARD_OFFS(st),				\
-> +		.size	= PAGE_SIZE,					\
-> +		.type	= STACK_TYPE_GUARD +				\
-> +			  STACK_TYPE_EXCEPTION + ESTACK_ ##st, },	\
->  	[PFN_DOWN(CEA_ESTACK_OFFS(st)) ...				\
->  	 PFN_DOWN(CEA_ESTACK_OFFS(st) + CEA_ESTACK_SIZE(st) - 1)] = {	\
->  		.offs	= CEA_ESTACK_OFFS(st),				\
-> @@ -111,10 +122,11 @@ static __always_inline bool in_exception
->  	k = (stk - begin) >> PAGE_SHIFT;
->  	/* Lookup the page descriptor */
->  	ep = &estack_pages[k];
-> -	/* Guard page? */
-> +	/* unknown entry */
->  	if (!ep->size)
->  		return false;
->  
-> +
-
-Extra line?
-
-Regards,
-Michael Wang
-
->  	begin += (unsigned long)ep->offs;
->  	end = begin + (unsigned long)ep->size;
->  	regs = (struct pt_regs *)end - 1;
-> @@ -193,6 +205,9 @@ int get_stack_info(unsigned long *stack,
->  	if (!get_stack_info_noinstr(stack, task, info))
->  		goto unknown;
->  
-> +	if (info->type & STACK_TYPE_GUARD)
-> +		goto unknown;
-> +
->  	/*
->  	 * Make sure we don't iterate through any given stack more than once.
->  	 * If it comes up a second time then there's something wrong going on:
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-> @@ -461,6 +461,19 @@ DEFINE_IDTENTRY_DF(exc_double_fault)
->  	}
->  #endif
->  
-> +#ifdef CONFIG_X86_64
-> +	{
-> +		struct stack_info info;
-> +
-> +		if (get_stack_info_noinstr((void *)address, current, &info) &&
-> +		    info.type & STACK_TYPE_GUARD) {
-> +			const char *name = stack_type_name(info.type & ~STACK_TYPE_GUARD);
-> +			pr_emerg("BUG: %s stack guard hit at %p (stack is %p..%p)\n",
-> +				 name, (void *)address, info.begin, info.end);
-> +		}
-> +	}
-> +#endif
-> +
->  	pr_emerg("PANIC: double fault, error_code: 0x%lx\n", error_code);
->  	die("double fault", regs, error_code);
->  	panic("Machine halted.");
-> @@ -708,7 +721,9 @@ asmlinkage __visible noinstr struct pt_r
->  	sp    = regs->sp;
->  	stack = (unsigned long *)sp;
->  
-> -	if (!get_stack_info_noinstr(stack, current, &info) || info.type == STACK_TYPE_ENTRY ||
-> +	if (!get_stack_info_noinstr(stack, current, &info) ||
-> +	    info.type & STACK_TYPE_GUARD ||
-> +	    info.type == STACK_TYPE_ENTRY ||
->  	    info.type >= STACK_TYPE_EXCEPTION_LAST)
->  		sp = __this_cpu_ist_top_va(VC2);
->  
-> 
