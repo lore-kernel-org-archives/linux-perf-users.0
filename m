@@ -2,296 +2,144 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A47C3C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 06:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F05C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 07:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7434460F6D
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 06:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 938AE61185
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 07:30:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234410AbhIPGYF (ORCPT
+        id S234777AbhIPHbl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 16 Sep 2021 02:24:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48730 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231255AbhIPGYF (ORCPT
+        Thu, 16 Sep 2021 03:31:41 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:49170 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232254AbhIPHbk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 16 Sep 2021 02:24:05 -0400
-Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0F97C061574
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Sep 2021 23:22:44 -0700 (PDT)
-Received: by mail-qk1-x74a.google.com with SMTP id c27-20020a05620a165b00b003d3817c7c23so25005507qko.16
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Sep 2021 23:22:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=2zO9I+WpfIAi/lsn9jzqdmaKYibtEk4wOlr2sTHiCKA=;
-        b=U87j3QSzlqk1gZ15ATT+N2Q/rNB64XKHG4vZLZ8Qo8+64V4c8fh/q1p9xWaxh3STAx
-         VxXHa3CGRBonUhe5AXsjfxApP9/ctReV1GBHf/IBfQgrH2UkP0de61nID+CHcjFu0dSY
-         nti1Yo5cmQWeDGaRNk5XntoyL2xPerKQgSKYWQZz2FYh99+AXjGlo63Qk38QizK7J+9R
-         GUWTwMTGPAyL6Phj8D+6RfE1wskRLPZnoGwZJgVbNBi232YVJ5aYSmyZMIZ39izoq7/M
-         jhoG1dOfihf8X1vsmLEtIZC7L9px6SbvvNDGW05wF5GQNk3r2TV137VfuOr0/FEexbKN
-         m++w==
+        Thu, 16 Sep 2021 03:31:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1631777420;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=257yrPQS6KeYQm5bEFKU+lS9FYHPgLAN8rTbuc9lmLw=;
+        b=WVAa48lu8UkOwHYJA7/o+QgiJWq5ImFe4YIfR4Gq5VZD9UuH9PFQ4EqGMOozfOqzC00b/5
+        aYc6afE8Fck8CXEhB6f0cNJeLFCWlWxQpiMCtzfLaTz3+cFvKg6L5i0fjjf4sNZoNSBvta
+        lCPfVICdzNqf8UOsfZ6cJORaNYXUfN0=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-43-rdiXGYqCNnmvzCbkmNw8rA-1; Thu, 16 Sep 2021 03:30:18 -0400
+X-MC-Unique: rdiXGYqCNnmvzCbkmNw8rA-1
+Received: by mail-wm1-f69.google.com with SMTP id q4-20020a1c4304000000b00306cd53b671so404202wma.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 16 Sep 2021 00:30:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=2zO9I+WpfIAi/lsn9jzqdmaKYibtEk4wOlr2sTHiCKA=;
-        b=kd9nOaHhJ3rqwn2XvdtktY+x/CxRrngnPnLzGH9c/WOoQoENU+Dm63xwUskxuXIf6o
-         1go3n6L8CXrscpYCbBcjIapsP/Bsm/H344DublI/pg09y6ACZAmaQnNJmF2gg9JNEClg
-         KJMFSa/b4CQQ1Pe6i5R3dFRgzGIbEES5h2/6+TSg591FPA6OZqrplDN5NXvXVlvqAdj7
-         qfeUHMG0S9p/lEk7MN81U/9XrZkyZpUmkTcBIBSZKcXOvwKGnsGRzVwmlLhkcV1QUXFx
-         L3bP8mqD5oXxh7S7Ti4z94eR8BlE3KB9UD9NuE6ImuKMjTytMc9VEZ+rTFD4jnFnY7mF
-         GtMg==
-X-Gm-Message-State: AOAM5316L+jZrNSAofl2FYcgHx2XKpmYLJqW1SbabXHZgqbGXGFIzH4H
-        lonsHtovQz88wAzkpQq369QrNmq7Itws
-X-Google-Smtp-Source: ABdhPJyySdsntiMWq9IDoau8aR+KGXnN4JIy7FLTbdQCApVVNK2nggPvQJhS6fPkfkL3qFk59qTCondiPWL4
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:7b71:ab93:de5f:617b])
- (user=irogers job=sendgmr) by 2002:a0c:f38b:: with SMTP id
- i11mr3708217qvk.42.1631773364019; Wed, 15 Sep 2021 23:22:44 -0700 (PDT)
-Date:   Wed, 15 Sep 2021 23:22:39 -0700
-Message-Id: <20210916062239.1894011-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.33.0.309.g3052b89438-goog
-Subject: [PATCH v2] libperf evsel: Make use of FD robust.
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=257yrPQS6KeYQm5bEFKU+lS9FYHPgLAN8rTbuc9lmLw=;
+        b=pEhX8rts6KSAevdNiQq5j+yjfVHA3eeU3F6/UmNheOAflqmqRpMm642K7gXstdMUd7
+         Jt4+9mWVDpcJ44TzM+56iAo+3XWLZEgJ0eTCpRL4Uqr5sicMnAqUfiiz+Ofw+wbtqJsn
+         ZH8o2OPZqFWgDrmbvETtOXkDn8Y91Pc2hZjlcax8FQazX7ktbruAFoa0UTdKtUPrysDm
+         2B+mTAAT33GGKtTfwXdZH/wJP9QuykAm16+PDabbIk9htbrNYcFGTlfHVOAroIlNa/aN
+         deRC3UWvO1c4xn3idsaHCzR7Txo8dO6TmxwOiIfJWGCxctQXyJG/PWOHHtav8TjExvQC
+         cr5g==
+X-Gm-Message-State: AOAM532+Z1EnBgii3RRUpsHSYxg+LeqUG+RgUWVviPhpqsTRNy8Fndxw
+        kt/z+QCRz0plVHkZd6sMq+fl2LyBJAsl+qdNn6sLsRcd79zTEkwkFZ6BqoFGqxLCLxFVLoenCZb
+        oSFenFQdTmjX4chHckGGTTEtywUU+og==
+X-Received: by 2002:a1c:3bd7:: with SMTP id i206mr8431271wma.115.1631777417679;
+        Thu, 16 Sep 2021 00:30:17 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx/Q8RcskLaagNg4DGjNaPXj2RP+aICamk0pnhLgNm8IgTBGSH/sRpY2GxquQ5RQpePwlcc5A==
+X-Received: by 2002:a1c:3bd7:: with SMTP id i206mr8431246wma.115.1631777417340;
+        Thu, 16 Sep 2021 00:30:17 -0700 (PDT)
+Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
+        by smtp.gmail.com with ESMTPSA id d2sm2371591wrc.32.2021.09.16.00.30.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Sep 2021 00:30:17 -0700 (PDT)
+Date:   Thu, 16 Sep 2021 09:30:15 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     eranian@google.com, Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Jin Yao <yao.jin@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        eranian@google.com
+Subject: Re: [PATCH v2] perf test: Workload test of metric and metricgroups
+Message-ID: <YULyhx+ZxjEIOMsi@krava>
+References: <20210916060525.1890638-1-irogers@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210916060525.1890638-1-irogers@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-FD uses xyarray__entry that may return NULL if an index is out of
-bounds. If NULL is returned then a segv happens as FD unconditionally
-dereferences the pointer. This was happening in a case of with perf
-iostat as shown below. The fix is to make FD an "int*" rather than an
-int and handle the NULL case as either invalid input or a closed fd.
+On Wed, Sep 15, 2021 at 11:05:25PM -0700, Ian Rogers wrote:
+> Test every metric and metricgroup with 'true' as a workload.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-$ sudo gdb --args perf stat --iostat  list
-...
-Breakpoint 1, perf_evsel__alloc_fd (evsel=0x5555560951a0, ncpus=1, nthreads=1) at evsel.c:50
-50      {
-(gdb) bt
- #0  perf_evsel__alloc_fd (evsel=0x5555560951a0, ncpus=1, nthreads=1) at evsel.c:50
- #1  0x000055555585c188 in evsel__open_cpu (evsel=0x5555560951a0, cpus=0x555556093410,
-    threads=0x555556086fb0, start_cpu=0, end_cpu=1) at util/evsel.c:1792
- #2  0x000055555585cfb2 in evsel__open (evsel=0x5555560951a0, cpus=0x0, threads=0x555556086fb0)
-    at util/evsel.c:2045
- #3  0x000055555585d0db in evsel__open_per_thread (evsel=0x5555560951a0, threads=0x555556086fb0)
-    at util/evsel.c:2065
- #4  0x00005555558ece64 in create_perf_stat_counter (evsel=0x5555560951a0,
-    config=0x555555c34700 <stat_config>, target=0x555555c2f1c0 <target>, cpu=0) at util/stat.c:590
- #5  0x000055555578e927 in __run_perf_stat (argc=1, argv=0x7fffffffe4a0, run_idx=0)
-    at builtin-stat.c:833
- #6  0x000055555578f3c6 in run_perf_stat (argc=1, argv=0x7fffffffe4a0, run_idx=0)
-    at builtin-stat.c:1048
- #7  0x0000555555792ee5 in cmd_stat (argc=1, argv=0x7fffffffe4a0) at builtin-stat.c:2534
- #8  0x0000555555835ed3 in run_builtin (p=0x555555c3f540 <commands+288>, argc=3,
-    argv=0x7fffffffe4a0) at perf.c:313
- #9  0x0000555555836154 in handle_internal_command (argc=3, argv=0x7fffffffe4a0) at perf.c:365
- #10 0x000055555583629f in run_argv (argcp=0x7fffffffe2ec, argv=0x7fffffffe2e0) at perf.c:409
- #11 0x0000555555836692 in main (argc=3, argv=0x7fffffffe4a0) at perf.c:539
-...
-(gdb) c
-Continuing.
-Error:
-The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (uncore_iio_0/event=0x83,umask=0x04,ch_mask=0xF,fc_mask=0x07/).
-/bin/dmesg | grep -i perf may provide additional information.
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-Program received signal SIGSEGV, Segmentation fault.
-0x00005555559b03ea in perf_evsel__close_fd_cpu (evsel=0x5555560951a0, cpu=1) at evsel.c:166
-166                     if (FD(evsel, cpu, thread) >= 0)
+thanks,
+jirka
 
-v2. is a rebase.
-
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/lib/perf/evsel.c | 64 +++++++++++++++++++++++++++---------------
- 1 file changed, 41 insertions(+), 23 deletions(-)
-
-diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-index d8886720e83d..ede7af4d183c 100644
---- a/tools/lib/perf/evsel.c
-+++ b/tools/lib/perf/evsel.c
-@@ -43,7 +43,7 @@ void perf_evsel__delete(struct perf_evsel *evsel)
- 	free(evsel);
- }
- 
--#define FD(e, x, y) (*(int *) xyarray__entry(e->fd, x, y))
-+#define FD(e, x, y) (int *) xyarray__entry(e->fd, x, y)
- #define MMAP(e, x, y) (e->mmap ? ((struct perf_mmap *) xyarray__entry(e->mmap, x, y)) : NULL)
- 
- int perf_evsel__alloc_fd(struct perf_evsel *evsel, int ncpus, int nthreads)
-@@ -54,7 +54,10 @@ int perf_evsel__alloc_fd(struct perf_evsel *evsel, int ncpus, int nthreads)
- 		int cpu, thread;
- 		for (cpu = 0; cpu < ncpus; cpu++) {
- 			for (thread = 0; thread < nthreads; thread++) {
--				FD(evsel, cpu, thread) = -1;
-+				int *fd = FD(evsel, cpu, thread);
-+
-+				if (fd)
-+					 *fd = -1;
- 			}
- 		}
- 	}
-@@ -80,7 +83,7 @@ sys_perf_event_open(struct perf_event_attr *attr,
- static int get_group_fd(struct perf_evsel *evsel, int cpu, int thread, int *group_fd)
- {
- 	struct perf_evsel *leader = evsel->leader;
--	int fd;
-+	int *fd;
- 
- 	if (evsel == leader) {
- 		*group_fd = -1;
-@@ -95,10 +98,10 @@ static int get_group_fd(struct perf_evsel *evsel, int cpu, int thread, int *grou
- 		return -ENOTCONN;
- 
- 	fd = FD(leader, cpu, thread);
--	if (fd == -1)
-+	if (fd == NULL || *fd == -1)
- 		return -EBADF;
- 
--	*group_fd = fd;
-+	*group_fd = *fd;
- 
- 	return 0;
- }
-@@ -138,7 +141,11 @@ int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
- 
- 	for (cpu = 0; cpu < cpus->nr; cpu++) {
- 		for (thread = 0; thread < threads->nr; thread++) {
--			int fd, group_fd;
-+			int fd, group_fd, *evsel_fd;
-+
-+			evsel_fd = FD(evsel, cpu, thread);
-+			if (evsel_fd == NULL)
-+				return -EINVAL;
- 
- 			err = get_group_fd(evsel, cpu, thread, &group_fd);
- 			if (err < 0)
-@@ -151,7 +158,7 @@ int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
- 			if (fd < 0)
- 				return -errno;
- 
--			FD(evsel, cpu, thread) = fd;
-+			*evsel_fd = fd;
- 		}
- 	}
- 
-@@ -163,9 +170,12 @@ static void perf_evsel__close_fd_cpu(struct perf_evsel *evsel, int cpu)
- 	int thread;
- 
- 	for (thread = 0; thread < xyarray__max_y(evsel->fd); ++thread) {
--		if (FD(evsel, cpu, thread) >= 0)
--			close(FD(evsel, cpu, thread));
--		FD(evsel, cpu, thread) = -1;
-+		int *fd = FD(evsel, cpu, thread);
-+
-+		if (fd && *fd >= 0) {
-+			close(*fd);
-+			*fd = -1;
-+		}
- 	}
- }
- 
-@@ -209,13 +219,12 @@ void perf_evsel__munmap(struct perf_evsel *evsel)
- 
- 	for (cpu = 0; cpu < xyarray__max_x(evsel->fd); cpu++) {
- 		for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
--			int fd = FD(evsel, cpu, thread);
--			struct perf_mmap *map = MMAP(evsel, cpu, thread);
-+			int *fd = FD(evsel, cpu, thread);
- 
--			if (fd < 0)
-+			if (fd == NULL || *fd < 0)
- 				continue;
- 
--			perf_mmap__munmap(map);
-+			perf_mmap__munmap(MMAP(evsel, cpu, thread));
- 		}
- 	}
- 
-@@ -239,15 +248,16 @@ int perf_evsel__mmap(struct perf_evsel *evsel, int pages)
- 
- 	for (cpu = 0; cpu < xyarray__max_x(evsel->fd); cpu++) {
- 		for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
--			int fd = FD(evsel, cpu, thread);
--			struct perf_mmap *map = MMAP(evsel, cpu, thread);
-+			int *fd = FD(evsel, cpu, thread);
-+			struct perf_mmap *map;
- 
--			if (fd < 0)
-+			if (fd == NULL || *fd < 0)
- 				continue;
- 
-+			map = MMAP(evsel, cpu, thread);
- 			perf_mmap__init(map, NULL, false, NULL);
- 
--			ret = perf_mmap__mmap(map, &mp, fd, cpu);
-+			ret = perf_mmap__mmap(map, &mp, *fd, cpu);
- 			if (ret) {
- 				perf_evsel__munmap(evsel);
- 				return ret;
-@@ -260,7 +270,9 @@ int perf_evsel__mmap(struct perf_evsel *evsel, int pages)
- 
- void *perf_evsel__mmap_base(struct perf_evsel *evsel, int cpu, int thread)
- {
--	if (FD(evsel, cpu, thread) < 0 || MMAP(evsel, cpu, thread) == NULL)
-+	int *fd = FD(evsel, cpu, thread);
-+
-+	if (fd == NULL || *fd < 0 || MMAP(evsel, cpu, thread) == NULL)
- 		return NULL;
- 
- 	return MMAP(evsel, cpu, thread)->base;
-@@ -295,17 +307,18 @@ int perf_evsel__read(struct perf_evsel *evsel, int cpu, int thread,
- 		     struct perf_counts_values *count)
- {
- 	size_t size = perf_evsel__read_size(evsel);
-+	int *fd = FD(evsel, cpu, thread);
- 
- 	memset(count, 0, sizeof(*count));
- 
--	if (FD(evsel, cpu, thread) < 0)
-+	if (fd == NULL || *fd < 0)
- 		return -EINVAL;
- 
- 	if (MMAP(evsel, cpu, thread) &&
- 	    !perf_mmap__read_self(MMAP(evsel, cpu, thread), count))
- 		return 0;
- 
--	if (readn(FD(evsel, cpu, thread), count->values, size) <= 0)
-+	if (readn(*fd, count->values, size) <= 0)
- 		return -errno;
- 
- 	return 0;
-@@ -318,8 +331,13 @@ static int perf_evsel__run_ioctl(struct perf_evsel *evsel,
- 	int thread;
- 
- 	for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
--		int fd = FD(evsel, cpu, thread),
--		    err = ioctl(fd, ioc, arg);
-+		int err;
-+		int *fd = FD(evsel, cpu, thread);
-+
-+		if (fd || *fd < 0)
-+			return -1;
-+
-+		err = ioctl(*fd, ioc, arg);
- 
- 		if (err)
- 			return err;
--- 
-2.33.0.309.g3052b89438-goog
+> ---
+>  tools/perf/tests/shell/stat_all_metricgroups.sh | 12 ++++++++++++
+>  tools/perf/tests/shell/stat_all_metrics.sh      | 16 ++++++++++++++++
+>  2 files changed, 28 insertions(+)
+>  create mode 100755 tools/perf/tests/shell/stat_all_metricgroups.sh
+>  create mode 100755 tools/perf/tests/shell/stat_all_metrics.sh
+> 
+> diff --git a/tools/perf/tests/shell/stat_all_metricgroups.sh b/tools/perf/tests/shell/stat_all_metricgroups.sh
+> new file mode 100755
+> index 000000000000..de24d374ce24
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/stat_all_metricgroups.sh
+> @@ -0,0 +1,12 @@
+> +#!/bin/sh
+> +# perf all metricgroups test
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +set -e
+> +
+> +for m in $(perf list --raw-dump metricgroups); do
+> +  echo "Testing $m"
+> +  perf stat -M "$m" true
+> +done
+> +
+> +exit 0
+> diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/tests/shell/stat_all_metrics.sh
+> new file mode 100755
+> index 000000000000..81b19ba27e68
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/stat_all_metrics.sh
+> @@ -0,0 +1,16 @@
+> +#!/bin/sh
+> +# perf all metrics test
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +set -e
+> +
+> +for m in `perf list --raw-dump metrics`; do
+> +  echo "Testing $m"
+> +  result=$(perf stat -M "$m" true)
+> +  if [[ "$result" =~ "$m" ]]; then
+> +    echo "Metric not printed: $m"
+> +    exit 1
+> +  fi
+> +done
+> +
+> +exit 0
+> -- 
+> 2.33.0.309.g3052b89438-goog
+> 
 
