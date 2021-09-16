@@ -2,172 +2,521 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BD5C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 12:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4366CC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 12:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D436D60F11
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 12:04:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1775661288
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 12:09:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239002AbhIPMGR (ORCPT
+        id S239220AbhIPMLK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 16 Sep 2021 08:06:17 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32444 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S238974AbhIPMGQ (ORCPT
+        Thu, 16 Sep 2021 08:11:10 -0400
+Received: from smoke.leastfixedpoint.com ([81.4.107.66]:44740 "EHLO
+        mail.leastfixedpoint.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238536AbhIPMLK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 16 Sep 2021 08:06:16 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.0.43) with SMTP id 18GBokCc011984;
-        Thu, 16 Sep 2021 08:04:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=5RhjU+LEmgORcq/vv2e0IOKZ6jh2ZKtBlLhFlAHPRHg=;
- b=GHxjWi0AyL+1vvNb7be9plmfgeSx9iPty/SNXCP7Ah0PYh/MLaKRxVTdnkZDvwVOmfcj
- 5/AqtcO2CkGgLKgRoqEJahbXoF6E5qsi0dPTaM+QI5l70nV4Lo8jXvuGh+/nzsBpiKyI
- ujvdhfsUk+PtkhwJQql888ydK7g8/Tn9CbVeb07nm3yORXGAzwD3UMkBXeuk/oTIMQrG
- sLY0Vfrt8ILxhtsCWG/JHQ9Mf16fdElDAC4/0zTPMiUc1ug5DHe28gStaOhBpBPf0EVd
- YkFo/8iWBRq1QP+WSF3ANxv+Voa1oZA2+94018gYlpNRdrFxl4dO3gA5+wsFt054xReg Aw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3b44r3hb65-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Sep 2021 08:04:39 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 18GBpAOe018953;
-        Thu, 16 Sep 2021 08:04:39 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3b44r3hb5m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Sep 2021 08:04:39 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 18GBuu0s027838;
-        Thu, 16 Sep 2021 12:04:38 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma02wdc.us.ibm.com with ESMTP id 3b0m3cgswa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Sep 2021 12:04:38 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 18GC4cSH22086012
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Sep 2021 12:04:38 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E032528067;
-        Thu, 16 Sep 2021 12:04:37 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F378A2805C;
-        Thu, 16 Sep 2021 12:04:35 +0000 (GMT)
-Received: from li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com (unknown [9.160.174.53])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Thu, 16 Sep 2021 12:04:35 +0000 (GMT)
-Date:   Thu, 16 Sep 2021 07:04:34 -0500
-From:   "Paul A. Clarke" <pc@us.ibm.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        eranian@google.com
-Subject: Re: [PATCH v2] perf test: Workload test of metric and metricgroups
-Message-ID: <20210916120434.GA4498@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
-References: <20210916060525.1890638-1-irogers@google.com>
+        Thu, 16 Sep 2021 08:11:10 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.leastfixedpoint.com (Postfix) with ESMTPSA id A77A06433D;
+        Thu, 16 Sep 2021 13:09:48 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=leastfixedpoint.com;
+        s=default; t=1631794188;
+        bh=HyeUqoWl5M6FJGZY92guL3XNIdAXMe9IcV+OCJEorXQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=uOrF2F0DrWpLD+u1KOyjSsg+NQzdzt0gX/vH6s038f0vKjzL1bIuBuqoC2byy/ZC4
+         y4EAZqhvP088kQbF5Y4dfr2tasxnPRl3ep457jjeYPWCvmqdRfkCBzBvPZIXFF1Lwc
+         HTxmDNG27yLG+9NCYA+mFLk4i/4jgSwcTO1uqahw=
+From:   Tony Garnock-Jones <tonyg@leastfixedpoint.com>
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org
+Cc:     linux-perf-users@vger.kernel.org,
+        Tony Garnock-Jones <tonyg@leastfixedpoint.com>,
+        Ian Rogers <irogers@google.com>
+Subject: [PATCH v4] tools/perf: Use long-running addr2line per dso
+Date:   Thu, 16 Sep 2021 14:09:39 +0200
+Message-Id: <20210916120939.453536-1-tonyg@leastfixedpoint.com>
+In-Reply-To: <YT+vJQFfSTE3EExF@kernel.org>
+References: <YT+vJQFfSTE3EExF@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210916060525.1890638-1-irogers@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: QZlgmHlhqgc6bOwf_oeWkoIU_-VfjeQS
-X-Proofpoint-ORIG-GUID: WhGUe7YqOAMBCriT8Gea9tpvtlqe3mrk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.182.1,Aquarius:18.0.687,Hydra:6.0.235,FMLib:17.0.607.475
- definitions=2020-10-13_15,2020-10-13_02,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- priorityscore=1501 bulkscore=0 adultscore=0 lowpriorityscore=0
- clxscore=1011 phishscore=0 mlxscore=0 mlxlogscore=999 suspectscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2109030001 definitions=main-2109160068
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 15, 2021 at 11:05:25PM -0700, Ian Rogers wrote:
-> Test every metric and metricgroup with 'true' as a workload.
+Invoking addr2line in a separate subprocess, one for each required
+lookup, takes a terribly long time. This patch introduces a
+long-running addr2line process for each dso, *DRAMATICALLY* speeding
+up runs of perf. What used to take tens of minutes now takes tens of
+seconds.
 
-Good idea!  (However...)
+Debian bug report about this issue:
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=911815
 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/tests/shell/stat_all_metricgroups.sh | 12 ++++++++++++
->  tools/perf/tests/shell/stat_all_metrics.sh      | 16 ++++++++++++++++
->  2 files changed, 28 insertions(+)
->  create mode 100755 tools/perf/tests/shell/stat_all_metricgroups.sh
->  create mode 100755 tools/perf/tests/shell/stat_all_metrics.sh
-> 
-> diff --git a/tools/perf/tests/shell/stat_all_metricgroups.sh b/tools/perf/tests/shell/stat_all_metricgroups.sh
-> new file mode 100755
-> index 000000000000..de24d374ce24
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/stat_all_metricgroups.sh
-> @@ -0,0 +1,12 @@
-> +#!/bin/sh
-> +# perf all metricgroups test
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +set -e
-> +
-> +for m in $(perf list --raw-dump metricgroups); do
-> +  echo "Testing $m"
-> +  perf stat -M "$m" true
-> +done
-> +
-> +exit 0
+Signed-off-by: Tony Garnock-Jones <tonyg@leastfixedpoint.com>
+Tested-by: Ian Rogers <irogers@google.com>
 
-This always succeeds. Is that what you want?
-Maybe check the return code from "perf", at least?
+---
+Changes since v3:
+ - use zfree(), plus some small code compaction edits
+ - rebase against upstream master ff1ffd71d5f0612cf194f5705c671d6b64bf5f91
 
-> diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/tests/shell/stat_all_metrics.sh
-> new file mode 100755
-> index 000000000000..81b19ba27e68
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/stat_all_metrics.sh
-> @@ -0,0 +1,16 @@
-> +#!/bin/sh
-> +# perf all metrics test
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +set -e
-> +
-> +for m in `perf list --raw-dump metrics`; do
-> +  echo "Testing $m"
-> +  result=$(perf stat -M "$m" true)
+Changes since v2:
+ - remove redundant initializations to 0 and NULL
+ - use terminology "record" instead of "stanza" for input from addr2line
 
-I don't think this is doing what you want it to do, as it just captures the
-output of "true", which is always empty.
+Changes since v1:
+ - use "subcmd/run-command.h" machinery instead of socketpair/fork/exec directly
 
-> +  if [[ "$result" =~ "$m" ]]; then
 
-So this always fails to match, and you'll never fail here, either. :-)
+ tools/perf/util/srcline.c | 362 +++++++++++++++++++++++++++-----------
+ 1 file changed, 262 insertions(+), 100 deletions(-)
 
-> +    echo "Metric not printed: $m"
-> +    exit 1
-> +  fi
-> +done
-> +
-> +exit 0
+diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+index 5b7d6c16d33f..af468e3bb6fa 100644
+--- a/tools/perf/util/srcline.c
++++ b/tools/perf/util/srcline.c
+@@ -1,8 +1,10 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <inttypes.h>
++#include <signal.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++#include <sys/types.h>
+ 
+ #include <linux/kernel.h>
+ #include <linux/string.h>
+@@ -15,6 +17,7 @@
+ #include "srcline.h"
+ #include "string2.h"
+ #include "symbol.h"
++#include "subcmd/run-command.h"
+ 
+ bool srcline_full_filename;
+ 
+@@ -119,6 +122,8 @@ static struct symbol *new_inline_sym(struct dso *dso,
+ 	return inline_sym;
+ }
+ 
++#define MAX_INLINE_NEST 1024
++
+ #ifdef HAVE_LIBBFD_SUPPORT
+ 
+ /*
+@@ -273,8 +278,6 @@ static void addr2line_cleanup(struct a2l_data *a2l)
+ 	free(a2l);
+ }
+ 
+-#define MAX_INLINE_NEST 1024
+-
+ static int inline_list__append_dso_a2l(struct dso *dso,
+ 				       struct inline_node *node,
+ 				       struct symbol *sym)
+@@ -361,26 +364,14 @@ void dso__free_a2l(struct dso *dso)
+ 	dso->a2l = NULL;
+ }
+ 
+-static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
+-					struct dso *dso, struct symbol *sym)
+-{
+-	struct inline_node *node;
+-
+-	node = zalloc(sizeof(*node));
+-	if (node == NULL) {
+-		perror("not enough memory for the inline node");
+-		return NULL;
+-	}
+-
+-	INIT_LIST_HEAD(&node->val);
+-	node->addr = addr;
+-
+-	addr2line(dso_name, addr, NULL, NULL, dso, true, node, sym);
+-	return node;
+-}
+-
+ #else /* HAVE_LIBBFD_SUPPORT */
+ 
++struct a2l_subprocess {
++	struct child_process addr2line;
++	FILE *to_child;
++	FILE *from_child;
++};
++
+ static int filename_split(char *filename, unsigned int *line_nr)
+ {
+ 	char *sep;
+@@ -402,114 +393,285 @@ static int filename_split(char *filename, unsigned int *line_nr)
+ 	return 0;
+ }
+ 
++static void addr2line_subprocess_cleanup(struct a2l_subprocess *a2l)
++{
++	if (a2l->addr2line.pid != -1) {
++		kill(a2l->addr2line.pid, SIGKILL);
++		finish_command(&a2l->addr2line); /* ignore result, we don't care */
++		a2l->addr2line.pid = -1;
++	}
++
++	if (a2l->to_child != NULL) {
++		fclose(a2l->to_child);
++		a2l->to_child = NULL;
++	}
++
++	if (a2l->from_child != NULL) {
++		fclose(a2l->from_child);
++		a2l->from_child = NULL;
++	}
++
++	free(a2l);
++}
++
++static struct a2l_subprocess *addr2line_subprocess_init(const char *path)
++{
++	const char *argv[] = { "addr2line", "-e", path, "-i", "-f", NULL };
++	struct a2l_subprocess *a2l = zalloc(sizeof(*a2l));
++	int start_command_status = 0;
++
++	if (a2l == NULL)
++		goto out;
++
++	a2l->to_child = NULL;
++	a2l->from_child = NULL;
++
++	a2l->addr2line.pid = -1;
++	a2l->addr2line.in = -1;
++	a2l->addr2line.out = -1;
++	a2l->addr2line.no_stderr = 1;
++
++	a2l->addr2line.argv = argv;
++	start_command_status = start_command(&a2l->addr2line);
++	a2l->addr2line.argv = NULL; /* it's not used after start_command; avoid dangling pointers */
++
++	if (start_command_status != 0) {
++		pr_warning("could not start addr2line for %s: start_command return code %d\n",
++			   path,
++			   start_command_status);
++		goto out;
++	}
++
++	a2l->to_child = fdopen(a2l->addr2line.in, "w");
++	if (a2l->to_child == NULL) {
++		pr_warning("could not open write-stream to addr2line of %s\n", path);
++		goto out;
++	}
++
++	a2l->from_child = fdopen(a2l->addr2line.out, "r");
++	if (a2l->from_child == NULL) {
++		pr_warning("could not open read-stream from addr2line of %s\n", path);
++		goto out;
++	}
++
++	return a2l;
++
++out:
++	if (a2l)
++		addr2line_subprocess_cleanup(a2l);
++
++	return NULL;
++}
++
++static int read_addr2line_record(struct a2l_subprocess *a2l,
++				 char **function,
++				 char **filename,
++				 unsigned int *line_nr)
++{
++	/*
++	 * Returns:
++	 * -1 ==> error
++	 * 0 ==> sentinel (or other ill-formed) record read
++	 * 1 ==> a genuine record read
++	 */
++	char *line = NULL;
++	size_t line_len = 0;
++	unsigned int dummy_line_nr = 0;
++	int ret = -1;
++
++	if (function != NULL)
++		zfree(function);
++
++	if (filename != NULL)
++		zfree(filename);
++
++	if (line_nr != NULL)
++		*line_nr = 0;
++
++	if (getline(&line, &line_len, a2l->from_child) < 0 || !line_len)
++		goto error;
++
++	if (function != NULL)
++		*function = strdup(strim(line));
++
++	zfree(&line);
++	line_len = 0;
++
++	if (getline(&line, &line_len, a2l->from_child) < 0 || !line_len)
++		goto error;
++
++	if (filename_split(line, line_nr == NULL ? &dummy_line_nr : line_nr) == 0) {
++		ret = 0;
++		goto error;
++	}
++
++	if (filename != NULL)
++		*filename = strdup(line);
++
++	zfree(&line);
++	line_len = 0;
++
++	return 1;
++
++error:
++	free(line);
++	if (function != NULL)
++		zfree(function);
++	if (filename != NULL)
++		zfree(filename);
++	return ret;
++}
++
++static int inline_list__append_record(struct dso *dso,
++				      struct inline_node *node,
++				      struct symbol *sym,
++				      const char *function,
++				      const char *filename,
++				      unsigned int line_nr)
++{
++	struct symbol *inline_sym = new_inline_sym(dso, sym, function);
++
++	return inline_list__append(inline_sym, srcline_from_fileline(filename, line_nr), node);
++}
++
+ static int addr2line(const char *dso_name, u64 addr,
+ 		     char **file, unsigned int *line_nr,
+-		     struct dso *dso __maybe_unused,
+-		     bool unwind_inlines __maybe_unused,
+-		     struct inline_node *node __maybe_unused,
++		     struct dso *dso,
++		     bool unwind_inlines,
++		     struct inline_node *node,
+ 		     struct symbol *sym __maybe_unused)
+ {
+-	FILE *fp;
+-	char cmd[PATH_MAX];
+-	char *filename = NULL;
+-	size_t len;
++	struct a2l_subprocess *a2l = dso->a2l;
++	char *record_function = NULL;
++	char *record_filename = NULL;
++	unsigned int record_line_nr = 0;
++	int record_status = -1;
+ 	int ret = 0;
++	size_t inline_count = 0;
+ 
+-	scnprintf(cmd, sizeof(cmd), "addr2line -e %s %016"PRIx64,
+-		  dso_name, addr);
++	if (!a2l) {
++		dso->a2l = addr2line_subprocess_init(dso_name);
++		a2l = dso->a2l;
++	}
+ 
+-	fp = popen(cmd, "r");
+-	if (fp == NULL) {
+-		pr_warning("popen failed for %s\n", dso_name);
+-		return 0;
++	if (a2l == NULL) {
++		if (!symbol_conf.disable_add2line_warn)
++			pr_warning("%s %s: addr2line_subprocess_init failed\n", __func__, dso_name);
++		goto out;
+ 	}
+ 
+-	if (getline(&filename, &len, fp) < 0 || !len) {
+-		pr_warning("addr2line has no output for %s\n", dso_name);
++	/*
++	 * Send our request and then *deliberately* send something that can't be interpreted as
++	 * a valid address to ask addr2line about (namely, ","). This causes addr2line to first
++	 * write out the answer to our request, in an unbounded/unknown number of records, and
++	 * then to write out the lines "??" and "??:0", so that we can detect when it has
++	 * finished giving us anything useful. We have to be careful about the first record,
++	 * though, because it may be genuinely unknown, in which case we'll get two sets of
++	 * "??"/"??:0" lines.
++	 */
++	if (fprintf(a2l->to_child, "%016"PRIx64"\n,\n", addr) < 0 || fflush(a2l->to_child) != 0) {
++		pr_warning("%s %s: could not send request\n", __func__, dso_name);
+ 		goto out;
+ 	}
+ 
+-	ret = filename_split(filename, line_nr);
+-	if (ret != 1) {
+-		free(filename);
++	switch (read_addr2line_record(a2l, &record_function, &record_filename, &record_line_nr)) {
++	case -1:
++		pr_warning("%s %s: could not read first record\n", __func__, dso_name);
+ 		goto out;
++	case 0:
++		/*
++		 * The first record was invalid, so return failure, but first read another
++		 * record, since we asked a junk question and have to clear the answer out.
++		 */
++		switch (read_addr2line_record(a2l, NULL, NULL, NULL)) {
++		case -1:
++			pr_warning("%s %s: could not read delimiter record\n", __func__, dso_name);
++			break;
++		case 0:
++			/* As expected. */
++			break;
++		default:
++			pr_warning("%s %s: unexpected record instead of sentinel",
++				   __func__, dso_name);
++			break;
++		}
++		goto out;
++	default:
++		break;
++	}
++
++	if (file) {
++		*file = strdup(record_filename);
++		ret = 1;
++	}
++	if (line_nr)
++		*line_nr = record_line_nr;
++
++	if (unwind_inlines) {
++		if (node && inline_list__append_record(dso, node, sym,
++						       record_function,
++						       record_filename,
++						       record_line_nr)) {
++			ret = 0;
++			goto out;
++		}
+ 	}
+ 
+-	*file = filename;
++	/* We have to read the records even if we don't care about the inline info. */
++	while ((record_status = read_addr2line_record(a2l,
++						      &record_function,
++						      &record_filename,
++						      &record_line_nr)) == 1) {
++		if (unwind_inlines && node && inline_count++ < MAX_INLINE_NEST) {
++			if (inline_list__append_record(dso, node, sym,
++						       record_function,
++						       record_filename,
++						       record_line_nr)) {
++				ret = 0;
++				goto out;
++			}
++			ret = 1; /* found at least one inline frame */
++		}
++	}
+ 
+ out:
+-	pclose(fp);
++	free(record_function);
++	free(record_filename);
+ 	return ret;
+ }
+ 
+-void dso__free_a2l(struct dso *dso __maybe_unused)
++void dso__free_a2l(struct dso *dso)
+ {
+-}
++	struct a2l_subprocess *a2l = dso->a2l;
+ 
+-static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
+-					struct dso *dso __maybe_unused,
+-					struct symbol *sym)
+-{
+-	FILE *fp;
+-	char cmd[PATH_MAX];
+-	struct inline_node *node;
+-	char *filename = NULL;
+-	char *funcname = NULL;
+-	size_t filelen, funclen;
+-	unsigned int line_nr = 0;
+-
+-	scnprintf(cmd, sizeof(cmd), "addr2line -e %s -i -f %016"PRIx64,
+-		  dso_name, addr);
+-
+-	fp = popen(cmd, "r");
+-	if (fp == NULL) {
+-		pr_err("popen failed for %s\n", dso_name);
+-		return NULL;
+-	}
+-
+-	node = zalloc(sizeof(*node));
+-	if (node == NULL) {
+-		perror("not enough memory for the inline node");
+-		goto out;
+-	}
+-
+-	INIT_LIST_HEAD(&node->val);
+-	node->addr = addr;
+-
+-	/* addr2line -f generates two lines for each inlined functions */
+-	while (getline(&funcname, &funclen, fp) != -1) {
+-		char *srcline;
+-		struct symbol *inline_sym;
+-
+-		strim(funcname);
+-
+-		if (getline(&filename, &filelen, fp) == -1)
+-			goto out;
+-
+-		if (filename_split(filename, &line_nr) != 1)
+-			goto out;
+-
+-		srcline = srcline_from_fileline(filename, line_nr);
+-		inline_sym = new_inline_sym(dso, sym, funcname);
+-
+-		if (inline_list__append(inline_sym, srcline, node) != 0) {
+-			free(srcline);
+-			if (inline_sym && inline_sym->inlined)
+-				symbol__delete(inline_sym);
+-			goto out;
+-		}
+-	}
++	if (!a2l)
++		return;
+ 
+-out:
+-	pclose(fp);
+-	free(filename);
+-	free(funcname);
++	addr2line_subprocess_cleanup(a2l);
+ 
+-	return node;
++	dso->a2l = NULL;
+ }
+ 
+ #endif /* HAVE_LIBBFD_SUPPORT */
+ 
++static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
++					struct dso *dso, struct symbol *sym)
++{
++	struct inline_node *node;
++
++	node = zalloc(sizeof(*node));
++	if (node == NULL) {
++		perror("not enough memory for the inline node");
++		return NULL;
++	}
++
++	INIT_LIST_HEAD(&node->val);
++	node->addr = addr;
++
++	addr2line(dso_name, addr, NULL, NULL, dso, true, node, sym);
++	return node;
++}
++
+ /*
+  * Number of addr2line failures (without success) before disabling it for that
+  * dso.
+-- 
+2.33.0
 
-You may want to redirect the output of the "perf" command to a temporary file,
-then grep within that.  And, you'll need to remove the file before running the
-perf command, because if it fails, it will leave any existing file untouched.
-
-Thanks! :-)
-
-PC
