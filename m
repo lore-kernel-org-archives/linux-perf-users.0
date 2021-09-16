@@ -2,179 +2,281 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E3AC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 08:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10AADC433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 08:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2562E6120F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 08:00:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E46E66120C
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 08:03:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234980AbhIPIB6 (ORCPT
+        id S234881AbhIPIFP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 16 Sep 2021 04:01:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42356 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234882AbhIPIB5 (ORCPT
+        Thu, 16 Sep 2021 04:05:15 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:21660 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234968AbhIPIFE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 16 Sep 2021 04:01:57 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78B0BC061574;
-        Thu, 16 Sep 2021 01:00:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=/QXwV71Kp89im184T0V/ymrJou00nyhzJ+R4oD+1+9E=; b=IkOcVzKq4+f8IOOQbzP3FeT1dy
-        G1WF51P7rzx3jxur49KY7W50vga9kSNq3gDNzq5+LEEVlP6/9A2H8BWfO9vE9O3WwiZSXCKqj+cXg
-        JIKU1QHpzZrloTIieHyQxKEd2th7ofkEa6bXEY63k5vDhpEwxvwHy8BvwQNMVo5unSgFZOESHDWdu
-        vhbUn20zbcRXG+dbat4OfdKSVfEEMtSISJKA3CRVWlhuU83d5iir6IVupT1Pe3lKJawvXgvSGzU64
-        f/NQpxQ4zzZ3UG4Dx3D1JRXhMn+90EGUHCmDeFm6PdMFmsRgPkZyKVI5XsRhFhnKLA3DvqkqokmHv
-        /vuzOSGA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mQmJd-003bfD-7X; Thu, 16 Sep 2021 08:00:17 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EFCD83000A3;
-        Thu, 16 Sep 2021 10:00:15 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A17002CD48C2B; Thu, 16 Sep 2021 10:00:15 +0200 (CEST)
-Date:   Thu, 16 Sep 2021 10:00:15 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     =?utf-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
+        Thu, 16 Sep 2021 04:05:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1631779387;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=bZ0FCXOzP6c2zCLyHHAXO5rY0Lt3SSa8cnMTTAnyRbw=;
+        b=ejkHI2TmDr2QSoeOX+NB4wH1gEtsQmo+jSgpMYaXbI/hvkpUEeI79WKUBBz2cN8mnN2ik8
+        JxGnmG9CUH/aLgSsoBO6pdn1TGF4SA2p86JqR2P2MYH885ZS44Xh/Y+cMJpyEf1E9yAJuD
+        Y/hFtgIfnYvsfaDwhfH0tQRZ6fNPvgc=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-134-K3wzCw4QMEmPNDLU-iyHBg-1; Thu, 16 Sep 2021 04:03:06 -0400
+X-MC-Unique: K3wzCw4QMEmPNDLU-iyHBg-1
+Received: by mail-wm1-f69.google.com with SMTP id c2-20020a7bc8420000b0290238db573ab7so2291620wml.5
+        for <linux-perf-users@vger.kernel.org>; Thu, 16 Sep 2021 01:03:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bZ0FCXOzP6c2zCLyHHAXO5rY0Lt3SSa8cnMTTAnyRbw=;
+        b=Bc+c4nv7m/3DNi9FJxhXfEcVIKg05ieSkQmYaySHcwwucT8xf8D9dX9g0k3nleLESM
+         Pswinxe+lcsi45MzdeIVCSRTprKhFzH2g4Ko01qHdJqyr6MupVGNnR7gbqRmihw6xm+L
+         VKJ6cOJgutOQK/V3g0lMB0O0WTvu3bwLrhjb3Nh2oyP75v0k5ZUcyD2HCSr8QUTC9Cvi
+         5nIeul96zx84GvH/T4Or/6mntC+SKSyKLMbgLUU7JsZqNfFsWEQaL9tUH6ZwfsRlbsgE
+         BIwN5f21RWuKT0OKk6nqnvHVSONKyVnB6cNqYvFwvvJ5MWYGy5/a/yCmeW/xvkiSqrKT
+         0e1g==
+X-Gm-Message-State: AOAM531dWzuaDDjl95Zl5zVhdxwjrcXs7RICwNfw5FjBfrBBCER3+Jtg
+        +Fm1J+gCCYiC5J6vifbkjsfrPQvt26qIYPhW8XId6rcFNGbGGOuW+IG3d3dZUwhFpm2HKu52ffH
+        enwEbwGlx+3i3blGBggxcuA+t0Mz4Aw==
+X-Received: by 2002:a7b:cd93:: with SMTP id y19mr3776584wmj.110.1631779384779;
+        Thu, 16 Sep 2021 01:03:04 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw18IMWSmW/pHBzA7dkRKVOTtp0BTquaXG3HnDUE7BJ832AYBtvnnsjfO2DPVnkb3iVkbZ3VQ==
+X-Received: by 2002:a7b:cd93:: with SMTP id y19mr3776554wmj.110.1631779384444;
+        Thu, 16 Sep 2021 01:03:04 -0700 (PDT)
+Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
+        by smtp.gmail.com with ESMTPSA id c23sm2268239wmb.37.2021.09.16.01.03.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Sep 2021 01:03:04 -0700 (PDT)
+Date:   Thu, 16 Sep 2021 10:03:02 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-perf-users@vger.kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-kernel@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <netdev@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <bpf@vger.kernel.org>, jroedel@suse.de, x86@kernel.org
-Subject: Re: [PATCH] x86/dumpstack/64: Add guard pages to stack_info
-Message-ID: <YUL5j/lY0mtx4NMq@hirez.programming.kicks-ass.net>
-References: <ff979a43-045a-dc56-64d1-2c31dd4db381@linux.alibaba.com>
- <20210910153839.GH4323@worktop.programming.kicks-ass.net>
- <f38987a5-dc36-a20d-8c5e-81e8ead5b4dc@linux.alibaba.com>
- <YT8m2B6D2yWc5Umq@hirez.programming.kicks-ass.net>
- <3fb7c51f-696b-da70-1965-1dda9910cb14@linux.alibaba.com>
- <YUB5VchM3a/MiZpX@hirez.programming.kicks-ass.net>
- <3f26f7a2-0a09-056a-3a7a-4795b6723b60@linux.alibaba.com>
- <YUIOgmOfnOqPrE+z@hirez.programming.kicks-ass.net>
- <76de02b7-4d87-4a3a-e4d4-048829749887@linux.alibaba.com>
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        eranian@google.com
+Subject: Re: [PATCH v2] libperf evsel: Make use of FD robust.
+Message-ID: <YUL6NoeDwdZQ6gNz@krava>
+References: <20210916062239.1894011-1-irogers@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <76de02b7-4d87-4a3a-e4d4-048829749887@linux.alibaba.com>
+In-Reply-To: <20210916062239.1894011-1-irogers@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 16, 2021 at 11:47:49AM +0800, 王贇 wrote:
+On Wed, Sep 15, 2021 at 11:22:39PM -0700, Ian Rogers wrote:
 
-> I did some debug and found the issue, we are missing:
+SNIP
+
+> v2. is a rebase.
 > 
-> @@ -122,7 +137,10 @@ static __always_inline bool in_exception_stack(unsigned long *stack, struct stac
->         info->type      = ep->type;
->         info->begin     = (unsigned long *)begin;
->         info->end       = (unsigned long *)end;
-> -       info->next_sp   = (unsigned long *)regs->sp;
-> +
-> +       if (!(ep->type & STACK_TYPE_GUARD))
-> +               info->next_sp   = (unsigned long *)regs->sp;
-> +
->         return true;
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/lib/perf/evsel.c | 64 +++++++++++++++++++++++++++---------------
+>  1 file changed, 41 insertions(+), 23 deletions(-)
+> 
+> diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
+> index d8886720e83d..ede7af4d183c 100644
+> --- a/tools/lib/perf/evsel.c
+> +++ b/tools/lib/perf/evsel.c
+> @@ -43,7 +43,7 @@ void perf_evsel__delete(struct perf_evsel *evsel)
+>  	free(evsel);
 >  }
+>  
+> -#define FD(e, x, y) (*(int *) xyarray__entry(e->fd, x, y))
+> +#define FD(e, x, y) (int *) xyarray__entry(e->fd, x, y)
+>  #define MMAP(e, x, y) (e->mmap ? ((struct perf_mmap *) xyarray__entry(e->mmap, x, y)) : NULL)
+>  
+>  int perf_evsel__alloc_fd(struct perf_evsel *evsel, int ncpus, int nthreads)
+> @@ -54,7 +54,10 @@ int perf_evsel__alloc_fd(struct perf_evsel *evsel, int ncpus, int nthreads)
+>  		int cpu, thread;
+>  		for (cpu = 0; cpu < ncpus; cpu++) {
+>  			for (thread = 0; thread < nthreads; thread++) {
+> -				FD(evsel, cpu, thread) = -1;
+> +				int *fd = FD(evsel, cpu, thread);
+> +
+> +				if (fd)
+> +					 *fd = -1;
+
+so it's the perf_thread open that uses empty cpus and evlist__close
+will have more cpus to work on
+
+I'd expect some symetric fix on close path, but evlist__close is
+generic, so it's probably the best fix ;-)
+
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+
+thanks,
+jirka
+
+
+>  			}
+>  		}
+>  	}
+> @@ -80,7 +83,7 @@ sys_perf_event_open(struct perf_event_attr *attr,
+>  static int get_group_fd(struct perf_evsel *evsel, int cpu, int thread, int *group_fd)
+>  {
+>  	struct perf_evsel *leader = evsel->leader;
+> -	int fd;
+> +	int *fd;
+>  
+>  	if (evsel == leader) {
+>  		*group_fd = -1;
+> @@ -95,10 +98,10 @@ static int get_group_fd(struct perf_evsel *evsel, int cpu, int thread, int *grou
+>  		return -ENOTCONN;
+>  
+>  	fd = FD(leader, cpu, thread);
+> -	if (fd == -1)
+> +	if (fd == NULL || *fd == -1)
+>  		return -EBADF;
+>  
+> -	*group_fd = fd;
+> +	*group_fd = *fd;
+>  
+>  	return 0;
+>  }
+> @@ -138,7 +141,11 @@ int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
+>  
+>  	for (cpu = 0; cpu < cpus->nr; cpu++) {
+>  		for (thread = 0; thread < threads->nr; thread++) {
+> -			int fd, group_fd;
+> +			int fd, group_fd, *evsel_fd;
+> +
+> +			evsel_fd = FD(evsel, cpu, thread);
+> +			if (evsel_fd == NULL)
+> +				return -EINVAL;
+>  
+>  			err = get_group_fd(evsel, cpu, thread, &group_fd);
+>  			if (err < 0)
+> @@ -151,7 +158,7 @@ int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
+>  			if (fd < 0)
+>  				return -errno;
+>  
+> -			FD(evsel, cpu, thread) = fd;
+> +			*evsel_fd = fd;
+>  		}
+>  	}
+>  
+> @@ -163,9 +170,12 @@ static void perf_evsel__close_fd_cpu(struct perf_evsel *evsel, int cpu)
+>  	int thread;
+>  
+>  	for (thread = 0; thread < xyarray__max_y(evsel->fd); ++thread) {
+> -		if (FD(evsel, cpu, thread) >= 0)
+> -			close(FD(evsel, cpu, thread));
+> -		FD(evsel, cpu, thread) = -1;
+> +		int *fd = FD(evsel, cpu, thread);
+> +
+> +		if (fd && *fd >= 0) {
+> +			close(*fd);
+> +			*fd = -1;
+> +		}
+>  	}
+>  }
+>  
+> @@ -209,13 +219,12 @@ void perf_evsel__munmap(struct perf_evsel *evsel)
+>  
+>  	for (cpu = 0; cpu < xyarray__max_x(evsel->fd); cpu++) {
+>  		for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
+> -			int fd = FD(evsel, cpu, thread);
+> -			struct perf_mmap *map = MMAP(evsel, cpu, thread);
+> +			int *fd = FD(evsel, cpu, thread);
+>  
+> -			if (fd < 0)
+> +			if (fd == NULL || *fd < 0)
+>  				continue;
+>  
+> -			perf_mmap__munmap(map);
+> +			perf_mmap__munmap(MMAP(evsel, cpu, thread));
+>  		}
+>  	}
+>  
+> @@ -239,15 +248,16 @@ int perf_evsel__mmap(struct perf_evsel *evsel, int pages)
+>  
+>  	for (cpu = 0; cpu < xyarray__max_x(evsel->fd); cpu++) {
+>  		for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
+> -			int fd = FD(evsel, cpu, thread);
+> -			struct perf_mmap *map = MMAP(evsel, cpu, thread);
+> +			int *fd = FD(evsel, cpu, thread);
+> +			struct perf_mmap *map;
+>  
+> -			if (fd < 0)
+> +			if (fd == NULL || *fd < 0)
+>  				continue;
+>  
+> +			map = MMAP(evsel, cpu, thread);
+>  			perf_mmap__init(map, NULL, false, NULL);
+>  
+> -			ret = perf_mmap__mmap(map, &mp, fd, cpu);
+> +			ret = perf_mmap__mmap(map, &mp, *fd, cpu);
+>  			if (ret) {
+>  				perf_evsel__munmap(evsel);
+>  				return ret;
+> @@ -260,7 +270,9 @@ int perf_evsel__mmap(struct perf_evsel *evsel, int pages)
+>  
+>  void *perf_evsel__mmap_base(struct perf_evsel *evsel, int cpu, int thread)
+>  {
+> -	if (FD(evsel, cpu, thread) < 0 || MMAP(evsel, cpu, thread) == NULL)
+> +	int *fd = FD(evsel, cpu, thread);
+> +
+> +	if (fd == NULL || *fd < 0 || MMAP(evsel, cpu, thread) == NULL)
+>  		return NULL;
+>  
+>  	return MMAP(evsel, cpu, thread)->base;
+> @@ -295,17 +307,18 @@ int perf_evsel__read(struct perf_evsel *evsel, int cpu, int thread,
+>  		     struct perf_counts_values *count)
+>  {
+>  	size_t size = perf_evsel__read_size(evsel);
+> +	int *fd = FD(evsel, cpu, thread);
+>  
+>  	memset(count, 0, sizeof(*count));
+>  
+> -	if (FD(evsel, cpu, thread) < 0)
+> +	if (fd == NULL || *fd < 0)
+>  		return -EINVAL;
+>  
+>  	if (MMAP(evsel, cpu, thread) &&
+>  	    !perf_mmap__read_self(MMAP(evsel, cpu, thread), count))
+>  		return 0;
+>  
+> -	if (readn(FD(evsel, cpu, thread), count->values, size) <= 0)
+> +	if (readn(*fd, count->values, size) <= 0)
+>  		return -errno;
+>  
+>  	return 0;
+> @@ -318,8 +331,13 @@ static int perf_evsel__run_ioctl(struct perf_evsel *evsel,
+>  	int thread;
+>  
+>  	for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
+> -		int fd = FD(evsel, cpu, thread),
+> -		    err = ioctl(fd, ioc, arg);
+> +		int err;
+> +		int *fd = FD(evsel, cpu, thread);
+> +
+> +		if (fd || *fd < 0)
+> +			return -1;
+> +
+> +		err = ioctl(*fd, ioc, arg);
+>  
+>  		if (err)
+>  			return err;
+> -- 
+> 2.33.0.309.g3052b89438-goog
 > 
-> as the guard page are not working as real stack I guess?
 
-Correct, but I thought I put if (type & GUARD) terminators in all paths
-that ended up caring about ->next_sp. Clearly I seem to have missed one
-:/
-
-Let me try and figure out where that happens.
-
-> With that one things going on correctly, and some trivials below.
-
-> >  enum stack_type {
-> > -	STACK_TYPE_UNKNOWN,
-> > +	STACK_TYPE_UNKNOWN = 0,
-> 
-> Is this necessary?
-
-No, but it makes it more explicit we care about the value.
-
-> >  	STACK_TYPE_TASK,
-> >  	STACK_TYPE_IRQ,
-> >  	STACK_TYPE_SOFTIRQ,
-> >  	STACK_TYPE_ENTRY,
-> >  	STACK_TYPE_EXCEPTION,
-> >  	STACK_TYPE_EXCEPTION_LAST = STACK_TYPE_EXCEPTION + N_EXCEPTION_STACKS-1,
-> > +	STACK_TYPE_GUARD = 0x80,
-
-Note that this is a flag.
-
-> >  };
-> >  
-> >  struct stack_info {
-> > --- a/arch/x86/kernel/dumpstack_64.c
-> > +++ b/arch/x86/kernel/dumpstack_64.c
-> > @@ -32,9 +32,15 @@ const char *stack_type_name(enum stack_t
-> >  {
-> >  	BUILD_BUG_ON(N_EXCEPTION_STACKS != 6);
-> >  
-> > +	if (type == STACK_TYPE_TASK)
-> > +		return "TASK";
-> > +
-> >  	if (type == STACK_TYPE_IRQ)
-> >  		return "IRQ";
-> >  
-> > +	if (type == STACK_TYPE_SOFTIRQ)
-> > +		return "SOFTIRQ";
-> > +
-> 
-> Do we need one for GUARD too?
-
-No, GUARD is not a single type but a flag. The caller can trivially do
-something like:
-
-	"%s %s", stack_type_name(type & ~GUARD),
-	         (type & GUARD) ?  "GUARD" : ""
-
-> >  	if (type == STACK_TYPE_ENTRY) {
-> >  		/*
-> >  		 * On 64-bit, we have a generic entry stack that we
-
-> > @@ -111,10 +122,11 @@ static __always_inline bool in_exception
-> >  	k = (stk - begin) >> PAGE_SHIFT;
-> >  	/* Lookup the page descriptor */
-> >  	ep = &estack_pages[k];
-> > -	/* Guard page? */
-> > +	/* unknown entry */
-> >  	if (!ep->size)
-> >  		return false;
-> >  
-> > +
-> 
-> Extra line?
-
-Gone now, thanks!
