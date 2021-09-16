@@ -2,84 +2,179 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56203C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 07:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E3AC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 08:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3972F611C8
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 07:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2562E6120F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 08:00:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234941AbhIPHjF (ORCPT
+        id S234980AbhIPIB6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 16 Sep 2021 03:39:05 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3835 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234935AbhIPHjE (ORCPT
+        Thu, 16 Sep 2021 04:01:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42356 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234882AbhIPIB5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 16 Sep 2021 03:39:04 -0400
-Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4H984x0ZHjz67mMR;
-        Thu, 16 Sep 2021 15:35:29 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Thu, 16 Sep 2021 09:37:42 +0200
-Received: from [10.47.81.58] (10.47.81.58) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Thu, 16 Sep
- 2021 08:37:41 +0100
-Subject: Re: [PATCH v2] perf test: Workload test of metric and metricgroups
-To:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Thu, 16 Sep 2021 04:01:57 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78B0BC061574;
+        Thu, 16 Sep 2021 01:00:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=/QXwV71Kp89im184T0V/ymrJou00nyhzJ+R4oD+1+9E=; b=IkOcVzKq4+f8IOOQbzP3FeT1dy
+        G1WF51P7rzx3jxur49KY7W50vga9kSNq3gDNzq5+LEEVlP6/9A2H8BWfO9vE9O3WwiZSXCKqj+cXg
+        JIKU1QHpzZrloTIieHyQxKEd2th7ofkEa6bXEY63k5vDhpEwxvwHy8BvwQNMVo5unSgFZOESHDWdu
+        vhbUn20zbcRXG+dbat4OfdKSVfEEMtSISJKA3CRVWlhuU83d5iir6IVupT1Pe3lKJawvXgvSGzU64
+        f/NQpxQ4zzZ3UG4Dx3D1JRXhMn+90EGUHCmDeFm6PdMFmsRgPkZyKVI5XsRhFhnKLA3DvqkqokmHv
+        /vuzOSGA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mQmJd-003bfD-7X; Thu, 16 Sep 2021 08:00:17 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EFCD83000A3;
+        Thu, 16 Sep 2021 10:00:15 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A17002CD48C2B; Thu, 16 Sep 2021 10:00:15 +0200 (CEST)
+Date:   Thu, 16 Sep 2021 10:00:15 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     =?utf-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <eranian@google.com>
-References: <20210916060525.1890638-1-irogers@google.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <f7bbc59b-794f-2675-a044-1e3a58ad1495@huawei.com>
-Date:   Thu, 16 Sep 2021 08:41:17 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-perf-users@vger.kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-kernel@vger.kernel.org>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <netdev@vger.kernel.org>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <bpf@vger.kernel.org>, jroedel@suse.de, x86@kernel.org
+Subject: Re: [PATCH] x86/dumpstack/64: Add guard pages to stack_info
+Message-ID: <YUL5j/lY0mtx4NMq@hirez.programming.kicks-ass.net>
+References: <ff979a43-045a-dc56-64d1-2c31dd4db381@linux.alibaba.com>
+ <20210910153839.GH4323@worktop.programming.kicks-ass.net>
+ <f38987a5-dc36-a20d-8c5e-81e8ead5b4dc@linux.alibaba.com>
+ <YT8m2B6D2yWc5Umq@hirez.programming.kicks-ass.net>
+ <3fb7c51f-696b-da70-1965-1dda9910cb14@linux.alibaba.com>
+ <YUB5VchM3a/MiZpX@hirez.programming.kicks-ass.net>
+ <3f26f7a2-0a09-056a-3a7a-4795b6723b60@linux.alibaba.com>
+ <YUIOgmOfnOqPrE+z@hirez.programming.kicks-ass.net>
+ <76de02b7-4d87-4a3a-e4d4-048829749887@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <20210916060525.1890638-1-irogers@google.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.81.58]
-X-ClientProxiedBy: lhreml727-chm.china.huawei.com (10.201.108.78) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <76de02b7-4d87-4a3a-e4d4-048829749887@linux.alibaba.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 16/09/2021 07:05, Ian Rogers wrote:
-> Test every metric and metricgroup with 'true' as a workload.
+On Thu, Sep 16, 2021 at 11:47:49AM +0800, 王贇 wrote:
+
+> I did some debug and found the issue, we are missing:
 > 
-> Signed-off-by: Ian Rogers<irogers@google.com>
+> @@ -122,7 +137,10 @@ static __always_inline bool in_exception_stack(unsigned long *stack, struct stac
+>         info->type      = ep->type;
+>         info->begin     = (unsigned long *)begin;
+>         info->end       = (unsigned long *)end;
+> -       info->next_sp   = (unsigned long *)regs->sp;
+> +
+> +       if (!(ep->type & STACK_TYPE_GUARD))
+> +               info->next_sp   = (unsigned long *)regs->sp;
+> +
+>         return true;
+>  }
+> 
+> as the guard page are not working as real stack I guess?
 
-Reviewed-by: John Garry <john.garry@huawei.com>
+Correct, but I thought I put if (type & GUARD) terminators in all paths
+that ended up caring about ->next_sp. Clearly I seem to have missed one
+:/
 
-Note that I also had a local test for pmu events:
-for e in `$PERF list --raw-dump pmu`; do
-   echo "Testing $e"
-   result=$($PERF stat -v -e "$e" perf bench internals synthesize)
-   if [[ "$result" =~ "$e" ]]; then
-     echo "Event not printed: $e"
-     exit 1
-   fi
-done
+Let me try and figure out where that happens.
 
-Is there any value in upstreaming this? I could not see same already 
-there. Or else make your new script generic, so that it accepts an 
-argument whether to test events or metrics or metricgroups
+> With that one things going on correctly, and some trivials below.
+
+> >  enum stack_type {
+> > -	STACK_TYPE_UNKNOWN,
+> > +	STACK_TYPE_UNKNOWN = 0,
+> 
+> Is this necessary?
+
+No, but it makes it more explicit we care about the value.
+
+> >  	STACK_TYPE_TASK,
+> >  	STACK_TYPE_IRQ,
+> >  	STACK_TYPE_SOFTIRQ,
+> >  	STACK_TYPE_ENTRY,
+> >  	STACK_TYPE_EXCEPTION,
+> >  	STACK_TYPE_EXCEPTION_LAST = STACK_TYPE_EXCEPTION + N_EXCEPTION_STACKS-1,
+> > +	STACK_TYPE_GUARD = 0x80,
+
+Note that this is a flag.
+
+> >  };
+> >  
+> >  struct stack_info {
+> > --- a/arch/x86/kernel/dumpstack_64.c
+> > +++ b/arch/x86/kernel/dumpstack_64.c
+> > @@ -32,9 +32,15 @@ const char *stack_type_name(enum stack_t
+> >  {
+> >  	BUILD_BUG_ON(N_EXCEPTION_STACKS != 6);
+> >  
+> > +	if (type == STACK_TYPE_TASK)
+> > +		return "TASK";
+> > +
+> >  	if (type == STACK_TYPE_IRQ)
+> >  		return "IRQ";
+> >  
+> > +	if (type == STACK_TYPE_SOFTIRQ)
+> > +		return "SOFTIRQ";
+> > +
+> 
+> Do we need one for GUARD too?
+
+No, GUARD is not a single type but a flag. The caller can trivially do
+something like:
+
+	"%s %s", stack_type_name(type & ~GUARD),
+	         (type & GUARD) ?  "GUARD" : ""
+
+> >  	if (type == STACK_TYPE_ENTRY) {
+> >  		/*
+> >  		 * On 64-bit, we have a generic entry stack that we
+
+> > @@ -111,10 +122,11 @@ static __always_inline bool in_exception
+> >  	k = (stk - begin) >> PAGE_SHIFT;
+> >  	/* Lookup the page descriptor */
+> >  	ep = &estack_pages[k];
+> > -	/* Guard page? */
+> > +	/* unknown entry */
+> >  	if (!ep->size)
+> >  		return false;
+> >  
+> > +
+> 
+> Extra line?
+
+Gone now, thanks!
