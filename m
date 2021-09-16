@@ -2,35 +2,36 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C231AC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 12:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3535C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 12:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A76C760F6D
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 12:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84BB360F8F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 12:39:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239683AbhIPMkr (ORCPT
+        id S239752AbhIPMk6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 16 Sep 2021 08:40:47 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3836 "EHLO
+        Thu, 16 Sep 2021 08:40:58 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3837 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239768AbhIPMkq (ORCPT
+        with ESMTP id S239793AbhIPMku (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 16 Sep 2021 08:40:46 -0400
-Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4H9Gmz2s5Wz67bGM;
-        Thu, 16 Sep 2021 20:37:07 +0800 (CST)
+        Thu, 16 Sep 2021 08:40:50 -0400
+Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4H9Gn36xDkz67gYW;
+        Thu, 16 Sep 2021 20:37:11 +0800 (CST)
 Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
+ fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Thu, 16 Sep 2021 14:39:23 +0200
+ 15.1.2308.8; Thu, 16 Sep 2021 14:39:28 +0200
 Received: from localhost.localdomain (10.69.192.58) by
  lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Thu, 16 Sep 2021 13:39:19 +0100
+ 15.1.2308.8; Thu, 16 Sep 2021 13:39:23 +0100
 From:   John Garry <john.garry@huawei.com>
 To:     <will@kernel.org>, <mathieu.poirier@linaro.org>,
         <leo.yan@linaro.org>, <peterz@infradead.org>, <mingo@redhat.com>,
@@ -41,10 +42,12 @@ CC:     <irogers@google.com>, <linux-arm-kernel@lists.infradead.org>,
         <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linuxarm@huawei.com>, <zhangshaokun@hisilicon.com>,
         <liuqi115@huawei.com>, John Garry <john.garry@huawei.com>
-Subject: [PATCH 0/5] Improve perf list support for hisi uncore PMUs
-Date:   Thu, 16 Sep 2021 20:34:20 +0800
-Message-ID: <1631795665-240946-1-git-send-email-john.garry@huawei.com>
+Subject: [PATCH 1/5] perf parse-events: Set numeric term config
+Date:   Thu, 16 Sep 2021 20:34:21 +0800
+Message-ID: <1631795665-240946-2-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
+In-Reply-To: <1631795665-240946-1-git-send-email-john.garry@huawei.com>
+References: <1631795665-240946-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.69.192.58]
@@ -55,118 +58,106 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Currently event aliases are supported for HiSilicon uncore PMUs, such that
-we get events listed like the following:
+For numeric terms, the config field may be NULL as it is not set from the
+l+y parsing.
 
-$perf list
-...
-uncore ddrc:
-  uncore_hisi_ddrc.act_cmd
-       [DDRC active commands. Unit: hisi_sccl,ddrc]
-  uncore_hisi_ddrc.flux_rcmd
-       [DDRC read commands. Unit: hisi_sccl,ddrc]
-  uncore_hisi_ddrc.flux_rd 
-       [DDRC total read operations. Unit: hisi_sccl,ddrc]
-  uncore_hisi_ddrc.flux_wcmd
-... 
+Fix by setting the term config from the term type name.
 
-However we still get the events listed from the PMUs event files, like:
+Also fix up the pmu-events test to set the alias strings to set the period
+term properly, and fix up parse-events test to check the term config
+string.
 
-$perf list
-...
-  hisi_sccl1_ddrc0/act_cmd/                          [Kernel PMU event]
-  hisi_sccl1_ddrc0/flux_rcmd/                        [Kernel PMU event]
-  hisi_sccl1_ddrc0/flux_rd/                          [Kernel PMU event]
-  hisi_sccl1_ddrc0/flux_wcmd/                        [Kernel PMU event]
-  hisi_sccl1_ddrc0/flux_wr/                          [Kernel PMU event]
-  hisi_sccl1_ddrc0/pre_cmd/                          [Kernel PMU event]
-  hisi_sccl1_ddrc0/rnk_chg/                          [Kernel PMU event]
-  hisi_sccl1_ddrc0/rw_chg/                           [Kernel PMU event]
-  hisi_sccl1_ddrc1/act_cmd/                          [Kernel PMU event]
-...   
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+ tools/perf/tests/parse-events.c | 8 ++++----
+ tools/perf/tests/pmu-events.c   | 6 +++---
+ tools/perf/util/parse-events.c  | 2 +-
+ 3 files changed, 8 insertions(+), 8 deletions(-)
 
-The list of events will include every event for every PMU in the sysfs event
-folder, so the list can be huge:
-
-$perf list | grep hisi_scc | wc -l
-783
-
-And it will get larger for the next gen of HiSi SoCs, which has more PMUs.
-
-Fortunately the perf PMU code can merge events when an alias with the
-same name exists. So renaming the events in the JSONs to remove the
-"uncore_hisi_XXX." prefix from the name to fully match the sysfs
-name will mean events are merged. The list will then not show the
-individual events per PMU, and rather just the aliases:
-
-$perf list
-...
-uncore ddrc:
-  act_cmd
-       [DDRC active commands. Unit: hisi_sccl,ddrc]
-  flux_rcmd
-       [DDRC read commands. Unit: hisi_sccl,ddrc]
-  flux_rd
-       [DDRC total read operations. Unit: hisi_sccl,ddrc]
-  flux_wcmd
-       [DDRC write commands. Unit: hisi_sccl,ddrc]
-...
-
-To get the stat for the event, just run something like this:
-
-$perf stat -v -e act_cmd sleep 1                
-Using CPUID 0x00000000480fd010
-act_cmd -> hisi_sccl1_ddrc0/config=0x5/
-act_cmd -> hisi_sccl3_ddrc1/config=0x5/
-act_cmd -> hisi_sccl5_ddrc2/config=0x5/
-act_cmd -> hisi_sccl7_ddrc3/config=0x5/
-act_cmd -> hisi_sccl5_ddrc0/config=0x5/
-Control descriptor is not initialized
-act_cmd: 0 1001546260 1001546260
-act_cmd: 0 1001542780 1001542780
-act_cmd: 0 1001531630 1001531630
-act_cmd: 0 1001518570 1001518570
-act_cmd: 0 1001527830 1001527830
-
- Performance counter stats for 'system wide':  
-
-            48,142      act_cmd
-
-       1.001518294 seconds time elapsed
-
-And to run for an individual PMU, run something like this:
-
-$perf stat -v -e hisi_sccl1_ddrc0/act_cmd/ sleep 1
-
-hisi_sccl1_ddrc0/act_cmd/: 0 1000818310 1000818310
-
- Performance counter stats for 'system wide':
-
-                 0      hisi_sccl1_ddrc0/act_cmd/
-
-       1.000827061 seconds time elapsed
-
-I expect that having the same event name for different types of PMUs
-may give unexpected results, so best to use -v option to verify the 
-PMUs used are as expected.
-
-John Garry (5):
-  perf parse-events: Set numeric term config
-  perf jevents: Support ConfigCode
-  perf test: Verify more event members in pmu-events test
-  perf test: Add pmu-event test for event described as "config="
-  perf vendor events arm64: Revise hip08 uncore events
-
- .../arm64/hisilicon/hip08/uncore-ddrc.json    |  32 ++---
- .../arm64/hisilicon/hip08/uncore-hha.json     | 120 +++++++++++++++---
- .../arm64/hisilicon/hip08/uncore-l3c.json     |  52 ++++----
- .../arch/test/test_soc/sys/uncore.json        |   7 +
- tools/perf/pmu-events/jevents.c               |  13 +-
- tools/perf/tests/parse-events.c               |   8 +-
- tools/perf/tests/pmu-events.c                 |  81 ++++++++++--
- tools/perf/util/parse-events.c                |   2 +-
- 8 files changed, 234 insertions(+), 81 deletions(-)
-
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index fd3556cc9ad4..8875e388563e 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -605,7 +605,7 @@ static int test__checkterms_simple(struct list_head *terms)
+ 	TEST_ASSERT_VAL("wrong type val",
+ 			term->type_val == PARSE_EVENTS__TERM_TYPE_NUM);
+ 	TEST_ASSERT_VAL("wrong val", term->val.num == 10);
+-	TEST_ASSERT_VAL("wrong config", !term->config);
++	TEST_ASSERT_VAL("wrong config", !strcmp(term->config, "config"));
+ 
+ 	/* config1 */
+ 	term = list_entry(term->list.next, struct parse_events_term, list);
+@@ -614,7 +614,7 @@ static int test__checkterms_simple(struct list_head *terms)
+ 	TEST_ASSERT_VAL("wrong type val",
+ 			term->type_val == PARSE_EVENTS__TERM_TYPE_NUM);
+ 	TEST_ASSERT_VAL("wrong val", term->val.num == 1);
+-	TEST_ASSERT_VAL("wrong config", !term->config);
++	TEST_ASSERT_VAL("wrong config", !strcmp(term->config, "config1"));
+ 
+ 	/* config2=3 */
+ 	term = list_entry(term->list.next, struct parse_events_term, list);
+@@ -623,7 +623,7 @@ static int test__checkterms_simple(struct list_head *terms)
+ 	TEST_ASSERT_VAL("wrong type val",
+ 			term->type_val == PARSE_EVENTS__TERM_TYPE_NUM);
+ 	TEST_ASSERT_VAL("wrong val", term->val.num == 3);
+-	TEST_ASSERT_VAL("wrong config", !term->config);
++	TEST_ASSERT_VAL("wrong config", !strcmp(term->config, "config2"));
+ 
+ 	/* umask=1*/
+ 	term = list_entry(term->list.next, struct parse_events_term, list);
+@@ -661,7 +661,7 @@ static int test__checkterms_simple(struct list_head *terms)
+ 	TEST_ASSERT_VAL("wrong type val",
+ 			term->type_val == PARSE_EVENTS__TERM_TYPE_NUM);
+ 	TEST_ASSERT_VAL("wrong val", term->val.num == 0xead);
+-	TEST_ASSERT_VAL("wrong config", !term->config);
++	TEST_ASSERT_VAL("wrong config", !strcmp(term->config, "config"));
+ 	return 0;
+ }
+ 
+diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+index 43743cf719ef..8c5a6ba1cb14 100644
+--- a/tools/perf/tests/pmu-events.c
++++ b/tools/perf/tests/pmu-events.c
+@@ -67,7 +67,7 @@ static const struct perf_pmu_test_event segment_reg_loads_any = {
+ 		.desc = "Number of segment register loads",
+ 		.topic = "other",
+ 	},
+-	.alias_str = "umask=0x80,(null)=0x30d40,event=0x6",
++	.alias_str = "umask=0x80,period=0x30d40,event=0x6",
+ 	.alias_long_desc = "Number of segment register loads",
+ };
+ 
+@@ -78,7 +78,7 @@ static const struct perf_pmu_test_event dispatch_blocked_any = {
+ 		.desc = "Memory cluster signals to block micro-op dispatch for any reason",
+ 		.topic = "other",
+ 	},
+-	.alias_str = "umask=0x20,(null)=0x30d40,event=0x9",
++	.alias_str = "umask=0x20,period=0x30d40,event=0x9",
+ 	.alias_long_desc = "Memory cluster signals to block micro-op dispatch for any reason",
+ };
+ 
+@@ -89,7 +89,7 @@ static const struct perf_pmu_test_event eist_trans = {
+ 		.desc = "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
+ 		.topic = "other",
+ 	},
+-	.alias_str = "umask=0,(null)=0x30d40,event=0x3a",
++	.alias_str = "umask=0,period=0x30d40,event=0x3a",
+ 	.alias_long_desc = "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
+ };
+ 
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 51a2219df601..e10243454e8b 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -3083,7 +3083,7 @@ int parse_events_term__num(struct parse_events_term **term,
+ 	struct parse_events_term temp = {
+ 		.type_val  = PARSE_EVENTS__TERM_TYPE_NUM,
+ 		.type_term = type_term,
+-		.config    = config,
++		.config    = config ? : strdup(config_term_names[type_term]),
+ 		.no_value  = no_value,
+ 		.err_term  = loc_term ? loc_term->first_column : 0,
+ 		.err_val   = loc_val  ? loc_val->first_column  : 0,
 -- 
 2.26.2
 
