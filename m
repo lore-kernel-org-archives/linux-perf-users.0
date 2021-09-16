@@ -2,204 +2,295 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-23.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE19C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 00:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED29C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 03:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B499B611C8
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 00:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45196611C4
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Sep 2021 03:34:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233297AbhIPAQK (ORCPT
+        id S234120AbhIPDgJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Sep 2021 20:16:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52726 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233073AbhIPAQK (ORCPT
+        Wed, 15 Sep 2021 23:36:09 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:53282 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233856AbhIPDgI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Sep 2021 20:16:10 -0400
-Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F0BFC061574
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Sep 2021 17:14:50 -0700 (PDT)
-Received: by mail-io1-xd36.google.com with SMTP id a22so5756197iok.12
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Sep 2021 17:14:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2bhYNIvZhw1Pu4EwCfZvnrNOuUaG9EgxvmCjOYrQTC4=;
-        b=WMUqZapexgL0XF/3za9ijZuEsrW8lsacrvIaQLFEJCd1zC78Z3FgkV768ldzEgYt79
-         +GFDezuO+fwb2lDJD2xFYpqUxaYHuPbb8IP3pysxFMgDFHhNPfP/frrIngfkAHdMVFct
-         XHMRi6Lap0baSSKPgmeDo9NWHSpXuQv2jYGoVpem+88djtO/jp+T0Pqm2GayWSCTKgU/
-         3hd3dT1YurhNEWjzXdyDSroifDsyUjMyaMIhvzqZ6ySlXaaJQ2zIXUxCoZ/K4CkGvVaG
-         xrGrehbHvgZy5VZFwsiXhZuv7fXmxfQS20BGwHbLWxQQcpkkRYXnH2BqrSnAy9n36CML
-         BiIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2bhYNIvZhw1Pu4EwCfZvnrNOuUaG9EgxvmCjOYrQTC4=;
-        b=C7vAV7aIAm6hYu1a0C2Iq+HmbWlaTh6LfKw7wkEF1kXt032a7sET9POoitomQ7yu1f
-         S2BgIN0JrbTqhb/tSlHO27gZ7FmILjeFXy62JJ9ConOhZxMoN/spRR02FfoV83JWErnB
-         +Dh3zYOZpLNuRBzonwWBtFvNildhyoLDA74qZcV896lib+voC2IvurPfqGjWYoWGVRDg
-         5k1dAvqZ0PeKTxyCAxLYwAl0PMRPKijm3mCkUt4KAvTsHWI0J2r5dzNVCTiwxdGNHvAl
-         dlmGSe4dKA50WFsu/XU+KFj1dABa571q56O+n8Iby3zKncQBJQtdE4hy4tJ0jmhIPQ8P
-         F8Uw==
-X-Gm-Message-State: AOAM532qUM4lYj3VMvXdpCTvvJd3q4/W72J//XxE5SGQJgb7vz+cvsDI
-        Aq+rNm3drqNAxl0q3IyL0oDYiDbF1WIkQ1rpY+6Cvg==
-X-Google-Smtp-Source: ABdhPJwRh16jEualQ9AXgB69frrD0oCOvlcoRnL43yB09g3/8l/+zWP6bTjkns6IG6Ua3APFTh4VLTedsidivoT2GuE=
-X-Received: by 2002:a05:6638:dc8:: with SMTP id m8mr2145670jaj.21.1631751289790;
- Wed, 15 Sep 2021 17:14:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210804072547.1728924-1-irogers@google.com> <74ddb02a-1cdc-24fc-781e-4c87feb638fa@huawei.com>
- <CAP-5=fWWvGi8gGfwGORF-4y7V6G_gCxY7=SX2zo_cyxKxTEf+A@mail.gmail.com> <3e853906-f758-8ad6-2297-27e4f097591a@huawei.com>
-In-Reply-To: <3e853906-f758-8ad6-2297-27e4f097591a@huawei.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 15 Sep 2021 17:14:37 -0700
-Message-ID: <CAP-5=fVZJfXioc5DiurH+LOfcGGmTgd4Cg+qQHQYWzkD64_G+Q@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Make metric testing more robust.
-To:     John Garry <john.garry@huawei.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Wed, 15 Sep 2021 23:36:08 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R241e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0UoY1VFK_1631763283;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0UoY1VFK_1631763283)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 16 Sep 2021 11:34:44 +0800
+Subject: Re: [PATCH] x86/dumpstack/64: Add guard pages to stack_info
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-perf-users@vger.kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-kernel@vger.kernel.org>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <netdev@vger.kernel.org>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <bpf@vger.kernel.org>, jroedel@suse.de, x86@kernel.org
+References: <ff979a43-045a-dc56-64d1-2c31dd4db381@linux.alibaba.com>
+ <20210910153839.GH4323@worktop.programming.kicks-ass.net>
+ <f38987a5-dc36-a20d-8c5e-81e8ead5b4dc@linux.alibaba.com>
+ <YT8m2B6D2yWc5Umq@hirez.programming.kicks-ass.net>
+ <3fb7c51f-696b-da70-1965-1dda9910cb14@linux.alibaba.com>
+ <YUB5VchM3a/MiZpX@hirez.programming.kicks-ass.net>
+ <3f26f7a2-0a09-056a-3a7a-4795b6723b60@linux.alibaba.com>
+ <YUIOgmOfnOqPrE+z@hirez.programming.kicks-ass.net>
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Message-ID: <8322f202-a2e9-8cc2-78c7-f6c98f360afb@linux.alibaba.com>
+Date:   Thu, 16 Sep 2021 11:34:43 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:78.0)
+ Gecko/20100101 Thunderbird/78.14.0
+MIME-Version: 1.0
+In-Reply-To: <YUIOgmOfnOqPrE+z@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Aug 4, 2021 at 10:19 AM John Garry <john.garry@huawei.com> wrote:
->
-> On 04/08/2021 15:55, Ian Rogers wrote:
-> >
-> >
-> > On Wed, Aug 4, 2021, 2:11 AM John Garry <john.garry@huawei.com
-> > <mailto:john.garry@huawei.com>> wrote:
-> >
-> >     On 04/08/2021 08:25, Ian Rogers wrote:
-> >      > When testing metric expressions we fake counter values from 1 going
-> >      > upward. For some metrics this can yield negative values that are
-> >     clipped
-> >      > to zero, and then cause divide by zero failures. A workaround for
-> >     this
-> >      > case is to try a second time with counter values going in the
-> >     opposite
-> >      > direction.
-> >      >
-> >      > This case was seen in a metric like:
-> >      >    event1 / max(event2 - event3, 0)
-> >
-> >     is this the standard method to make the metric evaluation fail when
-> >     results are not as expected? In this example, event2 should be greater
-> >     than event3 always. Dividing by max(x, 0) would seem a bit silly.
-> >
-> >
-> > I wouldn't say it was standard but it is in a metric a third party gave
-> > us.
->
-> I agree that making it more robust is a good thing. But masking bogus
-> expressions isn't great. After all, we're here to find them :)
->
->  > It would be possible to get the same test failure on more standard
->  > expressions, so it would be nice if these tests were more robust.
->
-> so something like this would fail also:
-> event1 / (event2 + event3 - 1 - event4)
->
-> assuming we have ascending values from 1 for event1. And this would seem
-> a valid expression.
->
-> Anyway, it would be nice if we could reject max(0, x) and any divide by
-> negative numbers, apart from your change.
 
-Thanks John, it'd be nice to have a tool to vet for bogus expressions.
-I think that's out of the scope of this change but we should bear it
-in mind. Would be nice to land this change if someone has time to
-review.
 
-Thanks,
-Ian
+On 2021/9/15 下午11:17, Peter Zijlstra wrote:
+> On Wed, Sep 15, 2021 at 09:51:57AM +0800, 王贇 wrote:
+> 
+>>> +
+>>> +	if (in_exception_stack_guard((void *)address))
+>>> +		pr_emerg("PANIC: exception stack guard: 0x%lx\n", address);
+>>>  #endif
+>>>  
+>>>  	pr_emerg("PANIC: double fault, error_code: 0x%lx\n", error_code);
+>>>
+>>
+>> The panic triggered as below after the stack size recovered, I found this info
+>> could be helpful, maybe we should keep it?
+> 
+> Could you please test this?
 
-> Cheers,
-> john
->
->
-> >      >
-> >      > Signed-off-by: Ian Rogers <irogers@google.com
-> >     <mailto:irogers@google.com>>
-> >      > ---
-> >      >   tools/perf/tests/pmu-events.c | 32 ++++++++++++++++++++++++++------
-> >      >   1 file changed, 26 insertions(+), 6 deletions(-)
-> >      >
-> >      > diff --git a/tools/perf/tests/pmu-events.c
-> >     b/tools/perf/tests/pmu-events.c
-> >      > index b8aff8fb50d8..6c1cd58605c1 100644
-> >      > --- a/tools/perf/tests/pmu-events.c
-> >      > +++ b/tools/perf/tests/pmu-events.c
-> >      > @@ -600,8 +600,18 @@ static int test_parsing(void)
-> >      >                       }
-> >      >
-> >      >                       if (expr__parse(&result, &ctx,
-> >     pe->metric_expr, 0)) {
-> >      > -                             expr_failure("Parse failed", map, pe);
-> >      > -                             ret++;
-> >      > +                             /*
-> >      > +                              * Parsing failed, make numbers go
-> >     from large to
-> >      > +                              * small which can resolve divide
-> >     by zero
-> >      > +                              * issues.
-> >      > +                              */
-> >      > +                             k = 1024;
-> >      > +                             hashmap__for_each_entry((&ctx.ids),
-> >     cur, bkt)
-> >      > +                                     expr__add_id_val(&ctx,
-> >     strdup(cur->key), k--);
-> >      > +                             if (expr__parse(&result, &ctx,
-> >     pe->metric_expr, 0)) {
-> >      > +                                     expr_failure("Parse
-> >     failed", map, pe);
-> >      > +                                     ret++;
-> >      > +                             }
-> >      >                       }
-> >      >                       expr__ctx_clear(&ctx);
-> >      >               }
-> >      > @@ -656,10 +666,20 @@ static int metric_parse_fake(const char *str)
-> >      >               }
-> >      >       }
-> >      >
-> >      > -     if (expr__parse(&result, &ctx, str, 0))
-> >      > -             pr_err("expr__parse failed\n");
-> >      > -     else
-> >      > -             ret = 0;
-> >      > +     ret = 0;
-> >      > +     if (expr__parse(&result, &ctx, str, 0)) {
-> >      > +             /*
-> >      > +              * Parsing failed, make numbers go from large to
-> >     small which can
-> >      > +              * resolve divide by zero issues.
-> >      > +              */
-> >      > +             i = 1024;
-> >      > +             hashmap__for_each_entry((&ctx.ids), cur, bkt)
-> >      > +                     expr__add_id_val(&ctx, strdup(cur->key), i--);
-> >      > +             if (expr__parse(&result, &ctx, str, 0)) {
-> >      > +                     pr_err("expr__parse failed\n");
-> >      > +                     ret = -1;
-> >      > +             }
-> >      > +     }
-> >      >
-> >      >   out:
-> >      >       expr__ctx_clear(&ctx);
-> >      >
-> >
->
+It seems like not working properly, we get very long trace ending as below:
+
+Regards,
+Michael Wang
+
+[   34.662432][    C0] BUG: unable to handle page fault for address: fffffe0000008ff0
+[   34.662435][    C0] #PF: supervisor read access in kernel mode
+[   34.662438][    C0] #PF: error_code(0x0000) - not-present page
+[   34.662442][    C0] PGD 13ffef067 P4D 13ffef067 PUD 13ffed067 PMD 13ffec067 PTE 0
+[   34.662455][    C0] Oops: 0000 [#11] SMP PTI
+[   34.662459][    C0] CPU: 0 PID: 713 Comm: a.out Not tainted 5.14.0-next-20210913+ #530
+[   34.662465][    C0] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
+[   34.662468][    C0] RIP: 0010:get_stack_info_noinstr+0x8d/0xf0
+[   34.662474][    C0] Code: 40 82 66 85 c9 74 33 8b 34 d5 40 6d 40 82 0f b7 14 d5 46 6d 40 82 48 01 f0 41 89 14 24 48 01 c1 49 89 44 24 08 49 89 4c 24 10 <48> 8b 41 f0 49 89 44 24 18 b8 01 00 00 00 eb 87 65 48 8b 05 43 c5
+[   34.662485][    C0] RSP: 0018:fffffe0000009bb0 EFLAGS: 00010086
+[   34.662490][    C0] RAX: fffffe0000008000 RBX: ffff888107422180 RCX: fffffe0000009000
+[   34.662494][    C0] RDX: 0000000000000085 RSI: 0000000000000000 RDI: fffffe0000008f30
+[   34.662498][    C0] RBP: fffffe0000008f30 R08: ffffffff82754eff R09: fffffe0000009b78
+[   34.662502][    C0] R10: 0000000000000000 R11: 0000000000000006 R12: fffffe0000009c28
+[   34.662506][    C0] R13: 0000000000000000 R14: ffff888107422180 R15: fffffe0000009c48
+[   34.662510][    C0] FS:  00007f5298fe2740(0000) GS:ffff88813bc00000(0000) knlGS:0000000000000000
+[   34.662516][    C0] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   34.662520][    C0] CR2: fffffe0000008ff0 CR3: 0000000109b5a005 CR4: 00000000003606f0
+[   34.662524][    C0] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   34.662528][    C0] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   34.662532][    C0] Call Trace:
+[   34.662534][    C0]  <#DF>
+[   34.662542][    C0]  get_stack_info+0x30/0xb0
+[   34.662556][    C0]  show_trace_log_lvl+0xf9/0x410
+[   34.662571][    C0]  ? sprint_symbol_build_id+0x30/0x30
+[   34.662605][    C0]  ? 0xffffffffa0106083
+[   34.662628][    C0]  __die_body+0x1a/0x60
+[   34.662641][    C0]  page_fault_oops+0xe8/0x560
+[   34.662671][    C0]  kernelmode_fixup_or_oops+0x107/0x120
+[   34.662687][    C0]  __bad_area_nosemaphore+0x1b8/0x280
+[   34.662707][    C0]  do_kern_addr_fault+0x57/0xc0
+[   34.662719][    C0]  exc_page_fault+0x1c1/0x300
+[   34.662735][    C0]  asm_exc_page_fault+0x1e/0x30
+[   34.662742][    C0] RIP: 0010:get_stack_info_noinstr+0x8d/0xf0
+[   34.662749][    C0] Code: 40 82 66 85 c9 74 33 8b 34 d5 40 6d 40 82 0f b7 14 d5 46 6d 40 82 48 01 f0 41 89 14 24 48 01 c1 49 89 44 24 08 49 89 4c 24 10 <48> 8b 41 f0 49 89 44 24 18 b8 01 00 00 00 eb 87 65 48 8b 05 43 c5
+[   34.662754][    C0] RSP: 0018:fffffe0000009ee8 EFLAGS: 00010086
+[   34.662759][    C0] RAX: fffffe0000008000 RBX: ffff888107422180 RCX: fffffe0000009000
+[   34.662763][    C0] RDX: 0000000000000085 RSI: 0000000000000000 RDI: fffffe0000008f28
+[   34.662767][    C0] RBP: fffffe0000008f28 R08: 0000000000000000 R09: 0000000000000000
+[   34.662771][    C0] R10: 0000000000000000 R11: 0000000000000000 R12: fffffe0000009f08
+[   34.662775][    C0] R13: fffffe0000008f28 R14: 0000000109b5a005 R15: 0000000000000000
+[   34.662816][    C0]  ? get_stack_info_noinstr+0x12/0xf0
+[   34.662828][    C0]  exc_double_fault+0x138/0x1a0
+[   34.662851][    C0]  asm_exc_double_fault+0x1e/0x30
+[   34.662858][    C0] RIP: 0010:perf_ftrace_function_call+0x26/0x2e0
+[   34.662866][    C0] Code: 5b 5d c3 90 55 48 89 e5 41 57 41 56 41 55 41 54 49 89 f5 53 49 89 fc 48 89 d3 48 81 ec d0 00 00 00 65 48 8b 04 25 28 00 00 00 <48> 89 45 d0 31 c0 e8 9f 69 fa ff e8 2a 4a f1 ff 84 c0 74 14 e8 91
+[   34.662872][    C0] RSP: 0018:fffffe0000008f30 EFLAGS: 00010086
+[   34.662877][    C0] RAX: 0c14fdf027d1e500 RBX: ffff8881002f99f0 RCX: fffffe0000009038
+[   34.662881][    C0] RDX: ffff8881002f99f0 RSI: ffffffff817cd61f RDI: ffffffff811cc7b0
+[   34.662884][    C0] RBP: fffffe0000009028 R08: ffffffff82754ed9 R09: fffffe00000095d0
+[   34.662888][    C0] R10: fffffe00000095e8 R11: 0000000020455450 R12: ffffffff811cc7b0
+[   34.662892][    C0] R13: ffffffff817cd61f R14: ffff0a00ffffff05 R15: ffffffff81edac2d
+[   34.662896][    C0]  ? get_stack_info_noinstr+0x8d/0xf0
+[   34.662904][    C0]  ? symbol_string+0xbf/0x160
+[   34.662911][    C0]  ? sprint_symbol_build_id+0x30/0x30
+[   34.662935][    C0]  ? symbol_string+0xbf/0x160
+[   34.662942][    C0]  ? sprint_symbol_build_id+0x30/0x30
+[   34.662959][    C0]  </#DF>
+[   34.662964][    C0] BUG: unable to handle page fault for address: fffffe0000008ff0
+[   34.662966][    C0] #PF: supervisor read access in kernel mode
+[   34.662970][    C0] #PF: error_code(0x0000) - not-present page
+[   34.662973][    C0] PGD 13ffef067 P4D 13ffef067 PUD 13ffed067 PMD 13ffec067 PTE 0
+[   34.662986][    C0] Oops: 0000 [#12] SMP PTI
+[   34.662991][    C0] CPU: 0 PID: 713 Comm: a.out Not tainted 5.14.0-next-20210913+ #530
+[   34.662996][    C0] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
+
+
+> 
+> ---
+> Subject: x86/dumpstack/64: Add guard pages to stack_info
+> From: Peter Zijlstra <peterz@infradead.org>
+> Date: Wed Sep 15 17:12:59 CEST 2021
+> 
+> Explicitly add the exception stack guard pages to stack_info and
+> report on them from #DF.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  arch/x86/include/asm/cpu_entry_area.h |    3 +++
+>  arch/x86/include/asm/stacktrace.h     |    3 ++-
+>  arch/x86/kernel/dumpstack_64.c        |   17 ++++++++++++++++-
+>  arch/x86/kernel/traps.c               |   17 ++++++++++++++++-
+>  4 files changed, 37 insertions(+), 3 deletions(-)
+> 
+> --- a/arch/x86/include/asm/cpu_entry_area.h
+> +++ b/arch/x86/include/asm/cpu_entry_area.h
+> @@ -61,6 +61,9 @@ enum exception_stack_ordering {
+>  #define CEA_ESTACK_OFFS(st)					\
+>  	offsetof(struct cea_exception_stacks, st## _stack)
+>  
+> +#define CEA_EGUARD_OFFS(st)					\
+> +	offsetof(struct cea_exception_stacks, st## _stack_guard)
+> +
+>  #define CEA_ESTACK_PAGES					\
+>  	(sizeof(struct cea_exception_stacks) / PAGE_SIZE)
+>  
+> --- a/arch/x86/include/asm/stacktrace.h
+> +++ b/arch/x86/include/asm/stacktrace.h
+> @@ -14,13 +14,14 @@
+>  #include <asm/switch_to.h>
+>  
+>  enum stack_type {
+> -	STACK_TYPE_UNKNOWN,
+> +	STACK_TYPE_UNKNOWN = 0,
+>  	STACK_TYPE_TASK,
+>  	STACK_TYPE_IRQ,
+>  	STACK_TYPE_SOFTIRQ,
+>  	STACK_TYPE_ENTRY,
+>  	STACK_TYPE_EXCEPTION,
+>  	STACK_TYPE_EXCEPTION_LAST = STACK_TYPE_EXCEPTION + N_EXCEPTION_STACKS-1,
+> +	STACK_TYPE_GUARD = 0x80,
+>  };
+>  
+>  struct stack_info {
+> --- a/arch/x86/kernel/dumpstack_64.c
+> +++ b/arch/x86/kernel/dumpstack_64.c
+> @@ -32,9 +32,15 @@ const char *stack_type_name(enum stack_t
+>  {
+>  	BUILD_BUG_ON(N_EXCEPTION_STACKS != 6);
+>  
+> +	if (type == STACK_TYPE_TASK)
+> +		return "TASK";
+> +
+>  	if (type == STACK_TYPE_IRQ)
+>  		return "IRQ";
+>  
+> +	if (type == STACK_TYPE_SOFTIRQ)
+> +		return "SOFTIRQ";
+> +
+>  	if (type == STACK_TYPE_ENTRY) {
+>  		/*
+>  		 * On 64-bit, we have a generic entry stack that we
+> @@ -63,6 +69,11 @@ struct estack_pages {
+>  };
+>  
+>  #define EPAGERANGE(st)							\
+> +	[PFN_DOWN(CEA_EGUARD_OFFS(st))] = {				\
+> +		.offs	= CEA_EGUARD_OFFS(st),				\
+> +		.size	= PAGE_SIZE,					\
+> +		.type	= STACK_TYPE_GUARD +				\
+> +			  STACK_TYPE_EXCEPTION + ESTACK_ ##st, },	\
+>  	[PFN_DOWN(CEA_ESTACK_OFFS(st)) ...				\
+>  	 PFN_DOWN(CEA_ESTACK_OFFS(st) + CEA_ESTACK_SIZE(st) - 1)] = {	\
+>  		.offs	= CEA_ESTACK_OFFS(st),				\
+> @@ -111,10 +122,11 @@ static __always_inline bool in_exception
+>  	k = (stk - begin) >> PAGE_SHIFT;
+>  	/* Lookup the page descriptor */
+>  	ep = &estack_pages[k];
+> -	/* Guard page? */
+> +	/* unknown entry */
+>  	if (!ep->size)
+>  		return false;
+>  
+> +
+>  	begin += (unsigned long)ep->offs;
+>  	end = begin + (unsigned long)ep->size;
+>  	regs = (struct pt_regs *)end - 1;
+> @@ -193,6 +205,9 @@ int get_stack_info(unsigned long *stack,
+>  	if (!get_stack_info_noinstr(stack, task, info))
+>  		goto unknown;
+>  
+> +	if (info->type & STACK_TYPE_GUARD)
+> +		goto unknown;
+> +
+>  	/*
+>  	 * Make sure we don't iterate through any given stack more than once.
+>  	 * If it comes up a second time then there's something wrong going on:
+> --- a/arch/x86/kernel/traps.c
+> +++ b/arch/x86/kernel/traps.c
+> @@ -461,6 +461,19 @@ DEFINE_IDTENTRY_DF(exc_double_fault)
+>  	}
+>  #endif
+>  
+> +#ifdef CONFIG_X86_64
+> +	{
+> +		struct stack_info info;
+> +
+> +		if (get_stack_info_noinstr((void *)address, current, &info) &&
+> +		    info.type & STACK_TYPE_GUARD) {
+> +			const char *name = stack_type_name(info.type & ~STACK_TYPE_GUARD);
+> +			pr_emerg("BUG: %s stack guard hit at %p (stack is %p..%p)\n",
+> +				 name, (void *)address, info.begin, info.end);
+> +		}
+> +	}
+> +#endif
+> +
+>  	pr_emerg("PANIC: double fault, error_code: 0x%lx\n", error_code);
+>  	die("double fault", regs, error_code);
+>  	panic("Machine halted.");
+> @@ -708,7 +721,9 @@ asmlinkage __visible noinstr struct pt_r
+>  	sp    = regs->sp;
+>  	stack = (unsigned long *)sp;
+>  
+> -	if (!get_stack_info_noinstr(stack, current, &info) || info.type == STACK_TYPE_ENTRY ||
+> +	if (!get_stack_info_noinstr(stack, current, &info) ||
+> +	    info.type & STACK_TYPE_GUARD ||
+> +	    info.type == STACK_TYPE_ENTRY ||
+>  	    info.type >= STACK_TYPE_EXCEPTION_LAST)
+>  		sp = __this_cpu_ist_top_va(VC2);
+>  
+> 
