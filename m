@@ -8,56 +8,60 @@ X-Spam-Status: No, score=-26.2 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B974C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Sep 2021 18:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A82B0C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Sep 2021 18:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC6196121F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Sep 2021 18:42:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88AE260295
+	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Sep 2021 18:43:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241576AbhIQSoM (ORCPT
+        id S235206AbhIQSoX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 17 Sep 2021 14:44:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38762 "EHLO
+        Fri, 17 Sep 2021 14:44:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235998AbhIQSoM (ORCPT
+        with ESMTP id S242784AbhIQSoQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Sep 2021 14:44:12 -0400
-Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03D60C061757
-        for <linux-perf-users@vger.kernel.org>; Fri, 17 Sep 2021 11:42:50 -0700 (PDT)
-Received: by mail-qk1-x74a.google.com with SMTP id 23-20020a05620a071700b00426392c0e6eso73191469qkc.4
-        for <linux-perf-users@vger.kernel.org>; Fri, 17 Sep 2021 11:42:49 -0700 (PDT)
+        Fri, 17 Sep 2021 14:44:16 -0400
+Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AF5DC061757
+        for <linux-perf-users@vger.kernel.org>; Fri, 17 Sep 2021 11:42:52 -0700 (PDT)
+Received: by mail-qk1-x749.google.com with SMTP id w2-20020a3794020000b02903b54f40b442so73309631qkd.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 17 Sep 2021 11:42:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=y0sa4e4lbQGIc32UF0ZQ0jyLYMg0ma5kgGxjvCLIZ0w=;
-        b=IFYJlUlhIPcI1hQb+REipCAWLVdyXl0WZ98CK8ZXSEZ60ImDvlWlCCT8HZ3Ho5h75S
-         CuLbyKQplXUkIK2rj61z2LwUeiSt75X75bSPY6A+Y41zce6kz8Kt0OGqElJG9uX8ubYF
-         a1yotOo2FaFWrd2nhfHC1KfTqD1+j46V2/3WEN+FIZRPj/dEJLS+rIEk3nYGsW+t+0Bw
-         hxGXG7e4a2k9MuOJkfKXSh0IUBNIbebLHgCljFcUb5qCzonZe4EcOsWeB8jrkOqUHe/I
-         NTh8t/sbSmB2+eISUmLKsiVFLvKsXQEkkcioAX7ivzV+rVHq3AkVrrl1C5Ejf1zkQbue
-         mVog==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=Bqy07kGPYsMNzuUJlHwETp2BeTurO4WRlTy8/LiV/t8=;
+        b=PmKIa83DXF84pPDOz+CuFVXCccbMvtCLj9QFBQsQrXjPe+MD+LvS7ZEFUyyY4DNNdr
+         l41ub3BZ0Glym2OAGaG/aLIDpsldH257YNGpSVSMVCopjcpPwOu6of5xWHUCtrMPqCfX
+         1PDIukg/dnsMYLdHunN2t4KuuvdthY6E+/qBaR6xbL8nNq1tRKyWSMxFbxOBY92XqFGZ
+         qHhRu1Q7dnrCbuE6MDlYK3pALMVBDhdUhTZIxOZntCkV+B78fGXnjic8zZ/Y6rYwnZHw
+         o9JAWX2Lgq7KgVQ+Hr1hbYVxUovS9OBFj4D2YDkmU5yy0yMF8dCjfmO4M+ROgTxZUn9r
+         GToA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=y0sa4e4lbQGIc32UF0ZQ0jyLYMg0ma5kgGxjvCLIZ0w=;
-        b=ot8v4P87g+uPPNmQQHvqYnKCcl5GesJx49ncpIwV4RKSweQlcTphDypUdpTqFy7TyN
-         c9DwfBKg6NyeHAY9OphmJzrNXxw0vpUWkfRGt4p26YPrlGbRLgST5lRK8LZBinqZHT7b
-         wfz81bumxHhpmP8x3aXvpzNuXKBE25isD3gd8pmZaJ3oK2mvCEBbc5DcoUsnd/YCLTau
-         oTBHx77C3ePGSOOfdU5ThwLoNf0oGE+59M8WTxZmnX/mvaCHcI9JweEJj3gpw/BsHOGq
-         Oh6Ri1cf2Fr/VKVsfddacPYu9R3eR05PU7D4nsSVhtn58CRInMKdWGsRfqfP+VWE13y0
-         db4A==
-X-Gm-Message-State: AOAM532eduDj81Fq6yfPr7+Pk0sU+izMnzJgT56DBxQ7CNzrheXKKja3
-        +Vr0DUr+s2tCqu29PQ0HPzsnbatwq1So
-X-Google-Smtp-Source: ABdhPJzHbmiBJdDc6C9qsiti3TK5gWC0T5RcTS09qatJztA4ABtTuvDlheJobW0rQ0qw/povhR2Jql2bn75T
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=Bqy07kGPYsMNzuUJlHwETp2BeTurO4WRlTy8/LiV/t8=;
+        b=EjQv25VfExFEiH4HsFvd2754O1wM34tNdsBhTAvWiN3BAu7G7eYsVEK0QlR3xJHHUO
+         HpeucctGZWnHCeqCi3TYnXjOG5x5CFwsbSSOEioNZFV+TiZT7uCMFI3UMTEJKzN5lcpe
+         iMPafoOPbyhxMgpIq9pMLXTlq42fj7tXQKszFoxEHVPCXgzdA7V74MALpHUq60pnUqiZ
+         DBiZmfgX3qwm/UtsuRF2l5MIpkzapAJ3fgSOLp3+oMCwZV5RX2w77LXV2v3FNve++txU
+         ZMQQGEMYT4OlKCUZq59x15qH/mEfmUgyZZvAYk/6ZpyPkx+qDzLCKaWznV2UqwjoFS9V
+         kTZA==
+X-Gm-Message-State: AOAM5317oKaVha944itAJHvIoaHDeKQmPopHJyP0hKyGMFd1PTjmA41B
+        9OJ3DjJoQnV5akR43QSqh9aYIaFap797
+X-Google-Smtp-Source: ABdhPJwHAeMyV5LsQZJk4Z1S6Wi1WazWzStq76iL0O0rylNgF5FqqeuFWEgBc1UxUdwGMSBMvw/YaOY1498T
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:6399:5df3:21d3:3cca])
- (user=irogers job=sendgmr) by 2002:a05:6214:13ee:: with SMTP id
- ch14mr12944480qvb.43.1631904169179; Fri, 17 Sep 2021 11:42:49 -0700 (PDT)
-Date:   Fri, 17 Sep 2021 11:42:39 -0700
-Message-Id: <20210917184240.2181186-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:ad4:4947:: with SMTP id
+ o7mr2610965qvy.6.1631904171208; Fri, 17 Sep 2021 11:42:51 -0700 (PDT)
+Date:   Fri, 17 Sep 2021 11:42:40 -0700
+In-Reply-To: <20210917184240.2181186-1-irogers@google.com>
+Message-Id: <20210917184240.2181186-2-irogers@google.com>
 Mime-Version: 1.0
+References: <20210917184240.2181186-1-irogers@google.com>
 X-Mailer: git-send-email 2.33.0.464.g1972c5931b-goog
-Subject: [PATCH v3 1/2] perf test: Workload test of metric and metricgroups
+Subject: [PATCH v3 2/2] perf test: Workload test of all PMUs
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -76,63 +80,40 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Test every metric and metricgroup with 'true' as a workload. For
-metrics, check that we see the metric printed or get unsupported. If the
-'true' workload executes too quickly retry with 'perf bench internals
-synthesize'.
+Iterate over the list of PMUs and run the 'true' workload on them. If
+the event isn't printed then run the large 'perf bench internals
+synthesize' workload and check the event is counted.
 
-v3. Fix test condition (thanks to Paul A. Clarke <pc@us.ibm.com>). Add a
-    fallback case of a larger workload so that we don't ignore "<not
-    counted>".
-v2. Switched the workload to something faster.
+On a Skylake this test takes 1m15s mainly running the 'true' workload.
 
+Suggested-by: John Garry <john.garry@huawei.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../perf/tests/shell/stat_all_metricgroups.sh | 12 ++++++++++
- tools/perf/tests/shell/stat_all_metrics.sh    | 22 +++++++++++++++++++
- 2 files changed, 34 insertions(+)
- create mode 100755 tools/perf/tests/shell/stat_all_metricgroups.sh
- create mode 100755 tools/perf/tests/shell/stat_all_metrics.sh
+ tools/perf/tests/shell/stat_all_pmu.sh | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100755 tools/perf/tests/shell/stat_all_pmu.sh
 
-diff --git a/tools/perf/tests/shell/stat_all_metricgroups.sh b/tools/perf/tests/shell/stat_all_metricgroups.sh
+diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/tests/shell/stat_all_pmu.sh
 new file mode 100755
-index 000000000000..de24d374ce24
+index 000000000000..2de7fd0394fd
 --- /dev/null
-+++ b/tools/perf/tests/shell/stat_all_metricgroups.sh
-@@ -0,0 +1,12 @@
-+#!/bin/sh
-+# perf all metricgroups test
-+# SPDX-License-Identifier: GPL-2.0
-+
-+set -e
-+
-+for m in $(perf list --raw-dump metricgroups); do
-+  echo "Testing $m"
-+  perf stat -M "$m" true
-+done
-+
-+exit 0
-diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/tests/shell/stat_all_metrics.sh
-new file mode 100755
-index 000000000000..7f4ba3cad632
---- /dev/null
-+++ b/tools/perf/tests/shell/stat_all_metrics.sh
++++ b/tools/perf/tests/shell/stat_all_pmu.sh
 @@ -0,0 +1,22 @@
 +#!/bin/sh
-+# perf all metrics test
++# perf all PMU test
 +# SPDX-License-Identifier: GPL-2.0
 +
 +set -e
 +
-+for m in $(perf list --raw-dump metrics); do
-+  echo "Testing $m"
-+  result=$(perf stat -M "$m" true 2>&1)
-+  if [[ ! "$result" =~ "$m" ]] && [[ ! "$result" =~ "<not supported>" ]]; then
-+    # We failed to see the metric and the events are support. Possibly the
-+    # workload was too small so retry with something longer.
-+    result=$(perf stat -M "$m" perf bench internals synthesize 2>&1)
-+    if [[ ! "$result" =~ "$m" ]]; then
-+      echo "Metric '$m' not printed in:"
++for p in $(perf list --raw-dump pmu); do
++  echo "Testing $p"
++  result=$(perf stat -e "$p" true 2>&1)
++  if [[ ! "$result" =~ "$p" ]] && [[ ! "$result" =~ "<not supported>" ]]; then
++    # We failed to see the event and it is supported. Possibly the workload was
++    # too small so retry with something longer.
++    result=$(perf stat -e "$p" perf bench internals synthesize 2>&1)
++    if [[ ! "$result" =~ "$p" ]]; then
++      echo "Event '$p' not printed in:"
 +      echo "$result"
 +      exit 1
 +    fi
