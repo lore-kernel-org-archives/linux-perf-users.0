@@ -2,149 +2,96 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9A1C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Sep 2021 07:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0943EC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Sep 2021 07:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0BEA6113E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Sep 2021 07:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D498C60F48
+	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Sep 2021 07:33:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240311AbhIQHbM (ORCPT
+        id S240797AbhIQHew (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 17 Sep 2021 03:31:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236843AbhIQHbL (ORCPT
+        Fri, 17 Sep 2021 03:34:52 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:60185 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238827AbhIQHew (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Sep 2021 03:31:11 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2026FC061574;
-        Fri, 17 Sep 2021 00:29:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=17mkqfuKdfnPg9YSAeGWHc/O4GLOFEnsaFTJ4hUb1Qc=; b=R175PzEhjMPDTuiig9T+/8FvBN
-        wCwITbQjI86keC2UZcKL3oHklcXqScPxlhfsprjzgtQHXNUwlN8OYqdLQ7ztxGmPqLPGGL1HvK5TW
-        8un1CwadAtDZMXP8kHm7KJ60CKQlzq6kBsXmSOCidcFaqUG49FGQ/Q91WQSCSzrudnHUpN1n/dtAK
-        3oCiHTPea1eYl35kiZcqB3afHwTSqwkSRYpje8CyTQKsMtTXOUjDfhQXOeCpbGDLw3jXUuiLQwU+o
-        fpmbPjE5lGD64IJe7KimQfKhdgCV7/TWkKj798HvtN0fT0soP/DzPI91f4RdvEreoDEx02Cp2qq0O
-        NM1LgiIg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mR8Ig-003p42-0g; Fri, 17 Sep 2021 07:28:46 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 64E5430031A;
-        Fri, 17 Sep 2021 09:28:42 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id EBC3F2B27F98D; Fri, 17 Sep 2021 09:28:41 +0200 (CEST)
-Date:   Fri, 17 Sep 2021 09:28:41 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sean Christopherson <seanjc@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Guo Ren <guoren@kernel.org>,
-        Nick Hu <nickhu@andestech.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org,
-        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
-        Artem Kashkanov <artem.kashkanov@intel.com>,
-        Like Xu <like.xu.linux@gmail.com>,
-        Zhu Lingshan <lingshan.zhu@intel.com>
-Subject: Re: [PATCH v2 00/13] perf: KVM: Fix, optimize, and clean up callbacks
-Message-ID: <YURDqVZ1UXKCiKPV@hirez.programming.kicks-ass.net>
-References: <20210828003558.713983-1-seanjc@google.com>
- <20210828201336.GD4353@worktop.programming.kicks-ass.net>
- <YUO5J/jTMa2KGbsq@google.com>
+        Fri, 17 Sep 2021 03:34:52 -0400
+Received: from mail-wr1-f52.google.com ([209.85.221.52]) by
+ mrelayeu.kundenserver.de (mreue107 [213.165.67.113]) with ESMTPSA (Nemesis)
+ id 1MHFwM-1meNvl0hlY-00DI7N; Fri, 17 Sep 2021 09:33:29 +0200
+Received: by mail-wr1-f52.google.com with SMTP id g16so13587060wrb.3;
+        Fri, 17 Sep 2021 00:33:29 -0700 (PDT)
+X-Gm-Message-State: AOAM533+KkC9S8cHZhyyQr/Gcws3Pv+QbrR6nhr9ElMZ5xHXmGbUF81h
+        JdUrzaBkhYxpXPotrZF4WqH+Mo3QpMgV6vbUIAg=
+X-Google-Smtp-Source: ABdhPJyPtoZ/mG7bWsWHsydawMEYKJ4E3ECfqsk8lnBKNgqIVX5W2m+pElPlgj2gMjbI3079PSZ95Swtj4MIyk84lH8=
+X-Received: by 2002:adf:c10b:: with SMTP id r11mr10471636wre.336.1631864008841;
+ Fri, 17 Sep 2021 00:33:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YUO5J/jTMa2KGbsq@google.com>
+References: <20210917061040.2270822-1-alistair.francis@opensource.wdc.com> <20210917061040.2270822-2-alistair.francis@opensource.wdc.com>
+In-Reply-To: <20210917061040.2270822-2-alistair.francis@opensource.wdc.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 17 Sep 2021 09:33:12 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2kAvrKvCUOhVouHUmY661OZHVAm9sefgXuZpLHMQg7Ow@mail.gmail.com>
+Message-ID: <CAK8P3a2kAvrKvCUOhVouHUmY661OZHVAm9sefgXuZpLHMQg7Ow@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] perf bench: Add support for 32-bit systems with
+ 64-bit time_t
+To:     Alistair Francis <alistair.francis@opensource.wdc.com>
+Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
+        linux-perf-users@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alistair Francis <alistair23@gmail.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Darren Hart <dvhart@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <atish.patra@wdc.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alistair Francis <alistair.francis@wdc.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:i1tPDOPsEkIXWl6o8lvaOVSXFg/bAWXldhifz9hNemIOJCFTnx/
+ zZVhz0YkzYzan4TSQY8NlIUxLVIZhqZ2Sx+jIItl5UTtY38hQ8g0UpoGXpsbG+PIIFLVE3A
+ SKaYGAmda4GZvCHcy4UwYGUm9AcW/Fg2vZRCDrKeTOTj2tbKgMzSBS98PlVAwM4PL5PX7DU
+ MrucBauAQlLixBt8ly4Fw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:FbgTo1ML4rc=:Fj5i0kgHwvY0JXikCXS7cJ
+ PJ62OAK1WCPrbNjI278U8xy+5UY2i5p6jf7QnkrS7qzd6afnJA7d5GB+0cId+p5e7/4pogpIF
+ bzZ5Fs99rB5nb6mlqa0/0/7ByEHwB4EiGtC5Juzj+ToM4/qUWwvuTRLFFFoFuRoaf2fRtF4Si
+ oCY9NfprJjOeRJe+L3qWp+en4PW2pHlV8XLFStlfdUqbD0JXt0YGvOz7MrxCbbUQxiyBVAJSK
+ fmiShXA4z+pU1JkF88/QqfypI69pid+yz8LtIxcpu170fdygCEXTwx/9C5l4xcoTXfBaNfh1/
+ f8EDfhkvXu4U6eu2UABIa4aBYZDBJrMmG0TSgEcr4skqyIiWr6kqa3co4iC7ECG+BBexpLvyR
+ QRJ4ICH5zFa1tGtERCmFUhySJrSNYlofkVkxLX/xzc47/SZ3wVLsOHJzBaUBhxuuS5EJajG1K
+ CErqW3GjO5C7dhSzAtRnpzUUJ0M8ujL1D73o4lveVjA6LYWqe7leOwEkZNb1xIwWSvPSeftqH
+ kzoVvsgRnUNt7GV1OCABGfM4BvB/DfyAgVFUhbjIUkVn0aGwWWOgv4l03WljeHpL1cIYjng/I
+ ZWjAGlll0LPeaz23eG4iN1ui6GdFJ6v2HprjPE4AiAZXXOOkdui67gdE37yFuJmVRNk9YSQdx
+ doDMaIqBi49FikX3S/9uDVLTW6ZK/0p3ELCdG/7f+RCviyMli6rCbSHFVUyHl3jZSNG+DqL0C
+ ZhqZs/PybRWZ5AFl1sSJZeOag/Lxb4X/ly/Q7Spmaf/ZwZvCcUYatD2H7C/CMBCdDtamUaiDA
+ 5qxYwrm0JGLqD8n5q/W2udrUuHm3gYoja0zDnmrqBGjbyX578ud5IGjVN7/zNHKmwFE8pJIGn
+ Npk89ZGaXQeskJOR8uzg==
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 16, 2021 at 09:37:43PM +0000, Sean Christopherson wrote:
-> On Sat, Aug 28, 2021, Peter Zijlstra wrote:
+On Fri, Sep 17, 2021 at 8:10 AM Alistair Francis
+<alistair.francis@opensource.wdc.com> wrote:
+>
+> From: Alistair Francis <alistair.francis@wdc.com>
+>
+> Some 32-bit architectures (such are 32-bit RISC-V) only have a 64-bit
+> time_t and as such don't have the SYS_futex syscall. This patch will
+> allow us to use the SYS_futex_time64 syscall on those platforms.
+>
+> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
 
-> Argh, sorry, I somehow managed to miss all of your replies.  I'll get back to
-> this series next week.  Thanks for the quick response!
-> 
-> > Lets keep the whole intel_pt crud inside x86...
-> 
-> In theory, I like the idea of burying intel_pt inside x86 (and even in
-> Intel+VMX code for the most part), but the actual implementation is a
-> bit gross.  Because of the whole "KVM can be a module" thing,
+Thanks for the follow-up!
 
-ARGH!! we should really fix that. I've heard other archs have made much
-better choices here.
-
-> either
-> the static call and __static_call_return0 would need to be exported,
-> or a new register/unregister pair would have to be exported.
-
-So I don't mind exporting __static_call_return0, but exporting a raw
-static_call is much like exporting a function pointer :/
-
-> The unregister path would also need its own synchronize_rcu().  In general, I
-> don't love duplicating the logic, but it's not the end of the world.
-> 
-> Either way works for me.  Paolo or Peter, do either of you have a preference?
-
-Can we de-feature kvm as a module and only have this PT functionality
-when built-in? :-)
-
-
-> > ---
-> > Index: linux-2.6/arch/x86/events/core.c
-> > ===================================================================
-> > --- linux-2.6.orig/arch/x86/events/core.c
-> > +++ linux-2.6/arch/x86/events/core.c
-> > @@ -92,7 +92,7 @@ DEFINE_STATIC_CALL_RET0(x86_pmu_guest_ge
-> >  
-> >  DEFINE_STATIC_CALL_RET0(x86_guest_state, *(perf_guest_cbs->state));
-> >  DEFINE_STATIC_CALL_RET0(x86_guest_get_ip, *(perf_guest_cbs->get_ip));
-> > -DEFINE_STATIC_CALL_RET0(x86_guest_handle_intel_pt_intr, *(perf_guest_cbs->handle_intel_pt_intr));
-> > +DEFINE_STATIC_CALL_RET0(x86_guest_handle_intel_pt_intr, unsigned int (*)(void));
-> 
-> FWIW, the param needs to be a raw function, not a function pointer. 
-
-Yeah, I keep making that mistake.. and I wrote the bloody thing :/
-
-I have a 'fix' for that, but I need to finish that and also flag-day
-change :-(
-
-  https://lkml.kernel.org/r/YS+0eIeAJsRRArk4@hirez.programming.kicks-ass.net
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
