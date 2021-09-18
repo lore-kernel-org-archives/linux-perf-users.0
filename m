@@ -2,179 +2,111 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C64EC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Sep 2021 02:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A45C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Sep 2021 03:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 680AC61244
-	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Sep 2021 02:38:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE1E4610A4
+	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Sep 2021 03:01:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234463AbhIRCji (ORCPT
+        id S240606AbhIRDDD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 17 Sep 2021 22:39:38 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:38281 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232471AbhIRCjh (ORCPT
+        Fri, 17 Sep 2021 23:03:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238949AbhIRDDC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Sep 2021 22:39:37 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=22;SR=0;TI=SMTPD_---0Uoje9Dt_1631932689;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0Uoje9Dt_1631932689)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 18 Sep 2021 10:38:11 +0800
-Subject: Re: [PATCH] x86/dumpstack/64: Add guard pages to stack_info
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-perf-users@vger.kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-kernel@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <netdev@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <bpf@vger.kernel.org>, jroedel@suse.de, x86@kernel.org,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-References: <3fb7c51f-696b-da70-1965-1dda9910cb14@linux.alibaba.com>
- <YUB5VchM3a/MiZpX@hirez.programming.kicks-ass.net>
- <3f26f7a2-0a09-056a-3a7a-4795b6723b60@linux.alibaba.com>
- <YUIOgmOfnOqPrE+z@hirez.programming.kicks-ass.net>
- <76de02b7-4d87-4a3a-e4d4-048829749887@linux.alibaba.com>
- <YUL5j/lY0mtx4NMq@hirez.programming.kicks-ass.net>
- <YUL6R5AH6WNxu5sH@hirez.programming.kicks-ass.net>
- <YUMWLdijs8vSkRjo@hirez.programming.kicks-ass.net>
- <a11f43d2-f12e-18c2-65d4-debd8d085fa8@linux.alibaba.com>
- <YURsJGaB0vKgPT8x@hirez.programming.kicks-ass.net>
- <YUTE/NuqnaWbST8n@hirez.programming.kicks-ass.net>
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Message-ID: <50ccb496-0bbd-bdfe-1180-fb0a9d7fd87e@linux.alibaba.com>
-Date:   Sat, 18 Sep 2021 10:38:09 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:78.0)
- Gecko/20100101 Thunderbird/78.14.0
+        Fri, 17 Sep 2021 23:03:02 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B201CC061574;
+        Fri, 17 Sep 2021 20:01:39 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id c4so7397093pls.6;
+        Fri, 17 Sep 2021 20:01:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PwUqXkH93bEGRVKzJp2Nv35OcjcWzah8V6Bmy0LMTmo=;
+        b=juHdkxVo0CKZQWsanvObBOXNAxfo6eLYtfkGC+UTWPUb3bVbR8DzFlmgwJdp0Q/mvq
+         7+N5mJ3ua0CSoPchcBwhSyY8r6ZYGDHi8crz9JvvzUeQBWxCdmV3AgnXmQFgmpmcOgu1
+         jjVy8F7FE0LJZBgjbfqhPjQkTQomZ4jh7ijJWgJ8EV+LmdyZQfn6Mb1RWnhhSkLtsHmF
+         4lhZV4NPH8JzXPmq4bW5iFqq0VFrCZyIn/qp4FC/JVpBEcE0ySw3g3HTdRdQeYZi7dEQ
+         gzzydTdTsMNd4kCu+B+kIYEYhiQHWzT6OrneudfBGl+ryPjT7fwElllbramHWeGPlxox
+         lWQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PwUqXkH93bEGRVKzJp2Nv35OcjcWzah8V6Bmy0LMTmo=;
+        b=V7g/n4+8YAtmwlegIMuMnkTpdc+WPLREM1HwC0avSIB3K1khPs3dSqIieA6Y7pD30U
+         JfM+FQrPO7htcIna2V2ug7eaHoZwWYoPSVDNQ3NiRnX0HPbGO6SCTg0HOG7JlmBLjN2+
+         rTPtJ3yqYRtgQEpudCjJIiy5fqnhL1gYBdu4vpeccp1XjZmylZviuSOGw26x5tWj5yA2
+         9q8JBuUv7+3Gl2n8OjUYj1yN+nDVLxeUlqyEiEhQ+Slqvafq8Ju73ZRaQqU4UnucgqP1
+         ZsXs5LEIXo1U7kxOMqz6LgPwpxCodMzVWJwRqCCcTQj7VKWFDGle/PvXJnGNYzI+/Ov9
+         L8/Q==
+X-Gm-Message-State: AOAM530b2FuwQ3lahbpoBoXPEPeTildVD6B5QrP8jhVCdB99oSz0yeFw
+        QDSz8y9tdZ5gew73QjlBBnwEArV/QPs=
+X-Google-Smtp-Source: ABdhPJwZ375Esd0ihz8IfijshThreUAfPJCe17KcD168KN3vwwJyF8E/rm1OJhl3Im1qKC6xambfoA==
+X-Received: by 2002:a17:903:230b:b0:13b:a0ec:1136 with SMTP id d11-20020a170903230b00b0013ba0ec1136mr12555670plh.63.1631934099187;
+        Fri, 17 Sep 2021 20:01:39 -0700 (PDT)
+Received: from localhost.localdomain ([193.203.214.57])
+        by smtp.gmail.com with ESMTPSA id p10sm7794817pge.38.2021.09.17.20.01.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Sep 2021 20:01:38 -0700 (PDT)
+From:   cgel.zte@gmail.com
+X-Google-Original-From: yang.guang5@zte.com.cn
+To:     peterz@infradead.org
+Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
+        x86@kernel.org, hpa@zytor.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yang Guang <yang.guang5@zte.com.cn>
+Subject: [PATCH] Add pointer check
+Date:   Sat, 18 Sep 2021 03:01:31 +0000
+Message-Id: <20210918030131.236378-1-yang.guang5@zte.com.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <YUTE/NuqnaWbST8n@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+From: Yang Guang <yang.guang5@zte.com.cn>
 
+The buf->stop_te pointer may be NULL.
+Accessing buf->stop_te->stop buf->stop_te->intr might occer segmentation
+fault. Same as buf->intr_te.
 
-On 2021/9/18 上午12:40, Peter Zijlstra wrote:
-[snip]
-> -	printk(KERN_EMERG "BUG: stack guard page was hit at %p (stack is %p..%p)\n",
-> -		 (void *)fault_address, current->stack,
-> -		 (char *)current->stack + THREAD_SIZE - 1);
-> -	die(message, regs, 0);
-> +	const char *name = stack_type_name(info->type);
-> +
-> +	printk(KERN_EMERG "BUG: %s stack guard page was hit at %p (stack is %p..%p)\n",
-> +	       name, (void *)fault_address, info->begin, info->end);
+Signed-off-by: Yang Guang <yang.guang5@zte.com.cn>
+---
+ arch/x86/events/intel/pt.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-Just found that the printed pointer address is not correct:
-  BUG: NMI stack guard page was hit at 0000000085fd977b (stack is 000000003a55b09e..00000000d8cce1a5)
+diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+index 7f406c14715f..ec1c644fc83f 100644
+--- a/arch/x86/events/intel/pt.c
++++ b/arch/x86/events/intel/pt.c
+@@ -1118,9 +1118,12 @@ static int pt_buffer_reset_markers(struct pt_buffer *buf,
+ 		buf->intr_te = pt_topa_prev_entry(buf, buf->intr_te);
+ 	}
+ 
+-	buf->stop_te->stop = 1;
+-	buf->stop_te->intr = 1;
+-	buf->intr_te->intr = 1;
++	if (buf->stop_te) {
++		buf->stop_te->stop = 1;
++		buf->stop_te->intr = 1;
++	}
++	if (buf->intr_te)
++		buf->intr_te->intr = 1;
+ 
+ 	return 0;
+ }
+-- 
+2.25.1
 
-Maybe we could use %px instead?
-
-Regards,
-Michael Wang
-
-> +
-> +	die("stack guard page", regs, 0);
->  
->  	/* Be absolutely certain we don't return. */
-> -	panic("%s", message);
-> +	panic("%s stack guard hit", name);
->  }
->  #endif
->  
-> @@ -353,6 +355,7 @@ DEFINE_IDTENTRY_DF(exc_double_fault)
->  
->  #ifdef CONFIG_VMAP_STACK
->  	unsigned long address = read_cr2();
-> +	struct stack_info info;
->  #endif
->  
->  #ifdef CONFIG_X86_ESPFIX64
-> @@ -455,10 +458,8 @@ DEFINE_IDTENTRY_DF(exc_double_fault)
->  	 * stack even if the actual trigger for the double fault was
->  	 * something else.
->  	 */
-> -	if ((unsigned long)task_stack_page(tsk) - 1 - address < PAGE_SIZE) {
-> -		handle_stack_overflow("kernel stack overflow (double-fault)",
-> -				      regs, address);
-> -	}
-> +	if (get_stack_guard_info((void *)address, &info))
-> +		handle_stack_overflow(regs, address, &info);
->  #endif
->  
->  	pr_emerg("PANIC: double fault, error_code: 0x%lx\n", error_code);
-> diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-> index b2eefdefc108..edb5152f0866 100644
-> --- a/arch/x86/mm/fault.c
-> +++ b/arch/x86/mm/fault.c
-> @@ -32,6 +32,7 @@
->  #include <asm/pgtable_areas.h>		/* VMALLOC_START, ...		*/
->  #include <asm/kvm_para.h>		/* kvm_handle_async_pf		*/
->  #include <asm/vdso.h>			/* fixup_vdso_exception()	*/
-> +#include <asm/irq_stack.h>
->  
->  #define CREATE_TRACE_POINTS
->  #include <asm/trace/exceptions.h>
-> @@ -631,6 +632,9 @@ static noinline void
->  page_fault_oops(struct pt_regs *regs, unsigned long error_code,
->  		unsigned long address)
->  {
-> +#ifdef CONFIG_VMAP_STACK
-> +	struct stack_info info;
-> +#endif
->  	unsigned long flags;
->  	int sig;
->  
-> @@ -649,9 +653,7 @@ page_fault_oops(struct pt_regs *regs, unsigned long error_code,
->  	 * that we're in vmalloc space to avoid this.
->  	 */
->  	if (is_vmalloc_addr((void *)address) &&
-> -	    (((unsigned long)current->stack - 1 - address < PAGE_SIZE) ||
-> -	     address - ((unsigned long)current->stack + THREAD_SIZE) < PAGE_SIZE)) {
-> -		unsigned long stack = __this_cpu_ist_top_va(DF) - sizeof(void *);
-> +	    get_stack_guard_info((void *)address, &info)) {
->  		/*
->  		 * We're likely to be running with very little stack space
->  		 * left.  It's plausible that we'd hit this condition but
-> @@ -662,13 +664,11 @@ page_fault_oops(struct pt_regs *regs, unsigned long error_code,
->  		 * and then double-fault, though, because we're likely to
->  		 * break the console driver and lose most of the stack dump.
->  		 */
-> -		asm volatile ("movq %[stack], %%rsp\n\t"
-> -			      "call handle_stack_overflow\n\t"
-> -			      "1: jmp 1b"
-> -			      : ASM_CALL_CONSTRAINT
-> -			      : "D" ("kernel stack overflow (page fault)"),
-> -				"S" (regs), "d" (address),
-> -				[stack] "rm" (stack));
-> +		call_on_stack(__this_cpu_ist_top_va(DF) - sizeof(void*),
-> +			      handle_stack_overflow,
-> +			      ASM_CALL_ARG3,
-> +			      , [arg1] "r" (regs), [arg2] "r" (address), [arg3] "r" (&info));
-> +
->  		unreachable();
->  	}
->  #endif
-> 
