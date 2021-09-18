@@ -2,111 +2,299 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A45C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Sep 2021 03:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F85C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Sep 2021 05:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE1E4610A4
-	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Sep 2021 03:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68E6660F92
+	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Sep 2021 05:44:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240606AbhIRDDD (ORCPT
+        id S234354AbhIRFqO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 17 Sep 2021 23:03:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35812 "EHLO
+        Sat, 18 Sep 2021 01:46:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238949AbhIRDDC (ORCPT
+        with ESMTP id S233355AbhIRFqN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Sep 2021 23:03:02 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B201CC061574;
-        Fri, 17 Sep 2021 20:01:39 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id c4so7397093pls.6;
-        Fri, 17 Sep 2021 20:01:39 -0700 (PDT)
+        Sat, 18 Sep 2021 01:46:13 -0400
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85B23C061574
+        for <linux-perf-users@vger.kernel.org>; Fri, 17 Sep 2021 22:44:50 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id o9-20020ac80249000000b002a0c9fd54d5so103094256qtg.4
+        for <linux-perf-users@vger.kernel.org>; Fri, 17 Sep 2021 22:44:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PwUqXkH93bEGRVKzJp2Nv35OcjcWzah8V6Bmy0LMTmo=;
-        b=juHdkxVo0CKZQWsanvObBOXNAxfo6eLYtfkGC+UTWPUb3bVbR8DzFlmgwJdp0Q/mvq
-         7+N5mJ3ua0CSoPchcBwhSyY8r6ZYGDHi8crz9JvvzUeQBWxCdmV3AgnXmQFgmpmcOgu1
-         jjVy8F7FE0LJZBgjbfqhPjQkTQomZ4jh7ijJWgJ8EV+LmdyZQfn6Mb1RWnhhSkLtsHmF
-         4lhZV4NPH8JzXPmq4bW5iFqq0VFrCZyIn/qp4FC/JVpBEcE0ySw3g3HTdRdQeYZi7dEQ
-         gzzydTdTsMNd4kCu+B+kIYEYhiQHWzT6OrneudfBGl+ryPjT7fwElllbramHWeGPlxox
-         lWQQ==
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=7wgjYLqwrwDJezacSFSY2R7gyI7KefnfM0t1HlhD5qw=;
+        b=GDMjUCjMb72d6TB9pRVP5wCOGNRD7JIYgoi6SBMvPFtavoQczjjgpW1rCb+rK92p5v
+         wIEeGq91DisQtzNm1wjTc8ddWLuizNvZVgmH5f2Bx33YKTiYyKVPO7VqxhqBhfyDEer4
+         1fQ6oi9HAm1ST+tsbDjKQtMxoUBbLlBuqM57p4SPDIpf0Ltng2kB8oQUiFaL6ZUAajiU
+         xD1SV4GxMEwgwf0GWmpMMrjBO+snXAFRdEy0zfFeiNnKJ3jB1OqIGVpCWB/yt9lw9890
+         bLWy/BnwCCIkUohmdP+rTpcfO0QNcu/PyHRcMDZewBu0aVH1cDNxVOQtmrmc1BLq/SLS
+         tKJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PwUqXkH93bEGRVKzJp2Nv35OcjcWzah8V6Bmy0LMTmo=;
-        b=V7g/n4+8YAtmwlegIMuMnkTpdc+WPLREM1HwC0avSIB3K1khPs3dSqIieA6Y7pD30U
-         JfM+FQrPO7htcIna2V2ug7eaHoZwWYoPSVDNQ3NiRnX0HPbGO6SCTg0HOG7JlmBLjN2+
-         rTPtJ3yqYRtgQEpudCjJIiy5fqnhL1gYBdu4vpeccp1XjZmylZviuSOGw26x5tWj5yA2
-         9q8JBuUv7+3Gl2n8OjUYj1yN+nDVLxeUlqyEiEhQ+Slqvafq8Ju73ZRaQqU4UnucgqP1
-         ZsXs5LEIXo1U7kxOMqz6LgPwpxCodMzVWJwRqCCcTQj7VKWFDGle/PvXJnGNYzI+/Ov9
-         L8/Q==
-X-Gm-Message-State: AOAM530b2FuwQ3lahbpoBoXPEPeTildVD6B5QrP8jhVCdB99oSz0yeFw
-        QDSz8y9tdZ5gew73QjlBBnwEArV/QPs=
-X-Google-Smtp-Source: ABdhPJwZ375Esd0ihz8IfijshThreUAfPJCe17KcD168KN3vwwJyF8E/rm1OJhl3Im1qKC6xambfoA==
-X-Received: by 2002:a17:903:230b:b0:13b:a0ec:1136 with SMTP id d11-20020a170903230b00b0013ba0ec1136mr12555670plh.63.1631934099187;
-        Fri, 17 Sep 2021 20:01:39 -0700 (PDT)
-Received: from localhost.localdomain ([193.203.214.57])
-        by smtp.gmail.com with ESMTPSA id p10sm7794817pge.38.2021.09.17.20.01.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Sep 2021 20:01:38 -0700 (PDT)
-From:   cgel.zte@gmail.com
-X-Google-Original-From: yang.guang5@zte.com.cn
-To:     peterz@infradead.org
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        x86@kernel.org, hpa@zytor.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yang Guang <yang.guang5@zte.com.cn>
-Subject: [PATCH] Add pointer check
-Date:   Sat, 18 Sep 2021 03:01:31 +0000
-Message-Id: <20210918030131.236378-1-yang.guang5@zte.com.cn>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=7wgjYLqwrwDJezacSFSY2R7gyI7KefnfM0t1HlhD5qw=;
+        b=Ix9x2JeVy0PThCME+P3zN21qbZALYkoTXadT1qD8qcVwsIp0manY/hfdBcbxzDiBJ7
+         qBTPMTwSWMqibV8OMBKcyEKMSxkQpeLMqBzXiwl6K0ff9ZrhpPdaE7WNN9R8yr3zukSM
+         E9sT8kRZy8asLjaTj822xLsVgh6PsnGGHXxT61dOkrhmgjEQe8E4LJf4NXKihby5Vo+K
+         QHZv/xJ7Y+9osScB7CPyjVejUAK4Zoyf1HSGql7LUKWa5sEU4ly1COd+U1mpcCpaMReb
+         kpcxv/81Lnor7EX9VLuUcNtN8T2WvDchh2FZAu0rXbpSJkKta/EVBwixWVcKoPdQcqG7
+         zcsA==
+X-Gm-Message-State: AOAM531w22AL3vTX58bZD8zAmw6p+wk88C1xv/DNC0TMgbjft2beJPwy
+        B8NsxmCxkxEIAkkHD5/axVFhpOCpDueI
+X-Google-Smtp-Source: ABdhPJycMpMy5PFT2fsPOuCKaBNVvSXoJr7scKzClLDLoBPMbPV60+o40pgySaQlk38/JciiVlowDqIEpDty
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:6399:5df3:21d3:3cca])
+ (user=irogers job=sendgmr) by 2002:a05:6214:1372:: with SMTP id
+ c18mr12792756qvw.28.1631943889741; Fri, 17 Sep 2021 22:44:49 -0700 (PDT)
+Date:   Fri, 17 Sep 2021 22:44:40 -0700
+Message-Id: <20210918054440.2350466-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.33.0.464.g1972c5931b-goog
+Subject: [PATCH v3] libperf evsel: Make use of FD robust.
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     eranian@google.com, Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Yang Guang <yang.guang5@zte.com.cn>
+FD uses xyarray__entry that may return NULL if an index is out of
+bounds. If NULL is returned then a segv happens as FD unconditionally
+dereferences the pointer. This was happening in a case of with perf
+iostat as shown below. The fix is to make FD an "int*" rather than an
+int and handle the NULL case as either invalid input or a closed fd.
 
-The buf->stop_te pointer may be NULL.
-Accessing buf->stop_te->stop buf->stop_te->intr might occer segmentation
-fault. Same as buf->intr_te.
+$ sudo gdb --args perf stat --iostat  list
+...
+Breakpoint 1, perf_evsel__alloc_fd (evsel=0x5555560951a0, ncpus=1, nthreads=1) at evsel.c:50
+50      {
+(gdb) bt
+ #0  perf_evsel__alloc_fd (evsel=0x5555560951a0, ncpus=1, nthreads=1) at evsel.c:50
+ #1  0x000055555585c188 in evsel__open_cpu (evsel=0x5555560951a0, cpus=0x555556093410,
+    threads=0x555556086fb0, start_cpu=0, end_cpu=1) at util/evsel.c:1792
+ #2  0x000055555585cfb2 in evsel__open (evsel=0x5555560951a0, cpus=0x0, threads=0x555556086fb0)
+    at util/evsel.c:2045
+ #3  0x000055555585d0db in evsel__open_per_thread (evsel=0x5555560951a0, threads=0x555556086fb0)
+    at util/evsel.c:2065
+ #4  0x00005555558ece64 in create_perf_stat_counter (evsel=0x5555560951a0,
+    config=0x555555c34700 <stat_config>, target=0x555555c2f1c0 <target>, cpu=0) at util/stat.c:590
+ #5  0x000055555578e927 in __run_perf_stat (argc=1, argv=0x7fffffffe4a0, run_idx=0)
+    at builtin-stat.c:833
+ #6  0x000055555578f3c6 in run_perf_stat (argc=1, argv=0x7fffffffe4a0, run_idx=0)
+    at builtin-stat.c:1048
+ #7  0x0000555555792ee5 in cmd_stat (argc=1, argv=0x7fffffffe4a0) at builtin-stat.c:2534
+ #8  0x0000555555835ed3 in run_builtin (p=0x555555c3f540 <commands+288>, argc=3,
+    argv=0x7fffffffe4a0) at perf.c:313
+ #9  0x0000555555836154 in handle_internal_command (argc=3, argv=0x7fffffffe4a0) at perf.c:365
+ #10 0x000055555583629f in run_argv (argcp=0x7fffffffe2ec, argv=0x7fffffffe2e0) at perf.c:409
+ #11 0x0000555555836692 in main (argc=3, argv=0x7fffffffe4a0) at perf.c:539
+...
+(gdb) c
+Continuing.
+Error:
+The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (uncore_iio_0/event=0x83,umask=0x04,ch_mask=0xF,fc_mask=0x07/).
+/bin/dmesg | grep -i perf may provide additional information.
 
-Signed-off-by: Yang Guang <yang.guang5@zte.com.cn>
+Program received signal SIGSEGV, Segmentation fault.
+0x00005555559b03ea in perf_evsel__close_fd_cpu (evsel=0x5555560951a0, cpu=1) at evsel.c:166
+166                     if (FD(evsel, cpu, thread) >= 0)
+
+v3. fixes a bug in perf_evsel__run_ioctl where the sense of a branch was
+    backward.
+v2. is a rebase.
+
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- arch/x86/events/intel/pt.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ tools/lib/perf/evsel.c | 64 +++++++++++++++++++++++++++---------------
+ 1 file changed, 41 insertions(+), 23 deletions(-)
 
-diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
-index 7f406c14715f..ec1c644fc83f 100644
---- a/arch/x86/events/intel/pt.c
-+++ b/arch/x86/events/intel/pt.c
-@@ -1118,9 +1118,12 @@ static int pt_buffer_reset_markers(struct pt_buffer *buf,
- 		buf->intr_te = pt_topa_prev_entry(buf, buf->intr_te);
- 	}
+diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
+index d8886720e83d..8441e3e1aaac 100644
+--- a/tools/lib/perf/evsel.c
++++ b/tools/lib/perf/evsel.c
+@@ -43,7 +43,7 @@ void perf_evsel__delete(struct perf_evsel *evsel)
+ 	free(evsel);
+ }
  
--	buf->stop_te->stop = 1;
--	buf->stop_te->intr = 1;
--	buf->intr_te->intr = 1;
-+	if (buf->stop_te) {
-+		buf->stop_te->stop = 1;
-+		buf->stop_te->intr = 1;
-+	}
-+	if (buf->intr_te)
-+		buf->intr_te->intr = 1;
+-#define FD(e, x, y) (*(int *) xyarray__entry(e->fd, x, y))
++#define FD(e, x, y) ((int *) xyarray__entry(e->fd, x, y))
+ #define MMAP(e, x, y) (e->mmap ? ((struct perf_mmap *) xyarray__entry(e->mmap, x, y)) : NULL)
+ 
+ int perf_evsel__alloc_fd(struct perf_evsel *evsel, int ncpus, int nthreads)
+@@ -54,7 +54,10 @@ int perf_evsel__alloc_fd(struct perf_evsel *evsel, int ncpus, int nthreads)
+ 		int cpu, thread;
+ 		for (cpu = 0; cpu < ncpus; cpu++) {
+ 			for (thread = 0; thread < nthreads; thread++) {
+-				FD(evsel, cpu, thread) = -1;
++				int *fd = FD(evsel, cpu, thread);
++
++				if (fd)
++					*fd = -1;
+ 			}
+ 		}
+ 	}
+@@ -80,7 +83,7 @@ sys_perf_event_open(struct perf_event_attr *attr,
+ static int get_group_fd(struct perf_evsel *evsel, int cpu, int thread, int *group_fd)
+ {
+ 	struct perf_evsel *leader = evsel->leader;
+-	int fd;
++	int *fd;
+ 
+ 	if (evsel == leader) {
+ 		*group_fd = -1;
+@@ -95,10 +98,10 @@ static int get_group_fd(struct perf_evsel *evsel, int cpu, int thread, int *grou
+ 		return -ENOTCONN;
+ 
+ 	fd = FD(leader, cpu, thread);
+-	if (fd == -1)
++	if (fd == NULL || *fd == -1)
+ 		return -EBADF;
+ 
+-	*group_fd = fd;
++	*group_fd = *fd;
  
  	return 0;
  }
+@@ -138,7 +141,11 @@ int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
+ 
+ 	for (cpu = 0; cpu < cpus->nr; cpu++) {
+ 		for (thread = 0; thread < threads->nr; thread++) {
+-			int fd, group_fd;
++			int fd, group_fd, *evsel_fd;
++
++			evsel_fd = FD(evsel, cpu, thread);
++			if (evsel_fd == NULL)
++				return -EINVAL;
+ 
+ 			err = get_group_fd(evsel, cpu, thread, &group_fd);
+ 			if (err < 0)
+@@ -151,7 +158,7 @@ int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
+ 			if (fd < 0)
+ 				return -errno;
+ 
+-			FD(evsel, cpu, thread) = fd;
++			*evsel_fd = fd;
+ 		}
+ 	}
+ 
+@@ -163,9 +170,12 @@ static void perf_evsel__close_fd_cpu(struct perf_evsel *evsel, int cpu)
+ 	int thread;
+ 
+ 	for (thread = 0; thread < xyarray__max_y(evsel->fd); ++thread) {
+-		if (FD(evsel, cpu, thread) >= 0)
+-			close(FD(evsel, cpu, thread));
+-		FD(evsel, cpu, thread) = -1;
++		int *fd = FD(evsel, cpu, thread);
++
++		if (fd && *fd >= 0) {
++			close(*fd);
++			*fd = -1;
++		}
+ 	}
+ }
+ 
+@@ -209,13 +219,12 @@ void perf_evsel__munmap(struct perf_evsel *evsel)
+ 
+ 	for (cpu = 0; cpu < xyarray__max_x(evsel->fd); cpu++) {
+ 		for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
+-			int fd = FD(evsel, cpu, thread);
+-			struct perf_mmap *map = MMAP(evsel, cpu, thread);
++			int *fd = FD(evsel, cpu, thread);
+ 
+-			if (fd < 0)
++			if (fd == NULL || *fd < 0)
+ 				continue;
+ 
+-			perf_mmap__munmap(map);
++			perf_mmap__munmap(MMAP(evsel, cpu, thread));
+ 		}
+ 	}
+ 
+@@ -239,15 +248,16 @@ int perf_evsel__mmap(struct perf_evsel *evsel, int pages)
+ 
+ 	for (cpu = 0; cpu < xyarray__max_x(evsel->fd); cpu++) {
+ 		for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
+-			int fd = FD(evsel, cpu, thread);
+-			struct perf_mmap *map = MMAP(evsel, cpu, thread);
++			int *fd = FD(evsel, cpu, thread);
++			struct perf_mmap *map;
+ 
+-			if (fd < 0)
++			if (fd == NULL || *fd < 0)
+ 				continue;
+ 
++			map = MMAP(evsel, cpu, thread);
+ 			perf_mmap__init(map, NULL, false, NULL);
+ 
+-			ret = perf_mmap__mmap(map, &mp, fd, cpu);
++			ret = perf_mmap__mmap(map, &mp, *fd, cpu);
+ 			if (ret) {
+ 				perf_evsel__munmap(evsel);
+ 				return ret;
+@@ -260,7 +270,9 @@ int perf_evsel__mmap(struct perf_evsel *evsel, int pages)
+ 
+ void *perf_evsel__mmap_base(struct perf_evsel *evsel, int cpu, int thread)
+ {
+-	if (FD(evsel, cpu, thread) < 0 || MMAP(evsel, cpu, thread) == NULL)
++	int *fd = FD(evsel, cpu, thread);
++
++	if (fd == NULL || *fd < 0 || MMAP(evsel, cpu, thread) == NULL)
+ 		return NULL;
+ 
+ 	return MMAP(evsel, cpu, thread)->base;
+@@ -295,17 +307,18 @@ int perf_evsel__read(struct perf_evsel *evsel, int cpu, int thread,
+ 		     struct perf_counts_values *count)
+ {
+ 	size_t size = perf_evsel__read_size(evsel);
++	int *fd = FD(evsel, cpu, thread);
+ 
+ 	memset(count, 0, sizeof(*count));
+ 
+-	if (FD(evsel, cpu, thread) < 0)
++	if (fd == NULL || *fd < 0)
+ 		return -EINVAL;
+ 
+ 	if (MMAP(evsel, cpu, thread) &&
+ 	    !perf_mmap__read_self(MMAP(evsel, cpu, thread), count))
+ 		return 0;
+ 
+-	if (readn(FD(evsel, cpu, thread), count->values, size) <= 0)
++	if (readn(*fd, count->values, size) <= 0)
+ 		return -errno;
+ 
+ 	return 0;
+@@ -318,8 +331,13 @@ static int perf_evsel__run_ioctl(struct perf_evsel *evsel,
+ 	int thread;
+ 
+ 	for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
+-		int fd = FD(evsel, cpu, thread),
+-		    err = ioctl(fd, ioc, arg);
++		int err;
++		int *fd = FD(evsel, cpu, thread);
++
++		if (fd == NULL || *fd < 0)
++			return -1;
++
++		err = ioctl(*fd, ioc, arg);
+ 
+ 		if (err)
+ 			return err;
 -- 
-2.25.1
+2.33.0.464.g1972c5931b-goog
 
