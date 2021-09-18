@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AC4C433F5
-	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Sep 2021 06:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1998C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Sep 2021 06:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48D0C61212
-	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Sep 2021 06:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7F9D611C8
+	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Sep 2021 06:35:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237288AbhIRGgz (ORCPT
+        id S237407AbhIRGhF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 18 Sep 2021 02:36:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53778 "EHLO
+        Sat, 18 Sep 2021 02:37:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237235AbhIRGgw (ORCPT
+        with ESMTP id S237199AbhIRGhB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 18 Sep 2021 02:36:52 -0400
-Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5234BC061574
-        for <linux-perf-users@vger.kernel.org>; Fri, 17 Sep 2021 23:35:29 -0700 (PDT)
-Received: by mail-qv1-xf4a.google.com with SMTP id r18-20020a056214069200b0037a291a6081so106899633qvz.18
-        for <linux-perf-users@vger.kernel.org>; Fri, 17 Sep 2021 23:35:29 -0700 (PDT)
+        Sat, 18 Sep 2021 02:37:01 -0400
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA59BC061757
+        for <linux-perf-users@vger.kernel.org>; Fri, 17 Sep 2021 23:35:31 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id j23-20020ac86657000000b0029cb70967ebso103479328qtp.14
+        for <linux-perf-users@vger.kernel.org>; Fri, 17 Sep 2021 23:35:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=zW1Ams81Kjka2LWuco04HmyEdFth1+/D5Mj6r33SeYY=;
-        b=du8INAehX/nOqsE7pu3XLmHunjsh9U/+3BbMjyP8raBArv8X+MbUAfZcovVJk/Ypqj
-         qZR6K38B1WGbKgdoH8MDaHPCU3GWfGgUi2+Rm4KURfKy4+nBw1hIrlIPii0iBaNknOzB
-         GcEhpiDtrZDr+aq2npjCg1o+xm9x0SJHEYZaXiWGEZ0O3pjXr7RJoSeS26gnHOG6clRr
-         3RiWHxXZ0Uo3RaKvVo2IlAnPoOrvi36ieUB1L2ovFiDCAzDYtTX7Yv+mWYoAji57SoaK
-         rluOHB6/9WyaIuh7SqV8ZTCOjyFElbusUwBowsgp9L96oN/4A2kk/iYqI+3IVYAcmoAx
-         gb7A==
+        bh=tyFMwnI6y9FcQXpb24VEVVWcGbqWCmrjC6BsWMJxuIk=;
+        b=FF/+nikOyke9TlPO3qubq2xKjjxSIJuh8XPB6fAW5I72AEB6GJYk2CeLoxfBSO6juM
+         h8qXzECDReY/qn+MExEDdbqKJC3pnUd5kby4fw1lUzoGY4L+sETDlPp+WsOswymBXs1K
+         aSmENcltfIv2gZ7EXGibNvg2PjzB72IqIXwXKnXtL1Mgg7bYjPDL5bB0PK3evyFSiTz2
+         E0rKlnIlC6pRm2EzaGRlzEcifwwgWeMvDL6pOVdMmCO2gKR+V40wjVoo+nFsbaRfw3tk
+         FamMTKuQrVR/2XGZjQlguv5pLO2dXN0V+FMMP1r31fSzBLIIpSJ6+OLnYiPFgSIlPHVj
+         vDwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=zW1Ams81Kjka2LWuco04HmyEdFth1+/D5Mj6r33SeYY=;
-        b=O9/ubeQ1vvsbwXyia2OXdUQh6arqinGcvRQPuKxPOlHzGfDJ/I6lYaA83qGqrtz2sB
-         RMJGKASCCqtSRwz5rZYsbSmfbug7Ea6zUJxLLuoEMPf3AaiNI6QQsvABktcew1gXJjXu
-         LcaX/euPWArXfIPeMMJKdQvR1h0bZ6/5wYp3GY7JZsh9K0KgVg4b9t+rSfm6HRVMNZK4
-         AubXaz6Z1lXBAKPLZxy7c0xOnIyNvhlJpfG+t6BjRUQNWurjQVlnjgUHH76oWA9YMRjz
-         dMu5lsEZnOu0Dol0XlblhrKvKAIiCzk3a+8c7xXSSWQDM59coJn1LTdCq7CUyNai18wP
-         FIlg==
-X-Gm-Message-State: AOAM532W4odFqDHPx2VFjdWjxoFQ4unXt5mQ9LYDvXo7hKqkStV3kQRf
-        jC0He6ETykhkGdECEKo48DXGsRx0OwaD
-X-Google-Smtp-Source: ABdhPJzjEy/dTIknYXk6tYa8ANhX1QZNZeDVSSYlV1hZdQ1Ox30Kk/RuMz3Q0TAVOqQzUKUJT5o9wt68CXKt
+        bh=tyFMwnI6y9FcQXpb24VEVVWcGbqWCmrjC6BsWMJxuIk=;
+        b=3OhgLZGLxrtBtVRrJ2nGpim7BbPmzXcjkS0ZXJDFlSAacyuRZcw2BPX6/5jkMZEUCa
+         hoJnpEWeizC7VvntDH26C/LoG+HPmPBy0jEoVC7cfiFPt1r8J1OZX5Dz80B2dE90OYqo
+         HfcW6h5EqOCn3TOjvI+GtJ9pWMKyaYJ6MtYHh/YoX7zdieJ5tdyZvw7m4QGP3aDJq/YP
+         1uvtqmzEHsWONJu4UjOV1OO5vojvp7uvTS+iZPDuM2zpFqxlDVo/1q3m2nImBnQd9U7X
+         5igczNRP87lFW77HiHepfU+wxONxNmrkkcgBn/NbVhYokTXMfeyx3Qk+XikDoyaFFu5m
+         aFrg==
+X-Gm-Message-State: AOAM533JKJ6WolUl69X9sPU8WIGX1v5OxgDJAL6t0pMHyoAdsxjDwNOx
+        8sc3Zbk3PhvuPxH8XJpzh/7bsWWHZJDy
+X-Google-Smtp-Source: ABdhPJy4vavHJ3mJtBPSuAMRZW49bTZf/VL1yJ0Ikibh3tJ69oluxNwnnA5goZYlzoHXgerPTnm4kFRHLbz1
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:6399:5df3:21d3:3cca])
- (user=irogers job=sendgmr) by 2002:a05:6214:142c:: with SMTP id
- o12mr15055954qvx.26.1631946928407; Fri, 17 Sep 2021 23:35:28 -0700 (PDT)
-Date:   Fri, 17 Sep 2021 23:35:07 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:1546:: with SMTP id
+ r6mr19622632ybu.268.1631946930795; Fri, 17 Sep 2021 23:35:30 -0700 (PDT)
+Date:   Fri, 17 Sep 2021 23:35:08 -0700
 In-Reply-To: <20210918063513.2356923-1-irogers@google.com>
-Message-Id: <20210918063513.2356923-3-irogers@google.com>
+Message-Id: <20210918063513.2356923-4-irogers@google.com>
 Mime-Version: 1.0
 References: <20210918063513.2356923-1-irogers@google.com>
 X-Mailer: git-send-email 2.33.0.464.g1972c5931b-goog
-Subject: [PATCH v8 2/8] perf metric: Use NAN for missing event IDs.
+Subject: [PATCH v8 3/8] perf expr: Modify code layout
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -83,44 +83,203 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If during computing a metric an event (id) is missing the parsing
-aborts. A later patch will make it so that events that aren't used in
-the output are deliberately omitted, in which case we don't want the
-abort. Modify the missing ID case to report NAN for these cases.
+No functional change. Alter whitespace. Use helper macros that will be
+made more complex in a later change.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/expr.y | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ tools/perf/util/expr.y | 149 +++++++++++++++++++++++------------------
+ 1 file changed, 85 insertions(+), 64 deletions(-)
 
 diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-index b2ada8f8309a..41c9cd4efadd 100644
+index 41c9cd4efadd..51f4f0aa1955 100644
 --- a/tools/perf/util/expr.y
 +++ b/tools/perf/util/expr.y
-@@ -1,6 +1,7 @@
- /* Simple expression parser */
+@@ -2,23 +2,10 @@
  %{
  #define YYDEBUG 1
-+#include <math.h>
- #include <stdio.h>
- #include "util.h"
+ #include <math.h>
+-#include <stdio.h>
+-#include "util.h"
  #include "util/debug.h"
-@@ -88,12 +89,10 @@ expr:	  NUMBER
- 	| ID			{
- 					struct expr_id_data *data;
+-#include <stdlib.h> // strtod()
++#include "smt.h"
+ #define IN_EXPR_Y 1
+ #include "expr.h"
+-#include "smt.h"
+-#include <string.h>
+-
+-static double d_ratio(double val0, double val1)
+-{
+-	if (val1 == 0) {
+-		return 0;
+-	}
+-	return  val0 / val1;
+-}
+-
+ %}
  
--					if (expr__resolve_id(ctx, $1, &data)) {
--						free($1);
--						YYABORT;
--					}
-+					$$ = NAN;
-+					if (expr__resolve_id(ctx, $1, &data) == 0)
-+						$$ = expr_id_data__value(data);
+ %define api.pure full
+@@ -33,11 +20,7 @@ static double d_ratio(double val0, double val1)
+ 	char	*str;
+ }
  
--					$$ = expr_id_data__value(data);
- 					free($1);
- 				}
- 	| expr '|' expr		{ $$ = (long)$1 | (long)$3; }
+-%token EXPR_PARSE EXPR_OTHER EXPR_ERROR
+-%token <num> NUMBER
+-%token <str> ID
+-%destructor { free ($$); } <str>
+-%token MIN MAX IF ELSE SMT_ON D_RATIO
++%token ID NUMBER MIN MAX IF ELSE SMT_ON D_RATIO EXPR_ERROR EXPR_PARSE EXPR_OTHER
+ %left MIN MAX IF
+ %left '|'
+ %left '^'
+@@ -46,6 +29,9 @@ static double d_ratio(double val0, double val1)
+ %left '-' '+'
+ %left '*' '/' '%'
+ %left NEG NOT
++%type <num> NUMBER
++%type <str> ID
++%destructor { free ($$); } <str>
+ %type <num> expr if_expr
+ 
+ %{
+@@ -57,6 +43,12 @@ static void expr_error(double *final_val __maybe_unused,
+ 	pr_debug("%s\n", s);
+ }
+ 
++#define BINARY_LONG_OP(RESULT, OP, LHS, RHS)				\
++	RESULT = (long)LHS OP (long)RHS;
++
++#define BINARY_OP(RESULT, OP, LHS, RHS)					\
++	RESULT = LHS OP RHS;
++
+ %}
+ %%
+ 
+@@ -78,49 +70,78 @@ MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/
+ '<' | '>' | D_RATIO
+ 
+ all_expr: if_expr			{ *final_val = $1; }
+-	;
+-
+-if_expr:
+-	expr IF expr ELSE expr { $$ = $3 ? $1 : $5; }
+-	| expr
+-	;
+-
+-expr:	  NUMBER
+-	| ID			{
+-					struct expr_id_data *data;
+-
+-					$$ = NAN;
+-					if (expr__resolve_id(ctx, $1, &data) == 0)
+-						$$ = expr_id_data__value(data);
+-
+-					free($1);
+-				}
+-	| expr '|' expr		{ $$ = (long)$1 | (long)$3; }
+-	| expr '&' expr		{ $$ = (long)$1 & (long)$3; }
+-	| expr '^' expr		{ $$ = (long)$1 ^ (long)$3; }
+-	| expr '<' expr		{ $$ = $1 < $3; }
+-	| expr '>' expr		{ $$ = $1 > $3; }
+-	| expr '+' expr		{ $$ = $1 + $3; }
+-	| expr '-' expr		{ $$ = $1 - $3; }
+-	| expr '*' expr		{ $$ = $1 * $3; }
+-	| expr '/' expr		{ if ($3 == 0) {
+-					pr_debug("division by zero\n");
+-					YYABORT;
+-				  }
+-				  $$ = $1 / $3;
+-	                        }
+-	| expr '%' expr		{ if ((long)$3 == 0) {
+-					pr_debug("division by zero\n");
+-					YYABORT;
+-				  }
+-				  $$ = (long)$1 % (long)$3;
+-	                        }
+-	| '-' expr %prec NEG	{ $$ = -$2; }
+-	| '(' if_expr ')'	{ $$ = $2; }
+-	| MIN '(' expr ',' expr ')' { $$ = $3 < $5 ? $3 : $5; }
+-	| MAX '(' expr ',' expr ')' { $$ = $3 > $5 ? $3 : $5; }
+-	| SMT_ON		 { $$ = smt_on() > 0; }
+-	| D_RATIO '(' expr ',' expr ')' { $$ = d_ratio($3,$5); }
+-	;
+ 
+-%%
++if_expr: expr IF expr ELSE expr
++{
++	$$ = $3 ? $1 : $5;
++}
++| expr
++;
++
++expr: NUMBER
++{
++	$$ = $1;
++}
++| ID
++{
++	struct expr_id_data *data;
++
++	$$ = NAN;
++	if (expr__resolve_id(ctx, $1, &data) == 0)
++		$$ = expr_id_data__value(data);
++
++	free($1);
++}
++| expr '|' expr { BINARY_LONG_OP($$, |, $1, $3); }
++| expr '&' expr { BINARY_LONG_OP($$, &, $1, $3); }
++| expr '^' expr { BINARY_LONG_OP($$, ^, $1, $3); }
++| expr '<' expr { BINARY_OP($$, <, $1, $3); }
++| expr '>' expr { BINARY_OP($$, >, $1, $3); }
++| expr '+' expr { BINARY_OP($$, +, $1, $3); }
++| expr '-' expr { BINARY_OP($$, -, $1, $3); }
++| expr '*' expr { BINARY_OP($$, *, $1, $3); }
++| expr '/' expr
++{
++	if ($3 == 0) {
++		pr_debug("division by zero\n");
++		YYABORT;
++	}
++	$$ = $1 / $3;
++}
++| expr '%' expr
++{
++	if ((long)$3 == 0) {
++		pr_debug("division by zero\n");
++		YYABORT;
++	}
++	$$ = (long)$1 % (long)$3;
++}
++| D_RATIO '(' expr ',' expr ')'
++{
++	if ($5 == 0) {
++		$$ = 0;
++	} else {
++		$$ = $3 / $5;
++	}
++}
++| '-' expr %prec NEG
++{
++	$$ = -$2;
++}
++| '(' if_expr ')'
++{
++	$$ = $2;
++}
++| MIN '(' expr ',' expr ')'
++{
++	$$ = $3 < $5 ? $3 : $5;
++}
++| MAX '(' expr ',' expr ')'
++{
++	$$ = $3 > $5 ? $3 : $5;
++}
++| SMT_ON
++{
++	$$ = smt_on() > 0 ? 1.0 : 0.0;
++}
++;
 -- 
 2.33.0.464.g1972c5931b-goog
 
