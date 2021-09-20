@@ -2,76 +2,110 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2EACC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Sep 2021 20:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B34DC433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Sep 2021 10:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98BB761004
-	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Sep 2021 20:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1078660F4B
+	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Sep 2021 10:00:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232382AbhISUiY (ORCPT
+        id S232262AbhITKCR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 19 Sep 2021 16:38:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54332 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232004AbhISUiX (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 19 Sep 2021 16:38:23 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 1776760240;
-        Sun, 19 Sep 2021 20:36:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632083806;
-        bh=T2c8bMYXBskh9FZsrU6GF3pxxSkFGJVq3SeIae8HZl0=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=ApukXedAYArl44wjPZw8WIbITY9mO7ywuxlSNtxdb1w5RG05G/HKBq6kyn9nURztx
-         Y39maP+gHeoLKn4VKnOW2oMNx+PJNzn7vi9hY1ldMUMOs7NG4FT6yWWXnuWdBb1L18
-         9O4pFGFm2YoX7S+UcsAXwVHVk9z8p4MvjvuQGrfCyWJEmUulzH5EnOvkzF4/EaBOVd
-         4lcsV0/+QaixLa6umLyrorx+JnEX9/Rn+/DtFoNiyEoWkCrhayIiDqTItgOuj2xWHI
-         YLLRjDIVGNepsSkqOBSBTmVnNJR6SQhsIdH6uv9nHssU3Mnt8kjO2jB+qs3a/h34zn
-         scTcINuYfnnJg==
-Subject: Re: [GIT PULL] perf tools fixes for v5.15: 1st batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20210919001030.301511-1-acme@kernel.org>
-References: <20210919001030.301511-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20210919001030.301511-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.15-2021-09-18
-X-PR-Tracked-Commit-Id: 219d720e6df71c2607d7120d6b9281614863e5b1
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d94f395772aeee64325d8b2f279560f08ac06fac
-Message-Id: <163208380595.27843.9098127255998207602.pr-tracker-bot@kernel.org>
-Date:   Sun, 19 Sep 2021 20:36:45 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Mon, 20 Sep 2021 06:02:17 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3845 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229567AbhITKCQ (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 20 Sep 2021 06:02:16 -0400
+Received: from fraeml704-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HCg3h30Pjz67N8Z;
+        Mon, 20 Sep 2021 17:58:08 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml704-chm.china.huawei.com (10.206.15.53) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.8; Mon, 20 Sep 2021 12:00:47 +0200
+Received: from [10.47.88.85] (10.47.88.85) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Mon, 20 Sep
+ 2021 11:00:46 +0100
+Subject: Re: [PATCH v2] perf test: Workload test of metric and metricgroups
+To:     Ian Rogers <irogers@google.com>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Juri Lelli <jlelli@redhat.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <eranian@google.com>, Paul Clarke <pc@us.ibm.com>
+References: <20210916060525.1890638-1-irogers@google.com>
+ <f7bbc59b-794f-2675-a044-1e3a58ad1495@huawei.com>
+ <CAP-5=fUAxfHb8fNjpPKthztJhB7Q3yUZucLS-6kKZtq-iNOVoA@mail.gmail.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <361478a4-98d0-d488-2903-2c859a2c8524@huawei.com>
+Date:   Mon, 20 Sep 2021 11:04:10 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
+MIME-Version: 1.0
+In-Reply-To: <CAP-5=fUAxfHb8fNjpPKthztJhB7Q3yUZucLS-6kKZtq-iNOVoA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.88.85]
+X-ClientProxiedBy: lhreml729-chm.china.huawei.com (10.201.108.80) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Sat, 18 Sep 2021 21:10:30 -0300:
+On 17/09/2021 20:16, Ian Rogers wrote:
+> On Thu, Sep 16, 2021 at 12:37 AM John Garry<john.garry@huawei.com>  wrote:
+>> On 16/09/2021 07:05, Ian Rogers wrote:
+>>> Test every metric and metricgroup with 'true' as a workload.
+>>>
+>>> Signed-off-by: Ian Rogers<irogers@google.com>
+>> Reviewed-by: John Garry<john.garry@huawei.com>
+>>
+>> Note that I also had a local test for pmu events:
+>> for e in `$PERF list --raw-dump pmu`; do
+>>     echo "Testing $e"
+>>     result=$($PERF stat -v -e "$e" perf bench internals synthesize)
+>>     if [[ "$result" =~ "$e" ]]; then
+>>       echo "Event not printed: $e"
+>>       exit 1
+>>     fi
+>> done
+>>
+>> Is there any value in upstreaming this? I could not see same already
+>> there. Or else make your new script generic, so that it accepts an
+>> argument whether to test events or metrics or metricgroups
+> It is not easy to make a generic script with the current shell test
+> infrastructure. I made a variant of this test:
+> https://lore.kernel.org/linux-perf-users/20210917184240.2181186-2-irogers@google.com/T/#u
+> For skylake it ran for 1m15s and so it may be too slow. Perhaps we
+> need to add to the test infrastructure with some kind of speed flag.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.15-2021-09-18
+Hi Ian,
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d94f395772aeee64325d8b2f279560f08ac06fac
+I suggested this before I realized that it would be called from "perf test".
 
-Thank you!
+You think that 1m15s could be considered too slow, but I think that it 
+could be much slower to now run "perf test" on some other systems. Like 
+my arm64 system - see series 
+https://lore.kernel.org/linux-perf-users/1631795665-240946-1-git-send-email-john.garry@huawei.com/T/#t 
+- where I mention that we have >700 HW PMU events (before applying that 
+series to take advantage of the event merging). And each of those events 
+would be tested individually - slow...
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+So firstly maybe a speed or test level flag could be added before we try 
+this. Sorry for any inconvenience caused.
+
+Thanks,
+John
