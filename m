@@ -2,123 +2,87 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C29AC433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Sep 2021 13:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FC3C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Sep 2021 13:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02C50601FC
-	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Sep 2021 13:40:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04D0A60F6F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Sep 2021 13:46:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237677AbhITNmJ (ORCPT
+        id S239650AbhITNrn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 20 Sep 2021 09:42:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50376 "EHLO mail.kernel.org"
+        Mon, 20 Sep 2021 09:47:43 -0400
+Received: from mga09.intel.com ([134.134.136.24]:45174 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239325AbhITNmJ (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 20 Sep 2021 09:42:09 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32B9260F21;
-        Mon, 20 Sep 2021 13:40:42 +0000 (UTC)
-Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1mSJXE-00Bm01-5z; Mon, 20 Sep 2021 14:40:40 +0100
-Date:   Mon, 20 Sep 2021 14:40:39 +0100
-Message-ID: <87o88nuzzc.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Sean Christopherson <seanjc@google.com>,
+        id S236385AbhITNrn (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 20 Sep 2021 09:47:43 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10112"; a="223166976"
+X-IronPort-AV: E=Sophos;i="5.85,308,1624345200"; 
+   d="scan'208";a="223166976"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2021 06:46:16 -0700
+X-IronPort-AV: E=Sophos;i="5.85,308,1624345200"; 
+   d="scan'208";a="701062486"
+Received: from akleen-mobl1.amr.corp.intel.com (HELO [10.252.131.200]) ([10.252.131.200])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2021 06:46:15 -0700
+Subject: Re: [PATCH v8 0/8] Don't compute events that won't be used in a
+ metric.
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Guo Ren <guoren@kernel.org>, Nick Hu <nickhu@andestech.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org,
-        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
-        Artem Kashkanov <artem.kashkanov@intel.com>,
-        Like Xu <like.xu.linux@gmail.com>,
-        Zhu Lingshan <lingshan.zhu@intel.com>
-Subject: Re: [PATCH v2 00/13] perf: KVM: Fix, optimize, and clean up callbacks
-In-Reply-To: <7a5825d1-d6e9-8ac8-5df2-cce693525da7@redhat.com>
-References: <20210828003558.713983-1-seanjc@google.com>
-        <20210828201336.GD4353@worktop.programming.kicks-ass.net>
-        <YUO5J/jTMa2KGbsq@google.com>
-        <YURDqVZ1UXKCiKPV@hirez.programming.kicks-ass.net>
-        <662e93f9-e858-689d-d203-742731ecad2c@redhat.com>
-        <87tuifv3mb.wl-maz@kernel.org>
-        <7a5825d1-d6e9-8ac8-5df2-cce693525da7@redhat.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: pbonzini@redhat.com, peterz@infradead.org, seanjc@google.com, mingo@redhat.com, acme@kernel.org, will@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, guoren@kernel.org, nickhu@andestech.com, green.hu@gmail.com, deanbo422@gmail.com, paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, tglx@linutronix.de, bp@alien8.de, x86@kernel.org, boris.ostrovsky@oracle.com, jgross@suse.com, alexander.shishkin@linux.intel.com, jolsa@redhat.com, namhyung@kernel.org, james.morse@arm.com, alexandru.elisei@arm.com, suzuki.poulose@arm.com, hpa@zytor.com, vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org, sstabellini@kernel.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org, kvm@vger.kernel.org, xen-devel@lists.xenproject.org, artem.kashkanov@intel.com, like.xu.linux@gmail.com, lingsha
- n.zhu@intel.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        linux-kernel@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Paul Clarke <pc@us.ibm.com>, kajoljain <kjain@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Sandeep Dasgupta <sdasgup@google.com>
+References: <20210918063513.2356923-1-irogers@google.com>
+From:   Andi Kleen <ak@linux.intel.com>
+Message-ID: <7307f6f3-74a8-ef3e-428b-fc294454e463@linux.intel.com>
+Date:   Mon, 20 Sep 2021 06:46:14 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
+MIME-Version: 1.0
+In-Reply-To: <20210918063513.2356923-1-irogers@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, 20 Sep 2021 14:18:30 +0100,
-Paolo Bonzini <pbonzini@redhat.com> wrote:
-> 
-> On 20/09/21 14:22, Marc Zyngier wrote:
-> >> I think that's only ARM, and even then it is only because of
-> >> limitations of the hardware which mostly apply only if VHE is not in
-> >> use.
-> >> 
-> >> If anything, it's ARM that should support module build in VHE mode
-> >> (Linux would still need to know whether it will be running at EL1 or
-> >> EL2, but KVM's functionality is as self-contained as on x86 in the VHE
-> >> case).
-> > I don't see this happening anytime soon. At least not before we
-> > declare the arm64 single kernel image policy to be obsolete.
-> 
-> --verbose please. :)  I am sure you're right, but I don't understand
-> the link between the two.
 
-To start making KVM/arm64 modular, you'd have to build it such as
-there is no support for the nVHE hypervisor anymore. Which would mean
-two different configs (one that can only work with VHE, and one for
-the rest) and contradicts the current single kernel image policy.
+On 9/17/2021 11:35 PM, Ian Rogers wrote:
+>      
+> For a metric like:
+>    EVENT1 if #smt_on else EVENT2
+>      
+> currently EVENT1 and EVENT2 will be measured and then when the metric
+> is reported EVENT1 or EVENT2 will be printed depending on the value
+> from smt_on() during the expr parsing. Computing both events is
+> unnecessary and can lead to multiplexing as discussed in this thread:
+> https://lore.kernel.org/lkml/20201110100346.2527031-1-irogers@google.com/
+>
+> This change modifies expression parsing so that constants are
+> considered when building the set of ids (events) and only events not
+> contributing to a constant value are measured.
 
-It is bad enough that we have to support 3 sets of page sizes.
-Doubling the validation space for the sake of being able to unload KVM
-seems a dubious prospect.
 
-	M.
+The series looks good to me.
 
--- 
-Without deviation from the norm, progress is not possible.
+
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+
+
+-Andi
+
+
