@@ -2,134 +2,123 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.2 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F2CC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Sep 2021 05:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 403E1C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Sep 2021 08:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D76A060ED5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Sep 2021 05:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22DEC61181
+	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Sep 2021 08:08:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229469AbhIUFHk (ORCPT
+        id S230456AbhIUIKJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 21 Sep 2021 01:07:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49254 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbhIUFHk (ORCPT
+        Tue, 21 Sep 2021 04:10:09 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:52379 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230032AbhIUIKI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 21 Sep 2021 01:07:40 -0400
-Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E6C0C061575
-        for <linux-perf-users@vger.kernel.org>; Mon, 20 Sep 2021 22:06:12 -0700 (PDT)
-Received: by mail-il1-x130.google.com with SMTP id x2so21259995ila.11
-        for <linux-perf-users@vger.kernel.org>; Mon, 20 Sep 2021 22:06:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=L+tfnHMedGZe2TFbLCJcKj8ZBwL3hCr8DyK+pgVSE+4=;
-        b=QXWd88y2WJnDIsPwkEYPzcd/JXfLUTRpO318D7yusvGQ4g+wvLNzfnJRIjp42X+5kx
-         XgULeZOsCGhbGf9cIoth7WZgA8l/Gsovl3AVZE+shaRppsYL7wOhTjFOPvt47T6mvAYY
-         7dkdEzqqqFMaOMAmHIDRy+2ONB2AG+0VMBuGSUKtkTKgTiXU9KlFd/NMXeHM1+UdJe04
-         oQYLXfesNaJMFETttGOt2hBodvoBhbqzJRp8Vzblf6t4tN9q9vJOpx20bMavfIFXWm/q
-         ETTlnuQvctQIQdSrh5B/3gxFM7I3EKhN2Qs1Mlr0ND95ElQVtA6aPsUKr2kmUiHgL2OV
-         IQcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L+tfnHMedGZe2TFbLCJcKj8ZBwL3hCr8DyK+pgVSE+4=;
-        b=4Vb1FxYPH/BDvoIQhGgdcKXdXvc6W9NDWRvG6ZvQkKB+CrWFowDNu8ZYrm7D2k407c
-         Nx+rUSfgpDXgJ2GSzKFB1aoLAJjg6dFjChGv3I1+1/qCbrba8JKHYOPXQ1CB0SwyWvVc
-         UOOjgPOgBOsva+zQtE7Q5UfHB93fJexjmGkzaWnM/uvEGVXcz/7VYhuDO+L6IYFIghkX
-         +fqqLAAnHNKKoz3t21dKH2BxDgd+R4ue5aN9PXoUPSxrkPcN3fShUS5gT21Qq6W2I6Cf
-         eXC5k0qCUJ6Ckt2BlqsiBQ3cNk63ISjDWlp2mH5q4445cMfBAvrJuJ5okRZAAVYi2O4r
-         jZTA==
-X-Gm-Message-State: AOAM533dGfWsyytMdw2bFFhsmbJDBCMb9Wjnj238mvcOmk4tmKRn81Ct
-        cWL64+OwJpSzKzGRt4HueJDWdmPmKMYN7Hxk7dzpsw==
-X-Google-Smtp-Source: ABdhPJzVjEyiyrOobrt+R+WGvly+cwuaGiPLn6fNOPjSS7m+B01J9uyOvXZ6/MYVBQqnlp0AXh1bqUkjqJodsFqW7Ts=
-X-Received: by 2002:a92:c605:: with SMTP id p5mr19598295ilm.53.1632200771676;
- Mon, 20 Sep 2021 22:06:11 -0700 (PDT)
+        Tue, 21 Sep 2021 04:10:08 -0400
+Received: from mail-wr1-f43.google.com ([209.85.221.43]) by
+ mrelayeu.kundenserver.de (mreue009 [213.165.67.97]) with ESMTPSA (Nemesis) id
+ 1MUok5-1mJcZC1Csb-00QgVF; Tue, 21 Sep 2021 10:08:39 +0200
+Received: by mail-wr1-f43.google.com with SMTP id t8so29588364wri.1;
+        Tue, 21 Sep 2021 01:08:39 -0700 (PDT)
+X-Gm-Message-State: AOAM531O3Bu8Xsc1krB8Y3q5vCx+SAhQZ9GshjuaAeQTTV3sg2nIzC0b
+        IZGqldQ2SKT50mhX7SrmD//2WiH8Ibs8C2qtpf0=
+X-Google-Smtp-Source: ABdhPJy6gNp3mnAgyb/iPHvO2OC6clNZlGkHnTCwBMBfOS6i3DFhHXtaQsZqW3ibIVTDOgQQF2uucpdNu1A4eKHz32Y=
+X-Received: by 2002:adf:f481:: with SMTP id l1mr2382016wro.411.1632211718939;
+ Tue, 21 Sep 2021 01:08:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210916060525.1890638-1-irogers@google.com> <f7bbc59b-794f-2675-a044-1e3a58ad1495@huawei.com>
- <CAP-5=fUAxfHb8fNjpPKthztJhB7Q3yUZucLS-6kKZtq-iNOVoA@mail.gmail.com> <361478a4-98d0-d488-2903-2c859a2c8524@huawei.com>
-In-Reply-To: <361478a4-98d0-d488-2903-2c859a2c8524@huawei.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 20 Sep 2021 22:05:59 -0700
-Message-ID: <CAP-5=fWmGyuqFKc-EMP3rbmTkjZ3MS+YSajGZfeRMc38HS82gw@mail.gmail.com>
-Subject: Re: [PATCH v2] perf test: Workload test of metric and metricgroups
-To:     John Garry <john.garry@huawei.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+References: <20210917061040.2270822-1-alistair.francis@opensource.wdc.com>
+ <20210917061040.2270822-2-alistair.francis@opensource.wdc.com> <72990864-5ec6-1f73-efd9-61b667a172dd@collabora.com>
+In-Reply-To: <72990864-5ec6-1f73-efd9-61b667a172dd@collabora.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 21 Sep 2021 10:08:22 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3x_EyCiPDpMK54y=Rtm-Wb08ym2TNiuAZgXhYrThcWTw@mail.gmail.com>
+Message-ID: <CAK8P3a3x_EyCiPDpMK54y=Rtm-Wb08ym2TNiuAZgXhYrThcWTw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] perf bench: Add support for 32-bit systems with
+ 64-bit time_t
+To:     =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@collabora.com>
+Cc:     Alistair Francis <alistair.francis@opensource.wdc.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alistair Francis <alistair23@gmail.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        eranian@google.com, Paul Clarke <pc@us.ibm.com>
+        Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Darren Hart <dvhart@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <atish.patra@wdc.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alistair Francis <alistair.francis@wdc.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:2yF3PfTcmCw/0IsZGBaRWPlj+IyCqMBI9CMPm79Q8KL/6PWQNo9
+ Q6LCo0fJITzs+lxJO9kzln0lfLXo0yaCv3Zlm+tHbhZVMYgz+foXCkR89UenROLJ6OuOsZ5
+ vF+nr+8aYJ6TwO1u+GZQrIPkpUd2ssI1GFxplKeRQrv1vNA3fyuYF61Y5Q/InADiotHilTe
+ 9qhDO+IWqlqcVOiNwU30Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ePN22AnODOg=:cBr3hn4Wi3cbzGIiKUDsZN
+ fwb3KrAmwoPq/FgFsC3UOYZz+EuCUMqMuO5YODB+GZ2fykVq8sBtqtaeeTDsWvyE5R++7ZfNH
+ ZkabrmgHpUEN68Ooo+j3a2XLf13Tvi3ruDc7mbVwkUK+g54xDbQKpLnCG5L+LDP4Vy0on+kB2
+ kXogpGzWyZaf7sXr/reZr8L3p+YoDKDRnTnKZ/htxqqvnP+QjJ6N9ZN55JkUpvtaVNUpd7RWn
+ imPJa+QArdHl55tH1h1QmW/lztpLbHXGDvUTV57x4/jEX7x/HV8evYIcEaG/6VgtLmUAjI7/F
+ Ze1UrAbbddllgNZ83Nxv6y6cLUGuXkp2ohUT3U6taGFEMdWnGokpA3SGrtoz2bp2bW/v2I8KZ
+ 8KT8Hi5trlkI1EPtaTpxQHm04Gt7smBaC0Vvl9aifjifNUIOXLssXKU2wf+Vld7M8Qc4rlzql
+ 7l/P6fLgRLuz/NvCO/42HVsfnV/A0yC/WVCUyEBSrkJ2WKSbyfETs/vwVUNmPL4eVCfzL2p+u
+ XEgDPc1OwTvrn/NU380AwM8Mj7+EKmFqqGr3l+Fmy75O1kBbjZqzTrVtqSwBWhGva0UoIqAsQ
+ ttr9ynx58EOGa8KvmU6rHY/7t4QPKF18d12Nx50Po9Rmaq6vF6aRMdDmr9hU6ks2gUYp3UhK3
+ lgS5rnxxdVQB3dfDi4o9pF8HXVafL2RBiRm7mEpEa9MobIdSUSE7xzCeP5R+OBkKhEjUD0Xb4
+ nEuen2i+YFBw1pSy8aZHF5Bu26ZgtCnePZZHTcmCW2w0YhQhXjBg7K3+nN2A3QmbteqxDKE/A
+ I32UC2mDBSKBggPvYpj7dE/o12s47wsEeS3R8Y6vUugeyhmRJTpe9tHjF1tdJrutvUDy2acgG
+ X+IdfDVN31T5JlMABIfw==
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Sep 20, 2021 at 3:00 AM John Garry <john.garry@huawei.com> wrote:
+On Tue, Sep 21, 2021 at 12:47 AM André Almeida
+<andrealmeid@collabora.com> wrote:
 >
-> On 17/09/2021 20:16, Ian Rogers wrote:
-> > On Thu, Sep 16, 2021 at 12:37 AM John Garry<john.garry@huawei.com>  wrote:
-> >> On 16/09/2021 07:05, Ian Rogers wrote:
-> >>> Test every metric and metricgroup with 'true' as a workload.
-> >>>
-> >>> Signed-off-by: Ian Rogers<irogers@google.com>
-> >> Reviewed-by: John Garry<john.garry@huawei.com>
-> >>
-> >> Note that I also had a local test for pmu events:
-> >> for e in `$PERF list --raw-dump pmu`; do
-> >>     echo "Testing $e"
-> >>     result=$($PERF stat -v -e "$e" perf bench internals synthesize)
-> >>     if [[ "$result" =~ "$e" ]]; then
-> >>       echo "Event not printed: $e"
-> >>       exit 1
-> >>     fi
-> >> done
-> >>
-> >> Is there any value in upstreaming this? I could not see same already
-> >> there. Or else make your new script generic, so that it accepts an
-> >> argument whether to test events or metrics or metricgroups
-> > It is not easy to make a generic script with the current shell test
-> > infrastructure. I made a variant of this test:
-> > https://lore.kernel.org/linux-perf-users/20210917184240.2181186-2-irogers@google.com/T/#u
-> > For skylake it ran for 1m15s and so it may be too slow. Perhaps we
-> > need to add to the test infrastructure with some kind of speed flag.
+> #if defined(__i386__) || __TIMESIZE == 32
+> # define NR_gettime64 __NR_clock_gettime64
+> #else
+> # define NR_gettime64 __NR_clock_gettime
+> #endif
 >
-> Hi Ian,
+> struct timespec64 {
+>         long long tv_sec;       /* seconds */
+>         long long tv_nsec;      /* nanoseconds */
+> };
 >
-> I suggested this before I realized that it would be called from "perf test".
+> int gettime64(clock_t clockid, struct timespec64 *tv)
+> {
+>         return syscall(NR_gettime64, clockid, tv);
+> }
 >
-> You think that 1m15s could be considered too slow, but I think that it
-> could be much slower to now run "perf test" on some other systems. Like
-> my arm64 system - see series
-> https://lore.kernel.org/linux-perf-users/1631795665-240946-1-git-send-email-john.garry@huawei.com/T/#t
-> - where I mention that we have >700 HW PMU events (before applying that
-> series to take advantage of the event merging). And each of those events
-> would be tested individually - slow...
->
-> So firstly maybe a speed or test level flag could be added before we try
-> this. Sorry for any inconvenience caused.
+> Then we can just use &timeout at __NR_futex_time64 for 32bit arch and at
+> __NR_futex for 64bit arch.
 
-Hi John,
+This is still broken when you disable CONFIG_COMPAT_32BIT_TIME,
+which disables all system calls that take time32 arguments.
 
-I think a flag would be best. I'll look to add a notion of test sizes,
-as that mirrors what works well at Google. We can then tag a test as
-small, medium, large and default to just say running small and medium
-tests.
+> This might be a simpler solution to the problem that you are facing but
+> I'm not entirely sure. Also, futex's selftests do use the timeout
+> argument and I think that they also won't compile in 32-bit RISC-V, so
+> maybe we can start from there so we can actually test the timeout
+> argument and check if it's working.
 
-Thanks,
-Ian
+I would love to see the wrapper that Alistair wrote as part of some kernel
+uapi header provided to user space. futex is used by tons of applications,
+and we never had a library abstraction for it, so everyone has to do these
+by hand, and they all get them slightly wrong in different ways.
 
-> Thanks,
-> John
+We normally don't do this in kernel headers, but I think the benefits
+would be far greater compared to today's situation.
+
+      Arnd
