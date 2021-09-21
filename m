@@ -2,95 +2,130 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85285C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Sep 2021 13:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BC0C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Sep 2021 16:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69B2061178
-	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Sep 2021 13:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BDEF61183
+	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Sep 2021 16:44:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232982AbhIUNL6 (ORCPT
+        id S229523AbhIUQqI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 21 Sep 2021 09:11:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:33418 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232950AbhIUNL5 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 21 Sep 2021 09:11:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D2834106F;
-        Tue, 21 Sep 2021 06:10:28 -0700 (PDT)
-Received: from e121896.arm.com (unknown [10.57.50.222])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 90FD03F59C;
-        Tue, 21 Sep 2021 06:10:26 -0700 (PDT)
-From:   James Clark <james.clark@arm.com>
-To:     acme@kernel.org, leo.yan@linaro.com,
-        linux-perf-users@vger.kernel.org
-Cc:     James Clark <james.clark@arm.com>,
+        Tue, 21 Sep 2021 12:46:08 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:38587 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229490AbhIUQqH (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 21 Sep 2021 12:46:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1632242678;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2MOh25Z0CXinUksqYDluCoredOuFNiGvVHCwdZh/BTA=;
+        b=fMQBRvFbKUREv2fA+AGvkCsmlbU6zexpDH0XZ7f9S+6tOtWrksGDgEYq1tJD5g/1pJpAQq
+        NHx71FG/3pPj+hPpQHV/wluvJjANYWDxvg7ZaRm3yIhXhA62L9X0LzWiTFHHhN7KL3a8tk
+        6O8nSkJsGIEhmzcttRNJ67nAEZ8utTA=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-422-rf5e9K_-Ph6um9ZinVzxEg-1; Tue, 21 Sep 2021 12:44:37 -0400
+X-MC-Unique: rf5e9K_-Ph6um9ZinVzxEg-1
+Received: by mail-wr1-f70.google.com with SMTP id v15-20020adff68f000000b0015df51efa18so9326634wrp.16
+        for <linux-perf-users@vger.kernel.org>; Tue, 21 Sep 2021 09:44:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2MOh25Z0CXinUksqYDluCoredOuFNiGvVHCwdZh/BTA=;
+        b=nNcf7pKuls1mWwivVg7r9EmHhCd4Zz0VUu1Zvsh0e3701A1vQ1LcTecc8mpqmrplPU
+         mYMAwMvfQbpryHlDUR/OrwbVvOLFGd/gVGn6MEs2G4x2yC7atfj8mbdHgPQiB9pRoe37
+         mzOSf6akTkx3F1245PRATkP/stD/mrFLFsJGUGkwLMTseFS8yVqPF2oFdpxrpdl33fXw
+         Dn9VsFBbW+hEyg5A7/57ftv9X29ks9v0x9o7ezWMzru5E0vJaWz5CzNF8Rj0z0rk+lhr
+         yr0E/QxMBUVLhgNfUcU6vmT56xisGP/tncxhhfFJVPbtdIpDKQg2cxkAyZaL5sVASxeU
+         wgPg==
+X-Gm-Message-State: AOAM532ZxEZDTkvdMVJ6Tn3gFhFzEn+FCzIC2AE8Ect6P7PaPrkhljjZ
+        8FUud81kSLPcwR44tfFO/zo+Qcs83VoZxi8Yze8Dc+WwdM7y1fO8K1CrKWOwMirCs5rvi4fIqLI
+        5iPBNoTo4Onw9p6RkoEZwzU1ADBcBfg==
+X-Received: by 2002:adf:ef02:: with SMTP id e2mr35671910wro.401.1632242676306;
+        Tue, 21 Sep 2021 09:44:36 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzsCp5ZrdIqXk735XH8pFAzorkNCbfLAUPGTe1MtIGjUyvp4uSPpnZgIUWeU9z8tn602zxqYg==
+X-Received: by 2002:adf:ef02:: with SMTP id e2mr35671861wro.401.1632242676096;
+        Tue, 21 Sep 2021 09:44:36 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:c8dd:75d4:99ab:290a? ([2001:b07:6468:f312:c8dd:75d4:99ab:290a])
+        by smtp.gmail.com with ESMTPSA id k1sm20272243wrz.61.2021.09.21.09.44.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Sep 2021 09:44:35 -0700 (PDT)
+Subject: Re: [PATCH v2 05/13] perf: Force architectures to opt-in to guest
+ callbacks
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <seanjc@google.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>, Guo Ren <guoren@kernel.org>,
+        Nick Hu <nickhu@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] perf tests: Improve temp file cleanup in test_arm_coresight.sh
-Date:   Tue, 21 Sep 2021 14:10:09 +0100
-Message-Id: <20210921131009.390810-3-james.clark@arm.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20210921131009.390810-1-james.clark@arm.com>
-References: <20210921131009.390810-1-james.clark@arm.com>
+        James Morse <james.morse@arm.com>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org,
+        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Artem Kashkanov <artem.kashkanov@intel.com>,
+        Like Xu <like.xu.linux@gmail.com>,
+        Zhu Lingshan <lingshan.zhu@intel.com>
+References: <20210828003558.713983-1-seanjc@google.com>
+ <20210828003558.713983-6-seanjc@google.com>
+ <20210828194752.GC4353@worktop.programming.kicks-ass.net>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <8ee13a69-f2c4-2413-2d6c-b6c0a559286e@redhat.com>
+Date:   Tue, 21 Sep 2021 18:44:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210828194752.GC4353@worktop.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Cleanup perf.data.old files which are also dropped by perf, handle
-sigint and propagate it to the parent in case the test is run in a bash
-while loop and don't create the temp files if the test will be skipped.
+On 28/08/21 21:47, Peter Zijlstra wrote:
+>> +config HAVE_GUEST_PERF_EVENTS
+>> +	bool
+> 	depends on HAVE_KVM
 
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/tests/shell/test_arm_coresight.sh | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+It won't really do anything, since Kconfig does not detects conflicts 
+between select' and 'depends on' clauses.
 
-diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
-index c9eef0bba6f1..6de53b7ef5ff 100755
---- a/tools/perf/tests/shell/test_arm_coresight.sh
-+++ b/tools/perf/tests/shell/test_arm_coresight.sh
-@@ -9,8 +9,6 @@
- # SPDX-License-Identifier: GPL-2.0
- # Leo Yan <leo.yan@linaro.org>, 2020
- 
--perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
--file=$(mktemp /tmp/temporary_file.XXXXX)
- glb_err=0
- 
- skip_if_no_cs_etm_event() {
-@@ -22,13 +20,20 @@ skip_if_no_cs_etm_event() {
- 
- skip_if_no_cs_etm_event || exit 2
- 
-+perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+file=$(mktemp /tmp/temporary_file.XXXXX)
-+
- cleanup_files()
- {
- 	rm -f ${perfdata}
- 	rm -f ${file}
-+	rm -f "${perfdata}.old"
-+	trap - exit term int
-+	kill -2 $$
-+	exit $glb_err
- }
- 
--trap cleanup_files exit
-+trap cleanup_files exit term int
- 
- record_touch_file() {
- 	echo "Recording trace (only user mode) with path: CPU$2 => $1"
--- 
-2.28.0
+Rather, should the symbol be selected by KVM, instead of ARM64 and X86?
+
+Paolo
 
