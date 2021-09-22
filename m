@@ -2,118 +2,148 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60757C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 16:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20082C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 17:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F373611C9
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 16:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDF7F6112F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 17:24:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231210AbhIVQv3 (ORCPT
+        id S236806AbhIVR0H (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Sep 2021 12:51:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:51582 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231925AbhIVQv2 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Sep 2021 12:51:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 13595113E;
-        Wed, 22 Sep 2021 09:49:58 -0700 (PDT)
-Received: from [10.57.50.100] (unknown [10.57.50.100])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C86E83F719;
-        Wed, 22 Sep 2021 09:49:56 -0700 (PDT)
-Subject: Re: [PATCH 3/3] perf tests: Improve temp file cleanup in
- test_arm_coresight.sh
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     acme@kernel.org, leo.yan@linaro.com,
-        linux-perf-users@vger.kernel.org,
+        Wed, 22 Sep 2021 13:26:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41978 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236753AbhIVR0C (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 22 Sep 2021 13:26:02 -0400
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DE1AC061574
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Sep 2021 10:24:32 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id 61-20020aed2143000000b002a6a0f52ce7so11052172qtc.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Sep 2021 10:24:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=eYmFyjQxJlLAih8817ANlmnPSTWsjS/u2nvqtL+z9+Y=;
+        b=I17ESIifGUT777mMs0vxWBghGwJVlaVE20O69OixREeXEwLBOg/rXPqYptKmzC55eT
+         8qK5gNqDhH98ueVCasOa8BXfMpZYlgy/dmZPWn0kxdyE8bfF9ZZdWqe3zBKL0Yuuf401
+         B0rG96xc+06x8RyrkZBA/jW4+6/FHlkmAlqb6d7Ai/0fur8wrbUgSN3OaIYugLncJif9
+         7cGMtNb2E17chaZ8gHuUO4aqD59MBJXNK4bLL5PM9uFbiqaWk7+dgk9NQC9QjuCIs42T
+         nwaEKmjxBQxaxKRWmi7Wmdd6RF3iUeH0LpVLE+j7dnWcoztOL8CG8wz/HNyFoYt8WIbh
+         L1Tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=eYmFyjQxJlLAih8817ANlmnPSTWsjS/u2nvqtL+z9+Y=;
+        b=3syvPQ1qskh9z/mZlK8JVAiOA0eEoj7ydplSTLXRYnYT9P7fiDh70wpgbe0xXB79ym
+         +G/jkCR/u8av2Wbq5o2OuNeA/2HOEbBQ6QVDcyM1jYJSpS8WjqWT0Iq5JsVDFNW3D8oT
+         0BhNNtlYRJXFjeT1PR0cl2vQyorXtmLmxKyc2DrU2U5VD06w5YZR/6VdUJpbXCIo8QIZ
+         qbT6eY8ygalL7lxO9bMoOH3wCHVGFIPgI/aqU52HeeFFq/UdvGFA9TO+PV5T/Aai/r5d
+         qMWe4CVBP3GYRn3JBisdibYGatqwGm372B8475wCS1gtFSiK9cMcnwMnYyoGfBcrEYTe
+         CqWQ==
+X-Gm-Message-State: AOAM531la2hQZm4xn65rCOR7Wh6vQmyvk0ogui4h4/Ia7WuUD4lbMDwQ
+        np7sgoxCIRivrH0UOXPeUwz+uT51B+bp
+X-Google-Smtp-Source: ABdhPJyTjx6VMtA6M/q+njx49v6Rp1/ItPKEMFUSCwQnP9Cak3Ek4KuWfJw311I8SZEYlyhCgCXw6impTb4K
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:d3ff:e8f7:11f4:c738])
+ (user=irogers job=sendgmr) by 2002:a25:c9c5:: with SMTP id
+ z188mr321611ybf.223.1632331471582; Wed, 22 Sep 2021 10:24:31 -0700 (PDT)
+Date:   Wed, 22 Sep 2021 10:24:27 -0700
+Message-Id: <20210922172427.454376-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.33.0.464.g1972c5931b-goog
+Subject: [PATCH v2] perf test: Make metric testing more robust.
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20210921131009.390810-1-james.clark@arm.com>
- <20210921131009.390810-3-james.clark@arm.com>
- <20210922110012.GA400258@leoy-ThinkPad-X240s>
- <5a1c5eab-d9b7-5623-2d7d-c6b1921b3628@arm.com>
- <20210922140832.GB400258@leoy-ThinkPad-X240s>
-From:   James Clark <james.clark@arm.com>
-Message-ID: <85c593b5-5348-8e9a-b9e4-bc4d31ffc785@arm.com>
-Date:   Wed, 22 Sep 2021 17:49:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
-MIME-Version: 1.0
-In-Reply-To: <20210922140832.GB400258@leoy-ThinkPad-X240s>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        John Garry <john.garry@huawei.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     eranian@google.com, Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+When testing metric expressions we fake counter values from 1 going
+upward. For some metrics this can yield negative values that are clipped
+to zero, and then cause divide by zero failures. Such clipping is
+questionable but may be a result of tools automatically generating
+metrics. A workaround for this case is to try a second time with counter
+values going in the opposite direction.
 
+This case was seen in a metric like:
+  event1 / max(event2 - event3, 0)
+But it may also happen in more sensible metrics like:
+  event1 / (event2 + event3 - 1 - event4)
 
-On 22/09/2021 15:08, Leo Yan wrote:
-> Hi James,
-> 
-> On Wed, Sep 22, 2021 at 02:40:54PM +0100, James Clark wrote:
-> 
-> [...]
-> 
->>>>  cleanup_files()
->>>>  {
->>>>  	rm -f ${perfdata}
->>>>  	rm -f ${file}
->>>> +	rm -f "${perfdata}.old"
->>>> +	trap - exit term int
->>>> +	kill -2 $$
->>>
->>> Here it always sends signal SIGINT to current PID with $$, another
->>> choice is to send signal based on the incoming signal type, like below:
->>>
->>>   [[ "$1" = "int" ]] || kill -SIGINT $$
->>>   [[ "$1" = "term" ]] || kill -SIGTERM $$
->>
->> Yes I thought that this might be an issue, but I tested it in a few different
->> scenarios. Especially when running it under the normal ./perf test command and
->> it didn't seem to cause an issue whether it passed or failed. So I'm not sure
->> if it's worth changing or not. Maybe it is in case it gets copy pasted into
->> another shell test?
-> 
-> I think it's not very necessary to send signal again with command
-> "kill -2 $$" at here.
-> 
-> "kill -2 $$" sends the signal to the shell process itself rather than
-> propagating signal to its parent process.  And the up level's script
-> should can detect an error with the returned exit code.
-> 
-> So below change should be sufficient?
-> 
-> cleanup_files()
-> {
-> 	rm -f ${perfdata}
-> 	rm -f ${file}
-> +       rm -f "${perfdata}.old"
-> +       exit $glb_err
-> }
-> 
-> Sorry if I miss anything at here and cause noise.
+v2. Rebase and more detail in commit message.
 
-The problem with not re-sending the sigint is that if you want to run the
-script in a bash while loop like:
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/pmu-events.c | 32 ++++++++++++++++++++++++++------
+ 1 file changed, 26 insertions(+), 6 deletions(-)
 
-  while ! tests/shell/test_arm_coresight.sh; do echo loop; done
+diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+index 43743cf719ef..0ed11764cfab 100644
+--- a/tools/perf/tests/pmu-events.c
++++ b/tools/perf/tests/pmu-events.c
+@@ -891,8 +891,18 @@ static int test_parsing(void)
+ 			}
+ 
+ 			if (expr__parse(&result, &ctx, pe->metric_expr, 0)) {
+-				expr_failure("Parse failed", map, pe);
+-				ret++;
++				/*
++				 * Parsing failed, make numbers go from large to
++				 * small which can resolve divide by zero
++				 * issues.
++				 */
++				k = 1024;
++				hashmap__for_each_entry((&ctx.ids), cur, bkt)
++					expr__add_id_val(&ctx, strdup(cur->key), k--);
++				if (expr__parse(&result, &ctx, pe->metric_expr, 0)) {
++					expr_failure("Parse failed", map, pe);
++					ret++;
++				}
+ 			}
+ 			expr__ctx_clear(&ctx);
+ 		}
+@@ -947,10 +957,20 @@ static int metric_parse_fake(const char *str)
+ 		}
+ 	}
+ 
+-	if (expr__parse(&result, &ctx, str, 0))
+-		pr_err("expr__parse failed\n");
+-	else
+-		ret = 0;
++	ret = 0;
++	if (expr__parse(&result, &ctx, str, 0)) {
++		/*
++		 * Parsing failed, make numbers go from large to small which can
++		 * resolve divide by zero issues.
++		 */
++		i = 1024;
++		hashmap__for_each_entry((&ctx.ids), cur, bkt)
++			expr__add_id_val(&ctx, strdup(cur->key), i--);
++		if (expr__parse(&result, &ctx, str, 0)) {
++			pr_err("expr__parse failed\n");
++			ret = -1;
++		}
++	}
+ 
+ out:
+ 	expr__ctx_clear(&ctx);
+-- 
+2.33.0.464.g1972c5931b-goog
 
-Then it's impossible to exit with Ctrl-C and delete the temp files at the
-same time. It exits if we don't trap sigint like it is at the moment, but
-then it leaves the temporary files. This change is so we can have both
-behaviours of Ctrl-C in a loop and keep the cleanup working.
-
-
-> 
-> Thanks,
-> Leo
-> 
