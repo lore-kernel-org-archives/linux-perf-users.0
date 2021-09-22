@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD880C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 20:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E33B0C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 20:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CDEA61168
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 20:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB98960F23
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 20:59:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237839AbhIVVAX (ORCPT
+        id S237816AbhIVVBB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Sep 2021 17:00:23 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:40667 "EHLO
+        Wed, 22 Sep 2021 17:01:01 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:43869 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237786AbhIVVAX (ORCPT
+        by vger.kernel.org with ESMTP id S237810AbhIVVBA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Sep 2021 17:00:23 -0400
+        Wed, 22 Sep 2021 17:01:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1632344332;
+        s=mimecast20190719; t=1632344370;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=hws5eDqR+f2bTbX+cn5+y2+RLzs8dFQl3RKjAF5zxFE=;
-        b=UIt5MCVPJAmAdBwpbypUkD8nAdYWmecQhCV4oLid+Brwszg0ykoIEBy7+tnss5vdXYqVYH
-        kex+zHK/mJFNlCMSLFoUAaNcEW9Qwoak7lgZh1LvIfxWpLlRfJn+OBLNbTHuaiQ+8W6zFz
-        FOLQFSZCJeQ550R8asUecjl5LW8jj6E=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-526-cZK0KnDBMiOB4Ti7TBTReQ-1; Wed, 22 Sep 2021 16:58:51 -0400
-X-MC-Unique: cZK0KnDBMiOB4Ti7TBTReQ-1
-Received: by mail-wr1-f69.google.com with SMTP id x7-20020a5d6507000000b0015dada209b1so3264103wru.15
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Sep 2021 13:58:51 -0700 (PDT)
+        bh=1ShBqRd2afcxQiqKLzFLPQi4RmuvWNKjI1gBxuj67v0=;
+        b=BYLZY28Abroo3otYeecfMIL762lrNQBPT6+dE+LNmfIJ3QnSKg8a9hoDOYFk0sNFPRgtqH
+        QJ7aoOyb2alpi6PezWhuSAqqzHsBffCsB7qYDp0BgVv2BzkIo7Dn1k0FgGCPnSwN9hnthn
+        KRseEUfC2fLZn5FYO0dqsEuFOF0dmgE=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-587-oZFezgCQMhuP7Pf3scyn9Q-1; Wed, 22 Sep 2021 16:59:28 -0400
+X-MC-Unique: oZFezgCQMhuP7Pf3scyn9Q-1
+Received: by mail-wr1-f70.google.com with SMTP id f11-20020adfc98b000000b0015fedc2a8d4so3354265wrh.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Sep 2021 13:59:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=hws5eDqR+f2bTbX+cn5+y2+RLzs8dFQl3RKjAF5zxFE=;
-        b=Ij8vafW42AdgMh1X6aMliiJuS+VImlKvLQT+F1HjwjMCXM19OWouxaGbA2XesTEdnE
-         mqpmatZc+UgldCJCKoPFlAPNwFtbHNL7BU5SQYnTm3TojD0NHG5O0PBYOeiIDoAQpa8f
-         /Xx+suuh/w1ebdNY9afp7GSG5gWfNPR8/UbB7XPY7xEnaTnKDz37ql8OvePTJwqWYntm
-         m4iyVS9I+/cmZMyqh+Sjn7iXoWVpGKMQBoi3cDG8yCj2NZ/okShjf0om0qxK8w4823CD
-         o4I2chsk8fWStLqU0kOJ9X60IvcQFj34rFDGIleIv1TOuXTbrENppoFdEUmSH3JPwAie
-         tEDA==
-X-Gm-Message-State: AOAM5317TuI1ZCGZhDglysfLN2UO74Yn6gsHu6/Tp3sfeUl9LKXFH/94
-        wEis6JYNJZ5IOIkErjKB2tCgTS7LAm/A5lINoPWgJ+UHK9bSeoisQ3dJmJnf7D5YdkspJHG6Cwz
-        wL86XK+e2yvlV0219i2jKVKqYzv2RGA==
-X-Received: by 2002:adf:ded1:: with SMTP id i17mr1079664wrn.83.1632344330224;
-        Wed, 22 Sep 2021 13:58:50 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzX0qj99H3uabhF3988CIOB5pZ+vp3ItuvU1Q6aMmQV0NnazNCvW6h4PM/2iXwod18nE3Stqw==
-X-Received: by 2002:adf:ded1:: with SMTP id i17mr1079646wrn.83.1632344330023;
-        Wed, 22 Sep 2021 13:58:50 -0700 (PDT)
+        bh=1ShBqRd2afcxQiqKLzFLPQi4RmuvWNKjI1gBxuj67v0=;
+        b=V+SY2SXuuOCIw7sE+QrpukBmGUhjK++Mb4FzOHk8+II9uKOJmtGnDZ4Ogn4/QYjKz9
+         yJONC+ApUA573YKiEyBgbC2dwljBFfPZ7qBInJMUiF9CBNRTvVGZ8rVPj8Y+h7rxLwj0
+         KCknnshA6yN8GXCNSCZy5OJaOt2v405jCkJaeIEEhcGyvPPGfCraQWY45x6txIbkngi4
+         f6FiY6x88f4swGLwP8Jof8RSX40bBrfe3AlGTPCt7UK3tx0HjAlmJvGkWFIKs6b7LV3G
+         dHWr7M37CXyehSRvgKvSu1vAZQNrDBc4cmYpVYPP9qxrzzYHK9hlz/8Mvlu7sKw4I6Eg
+         6tCg==
+X-Gm-Message-State: AOAM533BykhjeuYcTlIN3feuh9nFRR8s+jMK+SNBqckgk5vbZQT8MJ35
+        /JSSGcRmFnynG6azW5kRapA8LAY6U1QWHYI6kGk7fXUz+hy6fxO0QHYTFQf46YFrmwAbKpEBSTf
+        lv8oYWv22ADZH+1hWO+/FfodL5JQDpg==
+X-Received: by 2002:a5d:648b:: with SMTP id o11mr1045155wri.315.1632344367467;
+        Wed, 22 Sep 2021 13:59:27 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx9rMfpnyymCWiPG6vAap+Sb4l9xolJm1ZkYcM0jeT9HTzmEoBghNiAWZVn50oqFPj44MOVrA==
+X-Received: by 2002:a5d:648b:: with SMTP id o11mr1045116wri.315.1632344367071;
+        Wed, 22 Sep 2021 13:59:27 -0700 (PDT)
 Received: from krava ([83.240.63.48])
-        by smtp.gmail.com with ESMTPSA id c185sm3320676wma.8.2021.09.22.13.58.49
+        by smtp.gmail.com with ESMTPSA id r9sm3166977wru.2.2021.09.22.13.59.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Sep 2021 13:58:49 -0700 (PDT)
-Date:   Wed, 22 Sep 2021 22:58:47 +0200
+        Wed, 22 Sep 2021 13:59:26 -0700 (PDT)
+Date:   Wed, 22 Sep 2021 22:59:19 +0200
 From:   Jiri Olsa <jolsa@redhat.com>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -75,223 +75,616 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         linux-perf-users@vger.kernel.org,
         Stephane Eranian <eranian@google.com>,
         Sandeep Dasgupta <sdasgup@google.com>
-Subject: Re: [PATCH v8 3/8] perf expr: Modify code layout
-Message-ID: <YUuZBwiW/0M7yosQ@krava>
+Subject: Re: [PATCH v8 1/8] perf metric: Restructure struct expr_parse_ctx.
+Message-ID: <YUuZJ/UeNv9uphy8@krava>
 References: <20210918063513.2356923-1-irogers@google.com>
- <20210918063513.2356923-4-irogers@google.com>
+ <20210918063513.2356923-2-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210918063513.2356923-4-irogers@google.com>
+In-Reply-To: <20210918063513.2356923-2-irogers@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Sep 17, 2021 at 11:35:08PM -0700, Ian Rogers wrote:
-> No functional change. Alter whitespace. Use helper macros that will be
-> made more complex in a later change.
-
-please split into more patches, with the spacing changes
-it's not easy to check there's no functional change
-
-thanks,
-jirka
-
+On Fri, Sep 17, 2021 at 11:35:06PM -0700, Ian Rogers wrote:
+> A later change to parsing the ids out (in expr__find_other) will
+> potentially drop hashmaps and so it is more convenient to move
+> expr_parse_ctx to have a hashmap pointer rather than a struct value. As
+> this pointer must be freed, rather than just going out of scope,
+> add expr__ctx_new and expr__ctx_free to manage expr_parse_ctx memory.
+> Adjust use of struct expr_parse_ctx accordingly.
 > 
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/util/expr.y | 149 +++++++++++++++++++++++------------------
->  1 file changed, 85 insertions(+), 64 deletions(-)
+>  tools/perf/tests/expr.c       | 81 ++++++++++++++++++-----------------
+>  tools/perf/tests/pmu-events.c | 43 +++++++++++--------
+>  tools/perf/util/expr.c        | 39 +++++++++++++----
+>  tools/perf/util/expr.h        |  5 ++-
+>  tools/perf/util/metricgroup.c | 44 ++++++++++---------
+>  tools/perf/util/stat-shadow.c | 50 +++++++++++++--------
+>  6 files changed, 155 insertions(+), 107 deletions(-)
 > 
-> diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-> index 41c9cd4efadd..51f4f0aa1955 100644
-> --- a/tools/perf/util/expr.y
-> +++ b/tools/perf/util/expr.y
-> @@ -2,23 +2,10 @@
->  %{
->  #define YYDEBUG 1
->  #include <math.h>
-> -#include <stdio.h>
-> -#include "util.h"
->  #include "util/debug.h"
-> -#include <stdlib.h> // strtod()
-> +#include "smt.h"
->  #define IN_EXPR_Y 1
->  #include "expr.h"
-> -#include "smt.h"
-> -#include <string.h>
-> -
-> -static double d_ratio(double val0, double val1)
-> -{
-> -	if (val1 == 0) {
-> -		return 0;
-> -	}
-> -	return  val0 / val1;
-> -}
-> -
->  %}
+> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+> index 4d01051951cd..b0a3b5fd0c00 100644
+> --- a/tools/perf/tests/expr.c
+> +++ b/tools/perf/tests/expr.c
+> @@ -22,67 +22,70 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
+>  	const char *p;
+>  	double val;
+>  	int ret;
+> -	struct expr_parse_ctx ctx;
+> +	struct expr_parse_ctx *ctx;
 >  
->  %define api.pure full
-> @@ -33,11 +20,7 @@ static double d_ratio(double val0, double val1)
->  	char	*str;
+> -	expr__ctx_init(&ctx);
+> -	expr__add_id_val(&ctx, strdup("FOO"), 1);
+> -	expr__add_id_val(&ctx, strdup("BAR"), 2);
+> +	ctx = expr__ctx_new();
+
+missing ctx check
+
+> +	TEST_ASSERT_VAL("expr__ctx_new", ctx);
+> +	expr__add_id_val(ctx, strdup("FOO"), 1);
+> +	expr__add_id_val(ctx, strdup("BAR"), 2);
+>  
+> -	ret = test(&ctx, "1+1", 2);
+> -	ret |= test(&ctx, "FOO+BAR", 3);
+> -	ret |= test(&ctx, "(BAR/2)%2", 1);
+> -	ret |= test(&ctx, "1 - -4",  5);
+> -	ret |= test(&ctx, "(FOO-1)*2 + (BAR/2)%2 - -4",  5);
+> -	ret |= test(&ctx, "1-1 | 1", 1);
+> -	ret |= test(&ctx, "1-1 & 1", 0);
+> -	ret |= test(&ctx, "min(1,2) + 1", 2);
+> -	ret |= test(&ctx, "max(1,2) + 1", 3);
+> -	ret |= test(&ctx, "1+1 if 3*4 else 0", 2);
+> -	ret |= test(&ctx, "1.1 + 2.1", 3.2);
+> -	ret |= test(&ctx, ".1 + 2.", 2.1);
+> -	ret |= test(&ctx, "d_ratio(1, 2)", 0.5);
+> -	ret |= test(&ctx, "d_ratio(2.5, 0)", 0);
+> -	ret |= test(&ctx, "1.1 < 2.2", 1);
+> -	ret |= test(&ctx, "2.2 > 1.1", 1);
+> -	ret |= test(&ctx, "1.1 < 1.1", 0);
+> -	ret |= test(&ctx, "2.2 > 2.2", 0);
+> -	ret |= test(&ctx, "2.2 < 1.1", 0);
+> -	ret |= test(&ctx, "1.1 > 2.2", 0);
+> +	ret = test(ctx, "1+1", 2);
+> +	ret |= test(ctx, "FOO+BAR", 3);
+> +	ret |= test(ctx, "(BAR/2)%2", 1);
+> +	ret |= test(ctx, "1 - -4",  5);
+> +	ret |= test(ctx, "(FOO-1)*2 + (BAR/2)%2 - -4",  5);
+> +	ret |= test(ctx, "1-1 | 1", 1);
+> +	ret |= test(ctx, "1-1 & 1", 0);
+> +	ret |= test(ctx, "min(1,2) + 1", 2);
+> +	ret |= test(ctx, "max(1,2) + 1", 3);
+> +	ret |= test(ctx, "1+1 if 3*4 else 0", 2);
+> +	ret |= test(ctx, "1.1 + 2.1", 3.2);
+> +	ret |= test(ctx, ".1 + 2.", 2.1);
+> +	ret |= test(ctx, "d_ratio(1, 2)", 0.5);
+> +	ret |= test(ctx, "d_ratio(2.5, 0)", 0);
+> +	ret |= test(ctx, "1.1 < 2.2", 1);
+> +	ret |= test(ctx, "2.2 > 1.1", 1);
+> +	ret |= test(ctx, "1.1 < 1.1", 0);
+> +	ret |= test(ctx, "2.2 > 2.2", 0);
+> +	ret |= test(ctx, "2.2 < 1.1", 0);
+> +	ret |= test(ctx, "1.1 > 2.2", 0);
+
+
+SNIP
+
+
+>  				ret++;
+> @@ -876,27 +881,27 @@ static int test_parsing(void)
+>  			 * make them unique.
+>  			 */
+>  			k = 1;
+> -			hashmap__for_each_entry((&ctx.ids), cur, bkt)
+> -				expr__add_id_val(&ctx, strdup(cur->key), k++);
+> +			hashmap__for_each_entry(ctx->ids, cur, bkt)
+> +				expr__add_id_val(ctx, strdup(cur->key), k++);
+>  
+> -			hashmap__for_each_entry((&ctx.ids), cur, bkt) {
+> +			hashmap__for_each_entry(ctx->ids, cur, bkt) {
+>  				if (check_parse_cpu(cur->key, map == cpus_map,
+>  						   pe))
+>  					ret++;
+>  			}
+>  
+>  			list_for_each_entry_safe(metric, tmp, &compound_list, list) {
+> -				expr__add_ref(&ctx, &metric->metric_ref);
+> +				expr__add_ref(ctx, &metric->metric_ref);
+>  				free(metric);
+>  			}
+>  
+> -			if (expr__parse(&result, &ctx, pe->metric_expr, 0)) {
+> +			if (expr__parse(&result, ctx, pe->metric_expr, 0)) {
+>  				expr_failure("Parse failed", map, pe);
+>  				ret++;
+>  			}
+> -			expr__ctx_clear(&ctx);
+>  		}
+>  	}
+> +	expr__ctx_free(ctx);
+>  	/* TODO: fail when not ok */
+>  exit:
+>  	return ret == 0 ? TEST_OK : TEST_SKIP;
+> @@ -916,7 +921,7 @@ static struct test_metric metrics[] = {
+>  
+>  static int metric_parse_fake(const char *str)
+>  {
+> -	struct expr_parse_ctx ctx;
+> +	struct expr_parse_ctx *ctx;
+>  	struct hashmap_entry *cur;
+>  	double result;
+>  	int ret = -1;
+> @@ -925,8 +930,8 @@ static int metric_parse_fake(const char *str)
+>  
+>  	pr_debug("parsing '%s'\n", str);
+>  
+> -	expr__ctx_init(&ctx);
+> -	if (expr__find_other(str, NULL, &ctx, 0) < 0) {
+> +	ctx = expr__ctx_new();
+
+missing ctx check
+
+jirka
+
+> +	if (expr__find_other(str, NULL, ctx, 0) < 0) {
+>  		pr_err("expr__find_other failed\n");
+>  		return -1;
+>  	}
+> @@ -937,23 +942,23 @@ static int metric_parse_fake(const char *str)
+>  	 * make them unique.
+>  	 */
+>  	i = 1;
+> -	hashmap__for_each_entry((&ctx.ids), cur, bkt)
+> -		expr__add_id_val(&ctx, strdup(cur->key), i++);
+> +	hashmap__for_each_entry(ctx->ids, cur, bkt)
+> +		expr__add_id_val(ctx, strdup(cur->key), i++);
+>  
+> -	hashmap__for_each_entry((&ctx.ids), cur, bkt) {
+> +	hashmap__for_each_entry(ctx->ids, cur, bkt) {
+>  		if (check_parse_fake(cur->key)) {
+>  			pr_err("check_parse_fake failed\n");
+>  			goto out;
+>  		}
+>  	}
+>  
+> -	if (expr__parse(&result, &ctx, str, 0))
+> +	if (expr__parse(&result, ctx, str, 0))
+>  		pr_err("expr__parse failed\n");
+>  	else
+>  		ret = 0;
+>  
+>  out:
+> -	expr__ctx_clear(&ctx);
+> +	expr__ctx_free(ctx);
+>  	return ret;
 >  }
 >  
-> -%token EXPR_PARSE EXPR_OTHER EXPR_ERROR
-> -%token <num> NUMBER
-> -%token <str> ID
-> -%destructor { free ($$); } <str>
-> -%token MIN MAX IF ELSE SMT_ON D_RATIO
-> +%token ID NUMBER MIN MAX IF ELSE SMT_ON D_RATIO EXPR_ERROR EXPR_PARSE EXPR_OTHER
->  %left MIN MAX IF
->  %left '|'
->  %left '^'
-> @@ -46,6 +29,9 @@ static double d_ratio(double val0, double val1)
->  %left '-' '+'
->  %left '*' '/' '%'
->  %left NEG NOT
-> +%type <num> NUMBER
-> +%type <str> ID
-> +%destructor { free ($$); } <str>
->  %type <num> expr if_expr
+> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+> index a850fd0be3ee..7b1c06772a49 100644
+> --- a/tools/perf/util/expr.c
+> +++ b/tools/perf/util/expr.c
+> @@ -73,7 +73,7 @@ int expr__add_id(struct expr_parse_ctx *ctx, const char *id)
+>  	data_ptr->parent = ctx->parent;
+>  	data_ptr->kind = EXPR_ID_DATA__PARENT;
 >  
->  %{
-> @@ -57,6 +43,12 @@ static void expr_error(double *final_val __maybe_unused,
->  	pr_debug("%s\n", s);
+> -	ret = hashmap__set(&ctx->ids, id, data_ptr,
+> +	ret = hashmap__set(ctx->ids, id, data_ptr,
+>  			   (const void **)&old_key, (void **)&old_data);
+>  	if (ret)
+>  		free(data_ptr);
+> @@ -95,7 +95,7 @@ int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val)
+>  	data_ptr->val = val;
+>  	data_ptr->kind = EXPR_ID_DATA__VALUE;
+>  
+> -	ret = hashmap__set(&ctx->ids, id, data_ptr,
+> +	ret = hashmap__set(ctx->ids, id, data_ptr,
+>  			   (const void **)&old_key, (void **)&old_data);
+>  	if (ret)
+>  		free(data_ptr);
+> @@ -140,7 +140,7 @@ int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref)
+>  	data_ptr->ref.metric_expr = ref->metric_expr;
+>  	data_ptr->kind = EXPR_ID_DATA__REF;
+>  
+> -	ret = hashmap__set(&ctx->ids, name, data_ptr,
+> +	ret = hashmap__set(ctx->ids, name, data_ptr,
+>  			   (const void **)&old_key, (void **)&old_data);
+>  	if (ret)
+>  		free(data_ptr);
+> @@ -156,7 +156,7 @@ int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref)
+>  int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
+>  		 struct expr_id_data **data)
+>  {
+> -	return hashmap__find(&ctx->ids, id, (void **)data) ? 0 : -1;
+> +	return hashmap__find(ctx->ids, id, (void **)data) ? 0 : -1;
 >  }
 >  
-> +#define BINARY_LONG_OP(RESULT, OP, LHS, RHS)				\
-> +	RESULT = (long)LHS OP (long)RHS;
-> +
-> +#define BINARY_OP(RESULT, OP, LHS, RHS)					\
-> +	RESULT = LHS OP RHS;
-> +
->  %}
->  %%
+>  int expr__resolve_id(struct expr_parse_ctx *ctx, const char *id,
+> @@ -205,15 +205,23 @@ void expr__del_id(struct expr_parse_ctx *ctx, const char *id)
+>  	struct expr_id_data *old_val = NULL;
+>  	char *old_key = NULL;
 >  
-> @@ -78,49 +70,78 @@ MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/
->  '<' | '>' | D_RATIO
+> -	hashmap__delete(&ctx->ids, id,
+> +	hashmap__delete(ctx->ids, id,
+>  			(const void **)&old_key, (void **)&old_val);
+>  	free(old_key);
+>  	free(old_val);
+>  }
 >  
->  all_expr: if_expr			{ *final_val = $1; }
-> -	;
-> -
-> -if_expr:
-> -	expr IF expr ELSE expr { $$ = $3 ? $1 : $5; }
-> -	| expr
-> -	;
-> -
-> -expr:	  NUMBER
-> -	| ID			{
-> -					struct expr_id_data *data;
-> -
-> -					$$ = NAN;
-> -					if (expr__resolve_id(ctx, $1, &data) == 0)
-> -						$$ = expr_id_data__value(data);
-> -
-> -					free($1);
-> -				}
-> -	| expr '|' expr		{ $$ = (long)$1 | (long)$3; }
-> -	| expr '&' expr		{ $$ = (long)$1 & (long)$3; }
-> -	| expr '^' expr		{ $$ = (long)$1 ^ (long)$3; }
-> -	| expr '<' expr		{ $$ = $1 < $3; }
-> -	| expr '>' expr		{ $$ = $1 > $3; }
-> -	| expr '+' expr		{ $$ = $1 + $3; }
-> -	| expr '-' expr		{ $$ = $1 - $3; }
-> -	| expr '*' expr		{ $$ = $1 * $3; }
-> -	| expr '/' expr		{ if ($3 == 0) {
-> -					pr_debug("division by zero\n");
-> -					YYABORT;
-> -				  }
-> -				  $$ = $1 / $3;
-> -	                        }
-> -	| expr '%' expr		{ if ((long)$3 == 0) {
-> -					pr_debug("division by zero\n");
-> -					YYABORT;
-> -				  }
-> -				  $$ = (long)$1 % (long)$3;
-> -	                        }
-> -	| '-' expr %prec NEG	{ $$ = -$2; }
-> -	| '(' if_expr ')'	{ $$ = $2; }
-> -	| MIN '(' expr ',' expr ')' { $$ = $3 < $5 ? $3 : $5; }
-> -	| MAX '(' expr ',' expr ')' { $$ = $3 > $5 ? $3 : $5; }
-> -	| SMT_ON		 { $$ = smt_on() > 0; }
-> -	| D_RATIO '(' expr ',' expr ')' { $$ = d_ratio($3,$5); }
-> -	;
+> -void expr__ctx_init(struct expr_parse_ctx *ctx)
+> +struct expr_parse_ctx *expr__ctx_new(void)
+>  {
+> -	hashmap__init(&ctx->ids, key_hash, key_equal, NULL);
+> +	struct expr_parse_ctx *ctx;
+> +
+> +	ctx = malloc(sizeof(struct expr_parse_ctx));
+> +	if (!ctx)
+> +		return NULL;
+> +
+> +	ctx->ids = hashmap__new(key_hash, key_equal, NULL);
+> +	ctx->parent = NULL;
+> +	return ctx;
+>  }
 >  
-> -%%
-> +if_expr: expr IF expr ELSE expr
-> +{
-> +	$$ = $3 ? $1 : $5;
-> +}
-> +| expr
-> +;
-> +
-> +expr: NUMBER
-> +{
-> +	$$ = $1;
-> +}
-> +| ID
-> +{
-> +	struct expr_id_data *data;
-> +
-> +	$$ = NAN;
-> +	if (expr__resolve_id(ctx, $1, &data) == 0)
-> +		$$ = expr_id_data__value(data);
-> +
-> +	free($1);
-> +}
-> +| expr '|' expr { BINARY_LONG_OP($$, |, $1, $3); }
-> +| expr '&' expr { BINARY_LONG_OP($$, &, $1, $3); }
-> +| expr '^' expr { BINARY_LONG_OP($$, ^, $1, $3); }
-> +| expr '<' expr { BINARY_OP($$, <, $1, $3); }
-> +| expr '>' expr { BINARY_OP($$, >, $1, $3); }
-> +| expr '+' expr { BINARY_OP($$, +, $1, $3); }
-> +| expr '-' expr { BINARY_OP($$, -, $1, $3); }
-> +| expr '*' expr { BINARY_OP($$, *, $1, $3); }
-> +| expr '/' expr
-> +{
-> +	if ($3 == 0) {
-> +		pr_debug("division by zero\n");
-> +		YYABORT;
+>  void expr__ctx_clear(struct expr_parse_ctx *ctx)
+> @@ -221,11 +229,24 @@ void expr__ctx_clear(struct expr_parse_ctx *ctx)
+>  	struct hashmap_entry *cur;
+>  	size_t bkt;
+>  
+> -	hashmap__for_each_entry((&ctx->ids), cur, bkt) {
+> +	hashmap__for_each_entry(ctx->ids, cur, bkt) {
+> +		free((char *)cur->key);
+> +		free(cur->value);
 > +	}
-> +	$$ = $1 / $3;
+> +	hashmap__clear(ctx->ids);
 > +}
-> +| expr '%' expr
+> +
+> +void expr__ctx_free(struct expr_parse_ctx *ctx)
 > +{
-> +	if ((long)$3 == 0) {
-> +		pr_debug("division by zero\n");
-> +		YYABORT;
+> +	struct hashmap_entry *cur;
+> +	size_t bkt;
+> +
+> +	hashmap__for_each_entry(ctx->ids, cur, bkt) {
+>  		free((char *)cur->key);
+>  		free(cur->value);
+>  	}
+> -	hashmap__clear(&ctx->ids);
+> +	hashmap__free(ctx->ids);
+> +	free(ctx);
+>  }
+>  
+>  static int
+> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+> index 85df3e4771e4..5fa394f10418 100644
+> --- a/tools/perf/util/expr.h
+> +++ b/tools/perf/util/expr.h
+> @@ -19,7 +19,7 @@ struct expr_id {
+>  };
+>  
+>  struct expr_parse_ctx {
+> -	struct hashmap	 ids;
+> +	struct hashmap	*ids;
+>  	struct expr_id	*parent;
+>  };
+>  
+> @@ -30,8 +30,9 @@ struct expr_scanner_ctx {
+>  	int runtime;
+>  };
+>  
+> -void expr__ctx_init(struct expr_parse_ctx *ctx);
+> +struct expr_parse_ctx *expr__ctx_new(void);
+>  void expr__ctx_clear(struct expr_parse_ctx *ctx);
+> +void expr__ctx_free(struct expr_parse_ctx *ctx);
+>  void expr__del_id(struct expr_parse_ctx *ctx, const char *id);
+>  int expr__add_id(struct expr_parse_ctx *ctx, const char *id);
+>  int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val);
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> index 29b747ac31c1..b7924a2f1f45 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -118,7 +118,7 @@ struct metric_ref_node {
+>  
+>  struct metric {
+>  	struct list_head nd;
+> -	struct expr_parse_ctx pctx;
+> +	struct expr_parse_ctx *pctx;
+>  	const char *metric_name;
+>  	const char *metric_expr;
+>  	const char *metric_unit;
+> @@ -198,7 +198,7 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+>  	struct evsel *ev, *current_leader = NULL;
+>  	struct expr_id_data *val_ptr;
+>  	int i = 0, matched_events = 0, events_to_match;
+> -	const int idnum = (int)hashmap__size(&pctx->ids);
+> +	const int idnum = (int)hashmap__size(pctx->ids);
+>  
+>  	/*
+>  	 * duration_time is always grouped separately, when events are grouped
+> @@ -206,7 +206,7 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+>  	 * add it to metric_events at the end.
+>  	 */
+>  	if (!has_constraint &&
+> -	    hashmap__find(&pctx->ids, "duration_time", (void **)&val_ptr))
+> +	    hashmap__find(pctx->ids, "duration_time", (void **)&val_ptr))
+>  		events_to_match = idnum - 1;
+>  	else
+>  		events_to_match = idnum;
+> @@ -242,7 +242,7 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+>  		if (contains_event(metric_events, matched_events, ev->name))
+>  			continue;
+>  		/* Does this event belong to the parse context? */
+> -		if (hashmap__find(&pctx->ids, ev->name, (void **)&val_ptr))
+> +		if (hashmap__find(pctx->ids, ev->name, (void **)&val_ptr))
+>  			metric_events[matched_events++] = ev;
+>  
+>  		if (matched_events == events_to_match)
+> @@ -322,12 +322,12 @@ static int metricgroup__setup_events(struct list_head *groups,
+>  		struct metric_ref *metric_refs = NULL;
+>  
+>  		metric_events = calloc(sizeof(void *),
+> -				hashmap__size(&m->pctx.ids) + 1);
+> +				hashmap__size(m->pctx->ids) + 1);
+>  		if (!metric_events) {
+>  			ret = -ENOMEM;
+>  			break;
+>  		}
+> -		evsel = find_evsel_group(perf_evlist, &m->pctx,
+> +		evsel = find_evsel_group(perf_evlist, m->pctx,
+>  					 metric_no_merge,
+>  					 m->has_constraint, metric_events,
+>  					 evlist_used);
+> @@ -693,7 +693,7 @@ static void metricgroup__add_metric_weak_group(struct strbuf *events,
+>  	size_t bkt;
+>  	bool no_group = true, has_duration = false;
+>  
+> -	hashmap__for_each_entry((&ctx->ids), cur, bkt) {
+> +	hashmap__for_each_entry(ctx->ids, cur, bkt) {
+>  		pr_debug("found event %s\n", (const char *)cur->key);
+>  		/*
+>  		 * Duration time maps to a software event and can make
+> @@ -724,7 +724,7 @@ static void metricgroup__add_metric_non_group(struct strbuf *events,
+>  	size_t bkt;
+>  	bool first = true;
+>  
+> -	hashmap__for_each_entry((&ctx->ids), cur, bkt) {
+> +	hashmap__for_each_entry(ctx->ids, cur, bkt) {
+>  		if (!first)
+>  			strbuf_addf(events, ",");
+>  		strbuf_addf(events, "%s", (const char *)cur->key);
+> @@ -799,7 +799,11 @@ static int __add_metric(struct list_head *metric_list,
+>  		if (!m)
+>  			return -ENOMEM;
+>  
+> -		expr__ctx_init(&m->pctx);
+> +		m->pctx = expr__ctx_new();
+> +		if (!m->pctx) {
+> +			free(m);
+> +			return -ENOMEM;
+> +		}
+>  		m->metric_name = pe->metric_name;
+>  		m->metric_expr = pe->metric_expr;
+>  		m->metric_unit = pe->unit;
+> @@ -847,15 +851,15 @@ static int __add_metric(struct list_head *metric_list,
+>  
+>  	/* Force all found IDs in metric to have us as parent ID. */
+>  	WARN_ON_ONCE(!parent);
+> -	m->pctx.parent = parent;
+> +	m->pctx->parent = parent;
+>  
+>  	/*
+>  	 * For both the parent and referenced metrics, we parse
+>  	 * all the metric's IDs and add it to the parent context.
+>  	 */
+> -	if (expr__find_other(pe->metric_expr, NULL, &m->pctx, runtime) < 0) {
+> +	if (expr__find_other(pe->metric_expr, NULL, m->pctx, runtime) < 0) {
+>  		if (m->metric_refs_cnt == 0) {
+> -			expr__ctx_clear(&m->pctx);
+> +			expr__ctx_free(m->pctx);
+>  			free(m);
+>  			*mp = NULL;
+>  		}
+> @@ -878,8 +882,8 @@ static int __add_metric(struct list_head *metric_list,
+>  		list_for_each_prev(pos, metric_list) {
+>  			struct metric *old = list_entry(pos, struct metric, nd);
+>  
+> -			if (hashmap__size(&m->pctx.ids) <=
+> -			    hashmap__size(&old->pctx.ids))
+> +			if (hashmap__size(m->pctx->ids) <=
+> +			    hashmap__size(old->pctx->ids))
+>  				break;
+>  		}
+>  		list_add(&m->nd, pos);
+> @@ -927,7 +931,7 @@ static int recursion_check(struct metric *m, const char *id, struct expr_id **pa
+>  	 * if we already processed 'id', if we did, it's recursion
+>  	 * and we fail.
+>  	 */
+> -	ret = expr__get_id(&m->pctx, id, &data);
+> +	ret = expr__get_id(m->pctx, id, &data);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -982,7 +986,7 @@ static int __resolve_metric(struct metric *m,
+>  	 */
+>  	do {
+>  		all = true;
+> -		hashmap__for_each_entry((&m->pctx.ids), cur, bkt) {
+> +		hashmap__for_each_entry(m->pctx->ids, cur, bkt) {
+>  			struct expr_id *parent;
+>  			struct pmu_event *pe;
+>  
+> @@ -996,7 +1000,7 @@ static int __resolve_metric(struct metric *m,
+>  
+>  			all = false;
+>  			/* The metric key itself needs to go out.. */
+> -			expr__del_id(&m->pctx, cur->key);
+> +			expr__del_id(m->pctx, cur->key);
+>  
+>  			/* ... and it gets resolved to the parent context. */
+>  			ret = add_metric(metric_list, pe, metric_no_group, &m, parent, ids);
+> @@ -1144,10 +1148,10 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
+>  
+>  		if (m->has_constraint) {
+>  			metricgroup__add_metric_non_group(events,
+> -							  &m->pctx);
+> +							  m->pctx);
+>  		} else {
+>  			metricgroup__add_metric_weak_group(events,
+> -							   &m->pctx);
+> +							   m->pctx);
+>  		}
+>  	}
+>  
+> @@ -1210,7 +1214,7 @@ static void metricgroup__free_metrics(struct list_head *metric_list)
+>  
+>  	list_for_each_entry_safe (m, tmp, metric_list, nd) {
+>  		metric__free_refs(m);
+> -		expr__ctx_clear(&m->pctx);
+> +		expr__ctx_free(m->pctx);
+>  		list_del_init(&m->nd);
+>  		free(m);
+>  	}
+> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+> index 34a7f5c1fff7..c9fa07e49e72 100644
+> --- a/tools/perf/util/stat-shadow.c
+> +++ b/tools/perf/util/stat-shadow.c
+> @@ -1,8 +1,10 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> +#include <math.h>
+>  #include <stdio.h>
+>  #include "evsel.h"
+>  #include "stat.h"
+>  #include "color.h"
+> +#include "debug.h"
+>  #include "pmu.h"
+>  #include "rblist.h"
+>  #include "evlist.h"
+> @@ -370,12 +372,16 @@ void perf_stat__collect_metric_expr(struct evlist *evsel_list)
+>  {
+>  	struct evsel *counter, *leader, **metric_events, *oc;
+>  	bool found;
+> -	struct expr_parse_ctx ctx;
+> +	struct expr_parse_ctx *ctx;
+>  	struct hashmap_entry *cur;
+>  	size_t bkt;
+>  	int i;
+>  
+> -	expr__ctx_init(&ctx);
+> +	ctx = expr__ctx_new();
+> +	if (!ctx) {
+> +		pr_debug("expr__ctx_new failed");
+> +		return;
 > +	}
-> +	$$ = (long)$1 % (long)$3;
-> +}
-> +| D_RATIO '(' expr ',' expr ')'
-> +{
-> +	if ($5 == 0) {
-> +		$$ = 0;
-> +	} else {
-> +		$$ = $3 / $5;
+>  	evlist__for_each_entry(evsel_list, counter) {
+>  		bool invalid = false;
+>  
+> @@ -383,25 +389,25 @@ void perf_stat__collect_metric_expr(struct evlist *evsel_list)
+>  		if (!counter->metric_expr)
+>  			continue;
+>  
+> -		expr__ctx_clear(&ctx);
+> +		expr__ctx_clear(ctx);
+>  		metric_events = counter->metric_events;
+>  		if (!metric_events) {
+>  			if (expr__find_other(counter->metric_expr,
+>  					     counter->name,
+> -					     &ctx, 1) < 0)
+> +					     ctx, 1) < 0)
+>  				continue;
+>  
+>  			metric_events = calloc(sizeof(struct evsel *),
+> -					       hashmap__size(&ctx.ids) + 1);
+> +					       hashmap__size(ctx->ids) + 1);
+>  			if (!metric_events) {
+> -				expr__ctx_clear(&ctx);
+> +				expr__ctx_free(ctx);
+>  				return;
+>  			}
+>  			counter->metric_events = metric_events;
+>  		}
+>  
+>  		i = 0;
+> -		hashmap__for_each_entry((&ctx.ids), cur, bkt) {
+> +		hashmap__for_each_entry(ctx->ids, cur, bkt) {
+>  			const char *metric_name = (const char *)cur->key;
+>  
+>  			found = false;
+> @@ -453,7 +459,7 @@ void perf_stat__collect_metric_expr(struct evlist *evsel_list)
+>  			counter->metric_expr = NULL;
+>  		}
+>  	}
+> -	expr__ctx_clear(&ctx);
+> +	expr__ctx_free(ctx);
+>  }
+>  
+>  static double runtime_stat_avg(struct runtime_stat *st,
+> @@ -818,7 +824,6 @@ static int prepare_metric(struct evsel **metric_events,
+>  	char *n, *pn;
+>  	int i, j, ret;
+>  
+> -	expr__ctx_init(pctx);
+>  	for (i = 0; metric_events[i]; i++) {
+>  		struct saved_value *v;
+>  		struct stats *stats;
+> @@ -880,17 +885,22 @@ static void generic_metric(struct perf_stat_config *config,
+>  			   struct runtime_stat *st)
+>  {
+>  	print_metric_t print_metric = out->print_metric;
+> -	struct expr_parse_ctx pctx;
+> +	struct expr_parse_ctx *pctx;
+>  	double ratio, scale;
+>  	int i;
+>  	void *ctxp = out->ctx;
+>  
+> -	i = prepare_metric(metric_events, metric_refs, &pctx, cpu, st);
+> -	if (i < 0)
+> +	pctx = expr__ctx_new();
+> +	if (!pctx)
+>  		return;
+>  
+> +	i = prepare_metric(metric_events, metric_refs, pctx, cpu, st);
+> +	if (i < 0) {
+> +		expr__ctx_free(pctx);
+> +		return;
 > +	}
-> +}
-> +| '-' expr %prec NEG
-> +{
-> +	$$ = -$2;
-> +}
-> +| '(' if_expr ')'
-> +{
-> +	$$ = $2;
-> +}
-> +| MIN '(' expr ',' expr ')'
-> +{
-> +	$$ = $3 < $5 ? $3 : $5;
-> +}
-> +| MAX '(' expr ',' expr ')'
-> +{
-> +	$$ = $3 > $5 ? $3 : $5;
-> +}
-> +| SMT_ON
-> +{
-> +	$$ = smt_on() > 0 ? 1.0 : 0.0;
-> +}
-> +;
+>  	if (!metric_events[i]) {
+> -		if (expr__parse(&ratio, &pctx, metric_expr, runtime) == 0) {
+> +		if (expr__parse(&ratio, pctx, metric_expr, runtime) == 0) {
+>  			char *unit;
+>  			char metric_bf[64];
+>  
+> @@ -926,22 +936,26 @@ static void generic_metric(struct perf_stat_config *config,
+>  			     (metric_name ? metric_name : name) : "", 0);
+>  	}
+>  
+> -	expr__ctx_clear(&pctx);
+> +	expr__ctx_free(pctx);
+>  }
+>  
+>  double test_generic_metric(struct metric_expr *mexp, int cpu, struct runtime_stat *st)
+>  {
+> -	struct expr_parse_ctx pctx;
+> +	struct expr_parse_ctx *pctx;
+>  	double ratio = 0.0;
+>  
+> -	if (prepare_metric(mexp->metric_events, mexp->metric_refs, &pctx, cpu, st) < 0)
+> +	pctx = expr__ctx_new();
+> +	if (!pctx)
+> +		return NAN;
+> +
+> +	if (prepare_metric(mexp->metric_events, mexp->metric_refs, pctx, cpu, st) < 0)
+>  		goto out;
+>  
+> -	if (expr__parse(&ratio, &pctx, mexp->metric_expr, 1))
+> +	if (expr__parse(&ratio, pctx, mexp->metric_expr, 1))
+>  		ratio = 0.0;
+>  
+>  out:
+> -	expr__ctx_clear(&pctx);
+> +	expr__ctx_free(pctx);
+>  	return ratio;
+>  }
+>  
 > -- 
 > 2.33.0.464.g1972c5931b-goog
 > 
