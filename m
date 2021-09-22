@@ -2,100 +2,141 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C648CC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 10:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB90BC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 11:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC0A960F44
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 10:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9832260EB6
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 11:00:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234684AbhIVKSS (ORCPT
+        id S235182AbhIVLBr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Sep 2021 06:18:18 -0400
-Received: from esa7.hc1455-7.c3s2.iphmx.com ([139.138.61.252]:44405 "EHLO
-        esa7.hc1455-7.c3s2.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234499AbhIVKSL (ORCPT
+        Wed, 22 Sep 2021 07:01:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35822 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235047AbhIVLBr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Sep 2021 06:18:11 -0400
-IronPort-SDR: FeTWYrLK/Q4GpKi4zlGtaRM9NIRwdbZjVEDUrMGuitFBTDhGnVgMG5RvyF8jpK33zCHdc3iJTO
- NjnfNwmJff1tt655UvIpDRMeS5k0oH3mUCmpGOi5OGB7vxn5jE7cyP+6xQa2dBcYXRxRZfdmxJ
- u1+1PYdJGcId3CyXSJN1L0N/t1te6eD9aYcmdrTkSgtKwALjBxSHwRq5ptmZu1v5qm9eswd06M
- YeN/nX7UWxf0+KR1erKj3m2UJO5k3P1KAvqQT5F8pw68zPaIKLNXplXl2ucxESgrMQlYtkL3ht
- 3q5j+ZYsA5wZc/SxAcsxNPOB
-X-IronPort-AV: E=McAfee;i="6200,9189,10114"; a="24913021"
-X-IronPort-AV: E=Sophos;i="5.85,313,1624287600"; 
-   d="scan'208";a="24913021"
-Received: from unknown (HELO oym-r2.gw.nic.fujitsu.com) ([210.162.30.90])
-  by esa7.hc1455-7.c3s2.iphmx.com with ESMTP; 22 Sep 2021 19:16:32 +0900
-Received: from oym-m2.gw.nic.fujitsu.com (oym-nat-oym-m2.gw.nic.fujitsu.com [192.168.87.59])
-        by oym-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 9A9D6E6800;
-        Wed, 22 Sep 2021 19:16:31 +0900 (JST)
-Received: from yto-om2.fujitsu.com (yto-om2.o.css.fujitsu.com [10.128.89.163])
-        by oym-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id C5ECCFF44;
-        Wed, 22 Sep 2021 19:16:30 +0900 (JST)
-Received: from pumpkin.openstacklocal (pumpkin.fct.css.fujitsu.com [10.130.70.189])
-        by yto-om2.fujitsu.com (Postfix) with ESMTP id A52DE400C007A;
-        Wed, 22 Sep 2021 19:16:30 +0900 (JST)
-From:   Shunsuke Nakamura <nakamura.shun@fujitsu.com>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 1/2] libperf: Add processing to scale the counters obtained during the read() system call when multiplexing
-Date:   Wed, 22 Sep 2021 19:16:26 +0900
-Message-Id: <20210922101627.3396398-2-nakamura.shun@fujitsu.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210922101627.3396398-1-nakamura.shun@fujitsu.com>
-References: <20210922101627.3396398-1-nakamura.shun@fujitsu.com>
+        Wed, 22 Sep 2021 07:01:47 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75F67C061574
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Sep 2021 04:00:17 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id bb10so1520241plb.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Sep 2021 04:00:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Hwl3MVKuLK+CwZQofEVoUFGs27PPnfkfJHGmENBFAts=;
+        b=hjLHBpmuAPymArjlyDDR/L6wa5rSjTRJswtwPE1xPI6UPAl8bAIeYySoyLmCJXlrGq
+         6DyG9PKxc/HH/KRFqwnbLjTXdXSo/u23wFNK1l425tkZjDBipaGE2f5TYRfs6HUdo4In
+         xg9TjAHhTybSVQyE4zwUBgLHJAsivfkWQCqNQbrITK7u5Gk4lSC0Bk4LY5X29gZMRFFQ
+         SsiJL0skX75tSXdvquluepwkNt0kl7Eqh7e/k0ljYsx2zoS8BNckVNi20dkqosN5QqYj
+         0g/xgmXAPus3mkTbzuIgxCuK0Xzwb6u4L+wWAiwuTZ/nV8hqcNwc5V+5XtUF0p958QiK
+         90TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Hwl3MVKuLK+CwZQofEVoUFGs27PPnfkfJHGmENBFAts=;
+        b=MxNNGDES9q3i3yz55lcUlJ3JxefGWU74xhhz0/mmIrb+iSe6DXu9zR3WYscxbS/EbH
+         VJtBN2B24/QXrQEChKuYQ5XDKClRCEWoVzWtt5TxlQXSVfe7HxoWa9Z4Sap8tc9wBQqv
+         AjmBqHO+bX6qrQIMwkv3SFUOGcAIJtYvCN/vyaB6wN67pNqKmntndavzOEUc0aKgkK5s
+         jVjhmK/zeO9vD2wdrClrqj48hZ0urbxPPu0fzRBvag9krU+eremT9Gjc9hWYM0GmjwGt
+         vbdf9LdTPxUBfIGtzZHeb/cI6/0M02W9w6EPfkom0lb3SMjvyY88LTY/QCbB5BkQ9/ja
+         JT9Q==
+X-Gm-Message-State: AOAM533m6J2n3cSiv0UttnJv8NquYWylsd9gVcFfh56+J/1H0O96q6gL
+        UVGRPJFymjKWcRd6/YVufEn9tw==
+X-Google-Smtp-Source: ABdhPJyox/oP8xe915hBd8nZV6x52NPUVmKObsHum2sThZRTtinoTUoYJOv9eBNvHs09nCniPZ/RLg==
+X-Received: by 2002:a17:90b:1a90:: with SMTP id ng16mr10659892pjb.130.1632308416907;
+        Wed, 22 Sep 2021 04:00:16 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([213.173.35.225])
+        by smtp.gmail.com with ESMTPSA id u12sm3518046pjr.2.2021.09.22.04.00.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Sep 2021 04:00:16 -0700 (PDT)
+Date:   Wed, 22 Sep 2021 19:00:12 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     acme@kernel.org, leo.yan@linaro.com,
+        linux-perf-users@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] perf tests: Improve temp file cleanup in
+ test_arm_coresight.sh
+Message-ID: <20210922110012.GA400258@leoy-ThinkPad-X240s>
+References: <20210921131009.390810-1-james.clark@arm.com>
+ <20210921131009.390810-3-james.clark@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210921131009.390810-3-james.clark@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: nakamura shunsuke <nakamura.shun@fujitsu.com>
+On Tue, Sep 21, 2021 at 02:10:09PM +0100, James Clark wrote:
+> Cleanup perf.data.old files which are also dropped by perf, handle
+> sigint and propagate it to the parent in case the test is run in a bash
+> while loop and don't create the temp files if the test will be skipped.
+> 
+> Signed-off-by: James Clark <james.clark@arm.com>
+> ---
+>  tools/perf/tests/shell/test_arm_coresight.sh | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
+> index c9eef0bba6f1..6de53b7ef5ff 100755
+> --- a/tools/perf/tests/shell/test_arm_coresight.sh
+> +++ b/tools/perf/tests/shell/test_arm_coresight.sh
+> @@ -9,8 +9,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  # Leo Yan <leo.yan@linaro.org>, 2020
+>  
+> -perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+> -file=$(mktemp /tmp/temporary_file.XXXXX)
+>  glb_err=0
+>  
+>  skip_if_no_cs_etm_event() {
+> @@ -22,13 +20,20 @@ skip_if_no_cs_etm_event() {
+>  
+>  skip_if_no_cs_etm_event || exit 2
+>  
+> +perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+> +file=$(mktemp /tmp/temporary_file.XXXXX)
+> +
+>  cleanup_files()
+>  {
+>  	rm -f ${perfdata}
+>  	rm -f ${file}
+> +	rm -f "${perfdata}.old"
+> +	trap - exit term int
+> +	kill -2 $$
 
-perf_evsel__read() scales counters obtained by RDPMC during multiplexing, but
-does not scale counters obtained by read() system call.
+Here it always sends signal SIGINT to current PID with $$, another
+choice is to send signal based on the incoming signal type, like below:
 
-Add processing to perf_evsel__read() to scale the counters obtained during the
-read() system call when multiplexing.
+  [[ "$1" = "int" ]] || kill -SIGINT $$
+  [[ "$1" = "term" ]] || kill -SIGTERM $$
 
+If you think the current change is sufficient to meet the testing
+requirement, then this patch would be fine for me either:
 
-Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
----
- tools/lib/perf/evsel.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
 
-diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-index 8441e3e1aaac..0ebd1d34436f 100644
---- a/tools/lib/perf/evsel.c
-+++ b/tools/lib/perf/evsel.c
-@@ -18,6 +18,7 @@
- #include <sys/ioctl.h>
- #include <sys/mman.h>
- #include <asm/bug.h>
-+#include <linux/math64.h>
- 
- void perf_evsel__init(struct perf_evsel *evsel, struct perf_event_attr *attr,
- 		      int idx)
-@@ -321,6 +322,11 @@ int perf_evsel__read(struct perf_evsel *evsel, int cpu, int thread,
- 	if (readn(*fd, count->values, size) <= 0)
- 		return -errno;
- 
-+	if (count->ena != count->run) {
-+		if (count->run != 0)
-+			count->val = mul_u64_u64_div64(count->val, count->ena, count->run);
-+	}
-+
- 	return 0;
- }
- 
--- 
-2.27.0
-
+> +	exit $glb_err
+>  }
+>  
+> -trap cleanup_files exit
+> +trap cleanup_files exit term int
+>  
+>  record_touch_file() {
+>  	echo "Recording trace (only user mode) with path: CPU$2 => $1"
+> -- 
+> 2.28.0
+> 
