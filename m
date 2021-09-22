@@ -2,122 +2,126 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 721A0C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 11:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A782CC4167B
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 13:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4875961131
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 11:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90535611B0
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 13:41:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235480AbhIVL3o convert rfc822-to-8bit (ORCPT
+        id S233160AbhIVNmj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Sep 2021 07:29:44 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:54689 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235422AbhIVL3n (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Sep 2021 07:29:43 -0400
-Received: from mail-wr1-f48.google.com ([209.85.221.48]) by
- mrelayeu.kundenserver.de (mreue011 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1Mf0Ru-1n3yru1oWQ-00gY3D; Wed, 22 Sep 2021 13:28:12 +0200
-Received: by mail-wr1-f48.google.com with SMTP id t8so5778316wrq.4;
-        Wed, 22 Sep 2021 04:28:12 -0700 (PDT)
-X-Gm-Message-State: AOAM5331qTdk/wBgbOmEdQ2DwA/D/XUOXqQkyfwtcoka3Obj6KA8mdFG
-        rE7Z52jJJseEXexGUnAa/ykL37DWvBcr9dC1jCQ=
-X-Google-Smtp-Source: ABdhPJzt4kksrUoZmyMjHfZ1cfXQn9J73x/e0ELvJ0CKV2Dc5dZsaGo4r7nOa+BZFW/ZNbjTdCnfWEpWCsmso267J14=
-X-Received: by 2002:adf:f481:: with SMTP id l1mr10127682wro.411.1632310091979;
- Wed, 22 Sep 2021 04:28:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210917061040.2270822-1-alistair.francis@opensource.wdc.com>
- <20210917061040.2270822-2-alistair.francis@opensource.wdc.com>
- <72990864-5ec6-1f73-efd9-61b667a172dd@collabora.com> <CAK8P3a3x_EyCiPDpMK54y=Rtm-Wb08ym2TNiuAZgXhYrThcWTw@mail.gmail.com>
- <9db8c79a-f704-84ce-360b-84335f926a48@collabora.com>
-In-Reply-To: <9db8c79a-f704-84ce-360b-84335f926a48@collabora.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 22 Sep 2021 13:27:55 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0w4EOsSUThTAxrARPSyt+CGJTV4V4eeNmDNdG2Qrbq9w@mail.gmail.com>
-Message-ID: <CAK8P3a0w4EOsSUThTAxrARPSyt+CGJTV4V4eeNmDNdG2Qrbq9w@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] perf bench: Add support for 32-bit systems with
- 64-bit time_t
-To:     =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@collabora.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Alistair Francis <alistair.francis@opensource.wdc.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alistair Francis <alistair23@gmail.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Wed, 22 Sep 2021 09:42:39 -0400
+Received: from foss.arm.com ([217.140.110.172]:49300 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233561AbhIVNm0 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 22 Sep 2021 09:42:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B2B6E11B3;
+        Wed, 22 Sep 2021 06:40:56 -0700 (PDT)
+Received: from [10.57.50.100] (unknown [10.57.50.100])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 748C63F7D7;
+        Wed, 22 Sep 2021 06:40:55 -0700 (PDT)
+Subject: Re: [PATCH 3/3] perf tests: Improve temp file cleanup in
+ test_arm_coresight.sh
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     acme@kernel.org, leo.yan@linaro.com,
+        linux-perf-users@vger.kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Darren Hart <dvhart@infradead.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <atish.patra@wdc.com>,
-        Alistair Francis <alistair.francis@wdc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:oKhwyJ++5qnKLB6p9FS+cu930Y5F9WXu9M133KWxH5o4nnddAFw
- rGKInGG6tM1zE9NKRl6acRsqMXT1EFfuorv4PVM7fcyePALDt6Hlh2eiitcR88zqOVIQ8CG
- vpTcA7RcCwACytMxhm7KGVASJBFZ50NYE+1A0UqfnK/BtXOLXdlqg4nFFdONyH7GIEaczYL
- xab4rcZ3XqXs9ciJng+PA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lKpsXYQVrnU=:Oz8wML5xCK4WnlSzkb4BHx
- 3ZfPvaFlfHHqDD5X5HtTH9ZnCCnYIu9k+eeAS4W1xV3orN43eCL4qzW89bYUeWRXY+UKg8vMp
- IITMKNbzZWlp3m/QLx1jnnx7nw9mSVIXCfWpWQ4gW/VWQ9c2x/1KOLDhID5RarbgTfSpIjofP
- hVplTfNSymacFvho43p74m+lu2UoeI9mYt6aoOhCG93I9D/DWTON4GgdFQN1Wka3r8Pf22U/x
- LSwTS+w05WEYazzZ88D2ylWBEzLMQ1JY0hMKK5BvwQTYbcWxpLYzs+RNMkXDSg/xSm6U9VyBS
- bPUGiAp7NP+o5fNofOIZ6E/4oaqlN14iyV1VW8uCtziqqSb34qOwn1cdqa7SciqBpsQv8Krbn
- ElPWabW8i4t40T8Sf8nl1O+i+uQ75UDJ0DlYrps4zoK79YTtEsT3QgadhhFCHZKlAMNZ2Hvw9
- ZlUhQvKOXubqDy9OwuG4qirK6ujPL0FyZguXeKlBjwDAbQRbpwx6LxJASeh9hZyB3j6socMHe
- NsPU4l97HAJ2Jv54V0i1Tg9LfQsKbQcUQThi90eMT89PCfeItICpYJFrPJY1pF/8+SsH4frsy
- ynjuAlOo92I03/dqwjkrF/KaOk4L4Zyfjf3mZXGr8t+fbg26iHHVPpvOnacGodUd21GxmQsJU
- lfY2NL7cgRV4Uq0lWgtXGkt3/WRGpV0VQxiXerNw3xMXnfKxXtM9Y9aeq9qm1F3l3BFOoIHT2
- z2JzcYmy8JQrCFqLEKDImCjmbOUUz4PC8RLOgT9JvcLmjK9qaQeEAMCH+MxMHjzmKSm2qn8l3
- lk2fBWG8+llYK+YK8fAtHBEVzBAwDVKp/MdeZ+6q8MnyIediOHp4GBHBLH+kmdAZJzLBEHCHE
- eLpE+ojuF9n5rMxr2VFQ==
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <20210921131009.390810-1-james.clark@arm.com>
+ <20210921131009.390810-3-james.clark@arm.com>
+ <20210922110012.GA400258@leoy-ThinkPad-X240s>
+From:   James Clark <james.clark@arm.com>
+Message-ID: <5a1c5eab-d9b7-5623-2d7d-c6b1921b3628@arm.com>
+Date:   Wed, 22 Sep 2021 14:40:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
+MIME-Version: 1.0
+In-Reply-To: <20210922110012.GA400258@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 22, 2021 at 1:06 AM André Almeida <andrealmeid@collabora.com> wrote:
-> Às 05:08 de 21/09/21, Arnd Bergmann escreveu:
-> > On Tue, Sep 21, 2021 at 12:47 AM André Almeida
-> > <andrealmeid@collabora.com> wrote:
-> >>
-> >> #if defined(__i386__) || __TIMESIZE == 32
-> >> # define NR_gettime64 __NR_clock_gettime64
-> >> #else
-> >> # define NR_gettime64 __NR_clock_gettime
-> >> #endif
-> >>
-> >> struct timespec64 {
-> >>         long long tv_sec;       /* seconds */
-> >>         long long tv_nsec;      /* nanoseconds */
-> >> };
-> >>
-> >> int gettime64(clock_t clockid, struct timespec64 *tv)
-> >> {
-> >>         return syscall(NR_gettime64, clockid, tv);
-> >> }
-> >>
-> >> Then we can just use &timeout at __NR_futex_time64 for 32bit arch and at
-> >> __NR_futex for 64bit arch.
-> >
-> > This is still broken when you disable CONFIG_COMPAT_32BIT_TIME,
-> > which disables all system calls that take time32 arguments.
-> >
->
-> Oh, I think my point was confusing then. My suggestion was to use only
-> the futex entry points that accepts time64, and to always use
-> clock_gettime that uses time64, for all platforms. Then it will work if
-> we disable CONFIG_COMPAT_32BIT_TIME.
 
-Yes, that would be ok. It does require using at least linux-5.1, but we
-perf is already sort-of tied to the kernel version.
 
-        Arnd
+On 22/09/2021 12:00, Leo Yan wrote:
+> On Tue, Sep 21, 2021 at 02:10:09PM +0100, James Clark wrote:
+>> Cleanup perf.data.old files which are also dropped by perf, handle
+>> sigint and propagate it to the parent in case the test is run in a bash
+>> while loop and don't create the temp files if the test will be skipped.
+>>
+>> Signed-off-by: James Clark <james.clark@arm.com>
+>> ---
+>>  tools/perf/tests/shell/test_arm_coresight.sh | 11 ++++++++---
+>>  1 file changed, 8 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
+>> index c9eef0bba6f1..6de53b7ef5ff 100755
+>> --- a/tools/perf/tests/shell/test_arm_coresight.sh
+>> +++ b/tools/perf/tests/shell/test_arm_coresight.sh
+>> @@ -9,8 +9,6 @@
+>>  # SPDX-License-Identifier: GPL-2.0
+>>  # Leo Yan <leo.yan@linaro.org>, 2020
+>>  
+>> -perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+>> -file=$(mktemp /tmp/temporary_file.XXXXX)
+>>  glb_err=0
+>>  
+>>  skip_if_no_cs_etm_event() {
+>> @@ -22,13 +20,20 @@ skip_if_no_cs_etm_event() {
+>>  
+>>  skip_if_no_cs_etm_event || exit 2
+>>  
+>> +perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+>> +file=$(mktemp /tmp/temporary_file.XXXXX)
+>> +
+>>  cleanup_files()
+>>  {
+>>  	rm -f ${perfdata}
+>>  	rm -f ${file}
+>> +	rm -f "${perfdata}.old"
+>> +	trap - exit term int
+>> +	kill -2 $$
+> 
+> Here it always sends signal SIGINT to current PID with $$, another
+> choice is to send signal based on the incoming signal type, like below:
+> 
+>   [[ "$1" = "int" ]] || kill -SIGINT $$
+>   [[ "$1" = "term" ]] || kill -SIGTERM $$
+
+Yes I thought that this might be an issue, but I tested it in a few different
+scenarios. Especially when running it under the normal ./perf test command and
+it didn't seem to cause an issue whether it passed or failed. So I'm not sure
+if it's worth changing or not. Maybe it is in case it gets copy pasted into
+another shell test?
+
+James
+
+> 
+> If you think the current change is sufficient to meet the testing
+> requirement, then this patch would be fine for me either:
+> 
+> Reviewed-by: Leo Yan <leo.yan@linaro.org>
+> 
+>> +	exit $glb_err
+>>  }
+>>  
+>> -trap cleanup_files exit
+>> +trap cleanup_files exit term int
+>>  
+>>  record_touch_file() {
+>>  	echo "Recording trace (only user mode) with path: CPU$2 => $1"
+>> -- 
+>> 2.28.0
+>>
