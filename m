@@ -2,228 +2,118 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-23.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A3B6C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 16:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60757C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 16:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F6B3611C9
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 16:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F373611C9
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 16:50:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236558AbhIVQhz (ORCPT
+        id S231210AbhIVQv3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Sep 2021 12:37:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58902 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234140AbhIVQhz (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Sep 2021 12:37:55 -0400
-Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10E53C061574
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Sep 2021 09:36:25 -0700 (PDT)
-Received: by mail-io1-xd2b.google.com with SMTP id m11so4191616ioo.6
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Sep 2021 09:36:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9kojJrobEEtFX01MsPp9CtOWo6Qy1c0vixj00jOo+xw=;
-        b=oJURPli559uU2JiYXJlOVIBdreD5ncJ13cAqzsvghBT5ba7+UAw5p/h1zH5MbQnoIQ
-         5pgYjDWmEtdu5D9v+fi3zFmFVxKcnOdV3LSeRlBGegyxhU1sAGHCy209HILUTJ6TFFp6
-         MBjzrEeR3b9sGBTPSCWCm5cd7OllJbFu9rcpTfpeiL5LmS0M9ctAjmD13vmwoW6bJXP0
-         8ISPZocLA3iut8kCl6mYEUB2wDu7NAH3ICyHWLnkVS6jssYzCxnmty3vBadKU3iSphAt
-         L62GNq1T6eaPHn8SbN2O0BXH/65kR5/gcmzoO+4w74TdrhKh3j6AE5Dg6KHi0DPQah3m
-         W2Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9kojJrobEEtFX01MsPp9CtOWo6Qy1c0vixj00jOo+xw=;
-        b=m+0myw3SGNkcjnLt7EYnEWQwqpmP0PzxaOH/4Kd+ldpHz0jyj+iTBEbGRSzJYrdRIY
-         zc3+2yPIQZ6g8Dn24qSaLh4f+bs2BZD5pCvAp3p/S+wd4eD2ybaCJX/loFIRGs6nCMuy
-         fMiKom8GtnyfE8kKt/TMF1pesuGOZXwX4+DkZxolQqlCkvP8IOWTKKMt+8PLAy5N8OBV
-         1uslUX6MjgAZZ6ZY4bWTtLzaQgH95W6GoPwM9PvABNHL244Wb3Mmd3OKPUt8vjbAxDDB
-         /NyKd9USRKrATP7gDx3lR2ABrS0/On/hwTIdRZKUVjW+EXCHzw978/JdGfGYMD+D9KSI
-         MMug==
-X-Gm-Message-State: AOAM530hwd0Ueweyb9KC8eaD86jkNwrtdmQUXqNpehFnYosz6eGupXxr
-        6/qExGUUq8kujxffdPtz1jXOGxFzKpUb0L5wLhfbxQ==
-X-Google-Smtp-Source: ABdhPJxNXO6Vmf+IgMpMX4uLIkNmmQKj1o8MpbT0UqyxEhMzqT0rJnq5koqfxRnxuhK0mQhOJsUT6Ilqt1uqwwdUN9c=
-X-Received: by 2002:a05:6638:1929:: with SMTP id p41mr649881jal.21.1632328584150;
- Wed, 22 Sep 2021 09:36:24 -0700 (PDT)
+        Wed, 22 Sep 2021 12:51:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:51582 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231925AbhIVQv2 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 22 Sep 2021 12:51:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 13595113E;
+        Wed, 22 Sep 2021 09:49:58 -0700 (PDT)
+Received: from [10.57.50.100] (unknown [10.57.50.100])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C86E83F719;
+        Wed, 22 Sep 2021 09:49:56 -0700 (PDT)
+Subject: Re: [PATCH 3/3] perf tests: Improve temp file cleanup in
+ test_arm_coresight.sh
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     acme@kernel.org, leo.yan@linaro.com,
+        linux-perf-users@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <20210921131009.390810-1-james.clark@arm.com>
+ <20210921131009.390810-3-james.clark@arm.com>
+ <20210922110012.GA400258@leoy-ThinkPad-X240s>
+ <5a1c5eab-d9b7-5623-2d7d-c6b1921b3628@arm.com>
+ <20210922140832.GB400258@leoy-ThinkPad-X240s>
+From:   James Clark <james.clark@arm.com>
+Message-ID: <85c593b5-5348-8e9a-b9e4-bc4d31ffc785@arm.com>
+Date:   Wed, 22 Sep 2021 17:49:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-References: <20210922152706.23655-1-mpetlan@redhat.com>
-In-Reply-To: <20210922152706.23655-1-mpetlan@redhat.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 22 Sep 2021 09:36:11 -0700
-Message-ID: <CAP-5=fUN_fYmgm69ruBvp6E+nkLKsTvZwHqGzaRd471MhMRykA@mail.gmail.com>
-Subject: Re: [PATCH] perf tests vmlinux-kallsyms: ignore hidden symbols
-To:     Michael Petlan <mpetlan@redhat.com>
-Cc:     linux-perf-users@vger.kernel.org, acme@kernel.org, jolsa@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210922140832.GB400258@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 22, 2021 at 8:27 AM Michael Petlan <mpetlan@redhat.com> wrote:
->
-> Certain kernel symbols are purposely hidden from kallsyms. The function
-> is_ignored_symbol() from scripts/kallsyms.c decides if a symbol should
-> be hidden or not.
->
-> The perf test "vmlinux symtab matches kallsyms" fails in case perf finds
-> some of the hidden symbols in its machine image and can't match them to
-> kallsyms.
->
-> Let's add a filter to check if a symbol not found isn't one of these
-> before failing the test.
->
-> The function is_ignored_symbol() has been copied from scripts/kallsyms.c
-> and needs to be updated along with the original.
->
-> Signed-off-by: Michael Petlan <mpetlan@redhat.com>
 
-Acked-by: Ian Rogers <irogers@google.com>
 
-It is a shame this can't be a library to ensure the function is kept in sync.
+On 22/09/2021 15:08, Leo Yan wrote:
+> Hi James,
+> 
+> On Wed, Sep 22, 2021 at 02:40:54PM +0100, James Clark wrote:
+> 
+> [...]
+> 
+>>>>  cleanup_files()
+>>>>  {
+>>>>  	rm -f ${perfdata}
+>>>>  	rm -f ${file}
+>>>> +	rm -f "${perfdata}.old"
+>>>> +	trap - exit term int
+>>>> +	kill -2 $$
+>>>
+>>> Here it always sends signal SIGINT to current PID with $$, another
+>>> choice is to send signal based on the incoming signal type, like below:
+>>>
+>>>   [[ "$1" = "int" ]] || kill -SIGINT $$
+>>>   [[ "$1" = "term" ]] || kill -SIGTERM $$
+>>
+>> Yes I thought that this might be an issue, but I tested it in a few different
+>> scenarios. Especially when running it under the normal ./perf test command and
+>> it didn't seem to cause an issue whether it passed or failed. So I'm not sure
+>> if it's worth changing or not. Maybe it is in case it gets copy pasted into
+>> another shell test?
+> 
+> I think it's not very necessary to send signal again with command
+> "kill -2 $$" at here.
+> 
+> "kill -2 $$" sends the signal to the shell process itself rather than
+> propagating signal to its parent process.  And the up level's script
+> should can detect an error with the returned exit code.
+> 
+> So below change should be sufficient?
+> 
+> cleanup_files()
+> {
+> 	rm -f ${perfdata}
+> 	rm -f ${file}
+> +       rm -f "${perfdata}.old"
+> +       exit $glb_err
+> }
+> 
+> Sorry if I miss anything at here and cause noise.
 
-> ---
->  tools/perf/tests/vmlinux-kallsyms.c | 102 ++++++++++++++++++++++++++++
->  1 file changed, 102 insertions(+)
->
-> diff --git a/tools/perf/tests/vmlinux-kallsyms.c b/tools/perf/tests/vmlinux-kallsyms.c
-> index 193b7c91b4e2..4f884aabc7f4 100644
-> --- a/tools/perf/tests/vmlinux-kallsyms.c
-> +++ b/tools/perf/tests/vmlinux-kallsyms.c
-> @@ -3,6 +3,7 @@
->  #include <linux/rbtree.h>
->  #include <inttypes.h>
->  #include <string.h>
-> +#include <ctype.h>
->  #include <stdlib.h>
->  #include "dso.h"
->  #include "map.h"
-> @@ -14,6 +15,102 @@
->
->  #define UM(x) kallsyms_map->unmap_ip(kallsyms_map, (x))
->
-> +static bool is_ignored_symbol(const char *name, char type)
-> +{
-> +       /* Symbol names that exactly match to the following are ignored.*/
-> +       static const char * const ignored_symbols[] = {
-> +               /*
-> +                * Symbols which vary between passes. Passes 1 and 2 must have
-> +                * identical symbol lists. The kallsyms_* symbols below are
-> +                * only added after pass 1, they would be included in pass 2
-> +                * when --all-symbols is specified so exclude them to get a
-> +                * stable symbol list.
-> +                */
-> +               "kallsyms_addresses",
-> +               "kallsyms_offsets",
-> +               "kallsyms_relative_base",
-> +               "kallsyms_num_syms",
-> +               "kallsyms_names",
-> +               "kallsyms_markers",
-> +               "kallsyms_token_table",
-> +               "kallsyms_token_index",
-> +               /* Exclude linker generated symbols which vary between passes */
-> +               "_SDA_BASE_",           /* ppc */
-> +               "_SDA2_BASE_",          /* ppc */
+The problem with not re-sending the sigint is that if you want to run the
+script in a bash while loop like:
 
-Do values like this belong behind an architecture #ifdef? I know
-that's not currently the case in scripts/kallsyms.c.
+  while ! tests/shell/test_arm_coresight.sh; do echo loop; done
 
-> +               NULL
-> +       };
-> +
-> +       /* Symbol names that begin with the following are ignored.*/
-> +       static const char * const ignored_prefixes[] = {
-> +               "$",                    /* local symbols for ARM, MIPS, etc. */
-> +               ".LASANPC",             /* s390 kasan local symbols */
-> +               "__crc_",               /* modversions */
-> +               "__efistub_",           /* arm64 EFI stub namespace */
-> +               "__kvm_nvhe_",          /* arm64 non-VHE KVM namespace */
-> +               "__AArch64ADRPThunk_",  /* arm64 lld */
-> +               "__ARMV5PILongThunk_",  /* arm lld */
-> +               "__ARMV7PILongThunk_",
-> +               "__ThumbV7PILongThunk_",
-> +               "__LA25Thunk_",         /* mips lld */
-> +               "__microLA25Thunk_",
-> +               NULL
-> +       };
-> +
-> +       /* Symbol names that end with the following are ignored.*/
-> +       static const char * const ignored_suffixes[] = {
-> +               "_from_arm",            /* arm */
-> +               "_from_thumb",          /* arm */
-> +               "_veneer",              /* arm */
-> +               NULL
-> +       };
-> +
-> +       /* Symbol names that contain the following are ignored.*/
-> +       static const char * const ignored_matches[] = {
-> +               ".long_branch.",        /* ppc stub */
-> +               ".plt_branch.",         /* ppc stub */
-> +               NULL
-> +       };
-> +
-> +       const char * const *p;
-> +
-> +       for (p = ignored_symbols; *p; p++)
-> +               if (!strcmp(name, *p))
-> +                       return true;
-> +
-> +       for (p = ignored_prefixes; *p; p++)
-> +               if (!strncmp(name, *p, strlen(*p)))
-> +                       return true;
-> +
-> +       for (p = ignored_suffixes; *p; p++) {
-> +               int l = strlen(name) - strlen(*p);
-> +
-> +               if (l >= 0 && !strcmp(name + l, *p))
-> +                       return true;
-> +       }
-> +
-> +       for (p = ignored_matches; *p; p++) {
-> +               if (strstr(name, *p))
-> +                       return true;
-> +       }
-> +
-> +       if (type == 'U' || type == 'u')
-> +               return true;
-> +       /* exclude debugging symbols */
-> +       if (type == 'N' || type == 'n')
-> +               return true;
-> +
-> +       if (toupper(type) == 'A') {
-> +               /* Keep these useful absolute symbols */
-> +               if (strcmp(name, "__kernel_syscall_via_break") &&
-> +                   strcmp(name, "__kernel_syscall_via_epc") &&
-> +                   strcmp(name, "__kernel_sigtramp") &&
-> +                   strcmp(name, "__gp"))
-> +                       return true;
-> +       }
-> +
-> +       return false;
-> +}
-> +
->  int test__vmlinux_matches_kallsyms(struct test *test __maybe_unused, int subtest __maybe_unused)
->  {
->         int err = -1;
-> @@ -169,6 +266,11 @@ int test__vmlinux_matches_kallsyms(struct test *test __maybe_unused, int subtest
->                          * such as __indirect_thunk_end.
->                          */
->                         continue;
-> +               } else if (is_ignored_symbol(sym->name, sym->type)) {
-> +                       /*
-> +                        * Ignore hidden symbols, see scripts/kallsyms.c for the details
-> +                        */
-> +                       continue;
->                 } else {
->                         pr_debug("ERR : %#" PRIx64 ": %s not on kallsyms\n",
->                                  mem_start, sym->name);
-> --
-> 2.18.4
->
+Then it's impossible to exit with Ctrl-C and delete the temp files at the
+same time. It exits if we don't trap sigint like it is at the moment, but
+then it leaves the temporary files. This change is so we can have both
+behaviours of Ctrl-C in a loop and keep the cleanup working.
+
+
+> 
+> Thanks,
+> Leo
+> 
