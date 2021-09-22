@@ -2,124 +2,144 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B946DC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 21:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE0CC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 21:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A03106112F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 21:20:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC92961181
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 21:34:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238071AbhIVVWX (ORCPT
+        id S238043AbhIVVg1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Sep 2021 17:22:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40140 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238126AbhIVVWR (ORCPT
+        Wed, 22 Sep 2021 17:36:27 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:49168 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S238022AbhIVVg0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Sep 2021 17:22:17 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C1D2C061798
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Sep 2021 14:20:35 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id r11-20020ac86d2b000000b002a688ea1f4bso11712859qtu.5
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Sep 2021 14:20:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=DdQUoFRq3sEN1JUX2L/SFL8llDgMarKIfKvV6PGdcNM=;
-        b=O4Jy/Ogp/dp680P+CqoX4JCGL8Rm0rGOz/twbZ/PLzUe02DaJhI6ICFOXvxErzAlCR
-         R/6GWvxQWHUp4U82Sbykjn+7zGYogeWjiJH57Tz5GYyhl4BaU3gnE0KX4RZ1ByJ27yqg
-         KTK0XWu52VN94NN7WJMD4a8uLuEHckFb+t7BiGo8d059NOrbw5rRI5YKbg6UpJuWAX0f
-         KyDfEv0HbMTkpH+v0W7BkmEXnM+sHr00HrsEXiG+T1dkghKtmEUIHgclR7QTZECK9RYv
-         KDfvaFRH9VIp7PuY6/qEtmyBI8lw0oBxSEVcK020VEV0hlzUWIDty29cqkknxinkLOjm
-         m+vQ==
+        Wed, 22 Sep 2021 17:36:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1632346495;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tkHP6mmjG7SBJfcpCC261TiUWmXihHKnsMoMGcToTiQ=;
+        b=ZU7Dxtkiq5twh+n01SpeETB1N8ejE3cxLjPuNbRkc7n5Uk9daA6UDiu/PmOwOpu+6BqEYL
+        rAqbX/i4PNPNkdfmDtqtKOEETxdLe+Sx1JGNMmcAxOzlMcioI/A0bPI3j1f4WidmaTVx7L
+        FfHrtt0naGdgqiDjJz5AC4d6EVsF8OY=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-460-r3qP0gDANpyLxlYUXAqT4w-1; Wed, 22 Sep 2021 17:34:54 -0400
+X-MC-Unique: r3qP0gDANpyLxlYUXAqT4w-1
+Received: by mail-wr1-f71.google.com with SMTP id f7-20020a5d50c7000000b0015e288741a4so3376025wrt.9
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Sep 2021 14:34:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=DdQUoFRq3sEN1JUX2L/SFL8llDgMarKIfKvV6PGdcNM=;
-        b=gvI38Z4sSs9HRa4J5lfP4MVbgJTqz5T0K+hbHWaMfPxHkyYgHryCZeIw8xcpZm87tY
-         AkVILJwrtTzX3atBlaXDRy8gql5sOujaerIO9MRQuul2ASmLkj13AeGT0EvIMuPdC9HF
-         k4ZUwejOp5dYSH4vCIPuiHEOqP0/kirPIO+nqd5WzKjBFW1xzxyemj5/p6qgZWmm1JTo
-         ZxWGrpxQw4iDOzOtbI6ShVNQP/jv8lmo319IBS+ARCfnCtOURI9b4QZuu4ocJx0malZz
-         84uGf8FmYh5hg6Rs3iBvk7Qde1/vLWTjQb08Knu256sJO2nVDa3/vNbvyUMXiTJ00SMR
-         JmgA==
-X-Gm-Message-State: AOAM5324CiCrqTqUE/DLQyFTcmwx31Ss0XoWFGhr/KqdoeLCcThGpQAB
-        SiWMGAC4dmkUs0CU05zAjOPXhko1beUr
-X-Google-Smtp-Source: ABdhPJwvhV9ZFc+lkU9LSeXeQy7XtePcMyA7QjfbSu604kbhOmlA4DCMROswouYhlH/9UtbhAyY8Pz95qvWc
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:d3ff:e8f7:11f4:c738])
- (user=irogers job=sendgmr) by 2002:a25:c183:: with SMTP id
- r125mr1134144ybf.37.1632345634702; Wed, 22 Sep 2021 14:20:34 -0700 (PDT)
-Date:   Wed, 22 Sep 2021 14:20:31 -0700
-Message-Id: <20210922212031.485950-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.33.0.464.g1972c5931b-goog
-Subject: [PATCH] perf kmem: Improve man page for record options
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tkHP6mmjG7SBJfcpCC261TiUWmXihHKnsMoMGcToTiQ=;
+        b=vdARh2C5gNYCXhB5tQX/nfogmMCqHPinwxny4gBhZ8QpP1rLZ1avOskTakR17zeWHq
+         clY85mwhvRoEzDuJ67NJVTeNVJzwVdZI42CmVUO7cmRBNpbZiGv6rqihkBpaee+eJmdn
+         0mSd710UiDTp2Y+zC94JvovpJUtI6uH3Fbse1uQM6+/hk7o6uFn9dbqqxPgsJzllEulA
+         PjFa4FVH60wjQNoRShseZtmu+mfNw+ye36PDPCj3CLKtYedAy39QX3qthdRiDEikZk5R
+         U9TLk0Xk2i+KuFNJt8ELQiLHGF2fwqsW2I3E/DaGqHkJshNtL1tBFL3BLM6MP2Hsa3cu
+         RY5A==
+X-Gm-Message-State: AOAM530jN20x869ky0zbKvMGWLcU/ik6Ezn7ECDR6Pow8AtgKZsEY37E
+        PVsDsWhMX5/9BNxZMyVPT6XDlKrO4rWlVf4OBNBCOsyC3Hs4B4hDmU0m9mDiqlTSBvUv9tZqKID
+        JdQol3s6SeF8Ap8i6J6hDHXPP89BvkA==
+X-Received: by 2002:a1c:4645:: with SMTP id t66mr1125850wma.130.1632346493729;
+        Wed, 22 Sep 2021 14:34:53 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxd1RkKSZkPhwjIrnO7GuZSEPf5kCr25yr28k0XTQOtRFZvlE8bh9XkB8b5QIMw3larpzNauQ==
+X-Received: by 2002:a1c:4645:: with SMTP id t66mr1125833wma.130.1632346493521;
+        Wed, 22 Sep 2021 14:34:53 -0700 (PDT)
+Received: from krava ([83.240.63.48])
+        by smtp.gmail.com with ESMTPSA id n186sm7105048wme.31.2021.09.22.14.34.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Sep 2021 14:34:53 -0700 (PDT)
+Date:   Wed, 22 Sep 2021 23:34:51 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Shunsuke Nakamura <nakamura.shun@fujitsu.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] libperf: Add processing to scale the counters
+ obtained during the read() system call when multiplexing
+Message-ID: <YUuhe7e0J0PSea+b@krava>
+References: <20210922101627.3396398-1-nakamura.shun@fujitsu.com>
+ <20210922101627.3396398-2-nakamura.shun@fujitsu.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210922101627.3396398-2-nakamura.shun@fujitsu.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Since:
-https://lore.kernel.org/lkml/20200708183919.4141023-1-irogers@google.com/
-The output option works for 'perf kmem', however, it must appear after
-'record'. This is different to 'stat' where '-i' for the input must
-appear before. Try to capture this complication in the man page.
+On Wed, Sep 22, 2021 at 07:16:26PM +0900, Shunsuke Nakamura wrote:
+> From: nakamura shunsuke <nakamura.shun@fujitsu.com>
+> 
+> perf_evsel__read() scales counters obtained by RDPMC during multiplexing, but
+> does not scale counters obtained by read() system call.
+> 
+> Add processing to perf_evsel__read() to scale the counters obtained during the
+> read() system call when multiplexing.
+> 
+> 
+> Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
+> ---
+>  tools/lib/perf/evsel.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
+> index 8441e3e1aaac..0ebd1d34436f 100644
+> --- a/tools/lib/perf/evsel.c
+> +++ b/tools/lib/perf/evsel.c
+> @@ -18,6 +18,7 @@
+>  #include <sys/ioctl.h>
+>  #include <sys/mman.h>
+>  #include <asm/bug.h>
+> +#include <linux/math64.h>
+>  
+>  void perf_evsel__init(struct perf_evsel *evsel, struct perf_event_attr *attr,
+>  		      int idx)
+> @@ -321,6 +322,11 @@ int perf_evsel__read(struct perf_evsel *evsel, int cpu, int thread,
+>  	if (readn(*fd, count->values, size) <= 0)
+>  		return -errno;
+>  
+> +	if (count->ena != count->run) {
+> +		if (count->run != 0)
+> +			count->val = mul_u64_u64_div64(count->val, count->ena, count->run);
+> +	}
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Documentation/perf-kmem.txt | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+so I think perf stat expect raw values in there and does the
+scaling by itself, please check following code:
 
-diff --git a/tools/perf/Documentation/perf-kmem.txt b/tools/perf/Documentation/perf-kmem.txt
-index 85b8ac695c87..f378ac59353d 100644
---- a/tools/perf/Documentation/perf-kmem.txt
-+++ b/tools/perf/Documentation/perf-kmem.txt
-@@ -8,22 +8,25 @@ perf-kmem - Tool to trace/measure kernel memory properties
- SYNOPSIS
- --------
- [verse]
--'perf kmem' {record|stat} [<options>]
-+'perf kmem' [<options>] {record|stat}
- 
- DESCRIPTION
- -----------
- There are two variants of perf kmem:
- 
--  'perf kmem record <command>' to record the kmem events
--  of an arbitrary workload.
-+  'perf kmem [<options>] record [<perf-record-options>] <command>' to
-+  record the kmem events of an arbitrary workload. Additional 'perf
-+  record' options may be specified after record, such as '-o' to
-+  change the output file name.
- 
--  'perf kmem stat' to report kernel memory statistics.
-+  'perf kmem [<options>] stat' to report kernel memory statistics.
- 
- OPTIONS
- -------
- -i <file>::
- --input=<file>::
--	Select the input file (default: perf.data unless stdin is a fifo)
-+	For stat, select the input file (default: perf.data unless stdin is a
-+	fifo)
- 
- -f::
- --force::
--- 
-2.33.0.464.g1972c5931b-goog
+read_counters
+  read_affinity_counters
+    read_counter_cpu
+      read_single_counter
+        evsel__read_counter
+
+  perf_stat_process_counter
+    process_counter_maps
+      process_counter_values
+        perf_counts_values__scale
+
+
+perhaps we could export perf_counts_values__scale if it'd be any help
+
+jirka
+
+
+> +
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.27.0
+> 
 
