@@ -2,64 +2,64 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C17BDC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 20:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27504C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 21:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A669560F23
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 20:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B97B6120F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 21:10:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237850AbhIVVBL (ORCPT
+        id S237943AbhIVVML (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Sep 2021 17:01:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:53058 "EHLO
+        Wed, 22 Sep 2021 17:12:11 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:36481 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237905AbhIVVBL (ORCPT
+        by vger.kernel.org with ESMTP id S237877AbhIVVMK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Sep 2021 17:01:11 -0400
+        Wed, 22 Sep 2021 17:12:10 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1632344380;
+        s=mimecast20190719; t=1632345040;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=gO65tY85mzxNSiMQSTLAVCO3OAT6edKTBG18pm5kxVg=;
-        b=cFRcWeXN4q+qWV8r5+S87M5gY+09OCPtIP8qZT2UKVC0uh39apeMunq2LdHOn8lECERIV6
-        HALK1D60F1TPqAQPNkoyLygqO+LF+48JLnrqxr0zV1KNSHLPqWQq4EsRfeHDjAI9djWjXq
-        wCbrwLs35xRqdOjWbbOVYPR8YqXOyIQ=
+        bh=QSaDDb+UPCl85zWqGodzp//Rjjy1AQfZIg0iKTqryTc=;
+        b=RVwXfEGRUJK97+d5JxQEz2QUUl48sZfXdoRnhv5bX4s1WdKNXGYHJ9sA8RKw9AfVFShNIf
+        cpuNRZONH3ayrmtVvLVq8IHHnHvIeRCEpe+VNQWfv7Z0J0eDvx95ytDprSQB/T0GYPEqPL
+        qavfeZFDGkCa9179teio1UGgctgYKmc=
 Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
  [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-239-JKvdNaMRMHeMFFs-_78qbw-1; Wed, 22 Sep 2021 16:59:37 -0400
-X-MC-Unique: JKvdNaMRMHeMFFs-_78qbw-1
-Received: by mail-wr1-f70.google.com with SMTP id c15-20020a5d4ccf000000b0015dff622f39so3257038wrt.21
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Sep 2021 13:59:37 -0700 (PDT)
+ us-mta-1-64JhbdEcPQyOZm8zx6tZBA-1; Wed, 22 Sep 2021 17:10:39 -0400
+X-MC-Unique: 64JhbdEcPQyOZm8zx6tZBA-1
+Received: by mail-wr1-f70.google.com with SMTP id c2-20020adfa302000000b0015e4260febdso3283590wrb.20
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Sep 2021 14:10:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=gO65tY85mzxNSiMQSTLAVCO3OAT6edKTBG18pm5kxVg=;
-        b=XJw64JSw5dELNUc7mbhi9TvFyKgmpTTBVXD70hGhCBhk2GnEQ5x1vbE30TYO594t+i
-         Iiwsgtr3lFdMoUNkiMu0KOXBp6M+muxTCwffdHUvUHPCharV1Z8c0hN0JI1Jh5eV5Obp
-         Mc5jphgK8yFGUG9XaDmsSBjBM5AWUj711rhF8ukEzNFZu1TKyF2LBE1Wogla9Fq9vi/d
-         mSER+gfLkkEiMl2eLs8Lq8GC5TQcW21R9U+Jchfr8GutOjTsz1IVIguQQGrvLYroObtq
-         zQXmSGRjzEUHL+xXZAhMZJZRZm8TrXCq6E73THm2phCDUfrxmquaRlvFpo/nUdY0SYax
-         RArw==
-X-Gm-Message-State: AOAM531EYdQcGP3WzcF04jHvAYm4j1hNH7ImaNOAKa2aaAG5P824vR5D
-        NZGACcSvzZwLwcfl2GDXQ+TtWHVyuoX2mn6o6h3z0E6ftwahXtLl3fJgM/50Pz8/dFqecIG0rp7
-        q2OYuGD26I8F8HtXFIVD4SbhszUbjJg==
-X-Received: by 2002:a5d:47ce:: with SMTP id o14mr1173110wrc.30.1632344376668;
-        Wed, 22 Sep 2021 13:59:36 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxAOX6zR8UdlJwxSo4byiE+o5OmKjpIEKhFgFNFvbI72YCtJS0RXQq3rDy0nRcqeTmyrwcK1Q==
-X-Received: by 2002:a5d:47ce:: with SMTP id o14mr1173088wrc.30.1632344376488;
-        Wed, 22 Sep 2021 13:59:36 -0700 (PDT)
+        bh=QSaDDb+UPCl85zWqGodzp//Rjjy1AQfZIg0iKTqryTc=;
+        b=Iaw2Dkv+nRIdifK2tEAFFa9//e0CigO6uZeOFpctua3IZ4lcar8958oHhoDwT6jkSp
+         ZR5geP+np1Idcjhkn4Q+ydzqupX6cRgL+b7PuOmdW5BipoycpKrsv49l8K7x1PjVQEKt
+         lRwNTQEvGxEu/w5K24PGIglgRa7rKz82aVdGyTmCu/t7yHXrwdNcNVxJt1ixIHh4Z4Rf
+         jPnEFhraBKcP+rlojlLeELmrGHPooym49DMZgGzf0XRGrHhW1Y6jISsr8+PyxOBRGZqM
+         u1kX190/DydAR3C/xp2RUsedq/GMlEbPFIanj0JWNBpS5oRlXnmyLxndxNGQ+je9hfqg
+         9XzA==
+X-Gm-Message-State: AOAM530Q9NjA6rljb38LXXPWr5mzH89eU6fP4whgiHzVZJ3oxCh5jM/m
+        eVoNVq0zXpZbqRjv3flleGcHx623PTFwXPrDdwuCAypIKjcuHTHoBLKYUrzCqbjtdqNsdLqYehf
+        dWapW0Z0cTU6bKnLcRPBMmbFxRm7Ctg==
+X-Received: by 2002:a5d:4cc6:: with SMTP id c6mr1205696wrt.108.1632345037785;
+        Wed, 22 Sep 2021 14:10:37 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw5T0pxBW9oWQ/llmaNM/LDVZnierNxbbZ52SgI25fsINV0QQ/74eaFTFihjih1WuagzrDGBg==
+X-Received: by 2002:a5d:4cc6:: with SMTP id c6mr1205678wrt.108.1632345037650;
+        Wed, 22 Sep 2021 14:10:37 -0700 (PDT)
 Received: from krava ([83.240.63.48])
-        by smtp.gmail.com with ESMTPSA id c135sm7335517wme.6.2021.09.22.13.59.34
+        by smtp.gmail.com with ESMTPSA id h1sm3006175wmb.7.2021.09.22.14.10.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Sep 2021 13:59:36 -0700 (PDT)
-Date:   Wed, 22 Sep 2021 22:59:32 +0200
+        Wed, 22 Sep 2021 14:10:37 -0700 (PDT)
+Date:   Wed, 22 Sep 2021 23:10:35 +0200
 From:   Jiri Olsa <jolsa@redhat.com>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -68,74 +68,111 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Paul Clarke <pc@us.ibm.com>, kajoljain <kjain@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>,
-        Sandeep Dasgupta <sdasgup@google.com>
-Subject: Re: [PATCH v8 5/8] perf metric: Add utilities to work on ids map.
-Message-ID: <YUuZNJjphZBHOAAA@krava>
-References: <20210918063513.2356923-1-irogers@google.com>
- <20210918063513.2356923-6-irogers@google.com>
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>, eranian@google.com
+Subject: Re: [PATCH v2 1/4] perf: Enable libtracefs dynamic linking
+Message-ID: <YUuby5uGSzR9+Lfy@krava>
+References: <20210921204839.236840-1-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210918063513.2356923-6-irogers@google.com>
+In-Reply-To: <20210921204839.236840-1-irogers@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Sep 17, 2021 at 11:35:10PM -0700, Ian Rogers wrote:
-
-SNIP
-
+On Tue, Sep 21, 2021 at 01:48:36PM -0700, Ian Rogers wrote:
+> Currently libtracefs isn't used by perf, but there are potential
+> improvements by using it as identified Steven Rostedt's e-mail:
+> https://lore.kernel.org/lkml/20210610154759.1ef958f0@oasis.local.home/
+> 
+> This change is modelled on the dynamic libtraceevent patch by Michael
+> Petlan:
+> https://lore.kernel.org/linux-perf-users/20210428092023.4009-1-mpetlan@redhat.com/
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/build/Makefile.feature | 1 +
+>  tools/build/feature/Makefile | 4 ++++
+>  tools/perf/Makefile.config   | 9 +++++++++
+>  tools/perf/Makefile.perf     | 2 ++
+>  4 files changed, 16 insertions(+)
+> 
+> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+> index 3dd2f68366f9..45a9a59828c3 100644
+> --- a/tools/build/Makefile.feature
+> +++ b/tools/build/Makefile.feature
+> @@ -52,6 +52,7 @@ FEATURE_TESTS_BASIC :=                  \
+>          libslang                        \
+>          libslang-include-subdir         \
+>          libtraceevent                   \
+> +        libtracefs                      \
+>          libcrypto                       \
+>          libunwind                       \
+>          pthread-attr-setaffinity-np     \
+> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+> index eff55d287db1..d024b5204ba0 100644
+> --- a/tools/build/feature/Makefile
+> +++ b/tools/build/feature/Makefile
+> @@ -36,6 +36,7 @@ FILES=                                          \
+>           test-libslang.bin                      \
+>           test-libslang-include-subdir.bin       \
+>           test-libtraceevent.bin                 \
+> +         test-libtracefs.bin                    \
+>           test-libcrypto.bin                     \
+>           test-libunwind.bin                     \
+>           test-libunwind-debug-frame.bin         \
+> @@ -199,6 +200,9 @@ $(OUTPUT)test-libslang-include-subdir.bin:
+>  $(OUTPUT)test-libtraceevent.bin:
+>  	$(BUILD) -ltraceevent
 >  
-> +struct hashmap *ids__union(struct hashmap *ids1, struct hashmap *ids2)
-> +{
-> +	size_t bkt;
-> +	struct hashmap_entry *cur;
-> +	int ret;
-> +	struct expr_id_data *old_data = NULL;
-> +	char *old_key = NULL;
-> +
-> +	if (!ids1)
-> +		return ids2;
-> +
-> +	if (!ids2)
-> +		return ids1;
-> +
-> +	if (hashmap__size(ids1) <  hashmap__size(ids2)) {
-> +		struct hashmap *tmp = ids1;
-> +
-> +		ids1 = ids2;
-> +		ids2 = tmp;
-> +	}
-> +	hashmap__for_each_entry(ids2, cur, bkt) {
-> +		ret = hashmap__set(ids1, cur->key, cur->value,
-> +				(const void **)&old_key, (void **)&old_data);
-> +		free(old_key);
-> +		free(old_data);
-> +
-> +		if (ret)
-> +			break;
+> +$(OUTPUT)test-libtracefs.bin:
+> +	$(BUILD) -ltracefs
 
-should we return NULL in here?
+hum, looks like you forgot to git add test-libtracefs.c?
 
 jirka
 
-> +	}
-> +	hashmap__free(ids2);
-> +	return ids1;
-> +}
 > +
-> +/* Caller must make sure id is allocated */
-> +int expr__add_id(struct expr_parse_ctx *ctx, const char *id)
-> +{
-> +	return ids__insert(ctx->ids, id, ctx->parent);
-> +}
+>  $(OUTPUT)test-libcrypto.bin:
+>  	$(BUILD) -lcrypto
+>  
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 446180401e26..00ec900ddbca 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -1098,6 +1098,15 @@ ifdef LIBTRACEEVENT_DYNAMIC
+>    endif
+>  endif
+>  
+> +ifdef LIBTRACEFS_DYNAMIC
+> +  $(call feature_check,libtracefs)
+> +  ifeq ($(feature-libtracefs), 1)
+> +    EXTLIBS += -ltracefs
+> +  else
+> +    dummy := $(error Error: No libtracefs devel library found, please install libtracefs-dev);
+> +  endif
+> +endif
 > +
-
-SNIP
+>  # Among the variables below, these:
+>  #   perfexecdir
+>  #   perf_include_dir
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index e04313c4d840..7df13e74450c 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -130,6 +130,8 @@ include ../scripts/utilities.mak
+>  #
+>  # Define LIBTRACEEVENT_DYNAMIC to enable libtraceevent dynamic linking
+>  #
+> +# Define LIBTRACEFS_DYNAMIC to enable libtracefs dynamic linking
+> +#
+>  
+>  # As per kernel Makefile, avoid funny character set dependencies
+>  unexport LC_ALL
+> -- 
+> 2.33.0.464.g1972c5931b-goog
+> 
 
