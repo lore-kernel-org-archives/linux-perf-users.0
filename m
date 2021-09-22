@@ -2,144 +2,212 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE0CC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 21:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA55C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 21:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC92961181
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 21:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20BD061019
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 21:55:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238043AbhIVVg1 (ORCPT
+        id S238182AbhIVV4q (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Sep 2021 17:36:27 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:49168 "EHLO
+        Wed, 22 Sep 2021 17:56:46 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:46685 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S238022AbhIVVg0 (ORCPT
+        by vger.kernel.org with ESMTP id S238162AbhIVV4q (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Sep 2021 17:36:26 -0400
+        Wed, 22 Sep 2021 17:56:46 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1632346495;
+        s=mimecast20190719; t=1632347715;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=tkHP6mmjG7SBJfcpCC261TiUWmXihHKnsMoMGcToTiQ=;
-        b=ZU7Dxtkiq5twh+n01SpeETB1N8ejE3cxLjPuNbRkc7n5Uk9daA6UDiu/PmOwOpu+6BqEYL
-        rAqbX/i4PNPNkdfmDtqtKOEETxdLe+Sx1JGNMmcAxOzlMcioI/A0bPI3j1f4WidmaTVx7L
-        FfHrtt0naGdgqiDjJz5AC4d6EVsF8OY=
+        bh=EqS74/naZJE5TFiYTVoASdxvH6bMfJJ7gf6aZytwa8E=;
+        b=fOcb+AyR4lfukS1E79gsJxdN2f2MGbsnXK12g1ns4NSAUS65HXn2szX2w/F0p1ureyla8W
+        Vkw6gsCUfZIGXT4lKIDcsDaOXnDv9uuEIrxQRgFmbC7JLWn1jNQZosoqQs9CjFmFQ9VJsK
+        DUKP7fGsh7zrY5jnDdQ5Mm2fRYtmx1E=
 Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
  [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-460-r3qP0gDANpyLxlYUXAqT4w-1; Wed, 22 Sep 2021 17:34:54 -0400
-X-MC-Unique: r3qP0gDANpyLxlYUXAqT4w-1
-Received: by mail-wr1-f71.google.com with SMTP id f7-20020a5d50c7000000b0015e288741a4so3376025wrt.9
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Sep 2021 14:34:54 -0700 (PDT)
+ us-mta-236-bFw_uAxJPVKSsSwSmPgTBw-1; Wed, 22 Sep 2021 17:55:14 -0400
+X-MC-Unique: bFw_uAxJPVKSsSwSmPgTBw-1
+Received: by mail-wr1-f71.google.com with SMTP id i4-20020a5d5224000000b0015b14db14deso3357918wra.23
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Sep 2021 14:55:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=tkHP6mmjG7SBJfcpCC261TiUWmXihHKnsMoMGcToTiQ=;
-        b=vdARh2C5gNYCXhB5tQX/nfogmMCqHPinwxny4gBhZ8QpP1rLZ1avOskTakR17zeWHq
-         clY85mwhvRoEzDuJ67NJVTeNVJzwVdZI42CmVUO7cmRBNpbZiGv6rqihkBpaee+eJmdn
-         0mSd710UiDTp2Y+zC94JvovpJUtI6uH3Fbse1uQM6+/hk7o6uFn9dbqqxPgsJzllEulA
-         PjFa4FVH60wjQNoRShseZtmu+mfNw+ye36PDPCj3CLKtYedAy39QX3qthdRiDEikZk5R
-         U9TLk0Xk2i+KuFNJt8ELQiLHGF2fwqsW2I3E/DaGqHkJshNtL1tBFL3BLM6MP2Hsa3cu
-         RY5A==
-X-Gm-Message-State: AOAM530jN20x869ky0zbKvMGWLcU/ik6Ezn7ECDR6Pow8AtgKZsEY37E
-        PVsDsWhMX5/9BNxZMyVPT6XDlKrO4rWlVf4OBNBCOsyC3Hs4B4hDmU0m9mDiqlTSBvUv9tZqKID
-        JdQol3s6SeF8Ap8i6J6hDHXPP89BvkA==
-X-Received: by 2002:a1c:4645:: with SMTP id t66mr1125850wma.130.1632346493729;
-        Wed, 22 Sep 2021 14:34:53 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxd1RkKSZkPhwjIrnO7GuZSEPf5kCr25yr28k0XTQOtRFZvlE8bh9XkB8b5QIMw3larpzNauQ==
-X-Received: by 2002:a1c:4645:: with SMTP id t66mr1125833wma.130.1632346493521;
-        Wed, 22 Sep 2021 14:34:53 -0700 (PDT)
+        bh=EqS74/naZJE5TFiYTVoASdxvH6bMfJJ7gf6aZytwa8E=;
+        b=ubGumWM0nhDMZDXxc7Hs/06I6ZucbaH9QO9IOPQn9uJnadgRpJaxmbNqubyevmFLda
+         mslndsLJ7bCMbWTbMSEO+jaMGK8ERh2rY6JflfarXCG8q4ESLu+BAcg5puGIf5F9hcL1
+         vJedMJgDHTTf6fuptWNQJcckcmMkC/kIJPcVc04uoKx1aVIYCeSJXVmStkGnAp1yKyEZ
+         y0rRbmwTTRgoKrdwxAOC5zYu+AwTTznRVfuaAGM7abhjLtv0BsvUJ7VayP4usAV9Bio4
+         dSz46hU2PIdpJ6QbbuYgvR3dUhq/aLcxUkkNNmmwivou1/nUiCwThd1Xloo/jj6IGxNh
+         KzLA==
+X-Gm-Message-State: AOAM5337LsbfAk995Mc+7JUuJzDRKM+1HsHgOISaqEwZelTPDe7PU/Ub
+        oqLDmL9XIw6LEKLNYgqOmrUnJMj6q26660I1GyEYnQThD1iPHNN9K95z4rlIpal4hEZrpXEui46
+        xmK39Wg/Ka2jmU1FxaHUfW5AijwD2oQ==
+X-Received: by 2002:a05:600c:214a:: with SMTP id v10mr1129275wml.167.1632347713146;
+        Wed, 22 Sep 2021 14:55:13 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzVCyOa1n0vvgmvEeAypXrQOVKWHUlZSyrtCl4h3iBY0nCmoSj6j0xWQ0v4gqILM3CSE2nzWg==
+X-Received: by 2002:a05:600c:214a:: with SMTP id v10mr1129262wml.167.1632347712965;
+        Wed, 22 Sep 2021 14:55:12 -0700 (PDT)
 Received: from krava ([83.240.63.48])
-        by smtp.gmail.com with ESMTPSA id n186sm7105048wme.31.2021.09.22.14.34.52
+        by smtp.gmail.com with ESMTPSA id o12sm2825631wms.15.2021.09.22.14.55.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Sep 2021 14:34:53 -0700 (PDT)
-Date:   Wed, 22 Sep 2021 23:34:51 +0200
+        Wed, 22 Sep 2021 14:55:12 -0700 (PDT)
+Date:   Wed, 22 Sep 2021 23:55:10 +0200
 From:   Jiri Olsa <jolsa@redhat.com>
-To:     Shunsuke Nakamura <nakamura.shun@fujitsu.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] libperf: Add processing to scale the counters
- obtained during the read() system call when multiplexing
-Message-ID: <YUuhe7e0J0PSea+b@krava>
-References: <20210922101627.3396398-1-nakamura.shun@fujitsu.com>
- <20210922101627.3396398-2-nakamura.shun@fujitsu.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Daniel Latypov <dlatypov@google.com>,
+        David Gow <davidgow@google.com>, eranian@google.com
+Subject: Re: [RFC PATCH 0/5] Start aligning perf test with kunit style
+Message-ID: <YUumPj7Oa1HvVGW/@krava>
+References: <20210922081959.390059-1-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210922101627.3396398-2-nakamura.shun@fujitsu.com>
+In-Reply-To: <20210922081959.390059-1-irogers@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 22, 2021 at 07:16:26PM +0900, Shunsuke Nakamura wrote:
-> From: nakamura shunsuke <nakamura.shun@fujitsu.com>
+On Wed, Sep 22, 2021 at 01:19:53AM -0700, Ian Rogers wrote:
+> Perf test uses its own structs and code layout that differs from kunit
+> that was more recently introduced to the kernel. Besides consistency,
+> it is hoped that moving in the direction of kunit style will enable
+> reuse of infrastructure like test output formatting for continuous
+> testing systems. For example:
+> https://lore.kernel.org/linux-kselftest/CA+GJov6tdjvY9x12JsJT14qn6c7NViJxqaJk+r-K1YJzPggFDQ@mail.gmail.com/
 > 
-> perf_evsel__read() scales counters obtained by RDPMC during multiplexing, but
-> does not scale counters obtained by read() system call.
+> The motivation for this restructuring comes from wanting to be able to
+> tag tests with a size:
+> https://lore.kernel.org/linux-perf-users/CAP-5=fWmGyuqFKc-EMP3rbmTkjZ3MS+YSajGZfeRMc38HS82gw@mail.gmail.com/
+> To have more exhaustive and slower running tests.  This isn't
+> something kunit currently supports, nor is the execution of python and
+> shell tests, but it seems sensible to work on an approach with kunit
+> rather to invent a new wheel inside of perf.
 > 
-> Add processing to perf_evsel__read() to scale the counters obtained during the
-> read() system call when multiplexing.
+> These initial patches are just refactoring the main test suite
+> definitions to be in a more kunit style. Kunit isn't depended upon, it
+> is hoped that this can be done in later patches for the sake of
+> consistency.
+
+seems good.. how far away from kunit is the code now?
+
 > 
+> v1. Built/tested on x86.
 > 
-> Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
-> ---
->  tools/lib/perf/evsel.c | 6 ++++++
->  1 file changed, 6 insertions(+)
+> Ian Rogers (5):
+>   perf test: Use macro for "suite" declarations
+>   perf test: Use macro for "suite" definitions
+>   perf test: Make each test/suite its own struct.
+>   perf test: Move each test suite struct to its test
+>   perf test: Rename struct test to test_suite
 > 
-> diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-> index 8441e3e1aaac..0ebd1d34436f 100644
-> --- a/tools/lib/perf/evsel.c
-> +++ b/tools/lib/perf/evsel.c
-> @@ -18,6 +18,7 @@
->  #include <sys/ioctl.h>
->  #include <sys/mman.h>
->  #include <asm/bug.h>
-> +#include <linux/math64.h>
->  
->  void perf_evsel__init(struct perf_evsel *evsel, struct perf_event_attr *attr,
->  		      int idx)
-> @@ -321,6 +322,11 @@ int perf_evsel__read(struct perf_evsel *evsel, int cpu, int thread,
->  	if (readn(*fd, count->values, size) <= 0)
->  		return -errno;
->  
-> +	if (count->ena != count->run) {
-> +		if (count->run != 0)
-> +			count->val = mul_u64_u64_div64(count->val, count->ena, count->run);
-> +	}
+>  tools/perf/arch/arm/include/arch-tests.h      |   2 +-
+>  tools/perf/arch/arm/tests/arch-tests.c        |  21 +-
+>  tools/perf/arch/arm/tests/vectors-page.c      |   2 +-
+>  tools/perf/arch/arm64/include/arch-tests.h    |   2 +-
+>  tools/perf/arch/arm64/tests/arch-tests.c      |  15 +-
+>  tools/perf/arch/powerpc/include/arch-tests.h  |   2 +-
+>  tools/perf/arch/powerpc/tests/arch-tests.c    |  15 +-
 
-so I think perf stat expect raw values in there and does the
-scaling by itself, please check following code:
-
-read_counters
-  read_affinity_counters
-    read_counter_cpu
-      read_single_counter
-        evsel__read_counter
-
-  perf_stat_process_counter
-    process_counter_maps
-      process_counter_values
-        perf_counts_values__scale
-
-
-perhaps we could export perf_counts_values__scale if it'd be any help
+I can run/test this on ppc/arm if you don't have any
 
 jirka
 
-
-> +
->  	return 0;
->  }
->  
+>  tools/perf/arch/x86/include/arch-tests.h      |  14 +-
+>  tools/perf/arch/x86/tests/arch-tests.c        |  47 +-
+>  tools/perf/arch/x86/tests/bp-modify.c         |   2 +-
+>  tools/perf/arch/x86/tests/insn-x86.c          |   2 +-
+>  tools/perf/arch/x86/tests/intel-cqm.c         |   2 +-
+>  .../x86/tests/intel-pt-pkt-decoder-test.c     |   2 +-
+>  tools/perf/arch/x86/tests/rdpmc.c             |   2 +-
+>  tools/perf/arch/x86/tests/sample-parsing.c    |   2 +-
+>  tools/perf/tests/api-io.c                     |   6 +-
+>  tools/perf/tests/attr.c                       |   4 +-
+>  tools/perf/tests/backward-ring-buffer.c       |   4 +-
+>  tools/perf/tests/bitmap.c                     |   4 +-
+>  tools/perf/tests/bp_account.c                 |  10 +-
+>  tools/perf/tests/bp_signal.c                  |   8 +-
+>  tools/perf/tests/bp_signal_overflow.c         |   8 +-
+>  tools/perf/tests/bpf.c                        |  22 +-
+>  tools/perf/tests/builtin-test.c               | 441 ++++--------------
+>  tools/perf/tests/clang.c                      |  18 +-
+>  tools/perf/tests/code-reading.c               |   4 +-
+>  tools/perf/tests/cpumap.c                     |  10 +-
+>  tools/perf/tests/demangle-java-test.c         |   4 +-
+>  tools/perf/tests/demangle-ocaml-test.c        |   4 +-
+>  tools/perf/tests/dlfilter-test.c              |   4 +-
+>  tools/perf/tests/dso-data.c                   |  10 +-
+>  tools/perf/tests/dwarf-unwind.c               |   2 +-
+>  tools/perf/tests/event-times.c                |   4 +-
+>  tools/perf/tests/event_update.c               |   4 +-
+>  tools/perf/tests/evsel-roundtrip-name.c       |   4 +-
+>  tools/perf/tests/evsel-tp-sched.c             |   4 +-
+>  tools/perf/tests/expand-cgroup.c              |   6 +-
+>  tools/perf/tests/expr.c                       |   4 +-
+>  tools/perf/tests/fdarray.c                    |   7 +-
+>  tools/perf/tests/genelf.c                     |   6 +-
+>  tools/perf/tests/hists_cumulate.c             |   4 +-
+>  tools/perf/tests/hists_filter.c               |   4 +-
+>  tools/perf/tests/hists_link.c                 |   4 +-
+>  tools/perf/tests/hists_output.c               |   4 +-
+>  tools/perf/tests/is_printable_array.c         |   4 +-
+>  tools/perf/tests/keep-tracking.c              |   4 +-
+>  tools/perf/tests/kmod-path.c                  |   4 +-
+>  tools/perf/tests/llvm.c                       |  22 +-
+>  tools/perf/tests/maps.c                       |   4 +-
+>  tools/perf/tests/mem.c                        |   4 +-
+>  tools/perf/tests/mem2node.c                   |   4 +-
+>  tools/perf/tests/mmap-basic.c                 |   4 +-
+>  tools/perf/tests/mmap-thread-lookup.c         |   4 +-
+>  tools/perf/tests/openat-syscall-all-cpus.c    |   5 +-
+>  tools/perf/tests/openat-syscall-tp-fields.c   |   4 +-
+>  tools/perf/tests/openat-syscall.c             |   5 +-
+>  tools/perf/tests/parse-events.c               |   4 +-
+>  tools/perf/tests/parse-metric.c               |   4 +-
+>  tools/perf/tests/parse-no-sample-id-all.c     |   4 +-
+>  tools/perf/tests/pe-file-parsing.c            |   6 +-
+>  tools/perf/tests/perf-hooks.c                 |   4 +-
+>  tools/perf/tests/perf-record.c                |   4 +-
+>  tools/perf/tests/perf-time-to-tsc.c           |  10 +-
+>  tools/perf/tests/pfm.c                        |  16 +-
+>  tools/perf/tests/pmu-events.c                 |  19 +-
+>  tools/perf/tests/pmu.c                        |   4 +-
+>  tools/perf/tests/python-use.c                 |   4 +-
+>  tools/perf/tests/sample-parsing.c             |   4 +-
+>  tools/perf/tests/sdt.c                        |   6 +-
+>  tools/perf/tests/stat.c                       |  10 +-
+>  tools/perf/tests/sw-clock.c                   |   4 +-
+>  tools/perf/tests/switch-tracking.c            |   4 +-
+>  tools/perf/tests/task-exit.c                  |   4 +-
+>  tools/perf/tests/tests.h                      | 179 ++++---
+>  tools/perf/tests/thread-map.c                 |  10 +-
+>  tools/perf/tests/thread-maps-share.c          |   4 +-
+>  tools/perf/tests/time-utils-test.c            |   4 +-
+>  tools/perf/tests/topology.c                   |   4 +-
+>  tools/perf/tests/unit_number__scnprintf.c     |   4 +-
+>  tools/perf/tests/vmlinux-kallsyms.c           |   5 +-
+>  tools/perf/tests/wp.c                         |  22 +-
+>  81 files changed, 543 insertions(+), 618 deletions(-)
+> 
 > -- 
-> 2.27.0
+> 2.33.0.464.g1972c5931b-goog
 > 
 
