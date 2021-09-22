@@ -2,141 +2,105 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB90BC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 11:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0926C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 11:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9832260EB6
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 11:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA9486112F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 11:26:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235182AbhIVLBr (ORCPT
+        id S235589AbhIVL2E convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Sep 2021 07:01:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35822 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235047AbhIVLBr (ORCPT
+        Wed, 22 Sep 2021 07:28:04 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:51701 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235567AbhIVL2D (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Sep 2021 07:01:47 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75F67C061574
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Sep 2021 04:00:17 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id bb10so1520241plb.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Sep 2021 04:00:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Hwl3MVKuLK+CwZQofEVoUFGs27PPnfkfJHGmENBFAts=;
-        b=hjLHBpmuAPymArjlyDDR/L6wa5rSjTRJswtwPE1xPI6UPAl8bAIeYySoyLmCJXlrGq
-         6DyG9PKxc/HH/KRFqwnbLjTXdXSo/u23wFNK1l425tkZjDBipaGE2f5TYRfs6HUdo4In
-         xg9TjAHhTybSVQyE4zwUBgLHJAsivfkWQCqNQbrITK7u5Gk4lSC0Bk4LY5X29gZMRFFQ
-         SsiJL0skX75tSXdvquluepwkNt0kl7Eqh7e/k0ljYsx2zoS8BNckVNi20dkqosN5QqYj
-         0g/xgmXAPus3mkTbzuIgxCuK0Xzwb6u4L+wWAiwuTZ/nV8hqcNwc5V+5XtUF0p958QiK
-         90TQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Hwl3MVKuLK+CwZQofEVoUFGs27PPnfkfJHGmENBFAts=;
-        b=MxNNGDES9q3i3yz55lcUlJ3JxefGWU74xhhz0/mmIrb+iSe6DXu9zR3WYscxbS/EbH
-         VJtBN2B24/QXrQEChKuYQ5XDKClRCEWoVzWtt5TxlQXSVfe7HxoWa9Z4Sap8tc9wBQqv
-         AjmBqHO+bX6qrQIMwkv3SFUOGcAIJtYvCN/vyaB6wN67pNqKmntndavzOEUc0aKgkK5s
-         jVjhmK/zeO9vD2wdrClrqj48hZ0urbxPPu0fzRBvag9krU+eremT9Gjc9hWYM0GmjwGt
-         vbdf9LdTPxUBfIGtzZHeb/cI6/0M02W9w6EPfkom0lb3SMjvyY88LTY/QCbB5BkQ9/ja
-         JT9Q==
-X-Gm-Message-State: AOAM533m6J2n3cSiv0UttnJv8NquYWylsd9gVcFfh56+J/1H0O96q6gL
-        UVGRPJFymjKWcRd6/YVufEn9tw==
-X-Google-Smtp-Source: ABdhPJyox/oP8xe915hBd8nZV6x52NPUVmKObsHum2sThZRTtinoTUoYJOv9eBNvHs09nCniPZ/RLg==
-X-Received: by 2002:a17:90b:1a90:: with SMTP id ng16mr10659892pjb.130.1632308416907;
-        Wed, 22 Sep 2021 04:00:16 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([213.173.35.225])
-        by smtp.gmail.com with ESMTPSA id u12sm3518046pjr.2.2021.09.22.04.00.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Sep 2021 04:00:16 -0700 (PDT)
-Date:   Wed, 22 Sep 2021 19:00:12 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     acme@kernel.org, leo.yan@linaro.com,
-        linux-perf-users@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] perf tests: Improve temp file cleanup in
- test_arm_coresight.sh
-Message-ID: <20210922110012.GA400258@leoy-ThinkPad-X240s>
-References: <20210921131009.390810-1-james.clark@arm.com>
- <20210921131009.390810-3-james.clark@arm.com>
+        Wed, 22 Sep 2021 07:28:03 -0400
+Received: from mail-wr1-f48.google.com ([209.85.221.48]) by
+ mrelayeu.kundenserver.de (mreue107 [213.165.67.113]) with ESMTPSA (Nemesis)
+ id 1MDy9C-1mcwXs3dhs-009yuP; Wed, 22 Sep 2021 13:26:32 +0200
+Received: by mail-wr1-f48.google.com with SMTP id t8so5826332wri.1;
+        Wed, 22 Sep 2021 04:26:32 -0700 (PDT)
+X-Gm-Message-State: AOAM533LsjKHRHjlQInwTX0j/HGbg1arUoToMliProsOZ4IaDiP4Ba5y
+        A+QjtfANgq8mEYZNS9SHXc+ZUSGRDXxN9UU6l3M=
+X-Google-Smtp-Source: ABdhPJx7Vx8CgVkbie6rTHzp0NlK8qWjQiWBbJyQ5+YpxWx+wv3QwjZDGoYajJ4SkwfdROeT/MWSc2i1Jl2U7JktY+8=
+X-Received: by 2002:adf:f481:: with SMTP id l1mr10119089wro.411.1632309992502;
+ Wed, 22 Sep 2021 04:26:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210921131009.390810-3-james.clark@arm.com>
+References: <20210917061040.2270822-1-alistair.francis@opensource.wdc.com>
+ <20210917061040.2270822-2-alistair.francis@opensource.wdc.com>
+ <72990864-5ec6-1f73-efd9-61b667a172dd@collabora.com> <CAK8P3a3x_EyCiPDpMK54y=Rtm-Wb08ym2TNiuAZgXhYrThcWTw@mail.gmail.com>
+ <9db8c79a-f704-84ce-360b-84335f926a48@collabora.com>
+In-Reply-To: <9db8c79a-f704-84ce-360b-84335f926a48@collabora.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 22 Sep 2021 13:26:16 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0LsxOTYeM-o=Ee=XFD6zN7ESV_dhGmAOFSj_zJ8pBDgA@mail.gmail.com>
+Message-ID: <CAK8P3a0LsxOTYeM-o=Ee=XFD6zN7ESV_dhGmAOFSj_zJ8pBDgA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] perf bench: Add support for 32-bit systems with
+ 64-bit time_t
+To:     =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@collabora.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Alistair Francis <alistair.francis@opensource.wdc.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alistair Francis <alistair23@gmail.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Darren Hart <dvhart@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <alistair.francis@wdc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:DVyMJu3EjIwLUe2Ypw4bUMl+M9UBYlSLH1ODjKc+u1OVi8dNV3I
+ kbbbC9VP6r4vZtTTWHqIDwdWO7JNYK9H670FzpUoE/w3NeTEM9Ti/rJtzeAyBnA90h1J8Yn
+ kghcVpILj3m4u71GMidgvFcvY48nDvIBv5u3d3eddAPbgIJjvhHHileEtP4kGagBoRPOW8t
+ AQty/39s9A2PfUir+ei0g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:XOi8kqRnCCs=:2721ZEHrD0X0Fgqt5mARlB
+ W6J86hPyLugTT5k1p6aporsqWgKsvXJs9w6qhcylhVjoq+K8yO0xDX4PaC91R+Zks3wgCEzI1
+ sbbVPtaIKtN/UxopsXstSI5yGt2cwOxO+M+R7eIb2HcLA52zVYxCRCXIaStNO6PK1tO4Jayqy
+ lVMGSIGviD0nPgOTOJxB7krLyc8FYeasKUl0ljSLrvMi+XMKe1wk0ThBICCWTlRq4MPkM+TrI
+ Q9sZ20e//alhXLPMU0nz9Jjd5mdp4gpflQLHuVnAe5+T9Ln++mO2TezvxvT/xJ7n0RWa1eRMH
+ AeylAbm+AIcRKEe7r2tZ+EUtqI0XPKBworlqQ0P7leKO+agsyAeNsmFNSyH1tTw3c5bbGWWZZ
+ d/1qrtYxW7bc42d3Xr8dNQf9bWj6cmah6ON/eUHn2utJCYL8ygE4s3mywSRaTxN7aNMjZQhsW
+ 0qCBCSB5JloXpH+xiDpNIa8b9evDt8unBQLKLCavxYsxkM0mPhE6MklUw43exAF3NQzu1rXp9
+ xtEY6kV6MN2urO26jCF+Z6tTodNEgDUNIyKfh+apgxodtt83lN+p7zgb08KOsfy8fth1O7MGe
+ jRm2b1UT52MZ1uLRBncflHOO4zh+So5re8VLHaQWPCdNMqYMWQmrVwNBdhH1MWCwzeSDvVyDa
+ 4FdJ/C8RuGfBNwOy+SBYsX7wuAT40D4bU/k9cjYOTVdQ5tOQnjScnY03R+atergTgzyVedLk6
+ F3gnwXBl7tMnmfujV5rd3LwYTjsIN1BPYVvYTgzTULsoHtBvcgcfNxg3agzpzCjAdoIZA7b/u
+ 965eCYwiiZHSwSD3behe75QcQoXuQb2hvxLZqG/D1ar8Huw7whPk5kfP1wRR1u2NoL6TIEFlW
+ aT1K0txkQQlSkwhVjoEg==
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Sep 21, 2021 at 02:10:09PM +0100, James Clark wrote:
-> Cleanup perf.data.old files which are also dropped by perf, handle
-> sigint and propagate it to the parent in case the test is run in a bash
-> while loop and don't create the temp files if the test will be skipped.
-> 
-> Signed-off-by: James Clark <james.clark@arm.com>
-> ---
->  tools/perf/tests/shell/test_arm_coresight.sh | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
-> index c9eef0bba6f1..6de53b7ef5ff 100755
-> --- a/tools/perf/tests/shell/test_arm_coresight.sh
-> +++ b/tools/perf/tests/shell/test_arm_coresight.sh
-> @@ -9,8 +9,6 @@
->  # SPDX-License-Identifier: GPL-2.0
->  # Leo Yan <leo.yan@linaro.org>, 2020
->  
-> -perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-> -file=$(mktemp /tmp/temporary_file.XXXXX)
->  glb_err=0
->  
->  skip_if_no_cs_etm_event() {
-> @@ -22,13 +20,20 @@ skip_if_no_cs_etm_event() {
->  
->  skip_if_no_cs_etm_event || exit 2
->  
-> +perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-> +file=$(mktemp /tmp/temporary_file.XXXXX)
-> +
->  cleanup_files()
->  {
->  	rm -f ${perfdata}
->  	rm -f ${file}
-> +	rm -f "${perfdata}.old"
-> +	trap - exit term int
-> +	kill -2 $$
+On Wed, Sep 22, 2021 at 1:06 AM André Almeida <andrealmeid@collabora.com> wrote:
+> Às 05:08 de 21/09/21, Arnd Bergmann escreveu:
+> > I would love to see the wrapper that Alistair wrote as part of some kernel
+> > uapi header provided to user space. futex is used by tons of applications,
+> > and we never had a library abstraction for it, so everyone has to do these
+> > by hand, and they all get them slightly wrong in different ways.
+>
+> Why we don't have a futex() wrapper at glibc as we do have for others
+> syscalls?
 
-Here it always sends signal SIGINT to current PID with $$, another
-choice is to send signal based on the incoming signal type, like below:
+I think mainly because there was no agreement on what the calling
+conventions should be:
 
-  [[ "$1" = "int" ]] || kill -SIGINT $$
-  [[ "$1" = "term" ]] || kill -SIGTERM $$
+The raw syscall is awkward because of the argument overloading that cannot
+easily be expressed in standard C in a typesafe way. Having a per-operation
+interface would avoid that problem but requires specifying what that
+particular interface has to be, and there is no standard to fall back on for
+this syscall.
 
-If you think the current change is sufficient to meet the testing
-requirement, then this patch would be fine for me either:
-
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
-
-> +	exit $glb_err
->  }
->  
-> -trap cleanup_files exit
-> +trap cleanup_files exit term int
->  
->  record_touch_file() {
->  	echo "Recording trace (only user mode) with path: CPU$2 => $1"
-> -- 
-> 2.28.0
-> 
+       Arnd
