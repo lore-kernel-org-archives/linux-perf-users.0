@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94551C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 08:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 497BBC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 08:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A28B6113E
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 08:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F04261184
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Sep 2021 08:20:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233761AbhIVIVh (ORCPT
+        id S233845AbhIVIVl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Sep 2021 04:21:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54614 "EHLO
+        Wed, 22 Sep 2021 04:21:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233756AbhIVIVg (ORCPT
+        with ESMTP id S233814AbhIVIVi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Sep 2021 04:21:36 -0400
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04A3CC061756
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Sep 2021 01:20:07 -0700 (PDT)
-Received: by mail-qk1-x749.google.com with SMTP id az30-20020a05620a171e00b00432eb71d467so7786539qkb.18
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Sep 2021 01:20:06 -0700 (PDT)
+        Wed, 22 Sep 2021 04:21:38 -0400
+Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DCECC06175F
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Sep 2021 01:20:09 -0700 (PDT)
+Received: by mail-qv1-xf4a.google.com with SMTP id e6-20020a0cb446000000b0037eeb9851dfso9480539qvf.17
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Sep 2021 01:20:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=jhtmBJ6Dc/tyF1h7HVlvMIPOJAIqW+/3wSXrZ6EDJkw=;
-        b=mY5WQJ3imda4F5EgsCfyLnnoZl+iJiJvNzmirryxnF2X+WYis286hsRFsGAOg4cZy+
-         BO1lIeYbDYm6qN1H/xIqWS+HWI2hbD2wuteRaorJWIOA/K2hmSUlWfSjYDtaA3FhzV9p
-         qqoHyuPyazhbAl6Z36rpzeZ09xU/ljmFcPKrokPE7S1r0srAdjGIBHYYERKZgopGsNsM
-         /F18qsZHcQhiHAb0cZ0ZtERVdmn6NGVbd8uHmRfWZoINZtC9OeI2ryUlZ85LwltjeOCC
-         tGqIpYkAjJ3/gZH7b1E9wgD1ILZg2J27iN6ddBhvWmBQpZMnhwgnpO2vUwoI0r/GwL3S
-         jGaw==
+        bh=g6/kLkxboCQT1Hy7hkd5WKEU18GDnJeNWgnZK4JmHvI=;
+        b=JXueTkB0Z3VIEz5mcEdPY3QXUZUOXjNtjRIQ3h/aq9UopBzIaN1ZwQ4f8uQ2wNMlxm
+         Tcybp2kuHO8kDvLKr9Uz4q8Ouyb4+FGDwZMtCK7uooYiXaiDtADRX6ZNQDyRg0AtuuOC
+         Lmn9IoUyL6qfDvRvSD0f8uXMKW4hAawBVttAI1/el9X1k6hBvaVTlwYa8jDyAg/iBK2o
+         pJRG+iYnopdaztFQhXEfrNlaw9zXRI2LUitdMiEmYbDTmmVu4auujY4UyrsJTAVtRxph
+         wg7kZxNXzxVcXa28eh2awLxG+oy8RBRZnO6f7esU/wH/31OGjshX5cm2SR6WRdO8L1ic
+         BF8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=jhtmBJ6Dc/tyF1h7HVlvMIPOJAIqW+/3wSXrZ6EDJkw=;
-        b=wOwm5EBOLoVF3DpHSuFUf7ObZzmxVUJEnYjqJ2FdgRWziAdvgRzYoBN6cATerl1Jtr
-         voFFv9gTq2f/cSo5k89Rd4npKADdFx/mo732uftODwBZ28dYZ03xwI8/XVePK8x6fGqS
-         1TkzbPibMPkFa9N0qCe4KcQ90z0QNQFyuGuzB0lVn4v3HreuAs8cPhLfNk1Ycl+mzZSm
-         RH+RriIEuLDh3T7hwwnvXO6V7pdUXvYTVpp+bmDm3YnIcUSLwYv4+9jo6U/2sNR9mCY/
-         O8VwQyWcl9MQPUTTF+qsmg+DNTxCvQw84nVFPy8yfv611eNPENAcJCIzu54YDHxShq3T
-         MQ7A==
-X-Gm-Message-State: AOAM530v1zELbauEY5VJgqSpKXirI1TMaqQNSMqYP+LSr0UaIEJsWJeI
-        sl3Kj2nxrS0AWrpxXx0MpWayw6f3gjlM
-X-Google-Smtp-Source: ABdhPJwXkiqK/VcswL+wbPj4KeaKc0cC/bXybc3E4rflhrxj7cXk825nJ9xs1rXna29j22Eb31/jj0zj6k0l
+        bh=g6/kLkxboCQT1Hy7hkd5WKEU18GDnJeNWgnZK4JmHvI=;
+        b=bf0/pkuY3S9Sdo7p0jdM9jAi7CyAU18j6ovIDNQPpebyUD0jwKujUHgRvAxvsBqSaz
+         ieVg8yFzL4j8KUjTWjTt7Hr7kMO/h0ipi6C1KjO73AZjP8EmGft9qTiUkYtsBlnMYyEl
+         JYQEjB01txyk5OIQtXtgICk1rgv3TOMlW7yJRMVXmxac0eTRFJbTRnVMgnRXExjkymOv
+         SY0MsJNUCIk8Jj2L7wBnhWDkU3oz5URrunuln4xB935Ox8SpqIcXwtxjHuBWgFsFmrGu
+         5tlrO7yRhfokKqpLOVFssHEzR61zD8cDrrDF1n1hoQCa17AfDIyGkzgpj/rA73HW3tRX
+         alGg==
+X-Gm-Message-State: AOAM531/85zTgci+Axfkfwi47tXtyn2QZLks90MaE39PqVNHGOCn98l5
+        XgIqVbS5xnJtYlNBcCOTqZwUkiyl1dIr
+X-Google-Smtp-Source: ABdhPJx3gJcGzNH4fKj49FCCLWg9EUiW3alv74eC8ibKt933WfbyXCISDBC5R0DDc53PBmiArzvwyBKEvMPN
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:dffa:819a:f0e2:47e])
- (user=irogers job=sendgmr) by 2002:a05:6214:13a3:: with SMTP id
- h3mr35401554qvz.26.1632298806171; Wed, 22 Sep 2021 01:20:06 -0700 (PDT)
-Date:   Wed, 22 Sep 2021 01:19:54 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6214:1233:: with SMTP id
+ p19mr33051554qvv.20.1632298808479; Wed, 22 Sep 2021 01:20:08 -0700 (PDT)
+Date:   Wed, 22 Sep 2021 01:19:55 -0700
 In-Reply-To: <20210922081959.390059-1-irogers@google.com>
-Message-Id: <20210922081959.390059-2-irogers@google.com>
+Message-Id: <20210922081959.390059-3-irogers@google.com>
 Mime-Version: 1.0
 References: <20210922081959.390059-1-irogers@google.com>
 X-Mailer: git-send-email 2.33.0.464.g1972c5931b-goog
-Subject: [RFC PATCH 1/5] perf test: Use macro for "suite" declarations
+Subject: [RFC PATCH 2/5] perf test: Use macro for "suite" definitions
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -83,199 +83,504 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Currently tests are setup in builtin-test with function pointers. Kunit
-exposes tests as a kunit_suite with a null terminated array of test
-cases. Use a macro to aid transition from one to the other in later changes.
+Add a macro to simplify later refactoring. No functional change.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/tests.h | 151 ++++++++++++++++++++-------------------
- 1 file changed, 77 insertions(+), 74 deletions(-)
+ tools/perf/tests/builtin-test.c | 479 ++++++++++----------------------
+ 1 file changed, 149 insertions(+), 330 deletions(-)
 
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index fe1306f58495..0846f66d67f9 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -40,94 +40,97 @@ struct test {
- 	void *priv;
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index da7dc5e45d0c..820fc1ae2210 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -36,337 +36,156 @@ struct test __weak arch_tests[] = {
+ 	},
  };
  
-+#define DECLARE_SUITE(name) \
-+	int test__##name(struct test *test, int subtest)
+-static struct test generic_tests[] = {
+-	{
+-		.desc = "vmlinux symtab matches kallsyms",
+-		.func = test__vmlinux_matches_kallsyms,
+-	},
+-	{
+-		.desc = "Detect openat syscall event",
+-		.func = test__openat_syscall_event,
+-	},
+-	{
+-		.desc = "Detect openat syscall event on all cpus",
+-		.func = test__openat_syscall_event_on_all_cpus,
+-	},
+-	{
+-		.desc = "Read samples using the mmap interface",
+-		.func = test__basic_mmap,
+-	},
+-	{
+-		.desc = "Test data source output",
+-		.func = test__mem,
+-	},
+-	{
+-		.desc = "Parse event definition strings",
+-		.func = test__parse_events,
+-	},
+-	{
+-		.desc = "Simple expression parser",
+-		.func = test__expr,
+-	},
+-	{
+-		.desc = "PERF_RECORD_* events & perf_sample fields",
+-		.func = test__PERF_RECORD,
+-	},
+-	{
+-		.desc = "Parse perf pmu format",
+-		.func = test__pmu,
+-	},
+-	{
+-		.desc = "PMU events",
+-		.func = test__pmu_events,
+-		.subtest = {
+-			.skip_if_fail	= false,
+-			.get_nr		= test__pmu_events_subtest_get_nr,
+-			.get_desc	= test__pmu_events_subtest_get_desc,
+-			.skip_reason	= test__pmu_events_subtest_skip_reason,
+-		},
+-
+-	},
+-	{
+-		.desc = "DSO data read",
+-		.func = test__dso_data,
+-	},
+-	{
+-		.desc = "DSO data cache",
+-		.func = test__dso_data_cache,
+-	},
+-	{
+-		.desc = "DSO data reopen",
+-		.func = test__dso_data_reopen,
+-	},
+-	{
+-		.desc = "Roundtrip evsel->name",
+-		.func = test__perf_evsel__roundtrip_name_test,
+-	},
+-	{
+-		.desc = "Parse sched tracepoints fields",
+-		.func = test__perf_evsel__tp_sched_test,
+-	},
+-	{
+-		.desc = "syscalls:sys_enter_openat event fields",
+-		.func = test__syscall_openat_tp_fields,
+-	},
+-	{
+-		.desc = "Setup struct perf_event_attr",
+-		.func = test__attr,
+-	},
+-	{
+-		.desc = "Match and link multiple hists",
+-		.func = test__hists_link,
+-	},
+-	{
+-		.desc = "'import perf' in python",
+-		.func = test__python_use,
+-	},
+-	{
+-		.desc = "Breakpoint overflow signal handler",
+-		.func = test__bp_signal,
+-		.is_supported = test__bp_signal_is_supported,
+-	},
+-	{
+-		.desc = "Breakpoint overflow sampling",
+-		.func = test__bp_signal_overflow,
+-		.is_supported = test__bp_signal_is_supported,
+-	},
+-	{
+-		.desc = "Breakpoint accounting",
+-		.func = test__bp_accounting,
+-		.is_supported = test__bp_account_is_supported,
+-	},
+-	{
+-		.desc = "Watchpoint",
+-		.func = test__wp,
+-		.is_supported = test__wp_is_supported,
+-		.subtest = {
+-			.skip_if_fail	= false,
+-			.get_nr		= test__wp_subtest_get_nr,
+-			.get_desc	= test__wp_subtest_get_desc,
+-			.skip_reason    = test__wp_subtest_skip_reason,
+-		},
+-	},
+-	{
+-		.desc = "Number of exit events of a simple workload",
+-		.func = test__task_exit,
+-	},
+-	{
+-		.desc = "Software clock events period values",
+-		.func = test__sw_clock_freq,
+-	},
+-	{
+-		.desc = "Object code reading",
+-		.func = test__code_reading,
+-	},
+-	{
+-		.desc = "Sample parsing",
+-		.func = test__sample_parsing,
+-	},
+-	{
+-		.desc = "Use a dummy software event to keep tracking",
+-		.func = test__keep_tracking,
+-	},
+-	{
+-		.desc = "Parse with no sample_id_all bit set",
+-		.func = test__parse_no_sample_id_all,
+-	},
+-	{
+-		.desc = "Filter hist entries",
+-		.func = test__hists_filter,
+-	},
+-	{
+-		.desc = "Lookup mmap thread",
+-		.func = test__mmap_thread_lookup,
+-	},
+-	{
+-		.desc = "Share thread maps",
+-		.func = test__thread_maps_share,
+-	},
+-	{
+-		.desc = "Sort output of hist entries",
+-		.func = test__hists_output,
+-	},
+-	{
+-		.desc = "Cumulate child hist entries",
+-		.func = test__hists_cumulate,
+-	},
+-	{
+-		.desc = "Track with sched_switch",
+-		.func = test__switch_tracking,
+-	},
+-	{
+-		.desc = "Filter fds with revents mask in a fdarray",
+-		.func = test__fdarray__filter,
+-	},
+-	{
+-		.desc = "Add fd to a fdarray, making it autogrow",
+-		.func = test__fdarray__add,
+-	},
+-	{
+-		.desc = "kmod_path__parse",
+-		.func = test__kmod_path__parse,
+-	},
+-	{
+-		.desc = "Thread map",
+-		.func = test__thread_map,
+-	},
+-	{
+-		.desc = "LLVM search and compile",
+-		.func = test__llvm,
+-		.subtest = {
+-			.skip_if_fail	= true,
+-			.get_nr		= test__llvm_subtest_get_nr,
+-			.get_desc	= test__llvm_subtest_get_desc,
+-		},
+-	},
+-	{
+-		.desc = "Session topology",
+-		.func = test__session_topology,
+-	},
+-	{
+-		.desc = "BPF filter",
+-		.func = test__bpf,
+-		.subtest = {
+-			.skip_if_fail	= true,
+-			.get_nr		= test__bpf_subtest_get_nr,
+-			.get_desc	= test__bpf_subtest_get_desc,
+-		},
+-	},
+-	{
+-		.desc = "Synthesize thread map",
+-		.func = test__thread_map_synthesize,
+-	},
+-	{
+-		.desc = "Remove thread map",
+-		.func = test__thread_map_remove,
+-	},
+-	{
+-		.desc = "Synthesize cpu map",
+-		.func = test__cpu_map_synthesize,
+-	},
+-	{
+-		.desc = "Synthesize stat config",
+-		.func = test__synthesize_stat_config,
+-	},
+-	{
+-		.desc = "Synthesize stat",
+-		.func = test__synthesize_stat,
+-	},
+-	{
+-		.desc = "Synthesize stat round",
+-		.func = test__synthesize_stat_round,
+-	},
+-	{
+-		.desc = "Synthesize attr update",
+-		.func = test__event_update,
+-	},
+-	{
+-		.desc = "Event times",
+-		.func = test__event_times,
+-	},
+-	{
+-		.desc = "Read backward ring buffer",
+-		.func = test__backward_ring_buffer,
+-	},
+-	{
+-		.desc = "Print cpu map",
+-		.func = test__cpu_map_print,
+-	},
+-	{
+-		.desc = "Merge cpu map",
+-		.func = test__cpu_map_merge,
+-	},
++#define DEFINE_SUITE(description, name)		\
++	{					\
++		.desc = description,		\
++		.func = test__##name,		\
++	}
+ 
+-	{
+-		.desc = "Probe SDT events",
+-		.func = test__sdt_event,
+-	},
+-	{
+-		.desc = "is_printable_array",
+-		.func = test__is_printable_array,
+-	},
+-	{
+-		.desc = "Print bitmap",
+-		.func = test__bitmap_print,
+-	},
+-	{
+-		.desc = "perf hooks",
+-		.func = test__perf_hooks,
+-	},
+-	{
+-		.desc = "builtin clang support",
+-		.func = test__clang,
+-		.subtest = {
+-			.skip_if_fail	= true,
+-			.get_nr		= test__clang_subtest_get_nr,
+-			.get_desc	= test__clang_subtest_get_desc,
+-		}
+-	},
+-	{
+-		.desc = "unit_number__scnprintf",
+-		.func = test__unit_number__scnprint,
+-	},
+-	{
+-		.desc = "mem2node",
+-		.func = test__mem2node,
+-	},
+-	{
+-		.desc = "time utils",
+-		.func = test__time_utils,
+-	},
+-	{
+-		.desc = "Test jit_write_elf",
+-		.func = test__jit_write_elf,
+-	},
+-	{
+-		.desc = "Test libpfm4 support",
+-		.func = test__pfm,
+-		.subtest = {
+-			.skip_if_fail	= true,
+-			.get_nr		= test__pfm_subtest_get_nr,
+-			.get_desc	= test__pfm_subtest_get_desc,
+-		}
+-	},
+-	{
+-		.desc = "Test api io",
+-		.func = test__api_io,
+-	},
+-	{
+-		.desc = "maps__merge_in",
+-		.func = test__maps__merge_in,
+-	},
+-	{
+-		.desc = "Demangle Java",
+-		.func = test__demangle_java,
+-	},
+-	{
+-		.desc = "Demangle OCaml",
+-		.func = test__demangle_ocaml,
+-	},
+-	{
+-		.desc = "Parse and process metrics",
+-		.func = test__parse_metric,
+-	},
+-	{
+-		.desc = "PE file support",
+-		.func = test__pe_file_parsing,
+-	},
+-	{
+-		.desc = "Event expansion for cgroups",
+-		.func = test__expand_cgroup_events,
+-	},
+-	{
+-		.desc = "Convert perf time to TSC",
+-		.func = test__perf_time_to_tsc,
+-		.is_supported = test__tsc_is_supported,
+-	},
+-	{
+-		.desc = "dlfilter C API",
+-		.func = test__dlfilter,
+-	},
+-	{
+-		.func = NULL,
+-	},
++static struct test generic_tests[] = {
++DEFINE_SUITE("vmlinux symtab matches kallsyms", vmlinux_matches_kallsyms),
++DEFINE_SUITE("Detect openat syscall event", openat_syscall_event),
++DEFINE_SUITE("Detect openat syscall event on all cpus", openat_syscall_event_on_all_cpus),
++DEFINE_SUITE("Read samples using the mmap interface", basic_mmap),
++DEFINE_SUITE("Test data source output", mem),
++DEFINE_SUITE("Parse event definition strings", parse_events),
++DEFINE_SUITE("Simple expression parser", expr),
++DEFINE_SUITE("PERF_RECORD_* events & perf_sample fields", PERF_RECORD),
++DEFINE_SUITE("Parse perf pmu format", pmu),
++{
++	.desc = "PMU events",
++	.func = test__pmu_events,
++	.subtest = {
++		.skip_if_fail	= false,
++		.get_nr		= test__pmu_events_subtest_get_nr,
++		.get_desc	= test__pmu_events_subtest_get_desc,
++		.skip_reason	= test__pmu_events_subtest_skip_reason,
++	},
 +
- /* Tests */
--int test__vmlinux_matches_kallsyms(struct test *test, int subtest);
--int test__openat_syscall_event(struct test *test, int subtest);
--int test__openat_syscall_event_on_all_cpus(struct test *test, int subtest);
--int test__basic_mmap(struct test *test, int subtest);
--int test__PERF_RECORD(struct test *test, int subtest);
--int test__perf_evsel__roundtrip_name_test(struct test *test, int subtest);
--int test__perf_evsel__tp_sched_test(struct test *test, int subtest);
--int test__syscall_openat_tp_fields(struct test *test, int subtest);
--int test__pmu(struct test *test, int subtest);
--int test__pmu_events(struct test *test, int subtest);
-+DECLARE_SUITE(vmlinux_matches_kallsyms);
-+DECLARE_SUITE(openat_syscall_event);
-+DECLARE_SUITE(openat_syscall_event_on_all_cpus);
-+DECLARE_SUITE(basic_mmap);
-+DECLARE_SUITE(PERF_RECORD);
-+DECLARE_SUITE(perf_evsel__roundtrip_name_test);
-+DECLARE_SUITE(perf_evsel__tp_sched_test);
-+DECLARE_SUITE(syscall_openat_tp_fields);
-+DECLARE_SUITE(pmu);
-+DECLARE_SUITE(pmu_events);
- const char *test__pmu_events_subtest_get_desc(int subtest);
- const char *test__pmu_events_subtest_skip_reason(int subtest);
- int test__pmu_events_subtest_get_nr(void);
--int test__attr(struct test *test, int subtest);
--int test__dso_data(struct test *test, int subtest);
--int test__dso_data_cache(struct test *test, int subtest);
--int test__dso_data_reopen(struct test *test, int subtest);
--int test__parse_events(struct test *test, int subtest);
--int test__hists_link(struct test *test, int subtest);
--int test__python_use(struct test *test, int subtest);
--int test__bp_signal(struct test *test, int subtest);
--int test__bp_signal_overflow(struct test *test, int subtest);
--int test__bp_accounting(struct test *test, int subtest);
--int test__wp(struct test *test, int subtest);
-+DECLARE_SUITE(attr);
-+DECLARE_SUITE(dso_data);
-+DECLARE_SUITE(dso_data_cache);
-+DECLARE_SUITE(dso_data_reopen);
-+DECLARE_SUITE(parse_events);
-+DECLARE_SUITE(hists_link);
-+DECLARE_SUITE(python_use);
-+DECLARE_SUITE(bp_signal);
-+DECLARE_SUITE(bp_signal_overflow);
-+DECLARE_SUITE(bp_accounting);
-+DECLARE_SUITE(wp);
- const char *test__wp_subtest_get_desc(int subtest);
- const char *test__wp_subtest_skip_reason(int subtest);
- int test__wp_subtest_get_nr(void);
--int test__task_exit(struct test *test, int subtest);
--int test__mem(struct test *test, int subtest);
--int test__sw_clock_freq(struct test *test, int subtest);
--int test__code_reading(struct test *test, int subtest);
--int test__sample_parsing(struct test *test, int subtest);
--int test__keep_tracking(struct test *test, int subtest);
--int test__parse_no_sample_id_all(struct test *test, int subtest);
--int test__dwarf_unwind(struct test *test, int subtest);
--int test__expr(struct test *test, int subtest);
--int test__hists_filter(struct test *test, int subtest);
--int test__mmap_thread_lookup(struct test *test, int subtest);
--int test__thread_maps_share(struct test *test, int subtest);
--int test__hists_output(struct test *test, int subtest);
--int test__hists_cumulate(struct test *test, int subtest);
--int test__switch_tracking(struct test *test, int subtest);
--int test__fdarray__filter(struct test *test, int subtest);
--int test__fdarray__add(struct test *test, int subtest);
--int test__kmod_path__parse(struct test *test, int subtest);
--int test__thread_map(struct test *test, int subtest);
--int test__llvm(struct test *test, int subtest);
-+DECLARE_SUITE(task_exit);
-+DECLARE_SUITE(mem);
-+DECLARE_SUITE(sw_clock_freq);
-+DECLARE_SUITE(code_reading);
-+DECLARE_SUITE(sample_parsing);
-+DECLARE_SUITE(keep_tracking);
-+DECLARE_SUITE(parse_no_sample_id_all);
-+DECLARE_SUITE(dwarf_unwind);
-+DECLARE_SUITE(expr);
-+DECLARE_SUITE(hists_filter);
-+DECLARE_SUITE(mmap_thread_lookup);
-+DECLARE_SUITE(thread_maps_share);
-+DECLARE_SUITE(hists_output);
-+DECLARE_SUITE(hists_cumulate);
-+DECLARE_SUITE(switch_tracking);
-+DECLARE_SUITE(fdarray__filter);
-+DECLARE_SUITE(fdarray__add);
-+DECLARE_SUITE(kmod_path__parse);
-+DECLARE_SUITE(thread_map);
-+DECLARE_SUITE(llvm);
- const char *test__llvm_subtest_get_desc(int subtest);
- int test__llvm_subtest_get_nr(void);
--int test__bpf(struct test *test, int subtest);
-+DECLARE_SUITE(bpf);
- const char *test__bpf_subtest_get_desc(int subtest);
- int test__bpf_subtest_get_nr(void);
--int test__session_topology(struct test *test, int subtest);
--int test__thread_map_synthesize(struct test *test, int subtest);
--int test__thread_map_remove(struct test *test, int subtest);
--int test__cpu_map_synthesize(struct test *test, int subtest);
--int test__synthesize_stat_config(struct test *test, int subtest);
--int test__synthesize_stat(struct test *test, int subtest);
--int test__synthesize_stat_round(struct test *test, int subtest);
--int test__event_update(struct test *test, int subtest);
--int test__event_times(struct test *test, int subtest);
--int test__backward_ring_buffer(struct test *test, int subtest);
--int test__cpu_map_print(struct test *test, int subtest);
--int test__cpu_map_merge(struct test *test, int subtest);
--int test__sdt_event(struct test *test, int subtest);
--int test__is_printable_array(struct test *test, int subtest);
--int test__bitmap_print(struct test *test, int subtest);
--int test__perf_hooks(struct test *test, int subtest);
--int test__clang(struct test *test, int subtest);
-+DECLARE_SUITE(session_topology);
-+DECLARE_SUITE(thread_map_synthesize);
-+DECLARE_SUITE(thread_map_remove);
-+DECLARE_SUITE(cpu_map_synthesize);
-+DECLARE_SUITE(synthesize_stat_config);
-+DECLARE_SUITE(synthesize_stat);
-+DECLARE_SUITE(synthesize_stat_round);
-+DECLARE_SUITE(event_update);
-+DECLARE_SUITE(event_times);
-+DECLARE_SUITE(backward_ring_buffer);
-+DECLARE_SUITE(cpu_map_print);
-+DECLARE_SUITE(cpu_map_merge);
-+DECLARE_SUITE(sdt_event);
-+DECLARE_SUITE(is_printable_array);
-+DECLARE_SUITE(bitmap_print);
-+DECLARE_SUITE(perf_hooks);
-+DECLARE_SUITE(clang);
- const char *test__clang_subtest_get_desc(int subtest);
- int test__clang_subtest_get_nr(void);
--int test__unit_number__scnprint(struct test *test, int subtest);
--int test__mem2node(struct test *t, int subtest);
--int test__maps__merge_in(struct test *t, int subtest);
--int test__time_utils(struct test *t, int subtest);
--int test__jit_write_elf(struct test *test, int subtest);
--int test__api_io(struct test *test, int subtest);
--int test__demangle_java(struct test *test, int subtest);
--int test__demangle_ocaml(struct test *test, int subtest);
--int test__pfm(struct test *test, int subtest);
-+DECLARE_SUITE(unit_number__scnprint);
-+DECLARE_SUITE(mem2node);
-+DECLARE_SUITE(maps__merge_in);
-+DECLARE_SUITE(time_utils);
-+DECLARE_SUITE(jit_write_elf);
-+DECLARE_SUITE(api_io);
-+DECLARE_SUITE(demangle_java);
-+DECLARE_SUITE(demangle_ocaml);
-+DECLARE_SUITE(pfm);
- const char *test__pfm_subtest_get_desc(int subtest);
- int test__pfm_subtest_get_nr(void);
--int test__parse_metric(struct test *test, int subtest);
--int test__pe_file_parsing(struct test *test, int subtest);
--int test__expand_cgroup_events(struct test *test, int subtest);
--int test__perf_time_to_tsc(struct test *test, int subtest);
--int test__dlfilter(struct test *test, int subtest);
-+DECLARE_SUITE(parse_metric);
-+DECLARE_SUITE(pe_file_parsing);
-+DECLARE_SUITE(expand_cgroup_events);
-+DECLARE_SUITE(perf_time_to_tsc);
-+DECLARE_SUITE(dlfilter);
++},
++DEFINE_SUITE("DSO data read", dso_data),
++DEFINE_SUITE("DSO data cache", dso_data_cache),
++DEFINE_SUITE("DSO data reopen", dso_data_reopen),
++DEFINE_SUITE("Roundtrip evsel->name", perf_evsel__roundtrip_name_test),
++DEFINE_SUITE("Parse sched tracepoints fields", perf_evsel__tp_sched_test),
++DEFINE_SUITE("syscalls:sys_enter_openat event fields", syscall_openat_tp_fields),
++DEFINE_SUITE("Setup struct perf_event_attr", attr),
++DEFINE_SUITE("Match and link multiple hists", hists_link),
++DEFINE_SUITE("'import perf' in python", python_use),
++{
++	.desc = "Breakpoint overflow signal handler",
++	.func = test__bp_signal,
++	.is_supported = test__bp_signal_is_supported,
++},
++{
++	.desc = "Breakpoint overflow sampling",
++	.func = test__bp_signal_overflow,
++	.is_supported = test__bp_signal_is_supported,
++},
++{
++	.desc = "Breakpoint accounting",
++	.func = test__bp_accounting,
++	.is_supported = test__bp_account_is_supported,
++},
++{
++	.desc = "Watchpoint",
++	.func = test__wp,
++	.is_supported = test__wp_is_supported,
++	.subtest = {
++		.skip_if_fail	= false,
++		.get_nr		= test__wp_subtest_get_nr,
++		.get_desc	= test__wp_subtest_get_desc,
++		.skip_reason    = test__wp_subtest_skip_reason,
++	},
++},
++DEFINE_SUITE("Number of exit events of a simple workload", task_exit),
++DEFINE_SUITE("Software clock events period values", sw_clock_freq),
++DEFINE_SUITE("Object code reading", code_reading),
++DEFINE_SUITE("Sample parsing", sample_parsing),
++DEFINE_SUITE("Use a dummy software event to keep tracking", keep_tracking),
++DEFINE_SUITE("Parse with no sample_id_all bit set", parse_no_sample_id_all),
++DEFINE_SUITE("Filter hist entries", hists_filter),
++DEFINE_SUITE("Lookup mmap thread", mmap_thread_lookup),
++DEFINE_SUITE("Share thread maps", thread_maps_share),
++DEFINE_SUITE("Sort output of hist entries", hists_output),
++DEFINE_SUITE("Cumulate child hist entries", hists_cumulate),
++DEFINE_SUITE("Track with sched_switch", switch_tracking),
++DEFINE_SUITE("Filter fds with revents mask in a fdarray", fdarray__filter),
++DEFINE_SUITE("Add fd to a fdarray, making it autogrow", fdarray__add),
++DEFINE_SUITE("kmod_path__parse", kmod_path__parse),
++DEFINE_SUITE("Thread map", thread_map),
++{
++	.desc = "LLVM search and compile",
++	.func = test__llvm,
++	.subtest = {
++		.skip_if_fail	= true,
++		.get_nr		= test__llvm_subtest_get_nr,
++		.get_desc	= test__llvm_subtest_get_desc,
++	},
++},
++DEFINE_SUITE("Session topology", session_topology),
++{
++	.desc = "BPF filter",
++	.func = test__bpf,
++	.subtest = {
++		.skip_if_fail	= true,
++		.get_nr		= test__bpf_subtest_get_nr,
++		.get_desc	= test__bpf_subtest_get_desc,
++	},
++},
++DEFINE_SUITE("Synthesize thread map", thread_map_synthesize),
++DEFINE_SUITE("Remove thread map", thread_map_remove),
++DEFINE_SUITE("Synthesize cpu map", cpu_map_synthesize),
++DEFINE_SUITE("Synthesize stat config", synthesize_stat_config),
++DEFINE_SUITE("Synthesize stat", synthesize_stat),
++DEFINE_SUITE("Synthesize stat round", synthesize_stat_round),
++DEFINE_SUITE("Synthesize attr update", event_update),
++DEFINE_SUITE("Event times", event_times),
++DEFINE_SUITE("Read backward ring buffer", backward_ring_buffer),
++DEFINE_SUITE("Print cpu map", cpu_map_print),
++DEFINE_SUITE("Merge cpu map", cpu_map_merge),
++DEFINE_SUITE("Probe SDT events", sdt_event),
++DEFINE_SUITE("is_printable_array", is_printable_array),
++DEFINE_SUITE("Print bitmap", bitmap_print),
++DEFINE_SUITE("perf hooks", perf_hooks),
++{
++	.desc = "builtin clang support",
++	.func = test__clang,
++	.subtest = {
++		.skip_if_fail	= true,
++		.get_nr		= test__clang_subtest_get_nr,
++		.get_desc	= test__clang_subtest_get_desc,
++	}
++},
++DEFINE_SUITE("unit_number__scnprintf", unit_number__scnprint),
++DEFINE_SUITE("mem2node", mem2node),
++DEFINE_SUITE("time utils", time_utils),
++DEFINE_SUITE("Test jit_write_elf", jit_write_elf),
++{
++	.desc = "Test libpfm4 support",
++	.func = test__pfm,
++	.subtest = {
++		.skip_if_fail	= true,
++		.get_nr		= test__pfm_subtest_get_nr,
++		.get_desc	= test__pfm_subtest_get_desc,
++	}
++},
++DEFINE_SUITE("Test api io", api_io),
++DEFINE_SUITE("maps__merge_in", maps__merge_in),
++DEFINE_SUITE("Demangle Java", demangle_java),
++DEFINE_SUITE("Demangle OCaml", demangle_ocaml),
++DEFINE_SUITE("Parse and process metrics", parse_metric),
++DEFINE_SUITE("PE file support", pe_file_parsing),
++DEFINE_SUITE("Event expansion for cgroups", expand_cgroup_events),
++{
++	.desc = "Convert perf time to TSC",
++	.func = test__perf_time_to_tsc,
++	.is_supported = test__tsc_is_supported,
++},
++DEFINE_SUITE("dlfilter C API", dlfilter),
++{
++	.func = NULL,
++},
+ };
  
- bool test__bp_signal_is_supported(void);
- bool test__bp_account_is_supported(void);
-@@ -142,7 +145,7 @@ int test__arch_unwind_sample(struct perf_sample *sample,
- #endif
- 
- #if defined(__arm__)
--int test__vectors_page(struct test *test, int subtest);
-+DECLARE_SUITE(vectors_page);
- #endif
- 
- #endif /* TESTS_H */
+ static struct test *tests[] = {
 -- 
 2.33.0.464.g1972c5931b-goog
 
