@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD98BC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Sep 2021 07:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6F0C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Sep 2021 07:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5C2A61019
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Sep 2021 07:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 707C461019
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Sep 2021 07:46:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239747AbhIWHsP (ORCPT
+        id S239757AbhIWHsS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Sep 2021 03:48:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38790 "EHLO
+        Thu, 23 Sep 2021 03:48:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239796AbhIWHsO (ORCPT
+        with ESMTP id S239777AbhIWHsQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Sep 2021 03:48:14 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA81FC061757
-        for <linux-perf-users@vger.kernel.org>; Thu, 23 Sep 2021 00:46:42 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id c21-20020ac85195000000b002a540bbf1caso16533005qtn.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 23 Sep 2021 00:46:42 -0700 (PDT)
+        Thu, 23 Sep 2021 03:48:16 -0400
+Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03B22C061574
+        for <linux-perf-users@vger.kernel.org>; Thu, 23 Sep 2021 00:46:45 -0700 (PDT)
+Received: by mail-qk1-x74a.google.com with SMTP id v14-20020a05620a0f0e00b0043355ed67d1so18091723qkl.7
+        for <linux-perf-users@vger.kernel.org>; Thu, 23 Sep 2021 00:46:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=8/vLHEatF56tRYYCixJ8mAYibrjQPYFCtQw+LEHly14=;
-        b=gUDOjpMu9NR33CwU3XttdZ64LFpA58kWGPBJQdBER5o3HnMNsP3eOqRijM67QvKUzB
-         VAcOSaghYr2/ryY+u2UO3urQELtDAr4FRSAmTcSv4LIWiUfX6DXxrzkk+O8TkyY1y8Om
-         AdyLMloA9JigBpp+3qXUfg/Gp8ZP3gzEdZdBFTDAnquI+7CGBvNqsZJWI+SJk1ymkmF8
-         wDzqg1wzdkDq/PElxw7IQTWSN3ocKApyH9RecNiSA6xa2Yb8yZrWvlw/4BXzRAxsTnCy
-         nRXUU2r4eeGUdC3+kGe9nt4nEEKVpd5EJLVATb0VTOmeO3z4B5SeR1q0usWFWYLpVvWj
-         TXTQ==
+        bh=Hs5Rj+NJx7+HtIpxHcg+oHBvbk954rcb4LXyidx6Rwg=;
+        b=s+JliFIJVOrnwMlQ9siG3F9Wi2QguFdhEczvYRLZv5jCJSUyt7HxXQwnujlvFbvvmt
+         FTiXdoOIfIbe/KHSbHBOJV4MZoD+bfsVPxy5aPS1kr2S7CaPfNHUKpdepzCAf7ODEIib
+         O9Aoqe1+3HDDV2bynzFEMZRynKlNYAkLoZHIctdFSTFRbMkY4UxIfHlIgJ3/s/YnNtmf
+         SFPRCVJ/J8bKlGe9ZD0PJaDfcNYNsnEf+zAHKAuVQw6gQ1QyxkbyK1gFBc7WicnTzDeh
+         +w6LQeCaA3lra2WUif7DWIg2abTK9nM5KlDrnXadASvSPt3uGAkCt66gb6IFRcwMkEc7
+         qoug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=8/vLHEatF56tRYYCixJ8mAYibrjQPYFCtQw+LEHly14=;
-        b=EL79BoBZ4ofgJ+KIow20yLocg8AlkZ5LUeQc8EqchzFRGKMINsg6lZS3o+Htj6f1ip
-         YFJxhdAfB7E26mNIL17YrOQGCLBEmM1jUrrkqiM8SfJoDaLLoEDx+xgc64KdplcCPUBc
-         K+wZ1cLbqxTN/YIbDkTnx6oskGFdEVVraiPREo3i70H0gyh8cEhRfua+GsjjNa1mnWto
-         7mrctpF+oBJLzOqN9GBzxpmpQeQFWaQRrvMzZHQAV3CbHkKJoArJLGmPyBMQFS94KYOj
-         givbge3Z1OdPzFllMEBtWJjaU+1xfbATmhToJ/QwKrveFR6Q+g/5lmXIF1HpF5RFFyrK
-         Vmmw==
-X-Gm-Message-State: AOAM531sZvhRR+x4Hzsjr2riZ6acJlXLfW6Rg3t9UXaYZHmSnXncj7cp
-        PEff52LzPLfPMz4wRFbtQKkiVdT0oVXO
-X-Google-Smtp-Source: ABdhPJzy5RwTHeXcf3z/dRJA8JYJBydsb1C6L52nMxSz6ECXeaaIGyHqE4grWc0cnRvz574Dg01pLj5fWPfb
+        bh=Hs5Rj+NJx7+HtIpxHcg+oHBvbk954rcb4LXyidx6Rwg=;
+        b=vC7IkD1A7lfC6Rij3yJd0uRhC9Bn6CgSY+2fw3kxjcWE/Hcm4mZQVZbQb/joYCcGlK
+         YqxBsimZEdzSMzMpm8Fri5eBHsbo5zhvNrt9Os4IO8u8kdfHKJ9qdJiWxC4UYG4dP3hg
+         p59fym6gKU71Xe/wgaOUf0xJPNSyRBXObkyi9hx6nGhSD507MaeZ6272qBfrsVkzwaWX
+         O1x8tOz6WK42QXToF+YeMnTWuXar4hY8k0Js+wnD56sEvOAXmzzQzMncsR5KhccVh2Hl
+         9sn5Hilxk+VnJ2x15vw23ECNo8eaxsC3wy95OK+ITCYxv6MuY20JRLKAv77jxOCaMniF
+         WjsA==
+X-Gm-Message-State: AOAM533XyHEHL09o+1JOgF5Yf04ywqjPO+u/7XdEcGm+r9VCSvVIhN8q
+        qAKFWB2iVahNbSeGdeMhs6TU6iNNSi1C
+X-Google-Smtp-Source: ABdhPJx3s4c0RgpCmKkzxC7B+/vnn5DD2zrreDc1rFHinSChs2v9vVq/r+H09Lfd+zDVsj0RlwobFWxAhmWq
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:d3ff:e8f7:11f4:c738])
- (user=irogers job=sendgmr) by 2002:a05:6214:1331:: with SMTP id
- c17mr3155570qvv.56.1632383202012; Thu, 23 Sep 2021 00:46:42 -0700 (PDT)
-Date:   Thu, 23 Sep 2021 00:46:06 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6214:4c9:: with SMTP id
+ ck9mr3145524qvb.52.1632383204146; Thu, 23 Sep 2021 00:46:44 -0700 (PDT)
+Date:   Thu, 23 Sep 2021 00:46:07 -0700
 In-Reply-To: <20210923074616.674826-1-irogers@google.com>
-Message-Id: <20210923074616.674826-4-irogers@google.com>
+Message-Id: <20210923074616.674826-5-irogers@google.com>
 Mime-Version: 1.0
 References: <20210923074616.674826-1-irogers@google.com>
 X-Mailer: git-send-email 2.33.0.464.g1972c5931b-goog
-Subject: [PATCH v9 03/13] perf expr: Remove unused headers and inline d_ratio
+Subject: [PATCH v9 04/13] perf expr: Separate token declataion from type
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -83,57 +83,42 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-No functional change. Inlining d_ratio makes it easier to special case
-for constants in a later patch.
+No functional change, so the type of expr remains <num>. A later patch
+will change the computation to be an aggregate type and making this
+change makes that later change smaller.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/expr.y | 22 +++++++---------------
- 1 file changed, 7 insertions(+), 15 deletions(-)
+ tools/perf/util/expr.y | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-index 41c9cd4efadd..e6005450feae 100644
+index e6005450feae..68b122e59b3f 100644
 --- a/tools/perf/util/expr.y
 +++ b/tools/perf/util/expr.y
-@@ -2,23 +2,10 @@
+@@ -20,11 +20,7 @@
+ 	char	*str;
+ }
+ 
+-%token EXPR_PARSE EXPR_OTHER EXPR_ERROR
+-%token <num> NUMBER
+-%token <str> ID
+-%destructor { free ($$); } <str>
+-%token MIN MAX IF ELSE SMT_ON D_RATIO
++%token ID NUMBER MIN MAX IF ELSE SMT_ON D_RATIO EXPR_ERROR EXPR_PARSE EXPR_OTHER
+ %left MIN MAX IF
+ %left '|'
+ %left '^'
+@@ -33,6 +29,9 @@
+ %left '-' '+'
+ %left '*' '/' '%'
+ %left NEG NOT
++%type <num> NUMBER
++%type <str> ID
++%destructor { free ($$); } <str>
+ %type <num> expr if_expr
+ 
  %{
- #define YYDEBUG 1
- #include <math.h>
--#include <stdio.h>
--#include "util.h"
- #include "util/debug.h"
--#include <stdlib.h> // strtod()
-+#include "smt.h"
- #define IN_EXPR_Y 1
- #include "expr.h"
--#include "smt.h"
--#include <string.h>
--
--static double d_ratio(double val0, double val1)
--{
--	if (val1 == 0) {
--		return 0;
--	}
--	return  val0 / val1;
--}
--
- %}
- 
- %define api.pure full
-@@ -120,7 +107,12 @@ expr:	  NUMBER
- 	| MIN '(' expr ',' expr ')' { $$ = $3 < $5 ? $3 : $5; }
- 	| MAX '(' expr ',' expr ')' { $$ = $3 > $5 ? $3 : $5; }
- 	| SMT_ON		 { $$ = smt_on() > 0; }
--	| D_RATIO '(' expr ',' expr ')' { $$ = d_ratio($3,$5); }
-+	| D_RATIO '(' expr ',' expr ')' { if ($5 == 0) {
-+						$$ = 0;
-+					  } else {
-+						$$ = $3 / $5;
-+					  }
-+					}
- 	;
- 
- %%
 -- 
 2.33.0.464.g1972c5931b-goog
 
