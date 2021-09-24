@@ -2,121 +2,131 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E61EAC433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Sep 2021 19:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1ED8C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Sep 2021 19:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA91961250
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Sep 2021 19:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85074610FD
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Sep 2021 19:09:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346323AbhIXTIX (ORCPT
+        id S1346281AbhIXTKq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 24 Sep 2021 15:08:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52192 "EHLO mail.kernel.org"
+        Fri, 24 Sep 2021 15:10:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1346272AbhIXTIX (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 24 Sep 2021 15:08:23 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id BA4F1610FD;
-        Fri, 24 Sep 2021 19:06:49 +0000 (UTC)
+        id S229930AbhIXTKp (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 24 Sep 2021 15:10:45 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2BA0961250;
+        Fri, 24 Sep 2021 19:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632510409;
-        bh=LvsTbVneJYaTCR+Ilv4DwkAJIZ7Ldm6fuKKu6q0I2CY=;
+        s=k20201202; t=1632510552;
+        bh=NwQH74aMnB1PseISd4nMEqKkBEsFOJREMogXH7iIssg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=psw+nBuX2BHGqJa5zZkFa3SBHDKBijqzOk17skzM0TDRupe+2YuX++BTjCid1jfeI
-         PQyt5LZ7jbgFy/T5Z9Gni65CZDktKXufPUfsuTTDpqBXfIj031wUB2jlrZbTQnDOXr
-         lo3m9sTF1n2QTk1cX2DAjYYAFoSs5Ld5eq7l4TCLNB+N+nJsiqyz7TWq1aPgJjF/Ym
-         1IqtU13s/N/DFIvbT04uC33oJt6P3BkzfbHYgtNBnFMHuHAARIVVEIWkHoBe1nSYdc
-         FLVzNFGTcitCXiXa3Og/GZ3UPTt/q+QfDrktJn3pAnUFhQgdRJvYDpetHUGM4kbZEU
-         GjdIZVHwX4EPQ==
+        b=Hlu/Pa10JGKN29fzEH0MrHdzCSzryn+RX2/diyZD2sEj6kkL0zCANjSzexgBpNlLq
+         Crwn1rq2ZvIHSv6gyVFII+5mOpLUgvKI/yxCJIXguL4Xf4P/GMp3Xi0AJgHzOnOq3F
+         m8UfPZD9kOREdnCPlANolYb/9QNVrGnYEZ29pYAiQRWhTNIaycBoLXpiGmFW8BY3F9
+         XxMzn1PleDeMVLEJzzxNuXwlMRtpuB94YHYQ/F7Bz3sMY87s28EIKX27GdrocWY68V
+         TWS65FVBjtuzvYDVbVTg1YWdd4N+KNmKmP4otSA8bhCvfZ3TK3WkVAZHJZHAMMtR92
+         Qg0bdSZtptX6g==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id AB27C410A1; Fri, 24 Sep 2021 16:06:47 -0300 (-03)
-Date:   Fri, 24 Sep 2021 16:06:47 -0300
+        id 0AB5A410A1; Fri, 24 Sep 2021 16:09:10 -0300 (-03)
+Date:   Fri, 24 Sep 2021 16:09:09 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
-Cc:     Like Xu <like.xu.linux@gmail.com>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf config: Refine error message to eliminate confusion
-Message-ID: <YU4hx4jRhYLYnPiM@kernel.org>
-References: <20210924115817.58689-1-likexu@tencent.com>
- <CAP-5=fW+Wn+_OcQWR8-UHQ42CsG6koZVw-UWBptQY8oYLsW=Vg@mail.gmail.com>
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        eranian@google.com
+Subject: Re: [PATCH v3 1/2] perf test: Workload test of metric and
+ metricgroups
+Message-ID: <YU4iVcVc6uYAWft4@kernel.org>
+References: <20210917184240.2181186-1-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fW+Wn+_OcQWR8-UHQ42CsG6koZVw-UWBptQY8oYLsW=Vg@mail.gmail.com>
+In-Reply-To: <20210917184240.2181186-1-irogers@google.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Sep 24, 2021 at 08:08:07AM -0700, Ian Rogers escreveu:
-> On Fri, Sep 24, 2021 at 4:58 AM Like Xu <like.xu.linux@gmail.com> wrote:
-> >
-> > From: Like Xu <likexu@tencent.com>
-> >
-> > If there is no configuration file at first, the user can
-> > write any pair of "key.subkey=value" to the newly created
-> > configuration file, while value validation against a valid
-> > configurable key is *deferred* until the next execution or
-> > the implied execution of "perf config ... ".
-> >
-> > For example:
-> >
-> >  $ rm ~/.perfconfig
-> >  $ perf config call-graph.dump-size=65529
-> >  $ cat ~/.perfconfig
-> >  # this file is auto-generated.
-> >  [call-graph]
-> >         dump-size = 65529
-> >  $ perf config call-graph.dump-size=2048
-> >  callchain: Incorrect stack dump size (max 65528): 65529
-> >  Error: wrong config key-value pair call-graph.dump-size=65529
-> >
-> > The user might expect that the second value 2048 is valid
-> > and can be updated to the configuration file, but the error
-> > message is very confusing because the first value 65529 is
-> > not reported as an error during the last configuration.
-> >
-> > It is recommended not to change the current behavior of
-> > delayed validation (as more effort is needed), but to refine
-> > the original error message to *clearly indicate* that the
-> > cause of the error is the configuration file.
-> >
-> > Signed-off-by: Like Xu <likexu@tencent.com>
+Em Fri, Sep 17, 2021 at 11:42:39AM -0700, Ian Rogers escreveu:
+> Test every metric and metricgroup with 'true' as a workload. For
+> metrics, check that we see the metric printed or get unsupported. If the
+> 'true' workload executes too quickly retry with 'perf bench internals
+> synthesize'.
 > 
-> Acked-by: Ian Rogers <irogers@google.com>
+> v3. Fix test condition (thanks to Paul A. Clarke <pc@us.ibm.com>). Add a
+>     fallback case of a larger workload so that we don't ignore "<not
+>     counted>".
+> v2. Switched the workload to something faster.
 
-Thanks, applied.
+Hi John, does your Reviewed-by stands for v3 too?
 
 - Arnaldo
-
  
-> Thanks,
-> Ian
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  .../perf/tests/shell/stat_all_metricgroups.sh | 12 ++++++++++
+>  tools/perf/tests/shell/stat_all_metrics.sh    | 22 +++++++++++++++++++
+>  2 files changed, 34 insertions(+)
+>  create mode 100755 tools/perf/tests/shell/stat_all_metricgroups.sh
+>  create mode 100755 tools/perf/tests/shell/stat_all_metrics.sh
 > 
-> > ---
-> >  tools/perf/util/config.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
-> > index 4fb5e90d7a57..60ce5908c664 100644
-> > --- a/tools/perf/util/config.c
-> > +++ b/tools/perf/util/config.c
-> > @@ -801,7 +801,7 @@ int perf_config_set(struct perf_config_set *set,
-> >                                   section->name, item->name);
-> >                         ret = fn(key, value, data);
-> >                         if (ret < 0) {
-> > -                               pr_err("Error: wrong config key-value pair %s=%s\n",
-> > +                               pr_err("Error in the given config file: wrong config key-value pair %s=%s\n",
-> >                                        key, value);
-> >                                 /*
-> >                                  * Can't be just a 'break', as perf_config_set__for_each_entry()
-> > --
-> > 2.32.0
-> >
+> diff --git a/tools/perf/tests/shell/stat_all_metricgroups.sh b/tools/perf/tests/shell/stat_all_metricgroups.sh
+> new file mode 100755
+> index 000000000000..de24d374ce24
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/stat_all_metricgroups.sh
+> @@ -0,0 +1,12 @@
+> +#!/bin/sh
+> +# perf all metricgroups test
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +set -e
+> +
+> +for m in $(perf list --raw-dump metricgroups); do
+> +  echo "Testing $m"
+> +  perf stat -M "$m" true
+> +done
+> +
+> +exit 0
+> diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/tests/shell/stat_all_metrics.sh
+> new file mode 100755
+> index 000000000000..7f4ba3cad632
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/stat_all_metrics.sh
+> @@ -0,0 +1,22 @@
+> +#!/bin/sh
+> +# perf all metrics test
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +set -e
+> +
+> +for m in $(perf list --raw-dump metrics); do
+> +  echo "Testing $m"
+> +  result=$(perf stat -M "$m" true 2>&1)
+> +  if [[ ! "$result" =~ "$m" ]] && [[ ! "$result" =~ "<not supported>" ]]; then
+> +    # We failed to see the metric and the events are support. Possibly the
+> +    # workload was too small so retry with something longer.
+> +    result=$(perf stat -M "$m" perf bench internals synthesize 2>&1)
+> +    if [[ ! "$result" =~ "$m" ]]; then
+> +      echo "Metric '$m' not printed in:"
+> +      echo "$result"
+> +      exit 1
+> +    fi
+> +  fi
+> +done
+> +
+> +exit 0
+> -- 
+> 2.33.0.464.g1972c5931b-goog
 
 -- 
 
