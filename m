@@ -2,92 +2,103 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6CDC433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Sep 2021 14:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE5AC433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Sep 2021 15:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E444161038
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Sep 2021 14:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4281760EB4
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Sep 2021 15:08:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346951AbhIXPBJ (ORCPT
+        id S1346973AbhIXPJ5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 24 Sep 2021 11:01:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45208 "EHLO
+        Fri, 24 Sep 2021 11:09:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346950AbhIXPBI (ORCPT
+        with ESMTP id S1346921AbhIXPJ4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 24 Sep 2021 11:01:08 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30C25C061613
-        for <linux-perf-users@vger.kernel.org>; Fri, 24 Sep 2021 07:59:35 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id d6so28250000wrc.11
-        for <linux-perf-users@vger.kernel.org>; Fri, 24 Sep 2021 07:59:35 -0700 (PDT)
+        Fri, 24 Sep 2021 11:09:56 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7D8FC061571
+        for <linux-perf-users@vger.kernel.org>; Fri, 24 Sep 2021 08:08:22 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id i24so12520052wrc.9
+        for <linux-perf-users@vger.kernel.org>; Fri, 24 Sep 2021 08:08:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=LuJBJddAbNmI++eqx+rjg/yRDsYkwL6jnpDKYkeFYQk=;
-        b=CRtNoN3F9yQf8P31py3o8RdW69qM6AYe1hmWWxu2ziqEFV3bSmn9GQE8WyMpEkNaV0
-         arJqtADkaV8opursy9m6GaTULx46Jk/8wOVEqL/XwEgwBUAS+JR+C2V1rcX6JANfJ7ui
-         7taWjuxVHAt/jTaXt5t7RqJby8goAgbfnZZ8sJvD7koeE5GpGv+o+xB7aGB/BJ3EeORR
-         JOsqzXs/+TD1rKLfM1/fRTk5byVkBz/kO1Qpq8/aYuCePNnFC7X0XehCivodveHVklzl
-         jmW2+FkFnuOEO5DYT+hejD6plBhWvKvVmqUPawg7oMj5bTJ2JLxGdMikCZmrrREh37x8
-         xf5w==
+         :cc;
+        bh=ddIdnJJQzt6KCE2sdls+EVKfN4Fpq3cgwiHva/iq2vo=;
+        b=R07NzMnHXoImrOjylse2riaepm/fUDAG6H+3urNsYdy7DtyR6DQLKlKLEryebJ9hTw
+         BnGIM1bREVyCNihA2LIgeARwZg0qYezxMAdT5cz6pvSPIP6mDnqhAOTTccrTbvEhx2IP
+         ThaFyWXNsXx95VbGwDuF0xHXDAk8KXTCKBJoNs8tMp7BJp4g009Pc6sGt1JTtKM+Q9JQ
+         2dMNua+oLsL4AwBizsawN7FfHmhVBlLAyAD9lV1rEbMXnqbOONm3q8EGzo9j8KZHLHxh
+         pvzEKziLd/NvU5V2phm4PyE+FozUQH38irfN7asU0uaxV8i5RGA/FxeWS7YQnBuMAwQM
+         YXiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=LuJBJddAbNmI++eqx+rjg/yRDsYkwL6jnpDKYkeFYQk=;
-        b=Ho3o74doFqcX9xQ4uCe+xpFiTrlQ7BHYOzK5pHmL1rGo98IlO/x0Hq6Q04aPfb2p8h
-         BiTAWGKH+lwU1nj4r6wMtHW5DNcDg/eByrG9PQQIbsIdu8pTayKB0O3F+8Qjw3LD+wdV
-         +ZkX8O+lGxPRAQ481Vob8Q+++qAVtttP8KpbZT/9luGWXGQezmBBHZBNz/yTkXoonTgK
-         6kNgotrT9q42aWz18KVQpNnsWH7FidzQC2T5DFTxRRqUkS+HAwFGIKdGqWjViEIMIcDd
-         25FTNMwNDUBk7fzum0akd12TjO3C7RGj/HbK7WwtlKIP0BLTYvje1rddYyo99dXh7zB0
-         Mv9A==
-X-Gm-Message-State: AOAM531kxVuu8Fi6fNfKCwckwUP+cZdYDdGFxSPG6lmVQJOeQaF34n6z
-        pLPWT1yxGMH0n/6Rr5CkDISzdz3Jj00gYeOKBIHApQ==
-X-Google-Smtp-Source: ABdhPJwuGY4dWUl219fyh5OMhkdCHYPnpzIDQ3h6By5bCR0ni86V8KhIr2tRhX1KntE6hLZKM+CMKRsdmuE+L39Zoc0=
-X-Received: by 2002:a5d:4b11:: with SMTP id v17mr1370065wrq.313.1632495573228;
- Fri, 24 Sep 2021 07:59:33 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=ddIdnJJQzt6KCE2sdls+EVKfN4Fpq3cgwiHva/iq2vo=;
+        b=24wgV6ElJ9TxD4lvVuYmGUxXADZl3gGGbIiB5z5A0HBN2c6u4CyXPd4TWothIlHXmP
+         SZ6z5ppahxW0ervzElCwQXiCcf4SQAqCfNZwQHgoUu0C9jAPqp67I+O6Iul0AatIWPl/
+         MdbSfs5Z02PJd3xRcASgf6I+qIdzeGwBkZf6P6g67YthYlU4v5WEZkTKriQUF7CRvJbY
+         1Xil+42c0q68MdxyVVgtiaK0kyOPRSrgV+0NHWqbmyBSUYXKgXZ9J/KHeboIcyb+vlQ4
+         bIDUwpWqM5ioKippEm5umCuwIy2V2+Q4Q/mB0ENQt5M0g/WJkmhPjkpuCq1IwHCXgngA
+         ed3g==
+X-Gm-Message-State: AOAM533oY9WCIHnIRcxFI0K792lJOcA4ReP8L3YLRbI8mVf6B+eOOeWF
+        6JPI6vOVf8PakJy4Hm9/Bzlq8zUupM5vaa1dpxRFRQCNv8o=
+X-Google-Smtp-Source: ABdhPJyr4VODmsi8x1Q4P6qhekNJlvK9Ik/fVMP470V1zoNi6TDT90zRMm+XDKBECfyZ8uByjbOF1JkmHjTvUKWhKtQ=
+X-Received: by 2002:adf:fe08:: with SMTP id n8mr12114792wrr.246.1632496101043;
+ Fri, 24 Sep 2021 08:08:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210924081942.38368-1-likexu@tencent.com>
-In-Reply-To: <20210924081942.38368-1-likexu@tencent.com>
+References: <20210924115817.58689-1-likexu@tencent.com>
+In-Reply-To: <20210924115817.58689-1-likexu@tencent.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 24 Sep 2021 07:59:19 -0700
-Message-ID: <CAP-5=fUuDkntXse1XDksOSij2MO7-rtMg3TfR=N+eHMu0kMTnA@mail.gmail.com>
-Subject: Re: [PATCH] perf doc: Fix typos all over the place
+Date:   Fri, 24 Sep 2021 08:08:07 -0700
+Message-ID: <CAP-5=fW+Wn+_OcQWR8-UHQ42CsG6koZVw-UWBptQY8oYLsW=Vg@mail.gmail.com>
+Subject: Re: [PATCH] perf config: Refine error message to eliminate confusion
 To:     Like Xu <like.xu.linux@gmail.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-perf-users@vger.kernel.org,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Stephane Eranian <eranian@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Sep 24, 2021 at 1:20 AM Like Xu <like.xu.linux@gmail.com> wrote:
+On Fri, Sep 24, 2021 at 4:58 AM Like Xu <like.xu.linux@gmail.com> wrote:
 >
 > From: Like Xu <likexu@tencent.com>
 >
-> Considering that perf and its subcommands have so many parameters,
-> the documentation is always the first stop for perf beginners. Fixing
-> some spelling errors will relax the eyes of some readers a little bit.
+> If there is no configuration file at first, the user can
+> write any pair of "key.subkey=value" to the newly created
+> configuration file, while value validation against a valid
+> configurable key is *deferred* until the next execution or
+> the implied execution of "perf config ... ".
 >
->  s/specicfication/specification/
->  s/caheline/cacheline/
->  s/tranasaction/transaction/
->  s/complan/complain/
->  s/sched_wakep/sched_wakeup/
->  s/possble/possible/
->  s/methology/methodology/
+> For example:
+>
+>  $ rm ~/.perfconfig
+>  $ perf config call-graph.dump-size=65529
+>  $ cat ~/.perfconfig
+>  # this file is auto-generated.
+>  [call-graph]
+>         dump-size = 65529
+>  $ perf config call-graph.dump-size=2048
+>  callchain: Incorrect stack dump size (max 65528): 65529
+>  Error: wrong config key-value pair call-graph.dump-size=65529
+>
+> The user might expect that the second value 2048 is valid
+> and can be updated to the configuration file, but the error
+> message is very confusing because the first value 65529 is
+> not reported as an error during the last configuration.
+>
+> It is recommended not to change the current behavior of
+> delayed validation (as more effort is needed), but to refine
+> the original error message to *clearly indicate* that the
+> cause of the error is the configuration file.
 >
 > Signed-off-by: Like Xu <likexu@tencent.com>
 
@@ -97,145 +108,22 @@ Thanks,
 Ian
 
 > ---
->  tools/perf/Documentation/jitdump-specification.txt | 2 +-
->  tools/perf/Documentation/perf-c2c.txt              | 2 +-
->  tools/perf/Documentation/perf-intel-pt.txt         | 2 +-
->  tools/perf/Documentation/perf-lock.txt             | 2 +-
->  tools/perf/Documentation/perf-script-perl.txt      | 2 +-
->  tools/perf/Documentation/perf-script-python.txt    | 2 +-
->  tools/perf/Documentation/perf-stat.txt             | 2 +-
->  tools/perf/Documentation/topdown.txt               | 2 +-
->  8 files changed, 8 insertions(+), 8 deletions(-)
+>  tools/perf/util/config.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/tools/perf/Documentation/jitdump-specification.txt b/tools/p=
-erf/Documentation/jitdump-specification.txt
-> index 52152d156ad9..79936355d819 100644
-> --- a/tools/perf/Documentation/jitdump-specification.txt
-> +++ b/tools/perf/Documentation/jitdump-specification.txt
-> @@ -164,7 +164,7 @@ const char unwinding_data[n]: an array of unwinding d=
-ata, consisting of the EH F
->  The EH Frame header follows the Linux Standard Base (LSB) specification =
-as described in the document at https://refspecs.linuxfoundation.org/LSB_1.=
-3.0/gLSB/gLSB/ehframehdr.html
->
->
-> -The EH Frame follows the LSB specicfication as described in the document=
- at https://refspecs.linuxbase.org/LSB_3.0.0/LSB-PDA/LSB-PDA/ehframechpt.ht=
-ml
-> +The EH Frame follows the LSB specification as described in the document =
-at https://refspecs.linuxbase.org/LSB_3.0.0/LSB-PDA/LSB-PDA/ehframechpt.htm=
-l
->
->
->  NOTE: The mapped_size is generally either the same as unwind_data_size (=
-if the unwinding data was mapped in memory by the running process) or zero =
-(if the unwinding data is not mapped by the process). If the unwinding data=
- was not mapped, then only the EH Frame Header will be read, which can be u=
-sed to specify FP based unwinding for a function which does not have unwind=
-ing information.
-> diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documenta=
-tion/perf-c2c.txt
-> index de6beedb7283..3b6a2c84ea02 100644
-> --- a/tools/perf/Documentation/perf-c2c.txt
-> +++ b/tools/perf/Documentation/perf-c2c.txt
-> @@ -261,7 +261,7 @@ COALESCE
->  User can specify how to sort offsets for cacheline.
->
->  Following fields are available and governs the final
-> -output fields set for caheline offsets output:
-> +output fields set for cacheline offsets output:
->
->    tid   - coalesced by process TIDs
->    pid   - coalesced by process PIDs
-> diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Docu=
-mentation/perf-intel-pt.txt
-> index 184ba62420f0..db465fa7ee91 100644
-> --- a/tools/perf/Documentation/perf-intel-pt.txt
-> +++ b/tools/perf/Documentation/perf-intel-pt.txt
-> @@ -883,7 +883,7 @@ and "r" can be combined to get calls and returns.
->
->  "Transactions" events correspond to the start or end of transactions. Th=
-e
->  'flags' field can be used in perf script to determine whether the event =
-is a
-> -tranasaction start, commit or abort.
-> +transaction start, commit or abort.
->
->  Note that "instructions", "branches" and "transactions" events depend on=
- code
->  flow packets which can be disabled by using the config term "branch=3D0"=
-.  Refer
-> diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Document=
-ation/perf-lock.txt
-> index 74d774592196..1b4d452923d7 100644
-> --- a/tools/perf/Documentation/perf-lock.txt
-> +++ b/tools/perf/Documentation/perf-lock.txt
-> @@ -44,7 +44,7 @@ COMMON OPTIONS
->
->  -f::
->  --force::
-> -       Don't complan, do it.
-> +       Don't complain, do it.
->
->  REPORT OPTIONS
->  --------------
-> diff --git a/tools/perf/Documentation/perf-script-perl.txt b/tools/perf/D=
-ocumentation/perf-script-perl.txt
-> index 5a1f68122f50..fa4f39d305a7 100644
-> --- a/tools/perf/Documentation/perf-script-perl.txt
-> +++ b/tools/perf/Documentation/perf-script-perl.txt
-> @@ -54,7 +54,7 @@ all sched_wakeup events in the system:
->  Traces meant to be processed using a script should be recorded with
->  the above option: -a to enable system-wide collection.
->
-> -The format file for the sched_wakep event defines the following fields
-> +The format file for the sched_wakeup event defines the following fields
->  (see /sys/kernel/debug/tracing/events/sched/sched_wakeup/format):
->
->  ----
-> diff --git a/tools/perf/Documentation/perf-script-python.txt b/tools/perf=
-/Documentation/perf-script-python.txt
-> index 0250dc61cf98..cf4b7f4b625a 100644
-> --- a/tools/perf/Documentation/perf-script-python.txt
-> +++ b/tools/perf/Documentation/perf-script-python.txt
-> @@ -448,7 +448,7 @@ all sched_wakeup events in the system:
->  Traces meant to be processed using a script should be recorded with
->  the above option: -a to enable system-wide collection.
->
-> -The format file for the sched_wakep event defines the following fields
-> +The format file for the sched_wakeup event defines the following fields
->  (see /sys/kernel/debug/tracing/events/sched/sched_wakeup/format):
->
->  ----
-> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Document=
-ation/perf-stat.txt
-> index 4c9310be6acc..7e6fb7cbc0f4 100644
-> --- a/tools/perf/Documentation/perf-stat.txt
-> +++ b/tools/perf/Documentation/perf-stat.txt
-> @@ -385,7 +385,7 @@ Aggregate counts per physical processor for system-wi=
-de mode measurements.
->  Print metrics or metricgroups specified in a comma separated list.
->  For a group all metrics from the group are added.
->  The events from the metrics are automatically measured.
-> -See perf list output for the possble metrics and metricgroups.
-> +See perf list output for the possible metrics and metricgroups.
->
->  -A::
->  --no-aggr::
-> diff --git a/tools/perf/Documentation/topdown.txt b/tools/perf/Documentat=
-ion/topdown.txt
-> index c6302df4cf29..a15b93fdcf50 100644
-> --- a/tools/perf/Documentation/topdown.txt
-> +++ b/tools/perf/Documentation/topdown.txt
-> @@ -2,7 +2,7 @@ Using TopDown metrics in user space
->  -----------------------------------
->
->  Intel CPUs (since Sandy Bridge and Silvermont) support a TopDown
-> -methology to break down CPU pipeline execution into 4 bottlenecks:
-> +methodology to break down CPU pipeline execution into 4 bottlenecks:
->  frontend bound, backend bound, bad speculation, retiring.
->
->  For more details on Topdown see [1][5]
+> diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
+> index 4fb5e90d7a57..60ce5908c664 100644
+> --- a/tools/perf/util/config.c
+> +++ b/tools/perf/util/config.c
+> @@ -801,7 +801,7 @@ int perf_config_set(struct perf_config_set *set,
+>                                   section->name, item->name);
+>                         ret = fn(key, value, data);
+>                         if (ret < 0) {
+> -                               pr_err("Error: wrong config key-value pair %s=%s\n",
+> +                               pr_err("Error in the given config file: wrong config key-value pair %s=%s\n",
+>                                        key, value);
+>                                 /*
+>                                  * Can't be just a 'break', as perf_config_set__for_each_entry()
 > --
 > 2.32.0
 >
