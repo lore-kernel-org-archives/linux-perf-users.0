@@ -2,117 +2,104 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10670C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Sep 2021 18:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5823FC433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Sep 2021 18:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC6226124B
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Sep 2021 18:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 219706124B
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Sep 2021 18:55:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344394AbhIXSzM (ORCPT
+        id S1344342AbhIXS47 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 24 Sep 2021 14:55:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48500 "EHLO mail.kernel.org"
+        Fri, 24 Sep 2021 14:56:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230025AbhIXSzM (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 24 Sep 2021 14:55:12 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9C8DC61241;
-        Fri, 24 Sep 2021 18:53:38 +0000 (UTC)
+        id S1344271AbhIXS46 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 24 Sep 2021 14:56:58 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 25DFA61050;
+        Fri, 24 Sep 2021 18:55:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632509618;
-        bh=HruFkRlruI3SA2YWxa1uOXIg2FOBJWsIAbQdkNVsclw=;
+        s=k20201202; t=1632509725;
+        bh=TXsn3Uv+TGGzH1xr8185AlXEnFQs8EcjzTwxfzor9E0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cfO2E95sz37VoXgEJb0VicOBlEzpeL9kPwbLmKgK73sibjQ1K2z1ES3fZppSbOw3Y
-         O3mJCtbTC8IV+aI0/8MqjBodZNP65TVzC6RCO9d62CRzNjKidmvCgfaw7LZQno30Pq
-         3rgnyyVTtVpuYwhyyY006Y4HGB7hampEQvBBWIVEnpGckAGMnHbObSjrIaq3MokcHi
-         uIEZUZFAYXvFME7wwpiXvnIJUxJIfNbERor1YPeC8JHnLiqoXZ2eO9QRKL3pVjI7RN
-         J9aeXej5jEKksXFfSrDN7Ar3UFIH+5yechs2gI84iSmJLqBL3KlzEZgsO+hW0AnYTd
-         Vhj0hN1NkZZGQ==
+        b=F2WJ/kN1Gz4F61xI6E2RuSDUpvi0bDm4YS7ZfaRYZiqz05SFD90se/o0c9Y3rUyPL
+         xb4ok/rCqjIlJBP5lqJBxUwc/uMv9vcCSyif2BCGyTk4dlW8zHpo4vB8NvyTMqy42N
+         w+lipffCMIPfPZiQ9/6ZwOyQ4lRpf4W1vr1NYbBx340WSAS9rhYROzUyhN2s3Mc5QA
+         6crOPZX3Fd5RLDLpc07rR3ckd9E/jM6kir4JzlE4/rBYv7Vcfbtnu6iMdRlYMc/5hu
+         uSSXtsBzoEcsGZScE6J7VGM6kzIPBH1U5CLmE7NPdygDZzl29PcT8DlU56i1qb5Eag
+         siRl9QRkheeiQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 92F46410A1; Fri, 24 Sep 2021 15:53:35 -0300 (-03)
-Date:   Fri, 24 Sep 2021 15:53:35 -0300
+        id BB327410A1; Fri, 24 Sep 2021 15:55:22 -0300 (-03)
+Date:   Fri, 24 Sep 2021 15:55:22 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-perf-users@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf tests: Fix flaky test 'Object code reading'
-Message-ID: <YU4er4mzHfa4+7Jg@kernel.org>
-References: <20210906152238.3415467-1-james.clark@arm.com>
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH] perf list: Display pmu prefix for partially supported
+ hybrid cache events
+Message-ID: <YU4fGqAHXZQavw09@kernel.org>
+References: <20210909061844.10221-1-yao.jin@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210906152238.3415467-1-james.clark@arm.com>
+In-Reply-To: <20210909061844.10221-1-yao.jin@linux.intel.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Sep 06, 2021 at 04:22:38PM +0100, James Clark escreveu:
-> This test occasionally fails on aarch64 when a sample is taken in
-> free@plt and it fails with "Bytes read differ from those read by
-> objdump". This is because that symbol is near a section boundary in the
-> elf file. Despite the -z option to always output zeros, objdump uses
-> bfd_map_over_sections() to iterate through the elf file so it doesn't
-> see outside of the sections where these zeros are and can't print them.
+Em Thu, Sep 09, 2021 at 02:18:44PM +0800, Jin Yao escreveu:
+> Part of hardware cache events are only available on one CPU PMU.
+> For example, 'L1-dcache-load-misses' is only available on cpu_core.
+> perf list should clearly report this info.
 > 
-> For example this boundary proceeds free@plt in libc with a gap of 48
-> bytes between .plt and .text:
+> root@otcpl-adl-s-2:~# ./perf list
 > 
->   objdump -d -z --start-address=0x23cc8 --stop-address=0x23d08 libc-2.30.so
+> Before:
+>   L1-dcache-load-misses                              [Hardware cache event]
+>   L1-dcache-loads                                    [Hardware cache event]
+>   L1-dcache-stores                                   [Hardware cache event]
+>   L1-icache-load-misses                              [Hardware cache event]
+>   L1-icache-loads                                    [Hardware cache event]
+>   LLC-load-misses                                    [Hardware cache event]
+>   LLC-loads                                          [Hardware cache event]
+>   LLC-store-misses                                   [Hardware cache event]
+>   LLC-stores                                         [Hardware cache event]
+>   branch-load-misses                                 [Hardware cache event]
+>   branch-loads                                       [Hardware cache event]
+>   dTLB-load-misses                                   [Hardware cache event]
+>   dTLB-loads                                         [Hardware cache event]
+>   dTLB-store-misses                                  [Hardware cache event]
+>   dTLB-stores                                        [Hardware cache event]
+>   iTLB-load-misses                                   [Hardware cache event]
+>   node-load-misses                                   [Hardware cache event]
+>   node-loads                                         [Hardware cache event]
+>   node-store-misses                                  [Hardware cache event]
+>   node-stores                                        [Hardware cache event]
 > 
->   libc-2.30.so:     file format elf64-littleaarch64
-> 
->   Disassembly of section .plt:
-> 
->   0000000000023cc8 <*ABS*+0x7fd00@plt+0x8>:
->      23cc8:	91018210 	add	x16, x16, #0x60
->      23ccc:	d61f0220 	br	x17
-> 
->   Disassembly of section .text:
-> 
->   0000000000023d00 <abort@@GLIBC_2.17-0x98>:
->      23d00:	a9bf7bfd 	stp	x29, x30, [sp, #-16]!
->      23d04:	910003fd 	mov	x29, sp
-> 
-> Taking a sample in free@plt is very rare because it is so small, but the
-> test can be forced to fail almost every time on any platform by linking
-> the test with a shared library that has a single empty function and
-> calling it in a loop.
-> 
-> The fix is to zero the buffers so that when there is a jump in the
-> addresses output by objdump, zeros are already filled in between.
+> After:
+>   L1-dcache-loads                                    [Hardware cache event]
+>   L1-dcache-stores                                   [Hardware cache event]
+>   L1-icache-load-misses                              [Hardware cache event]
+>   LLC-load-misses                                    [Hardware cache event]
+>   LLC-loads                                          [Hardware cache event]
+>   LLC-store-misses                                   [Hardware cache event]
+>   LLC-stores                                         [Hardware cache event]
+>   branch-load-misses                                 [Hardware cache event]
+>   branch-loads                                       [Hardware cache event]
+>   cpu_atom/L1-icache-loads/                          [Hardware cache event]
+>   cpu_core/L1-dcache-load-misses/                    [Hardware cache event]
+>   cpu_core/node-load-misses/                         [Hardware cache event]
+>   cpu_core/node-loads/                               [Hardware cache event]
+>   dTLB-load-misses                                   [Hardware cache event]
+>   dTLB-loads                                         [Hardware cache event]
+>   dTLB-store-misses                                  [Hardware cache event]
+>   dTLB-stores                                        [Hardware cache event]
+>   iTLB-load-misses                                   [Hardware cache event]
 
 Thanks, applied.
 
 - Arnaldo
 
- 
-> Signed-off-by: James Clark <james.clark@arm.com>
-> ---
->  tools/perf/tests/code-reading.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
-> index 9866cddebf23..9b4a765e4b73 100644
-> --- a/tools/perf/tests/code-reading.c
-> +++ b/tools/perf/tests/code-reading.c
-> @@ -229,8 +229,8 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
->  			    struct thread *thread, struct state *state)
->  {
->  	struct addr_location al;
-> -	unsigned char buf1[BUFSZ];
-> -	unsigned char buf2[BUFSZ];
-> +	unsigned char buf1[BUFSZ] = {0};
-> +	unsigned char buf2[BUFSZ] = {0};
->  	size_t ret_len;
->  	u64 objdump_addr;
->  	const char *objdump_name;
-> -- 
-> 2.28.0
-
--- 
-
-- Arnaldo
