@@ -2,139 +2,215 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9817C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Sep 2021 04:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2692C433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Sep 2021 08:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F34861107
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Sep 2021 04:35:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1699610CF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Sep 2021 08:20:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242223AbhIXEg4 (ORCPT
+        id S244617AbhIXIVc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 24 Sep 2021 00:36:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43354 "EHLO
+        Fri, 24 Sep 2021 04:21:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237144AbhIXEgz (ORCPT
+        with ESMTP id S244700AbhIXIV0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 24 Sep 2021 00:36:55 -0400
-Received: from mail-io1-xd2a.google.com (mail-io1-xd2a.google.com [IPv6:2607:f8b0:4864:20::d2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD713C061756;
-        Thu, 23 Sep 2021 21:35:22 -0700 (PDT)
-Received: by mail-io1-xd2a.google.com with SMTP id h129so11064216iof.1;
-        Thu, 23 Sep 2021 21:35:22 -0700 (PDT)
+        Fri, 24 Sep 2021 04:21:26 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3BAFC061757;
+        Fri, 24 Sep 2021 01:19:53 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id pf3-20020a17090b1d8300b0019e081aa87bso7049510pjb.0;
+        Fri, 24 Sep 2021 01:19:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=xcH9wYSR91fpt+5IhR8QHq5X+wHLKfuvWgni3VmGpiU=;
-        b=IwQPPQ10h/E5e/e7b49Tir8b5B9hgs/Wi9m4wHV/tEVRB3SijM3j5dbrNfI70GEMmU
-         cRwjbjssjw6ODT3JN0RVWcjCh8cD0Y+CxXu3DS242Uo98NLw5U6yKDmaKI7w92iroixP
-         FNFPWVZtRff9VniJ6HRtLlhtjP1A+XGYVlKmmehI+WDSy6N3Vhs8UeQdDjtQZonRdhi8
-         NccqO+MnV+D0g4F3ZApPzqWM7HOzosTHlI2dmcTR6jmCvjmofQQJgJHaNMaP24vhKiM1
-         tuejb39zHQw4ELgt9h8JAtObelmIa1RCFZ/C+W07FW94J8bAun/3aAZVQ5CkoS+Bfp+h
-         hSGQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=en0BNZepb388y42VwZK97cG6vwTM2RLIEDJf2i2NL/E=;
+        b=ji/y2Fb+TtBS47HMED9yR5byTMhTtdwRGpjAyipNAqBeIZm7SVF2WfeHQQC1DmXC05
+         P81bEEtxFIA2zOY8bv7jU2IYccV3s1AIu9Vi2cOHsLbrRM6SXOni8j5OiqFBwsegSF/W
+         3iAGvD0GAcDlq6UJEeFMZlavqibym96llwmc4i1l8wAkvEGYav48815+mA8LESygPyni
+         tJbPqJXWjPJyi68dgfoRabRM6x/66B4h6fc3Hk79iNoCO9uZdyTgZBBauZ6czCWA8NPA
+         yT8yFbNQZU+z3MvyjPsgLjD8eYSUr46/OjDNX6/tDa9QM7geHvRqD4K1D4XrvTUebVZN
+         LyJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=xcH9wYSR91fpt+5IhR8QHq5X+wHLKfuvWgni3VmGpiU=;
-        b=KjlNPy0yesaK44qSP1YnU2cmfJfcsHWJd86BKd69e+M2whkZN1x8r6cMNSCeVnOLlW
-         VM4Fmn8CmljUb9fIUO0Heeoy9qNBRLPArARCk7nXkrXm6GNcxm07VJYOLUGdhE6TuwAT
-         x8G0e29eTZcbRQoIS17B9PKeKEC8bJhlCTSMd1m9SXkFiUoT7QPINwAcvxZc3f/W5mfc
-         C+svIHS3/o50Z8Xwmt/aQt7yvK8EjRnuLpT1TIaOyibTKlffyAKozpYTh/scPqMpRron
-         JY6onrWhXuZvYSxa6p7SNGd01gLc4FXGKd7FPC0MF+2WqhZ4VJa2qtmYoE4/6GoAZuwt
-         7tig==
-X-Gm-Message-State: AOAM5325IbH5CCw/+9yfTRGaaRyF0UNjpiEpD+oJUW8TATyUgBfzK76i
-        ALdFQ1lsCgAHMewhVdSVWLGrWdsPM6paj4jVKB0=
-X-Google-Smtp-Source: ABdhPJw0PKpy4KqW5zF42c4Or1B+70c7jdEyFtPXZxvh0z0enU/YbxlqfhfU5mkG+k5Ewtfp3z2GHTvrCk4/ot0G2y4=
-X-Received: by 2002:a02:2124:: with SMTP id e36mr7336788jaa.35.1632458122367;
- Thu, 23 Sep 2021 21:35:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210917061040.2270822-1-alistair.francis@opensource.wdc.com>
- <20210917061040.2270822-2-alistair.francis@opensource.wdc.com>
- <72990864-5ec6-1f73-efd9-61b667a172dd@collabora.com> <CAK8P3a3x_EyCiPDpMK54y=Rtm-Wb08ym2TNiuAZgXhYrThcWTw@mail.gmail.com>
-In-Reply-To: <CAK8P3a3x_EyCiPDpMK54y=Rtm-Wb08ym2TNiuAZgXhYrThcWTw@mail.gmail.com>
-From:   Alistair Francis <alistair23@gmail.com>
-Date:   Fri, 24 Sep 2021 14:34:56 +1000
-Message-ID: <CAKmqyKM3vy_Ob1a0=cEi_Efi6_VVAa8YfMb6+rOt3fQK_TTcmw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] perf bench: Add support for 32-bit systems with
- 64-bit time_t
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@collabora.com>,
-        Alistair Francis <alistair.francis@opensource.wdc.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Darren Hart <dvhart@infradead.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=en0BNZepb388y42VwZK97cG6vwTM2RLIEDJf2i2NL/E=;
+        b=a8+qvCJF5o/J9SWD34B1qs+5mwK3hHLBYHPDGnap0XirFwj8AJ5qY22Vyjw97x69Lm
+         LipEubPWqKv8DIyYBrMFA462B3xlMYqak+N5H4RNvDVtISfhv0rtlrqJuuR8nFXD0AY8
+         wq+/ubVl6S/2+ng1kFwm83Nk+1RWA8YZyQiUWEpTUzydkcwzUPQLlT/D84lUtsMfzYY/
+         oOZ10AyIOO9s/gQgJNlhagEy3R8MpUkH7GbYAqizTy6DJeIpHRHipiJY7NPLUCWuJiT1
+         TmR1BtbSCuzn+cLLIDstpJz4+7A7s9ik0/3wdH+2oR+5jdw1WHV07F8nkQdNSJTTzTBD
+         1WMA==
+X-Gm-Message-State: AOAM532Ul1eV5VjQdDCEzLoHM4NqO56eP1uqWpwo+SvufSGtfMpstp0f
+        g0q1EUrTmIgRSaWb/k8oanQ=
+X-Google-Smtp-Source: ABdhPJyV+7uiPqiOPRmmxl9oaQZ5fYkO7cqh1WaIOm/f/TDRyI4Jy/6UjjuBVBnpkcqm5WoO4xLq2w==
+X-Received: by 2002:a17:903:230b:b0:13b:a0ec:1136 with SMTP id d11-20020a170903230b00b0013ba0ec1136mr7902396plh.63.1632471592893;
+        Fri, 24 Sep 2021 01:19:52 -0700 (PDT)
+Received: from localhost.localdomain ([103.7.29.32])
+        by smtp.gmail.com with ESMTPSA id n19sm8083216pfa.60.2021.09.24.01.19.49
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 Sep 2021 01:19:52 -0700 (PDT)
+From:   Like Xu <like.xu.linux@gmail.com>
+X-Google-Original-From: Like Xu <likexu@tencent.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-perf-users@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <atish.patra@wdc.com>,
-        Alistair Francis <alistair.francis@wdc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] perf doc: Fix typos all over the place
+Date:   Fri, 24 Sep 2021 16:19:42 +0800
+Message-Id: <20210924081942.38368-1-likexu@tencent.com>
+X-Mailer: git-send-email 2.32.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Sep 21, 2021 at 6:08 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Tue, Sep 21, 2021 at 12:47 AM Andr=C3=A9 Almeida
-> <andrealmeid@collabora.com> wrote:
-> >
-> > #if defined(__i386__) || __TIMESIZE =3D=3D 32
-> > # define NR_gettime64 __NR_clock_gettime64
-> > #else
-> > # define NR_gettime64 __NR_clock_gettime
-> > #endif
-> >
-> > struct timespec64 {
-> >         long long tv_sec;       /* seconds */
-> >         long long tv_nsec;      /* nanoseconds */
-> > };
-> >
-> > int gettime64(clock_t clockid, struct timespec64 *tv)
-> > {
-> >         return syscall(NR_gettime64, clockid, tv);
-> > }
-> >
-> > Then we can just use &timeout at __NR_futex_time64 for 32bit arch and a=
-t
-> > __NR_futex for 64bit arch.
->
-> This is still broken when you disable CONFIG_COMPAT_32BIT_TIME,
-> which disables all system calls that take time32 arguments.
->
-> > This might be a simpler solution to the problem that you are facing but
-> > I'm not entirely sure. Also, futex's selftests do use the timeout
-> > argument and I think that they also won't compile in 32-bit RISC-V, so
-> > maybe we can start from there so we can actually test the timeout
-> > argument and check if it's working.
->
-> I would love to see the wrapper that Alistair wrote as part of some kerne=
-l
-> uapi header provided to user space. futex is used by tons of applications=
-,
-> and we never had a library abstraction for it, so everyone has to do thes=
-e
-> by hand, and they all get them slightly wrong in different ways.
->
-> We normally don't do this in kernel headers, but I think the benefits
-> would be far greater compared to today's situation.
+From: Like Xu <likexu@tencent.com>
 
-I'm happy to prepare a patch, if others are on board with it being accepted=
-.
+Considering that perf and its subcommands have so many parameters,
+the documentation is always the first stop for perf beginners. Fixing
+some spelling errors will relax the eyes of some readers a little bit.
 
-Alistair
+ s/specicfication/specification/
+ s/caheline/cacheline/
+ s/tranasaction/transaction/
+ s/complan/complain/
+ s/sched_wakep/sched_wakeup/
+ s/possble/possible/
+ s/methology/methodology/
 
->
->       Arnd
+Signed-off-by: Like Xu <likexu@tencent.com>
+---
+ tools/perf/Documentation/jitdump-specification.txt | 2 +-
+ tools/perf/Documentation/perf-c2c.txt              | 2 +-
+ tools/perf/Documentation/perf-intel-pt.txt         | 2 +-
+ tools/perf/Documentation/perf-lock.txt             | 2 +-
+ tools/perf/Documentation/perf-script-perl.txt      | 2 +-
+ tools/perf/Documentation/perf-script-python.txt    | 2 +-
+ tools/perf/Documentation/perf-stat.txt             | 2 +-
+ tools/perf/Documentation/topdown.txt               | 2 +-
+ 8 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/tools/perf/Documentation/jitdump-specification.txt b/tools/perf/Documentation/jitdump-specification.txt
+index 52152d156ad9..79936355d819 100644
+--- a/tools/perf/Documentation/jitdump-specification.txt
++++ b/tools/perf/Documentation/jitdump-specification.txt
+@@ -164,7 +164,7 @@ const char unwinding_data[n]: an array of unwinding data, consisting of the EH F
+ The EH Frame header follows the Linux Standard Base (LSB) specification as described in the document at https://refspecs.linuxfoundation.org/LSB_1.3.0/gLSB/gLSB/ehframehdr.html
+ 
+ 
+-The EH Frame follows the LSB specicfication as described in the document at https://refspecs.linuxbase.org/LSB_3.0.0/LSB-PDA/LSB-PDA/ehframechpt.html
++The EH Frame follows the LSB specification as described in the document at https://refspecs.linuxbase.org/LSB_3.0.0/LSB-PDA/LSB-PDA/ehframechpt.html
+ 
+ 
+ NOTE: The mapped_size is generally either the same as unwind_data_size (if the unwinding data was mapped in memory by the running process) or zero (if the unwinding data is not mapped by the process). If the unwinding data was not mapped, then only the EH Frame Header will be read, which can be used to specify FP based unwinding for a function which does not have unwinding information.
+diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documentation/perf-c2c.txt
+index de6beedb7283..3b6a2c84ea02 100644
+--- a/tools/perf/Documentation/perf-c2c.txt
++++ b/tools/perf/Documentation/perf-c2c.txt
+@@ -261,7 +261,7 @@ COALESCE
+ User can specify how to sort offsets for cacheline.
+ 
+ Following fields are available and governs the final
+-output fields set for caheline offsets output:
++output fields set for cacheline offsets output:
+ 
+   tid   - coalesced by process TIDs
+   pid   - coalesced by process PIDs
+diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Documentation/perf-intel-pt.txt
+index 184ba62420f0..db465fa7ee91 100644
+--- a/tools/perf/Documentation/perf-intel-pt.txt
++++ b/tools/perf/Documentation/perf-intel-pt.txt
+@@ -883,7 +883,7 @@ and "r" can be combined to get calls and returns.
+ 
+ "Transactions" events correspond to the start or end of transactions. The
+ 'flags' field can be used in perf script to determine whether the event is a
+-tranasaction start, commit or abort.
++transaction start, commit or abort.
+ 
+ Note that "instructions", "branches" and "transactions" events depend on code
+ flow packets which can be disabled by using the config term "branch=0".  Refer
+diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Documentation/perf-lock.txt
+index 74d774592196..1b4d452923d7 100644
+--- a/tools/perf/Documentation/perf-lock.txt
++++ b/tools/perf/Documentation/perf-lock.txt
+@@ -44,7 +44,7 @@ COMMON OPTIONS
+ 
+ -f::
+ --force::
+-	Don't complan, do it.
++	Don't complain, do it.
+ 
+ REPORT OPTIONS
+ --------------
+diff --git a/tools/perf/Documentation/perf-script-perl.txt b/tools/perf/Documentation/perf-script-perl.txt
+index 5a1f68122f50..fa4f39d305a7 100644
+--- a/tools/perf/Documentation/perf-script-perl.txt
++++ b/tools/perf/Documentation/perf-script-perl.txt
+@@ -54,7 +54,7 @@ all sched_wakeup events in the system:
+ Traces meant to be processed using a script should be recorded with
+ the above option: -a to enable system-wide collection.
+ 
+-The format file for the sched_wakep event defines the following fields
++The format file for the sched_wakeup event defines the following fields
+ (see /sys/kernel/debug/tracing/events/sched/sched_wakeup/format):
+ 
+ ----
+diff --git a/tools/perf/Documentation/perf-script-python.txt b/tools/perf/Documentation/perf-script-python.txt
+index 0250dc61cf98..cf4b7f4b625a 100644
+--- a/tools/perf/Documentation/perf-script-python.txt
++++ b/tools/perf/Documentation/perf-script-python.txt
+@@ -448,7 +448,7 @@ all sched_wakeup events in the system:
+ Traces meant to be processed using a script should be recorded with
+ the above option: -a to enable system-wide collection.
+ 
+-The format file for the sched_wakep event defines the following fields
++The format file for the sched_wakeup event defines the following fields
+ (see /sys/kernel/debug/tracing/events/sched/sched_wakeup/format):
+ 
+ ----
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index 4c9310be6acc..7e6fb7cbc0f4 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -385,7 +385,7 @@ Aggregate counts per physical processor for system-wide mode measurements.
+ Print metrics or metricgroups specified in a comma separated list.
+ For a group all metrics from the group are added.
+ The events from the metrics are automatically measured.
+-See perf list output for the possble metrics and metricgroups.
++See perf list output for the possible metrics and metricgroups.
+ 
+ -A::
+ --no-aggr::
+diff --git a/tools/perf/Documentation/topdown.txt b/tools/perf/Documentation/topdown.txt
+index c6302df4cf29..a15b93fdcf50 100644
+--- a/tools/perf/Documentation/topdown.txt
++++ b/tools/perf/Documentation/topdown.txt
+@@ -2,7 +2,7 @@ Using TopDown metrics in user space
+ -----------------------------------
+ 
+ Intel CPUs (since Sandy Bridge and Silvermont) support a TopDown
+-methology to break down CPU pipeline execution into 4 bottlenecks:
++methodology to break down CPU pipeline execution into 4 bottlenecks:
+ frontend bound, backend bound, bad speculation, retiring.
+ 
+ For more details on Topdown see [1][5]
+-- 
+2.32.0
+
