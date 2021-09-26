@@ -2,56 +2,56 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04CEAC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun, 26 Sep 2021 02:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0871BC433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun, 26 Sep 2021 02:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C539361090
-	for <linux-perf-users@archiver.kernel.org>; Sun, 26 Sep 2021 02:17:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D77AE610C9
+	for <linux-perf-users@archiver.kernel.org>; Sun, 26 Sep 2021 02:30:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230222AbhIZCSd (ORCPT
+        id S230343AbhIZCcI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 25 Sep 2021 22:18:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58874 "EHLO
+        Sat, 25 Sep 2021 22:32:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230205AbhIZCSd (ORCPT
+        with ESMTP id S230232AbhIZCcI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 25 Sep 2021 22:18:33 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1FD8C061570;
-        Sat, 25 Sep 2021 19:16:57 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id k17so12375639pff.8;
-        Sat, 25 Sep 2021 19:16:57 -0700 (PDT)
+        Sat, 25 Sep 2021 22:32:08 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0D3BC061570;
+        Sat, 25 Sep 2021 19:30:32 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id w8so14131853pgf.5;
+        Sat, 25 Sep 2021 19:30:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=GDTDNI4hUP1MqVt0nccZ7JttotmBsczDXF+BDCFJhk8=;
-        b=obidVrG9+JqOCl/vfnoHCNS8400ftOh8dYnnHHDyJ25txVnP4T5xTFUmKsx/0N8MZ5
-         vGqBu6eo1q98LGVTt5OOTlUiBbQ4v3vkiFEUQ+mhKz0QyPfxdbXWYEE/8uG9hdh4asBk
-         eSrCdCkL+0sj3XwLT/LglguGipjW4htjw6FfNgTFo9ZCn4RBxltQ/ABKWRrxwnjXOF9X
-         U47z+pEd6klbBaiIyWSxGLsYQFbRFBLYPfoy1jiY+XrYU8GvvG6MNgla23FVXakIWTkO
-         P5X1p47IGwvnTTVk2RZrvUw0b3GHqtoC/Xdj+FclQ7RJCkVZuBJ4G/OPaKr5FjMmVCro
-         /8QA==
+        bh=+UNinGt7TcWnbGmmdAZoGQxTYznnTlcEWz5rOMirJBE=;
+        b=a2FeDfrB+LPwOlmvdzu7W8SBrTu8IwGREWDzi6kwpUnTYz5eEws9V8U17ELv7viGFj
+         V2QyaPuEQIyaqrPMV4cPIDqnvCumX2yAW+kHCzE5t6sCjlhfPhonFEY7+01wJGyo6V9k
+         3YsJRHecrjE+z189SN6E6o9m6OCNIzcZYaBCge4glAI8e9F4eCz8IGkhki6mlR2/oZcl
+         T4zWTrRPMz190Mlax9jJZp34Tb7TSA58gYNRNv2KeUVlA4vEYb0kqtl1ELYW6puGs+CI
+         I7uQMDNjIXWtX8VUqbKReMykililuvqFXEVPC3V0rNBf0G/SXMbAAM6eGmaM7at2Z6Ig
+         +3/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=GDTDNI4hUP1MqVt0nccZ7JttotmBsczDXF+BDCFJhk8=;
-        b=BF77S9/moFuYFOU5FwzLpFmj7d6ogI4MW8n9oirMhN2x5uES5YzBuunFaeGIserLWc
-         kKDJEEkItM+l+cRAJ6oB8do448NNWNKnaGE+SEcMXjq0xAiR4/pFibdoW22MAP/hcMRc
-         1cPPZrN5miTwtJGcxoN53ubr2fjO9gHgX0iv16tSZ0s9kBcF+vkbv+soscbf1xvT5eoE
-         ruKSwqIGPrZbrLvcrMpHS9jCG0qxgsgXw3Ge3GMZ2Ie/Z+q5rEf9u1ar/z+lHkodTWkv
-         CVFvgGxkNHTv6BcCZLDA656FyOtHd4KTBDk2iE1PCunbyZVdX8fSlr0yoC6Ws7gsFb8H
-         hXvA==
-X-Gm-Message-State: AOAM532Fv8fBIC0dtoMTav/vxJaZxXwjoaua8xq3ljq3lNHgGhGdjUpU
-        1YMwYW3ZycFOXB64lac0qFE=
-X-Google-Smtp-Source: ABdhPJwC+kphnXVUMRQ5QDZemn3M8PaLKgPxvRx2pws2HDiYSCJs5uIf6hczNjQlndELZnY5KAEfKw==
-X-Received: by 2002:a05:6a00:234f:b0:3eb:3ffd:6da2 with SMTP id j15-20020a056a00234f00b003eb3ffd6da2mr16641892pfj.15.1632622617299;
-        Sat, 25 Sep 2021 19:16:57 -0700 (PDT)
+        bh=+UNinGt7TcWnbGmmdAZoGQxTYznnTlcEWz5rOMirJBE=;
+        b=irG8SlTarCqUYkjLCN2VNffQjbOqPjlK7vJLl06zhFAfyZ2PUgEaWBf0JLPdwzFA0V
+         iMvEOZccVXDAMbVKXRn4YqYINukwv++ivNLl4ATCp4Fv6L0XgA5mrZIvCgtwni+Q/cGH
+         rAxO77wknf66zeCUBGxT0K595hBLKOj6sKmES/qvwP6JPWdAKKnRtrQukPqq8NtdRe3W
+         zS2FULqBV+/7w8Li/EtkFQlMoobMQAkuAz2Vz21x0GzSMNJ01Wlettvl9xKdcmZyPOE/
+         znRxoRu5AERBt2DOuHTn/z9RFrQEDq+U5j2BiB9g6X300H/bzjyqt8R/br51koggE/Ag
+         jvUg==
+X-Gm-Message-State: AOAM532bXt5VXzdngFHu+C7gVx5QrYAxXbwvBBoTxVNzYq2MPzigJFti
+        6WIYGjaAJepkSLy6r8u7GXA=
+X-Google-Smtp-Source: ABdhPJwBBemqdoBXP7qtNPG6w1x4pysc+d0E7oOPzclgARA1/MTXJxAMUGdzRmf8lvE9CFUNuwb/uA==
+X-Received: by 2002:a65:6a4b:: with SMTP id o11mr10138762pgu.278.1632623432000;
+        Sat, 25 Sep 2021 19:30:32 -0700 (PDT)
 Received: from titan.. ([2601:644:8300:136:a6bb:6dff:feb6:3500])
-        by smtp.gmail.com with ESMTPSA id w8sm13166829pfc.93.2021.09.25.19.16.55
+        by smtp.gmail.com with ESMTPSA id x8sm5542553pjf.43.2021.09.25.19.30.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Sep 2021 19:16:56 -0700 (PDT)
+        Sat, 25 Sep 2021 19:30:31 -0700 (PDT)
 From:   Jinshan Xiong <jinshan.xiong@gmail.com>
 To:     jolsa@redhat.com
 Cc:     Jinshan Xiong <jinshan.xiong@gmail.com>,
@@ -62,9 +62,9 @@ Cc:     Jinshan Xiong <jinshan.xiong@gmail.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] tools/lib/perf: add a flag to specify cgroup fd
-Date:   Sat, 25 Sep 2021 19:15:25 -0700
-Message-Id: <20210926021611.2312331-1-jinshan.xiong@gmail.com>
+Subject: [PATCH] tools/lib/perf: make the static libperf complete
+Date:   Sat, 25 Sep 2021 19:30:24 -0700
+Message-Id: <20210926023028.2338342-1-jinshan.xiong@gmail.com>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -72,80 +72,43 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This patch adds an API perf_thread_map__set_flags() so that we can use
-it to pass down a flag to specific cgroup fd in sys_perf_event_open().
+This patch makes libperf.a complete. Initially it misses the symbols
+fdarray_* that makes it unusable:
+   $ nm tools/lib/perf/libperf.a | grep fdarray_
+                    U fdarray__add
+   0000000000002b3e t fdarray__available_entries
+                    U fdarray__exit
+                    U fdarray__filter
+                    U fdarray__grow
+                    U fdarray__init
+                    U fdarray__poll
 
-This API can be used in the following way:
-    int cgroup_fd = open("/sys/fs/cgroup/perf_event", O_RDONLY);
-    struct thread_map *threadmap = perf_thread_map__new_dummy();
-    perf_thread_map__set_pid(threadmap, 0, cgroup_fd);
-    perf_thread_map__set_flags(threadmap, 0, PERF_FLAG_PID_CGROUP);
+After this patch is applied:
+    $ nm tools/lib/perf/libperf.a | grep fdarray_
+    00000000000063f7 T fdarray__add
+    ......
+    00000000000065d4 T fdarray__poll
 
-Therefore, we can only collect perf events in a specific docker
-container.
-
-Signed-off-by: Jinshan Xiong <jinshan.xiong@gmail.com>
+Signed-off-by: "Jinshan Xiong" <jinshan.xiong@gmail.com>
 ---
- tools/lib/perf/evsel.c                      | 3 ++-
- tools/lib/perf/include/internal/threadmap.h | 1 +
- tools/lib/perf/include/perf/threadmap.h     | 1 +
- tools/lib/perf/threadmap.c                  | 5 +++++
- 4 files changed, 9 insertions(+), 1 deletion(-)
+ tools/lib/perf/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-index 8441e3e1aaac..67f86513a816 100644
---- a/tools/lib/perf/evsel.c
-+++ b/tools/lib/perf/evsel.c
-@@ -153,7 +153,8 @@ int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
+diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
+index 08fe6e3c4089..840366584fc1 100644
+--- a/tools/lib/perf/Makefile
++++ b/tools/lib/perf/Makefile
+@@ -121,8 +121,8 @@ $(LIBAPI)-clean:
+ $(LIBPERF_IN): FORCE
+ 	$(Q)$(MAKE) $(build)=libperf
  
- 			fd = sys_perf_event_open(&evsel->attr,
- 						 threads->map[thread].pid,
--						 cpus->map[cpu], group_fd, 0);
-+						 cpus->map[cpu], group_fd,
-+						 threads->map[thread].flags);
+-$(LIBPERF_A): $(LIBPERF_IN)
+-	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $(LIBPERF_IN)
++$(LIBPERF_A): $(LIBPERF_IN) $(LIBAPI)
++	$(QUIET_AR)$(RM) $@ && $(LD) -r -o libperf-ar.o $^ && $(AR) rcs $@ libperf-ar.o
  
- 			if (fd < 0)
- 				return -errno;
-diff --git a/tools/lib/perf/include/internal/threadmap.h b/tools/lib/perf/include/internal/threadmap.h
-index df748baf9eda..5d7bd6968563 100644
---- a/tools/lib/perf/include/internal/threadmap.h
-+++ b/tools/lib/perf/include/internal/threadmap.h
-@@ -8,6 +8,7 @@
- 
- struct thread_map_data {
- 	pid_t	 pid;
-+	int	 flags;
- 	char	*comm;
- };
- 
-diff --git a/tools/lib/perf/include/perf/threadmap.h b/tools/lib/perf/include/perf/threadmap.h
-index a7c50de8d010..5fea1a403e28 100644
---- a/tools/lib/perf/include/perf/threadmap.h
-+++ b/tools/lib/perf/include/perf/threadmap.h
-@@ -10,6 +10,7 @@ struct perf_thread_map;
- LIBPERF_API struct perf_thread_map *perf_thread_map__new_dummy(void);
- 
- LIBPERF_API void perf_thread_map__set_pid(struct perf_thread_map *map, int thread, pid_t pid);
-+LIBPERF_API void perf_thread_map__set_flags(struct perf_thread_map *map, int thread, int flags);
- LIBPERF_API char *perf_thread_map__comm(struct perf_thread_map *map, int thread);
- LIBPERF_API int perf_thread_map__nr(struct perf_thread_map *threads);
- LIBPERF_API pid_t perf_thread_map__pid(struct perf_thread_map *map, int thread);
-diff --git a/tools/lib/perf/threadmap.c b/tools/lib/perf/threadmap.c
-index e92c368b0a6c..3b8ec4f944b9 100644
---- a/tools/lib/perf/threadmap.c
-+++ b/tools/lib/perf/threadmap.c
-@@ -37,6 +37,11 @@ void perf_thread_map__set_pid(struct perf_thread_map *map, int thread, pid_t pid
- 	map->map[thread].pid = pid;
- }
- 
-+void perf_thread_map__set_flags(struct perf_thread_map *map, int thread, int flags)
-+{
-+	map->map[thread].flags = flags;
-+}
-+
- char *perf_thread_map__comm(struct perf_thread_map *map, int thread)
- {
- 	return map->map[thread].comm;
+ $(LIBPERF_SO): $(LIBPERF_IN) $(LIBAPI)
+ 	$(QUIET_LINK)$(CC) --shared -Wl,-soname,libperf.so \
 -- 
 2.30.2
 
