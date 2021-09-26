@@ -2,254 +2,132 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E22BC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun, 26 Sep 2021 21:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB47C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun, 26 Sep 2021 21:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4903561041
-	for <linux-perf-users@archiver.kernel.org>; Sun, 26 Sep 2021 21:25:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DF4760FC2
+	for <linux-perf-users@archiver.kernel.org>; Sun, 26 Sep 2021 21:33:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230169AbhIZV0r (ORCPT
+        id S230159AbhIZVep (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 26 Sep 2021 17:26:47 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:37154 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230156AbhIZV0q (ORCPT
+        Sun, 26 Sep 2021 17:34:45 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46786 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230075AbhIZVeo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 26 Sep 2021 17:26:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1632691509;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=P+U0s4rlZ/U+pddjjBk9fjbMZ+HeCXOcrSWJg804pdQ=;
-        b=DsY4XiQn+BcgxRdRA6KNNqxT+1pPUcJLSQr3GdkITk0n9kaoKcTGMTUciOE9/4bqBwynAg
-        wXj7oufu4QxlhZNwtX6l2ZWc6+N7C4eDItQ/AeICq0bMlpWwTmq/LUGj/sco2w4ryWg3OL
-        vqXH1m4vMnZLotq2uibyEJJPRmE9+VA=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-5-q62bMX56MROcq7ssCPKFBQ-1; Sun, 26 Sep 2021 17:25:07 -0400
-X-MC-Unique: q62bMX56MROcq7ssCPKFBQ-1
-Received: by mail-ed1-f70.google.com with SMTP id n5-20020a05640206c500b003cf53f7cef2so15567867edy.12
-        for <linux-perf-users@vger.kernel.org>; Sun, 26 Sep 2021 14:25:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=P+U0s4rlZ/U+pddjjBk9fjbMZ+HeCXOcrSWJg804pdQ=;
-        b=IYqG/defdvvHdQ+KHKUYWKgeqrooGAcLSYKndegNpxu6xImgtBfzHS9ufAjGGRFf+a
-         a6rtEQZbbG/omIdqVMoG/o/74XJq7Ne7VrHMATl+rEgOLdpCjpSm44/Y0J0cXkWyr6gr
-         WQh8bBamoVTVnzp8mH8Wni9a27Va84n3uuvdDInIy1GrmNUyMF11Z4JI1nfaQ6HXH4zF
-         /Ord8nFHB4VxJlvQmS8qKt8Sz88H6K1g5oRiEKEDeG11tTepKxjbCR/4e9vp5t6HlHEi
-         sdwZ+LEuJ7i3ngF0JCDolhE/tLqSmuHsDHlKXbiT0BH7IMHdNFbs/IWFIvg4VDCoHuI5
-         vUAQ==
-X-Gm-Message-State: AOAM5334XNjQ5pBIkMPcw1xq5tZHN5jL51MXQaWWHeUdlRgOlE5+i+bu
-        QlIuHoMtjXIz3xxifItfKSjCrhkPA/OnrO6S941l2IgYRLAE//syIDhO+U2kvFXbqmKHGbUuhU1
-        iB3t1fInmj8b/Vby1DB+2wFb91cNuHg==
-X-Received: by 2002:a05:6402:1b92:: with SMTP id cc18mr13320463edb.31.1632691506456;
-        Sun, 26 Sep 2021 14:25:06 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzHHyadehFQHU0FFkAhB4tMrCkZ7Q0YaaDD1pVuscLCBECNk3P99rQQBmhCvYiAF3pSiGyV/g==
-X-Received: by 2002:a05:6402:1b92:: with SMTP id cc18mr13320441edb.31.1632691506267;
-        Sun, 26 Sep 2021 14:25:06 -0700 (PDT)
-Received: from krava ([83.240.63.48])
-        by smtp.gmail.com with ESMTPSA id f2sm7740640eje.109.2021.09.26.14.25.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Sep 2021 14:25:05 -0700 (PDT)
-Date:   Sun, 26 Sep 2021 23:25:03 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Daniel Latypov <dlatypov@google.com>,
-        David Gow <davidgow@google.com>, eranian@google.com
-Subject: Re: [RFC PATCH 0/5] Start aligning perf test with kunit style
-Message-ID: <YVDlL28JgxaRwMJs@krava>
-References: <20210922081959.390059-1-irogers@google.com>
- <YUumPj7Oa1HvVGW/@krava>
- <CAP-5=fVd8zU-uHMg1KjyNPDv-_y-Q562PvPpoWSi1rS-KD0ezw@mail.gmail.com>
+        Sun, 26 Sep 2021 17:34:44 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: tonyk)
+        with ESMTPSA id 8B0D01F4239D
+Message-ID: <a65dfe31-a355-8cf8-99d8-70ddf23c5384@collabora.com>
+Date:   Sun, 26 Sep 2021 18:32:57 -0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fVd8zU-uHMg1KjyNPDv-_y-Q562PvPpoWSi1rS-KD0ezw@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.1.1
+Subject: Re: [PATCH v3 2/2] perf bench: Add support for 32-bit systems with
+ 64-bit time_t
+Content-Language: en-US
+To:     Alistair Francis <alistair23@gmail.com>
+Cc:     Alistair Francis <alistair.francis@opensource.wdc.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Darren Hart <dvhart@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <atish.patra@wdc.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alistair Francis <alistair.francis@wdc.com>
+References: <20210917061040.2270822-1-alistair.francis@opensource.wdc.com>
+ <20210917061040.2270822-2-alistair.francis@opensource.wdc.com>
+ <72990864-5ec6-1f73-efd9-61b667a172dd@collabora.com>
+ <CAKmqyKM+VN-KST9-VMULZMC=2sNbjH2wiE-CZ1WRfVFj3WmpdQ@mail.gmail.com>
+From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
+In-Reply-To: <CAKmqyKM+VN-KST9-VMULZMC=2sNbjH2wiE-CZ1WRfVFj3WmpdQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 22, 2021 at 04:36:05PM -0700, Ian Rogers wrote:
-> On Wed, Sep 22, 2021 at 2:55 PM Jiri Olsa <jolsa@redhat.com> wrote:
-> >
-> > On Wed, Sep 22, 2021 at 01:19:53AM -0700, Ian Rogers wrote:
-> > > Perf test uses its own structs and code layout that differs from kunit
-> > > that was more recently introduced to the kernel. Besides consistency,
-> > > it is hoped that moving in the direction of kunit style will enable
-> > > reuse of infrastructure like test output formatting for continuous
-> > > testing systems. For example:
-> > > https://lore.kernel.org/linux-kselftest/CA+GJov6tdjvY9x12JsJT14qn6c7NViJxqaJk+r-K1YJzPggFDQ@mail.gmail.com/
-> > >
-> > > The motivation for this restructuring comes from wanting to be able to
-> > > tag tests with a size:
-> > > https://lore.kernel.org/linux-perf-users/CAP-5=fWmGyuqFKc-EMP3rbmTkjZ3MS+YSajGZfeRMc38HS82gw@mail.gmail.com/
-> > > To have more exhaustive and slower running tests.  This isn't
-> > > something kunit currently supports, nor is the execution of python and
-> > > shell tests, but it seems sensible to work on an approach with kunit
-> > > rather to invent a new wheel inside of perf.
-> > >
-> > > These initial patches are just refactoring the main test suite
-> > > definitions to be in a more kunit style. Kunit isn't depended upon, it
-> > > is hoped that this can be done in later patches for the sake of
-> > > consistency.
-> >
-> > seems good.. how far away from kunit is the code now?
+Às 01:34 de 24/09/21, Alistair Francis escreveu:
+> On Tue, Sep 21, 2021 at 8:47 AM André Almeida <andrealmeid@collabora.com> wrote:
+>>
+>> Hi Alistair,
+>>
+>> Às 03:10 de 17/09/21, Alistair Francis escreveu:
+>>> From: Alistair Francis <alistair.francis@wdc.com>
+>>>
+>>> Some 32-bit architectures (such are 32-bit RISC-V) only have a 64-bit
+>>> time_t and as such don't have the SYS_futex syscall. This patch will
+>>> allow us to use the SYS_futex_time64 syscall on those platforms.
+>>>
+>>
+>> Thanks for your patch! However, I don't think that any futex operation
+>> at perf has timeout. Do you plan to implement a test that use it? Or the
+>> idea is to get this ready for it in case someone want to do so in the
+>> future?
 > 
-> Thanks Jiri, It is a ways away from complete. I was thinking to follow up with:
-> * Migrate the current sub-test approach to use kunit style test cases
-> within a suite.
-> * Combine what are currently independent test suites into one test
-> suite with different test cases, for example stat.c contains stat,
-> stat_config and stat_round tests.
+> I don't have plans to implement any new tests (although I'm happy to
+> add one if need be).
 > 
-> Once this is done then to unify with kunit we need to work out a
-> common pattern for skipping a test, etc. There's already a lot here
-> and so I wanted to get an opinion before pushing along further.
-> 
-> > >
-> > > v1. Built/tested on x86.
-> > >
-> > > Ian Rogers (5):
-> > >   perf test: Use macro for "suite" declarations
-> > >   perf test: Use macro for "suite" definitions
-> > >   perf test: Make each test/suite its own struct.
-> > >   perf test: Move each test suite struct to its test
-> > >   perf test: Rename struct test to test_suite
-> > >
-> > >  tools/perf/arch/arm/include/arch-tests.h      |   2 +-
-> > >  tools/perf/arch/arm/tests/arch-tests.c        |  21 +-
-> > >  tools/perf/arch/arm/tests/vectors-page.c      |   2 +-
-> > >  tools/perf/arch/arm64/include/arch-tests.h    |   2 +-
-> > >  tools/perf/arch/arm64/tests/arch-tests.c      |  15 +-
-> > >  tools/perf/arch/powerpc/include/arch-tests.h  |   2 +-
-> > >  tools/perf/arch/powerpc/tests/arch-tests.c    |  15 +-
-> >
-> > I can run/test this on ppc/arm if you don't have any
-> 
-> I have pretty easy access to ARM but lost access to PowerPC. If we're
-> happy with the direction then I can test ARM and ask for help on
-> PowerPC.
-
-it compiles fine on powerpc and failed tests seem reasonable,
-before/after perf test output is same apart from this:
-
-[root@ibm-p9z-06-lp7 perf]# diff -puw out.old out.new 
---- out.old     2021-09-26 17:15:57.947807813 -0400
-+++ out.new     2021-09-26 17:20:51.789918644 -0400
-@@ -81,7 +81,7 @@
- 69: PE file support                                                 : Ok
- 70: Event expansion for cgroups                                     : Ok
- 72: dlfilter C API                                                  : Ok
--73: Test dwarf unwind                                               : Ok
-+73: DWARF unwind                                                    : Ok
- 74: build id cache operations                                       : Ok
- 75: daemon operations                                               : Ok
- 76: perf pipe recording and injection test                          : Ok
-
-not sure there's somebody out there parsing this output,
-maybe we can find out ;-)
-
-jirka
-
-> 
-> Thanks,
-> Ian
-> 
-> > jirka
-> >
-> > >  tools/perf/arch/x86/include/arch-tests.h      |  14 +-
-> > >  tools/perf/arch/x86/tests/arch-tests.c        |  47 +-
-> > >  tools/perf/arch/x86/tests/bp-modify.c         |   2 +-
-> > >  tools/perf/arch/x86/tests/insn-x86.c          |   2 +-
-> > >  tools/perf/arch/x86/tests/intel-cqm.c         |   2 +-
-> > >  .../x86/tests/intel-pt-pkt-decoder-test.c     |   2 +-
-> > >  tools/perf/arch/x86/tests/rdpmc.c             |   2 +-
-> > >  tools/perf/arch/x86/tests/sample-parsing.c    |   2 +-
-> > >  tools/perf/tests/api-io.c                     |   6 +-
-> > >  tools/perf/tests/attr.c                       |   4 +-
-> > >  tools/perf/tests/backward-ring-buffer.c       |   4 +-
-> > >  tools/perf/tests/bitmap.c                     |   4 +-
-> > >  tools/perf/tests/bp_account.c                 |  10 +-
-> > >  tools/perf/tests/bp_signal.c                  |   8 +-
-> > >  tools/perf/tests/bp_signal_overflow.c         |   8 +-
-> > >  tools/perf/tests/bpf.c                        |  22 +-
-> > >  tools/perf/tests/builtin-test.c               | 441 ++++--------------
-> > >  tools/perf/tests/clang.c                      |  18 +-
-> > >  tools/perf/tests/code-reading.c               |   4 +-
-> > >  tools/perf/tests/cpumap.c                     |  10 +-
-> > >  tools/perf/tests/demangle-java-test.c         |   4 +-
-> > >  tools/perf/tests/demangle-ocaml-test.c        |   4 +-
-> > >  tools/perf/tests/dlfilter-test.c              |   4 +-
-> > >  tools/perf/tests/dso-data.c                   |  10 +-
-> > >  tools/perf/tests/dwarf-unwind.c               |   2 +-
-> > >  tools/perf/tests/event-times.c                |   4 +-
-> > >  tools/perf/tests/event_update.c               |   4 +-
-> > >  tools/perf/tests/evsel-roundtrip-name.c       |   4 +-
-> > >  tools/perf/tests/evsel-tp-sched.c             |   4 +-
-> > >  tools/perf/tests/expand-cgroup.c              |   6 +-
-> > >  tools/perf/tests/expr.c                       |   4 +-
-> > >  tools/perf/tests/fdarray.c                    |   7 +-
-> > >  tools/perf/tests/genelf.c                     |   6 +-
-> > >  tools/perf/tests/hists_cumulate.c             |   4 +-
-> > >  tools/perf/tests/hists_filter.c               |   4 +-
-> > >  tools/perf/tests/hists_link.c                 |   4 +-
-> > >  tools/perf/tests/hists_output.c               |   4 +-
-> > >  tools/perf/tests/is_printable_array.c         |   4 +-
-> > >  tools/perf/tests/keep-tracking.c              |   4 +-
-> > >  tools/perf/tests/kmod-path.c                  |   4 +-
-> > >  tools/perf/tests/llvm.c                       |  22 +-
-> > >  tools/perf/tests/maps.c                       |   4 +-
-> > >  tools/perf/tests/mem.c                        |   4 +-
-> > >  tools/perf/tests/mem2node.c                   |   4 +-
-> > >  tools/perf/tests/mmap-basic.c                 |   4 +-
-> > >  tools/perf/tests/mmap-thread-lookup.c         |   4 +-
-> > >  tools/perf/tests/openat-syscall-all-cpus.c    |   5 +-
-> > >  tools/perf/tests/openat-syscall-tp-fields.c   |   4 +-
-> > >  tools/perf/tests/openat-syscall.c             |   5 +-
-> > >  tools/perf/tests/parse-events.c               |   4 +-
-> > >  tools/perf/tests/parse-metric.c               |   4 +-
-> > >  tools/perf/tests/parse-no-sample-id-all.c     |   4 +-
-> > >  tools/perf/tests/pe-file-parsing.c            |   6 +-
-> > >  tools/perf/tests/perf-hooks.c                 |   4 +-
-> > >  tools/perf/tests/perf-record.c                |   4 +-
-> > >  tools/perf/tests/perf-time-to-tsc.c           |  10 +-
-> > >  tools/perf/tests/pfm.c                        |  16 +-
-> > >  tools/perf/tests/pmu-events.c                 |  19 +-
-> > >  tools/perf/tests/pmu.c                        |   4 +-
-> > >  tools/perf/tests/python-use.c                 |   4 +-
-> > >  tools/perf/tests/sample-parsing.c             |   4 +-
-> > >  tools/perf/tests/sdt.c                        |   6 +-
-> > >  tools/perf/tests/stat.c                       |  10 +-
-> > >  tools/perf/tests/sw-clock.c                   |   4 +-
-> > >  tools/perf/tests/switch-tracking.c            |   4 +-
-> > >  tools/perf/tests/task-exit.c                  |   4 +-
-> > >  tools/perf/tests/tests.h                      | 179 ++++---
-> > >  tools/perf/tests/thread-map.c                 |  10 +-
-> > >  tools/perf/tests/thread-maps-share.c          |   4 +-
-> > >  tools/perf/tests/time-utils-test.c            |   4 +-
-> > >  tools/perf/tests/topology.c                   |   4 +-
-> > >  tools/perf/tests/unit_number__scnprintf.c     |   4 +-
-> > >  tools/perf/tests/vmlinux-kallsyms.c           |   5 +-
-> > >  tools/perf/tests/wp.c                         |  22 +-
-> > >  81 files changed, 543 insertions(+), 618 deletions(-)
-> > >
-> > > --
-> > > 2.33.0.464.g1972c5931b-goog
-> > >
-> >
+> My goal was just to get this to build for RISC-V 32-bit. The timeout
+> was already exposed by the old futex macro, so I was just following
+> that.
 > 
 
+I see, thanks for working on that.
+
+>>
+>>
+>> Also, I faced a similar problem with the new futex2 syscalls, that
+>> supports exclusively 64bit timespec. But I took a different approach: I
+>> called __NR_clock_gettime64 for 32bit architectures so it wouldn't
+>> require to convert the struct:
+>>
+>> #if defined(__i386__) || __TIMESIZE == 32
+>> # define NR_gettime64 __NR_clock_gettime64
+>> #else
+>> # define NR_gettime64 __NR_clock_gettime
+>> #endif
+>>
+>> struct timespec64 {
+>>         long long tv_sec;       /* seconds */
+>>         long long tv_nsec;      /* nanoseconds */
+>> };
+>>
+>> int gettime64(clock_t clockid, struct timespec64 *tv)
+>> {
+>>         return syscall(NR_gettime64, clockid, tv);
+>> }
+>>
+>> Then we can just use &timeout at __NR_futex_time64 for 32bit arch and at
+>> __NR_futex for 64bit arch.
+> 
+> So the idea is to use 64-bit time_t everywhere and only work on 5.1+ kernels.
+> 
+> If that's the favoured approach I can convert this series to your idea.
+> 
+
+Yes, this is what I think it will be the best approach. I believe the
+code will be less complex, it's more future proof (it's ready for y2038)
+and when glibc supports time64, we can make this code even simpler using
+`-D__USE_TIME_BITS64` to compile it. Thanks again for working on that!
+
+> Alistair
+> 
+>>
+>> This might be a simpler solution to the problem that you are facing but
+>> I'm not entirely sure. Also, futex's selftests do use the timeout
+>> argument and I think that they also won't compile in 32-bit RISC-V, so
+>> maybe we can start from there so we can actually test the timeout
+>> argument and check if it's working.
+>>
+>> Thanks,
+>>         André
