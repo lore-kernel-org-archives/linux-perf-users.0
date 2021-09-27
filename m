@@ -2,252 +2,230 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF43CC433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Sep 2021 16:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42011C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Sep 2021 17:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDD3C60F9B
-	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Sep 2021 16:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D08E60F3A
+	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Sep 2021 17:40:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235318AbhI0QLg (ORCPT
+        id S234140AbhI0RmQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 27 Sep 2021 12:11:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53164 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235286AbhI0QLg (ORCPT
+        Mon, 27 Sep 2021 13:42:16 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:45958 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237061AbhI0RmB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 27 Sep 2021 12:11:36 -0400
-Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45D12C061604
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Sep 2021 09:09:58 -0700 (PDT)
-Received: by mail-io1-xd34.google.com with SMTP id p80so23410412iod.10
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Sep 2021 09:09:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2GQ/4yVo5M6uC3IK/BIrMcprTNmZ6x0QiXuUrYuvaGQ=;
-        b=fvYVIROgMYloEMngAaoX++4PKLGL4I2Y6ORD7LIBRQ4TqPvpXEH02N1pz7M2Neokis
-         3qmzHiem+1W3OryQkA9+ZA+YyOchpW5Rd5FMeYPXfOonp8QTbHG48R0EtbzjEhjZdw3j
-         MStsGq02w6aP5HFKVSJXxwKxYK/xq38+M9t9LPxAftVQ1r0T4idsE3JDePie7/l0qYvl
-         G3Jr1NO2CMKU2YYX9G70Xfa6MC16r+KxHX7tgEqb92HEOEpxuOAlDKxisFD8QgR5vRfo
-         rNGHyFfm1gFba2uyuXeVBw4h/+4bjtNk5OyMmuPPq2coY1rc5V0svaB4X/fvyf2vZcjX
-         9A8Q==
+        Mon, 27 Sep 2021 13:42:01 -0400
+Received: by mail-il1-f200.google.com with SMTP id s14-20020a92ae0e000000b00240b2b67a5dso19527693ilh.12
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Sep 2021 10:40:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2GQ/4yVo5M6uC3IK/BIrMcprTNmZ6x0QiXuUrYuvaGQ=;
-        b=yBdmTHNsx5qVeb4to80Tex734mcaPiD6u2nUVbICWUQ/lec5O/6RubZHKnQ5kE9mlY
-         bYVeco9dNfNo0zULNa1dyjQPqN46y8Wevw3w8rpBzJ/EYS+uiWAPC3GE7RIODJuIKV81
-         vccF0xAZVAbYGHKfp06tMl1NfxA3YV8Dmop8Ow5cTU6UNF7L0bwPQAwX00+CTdgtzb63
-         dkZ2zZusZl63xr+KzzoOidgrMyuCcEGXy9VMnOr6ij1CCxjyGm9WqbJ5Z5Vt7p1OY10N
-         mTUzsVb9K21sfIJFVPqFxn1KYoujufvmhsWyAnZRnAOFn6zcqsavG3mk4CKyvxiyaXE1
-         0NTg==
-X-Gm-Message-State: AOAM530BiDXLAK3gxLm7xpsh300+1Bd9MnjEZYV/gfQu0xU9KAbHGZ3c
-        5ujclJC0g7maBrMJY2owR6AWt7syQ2/6rxoJKA86Xg==
-X-Google-Smtp-Source: ABdhPJwLXol1mbrw3uK9YsUwzKgrmzt2KzIExT1goYjNVKmnCt28a+gzwC3rgUPIRPogNnVM8mp8S7dTGtrExQw91JM=
-X-Received: by 2002:a02:8790:: with SMTP id t16mr666255jai.14.1632758997457;
- Mon, 27 Sep 2021 09:09:57 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=swVaGhsc6FB0JtyepZaFHR3VXX9wosPf7B18mHjCgo0=;
+        b=d1SnFl+xYAmKvbjY2a+jUDZ7ZFi8+rUMKSe1QuZuA/q+eIqJd2peg7w7bK/gACQibs
+         giX3+i4pFD6gaEkpApBGwYx+84T+RqEXEV1RzDEEVLQe63jdGY/R4HBnBzukSsi83c8V
+         o0jSe8C4HlE68rSOZ4544Wbz91M8mrShrnmrDpKfr6zeIb3/9vr1SavMF5WwG7kriccj
+         Vy6+9Nao+MjNFMMbaHHDQajIrzUxARJ4zq5dIRq1x1r2Qo0bGNdqX5UblTg42trzP7bj
+         Dfa86jLxSBdKF4XTDSx8gR9ruNhFRg564/d6VykwBRZWyQqMK97RbVd3BGO3uBppgyZm
+         lh8A==
+X-Gm-Message-State: AOAM531i9WZKOIfifiGxKUPPcutKocU+SamZsICzS7d/3Qn5YOnUKS0v
+        dOv3XmfMZ2aDcolNgS/mN79l6pl4NWWR18f5TnY/x4XHbbnT
+X-Google-Smtp-Source: ABdhPJw/JRGNnV6WNAd+DBpeMyJ8C9s3bfvXWTdo99KVQLCMObaIsIChQWqLa0GjAhai/S+amIDpHNi9VD2P7XfsH+QEHiG9casU
 MIME-Version: 1.0
-References: <20210922081959.390059-1-irogers@google.com> <YUumPj7Oa1HvVGW/@krava>
- <CAP-5=fVd8zU-uHMg1KjyNPDv-_y-Q562PvPpoWSi1rS-KD0ezw@mail.gmail.com> <YVDlL28JgxaRwMJs@krava>
-In-Reply-To: <YVDlL28JgxaRwMJs@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 27 Sep 2021 09:09:43 -0700
-Message-ID: <CAP-5=fXkfMW9jHYz8X9p==gsRRzRCsx5WrGdmzE5YWe+idBeQw@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/5] Start aligning perf test with kunit style
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Daniel Latypov <dlatypov@google.com>,
-        David Gow <davidgow@google.com>, eranian@google.com
+X-Received: by 2002:a5e:8d16:: with SMTP id m22mr711651ioj.62.1632764422730;
+ Mon, 27 Sep 2021 10:40:22 -0700 (PDT)
+Date:   Mon, 27 Sep 2021 10:40:22 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006b363405ccfd971d@google.com>
+Subject: [syzbot] possible deadlock in register_for_each_vma (2)
+From:   syzbot <syzbot+aca1f8067e639ef04ff7@syzkaller.appspotmail.com>
+To:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        mingo@redhat.com, namhyung@kernel.org, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Sep 26, 2021 at 2:25 PM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Wed, Sep 22, 2021 at 04:36:05PM -0700, Ian Rogers wrote:
-> > On Wed, Sep 22, 2021 at 2:55 PM Jiri Olsa <jolsa@redhat.com> wrote:
-> > >
-> > > On Wed, Sep 22, 2021 at 01:19:53AM -0700, Ian Rogers wrote:
-> > > > Perf test uses its own structs and code layout that differs from kunit
-> > > > that was more recently introduced to the kernel. Besides consistency,
-> > > > it is hoped that moving in the direction of kunit style will enable
-> > > > reuse of infrastructure like test output formatting for continuous
-> > > > testing systems. For example:
-> > > > https://lore.kernel.org/linux-kselftest/CA+GJov6tdjvY9x12JsJT14qn6c7NViJxqaJk+r-K1YJzPggFDQ@mail.gmail.com/
-> > > >
-> > > > The motivation for this restructuring comes from wanting to be able to
-> > > > tag tests with a size:
-> > > > https://lore.kernel.org/linux-perf-users/CAP-5=fWmGyuqFKc-EMP3rbmTkjZ3MS+YSajGZfeRMc38HS82gw@mail.gmail.com/
-> > > > To have more exhaustive and slower running tests.  This isn't
-> > > > something kunit currently supports, nor is the execution of python and
-> > > > shell tests, but it seems sensible to work on an approach with kunit
-> > > > rather to invent a new wheel inside of perf.
-> > > >
-> > > > These initial patches are just refactoring the main test suite
-> > > > definitions to be in a more kunit style. Kunit isn't depended upon, it
-> > > > is hoped that this can be done in later patches for the sake of
-> > > > consistency.
-> > >
-> > > seems good.. how far away from kunit is the code now?
-> >
-> > Thanks Jiri, It is a ways away from complete. I was thinking to follow up with:
-> > * Migrate the current sub-test approach to use kunit style test cases
-> > within a suite.
-> > * Combine what are currently independent test suites into one test
-> > suite with different test cases, for example stat.c contains stat,
-> > stat_config and stat_round tests.
-> >
-> > Once this is done then to unify with kunit we need to work out a
-> > common pattern for skipping a test, etc. There's already a lot here
-> > and so I wanted to get an opinion before pushing along further.
-> >
-> > > >
-> > > > v1. Built/tested on x86.
-> > > >
-> > > > Ian Rogers (5):
-> > > >   perf test: Use macro for "suite" declarations
-> > > >   perf test: Use macro for "suite" definitions
-> > > >   perf test: Make each test/suite its own struct.
-> > > >   perf test: Move each test suite struct to its test
-> > > >   perf test: Rename struct test to test_suite
-> > > >
-> > > >  tools/perf/arch/arm/include/arch-tests.h      |   2 +-
-> > > >  tools/perf/arch/arm/tests/arch-tests.c        |  21 +-
-> > > >  tools/perf/arch/arm/tests/vectors-page.c      |   2 +-
-> > > >  tools/perf/arch/arm64/include/arch-tests.h    |   2 +-
-> > > >  tools/perf/arch/arm64/tests/arch-tests.c      |  15 +-
-> > > >  tools/perf/arch/powerpc/include/arch-tests.h  |   2 +-
-> > > >  tools/perf/arch/powerpc/tests/arch-tests.c    |  15 +-
-> > >
-> > > I can run/test this on ppc/arm if you don't have any
-> >
-> > I have pretty easy access to ARM but lost access to PowerPC. If we're
-> > happy with the direction then I can test ARM and ask for help on
-> > PowerPC.
->
-> it compiles fine on powerpc and failed tests seem reasonable,
-> before/after perf test output is same apart from this:
->
-> [root@ibm-p9z-06-lp7 perf]# diff -puw out.old out.new
-> --- out.old     2021-09-26 17:15:57.947807813 -0400
-> +++ out.new     2021-09-26 17:20:51.789918644 -0400
-> @@ -81,7 +81,7 @@
->  69: PE file support                                                 : Ok
->  70: Event expansion for cgroups                                     : Ok
->  72: dlfilter C API                                                  : Ok
-> -73: Test dwarf unwind                                               : Ok
-> +73: DWARF unwind                                                    : Ok
->  74: build id cache operations                                       : Ok
->  75: daemon operations                                               : Ok
->  76: perf pipe recording and injection test                          : Ok
->
-> not sure there's somebody out there parsing this output,
-> maybe we can find out ;-)
+Hello,
 
-Thanks, actually we have a parser on this output :-) I will correct the issue.
+syzbot found the following issue on:
 
-Ian
+HEAD commit:    7d42e9818258 Merge tag 'gpio-fixes-for-v5.15-rc3' of git:/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15ec2213300000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=83fd90919369058f
+dashboard link: https://syzkaller.appspot.com/bug?extid=aca1f8067e639ef04ff7
+compiler:       Debian clang version 11.0.1-2, GNU ld (GNU Binutils for Debian) 2.35.2
 
-> jirka
->
-> >
-> > Thanks,
-> > Ian
-> >
-> > > jirka
-> > >
-> > > >  tools/perf/arch/x86/include/arch-tests.h      |  14 +-
-> > > >  tools/perf/arch/x86/tests/arch-tests.c        |  47 +-
-> > > >  tools/perf/arch/x86/tests/bp-modify.c         |   2 +-
-> > > >  tools/perf/arch/x86/tests/insn-x86.c          |   2 +-
-> > > >  tools/perf/arch/x86/tests/intel-cqm.c         |   2 +-
-> > > >  .../x86/tests/intel-pt-pkt-decoder-test.c     |   2 +-
-> > > >  tools/perf/arch/x86/tests/rdpmc.c             |   2 +-
-> > > >  tools/perf/arch/x86/tests/sample-parsing.c    |   2 +-
-> > > >  tools/perf/tests/api-io.c                     |   6 +-
-> > > >  tools/perf/tests/attr.c                       |   4 +-
-> > > >  tools/perf/tests/backward-ring-buffer.c       |   4 +-
-> > > >  tools/perf/tests/bitmap.c                     |   4 +-
-> > > >  tools/perf/tests/bp_account.c                 |  10 +-
-> > > >  tools/perf/tests/bp_signal.c                  |   8 +-
-> > > >  tools/perf/tests/bp_signal_overflow.c         |   8 +-
-> > > >  tools/perf/tests/bpf.c                        |  22 +-
-> > > >  tools/perf/tests/builtin-test.c               | 441 ++++--------------
-> > > >  tools/perf/tests/clang.c                      |  18 +-
-> > > >  tools/perf/tests/code-reading.c               |   4 +-
-> > > >  tools/perf/tests/cpumap.c                     |  10 +-
-> > > >  tools/perf/tests/demangle-java-test.c         |   4 +-
-> > > >  tools/perf/tests/demangle-ocaml-test.c        |   4 +-
-> > > >  tools/perf/tests/dlfilter-test.c              |   4 +-
-> > > >  tools/perf/tests/dso-data.c                   |  10 +-
-> > > >  tools/perf/tests/dwarf-unwind.c               |   2 +-
-> > > >  tools/perf/tests/event-times.c                |   4 +-
-> > > >  tools/perf/tests/event_update.c               |   4 +-
-> > > >  tools/perf/tests/evsel-roundtrip-name.c       |   4 +-
-> > > >  tools/perf/tests/evsel-tp-sched.c             |   4 +-
-> > > >  tools/perf/tests/expand-cgroup.c              |   6 +-
-> > > >  tools/perf/tests/expr.c                       |   4 +-
-> > > >  tools/perf/tests/fdarray.c                    |   7 +-
-> > > >  tools/perf/tests/genelf.c                     |   6 +-
-> > > >  tools/perf/tests/hists_cumulate.c             |   4 +-
-> > > >  tools/perf/tests/hists_filter.c               |   4 +-
-> > > >  tools/perf/tests/hists_link.c                 |   4 +-
-> > > >  tools/perf/tests/hists_output.c               |   4 +-
-> > > >  tools/perf/tests/is_printable_array.c         |   4 +-
-> > > >  tools/perf/tests/keep-tracking.c              |   4 +-
-> > > >  tools/perf/tests/kmod-path.c                  |   4 +-
-> > > >  tools/perf/tests/llvm.c                       |  22 +-
-> > > >  tools/perf/tests/maps.c                       |   4 +-
-> > > >  tools/perf/tests/mem.c                        |   4 +-
-> > > >  tools/perf/tests/mem2node.c                   |   4 +-
-> > > >  tools/perf/tests/mmap-basic.c                 |   4 +-
-> > > >  tools/perf/tests/mmap-thread-lookup.c         |   4 +-
-> > > >  tools/perf/tests/openat-syscall-all-cpus.c    |   5 +-
-> > > >  tools/perf/tests/openat-syscall-tp-fields.c   |   4 +-
-> > > >  tools/perf/tests/openat-syscall.c             |   5 +-
-> > > >  tools/perf/tests/parse-events.c               |   4 +-
-> > > >  tools/perf/tests/parse-metric.c               |   4 +-
-> > > >  tools/perf/tests/parse-no-sample-id-all.c     |   4 +-
-> > > >  tools/perf/tests/pe-file-parsing.c            |   6 +-
-> > > >  tools/perf/tests/perf-hooks.c                 |   4 +-
-> > > >  tools/perf/tests/perf-record.c                |   4 +-
-> > > >  tools/perf/tests/perf-time-to-tsc.c           |  10 +-
-> > > >  tools/perf/tests/pfm.c                        |  16 +-
-> > > >  tools/perf/tests/pmu-events.c                 |  19 +-
-> > > >  tools/perf/tests/pmu.c                        |   4 +-
-> > > >  tools/perf/tests/python-use.c                 |   4 +-
-> > > >  tools/perf/tests/sample-parsing.c             |   4 +-
-> > > >  tools/perf/tests/sdt.c                        |   6 +-
-> > > >  tools/perf/tests/stat.c                       |  10 +-
-> > > >  tools/perf/tests/sw-clock.c                   |   4 +-
-> > > >  tools/perf/tests/switch-tracking.c            |   4 +-
-> > > >  tools/perf/tests/task-exit.c                  |   4 +-
-> > > >  tools/perf/tests/tests.h                      | 179 ++++---
-> > > >  tools/perf/tests/thread-map.c                 |  10 +-
-> > > >  tools/perf/tests/thread-maps-share.c          |   4 +-
-> > > >  tools/perf/tests/time-utils-test.c            |   4 +-
-> > > >  tools/perf/tests/topology.c                   |   4 +-
-> > > >  tools/perf/tests/unit_number__scnprintf.c     |   4 +-
-> > > >  tools/perf/tests/vmlinux-kallsyms.c           |   5 +-
-> > > >  tools/perf/tests/wp.c                         |  22 +-
-> > > >  81 files changed, 543 insertions(+), 618 deletions(-)
-> > > >
-> > > > --
-> > > > 2.33.0.464.g1972c5931b-goog
-> > > >
-> > >
-> >
->
+Unfortunately, I don't have any reproducer for this issue yet.
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+aca1f8067e639ef04ff7@syzkaller.appspotmail.com
+
+======================================================
+WARNING: possible circular locking dependency detected
+5.15.0-rc2-syzkaller #0 Not tainted
+------------------------------------------------------
+syz-executor.5/15152 is trying to acquire lock:
+ffffffff8c9a7c10 (dup_mmap_sem){++++}-{0:0}, at: register_for_each_vma+0x32/0xc50 kernel/events/uprobes.c:1041
+
+but task is already holding lock:
+ffff88807d694c90 (&uprobe->register_rwsem){+.+.}-{3:3}, at: __uprobe_register+0x4fd/0x860 kernel/events/uprobes.c:1178
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #3 (&uprobe->register_rwsem){+.+.}-{3:3}:
+       lock_acquire+0x19f/0x4d0 kernel/locking/lockdep.c:5625
+       down_write+0x97/0x170 kernel/locking/rwsem.c:1517
+       __uprobe_register+0x4fd/0x860 kernel/events/uprobes.c:1178
+       trace_uprobe_enable kernel/trace/trace_uprobe.c:1065 [inline]
+       probe_event_enable+0x399/0xbd0 kernel/trace/trace_uprobe.c:1134
+       perf_trace_event_reg kernel/trace/trace_event_perf.c:129 [inline]
+       perf_trace_event_init+0x49b/0x950 kernel/trace/trace_event_perf.c:204
+       perf_uprobe_init+0x138/0x1a0 kernel/trace/trace_event_perf.c:336
+       perf_uprobe_event_init+0xfe/0x180 kernel/events/core.c:9886
+       perf_try_init_event+0x13e/0x3d0 kernel/events/core.c:11193
+       perf_init_event kernel/events/core.c:11257 [inline]
+       perf_event_alloc+0x1155/0x2c10 kernel/events/core.c:11548
+       __do_sys_perf_event_open kernel/events/core.c:12069 [inline]
+       __se_sys_perf_event_open+0x7b2/0x4280 kernel/events/core.c:11961
+       do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+       do_syscall_64+0x44/0xd0 arch/x86/entry/common.c:80
+       entry_SYSCALL_64_after_hwframe+0x44/0xae
+
+-> #2 (event_mutex){+.+.}-{3:3}:
+       lock_acquire+0x19f/0x4d0 kernel/locking/lockdep.c:5625
+       __mutex_lock_common+0x1df/0x2550 kernel/locking/mutex.c:596
+       __mutex_lock kernel/locking/mutex.c:729 [inline]
+       mutex_lock_nested+0x1a/0x20 kernel/locking/mutex.c:743
+       perf_trace_destroy+0x27/0xb0 kernel/trace/trace_event_perf.c:241
+       _free_event+0x874/0xe50 kernel/events/core.c:4958
+       put_event kernel/events/core.c:5052 [inline]
+       perf_mmap_close+0x8dd/0xde0 kernel/events/core.c:6111
+       remove_vma mm/mmap.c:184 [inline]
+       remove_vma_list mm/mmap.c:2629 [inline]
+       __do_munmap+0x1c2f/0x1e80 mm/mmap.c:2887
+       do_munmap mm/mmap.c:2895 [inline]
+       munmap_vma_range mm/mmap.c:603 [inline]
+       mmap_region+0x9e8/0x1b60 mm/mmap.c:1742
+       do_mmap+0x88b/0xf30 mm/mmap.c:1575
+       vm_mmap_pgoff+0x1e5/0x2f0 mm/util.c:519
+       ksys_mmap_pgoff+0x4a4/0x740 mm/mmap.c:1624
+       do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+       do_syscall_64+0x44/0xd0 arch/x86/entry/common.c:80
+       entry_SYSCALL_64_after_hwframe+0x44/0xae
+
+-> #1 (&mm->mmap_lock#2){++++}-{3:3}:
+       lock_acquire+0x19f/0x4d0 kernel/locking/lockdep.c:5625
+       down_write_killable+0xaa/0x1b0 kernel/locking/rwsem.c:1528
+       mmap_write_lock_killable include/linux/mmap_lock.h:87 [inline]
+       dup_mmap+0xde/0xfd0 kernel/fork.c:499
+       dup_mm+0x8c/0x310 kernel/fork.c:1453
+       copy_mm kernel/fork.c:1505 [inline]
+       copy_process+0x28d7/0x5c80 kernel/fork.c:2194
+       kernel_clone+0x230/0x7d0 kernel/fork.c:2584
+       __do_sys_clone kernel/fork.c:2701 [inline]
+       __se_sys_clone kernel/fork.c:2685 [inline]
+       __x64_sys_clone+0x245/0x2b0 kernel/fork.c:2685
+       do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+       do_syscall_64+0x44/0xd0 arch/x86/entry/common.c:80
+       entry_SYSCALL_64_after_hwframe+0x44/0xae
+
+-> #0 (dup_mmap_sem){++++}-{0:0}:
+       check_prev_add kernel/locking/lockdep.c:3051 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3174 [inline]
+       validate_chain+0x1dfb/0x8240 kernel/locking/lockdep.c:3789
+       __lock_acquire+0x1382/0x2b00 kernel/locking/lockdep.c:5015
+       lock_acquire+0x19f/0x4d0 kernel/locking/lockdep.c:5625
+       percpu_down_write+0x52/0x2f0 kernel/locking/percpu-rwsem.c:217
+       register_for_each_vma+0x32/0xc50 kernel/events/uprobes.c:1041
+       __uprobe_register+0x5d4/0x860 kernel/events/uprobes.c:1182
+       trace_uprobe_enable kernel/trace/trace_uprobe.c:1065 [inline]
+       probe_event_enable+0x399/0xbd0 kernel/trace/trace_uprobe.c:1134
+       perf_trace_event_reg kernel/trace/trace_event_perf.c:129 [inline]
+       perf_trace_event_init+0x49b/0x950 kernel/trace/trace_event_perf.c:204
+       perf_uprobe_init+0x138/0x1a0 kernel/trace/trace_event_perf.c:336
+       perf_uprobe_event_init+0xfe/0x180 kernel/events/core.c:9886
+       perf_try_init_event+0x13e/0x3d0 kernel/events/core.c:11193
+       perf_init_event kernel/events/core.c:11257 [inline]
+       perf_event_alloc+0x1155/0x2c10 kernel/events/core.c:11548
+       __do_sys_perf_event_open kernel/events/core.c:12069 [inline]
+       __se_sys_perf_event_open+0x7b2/0x4280 kernel/events/core.c:11961
+       do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+       do_syscall_64+0x44/0xd0 arch/x86/entry/common.c:80
+       entry_SYSCALL_64_after_hwframe+0x44/0xae
+
+other info that might help us debug this:
+
+Chain exists of:
+  dup_mmap_sem --> event_mutex --> &uprobe->register_rwsem
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&uprobe->register_rwsem);
+                               lock(event_mutex);
+                               lock(&uprobe->register_rwsem);
+  lock(dup_mmap_sem);
+
+ *** DEADLOCK ***
+
+3 locks held by syz-executor.5/15152:
+ #0: ffffffff90984d78 (&pmus_srcu){....}-{0:0}, at: rcu_lock_acquire+0x9/0x30 include/linux/rcupdate.h:267
+ #1: ffffffff8c96a3c8 (event_mutex){+.+.}-{3:3}, at: perf_uprobe_init+0x12d/0x1a0 kernel/trace/trace_event_perf.c:335
+ #2: ffff88807d694c90 (&uprobe->register_rwsem){+.+.}-{3:3}, at: __uprobe_register+0x4fd/0x860 kernel/events/uprobes.c:1178
+
+stack backtrace:
+CPU: 1 PID: 15152 Comm: syz-executor.5 Not tainted 5.15.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x1dc/0x2d8 lib/dump_stack.c:106
+ check_noncircular+0x2f9/0x3b0 kernel/locking/lockdep.c:2131
+ check_prev_add kernel/locking/lockdep.c:3051 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3174 [inline]
+ validate_chain+0x1dfb/0x8240 kernel/locking/lockdep.c:3789
+ __lock_acquire+0x1382/0x2b00 kernel/locking/lockdep.c:5015
+ lock_acquire+0x19f/0x4d0 kernel/locking/lockdep.c:5625
+ percpu_down_write+0x52/0x2f0 kernel/locking/percpu-rwsem.c:217
+ register_for_each_vma+0x32/0xc50 kernel/events/uprobes.c:1041
+ __uprobe_register+0x5d4/0x860 kernel/events/uprobes.c:1182
+ trace_uprobe_enable kernel/trace/trace_uprobe.c:1065 [inline]
+ probe_event_enable+0x399/0xbd0 kernel/trace/trace_uprobe.c:1134
+ perf_trace_event_reg kernel/trace/trace_event_perf.c:129 [inline]
+ perf_trace_event_init+0x49b/0x950 kernel/trace/trace_event_perf.c:204
+ perf_uprobe_init+0x138/0x1a0 kernel/trace/trace_event_perf.c:336
+ perf_uprobe_event_init+0xfe/0x180 kernel/events/core.c:9886
+ perf_try_init_event+0x13e/0x3d0 kernel/events/core.c:11193
+ perf_init_event kernel/events/core.c:11257 [inline]
+ perf_event_alloc+0x1155/0x2c10 kernel/events/core.c:11548
+ __do_sys_perf_event_open kernel/events/core.c:12069 [inline]
+ __se_sys_perf_event_open+0x7b2/0x4280 kernel/events/core.c:11961
+ do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+ do_syscall_64+0x44/0xd0 arch/x86/entry/common.c:80
+ entry_SYSCALL_64_after_hwframe+0x44/0xae
+RIP: 0033:0x7f7a6e6c4709
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f7a6bbf9188 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
+RAX: ffffffffffffffda RBX: 00007f7a6e7c90e0 RCX: 00007f7a6e6c4709
+RDX: 0000000000000000 RSI: ffffffffffffffff RDI: 0000000020000180
+RBP: 00007f7a6e71ecb4 R08: 0000000000000000 R09: 0000000000000000
+R10: ffffffffffffffff R11: 0000000000000246 R12: 0000000000000000
+R13: 00007ffe2403e64f R14: 00007f7a6bbf9300 R15: 0000000000022000
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
