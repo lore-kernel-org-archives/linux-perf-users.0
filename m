@@ -2,130 +2,148 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A4FC433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Sep 2021 22:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED68C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Sep 2021 22:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93A7560F94
-	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Sep 2021 22:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B970D61058
+	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Sep 2021 22:31:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237373AbhI0WOs (ORCPT
+        id S237678AbhI0WdB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 27 Sep 2021 18:14:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53572 "EHLO
+        Mon, 27 Sep 2021 18:33:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237237AbhI0WOs (ORCPT
+        with ESMTP id S237545AbhI0WdA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 27 Sep 2021 18:14:48 -0400
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 366E1C061575;
-        Mon, 27 Sep 2021 15:13:10 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id e7so19150321pgk.2;
-        Mon, 27 Sep 2021 15:13:10 -0700 (PDT)
+        Mon, 27 Sep 2021 18:33:00 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D550C061575;
+        Mon, 27 Sep 2021 15:31:20 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id n2so12760027plk.12;
+        Mon, 27 Sep 2021 15:31:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LQoaNx5tAGjunmfJNoYC07QY3HqXDClsG7X/kjDcaHM=;
-        b=qIydS8jNGOHH2PajdpXajC5LXHdZnQ8xaKAsu5QaLok9cHzAxluLivYrnOFLPxqKqE
-         0hozzn2PyUhobcE89p9IDM4ALB+FbA8PDIzdVaFl/MLcgShy1gd0BQsHdMLoWCftcDuc
-         bv47yDQQN/vgxit8CP6OoqtdTJTI8C+SMjAa++U3PE8pnFQw4eQeccl6osT1TcYoOZCN
-         3fiBGdp3grow81cAp1Zzt/hq+QFsZdUB8SwJ/82a1kvIFJx4W0minOMc5N49NILTVn21
-         Lzz5aBD0OlupQurKdCrltAVxUBFlcFkCEwSUlhHV/ax6vEB7IgJ5opYdtusS+GwRG4Ot
-         trSw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=jtohzWpaqkO4tU2pAeEn9Z5yAnnkQyBYiaAEVGUJmac=;
+        b=YQicmZtm0w6K2IXXhrqHlHrViMkMyd07v8gqlk365KYOU0spBQS4exom6/om/3WcjL
+         c3rp8Lplq7zhtrl0s4verCbiToNLsHwf2N1a46iD1NshaU75szMCfvC2Ve6SDwsAmile
+         +5u4+X0gQRA5RO5oMgX4tcmHvGyh2HcFIIut1U5CEBUx0Le4uJJEed+nonnGQWtgP37L
+         T+SeFD5Kts1c+1cN0APv5MkHqQ3lTOrH/coOC+73A3h1cEgyRe5Ve4op5yU76WK3rsQ2
+         eOLmTij9la89JEoFqJ5mXJhfJVs2vTIfklEBfqmXx/2Be5JjX310tX2FxMta7hW6TxqI
+         dpfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LQoaNx5tAGjunmfJNoYC07QY3HqXDClsG7X/kjDcaHM=;
-        b=ipuQm1kJzaauJUxvhdeoyBe6iG+hgnEQQAAbO/PYYwYFVFkq6oVb76g5r0urkx79to
-         KxVeuf6Ow0hmVRHBreKSaZQOgD7sI15+fuTQiq/I477wglqGOBME3/v01X9JIXi45Da/
-         o1f/lWiifX88lew6QU7wDpBG54Lwsh1KZ5bngf/8dSQlBF2CwFH7LwvyyhjIacfpyJeb
-         wI0ygp56dh+PfQsluM9lAp+ivJIt5sJqwOuKBvup+bMs9fXA37izDt62jYLhzd0Swu6e
-         iwr9pxnXHMIC7Yd2XNsvvxqdWMsCNxa9o2Mn4SL5b7gMiG+faeSSnMK4qY77LIyYNtG+
-         PpRQ==
-X-Gm-Message-State: AOAM533GqeF6Ni8Ie1DtA3QbMKawgjJcB1OGIHeEffd2ChGfemzOPHOt
-        OPHW4fvQ+y9bZUfFbnlnrcx7jhhLb7e7YS2MvDM=
-X-Google-Smtp-Source: ABdhPJzOQORKcAXFM5QQCW6Uy4cQVYG5x75c/jCV3lw1160enyL+fOFkGkgsNEJxMOqZauyc+ZWsGdN2WB6M2cJg+iY=
-X-Received: by 2002:a62:407:0:b0:447:c104:2529 with SMTP id
- 7-20020a620407000000b00447c1042529mr2323985pfe.8.1632780789705; Mon, 27 Sep
- 2021 15:13:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210926023028.2338342-1-jinshan.xiong@gmail.com> <YVBkObnrPfX6KIZM@kernel.org>
-In-Reply-To: <YVBkObnrPfX6KIZM@kernel.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=jtohzWpaqkO4tU2pAeEn9Z5yAnnkQyBYiaAEVGUJmac=;
+        b=Scs/Mr+6s3CFUnbAB4jjfodQYj8nLoQxP+XWvsBgJh286eBOva5G+IvpFg1H33kwhM
+         r7zX1nUpnDNajEvrBOkG1wBlxAV+CRgKFLA5wONjnD0O/pwsgiiK0rwfu02eK+2+Wu5p
+         jz4IulfmLHNpM1hhMpSfi+hNUYY19lYdhNrSt8GlHOOccyctL1l59rbxsVsfRtosd7Wm
+         rPxrs57EiPG4Rn58ZzrStAwz/mKdgYoBTPaeYEaDthm0xwBmP4hV0SrkcshOkrwgaY0p
+         MKX55PDKi0ayIKWIPQnElIp8W9DJTU+JVtTsBF/pBRgJxFmhZusV1DioDGNdodVg22OS
+         mINw==
+X-Gm-Message-State: AOAM532zb9V5lK6et2bO4On04biG7lZRJJQbJoBXQNC4yNosGIruLVGA
+        fMMwY2AY5XW1cqa58a5ezZM6c6Osa6sbDA==
+X-Google-Smtp-Source: ABdhPJx+938LPA9dvs/fmtwyLbAOxayWi/5NhCHKMwzyhefBHQ9RXoTJULKWwqoyToQX5TtiN7Gc6g==
+X-Received: by 2002:a17:90a:854b:: with SMTP id a11mr222853pjw.4.1632781880154;
+        Mon, 27 Sep 2021 15:31:20 -0700 (PDT)
+Received: from titan.corp.tusimple.io ([2601:644:8300:136:a6bb:6dff:feb6:3500])
+        by smtp.gmail.com with ESMTPSA id i27sm18081225pfq.184.2021.09.27.15.31.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Sep 2021 15:31:19 -0700 (PDT)
 From:   Jinshan Xiong <jinshan.xiong@gmail.com>
-Date:   Mon, 27 Sep 2021 15:12:33 -0700
-Message-ID: <CABoqRjsUPhJk6A7QOh_9z6zHLyqX=ZZG7gkcEZeui1uO4m7Bbg@mail.gmail.com>
-Subject: Re: [PATCH] tools/lib/perf: make the static libperf complete
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     jolsa@redhat.com, Peter Zijlstra <peterz@infradead.org>,
+To:     jolsa@redhat.com, arnaldo.melo@gmail.com
+Cc:     Jinshan Xiong <jinshan.xiong@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH v2] tools/lib/perf: make the static libperf complete
+Date:   Mon, 27 Sep 2021 15:30:26 -0700
+Message-Id: <20210927223101.3155964-1-jinshan.xiong@gmail.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <CABoqRjsUPhJk6A7QOh_9z6zHLyqX=ZZG7gkcEZeui1uO4m7Bbg@mail.gmail.com>
+References: <CABoqRjsUPhJk6A7QOh_9z6zHLyqX=ZZG7gkcEZeui1uO4m7Bbg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Thanks for pointing it out. I will make the static library a separate
-target for installation. Patch is coming soon.
+This patch makes libperf.a complete. Initially it misses the symbols
+fdarray_* that makes it unusable after being installed by:
+   $ make install DESTDIR=<install_dir>
 
-Jinshan
+Check missing symbols:
+   $ nm tools/lib/perf/libperf.a | grep fdarray_
+                    U fdarray__add
+   0000000000002b3e t fdarray__available_entries
+                    U fdarray__exit
+                    U fdarray__filter
+                    U fdarray__grow
+                    U fdarray__init
+                    U fdarray__poll
 
+After this patch is applied:
+    $ nm tools/lib/perf/libperf-ext.a | grep fdarray_
+    00000000000063f7 T fdarray__add
+    ......
+    00000000000065d4 T fdarray__poll
 
-On Sun, Sep 26, 2021 at 5:14 AM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
->
-> Em Sat, Sep 25, 2021 at 07:30:24PM -0700, Jinshan Xiong escreveu:
-> > This patch makes libperf.a complete. Initially it misses the symbols
-> > fdarray_* that makes it unusable:
-> >    $ nm tools/lib/perf/libperf.a | grep fdarray_
-> >                     U fdarray__add
-> >    0000000000002b3e t fdarray__available_entries
-> >                     U fdarray__exit
-> >                     U fdarray__filter
-> >                     U fdarray__grow
-> >                     U fdarray__init
-> >                     U fdarray__poll
-> >
-> > After this patch is applied:
-> >     $ nm tools/lib/perf/libperf.a | grep fdarray_
-> >     00000000000063f7 T fdarray__add
-> >     ......
-> >     00000000000065d4 T fdarray__poll
->
-> Have you tried to build tools/perf/ with this?
->
->   LINK    /tmp/build/perf/plugins/plugin_futex.so
->   LINK    /tmp/build/perf/plugins/plugin_jbd2.so
->   INSTALL trace_plugins
-> /usr/bin/ld: /tmp/build/perf/libperf.a(libperf-ar.o):/var/home/acme/git/perf/tools/lib/api/debug.c:20: multiple definition of `__pr_debug'; /tmp/build/perf/libapi.a(libapi-in.o):/var/home/acme/git/perf/tools/lib/api/debug.c:20: first defined here
-> /usr/bin/ld: /tmp/build/perf/libperf.a(libperf-ar.o): in function `sysfs__read_bool':
-> /var/home/acme/git/perf/tools/lib/api/fs/fs.c:505: multiple definition of `sysfs__read_bool'; /tmp/build/perf/libapi.a(libapi-in.o):/var/home/acme/git/perf/tools/lib/api/fs/fs.c:505: first defined here
-> /usr/bin/ld: /tmp/build/perf/libperf.a(libperf-ar.o): in function `fdarray__poll':
-> /var/home/acme/git/perf/tools/lib/api/fd/array.c:120: multiple definition of `fdarray__poll'; /tmp/build/perf/libapi.a(libapi-in.o):/var/home/acme/git/perf/tools/lib/api/fd/array.c:120: first defined here
-> /usr/bin/ld: /tmp/build/perf/libperf.a(libperf-ar.o): in function `tracefs__configured':
-> /var/home/acme/git/perf/tools/lib/api/fs/fs.c:316: multiple definition of `tracefs__configured'; /tmp/build/perf/libapi.a(libapi-in.o):/var/home/acme/git/perf/tools/lib/api/fs/fs.c:316: first defined here
-> /usr/bin/ld: /tmp/build/perf/libperf.a(libperf-ar.o): in function `sysfs__read_int':
-> /var/home/acme/git/perf/tools/lib/api/fs/fs.c:479: multiple definition of `sysfs__read_int'; /tmp/build/perf/libapi.a(libapi-in.o):/var/home/acme/git/perf/tools/lib/api/fs/fs.c:479: first defined here
-> /usr/bin/ld: /tmp/build/perf/libperf.a(libperf-ar.o): in function `fdarray__fprintf':
-> /var/home/acme/git/perf/tools/lib/api/fd/array.c:125: multiple definition of `fdarray__fprintf'; /tmp/build/perf/libapi.a(libapi-in.o):/var/home/acme/git/perf/tools/lib/api/fd/array.c:125: first defined here
-> /usr/bin/ld: /tmp/build/perf/libperf.a(libperf-ar.o): in function `sysfs__write_int':
-> /var/home/acme/git/perf/tools/lib/api/fs/fs.c:547: multiple definition of `sysfs__write_int'; /tmp/build/perf/libapi.a(libapi-in.o):/var/home/acme/git/perf/tools/lib/api/fs/fs.c:547: first defined here
-> /usr/bin/ld: /tmp/build/perf/libperf.a(libperf-ar.o): in function `filename__read_str':
-> /var/home/acme/git/perf/tools/lib/api/fs/fs.c:378: multiple definition of `filename__read_str'; /tmp/build/perf/libapi.a(libapi-in.o):/var/home/acme/git/perf/tools/lib/api/fs/fs.c:378: first defined here
-> /usr/bin/ld: /tmp/build/perf/libperf.a(libperf-ar.o): in function `hugetlbfs__mountpoint':
-> /var/home/acme/git/perf/tools/lib/api/fs/fs.c:317: multiple definition of `hugetlbfs__mountpoint'; /tmp/build/perf/libapi.a(libapi-in.o):/var/home/acme/git/perf/tools/lib/api/fs/fs.c:317: first defined here
-> /usr/bin/ld: /tmp/build/perf/libperf.a(libperf-ar.o): in function `debugfs__mountpoint':
-> /var/home/acme/git/perf/tools/lib/api/fs/fs.c:315: multiple definition of `debugfs__mountpoint'; /tmp/build/perf/libapi.a(libapi-in.o):/var/home/acme/git/perf/tools/lib/api/fs/fs.c:315: first defined here
-> /usr/bin/ld: /tmp/build/perf/libperf.a(libperf-ar.o): in function `fdarray__delete':
-> /var/home/acme/git/perf/tools/lib/api/fd/array.c:71: multiple definition of `fdarray__delete'; /tmp/build/perf/libapi.a(libapi-in.o):/var/home/acme/git/perf/tools/lib/api/fd/array.c:71: first defined here
-> /usr/bin/ld: /tmp/build/perf/libperf.a(libperf-ar.o): in function `procfs__mountpoint':
-> /var/home/acme/git/perf/tools/lib/api/fs/fs.c:314: multiple definition of `procfs__mountpoint'; /tmp/build/perf/libapi.a(libapi-in.o):/var/home/acme/git/perf/tools/lib/api/fs/fs.c:314: first defined here
-> /usr/bin/ld: /tmp/build/perf/libperf.a(libperf-ar.o): in function `get_tracing_file':
-> /var/home/acme/git/perf/tools/lib/api/fs/tracing_path.c:74: multiple definition of `get_tracing_file'; /tmp/build/perf/libapi.a(libapi-in.o):/var/home/acme/git/perf/tools/lib/api/fs/tracing_path.c:74: first defined here
->
-> You probably need to include libapi.a as well.
->
-> - Arnaldo
+Signed-off-by: "Jinshan Xiong" <jinshan.xiong@gmail.com>
+---
+ tools/lib/perf/Makefile | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
+index 08fe6e3c4089..b2f7f4fd7065 100644
+--- a/tools/lib/perf/Makefile
++++ b/tools/lib/perf/Makefile
+@@ -94,7 +94,8 @@ LIBPERF_A  := $(OUTPUT)libperf.a
+ LIBPERF_IN := $(OUTPUT)libperf-in.o
+ LIBPERF_PC := $(OUTPUT)libperf.pc
+ 
+-LIBPERF_ALL := $(LIBPERF_A) $(OUTPUT)libperf.so*
++LIBPERF_A_EXT        := $(OUTPUT)libperf-ext.a
++LIBPERF_LIBS_INSTALL := $(LIBPERF_A_EXT) $(OUTPUT)libperf.so*
+ 
+ LIB_DIR := $(srctree)/tools/lib/api/
+ 
+@@ -124,6 +125,9 @@ $(LIBPERF_IN): FORCE
+ $(LIBPERF_A): $(LIBPERF_IN)
+ 	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $(LIBPERF_IN)
+ 
++$(LIBPERF_A_EXT): $(LIBPERF_IN) $(LIBAPI)
++	$(QUIET_AR)$(RM) $@ && $(LD) -r -o libperf-ext.o $^ && $(AR) rcs $@ libperf-ext.o
++
+ $(LIBPERF_SO): $(LIBPERF_IN) $(LIBAPI)
+ 	$(QUIET_LINK)$(CC) --shared -Wl,-soname,libperf.so \
+                                     -Wl,--version-script=$(VERSION_SCRIPT) $^ -o $@
+@@ -131,7 +135,7 @@ $(LIBPERF_SO): $(LIBPERF_IN) $(LIBAPI)
+ 	@ln -sf $(@F) $(OUTPUT)libperf.so.$(LIBPERF_VERSION)
+ 
+ 
+-libs: $(LIBPERF_A) $(LIBPERF_SO) $(LIBPERF_PC)
++libs: $(LIBPERF_A) $(LIBPERF_A_EXT) $(LIBPERF_SO) $(LIBPERF_PC)
+ 
+ all: fixdep
+ 	$(Q)$(MAKE) libs
+@@ -183,9 +187,9 @@ define do_install
+ endef
+ 
+ install_lib: libs
+-	$(call QUIET_INSTALL, $(LIBPERF_ALL)) \
++	$(call QUIET_INSTALL, $(LIBPERF_LIBS_INSTALL)) \
+ 		$(call do_install_mkdir,$(libdir_SQ)); \
+-		cp -fpR $(LIBPERF_ALL) $(DESTDIR)$(libdir_SQ)
++		cp -fpR $(LIBPERF_LIBS_INSTALL) $(DESTDIR)$(libdir_SQ)
+ 
+ install_headers:
+ 	$(call QUIET_INSTALL, headers) \
+-- 
+2.30.2
+
