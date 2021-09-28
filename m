@@ -2,135 +2,106 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C4FC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Sep 2021 13:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE74AC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Sep 2021 13:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C26EF611CA
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Sep 2021 13:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA62761139
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Sep 2021 13:29:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240828AbhI1NYS (ORCPT
+        id S240514AbhI1Naq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 28 Sep 2021 09:24:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33310 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240579AbhI1NYR (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 28 Sep 2021 09:24:17 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6748C611BD;
-        Tue, 28 Sep 2021 13:22:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632835358;
-        bh=cWaVXKQuN3nkLq32pZ/eOvCZQPH57EVZSiGyda8i8F8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fdmWfrfsJwEAyZfjzOtPJp3ifg4fVak+YTq/bqBKF2AU6gNd5YQ3gptbMO7oKMMlX
-         +zhdSXFgW5semnuzJglE9aaVXFQpeXMIteMYpCU563Awd53cx2OVsn1n6wMhJsxhIG
-         z7Ln/jD38NA0dtq2J+TIZMrwvK6OJUma/FqMnx+Qo0JgUTaTWrjhU7YfvA7MqVPXTe
-         GbK3C/gcAI/XRwCfXsDOW7KcbWs8J5WQFH9mhwOxZJ4ax4mAFAvcy0MFfkUF64BnWa
-         WCt9WHd09g5ip5cVAtpJI3c/X/FlnO1M9tZ/iYat0e7R8C4l/0xyltK1HH/veNlyyK
-         en744RjDi3mMw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 10C9F410A1; Tue, 28 Sep 2021 10:22:36 -0300 (-03)
-Date:   Tue, 28 Sep 2021 10:22:36 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     Like Xu <like.xu.linux@gmail.com>,
+        Tue, 28 Sep 2021 09:30:46 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3884 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233878AbhI1Nap (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 28 Sep 2021 09:30:45 -0400
+Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HJgJR16hZz67kg2;
+        Tue, 28 Sep 2021 21:26:31 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.8; Tue, 28 Sep 2021 15:29:04 +0200
+Received: from [10.47.85.67] (10.47.85.67) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Tue, 28 Sep
+ 2021 14:29:03 +0100
+Subject: Re: [PATCH] perf jevents: Fix sys_event_tables to be freed like
+ arch_std_events
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     Like Xu <like.xu.linux@gmail.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf jevents: Fix sys_event_tables to be freed like
- arch_std_events
-Message-ID: <YVMXHM0F/y2ptX8C@kernel.org>
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 References: <20210928102938.69681-1-likexu@tencent.com>
  <YVMB5kt8XG+OdJ1M@kernel.org>
  <c547bc2d-ab7c-1e89-5d12-bd5d875f7aa5@huawei.com>
- <YVMVwDt3QHBPfT/T@kernel.org>
+ <YVMVwDt3QHBPfT/T@kernel.org> <YVMXHM0F/y2ptX8C@kernel.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <3949dfa2-d684-47af-ffa7-71b07141f64d@huawei.com>
+Date:   Tue, 28 Sep 2021 14:32:02 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <YVMXHM0F/y2ptX8C@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <YVMVwDt3QHBPfT/T@kernel.org>
-X-Url:  http://acmel.wordpress.com
+X-Originating-IP: [10.47.85.67]
+X-ClientProxiedBy: lhreml717-chm.china.huawei.com (10.201.108.68) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Sep 28, 2021 at 10:16:48AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Tue, Sep 28, 2021 at 01:49:20PM +0100, John Garry escreveu:
-> > On 28/09/2021 12:52, Arnaldo Carvalho de Melo wrote:
-> > > Em Tue, Sep 28, 2021 at 06:29:38PM +0800, Like Xu escreveu:
-> > > > From: Like Xu <likexu@tencent.com>
-> > > > 
-> > > > The compiler reports that free_sys_event_tables() is dead code. But
-> > > > according to the semantics, the "LIST_HEAD(arch_std_events)" should
-> > > > also be released, just like we do with 'arch_std_events' in the main().
-> > > 
-> > > Thanks, applied.
-> > > 
-> > > - Arnaldo
-> > > 
-> > 
-> > If not too late:
-> > Reviewed-by: John Garry <john.garry@huawei.com>
+On 28/09/2021 14:22, Arnaldo Carvalho de Melo wrote:
+>   jevents-y      += json.o jsmn.o jevents.o
+> -HOSTCFLAGS_jevents.o   = -I$(srctree)/tools/include
+> +HOSTCFLAGS_jevents.o   = -I$(srctree)/tools/include -Wall -Wextra
+>   pmu-events-y   += pmu-events.o
+>   JDIR           =  pmu-events/arch/$(SRCARCH)
+>   JSON           =  $(shell [ -d $(JDIR) ] &&                            \
+> ⬢[acme@toolbox perf]$
 > 
-> Not too late, collected.
->  
-> > I think that it could be a good idea to raise gcc warning level to detect
-> > unused static functions, like this was
+> I get this before applying Xu's patch:
 > 
-> Agreed, but we already have:
+>    LINK    /tmp/build/perf/libbpf.a
+> pmu-events/jevents.c: In function ‘save_arch_std_events’:
+> pmu-events/jevents.c:473:39: warning: unused parameter ‘data’ [-Wunused-parameter]
+>    473 | static int save_arch_std_events(void *data, struct json_event *je)
+>        |                                 ~~~~~~^~~~
+> At top level:
+> pmu-events/jevents.c:93:13: warning: ‘free_sys_event_tables’ defined but not used [-Wunused-function]
+>     93 | static void free_sys_event_tables(void)
+>        |             ^~~~~~~~~~~~~~~~~~~~~
 > 
-> CORE_CFLAGS += -Wall
-> CORE_CFLAGS += -Wextra
 > 
-> We can se it for this specific case with:
+> -------------------------------------
 > 
-> $ make V=1 -k BUILD_BPF_SKEL=1 CORESIGHT=1 PYTHON=python3 O=/tmp/build/perf -C tools/perf install-bin | grep jevents
-> make -f /var/home/acme/git/perf/tools/build/Makefile.build dir=pmu-events obj=jevents
->   gcc -Wp,-MD,/tmp/build/perf/pmu-events/.jevents.o.d -Wp,-MT,/tmp/build/perf/pmu-events/jevents.o  -D"BUILD_STR(s)=#s" -I/var/home/acme/git/perf/tools/include  -c -o /tmp/build/perf/pmu-events/jevents.o pmu-events/jevents.c
->    ld -r -o /tmp/build/perf/pmu-events/jevents-in.o  /tmp/build/perf/pmu-events/json.o /tmp/build/perf/pmu-events/jsmn.o /tmp/build/perf/pmu-events/jevents.o
-> gcc /tmp/build/perf/pmu-events/jevents-in.o -o /tmp/build/perf/pmu-events/jevents
-> /tmp/build/perf/pmu-events/jevents x86 pmu-events/arch /tmp/build/perf/pmu-events/pmu-events.c 1
-> jevents: Processing mapfile pmu-events/arch/x86/mapfile.csv
-> 
-> Humm... no "-Wall -Wextra" there... lemme try to fix it
+> I'll add this to perf/core, as this isn't a strict fix, so can wait for
+> v5.16.
 
-With this:
+Hi Arnaldo,
 
-⬢[acme@toolbox perf]$ git diff
-diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
-index a055dee6a46af77e..ea7107630bf4327f 100644
+OK, would you also consider reusing CFLAGS:
+
 --- a/tools/perf/pmu-events/Build
 +++ b/tools/perf/pmu-events/Build
-@@ -1,7 +1,7 @@
- hostprogs := jevents
+@@ -9,10 +9,12 @@ JSON          =  $(shell [ -d $(JDIR) ] && 
+                \
+JDIR_TEST      =  pmu-events/arch/test
+JSON_TEST      =  $(shell [ -d $(JDIR_TEST) ] &&                       \
+                        find $(JDIR_TEST) -name '*.json')
+-
++HOSTCFLAGS_jevents += $(CFLAGS)
 
- jevents-y      += json.o jsmn.o jevents.o
--HOSTCFLAGS_jevents.o   = -I$(srctree)/tools/include
-+HOSTCFLAGS_jevents.o   = -I$(srctree)/tools/include -Wall -Wextra
- pmu-events-y   += pmu-events.o
- JDIR           =  pmu-events/arch/$(SRCARCH)
- JSON           =  $(shell [ -d $(JDIR) ] &&                            \
-⬢[acme@toolbox perf]$
+I tried it, and there are more things to fix for jevents.o. Let me know 
+your preference and if any help required to fix any errors up.
 
-I get this before applying Xu's patch:
-
-  LINK    /tmp/build/perf/libbpf.a
-pmu-events/jevents.c: In function ‘save_arch_std_events’:
-pmu-events/jevents.c:473:39: warning: unused parameter ‘data’ [-Wunused-parameter]
-  473 | static int save_arch_std_events(void *data, struct json_event *je)
-      |                                 ~~~~~~^~~~
-At top level:
-pmu-events/jevents.c:93:13: warning: ‘free_sys_event_tables’ defined but not used [-Wunused-function]
-   93 | static void free_sys_event_tables(void)
-      |             ^~~~~~~~~~~~~~~~~~~~~
-
-
--------------------------------------
-
-I'll add this to perf/core, as this isn't a strict fix, so can wait for
-v5.16.
-
-- Arnaldo
+Thanks!
