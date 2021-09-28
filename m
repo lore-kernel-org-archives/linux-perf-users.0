@@ -2,180 +2,160 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 135ABC433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Sep 2021 20:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A567C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Sep 2021 20:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2822610E6
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Sep 2021 20:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2923B61209
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Sep 2021 20:27:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242617AbhI1UJD (ORCPT
+        id S242315AbhI1U3C (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 28 Sep 2021 16:09:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:60910 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S242563AbhI1UJC (ORCPT
+        Tue, 28 Sep 2021 16:29:02 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3886 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234794AbhI1U3B (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 28 Sep 2021 16:09:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1632859642;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Bk6tb6Ct537XzJhdSUGj/GNTfjhpoUwK2pWLiL4w+xw=;
-        b=Ev0BxwTMDmr0hshVWBU5HvjS8bnUbxfA5QNT5ld7pSUvzwcTBIh5ySrQWLQ32JCkrizRaC
-        MCWhKWRkzfzsIHId21gTwTUwTLFs9pkSzATLGfltcLpHgvdGbzZZkFACG7aPIfFsLH2TLf
-        YioapmUYZh33Bm+39+BCyMzK7mnHLns=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-259-C81LjLfnM5KOjmKbPpRRCQ-1; Tue, 28 Sep 2021 16:07:19 -0400
-X-MC-Unique: C81LjLfnM5KOjmKbPpRRCQ-1
-Received: by mail-ed1-f72.google.com with SMTP id b7-20020a50e787000000b003d59cb1a923so23068622edn.5
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Sep 2021 13:07:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Bk6tb6Ct537XzJhdSUGj/GNTfjhpoUwK2pWLiL4w+xw=;
-        b=HzLCtrp6b07guJIpsL4yWsr+AycYYqkgB+seCz7IqJBLP8Zmrig2rjgWNN8faJ9CXQ
-         rTbnWgYo9aijOQ08beLiebpfGCO91x/GgFXOfNEKwivbeE41TKEXXJeGHh3bdw30X88r
-         qz732GMk0Pu0qM5Z6eo1EO8M48Jr1rTlyiMJz4i3kCqp1Qcjky2Kh/o1bX+M/hxB2YPb
-         ccuF56qyKebS20Kni/xpv9uAFuhVTbiPAWzPcvw/eVZZttSjd7Nq8yCnR4FfQDRKWKJq
-         Gr6a9/ao2AyE8UORY7L2z7Wimq02rawyZ8L1vqMBo2T9Go1mmC36hN4mAjS3xvVpW5mH
-         x29w==
-X-Gm-Message-State: AOAM532dXPYHGZdtUueK6cNim9HAn/cHqKjmshmtykmTDEITekN/qM5X
-        3sKHoW4oRq7IKeYyv18IMSLnIFvndUmHaYUux//k5EdfQSpBVVZC/zivrnqatAQjx0fcQD9m9AG
-        +vNR+HB4qgpBZbXfVkKZwiT82o4tISA==
-X-Received: by 2002:a50:8d85:: with SMTP id r5mr2768007edh.312.1632859638184;
-        Tue, 28 Sep 2021 13:07:18 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzWTOpT3bmqoWPQtevCOSt6HiSKoNt3ldOdQym4CIAEfcKKVcaEFtNEQFgNyQAYVjfWzV/H3g==
-X-Received: by 2002:a50:8d85:: with SMTP id r5mr2767987edh.312.1632859638039;
-        Tue, 28 Sep 2021 13:07:18 -0700 (PDT)
-Received: from krava ([83.240.63.48])
-        by smtp.gmail.com with ESMTPSA id ck10sm46109edb.43.2021.09.28.13.07.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Sep 2021 13:07:17 -0700 (PDT)
-Date:   Tue, 28 Sep 2021 22:07:15 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Tue, 28 Sep 2021 16:29:01 -0400
+Received: from fraeml735-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HJrZk5t57z67Cp2;
+        Wed, 29 Sep 2021 04:24:30 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml735-chm.china.huawei.com (10.206.15.216) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.8; Tue, 28 Sep 2021 22:27:19 +0200
+Received: from [10.47.26.77] (10.47.26.77) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Tue, 28 Sep
+ 2021 21:27:18 +0100
+Subject: Re: [PATCH] perf jevents: Fix sys_event_tables to be freed like
+ arch_std_events
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     Like Xu <like.xu.linux@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Daniel Latypov <dlatypov@google.com>,
-        David Gow <davidgow@google.com>, eranian@google.com
-Subject: Re: [RFC PATCH 3/5] perf test: Make each test/suite its own struct.
-Message-ID: <YVN18yh1N5luKGen@krava>
-References: <20210922081959.390059-1-irogers@google.com>
- <20210922081959.390059-4-irogers@google.com>
- <YVDiMDoD2dr312KY@krava>
- <CAP-5=fWONeXLa=r4uJ1TM4K+E1moBMrV29LzfbciTfVVHvorsA@mail.gmail.com>
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20210928102938.69681-1-likexu@tencent.com>
+ <YVMB5kt8XG+OdJ1M@kernel.org>
+ <c547bc2d-ab7c-1e89-5d12-bd5d875f7aa5@huawei.com>
+ <YVMVwDt3QHBPfT/T@kernel.org> <YVMXHM0F/y2ptX8C@kernel.org>
+ <3949dfa2-d684-47af-ffa7-71b07141f64d@huawei.com>
+ <YVNXTuq1PpLpMH/R@kernel.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <bd98c9f3-de67-7ca5-534c-f7fd6cc69915@huawei.com>
+Date:   Tue, 28 Sep 2021 21:30:16 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fWONeXLa=r4uJ1TM4K+E1moBMrV29LzfbciTfVVHvorsA@mail.gmail.com>
+In-Reply-To: <YVNXTuq1PpLpMH/R@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.47.26.77]
+X-ClientProxiedBy: lhreml714-chm.china.huawei.com (10.201.108.65) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Sep 27, 2021 at 09:08:53AM -0700, Ian Rogers wrote:
-> On Sun, Sep 26, 2021 at 2:12 PM Jiri Olsa <jolsa@redhat.com> wrote:
-> >
-> > On Wed, Sep 22, 2021 at 01:19:56AM -0700, Ian Rogers wrote:
-> > > By switching to an array of pointers to tests (later to be suites)
-> > > the definition of the tests can be moved to the file containing the
-> > > tests.
-> > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> > >  tools/perf/arch/arm/include/arch-tests.h     |   2 +-
-> > >  tools/perf/arch/arm/tests/arch-tests.c       |  21 +-
-> > >  tools/perf/arch/arm64/include/arch-tests.h   |   2 +-
-> > >  tools/perf/arch/arm64/tests/arch-tests.c     |  15 +-
-> > >  tools/perf/arch/powerpc/include/arch-tests.h |   2 +-
-> > >  tools/perf/arch/powerpc/tests/arch-tests.c   |  15 +-
-> > >  tools/perf/arch/x86/include/arch-tests.h     |   2 +-
-> > >  tools/perf/arch/x86/tests/arch-tests.c       |  47 ++--
-> > >  tools/perf/tests/builtin-test.c              | 273 ++++++++++++-------
-> > >  tools/perf/tests/tests.h                     |   6 +
-> > >  10 files changed, 220 insertions(+), 165 deletions(-)
-> > >
-> > > diff --git a/tools/perf/arch/arm/include/arch-tests.h b/tools/perf/arch/arm/include/arch-tests.h
-> > > index c62538052404..37039e80f18b 100644
-> > > --- a/tools/perf/arch/arm/include/arch-tests.h
-> > > +++ b/tools/perf/arch/arm/include/arch-tests.h
-> > > @@ -2,6 +2,6 @@
-> > >  #ifndef ARCH_TESTS_H
-> > >  #define ARCH_TESTS_H
-> > >
-> > > -extern struct test arch_tests[];
-> > > +extern struct test *arch_tests[];
-> > >
-> > >  #endif
-> > > diff --git a/tools/perf/arch/arm/tests/arch-tests.c b/tools/perf/arch/arm/tests/arch-tests.c
-> > > index 6848101a855f..4374b0293177 100644
-> > > --- a/tools/perf/arch/arm/tests/arch-tests.c
-> > > +++ b/tools/perf/arch/arm/tests/arch-tests.c
-> > > @@ -3,18 +3,15 @@
-> > >  #include "tests/tests.h"
-> > >  #include "arch-tests.h"
-> > >
-> > > -struct test arch_tests[] = {
-> > >  #ifdef HAVE_DWARF_UNWIND_SUPPORT
-> > > -     {
-> > > -             .desc = "DWARF unwind",
-> > > -             .func = test__dwarf_unwind,
-> > > -     },
-> > > +DEFINE_SUITE("DWARF unwind", dwarf_unwind);
-> >
-> > why not having this and other in here DEFINE_SUITE in
-> > tests/dwarf-unwind.c ? it seems to get compiled in only
-> > for supported arch
-> 
-> Not sure I follow. In these changes I've just tried to move things
-> around without changing the logic behind things. This sounds like a
-> sensible follow up clean up.
+On 28/09/2021 18:56, Arnaldo Carvalho de Melo wrote:
+>>>   ‘save_arch_std_events’:
+>>> pmu-events/jevents.c:473:39: warning: unused parameter ‘data’ [-Wunused-parameter]
+>>>     473 | static int save_arch_std_events(void *data, struct json_event *je)
+>>>         |                                 ~~~~~~^~~~
+>>> At top level:
+>>> pmu-events/jevents.c:93:13: warning: ‘free_sys_event_tables’ defined but not used [-Wunused-function]
+>>>      93 | static void free_sys_event_tables(void)
+>>>         |             ^~~~~~~~~~~~~~~~~~~~~
+>>>
+>>>
+>>> -------------------------------------
+>>>
+>>> I'll add this to perf/core, as this isn't a strict fix, so can wait for
+>>> v5.16.
+>> Hi Arnaldo,
+>>
+>> OK, would you also consider reusing CFLAGS:
+>>
+>> --- a/tools/perf/pmu-events/Build
+>> +++ b/tools/perf/pmu-events/Build
+>> @@ -9,10 +9,12 @@ JSON          =  $(shell [ -d $(JDIR) ] &&
+>> \
+>> JDIR_TEST      =  pmu-events/arch/test
+>> JSON_TEST      =  $(shell [ -d $(JDIR_TEST) ] &&                       \
+>>                         find $(JDIR_TEST) -name '*.json')
+>> -
+>> +HOSTCFLAGS_jevents += $(CFLAGS)
+> Humm, we have to check if CFLAGS doesn't come with cross-build options,
+> i.e. IIRC we have to use HOSTCFLAGS instead. Unsure if there is some
+> *CFLAGS variable that gets the common part, where these -Wall and
+> -Wextra, -Werror could go.
 
-ah ok, maybe I mixed the proper patch to adress this, sry
+not sure. As I see, the bulk of flags we have in CFLAGS comes from 
+EXTRA_WARNINGS in scripts/Makefile.include; but CFLAGS seems to also 
+include EXTRA_CLAGS, which are for cross-builds (see perf/Makefile.config)
 
-the question I have is why DEFINE_SUITE("DWARF unwind" ..
-is not moved to dwarf unwind test object, like you did for
-other tests
+So maybe we just need to use EXTRA_WARNINGS for HOST_CFLAGS
 
-thanks,
-jirka
+>   
+>> I tried it, and there are more things to fix for jevents.o. Let me know your
+>> preference and if any help required to fix any errors up.
+> I fixed the one I found, see below, I'll test build what I have in
+> perf/core and push it, then you can continue from there, after checking
+> this HOSTCFLAGS/CFLAGS issue.
+> 
+> - Arnaldo
+> 
+>>From 0e46c8307574a8e2dac8d7ba97e0f6f4bbee67a5 Mon Sep 17 00:00:00 2001
+> From: Arnaldo Carvalho de Melo<acme@redhat.com>
+> Date: Tue, 28 Sep 2021 14:15:01 -0300
+> Subject: [PATCH 1/1] perf jevents: Add __maybe_unused attribute to unused
+>   function arg
+> 
+> The tools/perf/pmu-events/jevents.c file isn't being compiled with
+> -Werror and -Wextra, which will be the case soon, so before we turn
+> those compiler flags on, fix what it would flag.
+> 
+> Cc: Alexander Shishkin<alexander.shishkin@linux.intel.com>
+> Cc: Ingo Molnar<mingo@redhat.com>
+> Cc: Jiri Olsa<jolsa@redhat.com>
+> Cc: Like Xu<like.xu.linux@gmail.com>
+> Cc: Mark Rutland<mark.rutland@arm.com>
+> Cc: Namhyung Kim<namhyung@kernel.org>
+> Cc: Peter Zijlstra<peterz@infradead.org>
+> Signed-off-by: Arnaldo Carvalho de Melo<acme@redhat.com>
+> To: John Garry<john.garry@huawei.com>
 
+thanks.
+
+Reviewed-by: John Garry <john.garry@huawei.com>
+
+> ---
+>   tools/perf/pmu-events/jevents.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> Thanks,
-> Ian
-> 
-> > jirka
-> >
-> > >  #endif
-> > > -     {
-> > > -             .desc = "Vectors page",
-> > > -             .func = test__vectors_page,
-> > > -     },
-> > > -     {
-> > > -             .func = NULL,
-> > > -     },
-> > > +DEFINE_SUITE("Vectors page", vectors_page);
-> > > +
-> > > +struct test *arch_tests[] = {
-> > > +#ifdef HAVE_DWARF_UNWIND_SUPPORT
-> > > +     &dwarf_unwind,
-> > > +#endif
-> > > +     &vectors_pages,
-> > > +     NULL,
-> > >  };
-> >
-> > SNIP
-> >
-> 
+> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+> index 6731b3cf0c2fc9b7..323e1dfe2436c049 100644
+> --- a/tools/perf/pmu-events/jevents.c
+> +++ b/tools/perf/pmu-events/jevents.c
+> @@ -45,6 +45,7 @@
+>   #include <sys/resource.h>		/* getrlimit */
+>   #include <ftw.h>
+>   #include <sys/stat.h>
+> +#include <linux/compiler.h>
+>   #include <linux/list.h>
+>   #include "jsmn.h"
+>   #include "json.h"
+> @@ -470,7 +471,7 @@ static void free_arch_std_events(void)
+>   	}
+>   }
+>   
+> -static int save_arch_std_events(void *data, struct json_event *je)
+> +static int save_arch_std_events(void *data __maybe_unused, struct json_event *je)
+>   {
+>   	struct event_struct *es;
 
