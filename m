@@ -2,59 +2,59 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E63C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Sep 2021 17:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63264C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Sep 2021 18:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF8416120C
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Sep 2021 17:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4050460FF2
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Sep 2021 18:01:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242033AbhI1SBg (ORCPT
+        id S230238AbhI1SCp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 28 Sep 2021 14:01:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45144 "EHLO
+        Tue, 28 Sep 2021 14:02:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236453AbhI1SBg (ORCPT
+        with ESMTP id S241965AbhI1SCn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 28 Sep 2021 14:01:36 -0400
-Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D768C061745
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Sep 2021 10:59:56 -0700 (PDT)
-Received: by mail-il1-x135.google.com with SMTP id r9so2757346ile.5
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Sep 2021 10:59:56 -0700 (PDT)
+        Tue, 28 Sep 2021 14:02:43 -0400
+Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7C79C06161C
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Sep 2021 11:01:03 -0700 (PDT)
+Received: by mail-il1-x136.google.com with SMTP id b12so12532089ilf.11
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Sep 2021 11:01:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2BniPafuDoFdlymopELQXkB/zQh7F6LVoUvjWNE/VRg=;
-        b=glkMq8CqzAY65V+OfwsRWbZMfrbm5gk2blCTp6HIIduX5J0r1s9yNPz7ULbG20e6TW
-         nwe2TsaMYxdv3YxGyKZZT+BqyhO+hIwkGFvXsYrRxwF/bZA8XvYQ95Ax1f3GmffZ2wzw
-         QMKk7kYfUteYb7dtrXOW1iFNZ7lxxf/CNN6SayYgUF191WpLw8WXyuWz95lyCm4hNNio
-         1O7cVUTfjZtzRriKK6cfo59a/Zwen6v6mHn5tdw8fibVHsu11wOAariYsIKNcXsZs9fj
-         CCizVcbfKkS7PteVgyObIKXxeBZHnjKXaQxZsmw2SciE+7EwEHNKrH3LHLXs7SUVmsAo
-         PWBg==
+        bh=9pIAVmKduZgRWLe5UowP642oGT2BOJEs4BGi2pkF7gI=;
+        b=ABsYvrJOpHL5K/R/0K2WbzjkbN2er/hWQO4aSKf4pLOFEgBwQ0ITQX7Qmb8V6D/6jD
+         +fRe2tjw4jywsoQIiSgDRKH5DNEjARBv3T8NMGZPJ34z0jKZCr263DdBTQcPwOrix1LJ
+         c+/fgFJWjcfMDguMk2WMqaBMef74+jlqy24qvGdXxM1YEQPi2jny9buLM3B5o6S+qFMA
+         XQveCzsEYa/4TqUvQT/8fTdn/giuIypRI2z4NDNcfus2HkiJg1IdAb+/HAUU+BVlrmnt
+         6IvccW50PGsKc3VbIaDTeBxiIi2GoQPSC0j2B1YlPoaJVhhCugzoYM1GI6chKdu2c6k/
+         tLSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2BniPafuDoFdlymopELQXkB/zQh7F6LVoUvjWNE/VRg=;
-        b=MFTDbhg7kGUJqJG/S1+YDntXVE/4mklqiUTRpENc1JZnyT3372wZGe+mTQB5jnR5SP
-         PSnjqkRUyZdtwSKmtaWTdvNjYbs5tyFZcznD1sha6iDP02xywryfl2qLDPkvld5L9B1h
-         sKr9Dz1fUXIYiS59qORUgPjgxQR/WaAAMl3R+YLeeRy/tVV1SnMAWWbCNfLh0V3DhT54
-         /DkMpcBwVnbk2i/jr3XDufaOSTOd4cEBh0Adn34I5XQlGB1NL+CkCDtTlKgZ1844oQsf
-         OGMrDN5As81Oepjq17/LLQttGSCSdPxhxusqQnG9QfD41mxC3xXGfo4ae1PAe1ZdwVjz
-         sXxA==
-X-Gm-Message-State: AOAM532ZdWIoNZQzl7JHLhwIb6Nsn3QCq5YdS74xSjrj+UHxw7FtUbRJ
-        opEBnTN6woAd5Eshwv8s81pF0h4EgeB79cPK/UYhKg==
-X-Google-Smtp-Source: ABdhPJzQriZBhaXa8Nz8rzqkeHFOVtzxDfH7dKuTTCQu8Bb7gYIbKnLCthu8TUtgv0Ac7wqnKtun73U9BkEpVpidxz0=
-X-Received: by 2002:a05:6e02:b23:: with SMTP id e3mr5253595ilu.53.1632851995505;
- Tue, 28 Sep 2021 10:59:55 -0700 (PDT)
+        bh=9pIAVmKduZgRWLe5UowP642oGT2BOJEs4BGi2pkF7gI=;
+        b=oYyN5STMQVhncu3jLvjY9gyRM3fqUiqeQBQc5WYXj+gh4itehmk9d0X2SYjz6jco+U
+         849tyXc5Dye/X308TZoBiWmgnIsSLPcUuH5zTeqUGW8Xtm1ZMzHNxxCVaWFZjsf+whI6
+         ZsYdbSXvwPTWBS+jKkQ9J3wKVuMawi9mAx1GRP1LiblRo9lZMs5NlwiPJjoLIf4IkSIw
+         ETssv72ENofr1y0pHlDh09M/NONTriNhgetqnZYksT8LwcBdnzxJtuEZ4pjoFKv3nVVL
+         RBIAyqi6EwBL6qWK6fI7vL1a2YDa+dyySRExHRyEJ2qzQiyLJB22zWUUHyRhP3hgtjRG
+         eRGw==
+X-Gm-Message-State: AOAM531v0ZNYYUSv9fI4SOKRNZoRhleq4ZBkdcKlD2nRh94+kTCwlqUC
+        DRsx9wSAyPqOo/jtrF9hY4x3TEn3e6xIjsc0qu6BeQ==
+X-Google-Smtp-Source: ABdhPJzKmZtv7UlFF9wsX/z7IY9Q6X5zJ6CdJeOGa0JK7EWUFnPEAiI1ytvPflWCpdVBcP3PdRk7GUo9NfLNtdN86oI=
+X-Received: by 2002:a05:6e02:1c2d:: with SMTP id m13mr5254327ilh.2.1632852062669;
+ Tue, 28 Sep 2021 11:01:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <1631795665-240946-1-git-send-email-john.garry@huawei.com> <1631795665-240946-2-git-send-email-john.garry@huawei.com>
-In-Reply-To: <1631795665-240946-2-git-send-email-john.garry@huawei.com>
+References: <1631795665-240946-1-git-send-email-john.garry@huawei.com> <1631795665-240946-3-git-send-email-john.garry@huawei.com>
+In-Reply-To: <1631795665-240946-3-git-send-email-john.garry@huawei.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 28 Sep 2021 10:59:42 -0700
-Message-ID: <CAP-5=fVG3_p3Xf3s6FnpSRFwt3+CxitPZwRK0fMbz2t8WZaSEw@mail.gmail.com>
-Subject: Re: [PATCH 1/5] perf parse-events: Set numeric term config
+Date:   Tue, 28 Sep 2021 11:00:47 -0700
+Message-ID: <CAP-5=fVzcQCUA611byVn47Fyt0mWLfQ2q_619zqYwJB=7ckPtw@mail.gmail.com>
+Subject: Re: [PATCH 2/5] perf jevents: Support ConfigCode
 To:     John Garry <john.garry@huawei.com>
 Cc:     will@kernel.org, mathieu.poirier@linaro.org, leo.yan@linaro.org,
         peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
@@ -71,114 +71,76 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On Thu, Sep 16, 2021 at 5:39 AM John Garry <john.garry@huawei.com> wrote:
 >
-> For numeric terms, the config field may be NULL as it is not set from the
-> l+y parsing.
+> Some PMUs use "config=XXX" for eventcodes, like:
 >
-> Fix by setting the term config from the term type name.
+> more /sys/bus/event_source/devices/hisi_sccl1_ddrc3/events/act_cmd
+> config=0x5
 >
-> Also fix up the pmu-events test to set the alias strings to set the period
-> term properly, and fix up parse-events test to check the term config
-> string.
+> However jevents would give an alias with .event field "event=0x5" for this
+> event. This is handled without issue by the parse events code, but the pmu
+> alias code gets a bit confused, as it warns about assigning "event=0x5"
+> over "config=0x5" in perf_pmu_assign_str() when merging aliases:
+> ./perf stat -v -e act_cmd
+> ...
+> alias act_cmd differs in field 'value'
+> ...
+>
+> To make things a bit more straightforward, allow jevents to support
+> "config=XXX" as well, by supporting a "ConfigCode" field.
 >
 > Signed-off-by: John Garry <john.garry@huawei.com>
 
 Acked-by: Ian Rogers <irogers@google.com>
 
-Having this would be very useful with an issue I'm looking into.
-
 Thanks,
 Ian
 
 > ---
->  tools/perf/tests/parse-events.c | 8 ++++----
->  tools/perf/tests/pmu-events.c   | 6 +++---
->  tools/perf/util/parse-events.c  | 2 +-
->  3 files changed, 8 insertions(+), 8 deletions(-)
+>  tools/perf/pmu-events/jevents.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
 >
-> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-> index fd3556cc9ad4..8875e388563e 100644
-> --- a/tools/perf/tests/parse-events.c
-> +++ b/tools/perf/tests/parse-events.c
-> @@ -605,7 +605,7 @@ static int test__checkterms_simple(struct list_head *terms)
->         TEST_ASSERT_VAL("wrong type val",
->                         term->type_val == PARSE_EVENTS__TERM_TYPE_NUM);
->         TEST_ASSERT_VAL("wrong val", term->val.num == 10);
-> -       TEST_ASSERT_VAL("wrong config", !term->config);
-> +       TEST_ASSERT_VAL("wrong config", !strcmp(term->config, "config"));
+> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+> index 6731b3cf0c2f..ef92c2fdd45d 100644
+> --- a/tools/perf/pmu-events/jevents.c
+> +++ b/tools/perf/pmu-events/jevents.c
+> @@ -575,10 +575,12 @@ static int json_events(const char *fn,
+>                 struct json_event je = {};
+>                 char *arch_std = NULL;
+>                 unsigned long long eventcode = 0;
+> +               unsigned long long configcode = 0;
+>                 struct msrmap *msr = NULL;
+>                 jsmntok_t *msrval = NULL;
+>                 jsmntok_t *precise = NULL;
+>                 jsmntok_t *obj = tok++;
+> +               bool configcode_present = false;
 >
->         /* config1 */
->         term = list_entry(term->list.next, struct parse_events_term, list);
-> @@ -614,7 +614,7 @@ static int test__checkterms_simple(struct list_head *terms)
->         TEST_ASSERT_VAL("wrong type val",
->                         term->type_val == PARSE_EVENTS__TERM_TYPE_NUM);
->         TEST_ASSERT_VAL("wrong val", term->val.num == 1);
-> -       TEST_ASSERT_VAL("wrong config", !term->config);
-> +       TEST_ASSERT_VAL("wrong config", !strcmp(term->config, "config1"));
->
->         /* config2=3 */
->         term = list_entry(term->list.next, struct parse_events_term, list);
-> @@ -623,7 +623,7 @@ static int test__checkterms_simple(struct list_head *terms)
->         TEST_ASSERT_VAL("wrong type val",
->                         term->type_val == PARSE_EVENTS__TERM_TYPE_NUM);
->         TEST_ASSERT_VAL("wrong val", term->val.num == 3);
-> -       TEST_ASSERT_VAL("wrong config", !term->config);
-> +       TEST_ASSERT_VAL("wrong config", !strcmp(term->config, "config2"));
->
->         /* umask=1*/
->         term = list_entry(term->list.next, struct parse_events_term, list);
-> @@ -661,7 +661,7 @@ static int test__checkterms_simple(struct list_head *terms)
->         TEST_ASSERT_VAL("wrong type val",
->                         term->type_val == PARSE_EVENTS__TERM_TYPE_NUM);
->         TEST_ASSERT_VAL("wrong val", term->val.num == 0xead);
-> -       TEST_ASSERT_VAL("wrong config", !term->config);
-> +       TEST_ASSERT_VAL("wrong config", !strcmp(term->config, "config"));
->         return 0;
->  }
->
-> diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-> index 43743cf719ef..8c5a6ba1cb14 100644
-> --- a/tools/perf/tests/pmu-events.c
-> +++ b/tools/perf/tests/pmu-events.c
-> @@ -67,7 +67,7 @@ static const struct perf_pmu_test_event segment_reg_loads_any = {
->                 .desc = "Number of segment register loads",
->                 .topic = "other",
->         },
-> -       .alias_str = "umask=0x80,(null)=0x30d40,event=0x6",
-> +       .alias_str = "umask=0x80,period=0x30d40,event=0x6",
->         .alias_long_desc = "Number of segment register loads",
->  };
->
-> @@ -78,7 +78,7 @@ static const struct perf_pmu_test_event dispatch_blocked_any = {
->                 .desc = "Memory cluster signals to block micro-op dispatch for any reason",
->                 .topic = "other",
->         },
-> -       .alias_str = "umask=0x20,(null)=0x30d40,event=0x9",
-> +       .alias_str = "umask=0x20,period=0x30d40,event=0x9",
->         .alias_long_desc = "Memory cluster signals to block micro-op dispatch for any reason",
->  };
->
-> @@ -89,7 +89,7 @@ static const struct perf_pmu_test_event eist_trans = {
->                 .desc = "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
->                 .topic = "other",
->         },
-> -       .alias_str = "umask=0,(null)=0x30d40,event=0x3a",
-> +       .alias_str = "umask=0,period=0x30d40,event=0x3a",
->         .alias_long_desc = "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
->  };
->
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index 51a2219df601..e10243454e8b 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -3083,7 +3083,7 @@ int parse_events_term__num(struct parse_events_term **term,
->         struct parse_events_term temp = {
->                 .type_val  = PARSE_EVENTS__TERM_TYPE_NUM,
->                 .type_term = type_term,
-> -               .config    = config,
-> +               .config    = config ? : strdup(config_term_names[type_term]),
->                 .no_value  = no_value,
->                 .err_term  = loc_term ? loc_term->first_column : 0,
->                 .err_val   = loc_val  ? loc_val->first_column  : 0,
+>                 EXPECT(obj->type == JSMN_OBJECT, obj, "expected object");
+>                 for (j = 0; j < obj->size; j += 2) {
+> @@ -601,6 +603,12 @@ static int json_events(const char *fn,
+>                                 addfield(map, &code, "", "", val);
+>                                 eventcode |= strtoul(code, NULL, 0);
+>                                 free(code);
+> +                       } else if (json_streq(map, field, "ConfigCode")) {
+> +                               char *code = NULL;
+> +                               addfield(map, &code, "", "", val);
+> +                               configcode |= strtoul(code, NULL, 0);
+> +                               free(code);
+> +                               configcode_present = true;
+>                         } else if (json_streq(map, field, "ExtSel")) {
+>                                 char *code = NULL;
+>                                 addfield(map, &code, "", "", val);
+> @@ -682,7 +690,10 @@ static int json_events(const char *fn,
+>                                 addfield(map, &extra_desc, " ",
+>                                                 "(Precise event)", NULL);
+>                 }
+> -               snprintf(buf, sizeof buf, "event=%#llx", eventcode);
+> +               if (configcode_present)
+> +                       snprintf(buf, sizeof buf, "config=%#llx", configcode);
+> +               else
+> +                       snprintf(buf, sizeof buf, "event=%#llx", eventcode);
+>                 addfield(map, &event, ",", buf, NULL);
+>                 if (je.desc && extra_desc)
+>                         addfield(map, &je.desc, " ", extra_desc, NULL);
 > --
 > 2.26.2
 >
