@@ -2,59 +2,59 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63264C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Sep 2021 18:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 100BBC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Sep 2021 18:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4050460FF2
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Sep 2021 18:01:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8FDA61352
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Sep 2021 18:02:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230238AbhI1SCp (ORCPT
+        id S242141AbhI1SEZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 28 Sep 2021 14:02:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45418 "EHLO
+        Tue, 28 Sep 2021 14:04:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241965AbhI1SCn (ORCPT
+        with ESMTP id S242060AbhI1SEY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 28 Sep 2021 14:02:43 -0400
-Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7C79C06161C
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Sep 2021 11:01:03 -0700 (PDT)
-Received: by mail-il1-x136.google.com with SMTP id b12so12532089ilf.11
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Sep 2021 11:01:03 -0700 (PDT)
+        Tue, 28 Sep 2021 14:04:24 -0400
+Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8321AC06161C
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Sep 2021 11:02:44 -0700 (PDT)
+Received: by mail-io1-xd29.google.com with SMTP id p80so28461463iod.10
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Sep 2021 11:02:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9pIAVmKduZgRWLe5UowP642oGT2BOJEs4BGi2pkF7gI=;
-        b=ABsYvrJOpHL5K/R/0K2WbzjkbN2er/hWQO4aSKf4pLOFEgBwQ0ITQX7Qmb8V6D/6jD
-         +fRe2tjw4jywsoQIiSgDRKH5DNEjARBv3T8NMGZPJ34z0jKZCr263DdBTQcPwOrix1LJ
-         c+/fgFJWjcfMDguMk2WMqaBMef74+jlqy24qvGdXxM1YEQPi2jny9buLM3B5o6S+qFMA
-         XQveCzsEYa/4TqUvQT/8fTdn/giuIypRI2z4NDNcfus2HkiJg1IdAb+/HAUU+BVlrmnt
-         6IvccW50PGsKc3VbIaDTeBxiIi2GoQPSC0j2B1YlPoaJVhhCugzoYM1GI6chKdu2c6k/
-         tLSQ==
+        bh=iml/VgaExryQoFlabzYCAD3repwu8THYP0LEUo7RDw8=;
+        b=ismr0qLIdlmhPy1VIB+ST7MXgGg5DQQWHEuIIKqi+mr0AVnVFJN8xOIDmgC+re0qNz
+         lYZHi/ekOZ7ThK81qsIVWwnH0w6QYYGos//Knny6xi4yn4Al04WGtc1fYfwKNLYlSEVK
+         mRNTGXRpta0XEtahbNknTx6LXkf0bfyTl47hP2/fftTWpfZw78XH/Q6WSmQT50aj0BC7
+         GD9pKi7aYGcqv3fCZAWUTyOBnuisag5v+xQzL1NBAIGs2jk95o13AnygZ/SOyx99htBL
+         DKAeuQlDk3VTKY9j+qWiUEFF6Fl6VlEitBT+OZviPMtWHatLtlAfRDq5tPllRuiexvTW
+         3IxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9pIAVmKduZgRWLe5UowP642oGT2BOJEs4BGi2pkF7gI=;
-        b=oYyN5STMQVhncu3jLvjY9gyRM3fqUiqeQBQc5WYXj+gh4itehmk9d0X2SYjz6jco+U
-         849tyXc5Dye/X308TZoBiWmgnIsSLPcUuH5zTeqUGW8Xtm1ZMzHNxxCVaWFZjsf+whI6
-         ZsYdbSXvwPTWBS+jKkQ9J3wKVuMawi9mAx1GRP1LiblRo9lZMs5NlwiPJjoLIf4IkSIw
-         ETssv72ENofr1y0pHlDh09M/NONTriNhgetqnZYksT8LwcBdnzxJtuEZ4pjoFKv3nVVL
-         RBIAyqi6EwBL6qWK6fI7vL1a2YDa+dyySRExHRyEJ2qzQiyLJB22zWUUHyRhP3hgtjRG
-         eRGw==
-X-Gm-Message-State: AOAM531v0ZNYYUSv9fI4SOKRNZoRhleq4ZBkdcKlD2nRh94+kTCwlqUC
-        DRsx9wSAyPqOo/jtrF9hY4x3TEn3e6xIjsc0qu6BeQ==
-X-Google-Smtp-Source: ABdhPJzKmZtv7UlFF9wsX/z7IY9Q6X5zJ6CdJeOGa0JK7EWUFnPEAiI1ytvPflWCpdVBcP3PdRk7GUo9NfLNtdN86oI=
-X-Received: by 2002:a05:6e02:1c2d:: with SMTP id m13mr5254327ilh.2.1632852062669;
- Tue, 28 Sep 2021 11:01:02 -0700 (PDT)
+        bh=iml/VgaExryQoFlabzYCAD3repwu8THYP0LEUo7RDw8=;
+        b=69s1Cj2jb8AmYRBoEJVvHZHiKwTXC364bXoYCLCYmcmSyi8VbJHBvhV9PphEugIR3Q
+         C85OCGU7ulO63R1VUAphj9n/+CKU3K/QKOOcTfKXDxCbnM1rnaIL8zyPZDlm4MeE//eA
+         FkwBvKVf2EjEqtavSpj9G8kj7fnhzm6ty+BUJMzwGPcJioO2OOvIyMRGiIUH2DP0gL5o
+         GlBbjg/fGtP1ox4zB5mbMCdBCBXNe7NA73dOlGFIt6uwJHXL+usE69H3OBfMFxv+cLu0
+         /VSZUZf2cMYX9xlPf13cO7jS30v8aflQdBMfpx9r+NL7hvZwKuZoFxmdvcQQmExTxic3
+         MQwQ==
+X-Gm-Message-State: AOAM532gTop0CJ9EMURypE9EvydCeLtt19SDNhsed42YuGIoh7OvLfV+
+        n+3h5lpSpwtVq97pMIrJ2yh9cbCD0c05CVCe2H6fMA==
+X-Google-Smtp-Source: ABdhPJyIyz7HHcZ3wmbeY4d6vV9kn924GY9hfQmHZ07E9f42u2rOSKuyAquC7V6Go+MV0xcQZo1FXD9/xFrGOtXcDYA=
+X-Received: by 2002:a6b:8f47:: with SMTP id r68mr4812581iod.18.1632852163595;
+ Tue, 28 Sep 2021 11:02:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <1631795665-240946-1-git-send-email-john.garry@huawei.com> <1631795665-240946-3-git-send-email-john.garry@huawei.com>
-In-Reply-To: <1631795665-240946-3-git-send-email-john.garry@huawei.com>
+References: <1631795665-240946-1-git-send-email-john.garry@huawei.com> <1631795665-240946-4-git-send-email-john.garry@huawei.com>
+In-Reply-To: <1631795665-240946-4-git-send-email-john.garry@huawei.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 28 Sep 2021 11:00:47 -0700
-Message-ID: <CAP-5=fVzcQCUA611byVn47Fyt0mWLfQ2q_619zqYwJB=7ckPtw@mail.gmail.com>
-Subject: Re: [PATCH 2/5] perf jevents: Support ConfigCode
+Date:   Tue, 28 Sep 2021 11:02:29 -0700
+Message-ID: <CAP-5=fVDmEmwwV=-THt6ppDGmGoBy9AYVMDT_eob=GW0saepJQ@mail.gmail.com>
+Subject: Re: [PATCH 3/5] perf test: Verify more event members in pmu-events test
 To:     John Garry <john.garry@huawei.com>
 Cc:     will@kernel.org, mathieu.poirier@linaro.org, leo.yan@linaro.org,
         peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
@@ -71,22 +71,13 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On Thu, Sep 16, 2021 at 5:39 AM John Garry <john.garry@huawei.com> wrote:
 >
-> Some PMUs use "config=XXX" for eventcodes, like:
+> Function compare_pmu_events() does not compare all struct pmu-events
+> members, so add tests for missing members "name", "event", "aggr_mod",
+> "event", "metric_constraint", and "metric_group", and re-order the tests
+> to match current struct pmu-events member ordering.
 >
-> more /sys/bus/event_source/devices/hisi_sccl1_ddrc3/events/act_cmd
-> config=0x5
->
-> However jevents would give an alias with .event field "event=0x5" for this
-> event. This is handled without issue by the parse events code, but the pmu
-> alias code gets a bit confused, as it warns about assigning "event=0x5"
-> over "config=0x5" in perf_pmu_assign_str() when merging aliases:
-> ./perf stat -v -e act_cmd
-> ...
-> alias act_cmd differs in field 'value'
-> ...
->
-> To make things a bit more straightforward, allow jevents to support
-> "config=XXX" as well, by supporting a "ConfigCode" field.
+> Also fix uncore_hisi_l3c_rd_hit_cpipe.event member, now that we're actually
+> testing it.
 >
 > Signed-off-by: John Garry <john.garry@huawei.com>
 
@@ -96,51 +87,104 @@ Thanks,
 Ian
 
 > ---
->  tools/perf/pmu-events/jevents.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
+>  tools/perf/tests/pmu-events.c | 50 ++++++++++++++++++++++++++++-------
+>  1 file changed, 40 insertions(+), 10 deletions(-)
 >
-> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-> index 6731b3cf0c2f..ef92c2fdd45d 100644
-> --- a/tools/perf/pmu-events/jevents.c
-> +++ b/tools/perf/pmu-events/jevents.c
-> @@ -575,10 +575,12 @@ static int json_events(const char *fn,
->                 struct json_event je = {};
->                 char *arch_std = NULL;
->                 unsigned long long eventcode = 0;
-> +               unsigned long long configcode = 0;
->                 struct msrmap *msr = NULL;
->                 jsmntok_t *msrval = NULL;
->                 jsmntok_t *precise = NULL;
->                 jsmntok_t *obj = tok++;
-> +               bool configcode_present = false;
+> diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+> index 8c5a6ba1cb14..adfc17f51c7b 100644
+> --- a/tools/perf/tests/pmu-events.c
+> +++ b/tools/perf/tests/pmu-events.c
+> @@ -146,7 +146,7 @@ static const struct perf_pmu_test_event unc_cbo_xsnp_response_miss_eviction = {
+>  static const struct perf_pmu_test_event uncore_hisi_l3c_rd_hit_cpipe = {
+>         .event = {
+>                 .name = "uncore_hisi_l3c.rd_hit_cpipe",
+> -               .event = "event=0x2",
+> +               .event = "event=0x7",
+>                 .desc = "Total read hits. Unit: hisi_sccl,l3c ",
+>                 .topic = "uncore",
+>                 .long_desc = "Total read hits",
+> @@ -255,6 +255,24 @@ static struct pmu_event *__test_pmu_get_sys_events_table(void)
 >
->                 EXPECT(obj->type == JSMN_OBJECT, obj, "expected object");
->                 for (j = 0; j < obj->size; j += 2) {
-> @@ -601,6 +603,12 @@ static int json_events(const char *fn,
->                                 addfield(map, &code, "", "", val);
->                                 eventcode |= strtoul(code, NULL, 0);
->                                 free(code);
-> +                       } else if (json_streq(map, field, "ConfigCode")) {
-> +                               char *code = NULL;
-> +                               addfield(map, &code, "", "", val);
-> +                               configcode |= strtoul(code, NULL, 0);
-> +                               free(code);
-> +                               configcode_present = true;
->                         } else if (json_streq(map, field, "ExtSel")) {
->                                 char *code = NULL;
->                                 addfield(map, &code, "", "", val);
-> @@ -682,7 +690,10 @@ static int json_events(const char *fn,
->                                 addfield(map, &extra_desc, " ",
->                                                 "(Precise event)", NULL);
->                 }
-> -               snprintf(buf, sizeof buf, "event=%#llx", eventcode);
-> +               if (configcode_present)
-> +                       snprintf(buf, sizeof buf, "config=%#llx", configcode);
-> +               else
-> +                       snprintf(buf, sizeof buf, "event=%#llx", eventcode);
->                 addfield(map, &event, ",", buf, NULL);
->                 if (je.desc && extra_desc)
->                         addfield(map, &je.desc, " ", extra_desc, NULL);
+>  static int compare_pmu_events(struct pmu_event *e1, const struct pmu_event *e2)
+>  {
+> +       if (!is_same(e1->name, e2->name)) {
+> +               pr_debug2("testing event e1 %s: mismatched name string, %s vs %s\n",
+> +                         e1->name, e1->name, e2->name);
+> +               return -1;
+> +       }
+> +
+> +       if (!is_same(e1->compat, e2->compat)) {
+> +               pr_debug2("testing event e1 %s: mismatched compat string, %s vs %s\n",
+> +                         e1->name, e1->compat, e2->compat);
+> +               return -1;
+> +       }
+> +
+> +       if (!is_same(e1->event, e2->event)) {
+> +               pr_debug2("testing event e1 %s: mismatched event, %s vs %s\n",
+> +                         e1->name, e1->event, e2->event);
+> +               return -1;
+> +       }
+> +
+>         if (!is_same(e1->desc, e2->desc)) {
+>                 pr_debug2("testing event e1 %s: mismatched desc, %s vs %s\n",
+>                           e1->name, e1->desc, e2->desc);
+> @@ -273,6 +291,12 @@ static int compare_pmu_events(struct pmu_event *e1, const struct pmu_event *e2)
+>                 return -1;
+>         }
+>
+> +       if (!is_same(e1->pmu, e2->pmu)) {
+> +               pr_debug2("testing event e1 %s: mismatched pmu string, %s vs %s\n",
+> +                         e1->name, e1->pmu, e2->pmu);
+> +               return -1;
+> +       }
+> +
+>         if (!is_same(e1->unit, e2->unit)) {
+>                 pr_debug2("testing event e1 %s: mismatched unit, %s vs %s\n",
+>                           e1->name, e1->unit, e2->unit);
+> @@ -285,6 +309,12 @@ static int compare_pmu_events(struct pmu_event *e1, const struct pmu_event *e2)
+>                 return -1;
+>         }
+>
+> +       if (!is_same(e1->aggr_mode, e2->aggr_mode)) {
+> +               pr_debug2("testing event e1 %s: mismatched aggr_mode, %s vs %s\n",
+> +                         e1->name, e1->aggr_mode, e2->aggr_mode);
+> +               return -1;
+> +       }
+> +
+>         if (!is_same(e1->metric_expr, e2->metric_expr)) {
+>                 pr_debug2("testing event e1 %s: mismatched metric_expr, %s vs %s\n",
+>                           e1->name, e1->metric_expr, e2->metric_expr);
+> @@ -297,21 +327,21 @@ static int compare_pmu_events(struct pmu_event *e1, const struct pmu_event *e2)
+>                 return -1;
+>         }
+>
+> -       if (!is_same(e1->deprecated, e2->deprecated)) {
+> -               pr_debug2("testing event e1 %s: mismatched deprecated, %s vs %s\n",
+> -                         e1->name, e1->deprecated, e2->deprecated);
+> +       if (!is_same(e1->metric_group, e2->metric_group)) {
+> +               pr_debug2("testing event e1 %s: mismatched metric_group, %s vs %s\n",
+> +                         e1->name, e1->metric_group, e2->metric_group);
+>                 return -1;
+>         }
+>
+> -       if (!is_same(e1->pmu, e2->pmu)) {
+> -               pr_debug2("testing event e1 %s: mismatched pmu string, %s vs %s\n",
+> -                         e1->name, e1->pmu, e2->pmu);
+> +       if (!is_same(e1->deprecated, e2->deprecated)) {
+> +               pr_debug2("testing event e1 %s: mismatched deprecated, %s vs %s\n",
+> +                         e1->name, e1->deprecated, e2->deprecated);
+>                 return -1;
+>         }
+>
+> -       if (!is_same(e1->compat, e2->compat)) {
+> -               pr_debug2("testing event e1 %s: mismatched compat string, %s vs %s\n",
+> -                         e1->name, e1->compat, e2->compat);
+> +       if (!is_same(e1->metric_constraint, e2->metric_constraint)) {
+> +               pr_debug2("testing event e1 %s: mismatched metric_constant, %s vs %s\n",
+> +                         e1->name, e1->metric_constraint, e2->metric_constraint);
+>                 return -1;
+>         }
+>
 > --
 > 2.26.2
 >
