@@ -2,163 +2,183 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE01C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Sep 2021 17:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E63C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Sep 2021 17:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B9566120D
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Sep 2021 17:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF8416120C
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Sep 2021 17:59:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241988AbhI1R6O (ORCPT
+        id S242033AbhI1SBg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 28 Sep 2021 13:58:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42660 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241520AbhI1R6N (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 28 Sep 2021 13:58:13 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id DD5C460FF2;
-        Tue, 28 Sep 2021 17:56:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632851794;
-        bh=YdEI7Bqrro9bDQO4y5JLhhRKWf6HiLH8T6YQwDBQ1lQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JlJAgl38ZCcpdRshnTlkbAZ+qTClDGjH9lbbN87z5US+q8fXuoDjX2ASHWFO8cfPh
-         PJxe7bpIMNLVHRUHx/Md/NqkFraNe+Doo5f2oxx7nwQ/sxaZR/gna4Js7lLffDKS1a
-         3hc5AkX5sbAhW9xtNv3zvXc0vcT2JpTuBYi/qMxjQWhtBu7+aEnx8qUAXpOPFfR/ek
-         O0euJqAsyv9/ZE3Ymm/JmR1mWMkzX5icPzFzdS2br0eDfhOTc/c7KLlzDNiJ209/UG
-         nGm9KFc8Mon59seYPxNtdpaMsUAF5KgVCC+HbCjd35ON0Fd1O56ZLc1ox8vpKQ3kTY
-         alUBfDFM8Hxeg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 35318410A1; Tue, 28 Sep 2021 14:56:30 -0300 (-03)
-Date:   Tue, 28 Sep 2021 14:56:30 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     Like Xu <like.xu.linux@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf jevents: Fix sys_event_tables to be freed like
- arch_std_events
-Message-ID: <YVNXTuq1PpLpMH/R@kernel.org>
-References: <20210928102938.69681-1-likexu@tencent.com>
- <YVMB5kt8XG+OdJ1M@kernel.org>
- <c547bc2d-ab7c-1e89-5d12-bd5d875f7aa5@huawei.com>
- <YVMVwDt3QHBPfT/T@kernel.org>
- <YVMXHM0F/y2ptX8C@kernel.org>
- <3949dfa2-d684-47af-ffa7-71b07141f64d@huawei.com>
+        Tue, 28 Sep 2021 14:01:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236453AbhI1SBg (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 28 Sep 2021 14:01:36 -0400
+Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D768C061745
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Sep 2021 10:59:56 -0700 (PDT)
+Received: by mail-il1-x135.google.com with SMTP id r9so2757346ile.5
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Sep 2021 10:59:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2BniPafuDoFdlymopELQXkB/zQh7F6LVoUvjWNE/VRg=;
+        b=glkMq8CqzAY65V+OfwsRWbZMfrbm5gk2blCTp6HIIduX5J0r1s9yNPz7ULbG20e6TW
+         nwe2TsaMYxdv3YxGyKZZT+BqyhO+hIwkGFvXsYrRxwF/bZA8XvYQ95Ax1f3GmffZ2wzw
+         QMKk7kYfUteYb7dtrXOW1iFNZ7lxxf/CNN6SayYgUF191WpLw8WXyuWz95lyCm4hNNio
+         1O7cVUTfjZtzRriKK6cfo59a/Zwen6v6mHn5tdw8fibVHsu11wOAariYsIKNcXsZs9fj
+         CCizVcbfKkS7PteVgyObIKXxeBZHnjKXaQxZsmw2SciE+7EwEHNKrH3LHLXs7SUVmsAo
+         PWBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2BniPafuDoFdlymopELQXkB/zQh7F6LVoUvjWNE/VRg=;
+        b=MFTDbhg7kGUJqJG/S1+YDntXVE/4mklqiUTRpENc1JZnyT3372wZGe+mTQB5jnR5SP
+         PSnjqkRUyZdtwSKmtaWTdvNjYbs5tyFZcznD1sha6iDP02xywryfl2qLDPkvld5L9B1h
+         sKr9Dz1fUXIYiS59qORUgPjgxQR/WaAAMl3R+YLeeRy/tVV1SnMAWWbCNfLh0V3DhT54
+         /DkMpcBwVnbk2i/jr3XDufaOSTOd4cEBh0Adn34I5XQlGB1NL+CkCDtTlKgZ1844oQsf
+         OGMrDN5As81Oepjq17/LLQttGSCSdPxhxusqQnG9QfD41mxC3xXGfo4ae1PAe1ZdwVjz
+         sXxA==
+X-Gm-Message-State: AOAM532ZdWIoNZQzl7JHLhwIb6Nsn3QCq5YdS74xSjrj+UHxw7FtUbRJ
+        opEBnTN6woAd5Eshwv8s81pF0h4EgeB79cPK/UYhKg==
+X-Google-Smtp-Source: ABdhPJzQriZBhaXa8Nz8rzqkeHFOVtzxDfH7dKuTTCQu8Bb7gYIbKnLCthu8TUtgv0Ac7wqnKtun73U9BkEpVpidxz0=
+X-Received: by 2002:a05:6e02:b23:: with SMTP id e3mr5253595ilu.53.1632851995505;
+ Tue, 28 Sep 2021 10:59:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3949dfa2-d684-47af-ffa7-71b07141f64d@huawei.com>
-X-Url:  http://acmel.wordpress.com
+References: <1631795665-240946-1-git-send-email-john.garry@huawei.com> <1631795665-240946-2-git-send-email-john.garry@huawei.com>
+In-Reply-To: <1631795665-240946-2-git-send-email-john.garry@huawei.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 28 Sep 2021 10:59:42 -0700
+Message-ID: <CAP-5=fVG3_p3Xf3s6FnpSRFwt3+CxitPZwRK0fMbz2t8WZaSEw@mail.gmail.com>
+Subject: Re: [PATCH 1/5] perf parse-events: Set numeric term config
+To:     John Garry <john.garry@huawei.com>
+Cc:     will@kernel.org, mathieu.poirier@linaro.org, leo.yan@linaro.org,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxarm@huawei.com, zhangshaokun@hisilicon.com,
+        liuqi115@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Sep 28, 2021 at 02:32:02PM +0100, John Garry escreveu:
-> On 28/09/2021 14:22, Arnaldo Carvalho de Melo wrote:
-> >   jevents-y      += json.o jsmn.o jevents.o
-> > -HOSTCFLAGS_jevents.o   = -I$(srctree)/tools/include
-> > +HOSTCFLAGS_jevents.o   = -I$(srctree)/tools/include -Wall -Wextra
-> >   pmu-events-y   += pmu-events.o
-> >   JDIR           =  pmu-events/arch/$(SRCARCH)
-> >   JSON           =  $(shell [ -d $(JDIR) ] &&                            \
-> > ⬢[acme@toolbox perf]$
-> > 
-> > I get this before applying Xu's patch:
-> > 
-> >    LINK    /tmp/build/perf/libbpf.a
-> > pmu-events/jevents.c: In function ‘save_arch_std_events’:
-> > pmu-events/jevents.c:473:39: warning: unused parameter ‘data’ [-Wunused-parameter]
-> >    473 | static int save_arch_std_events(void *data, struct json_event *je)
-> >        |                                 ~~~~~~^~~~
-> > At top level:
-> > pmu-events/jevents.c:93:13: warning: ‘free_sys_event_tables’ defined but not used [-Wunused-function]
-> >     93 | static void free_sys_event_tables(void)
-> >        |             ^~~~~~~~~~~~~~~~~~~~~
-> > 
-> > 
-> > -------------------------------------
-> > 
-> > I'll add this to perf/core, as this isn't a strict fix, so can wait for
-> > v5.16.
-> 
-> Hi Arnaldo,
-> 
-> OK, would you also consider reusing CFLAGS:
-> 
-> --- a/tools/perf/pmu-events/Build
-> +++ b/tools/perf/pmu-events/Build
-> @@ -9,10 +9,12 @@ JSON          =  $(shell [ -d $(JDIR) ] &&
-> \
-> JDIR_TEST      =  pmu-events/arch/test
-> JSON_TEST      =  $(shell [ -d $(JDIR_TEST) ] &&                       \
->                        find $(JDIR_TEST) -name '*.json')
-> -
-> +HOSTCFLAGS_jevents += $(CFLAGS)
+On Thu, Sep 16, 2021 at 5:39 AM John Garry <john.garry@huawei.com> wrote:
+>
+> For numeric terms, the config field may be NULL as it is not set from the
+> l+y parsing.
+>
+> Fix by setting the term config from the term type name.
+>
+> Also fix up the pmu-events test to set the alias strings to set the period
+> term properly, and fix up parse-events test to check the term config
+> string.
+>
+> Signed-off-by: John Garry <john.garry@huawei.com>
 
-Humm, we have to check if CFLAGS doesn't come with cross-build options,
-i.e. IIRC we have to use HOSTCFLAGS instead. Unsure if there is some
-*CFLAGS variable that gets the common part, where these -Wall and
--Wextra, -Werror could go.
- 
-> I tried it, and there are more things to fix for jevents.o. Let me know your
-> preference and if any help required to fix any errors up.
+Acked-by: Ian Rogers <irogers@google.com>
 
-I fixed the one I found, see below, I'll test build what I have in
-perf/core and push it, then you can continue from there, after checking
-this HOSTCFLAGS/CFLAGS issue.
+Having this would be very useful with an issue I'm looking into.
 
-- Arnaldo
+Thanks,
+Ian
 
-From 0e46c8307574a8e2dac8d7ba97e0f6f4bbee67a5 Mon Sep 17 00:00:00 2001
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date: Tue, 28 Sep 2021 14:15:01 -0300
-Subject: [PATCH 1/1] perf jevents: Add __maybe_unused attribute to unused
- function arg
-
-The tools/perf/pmu-events/jevents.c file isn't being compiled with
--Werror and -Wextra, which will be the case soon, so before we turn
-those compiler flags on, fix what it would flag.
-
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Like Xu <like.xu.linux@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-To: John Garry <john.garry@huawei.com>
----
- tools/perf/pmu-events/jevents.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index 6731b3cf0c2fc9b7..323e1dfe2436c049 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -45,6 +45,7 @@
- #include <sys/resource.h>		/* getrlimit */
- #include <ftw.h>
- #include <sys/stat.h>
-+#include <linux/compiler.h>
- #include <linux/list.h>
- #include "jsmn.h"
- #include "json.h"
-@@ -470,7 +471,7 @@ static void free_arch_std_events(void)
- 	}
- }
- 
--static int save_arch_std_events(void *data, struct json_event *je)
-+static int save_arch_std_events(void *data __maybe_unused, struct json_event *je)
- {
- 	struct event_struct *es;
- 
--- 
-2.31.1
-
+> ---
+>  tools/perf/tests/parse-events.c | 8 ++++----
+>  tools/perf/tests/pmu-events.c   | 6 +++---
+>  tools/perf/util/parse-events.c  | 2 +-
+>  3 files changed, 8 insertions(+), 8 deletions(-)
+>
+> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+> index fd3556cc9ad4..8875e388563e 100644
+> --- a/tools/perf/tests/parse-events.c
+> +++ b/tools/perf/tests/parse-events.c
+> @@ -605,7 +605,7 @@ static int test__checkterms_simple(struct list_head *terms)
+>         TEST_ASSERT_VAL("wrong type val",
+>                         term->type_val == PARSE_EVENTS__TERM_TYPE_NUM);
+>         TEST_ASSERT_VAL("wrong val", term->val.num == 10);
+> -       TEST_ASSERT_VAL("wrong config", !term->config);
+> +       TEST_ASSERT_VAL("wrong config", !strcmp(term->config, "config"));
+>
+>         /* config1 */
+>         term = list_entry(term->list.next, struct parse_events_term, list);
+> @@ -614,7 +614,7 @@ static int test__checkterms_simple(struct list_head *terms)
+>         TEST_ASSERT_VAL("wrong type val",
+>                         term->type_val == PARSE_EVENTS__TERM_TYPE_NUM);
+>         TEST_ASSERT_VAL("wrong val", term->val.num == 1);
+> -       TEST_ASSERT_VAL("wrong config", !term->config);
+> +       TEST_ASSERT_VAL("wrong config", !strcmp(term->config, "config1"));
+>
+>         /* config2=3 */
+>         term = list_entry(term->list.next, struct parse_events_term, list);
+> @@ -623,7 +623,7 @@ static int test__checkterms_simple(struct list_head *terms)
+>         TEST_ASSERT_VAL("wrong type val",
+>                         term->type_val == PARSE_EVENTS__TERM_TYPE_NUM);
+>         TEST_ASSERT_VAL("wrong val", term->val.num == 3);
+> -       TEST_ASSERT_VAL("wrong config", !term->config);
+> +       TEST_ASSERT_VAL("wrong config", !strcmp(term->config, "config2"));
+>
+>         /* umask=1*/
+>         term = list_entry(term->list.next, struct parse_events_term, list);
+> @@ -661,7 +661,7 @@ static int test__checkterms_simple(struct list_head *terms)
+>         TEST_ASSERT_VAL("wrong type val",
+>                         term->type_val == PARSE_EVENTS__TERM_TYPE_NUM);
+>         TEST_ASSERT_VAL("wrong val", term->val.num == 0xead);
+> -       TEST_ASSERT_VAL("wrong config", !term->config);
+> +       TEST_ASSERT_VAL("wrong config", !strcmp(term->config, "config"));
+>         return 0;
+>  }
+>
+> diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+> index 43743cf719ef..8c5a6ba1cb14 100644
+> --- a/tools/perf/tests/pmu-events.c
+> +++ b/tools/perf/tests/pmu-events.c
+> @@ -67,7 +67,7 @@ static const struct perf_pmu_test_event segment_reg_loads_any = {
+>                 .desc = "Number of segment register loads",
+>                 .topic = "other",
+>         },
+> -       .alias_str = "umask=0x80,(null)=0x30d40,event=0x6",
+> +       .alias_str = "umask=0x80,period=0x30d40,event=0x6",
+>         .alias_long_desc = "Number of segment register loads",
+>  };
+>
+> @@ -78,7 +78,7 @@ static const struct perf_pmu_test_event dispatch_blocked_any = {
+>                 .desc = "Memory cluster signals to block micro-op dispatch for any reason",
+>                 .topic = "other",
+>         },
+> -       .alias_str = "umask=0x20,(null)=0x30d40,event=0x9",
+> +       .alias_str = "umask=0x20,period=0x30d40,event=0x9",
+>         .alias_long_desc = "Memory cluster signals to block micro-op dispatch for any reason",
+>  };
+>
+> @@ -89,7 +89,7 @@ static const struct perf_pmu_test_event eist_trans = {
+>                 .desc = "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
+>                 .topic = "other",
+>         },
+> -       .alias_str = "umask=0,(null)=0x30d40,event=0x3a",
+> +       .alias_str = "umask=0,period=0x30d40,event=0x3a",
+>         .alias_long_desc = "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
+>  };
+>
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index 51a2219df601..e10243454e8b 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -3083,7 +3083,7 @@ int parse_events_term__num(struct parse_events_term **term,
+>         struct parse_events_term temp = {
+>                 .type_val  = PARSE_EVENTS__TERM_TYPE_NUM,
+>                 .type_term = type_term,
+> -               .config    = config,
+> +               .config    = config ? : strdup(config_term_names[type_term]),
+>                 .no_value  = no_value,
+>                 .err_term  = loc_term ? loc_term->first_column : 0,
+>                 .err_val   = loc_val  ? loc_val->first_column  : 0,
+> --
+> 2.26.2
+>
