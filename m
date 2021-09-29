@@ -2,176 +2,98 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34869C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Sep 2021 15:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E5DC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Sep 2021 16:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 135D461526
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Sep 2021 15:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D91D2615E4
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Sep 2021 16:10:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244669AbhI2Prn (ORCPT
+        id S1345828AbhI2QMi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 29 Sep 2021 11:47:43 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7584 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S245646AbhI2Prl (ORCPT
+        Wed, 29 Sep 2021 12:12:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38940 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1345666AbhI2QMd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 29 Sep 2021 11:47:41 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 18TFIXs5013454;
-        Wed, 29 Sep 2021 11:44:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=2lZJdFw4WNk77XQ3gfuFQ0Wu4AQF8qNlzBIEQyCzgpc=;
- b=T/0vUcqJAa2fgLtyzY4tlQYtWLN8QVM0E25FTA6Zi7YulGd8Xo7QJfagdJ75M9VcA0n3
- e5TU1HSXPryyf0I8/UZHPWxNlno2R4cb5TY22SkLbPnBHwC8BMRJtj9V5AzF/UaxwtuY
- 6ozdx9pMD3nIp0LpRP23GSJCB1cwz/V1u4oNvhdKizQ58LwiDQ55qqO0voze+t0jMrsx
- Q7Gn6g+aahJZ8K19odhcjNOxEOq1cqhn6zoUOeptzFurvTZWEtFGYe4xAywRRaUxG/4p
- QvzXrQ/vp5FNVPs9hO+wNi1UTQtCH93tezwbf6qv5yeWPPACnypEMeCrGi7e+1XPjByB Hg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3bcs3bkpay-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Sep 2021 11:44:54 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 18TFKswJ027183;
-        Wed, 29 Sep 2021 11:44:53 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3bcs3bkp9q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Sep 2021 11:44:53 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 18TFI54C008881;
-        Wed, 29 Sep 2021 15:44:51 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma05fra.de.ibm.com with ESMTP id 3bc11evrnx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Sep 2021 15:44:50 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 18TFimIU46596452
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Sep 2021 15:44:48 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1E5C211C050;
-        Wed, 29 Sep 2021 15:44:48 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 70FD011C06E;
-        Wed, 29 Sep 2021 15:44:47 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 29 Sep 2021 15:44:47 +0000 (GMT)
-Received: from [9.206.131.40] (unknown [9.206.131.40])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 5834F600F5;
-        Thu, 30 Sep 2021 01:44:45 +1000 (AEST)
-Subject: Re: [PATCH v5 10/11] PCI: Replace pci_dev::driver usage by
- pci_dev::dev.driver
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Jiri Olsa <jolsa@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-pci@vger.kernel.org,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        kernel@pengutronix.de, Frederic Barrat <fbarrat@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org
-References: <20210929085306.2203850-1-u.kleine-koenig@pengutronix.de>
- <20210929085306.2203850-11-u.kleine-koenig@pengutronix.de>
- <75dd6d60-08b9-fa68-352c-3a0c5a04c0ab@linux.ibm.com>
- <20210929134330.e5c57t7mtwu5iner@pengutronix.de>
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-Message-ID: <1414b3c5-167c-c271-baed-d3d7f6cd0309@linux.ibm.com>
-Date:   Thu, 30 Sep 2021 01:44:44 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Wed, 29 Sep 2021 12:12:33 -0400
+Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B4A6C0617AA
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Sep 2021 09:09:39 -0700 (PDT)
+Received: by mail-io1-xd29.google.com with SMTP id b10so3790743ioq.9
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Sep 2021 09:09:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ACUKWINJ+b06A5Dd/rYTKUJ9Y6q0KbWlxJSrgmw5wHA=;
+        b=MOc/3VdQCP9UfKju2Uqc1gSeyJTWl8zXipu0hevSto3yALhXsOmo+pY1Hb2lYDPKDp
+         qc832qgrr8pNocPHOPEDOQAG+MSlbU/YHGvL7N0/vq6KM8nbs+lcJyP8vvDCg8vG/5YP
+         lA8Gd2GAa3dgO1+Ved/3ni8ZSXdSYQWkfx7I+QkBF1s1SoOJFxgT1fGkb6RIZJEi47uJ
+         C3gGTMH/fZAqgE+P8iJ72fjZIDvozOXpAuH/bXEJdK9jKQNXjKSfPa3tUgNQ4EBTC6BS
+         jWj+ogFJoD2S2uN/1D6BiAqR4Dpit1IPt48nBqrGUC3XEivutYWFWaMSRhemhz54VRle
+         5Nzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ACUKWINJ+b06A5Dd/rYTKUJ9Y6q0KbWlxJSrgmw5wHA=;
+        b=mRQbvjLWirtRjdyGdjPMus56z8LOtZghV2YawhEJVZhS++XMjrm1vYQyahoqA+koZb
+         SByIGgJcBSxssaHrSILA7HSJfiQhXA8PFXe8p8lDMUqQb9cfNbiIFaAd2uvxbT94vn/b
+         pnldcF6rSaZ/ZTYPhgRKDWg2QRqrMZClcD+v1D2DHTJyu1fevNyinJDZ6aLwIM/5nSoQ
+         8wddn2ruXExDueEtmlVESU0MQw1T7Yf0KaqSWwDVnG/TTGFMGiuGeL1rTUdvlBmTowr7
+         dLOI/qHWY/W7PHYJ+RfSlZH0TdTqY0rUFp0wUtN2z7n/+qTuzPyszSr8uuG+2ufa7m3Z
+         iEUQ==
+X-Gm-Message-State: AOAM531ZKv5FYYT4ZbFjUw12+Z34qPdeYi/oMDHyfoJ2VjI1ytGy/n04
+        HPlMcL6iJIMuqRGq30S07qbQ6YW/6P9FpgR2xoESXw==
+X-Google-Smtp-Source: ABdhPJy0gIx1+yVcS/UAQTXH0ffONVAs642RbjnsR2662Krs+4wo4y+Wj9uF+tsNYNB3wKON/rz76H4EUrkWJNPKguw=
+X-Received: by 2002:a5d:9d8e:: with SMTP id ay14mr439562iob.32.1632931778709;
+ Wed, 29 Sep 2021 09:09:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210929134330.e5c57t7mtwu5iner@pengutronix.de>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: xoS4V0L0XnAZXIlSObNRrRHFrN-qRdXU
-X-Proofpoint-GUID: aqWPGKvFeDrRCpepuY6Q_1i7K4Jcg0AY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.391,FMLib:17.0.607.475
- definitions=2021-09-29_06,2021-09-29_01,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- impostorscore=0 suspectscore=0 clxscore=1015 mlxlogscore=874
- malwarescore=0 spamscore=0 priorityscore=1501 adultscore=0 bulkscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2109230001 definitions=main-2109290092
+References: <20210923074616.674826-1-irogers@google.com> <00eb6280-fad0-66c4-b957-a4d27dffd0da@huawei.com>
+In-Reply-To: <00eb6280-fad0-66c4-b957-a4d27dffd0da@huawei.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 29 Sep 2021 09:09:24 -0700
+Message-ID: <CAP-5=fXcq6Npio0n9y8znknNUGJ4ovtbi=hHr4jWG6H38=BzSA@mail.gmail.com>
+Subject: Re: [PATCH v9 00/13] Don't compute events that won't be used in a metric.
+To:     John Garry <john.garry@huawei.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>, Paul Clarke <pc@us.ibm.com>,
+        kajoljain <kjain@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>,
+        Sandeep Dasgupta <sdasgup@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 29/9/21 11:43 pm, Uwe Kleine-König wrote:> I'm not a huge fan either, 
-I used it to keep the control flow as is and
-> without introducing several calls to to_pci_driver.
-> 
-> The whole code looks as follows:
-> 
-> 	list_for_each_entry(afu_dev, &afu->phb->bus->devices, bus_list) {
-> 		struct pci_driver *afu_drv;
-> 		if (afu_dev->dev.driver &&
-> 		    (afu_drv = to_pci_driver(afu_dev->dev.driver))->err_handler &&
-> 		    afu_drv->err_handler->resume)
-> 			afu_drv->err_handler->resume(afu_dev);
-> 	}
-> 
-> Without assignment in the if it could look as follows:
-> 
-> 	list_for_each_entry(afu_dev, &afu->phb->bus->devices, bus_list) {
-> 		struct pci_driver *afu_drv;
-> 
-> 		if (!afu_dev->dev.driver)
-> 			continue;
-> 
-> 		afu_drv = to_pci_driver(afu_dev->dev.driver));
-> 
-> 		if (afu_drv->err_handler && afu_drv->err_handler->resume)
-> 			afu_drv->err_handler->resume(afu_dev);
-> 	}
-> 
-> Fine for me.
+On Wed, Sep 29, 2021 at 8:16 AM John Garry <john.garry@huawei.com> wrote:
+>
+> On 23/09/2021 08:46, Ian Rogers wrote:
+> > For a metric like:
+> >    EVENT1 if #smt_on else EVENT2
+> >
+> > currently EVENT1 and EVENT2 will be measured and then when the metric
+> > is reported EVENT1 or EVENT2 will be printed depending on the value
+> > from smt_on() during the expr parsing. Computing both events is
+> > unnecessary and can lead to multiplexing as discussed in this thread:
+> > https://lore.kernel.org/lkml/20201110100346.2527031-1-irogers@google.com/
+> >
+> > This change modifies expression parsing so that constants are
+> > considered when building the set of ids (events) and only events not
+> > contributing to a constant value are measured.
+>
+> Based on some testing on my arm64 platform, no regression seen, so:
+>
+> Tested-by: John Garry <john.garry@huawei.com>
 
-This looks fine.
+Awesome, much thanks Jiri, John, Andi for the reviews and testing!
 
-As an aside while writing my email I discovered the existence of 
-container_of_safe(), a version of container_of() that handles the null 
-and err ptr cases... if to_pci_driver() used that, the null check in the 
-caller could be moved until after the to_pci_driver() call which would 
-be neater.
-
-But then, grep tells me that container_of_safe() is used precisely zero 
-times in the entire tree. Interesting.
-
-> (Sidenote: What happens if the device is unbound directly after the
-> check for afu_dev->dev.driver? This is a problem the old code had, too
-> (assuming it is a real problem, didn't check deeply).)
-
-Looking at any of the cxl PCI error handling paths brings back 
-nightmares from a few years ago... Fred: I wonder if we need to add a 
-lock here?
-
--- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
+Ian
