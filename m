@@ -2,167 +2,185 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E111FC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Sep 2021 05:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8ACC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Sep 2021 06:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB88B60C51
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Sep 2021 05:35:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 991A4613CE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Sep 2021 06:08:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244181AbhI2FhG (ORCPT
+        id S244014AbhI2GJ6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 29 Sep 2021 01:37:06 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:42998 "EHLO
+        Wed, 29 Sep 2021 02:09:58 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:24929 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S244110AbhI2FhF (ORCPT
+        by vger.kernel.org with ESMTP id S243377AbhI2GJ5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 29 Sep 2021 01:37:05 -0400
+        Wed, 29 Sep 2021 02:09:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1632893725;
+        s=mimecast20190719; t=1632895697;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=fYPoJ+HHx7LQ03iNT/GjSChjOpHqMM3m9N+X07o5q5s=;
-        b=CBcQUEZmIeobxvIDXodj7mAyaFPqKLr5R2L68xzmoGP0nJi9wre2kccGmzTt5f4XOWjmpI
-        iJplDixavLwrNvAleXlypykWXGcFZ9R+RS+4DyF5j/PTpOxJtj0khNe8//Vn+GrtVRM2aK
-        7Fs66sgao5aWiVD4Pz1ekHZPIWoFAYQ=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-388-uffOuawJNPmO2Qf18Gxi8g-1; Wed, 29 Sep 2021 01:35:23 -0400
-X-MC-Unique: uffOuawJNPmO2Qf18Gxi8g-1
-Received: by mail-ed1-f71.google.com with SMTP id 1-20020a508741000000b003da559ba1eeso1138709edv.13
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Sep 2021 22:35:23 -0700 (PDT)
+        bh=XRG+QkBHb7+dJu7hgxSpKrOu8STtKM5W0f2Gvnwat7Q=;
+        b=L9abT1y8uDdRCrh+HmVAEYGNY8zUwHSFra7Zswkt3JF5ocV4I+u4xxpHpc6wTDSDt8q/CA
+        ifqIFKLgiiIwbX+le/ZdFT8fUXbWZUyIBrf4h1ayyRqdgaJ131OVZYU1W8uGwDkyYqpECx
+        5qYDIGfDJjI8MnImhKmm9EfVTra+lcE=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-290-g8HA7v3sOtGkoPlKUpQ20w-1; Wed, 29 Sep 2021 02:08:15 -0400
+X-MC-Unique: g8HA7v3sOtGkoPlKUpQ20w-1
+Received: by mail-ed1-f70.google.com with SMTP id z6-20020a50cd06000000b003d2c2e38f1fso1257520edi.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Sep 2021 23:08:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=fYPoJ+HHx7LQ03iNT/GjSChjOpHqMM3m9N+X07o5q5s=;
-        b=YFW4qjPTOm7vQsGJEfpLgTNTUnox8WLwuMJX/Exh+HmgOmNqbjI7dCp0gIb/DWDvon
-         esNo+EJRcWsej8blTLuIIkQeFjHQMq4wWIl6IyXeYL+BYf+BE21TuBbsav7eNCLzqjAH
-         hszgDm30RehndDgvj3YhPofOjxNORdEREHsrxmHMqSJp6R7ZoZcoD+JCPUzZokRV0XdU
-         1Igx5RSkmCYgpb/sOWCsjbJ1k4feVtO0gI9k2uurLF/N931Z42ZMcV3EO0dFQIqi9J++
-         EMZrGx57Wzt9nFcylRWnqVCcfNtmsexPr8BNbEb4XMM6xx4EzWM7Wexc+hLfhzWGVT70
-         mvzA==
-X-Gm-Message-State: AOAM531dlw9WoE7mV1NMWfN0Bc+2FDL+FFjHa/uLiYwWlteJ3TBYQ3Ql
-        OY8MIA6/iCDF+TNkhqm3VmtMkz8VZuDJOIgSRIjl8j9yrKCiYQQbomTwtJL+XgKe6kLwUa6lnzD
-        hiKWPZAcXTx4YaDbs0tWGZxflDxNIEQ==
-X-Received: by 2002:a17:906:288f:: with SMTP id o15mr11351002ejd.436.1632893722189;
-        Tue, 28 Sep 2021 22:35:22 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxk2FUc1JVdkjb/gPfZp1EovaTk2jh+U41vmhR343Lp1WWGAa8uqs/LwrWNps/p5POw1hAFrA==
-X-Received: by 2002:a17:906:288f:: with SMTP id o15mr11350989ejd.436.1632893722005;
-        Tue, 28 Sep 2021 22:35:22 -0700 (PDT)
+        bh=XRG+QkBHb7+dJu7hgxSpKrOu8STtKM5W0f2Gvnwat7Q=;
+        b=UisbPelYLxBseq+7czP77wAOEsQ5sOkvXIuhIGlZBsM9lhgpmkSRimBDuDzyF1iaah
+         lrqCX2bmIonKaxiiWlVvXHE354rUmQiOQvSRdJUDy9r0z1P9TffkxgXWchjFOmQ7RslC
+         DqAw4MRgRyJZLaWTezOZ9+P3/3q0+3t4a6WagHrIh7ZECnIju11Vg4gN6PrrM63EmA0p
+         M1wOTJ49CmQ4pDPX+7ZaDp5nqBFyrxVB0QkdfiayCugsW1I4uv9bLEV2IqjPDUz4houq
+         b4aQ8NewrfUHFcWXLUMFbWoNBOKHwEpCQHr5g6Ppz0+x6xCICVo+VbWygHd94CK4MZ7z
+         NBqw==
+X-Gm-Message-State: AOAM530lNEVtX2Sh2Qml1p0hezoefYpl5Bw9qUaiwb6q8LWy+QK/GeT2
+        COpQESYEm9zY6P9NIb9enrL1FzjYk9+TYoTGI9WuX7+Vhe4XrPfglQxGknqb8SVUryKMJGaWWGT
+        4vnN3MxvAVGoLmcdcMtB+hpW8wGadoA==
+X-Received: by 2002:a17:906:6558:: with SMTP id u24mr11934218ejn.361.1632895693904;
+        Tue, 28 Sep 2021 23:08:13 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxX98eCLuPMiPp7TmfnYb37KWWvnPZgKfuOxIgkhZ2QV4uQYuKD/boIURtrlR08YcB6Uc6NuA==
+X-Received: by 2002:a17:906:6558:: with SMTP id u24mr11934205ejn.361.1632895693735;
+        Tue, 28 Sep 2021 23:08:13 -0700 (PDT)
 Received: from krava ([83.240.63.48])
-        by smtp.gmail.com with ESMTPSA id h13sm731600edr.4.2021.09.28.22.35.20
+        by smtp.gmail.com with ESMTPSA id v13sm774085edr.0.2021.09.28.23.08.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Sep 2021 22:35:21 -0700 (PDT)
-Date:   Wed, 29 Sep 2021 07:35:19 +0200
+        Tue, 28 Sep 2021 23:08:13 -0700 (PDT)
+Date:   Wed, 29 Sep 2021 08:08:11 +0200
 From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joe Mario <jmario@redhat.com>, Andi Kleen <ak@linux.intel.com>,
         Jin Yao <yao.jin@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Paul Clarke <pc@us.ibm.com>, kajoljain <kjain@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>,
-        Sandeep Dasgupta <sdasgup@google.com>
-Subject: Re: [PATCH v9 00/13] Don't compute events that won't be used in a
- metric.
-Message-ID: <YVP7F0NsKR8KIqX4@krava>
-References: <20210923074616.674826-1-irogers@google.com>
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: problem with 'perf script -F weight'
+Message-ID: <YVQCy2yEK00XbWAq@krava>
+References: <YVNq9av/3Lwmom4T@krava>
+ <732928be-f438-120f-7c9f-685630147495@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210923074616.674826-1-irogers@google.com>
+In-Reply-To: <732928be-f438-120f-7c9f-685630147495@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 23, 2021 at 12:46:03AM -0700, Ian Rogers wrote:
-> For a metric like:
->   EVENT1 if #smt_on else EVENT2
->     
-> currently EVENT1 and EVENT2 will be measured and then when the metric
-> is reported EVENT1 or EVENT2 will be printed depending on the value
-> from smt_on() during the expr parsing. Computing both events is
-> unnecessary and can lead to multiplexing as discussed in this thread:
-> https://lore.kernel.org/lkml/20201110100346.2527031-1-irogers@google.com/
+On Tue, Sep 28, 2021 at 05:35:51PM -0400, Liang, Kan wrote:
 > 
-> This change modifies expression parsing so that constants are
-> considered when building the set of ids (events) and only events not
-> contributing to a constant value are measured.
 > 
-> v9. adds a missing memory allocation failure check in the pmu-metrics
->     test.  A memory allocation failure in union returns NULL. Some
->     parser debug on IDs is removed. "Modify code layout" is broken
->     apart into 3 changes.  "Don't compute unused events" is broken
->     apart into 4 changes with the tests merged into the change that
->     adds the corresponding optimization. This is trying to address
->     feedback from Jiri Olsa <jolsa@redhat.com>.  The unmodified
->     patches have Reviewed-by: Andi Kleen <ak@linux.intel.com> added,
->     although the overall patch set is largely the same as v8 which was
->     fully reviewed-by.
+> On 9/28/2021 3:20 PM, Jiri Olsa wrote:
+> > Joe reported broken -F weight in perf script with (on x86):
+> > 
+> >    # ./perf mem record
+> >    # ./perf script -F weight
+> >    Samples for 'dummy:HG' event do not have WEIGHT attribute set. Cannot print 'weight' field.
+> > 
+> > the problem seems to be introduced with the WEIGHT_STRUCT change:
+> >    ea8d0ed6eae3 perf tools: Support PERF_SAMPLE_WEIGHT_STRUCT
+> > 
+> > which enables WEIGHT_STRUCT sample_type on x86 instead of WEIGHT,
+> > and leaves 'perf script -F weight' in the dark
+> 
+> Right, I missed the support for the perf script. Because the default perf
+> script worked. It didn't ring the bell. :(
+> 
+> > 
+> > I'm not sure what the fix should look like.. should we allow user
+> > to use just 'WEIGHT' sample type? or is there a way to get original
+> > weight from 'WEIGHT_STRUCT' data, so we could fix just perf script?
+> 
+> Just fix the perf script is enough.
+> Could you please try the below patch?
+> 
+> (I probably need to split the patch into two patches, since it fixed two
+> issues, one is this error, the other is to print the instruction latency.
+> Anyway, let's try it first.)
+> 
+> From 99443f49a6236ef6e3bea3930792967a7863f753 Mon Sep 17 00:00:00 2001
+> From: Kan Liang <kan.liang@linux.intel.com>
+> Date: Tue, 28 Sep 2021 13:57:18 -0700
+> Subject: [PATCH] perf script: Fix PERF_SAMPLE_WEIGHT_STRUCT support
+> 
+> -F weight in perf script is broken.
+> 
+>   # ./perf mem record
+>   # ./perf script -F weight
+>   Samples for 'dummy:HG' event do not have WEIGHT attribute set. Cannot
+> print 'weight' field.
+> 
+> The sample type, PERF_SAMPLE_WEIGHT_STRUCT, is an alternative of the
+> PERF_SAMPLE_WEIGHT sample type. They share the same space, weight. The
+> lower 32 bits are exactly the same for both sample type. The higher 32
+> bits may be different for different architecture. For a new kernel on
+> x86, the PERF_SAMPLE_WEIGHT_STRUCT is used. For an old kernel or other
+> ARCHs, the PERF_SAMPLE_WEIGHT is used.
+> 
+> With -F weight, current perf script will check the input string "weight"
+> with the corresponding sample type. However, the commit ID ea8d0ed6eae3
+> ("perf tools: Support PERF_SAMPLE_WEIGHT_STRUCT") didn't update the
+> sample type for perf script. The check fails with a new kernel on x86.
+> 
+> Use PERF_SAMPLE_WEIGHT_TYPE, which supports both sample types, to
+> replace PERF_SAMPLE_WEIGHT.
+> 
+> Also, print the instruction latency for PERF_SAMPLE_WEIGHT_STRUCT type.
+> 
+> Reported-by: Joe Mario <jmario@redhat.com>
+> Fixes: ea8d0ed6eae3 ("perf tools: Support PERF_SAMPLE_WEIGHT_STRUCT")
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> ---
+>  tools/perf/builtin-script.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 6211d0b..fd73bbc 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -459,7 +459,7 @@ static int evsel__check_attr(struct evsel *evsel, struct
+> perf_session *session)
+>  		return -EINVAL;
+> 
+>  	if (PRINT_FIELD(WEIGHT) &&
+> -	    evsel__check_stype(evsel, PERF_SAMPLE_WEIGHT, "WEIGHT",
+> PERF_OUTPUT_WEIGHT))
+> +	    evsel__check_stype(evsel, PERF_SAMPLE_WEIGHT_TYPE, "WEIGHT",
+> PERF_OUTPUT_WEIGHT))
+>  		return -EINVAL;
+> 
+>  	if (PRINT_FIELD(SYM) &&
+> @@ -2036,8 +2036,11 @@ static void process_event(struct perf_script *script,
+>  	if (PRINT_FIELD(DATA_SRC))
+>  		data_src__fprintf(sample->data_src, fp);
+> 
+> -	if (PRINT_FIELD(WEIGHT))
+> +	if (PRINT_FIELD(WEIGHT)) {
+>  		fprintf(fp, "%16" PRIu64, sample->weight);
+> +		if (attr->sample_type & PERF_SAMPLE_WEIGHT_STRUCT)
+> +			fprintf(fp, ",0x%" PRIx16, sample->ins_lat);
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+this will add extra number to weight.. should we add separate column
+for that -F 'insn-lat' ? users expect just single value for -F weight
 
 thanks,
 jirka
 
+> +	}
 > 
-> v8. rebases, adds an ability to compute metrics with no events and
->     further breaks apart the "Don't compute unused events" part of the
->     change as requested by Jiri Olsa <jolsa@redhat.com>.
-> 
-> v7. fixes the fix to be in the correct patch.
-> 
-> v6. rebases and fixes issues raised by Namhyung Kim <namhyung@kernel.org>,
-> a memory leak and a function comment.
-> 
-> v5. uses macros to reduce boiler plate in patch 5/5 as suggested by
-> Andi Kleen <ak@linux.intel.com>.
-> 
-> v4. reduces references to BOTTOM/NAN in patch 5/5 by using utility
-> functions. It improves comments and fixes an unnecessary union in a
-> peephole optimization.
-> 
-> v3. fixes an assignment in patch 2/5. In patch 5/5 additional comments
-> are added and useless frees are replaced by asserts. A new peephole
-> optimization is added for the case CONST IF expr ELSE CONST, where the
-> the constants are identical, as we don't need to evaluate the IF
-> condition.
-> 
-> v2. is a rebase.
-> 
-> Ian Rogers (13):
->   perf metric: Restructure struct expr_parse_ctx.
->   perf metric: Use NAN for missing event IDs.
->   perf expr: Remove unused headers and inline d_ratio
->   perf expr: Separate token declataion from type
->   perf expr: Use macros for operators
->   perf expr: Move actions to the left.
->   perf metric: Rename expr__find_other.
->   perf metric: Add utilities to work on ids map.
->   perf metric: Allow metrics with no events
->   perf expr: Merge find_ids and regular parsing
->   perf expr: Propagate constants for binary operations
->   perf metric: Don't compute unused events
->   perf metric: Avoid events for an 'if' constant result
-> 
->  tools/perf/tests/expr.c       | 160 ++++++++++++-----
->  tools/perf/tests/pmu-events.c |  54 +++---
->  tools/perf/util/expr.c        | 121 +++++++++++--
->  tools/perf/util/expr.h        |  20 ++-
->  tools/perf/util/expr.l        |   9 -
->  tools/perf/util/expr.y        | 325 +++++++++++++++++++++++++---------
->  tools/perf/util/metricgroup.c | 145 ++++++++-------
->  tools/perf/util/stat-shadow.c |  54 +++---
->  8 files changed, 620 insertions(+), 268 deletions(-)
-> 
+>  	if (PRINT_FIELD(IP)) {
+>  		struct callchain_cursor *cursor = NULL;
 > -- 
-> 2.33.0.464.g1972c5931b-goog
+> 2.7.4
+> 
+> Thanks,
+> Kan
 > 
 
