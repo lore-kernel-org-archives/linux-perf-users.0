@@ -2,162 +2,160 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA158C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Sep 2021 13:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D7DC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Sep 2021 15:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 923F861503
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Sep 2021 13:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99B8061390
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Sep 2021 15:13:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344258AbhI2NqD (ORCPT
+        id S1344991AbhI2PPI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 29 Sep 2021 09:46:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60974 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243959AbhI2NqC (ORCPT
+        Wed, 29 Sep 2021 11:15:08 -0400
+Received: from mga14.intel.com ([192.55.52.115]:15333 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1344939AbhI2PPI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 29 Sep 2021 09:46:02 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E04CC06161C
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Sep 2021 06:44:21 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mVZs4-0002ro-Tl; Wed, 29 Sep 2021 15:43:40 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mVZru-0005It-Cu; Wed, 29 Sep 2021 15:43:30 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mVZru-0001Wi-AO; Wed, 29 Sep 2021 15:43:30 +0200
-Date:   Wed, 29 Sep 2021 15:43:30 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Andrew Donnellan <ajd@linux.ibm.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Wed, 29 Sep 2021 11:15:08 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10122"; a="224617572"
+X-IronPort-AV: E=Sophos;i="5.85,332,1624345200"; 
+   d="scan'208";a="224617572"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2021 08:13:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,332,1624345200"; 
+   d="scan'208";a="520863532"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 29 Sep 2021 08:13:26 -0700
+Received: from [10.209.78.119] (kliang2-MOBL.ccr.corp.intel.com [10.209.78.119])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 637FC58097E;
+        Wed, 29 Sep 2021 08:13:25 -0700 (PDT)
+Subject: Re: problem with 'perf script -F weight'
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     linux-perf-users@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Jiri Olsa <jolsa@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-pci@vger.kernel.org,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        kernel@pengutronix.de, Frederic Barrat <fbarrat@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v5 10/11] PCI: Replace pci_dev::driver usage by
- pci_dev::dev.driver
-Message-ID: <20210929134330.e5c57t7mtwu5iner@pengutronix.de>
-References: <20210929085306.2203850-1-u.kleine-koenig@pengutronix.de>
- <20210929085306.2203850-11-u.kleine-koenig@pengutronix.de>
- <75dd6d60-08b9-fa68-352c-3a0c5a04c0ab@linux.ibm.com>
+        Joe Mario <jmario@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+References: <YVNq9av/3Lwmom4T@krava>
+ <732928be-f438-120f-7c9f-685630147495@linux.intel.com>
+ <YVQCy2yEK00XbWAq@krava>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <70d0b651-4cd6-6f6c-247e-b01067155418@linux.intel.com>
+Date:   Wed, 29 Sep 2021 11:13:23 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ycp367bsarc33tfb"
-Content-Disposition: inline
-In-Reply-To: <75dd6d60-08b9-fa68-352c-3a0c5a04c0ab@linux.ibm.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-perf-users@vger.kernel.org
+In-Reply-To: <YVQCy2yEK00XbWAq@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
---ycp367bsarc33tfb
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 29, 2021 at 11:15:37PM +1000, Andrew Donnellan wrote:
-> On 29/9/21 6:53 pm, Uwe Kleine-K=F6nig wrote:>   =09
-> list_for_each_entry(afu_dev, &afu->phb->bus->devices, bus_list) {
-> > -			if (afu_dev->driver && afu_dev->driver->err_handler &&
-> > -			    afu_dev->driver->err_handler->resume)
-> > -				afu_dev->driver->err_handler->resume(afu_dev);
-> > +			struct pci_driver *afu_drv;
-> > +			if (afu_dev->dev.driver &&
-> > +			    (afu_drv =3D to_pci_driver(afu_dev->dev.driver))->err_handler &&
->=20
-> I'm not a huge fan of assignments in if statements and if you send a v6 I=
-'d
-> prefer you break it up.
+On 9/29/2021 2:08 AM, Jiri Olsa wrote:
+> On Tue, Sep 28, 2021 at 05:35:51PM -0400, Liang, Kan wrote:
+>>
+>>
+>> On 9/28/2021 3:20 PM, Jiri Olsa wrote:
+>>> Joe reported broken -F weight in perf script with (on x86):
+>>>
+>>>     # ./perf mem record
+>>>     # ./perf script -F weight
+>>>     Samples for 'dummy:HG' event do not have WEIGHT attribute set. Cannot print 'weight' field.
+>>>
+>>> the problem seems to be introduced with the WEIGHT_STRUCT change:
+>>>     ea8d0ed6eae3 perf tools: Support PERF_SAMPLE_WEIGHT_STRUCT
+>>>
+>>> which enables WEIGHT_STRUCT sample_type on x86 instead of WEIGHT,
+>>> and leaves 'perf script -F weight' in the dark
+>>
+>> Right, I missed the support for the perf script. Because the default perf
+>> script worked. It didn't ring the bell. :(
+>>
+>>>
+>>> I'm not sure what the fix should look like.. should we allow user
+>>> to use just 'WEIGHT' sample type? or is there a way to get original
+>>> weight from 'WEIGHT_STRUCT' data, so we could fix just perf script?
+>>
+>> Just fix the perf script is enough.
+>> Could you please try the below patch?
+>>
+>> (I probably need to split the patch into two patches, since it fixed two
+>> issues, one is this error, the other is to print the instruction latency.
+>> Anyway, let's try it first.)
+>>
+>>  From 99443f49a6236ef6e3bea3930792967a7863f753 Mon Sep 17 00:00:00 2001
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>> Date: Tue, 28 Sep 2021 13:57:18 -0700
+>> Subject: [PATCH] perf script: Fix PERF_SAMPLE_WEIGHT_STRUCT support
+>>
+>> -F weight in perf script is broken.
+>>
+>>    # ./perf mem record
+>>    # ./perf script -F weight
+>>    Samples for 'dummy:HG' event do not have WEIGHT attribute set. Cannot
+>> print 'weight' field.
+>>
+>> The sample type, PERF_SAMPLE_WEIGHT_STRUCT, is an alternative of the
+>> PERF_SAMPLE_WEIGHT sample type. They share the same space, weight. The
+>> lower 32 bits are exactly the same for both sample type. The higher 32
+>> bits may be different for different architecture. For a new kernel on
+>> x86, the PERF_SAMPLE_WEIGHT_STRUCT is used. For an old kernel or other
+>> ARCHs, the PERF_SAMPLE_WEIGHT is used.
+>>
+>> With -F weight, current perf script will check the input string "weight"
+>> with the corresponding sample type. However, the commit ID ea8d0ed6eae3
+>> ("perf tools: Support PERF_SAMPLE_WEIGHT_STRUCT") didn't update the
+>> sample type for perf script. The check fails with a new kernel on x86.
+>>
+>> Use PERF_SAMPLE_WEIGHT_TYPE, which supports both sample types, to
+>> replace PERF_SAMPLE_WEIGHT.
+>>
+>> Also, print the instruction latency for PERF_SAMPLE_WEIGHT_STRUCT type.
+>>
+>> Reported-by: Joe Mario <jmario@redhat.com>
+>> Fixes: ea8d0ed6eae3 ("perf tools: Support PERF_SAMPLE_WEIGHT_STRUCT")
+>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>> ---
+>>   tools/perf/builtin-script.c | 7 +++++--
+>>   1 file changed, 5 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+>> index 6211d0b..fd73bbc 100644
+>> --- a/tools/perf/builtin-script.c
+>> +++ b/tools/perf/builtin-script.c
+>> @@ -459,7 +459,7 @@ static int evsel__check_attr(struct evsel *evsel, struct
+>> perf_session *session)
+>>   		return -EINVAL;
+>>
+>>   	if (PRINT_FIELD(WEIGHT) &&
+>> -	    evsel__check_stype(evsel, PERF_SAMPLE_WEIGHT, "WEIGHT",
+>> PERF_OUTPUT_WEIGHT))
+>> +	    evsel__check_stype(evsel, PERF_SAMPLE_WEIGHT_TYPE, "WEIGHT",
+>> PERF_OUTPUT_WEIGHT))
+>>   		return -EINVAL;
+>>
+>>   	if (PRINT_FIELD(SYM) &&
+>> @@ -2036,8 +2036,11 @@ static void process_event(struct perf_script *script,
+>>   	if (PRINT_FIELD(DATA_SRC))
+>>   		data_src__fprintf(sample->data_src, fp);
+>>
+>> -	if (PRINT_FIELD(WEIGHT))
+>> +	if (PRINT_FIELD(WEIGHT)) {
+>>   		fprintf(fp, "%16" PRIu64, sample->weight);
+>> +		if (attr->sample_type & PERF_SAMPLE_WEIGHT_STRUCT)
+>> +			fprintf(fp, ",0x%" PRIx16, sample->ins_lat);
+> 
+> this will add extra number to weight.. should we add separate column
+> for that -F 'insn-lat' ? users expect just single value for -F weight
+> 
 
-I'm not a huge fan either, I used it to keep the control flow as is and
-without introducing several calls to to_pci_driver.
+Sure, I will send out a patch set to LKML for review shortly.
 
-The whole code looks as follows:
-
-	list_for_each_entry(afu_dev, &afu->phb->bus->devices, bus_list) {
-		struct pci_driver *afu_drv;
-		if (afu_dev->dev.driver &&
-		    (afu_drv =3D to_pci_driver(afu_dev->dev.driver))->err_handler &&
-		    afu_drv->err_handler->resume)
-			afu_drv->err_handler->resume(afu_dev);
-	}
-
-Without assignment in the if it could look as follows:
-
-	list_for_each_entry(afu_dev, &afu->phb->bus->devices, bus_list) {
-		struct pci_driver *afu_drv;
-
-		if (!afu_dev->dev.driver)
-			continue;
-
-		afu_drv =3D to_pci_driver(afu_dev->dev.driver));
-
-		if (afu_drv->err_handler && afu_drv->err_handler->resume)
-			afu_drv->err_handler->resume(afu_dev);
-	}
-
-Fine for me.
-
-(Sidenote: What happens if the device is unbound directly after the
-check for afu_dev->dev.driver? This is a problem the old code had, too
-(assuming it is a real problem, didn't check deeply).)
-
-> Apart from that everything in the powerpc and cxl sections looks good to =
-me.
-
-Thanks for checking.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---ycp367bsarc33tfb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEyBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmFUbX8ACgkQwfwUeK3K
-7Am1vgf4oAZW8TWGX7Ao47AspECT0eq6axIwcj5PXeVpv5NC7BZPYClTPkycpcUZ
-q8GsCEDyP5ratJ0gW3XFPyCkvgml0ndAP8y5Cs1ZeE1rU6xCJivD/HWMBoTJvaIH
-uWxKIKzt/IiZWdt4Wo+fYplgR1/fak8IgUcV7jWOXA7pVVcZB3enVL/cB6xinq/H
-+T9nGsYMVfSfdJdcD/EHVePI34oVlE9Eor3g1MFzRHk21B+r9J/TxUCsj84/JW60
-P//CUO5CrpsjnqvhmShEm8POvpOjaTXLPxxTh3Oan2WFcgc/8mNx5zaKFdM1Rjmg
-YeZXa3sMNdP7hIFZvqylIJDO3SbK
-=MbZA
------END PGP SIGNATURE-----
-
---ycp367bsarc33tfb--
+Thanks,
+Kan
