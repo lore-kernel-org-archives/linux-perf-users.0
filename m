@@ -2,116 +2,629 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E8EC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Sep 2021 07:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 107C7C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Sep 2021 08:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4A70613C8
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Sep 2021 07:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF548613A7
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Sep 2021 08:54:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244505AbhI2HGP (ORCPT
+        id S244939AbhI2I4j (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 29 Sep 2021 03:06:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54058 "EHLO
+        Wed, 29 Sep 2021 04:56:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244489AbhI2HGP (ORCPT
+        with ESMTP id S244640AbhI2I4i (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 29 Sep 2021 03:06:15 -0400
-Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7726DC061749
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Sep 2021 00:04:34 -0700 (PDT)
-Received: by mail-qt1-x84a.google.com with SMTP id 62-20020aed2044000000b002a6aa209efaso7181233qta.18
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Sep 2021 00:04:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=485aqyMaDhgNS2O/IDjEvg+jxK02XiMi7beDqYxp0oU=;
-        b=pn51I8FoCpp0r1PED2fZr8xnbRt/fFAtSye7wwHS3v5i7peflI0195y+mVTHkFdmsB
-         xWM1nb/BQrYjDfZtCi1N79y0Ov8BNZsLNkLTCxd0q8qUr+HLUnGb4iKYmCZgmsZVpy9f
-         3Ab9kA3sTdmkF/RT516ifCN162EU88z1b5BxNP/wsRKvOYBYAhgXebURobTSNG3mFggG
-         T3mfnkBSQMb9SBBsCcsnHkqjNP+vvmc665nRH3Vs7/rWZm9zi2Cksri2yDHW/gK/edoL
-         KnozByn9nPtxgxgS2du9I31tptg0QWOAnr7ji5UwKsgw9/6GPHrSlxotgZEXvQh20Vbv
-         IaYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=485aqyMaDhgNS2O/IDjEvg+jxK02XiMi7beDqYxp0oU=;
-        b=lNRWkB4WbE0WqnTzq7Zs/vr72MYPYxbWBCQWmh135VDJbO08nFTRSR+IC8pJTx1NOT
-         0qE4zCt2xE5t4nau66ojvqj37OwU8MQbtdjaVmb6XQxMDSOscM69yg+rYCkOLDjz3ZA5
-         Nu7NoI3GT6esCAAF83W6jDW9oL5tfmKCYnRq0yt+DMOkxMwo1iKQob9tFfez9vYRFdAK
-         4zMCTsvYKkmfvNB8htdkylpEiMIdogIb2GyoG3UB2Zbz4xDIMHoj2zrV6Ye7MtazxEuE
-         bmogajg8eLp6KkExQNk6QoJ/LTOWo5FGDT1zvQDpw+uQowE2ctif91qmPHkgf3gorCxK
-         O6aw==
-X-Gm-Message-State: AOAM5336PI1W0joFnKiqstnzA7nwhqy2CsJ0Hfgmj2CPg7Mo4fqfc2/D
-        SX6U34TygCnbeLKNJCH9YRand50Zzt67M1/KEfIOWYm7P5R3XR99MxSqe3cbNEOqE3rL6x0chbX
-        UGZ6KEr+paJy/bGGaX3XoEqN/fcO5ONHVJr+iyA50wm1xeiW/WPUe6GPfeWvgtlqOeORmouco2v
-        Sh6Q==
-X-Google-Smtp-Source: ABdhPJz2Q+RMRv8+ZBVLFet3MQ700VtyYjtKz5H2PNxHN4Iu/cz1l5TyAVcm2tlliSB/aDALbhTqgbx4QCnX
-X-Received: from nandos.syd.corp.google.com ([2401:fa00:9:14:846e:ae82:9f80:179b])
- (user=amistry job=sendgmr) by 2002:a05:6214:17d1:: with SMTP id
- cu17mr10202777qvb.14.1632899073573; Wed, 29 Sep 2021 00:04:33 -0700 (PDT)
-Date:   Wed, 29 Sep 2021 17:04:21 +1000
-Message-Id: <20210929170405.1.I078b98ee7727f9ae9d6df8262bad7e325e40faf0@changeid>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.33.0.800.g4c38ced690-goog
-Subject: [PATCH] perf/x86: Reset destroy callback on event init failure
-From:   Anand K Mistry <amistry@google.com>
-To:     linux-perf-users@vger.kernel.org
-Cc:     Anand K Mistry <amistry@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Wed, 29 Sep 2021 04:56:38 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53C02C06161C
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Sep 2021 01:54:57 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mVVL6-0001jM-6d; Wed, 29 Sep 2021 10:53:20 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mVVL4-0004gO-VW; Wed, 29 Sep 2021 10:53:18 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mVVL3-0000RO-SQ; Wed, 29 Sep 2021 10:53:17 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-pci@vger.kernel.org,
+        kernel@pengutronix.de, Russell Currey <ruscur@russell.cc>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
         Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-usb@vger.kernel.org
+Subject: [PATCH v5 10/11] PCI: Replace pci_dev::driver usage by pci_dev::dev.driver
+Date:   Wed, 29 Sep 2021 10:53:05 +0200
+Message-Id: <20210929085306.2203850-11-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210929085306.2203850-1-u.kleine-koenig@pengutronix.de>
+References: <20210929085306.2203850-1-u.kleine-koenig@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Patch-Hashes: v=1; h=sha256; i=/pZgVMb346xYWFyKXoYzQiwqLbFb4Qw5wqFIqjkKa+4=; m=FyMqGYUG+9Ut7bWwCBeeUgHOxoK/KbMAjt+cyx+MULA=; p=7uJBwDup3eOXFa/jaxic6at398GqkPM+jAglE1o0ido=; g=d846534d35b8420e8bfb08112981cf20b1b1fab2
+X-Patch-Sig: m=pgp; i=u.kleine-koenig@pengutronix.de; s=0x0D2511F322BFAB1C1580266BE2DCDD9132669BD6; b=iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmFUKWMACgkQwfwUeK3K7AmtpggAmyR 6rO1OqNj4Fquhf8pUeQsYWPCNyaSBg+ipgJHefnapmLAKQVspu/dH/PC55+8isG9gHDw/cc2aZGT8 XD7Ez6VRDOV8ryX2WGNNU4Hy5D5TzpGmHWt6tWKJzvQ0MGyFHZuHYguOR+PGGyw8BGGQNYCQLqVrJ 9sdmFeHKuAL0gwF6ePXdUaBNPcRNub3BEpt4IhiDwL57NELfETNaCvcCh1qZR9CtNrrLDG6JtCEXq 3voBvjuH9ajF8bZvq3Cjf8S5ZJ+/RCab6EtFb3jgLednPhUmO4kvRzYD7Bqoi0yIMCcUKwTAxnVJc jbe8dIQIb17LLK3TWwX+zPegpmSeziQ==
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-perf-users@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-perf_init_event tries multiple init callbacks and does not reset the
-event state between tries. When x86_pmu_event_init runs, it
-unconditionally sets the destroy callback to hw_perf_event_destroy. On
-the next init attempt after x86_pmu_event_init, in perf_try_init_event,
-if the pmu's capabilities includes PERF_PMU_CAP_NO_EXCLUDE, the destroy
-callback will be run. However, if the next init didn't set the destroy
-callback, hw_perf_event_destroy will be run (since the callback wasn't
-reset).
+struct pci_dev::driver contains (apart from a constant offset) the same
+data as struct pci_dev::dev->driver. Replace all remaining users of the
+former pointer by the latter to allow removing the former.
 
-Looking at other pmu init functions, the common pattern is to only set
-the destroy callback on a successful init. Resetting the callback on
-failure tries to replicate that pattern.
-
-This was discovered after commit f11dd0d80555 ("perf/x86/amd/ibs: Extend
-PERF_PMU_CAP_NO_EXCLUDE to IBS Op") when the second (and only second)
-run of the perf tool after a reboot results in 0 samples being
-generated. The extra run of hw_perf_event_destroy results in
-active_events having an extra decrement on each perf run. The second run
-has active_events == 0 and every subsequent run has active_events < 0.
-When active_events == 0, the NMI handler will early-out and not record
-any samples.
-
-Signed-off-by: Anand K Mistry <amistry@google.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
+ arch/powerpc/kernel/eeh_driver.c | 10 ++++-----
+ arch/x86/events/intel/uncore.c   |  2 +-
+ arch/x86/kernel/probe_roms.c     |  2 +-
+ drivers/misc/cxl/guest.c         | 24 ++++++++++++---------
+ drivers/misc/cxl/pci.c           | 30 ++++++++++++++++----------
+ drivers/pci/iov.c                | 25 ++++++++++++++--------
+ drivers/pci/pci-driver.c         | 25 +++++++++++-----------
+ drivers/pci/pci.c                |  4 ++--
+ drivers/pci/pcie/err.c           | 36 ++++++++++++++++++--------------
+ drivers/pci/xen-pcifront.c       |  4 ++--
+ drivers/usb/host/xhci-pci.c      |  2 +-
+ 11 files changed, 93 insertions(+), 71 deletions(-)
 
- arch/x86/events/core.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index e6db1a1f22d7..1f5d96ba4866 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2284,6 +2284,7 @@ static int x86_pmu_event_init(struct perf_event *event)
- 	if (err) {
- 		if (event->destroy)
- 			event->destroy(event);
-+		event->destroy = NULL;
+diff --git a/arch/powerpc/kernel/eeh_driver.c b/arch/powerpc/kernel/eeh_driver.c
+index 3eff6a4888e7..350dab18e137 100644
+--- a/arch/powerpc/kernel/eeh_driver.c
++++ b/arch/powerpc/kernel/eeh_driver.c
+@@ -104,13 +104,13 @@ static bool eeh_edev_actionable(struct eeh_dev *edev)
+  */
+ static inline struct pci_driver *eeh_pcid_get(struct pci_dev *pdev)
+ {
+-	if (!pdev || !pdev->driver)
++	if (!pdev || !pdev->dev.driver)
+ 		return NULL;
+ 
+-	if (!try_module_get(pdev->driver->driver.owner))
++	if (!try_module_get(pdev->dev.driver->owner))
+ 		return NULL;
+ 
+-	return pdev->driver;
++	return to_pci_driver(pdev->dev.driver);
+ }
+ 
+ /**
+@@ -122,10 +122,10 @@ static inline struct pci_driver *eeh_pcid_get(struct pci_dev *pdev)
+  */
+ static inline void eeh_pcid_put(struct pci_dev *pdev)
+ {
+-	if (!pdev || !pdev->driver)
++	if (!pdev || !pdev->dev.driver)
+ 		return;
+ 
+-	module_put(pdev->driver->driver.owner);
++	module_put(pdev->dev.driver->owner);
+ }
+ 
+ /**
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index c72e368dd164..f1ba6ab2e97e 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -1187,7 +1187,7 @@ static int uncore_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id
+ 	 * PCI slot and func to indicate the uncore box.
+ 	 */
+ 	if (id->driver_data & ~0xffff) {
+-		struct pci_driver *pci_drv = pdev->driver;
++		struct pci_driver *pci_drv = to_pci_driver(pdev->dev.driver);
+ 
+ 		pmu = uncore_pci_find_dev_pmu(pdev, pci_drv->id_table);
+ 		if (pmu == NULL)
+diff --git a/arch/x86/kernel/probe_roms.c b/arch/x86/kernel/probe_roms.c
+index 9e1def3744f2..36e84d904260 100644
+--- a/arch/x86/kernel/probe_roms.c
++++ b/arch/x86/kernel/probe_roms.c
+@@ -80,7 +80,7 @@ static struct resource video_rom_resource = {
+  */
+ static bool match_id(struct pci_dev *pdev, unsigned short vendor, unsigned short device)
+ {
+-	struct pci_driver *drv = pdev->driver;
++	struct pci_driver *drv = to_pci_driver(pdev->dev.driver);
+ 	const struct pci_device_id *id;
+ 
+ 	if (pdev->vendor == vendor && pdev->device == device)
+diff --git a/drivers/misc/cxl/guest.c b/drivers/misc/cxl/guest.c
+index 186308f1f8eb..d997c9c3ebb5 100644
+--- a/drivers/misc/cxl/guest.c
++++ b/drivers/misc/cxl/guest.c
+@@ -25,28 +25,32 @@ static void pci_error_handlers(struct cxl_afu *afu,
+ 		return;
+ 
+ 	list_for_each_entry(afu_dev, &afu->phb->bus->devices, bus_list) {
+-		if (!afu_dev->driver)
++		struct pci_driver *afu_drv;
++
++		if (!afu_dev->dev.driver)
+ 			continue;
+ 
++		afu_drv = to_pci_driver(afu_dev->dev.driver);
++
+ 		switch (bus_error_event) {
+ 		case CXL_ERROR_DETECTED_EVENT:
+ 			afu_dev->error_state = state;
+ 
+-			if (afu_dev->driver->err_handler &&
+-			    afu_dev->driver->err_handler->error_detected)
+-				afu_dev->driver->err_handler->error_detected(afu_dev, state);
++			if (afu_drv->err_handler &&
++			    afu_drv->err_handler->error_detected)
++				afu_drv->err_handler->error_detected(afu_dev, state);
+ 		break;
+ 		case CXL_SLOT_RESET_EVENT:
+ 			afu_dev->error_state = state;
+ 
+-			if (afu_dev->driver->err_handler &&
+-			    afu_dev->driver->err_handler->slot_reset)
+-				afu_dev->driver->err_handler->slot_reset(afu_dev);
++			if (afu_drv->err_handler &&
++			    afu_drv->err_handler->slot_reset)
++				afu_drv->err_handler->slot_reset(afu_dev);
+ 		break;
+ 		case CXL_RESUME_EVENT:
+-			if (afu_dev->driver->err_handler &&
+-			    afu_dev->driver->err_handler->resume)
+-				afu_dev->driver->err_handler->resume(afu_dev);
++			if (afu_drv->err_handler &&
++			    afu_drv->err_handler->resume)
++				afu_drv->err_handler->resume(afu_dev);
+ 		break;
+ 		}
+ 	}
+diff --git a/drivers/misc/cxl/pci.c b/drivers/misc/cxl/pci.c
+index 2ba899f5659f..7e7545d01e27 100644
+--- a/drivers/misc/cxl/pci.c
++++ b/drivers/misc/cxl/pci.c
+@@ -1805,14 +1805,16 @@ static pci_ers_result_t cxl_vphb_error_detected(struct cxl_afu *afu,
+ 		return result;
+ 
+ 	list_for_each_entry(afu_dev, &afu->phb->bus->devices, bus_list) {
+-		if (!afu_dev->driver)
++		struct pci_driver *afu_drv;
++		if (!afu_dev->dev.driver)
+ 			continue;
+ 
++		afu_drv = to_pci_driver(afu_dev->dev.driver);
++
+ 		afu_dev->error_state = state;
+ 
+-		if (afu_dev->driver->err_handler)
+-			afu_result = afu_dev->driver->err_handler->error_detected(afu_dev,
+-										  state);
++		if (afu_drv->err_handler)
++			afu_result = afu_drv->err_handler->error_detected(afu_dev, state);
+ 		/* Disconnect trumps all, NONE trumps NEED_RESET */
+ 		if (afu_result == PCI_ERS_RESULT_DISCONNECT)
+ 			result = PCI_ERS_RESULT_DISCONNECT;
+@@ -2003,6 +2005,8 @@ static pci_ers_result_t cxl_pci_slot_reset(struct pci_dev *pdev)
+ 			continue;
+ 
+ 		list_for_each_entry(afu_dev, &afu->phb->bus->devices, bus_list) {
++			struct pci_driver *afu_drv;
++
+ 			/* Reset the device context.
+ 			 * TODO: make this less disruptive
+ 			 */
+@@ -2028,12 +2032,14 @@ static pci_ers_result_t cxl_pci_slot_reset(struct pci_dev *pdev)
+ 			 * shouldn't start new work until we call
+ 			 * their resume function.
+ 			 */
+-			if (!afu_dev->driver)
++			if (!afu_dev->dev.driver)
+ 				continue;
+ 
+-			if (afu_dev->driver->err_handler &&
+-			    afu_dev->driver->err_handler->slot_reset)
+-				afu_result = afu_dev->driver->err_handler->slot_reset(afu_dev);
++			afu_drv = to_pci_driver(afu_dev->dev.driver);
++
++			if (afu_drv->err_handler &&
++			    afu_drv->err_handler->slot_reset)
++				afu_result = afu_drv->err_handler->slot_reset(afu_dev);
+ 
+ 			if (afu_result == PCI_ERS_RESULT_DISCONNECT)
+ 				result = PCI_ERS_RESULT_DISCONNECT;
+@@ -2074,9 +2080,11 @@ static void cxl_pci_resume(struct pci_dev *pdev)
+ 			continue;
+ 
+ 		list_for_each_entry(afu_dev, &afu->phb->bus->devices, bus_list) {
+-			if (afu_dev->driver && afu_dev->driver->err_handler &&
+-			    afu_dev->driver->err_handler->resume)
+-				afu_dev->driver->err_handler->resume(afu_dev);
++			struct pci_driver *afu_drv;
++			if (afu_dev->dev.driver &&
++			    (afu_drv = to_pci_driver(afu_dev->dev.driver))->err_handler &&
++			    afu_drv->err_handler->resume)
++				afu_drv->err_handler->resume(afu_dev);
+ 		}
+ 	}
+ 	spin_unlock(&adapter->afu_list_lock);
+diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+index dafdc652fcd0..f94660927544 100644
+--- a/drivers/pci/iov.c
++++ b/drivers/pci/iov.c
+@@ -164,13 +164,15 @@ static ssize_t sriov_vf_total_msix_show(struct device *dev,
+ 					char *buf)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(dev);
++	struct pci_driver *pdrv;
+ 	u32 vf_total_msix = 0;
+ 
+ 	device_lock(dev);
+-	if (!pdev->driver || !pdev->driver->sriov_get_vf_total_msix)
++	pdrv = to_pci_driver(dev->driver);
++	if (!pdrv || !pdrv->sriov_get_vf_total_msix)
+ 		goto unlock;
+ 
+-	vf_total_msix = pdev->driver->sriov_get_vf_total_msix(pdev);
++	vf_total_msix = pdrv->sriov_get_vf_total_msix(pdev);
+ unlock:
+ 	device_unlock(dev);
+ 	return sysfs_emit(buf, "%u\n", vf_total_msix);
+@@ -183,6 +185,7 @@ static ssize_t sriov_vf_msix_count_store(struct device *dev,
+ {
+ 	struct pci_dev *vf_dev = to_pci_dev(dev);
+ 	struct pci_dev *pdev = pci_physfn(vf_dev);
++	struct pci_driver *pdrv;
+ 	int val, ret;
+ 
+ 	ret = kstrtoint(buf, 0, &val);
+@@ -193,13 +196,14 @@ static ssize_t sriov_vf_msix_count_store(struct device *dev,
+ 		return -EINVAL;
+ 
+ 	device_lock(&pdev->dev);
+-	if (!pdev->driver || !pdev->driver->sriov_set_msix_vec_count) {
++	pdrv = to_pci_driver(pdev->dev.driver);
++	if (!pdrv || !pdrv->sriov_set_msix_vec_count) {
+ 		ret = -EOPNOTSUPP;
+ 		goto err_pdev;
  	}
  
- 	if (READ_ONCE(x86_pmu.attr_rdpmc) &&
+ 	device_lock(&vf_dev->dev);
+-	if (vf_dev->driver) {
++	if (vf_dev->dev.driver) {
+ 		/*
+ 		 * A driver is already attached to this VF and has configured
+ 		 * itself based on the current MSI-X vector count. Changing
+@@ -209,7 +213,7 @@ static ssize_t sriov_vf_msix_count_store(struct device *dev,
+ 		goto err_dev;
+ 	}
+ 
+-	ret = pdev->driver->sriov_set_msix_vec_count(vf_dev, val);
++	ret = pdrv->sriov_set_msix_vec_count(vf_dev, val);
+ 
+ err_dev:
+ 	device_unlock(&vf_dev->dev);
+@@ -376,6 +380,7 @@ static ssize_t sriov_numvfs_store(struct device *dev,
+ 				  const char *buf, size_t count)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(dev);
++	struct pci_driver *pdrv;
+ 	int ret;
+ 	u16 num_vfs;
+ 
+@@ -392,14 +397,16 @@ static ssize_t sriov_numvfs_store(struct device *dev,
+ 		goto exit;
+ 
+ 	/* is PF driver loaded */
+-	if (!pdev->driver) {
++	if (!pdev->dev.driver) {
+ 		pci_info(pdev, "no driver bound to device; cannot configure SR-IOV\n");
+ 		ret = -ENOENT;
+ 		goto exit;
+ 	}
+ 
++	pdrv = to_pci_driver(pdev->dev.driver);
++
+ 	/* is PF driver loaded w/callback */
+-	if (!pdev->driver->sriov_configure) {
++	if (!pdrv->sriov_configure) {
+ 		pci_info(pdev, "driver does not support SR-IOV configuration via sysfs\n");
+ 		ret = -ENOENT;
+ 		goto exit;
+@@ -407,7 +414,7 @@ static ssize_t sriov_numvfs_store(struct device *dev,
+ 
+ 	if (num_vfs == 0) {
+ 		/* disable VFs */
+-		ret = pdev->driver->sriov_configure(pdev, 0);
++		ret = pdrv->sriov_configure(pdev, 0);
+ 		goto exit;
+ 	}
+ 
+@@ -419,7 +426,7 @@ static ssize_t sriov_numvfs_store(struct device *dev,
+ 		goto exit;
+ 	}
+ 
+-	ret = pdev->driver->sriov_configure(pdev, num_vfs);
++	ret = pdrv->sriov_configure(pdev, num_vfs);
+ 	if (ret < 0)
+ 		goto exit;
+ 
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index 50449ec622a3..4d20022b8631 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -457,7 +457,7 @@ static int pci_device_probe(struct device *dev)
+ static void pci_device_remove(struct device *dev)
+ {
+ 	struct pci_dev *pci_dev = to_pci_dev(dev);
+-	struct pci_driver *drv = pci_dev->driver;
++	struct pci_driver *drv = to_pci_driver(pci_dev->dev.driver);
+ 
+ 	if (drv->remove) {
+ 		pm_runtime_get_sync(dev);
+@@ -493,7 +493,7 @@ static void pci_device_remove(struct device *dev)
+ static void pci_device_shutdown(struct device *dev)
+ {
+ 	struct pci_dev *pci_dev = to_pci_dev(dev);
+-	struct pci_driver *drv = pci_dev->driver;
++	struct pci_driver *drv = to_pci_driver(pci_dev->dev.driver);
+ 
+ 	pm_runtime_resume(dev);
+ 
+@@ -589,7 +589,7 @@ static int pci_pm_reenable_device(struct pci_dev *pci_dev)
+ static int pci_legacy_suspend(struct device *dev, pm_message_t state)
+ {
+ 	struct pci_dev *pci_dev = to_pci_dev(dev);
+-	struct pci_driver *drv = pci_dev->driver;
++	struct pci_driver *drv = to_pci_driver(dev->driver);
+ 
+ 	if (drv && drv->suspend) {
+ 		pci_power_t prev = pci_dev->current_state;
+@@ -630,7 +630,7 @@ static int pci_legacy_suspend_late(struct device *dev, pm_message_t state)
+ static int pci_legacy_resume(struct device *dev)
+ {
+ 	struct pci_dev *pci_dev = to_pci_dev(dev);
+-	struct pci_driver *drv = pci_dev->driver;
++	struct pci_driver *drv = to_pci_driver(pci_dev->dev.driver);
+ 
+ 	pci_fixup_device(pci_fixup_resume, pci_dev);
+ 
+@@ -649,7 +649,7 @@ static void pci_pm_default_suspend(struct pci_dev *pci_dev)
+ 
+ static bool pci_has_legacy_pm_support(struct pci_dev *pci_dev)
+ {
+-	struct pci_driver *drv = pci_dev->driver;
++	struct pci_driver *drv = to_pci_driver(pci_dev->dev.driver);
+ 	bool ret = drv && (drv->suspend || drv->resume);
+ 
+ 	/*
+@@ -1242,11 +1242,11 @@ static int pci_pm_runtime_suspend(struct device *dev)
+ 	int error;
+ 
+ 	/*
+-	 * If pci_dev->driver is not set (unbound), we leave the device in D0,
++	 * If pci_dev->dev.driver is not set (unbound), we leave the device in D0,
+ 	 * but it may go to D3cold when the bridge above it runtime suspends.
+ 	 * Save its config space in case that happens.
+ 	 */
+-	if (!pci_dev->driver) {
++	if (!pci_dev->dev.driver) {
+ 		pci_save_state(pci_dev);
+ 		return 0;
+ 	}
+@@ -1303,7 +1303,7 @@ static int pci_pm_runtime_resume(struct device *dev)
+ 	 */
+ 	pci_restore_standard_config(pci_dev);
+ 
+-	if (!pci_dev->driver)
++	if (!dev->driver)
+ 		return 0;
+ 
+ 	pci_fixup_device(pci_fixup_resume_early, pci_dev);
+@@ -1322,14 +1322,13 @@ static int pci_pm_runtime_resume(struct device *dev)
+ 
+ static int pci_pm_runtime_idle(struct device *dev)
+ {
+-	struct pci_dev *pci_dev = to_pci_dev(dev);
+ 	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
+ 
+ 	/*
+-	 * If pci_dev->driver is not set (unbound), the device should
++	 * If dev->driver is not set (unbound), the device should
+ 	 * always remain in D0 regardless of the runtime PM status
+ 	 */
+-	if (!pci_dev->driver)
++	if (!dev->driver)
+ 		return 0;
+ 
+ 	if (!pm)
+@@ -1436,8 +1435,8 @@ static struct pci_driver pci_compat_driver = {
+  */
+ struct pci_driver *pci_dev_driver(const struct pci_dev *dev)
+ {
+-	if (dev->driver)
+-		return dev->driver;
++	if (dev->dev.driver)
++		return to_pci_driver(dev->dev.driver);
+ 	else {
+ 		int i;
+ 		for (i = 0; i <= PCI_ROM_RESOURCE; i++)
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index ce2ab62b64cf..ccecf740de59 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5089,7 +5089,7 @@ EXPORT_SYMBOL_GPL(pci_dev_unlock);
+ static void pci_dev_save_and_disable(struct pci_dev *dev)
+ {
+ 	const struct pci_error_handlers *err_handler =
+-			dev->driver ? dev->driver->err_handler : NULL;
++			dev->dev.driver ? to_pci_driver(dev->dev.driver)->err_handler : NULL;
+ 
+ 	/*
+ 	 * dev->driver->err_handler->reset_prepare() is protected against
+@@ -5120,7 +5120,7 @@ static void pci_dev_save_and_disable(struct pci_dev *dev)
+ static void pci_dev_restore(struct pci_dev *dev)
+ {
+ 	const struct pci_error_handlers *err_handler =
+-			dev->driver ? dev->driver->err_handler : NULL;
++			dev->dev.driver ? to_pci_driver(dev->dev.driver)->err_handler : NULL;
+ 
+ 	pci_restore_state(dev);
+ 
+diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+index b576aa890c76..b314b54f7821 100644
+--- a/drivers/pci/pcie/err.c
++++ b/drivers/pci/pcie/err.c
+@@ -49,14 +49,15 @@ static int report_error_detected(struct pci_dev *dev,
+ 				 pci_channel_state_t state,
+ 				 enum pci_ers_result *result)
+ {
++	struct pci_driver *pdrv;
+ 	pci_ers_result_t vote;
+ 	const struct pci_error_handlers *err_handler;
+ 
+ 	device_lock(&dev->dev);
+ 	if (!pci_dev_set_io_state(dev, state) ||
+-		!dev->driver ||
+-		!dev->driver->err_handler ||
+-		!dev->driver->err_handler->error_detected) {
++		!dev->dev.driver ||
++		!(pdrv = to_pci_driver(dev->dev.driver))->err_handler ||
++		!pdrv->err_handler->error_detected) {
+ 		/*
+ 		 * If any device in the subtree does not have an error_detected
+ 		 * callback, PCI_ERS_RESULT_NO_AER_DRIVER prevents subsequent
+@@ -70,7 +71,7 @@ static int report_error_detected(struct pci_dev *dev,
+ 			vote = PCI_ERS_RESULT_NONE;
+ 		}
+ 	} else {
+-		err_handler = dev->driver->err_handler;
++		err_handler = pdrv->err_handler;
+ 		vote = err_handler->error_detected(dev, state);
+ 	}
+ 	pci_uevent_ers(dev, vote);
+@@ -92,15 +93,16 @@ static int report_normal_detected(struct pci_dev *dev, void *data)
+ static int report_mmio_enabled(struct pci_dev *dev, void *data)
+ {
+ 	pci_ers_result_t vote, *result = data;
++	struct pci_driver *pdrv;
+ 	const struct pci_error_handlers *err_handler;
+ 
+ 	device_lock(&dev->dev);
+-	if (!dev->driver ||
+-		!dev->driver->err_handler ||
+-		!dev->driver->err_handler->mmio_enabled)
++	if (!dev->dev.driver ||
++		!(pdrv = to_pci_driver(dev->dev.driver))->err_handler ||
++		!pdrv->err_handler->mmio_enabled)
+ 		goto out;
+ 
+-	err_handler = dev->driver->err_handler;
++	err_handler = pdrv->err_handler;
+ 	vote = err_handler->mmio_enabled(dev);
+ 	*result = merge_result(*result, vote);
+ out:
+@@ -112,14 +114,15 @@ static int report_slot_reset(struct pci_dev *dev, void *data)
+ {
+ 	pci_ers_result_t vote, *result = data;
+ 	const struct pci_error_handlers *err_handler;
++	struct pci_driver *pdrv;
+ 
+ 	device_lock(&dev->dev);
+-	if (!dev->driver ||
+-		!dev->driver->err_handler ||
+-		!dev->driver->err_handler->slot_reset)
++	if (!dev->dev.driver ||
++		!(pdrv = to_pci_driver(dev->dev.driver))->err_handler ||
++		!pdrv->err_handler->slot_reset)
+ 		goto out;
+ 
+-	err_handler = dev->driver->err_handler;
++	err_handler = pdrv->err_handler;
+ 	vote = err_handler->slot_reset(dev);
+ 	*result = merge_result(*result, vote);
+ out:
+@@ -130,15 +133,16 @@ static int report_slot_reset(struct pci_dev *dev, void *data)
+ static int report_resume(struct pci_dev *dev, void *data)
+ {
+ 	const struct pci_error_handlers *err_handler;
++	struct pci_driver *pdrv;
+ 
+ 	device_lock(&dev->dev);
+ 	if (!pci_dev_set_io_state(dev, pci_channel_io_normal) ||
+-		!dev->driver ||
+-		!dev->driver->err_handler ||
+-		!dev->driver->err_handler->resume)
++		!dev->dev.driver ||
++		!(pdrv = to_pci_driver(dev->dev.driver))->err_handler ||
++		!pdrv->err_handler->resume)
+ 		goto out;
+ 
+-	err_handler = dev->driver->err_handler;
++	err_handler = pdrv->err_handler;
+ 	err_handler->resume(dev);
+ out:
+ 	pci_uevent_ers(dev, PCI_ERS_RESULT_RECOVERED);
+diff --git a/drivers/pci/xen-pcifront.c b/drivers/pci/xen-pcifront.c
+index f2d7f70a7a10..73831fb87a1e 100644
+--- a/drivers/pci/xen-pcifront.c
++++ b/drivers/pci/xen-pcifront.c
+@@ -601,12 +601,12 @@ static pci_ers_result_t pcifront_common_process(int cmd,
+ 	result = PCI_ERS_RESULT_NONE;
+ 
+ 	pcidev = pci_get_domain_bus_and_slot(domain, bus, devfn);
+-	if (!pcidev || !pcidev->driver) {
++	if (!pcidev || !pcidev->dev.driver) {
+ 		dev_err(&pdev->xdev->dev, "device or AER driver is NULL\n");
+ 		pci_dev_put(pcidev);
+ 		return result;
+ 	}
+-	pdrv = pcidev->driver;
++	pdrv = to_pci_driver(pcidev->dev.driver);
+ 
+ 	if (pdrv->err_handler && pdrv->err_handler->error_detected) {
+ 		pci_dbg(pcidev, "trying to call AER service\n");
+diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+index 2c9f25ca8edd..2f4729f4f1e0 100644
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -103,7 +103,7 @@ static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
+ 	struct xhci_driver_data         *driver_data;
+ 	const struct pci_device_id      *id;
+ 
+-	id = pci_match_id(pdev->driver->id_table, pdev);
++	id = pci_match_id(to_pci_driver(pdev->dev.driver)->id_table, pdev);
+ 
+ 	if (id && id->driver_data) {
+ 		driver_data = (struct xhci_driver_data *)id->driver_data;
 -- 
-2.33.0.800.g4c38ced690-goog
+2.30.2
 
