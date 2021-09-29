@@ -2,46 +2,49 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EB4C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Sep 2021 17:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22152C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Sep 2021 21:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B02F613A5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Sep 2021 17:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08C7A61502
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Sep 2021 21:10:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345376AbhI2RQJ (ORCPT
+        id S1346831AbhI2VMT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 29 Sep 2021 13:16:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57080 "EHLO mail.kernel.org"
+        Wed, 29 Sep 2021 17:12:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1345367AbhI2RQI (ORCPT
+        id S1346833AbhI2VMS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 29 Sep 2021 13:16:08 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 34D9061052;
-        Wed, 29 Sep 2021 17:14:27 +0000 (UTC)
+        Wed, 29 Sep 2021 17:12:18 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C9AA1615A2;
+        Wed, 29 Sep 2021 21:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632935667;
-        bh=QRT81ol30QYMdX4x58oQVOt0/3wqgrWhENxKrgzQ5Uk=;
+        s=k20201202; t=1632949837;
+        bh=VkVtr9ff3pqbOeduk4fdcTSzfp8pXb56OBTnBgAb4WU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=I5geUBo4iw42fgTwiYY1nvKnKtkmwSOIgMbJZsAO4SUm7di5IkO3J1CTU74zRYOn5
-         oEVLKirjENE/iIZ0zbjb3Dj/q99ukAEZ3aQL28VDo6njS8b8IhP8dw9Q9aebCA1otM
-         lQZmZFDsX8cs8J0ROQu2FFGXRx/LNLvK3I+IIhOHHkeljnsuC2NiIf0hMG9GZcmMGD
-         XH2WP4kIZJ5vcy4j5025NC2J8VKQ463WLo6NfjH6JqY2jnFXYvOmnK+eoXsapCrjq6
-         12dtOyzxzHeW5u5Ohh/a3Yuu3AEefLiPNjG/DKGhCj5btjVN0NQiSicQ6qA00BI5BK
-         0DKyBpsn/+Wew==
+        b=eWB9cS59SsFDc0zmb7fXgonZKcb7B83lHRffii/ir603DzT/SAiS9kg1gOmrGeV2T
+         mC6vOLD0ZvEPkzMiBTSG9pxLSQgT9H2XxOKIZWOEjTGxUOzlds/j5P8ZF2BIorfbjs
+         /Qw6psYLTMhiFBU4gCONMzvZQ/+2/++iPtOqfvGIrRYgHvrGCCN2AnQrKJ5EBT8Rp7
+         C9s7Ds+un6PDRDkDLPyjiM0j2RxP8NYX04GSbLBJ4Q24cny8muRGiegdoAAQaFDmFO
+         vAk8ofTUISNTgxTyKEvfmxtot+aP+eQKxYHWH8Tje6HCqInbsrPTi31oYUbqxe6Kas
+         zrX956LLdMNyA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id ECF2D410A1; Wed, 29 Sep 2021 14:14:24 -0300 (-03)
-Date:   Wed, 29 Sep 2021 14:14:24 -0300
+        id 0ECD5410A1; Wed, 29 Sep 2021 18:10:34 -0300 (-03)
+Date:   Wed, 29 Sep 2021 18:10:33 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Michael Petlan <mpetlan@redhat.com>,
-        linux-perf-users@vger.kernel.org, jolsa@kernel.org
+To:     Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>
+Cc:     linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH] perf tests vmlinux-kallsyms: ignore hidden symbols
-Message-ID: <YVSe8Fv6YAbuLJFQ@kernel.org>
+Message-ID: <YVTWSXjThbbZbE0L@kernel.org>
 References: <20210922152706.23655-1-mpetlan@redhat.com>
  <CAP-5=fUN_fYmgm69ruBvp6E+nkLKsTvZwHqGzaRd471MhMRykA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 In-Reply-To: <CAP-5=fUN_fYmgm69ruBvp6E+nkLKsTvZwHqGzaRd471MhMRykA@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
@@ -71,7 +74,120 @@ Em Wed, Sep 22, 2021 at 09:36:11AM -0700, Ian Rogers escreveu:
 > 
 > It is a shame this can't be a library to ensure the function is kept in sync.
 
-Thanks, applied.
+We can adapt :-)
+
+⬢[acme@toolbox perf]$ sed -n -e '/static bool is_ignored_symbol.*/,/^}.*/ p' scripts/kallsyms.c > original
+⬢[acme@toolbox perf]$ sed -n -e '/static bool is_ignored_symbol.*/,/^}.*/ p' tools/perf/tests/vmlinux-kallsyms.c > copy
+⬢[acme@toolbox perf]$ diff -u original copy
+⬢[acme@toolbox perf]$
+
+⬢[acme@toolbox perf]$ sed -n -e '/static bool is_ignored_symbol.*/,/^}.*/ p' scripts/kallsyms.c 
+static bool is_ignored_symbol(const char *name, char type)
+{
+	/* Symbol names that exactly match to the following are ignored.*/
+	static const char * const ignored_symbols[] = {
+		/*
+		 * Symbols which vary between passes. Passes 1 and 2 must have
+		 * identical symbol lists. The kallsyms_* symbols below are
+		 * only added after pass 1, they would be included in pass 2
+		 * when --all-symbols is specified so exclude them to get a
+		 * stable symbol list.
+		 */
+		"kallsyms_addresses",
+		"kallsyms_offsets",
+		"kallsyms_relative_base",
+		"kallsyms_num_syms",
+		"kallsyms_names",
+		"kallsyms_markers",
+		"kallsyms_token_table",
+		"kallsyms_token_index",
+		/* Exclude linker generated symbols which vary between passes */
+		"_SDA_BASE_",		/* ppc */
+		"_SDA2_BASE_",		/* ppc */
+		NULL
+	};
+
+	/* Symbol names that begin with the following are ignored.*/
+	static const char * const ignored_prefixes[] = {
+		"$",			/* local symbols for ARM, MIPS, etc. */
+		".LASANPC",		/* s390 kasan local symbols */
+		"__crc_",		/* modversions */
+		"__efistub_",		/* arm64 EFI stub namespace */
+		"__kvm_nvhe_",		/* arm64 non-VHE KVM namespace */
+		"__AArch64ADRPThunk_",	/* arm64 lld */
+		"__ARMV5PILongThunk_",	/* arm lld */
+		"__ARMV7PILongThunk_",
+		"__ThumbV7PILongThunk_",
+		"__LA25Thunk_",		/* mips lld */
+		"__microLA25Thunk_",
+		NULL
+	};
+
+	/* Symbol names that end with the following are ignored.*/
+	static const char * const ignored_suffixes[] = {
+		"_from_arm",		/* arm */
+		"_from_thumb",		/* arm */
+		"_veneer",		/* arm */
+		NULL
+	};
+
+	/* Symbol names that contain the following are ignored.*/
+	static const char * const ignored_matches[] = {
+		".long_branch.",	/* ppc stub */
+		".plt_branch.",		/* ppc stub */
+		NULL
+	};
+
+	const char * const *p;
+
+	for (p = ignored_symbols; *p; p++)
+		if (!strcmp(name, *p))
+			return true;
+
+	for (p = ignored_prefixes; *p; p++)
+		if (!strncmp(name, *p, strlen(*p)))
+			return true;
+
+	for (p = ignored_suffixes; *p; p++) {
+		int l = strlen(name) - strlen(*p);
+
+		if (l >= 0 && !strcmp(name + l, *p))
+			return true;
+	}
+
+	for (p = ignored_matches; *p; p++) {
+		if (strstr(name, *p))
+			return true;
+	}
+
+	if (type == 'U' || type == 'u')
+		return true;
+	/* exclude debugging symbols */
+	if (type == 'N' || type == 'n')
+		return true;
+
+	if (toupper(type) == 'A') {
+		/* Keep these useful absolute symbols */
+		if (strcmp(name, "__kernel_syscall_via_break") &&
+		    strcmp(name, "__kernel_syscall_via_epc") &&
+		    strcmp(name, "__kernel_sigtramp") &&
+		    strcmp(name, "__gp"))
+			return true;
+	}
+
+	return false;
+}
+⬢[acme@toolbox perf]$
+
+This should be added to tools/perf/check-headers.sh as a new
+function_check() function that receives three parameters:
+
+	function_check scripts/kallsyms.c tools/perf/tests/vmlinux-kallsyms.c is_ignored_symbol
+
+The regexps can also be tightened up a bit.
+
+Michael, can you cook up a patch for this?
+
+Thanks,
 
 - Arnaldo
-
