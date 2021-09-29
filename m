@@ -2,314 +2,140 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D11D0C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Sep 2021 08:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8785C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Sep 2021 13:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B83FE613A6
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Sep 2021 08:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C025761216
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Sep 2021 13:16:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244968AbhI2I44 (ORCPT
+        id S1344045AbhI2NSg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 29 Sep 2021 04:56:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244949AbhI2I4t (ORCPT
+        Wed, 29 Sep 2021 09:18:36 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7260 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S242801AbhI2NSf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 29 Sep 2021 04:56:49 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECA70C061753
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Sep 2021 01:55:07 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mVVL8-0001if-2j; Wed, 29 Sep 2021 10:53:22 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mVVL1-0004fa-GN; Wed, 29 Sep 2021 10:53:15 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mVVL1-0000Ow-C0; Wed, 29 Sep 2021 10:53:15 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
+        Wed, 29 Sep 2021 09:18:35 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 18TD0Tpj027476;
+        Wed, 29 Sep 2021 09:15:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=8WNH5WIjmi4VXGGXQVQqQGa9LxSWiuKObMKI3R3N3v0=;
+ b=eTICHaTe5EWn0Iqkz8yeEUgAvudcmWSKeYOZL3tmsOVg2p/vuJCd3lLc7X4IpTJRsQvN
+ N+h9f7ERDYgfvyZzbNdXaYE4xiu6SSMbi+oOoQnXmFqA0MDjRWByMV8QDZklznxhWnP8
+ Zfu6Z65PrhA/glaMqoEOzOj4/+LPoWJLpdQ3z2MhMDq2F8jcszdMujO8CYHVNV9Cz7k0
+ sstnbptCuAlwXwUd+5bwWpT1qWREPrnHxzZBLT02ytCWu6N5JyvTo1qOy/7Be3XDwwgp
+ SBf9sCOqX6+7qHmwe/BbrU7S8zsBAly7zJlvoZTU2jK/RY4l2dgZ/h3Am2Pd3krxwQpW Gg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3bcrn9rbsx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Sep 2021 09:15:46 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 18TD1Rbo030294;
+        Wed, 29 Sep 2021 09:15:45 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3bcrn9rbrq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Sep 2021 09:15:45 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 18TDC3n0019787;
+        Wed, 29 Sep 2021 13:15:42 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma01fra.de.ibm.com with ESMTP id 3b9ud9xasx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Sep 2021 13:15:42 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 18TDFevi57213414
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 Sep 2021 13:15:40 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E44C911C04C;
+        Wed, 29 Sep 2021 13:15:39 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8BE3911C05E;
+        Wed, 29 Sep 2021 13:15:39 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 29 Sep 2021 13:15:39 +0000 (GMT)
+Received: from [9.206.131.40] (unknown [9.206.131.40])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 7E5A9600F5;
+        Wed, 29 Sep 2021 23:15:37 +1000 (AEST)
+Subject: Re: [PATCH v5 10/11] PCI: Replace pci_dev::driver usage by
+ pci_dev::dev.driver
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Bjorn Helgaas <helgaas@kernel.org>
 Cc:     Christoph Hellwig <hch@lst.de>, linux-pci@vger.kernel.org,
-        kernel@pengutronix.de, Alexander Duyck <alexanderduyck@fb.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Fiona Trahe <fiona.trahe@intel.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ido Schimmel <idosch@nvidia.com>,
-        Ingo Molnar <mingo@redhat.com>, Jack Xu <jack.xu@intel.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Jiri Pirko <jiri@nvidia.com>,
-        Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Marco Chiappero <marco.chiappero@intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Michael Buesch <m@bues.ch>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Namhyung Kim <namhyung@kernel.org>,
+        kernel@pengutronix.de, Russell Currey <ruscur@russell.cc>,
         "Oliver O'Halloran" <oohall@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        Simon Horman <simon.horman@corigine.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Taras Chornyi <tchornyi@marvell.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Tomaszx Kowalik <tomaszx.kowalik@intel.com>,
-        Vadym Kochan <vkochan@marvell.com>,
-        Wojciech Ziemba <wojciech.ziemba@intel.com>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
-        netdev@vger.kernel.org, oss-drivers@corigine.com,
-        qat-linux@intel.com, x86@kernel.org, xen-devel@lists.xenproject.org
-Subject: [PATCH v5 00/11] PCI: Drop duplicated tracking of a pci_dev's bound driver
-Date:   Wed, 29 Sep 2021 10:52:55 +0200
-Message-Id: <20210929085306.2203850-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.30.2
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-usb@vger.kernel.org
+References: <20210929085306.2203850-1-u.kleine-koenig@pengutronix.de>
+ <20210929085306.2203850-11-u.kleine-koenig@pengutronix.de>
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+Message-ID: <75dd6d60-08b9-fa68-352c-3a0c5a04c0ab@linux.ibm.com>
+Date:   Wed, 29 Sep 2021 23:15:37 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20210929085306.2203850-11-u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-perf-users@vger.kernel.org
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: hXtcU9LxcZFWJ3_AQvYkTcqzdGELwYzx
+X-Proofpoint-GUID: JvUu1pq2Dv5jXGImGMo8koe6SjbY5_vk
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.391,FMLib:17.0.607.475
+ definitions=2021-09-29_05,2021-09-29_01,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ malwarescore=0 clxscore=1011 lowpriorityscore=0 mlxlogscore=928
+ spamscore=0 impostorscore=0 bulkscore=0 mlxscore=0 adultscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2109230001 definitions=main-2109290081
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+On 29/9/21 6:53 pm, Uwe Kleine-König wrote:>   	 
+list_for_each_entry(afu_dev, &afu->phb->bus->devices, bus_list) {
+> -			if (afu_dev->driver && afu_dev->driver->err_handler &&
+> -			    afu_dev->driver->err_handler->resume)
+> -				afu_dev->driver->err_handler->resume(afu_dev);
+> +			struct pci_driver *afu_drv;
+> +			if (afu_dev->dev.driver &&
+> +			    (afu_drv = to_pci_driver(afu_dev->dev.driver))->err_handler &&
 
-this is v5 of the quest to drop the "driver" member from struct pci_dev
-which tracks the same data (apart from a constant offset) as dev.driver.
+I'm not a huge fan of assignments in if statements and if you send a v6 
+I'd prefer you break it up.
 
-Changes since v4:
- - split some changes out of "PCI: replace pci_dev::driver usage that
-   gets the driver name" and reworked them a bit as suggested by Bjorn.
- - Add a line break in
-   drivers/net/ethernet/netronome/nfp/nfp_net_ethtool.c to please
-   checkpatch --strict and Simon Horman.
- - Fixed a build problem in "crypto: qat - simplify adf_enable_aer()",
-   thanks to Giovanni Cabiddu for spotting and a suggested fix.
+Apart from that everything in the powerpc and cxl sections looks good to me.
 
-I didn't replace :: by . as suggested by Bjorn as I'm unsure if his
-preference is stronger than mine.
-
-This patch stack survived an allmodconfig build on arm64, m68k, powerpc,
-riscv, s390, sparc64 and x86_64 on top of v5.15-rc3.
-
-Best regards
-Uwe
-
-Uwe Kleine-König (11):
-  PCI: Simplify pci_device_remove()
-  PCI: Drop useless check from pci_device_probe()
-  xen/pci: Drop some checks that are always true
-  bcma: simplify reference to the driver's name
-  powerpc/eeh: Don't use driver member of struct pci_dev and further
-    cleanups
-  ssb: Simplify determination of driver name
-  PCI: Replace pci_dev::driver usage that gets the driver name
-  scsi: message: fusion: Remove unused parameter of mpt_pci driver's
-    probe()
-  crypto: qat - simplify adf_enable_aer()
-  PCI: Replace pci_dev::driver usage by pci_dev::dev.driver
-  PCI: Drop duplicated tracking of a pci_dev's bound driver
-
- arch/powerpc/include/asm/ppc-pci.h            |  5 --
- arch/powerpc/kernel/eeh.c                     |  8 +++
- arch/powerpc/kernel/eeh_driver.c              | 10 +--
- arch/x86/events/intel/uncore.c                |  2 +-
- arch/x86/kernel/probe_roms.c                  |  2 +-
- drivers/bcma/host_pci.c                       |  6 +-
- drivers/crypto/hisilicon/qm.c                 |  2 +-
- drivers/crypto/qat/qat_4xxx/adf_drv.c         |  7 +--
- drivers/crypto/qat/qat_c3xxx/adf_drv.c        |  7 +--
- drivers/crypto/qat/qat_c62x/adf_drv.c         |  7 +--
- drivers/crypto/qat/qat_common/adf_aer.c       | 10 +--
- .../crypto/qat/qat_common/adf_common_drv.h    |  3 +-
- drivers/crypto/qat/qat_dh895xcc/adf_drv.c     |  7 +--
- drivers/message/fusion/mptbase.c              |  7 +--
- drivers/message/fusion/mptbase.h              |  2 +-
- drivers/message/fusion/mptctl.c               |  4 +-
- drivers/message/fusion/mptlan.c               |  2 +-
- drivers/misc/cxl/guest.c                      | 24 ++++---
- drivers/misc/cxl/pci.c                        | 30 +++++----
- .../ethernet/hisilicon/hns3/hns3_ethtool.c    |  2 +-
- .../ethernet/marvell/prestera/prestera_pci.c  |  2 +-
- drivers/net/ethernet/mellanox/mlxsw/pci.c     |  2 +-
- .../ethernet/netronome/nfp/nfp_net_ethtool.c  |  3 +-
- drivers/pci/iov.c                             | 25 +++++---
- drivers/pci/pci-driver.c                      | 45 ++++++-------
- drivers/pci/pci.c                             |  4 +-
- drivers/pci/pcie/err.c                        | 36 ++++++-----
- drivers/pci/xen-pcifront.c                    | 63 +++++++++----------
- drivers/ssb/pcihost_wrapper.c                 |  6 +-
- drivers/usb/host/xhci-pci.c                   |  2 +-
- include/linux/pci.h                           |  1 -
- 31 files changed, 161 insertions(+), 175 deletions(-)
-
-Range-diff against v4:
- 1:  8d064bbc74b0 =  1:  c2b53ab26a6b PCI: Simplify pci_device_remove()
- 2:  966b49c308b4 =  2:  2c733e1d5186 PCI: Drop useless check from pci_device_probe()
- 3:  ce710d6e8a1b =  3:  547ca5a7aa16 xen/pci: Drop some checks that are always true
- -:  ------------ >  4:  40eb07353844 bcma: simplify reference to the driver's name
- -:  ------------ >  5:  bab59c1dff6d powerpc/eeh: Don't use driver member of struct pci_dev and further cleanups
- -:  ------------ >  6:  abd70de9782d ssb: Simplify determination of driver name
- 4:  3e4e6994a59d !  7:  735845bd26b9 PCI: replace pci_dev::driver usage that gets the driver name
-    @@ Metadata
-     Author: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-     
-      ## Commit message ##
-    -    PCI: replace pci_dev::driver usage that gets the driver name
-    +    PCI: Replace pci_dev::driver usage that gets the driver name
-     
-         struct pci_dev::driver holds (apart from a constant offset) the same
-         data as struct pci_dev::dev->driver. With the goal to remove struct
-    @@ Commit message
-     
-         Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-     
-    - ## arch/powerpc/include/asm/ppc-pci.h ##
-    -@@ arch/powerpc/include/asm/ppc-pci.h: void eeh_sysfs_remove_device(struct pci_dev *pdev);
-    - 
-    - static inline const char *eeh_driver_name(struct pci_dev *pdev)
-    - {
-    --	return (pdev && pdev->driver) ? pdev->driver->name : "<null>";
-    -+	if (pdev) {
-    -+		const char *drvstr = dev_driver_string(&pdev->dev);
-    -+
-    -+		if (strcmp(drvstr, ""))
-    -+			return drvstr;
-    -+	}
-    -+
-    -+	return "<null>";
-    - }
-    - 
-    - #endif /* CONFIG_EEH */
-    -
-    - ## drivers/bcma/host_pci.c ##
-    -@@ drivers/bcma/host_pci.c: static int bcma_host_pci_probe(struct pci_dev *dev,
-    - 	if (err)
-    - 		goto err_kfree_bus;
-    - 
-    --	name = dev_name(&dev->dev);
-    --	if (dev->driver && dev->driver->name)
-    --		name = dev->driver->name;
-    -+	name = dev_driver_string(&dev->dev);
-    -+	if (!strcmp(name, ""))
-    -+		name = dev_name(&dev->dev);
-    -+
-    - 	err = pci_request_regions(dev, name);
-    - 	if (err)
-    - 		goto err_pci_disable;
-    -
-      ## drivers/crypto/hisilicon/qm.c ##
-     @@ drivers/crypto/hisilicon/qm.c: static int qm_alloc_uacce(struct hisi_qm *qm)
-      	};
-    @@ drivers/net/ethernet/netronome/nfp/nfp_net_ethtool.c: nfp_get_drvinfo(struct nfp
-      	char nsp_version[ETHTOOL_FWVERS_LEN] = {};
-      
-     -	strlcpy(drvinfo->driver, pdev->driver->name, sizeof(drvinfo->driver));
-    -+	strlcpy(drvinfo->driver, dev_driver_string(&pdev->dev), sizeof(drvinfo->driver));
-    ++	strlcpy(drvinfo->driver, dev_driver_string(&pdev->dev),
-    ++		sizeof(drvinfo->driver));
-      	nfp_net_get_nspinfo(app, nsp_version);
-      	snprintf(drvinfo->fw_version, sizeof(drvinfo->fw_version),
-      		 "%s %s %s %s", vnic_version, nsp_version,
-    -
-    - ## drivers/ssb/pcihost_wrapper.c ##
-    -@@ drivers/ssb/pcihost_wrapper.c: static int ssb_pcihost_probe(struct pci_dev *dev,
-    - 	err = pci_enable_device(dev);
-    - 	if (err)
-    - 		goto err_kfree_ssb;
-    --	name = dev_name(&dev->dev);
-    --	if (dev->driver && dev->driver->name)
-    --		name = dev->driver->name;
-    -+
-    -+	name = dev_driver_string(&dev->dev);
-    -+	if (*name == '\0')
-    -+		name = dev_name(&dev->dev);
-    -+
-    - 	err = pci_request_regions(dev, name);
-    - 	if (err)
-    - 		goto err_pci_disable;
- 5:  574b743327b8 =  8:  1e58019165b9 scsi: message: fusion: Remove unused parameter of mpt_pci driver's probe()
- 6:  674c6efd3dab !  9:  dea72a470141 crypto: qat - simplify adf_enable_aer()
-    @@ drivers/crypto/qat/qat_4xxx/adf_drv.c: static struct pci_driver adf_driver = {
-      	.probe = adf_probe,
-      	.remove = adf_remove,
-      	.sriov_configure = adf_sriov_configure,
-    -+	.err_handler = adf_err_handler,
-    ++	.err_handler = &adf_err_handler,
-      };
-      
-      module_pci_driver(adf_driver);
-    @@ drivers/crypto/qat/qat_c3xxx/adf_drv.c: static struct pci_driver adf_driver = {
-      	.probe = adf_probe,
-      	.remove = adf_remove,
-      	.sriov_configure = adf_sriov_configure,
-    -+	.err_handler = adf_err_handler,
-    ++	.err_handler = &adf_err_handler,
-      };
-      
-      static void adf_cleanup_pci_dev(struct adf_accel_dev *accel_dev)
-    @@ drivers/crypto/qat/qat_c62x/adf_drv.c: static struct pci_driver adf_driver = {
-      	.probe = adf_probe,
-      	.remove = adf_remove,
-      	.sriov_configure = adf_sriov_configure,
-    -+	.err_handler = adf_err_handler,
-    ++	.err_handler = &adf_err_handler,
-      };
-      
-      static void adf_cleanup_pci_dev(struct adf_accel_dev *accel_dev)
-    @@ drivers/crypto/qat/qat_common/adf_common_drv.h: void adf_ae_fw_release(struct ad
-      int adf_ae_stop(struct adf_accel_dev *accel_dev);
-      
-     -int adf_enable_aer(struct adf_accel_dev *accel_dev);
-    ++extern const struct pci_error_handlers adf_err_handler;
-     +void adf_enable_aer(struct adf_accel_dev *accel_dev);
-      void adf_disable_aer(struct adf_accel_dev *accel_dev);
-      void adf_reset_sbr(struct adf_accel_dev *accel_dev);
-    @@ drivers/crypto/qat/qat_dh895xcc/adf_drv.c: static struct pci_driver adf_driver =
-      	.probe = adf_probe,
-      	.remove = adf_remove,
-      	.sriov_configure = adf_sriov_configure,
-    -+	.err_handler = adf_err_handler,
-    ++	.err_handler = &adf_err_handler,
-      };
-      
-      static void adf_cleanup_pci_dev(struct adf_accel_dev *accel_dev)
- 7:  0e022deb0f75 = 10:  b4165dda38ea PCI: Replace pci_dev::driver usage by pci_dev::dev.driver
- 8:  edd9d24df02a = 11:  d93a138bd7ab PCI: Drop duplicated tracking of a pci_dev's bound driver
-
-base-commit: 5816b3e6577eaa676ceb00a848f0fd65fe2adc29
 -- 
-2.30.2
-
+Andrew Donnellan              OzLabs, ADL Canberra
+ajd@linux.ibm.com             IBM Australia Limited
