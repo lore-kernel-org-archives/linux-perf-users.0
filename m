@@ -2,101 +2,178 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC344C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Sep 2021 12:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2075C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Sep 2021 13:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E9536136A
-	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Sep 2021 12:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A48A5619EC
+	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Sep 2021 13:49:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349808AbhI3M2D (ORCPT
+        id S1351443AbhI3Nvc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 30 Sep 2021 08:28:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:53400 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1350160AbhI3M2C (ORCPT
+        Thu, 30 Sep 2021 09:51:32 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42022 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S235171AbhI3Nvb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 30 Sep 2021 08:28:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D05A3106F;
-        Thu, 30 Sep 2021 05:26:19 -0700 (PDT)
-Received: from [10.57.21.68] (unknown [10.57.21.68])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 15E733F793;
-        Thu, 30 Sep 2021 05:26:16 -0700 (PDT)
-Subject: Re: [PATCH 4/5] perf arm-spe: Implement find_snapshot callback
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org
-References: <20210916154635.1525-1-german.gomez@arm.com>
- <20210916154635.1525-4-german.gomez@arm.com>
- <20210923135016.GG400258@leoy-ThinkPad-X240s>
- <20210923144048.GB603008@leoy-ThinkPad-X240s>
-From:   German Gomez <german.gomez@arm.com>
-Message-ID: <1c6a3a73-27dc-6673-7fe7-34bc7fcb0a68@arm.com>
-Date:   Thu, 30 Sep 2021 13:26:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        Thu, 30 Sep 2021 09:51:31 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 18UCBxYt019958;
+        Thu, 30 Sep 2021 09:48:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=Q+AzT0Ijwdw7ICtovDN1my42gJlkON+amsvj9v8ooiM=;
+ b=lQgzyUqXVkfGYfIt0Ch8RaKtlmIO6gizazSCeTsQzOdqLwcuzmMl4mFsZAnyWbwIp4FP
+ 6DPoyR44kXJJZ7lmHh9ozPD83SUDnbwObYunomLIOYbRNofigHr7W9owQJVPIP2u5PDl
+ scdMAbKBB/ZsfyiQfRjbBG3urvEypmfqvptUmDx86XfEU90JuutbQpCroOqtimmJ09Gh
+ ViMuqNernMb0exN9vnb0YA6w6iPkNqWWei+kMGtd6YDcHT8Ydk3Yta5cyWRODcb4ZK7k
+ RURHAnrkOzxAIeIYtMoDQcv/ZnZ+yEWpBxNEfXrPaFCZxPwzSjZH+em+PjODNqawGzU7 8w== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3bdd18tfqq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Sep 2021 09:48:44 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 18UDMbpq025093;
+        Thu, 30 Sep 2021 09:48:43 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3bdd18tfq0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Sep 2021 09:48:43 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 18UDlI4r026910;
+        Thu, 30 Sep 2021 13:48:41 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma06ams.nl.ibm.com with ESMTP id 3b9u1k4bx8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Sep 2021 13:48:41 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 18UDmc3x46334294
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Sep 2021 13:48:38 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C8532A4040;
+        Thu, 30 Sep 2021 13:48:38 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BA81EA405D;
+        Thu, 30 Sep 2021 13:48:37 +0000 (GMT)
+Received: from [9.145.153.93] (unknown [9.145.153.93])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 30 Sep 2021 13:48:37 +0000 (GMT)
+Message-ID: <e53a8113-5037-db2a-7313-d1ef5e430682@linux.ibm.com>
+Date:   Thu, 30 Sep 2021 15:48:37 +0200
 MIME-Version: 1.0
-In-Reply-To: <20210923144048.GB603008@leoy-ThinkPad-X240s>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.1.0
+Subject: Re: [PATCH v5 10/11] PCI: Replace pci_dev::driver usage by
+ pci_dev::dev.driver
 Content-Language: en-US
+To:     Andrew Donnellan <ajd@linux.ibm.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Jiri Olsa <jolsa@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-pci@vger.kernel.org,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        kernel@pengutronix.de, Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org
+References: <20210929085306.2203850-1-u.kleine-koenig@pengutronix.de>
+ <20210929085306.2203850-11-u.kleine-koenig@pengutronix.de>
+ <75dd6d60-08b9-fa68-352c-3a0c5a04c0ab@linux.ibm.com>
+ <20210929134330.e5c57t7mtwu5iner@pengutronix.de>
+ <1414b3c5-167c-c271-baed-d3d7f6cd0309@linux.ibm.com>
+From:   Frederic Barrat <fbarrat@linux.ibm.com>
+In-Reply-To: <1414b3c5-167c-c271-baed-d3d7f6cd0309@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: ydDkSS-JwggQoWGJmx2KVo1ai4eV3eaN
+X-Proofpoint-ORIG-GUID: _H8ui1Jc9Hf375ilmtd2tw6D1AxPAzql
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.391,FMLib:17.0.607.475
+ definitions=2021-09-30_04,2021-09-30_01,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ lowpriorityscore=0 bulkscore=0 mlxscore=0 malwarescore=0 mlxlogscore=999
+ priorityscore=1501 adultscore=0 clxscore=1011 spamscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2109230001
+ definitions=main-2109300085
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Leo,
 
-On 23/09/2021 15:40, Leo Yan wrote:
-> On Thu, Sep 23, 2021 at 09:50:16PM +0800, Leo Yan wrote:
->
-> [...]
->
->>> @@ -336,6 +480,7 @@ struct auxtrace_record *arm_spe_recording_init(int *err,
->>>   	sper->itr.pmu = arm_spe_pmu;
->>>   	sper->itr.snapshot_start = arm_spe_snapshot_start;
->>>   	sper->itr.snapshot_finish = arm_spe_snapshot_finish;
->>> +	sper->itr.find_snapshot = arm_spe_find_snapshot;
->> If I understand correctly, this patch copies the code from cs-etm for
->> snapshot handling.  About 2 months ago, we removed the Arm cs-etm's
->> specific snapshot callback function and directly use perf's function
->> __auxtrace_mmap__read() to handle 'head' and 'tail' pointers.  Please
->> see the commit for details:
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=2f01c200d4405c4562e45e8bb4de44a5ce37b217
+
+On 29/09/2021 17:44, Andrew Donnellan wrote:
+> On 29/9/21 11:43 pm, Uwe Kleine-König wrote:> I'm not a huge fan either, 
+> I used it to keep the control flow as is and
+>> without introducing several calls to to_pci_driver.
 >>
->> Before I review more details for snapshot enabling in patches 03 and
->> 04, could you confirm if Arm SPE can use the same way with cs-etm for
->> snapshot handling?  From my understanding, this is a better way to
->> handle AUX buffer's 'head' and 'tail'.
-> In other words, if we can only apply patch 03 and can pass the testing
-> in patch 05, then it would be a very neat implementation.
->
-> I will try to verify these patches and will get back result.
->
-> Thanks,
-> Leo
-The patch is indeed based on that commit. The reason behind it is that the
-values for *head are being wrapped in the driver side (see the macro
-PERF_IDX2OFF which is used at various points in 
-/drivers/perf/arm_spe_pmu.c).
+>> The whole code looks as follows:
+>>
+>>     list_for_each_entry(afu_dev, &afu->phb->bus->devices, bus_list) {
+>>         struct pci_driver *afu_drv;
+>>         if (afu_dev->dev.driver &&
+>>             (afu_drv = 
+>> to_pci_driver(afu_dev->dev.driver))->err_handler &&
+>>             afu_drv->err_handler->resume)
+>>             afu_drv->err_handler->resume(afu_dev);
+>>     }
+>>
+>> Without assignment in the if it could look as follows:
+>>
+>>     list_for_each_entry(afu_dev, &afu->phb->bus->devices, bus_list) {
+>>         struct pci_driver *afu_drv;
+>>
+>>         if (!afu_dev->dev.driver)
+>>             continue;
+>>
+>>         afu_drv = to_pci_driver(afu_dev->dev.driver));
+>>
+>>         if (afu_drv->err_handler && afu_drv->err_handler->resume)
+>>             afu_drv->err_handler->resume(afu_dev);
+>>     }
+>>
+>> Fine for me.
+> 
+> This looks fine.
+> 
+> As an aside while writing my email I discovered the existence of 
+> container_of_safe(), a version of container_of() that handles the null 
+> and err ptr cases... if to_pci_driver() used that, the null check in the 
+> caller could be moved until after the to_pci_driver() call which would 
+> be neater.
+> 
+> But then, grep tells me that container_of_safe() is used precisely zero 
+> times in the entire tree. Interesting.
+> 
+>> (Sidenote: What happens if the device is unbound directly after the
+>> check for afu_dev->dev.driver? This is a problem the old code had, too
+>> (assuming it is a real problem, didn't check deeply).)
+> 
+> Looking at any of the cxl PCI error handling paths brings back 
+> nightmares from a few years ago... Fred: I wonder if we need to add a 
+> lock here?
 
-If this callback is not to be added, I believe the driver needs to be 
-updated
-first so that the head pointer monotonically increases like in cs-etm. 
-Do you
-think this makes sense for SPE?
+Yes, it's indeed a potential issue, there's nothing to prevent the afu 
+driver to unbind during that window. Sigh..
 
-(note that the patch will skip the wrap-around detection if this is the 
-case,
-in order to handle both cases in the userspace perf tool).
-
-Thanks,
-German
+   Fred
 
