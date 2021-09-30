@@ -2,193 +2,160 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1FBC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Sep 2021 07:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F7DC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Sep 2021 10:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8454D615E5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Sep 2021 07:04:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB8261507
+	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Sep 2021 10:03:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348484AbhI3HGU (ORCPT
+        id S1349638AbhI3KFe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 30 Sep 2021 03:06:20 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63978 "EHLO
+        Thu, 30 Sep 2021 06:05:34 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49238 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233661AbhI3HGT (ORCPT
+        by vger.kernel.org with ESMTP id S238316AbhI3KFd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 30 Sep 2021 03:06:19 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 18U6gK7O021987;
-        Thu, 30 Sep 2021 03:04:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=Q00eudB6gXZxLSoYORbSMIt2sLyq3sde+WvhQ39CBBU=;
- b=Go0UVew+ul8n9PLdFBg5H6omIpN2qANt8lBfC+528iB9eUvl/EuYQnq/NhuYVCQ87dzf
- xGSkHRjBlt6EgvTWOk7iEwHte4vAGNJDlzko8tDaaNDXxnodXhw3nu20VYBiUXvzd3Xt
- lDs2QfSjpFu16ufUB36cpRbyHtqgSKhSqmZoGiukN8gagkmXEWdWG5+vjjl2DzLv3SZM
- 0RPrTtFaKv1CWkPKfgofaP4knVpHjJcctgf3YB2vOKfr8wVOhTEmAp7OMFz0ItcAXu15
- NJ6PdfwXG4/OxJI3961g5z0u3xNYiSuLFLIrxTqzGAU3iDydOmJxapQUPMJcfylS54+V YQ== 
+        Thu, 30 Sep 2021 06:05:33 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 18U7gToN012991;
+        Thu, 30 Sep 2021 06:03:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=C3vwBi2ML7bWOSUbjxYHzYi6MwvjumVR36KCY9qBVxs=;
+ b=ciOek/WSj6I26BzsyjnGSlo25AE6ptpzbOUM1K1r68hmBeu/dfuWZ2HvTLbu4RXbKkTD
+ ecJoKtbnu6wlvSlqkKwel4LH1KV+5gVwKnSFX625sZg6/yDitvfJtvqJfNYlzdakn4In
+ /U/Y6yR5eShHq97ELpePsZaDPRNvNjXKqhgb4tcDcvySju4ysHHJmpLrI/2eQ8AWG5/p
+ YFe3xh4vw+HXMctQQ/ddJ1ASw/LN3HNM0BgZrEYV8rL4/7F1X8k0/Qd55O4pvCGOIBAb
+ 1NbfrQGOSccT3PuaW9ZOjg7wNvrg5rQqKBXX+OmGbyWFnsdtkN17xhL/U53Tactr9z0z Rw== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3bd86qrg0m-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3bd751673e-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Sep 2021 03:04:32 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 18U6jhgu001508;
-        Thu, 30 Sep 2021 03:04:31 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3bd86qrfyr-1
+        Thu, 30 Sep 2021 06:03:46 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 18U8xBBv008565;
+        Thu, 30 Sep 2021 06:03:45 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3bd751672d-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Sep 2021 03:04:31 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 18U727fo009668;
-        Thu, 30 Sep 2021 07:04:29 GMT
+        Thu, 30 Sep 2021 06:03:45 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 18UA3GeX029071;
+        Thu, 30 Sep 2021 10:03:43 GMT
 Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 3b9udag5h6-1
+        by ppma04ams.nl.ibm.com with ESMTP id 3b9udaa4ct-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Sep 2021 07:04:28 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 18U6xHi658458532
+        Thu, 30 Sep 2021 10:03:42 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 18U9wWM556230224
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Sep 2021 06:59:17 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E46B311C04A;
-        Thu, 30 Sep 2021 07:04:24 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6EBB211C04C;
-        Thu, 30 Sep 2021 07:04:20 +0000 (GMT)
-Received: from Madhavan.com (unknown [9.43.101.207])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 30 Sep 2021 07:04:20 +0000 (GMT)
-From:   Madhavan Srinivasan <maddy@linux.ibm.com>
-To:     acme@kernel.org
-Cc:     michael@ellerman.id.au, eranian@google.com, mark.rutland@arm.com,
-        namhyung@kernel.org, kjain@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com, jolsa@redhat.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Madhavan Srinivasan <maddy@linux.ibm.com>
-Subject: [PATCH 2/2] tools/perf/test: Add endian test for struct branch_flags
-Date:   Thu, 30 Sep 2021 12:34:10 +0530
-Message-Id: <20210930070410.52703-2-maddy@linux.ibm.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210930070410.52703-1-maddy@linux.ibm.com>
-References: <20210930070410.52703-1-maddy@linux.ibm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 30 Sep 2021 09:58:32 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F26084C040;
+        Thu, 30 Sep 2021 10:03:39 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 108D34C04E;
+        Thu, 30 Sep 2021 10:03:36 +0000 (GMT)
+Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com (unknown [9.43.93.90])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 30 Sep 2021 10:03:35 +0000 (GMT)
+Subject: Re: [PATCH] perf tools: Fix compilation on powerpc
+To:     Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Mark Wielaard <mjw@redhat.com>,
+        Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org
+References: <20210928195253.1267023-1-jolsa@kernel.org>
+From:   kajoljain <kjain@linux.ibm.com>
+Message-ID: <a9963f8b-6913-5f4d-214f-95fac5b80925@linux.ibm.com>
+Date:   Thu, 30 Sep 2021 15:33:34 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
+In-Reply-To: <20210928195253.1267023-1-jolsa@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: G2Zj_TAqG3-2aMfTjFSdbU52BPTjocGp
-X-Proofpoint-GUID: g8TTNauH8Q9QQt9CnIxSDesbxlnFt9Je
+X-Proofpoint-GUID: EgNjcpTq59xFINJqRArtctGcSrCJCWk9
+X-Proofpoint-ORIG-GUID: NkszpNdc3k2cz87n7M9PVTQ_3O_HqHyx
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.391,FMLib:17.0.607.475
- definitions=2021-09-30_02,2021-09-29_01,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 lowpriorityscore=0
- adultscore=0 malwarescore=0 phishscore=0 spamscore=0 bulkscore=0
- mlxscore=0 clxscore=1015 mlxlogscore=464 priorityscore=1501 suspectscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2109230001 definitions=main-2109300042
+ definitions=2021-09-30_03,2021-09-29_01,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ spamscore=0 suspectscore=0 malwarescore=0 clxscore=1011 bulkscore=0
+ impostorscore=0 mlxlogscore=999 priorityscore=1501 adultscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2109230001 definitions=main-2109300063
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Extend sample-parsing test to include branch_flag
-endian-reverse test. Patch include "util/trace-event.h"
-to sample-parsing for importing bigendian() and extends
-samples_same() to include "needs_swap" to detect/enable
-check for endian-reverse.
 
-Signed-off-by: Madhavan Srinivasan <maddy@linux.ibm.com>
----
- tools/perf/tests/sample-parsing.c | 43 +++++++++++++++++++++++++++----
- 1 file changed, 38 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/tests/sample-parsing.c b/tools/perf/tests/sample-parsing.c
-index 8fd8a4ef97da..a67158c12773 100644
---- a/tools/perf/tests/sample-parsing.c
-+++ b/tools/perf/tests/sample-parsing.c
-@@ -13,6 +13,7 @@
- #include "evsel.h"
- #include "debug.h"
- #include "util/synthetic-events.h"
-+#include "util/trace-event.h"
- 
- #include "tests.h"
- 
-@@ -30,9 +31,18 @@
- 	}						\
- } while (0)
- 
-+/*
-+ * Hardcode the expected values for branch_entry flags.
-+ * These are based on the input value (213) specified
-+ * in branch_stack variable.
-+ */
-+#define BS_EXPECTED_BE	0xa00d000000000000
-+#define BS_EXPECTED_LE	0xd5000000
-+#define FLAG(s)	s->branch_stack->entries[i].flags
-+
- static bool samples_same(const struct perf_sample *s1,
- 			 const struct perf_sample *s2,
--			 u64 type, u64 read_format)
-+			 u64 type, u64 read_format, bool needs_swap)
- {
- 	size_t i;
- 
-@@ -100,8 +110,14 @@ static bool samples_same(const struct perf_sample *s1,
- 	if (type & PERF_SAMPLE_BRANCH_STACK) {
- 		COMP(branch_stack->nr);
- 		COMP(branch_stack->hw_idx);
--		for (i = 0; i < s1->branch_stack->nr; i++)
--			MCOMP(branch_stack->entries[i]);
-+		for (i = 0; i < s1->branch_stack->nr; i++) {
-+			if (needs_swap)
-+				return ((bigendian()) ?
-+					(FLAG(s2).value == BS_EXPECTED_BE) :
-+					(FLAG(s2).value == BS_EXPECTED_LE));
-+			else
-+				MCOMP(branch_stack->entries[i]);
-+		}
- 	}
- 
- 	if (type & PERF_SAMPLE_REGS_USER) {
-@@ -248,7 +264,7 @@ static int do_test(u64 sample_type, u64 sample_regs, u64 read_format)
- 		},
- 	};
- 	struct sample_read_value values[] = {{1, 5}, {9, 3}, {2, 7}, {6, 4},};
--	struct perf_sample sample_out;
-+	struct perf_sample sample_out, sample_out_endian;
- 	size_t i, sz, bufsz;
- 	int err, ret = -1;
- 
-@@ -313,12 +329,29 @@ static int do_test(u64 sample_type, u64 sample_regs, u64 read_format)
- 		goto out_free;
- 	}
- 
--	if (!samples_same(&sample, &sample_out, sample_type, read_format)) {
-+	if (!samples_same(&sample, &sample_out, sample_type, read_format, evsel.needs_swap)) {
- 		pr_debug("parsing failed for sample_type %#"PRIx64"\n",
- 			 sample_type);
- 		goto out_free;
- 	}
- 
-+	if (sample_type == PERF_SAMPLE_BRANCH_STACK) {
-+		evsel.needs_swap = true;
-+		evsel.sample_size = __evsel__sample_size(sample_type);
-+		err = evsel__parse_sample(&evsel, event, &sample_out_endian);
-+		if (err) {
-+			pr_debug("%s failed for sample_type %#"PRIx64", error %d\n",
-+				 "evsel__parse_sample", sample_type, err);
-+			goto out_free;
-+		}
-+
-+		if (!samples_same(&sample, &sample_out_endian, sample_type, read_format, evsel.needs_swap)) {
-+			pr_debug("parsing failed for sample_type %#"PRIx64"\n",
-+				 sample_type);
-+			goto out_free;
-+		}
-+	}
-+
- 	ret = 0;
- out_free:
- 	free(event);
--- 
-2.31.1
+On 9/29/21 1:22 AM, Jiri Olsa wrote:
+> Got following build fail on powerpc:
+> 
+>     CC      arch/powerpc/util/skip-callchain-idx.o
+>   In function ‘check_return_reg’,
+>       inlined from ‘check_return_addr’ at arch/powerpc/util/skip-callchain-idx.c:213:7,
+>       inlined from ‘arch_skip_callchain_idx’ at arch/powerpc/util/skip-callchain-idx.c:265:7:
+>   arch/powerpc/util/skip-callchain-idx.c:54:18: error: ‘dwarf_frame_register’ accessing 96 bytes \
+>   in a region of size 64 [-Werror=stringop-overflow=]
+>      54 |         result = dwarf_frame_register(frame, ra_regno, ops_mem, &ops, &nops);
+>         |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   arch/powerpc/util/skip-callchain-idx.c: In function ‘arch_skip_callchain_idx’:
+>   arch/powerpc/util/skip-callchain-idx.c:54:18: note: referencing argument 3 of type ‘Dwarf_Op *’
+>   In file included from /usr/include/elfutils/libdwfl.h:32,
+>                    from arch/powerpc/util/skip-callchain-idx.c:10:
+>   /usr/include/elfutils/libdw.h:1069:12: note: in a call to function ‘dwarf_frame_register’
+>    1069 | extern int dwarf_frame_register (Dwarf_Frame *frame, int regno,
+>         |            ^~~~~~~~~~~~~~~~~~~~
+>   cc1: all warnings being treated as errors
+> 
+> The dwarf_frame_register args changed with [1],
+> Updating ops_mem accordingly.
+> 
+> [1] https://sourceware.org/git/?p=elfutils.git;a=commit;h=5621fe5443da23112170235dd5cac161e5c75e65
 
+Hi Jiri,
+	Thanks for the patch. I was able to reproduce this issue with gcc11 and
+verified that with your change we no longer seeing this error.
+
+Reviewed-by: Kajol Jain<kjain@linux.ibm.com>
+Tested-by: Kajol Jain<kjain@linuxibm.com>
+
+Thanks,
+Kajol Jain
+
+> 
+> Cc: Mark Wielaard <mjw@redhat.com>
+> Cc: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
+> Signed-off-by: Jiri Olsa <jolsa@redhat.com>
+> ---
+>  tools/perf/arch/powerpc/util/skip-callchain-idx.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/arch/powerpc/util/skip-callchain-idx.c b/tools/perf/arch/powerpc/util/skip-callchain-idx.c
+> index 3018a054526a..20cd6244863b 100644
+> --- a/tools/perf/arch/powerpc/util/skip-callchain-idx.c
+> +++ b/tools/perf/arch/powerpc/util/skip-callchain-idx.c
+> @@ -45,7 +45,7 @@ static const Dwfl_Callbacks offline_callbacks = {
+>   */
+>  static int check_return_reg(int ra_regno, Dwarf_Frame *frame)
+>  {
+> -	Dwarf_Op ops_mem[2];
+> +	Dwarf_Op ops_mem[3];
+>  	Dwarf_Op dummy;
+>  	Dwarf_Op *ops = &dummy;
+>  	size_t nops;
+> 
