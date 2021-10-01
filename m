@@ -2,612 +2,159 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27AB1C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Oct 2021 01:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4F9C433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Oct 2021 12:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F03C761452
-	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Oct 2021 01:22:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C8E761A85
+	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Oct 2021 12:05:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351140AbhJABYQ (ORCPT
+        id S1354272AbhJAMHM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 30 Sep 2021 21:24:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351046AbhJABYP (ORCPT
+        Fri, 1 Oct 2021 08:07:12 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:54836 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1354266AbhJAMHK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 30 Sep 2021 21:24:15 -0400
-Received: from mail-vs1-xe35.google.com (mail-vs1-xe35.google.com [IPv6:2607:f8b0:4864:20::e35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A475C06176A
-        for <linux-perf-users@vger.kernel.org>; Thu, 30 Sep 2021 18:22:32 -0700 (PDT)
-Received: by mail-vs1-xe35.google.com with SMTP id 66so9553150vsd.11
-        for <linux-perf-users@vger.kernel.org>; Thu, 30 Sep 2021 18:22:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:user-agent:in-reply-to:references
-         :message-id:mime-version:content-transfer-encoding;
-        bh=MfteCPxyYjPWCEGGwrykwxh7TlDuFKwMtUUSHbzx3VQ=;
-        b=mQTax89o0jMuEO2TjlWDKwTQghRwmEfBmluBCfRYMSy7YTA2pJolsyUkbcGjZWlLSS
-         u/sPTZR+NSCoPDiQSqzgXjW5TLXV6n2fHqBQxkecaPdF4Q7MDvOMbpfEoddvqyZZgplN
-         4iUY/3SpjjU7YsLfftKfFPBmRGaUpArmnUH/kiBKrF81vilm0qvTRUlcHqmoD/dK2UlJ
-         TkvbX6TZ4iaYZ7hL74GtNmKxW4+pmBvNpeAPBf/grXJgaa4qeDFxSZzjoxfhk0g6wmWs
-         sjRt8DPaXKxZp3B0sYFCn8iDjDdw980r3iA9OXl+6WhLK1KXPeKE0Oa5KX6QmyG4MSl7
-         nJYQ==
+        Fri, 1 Oct 2021 08:07:10 -0400
+Received: by mail-il1-f198.google.com with SMTP id 2-20020a920d02000000b002589c563709so7229852iln.21
+        for <linux-perf-users@vger.kernel.org>; Fri, 01 Oct 2021 05:05:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:user-agent:in-reply-to
-         :references:message-id:mime-version:content-transfer-encoding;
-        bh=MfteCPxyYjPWCEGGwrykwxh7TlDuFKwMtUUSHbzx3VQ=;
-        b=zxfkB+UtBx5RVeYQitAMUH2Qt7C/ubsR+9BhnxAkrqvtomw4Eg76lcR1AAeKGYVgzZ
-         j1KKGfyPmtJAK89BiZwfx265ggrfWOp+oeQy0kAp0+3eQJ+jrVgsYetX0dU93yMtNVSa
-         cv82GFL3Hxe4MWuT0aGltE3YylGkxsois+ylz1I3f/xkG+CyBHmuxOJbqDyFi/GvtbkV
-         f81AtOpoMXksDTEFsfUowi8WoiJAcrwcN2IJOqpLsGboGAykxHElH4MhsP/70N+L1NRh
-         eN3VF8+ipSEgFmFcY5NrjO351vl9OVovampHtwBOh/cOU32w4Ff0kMQVo+4DnX8+WVoN
-         WiHQ==
-X-Gm-Message-State: AOAM5328OfvNNmkzii8isYg6k1YnMU+JS01bDzPxv1+14iwCykBeLCb2
-        V79b2gdGVhC17CbrduURaCI=
-X-Google-Smtp-Source: ABdhPJynuqqrU8JfRZXIwt9yJjKTCwZTmuOMLG06Y/xc+9rhHc/T9LPUt/CFmC/+mGugvggWT0S6aA==
-X-Received: by 2002:a67:f147:: with SMTP id t7mr2309886vsm.41.1633051351309;
-        Thu, 30 Sep 2021 18:22:31 -0700 (PDT)
-Received: from [127.0.0.1] ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id t64sm2558043vke.24.2021.09.30.18.22.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Sep 2021 18:22:30 -0700 (PDT)
-Date:   Thu, 30 Sep 2021 22:20:41 -0300
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-To:     Ian Rogers <irogers@google.com>,
-        Tony Garnock-Jones <tonyg@leastfixedpoint.com>, acme@kernel.org
-CC:     peterz@infradead.org, mingo@redhat.com,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v4] tools/perf: Use long-running addr2line per dso
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAP-5=fWuxeSDa1gmHsLEJUcDXq+C-8j06ATOquE8ts0qFOuTTg@mail.gmail.com>
-References: <YT+vJQFfSTE3EExF@kernel.org> <20210916120939.453536-1-tonyg@leastfixedpoint.com> <CAP-5=fWuxeSDa1gmHsLEJUcDXq+C-8j06ATOquE8ts0qFOuTTg@mail.gmail.com>
-Message-ID: <3D12D1AC-C7AF-49FD-B557-33E0778702DB@gmail.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=6XR7AcFwJGCAhR4U8M+rl8QBYvsM2ERoXA6/OjrO3zU=;
+        b=DfsjoU1oxjejJvMrtJegzh5TG1zGFeUDdOpMViIom9j2l7Tag0ECTkd3olfyjPcNOe
+         ENeL3LPwso8TtfcXYemRmYWv82wO80bwSY+gcyvn6snY+zStHr1UKOhdinJ91gQX1SsB
+         zwPP0imcm9IaGOz7dk0PWVVfxOq8PNN1nONq0/e200tO8RjUY52Zf/aYA0GrKU8l4KJM
+         CZfk1m6wYb9SxkuTD0F0NLoP1XorgeGtTVTlcVCfhIhqFh0nHlxf3WjJBCuiT+W6cKay
+         dFCpf/s0hWK+Vs0EqwvZKSpOT7zmzeAoR6KKqtGnMMJPNvYvR7M+Yv62BwquiRUNwzc3
+         tZ5w==
+X-Gm-Message-State: AOAM530pCXZa9oaYxVEA4u69ndTsLrxI+QATuEVJwUYb5uDhorzKRXn/
+        yvSOVJSUe5VH/sc820HvN6cEJOvfc+T5mRmgya0VfV0xNXG8
+X-Google-Smtp-Source: ABdhPJwZrhf9uro0TwU2UOZIoHBcW5RwGMHaI/lnR0Z6n+s/V1okJosAbQA4JH0TJt6dPG7/SbUbRK7nnzUVOKsuaZLFQp/Q5dMY
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-Received: by 2002:a5d:9f44:: with SMTP id u4mr3449828iot.155.1633089926290;
+ Fri, 01 Oct 2021 05:05:26 -0700 (PDT)
+Date:   Fri, 01 Oct 2021 05:05:26 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f1645705cd496085@google.com>
+Subject: [syzbot] general protection fault in perf_tp_event (3)
+From:   syzbot <syzbot+f27ed6d2b22fe3b92377@syzkaller.appspotmail.com>
+To:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, john.fastabend@gmail.com, jolsa@redhat.com,
+        kafai@fb.com, kpsingh@kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        mingo@redhat.com, namhyung@kernel.org, netdev@vger.kernel.org,
+        peterz@infradead.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    a3debf177f21 libbpf: Fix segfault in static linker for obj..
+git tree:       bpf
+console output: https://syzkaller.appspot.com/x/log.txt?x=122fa35f300000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c31c0936547df9ea
+dashboard link: https://syzkaller.appspot.com/bug?extid=f27ed6d2b22fe3b92377
+compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+f27ed6d2b22fe3b92377@syzkaller.appspotmail.com
+
+general protection fault, probably for non-canonical address 0xfe001bea7e002090: 0000 [#1] PREEMPT SMP KASAN
+KASAN: maybe wild-memory-access in range [0xf000ff53f0010480-0xf000ff53f0010487]
+CPU: 0 PID: 29889 Comm: syz-executor.4 Not tainted 5.14.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:perf_tp_filter_match kernel/events/core.c:9622 [inline]
+RIP: 0010:perf_tp_event_match kernel/events/core.c:9639 [inline]
+RIP: 0010:perf_tp_event_match kernel/events/core.c:9627 [inline]
+RIP: 0010:perf_tp_event+0x2af/0xb70 kernel/events/core.c:9682
+Code: 3c 20 00 0f 85 d7 07 00 00 4c 8b bb e8 02 00 00 4d 85 ff 4c 0f 44 fb e8 df 37 e1 ff 49 8d bf 30 05 00 00 48 89 fa 48 c1 ea 03 <42> 80 3c 22 00 0f 85 a1 07 00 00 4d 8b 87 30 05 00 00 4d 85 c0 0f
+RSP: 0018:ffffc90002137540 EFLAGS: 00010806
+RAX: 0000000000000a8c RBX: ffff887fffffffa0 RCX: ffffc90012317000
+RDX: 1e001fea7e002090 RSI: ffffffff8194d811 RDI: f000ff53f0010483
+RBP: ffffc900021377b0 R08: 0000000000000000 R09: 0000000000000000
+R10: ffffffff8194d7ac R11: 0000000000000000 R12: dffffc0000000000
+R13: ffff8880b9c2c800 R14: 0000000000000001 R15: f000ff53f000ff53
+FS:  00007fb42500a700(0000) GS:ffff8880b9c00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fb424fe9718 CR3: 0000000021c6d000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000600
+Call Trace:
+ perf_trace_run_bpf_submit+0x11c/0x210 kernel/events/core.c:9657
+ perf_trace_lock+0x2ef/0x4d0 include/trace/events/lock.h:39
+ trace_lock_release include/trace/events/lock.h:58 [inline]
+ lock_release+0x4a8/0x720 kernel/locking/lockdep.c:5636
+ __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:158 [inline]
+ _raw_spin_unlock_irqrestore+0x16/0x70 kernel/locking/spinlock.c:194
+ spin_unlock_irqrestore include/linux/spinlock.h:418 [inline]
+ pcpu_alloc+0x848/0x1350 mm/percpu.c:1851
+ bpf_prog_alloc+0x4b/0x1a0 kernel/bpf/core.c:125
+ bpf_prog_load+0x651/0x21f0 kernel/bpf/syscall.c:2248
+ __sys_bpf+0x67e/0x5df0 kernel/bpf/syscall.c:4587
+ __do_sys_bpf kernel/bpf/syscall.c:4691 [inline]
+ __se_sys_bpf kernel/bpf/syscall.c:4689 [inline]
+ __x64_sys_bpf+0x75/0xb0 kernel/bpf/syscall.c:4689
+ do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+ do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
+ entry_SYSCALL_64_after_hwframe+0x44/0xae
+RIP: 0033:0x7fb427a93709
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fb42500a188 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 00007fb427b97f60 RCX: 00007fb427a93709
+RDX: 0000000000000070 RSI: 0000000020000440 RDI: 0000000000000005
+RBP: 00007fb427aedcb4 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fffe8ec545f R14: 00007fb42500a300 R15: 0000000000022000
+Modules linked in:
+---[ end trace 01ae9f661067bd97 ]---
+RIP: 0010:perf_tp_filter_match kernel/events/core.c:9622 [inline]
+RIP: 0010:perf_tp_event_match kernel/events/core.c:9639 [inline]
+RIP: 0010:perf_tp_event_match kernel/events/core.c:9627 [inline]
+RIP: 0010:perf_tp_event+0x2af/0xb70 kernel/events/core.c:9682
+Code: 3c 20 00 0f 85 d7 07 00 00 4c 8b bb e8 02 00 00 4d 85 ff 4c 0f 44 fb e8 df 37 e1 ff 49 8d bf 30 05 00 00 48 89 fa 48 c1 ea 03 <42> 80 3c 22 00 0f 85 a1 07 00 00 4d 8b 87 30 05 00 00 4d 85 c0 0f
+RSP: 0018:ffffc90002137540 EFLAGS: 00010806
+RAX: 0000000000000a8c RBX: ffff887fffffffa0 RCX: ffffc90012317000
+RDX: 1e001fea7e002090 RSI: ffffffff8194d811 RDI: f000ff53f0010483
+RBP: ffffc900021377b0 R08: 0000000000000000 R09: 0000000000000000
+R10: ffffffff8194d7ac R11: 0000000000000000 R12: dffffc0000000000
+R13: ffff8880b9c2c800 R14: 0000000000000001 R15: f000ff53f000ff53
+FS:  00007fb42500a700(0000) GS:ffff8880b9c00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fb424fe9718 CR3: 0000000021c6d000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000600
+----------------
+Code disassembly (best guess), 1 bytes skipped:
+   0:	20 00                	and    %al,(%rax)
+   2:	0f 85 d7 07 00 00    	jne    0x7df
+   8:	4c 8b bb e8 02 00 00 	mov    0x2e8(%rbx),%r15
+   f:	4d 85 ff             	test   %r15,%r15
+  12:	4c 0f 44 fb          	cmove  %rbx,%r15
+  16:	e8 df 37 e1 ff       	callq  0xffe137fa
+  1b:	49 8d bf 30 05 00 00 	lea    0x530(%r15),%rdi
+  22:	48 89 fa             	mov    %rdi,%rdx
+  25:	48 c1 ea 03          	shr    $0x3,%rdx
+* 29:	42 80 3c 22 00       	cmpb   $0x0,(%rdx,%r12,1) <-- trapping instruction
+  2e:	0f 85 a1 07 00 00    	jne    0x7d5
+  34:	4d 8b 87 30 05 00 00 	mov    0x530(%r15),%r8
+  3b:	4d 85 c0             	test   %r8,%r8
+  3e:	0f                   	.byte 0xf
 
 
-On September 30, 2021 9:29:47 PM GMT-03:00, Ian Rogers <irogers@google=2Ec=
-om> wrote:
->On Thu, Sep 16, 2021 at 5:09 AM Tony Garnock-Jones
-><tonyg@leastfixedpoint=2Ecom> wrote:
->>
->> Invoking addr2line in a separate subprocess, one for each required
->> lookup, takes a terribly long time=2E This patch introduces a
->> long-running addr2line process for each dso, *DRAMATICALLY* speeding
->> up runs of perf=2E What used to take tens of minutes now takes tens of
->> seconds=2E
->>
->> Debian bug report about this issue:
->> https://bugs=2Edebian=2Eorg/cgi-bin/bugreport=2Ecgi?bug=3D911815
->>
->> Signed-off-by: Tony Garnock-Jones <tonyg@leastfixedpoint=2Ecom>
->> Tested-by: Ian Rogers <irogers@google=2Ecom>
->
->Hi Arnaldo,
->
->Is there anything further to do with this change?
->
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-I'll try and test/merge this tomorrow=2E
-
-Thanks for the ping,
-
-- Arnaldo
-
->Thanks,
->Ian
->
->> ---
->> Changes since v3:
->>  - use zfree(), plus some small code compaction edits
->>  - rebase against upstream master ff1ffd71d5f0612cf194f5705c671d6b64bf5=
-f91
->>
->> Changes since v2:
->>  - remove redundant initializations to 0 and NULL
->>  - use terminology "record" instead of "stanza" for input from addr2lin=
-e
->>
->> Changes since v1:
->>  - use "subcmd/run-command=2Eh" machinery instead of socketpair/fork/ex=
-ec directly
->>
->>
->>  tools/perf/util/srcline=2Ec | 362 +++++++++++++++++++++++++++---------=
---
->>  1 file changed, 262 insertions(+), 100 deletions(-)
->>
->> diff --git a/tools/perf/util/srcline=2Ec b/tools/perf/util/srcline=2Ec
->> index 5b7d6c16d33f=2E=2Eaf468e3bb6fa 100644
->> --- a/tools/perf/util/srcline=2Ec
->> +++ b/tools/perf/util/srcline=2Ec
->> @@ -1,8 +1,10 @@
->>  // SPDX-License-Identifier: GPL-2=2E0
->>  #include <inttypes=2Eh>
->> +#include <signal=2Eh>
->>  #include <stdio=2Eh>
->>  #include <stdlib=2Eh>
->>  #include <string=2Eh>
->> +#include <sys/types=2Eh>
->>
->>  #include <linux/kernel=2Eh>
->>  #include <linux/string=2Eh>
->> @@ -15,6 +17,7 @@
->>  #include "srcline=2Eh"
->>  #include "string2=2Eh"
->>  #include "symbol=2Eh"
->> +#include "subcmd/run-command=2Eh"
->>
->>  bool srcline_full_filename;
->>
->> @@ -119,6 +122,8 @@ static struct symbol *new_inline_sym(struct dso *ds=
-o,
->>         return inline_sym;
->>  }
->>
->> +#define MAX_INLINE_NEST 1024
->> +
->>  #ifdef HAVE_LIBBFD_SUPPORT
->>
->>  /*
->> @@ -273,8 +278,6 @@ static void addr2line_cleanup(struct a2l_data *a2l)
->>         free(a2l);
->>  }
->>
->> -#define MAX_INLINE_NEST 1024
->> -
->>  static int inline_list__append_dso_a2l(struct dso *dso,
->>                                        struct inline_node *node,
->>                                        struct symbol *sym)
->> @@ -361,26 +364,14 @@ void dso__free_a2l(struct dso *dso)
->>         dso->a2l =3D NULL;
->>  }
->>
->> -static struct inline_node *addr2inlines(const char *dso_name, u64 addr=
-,
->> -                                       struct dso *dso, struct symbol =
-*sym)
->> -{
->> -       struct inline_node *node;
->> -
->> -       node =3D zalloc(sizeof(*node));
->> -       if (node =3D=3D NULL) {
->> -               perror("not enough memory for the inline node");
->> -               return NULL;
->> -       }
->> -
->> -       INIT_LIST_HEAD(&node->val);
->> -       node->addr =3D addr;
->> -
->> -       addr2line(dso_name, addr, NULL, NULL, dso, true, node, sym);
->> -       return node;
->> -}
->> -
->>  #else /* HAVE_LIBBFD_SUPPORT */
->>
->> +struct a2l_subprocess {
->> +       struct child_process addr2line;
->> +       FILE *to_child;
->> +       FILE *from_child;
->> +};
->> +
->>  static int filename_split(char *filename, unsigned int *line_nr)
->>  {
->>         char *sep;
->> @@ -402,114 +393,285 @@ static int filename_split(char *filename, unsig=
-ned int *line_nr)
->>         return 0;
->>  }
->>
->> +static void addr2line_subprocess_cleanup(struct a2l_subprocess *a2l)
->> +{
->> +       if (a2l->addr2line=2Epid !=3D -1) {
->> +               kill(a2l->addr2line=2Epid, SIGKILL);
->> +               finish_command(&a2l->addr2line); /* ignore result, we d=
-on't care */
->> +               a2l->addr2line=2Epid =3D -1;
->> +       }
->> +
->> +       if (a2l->to_child !=3D NULL) {
->> +               fclose(a2l->to_child);
->> +               a2l->to_child =3D NULL;
->> +       }
->> +
->> +       if (a2l->from_child !=3D NULL) {
->> +               fclose(a2l->from_child);
->> +               a2l->from_child =3D NULL;
->> +       }
->> +
->> +       free(a2l);
->> +}
->> +
->> +static struct a2l_subprocess *addr2line_subprocess_init(const char *pa=
-th)
->> +{
->> +       const char *argv[] =3D { "addr2line", "-e", path, "-i", "-f", N=
-ULL };
->> +       struct a2l_subprocess *a2l =3D zalloc(sizeof(*a2l));
->> +       int start_command_status =3D 0;
->> +
->> +       if (a2l =3D=3D NULL)
->> +               goto out;
->> +
->> +       a2l->to_child =3D NULL;
->> +       a2l->from_child =3D NULL;
->> +
->> +       a2l->addr2line=2Epid =3D -1;
->> +       a2l->addr2line=2Ein =3D -1;
->> +       a2l->addr2line=2Eout =3D -1;
->> +       a2l->addr2line=2Eno_stderr =3D 1;
->> +
->> +       a2l->addr2line=2Eargv =3D argv;
->> +       start_command_status =3D start_command(&a2l->addr2line);
->> +       a2l->addr2line=2Eargv =3D NULL; /* it's not used after start_co=
-mmand; avoid dangling pointers */
->> +
->> +       if (start_command_status !=3D 0) {
->> +               pr_warning("could not start addr2line for %s: start_com=
-mand return code %d\n",
->> +                          path,
->> +                          start_command_status);
->> +               goto out;
->> +       }
->> +
->> +       a2l->to_child =3D fdopen(a2l->addr2line=2Ein, "w");
->> +       if (a2l->to_child =3D=3D NULL) {
->> +               pr_warning("could not open write-stream to addr2line of=
- %s\n", path);
->> +               goto out;
->> +       }
->> +
->> +       a2l->from_child =3D fdopen(a2l->addr2line=2Eout, "r");
->> +       if (a2l->from_child =3D=3D NULL) {
->> +               pr_warning("could not open read-stream from addr2line o=
-f %s\n", path);
->> +               goto out;
->> +       }
->> +
->> +       return a2l;
->> +
->> +out:
->> +       if (a2l)
->> +               addr2line_subprocess_cleanup(a2l);
->> +
->> +       return NULL;
->> +}
->> +
->> +static int read_addr2line_record(struct a2l_subprocess *a2l,
->> +                                char **function,
->> +                                char **filename,
->> +                                unsigned int *line_nr)
->> +{
->> +       /*
->> +        * Returns:
->> +        * -1 =3D=3D> error
->> +        * 0 =3D=3D> sentinel (or other ill-formed) record read
->> +        * 1 =3D=3D> a genuine record read
->> +        */
->> +       char *line =3D NULL;
->> +       size_t line_len =3D 0;
->> +       unsigned int dummy_line_nr =3D 0;
->> +       int ret =3D -1;
->> +
->> +       if (function !=3D NULL)
->> +               zfree(function);
->> +
->> +       if (filename !=3D NULL)
->> +               zfree(filename);
->> +
->> +       if (line_nr !=3D NULL)
->> +               *line_nr =3D 0;
->> +
->> +       if (getline(&line, &line_len, a2l->from_child) < 0 || !line_len=
-)
->> +               goto error;
->> +
->> +       if (function !=3D NULL)
->> +               *function =3D strdup(strim(line));
->> +
->> +       zfree(&line);
->> +       line_len =3D 0;
->> +
->> +       if (getline(&line, &line_len, a2l->from_child) < 0 || !line_len=
-)
->> +               goto error;
->> +
->> +       if (filename_split(line, line_nr =3D=3D NULL ? &dummy_line_nr :=
- line_nr) =3D=3D 0) {
->> +               ret =3D 0;
->> +               goto error;
->> +       }
->> +
->> +       if (filename !=3D NULL)
->> +               *filename =3D strdup(line);
->> +
->> +       zfree(&line);
->> +       line_len =3D 0;
->> +
->> +       return 1;
->> +
->> +error:
->> +       free(line);
->> +       if (function !=3D NULL)
->> +               zfree(function);
->> +       if (filename !=3D NULL)
->> +               zfree(filename);
->> +       return ret;
->> +}
->> +
->> +static int inline_list__append_record(struct dso *dso,
->> +                                     struct inline_node *node,
->> +                                     struct symbol *sym,
->> +                                     const char *function,
->> +                                     const char *filename,
->> +                                     unsigned int line_nr)
->> +{
->> +       struct symbol *inline_sym =3D new_inline_sym(dso, sym, function=
-);
->> +
->> +       return inline_list__append(inline_sym, srcline_from_fileline(fi=
-lename, line_nr), node);
->> +}
->> +
->>  static int addr2line(const char *dso_name, u64 addr,
->>                      char **file, unsigned int *line_nr,
->> -                    struct dso *dso __maybe_unused,
->> -                    bool unwind_inlines __maybe_unused,
->> -                    struct inline_node *node __maybe_unused,
->> +                    struct dso *dso,
->> +                    bool unwind_inlines,
->> +                    struct inline_node *node,
->>                      struct symbol *sym __maybe_unused)
->>  {
->> -       FILE *fp;
->> -       char cmd[PATH_MAX];
->> -       char *filename =3D NULL;
->> -       size_t len;
->> +       struct a2l_subprocess *a2l =3D dso->a2l;
->> +       char *record_function =3D NULL;
->> +       char *record_filename =3D NULL;
->> +       unsigned int record_line_nr =3D 0;
->> +       int record_status =3D -1;
->>         int ret =3D 0;
->> +       size_t inline_count =3D 0;
->>
->> -       scnprintf(cmd, sizeof(cmd), "addr2line -e %s %016"PRIx64,
->> -                 dso_name, addr);
->> +       if (!a2l) {
->> +               dso->a2l =3D addr2line_subprocess_init(dso_name);
->> +               a2l =3D dso->a2l;
->> +       }
->>
->> -       fp =3D popen(cmd, "r");
->> -       if (fp =3D=3D NULL) {
->> -               pr_warning("popen failed for %s\n", dso_name);
->> -               return 0;
->> +       if (a2l =3D=3D NULL) {
->> +               if (!symbol_conf=2Edisable_add2line_warn)
->> +                       pr_warning("%s %s: addr2line_subprocess_init fa=
-iled\n", __func__, dso_name);
->> +               goto out;
->>         }
->>
->> -       if (getline(&filename, &len, fp) < 0 || !len) {
->> -               pr_warning("addr2line has no output for %s\n", dso_name=
-);
->> +       /*
->> +        * Send our request and then *deliberately* send something that=
- can't be interpreted as
->> +        * a valid address to ask addr2line about (namely, ",")=2E This=
- causes addr2line to first
->> +        * write out the answer to our request, in an unbounded/unknown=
- number of records, and
->> +        * then to write out the lines "??" and "??:0", so that we can =
-detect when it has
->> +        * finished giving us anything useful=2E We have to be careful =
-about the first record,
->> +        * though, because it may be genuinely unknown, in which case w=
-e'll get two sets of
->> +        * "??"/"??:0" lines=2E
->> +        */
->> +       if (fprintf(a2l->to_child, "%016"PRIx64"\n,\n", addr) < 0 || ff=
-lush(a2l->to_child) !=3D 0) {
->> +               pr_warning("%s %s: could not send request\n", __func__,=
- dso_name);
->>                 goto out;
->>         }
->>
->> -       ret =3D filename_split(filename, line_nr);
->> -       if (ret !=3D 1) {
->> -               free(filename);
->> +       switch (read_addr2line_record(a2l, &record_function, &record_fi=
-lename, &record_line_nr)) {
->> +       case -1:
->> +               pr_warning("%s %s: could not read first record\n", __fu=
-nc__, dso_name);
->>                 goto out;
->> +       case 0:
->> +               /*
->> +                * The first record was invalid, so return failure, but=
- first read another
->> +                * record, since we asked a junk question and have to c=
-lear the answer out=2E
->> +                */
->> +               switch (read_addr2line_record(a2l, NULL, NULL, NULL)) {
->> +               case -1:
->> +                       pr_warning("%s %s: could not read delimiter rec=
-ord\n", __func__, dso_name);
->> +                       break;
->> +               case 0:
->> +                       /* As expected=2E */
->> +                       break;
->> +               default:
->> +                       pr_warning("%s %s: unexpected record instead of=
- sentinel",
->> +                                  __func__, dso_name);
->> +                       break;
->> +               }
->> +               goto out;
->> +       default:
->> +               break;
->> +       }
->> +
->> +       if (file) {
->> +               *file =3D strdup(record_filename);
->> +               ret =3D 1;
->> +       }
->> +       if (line_nr)
->> +               *line_nr =3D record_line_nr;
->> +
->> +       if (unwind_inlines) {
->> +               if (node && inline_list__append_record(dso, node, sym,
->> +                                                      record_function,
->> +                                                      record_filename,
->> +                                                      record_line_nr))=
- {
->> +                       ret =3D 0;
->> +                       goto out;
->> +               }
->>         }
->>
->> -       *file =3D filename;
->> +       /* We have to read the records even if we don't care about the =
-inline info=2E */
->> +       while ((record_status =3D read_addr2line_record(a2l,
->> +                                                     &record_function,
->> +                                                     &record_filename,
->> +                                                     &record_line_nr))=
- =3D=3D 1) {
->> +               if (unwind_inlines && node && inline_count++ < MAX_INLI=
-NE_NEST) {
->> +                       if (inline_list__append_record(dso, node, sym,
->> +                                                      record_function,
->> +                                                      record_filename,
->> +                                                      record_line_nr))=
- {
->> +                               ret =3D 0;
->> +                               goto out;
->> +                       }
->> +                       ret =3D 1; /* found at least one inline frame *=
-/
->> +               }
->> +       }
->>
->>  out:
->> -       pclose(fp);
->> +       free(record_function);
->> +       free(record_filename);
->>         return ret;
->>  }
->>
->> -void dso__free_a2l(struct dso *dso __maybe_unused)
->> +void dso__free_a2l(struct dso *dso)
->>  {
->> -}
->> +       struct a2l_subprocess *a2l =3D dso->a2l;
->>
->> -static struct inline_node *addr2inlines(const char *dso_name, u64 addr=
-,
->> -                                       struct dso *dso __maybe_unused,
->> -                                       struct symbol *sym)
->> -{
->> -       FILE *fp;
->> -       char cmd[PATH_MAX];
->> -       struct inline_node *node;
->> -       char *filename =3D NULL;
->> -       char *funcname =3D NULL;
->> -       size_t filelen, funclen;
->> -       unsigned int line_nr =3D 0;
->> -
->> -       scnprintf(cmd, sizeof(cmd), "addr2line -e %s -i -f %016"PRIx64,
->> -                 dso_name, addr);
->> -
->> -       fp =3D popen(cmd, "r");
->> -       if (fp =3D=3D NULL) {
->> -               pr_err("popen failed for %s\n", dso_name);
->> -               return NULL;
->> -       }
->> -
->> -       node =3D zalloc(sizeof(*node));
->> -       if (node =3D=3D NULL) {
->> -               perror("not enough memory for the inline node");
->> -               goto out;
->> -       }
->> -
->> -       INIT_LIST_HEAD(&node->val);
->> -       node->addr =3D addr;
->> -
->> -       /* addr2line -f generates two lines for each inlined functions =
-*/
->> -       while (getline(&funcname, &funclen, fp) !=3D -1) {
->> -               char *srcline;
->> -               struct symbol *inline_sym;
->> -
->> -               strim(funcname);
->> -
->> -               if (getline(&filename, &filelen, fp) =3D=3D -1)
->> -                       goto out;
->> -
->> -               if (filename_split(filename, &line_nr) !=3D 1)
->> -                       goto out;
->> -
->> -               srcline =3D srcline_from_fileline(filename, line_nr);
->> -               inline_sym =3D new_inline_sym(dso, sym, funcname);
->> -
->> -               if (inline_list__append(inline_sym, srcline, node) !=3D=
- 0) {
->> -                       free(srcline);
->> -                       if (inline_sym && inline_sym->inlined)
->> -                               symbol__delete(inline_sym);
->> -                       goto out;
->> -               }
->> -       }
->> +       if (!a2l)
->> +               return;
->>
->> -out:
->> -       pclose(fp);
->> -       free(filename);
->> -       free(funcname);
->> +       addr2line_subprocess_cleanup(a2l);
->>
->> -       return node;
->> +       dso->a2l =3D NULL;
->>  }
->>
->>  #endif /* HAVE_LIBBFD_SUPPORT */
->>
->> +static struct inline_node *addr2inlines(const char *dso_name, u64 addr=
-,
->> +                                       struct dso *dso, struct symbol =
-*sym)
->> +{
->> +       struct inline_node *node;
->> +
->> +       node =3D zalloc(sizeof(*node));
->> +       if (node =3D=3D NULL) {
->> +               perror("not enough memory for the inline node");
->> +               return NULL;
->> +       }
->> +
->> +       INIT_LIST_HEAD(&node->val);
->> +       node->addr =3D addr;
->> +
->> +       addr2line(dso_name, addr, NULL, NULL, dso, true, node, sym);
->> +       return node;
->> +}
->> +
->>  /*
->>   * Number of addr2line failures (without success) before disabling it =
-for that
->>   * dso=2E
->> --
->> 2=2E33=2E0
->>
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
