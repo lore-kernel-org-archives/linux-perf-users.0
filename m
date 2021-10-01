@@ -2,56 +2,56 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE6EC433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Oct 2021 18:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6B9C4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Oct 2021 18:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B5BF61A03
-	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Oct 2021 18:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E617D61A03
+	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Oct 2021 18:14:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355888AbhJASPp (ORCPT
+        id S1355859AbhJASQP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 1 Oct 2021 14:15:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50364 "EHLO
+        Fri, 1 Oct 2021 14:16:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355893AbhJASPL (ORCPT
+        with ESMTP id S1355899AbhJASPq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 1 Oct 2021 14:15:11 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FEF5C06177E;
-        Fri,  1 Oct 2021 11:13:21 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id r201so4251638pgr.4;
-        Fri, 01 Oct 2021 11:13:21 -0700 (PDT)
+        Fri, 1 Oct 2021 14:15:46 -0400
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B593C0617B1;
+        Fri,  1 Oct 2021 11:13:27 -0700 (PDT)
+Received: by mail-pj1-x1034.google.com with SMTP id v19so7109283pjh.2;
+        Fri, 01 Oct 2021 11:13:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=KItrf/8CC1jUWlWikMSRYATLzZeQvXDG/CTBGZDdNyk=;
-        b=hvzO7QUqCKq80JWmczkm9F1XsojfIjsT6sL1BvDhvH3yswXLbSqB14lWUycWwf17Cs
-         paVfPt37iaUgR3aZ7T+AMrC1BChw7Oqpqq57H33vNLmXrrb11VGpILQPPsdw3Db3npKG
-         YbBObDz1hT6+1J2OJmxUytIs/F3NSrfcQtZX2sR2XZUpcvbIGDkgplolWn7Zao4+aY3P
-         nnJjv3/j26hXWVP8GAUelSasST0cBj9n/WGwyvqYVC2+iiMjfj0NYMwKnFf/gu4h8bD0
-         2DdRLmcVlHtNdrYGNPLPBYhx9CxjMAO7RwbbzM9A2J/2jgv3MCsUU84RLb1z9cUXbrVo
-         AFDw==
+        bh=nf81eMg0W7fVWw+dS1fRTqTJZj1jgno6nh0Ggg55AFs=;
+        b=lLZwpryZB98PlGeM8ZanBwznPLR+qj4BAk9K/uf8CR1i4Vr7ohWNGkej3kVUNqXdVG
+         1Jz42et237u6yAI2fLT63htNSZHBQhI5hTW5QlTYMfJALg2QS7K341SuCyg4JVoN+kGK
+         yOPWlwz1SZqxUrFbg0dAknq0LNE8mNSh0R3dX8vDH2CEQhdIdhjfR7r7zRN3uJrZXcfW
+         4oysstkJLDNrmHqITg7OwYcRcURoNhlMq4pNYfSkpvdiR3XB3A3qF8SPFy4Vr8b3LYgh
+         GIuCVYH1I8wQMVDx8yJeJME3oPJHo6nsCRdz2f0rkYcuGYqLc+cVhFZggI3dGfdtYMGP
+         dgRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KItrf/8CC1jUWlWikMSRYATLzZeQvXDG/CTBGZDdNyk=;
-        b=sz3hl6Cl4foMI7aZ+F+QXzR7coYpr3EueZDkH13eIcJcsTslInKXrnOQRiRwPvozdT
-         LpUBovXVDpagPNBjppxbbvgVOOMwslRNVKUcm6VXGplOT07WEs2HCTDFMNc2a4BXL7MV
-         Kpk0MInHBtwnHHHKs3DS/tjT4tI401iZzcASxwDorZGh6dHP0srObD0aafCwPQOCp4vX
-         YxWohNdd+W1a4LIANbfvjQFfQ4M6d5qJBHQA1hVgYD90GLFfoGPtNb+DKBlEPNEG897K
-         9CE5zna1uQoOSbuCFNELA2g3SgLD2Ku3Is+/v11kS88+Nl6eh6QDbrRKkNOSMIjzaUXh
-         6K7g==
-X-Gm-Message-State: AOAM531CRe5bS/xkljzLHwupneN9Jw25qU8DXAv1hh2W7xcgI5AtuNB4
-        XBlpky0dIjdU74Nw+Sb92aU=
-X-Google-Smtp-Source: ABdhPJy63QWzYfka9stv8WCp68mZSua/IICcFSjcVwG0FkOdVATEaBbbU7JB45fFwQs/JjJuBnib2w==
-X-Received: by 2002:a62:7ec4:0:b0:44b:bc4b:844b with SMTP id z187-20020a627ec4000000b0044bbc4b844bmr12986951pfc.48.1633112000495;
-        Fri, 01 Oct 2021 11:13:20 -0700 (PDT)
+        bh=nf81eMg0W7fVWw+dS1fRTqTJZj1jgno6nh0Ggg55AFs=;
+        b=l6HFr1nt7qh0YTsftDmPPReVwkhz4PNG3YiKB/OHM14AV6ANoZbMCRNxw6h+K/rgHE
+         zxQd/ekpNvg9LyzqY+u2MBtC5oIBSG1azmSA16U3tS+ZJv30T+bwsPNGeRYMajEsXU89
+         WFa9f5vjE6LH+Uvn9pD5DN5VMfabp/Zvgd3RIZWLZ97QIMYkjFKlUX7DXEmWJqeYvDrE
+         claKN5qBowbuVZfu+ThuzsuQ6Y/1lgNR1AqMjz72eE5pQCZSlNHA5c4WCYJ2v1L4DzUz
+         tB1t65PnjyqKlL94GGYdKy9Ppcc53oTGq5BRu0iTvMdN49s1+mEc8wFgN1s1BkSvg+8P
+         HHpw==
+X-Gm-Message-State: AOAM5335lupF2e6siSxDYqKRu9XAoZEPPDKMqoL6XzJADckrb3acsjIx
+        VT4iy6HLVxXwtu0LvMPQEHo=
+X-Google-Smtp-Source: ABdhPJwxSbuZpik63wXkHcsR03oG0P45JgB69KyL2Up8CkB/6v40eakk14TkFHTNdybDdRPkK7Axtg==
+X-Received: by 2002:a17:90a:2841:: with SMTP id p1mr15463362pjf.153.1633112006983;
+        Fri, 01 Oct 2021 11:13:26 -0700 (PDT)
 Received: from localhost (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id g9sm6983227pfh.13.2021.10.01.11.13.19
+        by smtp.gmail.com with ESMTPSA id o2sm8177868pja.7.2021.10.01.11.13.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Oct 2021 11:13:20 -0700 (PDT)
+        Fri, 01 Oct 2021 11:13:26 -0700 (PDT)
 From:   Yury Norov <yury.norov@gmail.com>
 To:     Stephen Rothwell <sfr@canb.auug.org.au>
 Cc:     Yury Norov <yury.norov@gmail.com>,
@@ -104,9 +104,9 @@ Cc:     Yury Norov <yury.norov@gmail.com>,
         Will Deacon <will@kernel.org>,
         Wolfram Sang <wsa+renesas@sang-engineering.com>,
         Yoshinori Sato <ysato@users.sourceforge.jp>
-Subject: [PATCH 11/16] find: micro-optimize for_each_{set,clear}_bit()
-Date:   Fri,  1 Oct 2021 11:12:40 -0700
-Message-Id: <20211001181245.228419-12-yury.norov@gmail.com>
+Subject: [PATCH 13/16] mm/percpu: micro-optimize pcpu_is_populated()
+Date:   Fri,  1 Oct 2021 11:12:42 -0700
+Message-Id: <20211001181245.228419-14-yury.norov@gmail.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20211001181245.228419-1-yury.norov@gmail.com>
 References: <20211001181245.228419-1-yury.norov@gmail.com>
@@ -116,39 +116,46 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The macros iterate thru all set/clear bits in a bitmap. They search a
-first bit using find_first_bit(), and the rest bits using find_next_bit().
-
-Since find_next_bit() is called shortly after find_first_bit(), we can
-save few lines of I-cache by not using find_first_bit().
+bitmap_next_clear_region() calls find_next_zero_bit() and find_next_bit()
+sequentially to find a range of clear bits. In case of pcpu_is_populated()
+there's a chance to return earlier if bitmap has all bits set.
 
 Signed-off-by: Yury Norov <yury.norov@gmail.com>
 Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Acked-by: Dennis Zhou <dennis@kernel.org>
 ---
- include/linux/find.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ mm/percpu.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/find.h b/include/linux/find.h
-index 4500e8ab93e2..ae9ed52b52b8 100644
---- a/include/linux/find.h
-+++ b/include/linux/find.h
-@@ -280,7 +280,7 @@ unsigned long find_next_bit_le(const void *addr, unsigned
- #endif
+diff --git a/mm/percpu.c b/mm/percpu.c
+index e0a986818903..1cf0bb904b1d 100644
+--- a/mm/percpu.c
++++ b/mm/percpu.c
+@@ -1070,17 +1070,18 @@ static void pcpu_block_update_hint_free(struct pcpu_chunk *chunk, int bit_off,
+ static bool pcpu_is_populated(struct pcpu_chunk *chunk, int bit_off, int bits,
+ 			      int *next_off)
+ {
+-	unsigned int page_start, page_end, rs, re;
++	unsigned int start, end;
  
- #define for_each_set_bit(bit, addr, size) \
--	for ((bit) = find_first_bit((addr), (size));		\
-+	for ((bit) = find_next_bit((addr), (size), 0);		\
- 	     (bit) < (size);					\
- 	     (bit) = find_next_bit((addr), (size), (bit) + 1))
+-	page_start = PFN_DOWN(bit_off * PCPU_MIN_ALLOC_SIZE);
+-	page_end = PFN_UP((bit_off + bits) * PCPU_MIN_ALLOC_SIZE);
++	start = PFN_DOWN(bit_off * PCPU_MIN_ALLOC_SIZE);
++	end = PFN_UP((bit_off + bits) * PCPU_MIN_ALLOC_SIZE);
  
-@@ -291,7 +291,7 @@ unsigned long find_next_bit_le(const void *addr, unsigned
- 	     (bit) = find_next_bit((addr), (size), (bit) + 1))
+-	rs = page_start;
+-	bitmap_next_clear_region(chunk->populated, &rs, &re, page_end);
+-	if (rs >= page_end)
++	start = find_next_zero_bit(chunk->populated, end, start);
++	if (start >= end)
+ 		return true;
  
- #define for_each_clear_bit(bit, addr, size) \
--	for ((bit) = find_first_zero_bit((addr), (size));	\
-+	for ((bit) = find_next_zero_bit((addr), (size), 0);	\
- 	     (bit) < (size);					\
- 	     (bit) = find_next_zero_bit((addr), (size), (bit) + 1))
+-	*next_off = re * PAGE_SIZE / PCPU_MIN_ALLOC_SIZE;
++	end = find_next_bit(chunk->populated, end, start + 1);
++
++	*next_off = end * PAGE_SIZE / PCPU_MIN_ALLOC_SIZE;
+ 	return false;
+ }
  
 -- 
 2.30.2
