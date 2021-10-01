@@ -2,159 +2,234 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4F9C433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Oct 2021 12:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBC8C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Oct 2021 18:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C8E761A85
-	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Oct 2021 12:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37BCE61263
+	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Oct 2021 18:12:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354272AbhJAMHM (ORCPT
+        id S1355662AbhJASON (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 1 Oct 2021 08:07:12 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:54836 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354266AbhJAMHK (ORCPT
+        Fri, 1 Oct 2021 14:14:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50134 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232126AbhJASOM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 1 Oct 2021 08:07:10 -0400
-Received: by mail-il1-f198.google.com with SMTP id 2-20020a920d02000000b002589c563709so7229852iln.21
-        for <linux-perf-users@vger.kernel.org>; Fri, 01 Oct 2021 05:05:26 -0700 (PDT)
+        Fri, 1 Oct 2021 14:14:12 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 277CBC061775;
+        Fri,  1 Oct 2021 11:12:28 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id r7so7084989pjo.3;
+        Fri, 01 Oct 2021 11:12:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=j1V9qLdJ7N9KO3G5HusJFlDeTFePzR9GzlCEJBTXj3U=;
+        b=iqFo/EBaTQNoe4x5hYB05wov6we850SStXP27FhStUkPDi9Lr9CWiQLcFcDIALBm8E
+         4aWBViejYhUjMssufYOySZ9pWWpO2RVKv96lA4BCEqUabGROHoYIsK7l2LPjzPfy8g4o
+         yM28Gfs3u3n3VBCSmWyCeyHJFQKECIVQbY/T4OtYNF2j/i333wL67XIOvBtOW4nEUZoc
+         2iBZ8+/5EXoI/tbZTf3Rh/pXmHKcwjnUE4HbtlNfQRdFGXdV5wKHTKbSoErpkWxddN0t
+         MstNBNLID4V2yUaye9E18Ok1dmajJWaN13VXKpYkEY6DmB5XlIwx4Dn7ZseK4WcTqmeg
+         7nwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=6XR7AcFwJGCAhR4U8M+rl8QBYvsM2ERoXA6/OjrO3zU=;
-        b=DfsjoU1oxjejJvMrtJegzh5TG1zGFeUDdOpMViIom9j2l7Tag0ECTkd3olfyjPcNOe
-         ENeL3LPwso8TtfcXYemRmYWv82wO80bwSY+gcyvn6snY+zStHr1UKOhdinJ91gQX1SsB
-         zwPP0imcm9IaGOz7dk0PWVVfxOq8PNN1nONq0/e200tO8RjUY52Zf/aYA0GrKU8l4KJM
-         CZfk1m6wYb9SxkuTD0F0NLoP1XorgeGtTVTlcVCfhIhqFh0nHlxf3WjJBCuiT+W6cKay
-         dFCpf/s0hWK+Vs0EqwvZKSpOT7zmzeAoR6KKqtGnMMJPNvYvR7M+Yv62BwquiRUNwzc3
-         tZ5w==
-X-Gm-Message-State: AOAM530pCXZa9oaYxVEA4u69ndTsLrxI+QATuEVJwUYb5uDhorzKRXn/
-        yvSOVJSUe5VH/sc820HvN6cEJOvfc+T5mRmgya0VfV0xNXG8
-X-Google-Smtp-Source: ABdhPJwZrhf9uro0TwU2UOZIoHBcW5RwGMHaI/lnR0Z6n+s/V1okJosAbQA4JH0TJt6dPG7/SbUbRK7nnzUVOKsuaZLFQp/Q5dMY
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=j1V9qLdJ7N9KO3G5HusJFlDeTFePzR9GzlCEJBTXj3U=;
+        b=p29H3V2HLsNE65vewlUzvAGk1IjZp6wLYiv9MGSEzC2MDSPpeKvbEupxIKi6f4fWMz
+         ZbSPD9HflyvnSGVUHVTRnScR9RpGQ8A7NJW4dT5uIK3x9Yswa/GiYiSdbni8DVLu868a
+         scnnrzjkRMXRS+mv9dwsi0LHitwPiKs57PtkyD5la7BEoJfnFpZL+h3FEoxH0sO8caMX
+         l1XkAP5WJvWXINvfRl4HyAvrlcR0AdRPJnwZZG8FzPCkA4fkXpZZiVGRHDVaxJlRqVNi
+         A41YDx1pTrTvf+iVBp++4gKNRIXklVs1QvY9yaVZpkD6bXCBB7PJfb30xboQUVxWegMc
+         FkOQ==
+X-Gm-Message-State: AOAM533rgdp7QD3RijKxiDUOakiI8Qmizzds77Z4lxIih8s8iAxNeWi3
+        db+RTx+y/VUOG8k1uhvqWpSlgKqoVwc=
+X-Google-Smtp-Source: ABdhPJyfvygyojPKT3w4OvBrSy5IcoV7PC60DzY5WgZ5LojtQSC6JOTGKIKAg7rflEge8lah9V8Bew==
+X-Received: by 2002:a17:90a:1942:: with SMTP id 2mr21445882pjh.195.1633111946990;
+        Fri, 01 Oct 2021 11:12:26 -0700 (PDT)
+Received: from localhost (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id m10sm8294682pjs.21.2021.10.01.11.12.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Oct 2021 11:12:26 -0700 (PDT)
+From:   Yury Norov <yury.norov@gmail.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Yury Norov <yury.norov@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Alexander Lobakin <alobakin@pm.me>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexey Klimov <aklimov@redhat.com>,
+        Andrea Merello <andrea.merello@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, Ben Gardon <bgardon@google.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Brian Cain <bcain@codeaurora.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Lameter <cl@linux.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dennis Zhou <dennis@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Ian Rogers <irogers@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        Joe Perches <joe@perches.com>, Jonas Bonn <jonas@southpole.se>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Peter Xu <peterx@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Rich Felker <dalias@libc.org>,
+        Samuel Mendoza-Jonas <sam@mendozajonas.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>
+Subject: [PATCH RESEND 2 00/16] Resend bitmap patches
+Date:   Fri,  1 Oct 2021 11:12:10 -0700
+Message-Id: <20211001181226.228340-1-yury.norov@gmail.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9f44:: with SMTP id u4mr3449828iot.155.1633089926290;
- Fri, 01 Oct 2021 05:05:26 -0700 (PDT)
-Date:   Fri, 01 Oct 2021 05:05:26 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f1645705cd496085@google.com>
-Subject: [syzbot] general protection fault in perf_tp_event (3)
-From:   syzbot <syzbot+f27ed6d2b22fe3b92377@syzkaller.appspotmail.com>
-To:     acme@kernel.org, alexander.shishkin@linux.intel.com,
-        andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, john.fastabend@gmail.com, jolsa@redhat.com,
-        kafai@fb.com, kpsingh@kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
-        mingo@redhat.com, namhyung@kernel.org, netdev@vger.kernel.org,
-        peterz@infradead.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+Hi Stephen,
 
-syzbot found the following issue on:
+Can you please take this series into the next tree? It has been already
+in next-tree for 5.14:
 
-HEAD commit:    a3debf177f21 libbpf: Fix segfault in static linker for obj..
-git tree:       bpf
-console output: https://syzkaller.appspot.com/x/log.txt?x=122fa35f300000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c31c0936547df9ea
-dashboard link: https://syzkaller.appspot.com/bug?extid=f27ed6d2b22fe3b92377
-compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
+https://lore.kernel.org/linux-mmc/YSeduU41Ef568xhS@alley/T/
 
-Unfortunately, I don't have any reproducer for this issue yet.
+But it was damaged and we decided to merge it in 5.15 cycle. No changes
+comparing to 5.14, except for Andy's patch that was already upstreamed
+and therefore removed from here.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+f27ed6d2b22fe3b92377@syzkaller.appspotmail.com
+The git tree is here:
+	https://github.com/norov/linux/tree/bitmap-20210929
 
-general protection fault, probably for non-canonical address 0xfe001bea7e002090: 0000 [#1] PREEMPT SMP KASAN
-KASAN: maybe wild-memory-access in range [0xf000ff53f0010480-0xf000ff53f0010487]
-CPU: 0 PID: 29889 Comm: syz-executor.4 Not tainted 5.14.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:perf_tp_filter_match kernel/events/core.c:9622 [inline]
-RIP: 0010:perf_tp_event_match kernel/events/core.c:9639 [inline]
-RIP: 0010:perf_tp_event_match kernel/events/core.c:9627 [inline]
-RIP: 0010:perf_tp_event+0x2af/0xb70 kernel/events/core.c:9682
-Code: 3c 20 00 0f 85 d7 07 00 00 4c 8b bb e8 02 00 00 4d 85 ff 4c 0f 44 fb e8 df 37 e1 ff 49 8d bf 30 05 00 00 48 89 fa 48 c1 ea 03 <42> 80 3c 22 00 0f 85 a1 07 00 00 4d 8b 87 30 05 00 00 4d 85 c0 0f
-RSP: 0018:ffffc90002137540 EFLAGS: 00010806
-RAX: 0000000000000a8c RBX: ffff887fffffffa0 RCX: ffffc90012317000
-RDX: 1e001fea7e002090 RSI: ffffffff8194d811 RDI: f000ff53f0010483
-RBP: ffffc900021377b0 R08: 0000000000000000 R09: 0000000000000000
-R10: ffffffff8194d7ac R11: 0000000000000000 R12: dffffc0000000000
-R13: ffff8880b9c2c800 R14: 0000000000000001 R15: f000ff53f000ff53
-FS:  00007fb42500a700(0000) GS:ffff8880b9c00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fb424fe9718 CR3: 0000000021c6d000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000600
-Call Trace:
- perf_trace_run_bpf_submit+0x11c/0x210 kernel/events/core.c:9657
- perf_trace_lock+0x2ef/0x4d0 include/trace/events/lock.h:39
- trace_lock_release include/trace/events/lock.h:58 [inline]
- lock_release+0x4a8/0x720 kernel/locking/lockdep.c:5636
- __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:158 [inline]
- _raw_spin_unlock_irqrestore+0x16/0x70 kernel/locking/spinlock.c:194
- spin_unlock_irqrestore include/linux/spinlock.h:418 [inline]
- pcpu_alloc+0x848/0x1350 mm/percpu.c:1851
- bpf_prog_alloc+0x4b/0x1a0 kernel/bpf/core.c:125
- bpf_prog_load+0x651/0x21f0 kernel/bpf/syscall.c:2248
- __sys_bpf+0x67e/0x5df0 kernel/bpf/syscall.c:4587
- __do_sys_bpf kernel/bpf/syscall.c:4691 [inline]
- __se_sys_bpf kernel/bpf/syscall.c:4689 [inline]
- __x64_sys_bpf+0x75/0xb0 kernel/bpf/syscall.c:4689
- do_syscall_x64 arch/x86/entry/common.c:50 [inline]
- do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
- entry_SYSCALL_64_after_hwframe+0x44/0xae
-RIP: 0033:0x7fb427a93709
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fb42500a188 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
-RAX: ffffffffffffffda RBX: 00007fb427b97f60 RCX: 00007fb427a93709
-RDX: 0000000000000070 RSI: 0000000020000440 RDI: 0000000000000005
-RBP: 00007fb427aedcb4 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007fffe8ec545f R14: 00007fb42500a300 R15: 0000000000022000
-Modules linked in:
----[ end trace 01ae9f661067bd97 ]---
-RIP: 0010:perf_tp_filter_match kernel/events/core.c:9622 [inline]
-RIP: 0010:perf_tp_event_match kernel/events/core.c:9639 [inline]
-RIP: 0010:perf_tp_event_match kernel/events/core.c:9627 [inline]
-RIP: 0010:perf_tp_event+0x2af/0xb70 kernel/events/core.c:9682
-Code: 3c 20 00 0f 85 d7 07 00 00 4c 8b bb e8 02 00 00 4d 85 ff 4c 0f 44 fb e8 df 37 e1 ff 49 8d bf 30 05 00 00 48 89 fa 48 c1 ea 03 <42> 80 3c 22 00 0f 85 a1 07 00 00 4d 8b 87 30 05 00 00 4d 85 c0 0f
-RSP: 0018:ffffc90002137540 EFLAGS: 00010806
-RAX: 0000000000000a8c RBX: ffff887fffffffa0 RCX: ffffc90012317000
-RDX: 1e001fea7e002090 RSI: ffffffff8194d811 RDI: f000ff53f0010483
-RBP: ffffc900021377b0 R08: 0000000000000000 R09: 0000000000000000
-R10: ffffffff8194d7ac R11: 0000000000000000 R12: dffffc0000000000
-R13: ffff8880b9c2c800 R14: 0000000000000001 R15: f000ff53f000ff53
-FS:  00007fb42500a700(0000) GS:ffff8880b9c00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fb424fe9718 CR3: 0000000021c6d000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000600
-----------------
-Code disassembly (best guess), 1 bytes skipped:
-   0:	20 00                	and    %al,(%rax)
-   2:	0f 85 d7 07 00 00    	jne    0x7df
-   8:	4c 8b bb e8 02 00 00 	mov    0x2e8(%rbx),%r15
-   f:	4d 85 ff             	test   %r15,%r15
-  12:	4c 0f 44 fb          	cmove  %rbx,%r15
-  16:	e8 df 37 e1 ff       	callq  0xffe137fa
-  1b:	49 8d bf 30 05 00 00 	lea    0x530(%r15),%rdi
-  22:	48 89 fa             	mov    %rdi,%rdx
-  25:	48 c1 ea 03          	shr    $0x3,%rdx
-* 29:	42 80 3c 22 00       	cmpb   $0x0,(%rdx,%r12,1) <-- trapping instruction
-  2e:	0f 85 a1 07 00 00    	jne    0x7d5
-  34:	4d 8b 87 30 05 00 00 	mov    0x530(%r15),%r8
-  3b:	4d 85 c0             	test   %r8,%r8
-  3e:	0f                   	.byte 0xf
+Thanks,
+Yury
 
+Yury Norov (16):
+  bitops: protect find_first_{,zero}_bit properly
+  bitops: move find_bit_*_le functions from le.h to find.h
+  include: move find.h from asm_generic to linux
+  arch: remove GENERIC_FIND_FIRST_BIT entirely
+  lib: add find_first_and_bit()
+  cpumask: use find_first_and_bit()
+  all: replace find_next{,_zero}_bit with find_first{,_zero}_bit where
+    appropriate
+  tools: sync tools/bitmap with mother linux
+  cpumask: replace cpumask_next_* with cpumask_first_* where appropriate
+  include/linux: move for_each_bit() macros from bitops.h to find.h
+  find: micro-optimize for_each_{set,clear}_bit()
+  Replace for_each_*_bit_from() with for_each_*_bit() where appropriate
+  mm/percpu: micro-optimize pcpu_is_populated()
+  bitmap: unify find_bit operations
+  lib: bitmap: add performance test for bitmap_print_to_pagebuf
+  vsprintf: rework bitmap_list_string
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ MAINTAINERS                                   |   4 +-
+ arch/alpha/include/asm/bitops.h               |   2 -
+ arch/arc/Kconfig                              |   1 -
+ arch/arc/include/asm/bitops.h                 |   1 -
+ arch/arm/include/asm/bitops.h                 |   1 -
+ arch/arm64/Kconfig                            |   1 -
+ arch/arm64/include/asm/bitops.h               |   1 -
+ arch/csky/include/asm/bitops.h                |   1 -
+ arch/h8300/include/asm/bitops.h               |   1 -
+ arch/hexagon/include/asm/bitops.h             |   1 -
+ arch/ia64/include/asm/bitops.h                |   2 -
+ arch/m68k/include/asm/bitops.h                |   2 -
+ arch/mips/Kconfig                             |   1 -
+ arch/mips/include/asm/bitops.h                |   1 -
+ arch/openrisc/include/asm/bitops.h            |   1 -
+ arch/parisc/include/asm/bitops.h              |   2 -
+ arch/powerpc/include/asm/bitops.h             |   2 -
+ arch/powerpc/include/asm/cputhreads.h         |   2 +-
+ arch/powerpc/platforms/pasemi/dma_lib.c       |   4 +-
+ arch/riscv/include/asm/bitops.h               |   1 -
+ arch/s390/Kconfig                             |   1 -
+ arch/s390/include/asm/bitops.h                |   1 -
+ arch/s390/kvm/kvm-s390.c                      |   2 +-
+ arch/sh/include/asm/bitops.h                  |   1 -
+ arch/sparc/include/asm/bitops_32.h            |   1 -
+ arch/sparc/include/asm/bitops_64.h            |   2 -
+ arch/x86/Kconfig                              |   1 -
+ arch/x86/include/asm/bitops.h                 |   2 -
+ arch/x86/kernel/apic/vector.c                 |   4 +-
+ arch/x86/um/Kconfig                           |   1 -
+ arch/xtensa/include/asm/bitops.h              |   1 -
+ block/blk-mq.c                                |   2 +-
+ drivers/block/rnbd/rnbd-clt.c                 |   2 +-
+ drivers/dma/ti/edma.c                         |   2 +-
+ drivers/gpu/drm/etnaviv/etnaviv_gpu.c         |   4 +-
+ drivers/hwmon/ltc2992.c                       |   3 +-
+ drivers/iio/adc/ad7124.c                      |   2 +-
+ drivers/infiniband/hw/irdma/hw.c              |  16 +-
+ drivers/media/cec/core/cec-core.c             |   2 +-
+ drivers/media/mc/mc-devnode.c                 |   2 +-
+ drivers/mmc/host/renesas_sdhi_core.c          |   2 +-
+ drivers/net/virtio_net.c                      |   2 +-
+ drivers/pci/controller/dwc/pci-dra7xx.c       |   2 +-
+ drivers/scsi/lpfc/lpfc_sli.c                  |  10 +-
+ drivers/soc/fsl/qbman/bman_portal.c           |   2 +-
+ drivers/soc/fsl/qbman/qman_portal.c           |   2 +-
+ drivers/soc/ti/k3-ringacc.c                   |   4 +-
+ drivers/tty/n_tty.c                           |   2 +-
+ drivers/virt/acrn/ioreq.c                     |   3 +-
+ fs/f2fs/segment.c                             |   8 +-
+ fs/ocfs2/cluster/heartbeat.c                  |   2 +-
+ fs/ocfs2/dlm/dlmdomain.c                      |   4 +-
+ fs/ocfs2/dlm/dlmmaster.c                      |  18 +-
+ fs/ocfs2/dlm/dlmrecovery.c                    |   2 +-
+ fs/ocfs2/dlm/dlmthread.c                      |   2 +-
+ include/asm-generic/bitops.h                  |   1 -
+ include/asm-generic/bitops/le.h               |  64 ---
+ include/linux/bitmap.h                        |  34 +-
+ include/linux/bitops.h                        |  34 --
+ include/linux/cpumask.h                       |  46 ++-
+ include/linux/find.h                          | 372 ++++++++++++++++++
+ kernel/time/clocksource.c                     |   4 +-
+ lib/Kconfig                                   |   3 -
+ lib/find_bit.c                                |  21 +
+ lib/find_bit_benchmark.c                      |  21 +
+ lib/genalloc.c                                |   2 +-
+ lib/test_bitmap.c                             |  37 ++
+ lib/vsprintf.c                                |  24 +-
+ mm/percpu.c                                   |  35 +-
+ net/ncsi/ncsi-manage.c                        |   4 +-
+ tools/include/asm-generic/bitops.h            |   1 -
+ tools/include/asm-generic/bitops/find.h       | 145 -------
+ tools/include/linux/bitmap.h                  |   7 +-
+ .../bitops => tools/include/linux}/find.h     |  54 ++-
+ tools/lib/find_bit.c                          |  20 +
+ 75 files changed, 637 insertions(+), 441 deletions(-)
+ create mode 100644 include/linux/find.h
+ delete mode 100644 tools/include/asm-generic/bitops/find.h
+ rename {include/asm-generic/bitops => tools/include/linux}/find.h (83%)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+-- 
+2.30.2
+
