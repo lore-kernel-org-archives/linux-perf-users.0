@@ -2,70 +2,61 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 727E0C4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Oct 2021 18:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA10AC433FE
+	for <linux-perf-users@archiver.kernel.org>; Sat,  2 Oct 2021 09:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EDF76124C
-	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Oct 2021 18:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E3066136A
+	for <linux-perf-users@archiver.kernel.org>; Sat,  2 Oct 2021 09:25:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231563AbhJASio (ORCPT
+        id S232729AbhJBJ1H (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 1 Oct 2021 14:38:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55862 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355969AbhJASig (ORCPT
+        Sat, 2 Oct 2021 05:27:07 -0400
+Received: from mail-vs1-f54.google.com ([209.85.217.54]:35694 "EHLO
+        mail-vs1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232719AbhJBJZX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 1 Oct 2021 14:38:36 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A6C9C061775;
-        Fri,  1 Oct 2021 11:36:44 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id p1so2647059pfh.8;
-        Fri, 01 Oct 2021 11:36:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=U/jeo0cc4IS12fXu/3bym/iiyWz3QTfkGKyYijbo8pY=;
-        b=cPfJPl85flsr5d4GoEpVUbaPdgMoIQXFsKWqOJIawh2OktBJif4WDJTgJfCp+DZVLE
-         xWjav8cTfeSzwz6vvFgspe8IuaOqaPNp1QmAXMnLOJhWBr+i9jTOc6g0I++ZmPq70S2u
-         wz+gnit0JRnRxpEKSiaFE/4qg58Qj5poqu6BZscEk7exNp72iz2SVBawCsfF7bRb9kd4
-         WQHbaZ7lwO2hmVGRat0sOY4CbIqesw4bhvmbdOsncWv6mImb8vtBs90Az8MFfTQzaGqX
-         NLKwh1XOC6ZlMYoPzZDX2cqXJ7bDqFJFTjyJjRGAPHJ1urMr9+ZmccUHI/ZdKgggTBpL
-         HMCw==
+        Sat, 2 Oct 2021 05:25:23 -0400
+Received: by mail-vs1-f54.google.com with SMTP id f18so14116319vsp.2;
+        Sat, 02 Oct 2021 02:23:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=U/jeo0cc4IS12fXu/3bym/iiyWz3QTfkGKyYijbo8pY=;
-        b=p3PHMLbvL10ZT7WKQ3MUmMalH4Xgz4SBRI5LFbymV3M7k00S65G7KB4Cc5qX7eQk8Q
-         JsUYMVfDDmHcqSb3EsnzmcyEh0nOBVqDgC0nbBHXyHERFZeOsZ6rP3iRaYFgPXlee0wf
-         vmJ3h5k7Bln7j3ZEk10xfxZPIvlEStDjdfvkoZeMaUIAapj73mdUpF2tYauS3DxeinCi
-         U8b443AhUC9FnkJcYJGkJSoWjcC7/TUC5ROE9NdPi7qUr4OfIB7kFzsBaR4M6wxDIV8H
-         A+fhxsqMoarDLgyMSd3iBXNV04Vhijq9/DWM0dAht5tMNf5q8cMAZkyHd2UGXD7RZTgB
-         rCiQ==
-X-Gm-Message-State: AOAM532SN6xnR6UcfWMoch6otfb7/kqlT7QRc6pY9CF0AXvCTys+t+ip
-        EgB4Oui4+Jl6jxpWlYnRVBs=
-X-Google-Smtp-Source: ABdhPJxpcN7h+xroaO4ziJJc8u4TcIRQF/ZupaBuavc2M/JBoGPwQoLCynTihJtuxc2oGWN1VfWgvw==
-X-Received: by 2002:a62:e210:0:b0:44b:ae4c:8c01 with SMTP id a16-20020a62e210000000b0044bae4c8c01mr11498160pfi.45.1633113403479;
-        Fri, 01 Oct 2021 11:36:43 -0700 (PDT)
-Received: from localhost (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id t23sm2310819pgn.25.2021.10.01.11.36.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Oct 2021 11:36:43 -0700 (PDT)
-Date:   Fri, 1 Oct 2021 11:36:44 -0700
-From:   Yury Norov <yury.norov@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Lj27fX+w/X1fzAaixWVl+EMSmBzqib+t1AvqNPW0Qfo=;
+        b=eQ7Xi9BjwHarBUNbWz9NkWr+Fq1PS//jsakctwN1H55+6xYfn/5LXwsCHrYFZTnUcN
+         mwY9NJ2FfvWu3wmzbKuXrU4cXn5mqLsTR+efLwMLgNDEMAWvHqEkC1Ik1WFbgAvIz2Gx
+         JuEmKDTYxqlB2l312wzigYfwJemW5sYFhCM0NfF9vpNfGv0hzOSF9UNhjuEdtnXfk9yU
+         +JV7vk5s/EldK0mGmu9saoMP1nnYXQ8OPZdp5na8Mvyp8T5XCGp8apmtWP8pJ3+9C2/p
+         Oz2qn2Q2SE80s6k8HBIQ6iGYUF6tBC1YlRtYk+B5o1q8F2GiFLEMTWrTF/w9WIiGgS8A
+         0qxw==
+X-Gm-Message-State: AOAM532FJKaFkA2ueioqhCgwtr7GJs9sIsBrPlBln+xYP93w8czVziVJ
+        p4hIiGc02j1P9w0wLDl2qshMRPZ42IoTmnUuAeg=
+X-Google-Smtp-Source: ABdhPJyIkTe18axoKGGfe6/riaB8UL54KfoHPvrebxDva0p8GQNYtsCXNMqktxYUF4cWRNiUDZV6LfcDHAZk9sL3kO8=
+X-Received: by 2002:a67:c295:: with SMTP id k21mr5066492vsj.37.1633166617532;
+ Sat, 02 Oct 2021 02:23:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <20211001181245.228419-1-yury.norov@gmail.com> <20211001181245.228419-4-yury.norov@gmail.com>
+In-Reply-To: <20211001181245.228419-4-yury.norov@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Sat, 2 Oct 2021 11:23:26 +0200
+Message-ID: <CAMuHMdUbzBBpCvw+44BAEVWtLfXLH_75JUcsUkedyxZYmdwL7w@mail.gmail.com>
+Subject: Re: [PATCH 03/16] include: move find.h from asm_generic to linux
+To:     Yury Norov <yury.norov@gmail.com>
 Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
         Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        kvm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, KVM list <kvm@vger.kernel.org>,
         "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
         Alexander Lobakin <alobakin@pm.me>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Alexey Klimov <aklimov@redhat.com>,
         Andrea Merello <andrea.merello@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Arnd Bergmann <arnd@arndb.de>, Ben Gardon <bgardon@google.com>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
@@ -75,7 +66,6 @@ Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
         Daniel Bristot de Oliveira <bristot@redhat.com>,
         David Hildenbrand <david@redhat.com>,
         Dennis Zhou <dennis@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
         Heiko Carstens <hca@linux.ibm.com>,
         Ian Rogers <irogers@google.com>,
         Ingo Molnar <mingo@redhat.com>,
@@ -104,38 +94,48 @@ Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
         Will Deacon <will@kernel.org>,
         Wolfram Sang <wsa+renesas@sang-engineering.com>,
         Yoshinori Sato <ysato@users.sourceforge.jp>
-Subject: Re: [PATCH RESEND 2 00/16] Resend bitmap patches
-Message-ID: <YVdVPGaF2Gq1PGpG@yury-ThinkPad>
-References: <20211001181226.228340-1-yury.norov@gmail.com>
- <YVdSK4rFmLVFrKrD@smile.fi.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YVdSK4rFmLVFrKrD@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Oct 01, 2021 at 09:23:39PM +0300, Andy Shevchenko wrote:
-> On Fri, Oct 01, 2021 at 11:12:10AM -0700, Yury Norov wrote:
-> > Hi Stephen,
-> > 
-> > Can you please take this series into the next tree? It has been already
-> > in next-tree for 5.14:
-> > 
-> > https://lore.kernel.org/linux-mmc/YSeduU41Ef568xhS@alley/T/
-> > 
-> > But it was damaged and we decided to merge it in 5.15 cycle. No changes
-> > comparing to 5.14, except for Andy's patch that was already upstreamed
-> > and therefore removed from here.
-> > 
-> > The git tree is here:
-> > 	https://github.com/norov/linux/tree/bitmap-20210929
-> 
-> 
-> This is a dup with the same subject. Which one should we look into?
+Hi Yuri,
 
-Please ignore this (short) series. It's a duplication, my connection
-was broken and I had to restart submitting.
+Thanks for your patch!
 
-Sorry for noise.
+On Fri, Oct 1, 2021 at 8:12 PM Yury Norov <yury.norov@gmail.com> wrote:
+> find_bit API and bitmap API are closely related, but inclusion paths
+> are different - include/asm-generic and include/linux, correspondingly.
+> In the past it made a lot of troubles due to circular dependencies
+> and/or undefined symbols. Fix this by moving find.h under include/linux.
+
+.. and including it from include/linux/bitmap.h, like the other helper includes?
+
+> Signed-off-by: Yury Norov <yury.norov@gmail.com>
+> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+
+>  arch/m68k/include/asm/bitops.h               |  2 --
+
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+> --- a/include/linux/bitmap.h
+> +++ b/include/linux/bitmap.h
+> @@ -6,6 +6,7 @@
+>
+>  #include <linux/align.h>
+>  #include <linux/bitops.h>
+> +#include <linux/find.h>
+>  #include <linux/limits.h>
+>  #include <linux/string.h>
+>  #include <linux/types.h>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
