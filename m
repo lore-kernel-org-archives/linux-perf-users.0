@@ -2,46 +2,59 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA10AC433FE
-	for <linux-perf-users@archiver.kernel.org>; Sat,  2 Oct 2021 09:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4686C433F5
+	for <linux-perf-users@archiver.kernel.org>; Sat,  2 Oct 2021 17:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E3066136A
-	for <linux-perf-users@archiver.kernel.org>; Sat,  2 Oct 2021 09:25:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC74961B00
+	for <linux-perf-users@archiver.kernel.org>; Sat,  2 Oct 2021 17:25:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232729AbhJBJ1H (ORCPT
+        id S233727AbhJBR1h (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 2 Oct 2021 05:27:07 -0400
-Received: from mail-vs1-f54.google.com ([209.85.217.54]:35694 "EHLO
-        mail-vs1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232719AbhJBJZX (ORCPT
+        Sat, 2 Oct 2021 13:27:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46798 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233739AbhJBR0R (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 2 Oct 2021 05:25:23 -0400
-Received: by mail-vs1-f54.google.com with SMTP id f18so14116319vsp.2;
-        Sat, 02 Oct 2021 02:23:37 -0700 (PDT)
+        Sat, 2 Oct 2021 13:26:17 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF939C0613EC;
+        Sat,  2 Oct 2021 10:24:31 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id h1so126296pfv.12;
+        Sat, 02 Oct 2021 10:24:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=D1bXkBk9YxmebFeA6E0BW5aK15Kg0BQ6ZYq9gHvLf8I=;
+        b=bD7c6t/HirAEIz+/PxtC8eGDtvg1LK+3UlvnvIzjRphISe/ujCdscLeEaYSqGdB2cj
+         JceH5o9k+buUK9BNbOFXYeSR6DHP8ur+gBgb3eBAUsRAu2yqdnuBuRC/DMXAkD3ty/RE
+         BKJFJIER/2X0fKhIho35yK3irtEi8Cr1Ru59ywzHmKOD6NQHYnBqMsP3yYZi6nVszfMo
+         yxXeTDn2azo9UfL+g1crhi6VQX939ULcMfw+t4q8pLQ+UwAB9cCtQp0MiV/yoQL4nr1H
+         Q17zkMpwJTeP2iFQKAU9BbhXTjeExEr8SMlR20wT94Rx1kUGfpINHmZLFEM6wdRtfFRp
+         kbgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Lj27fX+w/X1fzAaixWVl+EMSmBzqib+t1AvqNPW0Qfo=;
-        b=eQ7Xi9BjwHarBUNbWz9NkWr+Fq1PS//jsakctwN1H55+6xYfn/5LXwsCHrYFZTnUcN
-         mwY9NJ2FfvWu3wmzbKuXrU4cXn5mqLsTR+efLwMLgNDEMAWvHqEkC1Ik1WFbgAvIz2Gx
-         JuEmKDTYxqlB2l312wzigYfwJemW5sYFhCM0NfF9vpNfGv0hzOSF9UNhjuEdtnXfk9yU
-         +JV7vk5s/EldK0mGmu9saoMP1nnYXQ8OPZdp5na8Mvyp8T5XCGp8apmtWP8pJ3+9C2/p
-         Oz2qn2Q2SE80s6k8HBIQ6iGYUF6tBC1YlRtYk+B5o1q8F2GiFLEMTWrTF/w9WIiGgS8A
-         0qxw==
-X-Gm-Message-State: AOAM532FJKaFkA2ueioqhCgwtr7GJs9sIsBrPlBln+xYP93w8czVziVJ
-        p4hIiGc02j1P9w0wLDl2qshMRPZ42IoTmnUuAeg=
-X-Google-Smtp-Source: ABdhPJyIkTe18axoKGGfe6/riaB8UL54KfoHPvrebxDva0p8GQNYtsCXNMqktxYUF4cWRNiUDZV6LfcDHAZk9sL3kO8=
-X-Received: by 2002:a67:c295:: with SMTP id k21mr5066492vsj.37.1633166617532;
- Sat, 02 Oct 2021 02:23:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20211001181245.228419-1-yury.norov@gmail.com> <20211001181245.228419-4-yury.norov@gmail.com>
-In-Reply-To: <20211001181245.228419-4-yury.norov@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sat, 2 Oct 2021 11:23:26 +0200
-Message-ID: <CAMuHMdUbzBBpCvw+44BAEVWtLfXLH_75JUcsUkedyxZYmdwL7w@mail.gmail.com>
-Subject: Re: [PATCH 03/16] include: move find.h from asm_generic to linux
-To:     Yury Norov <yury.norov@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=D1bXkBk9YxmebFeA6E0BW5aK15Kg0BQ6ZYq9gHvLf8I=;
+        b=0UNITr5eyIip/TO9bOJ/g/xAAccRGaRr8rjXSU0Ri/IMT0ohCu1F4v73HyVPS8Qhar
+         /wbYTbjn5wjS5TcbFzAKf91E+F01plNewRwhw0NHl9DQeq/o3pnNBEgACk93VBLweV0G
+         UOmaHVv5gs7WVEqqkg6hO8zD9khevZBIn0/MkWySBEkTb7PPenkBdtTHglwQF91skboq
+         v+e+qY3BBn3HwiRkknDTyAKYwIadrSZBoPKVaD6lqeNPIVb0JK499EgLscJaEOHDWCmG
+         goWtNgRac2oZoWi7xPgFMnhUpkCwZituc8HXDEuC25p/1whNqf0o4HsK6ZlV+DVj5Lfu
+         0iRg==
+X-Gm-Message-State: AOAM533ifFVAhrlepNY97KbdqQgdtmk2/NWf5hl4b4XkH7JhpKnVzakH
+        s1MoJ51bBrwd6XnxlRmOVuA=
+X-Google-Smtp-Source: ABdhPJx5joTF1gNiWd6ZXwTh3t1fPMuPaA4tteEBIL9LThUASubI0TivX6vd9CDwEQL/39E2/PqcBw==
+X-Received: by 2002:a63:131f:: with SMTP id i31mr3665877pgl.207.1633195470271;
+        Sat, 02 Oct 2021 10:24:30 -0700 (PDT)
+Received: from localhost (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id ch7sm10714708pjb.44.2021.10.02.10.24.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 02 Oct 2021 10:24:29 -0700 (PDT)
+Date:   Sat, 2 Oct 2021 10:24:31 -0700
+From:   Yury Norov <yury.norov@gmail.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
 Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
@@ -94,48 +107,59 @@ Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
         Will Deacon <will@kernel.org>,
         Wolfram Sang <wsa+renesas@sang-engineering.com>,
         Yoshinori Sato <ysato@users.sourceforge.jp>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH 03/16] include: move find.h from asm_generic to linux
+Message-ID: <YViVz/28pNaGs+Rv@yury-ThinkPad>
+References: <20211001181245.228419-1-yury.norov@gmail.com>
+ <20211001181245.228419-4-yury.norov@gmail.com>
+ <CAMuHMdUbzBBpCvw+44BAEVWtLfXLH_75JUcsUkedyxZYmdwL7w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUbzBBpCvw+44BAEVWtLfXLH_75JUcsUkedyxZYmdwL7w@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Yuri,
+On Sat, Oct 02, 2021 at 11:23:26AM +0200, Geert Uytterhoeven wrote:
+> Hi Yuri,
+> 
+> Thanks for your patch!
+> 
+> On Fri, Oct 1, 2021 at 8:12 PM Yury Norov <yury.norov@gmail.com> wrote:
+> > find_bit API and bitmap API are closely related, but inclusion paths
+> > are different - include/asm-generic and include/linux, correspondingly.
+> > In the past it made a lot of troubles due to circular dependencies
+> > and/or undefined symbols. Fix this by moving find.h under include/linux.
+> 
+> .. and including it from include/linux/bitmap.h, like the other helper includes?
 
-Thanks for your patch!
+yes.
 
-On Fri, Oct 1, 2021 at 8:12 PM Yury Norov <yury.norov@gmail.com> wrote:
-> find_bit API and bitmap API are closely related, but inclusion paths
-> are different - include/asm-generic and include/linux, correspondingly.
-> In the past it made a lot of troubles due to circular dependencies
-> and/or undefined symbols. Fix this by moving find.h under include/linux.
-
-.. and including it from include/linux/bitmap.h, like the other helper includes?
-
-> Signed-off-by: Yury Norov <yury.norov@gmail.com>
-> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-
->  arch/m68k/include/asm/bitops.h               |  2 --
-
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
-
-> --- a/include/linux/bitmap.h
-> +++ b/include/linux/bitmap.h
-> @@ -6,6 +6,7 @@
->
->  #include <linux/align.h>
->  #include <linux/bitops.h>
-> +#include <linux/find.h>
->  #include <linux/limits.h>
->  #include <linux/string.h>
->  #include <linux/types.h>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> > Signed-off-by: Yury Norov <yury.norov@gmail.com>
+> > Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> 
+> >  arch/m68k/include/asm/bitops.h               |  2 --
+> 
+> Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> 
+> > --- a/include/linux/bitmap.h
+> > +++ b/include/linux/bitmap.h
+> > @@ -6,6 +6,7 @@
+> >
+> >  #include <linux/align.h>
+> >  #include <linux/bitops.h>
+> > +#include <linux/find.h>
+> >  #include <linux/limits.h>
+> >  #include <linux/string.h>
+> >  #include <linux/types.h>
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
