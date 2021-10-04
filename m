@@ -2,135 +2,126 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE2CFC4332F
-	for <linux-perf-users@archiver.kernel.org>; Sat,  2 Oct 2021 23:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1783C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Oct 2021 12:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6B4961AF7
-	for <linux-perf-users@archiver.kernel.org>; Sat,  2 Oct 2021 23:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3107611CC
+	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Oct 2021 12:27:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234260AbhJBXpy (ORCPT
+        id S231901AbhJDM3U (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 2 Oct 2021 19:45:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44894 "EHLO
+        Mon, 4 Oct 2021 08:29:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234280AbhJBXps (ORCPT
+        with ESMTP id S229945AbhJDM3T (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 2 Oct 2021 19:45:48 -0400
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee2:21ea])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF6D7C0613EF;
-        Sat,  2 Oct 2021 16:44:01 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4HMNpy1d9Pz4xb9;
-        Sun,  3 Oct 2021 10:43:54 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-        s=201702; t=1633218235;
-        bh=jdy5JNJViBbQceeojrb8Lg+GiJVod62XNefz9Q9zGMg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=rLO4CxydwThjUYpKtT+ewMDVdVfKgCUwXrMukvMI1VENAoBzrFq71t4MN+6vbfVl2
-         fpPtMPnefXCa8oYRNOzlImwID10tgnIpA9sveg8qEGU4QACpUb2AjUUDGx3ESg00Xs
-         zkUnh3hPftLvlEMti64+zjYQzCjeU6w/1fdveZCbQeJ6c2YqUItmyBjGVEVzyw8jv8
-         XK1pHUwz03abFsQ0b7r6dtl+8LbQzouyMfQW+zJCgzhTxj3AwcULYWKDNVuX0v8NXg
-         vBVj4+Rqgcu7D2yuTjoAwK9Htz79Vq6AZd5MBrdIdzef9FkZptW2qIDrCxEQxeFXFW
-         nmt2SFbhCMPKQ==
-Date:   Sun, 3 Oct 2021 10:43:53 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Yury Norov <yury.norov@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Alexander Lobakin <alobakin@pm.me>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Klimov <aklimov@redhat.com>,
-        Andrea Merello <andrea.merello@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, Ben Gardon <bgardon@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Brian Cain <bcain@codeaurora.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Lameter <cl@linux.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dennis Zhou <dennis@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Joe Perches <joe@perches.com>, Jonas Bonn <jonas@southpole.se>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Peter Xu <peterx@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Rich Felker <dalias@libc.org>,
-        Samuel Mendoza-Jonas <sam@mendozajonas.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        Mon, 4 Oct 2021 08:29:19 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 358D1C061746
+        for <linux-perf-users@vger.kernel.org>; Mon,  4 Oct 2021 05:27:31 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id j4so9506194plx.4
+        for <linux-perf-users@vger.kernel.org>; Mon, 04 Oct 2021 05:27:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=seqv46vapK3LYSUO+3R1zuCP1rybYVvrFT5pZqlDw1A=;
+        b=B9th5UxPPKH4IGJzAy4GbFFVV9wEb9q8pYukvEGqowKB/vV/l4UpjJGJxuTbaoHg78
+         P4NiaoBGoOFxqlL0UNnjgC5fCNf64+LIK7RDQyDYplmsBwZnz/23MGV4Va31cqrB4+Wa
+         Ffgtj4gp3UnvQcsgDLmIKLmyIBzXcBqq3aI1hVE8un2jvArUCE+O+wW3fa3zRijAO539
+         0VrjxTo80cRcLs12HoHBba8Z23DkdeNiNrQq2Y/KyZsVjLoLzpbNTDp7JVMuIV/Xu8xJ
+         GmTuBmqDI+tjQujcjTfiUd+06nxInO6B49btOoTnfGuRFWX1t8cQ3sWU6U7mxaAOEm0O
+         h+nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=seqv46vapK3LYSUO+3R1zuCP1rybYVvrFT5pZqlDw1A=;
+        b=R6S3xr3/zLVktSqGU7JAYukyfTvN0YjQdOA0xbolpa27bMjEHB72pUZWybVy25gB09
+         th9VI6WVEO0ajZQurzL5qMUb+kbARRmr5LeLSrIq9+yOcTo0PNcmQajxJIeYLK4U3M90
+         zJx1Qu9GeVs1SimKl97467+sL7aPwONJzlUCYai3bBaUWko8UdOQ2q7ZkSZnkhDihOcx
+         UQqkHoEo6L9jVWLmRMRO/TpNA5siUm4MDylhRhA6Nj0Lptg1hKrUKaJkxLAyFHrrS99A
+         4yJ8bTa6Ja7OL3QPshZOgYEQuhY3M8kdQ85PRYPVRQ864+q/mXZH0enre2zHu+GXSKeq
+         D+6A==
+X-Gm-Message-State: AOAM5309Z7O+kvSDZnKyJKphM7DDdRSyFcuYSJDv+qmhmYhIKJJ8+st/
+        HFMdqH/7gfORt/pjmVkWtJg9Sw==
+X-Google-Smtp-Source: ABdhPJxMgsnpiosCKhuEpLJjE3CB+I+h06iBCRwJEbbQ+Z59Ytp3hnFa5B/efn+C3/yQFI4hUws3Ig==
+X-Received: by 2002:a17:90a:f0c4:: with SMTP id fa4mr2614890pjb.245.1633350450588;
+        Mon, 04 Oct 2021 05:27:30 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([204.124.181.210])
+        by smtp.gmail.com with ESMTPSA id a10sm14423232pgd.91.2021.10.04.05.27.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Oct 2021 05:27:30 -0700 (PDT)
+Date:   Mon, 4 Oct 2021 20:27:24 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     German Gomez <german.gomez@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
         Will Deacon <will@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>
-Subject: Re: [PATCH RESEND 2 00/16] Resend bitmap patches
-Message-ID: <20211003104353.7787c3e9@canb.auug.org.au>
-In-Reply-To: <YVjm3NXEhoBQtUSI@yury-ThinkPad>
-References: <20211001181245.228419-1-yury.norov@gmail.com>
-        <20211003094722.434c030d@canb.auug.org.au>
-        <YVjm3NXEhoBQtUSI@yury-ThinkPad>
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org
+Subject: Re: [PATCH 4/5] perf arm-spe: Implement find_snapshot callback
+Message-ID: <20211004122724.GC174271@leoy-ThinkPad-X240s>
+References: <20210916154635.1525-1-german.gomez@arm.com>
+ <20210916154635.1525-4-german.gomez@arm.com>
+ <20210923135016.GG400258@leoy-ThinkPad-X240s>
+ <20210923144048.GB603008@leoy-ThinkPad-X240s>
+ <1c6a3a73-27dc-6673-7fe7-34bc7fcb0a68@arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/+sbm5rWV9n_aJg+5hEB3VwJ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1c6a3a73-27dc-6673-7fe7-34bc7fcb0a68@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
---Sig_/+sbm5rWV9n_aJg+5hEB3VwJ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi German,
 
-Hi Yury,
+On Thu, Sep 30, 2021 at 01:26:15PM +0100, German Gomez wrote:
 
-On Sat, 2 Oct 2021 16:10:20 -0700 Yury Norov <yury.norov@gmail.com> wrote:
->
-> Ok, I'll resend it based on Linus tree shortly
+[...]
 
-There is no big hurry, the next linux-next release will not be until
-Tuesday (my time).  So you have time to retest after the rebase.
+> The patch is indeed based on that commit. The reason behind it is that the
+> values for *head are being wrapped in the driver side (see the macro
+> PERF_IDX2OFF which is used at various points in
+> /drivers/perf/arm_spe_pmu.c).
 
---=20
-Cheers,
-Stephen Rothwell
+Yes, I noted that Arm SPE driver doesn't use monotonical increasing
+for AUX head.
 
---Sig_/+sbm5rWV9n_aJg+5hEB3VwJ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> If this callback is not to be added, I believe the driver needs to be
+> updated > first so that the head pointer monotonically increases like in cs-etm. Do
+> you think this makes sense for SPE?
 
------BEGIN PGP SIGNATURE-----
+Please note, there have two cases should be handled for snapshot mode:
+- Wrap-around case, somehow function __auxtrace_mmap__read() has
+  handled this case, see [1];
+- It's possible that there have overrun case for snapshot mode, e.g.
+  the kernel space receives multiple signals and take snapshot to save
+  Arm SPE trace data into AUX buffer for multiple times, but the
+  userspace tool cannot catch up to save AUX data into perf.data file.
+  Thus the AUX head might be wrapped around for multiple times, for
+  this case, I think monotonically increasing AUX head is the right
+  solution to handle overrun issue.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmFY7rkACgkQAVBC80lX
-0GxF9gf+KAnaxw0eisqqSqcepbYMcwRtN4jFLkus8fDpuO17V4jnFQLsw22GkxaP
-Mcrbu2fgU/PVCWgxn/3uRSlJnjb0jaZ44zVym1DBof8qIiX5YIiDjaTobS7r16L+
-Bbiaury6Fe2RTDRqsxgiMtSJ4+DzQXNyRqNocCsMSElLwDjs3YARuFBS+dh/enDA
-uqX2MA+FH2Ijb75pqd/ui1ydpehNWtgvCKFltoaVTKEV2NP7ex2617WmSifleQOy
-xnWdwCU3UH8FA05x0q6B1o9TgpqHSjDeuq5A8AlM/s2Efh9rAU3lh4JTkKC69XLo
-+B2Tj8og5FXwIiw40Ua9fIxIZ0uJ5w==
-=4tcx
------END PGP SIGNATURE-----
+So simply say, I think the head pointer monotonically increasing is
+the right thing to do in Arm SPE driver.
 
---Sig_/+sbm5rWV9n_aJg+5hEB3VwJ--
+> (note that the patch will skip the wrap-around detection if this is the
+> case,
+> in order to handle both cases in the userspace perf tool).
+
+Almost agree, I read multiple times but have no idea what's the
+"both cases" in the last sentence.
+
+Please let me know if anything is not clear.
+
+Thanks,
+Leo
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/util/auxtrace.c#n1804
