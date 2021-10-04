@@ -2,225 +2,160 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DC6C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Oct 2021 18:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E46D4C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Oct 2021 21:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 243E06139F
-	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Oct 2021 18:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7FC061002
+	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Oct 2021 21:41:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238014AbhJDSWF (ORCPT
+        id S236549AbhJDVnZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 4 Oct 2021 14:22:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48816 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232577AbhJDSWF (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 4 Oct 2021 14:22:05 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5292C061745
-        for <linux-perf-users@vger.kernel.org>; Mon,  4 Oct 2021 11:20:15 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id kk10so2891815pjb.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 04 Oct 2021 11:20:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20210112.gappssmtp.com; s=20210112;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pEjTxCQKuPkdzyQQSESkdNKEWA1LvyzgE120tyKjY/k=;
-        b=rGnHyMlngVZkVwcemVB84QoJgkH1XLR0Hg7szuZRrfBs+vpJHEce6HZlQJyes1QbVm
-         SbpROkR94JhvXXXC5WkOwInC9p0RM1G5uqrOOUv2b9BVFzJo16pY2Bd/+UJFUEpH+gMm
-         hZfXJdrboGH78IJt6C83lbLsW71NNip/Op9Rcr2O1vMhYiFYF4oxzQVGHxYNd6Vd3Wcg
-         817+jvBFq+t5osSy8FUpDwF8Rt4paPtwvELMG6/seyy/AsVlXzD0QUshhKcKVgpuM3b1
-         EM9MLqKWPIQA8hZ6vVSDG3YG3ZAOq6OHjrZ2xU7jufjBDvNJjlH70KxyuJT6nd2+5ZwM
-         0ajQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=pEjTxCQKuPkdzyQQSESkdNKEWA1LvyzgE120tyKjY/k=;
-        b=j1q8xAcQiUiorF+9Jt3S2rkvHdmHmgZzFFiJs+XfUrbNXz6dZEX4/vMYsTypY2AgH1
-         HP+7uqbq0+zNamLirIoyz7lAL2W/ODRGxAc/MCATvnMpUNfYZMeKva8+y+G8WkndVP69
-         eBsvTpByNBWwAuBNr77B4RIFw0Mi3K+sYbJQspAHiKV/QEk2Wj4ihycrQV6TFCrTv0Nj
-         HfQc0B+Am/ArxZYnEbPHtL5qD7CjjHqglvE5mU1glkzolQeF1k1Kw4yK8Rlm25ZeIrqb
-         xAk7mVaU3pnuE+R/Zcznnyc5tTC7M/LUvUnHZSiRXyqOmK2p7zD8oMGVMQnErtWnQwk6
-         Xr9Q==
-X-Gm-Message-State: AOAM532mJ+h7YTMQGFlNtlrzluVOMoZ+eIuIQbl2t8q0YHz3I5qtDXkc
-        2wj+1NENgf+9zSxuFg4RY4WxZg==
-X-Google-Smtp-Source: ABdhPJzK5iZkh9VfvvOe8LwLx7+UekY7XK1kf6LgOA8CSZG1sCV/38BCb5MgWXDwf85wkTC4ZS3fHA==
-X-Received: by 2002:a17:90a:5d11:: with SMTP id s17mr22510232pji.230.1633371614886;
-        Mon, 04 Oct 2021 11:20:14 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id x13sm699826pgt.80.2021.10.04.11.20.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Oct 2021 11:20:14 -0700 (PDT)
-Date:   Mon, 04 Oct 2021 11:20:14 -0700 (PDT)
-X-Google-Original-Date: Mon, 04 Oct 2021 11:20:12 PDT (-0700)
-Subject:     Re: [v3 00/10] Improve RISC-V Perf support using SBI PMU and sscofpmf extension
-In-Reply-To: <20210910192757.2309100-1-atish.patra@wdc.com>
-CC:     linux-kernel@vger.kernel.org, Atish Patra <Atish.Patra@wdc.com>,
-        alexander.shishkin@linux.intel.com,
-        Anup Patel <Anup.Patel@wdc.com>, ardb@kernel.org,
-        djwong@kernel.org, devicetree@vger.kernel.org,
-        guoren@linux.alibaba.com, xypron.glpk@gmx.de, jolsa@redhat.com,
-        john.garry@huawei.com, corbet@lwn.net, linux-doc@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-        mick@ics.forth.gr, Paul Walmsley <paul.walmsley@sifive.com>,
-        robh+dt@kernel.org, vincent.chen@sifive.com
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     Atish Patra <Atish.Patra@wdc.com>
-Message-ID: <mhng-62d18ad4-0547-42bb-87a0-5e96e5354650@palmerdabbelt-glaptop>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 4 Oct 2021 17:43:25 -0400
+Received: from mail-mw2nam10on2059.outbound.protection.outlook.com ([40.107.94.59]:6849
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S235167AbhJDVnY (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 4 Oct 2021 17:43:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IDcwBnyThZRZZ6JLP4w1RB2Q0InLHTEZ490jieRlwab9tAs/BFaExUo1ytmayCpAegwqLxBzQl23+AOYxM9JRO1Ue/lxC9RJsnmzBDNcSVrIytbPKwhSRqbFjZw6KdoOhYPowXu1g6mhitatywQNNgbGFj0WqY2GEsNOZNYxFokvViiYEucnrkZ4KgKecKynNDWq0C7CjM3yjkiyXXGj/rkpIx6gif1uZ/3GauyXc7Ft2gl/Mmkqmi5GFrXD5u26aR3iW3Ft+x4l1lKsMdEPJ5wj1/QP9l/kUWBI2lN4TPwiavmmpGiqs+TCqJ0jLE8v5nU/EXcQjwr4R0V6P7JKEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oq3vX9GviMwQJK9SKASuDT3FB77Zbebjg6N4hUsZBuo=;
+ b=FyomedHlUz9qBeuPc+bed3L95sxD7BisnKobRtZ/dYxErfRAJzznjB4Nyyi49uQ/DQPHFepFXYAFjEnQVy7Dwrx+Q4LoEE8Yuo/uJ7Bs8vvdSxb35R8ffi0JuDn/wMu083Am/mvT2scNfWaH1rlD3yyQvz3t0QLpeWGabaJhhjEORac4WALXzJi1lLwg2R58K0WajNKufJryzxXiXEgA7YWGIByp1vZYZXTYhiuXfYei3fjxu8Yfai/2TEyfmLle5sLiKzHIb/KUkHpy9jEhLBlayiuvaaRkR67rUWicznksuMz/GSTOlBPZu3Rs+s3PSKdys2mRJdhElHR/kpCi9g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oq3vX9GviMwQJK9SKASuDT3FB77Zbebjg6N4hUsZBuo=;
+ b=0Q6FBkdYYxLnZHkRYtpNeNFxOMPavKSdopnYFkXHxcBDQNMdsOmY1aBS5R8t35GgwrHRLZi0aCtgSnqhW/zZGUWZe8QlTjtfqhhs8HU8FvW7KX85aunf7ddkI5TvnG4SBh+11d6qg3EzbQ3K5o+7BsT+73iE7Fra/r9iXvluQYM=
+Authentication-Results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=amd.com;
+Received: from BN8PR12MB3505.namprd12.prod.outlook.com (2603:10b6:408:69::17)
+ by BN7PR12MB2772.namprd12.prod.outlook.com (2603:10b6:408:26::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.22; Mon, 4 Oct
+ 2021 21:41:32 +0000
+Received: from BN8PR12MB3505.namprd12.prod.outlook.com
+ ([fe80::704c:60ed:36f:4e4c]) by BN8PR12MB3505.namprd12.prod.outlook.com
+ ([fe80::704c:60ed:36f:4e4c%7]) with mapi id 15.20.4566.022; Mon, 4 Oct 2021
+ 21:41:32 +0000
+From:   Kim Phillips <kim.phillips@amd.com>
+To:     Arnaldo Carvalho de Melo <acme@redhat.com>, kim.phillips@amd.com
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Ian Rogers <irogers@google.com>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
+        Joao Martins <joao.m.martins@oracle.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Robert Richter <robert.richter@amd.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: [PATCH 1/2] perf evsel: Make evsel__env always return a valid env
+Date:   Mon,  4 Oct 2021 16:41:13 -0500
+Message-Id: <20211004214114.188477-1-kim.phillips@amd.com>
+X-Mailer: git-send-email 2.31.1
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SA9PR13CA0100.namprd13.prod.outlook.com
+ (2603:10b6:806:24::15) To BN8PR12MB3505.namprd12.prod.outlook.com
+ (2603:10b6:408:69::17)
+MIME-Version: 1.0
+Received: from fritz.amd.com (165.204.77.1) by SA9PR13CA0100.namprd13.prod.outlook.com (2603:10b6:806:24::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4587.7 via Frontend Transport; Mon, 4 Oct 2021 21:41:31 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ab9b4e2f-765b-4bf8-a0d7-08d9877fbb51
+X-MS-TrafficTypeDiagnostic: BN7PR12MB2772:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN7PR12MB2772DE5B9748FD10172AAAF487AE9@BN7PR12MB2772.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: eG+p48r2SBk3dS3oUtIm/nR+3nU3sNASh2+80XAAAc2zK/BsXExfbPNX6AODtYnS5lAdxZhvkhrEJhBvlc0J63tG8SEOWX14c/kW3QFOBwIcMHa62aN2xI0cOH1hCthRAFrBeX4aS2pWtV6vvuSFi5QUkVEzg9oGrUCy6jEIYir9O87OQ8HyPmaY5HQ6hrQ9UwvFfJuXOD5kIOUCtn6otIwe/tHitxT4L9MY/Eo3msqf93A7SjD3yw3SJOa8I9VQJxSOaN4Q7gX8fwB+xLYGouMECubf9BH175+/q3TMD/SXye1dgvrs7k9CCF9tBkd+9d4GrUkka8M/8hNHUjXYQFFSQWvwwNGvgn6fsO/dKSBab+Yk9hWyJeeYX11BOFPpjQt3cqX2KzqVqoHJk0m0iVGdy0AhI08noLwg6YbvcNGftz46XfMcc2IY1OIGGqXmtQCo6w3uH9kffatZvTsKMDI/o552MQFe4uTXyHaR86P90XzA29qRFWl3nzl5R0D7gCAAIjUxFgg5x06mQgeK6peda3vzVkPTm9c++dGB2sLdmy5adzsJZDS1MkquB24LD74t0va/5/LX4XZ0sNgcZLnL651LE8Ghw6gQX1xMhZAhI7LgmZMF/SbZuSFFqkeFGgnsFFB2gnrppWXK+IQLeR/lECGzkMNMCG8TRNrsSL9alM6FuyRwEQ0gaTt46wSUphC6mKFA/GVIqXx0yVMw7gbjCuSgloIklscVG8IK/feiKDbsvvD/bBzMRffYJkA+
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3505.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(8936002)(8676002)(44832011)(86362001)(52116002)(26005)(66946007)(66476007)(66556008)(508600001)(7696005)(7416002)(6486002)(38100700002)(316002)(6666004)(1076003)(5660300002)(956004)(2616005)(38350700002)(83380400001)(36756003)(4326008)(2906002)(54906003)(186003)(101420200003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?B0fVePb4QjEtrvhSobzWyD7oltC3M+unyX0dpBI1jFdnooa1BT1DwYS8fsuU?=
+ =?us-ascii?Q?f0x6hMBzrJa4MxRWz7mU4Sns8ohBf+oYTzbun03F1aafsk3sLMwtFvzxG1Kz?=
+ =?us-ascii?Q?6SB3mQHtCXnqRbZRierGG0eCTgIY+feMwQ/FBDi0A1xbMq6Lzn76I3+GNReE?=
+ =?us-ascii?Q?JzH54Yu9/PmXMRUBFpXN3UCWNjBkNJhimsbAuOtEpK5/wRywMfb2Lg/Zsn1H?=
+ =?us-ascii?Q?prGCS/UTvgwToyztJAgKKGAdhyrOt85plLhQohUF5Us65e8HDDi11Ks1KJWt?=
+ =?us-ascii?Q?LoXC97mD3rOKe2cx1OtQSsVh2PeL+3iCS9s+IzuXMmXNl7tyu06Mo1U2STRq?=
+ =?us-ascii?Q?ylpbF3V3rscls5ET8u3Ax0Q3nWB9+XlCKE4OmnseXJcrtpzEp5w+zzA39sbB?=
+ =?us-ascii?Q?sii/UtUPebdhfJ3YfXa4u6AMuQsDbhQb55AN1BTwlwyZfZZPIRdo275HAe2b?=
+ =?us-ascii?Q?ys0iBVo4KOi4kvNZ5F6YTzjXIO6CCb1pRfuJaHesGwjhvoUEw4iwUzby++Gx?=
+ =?us-ascii?Q?DPjsnNycwe0Hz4QVseVqgI3gBT0RlYR4hkQPTkv1XAwvAc+K/mXlHLdE2INk?=
+ =?us-ascii?Q?BCu+ApDaGREE4zC31OwXl1TK31w1KaN5inf0Hhj3FwAzVTga+fk0GR7vYouQ?=
+ =?us-ascii?Q?PlPw6+yrxpeWwWQkUxw4QXo8IW5WnmpBOt335T/aHHd2+IQ5QIBVgg+kteEP?=
+ =?us-ascii?Q?pYKX3vMIST6CGTFOll9x08Lm/C4Tv2kzhkaIr5Dp0s72HYZ5PkPQFEaZPcfm?=
+ =?us-ascii?Q?KYdDFAXDgzbLV0V9FBAZRu9jD0pycB9XUL97xMijT/oenBp7fweybNarxBn3?=
+ =?us-ascii?Q?MThN7vACOugnxjiHI/xgRacmkt8BlYnzL59X0SMDKJ4D8XlHygBwx/BUJDHt?=
+ =?us-ascii?Q?AyV1GsZ9gmEd6KKAPNZPsW1lnjEwxVbOSRYbIodCeuyFtz6PO0KVszeuvOQM?=
+ =?us-ascii?Q?aEMAJjna3ShN91DPq/xb7PS5qTyCKxVBFpuJFmpWclB5olNOIjQTtLWkQww8?=
+ =?us-ascii?Q?cZg6ty45wniT7bgfCcDThKlBEJT4PeNbb7vGJvx1vkZpjbuHakQEQYjLV3qW?=
+ =?us-ascii?Q?4QTrT+TjWGf3hBhd69f3vf/B1vkl3d5A1K4bXvOAxUf44QRrw+MjhhOviy5i?=
+ =?us-ascii?Q?wY2CsEFcokWyaBfR93Ehac6G2OoyJR+taEr1OzsoXutSFtvSdXv8uybgx+eH?=
+ =?us-ascii?Q?6l99+Cpa7Usq6YYT3cqxGqkyXIjDv8Ef2KzB/fkUG7WtlqkGYsXyP+YU+VC/?=
+ =?us-ascii?Q?VxpHdtBMAu2/FxhWJt7SRHJTW0/VG2Nnmdx697Xq4mePPhPNWClgHNg8GaM3?=
+ =?us-ascii?Q?QsEwx9omnbkPVAeSBqZrQTeO?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ab9b4e2f-765b-4bf8-a0d7-08d9877fbb51
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3505.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Oct 2021 21:41:32.4060
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YiwXplgao2OPtSkWHmJT+Wnj5N7VLAAz9jVz4ZNIILZbWHqyG7Q/3nlr+kC3F0c06Jdxua6YVm5raRFLDWgWog==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR12MB2772
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, 10 Sep 2021 12:27:47 PDT (-0700), Atish Patra wrote:
-> This series adds improved perf support for RISC-V based system using
-> SBI PMU extension[1] and Sscofpmf extension[2]. The SBI PMU extension allows
+It's possible to have an evsel and evsel->evlist populated without
+an evsel->evlist->env, when, e.g., cmd_record is in its error path.
 
-Last we talked the SBI-0.3 stuff was in an uncertain state and I'm not 
-sure we ever got to a point of agreement there.  I've decided to just 
-stop worrying about the state of extensions, so if you guys want the 
-SBI-0.3 stuff merged then just go say it's frozen and that'll be good 
-enough for me.
+Future patches will add support for evsel__open_strerror to be able
+to customize error messaging based on perf_env__{arch,cpuid}, so
+let's have evsel__env return &perf_env instead of NULL in that case.
 
-> the kernel to program the counters for different events and start/stop counters
-> while the sscofpmf extension allows the counter overflow interrupt and privilege
-> mode filtering. An hardware platform can leverage SBI PMU extension without
-> the sscofpmf extension if it supports mcountinhibit and mcounteren. However,
-> the reverse is not true. With both of these extension enabled, a platform can
-> take advantage of all both event counting and sampling using perf tool.
->
-> This series introduces a platform perf driver instead of a existing arch
-> specific implementation. The new perf implementation has adopted a modular
-> approach where most of the generic event handling is done in the core library
-> while individual PMUs need to only implement necessary features specific to
-> the PMU. This is easily extensible and any future RISC-V PMU implementation
-> can leverage this. Currently, SBI PMU driver & legacy PMU driver are implemented
-> as a part of this series.
->
-> The legacy driver tries to reimplement the existing minimal perf under a new
-> config to maintain backward compatibility. This implementation only allows
-> monitoring of always running cycle/instruction counters. Moreover, they can
-> not be started or stopped. In general, this is very limited and not very useful.
-> That's why, I am not very keen to carry the support into the new driver.
-> However, I don't want to break perf for any existing hardware platforms.
-> If nobody really uses perf currently, I will be happy to drop PATCH 4.
->
-> This series has been tested in Qemu on both RV64 & RV32. Qemu[5] & OpenSBI [3]
-> patches are required to test it. Qemu changes are not backward compatible.
-> That means, you can not use perf anymore on older Qemu versions with latest
-> OpenSBI and/or Kernel. However, newer kernel will just use legacy pmu driver if
-> old OpenSBI is detected or hardware doesn't implement mcountinhibit.
->
-> Here is an output of perf stat/report while running hackbench with OpenSBI & Linux
-> kernel patches applied [3].
->
-> Perf stat:
-> =========
->
-> [root@fedora-riscv riscv]# perf stat -e r8000000000000005 -e r8000000000000007
-> -e r8000000000000006 -e r0000000000020002 -e r0000000000020004 -e branch-misses
-> -e cache-misses -e dTLB-load-misses -e dTLB-store-misses -e iTLB-load-misses
-> -e cycles -e instructions ./hackbench -pipe 15 process
-> Running with 15*40 (== 600) tasks.
-> Time: 6.578
->
->  Performance counter stats for './hackbench -pipe 15 process':
->
->              6,491      r8000000000000005      (52.59%) --> SBI_PMU_FW_SET_TIMER
->             20,433      r8000000000000007      (60.74%) --> SBI_PMU_FW_IPI_RECVD
->             21,271      r8000000000000006      (68.71%) --> SBI_PMU_FW_IPI_SENT
->                  0      r0000000000020002      (76.55%)
->      <not counted>      r0000000000020004      (0.00%)
->      <not counted>      branch-misses          (0.00%)
->      <not counted>      cache-misses           (0.00%)
->         57,537,853      dTLB-load-misses       (9.49%)
->          2,821,147      dTLB-store-misses      (18.64%)
->         52,928,130      iTLB-load-misses       (27.53%)
->     89,521,791,110      cycles                 (36.08%)
->     90,678,132,464      instructions #    1.01  insn per cycle (44.44%)
->
->        6.975908032 seconds time elapsed
->
->        3.130950000 seconds user
->       24.353310000 seconds sys
->
-> The patches can also be found in the github[4].
->
-> Perf record:
-> ============
-> [root@fedora-riscv riscv]# perf record -e cycles -e instructions -e \
-> dTLB-load-misses -e dTLB-store-misses -c 1000 ./hackbench -pipe 15 process 15
-> Running with 15*40 (== 600) tasks.
-> Time: 1.238
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.106 MB perf.data (1020 samples) ]
->
-> [root@fedora-riscv riscv]# perf report
-> Available samples
-> 372 cycles                                                                     ◆
-> 372 instructions                                                               ▒
-> 262 dTLB-load-misses                                                           ▒
-> 14 dTLB-store-misses
->
-> The patches can also be found in the github[4].
->
-> [1] https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/riscv-sbi.adoc
-> [2] https://drive.google.com/file/d/171j4jFjIkKdj5LWcExphq4xG_2sihbfd/edit
-> [3] https://github.com/atishp04/opensbi/tree/pmu_sscofpmf
-> [4] https://github.com/atishp04/linux/tree/riscv_pmu_v3
-> [5] https://github.com/atishp04/qemu/tree/riscv_pmu_v2
->
-> Changes from v3->v4:
-> 1. Added interrupt overflow support.
-> 2. Cleaned up legacy driver initialization.
-> 3. Supports perf record now.
-> 4. Added the DT binding and maintainers file.
-> 5. Changed cpu hotplug notifier to be multi-state.
-> 6. OpenSBI doesn't disable cycle/instret counter during boot. Update the
->    perf code to disable all the counter during the boot.
->
-> Changes from v1->v2
-> 1. Implemented the latest SBI PMU extension specification.
-> 2. The core platform driver was changed to operate as a library while only
->    sbi based PMU is built as a driver. The legacy one is just a fallback if
->    SBI PMU extension is not available.
->
-> Atish Patra (10):
-> RISC-V: Remove the current perf implementation
-> RISC-V: Add CSR encodings for all HPMCOUNTERS
-> RISC-V: Add a perf core library for pmu drivers
-> RISC-V: Add a simple platform driver for RISC-V legacy perf
-> RISC-V: Add RISC-V SBI PMU extension definitions
-> dt-binding: pmu: Add RISC-V PMU DT bindings
-> RISC-V: Add perf platform driver based on SBI PMU extension
-> RISC-V: Add interrupt support for perf
-> Documentation: riscv: Remove the old documentation
-> MAINTAINERS: Add entry for RISC-V PMU drivers
->
-> .../devicetree/bindings/perf/riscv,pmu.yaml   |  51 ++
-> Documentation/riscv/pmu.rst                   | 255 ------
-> MAINTAINERS                                   |  10 +
-> arch/riscv/Kconfig                            |  13 -
-> arch/riscv/include/asm/csr.h                  |  66 +-
-> arch/riscv/include/asm/perf_event.h           |  72 --
-> arch/riscv/include/asm/sbi.h                  |  97 +++
-> arch/riscv/kernel/Makefile                    |   1 -
-> arch/riscv/kernel/perf_event.c                | 485 ------------
-> drivers/perf/Kconfig                          |  25 +
-> drivers/perf/Makefile                         |   5 +
-> drivers/perf/riscv_pmu.c                      | 331 ++++++++
-> drivers/perf/riscv_pmu_legacy.c               | 143 ++++
-> drivers/perf/riscv_pmu_sbi.c                  | 731 ++++++++++++++++++
-> include/linux/cpuhotplug.h                    |   1 +
-> include/linux/perf/riscv_pmu.h                |  69 ++
-> 16 files changed, 1528 insertions(+), 827 deletions(-)
-> create mode 100644 Documentation/devicetree/bindings/perf/riscv,pmu.yaml
-> delete mode 100644 Documentation/riscv/pmu.rst
-> delete mode 100644 arch/riscv/kernel/perf_event.c
-> create mode 100644 drivers/perf/riscv_pmu.c
-> create mode 100644 drivers/perf/riscv_pmu_legacy.c
-> create mode 100644 drivers/perf/riscv_pmu_sbi.c
-> create mode 100644 include/linux/perf/riscv_pmu.h
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Joao Martins <joao.m.martins@oracle.com>
+Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Robert Richter <robert.richter@amd.com>
+Cc: Stephane Eranian <eranian@google.com>
+---
+ tools/perf/util/evsel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index dbfeceb2546c..b915840690d4 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2857,7 +2857,7 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
+ 
+ struct perf_env *evsel__env(struct evsel *evsel)
+ {
+-	if (evsel && evsel->evlist)
++	if (evsel && evsel->evlist && evsel->evlist->env)
+ 		return evsel->evlist->env;
+ 	return &perf_env;
+ }
+-- 
+2.31.1
+
