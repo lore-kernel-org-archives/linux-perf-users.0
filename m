@@ -2,25 +2,25 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29650C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Oct 2021 16:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87BB5C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Oct 2021 16:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0700961401
-	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Oct 2021 16:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 655936139F
+	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Oct 2021 16:00:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236167AbhJDQC3 (ORCPT
+        id S236169AbhJDQCf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 4 Oct 2021 12:02:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:55790 "EHLO foss.arm.com"
+        Mon, 4 Oct 2021 12:02:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:55844 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234939AbhJDQC1 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 4 Oct 2021 12:02:27 -0400
+        id S236195AbhJDQCe (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 4 Oct 2021 12:02:34 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D13A4D6E;
-        Mon,  4 Oct 2021 09:00:37 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E6FB6113E;
+        Mon,  4 Oct 2021 09:00:44 -0700 (PDT)
 Received: from ubuntu-18-04-aarch64-spe-2.warwick.arm.com (ubuntu-18-04-aarch64-spe-2.warwick.arm.com [10.32.33.30])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 07D153F70D;
-        Mon,  4 Oct 2021 09:00:35 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 148113F70D;
+        Mon,  4 Oct 2021 09:00:42 -0700 (PDT)
 From:   Andrew Kilroy <andrew.kilroy@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         acme@kernel.org
@@ -34,9 +34,9 @@ Cc:     Andrew Kilroy <andrew.kilroy@arm.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 2/4] perf vendor events: Add new armv8 pmu events
-Date:   Mon,  4 Oct 2021 17:00:05 +0100
-Message-Id: <20211004160008.21645-2-andrew.kilroy@arm.com>
+Subject: [PATCH 4/4] perf vendor events: Add the Neoverse V1 to arm64 mapfile
+Date:   Mon,  4 Oct 2021 17:00:07 +0100
+Message-Id: <20211004160008.21645-4-andrew.kilroy@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20211004160008.21645-1-andrew.kilroy@arm.com>
 References: <20211004160008.21645-1-andrew.kilroy@arm.com>
@@ -44,100 +44,26 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add new armv8 common events for use by Arm Neoverse V1 cores in a later
-commit. These are defined in the ArmV8 architecture reference manual
-available from
-
-  https://developer.arm.com/documentation/ddi0487/gb/?lang=en
+This is so that performance counters for the Neoverse V1 appear
+categorised upon running 'perf list' on the CPU.
 
 Signed-off-by: Andrew Kilroy <andrew.kilroy@arm.com>
 ---
- .../arm64/armv8-common-and-microarch.json     | 72 +++++++++++++++++++
- 1 file changed, 72 insertions(+)
+ tools/perf/pmu-events/arch/arm64/mapfile.csv | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/pmu-events/arch/arm64/armv8-common-and-microarch.json b/tools/perf/pmu-events/arch/arm64/armv8-common-and-microarch.json
-index 913fb200ea52..423767510aff 100644
---- a/tools/perf/pmu-events/arch/arm64/armv8-common-and-microarch.json
-+++ b/tools/perf/pmu-events/arch/arm64/armv8-common-and-microarch.json
-@@ -257,6 +257,78 @@
-         "EventName": "LL_CACHE_MISS_RD",
-         "BriefDescription": "Last level cache miss, read"
-     },
-+    {
-+        "PublicDescription": "Level 1 data cache long-latency read miss.  The counter counts each memory read access counted by L1D_CACHE that incurs additional latency because it returns data from outside the Level 1 data or unified cache of this processing element.",
-+        "EventCode": "0x39",
-+        "EventName": "L1D_CACHE_LMISS_RD",
-+        "BriefDescription": "Level 1 data cache long-latency read miss"
-+    },
-+    {
-+        "PublicDescription": "Micro-operation architecturally executed.  The counter counts each operation counted by OP_SPEC that would be executed in a simple sequential execution of the program.",
-+        "EventCode": "0x3A",
-+        "EventName": "OP_RETIRED",
-+        "BriefDescription": "Micro-operation architecturally executed"
-+    },
-+    {
-+        "PublicDescription": "Micro-operation speculatively executed.  The counter counts the number of operations executed by the processing element, including those that are executed speculatively and would not be executed in a simple sequential execution of the program.",
-+        "EventCode": "0x3B",
-+        "EventName": "OP_SPEC",
-+        "BriefDescription": "Micro-operation speculatively executed"
-+    },
-+    {
-+        "PublicDescription": "No operation sent for execution.  The counter counts every attributable cycle on which no attributable instruction or operation was sent for execution on this processing element.",
-+        "EventCode": "0x3C",
-+        "EventName": "STALL",
-+        "BriefDescription": "No operation sent for execution"
-+    },
-+    {
-+        "PublicDescription": "No operation sent for execution on a slot due to the backend.  Counts each slot counted by STALL_SLOT where no attributable instruction or operation was sent for execution because the backend is unable to accept it.",
-+        "EventCode": "0x3D",
-+        "EventName": "STALL_SLOT_BACKEND",
-+        "BriefDescription": "No operation sent for execution on a slot due to the backend"
-+    },
-+    {
-+        "PublicDescription": "No operation sent for execution on a slot due to the frontend.  Counts each slot counted by STALL_SLOT where no attributable instruction or operation was sent for execution because there was no attributable instruction or operation available to issue from the processing element from the frontend for the slot.",
-+        "EventCode": "0x3E",
-+        "EventName": "STALL_SLOT_FRONTEND",
-+        "BriefDescription": "No operation sent for execution on a slot due to the frontend"
-+    },
-+    {
-+        "PublicDescription": "No operation sent for execution on a slot.  The counter counts on each attributable cycle the number of instruction or operation slots that were not occupied by an instruction or operation attributable to the processing element.",
-+        "EventCode": "0x3F",
-+        "EventName": "STALL_SLOT",
-+        "BriefDescription": "No operation sent for execution on a slot"
-+    },
-+    {
-+        "PublicDescription": "Constant frequency cycles.  The counter increments at a constant frequency equal to the rate of increment of the system counter, CNTPCT_EL0.",
-+        "EventCode": "0x4004",
-+        "EventName": "CNT_CYCLES",
-+        "BriefDescription": "Constant frequency cycles"
-+    },
-+    {
-+        "PublicDescription": "Memory stall cycles.  The counter counts each cycle counted by STALL_BACKEND where there is a cache miss in the last level of cache within the processing element clock domain",
-+        "EventCode": "0x4005",
-+        "EventName": "STALL_BACKEND_MEM",
-+        "BriefDescription": "Memory stall cycles"
-+    },
-+    {
-+        "PublicDescription": "Level 1 instruction cache long-latency read miss.  If the L1I_CACHE_RD event is implemented, the counter counts each access counted by L1I_CACHE_RD that incurs additional latency because it returns instructions from outside of the Level 1 instruction cache of this PE.  If the L1I_CACHE_RD event is not implemented, the counter counts each access counted by L1I_CACHE that incurs additional latency because it returns instructions from outside the Level 1 instruction cache of this PE.  The event indicates to software that the access missed in the Level 1 instruction cache and might have a significant performance impact due to the additional latency, compared to the latency of an access that hits in the Level 1 instruction cache.",
-+        "EventCode": "0x4006",
-+        "EventName": "L1I_CACHE_LMISS",
-+        "BriefDescription": "Level 1 instruction cache long-latency read miss"
-+    },
-+    {
-+        "PublicDescription": "Level 2 data cache long-latency read miss.  The counter counts each memory read access counted by L2D_CACHE that incurs additional latency because it returns data from outside the Level 2 data or unified cache of this processing element.  The event indicates to software that the access missed in the Level 2 data or unified cache and might have a significant performance impact compared to the latency of an access that hits in the Level 2 data or unified cache.",
-+        "EventCode": "0x4009",
-+        "EventName": "L2D_CACHE_LMISS_RD",
-+        "BriefDescription": "Level 2 data cache long-latency read miss"
-+    },
-+    {
-+        "PublicDescription": "Level 3 data cache long-latency read miss.  The counter counts each memory read access counted by L3D_CACHE that incurs additional latency because it returns data from outside the Level 3 data or unified cache of this processing element.  The event indicates to software that the access missed in the Level 3 data or unified cache and might have a significant performance impact compared to the latency of an access that hits in the Level 3 data or unified cache.",
-+        "EventCode": "0x400B",
-+        "EventName": "L3D_CACHE_LMISS_RD",
-+        "BriefDescription": "Level 3 data cache long-latency read miss"
-+    },
-     {
-         "PublicDescription": "SIMD Instruction architecturally executed.",
-         "EventCode": "0x8000",
+diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+index c43591d831b8..31d8b57ca9bb 100644
+--- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
++++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+@@ -18,6 +18,7 @@
+ 0x00000000410fd080,v1,arm/cortex-a57-a72,core
+ 0x00000000410fd0b0,v1,arm/cortex-a76-n1,core
+ 0x00000000410fd0c0,v1,arm/cortex-a76-n1,core
++0x00000000410fd400,v1,arm/neoverse-v1,core
+ 0x00000000420f5160,v1,cavium/thunderx2,core
+ 0x00000000430f0af0,v1,cavium/thunderx2,core
+ 0x00000000460f0010,v1,fujitsu/a64fx,core
 -- 
 2.17.1
 
