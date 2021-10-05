@@ -2,154 +2,95 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3312C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Oct 2021 16:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B1BC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Oct 2021 17:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D220261381
-	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Oct 2021 16:36:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCF2F60FD8
+	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Oct 2021 17:58:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234691AbhJEQiW (ORCPT
+        id S229796AbhJESAP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 5 Oct 2021 12:38:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39260 "EHLO mail.kernel.org"
+        Tue, 5 Oct 2021 14:00:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233896AbhJEQiW (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 5 Oct 2021 12:38:22 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4213961501;
-        Tue,  5 Oct 2021 16:36:31 +0000 (UTC)
+        id S229626AbhJESAO (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 5 Oct 2021 14:00:14 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id ECBF560F38;
+        Tue,  5 Oct 2021 17:58:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633451791;
-        bh=TE1byajMD4BEXyGVyWtNuptLh2myMAefZKocS/zdfIw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=g4ehtVhCpXI/h0RcaVu7/cmGWYbaHpAuz4q0prTAJg+q8HEnovvV2EKJNNs1dgUdw
-         fe7/KOJYfcOc4Qmv1KAMvS9cPfrD6KCQFW/bZRIyr4NiwpCa8Zm1QhcIpzR1Sw/pB+
-         01WkZQinTAkqj3rWOWI0O8jJTWkBePImbHJ6kQnxoDqPpvwfTKfygrliV68HD6os2C
-         PNlCGgYqozgP8PCU59i9ocbqaHlwFE22+fFb+mKgMqqoiNsQsCiYpULRe2Cs9eemB9
-         eAubFYgjPmAOPJBbf1AoAoz1B/m1T2FzfoejA8JPcnpBfO/83nE+c+WypdDXYj1M5q
-         OSgWPcbkYFe2w==
-Received: by mail-ed1-f45.google.com with SMTP id z1so1093478edb.8;
-        Tue, 05 Oct 2021 09:36:31 -0700 (PDT)
-X-Gm-Message-State: AOAM5300hjr+xHOKnsVtYs9QW/8dX4e9WbVmx6G4c83sfNLpi8peP5Y9
-        0m5tcFCZkr9i5av330/jLTGYIS/E8A4+NGwZSw==
-X-Google-Smtp-Source: ABdhPJzR0I+KymQcG3+ZDCX9WpcmJx2FX408lmStJiMaHFdL3t7vpRPyZ2jofy8Uel4WNW674wFpAqqn2UKbbV76JXM=
-X-Received: by 2002:a50:a402:: with SMTP id u2mr6088428edb.164.1633451789787;
- Tue, 05 Oct 2021 09:36:29 -0700 (PDT)
+        s=k20201202; t=1633456704;
+        bh=fGEQ/Kh6I+hpl2vaInO9ive8KNBkj7H+QlaS2vgQWPg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lfuUWu2adxlvevelEwEloBqVcapbe/s/56NvMxmycuIlkxafkigYvnTTK2Su0V/G0
+         fa7x20DnYpSBV7ZNu8wv84fC5sMUBRkwo+ZbprilphJwccj8Cf9RQkTnCvtxDaTy/J
+         gOV3AcZA/+W6aCY1LeW3nkt+dg+28MkSTyQr7uUk7tosvVEQfxuA9WDEmL6pom6MgI
+         IFsVKnec/CejMGWZm802zvBktm4h6A/sbNrKqSXcMJVbJGFphg0e6nK7TQaiXwmdII
+         h13ppKMJ7WD4Tl1M16OCUBQFaIDOHBsqRXFpwV1GylUkjDKgc5jAWWiaV26xPQD+dM
+         8Y7vhYDWi7n8Q==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 962B6410A1; Tue,  5 Oct 2021 14:58:21 -0300 (-03)
+Date:   Tue, 5 Oct 2021 14:58:21 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     John Garry <john.garry@huawei.com>
+Cc:     Andrew Kilroy <andrew.kilroy@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 4/4] perf vendor events: Add the Neoverse V1 to arm64
+ mapfile
+Message-ID: <YVySPe1LRz4bGZFy@kernel.org>
+References: <20211004160008.21645-1-andrew.kilroy@arm.com>
+ <20211004160008.21645-4-andrew.kilroy@arm.com>
+ <424d066b-30d5-4512-bd8c-15b700af2864@huawei.com>
 MIME-Version: 1.0
-References: <20210922101627.3396398-1-nakamura.shun@fujitsu.com>
- <20210922101627.3396398-2-nakamura.shun@fujitsu.com> <YUuhe7e0J0PSea+b@krava> <OSBPR01MB4600A329F99490D206990EC0F7A89@OSBPR01MB4600.jpnprd01.prod.outlook.com>
-In-Reply-To: <OSBPR01MB4600A329F99490D206990EC0F7A89@OSBPR01MB4600.jpnprd01.prod.outlook.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 5 Oct 2021 11:36:18 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLrHLmEM06mxJ8V304VTmKHYU8Pca5h=jMJQe1beoXbDw@mail.gmail.com>
-Message-ID: <CAL_JsqLrHLmEM06mxJ8V304VTmKHYU8Pca5h=jMJQe1beoXbDw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] libperf: Add processing to scale the counters
- obtained during the read() system call when multiplexing
-To:     "nakamura.shun@fujitsu.com" <nakamura.shun@fujitsu.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "irogers@google.com" <irogers@google.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <424d066b-30d5-4512-bd8c-15b700af2864@huawei.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Sep 28, 2021 at 7:41 AM nakamura.shun@fujitsu.com
-<nakamura.shun@fujitsu.com> wrote:
->
-> Hi Jirka
->
-> > On Wed, Sep 22, 2021 at 07:16:26PM +0900, Shunsuke Nakamura wrote:
-> > > From: nakamura shunsuke <nakamura.shun@fujitsu.com>
-> > >
-> > > perf_evsel__read() scales counters obtained by RDPMC during multiplexing, but
-> > > does not scale counters obtained by read() system call.
-> > >
-> > > Add processing to perf_evsel__read() to scale the counters obtained during the
-> > > read() system call when multiplexing.
-> > >
-> > >
-> > > Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
-> > > ---
-> > >  tools/lib/perf/evsel.c | 6 ++++++
-> > >  1 file changed, 6 insertions(+)
-> > >
-> > > diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-> > > index 8441e3e1aaac..0ebd1d34436f 100644
-> > > --- a/tools/lib/perf/evsel.c
-> > +++ b/tools/lib/perf/evsel.c
-> > > @@ -18,6 +18,7 @@
-> > >  #include <sys/ioctl.h>
-> > >  #include <sys/mman.h>
-> > >  #include <asm/bug.h>
-> > > +#include <linux/math64.h>
-> > >
-> > >  void perf_evsel__init(struct perf_evsel *evsel, struct perf_event_attr *attr,
-> > >                      int idx)
-> > > @@ -321,6 +322,11 @@ int perf_evsel__read(struct perf_evsel *evsel, int cpu, int thread,
-> > >        if (readn(*fd, count->values, size) <= 0)
-> > >                return -errno;
-> > >
-> > > +     if (count->ena != count->run) {
-> > > +             if (count->run != 0)
-> > > +                     count->val = mul_u64_u64_div64(count->val, count->ena, count->run);
-> > > +     }
-> >
-> > so I think perf stat expect raw values in there and does the
-> > scaling by itself, please check following code:
-> >
-> > read_counters
-> >   read_affinity_counters
-> >     read_counter_cpu
-> >       read_single_counter
-> >         evsel__read_counter
-> >
-> >   perf_stat_process_counter
-> >     process_counter_maps
-> >       process_counter_values
-> >         perf_counts_values__scale
-> >
-> >
-> > perhaps we could export perf_counts_values__scale if it'd be any help
->
-> Thank you for your comment.
->
-> The purpose of this patch is to unify the counters obtained with
-> perf_evsel__read() to scaled or unscaled values.
->
-> perf_evsel__read() gets counter by perf_mmap__read_self() if RDPMC is
-> available, else gets by readn(). In current implementation, caller
-> gets scaled counter if goes through RDPMC path, otherwise gets unscaled
-> counter via readn() path.
->
-> However caller cannnot know which path were taken.
->
-> If caller expects a raw value, I think the RDPMC path should also
-> return an unscaled counter.
->
-> diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
-> index c89dfa5..aaa4579 100644
-> --- a/tools/lib/perf/mmap.c
-> +++ b/tools/lib/perf/mmap.c
-> @@ -353,8 +353,6 @@ int perf_mmap__read_self(struct perf_mmap *map, struct perf_counts_values *count
->                 count->ena += delta;
->                 if (idx)
->                         count->run += delta;
-> -
-> -               cnt = mul_u64_u64_div64(cnt, count->ena, count->run);
->         }
->
->         count->val = cnt;
->
-> Rob, do you have any comments?
+Em Tue, Oct 05, 2021 at 10:33:49AM +0100, John Garry escreveu:
+> On 04/10/2021 17:00, Andrew Kilroy wrote:
+> > This is so that performance counters for the Neoverse V1 appear
+> > categorised upon running 'perf list' on the CPU.
+> > 
+> 
+> this really belongs with the previous patch
 
-Submit a proper patch with the above.
+Waiting for a resolution on this one.
 
-Rob
+- Arnaldo
+ 
+> Thanks,
+> John
+> 
+> > Signed-off-by: Andrew Kilroy <andrew.kilroy@arm.com>
+> > ---
+> >   tools/perf/pmu-events/arch/arm64/mapfile.csv | 1 +
+> >   1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+> > index c43591d831b8..31d8b57ca9bb 100644
+> > --- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
+> > +++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+> > @@ -18,6 +18,7 @@
+> >   0x00000000410fd080,v1,arm/cortex-a57-a72,core
+> >   0x00000000410fd0b0,v1,arm/cortex-a76-n1,core
+> >   0x00000000410fd0c0,v1,arm/cortex-a76-n1,core
+> > +0x00000000410fd400,v1,arm/neoverse-v1,core
+> >   0x00000000420f5160,v1,cavium/thunderx2,core
+> >   0x00000000430f0af0,v1,cavium/thunderx2,core
+> >   0x00000000460f0010,v1,fujitsu/a64fx,core
+> > 
+
+-- 
+
+- Arnaldo
