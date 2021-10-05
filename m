@@ -2,172 +2,149 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A76FC433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Oct 2021 09:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C47C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Oct 2021 09:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 817F761526
-	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Oct 2021 09:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7172C6154B
+	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Oct 2021 09:24:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233698AbhJEJWd (ORCPT
+        id S233216AbhJEJ0B (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 5 Oct 2021 05:22:33 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8754 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S233490AbhJEJWa (ORCPT
+        Tue, 5 Oct 2021 05:26:01 -0400
+Received: from forward500o.mail.yandex.net ([37.140.190.195]:59362 "EHLO
+        forward500o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232871AbhJEJ0B (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 5 Oct 2021 05:22:30 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1957aojb010394;
-        Tue, 5 Oct 2021 05:19:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=4enNdl2kR8LMd3UN5l3K5mtS1CQB7Mo+IxOA3PfIPWA=;
- b=M7YPzYEZFSRxu4pLEsYs1DYKjwjRslVZ3PjGOknXW5gfgyP4PAVL2z8A0KnwrncRDyjN
- EIQd10i0TNzInzv1KXx5nq0ts8Xx60I0paiIUo5UBm5K1dbvnrHDemnR98ohdDsMNyAy
- WbUJ5pjqdprwq9Bt5YixWiY+65Wo8Z10y2UtRUDNNRPe8a5pzZkIeG+K0llJItTp62Jd
- erWYYt80oryzR4zjqBSP85ysFoDgdFtHTSuMBPKjdFm4UOXkiVLGU+H6rXHIh6NLxMmR
- BpSQkw9jyDgmHE7vpzw6ZEdM2r/1VhYTNSEntgCJYQ1ujCHfEg7mx5AYv7aborXp1ATR bg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3bghr0k4td-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 Oct 2021 05:19:59 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1958xDGA021006;
-        Tue, 5 Oct 2021 05:19:58 -0400
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3bghr0k4t2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 Oct 2021 05:19:58 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1959DFv8025259;
-        Tue, 5 Oct 2021 09:19:56 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma01fra.de.ibm.com with ESMTP id 3bef29pbb4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 Oct 2021 09:19:56 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1959JpU239387440
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 5 Oct 2021 09:19:51 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5169BA406F;
-        Tue,  5 Oct 2021 09:19:51 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 19EBEA4080;
-        Tue,  5 Oct 2021 09:19:44 +0000 (GMT)
-Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com.com (unknown [9.43.64.84])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  5 Oct 2021 09:19:43 +0000 (GMT)
-From:   Kajol Jain <kjain@linux.ibm.com>
-To:     mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, jolsa@kernel.org,
-        namhyung@kernel.org, ak@linux.intel.com
-Cc:     linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
-        yao.jin@linux.intel.com, ast@kernel.org, daniel@iogearbox.net,
-        songliubraving@fb.com, kan.liang@linux.intel.com,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        paulus@samba.org, kjain@linux.ibm.com
-Subject: [PATCH 4/4] powerpc/perf: Fix data source encodings for L2.1 and L3.1 accesses
-Date:   Tue,  5 Oct 2021 14:48:37 +0530
-Message-Id: <20211005091837.250044-4-kjain@linux.ibm.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20211005091837.250044-1-kjain@linux.ibm.com>
-References: <20211005091837.250044-1-kjain@linux.ibm.com>
+        Tue, 5 Oct 2021 05:26:01 -0400
+X-Greylist: delayed 377 seconds by postgrey-1.27 at vger.kernel.org; Tue, 05 Oct 2021 05:25:59 EDT
+Received: from myt5-6c0659e8c6cb.qloud-c.yandex.net (myt5-6c0659e8c6cb.qloud-c.yandex.net [IPv6:2a02:6b8:c12:271e:0:640:6c06:59e8])
+        by forward500o.mail.yandex.net (Yandex) with ESMTP id A206F941E36;
+        Tue,  5 Oct 2021 12:17:48 +0300 (MSK)
+Received: from myt5-ca5ec8faf378.qloud-c.yandex.net (2a02:6b8:c12:2514:0:640:ca5e:c8fa [2a02:6b8:c12:2514:0:640:ca5e:c8fa])
+        by myt5-6c0659e8c6cb.qloud-c.yandex.net (mxback/Yandex) with ESMTP id IyV6tEzelD-HkDqMhNI;
+        Tue, 05 Oct 2021 12:17:48 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1633425468;
+        bh=CrnGMerQ4LBYjjGbgeqFgGHVtZrQ+QTtn5a0VX0cO1Y=;
+        h=In-Reply-To:Message-ID:Subject:To:From:References:Date:Cc;
+        b=dehZ7uZt+fO6YaaLE03MQykhBGAWbnTmJAz787q5v+kP+tnjCX9x7H9RnogO2XnQp
+         o2LRZpnAlGHdRWJteqIyL14dh5xgLy2vRi3CnyXYsauaUBuFMzC+aXli5//Spgpk63
+         AQfi00eYfDiMTtzwMWrmEkxl0sCLVfek9C7+wa9k=
+Authentication-Results: myt5-6c0659e8c6cb.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
+Received: by myt5-ca5ec8faf378.qloud-c.yandex.net (smtp/Yandex) with ESMTPS id 43frcM9OPL-HjPCRD6R;
+        Tue, 05 Oct 2021 12:17:46 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Date:   Tue, 5 Oct 2021 12:17:44 +0300
+From:   Nikita Shubin <nikita.shubin@maquefel.me>
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Anup Patel <anup.patel@wdc.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Darrick J. Wong" <djwong@kernel.org>, devicetree@vger.kernel.org,
+        Guo Ren <guoren@linux.alibaba.com>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Jiri Olsa <jolsa@redhat.com>,
+        John Garry <john.garry@huawei.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+        Nick Kossifidis <mick@ics.forth.gr>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vincent Chen <vincent.chen@sifive.com>
+Subject: Re: [v3 00/10] Improve RISC-V Perf support using SBI PMU and
+ sscofpmf extension
+Message-ID: <20211005121744.728385be@redslave.neermore.group>
+In-Reply-To: <20210910192757.2309100-1-atish.patra@wdc.com>
+References: <20210910192757.2309100-1-atish.patra@wdc.com>
+X-Mailer: Claws Mail 3.17.7 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: IaifetT0ByICvxcnB09ZVfnIwt83bn2C
-X-Proofpoint-GUID: qVhqqRJsv84Z3zLGOYD5D7sq9rG5DgoX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.391,FMLib:17.0.607.475
- definitions=2021-10-04_05,2021-10-04_01,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- priorityscore=1501 suspectscore=0 mlxscore=0 clxscore=1015 adultscore=0
- bulkscore=0 malwarescore=0 lowpriorityscore=0 impostorscore=0 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2109230001 definitions=main-2110050052
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Fix the data source encodings to represent L2.1/L3.1(another core's
-L2/L3 on the same chip) accesses properly for power10 and older
-plaforms.
+On Fri, 10 Sep 2021 12:27:47 -0700
+Atish Patra <atish.patra@wdc.com> wrote:
 
-Add new macros(LEVEL/REM) which can be used to add mem_lvl_num and remote
-field data inside perf_mem_data_src structure.
+Hello Atish,
 
-Result in power9 system with patch changes:
+> Perf stat:
+> =========
+> 
+> [root@fedora-riscv riscv]# perf stat -e r8000000000000005 -e
+> r8000000000000007 -e r8000000000000006 -e r0000000000020002 -e
+> r0000000000020004 -e branch-misses -e cache-misses -e
+> dTLB-load-misses -e dTLB-store-misses -e iTLB-load-misses -e cycles
+> -e instructions ./hackbench -pipe 15 process Running with 15*40 (==
+> 600) tasks. Time: 6.578
+> 
+>  Performance counter stats for './hackbench -pipe 15 process':
+> 
+>              6,491      r8000000000000005      (52.59%) -->
+> SBI_PMU_FW_SET_TIMER 20,433      r8000000000000007      (60.74%) -->
+> SBI_PMU_FW_IPI_RECVD 21,271      r8000000000000006      (68.71%) -->
+> SBI_PMU_FW_IPI_SENT 0      r0000000000020002      (76.55%)
+>      <not counted>      r0000000000020004      (0.00%)
+>      <not counted>      branch-misses          (0.00%)
+>      <not counted>      cache-misses           (0.00%)
+>         57,537,853      dTLB-load-misses       (9.49%)
+>          2,821,147      dTLB-store-misses      (18.64%)
+>         52,928,130      iTLB-load-misses       (27.53%)
+>     89,521,791,110      cycles                 (36.08%)
+>     90,678,132,464      instructions #    1.01  insn per cycle
+> (44.44%)
+> 
+>        6.975908032 seconds time elapsed
+> 
+>        3.130950000 seconds user
+>       24.353310000 seconds sys
+> 
 
-localhost:~/linux/tools/perf # ./perf mem report | grep Remote
-     0.01%             1  236           Remote core, same chip L3 or L3 hit  [.] 0x0000000000002dd0                producer_consumer   [.] 0x00007fffadd4cc10        
-anon               HitM          N/A                     No       N/A        0              0            
-     0.01%             1  208           Remote core, same chip L3 or L3 hit  [.] 0x0000000000002dd0                producer_consumer   [.] 0x00007fff9dd33710        
-anon               HitM          N/A                     No       N/A        0              0            
-     0.00%             1  176           Remote core, same chip L3 or L3 hit  [.] 0x0000000000002dd0                producer_consumer   [.] 0x00007fff9b22c290        
-anon               HitM          N/A                     No       N/A        0              0 
+Tested your patch series with qemu and got results as expected:
 
-Fixes: 79e96f8f930d ("powerpc/perf: Export memory hierarchy info to user
-space")
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
----
- arch/powerpc/perf/isa207-common.c | 26 +++++++++++++++++++++-----
- arch/powerpc/perf/isa207-common.h |  2 ++
- 2 files changed, 23 insertions(+), 5 deletions(-)
+perf stat -e r8000000000000005 -e r8000000000000007 \
+-e r8000000000000006 -e r0000000000020002 -e r0000000000020004 -e
+branch-misses \ -e cache-misses -e dTLB-load-misses -e
+dTLB-store-misses -e iTLB-load-misses \ -e cycles -e instructions
+./hackbench -pipe 15 process
 
-diff --git a/arch/powerpc/perf/isa207-common.c b/arch/powerpc/perf/isa207-common.c
-index f92bf5f6b74f..7ea873ab2e6f 100644
---- a/arch/powerpc/perf/isa207-common.c
-+++ b/arch/powerpc/perf/isa207-common.c
-@@ -238,11 +238,27 @@ static inline u64 isa207_find_source(u64 idx, u32 sub_idx)
- 		ret |= P(SNOOP, HIT);
- 		break;
- 	case 5:
--		ret = PH(LVL, REM_CCE1);
--		if ((sub_idx == 0) || (sub_idx == 2) || (sub_idx == 4))
--			ret |= P(SNOOP, HIT);
--		else if ((sub_idx == 1) || (sub_idx == 3) || (sub_idx == 5))
--			ret |= P(SNOOP, HITM);
-+		if (cpu_has_feature(CPU_FTR_ARCH_31)) {
-+			ret = REM | P(HOPS, 0);
-+
-+			if (sub_idx == 0 || sub_idx == 4)
-+				ret |= PH(LVL, L2) | LEVEL(L2) | P(SNOOP, HIT);
-+			else if (sub_idx == 1 || sub_idx == 5)
-+				ret |= PH(LVL, L2) | LEVEL(L2) | P(SNOOP, HITM);
-+			else if (sub_idx == 2 || sub_idx == 6)
-+				ret |= PH(LVL, L3) | LEVEL(L3) | P(SNOOP, HIT);
-+			else if (sub_idx == 3 || sub_idx == 7)
-+				ret |= PH(LVL, L3) | LEVEL(L3) | P(SNOOP, HITM);
-+		} else {
-+			if (sub_idx == 0)
-+				ret = PH(LVL, L2) | LEVEL(L2) | REM | P(SNOOP, HIT) | P(HOPS, 0);
-+			else if (sub_idx == 1)
-+				ret = PH(LVL, L2) | LEVEL(L2) | REM | P(SNOOP, HITM) | P(HOPS, 0);
-+			else if (sub_idx == 2 || sub_idx == 4)
-+				ret = PH(LVL, L3) | LEVEL(L3) | REM | P(SNOOP, HIT) | P(HOPS, 0);
-+			else if (sub_idx == 3 || sub_idx == 5)
-+				ret = PH(LVL, L3) | LEVEL(L3) | REM | P(SNOOP, HITM) | P(HOPS, 0);
-+		}
- 		break;
- 	case 6:
- 		ret = PH(LVL, REM_CCE2);
-diff --git a/arch/powerpc/perf/isa207-common.h b/arch/powerpc/perf/isa207-common.h
-index 4a2cbc3dc047..ff122603989b 100644
---- a/arch/powerpc/perf/isa207-common.h
-+++ b/arch/powerpc/perf/isa207-common.h
-@@ -273,6 +273,8 @@
- #define P(a, b)				PERF_MEM_S(a, b)
- #define PH(a, b)			(P(LVL, HIT) | P(a, b))
- #define PM(a, b)			(P(LVL, MISS) | P(a, b))
-+#define LEVEL(x)			P(LVLNUM, x)
-+#define REM				P(REMOTE, REMOTE)
- 
- int isa207_get_constraint(u64 event, unsigned long *maskp, unsigned long *valp, u64 event_config1);
- int isa207_compute_mmcr(u64 event[], int n_ev,
--- 
-2.26.2
+Running with 15*40 (== 600) tasks.nch -pipe 15 process
+Time: 20.027
+
+ Performance counter stats for './hackbench -pipe 15 process':
+
+              4896      r8000000000000005
+                            (53.34%) 0      r8000000000000007
+                                                (61.20%) 0
+              r8000000000000006
+                  (68.88%) 0      r0000000000020002
+                                      (76.53%) <not counted>
+              r0000000000020004
+                  (0.00%) <not counted>      branch-misses
+                                                 (0.00%) <not counted>
+                  cache-misses
+                      (0.00%) 48414917      dTLB-load-misses
+                                                (9.87%) 2427413
+              dTLB-store-misses
+                  (19.43%) 46958092      iTLB-load-misses
+                                             (28.58%) 69245163600
+              cycles
+                  (37.09%) 70334279943      instructions              #
+                 1.02  insn per cycle           (45.24%)
+
+      20.895871900 seconds time elapsed
+
+       2.724942000 seconds user
+      18.126277000 seconds sys
+
+perf top/record also works.
+
+Tested-by: Nikita Shubin <n.shubin@yadro.com>
+
+Yours,
+Nikita Shubin
+
 
