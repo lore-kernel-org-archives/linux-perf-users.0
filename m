@@ -2,62 +2,63 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F32C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Oct 2021 09:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 433EAC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Oct 2021 09:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3198161409
-	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Oct 2021 09:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BAF66154B
+	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Oct 2021 09:20:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233501AbhJEJV7 (ORCPT
+        id S233400AbhJEJWN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 5 Oct 2021 05:21:59 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64340 "EHLO
+        Tue, 5 Oct 2021 05:22:13 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34252 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232658AbhJEJV6 (ORCPT
+        by vger.kernel.org with ESMTP id S232658AbhJEJWN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 5 Oct 2021 05:21:58 -0400
+        Tue, 5 Oct 2021 05:22:13 -0400
 Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1958g82k024319;
-        Tue, 5 Oct 2021 05:19:22 -0400
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1958gBuk024366;
+        Tue, 5 Oct 2021 05:19:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=4KWtlySNTnqXB8CFgnNbWgTinUBqt+TDSXQNhwqkcs0=;
- b=TaBfo1H0odQKIJBKeAPqkw8VXiyPhQMhJIR5owlTZLhHog8FXrsCVWXWXyPYHfZm+RC+
- wFJHT5OzLobwG7Anodh4DVj2sX55UrkE6VLlyGNPziCV2DZhdgeSoFsUuBgGre3PmZHl
- hRf17OTsO51rYn8mIdWa7cr5r2d55O+2Omnce4g5vjfrm3fHeUzcUVFr2SvNdqBqoiY+
- VfV5MEwXQgfW75tJ1Sw496Rw5HZB3FkynwrGUOsExHc29DsK5w2R880380+yw8ehoG0f
- EKG++wHnKtdpHhjN/7TVTdVpfAgtsHD9Zi4qIgleLvp3j7/dRD4nCMnDVp+UIeEowaXZ eQ== 
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=eOPEefFddRaBayf58oH90vGMUYF6SyRxA+nfxkPpTxk=;
+ b=DVUUVAXx6AnyjA4Ddg69/MXO5UowsW9DJ7rjqptl84YbQ/xK2dAQjtQbmdjcuud68DhB
+ rM3ujxrLg2zKhQ0H5ONZRh2pnnRrJfk5bXMVwID4urwYjhhYnZd4LdFgfmJjhW6ICfH0
+ TNz8AW6W9sk6F74KHJYffMjC4e5wQPdUNILBbzpuNOboprcANQ7qn8cmnhlvdVZ2azBQ
+ s3/fRJCLUTa604L/w8bwsreOoKy++QfRrRKz4H0ua8vfI/i+bEl4wU3DoyrtQByuHGEW
+ 1CAyimNBM5uSpbYpaVvzVAsac++xNHc956bUEOM2tKgbh/lOUAW03zBCJSwSk8atR8ge FQ== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3bgkdw8rx9-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3bgkdw8s60-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 Oct 2021 05:19:22 -0400
+        Tue, 05 Oct 2021 05:19:51 -0400
 Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1959I2sL025054;
-        Tue, 5 Oct 2021 05:19:22 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3bgkdw8rw9-1
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 195936PW009019;
+        Tue, 5 Oct 2021 05:19:50 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3bgkdw8s5e-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 Oct 2021 05:19:21 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1959CViH022035;
-        Tue, 5 Oct 2021 09:19:18 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma06ams.nl.ibm.com with ESMTP id 3beepjgfkm-1
+        Tue, 05 Oct 2021 05:19:50 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1959DcWY025863;
+        Tue, 5 Oct 2021 09:19:48 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04fra.de.ibm.com with ESMTP id 3bef29xag8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 Oct 2021 09:19:18 +0000
+        Tue, 05 Oct 2021 09:19:47 +0000
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1959JDuA40173884
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1959Je4v59703582
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 5 Oct 2021 09:19:13 GMT
+        Tue, 5 Oct 2021 09:19:40 GMT
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4EAD8A4080;
-        Tue,  5 Oct 2021 09:19:13 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id BE38FA406A;
+        Tue,  5 Oct 2021 09:19:39 +0000 (GMT)
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E7A96A406F;
-        Tue,  5 Oct 2021 09:19:03 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 2BCB0A405F;
+        Tue,  5 Oct 2021 09:19:32 +0000 (GMT)
 Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com.com (unknown [9.43.64.84])
         by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  5 Oct 2021 09:19:03 +0000 (GMT)
+        Tue,  5 Oct 2021 09:19:31 +0000 (GMT)
 From:   Kajol Jain <kjain@linux.ibm.com>
 To:     mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
         linux-kernel@vger.kernel.org, peterz@infradead.org,
@@ -69,90 +70,144 @@ Cc:     linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
         songliubraving@fb.com, kan.liang@linux.intel.com,
         mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
         paulus@samba.org, kjain@linux.ibm.com
-Subject: [PATCH 1/4] perf: Add comment about current state of PERF_MEM_LVL_* namespace and remove an extra line
-Date:   Tue,  5 Oct 2021 14:48:34 +0530
-Message-Id: <20211005091837.250044-1-kjain@linux.ibm.com>
+Subject: [PATCH 3/4] tools/perf: Add mem_hops field in perf_mem_data_src structure
+Date:   Tue,  5 Oct 2021 14:48:36 +0530
+Message-Id: <20211005091837.250044-3-kjain@linux.ibm.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20211005091837.250044-1-kjain@linux.ibm.com>
+References: <20211005091837.250044-1-kjain@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: tGFMIXsCZcH_fh0aN6SIELorgBuR0UKd
-X-Proofpoint-GUID: 1wCRPklwI3u1dYJI1JF0PA0VZpJADI8p
+X-Proofpoint-ORIG-GUID: Q2HJ2QQMfcrDN-v8_t3OMjBYirN958xA
+X-Proofpoint-GUID: P_jVUczgTesC5FxIesfbS4nxYJj0w2lr
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.391,FMLib:17.0.607.475
  definitions=2021-10-04_05,2021-10-04_01,2020-04-07_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
  suspectscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
- phishscore=0 priorityscore=1501 clxscore=1011 mlxlogscore=999 bulkscore=0
+ phishscore=0 priorityscore=1501 clxscore=1015 mlxlogscore=999 bulkscore=0
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2109230001 definitions=main-2110050052
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add a comment about PERF_MEM_LVL_* namespace being depricated
-to some extent in favour of added PERF_MEM_{LVLNUM_,REMOTE_,SNOOPX_}
-fields.
+Going forward, future generation systems can have more hierarchy
+within the chip/package level but currently we don't have any data source
+encoding field in perf, which can be used to represent this level of data.
 
-Remove an extra line present in perf_mem__lvl_scnprintf function.
+Add a new field called 'mem_hops' in the perf_mem_data_src structure
+which can be used to represent intra-chip/package or inter-chip/off-package
+details. This field is of size 3 bits where PERF_MEM_HOPS_{NA, 0..6} value
+can be used to present different hop levels data.
+
+Also add corresponding macros to define mem_hop field values
+and shift value.
+
+Currently we define macro for HOPS_0 which corresponds
+to data coming from another core but same chip.
+
+Add functionality to represent mem_hop field data in
+perf_mem__lvl_scnprintf function with the help of added string
+array called mem_hops.
+
+For ex: Encodings for mem_hops fields with L2 cache:
+
+L2                      - local L2
+L2 | REMOTE | HOPS_0    - remote core, same chip L2
+
+Since with the addition of HOPS field, now remote can be used to
+denote cache access from the same chip but different core, a check
+is added in the c2c_decode_stats function to set mrem only when HOPS
+is zero along with set remote field.
 
 Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
 ---
- include/uapi/linux/perf_event.h       | 8 +++++++-
- tools/include/uapi/linux/perf_event.h | 8 +++++++-
- tools/perf/util/mem-events.c          | 1 -
- 3 files changed, 14 insertions(+), 3 deletions(-)
+ tools/include/uapi/linux/perf_event.h | 11 +++++++++--
+ tools/perf/util/mem-events.c          | 19 ++++++++++++++++++-
+ 2 files changed, 27 insertions(+), 3 deletions(-)
 
-diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-index f92880a15645..e1701e9c7858 100644
---- a/include/uapi/linux/perf_event.h
-+++ b/include/uapi/linux/perf_event.h
-@@ -1241,7 +1241,13 @@ union perf_mem_data_src {
- #define PERF_MEM_OP_EXEC	0x10 /* code (execution) */
- #define PERF_MEM_OP_SHIFT	0
- 
--/* memory hierarchy (memory level, hit or miss) */
-+/*
-+ * PERF_MEM_LVL_* namespace being depricated to some extent in the
-+ * favour of newer composite PERF_MEM_{LVLNUM_,REMOTE_,SNOOPX_} fields.
-+ * Supporting this namespace inorder to not break defined ABIs.
-+ *
-+ * memory hierarchy (memory level, hit or miss)
-+ */
- #define PERF_MEM_LVL_NA		0x01  /* not available */
- #define PERF_MEM_LVL_HIT	0x02  /* hit level */
- #define PERF_MEM_LVL_MISS	0x04  /* miss level  */
 diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index f92880a15645..e1701e9c7858 100644
+index e1701e9c7858..42680563228c 100644
 --- a/tools/include/uapi/linux/perf_event.h
 +++ b/tools/include/uapi/linux/perf_event.h
-@@ -1241,7 +1241,13 @@ union perf_mem_data_src {
- #define PERF_MEM_OP_EXEC	0x10 /* code (execution) */
- #define PERF_MEM_OP_SHIFT	0
+@@ -1210,14 +1210,16 @@ union perf_mem_data_src {
+ 			mem_remote:1,   /* remote */
+ 			mem_snoopx:2,	/* snoop mode, ext */
+ 			mem_blk:3,	/* access blocked */
+-			mem_rsvd:21;
++			mem_hops:3,	/* hop level */
++			mem_rsvd:18;
+ 	};
+ };
+ #elif defined(__BIG_ENDIAN_BITFIELD)
+ union perf_mem_data_src {
+ 	__u64 val;
+ 	struct {
+-		__u64	mem_rsvd:21,
++		__u64	mem_rsvd:18,
++			mem_hops:3,	/* hop level */
+ 			mem_blk:3,	/* access blocked */
+ 			mem_snoopx:2,	/* snoop mode, ext */
+ 			mem_remote:1,   /* remote */
+@@ -1313,6 +1315,11 @@ union perf_mem_data_src {
+ #define PERF_MEM_BLK_ADDR	0x04 /* address conflict */
+ #define PERF_MEM_BLK_SHIFT	40
  
--/* memory hierarchy (memory level, hit or miss) */
-+/*
-+ * PERF_MEM_LVL_* namespace being depricated to some extent in the
-+ * favour of newer composite PERF_MEM_{LVLNUM_,REMOTE_,SNOOPX_} fields.
-+ * Supporting this namespace inorder to not break defined ABIs.
-+ *
-+ * memory hierarchy (memory level, hit or miss)
-+ */
- #define PERF_MEM_LVL_NA		0x01  /* not available */
- #define PERF_MEM_LVL_HIT	0x02  /* hit level */
- #define PERF_MEM_LVL_MISS	0x04  /* miss level  */
++/* hop level */
++#define PERF_MEM_HOPS_0		0x01 /* remote core, same chip */
++/* 2-7 available */
++#define PERF_MEM_HOPS_SHIFT	43
++
+ #define PERF_MEM_S(a, s) \
+ 	(((__u64)PERF_MEM_##a##_##s) << PERF_MEM_##a##_SHIFT)
+ 
 diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-index f0e75df72b80..ff7289e28192 100644
+index ff7289e28192..585b29592a24 100644
 --- a/tools/perf/util/mem-events.c
 +++ b/tools/perf/util/mem-events.c
-@@ -320,7 +320,6 @@ int perf_mem__lvl_scnprintf(char *out, size_t sz, struct mem_info *mem_info)
- 	/* already taken care of */
- 	m &= ~(PERF_MEM_LVL_HIT|PERF_MEM_LVL_MISS);
+@@ -301,6 +301,16 @@ static const char * const mem_lvlnum[] = {
+ 	[PERF_MEM_LVLNUM_NA] = "N/A",
+ };
  
--
- 	if (mem_info && mem_info->data_src.mem_remote) {
- 		strcat(out, "Remote ");
++static const char * const mem_hops[] = {
++	"N/A",
++	/*
++	 * While printing, 'Remote' will be added to represent
++	 * 'Remote core, same chip' accesses as remote field need
++	 * to be set with mem_hops field.
++	 */
++	"core, same chip",
++};
++
+ int perf_mem__lvl_scnprintf(char *out, size_t sz, struct mem_info *mem_info)
+ {
+ 	size_t i, l = 0;
+@@ -325,6 +335,9 @@ int perf_mem__lvl_scnprintf(char *out, size_t sz, struct mem_info *mem_info)
  		l += 7;
+ 	}
+ 
++	if (mem_info && mem_info->data_src.mem_hops)
++		l += scnprintf(out + l, sz - l, "%s ", mem_hops[mem_info->data_src.mem_hops]);
++
+ 	printed = 0;
+ 	for (i = 0; m && i < ARRAY_SIZE(mem_lvl); i++, m >>= 1) {
+ 		if (!(m & 0x1))
+@@ -471,8 +484,12 @@ int c2c_decode_stats(struct c2c_stats *stats, struct mem_info *mi)
+ 	/*
+ 	 * Skylake might report unknown remote level via this
+ 	 * bit, consider it when evaluating remote HITMs.
++	 *
++	 * Incase of power, remote field can also be used to denote cache
++	 * accesses from the another core of same chip. Hence, setting
++	 * mrem only when HOPS is zero along with set remote field.
+ 	 */
+-	bool mrem  = data_src->mem_remote;
++	bool mrem  = (data_src->mem_remote && !data_src->mem_hops);
+ 	int err = 0;
+ 
+ #define HITM_INC(__f)		\
 -- 
 2.26.2
 
