@@ -2,95 +2,88 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B1BC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Oct 2021 17:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C54B6C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Oct 2021 20:22:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCF2F60FD8
-	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Oct 2021 17:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A575761502
+	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Oct 2021 20:22:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229796AbhJESAP (ORCPT
+        id S230019AbhJEUYk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 5 Oct 2021 14:00:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36716 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229626AbhJESAO (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 5 Oct 2021 14:00:14 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id ECBF560F38;
-        Tue,  5 Oct 2021 17:58:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633456704;
-        bh=fGEQ/Kh6I+hpl2vaInO9ive8KNBkj7H+QlaS2vgQWPg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lfuUWu2adxlvevelEwEloBqVcapbe/s/56NvMxmycuIlkxafkigYvnTTK2Su0V/G0
-         fa7x20DnYpSBV7ZNu8wv84fC5sMUBRkwo+ZbprilphJwccj8Cf9RQkTnCvtxDaTy/J
-         gOV3AcZA/+W6aCY1LeW3nkt+dg+28MkSTyQr7uUk7tosvVEQfxuA9WDEmL6pom6MgI
-         IFsVKnec/CejMGWZm802zvBktm4h6A/sbNrKqSXcMJVbJGFphg0e6nK7TQaiXwmdII
-         h13ppKMJ7WD4Tl1M16OCUBQFaIDOHBsqRXFpwV1GylUkjDKgc5jAWWiaV26xPQD+dM
-         8Y7vhYDWi7n8Q==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 962B6410A1; Tue,  5 Oct 2021 14:58:21 -0300 (-03)
-Date:   Tue, 5 Oct 2021 14:58:21 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     Andrew Kilroy <andrew.kilroy@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 4/4] perf vendor events: Add the Neoverse V1 to arm64
- mapfile
-Message-ID: <YVySPe1LRz4bGZFy@kernel.org>
-References: <20211004160008.21645-1-andrew.kilroy@arm.com>
- <20211004160008.21645-4-andrew.kilroy@arm.com>
- <424d066b-30d5-4512-bd8c-15b700af2864@huawei.com>
+        Tue, 5 Oct 2021 16:24:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43834 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229851AbhJEUYk (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 5 Oct 2021 16:24:40 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EFD6C061749;
+        Tue,  5 Oct 2021 13:22:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=+8X5bhOq6FZhcb3qINVEcr3c5ULv6DfdL9C3Qj2SrpQ=; b=MUpHCsfnUDPsrJaINQKVwTGzod
+        SQHHHLABNDthwLhAwW9/RsYLycFVOi5Noiv+IXx27yRs8eUSdgGaKxfB8R23ngaKH/PqrZ8lJNQ6R
+        9ePe6xJjb4tTUU3t+lG6dkKRzUY807bOvyZTKXnhLW3aUs/I1dIypFanY/UXsqTYDgOywDJq/6yvJ
+        N1sff/pAd8zrpF3ZwiEg/aEuU8Ut52/unlb60rMNUnsrNW244g0s+Gu9QrlcreQNSkCk9MBU2Lh/9
+        OTA5WhHbUX6umVUx2LU3Lj5XaLVnIzTzdUpGwJ/scnTnn3dpddgzSKrSlrvsOitHPs3kOdBAu4eHH
+        mFJh2ODw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mXqv9-000EvW-TX; Tue, 05 Oct 2021 20:20:24 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 67BE0981AAA; Tue,  5 Oct 2021 22:20:15 +0200 (CEST)
+Date:   Tue, 5 Oct 2021 22:20:15 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Kajol Jain <kjain@linux.ibm.com>
+Cc:     mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, mingo@redhat.com, acme@kernel.org,
+        jolsa@kernel.org, namhyung@kernel.org, ak@linux.intel.com,
+        linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
+        yao.jin@linux.intel.com, ast@kernel.org, daniel@iogearbox.net,
+        songliubraving@fb.com, kan.liang@linux.intel.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        paulus@samba.org
+Subject: Re: [PATCH 2/4] perf: Add mem_hops field in perf_mem_data_src
+ structure
+Message-ID: <20211005202015.GC174703@worktop.programming.kicks-ass.net>
+References: <20211005091837.250044-1-kjain@linux.ibm.com>
+ <20211005091837.250044-2-kjain@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <424d066b-30d5-4512-bd8c-15b700af2864@huawei.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20211005091837.250044-2-kjain@linux.ibm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Oct 05, 2021 at 10:33:49AM +0100, John Garry escreveu:
-> On 04/10/2021 17:00, Andrew Kilroy wrote:
-> > This is so that performance counters for the Neoverse V1 appear
-> > categorised upon running 'perf list' on the CPU.
-> > 
+On Tue, Oct 05, 2021 at 02:48:35PM +0530, Kajol Jain wrote:
+> Going forward, future generation systems can have more hierarchy
+> within the chip/package level but currently we don't have any data source
+> encoding field in perf, which can be used to represent this level of data.
 > 
-> this really belongs with the previous patch
-
-Waiting for a resolution on this one.
-
-- Arnaldo
- 
-> Thanks,
-> John
+> Add a new field called 'mem_hops' in the perf_mem_data_src structure
+> which can be used to represent intra-chip/package or inter-chip/off-package
+> details. This field is of size 3 bits where PERF_MEM_HOPS_{NA, 0..6} value
+> can be used to present different hop levels data.
 > 
-> > Signed-off-by: Andrew Kilroy <andrew.kilroy@arm.com>
-> > ---
-> >   tools/perf/pmu-events/arch/arm64/mapfile.csv | 1 +
-> >   1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pmu-events/arch/arm64/mapfile.csv
-> > index c43591d831b8..31d8b57ca9bb 100644
-> > --- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
-> > +++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
-> > @@ -18,6 +18,7 @@
-> >   0x00000000410fd080,v1,arm/cortex-a57-a72,core
-> >   0x00000000410fd0b0,v1,arm/cortex-a76-n1,core
-> >   0x00000000410fd0c0,v1,arm/cortex-a76-n1,core
-> > +0x00000000410fd400,v1,arm/neoverse-v1,core
-> >   0x00000000420f5160,v1,cavium/thunderx2,core
-> >   0x00000000430f0af0,v1,cavium/thunderx2,core
-> >   0x00000000460f0010,v1,fujitsu/a64fx,core
-> > 
+> Also add corresponding macros to define mem_hop field values
+> and shift value.
+> 
+> Currently we define macro for HOPS_0 which corresponds
+> to data coming from another core but same chip.
+> 
+> For ex: Encodings for mem_hops fields with L2 cache:
+> 
+> L2			- local L2
+> L2 | REMOTE | HOPS_0	- remote core, same chip L2
 
--- 
+Can we do s/chip/node/ ? Hops are something NUMA related, while chips
+come in a bag or something :-)
 
-- Arnaldo
+> +/* hop level */
+> +#define PERF_MEM_HOPS_0		0x01 /* remote core, same chip */
+> +/* 2-7 available */
+> +#define PERF_MEM_HOPS_SHIFT	43
