@@ -2,156 +2,157 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B66D4C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Oct 2021 06:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB2CC433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Oct 2021 09:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E77D60EE2
-	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Oct 2021 06:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51355615A3
+	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Oct 2021 09:20:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232346AbhJEGEX (ORCPT
+        id S233608AbhJEJV7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 5 Oct 2021 02:04:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38780 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231597AbhJEGET (ORCPT
+        Tue, 5 Oct 2021 05:21:59 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:14624 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232992AbhJEJV6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 5 Oct 2021 02:04:19 -0400
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee2:21ea])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3838C061745;
-        Mon,  4 Oct 2021 23:02:29 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4HNn6Z0Lw4z4xbT;
-        Tue,  5 Oct 2021 17:02:14 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-        s=201702; t=1633413746;
-        bh=NxMykwAtSBGQYw1NN1b8tuLk3z/eu8KgxmvlevpwR08=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=AuN21dHC9+MvuIwLhRD96bDPhCznYUF4mW6sVZScbRUzl9khYXUvaDeVKY7j3EpSi
-         SxLzKS1Bs4wrte7aWbXpZFWoemH0PNGO4D37mni3TZjB1HF9v41Jp65nKUZ8k7EWb7
-         1WS06ttvm7jDrexi/wdAcBbdmsaNmdqfqkCfLltRleNNHw6/4tsoys9pHDR4kMpQ3X
-         hiZ975kZUM946XlJkVfu3fcj8ixvWtI9+4vCQ14o+3BoPZXOQo2KwupnUaz3BSOQLv
-         PP+voIhGccH2rnqTb4t4QCc3N3EFgiuOYx9ydItftfDiXwetSYPCE98mkJ03f/99MZ
-         0OvLwF5mq8Z4Q==
-Date:   Tue, 5 Oct 2021 17:02:13 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Yury Norov <yury.norov@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Alexander Lobakin <alobakin@pm.me>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Klimov <aklimov@redhat.com>,
-        Andrea Merello <andrea.merello@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, Ben Gardon <bgardon@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Brian Cain <bcain@codeaurora.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Lameter <cl@linux.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dennis Zhou <dennis@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Joe Perches <joe@perches.com>, Jonas Bonn <jonas@southpole.se>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Peter Xu <peterx@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Rich Felker <dalias@libc.org>,
-        Samuel Mendoza-Jonas <sam@mendozajonas.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>
-Subject: Re: [PATCH RESEND 3 00/16] Bitmap patches for 5.15
-Message-ID: <20211005170213.6e4ca629@canb.auug.org.au>
-In-Reply-To: <20211005054059.475634-1-yury.norov@gmail.com>
-References: <20211005054059.475634-1-yury.norov@gmail.com>
+        Tue, 5 Oct 2021 05:21:58 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1959C8bo015142;
+        Tue, 5 Oct 2021 05:19:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=e3zv0JpoXA3ce2SJV8E5dZPU5DKTXjfoMrciq3YCN8k=;
+ b=RgiNgdqoLNDluuwd7QZOnaQKQXlzKA7Dbc8ccxOKAAvMSFDnVJ+ND22bIUhNxmjwlq/M
+ V/eU1b4KjhIPHZEL039GmwDjaSpIwAMvHVCyUJJw09YAygcE3wEHesM3tzz+B0zu/8Bs
+ Ap0zlwk+53jxnDYXL2FbCNLl8qZXmg4hzRRs0SBZTX3VkIDsJCjmZbloNbcS+231V+6z
+ G2pIp+9yL8wKufk/DKpbyOiToNulmvaUP+EWA8HTxlQUamoQGg0YNlQj4qT4aUpWJrNU
+ 3jJicWb/7fQ2224re2ucdmEe1NTAdtcorPfKPI2AKzraYVStUBwqE+EgM8j1APyNyo24 gQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3bgkv1r4ce-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 Oct 2021 05:19:37 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1959EOG1023990;
+        Tue, 5 Oct 2021 05:19:36 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3bgkv1r4bv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 Oct 2021 05:19:36 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1959CVqm022033;
+        Tue, 5 Oct 2021 09:19:33 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma06ams.nl.ibm.com with ESMTP id 3beepjgfwb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 Oct 2021 09:19:33 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1959JSwF33817010
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 5 Oct 2021 09:19:28 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3E3E8A4054;
+        Tue,  5 Oct 2021 09:19:27 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 54F62A40AE;
+        Tue,  5 Oct 2021 09:19:19 +0000 (GMT)
+Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com.com (unknown [9.43.64.84])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  5 Oct 2021 09:19:19 +0000 (GMT)
+From:   Kajol Jain <kjain@linux.ibm.com>
+To:     mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, jolsa@kernel.org,
+        namhyung@kernel.org, ak@linux.intel.com
+Cc:     linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
+        yao.jin@linux.intel.com, ast@kernel.org, daniel@iogearbox.net,
+        songliubraving@fb.com, kan.liang@linux.intel.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        paulus@samba.org, kjain@linux.ibm.com
+Subject: [PATCH 2/4] perf: Add mem_hops field in perf_mem_data_src structure
+Date:   Tue,  5 Oct 2021 14:48:35 +0530
+Message-Id: <20211005091837.250044-2-kjain@linux.ibm.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20211005091837.250044-1-kjain@linux.ibm.com>
+References: <20211005091837.250044-1-kjain@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/UQDD3e=d/fr65N4eQ6HWDaN";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: -cBzxC_e7112ReJt_3E8M92XVZNzpXbS
+X-Proofpoint-ORIG-GUID: pQqNou_LK5UT9GDQAXj9VMEF-m0FvYjY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.391,FMLib:17.0.607.475
+ definitions=2021-10-04_05,2021-10-04_01,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ priorityscore=1501 lowpriorityscore=0 suspectscore=0 phishscore=0
+ adultscore=0 clxscore=1015 mlxscore=0 impostorscore=0 bulkscore=0
+ spamscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2109230001 definitions=main-2110050052
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
---Sig_/UQDD3e=d/fr65N4eQ6HWDaN
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Going forward, future generation systems can have more hierarchy
+within the chip/package level but currently we don't have any data source
+encoding field in perf, which can be used to represent this level of data.
 
-Hi Yury,
+Add a new field called 'mem_hops' in the perf_mem_data_src structure
+which can be used to represent intra-chip/package or inter-chip/off-package
+details. This field is of size 3 bits where PERF_MEM_HOPS_{NA, 0..6} value
+can be used to present different hop levels data.
 
-On Mon,  4 Oct 2021 22:40:43 -0700 Yury Norov <yury.norov@gmail.com> wrote:
->
-> Please pull this bitmap series. The git tree is here:
->         https://github.com/norov/linux/tree/bitmap-master-5.15
+Also add corresponding macros to define mem_hop field values
+and shift value.
 
-Actually branch bitmap-master-5.15 of https://github.com/norov/linux.git
+Currently we define macro for HOPS_0 which corresponds
+to data coming from another core but same chip.
 
-I would prefer a more generic branch name (unless this is a short term
-tree - since I will fetch it every day until you tell me to stop)
+For ex: Encodings for mem_hops fields with L2 cache:
 
-Added to linux-next from today.
+L2			- local L2
+L2 | REMOTE | HOPS_0	- remote core, same chip L2
 
-Thanks for adding your subsystem tree as a participant of linux-next.  As
-you may know, this is not a judgement of your code.  The purpose of
-linux-next is for integration testing and to lower the impact of
-conflicts between subsystems in the next merge window.=20
+Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+---
+ include/uapi/linux/perf_event.h | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-You will need to ensure that the patches/commits in your tree/series have
-been:
-     * submitted under GPL v2 (or later) and include the Contributor's
-        Signed-off-by,
-     * posted to the relevant mailing list,
-     * reviewed by you (or another maintainer of your subsystem tree),
-     * successfully unit tested, and=20
-     * destined for the current or next Linux merge window.
+diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+index e1701e9c7858..42680563228c 100644
+--- a/include/uapi/linux/perf_event.h
++++ b/include/uapi/linux/perf_event.h
+@@ -1210,14 +1210,16 @@ union perf_mem_data_src {
+ 			mem_remote:1,   /* remote */
+ 			mem_snoopx:2,	/* snoop mode, ext */
+ 			mem_blk:3,	/* access blocked */
+-			mem_rsvd:21;
++			mem_hops:3,	/* hop level */
++			mem_rsvd:18;
+ 	};
+ };
+ #elif defined(__BIG_ENDIAN_BITFIELD)
+ union perf_mem_data_src {
+ 	__u64 val;
+ 	struct {
+-		__u64	mem_rsvd:21,
++		__u64	mem_rsvd:18,
++			mem_hops:3,	/* hop level */
+ 			mem_blk:3,	/* access blocked */
+ 			mem_snoopx:2,	/* snoop mode, ext */
+ 			mem_remote:1,   /* remote */
+@@ -1313,6 +1315,11 @@ union perf_mem_data_src {
+ #define PERF_MEM_BLK_ADDR	0x04 /* address conflict */
+ #define PERF_MEM_BLK_SHIFT	40
+ 
++/* hop level */
++#define PERF_MEM_HOPS_0		0x01 /* remote core, same chip */
++/* 2-7 available */
++#define PERF_MEM_HOPS_SHIFT	43
++
+ #define PERF_MEM_S(a, s) \
+ 	(((__u64)PERF_MEM_##a##_##s) << PERF_MEM_##a##_SHIFT)
+ 
+-- 
+2.26.2
 
-Basically, this should be just what you would send to Linus (or ask him
-to fetch).  It is allowed to be rebased if you deem it necessary.
-
---=20
-Cheers,
-Stephen Rothwell=20
-sfr@canb.auug.org.au
-
---Sig_/UQDD3e=d/fr65N4eQ6HWDaN
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmFb6mUACgkQAVBC80lX
-0Gxbewf/Ww/E+XPHdQ1mp59XC0GkoUKOxCBfGR1vs7uFtk/jjJjQgZczaO5K0V8B
-5AV4HEuVQrACgBuuHnKuciVhbzgu5zwK6AitIcZTU904LwEr+mUZuhKteKdGMzlp
-fIWXLaQEDg3eHhTk3IYFiCJK/xQqU4TxVD4vCCGveKRh2C603nww/En/sYfFrmOk
-1ofCL8wN1uxqI+rsm21e2cXvb4IlMto5uimejQmP55fyX9zsdZ95ZUHg3jLb4sy3
-JAP298Vgeqhv3ynmkjYzYilP4TC0psiyQMGvwuzlFMN/qaywyQ1OeKYCm0ymgAXr
-lnHzfD2RdD0mlcaxkqWAWThdw6GFag==
-=qIlm
------END PGP SIGNATURE-----
-
---Sig_/UQDD3e=d/fr65N4eQ6HWDaN--
