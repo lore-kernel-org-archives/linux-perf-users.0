@@ -2,25 +2,25 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2257C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Oct 2021 08:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C52C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Oct 2021 08:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD63A60F9D
-	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Oct 2021 08:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E94B60F9D
+	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Oct 2021 08:11:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237620AbhJFIN0 (ORCPT
+        id S237721AbhJFIN3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 6 Oct 2021 04:13:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:56852 "EHLO foss.arm.com"
+        Wed, 6 Oct 2021 04:13:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:56878 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237411AbhJFINY (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Oct 2021 04:13:24 -0400
+        id S237647AbhJFIN2 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 6 Oct 2021 04:13:28 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A3FC1ED1;
-        Wed,  6 Oct 2021 01:11:32 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3127C101E;
+        Wed,  6 Oct 2021 01:11:36 -0700 (PDT)
 Received: from ubuntu-18-04-aarch64-spe-2.warwick.arm.com (ubuntu-18-04-aarch64-spe-2.warwick.arm.com [10.32.33.30])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CD91A3F766;
-        Wed,  6 Oct 2021 01:11:30 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5B95D3F766;
+        Wed,  6 Oct 2021 01:11:34 -0700 (PDT)
 From:   Andrew Kilroy <andrew.kilroy@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         acme@kernel.org
@@ -34,9 +34,9 @@ Cc:     Andrew Kilroy <andrew.kilroy@arm.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 2/3] perf vendor events: Add new armv8 pmu events
-Date:   Wed,  6 Oct 2021 09:11:04 +0100
-Message-Id: <20211006081106.8649-2-andrew.kilroy@arm.com>
+Subject: [PATCH v2 3/3] perf vendor events: Categorise the Neoverse V1 counters
+Date:   Wed,  6 Oct 2021 09:11:05 +0100
+Message-Id: <20211006081106.8649-3-andrew.kilroy@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20211006081106.8649-1-andrew.kilroy@arm.com>
 References: <20211006081106.8649-1-andrew.kilroy@arm.com>
@@ -44,100 +44,462 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add new armv8 common events for use by Arm Neoverse V1 cores in a later
-commit. These are defined in the ArmV8 architecture reference manual
-available from
+This is so they are categorised in the perf list output.  The pmus all
+exist in the armv8-common-and-microarch.json and arm-recommended.json
+files, so this commit places them into each category's own file under
 
-  https://developer.arm.com/documentation/ddi0487/gb/?lang=en
+  tools/perf/pmu-events/arch/arm64/arm/neoverse-v1
+
+Also add the Neoverse V1 to the arm64 mapfile
 
 Signed-off-by: Andrew Kilroy <andrew.kilroy@arm.com>
 ---
- .../arm64/armv8-common-and-microarch.json     | 72 +++++++++++++++++++
- 1 file changed, 72 insertions(+)
+ .../arch/arm64/arm/neoverse-v1/branch.json    |   8 +
+ .../arch/arm64/arm/neoverse-v1/bus.json       |  20 +++
+ .../arch/arm64/arm/neoverse-v1/cache.json     | 155 ++++++++++++++++++
+ .../arch/arm64/arm/neoverse-v1/exception.json |  47 ++++++
+ .../arm64/arm/neoverse-v1/instruction.json    |  89 ++++++++++
+ .../arch/arm64/arm/neoverse-v1/memory.json    |  20 +++
+ .../arch/arm64/arm/neoverse-v1/other.json     |   5 +
+ .../arch/arm64/arm/neoverse-v1/pipeline.json  |  23 +++
+ tools/perf/pmu-events/arch/arm64/mapfile.csv  |   1 +
+ 9 files changed, 368 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/branch.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/bus.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/cache.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/exception.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/instruction.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/other.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/pipeline.json
 
-diff --git a/tools/perf/pmu-events/arch/arm64/armv8-common-and-microarch.json b/tools/perf/pmu-events/arch/arm64/armv8-common-and-microarch.json
-index 913fb200ea52..423767510aff 100644
---- a/tools/perf/pmu-events/arch/arm64/armv8-common-and-microarch.json
-+++ b/tools/perf/pmu-events/arch/arm64/armv8-common-and-microarch.json
-@@ -257,6 +257,78 @@
-         "EventName": "LL_CACHE_MISS_RD",
-         "BriefDescription": "Last level cache miss, read"
-     },
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/branch.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/branch.json
+new file mode 100644
+index 000000000000..79f2016c53b0
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/branch.json
+@@ -0,0 +1,8 @@
++[
 +    {
-+        "PublicDescription": "Level 1 data cache long-latency read miss.  The counter counts each memory read access counted by L1D_CACHE that incurs additional latency because it returns data from outside the Level 1 data or unified cache of this processing element.",
-+        "EventCode": "0x39",
-+        "EventName": "L1D_CACHE_LMISS_RD",
-+        "BriefDescription": "Level 1 data cache long-latency read miss"
++        "ArchStdEvent": "BR_MIS_PRED"
 +    },
 +    {
-+        "PublicDescription": "Micro-operation architecturally executed.  The counter counts each operation counted by OP_SPEC that would be executed in a simple sequential execution of the program.",
-+        "EventCode": "0x3A",
-+        "EventName": "OP_RETIRED",
-+        "BriefDescription": "Micro-operation architecturally executed"
++        "ArchStdEvent": "BR_PRED"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/bus.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/bus.json
+new file mode 100644
+index 000000000000..579c1c993d17
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/bus.json
+@@ -0,0 +1,20 @@
++[
++    {
++        "ArchStdEvent": "CPU_CYCLES"
 +    },
 +    {
-+        "PublicDescription": "Micro-operation speculatively executed.  The counter counts the number of operations executed by the processing element, including those that are executed speculatively and would not be executed in a simple sequential execution of the program.",
-+        "EventCode": "0x3B",
-+        "EventName": "OP_SPEC",
-+        "BriefDescription": "Micro-operation speculatively executed"
++        "ArchStdEvent": "BUS_ACCESS"
 +    },
 +    {
-+        "PublicDescription": "No operation sent for execution.  The counter counts every attributable cycle on which no attributable instruction or operation was sent for execution on this processing element.",
-+        "EventCode": "0x3C",
-+        "EventName": "STALL",
-+        "BriefDescription": "No operation sent for execution"
++        "ArchStdEvent": "BUS_CYCLES"
 +    },
 +    {
-+        "PublicDescription": "No operation sent for execution on a slot due to the backend.  Counts each slot counted by STALL_SLOT where no attributable instruction or operation was sent for execution because the backend is unable to accept it.",
-+        "EventCode": "0x3D",
-+        "EventName": "STALL_SLOT_BACKEND",
-+        "BriefDescription": "No operation sent for execution on a slot due to the backend"
++        "ArchStdEvent": "BUS_ACCESS_RD"
 +    },
 +    {
-+        "PublicDescription": "No operation sent for execution on a slot due to the frontend.  Counts each slot counted by STALL_SLOT where no attributable instruction or operation was sent for execution because there was no attributable instruction or operation available to issue from the processing element from the frontend for the slot.",
-+        "EventCode": "0x3E",
-+        "EventName": "STALL_SLOT_FRONTEND",
-+        "BriefDescription": "No operation sent for execution on a slot due to the frontend"
++        "ArchStdEvent": "BUS_ACCESS_WR"
 +    },
 +    {
-+        "PublicDescription": "No operation sent for execution on a slot.  The counter counts on each attributable cycle the number of instruction or operation slots that were not occupied by an instruction or operation attributable to the processing element.",
-+        "EventCode": "0x3F",
-+        "EventName": "STALL_SLOT",
-+        "BriefDescription": "No operation sent for execution on a slot"
++        "ArchStdEvent": "CNT_CYCLES"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/cache.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/cache.json
+new file mode 100644
+index 000000000000..0141f749bff3
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/cache.json
+@@ -0,0 +1,155 @@
++[
++    {
++        "ArchStdEvent": "L1I_CACHE_REFILL"
 +    },
 +    {
-+        "PublicDescription": "Constant frequency cycles.  The counter increments at a constant frequency equal to the rate of increment of the system counter, CNTPCT_EL0.",
-+        "EventCode": "0x4004",
-+        "EventName": "CNT_CYCLES",
-+        "BriefDescription": "Constant frequency cycles"
++        "ArchStdEvent": "L1I_TLB_REFILL"
 +    },
 +    {
-+        "PublicDescription": "Memory stall cycles.  The counter counts each cycle counted by STALL_BACKEND where there is a cache miss in the last level of cache within the processing element clock domain",
-+        "EventCode": "0x4005",
-+        "EventName": "STALL_BACKEND_MEM",
-+        "BriefDescription": "Memory stall cycles"
++        "ArchStdEvent": "L1D_CACHE_REFILL"
 +    },
 +    {
-+        "PublicDescription": "Level 1 instruction cache long-latency read miss.  If the L1I_CACHE_RD event is implemented, the counter counts each access counted by L1I_CACHE_RD that incurs additional latency because it returns instructions from outside of the Level 1 instruction cache of this PE.  If the L1I_CACHE_RD event is not implemented, the counter counts each access counted by L1I_CACHE that incurs additional latency because it returns instructions from outside the Level 1 instruction cache of this PE.  The event indicates to software that the access missed in the Level 1 instruction cache and might have a significant performance impact due to the additional latency, compared to the latency of an access that hits in the Level 1 instruction cache.",
-+        "EventCode": "0x4006",
-+        "EventName": "L1I_CACHE_LMISS",
-+        "BriefDescription": "Level 1 instruction cache long-latency read miss"
++        "ArchStdEvent": "L1D_CACHE"
 +    },
 +    {
-+        "PublicDescription": "Level 2 data cache long-latency read miss.  The counter counts each memory read access counted by L2D_CACHE that incurs additional latency because it returns data from outside the Level 2 data or unified cache of this processing element.  The event indicates to software that the access missed in the Level 2 data or unified cache and might have a significant performance impact compared to the latency of an access that hits in the Level 2 data or unified cache.",
-+        "EventCode": "0x4009",
-+        "EventName": "L2D_CACHE_LMISS_RD",
-+        "BriefDescription": "Level 2 data cache long-latency read miss"
++        "ArchStdEvent": "L1D_TLB_REFILL"
 +    },
 +    {
-+        "PublicDescription": "Level 3 data cache long-latency read miss.  The counter counts each memory read access counted by L3D_CACHE that incurs additional latency because it returns data from outside the Level 3 data or unified cache of this processing element.  The event indicates to software that the access missed in the Level 3 data or unified cache and might have a significant performance impact compared to the latency of an access that hits in the Level 3 data or unified cache.",
-+        "EventCode": "0x400B",
-+        "EventName": "L3D_CACHE_LMISS_RD",
-+        "BriefDescription": "Level 3 data cache long-latency read miss"
++        "ArchStdEvent": "L1I_CACHE"
 +    },
-     {
-         "PublicDescription": "SIMD Instruction architecturally executed.",
-         "EventCode": "0x8000",
++    {
++        "ArchStdEvent": "L1D_CACHE_WB"
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE"
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_REFILL"
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_WB"
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_ALLOCATE"
++    },
++    {
++        "ArchStdEvent": "L1D_TLB"
++    },
++    {
++        "ArchStdEvent": "L1I_TLB"
++    },
++    {
++        "ArchStdEvent": "L3D_CACHE_ALLOCATE"
++    },
++    {
++        "ArchStdEvent": "L3D_CACHE_REFILL"
++    },
++    {
++        "ArchStdEvent": "L3D_CACHE"
++    },
++    {
++        "ArchStdEvent": "L2D_TLB_REFILL"
++    },
++    {
++        "ArchStdEvent": "L2D_TLB"
++    },
++    {
++        "ArchStdEvent": "DTLB_WALK"
++    },
++    {
++        "ArchStdEvent": "ITLB_WALK"
++    },
++    {
++        "ArchStdEvent": "LL_CACHE_RD"
++    },
++    {
++        "ArchStdEvent": "LL_CACHE_MISS_RD"
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_LMISS_RD"
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_RD"
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_WR"
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_REFILL_RD"
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_REFILL_WR"
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_REFILL_INNER"
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_REFILL_OUTER"
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_WB_VICTIM"
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_WB_CLEAN"
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_INVAL"
++    },
++    {
++        "ArchStdEvent": "L1D_TLB_REFILL_RD"
++    },
++    {
++        "ArchStdEvent": "L1D_TLB_REFILL_WR"
++    },
++    {
++        "ArchStdEvent": "L1D_TLB_RD"
++    },
++    {
++        "ArchStdEvent": "L1D_TLB_WR"
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_RD"
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_WR"
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_REFILL_RD"
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_REFILL_WR"
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_WB_VICTIM"
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_WB_CLEAN"
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_INVAL"
++    },
++    {
++        "ArchStdEvent": "L2D_TLB_REFILL_RD"
++    },
++    {
++        "ArchStdEvent": "L2D_TLB_REFILL_WR"
++    },
++    {
++        "ArchStdEvent": "L2D_TLB_RD"
++    },
++    {
++        "ArchStdEvent": "L2D_TLB_WR"
++    },
++    {
++        "ArchStdEvent": "L3D_CACHE_RD"
++    },
++    {
++        "ArchStdEvent": "L1I_CACHE_LMISS"
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_LMISS_RD"
++    },
++    {
++        "ArchStdEvent": "L3D_CACHE_LMISS_RD"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/exception.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/exception.json
+new file mode 100644
+index 000000000000..344a2d552ad5
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/exception.json
+@@ -0,0 +1,47 @@
++[
++    {
++        "ArchStdEvent": "EXC_TAKEN"
++    },
++    {
++        "ArchStdEvent": "MEMORY_ERROR"
++    },
++    {
++        "ArchStdEvent": "EXC_UNDEF"
++    },
++    {
++        "ArchStdEvent": "EXC_SVC"
++    },
++    {
++        "ArchStdEvent": "EXC_PABORT"
++    },
++    {
++        "ArchStdEvent": "EXC_DABORT"
++    },
++    {
++        "ArchStdEvent": "EXC_IRQ"
++    },
++    {
++        "ArchStdEvent": "EXC_FIQ"
++    },
++    {
++        "ArchStdEvent": "EXC_SMC"
++    },
++    {
++        "ArchStdEvent": "EXC_HVC"
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_PABORT"
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_DABORT"
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_OTHER"
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_IRQ"
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_FIQ"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/instruction.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/instruction.json
+new file mode 100644
+index 000000000000..25825e14c535
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/instruction.json
+@@ -0,0 +1,89 @@
++[
++    {
++        "ArchStdEvent": "SW_INCR"
++    },
++    {
++        "ArchStdEvent": "INST_RETIRED"
++    },
++    {
++        "ArchStdEvent": "EXC_RETURN"
++    },
++    {
++        "ArchStdEvent": "CID_WRITE_RETIRED"
++    },
++    {
++        "ArchStdEvent": "INST_SPEC"
++    },
++    {
++        "ArchStdEvent": "TTBR_WRITE_RETIRED"
++    },
++    {
++        "ArchStdEvent": "BR_RETIRED"
++    },
++    {
++        "ArchStdEvent": "BR_MIS_PRED_RETIRED"
++    },
++    {
++        "ArchStdEvent": "OP_RETIRED"
++    },
++    {
++        "ArchStdEvent": "OP_SPEC"
++    },
++    {
++        "ArchStdEvent": "LDREX_SPEC"
++    },
++    {
++        "ArchStdEvent": "STREX_PASS_SPEC"
++    },
++    {
++        "ArchStdEvent": "STREX_FAIL_SPEC"
++    },
++    {
++        "ArchStdEvent": "STREX_SPEC"
++    },
++    {
++        "ArchStdEvent": "LD_SPEC"
++    },
++    {
++        "ArchStdEvent": "ST_SPEC"
++    },
++    {
++        "ArchStdEvent": "DP_SPEC"
++    },
++    {
++        "ArchStdEvent": "ASE_SPEC"
++    },
++    {
++        "ArchStdEvent": "VFP_SPEC"
++    },
++    {
++        "ArchStdEvent": "PC_WRITE_SPEC"
++    },
++    {
++        "ArchStdEvent": "CRYPTO_SPEC"
++    },
++    {
++        "ArchStdEvent": "BR_IMMED_SPEC"
++    },
++    {
++        "ArchStdEvent": "BR_RETURN_SPEC"
++    },
++    {
++        "ArchStdEvent": "BR_INDIRECT_SPEC"
++    },
++    {
++        "ArchStdEvent": "ISB_SPEC"
++    },
++    {
++        "ArchStdEvent": "DSB_SPEC"
++    },
++    {
++        "ArchStdEvent": "DMB_SPEC"
++    },
++    {
++        "ArchStdEvent": "RC_LD_SPEC"
++    },
++    {
++        "ArchStdEvent": "RC_ST_SPEC"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/memory.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/memory.json
+new file mode 100644
+index 000000000000..e3d08f1f7c92
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/memory.json
+@@ -0,0 +1,20 @@
++[
++    {
++        "ArchStdEvent": "MEM_ACCESS"
++    },
++    {
++        "ArchStdEvent": "MEM_ACCESS_RD"
++    },
++    {
++        "ArchStdEvent": "MEM_ACCESS_WR"
++    },
++    {
++        "ArchStdEvent": "UNALIGNED_LD_SPEC"
++    },
++    {
++        "ArchStdEvent": "UNALIGNED_ST_SPEC"
++    },
++    {
++        "ArchStdEvent": "UNALIGNED_LDST_SPEC"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/other.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/other.json
+new file mode 100644
+index 000000000000..20d8365756c5
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/other.json
+@@ -0,0 +1,5 @@
++[
++    {
++        "ArchStdEvent": "REMOTE_ACCESS"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/pipeline.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/pipeline.json
+new file mode 100644
+index 000000000000..f9fae15f7555
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/pipeline.json
+@@ -0,0 +1,23 @@
++[
++    {
++        "ArchStdEvent": "STALL_FRONTEND"
++    },
++    {
++        "ArchStdEvent": "STALL_BACKEND"
++    },
++    {
++        "ArchStdEvent": "STALL"
++    },
++    {
++        "ArchStdEvent": "STALL_SLOT_BACKEND"
++    },
++    {
++        "ArchStdEvent": "STALL_SLOT_FRONTEND"
++    },
++    {
++        "ArchStdEvent": "STALL_SLOT"
++    },
++    {
++        "ArchStdEvent": "STALL_BACKEND_MEM"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+index c43591d831b8..31d8b57ca9bb 100644
+--- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
++++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+@@ -18,6 +18,7 @@
+ 0x00000000410fd080,v1,arm/cortex-a57-a72,core
+ 0x00000000410fd0b0,v1,arm/cortex-a76-n1,core
+ 0x00000000410fd0c0,v1,arm/cortex-a76-n1,core
++0x00000000410fd400,v1,arm/neoverse-v1,core
+ 0x00000000420f5160,v1,cavium/thunderx2,core
+ 0x00000000430f0af0,v1,cavium/thunderx2,core
+ 0x00000000460f0010,v1,fujitsu/a64fx,core
 -- 
 2.17.1
 
