@@ -2,139 +2,97 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 130EBC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Oct 2021 08:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7253CC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Oct 2021 08:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5DCD61139
-	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Oct 2021 08:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55013610A8
+	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Oct 2021 08:20:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237746AbhJFIOG (ORCPT
+        id S237653AbhJFIW2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 6 Oct 2021 04:14:06 -0400
-Received: from esa4.hc1455-7.c3s2.iphmx.com ([68.232.139.117]:59400 "EHLO
-        esa4.hc1455-7.c3s2.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237592AbhJFIOF (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Oct 2021 04:14:05 -0400
-X-Greylist: delayed 430 seconds by postgrey-1.27 at vger.kernel.org; Wed, 06 Oct 2021 04:14:05 EDT
-IronPort-SDR: GctfC0js80qXecAroZPLdfV2ZfAEdEeoeCOhaHN+W8iuU+4ENIa7k8pQt+y2zH19IYxhzjCaVq
- ndB8UjmiRHj9e70Vg6AeLol1sPByyKv5XgahEFJbM0LurvD8CZkrqOGJQ+g7cIl1oDU4W69aly
- DwiWIBDxHPPTba4i8Rsjpf7cLSRh4ilytWDdeUacJhWCD4zSpXCNqTWya07ux4RLHyQKRZgjpo
- IXTzzvw5x1cYqVaqqPsvoJ+09Q5XCdUiGEx7PbwzbAYr43ua5yH6IaDTkbCNfnNiUtTtoczrxX
- KHmdVu3JNzg7PjCJrUStpLaQ
-X-IronPort-AV: E=McAfee;i="6200,9189,10128"; a="47771964"
-X-IronPort-AV: E=Sophos;i="5.85,350,1624287600"; 
-   d="scan'208";a="47771964"
-Received: from unknown (HELO oym-r4.gw.nic.fujitsu.com) ([210.162.30.92])
-  by esa4.hc1455-7.c3s2.iphmx.com with ESMTP; 06 Oct 2021 17:05:01 +0900
-Received: from oym-m3.gw.nic.fujitsu.com (oym-nat-oym-m3.gw.nic.fujitsu.com [192.168.87.60])
-        by oym-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id 87AAEE6C25;
-        Wed,  6 Oct 2021 17:05:01 +0900 (JST)
-Received: from oym-om4.fujitsu.com (oym-om4.o.css.fujitsu.com [10.85.58.164])
-        by oym-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id BBF10DA9F7;
-        Wed,  6 Oct 2021 17:05:00 +0900 (JST)
-Received: from pumpkin.openstacklocal (pumpkin.fct.css.fujitsu.com [10.130.70.189])
-        by oym-om4.fujitsu.com (Postfix) with ESMTP id 8474E4008971B;
-        Wed,  6 Oct 2021 17:05:00 +0900 (JST)
-From:   Shunsuke Nakamura <nakamura.shun@fujitsu.com>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: [PATCH 2/2] libperf tests: Fix test_stat_cpu
-Date:   Wed,  6 Oct 2021 17:04:56 +0900
-Message-Id: <20211006080456.474273-1-nakamura.shun@fujitsu.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 6 Oct 2021 04:22:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:58194 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237411AbhJFIW2 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 6 Oct 2021 04:22:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 876F76D;
+        Wed,  6 Oct 2021 01:20:36 -0700 (PDT)
+Received: from [10.57.43.98] (unknown [10.57.43.98])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D7B583F766;
+        Wed,  6 Oct 2021 01:20:33 -0700 (PDT)
+Subject: Re: [PATCH 4/4] perf vendor events: Add the Neoverse V1 to arm64
+ mapfile
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        John Garry <john.garry@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <20211004160008.21645-1-andrew.kilroy@arm.com>
+ <20211004160008.21645-4-andrew.kilroy@arm.com>
+ <424d066b-30d5-4512-bd8c-15b700af2864@huawei.com>
+ <YVySPe1LRz4bGZFy@kernel.org>
+From:   Andrew Kilroy <andrew.kilroy@arm.com>
+Message-ID: <2db0d2b9-a234-2117-a6f3-67428bc3a820@arm.com>
+Date:   Wed, 6 Oct 2021 09:20:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
+In-Reply-To: <YVySPe1LRz4bGZFy@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-`cpu` of perf_evsel__read() must be specified the cpu index.
-perf_cpu_map__for_each_cpu is for iterating the cpu number (not index)
-and is not appropriate.
-So, if there is an offline CPU, the cpu number specified in the argument
-may point out of range because the cpu number and the cpu index are
-different.
+Hi Arnaldo + John,
 
-Fix test_stat_cpu.
+On 05/10/2021 18:58, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Oct 05, 2021 at 10:33:49AM +0100, John Garry escreveu:
+>> On 04/10/2021 17:00, Andrew Kilroy wrote:
+>>> This is so that performance counters for the Neoverse V1 appear
+>>> categorised upon running 'perf list' on the CPU.
+>>>
+>>
+>> this really belongs with the previous patch
+> 
+> Waiting for a resolution on this one.
+> 
+> - Arnaldo
+>   
+>> Thanks,
+>> John
+>>
 
-Committer testing:
+Sent a v2 of these patches
 
-  # make tests -C tools/lib/perf/
-  make: Entering directory '/home/nakamura/kernel_src/linux-5.15-rc4_fix/tools/lib/perf'
-  running static:
-  - running tests/test-cpumap.c...OK
-  - running tests/test-threadmap.c...OK
-  - running tests/test-evlist.c...OK
-  - running tests/test-evsel.c...OK
-  running dynamic:
-  - running tests/test-cpumap.c...OK
-  - running tests/test-threadmap.c...OK
-  - running tests/test-evlist.c...OK
-  - running tests/test-evsel.c...OK
-  make: Leaving directory '/home/nakamura/kernel_src/linux-5.15-rc4_fix/tools/lib/perf'
+Andrew
 
-Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
----
- tools/lib/perf/tests/test-evlist.c | 6 +++---
- tools/lib/perf/tests/test-evsel.c  | 6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/tools/lib/perf/tests/test-evlist.c b/tools/lib/perf/tests/test-evlist.c
-index c67c83399170..47badd7eabf2 100644
---- a/tools/lib/perf/tests/test-evlist.c
-+++ b/tools/lib/perf/tests/test-evlist.c
-@@ -40,7 +40,7 @@ static int test_stat_cpu(void)
- 		.type	= PERF_TYPE_SOFTWARE,
- 		.config	= PERF_COUNT_SW_TASK_CLOCK,
- 	};
--	int err, cpu, tmp;
-+	int err, idx;
- 
- 	cpus = perf_cpu_map__new(NULL);
- 	__T("failed to create cpus", cpus);
-@@ -70,10 +70,10 @@ static int test_stat_cpu(void)
- 	perf_evlist__for_each_evsel(evlist, evsel) {
- 		cpus = perf_evsel__cpus(evsel);
- 
--		perf_cpu_map__for_each_cpu(cpu, tmp, cpus) {
-+		for (idx = 0, idx < perf_cpu_map__nr(cpus); idx++) {
- 			struct perf_counts_values counts = { .val = 0 };
- 
--			perf_evsel__read(evsel, cpu, 0, &counts);
-+			perf_evsel__read(evsel, idx, 0, &counts);
- 			__T("failed to read value for evsel", counts.val != 0);
- 		}
- 	}
-diff --git a/tools/lib/perf/tests/test-evsel.c b/tools/lib/perf/tests/test-evsel.c
-index 9abd4c0bf6db..33ae9334861a 100644
---- a/tools/lib/perf/tests/test-evsel.c
-+++ b/tools/lib/perf/tests/test-evsel.c
-@@ -22,7 +22,7 @@ static int test_stat_cpu(void)
- 		.type	= PERF_TYPE_SOFTWARE,
- 		.config	= PERF_COUNT_SW_CPU_CLOCK,
- 	};
--	int err, cpu, tmp;
-+	int err, idx;
- 
- 	cpus = perf_cpu_map__new(NULL);
- 	__T("failed to create cpus", cpus);
-@@ -33,10 +33,10 @@ static int test_stat_cpu(void)
- 	err = perf_evsel__open(evsel, cpus, NULL);
- 	__T("failed to open evsel", err == 0);
- 
--	perf_cpu_map__for_each_cpu(cpu, tmp, cpus) {
-+	for (idx = 0; idx < perf_cpu_map__nr(cpus); idx++) {
- 		struct perf_counts_values counts = { .val = 0 };
- 
--		perf_evsel__read(evsel, cpu, 0, &counts);
-+		perf_evsel__read(evsel, idx, 0, &counts);
- 		__T("failed to read value for evsel", counts.val != 0);
- 	}
- 
--- 
-2.25.1
 
+>>> Signed-off-by: Andrew Kilroy <andrew.kilroy@arm.com>
+>>> ---
+>>>    tools/perf/pmu-events/arch/arm64/mapfile.csv | 1 +
+>>>    1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+>>> index c43591d831b8..31d8b57ca9bb 100644
+>>> --- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
+>>> +++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+>>> @@ -18,6 +18,7 @@
+>>>    0x00000000410fd080,v1,arm/cortex-a57-a72,core
+>>>    0x00000000410fd0b0,v1,arm/cortex-a76-n1,core
+>>>    0x00000000410fd0c0,v1,arm/cortex-a76-n1,core
+>>> +0x00000000410fd400,v1,arm/neoverse-v1,core
+>>>    0x00000000420f5160,v1,cavium/thunderx2,core
+>>>    0x00000000430f0af0,v1,cavium/thunderx2,core
+>>>    0x00000000460f0010,v1,fujitsu/a64fx,core
+>>>
+> 
