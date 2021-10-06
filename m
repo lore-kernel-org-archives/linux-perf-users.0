@@ -2,108 +2,80 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E49DDC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Oct 2021 09:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5791CC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Oct 2021 09:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C98D561130
-	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Oct 2021 09:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3647061139
+	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Oct 2021 09:57:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237851AbhJFJxX (ORCPT
+        id S229824AbhJFJ7R (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 6 Oct 2021 05:53:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57458 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229824AbhJFJxX (ORCPT
+        Wed, 6 Oct 2021 05:59:17 -0400
+Received: from esa6.hc1455-7.c3s2.iphmx.com ([68.232.139.139]:52809 "EHLO
+        esa6.hc1455-7.c3s2.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229874AbhJFJ7P (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Oct 2021 05:53:23 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F666C061749
-        for <linux-perf-users@vger.kernel.org>; Wed,  6 Oct 2021 02:51:31 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id h3so1996720pgb.7
-        for <linux-perf-users@vger.kernel.org>; Wed, 06 Oct 2021 02:51:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xY1wsjX3U9J+vby4z0tgc9K9/jXmFxDsS0cLl5E86uY=;
-        b=ANb47Ig3qYsLdrRAHPmoVR7LSbJ5LeLfmpO6W2110v5rUWkXmo+MW53cdnzNPyLkQx
-         7vexeBQlLHwD3vmxquJZCVwpkcICKDhUSHNNbblbTdeLhZcZg1GWTTo+JAEPVPCtfyD+
-         pXq+tRjitdrJpnVDboG9Y4NcHSBwXYLKm03/RkFoEKkuEb/220+HpkR5RnJzeEg351FS
-         aezW3H7otz3MwMh20B6I0y3wZd9t+F4fzbWe74yMNMUKDLUXFtPHAr33GM+YoF1XMErx
-         4eYKcARMFcwIPYKMYTz6jvtO7zmgbktB2JGKX/wbekbfGmyQwNIq167TiLYIZuCt42Sc
-         GdYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xY1wsjX3U9J+vby4z0tgc9K9/jXmFxDsS0cLl5E86uY=;
-        b=pWz24dtaryIY6tZ5rsENSyEqh+EP/tTvDUHfm4gPDt6vRw5inHWx7IZMHCjdy2SNmC
-         jTEcLPUWpZ6YJr+fpA2s8Z+CrbxV41a5GQv9nK40DZi/cFZlknpUhIf5MMxn7fwEPKfR
-         RAX9xgt3P5Dkv0ibxvoiPbTasId1m7NjLo4w98Xx1U3MqI+IDsOTexuyJB+qMCwnpjDp
-         jyDzxhOevM/4lcTirhJXQQJQmV4TmVBNyEeO6iOblvwCbaLjbW9FhJLmC35iMfGjiEmP
-         S5WFn0AT5ylwWo5oSB6l5C0dCWgoBbfHvI/2+49YScLwWb4ZAnch6Ui3q5m+Bh0LqzTC
-         X0OA==
-X-Gm-Message-State: AOAM532q2ikBohcZa3gCUAfGf0FaCPuKL2kTD5m9to/IdlAwqhFrpIPs
-        b6McEXdoLXPNBu4+NoFpPZ4cDQ==
-X-Google-Smtp-Source: ABdhPJyGC3VxxHFgXMt8iQ5UX29PMW144cZFgpYFwARgshb7Sw0gJxoVOb8zQ4xK6RRx+3NI55Eqsg==
-X-Received: by 2002:a65:6107:: with SMTP id z7mr19756459pgu.43.1633513890524;
-        Wed, 06 Oct 2021 02:51:30 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([204.124.181.210])
-        by smtp.gmail.com with ESMTPSA id t3sm20529834pgo.51.2021.10.06.02.51.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Oct 2021 02:51:30 -0700 (PDT)
-Date:   Wed, 6 Oct 2021 17:51:24 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     German Gomez <german.gomez@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org
-Subject: Re: [PATCH 4/5] perf arm-spe: Implement find_snapshot callback
-Message-ID: <20211006095124.GC14400@leoy-ThinkPad-X240s>
-References: <20210916154635.1525-1-german.gomez@arm.com>
- <20210916154635.1525-4-german.gomez@arm.com>
- <20210923135016.GG400258@leoy-ThinkPad-X240s>
- <20210923144048.GB603008@leoy-ThinkPad-X240s>
- <1c6a3a73-27dc-6673-7fe7-34bc7fcb0a68@arm.com>
- <20211004122724.GC174271@leoy-ThinkPad-X240s>
- <6b092f13-832f-5d1d-a504-aea96c81bf17@arm.com>
+        Wed, 6 Oct 2021 05:59:15 -0400
+IronPort-SDR: Z3L3ldJ4jOYFCMBkyH6glg8g9T2OcYbocgNJNF4YBwABS3nEotQG9d1gVlWbHG8WbpKj7tu0vq
+ 23GoG/d7V+xsykeIiO7GfwtN9w4rGA8AbyTiHd0JHTAYSABu347SxW4Bbx4SQae2D4VyX37Cwu
+ InzQntMVIS4ODmKUeBCU4lYCd3Xb2ZvrJgtX4eYCPg5ME4kqCHenu8qqpdFlTHadddk1pJXjej
+ AARjqbKdbsFeGXzDN16+hlpjcckPUSjAqWJMvmjiiRdeMIf2p+r2fK7YofY/hAWf6pUE1WSiq1
+ ALW0bHrTRLT9ALmsdFZodiZm
+X-IronPort-AV: E=McAfee;i="6200,9189,10128"; a="47996128"
+X-IronPort-AV: E=Sophos;i="5.85,350,1624287600"; 
+   d="scan'208";a="47996128"
+Received: from unknown (HELO oym-r2.gw.nic.fujitsu.com) ([210.162.30.90])
+  by esa6.hc1455-7.c3s2.iphmx.com with ESMTP; 06 Oct 2021 18:57:21 +0900
+Received: from oym-m4.gw.nic.fujitsu.com (oym-nat-oym-m4.gw.nic.fujitsu.com [192.168.87.61])
+        by oym-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 52042E6880;
+        Wed,  6 Oct 2021 18:57:21 +0900 (JST)
+Received: from oym-om3.fujitsu.com (oym-om3.o.css.fujitsu.com [10.85.58.163])
+        by oym-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id 8CABA216AE9;
+        Wed,  6 Oct 2021 18:57:20 +0900 (JST)
+Received: from pumpkin.openstacklocal (pumpkin.fct.css.fujitsu.com [10.130.70.189])
+        by oym-om3.fujitsu.com (Postfix) with ESMTP id 427AB4019A56D;
+        Wed,  6 Oct 2021 18:57:20 +0900 (JST)
+From:   Shunsuke Nakamura <nakamura.shun@fujitsu.com>
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: [PATCH] libperf test: Fix build error
+Date:   Wed,  6 Oct 2021 18:57:03 +0900
+Message-Id: <20211006095703.477826-1-nakamura.shun@fujitsu.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6b092f13-832f-5d1d-a504-aea96c81bf17@arm.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Oct 06, 2021 at 10:35:20AM +0100, German Gomez wrote:
+In test_stat_user_read, following build error occurs except i386 and 
+x86_64 architectures:
 
-[...]
+tests/test-evsel.c:129:31: error: variable 'pc' set but not used [-Werror=unused-but-set-variable]
+  struct perf_event_mmap_page *pc;
 
-> > So simply say, I think the head pointer monotonically increasing is
-> > the right thing to do in Arm SPE driver.
-> 
-> I will talk to James about how we can proceed on this.
+Fix build error.
 
-Thanks!
+Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
+---
+ tools/lib/perf/tests/test-evsel.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> >> (note that the patch will skip the wrap-around detection if this is the
-> >> case,
-> >> in order to handle both cases in the userspace perf tool).
-> > Almost agree, I read multiple times but have no idea what's the
-> > "both cases" in the last sentence.
-> 
-> Apologies for the later part was not clear. What I meant to say was that
-> in the original patch for cs-etm, it seemed to handle both cases where
-> AUX head might be monotonically and non-monotonically increasing, so we
-> applied the same for the Arm SPE patch.
+diff --git a/tools/lib/perf/tests/test-evsel.c b/tools/lib/perf/tests/test-evsel.c
+index a184e4861627..9abd4c0bf6db 100644
+--- a/tools/lib/perf/tests/test-evsel.c
++++ b/tools/lib/perf/tests/test-evsel.c
+@@ -148,6 +148,7 @@ static int test_stat_user_read(int event)
+ 	__T("failed to mmap evsel", err == 0);
+ 
+ 	pc = perf_evsel__mmap_base(evsel, 0, 0);
++	__T("failed to get mmapped address", pc);
+ 
+ #if defined(__i386__) || defined(__x86_64__)
+ 	__T("userspace counter access not supported", pc->cap_user_rdpmc);
+-- 
+2.25.1
 
-No worries, thanks for explanation.
-
-Leo
