@@ -2,60 +2,60 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D585C433EF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F78C433FE
 	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Oct 2021 16:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 089EA61040
+	by mail.kernel.org (Postfix) with ESMTP id B7C9061261
 	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Oct 2021 16:58:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243106AbhJGRA0 (ORCPT
+        id S242929AbhJGRA1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 7 Oct 2021 13:00:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35114 "EHLO
+        Thu, 7 Oct 2021 13:00:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242920AbhJGRAO (ORCPT
+        with ESMTP id S242964AbhJGRAM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Oct 2021 13:00:14 -0400
-Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF364C061760
-        for <linux-perf-users@vger.kernel.org>; Thu,  7 Oct 2021 09:58:00 -0700 (PDT)
-Received: by mail-pg1-x54a.google.com with SMTP id o10-20020a65614a000000b002850cb8c434so182418pgv.13
-        for <linux-perf-users@vger.kernel.org>; Thu, 07 Oct 2021 09:58:00 -0700 (PDT)
+        Thu, 7 Oct 2021 13:00:12 -0400
+Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BEABC061796
+        for <linux-perf-users@vger.kernel.org>; Thu,  7 Oct 2021 09:57:58 -0700 (PDT)
+Received: by mail-qk1-x749.google.com with SMTP id r5-20020a05620a298500b0045dac5fb940so5683541qkp.17
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Oct 2021 09:57:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=DKk7gYA97LusEn3hP/5WaAwdmMnNvOjC0L8CB2TRhaQ=;
-        b=kEnpQJVS+QVYLkv0k9EOl9/iPyWj38/UT53Rbedj4smDTSO+jBirKuwgrq2PQ+BJrI
-         bP7LIJVhbgROPmtSiXP118Q6rS4h4kyQ4NQ3ySD97KG3j5bt5eZX0Ybe7/OQVFiYng2Q
-         wSpbXAU+a/iprUk17ZUijnUlllj+dWGWfQfyWaIJIrx/T0JI82vKZHWLtx30wambRS5s
-         5QuzFnz5p5CEJ9MRUFm5iV2gdMSjF9FAZW01MM87LVx3CiUd+C8Qxmu3nXCzpgeTok45
-         WJ9LVTirynlDgRFnBSW50yk3ZoXLf52zlI93wVyusOBErNKzVK2SvBfpRVOLM6YMxp2P
-         NKWA==
+        bh=lZVRifLp/eRUS0DShn151xIzv9a2WbCBrno0ZLFegHE=;
+        b=IQ1SryqbvdpfWluKATITSox+B3WaWfqIg33eM4v/qZNpWQp229xeNM+g9B3tUfOvbj
+         wA23vEIk8gpGKJl3gsDkKfe3TVYP2gIfFo5tL2zon2zJik1w0K91dU7UatK2YH6t7jWP
+         9hgq50fTQXB62kFkvt/jFX2z1ZxsmOFqvmzyvvQ3oOtZ8mxXWpjKl5Jsj224KvYQTkvp
+         JFNzsX9qDp9wMGs5tXAjKBraukPQFAkuJCDbyiKhNe0XyYh8GcYIMw0RdhGPkzMtMkG5
+         CJ7JtIXnakFeI9sXXrPmvZtCRJKyag/pZlnnrbBHRe8/T/l142IUoBBYRnTdHggVtcb2
+         yxqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=DKk7gYA97LusEn3hP/5WaAwdmMnNvOjC0L8CB2TRhaQ=;
-        b=rj89apno7Yq17icN24a8aQuttxClUOQgrI9f4N0U+Xn1KVZWESgpueNArf31xqD08j
-         eBU/SiXJiajD692QW4pAUDH4tDDLFxpCHDxEsw384++LW9srg305RfnXvvDoIWse2xok
-         vUI6PqUGYM1e4Y4QyI3qoUM3ZTu5kemY9zonWfmuwcg6BrcCSaRN8pafjA8YTMsMlLhH
-         IPyr+WWqeZVidt+eGDldoXAi7Z6NUohaIRa52gKMxLTH4UP8GgNZ/t+4uuwhw2KOV+5P
-         Rwm8q6aa/KBeFgN9UzX0nf1nn84Hxc2eJVwAS7Gihn4T/9bzlMl2qKvJ9Likp7euw4zI
-         mbOQ==
-X-Gm-Message-State: AOAM531J3IVLukss/3L9FHsbIqUlizGfUqopYPfnEbd2D8fH67bnBes4
-        Z0B3IdJJudA7ssZOMuXXml+5W6jpsIFK
-X-Google-Smtp-Source: ABdhPJzpQM+MA/evANtsp+4SqzeKkjrtx3INNqf/nYRBUaNLA35Ieixes9qg0cFnNb3n56F7su+rtMdrK6GO
+        bh=lZVRifLp/eRUS0DShn151xIzv9a2WbCBrno0ZLFegHE=;
+        b=1fUgIeExp4d5zDRwSZFg/VDZWJj2R8/v70Chg1dLp0uuIfNUxCFhgSj8gISnHFFXpw
+         v1xDHu31HnYqVrXGBzDmCE0WF7/xoty0FU2L+e7xdm5zjwSoYtN7rrS1NXPfgiGnGJBG
+         Nh9PqMsLCMPf/9W8gei+80Qh8hI7McFK1OSEAqGrTGtnuIT9OWryR4UuJM52bfWsRU8f
+         FTFtNfuvqJLMohbWhy9jw6AYmVfsHNKYwZEPlL09SKSLfnOx77Wjd0dQEEcCC72x/5nU
+         W3A+JJ6r2ic32yuuaw+97B0ci+CpU4Z/lIvM0mvHBWHS9i8+M89/vRtkOJ6fTaWxD1nI
+         BPPg==
+X-Gm-Message-State: AOAM532I03VJGYugxCkrLod2yd+CzEnUs5jdbg0OnwOsR8VD0XHXmQkL
+        6CLehLpZ9UVi9ORtzc01EA77igjSVeH5
+X-Google-Smtp-Source: ABdhPJxxbdsEKkTSX/TY4qops1XUyhrL+NWbIdlukxoKdh4uaFSxcqtA86nTFzwiydOBR9VgLcoT1aUjraqf
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:fe85:5e36:cb6f:76bc])
- (user=irogers job=sendgmr) by 2002:a17:90a:4dc6:: with SMTP id
- r6mr6707646pjl.5.1633625880291; Thu, 07 Oct 2021 09:58:00 -0700 (PDT)
-Date:   Thu,  7 Oct 2021 09:56:39 -0700
+ (user=irogers job=sendgmr) by 2002:a05:622a:1793:: with SMTP id
+ s19mr6418711qtk.231.1633625877477; Thu, 07 Oct 2021 09:57:57 -0700 (PDT)
+Date:   Thu,  7 Oct 2021 09:56:38 -0700
 In-Reply-To: <20211007165647.3514803-1-irogers@google.com>
-Message-Id: <20211007165647.3514803-14-irogers@google.com>
+Message-Id: <20211007165647.3514803-13-irogers@google.com>
 Mime-Version: 1.0
 References: <20211007165647.3514803-1-irogers@google.com>
 X-Mailer: git-send-email 2.33.0.882.g93a45727a2-goog
-Subject: [PATCH 13/21] perf parse-events: Add const to evsel name
+Subject: [PATCH 12/21] perf metric: Simplify metric_refs calculation.
 From:   Ian Rogers <irogers@google.com>
 To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Jin Yao <yao.jin@linux.intel.com>,
@@ -98,226 +98,158 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The evsel name is strdup-ed before assignment and so can be const.
-A later change will add another similar string. Using const makes it
-clearer that these are not out arguments.
+Don't build a list and then turn to an array, just directly build the
+array. The size of the array is known due to the search for a duplicate.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/parse-events-hybrid.c | 15 +++++++++------
- tools/perf/util/parse-events-hybrid.h |  6 ++++--
- tools/perf/util/parse-events.c        | 15 ++++++++-------
- tools/perf/util/parse-events.h        |  7 ++++---
- tools/perf/util/pmu.c                 |  2 +-
- tools/perf/util/pmu.h                 |  2 +-
- 6 files changed, 27 insertions(+), 20 deletions(-)
+ tools/perf/util/metricgroup.c | 77 +++++++++++------------------------
+ 1 file changed, 23 insertions(+), 54 deletions(-)
 
-diff --git a/tools/perf/util/parse-events-hybrid.c b/tools/perf/util/parse-events-hybrid.c
-index b234d95fb10a..7e44deee1343 100644
---- a/tools/perf/util/parse-events-hybrid.c
-+++ b/tools/perf/util/parse-events-hybrid.c
-@@ -38,7 +38,7 @@ static void config_hybrid_attr(struct perf_event_attr *attr,
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 632867cedbae..b48836d7c080 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -137,10 +137,8 @@ struct metric {
+ 	 * output.
+ 	 */
+ 	const char *metric_unit;
+-	/** The list of metrics referenced by this one. */
+-	struct list_head metric_refs;
+-	/** The size of the metric_refs list. */
+-	int metric_refs_cnt;
++	/** Optional null terminated array of referenced metrics. */
++	struct metric_ref *metric_refs;
+ 	/**
+ 	 * Is there a constraint on the group of events? In which case the
+ 	 * events won't be grouped.
+@@ -202,20 +200,14 @@ static struct metric *metric__new(const struct pmu_event *pe,
+ 	m->metric_unit = pe->unit;
+ 	m->pctx->runtime = runtime;
+ 	m->has_constraint = metric_no_group || metricgroup__has_constraint(pe);
+-	INIT_LIST_HEAD(&m->metric_refs);
+-	m->metric_refs_cnt = 0;
++	m->metric_refs = NULL;
  
- static int create_event_hybrid(__u32 config_type, int *idx,
- 			       struct list_head *list,
--			       struct perf_event_attr *attr, char *name,
-+			       struct perf_event_attr *attr, const char *name,
- 			       struct list_head *config_terms,
- 			       struct perf_pmu *pmu)
- {
-@@ -70,7 +70,7 @@ static int pmu_cmp(struct parse_events_state *parse_state,
+ 	return m;
+ }
  
- static int add_hw_hybrid(struct parse_events_state *parse_state,
- 			 struct list_head *list, struct perf_event_attr *attr,
--			 char *name, struct list_head *config_terms)
-+			 const char *name, struct list_head *config_terms)
+ static void metric__free(struct metric *m)
  {
- 	struct perf_pmu *pmu;
+-	struct metric_ref_node *ref, *tmp;
+-
+-	list_for_each_entry_safe(ref, tmp, &m->metric_refs, list) {
+-		list_del(&ref->list);
+-		free(ref);
+-	}
++	free(m->metric_refs);
+ 	expr__ctx_free(m->pctx);
+ 	free(m);
+ }
+@@ -393,7 +385,6 @@ static int metricgroup__setup_events(struct list_head *groups,
+ 
+ 	list_for_each_entry (m, groups, nd) {
+ 		struct evsel **metric_events;
+-		struct metric_ref *metric_refs = NULL;
+ 		const size_t ids_size = hashmap__size(m->pctx->ids);
+ 
+ 		metric_events = calloc(sizeof(void *),
+@@ -427,36 +418,8 @@ static int metricgroup__setup_events(struct list_head *groups,
+ 			break;
+ 		}
+ 
+-		/*
+-		 * Collect and store collected nested expressions
+-		 * for metric processing.
+-		 */
+-		if (m->metric_refs_cnt) {
+-			struct metric_ref_node *ref;
+-
+-			metric_refs = zalloc(sizeof(struct metric_ref) * (m->metric_refs_cnt + 1));
+-			if (!metric_refs) {
+-				ret = -ENOMEM;
+-				free(metric_events);
+-				free(expr);
+-				break;
+-			}
+-
+-			i = 0;
+-			list_for_each_entry(ref, &m->metric_refs, list) {
+-				/*
+-				 * Intentionally passing just const char pointers,
+-				 * originally from 'struct pmu_event' object.
+-				 * We don't need to change them, so there's no
+-				 * need to create our own copy.
+-				 */
+-				metric_refs[i].metric_name = ref->metric_name;
+-				metric_refs[i].metric_expr = ref->metric_expr;
+-				i++;
+-			}
+-		}
+-
+-		expr->metric_refs = metric_refs;
++		expr->metric_refs = m->metric_refs;
++		m->metric_refs = NULL;
+ 		expr->metric_expr = m->metric_expr;
+ 		expr->metric_name = m->metric_name;
+ 		expr->metric_unit = m->metric_unit;
+@@ -936,7 +899,6 @@ static int __add_metric(struct list_head *metric_list,
+ 			const struct visited_metric *visited,
+ 			const struct pmu_events_map *map)
+ {
+-	struct metric_ref_node *ref;
+ 	const struct visited_metric *vm;
  	int ret;
-@@ -94,7 +94,8 @@ static int add_hw_hybrid(struct parse_events_state *parse_state,
- }
+ 	bool is_root = !root_metric;
+@@ -962,19 +924,25 @@ static int __add_metric(struct list_head *metric_list,
+ 			return -ENOMEM;
  
- static int create_raw_event_hybrid(int *idx, struct list_head *list,
--				   struct perf_event_attr *attr, char *name,
-+				   struct perf_event_attr *attr,
-+				   const char *name,
- 				   struct list_head *config_terms,
- 				   struct perf_pmu *pmu)
- {
-@@ -113,7 +114,7 @@ static int create_raw_event_hybrid(int *idx, struct list_head *list,
+ 	} else {
++		int cnt = 0;
++
+ 		/*
+ 		 * This metric was referenced in a metric higher in the
+ 		 * tree. Check if the same metric is already resolved in the
+ 		 * metric_refs list.
+ 		 */
+-		list_for_each_entry(ref, &root_metric->metric_refs, list) {
+-			if (!strcmp(pe->metric_name, ref->metric_name))
+-				return 0;
++		if (root_metric->metric_refs) {
++			for (; root_metric->metric_refs[cnt].metric_name; cnt++) {
++				if (!strcmp(pe->metric_name,
++					    root_metric->metric_refs[cnt].metric_name))
++					return 0;
++			}
+ 		}
  
- static int add_raw_hybrid(struct parse_events_state *parse_state,
- 			  struct list_head *list, struct perf_event_attr *attr,
--			  char *name, struct list_head *config_terms)
-+			  const char *name, struct list_head *config_terms)
- {
- 	struct perf_pmu *pmu;
- 	int ret;
-@@ -138,7 +139,8 @@ static int add_raw_hybrid(struct parse_events_state *parse_state,
- int parse_events__add_numeric_hybrid(struct parse_events_state *parse_state,
- 				     struct list_head *list,
- 				     struct perf_event_attr *attr,
--				     char *name, struct list_head *config_terms,
-+				     const char *name,
-+				     struct list_head *config_terms,
- 				     bool *hybrid)
- {
- 	*hybrid = false;
-@@ -159,7 +161,8 @@ int parse_events__add_numeric_hybrid(struct parse_events_state *parse_state,
- }
+-		/* Create reference */
+-		ref = malloc(sizeof(*ref));
+-		if (!ref)
++		/* Create reference. Need space for the entry and the terminator. */
++		root_metric->metric_refs = realloc(root_metric->metric_refs,
++						(cnt + 2) * sizeof(struct metric_ref));
++		if (!root_metric->metric_refs)
+ 			return -ENOMEM;
  
- int parse_events__add_cache_hybrid(struct list_head *list, int *idx,
--				   struct perf_event_attr *attr, char *name,
-+				   struct perf_event_attr *attr,
-+				   const char *name,
- 				   struct list_head *config_terms,
- 				   bool *hybrid,
- 				   struct parse_events_state *parse_state)
-diff --git a/tools/perf/util/parse-events-hybrid.h b/tools/perf/util/parse-events-hybrid.h
-index f33bd67aa851..25a4a4f73f3a 100644
---- a/tools/perf/util/parse-events-hybrid.h
-+++ b/tools/perf/util/parse-events-hybrid.h
-@@ -11,11 +11,13 @@
- int parse_events__add_numeric_hybrid(struct parse_events_state *parse_state,
- 				     struct list_head *list,
- 				     struct perf_event_attr *attr,
--				     char *name, struct list_head *config_terms,
-+				     const char *name,
-+				     struct list_head *config_terms,
- 				     bool *hybrid);
+ 		/*
+@@ -983,11 +951,12 @@ static int __add_metric(struct list_head *metric_list,
+ 		 * need to change them, so there's no need to create
+ 		 * our own copy.
+ 		 */
+-		ref->metric_name = pe->metric_name;
+-		ref->metric_expr = pe->metric_expr;
++		root_metric->metric_refs[cnt].metric_name = pe->metric_name;
++		root_metric->metric_refs[cnt].metric_expr = pe->metric_expr;
  
- int parse_events__add_cache_hybrid(struct list_head *list, int *idx,
--				   struct perf_event_attr *attr, char *name,
-+				   struct perf_event_attr *attr,
-+				   const char *name,
- 				   struct list_head *config_terms,
- 				   bool *hybrid,
- 				   struct parse_events_state *parse_state);
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 1acac3e13b32..88f181a985b7 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -337,7 +337,7 @@ static int parse_events__is_name_term(struct parse_events_term *term)
- 	return term->type_term == PARSE_EVENTS__TERM_TYPE_NAME;
- }
+-		list_add(&ref->list, &root_metric->metric_refs);
+-		root_metric->metric_refs_cnt++;
++		/* Null terminate array. */
++		root_metric->metric_refs[cnt+1].metric_name = NULL;
++		root_metric->metric_refs[cnt+1].metric_expr = NULL;
+ 	}
  
--static char *get_config_name(struct list_head *head_terms)
-+static const char *get_config_name(struct list_head *head_terms)
- {
- 	struct parse_events_term *term;
- 
-@@ -355,7 +355,7 @@ static struct evsel *
- __add_event(struct list_head *list, int *idx,
- 	    struct perf_event_attr *attr,
- 	    bool init_attr,
--	    char *name, struct perf_pmu *pmu,
-+	    const char *name, struct perf_pmu *pmu,
- 	    struct list_head *config_terms, bool auto_merge_stats,
- 	    const char *cpu_list)
- {
-@@ -394,14 +394,14 @@ __add_event(struct list_head *list, int *idx,
- }
- 
- struct evsel *parse_events__add_event(int idx, struct perf_event_attr *attr,
--					char *name, struct perf_pmu *pmu)
-+				      const char *name, struct perf_pmu *pmu)
- {
- 	return __add_event(NULL, &idx, attr, false, name, pmu, NULL, false,
- 			   NULL);
- }
- 
- static int add_event(struct list_head *list, int *idx,
--		     struct perf_event_attr *attr, char *name,
-+		     struct perf_event_attr *attr, const char *name,
- 		     struct list_head *config_terms)
- {
- 	return __add_event(list, idx, attr, true, name, NULL, config_terms,
-@@ -464,7 +464,8 @@ int parse_events_add_cache(struct list_head *list, int *idx,
- {
- 	struct perf_event_attr attr;
- 	LIST_HEAD(config_terms);
--	char name[MAX_NAME_LEN], *config_name;
-+	char name[MAX_NAME_LEN];
-+	const char *config_name;
- 	int cache_type = -1, cache_op = -1, cache_result = -1;
- 	char *op_result[2] = { op_result1, op_result2 };
- 	int i, n, ret;
-@@ -2027,7 +2028,7 @@ int parse_events__modifier_event(struct list_head *list, char *str, bool add)
- 	return 0;
- }
- 
--int parse_events_name(struct list_head *list, char *name)
-+int parse_events_name(struct list_head *list, const char *name)
- {
- 	struct evsel *evsel;
- 
-@@ -3344,7 +3345,7 @@ char *parse_events_formats_error_string(char *additional_terms)
- 
- struct evsel *parse_events__add_event_hybrid(struct list_head *list, int *idx,
- 					     struct perf_event_attr *attr,
--					     char *name, struct perf_pmu *pmu,
-+					     const char *name, struct perf_pmu *pmu,
- 					     struct list_head *config_terms)
- {
- 	return __add_event(list, idx, attr, true, name, pmu,
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index b32ed3064c49..54d24c24d074 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -162,7 +162,7 @@ void parse_events_terms__purge(struct list_head *terms);
- void parse_events__clear_array(struct parse_events_array *a);
- int parse_events__modifier_event(struct list_head *list, char *str, bool add);
- int parse_events__modifier_group(struct list_head *list, char *event_mod);
--int parse_events_name(struct list_head *list, char *name);
-+int parse_events_name(struct list_head *list, const char *name);
- int parse_events_add_tracepoint(struct list_head *list, int *idx,
- 				const char *sys, const char *event,
- 				struct parse_events_error *error,
-@@ -199,7 +199,7 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
- 			 bool use_alias);
- 
- struct evsel *parse_events__add_event(int idx, struct perf_event_attr *attr,
--					char *name, struct perf_pmu *pmu);
-+				      const char *name, struct perf_pmu *pmu);
- 
- int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 			       char *str,
-@@ -266,7 +266,8 @@ int perf_pmu__test_parse_init(void);
- 
- struct evsel *parse_events__add_event_hybrid(struct list_head *list, int *idx,
- 					     struct perf_event_attr *attr,
--					     char *name, struct perf_pmu *pmu,
-+					     const char *name,
-+					     struct perf_pmu *pmu,
- 					     struct list_head *config_terms);
- 
- #endif /* __PERF_PARSE_EVENTS_H */
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index cdd6c3f6caf1..9b5039bf909a 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1906,7 +1906,7 @@ int perf_pmu__caps_parse(struct perf_pmu *pmu)
- }
- 
- void perf_pmu__warn_invalid_config(struct perf_pmu *pmu, __u64 config,
--				   char *name)
-+				   const char *name)
- {
- 	struct perf_pmu_format *format;
- 	__u64 masks = 0, bits;
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index cc9f9e001347..f9743eab07b6 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -134,7 +134,7 @@ int perf_pmu__convert_scale(const char *scale, char **end, double *sval);
- int perf_pmu__caps_parse(struct perf_pmu *pmu);
- 
- void perf_pmu__warn_invalid_config(struct perf_pmu *pmu, __u64 config,
--				   char *name);
-+				   const char *name);
- 
- bool perf_pmu__has_hybrid(void);
- int perf_pmu__match(char *pattern, char *name, char *tok);
+ 	/*
 -- 
 2.33.0.882.g93a45727a2-goog
 
