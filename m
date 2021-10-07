@@ -2,109 +2,146 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F90DC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Oct 2021 17:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F4FC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Oct 2021 17:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFBFA61042
-	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Oct 2021 17:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7667860E09
+	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Oct 2021 17:28:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242964AbhJGRVg (ORCPT
+        id S242066AbhJGRac (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 7 Oct 2021 13:21:36 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3942 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243264AbhJGRVb (ORCPT
+        Thu, 7 Oct 2021 13:30:32 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46982 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233695AbhJGRac (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Oct 2021 13:21:31 -0400
-Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HQHzz5BJqz67nPb;
-        Fri,  8 Oct 2021 01:16:47 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Thu, 7 Oct 2021 19:19:34 +0200
-Received: from [10.47.80.141] (10.47.80.141) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Thu, 7 Oct 2021
- 18:19:33 +0100
-Subject: Re: [PATCH 1/3] perf vendor-events: Fix all remaining invalid JSON
- files
-To:     James Clark <james.clark@arm.com>, <acme@kernel.org>,
-        <ak@linux.intel.com>, <linux-perf-users@vger.kernel.org>
-CC:     <Nick.Forrington@arm.com>, <Andrew.Kilroy@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Thu, 7 Oct 2021 13:30:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1633627718;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ViJ5p8KevpsaUvbYZqn5hx21O6LKPLxzKtvwaPa9zp0=;
+        b=HGVI/oH4cJeBdYWreTh/iAB0aWHHKoNANZ2THJcU+XwIL9hla7Ho53WBFmbOVmzXYFe4mI
+        aGAGkqDU5gASesZt/isuVkHX9oOKkT8TigX17G2Ulql9pzsB3LAeA3LC6K8Yk/5dYEBP2c
+        kdve65Z44KjC0bElhjmMYMhs3VLRa48=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-539-3_8cGCPwNrGCY9IcyKmsyA-1; Thu, 07 Oct 2021 13:28:37 -0400
+X-MC-Unique: 3_8cGCPwNrGCY9IcyKmsyA-1
+Received: by mail-wr1-f72.google.com with SMTP id r16-20020adfbb10000000b00160958ed8acso5261779wrg.16
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Oct 2021 10:28:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ViJ5p8KevpsaUvbYZqn5hx21O6LKPLxzKtvwaPa9zp0=;
+        b=1DNS+g/Iau8JLqWdUGbVPMWQqq/0zLzyJqwMm4QiU5lUr3You+8fwGFR9WvaHH5KT3
+         7zhpWE7oN0Vnnw/68prCVdC0sWLurY8CDIWxwZEQtnFr30m/3v6bLxEzphdhDdeRvPBM
+         rpQwDm1TcUyFFJlnXETbFkEJ7O0zQY3YLG/8Xb0g1MqtArdEFtf0mO7cOj2y0B5IHiRH
+         E7Ao0+c7ph6TdsYSYa4ra+F+shRq8v6Y4Ix9oafjzeNfWH8HNIGYeV0qLgCUEo3RnCOI
+         2jdI21uSeyEvRIYvyWZmPxNNyKq5q+ZGqxLC1bkYnu11zRqHk2KzcA38PBxgv7Bm5RBd
+         iJfA==
+X-Gm-Message-State: AOAM5301RnI+UVqfBx9n9WW/ruOrHPj/n/B73xDoOkjOZGw7nOrz9Gea
+        Uggr2y/g/+Yx1C/XMgX9JP+za9GHdshR9bmpMvo8wbEp9eqkbIjMJoGLDbueDpX2TzuutUvtHkx
+        /ohR0QDJUolNHnpMhNOQ76aUlrYBw3w==
+X-Received: by 2002:a5d:47cd:: with SMTP id o13mr7243664wrc.85.1633627715917;
+        Thu, 07 Oct 2021 10:28:35 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz+RRNXynVbz5XW8Xfn9IkXFMxSU4suiHkgOksYtnJd77FNW7L2yKAJLyaQpxBlWgPI5lqf8g==
+X-Received: by 2002:a5d:47cd:: with SMTP id o13mr7243638wrc.85.1633627715756;
+        Thu, 07 Oct 2021 10:28:35 -0700 (PDT)
+Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
+        by smtp.gmail.com with ESMTPSA id k18sm210515wrn.81.2021.10.07.10.28.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Oct 2021 10:28:35 -0700 (PDT)
+Date:   Thu, 7 Oct 2021 19:28:33 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Kim Phillips <kim.phillips@amd.com>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20211007110543.564963-1-james.clark@arm.com>
- <20211007110543.564963-2-james.clark@arm.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <c73a8d30-a2ed-fec7-1537-c0ec79c1ad6f@huawei.com>
-Date:   Thu, 7 Oct 2021 18:22:06 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Ian Rogers <irogers@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Joao Martins <joao.m.martins@oracle.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Robert Richter <robert.richter@amd.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 2/2] perf tools: Improve IBS error handling
+Message-ID: <YV8uQVnMnnMd1Led@krava>
+References: <20211004214114.188477-1-kim.phillips@amd.com>
+ <20211004214114.188477-2-kim.phillips@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <20211007110543.564963-2-james.clark@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.80.141]
-X-ClientProxiedBy: lhreml744-chm.china.huawei.com (10.201.108.194) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211004214114.188477-2-kim.phillips@amd.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 07/10/2021 12:05, James Clark wrote:
-> Remove trailing commas. A later commit will make the parser more strict
-> and these will not be valid anymore.
-> 
-> Signed-off-by: James Clark<james.clark@arm.com>
+On Mon, Oct 04, 2021 at 04:41:14PM -0500, Kim Phillips wrote:
+
+SNIP
+
 > ---
->   .../arch/arm64/ampere/emag/bus.json           |  2 +-
->   .../arch/arm64/ampere/emag/cache.json         | 20 +++++++++----------
->   .../arch/arm64/ampere/emag/clock.json         |  2 +-
->   .../arch/arm64/ampere/emag/exception.json     |  4 ++--
->   .../arch/arm64/ampere/emag/instruction.json   | 10 +++++-----
->   .../arch/arm64/ampere/emag/memory.json        |  4 ++--
->   .../arch/arm64/hisilicon/hip08/metrics.json   |  2 +-
->   .../pmu-events/arch/nds32/n13/atcpmu.json     |  2 +-
->   .../pmu-events/arch/s390/cf_z10/basic.json    |  2 +-
->   .../pmu-events/arch/s390/cf_z10/crypto.json   |  2 +-
->   .../pmu-events/arch/s390/cf_z10/extended.json |  2 +-
->   .../pmu-events/arch/s390/cf_z13/basic.json    |  2 +-
->   .../pmu-events/arch/s390/cf_z13/crypto.json   |  2 +-
->   .../pmu-events/arch/s390/cf_z13/extended.json |  2 +-
->   .../pmu-events/arch/s390/cf_z14/basic.json    |  2 +-
->   .../pmu-events/arch/s390/cf_z14/crypto.json   |  2 +-
->   .../pmu-events/arch/s390/cf_z14/extended.json |  2 +-
->   .../pmu-events/arch/s390/cf_z15/basic.json    |  2 +-
->   .../pmu-events/arch/s390/cf_z15/crypto.json   |  2 +-
->   .../pmu-events/arch/s390/cf_z15/crypto6.json  |  2 +-
->   .../pmu-events/arch/s390/cf_z15/extended.json |  2 +-
->   .../pmu-events/arch/s390/cf_z196/basic.json   |  2 +-
->   .../pmu-events/arch/s390/cf_z196/crypto.json  |  2 +-
->   .../arch/s390/cf_z196/extended.json           |  2 +-
->   .../pmu-events/arch/s390/cf_zec12/basic.json  |  2 +-
->   .../pmu-events/arch/s390/cf_zec12/crypto.json |  2 +-
->   .../arch/s390/cf_zec12/extended.json          |  2 +-
->   .../arch/test/test_soc/cpu/uncore.json        |  2 +-
->   .../arch/x86/icelakex/icx-metrics.json        |  2 +-
+>  tools/perf/util/evsel.c | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index b915840690d4..f8a9cbd99314 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -2743,9 +2743,22 @@ static bool find_process(const char *name)
+>  	return ret ? false : true;
+>  }
+>  
+> +static bool is_amd(const char *arch, const char *cpuid)
+> +{
+> +	return arch && !strcmp("x86", arch) && cpuid && strstarts(cpuid, "AuthenticAMD");
+> +}
+> +
+> +static bool is_amd_ibs(struct evsel *evsel)
+> +{
+> +	return evsel->core.attr.precise_ip || !strncmp(evsel->pmu_name, "ibs", 3);
+> +}
+> +
+>  int evsel__open_strerror(struct evsel *evsel, struct target *target,
+>  			 int err, char *msg, size_t size)
+>  {
+> +	struct perf_env *env = evsel__env(evsel);
+> +	const char *arch = perf_env__arch(env);
+> +	const char *cpuid = perf_env__cpuid(env);
+>  	char sbuf[STRERR_BUFSIZE];
+>  	int printed = 0, enforced = 0;
+>  
+> @@ -2841,6 +2854,17 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
+>  			return scnprintf(msg, size, "wrong clockid (%d).", clockid);
+>  		if (perf_missing_features.aux_output)
+>  			return scnprintf(msg, size, "The 'aux_output' feature is not supported, update the kernel.");
+> +		if (is_amd(arch, cpuid)) {
+> +			if (is_amd_ibs(evsel)) {
 
+would single 'is_amd_ibs' call be better? checking on both amd and ibs
 
-This seems fine. But, as mentioned earlier, I do worry that some of 
-these JSONs are copied from some downstream repositories, and now they 
-will go out of sync. That could cause problems, so need to check with 
-respective owners.
+jirka
 
-Apart from that caveat, it seems ok:
-
-Reviewed-by: John Garry <john.garry@huawei.com>
-
+> +				if (evsel->core.attr.exclude_kernel)
+> +					return scnprintf(msg, size, 
+> +	"AMD IBS can't exclude kernel events.  Try running at a higher privilege level.");
+> +				if (!evsel->core.system_wide)
+> +					return scnprintf(msg, size,
+> +	"AMD IBS may only be available in system-wide/per-cpu mode.  Try using -a, or -C and workload affinity");
+> +			}
+> +		}
+> +
+>  		break;
+>  	case ENODATA:
+>  		return scnprintf(msg, size, "Cannot collect data source with the load latency event alone. "
+> -- 
+> 2.31.1
+> 
 
