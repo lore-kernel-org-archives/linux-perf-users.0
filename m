@@ -2,145 +2,212 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F4FC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Oct 2021 17:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CD5C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Oct 2021 17:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7667860E09
-	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Oct 2021 17:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D069461248
+	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Oct 2021 17:42:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242066AbhJGRac (ORCPT
+        id S233719AbhJGRoI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 7 Oct 2021 13:30:32 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46982 "EHLO
+        Thu, 7 Oct 2021 13:44:08 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:56181 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233695AbhJGRac (ORCPT
+        by vger.kernel.org with ESMTP id S233133AbhJGRoG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Oct 2021 13:30:32 -0400
+        Thu, 7 Oct 2021 13:44:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1633627718;
+        s=mimecast20190719; t=1633628532;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=ViJ5p8KevpsaUvbYZqn5hx21O6LKPLxzKtvwaPa9zp0=;
-        b=HGVI/oH4cJeBdYWreTh/iAB0aWHHKoNANZ2THJcU+XwIL9hla7Ho53WBFmbOVmzXYFe4mI
-        aGAGkqDU5gASesZt/isuVkHX9oOKkT8TigX17G2Ulql9pzsB3LAeA3LC6K8Yk/5dYEBP2c
-        kdve65Z44KjC0bElhjmMYMhs3VLRa48=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-539-3_8cGCPwNrGCY9IcyKmsyA-1; Thu, 07 Oct 2021 13:28:37 -0400
-X-MC-Unique: 3_8cGCPwNrGCY9IcyKmsyA-1
-Received: by mail-wr1-f72.google.com with SMTP id r16-20020adfbb10000000b00160958ed8acso5261779wrg.16
-        for <linux-perf-users@vger.kernel.org>; Thu, 07 Oct 2021 10:28:36 -0700 (PDT)
+        bh=vsjUpPJb1iTKpR4aN3cdz2aUWDLc3j7kcF/Y/CI7xlM=;
+        b=Rh6Izgbt+ogEKh3wE/T1jnckFdcMsRDr5vB/SeVhM1rvxrsgPfj8z49c4hCWF+71mAn+X+
+        xTweeWeKGOmjRcMmzUHzzCB4y5nJOCexhuQiIyMGdf7bSmtkNPB5XtoYg9awX8MJLqiWiM
+        bqkLxBr5HjkJuYA0ZMzgr87y+2x+BtY=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-512-slVHHIfnN1iPI3gPKZiDOQ-1; Thu, 07 Oct 2021 13:42:11 -0400
+X-MC-Unique: slVHHIfnN1iPI3gPKZiDOQ-1
+Received: by mail-wr1-f69.google.com with SMTP id m17-20020adffa11000000b00160c1ac74e9so5293665wrr.9
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Oct 2021 10:42:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ViJ5p8KevpsaUvbYZqn5hx21O6LKPLxzKtvwaPa9zp0=;
-        b=1DNS+g/Iau8JLqWdUGbVPMWQqq/0zLzyJqwMm4QiU5lUr3You+8fwGFR9WvaHH5KT3
-         7zhpWE7oN0Vnnw/68prCVdC0sWLurY8CDIWxwZEQtnFr30m/3v6bLxEzphdhDdeRvPBM
-         rpQwDm1TcUyFFJlnXETbFkEJ7O0zQY3YLG/8Xb0g1MqtArdEFtf0mO7cOj2y0B5IHiRH
-         E7Ao0+c7ph6TdsYSYa4ra+F+shRq8v6Y4Ix9oafjzeNfWH8HNIGYeV0qLgCUEo3RnCOI
-         2jdI21uSeyEvRIYvyWZmPxNNyKq5q+ZGqxLC1bkYnu11zRqHk2KzcA38PBxgv7Bm5RBd
-         iJfA==
-X-Gm-Message-State: AOAM5301RnI+UVqfBx9n9WW/ruOrHPj/n/B73xDoOkjOZGw7nOrz9Gea
-        Uggr2y/g/+Yx1C/XMgX9JP+za9GHdshR9bmpMvo8wbEp9eqkbIjMJoGLDbueDpX2TzuutUvtHkx
-        /ohR0QDJUolNHnpMhNOQ76aUlrYBw3w==
-X-Received: by 2002:a5d:47cd:: with SMTP id o13mr7243664wrc.85.1633627715917;
-        Thu, 07 Oct 2021 10:28:35 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz+RRNXynVbz5XW8Xfn9IkXFMxSU4suiHkgOksYtnJd77FNW7L2yKAJLyaQpxBlWgPI5lqf8g==
-X-Received: by 2002:a5d:47cd:: with SMTP id o13mr7243638wrc.85.1633627715756;
-        Thu, 07 Oct 2021 10:28:35 -0700 (PDT)
+        bh=vsjUpPJb1iTKpR4aN3cdz2aUWDLc3j7kcF/Y/CI7xlM=;
+        b=CXEjFQ4K5gPD8Q9t+MtOSQNAeaVkQ28zWnvB6IAq0BjIBCQt0xv3RfPfTGlOtZcnaU
+         bu2kiAWvukT6YLsONQE8vi9OxwqaADLwAfLa6bveXYYjL8ZRnCn5nnFWsHUqyVsORog5
+         NIuvKaS7a7ULPTctxrJxGmPtEe2iu7lVByuLEycTci/WjtePSOiIzffepRdFlPzZ3r50
+         xSwvCro0/zA21OYDjTFIqOc4jZwP2/hylPJIkHHPckG3dZsSfqZGtEBMdauJYC//YeJn
+         OMiouHHkUOgHb9WrJwdQhJpTOn0aNiirYhpVSZiZ35QmUbdgj/ANFt5YdydHt2SoK/Xs
+         dfwg==
+X-Gm-Message-State: AOAM533RiLOk/o+IAK08BRhKHf+vdQW5Tg5aGWM4rhTDJgs0EhUr3SG5
+        T5eZ/2fWdpCdzNVbI+cCGrpxq07+1vcwOuW+xmfPi7arEvFjhZE4FFDTyWmmEoUJIwpRDvoKYDB
+        JmG/Ba880SQMMA46IOyUfEw9AZDdpkg==
+X-Received: by 2002:a05:600c:214:: with SMTP id 20mr13686022wmi.190.1633628530242;
+        Thu, 07 Oct 2021 10:42:10 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxDmI/yGBLCgPg0WsPE3RvHXr6qIW67zZ3E4/qd73a3ZrztqgInsQUeO0qk0lUzJ61Xfwe7aw==
+X-Received: by 2002:a05:600c:214:: with SMTP id 20mr13686006wmi.190.1633628530064;
+        Thu, 07 Oct 2021 10:42:10 -0700 (PDT)
 Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
-        by smtp.gmail.com with ESMTPSA id k18sm210515wrn.81.2021.10.07.10.28.35
+        by smtp.gmail.com with ESMTPSA id c15sm16347wrs.19.2021.10.07.10.42.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Oct 2021 10:28:35 -0700 (PDT)
-Date:   Thu, 7 Oct 2021 19:28:33 +0200
+        Thu, 07 Oct 2021 10:42:09 -0700 (PDT)
+Date:   Thu, 7 Oct 2021 19:42:07 +0200
 From:   Jiri Olsa <jolsa@redhat.com>
-To:     Kim Phillips <kim.phillips@amd.com>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Joao Martins <joao.m.martins@oracle.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Robert Richter <robert.richter@amd.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 2/2] perf tools: Improve IBS error handling
-Message-ID: <YV8uQVnMnnMd1Led@krava>
-References: <20211004214114.188477-1-kim.phillips@amd.com>
- <20211004214114.188477-2-kim.phillips@amd.com>
+To:     Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc:     acme@kernel.org, michael@ellerman.id.au, eranian@google.com,
+        mark.rutland@arm.com, namhyung@kernel.org, kjain@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] tools/perf: Add reverse_fn to handle branch_stack
+ endian issue
+Message-ID: <YV8xbzWt7tEbBbZX@krava>
+References: <20210930070410.52703-1-maddy@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211004214114.188477-2-kim.phillips@amd.com>
+In-Reply-To: <20210930070410.52703-1-maddy@linux.ibm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Oct 04, 2021 at 04:41:14PM -0500, Kim Phillips wrote:
-
-SNIP
-
+On Thu, Sep 30, 2021 at 12:34:09PM +0530, Madhavan Srinivasan wrote:
+> branch_stack struct has bit field definition which
+> produces different bit ordering for big/little endian.
+> Because of this, when branch_stack sample is collected
+> in a BE system and viewed/reported in a LE system, bit
+> fields of the branch stack are not presented properly.
+> To address this issue, a evsel__reverse64_branch_stack_flags()
+> is defined and introduced in evsel__parse_sample.
+> 
+> Signed-off-by: Madhavan Srinivasan <maddy@linux.ibm.com>
 > ---
->  tools/perf/util/evsel.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
+>  tools/perf/util/evsel.c | 64 +++++++++++++++++++++++++++++++++++++++--
+>  tools/perf/util/evsel.h |  5 ++++
+>  2 files changed, 67 insertions(+), 2 deletions(-)
 > 
 > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index b915840690d4..f8a9cbd99314 100644
+> index dbfeceb2546c..007be66b69a2 100644
 > --- a/tools/perf/util/evsel.c
 > +++ b/tools/perf/util/evsel.c
-> @@ -2743,9 +2743,22 @@ static bool find_process(const char *name)
->  	return ret ? false : true;
+> @@ -2221,6 +2221,46 @@ void __weak arch_perf_parse_sample_weight(struct perf_sample *data,
+>  	data->weight = *array;
 >  }
 >  
-> +static bool is_amd(const char *arch, const char *cpuid)
+> +u64 evsel__reverse64_branch_stack_flags(u64 value)
 > +{
-> +	return arch && !strcmp("x86", arch) && cpuid && strstarts(cpuid, "AuthenticAMD");
+> +	u64 new_val = 0;
+> +
+> +	/*
+> +	 * branch_stack flag (u64)
+> +	 * union {
+> +	 * 	u64 values;
+> +	 * 	struct {
+> +	 * 		mispred:1	//target mispredicted
+> +	 * 		predicted:1	//target predicted
+> +	 * 		in_tx:1		//in transaction
+> +	 * 		abort:1		//transaction abort
+> +	 * 		cycles:16	//cycle count to last branch
+> +	 * 		type:4		//branch type
+> +	 * 		reserved:40
+> +	 * 	}
+> +	 * }
+> +	 */
+
+please describe in comment how the bitfield is swapped
+
+
+> +	if (bigendian()) {
+> +		new_val = reverse_64(value, 0, 1);
+> +		new_val |= reverse_64(value, 1, 1);
+> +		new_val |= reverse_64(value, 2, 1);
+> +		new_val |= reverse_64(value, 3, 1);
+> +		new_val |= reverse_64(value, 4, 16);
+> +		new_val |= reverse_64(value, 20, 4);
+> +		new_val |= reverse_64(value, 24, 40);
+> +	} else {
+> +		new_val = reverse_64(value, 63, 1);
+> +		new_val |= reverse_64(value, 62, 1);
+> +		new_val |= reverse_64(value, 61, 1);
+> +		new_val |= reverse_64(value, 60, 1);
+> +		new_val |= reverse_64(value, 44, 16);
+> +		new_val |= reverse_64(value, 40, 4);
+> +		new_val |= reverse_64(value, 0, 40);
+> +	}
+> +
+> +	return new_val;
 > +}
 > +
-> +static bool is_amd_ibs(struct evsel *evsel)
-> +{
-> +	return evsel->core.attr.precise_ip || !strncmp(evsel->pmu_name, "ibs", 3);
-> +}
-> +
->  int evsel__open_strerror(struct evsel *evsel, struct target *target,
->  			 int err, char *msg, size_t size)
+>  int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+>  			struct perf_sample *data)
 >  {
-> +	struct perf_env *env = evsel__env(evsel);
-> +	const char *arch = perf_env__arch(env);
-> +	const char *cpuid = perf_env__cpuid(env);
->  	char sbuf[STRERR_BUFSIZE];
->  	int printed = 0, enforced = 0;
+> @@ -2408,6 +2448,8 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+>  	if (type & PERF_SAMPLE_BRANCH_STACK) {
+>  		const u64 max_branch_nr = UINT64_MAX /
+>  					  sizeof(struct branch_entry);
+> +		struct branch_entry *e;
+> +		unsigned int i;
 >  
-> @@ -2841,6 +2854,17 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
->  			return scnprintf(msg, size, "wrong clockid (%d).", clockid);
->  		if (perf_missing_features.aux_output)
->  			return scnprintf(msg, size, "The 'aux_output' feature is not supported, update the kernel.");
-> +		if (is_amd(arch, cpuid)) {
-> +			if (is_amd_ibs(evsel)) {
+>  		OVERFLOW_CHECK_u64(array);
+>  		data->branch_stack = (struct branch_stack *)array++;
+> @@ -2416,10 +2458,28 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+>  			return -EFAULT;
+>  
+>  		sz = data->branch_stack->nr * sizeof(struct branch_entry);
+> -		if (evsel__has_branch_hw_idx(evsel))
+> +		if (evsel__has_branch_hw_idx(evsel)) {
+>  			sz += sizeof(u64);
+> -		else
+> +			e = &data->branch_stack->entries[0];
+> +		} else {
+>  			data->no_hw_idx = true;
+> +			e = (struct branch_entry *)&data->branch_stack->hw_idx;
 
-would single 'is_amd_ibs' call be better? checking on both amd and ibs
+hum, why do we convert hw_idx? it's the same struct as entries?
+please explain this in comment as well
 
-jirka
-
-> +				if (evsel->core.attr.exclude_kernel)
-> +					return scnprintf(msg, size, 
-> +	"AMD IBS can't exclude kernel events.  Try running at a higher privilege level.");
-> +				if (!evsel->core.system_wide)
-> +					return scnprintf(msg, size,
-> +	"AMD IBS may only be available in system-wide/per-cpu mode.  Try using -a, or -C and workload affinity");
-> +			}
 > +		}
 > +
->  		break;
->  	case ENODATA:
->  		return scnprintf(msg, size, "Cannot collect data source with the load latency event alone. "
+> +		if (swapped) {
+> +			/*
+> +			 * struct branch_flag does not have endian specific
+> +			 * bit field definition. And bswap will not resolve the
+> +			 * issue, since these are bit fields.
+> +			 *
+> +			 * evsel__reverse64_branch_stack_flags() uses a reverse64
+> +			 * macro to reverse the bit position based on the host
+> +			 * endians.
+> +			 */
+> +			for (i = 0; i < data->branch_stack->nr; i++, e++)
+> +				e->flags.value = evsel__reverse64_branch_stack_flags(e->flags.value);
+> +		}
+> +
+>  		OVERFLOW_CHECK(array, sz, max_size);
+>  		array = (void *)array + sz;
+>  	}
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index 1f7edfa8568a..1127c23710cf 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -482,4 +482,9 @@ struct evsel *evsel__leader(struct evsel *evsel);
+>  bool evsel__has_leader(struct evsel *evsel, struct evsel *leader);
+>  bool evsel__is_leader(struct evsel *evsel);
+>  void evsel__set_leader(struct evsel *evsel, struct evsel *leader);
+> +
+> +#define reverse_64(src, pos, size)	\
+> +	((((src) >> (pos)) & ((1ull << (size)) - 1)) << (63 - ((pos) + (size) - 1)))
+
+hum, is this reversing anything?
+could you please add comment describing what this is doing?
+
+thanks,
+jirka
+
+> +
+> +u64 evsel__reverse64_branch_stack_flags(u64 value);
+>  #endif /* __PERF_EVSEL_H */
 > -- 
 > 2.31.1
 > 
