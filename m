@@ -2,395 +2,273 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8041DC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Oct 2021 19:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 442BEC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Oct 2021 20:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61EA160FF2
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Oct 2021 19:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15278610E5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Oct 2021 20:04:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240659AbhJHTNz (ORCPT
+        id S242160AbhJHUGM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 8 Oct 2021 15:13:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231342AbhJHTNz (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 8 Oct 2021 15:13:55 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6ECDD60F4F;
-        Fri,  8 Oct 2021 19:11:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633720319;
-        bh=7mZMBOTiR9t6hATvGff5yzuCPWoz+H/q3mYoiQ5Cj+g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EYJZNWZsl4SPabnCRBKQywUhLz6FyLBnSmBpTTUYkVuwo7e2cHSsAJzwfm4HwEc2z
-         ZXDJh1wq5wzwl+lQ88/DpPqmh0OF3H6JfWCQrl40GE38sJ6LpttnmTNZaKqp3V6XMH
-         Vd953amFZRlR8e6NKnxbHy/TXeUlqMSr8oqPHZseeCcHOMsvr8bXrdV4cMMU6d0rrv
-         cYd1tDgzKCcS690gp7xZjtQhDFX5Tt+O257HgCuAkwZZbV99f+FpgB60YXD+HpiAMW
-         7pRx64VubnjW595jTJAKTlY6x16MBPnSxANM6M7rBSTBT2mOxIxYDANwA9r+ZIAfVZ
-         6wqfUuJJDsXPQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CC96E410A1; Fri,  8 Oct 2021 16:11:56 -0300 (-03)
-Date:   Fri, 8 Oct 2021 16:11:56 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Shunsuke Nakamura <nakamura.shun@fujitsu.com>
-Cc:     Rob Herring <robh@kernel.org>, peterz@infradead.org,
-        mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] libperf tests: Add test_stat_multiplexing test
-Message-ID: <YWCX/D31ZiqGmLjE@kernel.org>
-References: <20210922101627.3396398-1-nakamura.shun@fujitsu.com>
- <20210922101627.3396398-3-nakamura.shun@fujitsu.com>
+        Fri, 8 Oct 2021 16:06:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40104 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231589AbhJHUGM (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 8 Oct 2021 16:06:12 -0400
+Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89EA7C061755
+        for <linux-perf-users@vger.kernel.org>; Fri,  8 Oct 2021 13:04:16 -0700 (PDT)
+Received: by mail-il1-x136.google.com with SMTP id h11so3371186ila.10
+        for <linux-perf-users@vger.kernel.org>; Fri, 08 Oct 2021 13:04:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=54hDmXr2Paoz2+LC6oFG+5e8/5S5X4cUXnpR6jROIYo=;
+        b=JCuT9KD3X2OdvW/J8323cUFXQdxMlqp0ouiVFnLruk2BlDgYqmOU+dW4c4vYUAlL9e
+         nGWfP+D0xA9hTXsLwKsToOLcDjorXFdAJo00/60KbBh3zFFYndCCTIEXZqXhjxzbrzcu
+         1IUdj5tIqWopSGuQIQkEWX0aHdd08bzbHqk6f/n14hK7aDGErpYPE8ivQDWEZ1iOIx9Q
+         7V7QKhN8DgsRa3Jj0PhsAOgFwuJq/6J38VTG0X/jUXFRPVPwAF8iweFLnTElJV97zuvs
+         FPbOHvpYgXUQ6lSbeXT11U+5Hl8FSU4RdECE1nLsonmhtcMJRB+Wrc5h9hXsg1joUnFp
+         Jmhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=54hDmXr2Paoz2+LC6oFG+5e8/5S5X4cUXnpR6jROIYo=;
+        b=nMiAMnBr3Y57BVcNp3mQJ6VK2yVkWqufv9LL8ZebTGtFFerP7RptoVyzBajFlD8mgR
+         gP+08CsZzi3sjjtStTMEhIH85ZQ8TzTuKv9iWKiq5uSH/SWL+gyzqJZQckv1Hx3oxlPU
+         ersKQyaNdxeWjBr7VVx9IiaiJDZtZ/m9OW65fMyGG9CosXtU9h8KwWMmJG0L+vSw9/G4
+         gbCn+HwaPodpUbQdbEMmtA/LompSu+r356zdwINo67qF7azWaru/yeDQRU98NOJV+F2t
+         VR9PZ7LkLGEx7PtuR0i8SQeGl9hrfPMA5kbXJj2jhsAt7YHPmpXennDZoRtsG9C4U5U0
+         Aznw==
+X-Gm-Message-State: AOAM530/L0+Dacz5jpSLr8aTiZrYoXGSh1DvdEi5seA79GQFU3f5gx0A
+        8WRwr1qTSZKjZFiVhlrzNol8fXoHXyd8qlOMbNg4Zw==
+X-Google-Smtp-Source: ABdhPJw2HwIPjY0od+gfnx4+b+NRQhOvduZSvDe9coOckBS+/XtEZOWPxK/JUuCAZ0brvVoExmt7CLjtR9BBjGTmZTY=
+X-Received: by 2002:a05:6e02:190a:: with SMTP id w10mr8831798ilu.2.1633723455648;
+ Fri, 08 Oct 2021 13:04:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210922101627.3396398-3-nakamura.shun@fujitsu.com>
-X-Url:  http://acmel.wordpress.com
+References: <20210922081959.390059-1-irogers@google.com> <YUumPj7Oa1HvVGW/@krava>
+ <CAP-5=fVd8zU-uHMg1KjyNPDv-_y-Q562PvPpoWSi1rS-KD0ezw@mail.gmail.com>
+ <YVDlL28JgxaRwMJs@krava> <CAP-5=fXkfMW9jHYz8X9p==gsRRzRCsx5WrGdmzE5YWe+idBeQw@mail.gmail.com>
+ <YWCXQ5xw3Nc2NGIt@kernel.org>
+In-Reply-To: <YWCXQ5xw3Nc2NGIt@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 8 Oct 2021 13:04:02 -0700
+Message-ID: <CAP-5=fUy4Qe4dqBjcRwBV0U4q9QgVUw4swxi7iE65sfOrJ17xw@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/5] Start aligning perf test with kunit style
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Daniel Latypov <dlatypov@google.com>,
+        David Gow <davidgow@google.com>, eranian@google.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Sep 22, 2021 at 07:16:27PM +0900, Shunsuke Nakamura escreveu:
-> From: nakamura shunsuke <nakamura.shun@fujitsu.com>
-> 
-> Adds a test for a counter obtained using read() system call during multiplexing
+On Fri, Oct 8, 2021 at 12:08 PM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Mon, Sep 27, 2021 at 09:09:43AM -0700, Ian Rogers escreveu:
+> > On Sun, Sep 26, 2021 at 2:25 PM Jiri Olsa <jolsa@redhat.com> wrote:
+> > >
+> > > On Wed, Sep 22, 2021 at 04:36:05PM -0700, Ian Rogers wrote:
+> > > > On Wed, Sep 22, 2021 at 2:55 PM Jiri Olsa <jolsa@redhat.com> wrote:
+> > > > >
+> > > > > On Wed, Sep 22, 2021 at 01:19:53AM -0700, Ian Rogers wrote:
+> > > > > > Perf test uses its own structs and code layout that differs from kunit
+> > > > > > that was more recently introduced to the kernel. Besides consistency,
+> > > > > > it is hoped that moving in the direction of kunit style will enable
+> > > > > > reuse of infrastructure like test output formatting for continuous
+> > > > > > testing systems. For example:
+> > > > > > https://lore.kernel.org/linux-kselftest/CA+GJov6tdjvY9x12JsJT14qn6c7NViJxqaJk+r-K1YJzPggFDQ@mail.gmail.com/
+> > > > > >
+> > > > > > The motivation for this restructuring comes from wanting to be able to
+> > > > > > tag tests with a size:
+> > > > > > https://lore.kernel.org/linux-perf-users/CAP-5=fWmGyuqFKc-EMP3rbmTkjZ3MS+YSajGZfeRMc38HS82gw@mail.gmail.com/
+> > > > > > To have more exhaustive and slower running tests.  This isn't
+> > > > > > something kunit currently supports, nor is the execution of python and
+> > > > > > shell tests, but it seems sensible to work on an approach with kunit
+> > > > > > rather to invent a new wheel inside of perf.
+> > > > > >
+> > > > > > These initial patches are just refactoring the main test suite
+> > > > > > definitions to be in a more kunit style. Kunit isn't depended upon, it
+> > > > > > is hoped that this can be done in later patches for the sake of
+> > > > > > consistency.
+> > > > >
+> > > > > seems good.. how far away from kunit is the code now?
+> > > >
+> > > > Thanks Jiri, It is a ways away from complete. I was thinking to follow up with:
+> > > > * Migrate the current sub-test approach to use kunit style test cases
+> > > > within a suite.
+> > > > * Combine what are currently independent test suites into one test
+> > > > suite with different test cases, for example stat.c contains stat,
+> > > > stat_config and stat_round tests.
+> > > >
+> > > > Once this is done then to unify with kunit we need to work out a
+> > > > common pattern for skipping a test, etc. There's already a lot here
+> > > > and so I wanted to get an opinion before pushing along further.
+> > > >
+> > > > > >
+> > > > > > v1. Built/tested on x86.
+> > > > > >
+> > > > > > Ian Rogers (5):
+> > > > > >   perf test: Use macro for "suite" declarations
+> > > > > >   perf test: Use macro for "suite" definitions
+> > > > > >   perf test: Make each test/suite its own struct.
+> > > > > >   perf test: Move each test suite struct to its test
+> > > > > >   perf test: Rename struct test to test_suite
+> > > > > >
+> > > > > >  tools/perf/arch/arm/include/arch-tests.h      |   2 +-
+> > > > > >  tools/perf/arch/arm/tests/arch-tests.c        |  21 +-
+> > > > > >  tools/perf/arch/arm/tests/vectors-page.c      |   2 +-
+> > > > > >  tools/perf/arch/arm64/include/arch-tests.h    |   2 +-
+> > > > > >  tools/perf/arch/arm64/tests/arch-tests.c      |  15 +-
+> > > > > >  tools/perf/arch/powerpc/include/arch-tests.h  |   2 +-
+> > > > > >  tools/perf/arch/powerpc/tests/arch-tests.c    |  15 +-
+> > > > >
+> > > > > I can run/test this on ppc/arm if you don't have any
+> > > >
+> > > > I have pretty easy access to ARM but lost access to PowerPC. If we're
+> > > > happy with the direction then I can test ARM and ask for help on
+> > > > PowerPC.
+> > >
+> > > it compiles fine on powerpc and failed tests seem reasonable,
+> > > before/after perf test output is same apart from this:
+> > >
+> > > [root@ibm-p9z-06-lp7 perf]# diff -puw out.old out.new
+> > > --- out.old     2021-09-26 17:15:57.947807813 -0400
+> > > +++ out.new     2021-09-26 17:20:51.789918644 -0400
+> > > @@ -81,7 +81,7 @@
+> > >  69: PE file support                                                 : Ok
+> > >  70: Event expansion for cgroups                                     : Ok
+> > >  72: dlfilter C API                                                  : Ok
+> > > -73: Test dwarf unwind                                               : Ok
+> > > +73: DWARF unwind                                                    : Ok
+> > >  74: build id cache operations                                       : Ok
+> > >  75: daemon operations                                               : Ok
+> > >  76: perf pipe recording and injection test                          : Ok
+> > >
+> > > not sure there's somebody out there parsing this output,
+> > > maybe we can find out ;-)
+> >
+> > Thanks, actually we have a parser on this output :-) I will correct the issue.
+>
+> Seems like the right direction, people are ok with it, v2 time?
 
-You forgot to add Rob to the CC list, can I have Acked-by or
-Reviewed-by?
+Thanks! I'm working on v2, I've fixed up wrt Jiri's comments and I'm
+working on using the test_case style for subtests. I hope to send it
+out soon-ish.
 
 Thanks,
+Ian
 
-- Arnaldo
- 
-> Committer testing:
-> 
->   $ sudo make tests -C tools/lib/perf/ V=1
->   make: Entering directory '/home/nakamura/build_work/build_kernel/linux_kernel/linux/tools/lib/perf'
->   make -f /home/nakamura/build_work/build_kernel/linux_kernel/linux/tools/build/Makefile.build dir=. obj=libperf
->   make -C /home/nakamura/build_work/build_kernel/linux_kernel/linux/tools/lib/api/ O= libapi.a
->   make -f /home/nakamura/build_work/build_kernel/linux_kernel/linux/tools/build/Makefile.build dir=./fd obj=libapi
->   make -f /home/nakamura/build_work/build_kernel/linux_kernel/linux/tools/build/Makefile.build dir=./fs obj=libapi
->   make -f /home/nakamura/build_work/build_kernel/linux_kernel/linux/tools/build/Makefile.build dir=. obj=tests
->   make -f /home/nakamura/build_work/build_kernel/linux_kernel/linux/tools/build/Makefile.build dir=./tests obj=tests
->   running static:
->   - running tests/test-cpumap.c...OK
->   - running tests/test-threadmap.c...OK
->   - running tests/test-evlist.c...
->   	count = 502273264, run = 264105562, enable = 444092845
->   	count = 501850699, run = 264100505, enable = 444088400
->   	count = 499613780, run = 264096660, enable = 444085073
->   	count = 499569398, run = 264501528, enable = 444081268
->   	count = 500717228, run = 265495387, enable = 444077029
->   	count = 501260539, run = 266488226, enable = 444071569
->   	count = 501023910, run = 267469613, enable = 444065303
->   	count = 501188267, run = 268461294, enable = 444058413
->   	count = 503096683, run = 269450511, enable = 444050567
->   	count = 503141904, run = 269587790, enable = 444041735
->   	count = 503454490, run = 268590361, enable = 444030544
->   	count = 504838207, run = 267592624, enable = 444021005
->   	count = 505458594, run = 266594648, enable = 444001280
->   	count = 504269433, run = 265595795, enable = 443991377
->   	count = 502625858, run = 264599374, enable = 443982141
->      Expected: 502065774
->      High: 505458594   Low:  499569398   Average:  502292150
->      Average Error = 0.05%
->   	count = 26129, run = 134550, enable = 134550
->   	count = 34035, run = 140540, enable = 140540
->   	count = 40189, run = 141126, enable = 141126
->   	count = 45263, run = 138290, enable = 138290
->   	count = 51381, run = 136966, enable = 136966
->   	count = 57499, run = 134993, enable = 134993
->   	count = 63617, run = 132320, enable = 132320
->   	count = 71714, run = 132047, enable = 132047
->   	count = 77832, run = 128157, enable = 128157
->   	count = 0, run = 0, enable = 123662
->   	count = 0, run = 0, enable = 116753
->   	count = 0, run = 0, enable = 110304
->   	count = 0, run = 0, enable = 103834
->   	count = 0, run = 0, enable = 97465
->   	count = 0, run = 0, enable = 91110
->   OK
->   - running tests/test-evsel.c...
->   	loop = 65536, count = 334303
->   	loop = 131072, count = 656954
->   	loop = 262144, count = 1321090
->   	loop = 524288, count = 2652616
->   	loop = 1048576, count = 5262140
->   	loop = 65536, count = 393726
->   	loop = 131072, count = 989345
->   	loop = 262144, count = 1986206
->   	loop = 524288, count = 3831652
->   	loop = 1048576, count = 7747957
->   OK
->   running dynamic:
->   - running tests/test-cpumap.c...OK
->   - running tests/test-threadmap.c...OK
->   - running tests/test-evlist.c...
->   	count = 501975838, run = 247092568, enable = 415093723
->   	count = 502491858, run = 247087145, enable = 415088830
->   	count = 502571026, run = 247083574, enable = 415085139
->   	count = 502743767, run = 247080183, enable = 415081197
->   	count = 503259008, run = 247779561, enable = 415076990
->   	count = 503169622, run = 248773141, enable = 415072091
->   	count = 503430373, run = 249816445, enable = 415066529
->   	count = 502597951, run = 250808797, enable = 415059863
->   	count = 502211776, run = 251799199, enable = 415051831
->   	count = 501921896, run = 252000721, enable = 415042717
->   	count = 501441904, run = 251309399, enable = 415031152
->   	count = 501224474, run = 250311107, enable = 415021479
->   	count = 500502827, run = 249260579, enable = 415012168
->   	count = 500775622, run = 248259621, enable = 415002830
->   	count = 501377375, run = 247261134, enable = 414993890
->      Expected: 501953755
->      High: 503430373   Low:  500502827   Average:  502113021
->      Average Error = 0.03%
->   	count = 26098, run = 131826, enable = 131826
->   	count = 33689, run = 138284, enable = 138284
->   	count = 39808, run = 139152, enable = 139152
->   	count = 45927, run = 138880, enable = 138880
->   	count = 51049, run = 135405, enable = 135405
->   	count = 57168, run = 133406, enable = 133406
->   	count = 63287, run = 130736, enable = 130736
->   	count = 71392, run = 130474, enable = 130474
->   	count = 77794, run = 127203, enable = 127203
->   	count = 0, run = 0, enable = 123172
->   	count = 0, run = 0, enable = 116856
->   	count = 0, run = 0, enable = 110557
->   	count = 0, run = 0, enable = 104282
->   	count = 0, run = 0, enable = 97929
->   	count = 0, run = 0, enable = 91792
->   OK
->   - running tests/test-evsel.c...
->   	loop = 65536, count = 334400
->   	loop = 131072, count = 656908
->   	loop = 262144, count = 1315441
->   	loop = 524288, count = 2657481
->   	loop = 1048576, count = 5258193
->   	loop = 65536, count = 491938
->   	loop = 131072, count = 965755
->   	loop = 262144, count = 1666277
->   	loop = 524288, count = 3516123
->   	loop = 1048576, count = 6759204
->   OK
->   make: Leaving directory '/home/nakamura/build_work/build_kernel/linux_kernel/linux/tools/lib/perf'
-> 
-> 
-> Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
-> ---
->  tools/lib/perf/tests/test-evlist.c | 183 +++++++++++++++++++++++++++++
->  1 file changed, 183 insertions(+)
-> 
-> diff --git a/tools/lib/perf/tests/test-evlist.c b/tools/lib/perf/tests/test-evlist.c
-> index c67c83399170..ca7a9542f40e 100644
-> --- a/tools/lib/perf/tests/test-evlist.c
-> +++ b/tools/lib/perf/tests/test-evlist.c
-> @@ -21,6 +21,10 @@
->  #include "tests.h"
->  #include <internal/evsel.h>
->  
-> +#define EVENT_NUM 15
-> +#define WAIT_COUNT 100000000UL
-> +
-> +
->  static int libperf_print(enum libperf_print_level level,
->  			 const char *fmt, va_list ap)
->  {
-> @@ -413,6 +417,184 @@ static int test_mmap_cpus(void)
->  	return 0;
->  }
->  
-> +static double display_error(long long average,
-> +		     long long high,
-> +		     long long low,
-> +		     long long expected) {
-> +
-> +	double error;
-> +
-> +	error = (((double)average - expected) / expected) * 100.0;
-> +
-> +	__T_VERBOSE("   Expected: %lld\n", expected);
-> +	__T_VERBOSE("   High: %lld   Low:  %lld   Average:  %lld\n",
-> +			high, low, average);
-> +
-> +	__T_VERBOSE("   Average Error = %.2f%%\n",error);
-> +
-> +	return error;
-> +
-> +}
-> +
-> +static int test_stat_multiplexing(void)
-> +{
-> +	struct perf_counts_values expected_counts = { .val = 0 };
-> +	struct perf_counts_values multiplexing_counts[EVENT_NUM] = {{ .val = 0 },};
-> +	struct perf_thread_map *threads;
-> +	struct perf_evlist *evlist;
-> +	struct perf_evsel *evsel;
-> +	struct perf_event_attr attr = {
-> +		.type	     = PERF_TYPE_HARDWARE,
-> +		.config	     = PERF_COUNT_HW_INSTRUCTIONS,
-> +		.read_format = PERF_FORMAT_TOTAL_TIME_ENABLED |
-> +			       PERF_FORMAT_TOTAL_TIME_RUNNING,
-> +		.disabled    = 1,
-> +	};
-> +	int err, i, nonzero=0;
-> +	unsigned long count;
-> +	long long max = 0, min = 0, avg = 0;
-> +	double error = 0.0;
-> +
-> +
-> +	/* read for non-multiplexing event count */
-> +	threads = perf_thread_map__new_dummy();
-> +	__T("failed to create threads", threads);
-> +
-> +	perf_thread_map__set_pid(threads, 0, 0);
-> +
-> +	evsel = perf_evsel__new(&attr);
-> +	__T("failed to create evsel", evsel);
-> +
-> +	err = perf_evsel__open(evsel, NULL, threads);
-> +	__T("failed to open evsel", err == 0);
-> +
-> +	err = perf_evsel__enable(evsel);
-> +	__T("failed to enable evsel", err == 0);
-> +
-> +	/* wait loop */
-> +	count = WAIT_COUNT;
-> +	while(count--);
-> +
-> +	perf_evsel__read(evsel, 0, 0, &expected_counts);
-> +	__T("failed to read value for evsel", expected_counts.val != 0);
-> +	__T("failed to read non-multiplexing event count",
-> +	    expected_counts.ena == expected_counts.run);
-> +
-> +	err = perf_evsel__disable(evsel);
-> +	__T("failed to enable evsel", err == 0);
-> +
-> +	perf_evsel__close(evsel);
-> +	perf_evsel__delete(evsel);
-> +
-> +	perf_thread_map__put(threads);
-> +
-> +
-> +	/* read for multiplexing event count */
-> +	threads = perf_thread_map__new_dummy();
-> +	__T("failed to create threads", threads);
-> +
-> +	perf_thread_map__set_pid(threads, 0, 0);
-> +
-> +	evlist = perf_evlist__new();
-> +	__T("failed to create evlist", evlist);
-> +
-> +	for (i = 0; i < EVENT_NUM; i++) {
-> +		evsel = perf_evsel__new(&attr);
-> +		__T("failed to create evsel1", evsel);
-> +
-> +		perf_evlist__add(evlist, evsel);
-> +	}
-> +	perf_evlist__set_maps(evlist, NULL, threads);
-> +
-> +	err = perf_evlist__open(evlist);
-> +	__T("failed to open evsel", err == 0);
-> +
-> +	perf_evlist__enable(evlist);
-> +
-> +	/* wait loop */
-> +	count = WAIT_COUNT;
-> +	while(count--);
-> +
-> +	i = 0;
-> +	perf_evlist__for_each_evsel(evlist, evsel) {
-> +		perf_evsel__read(evsel, 0, 0, &multiplexing_counts[i]);
-> +		__T("failed to read value for evsel", multiplexing_counts[i].val != 0);
-> +		i++;
-> +	}
-> +
-> +	perf_evlist__disable(evlist);
-> +
-> +
-> +	min = multiplexing_counts[0].val;
-> +	for (i = 0; i < EVENT_NUM; i++) {
-> +		__T_VERBOSE("\tcount = %lu, run = %lu, enable = %lu\n",
-> +			    multiplexing_counts[i].val, multiplexing_counts[i].run,
-> +			    multiplexing_counts[i].ena);
-> +
-> +		if (multiplexing_counts[i].val > max)
-> +			max = multiplexing_counts[i].val;
-> +
-> +		if (multiplexing_counts[i].val < min)
-> +			min = multiplexing_counts[i].val;
-> +
-> +		avg += multiplexing_counts[i].val;
-> +
-> +		if (multiplexing_counts[i].val != 0)
-> +			nonzero++;
-> +	}
-> +
-> +	avg = avg / nonzero;
-> +
-> +	error = display_error(avg, max, min, expected_counts.val);
-> +
-> +	__T("Error out of range!", ((error <= 1.0) && (error >= -1.0)));
-> +
-> +	perf_evlist__close(evlist);
-> +	perf_evlist__delete(evlist);
-> +
-> +	perf_thread_map__put(threads);
-> +
-> +
-> +	/* Verify that no division by zero occurs */
-> +	threads = perf_thread_map__new_dummy();
-> +	__T("failed to create threads", threads);
-> +
-> +	perf_thread_map__set_pid(threads, 0, 0);
-> +
-> +	evlist = perf_evlist__new();
-> +	__T("failed to create evlist", evlist);
-> +
-> +	for (i = 0; i < EVENT_NUM; i++) {
-> +		evsel = perf_evsel__new(&attr);
-> +		__T("failed to create evsel1", evsel);
-> +
-> +		perf_evlist__add(evlist, evsel);
-> +	}
-> +	perf_evlist__set_maps(evlist, NULL, threads);
-> +
-> +	err = perf_evlist__open(evlist);
-> +	__T("failed to open evsel", err == 0);
-> +
-> +	perf_evlist__enable(evlist);
-> +
-> +	/* Reproduce run=0 by not executing wait loop. */
-> +
-> +	i = 0;
-> +	perf_evlist__for_each_evsel(evlist, evsel) {
-> +		perf_evsel__read(evsel, 0, 0, &multiplexing_counts[i]);
-> +		__T_VERBOSE("\tcount = %lu, run = %lu, enable = %lu\n",
-> +			    multiplexing_counts[i].val, multiplexing_counts[i].run,
-> +			    multiplexing_counts[i].ena);
-> +		i++;
-> +	}
-> +
-> +	perf_evlist__close(evlist);
-> +	perf_evlist__delete(evlist);
-> +
-> +	perf_thread_map__put(threads);
-> +	return 0;
-> +}
-> +
->  int test_evlist(int argc, char **argv)
->  {
->  	__T_START;
-> @@ -424,6 +606,7 @@ int test_evlist(int argc, char **argv)
->  	test_stat_thread_enable();
->  	test_mmap_thread();
->  	test_mmap_cpus();
-> +	test_stat_multiplexing();
->  
->  	__T_END;
->  	return tests_failed == 0 ? 0 : -1;
-> -- 
-> 2.27.0
-
--- 
-
-- Arnaldo
+> - Arnaldo
+>
+> > Ian
+> >
+> > > jirka
+> > >
+> > > >
+> > > > Thanks,
+> > > > Ian
+> > > >
+> > > > > jirka
+> > > > >
+> > > > > >  tools/perf/arch/x86/include/arch-tests.h      |  14 +-
+> > > > > >  tools/perf/arch/x86/tests/arch-tests.c        |  47 +-
+> > > > > >  tools/perf/arch/x86/tests/bp-modify.c         |   2 +-
+> > > > > >  tools/perf/arch/x86/tests/insn-x86.c          |   2 +-
+> > > > > >  tools/perf/arch/x86/tests/intel-cqm.c         |   2 +-
+> > > > > >  .../x86/tests/intel-pt-pkt-decoder-test.c     |   2 +-
+> > > > > >  tools/perf/arch/x86/tests/rdpmc.c             |   2 +-
+> > > > > >  tools/perf/arch/x86/tests/sample-parsing.c    |   2 +-
+> > > > > >  tools/perf/tests/api-io.c                     |   6 +-
+> > > > > >  tools/perf/tests/attr.c                       |   4 +-
+> > > > > >  tools/perf/tests/backward-ring-buffer.c       |   4 +-
+> > > > > >  tools/perf/tests/bitmap.c                     |   4 +-
+> > > > > >  tools/perf/tests/bp_account.c                 |  10 +-
+> > > > > >  tools/perf/tests/bp_signal.c                  |   8 +-
+> > > > > >  tools/perf/tests/bp_signal_overflow.c         |   8 +-
+> > > > > >  tools/perf/tests/bpf.c                        |  22 +-
+> > > > > >  tools/perf/tests/builtin-test.c               | 441 ++++--------------
+> > > > > >  tools/perf/tests/clang.c                      |  18 +-
+> > > > > >  tools/perf/tests/code-reading.c               |   4 +-
+> > > > > >  tools/perf/tests/cpumap.c                     |  10 +-
+> > > > > >  tools/perf/tests/demangle-java-test.c         |   4 +-
+> > > > > >  tools/perf/tests/demangle-ocaml-test.c        |   4 +-
+> > > > > >  tools/perf/tests/dlfilter-test.c              |   4 +-
+> > > > > >  tools/perf/tests/dso-data.c                   |  10 +-
+> > > > > >  tools/perf/tests/dwarf-unwind.c               |   2 +-
+> > > > > >  tools/perf/tests/event-times.c                |   4 +-
+> > > > > >  tools/perf/tests/event_update.c               |   4 +-
+> > > > > >  tools/perf/tests/evsel-roundtrip-name.c       |   4 +-
+> > > > > >  tools/perf/tests/evsel-tp-sched.c             |   4 +-
+> > > > > >  tools/perf/tests/expand-cgroup.c              |   6 +-
+> > > > > >  tools/perf/tests/expr.c                       |   4 +-
+> > > > > >  tools/perf/tests/fdarray.c                    |   7 +-
+> > > > > >  tools/perf/tests/genelf.c                     |   6 +-
+> > > > > >  tools/perf/tests/hists_cumulate.c             |   4 +-
+> > > > > >  tools/perf/tests/hists_filter.c               |   4 +-
+> > > > > >  tools/perf/tests/hists_link.c                 |   4 +-
+> > > > > >  tools/perf/tests/hists_output.c               |   4 +-
+> > > > > >  tools/perf/tests/is_printable_array.c         |   4 +-
+> > > > > >  tools/perf/tests/keep-tracking.c              |   4 +-
+> > > > > >  tools/perf/tests/kmod-path.c                  |   4 +-
+> > > > > >  tools/perf/tests/llvm.c                       |  22 +-
+> > > > > >  tools/perf/tests/maps.c                       |   4 +-
+> > > > > >  tools/perf/tests/mem.c                        |   4 +-
+> > > > > >  tools/perf/tests/mem2node.c                   |   4 +-
+> > > > > >  tools/perf/tests/mmap-basic.c                 |   4 +-
+> > > > > >  tools/perf/tests/mmap-thread-lookup.c         |   4 +-
+> > > > > >  tools/perf/tests/openat-syscall-all-cpus.c    |   5 +-
+> > > > > >  tools/perf/tests/openat-syscall-tp-fields.c   |   4 +-
+> > > > > >  tools/perf/tests/openat-syscall.c             |   5 +-
+> > > > > >  tools/perf/tests/parse-events.c               |   4 +-
+> > > > > >  tools/perf/tests/parse-metric.c               |   4 +-
+> > > > > >  tools/perf/tests/parse-no-sample-id-all.c     |   4 +-
+> > > > > >  tools/perf/tests/pe-file-parsing.c            |   6 +-
+> > > > > >  tools/perf/tests/perf-hooks.c                 |   4 +-
+> > > > > >  tools/perf/tests/perf-record.c                |   4 +-
+> > > > > >  tools/perf/tests/perf-time-to-tsc.c           |  10 +-
+> > > > > >  tools/perf/tests/pfm.c                        |  16 +-
+> > > > > >  tools/perf/tests/pmu-events.c                 |  19 +-
+> > > > > >  tools/perf/tests/pmu.c                        |   4 +-
+> > > > > >  tools/perf/tests/python-use.c                 |   4 +-
+> > > > > >  tools/perf/tests/sample-parsing.c             |   4 +-
+> > > > > >  tools/perf/tests/sdt.c                        |   6 +-
+> > > > > >  tools/perf/tests/stat.c                       |  10 +-
+> > > > > >  tools/perf/tests/sw-clock.c                   |   4 +-
+> > > > > >  tools/perf/tests/switch-tracking.c            |   4 +-
+> > > > > >  tools/perf/tests/task-exit.c                  |   4 +-
+> > > > > >  tools/perf/tests/tests.h                      | 179 ++++---
+> > > > > >  tools/perf/tests/thread-map.c                 |  10 +-
+> > > > > >  tools/perf/tests/thread-maps-share.c          |   4 +-
+> > > > > >  tools/perf/tests/time-utils-test.c            |   4 +-
+> > > > > >  tools/perf/tests/topology.c                   |   4 +-
+> > > > > >  tools/perf/tests/unit_number__scnprintf.c     |   4 +-
+> > > > > >  tools/perf/tests/vmlinux-kallsyms.c           |   5 +-
+> > > > > >  tools/perf/tests/wp.c                         |  22 +-
+> > > > > >  81 files changed, 543 insertions(+), 618 deletions(-)
+> > > > > >
+> > > > > > --
+> > > > > > 2.33.0.464.g1972c5931b-goog
+> > > > > >
+> > > > >
+> > > >
+> > >
+>
+> --
+>
+> - Arnaldo
