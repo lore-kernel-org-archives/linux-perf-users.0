@@ -2,36 +2,36 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF575C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Oct 2021 18:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1C0C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Oct 2021 19:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B272960F93
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Oct 2021 18:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C4426101A
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Oct 2021 19:00:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231350AbhJHS60 (ORCPT
+        id S231433AbhJHTC3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 8 Oct 2021 14:58:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43706 "EHLO mail.kernel.org"
+        Fri, 8 Oct 2021 15:02:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231308AbhJHS6Z (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 8 Oct 2021 14:58:25 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5B18360FE8;
-        Fri,  8 Oct 2021 18:56:29 +0000 (UTC)
+        id S231312AbhJHTC2 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 8 Oct 2021 15:02:28 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6BB5360FE8;
+        Fri,  8 Oct 2021 19:00:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633719389;
-        bh=hoAj05YuCRBBNrVjKODoIaxA5Jw6r/qy0A5fr49luFQ=;
+        s=k20201202; t=1633719632;
+        bh=X2+TA7D/QVQQ3sstjV8Bo85mIJKFkSjBOXOLiXSWzZE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FTedW6HxC0PQ40Ac5yGvKfkbP3O0QVCmM7/uLPjf3kz7pPvtu3Tn0JzbD5y8bhzyL
-         OpVn2YKBHxIAK/43QAmCq3xdT85kXHHV+G3xQjBsux4Rsj3CJ+wNFXlaurQTHLp5KI
-         5BvpJqU0pwmisE0QhnjIRE1ClWiwQVLmsvJ0AFMRJvFzQRsCmuh7TstTC7u7xZ+mMX
-         fHAYZsS7MsWiKifDBjBnMGBwXegLSl/g+FiIX8s5S1gd8fELcKv6j30aXbRaBfYvwl
-         JLI6J6/pzmBssxupn6ZHssyJPL2UPt9i8c8S2UPRAWY12SjX0w6WPbit4I+8f2Fcfp
-         JbmYaR8uTTNJA==
+        b=BPbxW1Z+XZF5OG7GpRFqxh4JOAvuLoGL/hnbOpxZdQOkl5mHTKG6Ap5Zy3vrL9v3y
+         GbkoH52HrxXMi4XirU2usdotE4A659Xleq/rbGzXDjSzsg4sLdAoijy3KeD8RJphVQ
+         hOsqzKFmu5xJ8t13RPYPmLOptZ++kjibZ7FKPcfpOqtakaU3/B6n5J6PmXsNwIRy4H
+         8zlbWuCkPOUknhfTf8x6aIAG4+Hw2x+8qKa2/rmsZWKwKY3oHuv3PHQxvpoRiSW0mq
+         n2PSPPXOJrqkkT1kJ/KSmM1R4cZuXUJ5BonT2V2ITyXIFLcoviRnYoUjwbTJUOD2qI
+         mu+RGbSoawX4w==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D609B410A1; Fri,  8 Oct 2021 15:56:26 -0300 (-03)
-Date:   Fri, 8 Oct 2021 15:56:26 -0300
+        id 12191410A1; Fri,  8 Oct 2021 16:00:30 -0300 (-03)
+Date:   Fri, 8 Oct 2021 16:00:30 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <jolsa@redhat.com>
+To:     kajoljain <kjain@linux.ibm.com>
 Cc:     James Clark <james.clark@arm.com>, john.garry@huawei.com,
         ak@linux.intel.com, linux-perf-users@vger.kernel.org,
         Nick.Forrington@arm.com, Andrew.Kilroy@arm.com,
@@ -40,186 +40,120 @@ Cc:     James Clark <james.clark@arm.com>, john.garry@huawei.com,
         Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] perf tools: Make the JSON parser more conformant
- when in strict mode
-Message-ID: <YWCUWo6pMns6p05o@kernel.org>
+Subject: Re: [PATCH 0/3] perf tools: Enable strict JSON parsing
+Message-ID: <YWCVTnOUM2P4FRPi@kernel.org>
 References: <20211007110543.564963-1-james.clark@arm.com>
- <20211007110543.564963-3-james.clark@arm.com>
- <YV8z306sBJQsdNNR@krava>
- <2e14963b-cb98-f508-7067-255fdbd36bdb@arm.com>
- <YWBDo5Ciq1hOIxLq@krava>
+ <c15fd2bf-104e-6ab0-6496-7e5cf77a218f@linux.ibm.com>
+ <e8752b2d-65a7-1ed8-3c68-30d9006261ba@arm.com>
+ <5947c093-cff9-f70e-af20-75bc053edf5f@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YWBDo5Ciq1hOIxLq@krava>
+In-Reply-To: <5947c093-cff9-f70e-af20-75bc053edf5f@linux.ibm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Oct 08, 2021 at 03:12:03PM +0200, Jiri Olsa escreveu:
-> On Fri, Oct 08, 2021 at 11:08:25AM +0100, James Clark wrote:
-> > 
-> > 
-> > On 07/10/2021 18:52, Jiri Olsa wrote:
-> > > On Thu, Oct 07, 2021 at 12:05:41PM +0100, James Clark wrote:
-> > >> Return an error when a trailing comma is found or a new item is
-> > >> encountered before a comma or an opening brace. This ensures that the
-> > >> perf json files conform more closely to the spec at https://www.json.org
-> > >>
-> > >> Signed-off-by: James Clark <james.clark@arm.com>
-> > >> ---
-> > >>  tools/perf/pmu-events/jsmn.c | 42 ++++++++++++++++++++++++++++++++++--
-> > >>  1 file changed, 40 insertions(+), 2 deletions(-)
-> > >>
-> > >> diff --git a/tools/perf/pmu-events/jsmn.c b/tools/perf/pmu-events/jsmn.c
-> > >> index 11d1fa18bfa5..8124d2d3ff0c 100644
-> > >> --- a/tools/perf/pmu-events/jsmn.c
-> > >> +++ b/tools/perf/pmu-events/jsmn.c
-> > >> @@ -176,6 +176,14 @@ jsmnerr_t jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
-> > >>  	jsmnerr_t r;
-> > >>  	int i;
-> > >>  	jsmntok_t *token;
-> > >> +#ifdef JSMN_STRICT
-> > > 
-> > > I might have missed some discussion on this, but do we need the
-> > > JSMN_STRICT define, if you enable it in the next patch?
-> > > why can't we be more strict by default.. do you plan to disable
-> > > it in future?
-> > 
-> > I didn't plan on disabling it, I was just trying to keep to the existing style of the
-> > jsmn project.
-> > 
-> > I could have added the trailing comma detection by default and not inside any
-> > #ifdef JSMN_STRICT blocks, but I would like to enable JSMN_STRICT anyway, because it
-> > enables some additional built in checking that was already there. So I thought it
-> > made sense to put my new strict stuff inside the existing strict option.
-> > 
-> > One option would be to remove all (including the existing) #ifdef JSMN_STRICT blocks
-> > and have everything strict by default. But it would be a further deviation from jsmn.
+Em Fri, Oct 08, 2021 at 04:56:55PM +0530, kajoljain escreveu:
 > 
-> ok, I think it makes sense to have JSMN_STRICT then..
-> thanks for explanation
 > 
-> Acked-by: Jiri Olsa <jolsa@redhat.com>
+> On 10/8/21 3:32 PM, James Clark wrote:
+> > 
+> > 
+> > On 08/10/2021 08:43, kajoljain wrote:
+> >>
+> >>
+> >> On 10/7/21 4:35 PM, James Clark wrote:
+> >>> After a discussion on "[PATCH 1/4] perf vendor events: Syntax corrections in Neoverse N1 json",
+> >>> John Garry suggested that we can just modify the parser to make it more strict. Hopefully this will
+> >>> remove the need to apply any future JSON comma fixup commits.
+> >>>
+> >>> Applies on top of "[PATCH v2 1/3] perf vendor events: Syntax corrections in Neoverse N1 json" on
+> >>> perf/core.
+> >>>
+> >>> Also available at:
+> >>>   git clone --branch james-json-parse-fix git@git.gitlab.arm.com:linux-arm/linux-jc.git
+> >>
+> >> Hi James,
+> >>    Do we have any dependency patches on top of this patch series. I am
+> >> reviewing and testing it, but in both powerpc and x86 system I am
+> >> getting build issue. Not sure if I am missing something> 
+> >> I am trying your changes on top of upstream perf.
+> >>
+> >> pmu-events/arch/test/test_soc/sys/uncore.json: json error Invalid
+> >> character inside JSON string
+> > 
+> > Hi Kajol,
+> > 
+> > A trailing comma was fixed in this file 3 weeks ago at b8b350a. Can you
+> > confirm if you have updated to get this commit on perf core?
+> > 
+> > Alternately you could pull from my branch above which is up to date enough
+> > to include it.
+> 
+> Hi James,
+>    Thanks for pointing it. Not getting build issue now.
+> > 
+> > The file is in pmu-events/arch/test/ so I would expect it to fail on all platforms.
+> > 
+> >> make[3]: *** [pmu-events/Build:18: pmu-events/pmu-events.c] Error 1
+> >> make[3]: *** Deleting file 'pmu-events/pmu-events.c'
+> >> make[2]: *** [Makefile.perf:667: pmu-events/pmu-events-in.o] Error 2
+> >> make[2]: *** Waiting for unfinished jobs....
+> >> make[1]: *** [Makefile.perf:238: sub-make] Error 2
+> >> make: *** [Makefile:70: all] Error 2
+> >>
+> >> Also, Is it possible to add line number along with file name while
+> >> showing this error `json error Invalid character inside JSON string`.
+> >> It might make it easy to fix.
+> > 
+> > I can add a character number with the following fix if you think that would
+> > be good enough? A line number might be a bigger change and involve keeping
+> > track of newline characters.
+> 
+> Sure. I think then we can skip this change. Not sure if character
+> number will be helpful.
+> 
+> Patch-set looks good to me.
+> 
+> Reviewed-by Kajol Jain<kjain@linux.ibm.com>
 
-So, is this for the whole patchset? b4 picked it just for this message.
+Applied ok as-is to my perf/core branch, applied and added your
+Reviewed-by, thanks.
 
 - Arnaldo
  
-> jirka
+> Thanks,
+> Kajol Jain
 > 
 > > 
-> > Thanks
-> > James
+> > diff --git a/tools/perf/pmu-events/json.c b/tools/perf/pmu-events/json.c
+> > index 0544398d6e2d..41a14e1543bf 100644
+> > --- a/tools/perf/pmu-events/json.c
+> > +++ b/tools/perf/pmu-events/json.c
+> > @@ -99,7 +99,7 @@ jsmntok_t *parse_json(const char *fn, char **map, size_t *size, int *len)
+> >         res = jsmn_parse(&parser, *map, *size, tokens,
+> >                          sz / sizeof(jsmntok_t));
+> >         if (res != JSMN_SUCCESS) {
+> > -               pr_err("%s: json error %s\n", fn, jsmn_strerror(res));
+> > +               pr_err("%s: json error at character %u '%s'\n", fn, parser.pos, jsmn_strerror(res));
+> >                 goto error_free;
+> >         }
+> >         if (len)
 > > 
-> > > 
-> > > thanks,
-> > > jirka
-> > > 
-> > >> +	/*
-> > >> +	 * Keeps track of whether a new object/list/primitive is expected. New items are only
-> > >> +	 * allowed after an opening brace, comma or colon. A closing brace after a comma is not
-> > >> +	 * valid JSON.
-> > >> +	 */
-> > >> +	int expecting_item = 1;
-> > >> +#endif
-> > >>  
-> > >>  	for (; parser->pos < len; parser->pos++) {
-> > >>  		char c;
-> > >> @@ -185,6 +193,10 @@ jsmnerr_t jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
-> > >>  		switch (c) {
-> > >>  		case '{':
-> > >>  		case '[':
-> > >> +#ifdef JSMN_STRICT
-> > >> +			if (!expecting_item)
-> > >> +				return JSMN_ERROR_INVAL;
-> > >> +#endif
-> > >>  			token = jsmn_alloc_token(parser, tokens, num_tokens);
-> > >>  			if (token == NULL)
-> > >>  				return JSMN_ERROR_NOMEM;
-> > >> @@ -196,6 +208,10 @@ jsmnerr_t jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
-> > >>  			break;
-> > >>  		case '}':
-> > >>  		case ']':
-> > >> +#ifdef JSMN_STRICT
-> > >> +			if (expecting_item)
-> > >> +				return JSMN_ERROR_INVAL;
-> > >> +#endif
-> > >>  			type = (c == '}' ? JSMN_OBJECT : JSMN_ARRAY);
-> > >>  			for (i = parser->toknext - 1; i >= 0; i--) {
-> > >>  				token = &tokens[i];
-> > >> @@ -219,6 +235,11 @@ jsmnerr_t jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
-> > >>  			}
-> > >>  			break;
-> > >>  		case '\"':
-> > >> +#ifdef JSMN_STRICT
-> > >> +			if (!expecting_item)
-> > >> +				return JSMN_ERROR_INVAL;
-> > >> +			expecting_item = 0;
-> > >> +#endif
-> > >>  			r = jsmn_parse_string(parser, js, len, tokens,
-> > >>  					      num_tokens);
-> > >>  			if (r < 0)
-> > >> @@ -229,11 +250,15 @@ jsmnerr_t jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
-> > >>  		case '\t':
-> > >>  		case '\r':
-> > >>  		case '\n':
-> > >> -		case ':':
-> > >> -		case ',':
-> > >>  		case ' ':
-> > >>  			break;
-> > >>  #ifdef JSMN_STRICT
-> > >> +		case ':':
-> > >> +		case ',':
-> > >> +			if (expecting_item)
-> > >> +				return JSMN_ERROR_INVAL;
-> > >> +			expecting_item = 1;
-> > >> +			break;
-> > >>  			/*
-> > >>  			 * In strict mode primitives are:
-> > >>  			 * numbers and booleans.
-> > >> @@ -253,6 +278,9 @@ jsmnerr_t jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
-> > >>  		case 'f':
-> > >>  		case 'n':
-> > >>  #else
-> > >> +		case ':':
-> > >> +		case ',':
-> > >> +			break;
-> > >>  			/*
-> > >>  			 * In non-strict mode every unquoted value
-> > >>  			 * is a primitive.
-> > >> @@ -260,6 +288,12 @@ jsmnerr_t jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
-> > >>  			/*FALL THROUGH */
-> > >>  		default:
-> > >>  #endif
-> > >> +
-> > >> +#ifdef JSMN_STRICT
-> > >> +			if (!expecting_item)
-> > >> +				return JSMN_ERROR_INVAL;
-> > >> +			expecting_item = 0;
-> > >> +#endif
-> > >>  			r = jsmn_parse_primitive(parser, js, len, tokens,
-> > >>  						 num_tokens);
-> > >>  			if (r < 0)
-> > >> @@ -282,7 +316,11 @@ jsmnerr_t jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
-> > >>  			return JSMN_ERROR_PART;
-> > >>  	}
-> > >>  
-> > >> +#ifdef JSMN_STRICT
-> > >> +	return expecting_item ? JSMN_ERROR_INVAL : JSMN_SUCCESS;
-> > >> +#else
-> > >>  	return JSMN_SUCCESS;
-> > >> +#endif
-> > >>  }
-> > >>  
-> > >>  /*
-> > >> -- 
-> > >> 2.28.0
-> > >>
-> > > 
+> > 
+> > It prints this for the same error you have above>
+> > pmu-events/arch/test/test_soc/sys/uncore.json: json error at character 213 'Invalid character inside JSON string'
+> > 
+> > Although funnily enough after re-introducing that extra comma it doesn't fail the build for me,
+> > it just prints the error message. But I may have noticed some dependency tracking issues around
+> > the json files.
+> > 
+> > James
 > > 
 
 -- 
