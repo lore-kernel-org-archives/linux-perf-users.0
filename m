@@ -2,126 +2,85 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF2AC433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Oct 2021 15:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7548C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Oct 2021 15:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E8CC6101A
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Oct 2021 15:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F10460FE8
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Oct 2021 15:58:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242783AbhJHPY5 (ORCPT
+        id S243101AbhJHP75 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 8 Oct 2021 11:24:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:58712 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242780AbhJHPY4 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 8 Oct 2021 11:24:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C30131063;
-        Fri,  8 Oct 2021 08:23:00 -0700 (PDT)
-Received: from [10.1.25.132] (e124483.cambridge.arm.com [10.1.25.132])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F00613F66F;
-        Fri,  8 Oct 2021 08:22:52 -0700 (PDT)
-Message-ID: <90460425-a987-2f18-ba9c-f064af5fb941@arm.com>
-Date:   Fri, 8 Oct 2021 16:22:36 +0100
+        Fri, 8 Oct 2021 11:59:57 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:54939 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230365AbhJHP74 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 8 Oct 2021 11:59:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1633708681;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=t/gpoal7kKHASLhUxUzEdo76jxdasCN4foB/2JL1Ha8=;
+        b=Y0B4e5POTphWDJ595XqupZ9mgvgn7E9zTlg2MQU1PHq1F8nT1SA3WQ/AmRYfID3ah6j7mP
+        Dxw1AHyfWv2HdiAu7SdaGfDG2G7Vgd1I6eTMGDyoz4+r27ix6e4QvJY9TVhk3Kxd+bSk05
+        RWNCs2iNjHX/SfFRSeFZUPPAZsvktpQ=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-482-rDm0gigMPKy7FJHtqoWD8A-1; Fri, 08 Oct 2021 11:57:40 -0400
+X-MC-Unique: rDm0gigMPKy7FJHtqoWD8A-1
+Received: by mail-qv1-f69.google.com with SMTP id e6-20020a0cb446000000b0037eeb9851dfso8974415qvf.17
+        for <linux-perf-users@vger.kernel.org>; Fri, 08 Oct 2021 08:57:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:to:from:subject:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=t/gpoal7kKHASLhUxUzEdo76jxdasCN4foB/2JL1Ha8=;
+        b=3Xujr2vvbRwe8QIAY/ESyKNHT/oms+KJIsYhwdKCApxth7BFpUS3Rbpirh62JVidaL
+         jeJXARn45mHzeEs7359jdUVwQ19CgmdWMOf4w6eUdu3KHYRkr9DUsyO5Ws+04lcNy8eV
+         cn0xB24aGNCEiXfljS/H36NuW6PAv/+Vj1ZxZKOwlUafKN64wxTe2LFI+lsgEQH6ChIY
+         84+JpH7CFpZAJ0S5qpxCRzRcTLK/vKiz6Ax8WTIWhelD4bXIgJ+tD1YLjGyVFgt0jrqx
+         tdjjpoMG4MjltpPk/4g+i7q6S9Aw6vEgP4RDtszBdgN59h+kgxZCKqggckKt8aOqXdus
+         Hufw==
+X-Gm-Message-State: AOAM531gMr9whbTaBRw9VZIz55a+ihPc1os+cpVW4J+47IEjgM7aZKFQ
+        qVcXnXSWnuQslWwWU3EARgVVrNxfQyCPXPcsR1RzMN4nES355ldWKXTgUuHDcktTkgTs+HmBI2y
+        eG+/C7yOwKVyRHhwOOI7q800W0BAlxg==
+X-Received: by 2002:a37:9f12:: with SMTP id i18mr2534308qke.418.1633708659564;
+        Fri, 08 Oct 2021 08:57:39 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyg2I/69KUy6O7gFsSHZEEWkE1gAXdSLzj/8Thl/yOzGCtB/DJJpbarmdQv//TzyS60AoPsUw==
+X-Received: by 2002:a37:9f12:: with SMTP id i18mr2534297qke.418.1633708659393;
+        Fri, 08 Oct 2021 08:57:39 -0700 (PDT)
+Received: from [192.168.86.23] ([136.56.129.226])
+        by smtp.gmail.com with ESMTPSA id f15sm2696582qtf.66.2021.10.08.08.57.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 Oct 2021 08:57:39 -0700 (PDT)
+To:     linux-perf-users@vger.kernel.org
+From:   Stan Cox <scox@redhat.com>
+Subject: SDT probes 'f' float type indicator
+Cc:     systemtap@sourceware.org
+Message-ID: <cf658615-9172-6cdc-d9fc-b0b5ddb04a8d@redhat.com>
+Date:   Fri, 8 Oct 2021 11:57:38 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Subject: Re: [PATCH 02/21] perf pmu: Add const to pmu_events_map.
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-To:     John Garry <john.garry@huawei.com>,
-        Ian Rogers <irogers@google.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jacob Keller <jacob.e.keller@intel.com>,
-        Zhen Lei <thunder.leizhen@huawei.com>,
-        ToastC <mrtoastcheng@gmail.com>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Felix Fietkau <nbd@nbd.name>,
-        Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-        Song Liu <songliubraving@fb.com>, Fabian Hemmer <copy@copy.sh>,
-        Alexander Antonov <alexander.antonov@linux.intel.com>,
-        Nicholas Fraser <nfraser@codeweavers.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Denys Zagorui <dzagorui@cisco.com>,
-        Wan Jiabing <wanjiabing@vivo.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Changbin Du <changbin.du@intel.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>
-References: <20211007165647.3514803-1-irogers@google.com>
- <20211007165647.3514803-3-irogers@google.com>
- <cee9bbe0-d19a-60ab-68c9-4632bd759274@huawei.com>
-From:   Andrew Kilroy <andrew.kilroy@arm.com>
-In-Reply-To: <cee9bbe0-d19a-60ab-68c9-4632bd759274@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Just an FYI that support was added to the upstream user space SDT probes 
+to indicate that an argument can be a float argument.  SDT probes are 
+recorded in the .note.stapsdt section and the syntax of a probes' 
+argument is:
+  [-][Size][f]@[Address]
+where:
+  '-' is optional and indicates a signed type
+  Size is the sizeof() the type
+  'f' is optional and indicates a float type
+      This is a new syntax feature
+  Address is typically one of:
+   Literal | Register | Offset(Register) | Register,Register |
+   Offset(Register,Register)
 
-
-On 08/10/2021 12:01, John Garry wrote:
-> On 07/10/2021 17:56, Ian Rogers wrote:
->> The pmu_events_map is generated at compile time and used for lookup. For
->> testing purposes we need to swap the map being used. Having the
->> pmu_events_map be non-const is misleading as it may be an out argument.
->> Make it const and update uses so they work on const too.
->>
->> Signed-off-by: Ian Rogers<irogers@google.com>
-> 
-> Reviewed-by: John Garry <john.garry@huawei.com>
-
-Got a compile error for this on arm64 when basing these patches on 
-acme/perf/core (be8ecc57f180415e8a7c1cc5620c5236be2a7e56):
-
-$ make DEBUG=1 O=output
-...<snipped>...
-arch/arm64/util/pmu.c:6:24: error: conflicting types for 
-‘pmu_events_map__find’
-  struct pmu_events_map *pmu_events_map__find(void)
-                         ^~~~~~~~~~~~~~~~~~~~
-In file included from arch/arm64/util/pmu.c:4:0:
-arch/arm64/util/../../../util/pmu.h:126:30: note: previous declaration 
-of ‘pmu_events_map__find’ was here
-  const struct pmu_events_map *pmu_events_map__find(void);
-                               ^~~~~~~~~~~~~~~~~~~~
-arch/arm64/util/pmu.c: In function ‘pmu_events_map__find’:
-arch/arm64/util/pmu.c:21:10: error: return discards ‘const’ qualifier 
-from pointer target type [-Werror=discarded-qualifiers]
-    return perf_pmu__find_map(pmu);
-           ^~~~~~~~~~~~~~~~~~~~~~~
-cc1: all warnings being treated as errors
-/home/andkil01/linux/tools/build/Makefile.build:96: recipe for target 
-'/home/andkil01/linux/tools/perf/output/arch/arm64/util/pmu.o' failed
-make[6]: *** 
-[/home/andkil01/linux/tools/perf/output/arch/arm64/util/pmu.o] Error 1
-/home/andkil01/linux/tools/build/Makefile.build:139: recipe for target 
-'util' failed
-make[5]: *** [util] Error 2
-/home/andkil01/linux/tools/build/Makefile.build:139: recipe for target 
-'arm64' failed
-make[4]: *** [arm64] Error 2
-/home/andkil01/linux/tools/build/Makefile.build:139: recipe for target 
-'arch' failed
-make[3]: *** [arch] Error 2
-make[3]: *** Waiting for unfinished jobs....
-
-
-Andrew
