@@ -2,85 +2,88 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7548C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Oct 2021 15:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DD3C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Oct 2021 18:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F10460FE8
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Oct 2021 15:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA74360F90
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Oct 2021 18:16:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243101AbhJHP75 (ORCPT
+        id S238955AbhJHSSc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 8 Oct 2021 11:59:57 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:54939 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230365AbhJHP74 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 8 Oct 2021 11:59:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1633708681;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=t/gpoal7kKHASLhUxUzEdo76jxdasCN4foB/2JL1Ha8=;
-        b=Y0B4e5POTphWDJ595XqupZ9mgvgn7E9zTlg2MQU1PHq1F8nT1SA3WQ/AmRYfID3ah6j7mP
-        Dxw1AHyfWv2HdiAu7SdaGfDG2G7Vgd1I6eTMGDyoz4+r27ix6e4QvJY9TVhk3Kxd+bSk05
-        RWNCs2iNjHX/SfFRSeFZUPPAZsvktpQ=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-482-rDm0gigMPKy7FJHtqoWD8A-1; Fri, 08 Oct 2021 11:57:40 -0400
-X-MC-Unique: rDm0gigMPKy7FJHtqoWD8A-1
-Received: by mail-qv1-f69.google.com with SMTP id e6-20020a0cb446000000b0037eeb9851dfso8974415qvf.17
-        for <linux-perf-users@vger.kernel.org>; Fri, 08 Oct 2021 08:57:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:to:from:subject:cc:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=t/gpoal7kKHASLhUxUzEdo76jxdasCN4foB/2JL1Ha8=;
-        b=3Xujr2vvbRwe8QIAY/ESyKNHT/oms+KJIsYhwdKCApxth7BFpUS3Rbpirh62JVidaL
-         jeJXARn45mHzeEs7359jdUVwQ19CgmdWMOf4w6eUdu3KHYRkr9DUsyO5Ws+04lcNy8eV
-         cn0xB24aGNCEiXfljS/H36NuW6PAv/+Vj1ZxZKOwlUafKN64wxTe2LFI+lsgEQH6ChIY
-         84+JpH7CFpZAJ0S5qpxCRzRcTLK/vKiz6Ax8WTIWhelD4bXIgJ+tD1YLjGyVFgt0jrqx
-         tdjjpoMG4MjltpPk/4g+i7q6S9Aw6vEgP4RDtszBdgN59h+kgxZCKqggckKt8aOqXdus
-         Hufw==
-X-Gm-Message-State: AOAM531gMr9whbTaBRw9VZIz55a+ihPc1os+cpVW4J+47IEjgM7aZKFQ
-        qVcXnXSWnuQslWwWU3EARgVVrNxfQyCPXPcsR1RzMN4nES355ldWKXTgUuHDcktTkgTs+HmBI2y
-        eG+/C7yOwKVyRHhwOOI7q800W0BAlxg==
-X-Received: by 2002:a37:9f12:: with SMTP id i18mr2534308qke.418.1633708659564;
-        Fri, 08 Oct 2021 08:57:39 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyg2I/69KUy6O7gFsSHZEEWkE1gAXdSLzj/8Thl/yOzGCtB/DJJpbarmdQv//TzyS60AoPsUw==
-X-Received: by 2002:a37:9f12:: with SMTP id i18mr2534297qke.418.1633708659393;
-        Fri, 08 Oct 2021 08:57:39 -0700 (PDT)
-Received: from [192.168.86.23] ([136.56.129.226])
-        by smtp.gmail.com with ESMTPSA id f15sm2696582qtf.66.2021.10.08.08.57.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Oct 2021 08:57:39 -0700 (PDT)
-To:     linux-perf-users@vger.kernel.org
-From:   Stan Cox <scox@redhat.com>
-Subject: SDT probes 'f' float type indicator
-Cc:     systemtap@sourceware.org
-Message-ID: <cf658615-9172-6cdc-d9fc-b0b5ddb04a8d@redhat.com>
-Date:   Fri, 8 Oct 2021 11:57:38 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Fri, 8 Oct 2021 14:18:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57030 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S240433AbhJHSSW (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 8 Oct 2021 14:18:22 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 89E8860F9D;
+        Fri,  8 Oct 2021 18:16:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1633716986;
+        bh=RBdgHRPobT+q/p6q5rP1sGlm6ImbduyR3N9DAmiw4zs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=I5oD1z3uANS36vuHpUyTLWe/ZKbVJT7AFsa/Em8DGDufs7xvtRoTLLfl2Q74YeNP9
+         mA7ZkqfQnhhLU+Wt5bIV7nRSp1/9TTjUGLYRVdjPWW5CjAtn4npsyrFn2DQ1sw8gDv
+         EGVcqvV2ViEG5tFITgtDTQxlgUslVnjxAGc3MOcdZYNjxzEyM158xy4MQAk8/3oLvu
+         efVooiYD6DkacWlDNir9izZtT9Z+axk2EwyYNhqFm9ESCErwx98Cr46joIURpIBYH0
+         eH3UncvxP1rpHp0vDoT/ClI4QvFwF4Ao/0TpytwaLBEKy9HIc3UEtrioQK331+ERU5
+         TsBLZexq7IgzQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 0FAF3410A1; Fri,  8 Oct 2021 15:16:23 -0300 (-03)
+Date:   Fri, 8 Oct 2021 15:16:22 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Guo Zhengkui <guozhengkui@vivo.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-perf-users@vger.kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-kernel@vger.kernel.org>, kernel@vivo.com
+Subject: Re: [PATCH] perf daemon: Remove a duplicate #include
+Message-ID: <YWCK9mHs9vTwynfo@kernel.org>
+References: <20211006062235.6364-1-guozhengkui@vivo.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211006062235.6364-1-guozhengkui@vivo.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Just an FYI that support was added to the upstream user space SDT probes 
-to indicate that an argument can be a float argument.  SDT probes are 
-recorded in the .note.stapsdt section and the syntax of a probes' 
-argument is:
-  [-][Size][f]@[Address]
-where:
-  '-' is optional and indicates a signed type
-  Size is the sizeof() the type
-  'f' is optional and indicates a float type
-      This is a new syntax feature
-  Address is typically one of:
-   Literal | Register | Offset(Register) | Register,Register |
-   Offset(Register,Register)
+Em Wed, Oct 06, 2021 at 02:22:34PM +0800, Guo Zhengkui escreveu:
+> There is a "#include <sys/file.h>" in line 10, so remove a duplicate
+> one in line 1124.
 
+Thanks, applied.
+
+- Arnaldo
+
+ 
+> Signed-off-by: Guo Zhengkui <guozhengkui@vivo.com>
+> ---
+>  tools/perf/builtin-daemon.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
+> index c13201fb09c3..6cb3f6cc36d0 100644
+> --- a/tools/perf/builtin-daemon.c
+> +++ b/tools/perf/builtin-daemon.c
+> @@ -1121,8 +1121,6 @@ static int setup_config(struct daemon *daemon)
+>  #ifndef F_TLOCK
+>  #define F_TLOCK 2
+>  
+> -#include <sys/file.h>
+> -
+>  static int lockf(int fd, int cmd, off_t len)
+>  {
+>  	if (cmd != F_TLOCK || len != 0)
+> -- 
+> 2.20.1
+
+-- 
+
+- Arnaldo
