@@ -2,173 +2,224 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA21AC433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Oct 2021 18:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF575C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Oct 2021 18:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD09E60FF2
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Oct 2021 18:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B272960F93
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Oct 2021 18:56:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231459AbhJHSzi (ORCPT
+        id S231350AbhJHS60 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 8 Oct 2021 14:55:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42578 "EHLO mail.kernel.org"
+        Fri, 8 Oct 2021 14:58:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239603AbhJHSzb (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 8 Oct 2021 14:55:31 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4A62360F93;
-        Fri,  8 Oct 2021 18:53:35 +0000 (UTC)
+        id S231308AbhJHS6Z (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 8 Oct 2021 14:58:25 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5B18360FE8;
+        Fri,  8 Oct 2021 18:56:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633719215;
-        bh=gCDIyOLC55BdB0VojmsOaz6jn9SjfK7KSJKg2L3pwYA=;
+        s=k20201202; t=1633719389;
+        bh=hoAj05YuCRBBNrVjKODoIaxA5Jw6r/qy0A5fr49luFQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EaYWxKQY872FgAXTtAjaQYw567AO1H0lQIY/SrQ5HKkjCc2ed/UEEBt6ow9vXLDMc
-         W0xuuYdzzktw9e4Xs5nSQ/KdZjVoFHmfSqETXlRASNVuplLDQ6QktkCukieYicuJql
-         bTzyZebirMDkq7aoWkb6RqEUOQvIuot1AV+vao2zQ3JAye1uJWTLFlC1ZV2eWz5Ygo
-         oAirGlbyDdImGrldHM9qU46XU2kDWc2P3USJzHzG8ozPl/SbfzpbKTHYSsasnN7vAV
-         vO2jyoIvbJxNN4u6zRuJilLUprAJ6Ro9aHLRi4/c4fAQfmcwvUEZVLw/Poh9T01Cmj
-         EZ9LfWXY7ZBhA==
+        b=FTedW6HxC0PQ40Ac5yGvKfkbP3O0QVCmM7/uLPjf3kz7pPvtu3Tn0JzbD5y8bhzyL
+         OpVn2YKBHxIAK/43QAmCq3xdT85kXHHV+G3xQjBsux4Rsj3CJ+wNFXlaurQTHLp5KI
+         5BvpJqU0pwmisE0QhnjIRE1ClWiwQVLmsvJ0AFMRJvFzQRsCmuh7TstTC7u7xZ+mMX
+         fHAYZsS7MsWiKifDBjBnMGBwXegLSl/g+FiIX8s5S1gd8fELcKv6j30aXbRaBfYvwl
+         JLI6J6/pzmBssxupn6ZHssyJPL2UPt9i8c8S2UPRAWY12SjX0w6WPbit4I+8f2Fcfp
+         JbmYaR8uTTNJA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6BBF5410A1; Fri,  8 Oct 2021 15:53:33 -0300 (-03)
-Date:   Fri, 8 Oct 2021 15:53:33 -0300
+        id D609B410A1; Fri,  8 Oct 2021 15:56:26 -0300 (-03)
+Date:   Fri, 8 Oct 2021 15:56:26 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
-        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2] libperf tests: Fix test_stat_cpu
-Message-ID: <YWCTrY/5zQLJm6kd@kernel.org>
-References: <20211006094817.477494-1-nakamura.shun@fujitsu.com>
- <YV8o9nukzBTkWmlw@krava>
+Cc:     James Clark <james.clark@arm.com>, john.garry@huawei.com,
+        ak@linux.intel.com, linux-perf-users@vger.kernel.org,
+        Nick.Forrington@arm.com, Andrew.Kilroy@arm.com,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] perf tools: Make the JSON parser more conformant
+ when in strict mode
+Message-ID: <YWCUWo6pMns6p05o@kernel.org>
+References: <20211007110543.564963-1-james.clark@arm.com>
+ <20211007110543.564963-3-james.clark@arm.com>
+ <YV8z306sBJQsdNNR@krava>
+ <2e14963b-cb98-f508-7067-255fdbd36bdb@arm.com>
+ <YWBDo5Ciq1hOIxLq@krava>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <YV8o9nukzBTkWmlw@krava>
+In-Reply-To: <YWBDo5Ciq1hOIxLq@krava>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Oct 07, 2021 at 07:05:58PM +0200, Jiri Olsa escreveu:
-> On Wed, Oct 06, 2021 at 06:48:17PM +0900, Shunsuke Nakamura wrote:
-> > `cpu` of perf_evsel__read() must be specified the cpu index.
-> > perf_cpu_map__for_each_cpu is for iterating the cpu number (not index)
-> > and is not appropriate.
-> > So, if there is an offline CPU, the cpu number specified in the argument
-> > may point out of range because the cpu number and the cpu index are
-> > different.
+Em Fri, Oct 08, 2021 at 03:12:03PM +0200, Jiri Olsa escreveu:
+> On Fri, Oct 08, 2021 at 11:08:25AM +0100, James Clark wrote:
+> > 
+> > 
+> > On 07/10/2021 18:52, Jiri Olsa wrote:
+> > > On Thu, Oct 07, 2021 at 12:05:41PM +0100, James Clark wrote:
+> > >> Return an error when a trailing comma is found or a new item is
+> > >> encountered before a comma or an opening brace. This ensures that the
+> > >> perf json files conform more closely to the spec at https://www.json.org
+> > >>
+> > >> Signed-off-by: James Clark <james.clark@arm.com>
+> > >> ---
+> > >>  tools/perf/pmu-events/jsmn.c | 42 ++++++++++++++++++++++++++++++++++--
+> > >>  1 file changed, 40 insertions(+), 2 deletions(-)
+> > >>
+> > >> diff --git a/tools/perf/pmu-events/jsmn.c b/tools/perf/pmu-events/jsmn.c
+> > >> index 11d1fa18bfa5..8124d2d3ff0c 100644
+> > >> --- a/tools/perf/pmu-events/jsmn.c
+> > >> +++ b/tools/perf/pmu-events/jsmn.c
+> > >> @@ -176,6 +176,14 @@ jsmnerr_t jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
+> > >>  	jsmnerr_t r;
+> > >>  	int i;
+> > >>  	jsmntok_t *token;
+> > >> +#ifdef JSMN_STRICT
+> > > 
+> > > I might have missed some discussion on this, but do we need the
+> > > JSMN_STRICT define, if you enable it in the next patch?
+> > > why can't we be more strict by default.. do you plan to disable
+> > > it in future?
+> > 
+> > I didn't plan on disabling it, I was just trying to keep to the existing style of the
+> > jsmn project.
+> > 
+> > I could have added the trailing comma detection by default and not inside any
+> > #ifdef JSMN_STRICT blocks, but I would like to enable JSMN_STRICT anyway, because it
+> > enables some additional built in checking that was already there. So I thought it
+> > made sense to put my new strict stuff inside the existing strict option.
+> > 
+> > One option would be to remove all (including the existing) #ifdef JSMN_STRICT blocks
+> > and have everything strict by default. But it would be a further deviation from jsmn.
 > 
-> nice catch
+> ok, I think it makes sense to have JSMN_STRICT then..
+> thanks for explanation
+> 
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-Indeed, Nakamura-san, please address Jiri's comment and resubmit,
-
-Thanks,
+So, is this for the whole patchset? b4 picked it just for this message.
 
 - Arnaldo
  
-> > 
-> > Fix test_stat_cpu.
-> > 
-> > Committer testing:
-> > 
-> >   # make tests -C tools/lib/perf/
-> >   make: Entering directory '/home/nakamura/kernel_src/linux-5.15-rc4_fix/tools/lib/perf'
-> >   running static:
-> >   - running tests/test-cpumap.c...OK
-> >   - running tests/test-threadmap.c...OK
-> >   - running tests/test-evlist.c...OK
-> >   - running tests/test-evsel.c...OK
-> >   running dynamic:
-> >   - running tests/test-cpumap.c...OK
-> >   - running tests/test-threadmap.c...OK
-> >   - running tests/test-evlist.c...OK
-> >   - running tests/test-evsel.c...OK
-> >   make: Leaving directory '/home/nakamura/kernel_src/linux-5.15-rc4_fix/tools/lib/perf'
-> > 
-> > 
-> > Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
-> > ---
-> > Previous version at:
-> > https://lore.kernel.org/lkml/20211006080456.474273-1-nakamura.shun@fujitsu.com/
-> > 
-> > Changes in v2:
-> >  - Remove "2/2" from Patch Subject
-> > 
-> >  tools/lib/perf/tests/test-evlist.c | 6 +++---
-> >  tools/lib/perf/tests/test-evsel.c  | 6 +++---
-> >  2 files changed, 6 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/tools/lib/perf/tests/test-evlist.c b/tools/lib/perf/tests/test-evlist.c
-> > index c67c83399170..47badd7eabf2 100644
-> > --- a/tools/lib/perf/tests/test-evlist.c
-> > +++ b/tools/lib/perf/tests/test-evlist.c
-> > @@ -40,7 +40,7 @@ static int test_stat_cpu(void)
-> >  		.type	= PERF_TYPE_SOFTWARE,
-> >  		.config	= PERF_COUNT_SW_TASK_CLOCK,
-> >  	};
-> > -	int err, cpu, tmp;
-> > +	int err, idx;
-> >  
-> >  	cpus = perf_cpu_map__new(NULL);
-> >  	__T("failed to create cpus", cpus);
-> > @@ -70,10 +70,10 @@ static int test_stat_cpu(void)
-> >  	perf_evlist__for_each_evsel(evlist, evsel) {
-> >  		cpus = perf_evsel__cpus(evsel);
-> >  
-> > -		perf_cpu_map__for_each_cpu(cpu, tmp, cpus) {
-> > +		for (idx = 0, idx < perf_cpu_map__nr(cpus); idx++) {
-> 
-> s/,/;/                      ^
-> 
-> tests/test-evlist.c: In function ‘test_stat_cpu’:
-> tests/test-evlist.c:73:52: error: expected ‘;’ before ‘)’ token
->    73 |   for (idx = 0, idx < perf_cpu_map__nr(cpus); idx++) {
->       |                                                    ^
->       |                                                    ;
-> 
-> 
-> perf_cpu_map__for_each_cpu also returns the cpu index (tmp),
-> maybe we could use that instead?
-> 
-> thanks,
 > jirka
 > 
-> >  			struct perf_counts_values counts = { .val = 0 };
-> >  
-> > -			perf_evsel__read(evsel, cpu, 0, &counts);
-> > +			perf_evsel__read(evsel, idx, 0, &counts);
-> >  			__T("failed to read value for evsel", counts.val != 0);
-> >  		}
-> >  	}
-> > diff --git a/tools/lib/perf/tests/test-evsel.c b/tools/lib/perf/tests/test-evsel.c
-> > index 9abd4c0bf6db..33ae9334861a 100644
-> > --- a/tools/lib/perf/tests/test-evsel.c
-> > +++ b/tools/lib/perf/tests/test-evsel.c
-> > @@ -22,7 +22,7 @@ static int test_stat_cpu(void)
-> >  		.type	= PERF_TYPE_SOFTWARE,
-> >  		.config	= PERF_COUNT_SW_CPU_CLOCK,
-> >  	};
-> > -	int err, cpu, tmp;
-> > +	int err, idx;
-> >  
-> >  	cpus = perf_cpu_map__new(NULL);
-> >  	__T("failed to create cpus", cpus);
-> > @@ -33,10 +33,10 @@ static int test_stat_cpu(void)
-> >  	err = perf_evsel__open(evsel, cpus, NULL);
-> >  	__T("failed to open evsel", err == 0);
-> >  
-> > -	perf_cpu_map__for_each_cpu(cpu, tmp, cpus) {
-> > +	for (idx = 0; idx < perf_cpu_map__nr(cpus); idx++) {
-> >  		struct perf_counts_values counts = { .val = 0 };
-> >  
-> > -		perf_evsel__read(evsel, cpu, 0, &counts);
-> > +		perf_evsel__read(evsel, idx, 0, &counts);
-> >  		__T("failed to read value for evsel", counts.val != 0);
-> >  	}
-> >  
-> > -- 
-> > 2.25.1
+> > 
+> > Thanks
+> > James
+> > 
+> > > 
+> > > thanks,
+> > > jirka
+> > > 
+> > >> +	/*
+> > >> +	 * Keeps track of whether a new object/list/primitive is expected. New items are only
+> > >> +	 * allowed after an opening brace, comma or colon. A closing brace after a comma is not
+> > >> +	 * valid JSON.
+> > >> +	 */
+> > >> +	int expecting_item = 1;
+> > >> +#endif
+> > >>  
+> > >>  	for (; parser->pos < len; parser->pos++) {
+> > >>  		char c;
+> > >> @@ -185,6 +193,10 @@ jsmnerr_t jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
+> > >>  		switch (c) {
+> > >>  		case '{':
+> > >>  		case '[':
+> > >> +#ifdef JSMN_STRICT
+> > >> +			if (!expecting_item)
+> > >> +				return JSMN_ERROR_INVAL;
+> > >> +#endif
+> > >>  			token = jsmn_alloc_token(parser, tokens, num_tokens);
+> > >>  			if (token == NULL)
+> > >>  				return JSMN_ERROR_NOMEM;
+> > >> @@ -196,6 +208,10 @@ jsmnerr_t jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
+> > >>  			break;
+> > >>  		case '}':
+> > >>  		case ']':
+> > >> +#ifdef JSMN_STRICT
+> > >> +			if (expecting_item)
+> > >> +				return JSMN_ERROR_INVAL;
+> > >> +#endif
+> > >>  			type = (c == '}' ? JSMN_OBJECT : JSMN_ARRAY);
+> > >>  			for (i = parser->toknext - 1; i >= 0; i--) {
+> > >>  				token = &tokens[i];
+> > >> @@ -219,6 +235,11 @@ jsmnerr_t jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
+> > >>  			}
+> > >>  			break;
+> > >>  		case '\"':
+> > >> +#ifdef JSMN_STRICT
+> > >> +			if (!expecting_item)
+> > >> +				return JSMN_ERROR_INVAL;
+> > >> +			expecting_item = 0;
+> > >> +#endif
+> > >>  			r = jsmn_parse_string(parser, js, len, tokens,
+> > >>  					      num_tokens);
+> > >>  			if (r < 0)
+> > >> @@ -229,11 +250,15 @@ jsmnerr_t jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
+> > >>  		case '\t':
+> > >>  		case '\r':
+> > >>  		case '\n':
+> > >> -		case ':':
+> > >> -		case ',':
+> > >>  		case ' ':
+> > >>  			break;
+> > >>  #ifdef JSMN_STRICT
+> > >> +		case ':':
+> > >> +		case ',':
+> > >> +			if (expecting_item)
+> > >> +				return JSMN_ERROR_INVAL;
+> > >> +			expecting_item = 1;
+> > >> +			break;
+> > >>  			/*
+> > >>  			 * In strict mode primitives are:
+> > >>  			 * numbers and booleans.
+> > >> @@ -253,6 +278,9 @@ jsmnerr_t jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
+> > >>  		case 'f':
+> > >>  		case 'n':
+> > >>  #else
+> > >> +		case ':':
+> > >> +		case ',':
+> > >> +			break;
+> > >>  			/*
+> > >>  			 * In non-strict mode every unquoted value
+> > >>  			 * is a primitive.
+> > >> @@ -260,6 +288,12 @@ jsmnerr_t jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
+> > >>  			/*FALL THROUGH */
+> > >>  		default:
+> > >>  #endif
+> > >> +
+> > >> +#ifdef JSMN_STRICT
+> > >> +			if (!expecting_item)
+> > >> +				return JSMN_ERROR_INVAL;
+> > >> +			expecting_item = 0;
+> > >> +#endif
+> > >>  			r = jsmn_parse_primitive(parser, js, len, tokens,
+> > >>  						 num_tokens);
+> > >>  			if (r < 0)
+> > >> @@ -282,7 +316,11 @@ jsmnerr_t jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
+> > >>  			return JSMN_ERROR_PART;
+> > >>  	}
+> > >>  
+> > >> +#ifdef JSMN_STRICT
+> > >> +	return expecting_item ? JSMN_ERROR_INVAL : JSMN_SUCCESS;
+> > >> +#else
+> > >>  	return JSMN_SUCCESS;
+> > >> +#endif
+> > >>  }
+> > >>  
+> > >>  /*
+> > >> -- 
+> > >> 2.28.0
+> > >>
+> > > 
 > > 
 
 -- 
