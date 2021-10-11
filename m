@@ -2,147 +2,151 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F474C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Oct 2021 08:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F947C433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Oct 2021 09:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BF7D60C49
-	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Oct 2021 08:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0484B60F38
+	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Oct 2021 09:35:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235137AbhJKIjR (ORCPT
+        id S235513AbhJKJhv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 11 Oct 2021 04:39:17 -0400
-Received: from esa11.hc1455-7.c3s2.iphmx.com ([207.54.90.137]:30335 "EHLO
-        esa11.hc1455-7.c3s2.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234885AbhJKIjQ (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 11 Oct 2021 04:39:16 -0400
-IronPort-SDR: U0VjdClWbSGtL1ulqKHnOxVlsXjCx8+fLEl3lakAdsdlmEYSJSB2PcCEuNHJk9+qSKiy4x/atV
- O373nA8/Vk4G209ArQLurqdo3Ti96fGpsnxIse1myYoXuScHTqr2KXws1pTYY7Ew/LtBx3tkPo
- ZdJA8kcEfqOpSmAAGwY3yP7VU7Qlv9WSeNPsqXe2jc7wJ1oTnO6Ozr/plqtiUO5OmfpAdhH625
- tnDA+A/mZbQzG8EQHFRse6aupF2mRVu00jcUqpkI2amFEEU+n1wpsXGEucY5fO7JdFi/fgA1Pb
- 5JN5FqvyU9ETt/OS3zoyHPuV
-X-IronPort-AV: E=McAfee;i="6200,9189,10133"; a="28062049"
-X-IronPort-AV: E=Sophos;i="5.85,364,1624287600"; 
-   d="scan'208";a="28062049"
-Received: from unknown (HELO oym-r2.gw.nic.fujitsu.com) ([210.162.30.90])
-  by esa11.hc1455-7.c3s2.iphmx.com with ESMTP; 11 Oct 2021 17:37:14 +0900
-Received: from oym-m2.gw.nic.fujitsu.com (oym-nat-oym-m2.gw.nic.fujitsu.com [192.168.87.59])
-        by oym-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id D892AE6800;
-        Mon, 11 Oct 2021 17:37:13 +0900 (JST)
-Received: from yto-om3.fujitsu.com (yto-om3.o.css.fujitsu.com [10.128.89.164])
-        by oym-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 170AECA703;
-        Mon, 11 Oct 2021 17:37:13 +0900 (JST)
-Received: from pumpkin.openstacklocal (pumpkin.fct.css.fujitsu.com [10.130.70.189])
-        by yto-om3.fujitsu.com (Postfix) with ESMTP id F3F584005EA44;
-        Mon, 11 Oct 2021 17:37:12 +0900 (JST)
-From:   Shunsuke Nakamura <nakamura.shun@fujitsu.com>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: [PATCH v3] libperf tests: Fix test_stat_cpu
-Date:   Mon, 11 Oct 2021 17:37:04 +0900
-Message-Id: <20211011083704.4108720-1-nakamura.shun@fujitsu.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
+        Mon, 11 Oct 2021 05:37:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39250 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235443AbhJKJhv (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 11 Oct 2021 05:37:51 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7730860E8B;
+        Mon, 11 Oct 2021 09:35:51 +0000 (UTC)
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mZrin-00FyQD-Cg; Mon, 11 Oct 2021 10:35:49 +0100
+Date:   Mon, 11 Oct 2021 10:35:48 +0100
+Message-ID: <87wnmjq4y3.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Sean Christopherson <seanjc@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Guo Ren <guoren@kernel.org>, Nick Hu <nickhu@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu, linux-csky@vger.kernel.org,
+        linux-riscv@lists.infradead.org, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org,
+        Artem Kashkanov <artem.kashkanov@intel.com>,
+        Like Xu <like.xu.linux@gmail.com>,
+        Zhu Lingshan <lingshan.zhu@intel.com>
+Subject: Re: [PATCH v3 12/16] KVM: Move x86's perf guest info callbacks to generic KVM
+In-Reply-To: <20210922000533.713300-13-seanjc@google.com>
+References: <20210922000533.713300-1-seanjc@google.com>
+        <20210922000533.713300-13-seanjc@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: seanjc@google.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, will@kernel.org, mark.rutland@arm.com, guoren@kernel.org, nickhu@andestech.com, green.hu@gmail.com, deanbo422@gmail.com, paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, pbonzini@redhat.com, boris.ostrovsky@oracle.com, jgross@suse.com, alexander.shishkin@linux.intel.com, jolsa@redhat.com, namhyung@kernel.org, james.morse@arm.com, alexandru.elisei@arm.com, suzuki.poulose@arm.com, vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org, sstabellini@kernel.org, linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu, linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org, kvm@vger.kernel.org, xen-devel@lists.xenproject.org, artem.kashkanov@intel.com, like.xu.linux@gmail.com, lingshan.zhu@intel.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-`cpu` of perf_evsel__read() must be specified the cpu index.
-perf_cpu_map__for_each_cpu is for iterating the cpu number (not index)
-and is not appropriate.
-So, if there is an offline CPU, the cpu number specified in the argument
-may point out of range because the cpu number and the cpu index are
-different.
+On Wed, 22 Sep 2021 01:05:29 +0100,
+Sean Christopherson <seanjc@google.com> wrote:
+> 
+> Move x86's perf guest callbacks into common KVM, as they are semantically
+> identical to arm64's callbacks (the only other such KVM callbacks).
+> arm64 will convert to the common versions in a future patch.
+> 
+> Implement the necessary arm64 arch hooks now to avoid having to provide
+> stubs or a temporary #define (from x86) to avoid arm64 compilation errors
+> when CONFIG_GUEST_PERF_EVENTS=y.
+> 
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>  arch/arm64/include/asm/kvm_host.h |  8 +++++
+>  arch/arm64/kvm/arm.c              |  5 +++
+>  arch/x86/include/asm/kvm_host.h   |  3 ++
+>  arch/x86/kvm/x86.c                | 53 +++++++------------------------
+>  include/linux/kvm_host.h          | 10 ++++++
+>  virt/kvm/kvm_main.c               | 44 +++++++++++++++++++++++++
+>  6 files changed, 81 insertions(+), 42 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+> index ed940aec89e0..828b6eaa2c56 100644
+> --- a/arch/arm64/include/asm/kvm_host.h
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -673,6 +673,14 @@ int io_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa);
+>  void kvm_perf_init(void);
+>  void kvm_perf_teardown(void);
+>  
+> +#ifdef CONFIG_GUEST_PERF_EVENTS
+> +static inline bool kvm_arch_pmi_in_guest(struct kvm_vcpu *vcpu)
 
-Fix test_stat_cpu.
+Pardon my x86 ignorance, what is PMI? PMU Interrupt?
 
-Committer testing:
+> +{
+> +	/* Any callback while a vCPU is loaded is considered to be in guest. */
+> +	return !!vcpu;
+> +}
+> +#endif
 
-  # make tests -C tools/lib/perf/
-  make: Entering directory '/home/nakamura/kernel_src/linux-5.15-rc4_fix/tools/lib/perf'
-  running static:
-  - running tests/test-cpumap.c...OK
-  - running tests/test-threadmap.c...OK
-  - running tests/test-evlist.c...OK
-  - running tests/test-evsel.c...OK
-  running dynamic:
-  - running tests/test-cpumap.c...OK
-  - running tests/test-threadmap.c...OK
-  - running tests/test-evlist.c...OK
-  - running tests/test-evsel.c...OK
-  make: Leaving directory '/home/nakamura/kernel_src/linux-5.15-rc4_fix/tools/lib/perf'
+Do you really need this #ifdef?
 
-Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
----
-Previous version at:
-https://lore.kernel.org/lkml/20211006094817.477494-1-nakamura.shun@fujitsu.com/
+> +
+>  long kvm_hypercall_pv_features(struct kvm_vcpu *vcpu);
+>  gpa_t kvm_init_stolen_time(struct kvm_vcpu *vcpu);
+>  void kvm_update_stolen_time(struct kvm_vcpu *vcpu);
+> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+> index e9a2b8f27792..2b542fdc237e 100644
+> --- a/arch/arm64/kvm/arm.c
+> +++ b/arch/arm64/kvm/arm.c
+> @@ -500,6 +500,11 @@ bool kvm_arch_vcpu_in_kernel(struct kvm_vcpu *vcpu)
+>  	return vcpu_mode_priv(vcpu);
+>  }
+>  
+> +unsigned long kvm_arch_vcpu_get_ip(struct kvm_vcpu *vcpu)
+> +{
+> +	return *vcpu_pc(vcpu);
+> +}
+> +
+>  /* Just ensure a guest exit from a particular CPU */
+>  static void exit_vm_noop(void *info)
+>  {
 
-Changes in v3:
-  - Fix build error
+The above nits notwithstanding,
 
-Changes in v2:
-  - Remove "2/2" from Patch Subject
+Acked-by: Marc Zyngier <maz@kernel.org>
 
- tools/lib/perf/tests/test-evlist.c | 6 +++---
- tools/lib/perf/tests/test-evsel.c  | 6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+	M.
 
-diff --git a/tools/lib/perf/tests/test-evlist.c b/tools/lib/perf/tests/test-evlist.c
-index c67c83399170..ce91a582f0e4 100644
---- a/tools/lib/perf/tests/test-evlist.c
-+++ b/tools/lib/perf/tests/test-evlist.c
-@@ -40,7 +40,7 @@ static int test_stat_cpu(void)
- 		.type	= PERF_TYPE_SOFTWARE,
- 		.config	= PERF_COUNT_SW_TASK_CLOCK,
- 	};
--	int err, cpu, tmp;
-+	int err, idx;
- 
- 	cpus = perf_cpu_map__new(NULL);
- 	__T("failed to create cpus", cpus);
-@@ -70,10 +70,10 @@ static int test_stat_cpu(void)
- 	perf_evlist__for_each_evsel(evlist, evsel) {
- 		cpus = perf_evsel__cpus(evsel);
- 
--		perf_cpu_map__for_each_cpu(cpu, tmp, cpus) {
-+		for (idx = 0; idx < perf_cpu_map__nr(cpus); idx++) {
- 			struct perf_counts_values counts = { .val = 0 };
- 
--			perf_evsel__read(evsel, cpu, 0, &counts);
-+			perf_evsel__read(evsel, idx, 0, &counts);
- 			__T("failed to read value for evsel", counts.val != 0);
- 		}
- 	}
-diff --git a/tools/lib/perf/tests/test-evsel.c b/tools/lib/perf/tests/test-evsel.c
-index 9abd4c0bf6db..33ae9334861a 100644
---- a/tools/lib/perf/tests/test-evsel.c
-+++ b/tools/lib/perf/tests/test-evsel.c
-@@ -22,7 +22,7 @@ static int test_stat_cpu(void)
- 		.type	= PERF_TYPE_SOFTWARE,
- 		.config	= PERF_COUNT_SW_CPU_CLOCK,
- 	};
--	int err, cpu, tmp;
-+	int err, idx;
- 
- 	cpus = perf_cpu_map__new(NULL);
- 	__T("failed to create cpus", cpus);
-@@ -33,10 +33,10 @@ static int test_stat_cpu(void)
- 	err = perf_evsel__open(evsel, cpus, NULL);
- 	__T("failed to open evsel", err == 0);
- 
--	perf_cpu_map__for_each_cpu(cpu, tmp, cpus) {
-+	for (idx = 0; idx < perf_cpu_map__nr(cpus); idx++) {
- 		struct perf_counts_values counts = { .val = 0 };
- 
--		perf_evsel__read(evsel, cpu, 0, &counts);
-+		perf_evsel__read(evsel, idx, 0, &counts);
- 		__T("failed to read value for evsel", counts.val != 0);
- 	}
- 
 -- 
-2.25.1
-
+Without deviation from the norm, progress is not possible.
