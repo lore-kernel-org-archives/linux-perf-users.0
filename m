@@ -2,83 +2,148 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B48C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Oct 2021 15:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4780C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Oct 2021 17:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5A5860E74
-	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Oct 2021 15:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9289860F3A
+	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Oct 2021 17:01:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238686AbhJKP5p (ORCPT
+        id S232793AbhJKRDC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 11 Oct 2021 11:57:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:35654 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231766AbhJKP5n (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 11 Oct 2021 11:57:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EE100ED1;
-        Mon, 11 Oct 2021 08:55:42 -0700 (PDT)
-Received: from [10.1.31.146] (e127744.cambridge.arm.com [10.1.31.146])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F20D23F66F;
-        Mon, 11 Oct 2021 08:55:39 -0700 (PDT)
-Subject: Re: [PATCH 4/5] perf arm-spe: Implement find_snapshot callback
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mon, 11 Oct 2021 13:03:02 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3965 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232560AbhJKRDA (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 11 Oct 2021 13:03:00 -0400
+Received: from fraeml745-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HSlMx1p68z67fKq;
+        Tue, 12 Oct 2021 00:57:33 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml745-chm.china.huawei.com (10.206.15.226) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.8; Mon, 11 Oct 2021 19:00:58 +0200
+Received: from [10.47.95.202] (10.47.95.202) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.8; Mon, 11 Oct
+ 2021 18:00:57 +0100
+Subject: perf tools jevents build flags (was Re: [PATCH] perf jevents: Fix
+ sys_event_tables to be freed like arch_std_events)
+From:   John Garry <john.garry@huawei.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     Like Xu <like.xu.linux@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
-        James Clark <James.Clark@arm.com>
-References: <20210916154635.1525-1-german.gomez@arm.com>
- <20210916154635.1525-4-german.gomez@arm.com>
- <20210923135016.GG400258@leoy-ThinkPad-X240s>
- <20210923144048.GB603008@leoy-ThinkPad-X240s>
- <1c6a3a73-27dc-6673-7fe7-34bc7fcb0a68@arm.com>
- <20211004122724.GC174271@leoy-ThinkPad-X240s>
- <6b092f13-832f-5d1d-a504-aea96c81bf17@arm.com>
- <20211006095124.GC14400@leoy-ThinkPad-X240s>
-From:   German Gomez <german.gomez@arm.com>
-Message-ID: <377b54ef-b9c0-9cfc-ef0c-0187d7c493cc@arm.com>
-Date:   Mon, 11 Oct 2021 16:55:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20210928102938.69681-1-likexu@tencent.com>
+ <YVMB5kt8XG+OdJ1M@kernel.org>
+ <c547bc2d-ab7c-1e89-5d12-bd5d875f7aa5@huawei.com>
+ <YVMVwDt3QHBPfT/T@kernel.org> <YVMXHM0F/y2ptX8C@kernel.org>
+ <3949dfa2-d684-47af-ffa7-71b07141f64d@huawei.com>
+ <YVNXTuq1PpLpMH/R@kernel.org>
+ <bd98c9f3-de67-7ca5-534c-f7fd6cc69915@huawei.com>
+Message-ID: <e5c0123b-31d2-5f07-52a4-724ae89747c1@huawei.com>
+Date:   Mon, 11 Oct 2021 18:03:19 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-In-Reply-To: <20211006095124.GC14400@leoy-ThinkPad-X240s>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <bd98c9f3-de67-7ca5-534c-f7fd6cc69915@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.47.95.202]
+X-ClientProxiedBy: lhreml707-chm.china.huawei.com (10.201.108.56) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Leo,
+On 28/09/2021 21:30, John Garry wrote:
+>>>
+>>> OK, would you also consider reusing CFLAGS:
+>>>
+>>> --- a/tools/perf/pmu-events/Build
+>>> +++ b/tools/perf/pmu-events/Build
+>>> @@ -9,10 +9,12 @@ JSON          =  $(shell [ -d $(JDIR) ] &&
+>>> \
+>>> JDIR_TEST      =  pmu-events/arch/test
+>>> JSON_TEST      =  $(shell [ -d $(JDIR_TEST) ] &&                       \
+>>>                         find $(JDIR_TEST) -name '*.json')
+>>> -
+>>> +HOSTCFLAGS_jevents += $(CFLAGS)
+>> Humm, we have to check if CFLAGS doesn't come with cross-build options,
+>> i.e. IIRC we have to use HOSTCFLAGS instead. Unsure if there is some
+>> *CFLAGS variable that gets the common part, where these -Wall and
+>> -Wextra, -Werror could go.
+> 
+> not sure. As I see, the bulk of flags we have in CFLAGS comes from 
+> EXTRA_WARNINGS in scripts/Makefile.include; but CFLAGS seems to also 
+> include EXTRA_CLAGS, which are for cross-builds (see perf/Makefile.config)
+> 
 
-On 06/10/2021 10:51, Leo Yan wrote:
-> On Wed, Oct 06, 2021 at 10:35:20AM +0100, German Gomez wrote:
->
-> [...]
->
->>> So simply say, I think the head pointer monotonically increasing is
->>> the right thing to do in Arm SPE driver.
->> I will talk to James about how we can proceed on this.
-> Thanks!
+Hi Arnaldo,
 
-I took this offline with James and, though it looks possible to patch
-the SPE driver to have a monotonically increasing head pointer in order
-to simplify the handling in the perf tool, it could be a breaking change
-for users of the perf_event_open syscall that currently rely on the way
-it works now.
+I'm just looking at enabling warning cflags for jevents again.
 
-An alternative way we considered to simplify the patch is to change the
-logic inside the find_snapshot callback so that it records the entire
-contents of the aux buffer every time.
+So how about this:
 
-What do you think?
+--->8----
 
-Many thanks,
-German
+
+Subject: [PATCH] perf pmu-events: Enable jevents warnings through HOSTCFLAGS
+
+
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 0ae2e3d8b832..65934984f032 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -17,6 +17,7 @@ detected     = $(shell echo "$(1)=y"       >> 
+$(OUTPUT).config-detected)
+  detected_var = $(shell echo "$(1)=$($(1))" >> $(OUTPUT).config-detected)
+
+  CFLAGS := $(EXTRA_CFLAGS) $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
++HOSTCFLAGS := $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
+
+  include $(srctree)/tools/scripts/Makefile.arch
+
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 7df13e74450c..118bcdc70bb4 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -226,7 +226,7 @@ else
+  endif
+
+  export srctree OUTPUT RM CC CXX LD AR CFLAGS CXXFLAGS V BISON FLEX AWK
+-export HOSTCC HOSTLD HOSTAR
++export HOSTCC HOSTLD HOSTAR HOSTCFLAGS
+
+  include $(srctree)/tools/build/Makefile.include
+
+diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
+index a055dee6a46a..d5c287f069a2 100644
+--- a/tools/perf/pmu-events/Build
++++ b/tools/perf/pmu-events/Build
+@@ -1,7 +1,7 @@
+  hostprogs := jevents
+
+  jevents-y	+= json.o jsmn.o jevents.o
+-HOSTCFLAGS_jevents.o	= -I$(srctree)/tools/include
++HOSTCFLAGS_jevents.o	= -I$(srctree)/tools/include $(HOSTCFLAGS)
+  pmu-events-y	+= pmu-events.o
+  JDIR		=  pmu-events/arch/$(SRCARCH)
+  JSON		=  $(shell [ -d $(JDIR) ] &&				\
+-- 
+2.26.2
+
+---8<---
+
+The newly generated warnings in jevents.c are pretty straightforward to 
+tidy up.
+
+Thanks,
+John
