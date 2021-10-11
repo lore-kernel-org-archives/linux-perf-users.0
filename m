@@ -2,110 +2,147 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EABC2C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Oct 2021 08:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F474C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Oct 2021 08:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D47D7600CD
-	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Oct 2021 08:20:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BF7D60C49
+	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Oct 2021 08:37:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234944AbhJKIWz (ORCPT
+        id S235137AbhJKIjR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 11 Oct 2021 04:22:55 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:11130 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235043AbhJKIWy (ORCPT
+        Mon, 11 Oct 2021 04:39:17 -0400
+Received: from esa11.hc1455-7.c3s2.iphmx.com ([207.54.90.137]:30335 "EHLO
+        esa11.hc1455-7.c3s2.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234885AbhJKIjQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 11 Oct 2021 04:22:54 -0400
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 19AI3aIr009193
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Oct 2021 01:20:54 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=facebook;
- bh=Uez65aulhadKLJpn+NXYsgF0SuMdHpdNtV+Bqq7Fi3E=;
- b=itKuqBv0taOwbGH4zv5bHJr/qaYriXEY/LV6wvRnyhcpfO+iyjkjsE937SLMiIuZPWbx
- lhpz93FSNI5zmj/YNJMDlezG1fi7hjbBU40UkqUeYfJwQxIMw3ZWJ59QEQuwE4vP0BZ5
- Yys8qijXRb8zI4lvHgjDLcWMSJmKbo0QY2g= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 3bm540ubwd-6
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Oct 2021 01:20:54 -0700
-Received: from intmgw001.38.frc1.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.14; Mon, 11 Oct 2021 01:20:43 -0700
-Received: by devbig030.frc3.facebook.com (Postfix, from userid 158236)
-        id 2EF737DCA117; Mon, 11 Oct 2021 01:20:35 -0700 (PDT)
-From:   Dave Marchevsky <davemarchevsky@fb.com>
-To:     <bpf@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-CC:     Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Marchevsky <davemarchevsky@fb.com>
-Subject: [PATCH v2 bpf-next 4/4] libbpf: deprecate bpf_program__get_prog_info_linear
-Date:   Mon, 11 Oct 2021 01:20:31 -0700
-Message-ID: <20211011082031.4148337-5-davemarchevsky@fb.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20211011082031.4148337-1-davemarchevsky@fb.com>
-References: <20211011082031.4148337-1-davemarchevsky@fb.com>
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-FB-Source: Intern
-X-Proofpoint-ORIG-GUID: lQz7c7-bhmpfdoN49HyxtqadIW-NY9S1
-X-Proofpoint-GUID: lQz7c7-bhmpfdoN49HyxtqadIW-NY9S1
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Mon, 11 Oct 2021 04:39:16 -0400
+IronPort-SDR: U0VjdClWbSGtL1ulqKHnOxVlsXjCx8+fLEl3lakAdsdlmEYSJSB2PcCEuNHJk9+qSKiy4x/atV
+ O373nA8/Vk4G209ArQLurqdo3Ti96fGpsnxIse1myYoXuScHTqr2KXws1pTYY7Ew/LtBx3tkPo
+ ZdJA8kcEfqOpSmAAGwY3yP7VU7Qlv9WSeNPsqXe2jc7wJ1oTnO6Ozr/plqtiUO5OmfpAdhH625
+ tnDA+A/mZbQzG8EQHFRse6aupF2mRVu00jcUqpkI2amFEEU+n1wpsXGEucY5fO7JdFi/fgA1Pb
+ 5JN5FqvyU9ETt/OS3zoyHPuV
+X-IronPort-AV: E=McAfee;i="6200,9189,10133"; a="28062049"
+X-IronPort-AV: E=Sophos;i="5.85,364,1624287600"; 
+   d="scan'208";a="28062049"
+Received: from unknown (HELO oym-r2.gw.nic.fujitsu.com) ([210.162.30.90])
+  by esa11.hc1455-7.c3s2.iphmx.com with ESMTP; 11 Oct 2021 17:37:14 +0900
+Received: from oym-m2.gw.nic.fujitsu.com (oym-nat-oym-m2.gw.nic.fujitsu.com [192.168.87.59])
+        by oym-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id D892AE6800;
+        Mon, 11 Oct 2021 17:37:13 +0900 (JST)
+Received: from yto-om3.fujitsu.com (yto-om3.o.css.fujitsu.com [10.128.89.164])
+        by oym-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 170AECA703;
+        Mon, 11 Oct 2021 17:37:13 +0900 (JST)
+Received: from pumpkin.openstacklocal (pumpkin.fct.css.fujitsu.com [10.130.70.189])
+        by yto-om3.fujitsu.com (Postfix) with ESMTP id F3F584005EA44;
+        Mon, 11 Oct 2021 17:37:12 +0900 (JST)
+From:   Shunsuke Nakamura <nakamura.shun@fujitsu.com>
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: [PATCH v3] libperf tests: Fix test_stat_cpu
+Date:   Mon, 11 Oct 2021 17:37:04 +0900
+Message-Id: <20211011083704.4108720-1-nakamura.shun@fujitsu.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.391,FMLib:17.0.607.475
- definitions=2021-10-11_02,2021-10-07_02,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=632
- spamscore=0 malwarescore=0 mlxscore=0 bulkscore=0 lowpriorityscore=0
- clxscore=1015 impostorscore=0 suspectscore=0 priorityscore=1501
- phishscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2109230001 definitions=main-2110110048
-X-FB-Internal: deliver
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-As part of the road to libbpf 1.0, and discussed in libbpf issue tracker
-[0], bpf_program__get_prog_info_linear and its associated structs and
-helper functions should be deprecated. The functionality is too specific
-to the needs of 'perf', and there's little/no out-of-tree usage to
-preclude introduction of a more general helper in the future.
+`cpu` of perf_evsel__read() must be specified the cpu index.
+perf_cpu_map__for_each_cpu is for iterating the cpu number (not index)
+and is not appropriate.
+So, if there is an offline CPU, the cpu number specified in the argument
+may point out of range because the cpu number and the cpu index are
+different.
 
-[0] Closes: https://github.com/libbpf/libbpf/issues/313
+Fix test_stat_cpu.
 
-Signed-off-by: Dave Marchevsky <davemarchevsky@fb.com>
+Committer testing:
+
+  # make tests -C tools/lib/perf/
+  make: Entering directory '/home/nakamura/kernel_src/linux-5.15-rc4_fix/tools/lib/perf'
+  running static:
+  - running tests/test-cpumap.c...OK
+  - running tests/test-threadmap.c...OK
+  - running tests/test-evlist.c...OK
+  - running tests/test-evsel.c...OK
+  running dynamic:
+  - running tests/test-cpumap.c...OK
+  - running tests/test-threadmap.c...OK
+  - running tests/test-evlist.c...OK
+  - running tests/test-evsel.c...OK
+  make: Leaving directory '/home/nakamura/kernel_src/linux-5.15-rc4_fix/tools/lib/perf'
+
+Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
 ---
- tools/lib/bpf/libbpf.h | 3 +++
- 1 file changed, 3 insertions(+)
+Previous version at:
+https://lore.kernel.org/lkml/20211006094817.477494-1-nakamura.shun@fujitsu.com/
 
-diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
-index 89ca9c83ed4e..285008b46e1b 100644
---- a/tools/lib/bpf/libbpf.h
-+++ b/tools/lib/bpf/libbpf.h
-@@ -877,12 +877,15 @@ struct bpf_prog_info_linear {
- 	__u8			data[];
- };
-=20
-+LIBBPF_DEPRECATED_SINCE(0, 7, "use a custom linear prog_info wrapper")
- LIBBPF_API struct bpf_prog_info_linear *
- bpf_program__get_prog_info_linear(int fd, __u64 arrays);
-=20
-+LIBBPF_DEPRECATED_SINCE(0, 7, "use a custom linear prog_info wrapper")
- LIBBPF_API void
- bpf_program__bpil_addr_to_offs(struct bpf_prog_info_linear *info_linear);
-=20
-+LIBBPF_DEPRECATED_SINCE(0, 7, "use a custom linear prog_info wrapper")
- LIBBPF_API void
- bpf_program__bpil_offs_to_addr(struct bpf_prog_info_linear *info_linear);
-=20
---=20
-2.30.2
+Changes in v3:
+  - Fix build error
+
+Changes in v2:
+  - Remove "2/2" from Patch Subject
+
+ tools/lib/perf/tests/test-evlist.c | 6 +++---
+ tools/lib/perf/tests/test-evsel.c  | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/tools/lib/perf/tests/test-evlist.c b/tools/lib/perf/tests/test-evlist.c
+index c67c83399170..ce91a582f0e4 100644
+--- a/tools/lib/perf/tests/test-evlist.c
++++ b/tools/lib/perf/tests/test-evlist.c
+@@ -40,7 +40,7 @@ static int test_stat_cpu(void)
+ 		.type	= PERF_TYPE_SOFTWARE,
+ 		.config	= PERF_COUNT_SW_TASK_CLOCK,
+ 	};
+-	int err, cpu, tmp;
++	int err, idx;
+ 
+ 	cpus = perf_cpu_map__new(NULL);
+ 	__T("failed to create cpus", cpus);
+@@ -70,10 +70,10 @@ static int test_stat_cpu(void)
+ 	perf_evlist__for_each_evsel(evlist, evsel) {
+ 		cpus = perf_evsel__cpus(evsel);
+ 
+-		perf_cpu_map__for_each_cpu(cpu, tmp, cpus) {
++		for (idx = 0; idx < perf_cpu_map__nr(cpus); idx++) {
+ 			struct perf_counts_values counts = { .val = 0 };
+ 
+-			perf_evsel__read(evsel, cpu, 0, &counts);
++			perf_evsel__read(evsel, idx, 0, &counts);
+ 			__T("failed to read value for evsel", counts.val != 0);
+ 		}
+ 	}
+diff --git a/tools/lib/perf/tests/test-evsel.c b/tools/lib/perf/tests/test-evsel.c
+index 9abd4c0bf6db..33ae9334861a 100644
+--- a/tools/lib/perf/tests/test-evsel.c
++++ b/tools/lib/perf/tests/test-evsel.c
+@@ -22,7 +22,7 @@ static int test_stat_cpu(void)
+ 		.type	= PERF_TYPE_SOFTWARE,
+ 		.config	= PERF_COUNT_SW_CPU_CLOCK,
+ 	};
+-	int err, cpu, tmp;
++	int err, idx;
+ 
+ 	cpus = perf_cpu_map__new(NULL);
+ 	__T("failed to create cpus", cpus);
+@@ -33,10 +33,10 @@ static int test_stat_cpu(void)
+ 	err = perf_evsel__open(evsel, cpus, NULL);
+ 	__T("failed to open evsel", err == 0);
+ 
+-	perf_cpu_map__for_each_cpu(cpu, tmp, cpus) {
++	for (idx = 0; idx < perf_cpu_map__nr(cpus); idx++) {
+ 		struct perf_counts_values counts = { .val = 0 };
+ 
+-		perf_evsel__read(evsel, cpu, 0, &counts);
++		perf_evsel__read(evsel, idx, 0, &counts);
+ 		__T("failed to read value for evsel", counts.val != 0);
+ 	}
+ 
+-- 
+2.25.1
 
