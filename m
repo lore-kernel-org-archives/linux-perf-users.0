@@ -2,240 +2,134 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2ED6C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Oct 2021 14:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6E1C433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Oct 2021 14:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 816EF6023F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Oct 2021 14:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD55A60EB1
+	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Oct 2021 14:46:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234693AbhJKOcG (ORCPT
+        id S244290AbhJKOsr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 11 Oct 2021 10:32:06 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17072 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237130AbhJKOcA (ORCPT
+        Mon, 11 Oct 2021 10:48:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47868 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243363AbhJKOsc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 11 Oct 2021 10:32:00 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 19BEE2R7022300;
-        Mon, 11 Oct 2021 10:29:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=bWwkMFaP9VR5avZOByPBEcQrDYktXrOW+1xzfEJ15xU=;
- b=hx+AryTQj+CtYFnoIshCLCDYvcSPTTSq+CVDaUEmQmqrBQV+GY+sLMIWt1gd8I4TTISk
- P6Yjt2Q8maVIJuu7K4y3ISojJG4reQ6g2OJ06TeL2ghzdUM65ErNHxoeYRzbCoV3J51W
- FTj+6zm+1NtkQsaimGB8iFXcTQvA6VZaVDLhsqHgnmICOdCj6IaBbAsKjnLqK5OyZt/7
- TbtW/CyOU6Wv8q/YAzkxBz1BKdlhqSnqyhEt/nONBi23gaDUKAXt5gqfgI0TByX2g/lD
- ASjf2DwFwsXlJro/VYASCnnLL1Q18ZshcrbNVL70JIlj1mPHJTPTpoRKrxGvmPeFSUbX Gg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3bmn28u96g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Oct 2021 10:29:52 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 19BDNtxa004155;
-        Mon, 11 Oct 2021 10:29:52 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3bmn28u95s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Oct 2021 10:29:52 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 19BESfce006507;
-        Mon, 11 Oct 2021 14:29:49 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma05fra.de.ibm.com with ESMTP id 3bk2q9de88-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Oct 2021 14:29:49 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 19BETkvG49414554
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Oct 2021 14:29:46 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 90FD411C04C;
-        Mon, 11 Oct 2021 14:29:46 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 30D1611C054;
-        Mon, 11 Oct 2021 14:29:43 +0000 (GMT)
-Received: from Madhavan.PrimaryTP (unknown [9.43.14.36])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 11 Oct 2021 14:29:42 +0000 (GMT)
-Subject: Re: [PATCH 1/2] tools/perf: Add reverse_fn to handle branch_stack
- endian issue
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, michael@ellerman.id.au, eranian@google.com,
-        mark.rutland@arm.com, namhyung@kernel.org, kjain@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20210930070410.52703-1-maddy@linux.ibm.com>
- <YV8xbzWt7tEbBbZX@krava>
-From:   Madhavan Srinivasan <maddy@linux.ibm.com>
-Message-ID: <e9504e62-63c9-de32-5c2d-1c5ca0b86bf0@linux.ibm.com>
-Date:   Mon, 11 Oct 2021 19:59:41 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Mon, 11 Oct 2021 10:48:32 -0400
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C32DBC06161C
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 Oct 2021 07:46:31 -0700 (PDT)
+Received: by mail-pg1-x52f.google.com with SMTP id r201so11039470pgr.4
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 Oct 2021 07:46:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=DBJ7ew0y4wvSmKi4WuGSAOH7oUWp7VGZaMnxUGUZnug=;
+        b=WUgGM/f+tuPQ7vGNX0cNBBwPv0afu/Zf4dQxhALEj1CWce6SG/QX3MDYljf0Gbuor/
+         sj1ONxiUie1VuDLeZqyzP3U8wgCb5jI5/lPjBFHrG3lQw2dxyh3W+h6mZVvyEvJz8G7y
+         1nEPJR+H3CxD/4MNWxAGoi6oKI9swc9dOAfsAmuD9ToN3kvenxSiEM2lWlzMHV2o9VoH
+         KyJiDN0gZI6nT02ZPzo0daWaK+RTn7Ob4pOSdy5AEMo6f68pgZs/vQbuhgd7TqLjMpzx
+         27dHqDzBC8kH05vyX+/CHU4byC6ZoMfjoSir4u7rmWajgW3NJ9i2O+wJZUYyUoDZl7A9
+         85aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DBJ7ew0y4wvSmKi4WuGSAOH7oUWp7VGZaMnxUGUZnug=;
+        b=QIF5wjbY6Yv/3p8djDbHOKNgzgGdwkgdtN5UJwjXBpbpQALLkKFZbc9v1TsDvmEnmD
+         AT27DVdu7m8AvwEvaB28taLQsvX5PKHs1eAOIxVddXMvglg1CLOmBInIhmXadyR2yy+/
+         d7kueFbbWa8Ln1AWjYD03igetHvtc7XuuhWr5rQqfkQM2zGWxNW9y9B1ZUn498GqqNnI
+         fgSjqMc/0nhUgIlRJxQaMzt8VCzxxUqFBMorg9GcrhUZ5v1hs8C94ggKWxFS98eJSvKA
+         j6BMObRLXO4N9UUFE7ok2NtIE0tZ+GCkJ9bRFkMkI1W3x5lL0jLm5NQizTtzwcjjPmjb
+         zwlA==
+X-Gm-Message-State: AOAM5323trc5tIpBk1J7txq6rHcKpMTdN2epPIjdmz5oiNGEBPwvw0eT
+        eILWnP2YDEN3SSx1pTtQb7RJfw==
+X-Google-Smtp-Source: ABdhPJy9JeaIFsaMhzjKrm4gRLnqTQlHrSTvgGmlHsrREml2i4T5hhC4ZlLxJitHkoHCOL8HD11SpQ==
+X-Received: by 2002:a63:c:: with SMTP id 12mr18698297pga.477.1633963591022;
+        Mon, 11 Oct 2021 07:46:31 -0700 (PDT)
+Received: from google.com (157.214.185.35.bc.googleusercontent.com. [35.185.214.157])
+        by smtp.gmail.com with ESMTPSA id x129sm8062008pfc.140.2021.10.11.07.46.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Oct 2021 07:46:30 -0700 (PDT)
+Date:   Mon, 11 Oct 2021 14:46:25 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Guo Ren <guoren@kernel.org>, Nick Hu <nickhu@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu, linux-csky@vger.kernel.org,
+        linux-riscv@lists.infradead.org, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org,
+        Artem Kashkanov <artem.kashkanov@intel.com>,
+        Like Xu <like.xu.linux@gmail.com>,
+        Zhu Lingshan <lingshan.zhu@intel.com>
+Subject: Re: [PATCH v3 12/16] KVM: Move x86's perf guest info callbacks to
+ generic KVM
+Message-ID: <YWROQSGPuPf3wfC9@google.com>
+References: <20210922000533.713300-1-seanjc@google.com>
+ <20210922000533.713300-13-seanjc@google.com>
+ <87wnmjq4y3.wl-maz@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <YV8xbzWt7tEbBbZX@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: qVNp4E85onsCiQp_ZPeBUxjwaIZkYDQd
-X-Proofpoint-GUID: 6pK2HSffoWle0l_FRryp8B6UcZTJkaCO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.391,FMLib:17.0.607.475
- definitions=2021-10-11_05,2021-10-07_02,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 bulkscore=0 suspectscore=0 impostorscore=0 malwarescore=0
- mlxscore=0 spamscore=0 mlxlogscore=999 phishscore=0 clxscore=1015
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2109230001 definitions=main-2110110082
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87wnmjq4y3.wl-maz@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Mon, Oct 11, 2021, Marc Zyngier wrote:
+> On Wed, 22 Sep 2021 01:05:29 +0100, Sean Christopherson <seanjc@google.com> wrote:
+> > diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+> > index ed940aec89e0..828b6eaa2c56 100644
+> > --- a/arch/arm64/include/asm/kvm_host.h
+> > +++ b/arch/arm64/include/asm/kvm_host.h
+> > @@ -673,6 +673,14 @@ int io_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa);
+> >  void kvm_perf_init(void);
+> >  void kvm_perf_teardown(void);
+> >  
+> > +#ifdef CONFIG_GUEST_PERF_EVENTS
+> > +static inline bool kvm_arch_pmi_in_guest(struct kvm_vcpu *vcpu)
+> 
+> Pardon my x86 ignorance, what is PMI? PMU Interrupt?
 
-On 10/7/21 11:12 PM, Jiri Olsa wrote:
-> On Thu, Sep 30, 2021 at 12:34:09PM +0530, Madhavan Srinivasan wrote:
->> branch_stack struct has bit field definition which
->> produces different bit ordering for big/little endian.
->> Because of this, when branch_stack sample is collected
->> in a BE system and viewed/reported in a LE system, bit
->> fields of the branch stack are not presented properly.
->> To address this issue, a evsel__reverse64_branch_stack_flags()
->> is defined and introduced in evsel__parse_sample.
->>
->> Signed-off-by: Madhavan Srinivasan <maddy@linux.ibm.com>
->> ---
->>   tools/perf/util/evsel.c | 64 +++++++++++++++++++++++++++++++++++++++--
->>   tools/perf/util/evsel.h |  5 ++++
->>   2 files changed, 67 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
->> index dbfeceb2546c..007be66b69a2 100644
->> --- a/tools/perf/util/evsel.c
->> +++ b/tools/perf/util/evsel.c
->> @@ -2221,6 +2221,46 @@ void __weak arch_perf_parse_sample_weight(struct perf_sample *data,
->>   	data->weight = *array;
->>   }
->>   
->> +u64 evsel__reverse64_branch_stack_flags(u64 value)
->> +{
->> +	u64 new_val = 0;
->> +
->> +	/*
->> +	 * branch_stack flag (u64)
->> +	 * union {
->> +	 * 	u64 values;
->> +	 * 	struct {
->> +	 * 		mispred:1	//target mispredicted
->> +	 * 		predicted:1	//target predicted
->> +	 * 		in_tx:1		//in transaction
->> +	 * 		abort:1		//transaction abort
->> +	 * 		cycles:16	//cycle count to last branch
->> +	 * 		type:4		//branch type
->> +	 * 		reserved:40
->> +	 * 	}
->> +	 * }
->> +	 */
-> please describe in comment how the bitfield is swapped
+Ya, Performance Monitoring Interrupt.  I didn't realize the term wasn't common
+perf terminology.  Maybe kvm_arch_perf_events_in_guest() to be less x86-centric?
 
-Sure will do.
+> > +{
+> > +	/* Any callback while a vCPU is loaded is considered to be in guest. */
+> > +	return !!vcpu;
+> > +}
+> > +#endif
+> 
+> Do you really need this #ifdef?
 
->> +	if (bigendian()) {
->> +		new_val = reverse_64(value, 0, 1);
->> +		new_val |= reverse_64(value, 1, 1);
->> +		new_val |= reverse_64(value, 2, 1);
->> +		new_val |= reverse_64(value, 3, 1);
->> +		new_val |= reverse_64(value, 4, 16);
->> +		new_val |= reverse_64(value, 20, 4);
->> +		new_val |= reverse_64(value, 24, 40);
->> +	} else {
->> +		new_val = reverse_64(value, 63, 1);
->> +		new_val |= reverse_64(value, 62, 1);
->> +		new_val |= reverse_64(value, 61, 1);
->> +		new_val |= reverse_64(value, 60, 1);
->> +		new_val |= reverse_64(value, 44, 16);
->> +		new_val |= reverse_64(value, 40, 4);
->> +		new_val |= reverse_64(value, 0, 40);
->> +	}
->> +
->> +	return new_val;
->> +}
->> +
->>   int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
->>   			struct perf_sample *data)
->>   {
->> @@ -2408,6 +2448,8 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
->>   	if (type & PERF_SAMPLE_BRANCH_STACK) {
->>   		const u64 max_branch_nr = UINT64_MAX /
->>   					  sizeof(struct branch_entry);
->> +		struct branch_entry *e;
->> +		unsigned int i;
->>   
->>   		OVERFLOW_CHECK_u64(array);
->>   		data->branch_stack = (struct branch_stack *)array++;
->> @@ -2416,10 +2458,28 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
->>   			return -EFAULT;
->>   
->>   		sz = data->branch_stack->nr * sizeof(struct branch_entry);
->> -		if (evsel__has_branch_hw_idx(evsel))
->> +		if (evsel__has_branch_hw_idx(evsel)) {
->>   			sz += sizeof(u64);
->> -		else
->> +			e = &data->branch_stack->entries[0];
->> +		} else {
->>   			data->no_hw_idx = true;
->> +			e = (struct branch_entry *)&data->branch_stack->hw_idx;
-> hum, why do we convert hw_idx? it's the same struct as entries?
-> please explain this in comment as well
+Nope, should compile fine without it, though simply dropping the #ifdef would make
+make the semantics of the function wrong, even if nothing consumes it.  Tweak it
+to use IS_ENABLED()?
 
-No. IIUC, hw_idx is valid only if PERF_SAMPLE_BRANCH_HW_INDEX is applied.
-If not, then only nr and entries[] will be output-ed by kernel
-42bbabed09ce ('perf tools: Add hw_idx in struct branch_stack')
-
->
->> +		}
->> +
->> +		if (swapped) {
->> +			/*
->> +			 * struct branch_flag does not have endian specific
->> +			 * bit field definition. And bswap will not resolve the
->> +			 * issue, since these are bit fields.
->> +			 *
->> +			 * evsel__reverse64_branch_stack_flags() uses a reverse64
->> +			 * macro to reverse the bit position based on the host
->> +			 * endians.
->> +			 */
->> +			for (i = 0; i < data->branch_stack->nr; i++, e++)
->> +				e->flags.value = evsel__reverse64_branch_stack_flags(e->flags.value);
->> +		}
->> +
->>   		OVERFLOW_CHECK(array, sz, max_size);
->>   		array = (void *)array + sz;
->>   	}
->> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
->> index 1f7edfa8568a..1127c23710cf 100644
->> --- a/tools/perf/util/evsel.h
->> +++ b/tools/perf/util/evsel.h
->> @@ -482,4 +482,9 @@ struct evsel *evsel__leader(struct evsel *evsel);
->>   bool evsel__has_leader(struct evsel *evsel, struct evsel *leader);
->>   bool evsel__is_leader(struct evsel *evsel);
->>   void evsel__set_leader(struct evsel *evsel, struct evsel *leader);
->> +
->> +#define reverse_64(src, pos, size)	\
->> +	((((src) >> (pos)) & ((1ull << (size)) - 1)) << (63 - ((pos) + (size) - 1)))
-> hum, is this reversing anything?
-> could you please add comment describing what this is doing?
-
-Sure will do.
-Thanks for review
-Maddy
-
-
-> thanks, jirka
->> +
->> +u64 evsel__reverse64_branch_stack_flags(u64 value);
->>   #endif /* __PERF_EVSEL_H */
->> -- 
->> 2.31.1
->>
+	return IS_ENABLED(CONFIG_GUEST_PERF_EVENTS) && !!vcpu;
