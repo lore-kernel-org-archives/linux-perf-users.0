@@ -2,34 +2,27 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B34FC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Oct 2021 08:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA949C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Oct 2021 08:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9FBD60C41
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Oct 2021 08:19:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE05C61076
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Oct 2021 08:47:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234071AbhJLIV4 (ORCPT
+        id S235397AbhJLItc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 12 Oct 2021 04:21:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52084 "EHLO mail.kernel.org"
+        Tue, 12 Oct 2021 04:49:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:56644 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232541AbhJLIVz (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Oct 2021 04:21:55 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5C27A6101D;
-        Tue, 12 Oct 2021 08:19:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634026794;
-        bh=lDPufYSiKyvGGDrYONfULzGOTQL591ZiKQDt8MPRrw8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EbhrCQT6mNhvQPiAFl8cNGZj7me7jYjv8/NCbzUy/aKo5RfWSXhn4M4I78GlMhNRN
-         pruhFBcjfGZcQkqF+4MPON1fwgpXBNmSoDzYF/fF4/0mYUDH3g6ZXPuATahOpCcOgq
-         +q0S6w9teF4Kw+i2PtOTccVI0E/N4LIvGostQHdf+3j1mApKvEZyDRr7DlVJHOTpCE
-         nx5qm85PGJTFzlTIBreR9gDbjD/K+a/s0oVk3UIkQOQh6bgoQImCGJ4ckusQxKlJ/D
-         eAqfvgiMXVFt82AgIP8Y/awQPdli5FYtnaEAdAkxd4wg6pPT4RTUZVzqLF0EI5mlCy
-         rDeHnI04DOUdw==
-Date:   Tue, 12 Oct 2021 09:19:48 +0100
-From:   Will Deacon <will@kernel.org>
-To:     German Gomez <german.gomez@arm.com>
+        id S235462AbhJLItc (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 12 Oct 2021 04:49:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 86EEAED1;
+        Tue, 12 Oct 2021 01:47:30 -0700 (PDT)
+Received: from [10.57.21.6] (unknown [10.57.21.6])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A23433F694;
+        Tue, 12 Oct 2021 01:47:28 -0700 (PDT)
+Subject: Re: [PATCH 4/5] perf arm-spe: Implement find_snapshot callback
+To:     Will Deacon <will@kernel.org>, German Gomez <german.gomez@arm.com>
 Cc:     Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
         John Garry <john.garry@huawei.com>,
@@ -39,10 +32,7 @@ Cc:     Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Mike Leach <mike.leach@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
-        James Clark <James.Clark@arm.com>
-Subject: Re: [PATCH 4/5] perf arm-spe: Implement find_snapshot callback
-Message-ID: <20211012081948.GA5156@willie-the-truck>
+        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org
 References: <20210916154635.1525-1-german.gomez@arm.com>
  <20210916154635.1525-4-german.gomez@arm.com>
  <20210923135016.GG400258@leoy-ThinkPad-X240s>
@@ -52,40 +42,65 @@ References: <20210916154635.1525-1-german.gomez@arm.com>
  <6b092f13-832f-5d1d-a504-aea96c81bf17@arm.com>
  <20211006095124.GC14400@leoy-ThinkPad-X240s>
  <377b54ef-b9c0-9cfc-ef0c-0187d7c493cc@arm.com>
+ <20211012081948.GA5156@willie-the-truck>
+From:   James Clark <james.clark@arm.com>
+Message-ID: <55f8978f-e656-5d5f-94e2-f4be4a70656d@arm.com>
+Date:   Tue, 12 Oct 2021 09:47:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <377b54ef-b9c0-9cfc-ef0c-0187d7c493cc@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20211012081948.GA5156@willie-the-truck>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Oct 11, 2021 at 04:55:37PM +0100, German Gomez wrote:
-> Hi Leo,
-> 
-> On 06/10/2021 10:51, Leo Yan wrote:
-> > On Wed, Oct 06, 2021 at 10:35:20AM +0100, German Gomez wrote:
-> >
-> > [...]
-> >
-> >>> So simply say, I think the head pointer monotonically increasing is
-> >>> the right thing to do in Arm SPE driver.
-> >> I will talk to James about how we can proceed on this.
-> > Thanks!
-> 
-> I took this offline with James and, though it looks possible to patch
-> the SPE driver to have a monotonically increasing head pointer in order
-> to simplify the handling in the perf tool, it could be a breaking change
-> for users of the perf_event_open syscall that currently rely on the way
-> it works now.
-> 
-> An alternative way we considered to simplify the patch is to change the
-> logic inside the find_snapshot callback so that it records the entire
-> contents of the aux buffer every time.
-> 
-> What do you think?
 
-What does intel-pt do?
 
-Will
+On 12/10/2021 09:19, Will Deacon wrote:
+> On Mon, Oct 11, 2021 at 04:55:37PM +0100, German Gomez wrote:
+>> Hi Leo,
+>>
+>> On 06/10/2021 10:51, Leo Yan wrote:
+>>> On Wed, Oct 06, 2021 at 10:35:20AM +0100, German Gomez wrote:
+>>>
+>>> [...]
+>>>
+>>>>> So simply say, I think the head pointer monotonically increasing is
+>>>>> the right thing to do in Arm SPE driver.
+>>>> I will talk to James about how we can proceed on this.
+>>> Thanks!
+>>
+>> I took this offline with James and, though it looks possible to patch
+>> the SPE driver to have a monotonically increasing head pointer in order
+>> to simplify the handling in the perf tool, it could be a breaking change
+>> for users of the perf_event_open syscall that currently rely on the way
+>> it works now.
+>>
+>> An alternative way we considered to simplify the patch is to change the
+>> logic inside the find_snapshot callback so that it records the entire
+>> contents of the aux buffer every time.
+>>
+>> What do you think?
+> 
+> What does intel-pt do?
+
+Intel-pt has a wrapped head, which is why it has the intel_pt_find_snapshot()
+function in perf to try to not save any zeros from the buffer that haven't
+been written yet. (With a wrapped head pointer it's impossible to tell).
+
+Coresight has a monotonically increasing head pointer so it is possible to
+tell. Recently, Leo removed the Coresight version of find_snapshot() for this
+reason.
+
+It would be nice to do the same for SPE because that function has a heuristic
+and is also slow, but I imagine that not returning wrapped head pointers could
+break anything that expects them.
+
+James
+ 
+> 
+> Will
+> 
