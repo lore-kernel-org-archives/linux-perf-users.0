@@ -2,86 +2,90 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C505CC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Oct 2021 03:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B34FC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Oct 2021 08:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A73EC60EE5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Oct 2021 03:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9FBD60C41
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Oct 2021 08:19:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231859AbhJLDLO (ORCPT
+        id S234071AbhJLIV4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 11 Oct 2021 23:11:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46424 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231742AbhJLDLO (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 11 Oct 2021 23:11:14 -0400
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 410F9C061570
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Oct 2021 20:09:13 -0700 (PDT)
-Received: by mail-yb1-xb2e.google.com with SMTP id q189so43528708ybq.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Oct 2021 20:09:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FTVshl9Jefo2BzQxtGM9kFLryo0edF9MOJ5E+vVxA44=;
-        b=efFH465LIdLBSe6pxeyXd6rpuBwhMRC7O641rjKon+zYzEi5zbCl6aXlyPw/kzRD2e
-         hxvl04IAP8Lu0xmEIuQ1Y28asASEfpDySl+jvc7b+sXSYgSIxyN3/50TvP50fjOYDyby
-         VQpu6oRd5fS7xFjzsN9pB0qHjFoZixL6UN3Dro8F0prUKfJUku4cuuPpEMV4Y5tsvhTJ
-         Yb0Uw6u4NXyR9qD8lSLLvqFk5Dz4TqSZQPR//vgcu3rf69JusHZmsVHWLln1Cj7+r9x0
-         wHDrZfrg5nQWhQ6Q6OTKuA66jB8rYEhjj7KXv0FW+8d3CyhCxSTmxFV5VWpUlYcTABEc
-         sBPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FTVshl9Jefo2BzQxtGM9kFLryo0edF9MOJ5E+vVxA44=;
-        b=EmI6iWdyNO5K9JnMr5K14HWYOra2Ofd//xBNf+pr2DokMKKt/a0xHPKhEpY8VPxN4h
-         7PR7xzHIkUtaC4quTZQAp+ys7+ZDdIRiTAJRAx2o4NQZ2qUiWQSFG24ywfRjHi9M9615
-         vzox6X4hf4XMAWnBjivpZVMoEoFMyIg27ySIVKs3mufjYIaAp+WJuFAvTtFJgxvC4Q77
-         hv1JQR0q75jbmHVDl9Y2+g7aVD6ASd72Y+7wo31Rtb6XT8V8LBJJhqOcyVlN8uJwgBEm
-         gUj5hdsDDOI6GwRN9XuSp3r8v2sheL5KTiLFp+Ueq1b1r4GgoLOIywi0i+q9IPumifWY
-         9Z5w==
-X-Gm-Message-State: AOAM532Rb32ECK26cETAaB6o1GictIm7nyIcBtKIXFMRQfzhOcofqMa1
-        TLAlQIsewM2Meine+HOE7qVg10FGGMMWL1iRJ63YxA==
-X-Google-Smtp-Source: ABdhPJzJS9y19I8QsN2CIc+h2Q+qEVwU2WZQBTowP4Q1pR7aazPCRPw2H9xNl2hUVLv6e/ATtWp904GkhyIGzEVaBg4=
-X-Received: by 2002:a25:ba08:: with SMTP id t8mr27043351ybg.111.1634008152410;
- Mon, 11 Oct 2021 20:09:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20211012021321.291635-1-irogers@google.com>
-In-Reply-To: <20211012021321.291635-1-irogers@google.com>
-From:   =?UTF-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>
-Date:   Mon, 11 Oct 2021 20:09:01 -0700
-Message-ID: <CAFP8O3L_Oi916yOAuPB7MFpa3QoDQtreRbV7oNt2Yh6h1Coq9A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] tools: Bump minimum LLVM C++ std to GNU++14
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
+        Tue, 12 Oct 2021 04:21:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52084 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232541AbhJLIVz (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 12 Oct 2021 04:21:55 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5C27A6101D;
+        Tue, 12 Oct 2021 08:19:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1634026794;
+        bh=lDPufYSiKyvGGDrYONfULzGOTQL591ZiKQDt8MPRrw8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EbhrCQT6mNhvQPiAFl8cNGZj7me7jYjv8/NCbzUy/aKo5RfWSXhn4M4I78GlMhNRN
+         pruhFBcjfGZcQkqF+4MPON1fwgpXBNmSoDzYF/fF4/0mYUDH3g6ZXPuATahOpCcOgq
+         +q0S6w9teF4Kw+i2PtOTccVI0E/N4LIvGostQHdf+3j1mApKvEZyDRr7DlVJHOTpCE
+         nx5qm85PGJTFzlTIBreR9gDbjD/K+a/s0oVk3UIkQOQh6bgoQImCGJ4ckusQxKlJ/D
+         eAqfvgiMXVFt82AgIP8Y/awQPdli5FYtnaEAdAkxd4wg6pPT4RTUZVzqLF0EI5mlCy
+         rDeHnI04DOUdw==
+Date:   Tue, 12 Oct 2021 09:19:48 +0100
+From:   Will Deacon <will@kernel.org>
+To:     German Gomez <german.gomez@arm.com>
+Cc:     Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Leo Yan <leo.yan@linaro.org>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+        Mike Leach <mike.leach@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+        James Clark <James.Clark@arm.com>
+Subject: Re: [PATCH 4/5] perf arm-spe: Implement find_snapshot callback
+Message-ID: <20211012081948.GA5156@willie-the-truck>
+References: <20210916154635.1525-1-german.gomez@arm.com>
+ <20210916154635.1525-4-german.gomez@arm.com>
+ <20210923135016.GG400258@leoy-ThinkPad-X240s>
+ <20210923144048.GB603008@leoy-ThinkPad-X240s>
+ <1c6a3a73-27dc-6673-7fe7-34bc7fcb0a68@arm.com>
+ <20211004122724.GC174271@leoy-ThinkPad-X240s>
+ <6b092f13-832f-5d1d-a504-aea96c81bf17@arm.com>
+ <20211006095124.GC14400@leoy-ThinkPad-X240s>
+ <377b54ef-b9c0-9cfc-ef0c-0187d7c493cc@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <377b54ef-b9c0-9cfc-ef0c-0187d7c493cc@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Oct 11, 2021 at 7:13 PM Ian Rogers <irogers@google.com> wrote:
->
-> LLVM 9 (current release is LLVM 13) moved the minimum C++ version to
-> GNU++14. Bump the version numbers in the feature test and perf build.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
+On Mon, Oct 11, 2021 at 04:55:37PM +0100, German Gomez wrote:
+> Hi Leo,
+> 
+> On 06/10/2021 10:51, Leo Yan wrote:
+> > On Wed, Oct 06, 2021 at 10:35:20AM +0100, German Gomez wrote:
+> >
+> > [...]
+> >
+> >>> So simply say, I think the head pointer monotonically increasing is
+> >>> the right thing to do in Arm SPE driver.
+> >> I will talk to James about how we can proceed on this.
+> > Thanks!
+> 
+> I took this offline with James and, though it looks possible to patch
+> the SPE driver to have a monotonically increasing head pointer in order
+> to simplify the handling in the perf tool, it could be a breaking change
+> for users of the perf_event_open syscall that currently rely on the way
+> it works now.
+> 
+> An alternative way we considered to simplify the patch is to change the
+> logic inside the find_snapshot callback so that it records the entire
+> contents of the aux buffer every time.
+> 
+> What do you think?
 
+What does intel-pt do?
 
-Reviewed-by: Fangrui Song <maskray@google.com>
+Will
