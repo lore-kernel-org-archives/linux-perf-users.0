@@ -2,54 +2,50 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA949C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Oct 2021 08:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F812C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Oct 2021 13:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE05C61076
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Oct 2021 08:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C98A60EB6
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Oct 2021 13:30:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235397AbhJLItc (ORCPT
+        id S236608AbhJLNc5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 12 Oct 2021 04:49:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:56644 "EHLO foss.arm.com"
+        Tue, 12 Oct 2021 09:32:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:42520 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235462AbhJLItc (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Oct 2021 04:49:32 -0400
+        id S233296AbhJLNc4 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 12 Oct 2021 09:32:56 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 86EEAED1;
-        Tue, 12 Oct 2021 01:47:30 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F2EB91063;
+        Tue, 12 Oct 2021 06:30:54 -0700 (PDT)
 Received: from [10.57.21.6] (unknown [10.57.21.6])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A23433F694;
-        Tue, 12 Oct 2021 01:47:28 -0700 (PDT)
-Subject: Re: [PATCH 4/5] perf arm-spe: Implement find_snapshot callback
-To:     Will Deacon <will@kernel.org>, German Gomez <german.gomez@arm.com>
-Cc:     Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D0A593F66F;
+        Tue, 12 Oct 2021 06:30:52 -0700 (PDT)
+Subject: Re: [PATCH 0/3] perf tools: Enable strict JSON parsing
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        kajoljain <kjain@linux.ibm.com>
+Cc:     john.garry@huawei.com, ak@linux.intel.com,
+        linux-perf-users@vger.kernel.org, Nick.Forrington@arm.com,
+        Andrew.Kilroy@arm.com, Will Deacon <will@kernel.org>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org
-References: <20210916154635.1525-1-german.gomez@arm.com>
- <20210916154635.1525-4-german.gomez@arm.com>
- <20210923135016.GG400258@leoy-ThinkPad-X240s>
- <20210923144048.GB603008@leoy-ThinkPad-X240s>
- <1c6a3a73-27dc-6673-7fe7-34bc7fcb0a68@arm.com>
- <20211004122724.GC174271@leoy-ThinkPad-X240s>
- <6b092f13-832f-5d1d-a504-aea96c81bf17@arm.com>
- <20211006095124.GC14400@leoy-ThinkPad-X240s>
- <377b54ef-b9c0-9cfc-ef0c-0187d7c493cc@arm.com>
- <20211012081948.GA5156@willie-the-truck>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20211007110543.564963-1-james.clark@arm.com>
+ <c15fd2bf-104e-6ab0-6496-7e5cf77a218f@linux.ibm.com>
+ <e8752b2d-65a7-1ed8-3c68-30d9006261ba@arm.com>
+ <5947c093-cff9-f70e-af20-75bc053edf5f@linux.ibm.com>
+ <YWCVTnOUM2P4FRPi@kernel.org>
 From:   James Clark <james.clark@arm.com>
-Message-ID: <55f8978f-e656-5d5f-94e2-f4be4a70656d@arm.com>
-Date:   Tue, 12 Oct 2021 09:47:27 +0100
+Message-ID: <0d73d04f-925c-4c97-9a07-18cc64a9c68b@arm.com>
+Date:   Tue, 12 Oct 2021 14:30:51 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.13.0
 MIME-Version: 1.0
-In-Reply-To: <20211012081948.GA5156@willie-the-truck>
+In-Reply-To: <YWCVTnOUM2P4FRPi@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -59,48 +55,79 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 12/10/2021 09:19, Will Deacon wrote:
-> On Mon, Oct 11, 2021 at 04:55:37PM +0100, German Gomez wrote:
->> Hi Leo,
+On 08/10/2021 20:00, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Oct 08, 2021 at 04:56:55PM +0530, kajoljain escreveu:
 >>
->> On 06/10/2021 10:51, Leo Yan wrote:
->>> On Wed, Oct 06, 2021 at 10:35:20AM +0100, German Gomez wrote:
+>>
+>> On 10/8/21 3:32 PM, James Clark wrote:
 >>>
->>> [...]
 >>>
->>>>> So simply say, I think the head pointer monotonically increasing is
->>>>> the right thing to do in Arm SPE driver.
->>>> I will talk to James about how we can proceed on this.
->>> Thanks!
+>>> On 08/10/2021 08:43, kajoljain wrote:
+>>>>
+>>>>
+>>>> On 10/7/21 4:35 PM, James Clark wrote:
+>>>>> After a discussion on "[PATCH 1/4] perf vendor events: Syntax corrections in Neoverse N1 json",
+>>>>> John Garry suggested that we can just modify the parser to make it more strict. Hopefully this will
+>>>>> remove the need to apply any future JSON comma fixup commits.
+>>>>>
+>>>>> Applies on top of "[PATCH v2 1/3] perf vendor events: Syntax corrections in Neoverse N1 json" on
+>>>>> perf/core.
+>>>>>
+>>>>> Also available at:
+>>>>>   git clone --branch james-json-parse-fix git@git.gitlab.arm.com:linux-arm/linux-jc.git
+>>>>
+>>>> Hi James,
+>>>>    Do we have any dependency patches on top of this patch series. I am
+>>>> reviewing and testing it, but in both powerpc and x86 system I am
+>>>> getting build issue. Not sure if I am missing something> 
+>>>> I am trying your changes on top of upstream perf.
+>>>>
+>>>> pmu-events/arch/test/test_soc/sys/uncore.json: json error Invalid
+>>>> character inside JSON string
+>>>
+>>> Hi Kajol,
+>>>
+>>> A trailing comma was fixed in this file 3 weeks ago at b8b350a. Can you
+>>> confirm if you have updated to get this commit on perf core?
+>>>
+>>> Alternately you could pull from my branch above which is up to date enough
+>>> to include it.
 >>
->> I took this offline with James and, though it looks possible to patch
->> the SPE driver to have a monotonically increasing head pointer in order
->> to simplify the handling in the perf tool, it could be a breaking change
->> for users of the perf_event_open syscall that currently rely on the way
->> it works now.
+>> Hi James,
+>>    Thanks for pointing it. Not getting build issue now.
+>>>
+>>> The file is in pmu-events/arch/test/ so I would expect it to fail on all platforms.
+>>>
+>>>> make[3]: *** [pmu-events/Build:18: pmu-events/pmu-events.c] Error 1
+>>>> make[3]: *** Deleting file 'pmu-events/pmu-events.c'
+>>>> make[2]: *** [Makefile.perf:667: pmu-events/pmu-events-in.o] Error 2
+>>>> make[2]: *** Waiting for unfinished jobs....
+>>>> make[1]: *** [Makefile.perf:238: sub-make] Error 2
+>>>> make: *** [Makefile:70: all] Error 2
+>>>>
+>>>> Also, Is it possible to add line number along with file name while
+>>>> showing this error `json error Invalid character inside JSON string`.
+>>>> It might make it easy to fix.
+>>>
+>>> I can add a character number with the following fix if you think that would
+>>> be good enough? A line number might be a bigger change and involve keeping
+>>> track of newline characters.
 >>
->> An alternative way we considered to simplify the patch is to change the
->> logic inside the find_snapshot callback so that it records the entire
->> contents of the aux buffer every time.
+>> Sure. I think then we can skip this change. Not sure if character
+>> number will be helpful.
 >>
->> What do you think?
+>> Patch-set looks good to me.
+>>
+>> Reviewed-by Kajol Jain<kjain@linux.ibm.com>
 > 
-> What does intel-pt do?
+> Applied ok as-is to my perf/core branch, applied and added your
+> Reviewed-by, thanks.
+> 
 
-Intel-pt has a wrapped head, which is why it has the intel_pt_find_snapshot()
-function in perf to try to not save any zeros from the buffer that haven't
-been written yet. (With a wrapped head pointer it's impossible to tell).
-
-Coresight has a monotonically increasing head pointer so it is possible to
-tell. Recently, Leo removed the Coresight version of find_snapshot() for this
-reason.
-
-It would be nice to do the same for SPE because that function has a heuristic
-and is also slow, but I imagine that not returning wrapped head pointers could
-break anything that expects them.
+Thanks Arnaldo. This does mean that the arm64 build will fail until
+"[PATCH v2 1/3] perf vendor events: Syntax corrections in Neoverse N1 json" is
+applied. I think there is also an arm64 build issue with "[PATCH 02/21] perf
+pmu: Add const to pmu_events_map." which Andrew Kilroy has replied to.
 
 James
- 
-> 
-> Will
-> 
+
