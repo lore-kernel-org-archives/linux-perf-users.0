@@ -2,30 +2,31 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0E1C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 17:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B90C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 17:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 535CC6109F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 17:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 723F46101D
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 17:30:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230527AbhJMR15 (ORCPT
+        id S229967AbhJMRca (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Oct 2021 13:27:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:42792 "EHLO foss.arm.com"
+        Wed, 13 Oct 2021 13:32:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:42892 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230404AbhJMR15 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Oct 2021 13:27:57 -0400
+        id S230301AbhJMRca (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 13 Oct 2021 13:32:30 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA6C01063;
-        Wed, 13 Oct 2021 10:25:52 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CE6B61063;
+        Wed, 13 Oct 2021 10:30:26 -0700 (PDT)
 Received: from C02TD0UTHF1T.local (unknown [10.57.73.189])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EA6E43F694;
-        Wed, 13 Oct 2021 10:25:47 -0700 (PDT)
-Date:   Wed, 13 Oct 2021 18:25:38 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AC1243F694;
+        Wed, 13 Oct 2021 10:30:22 -0700 (PDT)
+Date:   Wed, 13 Oct 2021 18:30:19 +0100
 From:   Mark Rutland <mark.rutland@arm.com>
-To:     Rob Herring <robh@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+To:     Rob Herring <robh@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@redhat.com>,
@@ -39,145 +40,181 @@ Cc:     Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
         Itaru Kitayama <itaru.kitayama@gmail.com>,
         Vince Weaver <vincent.weaver@maine.edu>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v10 1/5] x86: perf: Move RDPMC event flag to a common
- definition
-Message-ID: <20211013172529.GA5400@C02TD0UTHF1T.local>
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v10 3/5] arm64: perf: Add userspace counter access
+ disable switch
+Message-ID: <20211013173019.GC5400@C02TD0UTHF1T.local>
 References: <20210914204800.3945732-1-robh@kernel.org>
- <20210914204800.3945732-2-robh@kernel.org>
+ <20210914204800.3945732-4-robh@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210914204800.3945732-2-robh@kernel.org>
+In-Reply-To: <20210914204800.3945732-4-robh@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Rob,
-
-On Tue, Sep 14, 2021 at 03:47:56PM -0500, Rob Herring wrote:
-> In preparation to enable user counter access on arm64 and to move some
-> of the user access handling to perf core, create a common event flag for
-> user counter access and convert x86 to use it.
+On Tue, Sep 14, 2021 at 03:47:58PM -0500, Rob Herring wrote:
+> Like x86, some users may want to disable userspace PMU counter
+> altogether. Add a sysctl 'perf_user_access' file to control userspace
+> counter access. The default is '0' which is disabled. Writing '1'
+> enables access.
 > 
-> Since the architecture specific flags start at the LSB, starting at the
-> MSB for common flags.
+> Note that x86 also supports writing '2' to globally enable user access.
 
-Minor comments below (definition rename, and a comment block), but with
-those:
+For clarity it might be worth mentioning that on x86 this is controlled
+by the PMU's `rdpmc` sysfs attribute, i.e.
 
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+  Note that x86 supports globally enabling user access by writing '2' to
+  /sys/bus/event_source/devices/cpu/rdpmc
 
-Peter, are you happy with this from the x86 side?
-
+> As there's not existing userspace support to worry about, this shouldn't
+> be necessary for Arm. It could be added later if the need arises.
+> 
+> Cc: Mark Rutland <mark.rutland@arm.com>
 > Cc: Peter Zijlstra <peterz@infradead.org>
 > Cc: Ingo Molnar <mingo@redhat.com>
 > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
 > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 > Cc: Jiri Olsa <jolsa@redhat.com>
 > Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: x86@kernel.org
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
 > Cc: linux-perf-users@vger.kernel.org
+> Acked-by: Will Deacon <will@kernel.org>
 > Signed-off-by: Rob Herring <robh@kernel.org>
 > ---
->  arch/x86/events/core.c       | 10 +++++-----
->  arch/x86/events/perf_event.h |  2 +-
->  include/linux/perf_event.h   |  2 ++
->  3 files changed, 8 insertions(+), 6 deletions(-)
+> v10:
+>  - Add documentation
+>  - Use a custom handler (needed on the next patch)
+> v9:
+>  - Use sysctl instead of sysfs attr
+>  - Default to disabled
+> v8:
+>  - New patch
+> ---
+>  Documentation/admin-guide/sysctl/kernel.rst | 11 +++++++++
+>  arch/arm64/kernel/perf_event.c              | 27 +++++++++++++++++++++
+>  2 files changed, 38 insertions(+)
 > 
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index 2a57dbed4894..2bd50fc061e1 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -2469,7 +2469,7 @@ static int x86_pmu_event_init(struct perf_event *event)
+> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+> index 426162009ce9..346a0dba5703 100644
+> --- a/Documentation/admin-guide/sysctl/kernel.rst
+> +++ b/Documentation/admin-guide/sysctl/kernel.rst
+> @@ -905,6 +905,17 @@ enabled, otherwise writing to this file will return ``-EBUSY``.
+>  The default value is 8.
 >  
->  	if (READ_ONCE(x86_pmu.attr_rdpmc) &&
->  	    !(event->hw.flags & PERF_X86_EVENT_LARGE_PEBS))
-> -		event->hw.flags |= PERF_X86_EVENT_RDPMC_ALLOWED;
-> +		event->hw.flags |= PERF_EVENT_FLAG_USER_READ_CNT;
 >  
->  	return err;
+> +perf_user_access (arm64 only)
+> +=================================
+> +
+> +Controls user space access for reading perf event counters. When set to 1,
+> +user space can read performance monitor counter registers directly.
+> +
+> +The default value is 0 (access disabled).
+> +
+> +See Documentation/arm64/perf.rst for more information.
+
+Looking at the existing perf sysctls:
+
+# ls /proc/sys/kernel/perf*
+/proc/sys/kernel/perf_cpu_time_max_percent
+/proc/sys/kernel/perf_event_max_contexts_per_stack
+/proc/sys/kernel/perf_event_max_sample_rate
+/proc/sys/kernel/perf_event_max_stack
+/proc/sys/kernel/perf_event_mlock_kb
+/proc/sys/kernel/perf_event_paranoid
+
+I see that other than `perf_cpu_time_max_percent`, we've used
+`perf_event_` as the prefix, and I suspect we should do the same here,
+but I guess it may not matter either way.
+
+> +
+> +
+>  pid_max
+>  =======
+>  
+> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
+> index b4044469527e..a8f8dd741aeb 100644
+> --- a/arch/arm64/kernel/perf_event.c
+> +++ b/arch/arm64/kernel/perf_event.c
+> @@ -286,6 +286,8 @@ static const struct attribute_group armv8_pmuv3_events_attr_group = {
+>  PMU_FORMAT_ATTR(event, "config:0-15");
+>  PMU_FORMAT_ATTR(long, "config1:0");
+>  
+> +static int sysctl_perf_user_access __read_mostly;
+> +
+>  static inline bool armv8pmu_event_is_64bit(struct perf_event *event)
+>  {
+>  	return event->attr.config1 & 0x1;
+> @@ -1104,6 +1106,29 @@ static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
+>  	return probe.present ? 0 : -ENODEV;
 >  }
-> @@ -2503,7 +2503,7 @@ void perf_clear_dirty_counters(void)
 >  
->  static void x86_pmu_event_mapped(struct perf_event *event, struct mm_struct *mm)
->  {
-> -	if (!(event->hw.flags & PERF_X86_EVENT_RDPMC_ALLOWED))
-> +	if (!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT))
->  		return;
->  
->  	/*
-> @@ -2524,7 +2524,7 @@ static void x86_pmu_event_mapped(struct perf_event *event, struct mm_struct *mm)
->  
->  static void x86_pmu_event_unmapped(struct perf_event *event, struct mm_struct *mm)
->  {
-> -	if (!(event->hw.flags & PERF_X86_EVENT_RDPMC_ALLOWED))
-> +	if (!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT))
->  		return;
->  
->  	if (atomic_dec_and_test(&mm->context.perf_rdpmc_allowed))
-> @@ -2535,7 +2535,7 @@ static int x86_pmu_event_idx(struct perf_event *event)
->  {
->  	struct hw_perf_event *hwc = &event->hw;
->  
-> -	if (!(hwc->flags & PERF_X86_EVENT_RDPMC_ALLOWED))
-> +	if (!(hwc->flags & PERF_EVENT_FLAG_USER_READ_CNT))
->  		return 0;
->  
->  	if (is_metric_idx(hwc->idx))
-> @@ -2718,7 +2718,7 @@ void arch_perf_update_userpage(struct perf_event *event,
->  	userpg->cap_user_time = 0;
->  	userpg->cap_user_time_zero = 0;
->  	userpg->cap_user_rdpmc =
-> -		!!(event->hw.flags & PERF_X86_EVENT_RDPMC_ALLOWED);
-> +		!!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT);
->  	userpg->pmc_width = x86_pmu.cntval_bits;
->  
->  	if (!using_native_sched_clock() || !sched_clock_stable())
-> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-> index e3ac05c97b5e..49f68b15745f 100644
-> --- a/arch/x86/events/perf_event.h
-> +++ b/arch/x86/events/perf_event.h
-> @@ -73,7 +73,7 @@ static inline bool constraint_match(struct event_constraint *c, u64 ecode)
->  #define PERF_X86_EVENT_PEBS_NA_HSW	0x0010 /* haswell style datala, unknown */
->  #define PERF_X86_EVENT_EXCL		0x0020 /* HT exclusivity on counter */
->  #define PERF_X86_EVENT_DYNAMIC		0x0040 /* dynamic alloc'd constraint */
-> -#define PERF_X86_EVENT_RDPMC_ALLOWED	0x0080 /* grant rdpmc permission */
+> +int armv8pmu_proc_user_access_handler(struct ctl_table *table, int write,
+> +                void *buffer, size_t *lenp, loff_t *ppos)
+> +{
+> +	int ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
+> +	if (ret || !write || sysctl_perf_user_access)
+> +		return ret;
 > +
->  #define PERF_X86_EVENT_EXCL_ACCT	0x0100 /* accounted EXCL event */
->  #define PERF_X86_EVENT_AUTO_RELOAD	0x0200 /* use PEBS auto-reload */
->  #define PERF_X86_EVENT_LARGE_PEBS	0x0400 /* use large PEBS */
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index fe156a8170aa..12debf008d39 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -142,6 +142,8 @@ struct hw_perf_event {
->  			int		event_base_rdpmc;
->  			int		idx;
->  			int		last_cpu;
-> +
-> +#define PERF_EVENT_FLAG_USER_READ_CNT	0x80000000
+> +	return 0;
+> +}
 
-I realise this matches the style of PERF_HES_* and PERF_EF_*. but could
-we please arrange this like the PERF_PMU_CAP_* definitions, and move
-this immediately before the struct hw_perf_event defintion, with a
-comment block, e.g.
+Maybe this is needed in the next patch, but the if statement is entirely
+redundant on this patch and looks really odd.
 
-/*
- * hw_perf_event::flag values
- *
- * PERF_EVENT_FLAG_ARCH bits are reserved for architecture-specific
- * usage.
- */
-#define PERF_EVENT_FLAG_ARCH			0x0000ffff
-#define PERF_EVENT_FLAG_USER_READ_CNT		0x80000000
+Can we please either:
+
+1) Use proc_dointvec_minmax() directly in this patch (which is what Will
+Acked in v9) and add the wrapper in the next patch when we need it.
+
+2) make this:
+
+| int armv8pmu_proc_user_access_handler(struct ctl_table *table, int write,
+|                 void *buffer, size_t *lenp, loff_t *ppos)
+| {
+| 	return proc_dointvec_minmax(table, write, buffer, lenp, ppos);
+| }
+
+... and flesh it out in the next patch.
+
+With either of those two options (and regardless of whether the
+attribute is renamed):
+
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
 
 Thanks,
 Mark.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static struct ctl_table armv8_pmu_sysctl_table[] = {
+> +	{
+> +		.procname       = "perf_user_access",
+> +		.data		= &sysctl_perf_user_access,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode           = 0644,
+> +		.proc_handler	= armv8pmu_proc_user_access_handler,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +	{ }
+> +};
+> +
+>  static int armv8_pmu_init(struct arm_pmu *cpu_pmu, char *name,
+>  			  int (*map_event)(struct perf_event *event),
+>  			  const struct attribute_group *events,
+> @@ -1136,6 +1161,8 @@ static int armv8_pmu_init(struct arm_pmu *cpu_pmu, char *name,
+>  	cpu_pmu->attr_groups[ARMPMU_ATTR_GROUP_CAPS] = caps ?
+>  			caps : &armv8_pmuv3_caps_attr_group;
+>  
+> +	register_sysctl("kernel", armv8_pmu_sysctl_table);
+> +
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.30.2
+> 
