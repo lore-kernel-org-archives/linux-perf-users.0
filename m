@@ -2,60 +2,60 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1594C43219
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 17:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38AE3C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 17:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B69E36101D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 17:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 225D86101D
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 17:46:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238325AbhJMRst (ORCPT
+        id S238151AbhJMRsv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Oct 2021 13:48:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39964 "EHLO
+        Wed, 13 Oct 2021 13:48:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238280AbhJMRsq (ORCPT
+        with ESMTP id S238298AbhJMRsr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Oct 2021 13:48:46 -0400
+        Wed, 13 Oct 2021 13:48:47 -0400
 Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13A72C061749
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Oct 2021 10:46:39 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id j193-20020a2523ca000000b005b789d71d9aso3895019ybj.21
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Oct 2021 10:46:39 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3D36C061762
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Oct 2021 10:46:43 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id s6-20020a254506000000b005b6b6434cd6so3934106yba.9
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Oct 2021 10:46:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=C89KxJXK2AmfC41UKgGo8vF4MhXi7J9MAY9rM2xkdyE=;
-        b=V0Z/L1CaFQ+Z9lO9MhkZJlid8IqMjTmndnLxS8iY9dm8uNOzzLjWFeaf8yGsQoKsuL
-         g33GE97zKHXXi0Cz9W8C2q6+ZmSJH8vJnt7nvVaf6c6VVsof2/NPCXrCe6ITlU3egAju
-         7gi1GNUi4R2CfX6Z5Hj2tgW7e0oo+MXz87WryrwxgEcsPH+79s74a8VbNzHZNBZQloFs
-         a2zghpoJHYqhPxKC+d4lYsuuyXgwdfkmDxLx7pxiH8xqG9vvs9n/SAM1rHRIOtP4b6GT
-         iavelPHfv/ocX3mW3N87ehsr8CDj3HZWKbmB3Yb3Zt35aIPrV+i1p5DGBaFI/UBa+2b9
-         +orA==
+        bh=MdVNg7KPc55lwyVX7zGR3vWGbK06a6SEnmxPUjqIOmQ=;
+        b=A/RQJn5brYT66lX6lAaIuEiWo4+Z7GyClF9p1lbjwnjsWnjSvIMYzLTTxDojkiKic5
+         4WdAepynf2c1sz3ygumMRQ3EzZS/y7xLNgOefLH2iAk0PAY6ZYr4kIOP1Hf7ucbJP6DS
+         gPsn41GrzjYLR1L0RMtJt8FvzrZSfNDBr2O8Zme06d6XczFWtScFXiPzvJA56NLLRjQe
+         RBjn5Tv1nhug9qXFjjFuJjdTLmlSvQbC7czewS/O0qlsdjdVClF7WEybhfONAvCZPRny
+         xHxKwZUEwrqB2PvxGVOidt0iN816JTDRKJPE4Bga4MhjxDWikGoGBiyKDkL7ZshmD5qr
+         fBIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=C89KxJXK2AmfC41UKgGo8vF4MhXi7J9MAY9rM2xkdyE=;
-        b=U5v0x4kt1FVOvV9XkjslMXvS6r0XVRqgjJNunfvJz3y/ottlXTgjXi+M5miMAJk62w
-         eyEm913hWGZWQRAGKSvy/z/YO/2YpsWth+suRBhfUt9px7+j7g8612nL0OQ3spU3kLjV
-         ikk/yAzsdjVKRKG47SvcwqgXm8DrxY/uP6rRjNapU81fNnRHjpuDo9OXq/nJd6leA2k7
-         IPbi5c+WSIDuUdAPlOdGgeAOhPmqEjo5DR6xTB5Yazwl4vsZVmpG50BNl2+QglXnvFc7
-         9Ttb0t8c2QY2686Rg49kXGo8vs6l4CIEHtlGgATS7SMHtgBPEn9KTC2qQqiOWUJsGhGa
-         iK/w==
-X-Gm-Message-State: AOAM531f8aUgj02AloTrTWeXiwqjoOUyHIjaSIo3wGwWwZm7TnxcC1YR
-        pal8JHGicPcq888J0GksWRPiWvd5N3Vw
-X-Google-Smtp-Source: ABdhPJwOf9IMke9cKQ5Vp83R+oNhjfapQ+6q+MPZmx6pAvoK5alRGMdUUO9gx/UDC3WRwJeR4rSEMVkw2srd
+        bh=MdVNg7KPc55lwyVX7zGR3vWGbK06a6SEnmxPUjqIOmQ=;
+        b=AfKv/51v6bewTbm/qCpXYGOPzyptgjEASH12mhPbXYos4xYTekZIy8Q9VwGhROuvEI
+         iav1jqSDHIbcbgmVeYDYkyOjW0bLLzaNmPZ9u+ILqAHkxKYmimFoOXK4X+u5V4aabm7x
+         ogzffgkQxEZ+LxpZyyXsPvmBISO5wb1ZbQVsxnlnpnW4cMo8UqNz3vJam63OyUOIAqe7
+         0qWRQVUB/NqZrwwddHMZHjaHdHxLn0un1tSN+/pgg0DaQCK11VNcWDxEVCHlAEOKvLXS
+         RpsYiitZJ37G9m9NQXtZANBV3oparignqbGCBGbo3m/YrElmrSnc7j5cTJ5u7fQWkB2S
+         7lnA==
+X-Gm-Message-State: AOAM533bhZy29I/IywYWWYTXq8VhmT5Ep+DGKOtGyXBb1SZV+dEy5IDk
+        FOpvCWnzOBV+iaLCOTPW9FmkCN9K8M9R
+X-Google-Smtp-Source: ABdhPJyGG6ugpcALKyXNJw0EjZO8gGpxGgK/cyOlUwbsrC+L1BYnlG/xp0gaphNdl220Ql+hT13xn9YjN0UT
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:aeaf:8e9e:3df2:aad9])
- (user=irogers job=sendgmr) by 2002:a05:6902:709:: with SMTP id
- k9mr914170ybt.317.1634147198268; Wed, 13 Oct 2021 10:46:38 -0700 (PDT)
-Date:   Wed, 13 Oct 2021 10:45:49 -0700
+ (user=irogers job=sendgmr) by 2002:a25:b309:: with SMTP id
+ l9mr839346ybj.188.1634147202942; Wed, 13 Oct 2021 10:46:42 -0700 (PDT)
+Date:   Wed, 13 Oct 2021 10:45:51 -0700
 In-Reply-To: <20211013174604.747276-1-irogers@google.com>
-Message-Id: <20211013174604.747276-8-irogers@google.com>
+Message-Id: <20211013174604.747276-10-irogers@google.com>
 Mime-Version: 1.0
 References: <20211013174604.747276-1-irogers@google.com>
 X-Mailer: git-send-email 2.33.0.882.g93a45727a2-goog
-Subject: [PATCH v2 07/22] perf test: Add test case struct.
+Subject: [PATCH v2 09/22] perf test: Convert pfm tests to use test cases.
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -77,127 +77,119 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add a test case struct mirroring the 'struct kunit_case'. Use the struct
-with the DEFINE_SUITE macro, where the single test is turned into a test
-case. Update the helpers in builtin-test to handle test cases.
+Use null terminated array of test cases rather than the previous sub
+test functions.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/builtin-test.c | 30 ++++++++++++++++++++++++------
- tools/perf/tests/tests.h        | 26 ++++++++++++++++++++++----
- 2 files changed, 46 insertions(+), 10 deletions(-)
+ tools/perf/tests/pfm.c | 66 ++++++++++++------------------------------
+ 1 file changed, 19 insertions(+), 47 deletions(-)
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 96eb486ffbc9..a6d84feba483 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -117,10 +117,19 @@ static struct test_suite **tests[] = {
+diff --git a/tools/perf/tests/pfm.c b/tools/perf/tests/pfm.c
+index f55e4ecdda71..651fee4ef819 100644
+--- a/tools/perf/tests/pfm.c
++++ b/tools/perf/tests/pfm.c
+@@ -11,27 +11,6 @@
  
- static int num_subtests(const struct test_suite *t)
+ #include <linux/kernel.h>
+ 
+-#ifdef HAVE_LIBPFM
+-static int test__pfm_events(void);
+-static int test__pfm_group(void);
+-#endif
+-
+-static const struct {
+-	int (*func)(void);
+-	const char *desc;
+-} pfm_testcase_table[] = {
+-#ifdef HAVE_LIBPFM
+-	{
+-		.func = test__pfm_events,
+-		.desc = "test of individual --pfm-events",
+-	},
+-	{
+-		.func = test__pfm_group,
+-		.desc = "test groups of --pfm-events",
+-	},
+-#endif
+-};
+-
+ #ifdef HAVE_LIBPFM
+ static int count_pfm_events(struct perf_evlist *evlist)
  {
-+	int num;
-+
- 	if (t->subtest.get_nr)
- 		return t->subtest.get_nr();
- 
--	return 0;
-+	if (!t->test_cases)
-+		return 0;
-+
-+	num = 0;
-+	while (t->test_cases[num].name)
-+		num++;
-+
-+	return num;
+@@ -44,7 +23,8 @@ static int count_pfm_events(struct perf_evlist *evlist)
+ 	return count;
  }
  
- static bool has_subtests(const struct test_suite *t)
-@@ -138,10 +147,13 @@ static const char *skip_reason(const struct test_suite *t, int subtest)
- 
- static const char *test_description(const struct test_suite *t, int subtest)
+-static int test__pfm_events(void)
++static int test__pfm_events(struct test_suite *test __maybe_unused,
++			    int subtest __maybe_unused)
  {
--	if (subtest < 0 || !t->subtest.get_desc)
--		return t->desc;
-+	if (t->test_cases && subtest >= 0)
-+		return t->test_cases[subtest].desc;
- 
--	return t->subtest.get_desc(subtest);
-+	if (t->subtest.get_desc && subtest >= 0)
-+		return t->subtest.get_desc(subtest);
-+
-+	return t->desc;
+ 	struct evlist *evlist;
+ 	struct option opt;
+@@ -104,7 +84,8 @@ static int test__pfm_events(void)
+ 	return 0;
  }
  
- static bool is_supported(const struct test_suite *t)
-@@ -149,9 +161,15 @@ static bool is_supported(const struct test_suite *t)
- 	return !t->is_supported || t->is_supported();
- }
- 
--static test_fnptr test_function(const struct test_suite *t, int subtest __maybe_unused)
-+static test_fnptr test_function(const struct test_suite *t, int subtest)
+-static int test__pfm_group(void)
++static int test__pfm_group(struct test_suite *test __maybe_unused,
++			   int subtest __maybe_unused)
  {
--	return t->func;
-+	if (t->func)
-+		return t->func;
-+
-+	if (subtest <= 0)
-+		return t->test_cases[0].run_case;
-+
-+	return t->test_cases[subtest].run_case;
- }
- 
- static bool perf_test__matches(const char *desc, int curr, int argc, const char *argv[])
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 5139e24973cc..71b8d2c88e5c 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -31,6 +31,12 @@ struct test_suite;
- 
- typedef int (*test_fnptr)(struct test_suite *, int);
- 
-+struct test_case {
-+	const char *name;
-+	const char *desc;
-+	test_fnptr run_case;
-+};
-+
- struct test_suite {
- 	const char *desc;
- 	test_fnptr func;
-@@ -40,6 +46,7 @@ struct test_suite {
- 		const char *(*get_desc)(int subtest);
- 		const char *(*skip_reason)(int subtest);
- 	} subtest;
-+	struct test_case *test_cases;
- 	bool (*is_supported)(void);
- 	void *priv;
- };
-@@ -47,10 +54,21 @@ struct test_suite {
- #define DECLARE_SUITE(name) \
- 	extern struct test_suite suite__##name;
- 
--#define DEFINE_SUITE(description, name)		\
--	struct test_suite suite__##name = {		\
--		.desc = description,		\
--		.func = test__##name,		\
-+#define TEST_CASE(description, _name)			\
-+	{						\
-+		.name = #_name,				\
-+		.desc = description,			\
-+		.run_case = test__##_name,		\
-+	}
-+
-+#define DEFINE_SUITE(description, _name)			\
-+	struct test_case tests__##_name[] = {           \
-+		TEST_CASE(description, _name),		\
-+		{	.name = NULL, }			\
-+	};						\
-+	struct test_suite suite__##_name = {		\
-+		.desc = description,			\
-+		.test_cases = tests__##_name,		\
+ 	struct evlist *evlist;
+ 	struct option opt;
+@@ -187,37 +168,28 @@ static int test__pfm_group(void)
  	}
+ 	return 0;
+ }
+-#endif
+-
+-static const char *test__pfm_subtest_get_desc(int i)
+-{
+-	if (i < 0 || i >= (int)ARRAY_SIZE(pfm_testcase_table))
+-		return NULL;
+-	return pfm_testcase_table[i].desc;
+-}
+-
+-static int test__pfm_subtest_get_nr(void)
++#else
++static int test__pfm_events(struct test_suite *test __maybe_unused,
++			    int subtest __maybe_unused)
+ {
+-	return (int)ARRAY_SIZE(pfm_testcase_table);
++	return TEST_SKIP;
+ }
  
- /* Tests */
+-static int test__pfm(struct test_suite *test __maybe_unused, int i __maybe_unused)
++static int test__pfm_group(struct test_suite *test __maybe_unused,
++			   int subtest __maybe_unused)
+ {
+-#ifdef HAVE_LIBPFM
+-	if (i < 0 || i >= (int)ARRAY_SIZE(pfm_testcase_table))
+-		return TEST_FAIL;
+-	return pfm_testcase_table[i].func();
+-#else
+ 	return TEST_SKIP;
+-#endif
+ }
++#endif
++
++static struct test_case pfm_tests[] = {
++	TEST_CASE_REASON("test of individual --pfm-events", pfm_events, "not compiled in"),
++	TEST_CASE_REASON("test groups of --pfm-events", pfm_group, "not compiled in"),
++	{ .name = NULL, }
++};
+ 
+ struct test_suite suite__pfm = {
+ 	.desc = "Test libpfm4 support",
+-	.func = test__pfm,
+-	.subtest = {
+-		.skip_if_fail	= true,
+-		.get_nr		= test__pfm_subtest_get_nr,
+-		.get_desc	= test__pfm_subtest_get_desc,
+-	}
++	.test_cases = pfm_tests,
++	.subtest = { .skip_if_fail   = true }
+ };
 -- 
 2.33.0.882.g93a45727a2-goog
 
