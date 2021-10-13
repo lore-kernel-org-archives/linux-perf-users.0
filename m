@@ -2,80 +2,80 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7902BC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 14:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34578C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 15:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6211A610CB
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 14:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C97061139
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 15:28:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230324AbhJMOUH (ORCPT
+        id S229851AbhJMPa6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Oct 2021 10:20:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46914 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235899AbhJMOUH (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Oct 2021 10:20:07 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAC0DC061570;
-        Wed, 13 Oct 2021 07:18:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=cw9LX5oWo3jXEpGn2jFKdqP5yDiuWs/4Uz5XhmZ11ls=; b=OuoxBzOQZpfQCxF47k6MCjjrP1
-        DJ1J8ECPRGByre5xlA4B8SaFF2UKeVnVm80YRhlvMcp9nlAdHhXVaASweUhSFPe+9LyV6tEwm8a/U
-        jXbpWn6BaGL8/16aivnJvzvQ3TLuuWqReXqPaosXb6aniyIQXnx7imi5CYdbi9kZON9yP5P+susqT
-        xp+6zbyRN36HtpS2xonzWfrVcLsYV+4FtnihYyUrCEjZWRF8S50WYMjWRraImSImTu+F/P1AB/FBM
-        hSvszM5lnv4FicOPEIE1ngXhzE+b+MQAqRa+o4nvGZefKxjVbOemEK9qHifSh1LfoPs4Vu8dcwb6/
-        FHMazyfw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1maf4p-009chw-LE; Wed, 13 Oct 2021 14:17:51 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C439430026A;
-        Wed, 13 Oct 2021 16:17:49 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AD38C2CA86B38; Wed, 13 Oct 2021 16:17:49 +0200 (CEST)
-Date:   Wed, 13 Oct 2021 16:17:49 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Wed, 13 Oct 2021 11:30:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41270 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229715AbhJMPa6 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 13 Oct 2021 11:30:58 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8EAE961056;
+        Wed, 13 Oct 2021 15:28:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1634138934;
+        bh=roaz9HLeh1/B7nUIrCshrTEHqO19G7n5foigwr4B66U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mJ6LOzyiuHQzwpyZwQVOZit0h2VWHCjh5W8TufUqpl0DmLva0m6KMwZQwNJHnIsum
+         /N7ojWZHXg9rVH19b3xAKQxkgsaJr/+ssfS/UzZ9NIp6u9k5+CzCvAdKxmsGnzAVOM
+         1txmMTXNFGjm2lg8EuiXe+1iJbUjZjGnCJGFPCBkJyVSJ8zfxYNfl7Bb4DFbicTvC2
+         R9Zv3sNIJG0H66IbBlZM+jXnAgZ0wglV/t90fdRETN090+LV4fa/sqZbRBpgCwWdt+
+         6SVAF1C3daU4hdDb6TFHFFWyjxQlB/dHZmXZaRtG16O0ANBsWympcWEkuiD4Q+KqLN
+         LQ3Bc+EWroh6Q==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id F05F6410A1; Wed, 13 Oct 2021 12:28:50 -0300 (-03)
+Date:   Wed, 13 Oct 2021 12:28:50 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     John Garry <john.garry@huawei.com>
+Cc:     Andrew Kilroy <andrew.kilroy@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Jiri Olsa <jolsa@redhat.com>, Leo Yan <leo.yan@linaro.org>,
-        x86@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 1/3] perf/x86: Add new event for AUX output counter
- index
-Message-ID: <YWbqjfPVx7AjSe5o@hirez.programming.kicks-ass.net>
-References: <20210907163903.11820-1-adrian.hunter@intel.com>
- <20210907163903.11820-2-adrian.hunter@intel.com>
- <ab6f9ec2-2571-de5a-d44a-427851b08d19@linux.intel.com>
- <20210910160409.GI4323@worktop.programming.kicks-ass.net>
- <453b9364-c350-79ca-00fa-b9e6ed6e3367@linux.intel.com>
- <9da4ae5e-3e0e-180e-5bba-1351c08d7df9@intel.com>
- <87k0j7hzaw.fsf@ashishki-desk.ger.corp.intel.com>
- <3211feb9-b8e3-21fc-958c-07c7c7766bf2@intel.com>
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 3/3] perf vendor events: Categorise the Neoverse V1
+ counters
+Message-ID: <YWb7Mrh8QYSMgPjl@kernel.org>
+References: <20211006081106.8649-1-andrew.kilroy@arm.com>
+ <20211006081106.8649-3-andrew.kilroy@arm.com>
+ <03152b9d-2ad1-7bd3-e5a7-fc899c8c567c@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3211feb9-b8e3-21fc-958c-07c7c7766bf2@intel.com>
+In-Reply-To: <03152b9d-2ad1-7bd3-e5a7-fc899c8c567c@huawei.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Oct 13, 2021 at 12:12:48PM +0300, Adrian Hunter wrote:
+Em Wed, Oct 06, 2021 at 09:38:27AM +0100, John Garry escreveu:
+> On 06/10/2021 09:11, Andrew Kilroy wrote:
+> > This is so they are categorised in the perf list output.  The pmus all
+> > exist in the armv8-common-and-microarch.json and arm-recommended.json
+> > files, so this commit places them into each category's own file under
+> > 
+> >    tools/perf/pmu-events/arch/arm64/arm/neoverse-v1
+> > 
+> > Also add the Neoverse V1 to the arm64 mapfile
+> > 
+> > Signed-off-by: Andrew Kilroy<andrew.kilroy@arm.com>
+> > ---
+> 
+> Reviewed-by: John Garry <john.garry@huawei.com>
+> 
+> Note: for the other 2x patches in the series, you should have picked up my
+> reviewed-by tag for v2 (unless they have changed significantly from when the
+> tag was originally granted).
 
-> Will anyone takes these patches?  Perhaps Arnaldo if no one objects?
-> The patches still seem to apply cleanly.
+Right, I'm picking it up this time, thanks!
 
-I've picked up the first. But if acme wants to route the whole lot:
-
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-
+- Arnaldo
