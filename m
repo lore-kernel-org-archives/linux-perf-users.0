@@ -2,115 +2,182 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE616C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 16:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0E1C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 17:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A93C06109E
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 16:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 535CC6109F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 17:25:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238044AbhJMQ7a (ORCPT
+        id S230527AbhJMR15 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Oct 2021 12:59:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53362 "EHLO mail.kernel.org"
+        Wed, 13 Oct 2021 13:27:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:42792 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238067AbhJMQ7T (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Oct 2021 12:59:19 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 907616109E;
-        Wed, 13 Oct 2021 16:57:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634144235;
-        bh=Tk/bVs+ZbsdhSuYNIdd8Gg0DOirgfShoPLVvseKnS3I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZtRLth7FeOp51ALRIZxWWZpisGaIHr3hYq+0X5tRYZCV7bLA2hXopvGPf4ulvqiDd
-         HuuZYmYTVXdVm5CUOyIJnSGxzWphgkCUW4EBJ5IJd15wy1IfZBq3OP4KEPyQE5dWr3
-         JmXBuo3hGUnppXRAs6cM3zvxAW3V5DWA99xGAX7WMr2mFOIlaJrZr5rx44b0tNvgYl
-         L1attCACr3UTjHBWNgr+oEhlcasmAh+kgtxlaKpa1/bRLaEh/B9gR0XzrnmlO8wU89
-         S2qsQrrUbOpfCg9YCgg0OI80LaU0gytZpjeFZduaw+tFlokugznkgcMtiP9R0OYSKv
-         tMg6diPY7gNiA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 69CBC410A1; Wed, 13 Oct 2021 13:57:12 -0300 (-03)
-Date:   Wed, 13 Oct 2021 13:57:12 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     kajoljain <kjain@linux.ibm.com>, john.garry@huawei.com,
-        ak@linux.intel.com, linux-perf-users@vger.kernel.org,
-        Nick.Forrington@arm.com, Andrew.Kilroy@arm.com,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        id S230404AbhJMR15 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 13 Oct 2021 13:27:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA6C01063;
+        Wed, 13 Oct 2021 10:25:52 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.73.189])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EA6E43F694;
+        Wed, 13 Oct 2021 10:25:47 -0700 (PDT)
+Date:   Wed, 13 Oct 2021 18:25:38 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Rob Herring <robh@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        honnappa.nagarahalli@arm.com, Zachary.Leaf@arm.com,
+        Raphael Gault <raphael.gault@arm.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] perf tools: Enable strict JSON parsing
-Message-ID: <YWcP6EZ6Ors5/CGh@kernel.org>
-References: <20211007110543.564963-1-james.clark@arm.com>
- <c15fd2bf-104e-6ab0-6496-7e5cf77a218f@linux.ibm.com>
- <e8752b2d-65a7-1ed8-3c68-30d9006261ba@arm.com>
- <5947c093-cff9-f70e-af20-75bc053edf5f@linux.ibm.com>
- <YWCVTnOUM2P4FRPi@kernel.org>
- <0d73d04f-925c-4c97-9a07-18cc64a9c68b@arm.com>
+        Itaru Kitayama <itaru.kitayama@gmail.com>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v10 1/5] x86: perf: Move RDPMC event flag to a common
+ definition
+Message-ID: <20211013172529.GA5400@C02TD0UTHF1T.local>
+References: <20210914204800.3945732-1-robh@kernel.org>
+ <20210914204800.3945732-2-robh@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0d73d04f-925c-4c97-9a07-18cc64a9c68b@arm.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20210914204800.3945732-2-robh@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Oct 12, 2021 at 02:30:51PM +0100, James Clark escreveu:
-> On 08/10/2021 20:00, Arnaldo Carvalho de Melo wrote:
-> > Em Fri, Oct 08, 2021 at 04:56:55PM +0530, kajoljain escreveu:
-> >> On 10/8/21 3:32 PM, James Clark wrote:
-> >>> On 08/10/2021 08:43, kajoljain wrote:
-> >> Sure. I think then we can skip this change. Not sure if character
-> >> number will be helpful.
+Hi Rob,
 
-> >> Patch-set looks good to me.
+On Tue, Sep 14, 2021 at 03:47:56PM -0500, Rob Herring wrote:
+> In preparation to enable user counter access on arm64 and to move some
+> of the user access handling to perf core, create a common event flag for
+> user counter access and convert x86 to use it.
+> 
+> Since the architecture specific flags start at the LSB, starting at the
+> MSB for common flags.
 
-> >> Reviewed-by Kajol Jain<kjain@linux.ibm.com>
+Minor comments below (definition rename, and a comment block), but with
+those:
 
-> > Applied ok as-is to my perf/core branch, applied and added your
-> > Reviewed-by, thanks.
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
 
-> Thanks Arnaldo. This does mean that the arm64 build will fail until
-> "[PATCH v2 1/3] perf vendor events: Syntax corrections in Neoverse N1 json" is
-> applied. I think there is also an arm64 build issue with "[PATCH 02/21] perf
-> pmu: Add const to pmu_events_map." which Andrew Kilroy has replied to.
+Peter, are you happy with this from the x86 side?
 
-Its all in:
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: x86@kernel.org
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: linux-perf-users@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  arch/x86/events/core.c       | 10 +++++-----
+>  arch/x86/events/perf_event.h |  2 +-
+>  include/linux/perf_event.h   |  2 ++
+>  3 files changed, 8 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 2a57dbed4894..2bd50fc061e1 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -2469,7 +2469,7 @@ static int x86_pmu_event_init(struct perf_event *event)
+>  
+>  	if (READ_ONCE(x86_pmu.attr_rdpmc) &&
+>  	    !(event->hw.flags & PERF_X86_EVENT_LARGE_PEBS))
+> -		event->hw.flags |= PERF_X86_EVENT_RDPMC_ALLOWED;
+> +		event->hw.flags |= PERF_EVENT_FLAG_USER_READ_CNT;
+>  
+>  	return err;
+>  }
+> @@ -2503,7 +2503,7 @@ void perf_clear_dirty_counters(void)
+>  
+>  static void x86_pmu_event_mapped(struct perf_event *event, struct mm_struct *mm)
+>  {
+> -	if (!(event->hw.flags & PERF_X86_EVENT_RDPMC_ALLOWED))
+> +	if (!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT))
+>  		return;
+>  
+>  	/*
+> @@ -2524,7 +2524,7 @@ static void x86_pmu_event_mapped(struct perf_event *event, struct mm_struct *mm)
+>  
+>  static void x86_pmu_event_unmapped(struct perf_event *event, struct mm_struct *mm)
+>  {
+> -	if (!(event->hw.flags & PERF_X86_EVENT_RDPMC_ALLOWED))
+> +	if (!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT))
+>  		return;
+>  
+>  	if (atomic_dec_and_test(&mm->context.perf_rdpmc_allowed))
+> @@ -2535,7 +2535,7 @@ static int x86_pmu_event_idx(struct perf_event *event)
+>  {
+>  	struct hw_perf_event *hwc = &event->hw;
+>  
+> -	if (!(hwc->flags & PERF_X86_EVENT_RDPMC_ALLOWED))
+> +	if (!(hwc->flags & PERF_EVENT_FLAG_USER_READ_CNT))
+>  		return 0;
+>  
+>  	if (is_metric_idx(hwc->idx))
+> @@ -2718,7 +2718,7 @@ void arch_perf_update_userpage(struct perf_event *event,
+>  	userpg->cap_user_time = 0;
+>  	userpg->cap_user_time_zero = 0;
+>  	userpg->cap_user_rdpmc =
+> -		!!(event->hw.flags & PERF_X86_EVENT_RDPMC_ALLOWED);
+> +		!!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT);
+>  	userpg->pmc_width = x86_pmu.cntval_bits;
+>  
+>  	if (!using_native_sched_clock() || !sched_clock_stable())
+> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+> index e3ac05c97b5e..49f68b15745f 100644
+> --- a/arch/x86/events/perf_event.h
+> +++ b/arch/x86/events/perf_event.h
+> @@ -73,7 +73,7 @@ static inline bool constraint_match(struct event_constraint *c, u64 ecode)
+>  #define PERF_X86_EVENT_PEBS_NA_HSW	0x0010 /* haswell style datala, unknown */
+>  #define PERF_X86_EVENT_EXCL		0x0020 /* HT exclusivity on counter */
+>  #define PERF_X86_EVENT_DYNAMIC		0x0040 /* dynamic alloc'd constraint */
+> -#define PERF_X86_EVENT_RDPMC_ALLOWED	0x0080 /* grant rdpmc permission */
+> +
+>  #define PERF_X86_EVENT_EXCL_ACCT	0x0100 /* accounted EXCL event */
+>  #define PERF_X86_EVENT_AUTO_RELOAD	0x0200 /* use PEBS auto-reload */
+>  #define PERF_X86_EVENT_LARGE_PEBS	0x0400 /* use large PEBS */
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index fe156a8170aa..12debf008d39 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -142,6 +142,8 @@ struct hw_perf_event {
+>  			int		event_base_rdpmc;
+>  			int		idx;
+>  			int		last_cpu;
+> +
+> +#define PERF_EVENT_FLAG_USER_READ_CNT	0x80000000
 
-19f8408a634c9515 (HEAD -> perf/core) perf intel-pt: Add support for PERF_RECORD_AUX_OUTPUT_HW_ID
-69125e749c006b4f perf tools: Add support for PERF_RECORD_AUX_OUTPUT_HW_ID
-1b1d9560a61f1e4e perf vendor events arm64: Categorise the Neoverse V1 counters
-abe8733bc3575869 perf vendor events arm64: Add new armv8 pmu events
-d211e9e76a466cce perf vendor events: Syntax corrections in Neoverse N1 json
-c067335fcbfc67c3 (quaco/perf/core, acme/tmp.perf/core) perf metric: Allow modifiers on metrics.
-acf2cb9cf242e9ab perf parse-events: Identify broken modifiers
-fb193eca0ae8ddae perf metric: Switch fprintf() to pr_err()
-fb8c3a06943cc3c7 perf metrics: Modify setup and deduplication
-4965bb2e71371d5f perf expr: Add subset utility
-c1d7cd1b36fce16b perf metric: Encode and use metric-id as qualifier
-3743f880b3856971 perf parse-events: Allow config on kernel PMU events
-844f07a5ddcd46c5 perf parse-events: Add new "metric-id" term
-e68f07424b8b3f00 perf parse-events: Add const to evsel name
-ace154d9f5dc3331 perf metric: Simplify metric_refs calculation
-eeffd53b41dc7077 perf metric: Document the internal 'struct metric'
-9aa64400defa07fb perf metric: Comment data structures
-353ce4ed869635c7 perf metric: Modify resolution and recursion check
-0bffecb0ac304bb2 perf metric: Only add a referenced metric once
-937323c22db4cb1e perf metric: Add metric new and free
-176b9da84871449d perf metric: Add documentation and rename a variable.
-cc6803c12cef80f1 perf metric: Move runtime value to the expr context
-9610bca8f117d963 perf pmu: Make pmu_event tables const
-95ed79343835656d perf pmu: Make pmu_sys_event_tables const
-05335f28549c7cc5 perf pmu: Add const to pmu_events_map.
-cac98c8aca3c7dd2 tools lib: Adopt list_sort from the kernel sources
-f792cf8a094eac29 perf kmem: Improve man page for record options
-eda1a84cb4e93759 perf tools: Enable strict JSON parsing
-21813684e46df1c9 perf tools: Make the JSON parser more conformant when in strict mode
-08f3e0873ac20344 perf vendor-events: Fix all remaining invalid JSON files
+I realise this matches the style of PERF_HES_* and PERF_EF_*. but could
+we please arrange this like the PERF_PMU_CAP_* definitions, and move
+this immediately before the struct hw_perf_event defintion, with a
+comment block, e.g.
 
-- Arnaldo
+/*
+ * hw_perf_event::flag values
+ *
+ * PERF_EVENT_FLAG_ARCH bits are reserved for architecture-specific
+ * usage.
+ */
+#define PERF_EVENT_FLAG_ARCH			0x0000ffff
+#define PERF_EVENT_FLAG_USER_READ_CNT		0x80000000
+
+Thanks,
+Mark.
