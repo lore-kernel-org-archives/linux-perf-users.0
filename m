@@ -2,96 +2,196 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B63C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 07:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54801C43217
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 08:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C18060F94
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 07:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35163610CE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 08:53:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238737AbhJMHxg (ORCPT
+        id S238954AbhJMIz3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Oct 2021 03:53:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40474 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238660AbhJMHxe (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Oct 2021 03:53:34 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9E6A860E97;
-        Wed, 13 Oct 2021 07:51:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634111491;
-        bh=jxBe3EdmOkp/uf/o/Y4dxlDbjXr7z5Jy5FzRlJAf0iU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vILv/kn38IFQtIG005rvJ82OGKrmrcTLR2kW4PIyv1aDZi0QVHFfftbMghZ3/V/cU
-         sytZdYnQDpJkIr22aL4i2CKSyiWhy5IDVN1TTGBxh8lNlWHLtsK3RFeCrGrLchauNB
-         bpezcsIyMd3Zd0w4jN/dscn89MfWjHYKsX80lR3njxJ+PlA9SzZJegZWwmlR6BsVGF
-         Y0L2n4/Y/3NFjhsVkFM2Se4siag5ymMuHvobek6QusPZEu8VJwo/+d4CVr7qWFBDpv
-         yl87VkqK+MMHWfJ2AG1ueH+v7bbZfWHjTqM+z4X84L3w9D5LqOtDSh3NwjwMyYDlZu
-         rlhqmGpEfatFQ==
-Date:   Wed, 13 Oct 2021 08:51:26 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     German Gomez <german.gomez@arm.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Wed, 13 Oct 2021 04:55:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56500 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238885AbhJMIz2 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 13 Oct 2021 04:55:28 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED170C061570
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Oct 2021 01:53:25 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1maZzE-0007An-3c; Wed, 13 Oct 2021 10:51:44 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1maZz1-0005Il-VI; Wed, 13 Oct 2021 10:51:31 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1maZz1-0006zY-R9; Wed, 13 Oct 2021 10:51:31 +0200
+Date:   Wed, 13 Oct 2021 10:51:31 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
         Mark Rutland <mark.rutland@arm.com>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        linux-pci@vger.kernel.org, Alexander Duyck <alexanderduyck@fb.com>,
+        Russell Currey <ruscur@russell.cc>, x86@kernel.org,
+        qat-linux@intel.com, oss-drivers@corigine.com,
+        Oliver O'Halloran <oohall@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marco Chiappero <marco.chiappero@intel.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-scsi@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-wireless@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        Fiona Trahe <fiona.trahe@intel.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Ido Schimmel <idosch@nvidia.com>,
+        Simon Horman <simon.horman@corigine.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jack Xu <jack.xu@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Michael Buesch <m@bues.ch>, Jiri Pirko <jiri@nvidia.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
-        James Clark <James.Clark@arm.com>
-Subject: Re: [PATCH 4/5] perf arm-spe: Implement find_snapshot callback
-Message-ID: <20211013075125.GA6701@willie-the-truck>
-References: <20210916154635.1525-1-german.gomez@arm.com>
- <20210916154635.1525-4-german.gomez@arm.com>
- <20210923135016.GG400258@leoy-ThinkPad-X240s>
- <20210923144048.GB603008@leoy-ThinkPad-X240s>
- <1c6a3a73-27dc-6673-7fe7-34bc7fcb0a68@arm.com>
- <20211004122724.GC174271@leoy-ThinkPad-X240s>
- <6b092f13-832f-5d1d-a504-aea96c81bf17@arm.com>
- <20211006095124.GC14400@leoy-ThinkPad-X240s>
- <377b54ef-b9c0-9cfc-ef0c-0187d7c493cc@arm.com>
- <20211013003916.GA130842@leoy-ThinkPad-X240s>
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        xen-devel@lists.xenproject.org, Vadym Kochan <vkochan@marvell.com>,
+        MPT-FusionLinux.pdl@broadcom.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org,
+        Wojciech Ziemba <wojciech.ziemba@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        linux-crypto@vger.kernel.org, kernel@pengutronix.de,
+        netdev@vger.kernel.org, Frederic Barrat <fbarrat@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Tomaszx Kowalik <tomaszx.kowalik@intel.com>,
+        Taras Chornyi <tchornyi@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v6 00/11] PCI: Drop duplicated tracking of a pci_dev's
+ bound driver
+Message-ID: <20211013085131.5htnch5p6zv46mzn@pengutronix.de>
+References: <20211004125935.2300113-1-u.kleine-koenig@pengutronix.de>
+ <20211012233212.GA1806189@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="jgo3ssjhgqy54b4n"
 Content-Disposition: inline
-In-Reply-To: <20211013003916.GA130842@leoy-ThinkPad-X240s>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20211012233212.GA1806189@bhelgaas>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-perf-users@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Oct 13, 2021 at 08:39:16AM +0800, Leo Yan wrote:
-> On Mon, Oct 11, 2021 at 04:55:37PM +0100, German Gomez wrote:
-> > On 06/10/2021 10:51, Leo Yan wrote:
-> > > On Wed, Oct 06, 2021 at 10:35:20AM +0100, German Gomez wrote:
-> > >
-> > > [...]
-> > >
-> > >>> So simply say, I think the head pointer monotonically increasing is
-> > >>> the right thing to do in Arm SPE driver.
-> > >> I will talk to James about how we can proceed on this.
-> > > Thanks!
-> > 
-> > I took this offline with James and, though it looks possible to patch
-> > the SPE driver to have a monotonically increasing head pointer in order
-> > to simplify the handling in the perf tool, it could be a breaking change
-> > for users of the perf_event_open syscall that currently rely on the way
-> > it works now.
-> 
-> Here I cannot create the connection between AUX head pointer and the
-> breakage of calling perf_event_open().
-> 
-> Could you elaborate what's the reason the monotonical increasing head
-> pointer will lead to the breakage for perf_event_open()?
 
-It's a user-visible change in behaviour, isn't it? Therefore we risk
-breaking applications that rely on the current behaviour if we change it
-unconditionally.
+--jgo3ssjhgqy54b4n
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Given that the driver has always worked like this and it doesn't sound like
-it's the end of the world to deal with it in userspace (after all, it's
-aligned with intel-pt), then I don't think we should change it.
+On Tue, Oct 12, 2021 at 06:32:12PM -0500, Bjorn Helgaas wrote:
+> On Mon, Oct 04, 2021 at 02:59:24PM +0200, Uwe Kleine-K=F6nig wrote:
+> > Hello,
+> >=20
+> > this is v6 of the quest to drop the "driver" member from struct pci_dev
+> > which tracks the same data (apart from a constant offset) as dev.driver.
+>=20
+> I like this a lot and applied it to pci/driver for v5.16, thanks!
+>=20
+> I split some of the bigger patches apart so they only touched one
+> driver or subsystem at a time.  I also updated to_pci_driver() so it
+> returns NULL when given NULL, which makes some of the validations
+> quite a bit simpler, especially in the PM code in pci-driver.c.
 
-Will
+OK.
+
+> Full interdiff from this v6 series:
+>=20
+> diff --git a/arch/x86/kernel/probe_roms.c b/arch/x86/kernel/probe_roms.c
+> index deaaef6efe34..36e84d904260 100644
+> --- a/arch/x86/kernel/probe_roms.c
+> +++ b/arch/x86/kernel/probe_roms.c
+> @@ -80,17 +80,15 @@ static struct resource video_rom_resource =3D {
+>   */
+>  static bool match_id(struct pci_dev *pdev, unsigned short vendor, unsign=
+ed short device)
+>  {
+> +	struct pci_driver *drv =3D to_pci_driver(pdev->dev.driver);
+>  	const struct pci_device_id *id;
+> =20
+>  	if (pdev->vendor =3D=3D vendor && pdev->device =3D=3D device)
+>  		return true;
+> =20
+> -	if (pdev->dev.driver) {
+> -		struct pci_driver *drv =3D to_pci_driver(pdev->dev.driver);
+> -		for (id =3D drv->id_table; id && id->vendor; id++)
+> -			if (id->vendor =3D=3D vendor && id->device =3D=3D device)
+> -				break;
+> -	}
+> +	for (id =3D drv ? drv->id_table : NULL; id && id->vendor; id++)
+> +		if (id->vendor =3D=3D vendor && id->device =3D=3D device)
+> +			break;
+> =20
+>  	return id && id->vendor;
+>  }
+> diff --git a/drivers/misc/cxl/guest.c b/drivers/misc/cxl/guest.c
+> index d997c9c3ebb5..7eb3706cf42d 100644
+> --- a/drivers/misc/cxl/guest.c
+> +++ b/drivers/misc/cxl/guest.c
+> @@ -20,38 +20,38 @@ static void pci_error_handlers(struct cxl_afu *afu,
+>  				pci_channel_state_t state)
+>  {
+>  	struct pci_dev *afu_dev;
+> +	struct pci_driver *afu_drv;
+> +	struct pci_error_handlers *err_handler;
+
+These two could be moved into the for loop (where afu_drv was with my
+patch already). This is also possible in a few other drivers.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--jgo3ssjhgqy54b4n
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmFmng8ACgkQwfwUeK3K
+7AmPuQgAk6Dld3vvwdriW0ibspNDJTGfUcre3doNKax+JiXCiHbUthkO3jZ7kx1f
+rTKn9F/GlIOEH1uZZZPonJEaOLwVQmJz3OF8+BKCx7g1+0AqtNe2WefCf4Jl6ajR
+fuBtbNjjaCmBXFqToERlpAsB8kRfNy8Y5V7a/XqiX7ZDLiXle3V2AbuQVi5Ikmhp
+S72E0TV74YTVv77LeVSAA8275wN0GVI3gVT9F7w9ja0BjrapAALEVsk/s9pAl3Zq
+j9D63evuObSQ8ILnNmMOldPueBNZBIGCrXPD/EWKYWXjfstcmZUQtQqvyF6lK9ww
+AubKoQZ72JnZiuJZzVyJCsmBBRo2Vw==
+=Gp6y
+-----END PGP SIGNATURE-----
+
+--jgo3ssjhgqy54b4n--
