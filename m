@@ -2,194 +2,80 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CBCC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 13:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7902BC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 14:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69B7B610D0
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 13:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6211A610CB
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 14:18:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233955AbhJMNZd (ORCPT
+        id S230324AbhJMOUH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Oct 2021 09:25:33 -0400
-Received: from mga17.intel.com ([192.55.52.151]:29501 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233226AbhJMNZc (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Oct 2021 09:25:32 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10135"; a="208223337"
-X-IronPort-AV: E=Sophos;i="5.85,371,1624345200"; 
-   d="scan'208";a="208223337"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2021 06:23:29 -0700
-X-IronPort-AV: E=Sophos;i="5.85,371,1624345200"; 
-   d="scan'208";a="626341116"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.159])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2021 06:23:15 -0700
-Received: from andy by smile with local (Exim 4.95)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1maeDt-000LPO-Od;
-        Wed, 13 Oct 2021 16:23:09 +0300
-Date:   Wed, 13 Oct 2021 16:23:09 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Alexander Duyck <alexanderduyck@fb.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
+        Wed, 13 Oct 2021 10:20:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46914 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235899AbhJMOUH (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 13 Oct 2021 10:20:07 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAC0DC061570;
+        Wed, 13 Oct 2021 07:18:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=cw9LX5oWo3jXEpGn2jFKdqP5yDiuWs/4Uz5XhmZ11ls=; b=OuoxBzOQZpfQCxF47k6MCjjrP1
+        DJ1J8ECPRGByre5xlA4B8SaFF2UKeVnVm80YRhlvMcp9nlAdHhXVaASweUhSFPe+9LyV6tEwm8a/U
+        jXbpWn6BaGL8/16aivnJvzvQ3TLuuWqReXqPaosXb6aniyIQXnx7imi5CYdbi9kZON9yP5P+susqT
+        xp+6zbyRN36HtpS2xonzWfrVcLsYV+4FtnihYyUrCEjZWRF8S50WYMjWRraImSImTu+F/P1AB/FBM
+        hSvszM5lnv4FicOPEIE1ngXhzE+b+MQAqRa+o4nvGZefKxjVbOemEK9qHifSh1LfoPs4Vu8dcwb6/
+        FHMazyfw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1maf4p-009chw-LE; Wed, 13 Oct 2021 14:17:51 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C439430026A;
+        Wed, 13 Oct 2021 16:17:49 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AD38C2CA86B38; Wed, 13 Oct 2021 16:17:49 +0200 (CEST)
+Date:   Wed, 13 Oct 2021 16:17:49 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Fiona Trahe <fiona.trahe@intel.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ido Schimmel <idosch@nvidia.com>,
-        Ingo Molnar <mingo@redhat.com>, Jack Xu <jack.xu@intel.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Jiri Pirko <jiri@nvidia.com>,
-        Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Marco Chiappero <marco.chiappero@intel.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Michael Buesch <m@bues.ch>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        Simon Horman <simon.horman@corigine.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Taras Chornyi <tchornyi@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tomaszx Kowalik <tomaszx.kowalik@intel.com>,
-        Vadym Kochan <vkochan@marvell.com>,
-        Wojciech Ziemba <wojciech.ziemba@intel.com>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        linux-crypto <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" 
-        <linuxppc-dev@lists.ozlabs.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        USB <linux-usb@vger.kernel.org>,
-        "open list:TI WILINK WIRELES..." <linux-wireless@vger.kernel.org>,
-        MPT-FusionLinux.pdl@broadcom.com, netdev <netdev@vger.kernel.org>,
-        oss-drivers@corigine.com, qat-linux@intel.com,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v6 00/11] PCI: Drop duplicated tracking of a pci_dev's
- bound driver
-Message-ID: <YWbdvc7EWEZLVTHM@smile.fi.intel.com>
-References: <CAHp75Vd0uYEdfB0XaQuUV34V91qJdHR5ARku1hX_TCJLJHEjxQ@mail.gmail.com>
- <20211013113356.GA1891412@bhelgaas>
+        Jiri Olsa <jolsa@redhat.com>, Leo Yan <leo.yan@linaro.org>,
+        x86@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 1/3] perf/x86: Add new event for AUX output counter
+ index
+Message-ID: <YWbqjfPVx7AjSe5o@hirez.programming.kicks-ass.net>
+References: <20210907163903.11820-1-adrian.hunter@intel.com>
+ <20210907163903.11820-2-adrian.hunter@intel.com>
+ <ab6f9ec2-2571-de5a-d44a-427851b08d19@linux.intel.com>
+ <20210910160409.GI4323@worktop.programming.kicks-ass.net>
+ <453b9364-c350-79ca-00fa-b9e6ed6e3367@linux.intel.com>
+ <9da4ae5e-3e0e-180e-5bba-1351c08d7df9@intel.com>
+ <87k0j7hzaw.fsf@ashishki-desk.ger.corp.intel.com>
+ <3211feb9-b8e3-21fc-958c-07c7c7766bf2@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211013113356.GA1891412@bhelgaas>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <3211feb9-b8e3-21fc-958c-07c7c7766bf2@intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Oct 13, 2021 at 06:33:56AM -0500, Bjorn Helgaas wrote:
-> On Wed, Oct 13, 2021 at 12:26:42PM +0300, Andy Shevchenko wrote:
-> > On Wed, Oct 13, 2021 at 2:33 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Mon, Oct 04, 2021 at 02:59:24PM +0200, Uwe Kleine-König wrote:
+On Wed, Oct 13, 2021 at 12:12:48PM +0300, Adrian Hunter wrote:
 
-...
+> Will anyone takes these patches?  Perhaps Arnaldo if no one objects?
+> The patches still seem to apply cleanly.
 
-> > It's a bit unusual. Other to_*_dev() are not NULL-aware IIRC.
-> 
-> It is a little unusual.  I only found three of 77 that are NULL-aware:
-> 
->   to_moxtet_driver()
->   to_siox_driver()
->   to_spi_driver()
-> 
-> It seems worthwhile to me because it makes the patch and the resulting
-> code significantly cleaner.
+I've picked up the first. But if acme wants to route the whole lot:
 
-I'm not objecting the change, just a remark.
-
-...
-
-> > > +       for (id = drv ? drv->id_table : NULL; id && id->vendor; id++)
-> > > +               if (id->vendor == vendor && id->device == device)
-> > 
-> > > +                       break;
-> > 
-> > return true;
-> > 
-> > >         return id && id->vendor;
-> > 
-> > return false;
-> 
-> Good cleanup for a follow-up patch, but doesn't seem directly related
-> to the objective here.
-
-True. Maybe you can bake one while not forgotten?
-
-...
-
-> > > +       return drv && drv->resume ?
-> > > +                       drv->resume(pci_dev) : pci_pm_reenable_device(pci_dev);
-> > 
-> > One line?
-> 
-> I don't think I touched that line.
-
-Then why they are both in + section?
-
-...
-
-> > > +       struct pci_driver *drv = to_pci_driver(dev->dev.driver);
-> > >         const struct pci_error_handlers *err_handler =
-> > > -                       dev->dev.driver ? to_pci_driver(dev->dev.driver)->err_handler : NULL;
-> > > +                       drv ? drv->err_handler : NULL;
-> > 
-> > Isn't dev->driver == to_pci_driver(dev->dev.driver)?
-> 
-> Yes, I think so, but not sure what you're getting at here, can you
-> elaborate?
-
-Getting pointer from another pointer seems waste of resources, why we
-can't simply
-
-	struct pci_driver *drv = dev->driver;
-
-?
-
-...
-
-> > Stray change? Or is it in a separate patch in your tree?
-> 
-> Could be skipped.  The string now fits on one line so I combined it to
-> make it more greppable.
-
-This is inconsistency in your changes, in one case you are objecting of
-doing something close to the changed lines, in the other you are doing
-unrelated change.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
