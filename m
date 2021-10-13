@@ -2,196 +2,112 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54801C43217
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 08:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0422C4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 09:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35163610CE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 08:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CC9B60524
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 09:12:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238954AbhJMIz3 (ORCPT
+        id S239022AbhJMJO7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Oct 2021 04:55:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56500 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238885AbhJMIz2 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Oct 2021 04:55:28 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED170C061570
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Oct 2021 01:53:25 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1maZzE-0007An-3c; Wed, 13 Oct 2021 10:51:44 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1maZz1-0005Il-VI; Wed, 13 Oct 2021 10:51:31 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1maZz1-0006zY-R9; Wed, 13 Oct 2021 10:51:31 +0200
-Date:   Wed, 13 Oct 2021 10:51:31 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-pci@vger.kernel.org, Alexander Duyck <alexanderduyck@fb.com>,
-        Russell Currey <ruscur@russell.cc>, x86@kernel.org,
-        qat-linux@intel.com, oss-drivers@corigine.com,
-        Oliver O'Halloran <oohall@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marco Chiappero <marco.chiappero@intel.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-scsi@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-wireless@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Fiona Trahe <fiona.trahe@intel.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Ido Schimmel <idosch@nvidia.com>,
-        Simon Horman <simon.horman@corigine.com>,
-        linuxppc-dev@lists.ozlabs.org,
+        Wed, 13 Oct 2021 05:14:59 -0400
+Received: from mga02.intel.com ([134.134.136.20]:25033 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S239008AbhJMJO7 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 13 Oct 2021 05:14:59 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10135"; a="214537144"
+X-IronPort-AV: E=Sophos;i="5.85,370,1624345200"; 
+   d="scan'208";a="214537144"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2021 02:12:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,370,1624345200"; 
+   d="scan'208";a="570770415"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.76]) ([10.237.72.76])
+  by fmsmga002.fm.intel.com with ESMTP; 13 Oct 2021 02:12:49 -0700
+Subject: Re: [PATCH V3 1/3] perf/x86: Add new event for AUX output counter
+ index
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jack Xu <jack.xu@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Michael Buesch <m@bues.ch>, Jiri Pirko <jiri@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        xen-devel@lists.xenproject.org, Vadym Kochan <vkochan@marvell.com>,
-        MPT-FusionLinux.pdl@broadcom.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org,
-        Wojciech Ziemba <wojciech.ziemba@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        linux-crypto@vger.kernel.org, kernel@pengutronix.de,
-        netdev@vger.kernel.org, Frederic Barrat <fbarrat@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Tomaszx Kowalik <tomaszx.kowalik@intel.com>,
-        Taras Chornyi <tchornyi@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v6 00/11] PCI: Drop duplicated tracking of a pci_dev's
- bound driver
-Message-ID: <20211013085131.5htnch5p6zv46mzn@pengutronix.de>
-References: <20211004125935.2300113-1-u.kleine-koenig@pengutronix.de>
- <20211012233212.GA1806189@bhelgaas>
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Olsa <jolsa@redhat.com>, Leo Yan <leo.yan@linaro.org>,
+        x86@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20210907163903.11820-1-adrian.hunter@intel.com>
+ <20210907163903.11820-2-adrian.hunter@intel.com>
+ <ab6f9ec2-2571-de5a-d44a-427851b08d19@linux.intel.com>
+ <20210910160409.GI4323@worktop.programming.kicks-ass.net>
+ <453b9364-c350-79ca-00fa-b9e6ed6e3367@linux.intel.com>
+ <9da4ae5e-3e0e-180e-5bba-1351c08d7df9@intel.com>
+ <87k0j7hzaw.fsf@ashishki-desk.ger.corp.intel.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <3211feb9-b8e3-21fc-958c-07c7c7766bf2@intel.com>
+Date:   Wed, 13 Oct 2021 12:12:48 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jgo3ssjhgqy54b4n"
-Content-Disposition: inline
-In-Reply-To: <20211012233212.GA1806189@bhelgaas>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-perf-users@vger.kernel.org
+In-Reply-To: <87k0j7hzaw.fsf@ashishki-desk.ger.corp.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On 23/09/2021 22:22, Alexander Shishkin wrote:
+> Adrian Hunter <adrian.hunter@intel.com> writes:
+> 
+>> On 10/09/21 7:29 pm, Liang, Kan wrote:
+>>>
+>>>
+>>> On 9/10/2021 12:04 PM, Peter Zijlstra wrote:
+>>>> On Tue, Sep 07, 2021 at 01:45:22PM -0400, Liang, Kan wrote:
+>>>>> On 9/7/2021 12:39 PM, Adrian Hunter wrote:
+>>>>
+>>>>>> @@ -4494,8 +4500,16 @@ static int intel_pmu_check_period(struct perf_event *event, u64 value)
+>>>>>>        return intel_pmu_has_bts_period(event, value) ? -EINVAL : 0;
+>>>>>>    }
+>>>>>> +static void intel_aux_output_init(void)
+>>>>>> +{
+>>>>>> +    /* Refer also intel_pmu_aux_output_match() */
+>>>>>> +    if (x86_pmu.intel_cap.pebs_output_pt_available)
+>>>>>> +        x86_pmu.assign = intel_pmu_assign_event;
+>>>>>> +}
+>>>>>
+>>>>> For a hybrid machine, x86_pmu.intel_cap.pebs_output_pt_available is always
+>>>>> cleared. We probably need the PMU specific
+>>>>> pmu->intel_cap.pebs_output_pt_available here.
+>>>>>
+>>>>>> +
+>>>>>>    static int intel_pmu_aux_output_match(struct perf_event *event)
+>>>>>>    {
+>>>>>> +    /* intel_pmu_assign_event() is needed, refer intel_aux_output_init() */
+>>>>>>        if (!x86_pmu.intel_cap.pebs_output_pt_available)
+>>>>>>            return 0;
+>>>>>>
+>>>>>
+>>>>> For a hybrid machine, this always return 0. I think we need to fix it first?
+>>>>
+>>>> AFAICT the patch is correct for !hybrid, and the hybrid PT muck can then
+>>>> also fix this up, right?
+>>>>
+>>>
+>>> Yes, for !hybrid, the patch is good.
+>>>
+>>> Since PEBS via PT is temporarily disabled for hybrid for now, the patch set should not bring any issues with hybrid either.
+>>> The hybrid PT can be fixed separately.
+>>
+>> I don't have much time to look at the hybrid case right now.
+>>
+>> Would it be OK to go ahead with these patches?
+> 
+> I'll deal with the PEBS-via-PT on hybrid. As it stands right now, this
+> patchset is good.
 
---jgo3ssjhgqy54b4n
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Oct 12, 2021 at 06:32:12PM -0500, Bjorn Helgaas wrote:
-> On Mon, Oct 04, 2021 at 02:59:24PM +0200, Uwe Kleine-K=F6nig wrote:
-> > Hello,
-> >=20
-> > this is v6 of the quest to drop the "driver" member from struct pci_dev
-> > which tracks the same data (apart from a constant offset) as dev.driver.
->=20
-> I like this a lot and applied it to pci/driver for v5.16, thanks!
->=20
-> I split some of the bigger patches apart so they only touched one
-> driver or subsystem at a time.  I also updated to_pci_driver() so it
-> returns NULL when given NULL, which makes some of the validations
-> quite a bit simpler, especially in the PM code in pci-driver.c.
-
-OK.
-
-> Full interdiff from this v6 series:
->=20
-> diff --git a/arch/x86/kernel/probe_roms.c b/arch/x86/kernel/probe_roms.c
-> index deaaef6efe34..36e84d904260 100644
-> --- a/arch/x86/kernel/probe_roms.c
-> +++ b/arch/x86/kernel/probe_roms.c
-> @@ -80,17 +80,15 @@ static struct resource video_rom_resource =3D {
->   */
->  static bool match_id(struct pci_dev *pdev, unsigned short vendor, unsign=
-ed short device)
->  {
-> +	struct pci_driver *drv =3D to_pci_driver(pdev->dev.driver);
->  	const struct pci_device_id *id;
-> =20
->  	if (pdev->vendor =3D=3D vendor && pdev->device =3D=3D device)
->  		return true;
-> =20
-> -	if (pdev->dev.driver) {
-> -		struct pci_driver *drv =3D to_pci_driver(pdev->dev.driver);
-> -		for (id =3D drv->id_table; id && id->vendor; id++)
-> -			if (id->vendor =3D=3D vendor && id->device =3D=3D device)
-> -				break;
-> -	}
-> +	for (id =3D drv ? drv->id_table : NULL; id && id->vendor; id++)
-> +		if (id->vendor =3D=3D vendor && id->device =3D=3D device)
-> +			break;
-> =20
->  	return id && id->vendor;
->  }
-> diff --git a/drivers/misc/cxl/guest.c b/drivers/misc/cxl/guest.c
-> index d997c9c3ebb5..7eb3706cf42d 100644
-> --- a/drivers/misc/cxl/guest.c
-> +++ b/drivers/misc/cxl/guest.c
-> @@ -20,38 +20,38 @@ static void pci_error_handlers(struct cxl_afu *afu,
->  				pci_channel_state_t state)
->  {
->  	struct pci_dev *afu_dev;
-> +	struct pci_driver *afu_drv;
-> +	struct pci_error_handlers *err_handler;
-
-These two could be moved into the for loop (where afu_drv was with my
-patch already). This is also possible in a few other drivers.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---jgo3ssjhgqy54b4n
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmFmng8ACgkQwfwUeK3K
-7AmPuQgAk6Dld3vvwdriW0ibspNDJTGfUcre3doNKax+JiXCiHbUthkO3jZ7kx1f
-rTKn9F/GlIOEH1uZZZPonJEaOLwVQmJz3OF8+BKCx7g1+0AqtNe2WefCf4Jl6ajR
-fuBtbNjjaCmBXFqToERlpAsB8kRfNy8Y5V7a/XqiX7ZDLiXle3V2AbuQVi5Ikmhp
-S72E0TV74YTVv77LeVSAA8275wN0GVI3gVT9F7w9ja0BjrapAALEVsk/s9pAl3Zq
-j9D63evuObSQ8ILnNmMOldPueBNZBIGCrXPD/EWKYWXjfstcmZUQtQqvyF6lK9ww
-AubKoQZ72JnZiuJZzVyJCsmBBRo2Vw==
-=Gp6y
------END PGP SIGNATURE-----
-
---jgo3ssjhgqy54b4n--
+Will anyone takes these patches?  Perhaps Arnaldo if no one objects?
+The patches still seem to apply cleanly.
