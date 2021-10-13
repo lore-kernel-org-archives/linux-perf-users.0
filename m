@@ -2,60 +2,60 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46FCAC4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 17:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F844C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 17:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30CF060F4A
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 17:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D35460F4A
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Oct 2021 17:48:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238442AbhJMRuN (ORCPT
+        id S238479AbhJMRuY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Oct 2021 13:50:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40002 "EHLO
+        Wed, 13 Oct 2021 13:50:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238217AbhJMRtT (ORCPT
+        with ESMTP id S238339AbhJMRth (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Oct 2021 13:49:19 -0400
-Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2ED5C061773
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Oct 2021 10:46:53 -0700 (PDT)
-Received: by mail-qt1-x84a.google.com with SMTP id t15-20020ac8588f000000b002a777ee14d0so2630833qta.14
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Oct 2021 10:46:53 -0700 (PDT)
+        Wed, 13 Oct 2021 13:49:37 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24B82C061764
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Oct 2021 10:46:56 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id y16-20020a2586d0000000b005b752db8f97so3918331ybm.18
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Oct 2021 10:46:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=6s7UDaUWqWxOB0gkOYGBtnicqL2UK9wFtrA9e+9ezHc=;
-        b=K3LzWBcp8jclzYs4g8blDoMVJKnJojoegDMmR+QXeZ17DzY9BeS5A4U6VEXcbLi3Om
-         nAdjS7roJUIBDi++TSWGVvGPHtNlA4WUqbvzPNwio2bq3nYRT51WMJ1LRvPpPaHk2jBY
-         +LyUqpNiv9GmyidiT36JA2LiB7yYBGLEhSiqgoSinBvmGj625soM21Zon0oePf7EnVm7
-         FYEox3x53R2XwBceutzcOdAvi3PU6Y5hdHEQHl63ICYQTrsZXciPGssJnRloR40n8NsR
-         CZbkn4S5MRvLX4YL4cJF2Ywq1HgYOV0+2xZQZPx2e+XixqeT9SuKZfwa6iyalH3t0KBf
-         ZUKg==
+        bh=Z2OcCRUvnaTF0XXoo+0opwWMuFzb6rVbgkzabboWxgI=;
+        b=N6E57iQ6NHyl2pXW3P9Ww5vk0+94VXFNYbkf7fZ7AkmnOjSB7BwyP4YLiyqZxeavr9
+         BM4R62D8z04g/GII9Vt0aDZfVHw49PNxe8inTXxMLju8ospba9Q05Q0/neihmIpAWVo8
+         sVINV9TKXxh6rFHbyoiquRQuO6qgiTQEejbuv6Y7VGAc6olrxHCLnHroFlrLV1TWujbD
+         Az27BF+iYt5Zwsb7Saz1QbGoyXuBaSuhVTrvucldEXlIdrL70QVU1MHbN2YBXXMltMzc
+         kW47ZUbQhh5RNiM32SA55bRXkUSOzUrRLeScA4hXV74Zv+vOHdWgGCQDCBGIqzIFsZQ5
+         J5lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=6s7UDaUWqWxOB0gkOYGBtnicqL2UK9wFtrA9e+9ezHc=;
-        b=UCWydBYOR87lFeSFbIfLkJIBDAjGqRiOwNRNQyxAa7xedO8/nesfnnXRG9h+TYUFbl
-         /TdWnJD9KbgAV9Mt65AiKh2YEv9ui0K47M0RJnKVF9R1uotfy6/NSCedukoJDpKhqjNJ
-         TZoTlC9/C8H6vNlrIOLtqGubseHSYC8HbYd1XxvfrGQjq+tMbJ+NqjXBatuEV1zEdqdF
-         QO9vCmGsd65d9vhIbT0NvipfMF0oKp80R7UQwcY9dQLYb1U768vlraLmHEkkEpjeAH6O
-         7LyoYgN2nD0MG36hkgXsCeKA9D9uYP+0lR+7MIWgJujkBvUefn+tuHN8ozwxavUkt48y
-         e6uw==
-X-Gm-Message-State: AOAM532eulX6Ep++meMOTy2pQVRMyQiTPrfvgM8cqbl3zJnNoVNakR5v
-        sveDb3yxxUmGA0N15KEG1M08txWzKBMF
-X-Google-Smtp-Source: ABdhPJwwyWV5YTbj8yZhf281xwaGPjV2KsvGGvQ/dc12/yjCbDVUSjOVzgoQ9oWHHMl5ubCaUUj1M7AiyR/I
+        bh=Z2OcCRUvnaTF0XXoo+0opwWMuFzb6rVbgkzabboWxgI=;
+        b=FhtQhKEOzkzUnoSNhU/DMW3k32W5LFlJGWqs8mVQf9heIzXMP7CuDixTOa+KMln6TP
+         iSnf9Lfm1eHJxyZZbVsxrTsACXe2BjZaPWTRWiK+sjFG9zUmg0rcADa5uEesIaTvZb2D
+         3hC6NN+Doj/EdNiVRdfrZQZvhPciDVhyGQuYBQrFnghuB3wkrfxhMIthdwY6YdsuE93i
+         7F7NVo19LtAlPo5tLmdzSMSZcerc+9XQdT73VcFoP3uzsL4wZ+PCi+pQv7r877AO2YOR
+         Xzb0e4EdygSx+xWu4ZaR6mPuHTn2I3XPSBR3OVp0qNrFF//Yc/TmAz1nlJJEZcSmr49I
+         W/eg==
+X-Gm-Message-State: AOAM531GRim+XhBdKcK4eLNIXKo+LHq4OttOJHlDVJqaronnA0x+WBDF
+        3occGjKcVb0HElrjvlLha42EGVUTrt2k
+X-Google-Smtp-Source: ABdhPJy6Kk8Vy6cslBLQ90nwJOF1BtyH7FoXz9nONFdveSBBHxXBrl30dm8HwOhuJNlJ8CfW28v7mn7C/si8
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:aeaf:8e9e:3df2:aad9])
- (user=irogers job=sendgmr) by 2002:a05:622a:52:: with SMTP id
- y18mr828851qtw.300.1634147212836; Wed, 13 Oct 2021 10:46:52 -0700 (PDT)
-Date:   Wed, 13 Oct 2021 10:45:55 -0700
+ (user=irogers job=sendgmr) by 2002:a25:5545:: with SMTP id
+ j66mr781411ybb.288.1634147215360; Wed, 13 Oct 2021 10:46:55 -0700 (PDT)
+Date:   Wed, 13 Oct 2021 10:45:56 -0700
 In-Reply-To: <20211013174604.747276-1-irogers@google.com>
-Message-Id: <20211013174604.747276-14-irogers@google.com>
+Message-Id: <20211013174604.747276-15-irogers@google.com>
 Mime-Version: 1.0
 References: <20211013174604.747276-1-irogers@google.com>
 X-Mailer: git-send-email 2.33.0.882.g93a45727a2-goog
-Subject: [PATCH v2 13/22] perf test: Convert bpf tests to test cases.
+Subject: [PATCH v2 14/22] perf test: Convert llvm tests to test cases.
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -82,145 +82,116 @@ test functions.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/bpf.c | 72 +++++++++++++++++++++++++-----------------
- 1 file changed, 43 insertions(+), 29 deletions(-)
+ tools/perf/tests/llvm.c | 77 +++++++++++++++++++++++++++++------------
+ 1 file changed, 54 insertions(+), 23 deletions(-)
 
-diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
-index 274fdd5318a5..e86a77ce93ef 100644
---- a/tools/perf/tests/bpf.c
-+++ b/tools/perf/tests/bpf.c
-@@ -62,7 +62,6 @@ static int llseek_loop(void)
- 
- static struct {
- 	enum test_llvm__testcase prog_id;
--	const char *desc;
- 	const char *name;
- 	const char *msg_compile_fail;
- 	const char *msg_load_fail;
-@@ -72,7 +71,6 @@ static struct {
- } bpf_testcase_table[] = {
- 	{
- 		.prog_id	  = LLVM_TESTCASE_BASE,
--		.desc		  = "Basic BPF filtering",
- 		.name		  = "[basic_bpf_test]",
- 		.msg_compile_fail = "fix 'perf test LLVM' first",
- 		.msg_load_fail	  = "load bpf object failed",
-@@ -81,7 +79,6 @@ static struct {
- 	},
- 	{
- 		.prog_id	  = LLVM_TESTCASE_BASE,
--		.desc		  = "BPF pinning",
- 		.name		  = "[bpf_pinning]",
- 		.msg_compile_fail = "fix kbuild first",
- 		.msg_load_fail	  = "check your vmlinux setting?",
-@@ -92,7 +89,6 @@ static struct {
- #ifdef HAVE_BPF_PROLOGUE
- 	{
- 		.prog_id	  = LLVM_TESTCASE_BPF_PROLOGUE,
--		.desc		  = "BPF prologue generation",
- 		.name		  = "[bpf_prologue_test]",
- 		.msg_compile_fail = "fix kbuild first",
- 		.msg_load_fail	  = "check your vmlinux setting?",
-@@ -282,18 +278,6 @@ static int __test__bpf(int idx)
+diff --git a/tools/perf/tests/llvm.c b/tools/perf/tests/llvm.c
+index 057d6a59a8ea..f27ef00d65e9 100644
+--- a/tools/perf/tests/llvm.c
++++ b/tools/perf/tests/llvm.c
+@@ -124,7 +124,7 @@ test_llvm__fetch_bpf_obj(void **p_obj_buf,
  	return ret;
  }
  
--static int test__bpf_subtest_get_nr(void)
+-static int test__llvm(struct test_suite *test __maybe_unused, int subtest)
++static int test__llvm(int subtest)
+ {
+ 	int ret;
+ 	void *obj_buf = NULL;
+@@ -148,42 +148,73 @@ static int test__llvm(struct test_suite *test __maybe_unused, int subtest)
+ 
+ 	return ret;
+ }
++#endif //HAVE_LIBBPF_SUPPORT
+ 
+-static int test__llvm_subtest_get_nr(void)
++static int test__llvm__bpf_base_prog(struct test_suite *test __maybe_unused,
++				     int subtest __maybe_unused)
+ {
+-	return __LLVM_TESTCASE_MAX;
++#ifdef HAVE_LIBBPF_SUPPORT
++	return test__llvm(LLVM_TESTCASE_BASE);
++#else
++	pr_debug("Skip LLVM test because BPF support is not compiled\n");
++	return TEST_SKIP;
++#endif
+ }
+ 
+-static const char *test__llvm_subtest_get_desc(int subtest)
 -{
--	return (int)ARRAY_SIZE(bpf_testcase_table);
--}
--
--static const char *test__bpf_subtest_get_desc(int i)
--{
--	if (i < 0 || i >= (int)ARRAY_SIZE(bpf_testcase_table))
+-	if ((subtest < 0) || (subtest >= __LLVM_TESTCASE_MAX))
 -		return NULL;
--	return bpf_testcase_table[i].desc;
--}
 -
- static int check_env(void)
+-	return bpf_source_table[subtest].desc;
+-}
+-#else //HAVE_LIBBPF_SUPPORT
+-static int test__llvm(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
++static int test__llvm__bpf_test_kbuild_prog(struct test_suite *test __maybe_unused,
++					    int subtest __maybe_unused)
  {
- 	int err;
-@@ -324,7 +308,7 @@ static int check_env(void)
- 	return 0;
- }
- 
--static int test__bpf(struct test_suite *test __maybe_unused, int i)
-+static int test__bpf(int i)
- {
- 	int err;
- 
-@@ -342,31 +326,61 @@ static int test__bpf(struct test_suite *test __maybe_unused, int i)
- 	err = __test__bpf(i);
- 	return err;
- }
-+#endif
- 
--#else
--static int test__bpf_subtest_get_nr(void)
-+static int test__basic_bpf_test(struct test_suite *test __maybe_unused,
-+				int subtest __maybe_unused)
- {
--	return 0;
 +#ifdef HAVE_LIBBPF_SUPPORT
-+	return test__bpf(0);
++	return test__llvm(LLVM_TESTCASE_KBUILD);
 +#else
-+	pr_debug("Skip BPF test because BPF support is not compiled\n");
-+	return TEST_SKIP;
-+#endif
- }
- 
--static const char *test__bpf_subtest_get_desc(int i __maybe_unused)
-+static int test__bpf_pinning(struct test_suite *test __maybe_unused,
-+			     int subtest __maybe_unused)
- {
--	return NULL;
-+#ifdef HAVE_LIBBPF_SUPPORT
-+	return test__bpf(1);
-+#else
-+	pr_debug("Skip BPF test because BPF support is not compiled\n");
-+	return TEST_SKIP;
-+#endif
- }
- 
--static int test__bpf(struct test_suite *test __maybe_unused, int i __maybe_unused)
-+static int test__bpf_prologue_test(struct test_suite *test __maybe_unused,
-+				   int subtest __maybe_unused)
- {
-+#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_BPF_PROLOGUE)
-+	return test__bpf(2);
-+#else
- 	pr_debug("Skip BPF test because BPF support is not compiled\n");
++	pr_debug("Skip LLVM test because BPF support is not compiled\n");
  	return TEST_SKIP;
 +#endif
  }
-+
-+
-+static struct test_case bpf_tests[] = {
+ 
+-static int test__llvm_subtest_get_nr(void)
++static int test__llvm__bpf_test_prologue_prog(struct test_suite *test __maybe_unused,
++					      int subtest __maybe_unused)
+ {
+-	return 0;
 +#ifdef HAVE_LIBBPF_SUPPORT
-+	TEST_CASE("Basic BPF filtering", basic_bpf_test),
-+	TEST_CASE("BPF pinning", bpf_pinning),
-+#ifdef HAVE_BPF_PROLOGUE
-+	TEST_CASE("BPF prologue generation", bpf_prologue_test),
++	return test__llvm(LLVM_TESTCASE_BPF_PROLOGUE);
 +#else
-+	TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test, "not compiled in"),
- #endif
++	pr_debug("Skip LLVM test because BPF support is not compiled\n");
++	return TEST_SKIP;
++#endif
+ }
+ 
+-static const char *test__llvm_subtest_get_desc(int subtest __maybe_unused)
++static int test__llvm__bpf_test_relocation(struct test_suite *test __maybe_unused,
++					   int subtest __maybe_unused)
+ {
+-	return NULL;
++#ifdef HAVE_LIBBPF_SUPPORT
++	return test__llvm(LLVM_TESTCASE_BPF_RELOCATION);
 +#else
-+	TEST_CASE_REASON("Basic BPF filtering", basic_bpf_test, "not compiled in"),
-+	TEST_CASE_REASON("BPF pinning", bpf_pinning, "not compiled in"),
-+	TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test, "not compiled in"),
++	pr_debug("Skip LLVM test because BPF support is not compiled\n");
++	return TEST_SKIP;
++#endif
+ }
+-#endif // HAVE_LIBBPF_SUPPORT
++
++
++static struct test_case llvm_tests[] = {
++#ifdef HAVE_LIBBPF_SUPPORT
++	TEST_CASE("Basic BPF llvm compile", llvm__bpf_base_prog),
++	TEST_CASE("kbuild searching", llvm__bpf_test_kbuild_prog),
++	TEST_CASE("Compile source for BPF prologue generation",
++		  llvm__bpf_test_prologue_prog),
++	TEST_CASE("Compile source for BPF relocation", llvm__bpf_test_relocation),
++#else
++	TEST_CASE_REASON("Basic BPF llvm compile", llvm__bpf_base_prog, "not compiled in"),
++	TEST_CASE_REASON("kbuild searching", llvm__bpf_test_kbuild_prog, "not compiled in"),
++	TEST_CASE_REASON("Compile source for BPF prologue generation",
++			llvm__bpf_test_prologue_prog, "not compiled in"),
++	TEST_CASE_REASON("Compile source for BPF relocation",
++			llvm__bpf_test_relocation, "not compiled in"),
 +#endif
 +	{ .name = NULL, }
 +};
  
- struct test_suite suite__bpf = {
- 	.desc = "BPF filter",
--	.func = test__bpf,
+ struct test_suite suite__llvm = {
+ 	.desc = "LLVM search and compile",
+-	.func = test__llvm,
 -	.subtest = {
 -		.skip_if_fail	= true,
--		.get_nr		= test__bpf_subtest_get_nr,
--		.get_desc	= test__bpf_subtest_get_desc,
+-		.get_nr		= test__llvm_subtest_get_nr,
+-		.get_desc	= test__llvm_subtest_get_desc,
 -	},
-+	.test_cases = bpf_tests,
++	.test_cases = llvm_tests,
 +	.subtest = { .skip_if_fail = true, },
  };
 -- 
