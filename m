@@ -2,94 +2,117 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 938FCC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Oct 2021 08:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D4D1C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Oct 2021 12:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7384560ED4
-	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Oct 2021 08:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24C626108E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Oct 2021 12:33:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234714AbhJOIHu (ORCPT
+        id S235571AbhJOMfv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 15 Oct 2021 04:07:50 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:53719 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232537AbhJOIHu (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 15 Oct 2021 04:07:50 -0400
-Received: from mail-wr1-f50.google.com ([209.85.221.50]) by
- mrelayeu.kundenserver.de (mreue011 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1MRC7g-1mPEyg3cJw-00NBOg; Fri, 15 Oct 2021 10:05:42 +0200
-Received: by mail-wr1-f50.google.com with SMTP id g25so24882325wrb.2;
-        Fri, 15 Oct 2021 01:05:42 -0700 (PDT)
-X-Gm-Message-State: AOAM530YmS25Po28wfQMHJPNpkAcV5x3RrfefKyrR3mJ/NCRwI6Zmv2r
-        vbN52gTe3yT6NzIys6TSorRupaY7w/+beRg5w4g=
-X-Google-Smtp-Source: ABdhPJy9sZlQDrqD9m1U2kCsGr+NuqJq9GR+IhadW9NMvzLQSDS60WXLsc5ghfbjxyAdBhF+koA6oF3ct4kqTEH5fY8=
-X-Received: by 2002:adf:a3da:: with SMTP id m26mr12221525wrb.336.1634285142440;
- Fri, 15 Oct 2021 01:05:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20211015005634.2658470-1-alistair.francis@opensource.wdc.com> <20211015005634.2658470-2-alistair.francis@opensource.wdc.com>
-In-Reply-To: <20211015005634.2658470-2-alistair.francis@opensource.wdc.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 15 Oct 2021 10:05:26 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2i-4Q8SPwO+3X_FDF_J=dr3cyuRTgF7zxjW4WKxY0tuA@mail.gmail.com>
-Message-ID: <CAK8P3a2i-4Q8SPwO+3X_FDF_J=dr3cyuRTgF7zxjW4WKxY0tuA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] selftests: futex: Use a 64-bit time_t
-To:     Alistair Francis <alistair.francis@opensource.wdc.com>
-Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
+        Fri, 15 Oct 2021 08:35:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:41970 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234372AbhJOMfv (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 15 Oct 2021 08:35:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D9E1147A;
+        Fri, 15 Oct 2021 05:33:44 -0700 (PDT)
+Received: from [10.57.73.178] (unknown [10.57.73.178])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A18913F70D;
+        Fri, 15 Oct 2021 05:33:41 -0700 (PDT)
+Subject: Re: [PATCH 4/5] perf arm-spe: Implement find_snapshot callback
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alistair Francis <alistair23@gmail.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Darren Hart <dvhart@infradead.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <atish.patra@wdc.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Alistair Francis <alistair.francis@wdc.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:2QiHaZmcgG8KdrovqerTOtmxT24fe5r0TFvFfk2Cgy8jFVSFk+a
- 4WdYRe0tpdckk5vWAU0osFNfVYGCaxBwYUjXaLHIsMvi59cFOCF2Hj5Ec/EafZtFZMa0bcS
- pGzrIHoTRPX/nWBJLQMi8/UuCsS5Np4wp0ApcqKu94uiB5WLpz4lC2njx9++IqHvfmx6b+6
- 32OX+T7GQ93BLBIH002DQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:nnqrw5WsQIg=:QqwMh28coBxY3LSIG6y9Fq
- BB0CQyD3YaWUU1IPR57TfBsrEFbdHIa3gcnZgmrMXjibuzJ1m6j5L8vUHoLfaB1sN5GSD9/R9
- pf8BbjNbR1Wh6qI8r+58ujuhJe1MdH5mqatvy4l6C4yWyqSXrn9da40kiCNFfu7tKeDRZm/+h
- Ajpx3DBuv0fsSbz6kUUl6UNAwIZaBUXmVcoZ29m3QcJDusp4rk5trmn4Y/1TXgf1hBXw8zjZw
- gnQeFe8d/m2/jtQmlvrTXGH+CRWTvLJ99AJ9ZBbujQBVw7NrmDrl+EZrnMDE9pdXVPbdC4Pdu
- 3oiTbZzF+dTxygVh53Qi4WFBoOTGnUy95CmZ74+NGqxicggQvmY1HBFCtezjvtMQsINtLCdKF
- kcsopx7wdhPZSfSmMHfSXCXpecMvLsJ0iqAbhEnVenNRWdxjSnZ3Ai2FdDgkq3LdPiTslXUyo
- 7GT0XE0RjCrpJvjTEA14jlNRVZ4hOdsDyubu6D580Hy9JcmFeEBrPy//cbMKtdFqKlDaKkLTu
- IpzCWNaI3cWS78c46PTaiw2piANJPX0mdS5ra2rgh/9D61XkeS2eW0b4B+Ua6EGgAcqeQ5ptj
- SEFWViX0iQZtKEh3qNEFnEsXlAoLuHdHSvP4Z7in2EDww/xiEn6pLRiatOaPjRJmz1e2qU5h2
- kriBK0EZJNoJrsfR74J7DT4ZSz5S9S6sAGSza0F3EzLa3YIPBWfnMbVZ3ENyaQsNxfwH31osc
- J4kGAuZieWcrPVsptYBshh6u/ldR/gsmRI4Z4C8/p0slYkHX3XvtwoJWS2mEh/SOCaqycSXq3
- yada+h+S/KhqQRDNoueJNf1ka5ZaYJuet0YmdpOoj0r5oY30WIH5dX9+pf5eHR8iLg3eRipmw
- 8mTNHksQK0HvivmBnlzw==
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+        James Clark <James.Clark@arm.com>
+References: <20210916154635.1525-1-german.gomez@arm.com>
+ <20210916154635.1525-4-german.gomez@arm.com>
+ <20210923135016.GG400258@leoy-ThinkPad-X240s>
+ <20210923144048.GB603008@leoy-ThinkPad-X240s>
+ <1c6a3a73-27dc-6673-7fe7-34bc7fcb0a68@arm.com>
+ <20211004122724.GC174271@leoy-ThinkPad-X240s>
+ <6b092f13-832f-5d1d-a504-aea96c81bf17@arm.com>
+ <20211006095124.GC14400@leoy-ThinkPad-X240s>
+ <377b54ef-b9c0-9cfc-ef0c-0187d7c493cc@arm.com>
+ <20211013003916.GA130842@leoy-ThinkPad-X240s>
+ <20211013075125.GA6701@willie-the-truck>
+From:   German Gomez <german.gomez@arm.com>
+Message-ID: <35209d5c-6387-5248-ab61-a1e1cb0553de@arm.com>
+Date:   Fri, 15 Oct 2021 13:33:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
+MIME-Version: 1.0
+In-Reply-To: <20211013075125.GA6701@willie-the-truck>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Oct 15, 2021 at 2:56 AM Alistair Francis
-<alistair.francis@opensource.wdc.com> wrote:
->
-> From: Alistair Francis <alistair.francis@wdc.com>
->
-> Convert the futex selftests to only use a 64-bit time_t. On 64-bit
-> architectures this isn't a functional change. On 32-bit architectures
-> we now only perform 64-bit time_t syscalls (__NR_futex_time64) and
-> use a struct timespec64.
->
-> This won't work on kernels before 5.1, but as perf is tied to the kernel
-> that's ok.
->
-> This allows the tests to run and pass on RISC-V 32-bit.
->
-> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+Hi Leo,
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Would you be ok with the current patch the way it is? In case it's of
+any help, I'm sharing the testing steps that James and I went through
+when testing this internally, if you want to add to it
+
+- Test that only a portion of the buffer is saved until there is a wraparound
+
+$ ./perf record -vvv -e arm_spe/period=148576/u -S -- taskset --cpu-list 0 stress --cpu 1 & while true; do sleep 0.2; killall -s USR2 perf; done
+
+- Test snapshot mode in CPU mode
+
+$ sudo ./perf record -vvv -C 0 -e arm_spe/period=148576/u -S -- taskset --cpu-list 0 stress --cpu 1 &
+
+- Test that auxtrace buffers correspond to an aux record
+- Test snapshot default sizes in sudo and user modes
+- Test small snapshot size
+
+$ ./perf record -vvv -e arm_spe/period=148576/u -S1000 -m16,16 -- taskset --cpu-list 0 stress --cpu 1 &
+
+If there are any concerns with the patches, please let me know and I
+will try to address them.
+
+Thanks,
+German
+
+On 13/10/2021 08:51, Will Deacon wrote:
+> On Wed, Oct 13, 2021 at 08:39:16AM +0800, Leo Yan wrote:
+>> On Mon, Oct 11, 2021 at 04:55:37PM +0100, German Gomez wrote:
+>>> On 06/10/2021 10:51, Leo Yan wrote:
+>>>> On Wed, Oct 06, 2021 at 10:35:20AM +0100, German Gomez wrote:
+>>>>
+>>>> [...]
+>>>>
+>>>>>> So simply say, I think the head pointer monotonically increasing is
+>>>>>> the right thing to do in Arm SPE driver.
+>>>>> I will talk to James about how we can proceed on this.
+>>>> Thanks!
+>>> I took this offline with James and, though it looks possible to patch
+>>> the SPE driver to have a monotonically increasing head pointer in order
+>>> to simplify the handling in the perf tool, it could be a breaking change
+>>> for users of the perf_event_open syscall that currently rely on the way
+>>> it works now.
+>> Here I cannot create the connection between AUX head pointer and the
+>> breakage of calling perf_event_open().
+>>
+>> Could you elaborate what's the reason the monotonical increasing head
+>> pointer will lead to the breakage for perf_event_open()?
+> It's a user-visible change in behaviour, isn't it? Therefore we risk
+> breaking applications that rely on the current behaviour if we change it
+> unconditionally.
+>
+> Given that the driver has always worked like this and it doesn't sound like
+> it's the end of the world to deal with it in userspace (after all, it's
+> aligned with intel-pt), then I don't think we should change it.
+>
+> Will
