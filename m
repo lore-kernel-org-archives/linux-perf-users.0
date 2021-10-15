@@ -2,60 +2,60 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D2AC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Oct 2021 17:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8E6C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Oct 2021 17:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8AEB611C1
-	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Oct 2021 17:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A108D600CD
+	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Oct 2021 17:21:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242175AbhJORXs (ORCPT
+        id S242185AbhJORX5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 15 Oct 2021 13:23:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40090 "EHLO
+        Fri, 15 Oct 2021 13:23:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237969AbhJORXr (ORCPT
+        with ESMTP id S242165AbhJORXu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 15 Oct 2021 13:23:47 -0400
+        Fri, 15 Oct 2021 13:23:50 -0400
 Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDDD6C061762
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Oct 2021 10:21:40 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id j193-20020a2523ca000000b005b789d71d9aso11861574ybj.21
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Oct 2021 10:21:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F8BFC061762
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Oct 2021 10:21:43 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id z2-20020a254c02000000b005b68ef4fe24so11972162yba.11
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Oct 2021 10:21:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=+pvfnBZTpeenK8naiVnpmMSuK9E2qQGFB4fbGJAUfrQ=;
-        b=fBml1lyCT1YQmBm3A0SaeA339d+yaN82Nfg+OI25rEgcS9sKDfF71y2H/pa3SL9KuC
-         wgAfj5GdDHkzkGFMjgEQ2BilwIyxgvxf+MEQyqiYKu5MnYzFo4hErGXS8AzGX+AeCc/h
-         x5/fyi6mj92NS/ezi6jJ3mq9hJNiReADXCZvrpxWvlFnMol0P56HYEExgvIZTtagoxZ6
-         PORagWwuIwbVgBDdtfuC89hJe99HNw1s8ou8rzYM2XBO0kxlTwUWtHIL4nIxp6XukJ7P
-         foeAmPqOm4ZcnhG8Sdnnc2GgjY9Thc8rOT8oGS2Tu/6CC2mPQwER6a2GoNcJFMhYv5Mo
-         llgA==
+        bh=gxfMzKW95smVMegJPzan5IoHpS/DHp3BWD4qbUW0ZIs=;
+        b=o4UHOoyFs78uHXNv1mbf1S3IGByaezfdJ1cMH4PhZfXdXRZNiZjNqsSloO9tMwMcdH
+         7xGRerH9N8iDlOOv8Fn9YMW0dG26Wm9wgH4aF06Bl+maFH5XvNWscZix+/3axc63chf6
+         btAKlDsXPR5jxF6s4Hrujg7KbE0DeJKqvixDkyW6NJMNXOsKEZEQn4zqB3XdtUJhqzIb
+         BkD7sxxvn4ynr8BBrc9SSd1I3kyZazHcMz/3qFk4QH3MyAfVz5KGHxUhxo1Fj0cOsX5R
+         iTtRmTStKPXNjVIgh5l/2KDUhbWkUgK7hrdlgq+9fqE4MhENVvmWxwUWQ+tv8Gg1rHnn
+         Kg0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=+pvfnBZTpeenK8naiVnpmMSuK9E2qQGFB4fbGJAUfrQ=;
-        b=tvymRXQVCsQ4UTJZC75t8HE4UM+dIMzlnGuLRG6MSkqAdBQq7VJYbcCdBtHMzTr6/6
-         istm0x2GtoVD7+suLT5lmBl1uUsMZiIz+QAKKHWbcuv5IepnrAlJlYr7lbWsF7QfaJOc
-         IIcKfVa1GrCqR+PkLfWU7LBdaB0g36QPSdMLDCcvhuzohW33rE/AlwZ+4w7X0TOmh0jL
-         1gpr+9F76Wj7oCFi1pODVbac4x6l0SKZvNivCwNdPCQP8fxO8o26hcmAr0MH4BcAhbUl
-         9/eZoxnBtwoY7Zy3bVPT3Q1H+M63/SzOQlY6WvncPOPh/CMm4XD2lLZq4YAF7qs8p8eQ
-         ixcA==
-X-Gm-Message-State: AOAM531Kt+mleD22bXGOWhO1AjIiv034z5yIXa/uwaWVY8MWCQyVyMrX
-        amD8Aj8M7hSI5WnR+gQOBjQRdeINIISw
-X-Google-Smtp-Source: ABdhPJzWKRmMUF3Cb4+WnkAOzlyU4KePjlbUereMTjTe27usjiiN0B8c4qwTeOpwe8icyHIi4zNk6EaNzyrk
+        bh=gxfMzKW95smVMegJPzan5IoHpS/DHp3BWD4qbUW0ZIs=;
+        b=fIlv+dNem4cWqUzYb8utSZpN/kCJOVPBVYGdGkv27girAVQ6GHerg5QUPyOKE0eXHo
+         y75zSIbJYuIYcubehM9BkzIqz4JpuzNSU0Sq7ftYAbkVxSwmblCq/2/QpmaMNoH5Oa2f
+         HiXtLPush5HTXA3BBZNKoPNFRvk5Up6Wwajth1/aKY7Hkz9RN+D/35ar0/Tquc6Trasv
+         CTrzyN3SrKHSBFqeiaWEz5FX/pVNdplVVijJAEoi+jvNyPRUUyT6ZJCMy1SqURsO+Q2g
+         BH+bfA4xljFucUA/pgErbV05z4/aQS1zZwMD88vZPsJKzuhJkdZWusMpbNhFIySmFZYd
+         wHpA==
+X-Gm-Message-State: AOAM5324HqLe+GYm3sTMcwYnXgyrCpleq9Y+K15kyrnvg5o9iLXHtSs2
+        jr/GiiMVIp31Kg8a5e0CX57mmJcH9L0/
+X-Google-Smtp-Source: ABdhPJzY97BHAFZkptnkioi5Yin6rQN+bsUmxQgJVGadMA+ge/Ic9tKk6GJwGzZrCj5fKZ2qQjhC2R9FEs7m
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:69bc:7451:58ad:6585])
- (user=irogers job=sendgmr) by 2002:a25:6545:: with SMTP id
- z66mr13842733ybb.157.1634318500067; Fri, 15 Oct 2021 10:21:40 -0700 (PDT)
-Date:   Fri, 15 Oct 2021 10:21:12 -0700
+ (user=irogers job=sendgmr) by 2002:a25:be0c:: with SMTP id
+ h12mr13939933ybk.22.1634318502612; Fri, 15 Oct 2021 10:21:42 -0700 (PDT)
+Date:   Fri, 15 Oct 2021 10:21:13 -0700
 In-Reply-To: <20211015172132.1162559-1-irogers@google.com>
-Message-Id: <20211015172132.1162559-2-irogers@google.com>
+Message-Id: <20211015172132.1162559-3-irogers@google.com>
 Mime-Version: 1.0
 References: <20211015172132.1162559-1-irogers@google.com>
 X-Mailer: git-send-email 2.33.0.1079.g6e70778dc9-goog
-Subject: [PATCH v2 01/21] tools lib: Add list_sort.
+Subject: [PATCH v2 02/21] perf pmu: Add const to pmu_events_map.
 From:   Ian Rogers <irogers@google.com>
 To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Jin Yao <yao.jin@linux.intel.com>,
@@ -99,368 +99,357 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add list_sort.[ch] from the main kernel tree. The linux/bug.h #include
-is removed due to conflicting definitions. Add check-headers and modify
-perf build accordingly.
+The pmu_events_map is generated at compile time and used for lookup. For
+testing purposes we need to swap the map being used. Having the
+pmu_events_map be non-const is misleading as it may be an out argument.
+Make it const and update uses so they work on const too.
 
-MANIFEST and python-ext-sources fixes suggested by Arnaldo.
-
-Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
 Acked-by: Andi Kleen <ak@linux.intel.com>
+Reviewed-by: John Garry <john.garry@huawei.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/include/linux/list_sort.h    |  14 ++
- tools/lib/list_sort.c              | 252 +++++++++++++++++++++++++++++
- tools/perf/MANIFEST                |   1 +
- tools/perf/check-headers.sh        |   2 +
- tools/perf/util/Build              |   5 +
- tools/perf/util/python-ext-sources |   1 +
- 6 files changed, 275 insertions(+)
- create mode 100644 tools/include/linux/list_sort.h
- create mode 100644 tools/lib/list_sort.c
+ tools/perf/arch/arm64/util/pmu.c   |  2 +-
+ tools/perf/pmu-events/jevents.c    |  2 +-
+ tools/perf/pmu-events/pmu-events.h |  2 +-
+ tools/perf/tests/expand-cgroup.c   |  2 +-
+ tools/perf/tests/parse-metric.c    |  2 +-
+ tools/perf/tests/pmu-events.c      | 18 +++++++++---------
+ tools/perf/util/metricgroup.c      | 20 ++++++++++----------
+ tools/perf/util/metricgroup.h      |  4 ++--
+ tools/perf/util/pmu.c              | 10 +++++-----
+ tools/perf/util/pmu.h              |  6 +++---
+ tools/perf/util/s390-sample-raw.c  |  4 ++--
+ 11 files changed, 36 insertions(+), 36 deletions(-)
 
-diff --git a/tools/include/linux/list_sort.h b/tools/include/linux/list_sort.h
-new file mode 100644
-index 000000000000..453105f74e05
---- /dev/null
-+++ b/tools/include/linux/list_sort.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_LIST_SORT_H
-+#define _LINUX_LIST_SORT_H
-+
-+#include <linux/types.h>
-+
-+struct list_head;
-+
-+typedef int __attribute__((nonnull(2,3))) (*list_cmp_func_t)(void *,
-+		const struct list_head *, const struct list_head *);
-+
-+__attribute__((nonnull(2,3)))
-+void list_sort(void *priv, struct list_head *head, list_cmp_func_t cmp);
-+#endif
-diff --git a/tools/lib/list_sort.c b/tools/lib/list_sort.c
-new file mode 100644
-index 000000000000..10c067e3a8d2
---- /dev/null
-+++ b/tools/lib/list_sort.c
-@@ -0,0 +1,252 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/kernel.h>
-+#include <linux/compiler.h>
-+#include <linux/export.h>
-+#include <linux/string.h>
-+#include <linux/list_sort.h>
-+#include <linux/list.h>
-+
-+/*
-+ * Returns a list organized in an intermediate format suited
-+ * to chaining of merge() calls: null-terminated, no reserved or
-+ * sentinel head node, "prev" links not maintained.
-+ */
-+__attribute__((nonnull(2,3,4)))
-+static struct list_head *merge(void *priv, list_cmp_func_t cmp,
-+				struct list_head *a, struct list_head *b)
-+{
-+	struct list_head *head, **tail = &head;
-+
-+	for (;;) {
-+		/* if equal, take 'a' -- important for sort stability */
-+		if (cmp(priv, a, b) <= 0) {
-+			*tail = a;
-+			tail = &a->next;
-+			a = a->next;
-+			if (!a) {
-+				*tail = b;
-+				break;
-+			}
-+		} else {
-+			*tail = b;
-+			tail = &b->next;
-+			b = b->next;
-+			if (!b) {
-+				*tail = a;
-+				break;
-+			}
-+		}
-+	}
-+	return head;
-+}
-+
-+/*
-+ * Combine final list merge with restoration of standard doubly-linked
-+ * list structure.  This approach duplicates code from merge(), but
-+ * runs faster than the tidier alternatives of either a separate final
-+ * prev-link restoration pass, or maintaining the prev links
-+ * throughout.
-+ */
-+__attribute__((nonnull(2,3,4,5)))
-+static void merge_final(void *priv, list_cmp_func_t cmp, struct list_head *head,
-+			struct list_head *a, struct list_head *b)
-+{
-+	struct list_head *tail = head;
-+	u8 count = 0;
-+
-+	for (;;) {
-+		/* if equal, take 'a' -- important for sort stability */
-+		if (cmp(priv, a, b) <= 0) {
-+			tail->next = a;
-+			a->prev = tail;
-+			tail = a;
-+			a = a->next;
-+			if (!a)
-+				break;
-+		} else {
-+			tail->next = b;
-+			b->prev = tail;
-+			tail = b;
-+			b = b->next;
-+			if (!b) {
-+				b = a;
-+				break;
-+			}
-+		}
-+	}
-+
-+	/* Finish linking remainder of list b on to tail */
-+	tail->next = b;
-+	do {
-+		/*
-+		 * If the merge is highly unbalanced (e.g. the input is
-+		 * already sorted), this loop may run many iterations.
-+		 * Continue callbacks to the client even though no
-+		 * element comparison is needed, so the client's cmp()
-+		 * routine can invoke cond_resched() periodically.
-+		 */
-+		if (unlikely(!++count))
-+			cmp(priv, b, b);
-+		b->prev = tail;
-+		tail = b;
-+		b = b->next;
-+	} while (b);
-+
-+	/* And the final links to make a circular doubly-linked list */
-+	tail->next = head;
-+	head->prev = tail;
-+}
-+
-+/**
-+ * list_sort - sort a list
-+ * @priv: private data, opaque to list_sort(), passed to @cmp
-+ * @head: the list to sort
-+ * @cmp: the elements comparison function
-+ *
-+ * The comparison function @cmp must return > 0 if @a should sort after
-+ * @b ("@a > @b" if you want an ascending sort), and <= 0 if @a should
-+ * sort before @b *or* their original order should be preserved.  It is
-+ * always called with the element that came first in the input in @a,
-+ * and list_sort is a stable sort, so it is not necessary to distinguish
-+ * the @a < @b and @a == @b cases.
-+ *
-+ * This is compatible with two styles of @cmp function:
-+ * - The traditional style which returns <0 / =0 / >0, or
-+ * - Returning a boolean 0/1.
-+ * The latter offers a chance to save a few cycles in the comparison
-+ * (which is used by e.g. plug_ctx_cmp() in block/blk-mq.c).
-+ *
-+ * A good way to write a multi-word comparison is::
-+ *
-+ *	if (a->high != b->high)
-+ *		return a->high > b->high;
-+ *	if (a->middle != b->middle)
-+ *		return a->middle > b->middle;
-+ *	return a->low > b->low;
-+ *
-+ *
-+ * This mergesort is as eager as possible while always performing at least
-+ * 2:1 balanced merges.  Given two pending sublists of size 2^k, they are
-+ * merged to a size-2^(k+1) list as soon as we have 2^k following elements.
-+ *
-+ * Thus, it will avoid cache thrashing as long as 3*2^k elements can
-+ * fit into the cache.  Not quite as good as a fully-eager bottom-up
-+ * mergesort, but it does use 0.2*n fewer comparisons, so is faster in
-+ * the common case that everything fits into L1.
-+ *
-+ *
-+ * The merging is controlled by "count", the number of elements in the
-+ * pending lists.  This is beautifully simple code, but rather subtle.
-+ *
-+ * Each time we increment "count", we set one bit (bit k) and clear
-+ * bits k-1 .. 0.  Each time this happens (except the very first time
-+ * for each bit, when count increments to 2^k), we merge two lists of
-+ * size 2^k into one list of size 2^(k+1).
-+ *
-+ * This merge happens exactly when the count reaches an odd multiple of
-+ * 2^k, which is when we have 2^k elements pending in smaller lists,
-+ * so it's safe to merge away two lists of size 2^k.
-+ *
-+ * After this happens twice, we have created two lists of size 2^(k+1),
-+ * which will be merged into a list of size 2^(k+2) before we create
-+ * a third list of size 2^(k+1), so there are never more than two pending.
-+ *
-+ * The number of pending lists of size 2^k is determined by the
-+ * state of bit k of "count" plus two extra pieces of information:
-+ *
-+ * - The state of bit k-1 (when k == 0, consider bit -1 always set), and
-+ * - Whether the higher-order bits are zero or non-zero (i.e.
-+ *   is count >= 2^(k+1)).
-+ *
-+ * There are six states we distinguish.  "x" represents some arbitrary
-+ * bits, and "y" represents some arbitrary non-zero bits:
-+ * 0:  00x: 0 pending of size 2^k;           x pending of sizes < 2^k
-+ * 1:  01x: 0 pending of size 2^k; 2^(k-1) + x pending of sizes < 2^k
-+ * 2: x10x: 0 pending of size 2^k; 2^k     + x pending of sizes < 2^k
-+ * 3: x11x: 1 pending of size 2^k; 2^(k-1) + x pending of sizes < 2^k
-+ * 4: y00x: 1 pending of size 2^k; 2^k     + x pending of sizes < 2^k
-+ * 5: y01x: 2 pending of size 2^k; 2^(k-1) + x pending of sizes < 2^k
-+ * (merge and loop back to state 2)
-+ *
-+ * We gain lists of size 2^k in the 2->3 and 4->5 transitions (because
-+ * bit k-1 is set while the more significant bits are non-zero) and
-+ * merge them away in the 5->2 transition.  Note in particular that just
-+ * before the 5->2 transition, all lower-order bits are 11 (state 3),
-+ * so there is one list of each smaller size.
-+ *
-+ * When we reach the end of the input, we merge all the pending
-+ * lists, from smallest to largest.  If you work through cases 2 to
-+ * 5 above, you can see that the number of elements we merge with a list
-+ * of size 2^k varies from 2^(k-1) (cases 3 and 5 when x == 0) to
-+ * 2^(k+1) - 1 (second merge of case 5 when x == 2^(k-1) - 1).
-+ */
-+__attribute__((nonnull(2,3)))
-+void list_sort(void *priv, struct list_head *head, list_cmp_func_t cmp)
-+{
-+	struct list_head *list = head->next, *pending = NULL;
-+	size_t count = 0;	/* Count of pending */
-+
-+	if (list == head->prev)	/* Zero or one elements */
-+		return;
-+
-+	/* Convert to a null-terminated singly-linked list. */
-+	head->prev->next = NULL;
-+
-+	/*
-+	 * Data structure invariants:
-+	 * - All lists are singly linked and null-terminated; prev
-+	 *   pointers are not maintained.
-+	 * - pending is a prev-linked "list of lists" of sorted
-+	 *   sublists awaiting further merging.
-+	 * - Each of the sorted sublists is power-of-two in size.
-+	 * - Sublists are sorted by size and age, smallest & newest at front.
-+	 * - There are zero to two sublists of each size.
-+	 * - A pair of pending sublists are merged as soon as the number
-+	 *   of following pending elements equals their size (i.e.
-+	 *   each time count reaches an odd multiple of that size).
-+	 *   That ensures each later final merge will be at worst 2:1.
-+	 * - Each round consists of:
-+	 *   - Merging the two sublists selected by the highest bit
-+	 *     which flips when count is incremented, and
-+	 *   - Adding an element from the input as a size-1 sublist.
-+	 */
-+	do {
-+		size_t bits;
-+		struct list_head **tail = &pending;
-+
-+		/* Find the least-significant clear bit in count */
-+		for (bits = count; bits & 1; bits >>= 1)
-+			tail = &(*tail)->prev;
-+		/* Do the indicated merge */
-+		if (likely(bits)) {
-+			struct list_head *a = *tail, *b = a->prev;
-+
-+			a = merge(priv, cmp, b, a);
-+			/* Install the merged result in place of the inputs */
-+			a->prev = b->prev;
-+			*tail = a;
-+		}
-+
-+		/* Move one element from input list to pending */
-+		list->prev = pending;
-+		pending = list;
-+		list = list->next;
-+		pending->next = NULL;
-+		count++;
-+	} while (list);
-+
-+	/* End of input; merge together all the pending lists. */
-+	list = pending;
-+	pending = pending->prev;
-+	for (;;) {
-+		struct list_head *next = pending->prev;
-+
-+		if (!next)
-+			break;
-+		list = merge(priv, cmp, pending, list);
-+		pending = next;
-+	}
-+	/* The final merge, rebuilding prev links */
-+	merge_final(priv, cmp, head, pending, list);
-+}
-+EXPORT_SYMBOL(list_sort);
-diff --git a/tools/perf/MANIFEST b/tools/perf/MANIFEST
-index f05c4d48fd7e..e728615a3830 100644
---- a/tools/perf/MANIFEST
-+++ b/tools/perf/MANIFEST
-@@ -17,6 +17,7 @@ tools/lib/symbol/kallsyms.c
- tools/lib/symbol/kallsyms.h
- tools/lib/find_bit.c
- tools/lib/bitmap.c
-+tools/lib/list_sort.c
- tools/lib/str_error_r.c
- tools/lib/vsprintf.c
- tools/lib/zalloc.c
-diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index f1e46277e822..30ecf3a0f68b 100755
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -26,6 +26,7 @@ include/vdso/bits.h
- include/linux/const.h
- include/vdso/const.h
- include/linux/hash.h
-+include/linux/list-sort.h
- include/uapi/linux/hw_breakpoint.h
- arch/x86/include/asm/disabled-features.h
- arch/x86/include/asm/required-features.h
-@@ -150,6 +151,7 @@ check include/uapi/linux/mman.h       '-I "^#include <\(uapi/\)*asm/mman.h>"'
- check include/linux/build_bug.h       '-I "^#\(ifndef\|endif\)\( \/\/\)* static_assert$"'
- check include/linux/ctype.h	      '-I "isdigit("'
- check lib/ctype.c		      '-I "^EXPORT_SYMBOL" -I "^#include <linux/export.h>" -B'
-+check lib/list_sort.c		      '-I "^#include <linux/bug.h>"'
+diff --git a/tools/perf/arch/arm64/util/pmu.c b/tools/perf/arch/arm64/util/pmu.c
+index 2234fbd0a912..d3a18f9c85f6 100644
+--- a/tools/perf/arch/arm64/util/pmu.c
++++ b/tools/perf/arch/arm64/util/pmu.c
+@@ -3,7 +3,7 @@
+ #include "../../../util/cpumap.h"
+ #include "../../../util/pmu.h"
  
- # diff non-symmetric files
- check_2 tools/perf/arch/x86/entry/syscalls/syscall_64.tbl arch/x86/entry/syscalls/syscall_64.tbl
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index f2914d5bed6e..15b2366ad384 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -138,6 +138,7 @@ perf-y += expr.o
- perf-y += branch.o
- perf-y += mem2node.o
- perf-y += clockid.o
-+perf-y += list_sort.o
+-struct pmu_events_map *pmu_events_map__find(void)
++const struct pmu_events_map *pmu_events_map__find(void)
+ {
+ 	struct perf_pmu *pmu = NULL;
  
- perf-$(CONFIG_LIBBPF) += bpf-loader.o
- perf-$(CONFIG_LIBBPF) += bpf_map.o
-@@ -315,3 +316,7 @@ $(OUTPUT)util/hweight.o: ../lib/hweight.c FORCE
- $(OUTPUT)util/vsprintf.o: ../lib/vsprintf.c FORCE
- 	$(call rule_mkdir)
- 	$(call if_changed_dep,cc_o_c)
-+
-+$(OUTPUT)util/list_sort.o: ../lib/list_sort.c FORCE
-+	$(call rule_mkdir)
-+	$(call if_changed_dep,cc_o_c)
-diff --git a/tools/perf/util/python-ext-sources b/tools/perf/util/python-ext-sources
-index d7c976671e3a..a685d20165f7 100644
---- a/tools/perf/util/python-ext-sources
-+++ b/tools/perf/util/python-ext-sources
-@@ -18,6 +18,7 @@ util/mmap.c
- util/namespaces.c
- ../lib/bitmap.c
- ../lib/find_bit.c
-+../lib/list_sort.c
- ../lib/hweight.c
- ../lib/string.c
- ../lib/vsprintf.c
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index 19497e4f8a86..5624a37d6f93 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -798,7 +798,7 @@ static bool is_sys_dir(char *fname)
+ 
+ static void print_mapping_table_prefix(FILE *outfp)
+ {
+-	fprintf(outfp, "struct pmu_events_map pmu_events_map[] = {\n");
++	fprintf(outfp, "const struct pmu_events_map pmu_events_map[] = {\n");
+ }
+ 
+ static void print_mapping_table_suffix(FILE *outfp)
+diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
+index 5c2bf7275c1c..42c6db6bedec 100644
+--- a/tools/perf/pmu-events/pmu-events.h
++++ b/tools/perf/pmu-events/pmu-events.h
+@@ -53,7 +53,7 @@ struct pmu_sys_events {
+  * Global table mapping each known CPU for the architecture to its
+  * table of PMU events.
+  */
+-extern struct pmu_events_map pmu_events_map[];
++extern const struct pmu_events_map pmu_events_map[];
+ extern struct pmu_sys_events pmu_sys_event_tables[];
+ 
+ #endif
+diff --git a/tools/perf/tests/expand-cgroup.c b/tools/perf/tests/expand-cgroup.c
+index 0e46aeb843ce..aaad51aba12f 100644
+--- a/tools/perf/tests/expand-cgroup.c
++++ b/tools/perf/tests/expand-cgroup.c
+@@ -193,7 +193,7 @@ static int expand_metric_events(void)
+ 			.metric_name	= NULL,
+ 		},
+ 	};
+-	struct pmu_events_map ev_map = {
++	const struct pmu_events_map ev_map = {
+ 		.cpuid		= "test",
+ 		.version	= "1",
+ 		.type		= "core",
+diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
+index 4f6f4904e852..dfc797ecc750 100644
+--- a/tools/perf/tests/parse-metric.c
++++ b/tools/perf/tests/parse-metric.c
+@@ -79,7 +79,7 @@ static struct pmu_event pme_test[] = {
+ }
+ };
+ 
+-static struct pmu_events_map map = {
++static const struct pmu_events_map map = {
+ 	.cpuid		= "test",
+ 	.version	= "1",
+ 	.type		= "core",
+diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+index d3534960ed25..8a1fdcd072f5 100644
+--- a/tools/perf/tests/pmu-events.c
++++ b/tools/perf/tests/pmu-events.c
+@@ -242,9 +242,9 @@ static bool is_same(const char *reference, const char *test)
+ 	return !strcmp(reference, test);
+ }
+ 
+-static struct pmu_events_map *__test_pmu_get_events_map(void)
++static const struct pmu_events_map *__test_pmu_get_events_map(void)
+ {
+-	struct pmu_events_map *map;
++	const struct pmu_events_map *map;
+ 
+ 	for (map = &pmu_events_map[0]; map->cpuid; map++) {
+ 		if (!strcmp(map->cpuid, "testcpu"))
+@@ -421,7 +421,7 @@ static int compare_alias_to_test_event(struct perf_pmu_alias *alias,
+ static int test_pmu_event_table(void)
+ {
+ 	struct pmu_event *sys_event_tables = __test_pmu_get_sys_events_table();
+-	struct pmu_events_map *map = __test_pmu_get_events_map();
++	const struct pmu_events_map *map = __test_pmu_get_events_map();
+ 	struct pmu_event *table;
+ 	int map_events = 0, expected_events;
+ 
+@@ -518,7 +518,7 @@ static int __test_core_pmu_event_aliases(char *pmu_name, int *count)
+ 	struct perf_pmu *pmu;
+ 	LIST_HEAD(aliases);
+ 	int res = 0;
+-	struct pmu_events_map *map = __test_pmu_get_events_map();
++	const struct pmu_events_map *map = __test_pmu_get_events_map();
+ 	struct perf_pmu_alias *a, *tmp;
+ 
+ 	if (!map)
+@@ -571,7 +571,7 @@ static int __test_uncore_pmu_event_aliases(struct perf_pmu_test_pmu *test_pmu)
+ 	struct perf_pmu *pmu = &test_pmu->pmu;
+ 	const char *pmu_name = pmu->name;
+ 	struct perf_pmu_alias *a, *tmp, *alias;
+-	struct pmu_events_map *map;
++	const struct pmu_events_map *map;
+ 	LIST_HEAD(aliases);
+ 	int res = 0;
+ 
+@@ -825,7 +825,7 @@ struct metric {
+ 
+ static int resolve_metric_simple(struct expr_parse_ctx *pctx,
+ 				 struct list_head *compound_list,
+-				 struct pmu_events_map *map,
++				 const struct pmu_events_map *map,
+ 				 const char *metric_name)
+ {
+ 	struct hashmap_entry *cur, *cur_tmp;
+@@ -885,8 +885,8 @@ static int resolve_metric_simple(struct expr_parse_ctx *pctx,
+ 
+ static int test_parsing(void)
+ {
+-	struct pmu_events_map *cpus_map = pmu_events_map__find();
+-	struct pmu_events_map *map;
++	const struct pmu_events_map *cpus_map = pmu_events_map__find();
++	const struct pmu_events_map *map;
+ 	struct pmu_event *pe;
+ 	int i, j, k;
+ 	int ret = 0;
+@@ -1027,7 +1027,7 @@ static int metric_parse_fake(const char *str)
+  */
+ static int test_parsing_fake(void)
+ {
+-	struct pmu_events_map *map;
++	const struct pmu_events_map *map;
+ 	struct pmu_event *pe;
+ 	unsigned int i, j;
+ 	int err = 0;
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 8ba5370f5f64..74ea0a3540ce 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -623,7 +623,7 @@ static int metricgroup__print_sys_event_iter(struct pmu_event *pe, void *data)
+ void metricgroup__print(bool metrics, bool metricgroups, char *filter,
+ 			bool raw, bool details)
+ {
+-	struct pmu_events_map *map = pmu_events_map__find();
++	const struct pmu_events_map *map = pmu_events_map__find();
+ 	struct pmu_event *pe;
+ 	int i;
+ 	struct rblist groups;
+@@ -910,7 +910,7 @@ static int __add_metric(struct list_head *metric_list,
+ 		     match_metric(__pe->metric_name, __metric)))
+ 
+ struct pmu_event *metricgroup__find_metric(const char *metric,
+-					   struct pmu_events_map *map)
++					   const struct pmu_events_map *map)
+ {
+ 	struct pmu_event *pe;
+ 	int i;
+@@ -977,7 +977,7 @@ static int add_metric(struct list_head *metric_list,
+ static int __resolve_metric(struct metric *m,
+ 			    bool metric_no_group,
+ 			    struct list_head *metric_list,
+-			    struct pmu_events_map *map,
++			    const struct pmu_events_map *map,
+ 			    struct expr_ids *ids)
+ {
+ 	struct hashmap_entry *cur;
+@@ -1025,7 +1025,7 @@ static int __resolve_metric(struct metric *m,
+ 
+ static int resolve_metric(bool metric_no_group,
+ 			  struct list_head *metric_list,
+-			  struct pmu_events_map *map,
++			  const struct pmu_events_map *map,
+ 			  struct expr_ids *ids)
+ {
+ 	struct metric *m;
+@@ -1099,7 +1099,7 @@ static int metricgroup__add_metric_sys_event_iter(struct pmu_event *pe,
+ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
+ 				   struct strbuf *events,
+ 				   struct list_head *metric_list,
+-				   struct pmu_events_map *map)
++				   const struct pmu_events_map *map)
+ {
+ 	struct expr_ids ids = { .cnt = 0, };
+ 	struct pmu_event *pe;
+@@ -1173,7 +1173,7 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
+ static int metricgroup__add_metric_list(const char *list, bool metric_no_group,
+ 					struct strbuf *events,
+ 					struct list_head *metric_list,
+-					struct pmu_events_map *map)
++					const struct pmu_events_map *map)
+ {
+ 	char *llist, *nlist, *p;
+ 	int ret = -EINVAL;
+@@ -1230,7 +1230,7 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
+ 			bool metric_no_merge,
+ 			struct perf_pmu *fake_pmu,
+ 			struct rblist *metric_events,
+-			struct pmu_events_map *map)
++			const struct pmu_events_map *map)
+ {
+ 	struct parse_events_error parse_error;
+ 	struct strbuf extra_events;
+@@ -1266,14 +1266,14 @@ int metricgroup__parse_groups(const struct option *opt,
+ 			      struct rblist *metric_events)
+ {
+ 	struct evlist *perf_evlist = *(struct evlist **)opt->value;
+-	struct pmu_events_map *map = pmu_events_map__find();
++	const struct pmu_events_map *map = pmu_events_map__find();
+ 
+ 	return parse_groups(perf_evlist, str, metric_no_group,
+ 			    metric_no_merge, NULL, metric_events, map);
+ }
+ 
+ int metricgroup__parse_groups_test(struct evlist *evlist,
+-				   struct pmu_events_map *map,
++				   const struct pmu_events_map *map,
+ 				   const char *str,
+ 				   bool metric_no_group,
+ 				   bool metric_no_merge,
+@@ -1285,7 +1285,7 @@ int metricgroup__parse_groups_test(struct evlist *evlist,
+ 
+ bool metricgroup__has_metric(const char *metric)
+ {
+-	struct pmu_events_map *map = pmu_events_map__find();
++	const struct pmu_events_map *map = pmu_events_map__find();
+ 	struct pmu_event *pe;
+ 	int i;
+ 
+diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
+index cc4a92492a61..c931596557bf 100644
+--- a/tools/perf/util/metricgroup.h
++++ b/tools/perf/util/metricgroup.h
+@@ -44,9 +44,9 @@ int metricgroup__parse_groups(const struct option *opt,
+ 			      bool metric_no_merge,
+ 			      struct rblist *metric_events);
+ struct pmu_event *metricgroup__find_metric(const char *metric,
+-					   struct pmu_events_map *map);
++					   const struct pmu_events_map *map);
+ int metricgroup__parse_groups_test(struct evlist *evlist,
+-				   struct pmu_events_map *map,
++				   const struct pmu_events_map *map,
+ 				   const char *str,
+ 				   bool metric_no_group,
+ 				   bool metric_no_merge,
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index bdabd62170d2..4bcdc595ce5e 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -710,9 +710,9 @@ static char *perf_pmu__getcpuid(struct perf_pmu *pmu)
+ 	return cpuid;
+ }
+ 
+-struct pmu_events_map *perf_pmu__find_map(struct perf_pmu *pmu)
++const struct pmu_events_map *perf_pmu__find_map(struct perf_pmu *pmu)
+ {
+-	struct pmu_events_map *map;
++	const struct pmu_events_map *map;
+ 	char *cpuid = perf_pmu__getcpuid(pmu);
+ 	int i;
+ 
+@@ -737,7 +737,7 @@ struct pmu_events_map *perf_pmu__find_map(struct perf_pmu *pmu)
+ 	return map;
+ }
+ 
+-struct pmu_events_map *__weak pmu_events_map__find(void)
++const struct pmu_events_map *__weak pmu_events_map__find(void)
+ {
+ 	return perf_pmu__find_map(NULL);
+ }
+@@ -824,7 +824,7 @@ bool pmu_uncore_alias_match(const char *pmu_name, const char *name)
+  * as aliases.
+  */
+ void pmu_add_cpu_aliases_map(struct list_head *head, struct perf_pmu *pmu,
+-			     struct pmu_events_map *map)
++			     const struct pmu_events_map *map)
+ {
+ 	int i;
+ 	const char *name = pmu->name;
+@@ -859,7 +859,7 @@ void pmu_add_cpu_aliases_map(struct list_head *head, struct perf_pmu *pmu,
+ 
+ static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
+ {
+-	struct pmu_events_map *map;
++	const struct pmu_events_map *map;
+ 
+ 	map = perf_pmu__find_map(pmu);
+ 	if (!map)
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index 394898b07fd9..dd5cdde6a3d0 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -120,10 +120,10 @@ int perf_pmu__test(void);
+ 
+ struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu);
+ void pmu_add_cpu_aliases_map(struct list_head *head, struct perf_pmu *pmu,
+-			     struct pmu_events_map *map);
++			     const struct pmu_events_map *map);
+ 
+-struct pmu_events_map *perf_pmu__find_map(struct perf_pmu *pmu);
+-struct pmu_events_map *pmu_events_map__find(void);
++const struct pmu_events_map *perf_pmu__find_map(struct perf_pmu *pmu);
++const struct pmu_events_map *pmu_events_map__find(void);
+ bool pmu_uncore_alias_match(const char *pmu_name, const char *name);
+ void perf_pmu_free_alias(struct perf_pmu_alias *alias);
+ 
+diff --git a/tools/perf/util/s390-sample-raw.c b/tools/perf/util/s390-sample-raw.c
+index 08ec3c3ae0ee..13f33d1ddb78 100644
+--- a/tools/perf/util/s390-sample-raw.c
++++ b/tools/perf/util/s390-sample-raw.c
+@@ -135,7 +135,7 @@ static int get_counterset_start(int setnr)
+  * the name of this counter.
+  * If no match is found a NULL pointer is returned.
+  */
+-static const char *get_counter_name(int set, int nr, struct pmu_events_map *map)
++static const char *get_counter_name(int set, int nr, const struct pmu_events_map *map)
+ {
+ 	int rc, event_nr, wanted = get_counterset_start(set) + nr;
+ 
+@@ -159,7 +159,7 @@ static void s390_cpumcfdg_dump(struct perf_sample *sample)
+ 	unsigned char *buf = sample->raw_data;
+ 	const char *color = PERF_COLOR_BLUE;
+ 	struct cf_ctrset_entry *cep, ce;
+-	struct pmu_events_map *map;
++	const struct pmu_events_map *map;
+ 	u64 *p;
+ 
+ 	map = pmu_events_map__find();
 -- 
 2.33.0.1079.g6e70778dc9-goog
 
