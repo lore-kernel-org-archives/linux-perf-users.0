@@ -2,60 +2,60 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0B8C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Oct 2021 17:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06290C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Oct 2021 17:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1590611C3
-	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Oct 2021 17:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8A4F611C3
+	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Oct 2021 17:22:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242396AbhJORZD (ORCPT
+        id S242398AbhJORZD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Fri, 15 Oct 2021 13:25:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40224 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242355AbhJORYh (ORCPT
+        with ESMTP id S242265AbhJORYi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 15 Oct 2021 13:24:37 -0400
+        Fri, 15 Oct 2021 13:24:38 -0400
 Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7009AC06177D
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Oct 2021 10:22:17 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id i21-20020a253b15000000b005b9c0fbba45so12022988yba.20
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Oct 2021 10:22:17 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D2B9C0613DF
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Oct 2021 10:22:19 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id v70-20020a256149000000b005ba4d61ea0fso11928633ybb.22
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Oct 2021 10:22:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=MsTapPuxrslkXVa4Az44ebxjjcE0+NdaH/CgbbpQfDI=;
-        b=Iv7SHiAysrv4ian0IwNiHUB7dWTluTktan6o4uQ2b2Qhtxs5ZL9yLzNcUi9CFZSB7I
-         vF2N1iOZHTcronzI6VONnXKO/SrZcpS7KOm3Mb1O8qYsiN84TDz6lpbKRJ2fcxqpPCtb
-         +yOoVLIhlaXQnk7pCfbwZxCKbepEv5/3nktTS1nls0PM/PuORMLD/pO60Quh5sYHDSwS
-         14dk/IosRP1iyxQiDay6X52VBIRCOfdtK8E99db2kgV9vGhR/11Y923cAF7a1zYYm2i5
-         YtH7VA4SXITOWp4RqTDMSftIh0X8MQJbIduViMkvq6mhHJvIufWj8rWDLpi+4u2QMWyz
-         YBrQ==
+        bh=ehHQEfD5QF795LiWNu1NX0B6LCS/5JtCJ4EKdRcTYBI=;
+        b=j90US0DFz1tmT/Uu1SLfE7Lv7Ue6pjlkJRmZkFtPKlbes51pt3GqiGcNwSBmlLmb+L
+         HjFBduRPbQjsUXGhNFbHthZyPyr7Gcg2TLnzlDsqd7iWoKMiIHf1dfJ+suwLBUbJBa2V
+         DnH1Rf1+PzyLZDc0bjpp2oZb5qN2MIXnFQ5EQQKzCdvX5sNcJqr3KyEiVSOP9cC25bzc
+         JhN2TliQHI57R2r2VUXL5ibwviudL2OmYby9IYXjFv2/ir685UoMLqfX4vTjy0N27hpg
+         e9Ei2pVdiQktA7FxFfh0Fjljpe+Rf2vybj2fklDpLChxrHL4jlig8DpnVQUcIqNIlHoc
+         DFPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=MsTapPuxrslkXVa4Az44ebxjjcE0+NdaH/CgbbpQfDI=;
-        b=X5JLu1c/AX7PkxFVGSBFSuNEq4Dd/B4VpHiKTSAe0jDzFmw8irs29YJdvcQTCCZF5+
-         XSVQcCgD7X0wP+QknohCLyFR0JnRDwbRcmCZheN2ZOHea8DFptO0gbA23rD8sF7zf/tc
-         0Jn2b4a2Zq2A+d7qphPKH4cig+9xbRIIln3X6HAKBc8vs5EY4hFigvG29M3dIPPMdCDX
-         Qc5L8VindmmjBAEtZcOc3vuVZezc8b1XruLu0HKW4WUvclR/uJg4v+ZoPz1JNLMwy6gS
-         GiC7iC0KB/MPo55BTXrreK607XCjCMYNKMfKuHOe8icQIseoVForjumOr6fyIFZYWUNa
-         JErA==
-X-Gm-Message-State: AOAM531LK4G7qFP8x6Kg9x9bo3jpTBv8r//8XMQ9FzaRACgG2Q6z5Dsr
-        fuqFjYNBWZwcXYEjpMqFIiXI9IJlK0WF
-X-Google-Smtp-Source: ABdhPJyWS49DXwfiO/DJ8yqeqXNFq0rYRURzIOWOAPlUkwlcFNePesPso5pUzs5vQhClkAUrj9GZ7uR+1+a6
+        bh=ehHQEfD5QF795LiWNu1NX0B6LCS/5JtCJ4EKdRcTYBI=;
+        b=cD6TkpSLOe5DANzPNSW/+qpZQb9q6x3JDq9RBkUnqoLKsgID3qiEulyUeBk86qs9yL
+         L/H0XwdZ1eg3CHW/MXA0jdz2bfTZthmFmy1ZJYz6VQ5UkQih89RC+1Nt2uXe9EPt/gDl
+         W/V2gGCr533WZjzjmKxpe3+tAXzM6YZBaTLccuV4Sz5vIUESFSnuhgq/COod05/oqVBa
+         OpUXKDU0ZnMhOvwTNjss9kiHiyHsXbK8SNyZfW/0OD1KePdHeNc6xy9K6Vli8/NsX7gi
+         jlNWyKAM0g9niix8b7OekVobE/kJzfhi1z8Ow9R7FUCR2/ducEowxYVQpQlcIlDGQ4iN
+         2t9Q==
+X-Gm-Message-State: AOAM531JDt1HRNFjv8zxbIahE0EuXO5P3hMwoSM2kacPyg7QEWIB4tN6
+        ZIEXvnRFabUnWOquRkcCSFPQR9LPSv91
+X-Google-Smtp-Source: ABdhPJwc0qGJHldel/2iQhYmOIv1lBvvaR0ABQCNqCfnXjJHOViy+QQ07XVw5n3mNV4wi/KAtS3LCrhBzT/C
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:69bc:7451:58ad:6585])
- (user=irogers job=sendgmr) by 2002:a25:2a91:: with SMTP id
- q139mr14291380ybq.146.1634318536390; Fri, 15 Oct 2021 10:22:16 -0700 (PDT)
-Date:   Fri, 15 Oct 2021 10:21:27 -0700
+ (user=irogers job=sendgmr) by 2002:a25:478b:: with SMTP id
+ u133mr14382110yba.422.1634318538682; Fri, 15 Oct 2021 10:22:18 -0700 (PDT)
+Date:   Fri, 15 Oct 2021 10:21:28 -0700
 In-Reply-To: <20211015172132.1162559-1-irogers@google.com>
-Message-Id: <20211015172132.1162559-17-irogers@google.com>
+Message-Id: <20211015172132.1162559-18-irogers@google.com>
 Mime-Version: 1.0
 References: <20211015172132.1162559-1-irogers@google.com>
 X-Mailer: git-send-email 2.33.0.1079.g6e70778dc9-goog
-Subject: [PATCH v2 16/21] perf metric: Encode and use metric-id as qualifier
+Subject: [PATCH v2 17/21] perf expr: Add subset utility.
 From:   Ian Rogers <irogers@google.com>
 To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Jin Yao <yao.jin@linux.intel.com>,
@@ -99,577 +99,55 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-For a metric like IPC a group of events like {instructions,cycles}:W
-would be formed. If the events names were changed in parsing then the
-metric expression parser would fail to find them. This change makes the
-event encoding be something like {instructions/metric-id=instructions/,
-cycles/metric-id=cycles/} and then uses the evsel's stable metric-id
-value to locate the events. This fixes the case that an event is
-restricted to user because of the paranoia setting:
-
-    $ echo 2 > /proc/sys/kernel/perf_event_paranoid
-    $ perf stat -M IPC /bin/true
-     Performance counter stats for '/bin/true':
-
-               150,298      inst_retired.any:u        #      0.77 IPC
-               187,095      cpu_clk_unhalted.thread:u
-
-           0.002042731 seconds time elapsed
-
-           0.000000000 seconds user
-           0.002377000 seconds sys
-
-Adding the metric-id as a qualifier has a complication in that
-qualifiers will become embedded in qualifiers. For example, msr/tsc/
-could become msr/tsc,metric-id=msr/tsc// which will fail parse-events.
-To solve this problem the metric is encoded and decoded for the
-metric-id with !<num> standing in for an encoded value. Previously !
-wasn't parsed. With this msr/tsc/ becomese msr/tsc,metric-id=msr!3tsc!3/
-
-The metric expression parser is changed so that @ isn't changed to /,
-instead this is done when the ID is encoded for parse events.
-
-metricgroup__add_metric_non_group and metricgroup__add_metric_weak_group
-need to inject the metric-id qualifier, so to avoid repetition they are
-merged into a single metricgroup__build_event_string with error codes
-more rigorously checked.
-
-stat-shadow's prepare_metric uses the metric-id to match the metricgroup
-code.
-
-As "metric-id=..." is added to all events, it is adding during testing
-with the fake PMU. This complicates pmu_str_check code as
-PE_PMU_EVENT_FAKE won't match as part of a configuration. The testing
-fake PMU case is fixed so that if a known qualifier with an ! is parsed
-then it isn't reported as a fake PMU. This is sufficient to pass all
-testing but it and the original mechanism are somewhat brittle.
+Add a helper that returns true if all the IDs in needles are present in
+haystack. Later this will be used in sharing events between metrics.
 
 Acked-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/expr.c        |   4 +-
- tools/perf/tests/pmu-events.c  |  13 +-
- tools/perf/util/expr.l         |   6 +-
- tools/perf/util/metricgroup.c  | 263 ++++++++++++++++++++++++++-------
- tools/perf/util/parse-events.l |  17 ++-
- tools/perf/util/stat-shadow.c  |  20 +--
- 6 files changed, 242 insertions(+), 81 deletions(-)
+ tools/perf/util/expr.c | 15 +++++++++++++++
+ tools/perf/util/expr.h |  2 ++
+ 2 files changed, 17 insertions(+)
 
-diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-index 718c13e5a0f4..077783223ce0 100644
---- a/tools/perf/tests/expr.c
-+++ b/tools/perf/tests/expr.c
-@@ -129,9 +129,9 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
- 			expr__find_ids("EVENT1\\,param\\=?@ + EVENT2\\,param\\=?@",
- 					NULL, ctx) == 0);
- 	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 2);
--	TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT1,param=3/",
-+	TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT1,param=3@",
- 						    (void **)&val_ptr));
--	TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT2,param=3/",
-+	TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT2,param=3@",
- 						    (void **)&val_ptr));
- 
- 	/* Only EVENT1 or EVENT2 need be measured depending on the value of smt_on. */
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index 71b08c296410..50b1299fe643 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -761,6 +761,7 @@ static int check_parse_id(const char *id, struct parse_events_error *error,
- {
- 	struct evlist *evlist;
- 	int ret;
-+	char *dup, *cur;
- 
- 	/* Numbers are always valid. */
- 	if (is_number(id))
-@@ -769,7 +770,17 @@ static int check_parse_id(const char *id, struct parse_events_error *error,
- 	evlist = evlist__new();
- 	if (!evlist)
- 		return -ENOMEM;
--	ret = __parse_events(evlist, id, error, fake_pmu);
-+
-+	dup = strdup(id);
-+	if (!dup)
-+		return -ENOMEM;
-+
-+	for (cur = strchr(dup, '@') ; cur; cur = strchr(++cur, '@'))
-+		*cur = '/';
-+
-+	ret = __parse_events(evlist, dup, error, fake_pmu);
-+	free(dup);
-+
- 	evlist__delete(evlist);
- 	return ret;
- }
-diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
-index 702fdf6456ca..bd20f33418ba 100644
---- a/tools/perf/util/expr.l
-+++ b/tools/perf/util/expr.l
-@@ -41,11 +41,9 @@ static char *normalize(char *str, int runtime)
- 	char *dst = str;
- 
- 	while (*str) {
--		if (*str == '@')
--			*dst++ = '/';
--		else if (*str == '\\')
-+		if (*str == '\\')
- 			*dst++ = *++str;
--		 else if (*str == '?') {
-+		else if (*str == '?') {
- 			char *paramval;
- 			int i = 0;
- 			int size = asprintf(&paramval, "%d", runtime);
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index b48836d7c080..9c16a956fd2c 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -212,13 +212,13 @@ static void metric__free(struct metric *m)
- 	free(m);
+diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+index 5657222aaa25..77c6ad81a923 100644
+--- a/tools/perf/util/expr.c
++++ b/tools/perf/util/expr.c
+@@ -211,6 +211,21 @@ int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
+ 	return hashmap__find(ctx->ids, id, (void **)data) ? 0 : -1;
  }
  
--static bool contains_event(struct evsel **metric_events, int num_events,
--			const char *event_name)
-+static bool contains_metric_id(struct evsel **metric_events, int num_events,
-+			       const char *metric_id)
- {
- 	int i;
- 
- 	for (i = 0; i < num_events; i++) {
--		if (!strcmp(metric_events[i]->name, event_name))
-+		if (!strcmp(evsel__metric_id(metric_events[i]), metric_id))
- 			return true;
- 	}
- 	return false;
-@@ -259,6 +259,7 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
- {
- 	struct evsel *ev, *current_leader = NULL;
- 	struct expr_id_data *val_ptr;
-+	const char *metric_id;
- 	int i = 0, matched_events = 0, events_to_match;
- 	int idnum = (int)hashmap__size(pctx->ids);
- 
-@@ -300,10 +301,11 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
- 			 * different sibling groups aren't both added to
- 			 * metric_events.
- 			 */
--			if (contains_event(metric_events, matched_events, ev->name))
-+			metric_id = evsel__metric_id(ev);
-+			if (contains_metric_id(metric_events, matched_events, metric_id))
- 				continue;
- 			/* Does this event belong to the parse context? */
--			if (hashmap__find(pctx->ids, ev->name, (void **)&val_ptr))
-+			if (hashmap__find(pctx->ids, metric_id, (void **)&val_ptr))
- 				metric_events[matched_events++] = ev;
- 
- 			if (matched_events == events_to_match)
-@@ -347,6 +349,7 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
- 		 * for each pmu. Set the metric leader of such events to be the
- 		 * event that appears in metric_events.
- 		 */
-+		metric_id = evsel__metric_id(ev);
- 		evlist__for_each_entry_continue(perf_evlist, ev) {
- 			/*
- 			 * If events are grouped then the search can terminate
-@@ -356,7 +359,7 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
- 			    ev->core.leader != metric_events[i]->core.leader &&
- 			    evsel_same_pmu_or_none(evsel__leader(ev), evsel__leader(metric_events[i])))
- 				break;
--			if (!strcmp(metric_events[i]->name, ev->name)) {
-+			if (!strcmp(evsel__metric_id(metric_events[i]), metric_id)) {
- 				set_bit(ev->core.idx, evlist_used);
- 				ev->metric_leader = metric_events[i];
- 			}
-@@ -724,50 +727,191 @@ void metricgroup__print(bool metrics, bool metricgroups, char *filter,
- 	strlist__delete(metriclist);
- }
- 
--static void metricgroup__add_metric_weak_group(struct strbuf *events,
--					       struct expr_parse_ctx *ctx)
-+static const char *code_characters = ",-=@";
-+
-+static int encode_metric_id(struct strbuf *sb, const char *x)
++bool expr__subset_of_ids(struct expr_parse_ctx *haystack,
++			 struct expr_parse_ctx *needles)
 +{
-+	char *c;
-+	int ret = 0;
++	struct hashmap_entry *cur;
++	size_t bkt;
++	struct expr_id_data *data;
 +
-+	for (; *x; x++) {
-+		c = strchr(code_characters, *x);
-+		if (c) {
-+			ret = strbuf_addch(sb, '!');
-+			if (ret)
-+				break;
-+
-+			ret = strbuf_addch(sb, '0' + (c - code_characters));
-+			if (ret)
-+				break;
-+		} else {
-+			ret = strbuf_addch(sb, *x);
-+			if (ret)
-+				break;
-+		}
++	hashmap__for_each_entry(needles->ids, cur, bkt) {
++		if (expr__get_id(haystack, cur->key, &data))
++			return false;
 +	}
-+	return ret;
++	return true;
 +}
 +
-+static int decode_metric_id(struct strbuf *sb, const char *x)
-+{
-+	const char *orig = x;
-+	size_t i;
-+	char c;
-+	int ret;
 +
-+	for (; *x; x++) {
-+		c = *x;
-+		if (*x == '!') {
-+			x++;
-+			i = *x - '0';
-+			if (i > strlen(code_characters)) {
-+				pr_err("Bad metric-id encoding in: '%s'", orig);
-+				return -1;
-+			}
-+			c = code_characters[i];
-+		}
-+		ret = strbuf_addch(sb, c);
-+		if (ret)
-+			return ret;
-+	}
-+	return 0;
-+}
-+
-+static int decode_all_metric_ids(struct evlist *perf_evlist)
-+{
-+	struct evsel *ev;
-+	struct strbuf sb = STRBUF_INIT;
-+	char *cur;
-+	int ret = 0;
-+
-+	evlist__for_each_entry(perf_evlist, ev) {
-+		if (!ev->metric_id)
-+			continue;
-+
-+		ret = strbuf_setlen(&sb, 0);
-+		if (ret)
-+			break;
-+
-+		ret = decode_metric_id(&sb, ev->metric_id);
-+		if (ret)
-+			break;
-+
-+		free((char *)ev->metric_id);
-+		ev->metric_id = strdup(sb.buf);
-+		if (!ev->metric_id) {
-+			ret = -ENOMEM;
-+			break;
-+		}
-+		/*
-+		 * If the name is just the parsed event, use the metric-id to
-+		 * give a more friendly display version.
-+		 */
-+		if (strstr(ev->name, "metric-id=")) {
-+			free(ev->name);
-+			for (cur = strchr(sb.buf, '@') ; cur; cur = strchr(++cur, '@'))
-+				*cur = '/';
-+
-+			ev->name = strdup(sb.buf);
-+			if (!ev->name) {
-+				ret = -ENOMEM;
-+				break;
-+			}
-+		}
-+	}
-+	strbuf_release(&sb);
-+	return ret;
-+}
-+
-+static int metricgroup__build_event_string(struct strbuf *events,
-+					   const struct expr_parse_ctx *ctx,
-+					   bool has_constraint)
+ int expr__resolve_id(struct expr_parse_ctx *ctx, const char *id,
+ 		     struct expr_id_data **datap)
  {
- 	struct hashmap_entry *cur;
- 	size_t bkt;
- 	bool no_group = true, has_duration = false;
-+	int ret = 0;
-+
-+#define RETURN_IF_NON_ZERO(x) do { if (x) return x; } while (0)
+diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+index c6e534f633c3..cf81f9166dbb 100644
+--- a/tools/perf/util/expr.h
++++ b/tools/perf/util/expr.h
+@@ -43,6 +43,8 @@ int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val);
+ int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref);
+ int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
+ 		 struct expr_id_data **data);
++bool expr__subset_of_ids(struct expr_parse_ctx *haystack,
++			 struct expr_parse_ctx *needles);
+ int expr__resolve_id(struct expr_parse_ctx *ctx, const char *id,
+ 		     struct expr_id_data **datap);
  
- 	hashmap__for_each_entry(ctx->ids, cur, bkt) {
--		pr_debug("found event %s\n", (const char *)cur->key);
-+		const char *sep, *rsep, *id = cur->key;
-+
-+		pr_debug("found event %s\n", id);
- 		/*
- 		 * Duration time maps to a software event and can make
- 		 * groups not count. Always use it outside a
- 		 * group.
- 		 */
--		if (!strcmp(cur->key, "duration_time")) {
-+		if (!strcmp(id, "duration_time")) {
- 			has_duration = true;
- 			continue;
- 		}
--		strbuf_addf(events, "%s%s",
--			no_group ? "{" : ",",
--			(const char *)cur->key);
--		no_group = false;
--	}
--	if (!no_group) {
--		strbuf_addf(events, "}:W");
--		if (has_duration)
--			strbuf_addf(events, ",duration_time");
--	} else if (has_duration)
--		strbuf_addf(events, "duration_time");
--}
--
--static void metricgroup__add_metric_non_group(struct strbuf *events,
--					      struct expr_parse_ctx *ctx)
--{
--	struct hashmap_entry *cur;
--	size_t bkt;
--	bool first = true;
-+		/* Separate events with commas and open the group if necessary. */
-+		if (no_group) {
-+			if (!has_constraint) {
-+				ret = strbuf_addch(events, '{');
-+				RETURN_IF_NON_ZERO(ret);
-+			}
- 
--	hashmap__for_each_entry(ctx->ids, cur, bkt) {
--		if (!first)
--			strbuf_addf(events, ",");
--		strbuf_addf(events, "%s", (const char *)cur->key);
--		first = false;
-+			no_group = false;
-+		} else {
-+			ret = strbuf_addch(events, ',');
-+			RETURN_IF_NON_ZERO(ret);
-+		}
-+		/*
-+		 * Encode the ID as an event string. Add a qualifier for
-+		 * metric_id that is the original name except with characters
-+		 * that parse-events can't parse replaced. For example,
-+		 * 'msr@tsc@' gets added as msr/tsc,metric-id=msr!3tsc!3/
-+		 */
-+		sep = strchr(id, '@');
-+		if (sep != NULL) {
-+			ret = strbuf_add(events, id, sep - id);
-+			RETURN_IF_NON_ZERO(ret);
-+			ret = strbuf_addch(events, '/');
-+			RETURN_IF_NON_ZERO(ret);
-+			rsep = strrchr(sep, '@');
-+			ret = strbuf_add(events, sep + 1, rsep - sep - 1);
-+			RETURN_IF_NON_ZERO(ret);
-+			ret = strbuf_addstr(events, ",metric-id=");
-+			RETURN_IF_NON_ZERO(ret);
-+			sep = rsep;
-+		} else {
-+			sep = strchr(id, ':');
-+			if (sep != NULL) {
-+				ret = strbuf_add(events, id, sep - id);
-+				RETURN_IF_NON_ZERO(ret);
-+			} else {
-+				ret = strbuf_addstr(events, id);
-+				RETURN_IF_NON_ZERO(ret);
-+			}
-+			ret = strbuf_addstr(events, "/metric-id=");
-+			RETURN_IF_NON_ZERO(ret);
-+		}
-+		ret = encode_metric_id(events, id);
-+		RETURN_IF_NON_ZERO(ret);
-+		ret = strbuf_addstr(events, "/");
-+		RETURN_IF_NON_ZERO(ret);
-+
-+		if (sep != NULL) {
-+			ret = strbuf_addstr(events, sep + 1);
-+			RETURN_IF_NON_ZERO(ret);
-+		}
- 	}
-+	if (has_duration) {
-+		if (no_group) {
-+			/* Strange case of a metric of just duration_time. */
-+			ret = strbuf_addf(events, "duration_time");
-+		} else if (!has_constraint)
-+			ret = strbuf_addf(events, "}:W,duration_time");
-+		else
-+			ret = strbuf_addf(events, ",duration_time");
-+	} else if (!no_group && !has_constraint)
-+		ret = strbuf_addf(events, "}:W");
-+
-+	return ret;
-+#undef RETURN_IF_NON_ZERO
- }
- 
- int __weak arch_get_runtimeparam(const struct pmu_event *pe __maybe_unused)
-@@ -1134,16 +1278,17 @@ static int metricgroup__add_metric(const char *metric_name, bool metric_no_group
- 	list_sort(NULL,  &list, metric_list_cmp);
- 
- 	list_for_each_entry(m, &list, nd) {
--		if (events->len > 0)
--			strbuf_addf(events, ",");
--
--		if (m->has_constraint) {
--			metricgroup__add_metric_non_group(events,
--							  m->pctx);
--		} else {
--			metricgroup__add_metric_weak_group(events,
--							   m->pctx);
-+		if (events->len > 0) {
-+			ret = strbuf_addf(events, ",");
-+			if (ret)
-+				break;
- 		}
-+
-+		ret = metricgroup__build_event_string(events,
-+						m->pctx,
-+						m->has_constraint);
-+		if (ret)
-+			break;
- 	}
- 
- out:
-@@ -1180,30 +1325,40 @@ static int metricgroup__add_metric_list(const char *list, bool metric_no_group,
- 					const struct pmu_events_map *map)
- {
- 	char *llist, *nlist, *p;
--	int ret = -EINVAL;
-+	int ret, count = 0;
- 
- 	nlist = strdup(list);
- 	if (!nlist)
- 		return -ENOMEM;
- 	llist = nlist;
- 
--	strbuf_init(events, 100);
--	strbuf_addf(events, "%s", "");
-+	ret = strbuf_init(events, 100);
-+	if (ret)
-+		return ret;
- 
- 	while ((p = strsep(&llist, ",")) != NULL) {
- 		ret = metricgroup__add_metric(p, metric_no_group, events,
- 					      metric_list, map);
--		if (ret == -EINVAL) {
--			fprintf(stderr, "Cannot find metric or group `%s'\n",
--					p);
-+		if (ret == -EINVAL)
-+			fprintf(stderr, "Cannot find metric or group `%s'\n", p);
-+
-+		if (ret)
- 			break;
--		}
-+
-+		count++;
- 	}
- 	free(nlist);
- 
--	if (!ret)
-+	if (!ret) {
-+		/*
-+		 * Warn about nmi_watchdog if any parsed metrics had the
-+		 * NO_NMI_WATCHDOG constraint.
-+		 */
- 		metricgroup___watchdog_constraint_hint(NULL, true);
--
-+		/* No metrics. */
-+		if (count == 0)
-+			return -EINVAL;
-+	}
- 	return ret;
- }
- 
-@@ -1243,6 +1398,10 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
- 		parse_events_print_error(&parse_error, extra_events.buf);
- 		goto out;
- 	}
-+	ret = decode_all_metric_ids(perf_evlist);
-+	if (ret)
-+		goto out;
-+
- 	ret = metricgroup__setup_events(&metric_list, metric_no_merge,
- 					perf_evlist, metric_events);
- out:
-diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-index b1e29b97d261..4efe9872c667 100644
---- a/tools/perf/util/parse-events.l
-+++ b/tools/perf/util/parse-events.l
-@@ -138,18 +138,23 @@ static int pmu_str_check(yyscan_t scanner, struct parse_events_state *parse_stat
- 
- 	yylval->str = strdup(text);
- 
--	if (parse_state->fake_pmu)
--		return PE_PMU_EVENT_FAKE;
--
-+	/*
-+	 * If we're not testing then parse check determines the PMU event type
-+	 * which if it isn't a PMU returns PE_NAME. When testing the result of
-+	 * parse check can't be trusted so we return PE_PMU_EVENT_FAKE unless
-+	 * an '!' is present in which case the text can't be a PMU name.
-+	 */
- 	switch (perf_pmu__parse_check(text)) {
- 		case PMU_EVENT_SYMBOL_PREFIX:
- 			return PE_PMU_EVENT_PRE;
- 		case PMU_EVENT_SYMBOL_SUFFIX:
- 			return PE_PMU_EVENT_SUF;
- 		case PMU_EVENT_SYMBOL:
--			return PE_KERNEL_PMU_EVENT;
-+			return parse_state->fake_pmu
-+				? PE_PMU_EVENT_FAKE : PE_KERNEL_PMU_EVENT;
- 		default:
--			return PE_NAME;
-+			return parse_state->fake_pmu && !strchr(text,'!')
-+				? PE_PMU_EVENT_FAKE : PE_NAME;
- 	}
- }
- 
-@@ -204,7 +209,7 @@ bpf_source	[^,{}]+\.c[a-zA-Z0-9._]*
- num_dec		[0-9]+
- num_hex		0x[a-fA-F0-9]+
- num_raw_hex	[a-fA-F0-9]+
--name		[a-zA-Z_*?\[\]][a-zA-Z0-9_*?.\[\]]*
-+name		[a-zA-Z_*?\[\]][a-zA-Z0-9_*?.\[\]!]*
- name_tag	[\'][a-zA-Z_*?\[\]][a-zA-Z0-9_*?\-,\.\[\]:=]*[\']
- name_minus	[a-zA-Z_*?][a-zA-Z0-9\-_*?.:]*
- drv_cfg_term	[a-zA-Z0-9_\.]+(=[a-zA-Z0-9_*?\.:]+)?
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 20f1b9d0f272..69f3cf3b4a44 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -821,7 +821,7 @@ static int prepare_metric(struct evsel **metric_events,
- 			  struct runtime_stat *st)
- {
- 	double scale;
--	char *n, *pn;
-+	char *n;
- 	int i, j, ret;
- 
- 	for (i = 0; metric_events[i]; i++) {
-@@ -844,23 +844,11 @@ static int prepare_metric(struct evsel **metric_events,
- 			if (v->metric_other)
- 				metric_total = v->metric_total;
- 		}
--
--		n = strdup(metric_events[i]->name);
-+		n = strdup(evsel__metric_id(metric_events[i]));
- 		if (!n)
- 			return -ENOMEM;
--		/*
--		 * This display code with --no-merge adds [cpu] postfixes.
--		 * These are not supported by the parser. Remove everything
--		 * after the space.
--		 */
--		pn = strchr(n, ' ');
--		if (pn)
--			*pn = 0;
--
--		if (metric_total)
--			expr__add_id_val(pctx, n, metric_total);
--		else
--			expr__add_id_val(pctx, n, avg_stats(stats)*scale);
-+
-+		expr__add_id_val(pctx, n, metric_total ? : avg_stats(stats) * scale);
- 	}
- 
- 	for (j = 0; metric_refs && metric_refs[j].metric_name; j++) {
 -- 
 2.33.0.1079.g6e70778dc9-goog
 
