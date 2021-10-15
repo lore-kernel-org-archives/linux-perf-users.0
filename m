@@ -2,38 +2,38 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C87DC433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Oct 2021 08:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 938FCC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Oct 2021 08:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5729D61181
-	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Oct 2021 08:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7384560ED4
+	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Oct 2021 08:05:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236627AbhJOIHU (ORCPT
+        id S234714AbhJOIHu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 15 Oct 2021 04:07:20 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:46279 "EHLO
+        Fri, 15 Oct 2021 04:07:50 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:53719 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236629AbhJOIHJ (ORCPT
+        with ESMTP id S232537AbhJOIHu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 15 Oct 2021 04:07:09 -0400
-Received: from mail-wr1-f41.google.com ([209.85.221.41]) by
- mrelayeu.kundenserver.de (mreue012 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1MS1G7-1m90m913tL-00TUQ2; Fri, 15 Oct 2021 10:04:58 +0200
-Received: by mail-wr1-f41.google.com with SMTP id t2so25008771wrb.8;
-        Fri, 15 Oct 2021 01:04:57 -0700 (PDT)
-X-Gm-Message-State: AOAM530FHdl4QLXhJTqD7jHFvLYo8WwDJ8c22vApkju4E6AB45xJwbpY
-        EaJbNWP0GXaTz3rVG/EXJJL8no6bZYgWMliTaH0=
-X-Google-Smtp-Source: ABdhPJyMHuHnDGl2si8ITF+4TGXXgV0nuTwHzfeF7WqCGbb9eY4i99zzKLMdO9DWc/nq3na7Ws9y9ewKPsg0Jk/Kqqs=
-X-Received: by 2002:adf:f481:: with SMTP id l1mr12016275wro.411.1634285097750;
- Fri, 15 Oct 2021 01:04:57 -0700 (PDT)
+        Fri, 15 Oct 2021 04:07:50 -0400
+Received: from mail-wr1-f50.google.com ([209.85.221.50]) by
+ mrelayeu.kundenserver.de (mreue011 [213.165.67.97]) with ESMTPSA (Nemesis) id
+ 1MRC7g-1mPEyg3cJw-00NBOg; Fri, 15 Oct 2021 10:05:42 +0200
+Received: by mail-wr1-f50.google.com with SMTP id g25so24882325wrb.2;
+        Fri, 15 Oct 2021 01:05:42 -0700 (PDT)
+X-Gm-Message-State: AOAM530YmS25Po28wfQMHJPNpkAcV5x3RrfefKyrR3mJ/NCRwI6Zmv2r
+        vbN52gTe3yT6NzIys6TSorRupaY7w/+beRg5w4g=
+X-Google-Smtp-Source: ABdhPJy9sZlQDrqD9m1U2kCsGr+NuqJq9GR+IhadW9NMvzLQSDS60WXLsc5ghfbjxyAdBhF+koA6oF3ct4kqTEH5fY8=
+X-Received: by 2002:adf:a3da:: with SMTP id m26mr12221525wrb.336.1634285142440;
+ Fri, 15 Oct 2021 01:05:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211015005634.2658470-1-alistair.francis@opensource.wdc.com>
-In-Reply-To: <20211015005634.2658470-1-alistair.francis@opensource.wdc.com>
+References: <20211015005634.2658470-1-alistair.francis@opensource.wdc.com> <20211015005634.2658470-2-alistair.francis@opensource.wdc.com>
+In-Reply-To: <20211015005634.2658470-2-alistair.francis@opensource.wdc.com>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 15 Oct 2021 10:04:41 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a28zpO5Sy78CHts=p4G5v0bhxeCJhUK41bMQ8nqYV8z_A@mail.gmail.com>
-Message-ID: <CAK8P3a28zpO5Sy78CHts=p4G5v0bhxeCJhUK41bMQ8nqYV8z_A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] perf bench futex: Use a 64-bit time_t
+Date:   Fri, 15 Oct 2021 10:05:26 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2i-4Q8SPwO+3X_FDF_J=dr3cyuRTgF7zxjW4WKxY0tuA@mail.gmail.com>
+Message-ID: <CAK8P3a2i-4Q8SPwO+3X_FDF_J=dr3cyuRTgF7zxjW4WKxY0tuA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] selftests: futex: Use a 64-bit time_t
 To:     Alistair Francis <alistair.francis@opensource.wdc.com>
 Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
         linux-perf-users@vger.kernel.org,
@@ -53,22 +53,24 @@ Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Alistair Francis <alistair.francis@wdc.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:svj4o8UDMApwuFcuNXj7pxpjFVchrJM1P6yD6ye98s3GpluP7I1
- i5j3G+TKfv7DebTKtAn1BWAQhkjw8hWe7ePMxxNniwZPIUqFc/gAwyo6tOd8Bo+LY7QpONE
- vYa/o/fEhPSzTEVeOJUfdNIhxAPtSFe+IwvJ0bPy3b5YZKA2uFIYUpfVO+HQwM1SuJBDXhO
- u1RtYw8ejJI1ts2C8hJqw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:UtxibgzrXDc=:kaJU0WtF7yMJGGqC4gavvP
- kFbd6TFVczCNzYvaKSXy2ul4uUDDT987wwM1JL2sjTCNdHGQzmOOI9YB/pMxtkxxSQ0nUs+6P
- TwaNJd4u4HV+YJ2qM7ho6RYI+Dn+0u1fqPzxR4Xa/blTDbKRqxd3Bx4tWTi+X2h48xrUaDHNz
- GIfYg+uevWUujvou3+zB3pTIGs5eVKVjWdspq2KkVHhvsPuLQXXQIPH9o7h11mPHhcWzHtRa3
- 1VYwUUO3MEIxkU0BX8uLaU/MJf+EHcdpGJs4+zZN/lwQ5XFN9X6h6ra0+8FjqnD+W7XGAdpi9
- y1ais6Jxz2+95Vsz8O/ai1ZQHJN+TpRIJArK8kRJ0StUFGc60znYu8rjuNDzojjPKWVyRR3sw
- 7MEP+cxgZRF9ctL5c6klSkYkY8ZM1gHN1NgZ24fj+Z61iRKEVygJiQ5FE6/R5SWBUsDhVFaW8
- HS8fxhmFPkxWSY+cd0k29k3pUgshOiH6gTSfrfSlFd5tdsuky2wq9JohkTewQDpFFKFSTRYm9
- gaNym5Nf7U/nReJbYmQ46dFn2MdcZ6/lI/RZZqvwQ0QxYDHqUUPPK6GJNqyxCZ3vBZHMxZAZ3
- EeMOOY5M/lkLFbJOkfrdj9whtCwkrpJpeWJ3c1HuWGlGHvMhQrdzqvHVyjnVsLVoLkU5SNAeK
- NegUgBurcBvBRdxXYdG3JaCSEarYlX/J8tDm07NVBxHqHuc/GLgNNX3hVKqin4YqUmAVpptk1
- l9ivL4luwONEc2j2Y4hIr+XHdCBPZWaZb4pBxg==
+X-Provags-ID: V03:K1:2QiHaZmcgG8KdrovqerTOtmxT24fe5r0TFvFfk2Cgy8jFVSFk+a
+ 4WdYRe0tpdckk5vWAU0osFNfVYGCaxBwYUjXaLHIsMvi59cFOCF2Hj5Ec/EafZtFZMa0bcS
+ pGzrIHoTRPX/nWBJLQMi8/UuCsS5Np4wp0ApcqKu94uiB5WLpz4lC2njx9++IqHvfmx6b+6
+ 32OX+T7GQ93BLBIH002DQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nnqrw5WsQIg=:QqwMh28coBxY3LSIG6y9Fq
+ BB0CQyD3YaWUU1IPR57TfBsrEFbdHIa3gcnZgmrMXjibuzJ1m6j5L8vUHoLfaB1sN5GSD9/R9
+ pf8BbjNbR1Wh6qI8r+58ujuhJe1MdH5mqatvy4l6C4yWyqSXrn9da40kiCNFfu7tKeDRZm/+h
+ Ajpx3DBuv0fsSbz6kUUl6UNAwIZaBUXmVcoZ29m3QcJDusp4rk5trmn4Y/1TXgf1hBXw8zjZw
+ gnQeFe8d/m2/jtQmlvrTXGH+CRWTvLJ99AJ9ZBbujQBVw7NrmDrl+EZrnMDE9pdXVPbdC4Pdu
+ 3oiTbZzF+dTxygVh53Qi4WFBoOTGnUy95CmZ74+NGqxicggQvmY1HBFCtezjvtMQsINtLCdKF
+ kcsopx7wdhPZSfSmMHfSXCXpecMvLsJ0iqAbhEnVenNRWdxjSnZ3Ai2FdDgkq3LdPiTslXUyo
+ 7GT0XE0RjCrpJvjTEA14jlNRVZ4hOdsDyubu6D580Hy9JcmFeEBrPy//cbMKtdFqKlDaKkLTu
+ IpzCWNaI3cWS78c46PTaiw2piANJPX0mdS5ra2rgh/9D61XkeS2eW0b4B+Ua6EGgAcqeQ5ptj
+ SEFWViX0iQZtKEh3qNEFnEsXlAoLuHdHSvP4Z7in2EDww/xiEn6pLRiatOaPjRJmz1e2qU5h2
+ kriBK0EZJNoJrsfR74J7DT4ZSz5S9S6sAGSza0F3EzLa3YIPBWfnMbVZ3ENyaQsNxfwH31osc
+ J4kGAuZieWcrPVsptYBshh6u/ldR/gsmRI4Z4C8/p0slYkHX3XvtwoJWS2mEh/SOCaqycSXq3
+ yada+h+S/KhqQRDNoueJNf1ka5ZaYJuet0YmdpOoj0r5oY30WIH5dX9+pf5eHR8iLg3eRipmw
+ 8mTNHksQK0HvivmBnlzw==
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -78,16 +80,15 @@ On Fri, Oct 15, 2021 at 2:56 AM Alistair Francis
 >
 > From: Alistair Francis <alistair.francis@wdc.com>
 >
-> Convert tools/perf to only use a 64-bit time_t. On 64-bit architectures
-> this isn't a functional change. On 32-bit architectures we now only
-> perform 64-bit time_t syscalls (__NR_futex_time64) and use a struct
-> timespec64.
+> Convert the futex selftests to only use a 64-bit time_t. On 64-bit
+> architectures this isn't a functional change. On 32-bit architectures
+> we now only perform 64-bit time_t syscalls (__NR_futex_time64) and
+> use a struct timespec64.
 >
 > This won't work on kernels before 5.1, but as perf is tied to the kernel
 > that's ok.
 >
-> This allows us to build perf for 32-bit architectures with 64-bit time_t
-> like RISC-V 32-bit.
+> This allows the tests to run and pass on RISC-V 32-bit.
 >
 > Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
 
