@@ -2,56 +2,60 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A901C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Oct 2021 17:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D2AC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Oct 2021 17:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B88E61164
-	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Oct 2021 17:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8AEB611C1
+	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Oct 2021 17:21:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242130AbhJORXp (ORCPT
+        id S242175AbhJORXs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 15 Oct 2021 13:23:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40074 "EHLO
+        Fri, 15 Oct 2021 13:23:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242113AbhJORXo (ORCPT
+        with ESMTP id S237969AbhJORXr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 15 Oct 2021 13:23:44 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AE7EC061570
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Oct 2021 10:21:38 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id h185-20020a256cc2000000b005bdce4db0easo11905827ybc.12
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Oct 2021 10:21:38 -0700 (PDT)
+        Fri, 15 Oct 2021 13:23:47 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDDD6C061762
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Oct 2021 10:21:40 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id j193-20020a2523ca000000b005b789d71d9aso11861574ybj.21
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Oct 2021 10:21:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=/nDYakaYxbaZyFecc8yKJArWXyue+4iCPN+vHLxVtm8=;
-        b=XmoWQqvtNFAnC5n3qHx2qxnIzT/lAJ3vqMh2+Y5AFYiZuFEXjIUIYEonLUunixL318
-         H0ee/WTxT/JZghvOXvp4P8ievcQt7y+xZhIpgseQrLnNpRwzwGKCM6eOETch3oNK1YMn
-         qPZnax1FHsNdoSx2irt8F79E0yUWGTyz4CuQHMk+f5vRc3N2Rv10sk0EjRvsyreUr0TR
-         ugItKRl9iCkmtx8ipyHS+YCt38w6cin9bnFTLvzlrzVTTLmdqfhsBOOuADQUrkR/851e
-         sWhNZFvjyhglxz7DZ+dPBaSilVsOAKALFDmVUokE2bbcxmvLqN8rWPMuwQavZ6oUOIt2
-         hZHA==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=+pvfnBZTpeenK8naiVnpmMSuK9E2qQGFB4fbGJAUfrQ=;
+        b=fBml1lyCT1YQmBm3A0SaeA339d+yaN82Nfg+OI25rEgcS9sKDfF71y2H/pa3SL9KuC
+         wgAfj5GdDHkzkGFMjgEQ2BilwIyxgvxf+MEQyqiYKu5MnYzFo4hErGXS8AzGX+AeCc/h
+         x5/fyi6mj92NS/ezi6jJ3mq9hJNiReADXCZvrpxWvlFnMol0P56HYEExgvIZTtagoxZ6
+         PORagWwuIwbVgBDdtfuC89hJe99HNw1s8ou8rzYM2XBO0kxlTwUWtHIL4nIxp6XukJ7P
+         foeAmPqOm4ZcnhG8Sdnnc2GgjY9Thc8rOT8oGS2Tu/6CC2mPQwER6a2GoNcJFMhYv5Mo
+         llgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=/nDYakaYxbaZyFecc8yKJArWXyue+4iCPN+vHLxVtm8=;
-        b=zULCZXelWgC7SMLwV0sIn62XsAEkca8k3Md0jdFcabXJ/ciTkvWwyGbDkHldavvG/E
-         gXxNGBz0T6RxESJ/P/6yc8OlMtlWNBfzP5Boszh/qGZAAhpeiwjasGXOC8VT8jLMNh6J
-         lZzKj9ATB2CmkuQBc0phyKORP6fTwpN0pD3r/yfses/u/7r58a55FVlPwBBFGXpqOrOj
-         2FMv/jqqhjALVAX4D9VFB0YjZUj7ljPeuJwGRgqkbCjUlDtoVJNUVGSW5B0FPjGIin/F
-         xYFcLK7h0ulCW9snAtgA+HEsk16DJC7hFVQnHah95MKWbRbo1zihTYm1RCaa0NWKY0Hd
-         t/Xg==
-X-Gm-Message-State: AOAM533HVAEn0J77+TqBKv15cGcTvP1Al+9g32CgM8GXwYM7EDTXa9FP
-        lZ3pZ+olUjIZkE5PKe79ua5sJx4STTKM
-X-Google-Smtp-Source: ABdhPJxWkEEYlmaq0lw+6VBwNltVyHcRE1ud7zxTCiWiOQbO8QnBrhf6vxsDI5Q29gM5R6kaQp8KAFegi3m+
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=+pvfnBZTpeenK8naiVnpmMSuK9E2qQGFB4fbGJAUfrQ=;
+        b=tvymRXQVCsQ4UTJZC75t8HE4UM+dIMzlnGuLRG6MSkqAdBQq7VJYbcCdBtHMzTr6/6
+         istm0x2GtoVD7+suLT5lmBl1uUsMZiIz+QAKKHWbcuv5IepnrAlJlYr7lbWsF7QfaJOc
+         IIcKfVa1GrCqR+PkLfWU7LBdaB0g36QPSdMLDCcvhuzohW33rE/AlwZ+4w7X0TOmh0jL
+         1gpr+9F76Wj7oCFi1pODVbac4x6l0SKZvNivCwNdPCQP8fxO8o26hcmAr0MH4BcAhbUl
+         9/eZoxnBtwoY7Zy3bVPT3Q1H+M63/SzOQlY6WvncPOPh/CMm4XD2lLZq4YAF7qs8p8eQ
+         ixcA==
+X-Gm-Message-State: AOAM531Kt+mleD22bXGOWhO1AjIiv034z5yIXa/uwaWVY8MWCQyVyMrX
+        amD8Aj8M7hSI5WnR+gQOBjQRdeINIISw
+X-Google-Smtp-Source: ABdhPJzWKRmMUF3Cb4+WnkAOzlyU4KePjlbUereMTjTe27usjiiN0B8c4qwTeOpwe8icyHIi4zNk6EaNzyrk
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:69bc:7451:58ad:6585])
- (user=irogers job=sendgmr) by 2002:a25:6e06:: with SMTP id
- j6mr14669326ybc.311.1634318497453; Fri, 15 Oct 2021 10:21:37 -0700 (PDT)
-Date:   Fri, 15 Oct 2021 10:21:11 -0700
-Message-Id: <20211015172132.1162559-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:6545:: with SMTP id
+ z66mr13842733ybb.157.1634318500067; Fri, 15 Oct 2021 10:21:40 -0700 (PDT)
+Date:   Fri, 15 Oct 2021 10:21:12 -0700
+In-Reply-To: <20211015172132.1162559-1-irogers@google.com>
+Message-Id: <20211015172132.1162559-2-irogers@google.com>
 Mime-Version: 1.0
+References: <20211015172132.1162559-1-irogers@google.com>
 X-Mailer: git-send-email 2.33.0.1079.g6e70778dc9-goog
-Subject: [PATCH v2 00/21] perf metric: Fixes and allow modifiers
+Subject: [PATCH v2 01/21] tools lib: Add list_sort.
 From:   Ian Rogers <irogers@google.com>
 To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Jin Yao <yao.jin@linux.intel.com>,
@@ -95,131 +99,368 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-There are 4 main changes in this patch set:
- - perf metric: Modify resolution and recursion check.
- - perf parse-events: Add new "metric-id" term.
- - perf metrics: Modify setup and deduplication
- - perf metric: Allow modifiers on metrics.
+Add list_sort.[ch] from the main kernel tree. The linux/bug.h #include
+is removed due to conflicting definitions. Add check-headers and modify
+perf build accordingly.
 
-In overview the changes start by trying to simplify the metric code,
-then it fixes various bugs and finally it builds a new feature of
-allowing metrics like:
+MANIFEST and python-ext-sources fixes suggested by Arnaldo.
 
-$ perf stat -M IPC:u,IPC:k -a sleep 1
-
- Performance counter stats for 'system wide':
-
-        93,269,988      inst_retired.any:k        #     0.26 IPC:k                  
-       352,037,460      cpu_clk_unhalted.thread:k                                   
-        70,317,865      inst_retired.any:u        #     0.76 IPC:u                  
-        92,762,220      cpu_clk_unhalted.thread:u                                   
-
-       1.003754577 seconds time elapsed
-
-Previous complexity came from using the evsel->name as the identifier
-for events in metrics, however, this name isn't stable and has issues
-around wildcard expansion. These changes fix this by adding a
-dedicated metric_id to evsels, performing deduplication on IDs before
-event parsing and not handling all evsels on a single evlist.
-
-The recursion and metric_ref logic is simplified, the first by moving
-data from the heap to the stack, the latter by building in an array
-rather than a linked list. This logic is integral to metric set up and
-simplification makes the effects of the changes easier to follow, in
-particular as there are fewer structs being maintained.
-
-Event parsing is modified to allow qualifiers on kernel PMU events,
-this is necessary to allow the metric-id to be added, but allows
-qualifiers in other cases like specifying callgraph or a name.
-
-There is a certain amount of comment adding and const-ification, this
-is with a view to making the code more intention revealing and to aid
-following its logic. For example, the pmu event tables should never
-change and it'd be a bug if they ever did, it's therefore strange to
-access it using non-const pointers.
-
-The kernel list_sort.c/h are added for use sorting metrics in order to
-deduplicate/reuse events from a larger group in a smaller one. This
-was previously done by inserting in size order, but that only worked
-within a metric group.
-
-Some of the commit messages show the TopDownL1 metrics being used on a
-SkylakeX machine. These metrics were removed by
-c4ad8fabd03f76ed3a2a4c8aef6baf6cd4f24542 ("perf vendor events: Update
-metrics for SkyLake Server") and the data was gathered with this patch
-reverted.
-
-v2. Add METADATA fixes to 'Add list_sort' suggested by
-    Arnaldo Carvalho de Melo <acme@kernel.org>.
-    Fix arm64 function declaration in 'Add const to pmu_events_map' found by
-    Andrew Kilroy <andrew.kilroy@arm.com>.
-    Add a static in 'Make pmu_event tables const' suggested by
-    John Garry <john.garry@huawei.com>.
-    Add acked-by: Andi Kleen <ak@linux.intel.com>.
-    Fix/handle 0 events case in 'Modify setup and deduplication'.
-    Fix a missed strdup that resulted in a double free in 'Allow modifiers on
-    metrics.'
-
-Ian Rogers (21):
-  tools lib: Add list_sort.
-  perf pmu: Add const to pmu_events_map.
-  perf pmu: Make pmu_sys_event_tables const.
-  perf pmu: Make pmu_event tables const.
-  perf metric: Move runtime value to the expr context
-  perf metric: Add documentation and rename a variable.
-  perf metric: Add metric new and free
-  perf metric: Only add a referenced metric once
-  perf metric: Modify resolution and recursion check.
-  perf metric: Comment data structures.
-  perf metric: Document the internal 'struct metric'
-  perf metric: Simplify metric_refs calculation.
-  perf parse-events: Add const to evsel name
-  perf parse-events: Add new "metric-id" term.
-  perf parse-events: Allow config on kernel PMU events
-  perf metric: Encode and use metric-id as qualifier
-  perf expr: Add subset utility.
-  perf metrics: Modify setup and deduplication
-  perf metric: Switch fprintf to pr_err.
-  perf parse-events: Identify broken modifiers.
-  perf metric: Allow modifiers on metrics.
-
- tools/include/linux/list_sort.h       |   14 +
- tools/lib/list_sort.c                 |  252 +++++
- tools/perf/MANIFEST                   |    1 +
- tools/perf/arch/arm64/util/pmu.c      |    2 +-
- tools/perf/arch/powerpc/util/header.c |    2 +-
- tools/perf/check-headers.sh           |    2 +
- tools/perf/pmu-events/jevents.c       |    6 +-
- tools/perf/pmu-events/pmu-events.h    |    8 +-
- tools/perf/tests/expand-cgroup.c      |    2 +-
- tools/perf/tests/expr.c               |   29 +-
- tools/perf/tests/parse-metric.c       |    2 +-
- tools/perf/tests/pmu-events.c         |   59 +-
- tools/perf/util/Build                 |    5 +
- tools/perf/util/evsel.c               |   17 +
- tools/perf/util/evsel.h               |    2 +
- tools/perf/util/expr.c                |   56 +-
- tools/perf/util/expr.h                |   16 +-
- tools/perf/util/expr.l                |    6 +-
- tools/perf/util/expr.y                |    2 +-
- tools/perf/util/metricgroup.c         | 1461 ++++++++++++++-----------
- tools/perf/util/metricgroup.h         |   35 +-
- tools/perf/util/parse-events-hybrid.c |   34 +-
- tools/perf/util/parse-events-hybrid.h |    6 +-
- tools/perf/util/parse-events.c        |  166 +--
- tools/perf/util/parse-events.h        |   11 +-
- tools/perf/util/parse-events.l        |   18 +-
- tools/perf/util/parse-events.y        |   27 +-
- tools/perf/util/pfm.c                 |    3 +-
- tools/perf/util/pmu.c                 |   22 +-
- tools/perf/util/pmu.h                 |   10 +-
- tools/perf/util/python-ext-sources    |    1 +
- tools/perf/util/s390-sample-raw.c     |    6 +-
- tools/perf/util/stat-shadow.c         |   27 +-
- 33 files changed, 1470 insertions(+), 840 deletions(-)
+Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+Acked-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/include/linux/list_sort.h    |  14 ++
+ tools/lib/list_sort.c              | 252 +++++++++++++++++++++++++++++
+ tools/perf/MANIFEST                |   1 +
+ tools/perf/check-headers.sh        |   2 +
+ tools/perf/util/Build              |   5 +
+ tools/perf/util/python-ext-sources |   1 +
+ 6 files changed, 275 insertions(+)
  create mode 100644 tools/include/linux/list_sort.h
  create mode 100644 tools/lib/list_sort.c
 
+diff --git a/tools/include/linux/list_sort.h b/tools/include/linux/list_sort.h
+new file mode 100644
+index 000000000000..453105f74e05
+--- /dev/null
++++ b/tools/include/linux/list_sort.h
+@@ -0,0 +1,14 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_LIST_SORT_H
++#define _LINUX_LIST_SORT_H
++
++#include <linux/types.h>
++
++struct list_head;
++
++typedef int __attribute__((nonnull(2,3))) (*list_cmp_func_t)(void *,
++		const struct list_head *, const struct list_head *);
++
++__attribute__((nonnull(2,3)))
++void list_sort(void *priv, struct list_head *head, list_cmp_func_t cmp);
++#endif
+diff --git a/tools/lib/list_sort.c b/tools/lib/list_sort.c
+new file mode 100644
+index 000000000000..10c067e3a8d2
+--- /dev/null
++++ b/tools/lib/list_sort.c
+@@ -0,0 +1,252 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/kernel.h>
++#include <linux/compiler.h>
++#include <linux/export.h>
++#include <linux/string.h>
++#include <linux/list_sort.h>
++#include <linux/list.h>
++
++/*
++ * Returns a list organized in an intermediate format suited
++ * to chaining of merge() calls: null-terminated, no reserved or
++ * sentinel head node, "prev" links not maintained.
++ */
++__attribute__((nonnull(2,3,4)))
++static struct list_head *merge(void *priv, list_cmp_func_t cmp,
++				struct list_head *a, struct list_head *b)
++{
++	struct list_head *head, **tail = &head;
++
++	for (;;) {
++		/* if equal, take 'a' -- important for sort stability */
++		if (cmp(priv, a, b) <= 0) {
++			*tail = a;
++			tail = &a->next;
++			a = a->next;
++			if (!a) {
++				*tail = b;
++				break;
++			}
++		} else {
++			*tail = b;
++			tail = &b->next;
++			b = b->next;
++			if (!b) {
++				*tail = a;
++				break;
++			}
++		}
++	}
++	return head;
++}
++
++/*
++ * Combine final list merge with restoration of standard doubly-linked
++ * list structure.  This approach duplicates code from merge(), but
++ * runs faster than the tidier alternatives of either a separate final
++ * prev-link restoration pass, or maintaining the prev links
++ * throughout.
++ */
++__attribute__((nonnull(2,3,4,5)))
++static void merge_final(void *priv, list_cmp_func_t cmp, struct list_head *head,
++			struct list_head *a, struct list_head *b)
++{
++	struct list_head *tail = head;
++	u8 count = 0;
++
++	for (;;) {
++		/* if equal, take 'a' -- important for sort stability */
++		if (cmp(priv, a, b) <= 0) {
++			tail->next = a;
++			a->prev = tail;
++			tail = a;
++			a = a->next;
++			if (!a)
++				break;
++		} else {
++			tail->next = b;
++			b->prev = tail;
++			tail = b;
++			b = b->next;
++			if (!b) {
++				b = a;
++				break;
++			}
++		}
++	}
++
++	/* Finish linking remainder of list b on to tail */
++	tail->next = b;
++	do {
++		/*
++		 * If the merge is highly unbalanced (e.g. the input is
++		 * already sorted), this loop may run many iterations.
++		 * Continue callbacks to the client even though no
++		 * element comparison is needed, so the client's cmp()
++		 * routine can invoke cond_resched() periodically.
++		 */
++		if (unlikely(!++count))
++			cmp(priv, b, b);
++		b->prev = tail;
++		tail = b;
++		b = b->next;
++	} while (b);
++
++	/* And the final links to make a circular doubly-linked list */
++	tail->next = head;
++	head->prev = tail;
++}
++
++/**
++ * list_sort - sort a list
++ * @priv: private data, opaque to list_sort(), passed to @cmp
++ * @head: the list to sort
++ * @cmp: the elements comparison function
++ *
++ * The comparison function @cmp must return > 0 if @a should sort after
++ * @b ("@a > @b" if you want an ascending sort), and <= 0 if @a should
++ * sort before @b *or* their original order should be preserved.  It is
++ * always called with the element that came first in the input in @a,
++ * and list_sort is a stable sort, so it is not necessary to distinguish
++ * the @a < @b and @a == @b cases.
++ *
++ * This is compatible with two styles of @cmp function:
++ * - The traditional style which returns <0 / =0 / >0, or
++ * - Returning a boolean 0/1.
++ * The latter offers a chance to save a few cycles in the comparison
++ * (which is used by e.g. plug_ctx_cmp() in block/blk-mq.c).
++ *
++ * A good way to write a multi-word comparison is::
++ *
++ *	if (a->high != b->high)
++ *		return a->high > b->high;
++ *	if (a->middle != b->middle)
++ *		return a->middle > b->middle;
++ *	return a->low > b->low;
++ *
++ *
++ * This mergesort is as eager as possible while always performing at least
++ * 2:1 balanced merges.  Given two pending sublists of size 2^k, they are
++ * merged to a size-2^(k+1) list as soon as we have 2^k following elements.
++ *
++ * Thus, it will avoid cache thrashing as long as 3*2^k elements can
++ * fit into the cache.  Not quite as good as a fully-eager bottom-up
++ * mergesort, but it does use 0.2*n fewer comparisons, so is faster in
++ * the common case that everything fits into L1.
++ *
++ *
++ * The merging is controlled by "count", the number of elements in the
++ * pending lists.  This is beautifully simple code, but rather subtle.
++ *
++ * Each time we increment "count", we set one bit (bit k) and clear
++ * bits k-1 .. 0.  Each time this happens (except the very first time
++ * for each bit, when count increments to 2^k), we merge two lists of
++ * size 2^k into one list of size 2^(k+1).
++ *
++ * This merge happens exactly when the count reaches an odd multiple of
++ * 2^k, which is when we have 2^k elements pending in smaller lists,
++ * so it's safe to merge away two lists of size 2^k.
++ *
++ * After this happens twice, we have created two lists of size 2^(k+1),
++ * which will be merged into a list of size 2^(k+2) before we create
++ * a third list of size 2^(k+1), so there are never more than two pending.
++ *
++ * The number of pending lists of size 2^k is determined by the
++ * state of bit k of "count" plus two extra pieces of information:
++ *
++ * - The state of bit k-1 (when k == 0, consider bit -1 always set), and
++ * - Whether the higher-order bits are zero or non-zero (i.e.
++ *   is count >= 2^(k+1)).
++ *
++ * There are six states we distinguish.  "x" represents some arbitrary
++ * bits, and "y" represents some arbitrary non-zero bits:
++ * 0:  00x: 0 pending of size 2^k;           x pending of sizes < 2^k
++ * 1:  01x: 0 pending of size 2^k; 2^(k-1) + x pending of sizes < 2^k
++ * 2: x10x: 0 pending of size 2^k; 2^k     + x pending of sizes < 2^k
++ * 3: x11x: 1 pending of size 2^k; 2^(k-1) + x pending of sizes < 2^k
++ * 4: y00x: 1 pending of size 2^k; 2^k     + x pending of sizes < 2^k
++ * 5: y01x: 2 pending of size 2^k; 2^(k-1) + x pending of sizes < 2^k
++ * (merge and loop back to state 2)
++ *
++ * We gain lists of size 2^k in the 2->3 and 4->5 transitions (because
++ * bit k-1 is set while the more significant bits are non-zero) and
++ * merge them away in the 5->2 transition.  Note in particular that just
++ * before the 5->2 transition, all lower-order bits are 11 (state 3),
++ * so there is one list of each smaller size.
++ *
++ * When we reach the end of the input, we merge all the pending
++ * lists, from smallest to largest.  If you work through cases 2 to
++ * 5 above, you can see that the number of elements we merge with a list
++ * of size 2^k varies from 2^(k-1) (cases 3 and 5 when x == 0) to
++ * 2^(k+1) - 1 (second merge of case 5 when x == 2^(k-1) - 1).
++ */
++__attribute__((nonnull(2,3)))
++void list_sort(void *priv, struct list_head *head, list_cmp_func_t cmp)
++{
++	struct list_head *list = head->next, *pending = NULL;
++	size_t count = 0;	/* Count of pending */
++
++	if (list == head->prev)	/* Zero or one elements */
++		return;
++
++	/* Convert to a null-terminated singly-linked list. */
++	head->prev->next = NULL;
++
++	/*
++	 * Data structure invariants:
++	 * - All lists are singly linked and null-terminated; prev
++	 *   pointers are not maintained.
++	 * - pending is a prev-linked "list of lists" of sorted
++	 *   sublists awaiting further merging.
++	 * - Each of the sorted sublists is power-of-two in size.
++	 * - Sublists are sorted by size and age, smallest & newest at front.
++	 * - There are zero to two sublists of each size.
++	 * - A pair of pending sublists are merged as soon as the number
++	 *   of following pending elements equals their size (i.e.
++	 *   each time count reaches an odd multiple of that size).
++	 *   That ensures each later final merge will be at worst 2:1.
++	 * - Each round consists of:
++	 *   - Merging the two sublists selected by the highest bit
++	 *     which flips when count is incremented, and
++	 *   - Adding an element from the input as a size-1 sublist.
++	 */
++	do {
++		size_t bits;
++		struct list_head **tail = &pending;
++
++		/* Find the least-significant clear bit in count */
++		for (bits = count; bits & 1; bits >>= 1)
++			tail = &(*tail)->prev;
++		/* Do the indicated merge */
++		if (likely(bits)) {
++			struct list_head *a = *tail, *b = a->prev;
++
++			a = merge(priv, cmp, b, a);
++			/* Install the merged result in place of the inputs */
++			a->prev = b->prev;
++			*tail = a;
++		}
++
++		/* Move one element from input list to pending */
++		list->prev = pending;
++		pending = list;
++		list = list->next;
++		pending->next = NULL;
++		count++;
++	} while (list);
++
++	/* End of input; merge together all the pending lists. */
++	list = pending;
++	pending = pending->prev;
++	for (;;) {
++		struct list_head *next = pending->prev;
++
++		if (!next)
++			break;
++		list = merge(priv, cmp, pending, list);
++		pending = next;
++	}
++	/* The final merge, rebuilding prev links */
++	merge_final(priv, cmp, head, pending, list);
++}
++EXPORT_SYMBOL(list_sort);
+diff --git a/tools/perf/MANIFEST b/tools/perf/MANIFEST
+index f05c4d48fd7e..e728615a3830 100644
+--- a/tools/perf/MANIFEST
++++ b/tools/perf/MANIFEST
+@@ -17,6 +17,7 @@ tools/lib/symbol/kallsyms.c
+ tools/lib/symbol/kallsyms.h
+ tools/lib/find_bit.c
+ tools/lib/bitmap.c
++tools/lib/list_sort.c
+ tools/lib/str_error_r.c
+ tools/lib/vsprintf.c
+ tools/lib/zalloc.c
+diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+index f1e46277e822..30ecf3a0f68b 100755
+--- a/tools/perf/check-headers.sh
++++ b/tools/perf/check-headers.sh
+@@ -26,6 +26,7 @@ include/vdso/bits.h
+ include/linux/const.h
+ include/vdso/const.h
+ include/linux/hash.h
++include/linux/list-sort.h
+ include/uapi/linux/hw_breakpoint.h
+ arch/x86/include/asm/disabled-features.h
+ arch/x86/include/asm/required-features.h
+@@ -150,6 +151,7 @@ check include/uapi/linux/mman.h       '-I "^#include <\(uapi/\)*asm/mman.h>"'
+ check include/linux/build_bug.h       '-I "^#\(ifndef\|endif\)\( \/\/\)* static_assert$"'
+ check include/linux/ctype.h	      '-I "isdigit("'
+ check lib/ctype.c		      '-I "^EXPORT_SYMBOL" -I "^#include <linux/export.h>" -B'
++check lib/list_sort.c		      '-I "^#include <linux/bug.h>"'
+ 
+ # diff non-symmetric files
+ check_2 tools/perf/arch/x86/entry/syscalls/syscall_64.tbl arch/x86/entry/syscalls/syscall_64.tbl
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index f2914d5bed6e..15b2366ad384 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -138,6 +138,7 @@ perf-y += expr.o
+ perf-y += branch.o
+ perf-y += mem2node.o
+ perf-y += clockid.o
++perf-y += list_sort.o
+ 
+ perf-$(CONFIG_LIBBPF) += bpf-loader.o
+ perf-$(CONFIG_LIBBPF) += bpf_map.o
+@@ -315,3 +316,7 @@ $(OUTPUT)util/hweight.o: ../lib/hweight.c FORCE
+ $(OUTPUT)util/vsprintf.o: ../lib/vsprintf.c FORCE
+ 	$(call rule_mkdir)
+ 	$(call if_changed_dep,cc_o_c)
++
++$(OUTPUT)util/list_sort.o: ../lib/list_sort.c FORCE
++	$(call rule_mkdir)
++	$(call if_changed_dep,cc_o_c)
+diff --git a/tools/perf/util/python-ext-sources b/tools/perf/util/python-ext-sources
+index d7c976671e3a..a685d20165f7 100644
+--- a/tools/perf/util/python-ext-sources
++++ b/tools/perf/util/python-ext-sources
+@@ -18,6 +18,7 @@ util/mmap.c
+ util/namespaces.c
+ ../lib/bitmap.c
+ ../lib/find_bit.c
++../lib/list_sort.c
+ ../lib/hweight.c
+ ../lib/string.c
+ ../lib/vsprintf.c
 -- 
 2.33.0.1079.g6e70778dc9-goog
 
