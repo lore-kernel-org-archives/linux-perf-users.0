@@ -2,139 +2,74 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98AADC433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Oct 2021 11:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1875C4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Oct 2021 13:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 803EA60EE5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Oct 2021 11:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA271608FB
+	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Oct 2021 13:50:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231522AbhJRLxQ (ORCPT
+        id S232080AbhJRNxJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 18 Oct 2021 07:53:16 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53904 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229833AbhJRLxQ (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 18 Oct 2021 07:53:16 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 19IAlZM8005905;
-        Mon, 18 Oct 2021 07:50:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=xj+Wf7OGCK79lp/6E5Y5GmCD6+UfXPW0PiJouirKKb8=;
- b=d2mDlkRi/Kps6guvpgHbX2qncaB3iB99pO4JWXKO48otTOtn5ewKNW0SCLRQAzvejHNG
- suRsCPaTD1c4yzgNX6CcbuJ3pOu7t507UBwUb9E/5QrP0Uxf9qJ+NGyahYe303dIztk8
- 2JDY/xB894+kj7q5OtHr4G/HvIDeHRXyh9ArusIguFyYL3sVRI8tgPZb2IpjdUZ6Kj80
- f9vJ1kGWQklESrqNh3fdFf9XjjAK+mQLI90oO3FtKvKQiZpYK9+S8Muwczder/bM5ubq
- eYtO2ogHgdCH3Flt8rvbwAK/M0CUEjHds9PQkO4JXQYb4nP37bYa+Tnx8MbfYatnYzk6 Rg== 
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3bs7fsh7rx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 Oct 2021 07:50:58 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 19IBm4cT028229;
-        Mon, 18 Oct 2021 11:49:57 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma01fra.de.ibm.com with ESMTP id 3bqpc9mhkn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 Oct 2021 11:49:57 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 19IBi75Y61538770
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 Oct 2021 11:44:07 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D605E52059;
-        Mon, 18 Oct 2021 11:49:53 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.79.190.48])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 16CC25204E;
-        Mon, 18 Oct 2021 11:49:51 +0000 (GMT)
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To:     acme@kernel.org, jolsa@kernel.org
-Cc:     mpe@ellerman.id.au, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com,
-        rnsastry@linux.ibm.com, kjain@linux.ibm.com
-Subject: [V4 1/2] tools/perf: Refactor the code definition of perf reg extended mask in tools side header file
-Date:   Mon, 18 Oct 2021 17:19:47 +0530
-Message-Id: <20211018114948.16830-2-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211018114948.16830-1-atrajeev@linux.vnet.ibm.com>
-References: <20211018114948.16830-1-atrajeev@linux.vnet.ibm.com>
+        Mon, 18 Oct 2021 09:53:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:38312 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233098AbhJRNvD (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 18 Oct 2021 09:51:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C6A5A101E;
+        Mon, 18 Oct 2021 06:48:51 -0700 (PDT)
+Received: from e121896.arm.com (unknown [10.57.27.116])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 43F4B3F73D;
+        Mon, 18 Oct 2021 06:48:50 -0700 (PDT)
+From:   James Clark <james.clark@arm.com>
+To:     acme@kernel.org, linux-perf-users@vger.kernel.org
+Cc:     denik@chromium.org, James Clark <james.clark@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] perf inject: Add vmlinux and ignore-vmlinux arguments
+Date:   Mon, 18 Oct 2021 14:48:40 +0100
+Message-Id: <20211018134844.2627174-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: HSZTYJ1q-scBiFls9A75NdhjlQ1CIY9u
-X-Proofpoint-ORIG-GUID: HSZTYJ1q-scBiFls9A75NdhjlQ1CIY9u
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
- definitions=2021-10-18_03,2021-10-14_02,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=940 bulkscore=0
- mlxscore=0 suspectscore=0 priorityscore=1501 lowpriorityscore=0
- clxscore=1015 impostorscore=0 spamscore=0 phishscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2109230001 definitions=main-2110180071
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-PERF_REG_PMU_MASK_300 and PERF_REG_PMU_MASK_31 defines the mask
-value for extended registers. Current definition of these mask values
-uses hex constant and does not use registers by name, making it less
-readable. Patch refactor the macro values in perf tools side header file
-by or'ing together the actual register value constants.
+Perf inject was missing the --vmlinux argument so I've added it. At
+the same time I tidied up the argument checking that already existed in
+perf report and applied it to all tools.
 
-Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Reviewed-by: Kajol Jain<kjain@linux.ibm.com>
----
- .../arch/powerpc/include/uapi/asm/perf_regs.h | 21 ++++++++++++-------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+What I'm not sure about is whether it would have been better
+to check the accessibility of these files further down in a common place?
+It seems like vmlinux_name is also used for a non user provided name at
+some point so maybe this would be more complicated than just applying the
+existing check everywhere.
 
-diff --git a/tools/arch/powerpc/include/uapi/asm/perf_regs.h b/tools/arch/powerpc/include/uapi/asm/perf_regs.h
-index 578b3ee86105..085094553f3b 100644
---- a/tools/arch/powerpc/include/uapi/asm/perf_regs.h
-+++ b/tools/arch/powerpc/include/uapi/asm/perf_regs.h
-@@ -61,27 +61,32 @@ enum perf_event_powerpc_regs {
- 	PERF_REG_POWERPC_PMC4,
- 	PERF_REG_POWERPC_PMC5,
- 	PERF_REG_POWERPC_PMC6,
--	/* Max regs without the extended regs */
-+	/* Max mask value for interrupt regs w/o extended regs */
- 	PERF_REG_POWERPC_MAX = PERF_REG_POWERPC_MMCRA + 1,
-+	/* Max mask value for interrupt regs including extended regs */
-+	PERF_REG_EXTENDED_MAX = PERF_REG_POWERPC_PMC6 + 1,
- };
- 
- #define PERF_REG_PMU_MASK	((1ULL << PERF_REG_POWERPC_MAX) - 1)
- 
--/* Exclude MMCR3, SIER2, SIER3 for CPU_FTR_ARCH_300 */
--#define	PERF_EXCLUDE_REG_EXT_300	(7ULL << PERF_REG_POWERPC_MMCR3)
--
- /*
-  * PERF_REG_EXTENDED_MASK value for CPU_FTR_ARCH_300
-  * includes 9 SPRS from MMCR0 to PMC6 excluding the
-- * unsupported SPRS in PERF_EXCLUDE_REG_EXT_300.
-+ * unsupported SPRS MMCR3, SIER2 and SIER3.
-  */
--#define PERF_REG_PMU_MASK_300   ((0xfffULL << PERF_REG_POWERPC_MMCR0) - PERF_EXCLUDE_REG_EXT_300)
-+#define PERF_REG_PMU_MASK_300	\
-+	((1ULL << PERF_REG_POWERPC_MMCR0) | (1ULL << PERF_REG_POWERPC_MMCR1) | \
-+	(1ULL << PERF_REG_POWERPC_MMCR2) | (1ULL << PERF_REG_POWERPC_PMC1) | \
-+	(1ULL << PERF_REG_POWERPC_PMC2) | (1ULL << PERF_REG_POWERPC_PMC3) | \
-+	(1ULL << PERF_REG_POWERPC_PMC4) | (1ULL << PERF_REG_POWERPC_PMC5) | \
-+	(1ULL << PERF_REG_POWERPC_PMC6))
- 
- /*
-  * PERF_REG_EXTENDED_MASK value for CPU_FTR_ARCH_31
-  * includes 12 SPRs from MMCR0 to PMC6.
-  */
--#define PERF_REG_PMU_MASK_31   (0xfffULL << PERF_REG_POWERPC_MMCR0)
-+#define PERF_REG_PMU_MASK_31	\
-+	(PERF_REG_PMU_MASK_300 | (1ULL << PERF_REG_POWERPC_MMCR3) | \
-+	(1ULL << PERF_REG_POWERPC_SIER2) | (1ULL << PERF_REG_POWERPC_SIER3))
- 
--#define PERF_REG_EXTENDED_MAX  (PERF_REG_POWERPC_PMC6 + 1)
- #endif /* _UAPI_ASM_POWERPC_PERF_REGS_H */
+Thanks
+James
+
+James Clark (3):
+  perf tools: Refactor out kernel symbol argument sanity checking
+  perf tools: Check vmlinux/kallsyms arguments in all tools
+  perf inject: Add vmlinux and ignore-vmlinux arguments
+
+ tools/perf/builtin-annotate.c |  4 ++++
+ tools/perf/builtin-c2c.c      |  4 ++++
+ tools/perf/builtin-inject.c   |  7 +++++++
+ tools/perf/builtin-probe.c    |  5 +++++
+ tools/perf/builtin-record.c   |  4 ++++
+ tools/perf/builtin-report.c   | 13 ++-----------
+ tools/perf/builtin-sched.c    |  4 ++++
+ tools/perf/builtin-script.c   |  3 +++
+ tools/perf/builtin-top.c      |  4 ++++
+ tools/perf/util/symbol.c      | 22 ++++++++++++++++++++++
+ tools/perf/util/symbol.h      |  2 ++
+ 11 files changed, 61 insertions(+), 11 deletions(-)
+
 -- 
-2.33.0
+2.28.0
 
