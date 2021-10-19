@@ -2,98 +2,92 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C855C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Oct 2021 10:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A92CFC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Oct 2021 11:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 625C060F59
-	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Oct 2021 10:25:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8260461355
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Oct 2021 11:03:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235204AbhJSK1a (ORCPT
+        id S230281AbhJSLGC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 19 Oct 2021 06:27:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36434 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235085AbhJSK1a (ORCPT
+        Tue, 19 Oct 2021 07:06:02 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4004 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230123AbhJSLGB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 19 Oct 2021 06:27:30 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AEC9C06161C;
-        Tue, 19 Oct 2021 03:25:17 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id n11so13365991plf.4;
-        Tue, 19 Oct 2021 03:25:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yKZqp1gnUqMV4B15d0MyfsvIb4yG28S5ygx4uhJ8sGk=;
-        b=MYLSBM0LIEyIcnRbJwynNL15M3VQAkzUysYs2oZq6pYamJ2J367n7wDaOdlRK7pT/c
-         pZ8KuNSDFZtpmZ+8cQQAjrmxIiwXgQ9n3SyMvV7gYjNRpNMirKmDS1F9w20PK6tnua8W
-         O3Xv4Ei9LzJKKD1e2PLgqBjWVTcmMe0FzMiUoS4LgFmrJCyzopHJY22EzoR9KWQbg545
-         hftDfEZYC1IlvSuLscW7urOTyDFltCst2atgPgSphRG0vSpsHTv6k+muiNKPguiZvcNM
-         fOMENYopz30mfrvt69q9kJsnpH+jdJyTa5CXnRi0bNIJcHTIDdEld8DtsmMSPrek3LoO
-         np7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yKZqp1gnUqMV4B15d0MyfsvIb4yG28S5ygx4uhJ8sGk=;
-        b=KEWloDfNrkK/+QEwlxDFpoQO2KxXq3CCSp5H4Q41NYPinfG3VNlwbnzFIyg5iuVbge
-         5LuPJgAruw41g+VK9T4OWTVd0h1usRMWFi/GLFrooKiQrzNj8LnjHyIPL5KXr7fr+ixU
-         usF2TqFHzYnaEjTILFq8spSPj/MBZZHxibIB7jKwRF9p3jFM7ZOFCjfPw/JDyAfZ/7rR
-         QvL7XrlDJEdLfHvvLsdN3ss4/CNB1d+O2EW6a+aDQAAVBK3xkO6dg2k34QDHj7jFlgsj
-         KEQaBSI7ni2nzmYtX2A1GjgXf/YVKmip6B2kqmo9Sh4fUtB9gxRVtF+wy2+DT2txECHg
-         EktA==
-X-Gm-Message-State: AOAM532UZo1l1JBdWjFBe+ivGZOU4TlkzBvIKMXiq8CJtWMieL2ArcEY
-        VpjSqUw/zdq7mbCZHk4Km1A=
-X-Google-Smtp-Source: ABdhPJzgqEqZLSBoVNrfbhbRZMVwQmxSn4AaOtRugDglPTMF0Hj49R1HxEBAOrwdf2iPOwnbWXpQ9g==
-X-Received: by 2002:a17:90b:1c8f:: with SMTP id oo15mr5470992pjb.169.1634639117134;
-        Tue, 19 Oct 2021 03:25:17 -0700 (PDT)
-Received: from localhost.localdomain ([193.203.214.57])
-        by smtp.gmail.com with ESMTPSA id a15sm15815757pfl.182.2021.10.19.03.25.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Oct 2021 03:25:16 -0700 (PDT)
-From:   cgel.zte@gmail.com
-X-Google-Original-From: ye.guojin@zte.com.cn
-To:     mingo@redhat.com
-Cc:     peterz@infradead.org, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ye.guojin@zte.com.cn,
-        zealci@zte.com.cn
-Subject: [PATCH] perf daemon: remove duplicate include in builtin-daemon.c
-Date:   Tue, 19 Oct 2021 10:24:23 +0000
-Message-Id: <20211019102423.1016081-1-ye.guojin@zte.com.cn>
-X-Mailer: git-send-email 2.25.1
+        Tue, 19 Oct 2021 07:06:01 -0400
+Received: from fraeml737-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HYW3g0d3Zz67yLV;
+        Tue, 19 Oct 2021 18:59:59 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml737-chm.china.huawei.com (10.206.15.218) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.15; Tue, 19 Oct 2021 13:03:45 +0200
+Received: from [10.47.85.98] (10.47.85.98) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.15; Tue, 19 Oct
+ 2021 12:03:43 +0100
+Subject: Re: [PATCH v2 03/21] perf pmu: Make pmu_sys_event_tables const.
+To:     Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
+        "Jiri Olsa" <jolsa@redhat.com>, Jin Yao <yao.jin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Sami Tolvanen" <samitolvanen@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Jacob Keller" <jacob.e.keller@intel.com>,
+        Zhen Lei <thunder.leizhen@huawei.com>,
+        ToastC <mrtoastcheng@gmail.com>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Felix Fietkau <nbd@nbd.name>,
+        Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+        Song Liu <songliubraving@fb.com>,
+        "Fabian Hemmer" <copy@copy.sh>,
+        Alexander Antonov <alexander.antonov@linux.intel.com>,
+        Nicholas Fraser <nfraser@codeweavers.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Denys Zagorui <dzagorui@cisco.com>,
+        Wan Jiabing <wanjiabing@vivo.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        "Sumanth Korikkar" <sumanthk@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Changbin Du <changbin.du@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        Andrew Kilroy <andrew.kilroy@arm.com>
+CC:     Stephane Eranian <eranian@google.com>
+References: <20211015172132.1162559-1-irogers@google.com>
+ <20211015172132.1162559-4-irogers@google.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <b6c28f0a-04fe-c00a-ea8d-b832bea304f0@huawei.com>
+Date:   Tue, 19 Oct 2021 12:06:32 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211015172132.1162559-4-irogers@google.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.85.98]
+X-ClientProxiedBy: lhreml718-chm.china.huawei.com (10.201.108.69) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Ye Guojin <ye.guojin@zte.com.cn>
+On 15/10/2021 18:21, Ian Rogers wrote:
+> Make lookup nature of data structures clearer through their type.
+> 
+> Acked-by: Andi Kleen<ak@linux.intel.com>
+> Signed-off-by: Ian Rogers<irogers@google.com>
 
-'sys/file.h' included in 'builtin-daemon.c' is duplicated.
-it's also included at line 10.
-
-Reported-by: Zeal Robot <zealci@zte.com.cn>
-Signed-off-by: Ye Guojin <ye.guojin@zte.com.cn>
----
- tools/perf/builtin-daemon.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
-index c13201fb09c3..6cb3f6cc36d0 100644
---- a/tools/perf/builtin-daemon.c
-+++ b/tools/perf/builtin-daemon.c
-@@ -1121,8 +1121,6 @@ static int setup_config(struct daemon *daemon)
- #ifndef F_TLOCK
- #define F_TLOCK 2
- 
--#include <sys/file.h>
--
- static int lockf(int fd, int cmd, off_t len)
- {
- 	if (cmd != F_TLOCK || len != 0)
--- 
-2.25.1
-
+Reviewed-by: John Garry <john.garry@huawei.com>
