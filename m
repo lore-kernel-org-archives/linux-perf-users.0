@@ -2,160 +2,208 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9DCC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Oct 2021 17:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CB7C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Oct 2021 20:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D90C6135F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Oct 2021 17:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B928611C7
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Oct 2021 20:00:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234686AbhJSRgn (ORCPT
+        id S231738AbhJSUCv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 19 Oct 2021 13:36:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:52354 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234670AbhJSRgl (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 19 Oct 2021 13:36:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66331D6E;
-        Tue, 19 Oct 2021 10:34:28 -0700 (PDT)
-Received: from [10.57.73.194] (unknown [10.57.73.194])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 25CB03F694;
-        Tue, 19 Oct 2021 10:34:26 -0700 (PDT)
-Subject: Re: [PATCH 4/5] perf arm-spe: Implement find_snapshot callback
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Tue, 19 Oct 2021 16:02:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56344 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230432AbhJSUCu (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 19 Oct 2021 16:02:50 -0400
+Received: from mail-il1-x133.google.com (mail-il1-x133.google.com [IPv6:2607:f8b0:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CF14C061746
+        for <linux-perf-users@vger.kernel.org>; Tue, 19 Oct 2021 13:00:37 -0700 (PDT)
+Received: by mail-il1-x133.google.com with SMTP id a8so19621998ilj.10
+        for <linux-perf-users@vger.kernel.org>; Tue, 19 Oct 2021 13:00:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=9NU9PI5h+XIjdFaV8cJFhnAUvW54J00YhhaMQMKLO8o=;
+        b=JqOvObYObmHnMw/K5VX2OvTdj7KV86fkY/1/00npJRjr4O56ZHVu9hpu31vU+2esAw
+         upoaZHzqKeITLw+FmxVqOTnhdxJlV5hD/GcE9HKPB716Fby5Q1sfqTvA2S5um/SYCPVl
+         aLoVSxXZkrlPCsNLgKv+fw1iOMqO7nAkpgD5ETA9d2ionMfzs+vItT/+TyD8L8TszHc+
+         tW3eoeWdwzbg5ompA1VYx3Eq1t82BjpbcL3TI21Evry4qKiZS8TbgYW06UO5ZMrdE0zv
+         X6/vaJjlLo5jQqGpMZK/PokiXpCZx9g08UXmzEUbz0Y9ZE1nPxp2WOoOClPNyhF6gpQD
+         6NAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=9NU9PI5h+XIjdFaV8cJFhnAUvW54J00YhhaMQMKLO8o=;
+        b=62XYjieLLUIWYotklVavge3QAYHzIso1klnTtreuS9hDRTAPxe0cIB8A7058kiu39h
+         K5XZQQuu4UHcWi+cL1kMsG5pTd0rqKDczIHhldpyGbujfnYAHNZdnjaCh4G5ke9ShUrS
+         9t8cwIA54HpxwvmEKmkuY2fU8OjZyTE5OJ5vpMxG0mTpQEvL7BsBVHhF5Dcgve7MZRYp
+         4WBW/W7fWgFjwiPfvprQB5YaITUznHgQCWffPClxo4aq9V9nntwhQMUh5KYLqIXf0uzf
+         lLtHY607silb4jmw0DzYbQcn1SmC+9ry5mKQUeNQGwIgDZ8vyHDlM9lwGiuuLfjHHmp4
+         9zyw==
+X-Gm-Message-State: AOAM532zIkJ3rH95PdrB/rNLHh3rrustm89b+4/ZmploInopRoZ7PoPy
+        j/PRYmJKSScOmUtkOaEKrQkjfPyFF6bDhalmHB+lIA==
+X-Google-Smtp-Source: ABdhPJyqOJ7lv0Mj1nbom5b8As8VQx02ZXfyxIgGChPV+oeW9WuS3DO8uf2HdmxZxxCCGUaiXCAjk15iIYUFpnNcwyE=
+X-Received: by 2002:a05:6e02:1ca8:: with SMTP id x8mr20827199ill.150.1634673636531;
+ Tue, 19 Oct 2021 13:00:36 -0700 (PDT)
+MIME-Version: 1.0
+References: <20211015172132.1162559-1-irogers@google.com> <20211015172132.1162559-22-irogers@google.com>
+ <YW7e6OvE/juYY8it@kernel.org> <YW7gsEDXBw1jk65o@kernel.org>
+ <YW7hdvJ8eHS/jlgx@kernel.org> <YW7htMxwcNjZOtJH@kernel.org>
+In-Reply-To: <YW7htMxwcNjZOtJH@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 19 Oct 2021 13:00:23 -0700
+Message-ID: <CAP-5=fV85eOA5_vpaNSx5M8thSVvoiF+tzDmYe83TPF7Hk+0vA@mail.gmail.com>
+Subject: Re: [PATCH v2 21/21] perf metric: Allow modifiers on metrics.
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
-        James Clark <james.clark@arm.com>
-References: <20210916154635.1525-1-german.gomez@arm.com>
- <20210916154635.1525-4-german.gomez@arm.com>
- <20211017120546.GB130233@leoy-ThinkPad-X240s>
-From:   German Gomez <german.gomez@arm.com>
-Message-ID: <0661828d-f7d9-fd8f-2a57-19364d2e5218@arm.com>
-Date:   Tue, 19 Oct 2021 18:34:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
-MIME-Version: 1.0
-In-Reply-To: <20211017120546.GB130233@leoy-ThinkPad-X240s>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Kees Cook <keescook@chromium.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jacob Keller <jacob.e.keller@intel.com>,
+        Zhen Lei <thunder.leizhen@huawei.com>,
+        ToastC <mrtoastcheng@gmail.com>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Felix Fietkau <nbd@nbd.name>,
+        Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+        Song Liu <songliubraving@fb.com>, Fabian Hemmer <copy@copy.sh>,
+        Alexander Antonov <alexander.antonov@linux.intel.com>,
+        Nicholas Fraser <nfraser@codeweavers.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Denys Zagorui <dzagorui@cisco.com>,
+        Wan Jiabing <wanjiabing@vivo.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Changbin Du <changbin.du@intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Leo,
+On Tue, Oct 19, 2021 at 8:18 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Tue, Oct 19, 2021 at 12:17:10PM -0300, Arnaldo Carvalho de Melo escrev=
+eu:
+> > Em Tue, Oct 19, 2021 at 12:13:52PM -0300, Arnaldo Carvalho de Melo escr=
+eveu:
+> > > Em Tue, Oct 19, 2021 at 12:06:17PM -0300, Arnaldo Carvalho de Melo es=
+creveu:
+> > > > Em Fri, Oct 15, 2021 at 10:21:32AM -0700, Ian Rogers escreveu:
+> > > > > By allowing modifiers on metrics we can, for example, gather the
+> > > > > same metric for kernel and user mode. On a SkylakeX with
+> > > > > TopDownL1 this gives:
+> > > > >
+> > > > > $ perf stat -M TopDownL1:u,TopDownL1:k -a sleep 2
+> > > > >
+> > > > >  Performance counter stats for 'system wide':
+> > > >
+> > > > Hi Ian, can you please take a look on this? this is on my perf/core
+> > > > branch.
+> > >
+> > > I processed the first version of this series, reviewed by Andi, can y=
+ou
+> > > please submit the diff from one to the other?
+> >
+> > The interdiff from the 21st patch on the first batch versus on the v2
+> > batch is below, but it doesn't apply to my current perf/core branch,
+> > lemme push it to tmp.perf/core...
+>
+> It was there already, what I have locally is what is in tmp.perf/core.
 
-On 17/10/2021 13:05, Leo Yan wrote:
-> On Thu, Sep 16, 2021 at 04:46:34PM +0100, German Gomez wrote:
->
-> [...]
->
-> If run a test case (the test is pasted at the end of the reply), I
-> can get quite different AUX trace data with passing different wait
-> period before sending the first USR2 signal.
->
->   # sh test_arm_spe_snapshot.sh 2
->   Couldn't synthesize bpf events.
->   stress: info: [5768] dispatching hogs: 1 cpu, 0 io, 0 vm, 0 hdd
->   [ perf record: Woken up 3 times to write data ]
->   [ perf record: Captured and wrote 2.833 MB perf.data ]
->
->   # sh test_arm_spe_snapshot.sh 10
->   Couldn't synthesize bpf events.
->   stress: info: [5776] dispatching hogs: 1 cpu, 0 io, 0 vm, 0 hdd
->   [ perf record: Woken up 3 times to write data ]
->   [ perf record: Captured and wrote 24.356 MB perf.data ]
->
-> The first command passes argument '2' so the test will wait for 2
-> seconds before send USR2 signal for snapshot, and the perf data file is
-> 2.833 MB (so this means the Arm SPE trace data is about 2MB) for three
-> snapshots.  In the second command, the argument '10' means it will wait
-> for 10 seconds before sending the USR2 signals, and every time it records
-> the trace data from the full AUX buffer (8MB), at the end it gets 24MB
-> AUX trace data.
->
-> The issue happens in the second command, waiting for 10 seconds leads
-> to the *full* AUX ring buffer is filled by Arm SPE, so the function
-> arm_spe_buffer_has_wrapped() always return back true for this case.
-> Afterwards, arm_spe_find_snapshot() doesn't respect the passed old
-> header (from '*old') and assumes the trace data size is 'mm->len'.
+Hi Arnaldo,
 
-Returning the entire contents of the buffer once the first wrap-around
-was detected was the intention of the patch, so I don't currently see it
-as wrong. What were the values you were expecting to see in the test?
+The last change I see in tmp.perf/core is:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=3D=
+tmp.perf/core&id=3D5f43061b84d815c0f6477c1a8836bf0c6fec15a2
 
-If the handling of snapshot mode by the perf tool can be improved after
-upstreaming the changes to the driver, we could submit a followup patch
-after that has been fixed.
+The difference between v2 and v1 which fixes this bug is:
 
->
-> To allow arm_spe_buffer_has_wrapped() to work properly, I think we
-> need to clean up the top 8 bytes of the AUX buffer in Arm SPE driver
-> when start the PMU event (please note, this change has an assumption
-> that is meantioned in another email that suggests to remove redundant
-> PERF_RECORD_AUX events so the function arm_spe_perf_aux_output_begin()
-> is invoked only once when start PMU event, so we can use the top 8
-> bytes in AUX buffer to indicate trace is wrap around or not).
->
->
-> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-> index d44bcc29d99c..eb35f85d0efb 100644
-> --- a/drivers/perf/arm_spe_pmu.c
-> +++ b/drivers/perf/arm_spe_pmu.c
-> @@ -493,6 +493,16 @@ static void arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
->         if (limit)
->                 limit |= BIT(SYS_PMBLIMITR_EL1_E_SHIFT);
->
-> +       /*
-> +        * Cleanup the top 8 bytes for snapshot mode; these 8 bytes are
-> +        * used to indicate if trace data is wrap around if they are not
-> +        * zero.
-> +        */
-> +       if (buf->snapshot) {
-> +               void *tail = buf->base + (buf->nr_pages << PAGE_SHIFT) - 8;
-> +               memset(tail, 0x0, 8);
-> +       }
-> +
->         limit += (u64)buf->base;
->         base = (u64)buf->base + PERF_IDX2OFF(handle->head, buf);
->         write_sysreg_s(base, SYS_PMBPTR_EL1);
->
-> Thanks,
-> Leo
++@@ -1500,7 +1568,10 @@ int metricgroup__copy_metric_events(struct
+evlist *evlist, struct cgroup *cgrp,
++                               return -ENOMEM;
++
++                       new_expr->metric_expr =3D old_expr->metric_expr;
++-                      new_expr->metric_name =3D old_expr->metric_name;
+++                      new_expr->metric_name =3D strdup(old_expr->metric_n=
+ame);
+++                      if (!new_expr->metric_name)
+++                              return -ENOMEM;
+++
++                       new_expr->metric_unit =3D old_expr->metric_unit;
++                       new_expr->runtime =3D old_expr->runtime;
++
 
-I will try these and the other driver changes and discuss them with the
-team internally, thanks!
+I also cleaned up some checkpatch line length warnings in v2, which I
+think is the reason for the other changes. Ideally I'd prefer the v2
+patch set over the v1, but they are largely identical. Both were based
+on acme/perf/core. Let me know how I can help.
 
+Thanks,
+Ian
+
+> > - Arnaldo
+> >
+> > =E2=AC=A2[acme@toolbox perf]$ interdiff ~/wb/old.patch ~/wb/new.patch
+> > diff -u b/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> > --- b/tools/perf/util/metricgroup.c
+> > +++ b/tools/perf/util/metricgroup.c
+> > @@ -1308,8 +1308,7 @@
+> >       int ret;
+> >
+> >       *out_evlist =3D NULL;
+> > -     ret =3D metricgroup__build_event_string(&events, ids, modifier,
+> > -                                           has_constraint);
+> > +     ret =3D metricgroup__build_event_string(&events, ids, has_constra=
+int);
+> >       if (ret)
+> >               return ret;
+> >
+> > @@ -1324,7 +1323,8 @@
+> >
+> >               ids__insert(ids->ids, tmp);
+> >       }
+> > -     ret =3D metricgroup__build_event_string(&events, ids, has_constra=
+int);
+> > +     ret =3D metricgroup__build_event_string(&events, ids, modifier,
+> > +                                           has_constraint);
+> >       if (ret)
+> >               return ret;
+> >
+> > @@ -1568,7 +1568,10 @@
+> >                               return -ENOMEM;
+> >
+> >                       new_expr->metric_expr =3D old_expr->metric_expr;
+> > -                     new_expr->metric_name =3D old_expr->metric_name;
+> > +                     new_expr->metric_name =3D strdup(old_expr->metric=
+_name);
+> > +                     if (!new_expr->metric_name)
+> > +                             return -ENOMEM;
+> > +
+> >                       new_expr->metric_unit =3D old_expr->metric_unit;
+> >                       new_expr->runtime =3D old_expr->runtime;
+> >
+> > =E2=AC=A2[acme@toolbox perf]$
 >
-> ---8<---
+> --
 >
-> #!/bin/sh
->
-> ./perf record -e arm_spe/period=148576/u -C 0 -S -m8M,8M -- taskset --cpu-list 0 stress --cpu 1 &
->
-> PERFPID=$!
->
-> echo "sleep $1 seconds" > /sys/kernel/debug/tracing/trace_marker
->
-> # Wait for perf program
-> sleep  $1
->
-> # Send signal to snapshot trace data
-> kill -USR2 $PERFPID
-> sleep .03
-> kill -USR2 $PERFPID
-> sleep .03
-> kill -USR2 $PERFPID
->
-> echo "Stop snapshot" > /sys/kernel/debug/tracing/trace_marker
->
-> kill $PERFPID
-> wait $PERFPID
+> - Arnaldo
