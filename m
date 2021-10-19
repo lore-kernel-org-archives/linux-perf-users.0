@@ -2,152 +2,125 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDC1C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Oct 2021 15:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE7CC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Oct 2021 15:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69E5E61154
-	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Oct 2021 15:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F34386108E
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Oct 2021 15:28:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232231AbhJSPUb (ORCPT
+        id S233970AbhJSPau (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 19 Oct 2021 11:20:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39032 "EHLO mail.kernel.org"
+        Tue, 19 Oct 2021 11:30:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:50456 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233552AbhJSPUa (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 19 Oct 2021 11:20:30 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 18FE161074;
-        Tue, 19 Oct 2021 15:18:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634656695;
-        bh=iOMPFD5BW/TglrD5jW0xYpdvnZD0AjgFVyQTSJS7yRM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MBZ5cd5eOOEBgiOJsfQjDnR9OpFCU8PWsCJYjlNDixpB5VxLDJSLxb911McnfPUDy
-         qPVDoQaObA98kq+Naw1y8z4JlfC6koPz8HPluR2G1ZW/1C7ZmXqsfbTXWX+boMw+rr
-         XV3ZUnAu2VNhLCRCyyhFL2TEz83zcrWaQRqvvm0t51i7ypUeMADe0DkMCU/SSv1SX7
-         Wqxmnj5BdgdfieQqp0VsfsFNYBzYb/SN1iZUeYwnnc9ZU7BoxxOQhsEt7t8PBUabwj
-         eVPpJeFe6GyOFmf2JjshfqQH34fREa8DZNFCyMQJE1FQtXaKs7pLWunl7fw2BB+PWk
-         656qEx2sOyKcw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 7E98B410A1; Tue, 19 Oct 2021 12:18:12 -0300 (-03)
-Date:   Tue, 19 Oct 2021 12:18:12 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
+        id S233472AbhJSPat (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 19 Oct 2021 11:30:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 44BC32F;
+        Tue, 19 Oct 2021 08:28:36 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CE80B3F694;
+        Tue, 19 Oct 2021 08:28:33 -0700 (PDT)
+Date:   Tue, 19 Oct 2021 16:28:31 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jacob Keller <jacob.e.keller@intel.com>,
-        Zhen Lei <thunder.leizhen@huawei.com>,
-        ToastC <mrtoastcheng@gmail.com>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Felix Fietkau <nbd@nbd.name>,
-        Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-        Song Liu <songliubraving@fb.com>, Fabian Hemmer <copy@copy.sh>,
-        Alexander Antonov <alexander.antonov@linux.intel.com>,
-        Nicholas Fraser <nfraser@codeweavers.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Denys Zagorui <dzagorui@cisco.com>,
-        Wan Jiabing <wanjiabing@vivo.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Changbin Du <changbin.du@intel.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2 21/21] perf metric: Allow modifiers on metrics.
-Message-ID: <YW7htMxwcNjZOtJH@kernel.org>
-References: <20211015172132.1162559-1-irogers@google.com>
- <20211015172132.1162559-22-irogers@google.com>
- <YW7e6OvE/juYY8it@kernel.org>
- <YW7gsEDXBw1jk65o@kernel.org>
- <YW7hdvJ8eHS/jlgx@kernel.org>
+        Honnappa Nagarahalli <honnappa.nagarahalli@arm.com>,
+        Zachary.Leaf@arm.com, Raphael Gault <raphael.gault@arm.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Itaru Kitayama <itaru.kitayama@gmail.com>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v10 4/5] arm64: perf: Enable PMU counter userspace access
+ for perf event
+Message-ID: <20211019152831.GB4938@lakrids.cambridge.arm.com>
+References: <20210914204800.3945732-1-robh@kernel.org>
+ <20210914204800.3945732-5-robh@kernel.org>
+ <20211014165810.GA39276@lakrids.cambridge.arm.com>
+ <CAL_Jsq+OO3cbnsX6OdgKSL+3c8mn=KzanTJBePk-eA1J304uFA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <YW7hdvJ8eHS/jlgx@kernel.org>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <CAL_Jsq+OO3cbnsX6OdgKSL+3c8mn=KzanTJBePk-eA1J304uFA@mail.gmail.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Oct 19, 2021 at 12:17:10PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Tue, Oct 19, 2021 at 12:13:52PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Tue, Oct 19, 2021 at 12:06:17PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > Em Fri, Oct 15, 2021 at 10:21:32AM -0700, Ian Rogers escreveu:
-> > > > By allowing modifiers on metrics we can, for example, gather the
-> > > > same metric for kernel and user mode. On a SkylakeX with
-> > > > TopDownL1 this gives:
-> > > > 
-> > > > $ perf stat -M TopDownL1:u,TopDownL1:k -a sleep 2
-> > > > 
-> > > >  Performance counter stats for 'system wide':
-> > > 
-> > > Hi Ian, can you please take a look on this? this is on my perf/core
-> > > branch.
-> > 
-> > I processed the first version of this series, reviewed by Andi, can you
-> > please submit the diff from one to the other?
-> 
-> The interdiff from the 21st patch on the first batch versus on the v2
-> batch is below, but it doesn't apply to my current perf/core branch,
-> lemme push it to tmp.perf/core...
+Hi Rob,
 
-It was there already, what I have locally is what is in tmp.perf/core.
- 
-> - Arnaldo
+On Thu, Oct 14, 2021 at 02:24:46PM -0500, Rob Herring wrote:
+> On Thu, Oct 14, 2021 at 11:58 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> > On Tue, Sep 14, 2021 at 03:47:59PM -0500, Rob Herring wrote:
+> > For the `config1 = 3` case (potentially) overriding the usual long
+> > semantic, I'm struggling to understand why we need that rather than
+> > forcing the use of a 64-bit counter, because in that case:
+> >
+> > * For a CPU_CYCLES event:
+> >   __armv8_pmuv3_map_event() will always pick 64-bits
+> >   get_event_idx() may fail to allocate a 64-bit counter.
+> >
+> > * For other events:
+> >   __armv8_pmuv3_map_event() will pick 32/64 based on long counter
+> >   support
+> >   get_event_idx() will only fail if there are no counters free.
+> >
+> > Whereas if __armv8_pmuv3_map_event() returned an error for the latter
+> > when long counter support is not implemented, we'd have consistent
+> > `long` semantics, and the CPU_CYCLES behaviour would be identical.
+> >
+> > What's the rationale for `3` leaving the choice to the kernel?
 > 
-> ⬢[acme@toolbox perf]$ interdiff ~/wb/old.patch ~/wb/new.patch
-> diff -u b/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> --- b/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -1308,8 +1308,7 @@
->  	int ret;
+> It's the give me the maximum sized counter the h/w can support choice.
+> That's easier for userspace to implement. Bit 1 is more of a hint that
+> the user wants userspace access rather than a requirement.
 > 
->  	*out_evlist = NULL;
-> -	ret = metricgroup__build_event_string(&events, ids, modifier,
-> -					      has_constraint);
-> +	ret = metricgroup__build_event_string(&events, ids, has_constraint);
->  	if (ret)
->  		return ret;
+> > If the problem is discoverability, I'd be happy to add something to
+> > sysfs to describe whether the PMU has long event support.
 > 
-> @@ -1324,7 +1323,8 @@
+> Checking sysfs or a try for 64-bit support then fall back to 32-bit
+> support isn't much difference.
 > 
->  		ids__insert(ids->ids, tmp);
->  	}
-> -	ret = metricgroup__build_event_string(&events, ids, has_constraint);
-> +	ret = metricgroup__build_event_string(&events, ids, modifier,
-> +					      has_constraint);
->  	if (ret)
->  		return ret;
-> 
-> @@ -1568,7 +1568,10 @@
->  				return -ENOMEM;
-> 
->  			new_expr->metric_expr = old_expr->metric_expr;
-> -			new_expr->metric_name = old_expr->metric_name;
-> +			new_expr->metric_name = strdup(old_expr->metric_name);
-> +			if (!new_expr->metric_name)
-> +				return -ENOMEM;
-> +
->  			new_expr->metric_unit = old_expr->metric_unit;
->  			new_expr->runtime = old_expr->runtime;
-> 
-> ⬢[acme@toolbox perf]$
+> Keep in mind that x86 always succeeds here. Every userspace user will
+> have to add whatever dance we create here. For example, each libperf
+> test with user access (there's only 2 in my tree, but there's a series
+> adding more) has to have an '#ifdef __aarch64__' for whatever we do
+> here. I was seeking to minimize that. Right now, that's just a set
+> config1 to 0x3. Also, note that libperf will opportunistically use a
+> userspace read instead of read(). The user just has to mmap the event
+> and libperf will use a userspace read when enabled which ultimately
+> depends on what the mmapped page says.
 
--- 
+I think that x86 always succeeding here is more of a legacy thing that
+they're stuck with rather than a design to be copied.
 
-- Arnaldo
+I'd prefer to keep the existing meaning of the `long` flag to mean "give
+me 64 bits of counter, somehow", with `rdpmc` meaning "give me a single
+counter I can access from userspace", even if that means the combination
+of the two can sometimes be rejected. As you say, we can probe for that
+as necessary by trying `long` then falling back to a plain event, and if
+that ends up being a bottleneck somehow we can figure out a way of
+advertising support to userspace. Regardless, we should 
+
+Importantly, I don't think libperf should override a user's request for
+`long`, since the user may want to optimize for minimal perturbation
+rather than faster access.
+
+If we want a "please give me the longest counter that's compatible with
+other constraints", I think that should be a new flag e.g. `trylong`,
+and shouldn't override the existing `long`. We can add that as a
+follow-up if we want it.
+
+Thanks,
+Mark.
