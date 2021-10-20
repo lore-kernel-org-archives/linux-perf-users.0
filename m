@@ -2,180 +2,179 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F929C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Oct 2021 00:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 206CEC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Oct 2021 00:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECB1161029
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Oct 2021 00:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE305610CB
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Oct 2021 00:35:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229610AbhJTAEH (ORCPT
+        id S229683AbhJTAhd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 19 Oct 2021 20:04:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54414 "EHLO
+        Tue, 19 Oct 2021 20:37:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229602AbhJTAEG (ORCPT
+        with ESMTP id S229627AbhJTAhd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 19 Oct 2021 20:04:06 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6087FC06161C;
-        Tue, 19 Oct 2021 17:01:53 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: tonyk)
-        with ESMTPSA id 8D6C01F43E27
-Message-ID: <0d55b0a0-dd8c-0494-a200-7acb1976e32a@collabora.com>
-Date:   Tue, 19 Oct 2021 21:01:41 -0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Subject: Re: [PATCH v2 1/2] perf bench futex: Use a 64-bit time_t
-Content-Language: en-US
-To:     Alistair Francis <alistair23@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Alistair Francis <alistair.francis@opensource.wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        linux-perf-users@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tue, 19 Oct 2021 20:37:33 -0400
+Received: from mail-ua1-x936.google.com (mail-ua1-x936.google.com [IPv6:2607:f8b0:4864:20::936])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0921C06161C;
+        Tue, 19 Oct 2021 17:35:19 -0700 (PDT)
+Received: by mail-ua1-x936.google.com with SMTP id h4so3533710uaw.1;
+        Tue, 19 Oct 2021 17:35:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:user-agent:in-reply-to:references
+         :message-id:mime-version:content-transfer-encoding;
+        bh=DBHktv6tWnHaAPhvn/ATHNr/sBbAryr3v0f/Ync7WK0=;
+        b=a3rUdqTZqUyD0z9UFNRkvnwBUK3seVDZfsy5S9vUFigOsHNLRQJliep0ocNoGq0O7S
+         1gxnUtcVrC6foGEr107JoDmJf9gmtaaEMxWY+8ppIfzuY4aEw7Jzva2TX173tyQIQS6r
+         2b5xA9/OLAkGEzMuFmvf8ADZA9XOPCKkIkxpeaBGdabYhjRZO2PNOV9wJeIQAYSylLrF
+         qxGxOvmfmknh2STXs1mTsi9F8hU7RQen2TQLM6m7KNvXFHh6AjGfWKDEubQt4vSM/YxA
+         F06B7qaQ1+9R61F9AmEMIK6KljwCjETvqNGA64p/FOD6H6EQql8jhVH/8m+AF2IwT8X9
+         AG/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:user-agent:in-reply-to
+         :references:message-id:mime-version:content-transfer-encoding;
+        bh=DBHktv6tWnHaAPhvn/ATHNr/sBbAryr3v0f/Ync7WK0=;
+        b=D8Tarsl8rik/HO6naH8QNHQSUSFResxsaSszGZs+JWABmzFK9MYc7SZjiAjuj6l5Yx
+         5gYihlsG+vUV9llnMaDsg64vmd/VQi7BzywfqtLfDurGFDIBf0hJFXHgW/4j3WnCz2rH
+         U798ITnJJ0y5d+wpCyI5yDLxxhP0yx51i4ddFudFdS45g3cSayyYTWy2DE/uVAEUvpwB
+         u6amIqxxUxtaE0ThfKI4UIoY+o3e/+T6GE9MoNxTbd7HnVr0JTxTPSI6HLFaMnyqKG+F
+         Zy0D0AeqP/fHG74UrAHkUGpxRrn/gxEFCEQc6HlvZpspsgVNNSOK0yhC2PPDy2yYCHbH
+         7oAA==
+X-Gm-Message-State: AOAM533D3ok/Us/PabG/YnTYn08FiSBwLdPY5vUx4Qs4wzsYiVVuYcaX
+        p+xoyBzQu8uEUxh0nyctph8=
+X-Google-Smtp-Source: ABdhPJxLODS6k7EC06EcKK6jcvxgoUCnQC4eAkckdg3hP9PCABAJjJ9ODygIo5ainHAwKYgKSvJE7w==
+X-Received: by 2002:a67:e0c2:: with SMTP id m2mr39976209vsl.2.1634690118818;
+        Tue, 19 Oct 2021 17:35:18 -0700 (PDT)
+Received: from [127.0.0.1] ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id w128sm420145vka.27.2021.10.19.17.35.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Oct 2021 17:35:18 -0700 (PDT)
+Date:   Tue, 19 Oct 2021 21:35:13 -0300
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+To:     Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Darren Hart <dvhart@infradead.org>,
+        John Garry <john.garry@huawei.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <atish.patra@wdc.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Alistair Francis <alistair.francis@wdc.com>
-References: <20211015005634.2658470-1-alistair.francis@opensource.wdc.com>
- <YW74wK03ibOS3jVZ@kernel.org>
- <CAKmqyKP6AU-9tcYOp-ERvYFP7t6DMp4kbQgDmJxD6wb0WTUy+w@mail.gmail.com>
-From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
-In-Reply-To: <CAKmqyKP6AU-9tcYOp-ERvYFP7t6DMp4kbQgDmJxD6wb0WTUy+w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jacob Keller <jacob.e.keller@intel.com>,
+        Zhen Lei <thunder.leizhen@huawei.com>,
+        ToastC <mrtoastcheng@gmail.com>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Felix Fietkau <nbd@nbd.name>,
+        Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+        Song Liu <songliubraving@fb.com>, Fabian Hemmer <copy@copy.sh>,
+        Alexander Antonov <alexander.antonov@linux.intel.com>,
+        Nicholas Fraser <nfraser@codeweavers.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Denys Zagorui <dzagorui@cisco.com>,
+        Wan Jiabing <wanjiabing@vivo.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Changbin Du <changbin.du@intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v2 21/21] perf metric: Allow modifiers on metrics.
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAP-5=fV85eOA5_vpaNSx5M8thSVvoiF+tzDmYe83TPF7Hk+0vA@mail.gmail.com>
+References: <20211015172132.1162559-1-irogers@google.com> <20211015172132.1162559-22-irogers@google.com> <YW7e6OvE/juYY8it@kernel.org> <YW7gsEDXBw1jk65o@kernel.org> <YW7hdvJ8eHS/jlgx@kernel.org> <YW7htMxwcNjZOtJH@kernel.org> <CAP-5=fV85eOA5_vpaNSx5M8thSVvoiF+tzDmYe83TPF7Hk+0vA@mail.gmail.com>
+Message-ID: <C9460490-184C-4BFD-BD89-063C77F17344@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Às 20:17 de 19/10/21, Alistair Francis escreveu:
-> On Wed, Oct 20, 2021 at 2:56 AM Arnaldo Carvalho de Melo
-> <arnaldo.melo@gmail.com> wrote:
->>
->> Em Fri, Oct 15, 2021 at 10:56:33AM +1000, Alistair Francis escreveu:
->>> From: Alistair Francis <alistair.francis@wdc.com>
->>>
->>> Convert tools/perf to only use a 64-bit time_t. On 64-bit architectures
->>> this isn't a functional change. On 32-bit architectures we now only
->>> perform 64-bit time_t syscalls (__NR_futex_time64) and use a struct
->>> timespec64.
->>>
->>> This won't work on kernels before 5.1, but as perf is tied to the kernel
->>> that's ok.
->>
->> No, perf is not tied to the kernel, one can use a new perf tool on any
->> previous kernel, and an old perf tool should work on new kernels as
->> well.
-> 
-> + André, I won't be doing this the way you requested
-> 
 
-Ok, thanks anyway for your work and sorry for the trouble :)
 
-> Ok, so back to the previous version then. I'll send the patches soon.
-> 
-> Alistair
-> 
+On October 19, 2021 5:00:23 PM GMT-03:00, Ian Rogers <irogers@google=2Ecom=
+> wrote:
+>On Tue, Oct 19, 2021 at 8:18 AM Arnaldo Carvalho de Melo
+><acme@kernel=2Eorg> wrote:
 >>
->> - Arnaldo
+>> Em Tue, Oct 19, 2021 at 12:17:10PM -0300, Arnaldo Carvalho de Melo escr=
+eveu:
+>> > Em Tue, Oct 19, 2021 at 12:13:52PM -0300, Arnaldo Carvalho de Melo es=
+creveu:
+>> > > Em Tue, Oct 19, 2021 at 12:06:17PM -0300, Arnaldo Carvalho de Melo =
+escreveu:
+>> > > > Em Fri, Oct 15, 2021 at 10:21:32AM -0700, Ian Rogers escreveu:
+>> > > > > By allowing modifiers on metrics we can, for example, gather th=
+e
+>> > > > > same metric for kernel and user mode=2E On a SkylakeX with
+>> > > > > TopDownL1 this gives:
+>> > > > >
+>> > > > > $ perf stat -M TopDownL1:u,TopDownL1:k -a sleep 2
+>> > > > >
+>> > > > >  Performance counter stats for 'system wide':
+>> > > >
+>> > > > Hi Ian, can you please take a look on this? this is on my perf/co=
+re
+>> > > > branch=2E
+>> > >
+>> > > I processed the first version of this series, reviewed by Andi, can=
+ you
+>> > > please submit the diff from one to the other?
+>> >
+>> > The interdiff from the 21st patch on the first batch versus on the v2
+>> > batch is below, but it doesn't apply to my current perf/core branch,
+>> > lemme push it to tmp=2Eperf/core=2E=2E=2E
 >>
->>> This allows us to build perf for 32-bit architectures with 64-bit time_t
->>> like RISC-V 32-bit.
->>>
->>> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
->>> ---
->>>  tools/perf/bench/futex.h | 26 ++++++++++++++++++++------
->>>  1 file changed, 20 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/tools/perf/bench/futex.h b/tools/perf/bench/futex.h
->>> index b3853aac3021c..b9665d43d2988 100644
->>> --- a/tools/perf/bench/futex.h
->>> +++ b/tools/perf/bench/futex.h
->>> @@ -12,6 +12,7 @@
->>>  #include <sys/syscall.h>
->>>  #include <sys/types.h>
->>>  #include <linux/futex.h>
->>> +#include <linux/time_types.h>
->>>
->>>  struct bench_futex_parameters {
->>>       bool silent;
->>> @@ -27,12 +28,14 @@ struct bench_futex_parameters {
->>>       unsigned int nrequeue;
->>>  };
->>>
->>> +#define timespec64 __kernel_timespec
->>> +
->>>  /**
->>>   * futex() - SYS_futex syscall wrapper
->>>   * @uaddr:   address of first futex
->>>   * @op:              futex op code
->>>   * @val:     typically expected value of uaddr, but varies by op
->>> - * @timeout: typically an absolute struct timespec (except where noted
->>> + * @timeout: typically an absolute struct timespec64 (except where noted
->>>   *           otherwise). Overloaded by some ops
->>>   * @uaddr2:  address of second futex for some ops
->>>   * @val3:    varies by op
->>> @@ -47,15 +50,26 @@ struct bench_futex_parameters {
->>>   * These argument descriptions are the defaults for all
->>>   * like-named arguments in the following wrappers except where noted below.
->>>   */
->>> -#define futex(uaddr, op, val, timeout, uaddr2, val3, opflags) \
->>> -     syscall(SYS_futex, uaddr, op | opflags, val, timeout, uaddr2, val3)
->>> +/**
->>> + * We only support 64-bit time_t for the timeout.
->>> + * On 64-bit architectures we can use __NR_futex
->>> + * On 32-bit architectures we use __NR_futex_time64. This only works on kernel
->>> + * versions 5.1+.
->>> + */
->>> +#if __BITS_PER_LONG == 64
->>> +# define futex(uaddr, op, val, timeout, uaddr2, val3, opflags) \
->>> +     syscall(__NR_futex, uaddr, op | opflags, val, timeout, uaddr2, val3)
->>> +#else
->>> +# define futex(uaddr, op, val, timeout, uaddr2, val3, opflags) \
->>> +     syscall(__NR_futex_time64, uaddr, op | opflags, val, timeout, uaddr2, val3)
->>> +#endif
->>>
->>>  /**
->>>   * futex_wait() - block on uaddr with optional timeout
->>>   * @timeout: relative timeout
->>>   */
->>>  static inline int
->>> -futex_wait(u_int32_t *uaddr, u_int32_t val, struct timespec *timeout, int opflags)
->>> +futex_wait(u_int32_t *uaddr, u_int32_t val, struct timespec64 *timeout, int opflags)
->>>  {
->>>       return futex(uaddr, FUTEX_WAIT, val, timeout, NULL, 0, opflags);
->>>  }
->>> @@ -74,7 +88,7 @@ futex_wake(u_int32_t *uaddr, int nr_wake, int opflags)
->>>   * futex_lock_pi() - block on uaddr as a PI mutex
->>>   */
->>>  static inline int
->>> -futex_lock_pi(u_int32_t *uaddr, struct timespec *timeout, int opflags)
->>> +futex_lock_pi(u_int32_t *uaddr, struct timespec64 *timeout, int opflags)
->>>  {
->>>       return futex(uaddr, FUTEX_LOCK_PI, 0, timeout, NULL, 0, opflags);
->>>  }
->>> @@ -111,7 +125,7 @@ futex_cmp_requeue(u_int32_t *uaddr, u_int32_t val, u_int32_t *uaddr2, int nr_wak
->>>   */
->>>  static inline int
->>>  futex_wait_requeue_pi(u_int32_t *uaddr, u_int32_t val, u_int32_t *uaddr2,
->>> -                   struct timespec *timeout, int opflags)
->>> +                   struct timespec64 *timeout, int opflags)
->>>  {
->>>       return futex(uaddr, FUTEX_WAIT_REQUEUE_PI, val, timeout, uaddr2, 0,
->>>                    opflags);
->>> --
->>> 2.31.1
->>
->> --
->>
->> - Arnaldo
+>> It was there already, what I have locally is what is in tmp=2Eperf/core=
+=2E
+>
+>Hi Arnaldo,
+>
+>The last change I see in tmp=2Eperf/core is:
+>https://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/acme/linux=2Egit/comm=
+it/?h=3Dtmp=2Eperf/core&id=3D5f43061b84d815c0f6477c1a8836bf0c6fec15a2
+>
+>The difference between v2 and v1 which fixes this bug is:
+>
+>+@@ -1500,7 +1568,10 @@ int metricgroup__copy_metric_events(struct
+>evlist *evlist, struct cgroup *cgrp,
+>+                               return -ENOMEM;
+>+
+>+                       new_expr->metric_expr =3D old_expr->metric_expr;
+>+-                      new_expr->metric_name =3D old_expr->metric_name;
+>++                      new_expr->metric_name =3D strdup(old_expr->metric=
+_name);
+>++                      if (!new_expr->metric_name)
+>++                              return -ENOMEM;
+>++
+>+                       new_expr->metric_unit =3D old_expr->metric_unit;
+>+                       new_expr->runtime =3D old_expr->runtime;
+>+
+>
+>I also cleaned up some checkpatch line length warnings in v2, which I
+>think is the reason for the other changes=2E Ideally I'd prefer the v2
+>patch set over the v1, but they are largely identical=2E Both were based
+>on acme/perf/core=2E Let me know how I can help=2E
+>
+
+I'm trying not to rewrite the perf/core branch after it's made public, so =
+the best at this point is to add a new patch fixing the problem, if you can=
+ please send it, that would help=2E
+
+If it was just on tmp=2Eperf/core, then it would be ok to fix it=2E
+
+- Arnaldo
