@@ -2,215 +2,304 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B658EC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Oct 2021 15:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F57FC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Oct 2021 15:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96AD160FDA
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Oct 2021 15:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70FD3611F2
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Oct 2021 15:51:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230072AbhJTPJK (ORCPT
+        id S230219AbhJTPxc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 20 Oct 2021 11:09:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:32924 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229570AbhJTPJK (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 20 Oct 2021 11:09:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A911BED1;
-        Wed, 20 Oct 2021 08:06:55 -0700 (PDT)
-Received: from [10.1.37.134] (e127744.cambridge.arm.com [10.1.37.134])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 146473F73D;
-        Wed, 20 Oct 2021 08:06:52 -0700 (PDT)
-Subject: Re: [PATCH 5/5] perf arm-spe: Snapshot mode test
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Wed, 20 Oct 2021 11:53:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42380 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229952AbhJTPxc (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 20 Oct 2021 11:53:32 -0400
+Received: from mail-io1-xd2a.google.com (mail-io1-xd2a.google.com [IPv6:2607:f8b0:4864:20::d2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6732C061749
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Oct 2021 08:51:17 -0700 (PDT)
+Received: by mail-io1-xd2a.google.com with SMTP id y67so25159945iof.10
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Oct 2021 08:51:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=52C2Y8cOkNWoTUTXLaRoAf0RZQq35G8qoE/ETyl/2ng=;
+        b=DJjoSup0KjxlO/2xPyfyL15B0RtPUrK3GperDclaqQJl+OIwFZaWyR5zhe+J8qCXUy
+         JaRANowTvMA4na2sxV9FKmtIl/iy3GwH8d/KK8ks1m+xsfMNf6p8zyBeQI4ra0MwqBpx
+         Rx1a51LeH671fgvdqpKKkSZO6ffbWoqrE44xqbYYR/kVIzJe2EqNUlcRYB+WFAiQn1L1
+         KJXy5Pzu/9lUFLzMJgzURo+DHmbAPh2QAtiEmJTGhrTdm+4hVpIPlehmDawCRsr1+HPb
+         581prVMidQE0Ez60TdY0b6Ipu8LNc4bIxi3JDMRDJZihrrGroiLusA1aRBwu5fp/xrdx
+         Gmww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=52C2Y8cOkNWoTUTXLaRoAf0RZQq35G8qoE/ETyl/2ng=;
+        b=Z/8J1y0PWsSCtxhACTRw3mvTkaifZtOcRHeeqM0S4NEn1UKDpbvSxyKq9c3IOfxoqI
+         nMokPTRwd3I6FlLA+NpeIlwAdwkd13REqjbnhh0hwmrCkRVkjRx5/3bVVfcp1VISLF5F
+         TGhDcariFLAPwuv6QtNz9IaAm6xTBT/nGfsS5iwnguIjDNhxCCiFeMuxwGBbgGh05XQX
+         wlAPDSJ2dogsyoZx/jv/+7RdqdL3BelJPY24phopk0rSK+nj0zHCXe6JmxUhW/w6INkb
+         lNJGYLVzOTCQnKVXeyTLa6bxdl/9UxU3rg5OVSCAp9S4iX38DCKgSyL2slju0xJg3gLB
+         a1vQ==
+X-Gm-Message-State: AOAM531M5PYAD6m4L9oJyZVTwehkx+a7JFzw3ymbGM9jMYDQzK8RN8Q7
+        MotihIcAuTxcFsdLsrPJhyHjVs41OI1R3aRfXWbP3Q==
+X-Google-Smtp-Source: ABdhPJxwgkRWPyWwws7D4l5vUUPkYTbATGgpqv+YHX+ESR1rqOMbXqcopiOTQtckLX1MdbsAvENwcZTf60KT0MGcvVM=
+X-Received: by 2002:a05:6638:293:: with SMTP id c19mr78831jaq.21.1634745076847;
+ Wed, 20 Oct 2021 08:51:16 -0700 (PDT)
+MIME-Version: 1.0
+References: <20211013174604.747276-1-irogers@google.com> <YXAINnEcHsy450zm@krava>
+In-Reply-To: <YXAINnEcHsy450zm@krava>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 20 Oct 2021 08:51:04 -0700
+Message-ID: <CAP-5=fVCqisvy8-Obx9TA3Zgi_BJdefYr-g4LCsuy1KKb2xtBQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/22] Start aligning perf test with kunit style
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org
-References: <20210916154635.1525-1-german.gomez@arm.com>
- <20210916154635.1525-5-german.gomez@arm.com>
- <20211020131339.GG49614@leoy-ThinkPad-X240s>
-From:   German Gomez <german.gomez@arm.com>
-Message-ID: <4f3c3964-3448-586b-4199-764236938536@arm.com>
-Date:   Wed, 20 Oct 2021 16:06:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
-MIME-Version: 1.0
-In-Reply-To: <20211020131339.GG49614@leoy-ThinkPad-X240s>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Jin Yao <yao.jin@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Daniel Latypov <dlatypov@google.com>,
+        David Gow <davidgow@google.com>, eranian@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Leo,
+On Wed, Oct 20, 2021 at 5:14 AM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Wed, Oct 13, 2021 at 10:45:42AM -0700, Ian Rogers wrote:
+> > Perf test uses its own structs and code layout that differs from kunit
+> > that was more recently introduced to the kernel. Besides consistency,
+> > it is hoped that moving in the direction of kunit style will enable
+> > reuse of infrastructure like test output formatting for continuous
+> > testing systems. For example:
+> > https://lore.kernel.org/linux-kselftest/CA+GJov6tdjvY9x12JsJT14qn6c7NVi=
+JxqaJk+r-K1YJzPggFDQ@mail.gmail.com/
+> >
+> > The motivation for this restructuring comes from wanting to be able to
+> > tag tests with a size:
+> > https://lore.kernel.org/linux-perf-users/CAP-5=3DfWmGyuqFKc-EMP3rbmTkjZ=
+3MS+YSajGZfeRMc38HS82gw@mail.gmail.com/
+> > To have more exhaustive and slower running tests.  This isn't
+> > something kunit currently supports, nor is the execution of python and
+> > shell tests, but it seems sensible to work on an approach with kunit
+> > rather to invent a new wheel inside of perf.
+> >
+> > These initial patches are just refactoring the main test suite
+> > definitions to be in a more kunit style. Kunit isn't depended upon, it
+> > is hoped that this can be done in later patches for the sake of
+> > consistency.
+> >
+> > v2. Gets to a point of the perf test test suite/case structs being
+> >     close facsimiles of the kunit ones. It also addresses feedback on
+> >     the v1 RFC, in particular from Jiri Olsa <jolsa@redhat.com>.
+>
+> hi,
+> when I compile with DEBUG=3D1 it's ok, but with just make:
+>
+> [root@krava perf]# ./perf test
+> Segmentation fault (core dumped)
+> [root@krava perf]# gdb ./perf
+> GNU gdb (GDB) Fedora 10.2-4.fc33
+> Copyright (C) 2021 Free Software Foundation, Inc.
+> License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.h=
+tml>
+> This is free software: you are free to change and redistribute it.
+> There is NO WARRANTY, to the extent permitted by law.
+> Type "show copying" and "show warranty" for details.
+> This GDB was configured as "x86_64-redhat-linux-gnu".
+> Type "show configuration" for configuration details.
+> For bug reporting instructions, please see:
+> <https://www.gnu.org/software/gdb/bugs/>.
+> Find the GDB manual and other documentation resources online at:
+>     <http://www.gnu.org/software/gdb/documentation/>.
+>
+> For help, type "help".
+> Type "apropos word" to search for commands related to "word"...
+> Reading symbols from ./perf...
+> (gdb) r test
+> Starting program: /home/jolsa/kernel/linux-perf/tools/perf/perf test
+> [Thread debugging using libthread_db enabled]
+> Using host libthread_db library "/lib64/libthread_db.so.1".
+>
+> Program received signal SIGSEGV, Segmentation fault.
+> __strlen_avx2 () at ../sysdeps/x86_64/multiarch/strlen-avx2.S:96
+> 96              VPCMPEQ (%rdi), %ymm0, %ymm1
+> Missing separate debuginfos, use: dnf debuginfo-install bzip2-libs-1.0.8-=
+4.fc33.x86_64 cyrus-sasl-lib-2.1.27-6.fc33.x86_64 elfutils-debuginfod-clien=
+t-0.185-2.fc33.x86_64 elfutils-libelf-0.185-2.fc33.x86_64 elfutils-libs-0.1=
+85-2.fc33.x86_64 keyutils-libs-1.6.1-1.fc33.x86_64 krb5-libs-1.18.2-31.fc33=
+.x86_64 libbabeltrace-1.5.8-3.fc33.x86_64 libbrotli-1.0.9-3.fc33.x86_64 lib=
+cap-2.48-2.fc33.x86_64 libcom_err-1.45.6-4.fc33.x86_64 libgcc-10.3.1-1.fc33=
+.x86_64 libidn2-2.3.2-1.fc33.x86_64 libnghttp2-1.43.0-1.fc33.x86_64 libpsl-=
+0.21.1-2.fc33.x86_64 libselinux-3.1-2.fc33.x86_64 libssh-0.9.6-1.fc33.x86_6=
+4 libunistring-0.9.10-9.fc33.x86_64 libunwind-1.4.0-4.fc33.x86_64 libuuid-2=
+.36.1-1.fc33.x86_64 libxcrypt-4.4.26-2.fc33.x86_64 numactl-libs-2.0.14-1.fc=
+33.x86_64 openldap-2.4.50-5.fc33.x86_64 openssl-libs-1.1.1l-2.fc33.x86_64 p=
+cre-8.44-2.fc33.x86_64 perl-libs-5.32.1-471.fc33.x86_64 popt-1.18-2.fc33.x8=
+6_64 python2.7-2.7.18-15.fc33.x86_64 slang-2.3.2-8.fc33.x86_64 xz-libs-5.2.=
+5-4.fc33.x86_64 zlib-1.2.11-23.fc33.x86_64
+> (gdb) bt
+> #0  __strlen_avx2 () at ../sysdeps/x86_64/multiarch/strlen-avx2.S:96
+> #1  0x00000000004a3848 in __cmd_test (skiplist=3D0x0, argv=3D0x7fffffffd6=
+c0, argc=3D0) at tests/builtin-test.c:150
+> #2  cmd_test (argc=3D0, argv=3D0x7fffffffd6c0) at tests/builtin-test.c:62=
+8
+> #3  0x00000000004cc47b in run_builtin (p=3Dp@entry=3D0xa7cda8 <commands+5=
+52>, argc=3Dargc@entry=3D1, argv=3Dargv@entry=3D0x7fffffffd6c0) at perf.c:3=
+13
+> #4  0x00000000004397ae in handle_internal_command (argv=3D0x7fffffffd6c0,=
+ argc=3D1) at perf.c:365
+> #5  run_argv (argv=3D<synthetic pointer>, argcp=3D<synthetic pointer>) at=
+ perf.c:409
+> #6  main (argc=3D1, argv=3D0x7fffffffd6c0) at perf.c:539
+> (gdb)
 
-I'm unable to reproduce. I've tried on top of the most recent perf/core
-branch but I still get exit code 0 consistently:
+Thanks, I'll take a look.
 
-    $ git log
-    commit be8ecc57f180415e8a7c1cc5620c5236be2a7e56 (grafted, origin/perf/core)
-    Author: Tony Garnock-Jones <tonyg@leastfixedpoint.com>
-    Date:   Thu Sep 16 14:09:39 2021 +0200
+> also during the metric test (in make DEBUG=3D1 build) it runs the
+> perf bench synthesize and it takes forever ;-)
+>
+>   89: perf all metrics test
+>
+> that might be another patchset I haven't checked,
+> but I thought we already agreed not to do that ;-)
 
-    $ ./perf test 88 -v
-    Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
-    88: Check Arm SPE trace data recording and synthesized samples      :
-    --- start ---
-    test child forked, pid 18700
-    Recording trace with snapshot mode /tmp/__perf_test.perf.data.xgsUt
-    Looking at perf.data file for dumping samples:
-    Looking at perf.data file for reporting samples:
-    SPE snapshot testing: PASS
-    test child finished with 0
-    ---- end ----
-    Check Arm SPE trace data recording and synthesized samples: Ok
+The PMU test was merged, and that may be the very slow running one.
+The metric tests run with /bin/true, but if they get "not counted" in
+the output they try again with perf bench. It generally runs in
+O(seconds) for me, but maybe it is slower on a loaded machine. There
+may be some middle sized thing between "perf bench" and true that
+gives us enough counts for the tests.
 
-On 20/10/2021 14:13, Leo Yan wrote:
-> On Thu, Sep 16, 2021 at 04:46:35PM +0100, German Gomez wrote:
->> Shell script test_arm_spe.sh has been added to test the recording of SPE
->> tracing events in snapshot mode.
->>
->> Reviewed-by: James Clark <james.clark@arm.com>
->> Signed-off-by: German Gomez <german.gomez@arm.com>
->> ---
->>  tools/perf/tests/shell/test_arm_spe.sh | 91 ++++++++++++++++++++++++++
->>  1 file changed, 91 insertions(+)
->>  create mode 100755 tools/perf/tests/shell/test_arm_spe.sh
->>
->> diff --git a/tools/perf/tests/shell/test_arm_spe.sh b/tools/perf/tests/shell/test_arm_spe.sh
->> new file mode 100755
->> index 000000000000..9ed817e76f95
->> --- /dev/null
->> +++ b/tools/perf/tests/shell/test_arm_spe.sh
->> @@ -0,0 +1,91 @@
->> +#!/bin/sh
->> +# Check Arm SPE trace data recording and synthesized samples
->> +
->> +# Uses the 'perf record' to record trace data of Arm SPE events;
->> +# then verify if any SPE event samples are generated by SPE with
->> +# 'perf script' and 'perf report' commands.
->> +
->> +# SPDX-License-Identifier: GPL-2.0
->> +# German Gomez <german.gomez@arm.com>, 2021
->> +
->> +skip_if_no_arm_spe_event() {
->> +	perf list | egrep -q 'arm_spe_[0-9]+//' && return 0
->> +
->> +	# arm_spe event doesn't exist
->> +	return 2
->> +}
->> +
->> +skip_if_no_arm_spe_event || exit 2
->> +
->> +perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
->> +glb_err=0
->> +
->> +cleanup_files()
->> +{
->> +	rm -f ${perfdata}
->> +	trap - exit term int
->> +	kill -2 $$ # Forward sigint to parent
-> I understand you copy this code from Arm cs-etm testing, but I found
-> the sentence 'kill -2 $$' will cause a failure at my side with the
-> command:
+Thanks,
+Ian
+
+> jirka
 >
-> root@ubuntu:/home/leoy/linux/tools/perf# ./perf test 85 -v
-> 85: Check Arm SPE trace data recording and synthesized samples      :
-> --- start ---
-> test child forked, pid 29053
-> Recording trace with snapshot mode /tmp/__perf_test.perf.data.uughb
-> Looking at perf.data file for dumping samples:
-> Looking at perf.data file for reporting samples:
-> SPE snapshot testing: PASS
-> test child finished with -1
-> ---- end ----
-> Check Arm SPE trace data recording and synthesized samples: FAILED!
+> >
+> > v1. Built/tested on x86.
+> >
+> > Ian Rogers (22):
+> >   perf test: Use macro for "suite" declarations
+> >   perf test: Use macro for "suite" definitions
+> >   perf test: Make each test/suite its own struct.
+> >   perf test: Move each test suite struct to its test
+> >   perf test: Rename struct test to test_suite
+> >   perf test: Add helper functions for abstraction.
+> >   perf test: Add test case struct.
+> >   perf test: Add skip reason to test case.
+> >   perf test: Convert pfm tests to use test cases.
+> >   perf test: Convert pmu event tests to test cases.
+> >   perf test: Convert watch point tests to test cases.
+> >   perf test: Convert clang tests to test cases.
+> >   perf test: Convert bpf tests to test cases.
+> >   perf test: Convert llvm tests to test cases.
+> >   perf test: Remove now unused subtest helpers
+> >   perf test: bp tests use test case
+> >   perf test: Convert time to tsc test to test case.
+> >   perf test: Remove non test case style support.
+> >   perf test: BP tests, remove is_supported use
+> >   perf test: TSC test, remove is_supported use
+> >   perf test: Remove is_supported function
+> >   perf test: Remove skip_if_fail
+> >
+> >  tools/perf/arch/arm/include/arch-tests.h      |   2 +-
+> >  tools/perf/arch/arm/tests/arch-tests.c        |  18 +-
+> >  tools/perf/arch/arm/tests/vectors-page.c      |   2 +-
+> >  tools/perf/arch/arm64/include/arch-tests.h    |   2 +-
+> >  tools/perf/arch/arm64/tests/arch-tests.c      |  11 +-
+> >  tools/perf/arch/powerpc/include/arch-tests.h  |   2 +-
+> >  tools/perf/arch/powerpc/tests/arch-tests.c    |  12 +-
+> >  tools/perf/arch/x86/include/arch-tests.h      |  14 +-
+> >  tools/perf/arch/x86/tests/arch-tests.c        |  46 +-
+> >  tools/perf/arch/x86/tests/bp-modify.c         |   2 +-
+> >  tools/perf/arch/x86/tests/insn-x86.c          |   2 +-
+> >  tools/perf/arch/x86/tests/intel-cqm.c         |   2 +-
+> >  .../x86/tests/intel-pt-pkt-decoder-test.c     |   2 +-
+> >  tools/perf/arch/x86/tests/rdpmc.c             |   2 +-
+> >  tools/perf/arch/x86/tests/sample-parsing.c    |   2 +-
+> >  tools/perf/tests/api-io.c                     |   6 +-
+> >  tools/perf/tests/attr.c                       |   4 +-
+> >  tools/perf/tests/backward-ring-buffer.c       |   4 +-
+> >  tools/perf/tests/bitmap.c                     |   4 +-
+> >  tools/perf/tests/bp_account.c                 |  36 +-
+> >  tools/perf/tests/bp_signal.c                  |  34 +-
+> >  tools/perf/tests/bp_signal_overflow.c         |   9 +-
+> >  tools/perf/tests/bpf.c                        |  69 ++-
+> >  tools/perf/tests/builtin-test.c               | 578 ++++++------------
+> >  tools/perf/tests/clang.c                      |  54 +-
+> >  tools/perf/tests/code-reading.c               |   4 +-
+> >  tools/perf/tests/cpumap.c                     |  10 +-
+> >  tools/perf/tests/demangle-java-test.c         |   4 +-
+> >  tools/perf/tests/demangle-ocaml-test.c        |   4 +-
+> >  tools/perf/tests/dlfilter-test.c              |   4 +-
+> >  tools/perf/tests/dso-data.c                   |  10 +-
+> >  tools/perf/tests/dwarf-unwind.c               |   5 +-
+> >  tools/perf/tests/event-times.c                |   4 +-
+> >  tools/perf/tests/event_update.c               |   4 +-
+> >  tools/perf/tests/evsel-roundtrip-name.c       |   5 +-
+> >  tools/perf/tests/evsel-tp-sched.c             |   5 +-
+> >  tools/perf/tests/expand-cgroup.c              |   6 +-
+> >  tools/perf/tests/expr.c                       |   4 +-
+> >  tools/perf/tests/fdarray.c                    |   7 +-
+> >  tools/perf/tests/genelf.c                     |   6 +-
+> >  tools/perf/tests/hists_cumulate.c             |   4 +-
+> >  tools/perf/tests/hists_filter.c               |   4 +-
+> >  tools/perf/tests/hists_link.c                 |   4 +-
+> >  tools/perf/tests/hists_output.c               |   4 +-
+> >  tools/perf/tests/is_printable_array.c         |   4 +-
+> >  tools/perf/tests/keep-tracking.c              |   4 +-
+> >  tools/perf/tests/kmod-path.c                  |   4 +-
+> >  tools/perf/tests/llvm.c                       |  74 ++-
+> >  tools/perf/tests/maps.c                       |   4 +-
+> >  tools/perf/tests/mem.c                        |   4 +-
+> >  tools/perf/tests/mem2node.c                   |   4 +-
+> >  tools/perf/tests/mmap-basic.c                 |   4 +-
+> >  tools/perf/tests/mmap-thread-lookup.c         |   4 +-
+> >  tools/perf/tests/openat-syscall-all-cpus.c    |   5 +-
+> >  tools/perf/tests/openat-syscall-tp-fields.c   |   5 +-
+> >  tools/perf/tests/openat-syscall.c             |   5 +-
+> >  tools/perf/tests/parse-events.c               |   4 +-
+> >  tools/perf/tests/parse-metric.c               |   4 +-
+> >  tools/perf/tests/parse-no-sample-id-all.c     |   5 +-
+> >  tools/perf/tests/pe-file-parsing.c            |   6 +-
+> >  tools/perf/tests/perf-hooks.c                 |   4 +-
+> >  tools/perf/tests/perf-record.c                |   4 +-
+> >  tools/perf/tests/perf-time-to-tsc.c           |  30 +-
+> >  tools/perf/tests/pfm.c                        |  63 +-
+> >  tools/perf/tests/pmu-events.c                 |  73 +--
+> >  tools/perf/tests/pmu.c                        |   4 +-
+> >  tools/perf/tests/python-use.c                 |   4 +-
+> >  tools/perf/tests/sample-parsing.c             |   4 +-
+> >  tools/perf/tests/sdt.c                        |   6 +-
+> >  tools/perf/tests/stat.c                       |  11 +-
+> >  tools/perf/tests/sw-clock.c                   |   4 +-
+> >  tools/perf/tests/switch-tracking.c            |   4 +-
+> >  tools/perf/tests/task-exit.c                  |   4 +-
+> >  tools/perf/tests/tests.h                      | 238 ++++----
+> >  tools/perf/tests/thread-map.c                 |  10 +-
+> >  tools/perf/tests/thread-maps-share.c          |   4 +-
+> >  tools/perf/tests/time-utils-test.c            |   4 +-
+> >  tools/perf/tests/topology.c                   |   4 +-
+> >  tools/perf/tests/unit_number__scnprintf.c     |   4 +-
+> >  tools/perf/tests/vmlinux-kallsyms.c           |   5 +-
+> >  tools/perf/tests/wp.c                         | 122 +---
+> >  tools/perf/util/c++/clang-c.h                 |   8 +-
+> >  tools/perf/util/c++/clang-test.cpp            |   6 +-
+> >  83 files changed, 811 insertions(+), 966 deletions(-)
+> >
+> > --
+> > 2.33.0.882.g93a45727a2-goog
+> >
 >
-> I changed to use below code and looks it works for me:
->
->         if [[ "$1" == "int" ]]; then
->                 kill -SIGINT $$
->         fi
->         if [[ "$1" == "term" ]]; then
->                 kill -SIGTERM $$
->         fi
->
-> Thanks,
-> Leo
->
->> +	exit $glb_err
->> +}
->> +
->> +trap cleanup_files exit term int
->> +
->> +arm_spe_report() {
->> +	if [ $2 != 0 ]; then
->> +		echo "$1: FAIL"
->> +		glb_err=$2
->> +	else
->> +		echo "$1: PASS"
->> +	fi
->> +}
->> +
->> +perf_script_samples() {
->> +	echo "Looking at perf.data file for dumping samples:"
->> +
->> +	# from arm-spe.c/arm_spe_synth_events()
->> +	events="(ld1-miss|ld1-access|llc-miss|lld-access|tlb-miss|tlb-access|branch-miss|remote-access|memory)"
->> +
->> +	# Below is an example of the samples dumping:
->> +	#	dd  3048 [002]          1    l1d-access:      ffffaa64999c __GI___libc_write+0x3c (/lib/aarch64-linux-gnu/libc-2.27.so)
->> +	#	dd  3048 [002]          1    tlb-access:      ffffaa64999c __GI___libc_write+0x3c (/lib/aarch64-linux-gnu/libc-2.27.so)
->> +	#	dd  3048 [002]          1        memory:      ffffaa64999c __GI___libc_write+0x3c (/lib/aarch64-linux-gnu/libc-2.27.so)
->> +	perf script -F,-time -i ${perfdata} 2>&1 | \
->> +		egrep " +$1 +[0-9]+ .* +${events}:(.*:)? +" > /dev/null 2>&1
->> +}
->> +
->> +perf_report_samples() {
->> +	echo "Looking at perf.data file for reporting samples:"
->> +
->> +	# Below is an example of the samples reporting:
->> +	#   73.04%    73.04%  dd    libc-2.27.so      [.] _dl_addr
->> +	#    7.71%     7.71%  dd    libc-2.27.so      [.] getenv
->> +	#    2.59%     2.59%  dd    ld-2.27.so        [.] strcmp
->> +	perf report --stdio -i ${perfdata} 2>&1 | \
->> +		egrep " +[0-9]+\.[0-9]+% +[0-9]+\.[0-9]+% +$1 " > /dev/null 2>&1
->> +}
->> +
->> +arm_spe_snapshot_test() {
->> +	echo "Recording trace with snapshot mode $perfdata"
->> +	perf record -o ${perfdata} -e arm_spe// -S \
->> +		-- dd if=/dev/zero of=/dev/null > /dev/null 2>&1 &
->> +	PERFPID=$!
->> +
->> +	# Wait for perf program
->> +	sleep 1
->> +
->> +	# Send signal to snapshot trace data
->> +	kill -USR2 $PERFPID
->> +
->> +	# Stop perf program
->> +	kill $PERFPID
->> +	wait $PERFPID
->> +
->> +	perf_script_samples dd &&
->> +	perf_report_samples dd
->> +
->> +	err=$?
->> +	arm_spe_report "SPE snapshot testing" $err
->> +}
->> +
->> +arm_spe_snapshot_test
->> +exit $glb_err
->> \ No newline at end of file
->> -- 
->> 2.17.1
->>
