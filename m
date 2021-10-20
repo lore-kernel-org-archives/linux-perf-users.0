@@ -2,219 +2,159 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9240C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Oct 2021 13:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D158EC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Oct 2021 13:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC2B461052
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Oct 2021 13:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B309B610CB
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Oct 2021 13:24:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229943AbhJTNQF (ORCPT
+        id S230091AbhJTN0k (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 20 Oct 2021 09:16:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33986 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230177AbhJTNQE (ORCPT
+        Wed, 20 Oct 2021 09:26:40 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:27955 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229570AbhJTN0k (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 20 Oct 2021 09:16:04 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F5E1C061749
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Oct 2021 06:13:50 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id i76so2909660pfe.13
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Oct 2021 06:13:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RtJrSfwgtT8YF0UzABCy/bW/wKJYVo6+C+buqqv0qRM=;
-        b=q7xCqZuSLOyHPh4DSD5C5WeP2XY0+IKO9FUpBIuzlnqs/Pdrhi2E5FKTyNmLc0muw4
-         1f2tqi5sf9lEpGeSx3vNDXHHltXGj2W3/m8DWQf7SFV9OZmWTf/3+TKZ6BZqAbH/0OyC
-         xv067LrngqQ7LsK67NOCGqWimMdmcKIV7hS3WX+cIARG5Af1aD+ZwhYON1DC7de3XnYL
-         ZWArvmYmCj/Lpn0b4tWHCyR7U0lsdwTH8Dgksa+60rCZ8l5AO8uoH8oFjpjjDWViewiI
-         2dEiFaW7VXvniIU5hQnPZpVcx5NyRS6ZjetLVVAmz+jMIHMcstF1MThV6ZqC/whMjOW+
-         D6jA==
+        Wed, 20 Oct 2021 09:26:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1634736264;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=GcpzAnNHjm23kN2uqigubTKcRaFFegqSoAGf8LIkgeI=;
+        b=LYvq6Uo6SS2cSLT7123qDG9ir6RgNOIJbEOi5olTDINfWx+UF6cb70ZeA/IsiLGbS9ixuG
+        TlLix5tebL4iYo4rm7PJDhh9zViRignbAKZrkPCoFf+A2nhbQEngkLr4JsruNuY3PIba6N
+        dd5yQdo/zmKk8Lh1OpO5zpyjSluh4sU=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-398-5hQ5x-fxN5KYv_Dt0h-KtA-1; Wed, 20 Oct 2021 09:24:23 -0400
+X-MC-Unique: 5hQ5x-fxN5KYv_Dt0h-KtA-1
+Received: by mail-ed1-f71.google.com with SMTP id g28-20020a50d0dc000000b003dae69dfe3aso20968356edf.7
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Oct 2021 06:24:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=RtJrSfwgtT8YF0UzABCy/bW/wKJYVo6+C+buqqv0qRM=;
-        b=0Ke9F9/MKubP+MJktHOZUTHEwH2k8Pczt6mQqosxrpFctF7lC9zLcNhFo+8zF1vcHB
-         KsZJufj3eGSQo7A6/zqPIe9RnxSdaHP9JKrxCQYTIs1QKL8+8Odpr809f9TJrWbaa+86
-         cI1uJ6XFofHC2wBPuP7o8KYuSFBeQTzPtRBkMsZ3SgT1cXaSqHobJgDFfsidnUOZqnTS
-         +KK0nouywQW6TfuIGiwqnpz8EnDW9JBh31PnyPWCOLR5ibgFaIWT22hMLVx+DkZ1YKVY
-         Ks2fMBqpSLCZgFnPINHF5oGFmWK5adbGPC02x70v7EfP4/8jtv4jE4izZ4f6GkGiebLJ
-         zVwA==
-X-Gm-Message-State: AOAM530jX4sOC62WhUOGxphfQh7EL2kDuIuvYfWQaSyotBpijvEj3mlN
-        b+1dlaUgfyMXp6kl16lhpcS8Pw==
-X-Google-Smtp-Source: ABdhPJxM5HvKzicLfYl4WLcVTSmueL+mPJWwOC7F+YSKiR/HLNlWXOat5ZyZDw6U8uxZm+oLIPbG0g==
-X-Received: by 2002:a63:1266:: with SMTP id 38mr33378184pgs.219.1634735629999;
-        Wed, 20 Oct 2021 06:13:49 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([134.195.101.46])
-        by smtp.gmail.com with ESMTPSA id x27sm2486978pfr.181.2021.10.20.06.13.42
+        bh=GcpzAnNHjm23kN2uqigubTKcRaFFegqSoAGf8LIkgeI=;
+        b=l5uRsXXKQsChPFlKZneKd3zJkx+ja/bJaAE3/2uQ6r3KqD9qP9J6vyGC5tSdC4Q/T6
+         1KWNLl0r1MzZVZQt8/GfWf3XrrJXPuuO9GBGgBb/azkxOeaS3Ske6N4bh1+F+ZRXlBRL
+         1TgdCNl5BR77vDoO0jmiLDuE6Tz6uD61MRFoRz2t59soNkmhTRuQwaiAtWBj28rCAcHX
+         jVUpY3Ql5IkZGGpkmTPEbuluvsBsDlsVwDwK8YP3O92yKzvyiGQRxykZgL7YHJJjV38y
+         msGyut2GT9eD9Ztu5m2KrPzh31fXe4Rw3q0GH/jafWJY40+4Nuxr5zSBAPa3ohYPWymW
+         nOdg==
+X-Gm-Message-State: AOAM5307PhaGRFGHT92T8pLr1f5B8vjyPXJW50piQD5jIxhsafYYHAPO
+        xkUQReZyqs8inogTNyZV0jc+vlWMqnLLFaUj6+IYb7NrQEWI4EJvSppPXWlDYobavzexM3ozXPL
+        pidGa4w5X8IeOf2o26iSmPgYyBLIRHQ==
+X-Received: by 2002:a05:6402:2805:: with SMTP id h5mr62501162ede.169.1634736262084;
+        Wed, 20 Oct 2021 06:24:22 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzVW+LAoHPzviyKRL0KsI2xrRCoci0hduDBTl5iwSEDG3IMqePK/Z2vDw19wC+rX4UbPj8O5w==
+X-Received: by 2002:a05:6402:2805:: with SMTP id h5mr62501139ede.169.1634736261861;
+        Wed, 20 Oct 2021 06:24:21 -0700 (PDT)
+Received: from krava ([83.240.63.48])
+        by smtp.gmail.com with ESMTPSA id d4sm1205734edk.78.2021.10.20.06.24.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Oct 2021 06:13:49 -0700 (PDT)
-Date:   Wed, 20 Oct 2021 21:13:39 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     German Gomez <german.gomez@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org
-Subject: Re: [PATCH 5/5] perf arm-spe: Snapshot mode test
-Message-ID: <20211020131339.GG49614@leoy-ThinkPad-X240s>
-References: <20210916154635.1525-1-german.gomez@arm.com>
- <20210916154635.1525-5-german.gomez@arm.com>
+        Wed, 20 Oct 2021 06:24:21 -0700 (PDT)
+Date:   Wed, 20 Oct 2021 15:24:19 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Lexi Shao <shaolexi@huawei.com>
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        acme@kernel.org, mark.rutland@arm.com, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        namhyung@kernel.org, qiuxi1@huawei.com, nixiaoming@huawei.com,
+        wangbing6@huawei.com
+Subject: Re: [PATCH] perf script: Show binary offsets for userspace addr
+Message-ID: <YXAYg8N1vikCsOnU@krava>
+References: <20211019072417.122576-1-shaolexi@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210916154635.1525-5-german.gomez@arm.com>
+In-Reply-To: <20211019072417.122576-1-shaolexi@huawei.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 16, 2021 at 04:46:35PM +0100, German Gomez wrote:
-> Shell script test_arm_spe.sh has been added to test the recording of SPE
-> tracing events in snapshot mode.
+On Tue, Oct 19, 2021 at 03:24:17PM +0800, Lexi Shao wrote:
+> Show binary offsets for userspace addr with map in perf script output
+> with callchain.
 > 
-> Reviewed-by: James Clark <james.clark@arm.com>
-> Signed-off-by: German Gomez <german.gomez@arm.com>
+> In commit 19610184693c("perf script: Show virtual addresses instead of
+> offsets"), the addr shown in perf script output with callchain is changed
+> from binary offsets to virtual address to fix the incorrectness when
+> displaying symbol offset.
+> 
+> This is inconvenient in scenario that the binary is stripped and
+> symbol cannot be resolved. If someone wants to further resolve symbols for
+> specific binaries later, he would need an extra step to translate virtual
+> address to binary offset with mapping information recorded in perf.data,
+> which can be difficult for people not familiar with perf.
+> 
+> This patch modifies function sample__fprintf_callchain to print binary
+> offset for userspace addr with dsos, and virtual address otherwise. It
+> does not affect symbol offset calculation so symoff remains correct.
+> 
+> Before applying this patch:
+> test  1512    78.711307:     533129 cycles:
+> 	aaaae0da07f4 [unknown] (/tmp/test)
+> 	aaaae0da0704 [unknown] (/tmp/test)
+> 	ffffbe9f7ef4 __libc_start_main+0xe4 (/lib64/libc-2.31.so)
+> 
+> After this patch:
+> test  1519   111.330127:     406953 cycles:
+> 	7f4 [unknown] (/tmp/test)
+> 	704 [unknown] (/tmp/test)
+> 	20ef4 __libc_start_main+0xe4 (/lib64/libc-2.31.so)
+> 
+> Fixes: 19610184693c("perf script: Show virtual addresses instead of offsets")
+> 
+> Signed-off-by: Lexi Shao <shaolexi@huawei.com>
+
+makes sense to me
+
+Acked-/Tested-by Jiri Olsa <jolsa@redhat.com>
+
+should we have a way to display these callchain detail in perf report output as well?
+
+thanks,
+jirka
+
 > ---
->  tools/perf/tests/shell/test_arm_spe.sh | 91 ++++++++++++++++++++++++++
->  1 file changed, 91 insertions(+)
->  create mode 100755 tools/perf/tests/shell/test_arm_spe.sh
+>  tools/perf/util/evsel_fprintf.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
 > 
-> diff --git a/tools/perf/tests/shell/test_arm_spe.sh b/tools/perf/tests/shell/test_arm_spe.sh
-> new file mode 100755
-> index 000000000000..9ed817e76f95
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/test_arm_spe.sh
-> @@ -0,0 +1,91 @@
-> +#!/bin/sh
-> +# Check Arm SPE trace data recording and synthesized samples
+> diff --git a/tools/perf/util/evsel_fprintf.c b/tools/perf/util/evsel_fprintf.c
+> index bfedd7b23521..8c2ea8001329 100644
+> --- a/tools/perf/util/evsel_fprintf.c
+> +++ b/tools/perf/util/evsel_fprintf.c
+> @@ -11,6 +11,7 @@
+>  #include "strlist.h"
+>  #include "symbol.h"
+>  #include "srcline.h"
+> +#include "dso.h"
+>  
+>  static int comma_fprintf(FILE *fp, bool *first, const char *fmt, ...)
+>  {
+> @@ -144,12 +145,17 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
+>  			if (print_arrow && !first)
+>  				printed += fprintf(fp, " <-");
+>  
+> -			if (print_ip)
+> -				printed += fprintf(fp, "%c%16" PRIx64, s, node->ip);
+> -
+>  			if (map)
+>  				addr = map->map_ip(map, node->ip);
+>  
+> +			if (print_ip) {
+> +				/* Show binary offset for userspace addr */
+> +				if (map && !map->dso->kernel)
+> +					printed += fprintf(fp, "%c%16" PRIx64, s, addr);
+> +				else
+> +					printed += fprintf(fp, "%c%16" PRIx64, s, node->ip);
+> +			}
 > +
-> +# Uses the 'perf record' to record trace data of Arm SPE events;
-> +# then verify if any SPE event samples are generated by SPE with
-> +# 'perf script' and 'perf report' commands.
-> +
-> +# SPDX-License-Identifier: GPL-2.0
-> +# German Gomez <german.gomez@arm.com>, 2021
-> +
-> +skip_if_no_arm_spe_event() {
-> +	perf list | egrep -q 'arm_spe_[0-9]+//' && return 0
-> +
-> +	# arm_spe event doesn't exist
-> +	return 2
-> +}
-> +
-> +skip_if_no_arm_spe_event || exit 2
-> +
-> +perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-> +glb_err=0
-> +
-> +cleanup_files()
-> +{
-> +	rm -f ${perfdata}
-> +	trap - exit term int
-> +	kill -2 $$ # Forward sigint to parent
-
-I understand you copy this code from Arm cs-etm testing, but I found
-the sentence 'kill -2 $$' will cause a failure at my side with the
-command:
-
-root@ubuntu:/home/leoy/linux/tools/perf# ./perf test 85 -v
-85: Check Arm SPE trace data recording and synthesized samples      :
---- start ---
-test child forked, pid 29053
-Recording trace with snapshot mode /tmp/__perf_test.perf.data.uughb
-Looking at perf.data file for dumping samples:
-Looking at perf.data file for reporting samples:
-SPE snapshot testing: PASS
-test child finished with -1
----- end ----
-Check Arm SPE trace data recording and synthesized samples: FAILED!
-
-I changed to use below code and looks it works for me:
-
-        if [[ "$1" == "int" ]]; then
-                kill -SIGINT $$
-        fi
-        if [[ "$1" == "term" ]]; then
-                kill -SIGTERM $$
-        fi
-
-Thanks,
-Leo
-
-> +	exit $glb_err
-> +}
-> +
-> +trap cleanup_files exit term int
-> +
-> +arm_spe_report() {
-> +	if [ $2 != 0 ]; then
-> +		echo "$1: FAIL"
-> +		glb_err=$2
-> +	else
-> +		echo "$1: PASS"
-> +	fi
-> +}
-> +
-> +perf_script_samples() {
-> +	echo "Looking at perf.data file for dumping samples:"
-> +
-> +	# from arm-spe.c/arm_spe_synth_events()
-> +	events="(ld1-miss|ld1-access|llc-miss|lld-access|tlb-miss|tlb-access|branch-miss|remote-access|memory)"
-> +
-> +	# Below is an example of the samples dumping:
-> +	#	dd  3048 [002]          1    l1d-access:      ffffaa64999c __GI___libc_write+0x3c (/lib/aarch64-linux-gnu/libc-2.27.so)
-> +	#	dd  3048 [002]          1    tlb-access:      ffffaa64999c __GI___libc_write+0x3c (/lib/aarch64-linux-gnu/libc-2.27.so)
-> +	#	dd  3048 [002]          1        memory:      ffffaa64999c __GI___libc_write+0x3c (/lib/aarch64-linux-gnu/libc-2.27.so)
-> +	perf script -F,-time -i ${perfdata} 2>&1 | \
-> +		egrep " +$1 +[0-9]+ .* +${events}:(.*:)? +" > /dev/null 2>&1
-> +}
-> +
-> +perf_report_samples() {
-> +	echo "Looking at perf.data file for reporting samples:"
-> +
-> +	# Below is an example of the samples reporting:
-> +	#   73.04%    73.04%  dd    libc-2.27.so      [.] _dl_addr
-> +	#    7.71%     7.71%  dd    libc-2.27.so      [.] getenv
-> +	#    2.59%     2.59%  dd    ld-2.27.so        [.] strcmp
-> +	perf report --stdio -i ${perfdata} 2>&1 | \
-> +		egrep " +[0-9]+\.[0-9]+% +[0-9]+\.[0-9]+% +$1 " > /dev/null 2>&1
-> +}
-> +
-> +arm_spe_snapshot_test() {
-> +	echo "Recording trace with snapshot mode $perfdata"
-> +	perf record -o ${perfdata} -e arm_spe// -S \
-> +		-- dd if=/dev/zero of=/dev/null > /dev/null 2>&1 &
-> +	PERFPID=$!
-> +
-> +	# Wait for perf program
-> +	sleep 1
-> +
-> +	# Send signal to snapshot trace data
-> +	kill -USR2 $PERFPID
-> +
-> +	# Stop perf program
-> +	kill $PERFPID
-> +	wait $PERFPID
-> +
-> +	perf_script_samples dd &&
-> +	perf_report_samples dd
-> +
-> +	err=$?
-> +	arm_spe_report "SPE snapshot testing" $err
-> +}
-> +
-> +arm_spe_snapshot_test
-> +exit $glb_err
-> \ No newline at end of file
+>  			if (print_sym) {
+>  				printed += fprintf(fp, " ");
+>  				node_al.addr = addr;
 > -- 
-> 2.17.1
+> 2.12.3
 > 
+
