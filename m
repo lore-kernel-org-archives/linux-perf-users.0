@@ -2,193 +2,180 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 274BBC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Oct 2021 23:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F929C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Oct 2021 00:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08A66610D0
-	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Oct 2021 23:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECB1161029
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Oct 2021 00:01:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230058AbhJSXVa (ORCPT
+        id S229610AbhJTAEH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 19 Oct 2021 19:21:30 -0400
-Received: from mail-oo1-f49.google.com ([209.85.161.49]:35550 "EHLO
-        mail-oo1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230102AbhJSXV3 (ORCPT
+        Tue, 19 Oct 2021 20:04:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54414 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229602AbhJTAEG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 19 Oct 2021 19:21:29 -0400
-Received: by mail-oo1-f49.google.com with SMTP id s2-20020a4ac102000000b002b722c09046so1485477oop.2;
-        Tue, 19 Oct 2021 16:19:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=12dghxecuswptAmDfd0ZHuFdRzeHyPThhVojetDPh6o=;
-        b=5qysKSTjryZafg69nWqo+svSNW9IShHC/rqZ9pAc+0sflEOgpdVuGd04WEOhBWL0Bd
-         Ro3CyA2kUYNp11+ZfyoKFBMcR3BCGtONJOeFl0MKya3lhesWHtAIbLdCcbriYFzcWZ3j
-         YsespOaLJRxqqDHPJ3QhSQ7DdN9CopE8IPKQhyM0xKuGMwau73dMtOfLtwUmPl0dX3Eb
-         BHl8BNkX0x09JDNUfoSapt+PKB9MFT25x1CHDk9zA4GaW90mpFtEPYR+tI+h9Z+Qw4gD
-         m7kUqEehw9B4Nt/ImK/g7SXw9PRN7SEZVy66sj4GxeyWXIN7fBQ1o98kVLPFFqYaP1gH
-         IkCA==
-X-Gm-Message-State: AOAM533zFNrsbTdw7EgYjAhg5fBiZvchoyP7O1dEVcTAx8phzhbOznML
-        AcNS69iforQq8Z5AAQnNMQ==
-X-Google-Smtp-Source: ABdhPJzW14NWOacuXzgTtPozxy+7kd2SUIhVdBGt/IoOC6+J8igZ64kX72La+2561OK+N4Bvk2vR4A==
-X-Received: by 2002:a05:6820:1015:: with SMTP id v21mr7003715oor.47.1634685555920;
-        Tue, 19 Oct 2021 16:19:15 -0700 (PDT)
-Received: from xps15.herring.priv (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.googlemail.com with ESMTPSA id w141sm118375oif.20.2021.10.19.16.19.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Oct 2021 16:19:15 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Vince Weaver <vincent.weaver@maine.edu>,
-        honnappa.nagarahalli@arm.com, Zachary.Leaf@arm.com,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org,
-        Raphael Gault <raphael.gault@arm.com>
-Subject: [PATCH v11 5/5] Documentation: arm64: Document PMU counters access from userspace
-Date:   Tue, 19 Oct 2021 18:19:07 -0500
-Message-Id: <20211019231907.1009567-6-robh@kernel.org>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20211019231907.1009567-1-robh@kernel.org>
-References: <20211019231907.1009567-1-robh@kernel.org>
+        Tue, 19 Oct 2021 20:04:06 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6087FC06161C;
+        Tue, 19 Oct 2021 17:01:53 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: tonyk)
+        with ESMTPSA id 8D6C01F43E27
+Message-ID: <0d55b0a0-dd8c-0494-a200-7acb1976e32a@collabora.com>
+Date:   Tue, 19 Oct 2021 21:01:41 -0300
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [PATCH v2 1/2] perf bench futex: Use a 64-bit time_t
+Content-Language: en-US
+To:     Alistair Francis <alistair23@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Alistair Francis <alistair.francis@opensource.wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        linux-perf-users@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Darren Hart <dvhart@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <atish.patra@wdc.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alistair Francis <alistair.francis@wdc.com>
+References: <20211015005634.2658470-1-alistair.francis@opensource.wdc.com>
+ <YW74wK03ibOS3jVZ@kernel.org>
+ <CAKmqyKP6AU-9tcYOp-ERvYFP7t6DMp4kbQgDmJxD6wb0WTUy+w@mail.gmail.com>
+From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
+In-Reply-To: <CAKmqyKP6AU-9tcYOp-ERvYFP7t6DMp4kbQgDmJxD6wb0WTUy+w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Raphael Gault <raphael.gault@arm.com>
+Às 20:17 de 19/10/21, Alistair Francis escreveu:
+> On Wed, Oct 20, 2021 at 2:56 AM Arnaldo Carvalho de Melo
+> <arnaldo.melo@gmail.com> wrote:
+>>
+>> Em Fri, Oct 15, 2021 at 10:56:33AM +1000, Alistair Francis escreveu:
+>>> From: Alistair Francis <alistair.francis@wdc.com>
+>>>
+>>> Convert tools/perf to only use a 64-bit time_t. On 64-bit architectures
+>>> this isn't a functional change. On 32-bit architectures we now only
+>>> perform 64-bit time_t syscalls (__NR_futex_time64) and use a struct
+>>> timespec64.
+>>>
+>>> This won't work on kernels before 5.1, but as perf is tied to the kernel
+>>> that's ok.
+>>
+>> No, perf is not tied to the kernel, one can use a new perf tool on any
+>> previous kernel, and an old perf tool should work on new kernels as
+>> well.
+> 
+> + André, I won't be doing this the way you requested
+> 
 
-Add documentation to describe the access to the pmu hardware counters from
-userspace.
+Ok, thanks anyway for your work and sorry for the trouble :)
 
-Signed-off-by: Raphael Gault <raphael.gault@arm.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-v11:
- - Rework chained event section to reflect 64-bit counter request may
-   fail and 32-bit counters may be 64-bit with upper bits UNKNOWN.
-v10:
- - Add details on perf_user_access sysctl
-v9:
- - No change
-v8:
- - Reword that config1:1 must always be set to request user access
-v7:
- - Merge into existing arm64 perf.rst
-v6:
-  - Update the chained event section with attr.config1 details
-v2:
-  - Update links to test examples
-
-Changes from Raphael's v4:
-  - Convert to rSt
-  - Update chained event status
-  - Add section for heterogeneous systems
----
- Documentation/arm64/perf.rst | 75 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 74 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/arm64/perf.rst b/Documentation/arm64/perf.rst
-index b567f177d385..70b9f718ea92 100644
---- a/Documentation/arm64/perf.rst
-+++ b/Documentation/arm64/perf.rst
-@@ -2,7 +2,10 @@
- 
- .. _perf_index:
- 
--=====================
-+====
-+Perf
-+====
-+
- Perf Event Attributes
- =====================
- 
-@@ -88,3 +91,73 @@ exclude_host. However when using !exclude_hv there is a small blackout
- window at the guest entry/exit where host events are not captured.
- 
- On VHE systems there are no blackout windows.
-+
-+Perf Userspace PMU Hardware Counter Access
-+==========================================
-+
-+Overview
-+--------
-+The perf userspace tool relies on the PMU to monitor events. It offers an
-+abstraction layer over the hardware counters since the underlying
-+implementation is cpu-dependent.
-+Arm64 allows userspace tools to have access to the registers storing the
-+hardware counters' values directly.
-+
-+This targets specifically self-monitoring tasks in order to reduce the overhead
-+by directly accessing the registers without having to go through the kernel.
-+
-+How-to
-+------
-+The focus is set on the armv8 PMUv3 which makes sure that the access to the pmu
-+registers is enabled and that the userspace has access to the relevant
-+information in order to use them.
-+
-+In order to have access to the hardware counters, the global sysctl
-+kernel/perf_user_access must first be enabled:
-+
-+.. code-block:: sh
-+
-+  echo 1 > /proc/sys/kernel/perf_user_access
-+
-+It is necessary to open the event using the perf tool interface with config1:1
-+attr bit set: the sys_perf_event_open syscall returns a fd which can
-+subsequently be used with the mmap syscall in order to retrieve a page of memory
-+containing information about the event. The PMU driver uses this page to expose
-+to the user the hardware counter's index and other necessary data. Using this
-+index enables the user to access the PMU registers using the `mrs` instruction.
-+
-+The userspace access is supported in libperf using the perf_evsel__mmap()
-+and perf_evsel__read() functions. See `tools/lib/perf/tests/test-evsel.c`_ for
-+an example.
-+
-+About heterogeneous systems
-+---------------------------
-+On heterogeneous systems such as big.LITTLE, userspace PMU counter access can
-+only be enabled when the tasks are pinned to a homogeneous subset of cores and
-+the corresponding PMU instance is opened by specifying the 'type' attribute.
-+The use of generic event types is not supported in this case.
-+
-+Have a look at `tools/perf/arch/arm64/tests/user-events.c`_ for an example. It
-+can be run using the perf tool to check that the access to the registers works
-+correctly from userspace:
-+
-+.. code-block:: sh
-+
-+  perf test -v user
-+
-+About chained events and counter sizes
-+--------------------------------------
-+The user can request either a 32-bit (config1:0 == 0) or 64-bit (config1:0 == 1)
-+counter along with userspace access. The sys_perf_event_open syscall will fail
-+if a 64-bit counter is requested and the hardware doesn't support 64-bit
-+counters. Chained events are not supported in conjunction with userspace counter
-+access. If a 32-bit counter is requested on hardware with 64-bit counters, then
-+userspace must treat the upper 32-bits read from the counter as UNKNOWN. The
-+'pmc_width' field in the user page will indicate the valid width of the counter
-+and should be used to mask the upper bits as needed.
-+
-+.. Links
-+.. _tools/perf/arch/arm64/tests/user-events.c:
-+   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/arch/arm64/tests/user-events.c
-+.. _tools/lib/perf/tests/test-evsel.c:
-+   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/lib/perf/tests/test-evsel.c
--- 
-2.32.0
-
+> Ok, so back to the previous version then. I'll send the patches soon.
+> 
+> Alistair
+> 
+>>
+>> - Arnaldo
+>>
+>>> This allows us to build perf for 32-bit architectures with 64-bit time_t
+>>> like RISC-V 32-bit.
+>>>
+>>> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+>>> ---
+>>>  tools/perf/bench/futex.h | 26 ++++++++++++++++++++------
+>>>  1 file changed, 20 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/tools/perf/bench/futex.h b/tools/perf/bench/futex.h
+>>> index b3853aac3021c..b9665d43d2988 100644
+>>> --- a/tools/perf/bench/futex.h
+>>> +++ b/tools/perf/bench/futex.h
+>>> @@ -12,6 +12,7 @@
+>>>  #include <sys/syscall.h>
+>>>  #include <sys/types.h>
+>>>  #include <linux/futex.h>
+>>> +#include <linux/time_types.h>
+>>>
+>>>  struct bench_futex_parameters {
+>>>       bool silent;
+>>> @@ -27,12 +28,14 @@ struct bench_futex_parameters {
+>>>       unsigned int nrequeue;
+>>>  };
+>>>
+>>> +#define timespec64 __kernel_timespec
+>>> +
+>>>  /**
+>>>   * futex() - SYS_futex syscall wrapper
+>>>   * @uaddr:   address of first futex
+>>>   * @op:              futex op code
+>>>   * @val:     typically expected value of uaddr, but varies by op
+>>> - * @timeout: typically an absolute struct timespec (except where noted
+>>> + * @timeout: typically an absolute struct timespec64 (except where noted
+>>>   *           otherwise). Overloaded by some ops
+>>>   * @uaddr2:  address of second futex for some ops
+>>>   * @val3:    varies by op
+>>> @@ -47,15 +50,26 @@ struct bench_futex_parameters {
+>>>   * These argument descriptions are the defaults for all
+>>>   * like-named arguments in the following wrappers except where noted below.
+>>>   */
+>>> -#define futex(uaddr, op, val, timeout, uaddr2, val3, opflags) \
+>>> -     syscall(SYS_futex, uaddr, op | opflags, val, timeout, uaddr2, val3)
+>>> +/**
+>>> + * We only support 64-bit time_t for the timeout.
+>>> + * On 64-bit architectures we can use __NR_futex
+>>> + * On 32-bit architectures we use __NR_futex_time64. This only works on kernel
+>>> + * versions 5.1+.
+>>> + */
+>>> +#if __BITS_PER_LONG == 64
+>>> +# define futex(uaddr, op, val, timeout, uaddr2, val3, opflags) \
+>>> +     syscall(__NR_futex, uaddr, op | opflags, val, timeout, uaddr2, val3)
+>>> +#else
+>>> +# define futex(uaddr, op, val, timeout, uaddr2, val3, opflags) \
+>>> +     syscall(__NR_futex_time64, uaddr, op | opflags, val, timeout, uaddr2, val3)
+>>> +#endif
+>>>
+>>>  /**
+>>>   * futex_wait() - block on uaddr with optional timeout
+>>>   * @timeout: relative timeout
+>>>   */
+>>>  static inline int
+>>> -futex_wait(u_int32_t *uaddr, u_int32_t val, struct timespec *timeout, int opflags)
+>>> +futex_wait(u_int32_t *uaddr, u_int32_t val, struct timespec64 *timeout, int opflags)
+>>>  {
+>>>       return futex(uaddr, FUTEX_WAIT, val, timeout, NULL, 0, opflags);
+>>>  }
+>>> @@ -74,7 +88,7 @@ futex_wake(u_int32_t *uaddr, int nr_wake, int opflags)
+>>>   * futex_lock_pi() - block on uaddr as a PI mutex
+>>>   */
+>>>  static inline int
+>>> -futex_lock_pi(u_int32_t *uaddr, struct timespec *timeout, int opflags)
+>>> +futex_lock_pi(u_int32_t *uaddr, struct timespec64 *timeout, int opflags)
+>>>  {
+>>>       return futex(uaddr, FUTEX_LOCK_PI, 0, timeout, NULL, 0, opflags);
+>>>  }
+>>> @@ -111,7 +125,7 @@ futex_cmp_requeue(u_int32_t *uaddr, u_int32_t val, u_int32_t *uaddr2, int nr_wak
+>>>   */
+>>>  static inline int
+>>>  futex_wait_requeue_pi(u_int32_t *uaddr, u_int32_t val, u_int32_t *uaddr2,
+>>> -                   struct timespec *timeout, int opflags)
+>>> +                   struct timespec64 *timeout, int opflags)
+>>>  {
+>>>       return futex(uaddr, FUTEX_WAIT_REQUEUE_PI, val, timeout, uaddr2, 0,
+>>>                    opflags);
+>>> --
+>>> 2.31.1
+>>
+>> --
+>>
+>> - Arnaldo
