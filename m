@@ -2,59 +2,60 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5672CC4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Oct 2021 21:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2726BC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Oct 2021 22:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DA8761372
-	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Oct 2021 21:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A978F61362
+	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Oct 2021 22:38:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232249AbhJUV6A (ORCPT
+        id S231781AbhJUWkj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 21 Oct 2021 17:58:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57774 "EHLO
+        Thu, 21 Oct 2021 18:40:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232021AbhJUV57 (ORCPT
+        with ESMTP id S231515AbhJUWki (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 21 Oct 2021 17:57:59 -0400
-Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F580C061764;
-        Thu, 21 Oct 2021 14:55:43 -0700 (PDT)
-Received: by mail-yb1-xb32.google.com with SMTP id 67so2534153yba.6;
-        Thu, 21 Oct 2021 14:55:43 -0700 (PDT)
+        Thu, 21 Oct 2021 18:40:38 -0400
+Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14029C061764;
+        Thu, 21 Oct 2021 15:38:22 -0700 (PDT)
+Received: by mail-yb1-xb34.google.com with SMTP id v200so2665798ybe.11;
+        Thu, 21 Oct 2021 15:38:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ZCWSb4CNcUutmy67uPScB/N0o+yGwGltNZHm45vcOhk=;
-        b=oCz0HlMe3i8pvE64pfiQxaOUsu9XUUMN5xWybWUwvozJ0s2n5tiW+pW/bwvs37ylSL
-         cdrLjH9w95N1ZZUQnXKWpTckKiGhTa37QL52SsgRwxMkYwhJz2E1i8ofqI0mXmLOqXnI
-         rgAXJk7seMHgDZAo/mF6KzY3RPOBSlQ9x7dwpqXPA99wGCa13yvRlKjm5Fdkb6kooUdR
-         qbqqvoQWXpLWot3R/iDV2EQJCw3089PvAmI6FXiygyYWG3H30y87zvHDj+hKllx2ZJG+
-         2/e4A0Fgn/bQFQSWCq1D8KNReyBhETh6izE1N4qQfVp1H1x9HWzClPhzaR5HFS24lhZO
-         k5Kg==
+        bh=mX0gvzf/8QgI7lZxsXDzZG6vg6V+U9yQ0ZFCiOuBHEo=;
+        b=KonIF20sHgoOuKrWtmsRSJMbRoVsWrVKS7hixfNEbWzYzmdNQOUHSeH2r3EEdg8dx1
+         RrJekPfWfHsiNT+WMokibqdKZN4GBvnyCyDokh2s4wYfQR5Y3xqh/b1LKTpW9f1bnps9
+         hMeTeAn4xtpUCBbol1qcC8fnhs2XLafB/BEmuaPNFcjGCcTiH2+sKDrrUkAPadKzJRMs
+         TRcPZastxBaMNAoROM/WhbhChKVCmOLuScNq5KeWC01+x92K/cSsPZONKzuiAnLjUJCj
+         hxgeEKqqhKqCVQI22wcEcNnQ0E/bxPixyGn/4IXj+kd+lZ69I+IvDw3aWOESF8khVoqd
+         XZJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ZCWSb4CNcUutmy67uPScB/N0o+yGwGltNZHm45vcOhk=;
-        b=Y+qNHHNN3ykkQHi2fbI0Xt8OIcvAoXmeL7Y3kfB7vIYe/px/mCuCHI2t3fleuqcBm4
-         rjptd7wV5fNvyV0YaLEo1b0pkq7ZT0ZStfTmvXVM7p1ogyC8dSfFnM8LMma8FLkPBzT/
-         bHOoDjcULwvgzgipLInoGBTX1cqkqPX8oyNq69sbOiyT+VPlQJmgRIqWmZ7fpwFj1KhL
-         HbQn17ExFYeHWzoP69pNyq+nU939khWLaSiV1Z9QHW5xdC8lZ1BN1tw8e9bSiEFlb9Ej
-         Ld++jkUw7sHP3iE9KcAD8C0sAWaVB1MFLfHZ87Fg3Fv23FOCd9kKbYizny046tt8v0pu
-         yHug==
-X-Gm-Message-State: AOAM533S1TUc5Vzxazef5PVDX+UUnBjKvCCGFxQPCeczO75470mtuwrQ
-        rBj/9BEiYieyiCFzNFghbfu7Ca9QXvdTMUxZDgI=
-X-Google-Smtp-Source: ABdhPJwAwl8RViPtIS5dyd7tQAtoGE+y8lEBBFlWKgnWIrQnjKbXS84OdOvxzGdFdIi80lqcpZxtfcD5HgdVhO0cX1c=
-X-Received: by 2002:a25:d3c8:: with SMTP id e191mr9414694ybf.455.1634853341849;
- Thu, 21 Oct 2021 14:55:41 -0700 (PDT)
+        bh=mX0gvzf/8QgI7lZxsXDzZG6vg6V+U9yQ0ZFCiOuBHEo=;
+        b=Q/u8i9iN1zdkOv5PA3EWP1ooJBZt7LmZSlR+Zu2bWU7JPrZHKqqeVckbvsC6eXJkEx
+         IJZQa9P+GRBEv5mcELx0OAeLcKWd4kltiGHs6o8hWt7r5ifOku63scHA7KH0EisxDIca
+         L3tYcb7DqW8Haa1xDwVjXX8VW/IxqmHdUn9jIFacBQ7fpN3XQpbvTvfNZO+F6RfgChmv
+         MahtQHwMcHWAEurOm7lHPm2c+nT0woYatyZ74OYwZGIKRCISJAaOn5aQ7jrTgLCoereC
+         dZetLAjNpEUKT0jjP4qow2sJM68PyyII73YQNMPgJrGpGBb65RpQSHpW/tz83waZmO2L
+         ICBQ==
+X-Gm-Message-State: AOAM532kfrKg2QX3mBKvy2NFKzEvHwGlHO84d5CoOAMC6X8em0V8d3hl
+        suWiWNJ4ZQ/1mM/MHT9Rp+qkYgI1lnTJLtsgqfU=
+X-Google-Smtp-Source: ABdhPJxwUn/Nw+hFDNm25s6Pp6fp7TE4u5/M+TC0Rh+aiycuH8FRg6i2NM/ST69jmyv4dEGj0gNMW/Xcj4JwPvITPTg=
+X-Received: by 2002:a25:5606:: with SMTP id k6mr9160954ybb.51.1634855901340;
+ Thu, 21 Oct 2021 15:38:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211021034516.4400-1-laoar.shao@gmail.com> <20211021034516.4400-4-laoar.shao@gmail.com>
-In-Reply-To: <20211021034516.4400-4-laoar.shao@gmail.com>
+References: <20211021034603.4458-1-laoar.shao@gmail.com> <20211021034603.4458-2-laoar.shao@gmail.com>
+In-Reply-To: <20211021034603.4458-2-laoar.shao@gmail.com>
 From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 21 Oct 2021 14:55:31 -0700
-Message-ID: <CAEf4Bzb0YSwqoKn2N4gPJS40atWBRHLkK9fBy=wghkXUC5Sqmw@mail.gmail.com>
-Subject: Re: [PATCH v5 03/15] sched.h: introduce TASK_COMM_LEN_16
+Date:   Thu, 21 Oct 2021 15:38:10 -0700
+Message-ID: <CAEf4BzbLzVEXd0FO6MRuVJA=CO7zbgSrx8c0JcuR_1K=bq1OcA@mail.gmail.com>
+Subject: Re: [PATCH v5 11/15] tools/bpf/bpftool: use TASK_COMM_LEN_16 instead
+ of hard-coded 16
 To:     Yafang Shao <laoar.shao@gmail.com>
 Cc:     Kees Cook <keescook@chromium.org>,
         Steven Rostedt <rostedt@goodmis.org>,
@@ -88,52 +89,55 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Oct 20, 2021 at 8:45 PM Yafang Shao <laoar.shao@gmail.com> wrote:
+On Wed, Oct 20, 2021 at 8:46 PM Yafang Shao <laoar.shao@gmail.com> wrote:
 >
-> There're many hard-coded 16 used to store task comm in the kernel, that
-> makes it error prone if we want to change the value of TASK_COMM_LEN. A
-> new marco TASK_COMM_LEN_16 is introduced to replace these old ones, then
-> we can easily grep them.
+> Use TASK_COMM_LEN_16 instead of hard-coded 16 to make it more grepable.
+> It uses bpf_probe_read_kernel() to get task comm, which may return a
+> string without nul terminator. We should use bpf_probe_read_kernel_str()
+> instead.
 >
 > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
 > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
 > Cc: Peter Zijlstra <peterz@infradead.org>
 > Cc: Steven Rostedt <rostedt@goodmis.org>
 > Cc: Kees Cook <keescook@chromium.org>
 > Cc: Al Viro <viro@zeniv.linux.org.uk>
 > Cc: Petr Mladek <pmladek@suse.com>
 > ---
->  include/linux/sched.h | 2 ++
->  1 file changed, 2 insertions(+)
+>  tools/bpf/bpftool/Makefile                | 1 +
+>  tools/bpf/bpftool/main.h                  | 3 ++-
+>  tools/bpf/bpftool/skeleton/pid_iter.bpf.c | 4 ++--
+>  tools/bpf/bpftool/skeleton/pid_iter.h     | 4 +++-
+>  4 files changed, 8 insertions(+), 4 deletions(-)
 >
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index c1a927ddec64..62d5b30d310c 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -274,6 +274,8 @@ struct task_group;
+> diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
+> index d73232be1e99..33fbde84993c 100644
+> --- a/tools/bpf/bpftool/Makefile
+> +++ b/tools/bpf/bpftool/Makefile
+> @@ -164,6 +164,7 @@ $(OUTPUT)%.bpf.o: skeleton/%.bpf.c $(OUTPUT)vmlinux.h $(LIBBPF)
+>         $(QUIET_CLANG)$(CLANG) \
+>                 -I$(if $(OUTPUT),$(OUTPUT),.) \
+>                 -I$(srctree)/tools/include/uapi/ \
+> +               -I$(srctree)/tools/include/ \
+
+bpftool shouldn't rely on internal kernel headers for compilation. If
+you want to have TASK_COMM_LEN_16 constant for grep-ability, just
+#define it where appropriate
+
+>                 -I$(LIBBPF_PATH) \
+>                 -I$(srctree)/tools/lib \
+>                 -g -O2 -Wall -target bpf -c $< -o $@ && $(LLVM_STRIP) -g $@
+> diff --git a/tools/bpf/bpftool/main.h b/tools/bpf/bpftool/main.h
+> index 90caa42aac4c..5efa27188f68 100644
+> --- a/tools/bpf/bpftool/main.h
+> +++ b/tools/bpf/bpftool/main.h
+> @@ -12,6 +12,7 @@
+>  #include <linux/compiler.h>
+>  #include <linux/kernel.h>
+>  #include <linux/hashtable.h>
+> +#include <linux/sched/task.h>
+>  #include <tools/libc_compat.h>
 >
->  #define get_current_state()    READ_ONCE(current->__state)
->
-> +/* To replace the old hard-coded 16 */
-> +#define TASK_COMM_LEN_16               16
->  /* Task command name length: */
->  #define TASK_COMM_LEN                  16
 
-Can we please convert these two constants into enum? That will allow
-BPF applications to deal with such kernel change more easily because
-these constants will now be available as part of kernel BTF.
-
-Something like this should be completely equivalent for all the kernel uses:
-
-enum {
-    TASK_COMM_LEN = 16,
-    TASK_COMM_LEN_16 = 16,
-};
-
-When later TASK_COMM_LEN is defined as = 24, BPF applications will be
-able to deal with that by querying BTF through BPF CO-RE.
-
->
-> --
-> 2.17.1
->
+[...]
