@@ -2,56 +2,56 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9D6C43217
-	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Oct 2021 03:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A59D8C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Oct 2021 03:47:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8B2861038
-	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Oct 2021 03:47:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F91461183
+	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Oct 2021 03:47:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231728AbhJUDtl (ORCPT
+        id S230299AbhJUDtr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 20 Oct 2021 23:49:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34164 "EHLO
+        Wed, 20 Oct 2021 23:49:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231281AbhJUDtT (ORCPT
+        with ESMTP id S231422AbhJUDtY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 20 Oct 2021 23:49:19 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8707EC06177E;
-        Wed, 20 Oct 2021 20:46:12 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id oa12-20020a17090b1bcc00b0019f715462a8so3917100pjb.3;
-        Wed, 20 Oct 2021 20:46:12 -0700 (PDT)
+        Wed, 20 Oct 2021 23:49:24 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DC8BC0613E6;
+        Wed, 20 Oct 2021 20:46:17 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id i1so958921plr.13;
+        Wed, 20 Oct 2021 20:46:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=WXJPrQ9678Se3QG+Xzf+zJqr3rYn2faOseef/yOHc9c=;
-        b=F9u5C9s3ym5Y6yHJdNnaGcLBjH3jiTPlUN4K6C5NADSio2vbHZjtkjQ7QDQ6WJkxZr
-         E1nHY+LOkeDyQkDWJPB9TmDib8PE0wH3eBdSd9/6iqT4ubqDBYp+ncllx2O8gu76QCCC
-         XNIeFFaXU2akBiA8Q8DCm0gn0jn4WQ+iZ9Csd6bMtSgR/8y0qTRX12dNrTSjEEDfHQsr
-         B6zSum0WYir9tEZjoAusoDDlb6tooQ2c6jo+Vjow6snYDnI574TZ5WKJIshqENQHcVTD
-         AiwQ58fZHmrYZY3NPh5yK9cjX/V5j5ccGzc8oMi9Jig0xaHVXtquw1fbQV1GgTPscacg
-         iK1w==
+        bh=0yM3sBzVJixym6Pyyba7mfqYZoAEZb2k8KizyPSP7kg=;
+        b=RBw5omD4rTgpJrDE/tF+65u3aiUUhbDOjoxYbOUTHLFsfzRCE1qLcza3dSQSuVNI9x
+         yF4Rv2/3XR1+nsVOwkxJWIeuqgR8C3VcwQcCdU+q+hrFIAEEkfojFwHV5SSDlODMV7wD
+         Mg5hYwDDJUQS44dzlc46KJxWu33Q+ADcSFvpUJBAomHNtUFnd8YHwF+ThysyEXXq9PJf
+         BemE8OTfob3ebmojHzE0pKT/udvY799lkaP2MVbPwq7KVGJQ1w03aj0fSkmeod98u3Om
+         gIH2TvQtYBYmddoWcGYRYg8zpNyFg0MTuSO4IRoDXuzXdLDJcsFbabi0At9po1agLjxj
+         gNQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=WXJPrQ9678Se3QG+Xzf+zJqr3rYn2faOseef/yOHc9c=;
-        b=qUvVQYYEHj8Z/4vQ7qa/QBYXTG837aQIaA8I+AkjwzeR+Rd39ay9661Gqb0IFy/jl1
-         Od5w0rNdDPyT6Pq9OmA8pi/1SkdlvM2by/Dw6g4botlR7KuP1GoHoI4br5j9YDfcPJgK
-         3uGhBHrDaFKZgOuXdprMbLutC9xcF8OPfEwVjswI9Q8Ug9+WdSSp+fcV0dcs2UWLfXQl
-         2F0WeWVjYXaPg6yDI8uGkPs0hGVRfRKjcU/VFPhG39KlQOg53heqbKdvtjj7/yP3YTSo
-         xCIcr2foaXjF+GQmyTKhRNBGl0AhzCGUctSRvjqVcg/7cbZfdPoXk2ItLXe2Tlne7EAa
-         8ehA==
-X-Gm-Message-State: AOAM5322aDoqHhjPUK3EtyCtcXI+oxAtq/37LN0107b7PKZtaKeE2cBn
-        QQ9/VO6zt3bO7M+AaqXj5YdCN/FuZrM6EaLumYQGoA==
-X-Google-Smtp-Source: ABdhPJykQ537g0Oc0Tzo+SeeZAiRW14jcpCkkPvop9JWIPJg+4P2JqkOJYt2+D8aFwudaJZHzI9I/A==
-X-Received: by 2002:a17:902:c401:b0:13e:f5f2:f852 with SMTP id k1-20020a170902c40100b0013ef5f2f852mr2939252plk.29.1634787972119;
-        Wed, 20 Oct 2021 20:46:12 -0700 (PDT)
+        bh=0yM3sBzVJixym6Pyyba7mfqYZoAEZb2k8KizyPSP7kg=;
+        b=izgIHKy7yJ4Nzs6J5w9kzu8lnBFIax+A6dO3vMqwLXedzP690Fgin6hcmsvwFtZ218
+         +h5z/mK0N2+mgO8EWyEBf8HBi/1enSmUUY8q9RfAx6+B0sFtgg4AAepLGzobKYpIlXrU
+         HrdksSQBJmOHOsqVQQc63DgEQ2o3BY5uq9KGl8p+ifusB4Ac7F+n13D7eIx0Cj8l3uMZ
+         UnKb4xk37WeAaTBxEBmrmo011cjSlPW+WJHLF0IUoxbO2n5FH4ma4xcYpLwSqUSUldDm
+         FMHKbxjkpziAZcOo75LDlWCPsNcLTR81f/w1FaAKGj2J9VMd85A9DU5Vwi6oTuC9HVEw
+         YHTQ==
+X-Gm-Message-State: AOAM530qiLSdCq1ZM9ZMZMWa+SM1hVVb0jJU3INahcsSTNcZ+cISL/0x
+        eraDNHWPG+4k3oTVUN2L/VE=
+X-Google-Smtp-Source: ABdhPJxUL9qjB7igAdeOyZKwIJlugL1A0condl4sE5mTHamDXIGLy5/Lf+hpbqa+DOy9OirQoWCv4A==
+X-Received: by 2002:a17:90a:2a0d:: with SMTP id i13mr3517622pjd.166.1634787976727;
+        Wed, 20 Oct 2021 20:46:16 -0700 (PDT)
 Received: from localhost.localdomain ([140.82.17.67])
-        by smtp.gmail.com with ESMTPSA id r25sm3454254pge.61.2021.10.20.20.46.10
+        by smtp.gmail.com with ESMTPSA id r25sm3454254pge.61.2021.10.20.20.46.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Oct 2021 20:46:11 -0700 (PDT)
+        Wed, 20 Oct 2021 20:46:16 -0700 (PDT)
 From:   Yafang Shao <laoar.shao@gmail.com>
 To:     keescook@chromium.org, rostedt@goodmis.org,
         mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
@@ -68,9 +68,9 @@ Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
         linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org, oliver.sang@intel.com, lkp@intel.com,
         Yafang Shao <laoar.shao@gmail.com>
-Subject: [PATCH v5 11/15] tools/bpf/bpftool: use TASK_COMM_LEN_16 instead of hard-coded 16
-Date:   Thu, 21 Oct 2021 03:45:59 +0000
-Message-Id: <20211021034603.4458-2-laoar.shao@gmail.com>
+Subject: [PATCH v5 14/15] sched.h: extend task comm from 16 to 24 for CONFIG_BASE_FULL
+Date:   Thu, 21 Oct 2021 03:46:02 +0000
+Message-Id: <20211021034603.4458-5-laoar.shao@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20211021034603.4458-1-laoar.shao@gmail.com>
 References: <20211021034603.4458-1-laoar.shao@gmail.com>
@@ -80,92 +80,96 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Use TASK_COMM_LEN_16 instead of hard-coded 16 to make it more grepable.
-It uses bpf_probe_read_kernel() to get task comm, which may return a
-string without nul terminator. We should use bpf_probe_read_kernel_str()
-instead.
+When I was implementing a new per-cpu kthread cfs_migration, I found the
+comm of it "cfs_migration/%u" is truncated due to the limitation of
+TASK_COMM_LEN. For example, the comm of the percpu thread on CPU10~19 are
+all with the same name "cfs_migration/1", which will confuse the user. This
+issue is not critical, because we can get the corresponding CPU from the
+task's Cpus_allowed. But for kthreads correspoinding to other hardware
+devices, it is not easy to get the detailed device info from task comm,
+for example,
 
+    jbd2/nvme0n1p2-
+    xfs-reclaim/sdf
+
+We can also shorten the name to work around this problem, but I find
+there are so many truncated kthreads:
+
+    rcu_tasks_kthre
+    rcu_tasks_rude_
+    rcu_tasks_trace
+    poll_mpt3sas0_s
+    ext4-rsv-conver
+    xfs-reclaim/sd{a, b, c, ...}
+    xfs-blockgc/sd{a, b, c, ...}
+    xfs-inodegc/sd{a, b, c, ...}
+    audit_send_repl
+    ecryptfs-kthrea
+    vfio-irqfd-clea
+    jbd2/nvme0n1p2-
+    ...
+
+We should improve this problem fundamentally.
+
+This patch extends the size of task comm to 24 bytes, which is the
+same length with workqueue's, for the CONFIG_BASE_FULL case. And for the
+CONFIG_BASE_SMALL case, the size of task comm is still kept as 16 bytes.
+
+After this patchset, the truncated kthreads listed above will be
+displayed as:
+
+    rcu_tasks_kthread
+    rcu_tasks_rude_kthread
+    rcu_tasks_trace_kthread
+    poll_mpt3sas0_statu
+    ext4-rsv-conversion
+    xfs-reclaim/sdf1
+    xfs-blockgc/sdf1
+    xfs-inodegc/sdf1
+    audit_send_reply
+    ecryptfs-kthread
+    vfio-irqfd-cleanup
+    jbd2/nvme0n1p2-8
+
+Suggested-by: Petr Mladek <pmladek@suse.com>
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
 Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Kees Cook <keescook@chromium.org>
 Cc: Al Viro <viro@zeniv.linux.org.uk>
 Cc: Petr Mladek <pmladek@suse.com>
 ---
- tools/bpf/bpftool/Makefile                | 1 +
- tools/bpf/bpftool/main.h                  | 3 ++-
- tools/bpf/bpftool/skeleton/pid_iter.bpf.c | 4 ++--
- tools/bpf/bpftool/skeleton/pid_iter.h     | 4 +++-
- 4 files changed, 8 insertions(+), 4 deletions(-)
+ include/linux/sched.h | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
-index d73232be1e99..33fbde84993c 100644
---- a/tools/bpf/bpftool/Makefile
-+++ b/tools/bpf/bpftool/Makefile
-@@ -164,6 +164,7 @@ $(OUTPUT)%.bpf.o: skeleton/%.bpf.c $(OUTPUT)vmlinux.h $(LIBBPF)
- 	$(QUIET_CLANG)$(CLANG) \
- 		-I$(if $(OUTPUT),$(OUTPUT),.) \
- 		-I$(srctree)/tools/include/uapi/ \
-+		-I$(srctree)/tools/include/ \
- 		-I$(LIBBPF_PATH) \
- 		-I$(srctree)/tools/lib \
- 		-g -O2 -Wall -target bpf -c $< -o $@ && $(LLVM_STRIP) -g $@
-diff --git a/tools/bpf/bpftool/main.h b/tools/bpf/bpftool/main.h
-index 90caa42aac4c..5efa27188f68 100644
---- a/tools/bpf/bpftool/main.h
-+++ b/tools/bpf/bpftool/main.h
-@@ -12,6 +12,7 @@
- #include <linux/compiler.h>
- #include <linux/kernel.h>
- #include <linux/hashtable.h>
-+#include <linux/sched/task.h>
- #include <tools/libc_compat.h>
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 62d5b30d310c..fcb4bc97f95c 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -274,10 +274,17 @@ struct task_group;
  
- #include <bpf/libbpf.h>
-@@ -124,7 +125,7 @@ struct obj_refs_table {
+ #define get_current_state()	READ_ONCE(current->__state)
  
- struct obj_ref {
- 	int pid;
--	char comm[16];
-+	char comm[TASK_COMM_LEN_16];
- };
- 
- struct obj_refs {
-diff --git a/tools/bpf/bpftool/skeleton/pid_iter.bpf.c b/tools/bpf/bpftool/skeleton/pid_iter.bpf.c
-index d9b420972934..f70702fcb224 100644
---- a/tools/bpf/bpftool/skeleton/pid_iter.bpf.c
-+++ b/tools/bpf/bpftool/skeleton/pid_iter.bpf.c
-@@ -71,8 +71,8 @@ int iter(struct bpf_iter__task_file *ctx)
- 
- 	e.pid = task->tgid;
- 	e.id = get_obj_id(file->private_data, obj_type);
--	bpf_probe_read_kernel(&e.comm, sizeof(e.comm),
--			      task->group_leader->comm);
-+	bpf_probe_read_kernel_str(&e.comm, sizeof(e.comm),
-+				  task->group_leader->comm);
- 	bpf_seq_write(ctx->meta->seq, &e, sizeof(e));
- 
- 	return 0;
-diff --git a/tools/bpf/bpftool/skeleton/pid_iter.h b/tools/bpf/bpftool/skeleton/pid_iter.h
-index 5692cf257adb..675b2916567e 100644
---- a/tools/bpf/bpftool/skeleton/pid_iter.h
-+++ b/tools/bpf/bpftool/skeleton/pid_iter.h
-@@ -3,10 +3,12 @@
- #ifndef __PID_ITER_H
- #define __PID_ITER_H
- 
-+#include <linux/sched/task.h>
+-/* To replace the old hard-coded 16 */
+-#define TASK_COMM_LEN_16		16
++/* Also to replace the old hard-coded 16 */
++#define TASK_COMM_LEN_16	16
++#define TASK_COMM_LEN_24	24
 +
- struct pid_iter_entry {
- 	__u32 id;
- 	int pid;
--	char comm[16];
-+	char comm[TASK_COMM_LEN_16];
- };
++
+ /* Task command name length: */
+-#define TASK_COMM_LEN			16
++#if CONFIG_BASE_SMALL
++#define TASK_COMM_LEN		TASK_COMM_LEN_16
++#else
++#define TASK_COMM_LEN		TASK_COMM_LEN_24
++#endif
  
- #endif
+ extern void scheduler_tick(void);
+ 
 -- 
 2.17.1
 
