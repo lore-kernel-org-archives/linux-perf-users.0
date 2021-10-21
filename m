@@ -2,178 +2,105 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46372C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Oct 2021 15:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9441C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Oct 2021 20:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B9466120C
-	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Oct 2021 15:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E630610CF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Oct 2021 20:31:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231828AbhJUQAc (ORCPT
+        id S231579AbhJUUdX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 21 Oct 2021 12:00:32 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:24509 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231839AbhJUQAb (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 21 Oct 2021 12:00:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634831893;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=VfpACOZctT0RhCg7latmNH+ENpS2vqEqG/eWd+re1mY=;
-        b=QziaWjvuE+smOOKB7jXw2Uf+a03TfE9bbrBQvHkgMdh/hxM7+smCdubPJ3nufv9yitWars
-        Hgofr+lE1NpEtDm1K1oKemzYS/lAgipIQCv/xQRVZWf6dRUJOO393jdpzeQ2vfvj8QyBRX
-        RsowAugM/kcLCNgjPcw1QSy5zQ/6QFA=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-519-jm1wwpN_N-i80CzD7jZQBw-1; Thu, 21 Oct 2021 11:58:12 -0400
-X-MC-Unique: jm1wwpN_N-i80CzD7jZQBw-1
-Received: by mail-wr1-f70.google.com with SMTP id a15-20020a056000188f00b00161068d8461so44731wri.11
-        for <linux-perf-users@vger.kernel.org>; Thu, 21 Oct 2021 08:58:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VfpACOZctT0RhCg7latmNH+ENpS2vqEqG/eWd+re1mY=;
-        b=GqIW1Csu2sVK5Sn83JFUhYvugl1hruOytIIklR8S/msuPENluJ8kyoaZ07uAzoQRMm
-         G/tpJxoueQX4smTfRIyUeDWIqkh47Uweav99QzaHKG16cJCI0ERr3BchYKO8BLYWTcJ+
-         eb5u/wUqxmmHtiB3wyca2WLKeuFF+ITYz7+FASr+H47V+2Y6kzHGjUU1AGYxlxrgYQIB
-         cVvvo+oh0FyahQcRyXXRZrVARtugYD3mLt3+n7pxjf6ml/tprO+Ackim0u57qrEUjWiB
-         8Vw1Fuu6DmRENlF9+2DZvecQnAU54E8I9kt4xo7SlnaphGV9gq77AmM6bFgO5a8qRJu7
-         OAHw==
-X-Gm-Message-State: AOAM533hEFFAzsS9sJFE4bED1A9wrXIL2b5QKLFgZRQ9QdliimScRmJM
-        1Xs+aGuY8x7qzmHLLa/50ch41PPsxnHkSEu/LQyGq1XLUqAmH+QOI6APeQI1i3dI6ZN6y8pjKq7
-        c5eQOPZ4e1MdNZR33wjE4Cs8Bjx6GtA==
-X-Received: by 2002:a1c:7dcc:: with SMTP id y195mr988214wmc.18.1634831891400;
-        Thu, 21 Oct 2021 08:58:11 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyO7pXOflrAQi/8QFCQATA/d84nibFh3NwUmFnriNy9h3nvirMWb+xiNwlUPnLYnkiVTf4qZQ==
-X-Received: by 2002:a1c:7dcc:: with SMTP id y195mr988188wmc.18.1634831891154;
-        Thu, 21 Oct 2021 08:58:11 -0700 (PDT)
-Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
-        by smtp.gmail.com with ESMTPSA id f17sm198213wmf.44.2021.10.21.08.58.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Oct 2021 08:58:10 -0700 (PDT)
-Date:   Thu, 21 Oct 2021 17:58:09 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     John Garry <john.garry@huawei.com>
-Cc:     peterz@infradead.org, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        mingo@redhat.com, irogers@google.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kjain@linux.ibm.com, james.clark@arm.com
-Subject: Re: [PATCH v2 2/2] perf jevents: Enable warnings through HOSTCFLAGS
-Message-ID: <YXGOERQLp3M+pGH1@krava>
-References: <1634807805-40093-1-git-send-email-john.garry@huawei.com>
- <1634807805-40093-3-git-send-email-john.garry@huawei.com>
- <YXFhr2YoVp9GPsDM@krava>
- <f4330522-f36e-21f4-5967-0ef67de7418f@huawei.com>
+        Thu, 21 Oct 2021 16:33:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52642 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231206AbhJUUdV (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 21 Oct 2021 16:33:21 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1483660FE8;
+        Thu, 21 Oct 2021 20:31:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1634848265;
+        bh=eszrDbdkU26d521bV5MLXpdQPa7NylLuf1Bo8V1r+3s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WPHFQWeuj/a47468aOWrmB8fGMm07UjLOKPkMWE+C5W4VAHkRvmzThYAOFD2vhB+k
+         hpyIg34lp4bI8E0dsCbGEr2s7gBuEH98TsYoJ3XF3Zq/+YZoVQDJIeebZJL3bzZo0b
+         xr3oCUIYu7uTa5xcR6FPKlbi+TRp8WakQ41ebRAAleR25/y4YSWeOrfEhUSKAVNBib
+         5lopI9bKkj7GfSgCzwKoaDW7vRkxduWdi8dCEsrlNu7YFq0PeQYJkD+0D4iNOMZv+Z
+         iGDuKT0Bbti7MIqeES1xegrrxU/K2AD8e/mYxVt5+HZk0QcXMIMPLgG4IFTAt89GQ/
+         aGDsH1HyLlBNg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 551CD410A1; Thu, 21 Oct 2021 17:31:01 -0300 (-03)
+Date:   Thu, 21 Oct 2021 17:31:01 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     John Garry <john.garry@huawei.com>, peterz@infradead.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, mingo@redhat.com,
+        irogers@google.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, James Clark <James.Clark@arm.com>
+Subject: [RFC] Support Intel-PT code build in 32-bit arches
+Message-ID: <YXHOBXiIXP9b3xps@kernel.org>
+References: <1634316507-227751-1-git-send-email-john.garry@huawei.com>
+ <YXAoOgRVfkzr5vcS@kernel.org>
+ <744e6d05-eaec-49d9-1e3d-2f96d4e01e1a@huawei.com>
+ <YXBRF0vM8sEwherG@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f4330522-f36e-21f4-5967-0ef67de7418f@huawei.com>
+In-Reply-To: <YXBRF0vM8sEwherG@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Oct 21, 2021 at 04:50:09PM +0100, John Garry wrote:
-> On 21/10/2021 13:48, Jiri Olsa wrote:
-> > > +HOSTCFLAGS += -Wall
-> > > +HOSTCFLAGS += -Wextra
-> > > +
-> > >   # Enforce a non-executable stack, as we may regress (again) in the future by
-> > >   # adding assembler files missing the .GNU-stack linker note.
-> > >   LDFLAGS += -Wl,-z,noexecstack
-> > > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> > > index 7df13e74450c..118bcdc70bb4 100644
-> > > --- a/tools/perf/Makefile.perf
-> > > +++ b/tools/perf/Makefile.perf
-> > > @@ -226,7 +226,7 @@ else
-> > >   endif
-> > >   export srctree OUTPUT RM CC CXX LD AR CFLAGS CXXFLAGS V BISON FLEX AWK
-> > > -export HOSTCC HOSTLD HOSTAR
-> > > +export HOSTCC HOSTLD HOSTAR HOSTCFLAGS
-> > >   include $(srctree)/tools/build/Makefile.include
-> > > diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
-> > > index a055dee6a46a..d5c287f069a2 100644
-> > > --- a/tools/perf/pmu-events/Build
-> > > +++ b/tools/perf/pmu-events/Build
-> > > @@ -1,7 +1,7 @@
-> > >   hostprogs := jevents
-> > >   jevents-y	+= json.o jsmn.o jevents.o
-> > > -HOSTCFLAGS_jevents.o	= -I$(srctree)/tools/include
-> > > +HOSTCFLAGS_jevents.o	= -I$(srctree)/tools/include $(HOSTCFLAGS)
-> > so the the host cflags are made of:
-> > 
-> > host_c_flags = -Wp,-MD,$(depfile) -Wp,-MT,$@ $(KBUILD_HOSTCFLAGS) -D"BUILD_STR(s)=\#s" $(HOSTCFLAGS_$(basetarget).o) $(HOSTCFLAGS_$(obj))
-> > 
-> > can't you use KBUILD_HOSTCFLAGS?
+Em Wed, Oct 20, 2021 at 02:25:43PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Wed, Oct 20, 2021 at 03:41:01PM +0100, John Garry escreveu:
+> > I suppose the best thing now is to send a patch on top once perf/core
+> > contains that commit. Let me know otherwise.
+ 
+> You can send a v2, as:
+ 
+>   29     8.60 debian:experimental-x-mipsel  : FAIL gcc version 11.2.0 (Debian 11.2.0-9)
+>     util/intel-pt.c: In function 'intel_pt_synth_pebs_sample':
+>     util/intel-pt.c:2146:33: error: passing argument 1 of 'find_first_bit' from incompatible pointer type [-Werror=incompatible-pointer-types]
+>      2146 |         for_each_set_bit(hw_id, &items->applicable_counters, INTEL_PT_MAX_PEBS) {
+>     /git/perf-5.15.0-rc4/tools/include/linux/bitops.h:37:38: note: in definition of macro 'for_each_set_bit'
+>        37 |         for ((bit) = find_first_bit((addr), (size));            \
+>           |                                      ^~~~
+>     In file included from /git/perf-5.15.0-rc4/tools/include/asm-generic/bitops.h:21,
+>                      from /git/perf-5.15.0-rc4/tools/include/linux/bitops.h:34,
+>                      from /git/perf-5.15.0-rc4/tools/include/linux/bitmap.h:6,
+>                      from util/header.h:10,
+>                      from util/session.h:7,
+>                      from util/intel-pt.c:16:
+>     /git/perf-5.15.0-rc4/tools/include/asm-generic/bitops/find.h:109:51: note: expected 'const long unsigned int *' but argument is of type 'const uint64_t *' {aka 'const long long unsigned int *'}
 > 
-> Maybe. However, it seems to be empty when building perf/pmu-events. Even in
-> building tools/objtool - which currently references it - it is empty AFAICS.
-> I'm not sure if it's being imported properly.
+>  Adrian, this is on:
 > 
+>  commit 803a3c9233990e1adac8ea2421e3759c2d380cf8
+> Author: Adrian Hunter <adrian.hunter@intel.com>
+> Date:   Tue Sep 7 19:39:03 2021 +0300
+> 
+>     perf intel-pt: Add support for PERF_RECORD_AUX_OUTPUT_HW_ID
+> 
+>     Originally, software only supported redirecting at most one PEBS event to
+>     Intel PT (PEBS-via-PT) because it was not able to differentiate one event
+>     from another. To overcome that, add support for the
+>     PERF_RECORD_AUX_OUTPUT_HW_ID side-band event.
+> 
+>     Reviewed-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+>     Reviewed-by: Andi Kleen <ak@linux.intel.com>
+> 
+> 
+> That is still just on tmp.perf/core, so we can fix it, probably its just
+> making that uint64_t into a unsigned long, will check later if you don't
+> beat me to it.
 
-I meant change like this (on top of yours)
+Adrian,
 
-jirka
+	Probably we should just disable Intel PT support from being
+built on 32-bit arches, right? I don't know if anybody is interested on
+that, my tests just try to figure out if it continues to build, and if
+fixing any problem isn't costly, which in this case is more than my
+threshold, wdyt?
 
-
----
-diff --git a/tools/build/Build.include b/tools/build/Build.include
-index 2cf3b1bde86e..c2a95ab47379 100644
---- a/tools/build/Build.include
-+++ b/tools/build/Build.include
-@@ -99,7 +99,7 @@ cxx_flags = -Wp,-MD,$(depfile) -Wp,-MT,$@ $(CXXFLAGS) -D"BUILD_STR(s)=\#s" $(CXX
- ###
- ## HOSTCC C flags
- 
--host_c_flags = -Wp,-MD,$(depfile) -Wp,-MT,$@ $(KBUILD_HOSTCFLAGS) -D"BUILD_STR(s)=\#s" $(HOSTCFLAGS_$(basetarget).o) $(HOSTCFLAGS_$(obj))
-+host_c_flags = -Wp,-MD,$(depfile) -Wp,-MT,$@ $(HOSTCFLAGS) -D"BUILD_STR(s)=\#s" $(HOSTCFLAGS_$(basetarget).o) $(HOSTCFLAGS_$(obj))
- 
- # output directory for tests below
- TMPOUT = .tmp_$$$$
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 0ae2e3d8b832..374f65b52157 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -17,6 +17,7 @@ detected     = $(shell echo "$(1)=y"       >> $(OUTPUT).config-detected)
- detected_var = $(shell echo "$(1)=$($(1))" >> $(OUTPUT).config-detected)
- 
- CFLAGS := $(EXTRA_CFLAGS) $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
-+HOSTCFLAGS := $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
- 
- include $(srctree)/tools/scripts/Makefile.arch
- 
-@@ -211,6 +212,7 @@ endif
- ifneq ($(WERROR),0)
-   CORE_CFLAGS += -Werror
-   CXXFLAGS += -Werror
-+  HOSTCFLAGS += -Werror
- endif
- 
- ifndef DEBUG
-@@ -292,6 +294,9 @@ CXXFLAGS += -ggdb3
- CXXFLAGS += -funwind-tables
- CXXFLAGS += -Wno-strict-aliasing
- 
-+HOSTCFLAGS += -Wall
-+HOSTCFLAGS += -Wextra
-+
- # Enforce a non-executable stack, as we may regress (again) in the future by
- # adding assembler files missing the .GNU-stack linker note.
- LDFLAGS += -Wl,-z,noexecstack
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 7df13e74450c..118bcdc70bb4 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -226,7 +226,7 @@ else
- endif
- 
- export srctree OUTPUT RM CC CXX LD AR CFLAGS CXXFLAGS V BISON FLEX AWK
--export HOSTCC HOSTLD HOSTAR
-+export HOSTCC HOSTLD HOSTAR HOSTCFLAGS
- 
- include $(srctree)/tools/build/Makefile.include
- 
-
+- Arnaldo
