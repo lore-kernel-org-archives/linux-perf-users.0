@@ -2,56 +2,56 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 265F6C4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Oct 2021 03:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E36CAC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Oct 2021 03:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1089560FED
-	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Oct 2021 03:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D7E60FED
+	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Oct 2021 03:45:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231573AbhJUDr4 (ORCPT
+        id S231506AbhJUDr7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 20 Oct 2021 23:47:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33912 "EHLO
+        Wed, 20 Oct 2021 23:47:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231419AbhJUDro (ORCPT
+        with ESMTP id S231490AbhJUDrv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 20 Oct 2021 23:47:44 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 889A8C06161C;
-        Wed, 20 Oct 2021 20:45:29 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id e5-20020a17090a804500b001a116ad95caso3936884pjw.2;
-        Wed, 20 Oct 2021 20:45:29 -0700 (PDT)
+        Wed, 20 Oct 2021 23:47:51 -0400
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8922BC061755;
+        Wed, 20 Oct 2021 20:45:32 -0700 (PDT)
+Received: by mail-pg1-x530.google.com with SMTP id s136so21131316pgs.4;
+        Wed, 20 Oct 2021 20:45:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=pevXqfzk0a9mco3A0IBMgl8TtIgUhm0DLJ2rQWdresY=;
-        b=IVwXWPNp0IB5AtbRdxHUftVBA0ZHtHlUfYqroePI4Bxa5n4Ma6otf2aJulMSuhuuKb
-         K8CZmXaK9cs+CruHG4RH2qzM1AI1JA7J3iE41C8D4uTvGuWuhzLdhHUJHInTFpK43vKP
-         4HtzYVm/t41Lswbr0WKIpitoFeFuNg+ZT8hWSHi9RlVeEfTPxG4kwGtLRTgOzRxJdoUW
-         TbA8cDOX3VNZ3RK4zzU/kVAE7BdFLcrYEoFZgBbP6F0bWBvYQ/v0WERZOB7b9vRrcNSM
-         GpuyMj2lxGjmoYaFk8k5By37qtykRrLVhcNRViPcofYw1EcA0FQiFE0IwTMvXfX+5e6N
-         SzYw==
+        bh=IFlJQvgcVFayHxxxZOKIVduulLCEIS8IL4o5ynS1C+Y=;
+        b=UV8lW+/u1hTpRZJeCHc5TAt9vjBVIKt3Djp229X12qYrvSLGxWW1bKeiw+35AbdgHZ
+         WTHz3f4L3AEy4IcO4pxMCxOofNj3ssteEGzxBpB+qYEtsB6hOybtEFf3eU573jsSgpUE
+         Nwjn4G9sdOwsZs39sVNKcDy01eHIktFDOO2ioKO9LlyLYiqocG7RJgjuC/LM5CjJE42j
+         ySBHVs2Rqa6BOsWToOPQoyUJ3vEmMgzACPy6muR0ZkQcLZDG2ThP3p2GVvto9g+wsEWM
+         g0Jiw1B4Ew61OZS3bljvYjzsQ9AL94rVWrEN6LADvLRsKcdK8mu4n5ijbRADRGbgAiVE
+         b4Sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=pevXqfzk0a9mco3A0IBMgl8TtIgUhm0DLJ2rQWdresY=;
-        b=YgHQNYIt8nKRln6sxNqEQuJsGtRhltipSkWbUwGytK95ONbyAGiUD8/77tBEt65wbN
-         wX2VBDWm8woFIzP2T5xJVa93rWM98uRBc8LlJKqwr3ncJKWkOaMl0Vz4Y+RI59Qb5MzN
-         Lvuc95/P3HnzpJoQgr5PM/k/Sm4Vo4z1sSqYt9/QMPDGVADGVCDZ6zl27PZgEH643Ath
-         /BgPk3anv8xg/V94g/j8KwHUy820TuK63iTZw22bATwB0SwwvONhFyf5245qIc1RZGw9
-         RRpif33ANCHeg4yahtKgNOLgCmsB4kY6sXkUDeYp2axwSp4jaJAcYGceCpRoUuxaB918
-         c2rg==
-X-Gm-Message-State: AOAM533hmEY7n6F+xQAaFKKZHtV13Uuk7UwPYVibJjOvu/JrhxSdYAN5
-        lw8XmjHJ+Q7CmDcnM3+SfwM=
-X-Google-Smtp-Source: ABdhPJzp/IAql6drxO3acK8js1zsIW44wduMnkGkdnmstbT+jEsLlxRzHZdGqHVLATuxVGcoPrc6Pg==
-X-Received: by 2002:a17:90b:2494:: with SMTP id nt20mr2200494pjb.19.1634787929138;
-        Wed, 20 Oct 2021 20:45:29 -0700 (PDT)
+        bh=IFlJQvgcVFayHxxxZOKIVduulLCEIS8IL4o5ynS1C+Y=;
+        b=uTA8Q/0hWLp40hntGN7fIhWK/m/3q739EKf4os7NSUxUR7myuPPbwXVpReVtnUKB3i
+         1ROLVgMYMgjaMloLqGHKFwc7lL9DPd6kpjn2cqcCge7Ll0ZoUzD9We77VqW33cTmfeAt
+         Pl6c3vcfVOEgtPq/wL279RNAA4OZh1yb2294ACWCs9mgklICLbdmLvdKtEBE9+SKsP5+
+         4lVWXUVcl/cjMFG2+N/jPUSXeWVkrFbDkeznXq4Q1v1B0TVnptY33dwZNeDY+PIQvBB1
+         XkKEjFUIaoLZpnz3zDFEprt2pv2tFbKMyDEoNoYb3w2JyKxm3w+meOy8GnlYz5e87LfR
+         j95w==
+X-Gm-Message-State: AOAM533B9KBctyylL9ei5cJuYTz6ncheGbkqmdaqnY+H638t9vreSsWj
+        nkd1EotKCwCUr70/TfpdWQE=
+X-Google-Smtp-Source: ABdhPJw3tJ4+yRDaDe8c44srjX2Pyw7/4ELqqc0tR6rMgxRse+mdX70FULOBuOH5G3XvimxzcYd6cw==
+X-Received: by 2002:a63:d80c:: with SMTP id b12mr2541097pgh.331.1634787932148;
+        Wed, 20 Oct 2021 20:45:32 -0700 (PDT)
 Received: from localhost.localdomain ([140.82.17.67])
-        by smtp.gmail.com with ESMTPSA id bp19sm3651077pjb.46.2021.10.20.20.45.27
+        by smtp.gmail.com with ESMTPSA id bp19sm3651077pjb.46.2021.10.20.20.45.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Oct 2021 20:45:28 -0700 (PDT)
+        Wed, 20 Oct 2021 20:45:31 -0700 (PDT)
 From:   Yafang Shao <laoar.shao@gmail.com>
 To:     keescook@chromium.org, rostedt@goodmis.org,
         mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
@@ -67,12 +67,10 @@ To:     keescook@chromium.org, rostedt@goodmis.org,
 Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
         linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org, oliver.sang@intel.com, lkp@intel.com,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Vladimir Zapolskiy <vzapolskiy@gmail.com>,
-        David Howells <dhowells@redhat.com>
-Subject: [PATCH v5 04/15] cn_proc: make connector comm always nul ternimated
-Date:   Thu, 21 Oct 2021 03:45:11 +0000
-Message-Id: <20211021034516.4400-5-laoar.shao@gmail.com>
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: [PATCH v5 06/15] elfcore: make prpsinfo always get a nul terminated task comm
+Date:   Thu, 21 Oct 2021 03:45:13 +0000
+Message-Id: <20211021034516.4400-7-laoar.shao@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20211021034516.4400-1-laoar.shao@gmail.com>
 References: <20211021034516.4400-1-laoar.shao@gmail.com>
@@ -82,76 +80,84 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-connector comm was introduced in commit
-f786ecba4158 ("connector: add comm change event report to proc connector").
-struct comm_proc_event was defined in include/linux/cn_proc.h first and
-then been moved into file include/uapi/linux/cn_proc.h in commit
-607ca46e97a1 ("UAPI: (Scripted) Disintegrate include/linux").
+kernel test robot reported a -Wstringop-truncation warning after I
+extend task comm from 16 to 24. Below is the detailed warning:
 
-As this is the UAPI code, we can't change it without potentially breaking
-things (i.e. userspace binaries have this size built in, so we can't just
-change the size). To prepare for the followup change - extending task
-comm, we have to use __get_task_comm() to avoid the BUILD_BUG_ON() in
-proc_comm_connector().
+   fs/binfmt_elf.c: In function 'fill_psinfo.isra':
+>> fs/binfmt_elf.c:1575:9: warning: 'strncpy' output may be truncated copying 16 bytes from a string of length 23 [-Wstringop-truncation]
+    1575 |         strncpy(psinfo->pr_fname, p->comm, sizeof(psinfo->pr_fname));
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-__get_task_comm() always get a nul terminated string, so we don't worry
-about whether it is truncated or not.
+This patch can fix this warning.
 
+struct elf_prpsinfo is used to dump the task information in userspace
+coredump or kernel vmcore. Use TASK_COMM_LEN_16 instead of hard-coded 16
+to make it more grepable, and use strscpy_pad() instead of strncpy() to
+make it always get a nul terminated task comm.
+
+Reported-by: kernel test robot <lkp@intel.com>
 Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Vladimir Zapolskiy <vzapolskiy@gmail.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: David Howells <dhowells@redhat.com>
 Cc: Kees Cook <keescook@chromium.org>
 Cc: Al Viro <viro@zeniv.linux.org.uk>
 Cc: Petr Mladek <pmladek@suse.com>
 ---
- drivers/connector/cn_proc.c  | 5 ++++-
- include/uapi/linux/cn_proc.h | 7 ++++++-
- 2 files changed, 10 insertions(+), 2 deletions(-)
+ fs/binfmt_elf.c                | 2 +-
+ include/linux/elfcore-compat.h | 3 ++-
+ include/linux/elfcore.h        | 4 ++--
+ 3 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/connector/cn_proc.c b/drivers/connector/cn_proc.c
-index 646ad385e490..c88ba2dc1eae 100644
---- a/drivers/connector/cn_proc.c
-+++ b/drivers/connector/cn_proc.c
-@@ -230,7 +230,10 @@ void proc_comm_connector(struct task_struct *task)
- 	ev->what = PROC_EVENT_COMM;
- 	ev->event_data.comm.process_pid  = task->pid;
- 	ev->event_data.comm.process_tgid = task->tgid;
--	get_task_comm(ev->event_data.comm.comm, task);
-+
-+	/* This may get truncated. */
-+	__get_task_comm(ev->event_data.comm.comm,
-+			sizeof(ev->event_data.comm.comm), task);
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index a813b70f594e..a4ba79fce2a9 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -1572,7 +1572,7 @@ static int fill_psinfo(struct elf_prpsinfo *psinfo, struct task_struct *p,
+ 	SET_UID(psinfo->pr_uid, from_kuid_munged(cred->user_ns, cred->uid));
+ 	SET_GID(psinfo->pr_gid, from_kgid_munged(cred->user_ns, cred->gid));
+ 	rcu_read_unlock();
+-	strncpy(psinfo->pr_fname, p->comm, sizeof(psinfo->pr_fname));
++	strscpy_pad(psinfo->pr_fname, p->comm, sizeof(psinfo->pr_fname));
  
- 	memcpy(&msg->id, &cn_proc_event_id, sizeof(msg->id));
- 	msg->ack = 0; /* not used */
-diff --git a/include/uapi/linux/cn_proc.h b/include/uapi/linux/cn_proc.h
-index db210625cee8..4bb7f658fcc0 100644
---- a/include/uapi/linux/cn_proc.h
-+++ b/include/uapi/linux/cn_proc.h
-@@ -21,6 +21,11 @@
+ 	return 0;
+ }
+diff --git a/include/linux/elfcore-compat.h b/include/linux/elfcore-compat.h
+index e272c3d452ce..69fa1a728964 100644
+--- a/include/linux/elfcore-compat.h
++++ b/include/linux/elfcore-compat.h
+@@ -5,6 +5,7 @@
+ #include <linux/elf.h>
+ #include <linux/elfcore.h>
+ #include <linux/compat.h>
++#include <linux/sched.h>
  
- #include <linux/types.h>
- 
-+/* We can't include <linux/sched.h> directly in this UAPI header. */
-+#ifndef TASK_COMM_LEN_16
-+#define TASK_COMM_LEN_16 16
-+#endif
-+
  /*
-  * Userspace sends this enum to register with the kernel that it is listening
-  * for events on the connector.
-@@ -110,7 +115,7 @@ struct proc_event {
- 		struct comm_proc_event {
- 			__kernel_pid_t process_pid;
- 			__kernel_pid_t process_tgid;
--			char           comm[16];
-+			char           comm[TASK_COMM_LEN_16];
- 		} comm;
+  * Make sure these layouts match the linux/elfcore.h native definitions.
+@@ -43,7 +44,7 @@ struct compat_elf_prpsinfo
+ 	__compat_uid_t			pr_uid;
+ 	__compat_gid_t			pr_gid;
+ 	compat_pid_t			pr_pid, pr_ppid, pr_pgrp, pr_sid;
+-	char				pr_fname[16];
++	char				pr_fname[TASK_COMM_LEN_16];
+ 	char				pr_psargs[ELF_PRARGSZ];
+ };
  
- 		struct coredump_proc_event {
+diff --git a/include/linux/elfcore.h b/include/linux/elfcore.h
+index 2aaa15779d50..ee7ac09734ba 100644
+--- a/include/linux/elfcore.h
++++ b/include/linux/elfcore.h
+@@ -65,8 +65,8 @@ struct elf_prpsinfo
+ 	__kernel_gid_t	pr_gid;
+ 	pid_t	pr_pid, pr_ppid, pr_pgrp, pr_sid;
+ 	/* Lots missing */
+-	char	pr_fname[16];	/* filename of executable */
+-	char	pr_psargs[ELF_PRARGSZ];	/* initial part of arg list */
++	char	pr_fname[TASK_COMM_LEN_16];	/* filename of executable */
++	char	pr_psargs[ELF_PRARGSZ];		/* initial part of arg list */
+ };
+ 
+ static inline void elf_core_copy_regs(elf_gregset_t *elfregs, struct pt_regs *regs)
 -- 
 2.17.1
 
