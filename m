@@ -2,170 +2,129 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 000D3C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Oct 2021 13:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3EDC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Oct 2021 14:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA522611CE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Oct 2021 13:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDFE460F50
+	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Oct 2021 14:36:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230487AbhJUN2M (ORCPT
+        id S230283AbhJUOib (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 21 Oct 2021 09:28:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58344 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230425AbhJUN2M (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 21 Oct 2021 09:28:12 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B47EB610CB;
-        Thu, 21 Oct 2021 13:25:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634822756;
-        bh=97EQWqxB+NgM73M8P2ikYsx5BVa/jFCaVEfOcLm4DAc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LC3bzHXANc9HNpdF1fCEzyxrw4yDtgeVY9RGeGo+Qh3KCwCCVjQSJDObGvPDRm9nu
-         twT67ERS3WpER4BD9b/ZmeUZ/BSAdy661UWuwGGyHp9j/SsxzBj27Lfr9Q3HA7Pusl
-         L6iOPJhGEazpR0tGObvShlLV+QSLto7HXtoJrGnwt7IP70B8F93Nl7ekeXlU3HMrZ3
-         SsUT38t5Ru3kAg+X+bjaimtvgtxrdqhCHFeIqRvMPMtOn3SpPmNlQByh7zoQ9YKHl/
-         vX+K2ZfV5oc8y6RLumbS6l9EOyyyvzh4lBqkPEtQgWnjzjMKaMucP+w86Y3THp7VRE
-         jHzZFW17mb9CA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 789E2410A1; Thu, 21 Oct 2021 10:25:52 -0300 (-03)
-Date:   Thu, 21 Oct 2021 10:25:52 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Alistair Francis <alistair.francis@opensource.wdc.com>
-Cc:     linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, alistair23@gmail.com,
-        namhyung@kernel.org, jolsa@redhat.com,
-        alexander.shishkin@linux.intel.com, mark.rutland@arm.com,
-        dave@stgolabs.net, dvhart@infradead.org, peterz@infradead.org,
-        mingo@redhat.com, tglx@linutronix.de, atish.patra@wdc.com,
-        arnd@arndb.de, Alistair Francis <alistair.francis@wdc.com>,
-        Davidlohr Bueso <dbueso@suse.de>
-Subject: Re: [PATCH v4 1/4] perf bench futex: Call the futex syscall from a
- function
-Message-ID: <YXFqYJsPYA4c4Fqw@kernel.org>
-References: <20211020223920.2810727-1-alistair.francis@opensource.wdc.com>
+        Thu, 21 Oct 2021 10:38:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40888 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230072AbhJUOib (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 21 Oct 2021 10:38:31 -0400
+Received: from mail-ua1-x932.google.com (mail-ua1-x932.google.com [IPv6:2607:f8b0:4864:20::932])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6129DC0613B9;
+        Thu, 21 Oct 2021 07:36:15 -0700 (PDT)
+Received: by mail-ua1-x932.google.com with SMTP id f3so1607734uap.6;
+        Thu, 21 Oct 2021 07:36:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:user-agent:in-reply-to:references
+         :message-id:mime-version:content-transfer-encoding;
+        bh=ajoqDPP656VX5YEBu8I1q77ACKKc8Lf1fY/olzortAE=;
+        b=Ksty8m03gG131TGw1j2LHYW3Zz1euVw4MAxFJlvy2qBz+f6yYAdDVVmRgxYravk+7c
+         +bK7+cfHA6ic35LCl99nvibR/LuX7wugyZuxWFclwiWwyWOP1m1QpO9HEsWuU3BAYY1L
+         mUrPZtGfWWOPbGofXxF/CJ6zrBMz2nPIHfBeaoTSKmKLK4Dzsz3phMHTaqAWlDWEVOUz
+         lmgTBZ6QxXQ7/iiqo9k/aWp+Stc3HgGD0FgPAupGnH6CO8equjMzhr06ExcNCHtEY7yr
+         Iy5yhmXUFAh4rpgCpwsYn1+LA7HMil6t6bpvND0J4OzdCGvT4Yus3tMeBiavu7g2mR9B
+         SSQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:user-agent:in-reply-to
+         :references:message-id:mime-version:content-transfer-encoding;
+        bh=ajoqDPP656VX5YEBu8I1q77ACKKc8Lf1fY/olzortAE=;
+        b=ny5eVMy3uIpLCOI+6lNFsAbt3Byxnd0dRNrsbZ2dkw6e9OUWGoBxL7jJGxPppxb1Ln
+         urrV8pyItf3oAAFpk7LGBok31ho6uKX2en1qntew01/nwb0YqWFRsj6CdVOrZdGWLFB1
+         KAwIz3TyuW//J05jKxNWjNDtK09mEFF+SLfNaaO9brgoVEUW9UV+lVKcJWpvEGt5um5G
+         shmAMWEZ7PBj3IsOZgEnwstBwhaE0VQq8U7bQg/tjxhkRIuxhDVMCukAR4rxIuZSoLEa
+         e5GpG8k+oZIZeq2gURDHgEAYTXUfdoaW4cGHY8kLH1x9xmuub8l9CFmmg8Thed14g9yQ
+         8ucQ==
+X-Gm-Message-State: AOAM532RluNbYv/OsJUD0kQmwpGYyaDQlbzJZVHSaV4IdqSS25CfXvVR
+        ABqeYx/buarfY/UBUREeWUw=
+X-Google-Smtp-Source: ABdhPJzs3fIDRsfWoXgUCGIUOec9z2VIIpcFKSpSfazaeuxbj6y7WC1joJGMkog/7P0aRTBHrdrSTw==
+X-Received: by 2002:a67:e1d2:: with SMTP id p18mr6418032vsl.30.1634826974436;
+        Thu, 21 Oct 2021 07:36:14 -0700 (PDT)
+Received: from [127.0.0.1] ([187.68.192.38])
+        by smtp.gmail.com with ESMTPSA id s8sm2986617vsk.18.2021.10.21.07.36.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Oct 2021 07:36:13 -0700 (PDT)
+Date:   Thu, 21 Oct 2021 11:36:03 -0300
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+To:     John Garry <john.garry@huawei.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     peterz@infradead.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, mingo@redhat.com, irogers@google.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kjain@linux.ibm.com, james.clark@arm.com
+Subject: Re: [PATCH v2 0/2] perf jevents: Enable build warnings
+User-Agent: K-9 Mail for Android
+In-Reply-To: <9075dc5c-25a2-c977-a1c2-675e972115e7@huawei.com>
+References: <1634807805-40093-1-git-send-email-john.garry@huawei.com> <YXFjSR6ZRQbMjiG3@kernel.org> <9075dc5c-25a2-c977-a1c2-675e972115e7@huawei.com>
+Message-ID: <0B2C61AB-3F0D-4618-B0AD-7143C44B4A3A@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211020223920.2810727-1-alistair.francis@opensource.wdc.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Oct 21, 2021 at 08:39:17AM +1000, Alistair Francis escreveu:
-> From: Alistair Francis <alistair.francis@wdc.com>
-> 
-> In preparation for a more complex futex() function let's convert the
-> current macro into two functions. We need two functions to avoid
-> compiler failures as the macro is overloaded.
-> 
-> This will allow us to include pre-processor conditionals in the futex
-> syscall functions.
-> 
-> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
-> Acked-by: Davidlohr Bueso <dbueso@suse.de>
-> ---
->  tools/perf/bench/futex.h | 43 ++++++++++++++++++++++++----------------
->  1 file changed, 26 insertions(+), 17 deletions(-)
-
-Right after applying this one:
-
-In file included from bench/futex-hash.c:29:
-bench/futex.h: In function ‘futex_syscall’:
-bench/futex.h:52:61: error: ‘ts32’ undeclared (first use in this function); did you mean ‘s32’?
-   52 |         return syscall(SYS_futex, uaddr, op | opflags, val, ts32, uaddr2, val3);
-      |                                                             ^~~~
-      |                                                             s32
-bench/futex.h:52:61: note: each undeclared identifier is reported only once for each function it appears in
-bench/futex.h:49:82: error: unused parameter ‘timeout’ [-Werror=unused-parameter]
-   49 | futex_syscall(volatile u_int32_t *uaddr, int op, u_int32_t val, struct timespec *timeout,
-      |                                                                 ~~~~~~~~~~~~~~~~~^~~~~~~
-bench/futex.h:53:1: error: control reaches end of non-void function [-Werror=return-type]
-   53 | }
-      | ^
-cc1: all warnings being treated as errors
-make[4]: *** [/var/home/acme/git/perf/tools/build/Makefile.build:96: /tmp/build/perf/bench/futex-hash.o] Error 1
-make[4]: *** Waiting for unfinished jobs....
-In file included from bench/futex-wake-parallel.c:31:
-bench/futex.h: In function ‘futex_syscall’:
-bench/futex.h:52:61: error: ‘ts32’ undeclared (first use in this function); did you mean ‘s32’?
-   52 |         return syscall(SYS_futex, uaddr, op | opflags, val, ts32, uaddr2, val3);
-      |                                                             ^~~~
-      |                                                             s32
-bench/futex.h:52:61: note: each undeclared identifier is reported only once for each function it appears in
-bench/futex.h:49:82: error: unused parameter ‘timeout’ [-Werror=unused-parameter]
-   49 | futex_syscall(volatile u_int32_t *uaddr, int op, u_int32_t val, struct timespec *timeout,
-      |                                                                 ~~~~~~~~~~~~~~~~~^~~~~~~
-bench/futex.h:53:1: error: control reaches end of non-void function [-Werror=return-type]
-   53 | }
-      | ^
-cc1: all warnings being treated as errors
-make[4]: *** [/var/home/acme/git/perf/tools/build/Makefile.build:96: /tmp/build/perf/bench/futex-wake-parallel.o] Error 1
-In file included from bench/futex-requeue.c:26:
-bench/futex.h: In function ‘futex_syscall’:
-bench/futex.h:52:61: error: ‘ts32’ undeclared (first use in this function); did you mean ‘s32’?
-   52 |         return syscall(SYS_futex, uaddr, op | opflags, val, ts32, uaddr2, val3);
-      |                                                             ^~~~
-      |                                                             s32
-bench/futex.h:52:61: note: each undeclared identifier is reported only once for each function it appears in
-bench/futex.h:49:82: error: unused parameter ‘timeout’ [-Werror=unused-parameter]
-   49 | futex_syscall(volatile u_int32_t *uaddr, int op, u_int32_t val, struct timespec *timeout,
-      |                                                                 ~~~~~~~~~~~~~~~~~^~~~~~~
-bench/futex.h:53:1: error: control reaches end of non-void function [-Werror=return-type]
-   53 | }
-      | ^
-cc1: all warnings being treated as errors
-In file included from bench/futex-lock-pi.c:19:
-bench/futex.h: In function ‘futex_syscall’:
-bench/futex.h:52:61: error: ‘ts32’ undeclared (first use in this function); did you mean ‘s32’?
-   52 |         return syscall(SYS_futex, uaddr, op | opflags, val, ts32, uaddr2, val3);
-      |                                                             ^~~~
-      |                                                             s32
-bench/futex.h:52:61: note: each undeclared identifier is reported only once for each function it appears in
-bench/futex.h:49:82: error: unused parameter ‘timeout’ [-Werror=unused-parameter]
-   49 | futex_syscall(volatile u_int32_t *uaddr, int op, u_int32_t val, struct timespec *timeout,
-      |                                                                 ~~~~~~~~~~~~~~~~~^~~~~~~
-bench/futex.h:53:1: error: control reaches end of non-void function [-Werror=return-type]
-   53 | }
-      | ^
-cc1: all warnings being treated as errors
-make[4]: *** [/var/home/acme/git/perf/tools/build/Makefile.build:96: /tmp/build/perf/bench/futex-requeue.o] Error 1
-make[4]: *** [/var/home/acme/git/perf/tools/build/Makefile.build:96: /tmp/build/perf/bench/futex-lock-pi.o] Error 1
-In file included from bench/futex-wake.c:25:
-bench/futex.h: In function ‘futex_syscall’:
-bench/futex.h:52:61: error: ‘ts32’ undeclared (first use in this function); did you mean ‘s32’?
-   52 |         return syscall(SYS_futex, uaddr, op | opflags, val, ts32, uaddr2, val3);
-      |                                                             ^~~~
-      |                                                             s32
-bench/futex.h:52:61: note: each undeclared identifier is reported only once for each function it appears in
-bench/futex.h:49:82: error: unused parameter ‘timeout’ [-Werror=unused-parameter]
-   49 | futex_syscall(volatile u_int32_t *uaddr, int op, u_int32_t val, struct timespec *timeout,
-      |                                                                 ~~~~~~~~~~~~~~~~~^~~~~~~
-bench/futex.h:53:1: error: control reaches end of non-void function [-Werror=return-type]
-   53 | }
-      | ^
-cc1: all warnings being treated as errors
-make[4]: *** [/var/home/acme/git/perf/tools/build/Makefile.build:96: /tmp/build/perf/bench/futex-wake.o] Error 1
-make[3]: *** [/var/home/acme/git/perf/tools/build/Makefile.build:139: bench] Error 2
-make[3]: *** Waiting for unfinished jobs....
-make[2]: *** [Makefile.perf:660: /tmp/build/perf/perf-in.o] Error 2
-make[1]: *** [Makefile.perf:240: sub-make] Error 2
-make: *** [Makefile:113: install-bin] Error 2
-make: Leaving directory '/var/home/acme/git/perf/tools/perf'
-
- Performance counter stats for 'make -k BUILD_BPF_SKEL=1 CORESIGHT=1 PYTHON=python3 O=/tmp/build/perf -C tools/perf install-bin':
-
-          2,467.00 msec task-clock:u              #    1.263 CPUs utilized
-          2,457.82 msec cpu-clock:u               #    1.259 CPUs utilized
-
-       1.952573032 seconds time elapsed
-
-       1.444401000 seconds user
-       1.111434000 seconds sys
 
 
-⬢[acme@toolbox perf]$
+On October 21, 2021 10:02:41 AM GMT-03:00, John Garry <john=2Egarry@huawei=
+=2Ecom> wrote:
+>On 21/10/2021 13:55, Arnaldo Carvalho de Melo wrote:
+>> Em Thu, Oct 21, 2021 at 05:16:43PM +0800, John Garry escreveu:
+>>> Currently jevents builds without any complier warning flags enabled=2E=
+ So
+>>> use newly-defined HOSTCFLAGS, which comes from EXTRA_WARNINGS=2E
+>>>
+>>> Changes for v2:
+>>> - Add Werror, Wall, and Wextra (James Clark suggestion)
+>>=20
+>> Thanks, applied=2E
+>>=20
+>
+>Hi Arnaldo,
+>
+>Can you please wait until I check the review response from jirka?
 
+Sure, it's not published, and will not be until some fixes are made=2E Hav=
+ing it in my local tree gets it tested together with the whole shebang in l=
+ots of containers=2E
 
+I collect reviewed-by, etc as they appear=2E
+
+- Arnaldo
+
+>>=20
+>>  =20
+>>> Baseline is acme perf/core + mainline commit b94729919db2 ("perf jeven=
+ts:
+>>> Free the sys_event_tables list after processing entries"):
+>>>
+>>> 680453e63302 perf jevents: Free the sys_event_tables list after proces=
+sing entries
+>>> be8ecc57f180 (origin/perf/core) perf srcline: Use long-running addr2li=
+ne per DSO
+>>> 2b775152bbe8 perf tests vmlinux-kallsyms: Ignore hidden symbols
+>>>
+>>> John Garry (2):
+>>>    perf jevents: Fix some would-be warnings
+>>>    perf jevents: Enable warnings through HOSTCFLAGS
+>>>
+>>>   tools/perf/Makefile=2Econfig      |  5 +++++
+>>>   tools/perf/Makefile=2Eperf        |  2 +-
+>>>   tools/perf/pmu-events/Build     |  2 +-
+>>>   tools/perf/pmu-events/jevents=2Ec | 10 ++++------
+>>>   4 files changed, 11 insertions(+), 8 deletions(-)
+>>>
+>>> --=20
+>>> 2=2E17=2E1
+>>=20
+>
