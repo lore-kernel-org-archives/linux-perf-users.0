@@ -2,227 +2,119 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9EA6C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Oct 2021 06:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED73DC433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Oct 2021 09:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9081B60FC1
-	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Oct 2021 06:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE80260F02
+	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Oct 2021 09:42:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230270AbhJVGi5 (ORCPT
+        id S231992AbhJVJob (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 22 Oct 2021 02:38:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60428 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232060AbhJVGix (ORCPT
+        Fri, 22 Oct 2021 05:44:31 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4020 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231944AbhJVJob (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 22 Oct 2021 02:38:53 -0400
-Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C743C061766;
-        Thu, 21 Oct 2021 23:36:36 -0700 (PDT)
-Received: by mail-io1-xd34.google.com with SMTP id o184so4018496iof.6;
-        Thu, 21 Oct 2021 23:36:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=c/GFWfrfQCEwAUkTRHGoboE0d5lC1Uh+koDzmicEca0=;
-        b=WMbENLpzZjcQwzZGiPW9Rhj/vFgwtV2c/zTneotJXvWjk7VUNpF5RqaRXkH7XVbb1v
-         m/Bt+TPNkNMeG6CjLyjFtqDGplI7JGUtLGfH1tHhdqQauWPvrpXwMZhv+FT8usoTTzA4
-         7yQ8eYL40BoICYMya8ERyMssfiR9dSuRYuHP44OoJ3KGgq8N/cMF43J7WJZvQvaBLEYC
-         WC5lVPCnSPrD4rMtJ2E2YXIQRuoiX/lZtPhoz6BwAWzPDoJe962/hNugrkTW1efe9lYR
-         rEfL1Ylxd1IQCgi6FL1FOj/9mOj5+dxGwhbrXYgVM8dJfJnARoVGkPhGsTWCUTR+WZph
-         orSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c/GFWfrfQCEwAUkTRHGoboE0d5lC1Uh+koDzmicEca0=;
-        b=H0aW4brsariRoaYr2AmT/m5WuvpddmvwHJn1ZEPAsIBrwTk/d6LYk6iExoAz3A4/n4
-         vgNEU2nnpubUahd65a9GCJX9GG8Do8l8Tbu34OKu/QsyKEkjMU96p4TZc7d9iKz86Wrv
-         fh2N8INqJWNavwjKviqo8/FcFyVbApRWu1x1nz2Ww5eeeseE+pxFldsTonOVjumIWEBS
-         uquOpZpRXYUClwftPSPK0WUidfogZnQ9d1z8N3IuJv1R1tbW9E+TbBjEC1IZB0EdUANA
-         rsMhHJToz5l7tsmSu85RmTXPXDQp+RFz4ywv+zGAOFycm7YbuEweaKpw3RCF80iX4b80
-         qZvQ==
-X-Gm-Message-State: AOAM532BXbEh6dujVoZvsV/H1qV8eVew2Y8p1v3NpiUfIioZRqw5ku8N
-        VeN5hweICZoNZqZPIrioYWB/DPD3GzxLBYI5qCA=
-X-Google-Smtp-Source: ABdhPJzW3+HUT/rPVCwHnSiPO4ICRmyWKrku4AlXcSF+9AY0i+8EGnflNLTeS7Y89nZNFwPHrpQ1nFFJVIRURXVCvJQ=
-X-Received: by 2002:a05:6638:1607:: with SMTP id x7mr6984970jas.128.1634884595972;
- Thu, 21 Oct 2021 23:36:35 -0700 (PDT)
+        Fri, 22 Oct 2021 05:44:31 -0400
+Received: from fraeml712-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HbK6101Khz67mB7;
+        Fri, 22 Oct 2021 17:38:17 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml712-chm.china.huawei.com (10.206.15.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.15; Fri, 22 Oct 2021 11:42:12 +0200
+Received: from [10.202.227.179] (10.202.227.179) by
+ lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.15; Fri, 22 Oct 2021 10:42:11 +0100
+Subject: Re: [PATCH v2 2/2] perf jevents: Enable warnings through HOSTCFLAGS
+To:     Jiri Olsa <jolsa@redhat.com>
+CC:     <peterz@infradead.org>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <namhyung@kernel.org>,
+        <mingo@redhat.com>, <irogers@google.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kjain@linux.ibm.com>, <james.clark@arm.com>
+References: <1634807805-40093-1-git-send-email-john.garry@huawei.com>
+ <1634807805-40093-3-git-send-email-john.garry@huawei.com>
+ <YXFhr2YoVp9GPsDM@krava>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <86aee893-0b6b-bce3-d1aa-3b66365592d1@huawei.com>
+Date:   Fri, 22 Oct 2021 10:42:11 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-References: <20211021034603.4458-1-laoar.shao@gmail.com> <20211021034603.4458-4-laoar.shao@gmail.com>
- <CAEf4BzYTEoDwWzXd91MeMH5Qr9L853Ff3Qq8_wnwfJ8GK0oLnw@mail.gmail.com>
-In-Reply-To: <CAEf4BzYTEoDwWzXd91MeMH5Qr9L853Ff3Qq8_wnwfJ8GK0oLnw@mail.gmail.com>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Fri, 22 Oct 2021 14:36:00 +0800
-Message-ID: <CALOAHbB6KS8iscsz6y7zd=aGfKfo4jPbyMBKXL4ORY8taZRa8A@mail.gmail.com>
-Subject: Re: [PATCH v5 13/15] tools/testing/selftests/bpf: use
- TASK_COMM_LEN_16 instead of hard-coded 16
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Peter Ziljstra <peterz@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Qiang Zhang <qiang.zhang@windriver.com>,
-        robdclark <robdclark@chromium.org>,
-        Christian Brauner <christian@brauner.io>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>, Martin Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        kernel test robot <oliver.sang@intel.com>,
-        kbuild test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <YXFhr2YoVp9GPsDM@krava>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.179]
+X-ClientProxiedBy: lhreml731-chm.china.huawei.com (10.201.108.82) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Oct 22, 2021 at 6:44 AM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Wed, Oct 20, 2021 at 8:46 PM Yafang Shao <laoar.shao@gmail.com> wrote:
-> >
-> > The hard-coded 16 is used in various bpf progs. These progs get task
-> > comm either via bpf_get_current_comm() or prctl() or
-> > bpf_core_read_str(), all of which can work well even if the task comm size
-> > is changed.
-> > Below is the detailed information,
-> >
-> > bpf_get_current_comm:
-> >     progs/test_ringbuf.c
-> >     progs/test_ringbuf_multi.c
-> >
-> > prctl:
-> >     prog_tests/test_overhead.c
-> >     prog_tests/trampoline_count.c
-> >
-> > bpf_core_read_str:
-> >     progs/test_core_reloc_kernel.c
-> >     progs/test_sk_storage_tracing.c
-> >
-> > We'd better replace the hard-coded 16 with TASK_COMM_LEN_16 to make it
-> > more grepable.
-> >
-> > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> > Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > Cc: Kees Cook <keescook@chromium.org>
-> > Cc: Al Viro <viro@zeniv.linux.org.uk>
-> > Cc: Petr Mladek <pmladek@suse.com>
-> > ---
-> >  tools/testing/selftests/bpf/Makefile                      | 2 +-
-> >  tools/testing/selftests/bpf/prog_tests/ringbuf.c          | 3 ++-
-> >  tools/testing/selftests/bpf/prog_tests/ringbuf_multi.c    | 3 ++-
-> >  .../testing/selftests/bpf/prog_tests/sk_storage_tracing.c | 3 ++-
-> >  tools/testing/selftests/bpf/prog_tests/test_overhead.c    | 3 ++-
-> >  tools/testing/selftests/bpf/prog_tests/trampoline_count.c | 3 ++-
-> >  tools/testing/selftests/bpf/progs/profiler.h              | 7 ++++---
-> >  tools/testing/selftests/bpf/progs/profiler.inc.h          | 8 ++++----
-> >  tools/testing/selftests/bpf/progs/pyperf.h                | 4 ++--
-> >  tools/testing/selftests/bpf/progs/strobemeta.h            | 6 +++---
-> >  .../testing/selftests/bpf/progs/test_core_reloc_kernel.c  | 3 ++-
-> >  tools/testing/selftests/bpf/progs/test_ringbuf.c          | 3 ++-
-> >  tools/testing/selftests/bpf/progs/test_ringbuf_multi.c    | 3 ++-
-> >  .../testing/selftests/bpf/progs/test_sk_storage_tracing.c | 5 +++--
-> >  tools/testing/selftests/bpf/progs/test_skb_helpers.c      | 5 ++---
-> >  tools/testing/selftests/bpf/progs/test_stacktrace_map.c   | 5 +++--
-> >  tools/testing/selftests/bpf/progs/test_tracepoint.c       | 5 +++--
-> >  17 files changed, 41 insertions(+), 30 deletions(-)
-> >
-> > diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-> > index 799b88152e9e..5e72d783d3fe 100644
-> > --- a/tools/testing/selftests/bpf/Makefile
-> > +++ b/tools/testing/selftests/bpf/Makefile
-> > @@ -279,7 +279,7 @@ MENDIAN=$(if $(IS_LITTLE_ENDIAN),-mlittle-endian,-mbig-endian)
-> >
-> >  CLANG_SYS_INCLUDES = $(call get_sys_includes,$(CLANG))
-> >  BPF_CFLAGS = -g -D__TARGET_ARCH_$(SRCARCH) $(MENDIAN)                  \
-> > -            -I$(INCLUDE_DIR) -I$(CURDIR) -I$(APIDIR)                   \
-> > +            -I$(INCLUDE_DIR) -I$(CURDIR) -I$(APIDIR) -I${TOOLSINCDIR}  \
->
-> please don't add new include paths unnecessarily. See my comment on
-> another patch, if you add those new constants as enums, they will be
-> automatically available in vmlinux BTF and thus in auto-generated
-> vmlinux.h header (for those programs using it).
+On 21/10/2021 13:48, Jiri Olsa wrote:
+>> +HOSTCFLAGS += -Wall
+>> +HOSTCFLAGS += -Wextra
+>> +
+>>   # Enforce a non-executable stack, as we may regress (again) in the future by
+>>   # adding assembler files missing the .GNU-stack linker note.
+>>   LDFLAGS += -Wl,-z,noexecstack
+>> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+>> index 7df13e74450c..118bcdc70bb4 100644
+>> --- a/tools/perf/Makefile.perf
+>> +++ b/tools/perf/Makefile.perf
+>> @@ -226,7 +226,7 @@ else
+>>   endif
+>>   
+>>   export srctree OUTPUT RM CC CXX LD AR CFLAGS CXXFLAGS V BISON FLEX AWK
+>> -export HOSTCC HOSTLD HOSTAR
+>> +export HOSTCC HOSTLD HOSTAR HOSTCFLAGS
+>>   
+>>   include $(srctree)/tools/build/Makefile.include
+>>   
+>> diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
+>> index a055dee6a46a..d5c287f069a2 100644
+>> --- a/tools/perf/pmu-events/Build
+>> +++ b/tools/perf/pmu-events/Build
+>> @@ -1,7 +1,7 @@
+>>   hostprogs := jevents
+>>   
+>>   jevents-y	+= json.o jsmn.o jevents.o
+>> -HOSTCFLAGS_jevents.o	= -I$(srctree)/tools/include
+>> +HOSTCFLAGS_jevents.o	= -I$(srctree)/tools/include $(HOSTCFLAGS)
+> so the the host cflags are made of:
+> 
+> host_c_flags = -Wp,-MD,$(depfile) -Wp,-MT,$@ $(KBUILD_HOSTCFLAGS) -D"BUILD_STR(s)=\#s" $(HOSTCFLAGS_$(basetarget).o) $(HOSTCFLAGS_$(obj))
+> 
 
-Yes, after converting it to enum, the BPF programs can get it from the
-generated vmlinux.h.
+ok, so IIRC, then the rule for building .o from .c in 
+tools/build/Makefile.build will pick up HOSTCFLAGS through this 
+variable, so we then don't need to explicitly mention it in the 
+per-target rule, so can have this as before in pmu-events/Build
 
-> For others, I'd just
-> leave hard-coded 16 or re-defined TASK_COMM_LEN_16 where appropriate.
->
+HOSTCFLAGS_jevents.o	= -I$(srctree)/tools/include
 
-It seems not all the BPF programs can include the vmlinux.h.
-What we really care about here is the copy of task comm should be with
-a nul terminator, if we can assure it, then the size used by the BPF
-is not important.
-I have checked the copy of task comm in all these BPF programs one by
-one, and replaced the unsafe bpf_probe_read_kernel() with
-bpf_probe_read_kernel_str(), after that change, I think we can leave
-hard-coded 16 for the progs which can't include vmlinux.h.
+right?
 
-> >              -I$(abspath $(OUTPUT)/../usr/include)
-> >
-> >  CLANG_CFLAGS = $(CLANG_SYS_INCLUDES) \
-> > diff --git a/tools/testing/selftests/bpf/prog_tests/ringbuf.c b/tools/testing/selftests/bpf/prog_tests/ringbuf.c
-> > index 4706cee84360..ac82d57c09dc 100644
-> > --- a/tools/testing/selftests/bpf/prog_tests/ringbuf.c
-> > +++ b/tools/testing/selftests/bpf/prog_tests/ringbuf.c
-> > @@ -12,6 +12,7 @@
-> >  #include <sys/sysinfo.h>
-> >  #include <linux/perf_event.h>
-> >  #include <linux/ring_buffer.h>
-> > +#include <linux/sched/task.h>
-> >  #include "test_ringbuf.lskel.h"
-> >
-> >  #define EDONE 7777
-> > @@ -22,7 +23,7 @@ struct sample {
-> >         int pid;
-> >         int seq;
-> >         long value;
-> > -       char comm[16];
-> > +       char comm[TASK_COMM_LEN_16];
->
-> how much value is in this "grep-ability", really? I'm not convinced
-> all this code churn is justified.
->
-> >  };
-> >
-> >  static int sample_cnt;
-> > diff --git a/tools/testing/selftests/bpf/prog_tests/ringbuf_multi.c b/tools/testing/selftests/bpf/prog_tests/ringbuf_multi.c
-> > index 167cd8a2edfd..f0748305ffd6 100644
-> > --- a/tools/testing/selftests/bpf/prog_tests/ringbuf_multi.c
-> > +++ b/tools/testing/selftests/bpf/prog_tests/ringbuf_multi.c
-> > @@ -2,6 +2,7 @@
-> >  #define _GNU_SOURCE
-> >  #include <test_progs.h>
-> >  #include <sys/epoll.h>
-> > +#include <linux/sched/task.h>
-> >  #include "test_ringbuf_multi.skel.h"
-> >
-> >  static int duration = 0;
->
-> [...]
+(Indeed I guess that we can get rid of -I$(srctree)/tools/include as well)
+
+Thanks,
+John
 
 
--- 
-Thanks
-Yafang
+> can't you use KBUILD_HOSTCFLAGS?
+> 
+> also perhaps we could rename KBUILD_HOSTCFLAGS to HOSTCFLAGS?
+> the name seems like leftover from kbuild move
+> 
+> jirka
+> 
+>>   pmu-events-y	+= pmu-events.o
+>>   JDIR		=  pmu-events/arch/$(SRCARCH)
+>>   JSON		=  $(shell [ -d $(JDIR) ] &&	
+
+
+
