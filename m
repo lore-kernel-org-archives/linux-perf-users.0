@@ -2,299 +2,203 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBD2C433F5
-	for <linux-perf-users@archiver.kernel.org>; Sat, 23 Oct 2021 15:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D380CC43219
+	for <linux-perf-users@archiver.kernel.org>; Sun, 24 Oct 2021 15:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2E1B6103D
-	for <linux-perf-users@archiver.kernel.org>; Sat, 23 Oct 2021 15:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B69EA61051
+	for <linux-perf-users@archiver.kernel.org>; Sun, 24 Oct 2021 15:37:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231129AbhJWPoc (ORCPT
+        id S231689AbhJXPju (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 23 Oct 2021 11:44:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46268 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229901AbhJWPob (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 23 Oct 2021 11:44:31 -0400
-Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7669FC061714
-        for <linux-perf-users@vger.kernel.org>; Sat, 23 Oct 2021 08:42:12 -0700 (PDT)
-Received: by mail-il1-x12b.google.com with SMTP id a8so7659386ilj.10
-        for <linux-perf-users@vger.kernel.org>; Sat, 23 Oct 2021 08:42:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=pDUXgDVW1wxzf59mL9Dvd7KHHb2GUCuAlda3xFFQAVo=;
-        b=KL9U3u0/L4ttbSf1E7dvW93u/CxtJXzB8lMbk3dXqeEpPX0le1lbKnNTXxPwdoeufl
-         s0TceG0V7u2dKPZi0Ze/BfZchilTp6Z7XrBcZq5QYK/hKso2XM/B3yiHXsqov1E9v9dg
-         OZS5vv7BVZPsPYty3yab50ErBcy6sGIT6nT/oTI6b5v1Mjtaq//2AZ5K3GuS6HtVG1Ho
-         VxVU0s40oBxF5oP+GRgt6clTF3ERnMoBNktT/g69PZFmV3EYPuixYWk3/CLoqVWNeESa
-         pkqXw21qU2XZtFC2fxInvOVA6gzY9n+o8D6XYpR6ZW0Bqu6pCwbPTkFtd/zZ2DTb01Tk
-         TzaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pDUXgDVW1wxzf59mL9Dvd7KHHb2GUCuAlda3xFFQAVo=;
-        b=1cg+qXIFihLjCnRGUdEqSSVeD/TWdyBScpSVLfo49tyLefwDjH0vDJOOrZVqiV0Zat
-         JrfkZ7TC8/w+KkaxWjhTZpUoTVekFfjtWvua8BojzpVmSIH/321sbLAL2UTNP+09jAmp
-         JvtJnLmrMeQq6GG0ogFbjBNrYvBQZW0iJ2U3O+Rlo2rivYJpLejqYXOC0sZHgX2y0rtd
-         6yuITN/tDCkfpLR3UnyzWOBUGvV/Zwip2h2fYk6E4gM2LKwhpsnKbjusQXdkgQg0UqCz
-         /viUlG+nCxTTaOqwS/1kBM3KaeRlgaTRUsLM3ZxfIAdntecZ54UDY/Zzr3h5ra/eoaqw
-         1y6g==
-X-Gm-Message-State: AOAM531KD6+kXctqgNMXiB1PS4edASMVCObB+oRj+vWZ7TFpQhIHvXL8
-        UnE9dNrcCb1LHLBbMbYWGitVV9PYeb/c4s5ZtzkbjSsYJaE=
-X-Google-Smtp-Source: ABdhPJyJjbFVP+2mTzMxWi3AUi2RnJiEF/v/CKf1GGqcjJS4uI0tYUXT2hB9mlSU2lqay/8A6FCldjBsvEHLydKmmOQ=
-X-Received: by 2002:a92:5206:: with SMTP id g6mr3934814ilb.232.1635003731837;
- Sat, 23 Oct 2021 08:42:11 -0700 (PDT)
+        Sun, 24 Oct 2021 11:39:50 -0400
+Received: from elvis.franken.de ([193.175.24.41]:37591 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231548AbhJXPjq (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Sun, 24 Oct 2021 11:39:46 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1mefYp-0006bc-00; Sun, 24 Oct 2021 17:37:23 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id EA98EC2649; Sun, 24 Oct 2021 17:26:04 +0200 (CEST)
+Date:   Sun, 24 Oct 2021 17:26:04 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH] MIPS: Remove NETLOGIC support
+Message-ID: <20211024152604.GA4721@alpha.franken.de>
+References: <20211020124923.130298-1-tsbogend@alpha.franken.de>
 MIME-Version: 1.0
-References: <CAOBGo4xxHeiTVbJ2c0yey+86JxHW7N8uOOD1DSg5T3Z5Uge-6A@mail.gmail.com>
- <20190514220101.GB21157@kernel.org> <CAOBGo4zdETh1OrxvVDymA5QNWsRT9Z=FDFw+SJpk-GzjEnF1Rg@mail.gmail.com>
- <EE0DAC4D-BC60-4C05-AF65-2C2551649BD7@kernel.org> <CAOBGo4z31=vmUG4nJo1tKr+Km9wKD3FfejidWxEPDKD+-1JhZA@mail.gmail.com>
- <CAOBGo4xGB9sOyntHrjMyF6sT9L4Ksg8+yB6K5r+sTQxZK7gy3Q@mail.gmail.com>
-In-Reply-To: <CAOBGo4xGB9sOyntHrjMyF6sT9L4Ksg8+yB6K5r+sTQxZK7gy3Q@mail.gmail.com>
-From:   Travis Downs <travis.downs@gmail.com>
-Date:   Sat, 23 Oct 2021 08:41:35 -0700
-Message-ID: <CAOBGo4xZWh=OxqczjDg-WXa66VCFQdCz93m5GDSzXE=-aBGbSg@mail.gmail.com>
-Subject: Re: perf report with newest perf not showing jump targets on "most"
- C++ code
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211020124923.130298-1-tsbogend@alpha.franken.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Just keeping the dream alive that this will be fixed one day. It's
-still making perf report hard to use in C++.
+On Wed, Oct 20, 2021 at 02:49:13PM +0200, Thomas Bogendoerfer wrote:
+> No (active) developer owns this hardware, so let's remove Linux support.
+> 
+> Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> ---
+>  arch/mips/Kbuild.platforms                    |   1 -
+>  arch/mips/Kconfig                             |  91 +--
+>  arch/mips/boot/compressed/uart-16550.c        |  12 -
+>  arch/mips/boot/dts/Makefile                   |   1 -
+>  arch/mips/boot/dts/netlogic/Makefile          |   8 -
+>  arch/mips/boot/dts/netlogic/xlp_evp.dts       | 131 ----
+>  arch/mips/boot/dts/netlogic/xlp_fvp.dts       | 131 ----
+>  arch/mips/boot/dts/netlogic/xlp_gvp.dts       |  89 ---
+>  arch/mips/boot/dts/netlogic/xlp_rvp.dts       |  89 ---
+>  arch/mips/boot/dts/netlogic/xlp_svp.dts       | 131 ----
+>  arch/mips/configs/nlm_xlp_defconfig           | 557 -----------------
+>  arch/mips/configs/nlm_xlr_defconfig           | 508 ----------------
+>  arch/mips/include/asm/cop2.h                  |  11 -
+>  arch/mips/include/asm/cpu-type.h              |   8 -
+>  arch/mips/include/asm/cpu.h                   |   2 +-
+>  arch/mips/include/asm/hazards.h               |   2 +-
+>  .../asm/mach-netlogic/cpu-feature-overrides.h |  57 --
+>  arch/mips/include/asm/mach-netlogic/irq.h     |  17 -
+>  .../include/asm/mach-netlogic/multi-node.h    |  74 ---
+>  arch/mips/include/asm/netlogic/common.h       | 132 ----
+>  arch/mips/include/asm/netlogic/haldefs.h      | 171 ------
+>  arch/mips/include/asm/netlogic/interrupt.h    |  45 --
+>  arch/mips/include/asm/netlogic/mips-extns.h   | 301 ---------
+>  arch/mips/include/asm/netlogic/psb-bootinfo.h |  95 ---
+>  .../include/asm/netlogic/xlp-hal/bridge.h     | 186 ------
+>  .../include/asm/netlogic/xlp-hal/cpucontrol.h |  89 ---
+>  .../mips/include/asm/netlogic/xlp-hal/iomap.h | 214 -------
+>  .../include/asm/netlogic/xlp-hal/pcibus.h     | 113 ----
+>  arch/mips/include/asm/netlogic/xlp-hal/pic.h  | 366 -----------
+>  arch/mips/include/asm/netlogic/xlp-hal/sys.h  | 213 -------
+>  arch/mips/include/asm/netlogic/xlp-hal/uart.h | 192 ------
+>  arch/mips/include/asm/netlogic/xlp-hal/xlp.h  | 119 ----
+>  arch/mips/include/asm/netlogic/xlr/bridge.h   | 104 ----
+>  arch/mips/include/asm/netlogic/xlr/flash.h    |  55 --
+>  arch/mips/include/asm/netlogic/xlr/fmn.h      | 365 -----------
+>  arch/mips/include/asm/netlogic/xlr/gpio.h     |  74 ---
+>  arch/mips/include/asm/netlogic/xlr/iomap.h    | 109 ----
+>  arch/mips/include/asm/netlogic/xlr/msidef.h   |  84 ---
+>  arch/mips/include/asm/netlogic/xlr/pic.h      | 306 ----------
+>  arch/mips/include/asm/netlogic/xlr/xlr.h      |  59 --
+>  arch/mips/include/asm/processor.h             |  13 -
+>  arch/mips/include/asm/vermagic.h              |   4 -
+>  arch/mips/kernel/cpu-probe.c                  |  84 ---
+>  arch/mips/kernel/idle.c                       |   2 -
+>  arch/mips/kernel/perf_event_mipsxx.c          |  86 ---
+>  arch/mips/kvm/entry.c                         |   8 +-
+>  arch/mips/mm/c-r4k.c                          |   2 -
+>  arch/mips/mm/tlbex.c                          |   9 +-
+>  arch/mips/netlogic/Kconfig                    |  86 ---
+>  arch/mips/netlogic/Makefile                   |   4 -
+>  arch/mips/netlogic/Platform                   |  16 -
+>  arch/mips/netlogic/common/Makefile            |   5 -
+>  arch/mips/netlogic/common/earlycons.c         |  63 --
+>  arch/mips/netlogic/common/irq.c               | 350 -----------
+>  arch/mips/netlogic/common/reset.S             | 299 ---------
+>  arch/mips/netlogic/common/smp.c               | 285 ---------
+>  arch/mips/netlogic/common/smpboot.S           | 141 -----
+>  arch/mips/netlogic/common/time.c              | 110 ----
+>  arch/mips/netlogic/xlp/Makefile               |  11 -
+>  arch/mips/netlogic/xlp/ahci-init-xlp2.c       | 390 ------------
+>  arch/mips/netlogic/xlp/ahci-init.c            | 209 -------
+>  arch/mips/netlogic/xlp/cop2-ex.c              | 121 ----
+>  arch/mips/netlogic/xlp/dt.c                   |  95 ---
+>  arch/mips/netlogic/xlp/nlm_hal.c              | 508 ----------------
+>  arch/mips/netlogic/xlp/setup.c                | 174 ------
+>  arch/mips/netlogic/xlp/usb-init-xlp2.c        | 288 ---------
+>  arch/mips/netlogic/xlp/usb-init.c             | 149 -----
+>  arch/mips/netlogic/xlp/wakeup.c               | 212 -------
+>  arch/mips/netlogic/xlr/Makefile               |   3 -
+>  arch/mips/netlogic/xlr/fmn-config.c           | 296 ---------
+>  arch/mips/netlogic/xlr/fmn.c                  | 199 ------
+>  arch/mips/netlogic/xlr/platform-flash.c       | 216 -------
+>  arch/mips/netlogic/xlr/platform.c             | 250 --------
+>  arch/mips/netlogic/xlr/setup.c                | 206 -------
+>  arch/mips/netlogic/xlr/wakeup.c               |  85 ---
+>  arch/mips/pci/Makefile                        |   3 -
+>  arch/mips/pci/msi-xlp.c                       | 571 ------------------
+>  arch/mips/pci/pci-xlp.c                       | 332 ----------
+>  arch/mips/pci/pci-xlr.c                       | 368 -----------
+>  79 files changed, 6 insertions(+), 11559 deletions(-)
+>  delete mode 100644 arch/mips/boot/dts/netlogic/Makefile
+>  delete mode 100644 arch/mips/boot/dts/netlogic/xlp_evp.dts
+>  delete mode 100644 arch/mips/boot/dts/netlogic/xlp_fvp.dts
+>  delete mode 100644 arch/mips/boot/dts/netlogic/xlp_gvp.dts
+>  delete mode 100644 arch/mips/boot/dts/netlogic/xlp_rvp.dts
+>  delete mode 100644 arch/mips/boot/dts/netlogic/xlp_svp.dts
+>  delete mode 100644 arch/mips/configs/nlm_xlp_defconfig
+>  delete mode 100644 arch/mips/configs/nlm_xlr_defconfig
+>  delete mode 100644 arch/mips/include/asm/mach-netlogic/cpu-feature-overrides.h
+>  delete mode 100644 arch/mips/include/asm/mach-netlogic/irq.h
+>  delete mode 100644 arch/mips/include/asm/mach-netlogic/multi-node.h
+>  delete mode 100644 arch/mips/include/asm/netlogic/common.h
+>  delete mode 100644 arch/mips/include/asm/netlogic/haldefs.h
+>  delete mode 100644 arch/mips/include/asm/netlogic/interrupt.h
+>  delete mode 100644 arch/mips/include/asm/netlogic/mips-extns.h
+>  delete mode 100644 arch/mips/include/asm/netlogic/psb-bootinfo.h
+>  delete mode 100644 arch/mips/include/asm/netlogic/xlp-hal/bridge.h
+>  delete mode 100644 arch/mips/include/asm/netlogic/xlp-hal/cpucontrol.h
+>  delete mode 100644 arch/mips/include/asm/netlogic/xlp-hal/iomap.h
+>  delete mode 100644 arch/mips/include/asm/netlogic/xlp-hal/pcibus.h
+>  delete mode 100644 arch/mips/include/asm/netlogic/xlp-hal/pic.h
+>  delete mode 100644 arch/mips/include/asm/netlogic/xlp-hal/sys.h
+>  delete mode 100644 arch/mips/include/asm/netlogic/xlp-hal/uart.h
+>  delete mode 100644 arch/mips/include/asm/netlogic/xlp-hal/xlp.h
+>  delete mode 100644 arch/mips/include/asm/netlogic/xlr/bridge.h
+>  delete mode 100644 arch/mips/include/asm/netlogic/xlr/flash.h
+>  delete mode 100644 arch/mips/include/asm/netlogic/xlr/fmn.h
+>  delete mode 100644 arch/mips/include/asm/netlogic/xlr/gpio.h
+>  delete mode 100644 arch/mips/include/asm/netlogic/xlr/iomap.h
+>  delete mode 100644 arch/mips/include/asm/netlogic/xlr/msidef.h
+>  delete mode 100644 arch/mips/include/asm/netlogic/xlr/pic.h
+>  delete mode 100644 arch/mips/include/asm/netlogic/xlr/xlr.h
+>  delete mode 100644 arch/mips/netlogic/Kconfig
+>  delete mode 100644 arch/mips/netlogic/Makefile
+>  delete mode 100644 arch/mips/netlogic/Platform
+>  delete mode 100644 arch/mips/netlogic/common/Makefile
+>  delete mode 100644 arch/mips/netlogic/common/earlycons.c
+>  delete mode 100644 arch/mips/netlogic/common/irq.c
+>  delete mode 100644 arch/mips/netlogic/common/reset.S
+>  delete mode 100644 arch/mips/netlogic/common/smp.c
+>  delete mode 100644 arch/mips/netlogic/common/smpboot.S
+>  delete mode 100644 arch/mips/netlogic/common/time.c
+>  delete mode 100644 arch/mips/netlogic/xlp/Makefile
+>  delete mode 100644 arch/mips/netlogic/xlp/ahci-init-xlp2.c
+>  delete mode 100644 arch/mips/netlogic/xlp/ahci-init.c
+>  delete mode 100644 arch/mips/netlogic/xlp/cop2-ex.c
+>  delete mode 100644 arch/mips/netlogic/xlp/dt.c
+>  delete mode 100644 arch/mips/netlogic/xlp/nlm_hal.c
+>  delete mode 100644 arch/mips/netlogic/xlp/setup.c
+>  delete mode 100644 arch/mips/netlogic/xlp/usb-init-xlp2.c
+>  delete mode 100644 arch/mips/netlogic/xlp/usb-init.c
+>  delete mode 100644 arch/mips/netlogic/xlp/wakeup.c
+>  delete mode 100644 arch/mips/netlogic/xlr/Makefile
+>  delete mode 100644 arch/mips/netlogic/xlr/fmn-config.c
+>  delete mode 100644 arch/mips/netlogic/xlr/fmn.c
+>  delete mode 100644 arch/mips/netlogic/xlr/platform-flash.c
+>  delete mode 100644 arch/mips/netlogic/xlr/platform.c
+>  delete mode 100644 arch/mips/netlogic/xlr/setup.c
+>  delete mode 100644 arch/mips/netlogic/xlr/wakeup.c
+>  delete mode 100644 arch/mips/pci/msi-xlp.c
+>  delete mode 100644 arch/mips/pci/pci-xlp.c
+>  delete mode 100644 arch/mips/pci/pci-xlr.c
 
-As noted above it was introduced in 751b1783da784299b0509adb6a9cd3024cc4f83=
-7.
+applied to mips-next.
 
+Thomas.
 
-On Tue, Jun 25, 2019 at 1:18 PM Travis Downs <travis.downs@gmail.com> wrote=
-:
->
-> Hi,
->
-> Just wondering if there is anything I can do to help move this along.
->
-> I guess it hasn't been reported elsewhere yet because this perf
-> version hasn't hit the mainsteam, but I guess it will break in a
-> widespread way for C++ perf report users when it starts to get
-> deployed by the distros.
->
-> Cheers,
-> Travis
->
->
-> On Tue, May 21, 2019 at 8:38 PM Travis Downs <travis.downs@gmail.com> wro=
-te:
-> >
-> > Hi Arnaldo,
-> >
-> > Yes, --stdio2 worked well (but a bit tricky because --stdio2 was
-> > introduced fairly close in the commit stream to this issue)!
-> >
-> > I bisected it to:
-> >
-> > 751b1783da784299b0509adb6a9cd3024cc4f837
-> > perf annotate: Mark jumps to outher functions with the call arrow
-> >
-> > Indeed, in the detailed description we have:
-> >
-> > "... [f]or now lets just make some progress by marking jumps to outside=
- the
-> >     current function as call like ..."
-> >
-> > And empirically I see most jumps being marked as call-like after this
-> > change. Note however: with this change I see a middle-ground behavior
-> > compared to what I described earlier: all the arrows on the jumps look
-> > call-like, but when you select them in report tui it still correctly
-> > shows the jump arrow. However, later on (by v4.20 or earlier) this
-> > jump indicator disappears too.
-> >
-> > Here's some reproducing code:
-> >
-> > ---
-> > #include <algorithm>
-> > #include <memory>
-> > #include <random>
-> >
-> > const size_t size =3D 10000000;
-> >
-> > int main() {
-> >
-> > auto buf =3D std::unique_ptr<uint64_t[]>(new uint64_t[size]);
-> >
-> > auto b =3D buf.get(), e =3D b + size;
-> > std::iota(b, e, 0);
-> > std::shuffle(b, e, std::default_random_engine{});
-> >
-> > clock_t before, after;
-> >
-> > before =3D clock();
-> > std::sort(b, e);
-> > after =3D clock();
-> >
-> > printf("Soring took %5.2f ns/elem\n", (after - before) * 1000000000. /
-> > size / CLOCKS_PER_SEC);
-> > }
-> > ---
-> >
-> > I compile it with:
-> >
-> > g++ -O3 -g -march=3Dhaswell -Wall -Wextra -std=3Dc++11  -c bench.cpp
-> >
-> > If you run `perf annotate --stdio2 --no-source -Mintel` you see somethi=
-ng like:
-> >
-> >              Disassembly of section .text:
-> >
-> >              0000000000400dc0 <void std::__introsort_loop<unsigned
-> > long*, long, __gnu_cxx::__ops::_Iter_less_iter>(unsigned long*,
-> > unsigned long*, long, __gnu_cxx::__ops::_Iter_less_iter) [clone
-> > .isra.20]
-> >              _ZSt16__introsort_loopIPmlN9__gnu_cxx5__ops15_Iter_less_it=
-erEEvT_S4_T0_T1_():
-> >   0.03         mov    rax,rsi
-> >                sub    rax,rdi
-> >                cmp    rax,0x87
-> >   0.03       =E2=86=92 jle    400f5f <void std::__introsort_loop<unsign=
-ed
-> > long*, long, __gnu_cxx::__ops::_Iter_less_iter>(unsigned long*,
-> > unsigned long*, long, __gnu_cxx::__ops::_Iter_less_iter) [clone
-> > .isra.20]+
-> >   0.18         push   r14
-> >                mov    r14,rdx
-> >                push   r13
-> >                mov    r13,rdi
-> >   0.05         push   r12
-> >   0.05         push   rbp
-> >                push   rbx
-> >                test   rdx,rdx
-> >              =E2=86=92 je     400eeb <void std::__introsort_loop<unsign=
-ed
-> > long*, long, __gnu_cxx::__ops::_Iter_less_iter>(unsigned long*,
-> > unsigned long*, long, __gnu_cxx::__ops::_Iter_less_iter) [clone
-> > .isra.20]+
-> >   0.03         lea    rbp,[rdi+0x10]
-> >              _ZSt27__unguarded_partition_pivotIPmN9__gnu_cxx5__ops15_It=
-er_less_iterEET_S4_S4_T0_():
-> >                sar    rax,0x4
-> >   0.15         mov    rcx,QWORD PTR [r13+0x8]
-> >              _ZSt16__introsort_loopIPmlN9__gnu_cxx5__ops15_Iter_less_it=
-erEEvT_S4_T0_T1_():
-> >   0.03         sub    r14,0x1
-> >              _ZSt27__unguarded_partition_pivotIPmN9__gnu_cxx5__ops15_It=
-er_less_iterEET_S4_S4_T0_():
-> >                lea    rdx,[r13+rax*8+0x0]
-> >                mov    rdi,QWORD PTR [rsi-0x8]
-> >   0.03         mov    rax,QWORD PTR [rdx]
-> >              _ZSt22__move_median_to_firstIPmN9__gnu_cxx5__ops15_Iter_le=
-ss_iterEEvT_S4_S4_S4_T0_():
-> >                cmp    rcx,rax
-> >              =E2=86=92 jae    400eb0 <void std::__introsort_loop<unsign=
-ed
-> > long*, long, __gnu_cxx::__ops::_Iter_less_iter>(unsigned long*,
-> > unsigned long*, long, __gnu_cxx::__ops::_Iter_less_iter) [clone
-> > .isra.20]+
-> >   0.08         cmp    rax,rdi
-> >   0.18       =E2=86=92 jb     400ebe <void std::__introsort_loop<unsign=
-ed
-> > long*, long, __gnu_cxx::__ops::_Iter_less_iter>(unsigned long*,
-> > unsigned long*, long, __gnu_cxx::__ops::_Iter_less_iter) [clone
-> > .isra.20]+
-> >   0.03         cmp    rcx,rdi
-> >              =E2=86=92 jae    400ed6 <void std::__introsort_loop<unsign=
-ed
-> > long*, long, __gnu_cxx::__ops::_Iter_less_iter>(unsigned long*,
-> > unsigned long*, long, __gnu_cxx::__ops::_Iter_less_iter) [clone
-> > .isra.20]+
-> >              _ZSt4swapImEvRT_S1_():
-> >   0.10         mov    rdx,QWORD PTR [r13+0x0]
-> >
-> >
-> > Note all the "call-like arrows", even though most of those jumps are
-> > nearby in the same function. This function is [clone .isra] so a
-> > cloned function with certain values inlined. Maybe annotate/report is
-> > having trouble in those cases, thinking the jump is to another
-> > function?
-> >
-> > Cheers,
-> > Travis
-> >
-> >
-> > On Wed, May 15, 2019 at 9:38 PM Arnaldo Carvalho de Melo
-> > <arnaldo.melo@gmail.com> wrote:
-> > >
-> > > On May 15, 2019 10:04:05 PM GMT-03:00, Travis Downs <travis.downs@gma=
-il.com> wrote:
-> > > >Hi Arnaldo,
-> > > >
-> > > >I'll work on a repro case. One issue though: the arrows show up in t=
-he
-> > > >interactive tui mode, but to git bisect I'd like to script it, so ha=
-ve
-> > > >some
-> > > >arrow indication in --stdio mode: any way to do that?
-> > >
-> > > Try --stdio2, maybe it's enough.
-> > >
-> > > - Arnaldo
-> > > >
-> > > >Cheers,
-> > > >Travis
-> > > >
-> > > >On Tue, May 14, 2019, 5:01 PM Arnaldo Carvalho de Melo <
-> > > >arnaldo.melo@gmail.com> wrote:
-> > > >
-> > > >> Em Sun, May 05, 2019 at 06:58:51PM -0500, Travis Downs escreveu:
-> > > >> > For a few months the newest perf (build from Linus' tip) doens't
-> > > >show
-> > > >> > jump targets in most C++ code for me.
-> > > >> >
-> > > >> > The arrays on jcc instructions always point to the left, like fo=
-r
-> > > >> > jumps that can't be resolved, even when the jumps are only a few
-> > > >bytes
-> > > >> > away.
-> > > >> >
-> > > >> > I tried to reproduce it on a "simple" C++ looping process, with =
-the
-> > > >> > same compile flags as my project, but it worked there! So someth=
-ing
-> > > >is
-> > > >> > triggering failure to resolve jump targets.
-> > > >> >
-> > > >> > Any advice on how to bisect or diagnose this issue would be
-> > > >> > appreciated, e.g,. some way to turn on logging to see why perf
-> > > >report
-> > > >> > fails to resolve jump targets.
-> > > >> >
-> > > >> > FWIW perf as included in my distribution (perf version 4.15.18)
-> > > >works
-> > > >> > OK on the same files (it's perf report that matters, not perf
-> > > >record)
-> > > >> > but doesn't demangle the C++ symbols.
-> > > >>
-> > > >> Adding this to my backlog, but you could just try to use normal 'g=
-it
-> > > >> bisect', i.e. find a version that works for a workload you have, t=
-hen
-> > > >to
-> > > >> on rebuilding it till you find the version that introduce the
-> > > >problem.
-> > > >>
-> > > >> If you can send some simple C++ source code that exhibits the
-> > > >problem,
-> > > >> please do, I'll try to work on this as soon as I process my
-> > > >backlog...
-> > > >>
-> > > >> I just came back from vacation.
-> > > >>
-> > > >> - Arnaldo
-> > > >>
-> > >
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
