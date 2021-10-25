@@ -2,176 +2,106 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCB1C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Oct 2021 16:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA74DC433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Oct 2021 16:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35CF060EFF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Oct 2021 16:21:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF7D760F6F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Oct 2021 16:52:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233141AbhJYQX0 (ORCPT
+        id S234085AbhJYQzJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 25 Oct 2021 12:23:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41398 "EHLO mail.kernel.org"
+        Mon, 25 Oct 2021 12:55:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232362AbhJYQX0 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 25 Oct 2021 12:23:26 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B513D60E73;
-        Mon, 25 Oct 2021 16:21:03 +0000 (UTC)
+        id S232613AbhJYQzI (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 25 Oct 2021 12:55:08 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 51D4160E97;
+        Mon, 25 Oct 2021 16:52:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635178863;
-        bh=X4ETBzqUq9GQhIVyEU4rY4PDblTlGSrm/7xeH0+9BHk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KCrnS8vGSY+m24/jpzaK1SNgmJ1dhKMGmMgiH6VzzyVjGnfk2oLhAkZopibBnyu4E
-         Nja6Y5RrGxVlH5QkIUY0llnKnlr3tilEXm4BIr734ji1vDYUniwKzkV88FWQrVkc7g
-         OnqgaHm1Le9kWweUkUf9bi0+oqT2ojgC9hugAUDJnb2aBvTQbbK2/yJDuajUPEvyfx
-         ezloaPkrlsiT+BKsXeW+NMIEIIQ9Re/8vGmr9EQOwzcwyFqx3X/JDp77TenY/uh3ax
-         ClKo2/O0Y/6skQn2w9Jqr6vqjr0I+qDQNaB+uobg4OJ9SfkVEpn4UywtdXpNZf52jd
-         kS15acixFmKwA==
+        s=k20201202; t=1635180766;
+        bh=Hl6vfIz2kWxrCvEfYUe2q2+uL7HXYfA1sQ6X6F+krWw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=CsRZPbyz6S7TxHBLPZJWrXqrh5gJhSpCVSRUPYXlN+sAW1QkJcxXUvagDlvhMQzB9
+         QOd7Ow1BOnVbA7moNjYtCNhyRsBRttBuNxcYVyMQpTNkx1wxQxD1rTaKbhs4FOSDb3
+         N6OY8/0ggFHuyBPspxeoAWzRVWyh3rqhftpfm1x3GfqDVwdOFaYKuruvALY/qqTQ0J
+         vajHiHCmx/AZl3tJEktkQ0Rho+lR+XOpibDrHTmAwZI2cWlhvjbq+ZzhUDYgz5bfmP
+         ygNOz/wXm0EmxeXiZP9unYHrcfBhZ1Rpn90u3TTlCVizJtPVhy/yICjXRDDd0Y42f6
+         22E3uFs+K4hLw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D274B410A1; Mon, 25 Oct 2021 13:20:59 -0300 (-03)
-Date:   Mon, 25 Oct 2021 13:20:59 -0300
+        id DF5F2410A1; Mon, 25 Oct 2021 13:52:42 -0300 (-03)
+Date:   Mon, 25 Oct 2021 13:52:42 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     John Garry <john.garry@huawei.com>, peterz@infradead.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        namhyung@kernel.org, mingo@redhat.com, irogers@google.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kjain@linux.ibm.com, james.clark@arm.com
-Subject: Re: [PATCH v2 2/2] perf jevents: Enable warnings through HOSTCFLAGS
-Message-ID: <YXbZa8SaQta9pzHS@kernel.org>
-References: <1634807805-40093-1-git-send-email-john.garry@huawei.com>
- <1634807805-40093-3-git-send-email-john.garry@huawei.com>
- <YXFhr2YoVp9GPsDM@krava>
- <86aee893-0b6b-bce3-d1aa-3b66365592d1@huawei.com>
- <YXaXvGgvs4gr8Cgi@krava>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     peterz@infradead.org, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, mingo@redhat.com,
+        irogers@google.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH: Fix for_each_set_bit(u64) build on 32-bit arches, was perf
+ intel-pt: Add support for PERF_RECORD_AUX_OUTPUT_HW_ID
+Message-ID: <YXbg2vbY71qGdsYq@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YXaXvGgvs4gr8Cgi@krava>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Oct 25, 2021 at 01:40:44PM +0200, Jiri Olsa escreveu:
-> On Fri, Oct 22, 2021 at 10:42:11AM +0100, John Garry wrote:
-> > On 21/10/2021 13:48, Jiri Olsa wrote:
-> > > > +HOSTCFLAGS += -Wall
-> > > > +HOSTCFLAGS += -Wextra
-> > > > +
-> > > >   # Enforce a non-executable stack, as we may regress (again) in the future by
-> > > >   # adding assembler files missing the .GNU-stack linker note.
-> > > >   LDFLAGS += -Wl,-z,noexecstack
-> > > > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> > > > index 7df13e74450c..118bcdc70bb4 100644
-> > > > --- a/tools/perf/Makefile.perf
-> > > > +++ b/tools/perf/Makefile.perf
-> > > > @@ -226,7 +226,7 @@ else
-> > > >   endif
-> > > >   export srctree OUTPUT RM CC CXX LD AR CFLAGS CXXFLAGS V BISON FLEX AWK
-> > > > -export HOSTCC HOSTLD HOSTAR
-> > > > +export HOSTCC HOSTLD HOSTAR HOSTCFLAGS
-> > > >   include $(srctree)/tools/build/Makefile.include
-> > > > diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
-> > > > index a055dee6a46a..d5c287f069a2 100644
-> > > > --- a/tools/perf/pmu-events/Build
-> > > > +++ b/tools/perf/pmu-events/Build
-> > > > @@ -1,7 +1,7 @@
-> > > >   hostprogs := jevents
-> > > >   jevents-y	+= json.o jsmn.o jevents.o
-> > > > -HOSTCFLAGS_jevents.o	= -I$(srctree)/tools/include
-> > > > +HOSTCFLAGS_jevents.o	= -I$(srctree)/tools/include $(HOSTCFLAGS)
-> > > so the the host cflags are made of:
-> > > 
-> > > host_c_flags = -Wp,-MD,$(depfile) -Wp,-MT,$@ $(KBUILD_HOSTCFLAGS) -D"BUILD_STR(s)=\#s" $(HOSTCFLAGS_$(basetarget).o) $(HOSTCFLAGS_$(obj))
-> > > 
-> > 
-> > ok, so IIRC, then the rule for building .o from .c in
-> > tools/build/Makefile.build will pick up HOSTCFLAGS through this variable, so
-> > we then don't need to explicitly mention it in the per-target rule, so can
-> > have this as before in pmu-events/Build
-> > 
-> > HOSTCFLAGS_jevents.o	= -I$(srctree)/tools/include
-> > 
-> > right?
-> > 
-> > (Indeed I guess that we can get rid of -I$(srctree)/tools/include as well)
+Em Wed, Oct 20, 2021 at 02:25:43PM -0300, Arnaldo Carvalho de Melo escreveu:
+>   29     8.60 debian:experimental-x-mipsel  : FAIL gcc version 11.2.0 (Debian 11.2.0-9)
+>     util/intel-pt.c: In function 'intel_pt_synth_pebs_sample':
+>     util/intel-pt.c:2146:33: error: passing argument 1 of 'find_first_bit' from incompatible pointer type [-Werror=incompatible-pointer-types]
+>      2146 |         for_each_set_bit(hw_id, &items->applicable_counters, INTEL_PT_MAX_PEBS) {
+>     /git/perf-5.15.0-rc4/tools/include/linux/bitops.h:37:38: note: in definition of macro 'for_each_set_bit'
+>        37 |         for ((bit) = find_first_bit((addr), (size));            \
+>           |                                      ^~~~
+>     In file included from /git/perf-5.15.0-rc4/tools/include/asm-generic/bitops.h:21,
+>                      from /git/perf-5.15.0-rc4/tools/include/linux/bitops.h:34,
+>                      from /git/perf-5.15.0-rc4/tools/include/linux/bitmap.h:6,
+>                      from util/header.h:10,
+>                      from util/session.h:7,
+>                      from util/intel-pt.c:16:
+>     /git/perf-5.15.0-rc4/tools/include/asm-generic/bitops/find.h:109:51: note: expected 'const long unsigned int *' but argument is of type 'const uint64_t *' {aka 'const long long unsigned int *'}
 > 
-> hm, the -I.. should stay no? I don't see that
-> it's being added soem other way
+>  Adrian, this is on:
 > 
-> jirka
+>  commit 803a3c9233990e1adac8ea2421e3759c2d380cf8
+> Author: Adrian Hunter <adrian.hunter@intel.com>
+> Date:   Tue Sep 7 19:39:03 2021 +0300
 > 
+>     perf intel-pt: Add support for PERF_RECORD_AUX_OUTPUT_HW_ID
+> 
+>     Originally, software only supported redirecting at most one PEBS event to
+>     Intel PT (PEBS-via-PT) because it was not able to differentiate one event
+>     from another. To overcome that, add support for the
+>     PERF_RECORD_AUX_OUTPUT_HW_ID side-band event.
+> 
+>     Reviewed-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+>     Reviewed-by: Andi Kleen <ak@linux.intel.com>
+> 
+> 
+> That is still just on tmp.perf/core, so we can fix it, probably its just
+> making that uint64_t into a unsigned long, will check later if you don't
+> beat me to it.
 
-Probably this change from KBUILD_HOSTCFLAGS back to HOSTCFLAGS should
-come with this;
+Do as other code in perf does, e.g.  arch/x86/events/intel/ds.c, dealing
+with PEBS.
 
-Cc: Laura Abbott <labbott@redhat.com>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Fixes: 96f14fe738b69dd9 ("kbuild: Rename HOSTCFLAGS to KBUILD_HOSTCFLAGS")
-
-Right?
+I'm adding this to that patch to fix the build on 32-bit.
 
 - Arnaldo
+
+
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index 1073c56a512cdc6e..c9542fada8fb6f9b 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -2143,7 +2143,7 @@ static int intel_pt_synth_pebs_sample(struct intel_pt_queue *ptq)
+ 		return intel_pt_synth_single_pebs_sample(ptq);
+ 	}
  
-> ---
-> diff --git a/tools/build/Build.include b/tools/build/Build.include
-> index 2cf3b1bde86e..c2a95ab47379 100644
-> --- a/tools/build/Build.include
-> +++ b/tools/build/Build.include
-> @@ -99,7 +99,7 @@ cxx_flags = -Wp,-MD,$(depfile) -Wp,-MT,$@ $(CXXFLAGS) -D"BUILD_STR(s)=\#s" $(CXX
->  ###
->  ## HOSTCC C flags
->  
-> -host_c_flags = -Wp,-MD,$(depfile) -Wp,-MT,$@ $(KBUILD_HOSTCFLAGS) -D"BUILD_STR(s)=\#s" $(HOSTCFLAGS_$(basetarget).o) $(HOSTCFLAGS_$(obj))
-> +host_c_flags = -Wp,-MD,$(depfile) -Wp,-MT,$@ $(HOSTCFLAGS) -D"BUILD_STR(s)=\#s" $(HOSTCFLAGS_$(basetarget).o) $(HOSTCFLAGS_$(obj))
->  
->  # output directory for tests below
->  TMPOUT = .tmp_$$$$
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 0ae2e3d8b832..374f65b52157 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -17,6 +17,7 @@ detected     = $(shell echo "$(1)=y"       >> $(OUTPUT).config-detected)
->  detected_var = $(shell echo "$(1)=$($(1))" >> $(OUTPUT).config-detected)
->  
->  CFLAGS := $(EXTRA_CFLAGS) $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
-> +HOSTCFLAGS := $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
->  
->  include $(srctree)/tools/scripts/Makefile.arch
->  
-> @@ -211,6 +212,7 @@ endif
->  ifneq ($(WERROR),0)
->    CORE_CFLAGS += -Werror
->    CXXFLAGS += -Werror
-> +  HOSTCFLAGS += -Werror
->  endif
->  
->  ifndef DEBUG
-> @@ -292,6 +294,9 @@ CXXFLAGS += -ggdb3
->  CXXFLAGS += -funwind-tables
->  CXXFLAGS += -Wno-strict-aliasing
->  
-> +HOSTCFLAGS += -Wall
-> +HOSTCFLAGS += -Wextra
-> +
->  # Enforce a non-executable stack, as we may regress (again) in the future by
->  # adding assembler files missing the .GNU-stack linker note.
->  LDFLAGS += -Wl,-z,noexecstack
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 7df13e74450c..118bcdc70bb4 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -226,7 +226,7 @@ else
->  endif
->  
->  export srctree OUTPUT RM CC CXX LD AR CFLAGS CXXFLAGS V BISON FLEX AWK
-> -export HOSTCC HOSTLD HOSTAR
-> +export HOSTCC HOSTLD HOSTAR HOSTCFLAGS
->  
->  include $(srctree)/tools/build/Makefile.include
->  
-
--- 
-
-- Arnaldo
+-	for_each_set_bit(hw_id, &items->applicable_counters, INTEL_PT_MAX_PEBS) {
++	for_each_set_bit(hw_id, (unsigned long *)&items->applicable_counters, INTEL_PT_MAX_PEBS) {
+ 		pe = &ptq->pebs[hw_id];
+ 		if (!pe->evsel) {
+ 			if (!pt->single_pebs)
