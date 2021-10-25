@@ -2,49 +2,49 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D8EC4321E
-	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Oct 2021 19:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21705C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Oct 2021 19:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CE80610C9
-	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Oct 2021 19:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 060E960F9B
+	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Oct 2021 19:58:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237220AbhJYUAU (ORCPT
+        id S238676AbhJYUAV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 25 Oct 2021 16:00:20 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:9211 "EHLO
+        Mon, 25 Oct 2021 16:00:21 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:9214 "EHLO
         esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239888AbhJYT6Q (ORCPT
+        with ESMTP id S239913AbhJYT6T (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 25 Oct 2021 15:58:16 -0400
+        Mon, 25 Oct 2021 15:58:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1635191754; x=1666727754;
+  t=1635191757; x=1666727757;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=EwPH8S2shtkXPtK91LcmbvBxHJQny+yb+LwDXIyqGOc=;
-  b=bzjwNVA+4hpuRVoXLnnjXdg7Q2oPjdAQwlgMbFJLAsqpnI0pDnouMv7w
-   oW2lF0oYf4S/bJu+5Lkrwm/XwTa/DK8PPJrxDC+ZDw+2iE0cTncx2dm5Q
-   k0o8P9pf+rbi+ZtJZGOJ3NvSdNIekbJQYr/pZS7sawH0Qhz9M8Bij5pRG
-   ltCuAv9KF0+sYfD+O/yOBShQ9jGtvNyhoSoUUhIpRjQP2MJ2Dr5qJA3BF
-   Md9qSIlXYirdxVvmrEuhoGu3E+ZNB7frwekAYF0FygFM3nqQB5C/a3Wlw
-   e9uVn80eBibyujzk6D9rZ+RpNCmQpKKhl+ImDcfc5BoKuIPpp45ytCWn4
-   g==;
+  bh=DuPSUb7mLjAKpGhZiKY+keHuZZBigTliJx8ob9s9tVI=;
+  b=OvCxeIgAJjsreZJWj8+cAnppRjt1b0wvmPQK5Frwt6vT4Q6ZGMwFSDt8
+   l4zpuvUQsEyPo9tkOuVY4gj95GDrELd0ckx+FbD0NMQxQa7OPRZXgUNQl
+   tL09ISeHj7fSwPaA6QjRN95oJpL3dZkGGhMnhr9B8IBw9b3cX2UN7BujH
+   bx6Nn+1187fqmRjFfz9tCdSXHJHnXd/SIQcfXR4FSVEavx5alKyy8usQD
+   0Z56Jvs+Ypo0HgEf/K5TjOCQmj8/TewiV6lZVUiNCIbfaTcle/gDWqmMz
+   y3DK7rqMZYtWXX4FLJpNzZtGJnP7EHJ2n279XuMVNXduLkkrnXjw15cpO
+   Q==;
 X-IronPort-AV: E=Sophos;i="5.87,181,1631548800"; 
-   d="scan'208";a="295545850"
+   d="scan'208";a="295545852"
 Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 26 Oct 2021 03:53:56 +0800
-IronPort-SDR: PXrYtWkyyLeKH2DpFMXYhZaXZTpsZa+uaNbbtbUnBgVVKe2u6eFNbREk13i/pwQbfBgEDM/hLP
- kdpqIRsh0pBOdfy2VoafbW14Kg+jDqKF9fxSdHaQf4TXiNVGDmxdMWrH/GvKrQRwTruxSUILqw
- AIWlq9qPBpNghmnjVTt/rZhKG4KSWqu0gtyzTp2R4yNpRYfzOOo+h1eKp7uao4xfYDGO/SmTKT
- qLZdmCA+EIL1Wm3CySOFgnT9bMEipGBrqe5pHHHgs25dTK/pH281HP19vrr86/dnpOHeOCcYgp
- 2V+X89SK3y8hHZR3sbujGl64
+  by ob1.hgst.iphmx.com with ESMTP; 26 Oct 2021 03:53:57 +0800
+IronPort-SDR: sGH5a09/ZPn5foMWgy9LVgAmwyfsiCcRopsKrLn/x9Ksf86O0XMkpbVGMvXCdYcY8Vu7OS1rMQ
+ xwxhxQ5zm6qAVDVAgZjjvqhZ9YRb+2uj622KJ1phzuhktpbKOt9OryC4gYhQSU3LnGQI9ImL0W
+ EQu/tGxs5Octph6VMCzzJ3fWPQuMohQdY1hO5qY7jhv99aMyKhdp9VJx00Y30gqKzzp+p2iMTg
+ z4LCn7qLlAXwKnufHrU2ocTzV3ppo7ZvTWhGZiseQs/zpKWZsQIdXiVkziqNvJPCuNFW6pwz81
+ TsvRPAvrXRk+rU5mLLoWuGx3
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2021 12:27:54 -0700
-IronPort-SDR: pbkaGy8cmdmYn6geMoIdcG1oPtyf8CvhCDS9M5wWCm08wRzdFcvbiTFq/v9T0zgW+FKFKgSJSm
- LCvUvVcHLRNWqc4H8/p0DKAiq7uQS0hARjjXpLC+RMDZRKnW5z8Qyybqxp4/myt3bsxN/51AZr
- hrHqe3sWrm983H5MKQh5081o+wiixdGtM3lGOTK2zG5/Ha/SEqnEKoWmmEDwVUbwGVpgnvNXOy
- zqd/kYJOGxWCqR0+lLTf+5kZdQd1KTTOncuamfRT8xyazQurdCqDK8VhKg2uMdX2GJ8fjnTvlD
- 5zs=
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2021 12:27:55 -0700
+IronPort-SDR: 8QVMRPnAb949JxVnTbapzRtaEnHxjqkVTznWI80pViqktCf9eyPSiPFey1393D/B8SmFY9/9Qi
+ UMWGZ/vCWb34XxZdvCOSmQBpmC8ga2fS0O6AeviI/4DTl+OrXMnHThb0UxUwLtBb+krqQ4F2Gi
+ fisVMtTqJrlyV6H5vpijZu30Fb0uCdccDww/rBtyejZ+wIQIXzLbsQcQvOU8X1YNwqyOC4DKfs
+ siDBQKRfyO5WGM/sfs8uH3GusAQPPUeMTJqs+zbzuUVQtJ17dwTcqNxGIb3cq2TX30XicQIXgY
+ NUs=
 WDCIronportException: Internal
 Received: from unknown (HELO hulk.wdc.com) ([10.225.167.27])
   by uls-op-cesaip01.wdc.com with ESMTP; 25 Oct 2021 12:53:57 -0700
@@ -62,9 +62,9 @@ Cc:     Atish Patra <atish.patra@wdc.com>, Anup Patel <anup.patel@wdc.com>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Rob Herring <robh+dt@kernel.org>,
         Vincent Chen <vincent.chen@sifive.com>
-Subject: [v4 04/11] RISC-V: Add a simple platform driver for RISC-V legacy perf
-Date:   Mon, 25 Oct 2021 12:53:43 -0700
-Message-Id: <20211025195350.242914-5-atish.patra@wdc.com>
+Subject: [v4 05/11] RISC-V: Add RISC-V SBI PMU extension definitions
+Date:   Mon, 25 Oct 2021 12:53:44 -0700
+Message-Id: <20211025195350.242914-6-atish.patra@wdc.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20211025195350.242914-1-atish.patra@wdc.com>
 References: <20211025195350.242914-1-atish.patra@wdc.com>
@@ -74,225 +74,135 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The old RISC-V perf implementation allowed counting of only
-cycle/instruction counters using perf. Restore that feature by implementing
-a simple platform driver under a separate config to provide backward
-compatibility. Any existing software stack will continue to work as it is.
-However, it provides an easy way out in future where we can remove the
-legacy driver.
+This patch adds all the definitions defined by the SBI PMU extension.
 
 Signed-off-by: Atish Patra <atish.patra@wdc.com>
 ---
- drivers/perf/Kconfig            |   9 ++
- drivers/perf/Makefile           |   3 +
- drivers/perf/riscv_pmu_legacy.c | 143 ++++++++++++++++++++++++++++++++
- include/linux/perf/riscv_pmu.h  |   2 +
- 4 files changed, 157 insertions(+)
- create mode 100644 drivers/perf/riscv_pmu_legacy.c
+ arch/riscv/include/asm/sbi.h | 97 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 97 insertions(+)
 
-diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
-index fc42ab613ea0..1546a487d970 100644
---- a/drivers/perf/Kconfig
-+++ b/drivers/perf/Kconfig
-@@ -64,6 +64,15 @@ config RISCV_PMU
- 	  Say y if you want to use CPU performance monitors on RISCV-based
- 	  systems.
+diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
+index 0d42693cb65e..7a14ca06ba8f 100644
+--- a/arch/riscv/include/asm/sbi.h
++++ b/arch/riscv/include/asm/sbi.h
+@@ -27,6 +27,7 @@ enum sbi_ext_id {
+ 	SBI_EXT_IPI = 0x735049,
+ 	SBI_EXT_RFENCE = 0x52464E43,
+ 	SBI_EXT_HSM = 0x48534D,
++	SBI_EXT_PMU = 0x504D55,
+ };
  
-+config RISCV_PMU_LEGACY
-+	depends on RISCV_PMU
-+	bool "RISC-V legacy PMU implementation"
-+	default y
-+	help
-+	  Say y if you want to use the legacy CPU performance monitor
-+	  implementation on RISC-V based systems. This only allows counting
-+	  of cycle/instruction counter and will be removed in future.
+ enum sbi_ext_base_fid {
+@@ -70,6 +71,99 @@ enum sbi_hsm_hart_status {
+ 	SBI_HSM_HART_STATUS_STOP_PENDING,
+ };
+ 
 +
- config ARM_PMU_ACPI
- 	depends on ARM_PMU && ACPI
- 	def_bool y
-diff --git a/drivers/perf/Makefile b/drivers/perf/Makefile
-index 76e5c50e24bb..e8aa666a9d28 100644
---- a/drivers/perf/Makefile
-+++ b/drivers/perf/Makefile
-@@ -11,6 +11,9 @@ obj-$(CONFIG_HISI_PMU) += hisilicon/
- obj-$(CONFIG_QCOM_L2_PMU)	+= qcom_l2_pmu.o
- obj-$(CONFIG_QCOM_L3_PMU) += qcom_l3_pmu.o
- obj-$(CONFIG_RISCV_PMU) += riscv_pmu.o
-+ifeq ($(CONFIG_RISCV_PMU), y)
-+obj-$(CONFIG_RISCV_PMU_LEGACY) += riscv_pmu_legacy.o
-+endif
- obj-$(CONFIG_THUNDERX2_PMU) += thunderx2_pmu.o
- obj-$(CONFIG_XGENE_PMU) += xgene_pmu.o
- obj-$(CONFIG_ARM_SPE_PMU) += arm_spe_pmu.o
-diff --git a/drivers/perf/riscv_pmu_legacy.c b/drivers/perf/riscv_pmu_legacy.c
-new file mode 100644
-index 000000000000..8bb973f2d9f7
---- /dev/null
-+++ b/drivers/perf/riscv_pmu_legacy.c
-@@ -0,0 +1,143 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * RISC-V performance counter support.
-+ *
-+ * Copyright (C) 2021 Western Digital Corporation or its affiliates.
-+ *
-+ * This implementation is based on old RISC-V perf and ARM perf event code
-+ * which are in turn based on sparc64 and x86 code.
-+ */
-+
-+#include <linux/mod_devicetable.h>
-+#include <linux/perf/riscv_pmu.h>
-+#include <linux/platform_device.h>
-+
-+#define RISCV_PMU_LEGACY_CYCLE		0
-+#define RISCV_PMU_LEGACY_INSTRET	1
-+#define RISCV_PMU_LEGACY_NUM_CTR	2
-+
-+bool pmu_init_done;
-+
-+static int pmu_legacy_ctr_get_idx(struct perf_event *event)
-+{
-+	struct perf_event_attr *attr = &event->attr;
-+
-+	if (event->attr.type != PERF_TYPE_HARDWARE)
-+		return -EOPNOTSUPP;
-+	if (attr->config == PERF_COUNT_HW_CPU_CYCLES)
-+		return RISCV_PMU_LEGACY_CYCLE;
-+	else if (attr->config == PERF_COUNT_HW_INSTRUCTIONS)
-+		return RISCV_PMU_LEGACY_INSTRET;
-+	else
-+		return -EOPNOTSUPP;
-+}
-+
-+/* For legacy config & counter index are same */
-+static int pmu_legacy_event_map(struct perf_event *event, u64 *config)
-+{
-+	return pmu_legacy_ctr_get_idx(event);
-+}
-+
-+static u64 pmu_legacy_read_ctr(struct perf_event *event)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
-+	int idx = hwc->idx;
-+	u64 val;
-+
-+	if (idx == RISCV_PMU_LEGACY_CYCLE) {
-+		val = riscv_pmu_ctr_read_csr(CSR_CYCLE);
-+		if (IS_ENABLED(CONFIG_32BIT))
-+			val = (u64)riscv_pmu_ctr_read_csr(CSR_CYCLEH) << 32 | val;
-+	} else if (idx == RISCV_PMU_LEGACY_INSTRET) {
-+		val = riscv_pmu_ctr_read_csr(CSR_INSTRET);
-+		if (IS_ENABLED(CONFIG_32BIT))
-+			val = ((u64)riscv_pmu_ctr_read_csr(CSR_INSTRETH)) << 32 | val;
-+	} else
-+		return 0;
-+
-+	return val;
-+}
-+
-+static void pmu_legacy_ctr_start(struct perf_event *event, u64 ival)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
-+	u64 initial_val = pmu_legacy_read_ctr(event);
-+
-+	/**
-+	 * The legacy method doesn't really have a start/stop method.
-+	 * It also can not update the counter with a initial value.
-+	 * But we still need to set the prev_count so that read() can compute
-+	 * the delta. Just use the current counter value to set the prev_count.
-+	 */
-+	local64_set(&hwc->prev_count, initial_val);
-+}
-+
-+/**
-+ * This is just a simple implementation to allow legacy implementations
-+ * compatible with new RISC-V PMU driver framework.
-+ * This driver only allows reading two counters i.e CYCLE & INSTRET.
-+ * However, it can not start or stop the counter. Thus, it is not very useful
-+ * will be removed in future.
-+ */
-+static void pmu_legacy_init(struct riscv_pmu *pmu)
-+{
-+	pr_info("Legacy PMU implementation is available\n");
-+
-+	pmu->num_counters = RISCV_PMU_LEGACY_NUM_CTR;
-+	pmu->ctr_start = pmu_legacy_ctr_start;
-+	pmu->ctr_stop = NULL;
-+	pmu->event_map = pmu_legacy_event_map;
-+	pmu->ctr_get_idx = pmu_legacy_ctr_get_idx;
-+	pmu->ctr_get_width = NULL;
-+	pmu->ctr_clear_idx = NULL;
-+	pmu->ctr_read = pmu_legacy_read_ctr;
-+
-+	perf_pmu_register(&pmu->pmu, "cpu", PERF_TYPE_RAW);
-+}
-+
-+static int pmu_legacy_device_probe(struct platform_device *pdev)
-+{
-+	struct riscv_pmu *pmu = NULL;
-+
-+	pmu = riscv_pmu_alloc();
-+	if (!pmu)
-+		return -ENOMEM;
-+	pmu_legacy_init(pmu);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver pmu_legacy_driver = {
-+	.probe		= pmu_legacy_device_probe,
-+	.driver		= {
-+		.name	= RISCV_PMU_LEGACY_PDEV_NAME,
-+	},
++enum sbi_ext_pmu_fid {
++	SBI_EXT_PMU_NUM_COUNTERS = 0,
++	SBI_EXT_PMU_COUNTER_GET_INFO,
++	SBI_EXT_PMU_COUNTER_CFG_MATCH,
++	SBI_EXT_PMU_COUNTER_START,
++	SBI_EXT_PMU_COUNTER_STOP,
++	SBI_EXT_PMU_COUNTER_FW_READ,
 +};
 +
-+static int __init riscv_pmu_legacy_devinit(void)
-+{
-+	int ret;
-+	struct platform_device *pdev;
++#define RISCV_PMU_RAW_EVENT_MASK GENMASK_ULL(55, 0)
++#define RISCV_PMU_RAW_EVENT_IDX 0x20000
 +
-+	if (likely(pmu_init_done))
-+		return 0;
++/** General pmu event codes specified in SBI PMU extension */
++enum sbi_pmu_hw_generic_events_t {
++	SBI_PMU_HW_NO_EVENT			= 0,
++	SBI_PMU_HW_CPU_CYCLES			= 1,
++	SBI_PMU_HW_INSTRUCTIONS			= 2,
++	SBI_PMU_HW_CACHE_REFERENCES		= 3,
++	SBI_PMU_HW_CACHE_MISSES			= 4,
++	SBI_PMU_HW_BRANCH_INSTRUCTIONS		= 5,
++	SBI_PMU_HW_BRANCH_MISSES		= 6,
++	SBI_PMU_HW_BUS_CYCLES			= 7,
++	SBI_PMU_HW_STALLED_CYCLES_FRONTEND	= 8,
++	SBI_PMU_HW_STALLED_CYCLES_BACKEND	= 9,
++	SBI_PMU_HW_REF_CPU_CYCLES		= 10,
 +
-+	ret = platform_driver_register(&pmu_legacy_driver);
-+	if (ret)
-+		return ret;
++	SBI_PMU_HW_GENERAL_MAX,
++};
 +
-+	pdev = platform_device_register_simple(RISCV_PMU_LEGACY_PDEV_NAME, -1, NULL, 0);
-+	if (IS_ERR(pdev)) {
-+		platform_driver_unregister(&pmu_legacy_driver);
-+		return PTR_ERR(pdev);
-+	}
++/**
++ * Special "firmware" events provided by the firmware, even if the hardware
++ * does not support performance events. These events are encoded as a raw
++ * event type in Linux kernel perf framework.
++ */
++enum sbi_pmu_fw_generic_events_t {
++	SBI_PMU_FW_MISALIGNED_LOAD	= 0,
++	SBI_PMU_FW_MISALIGNED_STORE	= 1,
++	SBI_PMU_FW_ACCESS_LOAD		= 2,
++	SBI_PMU_FW_ACCESS_STORE		= 3,
++	SBI_PMU_FW_ILLEGAL_INSN		= 4,
++	SBI_PMU_FW_SET_TIMER		= 5,
++	SBI_PMU_FW_IPI_SENT		= 6,
++	SBI_PMU_FW_IPI_RECVD		= 7,
++	SBI_PMU_FW_FENCE_I_SENT		= 8,
++	SBI_PMU_FW_FENCE_I_RECVD	= 9,
++	SBI_PMU_FW_SFENCE_VMA_SENT	= 10,
++	SBI_PMU_FW_SFENCE_VMA_RCVD	= 11,
++	SBI_PMU_FW_SFENCE_VMA_ASID_SENT	= 12,
++	SBI_PMU_FW_SFENCE_VMA_ASID_RCVD	= 13,
 +
-+	return ret;
-+}
-+late_initcall(riscv_pmu_legacy_devinit);
++	SBI_PMU_FW_HFENCE_GVMA_SENT	= 14,
++	SBI_PMU_FW_HFENCE_GVMA_RCVD	= 15,
++	SBI_PMU_FW_HFENCE_GVMA_VMID_SENT = 16,
++	SBI_PMU_FW_HFENCE_GVMA_VMID_RCVD = 17,
 +
-+void riscv_pmu_legacy_init(bool done)
-+{
-+	if (done)
-+		pmu_init_done = true;
-+}
-diff --git a/include/linux/perf/riscv_pmu.h b/include/linux/perf/riscv_pmu.h
-index 564129839e19..f3bce79d8998 100644
---- a/include/linux/perf/riscv_pmu.h
-+++ b/include/linux/perf/riscv_pmu.h
-@@ -22,6 +22,7 @@
- #define RISCV_MAX_COUNTERS	64
- #define RISCV_OP_UNSUPP		(-EOPNOTSUPP)
- #define RISCV_PMU_PDEV_NAME	"riscv-pmu"
-+#define RISCV_PMU_LEGACY_PDEV_NAME	"riscv-pmu-legacy"
++	SBI_PMU_FW_HFENCE_VVMA_SENT	= 18,
++	SBI_PMU_FW_HFENCE_VVMA_RCVD	= 19,
++	SBI_PMU_FW_HFENCE_VVMA_ASID_SENT = 20,
++	SBI_PMU_FW_HFENCE_VVMA_ASID_RCVD = 21,
++	SBI_PMU_FW_MAX,
++};
++
++/* SBI PMU event types */
++enum sbi_pmu_event_type {
++	SBI_PMU_EVENT_TYPE_HW = 0x0,
++	SBI_PMU_EVENT_TYPE_CACHE = 0x1,
++	SBI_PMU_EVENT_TYPE_RAW = 0x2,
++	SBI_PMU_EVENT_TYPE_FW = 0xf,
++};
++
++/* SBI PMU event types */
++enum sbi_pmu_ctr_type {
++	SBI_PMU_CTR_TYPE_HW = 0x0,
++	SBI_PMU_CTR_TYPE_FW,
++};
++
++/* Flags defined for config matching function */
++#define SBI_PMU_CFG_FLAG_SKIP_MATCH	(1 << 0)
++#define SBI_PMU_CFG_FLAG_CLEAR_VALUE	(1 << 1)
++#define SBI_PMU_CFG_FLAG_AUTO_START	(1 << 2)
++#define SBI_PMU_CFG_FLAG_SET_MINH	(1 << 3)
++#define SBI_PMU_CFG_FLAG_SET_SINH	(1 << 4)
++#define SBI_PMU_CFG_FLAG_SET_UINH	(1 << 5)
++#define SBI_PMU_CFG_FLAG_SET_VSINH	(1 << 6)
++#define SBI_PMU_CFG_FLAG_SET_VUINH	(1 << 7)
++
++/* Flags defined for counter start function */
++#define SBI_PMU_START_FLAG_SET_INIT_VALUE (1 << 0)
++
++/* Flags defined for counter stop function */
++#define SBI_PMU_STOP_FLAG_RESET (1 << 0)
++
+ #define SBI_SPEC_VERSION_DEFAULT	0x1
+ #define SBI_SPEC_VERSION_MAJOR_SHIFT	24
+ #define SBI_SPEC_VERSION_MAJOR_MASK	0x7f
+@@ -82,6 +176,9 @@ enum sbi_hsm_hart_status {
+ #define SBI_ERR_INVALID_PARAM	-3
+ #define SBI_ERR_DENIED		-4
+ #define SBI_ERR_INVALID_ADDRESS	-5
++#define SBI_ERR_ALREADY_AVAILABLE -6
++#define SBI_ERR_ALREADY_STARTED -7
++#define SBI_ERR_ALREADY_STOPPED -8
  
- #define RISCV_PMU_STOP_FLAG_RESET 1
- 
-@@ -58,6 +59,7 @@ struct riscv_pmu {
- unsigned long riscv_pmu_ctr_read_csr(unsigned long csr);
- int riscv_pmu_event_set_period(struct perf_event *event, u64 *init_val);
- u64 riscv_pmu_event_update(struct perf_event *event);
-+void riscv_pmu_legacy_init(bool init_done);
- struct riscv_pmu *riscv_pmu_alloc(void);
- 
- #endif /* CONFIG_RISCV_PMU */
+ extern unsigned long sbi_spec_version;
+ struct sbiret {
 -- 
 2.31.1
 
