@@ -2,72 +2,151 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EFCAC433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Oct 2021 14:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1ED3C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Oct 2021 16:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73D7B610D2
-	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Oct 2021 14:25:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B809760EFE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Oct 2021 16:09:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234733AbhJZO1p (ORCPT
+        id S236069AbhJZQMO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 26 Oct 2021 10:27:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43930 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234586AbhJZO1p (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 26 Oct 2021 10:27:45 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F34A5603E8;
-        Tue, 26 Oct 2021 14:25:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635258321;
-        bh=wq4cHSA8xWjckRoJ1siSNw9emhTOZLSpWLEur+8gdMU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MkwChz6Fw1H2SvX8FY1gHx5MTaA7Xv+0ONt7wweq+/8wT6S9Ojk5GvCvYLqdoXTo6
-         9xkS0p71cE7TlrDx97yveQVyq3FiZNiD+d/H2XC2/hTG0XZ6hYsA8xAqeT6z+jEl4N
-         9zVWxAJPFMF04r8x3z4vvhTEhWsSnKg9EdN3n7ucfnuM5UdsPfj2/89sSQkoIgYjcX
-         iZn5i7uAb+NtKXHiH+qVpI7AkH+obakQyI8tyu151i21Of0WgozNyYWn0cKBshB8MF
-         s9NiipjPvd63uas0AgItXF3y/ZHg2cfc1uzAm/n8xhq2I+d9DV6vY8uq6/yV4d/X4s
-         0rRh4j3Lj9EqA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 66118410A1; Tue, 26 Oct 2021 11:25:18 -0300 (-03)
-Date:   Tue, 26 Oct 2021 11:25:18 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     John Keeping <john@metanate.com>, linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nick Terrell <terrelln@fb.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND] tools/build: drop slang include path in test-all
-Message-ID: <YXgPzslee7oDIMPD@kernel.org>
-References: <20211025172314.3766032-1-john@metanate.com>
- <9acd33bf-a11b-2c2e-569f-0de4c971404f@gmail.com>
+        Tue, 26 Oct 2021 12:12:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50874 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235993AbhJZQMK (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 26 Oct 2021 12:12:10 -0400
+Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64318C061348;
+        Tue, 26 Oct 2021 09:09:46 -0700 (PDT)
+Received: by mail-io1-xd29.google.com with SMTP id h196so21248199iof.2;
+        Tue, 26 Oct 2021 09:09:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rcwUM+yfYkd1fGoVQ1bAhhWXo7KweulJ4cGcrB1ov2k=;
+        b=j3hPdCROifw9JEpIA+McCEuNKWXOqBx6EsNP39GxRzscQeiT6z+/qJVIw6tlre1oR0
+         jenfCTu+YAhGgcdrYGOccXRLRIGsBdFZgMeSMz8sEwVfc1AqepJEJT9HHBm0UDZXs/O5
+         ZfhiMhpKdc3n2JO5H5DAJ5jvPJVnCsROvENQxUjaXPRspotW4g8Va7dYRA/uOYEbytGK
+         mNsdpH8oeQE1R+Od3g3VwR4XfDRvnLt4feNRnzdmfJko++vkI8GN7ieL6NMHCe8bt3AU
+         Raymkh3ad9Q7ejXGgrSb8jF0qWnMZCQd6Pxqv5sjUlcBK8P3RfghnR5eBA1gAeAOkpd9
+         qf8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rcwUM+yfYkd1fGoVQ1bAhhWXo7KweulJ4cGcrB1ov2k=;
+        b=xuV5OsOsyTNPIm3ICQVCx7KYjjrfJcmsVOZ5OqGfUEMIPI7yxg+K3w7pep8uTaHNDw
+         6rtutCXlpP5DxtvC0EZK/Q2qcNRBi0APSxuwAwoafWorJncMTi4PcN+0k6SxuS9C23ux
+         Q7Qqg5ea8u+OTgmjjzEOXQS4/9/Dagvd9ygpUaNgOJpL5FdRJYBhIaMEg6jWyrKs/0pf
+         cRkTjne4vm0uXrX+VbmgKTRkAu1bdX8QapjaLXA1OqZUsDKvCZNBwNS8kBhFQXxB6cIs
+         qUx7PUiO51IK9B5kqWa5MWgJfscHUbAdIWJ4gEU/BihISNVxQ2I7G4+tFQQzCT48A5MA
+         3T3w==
+X-Gm-Message-State: AOAM530yzEvr7KPQghvuok6UIj4Q6Qox3XBhNrsv5Q1s0ZTjrbxNWeyz
+        tNngYQIHGwiKVY0hTDA1MDwOdPB04r+wVAen4tE=
+X-Google-Smtp-Source: ABdhPJxXrjxmBSp1hood0IVz9PaZRtPxRuaI3ESryi3mTB5SO+Lab1x+ccAB23JEegIpQOzsPDhPHWEbuL2xAQCM5j8=
+X-Received: by 2002:a05:6602:1514:: with SMTP id g20mr16487935iow.9.1635264585800;
+ Tue, 26 Oct 2021 09:09:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9acd33bf-a11b-2c2e-569f-0de4c971404f@gmail.com>
-X-Url:  http://acmel.wordpress.com
+References: <20211025083315.4752-1-laoar.shao@gmail.com> <20211025083315.4752-9-laoar.shao@gmail.com>
+ <202110251421.7056ACF84@keescook> <CALOAHbDPs-pbr5CnmuRv+b+CgMdEkzi4Yr2fSO9pKCE-chr3Yg@mail.gmail.com>
+ <20211026091211.569a7ba2@gandalf.local.home>
+In-Reply-To: <20211026091211.569a7ba2@gandalf.local.home>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Wed, 27 Oct 2021 00:09:09 +0800
+Message-ID: <CALOAHbAK6u8qO5EiQ9yPp5a_HwddmDJE-JDUoDBK4QeEiR6ywQ@mail.gmail.com>
+Subject: Re: [PATCH v6 08/12] tools/bpf/bpftool/skeleton: make it adopt to
+ task comm size change
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Qiang Zhang <qiang.zhang@windriver.com>,
+        robdclark <robdclark@chromium.org>,
+        christian <christian@brauner.io>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>, Martin Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        john fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        dennis.dalessandro@cornelisnetworks.com,
+        mike.marciniszyn@cornelisnetworks.com, dledford@redhat.com,
+        jgg@ziepe.ca, linux-rdma@vger.kernel.org,
+        netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel test robot <oliver.sang@intel.com>,
+        kbuild test robot <lkp@intel.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Oct 25, 2021 at 10:45:17AM -0700, Florian Fainelli escreveu:
-> On 10/25/21 10:23 AM, John Keeping wrote:
-> > Commit cbefd24f0aee3 ("tools build: Add test to check if slang.h is in
-> > /usr/include/slang/") added a proper test to check whether slang.h is in
-> > a subdirectory, and commit 1955c8cf5e26b ("perf tools: Don't hardcode
-> > host include path for libslang") removed the include path for
-> > test-libslang.bin but missed test-all.bin.  Apply the same change to
-> > test-all.bin.
-> > 
-> > Fixes: 1955c8cf5e26 ("perf tools: Don't hardcode host include path for libslang")
-> > Signed-off-by: John Keeping <john@metanate.com>
-> 
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+On Tue, Oct 26, 2021 at 9:12 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Tue, 26 Oct 2021 10:18:51 +0800
+> Yafang Shao <laoar.shao@gmail.com> wrote:
+>
+> > > So, if we're ever going to copying these buffers out of the kernel (I
+> > > don't know what the object lifetime here in bpf is for "e", etc), we
+> > > should be zero-padding (as get_task_comm() does).
+> > >
+> > > Should this, instead, be using a bounce buffer?
+> >
+> > The comment in bpf_probe_read_kernel_str_common() says
+> >
+> >   :      /*
+> >   :       * The strncpy_from_kernel_nofault() call will likely not fill the
+> >   :       * entire buffer, but that's okay in this circumstance as we're probing
+> >   :       * arbitrary memory anyway similar to bpf_probe_read_*() and might
+> >   :       * as well probe the stack. Thus, memory is explicitly cleared
+> >   :       * only in error case, so that improper users ignoring return
+> >   :       * code altogether don't copy garbage; otherwise length of string
+> >   :       * is returned that can be used for bpf_perf_event_output() et al.
+> >   :       */
+> >
+> > It seems that it doesn't matter if the buffer is filled as that is
+> > probing arbitrary memory.
+> >
+> > >
+> > > get_task_comm(comm, task->group_leader);
+> >
+> > This helper can't be used by the BPF programs, as it is not exported to BPF.
+> >
+> > > bpf_probe_read_kernel_str(&e.comm, sizeof(e.comm), comm);
+>
+> I guess Kees is worried that e.comm will have something exported to user
+> space that it shouldn't. But since e is part of the BPF program, does the
+> BPF JIT take care to make sure everything on its stack is zero'd out, such
+> that a user BPF couldn't just read various items off its stack and by doing
+> so, see kernel memory it shouldn't be seeing?
+>
+> I'm guessing it does, otherwise this would be a bigger issue than this
+> patch series.
+>
 
-Thanks, applied.
+You guess is correct per my verification.
+But the BPF JIT doesn't  zero it out, while it really does is adding
+some character like '?' in my verification.
 
-- Arnaldo
+Anyway we don't need to worry that the kernel information may be
+leaked though bpf_probe_read_kernel_str().
 
+-- 
+Thanks
+Yafang
