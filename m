@@ -2,116 +2,216 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF0B2C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Oct 2021 10:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A93C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Oct 2021 13:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB5EB60E09
-	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Oct 2021 10:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6D7F60EFF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Oct 2021 13:10:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234541AbhJZKip (ORCPT
+        id S235253AbhJZNNK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 26 Oct 2021 06:38:45 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:47904 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234596AbhJZKiU (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 26 Oct 2021 06:38:20 -0400
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id CFCFC1FD4C;
-        Tue, 26 Oct 2021 10:35:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1635244551; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1eIOwvf/mMVcZwym9Rsv9K70HOPBD5q/9n5lAFwsZyI=;
-        b=INOy8JbcR/E0RvXOtZ9l6kLK4ypy5b76OCI5OckfNKpFgnwhlXjEbmuL3zGAyCw8uxdvjj
-        YSpBGCium6DRcUwhe5EC3/On5TQaGYvsiKMxzDZqBKy4LcBGj5EteMRwpKyc5XDj7AZPwm
-        YDf9opjAXlpbqwZAzKOuC4KIFz3WjkU=
-Received: from suse.cz (unknown [10.100.224.162])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 025E8A3B85;
-        Tue, 26 Oct 2021 10:35:50 +0000 (UTC)
-Date:   Tue, 26 Oct 2021 12:35:47 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Tue, 26 Oct 2021 09:13:10 -0400
+Received: from foss.arm.com ([217.140.110.172]:58230 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230324AbhJZNNJ (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 26 Oct 2021 09:13:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A3780D6E;
+        Tue, 26 Oct 2021 06:10:45 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.74.144])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B15BC3F73D;
+        Tue, 26 Oct 2021 06:10:42 -0700 (PDT)
+Date:   Tue, 26 Oct 2021 14:10:39 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        "Zhang, Qiang" <qiang.zhang@windriver.com>, robdclark@chromium.org,
-        Christian Brauner <christian@brauner.io>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        honnappa.nagarahalli@arm.com, Zachary.Leaf@arm.com,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        dennis.dalessandro@cornelisnetworks.com,
-        mike.marciniszyn@cornelisnetworks.com,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-perf-users@vger.kernel.org,
-        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel test robot <oliver.sang@intel.com>,
-        kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH v6 00/12] extend task comm from 16 to 24
-Message-ID: <YXfaA2uSj9JIfZIl@alley>
-References: <20211025083315.4752-1-laoar.shao@gmail.com>
- <CAADnVQKm0Ljj-w5PbkAu1ugLFnZRRPt-Vk-J7AhXxDD5xVompA@mail.gmail.com>
- <20211025170503.59830a43@gandalf.local.home>
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v11 0/5] arm64 userspace counter support
+Message-ID: <20211026131039.GC34073@C02TD0UTHF1T.local>
+References: <20211019231907.1009567-1-robh@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211025170503.59830a43@gandalf.local.home>
+In-Reply-To: <20211019231907.1009567-1-robh@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon 2021-10-25 17:05:03, Steven Rostedt wrote:
-> On Mon, 25 Oct 2021 11:10:09 -0700
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+On Tue, Oct 19, 2021 at 06:19:02PM -0500, Rob Herring wrote:
+> Another version of arm64 userspace counter access support.
 > 
-> > It looks like a churn that doesn't really address the problem.
-> > If we were to allow long names then make it into a pointer and use 16 byte
-> > as an optimized storage for short names. Any longer name would be a pointer.
-> > In other words make it similar to dentry->d_iname.
+> The arm64 support departs from the x86 implementation by requiring the user
+> to explicitly request user access (via attr.config1) and only enables access
+> for task bound events. Since usage is explicitly requested, access is
+> enabled at perf_event_open() rather than on mmap() as that greatly
+> simplifies the implementation. Rather than trying to lock down the access
+> as the x86 implementation has been doing, we can start with only a limited
+> use case enabled and later expand it if needed.
 > 
-> That would be quite a bigger undertaking too, as it is assumed throughout
-> the kernel that the task->comm is TASK_COMM_LEN and is nul terminated. And
-> most locations that save the comm simply use a fixed size string of
-> TASK_COMM_LEN. Not saying its not feasible, but it would require a lot more
-> analysis of the impact by changing such a fundamental part of task struct
-> from a static to something requiring allocation.
+> I've run this version thru Vince's perf tests[13] with arm64 support added.
+> I wish I'd found these tests sooner...
 
-I fully agree. The evolution of this patchset clearly shows how many
-code paths depend on the existing behavior.
+When you say "with arm64 support added", do you mean with patches not
+yet upstreamed?
 
+I took a look at the upstream repo, and there's some existing RDPMC
+support even though upstream never previously supported userspace
+access. That support code uses PMSELR_EL0, which this series adds no
+provisions for.
 
-> Unless you are suggesting that we truncate like normal the 16 byte names
-> (to a max of 15 characters), and add a way to hold the entire name for
-> those locations that understand it.
+Kernel-side, we'll need to either:
 
-Yup. If the problem is only with kthreads, it might be possible to
-store the pointer into "struct kthread" and update proc_task_name().
-It would generalize the solution already used by workqueues.
-I think that something like this was mentioned in the discussion
-about v1.
+* Document that PMSELR_EL0 is unreliable, and explcitly zero it within
+  the kernel such that it cnanot be used as a covert channel. Get the
+  tests updated to not rely on the never-previously-supported use of
+  PMSELR_EL0.
 
-Best Regards,
-Petr
+* Context switch PMSELR_EL0 (which'll IIUC is unreliable for big.LITTLE,
+  even where the registers exist on each CPU).
+
+Thanks,
+Mark.
+
+> This originally resurrected Raphael's series[1] to enable userspace counter
+> access on arm64. My previous versions are here[2][3][4][5][6][7][8][9][10][11].
+> A git branch is here[12].
+> 
+> Changes in v11:
+>  - User request for 64-bit counters and userspace access will fail on
+>    open if h/w doesn't support 64-bit counters instead of reporting the
+>    maximum counter size. The open will also fail if not a task bound
+>    event.
+> 
+> Changes in v10:
+>  - Drop changing event_mapped/event_unmapped ops to run on the event's
+>    current CPU. This won't work for x86 where any thread sharing an mm
+>    context will have rdpmc enabled. Instead, simply track user access
+>    events when added to a perf context and use that count.
+>  - Documentation for the sysctl disable
+> 
+> Changes in v9:
+>  - Reworked x86 and perf core to handle user access tracking and call
+>    .event_mapped() and .event_unmapped() on the CPU with the event like
+>    other changes to events.
+>  - Use sysctl instead of sysfs to disable user access.
+> 
+> Changes in v8:
+>  - Restrict user access to thread bound events which simplifies the
+>    implementation. A couple of perf core changes (patches 1 and 2) are
+>    needed to do this.
+>  - Always require the user to request userspace access.
+> 
+> Changes in v7:
+>  - Handling of dirty counter leakage and reworking of context switch and
+>    user access enabling. The .sched_task hook and undef instruction handler
+>    are now utilized. (Patch 3)
+>  - Add a userspace disable switch like x86. (Patch 5)
+> 
+> Changes in v6:
+>  - Reworking of the handling of 64-bit counters and user access. There's
+>    a new config1 flag to request user access. This takes priority over
+>    the 64-bit flag and the user will get the maximum size the h/w
+>    supports without chaining.
+>  - The libperf evsel mmap struct is stored in its own xyarray
+>  - New tests for user 64-bit and 32-bit counters
+>  - Rebase to v5.12-rc2
+> 
+> Changes in v5:
+>  - Limit enabling/disabling access to CPUs associated with the PMU
+>    (supported_cpus) and with the mm_struct matching current->active_mm.
+>    The x86 method of using mm_cpumask doesn't work for arm64 as it is not
+>    updated.
+>  - Only set cap_user_rdpmc if event is on current cpu. See patch 2.
+>  - Create an mmap for every event in an evsel. This results in some changes
+>    to the libperf mmap API from the last version.
+>  - Rebase to v5.11-rc2
+> 
+> Changes in v4:
+>  - Dropped 'arm64: pmu: Add hook to handle pmu-related undefined instructions'.
+>    The onus is on userspace to pin itself to a homogeneous subset of CPUs
+>    and avoid any aborts on heterogeneous systems, so the hook is not needed.
+>  - Make perf_evsel__mmap() take pages rather than bytes for size
+>  - Fix building arm64 heterogeneous test.
+> 
+> Changes in v3:
+>  - Dropped removing x86 rdpmc test until libperf tests can run via 'perf test'
+>  - Added verbose prints for tests
+>  - Split adding perf_evsel__mmap() to separate patch
+> 
+> The following changes to the arm64 support have been made compared to
+> Raphael's last version:
+> 
+> The major change is support for heterogeneous systems with some
+> restrictions. Specifically, userspace must pin itself to like CPUs, open
+> a specific PMU by type, and use h/w specific events. The tests have been
+> reworked to demonstrate this.
+> 
+> Chained events are not supported. The problem with supporting chained
+> events was there's no way to distinguish between a chained event and a
+> native 64-bit counter. We could add some flag, but do self monitoring
+> processes really need that? Native 64-bit counters are supported if the
+> PMU h/w has support. As there's already an explicit ABI to request 64-bit
+> counters, userspace can request 64-bit counters and if user
+> access is not enabled, then it must retry with 32-bit counters.
+> 
+> Prior versions broke the build on arm32 (surprisingly never caught by
+> 0-day). As a result, event_mapped and event_unmapped implementations have
+> been moved into the arm64 code.
+> 
+> There was a bug in that pmc_width was not set in the user page. The tests
+> now check for this.
+> 
+> The documentation has been converted to rST. I've added sections on
+> chained events and heterogeneous.
+> 
+> Rob
+> 
+> [1] https://lore.kernel.org/r/20190822144220.27860-1-raphael.gault@arm.com/
+> [2] https://lore.kernel.org/r/20200707205333.624938-1-robh@kernel.org/
+> [3] https://lore.kernel.org/r/20200828205614.3391252-1-robh@kernel.org/
+> [4] https://lore.kernel.org/r/20200911215118.2887710-1-robh@kernel.org/
+> [5] https://lore.kernel.org/r/20201001140116.651970-1-robh@kernel.org/
+> [6] https://lore.kernel.org/r/20210114020605.3943992-1-robh@kernel.org/
+> [7] https://lore.kernel.org/r/20210311000837.3630499-1-robh@kernel.org/
+> [8] https://lore.kernel.org/r/20210420031511.2348977-1-robh@kernel.org/
+> [9] https://lore.kernel.org/r/20210517195405.3079458-1-robh@kernel.org/
+> [10] https://lore.kernel.org/all/20210806225123.1958497-1-robh@kernel.org/
+> [11] https://lore.kernel.org/all/20210914204800.3945732-1-robh@kernel.org/
+> [12] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git arm64-user-perf-event-v11
+> [13] https://github.com/deater/perf_event_tests
+> 
+> 
+> Raphael Gault (1):
+>   Documentation: arm64: Document PMU counters access from userspace
+> 
+> Rob Herring (4):
+>   x86: perf: Move RDPMC event flag to a common definition
+>   perf: Add a counter for number of user access events in context
+>   arm64: perf: Add userspace counter access disable switch
+>   arm64: perf: Enable PMU counter userspace access for perf event
+> 
+>  Documentation/admin-guide/sysctl/kernel.rst |  11 ++
+>  Documentation/arm64/perf.rst                |  75 ++++++++++-
+>  arch/arm64/kernel/perf_event.c              | 132 +++++++++++++++++++-
+>  arch/x86/events/core.c                      |  10 +-
+>  arch/x86/events/perf_event.h                |   2 +-
+>  include/linux/perf_event.h                  |  10 ++
+>  kernel/events/core.c                        |   4 +
+>  7 files changed, 231 insertions(+), 13 deletions(-)
+> 
+> -- 
+> 2.32.0
+> 
