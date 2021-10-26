@@ -2,114 +2,107 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A33EC433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Oct 2021 13:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A24C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Oct 2021 13:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 239BB600D4
-	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Oct 2021 13:12:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2202E603E9
+	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Oct 2021 13:36:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235440AbhJZNOm (ORCPT
+        id S236207AbhJZNiW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 26 Oct 2021 09:14:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57748 "EHLO mail.kernel.org"
+        Tue, 26 Oct 2021 09:38:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230324AbhJZNOk (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 26 Oct 2021 09:14:40 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18A7360C49;
-        Tue, 26 Oct 2021 13:12:13 +0000 (UTC)
-Date:   Tue, 26 Oct 2021 09:12:11 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Qiang Zhang <qiang.zhang@windriver.com>,
-        robdclark <robdclark@chromium.org>,
-        christian <christian@brauner.io>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>, Martin Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        dennis.dalessandro@cornelisnetworks.com,
-        mike.marciniszyn@cornelisnetworks.com, dledford@redhat.com,
-        jgg@ziepe.ca, linux-rdma@vger.kernel.org,
-        netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel test robot <oliver.sang@intel.com>,
-        kbuild test robot <lkp@intel.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Subject: Re: [PATCH v6 08/12] tools/bpf/bpftool/skeleton: make it adopt to
- task comm size change
-Message-ID: <20211026091211.569a7ba2@gandalf.local.home>
-In-Reply-To: <CALOAHbDPs-pbr5CnmuRv+b+CgMdEkzi4Yr2fSO9pKCE-chr3Yg@mail.gmail.com>
-References: <20211025083315.4752-1-laoar.shao@gmail.com>
-        <20211025083315.4752-9-laoar.shao@gmail.com>
-        <202110251421.7056ACF84@keescook>
-        <CALOAHbDPs-pbr5CnmuRv+b+CgMdEkzi4Yr2fSO9pKCE-chr3Yg@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        id S230285AbhJZNiW (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 26 Oct 2021 09:38:22 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 887F760EC0;
+        Tue, 26 Oct 2021 13:35:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1635255358;
+        bh=GQ+yDzgA2vcbE0+K5hXW5DwWQFmuJ2lxO3v/1xD0kqY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=dmGr8/aDCCOrqqKw4knAZf8feV2W8qtoeZpRrNKwTlPOujTYd4cbxtZtLtV5OCCkQ
+         VGYs6OUCNQeI969BVc1fVT6BVVlFAYjOBlWOoVVSbzV5tTVdDCcPvJW7M+zLlp3hjn
+         uE7FfWony7cKnuHUAvz3ifsmL7WSJwfYzNibvpwn5661x1qQFjILBua2JrC/kbVpGU
+         zoUFEkJVnEl3e/F5z/P3EwcQzL9HPO8zeHZKdGAD1+FIcO852pqTYi2jqCljn2TDEd
+         qel2NaiNV7Tn/1sPXWO0GbobCpXBGGzAI7zixU67aLjKfTBHHhfJkLyzPtmLOEkYes
+         cIhvLr+cG9NPQ==
+Received: by mail-ed1-f53.google.com with SMTP id s1so13913051edd.3;
+        Tue, 26 Oct 2021 06:35:58 -0700 (PDT)
+X-Gm-Message-State: AOAM531GcCkxwJ6wh4wbBBj+jH6oLIxPFF7cu9y/130M6JPBDuZT4Nu8
+        BM8sLjkvwr5Y76fXAtkuIjcGdeBwB/dMZyX32g==
+X-Google-Smtp-Source: ABdhPJy26qFbzewnIKR+cGC5EF6zEzbM9xrEV2Eo10i80J/7NA0tKo3J7Uri4jQR0jAmeszts3tdQq9gGOYCEbG+vDo=
+X-Received: by 2002:a17:906:6a0a:: with SMTP id qw10mr14828933ejc.466.1635255287180;
+ Tue, 26 Oct 2021 06:34:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20211019231907.1009567-1-robh@kernel.org> <20211026131039.GC34073@C02TD0UTHF1T.local>
+In-Reply-To: <20211026131039.GC34073@C02TD0UTHF1T.local>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 26 Oct 2021 08:34:35 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+JLcWESzGzjsmrir+gCFEO88YMYdj+FOBhjZgSBNOeVA@mail.gmail.com>
+Message-ID: <CAL_Jsq+JLcWESzGzjsmrir+gCFEO88YMYdj+FOBhjZgSBNOeVA@mail.gmail.com>
+Subject: Re: [PATCH v11 0/5] arm64 userspace counter support
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Honnappa Nagarahalli <honnappa.nagarahalli@arm.com>,
+        Zachary.Leaf@arm.com, Catalin Marinas <catalin.marinas@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, 26 Oct 2021 10:18:51 +0800
-Yafang Shao <laoar.shao@gmail.com> wrote:
-
-> > So, if we're ever going to copying these buffers out of the kernel (I
-> > don't know what the object lifetime here in bpf is for "e", etc), we
-> > should be zero-padding (as get_task_comm() does).
+On Tue, Oct 26, 2021 at 8:10 AM Mark Rutland <mark.rutland@arm.com> wrote:
+>
+> On Tue, Oct 19, 2021 at 06:19:02PM -0500, Rob Herring wrote:
+> > Another version of arm64 userspace counter access support.
 > >
-> > Should this, instead, be using a bounce buffer?  
-> 
-> The comment in bpf_probe_read_kernel_str_common() says
-> 
->   :      /*
->   :       * The strncpy_from_kernel_nofault() call will likely not fill the
->   :       * entire buffer, but that's okay in this circumstance as we're probing
->   :       * arbitrary memory anyway similar to bpf_probe_read_*() and might
->   :       * as well probe the stack. Thus, memory is explicitly cleared
->   :       * only in error case, so that improper users ignoring return
->   :       * code altogether don't copy garbage; otherwise length of string
->   :       * is returned that can be used for bpf_perf_event_output() et al.
->   :       */
-> 
-> It seems that it doesn't matter if the buffer is filled as that is
-> probing arbitrary memory.
-> 
+> > The arm64 support departs from the x86 implementation by requiring the user
+> > to explicitly request user access (via attr.config1) and only enables access
+> > for task bound events. Since usage is explicitly requested, access is
+> > enabled at perf_event_open() rather than on mmap() as that greatly
+> > simplifies the implementation. Rather than trying to lock down the access
+> > as the x86 implementation has been doing, we can start with only a limited
+> > use case enabled and later expand it if needed.
 > >
-> > get_task_comm(comm, task->group_leader);  
-> 
-> This helper can't be used by the BPF programs, as it is not exported to BPF.
-> 
-> > bpf_probe_read_kernel_str(&e.comm, sizeof(e.comm), comm);
+> > I've run this version thru Vince's perf tests[13] with arm64 support added.
+> > I wish I'd found these tests sooner...
+>
+> When you say "with arm64 support added", do you mean with patches not
+> yet upstreamed?
 
-I guess Kees is worried that e.comm will have something exported to user
-space that it shouldn't. But since e is part of the BPF program, does the
-BPF JIT take care to make sure everything on its stack is zero'd out, such
-that a user BPF couldn't just read various items off its stack and by doing
-so, see kernel memory it shouldn't be seeing?
+Correct.
 
-I'm guessing it does, otherwise this would be a bigger issue than this
-patch series.
+> I took a look at the upstream repo, and there's some existing RDPMC
+> support even though upstream never previously supported userspace
+> access. That support code uses PMSELR_EL0, which this series adds no
+> provisions for.
+>
+> Kernel-side, we'll need to either:
+>
+> * Document that PMSELR_EL0 is unreliable, and explcitly zero it within
+>   the kernel such that it cnanot be used as a covert channel. Get the
+>   tests updated to not rely on the never-previously-supported use of
+>   PMSELR_EL0.
+>
+> * Context switch PMSELR_EL0 (which'll IIUC is unreliable for big.LITTLE,
+>   even where the registers exist on each CPU).
 
--- Steve
+Whether we support userspace using PMSELR_EL0 or not, we just need to
+zero it when userspace access is enabled (like the dirty counters).
+When there's a context switch, the read sequence is going to be
+incremented and PMSELR_EL0 will need to be written to again.
+
+Rob
