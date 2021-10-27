@@ -2,197 +2,196 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5125FC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Oct 2021 20:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F6FC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Oct 2021 23:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DE2C610A4
-	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Oct 2021 20:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC53F610E5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Oct 2021 23:56:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240772AbhJ0UTT (ORCPT
+        id S229484AbhJ0X6f (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 27 Oct 2021 16:19:19 -0400
-Received: from mail-ot1-f42.google.com ([209.85.210.42]:41546 "EHLO
-        mail-ot1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240753AbhJ0UTQ (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 27 Oct 2021 16:19:16 -0400
-Received: by mail-ot1-f42.google.com with SMTP id v2-20020a05683018c200b0054e3acddd91so5317666ote.8;
-        Wed, 27 Oct 2021 13:16:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=HfrUN45cqHgCg9PtoxrLRh/H00SV7ZMBqcSirS6LsG8=;
-        b=c6SoL+SlMrwJ5wzDr//V9lfaCQUhD6m+WeCmgkZz1mSTIovvHZD3b7UsebyLjQzOkh
-         zGupLi+XIxu90kreH/E78fdIGqr8UeKp0Sh05NXTB1zYibyqRW7E0sC6mkuPPNF4U9CI
-         BZvZDdM2XOr6MTJrdqkkB/DPRkO95j+NTilRUIg0Yb8w45JZ80Wsn81wyvxs37+mWX7D
-         ekgIxXGMXl5MPfBbyFHPEHuyAB75PjlxmETnVtiyUycVQGh1qbiRdOAUs+x4dZbd9FqJ
-         Qvzn+IxACbR7XBNz8DrSTgf+gvjh+lORUBcw/hOcr8ImTlZQLuO9aGsAyLHMKFCe3juP
-         H52w==
-X-Gm-Message-State: AOAM533HztAqhe5EJyPklXu7E365XiQqfkkC9YWdf8I47Rzr+wFa2cBe
-        hzdUv9vBfjZ7UUdppXTtIQ==
-X-Google-Smtp-Source: ABdhPJy9IQFcsudy3M0TVBpWfuRRPMkoDZolYuHhAEh/VwV+4a7Jh+jWci4BvaqumrdXRRuLuqzwAg==
-X-Received: by 2002:a05:6830:1f5c:: with SMTP id u28mr26099975oth.3.1635365810288;
-        Wed, 27 Oct 2021 13:16:50 -0700 (PDT)
-Received: from xps15.herring.priv (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.googlemail.com with ESMTPSA id f10sm415332otc.26.2021.10.27.13.16.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Oct 2021 13:16:49 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org,
-        Raphael Gault <raphael.gault@arm.com>
-Subject: [PATCH v12 5/5] Documentation: arm64: Document PMU counters access from userspace
-Date:   Wed, 27 Oct 2021 15:16:41 -0500
-Message-Id: <20211027201641.2076427-6-robh@kernel.org>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20211027201641.2076427-1-robh@kernel.org>
-References: <20211027201641.2076427-1-robh@kernel.org>
+        Wed, 27 Oct 2021 19:58:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45584 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229474AbhJ0X6f (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 27 Oct 2021 19:58:35 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 16B576109F;
+        Wed, 27 Oct 2021 23:56:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1635378969;
+        bh=vkiMMBmyVknfXHRJpHX8+Ih6N4FKDhqqF+YZ+FdyRMc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Y0m6Aw3RXhvpOUygZb/eE/qvdSfLBGyt33oLHM9j86p7SJEsWHp9/Gjavxu8mvevy
+         Nm8jNr5NQF95npfNvNKZLRJB5FvEEqNvWHBU5Jln3vh2JEM5g0E1GmfE30fV2rEWH8
+         ruEwMVrS82Syh0ikRU3RZwN0QJAD07GIVQsEqxVLhjFgfqI94sGcKun8hLAHcoGIky
+         OV6JrwDUeFLDc/onVcfNRW4w8gKPBlUA9Kp9brnOgXID8+zEnTEWv7F+Mo6P9FIHRF
+         jAodRIKnDsq/YOhAk1a0SgjGrM4kgPBDBto6kIpBNnTQFE8jRz2pC2ngh+S532l/32
+         lkgMrj2I39Zyw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 69326410A1; Wed, 27 Oct 2021 20:56:06 -0300 (-03)
+Date:   Wed, 27 Oct 2021 20:56:06 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Alistair Francis <alistair.francis@opensource.wdc.com>
+Cc:     linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+        dvhart@infradead.org, tglx@linutronix.de,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, mingo@redhat.com, atish.patra@wdc.com,
+        linux-kernel@vger.kernel.org, arnd@arndb.de, alistair23@gmail.com,
+        mark.rutland@arm.com, peterz@infradead.org, dave@stgolabs.net,
+        Alistair Francis <alistair.francis@wdc.com>,
+        Davidlohr Bueso <dbueso@suse.de>
+Subject: Re: [PATCH v5 1/4] perf bench futex: Call the futex syscall from a
+ function
+Message-ID: <YXnnFj19AnEq4f+g@kernel.org>
+References: <20211022013343.2262938-1-alistair.francis@opensource.wdc.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211022013343.2262938-1-alistair.francis@opensource.wdc.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Raphael Gault <raphael.gault@arm.com>
+Em Fri, Oct 22, 2021 at 11:33:40AM +1000, Alistair Francis escreveu:
+> From: Alistair Francis <alistair.francis@wdc.com>
+> 
+> In preparation for a more complex futex() function let's convert the
+> current macro into two functions. We need two functions to avoid
+> compiler failures as the macro is overloaded.
+> 
+> This will allow us to include pre-processor conditionals in the futex
+> syscall functions.
 
-Add documentation to describe the access to the pmu hardware counters from
-userspace.
+Thanks, applied both patches.
 
-Signed-off-by: Raphael Gault <raphael.gault@arm.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-v12:
- - Add note about accessing PMU registers and PMSELR_EL0 being zeroed
-v11:
- - Rework chained event section to reflect 64-bit counter request may
-   fail and 32-bit counters may be 64-bit with upper bits UNKNOWN.
-v10:
- - Add details on perf_user_access sysctl
-v9:
- - No change
-v8:
- - Reword that config1:1 must always be set to request user access
-v7:
- - Merge into existing arm64 perf.rst
-v6:
-  - Update the chained event section with attr.config1 details
-v2:
-  - Update links to test examples
+- Arnaldo
 
-Changes from Raphael's v4:
-  - Convert to rSt
-  - Update chained event status
-  - Add section for heterogeneous systems
----
- Documentation/arm64/perf.rst | 78 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 77 insertions(+), 1 deletion(-)
+ 
+> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+> Acked-by: Davidlohr Bueso <dbueso@suse.de>
+> ---
+>  tools/perf/bench/futex.h | 43 ++++++++++++++++++++++++----------------
+>  1 file changed, 26 insertions(+), 17 deletions(-)
+> 
+> diff --git a/tools/perf/bench/futex.h b/tools/perf/bench/futex.h
+> index b3853aac3021c..ebdc2b032afc1 100644
+> --- a/tools/perf/bench/futex.h
+> +++ b/tools/perf/bench/futex.h
+> @@ -28,7 +28,7 @@ struct bench_futex_parameters {
+>  };
+>  
+>  /**
+> - * futex() - SYS_futex syscall wrapper
+> + * futex_syscall() - SYS_futex syscall wrapper
+>   * @uaddr:	address of first futex
+>   * @op:		futex op code
+>   * @val:	typically expected value of uaddr, but varies by op
+> @@ -38,17 +38,26 @@ struct bench_futex_parameters {
+>   * @val3:	varies by op
+>   * @opflags:	flags to be bitwise OR'd with op, such as FUTEX_PRIVATE_FLAG
+>   *
+> - * futex() is used by all the following futex op wrappers. It can also be
+> + * futex_syscall() is used by all the following futex op wrappers. It can also be
+>   * used for misuse and abuse testing. Generally, the specific op wrappers
+> - * should be used instead. It is a macro instead of an static inline function as
+> - * some of the types over overloaded (timeout is used for nr_requeue for
+> - * example).
+> + * should be used instead.
+>   *
+>   * These argument descriptions are the defaults for all
+>   * like-named arguments in the following wrappers except where noted below.
+>   */
+> -#define futex(uaddr, op, val, timeout, uaddr2, val3, opflags) \
+> -	syscall(SYS_futex, uaddr, op | opflags, val, timeout, uaddr2, val3)
+> +static inline int
+> +futex_syscall(volatile u_int32_t *uaddr, int op, u_int32_t val, struct timespec *timeout,
+> +	      volatile u_int32_t *uaddr2, int val3, int opflags)
+> +{
+> +	return syscall(SYS_futex, uaddr, op | opflags, val, timeout, uaddr2, val3);
+> +}
+> +
+> +static inline int
+> +futex_syscall_nr_requeue(volatile u_int32_t *uaddr, int op, u_int32_t val, int nr_requeue,
+> +			 volatile u_int32_t *uaddr2, int val3, int opflags)
+> +{
+> +	return syscall(SYS_futex, uaddr, op | opflags, val, nr_requeue, uaddr2, val3);
+> +}
+>  
+>  /**
+>   * futex_wait() - block on uaddr with optional timeout
+> @@ -57,7 +66,7 @@ struct bench_futex_parameters {
+>  static inline int
+>  futex_wait(u_int32_t *uaddr, u_int32_t val, struct timespec *timeout, int opflags)
+>  {
+> -	return futex(uaddr, FUTEX_WAIT, val, timeout, NULL, 0, opflags);
+> +	return futex_syscall(uaddr, FUTEX_WAIT, val, timeout, NULL, 0, opflags);
+>  }
+>  
+>  /**
+> @@ -67,7 +76,7 @@ futex_wait(u_int32_t *uaddr, u_int32_t val, struct timespec *timeout, int opflag
+>  static inline int
+>  futex_wake(u_int32_t *uaddr, int nr_wake, int opflags)
+>  {
+> -	return futex(uaddr, FUTEX_WAKE, nr_wake, NULL, NULL, 0, opflags);
+> +	return futex_syscall(uaddr, FUTEX_WAKE, nr_wake, NULL, NULL, 0, opflags);
+>  }
+>  
+>  /**
+> @@ -76,7 +85,7 @@ futex_wake(u_int32_t *uaddr, int nr_wake, int opflags)
+>  static inline int
+>  futex_lock_pi(u_int32_t *uaddr, struct timespec *timeout, int opflags)
+>  {
+> -	return futex(uaddr, FUTEX_LOCK_PI, 0, timeout, NULL, 0, opflags);
+> +	return futex_syscall(uaddr, FUTEX_LOCK_PI, 0, timeout, NULL, 0, opflags);
+>  }
+>  
+>  /**
+> @@ -85,7 +94,7 @@ futex_lock_pi(u_int32_t *uaddr, struct timespec *timeout, int opflags)
+>  static inline int
+>  futex_unlock_pi(u_int32_t *uaddr, int opflags)
+>  {
+> -	return futex(uaddr, FUTEX_UNLOCK_PI, 0, NULL, NULL, 0, opflags);
+> +	return futex_syscall(uaddr, FUTEX_UNLOCK_PI, 0, NULL, NULL, 0, opflags);
+>  }
+>  
+>  /**
+> @@ -97,8 +106,8 @@ static inline int
+>  futex_cmp_requeue(u_int32_t *uaddr, u_int32_t val, u_int32_t *uaddr2, int nr_wake,
+>  		 int nr_requeue, int opflags)
+>  {
+> -	return futex(uaddr, FUTEX_CMP_REQUEUE, nr_wake, nr_requeue, uaddr2,
+> -		 val, opflags);
+> +	return futex_syscall_nr_requeue(uaddr, FUTEX_CMP_REQUEUE, nr_wake, nr_requeue, uaddr2,
+> +					val, opflags);
+>  }
+>  
+>  /**
+> @@ -113,8 +122,8 @@ static inline int
+>  futex_wait_requeue_pi(u_int32_t *uaddr, u_int32_t val, u_int32_t *uaddr2,
+>  		      struct timespec *timeout, int opflags)
+>  {
+> -	return futex(uaddr, FUTEX_WAIT_REQUEUE_PI, val, timeout, uaddr2, 0,
+> -		     opflags);
+> +	return futex_syscall(uaddr, FUTEX_WAIT_REQUEUE_PI, val, timeout, uaddr2, 0,
+> +			     opflags);
+>  }
+>  
+>  /**
+> @@ -130,8 +139,8 @@ static inline int
+>  futex_cmp_requeue_pi(u_int32_t *uaddr, u_int32_t val, u_int32_t *uaddr2,
+>  		     int nr_requeue, int opflags)
+>  {
+> -	return futex(uaddr, FUTEX_CMP_REQUEUE_PI, 1, nr_requeue, uaddr2,
+> -		     val, opflags);
+> +	return futex_syscall_nr_requeue(uaddr, FUTEX_CMP_REQUEUE_PI, 1, nr_requeue, uaddr2,
+> +					val, opflags);
+>  }
+>  
+>  #endif /* _FUTEX_H */
+> -- 
+> 2.31.1
 
-diff --git a/Documentation/arm64/perf.rst b/Documentation/arm64/perf.rst
-index b567f177d385..1f87b57c2332 100644
---- a/Documentation/arm64/perf.rst
-+++ b/Documentation/arm64/perf.rst
-@@ -2,7 +2,10 @@
- 
- .. _perf_index:
- 
--=====================
-+====
-+Perf
-+====
-+
- Perf Event Attributes
- =====================
- 
-@@ -88,3 +91,76 @@ exclude_host. However when using !exclude_hv there is a small blackout
- window at the guest entry/exit where host events are not captured.
- 
- On VHE systems there are no blackout windows.
-+
-+Perf Userspace PMU Hardware Counter Access
-+==========================================
-+
-+Overview
-+--------
-+The perf userspace tool relies on the PMU to monitor events. It offers an
-+abstraction layer over the hardware counters since the underlying
-+implementation is cpu-dependent.
-+Arm64 allows userspace tools to have access to the registers storing the
-+hardware counters' values directly.
-+
-+This targets specifically self-monitoring tasks in order to reduce the overhead
-+by directly accessing the registers without having to go through the kernel.
-+
-+How-to
-+------
-+The focus is set on the armv8 PMUv3 which makes sure that the access to the pmu
-+registers is enabled and that the userspace has access to the relevant
-+information in order to use them.
-+
-+In order to have access to the hardware counters, the global sysctl
-+kernel/perf_user_access must first be enabled:
-+
-+.. code-block:: sh
-+
-+  echo 1 > /proc/sys/kernel/perf_user_access
-+
-+It is necessary to open the event using the perf tool interface with config1:1
-+attr bit set: the sys_perf_event_open syscall returns a fd which can
-+subsequently be used with the mmap syscall in order to retrieve a page of memory
-+containing information about the event. The PMU driver uses this page to expose
-+to the user the hardware counter's index and other necessary data. Using this
-+index enables the user to access the PMU registers using the `mrs` instruction.
-+Access to the PMU registers is only valid while the sequence lock is unchanged.
-+In particular, the PMSELR_EL0 register is zeroed each time the sequence lock is
-+changed.
-+
-+The userspace access is supported in libperf using the perf_evsel__mmap()
-+and perf_evsel__read() functions. See `tools/lib/perf/tests/test-evsel.c`_ for
-+an example.
-+
-+About heterogeneous systems
-+---------------------------
-+On heterogeneous systems such as big.LITTLE, userspace PMU counter access can
-+only be enabled when the tasks are pinned to a homogeneous subset of cores and
-+the corresponding PMU instance is opened by specifying the 'type' attribute.
-+The use of generic event types is not supported in this case.
-+
-+Have a look at `tools/perf/arch/arm64/tests/user-events.c`_ for an example. It
-+can be run using the perf tool to check that the access to the registers works
-+correctly from userspace:
-+
-+.. code-block:: sh
-+
-+  perf test -v user
-+
-+About chained events and counter sizes
-+--------------------------------------
-+The user can request either a 32-bit (config1:0 == 0) or 64-bit (config1:0 == 1)
-+counter along with userspace access. The sys_perf_event_open syscall will fail
-+if a 64-bit counter is requested and the hardware doesn't support 64-bit
-+counters. Chained events are not supported in conjunction with userspace counter
-+access. If a 32-bit counter is requested on hardware with 64-bit counters, then
-+userspace must treat the upper 32-bits read from the counter as UNKNOWN. The
-+'pmc_width' field in the user page will indicate the valid width of the counter
-+and should be used to mask the upper bits as needed.
-+
-+.. Links
-+.. _tools/perf/arch/arm64/tests/user-events.c:
-+   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/arch/arm64/tests/user-events.c
-+.. _tools/lib/perf/tests/test-evsel.c:
-+   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/lib/perf/tests/test-evsel.c
 -- 
-2.32.0
 
+- Arnaldo
