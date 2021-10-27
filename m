@@ -2,148 +2,93 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA76C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Oct 2021 18:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2929FC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Oct 2021 09:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 841BC61002
-	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Oct 2021 18:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B85760EDF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Oct 2021 09:52:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238425AbhJZTAM (ORCPT
+        id S236854AbhJ0JzI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 26 Oct 2021 15:00:12 -0400
-Received: from mail-ot1-f45.google.com ([209.85.210.45]:39436 "EHLO
-        mail-ot1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231592AbhJZTAL (ORCPT
+        Wed, 27 Oct 2021 05:55:08 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:26197 "EHLO
+        szxga03-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235583AbhJ0JzH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 26 Oct 2021 15:00:11 -0400
-Received: by mail-ot1-f45.google.com with SMTP id e59-20020a9d01c1000000b00552c91a99f7so57018ote.6;
-        Tue, 26 Oct 2021 11:57:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yXb5tcc4h5n8tVs/+ZyUdUiPi8sa74ADcNZ1YwYZr1s=;
-        b=A/qSHwluftK0AAMBAeo4Janw8W+YWllhlyoh8yrbBG5GHPwX6pWd4cgWsy5/ND7FAo
-         SBfm9IGo0SEDAf6lZZghSvuk0eIR1/NjrgUYyqWCOttOmvps3JMYyMs6dli57QXVd/br
-         CVkoWvEDJ7OhGV83QmjmpUO2N9FOXqIsCs9ghoev865OWeAOJY37ERSoKVIKNaTLS12E
-         coJTfWdxIb8tVgFetDK9N8e4612gbZn/lYMf/DmnAu8XhL4z3pcnXwTWSEZCRgTSN4k9
-         UKjcDZlCHewhrlfECPl/O23zFxZ5lXKL86EAkb1Vbh+DzHe6B1InakJ75o/dRZGJw80A
-         Htnw==
-X-Gm-Message-State: AOAM533F+mcZdjpZnUG4ajl1Ba0QItufX/HeFyAiyvB5FjQGt+0N65CB
-        ZqZpt9Z161mk7nq6loxKSw==
-X-Google-Smtp-Source: ABdhPJwEJfXe5iZi4Vv8sIh0PxJX00V4HchBP4pLf1W0FS/HoJN7GA+G5Fl71yFEWjMyw/vG8nFccQ==
-X-Received: by 2002:a9d:57c9:: with SMTP id q9mr2845956oti.281.1635274667337;
-        Tue, 26 Oct 2021 11:57:47 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id k26sm596627otp.42.2021.10.26.11.57.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Oct 2021 11:57:46 -0700 (PDT)
-Received: (nullmailer pid 3030040 invoked by uid 1000);
-        Tue, 26 Oct 2021 18:57:45 -0000
-Date:   Tue, 26 Oct 2021 13:57:45 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     linux-kernel@vger.kernel.org, Anup Patel <anup.patel@wdc.com>,
-        David Abdurachmanov <david.abdurachmanov@sifive.com>,
-        devicetree@vger.kernel.org, Greentime Hu <greentime.hu@sifive.com>,
-        Guo Ren <guoren@linux.alibaba.com>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-        Nick Kossifidis <mick@ics.forth.gr>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Vincent Chen <vincent.chen@sifive.com>
-Subject: Re: [v4 06/11] dt-binding: pmu: Add RISC-V PMU DT bindings
-Message-ID: <YXhPqfpXh1VZN07T@robh.at.kernel.org>
-References: <20211025195350.242914-1-atish.patra@wdc.com>
- <20211025195350.242914-7-atish.patra@wdc.com>
+        Wed, 27 Oct 2021 05:55:07 -0400
+Received: from dggeme762-chm.china.huawei.com (unknown [172.30.72.57])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4HfP8h6XbRz8tt7;
+        Wed, 27 Oct 2021 17:51:16 +0800 (CST)
+Received: from huawei.com (10.67.189.2) by dggeme762-chm.china.huawei.com
+ (10.3.19.108) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.15; Wed, 27
+ Oct 2021 17:52:38 +0800
+From:   Lexi Shao <shaolexi@huawei.com>
+To:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <acme@kernel.org>, <mark.rutland@arm.com>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <namhyung@kernel.org>, <shaolexi@huawei.com>,
+        <qiuxi1@huawei.com>, <nixiaoming@huawei.com>,
+        <wangbing6@huawei.com>
+Subject: [PATCH] perf symbol: ignore $a/$d symbols for ARM modules
+Date:   Wed, 27 Oct 2021 17:52:35 +0800
+Message-ID: <20211027095235.123358-1-shaolexi@huawei.com>
+X-Mailer: git-send-email 2.12.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211025195350.242914-7-atish.patra@wdc.com>
+Content-Type: text/plain
+X-Originating-IP: [10.67.189.2]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Oct 25, 2021 at 12:53:45PM -0700, Atish Patra wrote:
-> This patch adds the DT bindings for RISC-V PMU driver. It also defines
-> the interrupt related properties to allow counter overflow interrupt.
-> 
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> ---
->  .../devicetree/bindings/perf/riscv,pmu.yaml   | 51 +++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/perf/riscv,pmu.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/perf/riscv,pmu.yaml b/Documentation/devicetree/bindings/perf/riscv,pmu.yaml
-> new file mode 100644
-> index 000000000000..497caad63f16
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/perf/riscv,pmu.yaml
-> @@ -0,0 +1,51 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pmu/riscv,pmu.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: RISC-V PMU
-> +
-> +maintainers:
-> +  - Atish Patra <atish.patra@wdc.com>
-> +
-> +description:
-> +  The "Sscofpmf" extension allows the RISC-V PMU counters to overflow and
-> +  generate a local interrupt so that event sampling can be done from user-space.
-> +  The above said ISA extension is an optional extension to maintain backward
-> +  compatibility and will be included in privilege specification v1.12 . That's
-> +  why the interrupt property is marked as optional. The platforms with sscofpmf
-> +  extension should add this property to enable event sampling.
-> +  The device tree node with the compatible string is mandatory for any platform
-> +  that wants to use pmu counter start/stop methods using SBI PMU extension.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - riscv,pmu
+On ARM machine, kernel symbols from modules can be resolved to $a
+instead of printing the actual symbol name. Ignore symbols starting with
+"$" when building kallsyms rbtree.
 
-Only 1 version? Every implementation detail is discoverable in other 
-ways?
+A sample stacktrace is shown as follows:
 
-> +
-> +    description:
-> +      Should be "riscv,pmu".
+c0f2e39c schedule_hrtimeout+0x14 ([kernel.kallsyms])
+bf4a66d8 $a+0x78 ([test_module])
+c0a4f5f4 kthread+0x15c ([kernel.kallsyms])
+c0a001f8 ret_from_fork+0x14 ([kernel.kallsyms])
 
-Don't write free form text of what the schema says.
+On ARM machine, $a/$d symbols are used by the compiler to mark the
+beginning of code/data part in code section. These symbols are filtered
+out when linking vmlinux(see scripts/kallsyms.c ignored_prefixes), but
+are left on modules. So there are $a symbols in /proc/kallsyms which
+share the same addresses with the actual module symbols and confuses perf
+when resolving symbols.
 
-> +
-> +  interrupts-extended:
-> +    minItems: 1
-> +    maxItems: 4095
-> +
-> +additionalProperties: false
-> +
-> +required:
-> +  - None
-> +optional:
+After this patch, the module symbol name is printed:
 
-No a json-schema keyword.
+c0f2e39c schedule_hrtimeout+0x14 ([kernel.kallsyms])
+bf4a66d8 test_func+0x78 ([test_module])
+c0a4f5f4 kthread+0x15c ([kernel.kallsyms])
+c0a001f8 ret_from_fork+0x14 ([kernel.kallsyms])
 
-> +  - compatible
-> +  - interrupts-extended
-> +
-> +examples:
-> +  - |
-> +    pmu {
-> +      compatible = "riscv,pmu";
-> +      interrupts-extended = <&cpu0intc 13>,
-> +                            <&cpu1intc 13>,
-> +                            <&cpu2intc 13>,
-> +                            <&cpu3intc 13>;
-> +    };
-> +...
-> -- 
-> 2.31.1
-> 
-> 
+Signed-off-by: Lexi Shao <shaolexi@huawei.com>
+---
+ tools/perf/util/symbol.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 0fc9a5410739..35116aed74eb 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -702,6 +702,10 @@ static int map__process_kallsym_symbol(void *arg, const char *name,
+ 	if (!symbol_type__filter(type))
+ 		return 0;
+ 
++	/* Ignore local symbols for ARM modules */
++	if (name[0] == '$')
++		return 0;
++
+ 	/*
+ 	 * module symbols are not sorted so we add all
+ 	 * symbols, setting length to 0, and rely on
+-- 
+2.12.3
+
