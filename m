@@ -2,107 +2,119 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF9AC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Oct 2021 12:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D9AC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Oct 2021 12:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF17260F70
-	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Oct 2021 12:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FDDC6103C
+	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Oct 2021 12:31:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237491AbhJ0MX2 (ORCPT
+        id S236079AbhJ0Mdn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 27 Oct 2021 08:23:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:42740 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237238AbhJ0MX1 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 27 Oct 2021 08:23:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 10D541FB;
-        Wed, 27 Oct 2021 05:21:02 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.72.240])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 360BE3F73D;
-        Wed, 27 Oct 2021 05:20:59 -0700 (PDT)
-Date:   Wed, 27 Oct 2021 13:20:56 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Honnappa Nagarahalli <honnappa.nagarahalli@arm.com>,
-        Zachary.Leaf@arm.com, Catalin Marinas <catalin.marinas@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v11 0/5] arm64 userspace counter support
-Message-ID: <20211027122056.GD54628@C02TD0UTHF1T.local>
-References: <20211019231907.1009567-1-robh@kernel.org>
- <20211026131039.GC34073@C02TD0UTHF1T.local>
- <CAL_Jsq+JLcWESzGzjsmrir+gCFEO88YMYdj+FOBhjZgSBNOeVA@mail.gmail.com>
+        Wed, 27 Oct 2021 08:33:43 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:26128 "EHLO
+        szxga08-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231497AbhJ0Mdm (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 27 Oct 2021 08:33:42 -0400
+Received: from dggeme762-chm.china.huawei.com (unknown [172.30.72.53])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4HfSg15f6dz1DHtb;
+        Wed, 27 Oct 2021 20:29:17 +0800 (CST)
+Received: from huawei.com (10.67.189.2) by dggeme762-chm.china.huawei.com
+ (10.3.19.108) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.15; Wed, 27
+ Oct 2021 20:31:13 +0800
+From:   Lexi Shao <shaolexi@huawei.com>
+To:     <james.clark@arm.com>
+CC:     <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>, <mark.rutland@arm.com>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <nixiaoming@huawei.com>,
+        <peterz@infradead.org>, <qiuxi1@huawei.com>, <shaolexi@huawei.com>,
+        <wangbing6@huawei.com>
+Subject: Re: [PATCH] perf symbol: ignore $a/$d symbols for ARM modules
+Date:   Wed, 27 Oct 2021 20:31:08 +0800
+Message-ID: <20211027123108.126944-1-shaolexi@huawei.com>
+X-Mailer: git-send-email 2.12.3
+In-Reply-To: <1b7fa65a-7587-b7c4-2dc0-d0f389200671@arm.com>
+References: <1b7fa65a-7587-b7c4-2dc0-d0f389200671@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+JLcWESzGzjsmrir+gCFEO88YMYdj+FOBhjZgSBNOeVA@mail.gmail.com>
+Content-Type: text/plain
+X-Originating-IP: [10.67.189.2]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Oct 26, 2021 at 08:34:35AM -0500, Rob Herring wrote:
-> On Tue, Oct 26, 2021 at 8:10 AM Mark Rutland <mark.rutland@arm.com> wrote:
-> >
-> > On Tue, Oct 19, 2021 at 06:19:02PM -0500, Rob Herring wrote:
-> > > Another version of arm64 userspace counter access support.
-> > >
-> > > The arm64 support departs from the x86 implementation by requiring the user
-> > > to explicitly request user access (via attr.config1) and only enables access
-> > > for task bound events. Since usage is explicitly requested, access is
-> > > enabled at perf_event_open() rather than on mmap() as that greatly
-> > > simplifies the implementation. Rather than trying to lock down the access
-> > > as the x86 implementation has been doing, we can start with only a limited
-> > > use case enabled and later expand it if needed.
-> > >
-> > > I've run this version thru Vince's perf tests[13] with arm64 support added.
-> > > I wish I'd found these tests sooner...
-> >
-> > When you say "with arm64 support added", do you mean with patches not
-> > yet upstreamed?
-> 
-> Correct.
+On 27/10/2021 18:24, James Clark wrote:
+>On 27/10/2021 10:52, Lexi Shao wrote:
+>> On ARM machine, kernel symbols from modules can be resolved to $a
+>> instead of printing the actual symbol name. Ignore symbols starting with
+>> "$" when building kallsyms rbtree.
+>> 
+>> A sample stacktrace is shown as follows:
+>> 
+>> c0f2e39c schedule_hrtimeout+0x14 ([kernel.kallsyms])
+>> bf4a66d8 $a+0x78 ([test_module])
+>> c0a4f5f4 kthread+0x15c ([kernel.kallsyms])
+>> c0a001f8 ret_from_fork+0x14 ([kernel.kallsyms])
+>> 
+>> On ARM machine, $a/$d symbols are used by the compiler to mark the
+>> beginning of code/data part in code section. These symbols are filtered
+>> out when linking vmlinux(see scripts/kallsyms.c ignored_prefixes), but
+>> are left on modules. So there are $a symbols in /proc/kallsyms which
+>> share the same addresses with the actual module symbols and confuses perf
+>> when resolving symbols.
+>
+>Hi Lexi,
+>
+>Is it worth using or re-implementing the entire is_ignored_symbol() function
+>from scripts/kallsyms.c? It seems like this change only fixes one occurrence,
+>but is_ignored_symbol() has a big list of other cases.
+>
+>Unless those cases are different?
+>
+>Thanks
+>James
 
-Did that require significant changes? I'd like to be able to run the
-tests locally if possible.
+Hi James,
 
-> > I took a look at the upstream repo, and there's some existing RDPMC
-> > support even though upstream never previously supported userspace
-> > access. That support code uses PMSELR_EL0, which this series adds no
-> > provisions for.
-> >
-> > Kernel-side, we'll need to either:
-> >
-> > * Document that PMSELR_EL0 is unreliable, and explcitly zero it within
-> >   the kernel such that it cnanot be used as a covert channel. Get the
-> >   tests updated to not rely on the never-previously-supported use of
-> >   PMSELR_EL0.
-> >
-> > * Context switch PMSELR_EL0 (which'll IIUC is unreliable for big.LITTLE,
-> >   even where the registers exist on each CPU).
-> 
-> Whether we support userspace using PMSELR_EL0 or not, we just need to
-> zero it when userspace access is enabled (like the dirty counters).
+I don't think it's necessary to cover all the cases listed in
+is_ignored_symbol(). As long as the symbols are unique and not overlapping
+with each other, they should't cause problems in resolving symbols. So most
+of the cases in is_ignored_symbol() should be irrelevant.
 
-Sure; doing that in armv8pmu_enable_user_access() makes sense to me,
-given it's not exposed to userspace otherwise, and the kernel itself
-doesn't care.
+Lexi
 
-If we do that, I think that we should document that it may be zero'd
-arbitrarily from userspace's PoV. That should only need a sentence or
-two in the documentation added in the final patch.
-
-Thanks,
-Mark.
+>
+>> 
+>> After this patch, the module symbol name is printed:
+>> 
+>> c0f2e39c schedule_hrtimeout+0x14 ([kernel.kallsyms])
+>> bf4a66d8 test_func+0x78 ([test_module])
+>> c0a4f5f4 kthread+0x15c ([kernel.kallsyms])
+>> c0a001f8 ret_from_fork+0x14 ([kernel.kallsyms])
+>> 
+>> Signed-off-by: Lexi Shao <shaolexi@huawei.com>
+>> ---
+>>  tools/perf/util/symbol.c | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>> 
+>> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+>> index 0fc9a5410739..35116aed74eb 100644
+>> --- a/tools/perf/util/symbol.c
+>> +++ b/tools/perf/util/symbol.c
+>> @@ -702,6 +702,10 @@ static int map__process_kallsym_symbol(void *arg, const char *name,
+>>  	if (!symbol_type__filter(type))
+>>  		return 0;
+>>  
+>> +	/* Ignore local symbols for ARM modules */
+>> +	if (name[0] == '$')
+>> +		return 0;
+>> +
+>>  	/*
+>>  	 * module symbols are not sorted so we add all
+>>  	 * symbols, setting length to 0, and rely on
+>>
+>
