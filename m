@@ -2,42 +2,42 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3372AC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Oct 2021 20:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 358CDC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Oct 2021 20:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B39E610A0
-	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Oct 2021 20:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F47B610A4
+	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Oct 2021 20:16:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240606AbhJ0UTK (ORCPT
+        id S240699AbhJ0UTP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 27 Oct 2021 16:19:10 -0400
-Received: from mail-oi1-f171.google.com ([209.85.167.171]:37748 "EHLO
-        mail-oi1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240545AbhJ0UTK (ORCPT
+        Wed, 27 Oct 2021 16:19:15 -0400
+Received: from mail-oi1-f173.google.com ([209.85.167.173]:37754 "EHLO
+        mail-oi1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240671AbhJ0UTL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 27 Oct 2021 16:19:10 -0400
-Received: by mail-oi1-f171.google.com with SMTP id o83so5112087oif.4;
-        Wed, 27 Oct 2021 13:16:44 -0700 (PDT)
+        Wed, 27 Oct 2021 16:19:11 -0400
+Received: by mail-oi1-f173.google.com with SMTP id o83so5112182oif.4;
+        Wed, 27 Oct 2021 13:16:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ittPuaaAb6BbKzqxfVLQuW2CwyJEQqA2ePbGsF19zjE=;
-        b=dnMAZ3ML3PZflbp+G09jcX2jOfxmpwBSq/E4w32nvywRklVvVgSF8jXU4KtEykGTvP
-         OBiPMSpprmrupMTvbFw91R0upwgxi0GMEWXYa1ISz7XPW1JYgQPTa3FhBmy0ohCAAvQj
-         SCm8ZeQ0hsmi+FvBQhzp0i/81SnGSU07dWjFdUOqIvAZJb0oPdHzVCsmZj0EfemgnImE
-         KA3MFBdli5a9/kH91JJMT7qFch2T8cHz0Renuaa5rv0RRBRsJqGH+fYGu40vVqE2KHeV
-         Dx6Rb6+XKae1thJ3k7zTEnDpOCxzbjPjoNyojz24Sww2Qs/KLxcEwsIFK/fW89dX3vXT
-         xhIA==
-X-Gm-Message-State: AOAM533N5uNxH8F31/d2Mbsb1JNQwjjUx3qOHPJH/xmoGE2qfBRINRk6
-        I9QA31YR9CHM/PFtR/lToQ==
-X-Google-Smtp-Source: ABdhPJz657ZUjEl8I5ysaYiAJX7ALgQnIAYmA2KNzZguf+Q46upto2BxVZAMPbObIlk6Pf6jaPbDuw==
-X-Received: by 2002:a05:6808:2181:: with SMTP id be1mr4052100oib.115.1635365804109;
-        Wed, 27 Oct 2021 13:16:44 -0700 (PDT)
+        bh=XglJs1OrxOGXDZwQ6Z0xWT/fdEEcMb5WDcdtHAA51Ao=;
+        b=3LUUhDrpVAIdEffQvEHKdYzu00qR+OQL2KM2+EqF3BPKf+jN+6KthuHdWNXih/0st6
+         1aYBv39CiO2OE94D6ZUghnnjlqdb1Mf+xkuAsNC/C3eRGgbei+6dY+M4+wZR/Cil+ogf
+         pbuD5tn3GgjKNQtAb+AfrJAq4MUmHuORb7DxBotHbq4PbNlld9bu2zhz+mhfGzxyNiHO
+         y/yWaNsnV0dQOzJgMhHZQaEjODg1KsqUm1ajSqsq7flV7mH23N/EeJNcBG+bpurMblfv
+         /FZcIoIQEde1xFsSfRi0e+NW2/JkQdKz5+tWVgl9iawe9/jpQ/uz2ZSb/1zcZjS31ZT3
+         yMqQ==
+X-Gm-Message-State: AOAM53152eX+7P16EyTHyMI5trtb53NSVHdk9P7k1lskP0+7yJMrSkye
+        6qwzNN2GF62DhG+JKlYsKQ==
+X-Google-Smtp-Source: ABdhPJxX3AiZ/vuirHgymgSIPu02dS9OiXOc1XMBNH12+W2iAg30s4MUs+CWgL849GrCzTZnN0NyYw==
+X-Received: by 2002:a05:6808:238a:: with SMTP id bp10mr5367505oib.30.1635365805635;
+        Wed, 27 Oct 2021 13:16:45 -0700 (PDT)
 Received: from xps15.herring.priv (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.googlemail.com with ESMTPSA id f10sm415332otc.26.2021.10.27.13.16.42
+        by smtp.googlemail.com with ESMTPSA id f10sm415332otc.26.2021.10.27.13.16.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Oct 2021 13:16:43 -0700 (PDT)
+        Wed, 27 Oct 2021 13:16:45 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
         Peter Zijlstra <peterz@infradead.org>
@@ -52,11 +52,10 @@ Cc:     Jonathan Corbet <corbet@lwn.net>,
         Borislav Petkov <bp@alien8.de>, x86@kernel.org,
         "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH v12 1/5] x86: perf: Move RDPMC event flag to a common definition
-Date:   Wed, 27 Oct 2021 15:16:37 -0500
-Message-Id: <20211027201641.2076427-2-robh@kernel.org>
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH v12 2/5] perf: Add a counter for number of user access events in context
+Date:   Wed, 27 Oct 2021 15:16:38 -0500
+Message-Id: <20211027201641.2076427-3-robh@kernel.org>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20211027201641.2076427-1-robh@kernel.org>
 References: <20211027201641.2076427-1-robh@kernel.org>
@@ -66,118 +65,60 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-In preparation to enable user counter access on arm64 and to move some
-of the user access handling to perf core, create a common event flag for
-user counter access and convert x86 to use it.
+For controlling user space counter access, we need to know if any event
+in a context (currently scheduled or not) is using user space counters.
+Walking the context's list of events would be slow, so add a counter
+to track this.
 
-Since the architecture specific flags start at the LSB, starting at the
-MSB for common flags.
-
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: linux-perf-users@vger.kernel.org
 Reviewed-by: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
-v11:
- - Move PERF_EVENT_FLAG_USER_READ_CNT definition above struct
+v10:
+ - Re-added.
+ - Maintain the count in the perf core
+v9:
+ - Dropped
+v8:
+ - new patch
 ---
- arch/x86/events/core.c       | 10 +++++-----
- arch/x86/events/perf_event.h |  2 +-
- include/linux/perf_event.h   |  9 +++++++++
- 3 files changed, 15 insertions(+), 6 deletions(-)
+ include/linux/perf_event.h | 1 +
+ kernel/events/core.c       | 4 ++++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 2a57dbed4894..2bd50fc061e1 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2469,7 +2469,7 @@ static int x86_pmu_event_init(struct perf_event *event)
- 
- 	if (READ_ONCE(x86_pmu.attr_rdpmc) &&
- 	    !(event->hw.flags & PERF_X86_EVENT_LARGE_PEBS))
--		event->hw.flags |= PERF_X86_EVENT_RDPMC_ALLOWED;
-+		event->hw.flags |= PERF_EVENT_FLAG_USER_READ_CNT;
- 
- 	return err;
- }
-@@ -2503,7 +2503,7 @@ void perf_clear_dirty_counters(void)
- 
- static void x86_pmu_event_mapped(struct perf_event *event, struct mm_struct *mm)
- {
--	if (!(event->hw.flags & PERF_X86_EVENT_RDPMC_ALLOWED))
-+	if (!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT))
- 		return;
- 
- 	/*
-@@ -2524,7 +2524,7 @@ static void x86_pmu_event_mapped(struct perf_event *event, struct mm_struct *mm)
- 
- static void x86_pmu_event_unmapped(struct perf_event *event, struct mm_struct *mm)
- {
--	if (!(event->hw.flags & PERF_X86_EVENT_RDPMC_ALLOWED))
-+	if (!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT))
- 		return;
- 
- 	if (atomic_dec_and_test(&mm->context.perf_rdpmc_allowed))
-@@ -2535,7 +2535,7 @@ static int x86_pmu_event_idx(struct perf_event *event)
- {
- 	struct hw_perf_event *hwc = &event->hw;
- 
--	if (!(hwc->flags & PERF_X86_EVENT_RDPMC_ALLOWED))
-+	if (!(hwc->flags & PERF_EVENT_FLAG_USER_READ_CNT))
- 		return 0;
- 
- 	if (is_metric_idx(hwc->idx))
-@@ -2718,7 +2718,7 @@ void arch_perf_update_userpage(struct perf_event *event,
- 	userpg->cap_user_time = 0;
- 	userpg->cap_user_time_zero = 0;
- 	userpg->cap_user_rdpmc =
--		!!(event->hw.flags & PERF_X86_EVENT_RDPMC_ALLOWED);
-+		!!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT);
- 	userpg->pmc_width = x86_pmu.cntval_bits;
- 
- 	if (!using_native_sched_clock() || !sched_clock_stable())
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index e3ac05c97b5e..49f68b15745f 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -73,7 +73,7 @@ static inline bool constraint_match(struct event_constraint *c, u64 ecode)
- #define PERF_X86_EVENT_PEBS_NA_HSW	0x0010 /* haswell style datala, unknown */
- #define PERF_X86_EVENT_EXCL		0x0020 /* HT exclusivity on counter */
- #define PERF_X86_EVENT_DYNAMIC		0x0040 /* dynamic alloc'd constraint */
--#define PERF_X86_EVENT_RDPMC_ALLOWED	0x0080 /* grant rdpmc permission */
-+
- #define PERF_X86_EVENT_EXCL_ACCT	0x0100 /* accounted EXCL event */
- #define PERF_X86_EVENT_AUTO_RELOAD	0x0200 /* use PEBS auto-reload */
- #define PERF_X86_EVENT_LARGE_PEBS	0x0400 /* use large PEBS */
 diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index fe156a8170aa..34ebcc9af608 100644
+index 34ebcc9af608..d733cac749e2 100644
 --- a/include/linux/perf_event.h
 +++ b/include/linux/perf_event.h
-@@ -128,6 +128,15 @@ struct hw_perf_event_extra {
- 	int		idx;	/* index in shared_regs->regs[] */
- };
+@@ -828,6 +828,7 @@ struct perf_event_context {
  
-+/**
-+ * hw_perf_event::flag values
-+ *
-+ * PERF_EVENT_FLAG_ARCH bits are reserved for architecture-specific
-+ * usage.
-+ */
-+#define PERF_EVENT_FLAG_ARCH			0x0000ffff
-+#define PERF_EVENT_FLAG_USER_READ_CNT		0x80000000
-+
- /**
-  * struct hw_perf_event - performance event hardware details:
-  */
+ 	int				nr_events;
+ 	int				nr_active;
++	int				nr_user;
+ 	int				is_active;
+ 	int				nr_stat;
+ 	int				nr_freq;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 744e8726c5b2..01290d150da3 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -1808,6 +1808,8 @@ list_add_event(struct perf_event *event, struct perf_event_context *ctx)
+ 
+ 	list_add_rcu(&event->event_entry, &ctx->event_list);
+ 	ctx->nr_events++;
++	if (event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT)
++		ctx->nr_user++;
+ 	if (event->attr.inherit_stat)
+ 		ctx->nr_stat++;
+ 
+@@ -1999,6 +2001,8 @@ list_del_event(struct perf_event *event, struct perf_event_context *ctx)
+ 	event->attach_state &= ~PERF_ATTACH_CONTEXT;
+ 
+ 	ctx->nr_events--;
++	if (event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT)
++		ctx->nr_user--;
+ 	if (event->attr.inherit_stat)
+ 		ctx->nr_stat--;
+ 
 -- 
 2.32.0
 
