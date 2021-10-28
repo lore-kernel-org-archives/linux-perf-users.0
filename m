@@ -2,202 +2,88 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC35EC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Oct 2021 11:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB32EC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Oct 2021 11:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 976C860249
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Oct 2021 11:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A822B60249
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Oct 2021 11:40:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230217AbhJ1LkH (ORCPT
+        id S230135AbhJ1LnS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 28 Oct 2021 07:40:07 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60132 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229578AbhJ1LkG (ORCPT
+        Thu, 28 Oct 2021 07:43:18 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4037 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230122AbhJ1LnR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 28 Oct 2021 07:40:06 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 19SApiRf027220;
-        Thu, 28 Oct 2021 11:37:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=mpKZsVC7bkqUHWPdhUOP1i5WrUtVyGSY/LjQMqONk40=;
- b=eCtdqseywteDJBLcESe3aGUSCOPWs0ARVg/H0LAItYKCNSNFdQKD4/raCZiv+yY85K+0
- q24cFmfUUwnJiigLGQDwsMIyIFh5EaCBHMt5YN871grTQr5UzMhgy1YHLmspZdYs2WpJ
- ptRtygmJYR9VnjO6vRxr69IHyE7rew9S0TIEaNlqsCvfzg5xrOklRUtsm8SCwvWb4hv4
- 24Gx/11Tzxo750cf/3pnRCzGl1M6ZVFzQ8lMJy6RgaQDgQJvbVRuIHwpGwG/bydvSvH4
- 25x2NlBmVcyYdb2tfKmGV42eDLexr6EUrv+n00lSCvY+FXgjZFKFkIVqz8KToE+X6T+1 iA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3bytfwrvkp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Oct 2021 11:37:33 +0000
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 19SBTScW026092;
-        Thu, 28 Oct 2021 11:37:33 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3bytfwrvjv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Oct 2021 11:37:33 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 19SBX3a7029551;
-        Thu, 28 Oct 2021 11:37:30 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma06ams.nl.ibm.com with ESMTP id 3bx4f1rj4v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Oct 2021 11:37:30 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 19SBbR9A60293376
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Oct 2021 11:37:27 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8338F4204F;
-        Thu, 28 Oct 2021 11:37:27 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8226F4204B;
-        Thu, 28 Oct 2021 11:37:23 +0000 (GMT)
-Received: from Madhavan.com (unknown [9.43.61.213])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 28 Oct 2021 11:37:23 +0000 (GMT)
-From:   Madhavan Srinivasan <maddy@linux.ibm.com>
-To:     acme@kernel.org, jolsa@redhat.com
-Cc:     michael@ellerman.id.au, eranian@google.com, mark.rutland@arm.com,
-        namhyung@kernel.org, kjain@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Madhavan Srinivasan <maddy@linux.ibm.com>
-Subject: [PATCH v3 2/2] tools/perf/test: Add endian test for struct branch_flags
-Date:   Thu, 28 Oct 2021 17:07:14 +0530
-Message-Id: <20211028113714.600549-2-maddy@linux.ibm.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20211028113714.600549-1-maddy@linux.ibm.com>
-References: <20211028113714.600549-1-maddy@linux.ibm.com>
+        Thu, 28 Oct 2021 07:43:17 -0400
+Received: from fraeml708-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Hg3Ss1wDfz67n0f;
+        Thu, 28 Oct 2021 19:37:33 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml708-chm.china.huawei.com (10.206.15.36) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.15; Thu, 28 Oct 2021 13:40:48 +0200
+Received: from [10.202.227.179] (10.202.227.179) by
+ lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.15; Thu, 28 Oct 2021 12:40:48 +0100
+Subject: Re: [PATCH v2 2/2] perf jevents: Enable warnings through HOSTCFLAGS
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     Jiri Olsa <jolsa@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "irogers@google.com" <irogers@google.com>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kjain@linux.ibm.com" <kjain@linux.ibm.com>,
+        "james.clark@arm.com" <james.clark@arm.com>
+References: <1634807805-40093-1-git-send-email-john.garry@huawei.com>
+ <1634807805-40093-3-git-send-email-john.garry@huawei.com>
+ <YXFhr2YoVp9GPsDM@krava> <86aee893-0b6b-bce3-d1aa-3b66365592d1@huawei.com>
+ <YXaXvGgvs4gr8Cgi@krava> <YXbZa8SaQta9pzHS@kernel.org>
+ <32d98804-7e56-e73b-4c66-8776dbf58ddf@huawei.com>
+ <YXqG0jb4qg4+x5DE@kernel.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <013643b0-a20f-eaa0-498b-44ba323a3209@huawei.com>
+Date:   Thu, 28 Oct 2021 12:40:47 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: HxSzh0wFoOJCXjfhmR_zxrwG1eQB9_u-
-X-Proofpoint-ORIG-GUID: pr32ZE8GJOhHxCnTsBziQkuBgwNqGWVZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
- definitions=2021-10-28_01,2021-10-26_01,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 mlxscore=0
- clxscore=1015 lowpriorityscore=0 phishscore=0 mlxlogscore=431
- impostorscore=0 spamscore=0 suspectscore=0 malwarescore=0
- priorityscore=1501 adultscore=0 bulkscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2110150000
- definitions=main-2110280063
+In-Reply-To: <YXqG0jb4qg4+x5DE@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.179]
+X-ClientProxiedBy: lhreml734-chm.china.huawei.com (10.201.108.85) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Extend sample-parsing test to include branch_flag
-bitfield-endian swap test. Patch include "util/trace-event.h"
-to sample-parsing for importing tep_is_bigendian() and
-extends samples_same() to include "needs_swap" to
-detect/enable check for bitfield-endian swap.
+On 28/10/2021 12:17, Arnaldo Carvalho de Melo wrote:
+>> Maybe, but then renaming back from KBUILD_HOSTCFLAGS -> HOSTCFLAGS seems odd
+>> as a fix
+>   
+>> Anyway, now that this original series is in perf/core,
+> Nope, just this one landed:
+> 
+> commit 342cb7ebf5e29fff4dc09ab2c8f37d710f8f5206
+> Author: John Garry<john.garry@huawei.com>
+> Date:   Thu Oct 21 17:16:44 2021 +0800
+> 
+>      perf jevents: Fix some would-be warnings
+> 
+> ---
+> 
+> The one you asked to wait for further discussion wasn't merged.
 
-Signed-off-by: Madhavan Srinivasan <maddy@linux.ibm.com>
----
-Changelog v2:
-- used tep_is_bigendian() instead bigendian()
-  to avoid perf test python fail.
-- Updated commit message
+ah, at I glance I saw my name and this patch and assumed both were in.
 
-Changelog v1:
-- Updated commit message
+OK, so I'll put together a new series soon and post that.
 
- tools/perf/tests/sample-parsing.c | 43 +++++++++++++++++++++++++++----
- 1 file changed, 38 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/tests/sample-parsing.c b/tools/perf/tests/sample-parsing.c
-index 8fd8a4ef97da..c83a11514129 100644
---- a/tools/perf/tests/sample-parsing.c
-+++ b/tools/perf/tests/sample-parsing.c
-@@ -13,6 +13,7 @@
- #include "evsel.h"
- #include "debug.h"
- #include "util/synthetic-events.h"
-+#include "util/trace-event.h"
- 
- #include "tests.h"
- 
-@@ -30,9 +31,18 @@
- 	}						\
- } while (0)
- 
-+/*
-+ * Hardcode the expected values for branch_entry flags.
-+ * These are based on the input value (213) specified
-+ * in branch_stack variable.
-+ */
-+#define BS_EXPECTED_BE	0xa00d000000000000
-+#define BS_EXPECTED_LE	0xd5000000
-+#define FLAG(s)	s->branch_stack->entries[i].flags
-+
- static bool samples_same(const struct perf_sample *s1,
- 			 const struct perf_sample *s2,
--			 u64 type, u64 read_format)
-+			 u64 type, u64 read_format, bool needs_swap)
- {
- 	size_t i;
- 
-@@ -100,8 +110,14 @@ static bool samples_same(const struct perf_sample *s1,
- 	if (type & PERF_SAMPLE_BRANCH_STACK) {
- 		COMP(branch_stack->nr);
- 		COMP(branch_stack->hw_idx);
--		for (i = 0; i < s1->branch_stack->nr; i++)
--			MCOMP(branch_stack->entries[i]);
-+		for (i = 0; i < s1->branch_stack->nr; i++) {
-+			if (needs_swap)
-+				return ((tep_is_bigendian()) ?
-+					(FLAG(s2).value == BS_EXPECTED_BE) :
-+					(FLAG(s2).value == BS_EXPECTED_LE));
-+			else
-+				MCOMP(branch_stack->entries[i]);
-+		}
- 	}
- 
- 	if (type & PERF_SAMPLE_REGS_USER) {
-@@ -248,7 +264,7 @@ static int do_test(u64 sample_type, u64 sample_regs, u64 read_format)
- 		},
- 	};
- 	struct sample_read_value values[] = {{1, 5}, {9, 3}, {2, 7}, {6, 4},};
--	struct perf_sample sample_out;
-+	struct perf_sample sample_out, sample_out_endian;
- 	size_t i, sz, bufsz;
- 	int err, ret = -1;
- 
-@@ -313,12 +329,29 @@ static int do_test(u64 sample_type, u64 sample_regs, u64 read_format)
- 		goto out_free;
- 	}
- 
--	if (!samples_same(&sample, &sample_out, sample_type, read_format)) {
-+	if (!samples_same(&sample, &sample_out, sample_type, read_format, evsel.needs_swap)) {
- 		pr_debug("parsing failed for sample_type %#"PRIx64"\n",
- 			 sample_type);
- 		goto out_free;
- 	}
- 
-+	if (sample_type == PERF_SAMPLE_BRANCH_STACK) {
-+		evsel.needs_swap = true;
-+		evsel.sample_size = __evsel__sample_size(sample_type);
-+		err = evsel__parse_sample(&evsel, event, &sample_out_endian);
-+		if (err) {
-+			pr_debug("%s failed for sample_type %#"PRIx64", error %d\n",
-+				 "evsel__parse_sample", sample_type, err);
-+			goto out_free;
-+		}
-+
-+		if (!samples_same(&sample, &sample_out_endian, sample_type, read_format, evsel.needs_swap)) {
-+			pr_debug("parsing failed for sample_type %#"PRIx64"\n",
-+				 sample_type);
-+			goto out_free;
-+		}
-+	}
-+
- 	ret = 0;
- out_free:
- 	free(event);
--- 
-2.31.1
-
+Thanks
