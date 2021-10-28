@@ -2,62 +2,63 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58CEBC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Oct 2021 11:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC35EC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Oct 2021 11:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36E3760249
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Oct 2021 11:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 976C860249
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Oct 2021 11:37:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230126AbhJ1LkE (ORCPT
+        id S230217AbhJ1LkH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 28 Oct 2021 07:40:04 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39674 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229578AbhJ1LkD (ORCPT
+        Thu, 28 Oct 2021 07:40:07 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60132 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229578AbhJ1LkG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 28 Oct 2021 07:40:03 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 19SAuIk7004020;
-        Thu, 28 Oct 2021 11:37:28 GMT
+        Thu, 28 Oct 2021 07:40:06 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 19SApiRf027220;
+        Thu, 28 Oct 2021 11:37:34 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=joIPSH0ykY2Qao0fpFQiHTKwQm8KchNNM+xHMAAYZ9Q=;
- b=BWMTZjonZ3mfJ+9qkA3S3jm0AKFUueGTmezUmNNDInQeAamnnCdaAY1pyVmEZBLsj3H1
- 6SaNu8xjOaSc/goWVHJ6trC6lpEs6xT9bw40lANMh14l5yqlEu/5XRhSw31i4rQMvMwt
- seu5egPjNBoGQ/XjETIhseJCviCq2zeS9FAaXlbLqjdJy8S6oFJaXwYUQm0dVQ6dO3x9
- 4gN4ijogXAz6Nc+Qm3qc9n1XmVv4RV7leWjkAJlnv1ieiFQo8DPXUw8Y3GzL0fqVQXgG
- V50hvGOwOWdIKmEHUA5e1U3fx9fwD2KOvB/DwP8rS7HbAW99VhFybbnoBkL9amQZKtfe jQ== 
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=mpKZsVC7bkqUHWPdhUOP1i5WrUtVyGSY/LjQMqONk40=;
+ b=eCtdqseywteDJBLcESe3aGUSCOPWs0ARVg/H0LAItYKCNSNFdQKD4/raCZiv+yY85K+0
+ q24cFmfUUwnJiigLGQDwsMIyIFh5EaCBHMt5YN871grTQr5UzMhgy1YHLmspZdYs2WpJ
+ ptRtygmJYR9VnjO6vRxr69IHyE7rew9S0TIEaNlqsCvfzg5xrOklRUtsm8SCwvWb4hv4
+ 24Gx/11Tzxo750cf/3pnRCzGl1M6ZVFzQ8lMJy6RgaQDgQJvbVRuIHwpGwG/bydvSvH4
+ 25x2NlBmVcyYdb2tfKmGV42eDLexr6EUrv+n00lSCvY+FXgjZFKFkIVqz8KToE+X6T+1 iA== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3byra2kne0-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3bytfwrvkp-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Oct 2021 11:37:27 +0000
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 19SBUbGD032477;
-        Thu, 28 Oct 2021 11:37:27 GMT
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3byra2kndp-1
+        Thu, 28 Oct 2021 11:37:33 +0000
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 19SBTScW026092;
+        Thu, 28 Oct 2021 11:37:33 GMT
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3bytfwrvjv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Oct 2021 11:37:27 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 19SBYf4v009961;
-        Thu, 28 Oct 2021 11:37:25 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 3bx4etghws-1
+        Thu, 28 Oct 2021 11:37:33 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 19SBX3a7029551;
+        Thu, 28 Oct 2021 11:37:30 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma06ams.nl.ibm.com with ESMTP id 3bx4f1rj4v-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Oct 2021 11:37:25 +0000
+        Thu, 28 Oct 2021 11:37:30 +0000
 Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 19SBVATP63832392
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 19SBbR9A60293376
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Oct 2021 11:31:10 GMT
+        Thu, 28 Oct 2021 11:37:27 GMT
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0030A4203F;
-        Thu, 28 Oct 2021 11:37:21 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 8338F4204F;
+        Thu, 28 Oct 2021 11:37:27 +0000 (GMT)
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 00A3A42041;
-        Thu, 28 Oct 2021 11:37:18 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 8226F4204B;
+        Thu, 28 Oct 2021 11:37:23 +0000 (GMT)
 Received: from Madhavan.com (unknown [9.43.61.213])
         by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 28 Oct 2021 11:37:17 +0000 (GMT)
+        Thu, 28 Oct 2021 11:37:23 +0000 (GMT)
 From:   Madhavan Srinivasan <maddy@linux.ibm.com>
 To:     acme@kernel.org, jolsa@redhat.com
 Cc:     michael@ellerman.id.au, eranian@google.com, mark.rutland@arm.com,
@@ -65,175 +66,138 @@ Cc:     michael@ellerman.id.au, eranian@google.com, mark.rutland@arm.com,
         atrajeev@linux.vnet.ibm.com, linux-perf-users@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Madhavan Srinivasan <maddy@linux.ibm.com>
-Subject: [PATCH v3 1/2] tools/perf: Add bitfield_swap to handle branch_stack endian issue
-Date:   Thu, 28 Oct 2021 17:07:13 +0530
-Message-Id: <20211028113714.600549-1-maddy@linux.ibm.com>
+Subject: [PATCH v3 2/2] tools/perf/test: Add endian test for struct branch_flags
+Date:   Thu, 28 Oct 2021 17:07:14 +0530
+Message-Id: <20211028113714.600549-2-maddy@linux.ibm.com>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20211028113714.600549-1-maddy@linux.ibm.com>
+References: <20211028113714.600549-1-maddy@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: heF2LXHBQeAxvn1RiKqvy9k5Kf6YnBu9
-X-Proofpoint-GUID: WrY2T6jdXt_U6AVRFEwgVnyT2XOFkE4s
+X-Proofpoint-GUID: HxSzh0wFoOJCXjfhmR_zxrwG1eQB9_u-
+X-Proofpoint-ORIG-GUID: pr32ZE8GJOhHxCnTsBziQkuBgwNqGWVZ
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
  definitions=2021-10-28_01,2021-10-26_01,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 suspectscore=0
- spamscore=0 impostorscore=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 phishscore=0 malwarescore=0 mlxlogscore=663 mlxscore=0
- bulkscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2110150000 definitions=main-2110280063
+X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 mlxscore=0
+ clxscore=1015 lowpriorityscore=0 phishscore=0 mlxlogscore=431
+ impostorscore=0 spamscore=0 suspectscore=0 malwarescore=0
+ priorityscore=1501 adultscore=0 bulkscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2110150000
+ definitions=main-2110280063
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-branch_stack struct has bit field definition which
-produces different bit ordering for big/little endian.
-Because of this, when branch_stack sample is collected
-in a BE system and viewed/reported in a LE system, bit
-fields of the branch stack are not presented properly.
-To address this issue, a evsel__bitfield_swap_branch_stack()
-is defined and introduced in evsel__parse_sample.
+Extend sample-parsing test to include branch_flag
+bitfield-endian swap test. Patch include "util/trace-event.h"
+to sample-parsing for importing tep_is_bigendian() and
+extends samples_same() to include "needs_swap" to
+detect/enable check for bitfield-endian swap.
 
 Signed-off-by: Madhavan Srinivasan <maddy@linux.ibm.com>
 ---
 Changelog v2:
 - used tep_is_bigendian() instead bigendian()
   to avoid perf test python fail.
- 
+- Updated commit message
+
 Changelog v1:
-- Renamed function and macro
-- Added comments in code
+- Updated commit message
 
- tools/perf/util/evsel.c | 77 +++++++++++++++++++++++++++++++++++++++--
- tools/perf/util/evsel.h | 13 +++++++
- 2 files changed, 88 insertions(+), 2 deletions(-)
+ tools/perf/tests/sample-parsing.c | 43 +++++++++++++++++++++++++++----
+ 1 file changed, 38 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index dbfeceb2546c..4e929b9d9718 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2221,6 +2221,54 @@ void __weak arch_perf_parse_sample_weight(struct perf_sample *data,
- 	data->weight = *array;
- }
+diff --git a/tools/perf/tests/sample-parsing.c b/tools/perf/tests/sample-parsing.c
+index 8fd8a4ef97da..c83a11514129 100644
+--- a/tools/perf/tests/sample-parsing.c
++++ b/tools/perf/tests/sample-parsing.c
+@@ -13,6 +13,7 @@
+ #include "evsel.h"
+ #include "debug.h"
+ #include "util/synthetic-events.h"
++#include "util/trace-event.h"
  
-+u64 evsel__bitfield_swap_branch_flags(u64 value)
-+{
-+	u64 new_val = 0;
+ #include "tests.h"
+ 
+@@ -30,9 +31,18 @@
+ 	}						\
+ } while (0)
+ 
++/*
++ * Hardcode the expected values for branch_entry flags.
++ * These are based on the input value (213) specified
++ * in branch_stack variable.
++ */
++#define BS_EXPECTED_BE	0xa00d000000000000
++#define BS_EXPECTED_LE	0xd5000000
++#define FLAG(s)	s->branch_stack->entries[i].flags
 +
-+	/*
-+	 * branch_flags
-+	 * union {
-+	 * 	u64 values;
-+	 * 	struct {
-+	 * 		mispred:1	//target mispredicted
-+	 * 		predicted:1	//target predicted
-+	 * 		in_tx:1		//in transaction
-+	 * 		abort:1		//transaction abort
-+	 * 		cycles:16	//cycle count to last branch
-+	 * 		type:4		//branch type
-+	 * 		reserved:40
-+	 * 	}
-+	 * }
-+	 *
-+	 * Avoid bswap64() the entire branch_flag.value,
-+	 * as it has variable bit-field sizes. Instead the
-+	 * macro takes the bit-field position/size,
-+	 * swaps it based on the host endianness.
-+	 *
-+	 * tep_is_bigendian() is used here instead of
-+	 * bigendian() to avoid python test fails.
-+	 */
-+	if (tep_is_bigendian()) {
-+		new_val = bitfield_swap(value, 0, 1);
-+		new_val |= bitfield_swap(value, 1, 1);
-+		new_val |= bitfield_swap(value, 2, 1);
-+		new_val |= bitfield_swap(value, 3, 1);
-+		new_val |= bitfield_swap(value, 4, 16);
-+		new_val |= bitfield_swap(value, 20, 4);
-+		new_val |= bitfield_swap(value, 24, 40);
-+	} else {
-+		new_val = bitfield_swap(value, 63, 1);
-+		new_val |= bitfield_swap(value, 62, 1);
-+		new_val |= bitfield_swap(value, 61, 1);
-+		new_val |= bitfield_swap(value, 60, 1);
-+		new_val |= bitfield_swap(value, 44, 16);
-+		new_val |= bitfield_swap(value, 40, 4);
-+		new_val |= bitfield_swap(value, 0, 40);
+ static bool samples_same(const struct perf_sample *s1,
+ 			 const struct perf_sample *s2,
+-			 u64 type, u64 read_format)
++			 u64 type, u64 read_format, bool needs_swap)
+ {
+ 	size_t i;
+ 
+@@ -100,8 +110,14 @@ static bool samples_same(const struct perf_sample *s1,
+ 	if (type & PERF_SAMPLE_BRANCH_STACK) {
+ 		COMP(branch_stack->nr);
+ 		COMP(branch_stack->hw_idx);
+-		for (i = 0; i < s1->branch_stack->nr; i++)
+-			MCOMP(branch_stack->entries[i]);
++		for (i = 0; i < s1->branch_stack->nr; i++) {
++			if (needs_swap)
++				return ((tep_is_bigendian()) ?
++					(FLAG(s2).value == BS_EXPECTED_BE) :
++					(FLAG(s2).value == BS_EXPECTED_LE));
++			else
++				MCOMP(branch_stack->entries[i]);
++		}
+ 	}
+ 
+ 	if (type & PERF_SAMPLE_REGS_USER) {
+@@ -248,7 +264,7 @@ static int do_test(u64 sample_type, u64 sample_regs, u64 read_format)
+ 		},
+ 	};
+ 	struct sample_read_value values[] = {{1, 5}, {9, 3}, {2, 7}, {6, 4},};
+-	struct perf_sample sample_out;
++	struct perf_sample sample_out, sample_out_endian;
+ 	size_t i, sz, bufsz;
+ 	int err, ret = -1;
+ 
+@@ -313,12 +329,29 @@ static int do_test(u64 sample_type, u64 sample_regs, u64 read_format)
+ 		goto out_free;
+ 	}
+ 
+-	if (!samples_same(&sample, &sample_out, sample_type, read_format)) {
++	if (!samples_same(&sample, &sample_out, sample_type, read_format, evsel.needs_swap)) {
+ 		pr_debug("parsing failed for sample_type %#"PRIx64"\n",
+ 			 sample_type);
+ 		goto out_free;
+ 	}
+ 
++	if (sample_type == PERF_SAMPLE_BRANCH_STACK) {
++		evsel.needs_swap = true;
++		evsel.sample_size = __evsel__sample_size(sample_type);
++		err = evsel__parse_sample(&evsel, event, &sample_out_endian);
++		if (err) {
++			pr_debug("%s failed for sample_type %#"PRIx64", error %d\n",
++				 "evsel__parse_sample", sample_type, err);
++			goto out_free;
++		}
++
++		if (!samples_same(&sample, &sample_out_endian, sample_type, read_format, evsel.needs_swap)) {
++			pr_debug("parsing failed for sample_type %#"PRIx64"\n",
++				 sample_type);
++			goto out_free;
++		}
 +	}
 +
-+	return new_val;
-+}
-+
- int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 			struct perf_sample *data)
- {
-@@ -2408,6 +2456,8 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 	if (type & PERF_SAMPLE_BRANCH_STACK) {
- 		const u64 max_branch_nr = UINT64_MAX /
- 					  sizeof(struct branch_entry);
-+		struct branch_entry *e;
-+		unsigned int i;
- 
- 		OVERFLOW_CHECK_u64(array);
- 		data->branch_stack = (struct branch_stack *)array++;
-@@ -2416,10 +2466,33 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 			return -EFAULT;
- 
- 		sz = data->branch_stack->nr * sizeof(struct branch_entry);
--		if (evsel__has_branch_hw_idx(evsel))
-+		if (evsel__has_branch_hw_idx(evsel)) {
- 			sz += sizeof(u64);
--		else
-+			e = &data->branch_stack->entries[0];
-+		} else {
- 			data->no_hw_idx = true;
-+			/*
-+			 * if the PERF_SAMPLE_BRANCH_HW_INDEX is not applied,
-+			 * only nr and entries[] will be output by kernel.
-+			 */
-+			e = (struct branch_entry *)&data->branch_stack->hw_idx;
-+		}
-+
-+		if (swapped) {
-+			/*
-+			 * struct branch_flag does not have endian
-+			 * specific bit field definition. And bswap
-+			 * will not resolve the issue, since these
-+			 * are bit fields.
-+			 *
-+			 * evsel__bitfield_swap_branch_flags() uses a
-+			 * bitfield_swap macro to swap the bit position
-+			 * based on the host endians.
-+			 */
-+			for (i = 0; i < data->branch_stack->nr; i++, e++)
-+				e->flags.value = evsel__bitfield_swap_branch_flags(e->flags.value);
-+		}
-+
- 		OVERFLOW_CHECK(array, sz, max_size);
- 		array = (void *)array + sz;
- 	}
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 1f7edfa8568a..2e82cdbe2c08 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -482,4 +482,17 @@ struct evsel *evsel__leader(struct evsel *evsel);
- bool evsel__has_leader(struct evsel *evsel, struct evsel *leader);
- bool evsel__is_leader(struct evsel *evsel);
- void evsel__set_leader(struct evsel *evsel, struct evsel *leader);
-+
-+/*
-+ * Macro to swap the bit-field postition and size.
-+ * Used when,
-+ * - dont need to swap the entire u64 &&
-+ * - when u64 has variable bit-field sizes &&
-+ * - when presented in a host endian which is different
-+ *   than the source endian of the perf.data file
-+ */
-+#define bitfield_swap(src, pos, size)	\
-+	((((src) >> (pos)) & ((1ull << (size)) - 1)) << (63 - ((pos) + (size) - 1)))
-+
-+u64 evsel__bitfield_swap_branch_flags(u64 value);
- #endif /* __PERF_EVSEL_H */
+ 	ret = 0;
+ out_free:
+ 	free(event);
 -- 
 2.31.1
 
