@@ -2,114 +2,97 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE3BCC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Oct 2021 20:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCBBC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Oct 2021 22:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9687D60F92
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Oct 2021 20:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E5AE60F21
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Oct 2021 22:26:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230404AbhJ1Uvc (ORCPT
+        id S231298AbhJ1W25 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 28 Oct 2021 16:51:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33814 "EHLO
+        Thu, 28 Oct 2021 18:28:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231272AbhJ1Uvb (ORCPT
+        with ESMTP id S231235AbhJ1W24 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 28 Oct 2021 16:51:31 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEF28C061570
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Oct 2021 13:49:03 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id d10so12443585wrb.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Oct 2021 13:49:03 -0700 (PDT)
+        Thu, 28 Oct 2021 18:28:56 -0400
+Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B54FC061570
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Oct 2021 15:26:29 -0700 (PDT)
+Received: by mail-io1-xd36.google.com with SMTP id z144so9019555iof.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Oct 2021 15:26:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jrtc27.com; s=gmail.jrtc27.user;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3IvTfylI/s5zjCUTJoTbfVOltBPWwJQSWlH2bF2QUuk=;
-        b=oDbwPY9FhMa5+lI34zwqKLXaGGEJP1uhqTbtRsJgcXK9YE2LdLZaiUk6cnSS0e/z7B
-         NGrVlsXfrFTsjnJAwwqdqoPbDLCN13n0CUMg2Hnu9Bl0kC3Ynqw3gDSy7EFkY5hOaWsV
-         cF0zEMmnNLEFqZq5usfApABvoY2RR5EkszAaoSGt/8bvwq4noNBArvxJqCHhkqxyKzRr
-         TCdGfdedDm8XQDbRwnJRXjlusfgnqW9aWPfo1myOMwH/pLlZhbQeP8c90RfxBdZBXhPs
-         3Z9fNnvvkFYCsQbWi5xjsw9AsZDY36nun2WGqIOWEjNfzCfRof3UPiUFd7N2JMgiPi4q
-         l/yQ==
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=69slPYPdxoIP5E1pXozkkOSJJNlQJg/ZybGsQcAlQjU=;
+        b=ZvebgKH3pRDT+eHN8yyyqshk7Xwtu0s+RNmQNKAF4bGCFh8HihuoQwIeVuENvHdO95
+         K4pfwh4RoUL60H8qNDvbEG+LIbiwhhNCY6AB8N/i63ofgqTMFXz5RCgUwqZQt813ldX8
+         xl34jWj15whFLfTX5t4DCQ8y4p545xs63NbwFJlDgG2CyVMvsV+6DPaoKl7czrrymczA
+         TkUHOP80lNP15DfhPKvonioyjWR3HaLSrut5ke4tpWu3vINXuVvw27Jal3DQZ+tk+Gtt
+         hX0IEZtROh08TtZN4+4mGfm11giUEgwoWxwtDIbMMyyM2KZbz9hRdDivvc2guFYXj9Pj
+         N72Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3IvTfylI/s5zjCUTJoTbfVOltBPWwJQSWlH2bF2QUuk=;
-        b=avQK1UmzkpNjqkkGpetq4ce08MRMgQCfnGIxM50fKkIBp77EWpvm0kYTmdfVe8c1aq
-         SmgwkYC6pE8ZJqDQgOyfZhmvyx8arkwadQPKuirPlhJSDFbK2SfIKo7Qoqj29N4BLqIZ
-         ZQ6isq2ykvY0deu7AjTgmQwoAcpjyQExuBBOHZXEoDp5MaTM9OBYZW3A0KfhMZ7lZmcP
-         ft6ph9W4ChThU+Bm4XmAzbfiHan6nJZKnRhU+pA6rejCj3uV3dfAts60J3T/qFLLbpJj
-         5oVH68sBgx9TtXdVK5V5VUzHgq/7mbwlkVz23ecmiAql5hgWsrsdrJxlrWTNfml4mefB
-         zCGg==
-X-Gm-Message-State: AOAM533sOsmYY98Yr6X2RJoTJmociwts6Od7GyWJwYVddDFleDqWRuqL
-        BRITRMU7WlrP9FREkoiDWD+CXw==
-X-Google-Smtp-Source: ABdhPJz5CVcMhbABFkm8qYpPeC8ZX0TX4ML2WSs+7463nI9XPEFL1WLEfTk4g3/yjS9ylWLJZoLIFw==
-X-Received: by 2002:adf:a78a:: with SMTP id j10mr8764668wrc.231.1635454142409;
-        Thu, 28 Oct 2021 13:49:02 -0700 (PDT)
-Received: from Jessicas-MacBook-Pro.local (global-5-141.nat-2.net.cam.ac.uk. [131.111.5.141])
-        by smtp.gmail.com with ESMTPSA id m34sm2584987wms.25.2021.10.28.13.49.01
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Oct 2021 13:49:02 -0700 (PDT)
-Received: by Jessicas-MacBook-Pro.local (Postfix, from userid 501)
-        id 6C870927B2D0; Thu, 28 Oct 2021 21:48:54 +0100 (BST)
-Date:   Thu, 28 Oct 2021 21:48:54 +0100
-From:   Jessica Clarke <jrtc27@jrtc27.com>
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     linux-kernel@vger.kernel.org, Anup Patel <anup.patel@wdc.com>,
-        David Abdurachmanov <david.abdurachmanov@sifive.com>,
-        devicetree@vger.kernel.org, Greentime Hu <greentime.hu@sifive.com>,
-        Guo Ren <guoren@linux.alibaba.com>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-        Nick Kossifidis <mick@ics.forth.gr>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vincent Chen <vincent.chen@sifive.com>
-Subject: Re: [v4 10/11] riscv: dts: fu740: Add pmu node
-Message-ID: <YXsMtrmuavGAHk8S@Jessicas-MacBook-Pro.local>
-References: <20211025195350.242914-1-atish.patra@wdc.com>
- <20211025195350.242914-11-atish.patra@wdc.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=69slPYPdxoIP5E1pXozkkOSJJNlQJg/ZybGsQcAlQjU=;
+        b=HJQgcaNpcO5HrrB9idz5HZCQSrcI0AqYn7iXVgNh8n6krr/2QH/+lbc9pcLkM5pzVB
+         380DTQF0qPm14z9iWMONzxYFfS9ZG8UEAIyE6zsw+Jf3UJS3+o7JQ+10by7ohR6EtaJU
+         H1ZTSdd5LClfqv3yptdrsaqKNuHSTqSlKAbnEtmCnSfM1ueADvwBuQfPThiMfhV8Ardd
+         UaRxs/M/ljlKhI+eV3+K4r4v6pXYlKGP99HbE3JOx6fx1XT5T6MDBGZB9iwFHjrd9zY/
+         fUAuj24uYG066CKIN389F1tU9EQQq6NL3+lSHa1TnoHbIzYWmh4A7iWJ3WqzJ/+AL/P8
+         rv/g==
+X-Gm-Message-State: AOAM5316CS72+gCwVXyLqzdhxSjZvScgT6CoQqERzaBDtoYqhBtWkSgp
+        7psFLkt8vr3f/5o29uFCFa6ksZ99em782Ep7n8HGGw==
+X-Google-Smtp-Source: ABdhPJzNqekMMxyk/B5nOTuy7BzBzfXpYdqoOl1hZ7GQRZVBtPFvvGSBBp2ksLmDaN2z5nG15SHOxsvOfYayG4y1uoE=
+X-Received: by 2002:a05:6602:13d3:: with SMTP id o19mr4969665iov.18.1635459988715;
+ Thu, 28 Oct 2021 15:26:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211025195350.242914-11-atish.patra@wdc.com>
+References: <20211012021321.291635-1-irogers@google.com> <CAFP8O3L_Oi916yOAuPB7MFpa3QoDQtreRbV7oNt2Yh6h1Coq9A@mail.gmail.com>
+In-Reply-To: <CAFP8O3L_Oi916yOAuPB7MFpa3QoDQtreRbV7oNt2Yh6h1Coq9A@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 28 Oct 2021 15:26:16 -0700
+Message-ID: <CAP-5=fU_Zf4w2K-uEM40Wr0o-v6O+3vQTfEjAJu842HdyotZHw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] tools: Bump minimum LLVM C++ std to GNU++14
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Leo Yan <leo.yan@linaro.org>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Oct 25, 2021 at 12:53:49PM -0700, Atish Patra wrote:
-> HiFive unmatched supports HPMCounters but does not implement mcountinhibit
-> or sscof extension. Thus, perf monitoring can be used on the unmatched
-> board without sampling.
-> 
-> Add the PMU node with compatible string so that Linux perf driver can
-> utilize this to enable PMU.
-> 
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> ---
->  arch/riscv/boot/dts/sifive/fu740-c000.dtsi | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/riscv/boot/dts/sifive/fu740-c000.dtsi b/arch/riscv/boot/dts/sifive/fu740-c000.dtsi
-> index abbb960f90a0..b35b96b58820 100644
-> --- a/arch/riscv/boot/dts/sifive/fu740-c000.dtsi
-> +++ b/arch/riscv/boot/dts/sifive/fu740-c000.dtsi
-> @@ -140,6 +140,9 @@ soc {
->  		#size-cells = <2>;
->  		compatible = "simple-bus";
->  		ranges;
-> +		pmu {
-> +			compatible = "riscv,pmu";
-> +		};
+Hi Arnaldo,
 
-This is a property of the user-replaceable firmware, not a property of
-the hardware, so having this in the device tree under /soc, let alone
-hard-coded in Linux, is utterly wrong. Why can this not just be probed
-like any other SBI interface? The "Probe SBI extension" interface is
-precisely for this kind of thing.
+Is there anything you'd like me to do extra for these two patches?
 
-Jess
+Thanks,
+Ian
+
+On Mon, Oct 11, 2021 at 8:09 PM F=C4=81ng-ru=C3=AC S=C3=B2ng <maskray@googl=
+e.com> wrote:
+>
+> On Mon, Oct 11, 2021 at 7:13 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > LLVM 9 (current release is LLVM 13) moved the minimum C++ version to
+> > GNU++14. Bump the version numbers in the feature test and perf build.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+>
+>
+> Reviewed-by: Fangrui Song <maskray@google.com>
