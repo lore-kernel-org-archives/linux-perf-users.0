@@ -2,63 +2,60 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BADBC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Oct 2021 04:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4697C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Oct 2021 07:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38BAB610A0
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Oct 2021 04:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CCD260F70
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Oct 2021 07:20:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229645AbhJ1EdS (ORCPT
+        id S229800AbhJ1HWb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 28 Oct 2021 00:33:18 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25134 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229488AbhJ1EdQ (ORCPT
+        Thu, 28 Oct 2021 03:22:31 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6894 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S229656AbhJ1HWa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 28 Oct 2021 00:33:16 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 19S4INo4002577;
-        Thu, 28 Oct 2021 04:30:41 GMT
+        Thu, 28 Oct 2021 03:22:30 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 19S6mB1N029471;
+        Thu, 28 Oct 2021 07:19:56 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
  references : from : message-id : date : mime-version : in-reply-to :
  content-type : content-transfer-encoding; s=pp1;
- bh=gWZQxtC5mAazBi5uYz7gq8iDpyHzF/Gg6yAloyjZWPA=;
- b=cnhQMxqIyICjNS/0mKjmk3MrPVIGLIG6Y/BliebMDIUsyHxeiMntb0hTkzlEVaFCZWx2
- MauXBsl1RpfpJH1aNUANgFBPT5CxfNFKelKerv8bka36OTGVI0sl6Ce9FkNQxvsZxD1m
- GzORvn2O5oiD7chBp7vlzw9xVNdkgR82xPrIgc9cKNVW9ovLBk+pcx8VPKZli/sVm+dY
- d36oUMyr7Wnp9SfTOA8Ja6mslg80cuGbRFuk2pG52JMTgNIZz215C/8+Ae6Vo/w+sCzE
- Z7V5tuuDHFJqTPgp5RNsRoTGXTE9aSKI+kw7I0irQU192ncsA5CTsc/hz76+wdqd/7j6 GQ== 
+ bh=gkQfcZPW+HtPpAGnoBtaHMJ20DjjxnQPDkknmLyYEBI=;
+ b=qOu8hm+ERGayt+pKmN8ITLhyb6owuNyWvFSVsJOYZLGnf4f6dx3f0Mo9tmEf9evkMbmO
+ QDrGnpwb+2xRSglkS2ZH7dzFc0atRa3a1njrhUCj43ce/CgFYwNOe/W1ixCe/1PR4zER
+ tyou2xDsOhEZc/LzIBQq4BojwgcfkD1Oi9fkIxwBlWG7EKeASi+AIfMWAhdcMdVLv/vv
+ KdF96o/nFXF567e/9TbUu0xWACSO8GGziXeSH+7vt++rCvl88cAZQR0w/8O51ngDkmMs
+ /wPdajQkuSnSbYoxKk0W206rCoyEG0F9gzTR3fT1+NAOYMfJCSdchfdrP+36jBXIRR2p sg== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3bymqjr59h-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3bypwh0kse-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Oct 2021 04:30:40 +0000
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 19S4UIck013112;
-        Thu, 28 Oct 2021 04:30:40 GMT
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3bymqjr58a-1
+        Thu, 28 Oct 2021 07:19:55 +0000
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 19S7Fcbx014595;
+        Thu, 28 Oct 2021 07:19:55 GMT
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3bypwh0krw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Oct 2021 04:30:40 +0000
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 19S4HYxw027557;
-        Thu, 28 Oct 2021 04:30:35 GMT
+        Thu, 28 Oct 2021 07:19:55 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 19S7D3Vj032486;
+        Thu, 28 Oct 2021 07:19:53 GMT
 Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma04fra.de.ibm.com with ESMTP id 3bx4f7uyyj-1
+        by ppma06ams.nl.ibm.com with ESMTP id 3bx4f1pckb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Oct 2021 04:30:35 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 19S4UX1t48103690
+        Thu, 28 Oct 2021 07:19:53 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 19S7Jopx39059878
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Oct 2021 04:30:33 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 053D742045;
-        Thu, 28 Oct 2021 04:30:33 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 26D7742047;
-        Thu, 28 Oct 2021 04:30:29 +0000 (GMT)
-Received: from Madhavan.PrimaryTP (unknown [9.43.20.1])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 28 Oct 2021 04:30:28 +0000 (GMT)
+        Thu, 28 Oct 2021 07:19:51 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DA3E052050;
+        Thu, 28 Oct 2021 07:19:50 +0000 (GMT)
+Received: from Madhavan.PrimaryTP (unknown [9.43.61.213])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 248ED52054;
+        Thu, 28 Oct 2021 07:19:46 +0000 (GMT)
 Subject: Re: [PATCH v2 1/2] tools/perf: Add bitfield_swap to handle
  branch_stack endian issue
 To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
@@ -71,8 +68,8 @@ References: <20211016125059.691856-1-maddy@linux.ibm.com>
  <YXnr8xpltsVZPATC@kernel.org>
  <FD195114-27C2-4F8F-B05E-2E9D5595C4EF@gmail.com>
 From:   Madhavan Srinivasan <maddy@linux.ibm.com>
-Message-ID: <63711ad2-a62e-e4b1-4321-b8de8314e2c3@linux.ibm.com>
-Date:   Thu, 28 Oct 2021 10:00:27 +0530
+Message-ID: <31b42a66-3e56-ab72-b2cb-798955c367e0@linux.ibm.com>
+Date:   Thu, 28 Oct 2021 12:49:45 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
@@ -81,16 +78,16 @@ Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Vfzycd9Zz66R2mTv3v8xC4xtIH6rjdNf
-X-Proofpoint-GUID: ru05VoRYMhWpysqSESY9WdcwtBu7LcfC
+X-Proofpoint-ORIG-GUID: m5VpM_chFC0sc3auDAiCA0e7x8JZ7yhk
+X-Proofpoint-GUID: -4Q6BYKIMDtPq6ctS6NGV-ouwCz1wRPU
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
  definitions=2021-10-28_01,2021-10-26_01,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- lowpriorityscore=0 phishscore=0 clxscore=1015 mlxscore=0 malwarescore=0
- priorityscore=1501 spamscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
+ bulkscore=0 malwarescore=0 adultscore=0 priorityscore=1501 clxscore=1015
+ spamscore=0 impostorscore=0 phishscore=0 mlxlogscore=999 suspectscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2110150000
- definitions=main-2110280021
+ definitions=main-2110280035
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -114,13 +111,6 @@ On 10/28/21 8:07 AM, Arnaldo Carvalho de Melo wrote:
 >>> - Renamed function and macro
 >>> - Added comments in code
 > Please, run 'perf test' before submitting patches, it's not that difficult, please do so.
-
-I did. I ran 'perf test' and did not see any fail. I did not do 'perf 
-test python', will check that out. My bad.
-
-Maddy
-
-
 >
 > - Arnaldo
 >
@@ -136,10 +126,13 @@ Maddy
 >>   File "<stdin>", line 1, in <module>
 >> ImportError: /tmp/build/perf/python/perf.cpython-39-x86_64-linux-gnu.so: undefined symbol: bigendian
 >> test child finished with -1
->> ---- end ----
->> 'import perf' in python: FAILED!
->> [acme@quaco perf]$
->>
+
+using tep_is_bigendian() instead of bigendian() fixes it.
+Will send a V3 with that changes.
+
+Maddy
+
+>> ---- end ---- 'import perf' in python: FAILED! [acme@quaco perf]$
 >>>   tools/perf/util/evsel.c | 74 +++++++++++++++++++++++++++++++++++++++--
 >>>   tools/perf/util/evsel.h | 13 ++++++++
 >>>   2 files changed, 85 insertions(+), 2 deletions(-)
