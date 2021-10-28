@@ -2,203 +2,145 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D0B4C43219
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Oct 2021 01:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16368C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Oct 2021 02:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8095D61107
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Oct 2021 01:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC76F60E09
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Oct 2021 02:05:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229704AbhJ1Bpz (ORCPT
+        id S229658AbhJ1CHq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 27 Oct 2021 21:45:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229638AbhJ1Bpy (ORCPT
+        Wed, 27 Oct 2021 22:07:46 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:26198 "EHLO
+        szxga03-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229534AbhJ1CHp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 27 Oct 2021 21:45:54 -0400
-Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2A36C061570;
-        Wed, 27 Oct 2021 18:43:28 -0700 (PDT)
-Received: by mail-io1-xd2b.google.com with SMTP id v65so6113407ioe.5;
-        Wed, 27 Oct 2021 18:43:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=q2MWT3ltBpEutemWMnO5IV+Dli3w0cr7Jk2rYKN1WKo=;
-        b=VYaQyXfWM6sOanx3t6qAvPWFfD338jdnTaM7L2F4EXwJrISOsX2ByFuKTHv7xNRkTG
-         7BWciBeSY2irXsWhnWRi6OVqJxQs7/ZO79rLcIDs/aiVFWgHfJlvuVpfUToWcVFBDw49
-         BCfecdSa2WUEjL+TN94OyEqsucM5rEaK9DgGgCJaOCYNRUwXGRjWaKZseUmGso3F9gxw
-         di+uY+S3e+rK3xyX3eI/JiQ9ICTO+6tm+0hZ1D5dbOqVvxb2fQEWj7uSPsf/vcKdxhy1
-         StoSWoyz4zwvhiyUgYfxfRiYrspymffEwoasFZiknT2hQbvSdzCZRqpNBiWlqe1b6cj1
-         mybQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=q2MWT3ltBpEutemWMnO5IV+Dli3w0cr7Jk2rYKN1WKo=;
-        b=5GtjatUqJ3P9/HnNIN95alD9Bu6whWZ9XVH5ktL/d+9Y3X89z5iUXVvwstLkiMjlFh
-         hC0T0712eP4l1p0mDmyu5STkFNR9g/cCuoBFFLCV62gMSpF4zwqp788gqcLN1dTxVywT
-         5qQ9wYhSEAijAef1im6uXAFA2apjq5ewm3Ae2/isLPWeAutvFD1husaS/pkPBIA3dE8t
-         KCkzdsFUsrcoaeDGsP6trlq2ypDDWFRtQshtZogN5AyzuTfZE+Gi5lx4/KsOtzrHyWBD
-         XM9Dr8AC3LgvMDp0hYdRRLA8ifS6PBqYsQJxe3H0MsMQTWMv0yc2NUF2Pksh870R8cOH
-         SO3Q==
-X-Gm-Message-State: AOAM533MCB28MCWGOamJ3U8rP8FlBSMyDsmopkaAF7lQwf9LT/NoZXEn
-        /S17W2MLejSuW/NLZahlp0d1KcSH8CgbVh6cZdQ=
-X-Google-Smtp-Source: ABdhPJwNQClWNir1jhV830HzS4FTBIIlwJORqskR1S8FYGa8OK7RlivKeHpt/M/ZKHGSsheR5GLY1mxrQk02MMgYFuc=
-X-Received: by 2002:a02:cb9c:: with SMTP id u28mr1005721jap.95.1635385408343;
- Wed, 27 Oct 2021 18:43:28 -0700 (PDT)
+        Wed, 27 Oct 2021 22:07:45 -0400
+Received: from dggeme762-chm.china.huawei.com (unknown [172.30.72.57])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Hfpkw5WD2z8tvq;
+        Thu, 28 Oct 2021 10:03:52 +0800 (CST)
+Received: from huawei.com (10.67.189.2) by dggeme762-chm.china.huawei.com
+ (10.3.19.108) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.15; Thu, 28
+ Oct 2021 10:05:14 +0800
+From:   Lexi Shao <shaolexi@huawei.com>
+To:     <james.clark@arm.com>
+CC:     <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>, <mark.rutland@arm.com>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <nixiaoming@huawei.com>,
+        <peterz@infradead.org>, <qiuxi1@huawei.com>, <shaolexi@huawei.com>,
+        <wangbing6@huawei.com>
+Subject: Re: [PATCH] perf symbol: ignore $a/$d symbols for ARM modules
+Date:   Thu, 28 Oct 2021 10:05:09 +0800
+Message-ID: <20211028020509.39082-1-shaolexi@huawei.com>
+X-Mailer: git-send-email 2.12.3
+In-Reply-To: <c7dfbd17-85fd-b914-b90f-082abc64c9d1@arm.com>
+References: <c7dfbd17-85fd-b914-b90f-082abc64c9d1@arm.com>
 MIME-Version: 1.0
-References: <20211025083315.4752-1-laoar.shao@gmail.com> <20211025083315.4752-13-laoar.shao@gmail.com>
- <202110251431.F594652F@keescook> <YXmySeDsxxbA7hcq@alley>
-In-Reply-To: <YXmySeDsxxbA7hcq@alley>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Thu, 28 Oct 2021 09:42:52 +0800
-Message-ID: <CALOAHbB4LT8t6g5NseRygGAaAbHzKXfuWzg+TnLeg1tRUuwePg@mail.gmail.com>
-Subject: Re: [PATCH v6 12/12] kernel/kthread: show a warning if kthread's comm
- is truncated
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Qiang Zhang <qiang.zhang@windriver.com>,
-        robdclark <robdclark@chromium.org>,
-        christian <christian@brauner.io>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>, Martin Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        dennis.dalessandro@cornelisnetworks.com,
-        mike.marciniszyn@cornelisnetworks.com, dledford@redhat.com,
-        jgg@ziepe.ca, linux-rdma@vger.kernel.org,
-        netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel test robot <oliver.sang@intel.com>,
-        kbuild test robot <lkp@intel.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.67.189.2]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Oct 28, 2021 at 4:10 AM Petr Mladek <pmladek@suse.com> wrote:
+On 27/10/2021 23:10, James Clark wrote:
+>On 27/10/2021 13:31, Lexi Shao wrote:
+>> On 27/10/2021 18:24, James Clark wrote:
+>>> On 27/10/2021 10:52, Lexi Shao wrote:
+>>>> On ARM machine, kernel symbols from modules can be resolved to $a
+>>>> instead of printing the actual symbol name. Ignore symbols starting with
+>>>> "$" when building kallsyms rbtree.
+>>>>
+>>>> A sample stacktrace is shown as follows:
+>>>>
+>>>> c0f2e39c schedule_hrtimeout+0x14 ([kernel.kallsyms])
+>>>> bf4a66d8 $a+0x78 ([test_module])
+>>>> c0a4f5f4 kthread+0x15c ([kernel.kallsyms])
+>>>> c0a001f8 ret_from_fork+0x14 ([kernel.kallsyms])
+>>>>
+>>>> On ARM machine, $a/$d symbols are used by the compiler to mark the
+>>>> beginning of code/data part in code section. These symbols are filtered
+>>>> out when linking vmlinux(see scripts/kallsyms.c ignored_prefixes), but
+>>>> are left on modules. So there are $a symbols in /proc/kallsyms which
+>>>> share the same addresses with the actual module symbols and confuses perf
+>>>> when resolving symbols.
+>>>
+>>> Hi Lexi,
+>>>
+>>> Is it worth using or re-implementing the entire is_ignored_symbol() function
+>>>from scripts/kallsyms.c? It seems like this change only fixes one occurrence,
+>>> but is_ignored_symbol() has a big list of other cases.
+>>>
+>>> Unless those cases are different?
+>>>
+>>> Thanks
+>>> James
+>> 
+>> Hi James,
+>> 
+>> I don't think it's necessary to cover all the cases listed in
+>> is_ignored_symbol(). As long as the symbols are unique and not overlapping
+>> with each other, they should't cause problems in resolving symbols. So most
+>> of the cases in is_ignored_symbol() should be irrelevant.
 >
-> On Mon 2021-10-25 14:35:42, Kees Cook wrote:
-> > On Mon, Oct 25, 2021 at 08:33:15AM +0000, Yafang Shao wrote:
-> > > Show a warning if task comm is truncated. Below is the result
-> > > of my test case:
-> > >
-> > > truncated kthread comm:I-am-a-kthread-with-lon, pid:14 by 6 characters
-> > >
-> > > Suggested-by: Petr Mladek <pmladek@suse.com>
-> > > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> > > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> > > Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-> > > Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-> > > Cc: Peter Zijlstra <peterz@infradead.org>
-> > > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > > Cc: Al Viro <viro@zeniv.linux.org.uk>
-> > > Cc: Kees Cook <keescook@chromium.org>
-> > > Cc: Petr Mladek <pmladek@suse.com>
-> > > ---
-> > >  kernel/kthread.c | 7 ++++++-
-> > >  1 file changed, 6 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/kernel/kthread.c b/kernel/kthread.c
-> > > index 5b37a8567168..46b924c92078 100644
-> > > --- a/kernel/kthread.c
-> > > +++ b/kernel/kthread.c
-> > > @@ -399,12 +399,17 @@ struct task_struct *__kthread_create_on_node(int (*threadfn)(void *data),
-> > >     if (!IS_ERR(task)) {
-> > >             static const struct sched_param param = { .sched_priority = 0 };
-> > >             char name[TASK_COMM_LEN];
-> > > +           int len;
-> > >
-> > >             /*
-> > >              * task is already visible to other tasks, so updating
-> > >              * COMM must be protected.
-> > >              */
-> > > -           vsnprintf(name, sizeof(name), namefmt, args);
-> > > +           len = vsnprintf(name, sizeof(name), namefmt, args);
-> > > +           if (len >= TASK_COMM_LEN) {
-> >
-> > And since this failure case is slow-path, we could improve the warning
-> > as other had kind of suggested earlier with something like this instead:
-> >
-> >                       char *full_comm;
-> >
-> >                       full_comm = kvasprintf(GFP_KERNEL, namefmt, args);
+>Is it possible to do the filtering of the module symbols somewhere else like
+>in kernel/kallsyms.c? I'm not that familiar with it but it seems like
+>at one point when populating kallsyms '$...' functions are filtered out, but
+>when modules are loaded the symbols are not filtered because another code path is
+>used?
 >
-> You need to use va_copy()/va_end() if you want to use the same va_args
-> twice.
+>If kallsyms has some duplicate addresses in there then isn't the bug in kallsyms
+>rather than perf? And another tool could get confused too.
 >
-> For example, see how kvasprintf() is implemented. It calls
-> vsnprintf() twice and it uses va_copy()/va_end() around the the first call.
->
+>James
 
-Does it mean that if we want to call vsnprintf() three times, we must
-use va_copy()/va_end() around the first call and the second call ?
-IOW, if we call vsnprintf() multiple times, all the calls except the
-last call should be protected by va_copy()/va_end().
-Actually I don't quite understand why we should do it like this. I
-will try to understand it, and appreciate it if you could explain it
-in detail.
+Yes we can filter these symbols out when adding module symbols to the kallsyms
+list. I will send another patch that modifies module.c to ignore '$' symbols
+when loading module.
 
-BTW,  can we use va_copy()/va_end() in vsnprintf(), then the caller
-doesn't need to care how many times it will call vsnprintf().
+I think it's worth applying this patch in the sense that perf userspace tool
+can be used on all 5.x kernels, and people don't have to update the kernel
+to fix it.
 
-> kvasprintf() could also return NULL if there is not enough memory.
-
-Right. We need to do the NULL check.
+Lexi
 
 >
-> >                       pr_warn("truncated kthread comm '%s' to '%s' (pid:%d)\n",
-> >                               full_comm, name);
->
-> BTW: Is this message printed during normal boot? I did not tried the
-> patchset myself.
->
+>> 
+>> Lexi
+>> 
+>>>
+>>>>
+>>>> After this patch, the module symbol name is printed:
+>>>>
+>>>> c0f2e39c schedule_hrtimeout+0x14 ([kernel.kallsyms])
+>>>> bf4a66d8 test_func+0x78 ([test_module])
+>>>> c0a4f5f4 kthread+0x15c ([kernel.kallsyms])
+>>>> c0a001f8 ret_from_fork+0x14 ([kernel.kallsyms])
+>>>>
+>>>> Signed-off-by: Lexi Shao <shaolexi@huawei.com>
+>>>> ---
+>>>>  tools/perf/util/symbol.c | 4 ++++
+>>>>  1 file changed, 4 insertions(+)
+>>>>
+>>>> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+>>>> index 0fc9a5410739..35116aed74eb 100644
+>>>> --- a/tools/perf/util/symbol.c
+>>>> +++ b/tools/perf/util/symbol.c
+>>>> @@ -702,6 +702,10 @@ static int map__process_kallsym_symbol(void *arg, const char *name,
+>>>>  	if (!symbol_type__filter(type))
+>>>>  		return 0;
+>>>>  
+>>>> +	/* Ignore local symbols for ARM modules */
+>>>> +	if (name[0] == '$')
+>>>> +		return 0;
+>>>> +
+>>>>  	/*
+>>>>  	 * module symbols are not sorted so we add all
+>>>>  	 * symbols, setting length to 0, and rely on
+>>>>
+>>>
 
-Yes, it will be printed at boot time.
-
-> We should add this warning only if there is a good solution how to
-> avoid the truncated names. And we should me sure that the most common
-> kthreads/workqueues do not trigger it. It would be ugly to print many
-> warnings during boot if people could not get rid of them easily.
->
-
-As we have extended task comm to 24, there's no such warning printed
-for the existing kthreads/workqueues.
-IOW, it will only print for the newly introduced one if it has a long name.
-That means this printing is under control.
-
-> >                       kfree(full_comm);
-> >               }
-> > >             set_task_comm(task, name);
-> > >             /*
-> > >              * root may have changed our (kthreadd's) priority or CPU mask.
->
-> Best Regards,
-> Petr
-
-
-
--- 
-Thanks
-Yafang
