@@ -2,214 +2,203 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 790C0C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Oct 2021 00:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D0B4C43219
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Oct 2021 01:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56B08610C8
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Oct 2021 00:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8095D61107
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Oct 2021 01:43:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229469AbhJ1ATW (ORCPT
+        id S229704AbhJ1Bpz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 27 Oct 2021 20:19:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55688 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229505AbhJ1ATU (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 27 Oct 2021 20:19:20 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6BCDA610C7;
-        Thu, 28 Oct 2021 00:16:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635380214;
-        bh=o3QNQPCGtLKxio4JdnP5c0qPU1uXVN1lOeUtBKwrKa0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ehyokWs3NR24/zviJ7+zl5rcrr0KIGv6xoSZj2aGzkQ1oBRKXbxyraDWGUZdl6wBF
-         1y/yNySsktg81AjBBYMFot7OZoGQdIZdJFEi4ZSctg4YovqtywBW1W+HHkA9yiefPr
-         0i5j3VEPQ/XzC6Zf5unpRCerUQqS0FT78pYk1oXY6kOZNFCAN0aAf2aRPJ6cj4VxbJ
-         CkQDZWYHhUPkJau9ILCRfNdFYoUemQC543ikDqP0ZwJhnIFY+BYcEF95UvZp30sclx
-         66u5flYpYKrgz9b3c4sajQNALvdlU1s6oleTp1NzQ9/GvQQ5sg9j16uGpfhlDU6H5n
-         pmT2Kme2jxqOg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B2CC5410A1; Wed, 27 Oct 2021 21:16:51 -0300 (-03)
-Date:   Wed, 27 Oct 2021 21:16:51 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Madhavan Srinivasan <maddy@linux.ibm.com>
-Cc:     jolsa@redhat.com, michael@ellerman.id.au, eranian@google.com,
-        mark.rutland@arm.com, namhyung@kernel.org, kjain@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] tools/perf: Add bitfield_swap to handle
- branch_stack endian issue
-Message-ID: <YXnr8xpltsVZPATC@kernel.org>
-References: <20211016125059.691856-1-maddy@linux.ibm.com>
+        Wed, 27 Oct 2021 21:45:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56622 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229638AbhJ1Bpy (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 27 Oct 2021 21:45:54 -0400
+Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2A36C061570;
+        Wed, 27 Oct 2021 18:43:28 -0700 (PDT)
+Received: by mail-io1-xd2b.google.com with SMTP id v65so6113407ioe.5;
+        Wed, 27 Oct 2021 18:43:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q2MWT3ltBpEutemWMnO5IV+Dli3w0cr7Jk2rYKN1WKo=;
+        b=VYaQyXfWM6sOanx3t6qAvPWFfD338jdnTaM7L2F4EXwJrISOsX2ByFuKTHv7xNRkTG
+         7BWciBeSY2irXsWhnWRi6OVqJxQs7/ZO79rLcIDs/aiVFWgHfJlvuVpfUToWcVFBDw49
+         BCfecdSa2WUEjL+TN94OyEqsucM5rEaK9DgGgCJaOCYNRUwXGRjWaKZseUmGso3F9gxw
+         di+uY+S3e+rK3xyX3eI/JiQ9ICTO+6tm+0hZ1D5dbOqVvxb2fQEWj7uSPsf/vcKdxhy1
+         StoSWoyz4zwvhiyUgYfxfRiYrspymffEwoasFZiknT2hQbvSdzCZRqpNBiWlqe1b6cj1
+         mybQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q2MWT3ltBpEutemWMnO5IV+Dli3w0cr7Jk2rYKN1WKo=;
+        b=5GtjatUqJ3P9/HnNIN95alD9Bu6whWZ9XVH5ktL/d+9Y3X89z5iUXVvwstLkiMjlFh
+         hC0T0712eP4l1p0mDmyu5STkFNR9g/cCuoBFFLCV62gMSpF4zwqp788gqcLN1dTxVywT
+         5qQ9wYhSEAijAef1im6uXAFA2apjq5ewm3Ae2/isLPWeAutvFD1husaS/pkPBIA3dE8t
+         KCkzdsFUsrcoaeDGsP6trlq2ypDDWFRtQshtZogN5AyzuTfZE+Gi5lx4/KsOtzrHyWBD
+         XM9Dr8AC3LgvMDp0hYdRRLA8ifS6PBqYsQJxe3H0MsMQTWMv0yc2NUF2Pksh870R8cOH
+         SO3Q==
+X-Gm-Message-State: AOAM533MCB28MCWGOamJ3U8rP8FlBSMyDsmopkaAF7lQwf9LT/NoZXEn
+        /S17W2MLejSuW/NLZahlp0d1KcSH8CgbVh6cZdQ=
+X-Google-Smtp-Source: ABdhPJwNQClWNir1jhV830HzS4FTBIIlwJORqskR1S8FYGa8OK7RlivKeHpt/M/ZKHGSsheR5GLY1mxrQk02MMgYFuc=
+X-Received: by 2002:a02:cb9c:: with SMTP id u28mr1005721jap.95.1635385408343;
+ Wed, 27 Oct 2021 18:43:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211016125059.691856-1-maddy@linux.ibm.com>
-X-Url:  http://acmel.wordpress.com
+References: <20211025083315.4752-1-laoar.shao@gmail.com> <20211025083315.4752-13-laoar.shao@gmail.com>
+ <202110251431.F594652F@keescook> <YXmySeDsxxbA7hcq@alley>
+In-Reply-To: <YXmySeDsxxbA7hcq@alley>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Thu, 28 Oct 2021 09:42:52 +0800
+Message-ID: <CALOAHbB4LT8t6g5NseRygGAaAbHzKXfuWzg+TnLeg1tRUuwePg@mail.gmail.com>
+Subject: Re: [PATCH v6 12/12] kernel/kthread: show a warning if kthread's comm
+ is truncated
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Qiang Zhang <qiang.zhang@windriver.com>,
+        robdclark <robdclark@chromium.org>,
+        christian <christian@brauner.io>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>, Martin Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        john fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        dennis.dalessandro@cornelisnetworks.com,
+        mike.marciniszyn@cornelisnetworks.com, dledford@redhat.com,
+        jgg@ziepe.ca, linux-rdma@vger.kernel.org,
+        netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel test robot <oliver.sang@intel.com>,
+        kbuild test robot <lkp@intel.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Sat, Oct 16, 2021 at 06:20:58PM +0530, Madhavan Srinivasan escreveu:
-> branch_stack struct has bit field definition which
-> produces different bit ordering for big/little endian.
-> Because of this, when branch_stack sample is collected
-> in a BE system and viewed/reported in a LE system, bit
-> fields of the branch stack are not presented properly.
-> To address this issue, a evsel__bitfield_swap_branch_stack()
-> is defined and introduced in evsel__parse_sample.
-> 
-> Signed-off-by: Madhavan Srinivasan <maddy@linux.ibm.com>
-> ---
-> Changelog v1:
-> - Renamed function and macro
-> - Added comments in code
+On Thu, Oct 28, 2021 at 4:10 AM Petr Mladek <pmladek@suse.com> wrote:
+>
+> On Mon 2021-10-25 14:35:42, Kees Cook wrote:
+> > On Mon, Oct 25, 2021 at 08:33:15AM +0000, Yafang Shao wrote:
+> > > Show a warning if task comm is truncated. Below is the result
+> > > of my test case:
+> > >
+> > > truncated kthread comm:I-am-a-kthread-with-lon, pid:14 by 6 characters
+> > >
+> > > Suggested-by: Petr Mladek <pmladek@suse.com>
+> > > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> > > Reviewed-by: Kees Cook <keescook@chromium.org>
+> > > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> > > Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+> > > Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+> > > Cc: Peter Zijlstra <peterz@infradead.org>
+> > > Cc: Steven Rostedt <rostedt@goodmis.org>
+> > > Cc: Al Viro <viro@zeniv.linux.org.uk>
+> > > Cc: Kees Cook <keescook@chromium.org>
+> > > Cc: Petr Mladek <pmladek@suse.com>
+> > > ---
+> > >  kernel/kthread.c | 7 ++++++-
+> > >  1 file changed, 6 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/kernel/kthread.c b/kernel/kthread.c
+> > > index 5b37a8567168..46b924c92078 100644
+> > > --- a/kernel/kthread.c
+> > > +++ b/kernel/kthread.c
+> > > @@ -399,12 +399,17 @@ struct task_struct *__kthread_create_on_node(int (*threadfn)(void *data),
+> > >     if (!IS_ERR(task)) {
+> > >             static const struct sched_param param = { .sched_priority = 0 };
+> > >             char name[TASK_COMM_LEN];
+> > > +           int len;
+> > >
+> > >             /*
+> > >              * task is already visible to other tasks, so updating
+> > >              * COMM must be protected.
+> > >              */
+> > > -           vsnprintf(name, sizeof(name), namefmt, args);
+> > > +           len = vsnprintf(name, sizeof(name), namefmt, args);
+> > > +           if (len >= TASK_COMM_LEN) {
+> >
+> > And since this failure case is slow-path, we could improve the warning
+> > as other had kind of suggested earlier with something like this instead:
+> >
+> >                       char *full_comm;
+> >
+> >                       full_comm = kvasprintf(GFP_KERNEL, namefmt, args);
+>
+> You need to use va_copy()/va_end() if you want to use the same va_args
+> twice.
+>
+> For example, see how kvasprintf() is implemented. It calls
+> vsnprintf() twice and it uses va_copy()/va_end() around the the first call.
+>
 
-[acme@quaco perf]$ perf test python
-19: 'import perf' in python                                         : FAILED!
-[acme@quaco perf]$ perf test -v python
-Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
-19: 'import perf' in python                                         :
---- start ---
-test child forked, pid 991284
-python usage test: "echo "import sys ; sys.path.append('/tmp/build/perf/python'); import perf" | '/usr/bin/python3' "
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-ImportError: /tmp/build/perf/python/perf.cpython-39-x86_64-linux-gnu.so: undefined symbol: bigendian
-test child finished with -1
----- end ----
-'import perf' in python: FAILED!
-[acme@quaco perf]$
- 
->  tools/perf/util/evsel.c | 74 +++++++++++++++++++++++++++++++++++++++--
->  tools/perf/util/evsel.h | 13 ++++++++
->  2 files changed, 85 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index dbfeceb2546c..746e642d4d32 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -2221,6 +2221,51 @@ void __weak arch_perf_parse_sample_weight(struct perf_sample *data,
->  	data->weight = *array;
->  }
->  
-> +u64 evsel__bitfield_swap_branch_flags(u64 value)
-> +{
-> +	u64 new_val = 0;
-> +
-> +	/*
-> +	 * branch_flags
-> +	 * union {
-> +	 * 	u64 values;
-> +	 * 	struct {
-> +	 * 		mispred:1	//target mispredicted
-> +	 * 		predicted:1	//target predicted
-> +	 * 		in_tx:1		//in transaction
-> +	 * 		abort:1		//transaction abort
-> +	 * 		cycles:16	//cycle count to last branch
-> +	 * 		type:4		//branch type
-> +	 * 		reserved:40
-> +	 * 	}
-> +	 * }
-> +	 *
-> +	 * Avoid bswap64() the entire branch_flag.value,
-> +	 * as it has variable bit-field sizes. Instead the
-> +	 * macro takes the bit-field position/size,
-> +	 * swaps it based on the host endianness.
-> +	 */
-> +	if (bigendian()) {
-> +		new_val = bitfield_swap(value, 0, 1);
-> +		new_val |= bitfield_swap(value, 1, 1);
-> +		new_val |= bitfield_swap(value, 2, 1);
-> +		new_val |= bitfield_swap(value, 3, 1);
-> +		new_val |= bitfield_swap(value, 4, 16);
-> +		new_val |= bitfield_swap(value, 20, 4);
-> +		new_val |= bitfield_swap(value, 24, 40);
-> +	} else {
-> +		new_val = bitfield_swap(value, 63, 1);
-> +		new_val |= bitfield_swap(value, 62, 1);
-> +		new_val |= bitfield_swap(value, 61, 1);
-> +		new_val |= bitfield_swap(value, 60, 1);
-> +		new_val |= bitfield_swap(value, 44, 16);
-> +		new_val |= bitfield_swap(value, 40, 4);
-> +		new_val |= bitfield_swap(value, 0, 40);
-> +	}
-> +
-> +	return new_val;
-> +}
-> +
->  int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
->  			struct perf_sample *data)
->  {
-> @@ -2408,6 +2453,8 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
->  	if (type & PERF_SAMPLE_BRANCH_STACK) {
->  		const u64 max_branch_nr = UINT64_MAX /
->  					  sizeof(struct branch_entry);
-> +		struct branch_entry *e;
-> +		unsigned int i;
->  
->  		OVERFLOW_CHECK_u64(array);
->  		data->branch_stack = (struct branch_stack *)array++;
-> @@ -2416,10 +2463,33 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
->  			return -EFAULT;
->  
->  		sz = data->branch_stack->nr * sizeof(struct branch_entry);
-> -		if (evsel__has_branch_hw_idx(evsel))
-> +		if (evsel__has_branch_hw_idx(evsel)) {
->  			sz += sizeof(u64);
-> -		else
-> +			e = &data->branch_stack->entries[0];
-> +		} else {
->  			data->no_hw_idx = true;
-> +			/*
-> +			 * if the PERF_SAMPLE_BRANCH_HW_INDEX is not applied,
-> +			 * only nr and entries[] will be output by kernel.
-> +			 */
-> +			e = (struct branch_entry *)&data->branch_stack->hw_idx;
-> +		}
-> +
-> +		if (swapped) {
-> +			/*
-> +			 * struct branch_flag does not have endian
-> +			 * specific bit field definition. And bswap
-> +			 * will not resolve the issue, since these
-> +			 * are bit fields.
-> +			 *
-> +			 * evsel__bitfield_swap_branch_flags() uses a
-> +			 * bitfield_swap macro to swap the bit position
-> +			 * based on the host endians.
-> +			 */
-> +			for (i = 0; i < data->branch_stack->nr; i++, e++)
-> +				e->flags.value = evsel__bitfield_swap_branch_flags(e->flags.value);
-> +		}
-> +
->  		OVERFLOW_CHECK(array, sz, max_size);
->  		array = (void *)array + sz;
->  	}
-> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> index 1f7edfa8568a..2e82cdbe2c08 100644
-> --- a/tools/perf/util/evsel.h
-> +++ b/tools/perf/util/evsel.h
-> @@ -482,4 +482,17 @@ struct evsel *evsel__leader(struct evsel *evsel);
->  bool evsel__has_leader(struct evsel *evsel, struct evsel *leader);
->  bool evsel__is_leader(struct evsel *evsel);
->  void evsel__set_leader(struct evsel *evsel, struct evsel *leader);
-> +
-> +/*
-> + * Macro to swap the bit-field postition and size.
-> + * Used when,
-> + * - dont need to swap the entire u64 &&
-> + * - when u64 has variable bit-field sizes &&
-> + * - when presented in a host endian which is different
-> + *   than the source endian of the perf.data file
-> + */
-> +#define bitfield_swap(src, pos, size)	\
-> +	((((src) >> (pos)) & ((1ull << (size)) - 1)) << (63 - ((pos) + (size) - 1)))
-> +
-> +u64 evsel__bitfield_swap_branch_flags(u64 value);
->  #endif /* __PERF_EVSEL_H */
-> -- 
-> 2.31.1
+Does it mean that if we want to call vsnprintf() three times, we must
+use va_copy()/va_end() around the first call and the second call ?
+IOW, if we call vsnprintf() multiple times, all the calls except the
+last call should be protected by va_copy()/va_end().
+Actually I don't quite understand why we should do it like this. I
+will try to understand it, and appreciate it if you could explain it
+in detail.
+
+BTW,  can we use va_copy()/va_end() in vsnprintf(), then the caller
+doesn't need to care how many times it will call vsnprintf().
+
+> kvasprintf() could also return NULL if there is not enough memory.
+
+Right. We need to do the NULL check.
+
+>
+> >                       pr_warn("truncated kthread comm '%s' to '%s' (pid:%d)\n",
+> >                               full_comm, name);
+>
+> BTW: Is this message printed during normal boot? I did not tried the
+> patchset myself.
+>
+
+Yes, it will be printed at boot time.
+
+> We should add this warning only if there is a good solution how to
+> avoid the truncated names. And we should me sure that the most common
+> kthreads/workqueues do not trigger it. It would be ugly to print many
+> warnings during boot if people could not get rid of them easily.
+>
+
+As we have extended task comm to 24, there's no such warning printed
+for the existing kthreads/workqueues.
+IOW, it will only print for the newly introduced one if it has a long name.
+That means this printing is under control.
+
+> >                       kfree(full_comm);
+> >               }
+> > >             set_task_comm(task, name);
+> > >             /*
+> > >              * root may have changed our (kthreadd's) priority or CPU mask.
+>
+> Best Regards,
+> Petr
+
+
 
 -- 
-
-- Arnaldo
+Thanks
+Yafang
