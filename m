@@ -2,197 +2,282 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D995C433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 29 Oct 2021 12:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14ACDC433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 29 Oct 2021 12:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7F0361177
-	for <linux-perf-users@archiver.kernel.org>; Fri, 29 Oct 2021 12:19:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF677610C7
+	for <linux-perf-users@archiver.kernel.org>; Fri, 29 Oct 2021 12:25:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231521AbhJ2MVo (ORCPT
+        id S231493AbhJ2M1j (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 29 Oct 2021 08:21:44 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:58296 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231510AbhJ2MVi (ORCPT
+        Fri, 29 Oct 2021 08:27:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44974 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231521AbhJ2M1h (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 29 Oct 2021 08:21:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1635509947;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=73h99hJWE5OrS3nYMF4MG/2Jws/54jgP43Y5v4A9xgo=;
-        b=AbjsF7itlpX+SOUk+oecb8f7GHea7icinKd8PyRNdWTPr91zUceQLhsYC5Bwu1ieBFX/jC
-        38KaVZXuqdMomwsP+2/xGlxQoHx0HyY1oOryUD7S7xwLqYqxbqIM26EL6asR76Eclvy2YF
-        xQAHH3uvCPj7nq2wuMWbd6CiVlYI9/4=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-478-8ykFcOQ4MrmwMNUibHSbXw-1; Fri, 29 Oct 2021 08:19:05 -0400
-X-MC-Unique: 8ykFcOQ4MrmwMNUibHSbXw-1
-Received: by mail-wm1-f71.google.com with SMTP id 145-20020a1c0197000000b0032efc3eb9bcso1346375wmb.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 29 Oct 2021 05:19:05 -0700 (PDT)
+        Fri, 29 Oct 2021 08:27:37 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2935FC061714
+        for <linux-perf-users@vger.kernel.org>; Fri, 29 Oct 2021 05:25:08 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id v17so15874856wrv.9
+        for <linux-perf-users@vger.kernel.org>; Fri, 29 Oct 2021 05:25:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jrtc27.com; s=gmail.jrtc27.user;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=w7ERDMxld9y+CPUnX75l8Ta0sFWie18coBUraZlyenY=;
+        b=KoIfAALYtn/x4ST7dyMPyMUL21tc/UEqneS4L9orO2RmQSLOPMraMaM4Ive3ZB47Pr
+         FQOEDMWe5ToTjOF9mXQxjNDlm5DgRpxW4+cjydO3mYptYWMFTNX8tFPkJnjTCRb6dZR5
+         hAyT9b84MLVMwGmdhg76Q7PBjSnEo6i6l0WNxM1/7J2lLGER4dS/xPBKXrRZ5xzHIR/z
+         SZDVFpxyqxwRvYiydNNBgRMgef8PsCLY8rPTm9uNOYFUZG16hba7AEO4NWcAwRICLoZR
+         +WcUysteLWWPWxshpXd0fTpMRLUgn2pikWxycci1yv+hht3zQVYCCRlc7jJrKCBuhwql
+         yfQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=73h99hJWE5OrS3nYMF4MG/2Jws/54jgP43Y5v4A9xgo=;
-        b=Zohy0X3HWxkAo86dekMWLQPJoFkcAFkNrJ0MqQ0RVDsgwct7JYLN+ABuXR7Cvz6qoI
-         cWQmk9NcPe5xYCvG/H4kKo5//GXRlxtwTduTYZJIifYYkB7ZDkCUFfYznRFylbGBxJog
-         CjBTknmvN/SjYAZ9+xch/Or+Ck5+/unCcqi7IQBBBN5iS5ltLviN19kqv9Ue16A7N6yx
-         RvFChSVvO4VKZqN3Ix18uADib2lSJ0LaGJvibS10CrN86Buda7ZkqQlqQTN8OvzGIWFS
-         EBTF9z7RMDucp1JzApC/LCFPt8IjTyGcvDYWpSJqWskBiuYK0wJtYP3AEeyL7eivL2ox
-         cKBg==
-X-Gm-Message-State: AOAM531YLinUkl2avXtKtfP+aDc+m3dU5Le00ClgqpUTtxxKWh8V440j
-        0U7E5V98xX5s1E25yjp8/yjmxrvQszUPjC+vUcdsEEHS3xkkgBJdVcR+CI0ZxOwvfrj4Odj+xQz
-        Pdek92P2zLxLuYyFeyYeIA7e/GcyAGQ==
-X-Received: by 2002:a1c:2047:: with SMTP id g68mr10196791wmg.181.1635509944734;
-        Fri, 29 Oct 2021 05:19:04 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzIgpvSw0ZswIlVG9WaM8erUI+2qIw/k8U6+b3m3QP5N8rEzXJ+qTLTUwF2TuFs9XYqef7Q0g==
-X-Received: by 2002:a1c:2047:: with SMTP id g68mr10196771wmg.181.1635509944541;
-        Fri, 29 Oct 2021 05:19:04 -0700 (PDT)
-Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
-        by smtp.gmail.com with ESMTPSA id n10sm7150280wmq.24.2021.10.29.05.19.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Oct 2021 05:19:04 -0700 (PDT)
-Date:   Fri, 29 Oct 2021 14:19:02 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Daniel Latypov <dlatypov@google.com>,
-        David Gow <davidgow@google.com>, eranian@google.com
-Subject: Re: [PATCH v2 00/22] Start aligning perf test with kunit style
-Message-ID: <YXvmtrBKV7eawT7h@krava>
-References: <20211013174604.747276-1-irogers@google.com>
- <YXAINnEcHsy450zm@krava>
- <CAP-5=fVCqisvy8-Obx9TA3Zgi_BJdefYr-g4LCsuy1KKb2xtBQ@mail.gmail.com>
- <CAP-5=fXGvBY7hmvCAS7deNAYVxppYj9DZoxstJ93p68BHTSACw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=w7ERDMxld9y+CPUnX75l8Ta0sFWie18coBUraZlyenY=;
+        b=GusIpNsDtI3vt+mj+RTcfh2SdGD55doCEnhj1xnqb7zWzbdO21o9fygqJUcL5z1boh
+         b1QaqhIMIB9+h62P/8ukbvoELJUMXZu8lVwN8F3GSba6/JkjSgW2EVplBIsVr+UU/eom
+         0fz4u0uAGZoJ/purZP8leZSg6SQMJ5ynxHbIO+aArxYbi2Pfwp8JeQpI0An5szO/AJpD
+         004+sx+lwMhd6qksrosABg4ScMdBvqlcc8+ntcgrYZ9uPmK2nSZ07sprg/Tm5lcDLdtU
+         4nCi1LrAiLsjEflCAjzk/uw0M2VyVZGBeJdRSlAWk3DwKEzjBNYIUwxUst0p+r4o0zId
+         lfJA==
+X-Gm-Message-State: AOAM530s3VDTmEv7q+dqVUWFFj+vNI1JzIKVGRfYEoZFdxFcYNCOAbtz
+        Ux3Y7RjIfpjgVaGr1KEL5B4hwuyLGHtfQOzi
+X-Google-Smtp-Source: ABdhPJzNeOWy0F/lHFywLb8P0P+Btkiv6onzYuaN22VjLXYuj/K536/O12T/6Kdme13KBlIKknwohA==
+X-Received: by 2002:adf:e992:: with SMTP id h18mr13746461wrm.21.1635510306627;
+        Fri, 29 Oct 2021 05:25:06 -0700 (PDT)
+Received: from smtpclient.apple (global-5-141.nat-2.net.cam.ac.uk. [131.111.5.141])
+        by smtp.gmail.com with ESMTPSA id q18sm8807724wmc.7.2021.10.29.05.25.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 29 Oct 2021 05:25:05 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.120.0.1.13\))
+Subject: Re: [v4 10/11] riscv: dts: fu740: Add pmu node
+From:   Jessica Clarke <jrtc27@jrtc27.com>
+In-Reply-To: <CAOnJCUJjzmW=QobLPKAWYGppFeoJXjT2Ee6eG2-H=s2mnei=RQ@mail.gmail.com>
+Date:   Fri, 29 Oct 2021 13:25:04 +0100
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Anup Patel <anup.patel@wdc.com>,
+        David Abdurachmanov <david.abdurachmanov@sifive.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Guo Ren <guoren@linux.alibaba.com>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Nick Kossifidis <mick@ics.forth.gr>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vincent Chen <vincent.chen@sifive.com>
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAP-5=fXGvBY7hmvCAS7deNAYVxppYj9DZoxstJ93p68BHTSACw@mail.gmail.com>
+Message-Id: <FE94A3CF-44B9-442A-B985-4ED86BF039EE@jrtc27.com>
+References: <20211025195350.242914-1-atish.patra@wdc.com>
+ <20211025195350.242914-11-atish.patra@wdc.com>
+ <YXsMtrmuavGAHk8S@Jessicas-MacBook-Pro.local>
+ <CAOnJCULqwZvK52nczp2HNinDCBjThnbGbvJpAvdameny1fK4Vw@mail.gmail.com>
+ <EDB030D6-D37A-43D6-9027-222794FDA80D@jrtc27.com>
+ <CAOnJCUJjzmW=QobLPKAWYGppFeoJXjT2Ee6eG2-H=s2mnei=RQ@mail.gmail.com>
+To:     Atish Patra <atishp@atishpatra.org>
+X-Mailer: Apple Mail (2.3654.120.0.1.13)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Oct 28, 2021 at 04:52:13PM -0700, Ian Rogers wrote:
-> On Wed, Oct 20, 2021 at 8:51 AM Ian Rogers <irogers@google.com> wrote:
-> >
-> > On Wed, Oct 20, 2021 at 5:14 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> > >
-> > > On Wed, Oct 13, 2021 at 10:45:42AM -0700, Ian Rogers wrote:
-> > > > Perf test uses its own structs and code layout that differs from ku=
-nit
-> > > > that was more recently introduced to the kernel. Besides consistenc=
-y,
-> > > > it is hoped that moving in the direction of kunit style will enable
-> > > > reuse of infrastructure like test output formatting for continuous
-> > > > testing systems. For example:
-> > > > https://lore.kernel.org/linux-kselftest/CA+GJov6tdjvY9x12JsJT14qn6c=
-7NViJxqaJk+r-K1YJzPggFDQ@mail.gmail.com/
-> > > >
-> > > > The motivation for this restructuring comes from wanting to be able=
- to
-> > > > tag tests with a size:
-> > > > https://lore.kernel.org/linux-perf-users/CAP-5=3DfWmGyuqFKc-EMP3rbm=
-TkjZ3MS+YSajGZfeRMc38HS82gw@mail.gmail.com/
-> > > > To have more exhaustive and slower running tests.  This isn't
-> > > > something kunit currently supports, nor is the execution of python =
-and
-> > > > shell tests, but it seems sensible to work on an approach with kunit
-> > > > rather to invent a new wheel inside of perf.
-> > > >
-> > > > These initial patches are just refactoring the main test suite
-> > > > definitions to be in a more kunit style. Kunit isn't depended upon,=
- it
-> > > > is hoped that this can be done in later patches for the sake of
-> > > > consistency.
-> > > >
-> > > > v2. Gets to a point of the perf test test suite/case structs being
-> > > >     close facsimiles of the kunit ones. It also addresses feedback =
-on
-> > > >     the v1 RFC, in particular from Jiri Olsa <jolsa@redhat.com>.
-> > >
-> > > hi,
-> > > when I compile with DEBUG=3D1 it's ok, but with just make:
-> > >
-> > > [root@krava perf]# ./perf test
-> > > Segmentation fault (core dumped)
-> > > [root@krava perf]# gdb ./perf
-> > > GNU gdb (GDB) Fedora 10.2-4.fc33
-> > > Copyright (C) 2021 Free Software Foundation, Inc.
-> > > License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/g=
-pl.html>
-> > > This is free software: you are free to change and redistribute it.
-> > > There is NO WARRANTY, to the extent permitted by law.
-> > > Type "show copying" and "show warranty" for details.
-> > > This GDB was configured as "x86_64-redhat-linux-gnu".
-> > > Type "show configuration" for configuration details.
-> > > For bug reporting instructions, please see:
-> > > <https://www.gnu.org/software/gdb/bugs/>.
-> > > Find the GDB manual and other documentation resources online at:
-> > >     <http://www.gnu.org/software/gdb/documentation/>.
-> > >
-> > > For help, type "help".
-> > > Type "apropos word" to search for commands related to "word"...
-> > > Reading symbols from ./perf...
-> > > (gdb) r test
-> > > Starting program: /home/jolsa/kernel/linux-perf/tools/perf/perf test
-> > > [Thread debugging using libthread_db enabled]
-> > > Using host libthread_db library "/lib64/libthread_db.so.1".
-> > >
-> > > Program received signal SIGSEGV, Segmentation fault.
-> > > __strlen_avx2 () at ../sysdeps/x86_64/multiarch/strlen-avx2.S:96
-> > > 96              VPCMPEQ (%rdi), %ymm0, %ymm1
-> > > Missing separate debuginfos, use: dnf debuginfo-install bzip2-libs-1.=
-0.8-4.fc33.x86_64 cyrus-sasl-lib-2.1.27-6.fc33.x86_64 elfutils-debuginfod-c=
-lient-0.185-2.fc33.x86_64 elfutils-libelf-0.185-2.fc33.x86_64 elfutils-libs=
--0.185-2.fc33.x86_64 keyutils-libs-1.6.1-1.fc33.x86_64 krb5-libs-1.18.2-31.=
-fc33.x86_64 libbabeltrace-1.5.8-3.fc33.x86_64 libbrotli-1.0.9-3.fc33.x86_64=
- libcap-2.48-2.fc33.x86_64 libcom_err-1.45.6-4.fc33.x86_64 libgcc-10.3.1-1.=
-fc33.x86_64 libidn2-2.3.2-1.fc33.x86_64 libnghttp2-1.43.0-1.fc33.x86_64 lib=
-psl-0.21.1-2.fc33.x86_64 libselinux-3.1-2.fc33.x86_64 libssh-0.9.6-1.fc33.x=
-86_64 libunistring-0.9.10-9.fc33.x86_64 libunwind-1.4.0-4.fc33.x86_64 libuu=
-id-2.36.1-1.fc33.x86_64 libxcrypt-4.4.26-2.fc33.x86_64 numactl-libs-2.0.14-=
-1.fc33.x86_64 openldap-2.4.50-5.fc33.x86_64 openssl-libs-1.1.1l-2.fc33.x86_=
-64 pcre-8.44-2.fc33.x86_64 perl-libs-5.32.1-471.fc33.x86_64 popt-1.18-2.fc3=
-3.x86_64 python2.7-2.7.18-15.fc33.x86_64 slang-2.3.2-8.fc33.x86_64 xz-libs-=
-5.2.5-4.fc33.x86_64 zlib-1.2.11-23.fc33.x86_64
-> > > (gdb) bt
-> > > #0  __strlen_avx2 () at ../sysdeps/x86_64/multiarch/strlen-avx2.S:96
-> > > #1  0x00000000004a3848 in __cmd_test (skiplist=3D0x0, argv=3D0x7fffff=
-ffd6c0, argc=3D0) at tests/builtin-test.c:150
-> > > #2  cmd_test (argc=3D0, argv=3D0x7fffffffd6c0) at tests/builtin-test.=
-c:628
-> > > #3  0x00000000004cc47b in run_builtin (p=3Dp@entry=3D0xa7cda8 <comman=
-ds+552>, argc=3Dargc@entry=3D1, argv=3Dargv@entry=3D0x7fffffffd6c0) at perf=
-=2Ec:313
-> > > #4  0x00000000004397ae in handle_internal_command (argv=3D0x7fffffffd=
-6c0, argc=3D1) at perf.c:365
-> > > #5  run_argv (argv=3D<synthetic pointer>, argcp=3D<synthetic pointer>=
-) at perf.c:409
-> > > #6  main (argc=3D1, argv=3D0x7fffffffd6c0) at perf.c:539
-> > > (gdb)
-> >
-> > Thanks, I'll take a look.
+On 29 Oct 2021, at 07:05, Atish Patra <atishp@atishpatra.org> wrote:
 >=20
-> I wasn't able to reproduce this, I tried with gcc-10 on each patch
-> individually, debug disabled and O3. I can send a v3 patch set, but
-> currently it is just a rebase of v2.
+> On Thu, Oct 28, 2021 at 5:07 PM Jessica Clarke <jrtc27@jrtc27.com> =
+wrote:
+>>=20
+>> On 29 Oct 2021, at 00:37, Atish Patra <atishp@atishpatra.org> wrote:
+>>>=20
+>>> On Thu, Oct 28, 2021 at 1:49 PM Jessica Clarke <jrtc27@jrtc27.com> =
+wrote:
+>>>>=20
+>>>> On Mon, Oct 25, 2021 at 12:53:49PM -0700, Atish Patra wrote:
+>>>>> HiFive unmatched supports HPMCounters but does not implement =
+mcountinhibit
+>>>>> or sscof extension. Thus, perf monitoring can be used on the =
+unmatched
+>>>>> board without sampling.
+>>>>>=20
+>>>>> Add the PMU node with compatible string so that Linux perf driver =
+can
+>>>>> utilize this to enable PMU.
+>>>>>=20
+>>>>> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+>>>>> ---
+>>>>> arch/riscv/boot/dts/sifive/fu740-c000.dtsi | 3 +++
+>>>>> 1 file changed, 3 insertions(+)
+>>>>>=20
+>>>>> diff --git a/arch/riscv/boot/dts/sifive/fu740-c000.dtsi =
+b/arch/riscv/boot/dts/sifive/fu740-c000.dtsi
+>>>>> index abbb960f90a0..b35b96b58820 100644
+>>>>> --- a/arch/riscv/boot/dts/sifive/fu740-c000.dtsi
+>>>>> +++ b/arch/riscv/boot/dts/sifive/fu740-c000.dtsi
+>>>>> @@ -140,6 +140,9 @@ soc {
+>>>>>             #size-cells =3D <2>;
+>>>>>             compatible =3D "simple-bus";
+>>>>>             ranges;
+>>>>> +             pmu {
+>>>>> +                     compatible =3D "riscv,pmu";
+>>>>> +             };
+>>>>=20
+>>>> This is a property of the user-replaceable firmware, not a property =
+of
+>>>> the hardware,
+>>>=20
+>>> It's a property of hardware that indicates that the hardware =
+supports PMU.
+>>=20
+>> All RISC-V hardware provides the CSRs, they=E2=80=99re part of the =
+privileged
+>> spec and not marked optional. How many aren=E2=80=99t hard-wired to =
+zero is up
+>> to the implementation. But even then you can=E2=80=99t know from the =
+hardware
+>> alone what is supported; the firmware has to enable S-mode (and
+>> U-mode)=E2=80=99s ability to read them, so you can=E2=80=99t assume =
+anything in a
+>> static device tree hard-coded in Linux about what firmware has done.
+>> Since you currently have to query the firmware to determine what=E2=80=99=
+s
+>> available to you anyway, I see no benefit from having a node in the
+>> device tree that tells you your firmware *might* have counters you =
+can
+>> use.
+>>=20
+>>> Additionally, the counter overflow interrupt number needs to be
+>>> defined through the DT as well
+>>> so that a clean platform driver can be implemented.
+>>=20
+>> The interrupt number is specified as 13 by the Sscofmpf spec.
+>> But that=E2=80=99s not relevant here, the FU740 predates and =
+doesn=E2=80=99t implement
+>> Sscofmpf, meaning there is no interrupt to even define here. And as I
+>> said on the other patch, don=E2=80=99t conflate =E2=80=9CSBI PMU =
+firmware interface is
+>> supported=E2=80=9D and =E2=80=9CSscofmpf is implemented in the =
+hardware=E2=80=9D; the former
+>> should be discovered by talking to firmware, and the latter should be
+>> discovered like any other extension (however that ends up happening).
+>=20
+> Presence of sscof extension can be discovered through general =
+extension
+> discovery mechanism (probably a separate DT node..that's a separate =
+discussion).
+>=20
+> However, the interrupt number discovery has to be through DT so the
+> platform driver
+> can probe the DT to figure out that.
 
-ok, I'll try to debug that if I can still reproduce
+No, you=E2=80=99re not reading what I said. It=E2=80=99s specified to be =
+13 in the
+Sscofmpf spec, there is zero need to encode information in the device
+tree that is already mandated by a specification. We don=E2=80=99t put =
+that
+supervisor software interrupts are 1 nor that supervisor timer
+interrupts are 5 in the device tree, so we also don=E2=80=99t need to =
+put that
+supervisor counter overflow interrupts are 13 in it. We *do* currently
+put machine timer interrupt information from the CLINT in the device
+tree, and both supervisor and machine external interrupt information
+from the PLIC, but that is not to tell you what=E2=80=99s already =
+specified
+(that they=E2=80=99re interrupts 7, 11 and 9 respectively), it=E2=80=99s =
+to tell you
+which order the per-hart registers are in in the CLINT, and which order
+the contexts are in in the PLIC. If it were up to me that would=E2=80=99ve=
+ been
+expressed a different way as it=E2=80=99s an ugly encoding, rather =
+redundant
+and not the nicest to decode in software, but it=E2=80=99s too late for =
+that.
+Though with the ACLINT, APLIC and other AIA parts on the horizon I hope
+we can get saner bindings for those that don=E2=80=99t repeat those =
+mistakes.
+But the point is, if it=E2=80=99s specified by the spec, it doesn=E2=80=99=
+t need to go
+in the device tree, the device tree is for telling you all the things
+you don=E2=80=99t, and can=E2=80=99t, already know.
 
-jirka
+>>>> so having this in the device tree under /soc, let alone
+>>>> hard-coded in Linux, is utterly wrong. Why can this not just be =
+probed
+>>>> like any other SBI interface? The "Probe SBI extension" interface =
+is
+>>>> precisely for this kind of thing.
+>>>>=20
+>>> SBI extension is anyways probed to verify if the firmware has PMU
+>>> extension or not.
+>>> However, adding the DT property allows different platforms (with or
+>>> without sscof extension)
+>>> to use the same code path.
+>>=20
+>> You don=E2=80=99t need a device tree for that; that same code path =
+can just be
+>> =E2=80=9Cuse the existing standard firmware interface=E2=80=9D. That =
+also has the
+>> benefit that it=E2=80=99s not tied to device tree and so works =
+identically for
+>> ACPI, rather than needing an ACPI version of it.
+>>=20
+>=20
+> I don't disagree with that argument. However, we need a DT node for
+> interrupt number as explained in the above.
+> A DT based platform driver allows us to provide a unified code path
+> which can handle both kinds of platforms described below.
+>=20
+> 1. Platforms without sscof extension
+> 2. Platforms with sscof extension that requires a DT node for =
+interrupt number
+>=20
+> Otherwise, the driver has to do the following things in order.
+>=20
+> 1. Probe PMU extension
+> 2. first check if sscof extension is present in the special RISC-V ISA
+> extension DT node (which is yet to finalize)
+> 3. If sscof extension is present then register for a DT based platform =
+driver.
+> 4. Otherwise, register a simple platform driver.
+>=20
+> I am not completely opposed to doing that if there is a strong
+> technical issue with the current approach.
+
+Nope, it=E2=80=99s:
+
+1. Probe PMU SBI extension
+2. Register a driver
+3. If Sscofmpf is present, register for interrupt 13
+
+Or perhaps with 2 and 3 swapped.
+
+You=E2=80=99re making this far too complicated by being fixated on =
+needing
+device tree in there somewhere. You don=E2=80=99t need it at all except
+possibly to tell you that Sscofmpf is supported, which should be done
+the same as any other supervisor extension like Svnapot or Svpbmt.
+
+Jess
+
+>> I see nothing here that can=E2=80=99t be discovered through =
+pre-existing means.
+>> If it can be discovered without use of the device tree then it does =
+not
+>> belong in the device tree; the device tree is purely for things that
+>> cannot otherwise be discovered.
+>>=20
+>> Jess
+>>=20
+>=20
+>=20
+> --=20
+> Regards,
+> Atish
 
