@@ -2,56 +2,56 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF54C433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon,  1 Nov 2021 06:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D72C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon,  1 Nov 2021 06:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C3F161078
-	for <linux-perf-users@archiver.kernel.org>; Mon,  1 Nov 2021 06:05:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F9ED60EBC
+	for <linux-perf-users@archiver.kernel.org>; Mon,  1 Nov 2021 06:05:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230462AbhKAGHr (ORCPT
+        id S231317AbhKAGHy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 1 Nov 2021 02:07:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55258 "EHLO
+        Mon, 1 Nov 2021 02:07:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231138AbhKAGHO (ORCPT
+        with ESMTP id S231393AbhKAGHe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 1 Nov 2021 02:07:14 -0400
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E35A8C061764;
-        Sun, 31 Oct 2021 23:04:41 -0700 (PDT)
-Received: by mail-pg1-x52f.google.com with SMTP id n23so5638840pgh.8;
-        Sun, 31 Oct 2021 23:04:41 -0700 (PDT)
+        Mon, 1 Nov 2021 02:07:34 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E1E7C06120C;
+        Sun, 31 Oct 2021 23:04:46 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id k4so1069630plx.8;
+        Sun, 31 Oct 2021 23:04:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Ap2gAMjIVTbmjeLM5LRGgC4luOpifeHIYUs0krjMvxk=;
-        b=Xww3fwhQ6GVEpXF7vRbHR0oD+u34jHMA9vEJrrh55zmht9IdE5Qb/0vjbQs4HN5gvY
-         POcNuU5T+abx6eRSGb9nZuGqjMlnYzI3jqvFYBpqbT6poqQDzWL/OCelJl7Ho3Jrf54u
-         5YN/78Tr6wNXbUZYW94XoWas9EC868iRRB80bXY8hf7ZBFghg6/WFfP5WyJZQXRoDLAc
-         5qWLDy0anYrl3w8SOS4VT5/w0N/L80lgTsNBBnkKg70ESOn1Peuixzj+ADfGsxOt+hYL
-         hcPflq3MyEUgj2IPSiAxx5uysxJUuGk+9g1qy+Fnllx7jZ0Mylv4WfpxvfDZiclIXnpB
-         nNMA==
+        bh=UnbvpW9WGZPPHsD461H5NLpgI+BcZRpk9Uvkg/7/FsI=;
+        b=mBgEqR2cuqWgG4wbE+Ee9nl7PI0oPuF//CHOFEk3rqDKH5Wv+2P8q+SgcLACl7Eu1S
+         DYIBVewqg0Hdo0Z9cjB8Sc4otEiDDpzHVGJDzdQm/23So6LaXX9kNiFXBxpugZ7V+xVS
+         0csKWuVOGikNjqyzPgk+VenqX+qZTV7bDJrecXDWyeYudRBWBkdXOMGaT3EtG6yamLnt
+         oT+8TiedZHp3qG2ml51vaYf8orZUmG0H45pcDpUssVRSPBh7l6VY8IyPdChDJul82kv5
+         Ev7EY/jQQfLSgW8XNit4lnKgN4T8Rq4bUuBwJvyrwIhPyecKtKCfMJM4hdXsmzwSwxCL
+         KqcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Ap2gAMjIVTbmjeLM5LRGgC4luOpifeHIYUs0krjMvxk=;
-        b=mzZAw8q7G9WAIbu0mr5dwx2+rjgpH809Jv+KdJxmgXU5M7Gb7HDQJBVNMQiUq0Ob1H
-         H+8eMnyy+sRKeyEqLOTNqFinTc5qU7srYhlzJ48+GP9R23iblu3z32y+lrO4DKMsAQJy
-         07JIdmrYOIgyd8DHgfJbZw7BpQKyemALGOrghrppIECnPuNEfh7dv+qO1XcRdG1Vfslk
-         BOVqIxKBHOARef2qef52A4dz+Op9pSQexCzCHoAjFrUtImrsc8+zGEo0trcQ1xBF5bCQ
-         0v40EQFyT6S4yo8yWMD/8dMwEUaTybX9deBsx16xaTDtoLMtOdarAA4NHKFNejpUSLxn
-         8Q+w==
-X-Gm-Message-State: AOAM530DZyryQUp7WGIapJHSPQqAffzTen4660n/4CfySKyaAKyUPGmt
-        Ev1zwb3RjenEUyzxU7IV5k0=
-X-Google-Smtp-Source: ABdhPJzKLE+vunSqJAXuq5W8qJV8bLajJd/LjCll+mqrJULVSs7WJNF0By6dsSaTkrqw5K5k4BauhA==
-X-Received: by 2002:a62:1743:0:b0:480:a01f:bf14 with SMTP id 64-20020a621743000000b00480a01fbf14mr11691513pfx.72.1635746681116;
-        Sun, 31 Oct 2021 23:04:41 -0700 (PDT)
+        bh=UnbvpW9WGZPPHsD461H5NLpgI+BcZRpk9Uvkg/7/FsI=;
+        b=X6fkjcpe6mzh8qOKc3DsZ7Cu7SMm9wxGkzruf7WvtS83k69P424BXLWq2/2HOp1y0f
+         kSHXyOM/H5NtS7l/xvtBCYJ/zLFFuQeLp3y7wyOuf4vk4DjDwI69jahyyC9o5LDVvjgU
+         NpD4Afvqw5KEG0Q/2LAHGugWO8XgAu4l6R4Z8yM3UpVEtvt8qkGrxnLxWoM6duT3/lo2
+         yFilMrXsUGXAGtyKd4GB8jIKTxHfQUo8UanW4mg/pbuzlKrlIgLnRc+iv4/Dk1n2y7N+
+         353FKnIoJJ1Ete1q684kk0JqayGyUq3sqZ+c3t6BSfmewYQug+dix2zOuQ6buBu5GCXG
+         XRPQ==
+X-Gm-Message-State: AOAM530TZMlNX+EOfKyPjS7WU8YfP2HK6fuO8TW/tcYaBsDUzlQ9OKmj
+        e/hZ1GTahlL/P1iBDVZV66I=
+X-Google-Smtp-Source: ABdhPJzGCvt5iEpyM474KY6O62Zlsfcvpf7wrXcYqDsBGf7Az/ne89nFa22e0UxYm86jwgxdTn2BTA==
+X-Received: by 2002:a17:902:bd01:b0:141:6232:6f89 with SMTP id p1-20020a170902bd0100b0014162326f89mr23251730pls.12.1635746685828;
+        Sun, 31 Oct 2021 23:04:45 -0700 (PDT)
 Received: from localhost.localdomain ([144.202.123.152])
-        by smtp.gmail.com with ESMTPSA id g8sm3277586pfc.65.2021.10.31.23.04.39
+        by smtp.gmail.com with ESMTPSA id g8sm3277586pfc.65.2021.10.31.23.04.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 Oct 2021 23:04:40 -0700 (PDT)
+        Sun, 31 Oct 2021 23:04:45 -0700 (PDT)
 From:   Yafang Shao <laoar.shao@gmail.com>
 To:     akpm@linux-foundation.org, keescook@chromium.org,
         rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
@@ -71,10 +71,11 @@ Cc:     linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, oliver.sang@intel.com, lkp@intel.com,
         Yafang Shao <laoar.shao@gmail.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Subject: [PATCH v7 05/11] fs/binfmt_elf: make prpsinfo always get a nul terminated task comm
-Date:   Mon,  1 Nov 2021 06:04:13 +0000
-Message-Id: <20211101060419.4682-6-laoar.shao@gmail.com>
+Subject: [PATCH v7 07/11] tools/bpf/bpftool/skeleton: make it adopt to task comm size change
+Date:   Mon,  1 Nov 2021 06:04:15 +0000
+Message-Id: <20211101060419.4682-8-laoar.shao@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20211101060419.4682-1-laoar.shao@gmail.com>
 References: <20211101060419.4682-1-laoar.shao@gmail.com>
@@ -84,50 +85,13 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-kernel test robot reported a -Wstringop-truncation warning after I
-extend task comm from 16 to 24. Below is the detailed warning:
+bpf_probe_read_kernel_str() will add a nul terminator to the dst, then
+we don't care about if the dst size is big enough.
 
-   fs/binfmt_elf.c: In function 'fill_psinfo.isra':
->> fs/binfmt_elf.c:1575:9: warning: 'strncpy' output may be truncated copying 16 bytes from a string of length 23 [-Wstringop-truncation]
-    1575 |         strncpy(psinfo->pr_fname, p->comm, sizeof(psinfo->pr_fname));
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Replacing the open-coded strncpy() with the helper get_task_comm() can
-avoid this warning.
-
-As the struct prpsinfo is externally parsed, for example by the crash
-utility, we can't change the size of pr_fname. So I just leave it as-is.
-
-I also verfied if it still work well when I extend the comm size to 24.
-struct elf_prpsinfo is used to dump the task information in userspace
-coredump or kernel vmcore. Below is the verfication of vmcore,
-
-crash> ps
-   PID    PPID  CPU       TASK        ST  %MEM     VSZ    RSS  COMM
-      0      0   0  ffffffff9d21a940  RU   0.0       0      0  [swapper/0]
->     0      0   1  ffffa09e40f85e80  RU   0.0       0      0  [swapper/1]
->     0      0   2  ffffa09e40f81f80  RU   0.0       0      0  [swapper/2]
->     0      0   3  ffffa09e40f83f00  RU   0.0       0      0  [swapper/3]
->     0      0   4  ffffa09e40f80000  RU   0.0       0      0  [swapper/4]
->     0      0   5  ffffa09e40f89f80  RU   0.0       0      0  [swapper/5]
-      0      0   6  ffffa09e40f8bf00  RU   0.0       0      0  [swapper/6]
->     0      0   7  ffffa09e40f88000  RU   0.0       0      0  [swapper/7]
->     0      0   8  ffffa09e40f8de80  RU   0.0       0      0  [swapper/8]
->     0      0   9  ffffa09e40f95e80  RU   0.0       0      0  [swapper/9]
->     0      0  10  ffffa09e40f91f80  RU   0.0       0      0  [swapper/10]
->     0      0  11  ffffa09e40f93f00  RU   0.0       0      0  [swapper/11]
->     0      0  12  ffffa09e40f90000  RU   0.0       0      0  [swapper/12]
->     0      0  13  ffffa09e40f9bf00  RU   0.0       0      0  [swapper/13]
->     0      0  14  ffffa09e40f98000  RU   0.0       0      0  [swapper/14]
->     0      0  15  ffffa09e40f9de80  RU   0.0       0      0  [swapper/15]
-
-It works well as expected.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Suggested-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
 Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Steven Rostedt <rostedt@goodmis.org>
@@ -135,22 +99,24 @@ Cc: Al Viro <viro@zeniv.linux.org.uk>
 Cc: Kees Cook <keescook@chromium.org>
 Cc: Petr Mladek <pmladek@suse.com>
 ---
- fs/binfmt_elf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/bpf/bpftool/skeleton/pid_iter.bpf.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index a813b70f594e..138956fd4a88 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -1572,7 +1572,7 @@ static int fill_psinfo(struct elf_prpsinfo *psinfo, struct task_struct *p,
- 	SET_UID(psinfo->pr_uid, from_kuid_munged(cred->user_ns, cred->uid));
- 	SET_GID(psinfo->pr_gid, from_kgid_munged(cred->user_ns, cred->gid));
- 	rcu_read_unlock();
--	strncpy(psinfo->pr_fname, p->comm, sizeof(psinfo->pr_fname));
-+	get_task_comm(psinfo->pr_fname, p);
+diff --git a/tools/bpf/bpftool/skeleton/pid_iter.bpf.c b/tools/bpf/bpftool/skeleton/pid_iter.bpf.c
+index d9b420972934..f70702fcb224 100644
+--- a/tools/bpf/bpftool/skeleton/pid_iter.bpf.c
++++ b/tools/bpf/bpftool/skeleton/pid_iter.bpf.c
+@@ -71,8 +71,8 @@ int iter(struct bpf_iter__task_file *ctx)
+ 
+ 	e.pid = task->tgid;
+ 	e.id = get_obj_id(file->private_data, obj_type);
+-	bpf_probe_read_kernel(&e.comm, sizeof(e.comm),
+-			      task->group_leader->comm);
++	bpf_probe_read_kernel_str(&e.comm, sizeof(e.comm),
++				  task->group_leader->comm);
+ 	bpf_seq_write(ctx->meta->seq, &e, sizeof(e));
  
  	return 0;
- }
 -- 
 2.17.1
 
