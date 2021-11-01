@@ -2,56 +2,56 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D07C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon,  1 Nov 2021 06:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD33C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon,  1 Nov 2021 06:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60E2E60EBC
-	for <linux-perf-users@archiver.kernel.org>; Mon,  1 Nov 2021 06:05:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18D0260EBC
+	for <linux-perf-users@archiver.kernel.org>; Mon,  1 Nov 2021 06:05:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231733AbhKAGH4 (ORCPT
+        id S231829AbhKAGIH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 1 Nov 2021 02:07:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55338 "EHLO
+        Mon, 1 Nov 2021 02:08:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230307AbhKAGHd (ORCPT
+        with ESMTP id S231532AbhKAGHj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 1 Nov 2021 02:07:33 -0400
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6897C06120B;
-        Sun, 31 Oct 2021 23:04:43 -0700 (PDT)
-Received: by mail-pg1-x532.google.com with SMTP id 75so16328164pga.3;
-        Sun, 31 Oct 2021 23:04:43 -0700 (PDT)
+        Mon, 1 Nov 2021 02:07:39 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 004BBC061210;
+        Sun, 31 Oct 2021 23:04:50 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id y4so1005212pfa.5;
+        Sun, 31 Oct 2021 23:04:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=CZbW1Aleg8hcQ6oriKfCOVzwEMQjjmsZLoOFChfxiOE=;
-        b=hLIVcr6CSGMn7q+duUxCWW0eGrpmQBAmB6Wq4FCLbLyQvr2Upd8TZDDWhXwETwIru5
-         gVsFVTteDomWNPaucmxRqkCCuS8WRWbKXTXFS4O738YFeGYfE7jLWgBhWcP5Wyl3Ixx1
-         e9YODtfNTOnD4iIYhMk9WCAiID1UqwO6uuIqcXKNmu7EhFjFVJ/VFfeT8r6Dr1npBbY7
-         zyuY/z7kwCaKGMOzNmsXif+LtjafxWuoctWRkorVboIJqLwC2HTMPIEGJO5cyPXEJAeh
-         sgohILu4rfKSjNpvEjhK4xvo6H+wsmaaOY6Ipo4srFpfRbzLHJNYJVKU90aLM7DlOEJ/
-         4Qrw==
+        bh=d7LTw3kPVa/zFmJb8s8WHpppDtuC/dCZbGEz654o0Z0=;
+        b=H/Nt6ip1DACtHq57o9Mdyh3bCgZ2fAcALeHvM0Gv+XQbwcYyRHXWzojtO6xw8zIvFg
+         of7ARcpuxOICZBLLWsgHgEjiLZ0NGPmGsuSOqYNFLvMqSv4w8r/p8nLl5pblmv9MgEXK
+         21ou7ksmzx/LPZaw79nrvSnwPYYF223o7/HBbYq0pHxF7nGPcAxZCCl6cOjOw/p4oGNc
+         VxIcq8UNpcJv+RFjFLhBnY8fbD5NrNaZXXYN5J97DSOc3G3PRDERiKp/Ha/Guhftz0eU
+         E9yXRyZQp5jPEOXF7gKMmJZHCv2oeodhDAX0AAFrN+gmh4zIDj2PfHr03avz0ORhIkM/
+         aw+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=CZbW1Aleg8hcQ6oriKfCOVzwEMQjjmsZLoOFChfxiOE=;
-        b=uwrfkDDJuATNgmtGsB8YLWZ2e20Hg1M+FUgUeoLyPC4LRzN+vM/No+LykePhwvGpDF
-         m9pk49EyFROd3T+k4z89+ZCR3PQ5kpcv7zkQnbMBbVPJUr8xhATBGZd6hSHEaWYo0Aix
-         a/KsgUPXv4XwjyDbHU/2C6rYe+7AVVgl8ebGJjuSAKRtThzKykEuZvRAz0MNODoqCd/3
-         +i99jy0FqWiOK3NdCjCZr/o10Xyq5SX+mA+ZvzHBVl3Ip0DVBFr5ceIWsOhbP6mHOXQa
-         r9q1uTnWaL6Hw63A+v2Dcf6Qdw/m3AaChis8bGUuJycoYzJSWcNRYcMG033iQk3HMa4n
-         2Alg==
-X-Gm-Message-State: AOAM532r06wRdBecCggO9q/ygmu7Sl1r6cSheTAWn1WnI+sjyLYnODWJ
-        7TWof55FHSV/URUY2gzErLQ=
-X-Google-Smtp-Source: ABdhPJy5ahFUxXTC3lwrjdq2rffkJFK0bqTnEW/fg2sOG/fpUs8BcRn22EW5Z/8v2ha5HNBZ374p9Q==
-X-Received: by 2002:a62:e510:0:b0:44c:e06e:80dd with SMTP id n16-20020a62e510000000b0044ce06e80ddmr27033507pff.48.1635746683498;
-        Sun, 31 Oct 2021 23:04:43 -0700 (PDT)
+        bh=d7LTw3kPVa/zFmJb8s8WHpppDtuC/dCZbGEz654o0Z0=;
+        b=bssYcQhuHz2agv7qxG/Q1CWChUxVZ4uOAvVo5e0rYO8mMcfHQ7lZphu6jqJFip7o8y
+         3MJ0ckdAAJpz4UqyY5B1yd7heJ8E9tflktCWPApGPmH8893WCFeGEN4lMQgtXe/m4jSO
+         4tarRIwNfB5+tcr3az3AHgCylm0quUiBee74uRj9r3zauqDpoRwcSIebf18aB5KU0263
+         aApFEQAwfo8i+6wbSgyulrlM8dbFu1PtPYgmRwsZgJZ0qG/cspA7brQoY1Du6qawtSpM
+         OmNgY0mm0TiUSCKjWepuszxLfDje5kL3rLxhCov14ZkHPKy3XPiJPnYMiB02WJVYjspP
+         YUKA==
+X-Gm-Message-State: AOAM533LaemEc4aqaTd6HJlE31rubWkyIAEmG0VxeazcGO2JlbG40RHF
+        3659EmGUBf6TcGHmSo5tKpU=
+X-Google-Smtp-Source: ABdhPJxHtNbH9HB5n5DPJRDQzLHf3MgJ9R6ynW9CWqOunCISp1/PBfsWZl/KKejsKvsqjLu1N78mrQ==
+X-Received: by 2002:a63:7e05:: with SMTP id z5mr20295506pgc.354.1635746690496;
+        Sun, 31 Oct 2021 23:04:50 -0700 (PDT)
 Received: from localhost.localdomain ([144.202.123.152])
-        by smtp.gmail.com with ESMTPSA id g8sm3277586pfc.65.2021.10.31.23.04.41
+        by smtp.gmail.com with ESMTPSA id g8sm3277586pfc.65.2021.10.31.23.04.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 Oct 2021 23:04:43 -0700 (PDT)
+        Sun, 31 Oct 2021 23:04:49 -0700 (PDT)
 From:   Yafang Shao <laoar.shao@gmail.com>
 To:     akpm@linux-foundation.org, keescook@chromium.org,
         rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
@@ -71,11 +71,10 @@ Cc:     linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, oliver.sang@intel.com, lkp@intel.com,
         Yafang Shao <laoar.shao@gmail.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Subject: [PATCH v7 06/11] samples/bpf/test_overhead_kprobe_kern: make it adopt to task comm size change
-Date:   Mon,  1 Nov 2021 06:04:14 +0000
-Message-Id: <20211101060419.4682-7-laoar.shao@gmail.com>
+Subject: [PATCH v7 09/11] tools/testing/selftests/bpf: make it adopt to task comm size change
+Date:   Mon,  1 Nov 2021 06:04:17 +0000
+Message-Id: <20211101060419.4682-10-laoar.shao@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20211101060419.4682-1-laoar.shao@gmail.com>
 References: <20211101060419.4682-1-laoar.shao@gmail.com>
@@ -85,16 +84,25 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-bpf_probe_read_kernel_str() will add a nul terminator to the dst, then
-we don't care about if the dst size is big enough. This patch also
-replaces the hard-coded 16 with TASK_COMM_LEN to make it adopt to task
-comm size change.
+The hard-coded 16 is used in various bpf progs. These progs get task
+comm either via bpf_get_current_comm() or prctl() or
+bpf_core_read_str(), all of which can work well even if the task comm size
+is changed.
+
+In these BPF programs, one thing to be improved is the
+sched:sched_switch tracepoint args. As the tracepoint args are derived
+from the kernel, we'd better make it same with the kernel. So the macro
+TASK_COMM_LEN is converted to type enum, then all the BPF programs can
+get it through BTF.
+
+The BPF program which wants to use TASK_COMM_LEN should include the header
+vmlinux.h. Regarding the test_stacktrace_map and test_tracepoint, as the
+type defined in linux/bpf.h are also defined in vmlinux.h, so we don't
+need to include linux/bpf.h again.
 
 Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
 Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Steven Rostedt <rostedt@goodmis.org>
@@ -102,16 +110,45 @@ Cc: Al Viro <viro@zeniv.linux.org.uk>
 Cc: Kees Cook <keescook@chromium.org>
 Cc: Petr Mladek <pmladek@suse.com>
 ---
- samples/bpf/offwaketime_kern.c          |  4 ++--
- samples/bpf/test_overhead_kprobe_kern.c | 11 ++++++-----
- samples/bpf/test_overhead_tp_kern.c     |  5 +++--
- 3 files changed, 11 insertions(+), 9 deletions(-)
+ include/linux/sched.h                                   | 9 +++++++--
+ tools/testing/selftests/bpf/progs/test_stacktrace_map.c | 6 +++---
+ tools/testing/selftests/bpf/progs/test_tracepoint.c     | 6 +++---
+ 3 files changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/samples/bpf/offwaketime_kern.c b/samples/bpf/offwaketime_kern.c
-index 4866afd054da..eb4d94742e6b 100644
---- a/samples/bpf/offwaketime_kern.c
-+++ b/samples/bpf/offwaketime_kern.c
-@@ -113,11 +113,11 @@ static inline int update_counts(void *ctx, u32 pid, u64 delta)
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index b9c85c52fed0..09ac13e54549 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -274,8 +274,13 @@ struct task_group;
+ 
+ #define get_current_state()	READ_ONCE(current->__state)
+ 
+-/* Task command name length: */
+-#define TASK_COMM_LEN			16
++/*
++ * Define the task command name length as enum, then it can be visible to
++ * BPF programs.
++ */
++enum {
++	TASK_COMM_LEN = 16,
++};
+ 
+ extern void scheduler_tick(void);
+ 
+diff --git a/tools/testing/selftests/bpf/progs/test_stacktrace_map.c b/tools/testing/selftests/bpf/progs/test_stacktrace_map.c
+index 00ed48672620..e9b602a6dc1b 100644
+--- a/tools/testing/selftests/bpf/progs/test_stacktrace_map.c
++++ b/tools/testing/selftests/bpf/progs/test_stacktrace_map.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ // Copyright (c) 2018 Facebook
+ 
+-#include <linux/bpf.h>
++#include <vmlinux.h>
+ #include <bpf/bpf_helpers.h>
+ 
+ #ifndef PERF_MAX_STACK_DEPTH
+@@ -41,11 +41,11 @@ struct {
  /* taken from /sys/kernel/debug/tracing/events/sched/sched_switch/format */
  struct sched_switch_args {
  	unsigned long long pad;
@@ -125,64 +162,31 @@ index 4866afd054da..eb4d94742e6b 100644
  	int next_pid;
  	int next_prio;
  };
-diff --git a/samples/bpf/test_overhead_kprobe_kern.c b/samples/bpf/test_overhead_kprobe_kern.c
-index f6d593e47037..8fdd2c9c56b2 100644
---- a/samples/bpf/test_overhead_kprobe_kern.c
-+++ b/samples/bpf/test_overhead_kprobe_kern.c
-@@ -6,6 +6,7 @@
-  */
- #include <linux/version.h>
- #include <linux/ptrace.h>
-+#include <linux/sched.h>
- #include <uapi/linux/bpf.h>
- #include <bpf/bpf_helpers.h>
- #include <bpf/bpf_tracing.h>
-@@ -22,17 +23,17 @@ int prog(struct pt_regs *ctx)
- {
- 	struct signal_struct *signal;
- 	struct task_struct *tsk;
--	char oldcomm[16] = {};
--	char newcomm[16] = {};
-+	char oldcomm[TASK_COMM_LEN] = {};
-+	char newcomm[TASK_COMM_LEN] = {};
- 	u16 oom_score_adj;
- 	u32 pid;
+diff --git a/tools/testing/selftests/bpf/progs/test_tracepoint.c b/tools/testing/selftests/bpf/progs/test_tracepoint.c
+index 4b825ee122cf..f21982681e28 100644
+--- a/tools/testing/selftests/bpf/progs/test_tracepoint.c
++++ b/tools/testing/selftests/bpf/progs/test_tracepoint.c
+@@ -1,17 +1,17 @@
+ // SPDX-License-Identifier: GPL-2.0
+ // Copyright (c) 2017 Facebook
  
- 	tsk = (void *)PT_REGS_PARM1(ctx);
- 
- 	pid = _(tsk->pid);
--	bpf_probe_read_kernel(oldcomm, sizeof(oldcomm), &tsk->comm);
--	bpf_probe_read_kernel(newcomm, sizeof(newcomm),
--			      (void *)PT_REGS_PARM2(ctx));
-+	bpf_probe_read_kernel_str(oldcomm, sizeof(oldcomm), &tsk->comm);
-+	bpf_probe_read_kernel_str(newcomm, sizeof(newcomm),
-+				  (void *)PT_REGS_PARM2(ctx));
- 	signal = _(tsk->signal);
- 	oom_score_adj = _(signal->oom_score_adj);
- 	return 0;
-diff --git a/samples/bpf/test_overhead_tp_kern.c b/samples/bpf/test_overhead_tp_kern.c
-index eaa32693f8fc..80edadacb692 100644
---- a/samples/bpf/test_overhead_tp_kern.c
-+++ b/samples/bpf/test_overhead_tp_kern.c
-@@ -4,6 +4,7 @@
-  * modify it under the terms of version 2 of the GNU General Public
-  * License as published by the Free Software Foundation.
-  */
-+#include <linux/sched.h>
- #include <uapi/linux/bpf.h>
+-#include <linux/bpf.h>
++#include <vmlinux.h>
  #include <bpf/bpf_helpers.h>
  
-@@ -11,8 +12,8 @@
- struct task_rename {
- 	__u64 pad;
- 	__u32 pid;
--	char oldcomm[16];
--	char newcomm[16];
-+	char oldcomm[TASK_COMM_LEN];
-+	char newcomm[TASK_COMM_LEN];
- 	__u16 oom_score_adj;
+ /* taken from /sys/kernel/debug/tracing/events/sched/sched_switch/format */
+ struct sched_switch_args {
+ 	unsigned long long pad;
+-	char prev_comm[16];
++	char prev_comm[TASK_COMM_LEN];
+ 	int prev_pid;
+ 	int prev_prio;
+ 	long long prev_state;
+-	char next_comm[16];
++	char next_comm[TASK_COMM_LEN];
+ 	int next_pid;
+ 	int next_prio;
  };
- SEC("tracepoint/task/task_rename")
 -- 
 2.17.1
 
