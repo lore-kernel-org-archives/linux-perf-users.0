@@ -2,136 +2,138 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED77EC433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon,  1 Nov 2021 21:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93365C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon,  1 Nov 2021 23:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDDEA60ED3
-	for <linux-perf-users@archiver.kernel.org>; Mon,  1 Nov 2021 21:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 740FD60F42
+	for <linux-perf-users@archiver.kernel.org>; Mon,  1 Nov 2021 23:47:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229970AbhKAVNI (ORCPT
+        id S231431AbhKAXuC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 1 Nov 2021 17:13:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42480 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229501AbhKAVNI (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 1 Nov 2021 17:13:08 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3942360E78;
-        Mon,  1 Nov 2021 21:10:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635801034;
-        bh=P1NF/lFoNB/+jYgMl0xZfzYLEkGo904XzG49NcwbE1U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AR7HVZSbGbIz/+8iQw0hdxmN2wiYCpEADAa5l7GbWBhSS8B0SIMkbxkGe+VBLeoXw
-         GUKwNIRlVhaYo+03ZD976mgb8d6cO+8ErNsxyn59xzQm18H7J7t8hbNzN98KKQwJT8
-         PPXvAv7IuA8mI+8HH4fnX2ds6BDScmbdLlfPacm9mrCcsAAyJS10dIyUqrCNrjisGx
-         tBRPl77/gFFSWYwkGchDhdKoD1TF07yW3bG3gWC0o03BsCt47zfeGty7KH0nkvrCvJ
-         Uxi+rfHDPhFxaMTsU+aOCbRSQvMgODjQKPFMH8hWYyMLnxDDbTtboEa455hSDrgW2R
-         8Vw/xGfxwNkJw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 50DA8410A1; Mon,  1 Nov 2021 18:10:32 -0300 (-03)
-Date:   Mon, 1 Nov 2021 18:10:32 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, masahiroy@kernel.org, labbott@redhat.com,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        irogers@google.com
-Subject: Re: [PATCH] perf tools: Enable warnings through HOSTCFLAGS
-Message-ID: <YYBXyGKfM2CAjghy@kernel.org>
-References: <1635525041-151876-1-git-send-email-john.garry@huawei.com>
+        Mon, 1 Nov 2021 19:50:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230396AbhKAXuB (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 1 Nov 2021 19:50:01 -0400
+Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAD17C061714;
+        Mon,  1 Nov 2021 16:47:27 -0700 (PDT)
+Received: by mail-yb1-xb33.google.com with SMTP id t127so48522313ybf.13;
+        Mon, 01 Nov 2021 16:47:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Sf1MOARYDjP4TdzVuSLyJGMCk0C2bT96cLtb/iSHOvE=;
+        b=SmRguYNmZ65IXjC5kS7UQZRTfWQSdxG3tt0NMqEE3jWrUYTo0GxWeERHGJGqffLMhO
+         mUpNaR7C7soFG4z0owyxtBpWpkIIwvI7NmZ1X9AdSpHW94bF9X0F2JYuleAt/1sHg0L/
+         5zrYaqQwj0Suq5S5VsmoV1AZdC6+4yP/fsMOSEXMRg6e4wm0lhJ2QLDw5Gk9S7qwsRw+
+         4Ge1C6z+tXJAZUZgehS4GLqH1/7jQ+JcX7YrRez6DqCs2zac2rP50sEIyn+lO7WeZt0c
+         XBXE/edBJBpIPW+IBzEvHdctfSqV5hvPkoQfNas342hISax3YHARRiHhQ7FBsPBgRiOl
+         mZFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Sf1MOARYDjP4TdzVuSLyJGMCk0C2bT96cLtb/iSHOvE=;
+        b=My1n7WexEEoJyWD0Ge/ODEjUZvs1Jnmp9d4kfbwVKWLOP9p795tdQvBGZTDovLK9Um
+         ZSC1ZAX+MOxq2P37ETL6qyHv9dn7n8gy77QrXNPVm0V8MF23sydr4L7+6jCBmE1RkQmA
+         5jdV4TMyuihtQfoDuxRoJnRawc4Tx6nF4OvrKlOM3O5+LYQAwLTp9MSJ8gg80YlYQx63
+         vNsMthPCXzPetfHUx+KuQUAlh1kF2BTrtk35zQrprwZkfjmGH5s3+j+eXNQ78eelLokx
+         41lXtJ4o/zAAsqWuOpIjS+okT6xfPfKvlw+8WAdWCk7OJ9ubYxs9FVJiZu7yBlXnY+8N
+         SNZg==
+X-Gm-Message-State: AOAM531vNQDgGTCBKyxAn6ybAGcEa6eQ+RGhH2LOM21ESFkZt2CB2Fcg
+        66MNT14asz07ghieh1ghnV/jS7CGpdJoQo55MMOqKgH95w4=
+X-Google-Smtp-Source: ABdhPJxxytkF+I+xIYE57g7IWWkQCLnoV8y619WwaJHG8gGGeHV30HWL8AmkKNk7EfNuLQNSutDI8kZo20T/HYQbqVA=
+X-Received: by 2002:a25:d010:: with SMTP id h16mr25598551ybg.225.1635810447094;
+ Mon, 01 Nov 2021 16:47:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1635525041-151876-1-git-send-email-john.garry@huawei.com>
-X-Url:  http://acmel.wordpress.com
+References: <20211101060419.4682-1-laoar.shao@gmail.com> <20211101060419.4682-10-laoar.shao@gmail.com>
+In-Reply-To: <20211101060419.4682-10-laoar.shao@gmail.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 1 Nov 2021 16:47:15 -0700
+Message-ID: <CAEf4BzafYdKmkJ_2sDMWibhWCZBPt=XLJwEAOgJDgnoYEvv4aA@mail.gmail.com>
+Subject: Re: [PATCH v7 09/11] tools/testing/selftests/bpf: make it adopt to
+ task comm size change
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Peter Ziljstra <peterz@infradead.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Qiang Zhang <qiang.zhang@windriver.com>,
+        robdclark <robdclark@chromium.org>,
+        Christian Brauner <christian@brauner.io>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>, Martin Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        john fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        dennis.dalessandro@cornelisnetworks.com,
+        mike.marciniszyn@cornelisnetworks.com,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        kernel test robot <oliver.sang@intel.com>,
+        kbuild test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Sat, Oct 30, 2021 at 12:30:41AM +0800, John Garry escreveu:
-> The tools build system uses KBUILD_HOSTCFLAGS symbol for obvious purposes.
-> 
-> However this is not set for anything under tools/
-> 
-> As such, host tools apps built have no compiler warnings enabled.
-> 
-> Declare HOSTCFLAGS for perf tools build, and also use that symbol in
-> declaration of host_c_flags. HOSTCFLAGS comes from EXTRA_WARNINGS, which
-> is independent of target platform/arch warning flags.
-> 
-> Suggested-by: Jiri Olsa <jolsa@redhat.com>
-> Signed-off-by: John Garry <john.garry@huawei.com>
+On Sun, Oct 31, 2021 at 11:04 PM Yafang Shao <laoar.shao@gmail.com> wrote:
+>
+> The hard-coded 16 is used in various bpf progs. These progs get task
+> comm either via bpf_get_current_comm() or prctl() or
+> bpf_core_read_str(), all of which can work well even if the task comm size
+> is changed.
+>
+> In these BPF programs, one thing to be improved is the
+> sched:sched_switch tracepoint args. As the tracepoint args are derived
+> from the kernel, we'd better make it same with the kernel. So the macro
+> TASK_COMM_LEN is converted to type enum, then all the BPF programs can
+> get it through BTF.
+>
+> The BPF program which wants to use TASK_COMM_LEN should include the header
+> vmlinux.h. Regarding the test_stacktrace_map and test_tracepoint, as the
+> type defined in linux/bpf.h are also defined in vmlinux.h, so we don't
+> need to include linux/bpf.h again.
+>
+> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+> Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Petr Mladek <pmladek@suse.com>
+> ---
 
-Jiri, does this implements your suggestion?
+LGTM, thanks.
 
-- Arnaldo
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
 
-> --
-> Using HOSTCFLAGS, as opposed to KBUILD_HOSTCFLAGS, is going opposite
-> direction to commit 96f14fe738b6 ("kbuild: Rename HOSTCFLAGS to
-> KBUILD_HOSTCFLAGS"), so would like further opinion from Laura and
-> Masahiro.
-> 
-> diff --git a/tools/build/Build.include b/tools/build/Build.include
-> index 2cf3b1bde86e..c2a95ab47379 100644
-> --- a/tools/build/Build.include
-> +++ b/tools/build/Build.include
-> @@ -99,7 +99,7 @@ cxx_flags = -Wp,-MD,$(depfile) -Wp,-MT,$@ $(CXXFLAGS) -D"BUILD_STR(s)=\#s" $(CXX
->  ###
->  ## HOSTCC C flags
->  
-> -host_c_flags = -Wp,-MD,$(depfile) -Wp,-MT,$@ $(KBUILD_HOSTCFLAGS) -D"BUILD_STR(s)=\#s" $(HOSTCFLAGS_$(basetarget).o) $(HOSTCFLAGS_$(obj))
-> +host_c_flags = -Wp,-MD,$(depfile) -Wp,-MT,$@ $(HOSTCFLAGS) -D"BUILD_STR(s)=\#s" $(HOSTCFLAGS_$(basetarget).o) $(HOSTCFLAGS_$(obj))
->  
->  # output directory for tests below
->  TMPOUT = .tmp_$$$$
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 4a9baed28f2e..9b95ba09657f 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -17,6 +17,7 @@ detected     = $(shell echo "$(1)=y"       >> $(OUTPUT).config-detected)
->  detected_var = $(shell echo "$(1)=$($(1))" >> $(OUTPUT).config-detected)
->  
->  CFLAGS := $(EXTRA_CFLAGS) $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
-> +HOSTCFLAGS := $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
->  
->  include $(srctree)/tools/scripts/Makefile.arch
->  
-> @@ -211,6 +212,7 @@ endif
->  ifneq ($(WERROR),0)
->    CORE_CFLAGS += -Werror
->    CXXFLAGS += -Werror
-> +  HOSTCFLAGS += -Werror
->  endif
->  
->  ifndef DEBUG
-> @@ -292,6 +294,9 @@ CXXFLAGS += -ggdb3
->  CXXFLAGS += -funwind-tables
->  CXXFLAGS += -Wno-strict-aliasing
->  
-> +HOSTCFLAGS += -Wall
-> +HOSTCFLAGS += -Wextra
-> +
->  # Enforce a non-executable stack, as we may regress (again) in the future by
->  # adding assembler files missing the .GNU-stack linker note.
->  LDFLAGS += -Wl,-z,noexecstack
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index a3966f290297..8ca656aa8b06 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -226,7 +226,7 @@ else
->  endif
->  
->  export srctree OUTPUT RM CC CXX LD AR CFLAGS CXXFLAGS V BISON FLEX AWK
-> -export HOSTCC HOSTLD HOSTAR
-> +export HOSTCC HOSTLD HOSTAR HOSTCFLAGS
->  
->  include $(srctree)/tools/build/Makefile.include
->  
-> -- 
-> 2.17.1
+>  include/linux/sched.h                                   | 9 +++++++--
+>  tools/testing/selftests/bpf/progs/test_stacktrace_map.c | 6 +++---
+>  tools/testing/selftests/bpf/progs/test_tracepoint.c     | 6 +++---
+>  3 files changed, 13 insertions(+), 8 deletions(-)
+>
 
--- 
-
-- Arnaldo
+[...]
