@@ -2,139 +2,112 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72952C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Nov 2021 09:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBBDC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Nov 2021 11:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E2BD60FC2
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Nov 2021 09:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86F6660C41
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Nov 2021 11:03:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229720AbhKBJpr (ORCPT
+        id S231365AbhKBLFi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 Nov 2021 05:45:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:59422 "EHLO foss.arm.com"
+        Tue, 2 Nov 2021 07:05:38 -0400
+Received: from foss.arm.com ([217.140.110.172]:32940 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230058AbhKBJpq (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 Nov 2021 05:45:46 -0400
+        id S230109AbhKBLFg (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 2 Nov 2021 07:05:36 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8DAA411B3;
-        Tue,  2 Nov 2021 02:43:08 -0700 (PDT)
-Received: from [10.32.36.26] (e121896.Emea.Arm.com [10.32.36.26])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1E3BA3F5A1;
-        Tue,  2 Nov 2021 02:43:02 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] kallsyms: ignore arm mapping symbols when loading
- module
-To:     Lexi Shao <shaolexi@huawei.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, mark.rutland@arm.com, mingo@redhat.com,
-        namhyung@kernel.org, nixiaoming@huawei.com, peterz@infradead.org,
-        qiuxi1@huawei.com, wangbing6@huawei.com, jeyu@kernel.org,
-        ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
-        john.fastabend@gmail.com, kpsingh@kernel.org,
-        natechancellor@gmail.com, ndesaulniers@google.com,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com
-References: <cb7e9ef7-eda4-b197-df8a-0b54f9b56181@arm.com>
- <20211029065038.39449-1-shaolexi@huawei.com>
- <20211029065038.39449-3-shaolexi@huawei.com>
-From:   James Clark <james.clark@arm.com>
-Message-ID: <415161e7-cdfc-557a-23cb-f72c5829bae4@arm.com>
-Date:   Tue, 2 Nov 2021 09:43:00 +0000
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE734D6E;
+        Tue,  2 Nov 2021 04:03:01 -0700 (PDT)
+Received: from [10.57.46.25] (unknown [10.57.46.25])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 974903F70D;
+        Tue,  2 Nov 2021 04:02:58 -0700 (PDT)
+Subject: Re: [PATCH 4/5] perf arm-spe: Implement find_snapshot callback
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+        James Clark <James.Clark@arm.com>
+References: <20210923135016.GG400258@leoy-ThinkPad-X240s>
+ <20210923144048.GB603008@leoy-ThinkPad-X240s>
+ <1c6a3a73-27dc-6673-7fe7-34bc7fcb0a68@arm.com>
+ <20211004122724.GC174271@leoy-ThinkPad-X240s>
+ <6b092f13-832f-5d1d-a504-aea96c81bf17@arm.com>
+ <20211006095124.GC14400@leoy-ThinkPad-X240s>
+ <377b54ef-b9c0-9cfc-ef0c-0187d7c493cc@arm.com>
+ <20211013003916.GA130842@leoy-ThinkPad-X240s>
+ <20211013075125.GA6701@willie-the-truck>
+ <35209d5c-6387-5248-ab61-a1e1cb0553de@arm.com>
+ <20211017061305.GA130233@leoy-ThinkPad-X240s>
+From:   German Gomez <german.gomez@arm.com>
+Message-ID: <0f5f8911-ff80-db4f-3c0d-d172d39794c6@arm.com>
+Date:   Tue, 2 Nov 2021 11:02:56 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.13.0
 MIME-Version: 1.0
-In-Reply-To: <20211029065038.39449-3-shaolexi@huawei.com>
+In-Reply-To: <20211017061305.GA130233@leoy-ThinkPad-X240s>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi Leo,
 
+On 17/10/2021 07:13, Leo Yan wrote:
+> [...]
+>
+> I looked into the Arm SPE driver and found it doesn't really support
+> free run mode for AUX ring buffer when the driver runs in snapshot
+> mode, the pair functions perf_aux_output_end() and
+> perf_aux_output_begin() are invoked when every time handle the
+> interrupt.  The detailed flow is:
+>
+>   arm_spe_pmu_irq_handler()
+>     `> arm_spe_pmu_buf_get_fault_act()
+>          `> arm_spe_perf_aux_output_end()
+>               `> set SPE registers
+>               `> perf_aux_output_end()
+>     `> arm_spe_perf_aux_output_begin()
+>          `> perf_aux_output_begin()
+>          `> set SPE registers
+>
+> Seems to me, a possible solution is to add an extra parameter 'int
+> in_interrupt' for functions arm_spe_perf_aux_output_end() and
+> arm_spe_perf_aux_output_begin(), if this parameter is passed as 1 in
+> the interrupt handling, these two functions should skip invoking
+> perf_aux_output_end() and perf_aux_output_begin() so can avoid the
+> redundant perf event PERF_RECORD_AUX.
+>
+>   arm_spe_pmu_irq_handler()
+>     `> arm_spe_pmu_buf_get_fault_act()
+>          `> arm_spe_perf_aux_output_end(..., in_interrupt=1)
+>               `> set SPE registers
+>     `> arm_spe_perf_aux_output_begin(..., in_interrupt=1)
+>          `> set SPE registers
 
-On 29/10/2021 07:50, Lexi Shao wrote:
-> Arm modules contains mapping symbols(e.g. $a $d) which are ignored in
-> module_kallsyms_on_each_symbol. However, these symbols are still
-> displayed when catting /proc/kallsyms. This confuses tools(e.g. perf)
-> that resolves kernel symbols with address using information from
-> /proc/kallsyms. See discussion in Link:
-> https://lore.kernel.org/all/c7dfbd17-85fd-b914-b90f-082abc64c9d1@arm.com/
-> 
-> Being left out in vmlinux(see scripts/kallsyms.c is_ignored_symbol) and
-> kernelspace API implies that these symbols are not used in any cases.
-> So we can ignore them in the first place by not adding them to module
-> kallsyms.
-> 
-> Signed-off-by: Lexi Shao <shaolexi@huawei.com>
+I brought the issue of the redundant AUX events to the team, and we know
+of at least one tool in Arm relying on these events in snapshot mode. So
+we think that changing this behavior of the driver might not be easy to
+do right now.
 
+>
+> P.s. I think Intel-PT has supported free run mode for snapshot mode,
+> so it should not generate interrupt in this mode.  Thus Intel-PT can
+> avoid this issue, please see the code [2].
+>
+> Thanks,
+> Leo
+>
+> [1] https://people.linaro.org/~leo.yan/spe/snapshot_test/perf.data
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/events/intel/pt.c#n753
 
-I tested this and it has removed the $ symbols from kallsyms where I saw
-them before.
-
-Reviewed-by: James Clark <james.clark@arm.com>
-
-> ---
->  kernel/module.c | 19 +++++++++++--------
->  1 file changed, 11 insertions(+), 8 deletions(-)
-> 
-> diff --git a/kernel/module.c b/kernel/module.c
-> index 5c26a76e800b..b30cbbe144c7 100644
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -2662,16 +2662,22 @@ static char elf_type(const Elf_Sym *sym, const struct load_info *info)
->  	return '?';
->  }
->  
-> -static bool is_core_symbol(const Elf_Sym *src, const Elf_Shdr *sechdrs,
-> -			unsigned int shnum, unsigned int pcpundx)
-> +static inline int is_arm_mapping_symbol(const char *str);
-> +static bool is_core_symbol(const Elf_Sym *src, const struct load_info *info)
->  {
->  	const Elf_Shdr *sec;
-> +	const Elf_Shdr *sechdrs = info->sechdrs;
-> +	unsigned int shnum = info->hdr->e_shnum;
-> +	unsigned int pcpundx = info->index.pcpu;
->  
->  	if (src->st_shndx == SHN_UNDEF
->  	    || src->st_shndx >= shnum
->  	    || !src->st_name)
->  		return false;
->  
-> +	if (is_arm_mapping_symbol(&info->strtab[src->st_name]))
-> +		return false;
-> +
->  #ifdef CONFIG_KALLSYMS_ALL
->  	if (src->st_shndx == pcpundx)
->  		return true;
-> @@ -2714,8 +2720,7 @@ static void layout_symtab(struct module *mod, struct load_info *info)
->  	/* Compute total space required for the core symbols' strtab. */
->  	for (ndst = i = 0; i < nsrc; i++) {
->  		if (i == 0 || is_livepatch_module(mod) ||
-> -		    is_core_symbol(src+i, info->sechdrs, info->hdr->e_shnum,
-> -				   info->index.pcpu)) {
-> +		    is_core_symbol(src+i, info)) {
->  			strtab_size += strlen(&info->strtab[src[i].st_name])+1;
->  			ndst++;
->  		}
-> @@ -2778,8 +2783,7 @@ static void add_kallsyms(struct module *mod, const struct load_info *info)
->  	for (ndst = i = 0; i < mod->kallsyms->num_symtab; i++) {
->  		mod->kallsyms->typetab[i] = elf_type(src + i, info);
->  		if (i == 0 || is_livepatch_module(mod) ||
-> -		    is_core_symbol(src+i, info->sechdrs, info->hdr->e_shnum,
-> -				   info->index.pcpu)) {
-> +		    is_core_symbol(src+i, info)) {
->  			mod->core_kallsyms.typetab[ndst] =
->  			    mod->kallsyms->typetab[i];
->  			dst[ndst] = src[i];
-> @@ -4246,8 +4250,7 @@ static const char *find_kallsyms_symbol(struct module *mod,
->  		 * We ignore unnamed symbols: they're uninformative
->  		 * and inserted at a whim.
->  		 */
-> -		if (*kallsyms_symbol_name(kallsyms, i) == '\0'
-> -		    || is_arm_mapping_symbol(kallsyms_symbol_name(kallsyms, i)))
-> +		if (*kallsyms_symbol_name(kallsyms, i) == '\0')
->  			continue;
->  
->  		if (thisval <= addr && thisval > bestval) {
-> 
+Thanks,
+German
