@@ -2,132 +2,227 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A72CFC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Nov 2021 13:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE28C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Nov 2021 14:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90387610E5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Nov 2021 13:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16FF360EDF
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Nov 2021 14:07:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230308AbhKBNvW (ORCPT
+        id S230124AbhKBOKV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 Nov 2021 09:51:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60552 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229530AbhKBNvV (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 Nov 2021 09:51:21 -0400
-Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8D1DC061714;
-        Tue,  2 Nov 2021 06:48:46 -0700 (PDT)
-Received: by mail-qk1-x731.google.com with SMTP id bj20so8380332qkb.11;
-        Tue, 02 Nov 2021 06:48:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Wu+GXwP0q8/l280sPfS5y2dnw2tDTjbgcZxPcts0nWA=;
-        b=YcR3IuaAtTNd5UTAQgUBmbub0s9rZKVwSQhTU6bWJJuuGdsbgVWzNuC9hWKqyxfIx3
-         99mns3eEXlEacdvGFsKoPPJhXuggFk/5dE5jXNf97+xm8eN7len5sSHHLvp3lWncIqzh
-         nqpTbP+Mq8ng1LNy3wXdOjEpj+jjzNB2OP/wuFZPk0/GaFXjhxctxfJRVTWOEq2Zc+SW
-         DNyX54rGB6MewKL70f5/ukEdoSGntFVl195Te6GLkxv8TwgbyAW3u4004JSdT9R69nCM
-         R+qKublTKycWSta+kv7uhK7PGTiFSv2r4mma2kG4TFzwKpMJAYoo/7RA//x4Akoe3VkM
-         BmPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Wu+GXwP0q8/l280sPfS5y2dnw2tDTjbgcZxPcts0nWA=;
-        b=DQfoPoBAdpWQMso9xSRciPzgV4/MGb3Q5u+TnYEsDVADmO5xkmlNKOELVnXPNfb4wx
-         XA50A8sjv5V8arZ2RVkdQX3ZU+jGcMyF9XnKjWaK6lNl7kvruTKphf55bi3SqcB+InF+
-         gPADjVLdfSfChfMDAe/rHor3evr9+cuSKV6pwwKaIICP6oiDcZIkH7xR5qg/xKQEJrqc
-         UaCQfq7yoydGj11Ihf1sUbCDgZD8J8wX7Nv9/Ntzm2O7GTage5F5yhz8qXMaoqvfCnYl
-         SLmtcb+oQStw/tGJTOjbv2w/Ov5InGrgZCsPLoOMu6tGKOnzrjQAloCZ1lwNfAVV82Mg
-         eniQ==
-X-Gm-Message-State: AOAM530KDw9E+aJKX8vnOWR0jOxVEie91h1xnFX7JKVYmGUkLkNS06Tq
-        TkFnco6aLwNhVa5Qn/MQ1HWkIBVCwdjG6cbsbOI=
-X-Google-Smtp-Source: ABdhPJzdAcu/rqsJAHYEDYHQWB2i5R24SjAWs9ovT6Ku6QrCQM5eY4Gm09bilSgO5SNhaLL7ebVPVXMe4LoGH0IsBkk=
-X-Received: by 2002:a05:620a:40d6:: with SMTP id g22mr29784297qko.104.1635860925969;
- Tue, 02 Nov 2021 06:48:45 -0700 (PDT)
+        Tue, 2 Nov 2021 10:10:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:36346 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229557AbhKBOKU (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 2 Nov 2021 10:10:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38B34D6E;
+        Tue,  2 Nov 2021 07:07:45 -0700 (PDT)
+Received: from [10.32.33.50] (e121896.warwick.arm.com [10.32.33.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 78D503F7B4;
+        Tue,  2 Nov 2021 07:07:43 -0700 (PDT)
+Subject: Re: [PATCH 5/5] perf arm-spe: Snapshot mode test
+To:     Leo Yan <leo.yan@linaro.org>, German Gomez <german.gomez@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org
+References: <20210916154635.1525-1-german.gomez@arm.com>
+ <20210916154635.1525-5-german.gomez@arm.com>
+ <20211020131339.GG49614@leoy-ThinkPad-X240s>
+From:   James Clark <james.clark@arm.com>
+Message-ID: <fd65eb63-d4ca-2105-74cb-c717ad2eb7d3@arm.com>
+Date:   Tue, 2 Nov 2021 14:07:42 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-References: <20211101060419.4682-1-laoar.shao@gmail.com> <YX/0h7j/nDwoBA+J@alley>
- <CALOAHbA61RyGVzG8SVcNG=0rdqnUCt4AxCKmtuxRnbS_SH=+MQ@mail.gmail.com>
- <YYAPhE9uX7OYTlpv@alley> <CALOAHbAx55AUo3bm8ZepZSZnw7A08cvKPdPyNTf=E_tPqmw5hw@mail.gmail.com>
- <20211101211845.20ff5b2e@gandalf.local.home> <CALOAHbCgaJ83qZVj6qt8tgJBd4ojuLfgSp2Ce7CgzQYshM-amQ@mail.gmail.com>
- <YYDvHv76tJtJht8b@alley>
-In-Reply-To: <YYDvHv76tJtJht8b@alley>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Tue, 2 Nov 2021 21:48:10 +0800
-Message-ID: <CALOAHbBA4xjoebNcO2422wa34bgui_=PriPNfJdx2_CstoKQqg@mail.gmail.com>
-Subject: Re: [PATCH v7 00/11] extend task comm from 16 to 24
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Qiang Zhang <qiang.zhang@windriver.com>,
-        robdclark <robdclark@chromium.org>,
-        christian <christian@brauner.io>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>, Martin Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        dennis.dalessandro@cornelisnetworks.com,
-        mike.marciniszyn@cornelisnetworks.com, dledford@redhat.com,
-        jgg@ziepe.ca, linux-rdma@vger.kernel.org,
-        netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel test robot <oliver.sang@intel.com>,
-        kbuild test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20211020131339.GG49614@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Nov 2, 2021 at 3:56 PM Petr Mladek <pmladek@suse.com> wrote:
->
-> On Tue 2021-11-02 09:26:35, Yafang Shao wrote:
-> > On Tue, Nov 2, 2021 at 9:18 AM Steven Rostedt <rostedt@goodmis.org> wrote:
-> > > On Tue, 2 Nov 2021 09:09:50 +0800
-> > > Yafang Shao <laoar.shao@gmail.com> wrote:
-> > > >      Now we only care about kthread, so we can put the pointer into a
-> > > > kthread specific struct.
-> > > >      For example in the struct kthread, or in kthread->data (which may
-> > > > conflict with workqueue).
-> > >
-> > > No, add a new field to the structure. "full_name" or something like that.
-> > > I'm guessing it should be NULL if the name fits in TASK_COMM_LEN and
-> > > allocated if the name had to be truncated.
-> > >
-> > > Do not overload data with this. That will just make things confusing.
-> > > There's not that many kthreads, where an addition of an 8 byte pointer is
-> > > going to cause issues.
-> >
-> > Sure, I will add a new field named "full_name", which only be
-> > allocated if the kthread's comm is truncated.
->
-> The plan looks good to me.
->
-> One more thing. It should obsolete the workqueue-specific solution.
-> It would be great to clean up the workqueue code as the next step.
->
 
-Agreed. The worker comm can be replaced by the new kthread full_name.
-I will do it in the next step.
 
--- 
+On 20/10/2021 14:13, Leo Yan wrote:
+> On Thu, Sep 16, 2021 at 04:46:35PM +0100, German Gomez wrote:
+>> Shell script test_arm_spe.sh has been added to test the recording of SPE
+>> tracing events in snapshot mode.
+>>
+>> Reviewed-by: James Clark <james.clark@arm.com>
+>> Signed-off-by: German Gomez <german.gomez@arm.com>
+>> ---
+>>  tools/perf/tests/shell/test_arm_spe.sh | 91 ++++++++++++++++++++++++++
+>>  1 file changed, 91 insertions(+)
+>>  create mode 100755 tools/perf/tests/shell/test_arm_spe.sh
+>>
+>> diff --git a/tools/perf/tests/shell/test_arm_spe.sh b/tools/perf/tests/shell/test_arm_spe.sh
+>> new file mode 100755
+>> index 000000000000..9ed817e76f95
+>> --- /dev/null
+>> +++ b/tools/perf/tests/shell/test_arm_spe.sh
+>> @@ -0,0 +1,91 @@
+>> +#!/bin/sh
+>> +# Check Arm SPE trace data recording and synthesized samples
+>> +
+>> +# Uses the 'perf record' to record trace data of Arm SPE events;
+>> +# then verify if any SPE event samples are generated by SPE with
+>> +# 'perf script' and 'perf report' commands.
+>> +
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +# German Gomez <german.gomez@arm.com>, 2021
+>> +
+>> +skip_if_no_arm_spe_event() {
+>> +	perf list | egrep -q 'arm_spe_[0-9]+//' && return 0
+>> +
+>> +	# arm_spe event doesn't exist
+>> +	return 2
+>> +}
+>> +
+>> +skip_if_no_arm_spe_event || exit 2
+>> +
+>> +perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+>> +glb_err=0
+>> +
+>> +cleanup_files()
+>> +{
+>> +	rm -f ${perfdata}
+>> +	trap - exit term int
+>> +	kill -2 $$ # Forward sigint to parent
+> 
+> I understand you copy this code from Arm cs-etm testing, but I found
+> the sentence 'kill -2 $$' will cause a failure at my side with the
+> command:
+> 
+> root@ubuntu:/home/leoy/linux/tools/perf# ./perf test 85 -v
+> 85: Check Arm SPE trace data recording and synthesized samples      :
+> --- start ---
+> test child forked, pid 29053
+> Recording trace with snapshot mode /tmp/__perf_test.perf.data.uughb
+> Looking at perf.data file for dumping samples:
+> Looking at perf.data file for reporting samples:
+> SPE snapshot testing: PASS
+> test child finished with -1
+> ---- end ----
+> Check Arm SPE trace data recording and synthesized samples: FAILED!
+> 
+> I changed to use below code and looks it works for me:
+> 
+>         if [[ "$1" == "int" ]]; then
+>                 kill -SIGINT $$
+>         fi
+>         if [[ "$1" == "term" ]]; then
+>                 kill -SIGTERM $$
+>         fi
+> 
+> Thanks,
+> Leo
+
+This is quite interesting. It looks like the issue is caused by the update from dash 0.5.8
+on Ubuntu 18 to dash 0.5.10 on Ubuntu 20. Specifically the commit that causes the issue is:
+
+   commit 9e5cd41d9605e4caaac3aacdc0482f6ee220a298
+   Author: Herbert Xu <herbert@gondor.apana.org.au>
+   Date:   Mon May 7 00:40:34 2018 +0800
+
+    jobs - Do not block when waiting on SIGCHLD
+    
+    Because of the nature of SIGCHLD, the process may have already been
+    waited on and therefore we must be prepared for the case that wait
+    may block.  So ensure that it doesn't by using WNOHANG.
+    
+    Furthermore, multiple jobs may have exited when gotsigchld is set.
+    Therefore we need to wait until there are no zombies left.
+    
+    Lastly, waitforjob needs to be called with interrupts off and
+    the original patch broke that.
+    
+    Fixes: 03876c0743a5 ("eval: Reap zombies after built-in...")
+    Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+
+
+This also means that the Coresight shell test will not be working anymore because I added
+the same trap to it so that it could be run in a loop. I'm going to compare the bahaviour
+to bash to see which one is doing the right thing and what the correct change to make to 
+fix it is. Or a bug needs to be reported.
+
 Thanks
-Yafang
+James
+
+> 
+>> +	exit $glb_err
+>> +}
+>> +
+>> +trap cleanup_files exit term int
+>> +
+>> +arm_spe_report() {
+>> +	if [ $2 != 0 ]; then
+>> +		echo "$1: FAIL"
+>> +		glb_err=$2
+>> +	else
+>> +		echo "$1: PASS"
+>> +	fi
+>> +}
+>> +
+>> +perf_script_samples() {
+>> +	echo "Looking at perf.data file for dumping samples:"
+>> +
+>> +	# from arm-spe.c/arm_spe_synth_events()
+>> +	events="(ld1-miss|ld1-access|llc-miss|lld-access|tlb-miss|tlb-access|branch-miss|remote-access|memory)"
+>> +
+>> +	# Below is an example of the samples dumping:
+>> +	#	dd  3048 [002]          1    l1d-access:      ffffaa64999c __GI___libc_write+0x3c (/lib/aarch64-linux-gnu/libc-2.27.so)
+>> +	#	dd  3048 [002]          1    tlb-access:      ffffaa64999c __GI___libc_write+0x3c (/lib/aarch64-linux-gnu/libc-2.27.so)
+>> +	#	dd  3048 [002]          1        memory:      ffffaa64999c __GI___libc_write+0x3c (/lib/aarch64-linux-gnu/libc-2.27.so)
+>> +	perf script -F,-time -i ${perfdata} 2>&1 | \
+>> +		egrep " +$1 +[0-9]+ .* +${events}:(.*:)? +" > /dev/null 2>&1
+>> +}
+>> +
+>> +perf_report_samples() {
+>> +	echo "Looking at perf.data file for reporting samples:"
+>> +
+>> +	# Below is an example of the samples reporting:
+>> +	#   73.04%    73.04%  dd    libc-2.27.so      [.] _dl_addr
+>> +	#    7.71%     7.71%  dd    libc-2.27.so      [.] getenv
+>> +	#    2.59%     2.59%  dd    ld-2.27.so        [.] strcmp
+>> +	perf report --stdio -i ${perfdata} 2>&1 | \
+>> +		egrep " +[0-9]+\.[0-9]+% +[0-9]+\.[0-9]+% +$1 " > /dev/null 2>&1
+>> +}
+>> +
+>> +arm_spe_snapshot_test() {
+>> +	echo "Recording trace with snapshot mode $perfdata"
+>> +	perf record -o ${perfdata} -e arm_spe// -S \
+>> +		-- dd if=/dev/zero of=/dev/null > /dev/null 2>&1 &
+>> +	PERFPID=$!
+>> +
+>> +	# Wait for perf program
+>> +	sleep 1
+>> +
+>> +	# Send signal to snapshot trace data
+>> +	kill -USR2 $PERFPID
+>> +
+>> +	# Stop perf program
+>> +	kill $PERFPID
+>> +	wait $PERFPID
+>> +
+>> +	perf_script_samples dd &&
+>> +	perf_report_samples dd
+>> +
+>> +	err=$?
+>> +	arm_spe_report "SPE snapshot testing" $err
+>> +}
+>> +
+>> +arm_spe_snapshot_test
+>> +exit $glb_err
+>> \ No newline at end of file
+>> -- 
+>> 2.17.1
+>>
