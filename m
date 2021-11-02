@@ -2,254 +2,70 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB2E8C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Nov 2021 15:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 095E4C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Nov 2021 18:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFE4860F02
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Nov 2021 15:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E26E360F24
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Nov 2021 18:07:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234162AbhKBPjt (ORCPT
+        id S232856AbhKBSKe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 Nov 2021 11:39:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:38230 "EHLO foss.arm.com"
+        Tue, 2 Nov 2021 14:10:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:41272 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231833AbhKBPjs (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 Nov 2021 11:39:48 -0400
+        id S230392AbhKBSKd (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 2 Nov 2021 14:10:33 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6AA39D6E;
-        Tue,  2 Nov 2021 08:37:13 -0700 (PDT)
-Received: from [10.32.33.50] (e121896.warwick.arm.com [10.32.33.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ABFC43F7B4;
-        Tue,  2 Nov 2021 08:37:11 -0700 (PDT)
-Subject: Re: [PATCH 5/5] perf arm-spe: Snapshot mode test
-From:   James Clark <james.clark@arm.com>
-To:     Leo Yan <leo.yan@linaro.org>, German Gomez <german.gomez@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6689611B3;
+        Tue,  2 Nov 2021 11:07:58 -0700 (PDT)
+Received: from ubuntu-18-04-aarch64-spe-2.warwick.arm.com (ubuntu-18-04-aarch64-spe-2.warwick.arm.com [10.32.33.30])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 85A7E3F7B4;
+        Tue,  2 Nov 2021 11:07:56 -0700 (PDT)
+From:   German Gomez <german.gomez@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     German Gomez <german.gomez@arm.com>,
         John Garry <john.garry@huawei.com>,
         Will Deacon <will@kernel.org>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org
-References: <20210916154635.1525-1-german.gomez@arm.com>
- <20210916154635.1525-5-german.gomez@arm.com>
- <20211020131339.GG49614@leoy-ThinkPad-X240s>
- <fd65eb63-d4ca-2105-74cb-c717ad2eb7d3@arm.com>
-Message-ID: <ef1d4b66-1743-529f-7c5b-fbc4ada7113b@arm.com>
-Date:   Tue, 2 Nov 2021 15:37:10 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
-MIME-Version: 1.0
-In-Reply-To: <fd65eb63-d4ca-2105-74cb-c717ad2eb7d3@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 0/3] perf arm-spe: Track pid/tid for Arm SPE samples
+Date:   Tue,  2 Nov 2021 18:07:36 +0000
+Message-Id: <20211102180739.18049-1-german.gomez@arm.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+The following patchset is an iteration on RFC [1] where pid/tid info is
+assigned to the Arm SPE synthesized samples. Two methods of tracking
+pids are considered: hardware-based (using Arm SPE CONTEXT packets), and
+context-switch events (from perf) as fallback.
 
+- Patch #1 enables pid tracking using RECORD_SWITCH* events from perf.
+- Patch #2 saves the value of SPE CONTEXT packet to the arm_spe_record
+  struct (patch from [2]).
+- Patch #3 enables hardware-based pid tracking using SPE CONTEXT packets.
 
-On 02/11/2021 14:07, James Clark wrote:
-> 
-> 
-> On 20/10/2021 14:13, Leo Yan wrote:
->> On Thu, Sep 16, 2021 at 04:46:35PM +0100, German Gomez wrote:
->>> Shell script test_arm_spe.sh has been added to test the recording of SPE
->>> tracing events in snapshot mode.
->>>
->>> Reviewed-by: James Clark <james.clark@arm.com>
->>> Signed-off-by: German Gomez <german.gomez@arm.com>
->>> ---
->>>  tools/perf/tests/shell/test_arm_spe.sh | 91 ++++++++++++++++++++++++++
->>>  1 file changed, 91 insertions(+)
->>>  create mode 100755 tools/perf/tests/shell/test_arm_spe.sh
->>>
->>> diff --git a/tools/perf/tests/shell/test_arm_spe.sh b/tools/perf/tests/shell/test_arm_spe.sh
->>> new file mode 100755
->>> index 000000000000..9ed817e76f95
->>> --- /dev/null
->>> +++ b/tools/perf/tests/shell/test_arm_spe.sh
->>> @@ -0,0 +1,91 @@
->>> +#!/bin/sh
->>> +# Check Arm SPE trace data recording and synthesized samples
->>> +
->>> +# Uses the 'perf record' to record trace data of Arm SPE events;
->>> +# then verify if any SPE event samples are generated by SPE with
->>> +# 'perf script' and 'perf report' commands.
->>> +
->>> +# SPDX-License-Identifier: GPL-2.0
->>> +# German Gomez <german.gomez@arm.com>, 2021
->>> +
->>> +skip_if_no_arm_spe_event() {
->>> +	perf list | egrep -q 'arm_spe_[0-9]+//' && return 0
->>> +
->>> +	# arm_spe event doesn't exist
->>> +	return 2
->>> +}
->>> +
->>> +skip_if_no_arm_spe_event || exit 2
->>> +
->>> +perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
->>> +glb_err=0
->>> +
->>> +cleanup_files()
->>> +{
->>> +	rm -f ${perfdata}
->>> +	trap - exit term int
->>> +	kill -2 $$ # Forward sigint to parent
->>
->> I understand you copy this code from Arm cs-etm testing, but I found
->> the sentence 'kill -2 $$' will cause a failure at my side with the
->> command:
->>
->> root@ubuntu:/home/leoy/linux/tools/perf# ./perf test 85 -v
->> 85: Check Arm SPE trace data recording and synthesized samples      :
->> --- start ---
->> test child forked, pid 29053
->> Recording trace with snapshot mode /tmp/__perf_test.perf.data.uughb
->> Looking at perf.data file for dumping samples:
->> Looking at perf.data file for reporting samples:
->> SPE snapshot testing: PASS
->> test child finished with -1
->> ---- end ----
->> Check Arm SPE trace data recording and synthesized samples: FAILED!
->>
->> I changed to use below code and looks it works for me:
->>
->>         if [[ "$1" == "int" ]]; then
->>                 kill -SIGINT $$
->>         fi
->>         if [[ "$1" == "term" ]]; then
->>                 kill -SIGTERM $$
->>         fi
->>
->> Thanks,
->> Leo
-> 
-> This is quite interesting. It looks like the issue is caused by the update from dash 0.5.8
-> on Ubuntu 18 to dash 0.5.10 on Ubuntu 20. Specifically the commit that causes the issue is:
-> 
->    commit 9e5cd41d9605e4caaac3aacdc0482f6ee220a298
->    Author: Herbert Xu <herbert@gondor.apana.org.au>
->    Date:   Mon May 7 00:40:34 2018 +0800
-> 
->     jobs - Do not block when waiting on SIGCHLD
->     
->     Because of the nature of SIGCHLD, the process may have already been
->     waited on and therefore we must be prepared for the case that wait
->     may block.  So ensure that it doesn't by using WNOHANG.
->     
->     Furthermore, multiple jobs may have exited when gotsigchld is set.
->     Therefore we need to wait until there are no zombies left.
->     
->     Lastly, waitforjob needs to be called with interrupts off and
->     the original patch broke that.
->     
->     Fixes: 03876c0743a5 ("eval: Reap zombies after built-in...")
->     Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-> 
-> 
-> This also means that the Coresight shell test will not be working anymore because I added
-> the same trap to it so that it could be run in a loop. I'm going to compare the bahaviour
-> to bash to see which one is doing the right thing and what the correct change to make to 
-> fix it is. Or a bug needs to be reported.
-> 
-> Thanks
-> James
-> 
+[1] https://lore.kernel.org/lkml/20210916001748.1525291-1-namhyung@kernel.org/
+[2] https://www.spinics.net/lists/linux-perf-users/msg12543.html
 
-Ok, it seems like I was relying on buggy dash behaviour for my original change. Even with this:
+German Gomez (3):
+  perf arm-spe: Track task context switch for cpu-mode events
+  perf arm-spe: Save context ID in record
+  perf arm-spe: Support hardware-based PID tracing
 
-        if [[ "$1" == "int" ]]; then
-                kill -SIGINT $$
-        fi
-        if [[ "$1" == "term" ]]; then
-                kill -SIGTERM $$
-        fi
+ tools/perf/arch/arm64/util/arm-spe.c          |   6 +-
+ .../util/arm-spe-decoder/arm-spe-decoder.c    |   2 +
+ .../util/arm-spe-decoder/arm-spe-decoder.h    |   1 +
+ tools/perf/util/arm-spe.c                     | 144 ++++++++++++++----
+ 4 files changed, 123 insertions(+), 30 deletions(-)
 
-it still doesn't allow you to break out of running it in a while loop. This is only because of
-the exit code, rather than any kind of signal propagation. Actually it's possible to stop it
-with Ctrl-\ rather than Ctrl-C, and that doesn't require any extra handling in the script.
+-- 
+2.25.1
 
-For that reason I'm happy to go with Leo's original suggestion when I first added this which was
-to not have any extra kill at all.
-
-Another fix could be this, but I'm not too keen on it because I don't think any other tests behave
-like this:
-
-        [ "$1" = "int" ] || exit 1
-        [ "$1" = "term" ] || exit 1
-
->>
->>> +	exit $glb_err
->>> +}
->>> +
->>> +trap cleanup_files exit term int
->>> +
->>> +arm_spe_report() {
->>> +	if [ $2 != 0 ]; then
->>> +		echo "$1: FAIL"
->>> +		glb_err=$2
->>> +	else
->>> +		echo "$1: PASS"
->>> +	fi
->>> +}
->>> +
->>> +perf_script_samples() {
->>> +	echo "Looking at perf.data file for dumping samples:"
->>> +
->>> +	# from arm-spe.c/arm_spe_synth_events()
->>> +	events="(ld1-miss|ld1-access|llc-miss|lld-access|tlb-miss|tlb-access|branch-miss|remote-access|memory)"
->>> +
->>> +	# Below is an example of the samples dumping:
->>> +	#	dd  3048 [002]          1    l1d-access:      ffffaa64999c __GI___libc_write+0x3c (/lib/aarch64-linux-gnu/libc-2.27.so)
->>> +	#	dd  3048 [002]          1    tlb-access:      ffffaa64999c __GI___libc_write+0x3c (/lib/aarch64-linux-gnu/libc-2.27.so)
->>> +	#	dd  3048 [002]          1        memory:      ffffaa64999c __GI___libc_write+0x3c (/lib/aarch64-linux-gnu/libc-2.27.so)
->>> +	perf script -F,-time -i ${perfdata} 2>&1 | \
->>> +		egrep " +$1 +[0-9]+ .* +${events}:(.*:)? +" > /dev/null 2>&1
->>> +}
->>> +
->>> +perf_report_samples() {
->>> +	echo "Looking at perf.data file for reporting samples:"
->>> +
->>> +	# Below is an example of the samples reporting:
->>> +	#   73.04%    73.04%  dd    libc-2.27.so      [.] _dl_addr
->>> +	#    7.71%     7.71%  dd    libc-2.27.so      [.] getenv
->>> +	#    2.59%     2.59%  dd    ld-2.27.so        [.] strcmp
->>> +	perf report --stdio -i ${perfdata} 2>&1 | \
->>> +		egrep " +[0-9]+\.[0-9]+% +[0-9]+\.[0-9]+% +$1 " > /dev/null 2>&1
->>> +}
->>> +
->>> +arm_spe_snapshot_test() {
->>> +	echo "Recording trace with snapshot mode $perfdata"
->>> +	perf record -o ${perfdata} -e arm_spe// -S \
->>> +		-- dd if=/dev/zero of=/dev/null > /dev/null 2>&1 &
->>> +	PERFPID=$!
->>> +
->>> +	# Wait for perf program
->>> +	sleep 1
->>> +
->>> +	# Send signal to snapshot trace data
->>> +	kill -USR2 $PERFPID
->>> +
->>> +	# Stop perf program
->>> +	kill $PERFPID
->>> +	wait $PERFPID
->>> +
->>> +	perf_script_samples dd &&
->>> +	perf_report_samples dd
->>> +
->>> +	err=$?
->>> +	arm_spe_report "SPE snapshot testing" $err
->>> +}
->>> +
->>> +arm_spe_snapshot_test
->>> +exit $glb_err
->>> \ No newline at end of file
->>> -- 
->>> 2.17.1
->>>
