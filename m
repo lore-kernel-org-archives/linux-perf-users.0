@@ -2,40 +2,70 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E038AC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Nov 2021 07:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 793FFC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Nov 2021 09:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAF4161050
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Nov 2021 07:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B04F60E90
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Nov 2021 09:26:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231284AbhKBH64 (ORCPT
+        id S229800AbhKBJ3U (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 Nov 2021 03:58:56 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:52976 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230508AbhKBH6y (ORCPT
+        Tue, 2 Nov 2021 05:29:20 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:46301 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230109AbhKBJ3T (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 Nov 2021 03:58:54 -0400
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id B46FE21956;
-        Tue,  2 Nov 2021 07:56:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1635839778; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
+        Tue, 2 Nov 2021 05:29:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1635845204;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=6ap4olzBTfLejakCPItyAX9e8bDmpSosfrrPGCanr3k=;
-        b=WwJzLSQXjGdAyznGGV6SpWmdhW49bQlRnvPytZ6fgxedhPeRJVVTgMy0Ih0O5QwjOYpS6a
-        96PQR55FMHbwdMZIMobPll5efDcxRY2ZviZSkiefrXc10IHo417/75YCqs3hplKbT1wpnR
-        lqnAN+Chyaj0oXodeKoyvl4MpccGfbE=
-Received: from suse.cz (unknown [10.100.224.162])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id A7312A3B88;
-        Tue,  2 Nov 2021 07:56:17 +0000 (UTC)
-Date:   Tue, 2 Nov 2021 08:56:14 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        bh=Knb795FyS1otYhncpNSxpdeSg0gR1wnUhjNSfjb9rwI=;
+        b=jDr064UReEPLwvorQXPZSLIln28hjzDeyaVW9HRw3wXfo3/BTNUg/P3Fk3Y3KGfFEaghmS
+        QeeSFLgDS9vSfy60gqkYVXn/5NZYTaI6TB+73mNUvDuKk8Ch0uHAfCpg5yh42Upc9pvhnh
+        rdR4nN2YD66O30c5GIMmfoONxsWJRI0=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-298-B-3MYClOMf-Q1PRP3dHhdg-1; Tue, 02 Nov 2021 05:26:43 -0400
+X-MC-Unique: B-3MYClOMf-Q1PRP3dHhdg-1
+Received: by mail-wr1-f72.google.com with SMTP id j12-20020adf910c000000b0015e4260febdso7245434wrj.20
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 Nov 2021 02:26:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:organization:in-reply-to
+         :content-transfer-encoding;
+        bh=Knb795FyS1otYhncpNSxpdeSg0gR1wnUhjNSfjb9rwI=;
+        b=3y9zzW/NMBBBcj51I8DL18rKl4g02hyXWTKK6a8H6y5b+JvzgY0ysfsSqQXmqO0BmA
+         m8skEqk4f4Gx7ErtS02KwPCUu98sZa24E4SZjB2JZMI5RshrN1OhE+yo7nyIST5ltsgB
+         cxSXbAe7czwv04iZmigGqHJPyYl7Y8/3v1UNxzo33JHHDsbJit850aZ/52PrXosH3ZZf
+         US2qQhv63MJTVkE57HOhNjzuF71jVgCov2QaPjmWCP72Xeo/4YdunBMWEgttEroTli/2
+         WwAk7Uvt99FPjHznOkx4zuAC8Wj1tKap66oiuYP5FmtuK8ekSo8RGr0YoNObLvJVM11u
+         gQHw==
+X-Gm-Message-State: AOAM533gO/IFTbDWUvzu3JvNVqOrh61O1HHz6hYd138adw6jgYVX6s4u
+        ahV26wk4e73ri9drFQ4+fwxB3+v8kdjYkUckAtjgiqWKx2xHpRdBhajyRTStWxb55NsMpQiNyah
+        iUExz9G7xEruNnRwrJVIkqS1ic+H5FA==
+X-Received: by 2002:a05:6000:1568:: with SMTP id 8mr8312844wrz.76.1635845202273;
+        Tue, 02 Nov 2021 02:26:42 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJypuONJhUPgkx5zdRXtO6PQwaMjrkRCxaI9v4ONJpzmi2h2qNNgIeiTS5/GOGnrjpahGsiP2w==
+X-Received: by 2002:a05:6000:1568:: with SMTP id 8mr8312796wrz.76.1635845202112;
+        Tue, 02 Nov 2021 02:26:42 -0700 (PDT)
+Received: from [192.168.3.132] (p5b0c6810.dip0.t-ipconnect.de. [91.12.104.16])
+        by smtp.gmail.com with ESMTPSA id c17sm16076995wrv.22.2021.11.02.02.26.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Nov 2021 02:26:41 -0700 (PDT)
+Message-ID: <e2695a2d-69bb-52ac-d5b9-fe9e5296393b@redhat.com>
+Date:   Tue, 2 Nov 2021 10:26:39 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [PATCH v7 00/11] extend task comm from 16 to 24
+Content-Language: en-US
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Yafang Shao <laoar.shao@gmail.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Kees Cook <keescook@chromium.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
@@ -67,47 +97,31 @@ Cc:     Steven Rostedt <rostedt@goodmis.org>,
         LKML <linux-kernel@vger.kernel.org>,
         kernel test robot <oliver.sang@intel.com>,
         kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH v7 00/11] extend task comm from 16 to 24
-Message-ID: <YYDvHv76tJtJht8b@alley>
 References: <20211101060419.4682-1-laoar.shao@gmail.com>
  <YX/0h7j/nDwoBA+J@alley>
  <CALOAHbA61RyGVzG8SVcNG=0rdqnUCt4AxCKmtuxRnbS_SH=+MQ@mail.gmail.com>
  <YYAPhE9uX7OYTlpv@alley>
  <CALOAHbAx55AUo3bm8ZepZSZnw7A08cvKPdPyNTf=E_tPqmw5hw@mail.gmail.com>
  <20211101211845.20ff5b2e@gandalf.local.home>
- <CALOAHbCgaJ83qZVj6qt8tgJBd4ojuLfgSp2Ce7CgzQYshM-amQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALOAHbCgaJ83qZVj6qt8tgJBd4ojuLfgSp2Ce7CgzQYshM-amQ@mail.gmail.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+In-Reply-To: <20211101211845.20ff5b2e@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue 2021-11-02 09:26:35, Yafang Shao wrote:
-> On Tue, Nov 2, 2021 at 9:18 AM Steven Rostedt <rostedt@goodmis.org> wrote:
-> > On Tue, 2 Nov 2021 09:09:50 +0800
-> > Yafang Shao <laoar.shao@gmail.com> wrote:
-> > >      Now we only care about kthread, so we can put the pointer into a
-> > > kthread specific struct.
-> > >      For example in the struct kthread, or in kthread->data (which may
-> > > conflict with workqueue).
-> >
-> > No, add a new field to the structure. "full_name" or something like that.
-> > I'm guessing it should be NULL if the name fits in TASK_COMM_LEN and
-> > allocated if the name had to be truncated.
-> >
-> > Do not overload data with this. That will just make things confusing.
-> > There's not that many kthreads, where an addition of an 8 byte pointer is
-> > going to cause issues.
+>> 2.  Keep the current comm[16] as-is and introduce a separate pointer
+>> to store kthread's long name
 > 
-> Sure, I will add a new field named "full_name", which only be
-> allocated if the kthread's comm is truncated.
+> I'm OK with this. Hopefully more would chime in too.
 
-The plan looks good to me.
+What you propose sounds sane to me.
 
-One more thing. It should obsolete the workqueue-specific solution.
-It would be great to clean up the workqueue code as the next step.
 
-Best Regards,
-Petr
+-- 
+Thanks,
+
+David / dhildenb
+
