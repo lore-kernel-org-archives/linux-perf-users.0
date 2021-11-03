@@ -2,130 +2,161 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B05C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed,  3 Nov 2021 15:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B43C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  3 Nov 2021 18:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70E7460E9B
-	for <linux-perf-users@archiver.kernel.org>; Wed,  3 Nov 2021 15:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BB5F6112E
+	for <linux-perf-users@archiver.kernel.org>; Wed,  3 Nov 2021 18:21:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231921AbhKCPzN (ORCPT
+        id S230036AbhKCSYN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 3 Nov 2021 11:55:13 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:11490 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S229885AbhKCPzM (ORCPT
+        Wed, 3 Nov 2021 14:24:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55710 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229940AbhKCSYM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 3 Nov 2021 11:55:12 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1A3FqUqv007979;
-        Wed, 3 Nov 2021 15:52:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=fm92TBvs3qYC4E7nOymJrhuSFDK74182N2yTteebE6I=;
- b=N1BpCxvLbURxRPJUeFzpongwGcTwB+c4urtyMG0JR8IEqXe1ZnX12RvfttUatM+vv+1U
- KueS6/AD9RGH50bBhB9hWlH1XZ3SwuMToa3kBEGzCpWcu4Y1ps1KChbx9ohLe1V/yjFW
- JJuoZGWuMXqmeQn/V3tJptkbPM07mloves+eHMgWdx9k2ma3rwsxGmr3k9YB60oyEB9G
- tlC9Mwzx/DMR8eeY6G33fGZCI2okn3q4lvxEYDV+MxBUO7omZEqpo03Xwyh0i84cYIlx
- GutCJAPuvHtvWhlQlqQXH8KZIgip1Rc7NtXcM1czkN3rYpKrhx8z7SRlfeANVDDOOPRX dg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3c3vt9s31d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 03 Nov 2021 15:52:34 +0000
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1A3FqUiR007967;
-        Wed, 3 Nov 2021 15:52:33 GMT
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3c3vt9s2yy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 03 Nov 2021 15:52:33 +0000
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1A3FhEED024021;
-        Wed, 3 Nov 2021 15:52:31 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma03fra.de.ibm.com with ESMTP id 3c0wp9wp4u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 03 Nov 2021 15:52:31 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1A3FqSDk7012872
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 3 Nov 2021 15:52:28 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9DB424C044;
-        Wed,  3 Nov 2021 15:52:28 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4D4B34C040;
-        Wed,  3 Nov 2021 15:52:28 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  3 Nov 2021 15:52:28 +0000 (GMT)
-From:   Thomas Richter <tmricht@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, sumanthk@linux.ibm.com, maddy@linux.ibm.com,
-        jolsa@redhat.com
-Cc:     svens@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com,
-        Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf/test: Test case 27 broken on s390 in linux-next
-Date:   Wed,  3 Nov 2021 16:52:15 +0100
-Message-Id: <20211103155215.2941895-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 3 Nov 2021 14:24:12 -0400
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CFE0C061714;
+        Wed,  3 Nov 2021 11:21:35 -0700 (PDT)
+Received: by mail-yb1-xb2e.google.com with SMTP id v64so8509602ybi.5;
+        Wed, 03 Nov 2021 11:21:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k/Y36oQavEUk/CbSUE4JbA9Hrj/lEJMM0pfmJWWGrTM=;
+        b=cjJvonAMq6S5Fm6eXejLFz0NLccrMj4ycbJ9mVLV7hqChyl7sx/fpZdcLamS/Erqix
+         DS9pwbZwoC2zldCibLTDntF3xS4wSFUUdAbS12EjvXOBt23dSpf60xXyTTO5SVSHF5P9
+         iZN0JmNOh4Pg5g8BbJjMa1wpaaTjms77RwMEiJwkRGeRi52xH+FFpwzzc+nIlMpmJ5Y+
+         VcHZXuGQmiF/bMSspjeqTZbBO0VnJMKuvZvEmL/NgRAoj85Rlq6SMlOMIf0G85X1dDvh
+         JyHUPuod61UD/3ul0kVShmE2ku8cPzYkA0VNb4m6kpf9U2238NImnXhM9qq7DyoDChZ9
+         B6mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k/Y36oQavEUk/CbSUE4JbA9Hrj/lEJMM0pfmJWWGrTM=;
+        b=4L5l/dyKuxIBhZNAxeubRBvawYRwAJ1c/UT+G5pDyK5bYkrRYps+OaIfd9AxNhVxkv
+         wsQ83s2sGeB1GJOTXVuXsByjDiwBxnZA6xRaB9k8VFQ6+2LTI7EvMhHw26940xElkxPh
+         JEE/l3NvnWg6Qh01h+9TJlwmzrN/xuBULnetYx0QTtPD3Ameb3DMbbC8aBsXrkL1jD2y
+         /PHd3tI2fp9KkrWMbxGVBu8ZCOv7eOYnxGGfiWZp+tXSkxgMVVIycJOsu0/+xKYOgNVF
+         yH7j2HlEMbwXa7QR3PBH94qhR2bZOywrLxw+RPkaR0fGuu9EvF4TnRyRHSajJXHcBrq4
+         QZ+w==
+X-Gm-Message-State: AOAM531ngrT1eCzgnXHBQmwLbvwkJ4b+OkKYjCx497gSl/sAWIie0wSc
+        ppqOezNhiWgq/JVBHzLNaQ880MDpZtwO5ROPFcg=
+X-Google-Smtp-Source: ABdhPJyKY84MoemKz2Umdb4LiuzuPIrMMGhKY9VSXDlPsLmNLrHr9IqmH0xGvjNDKacU4WEe34pi7QWS6M+q7cHSNZY=
+X-Received: by 2002:a25:d16:: with SMTP id 22mr41493565ybn.51.1635963694372;
+ Wed, 03 Nov 2021 11:21:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: zKlrLdJOsV68AglyUc5K14mB3ZJL1LSZ
-X-Proofpoint-GUID: HLnGwBEJoksy2vqXj4izKM-Cxg8o_XyH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
- definitions=2021-11-03_05,2021-11-03_01,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 malwarescore=0 phishscore=0 adultscore=0 clxscore=1011
- suspectscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0 bulkscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2110150000 definitions=main-2111030089
+References: <20211101224357.2651181-1-davemarchevsky@fb.com>
+ <CAEf4BzY_OXyWdgJu=0phg0Pyb4PW6QWcKKBHLFOf=FwAmgOjqA@mail.gmail.com> <7c6a10fb-b1c5-4f50-8f7c-75c170e24ebb@isovalent.com>
+In-Reply-To: <7c6a10fb-b1c5-4f50-8f7c-75c170e24ebb@isovalent.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 3 Nov 2021 11:21:23 -0700
+Message-ID: <CAEf4BzaGcLTsG-7Wbp+R-Y45ZN29Ch2pUyBdOHvYMoXupUaYWg@mail.gmail.com>
+Subject: Re: [PATCH v3 bpf-next 0/4] libbpf: deprecate bpf_program__get_prog_info_linear
+To:     Quentin Monnet <quentin@isovalent.com>
+Cc:     Dave Marchevsky <davemarchevsky@fb.com>, bpf <bpf@vger.kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Commit 10269a2ca2b08c ("perf test sample-parsing: Add endian test for struct branch_flags")
-broke the test case 27 (Sample parsing) on s390 on linux-next tree:
+On Wed, Nov 3, 2021 at 4:26 AM Quentin Monnet <quentin@isovalent.com> wrote:
+>
+> 2021-11-02 16:06 UTC-0700 ~ Andrii Nakryiko <andrii.nakryiko@gmail.com>
+> > On Mon, Nov 1, 2021 at 3:46 PM Dave Marchevsky <davemarchevsky@fb.com> wrote:
+> >>
+> >> bpf_program__get_prog_info_linear is a helper which wraps the
+> >> bpf_obj_get_info_by_fd BPF syscall with some niceties that put
+> >> all dynamic-length bpf_prog_info in one buffer contiguous with struct
+> >> bpf_prog_info, and simplify the selection of which dynamic data to grab.
+> >>
+> >> The resultant combined struct, bpf_prog_info_linear, is persisted to
+> >> file by 'perf' to enable later annotation of BPF prog data. libbpf
+> >> includes some vaddr <-> offset conversion helpers for
+> >> struct bpf_prog_info_linear to simplify this.
+> >>
+> >> This functionality is heavily tailored to perf's usecase, so its use as
+> >> a general prog info API should be deemphasized in favor of just calling
+> >> bpf_obj_get_info_by_fd, which can be more easily fit to purpose. Some
+> >> examples from caller migrations in this series:
+> >>
+> >>   * Some callers weren't requesting or using dynamic-sized prog info and
+> >>     are well served by a simple get_info_by_fd call (e.g.
+> >>     dump_prog_id_as_func_ptr in bpftool)
+> >>   * Some callers were requesting all of a specific dynamic info type but
+> >>     only using the first record, so can avoid unnecessary malloc by
+> >>     only requesting 1 (e.g. profile_target_name in bpftool)
+> >>   * bpftool's do_dump saves some malloc/free by growing and reusing its
+> >>     dynamic prog_info buf as it loops over progs to grab info and dump.
+> >>
+> >> Perf does need the full functionality of
+> >> bpf_program__get_prog_info_linear and its accompanying structs +
+> >> helpers, so copy the code to its codebase, migrate all other uses in the
+> >> tree, and deprecate the helper in libbpf.
+> >>
+> >> Since the deprecated symbols continue to be included in perf some
+> >> renaming was necessary in perf's copy, otherwise functionality is
+> >> unchanged.
+> >>
+> >> This work was previously discussed in libbpf's issue tracker [0].
+> >>
+> >> [0]: https://github.com/libbpf/libbpf/issues/313
+> >>
+> >> v2->v3:
+> >>   * Remove v2's patch 1 ("libbpf: Migrate internal use of
+> >>     bpf_program__get_prog_info_linear"), which was applied [Andrii]
+> >>   * Add new patch 1 migrating error checking of libbpf calls to
+> >>     new scheme [Andrii, Quentin]
+> >>   * In patch 2, fix != -1 error check of libbpf call, improper realloc
+> >>     handling, and get rid of confusing macros [Andrii]
+> >>   * In patch 4, deprecate starting from 0.6 instead of 0.7 [Andrii]
+> >
+> > LGTM. Quentin, can you please take a look and ack as well? Thanks!
+>
+> Thanks Andrii for the Cc! I realised yesterday morning that I'd been hit
+> by the unsubscription incident and missed v3 of this set.
 
-  # ./perf test -Fv 27
-  27: Sample parsing
-  --- start ---
-  parsing failed for sample_type 0x800
-  ---- end ----
-  Sample parsing: FAILED!
-  #
+Yeah, super unfortunate this unsubscription. Had to go through that as well.
 
-The cause of the failure is a wrong #define BS_EXPECTED_BE statement
-in above commit.  Correct this define and the test case runs fine.
+>
+> The changes look good to me, and you can add my tag to the first three
+> patches:
+>
+> Acked-by: Quentin Monnet <quentin@isovalent.com>
 
-Output After:
-  # ./perf test -Fv 27
-  27: Sample parsing                                                  :
-  --- start ---
-  ---- end ----
-  Sample parsing: Ok
-  #
+Thanks, I will.
 
-Fixes: 10269a2ca2b08c ("perf test sample-parsing: Add endian test for struct branch_flags")
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
----
- tools/perf/tests/sample-parsing.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> Regarding patch 4, looking at the latest deprecations in libbpf, I would
+> have expected the functions to be deprecated starting in v0.7, and not v0.6?
 
-diff --git a/tools/perf/tests/sample-parsing.c b/tools/perf/tests/sample-parsing.c
-index c83a11514129..9c7af55b74db 100644
---- a/tools/perf/tests/sample-parsing.c
-+++ b/tools/perf/tests/sample-parsing.c
-@@ -36,7 +36,7 @@
-  * These are based on the input value (213) specified
-  * in branch_stack variable.
-  */
--#define BS_EXPECTED_BE	0xa00d000000000000
-+#define BS_EXPECTED_BE	0xa000d00000000000
- #define BS_EXPECTED_LE	0xd5000000
- #define FLAG(s)	s->branch_stack->entries[i].flags
- 
--- 
-2.25.1
+The reason to do it in upcoming v0.6 is because there are no
+replacement APIs that we are going to wait for. No point in delaying
+the inevitable just for the sake of delaying it.
 
+>
+> Other than that, on patch 2 (apologies for not answering inline), it
+> would feel more natural, in do_dump()'s "for" loop in prog.c, to have
+> the memset() above the call to bpf_obj_get_info_by_fd() (and to skip the
+> zero-initialisation of "info") instead of at the end of the loop, which
+> means a useless memset() just before we exit the loop. But probably not
+> worth a respin just for that.
+
+Yeah, that bothered me a bit as well, but if you are also mentioning
+that I'll just move it up as you suggested, while applying. Thanks.
+
+>
+> Thanks,
+> Quentin
