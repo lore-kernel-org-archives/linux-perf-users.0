@@ -2,155 +2,119 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D09C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Nov 2021 23:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A392AC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed,  3 Nov 2021 08:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE16F60174
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Nov 2021 23:07:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78AEE61184
+	for <linux-perf-users@archiver.kernel.org>; Wed,  3 Nov 2021 08:24:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230258AbhKBXJk (ORCPT
+        id S231396AbhKCI1A (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 Nov 2021 19:09:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48418 "EHLO
+        Wed, 3 Nov 2021 04:27:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229747AbhKBXJk (ORCPT
+        with ESMTP id S230352AbhKCI1A (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 Nov 2021 19:09:40 -0400
-Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAF98C061714;
-        Tue,  2 Nov 2021 16:07:04 -0700 (PDT)
-Received: by mail-yb1-xb32.google.com with SMTP id o12so2067001ybk.1;
-        Tue, 02 Nov 2021 16:07:04 -0700 (PDT)
+        Wed, 3 Nov 2021 04:27:00 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3014CC061714;
+        Wed,  3 Nov 2021 01:24:24 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id y4so1576710pfa.5;
+        Wed, 03 Nov 2021 01:24:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5IzC/fM7D/0ocsFVOes4HmzPOfilROSHzYlPgHvWpoo=;
-        b=E5unkfS0BlsVA9kmyguZAGH+vnNPvUtiIr3upp3Uh6v/X7DR14OK8AaR9a5tnaRw0c
-         OtLu8z5A4uu5tO09glV9wio4iCRIOrV3KxRpkw2hL6KTrvXXf+jtZAi+xG7TXk8SPFq1
-         ZAMv2pDUwNe78DkA9rpcqZHYdpyuX7jQ24gU8QAlkYkmq6ZsGn8c0DLtE4P5WUUVgZRl
-         s2c4VC8r+tJCRPh6PUH6CWJnfKb2wZkMn3jC8ocw2Z6r2i5QhelrLD65ble9Kc6F3R21
-         CHljEP00NJnH/WYoZqxMKE6Y7ypU/5vAYhtGjwlr5zm4jTTntl0J9oUMhH/2v5RXSbjb
-         elng==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9NIKEDHqLCRhU12tMy0QZPx9nT1tD6ckOt8ztpTIROk=;
+        b=jV8MnVySVhW/cJONKXCarehnv9b3NpegTgTsbbUBIlm0Di3ouklO0uxonaUD8F3AzO
+         jza//rMwYPAkveezpcqWPB5FRJgvLwD8nPrNd8T/9zfkRjrfkJWhKEyNTH4h9Wv91xgX
+         pcYjCtnhgxY4PrfBj+n8EuaoIM0YcaJKhvBArjXObSIfaGkJRamBF4MwP+AoIFvkPybv
+         sTvHsYTXiVi4YpdF1eJ1RCR/6uv+LtOt6qqUrlpHeccQkikvW2xukSoeEFWaHFzVXcbB
+         rV4nb5x8kvahFbb49rJQRFxj4evwEOzAxdlTLp7kWp52eFOFpQQuEe2dlZnM0+oQFCm8
+         QWvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5IzC/fM7D/0ocsFVOes4HmzPOfilROSHzYlPgHvWpoo=;
-        b=FW90jRj01URA60T9X8ySiiNoz2u6XxzQuD40kZAYKefw6hf2/SiPWLXB4txqWvjD0A
-         WJU3ItIaXgagbk2D34nqOS7YJzEZQkm2C/UsI6rpDt6TKsqiBWepNEpAW3XDpIlD8Y+j
-         6tTiH38CfTKMw8sOaS78Ha1nx+qFAupV54ApgxMjS8GWJLgWp/hefzsR3ggtf5OpYeWG
-         1UnVl9VISXcPHbzI6Fg55BIsb5SUkChFnKXDr4dbJFXcdBGSgpy3RH03YYDXtHPTRxdS
-         1YieSKPdfJLPaxf/ymKjcTYQRrLtZKi+evevFj5wFqFwjNyzHroVz+455BOJccFjE5Qm
-         I13g==
-X-Gm-Message-State: AOAM5325792bGjrU0LMJuH5D/1cXDhNbB3mKhRCZ2Rk51yB+24ZH4865
-        0S2YMNq3YRw3pdreWNjoVLDpLNrVJLIrIjRhOo0=
-X-Google-Smtp-Source: ABdhPJznotNbgoKCR+VKFqCmVIHUXTZJIyj+zW6gCM34TMptCQKXj+k5l3NQ11ZTuIL4mILuteXiG0yhvHTtXDgkMNA=
-X-Received: by 2002:a25:d187:: with SMTP id i129mr31712440ybg.2.1635894423954;
- Tue, 02 Nov 2021 16:07:03 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9NIKEDHqLCRhU12tMy0QZPx9nT1tD6ckOt8ztpTIROk=;
+        b=3HvQ+pzlHWZf96zgXlqqSJA9TRB3aP/ssvie8JGYN/hThPyQgQopOATDJyCZoDm83Z
+         Wm2u9jr6wRkC6C0IA5paMMglHRXXylX/urr3TuSmWxudJgKZQjzF9JjP6Rbhfx55vJgr
+         kJFBf7Ux2/D8tDFAlLyU0knquFZhGsFRkBZVo6AfKLICvuj7Vnss9ec1AhvKlUYA4wz/
+         PSCVF73oaPfk934gO6jiJ0pBN7P0Qme97piEAtwisGvB3sqa2m9F60vhfcR9OqwSlhWf
+         PY7A1L3q2vpnIsrjGzjHL2jrtjcidzjZGMRnzhDwX9UHZWIDnQjT0iaxQNrXVjJkKGND
+         hmMw==
+X-Gm-Message-State: AOAM531J79+g4YlPxh4KSh97qPDL0esZdRGY7/EBNW0yhNbd83/BmH4E
+        kedg/uns3sLlmrW2OoEFuI4=
+X-Google-Smtp-Source: ABdhPJwYSOnyPnCnKQlaMLKH3NA4QjvNt0/tyU103JR+DF1EFGbckBw5EvTrMXA5IvXOxhRyJJx+uQ==
+X-Received: by 2002:a05:6a00:b50:b0:48c:2d75:2ec1 with SMTP id p16-20020a056a000b5000b0048c2d752ec1mr5786440pfo.66.1635927863763;
+        Wed, 03 Nov 2021 01:24:23 -0700 (PDT)
+Received: from localhost.localdomain ([193.203.214.57])
+        by smtp.gmail.com with ESMTPSA id e8sm1556614pfv.183.2021.11.03.01.24.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Nov 2021 01:24:23 -0700 (PDT)
+From:   cgel.zte@gmail.com
+X-Google-Original-From: yao.jing2@zte.com.cn
+To:     peterz@infradead.org
+Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jing Yao <yao.jing2@zte.com.cn>,
+        Zeal Robot <zealci@zte.com.cn>
+Subject: [PATCH] kernel: events: replace snprintf in show functions with sysfs_emit
+Date:   Wed,  3 Nov 2021 08:24:18 +0000
+Message-Id: <20211103082418.27657-1-yao.jing2@zte.com.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20211101224357.2651181-1-davemarchevsky@fb.com>
-In-Reply-To: <20211101224357.2651181-1-davemarchevsky@fb.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 2 Nov 2021 16:06:52 -0700
-Message-ID: <CAEf4BzY_OXyWdgJu=0phg0Pyb4PW6QWcKKBHLFOf=FwAmgOjqA@mail.gmail.com>
-Subject: Re: [PATCH v3 bpf-next 0/4] libbpf: deprecate bpf_program__get_prog_info_linear
-To:     Dave Marchevsky <davemarchevsky@fb.com>,
-        Quentin Monnet <quentin@isovalent.com>
-Cc:     bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Nov 1, 2021 at 3:46 PM Dave Marchevsky <davemarchevsky@fb.com> wrote:
->
-> bpf_program__get_prog_info_linear is a helper which wraps the
-> bpf_obj_get_info_by_fd BPF syscall with some niceties that put
-> all dynamic-length bpf_prog_info in one buffer contiguous with struct
-> bpf_prog_info, and simplify the selection of which dynamic data to grab.
->
-> The resultant combined struct, bpf_prog_info_linear, is persisted to
-> file by 'perf' to enable later annotation of BPF prog data. libbpf
-> includes some vaddr <-> offset conversion helpers for
-> struct bpf_prog_info_linear to simplify this.
->
-> This functionality is heavily tailored to perf's usecase, so its use as
-> a general prog info API should be deemphasized in favor of just calling
-> bpf_obj_get_info_by_fd, which can be more easily fit to purpose. Some
-> examples from caller migrations in this series:
->
->   * Some callers weren't requesting or using dynamic-sized prog info and
->     are well served by a simple get_info_by_fd call (e.g.
->     dump_prog_id_as_func_ptr in bpftool)
->   * Some callers were requesting all of a specific dynamic info type but
->     only using the first record, so can avoid unnecessary malloc by
->     only requesting 1 (e.g. profile_target_name in bpftool)
->   * bpftool's do_dump saves some malloc/free by growing and reusing its
->     dynamic prog_info buf as it loops over progs to grab info and dump.
->
-> Perf does need the full functionality of
-> bpf_program__get_prog_info_linear and its accompanying structs +
-> helpers, so copy the code to its codebase, migrate all other uses in the
-> tree, and deprecate the helper in libbpf.
->
-> Since the deprecated symbols continue to be included in perf some
-> renaming was necessary in perf's copy, otherwise functionality is
-> unchanged.
->
-> This work was previously discussed in libbpf's issue tracker [0].
->
-> [0]: https://github.com/libbpf/libbpf/issues/313
->
-> v2->v3:
->   * Remove v2's patch 1 ("libbpf: Migrate internal use of
->     bpf_program__get_prog_info_linear"), which was applied [Andrii]
->   * Add new patch 1 migrating error checking of libbpf calls to
->     new scheme [Andrii, Quentin]
->   * In patch 2, fix != -1 error check of libbpf call, improper realloc
->     handling, and get rid of confusing macros [Andrii]
->   * In patch 4, deprecate starting from 0.6 instead of 0.7 [Andrii]
+From: Jing Yao <yao.jing2@zte.com.cn>
 
-LGTM. Quentin, can you please take a look and ack as well? Thanks!
+coccicheck complains about the use of snprintf() in sysfs show
+functions:
+WARNING use scnprintf or sprintf
 
->
-> v1->v2: fix bpftool do_dump changes to clear bpf_prog_info after use and
-> correctly pass realloc'd ptr back (patch 2)
->
-> Dave Marchevsky (4):
->   bpftool: Migrate -1 err checks of libbpf fn calls
->   bpftool: use bpf_obj_get_info_by_fd directly
->   perf: pull in bpf_program__get_prog_info_linear
->   libbpf: deprecate bpf_program__get_prog_info_linear
->
->  tools/bpf/bpftool/btf_dumper.c                |  42 +--
->  tools/bpf/bpftool/prog.c                      | 158 ++++++++---
->  tools/bpf/bpftool/struct_ops.c                |   2 +-
->  tools/lib/bpf/libbpf.h                        |   3 +
->  .../Documentation/perf.data-file-format.txt   |   2 +-
->  tools/perf/util/Build                         |   1 +
->  tools/perf/util/annotate.c                    |   3 +-
->  tools/perf/util/bpf-event.c                   |  41 ++-
->  tools/perf/util/bpf-event.h                   |   2 +-
->  tools/perf/util/bpf-utils.c                   | 261 ++++++++++++++++++
->  tools/perf/util/bpf-utils.h                   |  76 +++++
->  tools/perf/util/bpf_counter.c                 |   6 +-
->  tools/perf/util/dso.c                         |   1 +
->  tools/perf/util/env.c                         |   1 +
->  tools/perf/util/header.c                      |  13 +-
->  15 files changed, 527 insertions(+), 85 deletions(-)
->  create mode 100644 tools/perf/util/bpf-utils.c
->  create mode 100644 tools/perf/util/bpf-utils.h
->
-> --
-> 2.30.2
->
+Use sysfs_emit instead of scnprintf or sprintf make more sense.
+
+Reported-by: Zeal Robot <zealci@zte.com.cn>
+Signed-off-by: Jing Yao <yao.jing2@zte.com.cn>
+---
+ kernel/events/core.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index f2253ea729a2..15419ced2a51 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -10921,7 +10921,7 @@ static ssize_t nr_addr_filters_show(struct device *dev,
+ {
+ 	struct pmu *pmu = dev_get_drvdata(dev);
+ 
+-	return snprintf(page, PAGE_SIZE - 1, "%d\n", pmu->nr_addr_filters);
++	return sysfs_emit(page, "%d\n", pmu->nr_addr_filters);
+ }
+ DEVICE_ATTR_RO(nr_addr_filters);
+ 
+@@ -10932,7 +10932,7 @@ type_show(struct device *dev, struct device_attribute *attr, char *page)
+ {
+ 	struct pmu *pmu = dev_get_drvdata(dev);
+ 
+-	return snprintf(page, PAGE_SIZE-1, "%d\n", pmu->type);
++	return sysfs_emit(page, "%d\n", pmu->type);
+ }
+ static DEVICE_ATTR_RO(type);
+ 
+@@ -10943,7 +10943,7 @@ perf_event_mux_interval_ms_show(struct device *dev,
+ {
+ 	struct pmu *pmu = dev_get_drvdata(dev);
+ 
+-	return snprintf(page, PAGE_SIZE-1, "%d\n", pmu->hrtimer_interval_ms);
++	return sysfs_emit(page, "%d\n", pmu->hrtimer_interval_ms);
+ }
+ 
+ static DEFINE_MUTEX(mux_interval_mutex);
+-- 
+2.25.1
+
