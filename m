@@ -2,168 +2,201 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65471C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  3 Nov 2021 18:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FBEC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  3 Nov 2021 19:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4308961157
-	for <linux-perf-users@archiver.kernel.org>; Wed,  3 Nov 2021 18:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47F0E6112E
+	for <linux-perf-users@archiver.kernel.org>; Wed,  3 Nov 2021 19:15:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229893AbhKCSxo (ORCPT
+        id S230363AbhKCTSP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 3 Nov 2021 14:53:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34186 "EHLO
+        Wed, 3 Nov 2021 15:18:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229697AbhKCSxn (ORCPT
+        with ESMTP id S230248AbhKCTSO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 3 Nov 2021 14:53:43 -0400
-Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDA1AC061714;
-        Wed,  3 Nov 2021 11:51:06 -0700 (PDT)
-Received: by mail-yb1-xb32.google.com with SMTP id y3so8748533ybf.2;
-        Wed, 03 Nov 2021 11:51:06 -0700 (PDT)
+        Wed, 3 Nov 2021 15:18:14 -0400
+Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ADB7C061714
+        for <linux-perf-users@vger.kernel.org>; Wed,  3 Nov 2021 12:15:38 -0700 (PDT)
+Received: by mail-io1-xd29.google.com with SMTP id d70so3165901iof.7
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Nov 2021 12:15:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yw3M8NVGUaiaF6RQboKd6RTjrXvJsqFSMX2x6M9gO7o=;
-        b=EGkhfZFZ1h80LT4AZAOyLqRsLxXr90QPNH/ElTNArWXioFgjxzTGBhprpdF+SIbUU8
-         xYdFE7ESTvfP2BxXHX1OI4PqxXfPhjGOn/8tG+gPJton1d8a7cVmOOhEnMexhsneg7Sp
-         NzUcAhqNgkAH3Ap/cOfxAzWfH0XkImpeUhLCQ8Li8HcCkcH7yuK7yAkOYS1xVvxY1Q6+
-         mwFbPpNBvgg6rUl2xx3dOTgF10jAsdx7mbPyQGGLGTKGbv3FHiu9dwkMEc0lxxOSrsDy
-         cHqmx8wkMVvf4kFGscb9tPCLLbPspzgPuXLbM+79SFxGi9mj2/qUP5rJL6SzGEsJiLz5
-         4I6Q==
+         :cc:content-transfer-encoding;
+        bh=zvN8Wx3cerlS5kndbX104hKLH3gFaS6msaaX+fbSIaA=;
+        b=sn/PLQIBmfI06w/WOGfSjv9Kw13j3swiXnsEhqgCbHbteMIUbCOen4UyZk0AH6wWkN
+         1IEIFq5KLrsfJ2vFFB03I0IsLZJ3JX06eusxHqxIXlIbbh2gBJB2ILDk+KUJQFyAmexf
+         uRPiqcTti8SZbHRBQPMCfp5tI16Y+UuyXeiTdP9hdG8LLMUPgUqQcmP1Afl5ijYH6dlw
+         Tt3gYdC0zn2cteKEyCdxxc0CMv7mUfSu0TAW93Y5J894XHqwomsaHv3udZdWMj48Agpx
+         d/4Pw/YNf6ct+1vVYr0RpRpk64LD/B6UHvCDqr9fdH/d82D9Jr1G1E1FR+vJlY2JQGMM
+         gc0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yw3M8NVGUaiaF6RQboKd6RTjrXvJsqFSMX2x6M9gO7o=;
-        b=mrwD9vehSdNUJa1MSTW43AjG3NOnpw8Tx3+cUbywZ6Txd0ihpSCepZv9kMW1NIx/M6
-         sVnSkcWYXrUS7UUQvrJHhOn6m+4Nt2tJeRU8ByVQ02xcaLD2Mxa6jy9Tsi47WFOttQFe
-         9l5bt8MjGS6yo5CJNtcblpIPHHrpOOE8ilaH+5+UKSTOHjvtSGx0DDrANX9nvFEfF9Ln
-         Ir50/7BaPHjyBe96xLl+skbTvOqMuiLe3cbbDqUHjdL/SHu5Szfgm8d5eAQiu6FNSFXa
-         EFKPYvdVZj0wgvR5k9mndMxOiZ4XyC/7X51qbvPnY5Bq5iAeQ8eSMdK9UwxkHKGAIhgh
-         Hp6w==
-X-Gm-Message-State: AOAM532IU87mZClnxB8lJaNj9GVbjpxN9D/+xNiA8Y9BvjmB2rfhA5aX
-        KUN1gPRPCC8Isxou7Lh+kDCxQgRbETBMDNPSrqk=
-X-Google-Smtp-Source: ABdhPJwo/NTzJ10taWClmCG9M2kZ7TiS5mmNQJuGgFZWgASg4bXE0LZNq40SIPaS0Kx5eIlCnnas3/CRFQFlwpXRyLE=
-X-Received: by 2002:a25:d16:: with SMTP id 22mr41679749ybn.51.1635965465937;
- Wed, 03 Nov 2021 11:51:05 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=zvN8Wx3cerlS5kndbX104hKLH3gFaS6msaaX+fbSIaA=;
+        b=BgFZNUgo9cDsH6crgXB0r4j/uyIOqFA1o302I9IcbNI5o54QqnLJg5+o7MRZ6v8Yu0
+         yovaubo5bbiomoN9OolJhR454NyxeG691tQXbMFvw25wPLyOvN2CCPRcJqgt+5n7BG7Y
+         XUiDwdjZfcsCj1nE2Pra6ZFiRm+MrRn0TX5PIslxQFLzlrpEpR2RiDFW7l7XNGioYVTu
+         1BrpqwsNowL4A8I8svcv6temlVubqvEzG4JizAGqfUysjK2JrJNogFuk06IlHALJLAfJ
+         O4zy8xGvNMznr2VNihxZsofYuHBeEEJVz9ZAZn5ExWx6ee/2PK8opurRDdPq8ZEDe6I5
+         4PPw==
+X-Gm-Message-State: AOAM530y3x7tdQ/dJPu0i9DLC1ChbmH4sj2w5trRvm4ltIXKQlFNG0mG
+        FJ6lBqNmsfe7X1z63pLdkqG4Bj4e7DrBKaFi/OMdkg==
+X-Google-Smtp-Source: ABdhPJxudaSAmjjQlGS3xDDYyZVrcKdBo6oXuNr/UTLcuIJ4p6l1tEQvNCUjaVtRr9WFf7YDMvYVtdF5ogAif4lLXsA=
+X-Received: by 2002:a05:6602:2d88:: with SMTP id k8mr22838002iow.18.1635966937329;
+ Wed, 03 Nov 2021 12:15:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211101224357.2651181-1-davemarchevsky@fb.com>
- <CAEf4BzY_OXyWdgJu=0phg0Pyb4PW6QWcKKBHLFOf=FwAmgOjqA@mail.gmail.com>
- <7c6a10fb-b1c5-4f50-8f7c-75c170e24ebb@isovalent.com> <CAEf4BzaGcLTsG-7Wbp+R-Y45ZN29Ch2pUyBdOHvYMoXupUaYWg@mail.gmail.com>
-In-Reply-To: <CAEf4BzaGcLTsG-7Wbp+R-Y45ZN29Ch2pUyBdOHvYMoXupUaYWg@mail.gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 3 Nov 2021 11:50:53 -0700
-Message-ID: <CAEf4BzamZ06oN4vezW1_L1Yn2hmA9SHn5Ch+JgjwqRbg08Yegg@mail.gmail.com>
-Subject: Re: [PATCH v3 bpf-next 0/4] libbpf: deprecate bpf_program__get_prog_info_linear
-To:     Quentin Monnet <quentin@isovalent.com>
-Cc:     Dave Marchevsky <davemarchevsky@fb.com>, bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+References: <20211013174604.747276-1-irogers@google.com> <YXAINnEcHsy450zm@krava>
+ <CAP-5=fVCqisvy8-Obx9TA3Zgi_BJdefYr-g4LCsuy1KKb2xtBQ@mail.gmail.com>
+ <CAP-5=fXGvBY7hmvCAS7deNAYVxppYj9DZoxstJ93p68BHTSACw@mail.gmail.com> <YXvmtrBKV7eawT7h@krava>
+In-Reply-To: <YXvmtrBKV7eawT7h@krava>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 3 Nov 2021 12:15:23 -0700
+Message-ID: <CAP-5=fWLY2cF97P0oiMpnLzKjBJ-tC_jRyRNicSHjx6m73KrWg@mail.gmail.com>
+Subject: Re: [PATCH v2 00/22] Start aligning perf test with kunit style
+To:     Jiri Olsa <jolsa@redhat.com>,
+        Sohaib Mohamed <sohaib.amhmd@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Daniel Latypov <dlatypov@google.com>,
+        David Gow <davidgow@google.com>, eranian@google.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Nov 3, 2021 at 11:21 AM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
+On Fri, Oct 29, 2021 at 5:19 AM Jiri Olsa <jolsa@redhat.com> wrote:
 >
-> On Wed, Nov 3, 2021 at 4:26 AM Quentin Monnet <quentin@isovalent.com> wrote:
-> >
-> > 2021-11-02 16:06 UTC-0700 ~ Andrii Nakryiko <andrii.nakryiko@gmail.com>
-> > > On Mon, Nov 1, 2021 at 3:46 PM Dave Marchevsky <davemarchevsky@fb.com> wrote:
-> > >>
-> > >> bpf_program__get_prog_info_linear is a helper which wraps the
-> > >> bpf_obj_get_info_by_fd BPF syscall with some niceties that put
-> > >> all dynamic-length bpf_prog_info in one buffer contiguous with struct
-> > >> bpf_prog_info, and simplify the selection of which dynamic data to grab.
-> > >>
-> > >> The resultant combined struct, bpf_prog_info_linear, is persisted to
-> > >> file by 'perf' to enable later annotation of BPF prog data. libbpf
-> > >> includes some vaddr <-> offset conversion helpers for
-> > >> struct bpf_prog_info_linear to simplify this.
-> > >>
-> > >> This functionality is heavily tailored to perf's usecase, so its use as
-> > >> a general prog info API should be deemphasized in favor of just calling
-> > >> bpf_obj_get_info_by_fd, which can be more easily fit to purpose. Some
-> > >> examples from caller migrations in this series:
-> > >>
-> > >>   * Some callers weren't requesting or using dynamic-sized prog info and
-> > >>     are well served by a simple get_info_by_fd call (e.g.
-> > >>     dump_prog_id_as_func_ptr in bpftool)
-> > >>   * Some callers were requesting all of a specific dynamic info type but
-> > >>     only using the first record, so can avoid unnecessary malloc by
-> > >>     only requesting 1 (e.g. profile_target_name in bpftool)
-> > >>   * bpftool's do_dump saves some malloc/free by growing and reusing its
-> > >>     dynamic prog_info buf as it loops over progs to grab info and dump.
-> > >>
-> > >> Perf does need the full functionality of
-> > >> bpf_program__get_prog_info_linear and its accompanying structs +
-> > >> helpers, so copy the code to its codebase, migrate all other uses in the
-> > >> tree, and deprecate the helper in libbpf.
-> > >>
-> > >> Since the deprecated symbols continue to be included in perf some
-> > >> renaming was necessary in perf's copy, otherwise functionality is
-> > >> unchanged.
-> > >>
-> > >> This work was previously discussed in libbpf's issue tracker [0].
-> > >>
-> > >> [0]: https://github.com/libbpf/libbpf/issues/313
-> > >>
-> > >> v2->v3:
-> > >>   * Remove v2's patch 1 ("libbpf: Migrate internal use of
-> > >>     bpf_program__get_prog_info_linear"), which was applied [Andrii]
-> > >>   * Add new patch 1 migrating error checking of libbpf calls to
-> > >>     new scheme [Andrii, Quentin]
-> > >>   * In patch 2, fix != -1 error check of libbpf call, improper realloc
-> > >>     handling, and get rid of confusing macros [Andrii]
-> > >>   * In patch 4, deprecate starting from 0.6 instead of 0.7 [Andrii]
+> On Thu, Oct 28, 2021 at 04:52:13PM -0700, Ian Rogers wrote:
+> > On Wed, Oct 20, 2021 at 8:51 AM Ian Rogers <irogers@google.com> wrote:
 > > >
-> > > LGTM. Quentin, can you please take a look and ack as well? Thanks!
+> > > On Wed, Oct 20, 2021 at 5:14 AM Jiri Olsa <jolsa@redhat.com> wrote:
+> > > >
+> > > > On Wed, Oct 13, 2021 at 10:45:42AM -0700, Ian Rogers wrote:
+> > > > > Perf test uses its own structs and code layout that differs from =
+kunit
+> > > > > that was more recently introduced to the kernel. Besides consiste=
+ncy,
+> > > > > it is hoped that moving in the direction of kunit style will enab=
+le
+> > > > > reuse of infrastructure like test output formatting for continuou=
+s
+> > > > > testing systems. For example:
+> > > > > https://lore.kernel.org/linux-kselftest/CA+GJov6tdjvY9x12JsJT14qn=
+6c7NViJxqaJk+r-K1YJzPggFDQ@mail.gmail.com/
+> > > > >
+> > > > > The motivation for this restructuring comes from wanting to be ab=
+le to
+> > > > > tag tests with a size:
+> > > > > https://lore.kernel.org/linux-perf-users/CAP-5=3DfWmGyuqFKc-EMP3r=
+bmTkjZ3MS+YSajGZfeRMc38HS82gw@mail.gmail.com/
+> > > > > To have more exhaustive and slower running tests.  This isn't
+> > > > > something kunit currently supports, nor is the execution of pytho=
+n and
+> > > > > shell tests, but it seems sensible to work on an approach with ku=
+nit
+> > > > > rather to invent a new wheel inside of perf.
+> > > > >
+> > > > > These initial patches are just refactoring the main test suite
+> > > > > definitions to be in a more kunit style. Kunit isn't depended upo=
+n, it
+> > > > > is hoped that this can be done in later patches for the sake of
+> > > > > consistency.
+> > > > >
+> > > > > v2. Gets to a point of the perf test test suite/case structs bein=
+g
+> > > > >     close facsimiles of the kunit ones. It also addresses feedbac=
+k on
+> > > > >     the v1 RFC, in particular from Jiri Olsa <jolsa@redhat.com>.
+> > > >
+> > > > hi,
+> > > > when I compile with DEBUG=3D1 it's ok, but with just make:
+> > > >
+> > > > [root@krava perf]# ./perf test
+> > > > Segmentation fault (core dumped)
+> > > > [root@krava perf]# gdb ./perf
+> > > > GNU gdb (GDB) Fedora 10.2-4.fc33
+> > > > Copyright (C) 2021 Free Software Foundation, Inc.
+> > > > License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses=
+/gpl.html>
+> > > > This is free software: you are free to change and redistribute it.
+> > > > There is NO WARRANTY, to the extent permitted by law.
+> > > > Type "show copying" and "show warranty" for details.
+> > > > This GDB was configured as "x86_64-redhat-linux-gnu".
+> > > > Type "show configuration" for configuration details.
+> > > > For bug reporting instructions, please see:
+> > > > <https://www.gnu.org/software/gdb/bugs/>.
+> > > > Find the GDB manual and other documentation resources online at:
+> > > >     <http://www.gnu.org/software/gdb/documentation/>.
+> > > >
+> > > > For help, type "help".
+> > > > Type "apropos word" to search for commands related to "word"...
+> > > > Reading symbols from ./perf...
+> > > > (gdb) r test
+> > > > Starting program: /home/jolsa/kernel/linux-perf/tools/perf/perf tes=
+t
+> > > > [Thread debugging using libthread_db enabled]
+> > > > Using host libthread_db library "/lib64/libthread_db.so.1".
+> > > >
+> > > > Program received signal SIGSEGV, Segmentation fault.
+> > > > __strlen_avx2 () at ../sysdeps/x86_64/multiarch/strlen-avx2.S:96
+> > > > 96              VPCMPEQ (%rdi), %ymm0, %ymm1
+> > > > Missing separate debuginfos, use: dnf debuginfo-install bzip2-libs-=
+1.0.8-4.fc33.x86_64 cyrus-sasl-lib-2.1.27-6.fc33.x86_64 elfutils-debuginfod=
+-client-0.185-2.fc33.x86_64 elfutils-libelf-0.185-2.fc33.x86_64 elfutils-li=
+bs-0.185-2.fc33.x86_64 keyutils-libs-1.6.1-1.fc33.x86_64 krb5-libs-1.18.2-3=
+1.fc33.x86_64 libbabeltrace-1.5.8-3.fc33.x86_64 libbrotli-1.0.9-3.fc33.x86_=
+64 libcap-2.48-2.fc33.x86_64 libcom_err-1.45.6-4.fc33.x86_64 libgcc-10.3.1-=
+1.fc33.x86_64 libidn2-2.3.2-1.fc33.x86_64 libnghttp2-1.43.0-1.fc33.x86_64 l=
+ibpsl-0.21.1-2.fc33.x86_64 libselinux-3.1-2.fc33.x86_64 libssh-0.9.6-1.fc33=
+.x86_64 libunistring-0.9.10-9.fc33.x86_64 libunwind-1.4.0-4.fc33.x86_64 lib=
+uuid-2.36.1-1.fc33.x86_64 libxcrypt-4.4.26-2.fc33.x86_64 numactl-libs-2.0.1=
+4-1.fc33.x86_64 openldap-2.4.50-5.fc33.x86_64 openssl-libs-1.1.1l-2.fc33.x8=
+6_64 pcre-8.44-2.fc33.x86_64 perl-libs-5.32.1-471.fc33.x86_64 popt-1.18-2.f=
+c33.x86_64 python2.7-2.7.18-15.fc33.x86_64 slang-2.3.2-8.fc33.x86_64 xz-lib=
+s-5.2.5-4.fc33.x86_64 zlib-1.2.11-23.fc33.x86_64
+> > > > (gdb) bt
+> > > > #0  __strlen_avx2 () at ../sysdeps/x86_64/multiarch/strlen-avx2.S:9=
+6
+> > > > #1  0x00000000004a3848 in __cmd_test (skiplist=3D0x0, argv=3D0x7fff=
+ffffd6c0, argc=3D0) at tests/builtin-test.c:150
+> > > > #2  cmd_test (argc=3D0, argv=3D0x7fffffffd6c0) at tests/builtin-tes=
+t.c:628
+> > > > #3  0x00000000004cc47b in run_builtin (p=3Dp@entry=3D0xa7cda8 <comm=
+ands+552>, argc=3Dargc@entry=3D1, argv=3Dargv@entry=3D0x7fffffffd6c0) at pe=
+rf.c:313
+> > > > #4  0x00000000004397ae in handle_internal_command (argv=3D0x7ffffff=
+fd6c0, argc=3D1) at perf.c:365
+> > > > #5  run_argv (argv=3D<synthetic pointer>, argcp=3D<synthetic pointe=
+r>) at perf.c:409
+> > > > #6  main (argc=3D1, argv=3D0x7fffffffd6c0) at perf.c:539
+> > > > (gdb)
+> > >
+> > > Thanks, I'll take a look.
 > >
-> > Thanks Andrii for the Cc! I realised yesterday morning that I'd been hit
-> > by the unsubscription incident and missed v3 of this set.
+> > I wasn't able to reproduce this, I tried with gcc-10 on each patch
+> > individually, debug disabled and O3. I can send a v3 patch set, but
+> > currently it is just a rebase of v2.
 >
-> Yeah, super unfortunate this unsubscription. Had to go through that as well.
+> ok, I'll try to debug that if I can still reproduce
 >
-> >
-> > The changes look good to me, and you can add my tag to the first three
-> > patches:
-> >
-> > Acked-by: Quentin Monnet <quentin@isovalent.com>
->
-> Thanks, I will.
->
-> >
-> > Regarding patch 4, looking at the latest deprecations in libbpf, I would
-> > have expected the functions to be deprecated starting in v0.7, and not v0.6?
->
-> The reason to do it in upcoming v0.6 is because there are no
-> replacement APIs that we are going to wait for. No point in delaying
-> the inevitable just for the sake of delaying it.
->
-> >
-> > Other than that, on patch 2 (apologies for not answering inline), it
-> > would feel more natural, in do_dump()'s "for" loop in prog.c, to have
-> > the memset() above the call to bpf_obj_get_info_by_fd() (and to skip the
-> > zero-initialisation of "info") instead of at the end of the loop, which
-> > means a useless memset() just before we exit the loop. But probably not
-> > worth a respin just for that.
->
-> Yeah, that bothered me a bit as well, but if you are also mentioning
-> that I'll just move it up as you suggested, while applying. Thanks.
->
+> jirka
 
-Applied to bpf-next, thanks.
+Thanks to Sohaib I have a reproduction now, and it looks like there
+are a bunch of issues to fix in v3.
 
-> >
-> > Thanks,
-> > Quentin
+Thanks,
+Ian
