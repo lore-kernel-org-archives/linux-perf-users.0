@@ -2,60 +2,60 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CD4C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Nov 2021 06:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05362C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Nov 2021 06:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A38361056
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Nov 2021 06:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D104560ED5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Nov 2021 06:44:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231607AbhKDGqB (ORCPT
+        id S231361AbhKDGqo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 Nov 2021 02:46:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50910 "EHLO
+        Thu, 4 Nov 2021 02:46:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231237AbhKDGpS (ORCPT
+        with ESMTP id S231136AbhKDGpp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 Nov 2021 02:45:18 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 016BDC061230
-        for <linux-perf-users@vger.kernel.org>; Wed,  3 Nov 2021 23:42:40 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id v133-20020a25c58b000000b005c20153475dso7434212ybe.17
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Nov 2021 23:42:39 -0700 (PDT)
+        Thu, 4 Nov 2021 02:45:45 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE659C061239
+        for <linux-perf-users@vger.kernel.org>; Wed,  3 Nov 2021 23:42:44 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id g190-20020a25dbc7000000b005c21574c704so7371529ybf.13
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Nov 2021 23:42:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=qnFYYK7h/c1igs5tdI3kMiUJ6Hx680HhSyVDm1AaQaA=;
-        b=fWPVrzjLiBMcc16C6/V64pohYCNREA+KxPx+n4qD+JQA7JQh2P52C1PNH/1aN3vBs/
-         lkjG5yr1aaIUvZRGvgGPiSsBvSsDBxoVOOVGIC24Ni+iaxNJmK/vTFCJEbTYvxGsFhIZ
-         CYTMv9P4st0jX4qmyiGGVazCt7zwEo1DPXZnI0Boy2T0GfAZlp7+CQp88jV15URL/k2q
-         /nT9+Wc+TQ/W58YJ5f86RH3QlP7YRn1srNRP/AzI2UmbD8el5x8mKfMKaW5ZK7Wdw9OA
-         Xj3ecaAOSAVliicPU9F6DxBv7NMZh+smPuJ1/kb6qzX4ptZUvPg0uDkc58cVY3l4Aj/n
-         AI4Q==
+        bh=GKJf8Yw6nAvyH7L7LWtVnPqoYfvwfYxKaTQQ4i15vnw=;
+        b=G38y6tdBeOqfNqLclHL6MJStzEFiBNg203t3YGe7yEATwZ/h8UQndsBxusWTDTDzT/
+         rVpdbXa5xnOF3exP0inMxehyxgoAnWJAGFTbmQC8Hc30Jg9SGCk2gbEqc0hADgQc9Jby
+         1D5Pqr94JLEk22lvIg0b8TInDXiOdTU3sLwz2GAPFtuq6y4N4nmkcykY1ehRwu+I19Bl
+         IYWZvBt4pc39f+ghkPfbbtIFBA52GN2lopwfXSajKFd67a7uf48DZxzqUd2biroqOE+Q
+         2RDPNZcbp0SDTVuNdcZAkY6LrcRxG2w9mvn6MM4FTTK9F9/Cjh7JtKYmvdzoL+b4lZcE
+         ga6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=qnFYYK7h/c1igs5tdI3kMiUJ6Hx680HhSyVDm1AaQaA=;
-        b=iH8b8odjYRtwPMDnP80uK2iYF3/Ms018/0D3he3b8kbFmoNvhH87OIlYy+0qTmrcnF
-         Sds2PfP6zMrVrAuekzqxYUbGaUIuDZN6RAuSm82O65aGMxukaAdu21qoKtO5MnVd2N1X
-         BwOpQDHiINVWAW0cikwbDHCNciu2KY3PEkBmCZVTLHfdMQyUum85HMp4QG7ncIB5QROv
-         l9zkPtJuK7hDlYgpqoT8JCylCFHEIHMoZxyDQeyQS6eiQVRqLn7QIwoXISs+xrdWrWCa
-         pjsjKbfi7gW4Q/Hwg3hhVkn6GKwMoxmqg29suc2N9nXdOrLTAQxmazdm1Dj/X7iLEtxL
-         Zeuw==
-X-Gm-Message-State: AOAM531wUQR95O6Mo3kY3NqbbKlqaEpfIrNFqr6SXu6P0y1AuUobAAi5
-        Rq+mwboXVt+oPJA328Bv9zNMwoJInBVs
-X-Google-Smtp-Source: ABdhPJxdev99AB3uQgaZnet7SwloRxNUURFK8tJjR60YR/v3H4Ax91xdwmBeFsIwQFdARE9Hrx+acmCYRwDp
+        bh=GKJf8Yw6nAvyH7L7LWtVnPqoYfvwfYxKaTQQ4i15vnw=;
+        b=Z2e3BsQflea+l1Fs3cbzfWYh2ELNICUF/7kjxThAwEeSGzaLEhQGtiqF80EtoPI21i
+         jejGhBkFt96ynv2EyZo/NYX6MZwWjCan+pWLp9wUM9Yw/aMEbeY3nA6BZaZ7ypibY6No
+         p7ET8NhxnWVX7V9N11/5YvvwHF9Z/7Uhy3WHg0iTLEdWuUlcTWVxzvYTERidFWkvVxlV
+         1W25I7xMy+vnvy5v2ZRWA8UwrhdiemZ7j404B0HM/bwE//ncN6dHVc4JDHJpl2URFFP/
+         +TRdT8BejN0NwqiaaFqhSQy/3Zgg3nEghZPpTDmmBgx6UKrbuSay4F1yxzuhyBMj5kRJ
+         lHpA==
+X-Gm-Message-State: AOAM531W+GoI4OKr9V9ofM3JY61fYXo/diuCZguyzXvbqi0UzHtXjpz0
+        C9KR7BX/qklQj8wFCyhc4M0nbXG6SiT0
+X-Google-Smtp-Source: ABdhPJwvxhGUs8qT6o1qXj0hFaxADubdJNS3RcNfw6stMxv0lpgPwWe9znpjjDYLclDuTHnjp/NX48k5FfFX
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:8ce:af84:2510:3f29])
- (user=irogers job=sendgmr) by 2002:a25:bdce:: with SMTP id
- g14mr51808732ybk.352.1636008159192; Wed, 03 Nov 2021 23:42:39 -0700 (PDT)
-Date:   Wed,  3 Nov 2021 23:41:56 -0700
+ (user=irogers job=sendgmr) by 2002:a5b:145:: with SMTP id c5mr51349264ybp.60.1636008164141;
+ Wed, 03 Nov 2021 23:42:44 -0700 (PDT)
+Date:   Wed,  3 Nov 2021 23:41:58 -0700
 In-Reply-To: <20211104064208.3156807-1-irogers@google.com>
-Message-Id: <20211104064208.3156807-11-irogers@google.com>
+Message-Id: <20211104064208.3156807-13-irogers@google.com>
 Mime-Version: 1.0
 References: <20211104064208.3156807-1-irogers@google.com>
 X-Mailer: git-send-email 2.33.1.1089.g2158813163f-goog
-Subject: [PATCH v3 10/22] perf test: Convert pmu event tests to test cases.
+Subject: [PATCH v3 12/22] perf test: Convert clang tests to test cases.
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -83,128 +83,137 @@ test functions.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/pmu-events.c | 78 +++++++----------------------------
- 1 file changed, 16 insertions(+), 62 deletions(-)
+ tools/perf/tests/clang.c           | 57 +++++++++---------------------
+ tools/perf/util/c++/clang-c.h      |  8 ++---
+ tools/perf/util/c++/clang-test.cpp |  6 ++--
+ 3 files changed, 24 insertions(+), 47 deletions(-)
 
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index 669eea831793..104de7ba1a93 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -418,7 +418,8 @@ static int compare_alias_to_test_event(struct perf_pmu_alias *alias,
- }
+diff --git a/tools/perf/tests/clang.c b/tools/perf/tests/clang.c
+index a499fcf37bf9..ba06a2257574 100644
+--- a/tools/perf/tests/clang.c
++++ b/tools/perf/tests/clang.c
+@@ -3,54 +3,31 @@
+ #include "c++/clang-c.h"
+ #include <linux/kernel.h>
  
- /* Verify generated events from pmu-events.c are as expected */
--static int test_pmu_event_table(void)
-+static int test__pmu_event_table(struct test_suite *test __maybe_unused,
-+				 int subtest __maybe_unused)
- {
- 	const struct pmu_event *sys_event_tables = __test_pmu_get_sys_events_table();
- 	const struct pmu_events_map *map = __test_pmu_get_events_map();
-@@ -705,7 +706,8 @@ static struct perf_pmu_test_pmu test_pmus[] = {
- };
- 
- /* Test that aliases generated are as expected */
--static int test_aliases(void)
-+static int test__aliases(struct test_suite *test __maybe_unused,
-+			int subtest __maybe_unused)
- {
- 	struct perf_pmu *pmu = NULL;
- 	unsigned long i;
-@@ -894,7 +896,8 @@ static int resolve_metric_simple(struct expr_parse_ctx *pctx,
- 
- }
- 
--static int test_parsing(void)
-+static int test__parsing(struct test_suite *test __maybe_unused,
-+			 int subtest __maybe_unused)
- {
- 	const struct pmu_events_map *cpus_map = pmu_events_map__find();
- 	const struct pmu_events_map *map;
-@@ -1036,7 +1039,8 @@ static int metric_parse_fake(const char *str)
-  * or all defined cpus via the 'fake_pmu'
-  * in parse_events.
-  */
--static int test_parsing_fake(void)
-+static int test__parsing_fake(struct test_suite *test __maybe_unused,
-+			      int subtest __maybe_unused)
- {
- 	const struct pmu_events_map *map;
- 	const struct pmu_event *pe;
-@@ -1070,66 +1074,16 @@ static int test_parsing_fake(void)
- 	return 0;
- }
- 
--static const struct {
+-static struct {
 -	int (*func)(void);
 -	const char *desc;
--} pmu_events_testcase_table[] = {
+-} clang_testcase_table[] = {
+-#ifdef HAVE_LIBCLANGLLVM_SUPPORT
 -	{
--		.func = test_pmu_event_table,
--		.desc = "PMU event table sanity",
+-		.func = test__clang_to_IR,
+-		.desc = "builtin clang compile C source to IR",
 -	},
 -	{
--		.func = test_aliases,
--		.desc = "PMU event map aliases",
+-		.func = test__clang_to_obj,
+-		.desc = "builtin clang compile C source to ELF object",
 -	},
--	{
--		.func = test_parsing,
--		.desc = "Parsing of PMU event table metrics",
--	},
--	{
--		.func = test_parsing_fake,
--		.desc = "Parsing of PMU event table metrics with fake PMUs",
--	},
-+static struct test_case pmu_events_tests[] = {
-+	TEST_CASE("PMU event table sanity", pmu_event_table),
-+	TEST_CASE("PMU event map aliases", aliases),
-+	TEST_CASE_REASON("Parsing of PMU event table metrics", parsing,
-+			 "some metrics failed"),
-+	TEST_CASE("Parsing of PMU event table metrics with fake PMUs", parsing_fake),
-+	{ .name = NULL, }
- };
- 
--static const char *test__pmu_events_subtest_get_desc(int subtest)
+-#endif
+-};
+-
+-static int test__clang_subtest_get_nr(void)
 -{
--	if (subtest < 0 ||
--	    subtest >= (int)ARRAY_SIZE(pmu_events_testcase_table))
--		return NULL;
--	return pmu_events_testcase_table[subtest].desc;
+-	return (int)ARRAY_SIZE(clang_testcase_table);
 -}
 -
--static const char *test__pmu_events_subtest_skip_reason(int subtest)
+-static const char *test__clang_subtest_get_desc(int i)
 -{
--	if (subtest < 0 ||
--	    subtest >= (int)ARRAY_SIZE(pmu_events_testcase_table))
+-	if (i < 0 || i >= (int)ARRAY_SIZE(clang_testcase_table))
 -		return NULL;
--	if (pmu_events_testcase_table[subtest].func != test_parsing)
--		return NULL;
--	return "some metrics failed";
+-	return clang_testcase_table[i].desc;
 -}
 -
--static int test__pmu_events_subtest_get_nr(void)
--{
--	return (int)ARRAY_SIZE(pmu_events_testcase_table);
--}
--
--static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest)
--{
--	if (subtest < 0 ||
--	    subtest >= (int)ARRAY_SIZE(pmu_events_testcase_table))
+ #ifndef HAVE_LIBCLANGLLVM_SUPPORT
+-static int test__clang(struct test_suite *test __maybe_unused, int i __maybe_unused)
++static int test__clang_to_IR(struct test_suite *test __maybe_unused,
++			     int subtest __maybe_unused)
+ {
+ 	return TEST_SKIP;
+ }
+-#else
+-static int test__clang(struct test_suite *test __maybe_unused, int i)
++
++static int test__clang_to_obj(struct test_suite *test __maybe_unused,
++			      int subtest __maybe_unused)
+ {
+-	if (i < 0 || i >= (int)ARRAY_SIZE(clang_testcase_table))
 -		return TEST_FAIL;
--	return pmu_events_testcase_table[subtest].func();
--}
--
- struct test_suite suite__pmu_events = {
- 	.desc = "PMU events",
--	.func = test__pmu_events,
+-	return clang_testcase_table[i].func();
++	return TEST_SKIP;
+ }
+ #endif
+ 
++static struct test_case clang_tests[] = {
++	TEST_CASE_REASON("builtin clang compile C source to IR", clang_to_IR,
++			 "not compiled in"),
++	TEST_CASE_REASON("builtin clang compile C source to ELF object",
++			 clang_to_obj,
++			 "not compiled in"),
++	{ .name = NULL, }
++};
++
+ struct test_suite suite__clang = {
+ 	.desc = "builtin clang support",
+-	.func = test__clang,
 -	.subtest = {
--		.skip_if_fail	= false,
--		.get_nr		= test__pmu_events_subtest_get_nr,
--		.get_desc	= test__pmu_events_subtest_get_desc,
--		.skip_reason	= test__pmu_events_subtest_skip_reason,
--	},
-+	.test_cases = pmu_events_tests,
+-		.skip_if_fail	= true,
+-		.get_nr		= test__clang_subtest_get_nr,
+-		.get_desc	= test__clang_subtest_get_desc,
+-	}
++	.test_cases = clang_tests,
++	.subtest = { .skip_if_fail = true, },
  };
+diff --git a/tools/perf/util/c++/clang-c.h b/tools/perf/util/c++/clang-c.h
+index 2df8a45bd088..d3731a876b6c 100644
+--- a/tools/perf/util/c++/clang-c.h
++++ b/tools/perf/util/c++/clang-c.h
+@@ -12,8 +12,9 @@ extern "C" {
+ extern void perf_clang__init(void);
+ extern void perf_clang__cleanup(void);
+ 
+-extern int test__clang_to_IR(void);
+-extern int test__clang_to_obj(void);
++struct test_suite;
++extern int test__clang_to_IR(struct test_suite *test, int subtest);
++extern int test__clang_to_obj(struct test_suite *test, int subtest);
+ 
+ extern int perf_clang__compile_bpf(const char *filename,
+ 				   void **p_obj_buf,
+@@ -26,9 +27,6 @@ extern int perf_clang__compile_bpf(const char *filename,
+ static inline void perf_clang__init(void) { }
+ static inline void perf_clang__cleanup(void) { }
+ 
+-static inline int test__clang_to_IR(void) { return -1; }
+-static inline int test__clang_to_obj(void) { return -1;}
+-
+ static inline int
+ perf_clang__compile_bpf(const char *filename __maybe_unused,
+ 			void **p_obj_buf __maybe_unused,
+diff --git a/tools/perf/util/c++/clang-test.cpp b/tools/perf/util/c++/clang-test.cpp
+index 21b23605f78b..a4683ca53697 100644
+--- a/tools/perf/util/c++/clang-test.cpp
++++ b/tools/perf/util/c++/clang-test.cpp
+@@ -35,7 +35,8 @@ __test__clang_to_IR(void)
+ }
+ 
+ extern "C" {
+-int test__clang_to_IR(void)
++int test__clang_to_IR(struct test_suite *test __maybe_unused,
++                      int subtest __maybe_unused)
+ {
+ 	perf_clang_scope _scope;
+ 
+@@ -48,7 +49,8 @@ int test__clang_to_IR(void)
+ 	return -1;
+ }
+ 
+-int test__clang_to_obj(void)
++int test__clang_to_obj(struct test_suite *test __maybe_unused,
++                       int subtest __maybe_unused)
+ {
+ 	perf_clang_scope _scope;
+ 
 -- 
 2.33.1.1089.g2158813163f-goog
 
