@@ -2,60 +2,60 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87756C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Nov 2021 06:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 910B0C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Nov 2021 06:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7058860EB4
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Nov 2021 06:44:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FA6E61056
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Nov 2021 06:45:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231489AbhKDGr1 (ORCPT
+        id S231129AbhKDGrs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 Nov 2021 02:47:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50910 "EHLO
+        Thu, 4 Nov 2021 02:47:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231152AbhKDGp4 (ORCPT
+        with ESMTP id S231217AbhKDGqm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 Nov 2021 02:45:56 -0400
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D531C079785
-        for <linux-perf-users@vger.kernel.org>; Wed,  3 Nov 2021 23:42:52 -0700 (PDT)
-Received: by mail-qk1-x749.google.com with SMTP id j6-20020a05620a288600b0045e5d85ca17so4029839qkp.16
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Nov 2021 23:42:52 -0700 (PDT)
+        Thu, 4 Nov 2021 02:46:42 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17F1AC0797B3
+        for <linux-perf-users@vger.kernel.org>; Wed,  3 Nov 2021 23:42:55 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id d8-20020a253608000000b005c202405f52so7510624yba.7
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Nov 2021 23:42:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=uhMKrCNfPxQ2Zcf5Vkl+HNKM9vie+osD+kw0v1/wntc=;
-        b=fRD6pPnhXQjYDgk64XZQYo4g3gb7eA/+1u37deVGGWIAbtp9nAGrA+hajH3CUuaWu0
-         Im8k2jipHGJl49zo1qi4RTg2sQMqKo//rfdgSo8etlrlmKSBhcUKI226CGUargNt3EGc
-         8edyLdQwEsIPVkKkd6Jh58N9l4PhuNqhFv325rboL4zKR2mtyo/gr/R52fWAVC/DPw95
-         zsrBnYhIEys7E/ZakY9PDvtQ05e5poqXQ6zVXofgqLBU7TxwAapHy+cPqfg7Y7UG0sHQ
-         rOCc/z0FncROnfJ7OTke6XEcLA5+ZJsoO6+17NdJN/f57/gE6ftXsGRohfKiySWsRWKH
-         HuQA==
+        bh=c5kOW90u4xsq8H2QxSIbQc8Tz3TWyUWjUuTa0kkYcgQ=;
+        b=W1LISV6K8ImfLN23kZIBLz/8oPp3a772noUSRVSCKrrGpHAy1ct1mxt7jj0ZDxSEfX
+         MzP15U0SO8kxTuBMpBtS7ofoxYg/wbqeFI0e0kB//Lt2mofIpUlLxXecBJKaejSpxtDB
+         W5Z0ZACdt4V/EWaF2eeX1jpdLWRXv3oqxkuRbuiSIZ2AIMQBT8sgN3n4IcYOrVEFOAkG
+         p8Q4YWRyCZVLcy+7hq4NsurF9Yy2kCL6Rbcbdaxt2xTXeEJuhbagRu2ESLZQSdxzNIei
+         FPjmQ/IWMuRBT3BXNV1zWqJDD1OK2soX5gG3jp/LlHug1ivtXjxNAOYgi+kxZhmlRKNf
+         hwuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=uhMKrCNfPxQ2Zcf5Vkl+HNKM9vie+osD+kw0v1/wntc=;
-        b=Q6Drf6QkYAuudPk0suMwYSRrBAYhpyOVQYRCj+gVi9GNF5i+XrHpsEGzkpYrVdjpmM
-         MWIGxNourtdg1bMN4TDE6vnzX44LtA/0keo23h0WLmdP4et60QDCZklfb9tAjsmGrDAK
-         tGoL/xo+S7wdwjCq88pp6WmueaA7rTCJaNX+rpt0Hh7E2Zap2eEZgXX7J9QurK2FVHuw
-         qAVVb6qt5C6C+/fdLhH2Un+YBR4ZbpKBVuIT4LBff+6FwwndvUUgjy3djLIIR8I6esSB
-         QE4u1eRbaGxaouRokxn7srEA5jGOoTBxFFvr194JnQ/xbSjLX2jV4HUizOxKAMrspgGZ
-         GioA==
-X-Gm-Message-State: AOAM530WDtUUdwiIaiQPgFtXcZKHgLk5rZeWVwz4EaNq1yewIOJ3GvjE
-        g1CzF+GtmaTNYjiFjDh1cLbLmtO6erko
-X-Google-Smtp-Source: ABdhPJwaj3qyP2mK2LcR/ElV51GawChsbXR3N0ewLz5rH02YbJX34yU3SyyaJ6tuw2uTlabymcCkRIZmMtyv
+        bh=c5kOW90u4xsq8H2QxSIbQc8Tz3TWyUWjUuTa0kkYcgQ=;
+        b=dFj4tUfp1hy35VxwK3SXyfuDuauoszuh0MVpeSlyojE3ZCznVSj7YkBP0VkVikrxGb
+         C3xAh7ZGZEuH+BDqEKEHRlYSUtT55daQ5V2xBdwX2qAknEqUiA4ugKDX9wTpn9AEtJuM
+         5IGmc1EUg1UuBm3uJ0gYw2vccFE02TyC5hXspg5M2qhXqiUevZ80nsoOOQrk/Qk53fWC
+         UKZQZPsyPPElzLwdQsJqGVvqxePEY06O0RxOuTUrPuZfIF71+6lMRWNpi5bSxCdtrSLB
+         dbiq9fXf+GGo+BtQV5cwjhwjAukf1+LyFYwxIuRUWnIMeZcCSHjnxOLvtk0nhgX8dsm1
+         3zfA==
+X-Gm-Message-State: AOAM532ORBG1x0a/6+psb3HE89v1yCyV8lKNbdZ9dvKt2dUXyC1APbE+
+        4CWZenEaj+hnbxRttRPBu8Ac0hOEJWfA
+X-Google-Smtp-Source: ABdhPJzfR7lzk8qdPKBvdk/ijcyDoDO2weQwc7JLbwZob3YYP/lX0ibUYNQYdqJLaedYAoSl9tmRDCea42PP
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:8ce:af84:2510:3f29])
- (user=irogers job=sendgmr) by 2002:a05:622a:50b:: with SMTP id
- l11mr51313937qtx.415.1636008171638; Wed, 03 Nov 2021 23:42:51 -0700 (PDT)
-Date:   Wed,  3 Nov 2021 23:42:01 -0700
+ (user=irogers job=sendgmr) by 2002:a25:d386:: with SMTP id
+ e128mr45990113ybf.176.1636008174311; Wed, 03 Nov 2021 23:42:54 -0700 (PDT)
+Date:   Wed,  3 Nov 2021 23:42:02 -0700
 In-Reply-To: <20211104064208.3156807-1-irogers@google.com>
-Message-Id: <20211104064208.3156807-16-irogers@google.com>
+Message-Id: <20211104064208.3156807-17-irogers@google.com>
 Mime-Version: 1.0
 References: <20211104064208.3156807-1-irogers@google.com>
 X-Mailer: git-send-email 2.33.1.1089.g2158813163f-goog
-Subject: [PATCH v3 15/22] perf test: Remove now unused subtest helpers
+Subject: [PATCH v3 16/22] perf test: bp tests use test case
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -78,68 +78,72 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Replaced by null terminated test case array.
+Migration toward kunit style test cases.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/builtin-test.c | 11 +----------
- tools/perf/tests/tests.h        |  3 ---
- 2 files changed, 1 insertion(+), 13 deletions(-)
+ tools/perf/tests/bp_account.c         | 7 ++++++-
+ tools/perf/tests/bp_signal.c          | 7 ++++++-
+ tools/perf/tests/bp_signal_overflow.c | 7 ++++++-
+ 3 files changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index db76d7d10749..62e97faa90f0 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -119,9 +119,6 @@ static int num_subtests(const struct test_suite *t)
- {
- 	int num;
- 
--	if (t->subtest.get_nr)
--		return t->subtest.get_nr();
--
- 	if (!t->test_cases)
- 		return 0;
- 
-@@ -134,14 +131,11 @@ static int num_subtests(const struct test_suite *t)
- 
- static bool has_subtests(const struct test_suite *t)
- {
--	return t->subtest.get_nr || num_subtests(t) > 1;
-+	return num_subtests(t) > 1;
+diff --git a/tools/perf/tests/bp_account.c b/tools/perf/tests/bp_account.c
+index 365120146d17..e4f7b635ffef 100644
+--- a/tools/perf/tests/bp_account.c
++++ b/tools/perf/tests/bp_account.c
+@@ -205,8 +205,13 @@ static bool test__bp_account_is_supported(void)
+ #endif
  }
  
- static const char *skip_reason(const struct test_suite *t, int subtest)
- {
--	if (t->subtest.skip_reason)
--		return t->subtest.skip_reason(subtest);
--
- 	if (t->test_cases && subtest >= 0)
- 		return t->test_cases[subtest].skip_reason;
- 
-@@ -153,9 +147,6 @@ static const char *test_description(const struct test_suite *t, int subtest)
- 	if (t->test_cases && subtest >= 0)
- 		return t->test_cases[subtest].desc;
- 
--	if (t->subtest.get_desc && subtest >= 0)
--		return t->subtest.get_desc(subtest);
--
- 	return t->desc;
++static struct test_case bp_accounting_tests[] = {
++	TEST_CASE("Breakpoint accounting", bp_accounting),
++	{ .name = NULL, }
++};
++
+ struct test_suite suite__bp_accounting = {
+ 	.desc = "Breakpoint accounting",
+-	.func = test__bp_accounting,
++	.test_cases = bp_accounting_tests,
+ 	.is_supported = test__bp_account_is_supported,
+ };
+diff --git a/tools/perf/tests/bp_signal.c b/tools/perf/tests/bp_signal.c
+index 3c269f81818a..1676e3a11906 100644
+--- a/tools/perf/tests/bp_signal.c
++++ b/tools/perf/tests/bp_signal.c
+@@ -312,8 +312,13 @@ bool test__bp_signal_is_supported(void)
+ #endif
  }
  
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index f87129b63d92..9bf448f7429a 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -43,9 +43,6 @@ struct test_suite {
- 	test_fnptr func;
- 	struct {
- 		bool skip_if_fail;
--		int (*get_nr)(void);
--		const char *(*get_desc)(int subtest);
--		const char *(*skip_reason)(int subtest);
- 	} subtest;
- 	struct test_case *test_cases;
- 	bool (*is_supported)(void);
++static struct test_case bp_signal_tests[] = {
++	TEST_CASE("Breakpoint overflow signal handler", bp_signal),
++	{ .name = NULL, }
++};
++
+ struct test_suite suite__bp_signal = {
+ 	.desc = "Breakpoint overflow signal handler",
+-	.func = test__bp_signal,
++	.test_cases = bp_signal_tests,
+ 	.is_supported = test__bp_signal_is_supported,
+ };
+diff --git a/tools/perf/tests/bp_signal_overflow.c b/tools/perf/tests/bp_signal_overflow.c
+index 5ac6e1393cf4..bc1f13851750 100644
+--- a/tools/perf/tests/bp_signal_overflow.c
++++ b/tools/perf/tests/bp_signal_overflow.c
+@@ -134,8 +134,13 @@ static int test__bp_signal_overflow(struct test_suite *test __maybe_unused, int
+ 	return fails ? TEST_FAIL : TEST_OK;
+ }
+ 
++static struct test_case bp_signal_overflow_tests[] = {
++	TEST_CASE("Breakpoint overflow sampling", bp_signal_overflow),
++	{ .name = NULL, }
++};
++
+ struct test_suite suite__bp_signal_overflow = {
+ 	.desc = "Breakpoint overflow sampling",
+-	.func = test__bp_signal_overflow,
++	.test_cases = bp_signal_overflow_tests,
+ 	.is_supported = test__bp_signal_is_supported,
+ };
 -- 
 2.33.1.1089.g2158813163f-goog
 
