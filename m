@@ -2,60 +2,60 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 910B0C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Nov 2021 06:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D8CC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Nov 2021 06:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FA6E61056
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Nov 2021 06:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72ADA60E98
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Nov 2021 06:45:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231129AbhKDGrs (ORCPT
+        id S231672AbhKDGsC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 Nov 2021 02:47:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50916 "EHLO
+        Thu, 4 Nov 2021 02:48:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231217AbhKDGqm (ORCPT
+        with ESMTP id S231340AbhKDGqn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 Nov 2021 02:46:42 -0400
+        Thu, 4 Nov 2021 02:46:43 -0400
 Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17F1AC0797B3
-        for <linux-perf-users@vger.kernel.org>; Wed,  3 Nov 2021 23:42:55 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id d8-20020a253608000000b005c202405f52so7510624yba.7
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Nov 2021 23:42:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DA1EC0797B6
+        for <linux-perf-users@vger.kernel.org>; Wed,  3 Nov 2021 23:42:57 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id b15-20020a25ae8f000000b005c20f367790so7526826ybj.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Nov 2021 23:42:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=c5kOW90u4xsq8H2QxSIbQc8Tz3TWyUWjUuTa0kkYcgQ=;
-        b=W1LISV6K8ImfLN23kZIBLz/8oPp3a772noUSRVSCKrrGpHAy1ct1mxt7jj0ZDxSEfX
-         MzP15U0SO8kxTuBMpBtS7ofoxYg/wbqeFI0e0kB//Lt2mofIpUlLxXecBJKaejSpxtDB
-         W5Z0ZACdt4V/EWaF2eeX1jpdLWRXv3oqxkuRbuiSIZ2AIMQBT8sgN3n4IcYOrVEFOAkG
-         p8Q4YWRyCZVLcy+7hq4NsurF9Yy2kCL6Rbcbdaxt2xTXeEJuhbagRu2ESLZQSdxzNIei
-         FPjmQ/IWMuRBT3BXNV1zWqJDD1OK2soX5gG3jp/LlHug1ivtXjxNAOYgi+kxZhmlRKNf
-         hwuw==
+        bh=emwMJ+ASFthU6AcpBIBeoQ3faNbQS22qf/k+f/Ngn88=;
+        b=sKa2ddxPie7Em8N2NULfqYSJdBFYeeg6fOjyFUEhOd5RL6/Xt9JBCeaI9+BRtnzEyY
+         s6ElLJKFq9C8LpJpgWYJQUG6I7pXsA2P4k/XQgXNr2cqrgN6Xj8uaZtKnCi3zpyi1O36
+         X4rDe/EJpwjFViXZ+03cU9JBalzEZvtNr5tYUZKy6E3CCNzDrnUT6JIAzVw+DnBqjqER
+         6FNREV7x+m3i/cRJVAYsrM1PqEAdJgVmmMVvo5qOTrf+hW2Mtvy9JCHWI5kOWQDWqN4o
+         mknU8MjACO9uVepcysvAhwBxDcrXXmmmDdsGDgGTYYzu9CroyL5bTcl4TP3vAGzN7EEm
+         hhjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=c5kOW90u4xsq8H2QxSIbQc8Tz3TWyUWjUuTa0kkYcgQ=;
-        b=dFj4tUfp1hy35VxwK3SXyfuDuauoszuh0MVpeSlyojE3ZCznVSj7YkBP0VkVikrxGb
-         C3xAh7ZGZEuH+BDqEKEHRlYSUtT55daQ5V2xBdwX2qAknEqUiA4ugKDX9wTpn9AEtJuM
-         5IGmc1EUg1UuBm3uJ0gYw2vccFE02TyC5hXspg5M2qhXqiUevZ80nsoOOQrk/Qk53fWC
-         UKZQZPsyPPElzLwdQsJqGVvqxePEY06O0RxOuTUrPuZfIF71+6lMRWNpi5bSxCdtrSLB
-         dbiq9fXf+GGo+BtQV5cwjhwjAukf1+LyFYwxIuRUWnIMeZcCSHjnxOLvtk0nhgX8dsm1
-         3zfA==
-X-Gm-Message-State: AOAM532ORBG1x0a/6+psb3HE89v1yCyV8lKNbdZ9dvKt2dUXyC1APbE+
-        4CWZenEaj+hnbxRttRPBu8Ac0hOEJWfA
-X-Google-Smtp-Source: ABdhPJzfR7lzk8qdPKBvdk/ijcyDoDO2weQwc7JLbwZob3YYP/lX0ibUYNQYdqJLaedYAoSl9tmRDCea42PP
+        bh=emwMJ+ASFthU6AcpBIBeoQ3faNbQS22qf/k+f/Ngn88=;
+        b=S8N6vYiUvm4Rm5w4vPqgdCrT+MVVzyv2Vrdd4CAijG7JkIWqGOL5Y4ZECxzyKnWG53
+         WGYsNl8JbY+D6C9hCL4hQa9ksA6UoVgDKVy/s3j+ePAGdtaxZ+Sld7NbyM12VEIxqJv1
+         SzqhrMWBdx+Nzs7HyDhnA9bmsmXZhXA/kqH2CsJDaU7CKnoaVwNL8UYEWzS2CFfdROid
+         DF2Hxh8VpHXfZf+1T3rUhXyv+4Me+FxQIL/AMQ6CV8gjxzrVtMgGVLeF02/7IlkcuWOw
+         OJ1jnVgtbOjqMBMIQVreEz6L9AlFuxVPDso27G79HyK7KmWNhDZsYEe/Bty1a+Q20etv
+         zQnA==
+X-Gm-Message-State: AOAM53073GnTxRz7sMpGb4qo3xjO3JGMzZbslenHQXmjGxPBaFixAf+T
+        PrrnfMn9HDzJpfLA7SWymwXsDB7p431P
+X-Google-Smtp-Source: ABdhPJzfLBnF+cZ3nEk/kT8SPwJIO7M/uPP9c9+A0OwMO7WIZxnDrhIlqndd5HPE2ANjSHIB4MABOVj9hzA+
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:8ce:af84:2510:3f29])
- (user=irogers job=sendgmr) by 2002:a25:d386:: with SMTP id
- e128mr45990113ybf.176.1636008174311; Wed, 03 Nov 2021 23:42:54 -0700 (PDT)
-Date:   Wed,  3 Nov 2021 23:42:02 -0700
+ (user=irogers job=sendgmr) by 2002:a25:cc15:: with SMTP id
+ l21mr46916198ybf.399.1636008176677; Wed, 03 Nov 2021 23:42:56 -0700 (PDT)
+Date:   Wed,  3 Nov 2021 23:42:03 -0700
 In-Reply-To: <20211104064208.3156807-1-irogers@google.com>
-Message-Id: <20211104064208.3156807-17-irogers@google.com>
+Message-Id: <20211104064208.3156807-18-irogers@google.com>
 Mime-Version: 1.0
 References: <20211104064208.3156807-1-irogers@google.com>
 X-Mailer: git-send-email 2.33.1.1089.g2158813163f-goog
-Subject: [PATCH v3 16/22] perf test: bp tests use test case
+Subject: [PATCH v3 17/22] perf test: Convert time to tsc test to test case.
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -82,67 +82,27 @@ Migration toward kunit style test cases.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/bp_account.c         | 7 ++++++-
- tools/perf/tests/bp_signal.c          | 7 ++++++-
- tools/perf/tests/bp_signal_overflow.c | 7 ++++++-
- 3 files changed, 18 insertions(+), 3 deletions(-)
+ tools/perf/tests/perf-time-to-tsc.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/bp_account.c b/tools/perf/tests/bp_account.c
-index 365120146d17..e4f7b635ffef 100644
---- a/tools/perf/tests/bp_account.c
-+++ b/tools/perf/tests/bp_account.c
-@@ -205,8 +205,13 @@ static bool test__bp_account_is_supported(void)
+diff --git a/tools/perf/tests/perf-time-to-tsc.c b/tools/perf/tests/perf-time-to-tsc.c
+index d23740f80c7d..594013e94ed0 100644
+--- a/tools/perf/tests/perf-time-to-tsc.c
++++ b/tools/perf/tests/perf-time-to-tsc.c
+@@ -198,8 +198,13 @@ static bool test__tsc_is_supported(void)
  #endif
  }
  
-+static struct test_case bp_accounting_tests[] = {
-+	TEST_CASE("Breakpoint accounting", bp_accounting),
++static struct test_case perf_time_to_tsc_tests[] = {
++	TEST_CASE("Convert perf time to TSC", perf_time_to_tsc),
 +	{ .name = NULL, }
 +};
 +
- struct test_suite suite__bp_accounting = {
- 	.desc = "Breakpoint accounting",
--	.func = test__bp_accounting,
-+	.test_cases = bp_accounting_tests,
- 	.is_supported = test__bp_account_is_supported,
- };
-diff --git a/tools/perf/tests/bp_signal.c b/tools/perf/tests/bp_signal.c
-index 3c269f81818a..1676e3a11906 100644
---- a/tools/perf/tests/bp_signal.c
-+++ b/tools/perf/tests/bp_signal.c
-@@ -312,8 +312,13 @@ bool test__bp_signal_is_supported(void)
- #endif
- }
- 
-+static struct test_case bp_signal_tests[] = {
-+	TEST_CASE("Breakpoint overflow signal handler", bp_signal),
-+	{ .name = NULL, }
-+};
-+
- struct test_suite suite__bp_signal = {
- 	.desc = "Breakpoint overflow signal handler",
--	.func = test__bp_signal,
-+	.test_cases = bp_signal_tests,
- 	.is_supported = test__bp_signal_is_supported,
- };
-diff --git a/tools/perf/tests/bp_signal_overflow.c b/tools/perf/tests/bp_signal_overflow.c
-index 5ac6e1393cf4..bc1f13851750 100644
---- a/tools/perf/tests/bp_signal_overflow.c
-+++ b/tools/perf/tests/bp_signal_overflow.c
-@@ -134,8 +134,13 @@ static int test__bp_signal_overflow(struct test_suite *test __maybe_unused, int
- 	return fails ? TEST_FAIL : TEST_OK;
- }
- 
-+static struct test_case bp_signal_overflow_tests[] = {
-+	TEST_CASE("Breakpoint overflow sampling", bp_signal_overflow),
-+	{ .name = NULL, }
-+};
-+
- struct test_suite suite__bp_signal_overflow = {
- 	.desc = "Breakpoint overflow sampling",
--	.func = test__bp_signal_overflow,
-+	.test_cases = bp_signal_overflow_tests,
- 	.is_supported = test__bp_signal_is_supported,
+ struct test_suite suite__perf_time_to_tsc = {
+ 	.desc = "Convert perf time to TSC",
+-	.func = test__perf_time_to_tsc,
++	.test_cases = perf_time_to_tsc_tests,
+ 	.is_supported = test__tsc_is_supported,
  };
 -- 
 2.33.1.1089.g2158813163f-goog
