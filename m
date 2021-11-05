@@ -2,120 +2,115 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F20C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  5 Nov 2021 16:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFF5C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  5 Nov 2021 17:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0486610A8
-	for <linux-perf-users@archiver.kernel.org>; Fri,  5 Nov 2021 16:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E64261216
+	for <linux-perf-users@archiver.kernel.org>; Fri,  5 Nov 2021 17:09:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233408AbhKEQtm (ORCPT
+        id S231842AbhKERMa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 5 Nov 2021 12:49:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59034 "EHLO
+        Fri, 5 Nov 2021 13:12:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233384AbhKEQtm (ORCPT
+        with ESMTP id S233658AbhKERM2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 5 Nov 2021 12:49:42 -0400
-Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40A1FC061714
-        for <linux-perf-users@vger.kernel.org>; Fri,  5 Nov 2021 09:47:02 -0700 (PDT)
-Received: by mail-pf1-x449.google.com with SMTP id z188-20020a6265c5000000b004946b8e3cedso3281703pfb.11
-        for <linux-perf-users@vger.kernel.org>; Fri, 05 Nov 2021 09:47:02 -0700 (PDT)
+        Fri, 5 Nov 2021 13:12:28 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AEB7C061205
+        for <linux-perf-users@vger.kernel.org>; Fri,  5 Nov 2021 10:09:48 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id b126-20020a251b84000000b005bd8aca71a2so14433492ybb.4
+        for <linux-perf-users@vger.kernel.org>; Fri, 05 Nov 2021 10:09:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:message-id:mime-version:subject:from:to:cc;
-        bh=if51XuBZwIEX2x5mLxcA/AQLijVPXzGJ1zH9O3ITOIA=;
-        b=Bg4zUOjdV8Y7SgLyQzPIDKkpSFIJLkTHj9Rt68Qmz24lHffLYUbriq4yw14sx6Dddz
-         QixjtB9SIw/v7q7tS/uI3csIuQrYnZZ2M4evplGWaWqLSrFIl1kfVEaXkdHRs1GaRbqe
-         uaVvnj6DLevC87Ht5zZBi5aPIMFrSO248B9hDL5wdTpTCT1S2U3gIN8XlfZhT9SV4S0u
-         AS9z2RIsg8nBAa9T/YzTD2vH4SgaU5kLiyacN8yGDuawRf/DzN05HEwW6Ao6eGSF0aS5
-         TrBdDUR/Px5z4oLqtZwki7e25BU1SEQzjyCHJmnWQSnAjKvJW0Ods9NY0fihVavm5N7m
-         DU5w==
+        bh=wacezEpCKQOT7J0uXwLpWPgWJZoDmBOEitRRyB3vpok=;
+        b=pWmaD7cr3Jh/On3VifbtQpfF2PGdjeJDLDLDeiC0UJq94aNCyl8W4XXmdhcGR9G7MC
+         FvQD7t+CXP1PVwa+oFwRtYQbB1egZLdB6quuO0DcYjIEwdI9xz+bLmpXgI4ijj6JXqbp
+         QyJ1EWlS5ICPkcL9wlEFTl1OeVyqS5+Ya9HgtEPiG4bcoPOD0zihfv0mcqRkMBcLnSge
+         dEjnj3umhTGeqPmMD+pkWtiBwqW7b+RDh/7MLUsKMxutIy93R0ueZPKG1pLKPt4mFE4T
+         ypj4aFtOJRGGRa7uLDyMgyNsR05gOFI2BqXrFyE14buaQ3ZrdFDfiUfuzACZwa4HPdMV
+         436Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=if51XuBZwIEX2x5mLxcA/AQLijVPXzGJ1zH9O3ITOIA=;
-        b=uW2KoMzDxTm7EeE1G6IuN0fsdnadsg4HnzsVwnU0rHux97KSEAgb957kUyUcU6bZvf
-         IWnYHPsDnApKc0UY2vMj8RfTw5GmDYeI4hzbmo86BeO0Zf9Oovb4EqrYauIUKD1bK1xO
-         W/BGinmyRAxsDRixaiT0pEWwXQyUSalALOikDfr0F/BXZs8nzNq9MwRto26IM8ayr3rW
-         GLDVUYx2hn5c+d9RXf0I54fP+U0n+RSmE6Cf+I5Zj9LOCwAf5kBSSdbkWBRYP/zRuC6o
-         arWrTqKG+mNTa8g6NHj1tnmuvA/mfeq91QUQvUC3om6D1TL5boL9Kf9gQtNpaAMdECx1
-         hElw==
-X-Gm-Message-State: AOAM533hpkln/d1fTkLmw9FlOhOv12ZwRzqbYmXmzVIy6vqrMEs+d/rD
-        JsIe+fCxk6L4gJIkwipRqmHDoHiXzwez
-X-Google-Smtp-Source: ABdhPJwEGWwXqFldXt9Fi9QKrpUbQ4nHAs9t/CUL8QIAuTpk8dAqdUX5hkJ9RJrD2Cz3NpNMAU2kUctDYDRx
+        bh=wacezEpCKQOT7J0uXwLpWPgWJZoDmBOEitRRyB3vpok=;
+        b=N3YxYtFmJ5Mq2yFsybqev3qdHPywqCX2q1Zl7G0nfEfs+6YY+hzcYsWl16FVehZgbz
+         RP0hL7yHIFWjsL5GW44ekzX2QQGp6sMuBDdS7P9rJ7dlXnePCwdQHeRodwbjSKW+zcHd
+         vAXMpdimuCeLw/63zNsFyE/b1mYZBs02TWzE3lcYK4YqYbbQPj8FsPQLuj3E0IPFbOAU
+         Tw0EsSJh6Q+KlLpSi0E4SQQgPkbw6XLPyL/Yc1lREM9fYNTk6n5gTp8XV8juD3xXCfi0
+         7rKQmIYwewexL727TcrNcwKIatsC+NknxJS08SqW+SB+LcixU1D9mXzVT/59i0lNZvxA
+         conQ==
+X-Gm-Message-State: AOAM5316bh9w49+86iHOrWitGNN/B+z9P9OPuMvFeSSiv4Qu0dyrrFzZ
+        Vr7tuLm0obkLpXw3vwZSZVJGKAJEgN9Q
+X-Google-Smtp-Source: ABdhPJxPfYTMK2qfpEvH2rBPLEMClJc0cLuJc3Xqgtjmo1MyvTcaTUXQp8Ip14yuncTFnb8bBvgyfp73BfDA
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:4cee:beb8:1744:5207])
- (user=irogers job=sendgmr) by 2002:a17:90b:2389:: with SMTP id
- mr9mr13880566pjb.152.1636130821694; Fri, 05 Nov 2021 09:47:01 -0700 (PDT)
-Date:   Fri,  5 Nov 2021 09:46:57 -0700
-Message-Id: <20211105164657.3476647-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:4bc3:: with SMTP id
+ y186mr60456831yba.74.1636132188166; Fri, 05 Nov 2021 10:09:48 -0700 (PDT)
+Date:   Fri,  5 Nov 2021 10:09:36 -0700
+Message-Id: <20211105170943.3479315-1-irogers@google.com>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.34.0.rc0.344.g81b53c2807-goog
-Subject: [PATCH] perf metric: Fix memory leaks.
+Subject: [PATCH 0/7] New function and literals for metrics
 From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
         John Garry <john.garry@huawei.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Song Liu <song@kernel.org>, Wan Jiabing <wanjiabing@vivo.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Changbin Du <changbin.du@intel.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     eranian@google.com, Ian Rogers <irogers@google.com>
+Cc:     Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Certain error paths may leak memory as caught by address sanitizer.
-Ensure this is cleaned up to make sure address/leak sanitizer is happy.
+Add a test for hyphenated events that are common with Intel's icelake
+topdown events.
 
-Fixes: 5ecd5a0c7d1c ("perf metrics: Modify setup and deduplication")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/metricgroup.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+Try to tidy the existing cputopo code and make it more consistent with
+the sysfs ABI. Refactor the #smt_on literal parsing into a general
+literal token that we can use for more literals. This is then used for
+num_cpus, num_cores, num_dies and num_packages literals that use the
+existing topology code. Finally, a source_count function is added
+which is used to determine the number of events contributing to an
+aggregate event. The intent for these new literals and function is for
+them to be used in upcoming metrics.
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 4917e9704765..734d2ce94825 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -228,6 +228,7 @@ static void metric__free(struct metric *m)
- 	free(m->metric_refs);
- 	expr__ctx_free(m->pctx);
- 	free((char *)m->modifier);
-+	evlist__delete(m->evlist);
- 	free(m);
- }
- 
-@@ -1352,6 +1353,14 @@ static int parse_ids(struct perf_pmu *fake_pmu, struct expr_parse_ctx *ids,
- 	*out_evlist = parsed_evlist;
- 	parsed_evlist = NULL;
- err_out:
-+	/*
-+	 * Errors are generally cleaned up by printing, but parsing may succeed
-+	 * with intermediate unused errors being recorded.
-+	 */
-+	free(parse_error.str);
-+	free(parse_error.help);
-+	free(parse_error.first_str);
-+	free(parse_error.first_help);
- 	evlist__delete(parsed_evlist);
- 	strbuf_release(&events);
- 	return ret;
-@@ -1481,8 +1490,10 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
- 	}
- 
- 
--	if (combined_evlist)
-+	if (combined_evlist) {
- 		evlist__splice_list_tail(perf_evlist, &combined_evlist->core.entries);
-+		evlist__delete(combined_evlist);
-+	}
- 
- 	list_for_each_entry(m, &metric_list, nd) {
- 		if (m->evlist)
+Ian Rogers (7):
+  perf test: Add expr test for events with hyphens
+  perf cputopo: Update to use pakage_cpus
+  perf cputopo: Match die_siblings to topology ABI name
+  perf cputopo: Match thread_siblings to topology ABI name
+  perf expr: Add literal values starting with #
+  perf expr: Add metric literals for topology.
+  perf expr: Add source_count for aggregating events
+
+ tools/perf/tests/expr.c       | 34 ++++++++++++++-
+ tools/perf/util/cputopo.c     | 78 ++++++++++++++++++-----------------
+ tools/perf/util/cputopo.h     | 33 ++++++++++++---
+ tools/perf/util/evsel.c       | 12 ++++++
+ tools/perf/util/evsel.h       |  1 +
+ tools/perf/util/expr.c        | 65 ++++++++++++++++++++++++++---
+ tools/perf/util/expr.h        |  4 ++
+ tools/perf/util/expr.l        | 16 ++++++-
+ tools/perf/util/expr.y        | 72 ++++++++++++++++++--------------
+ tools/perf/util/header.c      | 20 ++++-----
+ tools/perf/util/stat-shadow.c |  7 +++-
+ 11 files changed, 250 insertions(+), 92 deletions(-)
+
 -- 
 2.34.0.rc0.344.g81b53c2807-goog
 
