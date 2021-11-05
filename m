@@ -2,61 +2,60 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 112EEC433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  5 Nov 2021 17:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDDBC4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri,  5 Nov 2021 17:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED24861183
-	for <linux-perf-users@archiver.kernel.org>; Fri,  5 Nov 2021 17:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64B0961216
+	for <linux-perf-users@archiver.kernel.org>; Fri,  5 Nov 2021 17:10:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234269AbhKERMv (ORCPT
+        id S234324AbhKERM5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 5 Nov 2021 13:12:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36138 "EHLO
+        Fri, 5 Nov 2021 13:12:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234318AbhKERMn (ORCPT
+        with ESMTP id S234281AbhKERMq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 5 Nov 2021 13:12:43 -0400
-Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CD22C06120F
-        for <linux-perf-users@vger.kernel.org>; Fri,  5 Nov 2021 10:09:59 -0700 (PDT)
-Received: by mail-pg1-x549.google.com with SMTP id r7-20020a63ce47000000b002a5cadd2f25so6129534pgi.9
-        for <linux-perf-users@vger.kernel.org>; Fri, 05 Nov 2021 10:09:59 -0700 (PDT)
+        Fri, 5 Nov 2021 13:12:46 -0400
+Received: from mail-pj1-x1049.google.com (mail-pj1-x1049.google.com [IPv6:2607:f8b0:4864:20::1049])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53F87C061228
+        for <linux-perf-users@vger.kernel.org>; Fri,  5 Nov 2021 10:10:02 -0700 (PDT)
+Received: by mail-pj1-x1049.google.com with SMTP id mm1-20020a17090b358100b001a0a81b8664so2704318pjb.6
+        for <linux-perf-users@vger.kernel.org>; Fri, 05 Nov 2021 10:10:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=Ga/JTvMFQ2vXfkZ6husQa1qKB1WqPSvSIWfyJShez0g=;
-        b=QH2QS/D2usw9Eo983gIvl4iYDseLT6cegL944F3D4nhS8FMrjI+ggq8ZuSiMYoIcJn
-         WEx3uYqpjjK0DToatE5ooK4PyA1Mleup5jeotXKrScI2oT9ywocheXzsk4ncjnmTSlR/
-         PxCvrLv9x3P8UjZMGTTlKinuLKtiDhJCoq/Oec9XTvM98QC298yc4OACNVyjU6PicTi8
-         kcWUbZSaMsmudZ2nC2cf7UBgsUUUpqD3WJDI+28XqYXH7gpARdPZSxUSPgZWoAHf3yDB
-         xORPZv4MmaEaFhj4uhDGWKH74IvoOhnPMJ7/GhnVK6jM/RmxXNXWSRJQcnGBxfeanWjl
-         7g2A==
+        bh=tp+YfoZbse0y0sKx8hj8OQ/6tqTMgmmCVlQaWClRapE=;
+        b=V4792M5UGZZS7QJjiVHuH+dpHIXEIXKcCgLoxj1yCp/8q4ci4mVpI/7hJ14pPtaAD9
+         SKIC+TktLFNZNOBWHIhapfdiZ1xvici3YJL2P/GtLgeUJxSv6XjR5e4wvpH4oDWMXMOJ
+         VW5rp+AgbLfGbj03kpqbPXsev2K5dxwDPypGp8NAHVgm7ARLQmG7Yy3rvSrCg7GxNwZ+
+         /c44nu0cOwfsWSET1LTQOHQGT74PYEKukMBFDCkPcPWtwd7Sx+TD9Pk22yAt+DdnyMcZ
+         J3gqNFD9I4myZsE39r0QT6awKeMh9enNZ5bDsX4Qfv97fLzlzPrxHNrMU85O1OrdUzmV
+         M69w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=Ga/JTvMFQ2vXfkZ6husQa1qKB1WqPSvSIWfyJShez0g=;
-        b=gt6H1Rk3BoPYPuynZ8+hYD/qhvj5C0BbW3t/rzqRvfqijud5cdaLaN9BZTKVMWTwPk
-         VFgiSa71IGUUqCu2ZfAOFIh8SZ51l/3zVw++XMosRtUVF4DlsARG1fhmDq+i/0LFumGS
-         G6FXDI/v8vb1+73bSsyV/kKQ0DwYVBtj43l035mWh8aDsPqzGF36xU07P8HklnJQuUC6
-         mk2PgXdhJDrLowNPbsKBGa58FfjBTCPkeBybt/vfeceJ6eRxha2hUq17X32h4yelAsHk
-         kyOn9bFD01v9NyURFFvPUfnrKWUih9Mfk1iX+4Ir8NauBpvJjXORnypYNy6a5Fp+yrL6
-         Fnnw==
-X-Gm-Message-State: AOAM533BrmETP1GMGMYN96ixz5VzgoXlA505iCdyy8PJ/uBsfVXOKbBp
-        pygQ7wsmeOIa+ELMH1DUfmxKgiVCR8P6
-X-Google-Smtp-Source: ABdhPJxbxlJD2Et9RoxMTNa6hDu2Bse0kzgfQIuu/SRGVsAE4wGo+cOA34qIKUY/I3r2wORQMxyvk5NEQ8eX
+        bh=tp+YfoZbse0y0sKx8hj8OQ/6tqTMgmmCVlQaWClRapE=;
+        b=QLuqwyi6ZlDsQtaacVcWFgfbt6IDsGtIWaZaxYtxF48q8BH63KmyF89/Shw2mnPrSC
+         +8WrRhGbzZL1cmmb/uOnJand8ZLxepp9TwB3vt/qY1fZo9Bqxw2pvF9petTly8R6haEn
+         fXzSq9bu8nd7ZfQWxObt1mOt0OdQ/OR9ft+Z/DXIAsEGwTo3uKKD+z4E35vNH7qFVWiV
+         tBSlSnmJnBH1PixrsZW6t2UyhTJy9c+pBmw51NGjXdEJOwoHTbik/oEujsvhKABPGasM
+         RQIIWKQSuVr5L/TleceuI8MkbWpyEHIJpgBCk8AYNsZq6Z6ZTyRk7jLiEJEBCC26AC7v
+         mqAg==
+X-Gm-Message-State: AOAM5316Y+uW8DVZm6BW3jl9El7dFe9zBTmZwzmiDCM8rvL69d0fyU2y
+        Tf6YT5ZDaq76RrsU8qUOIZ718A5Vxx3G
+X-Google-Smtp-Source: ABdhPJw6FlvchtLRGTKvlWJvCTY1XkBsyp2Th0kQYUxgnlDyZX6k88O5Ha/f2Ji/Anibt6TC6hkkX+GvfMnz
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:4cee:beb8:1744:5207])
- (user=irogers job=sendgmr) by 2002:a17:903:1248:b0:13f:cd7d:69eb with SMTP id
- u8-20020a170903124800b0013fcd7d69ebmr52836736plh.23.1636132198979; Fri, 05
- Nov 2021 10:09:58 -0700 (PDT)
-Date:   Fri,  5 Nov 2021 10:09:41 -0700
+ (user=irogers job=sendgmr) by 2002:a17:90a:5285:: with SMTP id
+ w5mr94080pjh.1.1636132201145; Fri, 05 Nov 2021 10:10:01 -0700 (PDT)
+Date:   Fri,  5 Nov 2021 10:09:42 -0700
 In-Reply-To: <20211105170943.3479315-1-irogers@google.com>
-Message-Id: <20211105170943.3479315-6-irogers@google.com>
+Message-Id: <20211105170943.3479315-7-irogers@google.com>
 Mime-Version: 1.0
 References: <20211105170943.3479315-1-irogers@google.com>
 X-Mailer: git-send-email 2.34.0.rc0.344.g81b53c2807-goog
-Subject: [PATCH 5/7] perf expr: Add literal values starting with #
+Subject: [PATCH 6/7] perf expr: Add metric literals for topology.
 From:   Ian Rogers <irogers@google.com>
 To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Jin Yao <yao.jin@linux.intel.com>,
@@ -82,147 +81,93 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-It is useful to have literal values for constants relating to
-topologies, SMT, etc. Make the parsing of literals shared code and add a
-lookup function. Move #smt_on to this function.
+Allow the number of cpus, cores, dies and packages to be queried by a
+metric expression.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/expr.c | 11 +++++++++++
- tools/perf/util/expr.h |  1 +
- tools/perf/util/expr.l | 15 ++++++++++++++-
- tools/perf/util/expr.y |  9 ++++-----
- 4 files changed, 30 insertions(+), 6 deletions(-)
+ tools/perf/tests/expr.c | 12 +++++++++++-
+ tools/perf/util/expr.c  | 27 +++++++++++++++++++++++++++
+ 2 files changed, 38 insertions(+), 1 deletion(-)
 
+diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+index 9ee2dc91c27b..0c09ccc76665 100644
+--- a/tools/perf/tests/expr.c
++++ b/tools/perf/tests/expr.c
+@@ -66,7 +66,7 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
+ {
+ 	struct expr_id_data *val_ptr;
+ 	const char *p;
+-	double val;
++	double val, num_cpus, num_cores, num_dies, num_packages;
+ 	int ret;
+ 	struct expr_parse_ctx *ctx;
+ 
+@@ -161,6 +161,16 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
+ 			NULL, ctx) == 0);
+ 	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
+ 
++	/* Test toplogy constants appear well ordered. */
++	expr__ctx_clear(ctx);
++	TEST_ASSERT_VAL("#num_cpus", expr__parse(&num_cpus, ctx, "#num_cpus") == 0);
++	TEST_ASSERT_VAL("#num_cores", expr__parse(&num_cores, ctx, "#num_cores") == 0);
++	TEST_ASSERT_VAL("#num_cpus >= #num_cores", num_cpus >= num_cores);
++	TEST_ASSERT_VAL("#num_dies", expr__parse(&num_dies, ctx, "#num_dies") == 0);
++	TEST_ASSERT_VAL("#num_cores >= #num_dies", num_cores >= num_dies);
++	TEST_ASSERT_VAL("#num_packages", expr__parse(&num_packages, ctx, "#num_packages") == 0);
++	TEST_ASSERT_VAL("#num_dies >= #num_packages", num_dies >= num_packages);
++
+ 	expr__ctx_free(ctx);
+ 
+ 	return 0;
 diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-index 77c6ad81a923..7464739c2890 100644
+index 7464739c2890..15af8b8ef5e7 100644
 --- a/tools/perf/util/expr.c
 +++ b/tools/perf/util/expr.c
-@@ -9,9 +9,11 @@
+@@ -5,6 +5,8 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include "metricgroup.h"
++#include "cpumap.h"
++#include "cputopo.h"
+ #include "debug.h"
  #include "expr.h"
  #include "expr-bison.h"
- #include "expr-flex.h"
-+#include "smt.h"
- #include <linux/kernel.h>
- #include <linux/zalloc.h>
- #include <ctype.h>
-+#include <math.h>
+@@ -375,9 +377,34 @@ double expr_id_data__value(const struct expr_id_data *data)
  
- #ifdef PARSER_DEBUG
- extern int expr_debug;
-@@ -370,3 +372,12 @@ double expr_id_data__value(const struct expr_id_data *data)
- 	assert(data->kind == EXPR_ID_DATA__REF_VALUE);
- 	return data->ref.val;
- }
-+
-+double expr__get_literal(const char *literal)
-+{
-+	if (!strcmp("#smt_on", literal))
-+		return smt_on() > 0 ? 1.0 : 0.0;
-+
-+	pr_err("Unrecognized literal '%s'", literal);
-+	return NAN;
-+}
-diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-index cf81f9166dbb..a6ab7f2b23d1 100644
---- a/tools/perf/util/expr.h
-+++ b/tools/perf/util/expr.h
-@@ -55,5 +55,6 @@ int expr__find_ids(const char *expr, const char *one,
- 		   struct expr_parse_ctx *ids);
- 
- double expr_id_data__value(const struct expr_id_data *data);
-+double expr__get_literal(const char *literal);
- 
- #endif
-diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
-index bd20f33418ba..cf6e3c710502 100644
---- a/tools/perf/util/expr.l
-+++ b/tools/perf/util/expr.l
-@@ -6,6 +6,7 @@
- #include <linux/compiler.h>
- #include "expr.h"
- #include "expr-bison.h"
-+#include <math.h>
- 
- char *expr_get_text(yyscan_t yyscanner);
- YYSTYPE *expr_get_lval(yyscan_t yyscanner);
-@@ -77,6 +78,17 @@ static int str(yyscan_t scanner, int token, int runtime)
- 	yylval->str = normalize(yylval->str, runtime);
- 	return token;
- }
-+
-+static int literal(yyscan_t scanner)
-+{
-+	YYSTYPE *yylval = expr_get_lval(scanner);
-+
-+	yylval->num = expr__get_literal(expr_get_text(scanner));
-+	if (isnan(yylval->num))
-+		return EXPR_ERROR;
-+
-+	return LITERAL;
-+}
- %}
- 
- number		([0-9]+\.?[0-9]*|[0-9]*\.?[0-9]+)
-@@ -85,6 +97,7 @@ sch		[-,=]
- spec		\\{sch}
- sym		[0-9a-zA-Z_\.:@?]+
- symbol		({spec}|{sym})+
-+literal		#[0-9a-zA-Z_\.\-]+
- 
- %%
- 	struct expr_scanner_ctx *sctx = expr_get_extra(yyscanner);
-@@ -94,7 +107,7 @@ max		{ return MAX; }
- min		{ return MIN; }
- if		{ return IF; }
- else		{ return ELSE; }
--#smt_on		{ return SMT_ON; }
-+{literal}	{ return literal(yyscanner); }
- {number}	{ return value(yyscanner); }
- {symbol}	{ return str(yyscanner, ID, sctx->runtime); }
- "|"		{ return '|'; }
-diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-index f969dfa525bd..ba6c6dbf30c8 100644
---- a/tools/perf/util/expr.y
-+++ b/tools/perf/util/expr.y
-@@ -4,7 +4,6 @@
- #include <assert.h>
- #include <math.h>
- #include "util/debug.h"
--#include "smt.h"
- #define IN_EXPR_Y 1
- #include "expr.h"
- %}
-@@ -37,7 +36,7 @@
- 	} ids;
- }
- 
--%token ID NUMBER MIN MAX IF ELSE SMT_ON D_RATIO EXPR_ERROR
-+%token ID NUMBER MIN MAX IF ELSE LITERAL D_RATIO EXPR_ERROR
- %left MIN MAX IF
- %left '|'
- %left '^'
-@@ -46,7 +45,7 @@
- %left '-' '+'
- %left '*' '/' '%'
- %left NEG NOT
--%type <num> NUMBER
-+%type <num> NUMBER LITERAL
- %type <str> ID
- %destructor { free ($$); } <str>
- %type <ids> expr if_expr
-@@ -280,9 +279,9 @@ expr: NUMBER
- 		$$ = union_expr($3, $5);
- 	}
- }
--| SMT_ON
-+| LITERAL
+ double expr__get_literal(const char *literal)
  {
--	$$.val = smt_on() > 0 ? 1.0 : 0.0;
-+	$$.val = $1;
- 	$$.ids = NULL;
++	static struct cpu_topology *topology;
++
+ 	if (!strcmp("#smt_on", literal))
+ 		return smt_on() > 0 ? 1.0 : 0.0;
+ 
++	if (!strcmp("#num_cpus", literal))
++		return cpu__max_present_cpu();
++
++	/*
++	 * Assume that topology strings are consistent, such as CPUs "0-1"
++	 * wouldn't be listed as "0,1", and so after deduplication the number of
++	 * these strings gives an indication of the number of packages, dies,
++	 * etc.
++	 */
++	if (!topology) {
++		topology = cpu_topology__new();
++		if (!topology) {
++			pr_err("Error creating CPU topology");
++			return NAN;
++		}
++	}
++	if (!strcmp("#num_packages", literal))
++		return topology->package_cpus_lists;
++	if (!strcmp("#num_dies", literal))
++		return topology->die_cpus_lists;
++	if (!strcmp("#num_cores", literal))
++		return topology->core_cpus_lists;
++
+ 	pr_err("Unrecognized literal '%s'", literal);
+ 	return NAN;
  }
- ;
 -- 
 2.34.0.rc0.344.g81b53c2807-goog
 
