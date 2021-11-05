@@ -2,170 +2,165 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A3D9C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  5 Nov 2021 05:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16ABAC433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri,  5 Nov 2021 06:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39AF66127C
-	for <linux-perf-users@archiver.kernel.org>; Fri,  5 Nov 2021 05:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE2E4611EE
+	for <linux-perf-users@archiver.kernel.org>; Fri,  5 Nov 2021 06:35:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231679AbhKEGAe (ORCPT
+        id S232048AbhKEGiO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 5 Nov 2021 02:00:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53580 "EHLO
+        Fri, 5 Nov 2021 02:38:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229587AbhKEGAd (ORCPT
+        with ESMTP id S229971AbhKEGiO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 5 Nov 2021 02:00:33 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 843FBC061714;
-        Thu,  4 Nov 2021 22:57:54 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id u141so49957pfc.4;
-        Thu, 04 Nov 2021 22:57:54 -0700 (PDT)
+        Fri, 5 Nov 2021 02:38:14 -0400
+Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A966C061714;
+        Thu,  4 Nov 2021 23:35:35 -0700 (PDT)
+Received: by mail-qk1-x72a.google.com with SMTP id bq14so7975951qkb.1;
+        Thu, 04 Nov 2021 23:35:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:content-transfer-encoding:mime-version:subject:message-id:date
-         :cc:to;
-        bh=eEB4ecQ1ZNfPcSQu/zCsmgppD0Z0jo0HIyobZ6E/qyg=;
-        b=Y+blWID2npSQxlMePFKmMcv5UVywvYlMNsfojW9np0A1qJ6MelqQc5oCMuXl6VsZ+s
-         V1Nhqx9o/tsR926wRMShOLYCTuPVE5G6fzUXBAw29CgP4IkA0qTPP0MS3OytHQu4Dx3r
-         hu+Zr9ny2mlbKxjUwUqhvQQ7dlyqvWtFZ+SZmMvdFl3l3n+dO/b8ifEcBgc6OzmnCtpq
-         JO9lempYHsMHMq63RtfRFjCyv9lEUnJapf2tEGrzHlEgq7T2XEivggBj96NkBcBxyUAx
-         lKkf/zv8/td9449EN6rkG+8fEbbdS71qWXkiP8TB1deibDqjJnNr7yaOoetf1pI1Pomv
-         4b6w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=471eGmUxaF67diQu9fpSiCy6uokW6qtVpUcaxV0sWLg=;
+        b=jS5yXBDc4yq8hyj2cMX5ZzypfkbcLj9UWr5FarIDV8R/zKENQbna+Jo8HNO42CtEMt
+         RiopFHwHRn4GwPkE5mt3IdSzakYbUGSj2lbLs/YAsoK0ar9yVUh09Yhl8a4WWyQOjwZ+
+         ZMVvmuhWqz7vNgHbChGOHuDkC5/GG4HCHnSqsF5E+6MK0hng9T+RlaxODaBfqkN6w0KD
+         OKWDtzvX8pHGd6kiigIdwo/20u19Uex8DStSUaqEFXYlC/NevQSYREnt+slq5II6jC87
+         rVCtpwgcKIuv2TtDWCxHgQLpa/HJ7hMsWJ5Fd6j9a8IyeYP3DdbyGWKU3ZTxpURg3r5p
+         g1nA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:content-transfer-encoding:mime-version
-         :subject:message-id:date:cc:to;
-        bh=eEB4ecQ1ZNfPcSQu/zCsmgppD0Z0jo0HIyobZ6E/qyg=;
-        b=PxafpB4rUHfSjHUUmNIAYnIhsot40RutKqmlddDDMBkAxtsUlWTKFcYFzFaUcKnh3L
-         lhLC1mKsNezbxnHtM/1FQpyffiBUPeFDHARKZyhJ8cqhyrjWkA9ozqHeJ4PEnhAfyJiS
-         5vx5Vvsl+VExs+BsiU9oDyCnpfEG95A4PhEB8YZztjBEywkdDdU+Mf84KXDLPpBddULZ
-         p1Y/p1yfAou9Om37gnr+YvCq79Omu7eE6kH33tBh+cZqjykyXXyF4mXwqDLIiRtTbqEP
-         jQpODvyXBiR72F7vm61qJAsVBIjN8n90lF2QiUDtBbTy47MYBlcWAdnCw8Fejgf0wu+G
-         p6oQ==
-X-Gm-Message-State: AOAM530o4Ra7gNlIEHE10aS2DzoDMzd0Zpeu2YYP8xOZiJl56TpQblA0
-        001ofpVgM0Xp57ykYO+rLwXfvue1HXfSzw==
-X-Google-Smtp-Source: ABdhPJzbmQ0sB5kZR3aLa3IV/icD5aM3UqNE1fillfV2M0WPg6cywdIuDVekdoHk0rcww34n3SJA2w==
-X-Received: by 2002:a05:6a00:887:b0:474:1f41:2293 with SMTP id q7-20020a056a00088700b004741f412293mr57521929pfj.44.1636091873782;
-        Thu, 04 Nov 2021 22:57:53 -0700 (PDT)
-Received: from smtpclient.apple (c-24-6-216-183.hsd1.ca.comcast.net. [24.6.216.183])
-        by smtp.gmail.com with ESMTPSA id d12sm6925990pfl.141.2021.11.04.22.57.52
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Nov 2021 22:57:53 -0700 (PDT)
-From:   Nadav Amit <nadav.amit@gmail.com>
-Content-Type: text/plain;
-        charset=utf-8
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=471eGmUxaF67diQu9fpSiCy6uokW6qtVpUcaxV0sWLg=;
+        b=3uKCzCu8VTWNV0wcXvreoSKjyaPUYwX+7g8ZHMmE4Gh/6bLk4yF67y7VrzFzDf4wGN
+         CvuMUN6rJbCccamfauVszu6psGrsEpRrSZp4AxspfJV7HL5+ck6xGhI5IIXoWj7wV7oG
+         ouDjI5GzkGQoTZ0RzA4zs3cYeDU5CH1NclNomSVGbeC5EVHzsntXvhZyUlyN51k2k/GZ
+         ArraNeeCslddLWWjJhtNlBvs2VZQqc+ULoxPodOvRtE+r6ciYdl2qlfBIR858cFNVxVi
+         D46ubnVZfsWUQGxzR4oj+GbsuLbBEDjII3dTjd6xSYUzXlhMa11WstLnrWwOVLMy6ZAc
+         YiSA==
+X-Gm-Message-State: AOAM532MCZ0nymC6+h4cFbaYCBuLzuDAt5n/2FZqqSF7GNvWkQNaLeTw
+        g1uE9gdYeLGqOa6CEDc5p4uqeEanBkuFZz1xNuw=
+X-Google-Smtp-Source: ABdhPJyGlAK/4T0maCDIO1vKCkl3dt4UGJclujZc/WZfgwdBVMPOmko9selD7aq7tjVzpVvwBlKU0yeFneDO8orvn9Y=
+X-Received: by 2002:a05:620a:408:: with SMTP id 8mr16641290qkp.116.1636094134305;
+ Thu, 04 Nov 2021 23:35:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <20211101060419.4682-1-laoar.shao@gmail.com> <YYM5R95a7jgB2TPO@qmqm.qmqm.pl>
+In-Reply-To: <YYM5R95a7jgB2TPO@qmqm.qmqm.pl>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Fri, 5 Nov 2021 14:34:58 +0800
+Message-ID: <CALOAHbDtoBEr8TuuUEMAnw3aeOf=S10Lh_eBCS=5Ty+JHgdj0Q@mail.gmail.com>
+Subject: Re: [PATCH v7 00/11] extend task comm from 16 to 24
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Qiang Zhang <qiang.zhang@windriver.com>,
+        robdclark <robdclark@chromium.org>,
+        christian <christian@brauner.io>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>, Martin Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        john fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        dennis.dalessandro@cornelisnetworks.com,
+        mike.marciniszyn@cornelisnetworks.com, dledford@redhat.com,
+        jgg@ziepe.ca, linux-rdma@vger.kernel.org,
+        netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel test robot <oliver.sang@intel.com>,
+        kbuild test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.120.0.1.13\))
-Subject: Using perf_event_open() to sample multiple events of a process
-Message-Id: <92645262-D319-4068-9C44-2409EF44888E@gmail.com>
-Date:   Thu, 4 Nov 2021 22:57:50 -0700
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-To:     kan.liang@linux.intel.com, Peter Zijlstra <peterz@infradead.org>
-X-Mailer: Apple Mail (2.3654.120.0.1.13)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello Ken, Peter,
+On Thu, Nov 4, 2021 at 9:37 AM Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.q=
+mqm.pl> wrote:
+>
+> On Mon, Nov 01, 2021 at 06:04:08AM +0000, Yafang Shao wrote:
+> > There're many truncated kthreads in the kernel, which may make trouble
+> > for the user, for example, the user can't get detailed device
+> > information from the task comm.
+> >
+> > This patchset tries to improve this problem fundamentally by extending
+> > the task comm size from 16 to 24, which is a very simple way.
+> [...]
+>
+> Hi,
+>
+> I've tried something like this a few years back. My attempt got mostly
+> lost in the mailing lists, but I'm still carrying the patches in my
+> tree [1]. My target was userspace thread names, and it turned out more
+> involved than I had time for.
+>
+> [1] https://rere.qmqm.pl/git/?p=3Dlinux;a=3Dcommit;h=3D2c3814268caf2b1fee=
+6d1a0b61fd1730ce135d4a
+>     and its parents
+>
 
-I would appreciate some help regarding the use of perf_event_open()
-to have multiple samples getting into the same mmap=E2=80=99d memory =
-when they
-are both attached to the same process.
+Hi Michal,
 
-I am doing so (using both PERF_FLAG_FD_NO_GROUP and =
-PERF_FLAG_FD_OUTPUT),
-but it results in -EINVAL. Debugging the code shows that
-perf_event_set_output() fails due to the following check:
+Thanks for the information.
 
-        /*
-         * If its not a per-cpu rb, it must be the same task.
-         */
-        if (output_event->cpu =3D=3D -1 && output_event->ctx !=3D =
-event->ctx)
-                goto out;
+I have looked through your patches.  It seems to contain six patches
+now and can be divided into three parts per my understanding.
 
-However, it appears that at this point, event->ctx is not initialized
-(it is null) so the test fails and the whole perf_event_open() syscall
-fails.
+1. extend task comm len
+This parts contains below 4 patches:
+[prctl: prepare for bigger
+TASK_COMM_LEN](https://rere.qmqm.pl/git/?p=3Dlinux;a=3Dcommit;h=3Dcfd99db9c=
+f911bb4d106889aeba1dfe89b6527d0)
+[bluetooth: prepare for bigger
+TASK_COMM_LEN](https://rere.qmqm.pl/git/?p=3Dlinux;a=3Dcommit;h=3Dba2805f51=
+96865b81cc6fc938ea53af2c7c2c892)
+[taskstats: prepare for bigger
+TASK_COMM_LEN](https://rere.qmqm.pl/git/?p=3Dlinux;a=3Dcommit;h=3D4d29bfedc=
+57b36607915a0171f4864ec504908ca)
+[mm: make TASK_COMM_LEN
+configurable](https://rere.qmqm.pl/git/?p=3Dlinux;a=3Dcommit;h=3D362acc3558=
+2445174589184c738c4d86ec7d174b)
 
-Am I missing something? If not, I am unsure, unfortunately, what the
-proper way to fix it is=E2=80=A6
+What kind of userspace issues makes you extend the task comm length ?
+Why not just use /proc/[pid]/cmdline ?
 
-I include a small test that fails on my system. The second
-perf_event_open fails due to the check in perf_event_set_output():
+2.  A fix
+Below patch:
+[procfs: signal /proc/PID/comm write
+truncation](https://rere.qmqm.pl/git/?p=3Dlinux;a=3Dcommit;h=3Dd72027388d4d=
+95db5438a7a574e0a03ae4b5d6d7)
 
+It seems this patch is incomplete ?   I don't know what it means to do.
 
+3. A feature provided for pthread_getname_np
+Below patch:
+[procfs: lseek(/proc/PID/comm, 0,
+SEEK_END)](https://rere.qmqm.pl/git/?p=3Dlinux;a=3Dcommit;h=3D2c3814268caf2=
+b1fee6d1a0b61fd1730ce135d4a)
 
+It seems this patch is useful. With this patch the userspace can
+directly get the TASK_COMM_LEN through the API.
 
-#define _GNU_SOURCE 1
-
-#include <asm/unistd.h>
-#include <linux/perf_event.h>
-#include <linux/hw_breakpoint.h>
-#include <sys/mman.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-
-long perf_event_open(struct perf_event_attr* event_attr, pid_t pid, int =
-cpu,
-		     int group_fd, unsigned long flags)
-{
-    return syscall(__NR_perf_event_open, event_attr, pid, cpu, group_fd, =
-flags);
-}
-
-int main(void)
-{
-	pid_t pid =3D getpid();
-	int group_fd, fd;
-	void *p;
-	struct perf_event_attr pe =3D {
-		.type =3D 4,
-		.size =3D sizeof(struct perf_event_attr),
-		.config =3D 0x11d0,
-		.sample_type =3D 0x8,
-		.sample_period =3D 1000,
-		.precise_ip =3D 2,
-	};
-
-	group_fd =3D perf_event_open(&pe, pid, -1, -1, =
-PERF_FLAG_FD_CLOEXEC |=20
-						     =
-PERF_FLAG_FD_NO_GROUP |
-						     =
-PERF_FLAG_FD_OUTPUT);
-
-	if (group_fd < 0) {
-		perror("first perf_event_open");
-		exit(-1);
-	}
-
-	p =3D mmap(NULL, 3 * 4096, PROT_READ|PROT_WRITE, MAP_SHARED, =
-group_fd, 0);
-
-	if (p =3D=3D MAP_FAILED) {
-		perror("MAP_FAILED");
-		exit(-1);
-	}
-=09
-	pe.config =3D 0x12d0;
-=09
-	fd =3D perf_event_open(&pe, pid, -1, group_fd, =
-PERF_FLAG_FD_CLOEXEC |=20
-						     =
-PERF_FLAG_FD_NO_GROUP |
-						     =
-PERF_FLAG_FD_OUTPUT);
-
-	if (fd < 0) {
-		perror("second perf_event_open");
-		exit(-1);
-	}
-
-	printf("success\n");
-}
-
+--=20
+Thanks
+Yafang
