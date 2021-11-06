@@ -2,172 +2,113 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC9FC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Nov 2021 19:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C138CC433F5
+	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Nov 2021 19:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9084611C0
-	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Nov 2021 19:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92B5D6112D
+	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Nov 2021 19:51:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234963AbhKFTv6 (ORCPT
+        id S230028AbhKFTy1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 6 Nov 2021 15:51:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51434 "EHLO mail.kernel.org"
+        Sat, 6 Nov 2021 15:54:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229727AbhKFTv6 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 6 Nov 2021 15:51:58 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 49F1E6112D;
-        Sat,  6 Nov 2021 19:49:16 +0000 (UTC)
+        id S229727AbhKFTy0 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Sat, 6 Nov 2021 15:54:26 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C0B7160FC3;
+        Sat,  6 Nov 2021 19:51:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636228156;
-        bh=rceT6wlxvItlXQF/taIFxbM5kKFpK1pqdVOr6Tz8L/0=;
+        s=k20201202; t=1636228305;
+        bh=t35dqCporb6l1Hvqc9QMrCIDcT/NqtO6bPxLBhFw+I8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZVyx2QJ9gjaYwUutIMbDljSLLB5hXWbI57q32kMpBmRF0KPXjPSo6VzSQqRHc+Ddx
-         yiOFMhNZvHS+Im5GlrQ1P2wC//D86/ZMK3g5QusqbvZQQmpHRyYOrVQtC2Np67Tf/k
-         3/56gNjth2ljGOYZuLp9Of0gVW8nYwPNDiCGoCdzC4eU5XJv5BCLsMnhlyJlp0SZwb
-         Ib3dt+Jc4yZc/XZrrprbFzrnI0TGxJ7+FvS1gY/8mAdtvKmDYOC1ZSvrzXrQKPaWSd
-         Vh9udYjxOf1nCmK3rz9WWrHCsqRBEhgAND78M4bXMfqcGK9ecx9WGSKOT0nBzI2Dkt
-         AaUchipyLSxog==
+        b=UYk0ZVmCxeIc/VzJ0Hk2VUQ7Odf4H+y3viYxMe0IQMMvfTfr5m2eSr/HUhIOOq9Yn
+         S2ee+sxZa8zZ+4ANUtcegB7eGERdGQTXIeAkwgQi7yJiKWH1nXigC1TMnjT6JwUT73
+         O+7yL2YL4YRNApHVpGkJGC2bHF9VZf+21u8/GubKUA7ncafEKKnO6NF5llOBjXUHrB
+         LdwQY/vPhlqM7vYdY+Ju9lxCOa4xc5cfweszUc4zWYVhK/IqZQd+N/l8jGik14+YRn
+         UWgx10oNq6ses775k+Bw33siE0KOe/ZaeES3olsMasq9iOn0IEGr26cqXp+8b8XU0s
+         XDWjivTHKjmtw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 28687410A2; Sat,  6 Nov 2021 16:49:14 -0300 (-03)
-Date:   Sat, 6 Nov 2021 16:49:14 -0300
+        id 954A3410A1; Sat,  6 Nov 2021 16:51:42 -0300 (-03)
+Date:   Sat, 6 Nov 2021 16:51:42 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     German Gomez <german.gomez@arm.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/3] perf arm-spe: Track task context switch for cpu-mode
- events
-Message-ID: <YYbcOmudBPDcLKMd@kernel.org>
-References: <20211102180739.18049-1-german.gomez@arm.com>
- <20211102180739.18049-2-german.gomez@arm.com>
- <20211106032907.GG477387@leoy-ThinkPad-X240s>
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        eranian@google.com
+Subject: Re: [PATCH] perf metric: Fix memory leaks.
+Message-ID: <YYbczk5svUYrbIhQ@kernel.org>
+References: <20211105164657.3476647-1-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211106032907.GG477387@leoy-ThinkPad-X240s>
+In-Reply-To: <20211105164657.3476647-1-irogers@google.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Sat, Nov 06, 2021 at 11:29:07AM +0800, Leo Yan escreveu:
-> Hi German,
+Em Fri, Nov 05, 2021 at 09:46:57AM -0700, Ian Rogers escreveu:
+> Certain error paths may leak memory as caught by address sanitizer.
+> Ensure this is cleaned up to make sure address/leak sanitizer is happy.
 > 
-> On Tue, Nov 02, 2021 at 06:07:37PM +0000, German Gomez wrote:
-> > When perf report synthesize events from ARM SPE data, it refers to
-> > current cpu, pid and tid in the machine.  But there's no place to set
-> > them in the ARM SPE decoder.  I'm seeing all pid/tid is set to -1 and
-> > user symbols are not resolved in the output.
-> > 
-> >   # perf record -a -e arm_spe_0/ts_enable=1/ sleep 1
-> > 
-> >   # perf report -q | head
-> >      8.77%     8.77%  :-1      [kernel.kallsyms]  [k] format_decode
-> >      7.02%     7.02%  :-1      [kernel.kallsyms]  [k] seq_printf
-> >      7.02%     7.02%  :-1      [unknown]          [.] 0x0000ffff9f687c34
-> >      5.26%     5.26%  :-1      [kernel.kallsyms]  [k] vsnprintf
-> >      3.51%     3.51%  :-1      [kernel.kallsyms]  [k] string
-> >      3.51%     3.51%  :-1      [unknown]          [.] 0x0000ffff9f66ae20
-> >      3.51%     3.51%  :-1      [unknown]          [.] 0x0000ffff9f670b3c
-> >      3.51%     3.51%  :-1      [unknown]          [.] 0x0000ffff9f67c040
-> >      1.75%     1.75%  :-1      [kernel.kallsyms]  [k] ___cache_free
-> >      1.75%     1.75%  :-1      [kernel.kallsyms]  [k]
-> > __count_memcg_events
-> > 
-> > Like Intel PT, add context switch records to track task info.  As ARM
-> > SPE support was added later than PERF_RECORD_SWITCH_CPU_WIDE, I think
-> > we can safely set the attr.context_switch bit and use it.
-> > 
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > Signed-off-by: German Gomez <german.gomez@arm.com>
+> Fixes: 5ecd5a0c7d1c ("perf metrics: Modify setup and deduplication")
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/metricgroup.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
 > 
-> Reviewed-by: Leo Yan <leo.yan@linaro.org>
-> 
-> Note for one thing, please keep "Namhyung Kim" as the author for this
-> patch, thanks.
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> index 4917e9704765..734d2ce94825 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -228,6 +228,7 @@ static void metric__free(struct metric *m)
+>  	free(m->metric_refs);
+>  	expr__ctx_free(m->pctx);
+>  	free((char *)m->modifier);
+> +	evlist__delete(m->evlist);
+>  	free(m);
+>  }
+>  
+> @@ -1352,6 +1353,14 @@ static int parse_ids(struct perf_pmu *fake_pmu, struct expr_parse_ctx *ids,
+>  	*out_evlist = parsed_evlist;
+>  	parsed_evlist = NULL;
+>  err_out:
+> +	/*
+> +	 * Errors are generally cleaned up by printing, but parsing may succeed
+> +	 * with intermediate unused errors being recorded.
+> +	 */
+> +	free(parse_error.str);
+> +	free(parse_error.help);
+> +	free(parse_error.first_str);
+> +	free(parse_error.first_help);
 
-This merits a v2 submission, please do so.
+Can't this be in a parse_events__free_errors() routine?
 
 - Arnaldo
- 
-> Leo
-> 
-> > ---
-> >  tools/perf/arch/arm64/util/arm-spe.c |  6 +++++-
-> >  tools/perf/util/arm-spe.c            | 25 +++++++++++++++++++++++++
-> >  2 files changed, 30 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
-> > index a4420d4df..58ba8d15c 100644
-> > --- a/tools/perf/arch/arm64/util/arm-spe.c
-> > +++ b/tools/perf/arch/arm64/util/arm-spe.c
-> > @@ -166,8 +166,12 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
-> >  	tracking_evsel->core.attr.sample_period = 1;
-> >  
-> >  	/* In per-cpu case, always need the time of mmap events etc */
-> > -	if (!perf_cpu_map__empty(cpus))
-> > +	if (!perf_cpu_map__empty(cpus)) {
-> >  		evsel__set_sample_bit(tracking_evsel, TIME);
-> > +		evsel__set_sample_bit(tracking_evsel, CPU);
-> > +		/* also track task context switch */
-> > +		tracking_evsel->core.attr.context_switch = 1;
-> > +	}
-> >  
-> >  	return 0;
-> >  }
-> > diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-> > index 58b7069c5..230bc7ab2 100644
-> > --- a/tools/perf/util/arm-spe.c
-> > +++ b/tools/perf/util/arm-spe.c
-> > @@ -681,6 +681,25 @@ static int arm_spe_process_timeless_queues(struct arm_spe *spe, pid_t tid,
-> >  	return 0;
-> >  }
-> >  
-> > +static int arm_spe_context_switch(struct arm_spe *spe, union perf_event *event,
-> > +				  struct perf_sample *sample)
-> > +{
-> > +	pid_t pid, tid;
-> > +	int cpu;
-> > +
-> > +	if (!(event->header.misc & PERF_RECORD_MISC_SWITCH_OUT))
-> > +		return 0;
-> > +
-> > +	pid = event->context_switch.next_prev_pid;
-> > +	tid = event->context_switch.next_prev_tid;
-> > +	cpu = sample->cpu;
-> > +
-> > +	if (tid == -1)
-> > +		pr_warning("context_switch event has no tid\n");
-> > +
-> > +	return machine__set_current_tid(spe->machine, cpu, pid, tid);
-> > +}
-> > +
-> >  static int arm_spe_process_event(struct perf_session *session,
-> >  				 union perf_event *event,
-> >  				 struct perf_sample *sample,
-> > @@ -718,6 +737,12 @@ static int arm_spe_process_event(struct perf_session *session,
-> >  		}
-> >  	} else if (timestamp) {
-> >  		err = arm_spe_process_queues(spe, timestamp);
-> > +		if (err)
-> > +			return err;
-> > +
-> > +		if (event->header.type == PERF_RECORD_SWITCH_CPU_WIDE ||
-> > +		    event->header.type == PERF_RECORD_SWITCH)
-> > +			err = arm_spe_context_switch(spe, event, sample);
-> >  	}
-> >  
-> >  	return err;
-> > -- 
-> > 2.25.1
-> > 
+
+>  	evlist__delete(parsed_evlist);
+>  	strbuf_release(&events);
+>  	return ret;
+> @@ -1481,8 +1490,10 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
+>  	}
+>  
+>  
+> -	if (combined_evlist)
+> +	if (combined_evlist) {
+>  		evlist__splice_list_tail(perf_evlist, &combined_evlist->core.entries);
+> +		evlist__delete(combined_evlist);
+> +	}
+>  
+>  	list_for_each_entry(m, &metric_list, nd) {
+>  		if (m->evlist)
+> -- 
+> 2.34.0.rc0.344.g81b53c2807-goog
 
 -- 
 
