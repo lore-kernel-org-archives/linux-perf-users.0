@@ -2,158 +2,127 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7B0C433FE
-	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Nov 2021 11:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0CAC433F5
+	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Nov 2021 13:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9B3611C4
-	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Nov 2021 11:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E8E2611AE
+	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Nov 2021 13:47:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234050AbhKFLcl (ORCPT
+        id S231461AbhKFNuS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 6 Nov 2021 07:32:41 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:60803 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229500AbhKFLcl (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 6 Nov 2021 07:32:41 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 4HmZss2pjdz8K;
-        Sat,  6 Nov 2021 12:29:53 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1636198197; bh=WAutzEgYEkmalNSwQrpbordkhKZLQ/Y22509TsCal1M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MoSDr5iITx3E3YPjbwkyIUAMMz2VmRaGqyp931kZX9YG+QyaLES6TvE+QwQNSCXlJ
-         fpc5I73Jklg2OzmXxu2LMdsy9vNLA7EBPNnzQtR/b7pam2rbJ41auAZmoiKWDoGoTh
-         33ZJgvXhhdDgMv5Gftq0VWNj2quwtGMnCQ05Vicp9WOB1XHJmcwdB4C6fV5moIbunY
-         2pHxjtQgDkyQmIbCl5sYp6e9aq2kjDEzW8DTwxKTUYFbt5WG7t6QG/dNh1ogsZV3La
-         pN/Cdf+ZUSXgzppa++BQRGky7Z/Oiq8oAuUHz4R2kaNp0awXgwxWySm/P9++rhyRyL
-         YNV8/t5iEpSKQ==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.103.3 at mail
-Date:   Sat, 6 Nov 2021 12:29:51 +0100
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Qiang Zhang <qiang.zhang@windriver.com>,
-        robdclark <robdclark@chromium.org>,
-        christian <christian@brauner.io>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>, Martin Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        dennis.dalessandro@cornelisnetworks.com,
-        mike.marciniszyn@cornelisnetworks.com, dledford@redhat.com,
-        jgg@ziepe.ca, linux-rdma@vger.kernel.org,
-        netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel test robot <oliver.sang@intel.com>,
-        kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH v7 00/11] extend task comm from 16 to 24
-Message-ID: <YYZnL58B+GsNypEn@qmqm.qmqm.pl>
-References: <20211101060419.4682-1-laoar.shao@gmail.com>
- <YYM5R95a7jgB2TPO@qmqm.qmqm.pl>
- <CALOAHbDtoBEr8TuuUEMAnw3aeOf=S10Lh_eBCS=5Ty+JHgdj0Q@mail.gmail.com>
- <YYXEzlHn28/d5C6A@qmqm.qmqm.pl>
- <CALOAHbAP5qhKjsgwhekcDcutWpHMsxxGfB+K1-=2RyOyJt9MeQ@mail.gmail.com>
+        Sat, 6 Nov 2021 09:50:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51986 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230089AbhKFNuR (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Sat, 6 Nov 2021 09:50:17 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 494C0C061714
+        for <linux-perf-users@vger.kernel.org>; Sat,  6 Nov 2021 06:47:35 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id o6-20020a17090a0a0600b001a64b9a11aeso5377583pjo.3
+        for <linux-perf-users@vger.kernel.org>; Sat, 06 Nov 2021 06:47:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=cpPMO+oyCgCm4JMMdEnYJQPJnzv6BIKAi1V6GfI7xUA=;
+        b=v5mEqjJBFLHCL2H+vbyoD8h7c/OK8u2x6BVSkvfTVJu2ym+Q1oFfJyqYW8sMjBad43
+         kionLzcQfNSHLC2FS4WKmExtY3u94h1UxFEoG31S5PGm4dwKBr/UHQzUBKKgOVeDpTxF
+         MKbmAV9lKcbFa16+vWA8VNm2BepL2dFZeIestYmLslUYhppFZJw+CsZKwH2tDxWTDMgL
+         nq3c85j3bgjYnfwD3S0SCIaewLjVoGj6PUJZ6fH2aTOTeAbaUD9O9CDM20QpgqO558Vz
+         5BT4xeR0D7aFQoN+ari7JJG0xcUR6Z7baIgHVKFmjxKdIStEhP1sK+SjkMlUSS75lew6
+         HBug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cpPMO+oyCgCm4JMMdEnYJQPJnzv6BIKAi1V6GfI7xUA=;
+        b=iTAG5CCs2aEuppnHz2j/X5tq6GjS/JPGHXswKmbXJnRv1EBjH3eqPKz8ATXOP+IxwD
+         15RTbuKL/pY1WNU83YGxRcIJ+/UngWjgexGOsJs7n3UlHEggtxZNrhdGQDXCW529p7e4
+         adBX8Cd203h9yo6Mea0794I+bF8JRXmFKgWR51WQLtY7v6jTLFtSA7SJNyulhDvLyMC4
+         oxPlHRebzGohRCXbY5wfCvoYfFH0oDC3f1hrwlxM7UCFoLTdYz45UQwqkF6jLHCPamrS
+         qi6lU29tynP3/z9CnALcklZROruWIqoaFWK3HKW8DY6Zoh2gB2twRTZDjbbJFL5+r3SX
+         M/gw==
+X-Gm-Message-State: AOAM532wGig+31WZ2xpY/n0Q0fHoTEhLMGXH/5YCd6HMu+tPgS72ZDeL
+        4y8VVxS6rNawDtZGkgBUq1BliA==
+X-Google-Smtp-Source: ABdhPJwwtrmOcgNOnynP3D3Y+zgQzsZtX6gLsQWCWXog4kHLg3MsIDrrLiQxzOeYTDuq2Q3OLwekdw==
+X-Received: by 2002:a17:90a:408f:: with SMTP id l15mr37664768pjg.34.1636206453806;
+        Sat, 06 Nov 2021 06:47:33 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([134.195.101.46])
+        by smtp.gmail.com with ESMTPSA id z2sm11005889pfh.135.2021.11.06.06.47.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 06 Nov 2021 06:47:33 -0700 (PDT)
+Date:   Sat, 6 Nov 2021 21:47:25 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     German Gomez <german.gomez@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, James Clark <james.clark@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/3] perf arm-spe: Save context ID in record
+Message-ID: <20211106134725.GI477387@leoy-ThinkPad-X240s>
+References: <20211102180739.18049-1-german.gomez@arm.com>
+ <20211102180739.18049-3-german.gomez@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALOAHbAP5qhKjsgwhekcDcutWpHMsxxGfB+K1-=2RyOyJt9MeQ@mail.gmail.com>
+In-Reply-To: <20211102180739.18049-3-german.gomez@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Nov 06, 2021 at 05:12:24PM +0800, Yafang Shao wrote:
-> On Sat, Nov 6, 2021 at 7:57 AM Micha³ Miros³aw <mirq-linux@rere.qmqm.pl> wrote:
-> >
-> > On Fri, Nov 05, 2021 at 02:34:58PM +0800, Yafang Shao wrote:
-> > > On Thu, Nov 4, 2021 at 9:37 AM Micha³ Miros³aw <mirq-linux@rere.qmqm.pl> wrote:
-> > > >
-> > > > On Mon, Nov 01, 2021 at 06:04:08AM +0000, Yafang Shao wrote:
-> > > > > There're many truncated kthreads in the kernel, which may make trouble
-> > > > > for the user, for example, the user can't get detailed device
-> > > > > information from the task comm.
-> > > > >
-> > > > > This patchset tries to improve this problem fundamentally by extending
-> > > > > the task comm size from 16 to 24, which is a very simple way.
-> > > > [...]
-> > > >
-> > > > Hi,
-> > > >
-> > > > I've tried something like this a few years back. My attempt got mostly
-> > > > lost in the mailing lists, but I'm still carrying the patches in my
-> > > > tree [1]. My target was userspace thread names, and it turned out more
-> > > > involved than I had time for.
-> > > >
-> > > > [1] https://rere.qmqm.pl/git/?p=linux;a=commit;h=2c3814268caf2b1fee6d1a0b61fd1730ce135d4a
-> > > >     and its parents
-> > > >
-> > >
-> > > Hi Michal,
-> > >
-> > > Thanks for the information.
-> > >
-> > > I have looked through your patches.  It seems to contain six patches
-> > > now and can be divided into three parts per my understanding.
-> > >
-> > > 1. extend task comm len
-> > > This parts contains below 4 patches:
-> > > [prctl: prepare for bigger
-> > > TASK_COMM_LEN](https://rere.qmqm.pl/git/?p=linux;a=commit;h=cfd99db9cf911bb4d106889aeba1dfe89b6527d0)
-> > > [bluetooth: prepare for bigger
-> > > TASK_COMM_LEN](https://rere.qmqm.pl/git/?p=linux;a=commit;h=ba2805f5196865b81cc6fc938ea53af2c7c2c892)
-> > > [taskstats: prepare for bigger
-> > > TASK_COMM_LEN](https://rere.qmqm.pl/git/?p=linux;a=commit;h=4d29bfedc57b36607915a0171f4864ec504908ca)
-> > > [mm: make TASK_COMM_LEN
-> > > configurable](https://rere.qmqm.pl/git/?p=linux;a=commit;h=362acc35582445174589184c738c4d86ec7d174b)
-> > >
-> > > What kind of userspace issues makes you extend the task comm length ?
-> > > Why not just use /proc/[pid]/cmdline ?
-> >
-> > This was to enable longer thread names (as set by pthread_setname_np()).
-> > Currently its 16 bytes, and that's too short for e.g. Chrome's or Firefox'es
-> > threads. I believe that FreeBSD has 32-byte limit and so I expect that
-> > major portable code is already prepared for bigger thread names.
-> >
+On Tue, Nov 02, 2021 at 06:07:38PM +0000, German Gomez wrote:
+> This patch is to save context ID in record, this will be used to set TID
+> for samples.
 > 
-> The comm len in FreeBSD is (19 + 1) bytes[1], but that is still larger
-> than Linux :)
-> The task comm is short for many applications, that is why cmdline is
-> introduced per my understanding, but pthread_{set, get}name_np() is
-> reading/writing the comm or via prctl(2) rather than reading/writing
-> the cmdline...
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> Signed-off-by: James Clark <james.clark@arm.com>
+> Signed-off-by: German Gomez <german.gomez@arm.com>
+> ---
+>  tools/perf/util/arm-spe-decoder/arm-spe-decoder.c | 2 ++
+>  tools/perf/util/arm-spe-decoder/arm-spe-decoder.h | 1 +
+>  2 files changed, 3 insertions(+)
 > 
-> Is the truncated Chrome or Firefox thread comm really harmful or is
-> extending the task comm just for portable?
-> Could you pls show me some examples if the short comm is really harmful?
-> 
-> Per my understanding, if the short comm is harmful to applications
-> then it is worth extending it.
-> But if it is only for portable code, it may not be worth extending it.
-> 
-> [1]. https://github.com/freebsd/freebsd-src/blob/main/sys/sys/param.h#L126
+> diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+> index 32fe41835..1b58859d2 100644
+> --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+> @@ -151,6 +151,7 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
+>  	u64 payload, ip;
+>  
+>  	memset(&decoder->record, 0x0, sizeof(decoder->record));
+> +	decoder->record.context_id = -1;
 
-I don't think it is harmful as in exposing a bug or something. It's just
-inconvenient when debugging a system where you can't differentiate
-between threads because their names have been cut too short.
+Since 'context_id' is type u64, here it's good to assign '(u64)-1'.
 
-Best Regards
-Micha³ Miros³aw
+>  	while (1) {
+>  		err = arm_spe_get_next_packet(decoder);
+> @@ -180,6 +181,7 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
+>  		case ARM_SPE_COUNTER:
+>  			break;
+>  		case ARM_SPE_CONTEXT:
+> +			decoder->record.context_id = payload;
+>  			break;
+>  		case ARM_SPE_OP_TYPE:
+>  			if (idx == SPE_OP_PKT_HDR_CLASS_LD_ST_ATOMIC) {
+> diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+> index 59bdb7309..46a8556a9 100644
+> --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+> @@ -38,6 +38,7 @@ struct arm_spe_record {
+>  	u64 timestamp;
+>  	u64 virt_addr;
+>  	u64 phys_addr;
+> +	u64 context_id;
+>  };
+>  
+>  struct arm_spe_insn;
+> -- 
+> 2.25.1
+> 
