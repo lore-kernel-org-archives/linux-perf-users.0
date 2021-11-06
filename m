@@ -2,111 +2,158 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAABC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Nov 2021 04:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AFDC433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Nov 2021 05:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2113861139
-	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Nov 2021 04:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D5E261183
+	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Nov 2021 05:38:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230038AbhKFEWE (ORCPT
+        id S233126AbhKFFlF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 6 Nov 2021 00:22:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42218 "EHLO
+        Sat, 6 Nov 2021 01:41:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229967AbhKFEWE (ORCPT
+        with ESMTP id S232996AbhKFFlE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 6 Nov 2021 00:22:04 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41A5EC061714
-        for <linux-perf-users@vger.kernel.org>; Fri,  5 Nov 2021 21:19:23 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id w1so40082368edd.10
-        for <linux-perf-users@vger.kernel.org>; Fri, 05 Nov 2021 21:19:23 -0700 (PDT)
+        Sat, 6 Nov 2021 01:41:04 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA3CCC061714
+        for <linux-perf-users@vger.kernel.org>; Fri,  5 Nov 2021 22:38:23 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id f92-20020a25a465000000b005bea37bc0baso16915765ybi.5
+        for <linux-perf-users@vger.kernel.org>; Fri, 05 Nov 2021 22:38:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D8vFlpUznbXMyx/59K4Fs8dfFLIaAOhDqtSTgtxLO4w=;
-        b=CLUgto1Uw5PhScFMNxlMg+mLFoH2oJyTUpx9ZKIOtsBEQGHFkf+nYNv55tY7RJwDXB
-         mWhd1dXidWDEysPTUk7lxitXbu76Xe9UJTqn61J71kT/RSZ7c0/2HdqBOzddZc0UoR+O
-         juAMJwNTaRwcCAvasleIVeXRiaX1hZb41E2UY=
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=ZayAaJHcuA1bcDDOidW5iIDpwigbcsn41v2z+XbHtiI=;
+        b=SXDPhCPtzx39uuxzIlWZELOIKZv4gyA0EQdzsEQMDIkSv+kaeZ8NuPiA9pVw/3o1zX
+         N4554yb9P6B4XgLl4AzRwMSH3M3+DSh78fbX8hwQ4vOdJChFwJDdw1K2k0wr1MhLxxnI
+         UwlSMTmrzlt1jSqX7PDuUiNImN5B21a+MMMtxGWrzMJ3wziLW5ehyFdi0SIi9NldHJNy
+         dX8S0Q7jKBrO8TQJ8buTu0CQMSO6a01cPIIOPz/IpvNzQtQcV8lIi9k6lmUQ9UBsQWAh
+         KiOK4FuGdB7m7NmXXYyqBwiaw+fCchE362eog/yOYDJiQ1wyeztT/o465v5DLZhqsVHL
+         oQcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D8vFlpUznbXMyx/59K4Fs8dfFLIaAOhDqtSTgtxLO4w=;
-        b=oVGkrWDMiI3RCZhiFxg5qceDaamj227+2Cc8XBMI9L3fXsoRdlPxi9abbKa2x+HU6R
-         DJBHV+3eAUSOrFOY0ztJWaTOsBWkUoIjn1+IvID0J3KUS+ouXyg+GqSW22X9t1tZznPi
-         t9zbhjyOhvswygMrOAp9Cnv7nDq0HPZSYFUpzeEC2S6FEJ1HRrGbIuRSyOjPyBPIBlcO
-         U+1kK9q+TzC90wpgt0m5iCdxV1GlB8LdVRA20Fbez3hRGHFnwSRyasnqSZOMSyR0KJg5
-         OlX+F9yMa1rtdzmXbvgc3TitDBsYXwobQ4jsgLx/AI/hQ1IonD9DL8btLdDNOTiG9TQs
-         msQQ==
-X-Gm-Message-State: AOAM533Th2mpn6L1EbE27XhaTcAXFjdGItjLTDMG2ABPgUJWukNNLxyM
-        mvnO8oRVBKMjT4FjbyLDf66lajtGZ3ZANB0JfCirx7JjrmsNcg==
-X-Google-Smtp-Source: ABdhPJw5rtGG36uqtmsMWu916/Zpgaf0BqWezUaq8zx1ZP9rpY6kRTHC8FlIXzRblPppyMa5gH12t3vu9qhjendEnxc=
-X-Received: by 2002:a17:907:94c6:: with SMTP id dn6mr9990929ejc.490.1636172361775;
- Fri, 05 Nov 2021 21:19:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20211018134844.2627174-1-james.clark@arm.com> <20211018134844.2627174-4-james.clark@arm.com>
-In-Reply-To: <20211018134844.2627174-4-james.clark@arm.com>
-From:   Denis Nikitin <denik@chromium.org>
-Date:   Fri, 5 Nov 2021 21:19:10 -0700
-Message-ID: <CADDJ8CWoHb28JDjxq+ZtFVTUXQjhtFTszjeeXKx1WMue8zBp2A@mail.gmail.com>
-Subject: Re: [PATCH 3/3] perf inject: Add vmlinux and ignore-vmlinux arguments
-To:     James Clark <james.clark@arm.com>
-Cc:     acme@kernel.org, linux-perf-users@vger.kernel.org,
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=ZayAaJHcuA1bcDDOidW5iIDpwigbcsn41v2z+XbHtiI=;
+        b=FVG1CSdzveuLZnZIGmxqmYzYytt6r3lNAXj3txyjRvHkgWQjARU8qHkgN0u/r2mLF8
+         fCHDvoNqgp4cIYv3bh9xdrzCHJtqbhFrXwlqzkfVXMwEnXNTgfNbOhUM/7ks6lLj+8nZ
+         OVcD4DtgjZJqDZ5io8O5RKcdga3HVRAXl3Jc5JjJvEKmXY+4NlrkklNAhSlgzI3N7P7A
+         fPJ1voqddQYJK/bdfbNHK53pGgfRwpATQXCrBQywg9+kdpxytFIY47bzpgY0gScXQ84m
+         YbSGHR/6/Gw7DvrAoF89AQnG32j/YZHyRp7eQjfJjBlzABlHeMUfSY+QAua0wO5DvJ2R
+         N1/A==
+X-Gm-Message-State: AOAM530bPvk2+yl6bZ/6C3Pxi+IDuIbluuHyGQBCvFPcw1Ei34TjFwVX
+        98fQCoJKV0/0bk+lr6z4Sl2x+i1w04NM
+X-Google-Smtp-Source: ABdhPJzG9WMyFJYgNZwnoYHUb+JlLflaX6yIfrm7b3g1aUgL21oqFvCPOCOP5R/Jg7FyEJy7a49xsEAUjMTO
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:b70b:3e34:63e5:9e95])
+ (user=irogers job=sendgmr) by 2002:a25:2f13:: with SMTP id
+ v19mr69075829ybv.410.1636177103010; Fri, 05 Nov 2021 22:38:23 -0700 (PDT)
+Date:   Fri,  5 Nov 2021 22:37:32 -0700
+Message-Id: <20211106053733.3580931-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.34.0.rc0.344.g81b53c2807-goog
+Subject: [PATCH 1/2] perf bpf: Avoid memory leak from perf_env__insert_btf
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
+        Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        linux-perf-users@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Oct 18, 2021 at 6:49 AM James Clark <james.clark@arm.com> wrote:
->
-> Other perf tools allow specifying the path to vmlinux. Perf inject
-> didn't have this argument which made some auxtrace workflows difficult.
->
-> Also add ignore-vmlinux for consistency with other tools.
->
-> Suggested-by: Denis Nitikin <denik@chromium.org>
-> Signed-off-by: James Clark <james.clark@arm.com>
-> ---
->  tools/perf/builtin-inject.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> index 6ad191e731fc..4261ad89730f 100644
-> --- a/tools/perf/builtin-inject.c
-> +++ b/tools/perf/builtin-inject.c
-> @@ -938,6 +938,10 @@ int cmd_inject(int argc, const char **argv)
->  #endif
->                 OPT_INCR('v', "verbose", &verbose,
->                          "be more verbose (show build ids, etc)"),
-> +               OPT_STRING('k', "vmlinux", &symbol_conf.vmlinux_name,
-> +                          "file", "vmlinux pathname"),
-> +               OPT_BOOLEAN(0, "ignore-vmlinux", &symbol_conf.ignore_vmlinux,
-> +                           "don't load vmlinux even if found"),
+perf_env__insert_btf doesn't insert if a duplicate btf id is
+encountered and this causes a memory leak. Modify the function to return
+a success/error value and then free the memory if insertion didn't
+happen.
 
-I think we also need to update documentation at Documentation/perf-inject.txt
+Fixes: 3792cb2ff43b ("perf bpf: Save BTF in a rbtree in perf_env")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/bpf-event.c | 5 ++++-
+ tools/perf/util/env.c       | 5 ++++-
+ tools/perf/util/env.h       | 2 +-
+ 3 files changed, 9 insertions(+), 3 deletions(-)
 
->                 OPT_STRING(0, "kallsyms", &symbol_conf.kallsyms_name, "file",
->                            "kallsyms pathname"),
->                 OPT_BOOLEAN('f', "force", &data.force, "don't complain, do it"),
-> @@ -972,6 +976,9 @@ int cmd_inject(int argc, const char **argv)
->                 return -1;
->         }
->
-> +       if (symbol__validate_sym_arguments())
-> +               return -1;
-> +
->         if (inject.in_place_update) {
->                 if (!strcmp(inject.input_name, "-")) {
->                         pr_err("Input file name required for in-place updating\n");
-> --
-> 2.28.0
->
+diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+index 1a7112a87736..0783b464777a 100644
+--- a/tools/perf/util/bpf-event.c
++++ b/tools/perf/util/bpf-event.c
+@@ -120,7 +120,10 @@ static int perf_env__fetch_btf(struct perf_env *env,
+ 	node->data_size = data_size;
+ 	memcpy(node->data, data, data_size);
+ 
+-	perf_env__insert_btf(env, node);
++	if (!perf_env__insert_btf(env, node)) {
++		/* Insertion failed because of a duplicate. */
++		free(node);
++	}
+ 	return 0;
+ }
+ 
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index cf773f0dec38..5b24eb010336 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -74,12 +74,13 @@ struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
+ 	return node;
+ }
+ 
+-void perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
++bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
+ {
+ 	struct rb_node *parent = NULL;
+ 	__u32 btf_id = btf_node->id;
+ 	struct btf_node *node;
+ 	struct rb_node **p;
++	bool ret = true;
+ 
+ 	down_write(&env->bpf_progs.lock);
+ 	p = &env->bpf_progs.btfs.rb_node;
+@@ -93,6 +94,7 @@ void perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
+ 			p = &(*p)->rb_right;
+ 		} else {
+ 			pr_debug("duplicated btf %u\n", btf_id);
++			ret = false;
+ 			goto out;
+ 		}
+ 	}
+@@ -102,6 +104,7 @@ void perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
+ 	env->bpf_progs.btfs_cnt++;
+ out:
+ 	up_write(&env->bpf_progs.lock);
++	return ret;
+ }
+ 
+ struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id)
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index 1383876f72b3..163e5ec503a2 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -167,7 +167,7 @@ void perf_env__insert_bpf_prog_info(struct perf_env *env,
+ 				    struct bpf_prog_info_node *info_node);
+ struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
+ 							__u32 prog_id);
+-void perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
++bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
+ struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id);
+ 
+ int perf_env__numa_node(struct perf_env *env, int cpu);
+-- 
+2.34.0.rc0.344.g81b53c2807-goog
 
-Tested-by: Denis Nikitin <denik@chromium.org>
