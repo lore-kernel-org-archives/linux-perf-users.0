@@ -2,114 +2,108 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C138CC433F5
-	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Nov 2021 19:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B87C433F5
+	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Nov 2021 19:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92B5D6112D
-	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Nov 2021 19:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2D066112D
+	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Nov 2021 19:53:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230028AbhKFTy1 (ORCPT
+        id S233825AbhKFTzq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 6 Nov 2021 15:54:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51996 "EHLO mail.kernel.org"
+        Sat, 6 Nov 2021 15:55:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229727AbhKFTy0 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 6 Nov 2021 15:54:26 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C0B7160FC3;
-        Sat,  6 Nov 2021 19:51:44 +0000 (UTC)
+        id S229727AbhKFTzp (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Sat, 6 Nov 2021 15:55:45 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2C74A61054;
+        Sat,  6 Nov 2021 19:53:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636228305;
-        bh=t35dqCporb6l1Hvqc9QMrCIDcT/NqtO6bPxLBhFw+I8=;
+        s=k20201202; t=1636228384;
+        bh=qOGVHV2slOC5KIVm+e1qOM8RcHuz8RRw18Wkv9dHLGA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UYk0ZVmCxeIc/VzJ0Hk2VUQ7Odf4H+y3viYxMe0IQMMvfTfr5m2eSr/HUhIOOq9Yn
-         S2ee+sxZa8zZ+4ANUtcegB7eGERdGQTXIeAkwgQi7yJiKWH1nXigC1TMnjT6JwUT73
-         O+7yL2YL4YRNApHVpGkJGC2bHF9VZf+21u8/GubKUA7ncafEKKnO6NF5llOBjXUHrB
-         LdwQY/vPhlqM7vYdY+Ju9lxCOa4xc5cfweszUc4zWYVhK/IqZQd+N/l8jGik14+YRn
-         UWgx10oNq6ses775k+Bw33siE0KOe/ZaeES3olsMasq9iOn0IEGr26cqXp+8b8XU0s
-         XDWjivTHKjmtw==
+        b=YFcAv2qBwo6SX9n6aQ+4q0Uyjo7i879ialfqOLPD4spS8Sweh3QPkd0s7uMyrBzPc
+         KFVzmcJKhr1bl2YEelz/R+eA4nPyVqViwpSiPZ54170W2M11XXfqsXsiGh/0VlieI2
+         L8UUu19g47Wee1/lS59TkSVourVJbbWK4JFp3kNheT7hNrMf3Yb7elcRIfFZrqlgnx
+         JLt6LVLDUXmOlwxl9joReuVpC4buZFNl12rt+hHCmuD8nvjNrZvA72ugusnXvexe/F
+         sTQyaclbHzSzpfMJlDwqmY5wFXPcB9f3k6XFLKytIquuyt6QzlhkWxKsxT+GjJNTr8
+         YjQidxwULyKRQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 954A3410A1; Sat,  6 Nov 2021 16:51:42 -0300 (-03)
-Date:   Sat, 6 Nov 2021 16:51:42 -0300
+        id 38D31410A1; Sat,  6 Nov 2021 16:53:02 -0300 (-03)
+Date:   Sat, 6 Nov 2021 16:53:02 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+To:     Denis Nikitin <denik@chromium.org>
+Cc:     James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        eranian@google.com
-Subject: Re: [PATCH] perf metric: Fix memory leaks.
-Message-ID: <YYbczk5svUYrbIhQ@kernel.org>
-References: <20211105164657.3476647-1-irogers@google.com>
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] perf inject: Add vmlinux and ignore-vmlinux arguments
+Message-ID: <YYbdHl8GXosMn8rX@kernel.org>
+References: <20211018134844.2627174-1-james.clark@arm.com>
+ <20211018134844.2627174-4-james.clark@arm.com>
+ <CADDJ8CWoHb28JDjxq+ZtFVTUXQjhtFTszjeeXKx1WMue8zBp2A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211105164657.3476647-1-irogers@google.com>
+In-Reply-To: <CADDJ8CWoHb28JDjxq+ZtFVTUXQjhtFTszjeeXKx1WMue8zBp2A@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Nov 05, 2021 at 09:46:57AM -0700, Ian Rogers escreveu:
-> Certain error paths may leak memory as caught by address sanitizer.
-> Ensure this is cleaned up to make sure address/leak sanitizer is happy.
+Em Fri, Nov 05, 2021 at 09:19:10PM -0700, Denis Nikitin escreveu:
+> On Mon, Oct 18, 2021 at 6:49 AM James Clark <james.clark@arm.com> wrote:
+> >
+> > Other perf tools allow specifying the path to vmlinux. Perf inject
+> > didn't have this argument which made some auxtrace workflows difficult.
+> >
+> > Also add ignore-vmlinux for consistency with other tools.
+> >
+> > Suggested-by: Denis Nitikin <denik@chromium.org>
+> > Signed-off-by: James Clark <james.clark@arm.com>
+> > ---
+> >  tools/perf/builtin-inject.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >
+> > diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> > index 6ad191e731fc..4261ad89730f 100644
+> > --- a/tools/perf/builtin-inject.c
+> > +++ b/tools/perf/builtin-inject.c
+> > @@ -938,6 +938,10 @@ int cmd_inject(int argc, const char **argv)
+> >  #endif
+> >                 OPT_INCR('v', "verbose", &verbose,
+> >                          "be more verbose (show build ids, etc)"),
+> > +               OPT_STRING('k', "vmlinux", &symbol_conf.vmlinux_name,
+> > +                          "file", "vmlinux pathname"),
+> > +               OPT_BOOLEAN(0, "ignore-vmlinux", &symbol_conf.ignore_vmlinux,
+> > +                           "don't load vmlinux even if found"),
 > 
-> Fixes: 5ecd5a0c7d1c ("perf metrics: Modify setup and deduplication")
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/metricgroup.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
+> I think we also need to update documentation at Documentation/perf-inject.txt
+
+I can replicate what is in 'perf report' where this came from, will do
+it now.
+ 
+> >                 OPT_STRING(0, "kallsyms", &symbol_conf.kallsyms_name, "file",
+> >                            "kallsyms pathname"),
+> >                 OPT_BOOLEAN('f', "force", &data.force, "don't complain, do it"),
+> > @@ -972,6 +976,9 @@ int cmd_inject(int argc, const char **argv)
+> >                 return -1;
+> >         }
+> >
+> > +       if (symbol__validate_sym_arguments())
+> > +               return -1;
+> > +
+> >         if (inject.in_place_update) {
+> >                 if (!strcmp(inject.input_name, "-")) {
+> >                         pr_err("Input file name required for in-place updating\n");
+> > --
+> > 2.28.0
+> >
 > 
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index 4917e9704765..734d2ce94825 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -228,6 +228,7 @@ static void metric__free(struct metric *m)
->  	free(m->metric_refs);
->  	expr__ctx_free(m->pctx);
->  	free((char *)m->modifier);
-> +	evlist__delete(m->evlist);
->  	free(m);
->  }
->  
-> @@ -1352,6 +1353,14 @@ static int parse_ids(struct perf_pmu *fake_pmu, struct expr_parse_ctx *ids,
->  	*out_evlist = parsed_evlist;
->  	parsed_evlist = NULL;
->  err_out:
-> +	/*
-> +	 * Errors are generally cleaned up by printing, but parsing may succeed
-> +	 * with intermediate unused errors being recorded.
-> +	 */
-> +	free(parse_error.str);
-> +	free(parse_error.help);
-> +	free(parse_error.first_str);
-> +	free(parse_error.first_help);
+> Tested-by: Denis Nikitin <denik@chromium.org>
 
-Can't this be in a parse_events__free_errors() routine?
-
-- Arnaldo
-
->  	evlist__delete(parsed_evlist);
->  	strbuf_release(&events);
->  	return ret;
-> @@ -1481,8 +1490,10 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
->  	}
->  
->  
-> -	if (combined_evlist)
-> +	if (combined_evlist) {
->  		evlist__splice_list_tail(perf_evlist, &combined_evlist->core.entries);
-> +		evlist__delete(combined_evlist);
-> +	}
->  
->  	list_for_each_entry(m, &metric_list, nd) {
->  		if (m->evlist)
-> -- 
-> 2.34.0.rc0.344.g81b53c2807-goog
-
--- 
+Thanks,
 
 - Arnaldo
