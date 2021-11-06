@@ -2,103 +2,89 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38960C433F5
-	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Nov 2021 19:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1502EC4332F
+	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Nov 2021 19:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 124A861051
-	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Nov 2021 19:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E86D7611EF
+	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Nov 2021 19:48:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231820AbhKFTfa (ORCPT
+        id S234954AbhKFTut (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 6 Nov 2021 15:35:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47206 "EHLO mail.kernel.org"
+        Sat, 6 Nov 2021 15:50:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231531AbhKFTfa (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 6 Nov 2021 15:35:30 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 768EE610E9;
-        Sat,  6 Nov 2021 19:32:48 +0000 (UTC)
+        id S229727AbhKFTut (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Sat, 6 Nov 2021 15:50:49 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6706F6112D;
+        Sat,  6 Nov 2021 19:48:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636227168;
-        bh=P93O+SA047jbmBF1axixZgk787DKzkhZJ/kogxjr1uo=;
+        s=k20201202; t=1636228087;
+        bh=IdVT7GtyCMR4mfmk12mO3uhHDYgE7JCCf6WE6qE97KI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hyc0Ci3kxfMs5/vB62dPSdLOl6o7ErX7aW+7qJRJhWaecFsQ+gJxSF2nz+O7aFT8s
-         0Q2a0TctuQSxkbABqOt7JcLuX5afJb24q4apzuDCB9zpdqxyVQ7A+86QLingr2ZoSt
-         M/8zdYcLqD83OcUYotLS9vGp9j9UJJnsgQUtoefnGdbSxmU3y4dduHOIBxP0G4mfl7
-         stLmgDy+mXckNLe2ilBoY3PInLfG0+9HEfjbW9gw7O1Kr5I4NcZULcFFYTZos2YKU7
-         d348HNQ4d3y3CdlTADyEWWM6BlueWFCVbtBsvHIpfUkeFW9yQtTD5qUuhRGgrBPxmQ
-         HZjEvw8nVeQag==
+        b=QU+ZsP3x1VWA/TJJOQVHOmLnqzlskhiVnOU5TAvZL2bMiw3zOFSCv4PJQdsP1YTeL
+         CIJw43JESnanhHIlACmIrF4mixxlffx88fjrJ4Fadi6kRlzD909CjyDCGSzUUbTruH
+         sbiOodFllwwQhGm1lxHaOqJ1FGbx71E4SuaDC3Kbg60RYNtwnZipFubUYapqj8/8H7
+         aEJghCM9MQvcpAlyUoGDA+n6x1bLFl3gplLKO0wHXPfPLBv2af6kCn4Km0BE9RXKFH
+         YACiCyzw9D7DAmQr28q4mMnWDxTm/SQDRnNAc8EYgZRIqlrBFsLTj7GIiTXUeGL3rT
+         diyeoDK4iisoA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 04AF2410A1; Sat,  6 Nov 2021 16:32:45 -0300 (-03)
-Date:   Sat, 6 Nov 2021 16:32:45 -0300
+        id 549E4410A1; Sat,  6 Nov 2021 16:48:04 -0300 (-03)
+Date:   Sat, 6 Nov 2021 16:48:04 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        sumanthk@linux.ibm.com, jolsa@redhat.com, svens@linux.ibm.com,
-        gor@linux.ibm.com, hca@linux.ibm.com
-Subject: Re: [PATCH] perf/test: Test case 27 broken on s390 in linux-next
-Message-ID: <YYbYXT5O2KTxLAKC@kernel.org>
-References: <20211103155215.2941895-1-tmricht@linux.ibm.com>
+To:     James Clark <james.clark@arm.com>
+Cc:     Lexi Shao <shaolexi@huawei.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, qiuxi1@huawei.com, nixiaoming@huawei.com,
+        wangbing6@huawei.com
+Subject: Re: [PATCH] perf symbol: ignore $a/$d symbols for ARM modules
+Message-ID: <YYbb9Iz5Iix3JC/Q@kernel.org>
+References: <20211027095235.123358-1-shaolexi@huawei.com>
+ <0631949b-6cde-dee6-6a77-5b826938ce79@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211103155215.2941895-1-tmricht@linux.ibm.com>
+In-Reply-To: <0631949b-6cde-dee6-6a77-5b826938ce79@arm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Nov 03, 2021 at 04:52:15PM +0100, Thomas Richter escreveu:
-> Commit 10269a2ca2b08c ("perf test sample-parsing: Add endian test for struct branch_flags")
-> broke the test case 27 (Sample parsing) on s390 on linux-next tree:
+Em Thu, Oct 28, 2021 at 09:44:26AM +0100, James Clark escreveu:
+> 
+> 
+> On 27/10/2021 10:52, Lexi Shao wrote:
+> > On ARM machine, kernel symbols from modules can be resolved to $a
+> > instead of printing the actual symbol name. Ignore symbols starting with
+> > "$" when building kallsyms rbtree.
+> > 
+> > A sample stacktrace is shown as follows:
+> > 
+> > c0f2e39c schedule_hrtimeout+0x14 ([kernel.kallsyms])
+> > bf4a66d8 $a+0x78 ([test_module])
+> > c0a4f5f4 kthread+0x15c ([kernel.kallsyms])
+> > c0a001f8 ret_from_fork+0x14 ([kernel.kallsyms])
+> > 
+> > On ARM machine, $a/$d symbols are used by the compiler to mark the
+> > beginning of code/data part in code section. These symbols are filtered
+> > out when linking vmlinux(see scripts/kallsyms.c ignored_prefixes), but
+> > are left on modules. So there are $a symbols in /proc/kallsyms which
+> > share the same addresses with the actual module symbols and confuses perf
+> > when resolving symbols.
+> > 
+> > After this patch, the module symbol name is printed:
+> > 
+> > c0f2e39c schedule_hrtimeout+0x14 ([kernel.kallsyms])
+> > bf4a66d8 test_func+0x78 ([test_module])
+> > c0a4f5f4 kthread+0x15c ([kernel.kallsyms])
+> > c0a001f8 ret_from_fork+0x14 ([kernel.kallsyms])
+> > 
+> > Signed-off-by: Lexi Shao <shaolexi@huawei.com>
+> 
+> Reviewed-by: James Clark <james.clark@arm.com>
 
-Maddy,
-
-	Can you please ack this one?
+Thanks, applied.
 
 - Arnaldo
- 
->   # ./perf test -Fv 27
->   27: Sample parsing
->   --- start ---
->   parsing failed for sample_type 0x800
->   ---- end ----
->   Sample parsing: FAILED!
->   #
-> 
-> The cause of the failure is a wrong #define BS_EXPECTED_BE statement
-> in above commit.  Correct this define and the test case runs fine.
-> 
-> Output After:
->   # ./perf test -Fv 27
->   27: Sample parsing                                                  :
->   --- start ---
->   ---- end ----
->   Sample parsing: Ok
->   #
-> 
-> Fixes: 10269a2ca2b08c ("perf test sample-parsing: Add endian test for struct branch_flags")
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> ---
->  tools/perf/tests/sample-parsing.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/tests/sample-parsing.c b/tools/perf/tests/sample-parsing.c
-> index c83a11514129..9c7af55b74db 100644
-> --- a/tools/perf/tests/sample-parsing.c
-> +++ b/tools/perf/tests/sample-parsing.c
-> @@ -36,7 +36,7 @@
->   * These are based on the input value (213) specified
->   * in branch_stack variable.
->   */
-> -#define BS_EXPECTED_BE	0xa00d000000000000
-> +#define BS_EXPECTED_BE	0xa000d00000000000
->  #define BS_EXPECTED_LE	0xd5000000
->  #define FLAG(s)	s->branch_stack->entries[i].flags
->  
-> -- 
-> 2.25.1
 
--- 
-
-- Arnaldo
