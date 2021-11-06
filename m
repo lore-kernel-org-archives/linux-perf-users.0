@@ -2,358 +2,149 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED98C433F5
-	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Nov 2021 14:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 855A5C433F5
+	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Nov 2021 19:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D76B610E9
-	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Nov 2021 14:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 691DE61076
+	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Nov 2021 19:01:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232906AbhKFPAr (ORCPT
+        id S234846AbhKFTET (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 6 Nov 2021 11:00:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38986 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230122AbhKFPAr (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 6 Nov 2021 11:00:47 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07B49C061570
-        for <linux-perf-users@vger.kernel.org>; Sat,  6 Nov 2021 07:58:06 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id n36-20020a17090a5aa700b0019fa884ab85so5411412pji.5
-        for <linux-perf-users@vger.kernel.org>; Sat, 06 Nov 2021 07:58:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=MocImPNzBj/te/rH5DIhKsqDP9k0g3D8Pxj9skocwwQ=;
-        b=EIyULtb6dIuL82h9nB/PyTpo+Wrc4hNwD5mGr+oSH5pj9LH27gW2f0abd5pfoG3oi3
-         XuLOEVX2OVMhAZmLkledXYGCv37Y+0S50h4ZT/2cie5ZijVNUtiS8gxEQScFd7GqEfpV
-         sUAqwXC9k5QFMRSt/xFbfVbOzYnrMuuaNcUlVeJwcO2LOy9j/fovWGEy4/224kgGPBWW
-         v/WyrCuXlTG0LYtTg2mh6BSls7VzrClxcJk+ReSrT0fcC6yrHffqsVPlBjunL38ixk82
-         /LIvjAsz9uAvTezBsCpka0WjyopgL/20JmxdW7HvD4JEK7YrW+RZYquqkyD/4WkYsYxN
-         wCvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MocImPNzBj/te/rH5DIhKsqDP9k0g3D8Pxj9skocwwQ=;
-        b=t9tpzTT1XXgIvkCUjitCbWAnNPCvAkSPzUI4rKVoBCeMswk6BJ6iKYAg6CCAkFnz+n
-         J7XWhaVRJg6ch1DD6Do8srXTkoG2lzLOSh7wi0R3gORoV1HRT+Lsms6ozyhOk30VNpZU
-         YrELj5fGiHT5HawL+zbisyeLiCTchSGNydE2gm/x0rfem+CCRWLwpfl6EWhznox/2PSq
-         Uf0v047csHTJpQONluCElCAZnR76Y0mD4EG+C5CL+24dvH18LHHysk04e9j8TXWTeUWE
-         U27tQ6ReX4M+APHkwLCMyhGGKMk9NE5Gfo1lPolQGcLmK3zOIgUxhTiJKOlw/shNmHAs
-         auOg==
-X-Gm-Message-State: AOAM532DGRywzUBO17RGepCKDAv7v7cvNWOAnC22XLQsep67DpOWATOb
-        NAoKGQg+MuJdcfQZ1UrxbXasBQ==
-X-Google-Smtp-Source: ABdhPJz1w0bwOM+yxx8ucawI2qT9jc8DwbGefq+5B2DnoMYxgpMKTkJ7dr5XQW5ZcNpVkO3jMWb5Aw==
-X-Received: by 2002:a17:90a:a78f:: with SMTP id f15mr37971634pjq.106.1636210685240;
-        Sat, 06 Nov 2021 07:58:05 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([134.195.101.46])
-        by smtp.gmail.com with ESMTPSA id x2sm7713602pfd.144.2021.11.06.07.58.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Nov 2021 07:58:04 -0700 (PDT)
-Date:   Sat, 6 Nov 2021 22:57:58 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     German Gomez <german.gomez@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Sat, 6 Nov 2021 15:04:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52604 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232523AbhKFTES (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Sat, 6 Nov 2021 15:04:18 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D1C3261058;
+        Sat,  6 Nov 2021 19:01:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1636225297;
+        bh=gHiRP7T92ZrX+spwRw+xIdpGjcXe+C4gS84lei3bAXE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QWf3im/y0N/JbBKieGbxgCnRWbwO7L7qXY+xgCOev9tT7B4JvpDD1PlyWkgf9CUfN
+         IKRjIAkVj3v9hNpO8yqxxNAOjRSww+eKli1Gf/H1bOanbKlNnnKvS0rwXWlbypNQ+k
+         e4AYixfm6F7uOFxiO/Cc6KdVAPMbeK6vra3oNXgNakBw9H0VrWQY10A5R7TEXIM9Ol
+         qdsC37A12ATVR6fbLBK+1ePb11NnkO5S5g0UHxTZm8Qr92EuZBFrx75vnHJcvhuJvL
+         +/aJlJmJMOoISG5YvaBEqA/wtaLd6e47NWAHOA5Om++x/IewwTCNlK23tW1L0MK67G
+         dS2CLSvHJqrEQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 72C0F410A1; Sat,  6 Nov 2021 16:01:33 -0300 (-03)
+Date:   Sat, 6 Nov 2021 16:01:33 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>, Song Liu <songliubraving@fb.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/3] perf arm-spe: Support hardware-based PID tracing
-Message-ID: <20211106145758.GJ477387@leoy-ThinkPad-X240s>
-References: <20211102180739.18049-1-german.gomez@arm.com>
- <20211102180739.18049-4-german.gomez@arm.com>
+        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        linux-perf-users@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 1/2] perf bpf: Avoid memory leak from perf_env__insert_btf
+Message-ID: <YYbRDT6eknbL1DVd@kernel.org>
+References: <20211106053733.3580931-1-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211102180739.18049-4-german.gomez@arm.com>
+In-Reply-To: <20211106053733.3580931-1-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi German,
-
-On Tue, Nov 02, 2021 at 06:07:39PM +0000, German Gomez wrote:
-> If Arm SPE traces contain CONTEXT packets with PID info, use these
-> values for tracking pid of samples. Otherwise fall back to using context
-> switch events and display a message warning the user of possible timing
-> inaccuracies [1].
+Em Fri, Nov 05, 2021 at 10:37:32PM -0700, Ian Rogers escreveu:
+> perf_env__insert_btf doesn't insert if a duplicate btf id is
+> encountered and this causes a memory leak. Modify the function to return
+> a success/error value and then free the memory if insertion didn't
+> happen.
 > 
-> [1] https://lore.kernel.org/lkml/f877cfa6-9b25-6445-3806-ca44a4042eaf@arm.com/
-
-First of all, I'd like to clarify one thing:
-
-The pid/tid has been supported for 'per-thread' mode, the function
-arm_spe_process_timeless_queues() invokes arm_spe_set_pid_tid_cpu() to
-initialize 'speq->tid' and assign auxtrace_queue's tid to it.
-
-Thus, in this patch set we only need to consider support context packet
-for CPU wide tracing and system wide tracing.  The following comments
-are heavily based on this assumption.
-
-> Signed-off-by: German Gomez <german.gomez@arm.com>
+> Fixes: 3792cb2ff43b ("perf bpf: Save BTF in a rbtree in perf_env")
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/util/arm-spe.c | 123 ++++++++++++++++++++++++++++----------
->  1 file changed, 92 insertions(+), 31 deletions(-)
+>  tools/perf/util/bpf-event.c | 5 ++++-
+>  tools/perf/util/env.c       | 5 ++++-
+>  tools/perf/util/env.h       | 2 +-
+>  3 files changed, 9 insertions(+), 3 deletions(-)
 > 
-> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-> index 230bc7ab2..00a409469 100644
-> --- a/tools/perf/util/arm-spe.c
-> +++ b/tools/perf/util/arm-spe.c
-> @@ -71,6 +71,7 @@ struct arm_spe {
->  	u64				kernel_start;
+> diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+> index 1a7112a87736..0783b464777a 100644
+> --- a/tools/perf/util/bpf-event.c
+> +++ b/tools/perf/util/bpf-event.c
+> @@ -120,7 +120,10 @@ static int perf_env__fetch_btf(struct perf_env *env,
+>  	node->data_size = data_size;
+>  	memcpy(node->data, data, data_size);
 >  
->  	unsigned long			num_events;
-> +	u8				use_ctx_pkt_for_pid;
->  };
->  
->  struct arm_spe_queue {
-> @@ -226,6 +227,44 @@ static inline u8 arm_spe_cpumode(struct arm_spe *spe, u64 ip)
->  		PERF_RECORD_MISC_USER;
+> -	perf_env__insert_btf(env, node);
+> +	if (!perf_env__insert_btf(env, node)) {
+> +		/* Insertion failed because of a duplicate. */
+> +		free(node);
+> +	}
+>  	return 0;
+
+Shouldn't this error be propagated? Song?
+
+- Arnaldo
+
 >  }
 >  
-> +static void arm_spe_set_pid_tid_cpu(struct arm_spe *spe,
-> +				    struct auxtrace_queue *queue)
-> +{
-> +	struct arm_spe_queue *speq = queue->priv;
-> +	pid_t tid;
-> +
-> +	tid = machine__get_current_tid(spe->machine, speq->cpu);
-> +	if (tid != -1) {
-> +		speq->tid = tid;
-> +		thread__zput(speq->thread);
-> +	} else
-> +		speq->tid = queue->tid;
-> +
-> +	if ((!speq->thread) && (speq->tid != -1)) {
-> +		speq->thread = machine__find_thread(spe->machine, -1,
-> +						    speq->tid);
-> +	}
-> +
-> +	if (speq->thread) {
-> +		speq->pid = speq->thread->pid_;
-> +		if (queue->cpu == -1)
-> +			speq->cpu = speq->thread->cpu;
-> +	}
-> +}
-> +
-> +static int arm_spe_set_tid(struct arm_spe_queue *speq, pid_t tid)
-> +{
-> +	struct arm_spe *spe = speq->spe;
-> +	int err = machine__set_current_tid(spe->machine, speq->cpu, tid, tid);
-> +
-> +	if (err)
-> +		return err;
-> +
-> +	arm_spe_set_pid_tid_cpu(spe, &spe->queues.queue_array[speq->queue_nr]);
-> +
-> +	return 0;
-> +}
-> +
->  static void arm_spe_prep_sample(struct arm_spe *spe,
->  				struct arm_spe_queue *speq,
->  				union perf_event *event,
-> @@ -460,6 +499,13 @@ static int arm_spe_run_decoder(struct arm_spe_queue *speq, u64 *timestamp)
->  		 * can correlate samples between Arm SPE trace data and other
->  		 * perf events with correct time ordering.
->  		 */
-> +
-> +		if (spe->use_ctx_pkt_for_pid) {
-> +			ret = arm_spe_set_tid(speq, speq->decoder->record.context_id);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +
-
-If trace contains context packet, we can give it the priority.  So at
-here we can always update tid based on the latest context_id from the
-context packet.
-
-And for 'per thread' mode, we should not set pid/tid for it.  The
-reason is arm_spe_set_tid() will return error for 'per thread' mode,
-because the 'speq->cpu' is -1, so it cannot set tid/pid for CPU '-1'.
-
-And if we detect there have context packet is incoming, we should set
-the flag 'spe->use_ctx_pkt_for_pid' true.
-
-How about below code:
-
-        /* Update pid/tid info */
-        record = &speq->decoder->record;
-        if (!spe->timeless_decoding && record->context_id != (u64)-1) {
-                ret = arm_spe_set_tid(speq, record->context_id);
-                if (ret)
-                        return ret;
-
-                spe->use_ctx_pkt_for_pid = 1;
-        }
-
->  		ret = arm_spe_sample(speq);
->  		if (ret)
->  			return ret;
-> @@ -586,31 +632,6 @@ static bool arm_spe__is_timeless_decoding(struct arm_spe *spe)
->  	return timeless_decoding;
+> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+> index cf773f0dec38..5b24eb010336 100644
+> --- a/tools/perf/util/env.c
+> +++ b/tools/perf/util/env.c
+> @@ -74,12 +74,13 @@ struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
+>  	return node;
 >  }
 >  
-> -static void arm_spe_set_pid_tid_cpu(struct arm_spe *spe,
-> -				    struct auxtrace_queue *queue)
-> -{
-> -	struct arm_spe_queue *speq = queue->priv;
-> -	pid_t tid;
-> -
-> -	tid = machine__get_current_tid(spe->machine, speq->cpu);
-> -	if (tid != -1) {
-> -		speq->tid = tid;
-> -		thread__zput(speq->thread);
-> -	} else
-> -		speq->tid = queue->tid;
-> -
-> -	if ((!speq->thread) && (speq->tid != -1)) {
-> -		speq->thread = machine__find_thread(spe->machine, -1,
-> -						    speq->tid);
-> -	}
-> -
-> -	if (speq->thread) {
-> -		speq->pid = speq->thread->pid_;
-> -		if (queue->cpu == -1)
-> -			speq->cpu = speq->thread->cpu;
-> -	}
-> -}
-> -
->  static int arm_spe_process_queues(struct arm_spe *spe, u64 timestamp)
+> -void perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
+> +bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
 >  {
->  	unsigned int queue_nr;
-> @@ -641,7 +662,13 @@ static int arm_spe_process_queues(struct arm_spe *spe, u64 timestamp)
->  			ts = timestamp;
+>  	struct rb_node *parent = NULL;
+>  	__u32 btf_id = btf_node->id;
+>  	struct btf_node *node;
+>  	struct rb_node **p;
+> +	bool ret = true;
+>  
+>  	down_write(&env->bpf_progs.lock);
+>  	p = &env->bpf_progs.btfs.rb_node;
+> @@ -93,6 +94,7 @@ void perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
+>  			p = &(*p)->rb_right;
+>  		} else {
+>  			pr_debug("duplicated btf %u\n", btf_id);
+> +			ret = false;
+>  			goto out;
 >  		}
->  
-> -		arm_spe_set_pid_tid_cpu(spe, queue);
-> +		/*
-> +		 * Here we only consider PID tracking based on switch events.
-> +		 * For tracking based on CONTEXT packets, the pid is assigned in the function
-> +		 * arm_spe_run_decoder() in order to support timeless decoding.
-> +		 */
-> +		if (!spe->use_ctx_pkt_for_pid)
-> +			arm_spe_set_pid_tid_cpu(spe, queue);
-
-Yeah, this is right; if without context packet, we need to update thread
-context at this point.
-
-Could you refine the comment like something:
-
-"The switch events has set pid/tid in the machine's context, here we
-update the thread and pid/tid info for spe queue."
-
->  		ret = arm_spe_run_decoder(speq, &ts);
->  		if (ret < 0) {
-> @@ -740,8 +767,9 @@ static int arm_spe_process_event(struct perf_session *session,
->  		if (err)
->  			return err;
->  
-> -		if (event->header.type == PERF_RECORD_SWITCH_CPU_WIDE ||
-> -		    event->header.type == PERF_RECORD_SWITCH)
-> +		if (!spe->use_ctx_pkt_for_pid &&
-> +		    (event->header.type == PERF_RECORD_SWITCH_CPU_WIDE ||
-> +		     event->header.type == PERF_RECORD_SWITCH))
->
->  			err = arm_spe_context_switch(spe, event, sample);
 >  	}
->  
-> @@ -805,10 +833,16 @@ static int arm_spe_flush(struct perf_session *session __maybe_unused,
->  		return ret;
->  
->  	if (spe->timeless_decoding)
-> -		return arm_spe_process_timeless_queues(spe, -1,
-> +		ret = arm_spe_process_timeless_queues(spe, -1,
->  				MAX_TIMESTAMP - 1);
-> +	else
-> +		ret = arm_spe_process_queues(spe, MAX_TIMESTAMP);
->  
-> -	return arm_spe_process_queues(spe, MAX_TIMESTAMP);
-> +	if (!spe->use_ctx_pkt_for_pid)
-> +		ui__warning("Arm SPE CONTEXT packets not found in the traces.\n\n"
-> +			    "Matching of TIDs to SPE events could be inaccurate.\n\n");
-
-I think we only need to report the warning for no timeless case and
-it's not necessary to change code for timeless decoding, thus the
-change could be:
-
-        ret = arm_spe_process_queues(spe, MAX_TIMESTAMP);
-        if (!spe->use_ctx_pkt_for_pid)
-        ui__warning("Arm SPE CONTEXT packets not found in the traces.\n"
-                    "Matching of TIDs to SPE events could be inaccurate.\n");
-
-> +
+> @@ -102,6 +104,7 @@ void perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
+>  	env->bpf_progs.btfs_cnt++;
+>  out:
+>  	up_write(&env->bpf_progs.lock);
 > +	return ret;
 >  }
 >  
->  static void arm_spe_free_queue(void *priv)
-> @@ -1056,6 +1090,22 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
->  	return 0;
->  }
+>  struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id)
+> diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+> index 1383876f72b3..163e5ec503a2 100644
+> --- a/tools/perf/util/env.h
+> +++ b/tools/perf/util/env.h
+> @@ -167,7 +167,7 @@ void perf_env__insert_bpf_prog_info(struct perf_env *env,
+>  				    struct bpf_prog_info_node *info_node);
+>  struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
+>  							__u32 prog_id);
+> -void perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
+> +bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
+>  struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id);
 >  
-> +static bool arm_spe_is_ctx_pkt_enabled(struct arm_spe *spe)
-> +{
-> +	struct auxtrace_queues *queues = &spe->queues;
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < queues->nr_queues; i++) {
-> +		struct auxtrace_queue *queue = &spe->queues.queue_array[i];
-> +		struct arm_spe_queue *speq = queue->priv;
-> +
-> +		if (speq)
-> +			return speq->decoder->record.context_id != (u64) -1;
-> +	}
-> +
-> +	return false;
-> +}
-> +
->  int arm_spe_process_auxtrace_info(union perf_event *event,
->  				  struct perf_session *session)
->  {
-> @@ -1131,9 +1181,20 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
->  	if (err)
->  		goto err_free_queues;
->  
-> -	if (spe->queues.populated)
-> +	if (spe->queues.populated) {
->  		spe->data_queued = true;
->  
-> +		/*
-> +		 * Ensure the first record of every queue can be read in the function
-> +		 * arm_spe_is_ctx_pkt_enabled()
-> +		 */
-> +		err = arm_spe__update_queues(spe);
-> +		if (err)
-> +			goto err_free_queues;
-> +
-> +		spe->use_ctx_pkt_for_pid = arm_spe_is_ctx_pkt_enabled(spe);
-
-I don't think this change is needed.
-
-arm_spe__setup_queue() will start to decode and it returns back the
-first record; then function arm_spe_run_decoder() will check
-'record->context_id', if detect 'context_id' is not '-1' it will set
-'spe->use_ctx_pkt_for_pid' as true.
-
-So here we don't need to invoke arm_spe__update_queues().  And I have
-some concern that this might introduce other potential issue,
-especially the callback process_auxtrace_info() usually is only used
-for early initializatoin rather than trace data decoding.
-
-Thanks,
-Leo
-
-> +	}
-> +
->  	return 0;
->  
->  err_free_queues:
+>  int perf_env__numa_node(struct perf_env *env, int cpu);
 > -- 
-> 2.25.1
-> 
+> 2.34.0.rc0.344.g81b53c2807-goog
+
+-- 
+
+- Arnaldo
