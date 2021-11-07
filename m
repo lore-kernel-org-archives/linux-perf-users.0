@@ -2,56 +2,60 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF82BC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun,  7 Nov 2021 09:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 586E6C433FE
+	for <linux-perf-users@archiver.kernel.org>; Sun,  7 Nov 2021 09:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBF0D6103A
-	for <linux-perf-users@archiver.kernel.org>; Sun,  7 Nov 2021 09:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38661615E1
+	for <linux-perf-users@archiver.kernel.org>; Sun,  7 Nov 2021 09:00:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235001AbhKGJDA (ORCPT
+        id S233677AbhKGJDA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Sun, 7 Nov 2021 04:03:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46390 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233677AbhKGJC4 (ORCPT
+        with ESMTP id S234985AbhKGJC7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 7 Nov 2021 04:02:56 -0500
-Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FA9DC061714
-        for <linux-perf-users@vger.kernel.org>; Sun,  7 Nov 2021 01:00:13 -0800 (PST)
-Received: by mail-qv1-xf4a.google.com with SMTP id fn12-20020ad45d6c000000b003bd9c921c0eso10642142qvb.21
-        for <linux-perf-users@vger.kernel.org>; Sun, 07 Nov 2021 01:00:13 -0800 (PST)
+        Sun, 7 Nov 2021 04:02:59 -0500
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5624EC061746
+        for <linux-perf-users@vger.kernel.org>; Sun,  7 Nov 2021 01:00:17 -0800 (PST)
+Received: by mail-yb1-xb49.google.com with SMTP id b5-20020a25a205000000b005c2150fc181so20673256ybi.6
+        for <linux-perf-users@vger.kernel.org>; Sun, 07 Nov 2021 01:00:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=NnCuOenSD37oj37s/Y3BXZm5/PvvRkOXL/vssit1P/g=;
-        b=NA0a9OC2VjCjLSvLtUz/FcMbsTYDdxUHukSSHqpTcmkapKZ+4XtdgcRgcdUyqCjmdD
-         hnPw4Pq1Nma8VB9jD0FSKgGgNV2GNEgRIRbL2cMfRh7c/saqemXKcDmuAvz5qm5yVjT3
-         lVUtCPHT47uwTY5fJE8NUaAmupIGgRpR8aULc7T3lMCRtsb/YfJn1+zNObTzy5ch7s9W
-         +fywDt/XB6v/93dc9aJ+5HRpfUkGhLCeMnz82Jm6uwzffsg/vM5x2pbsEUYNsGllxQB5
-         YyNM3tvz9nTQttlBki3baCKANP0C9ZcEHFcvJKNjP+a4321rsg3meSY330x1UMz6gNw8
-         aQ4A==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=Wvb1Vmt7+glE9GKXoqOhDvJqXRAHcSiH1zjBbuAypD8=;
+        b=seOREBReA9oFXQHOsGzlnl/3sK9VbuFUMX94AfK9XDXiJwfEj9OCHDfN/kPw5L2wu9
+         Z0zNKsQeKjue6+dl7QSdK8yEnosZn1c4t9GCNmRmu+FZ3Mb/rxdG1u6NiEtXT8mWeCdG
+         /Lh8sPChKJfsojuHnMUWjR6OYQL9GH66xr1vBOaGYknmHJBQQyTEGue6OQ/dJWfeXw0C
+         TGPlVuXn9dj3mXWBePg+A6XSmWl9/vXsXFVUhnnMWmHis6M4HOZrUbYUH4A2DyvT/98C
+         +1TPJGxklum4Banr2YGan676iShAwrHI5uvKVyd2LboCqN23SnZfwVXSZ4/rSyLDRMP1
+         wo7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=NnCuOenSD37oj37s/Y3BXZm5/PvvRkOXL/vssit1P/g=;
-        b=2WsZSUlNG9jHuGvT76+6NIocsKF1OYydDGi1px6LtGKxciDwOUaleolYjpBAOKgKW4
-         oh2odXilz9RUD/iGWBSxYsXKyTJYv5uXpiv6l9TGjM3aJLWv++EAVUY7TvxcFkksXViE
-         vJ/mpbfFUdiU69ThCrqapQ8C+gp9i1OcOVuXij0bUTBbgKlsFQXamw1XLjHLCbSJ5YoG
-         57bme5Np/a/dhQtPcjM+8KqlkAVrrKuKV/dPHyY3Bz1DREa00UcQ6NdwKlTNbZw21whn
-         ifGaxRyMWHf0g/VjuHlyDw3j3nW//rya4McHTiXe97I7Fr0feFVJ0/sHovnxqbWLi0t0
-         v/Wg==
-X-Gm-Message-State: AOAM532EP7RjV/fsE2zYUaZbnlpkBSc00gFQrbrCbJE/D4TvsN7xrbto
-        Lne+roWd1Z/8oJps7FZAaNHdYwgd7kwE
-X-Google-Smtp-Source: ABdhPJzyplT1dNHEI/IFSYuWN5kSdEt8eCGJpUuWmNr5k12AEE5F16nl7/3va/6cBIbGEiVgn8LTZYB0diG8
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=Wvb1Vmt7+glE9GKXoqOhDvJqXRAHcSiH1zjBbuAypD8=;
+        b=znoqJi43AvDJvmqTrsODgC5unHX9DwKpHiecanJMQxypcBz3iH8GtILBG077DTBTtR
+         8fvOnGDu5bNquzvJlwoYsJNwhvPjGIFTpjoiw8rYL62C9mjHbo4jb1CzMjprKK5eLyZd
+         AmUFqJv0s9QRGdtLuDsIAAIxGSStXmuVBtXKcRSnn6JQIo9rkF6YjkMKZB0u6p8//hwS
+         L4kvJYl9QvrqdhqrbaQpCDiRvL/4s4J3lnAhNoYwbCizZ+BbzZVnq2hGWbYuCyFB/Rla
+         XLpdeFR2qXvl3KaEjwjdZm5XNMfsRqpxiyVJhs8epuigObHBiKTfhDc5XmOXaRJceP+L
+         m6GA==
+X-Gm-Message-State: AOAM530jEpeBd8TkMd4zL1xY9Mslw3d4IzXkN1uGd1iR0cfdyglF4dnh
+        OsrCYGsElSfOMoFB7DoRX/7YpbEZcl6z
+X-Google-Smtp-Source: ABdhPJwEbcrr+zzgSAnSauVDa0ryCBdRMtnvh9k4Ew4mf1SJ5PopUxmfNlH1J7E+Y6OXV87RhGvwTba/YQ6f
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:421f:fd78:d785:693a])
- (user=irogers job=sendgmr) by 2002:ac8:56f8:: with SMTP id
- 24mr74871062qtu.352.1636275612779; Sun, 07 Nov 2021 01:00:12 -0800 (PST)
-Date:   Sun,  7 Nov 2021 01:00:00 -0800
-Message-Id: <20211107090002.3784612-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:3341:: with SMTP id
+ z62mr60559194ybz.101.1636275616608; Sun, 07 Nov 2021 01:00:16 -0800 (PST)
+Date:   Sun,  7 Nov 2021 01:00:01 -0800
+In-Reply-To: <20211107090002.3784612-1-irogers@google.com>
+Message-Id: <20211107090002.3784612-2-irogers@google.com>
 Mime-Version: 1.0
+References: <20211107090002.3784612-1-irogers@google.com>
 X-Mailer: git-send-email 2.34.0.rc0.344.g81b53c2807-goog
-Subject: [PATCH v2 1/3] perf parse-events: Rename parse_events_error functions
+Subject: [PATCH v2 2/3] perf parse-event: Add init and exit to parse_event_error
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -68,509 +72,480 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Group error functions and name after the data type they manipulate.
+parse_events may succeed but leave string memory allocations reachable
+in the error. Add an init/exit that must be called to initialize and
+clean up the error. This fixes a leak in metricgroup parse_ids.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/bench/evlist-open-close.c |   2 +-
- tools/perf/builtin-stat.c            |  10 +--
- tools/perf/builtin-trace.c           |   2 +-
- tools/perf/tests/expand-cgroup.c     |   2 +-
- tools/perf/tests/parse-events.c      |   2 +-
- tools/perf/util/metricgroup.c        |   2 +-
- tools/perf/util/parse-events.c       | 116 +++++++++++++--------------
- tools/perf/util/parse-events.h       |   8 +-
- tools/perf/util/parse-events.y       |   4 +-
- tools/perf/util/pmu.c                |   8 +-
- 10 files changed, 78 insertions(+), 78 deletions(-)
+ tools/perf/arch/powerpc/util/kvm-stat.c |  3 +-
+ tools/perf/bench/evlist-open-close.c    |  6 ++--
+ tools/perf/builtin-stat.c               | 38 ++++++++++++++-----------
+ tools/perf/builtin-trace.c              | 17 +++++------
+ tools/perf/tests/backward-ring-buffer.c |  3 +-
+ tools/perf/tests/bpf.c                  |  3 +-
+ tools/perf/tests/expand-cgroup.c        |  2 ++
+ tools/perf/tests/parse-events.c         |  4 +--
+ tools/perf/tests/pmu-events.c           | 22 +++++++-------
+ tools/perf/tests/topology.c             |  2 ++
+ tools/perf/util/metricgroup.c           |  3 +-
+ tools/perf/util/parse-events.c          | 20 +++++++++----
+ tools/perf/util/parse-events.h          |  2 ++
+ 13 files changed, 74 insertions(+), 51 deletions(-)
 
-diff --git a/tools/perf/bench/evlist-open-close.c b/tools/perf/bench/evlist-open-close.c
-index 75a53919126b..3f9518936367 100644
---- a/tools/perf/bench/evlist-open-close.c
-+++ b/tools/perf/bench/evlist-open-close.c
-@@ -89,7 +89,7 @@ static struct evlist *bench__create_evlist(char *evstr)
+diff --git a/tools/perf/arch/powerpc/util/kvm-stat.c b/tools/perf/arch/powerpc/util/kvm-stat.c
+index 16510686c138..2a74bec15a3e 100644
+--- a/tools/perf/arch/powerpc/util/kvm-stat.c
++++ b/tools/perf/arch/powerpc/util/kvm-stat.c
+@@ -113,10 +113,11 @@ static int is_tracepoint_available(const char *str, struct evlist *evlist)
+ 	struct parse_events_error err;
+ 	int ret;
  
- 	ret = parse_events(evlist, evstr, &err);
- 	if (ret) {
--		parse_events_print_error(&err, evstr);
-+		parse_events_error__print(&err, evstr);
- 		pr_err("Run 'perf list' for a list of valid events\n");
- 		ret = 1;
- 		goto out_delete_evlist;
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index f0ecfda34ece..af447a179d84 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1782,7 +1782,7 @@ static int add_default_attributes(void)
- 					   &errinfo);
- 		if (err) {
- 			fprintf(stderr, "Cannot set up transaction events\n");
--			parse_events_print_error(&errinfo, transaction_attrs);
-+			parse_events_error__print(&errinfo, transaction_attrs);
- 			return -1;
- 		}
- 		return 0;
-@@ -1812,11 +1812,11 @@ static int add_default_attributes(void)
- 		} else {
- 			fprintf(stderr, "To measure SMI cost, it needs "
- 				"msr/aperf/, msr/smi/ and cpu/cycles/ support\n");
--			parse_events_print_error(&errinfo, smi_cost_attrs);
-+			parse_events_error__print(&errinfo, smi_cost_attrs);
- 			return -1;
- 		}
- 		if (err) {
--			parse_events_print_error(&errinfo, smi_cost_attrs);
-+			parse_events_error__print(&errinfo, smi_cost_attrs);
- 			fprintf(stderr, "Cannot set up SMI cost events\n");
- 			return -1;
- 		}
-@@ -1883,7 +1883,7 @@ static int add_default_attributes(void)
- 				fprintf(stderr,
- 					"Cannot set up top down events %s: %d\n",
- 					str, err);
--				parse_events_print_error(&errinfo, str);
-+				parse_events_error__print(&errinfo, str);
- 				free(str);
- 				return -1;
- 			}
-@@ -1911,7 +1911,7 @@ static int add_default_attributes(void)
- 				fprintf(stderr,
- 					"Cannot set up hybrid events %s: %d\n",
- 					hybrid_str, err);
--				parse_events_print_error(&errinfo, hybrid_str);
-+				parse_events_error__print(&errinfo, hybrid_str);
- 				return -1;
- 			}
- 			return err;
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 2f1d20553a0a..7f0acc94e9ac 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -4928,7 +4928,7 @@ int cmd_trace(int argc, const char **argv)
- 		bzero(&parse_err, sizeof(parse_err));
- 		err = parse_events(trace.evlist, trace.perfconfig_events, &parse_err);
- 		if (err) {
--			parse_events_print_error(&parse_err, trace.perfconfig_events);
-+			parse_events_error__print(&parse_err, trace.perfconfig_events);
- 			goto out;
- 		}
- 	}
-diff --git a/tools/perf/tests/expand-cgroup.c b/tools/perf/tests/expand-cgroup.c
-index aaad51aba12f..57b4c5f30324 100644
---- a/tools/perf/tests/expand-cgroup.c
-+++ b/tools/perf/tests/expand-cgroup.c
-@@ -128,7 +128,7 @@ static int expand_group_events(void)
- 	if (ret < 0) {
- 		pr_debug("failed to parse event '%s', err %d, str '%s'\n",
- 			 event_str, ret, err.str);
--		parse_events_print_error(&err, event_str);
-+		parse_events_error__print(&err, event_str);
- 		goto out;
- 	}
- 
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 8875e388563e..e200af986613 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -2059,7 +2059,7 @@ static int test_event(struct evlist_test *e)
- 	if (ret) {
- 		pr_debug("failed to parse event '%s', err %d, str '%s'\n",
- 			 e->name, ret, err.str);
--		parse_events_print_error(&err, e->name);
-+		parse_events_error__print(&err, e->name);
- 	} else {
- 		ret = e->check(evlist);
- 	}
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 4917e9704765..edd7180b24e4 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -1342,7 +1342,7 @@ static int parse_ids(struct perf_pmu *fake_pmu, struct expr_parse_ctx *ids,
- 	bzero(&parse_error, sizeof(parse_error));
- 	ret = __parse_events(parsed_evlist, events.buf, &parse_error, fake_pmu);
- 	if (ret) {
--		parse_events_print_error(&parse_error, events.buf);
-+		parse_events_error__print(&parse_error, events.buf);
- 		goto err_out;
- 	}
- 	ret = decode_all_metric_ids(parsed_evlist, modifier);
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 278199ed788b..75cafb9a0720 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -191,39 +191,6 @@ static int tp_event_has_id(const char *dir_path, struct dirent *evt_dir)
- 
- #define MAX_EVENT_LENGTH 512
- 
--void parse_events__handle_error(struct parse_events_error *err, int idx,
--				char *str, char *help)
--{
--	if (WARN(!str, "WARNING: failed to provide error string\n")) {
--		free(help);
--		return;
--	}
--	switch (err->num_errors) {
--	case 0:
--		err->idx = idx;
--		err->str = str;
--		err->help = help;
--		break;
--	case 1:
--		err->first_idx = err->idx;
--		err->idx = idx;
--		err->first_str = err->str;
--		err->str = str;
--		err->first_help = err->help;
--		err->help = help;
--		break;
--	default:
--		pr_debug("Multiple errors dropping message: %s (%s)\n",
--			err->str, err->help);
--		free(err->str);
--		err->str = str;
--		free(err->help);
--		err->help = help;
--		break;
--	}
--	err->num_errors++;
--}
--
- struct tracepoint_path *tracepoint_id_to_path(u64 config)
- {
- 	struct tracepoint_path *path = NULL;
-@@ -587,7 +554,7 @@ static void tracepoint_error(struct parse_events_error *e, int err,
- 	}
- 
- 	tracing_path__strerror_open_tp(err, help, sizeof(help), sys, name);
--	parse_events__handle_error(e, 0, strdup(str), strdup(help));
-+	parse_events_error__handle(e, 0, strdup(str), strdup(help));
- }
- 
- static int add_tracepoint(struct list_head *list, int *idx,
-@@ -811,7 +778,7 @@ int parse_events_load_bpf_obj(struct parse_events_state *parse_state,
- 
- 	return 0;
- errout:
--	parse_events__handle_error(parse_state->error, 0,
-+	parse_events_error__handle(parse_state->error, 0,
- 				strdup(errbuf), strdup("(add -v to see detail)"));
- 	return err;
- }
-@@ -831,7 +798,7 @@ parse_events_config_bpf(struct parse_events_state *parse_state,
- 		int err;
- 
- 		if (term->type_term != PARSE_EVENTS__TERM_TYPE_USER) {
--			parse_events__handle_error(parse_state->error, term->err_term,
-+			parse_events_error__handle(parse_state->error, term->err_term,
- 						strdup("Invalid config term for BPF object"),
- 						NULL);
- 			return -EINVAL;
-@@ -851,7 +818,7 @@ parse_events_config_bpf(struct parse_events_state *parse_state,
- 			else
- 				idx = term->err_term + error_pos;
- 
--			parse_events__handle_error(parse_state->error, idx,
-+			parse_events_error__handle(parse_state->error, idx,
- 						strdup(errbuf),
- 						strdup(
- "Hint:\tValid config terms:\n"
-@@ -923,7 +890,7 @@ int parse_events_load_bpf(struct parse_events_state *parse_state,
- 						   -err, errbuf,
- 						   sizeof(errbuf));
- 
--		parse_events__handle_error(parse_state->error, 0,
-+		parse_events_error__handle(parse_state->error, 0,
- 					strdup(errbuf), strdup("(add -v to see detail)"));
- 		return err;
- 	}
-@@ -947,7 +914,7 @@ int parse_events_load_bpf_obj(struct parse_events_state *parse_state,
- 			      struct bpf_object *obj __maybe_unused,
- 			      struct list_head *head_config __maybe_unused)
- {
--	parse_events__handle_error(parse_state->error, 0,
-+	parse_events_error__handle(parse_state->error, 0,
- 				   strdup("BPF support is not compiled"),
- 				   strdup("Make sure libbpf-devel is available at build time."));
- 	return -ENOTSUP;
-@@ -959,7 +926,7 @@ int parse_events_load_bpf(struct parse_events_state *parse_state,
- 			  bool source __maybe_unused,
- 			  struct list_head *head_config __maybe_unused)
- {
--	parse_events__handle_error(parse_state->error, 0,
-+	parse_events_error__handle(parse_state->error, 0,
- 				   strdup("BPF support is not compiled"),
- 				   strdup("Make sure libbpf-devel is available at build time."));
- 	return -ENOTSUP;
-@@ -1042,7 +1009,7 @@ static int check_type_val(struct parse_events_term *term,
- 		return 0;
- 
- 	if (err) {
--		parse_events__handle_error(err, term->err_val,
-+		parse_events_error__handle(err, term->err_val,
- 					type == PARSE_EVENTS__TERM_TYPE_NUM
- 					? strdup("expected numeric value")
- 					: strdup("expected string value"),
-@@ -1087,7 +1054,7 @@ config_term_avail(int term_type, struct parse_events_error *err)
- 	char *err_str;
- 
- 	if (term_type < 0 || term_type >= __PARSE_EVENTS__TERM_TYPE_NR) {
--		parse_events__handle_error(err, -1,
-+		parse_events_error__handle(err, -1,
- 					strdup("Invalid term_type"), NULL);
- 		return false;
- 	}
-@@ -1110,7 +1077,7 @@ config_term_avail(int term_type, struct parse_events_error *err)
- 		/* term_type is validated so indexing is safe */
- 		if (asprintf(&err_str, "'%s' is not usable in 'perf stat'",
- 				config_term_names[term_type]) >= 0)
--			parse_events__handle_error(err, -1, err_str, NULL);
-+			parse_events_error__handle(err, -1, err_str, NULL);
- 		return false;
- 	}
- }
-@@ -1154,7 +1121,7 @@ do {									   \
- 		if (strcmp(term->val.str, "no") &&
- 		    parse_branch_str(term->val.str,
- 				    &attr->branch_sample_type)) {
--			parse_events__handle_error(err, term->err_val,
-+			parse_events_error__handle(err, term->err_val,
- 					strdup("invalid branch sample type"),
- 					NULL);
- 			return -EINVAL;
-@@ -1163,7 +1130,7 @@ do {									   \
- 	case PARSE_EVENTS__TERM_TYPE_TIME:
- 		CHECK_TYPE_VAL(NUM);
- 		if (term->val.num > 1) {
--			parse_events__handle_error(err, term->err_val,
-+			parse_events_error__handle(err, term->err_val,
- 						strdup("expected 0 or 1"),
- 						NULL);
- 			return -EINVAL;
-@@ -1202,7 +1169,7 @@ do {									   \
- 	case PARSE_EVENTS__TERM_TYPE_PERCORE:
- 		CHECK_TYPE_VAL(NUM);
- 		if ((unsigned int)term->val.num > 1) {
--			parse_events__handle_error(err, term->err_val,
-+			parse_events_error__handle(err, term->err_val,
- 						strdup("expected 0 or 1"),
- 						NULL);
- 			return -EINVAL;
-@@ -1214,14 +1181,14 @@ do {									   \
- 	case PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE:
- 		CHECK_TYPE_VAL(NUM);
- 		if (term->val.num > UINT_MAX) {
--			parse_events__handle_error(err, term->err_val,
-+			parse_events_error__handle(err, term->err_val,
- 						strdup("too big"),
- 						NULL);
- 			return -EINVAL;
- 		}
- 		break;
- 	default:
--		parse_events__handle_error(err, term->err_term,
-+		parse_events_error__handle(err, term->err_term,
- 				strdup("unknown term"),
- 				parse_events_formats_error_string(NULL));
- 		return -EINVAL;
-@@ -1275,7 +1242,7 @@ static int config_term_tracepoint(struct perf_event_attr *attr,
- 		return config_term_common(attr, term, err);
- 	default:
- 		if (err) {
--			parse_events__handle_error(err, term->err_term,
-+			parse_events_error__handle(err, term->err_term,
- 				strdup("unknown term"),
- 				strdup("valid terms: call-graph,stack-size\n"));
- 		}
-@@ -1574,7 +1541,7 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
- 		if (asprintf(&err_str,
- 				"Cannot find PMU `%s'. Missing kernel support?",
- 				name) >= 0)
--			parse_events__handle_error(err, 0, err_str, NULL);
-+			parse_events_error__handle(err, 0, err_str, NULL);
- 		return -EINVAL;
- 	}
- 
-@@ -2334,6 +2301,39 @@ int __parse_events(struct evlist *evlist, const char *str,
+-	bzero(&err, sizeof(err));
++	parse_events_error__init(&err);
+ 	ret = parse_events(evlist, str, &err);
+ 	if (err.str)
+ 		parse_events_print_error(&err, "tracepoint");
++	parse_events_error__exit(&err);
  	return ret;
  }
  
-+void parse_events_error__handle(struct parse_events_error *err, int idx,
-+				char *str, char *help)
+diff --git a/tools/perf/bench/evlist-open-close.c b/tools/perf/bench/evlist-open-close.c
+index 3f9518936367..482738e9bdad 100644
+--- a/tools/perf/bench/evlist-open-close.c
++++ b/tools/perf/bench/evlist-open-close.c
+@@ -78,7 +78,7 @@ static int evlist__count_evsel_fds(struct evlist *evlist)
+ 
+ static struct evlist *bench__create_evlist(char *evstr)
+ {
+-	struct parse_events_error err = { .idx = 0, };
++	struct parse_events_error err;
+ 	struct evlist *evlist = evlist__new();
+ 	int ret;
+ 
+@@ -87,14 +87,16 @@ static struct evlist *bench__create_evlist(char *evstr)
+ 		return NULL;
+ 	}
+ 
++	parse_events_error__init(&err);
+ 	ret = parse_events(evlist, evstr, &err);
+ 	if (ret) {
+ 		parse_events_error__print(&err, evstr);
++		parse_events_error__exit(&err);
+ 		pr_err("Run 'perf list' for a list of valid events\n");
+ 		ret = 1;
+ 		goto out_delete_evlist;
+ 	}
+-
++	parse_events_error__exit(&err);
+ 	ret = evlist__create_maps(evlist, &opts.target);
+ 	if (ret < 0) {
+ 		pr_err("Not enough memory to create thread/cpu maps\n");
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index af447a179d84..7974933dbc77 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1750,14 +1750,12 @@ static int add_default_attributes(void)
+ 	(PERF_COUNT_HW_CACHE_OP_PREFETCH	<<  8) |
+ 	(PERF_COUNT_HW_CACHE_RESULT_MISS	<< 16)				},
+ };
+-	struct parse_events_error errinfo;
+-
+ 	/* Set attrs if no event is selected and !null_run: */
+ 	if (stat_config.null_run)
+ 		return 0;
+ 
+-	bzero(&errinfo, sizeof(errinfo));
+ 	if (transaction_run) {
++		struct parse_events_error errinfo;
+ 		/* Handle -T as -M transaction. Once platform specific metrics
+ 		 * support has been added to the json files, all architectures
+ 		 * will use this approach. To determine transaction support
+@@ -1772,6 +1770,7 @@ static int add_default_attributes(void)
+ 							 &stat_config.metric_events);
+ 		}
+ 
++		parse_events_error__init(&errinfo);
+ 		if (pmu_have_event("cpu", "cycles-ct") &&
+ 		    pmu_have_event("cpu", "el-start"))
+ 			err = parse_events(evsel_list, transaction_attrs,
+@@ -1783,12 +1782,13 @@ static int add_default_attributes(void)
+ 		if (err) {
+ 			fprintf(stderr, "Cannot set up transaction events\n");
+ 			parse_events_error__print(&errinfo, transaction_attrs);
+-			return -1;
+ 		}
+-		return 0;
++		parse_events_error__exit(&errinfo);
++		return err ? -1 : 0;
+ 	}
+ 
+ 	if (smi_cost) {
++		struct parse_events_error errinfo;
+ 		int smi;
+ 
+ 		if (sysfs__read_int(FREEZE_ON_SMI_PATH, &smi) < 0) {
+@@ -1804,23 +1804,23 @@ static int add_default_attributes(void)
+ 			smi_reset = true;
+ 		}
+ 
+-		if (pmu_have_event("msr", "aperf") &&
+-		    pmu_have_event("msr", "smi")) {
+-			if (!force_metric_only)
+-				stat_config.metric_only = true;
+-			err = parse_events(evsel_list, smi_cost_attrs, &errinfo);
+-		} else {
++		if (!pmu_have_event("msr", "aperf") ||
++		    !pmu_have_event("msr", "smi")) {
+ 			fprintf(stderr, "To measure SMI cost, it needs "
+ 				"msr/aperf/, msr/smi/ and cpu/cycles/ support\n");
+-			parse_events_error__print(&errinfo, smi_cost_attrs);
+ 			return -1;
+ 		}
++		if (!force_metric_only)
++			stat_config.metric_only = true;
++
++		parse_events_error__init(&errinfo);
++		err = parse_events(evsel_list, smi_cost_attrs, &errinfo);
+ 		if (err) {
+ 			parse_events_error__print(&errinfo, smi_cost_attrs);
+ 			fprintf(stderr, "Cannot set up SMI cost events\n");
+-			return -1;
+ 		}
+-		return 0;
++		parse_events_error__exit(&errinfo);
++		return err ? -1 : 0;
+ 	}
+ 
+ 	if (topdown_run) {
+@@ -1875,18 +1875,22 @@ static int add_default_attributes(void)
+ 			return -1;
+ 		}
+ 		if (topdown_attrs[0] && str) {
++			struct parse_events_error errinfo;
+ 			if (warn)
+ 				arch_topdown_group_warn();
+ setup_metrics:
++			parse_events_error__init(&errinfo);
+ 			err = parse_events(evsel_list, str, &errinfo);
+ 			if (err) {
+ 				fprintf(stderr,
+ 					"Cannot set up top down events %s: %d\n",
+ 					str, err);
+ 				parse_events_error__print(&errinfo, str);
++				parse_events_error__exit(&errinfo);
+ 				free(str);
+ 				return -1;
+ 			}
++			parse_events_error__exit(&errinfo);
+ 		} else {
+ 			fprintf(stderr, "System does not support topdown\n");
+ 			return -1;
+@@ -1896,6 +1900,7 @@ static int add_default_attributes(void)
+ 
+ 	if (!evsel_list->core.nr_entries) {
+ 		if (perf_pmu__has_hybrid()) {
++			struct parse_events_error errinfo;
+ 			const char *hybrid_str = "cycles,instructions,branches,branch-misses";
+ 
+ 			if (target__has_cpu(&target))
+@@ -1906,15 +1911,16 @@ static int add_default_attributes(void)
+ 				return -1;
+ 			}
+ 
++			parse_events_error__init(&errinfo);
+ 			err = parse_events(evsel_list, hybrid_str, &errinfo);
+ 			if (err) {
+ 				fprintf(stderr,
+ 					"Cannot set up hybrid events %s: %d\n",
+ 					hybrid_str, err);
+ 				parse_events_error__print(&errinfo, hybrid_str);
+-				return -1;
+ 			}
+-			return err;
++			parse_events_error__exit(&errinfo);
++			return err ? -1 : 0;
+ 		}
+ 
+ 		if (target__has_cpu(&target))
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 7f0acc94e9ac..624ea12ce5ca 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -3063,15 +3063,11 @@ static bool evlist__add_vfs_getname(struct evlist *evlist)
+ 	struct parse_events_error err;
+ 	int ret;
+ 
+-	bzero(&err, sizeof(err));
++	parse_events_error__init(&err);
+ 	ret = parse_events(evlist, "probe:vfs_getname*", &err);
+-	if (ret) {
+-		free(err.str);
+-		free(err.help);
+-		free(err.first_str);
+-		free(err.first_help);
++	parse_events_error__exit(&err);
++	if (ret)
+ 		return false;
+-	}
+ 
+ 	evlist__for_each_entry_safe(evlist, evsel, tmp) {
+ 		if (!strstarts(evsel__name(evsel), "probe:vfs_getname"))
+@@ -4925,12 +4921,13 @@ int cmd_trace(int argc, const char **argv)
+ 	if (trace.perfconfig_events != NULL) {
+ 		struct parse_events_error parse_err;
+ 
+-		bzero(&parse_err, sizeof(parse_err));
++		parse_events_error__init(&parse_err);
+ 		err = parse_events(trace.evlist, trace.perfconfig_events, &parse_err);
+-		if (err) {
++		if (err)
+ 			parse_events_error__print(&parse_err, trace.perfconfig_events);
++		parse_events_error__exit(&parse_err);
++		if (err)
+ 			goto out;
+-		}
+ 	}
+ 
+ 	if ((nr_cgroups || trace.cgroup) && !trace.opts.target.system_wide) {
+diff --git a/tools/perf/tests/backward-ring-buffer.c b/tools/perf/tests/backward-ring-buffer.c
+index b4b9a9488d51..7447a4478991 100644
+--- a/tools/perf/tests/backward-ring-buffer.c
++++ b/tools/perf/tests/backward-ring-buffer.c
+@@ -115,12 +115,13 @@ int test__backward_ring_buffer(struct test *test __maybe_unused, int subtest __m
+ 		goto out_delete_evlist;
+ 	}
+ 
+-	bzero(&parse_error, sizeof(parse_error));
++	parse_events_error__init(&parse_error);
+ 	/*
+ 	 * Set backward bit, ring buffer should be writing from end. Record
+ 	 * it in aux evlist
+ 	 */
+ 	err = parse_events(evlist, "syscalls:sys_enter_prctl/overwrite/", &parse_error);
++	parse_events_error__exit(&parse_error);
+ 	if (err) {
+ 		pr_debug("Failed to parse tracepoint event, try use root\n");
+ 		ret = TEST_SKIP;
+diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
+index fa03ff0dc083..2bf146e49ce8 100644
+--- a/tools/perf/tests/bpf.c
++++ b/tools/perf/tests/bpf.c
+@@ -123,12 +123,13 @@ static int do_test(struct bpf_object *obj, int (*func)(void),
+ 	struct parse_events_state parse_state;
+ 	struct parse_events_error parse_error;
+ 
+-	bzero(&parse_error, sizeof(parse_error));
++	parse_events_error__init(&parse_error);
+ 	bzero(&parse_state, sizeof(parse_state));
+ 	parse_state.error = &parse_error;
+ 	INIT_LIST_HEAD(&parse_state.list);
+ 
+ 	err = parse_events_load_bpf_obj(&parse_state, &parse_state.list, obj, NULL);
++	parse_events_error__exit(&parse_error);
+ 	if (err || list_empty(&parse_state.list)) {
+ 		pr_debug("Failed to add events selected by BPF\n");
+ 		return TEST_FAIL;
+diff --git a/tools/perf/tests/expand-cgroup.c b/tools/perf/tests/expand-cgroup.c
+index 57b4c5f30324..80cff8a3558c 100644
+--- a/tools/perf/tests/expand-cgroup.c
++++ b/tools/perf/tests/expand-cgroup.c
+@@ -124,6 +124,7 @@ static int expand_group_events(void)
+ 	evlist = evlist__new();
+ 	TEST_ASSERT_VAL("failed to get evlist", evlist);
+ 
++	parse_events_error__init(&err);
+ 	ret = parse_events(evlist, event_str, &err);
+ 	if (ret < 0) {
+ 		pr_debug("failed to parse event '%s', err %d, str '%s'\n",
+@@ -135,6 +136,7 @@ static int expand_group_events(void)
+ 	rblist__init(&metric_events);
+ 	ret = test_expand_events(evlist, &metric_events);
+ out:
++	parse_events_error__exit(&err);
+ 	evlist__delete(evlist);
+ 	return ret;
+ }
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index e200af986613..6af94639b14a 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -2045,7 +2045,6 @@ static int test_event(struct evlist_test *e)
+ 	struct evlist *evlist;
+ 	int ret;
+ 
+-	bzero(&err, sizeof(err));
+ 	if (e->valid && !e->valid()) {
+ 		pr_debug("... SKIP");
+ 		return 0;
+@@ -2055,6 +2054,7 @@ static int test_event(struct evlist_test *e)
+ 	if (evlist == NULL)
+ 		return -ENOMEM;
+ 
++	parse_events_error__init(&err);
+ 	ret = parse_events(evlist, e->name, &err);
+ 	if (ret) {
+ 		pr_debug("failed to parse event '%s', err %d, str '%s'\n",
+@@ -2063,7 +2063,7 @@ static int test_event(struct evlist_test *e)
+ 	} else {
+ 		ret = e->check(evlist);
+ 	}
+-
++	parse_events_error__exit(&err);
+ 	evlist__delete(evlist);
+ 
+ 	return ret;
+diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+index 50b1299fe643..9ae894c406d8 100644
+--- a/tools/perf/tests/pmu-events.c
++++ b/tools/perf/tests/pmu-events.c
+@@ -787,9 +787,11 @@ static int check_parse_id(const char *id, struct parse_events_error *error,
+ 
+ static int check_parse_cpu(const char *id, bool same_cpu, const struct pmu_event *pe)
+ {
+-	struct parse_events_error error = { .idx = 0, };
++	struct parse_events_error error;
++	int ret;
+ 
+-	int ret = check_parse_id(id, &error, NULL);
++	parse_events_error__init(&error);
++	ret = check_parse_id(id, &error, NULL);
+ 	if (ret && same_cpu) {
+ 		pr_warning("Parse event failed metric '%s' id '%s' expr '%s'\n",
+ 			pe->metric_name, id, pe->metric_expr);
+@@ -800,22 +802,18 @@ static int check_parse_cpu(const char *id, bool same_cpu, const struct pmu_event
+ 			  id, pe->metric_name, pe->metric_expr);
+ 		ret = 0;
+ 	}
+-	free(error.str);
+-	free(error.help);
+-	free(error.first_str);
+-	free(error.first_help);
++	parse_events_error__exit(&error);
+ 	return ret;
+ }
+ 
+ static int check_parse_fake(const char *id)
+ {
+-	struct parse_events_error error = { .idx = 0, };
+-	int ret = check_parse_id(id, &error, &perf_pmu__fake);
++	struct parse_events_error error;
++	int ret;
+ 
+-	free(error.str);
+-	free(error.help);
+-	free(error.first_str);
+-	free(error.first_help);
++	parse_events_error__init(&error);
++	ret = check_parse_id(id, &error, &perf_pmu__fake);
++	parse_events_error__exit(&error);
+ 	return ret;
+ }
+ 
+diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
+index b9028e304ddd..4574c46260d9 100644
+--- a/tools/perf/tests/topology.c
++++ b/tools/perf/tests/topology.c
+@@ -49,7 +49,9 @@ static int session_write_header(char *path)
+ 
+ 		session->evlist = evlist__new();
+ 		TEST_ASSERT_VAL("can't get evlist", session->evlist);
++		parse_events_error__init(&err);
+ 		parse_events(session->evlist, "cpu_core/cycles/", &err);
++		parse_events_error__exit(&err);
+ 	}
+ 
+ 	perf_header__set_feat(&session->header, HEADER_CPU_TOPOLOGY);
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index edd7180b24e4..1b43cbc1961d 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -1339,7 +1339,7 @@ static int parse_ids(struct perf_pmu *fake_pmu, struct expr_parse_ctx *ids,
+ 		goto err_out;
+ 	}
+ 	pr_debug("Parsing metric events '%s'\n", events.buf);
+-	bzero(&parse_error, sizeof(parse_error));
++	parse_events_error__init(&parse_error);
+ 	ret = __parse_events(parsed_evlist, events.buf, &parse_error, fake_pmu);
+ 	if (ret) {
+ 		parse_events_error__print(&parse_error, events.buf);
+@@ -1352,6 +1352,7 @@ static int parse_ids(struct perf_pmu *fake_pmu, struct expr_parse_ctx *ids,
+ 	*out_evlist = parsed_evlist;
+ 	parsed_evlist = NULL;
+ err_out:
++	parse_events_error__exit(&parse_error);
+ 	evlist__delete(parsed_evlist);
+ 	strbuf_release(&events);
+ 	return ret;
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 75cafb9a0720..5bfb6f892489 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -2301,6 +2301,19 @@ int __parse_events(struct evlist *evlist, const char *str,
+ 	return ret;
+ }
+ 
++void parse_events_error__init(struct parse_events_error *err)
 +{
-+	if (WARN(!str, "WARNING: failed to provide error string\n")) {
-+		free(help);
-+		return;
-+	}
-+	switch (err->num_errors) {
-+	case 0:
-+		err->idx = idx;
-+		err->str = str;
-+		err->help = help;
-+		break;
-+	case 1:
-+		err->first_idx = err->idx;
-+		err->idx = idx;
-+		err->first_str = err->str;
-+		err->str = str;
-+		err->first_help = err->help;
-+		err->help = help;
-+		break;
-+	default:
-+		pr_debug("Multiple errors dropping message: %s (%s)\n",
-+			err->str, err->help);
-+		free(err->str);
-+		err->str = str;
-+		free(err->help);
-+		err->help = help;
-+		break;
-+	}
-+	err->num_errors++;
++	bzero(err, sizeof(*err));
 +}
 +
- #define MAX_WIDTH 1000
- static int get_term_width(void)
++void parse_events_error__exit(struct parse_events_error *err)
++{
++	zfree(&err->str);
++	zfree(&err->help);
++	zfree(&err->first_str);
++	zfree(&err->first_help);
++}
++
+ void parse_events_error__handle(struct parse_events_error *err, int idx,
+ 				char *str, char *help)
  {
-@@ -2343,8 +2343,8 @@ static int get_term_width(void)
- 	return ws.ws_col > MAX_WIDTH ? MAX_WIDTH : ws.ws_col;
- }
- 
--static void __parse_events_print_error(int err_idx, const char *err_str,
--				const char *err_help, const char *event)
-+static void __parse_events_error__print(int err_idx, const char *err_str,
-+					const char *err_help, const char *event)
- {
- 	const char *str = "invalid or unsupported event: ";
- 	char _buf[MAX_WIDTH];
-@@ -2398,19 +2398,19 @@ static void __parse_events_print_error(int err_idx, const char *err_str,
- 	}
- }
- 
--void parse_events_print_error(struct parse_events_error *err,
--			      const char *event)
-+void parse_events_error__print(struct parse_events_error *err,
-+			       const char *event)
- {
- 	if (!err->num_errors)
+@@ -2405,15 +2418,11 @@ void parse_events_error__print(struct parse_events_error *err,
  		return;
  
--	__parse_events_print_error(err->idx, err->str, err->help, event);
-+	__parse_events_error__print(err->idx, err->str, err->help, event);
- 	zfree(&err->str);
- 	zfree(&err->help);
+ 	__parse_events_error__print(err->idx, err->str, err->help, event);
+-	zfree(&err->str);
+-	zfree(&err->help);
  
  	if (err->num_errors > 1) {
  		fputs("\nInitial error:\n", stderr);
--		__parse_events_print_error(err->first_idx, err->first_str,
-+		__parse_events_error__print(err->first_idx, err->first_str,
+ 		__parse_events_error__print(err->first_idx, err->first_str,
  					err->first_help, event);
- 		zfree(&err->first_str);
- 		zfree(&err->first_help);
-@@ -2430,7 +2430,7 @@ int parse_events_option(const struct option *opt, const char *str,
+-		zfree(&err->first_str);
+-		zfree(&err->first_help);
+ 	}
+ }
+ 
+@@ -2426,13 +2435,14 @@ int parse_events_option(const struct option *opt, const char *str,
+ 	struct parse_events_error err;
+ 	int ret;
+ 
+-	bzero(&err, sizeof(err));
++	parse_events_error__init(&err);
  	ret = parse_events(evlist, str, &err);
  
  	if (ret) {
--		parse_events_print_error(&err, str);
-+		parse_events_error__print(&err, str);
+ 		parse_events_error__print(&err, str);
  		fprintf(stderr, "Run 'perf list' for a list of valid events\n");
  	}
++	parse_events_error__exit(&err);
  
-@@ -3324,7 +3324,7 @@ void parse_events_evlist_error(struct parse_events_state *parse_state,
- 	if (!parse_state->error)
- 		return;
- 
--	parse_events__handle_error(parse_state->error, idx, strdup(str), NULL);
-+	parse_events_error__handle(parse_state->error, idx, strdup(str), NULL);
+ 	return ret;
  }
- 
- static void config_terms_list(char *buf, size_t buf_sz)
 diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index f60a661a2247..52ac26b3720a 100644
+index 52ac26b3720a..c7fc93f54577 100644
 --- a/tools/perf/util/parse-events.h
 +++ b/tools/perf/util/parse-events.h
-@@ -142,8 +142,6 @@ struct parse_events_state {
- 	char			  *hybrid_pmu_name;
- };
- 
--void parse_events__handle_error(struct parse_events_error *err, int idx,
--				char *str, char *help);
- void parse_events__shrink_config_terms(void);
- int parse_events__is_hardcoded_term(struct parse_events_term *term);
- int parse_events_term__num(struct parse_events_term **term,
-@@ -244,8 +242,10 @@ int is_valid_tracepoint(const char *event_string);
+@@ -242,6 +242,8 @@ int is_valid_tracepoint(const char *event_string);
  int valid_event_mount(const char *eventfs);
  char *parse_events_formats_error_string(char *additional_terms);
  
--void parse_events_print_error(struct parse_events_error *err,
--			      const char *event);
-+void parse_events_error__handle(struct parse_events_error *err, int idx,
-+				char *str, char *help);
-+void parse_events_error__print(struct parse_events_error *err,
-+			       const char *event);
- 
- #ifdef HAVE_LIBELF_SUPPORT
- /*
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 2d60f3cbe42b..174158982fae 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -186,7 +186,7 @@ group_def ':' PE_MODIFIER_EVENT
- 		struct parse_events_state *parse_state = _parse_state;
- 		struct parse_events_error *error = parse_state->error;
- 
--		parse_events__handle_error(error, @3.first_column,
-+		parse_events_error__handle(error, @3.first_column,
- 					   strdup("Bad modifier"), NULL);
- 		free_list_evsel(list);
- 		YYABORT;
-@@ -248,7 +248,7 @@ event_name PE_MODIFIER_EVENT
- 		struct parse_events_state *parse_state = _parse_state;
- 		struct parse_events_error *error = parse_state->error;
- 
--		parse_events__handle_error(error, @2.first_column,
-+		parse_events_error__handle(error, @2.first_column,
- 					   strdup("Bad modifier"), NULL);
- 		free_list_evsel(list);
- 		YYABORT;
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index f3072c71d132..6ae58406f4fc 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1283,7 +1283,7 @@ static int pmu_config_term(const char *pmu_name,
- 			unknown_term = NULL;
- 		help_msg = parse_events_formats_error_string(pmu_term);
- 		if (err) {
--			parse_events__handle_error(err, term->err_term,
-+			parse_events_error__handle(err, term->err_term,
- 						   unknown_term,
- 						   help_msg);
- 		} else {
-@@ -1316,7 +1316,7 @@ static int pmu_config_term(const char *pmu_name,
- 		if (term->no_value &&
- 		    bitmap_weight(format->bits, PERF_PMU_FORMAT_BITS) > 1) {
- 			if (err) {
--				parse_events__handle_error(err, term->err_val,
-+				parse_events_error__handle(err, term->err_val,
- 					   strdup("no value assigned for term"),
- 					   NULL);
- 			}
-@@ -1331,7 +1331,7 @@ static int pmu_config_term(const char *pmu_name,
- 						term->config, term->val.str);
- 			}
- 			if (err) {
--				parse_events__handle_error(err, term->err_val,
-+				parse_events_error__handle(err, term->err_val,
- 					strdup("expected numeric value"),
- 					NULL);
- 			}
-@@ -1348,7 +1348,7 @@ static int pmu_config_term(const char *pmu_name,
- 		if (err) {
- 			char *err_str;
- 
--			parse_events__handle_error(err, term->err_val,
-+			parse_events_error__handle(err, term->err_val,
- 				asprintf(&err_str,
- 				    "value too big for format, maximum is %llu",
- 				    (unsigned long long)max_val) < 0
++void parse_events_error__init(struct parse_events_error *err);
++void parse_events_error__exit(struct parse_events_error *err);
+ void parse_events_error__handle(struct parse_events_error *err, int idx,
+ 				char *str, char *help);
+ void parse_events_error__print(struct parse_events_error *err,
 -- 
 2.34.0.rc0.344.g81b53c2807-goog
 
