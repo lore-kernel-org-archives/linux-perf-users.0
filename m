@@ -2,68 +2,68 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DB4C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 13:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3796DC433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 13:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 947DD61177
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 13:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F9906115A
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 13:43:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240040AbhKHNpl (ORCPT
+        id S240043AbhKHNps (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 8 Nov 2021 08:45:41 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:41430 "EHLO
+        Mon, 8 Nov 2021 08:45:48 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:28719 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S240034AbhKHNpk (ORCPT
+        by vger.kernel.org with ESMTP id S238651AbhKHNpq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 8 Nov 2021 08:45:40 -0500
+        Mon, 8 Nov 2021 08:45:46 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1636378975;
+        s=mimecast20190719; t=1636378981;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ca+A2uwQhZ3Z75pgRPF/8bW4tJBRkzq3E2gPmfUckbo=;
-        b=bCpTA33yum0HbYDVemOPseOcp6SFex/qJ1MmUCyXbVcOXJy5T82g/ANKxAoaV1p1ga+59E
-        iESovqThT7vcUEeF74ylW/V2WEDnPpIcEfNk9NuwvJEQilCcNpmQ4NswDrqk6oiatzkyjn
-        o3ySs3ZwAQcIl7YccUjfNNOhlp+hfKw=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-380-7uNzGKLwOvqvm-ZBRchtdg-1; Mon, 08 Nov 2021 08:42:54 -0500
-X-MC-Unique: 7uNzGKLwOvqvm-ZBRchtdg-1
-Received: by mail-wr1-f70.google.com with SMTP id r12-20020adfdc8c000000b0017d703c07c0so4067516wrj.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 08 Nov 2021 05:42:54 -0800 (PST)
+        bh=pyBDHxbNyW4Nzt9EycQQk9knBHog5c5AL/iWkAczMQc=;
+        b=FdMm9421ywuHmR6s4+h8bR6XPHfFS9d5H6jntrLT+HRuEi2letAXYE5MOdZU8/yoCJx8T0
+        yGLYkPvjFf+a3E8Ml84RYZZM1xR+FekJOmulsjufi5IkR8mTr7bjSrOB/ZAgbRK7b3e8av
+        M6EgHM7MV0kOeoM3yIHujHY4zy9jAdk=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-539-F6tJPQ_DMUCVNMEEmN6-8A-1; Mon, 08 Nov 2021 08:43:00 -0500
+X-MC-Unique: F6tJPQ_DMUCVNMEEmN6-8A-1
+Received: by mail-wm1-f70.google.com with SMTP id 69-20020a1c0148000000b0033214e5b021so6241331wmb.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 08 Nov 2021 05:43:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ca+A2uwQhZ3Z75pgRPF/8bW4tJBRkzq3E2gPmfUckbo=;
-        b=fZ/qhlXPanyGtA+rQ17ygM1CTXo+ONipG7r4V7VMvTO+nf4qJ1Ad3msXrdfAtw8v9b
-         o165/+YhQILg3vjihmOdqYii5XZn7y3sI5Om6RQQhse0mNzTlB2ZwPFARdu8n3aDZMDB
-         rH2Ek+HMtsfNOBA3kSVaoCFH2mvhJzY+0/DeqJOUHaLhqe5pGWO9fD1sfHoXvf+Ajd3M
-         WVMICgmmT4ruZy+ljZj9gywibvl3xHYGOpSkNzmmaKrhCTt8++1TSa9oGyJWWtUVUyCE
-         Vs6RjeK2SeY2dtKhLIq4wGdb8o6x5eQbUd3Z1UvRKJaUQvp0LFqlTxJQFpD1p4nR36hw
-         KjiQ==
-X-Gm-Message-State: AOAM5333hc6wGVtlL4o/a2J2G/gVOvxgujjdJW/LyHcvZzK/t+U0tg8j
-        7R/aflsGKj67QAd64SykkkAeoKEj5DvE2EU6CXLUvvOI0Et/OOD1lSM8w9bZyHxoI9cH0PeDGqQ
-        HxmuTfOACyQunvT2KSV2yotW2Vjw5fQ==
-X-Received: by 2002:a1c:20cc:: with SMTP id g195mr53123996wmg.42.1636378973545;
-        Mon, 08 Nov 2021 05:42:53 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyJlj2KnVwHykyhrRovjoysj1heBh7JoNsOWXrimblcurVJEreDqVKpeb5ZxVD3TWccRcNGgw==
-X-Received: by 2002:a1c:20cc:: with SMTP id g195mr53123974wmg.42.1636378973401;
-        Mon, 08 Nov 2021 05:42:53 -0800 (PST)
+        bh=pyBDHxbNyW4Nzt9EycQQk9knBHog5c5AL/iWkAczMQc=;
+        b=QYwRXbVQ0ah1dMJhxjPJ9HaoIHWV8XGP1HM95BZfwHlBnk0nBYKUxeuf5UmyqQAChR
+         dAOsJJVkwdzWYHoaC1XEl8kcG/F6atQzkVv64/I+8BiAxaoqdnZsgY2tEgAq8n166r8O
+         kHqwV01y9oL92/bZww3lKJFAqFyaC94vmSoJqL9dp+K//S1PjlxTpF7txvPVY17NvdZg
+         G49VukqHBHzW3/K0JluKa/CpFJfU+a1cuJXBeO04XLdfudCSQhtcxbkpxdgBsxpHbvyi
+         6NsIgM7Y1k0YNyXlkmQIcdT0sc5GtKP4p8YQ5NbPMdU2xHDBufkFm2K+psEOkyIgyazM
+         44cQ==
+X-Gm-Message-State: AOAM5327H4xqGIngyd+UCeXtTb/t4l0t/L/Ugp1ehafd/OlEkRTcrnbM
+        i4zKL7PHRILfJWXcJche4SCkyk7Wr2HI3Iv5kGsu72lszJTXGoYHCJvJrot7preGw3t9d19QGb/
+        tFS7uFKolVWfZdgIGAYk6eQO9sRDkoA==
+X-Received: by 2002:a5d:6dc3:: with SMTP id d3mr13868084wrz.159.1636378979388;
+        Mon, 08 Nov 2021 05:42:59 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJys25uA8zBT9x8liuJgAK516zDbdMSARz/YqhltWG55idnDDJnA/5hjXxh4Xdk/zGyPBqAcpA==
+X-Received: by 2002:a5d:6dc3:: with SMTP id d3mr13868066wrz.159.1636378979253;
+        Mon, 08 Nov 2021 05:42:59 -0800 (PST)
 Received: from krava.redhat.com (nat-pool-brq-u.redhat.com. [213.175.37.12])
-        by smtp.gmail.com with ESMTPSA id u2sm17762439wrs.17.2021.11.08.05.42.52
+        by smtp.gmail.com with ESMTPSA id h7sm16300803wrt.64.2021.11.08.05.42.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Nov 2021 05:42:53 -0800 (PST)
+        Mon, 08 Nov 2021 05:42:59 -0800 (PST)
 From:   Jiri Olsa <jolsa@redhat.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org
-Subject: [PATCH 56/59] libperf: Move in parse_events_add_breakpoint function
-Date:   Mon,  8 Nov 2021 14:37:07 +0100
-Message-Id: <20211108133710.1352822-57-jolsa@kernel.org>
+Subject: [PATCH 57/59] libperf: Move in some lib objects from perf
+Date:   Mon,  8 Nov 2021 14:37:08 +0100
+Message-Id: <20211108133710.1352822-58-jolsa@kernel.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20211108133710.1352822-1-jolsa@kernel.org>
 References: <20211108133710.1352822-1-jolsa@kernel.org>
@@ -73,195 +73,130 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Moving parse_events_add_breakpoint function to libperf.
+New libperf code needs several libapi objects,
+moving them from perf in libperf.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- .../lib/perf/include/internal/parse-events.h  |  3 +
- tools/lib/perf/parse-events.c                 | 72 +++++++++++++++++++
- tools/perf/util/parse-events.c                | 70 ------------------
- 3 files changed, 75 insertions(+), 70 deletions(-)
+ tools/lib/perf/Build  | 24 ++++++++++++++++++++++++
+ tools/perf/util/Build | 23 -----------------------
+ 2 files changed, 24 insertions(+), 23 deletions(-)
 
-diff --git a/tools/lib/perf/include/internal/parse-events.h b/tools/lib/perf/include/internal/parse-events.h
-index 5020a1b2bff2..e6af1ad6e7ac 100644
---- a/tools/lib/perf/include/internal/parse-events.h
-+++ b/tools/lib/perf/include/internal/parse-events.h
-@@ -197,4 +197,7 @@ int parse_events_name(struct list_head *list, const char *name);
- int parse_events__scanner(const char *str,
- 			  struct parse_events_state *parse_state,
- 			  bool terms);
-+int parse_events_add_breakpoint(struct parse_events_state *parse_state,
-+				struct list_head *list,
-+				u64 addr, char *type, u64 len);
- #endif /* __LIBPERF_PARSE_EVENTS_H */
-diff --git a/tools/lib/perf/parse-events.c b/tools/lib/perf/parse-events.c
-index da684023b273..1c1fbbeb7182 100644
---- a/tools/lib/perf/parse-events.c
-+++ b/tools/lib/perf/parse-events.c
-@@ -2,6 +2,7 @@
+diff --git a/tools/lib/perf/Build b/tools/lib/perf/Build
+index 3e29d173e0ec..06ea39ee84ac 100644
+--- a/tools/lib/perf/Build
++++ b/tools/lib/perf/Build
+@@ -14,11 +14,35 @@ libperf-y += pmu-hybrid.o
+ libperf-y += parse-events.o
+ libperf-y += parse-events-flex.o
+ libperf-y += parse-events-bison.o
++libperf-y += bitmap.o
++libperf-y += find_bit.o
++libperf-y += vsprintf.o
++libperf-y += hweight.o
  
- #include <internal/parse-events.h>
- #include <linux/perf_event.h>
-+#include <linux/hw_breakpoint.h>
- #include <linux/zalloc.h>
- #include <string.h>
- #include <internal/parse-events.h>
-@@ -630,3 +631,74 @@ int parse_events__scanner(const char *str,
- 	parse_events_lex_destroy(scanner);
- 	return ret;
- }
-+
-+static int
-+parse_breakpoint_type(const char *type, struct perf_event_attr *attr)
-+{
-+	int i;
-+
-+	for (i = 0; i < 3; i++) {
-+		if (!type || !type[i])
-+			break;
-+
-+#define CHECK_SET_TYPE(bit)		\
-+do {					\
-+	if (attr->bp_type & bit)	\
-+		return -EINVAL;		\
-+	else				\
-+		attr->bp_type |= bit;	\
-+} while (0)
-+
-+		switch (type[i]) {
-+		case 'r':
-+			CHECK_SET_TYPE(HW_BREAKPOINT_R);
-+			break;
-+		case 'w':
-+			CHECK_SET_TYPE(HW_BREAKPOINT_W);
-+			break;
-+		case 'x':
-+			CHECK_SET_TYPE(HW_BREAKPOINT_X);
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+	}
-+
-+#undef CHECK_SET_TYPE
-+
-+	if (!attr->bp_type) /* Default */
-+		attr->bp_type = HW_BREAKPOINT_R | HW_BREAKPOINT_W;
-+
-+	return 0;
-+}
-+
-+int parse_events_add_breakpoint(struct parse_events_state *parse_state,
-+				struct list_head *list,
-+				u64 addr, char *type, u64 len)
-+{
-+	struct perf_event_attr attr;
-+
-+	memset(&attr, 0, sizeof(attr));
-+	attr.bp_addr = addr;
-+
-+	if (parse_breakpoint_type(type, &attr))
-+		return -EINVAL;
-+
-+	/* Provide some defaults if len is not specified */
-+	if (!len) {
-+		if (attr.bp_type == HW_BREAKPOINT_X)
-+			len = sizeof(long);
-+		else
-+			len = HW_BREAKPOINT_LEN_4;
-+	}
-+
-+	attr.bp_len = len;
-+
-+	attr.type = PERF_TYPE_BREAKPOINT;
-+	attr.sample_period = 1;
-+
-+	return perf_evsel__add_event(parse_state, list, &attr,
-+				     /*init_attr*/true, /*name=*/NULL, /*mertic_id=*/NULL,
-+				     /*pmu=*/NULL, /*config_terms=*/NULL,
-+				     /*auto_merge_stats=*/false, /*cpu_list=*/NULL) ? 0 : -ENOENT;
-+}
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 44980b34e367..02f46689f483 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -844,76 +844,6 @@ int parse_events_load_bpf(struct parse_events_state *parse_state,
- }
- #endif // HAVE_LIBBPF_SUPPORT
+ $(OUTPUT)zalloc.o: ../../lib/zalloc.c FORCE
+ 	$(call rule_mkdir)
+ 	$(call if_changed_dep,cc_o_c)
  
--static int
--parse_breakpoint_type(const char *type, struct perf_event_attr *attr)
--{
--	int i;
++$(OUTPUT)bitmap.o: ../../lib/bitmap.c FORCE
++	$(call rule_mkdir)
++	$(call if_changed_dep,cc_o_c)
++
++$(OUTPUT)find_bit.o: ../../lib/find_bit.c FORCE
++	$(call rule_mkdir)
++	$(call if_changed_dep,cc_o_c)
++
++$(OUTPUT)vsprintf.o: ../../lib/vsprintf.c FORCE
++	$(call rule_mkdir)
++	$(call if_changed_dep,cc_o_c)
++
++$(OUTPUT)hweight.o: ../../lib/hweight.c FORCE
++	$(call rule_mkdir)
++	$(call if_changed_dep,cc_o_c)
++
++CFLAGS_bitmap.o   += -Wno-unused-parameter
++CFLAGS_find_bit.o += -Wno-unused-parameter
++CFLAGS_hweight.o  += -Wno-unused-parameter
++
+ tests-y += tests/
+ 
+ $(OUTPUT)parse-events-flex.c $(OUTPUT)parse-events-flex.h: parse-events.l $(OUTPUT)parse-events-bison.c
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index ad9e2de899da..fdafde48dad1 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -16,7 +16,6 @@ perf-y += evsel.o
+ perf-y += evsel_fprintf.o
+ perf-y += perf_event_attr_fprintf.o
+ perf-y += evswitch.o
+-perf-y += find_bit.o
+ perf-y += get_current_dir_name.o
+ perf-y += kallsyms.o
+ perf-y += levenshtein.o
+@@ -32,8 +31,6 @@ perf-y += rlimit.o
+ perf-y += argv_split.o
+ perf-y += rbtree.o
+ perf-y += libstring.o
+-perf-y += bitmap.o
+-perf-y += hweight.o
+ perf-y += smt.o
+ perf-y += strbuf.o
+ perf-y += string.o
+@@ -123,7 +120,6 @@ perf-y += term.o
+ perf-y += help-unknown-cmd.o
+ perf-y += dlfilter.o
+ perf-y += mem-events.o
+-perf-y += vsprintf.o
+ perf-y += units.o
+ perf-y += time-utils.o
+ perf-y += expr-flex.o
+@@ -240,11 +236,8 @@ CFLAGS_expr-bison.o         += -DYYLTYPE_IS_TRIVIAL=0 $(bison_flags)
+ 
+ $(OUTPUT)util/expr.o: $(OUTPUT)util/expr-flex.c $(OUTPUT)util/expr-bison.c
+ 
+-CFLAGS_bitmap.o        += -Wno-unused-parameter -DETC_PERFCONFIG="BUILD_STR($(ETC_PERFCONFIG_SQ))"
+-CFLAGS_find_bit.o      += -Wno-unused-parameter -DETC_PERFCONFIG="BUILD_STR($(ETC_PERFCONFIG_SQ))"
+ CFLAGS_rbtree.o        += -Wno-unused-parameter -DETC_PERFCONFIG="BUILD_STR($(ETC_PERFCONFIG_SQ))"
+ CFLAGS_libstring.o     += -Wno-unused-parameter -DETC_PERFCONFIG="BUILD_STR($(ETC_PERFCONFIG_SQ))"
+-CFLAGS_hweight.o       += -Wno-unused-parameter -DETC_PERFCONFIG="BUILD_STR($(ETC_PERFCONFIG_SQ))"
+ CFLAGS_parse-events.o  += -Wno-redundant-decls
+ CFLAGS_expr.o          += -Wno-redundant-decls
+ CFLAGS_header.o        += -include $(OUTPUT)PERF-VERSION-FILE
+@@ -257,18 +250,10 @@ $(OUTPUT)util/argv_split.o: ../lib/argv_split.c FORCE
+ 	$(call rule_mkdir)
+ 	$(call if_changed_dep,cc_o_c)
+ 
+-$(OUTPUT)util/bitmap.o: ../lib/bitmap.c FORCE
+-	$(call rule_mkdir)
+-	$(call if_changed_dep,cc_o_c)
 -
--	for (i = 0; i < 3; i++) {
--		if (!type || !type[i])
--			break;
+ $(OUTPUT)util/ctype.o: ../lib/ctype.c FORCE
+ 	$(call rule_mkdir)
+ 	$(call if_changed_dep,cc_o_c)
+ 
+-$(OUTPUT)util/find_bit.o: ../lib/find_bit.c FORCE
+-	$(call rule_mkdir)
+-	$(call if_changed_dep,cc_o_c)
 -
--#define CHECK_SET_TYPE(bit)		\
--do {					\
--	if (attr->bp_type & bit)	\
--		return -EINVAL;		\
--	else				\
--		attr->bp_type |= bit;	\
--} while (0)
+ $(OUTPUT)util/rbtree.o: ../lib/rbtree.c FORCE
+ 	$(call rule_mkdir)
+ 	$(call if_changed_dep,cc_o_c)
+@@ -277,14 +262,6 @@ $(OUTPUT)util/libstring.o: ../lib/string.c FORCE
+ 	$(call rule_mkdir)
+ 	$(call if_changed_dep,cc_o_c)
+ 
+-$(OUTPUT)util/hweight.o: ../lib/hweight.c FORCE
+-	$(call rule_mkdir)
+-	$(call if_changed_dep,cc_o_c)
 -
--		switch (type[i]) {
--		case 'r':
--			CHECK_SET_TYPE(HW_BREAKPOINT_R);
--			break;
--		case 'w':
--			CHECK_SET_TYPE(HW_BREAKPOINT_W);
--			break;
--		case 'x':
--			CHECK_SET_TYPE(HW_BREAKPOINT_X);
--			break;
--		default:
--			return -EINVAL;
--		}
--	}
+-$(OUTPUT)util/vsprintf.o: ../lib/vsprintf.c FORCE
+-	$(call rule_mkdir)
+-	$(call if_changed_dep,cc_o_c)
 -
--#undef CHECK_SET_TYPE
--
--	if (!attr->bp_type) /* Default */
--		attr->bp_type = HW_BREAKPOINT_R | HW_BREAKPOINT_W;
--
--	return 0;
--}
--
--static
--int parse_events_add_breakpoint(struct parse_events_state *parse_state,
--				struct list_head *list,
--				u64 addr, char *type, u64 len)
--{
--	struct perf_event_attr attr;
--
--	memset(&attr, 0, sizeof(attr));
--	attr.bp_addr = addr;
--
--	if (parse_breakpoint_type(type, &attr))
--		return -EINVAL;
--
--	/* Provide some defaults if len is not specified */
--	if (!len) {
--		if (attr.bp_type == HW_BREAKPOINT_X)
--			len = sizeof(long);
--		else
--			len = HW_BREAKPOINT_LEN_4;
--	}
--
--	attr.bp_len = len;
--
--	attr.type = PERF_TYPE_BREAKPOINT;
--	attr.sample_period = 1;
--
--	return add_event(parse_state, list, &attr, /*name=*/NULL, /*mertic_id=*/NULL,
--			 /*config_terms=*/NULL);
--}
--
- static int check_type_val(struct parse_events_term *term,
- 			  struct parse_events_error *err,
- 			  int type)
+ $(OUTPUT)util/list_sort.o: ../lib/list_sort.c FORCE
+ 	$(call rule_mkdir)
+ 	$(call if_changed_dep,cc_o_c)
 -- 
 2.31.1
 
