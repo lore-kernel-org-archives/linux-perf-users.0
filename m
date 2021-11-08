@@ -2,119 +2,99 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4E2C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 18:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE10C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 19:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8880261152
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 18:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71A2F619E1
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 19:51:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236361AbhKHTAZ (ORCPT
+        id S237869AbhKHTxv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 8 Nov 2021 14:00:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45920 "EHLO
+        Mon, 8 Nov 2021 14:53:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236360AbhKHTAY (ORCPT
+        with ESMTP id S237645AbhKHTxv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 8 Nov 2021 14:00:24 -0500
-Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3414DC061714
-        for <linux-perf-users@vger.kernel.org>; Mon,  8 Nov 2021 10:57:40 -0800 (PST)
-Received: by mail-io1-xd32.google.com with SMTP id v23so5127660iom.12
-        for <linux-perf-users@vger.kernel.org>; Mon, 08 Nov 2021 10:57:40 -0800 (PST)
+        Mon, 8 Nov 2021 14:53:51 -0500
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67A84C061570;
+        Mon,  8 Nov 2021 11:51:06 -0800 (PST)
+Received: by mail-pj1-x1029.google.com with SMTP id v23so6956210pjr.5;
+        Mon, 08 Nov 2021 11:51:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vGJOYis+gviqxoUcyJaqUmqXmeZAJwJoCXfZHdsHcpw=;
-        b=h+kLvfOxck6zzy3NuxkqHfXUzxSxjxiZC7U9HXX9AdtnPGUzj7CmA6hUJ7IE2PLgfC
-         XvntadmSbvkYojWNDfRQpr+ddOQOOTCTEODrHMfUKF1zWQ26q2nrdIk6K4QDudU3u2VQ
-         8l1oFowFiXJ5Z+GQMbSR7fII0xfnhSE2+2EX7fZPWnqtJxUb5aI4JB76VE27vXP6Wxcm
-         AIsRmJ9EUkf115WV2k21dnMt/8TYdI4O6jrkUnoSC3YvcxBGjM0lW2iD9rdNwWw4TCa2
-         /wpwhAVPhaskFqi8OPSVEHefX2tNGryk1VGDFQe635aJ89ldjeIgPQpzjZG022cyD4vl
-         nWQg==
+        d=gmail.com; s=20210112;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=IjhS3kxhetwXaiYgcJTnbbq17lp2O4y2bTsBt4Udz4Q=;
+        b=jGk+Vd/0P4mleeeUfxZYYpjag6EOgu5O79b4VSJg1G8hvCKC8kzYgtBwIBSL25zecM
+         BbVHlslQLYsZeraYj9Gol/D0D6I6vyHLZHx95o4pWVmfNQlwjOsa6+pLid4KQVRUnwvt
+         3PUBAktZF4H4Arm8zPwHX+Bo/vbAbh+VMfWryOrQPPfaUTngYmbBlyort7ZgrrjoZPyk
+         ghCacJRI1gNkckADwzimiuITMmIesDrft0SaO4FDF9XtO+hl55c8WcNFlxfwwZD9Nshe
+         OD21exr+Af3DYjHIM7Z6STmaO36C7MrmGkmFo1P/cZ6M0gH1f2Urf6dmiOLj14HLxrQj
+         PImA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vGJOYis+gviqxoUcyJaqUmqXmeZAJwJoCXfZHdsHcpw=;
-        b=U9Df5ZqU7//nWJDy3EGCDHiOzMeTo8xGc6TLK2znhsbeCSE1t8IRLwt1zC7lR/AIs2
-         /ctaBe+bBKOZHJMrhAwuK2xP0QwWUuWIGrfYJV4EUSm0HGLAP6CHnSK/CRXyVvS8kMa/
-         lzYF9b/HFgUNY5LdK8wTKllo/7GAcMukuRQKoIDicOgOfyN6NHWRmRS/NXUJgxk599Sr
-         ygLF4Zj1KPtGtP1toAy5yUmlUB3yl0qUqjaLsF74f0LzYYDq6VZaYCO99I4buegqcndt
-         pG+Ah2QtZhznNd8NWZsDNpdHC2JjhUT+C7hB8b2c3nkCxyqn4t7l+oPgThZFfrv9DDhK
-         jw+Q==
-X-Gm-Message-State: AOAM533na4qTMNOJfSTOaq3dG0V2bJE60Em3MYNGIfy3rw0BJJw/rqk6
-        r/ZfIVs5gvfImpKO+SWZ3zREqgykLMSwDLyEVi+J/A==
-X-Google-Smtp-Source: ABdhPJy8SyUSNSSO0ev9lDHGHdIAxY1uNUr1pzWe9u/0WBlRq08HV8Laj2hnSIrsHvsO+Mv8dDRFLlo+JTLQ3eDoI8Q=
-X-Received: by 2002:a02:c559:: with SMTP id g25mr1014586jaj.123.1636397859461;
- Mon, 08 Nov 2021 10:57:39 -0800 (PST)
-MIME-Version: 1.0
-References: <20211108044826.138781-1-sohaib.amhmd@gmail.com>
-In-Reply-To: <20211108044826.138781-1-sohaib.amhmd@gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 8 Nov 2021 10:57:25 -0800
-Message-ID: <CAP-5=fUc1uPti1MN3BZJ1JFus=ZYU66+gjh3bW30pUkE2sUxBQ@mail.gmail.com>
-Subject: Re: [PATCH] perf bench: Fix memory leaks.
-To:     Sohaib Mohamed <sohaib.amhmd@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Pierre Gondois <Pierre.Gondois@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=IjhS3kxhetwXaiYgcJTnbbq17lp2O4y2bTsBt4Udz4Q=;
+        b=ScM1wdkZOzMjb+NrAfab5KoT9wGNzkTo5Fo7Jt+kP3tj7zcZMe0wt/teJKPCLB99UJ
+         wQ+CoqQPxnUJthP5gtTIMLW3PLUfx4WZpCcmv9CxVsUXlAmGbsSMj+JEAg5XB7DTPg4p
+         GEuul5K9Pn4MgaJqyp8asyGC7+mzjJ2yCbIMzdL14yE4E+X8GyyMWxvxFUPvulJ/uOeZ
+         YGkTru5+lPI3JlrsHdj6zFbyWGQjgtnA67N9pL+hlUJqYbTg++veVMWaGMg53b4gOw8u
+         cZnhZeJjzcD/XLYEzwR/jXMScInh+DsXS++0mHaNCNIa0sYutYZ7tPudFuz6kLCcMcys
+         2fSQ==
+X-Gm-Message-State: AOAM531m+w0pgT4+hF3StXqyFgoPb4lC/usGnHzlovH4Y3j0uaZ+6Bwd
+        v+8JGywxh7j99EM4zO4BJzM=
+X-Google-Smtp-Source: ABdhPJzwspsRw+pFLcs7NL58X4vW0O0hqmVH+i6tzE9683Ol0eMaNNPBKqVy2Y3SFYOKl0KLl7AEIQ==
+X-Received: by 2002:a17:90b:4b04:: with SMTP id lx4mr914448pjb.11.1636401065754;
+        Mon, 08 Nov 2021 11:51:05 -0800 (PST)
+Received: from smtpclient.apple (c-24-6-216-183.hsd1.ca.comcast.net. [24.6.216.183])
+        by smtp.gmail.com with ESMTPSA id m12sm170166pjr.14.2021.11.08.11.51.04
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Nov 2021 11:51:05 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.120.0.1.13\))
+Subject: Re: Using perf_event_open() to sample multiple events of a process
+From:   Nadav Amit <nadav.amit@gmail.com>
+In-Reply-To: <YYlBMmMg0PTV3pED@hirez.programming.kicks-ass.net>
+Date:   Mon, 8 Nov 2021 11:51:04 -0800
+Cc:     kan.liang@linux.intel.com, LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <ED4D20D0-DD1C-48D1-B686-E519EB384429@gmail.com>
+References: <92645262-D319-4068-9C44-2409EF44888E@gmail.com>
+ <YYXQRYbRO193U4re@hirez.programming.kicks-ass.net>
+ <YYXS8yldO/dwwVD4@hirez.programming.kicks-ass.net>
+ <YYlBMmMg0PTV3pED@hirez.programming.kicks-ass.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+X-Mailer: Apple Mail (2.3654.120.0.1.13)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Nov 7, 2021 at 8:49 PM Sohaib Mohamed <sohaib.amhmd@gmail.com> wrote:
->
-> ASan reports memory leaks while running:
->
-> $ perf bench sched all
->
-> Signed-off-by: Sohaib Mohamed <sohaib.amhmd@gmail.com>
 
-Acked-by: Ian Rogers <irogers@google.com>
+> On Nov 8, 2021, at 7:24 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> On Sat, Nov 06, 2021 at 01:57:23AM +0100, Peter Zijlstra wrote:
+> 
+>> The problem seems to be that we call perf_event_set_output() before we
+>> set event->ctx, which is a bit of a problem.
+>> 
+>> Now, afaict it's been broken since c3f00c70276d ("perf: Separate
+>> find_get_context() from event initialization"), which is ages ago :/
+>> 
+>> It's waaay too late to try and fix it; I'll be likely to make an even
+>> bigger mess if I tried. Perhaps tomorrow.
+>> 
+>> Clearly FD_OUTPUT isn't much used :-(
+> 
+> The below seems to fix, it's a bit of a hack, but I couldn't really come
+> up with anything saner.
 
-I think you can add:
-Fixes: e27454cc6352c ("perf bench: Add sched-messaging.c: Benchmark
-for scheduler and IPC mechanisms based on hackbench")
+I originally considered doing a similar hack. I assume it should work,
+but I moved to using the ioctl workaround that you suggested.
 
-This will then get the fix backported to older stable perf commands.
+Clearly nobody is using this feature if it is broken for 11 years.
+There is always the option to deprecate it if there is an alternative.
 
-Thanks,
-Ian
-
-> ---
->  tools/perf/bench/sched-messaging.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/tools/perf/bench/sched-messaging.c b/tools/perf/bench/sched-messaging.c
-> index 488f6e6ba1a5..fa0ff4ce2b74 100644
-> --- a/tools/perf/bench/sched-messaging.c
-> +++ b/tools/perf/bench/sched-messaging.c
-> @@ -223,6 +223,8 @@ static unsigned int group(pthread_t *pth,
->                 snd_ctx->out_fds[i] = fds[1];
->                 if (!thread_mode)
->                         close(fds[0]);
-> +
-> +               free(ctx);
->         }
->
->         /* Now we have all the fds, fork the senders */
-> @@ -239,6 +241,8 @@ static unsigned int group(pthread_t *pth,
->                 for (i = 0; i < num_fds; i++)
->                         close(snd_ctx->out_fds[i]);
->
-> +       free(snd_ctx);
-> +
->         /* Return number of children to reap */
->         return num_fds * 2;
->  }
-> --
-> 2.25.1
->
