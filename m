@@ -2,59 +2,59 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F08C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 17:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A5EC433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 17:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C080619E2
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 17:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D650061503
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 17:54:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239158AbhKHRtr (ORCPT
+        id S229854AbhKHR4o (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 8 Nov 2021 12:49:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58124 "EHLO
+        Mon, 8 Nov 2021 12:56:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239344AbhKHRtp (ORCPT
+        with ESMTP id S229699AbhKHR4o (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 8 Nov 2021 12:49:45 -0500
-Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7D95C061205
-        for <linux-perf-users@vger.kernel.org>; Mon,  8 Nov 2021 09:46:58 -0800 (PST)
-Received: by mail-il1-x12e.google.com with SMTP id i11so8578690ilv.13
-        for <linux-perf-users@vger.kernel.org>; Mon, 08 Nov 2021 09:46:58 -0800 (PST)
+        Mon, 8 Nov 2021 12:56:44 -0500
+Received: from mail-il1-x133.google.com (mail-il1-x133.google.com [IPv6:2607:f8b0:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92DE5C061570
+        for <linux-perf-users@vger.kernel.org>; Mon,  8 Nov 2021 09:53:59 -0800 (PST)
+Received: by mail-il1-x133.google.com with SMTP id j28so17849047ila.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 08 Nov 2021 09:53:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6gL4f+uKMoFEgSLUPCavceI+LSF7SH6xXDYYLwfmYtY=;
-        b=TyIpz3NdTe/ILhnpAb+NULakeAsapfU3bBrcdl+yztaU0iqi433It1qtUDjm/A4OM9
-         o1h3qFoMAebSL3uHJ923ciBb6aayi5oaUaqUUM4Io+k6fc1Xoy0KiXwtEY8fT+SAbg8A
-         L4sNj9mrt/vUg4COnzEM81xCowy9JcGYEjURNZ2/U48KwyP0Dry8keEfSWKbRtCoUHyo
-         JLWhOW/CPiPB5awLZLd3hcRCDOZ2HqDxRrOaDA2uXErz5OgdqH8fYAOhlCWO1HOpjlJS
-         3qA4NDlYVUWXEdp1+H54LQja921tc2p+HQqcx3ja93l1WHwHIaBitAhEWmXgLw5Ux7rQ
-         8k6A==
+        bh=C4WiLNQQSOQ7W/xo+m+jjD3GIDJJSLZQOASKnrNeALc=;
+        b=UCoOU12O5YTIBMFfL4HOW/1tClk5LXgXq0VlQglazitzySixE6KPq+M8gNIyRYWnY2
+         KwyKktBu8CI56vJHbPyXTlb3vI7M+j2xbbUFGgmBAC3xkJy+Ujl/9Q/XQi9Ek/Agce5O
+         4zmQUraMVmpUy/DVdXG+Rcdci/Mz62JvKF9LkS+I5UoyKAP5z7rYIlP9IJrLS3jKu6vM
+         MCa4wsYFM1A1rK0IzMYJHANuWp9EOPNVLvY0J3/RgdNk9NBm2sjF8zVmxsVBWmah0kXw
+         4pqp8YhZbuhg8SdLoDaORwZQqtLY7ANBicOQnfh1UZjqVth73fzBjn0KHV4B/NDbvAh6
+         3bfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6gL4f+uKMoFEgSLUPCavceI+LSF7SH6xXDYYLwfmYtY=;
-        b=uHIUNTWTyn7Q3ZdNEEWncExh+ck2OaaNWeWheYQijYtEJSz/aimOgD1iC4CgpzFcoL
-         G1JxK/XptfBRjlpyUT+ADrzX0pOuDsxpFE8NYMZDIx8cHN8Jz6EzvGSRKqMwSyhMdE9D
-         q/WuinFO47TkTXUn8U1N9qSEQZSiSE6boqJgjzuLkWwZy+IyI+7SUkD6aIy2oubTQsLp
-         gURuunGU5yN0hItUUiv2Xee++2PD9t0Lsp7Ukdv6V529A3tWo7RIfR0HrWBPPb/U7AQW
-         KDgXrswls3EzptAMcpequqnVg+jrJHceq5/sQZkVlJTMwyo3Ia3WFJ3M+zZv8wmrn18p
-         6ZSg==
-X-Gm-Message-State: AOAM532kXUgLDwoisDsc3NXyyIu1ftBSmIC/EFJvVSfa1EER5sCu9J3a
-        Xw3M1Re6foAvSwTdR1IWds5E3MDBUdnGiewi+n8167pgkvM=
-X-Google-Smtp-Source: ABdhPJz1EcMaIOZ8K3PqyJcxj67ohMVmoN9YGnfPTUcozx4KNjLpE5jCyMvNE9H6aPLXkwBncRfwNzAbxVwjv6vWKSo=
-X-Received: by 2002:a05:6e02:1048:: with SMTP id p8mr609326ilj.174.1636393617995;
- Mon, 08 Nov 2021 09:46:57 -0800 (PST)
+        bh=C4WiLNQQSOQ7W/xo+m+jjD3GIDJJSLZQOASKnrNeALc=;
+        b=XrSF35WYwjVbFyNFZTJNBAvxs8kPPZHLHka25TkR7heGWtAYyXSPvyCyQd9BRXXvwW
+         aCZDHXjLQitDaoB3iuTRBFo9p0nUD5qV1JdJOAuYzxfs6G+8vkiULaqxaRahDdUapqnw
+         Zsse51LYhb61FuOT812c3OIEkE7nXkwfePM6BY8+1GepBFub2jSNS5GYrLOkOipV+S35
+         ePLS4Ad1/45fWzLTSch/N65Wg8cHWeKqxYqJTgFbJ6opzE98DX3gLrNVUWbn08jnrpp5
+         zBpaaqkHiEUMHjm3gcDPEU4LKdzeYOAJjdLTn1VDAMdADatKIuuTlGWTcMqcZT/XePk5
+         vDZw==
+X-Gm-Message-State: AOAM530uy7Ujk3kWMkSAvt2b4B52pLDSY07MJRh255qNa+iOwdG7jpbi
+        Iulb6VdKg7K1ztuHS4/UJ5ltnTEiay36j2NNdjSeSg==
+X-Google-Smtp-Source: ABdhPJygra8No6NcGRZio0lEJYsViOMvO3SttdA6OfxeCYB+PKmmmlHemEMQrpDLBIGlR1rMIC+CZhFzQWUCOrE/q30=
+X-Received: by 2002:a92:cda2:: with SMTP id g2mr637999ild.2.1636394038712;
+ Mon, 08 Nov 2021 09:53:58 -0800 (PST)
 MIME-Version: 1.0
-References: <20211108133710.1352822-1-jolsa@kernel.org> <20211108133710.1352822-6-jolsa@kernel.org>
-In-Reply-To: <20211108133710.1352822-6-jolsa@kernel.org>
+References: <20211108133710.1352822-1-jolsa@kernel.org> <20211108133710.1352822-14-jolsa@kernel.org>
+In-Reply-To: <20211108133710.1352822-14-jolsa@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 8 Nov 2021 09:46:43 -0800
-Message-ID: <CAP-5=fWuAY=ML81CnujKGLu=-6PKqj6udt0sMzdr038T9Vaycw@mail.gmail.com>
-Subject: Re: [PATCH 05/59] tools api fs: Move in the fncache from perf
+Date:   Mon, 8 Nov 2021 09:53:44 -0800
+Message-ID: <CAP-5=fVcHtPxS01GJCazeJmF-Jnx07qGAcPpNwM2ocyV7yu63g@mail.gmail.com>
+Subject: Re: [PATCH 13/59] libperf: Move exclude_GH to perf_evsel
 To:     Jiri Olsa <jolsa@redhat.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -64,304 +64,87 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Nov 8, 2021 at 5:37 AM Jiri Olsa <jolsa@redhat.com> wrote:
+On Mon, Nov 8, 2021 at 5:38 AM Jiri Olsa <jolsa@redhat.com> wrote:
 >
-> Moving fncache from perf under libapi.
+> Moving exclude_GH to perf_evsel struct.
 >
 > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 > ---
->  tools/lib/api/fs/Build             |  1 +
->  tools/lib/api/fs/fncache.c         | 63 ++++++++++++++++++++++++++++++
->  tools/lib/api/fs/fs.h              |  2 +
->  tools/perf/arch/x86/util/pmu.c     |  1 -
->  tools/perf/tests/parse-events.c    |  1 -
->  tools/perf/util/Build              |  1 -
->  tools/perf/util/fncache.c          | 63 ------------------------------
->  tools/perf/util/fncache.h          |  7 ----
+>  tools/lib/perf/include/internal/evsel.h | 1 +
+>  tools/perf/util/evsel.c                 | 2 +-
+>  tools/perf/util/evsel.h                 | 1 -
+>  tools/perf/util/parse-events.c          | 4 ++--
+>  4 files changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/lib/perf/include/internal/evsel.h b/tools/lib/perf/include/internal/evsel.h
+> index b96c9f4808ca..7f3ee73c5aa5 100644
+> --- a/tools/lib/perf/include/internal/evsel.h
+> +++ b/tools/lib/perf/include/internal/evsel.h
+> @@ -69,6 +69,7 @@ struct perf_evsel {
+>                 const char              *metric_id;
+>                 enum perf_tool_event    tool_event;
+>                 const char              *unit;
+> +               int                     exclude_GH;
 
-This change looks like it could be independent. Could this code be
-simplified to just using a hashmap now that we have one?
+I think it'd be pretty awesome if when these things get moved around
+we added a comment here to explain what the variable means. Perhaps
+even put an example :-) In this case it could explain why this is an
+int and not a bool. This is a while you are here request rather than a
+criticism of the changes which I find fine.
 
 Thanks,
 Ian
 
->  tools/perf/util/pmu-hybrid.c       |  1 -
->  tools/perf/util/pmu.c              |  1 -
->  tools/perf/util/python-ext-sources |  1 -
->  tools/perf/util/srccode.c          | 10 ++++-
->  12 files changed, 75 insertions(+), 77 deletions(-)
->  create mode 100644 tools/lib/api/fs/fncache.c
->  delete mode 100644 tools/perf/util/fncache.c
->  delete mode 100644 tools/perf/util/fncache.h
+>         };
+>  };
 >
-> diff --git a/tools/lib/api/fs/Build b/tools/lib/api/fs/Build
-> index 0f75b28654de..3af4b5265a5f 100644
-> --- a/tools/lib/api/fs/Build
-> +++ b/tools/lib/api/fs/Build
-> @@ -1,3 +1,4 @@
->  libapi-y += fs.o
->  libapi-y += tracing_path.o
->  libapi-y += cgroup.o
-> +libapi-y += fncache.o
-> diff --git a/tools/lib/api/fs/fncache.c b/tools/lib/api/fs/fncache.c
-> new file mode 100644
-> index 000000000000..7fb4586c341a
-> --- /dev/null
-> +++ b/tools/lib/api/fs/fncache.c
-> @@ -0,0 +1,63 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/* Manage a cache of file names' existence */
-> +#include <stdlib.h>
-> +#include <unistd.h>
-> +#include <string.h>
-> +#include <linux/list.h>
-> +#include "fs.h"
-> +
-> +struct fncache {
-> +       struct hlist_node nd;
-> +       bool res;
-> +       char name[];
-> +};
-> +
-> +#define FNHSIZE 61
-> +
-> +static struct hlist_head fncache_hash[FNHSIZE];
-> +
-> +static unsigned shash(const unsigned char *s)
-> +{
-> +       unsigned h = 0;
-> +       while (*s)
-> +               h = 65599 * h + *s++;
-> +       return h ^ (h >> 16);
-> +}
-> +
-> +static bool lookup_fncache(const char *name, bool *res)
-> +{
-> +       int h = shash((const unsigned char *)name) % FNHSIZE;
-> +       struct fncache *n;
-> +
-> +       hlist_for_each_entry(n, &fncache_hash[h], nd) {
-> +               if (!strcmp(n->name, name)) {
-> +                       *res = n->res;
-> +                       return true;
-> +               }
-> +       }
-> +       return false;
-> +}
-> +
-> +static void update_fncache(const char *name, bool res)
-> +{
-> +       struct fncache *n = malloc(sizeof(struct fncache) + strlen(name) + 1);
-> +       int h = shash((const unsigned char *)name) % FNHSIZE;
-> +
-> +       if (!n)
-> +               return;
-> +       strcpy(n->name, name);
-> +       n->res = res;
-> +       hlist_add_head(&n->nd, &fncache_hash[h]);
-> +}
-> +
-> +/* No LRU, only use when bounded in some other way. */
-> +bool file_available(const char *name)
-> +{
-> +       bool res;
-> +
-> +       if (lookup_fncache(name, &res))
-> +               return res;
-> +       res = access(name, R_OK) == 0;
-> +       update_fncache(name, res);
-> +       return res;
-> +}
-> diff --git a/tools/lib/api/fs/fs.h b/tools/lib/api/fs/fs.h
-> index aa222ca30311..c42d4ff30ca7 100644
-> --- a/tools/lib/api/fs/fs.h
-> +++ b/tools/lib/api/fs/fs.h
-> @@ -59,4 +59,6 @@ int sysfs__read_str(const char *entry, char **buf, size_t *sizep);
->  int sysfs__read_bool(const char *entry, bool *value);
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 133b571e1190..802c7de9e8e3 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -431,7 +431,7 @@ struct evsel *evsel__clone(struct evsel *orig)
+>         evsel->use_uncore_alias = orig->use_uncore_alias;
+>         evsel->is_libpfm_event = orig->is_libpfm_event;
 >
->  int sysfs__write_int(const char *entry, int value);
-> +
-> +bool file_available(const char *name);
->  #endif /* __API_FS__ */
-> diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
-> index 74d69db1ea99..c875dded65bb 100644
-> --- a/tools/perf/arch/x86/util/pmu.c
-> +++ b/tools/perf/arch/x86/util/pmu.c
-> @@ -13,7 +13,6 @@
->  #include "../../../util/intel-pt.h"
->  #include "../../../util/intel-bts.h"
->  #include "../../../util/pmu.h"
-> -#include "../../../util/fncache.h"
+> -       evsel->exclude_GH = orig->exclude_GH;
+> +       evsel->core.exclude_GH = orig->core.exclude_GH;
+>         evsel->sample_read = orig->sample_read;
+>         evsel->core.auto_merge_stats = orig->core.auto_merge_stats;
+>         evsel->collect_stat = orig->collect_stat;
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index f6cc1e78903f..6c3634ed169a 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -62,7 +62,6 @@ struct evsel {
+>                 double                  scale;
+>                 struct cgroup           *cgrp;
+>                 /* parse modifier helper */
+> -               int                     exclude_GH;
+>                 int                     sample_read;
+>                 bool                    snapshot;
+>                 bool                    per_pkg;
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index 1878ea1310d3..89787ebc23ef 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -1918,7 +1918,7 @@ static int get_event_modifier(struct event_modifier *mod, char *str,
+>         int exclusive = evsel ? evsel->core.attr.exclusive : 0;
 >
->  #define TEMPLATE_ALIAS "%s/bus/event_source/devices/%s/alias"
+>         int exclude = eu | ek | eh;
+> -       int exclude_GH = evsel ? evsel->exclude_GH : 0;
+> +       int exclude_GH = evsel ? evsel->core.exclude_GH : 0;
+>         int weak = 0;
+>         int bpf_counter = 0;
 >
-> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-> index 8875e388563e..69381fe1655d 100644
-> --- a/tools/perf/tests/parse-events.c
-> +++ b/tools/perf/tests/parse-events.c
-> @@ -9,7 +9,6 @@
->  #include "pmu-hybrid.h"
->  #include <dirent.h>
->  #include <errno.h>
-> -#include "fncache.h"
->  #include <sys/types.h>
->  #include <sys/stat.h>
->  #include <unistd.h>
-> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> index 03d5d6ed7fe4..b93828aacc27 100644
-> --- a/tools/perf/util/Build
-> +++ b/tools/perf/util/Build
-> @@ -52,7 +52,6 @@ perf-y += header.o
->  perf-y += callchain.o
->  perf-y += values.o
->  perf-y += debug.o
-> -perf-y += fncache.o
->  perf-y += machine.o
->  perf-y += map.o
->  perf-y += pstack.o
-> diff --git a/tools/perf/util/fncache.c b/tools/perf/util/fncache.c
-> deleted file mode 100644
-> index 6225cbc52310..000000000000
-> --- a/tools/perf/util/fncache.c
-> +++ /dev/null
-> @@ -1,63 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0-only
-> -/* Manage a cache of file names' existence */
-> -#include <stdlib.h>
-> -#include <unistd.h>
-> -#include <string.h>
-> -#include <linux/list.h>
-> -#include "fncache.h"
-> -
-> -struct fncache {
-> -       struct hlist_node nd;
-> -       bool res;
-> -       char name[];
-> -};
-> -
-> -#define FNHSIZE 61
-> -
-> -static struct hlist_head fncache_hash[FNHSIZE];
-> -
-> -unsigned shash(const unsigned char *s)
-> -{
-> -       unsigned h = 0;
-> -       while (*s)
-> -               h = 65599 * h + *s++;
-> -       return h ^ (h >> 16);
-> -}
-> -
-> -static bool lookup_fncache(const char *name, bool *res)
-> -{
-> -       int h = shash((const unsigned char *)name) % FNHSIZE;
-> -       struct fncache *n;
-> -
-> -       hlist_for_each_entry(n, &fncache_hash[h], nd) {
-> -               if (!strcmp(n->name, name)) {
-> -                       *res = n->res;
-> -                       return true;
-> -               }
-> -       }
-> -       return false;
-> -}
-> -
-> -static void update_fncache(const char *name, bool res)
-> -{
-> -       struct fncache *n = malloc(sizeof(struct fncache) + strlen(name) + 1);
-> -       int h = shash((const unsigned char *)name) % FNHSIZE;
-> -
-> -       if (!n)
-> -               return;
-> -       strcpy(n->name, name);
-> -       n->res = res;
-> -       hlist_add_head(&n->nd, &fncache_hash[h]);
-> -}
-> -
-> -/* No LRU, only use when bounded in some other way. */
-> -bool file_available(const char *name)
-> -{
-> -       bool res;
-> -
-> -       if (lookup_fncache(name, &res))
-> -               return res;
-> -       res = access(name, R_OK) == 0;
-> -       update_fncache(name, res);
-> -       return res;
-> -}
-> diff --git a/tools/perf/util/fncache.h b/tools/perf/util/fncache.h
-> deleted file mode 100644
-> index fe020beaefb1..000000000000
-> --- a/tools/perf/util/fncache.h
-> +++ /dev/null
-> @@ -1,7 +0,0 @@
-> -#ifndef _FCACHE_H
-> -#define _FCACHE_H 1
-> -
-> -unsigned shash(const unsigned char *s);
-> -bool file_available(const char *name);
-> -
-> -#endif
-> diff --git a/tools/perf/util/pmu-hybrid.c b/tools/perf/util/pmu-hybrid.c
-> index f51ccaac60ee..65fdce81a384 100644
-> --- a/tools/perf/util/pmu-hybrid.c
-> +++ b/tools/perf/util/pmu-hybrid.c
-> @@ -13,7 +13,6 @@
->  #include <stdarg.h>
->  #include <locale.h>
->  #include <api/fs/fs.h>
-> -#include "fncache.h"
->  #include "pmu-hybrid.h"
->
->  LIST_HEAD(perf_pmu__hybrid_pmus);
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 55d834160428..13e1835955e0 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -26,7 +26,6 @@
->  #include "header.h"
->  #include "string2.h"
->  #include "strbuf.h"
-> -#include "fncache.h"
->  #include "pmu-hybrid.h"
->
->  struct perf_pmu perf_pmu__fake;
-> diff --git a/tools/perf/util/python-ext-sources b/tools/perf/util/python-ext-sources
-> index a685d20165f7..992a76c2af01 100644
-> --- a/tools/perf/util/python-ext-sources
-> +++ b/tools/perf/util/python-ext-sources
-> @@ -39,4 +39,3 @@ util/affinity.c
->  util/rwsem.c
->  util/hashmap.c
->  util/pmu-hybrid.c
-> -util/fncache.c
-> diff --git a/tools/perf/util/srccode.c b/tools/perf/util/srccode.c
-> index 476e99896d5e..5c1ff87eb98c 100644
-> --- a/tools/perf/util/srccode.c
-> +++ b/tools/perf/util/srccode.c
-> @@ -16,7 +16,7 @@
->  #include "srccode.h"
->  #include "debug.h"
->  #include <internal/lib.h> // page_size
-> -#include "fncache.h"
-> +#include <api/fs/fs.h>
->
->  #define MAXSRCCACHE (32*1024*1024)
->  #define MAXSRCFILES     64
-> @@ -86,6 +86,14 @@ static void free_srcfile(struct srcfile *sf)
->         num_srcfiles--;
->  }
->
-> +static unsigned shash(const unsigned char *s)
-> +{
-> +       unsigned h = 0;
-> +       while (*s)
-> +               h = 65599 * h + *s++;
-> +       return h ^ (h >> 16);
-> +}
-> +
->  static struct srcfile *find_srcfile(char *fn)
->  {
->         struct stat st;
+> @@ -2049,7 +2049,7 @@ int parse_events__modifier_event(struct list_head *list, char *str, bool add)
+>                 evsel->core.attr.exclude_host   = mod.eH;
+>                 evsel->core.attr.exclude_guest  = mod.eG;
+>                 evsel->core.attr.exclude_idle   = mod.eI;
+> -               evsel->exclude_GH          = mod.exclude_GH;
+> +               evsel->core.exclude_GH          = mod.exclude_GH;
+>                 evsel->sample_read         = mod.sample_read;
+>                 evsel->precise_max         = mod.precise_max;
+>                 evsel->weak_group          = mod.weak;
 > --
 > 2.31.1
 >
