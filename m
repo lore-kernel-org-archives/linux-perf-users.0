@@ -2,116 +2,172 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C25F9C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 18:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C7CCC4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 18:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C41C60184
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 18:20:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E61D61506
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 18:21:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235282AbhKHSXl (ORCPT
+        id S235407AbhKHSYO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 8 Nov 2021 13:23:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37662 "EHLO
+        Mon, 8 Nov 2021 13:24:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235228AbhKHSXk (ORCPT
+        with ESMTP id S235387AbhKHSYO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 8 Nov 2021 13:23:40 -0500
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55B18C061570;
-        Mon,  8 Nov 2021 10:20:56 -0800 (PST)
-Received: by mail-yb1-xb34.google.com with SMTP id q74so45934785ybq.11;
-        Mon, 08 Nov 2021 10:20:56 -0800 (PST)
+        Mon, 8 Nov 2021 13:24:14 -0500
+Received: from mail-io1-xd2e.google.com (mail-io1-xd2e.google.com [IPv6:2607:f8b0:4864:20::d2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5950C061570
+        for <linux-perf-users@vger.kernel.org>; Mon,  8 Nov 2021 10:21:29 -0800 (PST)
+Received: by mail-io1-xd2e.google.com with SMTP id r8so5640237iog.7
+        for <linux-perf-users@vger.kernel.org>; Mon, 08 Nov 2021 10:21:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=r7XPmJ4Slk0Ee3SezOzVKKKVWOfK/ZMFCj2/Il/40bw=;
-        b=iz01UfRunQAw2bNi51uhKvnwK2/Te9f/yoUFFKDmp5I6iZld01jP8o5venupoJWDO+
-         mT94brOYF2rsnQ9uqe12t0Y+xbOW7arQ2DH21TpPvZeFWaXI5omzz1VApkGnM2MZ15FJ
-         1zrT4C+5b5xSRAioqhGnsxz35d7mTG9TJy1xlk8nSZNpch7bGx/VzMczpRLQYkDGKLgP
-         5ReQhsl85aBI38ZkG/w/Zi2jMhqZqgCQ5fiW15aIJpYxdPWKRvVUhoLq9j1KgTwlCnT9
-         nr2UlZ5lWY9ldfsGC+IC+8RUNbeyEOvkY8IZR5FH5Fq96rFeepMMgtBf9TwyowqfnTsJ
-         FQFQ==
+        bh=d2YD7Z4FLD+GD02XtN2ok0eBFyyNepX4WZSV0b3ntEQ=;
+        b=Kkg0HiCq0UcuuHBgy/A5amebpLN//Thbd7fbNzRT0aQO8Fc/Ng3eFCY62NwM9CXQgq
+         hrCmHN6fcpw9AHD/yIrqZ/uGeJLQ8/ZXR2KhBL7+FKyRJzsuPejNWyPVMuy7BjKIEM+0
+         tagqY8mcxIdihVQr8W4DNOdCBgHswNDEoxg6IoNPy9U+9349QZ6FVdSCGa3TBdqhGrEU
+         1wu/SAY9NGawjgBVnUFsU5hPBwbaDpW5iL7NPdirml4vqDy/osfCtLCk5Vtl9Fp+SAwf
+         hKoyu/7Wo36MzsUS5w8uP6w1twnwafmsf8eoFo3hSJJ41KoFRyjT/EHKvLQ4osj1cDOO
+         IQEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=r7XPmJ4Slk0Ee3SezOzVKKKVWOfK/ZMFCj2/Il/40bw=;
-        b=I7ZRzP1GYj+660QOf/Kt6LiEsIkKcyoIpw3wizWepEdoy3kXYg2N3VTdnxZoyow3Rm
-         ssB2A1Cs3SKFavu78EP4+/iKylfDBvSHoTO2Bozo8mZLqbCC9Y5eMyFEj8C8wYr8F15N
-         baIcTl/SNJLFaDJ7GHefrE9AKmZzCSYdY0vF6r0qfUwt9qw/eUdQDLu3my5JBQ0vKO0H
-         A6hUhg8gdOJ39ZAHM2PrrqzkuaTzB5Jpibk+bW8MHbsVRWfcaeU6MqAsHEVqP4ClbSdf
-         XR+GU7Phcj7ZtuYM2FW6AejYtlc4TDYoXU+ndybHOxSAbAdOUfa1mt6npVaS/3XejMNA
-         mdqg==
-X-Gm-Message-State: AOAM5333zwdGKHmvt/V7GGahPeAHbRzuzySF5bnmBwsjHdYT82ekRhBT
-        S+OQQ396a2BdoaJXMex2weXiM3TsN+DShiR7iOyyNBlpM0s=
-X-Google-Smtp-Source: ABdhPJzKAxzbKjPtiiGNx7AYawm+AKqI67L99mxmMg0zsCRfBfiQ633kM0HeDLshFyAnNtdF6Ej5bom8rFbvvTcqyW4=
-X-Received: by 2002:a25:cc4c:: with SMTP id l73mr1441620ybf.114.1636395655412;
- Mon, 08 Nov 2021 10:20:55 -0800 (PST)
+        bh=d2YD7Z4FLD+GD02XtN2ok0eBFyyNepX4WZSV0b3ntEQ=;
+        b=qpbYh7hn5RmchRiUWsu3btX/Xr31xEJCzGN09lTfTR5VKWxD9R0dUUXdSwjnBOgjH+
+         W95BQUl20yIqSTAHuM05p0piQlA4WQ3oQ05d6Xf96Yr+d59uQaoGgUoWBvYHgWq41NnC
+         8mHfVu4cUxwqXc9hoyCdlpRtrrn3W1RNEVSa0KIsfa68/7IUrvmkOoPKvz+2gchi/eHS
+         5lj+/rIxcjOmr4DcLvmWkIg1ZRWsqt2XxhE5uNkCbREoeqx02k6mof19S6RRsPqR9CWo
+         aIiTy5JPpK66uHZApWWVy0ZZWm7hwNeCUW7C+vCJcH+FRjRxRUBK7cb4HtBnD3ypRPPe
+         gEnw==
+X-Gm-Message-State: AOAM531aNgFG+Pp9mk7LAJv2golHn3nK9ufR5sNSCB/Kl+YB3RCwMMi+
+        /M2RgWSpoaJ2GY+IieriHsIOX/5Hfxxxdtq6yhw1UQ==
+X-Google-Smtp-Source: ABdhPJyRiLE0F7ad4fVzxirUR6Rq7YwjzLgUQjY7I5R+Xw1qUW0ODtnQuSRvql/SslnkAOAWgrCzx/ZYx7mBNuq4Leg=
+X-Received: by 2002:a05:6638:144f:: with SMTP id l15mr847953jad.21.1636395689160;
+ Mon, 08 Nov 2021 10:21:29 -0800 (PST)
 MIME-Version: 1.0
-References: <20211108083840.4627-1-laoar.shao@gmail.com> <20211108083840.4627-6-laoar.shao@gmail.com>
-In-Reply-To: <20211108083840.4627-6-laoar.shao@gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 8 Nov 2021 10:20:44 -0800
-Message-ID: <CAEf4BzYn3PwjhjzWV8oPD3A8ozLN_Y4ef7xAHW+oECOMgtMgcA@mail.gmail.com>
-Subject: Re: [PATCH 5/7] samples/bpf/test_overhead_kprobe_kern: make it adopt
- to task comm size change
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        kernel test robot <oliver.sang@intel.com>,
-        kbuild test robot <lkp@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Hildenbrand <david@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Petr Mladek <pmladek@suse.com>
+References: <20211108133710.1352822-1-jolsa@kernel.org> <20211108133710.1352822-31-jolsa@kernel.org>
+In-Reply-To: <20211108133710.1352822-31-jolsa@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 8 Nov 2021 10:21:14 -0800
+Message-ID: <CAP-5=fWQtYizPSXw2NPLBhV-W-a=sK_aKC6HNSwNACGE0hUiGQ@mail.gmail.com>
+Subject: Re: [PATCH 30/59] libperf: Move in struct parse_events_state
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Nov 8, 2021 at 12:39 AM Yafang Shao <laoar.shao@gmail.com> wrote:
+On Mon, Nov 8, 2021 at 5:40 AM Jiri Olsa <jolsa@redhat.com> wrote:
 >
-> bpf_probe_read_kernel_str() will add a nul terminator to the dst, then
-> we don't care about if the dst size is big enough. This patch also
-> replaces the hard-coded 16 with TASK_COMM_LEN to make it adopt to task
-> comm size change.
+> Moving in struct parse_events_state to libperf
+> together with related structs.
 >
-> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-> Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-> Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-> Cc: Michal Miroslaw <mirq-linux@rere.qmqm.pl>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Petr Mladek <pmladek@suse.com>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 > ---
-
-LGTM.
-
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
-
->  samples/bpf/offwaketime_kern.c          |  4 ++--
->  samples/bpf/test_overhead_kprobe_kern.c | 11 ++++++-----
->  samples/bpf/test_overhead_tp_kern.c     |  5 +++--
->  3 files changed, 11 insertions(+), 9 deletions(-)
+>  .../lib/perf/include/internal/parse-events.h  | 29 +++++++++++++++++++
+>  tools/perf/util/parse-events.h                | 28 ------------------
+>  2 files changed, 29 insertions(+), 28 deletions(-)
 >
+> diff --git a/tools/lib/perf/include/internal/parse-events.h b/tools/lib/perf/include/internal/parse-events.h
+> index 46f632efd71b..aff13afa08e1 100644
+> --- a/tools/lib/perf/include/internal/parse-events.h
+> +++ b/tools/lib/perf/include/internal/parse-events.h
+> @@ -5,6 +5,7 @@
+>  #include <linux/types.h>
+>  #include <linux/list.h>
+>  #include <unistd.h>
+> +#include <linux/perf_event.h>
+>
+>  struct event_symbol {
+>         const char      *symbol;
+> @@ -74,6 +75,34 @@ struct parse_events_term {
+>         bool weak;
+>  };
+>
+> +struct parse_events_error {
+> +       int   num_errors;       /* number of errors encountered */
+> +       int   idx;      /* index in the parsed string */
+> +       char *str;      /* string to display at the index */
+> +       char *help;     /* optional help string */
+> +       int   first_idx;/* as above, but for the first encountered error */
+> +       char *first_str;
+> +       char *first_help;
+> +};
 
-[...]
+Just to note that this will conflict with the patches in:
+https://lore.kernel.org/lkml/YYfyEcPfj5ct7w7Q@kernel.org/
+Which may mean a bit larger change.
+
+Thanks,
+Ian
+
+> +struct parse_events_ops {
+> +       struct perf_evsel* (*perf_evsel__new)(struct perf_event_attr *attr, int idx);
+> +       struct perf_evsel* (*perf_evsel__new_tp)(const char *sys, const char *name, int idx);
+> +};
+> +
+> +struct parse_events_state {
+> +       struct list_head           list;
+> +       int                        idx;
+> +       int                        nr_groups;
+> +       struct parse_events_error *error;
+> +       struct perf_evlist        *evlist;
+> +       struct list_head          *terms;
+> +       int                        stoken;
+> +       struct perf_pmu           *fake_pmu;
+> +       char                      *hybrid_pmu_name;
+> +       struct parse_events_ops   *ops;
+> +};
+> +
+>  int parse_events_term__num(struct parse_events_term **term,
+>                            int type_term, char *config, u64 num,
+>                            bool novalue,
+> diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+> index 2f75e823124f..057b92778d17 100644
+> --- a/tools/perf/util/parse-events.h
+> +++ b/tools/perf/util/parse-events.h
+> @@ -61,34 +61,6 @@ struct perf_pmu_event_symbol {
+>         enum perf_pmu_event_symbol_type type;
+>  };
+>
+> -struct parse_events_error {
+> -       int   num_errors;       /* number of errors encountered */
+> -       int   idx;      /* index in the parsed string */
+> -       char *str;      /* string to display at the index */
+> -       char *help;     /* optional help string */
+> -       int   first_idx;/* as above, but for the first encountered error */
+> -       char *first_str;
+> -       char *first_help;
+> -};
+> -
+> -struct parse_events_ops {
+> -       struct perf_evsel* (*perf_evsel__new)(struct perf_event_attr *attr, int idx);
+> -       struct perf_evsel* (*perf_evsel__new_tp)(const char *sys, const char *name, int idx);
+> -};
+> -
+> -struct parse_events_state {
+> -       struct list_head           list;
+> -       int                        idx;
+> -       int                        nr_groups;
+> -       struct parse_events_error *error;
+> -       struct perf_evlist        *evlist;
+> -       struct list_head          *terms;
+> -       int                        stoken;
+> -       struct perf_pmu           *fake_pmu;
+> -       char                      *hybrid_pmu_name;
+> -       struct parse_events_ops   *ops;
+> -};
+> -
+>  void parse_events__handle_error(struct parse_events_error *err, int idx,
+>                                 char *str, char *help);
+>  void parse_events__shrink_config_terms(void);
+> --
+> 2.31.1
+>
