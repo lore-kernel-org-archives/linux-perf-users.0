@@ -2,143 +2,92 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F3BC433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 11:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EAFC433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 12:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8935960F14
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 11:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93D1A6125F
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 12:19:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239255AbhKHLey (ORCPT
+        id S237324AbhKHMWa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 8 Nov 2021 06:34:54 -0500
-Received: from foss.arm.com ([217.140.110.172]:49284 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237827AbhKHLey (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 8 Nov 2021 06:34:54 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 571852B;
-        Mon,  8 Nov 2021 03:32:09 -0800 (PST)
-Received: from [10.1.35.131] (e127744.cambridge.arm.com [10.1.35.131])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1452E3F800;
-        Mon,  8 Nov 2021 03:32:06 -0800 (PST)
-Subject: Re: [PATCH 1/3] perf arm-spe: Track task context switch for cpu-mode
- events
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Leo Yan <leo.yan@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <20211102180739.18049-1-german.gomez@arm.com>
- <20211102180739.18049-2-german.gomez@arm.com>
- <20211106032907.GG477387@leoy-ThinkPad-X240s> <YYbcOmudBPDcLKMd@kernel.org>
-From:   German Gomez <german.gomez@arm.com>
-Message-ID: <2d6b41a0-2ded-d8c8-630a-d418a0ef285a@arm.com>
-Date:   Mon, 8 Nov 2021 11:32:05 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        Mon, 8 Nov 2021 07:22:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39336 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230020AbhKHMWa (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 8 Nov 2021 07:22:30 -0500
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E69CC061570
+        for <linux-perf-users@vger.kernel.org>; Mon,  8 Nov 2021 04:19:46 -0800 (PST)
+Received: by mail-pg1-x52a.google.com with SMTP id r80so4668340pgr.9
+        for <linux-perf-users@vger.kernel.org>; Mon, 08 Nov 2021 04:19:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:subject:message-id:mime-version:content-disposition;
+        bh=d59ik40JE0Qg3xm+KRc3jyIsznq3a6nYEStgAFHetjk=;
+        b=LVtY1Lsh1wJYicQvyIVdY0tOx9qkIjnGmoLMa1DHI9La8HlsCMrrqGVxG7vwFGnMmQ
+         T2MqqJ0Ff5RI5vC+JexZJyuZ6KqnRZHj1RyIZbO2YkVnwL364B52gXu7iZ7xp5Gj2nsN
+         Fi92+Up394d+7EDBMvmyfX5UUgYFP3CIt3PXQdWCF/+eLkUtzOKtUw+ACsBpvkSVmkFj
+         3aE94dmPFrlswRsyIBBynPKEWtpGaBgFne3jsjtdbW+M2L164sX3MDlrkMm/Sb7Ys5+p
+         du4w4WW0VJN2gqu8POXwZz+4RFzMuoczriXHNFIsMMFHv23idnMjtHcYy+bp3tWWYbdo
+         emyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition;
+        bh=d59ik40JE0Qg3xm+KRc3jyIsznq3a6nYEStgAFHetjk=;
+        b=2dyhsJmLhooq0S6HX8n/vjm2ntdljZLtSwcbZDodIz8rAAXwwycjgBKFE1ZioRVDGy
+         z24JS3rTlqC39HrQ+fR3Eub6PIvi5Y06cGQsBVpnU046L2lpwwKqT4vYvDO5mq8B37or
+         FfZtp+RW2PYO7hzFqhrD7RbAH+BmejDdYlrLsodCurlsir+T6KETk1nlvha+HAYsnSrC
+         civGqTKqC9eLE3g63MkaV5NfTTv6U+aqZbfaDgXeY1KVvPUKZGEj7YX/QYRUNUD3m4FN
+         L2YXXoDliDi/yJEiVqcms7rEzEWe7B9hg2qi7hSleW5xIgzQskwVr430UlGiKy+ogci3
+         U59g==
+X-Gm-Message-State: AOAM533ON8rP2aybuoEo0D7KloQb9pMXm05/v0QQIaQxhLdpxDgnMTzT
+        aH0ds5wgir1+iZux8ObmU2Lxpw==
+X-Google-Smtp-Source: ABdhPJyVfx5SOGb17HjhO58f/lcqYt0rzNVO+yQVzsPtkOBZCJ1ixqdBfeouuQV39ZUsv1TF6Ly3GA==
+X-Received: by 2002:a63:6c4a:: with SMTP id h71mr55126977pgc.173.1636373985723;
+        Mon, 08 Nov 2021 04:19:45 -0800 (PST)
+Received: from leoy-ThinkPad-X240s ([134.195.101.46])
+        by smtp.gmail.com with ESMTPSA id j7sm12068918pjf.41.2021.11.08.04.19.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Nov 2021 04:19:45 -0800 (PST)
+Date:   Mon, 8 Nov 2021 20:19:41 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     John Garry <john.garry@huawei.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Question: SMMUv3 PMU event aliasing
+Message-ID: <20211108121941.GC1267967@leoy-ThinkPad-X240s>
 MIME-Version: 1.0
-In-Reply-To: <YYbcOmudBPDcLKMd@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi John,
 
-On 06/11/2021 19:49, Arnaldo Carvalho de Melo wrote:
-> Em Sat, Nov 06, 2021 at 11:29:07AM +0800, Leo Yan escreveu:
->> [...]
->> Reviewed-by: Leo Yan <leo.yan@linaro.org>
->>
->> Note for one thing, please keep "Namhyung Kim" as the author for this
->> patch, thanks.
-> This merits a v2 submission, please do so.
->
-> - Arnaldo
->  
+[ + mailing list ]
 
-Will do,
+I'd like to confirm the latest upstream status for SMMUv3 PMU event
+aliasing.
 
-Also will fix the authorship of [2/3].
+I see the patch set v6 of "perf pmu-events: Support event aliasing for
+system PMUs" [1] has been landed on the mainline kernel, and as an
+example, imx8mm DDR PMU has been supported as system PMU [2].
 
-Thanks,
-German
+On the other hand, I can see patch set 5 contains the SMMUv3 PMU event
+aliasing with patch "perf vendor events arm64: Add Architected events
+smmuv3-pmcg.json" [3], but this patch was left out in patch set 6 and
+it's never landed on the mainline kernel.
 
->> Leo
->>
->>> ---
->>>  tools/perf/arch/arm64/util/arm-spe.c |  6 +++++-
->>>  tools/perf/util/arm-spe.c            | 25 +++++++++++++++++++++++++
->>>  2 files changed, 30 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
->>> index a4420d4df..58ba8d15c 100644
->>> --- a/tools/perf/arch/arm64/util/arm-spe.c
->>> +++ b/tools/perf/arch/arm64/util/arm-spe.c
->>> @@ -166,8 +166,12 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
->>>  	tracking_evsel->core.attr.sample_period = 1;
->>>  
->>>  	/* In per-cpu case, always need the time of mmap events etc */
->>> -	if (!perf_cpu_map__empty(cpus))
->>> +	if (!perf_cpu_map__empty(cpus)) {
->>>  		evsel__set_sample_bit(tracking_evsel, TIME);
->>> +		evsel__set_sample_bit(tracking_evsel, CPU);
->>> +		/* also track task context switch */
->>> +		tracking_evsel->core.attr.context_switch = 1;
->>> +	}
->>>  
->>>  	return 0;
->>>  }
->>> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
->>> index 58b7069c5..230bc7ab2 100644
->>> --- a/tools/perf/util/arm-spe.c
->>> +++ b/tools/perf/util/arm-spe.c
->>> @@ -681,6 +681,25 @@ static int arm_spe_process_timeless_queues(struct arm_spe *spe, pid_t tid,
->>>  	return 0;
->>>  }
->>>  
->>> +static int arm_spe_context_switch(struct arm_spe *spe, union perf_event *event,
->>> +				  struct perf_sample *sample)
->>> +{
->>> +	pid_t pid, tid;
->>> +	int cpu;
->>> +
->>> +	if (!(event->header.misc & PERF_RECORD_MISC_SWITCH_OUT))
->>> +		return 0;
->>> +
->>> +	pid = event->context_switch.next_prev_pid;
->>> +	tid = event->context_switch.next_prev_tid;
->>> +	cpu = sample->cpu;
->>> +
->>> +	if (tid == -1)
->>> +		pr_warning("context_switch event has no tid\n");
->>> +
->>> +	return machine__set_current_tid(spe->machine, cpu, pid, tid);
->>> +}
->>> +
->>>  static int arm_spe_process_event(struct perf_session *session,
->>>  				 union perf_event *event,
->>>  				 struct perf_sample *sample,
->>> @@ -718,6 +737,12 @@ static int arm_spe_process_event(struct perf_session *session,
->>>  		}
->>>  	} else if (timestamp) {
->>>  		err = arm_spe_process_queues(spe, timestamp);
->>> +		if (err)
->>> +			return err;
->>> +
->>> +		if (event->header.type == PERF_RECORD_SWITCH_CPU_WIDE ||
->>> +		    event->header.type == PERF_RECORD_SWITCH)
->>> +			err = arm_spe_context_switch(spe, event, sample);
->>>  	}
->>>  
->>>  	return err;
->>> -- 
->>> 2.25.1
->>>
+Could you share current status (or plan) for upstreaming SMMUv3 PMU
+event alias?  Or if there have any block issue to prevent merging the
+changes in the mainline kernel?
+
+Thanks for your help!
+
+Leo
+
+[1] https://lore.kernel.org/lkml/1607080216-36968-1-git-send-email-john.garry@huawei.com/
+[2] pmu-events/arch/arm64/freescale/imx8mm/sys/ddrc.json
+[3] https://lore.kernel.org/lkml/1604666153-4187-6-git-send-email-john.garry@huawei.com/
