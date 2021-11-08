@@ -2,59 +2,59 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F40C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 18:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF997C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 18:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9418B60EE5
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 18:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F17061055
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 18:33:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235525AbhKHSaM (ORCPT
+        id S235649AbhKHSf6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 8 Nov 2021 13:30:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39134 "EHLO
+        Mon, 8 Nov 2021 13:35:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235383AbhKHSaK (ORCPT
+        with ESMTP id S235438AbhKHSf5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 8 Nov 2021 13:30:10 -0500
-Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7B45C061570
-        for <linux-perf-users@vger.kernel.org>; Mon,  8 Nov 2021 10:27:25 -0800 (PST)
-Received: by mail-io1-xd31.google.com with SMTP id z26so2845165iod.10
-        for <linux-perf-users@vger.kernel.org>; Mon, 08 Nov 2021 10:27:25 -0800 (PST)
+        Mon, 8 Nov 2021 13:35:57 -0500
+Received: from mail-il1-x131.google.com (mail-il1-x131.google.com [IPv6:2607:f8b0:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 304F3C061570
+        for <linux-perf-users@vger.kernel.org>; Mon,  8 Nov 2021 10:33:13 -0800 (PST)
+Received: by mail-il1-x131.google.com with SMTP id l8so17975843ilv.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 08 Nov 2021 10:33:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=oQP/WxuiAebTrnI6/GjM1jYNcsYTCHvWypTqL01iTK8=;
-        b=Ls+OfrXcX9g2WrpaaLDab7AyC2RSxgG0pf/avrUsxRryvMNt6Flb4nShyhDWyh0EK0
-         3OwdKyLKEuBgB5W9NMVDvd+p1RhnkhZhgC3B7mW6doQtCB0Xg650gqctZY5I9xO5qWML
-         /To9BJKIMxanM6te571vTz+84QHG9u/7nu5YzOtVIJIw9Qm94XEvKU0sC673ZdDAvQST
-         oEI6oAIw75R3pmxxg5fo0DpeTnmoPyhv0hOBpidf+AxM+N4m4agQxRW3ajzYv2zREUFc
-         j4WJovzcHsHHvkHJRfS+l5jxxyStmTbdlglsjZWUVdkva8Hcu9X46OwA/c1ZwMZhqnn3
-         NN5w==
+        bh=QIVfKaHwJtR526+2LMpHnZAbFDnNe63R3JsZeT3APHQ=;
+        b=qKnNuMB2Yysr+YHoLtECOqBtd6RqCsxpkRe4i8GBps3dnBnyDJXRNQPDe/Bq/+OROk
+         8HObSeh0X0wJ6M8xg8Qk8x0ONCUdEpIp0P9U/zYGUh7Dmw8rQ3b7gzaxf2Ywoa8Z+Vpt
+         wkiyv7Gep4/KVSQ4MTdfYkTpjUEPvRYELtkRzQolT5iH/SljwcwX/4k41FsjFGfyGzT7
+         p2YB8tn/+f9BcyWe1r/vneK9Va05uMSfwtpvPkop7AsZxNA4wZaW0r+//yMUZPnQKp/a
+         oS1Z61TXOgT58LZJxPxnmb5h9Su7VQ66x2TWqjKFelEpUtn9CjI2msUWg5iod+2Cc5Hc
+         ZEmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=oQP/WxuiAebTrnI6/GjM1jYNcsYTCHvWypTqL01iTK8=;
-        b=sACV1uTxb3UgjT32E246h26Sag7oxD+lPNLUGnXwJ3m60rb5h4nO2+HPYH0WHk5I1K
-         wG0FA7+CqV3f9JNRBFP0mGaSDdBWGowDOCls49TAhPviM98oK5Auebd7NcmAV39Dw1Ka
-         17hNltT12MwcjC2yz75QMFyYRlBkK4hIREZgrEex9umY58GsLoaVrbKF0TM2gN1/SQCE
-         T4Dtdyjt4wJsDFN7rULOUk1X5ZGSIcLPVdVHYmDg7j0seJdQGTnQZi8rHDFVk/Iime3I
-         Vs9iegJqZmYW0CmdW1qQzrsiAJemRU95UQg/YY1drK7TTID4lLcDO03KMQN01BWm0+86
-         6DOQ==
-X-Gm-Message-State: AOAM530LXem97dRxWhxyyWqWP8fTsoxtcL9Yvf+CSG3xkx1DLX1O4Z0D
-        pu8WQUGbbnckJleAGqMqhH3NJIeTqA6D3nNF2hqFQg==
-X-Google-Smtp-Source: ABdhPJw5WJw9glrM0YQCC5FvNmHcKzFSy9kSVErTgXaW+b+RA34GqHsuo9QlAc4+AnFUDYyTZaizID1Hz3UUG5aP8s8=
-X-Received: by 2002:a6b:b886:: with SMTP id i128mr802620iof.151.1636396044897;
- Mon, 08 Nov 2021 10:27:24 -0800 (PST)
+        bh=QIVfKaHwJtR526+2LMpHnZAbFDnNe63R3JsZeT3APHQ=;
+        b=6MD7E49zmZMokdZOBtwb5VWjyh4cJCTJdqeRnzJlRaEhh5AxNjofsVM2S28ctKIMBn
+         k85I9MA2vQMkYHRVpZymkBevHyJTg31eZQw3JUAUMseT050fPPHOTZExY0Q1UALVO5yl
+         loK6nUESkqVCgzxLWbgG6BAdngnYe8Ljo5cTdUYYPdkGo+tnOjE2nCTTA6Fxhtbdh5X+
+         JOg4DD/WuEPEDVoDjcQPAXaKT0dHb1fV0ngdMW88kJypngPLNjJSSvr7mOuAWlh3RVyv
+         2T+1iuCf1yZ+D/5bjZzxRvFitUe6Yqqej/yClvwyuvYkYXoNHJC0gcKJLEX8MVKKSS2r
+         Rybg==
+X-Gm-Message-State: AOAM533R8RP4oMpT6jMeqePgTAegP97am1FvM/RyQVK7u+dHuhjy2qEG
+        8YYS52bjEsk6s3e8RdmEYwfzBKk6enQptmz53Vk6yw==
+X-Google-Smtp-Source: ABdhPJw+1BehD8hqC9/bKWsUR1ZuyKUNpsDdVbwKUyo/A5hfrglGQdb4rGHZdmYt/Fr6WbKruKcV62Q1/1AyCXHkgso=
+X-Received: by 2002:a05:6e02:174e:: with SMTP id y14mr832768ill.89.1636396392424;
+ Mon, 08 Nov 2021 10:33:12 -0800 (PST)
 MIME-Version: 1.0
-References: <20211108133710.1352822-1-jolsa@kernel.org> <20211108133710.1352822-47-jolsa@kernel.org>
-In-Reply-To: <20211108133710.1352822-47-jolsa@kernel.org>
+References: <20211108133710.1352822-1-jolsa@kernel.org> <20211108133710.1352822-60-jolsa@kernel.org>
+In-Reply-To: <20211108133710.1352822-60-jolsa@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 8 Nov 2021 10:27:10 -0800
-Message-ID: <CAP-5=fUZyxqJXDuH1kS7fVXy4osCfQGcv9d5yUwuLHjUZumo5g@mail.gmail.com>
-Subject: Re: [PATCH 46/59] perf tools: Add add_numeric callback to struct parse_events_ops
+Date:   Mon, 8 Nov 2021 10:32:57 -0800
+Message-ID: <CAP-5=fXgNKGwiF-HnSrC6S6LKm1qQw66wjEx=0pGELLCcDcfrQ@mail.gmail.com>
+Subject: Re: [PATCH 59/59] libperf: Add parse-events test
 To:     Jiri Olsa <jolsa@redhat.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -64,143 +64,119 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Nov 8, 2021 at 5:41 AM Jiri Olsa <jolsa@redhat.com> wrote:
+On Mon, Nov 8, 2021 at 5:43 AM Jiri Olsa <jolsa@redhat.com> wrote:
 >
-> Adding add_numeric callback to struct parse_events_ops,
-> to allow custom numeric parsing code.
->
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/lib/perf/include/internal/parse-events.h |  5 +++++
->  tools/perf/util/parse-events.c                 |  2 ++
->  tools/perf/util/parse-events.h                 |  4 ----
->  tools/perf/util/parse-events.y                 | 12 ++++++++----
->  4 files changed, 15 insertions(+), 8 deletions(-)
->
-> diff --git a/tools/lib/perf/include/internal/parse-events.h b/tools/lib/perf/include/internal/parse-events.h
-> index 78dd3f989346..cbcf799f8969 100644
-> --- a/tools/lib/perf/include/internal/parse-events.h
-> +++ b/tools/lib/perf/include/internal/parse-events.h
-> @@ -102,6 +102,11 @@ struct parse_events_ops {
->         int (*add_pmu_multi)(struct parse_events_state *parse_state,
->                              char *str, struct list_head *head,
->                              struct list_head **listp);
-> +
-> +       int (*add_numeric)(struct parse_events_state *parse_state,
-> +                          struct list_head *list,
-> +                          u32 type, u64 config,
-> +                          struct list_head *head_config);
->  };
->
->  struct parse_events_state {
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index c67634c9de0d..a05e1bdb4e60 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -1306,6 +1306,7 @@ int parse_events_add_tracepoint(struct parse_events_state *parse_state,
->                                             err, head_config);
->  }
->
-> +static
->  int parse_events_add_numeric(struct parse_events_state *parse_state,
->                              struct list_head *list,
->                              u32 type, u64 config,
-> @@ -2904,4 +2905,5 @@ static struct parse_events_ops parse_state_ops = {
->         .perf_evsel__delete = perf_evsel__delete_helper,
->         .add_pmu            = parse_events_add_pmu,
->         .add_pmu_multi      = parse_events_multi_pmu_add,
-> +       .add_numeric        = parse_events_add_numeric,
+> Adding parse-events test.
 
-Some documentation on the ops would be awesome :-) Especially as this
-is allowing configuration and it is not immediately clear what that
-could mean when changes happen.
+Fwiw, we fuzz test this code but filter out strings containing .bpf.,
+.o or .c to avoid the fuzzer turning into an LLVM fuzzer. This
+refactoring will solve some linking issues we have. Perhaps we can set
+up fuzz testing here?
 
 Thanks,
 Ian
 
->  };
-> diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-> index fa03f8f70f33..40d192cace03 100644
-> --- a/tools/perf/util/parse-events.h
-> +++ b/tools/perf/util/parse-events.h
-> @@ -79,10 +79,6 @@ int parse_events_load_bpf_obj(struct parse_events_state *parse_state,
->                               struct list_head *list,
->                               struct bpf_object *obj,
->                               struct list_head *head_config);
-> -int parse_events_add_numeric(struct parse_events_state *parse_state,
-> -                            struct list_head *list,
-> -                            u32 type, u64 config,
-> -                            struct list_head *head_config);
->  int parse_events_add_tool(struct parse_events_state *parse_state,
->                           struct list_head *list,
->                           int tool_event);
-> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-> index f903690b3c8a..b23691397374 100644
-> --- a/tools/perf/util/parse-events.y
-> +++ b/tools/perf/util/parse-events.y
-> @@ -436,6 +436,7 @@ PE_VALUE_SYM_SW
->  event_legacy_symbol:
->  value_sym '/' event_config '/'
->  {
-> +       struct parse_events_state *parse_state = _parse_state;
->         struct list_head *list;
->         int type = $1 >> 16;
->         int config = $1 & 255;
-> @@ -443,7 +444,7 @@ value_sym '/' event_config '/'
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/lib/perf/tests/Build               |  1 +
+>  tools/lib/perf/tests/main.c              |  1 +
+>  tools/lib/perf/tests/test-evlist.c       |  2 ++
+>  tools/lib/perf/tests/test-parse-events.c | 41 ++++++++++++++++++++++++
+>  tools/lib/perf/tests/tests.h             |  1 +
+>  5 files changed, 46 insertions(+)
+>  create mode 100644 tools/lib/perf/tests/test-parse-events.c
 >
->         list = alloc_list();
->         ABORT_ON(!list);
-> -       err = parse_events_add_numeric(_parse_state, list, type, config, $3);
-> +       err = parse_state->ops->add_numeric(parse_state, list, type, config, $3);
->         parse_events_terms__delete($3);
->         if (err) {
->                 free_list_evsel(_parse_state, list);
-> @@ -454,13 +455,14 @@ value_sym '/' event_config '/'
->  |
->  value_sym sep_slash_slash_dc
->  {
-> +       struct parse_events_state *parse_state = _parse_state;
->         struct list_head *list;
->         int type = $1 >> 16;
->         int config = $1 & 255;
+> diff --git a/tools/lib/perf/tests/Build b/tools/lib/perf/tests/Build
+> index 56e81378d443..f1d1133d8dae 100644
+> --- a/tools/lib/perf/tests/Build
+> +++ b/tools/lib/perf/tests/Build
+> @@ -3,3 +3,4 @@ tests-y += test-evsel.o
+>  tests-y += test-evlist.o
+>  tests-y += test-cpumap.o
+>  tests-y += test-threadmap.o
+> +tests-y += test-parse-events.o
+> diff --git a/tools/lib/perf/tests/main.c b/tools/lib/perf/tests/main.c
+> index 56423fd4db19..bfa8ba05c422 100644
+> --- a/tools/lib/perf/tests/main.c
+> +++ b/tools/lib/perf/tests/main.c
+> @@ -7,6 +7,7 @@ int tests_verbose;
 >
->         list = alloc_list();
->         ABORT_ON(!list);
-> -       ABORT_ON(parse_events_add_numeric(_parse_state, list, type, config, NULL));
-> +       ABORT_ON(parse_state->ops->add_numeric(parse_state, list, type, config, NULL));
->         $$ = list;
->  }
->  |
-> @@ -646,12 +648,13 @@ PE_NAME ':' PE_NAME
->  event_legacy_numeric:
->  PE_VALUE ':' PE_VALUE opt_event_config
+>  int main(int argc, char **argv)
 >  {
-> +       struct parse_events_state *parse_state = _parse_state;
->         struct list_head *list;
->         int err;
+> +       __T("test parse_events", !test_parse_events(argc, argv));
+>         __T("test cpumap", !test_cpumap(argc, argv));
+>         __T("test threadmap", !test_threadmap(argc, argv));
+>         __T("test evlist", !test_evlist(argc, argv));
+> diff --git a/tools/lib/perf/tests/test-evlist.c b/tools/lib/perf/tests/test-evlist.c
+> index ce91a582f0e4..199451a605a1 100644
+> --- a/tools/lib/perf/tests/test-evlist.c
+> +++ b/tools/lib/perf/tests/test-evlist.c
+> @@ -1,5 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> +#ifndef _GNU_SOURCE
+>  #define _GNU_SOURCE // needed for sched.h to get sched_[gs]etaffinity and CPU_(ZERO,SET)
+> +#endif
+>  #include <sched.h>
+>  #include <stdio.h>
+>  #include <stdarg.h>
+> diff --git a/tools/lib/perf/tests/test-parse-events.c b/tools/lib/perf/tests/test-parse-events.c
+> new file mode 100644
+> index 000000000000..5f913f82de7f
+> --- /dev/null
+> +++ b/tools/lib/perf/tests/test-parse-events.c
+> @@ -0,0 +1,41 @@
+> +#include <stdio.h>
+> +#include <linux/perf_event.h>
+> +#include <linux/hw_breakpoint.h>
+> +#include <perf/evlist.h>
+> +#include <perf/evsel.h>
+> +#include <internal/evlist.h>
+> +#include <internal/tests.h>
+> +#include "tests.h"
+> +
+> +static int libperf_print(enum libperf_print_level level,
+> +                        const char *fmt, va_list ap)
+> +{
+> +       return vfprintf(stderr, fmt, ap);
+> +}
+> +
+> +int test_parse_events(int argc, char **argv)
+> +{
+> +       struct perf_evlist *evlist;
+> +       struct perf_evsel *evsel;
+> +       int err;
+> +
+> +       __T_START;
+> +
+> +       libperf_init(libperf_print);
+> +
+> +       evlist = perf_evlist__new();
+> +       __T("failed to create evlist", evlist);
+> +
+> +       err = libperf_parse_events(evlist, "mem:0:rw");
+> +       __T("failed to parse events", !err);
+> +
+> +       evsel = perf_evlist__first(evlist);
+> +
+> +       __T("wrong type", PERF_TYPE_BREAKPOINT == evsel->attr.type);
+> +       __T("wrong config", 0 == evsel->attr.config);
+> +       __T("wrong bp_type", (HW_BREAKPOINT_R|HW_BREAKPOINT_W) == evsel->attr.bp_type);
+> +       __T("wrong bp_len", HW_BREAKPOINT_LEN_4 == evsel->attr.bp_len);
+> +
+> +       __T_END;
+> +       return tests_failed == 0 ? 0 : -1;
+> +}
+> diff --git a/tools/lib/perf/tests/tests.h b/tools/lib/perf/tests/tests.h
+> index 604838f21b2b..b4f27fc9c46d 100644
+> --- a/tools/lib/perf/tests/tests.h
+> +++ b/tools/lib/perf/tests/tests.h
+> @@ -6,5 +6,6 @@ int test_cpumap(int argc, char **argv);
+>  int test_threadmap(int argc, char **argv);
+>  int test_evlist(int argc, char **argv);
+>  int test_evsel(int argc, char **argv);
+> +int test_parse_events(int argc, char **argv);
 >
->         list = alloc_list();
->         ABORT_ON(!list);
-> -       err = parse_events_add_numeric(_parse_state, list, (u32)$1, $3, $4);
-> +       err = parse_state->ops->add_numeric(_parse_state, list, (u32)$1, $3, $4);
->         parse_events_terms__delete($4);
->         if (err) {
->                 free(list);
-> @@ -663,12 +666,13 @@ PE_VALUE ':' PE_VALUE opt_event_config
->  event_legacy_raw:
->  PE_RAW opt_event_config
->  {
-> +       struct parse_events_state *parse_state = _parse_state;
->         struct list_head *list;
->         int err;
->
->         list = alloc_list();
->         ABORT_ON(!list);
-> -       err = parse_events_add_numeric(_parse_state, list, PERF_TYPE_RAW, $1, $2);
-> +       err = parse_state->ops->add_numeric(_parse_state, list, PERF_TYPE_RAW, $1, $2);
->         parse_events_terms__delete($2);
->         if (err) {
->                 free(list);
+>  #endif /* TESTS_H */
 > --
 > 2.31.1
 >
