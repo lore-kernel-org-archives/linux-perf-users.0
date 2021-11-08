@@ -2,68 +2,68 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06045C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 13:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F4EC433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 13:38:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9A3561503
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 13:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0238E61458
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 13:38:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240001AbhKHNlQ (ORCPT
+        id S240005AbhKHNlW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 8 Nov 2021 08:41:16 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:44389 "EHLO
+        Mon, 8 Nov 2021 08:41:22 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:38733 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235425AbhKHNlO (ORCPT
+        by vger.kernel.org with ESMTP id S235425AbhKHNlU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 8 Nov 2021 08:41:14 -0500
+        Mon, 8 Nov 2021 08:41:20 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1636378710;
+        s=mimecast20190719; t=1636378715;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=YLBA1Oe4nN8hMmBDSo04wyRlG7j4QoM0Vc2uGB7wq2U=;
-        b=jPWQlMcpJSuIm39mj9ii86AnqhskSvgiawj07HKWEepxGCEpYr+StqN5aw2dJ6fbHVKbRB
-        PQBgsMILBvRZk6GSZcZYmsqH87teMu8ibQKukMuHlyg8s7fIgfSP8zaoTh6/mN35B6rAeL
-        /QqeOi988Qg518z5OXY5IQcFgJ9+9To=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-585-H6Uc3FR5PpO8ZmcXuWu_IQ-1; Mon, 08 Nov 2021 08:38:28 -0500
-X-MC-Unique: H6Uc3FR5PpO8ZmcXuWu_IQ-1
-Received: by mail-wm1-f72.google.com with SMTP id a186-20020a1c7fc3000000b00332f1a308e7so10170482wmd.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 08 Nov 2021 05:38:28 -0800 (PST)
+        bh=cb4xeltO1DDlNqYovIXsipHet5daTDCWdu9vonMgzKQ=;
+        b=WTKxwY7sOZ5TUO/XkLfEaDb95F/RxYspbgi5qreJOp/eJcYle/gds21zbv/lw+7wamki3B
+        1/JAoS/fod3jrdtC66qbiBmt43JB+9OQ8kaXaQ91t+rRdbLwYqjLBmL28jV6K2T+lJq4oY
+        gX1Ch4hlBEHjky5/aOr+2ckz61L2BII=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-343-Yu_PRHjeOqajPAEqfqD1Vg-1; Mon, 08 Nov 2021 08:38:34 -0500
+X-MC-Unique: Yu_PRHjeOqajPAEqfqD1Vg-1
+Received: by mail-wm1-f70.google.com with SMTP id k25-20020a05600c1c9900b00332f798ba1dso10169169wms.4
+        for <linux-perf-users@vger.kernel.org>; Mon, 08 Nov 2021 05:38:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=YLBA1Oe4nN8hMmBDSo04wyRlG7j4QoM0Vc2uGB7wq2U=;
-        b=kZhNnZhzFLgT5rn+VCPIC2kzixg7v88ykDfzof0HJ5h3ZrI83+uJ52xpgO9KLaME53
-         +n7rcvm6KBMxCWg/XDh5MUqQkqz2Y19XAYK3L/k82TJS/yy2RQr7JTitSkB0w2Uo/RC/
-         EdiP15iUcBHXOqTQq6S0W2yHTfzAjbHDnR8Cmd4BUQayrdBmjdSHLBnqjSQ/LHhQtrso
-         zO4GGL8PuOxb2Iy41vTRSxuJAVhiTdSHuHfIfLE2E4UQmjfV+/zqLhWnzgMEZ6hWwB4a
-         MiF9yd3kn8ADkS4/OL3qpU59UKKzVnizkQnt+ncliIbQPAsob66eGypS5+sCi76QzKqZ
-         udxg==
-X-Gm-Message-State: AOAM532FMiuGyEWVvvVUs12cSIq3xE3JRgP18cwb868JzlAiEC8noqIM
-        TZU4TxIknPZZnSUT4QRYpGLiIxBTVEQ1tm8FokQq9ISxYUyyFVivmTYOiF3EuJnkJcTJZz7ytbK
-        wouRbECYH9nHgzoRFgEjN7R4SoOB0Ag==
-X-Received: by 2002:a05:600c:4a27:: with SMTP id c39mr53330197wmp.101.1636378707655;
-        Mon, 08 Nov 2021 05:38:27 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwAvSvwKY8HKHA8eRAptn0NxEuHMCq/yLbbl3nGRibfargu575L+muBIMCdYB/a30vUen8g/A==
-X-Received: by 2002:a05:600c:4a27:: with SMTP id c39mr53330177wmp.101.1636378707459;
-        Mon, 08 Nov 2021 05:38:27 -0800 (PST)
+        bh=cb4xeltO1DDlNqYovIXsipHet5daTDCWdu9vonMgzKQ=;
+        b=KIcpZaQm6li+mD5MBSL/nCAWQorbkIFeOiv8La7/PgYQAi9w5sEjAgZE0y2HeKqOWB
+         Z7C4l2eLrd++Gbgngj7c3bThXuLYY7RMrEStWLhaldYvTJ9ZvGuILFzomDQEAh6TCZPg
+         asi+66G7ja5BRH9FozasvlnJCJT7ugydBo6b0VctiYNHrZkv5sz7+MGp4Gd2fh9sOie4
+         iO0VjAzV+UEjTe5eWec+NLbouE7R146GVb8LGfN6U49n5q+yhu6FDGMIOEmLkRBS6yzX
+         1EPFQcZoN1bvofNPP3pOGZDFsz26tv3DsPTnafv2y1tQMIHHDxHtET/YL2wJBabrJU8t
+         HVow==
+X-Gm-Message-State: AOAM5318HBfbRsgHWg/w21ohuy3jQdJiYEGGKVMHFKI7QxvSiUXyN58v
+        q+HF5OwgzGTY/bmhZeFGtfRkKHJzuDGm8bLGck7nWxK5WKWtVRpU6DytYnJOMO3TEUkup1xQ2JO
+        Zva9HxGwEmoXEpFORhSFSZjFiElEoqQ==
+X-Received: by 2002:a05:6000:1862:: with SMTP id d2mr58984116wri.203.1636378713581;
+        Mon, 08 Nov 2021 05:38:33 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxTIHRp3ugO3MgcEF3rT/cBZhtAPkK0WptdY2fXSaR4ER1lg/cETp7ZAg05FDiBkhyinko93w==
+X-Received: by 2002:a05:6000:1862:: with SMTP id d2mr58984091wri.203.1636378713363;
+        Mon, 08 Nov 2021 05:38:33 -0800 (PST)
 Received: from krava.redhat.com (nat-pool-brq-u.redhat.com. [213.175.37.12])
-        by smtp.gmail.com with ESMTPSA id o10sm7169695wri.15.2021.11.08.05.38.27
+        by smtp.gmail.com with ESMTPSA id g18sm17706611wmq.4.2021.11.08.05.38.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Nov 2021 05:38:27 -0800 (PST)
+        Mon, 08 Nov 2021 05:38:33 -0800 (PST)
 From:   Jiri Olsa <jolsa@redhat.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org
-Subject: [PATCH 11/59] libperf: Move tool_event to perf_evsel
-Date:   Mon,  8 Nov 2021 14:36:22 +0100
-Message-Id: <20211108133710.1352822-12-jolsa@kernel.org>
+Subject: [PATCH 12/59] libperf: Move unit to perf_evsel
+Date:   Mon,  8 Nov 2021 14:36:23 +0100
+Message-Id: <20211108133710.1352822-13-jolsa@kernel.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20211108133710.1352822-1-jolsa@kernel.org>
 References: <20211108133710.1352822-1-jolsa@kernel.org>
@@ -73,122 +73,212 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Moving tool_event to perf_evsel struct.
+Moving unit to perf_evsel struct.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- tools/lib/perf/include/internal/evsel.h | 6 ++++++
+ tools/lib/perf/include/internal/evsel.h | 1 +
  tools/perf/builtin-stat.c               | 2 +-
- tools/perf/util/evsel.c                 | 6 +++---
- tools/perf/util/evsel.h                 | 6 ------
- tools/perf/util/parse-events.c          | 2 +-
- 5 files changed, 11 insertions(+), 11 deletions(-)
+ tools/perf/tests/event_update.c         | 2 +-
+ tools/perf/util/evsel.c                 | 8 ++++----
+ tools/perf/util/evsel.h                 | 1 -
+ tools/perf/util/header.c                | 2 +-
+ tools/perf/util/parse-events.c          | 4 ++--
+ tools/perf/util/stat-display.c          | 8 ++++----
+ tools/perf/util/synthetic-events.c      | 6 +++---
+ 9 files changed, 17 insertions(+), 17 deletions(-)
 
 diff --git a/tools/lib/perf/include/internal/evsel.h b/tools/lib/perf/include/internal/evsel.h
-index dafa1d6be731..105ff0626482 100644
+index 105ff0626482..b96c9f4808ca 100644
 --- a/tools/lib/perf/include/internal/evsel.h
 +++ b/tools/lib/perf/include/internal/evsel.h
-@@ -11,6 +11,11 @@ struct perf_cpu_map;
- struct perf_thread_map;
- struct xyarray;
- 
-+enum perf_tool_event {
-+	PERF_TOOL_NONE		= 0,
-+	PERF_TOOL_DURATION_TIME	= 1,
-+};
-+
- /*
-  * Per fd, to map back from PERF_SAMPLE_ID to evsel, only used when there are
-  * more than one entry in the evlist.
-@@ -62,6 +67,7 @@ struct perf_evsel {
- 		bool			auto_merge_stats;
+@@ -68,6 +68,7 @@ struct perf_evsel {
  		struct list_head	config_terms;
  		const char		*metric_id;
-+		enum perf_tool_event	tool_event;
+ 		enum perf_tool_event	tool_event;
++		const char		*unit;
  	};
  };
  
 diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index f7fda777f122..f697af989d60 100644
+index f697af989d60..f57a366b7a1a 100644
 --- a/tools/perf/builtin-stat.c
 +++ b/tools/perf/builtin-stat.c
-@@ -339,7 +339,7 @@ static int evsel__write_stat_event(struct evsel *counter, u32 cpu, u32 thread,
- static int read_single_counter(struct evsel *counter, int cpu,
- 			       int thread, struct timespec *rs)
- {
--	if (counter->tool_event == PERF_TOOL_DURATION_TIME) {
-+	if (counter->core.tool_event == PERF_TOOL_DURATION_TIME) {
- 		u64 val = rs->tv_nsec + rs->tv_sec*1000000000ULL;
- 		struct perf_counts_values *count =
- 			perf_counts(counter->counts, cpu, thread);
+@@ -917,7 +917,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 			continue;
+ 		}
+ 
+-		l = strlen(counter->unit);
++		l = strlen(counter->core.unit);
+ 		if (l > stat_config.unit_width)
+ 			stat_config.unit_width = l;
+ 
+diff --git a/tools/perf/tests/event_update.c b/tools/perf/tests/event_update.c
+index 44a50527f9d9..556eb8e6b228 100644
+--- a/tools/perf/tests/event_update.c
++++ b/tools/perf/tests/event_update.c
+@@ -99,7 +99,7 @@ int test__event_update(struct test *test __maybe_unused, int subtest __maybe_unu
+ 
+ 	perf_evlist__id_add(&evlist->core, &evsel->core, 0, 0, 123);
+ 
+-	evsel->unit = unit;
++	evsel->core.unit = unit;
+ 
+ 	TEST_ASSERT_VAL("failed to synthesize attr update unit",
+ 			!perf_event__synthesize_event_update_unit(NULL, evsel, process_event_unit));
 diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 52781210a874..3985e69123d2 100644
+index 3985e69123d2..133b571e1190 100644
 --- a/tools/perf/util/evsel.c
 +++ b/tools/perf/util/evsel.c
-@@ -421,7 +421,7 @@ struct evsel *evsel__clone(struct evsel *orig)
- 	evsel->core.leader = orig->core.leader;
+@@ -241,7 +241,7 @@ void evsel__init(struct evsel *evsel,
+ {
+ 	perf_evsel__init(&evsel->core, attr, idx);
+ 	evsel->tracking	   = !idx;
+-	evsel->unit	   = "";
++	evsel->core.unit   = "";
+ 	evsel->scale	   = 1.0;
+ 	evsel->max_events  = ULONG_MAX;
+ 	evsel->evlist	   = NULL;
+@@ -282,7 +282,7 @@ struct evsel *evsel__new_idx(struct perf_event_attr *attr, int idx)
+ 		 */
+ 		static const char *unit = "msec";
+ 
+-		evsel->unit = unit;
++		evsel->core.unit = unit;
+ 		evsel->scale = 1e-6;
+ 	}
+ 
+@@ -422,7 +422,7 @@ struct evsel *evsel__clone(struct evsel *orig)
  
  	evsel->max_events = orig->max_events;
--	evsel->tool_event = orig->tool_event;
-+	evsel->core.tool_event = orig->core.tool_event;
- 	evsel->unit = orig->unit;
+ 	evsel->core.tool_event = orig->core.tool_event;
+-	evsel->unit = orig->unit;
++	evsel->core.unit = orig->core.unit;
  	evsel->scale = orig->scale;
  	evsel->snapshot = orig->snapshot;
-@@ -756,7 +756,7 @@ const char *evsel__name(struct evsel *evsel)
- 		break;
+ 	evsel->per_pkg = orig->per_pkg;
+@@ -1300,7 +1300,7 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+ 		attr->exclude_user   = 1;
+ 	}
  
- 	case PERF_TYPE_SOFTWARE:
--		if (evsel->tool_event)
-+		if (evsel->core.tool_event)
- 			evsel__tool_name(bf, sizeof(bf));
- 		else
- 			evsel__sw_name(evsel, bf, sizeof(bf));
-@@ -789,7 +789,7 @@ const char *evsel__metric_id(const struct evsel *evsel)
- 	if (evsel->core.metric_id)
- 		return evsel->core.metric_id;
+-	if (evsel->core.own_cpus || evsel->unit)
++	if (evsel->core.own_cpus || evsel->core.unit)
+ 		evsel->core.attr.read_format |= PERF_FORMAT_ID;
  
--	if (evsel->core.attr.type == PERF_TYPE_SOFTWARE && evsel->tool_event)
-+	if (evsel->core.attr.type == PERF_TYPE_SOFTWARE && evsel->core.tool_event)
- 		return "duration_time";
- 
- 	return "unknown";
+ 	/*
 diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index b55173bf8f70..548d3042fa8b 100644
+index 548d3042fa8b..f6cc1e78903f 100644
 --- a/tools/perf/util/evsel.h
 +++ b/tools/perf/util/evsel.h
-@@ -25,11 +25,6 @@ struct bperf_follower_bpf;
- 
- typedef int (evsel__sb_cb_t)(union perf_event *event, void *data);
- 
--enum perf_tool_event {
--	PERF_TOOL_NONE		= 0,
--	PERF_TOOL_DURATION_TIME = 1,
--};
--
- /** struct evsel - event selector
-  *
-  * @evlist - evlist this evsel is in, if it is in one.
-@@ -67,7 +62,6 @@ struct evsel {
+@@ -60,7 +60,6 @@ struct evsel {
+ 		char			*filter;
+ 		unsigned long		max_events;
  		double			scale;
- 		const char		*unit;
+-		const char		*unit;
  		struct cgroup		*cgrp;
--		enum perf_tool_event	tool_event;
  		/* parse modifier helper */
  		int			exclude_GH;
- 		int			sample_read;
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 949d24da7000..4610b23fed28 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -4256,7 +4256,7 @@ int perf_event__process_event_update(struct perf_tool *tool __maybe_unused,
+ 
+ 	switch (ev->type) {
+ 	case PERF_EVENT_UPDATE__UNIT:
+-		evsel->unit = strdup(ev->data);
++		evsel->core.unit = strdup(ev->data);
+ 		break;
+ 	case PERF_EVENT_UPDATE__NAME:
+ 		evsel->core.name = strdup(ev->data);
 diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index ee04fec441e7..15d5880df4c2 100644
+index 15d5880df4c2..1878ea1310d3 100644
 --- a/tools/perf/util/parse-events.c
 +++ b/tools/perf/util/parse-events.c
-@@ -434,7 +434,7 @@ static int add_event_tool(struct list_head *list, int *idx,
- 			    /*cpu_list=*/"0");
- 	if (!evsel)
+@@ -436,7 +436,7 @@ static int add_event_tool(struct list_head *list, int *idx,
  		return -ENOMEM;
--	evsel->tool_event = tool_event;
-+	evsel->core.tool_event = tool_event;
+ 	evsel->core.tool_event = tool_event;
  	if (tool_event == PERF_TOOL_DURATION_TIME)
- 		evsel->unit = "ns";
+-		evsel->unit = "ns";
++		evsel->core.unit = "ns";
  	return 0;
+ }
+ 
+@@ -1663,7 +1663,7 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+ 	if (parse_state->fake_pmu)
+ 		return 0;
+ 
+-	evsel->unit = info.unit;
++	evsel->core.unit = info.unit;
+ 	evsel->scale = info.scale;
+ 	evsel->per_pkg = info.per_pkg;
+ 	evsel->snapshot = info.snapshot;
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index b00097e86c85..5f5467c55323 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -372,10 +372,10 @@ static void abs_printout(struct perf_stat_config *config,
+ 
+ 	fprintf(output, fmt, avg, config->csv_sep);
+ 
+-	if (evsel->unit)
++	if (evsel->core.unit)
+ 		fprintf(output, "%-*s%s",
+ 			config->csv_output ? 0 : config->unit_width,
+-			evsel->unit, config->csv_sep);
++			evsel->core.unit, config->csv_sep);
+ 
+ 	fprintf(output, "%-*s", config->csv_output ? 0 : 25, evsel__name(evsel));
+ 
+@@ -476,7 +476,7 @@ static void printout(struct perf_stat_config *config, struct aggr_cpu_id id, int
+ 
+ 		fprintf(config->output, "%-*s%s",
+ 			config->csv_output ? 0 : config->unit_width,
+-			counter->unit, config->csv_sep);
++			counter->core.unit, config->csv_sep);
+ 
+ 		fprintf(config->output, "%*s",
+ 			config->csv_output ? 0 : -25, evsel__name(counter));
+@@ -588,7 +588,7 @@ static void collect_all_aliases(struct perf_stat_config *config, struct evsel *c
+ 		if (strcmp(evsel__name(alias), evsel__name(counter)) ||
+ 		    alias->scale != counter->scale ||
+ 		    alias->cgrp != counter->cgrp ||
+-		    strcmp(alias->unit, counter->unit) ||
++		    strcmp(alias->core.unit, counter->core.unit) ||
+ 		    evsel__is_clock(alias) != evsel__is_clock(counter) ||
+ 		    !strcmp(alias->pmu_name, counter->pmu_name))
+ 			break;
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index 2528c22792be..27c97f22d855 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -1824,7 +1824,7 @@ static struct perf_record_event_update *event_update_event__new(size_t size, u64
+ int perf_event__synthesize_event_update_unit(struct perf_tool *tool, struct evsel *evsel,
+ 					     perf_event__handler_t process)
+ {
+-	size_t size = strlen(evsel->unit);
++	size_t size = strlen(evsel->core.unit);
+ 	struct perf_record_event_update *ev;
+ 	int err;
+ 
+@@ -1832,7 +1832,7 @@ int perf_event__synthesize_event_update_unit(struct perf_tool *tool, struct evse
+ 	if (ev == NULL)
+ 		return -ENOMEM;
+ 
+-	strlcpy(ev->data, evsel->unit, size + 1);
++	strlcpy(ev->data, evsel->core.unit, size + 1);
+ 	err = process(tool, (union perf_event *)ev, NULL, NULL);
+ 	free(ev);
+ 	return err;
+@@ -1921,7 +1921,7 @@ int perf_event__synthesize_attrs(struct perf_tool *tool, struct evlist *evlist,
+ 
+ static bool has_unit(struct evsel *evsel)
+ {
+-	return evsel->unit && *evsel->unit;
++	return evsel->core.unit && *evsel->core.unit;
+ }
+ 
+ static bool has_scale(struct evsel *evsel)
 -- 
 2.31.1
 
