@@ -2,68 +2,68 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E28AC433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 13:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1CAC433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 13:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 004BE61458
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 13:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4806161458
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Nov 2021 13:41:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238757AbhKHNoY (ORCPT
+        id S238721AbhKHNo3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 8 Nov 2021 08:44:24 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:26081 "EHLO
+        Mon, 8 Nov 2021 08:44:29 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:23144 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S240024AbhKHNoY (ORCPT
+        by vger.kernel.org with ESMTP id S240024AbhKHNo3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 8 Nov 2021 08:44:24 -0500
+        Mon, 8 Nov 2021 08:44:29 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1636378899;
+        s=mimecast20190719; t=1636378904;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=HHjEzELT2r7KPnopvwCH5U1z3J6vgvVx5TL9TWZNlk4=;
-        b=IkTltRoceUHJL9YpxJ9ZpMsghgrmoyk6/LWDw3gMRzXV+NSFpRY58QZ0e1fU2v0jrbt5I1
-        69CBUoWgR5JyARjXEXad7hago7QrLUE4C8Sfp1eFQqUViLVallhw89t1sRaDY8XJfWQjuF
-        w7F1+Kh5upyGR4AouOQIGuuDX6fa/OQ=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-58-iDLzQ7F2MFyui5DDNhxTDA-1; Mon, 08 Nov 2021 08:41:26 -0500
-X-MC-Unique: iDLzQ7F2MFyui5DDNhxTDA-1
-Received: by mail-wr1-f71.google.com with SMTP id r12-20020adfdc8c000000b0017d703c07c0so4066449wrj.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 08 Nov 2021 05:41:25 -0800 (PST)
+        bh=WFGYuXugtTPPNCUJsYLk6ok4aQMVBc76/pEuVby3MxM=;
+        b=RxcUlR7duk5AKr2kSkk4VayEPA+xuzp+OuI5yogNG+fT2BnqSK3zKDU0IwmNa1JILEy3ij
+        JG037uhhthhPktViMKseO28q5J6IfJZQV8wLXqq5VVff7nLRlr+AcsuRpsP14Fo/KCOLe3
+        Q3BRJ2NaH1KQJR46k1HwGjBItpK7ANo=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-217-jy1JoWb5O5KkbIC8U-ph-A-1; Mon, 08 Nov 2021 08:41:43 -0500
+X-MC-Unique: jy1JoWb5O5KkbIC8U-ph-A-1
+Received: by mail-wr1-f70.google.com with SMTP id u4-20020a5d4684000000b0017c8c1de97dso4046597wrq.16
+        for <linux-perf-users@vger.kernel.org>; Mon, 08 Nov 2021 05:41:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=HHjEzELT2r7KPnopvwCH5U1z3J6vgvVx5TL9TWZNlk4=;
-        b=awykUfeBJrI3+29K9Nx7g1EEuaB13O5IG4dM/eYnlTaJSU1FI3DHcYxMqSVNgL6AbJ
-         C2DndPhKxFSZ9+RV4CJJpIrMPritS4aOGi+n+z1BO962fSq49h91H9HWWxeXWQm77Trv
-         t6Csihe2d1pa9WO4ZYeZXF73wNtzgFgwPRV4zA6JYTGxVCWXSzIvvHpdvNbkRhsyR81l
-         YeWAnzQ4FeR1ijJJS2qZkDkOSf2jH2bQ4H2zP6waZg9yiRqPTckpE/9L49cv0CkjVc2a
-         Ol1t7StHZS2TVSBuEpLG5Ty/mmxek8+0C3LbEot7HvP0trYY8g6fRnoCZRgylnEqvpSU
-         9w0g==
-X-Gm-Message-State: AOAM5334Jo89BHEQgIp4/XsvZ7iToZVsRwmDSNNY5jjcnOiU0lGaSYh8
-        8eXNkWwMLi1JFJQ0zx1vMwCqib2CNBxpLhxVS1fFeQMJ/26QGPDi6maxKegraJ8tXBDqi9FE/Dk
-        rqwUCEueRgS/YYqQFDDQkhLgI+zuG/A==
-X-Received: by 2002:a5d:508d:: with SMTP id a13mr55682798wrt.41.1636378884702;
-        Mon, 08 Nov 2021 05:41:24 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwMuex/Y/frXoAydBCX3dHumL3lRJ0fsMeW/0bGFlFkFK4zirf3HNoTSPNDmAPSIQhtytuVbg==
-X-Received: by 2002:a5d:508d:: with SMTP id a13mr55682774wrt.41.1636378884559;
-        Mon, 08 Nov 2021 05:41:24 -0800 (PST)
+        bh=WFGYuXugtTPPNCUJsYLk6ok4aQMVBc76/pEuVby3MxM=;
+        b=x9cuEnsQW5FjwRv4f8eiiJncYlPUy66ZUaRe1H/i/uaeSIQRxQQeWwUpSwsf4ckUKv
+         Okk5g7wirsP8aP6YVESA7gpOwo7ie/px6Mr/14mQ2FC9gu8k3cY2HT3V1+mgecGS3ZsK
+         AVpt39foCDECTZpCHm1eE0Qm6+8RApESNNdDoARZO+wKIs6QMocH6iUyaZscZUBsKQ14
+         EMWyc0YoFZ8QCgnOZFQh8uVHJPRaSjoEf/q4pnRvFhxDcKaRqvCCl1z4PlKoJU5bGh99
+         kZtvpirvwuAMjjhFZhRkNsrwYfRgd/ph9TN9DtMiFKhrzjzAqKWZqE2UngXpbblzL+28
+         ZLdg==
+X-Gm-Message-State: AOAM530QLk2rZ3V81jZU+FF+k0IDn1ZpPFmqogP/NSmCV9BuFCtDMVF4
+        RAZZxgpYxM965CHB4hCOZNpt3XG9kj6ea/aU9ltryahQVPnmfsw8Xhlee7gV62KjUNYjIMOcKZO
+        XV3Hhkfi1Iq8KuYC0ZVa5fLAddwtYag==
+X-Received: by 2002:a05:6000:1541:: with SMTP id 1mr73799345wry.347.1636378902471;
+        Mon, 08 Nov 2021 05:41:42 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxWDaBBLS3TF4/++DbOdr/1IvJ6zHhARGXnGazqVSWwG6qGwlsjr+6vLj3PalbpLxlV3jEDGw==
+X-Received: by 2002:a05:6000:1541:: with SMTP id 1mr73799329wry.347.1636378902333;
+        Mon, 08 Nov 2021 05:41:42 -0800 (PST)
 Received: from krava.redhat.com (nat-pool-brq-u.redhat.com. [213.175.37.12])
-        by smtp.gmail.com with ESMTPSA id k27sm18005924wms.41.2021.11.08.05.41.23
+        by smtp.gmail.com with ESMTPSA id h17sm19159446wmb.44.2021.11.08.05.41.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Nov 2021 05:41:24 -0800 (PST)
+        Mon, 08 Nov 2021 05:41:42 -0800 (PST)
 From:   Jiri Olsa <jolsa@redhat.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org
-Subject: [PATCH 41/59] perf tools: Add perf_evsel__delete callback to struct parse_events_ops
-Date:   Mon,  8 Nov 2021 14:36:52 +0100
-Message-Id: <20211108133710.1352822-42-jolsa@kernel.org>
+Subject: [PATCH 44/59] perf tools: Add add_pmu callback to struct parse_events_ops
+Date:   Mon,  8 Nov 2021 14:36:55 +0100
+Message-Id: <20211108133710.1352822-45-jolsa@kernel.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20211108133710.1352822-1-jolsa@kernel.org>
 References: <20211108133710.1352822-1-jolsa@kernel.org>
@@ -73,146 +73,149 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Adding perf_evsel__delete callback to struct parse_events_ops,
-to allow custom event free for event parsing.
+Adding add_pmu callback to struct parse_events_ops,
+to allow custom pmu parsing code.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- .../lib/perf/include/internal/parse-events.h  |  1 +
- tools/perf/util/parse-events.c                |  8 ++++++
- tools/perf/util/parse-events.y                | 27 ++++++++++---------
- 3 files changed, 23 insertions(+), 13 deletions(-)
+ tools/lib/perf/include/internal/parse-events.h |  9 +++++++++
+ tools/perf/util/parse-events.c                 | 15 +++++++++------
+ tools/perf/util/parse-events.h                 |  6 ------
+ tools/perf/util/parse-events.y                 |  8 +++++---
+ 4 files changed, 23 insertions(+), 15 deletions(-)
 
 diff --git a/tools/lib/perf/include/internal/parse-events.h b/tools/lib/perf/include/internal/parse-events.h
-index 13a7baf2f781..1d7ee03b8a80 100644
+index 11a85a118480..6733068879a7 100644
 --- a/tools/lib/perf/include/internal/parse-events.h
 +++ b/tools/lib/perf/include/internal/parse-events.h
-@@ -88,6 +88,7 @@ struct parse_events_error {
+@@ -85,10 +85,19 @@ struct parse_events_error {
+ 	char *first_help;
+ };
+ 
++struct parse_events_state;
++
  struct parse_events_ops {
  	struct perf_evsel* (*perf_evsel__new)(struct perf_event_attr *attr, int idx, bool init_attr);
  	struct perf_evsel* (*perf_evsel__new_tp)(const char *sys, const char *name, int idx);
-+	void (*perf_evsel__delete)(struct perf_evsel *evsel);
+ 	void (*perf_evsel__delete)(struct perf_evsel *evsel);
++
++	int (*add_pmu)(struct parse_events_state *parse_state,
++		       struct list_head *list, char *pmu_name,
++		       struct list_head *head_config,
++		       struct list_head *orig_terms,
++		       bool auto_merge_stats,
++		       bool use_alias);
  };
  
  struct parse_events_state {
 diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 5d4ad2179a48..0f2bf2b48888 100644
+index 57f59253322d..78f10083f917 100644
 --- a/tools/perf/util/parse-events.c
 +++ b/tools/perf/util/parse-events.c
-@@ -74,9 +74,17 @@ static struct perf_evsel *perf_evsel__newtp_idx(const char *sys, const char *nam
- 	return IS_ERR(evsel) ? (void*) evsel : &evsel->core;
+@@ -51,6 +51,7 @@ static int parse_events__with_hybrid_pmu(struct parse_events_state *parse_state,
+ 					 const char *str, char *pmu_name,
+ 					 struct list_head *list);
+ 
++static struct parse_events_ops parse_state_ops;
+ static struct perf_pmu_event_symbol *perf_pmu_events_list;
+ /*
+  * The variable indicates the number of supported pmu event symbols.
+@@ -81,12 +82,6 @@ static void perf_evsel__delete_helper(struct perf_evsel *evsel)
+ 	free(tmp);
  }
  
-+static void perf_evsel__delete_helper(struct perf_evsel *evsel)
-+{
-+	struct evsel *tmp = container_of(evsel, struct evsel, core);
-+
-+	free(tmp);
-+}
-+
- static struct parse_events_ops parse_state_ops = {
- 	.perf_evsel__new    = perf_evsel__new_idx,
- 	.perf_evsel__new_tp = perf_evsel__newtp_idx,
-+	.perf_evsel__delete = perf_evsel__delete_helper,
- };
- 
+-static struct parse_events_ops parse_state_ops = {
+-	.perf_evsel__new    = perf_evsel__new_idx,
+-	.perf_evsel__new_tp = perf_evsel__newtp_idx,
+-	.perf_evsel__delete = perf_evsel__delete_helper,
+-};
+-
  #define __PERF_EVENT_FIELD(config, name) \
+ 	((config & PERF_EVENT_##name##_MASK) >> PERF_EVENT_##name##_SHIFT)
+ 
+@@ -1528,6 +1523,7 @@ static int __parse_events_add_pmu(struct parse_events_state *parse_state,
+ 	return 0;
+ }
+ 
++static
+ int parse_events_add_pmu(struct parse_events_state *parse_state,
+ 			 struct list_head *list, char *pmu_name,
+ 			 struct list_head *head_config,
+@@ -2900,3 +2896,10 @@ struct evsel *parse_events__add_event_hybrid(struct parse_events_state *parse_st
+ 				pmu, config_terms, /*auto_merge_stats=*/false,
+ 				/*cpu_list=*/NULL);
+ }
++
++static struct parse_events_ops parse_state_ops = {
++	.perf_evsel__new    = perf_evsel__new_idx,
++	.perf_evsel__new_tp = perf_evsel__newtp_idx,
++	.perf_evsel__delete = perf_evsel__delete_helper,
++	.add_pmu            = parse_events_add_pmu,
++};
+diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+index 74bf778400a9..d1057942825d 100644
+--- a/tools/perf/util/parse-events.h
++++ b/tools/perf/util/parse-events.h
+@@ -94,12 +94,6 @@ int parse_events_add_cache(struct parse_events_state *parse_state,
+ int parse_events_add_breakpoint(struct parse_events_state *parse_state,
+ 				struct list_head *list,
+ 				u64 addr, char *type, u64 len);
+-int parse_events_add_pmu(struct parse_events_state *parse_state,
+-			 struct list_head *list, char *name,
+-			 struct list_head *head_config,
+-			 struct list_head *orig_terms,
+-			 bool auto_merge_stats,
+-			 bool use_alias);
+ 
+ struct evsel *parse_events__add_event(struct parse_events_state *parse_state,
+ 				      struct perf_event_attr *attr,
 diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index d5cd2827b8a0..0ac863e06352 100644
+index b963c023bd40..5c57c8424323 100644
 --- a/tools/perf/util/parse-events.y
 +++ b/tools/perf/util/parse-events.y
-@@ -38,13 +38,14 @@ static struct list_head* alloc_list(void)
- 	return list;
- }
- 
--static void free_list_evsel(struct list_head* list_evsel)
-+static void free_list_evsel(struct parse_events_state *parse_state,
-+			    struct list_head* list_evsel)
- {
--	struct evsel *evsel, *tmp;
-+	struct perf_evsel *evsel, *tmp;
- 
--	list_for_each_entry_safe(evsel, tmp, list_evsel, core.node) {
--		list_del_init(&evsel->core.node);
--		evsel__delete(evsel);
-+	list_for_each_entry_safe(evsel, tmp, list_evsel, node) {
-+		list_del_init(&evsel->node);
-+		parse_state->ops->perf_evsel__delete(evsel);
- 	}
- 	free(list_evsel);
- }
-@@ -140,7 +141,7 @@ static int loc_val(void *loc_val_)
- %type <list_evsel> group_def
- %type <list_evsel> group
- %type <list_evsel> groups
--%destructor { free_list_evsel ($$); } <list_evsel>
-+%destructor { free_list_evsel (_parse_state, $$); } <list_evsel>
- %type <tracepoint_name> tracepoint_name
- %destructor { free ($$.sys); free ($$.event); } <tracepoint_name>
- %type <array> array
-@@ -215,7 +216,7 @@ group_def ':' PE_MODIFIER_EVENT
- 
- 		parse_events__handle_error(error, @3.first_column,
- 					   strdup("Bad modifier"), NULL);
--		free_list_evsel(list);
-+		free_list_evsel(parse_state, list);
- 		YYABORT;
- 	}
- 	$$ = list;
-@@ -277,7 +278,7 @@ event_name PE_MODIFIER_EVENT
- 
- 		parse_events__handle_error(error, @2.first_column,
- 					   strdup("Bad modifier"), NULL);
--		free_list_evsel(list);
-+		free_list_evsel(parse_state, list);
- 		YYABORT;
- 	}
- 	$$ = list;
-@@ -293,7 +294,7 @@ PE_EVENT_NAME event_def
- 	err = parse_events_name($2, $1);
- 	free($1);
- 	if (err) {
--		free_list_evsel($2);
-+		free_list_evsel(_parse_state, $2);
- 		YYABORT;
- 	}
- 	$$ = $2;
-@@ -467,7 +468,7 @@ value_sym '/' event_config '/'
- 	err = parse_events_add_numeric(_parse_state, list, type, config, $3);
- 	parse_events_terms__delete($3);
- 	if (err) {
--		free_list_evsel(list);
-+		free_list_evsel(_parse_state, list);
- 		YYABORT;
- 	}
- 	$$ = list;
-@@ -511,7 +512,7 @@ PE_NAME_CACHE_TYPE '-' PE_NAME_CACHE_OP_RESULT '-' PE_NAME_CACHE_OP_RESULT opt_e
- 	free($3);
- 	free($5);
- 	if (err) {
--		free_list_evsel(list);
-+		free_list_evsel(parse_state, list);
- 		YYABORT;
- 	}
- 	$$ = list;
-@@ -531,7 +532,7 @@ PE_NAME_CACHE_TYPE '-' PE_NAME_CACHE_OP_RESULT opt_event_config
- 	free($1);
- 	free($3);
- 	if (err) {
--		free_list_evsel(list);
-+		free_list_evsel(parse_state, list);
- 		YYABORT;
- 	}
- 	$$ = list;
-@@ -550,7 +551,7 @@ PE_NAME_CACHE_TYPE opt_event_config
+@@ -339,7 +339,7 @@ event_pmu_name opt_pmu_config
+ 	list = alloc_list();
+ 	if (!list)
+ 		CLEANUP_YYABORT;
+-	if (parse_events_add_pmu(_parse_state, list, $1, $2, orig_terms, false, false))
++	if (parse_state->ops->add_pmu(parse_state, list, $1, $2, orig_terms, false, false))
+ 		CLEANUP_YYABORT;
  	parse_events_terms__delete($2);
- 	free($1);
- 	if (err) {
--		free_list_evsel(list);
-+		free_list_evsel(parse_state, list);
+ 	parse_events_terms__delete(orig_terms);
+@@ -388,6 +388,7 @@ PE_PMU_EVENT_PRE '-' PE_PMU_EVENT_SUF sep_dc
+ |
+ PE_PMU_EVENT_FAKE sep_dc
+ {
++	struct parse_events_state *parse_state = _parse_state;
+ 	struct list_head *list;
+ 	int err;
+ 
+@@ -395,7 +396,7 @@ PE_PMU_EVENT_FAKE sep_dc
+ 	if (!list)
  		YYABORT;
- 	}
- 	$$ = list;
+ 
+-	err = parse_events_add_pmu(_parse_state, list, $1, NULL, NULL, false, false);
++	err = parse_state->ops->add_pmu(parse_state, list, $1, NULL, NULL, false, false);
+ 	free($1);
+ 	if (err < 0) {
+ 		free(list);
+@@ -406,6 +407,7 @@ PE_PMU_EVENT_FAKE sep_dc
+ |
+ PE_PMU_EVENT_FAKE opt_pmu_config
+ {
++	struct parse_events_state *parse_state = _parse_state;
+ 	struct list_head *list;
+ 	int err;
+ 
+@@ -413,7 +415,7 @@ PE_PMU_EVENT_FAKE opt_pmu_config
+ 	if (!list)
+ 		YYABORT;
+ 
+-	err = parse_events_add_pmu(_parse_state, list, $1, $2, NULL, false, false);
++	err = parse_state->ops->add_pmu(parse_state, list, $1, $2, NULL, false, false);
+ 	free($1);
+ 	parse_events_terms__delete($2);
+ 	if (err < 0) {
 -- 
 2.31.1
 
