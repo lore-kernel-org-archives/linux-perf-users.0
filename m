@@ -2,104 +2,149 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9F9C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 18:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D7BC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 18:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F172461166
-	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 18:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A46F61177
+	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 18:50:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242473AbhKISbI (ORCPT
+        id S242742AbhKISwy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 9 Nov 2021 13:31:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55284 "EHLO
+        Tue, 9 Nov 2021 13:52:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242443AbhKISbH (ORCPT
+        with ESMTP id S242741AbhKISwx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 9 Nov 2021 13:31:07 -0500
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05993C0613F5
-        for <linux-perf-users@vger.kernel.org>; Tue,  9 Nov 2021 10:28:21 -0800 (PST)
-Received: by mail-pl1-x62e.google.com with SMTP id o14so92180plg.5
-        for <linux-perf-users@vger.kernel.org>; Tue, 09 Nov 2021 10:28:20 -0800 (PST)
+        Tue, 9 Nov 2021 13:52:53 -0500
+Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6CCBC061764
+        for <linux-perf-users@vger.kernel.org>; Tue,  9 Nov 2021 10:50:07 -0800 (PST)
+Received: by mail-io1-xd2c.google.com with SMTP id v23so9131445iom.12
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Nov 2021 10:50:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=YqtAkERQI/ln6XRRI9t4KGym2pBKGt4SPOY54xOyYmc=;
-        b=PGOJkkhM/AspXaJubyodGGt3bokcuo1nWeF66Ozy2PSHqL4ozl1ealnJ2sESU77Daa
-         5PCgxSnMKmr5LSn7P+UZw5lKAiqvWF452/e/zcO5+QvHTusOJTtt+u60C6PqqZ1Yg/LF
-         XnAN//7pVh4I0+4GH1pCdd6cp3HnHcZsIY7gg=
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C7ayoAZBsG7SmT52WD7mztV4zmoTtxtcqBtR1Gou9eQ=;
+        b=FvvQNa7hOwEnvZKsAmcWroNO2el/XKh1p/kqLEDzVcYNdDaxpBYMhXrxVExMC0RjZx
+         AQ2HupjCg/azmyN8xTDiF3G4QcXZY4XeOLDmOdZXmEbHtEJ2e/5VNnWhXKzC/CWgY1kW
+         9Ai0rjRqqNtSScIPx29vzaPCIub0xXk3lt2V97Jszg3O5VjlFdGALPtNNKfGwK/2H8ax
+         TczdgUWx6k7X5kgvedEEip075SYscdOWJB9aVTUG582f/9GT8KTSj4VC0h6wjecdCVzL
+         g0vAqZQZw5qy4aqR3vUPWoREoyPuSCP+sNvLeMcJ/9uMCvWUlq6SeFT/0QRWlTZ/zUjq
+         tx5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YqtAkERQI/ln6XRRI9t4KGym2pBKGt4SPOY54xOyYmc=;
-        b=N7GiLkWJXwyI+CvRmT0rhlQzgqaB85ptoXgQTD5l/QetKk7EqOFuKTTXfLshaE+/0H
-         gD5jMdt3+ryppiz9BW21iOfTIGVbI8z9hUfkg3otRe5pQi1TjTGJTjyIwkFUtnXS13re
-         IL6ZUrg4cv/UT6/p3B6EpoBA/dQZwJGEK0tz9/FJoEj43CslaCtLct7Ou1XxGkZTdNWM
-         Bz/GWhx4NvocCzwGOI4VtnvQlza7Fm4HU1xcZM4LO7aLcwfyx/UfiKX9vG1/o15/OAxI
-         PyPRq0vOEagkW7FPgEtnh/6AAKqESJ9TT47LLZWt7R/CsLVG1mF8JBXsQCEY0iK0+oik
-         /hNQ==
-X-Gm-Message-State: AOAM532qvD8/FKD3XnbyHhbGHvCu4uGFYcuABkltB2NXW5UCkvbMMnY/
-        7lgL+aNmLB8DqPtcQ3lMHw4Uug==
-X-Google-Smtp-Source: ABdhPJw56zqbHPhzHi/UjO1EuTMs0ckASHUWtACCQVftB6fOpzf6idVKbxIvoc6DXqmWnHNuFyu1UQ==
-X-Received: by 2002:a17:90b:3a89:: with SMTP id om9mr9485773pjb.29.1636482500572;
-        Tue, 09 Nov 2021 10:28:20 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u11sm7194577pfk.152.2021.11.09.10.28.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Nov 2021 10:28:20 -0800 (PST)
-Date:   Tue, 9 Nov 2021 10:28:19 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     akpm@linux-foundation.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, oliver.sang@intel.com, lkp@intel.com,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Hildenbrand <david@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH 0/7] task comm cleanups
-Message-ID: <202111091027.DEF1B6DD@keescook>
-References: <20211108083840.4627-1-laoar.shao@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C7ayoAZBsG7SmT52WD7mztV4zmoTtxtcqBtR1Gou9eQ=;
+        b=mXYZxZn/QwnDH3iMreZ+PFqylHsg3pgqLfUYNy5BWU8PQEcQAKE897hxbolryuhMlr
+         7SEDXVJh01c7ZiK87M64TUu/pqqJ1rtqHuXOmmZ0F64Gt/FyH2xQUDOOG2yxVCHM0nCz
+         KoG0kP90yJo96v9OqnHygc72JhStQu9Vq8wrA3hTshCXqn3Pl1fvn3rEXGhjZw/WrHza
+         jbtJamXdDKF+hXRRK+N0nnGz7UG4truvj/AQ6Xp+TIcJV7SbWnT5X5TPntvF6AMoccd7
+         0O6WfGDMJxic89nsd19CpSU7xQJh7ot2gXtbCyVPV5xytqKFEMyxllSEpmuKzP0TUkBk
+         hugg==
+X-Gm-Message-State: AOAM530KtdY9Cs6K4is30sgaZDkdZn2PShD3XWR0/35s1QeqgFyTvjK4
+        iAw9dxX/YCLmjalWwTxnvwUNOlb6qz2+hf4tGWrddw==
+X-Google-Smtp-Source: ABdhPJwEIs3vlQLt6BT4ZkuXVh+EitAS6mwjZOseedf7mXmGOjP0VnyC89E9OFlORWdmo8U8hthIKUSy2oFTXfyev58=
+X-Received: by 2002:a05:6638:144f:: with SMTP id l15mr7414854jad.21.1636483807037;
+ Tue, 09 Nov 2021 10:50:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211108083840.4627-1-laoar.shao@gmail.com>
+References: <20211109140707.1689940-1-jolsa@kernel.org> <20211109140707.1689940-2-jolsa@kernel.org>
+In-Reply-To: <20211109140707.1689940-2-jolsa@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 9 Nov 2021 10:49:53 -0800
+Message-ID: <CAP-5=fVS2AwZ9bP4BjF9GDcZqmw5fwUZ6OGXdgMnFj3w_2OTaw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf tools: Add more weak libbpf functions
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        linux-perf-users@vger.kernel.org,
+        Andrii Nakryiko <andrii@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Nov 08, 2021 at 08:38:33AM +0000, Yafang Shao wrote:
-> This patchset is part of the patchset "extend task comm from 16 to 24"[1].
-> Now we have different opinion that dynamically allocates memory to store 
-> kthread's long name into a separate pointer, so I decide to take the useful
-> cleanups apart from the original patchset and send it separately[2].
-> 
-> These useful cleanups can make the usage around task comm less
-> error-prone. Furthermore, it will be useful if we want to extend task
-> comm in the future.
-> 
-> All of the patches except patch #4 have either a reviewed-by or a
-> acked-by now. I have verfied that the vmcore/crash works well after
-> patch #4.
-> 
-> [1]. https://lore.kernel.org/lkml/20211101060419.4682-1-laoar.shao@gmail.com/
-> [2]. https://lore.kernel.org/lkml/CALOAHbAx55AUo3bm8ZepZSZnw7A08cvKPdPyNTf=E_tPqmw5hw@mail.gmail.com/
+On Tue, Nov 9, 2021 at 6:07 AM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> We hit the window where perf uses libbpf functions, that did not
+> make it to the official libbpf release yet and it's breaking perf
+> build with dynamicly linked libbpf.
+>
+> Fixing this by providing the new interface as weak functions which
+> calls the original libbpf functions. Fortunatelly the changes were
+> just renames.
 
-Thanks for collecting this! It all looks good to me.
+Could we just provide these functions behind a libbpf version #if ?
+Weak symbols break things in subtle ways, under certain circumstances
+the weak symbol is preferred over the strong due to lazy object file
+resolution:
+https://maskray.me/blog/2021-06-20-symbol-processing#archive-processing
+This bit me last week, but in general you get away with it as the lazy
+object file will get processed in an archive exposing the strong
+symbol. With an #if you either get a linker error for 2 definitions or
+0 definitions, and it's clear what is broken.
 
-Andrew, can you take these?
+In the past we had problems due to constant propagation from weak
+const variables, where #if was the solution:
+https://lore.kernel.org/lkml/20191001003623.255186-1-irogers@google.com/
 
--Kees
+There was some recent conversation on libbpf version for pahole here:
+https://lore.kernel.org/bpf/CAP-5=fUc3LtU0WYg-Py9Jf+9picaWHJdSw=sdOMA54uY3p1pdw@mail.gmail.com/T/
+https://lore.kernel.org/bpf/20211021183330.460681-1-irogers@google.com/
 
--- 
-Kees Cook
+Thanks,
+Ian
+
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/perf/util/bpf-event.c | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>
+> diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+> index 4d3b4cdce176..ceb96360fd12 100644
+> --- a/tools/perf/util/bpf-event.c
+> +++ b/tools/perf/util/bpf-event.c
+> @@ -33,6 +33,33 @@ struct btf * __weak btf__load_from_kernel_by_id(__u32 id)
+>         return err ? ERR_PTR(err) : btf;
+>  }
+>
+> +struct bpf_program * __weak
+> +bpf_object__next_program(const struct bpf_object *obj, struct bpf_program *prev)
+> +{
+> +#pragma GCC diagnostic push
+> +#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+> +       return bpf_program__next(prev, obj);
+> +#pragma GCC diagnostic pop
+> +}
+> +
+> +struct bpf_map * __weak
+> +bpf_object__next_map(const struct bpf_object *obj, const struct bpf_map *prev)
+> +{
+> +#pragma GCC diagnostic push
+> +#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+> +       return bpf_map__next(prev, obj);
+> +#pragma GCC diagnostic pop
+> +}
+> +
+> +const void * __weak
+> +btf__raw_data(const struct btf *btf_ro, __u32 *size)
+> +{
+> +#pragma GCC diagnostic push
+> +#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+> +       return btf__get_raw_data(btf_ro, size);
+> +#pragma GCC diagnostic pop
+> +}
+> +
+>  static int snprintf_hex(char *buf, size_t size, unsigned char *data, size_t len)
+>  {
+>         int ret = 0;
+> --
+> 2.31.1
+>
