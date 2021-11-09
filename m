@@ -2,173 +2,69 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2412EC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 09:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB1FC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 09:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AD2960FD8
-	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 09:07:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34A8161055
+	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 09:54:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242391AbhKIJJ6 (ORCPT
+        id S242211AbhKIJ46 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 9 Nov 2021 04:09:58 -0500
-Received: from esa7.hc1455-7.c3s2.iphmx.com ([139.138.61.252]:31882 "EHLO
-        esa7.hc1455-7.c3s2.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S242256AbhKIJJ5 (ORCPT
+        Tue, 9 Nov 2021 04:56:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50680 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242663AbhKIJ46 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 9 Nov 2021 04:09:57 -0500
-IronPort-SDR: mo6xdfCXWCg8QzaIdfP0YI3Dzz6+qCncrdehwSMVUa9MQOZO6nJriuIb2fEySX1gML9/zPQeAK
- Zg1trZLVyftZvWVxtEjLlBsIWSEQ2jE1eB1/iiqfZVl7zjBu8XhalcfZNI+j9mSjUQr8gW6c5H
- 4FOlH9QNpEQBqil8O6bN2JxcoZQYGa0rP1p8ytML0kvA+8BizdNoBrGlvF2hiSTORXJeMzd8Ln
- hij0/LznzoZC9OxilysxX8vkGq2fJPY1mT2eljCxE9ZfKBMQIVMdhkWd7QJ20id7GmiSifiEmt
- PWQBMK9AYuKd8Rcoilrt67RJ
-X-IronPort-AV: E=McAfee;i="6200,9189,10162"; a="30750655"
-X-IronPort-AV: E=Sophos;i="5.87,219,1631545200"; 
-   d="scan'208";a="30750655"
-Received: from unknown (HELO oym-r3.gw.nic.fujitsu.com) ([210.162.30.91])
-  by esa7.hc1455-7.c3s2.iphmx.com with ESMTP; 09 Nov 2021 17:58:37 +0900
-Received: from oym-m4.gw.nic.fujitsu.com (oym-nat-oym-m4.gw.nic.fujitsu.com [192.168.87.61])
-        by oym-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id A2F1B15946;
-        Tue,  9 Nov 2021 17:58:36 +0900 (JST)
-Received: from yto-om2.fujitsu.com (yto-om2.o.css.fujitsu.com [10.128.89.163])
-        by oym-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id B8DC3E129D;
-        Tue,  9 Nov 2021 17:58:35 +0900 (JST)
-Received: from pumpkin.openstacklocal (pumpkin.fct.css.fujitsu.com [10.130.70.189])
-        by yto-om2.fujitsu.com (Postfix) with ESMTP id 919F34006D7F4;
-        Tue,  9 Nov 2021 17:58:35 +0900 (JST)
-From:   Shunsuke Nakamura <nakamura.shun@fujitsu.com>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, robh@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: [PATCH v3 1/3] libperf: Move perf_counts_values__scale to tools/lib/perf
-Date:   Tue,  9 Nov 2021 17:58:29 +0900
-Message-Id: <20211109085831.3770594-2-nakamura.shun@fujitsu.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211109085831.3770594-1-nakamura.shun@fujitsu.com>
-References: <20211109085831.3770594-1-nakamura.shun@fujitsu.com>
+        Tue, 9 Nov 2021 04:56:58 -0500
+Received: from mail-ua1-x936.google.com (mail-ua1-x936.google.com [IPv6:2607:f8b0:4864:20::936])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0C20C061766
+        for <linux-perf-users@vger.kernel.org>; Tue,  9 Nov 2021 01:54:12 -0800 (PST)
+Received: by mail-ua1-x936.google.com with SMTP id ay21so37315320uab.12
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Nov 2021 01:54:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=8EDU5BqV9W1kwYSiN4+QV4K7S9e3Q2QiXU8vlPMChi8=;
+        b=KevKRfmXPXyfWJVFQxZnoBAdO2sTkoaJpsr78W3owYn6MGHwJ3RJFEpGwThTLOwSSe
+         ZGZlZkFPRDbWZlME1m5JnKs9f5qgET/QN/5MJIVC6M3O59GYpZpEb+peJ0diCEFn0m8U
+         l0JiWiXsk7hWEA8/GfcHNFYOt3ZXk6GaQ3Uzn6abGtJRa6ZYoY68dJegIiAf3uZ8HG2m
+         gfnevyavIKzV4oyZD+Ghg5hjccR8/Ls3ehzTaiX+LoWXVjvSQD2uy9c6nToBpZKL4oLB
+         AL6LzyrFYkp4qf4Vy0er53dcouq24Ga8vnw4IgurYG8bEB0zAl262TWza9CGiEdqBihY
+         dv+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=8EDU5BqV9W1kwYSiN4+QV4K7S9e3Q2QiXU8vlPMChi8=;
+        b=0Qkla/F1C+CgnDq9+49b51VYBZ2qdKsFEWJL9GaREhLhGezgKNjstu8DaAIb4uG42U
+         WY9qyACMQS6FgAwLzHnALeyu2fDpKnuSmiBOPuLg0DOTP6Q9x/R+6hsQzLmGRVL98tVg
+         ExjaStQG9mb+iljTIxmyhfLNqzagHFWqoubygBHqIjpkXZ4vcdYYGxiN3kAK84ofoRW4
+         O2yU+xL7BC5vE5cwbgexVat3tdePWpU1vUkd6ZqkNjWafbaHl7LMSgMEGkzRNxEdAS8p
+         AGiH4k5tWYd7ROx/8pd28DmEKPINApzHH1SHxBXCMGfAInNkwzqooEvn836yWlhtzDvJ
+         sHJg==
+X-Gm-Message-State: AOAM531ingt9qEcc9m1kYde8dZZH2fnasFcFCRZUiQrrDnkCAQHqwbpX
+        tS6O90rxDrhym1IW8b+ckfXvmdrIxL/wxKJbuDRn3oxCVEc=
+X-Google-Smtp-Source: ABdhPJwGj6tiYkEX6YdjAzsesBlO+Gc3hnNSuIzEeyjQzuha1ijjEo04+oHBHJ6ijZF5MFxviYpTNREjnus6e0VPxt0=
+X-Received: by 2002:ab0:20d4:: with SMTP id z20mr8421941ual.23.1636451651935;
+ Tue, 09 Nov 2021 01:54:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
+From:   Neven Sajko <nsajko@gmail.com>
+Date:   Tue, 9 Nov 2021 09:53:46 +0000
+Message-ID: <CAL+bK4PgSAYVDHt+F_RzPfPXH7iCUpVAohbbuV0uKnjJhhfEHA@mail.gmail.com>
+Subject: symbol lookup error: ./libperf-gtk.so: undefined symbol: callchain_param
+To:     linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Move perf_counts_values__scale from tools/perf/util to tools/lib/perf
-so that it can be used with libperf.
+I built perf from linux git master with GTK2=1 on my Archlinux, but
+I'm having trouble actually running the GTK2 UI.
 
-Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
----
- tools/lib/perf/evsel.c              | 19 +++++++++++++++++++
- tools/lib/perf/include/perf/evsel.h |  4 ++++
- tools/lib/perf/libperf.map          |  1 +
- tools/perf/util/evsel.c             | 19 -------------------
- tools/perf/util/evsel.h             |  3 ---
- 5 files changed, 24 insertions(+), 22 deletions(-)
+When I run LD_PRELOAD=./libperf-gtk.so ./perf annotate --gtk, perf
+exits with this error:
+./perf: symbol lookup error: ./libperf-gtk.so: undefined symbol: callchain_param
 
-diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-index 8441e3e1aaac..5097aadea37a 100644
---- a/tools/lib/perf/evsel.c
-+++ b/tools/lib/perf/evsel.c
-@@ -431,3 +431,22 @@ void perf_evsel__free_id(struct perf_evsel *evsel)
- 	zfree(&evsel->id);
- 	evsel->ids = 0;
- }
-+
-+void perf_counts_values__scale(struct perf_counts_values *count,
-+			       bool scale, s8 *pscaled)
-+{
-+	s8 scaled = 0;
-+
-+	if (scale) {
-+		if (count->run == 0) {
-+			scaled = -1;
-+			count->val = 0;
-+		} else if (count->run < count->ena) {
-+			scaled = 1;
-+			count->val = (u64)((double)count->val * count->ena / count->run);
-+		}
-+	}
-+
-+	if (pscaled)
-+		*pscaled = scaled;
-+}
-diff --git a/tools/lib/perf/include/perf/evsel.h b/tools/lib/perf/include/perf/evsel.h
-index 60eae25076d3..9013d73af22d 100644
---- a/tools/lib/perf/include/perf/evsel.h
-+++ b/tools/lib/perf/include/perf/evsel.h
-@@ -4,6 +4,8 @@
- 
- #include <stdint.h>
- #include <perf/core.h>
-+#include <stdbool.h>
-+#include <linux/types.h>
- 
- struct perf_evsel;
- struct perf_event_attr;
-@@ -39,5 +41,7 @@ LIBPERF_API int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu);
- LIBPERF_API struct perf_cpu_map *perf_evsel__cpus(struct perf_evsel *evsel);
- LIBPERF_API struct perf_thread_map *perf_evsel__threads(struct perf_evsel *evsel);
- LIBPERF_API struct perf_event_attr *perf_evsel__attr(struct perf_evsel *evsel);
-+LIBPERF_API void perf_counts_values__scale(struct perf_counts_values *count,
-+					   bool scale, s8 *pscaled);
- 
- #endif /* __LIBPERF_EVSEL_H */
-diff --git a/tools/lib/perf/libperf.map b/tools/lib/perf/libperf.map
-index 71468606e8a7..5979bf92d98f 100644
---- a/tools/lib/perf/libperf.map
-+++ b/tools/lib/perf/libperf.map
-@@ -50,6 +50,7 @@ LIBPERF_0.0.1 {
- 		perf_mmap__read_init;
- 		perf_mmap__read_done;
- 		perf_mmap__read_event;
-+		perf_counts_values__scale;
- 	local:
- 		*;
- };
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index dbfeceb2546c..49e4d0bdd7cc 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1457,25 +1457,6 @@ void evsel__compute_deltas(struct evsel *evsel, int cpu, int thread,
- 	count->run = count->run - tmp.run;
- }
- 
--void perf_counts_values__scale(struct perf_counts_values *count,
--			       bool scale, s8 *pscaled)
--{
--	s8 scaled = 0;
--
--	if (scale) {
--		if (count->run == 0) {
--			scaled = -1;
--			count->val = 0;
--		} else if (count->run < count->ena) {
--			scaled = 1;
--			count->val = (u64)((double) count->val * count->ena / count->run);
--		}
--	}
--
--	if (pscaled)
--		*pscaled = scaled;
--}
--
- static int evsel__read_one(struct evsel *evsel, int cpu, int thread)
- {
- 	struct perf_counts_values *count = perf_counts(evsel->counts, cpu, thread);
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 1f7edfa8568a..8a6a4182c5fd 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -190,9 +190,6 @@ static inline int evsel__nr_cpus(struct evsel *evsel)
- 	return evsel__cpus(evsel)->nr;
- }
- 
--void perf_counts_values__scale(struct perf_counts_values *count,
--			       bool scale, s8 *pscaled);
--
- void evsel__compute_deltas(struct evsel *evsel, int cpu, int thread,
- 			   struct perf_counts_values *count);
- 
--- 
-2.27.0
+Any suggestions?
 
+Thanks,
+Neven
