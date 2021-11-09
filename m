@@ -2,149 +2,156 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E35C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 12:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB12C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 13:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23ED96103D
-	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 12:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DABCE61175
+	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 13:26:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242174AbhKIMZ1 (ORCPT
+        id S234838AbhKIN3k (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 9 Nov 2021 07:25:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56548 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242070AbhKIMZ0 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 9 Nov 2021 07:25:26 -0500
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E19EC061766
-        for <linux-perf-users@vger.kernel.org>; Tue,  9 Nov 2021 04:22:40 -0800 (PST)
-Received: by mail-wr1-x435.google.com with SMTP id d5so32673037wrc.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 09 Nov 2021 04:22:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jGGxV5hRcr0wdAm1Axn32TXl8p4NQnFAiW+DU8mCDhk=;
-        b=CVuj3yd4LZaAVrvocsGXAK3VqK2hgBR2j1Ok6AuNnXyeCSB92d3ccpQbXIxmAuNc/d
-         36xjh2fO7SszLqc5+Dgph1KVcm5HA+RhE14Bq/YGF1woju9mJSYWAHhKHlBvGKpR1seD
-         Z8CwnIzkHbkf0W7rLv1gV7qzYtXmTQ5qMon/AUh0XknPyOtwjslFM/20c06dD8S9CEu8
-         Dbrv7YqoG2zG0++/FRZO0m/aHBzkm/MQfz6nJ/K0PanroUdF76z9o/Za7TUMj79CVpuX
-         VZCM++NhOmcOfwVsgcXUql+mFEMi7KlCBeHCqereJDtAgdMyotpz/n4qmLbir/hmWQEr
-         cqMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jGGxV5hRcr0wdAm1Axn32TXl8p4NQnFAiW+DU8mCDhk=;
-        b=b0L2RNp00Ra5J4lfh9cJuydU1lvxzo9239vHUGSBiNgNT6R1dI9lanuobYT1B5FPrP
-         LbT7+AJ6sQpiSuv4AQDfn4mWdoyV5HMyyUkm+K3ATglHz1TcySPMxXIqOr6E7tLeiEs4
-         sc7cRgEHb1rcZPv0ALKX1i5Mrj3Mp5HM0M52XbZbdiypi3p4ImfPIBFNqSzouUHG3Jjm
-         YpIaL6ZsNbCrpK4oShhfRrpPFa0Dg5rHgJTPsiUql7R1SigzvCUOSbQhzDgtBqYrKCaQ
-         U7rB7A+l3d4doPmyXKzuHM/D5Cz6cLIALPB1NB6+8dni6hDj7AUFDFS7gk1axAkQLR23
-         kfXQ==
-X-Gm-Message-State: AOAM532P7GDQwIvqAjpsKN/SDHx2NzrxPm775UF4CO+GMduJRGzHSsb8
-        zOAnnQs5wAkSNu3U2eFeJ819vQ==
-X-Google-Smtp-Source: ABdhPJwVncvyWqpMtaGBtNmQxzHu9oM0ibXss97hRjSlw6b9nJhCbhm44df/U9FQj98N7elyEUzKwg==
-X-Received: by 2002:a5d:550c:: with SMTP id b12mr8817289wrv.427.1636460558780;
-        Tue, 09 Nov 2021 04:22:38 -0800 (PST)
-Received: from elver.google.com ([2a00:79e0:15:13:d20d:9fab:cbe:339])
-        by smtp.gmail.com with ESMTPSA id n32sm2815777wms.1.2021.11.09.04.22.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Nov 2021 04:22:38 -0800 (PST)
-Date:   Tue, 9 Nov 2021 13:22:32 +0100
-From:   Marco Elver <elver@google.com>
-To:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        namhyung@kernel.org, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com
-Cc:     syzbot <syzbot+23843634c323e144fd0b@syzkaller.appspotmail.com>,
-        andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, john.fastabend@gmail.com, kafai@fb.com,
-        kpsingh@kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
-Subject: [PATCH] perf: Ignore sigtrap for tracepoints destined for other tasks
-Message-ID: <YYpoCOBmC/kJWfmI@elver.google.com>
-References: <00000000000053692705d05a17c1@google.com>
+        Tue, 9 Nov 2021 08:29:40 -0500
+Received: from foss.arm.com ([217.140.110.172]:33872 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230190AbhKIN3j (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 9 Nov 2021 08:29:39 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A784D2B;
+        Tue,  9 Nov 2021 05:26:53 -0800 (PST)
+Received: from [10.57.46.99] (unknown [10.57.46.99])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F3D253F70D;
+        Tue,  9 Nov 2021 05:26:50 -0800 (PST)
+Subject: Re: [PATCH 5/5] perf arm-spe: Snapshot mode test
+To:     James Clark <james.clark@arm.com>, Leo Yan <leo.yan@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org
+References: <20210916154635.1525-1-german.gomez@arm.com>
+ <20210916154635.1525-5-german.gomez@arm.com>
+ <20211020131339.GG49614@leoy-ThinkPad-X240s>
+ <fd65eb63-d4ca-2105-74cb-c717ad2eb7d3@arm.com>
+ <ef1d4b66-1743-529f-7c5b-fbc4ada7113b@arm.com>
+From:   German Gomez <german.gomez@arm.com>
+Message-ID: <5af799c3-5f39-9792-225e-1957c3da7b07@arm.com>
+Date:   Tue, 9 Nov 2021 13:26:49 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00000000000053692705d05a17c1@google.com>
-User-Agent: Mutt/2.0.5 (2021-01-21)
+In-Reply-To: <ef1d4b66-1743-529f-7c5b-fbc4ada7113b@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-syzbot reported that the warning in perf_sigtrap() fires, saying that
-the event's task does not match current:
+Hi James, Leo,
 
- | WARNING: CPU: 0 PID: 9090 at kernel/events/core.c:6446 perf_pending_event+0x40d/0x4b0 kernel/events/core.c:6513
- | Modules linked in:
- | CPU: 0 PID: 9090 Comm: syz-executor.1 Not tainted 5.15.0-syzkaller #0
- | Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
- | RIP: 0010:perf_sigtrap kernel/events/core.c:6446 [inline]
- | RIP: 0010:perf_pending_event_disable kernel/events/core.c:6470 [inline]
- | RIP: 0010:perf_pending_event+0x40d/0x4b0 kernel/events/core.c:6513
- | ...
- | Call Trace:
- |  <IRQ>
- |  irq_work_single+0x106/0x220 kernel/irq_work.c:211
- |  irq_work_run_list+0x6a/0x90 kernel/irq_work.c:242
- |  irq_work_run+0x4f/0xd0 kernel/irq_work.c:251
- |  __sysvec_irq_work+0x95/0x3d0 arch/x86/kernel/irq_work.c:22
- |  sysvec_irq_work+0x8e/0xc0 arch/x86/kernel/irq_work.c:17
- |  </IRQ>
- |  <TASK>
- |  asm_sysvec_irq_work+0x12/0x20 arch/x86/include/asm/idtentry.h:664
- | RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:152 [inline]
- | RIP: 0010:_raw_spin_unlock_irqrestore+0x38/0x70 kernel/locking/spinlock.c:194
- | ...
- |  coredump_task_exit kernel/exit.c:371 [inline]
- |  do_exit+0x1865/0x25c0 kernel/exit.c:771
- |  do_group_exit+0xe7/0x290 kernel/exit.c:929
- |  get_signal+0x3b0/0x1ce0 kernel/signal.c:2820
- |  arch_do_signal_or_restart+0x2a9/0x1c40 arch/x86/kernel/signal.c:868
- |  handle_signal_work kernel/entry/common.c:148 [inline]
- |  exit_to_user_mode_loop kernel/entry/common.c:172 [inline]
- |  exit_to_user_mode_prepare+0x17d/0x290 kernel/entry/common.c:207
- |  __syscall_exit_to_user_mode_work kernel/entry/common.c:289 [inline]
- |  syscall_exit_to_user_mode+0x19/0x60 kernel/entry/common.c:300
- |  do_syscall_64+0x42/0xb0 arch/x86/entry/common.c:86
- |  entry_SYSCALL_64_after_hwframe+0x44/0xae
+Thank you for testing the patch.
 
-On x86 this shouldn't happen, which has arch_irq_work_raise().
+On 02/11/2021 15:37, James Clark wrote:
+> [...]
+> Ok, it seems like I was relying on buggy dash behaviour for my original change. Even with this:
+>
+>         if [[ "$1" == "int" ]]; then
+>                 kill -SIGINT $$
+>         fi
+>         if [[ "$1" == "term" ]]; then
+>                 kill -SIGTERM $$
+>         fi
+>
+> it still doesn't allow you to break out of running it in a while loop. This is only because of
+> the exit code, rather than any kind of signal propagation. Actually it's possible to stop it
+> with Ctrl-\ rather than Ctrl-C, and that doesn't require any extra handling in the script.
+>
+> For that reason I'm happy to go with Leo's original suggestion when I first added this which was
+> to not have any extra kill at all.
 
-The test program sets up a perf event with sigtrap set to fire on the
-'sched_wakeup' tracepoint, which fired in ttwu_do_wakeup().
+Thanks for debugging the issue, I think I will consider this fix in the
+re-submission.
 
-This happened because the 'sched_wakeup' tracepoint also takes a task
-argument passed on to perf_tp_event(), which is used to deliver the
-event to that other task.
+Thanks,
+German
 
-Since we cannot deliver synchronous signals to other tasks, skip an event if
-perf_tp_event() is targeted at another task and perf_event_attr::sigtrap is
-set, which will avoid ever entering perf_sigtrap() for such events.
-
-Fixes: 97ba62b27867 ("perf: Add support for SIGTRAP on perf events")
-Reported-by: syzbot+663359e32ce6f1a305ad@syzkaller.appspotmail.com
-Signed-off-by: Marco Elver <elver@google.com>
----
- kernel/events/core.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index f23ca260307f..91653c6e41a7 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -9729,6 +9729,9 @@ void perf_tp_event(u16 event_type, u64 count, void *record, int entry_size,
- 				continue;
- 			if (event->attr.config != entry->type)
- 				continue;
-+			/* Cannot deliver synchronous signal to other task. */
-+			if (event->attr.sigtrap)
-+				continue;
- 			if (perf_tp_event_match(event, &data, regs))
- 				perf_swevent_event(event, count, &data, regs);
- 		}
--- 
-2.34.0.rc0.344.g81b53c2807-goog
+>
+> Another fix could be this, but I'm not too keen on it because I don't think any other tests behave
+> like this:
+>
+>         [ "$1" = "int" ] || exit 1
+>         [ "$1" = "term" ] || exit 1
+>
+>>>> +	exit $glb_err
+>>>> +}
+>>>> +
+>>>> +trap cleanup_files exit term int
+>>>> +
+>>>> +arm_spe_report() {
+>>>> +	if [ $2 != 0 ]; then
+>>>> +		echo "$1: FAIL"
+>>>> +		glb_err=$2
+>>>> +	else
+>>>> +		echo "$1: PASS"
+>>>> +	fi
+>>>> +}
+>>>> +
+>>>> +perf_script_samples() {
+>>>> +	echo "Looking at perf.data file for dumping samples:"
+>>>> +
+>>>> +	# from arm-spe.c/arm_spe_synth_events()
+>>>> +	events="(ld1-miss|ld1-access|llc-miss|lld-access|tlb-miss|tlb-access|branch-miss|remote-access|memory)"
+>>>> +
+>>>> +	# Below is an example of the samples dumping:
+>>>> +	#	dd  3048 [002]          1    l1d-access:      ffffaa64999c __GI___libc_write+0x3c (/lib/aarch64-linux-gnu/libc-2.27.so)
+>>>> +	#	dd  3048 [002]          1    tlb-access:      ffffaa64999c __GI___libc_write+0x3c (/lib/aarch64-linux-gnu/libc-2.27.so)
+>>>> +	#	dd  3048 [002]          1        memory:      ffffaa64999c __GI___libc_write+0x3c (/lib/aarch64-linux-gnu/libc-2.27.so)
+>>>> +	perf script -F,-time -i ${perfdata} 2>&1 | \
+>>>> +		egrep " +$1 +[0-9]+ .* +${events}:(.*:)? +" > /dev/null 2>&1
+>>>> +}
+>>>> +
+>>>> +perf_report_samples() {
+>>>> +	echo "Looking at perf.data file for reporting samples:"
+>>>> +
+>>>> +	# Below is an example of the samples reporting:
+>>>> +	#   73.04%    73.04%  dd    libc-2.27.so      [.] _dl_addr
+>>>> +	#    7.71%     7.71%  dd    libc-2.27.so      [.] getenv
+>>>> +	#    2.59%     2.59%  dd    ld-2.27.so        [.] strcmp
+>>>> +	perf report --stdio -i ${perfdata} 2>&1 | \
+>>>> +		egrep " +[0-9]+\.[0-9]+% +[0-9]+\.[0-9]+% +$1 " > /dev/null 2>&1
+>>>> +}
+>>>> +
+>>>> +arm_spe_snapshot_test() {
+>>>> +	echo "Recording trace with snapshot mode $perfdata"
+>>>> +	perf record -o ${perfdata} -e arm_spe// -S \
+>>>> +		-- dd if=/dev/zero of=/dev/null > /dev/null 2>&1 &
+>>>> +	PERFPID=$!
+>>>> +
+>>>> +	# Wait for perf program
+>>>> +	sleep 1
+>>>> +
+>>>> +	# Send signal to snapshot trace data
+>>>> +	kill -USR2 $PERFPID
+>>>> +
+>>>> +	# Stop perf program
+>>>> +	kill $PERFPID
+>>>> +	wait $PERFPID
+>>>> +
+>>>> +	perf_script_samples dd &&
+>>>> +	perf_report_samples dd
+>>>> +
+>>>> +	err=$?
+>>>> +	arm_spe_report "SPE snapshot testing" $err
+>>>> +}
+>>>> +
+>>>> +arm_spe_snapshot_test
+>>>> +exit $glb_err
+>>>> \ No newline at end of file
+>>>> -- 
+>>>> 2.17.1
+>>>>
