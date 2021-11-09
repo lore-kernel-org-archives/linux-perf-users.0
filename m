@@ -2,91 +2,78 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F327EC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 08:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5E9C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 08:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0D19610FF
-	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 08:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 625FF610A6
+	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 08:58:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241394AbhKIIDp (ORCPT
+        id S244608AbhKIJBc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 9 Nov 2021 03:03:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52538 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236432AbhKIIDo (ORCPT
+        Tue, 9 Nov 2021 04:01:32 -0500
+Received: from esa3.hc1455-7.c3s2.iphmx.com ([207.54.90.49]:1858 "EHLO
+        esa3.hc1455-7.c3s2.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S244606AbhKIJBc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 9 Nov 2021 03:03:44 -0500
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8063BC061764;
-        Tue,  9 Nov 2021 00:00:59 -0800 (PST)
-Received: by mail-pg1-x52a.google.com with SMTP id q126so13801029pgq.13;
-        Tue, 09 Nov 2021 00:00:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YY/xWrWdHWoOd2ErQ+giH+QO0ELkWsrHSIUV0eDZ8CM=;
-        b=AnDLhyPbGhfJZo97QffKCrFoJXMnBb48Uqb7ULr9S0sLambfLXegt7hN1L91W4g7U9
-         ze1dUnFvGySkjt6oOW94ppqSziYah6d4JWJtChBF1DLb4O2hhYVl6mOfKhM+iRkOeVw2
-         kbYbNDMRl395HTA8bCQAVzWLdYQ2frMHpNMdsFJN1J0N9z/GzdsGsE4w6E38+G3CLARQ
-         vPrIO300rhOCEZCMKJLgzBX281cUfzhRJcsw+XaBNkhQx9bW9Mw/LlXau66jEyhZeAmM
-         x2IwnCCYiZiplA7wH/Mrd1r4+QL5pf2H4p9lkJv/RETK5qa36Ijp1XN30NiWaGs3OHsi
-         ozOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YY/xWrWdHWoOd2ErQ+giH+QO0ELkWsrHSIUV0eDZ8CM=;
-        b=fT9Gpzt3JDnSDRmBvoxYIZ2CCldfbV9LqgB+GLvWsXIJtsyksdht0qrUr7anJdNdbP
-         QiOlVGmlAIn7HbtPegzD0cPPvoDh8vB2sEdX+ANKcAPyIeK0KKjZsK6O2TxsICbliIVV
-         iwrfNaNJkLebY5W2YfB3FQtwvE6wI0xWWYsRK9fcgwMT3A8gabD+Y4+Y0ZorwaGNmDkg
-         G4tstvjXqTvB4EVqzZqb0Llo+aFJYtNKfJ4uuY+yZDTpwaYr1p4xoQ+fCC/ZdyUq/3et
-         T+wRjf0AEN5xgpk4ApQVIkx7R8xIF+m/VRwVGuFsVO06nRFAHd7AZsP5CN0ctlv+jtur
-         qBeA==
-X-Gm-Message-State: AOAM531KzgmCqmCO7vHK8S0zTuE5oUoevcd2ec8OuOi5pmE7SWUtt/Wn
-        Rfac5LWET4fGPiNUUykZiLoJ0Q23B6aN8UsYz+o=
-X-Google-Smtp-Source: ABdhPJw6rYUByMFJIZHERRo20+KIgnOpFO/AHyJxIfH7+z0hd8yHVzDGlFk8PQPG/CT+ff939LlbrA==
-X-Received: by 2002:a62:8683:0:b0:480:edf9:33c0 with SMTP id x125-20020a628683000000b00480edf933c0mr6128136pfd.11.1636444858881;
-        Tue, 09 Nov 2021 00:00:58 -0800 (PST)
-Received: from localhost.localdomain ([221.221.55.14])
-        by smtp.gmail.com with ESMTPSA id c1sm19710396pfv.54.2021.11.09.00.00.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Nov 2021 00:00:58 -0800 (PST)
-From:   Jian Wen <wenjianhn@gmail.com>
-To:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jian Wen <wenjianhn@gmail.com>
-Subject: [PATCH] Fix usage of open()
-Date:   Tue,  9 Nov 2021 16:00:54 +0800
-Message-Id: <20211109080054.444997-1-wenjianhn@gmail.com>
+        Tue, 9 Nov 2021 04:01:32 -0500
+IronPort-SDR: QN3+8lHmcnryN0CExQNo/cB19mmPsSbq+WxUx9sytPkkfeekt82PjiYHytbgpEJ/pRaSw+qwEY
+ MZ5Zm2snHctyh/FW9hbkoaGCuw/KBHzgfJ09opFSxdr3cQ4rED2I+QlH/RQ0O9lSq+xp2sI0E7
+ ChyIaGRH2sXC/9E/vXDPaLef2a62wj79uqXD07PirLxviHEkT9CSZo/7VFuvnkQuqB7HB5nnWl
+ QsFGIE639CWaFkAVml3nawf6wr6Hjw4ruJVaGbe2jPmyVQ1i6uK7wMQj8cE5Cg1+wCJDgDW0kE
+ +jn/81KIWzL/vvElUdLJyeoK
+X-IronPort-AV: E=McAfee;i="6200,9189,10162"; a="51953268"
+X-IronPort-AV: E=Sophos;i="5.87,219,1631545200"; 
+   d="scan'208";a="51953268"
+Received: from unknown (HELO yto-r1.gw.nic.fujitsu.com) ([218.44.52.217])
+  by esa3.hc1455-7.c3s2.iphmx.com with ESMTP; 09 Nov 2021 17:58:37 +0900
+Received: from yto-m4.gw.nic.fujitsu.com (yto-nat-yto-m4.gw.nic.fujitsu.com [192.168.83.67])
+        by yto-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id A39D013E0B1;
+        Tue,  9 Nov 2021 17:58:36 +0900 (JST)
+Received: from yto-om2.fujitsu.com (yto-om2.o.css.fujitsu.com [10.128.89.163])
+        by yto-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id BB08DD5079;
+        Tue,  9 Nov 2021 17:58:35 +0900 (JST)
+Received: from pumpkin.openstacklocal (pumpkin.fct.css.fujitsu.com [10.130.70.189])
+        by yto-om2.fujitsu.com (Postfix) with ESMTP id A014F4007B81B;
+        Tue,  9 Nov 2021 17:58:35 +0900 (JST)
+From:   Shunsuke Nakamura <nakamura.shun@fujitsu.com>
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, robh@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: [PATCH v3 2/3] libperf: Remove scaling process from perf_mmap__read_self()
+Date:   Tue,  9 Nov 2021 17:58:30 +0900
+Message-Id: <20211109085831.3770594-3-nakamura.shun@fujitsu.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20211109085831.3770594-1-nakamura.shun@fujitsu.com>
+References: <20211109085831.3770594-1-nakamura.shun@fujitsu.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-O_NONBLOCK is a flag instead of a file mode bit.
+Remove the scaling process from perf_mmap__read_self(), and unify the
+counters that can be obtained from perf_evsel__read() to "no scaling".
 
-Fixes: edcaa47958c7 ("perf daemon: Add 'ping' command")
-
-Signed-off-by: Jian Wen <wenjianhn@gmail.com>
+Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
 ---
- tools/perf/builtin-daemon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/lib/perf/mmap.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
-index 6cb3f6cc36d0..37d6fcdbb63d 100644
---- a/tools/perf/builtin-daemon.c
-+++ b/tools/perf/builtin-daemon.c
-@@ -531,7 +531,7 @@ static int daemon_session__control(struct daemon_session *session,
- 		scnprintf(ack_path, sizeof(ack_path), "%s/%s",
- 			  session->base, SESSION_ACK);
+diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
+index c89dfa5f67b3..aaa457904008 100644
+--- a/tools/lib/perf/mmap.c
++++ b/tools/lib/perf/mmap.c
+@@ -353,8 +353,6 @@ int perf_mmap__read_self(struct perf_mmap *map, struct perf_counts_values *count
+ 		count->ena += delta;
+ 		if (idx)
+ 			count->run += delta;
+-
+-		cnt = mul_u64_u64_div64(cnt, count->ena, count->run);
+ 	}
  
--		ack = open(ack_path, O_RDONLY, O_NONBLOCK);
-+		ack = open(ack_path, O_RDONLY|O_NONBLOCK);
- 		if (!ack) {
- 			close(control);
- 			return -1;
+ 	count->val = cnt;
 -- 
-2.25.1
+2.27.0
 
