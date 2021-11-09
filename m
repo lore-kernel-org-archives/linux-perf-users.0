@@ -2,215 +2,137 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75537C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 11:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE80C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 12:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B170611F0
-	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 11:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38BF46103B
+	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 12:17:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343624AbhKILxs (ORCPT
+        id S242308AbhKIMUM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 9 Nov 2021 06:53:48 -0500
-Received: from foss.arm.com ([217.140.110.172]:60850 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1343618AbhKILxf (ORCPT
+        Tue, 9 Nov 2021 07:20:12 -0500
+Received: from mail-io1-f69.google.com ([209.85.166.69]:39450 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241981AbhKIMUG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 9 Nov 2021 06:53:35 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5103C113E;
-        Tue,  9 Nov 2021 03:50:49 -0800 (PST)
-Received: from ip-10-252-15-108.eu-west-1.compute.internal (unknown [10.252.15.108])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3ACE73F7F5;
-        Tue,  9 Nov 2021 03:50:47 -0800 (PST)
-From:   German Gomez <german.gomez@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc:     German Gomez <german.gomez@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 4/4] perf arm-spe: Support hardware-based PID tracing
-Date:   Tue,  9 Nov 2021 11:50:20 +0000
-Message-Id: <20211109115020.31623-5-german.gomez@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211109115020.31623-1-german.gomez@arm.com>
-References: <20211109115020.31623-1-german.gomez@arm.com>
+        Tue, 9 Nov 2021 07:20:06 -0500
+Received: by mail-io1-f69.google.com with SMTP id r15-20020a6b600f000000b005dde03edc0cso14058447iog.6
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Nov 2021 04:17:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=aCoweEaOvgt71+0i7uxsWqNufLYUKzPDGNM1p0HMj7E=;
+        b=bqP4/SzhCGlzgEHdR7u/wxzSQ7N4JTcLmMw3YbgKd0I9agelXbxyxlj1SQEpSkMn1P
+         yTkYlfCE2mwdBAVpV3cASjnc36NbET7lWwg2u8ZK9vIKMkiUjULlxPDVdUCiFFGmjBu2
+         3lUw6PB9cku4z8jCw1KRfW5UIOsvZDPKA6DDr3lRbMoVLmnneTDZEZYImkCy6CfEyWXV
+         yiJenZozko4PSbcd0WJ1BMMNTXbTF6Opq1GY08SetwxXq/Ky8lIVe5KRb4bD+Qk4FwtR
+         b4iyWelvy9zPKXnxUreDVvTjtg4Q9UlPbTsRUkmhbED+kzSLc1W7XdjNieBWydVWwPYl
+         B/aw==
+X-Gm-Message-State: AOAM530ardrEBtzCGi4lokEyQUq7DED1nn0zZ5MIehjmmh6fyi4U3gXL
+        LZRc30KvtfQ9n7dPOCUy8mxtQxGVc3xaeRd2qQyKPwvC77hr
+X-Google-Smtp-Source: ABdhPJxHGqbMCdDPD99fI2rQ3B09+I0TS+iw5PhxMREKjUcnFu0aagRR+VHmZTddB2VF4YbOV6ZUNDwhZ8MzjNnidcIeCpqjHzAd
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:178a:: with SMTP id y10mr4676101ilu.257.1636460240527;
+ Tue, 09 Nov 2021 04:17:20 -0800 (PST)
+Date:   Tue, 09 Nov 2021 04:17:20 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000053692705d05a17c1@google.com>
+Subject: [syzbot] WARNING in perf_pending_event
+From:   syzbot <syzbot+23843634c323e144fd0b@syzkaller.appspotmail.com>
+To:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, john.fastabend@gmail.com, jolsa@redhat.com,
+        kafai@fb.com, kpsingh@kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        mingo@redhat.com, namhyung@kernel.org, netdev@vger.kernel.org,
+        peterz@infradead.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If Arm SPE traces contain CONTEXT packets with TID info, use these
-values for tracking tid of samples. Otherwise fall back to using context
-switch events and display a message warning the user of possible timing
-inaccuracies [1].
+Hello,
 
-[1] https://lore.kernel.org/lkml/f877cfa6-9b25-6445-3806-ca44a4042eaf@arm.com/
+syzbot found the following issue on:
 
-Signed-off-by: German Gomez <german.gomez@arm.com>
+HEAD commit:    85a90500f9a1 Merge tag 'io_uring-5.14-2021-08-07' of git:/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13c8aa81300000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5ba4a97de189f896
+dashboard link: https://syzkaller.appspot.com/bug?extid=23843634c323e144fd0b
+compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.1
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12ac8392300000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1039bce6300000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+23843634c323e144fd0b@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 8449 at kernel/events/core.c:6407 perf_sigtrap kernel/events/core.c:6407 [inline]
+WARNING: CPU: 0 PID: 8449 at kernel/events/core.c:6407 perf_pending_event_disable kernel/events/core.c:6431 [inline]
+WARNING: CPU: 0 PID: 8449 at kernel/events/core.c:6407 perf_pending_event+0x4ba/0x560 kernel/events/core.c:6474
+Modules linked in:
+CPU: 0 PID: 8449 Comm: syz-executor996 Not tainted 5.14.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:perf_sigtrap kernel/events/core.c:6407 [inline]
+RIP: 0010:perf_pending_event_disable kernel/events/core.c:6431 [inline]
+RIP: 0010:perf_pending_event+0x4ba/0x560 kernel/events/core.c:6474
+Code: ff 4c 89 e7 e8 d7 78 27 00 e9 2f ff ff ff e8 ad 78 27 00 e9 3d fc ff ff 4c 89 ff e8 30 79 27 00 e9 fb fb ff ff e8 b6 ba e1 ff <0f> 0b e9 86 fd ff ff e8 ba 78 27 00 e9 7b fe ff ff 48 89 df e8 9d
+RSP: 0018:ffffc90000007f38 EFLAGS: 00010046
+RAX: 0000000080010001 RBX: ffff88802a04fc40 RCX: 0000000000000000
+RDX: ffff8880377e0040 RSI: ffffffff8193268a RDI: ffff888026467958
+RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000020
+R10: ffffffff819322cb R11: 0000000000000000 R12: ffff8880377e0040
+R13: ffff888026467800 R14: ffff88802a04f800 R15: ffff88802a04fc30
+FS:  0000000000545300(0000) GS:ffff8880b9c00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000004d05c0 CR3: 000000003d54f000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <IRQ>
+ irq_work_single+0x120/0x1f0 kernel/irq_work.c:155
+ irq_work_run_list+0x91/0xc0 kernel/irq_work.c:177
+ irq_work_run+0x54/0xd0 kernel/irq_work.c:186
+ __sysvec_irq_work+0x95/0x3d0 arch/x86/kernel/irq_work.c:22
+ sysvec_irq_work+0x8e/0xc0 arch/x86/kernel/irq_work.c:17
+ </IRQ>
+ asm_sysvec_irq_work+0x12/0x20 arch/x86/include/asm/idtentry.h:664
+RIP: 0010:__raw_spin_unlock_irq include/linux/spinlock_api_smp.h:169 [inline]
+RIP: 0010:_raw_spin_unlock_irq+0x25/0x40 kernel/locking/spinlock.c:199
+Code: 0f 1f 44 00 00 55 48 8b 74 24 08 48 89 fd 48 83 c7 18 e8 3e 1a 2d f8 48 89 ef e8 e6 8f 2d f8 e8 21 cb 4d f8 fb bf 01 00 00 00 <e8> 36 6a 21 f8 65 8b 05 cf b0 d4 76 85 c0 74 02 5d c3 e8 2b 06 d3
+RSP: 0018:ffffc90001a17ee8 EFLAGS: 00000202
+RAX: 0000000000000315 RBX: 0000000000000000 RCX: 1ffffffff1ad8461
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000001
+RBP: ffff888021b9cb40 R08: 0000000000000001 R09: 0000000000000001
+R10: ffffffff817b0a38 R11: 0000000000000000 R12: ffff888033f2f320
+R13: 0000000000000000 R14: ffff888021b9cb40 R15: ffff8880377e0040
+ spin_unlock_irq include/linux/spinlock.h:404 [inline]
+ do_group_exit+0x29a/0x310 kernel/exit.c:919
+ __do_sys_exit_group kernel/exit.c:933 [inline]
+ __se_sys_exit_group kernel/exit.c:931 [inline]
+ __x64_sys_exit_group+0x3a/0x50 kernel/exit.c:931
+ do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+ do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
+ entry_SYSCALL_64_after_hwframe+0x44/0xae
+RIP: 0033:0x444379
+Code: 00 49 c7 c0 b8 ff ff ff be e7 00 00 00 ba 3c 00 00 00 eb 12 0f 1f 44 00 00 89 d0 0f 05 48 3d 00 f0 ff ff 77 1c f4 89 f0 0f 05 <48> 3d 00 f0 ff ff 76 e7 f7 d8 64 41 89 00 eb df 0f 1f 80 00 00 00
+RSP: 002b:00007fffad23f4c8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 00000000004ca370 RCX: 0000000000444379
+RDX: 000000000000003c RSI: 00000000000000e7 RDI: 0000000000000000
+RBP: 0000000000000000 R08: ffffffffffffffb8 R09: 0000000000f0b5ff
+R10: 00007fffad23f550 R11: 0000000000000246 R12: 00000000004ca370
+R13: 0000000000000001 R14: 0000000000000000 R15: 0000000000000001
+
+
 ---
- tools/perf/util/arm-spe.c | 99 +++++++++++++++++++++++++++------------
- 1 file changed, 70 insertions(+), 29 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 230bc7ab2..30b8bb48a 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -71,6 +71,7 @@ struct arm_spe {
- 	u64				kernel_start;
- 
- 	unsigned long			num_events;
-+	u8				use_ctx_pkt_for_pid;
- };
- 
- struct arm_spe_queue {
-@@ -226,6 +227,44 @@ static inline u8 arm_spe_cpumode(struct arm_spe *spe, u64 ip)
- 		PERF_RECORD_MISC_USER;
- }
- 
-+static void arm_spe_set_pid_tid_cpu(struct arm_spe *spe,
-+				    struct auxtrace_queue *queue)
-+{
-+	struct arm_spe_queue *speq = queue->priv;
-+	pid_t tid;
-+
-+	tid = machine__get_current_tid(spe->machine, speq->cpu);
-+	if (tid != -1) {
-+		speq->tid = tid;
-+		thread__zput(speq->thread);
-+	} else
-+		speq->tid = queue->tid;
-+
-+	if ((!speq->thread) && (speq->tid != -1)) {
-+		speq->thread = machine__find_thread(spe->machine, -1,
-+						    speq->tid);
-+	}
-+
-+	if (speq->thread) {
-+		speq->pid = speq->thread->pid_;
-+		if (queue->cpu == -1)
-+			speq->cpu = speq->thread->cpu;
-+	}
-+}
-+
-+static int arm_spe_set_tid(struct arm_spe_queue *speq, pid_t tid)
-+{
-+	struct arm_spe *spe = speq->spe;
-+	int err = machine__set_current_tid(spe->machine, speq->cpu, tid, tid);
-+
-+	if (err)
-+		return err;
-+
-+	arm_spe_set_pid_tid_cpu(spe, &spe->queues.queue_array[speq->queue_nr]);
-+
-+	return 0;
-+}
-+
- static void arm_spe_prep_sample(struct arm_spe *spe,
- 				struct arm_spe_queue *speq,
- 				union perf_event *event,
-@@ -460,6 +499,19 @@ static int arm_spe_run_decoder(struct arm_spe_queue *speq, u64 *timestamp)
- 		 * can correlate samples between Arm SPE trace data and other
- 		 * perf events with correct time ordering.
- 		 */
-+
-+		/*
-+		 * Update pid/tid info.
-+		 */
-+		record = &speq->decoder->record;
-+		if (!spe->timeless_decoding && record->context_id != (u64)-1) {
-+			ret = arm_spe_set_tid(speq, record->context_id);
-+			if (ret)
-+				return ret;
-+
-+			spe->use_ctx_pkt_for_pid = true;
-+		}
-+
- 		ret = arm_spe_sample(speq);
- 		if (ret)
- 			return ret;
-@@ -586,31 +638,6 @@ static bool arm_spe__is_timeless_decoding(struct arm_spe *spe)
- 	return timeless_decoding;
- }
- 
--static void arm_spe_set_pid_tid_cpu(struct arm_spe *spe,
--				    struct auxtrace_queue *queue)
--{
--	struct arm_spe_queue *speq = queue->priv;
--	pid_t tid;
--
--	tid = machine__get_current_tid(spe->machine, speq->cpu);
--	if (tid != -1) {
--		speq->tid = tid;
--		thread__zput(speq->thread);
--	} else
--		speq->tid = queue->tid;
--
--	if ((!speq->thread) && (speq->tid != -1)) {
--		speq->thread = machine__find_thread(spe->machine, -1,
--						    speq->tid);
--	}
--
--	if (speq->thread) {
--		speq->pid = speq->thread->pid_;
--		if (queue->cpu == -1)
--			speq->cpu = speq->thread->cpu;
--	}
--}
--
- static int arm_spe_process_queues(struct arm_spe *spe, u64 timestamp)
- {
- 	unsigned int queue_nr;
-@@ -641,7 +668,12 @@ static int arm_spe_process_queues(struct arm_spe *spe, u64 timestamp)
- 			ts = timestamp;
- 		}
- 
--		arm_spe_set_pid_tid_cpu(spe, queue);
-+		/*
-+		 * A previous context-switch event has set pid/tid in the machine's context, so
-+		 * here we need to update the pid/tid in the thread and SPE queue.
-+		 */
-+		if (!spe->use_ctx_pkt_for_pid)
-+			arm_spe_set_pid_tid_cpu(spe, queue);
- 
- 		ret = arm_spe_run_decoder(speq, &ts);
- 		if (ret < 0) {
-@@ -740,8 +772,9 @@ static int arm_spe_process_event(struct perf_session *session,
- 		if (err)
- 			return err;
- 
--		if (event->header.type == PERF_RECORD_SWITCH_CPU_WIDE ||
--		    event->header.type == PERF_RECORD_SWITCH)
-+		if (!spe->use_ctx_pkt_for_pid &&
-+		    (event->header.type == PERF_RECORD_SWITCH_CPU_WIDE ||
-+		    event->header.type == PERF_RECORD_SWITCH))
- 			err = arm_spe_context_switch(spe, event, sample);
- 	}
- 
-@@ -808,7 +841,15 @@ static int arm_spe_flush(struct perf_session *session __maybe_unused,
- 		return arm_spe_process_timeless_queues(spe, -1,
- 				MAX_TIMESTAMP - 1);
- 
--	return arm_spe_process_queues(spe, MAX_TIMESTAMP);
-+	ret = arm_spe_process_queues(spe, MAX_TIMESTAMP);
-+	if (ret)
-+		return ret;
-+
-+	if (!spe->use_ctx_pkt_for_pid)
-+		ui__warning("Arm SPE CONTEXT packets not found in the traces.\n"
-+			    "Matching of TIDs to SPE events could be inaccurate.\n");
-+
-+	return 0;
- }
- 
- static void arm_spe_free_queue(void *priv)
--- 
-2.25.1
-
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
