@@ -2,107 +2,85 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD80AC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 10:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF24C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 10:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C1AB61175
-	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 10:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83AC86112D
+	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 10:42:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243374AbhKIKo2 (ORCPT
+        id S243246AbhKIKpB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 9 Nov 2021 05:44:28 -0500
-Received: from foss.arm.com ([217.140.110.172]:60004 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242487AbhKIKoU (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 9 Nov 2021 05:44:20 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A0DFEED1;
-        Tue,  9 Nov 2021 02:41:34 -0800 (PST)
-Received: from [10.57.46.99] (unknown [10.57.46.99])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D451B3F7F5;
-        Tue,  9 Nov 2021 02:41:31 -0800 (PST)
-Subject: Re: [PATCH 2/3] perf arm-spe: Save context ID in record
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, James Clark <james.clark@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <20211102180739.18049-1-german.gomez@arm.com>
- <20211102180739.18049-3-german.gomez@arm.com>
- <20211106134725.GI477387@leoy-ThinkPad-X240s>
-From:   German Gomez <german.gomez@arm.com>
-Message-ID: <55338d60-bb75-48b8-66bb-87d74a6752b3@arm.com>
-Date:   Tue, 9 Nov 2021 10:41:29 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        Tue, 9 Nov 2021 05:45:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33420 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240799AbhKIKpA (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 9 Nov 2021 05:45:00 -0500
+Received: from mail-ua1-x92c.google.com (mail-ua1-x92c.google.com [IPv6:2607:f8b0:4864:20::92c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38E14C061764
+        for <linux-perf-users@vger.kernel.org>; Tue,  9 Nov 2021 02:42:15 -0800 (PST)
+Received: by mail-ua1-x92c.google.com with SMTP id s13so22054912uaj.11
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Nov 2021 02:42:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=UDmyX8ymZld6UPKP7CixHiCjmoY10TK2bwO06+fl+hw=;
+        b=hoJl741bA0pq423Shx5hsia2O5uKINpP6ChaZU4FEdW/Of5FBztTWhchDKxfYVPmyv
+         th90A2GWEEqHZWVxS1GIv4b/yy/8qiofoFC4Z9RgyfgF98wItAdMB7TkekyxUGtKRzRx
+         uzFcuhLoSjl0RFHv/au4nfMYN+7e0boM0sazFWLi3tNMc2/FxxhkXnz2zVFokIgmSaIq
+         mT1TPdVN2l7qfcimWiUwyXWZxGc6wj/ApU/oeqpjAiUwIqrRhcCcUdLkc4jfjHciLefE
+         j4a6gB+d0oLR9ixkBhGISf2l1U/cwdZoFfjF6u1lFqBG+2F8xDQdxUzHXKVoax7emkq3
+         A6QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=UDmyX8ymZld6UPKP7CixHiCjmoY10TK2bwO06+fl+hw=;
+        b=n+lmR3bH7z+01B/Y6oUcZyc7EU809PiYh+J6x8ZIUPYq7picqjrujNJg/MowrkBhYD
+         T8QVmNWpTyQi29k1HrZ+/SerUXd5bZDGA4CUiBWmeYAqBO9xlNIusnTQs6wVZjwA4gS6
+         Te4dc+iPiKIp03DUVbZ2s7msqapQMFF6bpi+P8OqmwS5lrseb7Ohp+0gQdIHK32pHo5G
+         kislDJRPLmvbM5x7o3wOmhrE6FZQB+QCl7tqoKO/02KbIlJUHcxWz0b9wF1RA2GAlsIS
+         3hhMrUISmqLCwtcVKgLyTMv2YGuO0nDEMo4sg3aitDhSTQn+vFQ0aTrQKJ+9tlHmjei3
+         Hl8Q==
+X-Gm-Message-State: AOAM531UCPnlfmYixGLIVJrSR1sac0RIcyBUeRqA412UFafGhhE/5eW0
+        779kE5bmESAtH2TbyrPVr8CcJ2Xb9MCV9kvGZwm5eY3Ej1U=
+X-Google-Smtp-Source: ABdhPJwfVp4ooKjdvzyiZRpyWzGGT4TgRvUC9e6JMGJAI56VcBeWcN9JpJNpoMisxo+Nkn6cp0nN+v4W2pJDMXGCnrA=
+X-Received: by 2002:a05:6102:5489:: with SMTP id bk9mr10460831vsb.37.1636454534398;
+ Tue, 09 Nov 2021 02:42:14 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20211106134725.GI477387@leoy-ThinkPad-X240s>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <CAL+bK4PgSAYVDHt+F_RzPfPXH7iCUpVAohbbuV0uKnjJhhfEHA@mail.gmail.com>
+ <CAL+bK4PbXYObP=sEpGGMeAAo6dU0iow1N9TgQqyBt+-M6Jwi5w@mail.gmail.com>
+In-Reply-To: <CAL+bK4PbXYObP=sEpGGMeAAo6dU0iow1N9TgQqyBt+-M6Jwi5w@mail.gmail.com>
+From:   Neven Sajko <nsajko@gmail.com>
+Date:   Tue, 9 Nov 2021 10:41:48 +0000
+Message-ID: <CAL+bK4N6gpQqCEO9L9kSU2n37B=P9j0AQez3SSzevqUhYZ2+vA@mail.gmail.com>
+Subject: Re: symbol lookup error: ./libperf-gtk.so: undefined symbol: callchain_param
+To:     linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-On 06/11/2021 13:47, Leo Yan wrote:
-> On Tue, Nov 02, 2021 at 06:07:38PM +0000, German Gomez wrote:
->> This patch is to save context ID in record, this will be used to set TID
->> for samples.
->>
->> Signed-off-by: Leo Yan <leo.yan@linaro.org>
->> Signed-off-by: James Clark <james.clark@arm.com>
->> Signed-off-by: German Gomez <german.gomez@arm.com>
->> ---
->>  tools/perf/util/arm-spe-decoder/arm-spe-decoder.c | 2 ++
->>  tools/perf/util/arm-spe-decoder/arm-spe-decoder.h | 1 +
->>  2 files changed, 3 insertions(+)
->>
->> diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
->> index 32fe41835..1b58859d2 100644
->> --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
->> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
->> @@ -151,6 +151,7 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
->>  	u64 payload, ip;
->>  
->>  	memset(&decoder->record, 0x0, sizeof(decoder->record));
->> +	decoder->record.context_id = -1;
-> Since 'context_id' is type u64, here it's good to assign '(u64)-1'.
-
-Ack.
-
-Thanks,
-German
-
+On Tue, 9 Nov 2021 at 10:22, Neven Sajko <nsajko@gmail.com> wrote:
 >
->>  	while (1) {
->>  		err = arm_spe_get_next_packet(decoder);
->> @@ -180,6 +181,7 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
->>  		case ARM_SPE_COUNTER:
->>  			break;
->>  		case ARM_SPE_CONTEXT:
->> +			decoder->record.context_id = payload;
->>  			break;
->>  		case ARM_SPE_OP_TYPE:
->>  			if (idx == SPE_OP_PKT_HDR_CLASS_LD_ST_ATOMIC) {
->> diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
->> index 59bdb7309..46a8556a9 100644
->> --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
->> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
->> @@ -38,6 +38,7 @@ struct arm_spe_record {
->>  	u64 timestamp;
->>  	u64 virt_addr;
->>  	u64 phys_addr;
->> +	u64 context_id;
->>  };
->>  
->>  struct arm_spe_insn;
->> -- 
->> 2.25.1
->>
+> On Tue, 9 Nov 2021 at 09:53, Neven Sajko <nsajko@gmail.com> wrote:
+> >
+> > I built perf from linux git master with GTK2=1 on my Archlinux, but
+> > I'm having trouble actually running the GTK2 UI.
+> >
+> > When I run LD_PRELOAD=./libperf-gtk.so ./perf annotate --gtk, perf
+> > exits with this error:
+> > ./perf: symbol lookup error: ./libperf-gtk.so: undefined symbol: callchain_param
+> >
+> > Any suggestions?
+>
+> Now that I think about how this is actually supposed to work, I guess
+> that using LD_PRELOAD was wrong.
+>
+> However, I still can't get the GTK2 GUI to start up: I tried both
+> using and empty  LD_LIBRARY_PATH (to make dlopen look in the current
+> directory) and copying libperf-gtk.so to /lib. Both of those attempts
+> resulted in:
+> GTK browser requested but could not find libperf-gtk.so
+
+FTR, the same issue appears when perf is built from the 5.14.16 tarball.
