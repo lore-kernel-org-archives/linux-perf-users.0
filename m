@@ -2,154 +2,278 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B3DC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 16:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE27C43217
+	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 17:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0B576102A
-	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 16:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68C7161381
+	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 17:34:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234501AbhKIQdk (ORCPT
+        id S241180AbhKIRhc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 9 Nov 2021 11:33:40 -0500
-Received: from foss.arm.com ([217.140.110.172]:35884 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234491AbhKIQdj (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 9 Nov 2021 11:33:39 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DAAA8ED1;
-        Tue,  9 Nov 2021 08:30:52 -0800 (PST)
-Received: from ip-10-252-15-108.eu-west-1.compute.internal (unknown [10.252.15.108])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C719E3F800;
-        Tue,  9 Nov 2021 08:30:50 -0800 (PST)
-From:   German Gomez <german.gomez@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc:     German Gomez <german.gomez@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 3/3] perf arm-spe: Snapshot mode test
-Date:   Tue,  9 Nov 2021 16:30:09 +0000
-Message-Id: <20211109163009.92072-4-german.gomez@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211109163009.92072-1-german.gomez@arm.com>
-References: <20211109163009.92072-1-german.gomez@arm.com>
+        Tue, 9 Nov 2021 12:37:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43154 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241153AbhKIRh1 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 9 Nov 2021 12:37:27 -0500
+Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4AD0C0613B9
+        for <linux-perf-users@vger.kernel.org>; Tue,  9 Nov 2021 09:34:40 -0800 (PST)
+Received: by mail-pg1-x52c.google.com with SMTP id g184so19153633pgc.6
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Nov 2021 09:34:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=YtCMrd8soCJwqQdYqfS1Uxj+jvIWsqJW9Sfp+I5znK0=;
+        b=RnI334WgYGo1s2xg0PnNwh/LwyjwkbeECYSptgpgWOUMErGKHmsDK/ZLGV9pEMwl/O
+         ekYV7g3Qyj7iroFAawbog28LZq8j9E8ozPsy6LbXEeNYDfaWne0pF0iY2RKw20oFgoi+
+         iUWeYVTxBO9NJJ4Hp1KyWtYKI60Ou3f9tZSZ4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YtCMrd8soCJwqQdYqfS1Uxj+jvIWsqJW9Sfp+I5znK0=;
+        b=qC/9d/BHpSWN0xFrvU1VUotsHCA+W9/eOOKQe98Jv5B3c5eIk8+mNW2IXyxPWdU3v7
+         8V6bngnM6WExygTzZaGYr+Eb1VK95qoXmH7oTE55mgIOZgYUIEgr8soYPjZ2Z+kBjBZ0
+         FEus3BH+/MD1IKPPWnijBWoiDli/tDMKRtI/bRX041HBpMhbMVzcd3B94rT6MsJMdFs2
+         d9IQX6JSHdAyrZBzQ8YA62gp+rc6HWKkLNECUME2+cJkXfylx2PCm+CzVwThPe7zzChR
+         5gT3e699iB5SdlNCUXneaKQxM0ZqKHQeIBa/fKCPei8l0Y6Rd45cC4lCI0tdTkmzVRX+
+         DhHg==
+X-Gm-Message-State: AOAM533IBTmPueXtH9psoQUfoVJr7Zwnv0g3hhWSKZ0j2VsPpPVJRMt9
+        HEyXVJgy53qaS/Zf2oqDGSqglA==
+X-Google-Smtp-Source: ABdhPJzSUauLeZJaFQUg6w2y5hqN0XLLDLzRlcMe5/CcpZD5KWsYDIDxVT3fGawLe51+TwjHa4Pryg==
+X-Received: by 2002:a63:e710:: with SMTP id b16mr7200956pgi.38.1636479280328;
+        Tue, 09 Nov 2021 09:34:40 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id q9sm20769593pfj.88.2021.11.09.09.34.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Nov 2021 09:34:39 -0800 (PST)
+Date:   Tue, 9 Nov 2021 09:34:39 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     akpm@linux-foundation.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, oliver.sang@intel.com, lkp@intel.com,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Hildenbrand <david@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH] kthread: dynamically allocate memory to store kthread's
+ full name
+Message-ID: <202111090930.75BBF4678@keescook>
+References: <20211108084142.4692-1-laoar.shao@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211108084142.4692-1-laoar.shao@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Shell script test_arm_spe.sh has been added to test the recording of SPE
-tracing events in snapshot mode.
+On Mon, Nov 08, 2021 at 08:41:42AM +0000, Yafang Shao wrote:
+> When I was implementing a new per-cpu kthread cfs_migration, I found the
+> comm of it "cfs_migration/%u" is truncated due to the limitation of
+> TASK_COMM_LEN. For example, the comm of the percpu thread on CPU10~19 are
+> all with the same name "cfs_migration/1", which will confuse the user. This
+> issue is not critical, because we can get the corresponding CPU from the
+> task's Cpus_allowed. But for kthreads correspoinding to other hardware
+> devices, it is not easy to get the detailed device info from task comm,
+> for example,
+> 
+>     jbd2/nvme0n1p2-
+>     xfs-reclaim/sdf
+> 
+> Currently there are so many truncated kthreads:
+> 
+>     rcu_tasks_kthre
+>     rcu_tasks_rude_
+>     rcu_tasks_trace
+>     poll_mpt3sas0_s
+>     ext4-rsv-conver
+>     xfs-reclaim/sd{a, b, c, ...}
+>     xfs-blockgc/sd{a, b, c, ...}
+>     xfs-inodegc/sd{a, b, c, ...}
+>     audit_send_repl
+>     ecryptfs-kthrea
+>     vfio-irqfd-clea
+>     jbd2/nvme0n1p2-
+>     ...
+> 
+> We can shorten these names to work around this problem, but it may be
+> not applied to all of the truncated kthreads. Take 'jbd2/nvme0n1p2-' for
+> example, it is a nice name, and it is not a good idea to shorten it.
+> 
+> One possible way to fix this issue is extending the task comm size, but
+> as task->comm is used in lots of places, that may cause some potential
+> buffer overflows. Another more conservative approach is introducing a new
+> pointer to store kthread's full name if it is truncated, which won't
+> introduce too much overhead as it is in the non-critical path. Finally we
+> make a dicision to use the second approach. See also the discussions in
+> this thread:
+> https://lore.kernel.org/lkml/20211101060419.4682-1-laoar.shao@gmail.com/
+> 
+> After this change, the full name of these truncated kthreads will be
+> displayed via /proc/[pid]/comm:
+> 
+>     rcu_tasks_kthread
+>     rcu_tasks_rude_kthread
+>     rcu_tasks_trace_kthread
+>     poll_mpt3sas0_statu
+>     ext4-rsv-conversion
+>     xfs-reclaim/sdf1
+>     xfs-blockgc/sdf1
+>     xfs-inodegc/sdf1
+>     audit_send_reply
+>     ecryptfs-kthread
+>     vfio-irqfd-cleanup
+>     jbd2/nvme0n1p2-8
+> 
+> Suggested-by: Petr Mladek <pmladek@suse.com>
+> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+> Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+> Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+> Cc: Michal Miroslaw <mirq-linux@rere.qmqm.pl>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Petr Mladek <pmladek@suse.com>
+> ---
+> TODO: will cleanup worker comm in the next step. 
+> 
+> ---
+>  fs/proc/array.c         |  3 +++
+>  include/linux/kthread.h |  1 +
+>  kernel/kthread.c        | 32 +++++++++++++++++++++++++++++++-
+>  3 files changed, 35 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/proc/array.c b/fs/proc/array.c
+> index 49be8c8ef555..860e4deafa65 100644
+> --- a/fs/proc/array.c
+> +++ b/fs/proc/array.c
+> @@ -92,6 +92,7 @@
+>  #include <linux/string_helpers.h>
+>  #include <linux/user_namespace.h>
+>  #include <linux/fs_struct.h>
+> +#include <linux/kthread.h>
+>  
+>  #include <asm/processor.h>
+>  #include "internal.h"
+> @@ -102,6 +103,8 @@ void proc_task_name(struct seq_file *m, struct task_struct *p, bool escape)
+>  
+>  	if (p->flags & PF_WQ_WORKER)
+>  		wq_worker_comm(tcomm, sizeof(tcomm), p);
+> +	else if (p->flags & PF_KTHREAD)
+> +		get_kthread_comm(tcomm, sizeof(tcomm), p);
+>  	else
+>  		__get_task_comm(tcomm, sizeof(tcomm), p);
+>  
+> diff --git a/include/linux/kthread.h b/include/linux/kthread.h
+> index 346b0f269161..2a5c04494663 100644
+> --- a/include/linux/kthread.h
+> +++ b/include/linux/kthread.h
+> @@ -33,6 +33,7 @@ struct task_struct *kthread_create_on_cpu(int (*threadfn)(void *data),
+>  					  unsigned int cpu,
+>  					  const char *namefmt);
+>  
+> +void get_kthread_comm(char *buf, size_t buf_size, struct task_struct *tsk);
+>  void set_kthread_struct(struct task_struct *p);
+>  
+>  void kthread_set_per_cpu(struct task_struct *k, int cpu);
+> diff --git a/kernel/kthread.c b/kernel/kthread.c
+> index 5b37a8567168..ce8258231eea 100644
+> --- a/kernel/kthread.c
+> +++ b/kernel/kthread.c
+> @@ -60,6 +60,8 @@ struct kthread {
+>  #ifdef CONFIG_BLK_CGROUP
+>  	struct cgroup_subsys_state *blkcg_css;
+>  #endif
+> +	/* To store the full name if task comm is truncated. */
+> +	char *full_name;
+>  };
+>  
+>  enum KTHREAD_BITS {
+> @@ -93,6 +95,18 @@ static inline struct kthread *__to_kthread(struct task_struct *p)
+>  	return kthread;
+>  }
+>  
+> +void get_kthread_comm(char *buf, size_t buf_size, struct task_struct *tsk)
+> +{
+> +	struct kthread *kthread = to_kthread(tsk);
+> +
+> +	if (!kthread || !kthread->full_name) {
+> +		__get_task_comm(buf, buf_size, tsk);
+> +		return;
+> +	}
+> +
+> +	strscpy_pad(buf, kthread->full_name, buf_size);
+> +}
+> +
+>  void set_kthread_struct(struct task_struct *p)
+>  {
+>  	struct kthread *kthread;
+> @@ -121,6 +135,7 @@ void free_kthread_struct(struct task_struct *k)
+>  #ifdef CONFIG_BLK_CGROUP
+>  	WARN_ON_ONCE(kthread && kthread->blkcg_css);
+>  #endif
+> +	kfree(kthread->full_name);
+>  	kfree(kthread);
+>  }
+>  
+> @@ -399,12 +414,27 @@ struct task_struct *__kthread_create_on_node(int (*threadfn)(void *data),
+>  	if (!IS_ERR(task)) {
+>  		static const struct sched_param param = { .sched_priority = 0 };
+>  		char name[TASK_COMM_LEN];
+> +		va_list aq;
+> +		int len;
+>  
+>  		/*
+>  		 * task is already visible to other tasks, so updating
+>  		 * COMM must be protected.
+>  		 */
+> -		vsnprintf(name, sizeof(name), namefmt, args);
+> +		va_copy(aq, args);
+> +		len = vsnprintf(name, sizeof(name), namefmt, aq);
+> +		va_end(aq);
+> +		if (len >= TASK_COMM_LEN) {
+> +			struct kthread *kthread = to_kthread(task);
+> +			char *full_name;
+> +
+> +			full_name = kvasprintf(GFP_KERNEL, namefmt, args);
+> +			if (!full_name) {
+> +				kfree(create);
+> +				return ERR_PTR(-ENOMEM);
 
-Signed-off-by: German Gomez <german.gomez@arm.com>
----
- tools/perf/tests/shell/test_arm_spe.sh | 89 ++++++++++++++++++++++++++
- 1 file changed, 89 insertions(+)
- create mode 100755 tools/perf/tests/shell/test_arm_spe.sh
+I'm not a fan of this out-of-line free/return. Why not just leave it
+truncated when out of memory? For example just do:
 
-diff --git a/tools/perf/tests/shell/test_arm_spe.sh b/tools/perf/tests/shell/test_arm_spe.sh
-new file mode 100755
-index 000000000..e59044edc
---- /dev/null
-+++ b/tools/perf/tests/shell/test_arm_spe.sh
-@@ -0,0 +1,89 @@
-+#!/bin/sh
-+# Check Arm SPE trace data recording and synthesized samples
-+
-+# Uses the 'perf record' to record trace data of Arm SPE events;
-+# then verify if any SPE event samples are generated by SPE with
-+# 'perf script' and 'perf report' commands.
-+
-+# SPDX-License-Identifier: GPL-2.0
-+# German Gomez <german.gomez@arm.com>, 2021
-+
-+skip_if_no_arm_spe_event() {
-+	perf list | egrep -q 'arm_spe_[0-9]+//' && return 0
-+
-+	# arm_spe event doesn't exist
-+	return 2
-+}
-+
-+skip_if_no_arm_spe_event || exit 2
-+
-+perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+glb_err=0
-+
-+cleanup_files()
-+{
-+	rm -f ${perfdata}
-+	exit $glb_err
-+}
-+
-+trap cleanup_files exit term int
-+
-+arm_spe_report() {
-+	if [ $2 != 0 ]; then
-+		echo "$1: FAIL"
-+		glb_err=$2
-+	else
-+		echo "$1: PASS"
-+	fi
-+}
-+
-+perf_script_samples() {
-+	echo "Looking at perf.data file for dumping samples:"
-+
-+	# from arm-spe.c/arm_spe_synth_events()
-+	events="(ld1-miss|ld1-access|llc-miss|lld-access|tlb-miss|tlb-access|branch-miss|remote-access|memory)"
-+
-+	# Below is an example of the samples dumping:
-+	#	dd  3048 [002]          1    l1d-access:      ffffaa64999c __GI___libc_write+0x3c (/lib/aarch64-linux-gnu/libc-2.27.so)
-+	#	dd  3048 [002]          1    tlb-access:      ffffaa64999c __GI___libc_write+0x3c (/lib/aarch64-linux-gnu/libc-2.27.so)
-+	#	dd  3048 [002]          1        memory:      ffffaa64999c __GI___libc_write+0x3c (/lib/aarch64-linux-gnu/libc-2.27.so)
-+	perf script -F,-time -i ${perfdata} 2>&1 | \
-+		egrep " +$1 +[0-9]+ .* +${events}:(.*:)? +" > /dev/null 2>&1
-+}
-+
-+perf_report_samples() {
-+	echo "Looking at perf.data file for reporting samples:"
-+
-+	# Below is an example of the samples reporting:
-+	#   73.04%    73.04%  dd    libc-2.27.so      [.] _dl_addr
-+	#    7.71%     7.71%  dd    libc-2.27.so      [.] getenv
-+	#    2.59%     2.59%  dd    ld-2.27.so        [.] strcmp
-+	perf report --stdio -i ${perfdata} 2>&1 | \
-+		egrep " +[0-9]+\.[0-9]+% +[0-9]+\.[0-9]+% +$1 " > /dev/null 2>&1
-+}
-+
-+arm_spe_snapshot_test() {
-+	echo "Recording trace with snapshot mode $perfdata"
-+	perf record -o ${perfdata} -e arm_spe// -S \
-+		-- dd if=/dev/zero of=/dev/null > /dev/null 2>&1 &
-+	PERFPID=$!
-+
-+	# Wait for perf program
-+	sleep 1
-+
-+	# Send signal to snapshot trace data
-+	kill -USR2 $PERFPID
-+
-+	# Stop perf program
-+	kill $PERFPID
-+	wait $PERFPID
-+
-+	perf_script_samples dd &&
-+	perf_report_samples dd
-+
-+	err=$?
-+	arm_spe_report "SPE snapshot testing" $err
-+}
-+
-+arm_spe_snapshot_test
-+exit $glb_err
+			struct kthread *kthread = to_kthread(task);
+
+			kthread->full_name = kvasprintf(GFP_KERNEL, namefmt, args);
+
+> +			}
+> +			kthread->full_name = full_name;
+> +		}
+>  		set_task_comm(task, name);
+>  		/*
+>  		 * root may have changed our (kthreadd's) priority or CPU mask.
+> -- 
+> 2.17.1
+> 
+
 -- 
-2.25.1
-
+Kees Cook
