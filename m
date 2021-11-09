@@ -2,102 +2,102 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E87C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 09:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E440C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 09:06:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADC0561381
-	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 09:03:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13E2361057
+	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Nov 2021 09:06:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244665AbhKIJGB (ORCPT
+        id S240412AbhKIJJf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 9 Nov 2021 04:06:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38520 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244653AbhKIJFZ (ORCPT
+        Tue, 9 Nov 2021 04:09:35 -0500
+Received: from esa9.hc1455-7.c3s2.iphmx.com ([139.138.36.223]:30340 "EHLO
+        esa9.hc1455-7.c3s2.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230489AbhKIJJf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 9 Nov 2021 04:05:25 -0500
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40489C061205;
-        Tue,  9 Nov 2021 01:01:59 -0800 (PST)
-Received: by mail-pl1-x636.google.com with SMTP id u17so19711073plg.9;
-        Tue, 09 Nov 2021 01:01:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ADqQSWSBgZvAUVfK5AnbdOpIlYdZvGUi9/6odqWla50=;
-        b=BqIYfWbguzUXhd3p0RDhasrtP2hEMeyEhfAn9eVaqNTc/PToYnaPwPJy6/bnXileUZ
-         K7xiNToySC7gr0EKr6ZeoAVZwTimoU4Swru+C429uBx8wANx1hjKMDlAdLoX1WMwQy23
-         rJ2OEEfdk+ILeG132Y3SmoQHsE83yRxGHa8+R1x31ffvwoc2kvoAR6PREvQUNUCFGr5o
-         zQNR9zRDCoICJes4lxG6zu9FCZZzNQKe1oTVMvOspKWNXgjwCLpiMo43mIaNq7bW4ISU
-         VTbadijwQ6Pnfkg9R31RiKub1jZilmZyxI5/m2FIwrjFtQ4FGpsRdEie/mBkEnZ1pR3r
-         cfaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ADqQSWSBgZvAUVfK5AnbdOpIlYdZvGUi9/6odqWla50=;
-        b=7C8lkIAGn5ehHFxi9s1w1SjDJWT3pjxaDi9gxW7vHzDumwR6h+7c27qV5Tv47+A7Oi
-         g/kqctQpUsq4qHVqVNqTHOTLPjO21i0qxjFUKf6lWEjNIxYvSmyMj1lmA4kEvbV33Snb
-         Nx1/AxwYKdlOSkDOPhJAnmMZ1TE0oo9qSgcaY9ngw+gFvbaYJ/rjr3lD1El6sZ/dZizt
-         qu53fI99/15fCug2Tsroel9ByifGHlz8amXBjpRpEyTfyr8M+9xbrWp5JjbH6f6NMvqH
-         M3V6k9JZj9JLZznZU/1tH3mBWEpBT+sdSskLVg2paUfTzz1CWULBbBf61hmxv7EcMGj+
-         oRag==
-X-Gm-Message-State: AOAM533huvBsrg+LjjeyP5wSv/JEW61KZjJPi34+R3NSSPkg/KyGjd2f
-        sa3GyCEthawypLqY/OEkvaKHVUyby5w=
-X-Google-Smtp-Source: ABdhPJwf59kzjyK4ikxLTQsuWq+tt7XQ7usJ6wUhFx4AA8E4c0Ss8/4c9K8yJ9hvjdEXz0nhZA3ZXg==
-X-Received: by 2002:a17:902:e546:b0:141:f4f7:7460 with SMTP id n6-20020a170902e54600b00141f4f77460mr5867395plf.17.1636448518838;
-        Tue, 09 Nov 2021 01:01:58 -0800 (PST)
-Received: from localhost.localdomain ([103.7.29.32])
-        by smtp.gmail.com with ESMTPSA id 4sm1616065pgj.63.2021.11.09.01.01.55
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Nov 2021 01:01:58 -0800 (PST)
-From:   Like Xu <like.xu.linux@gmail.com>
-X-Google-Original-From: Like Xu <likexu@tencent.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] tools/perf/design: Synchronize the definition of enum perf_hw_id with code
-Date:   Tue,  9 Nov 2021 17:01:47 +0800
-Message-Id: <20211109090147.56978-1-likexu@tencent.com>
-X-Mailer: git-send-email 2.33.0
+        Tue, 9 Nov 2021 04:09:35 -0500
+X-Greylist: delayed 489 seconds by postgrey-1.27 at vger.kernel.org; Tue, 09 Nov 2021 04:09:34 EST
+IronPort-SDR: +k2Whk6yF0CuwluFT+56L7yEKRlDdAA1JNJqjzzuQUpNUNr+e3lM3yQDUwca16Owbii/cFyDet
+ sqrNTwdrgs3JTIxcLbEjyncmUNJXWD7GupNdT2I1asEerdDPz69wYGmJ5oRhq+qxDO/1gdRm2I
+ OMgW2ks6BCQYiLoCKL8FAnmv/PDDCtmuXUWDsMDQG3ENSbQmejconabzny+l+7Dd0KnupypTbV
+ y4kyoWfpmiw5CkBR92EhcJBAwALM/XBeCsHqZd/fJGZuVZ7w+rYUqx2zXmFJVy59TyMCGW02ea
+ BLKkKaqeo1E2Fqw2Rt5wY8+V
+X-IronPort-AV: E=McAfee;i="6200,9189,10162"; a="39878293"
+X-IronPort-AV: E=Sophos;i="5.87,219,1631545200"; 
+   d="scan'208";a="39878293"
+Received: from unknown (HELO yto-r3.gw.nic.fujitsu.com) ([218.44.52.219])
+  by esa9.hc1455-7.c3s2.iphmx.com with ESMTP; 09 Nov 2021 17:58:38 +0900
+Received: from yto-m1.gw.nic.fujitsu.com (yto-nat-yto-m1.gw.nic.fujitsu.com [192.168.83.64])
+        by yto-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id C3D7A1F4782;
+        Tue,  9 Nov 2021 17:58:37 +0900 (JST)
+Received: from yto-om2.fujitsu.com (yto-om2.o.css.fujitsu.com [10.128.89.163])
+        by yto-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id 924BBC9CC1;
+        Tue,  9 Nov 2021 17:58:35 +0900 (JST)
+Received: from pumpkin.openstacklocal (pumpkin.fct.css.fujitsu.com [10.130.70.189])
+        by yto-om2.fujitsu.com (Postfix) with ESMTP id 8CFD54006D7C8;
+        Tue,  9 Nov 2021 17:58:35 +0900 (JST)
+From:   Shunsuke Nakamura <nakamura.shun@fujitsu.com>
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, robh@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: [PATCH v3 0/3] libperf: Unify scaling of counters obtained from perf_evsel__read()
+Date:   Tue,  9 Nov 2021 17:58:28 +0900
+Message-Id: <20211109085831.3770594-1-nakamura.shun@fujitsu.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Like Xu <likexu@tencent.com>
+This patch series unifies the counters that can be obtained from
+perf_evsel__read() to "no scaling".
+The counter scaling will be done using a function moved from
+tools/perf/util.
 
-We're not surprised that there are tons of Linux users who
-only read the documentation to learn about the kernel.
+The first patch move perf_counts_values__scale from tools/perf/util
+to tools/lib/perf so that it can be used with libperf.
 
-Let's update the perf part for common hardware events
-since three new *generic* hardware events were added.
+The second patch removes the scaling process from
+perf_mmap__read_self().
 
-Signed-off-by: Like Xu <likexu@tencent.com>
+The third patch adds a verification test to make sure that it scales
+correctly when multiplexed.
+
 ---
- tools/perf/design.txt | 3 +++
- 1 file changed, 3 insertions(+)
+Previous version at:
+https://lore.kernel.org/linux-perf-users/20210922101627.3396398-1-nakamura.shun@fujitsu.com/
 
-diff --git a/tools/perf/design.txt b/tools/perf/design.txt
-index a42fab308ff6..aa8cfeabb743 100644
---- a/tools/perf/design.txt
-+++ b/tools/perf/design.txt
-@@ -106,6 +106,9 @@ enum perf_hw_id {
- 	PERF_COUNT_HW_BRANCH_INSTRUCTIONS	= 4,
- 	PERF_COUNT_HW_BRANCH_MISSES		= 5,
- 	PERF_COUNT_HW_BUS_CYCLES		= 6,
-+	PERF_COUNT_HW_STALLED_CYCLES_FRONTEND	= 7,
-+	PERF_COUNT_HW_STALLED_CYCLES_BACKEND	= 8,
-+	PERF_COUNT_HW_REF_CPU_CYCLES		= 9,
- };
- 
- These are standardized types of events that work relatively uniformly
+Changes in v3:
+ - Move scaling process from tools/perf/util to tools/lib/perf
+ - Remove scaling process from perf_mmap__read_self()
+ - Remove scaling process for perf_mmap__read_self
+ - Remove test to verify that no division by zero occurs
+
+Changes in v2:
+ - Fix not to divide by zero when counter scaling
+ - Add test to verify that no division by zero occurs
+
+
+[1] https://github.com/deater/perf_event_tests/blob/master/tests/rdpmc/rdpmc_multiplexing.c
+
+
+Shunsuke Nakamura (3):
+  libperf: Move perf_counts_values__scale to tools/lib/perf
+  libperf: Remove scaling process from perf_mmap__read_self()
+  libperf tests: Add test_stat_multiplexing test
+
+ tools/lib/perf/evsel.c              |  19 ++++
+ tools/lib/perf/include/perf/evsel.h |   4 +
+ tools/lib/perf/libperf.map          |   1 +
+ tools/lib/perf/mmap.c               |   2 -
+ tools/lib/perf/tests/test-evlist.c  | 157 ++++++++++++++++++++++++++++
+ tools/perf/util/evsel.c             |  19 ----
+ tools/perf/util/evsel.h             |   3 -
+ 7 files changed, 181 insertions(+), 24 deletions(-)
+
 -- 
-2.33.0
+2.27.0
 
