@@ -2,265 +2,419 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7CFC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Nov 2021 12:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2A9C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Nov 2021 12:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF1C861264
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Nov 2021 12:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F24B6103C
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Nov 2021 12:56:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231669AbhKJMXP (ORCPT
+        id S231761AbhKJM7Y (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 10 Nov 2021 07:23:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231518AbhKJMXN (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 10 Nov 2021 07:23:13 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 19E5661251;
-        Wed, 10 Nov 2021 12:20:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636546826;
-        bh=9Mi7zBfFOFp45IKxZWRivyzhCkIw7ndVOzsvusYFmkY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Sf+YPTBzy4awnCs8d6Dvj+dzdmSYjxDf4Z9A2Z0NG0O8VminD7cva2FkeBTQWco5L
-         JKN6CZoeovKchEy9cQ8nQaMKhzzyVnTMd0PjmFBLeS4OT7JBDEawUqjeHh4MNvyfwY
-         Td/+QCYFSItslZ9zM8og2uZL0qV6HbpFgV4rBLdoRK561FoK7ntRM+x3jrTTaggP6h
-         9TsX3v/lFQWiM79c3VzqgQ9DnkehgV8OPVhYYhEH2Uwq29ETf7x0iws7vo2Glfr93T
-         JNvEQBbWkyPe0ULBLN4gmbnNRp3yrHsnvv7H3+IiXnpgChCyMgo81EqqbJsm4HERnR
-         EvFq2GFP0g+0w==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 0EF29410A1; Wed, 10 Nov 2021 09:20:23 -0300 (-03)
-Date:   Wed, 10 Nov 2021 09:20:22 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+        Wed, 10 Nov 2021 07:59:24 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:21571 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231822AbhKJM7Y (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 10 Nov 2021 07:59:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1636548996;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=CiNUxX7YP1FDAJqD9JAEwPdXebjdzMeH6N5HSXq36Gg=;
+        b=ek5VmZOsMuGpGDsXLNRK0aaieFFT3kh2VKoz9hOUTa9+/67g24Nt+em7C3G2jMMC9x7YBe
+        uyo26mko/oqNAfLdQfH5u/AwaPbWNQCOnH8gmUUDlG61v1megADiDk5YEyWISfNn4X3mQs
+        k5qjnEOJlFWzmKbuSkpjZP3LtU/d04Q=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-152-t8ic4JC4OcuT83kTXA6cng-1; Wed, 10 Nov 2021 07:56:35 -0500
+X-MC-Unique: t8ic4JC4OcuT83kTXA6cng-1
+Received: by mail-ed1-f69.google.com with SMTP id w12-20020aa7da4c000000b003e28acbf765so2255153eds.6
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Nov 2021 04:56:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CiNUxX7YP1FDAJqD9JAEwPdXebjdzMeH6N5HSXq36Gg=;
+        b=SqWnTm8L0LgOeLNPdaPFWIqLm37pcvPiAlSo/jvcStYIbhu13LOcwGY94Y+T46TvzE
+         5NgaMmGoGGw2D4M90oeZYqXsgoTRx14RsTZIblK7lXtqEj+BuCKQcnS6GBzw7KIj1zYm
+         ORTaCl2uC9OtOAChyN4sYKuUgeu6qz+hya9BAonX3uY1wqFiA+nCaMOIC/PHxz4DjwNN
+         KnlrmTm3H5Qbe8e1uUOlZziuijq0f7w3wgKh3SnLdCRDc9xchQFUlTZCwOAa8GoLp9zK
+         8NVTjBlHzFbaq196qzbucdldNYk3QT2KRTFBYphESZ1OwA1CIv1OCyTgcsn0MSFJmLxX
+         1QDg==
+X-Gm-Message-State: AOAM5315NA5AY76aYvUa3cozZEhCDmiklU+qCqMoSQzGZbG2DHjnJUYO
+        yH3crrND070lKsGWvg75+cuZ4hdkj3cOt1v7sYk8MO2PZPHMVUztbDgu7sEmv9CgZKEHvmEZBJV
+        Mh0dVqL/+CW5MTyytPswsnXS+6eXuLg==
+X-Received: by 2002:a17:907:3daa:: with SMTP id he42mr20682599ejc.160.1636548993885;
+        Wed, 10 Nov 2021 04:56:33 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxJ5zX39ITZ/sgTFZ+VhWNknQujRSQQvByT1P5SFh7HHpUvA9tZxxzd0t8LmzwkHiLvdJsvFA==
+X-Received: by 2002:a17:907:3daa:: with SMTP id he42mr20682554ejc.160.1636548993582;
+        Wed, 10 Nov 2021 04:56:33 -0800 (PST)
+Received: from krava ([83.240.60.218])
+        by smtp.gmail.com with ESMTPSA id i13sm13057694edc.62.2021.11.10.04.56.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Nov 2021 04:56:33 -0800 (PST)
+Date:   Wed, 10 Nov 2021 13:56:30 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
 To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+Cc:     Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Daniel Latypov <dlatypov@google.com>,
-        David Gow <davidgow@google.com>,
-        Sohaib Mohamed <sohaib.amhmd@gmail.com>, eranian@google.com
-Subject: Re: [PATCH v3 00/22] Start aligning perf test with kunit style
-Message-ID: <YYu5Bl7tJkDEdpce@kernel.org>
-References: <20211104064208.3156807-1-irogers@google.com>
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Song Liu <song@kernel.org>, Wan Jiabing <wanjiabing@vivo.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Changbin Du <changbin.du@intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 7/7] perf expr: Add source_count for aggregating events
+Message-ID: <YYvBfrP6fl3oNMyj@krava>
+References: <20211105170943.3479315-1-irogers@google.com>
+ <20211105170943.3479315-8-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211104064208.3156807-1-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20211105170943.3479315-8-irogers@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Nov 03, 2021 at 11:41:46PM -0700, Ian Rogers escreveu:
-> Perf test uses its own structs and code layout that differs from kunit
-> that was more recently introduced to the kernel. Besides consistency,
-> it is hoped that moving in the direction of kunit style will enable
-> reuse of infrastructure like test output formatting for continuous
-> testing systems. For example:
-> https://lore.kernel.org/linux-kselftest/CA+GJov6tdjvY9x12JsJT14qn6c7NViJxqaJk+r-K1YJzPggFDQ@mail.gmail.com/
+On Fri, Nov 05, 2021 at 10:09:43AM -0700, Ian Rogers wrote:
+> Events like uncore_imc/cas_count_read/ on Skylake open multiple events
+> and then aggregate in the metric leader. To determine the average value
+> per event the number of these events is needed. Add a source_count
+> function that returns this value by counting the number of events with
+> the given metric leader. For most events the value is 1 but for
+> uncore_imc/cas_count_read/ it can yield values like 6.
 > 
-> The motivation for this restructuring comes from wanting to be able to
-> tag tests with a size:
-> https://lore.kernel.org/linux-perf-users/CAP-5=fWmGyuqFKc-EMP3rbmTkjZ3MS+YSajGZfeRMc38HS82gw@mail.gmail.com/
-> To have more exhaustive and slower running tests.  This isn't
-> something kunit currently supports, nor is the execution of python and
-> shell tests, but it seems sensible to work on an approach with kunit
-> rather to invent a new wheel inside of perf.
+> Add a generic test, but manually tested with a test metric that uses
+> the function.
 > 
-> These initial patches are just refactoring the main test suite
-> definitions to be in a more kunit style. Kunit isn't depended upon, it
-> is hoped that this can be done in later patches for the sake of
-> consistency.
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/tests/expr.c       | 12 +++++++
+>  tools/perf/util/evsel.c       | 12 +++++++
+>  tools/perf/util/evsel.h       |  1 +
+>  tools/perf/util/expr.c        | 27 ++++++++++++---
+>  tools/perf/util/expr.h        |  3 ++
+>  tools/perf/util/expr.l        |  1 +
+>  tools/perf/util/expr.y        | 65 ++++++++++++++++++++---------------
+>  tools/perf/util/stat-shadow.c |  7 +++-
+>  8 files changed, 95 insertions(+), 33 deletions(-)
 > 
-> v3. Fixes a missing null and out of bound skip reason load detected by
->     address sanitizer. This issue was reported by Jiri Olsa
->     <jolsa@redhat.com> with an address sanitizer reproduction provided
->     by Sohaib Mohamed <sohaib.amhmd@gmail.com>.
-> 
-> v2. Gets to a point of the perf test test suite/case structs being
->     close facsimiles of the kunit ones. It also addresses feedback on
->     the v1 RFC, in particular from Jiri Olsa <jolsa@redhat.com>.
-> 
-> v1. Built/tested on x86.
+> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+> index 0c09ccc76665..f14d11ac353e 100644
+> --- a/tools/perf/tests/expr.c
+> +++ b/tools/perf/tests/expr.c
+> @@ -171,6 +171,18 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
+>  	TEST_ASSERT_VAL("#num_packages", expr__parse(&num_packages, ctx, "#num_packages") == 0);
+>  	TEST_ASSERT_VAL("#num_dies >= #num_packages", num_dies >= num_packages);
+>  
+> +	/*
+> +	 * Source count returns the number of events aggregating in a leader
+> +	 * event including the leader. Check parsing yields an id.
+> +	 */
+> +	expr__ctx_clear(ctx);
+> +	TEST_ASSERT_VAL("source count",
+> +			expr__find_ids("source_count(EVENT1)",
+> +			NULL, ctx) == 0);
+> +	TEST_ASSERT_VAL("source count", hashmap__size(ctx->ids) == 1);
+> +	TEST_ASSERT_VAL("source count", hashmap__find(ctx->ids, "EVENT1",
+> +							(void **)&val_ptr));
+> +
+>  	expr__ctx_free(ctx);
+>  
+>  	return 0;
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 2cfc2935d1d2..9a2a5087f00a 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -3018,3 +3018,15 @@ void evsel__set_leader(struct evsel *evsel, struct evsel *leader)
+>  {
+>  	evsel->core.leader = &leader->core;
+>  }
+> +
+> +int evsel__source_count(const struct evsel *evsel)
+> +{
+> +	struct evsel *pos;
+> +	int count = 0;
+> +
+> +	evlist__for_each_entry(evsel->evlist, pos) {
+> +		if (pos->metric_leader == evsel)
+> +			count++;
+> +	}
+> +	return count;
+> +}
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index 846c827934de..d733a8458a52 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -484,6 +484,7 @@ struct evsel *evsel__leader(struct evsel *evsel);
+>  bool evsel__has_leader(struct evsel *evsel, struct evsel *leader);
+>  bool evsel__is_leader(struct evsel *evsel);
+>  void evsel__set_leader(struct evsel *evsel, struct evsel *leader);
+> +int evsel__source_count(const struct evsel *evsel);
+>  
+>  /*
+>   * Macro to swap the bit-field postition and size.
+> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+> index 15af8b8ef5e7..1d532b9fed29 100644
+> --- a/tools/perf/util/expr.c
+> +++ b/tools/perf/util/expr.c
+> @@ -23,7 +23,10 @@ extern int expr_debug;
+>  
+>  struct expr_id_data {
+>  	union {
+> -		double val;
+> +		struct {
+> +			double val;
+> +			int source_count;
+> +		} val;
+>  		struct {
+>  			double val;
+>  			const char *metric_name;
+> @@ -140,6 +143,13 @@ int expr__add_id(struct expr_parse_ctx *ctx, const char *id)
+>  
+>  /* Caller must make sure id is allocated */
+>  int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val)
+> +{
+> +	return expr__add_id_val_source_count(ctx, id, val, /*source_count=*/1);
+> +}
+> +
+> +/* Caller must make sure id is allocated */
+> +int expr__add_id_val_source_count(struct expr_parse_ctx *ctx, const char *id,
+> +				  double val, int source_count)
+>  {
+>  	struct expr_id_data *data_ptr = NULL, *old_data = NULL;
+>  	char *old_key = NULL;
+> @@ -148,7 +158,8 @@ int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val)
+>  	data_ptr = malloc(sizeof(*data_ptr));
+>  	if (!data_ptr)
+>  		return -ENOMEM;
+> -	data_ptr->val = val;
+> +	data_ptr->val.val = val;
+> +	data_ptr->val.source_count = source_count;
+>  	data_ptr->kind = EXPR_ID_DATA__VALUE;
+>  
+>  	ret = hashmap__set(ctx->ids, id, data_ptr,
+> @@ -244,7 +255,7 @@ int expr__resolve_id(struct expr_parse_ctx *ctx, const char *id,
+>  
+>  	switch (data->kind) {
+>  	case EXPR_ID_DATA__VALUE:
+> -		pr_debug2("lookup(%s): val %f\n", id, data->val);
+> +		pr_debug2("lookup(%s): val %f\n", id, data->val.val);
+>  		break;
+>  	case EXPR_ID_DATA__REF:
+>  		pr_debug2("lookup(%s): ref metric name %s\n", id,
+> @@ -255,7 +266,7 @@ int expr__resolve_id(struct expr_parse_ctx *ctx, const char *id,
+>  			pr_debug("%s failed to count\n", id);
+>  			return -1;
+>  		}
+> -		pr_debug("processing metric: %s EXIT: %f\n", id, data->val);
+> +		pr_debug("processing metric: %s EXIT: %f\n", id, data->ref.val);
+>  		break;
+>  	case EXPR_ID_DATA__REF_VALUE:
+>  		pr_debug2("lookup(%s): ref val %f metric name %s\n", id,
+> @@ -370,11 +381,17 @@ int expr__find_ids(const char *expr, const char *one,
+>  double expr_id_data__value(const struct expr_id_data *data)
+>  {
+>  	if (data->kind == EXPR_ID_DATA__VALUE)
+> -		return data->val;
+> +		return data->val.val;
+>  	assert(data->kind == EXPR_ID_DATA__REF_VALUE);
+>  	return data->ref.val;
+>  }
+>  
+> +double expr_id_data__source_count(const struct expr_id_data *data)
+> +{
+> +	assert(data->kind == EXPR_ID_DATA__VALUE);
+> +	return data->val.source_count;
+> +}
+> +
+>  double expr__get_literal(const char *literal)
+>  {
+>  	static struct cpu_topology *topology;
+> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+> index a6ab7f2b23d1..bd2116983bbb 100644
+> --- a/tools/perf/util/expr.h
+> +++ b/tools/perf/util/expr.h
+> @@ -40,6 +40,8 @@ void expr__ctx_free(struct expr_parse_ctx *ctx);
+>  void expr__del_id(struct expr_parse_ctx *ctx, const char *id);
+>  int expr__add_id(struct expr_parse_ctx *ctx, const char *id);
+>  int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val);
+> +int expr__add_id_val_source_count(struct expr_parse_ctx *ctx, const char *id,
+> +				double val, int source_count);
+>  int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref);
+>  int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
+>  		 struct expr_id_data **data);
+> @@ -55,6 +57,7 @@ int expr__find_ids(const char *expr, const char *one,
+>  		   struct expr_parse_ctx *ids);
+>  
+>  double expr_id_data__value(const struct expr_id_data *data);
+> +double expr_id_data__source_count(const struct expr_id_data *data);
+>  double expr__get_literal(const char *literal);
+>  
+>  #endif
+> diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
+> index cf6e3c710502..0a13eb20c814 100644
+> --- a/tools/perf/util/expr.l
+> +++ b/tools/perf/util/expr.l
+> @@ -107,6 +107,7 @@ max		{ return MAX; }
+>  min		{ return MIN; }
+>  if		{ return IF; }
+>  else		{ return ELSE; }
+> +source_count	{ return SOURCE_COUNT; }
+>  {literal}	{ return literal(yyscanner); }
+>  {number}	{ return value(yyscanner); }
+>  {symbol}	{ return str(yyscanner, ID, sctx->runtime); }
+> diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+> index ba6c6dbf30c8..d5d10f21097a 100644
+> --- a/tools/perf/util/expr.y
+> +++ b/tools/perf/util/expr.y
+> @@ -3,6 +3,7 @@
+>  #define YYDEBUG 1
+>  #include <assert.h>
+>  #include <math.h>
+> +#include <stdlib.h>
+>  #include "util/debug.h"
+>  #define IN_EXPR_Y 1
+>  #include "expr.h"
+> @@ -36,7 +37,7 @@
+>  	} ids;
+>  }
+>  
+> -%token ID NUMBER MIN MAX IF ELSE LITERAL D_RATIO EXPR_ERROR
+> +%token ID NUMBER MIN MAX IF ELSE LITERAL D_RATIO SOURCE_COUNT EXPR_ERROR
+>  %left MIN MAX IF
+>  %left '|'
+>  %left '^'
+> @@ -82,6 +83,40 @@ static struct ids union_expr(struct ids ids1, struct ids ids2)
+>  	return result;
+>  }
+>  
+> +static struct ids handle_id(struct expr_parse_ctx *ctx, char *id,
+> +			    bool compute_ids, bool source_count)
+> +{
+> +	struct ids result;
+> +	if (!compute_ids) {
+> +		/*
+> +		 * Compute the event's value from ID. If the ID isn't known then
+> +		 * it isn't used to compute the formula so set to NAN.
+> +		 */
+> +		struct expr_id_data *data;
+> +
+> +		result.val = NAN;
+> +		if (expr__resolve_id(ctx, id, &data) == 0) {
+> +			result.val = source_count
+> +				? expr_id_data__source_count(data)
+> +				: expr_id_data__value(data);
+> +		}
+> +		result.ids = NULL;
+> +		free(id);
+> +	} else {
+> +		/*
+> +		 * Set the value to BOTTOM to show that any value is possible
+> +		 * when the event is computed. Create a set of just the ID.
+> +		 */
+> +		result.val = BOTTOM;
+> +		result.ids = ids__new();
+> +		if (!result.ids || ids__insert(result.ids, id)) {
+> +			pr_err("Error creating IDs for '%s'", id);
+> +			free(id);
+> +		}
+> +	}
 
-  60     7.19 ubuntu:16.04-x-arm            : FAIL gcc version 5.4.0 20160609 (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.9)
-    arch/arm/tests/vectors-page.c:12:5: error: no previous prototype for 'test__vectors_page' [-Werror=missing-prototypes]
-     int test__vectors_page(struct test_suite *test __maybe_unused,
-         ^
-    cc1: all warnings being treated as errors
-    /git/perf-5.15.0/tools/build/Makefile.build:139: recipe for target 'tests' failed
-    make[5]: *** [tests] Error 2
-    /git/perf-5.15.0/tools/build/Makefile.build:139: recipe for target 'arm' failed
-    make[4]: *** [arm] Error 2
-    /git/perf-5.15.0/tools/build/Makefile.build:139: recipe for target 'arch' failed
-    make[3]: *** [arch] Error 2
-  61    19.15 ubuntu:16.04-x-arm64          : Ok   aarch64-linux-gnu-gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
-  62    18.64 ubuntu:16.04-x-powerpc        : Ok   powerpc-linux-gnu-gcc (Ubuntu 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
-  63    19.04 ubuntu:16.04-x-powerpc64      : Ok   powerpc64-linux-gnu-gcc (Ubuntu/IBM 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
-  64    18.94 ubuntu:16.04-x-powerpc64el    : Ok   powerpc64le-linux-gnu-gcc (Ubuntu/IBM 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
-  65     6.48 ubuntu:16.04-x-s390           : FAIL gcc version 5.4.0 20160609 (Ubuntu 5.4.0-6ubuntu1~16.04.9)
-    tests/wp.c:24:12: error: 'wp_read' defined but not used [-Werror=unused-function]
-     static int wp_read(int fd, long long *count, int size)
-                ^
-    tests/wp.c:51:12: error: '__event' defined but not used [-Werror=unused-function]
-     static int __event(int wp_type, void *wp_addr, unsigned long wp_len)
-                ^
-    cc1: all warnings being treated as errors
-    /git/perf-5.15.0/tools/build/Makefile.build:139: recipe for target 'tests' failed
-    make[3]: *** [tests] Error 2
-  66    75.42 ubuntu:18.04                  : Ok   gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 , clang version 6.0.0-1ubuntu2 (tags/RELEASE_600/final)
-  67     7.70 ubuntu:18.04-x-arm            : FAIL gcc version 7.5.0 (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04)
-    arch/arm/tests/vectors-page.c:12:5: error: no previous prototype for 'test__vectors_page' [-Werror=missing-prototypes]
-     int test__vectors_page(struct test_suite *test __maybe_unused,
-         ^~~~~~~~~~~~~~~~~~
-    cc1: all warnings being treated as errors
-    /git/perf-5.15.0/tools/build/Makefile.build:139: recipe for target 'tests' failed
-    make[5]: *** [tests] Error 2
-    /git/perf-5.15.0/tools/build/Makefile.build:139: recipe for target 'arm' failed
-    make[4]: *** [arm] Error 2
-    /git/perf-5.15.0/tools/build/Makefile.build:139: recipe for target 'arch' failed
-    make[3]: *** [arch] Error 2
-  68    20.55 ubuntu:18.04-x-arm64          : Ok   aarch64-linux-gnu-gcc (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04) 7.5.0
-  69    22.45 ubuntu:18.04-x-m68k           : Ok   m68k-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0
-  70    19.94 ubuntu:18.04-x-powerpc        : Ok   powerpc-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0
-  71    21.36 ubuntu:18.04-x-powerpc64      : Ok   powerpc64-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0
-  72    21.75 ubuntu:18.04-x-powerpc64el    : Ok   powerpc64le-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0
-  73   102.45 ubuntu:18.04-x-riscv64        : Ok   riscv64-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0
-  74     6.90 ubuntu:18.04-x-s390           : FAIL gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
-    tests/wp.c:51:12: error: '__event' defined but not used [-Werror=unused-function]
-     static int __event(int wp_type, void *wp_addr, unsigned long wp_len)
-                ^~~~~~~
-    tests/wp.c:24:12: error: 'wp_read' defined but not used [-Werror=unused-function]
-     static int wp_read(int fd, long long *count, int size)
-                ^~~~~~~
-    cc1: all warnings being treated as errors
-    /git/perf-5.15.0/tools/build/Makefile.build:139: recipe for target 'tests' failed
-    make[3]: *** [tests] Error 2
+could you please put the move of handle_id into separate patch?
+it''ll be easier to review the actual changes
 
+thanks,
+jirka
 
-I'm trying to fix those now.
-
-- Arnaldo
- 
-> Ian Rogers (22):
->   perf test: Use macro for "suite" declarations
->   perf test: Use macro for "suite" definitions
->   perf test: Make each test/suite its own struct.
->   perf test: Move each test suite struct to its test
->   perf test: Rename struct test to test_suite
->   perf test: Add helper functions for abstraction.
->   perf test: Add test case struct.
->   perf test: Add skip reason to test case.
->   perf test: Convert pfm tests to use test cases.
->   perf test: Convert pmu event tests to test cases.
->   perf test: Convert watch point tests to test cases.
->   perf test: Convert clang tests to test cases.
->   perf test: Convert bpf tests to test cases.
->   perf test: Convert llvm tests to test cases.
->   perf test: Remove now unused subtest helpers
->   perf test: bp tests use test case
->   perf test: Convert time to tsc test to test case.
->   perf test: Remove non test case style support.
->   perf test: BP tests, remove is_supported use
->   perf test: TSC test, remove is_supported use
->   perf test: Remove is_supported function
->   perf test: Remove skip_if_fail
-> 
->  tools/perf/arch/arm/include/arch-tests.h      |   2 +-
->  tools/perf/arch/arm/tests/arch-tests.c        |  18 +-
->  tools/perf/arch/arm/tests/vectors-page.c      |   2 +-
->  tools/perf/arch/arm64/include/arch-tests.h    |   2 +-
->  tools/perf/arch/arm64/tests/arch-tests.c      |  11 +-
->  tools/perf/arch/powerpc/include/arch-tests.h  |   2 +-
->  tools/perf/arch/powerpc/tests/arch-tests.c    |  12 +-
->  tools/perf/arch/x86/include/arch-tests.h      |  14 +-
->  tools/perf/arch/x86/tests/arch-tests.c        |  47 +-
->  tools/perf/arch/x86/tests/bp-modify.c         |   2 +-
->  tools/perf/arch/x86/tests/insn-x86.c          |   2 +-
->  tools/perf/arch/x86/tests/intel-cqm.c         |   2 +-
->  .../x86/tests/intel-pt-pkt-decoder-test.c     |   2 +-
->  tools/perf/arch/x86/tests/rdpmc.c             |   2 +-
->  tools/perf/arch/x86/tests/sample-parsing.c    |   2 +-
->  tools/perf/tests/api-io.c                     |   6 +-
->  tools/perf/tests/attr.c                       |   4 +-
->  tools/perf/tests/backward-ring-buffer.c       |   4 +-
->  tools/perf/tests/bitmap.c                     |   4 +-
->  tools/perf/tests/bp_account.c                 |  36 +-
->  tools/perf/tests/bp_signal.c                  |  34 +-
->  tools/perf/tests/bp_signal_overflow.c         |   9 +-
->  tools/perf/tests/bpf.c                        |  69 ++-
->  tools/perf/tests/builtin-test.c               | 578 ++++++------------
->  tools/perf/tests/clang.c                      |  54 +-
->  tools/perf/tests/code-reading.c               |   4 +-
->  tools/perf/tests/cpumap.c                     |  10 +-
->  tools/perf/tests/demangle-java-test.c         |   4 +-
->  tools/perf/tests/demangle-ocaml-test.c        |   4 +-
->  tools/perf/tests/dlfilter-test.c              |   4 +-
->  tools/perf/tests/dso-data.c                   |  10 +-
->  tools/perf/tests/dwarf-unwind.c               |   5 +-
->  tools/perf/tests/event-times.c                |   4 +-
->  tools/perf/tests/event_update.c               |   4 +-
->  tools/perf/tests/evsel-roundtrip-name.c       |   5 +-
->  tools/perf/tests/evsel-tp-sched.c             |   5 +-
->  tools/perf/tests/expand-cgroup.c              |   6 +-
->  tools/perf/tests/expr.c                       |   4 +-
->  tools/perf/tests/fdarray.c                    |   7 +-
->  tools/perf/tests/genelf.c                     |   6 +-
->  tools/perf/tests/hists_cumulate.c             |   4 +-
->  tools/perf/tests/hists_filter.c               |   4 +-
->  tools/perf/tests/hists_link.c                 |   4 +-
->  tools/perf/tests/hists_output.c               |   4 +-
->  tools/perf/tests/is_printable_array.c         |   4 +-
->  tools/perf/tests/keep-tracking.c              |   4 +-
->  tools/perf/tests/kmod-path.c                  |   4 +-
->  tools/perf/tests/llvm.c                       |  74 ++-
->  tools/perf/tests/maps.c                       |   4 +-
->  tools/perf/tests/mem.c                        |   4 +-
->  tools/perf/tests/mem2node.c                   |   4 +-
->  tools/perf/tests/mmap-basic.c                 |   4 +-
->  tools/perf/tests/mmap-thread-lookup.c         |   4 +-
->  tools/perf/tests/openat-syscall-all-cpus.c    |   5 +-
->  tools/perf/tests/openat-syscall-tp-fields.c   |   5 +-
->  tools/perf/tests/openat-syscall.c             |   5 +-
->  tools/perf/tests/parse-events.c               |   4 +-
->  tools/perf/tests/parse-metric.c               |   4 +-
->  tools/perf/tests/parse-no-sample-id-all.c     |   5 +-
->  tools/perf/tests/pe-file-parsing.c            |   6 +-
->  tools/perf/tests/perf-hooks.c                 |   4 +-
->  tools/perf/tests/perf-record.c                |   4 +-
->  tools/perf/tests/perf-time-to-tsc.c           |  30 +-
->  tools/perf/tests/pfm.c                        |  63 +-
->  tools/perf/tests/pmu-events.c                 |  73 +--
->  tools/perf/tests/pmu.c                        |   4 +-
->  tools/perf/tests/python-use.c                 |   4 +-
->  tools/perf/tests/sample-parsing.c             |   4 +-
->  tools/perf/tests/sdt.c                        |   6 +-
->  tools/perf/tests/stat.c                       |  11 +-
->  tools/perf/tests/sw-clock.c                   |   4 +-
->  tools/perf/tests/switch-tracking.c            |   4 +-
->  tools/perf/tests/task-exit.c                  |   4 +-
->  tools/perf/tests/tests.h                      | 238 ++++----
->  tools/perf/tests/thread-map.c                 |  10 +-
->  tools/perf/tests/thread-maps-share.c          |   4 +-
->  tools/perf/tests/time-utils-test.c            |   4 +-
->  tools/perf/tests/topology.c                   |   4 +-
->  tools/perf/tests/unit_number__scnprintf.c     |   4 +-
->  tools/perf/tests/vmlinux-kallsyms.c           |   5 +-
->  tools/perf/tests/wp.c                         | 122 +---
->  tools/perf/util/c++/clang-c.h                 |   8 +-
->  tools/perf/util/c++/clang-test.cpp            |   6 +-
->  83 files changed, 812 insertions(+), 966 deletions(-)
-> 
+> +	return result;
+> +}
+> +
+>  /*
+>   * If we're not computing ids or $1 and $3 are constants, compute the new
+>   * constant value using OP. Its invariant that there are no ids.  If computing
+> @@ -167,32 +202,8 @@ expr: NUMBER
+>  	$$.val = $1;
+>  	$$.ids = NULL;
+>  }
+> -| ID
+> -{
+> -	if (!compute_ids) {
+> -		/*
+> -		 * Compute the event's value from ID. If the ID isn't known then
+> -		 * it isn't used to compute the formula so set to NAN.
+> -		 */
+> -		struct expr_id_data *data;
+> -
+> -		$$.val = NAN;
+> -		if (expr__resolve_id(ctx, $1, &data) == 0)
+> -			$$.val = expr_id_data__value(data);
+> -
+> -		$$.ids = NULL;
+> -		free($1);
+> -	} else {
+> -		/*
+> -		 * Set the value to BOTTOM to show that any value is possible
+> -		 * when the event is computed. Create a set of just the ID.
+> -		 */
+> -		$$.val = BOTTOM;
+> -		$$.ids = ids__new();
+> -		if (!$$.ids || ids__insert($$.ids, $1))
+> -			YYABORT;
+> -	}
+> -}
+> +| ID				{ $$ = handle_id(ctx, $1, compute_ids, /*source_count=*/false); }
+> +| SOURCE_COUNT '(' ID ')'	{ $$ = handle_id(ctx, $3, compute_ids, /*source_count=*/true); }
+>  | expr '|' expr { BINARY_LONG_OP($$, |, $1, $3); }
+>  | expr '&' expr { BINARY_LONG_OP($$, &, $1, $3); }
+>  | expr '^' expr { BINARY_LONG_OP($$, ^, $1, $3); }
+> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+> index 69f3cf3b4a44..ce0ce8ac2874 100644
+> --- a/tools/perf/util/stat-shadow.c
+> +++ b/tools/perf/util/stat-shadow.c
+> @@ -828,10 +828,12 @@ static int prepare_metric(struct evsel **metric_events,
+>  		struct saved_value *v;
+>  		struct stats *stats;
+>  		u64 metric_total = 0;
+> +		int source_count;
+>  
+>  		if (!strcmp(metric_events[i]->name, "duration_time")) {
+>  			stats = &walltime_nsecs_stats;
+>  			scale = 1e-9;
+> +			source_count = 1;
+>  		} else {
+>  			v = saved_value_lookup(metric_events[i], cpu, false,
+>  					       STAT_NONE, 0, st,
+> @@ -840,6 +842,7 @@ static int prepare_metric(struct evsel **metric_events,
+>  				break;
+>  			stats = &v->stats;
+>  			scale = 1.0;
+> +			source_count = evsel__source_count(metric_events[i]);
+>  
+>  			if (v->metric_other)
+>  				metric_total = v->metric_total;
+> @@ -848,7 +851,9 @@ static int prepare_metric(struct evsel **metric_events,
+>  		if (!n)
+>  			return -ENOMEM;
+>  
+> -		expr__add_id_val(pctx, n, metric_total ? : avg_stats(stats) * scale);
+> +		expr__add_id_val_source_count(pctx, n,
+> +					metric_total ? : avg_stats(stats) * scale,
+> +					source_count);
+>  	}
+>  
+>  	for (j = 0; metric_refs && metric_refs[j].metric_name; j++) {
 > -- 
-> 2.33.1.1089.g2158813163f-goog
+> 2.34.0.rc0.344.g81b53c2807-goog
+> 
 
--- 
-
-- Arnaldo
