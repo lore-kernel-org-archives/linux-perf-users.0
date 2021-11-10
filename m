@@ -2,210 +2,257 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 407DFC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Nov 2021 14:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CE9C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Nov 2021 15:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E2E36112F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Nov 2021 14:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5629E61186
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Nov 2021 15:44:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232249AbhKJOiF (ORCPT
+        id S231838AbhKJPrI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 10 Nov 2021 09:38:05 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:43189 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232240AbhKJOiC (ORCPT
+        Wed, 10 Nov 2021 10:47:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59666 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231408AbhKJPrH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 10 Nov 2021 09:38:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1636554914;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=XzTh+Q15aMwIcAcypgPtn2F/6DAjnMg723kzP00nSZs=;
-        b=GrA13iVaFYhIEwK2JPG5WBDMhWS9HlxJe92/9eXtlZmWm44ejDOqvaj0nBCB3icEM5yzzG
-        UW5Ne9I6Qmb5bxUUDAwsDIQXRjivLyQvfiktINPidJoSXlztsj/Xf+6iF1VU2mNumTxjxQ
-        WpwPoaD2qs7mYsDltq/hMzDdTs2PlJQ=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-545-dvlCh9CaMSONbJEPTdYYgg-1; Wed, 10 Nov 2021 09:35:13 -0500
-X-MC-Unique: dvlCh9CaMSONbJEPTdYYgg-1
-Received: by mail-ed1-f70.google.com with SMTP id w12-20020a056402268c00b003e2ab5a3370so2545342edd.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Nov 2021 06:35:12 -0800 (PST)
+        Wed, 10 Nov 2021 10:47:07 -0500
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ECC2C061764;
+        Wed, 10 Nov 2021 07:44:20 -0800 (PST)
+Received: by mail-wm1-x32c.google.com with SMTP id f7-20020a1c1f07000000b0032ee11917ceso2325360wmf.0;
+        Wed, 10 Nov 2021 07:44:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=rQqzmMPzFzq3afQK19UORovj6WjYsNPvthZJlG0OhFU=;
+        b=LK41+a0DKhDQ8yuaRtMRMG3M1qldPTFG0cFC9QVtSMxoKEk7ITSEboHNbxDd9iN28C
+         GOQZxo5yjyAwIVhf9xmexglb1VHRqLicXWgkcrK1db0QZRHdtK5PlO28s1jb2JMKYwya
+         ui+nSDRAvec2GH/Qx5fQv4WxKopR4TMcgCUFCXGLxbtQwYhLwh/doEH4BXaeo7uMtpkU
+         +WAXwuC8czidWztK8sMIu2nJFFTjQhhCNmRyz5Dh13f5qi2oh6LBL3JBas2YkJ75WS7g
+         XyFJpM6NArZk1JAxcEW+m+IjGIK1qflrWMSHYDNWxaHcobyLLhXhtYDxy21HdBl4fQNJ
+         Z3Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=XzTh+Q15aMwIcAcypgPtn2F/6DAjnMg723kzP00nSZs=;
-        b=yi14yKQIBSyrdY6UewOXrWRwkOMjVVQuWwSEwkF9mJbncD/zjSh4nx6rWZAWe7yloH
-         i1IpoAXdMmw9rK2nP5hczjM39wrvn3EmVpz3YQVb5uxVjMded3n4d1XzMwHG2vRsj09Z
-         NYHzQJtMIMre+w2vKGckjmFE/tYM9mb8WtZWU+cOiHJKbzlGJ+MeJuWlmPu6HtgYlW2N
-         EBMtEw7yyxhhTB2r+W7gIZBLnWlZOIdknXQxeagD7fxyjmealouG0hCRwzX60ZXtP5LJ
-         XEBqK67PemxAdol7FQROLOb13TrdKb/ab1MS2SpQVCNZV6/XMGnfUbmw4j/gzW4PkY44
-         s61Q==
-X-Gm-Message-State: AOAM532byYeE5TYZV/u9piHhbQJqzzbWiqxdUfQu1qYtqDHhsdlA8RWh
-        Uw9Z/8ZmgbRsd8lzXRAk/cvSIizxvd+UT5ZIMBvkGkrh+7/bbG7MyHKrM3oyM4UbSli+d6qKHcy
-        Gj7A0JHbDrHt9+PBTsgUGwxauWbkl8g==
-X-Received: by 2002:a05:6402:40d4:: with SMTP id z20mr83391edb.210.1636554911684;
-        Wed, 10 Nov 2021 06:35:11 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyFuMU/1tTXMzHUyT5Ck6EXJ07FUVIIhRksGuhVn/yOPYQaeyzLXJQHByX+EU1ufBKKmPQPWw==
-X-Received: by 2002:a05:6402:40d4:: with SMTP id z20mr83351edb.210.1636554911502;
-        Wed, 10 Nov 2021 06:35:11 -0800 (PST)
-Received: from krava ([83.240.60.218])
-        by smtp.gmail.com with ESMTPSA id sd28sm12700414ejc.37.2021.11.10.06.35.10
+        bh=rQqzmMPzFzq3afQK19UORovj6WjYsNPvthZJlG0OhFU=;
+        b=KLSj5gD50tiCjmGTwQNBCb9Qfx4uoadY8so6lxlbm7YXt44F/lytyeQgtQ5Lx3y9Ll
+         h8d/v66yeUyS+WbrA0ai+NqO8G47mXUMU6UvVKCGX+pLWVh7okwBapgv3mv1VJpU3gdR
+         7aNnVdIRVr8T4gN/6PvLOeMA21uSyjLk4oJlznlilZDspGrUgSQUImBE/d9VLNGqAh+O
+         SDvF2YW82Glr63Pu8bcM2baZh4PHpgrAlplYzSEqZBlmHQrasIYnkaTLkNW6kJTgtLZC
+         SJMIKiUyTm7YxDfoC4F75EAVq2asg8qE/E5xUsXFb71FxmDBWzVmWTJ3ZMMp+F5ZxkL9
+         7Dmw==
+X-Gm-Message-State: AOAM531KWc84E/92uYnQ0IAI+NNz0DZZ/YJ3+R0jss69SDSonjWP8sH6
+        8Ed5Thquci9vx86CgGt7r3U=
+X-Google-Smtp-Source: ABdhPJzy/1XyGKXXviLUCmSYGIPNlk5mV72EKJ9Pn+ybxuwmp/ixPAzmlPO2XTthsUCZ1dsOmemHaQ==
+X-Received: by 2002:a05:600c:5125:: with SMTP id o37mr88049wms.81.1636559058479;
+        Wed, 10 Nov 2021 07:44:18 -0800 (PST)
+Received: from pc ([197.49.136.152])
+        by smtp.gmail.com with ESMTPSA id k8sm197950wrn.91.2021.11.10.07.44.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Nov 2021 06:35:11 -0800 (PST)
-Date:   Wed, 10 Nov 2021 15:35:09 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
+        Wed, 10 Nov 2021 07:44:17 -0800 (PST)
+Date:   Wed, 10 Nov 2021 17:44:14 +0200
+From:   Sohaib Mohamed <sohaib.amhmd@gmail.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Song Liu <song@kernel.org>, Wan Jiabing <wanjiabing@vivo.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Changbin Du <changbin.du@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/7] perf expr: Add metric literals for topology.
-Message-ID: <YYvYnYPg43acgkvs@krava>
-References: <20211105170943.3479315-1-irogers@google.com>
- <20211105170943.3479315-7-irogers@google.com>
- <YYvBhfyizI+z8SAC@krava>
- <CAP-5=fWRzptEG2TUALNJaVLdP2egHhyhPZ=9HuP2da68jiPPTA@mail.gmail.com>
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        linux-perf-users@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Daniel Latypov <dlatypov@google.com>,
+        David Gow <davidgow@google.com>, eranian@google.com
+Subject: Re: [PATCH v3 22/22] perf test: Remove skip_if_fail
+Message-ID: <20211110154414.xu5jlt7sdgqneujs@pc>
+References: <20211104064208.3156807-1-irogers@google.com>
+ <20211104064208.3156807-23-irogers@google.com>
+ <CAOz-JA7Wu07aE29K1LHZEPNojop59xTcQO+zjHR4gVB6YK+ykA@mail.gmail.com>
+ <YYqGc9eIG8w+ep41@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fWRzptEG2TUALNJaVLdP2egHhyhPZ=9HuP2da68jiPPTA@mail.gmail.com>
+In-Reply-To: <YYqGc9eIG8w+ep41@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Nov 10, 2021 at 06:19:04AM -0800, Ian Rogers wrote:
-> On Wed, Nov 10, 2021 at 4:56 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> >
-> > On Fri, Nov 05, 2021 at 10:09:42AM -0700, Ian Rogers wrote:
-> > > Allow the number of cpus, cores, dies and packages to be queried by a
-> > > metric expression.
+On Tue, Nov 09, 2021 at 11:32:19AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Nov 04, 2021 at 03:51:07PM +0200, Sohaib Mohamed escreveu:
+> > On Thu, Nov 4, 2021 at 8:43 AM Ian Rogers <irogers@google.com> wrote:
+> > >
+> > > Remove optionality, always run tests in a suite even if one fails. This
+> > > brings perf's test more inline with kunit that lacks this notion.
 > > >
 > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > Tested-by: Sohaib Mohamed <sohaib.amhmd@gmail.com>
+>
+> Hi Sohaib,
+>
+> 	Have you tested all the 22 patches in this series or just the
+> last one?
+>
+> 	I use 'b4' and it thinks you tested just the 22nd, if you tested
+> all the patches, please next time reply with your
+> Tested-by/Reviewed-by/Acked-by/etc to the cover letter, usually a 00/22
+> message,
+>
+
+Yes, I tested them all, I'll do that. thanks for the note.
+
+Sohaib
+
+> Thanks!
+>
+> - Arnaldo
+>
 > > > ---
-> > >  tools/perf/tests/expr.c | 12 +++++++++++-
-> > >  tools/perf/util/expr.c  | 27 +++++++++++++++++++++++++++
-> > >  2 files changed, 38 insertions(+), 1 deletion(-)
+> > >  tools/perf/tests/bpf.c          |  1 -
+> > >  tools/perf/tests/builtin-test.c | 24 ++++++++----------------
+> > >  tools/perf/tests/clang.c        |  1 -
+> > >  tools/perf/tests/llvm.c         |  1 -
+> > >  tools/perf/tests/pfm.c          |  1 -
+> > >  tools/perf/tests/tests.h        |  3 ---
+> > >  6 files changed, 8 insertions(+), 23 deletions(-)
 > > >
-> > > diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-> > > index 9ee2dc91c27b..0c09ccc76665 100644
-> > > --- a/tools/perf/tests/expr.c
-> > > +++ b/tools/perf/tests/expr.c
-> > > @@ -66,7 +66,7 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
+> > > diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
+> > > index e86a77ce93ef..c3d6eda8601e 100644
+> > > --- a/tools/perf/tests/bpf.c
+> > > +++ b/tools/perf/tests/bpf.c
+> > > @@ -382,5 +382,4 @@ static struct test_case bpf_tests[] = {
+> > >  struct test_suite suite__bpf = {
+> > >         .desc = "BPF filter",
+> > >         .test_cases = bpf_tests,
+> > > -       .subtest = { .skip_if_fail = true, },
+> > >  };
+> > > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+> > > index 19b1228dbd5d..8cb5a1c3489e 100644
+> > > --- a/tools/perf/tests/builtin-test.c
+> > > +++ b/tools/perf/tests/builtin-test.c
+> > > @@ -238,18 +238,13 @@ static int run_test(struct test_suite *test, int subtest)
+> > >         for (j = 0; j < ARRAY_SIZE(tests); j++) \
+> > >                 for (k = 0, t = tests[j][k]; tests[j][k]; k++, t = tests[j][k])
+> > >
+> > > -static int test_and_print(struct test_suite *t, bool force_skip, int subtest)
+> > > +static int test_and_print(struct test_suite *t, int subtest)
 > > >  {
-> > >       struct expr_id_data *val_ptr;
-> > >       const char *p;
-> > > -     double val;
-> > > +     double val, num_cpus, num_cores, num_dies, num_packages;
-> > >       int ret;
-> > >       struct expr_parse_ctx *ctx;
+> > >         int err;
 > > >
-> > > @@ -161,6 +161,16 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
-> > >                       NULL, ctx) == 0);
-> > >       TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
+> > > -       if (!force_skip) {
+> > > -               pr_debug("\n--- start ---\n");
+> > > -               err = run_test(t, subtest);
+> > > -               pr_debug("---- end ----\n");
+> > > -       } else {
+> > > -               pr_debug("\n--- force skipped ---\n");
+> > > -               err = TEST_SKIP;
+> > > -       }
+> > > +       pr_debug("\n--- start ---\n");
+> > > +       err = run_test(t, subtest);
+> > > +       pr_debug("---- end ----\n");
 > > >
-> > > +     /* Test toplogy constants appear well ordered. */
-> > > +     expr__ctx_clear(ctx);
-> > > +     TEST_ASSERT_VAL("#num_cpus", expr__parse(&num_cpus, ctx, "#num_cpus") == 0);
-> > > +     TEST_ASSERT_VAL("#num_cores", expr__parse(&num_cores, ctx, "#num_cores") == 0);
-> > > +     TEST_ASSERT_VAL("#num_cpus >= #num_cores", num_cpus >= num_cores);
-> > > +     TEST_ASSERT_VAL("#num_dies", expr__parse(&num_dies, ctx, "#num_dies") == 0);
-> > > +     TEST_ASSERT_VAL("#num_cores >= #num_dies", num_cores >= num_dies);
-> > > +     TEST_ASSERT_VAL("#num_packages", expr__parse(&num_packages, ctx, "#num_packages") == 0);
-> > > +     TEST_ASSERT_VAL("#num_dies >= #num_packages", num_dies >= num_packages);
-> > > +
-> > >       expr__ctx_free(ctx);
+> > >         if (!has_subtests(t))
+> > >                 pr_debug("%s:", t->desc);
+> > > @@ -432,7 +427,7 @@ static int run_shell_tests(int argc, const char *argv[], int i, int width,
+> > >                         continue;
+> > >                 }
 > > >
-> > >       return 0;
-> > > diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-> > > index 7464739c2890..15af8b8ef5e7 100644
-> > > --- a/tools/perf/util/expr.c
-> > > +++ b/tools/perf/util/expr.c
-> > > @@ -5,6 +5,8 @@
-> > >  #include <stdlib.h>
-> > >  #include <string.h>
-> > >  #include "metricgroup.h"
-> > > +#include "cpumap.h"
-> > > +#include "cputopo.h"
-> > >  #include "debug.h"
-> > >  #include "expr.h"
-> > >  #include "expr-bison.h"
-> > > @@ -375,9 +377,34 @@ double expr_id_data__value(const struct expr_id_data *data)
+> > > -               test_and_print(&test_suite, false, 0);
+> > > +               test_and_print(&test_suite, 0);
+> > >         }
 > > >
-> > >  double expr__get_literal(const char *literal)
-> > >  {
-> > > +     static struct cpu_topology *topology;
-> > > +
-> > >       if (!strcmp("#smt_on", literal))
-> > >               return smt_on() > 0 ? 1.0 : 0.0;
+> > >         for (e = 0; e < n_dirs; e++)
+> > > @@ -456,7 +451,7 @@ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
+> > >         }
 > > >
-> > > +     if (!strcmp("#num_cpus", literal))
-> > > +             return cpu__max_present_cpu();
-> > > +
-> > > +     /*
-> > > +      * Assume that topology strings are consistent, such as CPUs "0-1"
-> > > +      * wouldn't be listed as "0,1", and so after deduplication the number of
-> > > +      * these strings gives an indication of the number of packages, dies,
-> > > +      * etc.
-> > > +      */
-> > > +     if (!topology) {
-> > > +             topology = cpu_topology__new();
-> >
-> > any chance we could propagate expr_scanner_ctx in here and store topology
-> > to it and release it at the end? I think we have several places like this,
-> > so it'd be nice not to make more if it's possible ;-)
-> 
-> The topology here is static and so will only get computed once per
-> execution rather than once pre expression parse. I was worried about
-> the cost of recomputing the topology for something like 'perf stat -I
-> 1000 -M ...' in which case the static will do less recomputation.
-
-can't we have the topology created/release on the top fo the parsing
-and released after all expressions are parsed?
-
-or we could come up with some generic way to handle this kind of release
-
-jirka
-
-> 
-> Thanks,
-> Ian
-> 
-> > thanks,
-> > jirka
-> >
-> > > +             if (!topology) {
-> > > +                     pr_err("Error creating CPU topology");
-> > > +                     return NAN;
-> > > +             }
-> > > +     }
-> > > +     if (!strcmp("#num_packages", literal))
-> > > +             return topology->package_cpus_lists;
-> > > +     if (!strcmp("#num_dies", literal))
-> > > +             return topology->die_cpus_lists;
-> > > +     if (!strcmp("#num_cores", literal))
-> > > +             return topology->core_cpus_lists;
-> > > +
-> > >       pr_err("Unrecognized literal '%s'", literal);
-> > >       return NAN;
-> > >  }
+> > >         for_each_test(j, k, t) {
+> > > -               int curr = i++, err;
+> > > +               int curr = i++;
+> > >                 int subi;
+> > >
+> > >                 if (!perf_test__matches(test_description(t, -1), curr, argc, argv)) {
+> > > @@ -483,7 +478,7 @@ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
+> > >                 }
+> > >
+> > >                 if (!has_subtests(t)) {
+> > > -                       test_and_print(t, false, -1);
+> > > +                       test_and_print(t, -1);
+> > >                 } else {
+> > >                         int subn = num_subtests(t);
+> > >                         /*
+> > > @@ -495,7 +490,6 @@ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
+> > >                          * 35.1: Basic BPF llvm compiling test                          : Ok
+> > >                          */
+> > >                         int subw = width > 2 ? width - 2 : width;
+> > > -                       bool skip = false;
+> > >
+> > >                         if (subn <= 0) {
+> > >                                 color_fprintf(stderr, PERF_COLOR_YELLOW,
+> > > @@ -518,9 +512,7 @@ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
+> > >
+> > >                                 pr_info("%2d.%1d: %-*s:", i, subi + 1, subw,
+> > >                                         test_description(t, subi));
+> > > -                               err = test_and_print(t, skip, subi);
+> > > -                               if (err != TEST_OK && t->subtest.skip_if_fail)
+> > > -                                       skip = true;
+> > > +                               test_and_print(t, subi);
+> > >                         }
+> > >                 }
+> > >         }
+> > > diff --git a/tools/perf/tests/clang.c b/tools/perf/tests/clang.c
+> > > index ba06a2257574..a7111005d5b9 100644
+> > > --- a/tools/perf/tests/clang.c
+> > > +++ b/tools/perf/tests/clang.c
+> > > @@ -29,5 +29,4 @@ static struct test_case clang_tests[] = {
+> > >  struct test_suite suite__clang = {
+> > >         .desc = "builtin clang support",
+> > >         .test_cases = clang_tests,
+> > > -       .subtest = { .skip_if_fail = true, },
+> > >  };
+> > > diff --git a/tools/perf/tests/llvm.c b/tools/perf/tests/llvm.c
+> > > index f27ef00d65e9..8ac0a3a457ef 100644
+> > > --- a/tools/perf/tests/llvm.c
+> > > +++ b/tools/perf/tests/llvm.c
+> > > @@ -216,5 +216,4 @@ static struct test_case llvm_tests[] = {
+> > >  struct test_suite suite__llvm = {
+> > >         .desc = "LLVM search and compile",
+> > >         .test_cases = llvm_tests,
+> > > -       .subtest = { .skip_if_fail = true, },
+> > >  };
+> > > diff --git a/tools/perf/tests/pfm.c b/tools/perf/tests/pfm.c
+> > > index 651fee4ef819..71b76deb1f92 100644
+> > > --- a/tools/perf/tests/pfm.c
+> > > +++ b/tools/perf/tests/pfm.c
+> > > @@ -191,5 +191,4 @@ static struct test_case pfm_tests[] = {
+> > >  struct test_suite suite__pfm = {
+> > >         .desc = "Test libpfm4 support",
+> > >         .test_cases = pfm_tests,
+> > > -       .subtest = { .skip_if_fail   = true }
+> > >  };
+> > > diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+> > > index 15051801c790..8f65098110fc 100644
+> > > --- a/tools/perf/tests/tests.h
+> > > +++ b/tools/perf/tests/tests.h
+> > > @@ -40,9 +40,6 @@ struct test_case {
+> > >
+> > >  struct test_suite {
+> > >         const char *desc;
+> > > -       struct {
+> > > -               bool skip_if_fail;
+> > > -       } subtest;
+> > >         struct test_case *test_cases;
+> > >         void *priv;
+> > >  };
 > > > --
-> > > 2.34.0.rc0.344.g81b53c2807-goog
+> > > 2.33.1.1089.g2158813163f-goog
 > > >
-> >
-> 
-
+>
+> --
+>
+> - Arnaldo
