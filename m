@@ -2,133 +2,143 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C57C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Nov 2021 02:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A18F0C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Nov 2021 08:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 527BD61181
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Nov 2021 02:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AD9161205
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Nov 2021 08:28:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229810AbhKJC1s (ORCPT
+        id S230147AbhKJIbG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 9 Nov 2021 21:27:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229756AbhKJC1r (ORCPT
+        Wed, 10 Nov 2021 03:31:06 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:46814 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229831AbhKJIbG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 9 Nov 2021 21:27:47 -0500
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E90D3C061764;
-        Tue,  9 Nov 2021 18:25:00 -0800 (PST)
-Received: by mail-wm1-x331.google.com with SMTP id 67-20020a1c1946000000b0030d4c90fa87so825397wmz.2;
-        Tue, 09 Nov 2021 18:25:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=TTkLFHcGvtH+pB13GJ0NadfjTaTC8FpUPnqsIBnvMb4=;
-        b=cWS5tAL5aLeFhdVmI1OhD3cCg43m/oSbq+cFcLaTDxkJgDbU+YqbtglrGDWkcynju1
-         KNN8Uf8+RDxHka85Q9CPkhY/YleqzKgF1PSqBdyARj4KUX/ZYtR23Aw2DdVRRg8qFy8D
-         c1y1eHQeJvEhAXu9yh5ixbnurF30yFABZojhtbzlOgSes99j6PFWvH8mS/BBNk4GUaUv
-         nkfNoWaizv8QPzCnHhUdprP+GLcYU7UuLju01oB5+kMyqmtjCpa6NcSMf9hBE9xNJQOx
-         C8uHNCN2rDf3ev87xmMkt7wPR7UT5zpJzUrVcxVCINOUrcbr+VDWnvqL0SGzxN3osC/D
-         53ZA==
+        Wed, 10 Nov 2021 03:31:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1636532898;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=U3N/QwJx99Htv9Bvod8btoHFfpBRUV5/sWEz28i4RYo=;
+        b=FsESyu9r1b/v48FiWdwordYEPGOp+otgPYa6y7o9y4EvfSmvA2VBK5+rN3C0v1/TOeu1AA
+        P2POoRa0I+R+PL9oBuMmDxLhPE53TbqvDSTbAABXAoGO0BEYlMRzRuTg3ovb4mwr336+l+
+        IQxjOzkBVddcCUJ+YwBv7Ds3XY/iJkE=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-296-kzspWDkrMxavNLISoKka8w-1; Wed, 10 Nov 2021 03:28:17 -0500
+X-MC-Unique: kzspWDkrMxavNLISoKka8w-1
+Received: by mail-wm1-f71.google.com with SMTP id b145-20020a1c8097000000b003335872db8dso183436wmd.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Nov 2021 00:28:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TTkLFHcGvtH+pB13GJ0NadfjTaTC8FpUPnqsIBnvMb4=;
-        b=NmWf2HIZiiZl85yPZMD6Kk194xzfnd6XURbCEBVr4v+Uash1RSP8HgtN0CI8vFEBje
-         FZBKMucmUEVrokSbrsLY9n5t6L/SK6G5W1uDWbErGcxajhyMDSN16Ya52YPYWtrSCghD
-         +DbaClta20k+6lbAD63BmTmLltWwI876Tth5CY0+bLbWHDb72J+SoYNkKzq/rQOiIZZJ
-         5FGvWhU0I5I3EqSXjDgbxXA/if8lPlkXK8sYy9vFhCzxyXtYO0/t5yYZLWXbAa0tAq6Y
-         nUELPfYQuvC0WWgRiYlSM1+u2rHlSNmnAsrqZWf9mw8NzpMfJZRMG67Gu57AXRhYS1+1
-         zamg==
-X-Gm-Message-State: AOAM530oaAfF9lWWILnlzJqIQF3eDsTkmz8JwgpqnPzXZvuQTx0qO2+c
-        q22c23dEXZSPL8AakCkFR6td8o5mLwWL3g==
-X-Google-Smtp-Source: ABdhPJzVkybnhbbiylMGuVpKDnT4vmNArLyKUyyJI7Ez1O6Xmr5h/Z/dR9RHq7d8Wf5/S4087/HqSQ==
-X-Received: by 2002:a1c:770e:: with SMTP id t14mr12342584wmi.173.1636511099468;
-        Tue, 09 Nov 2021 18:24:59 -0800 (PST)
-Received: from pc ([197.49.136.152])
-        by smtp.gmail.com with ESMTPSA id o10sm13129089wri.15.2021.11.09.18.24.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Nov 2021 18:24:59 -0800 (PST)
-Date:   Wed, 10 Nov 2021 04:24:56 +0200
-From:   Sohaib Mohamed <sohaib.amhmd@gmail.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Pierre Gondois <Pierre.Gondois@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf bench: Fix memory leaks.
-Message-ID: <20211110022456.yd5m5on7v2jbqyzg@pc>
-References: <20211108044826.138781-1-sohaib.amhmd@gmail.com>
- <CAP-5=fUc1uPti1MN3BZJ1JFus=ZYU66+gjh3bW30pUkE2sUxBQ@mail.gmail.com>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:organization:in-reply-to
+         :content-transfer-encoding;
+        bh=U3N/QwJx99Htv9Bvod8btoHFfpBRUV5/sWEz28i4RYo=;
+        b=M3jH3b04J2DHA3qLjhwEhOcY7dVOgAYOj8dKC+RjERoSk548oTqJWuFmH4Irop0Yb3
+         IQkZQZSUkt0Xx7XQQgYH7ud6oMUkZREmGAXUvHkje58TbG/eb7mWD6clhwdrMnUXG9BN
+         pkX04DXFZ9JFytJHVR8DkHHeujgBqr3di4bMRQXGc/PlrXovv0ZOGZUYOFNivGHgO9RW
+         rmj9veHO5MTt0gxlRRtXDnqXKNjbtW1CP6b0bc2R2taAf5a6n8r0G/Ip27iQ3NJmZMF9
+         oPepTkTgJ1SjtQNWMRfbErTpt0cCXVKcLTZOJCpv9tnP+zq+xMPiPtXH0TBbA/uzNSwH
+         8/vA==
+X-Gm-Message-State: AOAM530Y+/I9BdG/1x9nSYJKlxrrYKi7of/N9XBraIy6Tant1N0TCUdC
+        egJQxkkrA1lFFVExriHTD4RyYkN/7BFHmerivCDZ882vofiKdTEO9lQiGQfQId7YxuPoYn4wqlw
+        +U17iTCuDaBPBk4n9gxZLWnT1Ilmz3Q==
+X-Received: by 2002:adf:ba0d:: with SMTP id o13mr17628072wrg.339.1636532896088;
+        Wed, 10 Nov 2021 00:28:16 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwQ/2kqjTXPkYPHvyddhqvtTW4vWEhMZpSvnii4YyiM1CY6/ErutfetxXoUCqfLbvvZpl1HaA==
+X-Received: by 2002:adf:ba0d:: with SMTP id o13mr17628047wrg.339.1636532895920;
+        Wed, 10 Nov 2021 00:28:15 -0800 (PST)
+Received: from [192.168.3.132] (p5b0c604f.dip0.t-ipconnect.de. [91.12.96.79])
+        by smtp.gmail.com with ESMTPSA id u23sm15854437wru.21.2021.11.10.00.28.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Nov 2021 00:28:14 -0800 (PST)
+Message-ID: <c3571571-320a-3e25-8409-5653ddca895c@redhat.com>
+Date:   Wed, 10 Nov 2021 09:28:12 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fUc1uPti1MN3BZJ1JFus=ZYU66+gjh3bW30pUkE2sUxBQ@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [PATCH 1/7] fs/exec: make __set_task_comm always set a nul
+ terminated string
+Content-Language: en-US
+To:     Yafang Shao <laoar.shao@gmail.com>, akpm@linux-foundation.org
+Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        oliver.sang@intel.com, lkp@intel.com,
+        Kees Cook <keescook@chromium.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Petr Mladek <pmladek@suse.com>
+References: <20211108083840.4627-1-laoar.shao@gmail.com>
+ <20211108083840.4627-2-laoar.shao@gmail.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+In-Reply-To: <20211108083840.4627-2-laoar.shao@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Nov 08, 2021 at 10:57:25AM -0800, Ian Rogers wrote:
-> On Sun, Nov 7, 2021 at 8:49 PM Sohaib Mohamed <sohaib.amhmd@gmail.com> wrote:
-> >
-> > ASan reports memory leaks while running:
-> >
-> > $ perf bench sched all
-> >
-> > Signed-off-by: Sohaib Mohamed <sohaib.amhmd@gmail.com>
->
-> Acked-by: Ian Rogers <irogers@google.com>
->
-> I think you can add:
-> Fixes: e27454cc6352c ("perf bench: Add sched-messaging.c: Benchmark
-> for scheduler and IPC mechanisms based on hackbench")
->
-> This will then get the fix backported to older stable perf commands.
+On 08.11.21 09:38, Yafang Shao wrote:
+> Make sure the string set to task comm is always nul terminated.
+> 
 
-I just added these two lines to version 2:
-https://lore.kernel.org/linux-perf-users/20211110022012.16620-1-sohaib.amhmd@gmail.com/
+strlcpy: "the result is always a valid NUL-terminated string that fits
+in the buffer"
 
+The only difference seems to be that strscpy_pad() pads the remainder
+with zeroes.
+
+Is this description correct and I am missing something important?
+
+> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+> Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+> Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+> Cc: Michal Miroslaw <mirq-linux@rere.qmqm.pl> 
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Petr Mladek <pmladek@suse.com>
+> ---
+>  fs/exec.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/exec.c b/fs/exec.c
+> index a098c133d8d7..404156b5b314 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -1224,7 +1224,7 @@ void __set_task_comm(struct task_struct *tsk, const char *buf, bool exec)
+>  {
+>  	task_lock(tsk);
+>  	trace_task_rename(tsk, buf);
+> -	strlcpy(tsk->comm, buf, sizeof(tsk->comm));
+> +	strscpy_pad(tsk->comm, buf, sizeof(tsk->comm));
+>  	task_unlock(tsk);
+>  	perf_event_comm(tsk, exec);
+>  }
+> 
+
+
+-- 
 Thanks,
-Sohaib
 
->
-> Thanks,
-> Ian
->
-> > ---
-> >  tools/perf/bench/sched-messaging.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/tools/perf/bench/sched-messaging.c b/tools/perf/bench/sched-messaging.c
-> > index 488f6e6ba1a5..fa0ff4ce2b74 100644
-> > --- a/tools/perf/bench/sched-messaging.c
-> > +++ b/tools/perf/bench/sched-messaging.c
-> > @@ -223,6 +223,8 @@ static unsigned int group(pthread_t *pth,
-> >                 snd_ctx->out_fds[i] = fds[1];
-> >                 if (!thread_mode)
-> >                         close(fds[0]);
-> > +
-> > +               free(ctx);
-> >         }
-> >
-> >         /* Now we have all the fds, fork the senders */
-> > @@ -239,6 +241,8 @@ static unsigned int group(pthread_t *pth,
-> >                 for (i = 0; i < num_fds; i++)
-> >                         close(snd_ctx->out_fds[i]);
-> >
-> > +       free(snd_ctx);
-> > +
-> >         /* Return number of children to reap */
-> >         return num_fds * 2;
-> >  }
-> > --
-> > 2.25.1
-> >
+David / dhildenb
+
