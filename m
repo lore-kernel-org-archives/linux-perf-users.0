@@ -2,212 +2,151 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84595C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Nov 2021 18:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D95C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Nov 2021 20:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C9B261178
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Nov 2021 18:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D05E361052
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Nov 2021 20:17:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232101AbhKJScE (ORCPT
+        id S231984AbhKJUUY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 10 Nov 2021 13:32:04 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:47154 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232096AbhKJScE (ORCPT
+        Wed, 10 Nov 2021 15:20:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231576AbhKJUUY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 10 Nov 2021 13:32:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1636568956;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ckaC4HApZN9hZGfKlYmJ3lbe5VmvvuXCdyrcPx2tqXY=;
-        b=dXZ+mj9PSYdGN6wcmLKEIlR22RALd0khlrpCuhvFiWV+vE9xlSyw+sAO7dtqhWBz0jYnXQ
-        SBIhtuUS2HXuPS136EuiT/mbreMZ4FXUXCCuSNfdb4xx41jixVmYfZbN0Nt5+NXL0p525L
-        qPIvvlDALMoxMFb/2dM0FCJvuZC1GtI=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-352-hv02_mEKOqKT42bpcta_sQ-1; Wed, 10 Nov 2021 13:29:14 -0500
-X-MC-Unique: hv02_mEKOqKT42bpcta_sQ-1
-Received: by mail-wm1-f72.google.com with SMTP id l187-20020a1c25c4000000b0030da46b76daso3477894wml.9
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Nov 2021 10:29:14 -0800 (PST)
+        Wed, 10 Nov 2021 15:20:24 -0500
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A4CAC061766
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Nov 2021 12:17:36 -0800 (PST)
+Received: by mail-pj1-x1033.google.com with SMTP id iq11so2486245pjb.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Nov 2021 12:17:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=kJ30f4yltU8P9D1vIvrgm4JmaUKFVTUymd542MzbX34=;
+        b=g9lNF+pd24Lg+MqAqHCV7wh24XIQNX4IMaEiJo9WPFtT4ECrdlVpmAPO8QVV2WHbFK
+         nQ+O9QSeWTirPqQxEh3uFPZ+WLk8Q0CYxvBO5RUARXtXksYhPr4lmu5668PzlePyOmcl
+         As4OgFb6VXL9nsV00X1BkxHIuNlUxiMXmbd8w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ckaC4HApZN9hZGfKlYmJ3lbe5VmvvuXCdyrcPx2tqXY=;
-        b=PXs36+IUZnzD+yTu0Xo5vyHp5SoAUcwJb3wOXNES1O2zirFqBOf/qwlrGzYCoZjili
-         HNolJdNForBCyYZqbir8LU6ThASsrNJdjBUGsGn0hIcXadvr/+Jfjld5GkXr/5bkKLV/
-         0POlyhVLBnKTMLJy6jUEDTJgeXjY4NG9XCLP7QcjLwJHOgl/pK9/7sRDAjlsJGGWklM9
-         BsQnf5TICqbL+QYj1wBBb72cHRsgNcOMzuds4A2Pi6MM6kRMIIA5SafoYpqNdTWHWDIV
-         +OKJe/BKrTu5pR0W3GxlgSR/MAdXJDepJX8OhDYeKAEdgrEX/Orj7sKFyqWyxi1SG6IY
-         UBxA==
-X-Gm-Message-State: AOAM530t9SZ2qSsqUfVBVY5BPdQHJ3KRNgddUn5sRJ6si7UNJ9rQKQnL
-        wjOLLsD6teWvyb6R3OPE3Z50RPWp0U93syX+KiLc+MeJ0nWR/5DP4iBTbHeZjGik4tkyKlMzGMK
-        58DJDnKPs6EBKMo3nI1jDoS2WkQfcjw==
-X-Received: by 2002:a05:600c:a0b:: with SMTP id z11mr19161380wmp.147.1636568953467;
-        Wed, 10 Nov 2021 10:29:13 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxLNc+b6q1bOBa1tUYi+GlKpjxtH5KVHH3xHHPQdLoHjDBHgBPOijDSdCW1wnanyUW0q4ladg==
-X-Received: by 2002:a05:600c:a0b:: with SMTP id z11mr19161343wmp.147.1636568953236;
-        Wed, 10 Nov 2021 10:29:13 -0800 (PST)
-Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
-        by smtp.gmail.com with ESMTPSA id o12sm601367wmq.12.2021.11.10.10.29.12
+        bh=kJ30f4yltU8P9D1vIvrgm4JmaUKFVTUymd542MzbX34=;
+        b=LQk7CSOL5M/CaxdtCe9RG8MtPTt6zgMbzp0tTAiUQVKrpYmmDtjmAGTr/wFUCqGtAo
+         SXX0Fm+QdstMHdTjvH9H96AnFQDeW4nRzuco1ywHbyGP4JDdag/lNFYaU9cGxV1K3UHe
+         Eqetka3gvL+7U1jfMopqJ5b453ZloR1cvPqaqAh1k1Bq91dYucedXr3gaaeP5FbNvkb9
+         FVWyFqek9Ph6mXYndrrMmBFEClmdJWN6a2EvUHZWfrCfLSl4hglruvCYOoRu+joLeRcd
+         UdsmefQwVrHnwUCPG6BY8gUQuudu7leGQ25KZcc4YzQrfJpC0FH9Sz0501s+OJscMsnE
+         YNYg==
+X-Gm-Message-State: AOAM530aSfrcrgwRFjltyAJLl4GI5XBtqgArXWr0gDzKmWFNCwrmJxZo
+        GC9LdoCbeQpZnJzZHcwg5qcKSg==
+X-Google-Smtp-Source: ABdhPJy9OJ/YGW/eEJO6u7l+llSGLL86Mlc82irnMKIDFwKNMwM8Slu26rVYUZa6XKnHewItU9EAMw==
+X-Received: by 2002:a17:90b:33d0:: with SMTP id lk16mr1928527pjb.66.1636575455497;
+        Wed, 10 Nov 2021 12:17:35 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id fw21sm6200587pjb.25.2021.11.10.12.17.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Nov 2021 10:29:12 -0800 (PST)
-Date:   Wed, 10 Nov 2021 19:29:11 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
+        Wed, 10 Nov 2021 12:17:35 -0800 (PST)
+Date:   Wed, 10 Nov 2021 12:17:34 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Yafang Shao <laoar.shao@gmail.com>, akpm@linux-foundation.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        oliver.sang@intel.com, lkp@intel.com,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Song Liu <song@kernel.org>, Wan Jiabing <wanjiabing@vivo.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Changbin Du <changbin.du@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/7] perf expr: Add metric literals for topology.
-Message-ID: <YYwPdzgVlbenb2ai@krava>
-References: <20211105170943.3479315-1-irogers@google.com>
- <20211105170943.3479315-7-irogers@google.com>
- <YYvBhfyizI+z8SAC@krava>
- <CAP-5=fWRzptEG2TUALNJaVLdP2egHhyhPZ=9HuP2da68jiPPTA@mail.gmail.com>
- <YYvYnYPg43acgkvs@krava>
- <CAP-5=fU4JCn_8VY3KstN3bZeV-uRptO0hzyBFy=rGNtap1WRbw@mail.gmail.com>
+        Steven Rostedt <rostedt@goodmis.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH 1/7] fs/exec: make __set_task_comm always set a nul
+ terminated string
+Message-ID: <202111101215.A42612FEC@keescook>
+References: <20211108083840.4627-1-laoar.shao@gmail.com>
+ <20211108083840.4627-2-laoar.shao@gmail.com>
+ <c3571571-320a-3e25-8409-5653ddca895c@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fU4JCn_8VY3KstN3bZeV-uRptO0hzyBFy=rGNtap1WRbw@mail.gmail.com>
+In-Reply-To: <c3571571-320a-3e25-8409-5653ddca895c@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Nov 10, 2021 at 09:58:57AM -0800, Ian Rogers wrote:
-> On Wed, Nov 10, 2021 at 6:35 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> >
-> > On Wed, Nov 10, 2021 at 06:19:04AM -0800, Ian Rogers wrote:
-> > > On Wed, Nov 10, 2021 at 4:56 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> > > >
-> > > > On Fri, Nov 05, 2021 at 10:09:42AM -0700, Ian Rogers wrote:
-> > > > > Allow the number of cpus, cores, dies and packages to be queried by a
-> > > > > metric expression.
-> > > > >
-> > > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > > ---
-> > > > >  tools/perf/tests/expr.c | 12 +++++++++++-
-> > > > >  tools/perf/util/expr.c  | 27 +++++++++++++++++++++++++++
-> > > > >  2 files changed, 38 insertions(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-> > > > > index 9ee2dc91c27b..0c09ccc76665 100644
-> > > > > --- a/tools/perf/tests/expr.c
-> > > > > +++ b/tools/perf/tests/expr.c
-> > > > > @@ -66,7 +66,7 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
-> > > > >  {
-> > > > >       struct expr_id_data *val_ptr;
-> > > > >       const char *p;
-> > > > > -     double val;
-> > > > > +     double val, num_cpus, num_cores, num_dies, num_packages;
-> > > > >       int ret;
-> > > > >       struct expr_parse_ctx *ctx;
-> > > > >
-> > > > > @@ -161,6 +161,16 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
-> > > > >                       NULL, ctx) == 0);
-> > > > >       TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
-> > > > >
-> > > > > +     /* Test toplogy constants appear well ordered. */
-> > > > > +     expr__ctx_clear(ctx);
-> > > > > +     TEST_ASSERT_VAL("#num_cpus", expr__parse(&num_cpus, ctx, "#num_cpus") == 0);
-> > > > > +     TEST_ASSERT_VAL("#num_cores", expr__parse(&num_cores, ctx, "#num_cores") == 0);
-> > > > > +     TEST_ASSERT_VAL("#num_cpus >= #num_cores", num_cpus >= num_cores);
-> > > > > +     TEST_ASSERT_VAL("#num_dies", expr__parse(&num_dies, ctx, "#num_dies") == 0);
-> > > > > +     TEST_ASSERT_VAL("#num_cores >= #num_dies", num_cores >= num_dies);
-> > > > > +     TEST_ASSERT_VAL("#num_packages", expr__parse(&num_packages, ctx, "#num_packages") == 0);
-> > > > > +     TEST_ASSERT_VAL("#num_dies >= #num_packages", num_dies >= num_packages);
-> > > > > +
-> > > > >       expr__ctx_free(ctx);
-> > > > >
-> > > > >       return 0;
-> > > > > diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-> > > > > index 7464739c2890..15af8b8ef5e7 100644
-> > > > > --- a/tools/perf/util/expr.c
-> > > > > +++ b/tools/perf/util/expr.c
-> > > > > @@ -5,6 +5,8 @@
-> > > > >  #include <stdlib.h>
-> > > > >  #include <string.h>
-> > > > >  #include "metricgroup.h"
-> > > > > +#include "cpumap.h"
-> > > > > +#include "cputopo.h"
-> > > > >  #include "debug.h"
-> > > > >  #include "expr.h"
-> > > > >  #include "expr-bison.h"
-> > > > > @@ -375,9 +377,34 @@ double expr_id_data__value(const struct expr_id_data *data)
-> > > > >
-> > > > >  double expr__get_literal(const char *literal)
-> > > > >  {
-> > > > > +     static struct cpu_topology *topology;
-> > > > > +
-> > > > >       if (!strcmp("#smt_on", literal))
-> > > > >               return smt_on() > 0 ? 1.0 : 0.0;
-> > > > >
-> > > > > +     if (!strcmp("#num_cpus", literal))
-> > > > > +             return cpu__max_present_cpu();
-> > > > > +
-> > > > > +     /*
-> > > > > +      * Assume that topology strings are consistent, such as CPUs "0-1"
-> > > > > +      * wouldn't be listed as "0,1", and so after deduplication the number of
-> > > > > +      * these strings gives an indication of the number of packages, dies,
-> > > > > +      * etc.
-> > > > > +      */
-> > > > > +     if (!topology) {
-> > > > > +             topology = cpu_topology__new();
-> > > >
-> > > > any chance we could propagate expr_scanner_ctx in here and store topology
-> > > > to it and release it at the end? I think we have several places like this,
-> > > > so it'd be nice not to make more if it's possible ;-)
-> > >
-> > > The topology here is static and so will only get computed once per
-> > > execution rather than once pre expression parse. I was worried about
-> > > the cost of recomputing the topology for something like 'perf stat -I
-> > > 1000 -M ...' in which case the static will do less recomputation.
-> >
-> > can't we have the topology created/release on the top fo the parsing
-> > and released after all expressions are parsed?
-> >
-> > or we could come up with some generic way to handle this kind of release
+On Wed, Nov 10, 2021 at 09:28:12AM +0100, David Hildenbrand wrote:
+> On 08.11.21 09:38, Yafang Shao wrote:
+> > Make sure the string set to task comm is always nul terminated.
+> > 
 > 
-> Creating the topology at the top of metric parsing would incur a sysfs
-> parsing cost on metrics regardless of whether they used the topology.
-> I feel a lazy approach is better to avoid this cost. We could make
-> this part of the expression context and lazily initialize it there.
-> It'd be good to keep the expression context around in 'perf stat' in
-> that case. I quite like this approach as really the topology should be
-> part of the perf environment and part of the header. It is interesting
-> to think how can we get metrics to work with 'perf stat record'.
-> Currently you will get metrics for something like 'perf stat record -e
-> instructions,cycles -a sleep 2; perf stat report', but none baked in
-> metrics don't work and we don't even have the metric-id to make this
-> work (even using '-M IPC' doesn't work). Putting the environment in
-> the session, making the topology part of it, writing/reading data
-> based on that seems like worthwhile clean up but beyond the scope of
-> what I was trying to do here.
+> strlcpy: "the result is always a valid NUL-terminated string that fits
+> in the buffer"
 > 
-> In terms of releasing for the sake of memory leaks, leak sanitizer
-> doesn't treat memory allocated and reachable from a global as a leak.
-> We can't precompute the topology and so this style of approach is what
-> I'm used to. Putting the topology into the parsing context and lazily
-> initializing would be the second best option imo, and I can do that if
-> this is a blocker.
+> The only difference seems to be that strscpy_pad() pads the remainder
+> with zeroes.
+> 
+> Is this description correct and I am missing something important?
 
-ok, let's leave it as it is.. thanks for the details
+Yes, this makes sure it's zero padded just to be robust against full
+tsk->comm copies that got noticed in other places.
 
-jirka
+The only other change is that we want to remove strlcpy() from the
+kernel generally since it can trigger out-of-bound reads on the source
+string[1].
 
+So, in this case, the most robust version is to use strscpy_pad().
+
+-Kees
+
+[1] https://github.com/KSPP/linux/issues/89
+
+> 
+> > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> > Reviewed-by: Kees Cook <keescook@chromium.org>
+> > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> > Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+> > Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+> > Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+> > Cc: Michal Miroslaw <mirq-linux@rere.qmqm.pl> 
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Steven Rostedt <rostedt@goodmis.org>
+> > Cc: Matthew Wilcox <willy@infradead.org>
+> > Cc: David Hildenbrand <david@redhat.com>
+> > Cc: Al Viro <viro@zeniv.linux.org.uk>
+> > Cc: Kees Cook <keescook@chromium.org>
+> > Cc: Petr Mladek <pmladek@suse.com>
+> > ---
+> >  fs/exec.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/fs/exec.c b/fs/exec.c
+> > index a098c133d8d7..404156b5b314 100644
+> > --- a/fs/exec.c
+> > +++ b/fs/exec.c
+> > @@ -1224,7 +1224,7 @@ void __set_task_comm(struct task_struct *tsk, const char *buf, bool exec)
+> >  {
+> >  	task_lock(tsk);
+> >  	trace_task_rename(tsk, buf);
+> > -	strlcpy(tsk->comm, buf, sizeof(tsk->comm));
+> > +	strscpy_pad(tsk->comm, buf, sizeof(tsk->comm));
+> >  	task_unlock(tsk);
+> >  	perf_event_comm(tsk, exec);
+> >  }
+> > 
+> 
+> 
+> -- 
+> Thanks,
+> 
+> David / dhildenb
+> 
+
+-- 
+Kees Cook
