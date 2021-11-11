@@ -2,124 +2,115 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBCEC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 07:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5E8C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 07:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91C376124C
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 07:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C507761269
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 07:25:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229649AbhKKHVL (ORCPT
+        id S229564AbhKKH2a (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 11 Nov 2021 02:21:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43462 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229564AbhKKHVL (ORCPT
+        Thu, 11 Nov 2021 02:28:30 -0500
+Received: from mail-lj1-f176.google.com ([209.85.208.176]:38886 "EHLO
+        mail-lj1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229533AbhKKH2a (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 11 Nov 2021 02:21:11 -0500
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3BBAC061767
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Nov 2021 23:18:22 -0800 (PST)
-Received: by mail-pl1-x629.google.com with SMTP id y1so5029554plk.10
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Nov 2021 23:18:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=PYrvbXawX/D86nhUYmoX07v/ep6S8FSDyEh1vsVQ5lA=;
-        b=nBaUZWPAK0PuqPJ946GqOziDlcGX017pnlnYd7tQi7u36QwyYhUNmU78WEgB/Bwh8z
-         lquVB+f2q2T6ei+5VFL9vGKhkUKLjv1FdfSuSH4CIy76Rwbi9p62GXC3iT2x+BCPpclQ
-         aTrKoP+LsHRj1uOeFh/FiRAm7BluCU7MPJRn4JIkLzziU/Go1KD1FeGVHIwMA05zPdAm
-         QtV6j2LswVZ48UQtJmU2NrD8ibnX1Ox673WVu/IteTsYHBj+zF4hEUplqzPZ7kV8GI2D
-         grY7eaHTS4enzY7pRi8pDgSq1VmIIriOYWT0ldtnM686k0U1DRmgne90k3b7DJgcQ1BJ
-         +p2g==
+        Thu, 11 Nov 2021 02:28:30 -0500
+Received: by mail-lj1-f176.google.com with SMTP id e9so10181758ljl.5;
+        Wed, 10 Nov 2021 23:25:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PYrvbXawX/D86nhUYmoX07v/ep6S8FSDyEh1vsVQ5lA=;
-        b=n1UlXQ4eE4BajTe5o0n3zxwX6LihDvLYmZsjvOnpVUlmehupDB2s5LvbLI99+T0LKE
-         e0L1Mqrf+rJCgE81RTj+AFOrT+SHv9xzGq1IGeRImIW5UAceyBsYtfZq8Y/hzoP9OpPS
-         k8g5sxenC2DAdCk54/RaF7gGD3AdP2DA1bQnYHODoH0T7CExsycW2cLJi0WHoK5AUn8l
-         DaHRK6ST4zN0akpLGN1+jjzpKBdiSxu7oMCLwMpI5uEuN/PMozPl27NPjzOeLYvrL5zV
-         3BVNJ4VndqzhcCL73qckt9fXcqn4g9uq5KYlE4XF48nMRFCpi3LTAQkgttj/9k+VXoNZ
-         0NJQ==
-X-Gm-Message-State: AOAM532Fqi+nwg8kre1Cd9dM18KWmGbb3LQ7nn1sexR4IsM0Ji3g3+D8
-        mukj6UasftyyJ1DLi/p+Dfh5kw==
-X-Google-Smtp-Source: ABdhPJydPbEjUiXMik5uIU53Rj70Ky1Wu38t2u0Q19XKvOMobEIbSXRkxrgmnL6ASFs/LxSavtIGbw==
-X-Received: by 2002:a17:90b:4a4d:: with SMTP id lb13mr23719780pjb.97.1636615101877;
-        Wed, 10 Nov 2021 23:18:21 -0800 (PST)
-Received: from leoy-ThinkPad-X240s ([148.163.172.147])
-        by smtp.gmail.com with ESMTPSA id h6sm1865485pfi.174.2021.11.10.23.18.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Nov 2021 23:18:21 -0800 (PST)
-Date:   Thu, 11 Nov 2021 15:18:15 +0800
-From:   Leo Yan <leo.yan@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4w43pXJEj6sPijE7G4/gLGRPchckrBkkpJmn6UFaT3c=;
+        b=GypT5sO/ey57sjf1cm41YbN72pdtBygF7BnGkLwe9D9kl9L53NOdli9JLojhdDCWcd
+         pkxhNWIMwdwWhKw+YPi9u6lWVL9ZtOzjF5ZGPJiv538ZVvyPyfeS1Jbw3RsvWjLe5XHN
+         zChbC5n1Pm1zMLjXum9NqxA4q5ikA+fKGHrza64M0prOd5ezW3zccPjElULcorVY+Llf
+         EnfRpgnf8E5woVjqlKvwWP53UId1BRrlY9WtJN7DnWU9jNoSYaLnu5d6fM5Cmfp4vjq2
+         J56VDwcR65khmS3p3oZ5g47vAwZ2liJLA8qJWu4bpkNYkQbz+cC43puvIp+i10XoDlW6
+         khhw==
+X-Gm-Message-State: AOAM531r1C/qrgJUGyvB9akbW+txGu00yHJyXaNnwDLKnjIHXlEEZ/VQ
+        FuX838WqkWY9QzO3gKOqIKisf0eQKwo36BoTmWM=
+X-Google-Smtp-Source: ABdhPJzPMVBGPuLftQNA/tOSHotYrLQMXnnafr/sQy0BbFisj6KBKPam+pROMfHCZgG4F2oQ0rUbnpbFCzuKmnVw4TQ=
+X-Received: by 2002:a2e:82ce:: with SMTP id n14mr5210040ljh.90.1636615540222;
+ Wed, 10 Nov 2021 23:25:40 -0800 (PST)
+MIME-Version: 1.0
+References: <20211109115020.31623-1-german.gomez@arm.com> <20211109115020.31623-4-german.gomez@arm.com>
+In-Reply-To: <20211109115020.31623-4-german.gomez@arm.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 10 Nov 2021 23:25:28 -0800
+Message-ID: <CAM9d7cgB_kemcZLL2FK6pHOEx_TkJ72YNFW03OR_Zyhn0yrmPg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] perf arm-spe: Save context ID in record
 To:     German Gomez <german.gomez@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, Mark Rutland <mark.rutland@arm.com>,
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
         John Garry <john.garry@huawei.com>,
         Will Deacon <will@kernel.org>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 2/4] perf arm-spe: Update --switch-events docs in
- perf-record
-Message-ID: <20211111071815.GA102075@leoy-ThinkPad-X240s>
-References: <20211109115020.31623-1-german.gomez@arm.com>
- <20211109115020.31623-3-german.gomez@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211109115020.31623-3-german.gomez@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Nov 09, 2021 at 11:50:18AM +0000, German Gomez wrote:
-> Update perf-record docs and Arm SPE recording options so that they are
-> consistent. This includes supporting the --no-switch-events flag in Arm
-> SPE as well.
-> 
-> Signed-off-by: German Gomez <german.gomez@arm.com>
+Hello,
 
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
+On Tue, Nov 9, 2021 at 3:50 AM German Gomez <german.gomez@arm.com> wrote:
+>
+> This patch is to save context ID in record, this will be used to set TID
+> for samples.
+>
+> Signed-off-by: German Gomez <german.gomez@arm.com>
+> Reviewed-by: Leo Yan <leo.yan@linaro.org>
+
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+
+Thanks,
+Namhyung
+
 
 > ---
->  tools/perf/Documentation/perf-record.txt | 2 +-
->  tools/perf/arch/arm64/util/arm-spe.c     | 4 +++-
->  2 files changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-> index 2d7df8703..3cf7bac67 100644
-> --- a/tools/perf/Documentation/perf-record.txt
-> +++ b/tools/perf/Documentation/perf-record.txt
-> @@ -469,7 +469,7 @@ This option sets the time out limit. The default value is 500 ms.
->  
->  --switch-events::
->  Record context switch events i.e. events of type PERF_RECORD_SWITCH or
-> -PERF_RECORD_SWITCH_CPU_WIDE. In some cases (e.g. Intel PT or CoreSight)
-> +PERF_RECORD_SWITCH_CPU_WIDE. In some cases (e.g. Intel PT, CoreSight or Arm SPE)
->  switch events will be enabled automatically, which can be suppressed by
->  by the option --no-switch-events.
->  
-> diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
-> index 58ba8d15c..725a06cd2 100644
-> --- a/tools/perf/arch/arm64/util/arm-spe.c
-> +++ b/tools/perf/arch/arm64/util/arm-spe.c
-> @@ -169,8 +169,10 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
->  	if (!perf_cpu_map__empty(cpus)) {
->  		evsel__set_sample_bit(tracking_evsel, TIME);
->  		evsel__set_sample_bit(tracking_evsel, CPU);
-> +
->  		/* also track task context switch */
-> -		tracking_evsel->core.attr.context_switch = 1;
-> +		if (!record_opts__no_switch_events(opts))
-> +			tracking_evsel->core.attr.context_switch = 1;
->  	}
->  
->  	return 0;
-> -- 
+>  tools/perf/util/arm-spe-decoder/arm-spe-decoder.c | 2 ++
+>  tools/perf/util/arm-spe-decoder/arm-spe-decoder.h | 1 +
+>  2 files changed, 3 insertions(+)
+>
+> diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+> index 32fe41835..3fc528c92 100644
+> --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+> @@ -151,6 +151,7 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
+>         u64 payload, ip;
+>
+>         memset(&decoder->record, 0x0, sizeof(decoder->record));
+> +       decoder->record.context_id = (u64)-1;
+>
+>         while (1) {
+>                 err = arm_spe_get_next_packet(decoder);
+> @@ -180,6 +181,7 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
+>                 case ARM_SPE_COUNTER:
+>                         break;
+>                 case ARM_SPE_CONTEXT:
+> +                       decoder->record.context_id = payload;
+>                         break;
+>                 case ARM_SPE_OP_TYPE:
+>                         if (idx == SPE_OP_PKT_HDR_CLASS_LD_ST_ATOMIC) {
+> diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+> index 59bdb7309..46a8556a9 100644
+> --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+> @@ -38,6 +38,7 @@ struct arm_spe_record {
+>         u64 timestamp;
+>         u64 virt_addr;
+>         u64 phys_addr;
+> +       u64 context_id;
+>  };
+>
+>  struct arm_spe_insn;
+> --
 > 2.25.1
-> 
+>
