@@ -2,136 +2,190 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E81C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 02:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A90C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 07:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE6346108B
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 02:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B2B561053
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 07:15:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234348AbhKKCMZ (ORCPT
+        id S229674AbhKKHRs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 10 Nov 2021 21:12:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60266 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234355AbhKKCMD (ORCPT
+        Thu, 11 Nov 2021 02:17:48 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:48292 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229533AbhKKHRr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 10 Nov 2021 21:12:03 -0500
-Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DD6DC06121E
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Nov 2021 18:08:09 -0800 (PST)
-Received: by mail-pg1-x54a.google.com with SMTP id e4-20020a630f04000000b002cc40fe16afso2453802pgl.23
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Nov 2021 18:08:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=reply-to:date:in-reply-to:message-id:mime-version:references
-         :subject:from:to:cc;
-        bh=OsKSO91+IQOd1IkS1z06+WXQrIrb9btCelj8IT/rfjk=;
-        b=UjO1QsSOEJxaGsYGL3Apu9warF+RLCb7N0O8lrT4uA7hcwAOXn0B9aIpQDfjrTQVV9
-         GpUiUx0P3EvrUcerrFYJ43Q90SJS/Gs68/jHuhbKg4LsEjNWoUkdOiAjjqiiHSBSgjMG
-         R7y7UnI6YE9rNtmXbNbVt3sbKA6jvhnnGELbGyK4SRL2xwd9sX+q3f8jF57/MEhgUPD+
-         t/+a9Sg8Ta3/1ptTGbTPekcMLXxNe7dS033Slo6cfYWGcnVi+krIVbSkYZwCP0WX4pZh
-         GTnRwbyA69uU8U608boW9DzCYJ+6PE43F4bM/b41jK5pMY5lvLJwB8NslG8L5Jh5BxcV
-         /FSA==
+        Thu, 11 Nov 2021 02:17:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1636614898;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=O9nDE4nBev+ucNKzlFhtTKh11mMo8Dfth3UvWqU7P7E=;
+        b=Ky0lbPqQw87zK9Soi0GeTEZOAwUehVCiEmU+865U5ybO61+59sI+yQ/9/2F31S6DXmtQZV
+        kkZmPrQ02D+reSPK9GMMa2xIl/Ds87X5kuuRtoW4xTkqWQRruo425OAshMD/0tQQVcAd/A
+        el/cbefu9xk7HSqhtgjeUsjs8FcVYnE=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-26-UT80riKbPnSLwFFYz0X9Hg-1; Thu, 11 Nov 2021 02:14:56 -0500
+X-MC-Unique: UT80riKbPnSLwFFYz0X9Hg-1
+Received: by mail-wm1-f71.google.com with SMTP id m1-20020a1ca301000000b003231d5b3c4cso4326530wme.5
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Nov 2021 23:14:56 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:reply-to:date:in-reply-to:message-id
-         :mime-version:references:subject:from:to:cc;
-        bh=OsKSO91+IQOd1IkS1z06+WXQrIrb9btCelj8IT/rfjk=;
-        b=XSlSP3CgcRinMDmbnFVuzDn0H7gb+579/LzbPSLFSYJVdi+l+eWfZHSel1St0BfqPn
-         weTB4CGfwfLQfoAxb2mQjrW5w8Q8rr7mCnwqkFqgrR1DBLIgzy8hy8R8FBezPnDCQp7I
-         uWm/Zq3kwB032Ei01yKVraf8Nmpr7oDA/Md5iBNr5jriz7rHvjzrbZPKKL8vZZhYa4Bx
-         tdah6xJDYpDVQEcZt6Ex2bMplR8M2EFJxzKMZLOeAkd7Gmgsy47PveO8ZWfER5J5p0uF
-         Ht3v3ROHlkHJr8++KVEdITobAzdKx3wfoIOpKOTt1PVqzUA/9MXt+QFWIs9sQgZm901T
-         0b2w==
-X-Gm-Message-State: AOAM533OKTxunjjeUMBDHdOnbXgalZwI3SIN6XK5nt1ovsuMIsD/xMo3
-        +7RuUAqc47TOvYOUxgpb5Z/G6Aj31RE=
-X-Google-Smtp-Source: ABdhPJyHlT5oqharcB3QQjRQ4qoO/10ujhci23RJu5uAP9JkYDshL4v2uHHALGrgFqagvzcYI5ZLh/T3x7g=
-X-Received: from seanjc.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:3e5])
- (user=seanjc job=sendgmr) by 2002:a17:90a:1950:: with SMTP id
- 16mr4223713pjh.126.1636596488573; Wed, 10 Nov 2021 18:08:08 -0800 (PST)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date:   Thu, 11 Nov 2021 02:07:38 +0000
-In-Reply-To: <20211111020738.2512932-1-seanjc@google.com>
-Message-Id: <20211111020738.2512932-18-seanjc@google.com>
-Mime-Version: 1.0
-References: <20211111020738.2512932-1-seanjc@google.com>
-X-Mailer: git-send-email 2.34.0.rc0.344.g81b53c2807-goog
-Subject: [PATCH v4 17/17] perf: Drop guest callback (un)register stubs
-From:   Sean Christopherson <seanjc@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=O9nDE4nBev+ucNKzlFhtTKh11mMo8Dfth3UvWqU7P7E=;
+        b=LmgUjvMDvmrqO0FSOTaxXniXnuzR99UB8IQaFPWLY2Yl4GB8SEYt4zdYgwW3OMvy1o
+         JrMHASf5wtYcpOuhxOJHJKlF+tRm1YY2uz7c+krVabSkWKyQICS0dmwWKhYgGNnvmLEL
+         k8DnxgtCxSGJczVoXKhLeonuh7VLPWfpO9+S4nGIL9OZIXZzo0voNVuRAZCfwUL++SRY
+         dV4Qd2rATNVstNjp+3iGTLEVIt14s0LzhVFxxs3No6V7fTX5+MmQ3cWa4Q8Sgdzyl927
+         loX+rzue+ZhUcocRUKBe8UyRYxeSc68ZGAcMXncBdt+W+bgmjS8DEOrguVCUOHRlJR9k
+         ghWA==
+X-Gm-Message-State: AOAM531t9+RkC4V8vYNsnkiMqG1Guiy4dPcQnL7yE1ymFOie3ARPDJVy
+        Zl+sdsSFgIdpaE6NPmLqumsYgcwaZanzg8N4WSVDfBn/wb0kNZRr2m9kd9cXbCpyfNqr1I8t3uR
+        7Q/9K8ssiF4W7DMF3ljKWObaVnLZUQQ==
+X-Received: by 2002:adf:ce8b:: with SMTP id r11mr6408395wrn.294.1636614895604;
+        Wed, 10 Nov 2021 23:14:55 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJymrUVNsXqaRU9fHLE0kW6mRFTMT4IrqZvzzqE20e0UE0m5/xQesFwmXV2wx392nroFHgCxlA==
+X-Received: by 2002:adf:ce8b:: with SMTP id r11mr6408355wrn.294.1636614895321;
+        Wed, 10 Nov 2021 23:14:55 -0800 (PST)
+Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
+        by smtp.gmail.com with ESMTPSA id l5sm8129982wms.16.2021.11.10.23.14.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Nov 2021 23:14:55 -0800 (PST)
+Date:   Thu, 11 Nov 2021 08:14:53 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Ian Rogers <irogers@google.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Will Deacon <will@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Guo Ren <guoren@kernel.org>, Nick Hu <nickhu@andestech.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org,
-        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
-        Artem Kashkanov <artem.kashkanov@intel.com>,
-        Like Xu <like.xu.linux@gmail.com>,
-        Like Xu <like.xu@linux.intel.com>,
-        Zhu Lingshan <lingshan.zhu@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>
+Subject: Re: [PATCH 1/2] perf tools: Add more weak libbpf functions
+Message-ID: <YYzC7YCumGVA09UM@krava>
+References: <20211109140707.1689940-1-jolsa@kernel.org>
+ <20211109140707.1689940-2-jolsa@kernel.org>
+ <CAP-5=fVS2AwZ9bP4BjF9GDcZqmw5fwUZ6OGXdgMnFj3w_2OTaw@mail.gmail.com>
+ <CAEf4BzYXD57UDMW_scUdHUs=jgmR6f1-pt5JROwr5LYTh1vejw@mail.gmail.com>
+ <YYuGu+bhjSs3syGl@krava>
+ <CAEf4Bza+wxyRgTRN_vXL7SGqSBaBG5tWmwhyH6b7o3tsEjyauw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4Bza+wxyRgTRN_vXL7SGqSBaBG5tWmwhyH6b7o3tsEjyauw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Drop perf's stubs for (un)registering guest callbacks now that KVM
-registration of callbacks is hidden behind GUEST_PERF_EVENTS=y.  The only
-other user is x86 XEN_PV, and x86 unconditionally selects PERF_EVENTS.
+On Wed, Nov 10, 2021 at 02:37:53PM -0800, Andrii Nakryiko wrote:
+> On Wed, Nov 10, 2021 at 12:45 AM Jiri Olsa <jolsa@redhat.com> wrote:
+> >
+> > On Tue, Nov 09, 2021 at 03:33:04PM -0800, Andrii Nakryiko wrote:
+> > > On Tue, Nov 9, 2021 at 10:50 AM Ian Rogers <irogers@google.com> wrote:
+> > > >
+> > > > On Tue, Nov 9, 2021 at 6:07 AM Jiri Olsa <jolsa@redhat.com> wrote:
+> > > > >
+> > > > > We hit the window where perf uses libbpf functions, that did not
+> > > > > make it to the official libbpf release yet and it's breaking perf
+> > > > > build with dynamicly linked libbpf.
+> > > > >
+> > > > > Fixing this by providing the new interface as weak functions which
+> > > > > calls the original libbpf functions. Fortunatelly the changes were
+> > > > > just renames.
+> > > >
+> > > > Could we just provide these functions behind a libbpf version #if ?
+> > > > Weak symbols break things in subtle ways, under certain circumstances
+> > > > the weak symbol is preferred over the strong due to lazy object file
+> > > > resolution:
+> > > > https://maskray.me/blog/2021-06-20-symbol-processing#archive-processing
+> > > > This bit me last week, but in general you get away with it as the lazy
+> > > > object file will get processed in an archive exposing the strong
+> > > > symbol. With an #if you either get a linker error for 2 definitions or
+> > > > 0 definitions, and it's clear what is broken.
+> > > >
+> > > > In the past we had problems due to constant propagation from weak
+> > > > const variables, where #if was the solution:
+> > > > https://lore.kernel.org/lkml/20191001003623.255186-1-irogers@google.com/
+> > > >
+> > > > There was some recent conversation on libbpf version for pahole here:
+> > > > https://lore.kernel.org/bpf/CAP-5=fUc3LtU0WYg-Py9Jf+9picaWHJdSw=sdOMA54uY3p1pdw@mail.gmail.com/T/
+> > > > https://lore.kernel.org/bpf/20211021183330.460681-1-irogers@google.com/
+> > > >
+> > > > Thanks,
+> > > > Ian
+> > > >
+> > > > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > > > > ---
+> > > > >  tools/perf/util/bpf-event.c | 27 +++++++++++++++++++++++++++
+> > > > >  1 file changed, 27 insertions(+)
+> > > > >
+> > > > > diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+> > > > > index 4d3b4cdce176..ceb96360fd12 100644
+> > > > > --- a/tools/perf/util/bpf-event.c
+> > > > > +++ b/tools/perf/util/bpf-event.c
+> > > > > @@ -33,6 +33,33 @@ struct btf * __weak btf__load_from_kernel_by_id(__u32 id)
+> > > > >         return err ? ERR_PTR(err) : btf;
+> > > > >  }
+> > > > >
+> > > > > +struct bpf_program * __weak
+> > > > > +bpf_object__next_program(const struct bpf_object *obj, struct bpf_program *prev)
+> > > > > +{
+> > > > > +#pragma GCC diagnostic push
+> > > > > +#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+> > > > > +       return bpf_program__next(prev, obj);
+> > > > > +#pragma GCC diagnostic pop
+> > > > > +}
+> > > > > +
+> > > > > +struct bpf_map * __weak
+> > > > > +bpf_object__next_map(const struct bpf_object *obj, const struct bpf_map *prev)
+> > > > > +{
+> > > > > +#pragma GCC diagnostic push
+> > > > > +#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+> > > > > +       return bpf_map__next(prev, obj);
+> > > > > +#pragma GCC diagnostic pop
+> > > > > +}
+> > > > > +
+> > > > > +const void * __weak
+> > > > > +btf__raw_data(const struct btf *btf_ro, __u32 *size)
+> > > > > +{
+> > > > > +#pragma GCC diagnostic push
+> > > > > +#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+> > > > > +       return btf__get_raw_data(btf_ro, size);
+> > >
+> > > you can still use old variants for the time being, if you want. Were
+> > > new APIs used accidentally? Libbpf maintains a guarantee that if some
+> > > API is deprecated in favor of the new one, there will be at least one
+> > > full libbpf release where both APIs are available and not marked as
+> > > deprecated.
+> >
+> > we could use old api instead of btf__raw_data, we could just revert
+> > the perf change
+> >
+> > but bpf_object__next_program and bpf_object__next_map are used through
+> > macros like bpf_object__for_each_map or bpf_object__for_each_program,
+> > so we'd need to define 'old versions' of them
+> 
+> There is nothing magical about bpf_object__for_each_map(). If it's
+> causing problems, just implement your own iteration logic. You'll be
 
-No functional change intended.
+ok
 
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- include/linux/perf_event.h | 5 -----
- 1 file changed, 5 deletions(-)
+> suffering like this because you are trying to support both shared
+> library mode and static library mode with libbpf. I'm sorry for your
+> pain, but you are trying to compile against the latest unreleased
+> headers, yet work properly with older released libbpf shared library.
+> It's painful and you know what I think about using shared libraries,
+> right?
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 0ac7d867ca0c..7b7525e9155f 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1511,11 +1511,6 @@ perf_sw_event(u32 event_id, u64 nr, struct pt_regs *regs, u64 addr)	{ }
- static inline void
- perf_bp_event(struct perf_event *event, void *data)			{ }
- 
--static inline void perf_register_guest_info_callbacks
--(struct perf_guest_info_callbacks *cbs)					{ }
--static inline void perf_unregister_guest_info_callbacks
--(struct perf_guest_info_callbacks *cbs)					{ }
--
- static inline void perf_event_mmap(struct vm_area_struct *vma)		{ }
- 
- typedef int (perf_ksymbol_get_name_f)(char *name, int name_len, void *data);
--- 
-2.34.0.rc0.344.g81b53c2807-goog
+you are not a fan.. ;-)
+
+thanks,
+jirka
 
