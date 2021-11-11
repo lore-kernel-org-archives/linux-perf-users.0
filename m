@@ -2,60 +2,60 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D09DCC433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 00:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB31CC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 00:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0A0D6124D
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 00:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A12626124D
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 00:21:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232160AbhKKAYM (ORCPT
+        id S232005AbhKKAYN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 10 Nov 2021 19:24:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36436 "EHLO
+        Wed, 10 Nov 2021 19:24:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232242AbhKKAYL (ORCPT
+        with ESMTP id S232431AbhKKAYM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 10 Nov 2021 19:24:11 -0500
+        Wed, 10 Nov 2021 19:24:12 -0500
 Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85BCCC061205
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Nov 2021 16:21:21 -0800 (PST)
-Received: by mail-pj1-x104a.google.com with SMTP id p12-20020a17090b010c00b001a65bfe8054so1931832pjz.8
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Nov 2021 16:21:21 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20BDCC061766
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Nov 2021 16:21:24 -0800 (PST)
+Received: by mail-pj1-x104a.google.com with SMTP id d7-20020a17090a7bc700b001a6ebe3f9cbso1456746pjl.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Nov 2021 16:21:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=tSJF4NgxE0FiE6ZCyL+zeBWSot2mi/NQBEc61OonFLQ=;
-        b=KjyGmRcEotKJVBhuBH+oK7aHfYPkZ3Okq7KmAmjZRgYIcAnkuoE3NFqcwj22aNQKSV
-         xlf3eXklS9z7RCzx8m3ez8KpX38isSamCNRTQQ+ceVsQqAmjGinfg5Yws7PZ2gqUq0iE
-         cIARjgc0+RgANe6H2TVnOFVyZ69xuJF93k6qBYvpIMI1WsI5xPfqwIP06RafdzwrRiJg
-         m7CuRyRIHNujyv9GIs32/cKQozHmq1c9YnBEuiHyMsB7PabzkRo5B/FhHeRXMzV7WlaJ
-         uIdR+t6hziIUSfIQQJ+6Jmh2KqHEDihRVYsFvlrgeLfcG5WTr02GixC+vL/0ui0q01Uy
-         UQ0A==
+        bh=o2s1HY6bRmLdL93aXDkhFToh+qetSVkME/+Sdbttsko=;
+        b=mVX4V6zF0dIRE/JQnNTLYXiozq0p7PGldkDIngFdUfStiTyhQjY1arMLWPx6VRsIgf
+         g/GgW+eG4Ty6A9XreeYSAmXScdrpSeYOa0kh0y6sGdCKQdJlu6CiOYvWug5pWQ41+GCl
+         JMNhhZpuer/SH4fqSe8UytlqIjLHH9KLnw6L2nJHwON8QYU1I64SvpmZVsR+rTNv6oqI
+         n+wA4Jhhmv1fVJPbyLcdkeq6zTnCH0CVUpmQM/nnMWIQ1XGH0Er2PDn61eZGKNXSKcPZ
+         jrfyk5HV3vKUjAv3gZeP3LVLFK0+sGYypulnVvaFXBDrWJuOTKucDZdfNoVvNxP9YQo8
+         Rk3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=tSJF4NgxE0FiE6ZCyL+zeBWSot2mi/NQBEc61OonFLQ=;
-        b=oGwypd4aUvUp4mWv79eveZ8nZcHqt5IeQJozz8zCSK0FwDIqRSp29J/QpvP/I0TEr/
-         /tSax8tb1+s/M/9jbKGkOpnSWaikWgqnr6mYdnH6bFIkWlICFsr62Fxx8Z2bFKePggmh
-         6BoAm0Z2iqVcGTEbWrLwoKk/cVT1V6HH0XzjA1SKh5dIm0Lp40eU5FstM6QfPIrpr4ro
-         eIzlvAEFG83TkpsUNWEqJ4uD0ZBZch1cycZKgN6iqw/srVuO2VoLLNbYAMDnpGbcwTdC
-         2EjL9+X9uDdmRRkblb7Z2UFC+8EWIMjAMbYem7ona+fE4VNMMopDch/JuD5yfr4KS97o
-         z41A==
-X-Gm-Message-State: AOAM531eUUTQIS0ezqzpFdnqNCh+jjMbJe5Zvm8D8x2HuWgGqdz99bbo
-        ++t3oX+0Ag2SaR9zOchCKV/hL7kB96rz
-X-Google-Smtp-Source: ABdhPJyjh9M8fFIg1iomIj6W/Q3pdtxnw6KiAB6A6/Z6ZHiG1xFogUAZYuaYWYJkutYelZlEI54wumCCATNb
+        bh=o2s1HY6bRmLdL93aXDkhFToh+qetSVkME/+Sdbttsko=;
+        b=gXGFVTMMQ3HHJQjCNt+/OCyfUjj89pvnRTOU3oNUKOrFVmpRqBps6DYBMgzh/DRqzF
+         QtbL9dSGEKnA1yae3SDPcztcB39ylSMCCvqA4BJJFerPJ6/JqbFObxB4oYH5N2QKYnor
+         N83MUVBFEbwjGJUVQyU5LjUu3zCouZO7hxYYlEzXkKqM/9aKmnn3EAN4rgEelBW170E/
+         /o0sV2hbYyyvdhHLjqh4x8WXvzIUk7MQCcyyXRaaqexkDb79cfV4d3s4nEKML6uc1MgV
+         yVHBiYWQQCRr03h7Mx4W/p32B2C6x529z51w1U44dcqo0e6MieeHCjtcdiqdTE4NOkqP
+         K+VA==
+X-Gm-Message-State: AOAM532Jr4BmqJ7KDi4bFehIDtMXfeO/3P5PpXYnqdX3qPaDCzhjWIz9
+        KCpjGZS6ubjawF+4TblyA4HyephZq3fS
+X-Google-Smtp-Source: ABdhPJzAkr9+M7qQY2UeoRH4MD8qJHSGO8hpsAhC7HVz2ihHE6lblwYSQzzN/R25pJmC2iefipmDInu7BOt+
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:9510:b6b5:241:e409])
- (user=irogers job=sendgmr) by 2002:a63:8143:: with SMTP id
- t64mr1898528pgd.43.1636590080980; Wed, 10 Nov 2021 16:21:20 -0800 (PST)
-Date:   Wed, 10 Nov 2021 16:21:04 -0800
+ (user=irogers job=sendgmr) by 2002:a17:90a:284f:: with SMTP id
+ p15mr99315pjf.1.1636590083028; Wed, 10 Nov 2021 16:21:23 -0800 (PST)
+Date:   Wed, 10 Nov 2021 16:21:05 -0800
 In-Reply-To: <20211111002109.194172-1-irogers@google.com>
-Message-Id: <20211111002109.194172-4-irogers@google.com>
+Message-Id: <20211111002109.194172-5-irogers@google.com>
 Mime-Version: 1.0
 References: <20211111002109.194172-1-irogers@google.com>
 X-Mailer: git-send-email 2.34.0.rc1.387.gb447b232ab-goog
-Subject: [PATCH v2 3/8] perf cputopo: Match die_siblings to topology ABI name
+Subject: [PATCH v2 4/8] perf cputopo: Match thread_siblings to topology ABI name
 From:   Ian Rogers <irogers@google.com>
 To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -79,144 +79,134 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The topology name for die_siblings is die_cpus_list, use this for
+The topology name for thread_siblings is core_cpus_list, use this for
 consistency and add documentation.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/cputopo.c | 26 ++++++++++++--------------
+ tools/perf/util/cputopo.c | 26 +++++++++++++-------------
  tools/perf/util/cputopo.h | 11 +++++++++--
- tools/perf/util/header.c  |  8 ++++----
- 3 files changed, 25 insertions(+), 20 deletions(-)
+ tools/perf/util/header.c  |  6 +++---
+ 3 files changed, 25 insertions(+), 18 deletions(-)
 
 diff --git a/tools/perf/util/cputopo.c b/tools/perf/util/cputopo.c
-index f72a7de19e02..420aeda16fbb 100644
+index 420aeda16fbb..51b429c86f98 100644
 --- a/tools/perf/util/cputopo.c
 +++ b/tools/perf/util/cputopo.c
-@@ -18,7 +18,7 @@
- 	"%s/devices/system/cpu/cpu%d/topology/package_cpus_list"
- #define PACKAGE_CPUS_FMT_OLD \
+@@ -20,10 +20,10 @@
  	"%s/devices/system/cpu/cpu%d/topology/core_siblings_list"
--#define DIE_SIB_FMT \
-+#define DIE_CPUS_FMT \
+ #define DIE_CPUS_FMT \
  	"%s/devices/system/cpu/cpu%d/topology/die_cpus_list"
- #define THRD_SIB_FMT \
- 	"%s/devices/system/cpu/cpu%d/topology/thread_siblings_list"
-@@ -73,10 +73,10 @@ static int build_cpu_topology(struct cpu_topology *tp, int cpu)
+-#define THRD_SIB_FMT \
+-	"%s/devices/system/cpu/cpu%d/topology/thread_siblings_list"
+-#define THRD_SIB_FMT_NEW \
++#define CORE_CPUS_FMT \
+ 	"%s/devices/system/cpu/cpu%d/topology/core_cpus_list"
++#define CORE_CPUS_FMT_OLD \
++	"%s/devices/system/cpu/cpu%d/topology/thread_siblings_list"
+ #define NODE_ONLINE_FMT \
+ 	"%s/devices/system/node/online"
+ #define NODE_MEMINFO_FMT \
+@@ -104,10 +104,10 @@ static int build_cpu_topology(struct cpu_topology *tp, int cpu)
  	ret = 0;
  
- try_dies:
--	if (!tp->die_siblings)
-+	if (!tp->die_cpus_list)
- 		goto try_threads;
- 
--	scnprintf(filename, MAXPATHLEN, DIE_SIB_FMT,
-+	scnprintf(filename, MAXPATHLEN, DIE_CPUS_FMT,
+ try_threads:
+-	scnprintf(filename, MAXPATHLEN, THRD_SIB_FMT_NEW,
++	scnprintf(filename, MAXPATHLEN, CORE_CPUS_FMT,
  		  sysfs__mountpoint(), cpu);
+ 	if (access(filename, F_OK) == -1) {
+-		scnprintf(filename, MAXPATHLEN, THRD_SIB_FMT,
++		scnprintf(filename, MAXPATHLEN, CORE_CPUS_FMT_OLD,
+ 			  sysfs__mountpoint(), cpu);
+ 	}
  	fp = fopen(filename, "r");
- 	if (!fp)
-@@ -91,13 +91,13 @@ static int build_cpu_topology(struct cpu_topology *tp, int cpu)
+@@ -121,13 +121,13 @@ static int build_cpu_topology(struct cpu_topology *tp, int cpu)
  	if (p)
  		*p = '\0';
  
--	for (i = 0; i < tp->die_sib; i++) {
--		if (!strcmp(buf, tp->die_siblings[i]))
-+	for (i = 0; i < tp->die_cpus_lists; i++) {
-+		if (!strcmp(buf, tp->die_cpus_list[i]))
+-	for (i = 0; i < tp->thread_sib; i++) {
+-		if (!strcmp(buf, tp->thread_siblings[i]))
++	for (i = 0; i < tp->core_cpus_lists; i++) {
++		if (!strcmp(buf, tp->core_cpus_list[i]))
  			break;
  	}
--	if (i == tp->die_sib) {
--		tp->die_siblings[i] = buf;
--		tp->die_sib++;
-+	if (i == tp->die_cpus_lists) {
-+		tp->die_cpus_list[i] = buf;
-+		tp->die_cpus_lists++;
+-	if (i == tp->thread_sib) {
+-		tp->thread_siblings[i] = buf;
+-		tp->thread_sib++;
++	if (i == tp->core_cpus_lists) {
++		tp->core_cpus_list[i] = buf;
++		tp->core_cpus_lists++;
  		buf = NULL;
- 		len = 0;
  	}
-@@ -148,10 +148,8 @@ void cpu_topology__delete(struct cpu_topology *tp)
- 	for (i = 0 ; i < tp->package_cpus_lists; i++)
- 		zfree(&tp->package_cpus_list[i]);
+ 	ret = 0;
+@@ -151,8 +151,8 @@ void cpu_topology__delete(struct cpu_topology *tp)
+ 	for (i = 0 ; i < tp->die_cpus_lists; i++)
+ 		zfree(&tp->die_cpus_list[i]);
  
--	if (tp->die_sib) {
--		for (i = 0 ; i < tp->die_sib; i++)
--			zfree(&tp->die_siblings[i]);
--	}
-+	for (i = 0 ; i < tp->die_cpus_lists; i++)
-+		zfree(&tp->die_cpus_list[i]);
+-	for (i = 0 ; i < tp->thread_sib; i++)
+-		zfree(&tp->thread_siblings[i]);
++	for (i = 0 ; i < tp->core_cpus_lists; i++)
++		zfree(&tp->core_cpus_list[i]);
  
- 	for (i = 0 ; i < tp->thread_sib; i++)
- 		zfree(&tp->thread_siblings[i]);
-@@ -170,7 +168,7 @@ static bool has_die_topology(void)
- 	if (strncmp(uts.machine, "x86_64", 6))
- 		return false;
- 
--	scnprintf(filename, MAXPATHLEN, DIE_SIB_FMT,
-+	scnprintf(filename, MAXPATHLEN, DIE_CPUS_FMT,
- 		  sysfs__mountpoint(), 0);
- 	if (access(filename, F_OK) == -1)
- 		return false;
-@@ -214,7 +212,7 @@ struct cpu_topology *cpu_topology__new(void)
- 	tp->package_cpus_list = addr;
- 	addr += sz;
- 	if (has_die) {
--		tp->die_siblings = addr;
-+		tp->die_cpus_list = addr;
+ 	free(tp);
+ }
+@@ -215,7 +215,7 @@ struct cpu_topology *cpu_topology__new(void)
+ 		tp->die_cpus_list = addr;
  		addr += sz;
  	}
- 	tp->thread_siblings = addr;
+-	tp->thread_siblings = addr;
++	tp->core_cpus_list = addr;
+ 
+ 	for (i = 0; i < nr; i++) {
+ 		if (!cpu_map__has(map, i))
 diff --git a/tools/perf/util/cputopo.h b/tools/perf/util/cputopo.h
-index 4ec9cb192c3d..a3e01c367853 100644
+index a3e01c367853..854e18f9041e 100644
 --- a/tools/perf/util/cputopo.h
 +++ b/tools/perf/util/cputopo.h
-@@ -7,7 +7,8 @@
- struct cpu_topology {
- 	/* The number of unique package_cpus_lists below. */
+@@ -9,7 +9,8 @@ struct cpu_topology {
  	u32	  package_cpus_lists;
--	u32	  die_sib;
-+	/* The number of unique die_cpu_lists below. */
-+	u32	  die_cpus_lists;
- 	u32	  thread_sib;
+ 	/* The number of unique die_cpu_lists below. */
+ 	u32	  die_cpus_lists;
+-	u32	  thread_sib;
++	/* The number of unique core_cpu_lists below. */
++	u32	  core_cpus_lists;
  	/*
  	 * An array of strings where each string is unique and read from
-@@ -16,7 +17,13 @@ struct cpu_topology {
- 	 * physical_package_id. The format is like 0-3, 8-11, 14,17.
+ 	 * /sys/devices/system/cpu/cpuX/topology/package_cpus_list. From the ABI
+@@ -24,7 +25,13 @@ struct cpu_topology {
+ 	 * The format is like 0-3, 8-11, 14,17.
  	 */
- 	const char **package_cpus_list;
--	char	**die_siblings;
+ 	const char **die_cpus_list;
+-	char	**thread_siblings;
 +	/*
 +	 * An array of string where each string is unique and from
-+	 * /sys/devices/system/cpu/cpuX/topology/die_cpus_list. From the ABI
-+	 * each of these is a human-readable list of CPUs within the same die.
-+	 * The format is like 0-3, 8-11, 14,17.
++	 * /sys/devices/system/cpu/cpuX/topology/core_cpus_list. From the ABI
++	 * each of these is a human-readable list of CPUs within the same
++	 * core. The format is like 0-3, 8-11, 14,17.
 +	 */
-+	const char **die_cpus_list;
- 	char	**thread_siblings;
++	const char **core_cpus_list;
  };
  
+ struct numa_topology_node {
 diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 4e89cd35345b..e2ba261d1583 100644
+index e2ba261d1583..fda8d14c891f 100644
 --- a/tools/perf/util/header.c
 +++ b/tools/perf/util/header.c
-@@ -617,15 +617,15 @@ static int write_cpu_topology(struct feat_fd *ff,
- 			return ret;
+@@ -592,12 +592,12 @@ static int write_cpu_topology(struct feat_fd *ff,
+ 		if (ret < 0)
+ 			goto done;
  	}
- 
--	if (!tp->die_sib)
-+	if (!tp->die_cpus_lists)
- 		goto done;
- 
--	ret = do_write(ff, &tp->die_sib, sizeof(tp->die_sib));
-+	ret = do_write(ff, &tp->die_cpus_lists, sizeof(tp->die_cpus_lists));
+-	ret = do_write(ff, &tp->thread_sib, sizeof(tp->thread_sib));
++	ret = do_write(ff, &tp->core_cpus_lists, sizeof(tp->core_cpus_lists));
  	if (ret < 0)
  		goto done;
  
--	for (i = 0; i < tp->die_sib; i++) {
--		ret = do_write_string(ff, tp->die_siblings[i]);
-+	for (i = 0; i < tp->die_cpus_lists; i++) {
-+		ret = do_write_string(ff, tp->die_cpus_list[i]);
+-	for (i = 0; i < tp->thread_sib; i++) {
+-		ret = do_write_string(ff, tp->thread_siblings[i]);
++	for (i = 0; i < tp->core_cpus_lists; i++) {
++		ret = do_write_string(ff, tp->core_cpus_list[i]);
  		if (ret < 0)
- 			goto done;
+ 			break;
  	}
 -- 
 2.34.0.rc1.387.gb447b232ab-goog
