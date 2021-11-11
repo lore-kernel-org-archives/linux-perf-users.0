@@ -2,60 +2,60 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB31CC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 00:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09449C433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 00:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A12626124D
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 00:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFBFE6103C
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 00:21:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232005AbhKKAYN (ORCPT
+        id S232419AbhKKAYO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 10 Nov 2021 19:24:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36438 "EHLO
+        Wed, 10 Nov 2021 19:24:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232431AbhKKAYM (ORCPT
+        with ESMTP id S232444AbhKKAYO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 10 Nov 2021 19:24:12 -0500
-Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20BDCC061766
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Nov 2021 16:21:24 -0800 (PST)
-Received: by mail-pj1-x104a.google.com with SMTP id d7-20020a17090a7bc700b001a6ebe3f9cbso1456746pjl.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Nov 2021 16:21:24 -0800 (PST)
+        Wed, 10 Nov 2021 19:24:14 -0500
+Received: from mail-pj1-x1049.google.com (mail-pj1-x1049.google.com [IPv6:2607:f8b0:4864:20::1049])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFA37C061766
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Nov 2021 16:21:25 -0800 (PST)
+Received: by mail-pj1-x1049.google.com with SMTP id bf17-20020a17090b0b1100b001a634dbd737so2092733pjb.9
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Nov 2021 16:21:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=o2s1HY6bRmLdL93aXDkhFToh+qetSVkME/+Sdbttsko=;
-        b=mVX4V6zF0dIRE/JQnNTLYXiozq0p7PGldkDIngFdUfStiTyhQjY1arMLWPx6VRsIgf
-         g/GgW+eG4Ty6A9XreeYSAmXScdrpSeYOa0kh0y6sGdCKQdJlu6CiOYvWug5pWQ41+GCl
-         JMNhhZpuer/SH4fqSe8UytlqIjLHH9KLnw6L2nJHwON8QYU1I64SvpmZVsR+rTNv6oqI
-         n+wA4Jhhmv1fVJPbyLcdkeq6zTnCH0CVUpmQM/nnMWIQ1XGH0Er2PDn61eZGKNXSKcPZ
-         jrfyk5HV3vKUjAv3gZeP3LVLFK0+sGYypulnVvaFXBDrWJuOTKucDZdfNoVvNxP9YQo8
-         Rk3g==
+        bh=IIP3omaqBXw35Jy8B7vTYqW9trSeG0oUdyp8KTWGdgg=;
+        b=MwNTRPkMMsZarvMublTXk0TdKu3x4B0Fs73wM803nCq92KpqssTxK2T2GxsVOhmTVA
+         OUCLAQFhJV0OY0l4OkMd4DwAWQUavsnqgT9yl7NNAIyXHua2tTxqa6CXKZmRk4jZgJ3Z
+         krDOPPTVvby+ZBVW+yzuY0U4NftS/aEKQRSxUHosXcyrtaGhdcgvuHlGxu9E1MC0oVwo
+         PZf6GWOI+/ENwhqECL5BgPf6RbcTpU11RND9Z7taFP1jvenfc708fwqdUAcHaF4y9219
+         fvN4ND8bbJorBVMDr9z7m5Vq3tHmvwtWXQSZUJgY6FM7P1Ezjx6h9SoWcDxLpa3FYBKm
+         7q4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=o2s1HY6bRmLdL93aXDkhFToh+qetSVkME/+Sdbttsko=;
-        b=gXGFVTMMQ3HHJQjCNt+/OCyfUjj89pvnRTOU3oNUKOrFVmpRqBps6DYBMgzh/DRqzF
-         QtbL9dSGEKnA1yae3SDPcztcB39ylSMCCvqA4BJJFerPJ6/JqbFObxB4oYH5N2QKYnor
-         N83MUVBFEbwjGJUVQyU5LjUu3zCouZO7hxYYlEzXkKqM/9aKmnn3EAN4rgEelBW170E/
-         /o0sV2hbYyyvdhHLjqh4x8WXvzIUk7MQCcyyXRaaqexkDb79cfV4d3s4nEKML6uc1MgV
-         yVHBiYWQQCRr03h7Mx4W/p32B2C6x529z51w1U44dcqo0e6MieeHCjtcdiqdTE4NOkqP
-         K+VA==
-X-Gm-Message-State: AOAM532Jr4BmqJ7KDi4bFehIDtMXfeO/3P5PpXYnqdX3qPaDCzhjWIz9
-        KCpjGZS6ubjawF+4TblyA4HyephZq3fS
-X-Google-Smtp-Source: ABdhPJzAkr9+M7qQY2UeoRH4MD8qJHSGO8hpsAhC7HVz2ihHE6lblwYSQzzN/R25pJmC2iefipmDInu7BOt+
+        bh=IIP3omaqBXw35Jy8B7vTYqW9trSeG0oUdyp8KTWGdgg=;
+        b=AFDFkhvrIRs/NZd4KtPb7wAoX9zeerUv2Gana2TLVnToo7h76pIXZJ8+ZFfQNtRRSo
+         zIdZM4+7v6AJxn8U0Q0VqdsbmFvBHDRNkA/iaW/dvGhwV4WsNoL7jKzaT+VXS3u7Nl4S
+         dUWGrlXlE30W5azI1Rh7uUuF/A2EKMSqEKcJsacr3zevCai2sNKVUqeqvHMN9kTgQ6Qj
+         Dq0qEC+b8Sd8RuPrKbDWeelngVwo0kdF4JqC8aAZl6Or3qJt68gOvnCiyvllwIfaEVz2
+         kVfTC71j1Bt7YrzDbdPG7opVIFId8Tzf8wX2tcJBrs4vuOkU8NEtBDj5zWluVBYd7ugw
+         Jfxw==
+X-Gm-Message-State: AOAM530+DZ8VBw0a9NiirB/LyvsKnb7Nex6FbKYvoqi2KDAom0S3IgXb
+        WxrHAban6NS1ERgdGZFnU6CAqnhxM0+m
+X-Google-Smtp-Source: ABdhPJx6mTCra5xOG1QD9EK4C0RjCS8MjL5LRHWif2I8cCDNJo6OQTGGap1E9oIesuh9HpNA2ZJapVWOoo1v
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:9510:b6b5:241:e409])
- (user=irogers job=sendgmr) by 2002:a17:90a:284f:: with SMTP id
- p15mr99315pjf.1.1636590083028; Wed, 10 Nov 2021 16:21:23 -0800 (PST)
-Date:   Wed, 10 Nov 2021 16:21:05 -0800
+ (user=irogers job=sendgmr) by 2002:a63:88c2:: with SMTP id
+ l185mr1953670pgd.168.1636590085413; Wed, 10 Nov 2021 16:21:25 -0800 (PST)
+Date:   Wed, 10 Nov 2021 16:21:06 -0800
 In-Reply-To: <20211111002109.194172-1-irogers@google.com>
-Message-Id: <20211111002109.194172-5-irogers@google.com>
+Message-Id: <20211111002109.194172-6-irogers@google.com>
 Mime-Version: 1.0
 References: <20211111002109.194172-1-irogers@google.com>
 X-Mailer: git-send-email 2.34.0.rc1.387.gb447b232ab-goog
-Subject: [PATCH v2 4/8] perf cputopo: Match thread_siblings to topology ABI name
+Subject: [PATCH v2 5/8] perf expr: Add literal values starting with #
 From:   Ian Rogers <irogers@google.com>
 To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -79,135 +79,147 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The topology name for thread_siblings is core_cpus_list, use this for
-consistency and add documentation.
+It is useful to have literal values for constants relating to
+topologies, SMT, etc. Make the parsing of literals shared code and add a
+lookup function. Move #smt_on to this function.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/cputopo.c | 26 +++++++++++++-------------
- tools/perf/util/cputopo.h | 11 +++++++++--
- tools/perf/util/header.c  |  6 +++---
- 3 files changed, 25 insertions(+), 18 deletions(-)
+ tools/perf/util/expr.c | 11 +++++++++++
+ tools/perf/util/expr.h |  1 +
+ tools/perf/util/expr.l | 15 ++++++++++++++-
+ tools/perf/util/expr.y |  9 ++++-----
+ 4 files changed, 30 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/cputopo.c b/tools/perf/util/cputopo.c
-index 420aeda16fbb..51b429c86f98 100644
---- a/tools/perf/util/cputopo.c
-+++ b/tools/perf/util/cputopo.c
-@@ -20,10 +20,10 @@
- 	"%s/devices/system/cpu/cpu%d/topology/core_siblings_list"
- #define DIE_CPUS_FMT \
- 	"%s/devices/system/cpu/cpu%d/topology/die_cpus_list"
--#define THRD_SIB_FMT \
--	"%s/devices/system/cpu/cpu%d/topology/thread_siblings_list"
--#define THRD_SIB_FMT_NEW \
-+#define CORE_CPUS_FMT \
- 	"%s/devices/system/cpu/cpu%d/topology/core_cpus_list"
-+#define CORE_CPUS_FMT_OLD \
-+	"%s/devices/system/cpu/cpu%d/topology/thread_siblings_list"
- #define NODE_ONLINE_FMT \
- 	"%s/devices/system/node/online"
- #define NODE_MEMINFO_FMT \
-@@ -104,10 +104,10 @@ static int build_cpu_topology(struct cpu_topology *tp, int cpu)
- 	ret = 0;
+diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+index 77c6ad81a923..7464739c2890 100644
+--- a/tools/perf/util/expr.c
++++ b/tools/perf/util/expr.c
+@@ -9,9 +9,11 @@
+ #include "expr.h"
+ #include "expr-bison.h"
+ #include "expr-flex.h"
++#include "smt.h"
+ #include <linux/kernel.h>
+ #include <linux/zalloc.h>
+ #include <ctype.h>
++#include <math.h>
  
- try_threads:
--	scnprintf(filename, MAXPATHLEN, THRD_SIB_FMT_NEW,
-+	scnprintf(filename, MAXPATHLEN, CORE_CPUS_FMT,
- 		  sysfs__mountpoint(), cpu);
- 	if (access(filename, F_OK) == -1) {
--		scnprintf(filename, MAXPATHLEN, THRD_SIB_FMT,
-+		scnprintf(filename, MAXPATHLEN, CORE_CPUS_FMT_OLD,
- 			  sysfs__mountpoint(), cpu);
- 	}
- 	fp = fopen(filename, "r");
-@@ -121,13 +121,13 @@ static int build_cpu_topology(struct cpu_topology *tp, int cpu)
- 	if (p)
- 		*p = '\0';
- 
--	for (i = 0; i < tp->thread_sib; i++) {
--		if (!strcmp(buf, tp->thread_siblings[i]))
-+	for (i = 0; i < tp->core_cpus_lists; i++) {
-+		if (!strcmp(buf, tp->core_cpus_list[i]))
- 			break;
- 	}
--	if (i == tp->thread_sib) {
--		tp->thread_siblings[i] = buf;
--		tp->thread_sib++;
-+	if (i == tp->core_cpus_lists) {
-+		tp->core_cpus_list[i] = buf;
-+		tp->core_cpus_lists++;
- 		buf = NULL;
- 	}
- 	ret = 0;
-@@ -151,8 +151,8 @@ void cpu_topology__delete(struct cpu_topology *tp)
- 	for (i = 0 ; i < tp->die_cpus_lists; i++)
- 		zfree(&tp->die_cpus_list[i]);
- 
--	for (i = 0 ; i < tp->thread_sib; i++)
--		zfree(&tp->thread_siblings[i]);
-+	for (i = 0 ; i < tp->core_cpus_lists; i++)
-+		zfree(&tp->core_cpus_list[i]);
- 
- 	free(tp);
+ #ifdef PARSER_DEBUG
+ extern int expr_debug;
+@@ -370,3 +372,12 @@ double expr_id_data__value(const struct expr_id_data *data)
+ 	assert(data->kind == EXPR_ID_DATA__REF_VALUE);
+ 	return data->ref.val;
  }
-@@ -215,7 +215,7 @@ struct cpu_topology *cpu_topology__new(void)
- 		tp->die_cpus_list = addr;
- 		addr += sz;
- 	}
--	tp->thread_siblings = addr;
-+	tp->core_cpus_list = addr;
++
++double expr__get_literal(const char *literal)
++{
++	if (!strcmp("#smt_on", literal))
++		return smt_on() > 0 ? 1.0 : 0.0;
++
++	pr_err("Unrecognized literal '%s'", literal);
++	return NAN;
++}
+diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+index cf81f9166dbb..a6ab7f2b23d1 100644
+--- a/tools/perf/util/expr.h
++++ b/tools/perf/util/expr.h
+@@ -55,5 +55,6 @@ int expr__find_ids(const char *expr, const char *one,
+ 		   struct expr_parse_ctx *ids);
  
- 	for (i = 0; i < nr; i++) {
- 		if (!cpu_map__has(map, i))
-diff --git a/tools/perf/util/cputopo.h b/tools/perf/util/cputopo.h
-index a3e01c367853..854e18f9041e 100644
---- a/tools/perf/util/cputopo.h
-+++ b/tools/perf/util/cputopo.h
-@@ -9,7 +9,8 @@ struct cpu_topology {
- 	u32	  package_cpus_lists;
- 	/* The number of unique die_cpu_lists below. */
- 	u32	  die_cpus_lists;
--	u32	  thread_sib;
-+	/* The number of unique core_cpu_lists below. */
-+	u32	  core_cpus_lists;
- 	/*
- 	 * An array of strings where each string is unique and read from
- 	 * /sys/devices/system/cpu/cpuX/topology/package_cpus_list. From the ABI
-@@ -24,7 +25,13 @@ struct cpu_topology {
- 	 * The format is like 0-3, 8-11, 14,17.
- 	 */
- 	const char **die_cpus_list;
--	char	**thread_siblings;
-+	/*
-+	 * An array of string where each string is unique and from
-+	 * /sys/devices/system/cpu/cpuX/topology/core_cpus_list. From the ABI
-+	 * each of these is a human-readable list of CPUs within the same
-+	 * core. The format is like 0-3, 8-11, 14,17.
-+	 */
-+	const char **core_cpus_list;
- };
+ double expr_id_data__value(const struct expr_id_data *data);
++double expr__get_literal(const char *literal);
  
- struct numa_topology_node {
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index e2ba261d1583..fda8d14c891f 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -592,12 +592,12 @@ static int write_cpu_topology(struct feat_fd *ff,
- 		if (ret < 0)
- 			goto done;
- 	}
--	ret = do_write(ff, &tp->thread_sib, sizeof(tp->thread_sib));
-+	ret = do_write(ff, &tp->core_cpus_lists, sizeof(tp->core_cpus_lists));
- 	if (ret < 0)
- 		goto done;
+ #endif
+diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
+index bd20f33418ba..cf6e3c710502 100644
+--- a/tools/perf/util/expr.l
++++ b/tools/perf/util/expr.l
+@@ -6,6 +6,7 @@
+ #include <linux/compiler.h>
+ #include "expr.h"
+ #include "expr-bison.h"
++#include <math.h>
  
--	for (i = 0; i < tp->thread_sib; i++) {
--		ret = do_write_string(ff, tp->thread_siblings[i]);
-+	for (i = 0; i < tp->core_cpus_lists; i++) {
-+		ret = do_write_string(ff, tp->core_cpus_list[i]);
- 		if (ret < 0)
- 			break;
+ char *expr_get_text(yyscan_t yyscanner);
+ YYSTYPE *expr_get_lval(yyscan_t yyscanner);
+@@ -77,6 +78,17 @@ static int str(yyscan_t scanner, int token, int runtime)
+ 	yylval->str = normalize(yylval->str, runtime);
+ 	return token;
+ }
++
++static int literal(yyscan_t scanner)
++{
++	YYSTYPE *yylval = expr_get_lval(scanner);
++
++	yylval->num = expr__get_literal(expr_get_text(scanner));
++	if (isnan(yylval->num))
++		return EXPR_ERROR;
++
++	return LITERAL;
++}
+ %}
+ 
+ number		([0-9]+\.?[0-9]*|[0-9]*\.?[0-9]+)
+@@ -85,6 +97,7 @@ sch		[-,=]
+ spec		\\{sch}
+ sym		[0-9a-zA-Z_\.:@?]+
+ symbol		({spec}|{sym})+
++literal		#[0-9a-zA-Z_\.\-]+
+ 
+ %%
+ 	struct expr_scanner_ctx *sctx = expr_get_extra(yyscanner);
+@@ -94,7 +107,7 @@ max		{ return MAX; }
+ min		{ return MIN; }
+ if		{ return IF; }
+ else		{ return ELSE; }
+-#smt_on		{ return SMT_ON; }
++{literal}	{ return literal(yyscanner); }
+ {number}	{ return value(yyscanner); }
+ {symbol}	{ return str(yyscanner, ID, sctx->runtime); }
+ "|"		{ return '|'; }
+diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+index f969dfa525bd..ba6c6dbf30c8 100644
+--- a/tools/perf/util/expr.y
++++ b/tools/perf/util/expr.y
+@@ -4,7 +4,6 @@
+ #include <assert.h>
+ #include <math.h>
+ #include "util/debug.h"
+-#include "smt.h"
+ #define IN_EXPR_Y 1
+ #include "expr.h"
+ %}
+@@ -37,7 +36,7 @@
+ 	} ids;
+ }
+ 
+-%token ID NUMBER MIN MAX IF ELSE SMT_ON D_RATIO EXPR_ERROR
++%token ID NUMBER MIN MAX IF ELSE LITERAL D_RATIO EXPR_ERROR
+ %left MIN MAX IF
+ %left '|'
+ %left '^'
+@@ -46,7 +45,7 @@
+ %left '-' '+'
+ %left '*' '/' '%'
+ %left NEG NOT
+-%type <num> NUMBER
++%type <num> NUMBER LITERAL
+ %type <str> ID
+ %destructor { free ($$); } <str>
+ %type <ids> expr if_expr
+@@ -280,9 +279,9 @@ expr: NUMBER
+ 		$$ = union_expr($3, $5);
  	}
+ }
+-| SMT_ON
++| LITERAL
+ {
+-	$$.val = smt_on() > 0 ? 1.0 : 0.0;
++	$$.val = $1;
+ 	$$.ids = NULL;
+ }
+ ;
 -- 
 2.34.0.rc1.387.gb447b232ab-goog
 
