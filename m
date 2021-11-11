@@ -2,69 +2,68 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19937C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 10:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B95A7C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 10:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBCAE61215
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 10:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 997E961241
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 10:08:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232764AbhKKKI6 (ORCPT
+        id S230256AbhKKKKt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 11 Nov 2021 05:08:58 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:28971 "EHLO
+        Thu, 11 Nov 2021 05:10:49 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22470 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232587AbhKKKI6 (ORCPT
+        by vger.kernel.org with ESMTP id S231739AbhKKKKj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 11 Nov 2021 05:08:58 -0500
+        Thu, 11 Nov 2021 05:10:39 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1636625168;
+        s=mimecast20190719; t=1636625270;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=jl6i9Vg5MH/D47qfgpp1++mvVXS5mXYZyKefeF00ENM=;
-        b=BYT7gpKl0ciEu7JZa8s2Gad2/zns9UCqsAF/DiwrKTa3Gc5aRZNuxMChC1N8AipDeVFmdG
-        G3wmCrZ8Raa8rJTuPGsNjmBK9YtIoB2aytkPDV5jm48IWAK8+dUafYoXkaFTyvufdp5EOk
-        GzGi1gAyTDozdR6UFTHpmLO15n/54F0=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-408-N3ASglBiOda7qNGh0VzhWA-1; Thu, 11 Nov 2021 05:06:07 -0500
-X-MC-Unique: N3ASglBiOda7qNGh0VzhWA-1
-Received: by mail-wr1-f69.google.com with SMTP id p17-20020adff211000000b0017b902a7701so918709wro.19
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Nov 2021 02:06:07 -0800 (PST)
+        bh=O47h4DVVtUaEBtUgssjuQpExDB0fecfhYF5eRGFKZI0=;
+        b=iC+vtIQijwBbOvb3EruXNpTVSKTum/xrBLOqrDFUKBfHSEUTBv73he9hsHTCC2DV5/BsWy
+        VVkrm6zDHUHNFwnSnlZtt3OIn3pwdwzbXa2vzccCXh6TjeZxJrmC83AtJdlD9UV/dog5de
+        4iQbRs07X0V8V5EjR69PBWqHAJASBes=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-459-hpPQhQCWNNSnMmQhECDHtA-1; Thu, 11 Nov 2021 05:07:48 -0500
+X-MC-Unique: hpPQhQCWNNSnMmQhECDHtA-1
+Received: by mail-wm1-f70.google.com with SMTP id l187-20020a1c25c4000000b0030da46b76daso4528820wml.9
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Nov 2021 02:07:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:from:to:cc:references:organization:in-reply-to
+         :content-language:to:cc:references:from:organization:in-reply-to
          :content-transfer-encoding;
-        bh=jl6i9Vg5MH/D47qfgpp1++mvVXS5mXYZyKefeF00ENM=;
-        b=6M9eWFYc5OwVv3Qo4ZW3RvfINvGSYAIRzuQfbvytoUBuVaKqg9WT1CrwVlkGQhhlxd
-         XkPopRSDkA3Y1VU2aAZ3HQuZ6EBKh6xWO08MORAtcW1eJxvcXWsqwB8hm+zDNlG7/uWK
-         9Vr6uP2K3NiK06gB1DhJw6ipPd+mWW6dvXtFdRLXSMd2toW95euZeFH5TXQ6rsLDudFX
-         UHT3pzbSGOuSZXvzIlis/5hYimZIk56cVwoinIsi5fnDWJ5IgONmtsxn18SQBmTC0t5V
-         9MQILXYrlHiX6zC1Hgj47UPv8iVBE6BfJWU1JRpCdkFPQ4XfeazbG1tEfSJT8M5VKUFB
-         SJ5Q==
-X-Gm-Message-State: AOAM533IPZjmn1Q2lQZNQHJQhLPHFJoYx8TnZwn3UpisnopPYJp2UDmB
-        VW8Omk/paZdKGzsaNGAcllVBIIMPqGutV1LrJF34UAtYkfhN4iZn8+9pqFkUDVBeaAT9wWZtSDC
-        ma/3LUxc7Aj3KdKOHeNoT7dj9PD+oZg==
-X-Received: by 2002:adf:ef52:: with SMTP id c18mr7576520wrp.162.1636625166581;
-        Thu, 11 Nov 2021 02:06:06 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzsepfx71+Xyqb2g2FyILt7HhfvGVM2Y27qZ2ME6eL9iigsTPlV6uU5mw6Ulj3j6sBKopzmZQ==
-X-Received: by 2002:adf:ef52:: with SMTP id c18mr7576497wrp.162.1636625166404;
-        Thu, 11 Nov 2021 02:06:06 -0800 (PST)
+        bh=O47h4DVVtUaEBtUgssjuQpExDB0fecfhYF5eRGFKZI0=;
+        b=53YgPpQxHBNCiaArG5yttAA+N7bEXWjzp9jxLLnAnzhAivpkQQcioDCFtyvJmROBY/
+         wa8QLZ/7146lYNAL+ltJf/TI/rU5vNpXGKBGSQoXFbf9plGtHwEZNeaNZzZDH/Amh1R5
+         57FX4WCRJFcX4j9OeI7krsPaYN9LaWhcoQ6Y1w7qGRbX+mMGv4Fh7JBaEEkVky/n2oZx
+         pJOgWRzVhnyEin7Ysr+sCoHxluT2/FDfEMLfv4fkI9ys7x6a0cIDMhKh/j2gWR+dwiXP
+         i1r2QSeV6Wgn3H2dsSOj8opgWggkLi/tpOfow8EOfrrOYDUiVE411hj5j17Hsl/5GmIr
+         5pBQ==
+X-Gm-Message-State: AOAM531sTE6SYGcWZBMfUVzahayS0Jha/Urf0SZFWfMWb51iS1ja023G
+        VdwUpXh5Ov0HVyC4vkFL6mqIZrSpjTqs1Ut86beUA4do40j/kDxKOuJXV1GGNjHQlTD+JsDhjmE
+        +qIIoxuTa13ZP4MPYSFT9WYOF+jsvlw==
+X-Received: by 2002:a5d:58ed:: with SMTP id f13mr7228896wrd.373.1636625267125;
+        Thu, 11 Nov 2021 02:07:47 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzIYNQG8t7gWYqwpgZkkzMNqewJnW2iU/frpsF+W0jIDUpjovyfAg40kLr/ApFY0hP+csCBmg==
+X-Received: by 2002:a5d:58ed:: with SMTP id f13mr7228866wrd.373.1636625266915;
+        Thu, 11 Nov 2021 02:07:46 -0800 (PST)
 Received: from [192.168.3.132] (p4ff23ee8.dip0.t-ipconnect.de. [79.242.62.232])
-        by smtp.gmail.com with ESMTPSA id l15sm2324926wme.47.2021.11.11.02.06.05
+        by smtp.gmail.com with ESMTPSA id g18sm2436886wrv.42.2021.11.11.02.07.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Nov 2021 02:06:05 -0800 (PST)
-Message-ID: <b495d38d-5cdd-8a33-b9d3-de721095ccab@redhat.com>
-Date:   Thu, 11 Nov 2021 11:06:04 +0100
+        Thu, 11 Nov 2021 02:07:46 -0800 (PST)
+Message-ID: <8be53ae6-b3f9-f3da-afc7-23c8232a7a0a@redhat.com>
+Date:   Thu, 11 Nov 2021 11:07:45 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.2.0
-Subject: Re: [PATCH 4/7] fs/binfmt_elf: use get_task_comm instead of
- open-coded string copy
+Subject: Re: [PATCH 5/7] samples/bpf/test_overhead_kprobe_kern: make it adopt
+ to task comm size change
 Content-Language: en-US
-From:   David Hildenbrand <david@redhat.com>
 To:     Yafang Shao <laoar.shao@gmail.com>, akpm@linux-foundation.org
 Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
         linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
@@ -73,6 +72,7 @@ Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
         Kees Cook <keescook@chromium.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Andrii Nakryiko <andrii.nakryiko@gmail.com>,
         Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -81,86 +81,98 @@ Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
         Al Viro <viro@zeniv.linux.org.uk>,
         Petr Mladek <pmladek@suse.com>
 References: <20211108083840.4627-1-laoar.shao@gmail.com>
- <20211108083840.4627-5-laoar.shao@gmail.com>
- <a13c0541-59a3-6561-6d42-b51fef9f7c8b@redhat.com>
+ <20211108083840.4627-6-laoar.shao@gmail.com>
+From:   David Hildenbrand <david@redhat.com>
 Organization: Red Hat
-In-Reply-To: <a13c0541-59a3-6561-6d42-b51fef9f7c8b@redhat.com>
+In-Reply-To: <20211108083840.4627-6-laoar.shao@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 11.11.21 11:03, David Hildenbrand wrote:
-> On 08.11.21 09:38, Yafang Shao wrote:
->> It is better to use get_task_comm() instead of the open coded string
->> copy as we do in other places.
->>
->> struct elf_prpsinfo is used to dump the task information in userspace
->> coredump or kernel vmcore. Below is the verfication of vmcore,
->>
->> crash> ps
->>    PID    PPID  CPU       TASK        ST  %MEM     VSZ    RSS  COMM
->>       0      0   0  ffffffff9d21a940  RU   0.0       0      0  [swapper/0]
->>>     0      0   1  ffffa09e40f85e80  RU   0.0       0      0  [swapper/1]
->>>     0      0   2  ffffa09e40f81f80  RU   0.0       0      0  [swapper/2]
->>>     0      0   3  ffffa09e40f83f00  RU   0.0       0      0  [swapper/3]
->>>     0      0   4  ffffa09e40f80000  RU   0.0       0      0  [swapper/4]
->>>     0      0   5  ffffa09e40f89f80  RU   0.0       0      0  [swapper/5]
->>       0      0   6  ffffa09e40f8bf00  RU   0.0       0      0  [swapper/6]
->>>     0      0   7  ffffa09e40f88000  RU   0.0       0      0  [swapper/7]
->>>     0      0   8  ffffa09e40f8de80  RU   0.0       0      0  [swapper/8]
->>>     0      0   9  ffffa09e40f95e80  RU   0.0       0      0  [swapper/9]
->>>     0      0  10  ffffa09e40f91f80  RU   0.0       0      0  [swapper/10]
->>>     0      0  11  ffffa09e40f93f00  RU   0.0       0      0  [swapper/11]
->>>     0      0  12  ffffa09e40f90000  RU   0.0       0      0  [swapper/12]
->>>     0      0  13  ffffa09e40f9bf00  RU   0.0       0      0  [swapper/13]
->>>     0      0  14  ffffa09e40f98000  RU   0.0       0      0  [swapper/14]
->>>     0      0  15  ffffa09e40f9de80  RU   0.0       0      0  [swapper/15]
->>
->> It works well as expected.
->>
->> Suggested-by: Kees Cook <keescook@chromium.org>
->> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
->> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
->> Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
->> Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
->> Cc: Michal Miroslaw <mirq-linux@rere.qmqm.pl>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: Steven Rostedt <rostedt@goodmis.org>
->> Cc: Matthew Wilcox <willy@infradead.org>
->> Cc: David Hildenbrand <david@redhat.com>
->> Cc: Al Viro <viro@zeniv.linux.org.uk>
->> Cc: Kees Cook <keescook@chromium.org>
->> Cc: Petr Mladek <pmladek@suse.com>
->> ---
->>  fs/binfmt_elf.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
->> index a813b70f594e..138956fd4a88 100644
->> --- a/fs/binfmt_elf.c
->> +++ b/fs/binfmt_elf.c
->> @@ -1572,7 +1572,7 @@ static int fill_psinfo(struct elf_prpsinfo *psinfo, struct task_struct *p,
->>  	SET_UID(psinfo->pr_uid, from_kuid_munged(cred->user_ns, cred->uid));
->>  	SET_GID(psinfo->pr_gid, from_kgid_munged(cred->user_ns, cred->gid));
->>  	rcu_read_unlock();
->> -	strncpy(psinfo->pr_fname, p->comm, sizeof(psinfo->pr_fname));
->> +	get_task_comm(psinfo->pr_fname, p);
->>  
->>  	return 0;
->>  }
->>
+On 08.11.21 09:38, Yafang Shao wrote:
+> bpf_probe_read_kernel_str() will add a nul terminator to the dst, then
+> we don't care about if the dst size is big enough. This patch also
+> replaces the hard-coded 16 with TASK_COMM_LEN to make it adopt to task
+> comm size change.
 > 
-> We have a hard-coded "pr_fname[16]" as well, not sure if we want to
-> adjust that to use TASK_COMM_LEN?
+> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+> Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+> Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+> Cc: Michal Miroslaw <mirq-linux@rere.qmqm.pl>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Petr Mladek <pmladek@suse.com>
+> ---
+>  samples/bpf/offwaketime_kern.c          |  4 ++--
+>  samples/bpf/test_overhead_kprobe_kern.c | 11 ++++++-----
+>  samples/bpf/test_overhead_tp_kern.c     |  5 +++--
+>  3 files changed, 11 insertions(+), 9 deletions(-)
+> 
+> diff --git a/samples/bpf/offwaketime_kern.c b/samples/bpf/offwaketime_kern.c
+> index 4866afd054da..eb4d94742e6b 100644
+> --- a/samples/bpf/offwaketime_kern.c
+> +++ b/samples/bpf/offwaketime_kern.c
+> @@ -113,11 +113,11 @@ static inline int update_counts(void *ctx, u32 pid, u64 delta)
+>  /* taken from /sys/kernel/debug/tracing/events/sched/sched_switch/format */
+>  struct sched_switch_args {
+>  	unsigned long long pad;
+> -	char prev_comm[16];
+> +	char prev_comm[TASK_COMM_LEN];
+>  	int prev_pid;
+>  	int prev_prio;
+>  	long long prev_state;
+> -	char next_comm[16];
+> +	char next_comm[TASK_COMM_LEN];
+>  	int next_pid;
+>  	int next_prio;
+>  };
+> diff --git a/samples/bpf/test_overhead_kprobe_kern.c b/samples/bpf/test_overhead_kprobe_kern.c
+> index f6d593e47037..8fdd2c9c56b2 100644
+> --- a/samples/bpf/test_overhead_kprobe_kern.c
+> +++ b/samples/bpf/test_overhead_kprobe_kern.c
+> @@ -6,6 +6,7 @@
+>   */
+>  #include <linux/version.h>
+>  #include <linux/ptrace.h>
+> +#include <linux/sched.h>
+>  #include <uapi/linux/bpf.h>
+>  #include <bpf/bpf_helpers.h>
+>  #include <bpf/bpf_tracing.h>
+> @@ -22,17 +23,17 @@ int prog(struct pt_regs *ctx)
+>  {
+>  	struct signal_struct *signal;
+>  	struct task_struct *tsk;
+> -	char oldcomm[16] = {};
+> -	char newcomm[16] = {};
+> +	char oldcomm[TASK_COMM_LEN] = {};
+> +	char newcomm[TASK_COMM_LEN] = {};
+>  	u16 oom_score_adj;
+>  	u32 pid;
+>  
+>  	tsk = (void *)PT_REGS_PARM1(ctx);
+>  
+>  	pid = _(tsk->pid);
+> -	bpf_probe_read_kernel(oldcomm, sizeof(oldcomm), &tsk->comm);
+> -	bpf_probe_read_kernel(newcomm, sizeof(newcomm),
+> -			      (void *)PT_REGS_PARM2(ctx));
+> +	bpf_probe_read_kernel_str(oldcomm, sizeof(oldcomm), &tsk->comm);
+> +	bpf_probe_read_kernel_str(newcomm, sizeof(newcomm),
+> +				  (void *)PT_REGS_PARM2(ctx));
 
-But if the intention is to chance TASK_COMM_LEN later, we might want to
-keep that unchanged.
+It's a shame we have to do a manual copy here ...
 
-(replacing the 16 by a define might still be a good idea, similar to how
-it's done for ELF_PRARGSZ, but just a thought)
+Changes LGTM
 
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
 -- 
 Thanks,
