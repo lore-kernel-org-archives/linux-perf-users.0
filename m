@@ -2,193 +2,150 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CC7C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 08:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4877AC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 08:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 449EE611AD
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 08:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D73361215
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 08:30:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229674AbhKKIYP (ORCPT
+        id S232283AbhKKIdD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 11 Nov 2021 03:24:15 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:24571 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229543AbhKKIYO (ORCPT
+        Thu, 11 Nov 2021 03:33:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59444 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231675AbhKKIdA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 11 Nov 2021 03:24:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1636618885;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+/JqLm4sHmyADiAMedFlu1K2pl2+HxqUB8mfzcH1h3s=;
-        b=enbGkrX7kVme1PBBygsjCFjP7oKHP3Ngy4wTKHds6b2PyQEHzuhT4kKFUMvKJZ93XkEhyN
-        uan5YrBD+AIJWIiMhmldZUttCdueObQP347a8VQZSlHuPvQkVcMfk2x7kxsdlfFGTdk+vd
-        PDp6H58keqXCpVwtV3JynKmBPPbXObM=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-587-MdpKl3pnM6qmU3hhoYIpGA-1; Thu, 11 Nov 2021 03:21:24 -0500
-X-MC-Unique: MdpKl3pnM6qmU3hhoYIpGA-1
-Received: by mail-wm1-f70.google.com with SMTP id b145-20020a1c8097000000b003335872db8dso1729771wmd.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Nov 2021 00:21:24 -0800 (PST)
+        Thu, 11 Nov 2021 03:33:00 -0500
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC77DC061766
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Nov 2021 00:30:11 -0800 (PST)
+Received: by mail-pl1-x630.google.com with SMTP id k4so5164535plx.8
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Nov 2021 00:30:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=5GRE1AC8ySaNxlQTII1kzbZOaFXJN0vLmd4wnvl9WkE=;
+        b=byjBiInJMD5yeLnojx9Ahs1+IQkN/NLJjnQd0k7llQZEYdgbMYityInN7eZ079+S1q
+         GfcvDwhAv2pKPr1hOwn1n//MOdA0T5H0jElXnZY/ZzcVyt9Gxvx8UUu3+vx+mZzHDX7C
+         9zYHJtZuaiFXqeBcfiFE+oNA9ZucwqFmZgE12sMfp8MvW33VLxJdMvQxG/Ru6mW2PoI+
+         glrIgSISIG1zGg+LcoH2IsOOuig4dX69zOxS30uwC+A85xzXpCAzEkTkgezRl4JmCcEn
+         sJQ7qx2suTPtFyudvaGzTcjGcJ5u43CoLfqiTtp4Oo+bSheVJsPDAQsLxISc2aoFnAfm
+         KfVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=+/JqLm4sHmyADiAMedFlu1K2pl2+HxqUB8mfzcH1h3s=;
-        b=up/ilxwC9R7l8nQFSdkmNvpcJVMsPJlaXh27remptIv+U2tjl5Y3plDewom8TGUOLK
-         +T4KpwlkAJ2In7JVoxzoY0HRDA/ur7uq5y7f5g8W1kNCb+skCr6rGUESv7e1woGgqO9k
-         2UAmJgeidhmDhY3VdzkJtbPX7BpoD7o23k9GzdnWO0Lw97Md//8/OciJktsKxhExqrqQ
-         3xAlLpf/HEinVHmfeBsiOY5uIkTlTDsxMa7PUQhQcLESv9CSXqBCkq0edxOTb3a+M9jq
-         aTLDhbBEGulxGDJHiBujwx80Q6d/LRkL4WvUGGBNglx69LF5ay5v/aVmFrgHafPN8PJr
-         aTqg==
-X-Gm-Message-State: AOAM532SmqjmamPUWY3CiYSZHAqiJWdrRncTy9ktnyZv7EgdoeYGVgbM
-        nzNTaQhjtngd9POasU9WuazWwhh6Q0QjAEkjdFfKikYERpKmj580G273cbCi34wdYsb6uzFnX0U
-        5ycfbT3QosGTYCEcSF0gGdp23s8Eeiw==
-X-Received: by 2002:adf:fed0:: with SMTP id q16mr6864973wrs.276.1636618883184;
-        Thu, 11 Nov 2021 00:21:23 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzr1+n5lleP+gDrb4clqydaA2qxolVzJBakG37gHdguwLq8vV99rMRLrAQRXCvojPmI/0wUwQ==
-X-Received: by 2002:adf:fed0:: with SMTP id q16mr6864940wrs.276.1636618882952;
-        Thu, 11 Nov 2021 00:21:22 -0800 (PST)
-Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
-        by smtp.gmail.com with ESMTPSA id n7sm2129819wra.37.2021.11.11.00.21.22
+        bh=5GRE1AC8ySaNxlQTII1kzbZOaFXJN0vLmd4wnvl9WkE=;
+        b=xJcT8uMa5s4+hQ2AJnUjHNEGSkgxgpXJl1twm50Bjv2TGxilXZGpkZ4WnzJ6M+EPJl
+         /OY7Ek3LYUL4bc8mRdpu7RxqDJPDziqPFsYHOOBPzpLnT9Yzn83eWX6Ex94smt8wD2pG
+         To7a6e1R3Q9Ws/qzJrgBdCpR37qmcVs57GysEZQ++ICOs6s5vD5f3Elpq//C6aLy8yoG
+         Oy7QudT2XOD+i+b5TUYkXjMJ+tuh1/iKiNvRef7HcbTZkOB0dBHDv1tJ5kl4nRoaknRe
+         SKZPVg/oM+p3g4VPqoJxNUFKQtxeb6krXjFnP5NsN6orylls/807zZB+2FkyCEwe2XDW
+         fn0Q==
+X-Gm-Message-State: AOAM530YPd7fMPqNCad2u909fFQl70ntL1JUnM5dvCSiHM4Oh2/2CYUq
+        u5KiRMLXxehlKM/MrvbbNjZcWg==
+X-Google-Smtp-Source: ABdhPJx2D+UMoAhMUaW307dh+HtPDmNoWmh3lg9fYfO3S8DtmRKuYvu2XMw9/wZfHmMGZyt5P6KMnw==
+X-Received: by 2002:a17:90b:4b04:: with SMTP id lx4mr6454193pjb.11.1636619411324;
+        Thu, 11 Nov 2021 00:30:11 -0800 (PST)
+Received: from leoy-ThinkPad-X240s ([148.163.172.147])
+        by smtp.gmail.com with ESMTPSA id i76sm1579434pgd.69.2021.11.11.00.30.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Nov 2021 00:21:22 -0800 (PST)
-Date:   Thu, 11 Nov 2021 09:21:20 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
+        Thu, 11 Nov 2021 00:30:10 -0800 (PST)
+Date:   Thu, 11 Nov 2021 16:30:02 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     German Gomez <german.gomez@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Song Liu <song@kernel.org>, Wan Jiabing <wanjiabing@vivo.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 7/8] perf expr: Move ID handling to its own function
-Message-ID: <YYzSgNNWDkymfYi5@krava>
-References: <20211111002109.194172-1-irogers@google.com>
- <20211111002109.194172-8-irogers@google.com>
+        Jiri Olsa <jolsa@redhat.com>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 4/4] perf arm-spe: Support hardware-based PID tracing
+Message-ID: <20211111083002.GA106401@leoy-ThinkPad-X240s>
+References: <20211109115020.31623-1-german.gomez@arm.com>
+ <20211109115020.31623-5-german.gomez@arm.com>
+ <CAM9d7cg7Lp49xOc3BOhM4O9fqs7i+v6cNd=eaKWjDbREiE3Pvg@mail.gmail.com>
+ <20211111074148.GC102075@leoy-ThinkPad-X240s>
+ <CAM9d7cjW_=hDkHVWchNFDyqZXbbBwMb224hbZTMsCe34MLL-4Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211111002109.194172-8-irogers@google.com>
+In-Reply-To: <CAM9d7cjW_=hDkHVWchNFDyqZXbbBwMb224hbZTMsCe34MLL-4Q@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Nov 10, 2021 at 04:21:08PM -0800, Ian Rogers wrote:
-> This will facilitate sharing in a follow-on change.
+Hi Namhyung,
+
+On Wed, Nov 10, 2021 at 11:59:05PM -0800, Namhyung Kim wrote:
+
+[...]
+
+> > > > +static void arm_spe_set_pid_tid_cpu(struct arm_spe *spe,
+> > > > +                                   struct auxtrace_queue *queue)
+> > > > +{
+> > > > +       struct arm_spe_queue *speq = queue->priv;
+> > > > +       pid_t tid;
+> > > > +
+> > > > +       tid = machine__get_current_tid(spe->machine, speq->cpu);
+> > > > +       if (tid != -1) {
+> > > > +               speq->tid = tid;
+> > > > +               thread__zput(speq->thread);
+> > > > +       } else
+> > > > +               speq->tid = queue->tid;
+> > > > +
+> > > > +       if ((!speq->thread) && (speq->tid != -1)) {
+> > > > +               speq->thread = machine__find_thread(spe->machine, -1,
+> > > > +                                                   speq->tid);
+> > > > +       }
+> > > > +
+> > > > +       if (speq->thread) {
+> > > > +               speq->pid = speq->thread->pid_;
+> > > > +               if (queue->cpu == -1)
+> > > > +                       speq->cpu = speq->thread->cpu;
+> > > > +       }
+> > > > +}
+> > > > +
+> > > > +static int arm_spe_set_tid(struct arm_spe_queue *speq, pid_t tid)
+> > > > +{
+> > > > +       struct arm_spe *spe = speq->spe;
+> > > > +       int err = machine__set_current_tid(spe->machine, speq->cpu, tid, tid);
+> > >
+> > > I think we should pass -1 as pid as we don't know the real pid.
+> >
+> > AFAICT, I observe one case for machine__set_current_tid() returning error
+> > is 'speq->cpu' is -1 (this is the case for per-thread tracing).  In
+> > this case, if pass '-1' for pid/tid, it still will return failure.
+> >
+> > So here should return the error as it is.  Am I missing anything?
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/expr.y | 60 ++++++++++++++++++++++++------------------
->  1 file changed, 34 insertions(+), 26 deletions(-)
+> I'm not saying about the error.  It's about thread status.
+> In the machine__set_current_tid(), it calls
+> machine__findnew_thread() with given pid and tid.
 > 
-> diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-> index ba6c6dbf30c8..d90addf9b937 100644
-> --- a/tools/perf/util/expr.y
-> +++ b/tools/perf/util/expr.y
-> @@ -3,6 +3,7 @@
->  #define YYDEBUG 1
->  #include <assert.h>
->  #include <math.h>
-> +#include <stdlib.h>
->  #include "util/debug.h"
->  #define IN_EXPR_Y 1
->  #include "expr.h"
-> @@ -82,6 +83,38 @@ static struct ids union_expr(struct ids ids1, struct ids ids2)
->  	return result;
->  }
->  
-> +static struct ids handle_id(struct expr_parse_ctx *ctx, char *id,
-> +			    bool compute_ids)
-> +{
-> +	struct ids result;
+> I suspect it can set pid to a wrong value if the thread has
+> no pid value at the moment.
 
-nit, missing extra line in here
+Here we should avoid to write pid '-1' with
+machine__set_current_tid().
 
-other than that for the whole patchset:
+The function arm_spe_set_tid() is invoked when SPE trace data contains
+context packet and it passes pid coming from the context packet.  On
+the other hand, when SPE trace data doesn't contain context packet, we
+relies on context switch event to set pid value.  So if we pass pid
+'-1' in arm_spe_set_tid(), it will overwrite the pid value which has
+been set by context switch event.
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+Simply say, if SPE trace data contains context packet with valid pid,
+perf invokes arm_spe_set_tid() to set the pid value.  Otherwise, it
+should skip this operation and roll back to use the pid value from
+the context switch event.
 
-thanks,
-jirka
-
-> +	if (!compute_ids) {
-> +		/*
-> +		 * Compute the event's value from ID. If the ID isn't known then
-> +		 * it isn't used to compute the formula so set to NAN.
-> +		 */
-> +		struct expr_id_data *data;
-> +
-> +		result.val = NAN;
-> +		if (expr__resolve_id(ctx, id, &data) == 0)
-> +			result.val = expr_id_data__value(data);
-> +
-> +		result.ids = NULL;
-> +		free(id);
-> +	} else {
-> +		/*
-> +		 * Set the value to BOTTOM to show that any value is possible
-> +		 * when the event is computed. Create a set of just the ID.
-> +		 */
-> +		result.val = BOTTOM;
-> +		result.ids = ids__new();
-> +		if (!result.ids || ids__insert(result.ids, id)) {
-> +			pr_err("Error creating IDs for '%s'", id);
-> +			free(id);
-> +		}
-> +	}
-> +	return result;
-> +}
-> +
->  /*
->   * If we're not computing ids or $1 and $3 are constants, compute the new
->   * constant value using OP. Its invariant that there are no ids.  If computing
-> @@ -167,32 +200,7 @@ expr: NUMBER
->  	$$.val = $1;
->  	$$.ids = NULL;
->  }
-> -| ID
-> -{
-> -	if (!compute_ids) {
-> -		/*
-> -		 * Compute the event's value from ID. If the ID isn't known then
-> -		 * it isn't used to compute the formula so set to NAN.
-> -		 */
-> -		struct expr_id_data *data;
-> -
-> -		$$.val = NAN;
-> -		if (expr__resolve_id(ctx, $1, &data) == 0)
-> -			$$.val = expr_id_data__value(data);
-> -
-> -		$$.ids = NULL;
-> -		free($1);
-> -	} else {
-> -		/*
-> -		 * Set the value to BOTTOM to show that any value is possible
-> -		 * when the event is computed. Create a set of just the ID.
-> -		 */
-> -		$$.val = BOTTOM;
-> -		$$.ids = ids__new();
-> -		if (!$$.ids || ids__insert($$.ids, $1))
-> -			YYABORT;
-> -	}
-> -}
-> +| ID		{ $$ = handle_id(ctx, $1, compute_ids); }
->  | expr '|' expr { BINARY_LONG_OP($$, |, $1, $3); }
->  | expr '&' expr { BINARY_LONG_OP($$, &, $1, $3); }
->  | expr '^' expr { BINARY_LONG_OP($$, ^, $1, $3); }
-> -- 
-> 2.34.0.rc1.387.gb447b232ab-goog
-> 
-
+Thanks,
+Leo
