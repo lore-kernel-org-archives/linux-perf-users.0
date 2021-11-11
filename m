@@ -2,97 +2,134 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FFDCC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 07:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92290C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 07:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1788460FE3
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 07:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B30360FE3
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 07:29:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229649AbhKKHaL (ORCPT
+        id S229564AbhKKHbu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 11 Nov 2021 02:30:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45428 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231226AbhKKHaK (ORCPT
+        Thu, 11 Nov 2021 02:31:50 -0500
+Received: from mail-lj1-f179.google.com ([209.85.208.179]:42758 "EHLO
+        mail-lj1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231667AbhKKHbt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 11 Nov 2021 02:30:10 -0500
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40497C061767
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Nov 2021 23:27:22 -0800 (PST)
-Received: by mail-pj1-x1033.google.com with SMTP id v23so3544474pjr.5
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Nov 2021 23:27:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=JCdi6ova47Widl1JEkNIXeu43n0j2ewnGf1cGDnwtV0=;
-        b=US3oy7TDXGqlv+iD6HgB37PbwzQ7XNDYZ32d3X6CTgd5bPJ1O3HSs6x3K7qvqOVilX
-         dOFcMQx9Nn4sGOQtc6A96itXD5JSmFGpUiY3XKaJY3dwcRM0CeMUVrOEy5ZwEnwS9qeh
-         I+7t6OLPYxHdQQdf07cPV2yxAqG1HeabCbfb93nd+vsNCy/aXWT4JUTlDqaoYwuCN6WX
-         x3fC74kJXI+HCAvgLLWI8q3T3wodkCvCOMD+aKrKhPYwgvjpHM0FNYqnpuVoW2nlnHX9
-         mFrZfVFNexc8U2rCPbflXArxI5VnlvxS3Ic786qJCwZ/Zed7q9bmJ+uSLOzxupf0uk71
-         JAsg==
+        Thu, 11 Nov 2021 02:31:49 -0500
+Received: by mail-lj1-f179.google.com with SMTP id z8so10165859ljz.9;
+        Wed, 10 Nov 2021 23:29:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=JCdi6ova47Widl1JEkNIXeu43n0j2ewnGf1cGDnwtV0=;
-        b=Qq83mmrn0uLo/f3xDE5ApAEKlBeunDSRm+AEytufraJdRwgLeQQ1g1urselC341HAw
-         yIQKzDBR5eY9wiU9ZzIzPUkkwEkDEwW7N0wfn96uh5P2NAzBzfVHHC3ENW7GbysqLJJg
-         NTtQkT3Gtd/4XntBtjA/s1CegD4QFOR5jYEzAeHUSKHmL8a5LFjyarT5bVlci4W7Df1m
-         jprI/FMWfBglM39E1ZSeH6vvmDaoNhnEovZ4RRrHX4vjAprV0JUSRJhjObYwR5gsO08T
-         f5m++g40vulIS1AbS5Lb6beteQxPySWk1l1paRhdEViM5kohtoqoCaLjvuHfjDJerg0r
-         7Tfg==
-X-Gm-Message-State: AOAM5331LRE1HlHvPN1JByu9E0Z6gSHPca9zDlnSz5YpNlQSiXQUJZe1
-        MuTLvyn1/Kh+7oaOXmbPbbRDOg==
-X-Google-Smtp-Source: ABdhPJyJk2/3R7hXGyXSsqGDrrLFGqP8DLHcuOIFzzXZCsDFdZhpiWT7lexHtz0bwW+eDvu+9ijFTQ==
-X-Received: by 2002:a17:902:9897:b0:143:84c3:4341 with SMTP id s23-20020a170902989700b0014384c34341mr6034559plp.64.1636615641738;
-        Wed, 10 Nov 2021 23:27:21 -0800 (PST)
-Received: from leoy-ThinkPad-X240s ([148.163.172.147])
-        by smtp.gmail.com with ESMTPSA id o18sm1427790pgb.83.2021.11.10.23.27.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Nov 2021 23:27:21 -0800 (PST)
-Date:   Thu, 11 Nov 2021 15:27:14 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     German Gomez <german.gomez@arm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rvKLDKiLaxvEHRt4X5eALe08O4bJNdEFh/L/Ug15Ah0=;
+        b=dMtETGd0+ggl4/CyUZD8nPWzZxF2KHdmOEtnTaWMhZOgQo6Wxj0MlMBBltJSrrRwnc
+         z6f1YUvj+8zENdiZQdvqKFYQZ0OJYOlphpezWGgFIN6l5FOGttCfQ/B+gmmUlpVQ1Pg6
+         zs0iHQyam5OhBMXQ/vmaUfbucOuDJ5+wgx845yG3uHXAGzcQF7Z1+lgGfnZR0fylLp95
+         bAeIGUNEzF1IVuVhlEJzrljtrTAv6hLTIouCwHsA1MzgQVHARirTHHaTGgmTlVyqN1Ur
+         lpnfjiOheI8XuraM+clKwfoDrL7lzNZq85L5sVlc5RbIDv8SzPhO7chZ7ZJ9qZW4KMKt
+         8CSg==
+X-Gm-Message-State: AOAM531jn0DUGydntkHbjEIwMu9vqeVoUlCnwwDZhc279Spg4VPUZ41X
+        knTJVJ64+1R3QnaXnm5/i99h/8pmzkQRP2/DkOk=
+X-Google-Smtp-Source: ABdhPJzUd/LZ0kiH90kqC8WmPHvyWDEyELeyPwpNaBRwqt8stq2Qd5ft24FBXCVCui4+0io5Pb+uK/oAqhVrGgvfsKg=
+X-Received: by 2002:a2e:b88c:: with SMTP id r12mr4929201ljp.204.1636615739944;
+ Wed, 10 Nov 2021 23:28:59 -0800 (PST)
+MIME-Version: 1.0
+References: <20211109115020.31623-1-german.gomez@arm.com> <20211109115020.31623-5-german.gomez@arm.com>
+In-Reply-To: <20211109115020.31623-5-german.gomez@arm.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 10 Nov 2021 23:28:48 -0800
+Message-ID: <CAM9d7cg7Lp49xOc3BOhM4O9fqs7i+v6cNd=eaKWjDbREiE3Pvg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] perf arm-spe: Support hardware-based PID tracing
+To:     German Gomez <german.gomez@arm.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
         John Garry <john.garry@huawei.com>,
         Will Deacon <will@kernel.org>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 0/4] perf arm-spe: Track pid/tid for Arm SPE samples
-Message-ID: <20211111072714.GB102075@leoy-ThinkPad-X240s>
-References: <20211109115020.31623-1-german.gomez@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211109115020.31623-1-german.gomez@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Arnaldo,
+On Tue, Nov 9, 2021 at 3:50 AM German Gomez <german.gomez@arm.com> wrote:
+>
+> If Arm SPE traces contain CONTEXT packets with TID info, use these
+> values for tracking tid of samples. Otherwise fall back to using context
+> switch events and display a message warning the user of possible timing
+> inaccuracies [1].
+>
+> [1] https://lore.kernel.org/lkml/f877cfa6-9b25-6445-3806-ca44a4042eaf@arm.com/
+>
+> Signed-off-by: German Gomez <german.gomez@arm.com>
+> ---
+>  tools/perf/util/arm-spe.c | 99 +++++++++++++++++++++++++++------------
+>  1 file changed, 70 insertions(+), 29 deletions(-)
+>
+> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+> index 230bc7ab2..30b8bb48a 100644
+> --- a/tools/perf/util/arm-spe.c
+> +++ b/tools/perf/util/arm-spe.c
+> @@ -71,6 +71,7 @@ struct arm_spe {
+>         u64                             kernel_start;
+>
+>         unsigned long                   num_events;
+> +       u8                              use_ctx_pkt_for_pid;
+>  };
+>
+>  struct arm_spe_queue {
+> @@ -226,6 +227,44 @@ static inline u8 arm_spe_cpumode(struct arm_spe *spe, u64 ip)
+>                 PERF_RECORD_MISC_USER;
+>  }
+>
+> +static void arm_spe_set_pid_tid_cpu(struct arm_spe *spe,
+> +                                   struct auxtrace_queue *queue)
+> +{
+> +       struct arm_spe_queue *speq = queue->priv;
+> +       pid_t tid;
+> +
+> +       tid = machine__get_current_tid(spe->machine, speq->cpu);
+> +       if (tid != -1) {
+> +               speq->tid = tid;
+> +               thread__zput(speq->thread);
+> +       } else
+> +               speq->tid = queue->tid;
+> +
+> +       if ((!speq->thread) && (speq->tid != -1)) {
+> +               speq->thread = machine__find_thread(spe->machine, -1,
+> +                                                   speq->tid);
+> +       }
+> +
+> +       if (speq->thread) {
+> +               speq->pid = speq->thread->pid_;
+> +               if (queue->cpu == -1)
+> +                       speq->cpu = speq->thread->cpu;
+> +       }
+> +}
+> +
+> +static int arm_spe_set_tid(struct arm_spe_queue *speq, pid_t tid)
+> +{
+> +       struct arm_spe *spe = speq->spe;
+> +       int err = machine__set_current_tid(spe->machine, speq->cpu, tid, tid);
 
-On Tue, Nov 09, 2021 at 11:50:16AM +0000, German Gomez wrote:
-> The following patchset is an iteration on RFC [1] where pid/tid info is
-> assigned to the Arm SPE synthesized samples. Two methods of tracking
-> pids are considered: hardware-based (using Arm SPE CONTEXT packets), and
-> context-switch events (from perf) as fallback.
-> 
->   - Patch #1 enables pid tracking using RECORD_SWITCH* events from perf.
->   - Patch #2 updates perf-record documentation and arm-spe recording so
->     that they are consistent.
->   - Patch #3 saves the value of SPE CONTEXT packet to the arm_spe_record
->     struct.
->   - Patch #4 enables hardware-based pid tracking using SPE CONTEXT
->     packets.
+I think we should pass -1 as pid as we don't know the real pid.
 
-I have tested this patch set, it works well on Hisilicon D06 board,
-please consider to pick up.  Thanks!
+Thanks,
+Namhyung
 
-Leo
+
+> +
+> +       if (err)
+> +               return err;
+> +
+> +       arm_spe_set_pid_tid_cpu(spe, &spe->queues.queue_array[speq->queue_nr]);
+> +
+> +       return 0;
+> +}
+> +
