@@ -2,76 +2,103 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CDDC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 18:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C4DC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 21:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F08B61502
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 18:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B503461179
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 21:49:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233928AbhKKSaj (ORCPT
+        id S233819AbhKKVwG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 11 Nov 2021 13:30:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60370 "EHLO mail.kernel.org"
+        Thu, 11 Nov 2021 16:52:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233923AbhKKSaj (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 11 Nov 2021 13:30:39 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 66D2760FC2;
-        Thu, 11 Nov 2021 18:27:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636655269;
-        bh=VW9JEaDWG7lXT/3YcWIqMRxGkLSUlVUC8SJ2TK4yg30=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GnOwzs68n4h4CEP4N0jCfPFz7Pq9nVNsROjr5zRXvYH1GoMT7dVUXXbBUm08I5XYU
-         19AAShFGLQMqAY2QTafB9/TgQhY8RyMqQf/C7vjg3v+o+vqQzPNLGhwe3h2JRvluzy
-         9FoSknuAAEsW33cGev+920dLUPbrXUnoM04paiqG+V7Zz1XfT7o6d4yTlec3QNQUdH
-         gXiW6PJ+qK3qbFcoYw9tJ8vRvFV+2Xed0K4l/5z2z9wsf/t6jwTpxG2acUrsz7woTN
-         sciK1MZZwVpJ2TyhNuzb3F8d8gTB1TG90tais5YZ80DwDkXGxtNk7WO/o+x+W7bLX3
-         qYNYf+neXV9rQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C0287410A1; Thu, 11 Nov 2021 15:27:46 -0300 (-03)
-Date:   Thu, 11 Nov 2021 15:27:46 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     German Gomez <german.gomez@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        id S231825AbhKKVwF (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 11 Nov 2021 16:52:05 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE03B61211;
+        Thu, 11 Nov 2021 21:49:15 +0000 (UTC)
+Received: from sofa.misterjones.org ([185.219.108.64] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mlHwX-004u5l-Kw; Thu, 11 Nov 2021 21:49:13 +0000
+Date:   Thu, 11 Nov 2021 21:49:12 +0000
+Message-ID: <87k0hee52f.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Sean Christopherson <seanjc@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Guo Ren <guoren@kernel.org>, Nick Hu <nickhu@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 4/4] perf arm-spe: Support hardware-based PID tracing
-Message-ID: <YY1gop7wkdECurb7@kernel.org>
-References: <20211111133625.193568-1-german.gomez@arm.com>
- <20211111133625.193568-5-german.gomez@arm.com>
- <CAM9d7chUkk-e0-giLH_moiEri2N28+G1cE-F3+JsXHK89vDJWg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM9d7chUkk-e0-giLH_moiEri2N28+G1cE-F3+JsXHK89vDJWg@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+        Namhyung Kim <namhyung@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org,
+        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Artem Kashkanov <artem.kashkanov@intel.com>,
+        Like Xu <like.xu.linux@gmail.com>,
+        Like Xu <like.xu@linux.intel.com>,
+        Zhu Lingshan <lingshan.zhu@intel.com>
+Subject: Re: [PATCH v4 15/17] KVM: arm64: Hide kvm_arm_pmu_available behind CONFIG_HW_PERF_EVENTS=y
+In-Reply-To: <20211111020738.2512932-16-seanjc@google.com>
+References: <20211111020738.2512932-1-seanjc@google.com>
+        <20211111020738.2512932-16-seanjc@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: seanjc@google.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, will@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, catalin.marinas@arm.com, guoren@kernel.org, nickhu@andestech.com, green.hu@gmail.com, deanbo422@gmail.com, paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, pbonzini@redhat.com, boris.ostrovsky@oracle.com, jgross@suse.com, alexander.shishkin@linux.intel.com, jolsa@redhat.com, namhyung@kernel.org, james.morse@arm.com, alexandru.elisei@arm.com, suzuki.poulose@arm.com, hpa@zytor.com, vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org, sstabellini@kernel.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org, kvm@vger.kernel.org, xen-devel@lists.xenproject.org, artem.k
+ ashkanov@intel.com, like.xu.linux@gmail.com, like.xu@linux.intel.com, lingshan.zhu@intel.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Nov 11, 2021 at 09:23:22AM -0800, Namhyung Kim escreveu:
-> On Thu, Nov 11, 2021 at 5:36 AM German Gomez <german.gomez@arm.com> wrote:
-> >
-> > If Arm SPE traces contain CONTEXT packets with TID info, use these
-> > values for tracking tid of samples. Otherwise fall back to using context
-> > switch events and display a message warning the user of possible timing
-> > inaccuracies [1].
-> >
-> > [1] https://lore.kernel.org/lkml/f877cfa6-9b25-6445-3806-ca44a4042eaf@arm.com/
-> >
-> > Signed-off-by: German Gomez <german.gomez@arm.com>
+On Thu, 11 Nov 2021 02:07:36 +0000,
+Sean Christopherson <seanjc@google.com> wrote:
 > 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> Move the definition of kvm_arm_pmu_available to pmu-emul.c and, out of
+> "necessity", hide it behind CONFIG_HW_PERF_EVENTS.  Provide a stub for
+> the key's wrapper, kvm_arm_support_pmu_v3().  Moving the key's definition
+> out of perf.c will allow a future commit to delete perf.c entirely.
+> 
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
 
-Thanks, applied.
+Reviewed-by: Marc Zyngier <maz@kernel.org>
 
-- Arnaldo
+	M.
 
+-- 
+Without deviation from the norm, progress is not possible.
