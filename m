@@ -2,67 +2,67 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8017FC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 10:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AB1C433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 10:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69888619E4
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 10:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7519661269
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 10:11:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232871AbhKKKLP (ORCPT
+        id S232611AbhKKKOA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 11 Nov 2021 05:11:15 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:55292 "EHLO
+        Thu, 11 Nov 2021 05:14:00 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:26019 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232900AbhKKKLO (ORCPT
+        by vger.kernel.org with ESMTP id S230256AbhKKKN7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 11 Nov 2021 05:11:14 -0500
+        Thu, 11 Nov 2021 05:13:59 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1636625305;
+        s=mimecast20190719; t=1636625469;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=GiHlgUAmwsKT+hTugq3VkakjXKCs0k5+tiUaL6hbwdA=;
-        b=J1Dlqh1ezSCuU5WBAK40eNEzwXjdReBVb6Fwl7iFbz7MaQL+WI7TbvS6TLlr+VXUDLy8d3
-        x2dNn6KR4fdSVZfO7BbLxn+VwveMJlAG8Gh9QFyg1tC/pLEvPhAPy/rCsQcPqhtN/l4FMD
-        K/1ryc8T+Tu7jz/DTcSOehK0avRdWLM=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-466-jJrRDrbaN9GmONj9fbXz4A-1; Thu, 11 Nov 2021 05:08:24 -0500
-X-MC-Unique: jJrRDrbaN9GmONj9fbXz4A-1
-Received: by mail-wr1-f69.google.com with SMTP id q17-20020adfcd91000000b0017bcb12ad4fso924996wrj.12
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Nov 2021 02:08:24 -0800 (PST)
+        bh=0rA+4QDY7fcYCncOWJtOa/HujeNT5Vt9NxjUSIUPHvs=;
+        b=QXVTVZPP85huloPsfDZEZ7uTJtTN6mgpd1/wdYzj8qHNiwVP5SKjIDlZT3LgRKghuYZClJ
+        A55JK1Eunwz/NhQWUq237Jr6jyqF+jI7Y8x9rFL2HZnr0WbLHEuTVRLp7H4UvUxF1Mwc3B
+        w1RNE77ZK2o0M1+KseOrLcEFHv+oIvg=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-347-VGAAWkzFM9eIffJ-7_UsGA-1; Thu, 11 Nov 2021 05:11:07 -0500
+X-MC-Unique: VGAAWkzFM9eIffJ-7_UsGA-1
+Received: by mail-wm1-f71.google.com with SMTP id o10-20020a05600c4fca00b0033312e1ed8bso2466614wmq.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Nov 2021 02:11:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:organization:in-reply-to
          :content-transfer-encoding;
-        bh=GiHlgUAmwsKT+hTugq3VkakjXKCs0k5+tiUaL6hbwdA=;
-        b=3Ejq1Ow1mGYAjivYduJLx5mnzgmEsypAN/PJAc76O6rS+6f2FPy/fVxOf0uga7ssRY
-         nYbCeWCmXWEDN8uH4Cqh/5PgwYOIBavNPHCapL/kLQsV0UP/32YiJJBkN0b7wUL+c7xp
-         fvCjrDAI09Yzo3sR5faXTiQUNdU/2ne4zWl+zOPsh1Yni/nN2eR5H1/AhuHZem/fc8Tq
-         FmgF2pDm5RkE5tEcBFw4FhOMpzONOgofTWib5BwvpvvPZkorFU39fFmDlKx8UHJVePHr
-         6drCM1YniyKLUeqUgzs0ZafEuLiDIKZYHhiLxqhppgc5EejjuOHupCE0SqvtxN+d0zRx
-         Dvyg==
-X-Gm-Message-State: AOAM531fkJvsFA8QfvV5rOAtXLiJjUmT0JGKc4bqiVmNzW8Wc3J9LFNn
-        w03SZfIMOwuuteK1ud4W0QysVcOwZFq/rJhvxjbPYbirtYCB9uw7d0IP8hsRayAD46GFGjzHfPw
-        Y2STqg7u33O7zJb4bgq9YfKfP6QWIPQ==
-X-Received: by 2002:a05:6000:2a3:: with SMTP id l3mr7550626wry.415.1636625303237;
-        Thu, 11 Nov 2021 02:08:23 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJz6xfbJxVXU/0Vk9IV0rvq5JIqAJLSbOfFYTCvTXeNfro03lA0NI5R+gVHhWEw6LtsXRfL2QQ==
-X-Received: by 2002:a05:6000:2a3:: with SMTP id l3mr7550593wry.415.1636625303017;
-        Thu, 11 Nov 2021 02:08:23 -0800 (PST)
+        bh=0rA+4QDY7fcYCncOWJtOa/HujeNT5Vt9NxjUSIUPHvs=;
+        b=qHj7yUsdiYf0aal+h1PiJk0YZpROc9aGul3anTa50CTqIEumgK0LIGrgOj4M9xLXaB
+         r9Bh2hEgUWI1UO/mHcYNYYAyCyH5+JQwbTxJ+rNrq88HKARsF3RMAv4qX7rE6uxPPxEn
+         miinBXtSymzydqFZHC4D56EsDRbNXMKZmOdvKtUoeRUmiI4K0A2V+KIv2xa3yg8DUXRY
+         DMwXdgjubFdlxvhzkvig7wGRa0IioI3BeeV2vAlCBS1Rvo/tPQ0PMk5165IIhH57lrXi
+         N+d8Ge3H1BU41RdzDbjkcSNeOmtYCdN3QOh0TJ/gnyQawy96KK/xal4lfs4jJFl/TrYr
+         kr5g==
+X-Gm-Message-State: AOAM531hEelE/b6keOrzwwKhXKQG+JpLhgTyBZ0fLFoqWCGD/+x78e0u
+        XzlSoQUmCmTRe3gsyTqovupCTBK5CPuE7hiFoSE9z9qc9TtnIzhppe90Z0Bxp5GLKyy3THyzgQ+
+        6YL3fOGWnE6kYc870xwerqucqiVE2Ag==
+X-Received: by 2002:adf:f0c5:: with SMTP id x5mr7303229wro.320.1636625466724;
+        Thu, 11 Nov 2021 02:11:06 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzOcg/IBIObd/PrNSThzuPmbYflfz+NcWv98QuuE6NH2tE/x226NzWn+mDBhgZ2vITILodW1Q==
+X-Received: by 2002:adf:f0c5:: with SMTP id x5mr7303188wro.320.1636625466497;
+        Thu, 11 Nov 2021 02:11:06 -0800 (PST)
 Received: from [192.168.3.132] (p4ff23ee8.dip0.t-ipconnect.de. [79.242.62.232])
-        by smtp.gmail.com with ESMTPSA id l4sm2372769wrv.94.2021.11.11.02.08.20
+        by smtp.gmail.com with ESMTPSA id t8sm2094352wmn.44.2021.11.11.02.11.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Nov 2021 02:08:22 -0800 (PST)
-Message-ID: <e7778942-6220-949b-72f1-fa4fc4ffbfee@redhat.com>
-Date:   Thu, 11 Nov 2021 11:08:20 +0100
+        Thu, 11 Nov 2021 02:11:06 -0800 (PST)
+Message-ID: <24b685c3-f16a-9ced-fb39-bf6a0b9f994e@redhat.com>
+Date:   Thu, 11 Nov 2021 11:11:04 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.2.0
-Subject: Re: [PATCH 6/7] tools/bpf/bpftool/skeleton: use
- bpf_probe_read_kernel_str to get task comm
+Subject: Re: [PATCH 7/7] tools/testing/selftests/bpf: make it adopt to task
+ comm size change
 Content-Language: en-US
 To:     Yafang Shao <laoar.shao@gmail.com>, akpm@linux-foundation.org
 Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
@@ -72,7 +72,6 @@ Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
         Andrii Nakryiko <andrii@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Andrii Nakryiko <andrii.nakryiko@gmail.com>,
         Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -82,10 +81,10 @@ Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
         Kees Cook <keescook@chromium.org>,
         Petr Mladek <pmladek@suse.com>
 References: <20211108083840.4627-1-laoar.shao@gmail.com>
- <20211108083840.4627-7-laoar.shao@gmail.com>
+ <20211108083840.4627-8-laoar.shao@gmail.com>
 From:   David Hildenbrand <david@redhat.com>
 Organization: Red Hat
-In-Reply-To: <20211108083840.4627-7-laoar.shao@gmail.com>
+In-Reply-To: <20211108083840.4627-8-laoar.shao@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -93,14 +92,26 @@ List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On 08.11.21 09:38, Yafang Shao wrote:
-> bpf_probe_read_kernel_str() will add a nul terminator to the dst, then
-> we don't care about if the dst size is big enough.
+> The hard-coded 16 is used in various bpf progs. These progs get task
+> comm either via bpf_get_current_comm() or prctl() or
+> bpf_core_read_str(), all of which can work well even if the task comm size
+> is changed.
+> 
+> In these BPF programs, one thing to be improved is the
+> sched:sched_switch tracepoint args. As the tracepoint args are derived
+> from the kernel, we'd better make it same with the kernel. So the macro
+> TASK_COMM_LEN is converted to type enum, then all the BPF programs can
+> get it through BTF.
+> 
+> The BPF program which wants to use TASK_COMM_LEN should include the header
+> vmlinux.h. Regarding the test_stacktrace_map and test_tracepoint, as the
+> type defined in linux/bpf.h are also defined in vmlinux.h, so we don't
+> need to include linux/bpf.h again.
 > 
 > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
 > Acked-by: Andrii Nakryiko <andrii@kernel.org>
 > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 > Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-> Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
 > Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
 > Cc: Michal Miroslaw <mirq-linux@rere.qmqm.pl>
 > Cc: Peter Zijlstra <peterz@infradead.org>
@@ -111,7 +122,8 @@ On 08.11.21 09:38, Yafang Shao wrote:
 > Cc: Kees Cook <keescook@chromium.org>
 > Cc: Petr Mladek <pmladek@suse.com>
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+
+Acked-by: David Hildenbrand <david@redhat.com>
 
 
 -- 
