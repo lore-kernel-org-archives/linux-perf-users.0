@@ -2,103 +2,117 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C71C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Nov 2021 23:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3AF3C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 00:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA15610FC
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Nov 2021 23:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96FCB61247
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 00:21:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232016AbhKJXzD (ORCPT
+        id S231514AbhKKAYF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 10 Nov 2021 18:55:03 -0500
-Received: from mail-lf1-f45.google.com ([209.85.167.45]:33641 "EHLO
-        mail-lf1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234316AbhKJXzD (ORCPT
+        Wed, 10 Nov 2021 19:24:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36392 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230491AbhKKAYD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 10 Nov 2021 18:55:03 -0500
-Received: by mail-lf1-f45.google.com with SMTP id bu18so9992368lfb.0;
-        Wed, 10 Nov 2021 15:52:14 -0800 (PST)
+        Wed, 10 Nov 2021 19:24:03 -0500
+Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75A92C061767
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Nov 2021 16:21:15 -0800 (PST)
+Received: by mail-pf1-x449.google.com with SMTP id k63-20020a628442000000b004812ea67c34so2896740pfd.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Nov 2021 16:21:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=B4UOtBBGhwmFrPOJWP3A1UYwMSaQEiu5wNaDtht975w=;
+        b=RLcalrnYrMgV+HOP9Q0u3v6VRm1BeSgsihRjym6UaOXaWJ8BXzqHlOFQ/EA56CoAz7
+         sMXmVgc28aypxk1q3Qy5Djzzt29xcodDbsVzT7Iz0RuYkbK60druwwJOWbhDloxXEBnR
+         7B8mzzXxvke4FD5AA7ro7oUhLtHSKQel6+PkTeJC5V/Mn25oRDm1gnnRwlcNuCZstngs
+         FzlUHm8wwxStwrWJDlm7SOYHJ9B5e98skVr8ck6Rd7ly1bZR8iRwM0QzhqPp/h4bX0+E
+         qRBQJVMk9vEL5Pgj59LN+68FQ8UoxrTqcKgQUhp7FDq873ahtGNdQwLykXtG4bv2sQ0c
+         4VVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+nKdcp1TUX0xwsKzzso7GogPgPSJJ3oZHCpyiunn6r0=;
-        b=cuIpLBTQRoIbuZv2//15Lw+LmlAKDNZnjvtZ70E+nWc9h0vCpM6zlnSbvBios/qMbb
-         TPV2GqDTQ2W7phUrUhECesvxGZIATCGGaolwpsm4oS3yDPkrXelKh5807hEPkjeMxZBV
-         keRvsvsYs5OB5ZkMimO3iYxt6lYHHcOi01DTZWlqdci6mBfSYmILYFpDj49SkUrXPT7o
-         XfNZiL3a1w8rLiPRD9YA2DPbwVjvmb+ZC1TCgLmRYMTJK876YzqP/xhiG7PYsxst7sNT
-         xsOPpjV3WAxGkPwrsJQPHi2tB9k32EYWOuoNWpUZ7C87KhdJVLyXqTOYYFUXqeRcSqAg
-         rPiQ==
-X-Gm-Message-State: AOAM530UY0+2vgYtpSJzXXH2LCGHTQg0wFXXz05QNXZMGX65KSWuZv1q
-        lexFAyoHkhMlNEOK6TPhxHVz0qdu4L/RXlnPKEI=
-X-Google-Smtp-Source: ABdhPJyse7KNiO/ZZZESkZFi9JeAfu4BDjDxewSLRhAwXYuWGd9bCcoGB/SDAK77C+VN3E9oGk4LXD85jlugOS8vJrY=
-X-Received: by 2002:a05:6512:b8c:: with SMTP id b12mr2706877lfv.99.1636588333775;
- Wed, 10 Nov 2021 15:52:13 -0800 (PST)
-MIME-Version: 1.0
-References: <20211109163009.92072-1-german.gomez@arm.com>
-In-Reply-To: <20211109163009.92072-1-german.gomez@arm.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 10 Nov 2021 15:52:02 -0800
-Message-ID: <CAM9d7cgya96juY8+2CsMZztvU73Y-U0wS4=46An4+=3CSdd3mQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] perf arm-spe: Add snapshot mode support
-To:     German Gomez <german.gomez@arm.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=B4UOtBBGhwmFrPOJWP3A1UYwMSaQEiu5wNaDtht975w=;
+        b=vjPYzzybu7iHi8dPz5szwODAT9+zfT6IFCL5MJoZkV9WuhqpFcUGR/dsL9d/el7Rkk
+         fv11kbCOvTKJsvaq+wcQSc8l52JMCKwANZZrALZYUlapVOfwrdzZt1BeltAKNvs60QZS
+         f3XLzsSXdNiQ5ZzbYRuP0YH+xD8UR6xWwGZJXVTHOLYZwuYFohIflkQE+hWofPPoTTAD
+         v+QHG7VZpYC35N1DA/FVSmMcTOXEfcHEY2YfLV5+wv5YH9Q9JKnHKPapYMT1QzgnFlQ9
+         rQwKDvAT9Hv1i9nSmdO/7OZgEf+RcI6CJgG2AUoazoRFr0qFbDKMJtQGA3BDwWuXgMMd
+         yRig==
+X-Gm-Message-State: AOAM530uRipXHio+UbdM7erVrRvKRT1UBemhLAIPjhmMOKBqT2TZ8GLL
+        hd+ZN0LsOH1zfApFykfI4Tyeb30qrG7T
+X-Google-Smtp-Source: ABdhPJxyr9glynTfEax3JRIPMW8SOOucQ0kEAcAAFvFY6h/WeRJ8AqbCxSOpNAe6C/+xnCzT/4p8LVIXqtAK
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:9510:b6b5:241:e409])
+ (user=irogers job=sendgmr) by 2002:a65:4bca:: with SMTP id
+ p10mr1870204pgr.391.1636590074888; Wed, 10 Nov 2021 16:21:14 -0800 (PST)
+Date:   Wed, 10 Nov 2021 16:21:01 -0800
+Message-Id: <20211111002109.194172-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.34.0.rc1.387.gb447b232ab-goog
+Subject: [PATCH v2 0/8]  New function and literals for metrics
+From:   Ian Rogers <irogers@google.com>
+To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        linux-arm-kernel@lists.infradead.org
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Song Liu <song@kernel.org>, Wan Jiabing <wanjiabing@vivo.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+Add a test for hyphenated events that are common with Intel's icelake
+topdown events.
 
-On Tue, Nov 9, 2021 at 8:30 AM German Gomez <german.gomez@arm.com> wrote:
->
-> This patchset adds snapshot mode support for arm-spe.
->
->   - [PATCH 1/3] implements the minimal callbacks to support recording in
->     snapshot mode.
->   - [PATCH 2/3] implements the find_snapshot callback in order to handle
->     wrap-arounds in the AUX buffer.
->   - [PATCH 3/3] adds a test for spe snapshot mode.
->
-> ---
->
-> Changes since v1:
->   - Added acme@kernel.org to the recipients list as I forgot to include
->     him in the original patchset [1].
->   - Removed [PATCH 1/5] and [PATCH 2/5] in order to keep patches
->     semantically relevant.
->   - Updated test script test_arm_spe.sh because it wasn't working on
->     distributions that use dash shell v0.5.10 (ubuntu 20) [2].
->
-> [1] https://lore.kernel.org/all/20210916154635.1525-1-german.gomez@arm.com/
-> [2] https://lore.kernel.org/all/fd65eb63-d4ca-2105-74cb-c717ad2eb7d3@arm.com/
->
-> German Gomez (3):
->   perf arm-spe: Add snapshot mode support
->   perf arm-spe: Implement find_snapshot callback
->   perf arm-spe: Snapshot mode test
+Try to tidy the existing cputopo code and make it more consistent with
+the sysfs ABI. Refactor the #smt_on literal parsing into a general
+literal token that we can use for more literals. This is then used for
+num_cpus, num_cores, num_dies and num_packages literals that use the
+existing topology code. Finally, a source_count function is added
+which is used to determine the number of events contributing to an
+aggregate event. The intent for these new literals and function is for
+them to be used in upcoming metrics.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+v2. Split the handle_id function refactor out of adding the
+    source_count function as suggested-by Jiri Olsa <jolsa@kernel.org>.
 
-Thanks,
-Namhyung
+Ian Rogers (8):
+  perf test: Add expr test for events with hyphens
+  perf cputopo: Update to use pakage_cpus
+  perf cputopo: Match die_siblings to topology ABI name
+  perf cputopo: Match thread_siblings to topology ABI name
+  perf expr: Add literal values starting with #
+  perf expr: Add metric literals for topology.
+  perf expr: Move ID handling to its own function
+  perf expr: Add source_count for aggregating events
 
->
->  tools/perf/arch/arm64/util/arm-spe.c   | 275 +++++++++++++++++++++++++
->  tools/perf/tests/shell/test_arm_spe.sh |  89 ++++++++
->  2 files changed, 364 insertions(+)
->  create mode 100755 tools/perf/tests/shell/test_arm_spe.sh
->
-> --
-> 2.25.1
->
+ tools/perf/tests/expr.c       | 34 ++++++++++++++-
+ tools/perf/util/cputopo.c     | 78 ++++++++++++++++++-----------------
+ tools/perf/util/cputopo.h     | 33 ++++++++++++---
+ tools/perf/util/evsel.c       | 12 ++++++
+ tools/perf/util/evsel.h       |  1 +
+ tools/perf/util/expr.c        | 65 ++++++++++++++++++++++++++---
+ tools/perf/util/expr.h        |  4 ++
+ tools/perf/util/expr.l        | 16 ++++++-
+ tools/perf/util/expr.y        | 72 ++++++++++++++++++--------------
+ tools/perf/util/header.c      | 20 ++++-----
+ tools/perf/util/stat-shadow.c |  7 +++-
+ 11 files changed, 250 insertions(+), 92 deletions(-)
+
+-- 
+2.34.0.rc1.387.gb447b232ab-goog
+
