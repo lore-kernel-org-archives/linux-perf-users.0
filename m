@@ -2,31 +2,30 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FE9C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 13:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5815C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 13:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBD1F61502
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 13:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A579E6162E
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 13:36:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233500AbhKKNjj (ORCPT
+        id S233616AbhKKNjp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 11 Nov 2021 08:39:39 -0500
-Received: from foss.arm.com ([217.140.110.172]:39902 "EHLO foss.arm.com"
+        Thu, 11 Nov 2021 08:39:45 -0500
+Received: from foss.arm.com ([217.140.110.172]:39932 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233523AbhKKNji (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 11 Nov 2021 08:39:38 -0500
+        id S233523AbhKKNjm (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 11 Nov 2021 08:39:42 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8CE8142F;
-        Thu, 11 Nov 2021 05:36:49 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3380BED1;
+        Thu, 11 Nov 2021 05:36:53 -0800 (PST)
 Received: from ip-10-252-15-108.eu-west-1.compute.internal (unknown [10.252.15.108])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 98E903F70D;
-        Thu, 11 Nov 2021 05:36:47 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 247293F70D;
+        Thu, 11 Nov 2021 05:36:51 -0800 (PST)
 From:   German Gomez <german.gomez@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         acme@kernel.org
-Cc:     German Gomez <german.gomez@arm.com>,
+Cc:     German Gomez <german.gomez@arm.com>, Leo Yan <leo.yan@linaro.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
@@ -34,9 +33,9 @@ Cc:     German Gomez <german.gomez@arm.com>,
         Will Deacon <will@kernel.org>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 2/4] perf arm-spe: Update --switch-events docs in perf-record
-Date:   Thu, 11 Nov 2021 13:36:23 +0000
-Message-Id: <20211111133625.193568-3-german.gomez@arm.com>
+Subject: [PATCH v3 3/4] perf arm-spe: Save context ID in record
+Date:   Thu, 11 Nov 2021 13:36:24 +0000
+Message-Id: <20211111133625.193568-4-german.gomez@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20211111133625.193568-1-german.gomez@arm.com>
 References: <20211111133625.193568-1-german.gomez@arm.com>
@@ -46,47 +45,49 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Update perf-record docs and Arm SPE recording options so that they are
-consistent. This includes supporting the --no-switch-events flag in Arm
-SPE as well.
+This patch is to save context ID in record, this will be used to set TID
+for samples.
 
 Signed-off-by: German Gomez <german.gomez@arm.com>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
 Reviewed-by: Leo Yan <leo.yan@linaro.org>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/Documentation/perf-record.txt | 2 +-
- tools/perf/arch/arm64/util/arm-spe.c     | 4 +++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ tools/perf/util/arm-spe-decoder/arm-spe-decoder.c | 2 ++
+ tools/perf/util/arm-spe-decoder/arm-spe-decoder.h | 1 +
+ 2 files changed, 3 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 2d7df8703..3cf7bac67 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -469,7 +469,7 @@ This option sets the time out limit. The default value is 500 ms.
+diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+index 32fe41835..3fc528c92 100644
+--- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
++++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+@@ -151,6 +151,7 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
+ 	u64 payload, ip;
  
- --switch-events::
- Record context switch events i.e. events of type PERF_RECORD_SWITCH or
--PERF_RECORD_SWITCH_CPU_WIDE. In some cases (e.g. Intel PT or CoreSight)
-+PERF_RECORD_SWITCH_CPU_WIDE. In some cases (e.g. Intel PT, CoreSight or Arm SPE)
- switch events will be enabled automatically, which can be suppressed by
- by the option --no-switch-events.
+ 	memset(&decoder->record, 0x0, sizeof(decoder->record));
++	decoder->record.context_id = (u64)-1;
  
-diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
-index 58ba8d15c..725a06cd2 100644
---- a/tools/perf/arch/arm64/util/arm-spe.c
-+++ b/tools/perf/arch/arm64/util/arm-spe.c
-@@ -169,8 +169,10 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
- 	if (!perf_cpu_map__empty(cpus)) {
- 		evsel__set_sample_bit(tracking_evsel, TIME);
- 		evsel__set_sample_bit(tracking_evsel, CPU);
-+
- 		/* also track task context switch */
--		tracking_evsel->core.attr.context_switch = 1;
-+		if (!record_opts__no_switch_events(opts))
-+			tracking_evsel->core.attr.context_switch = 1;
- 	}
+ 	while (1) {
+ 		err = arm_spe_get_next_packet(decoder);
+@@ -180,6 +181,7 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
+ 		case ARM_SPE_COUNTER:
+ 			break;
+ 		case ARM_SPE_CONTEXT:
++			decoder->record.context_id = payload;
+ 			break;
+ 		case ARM_SPE_OP_TYPE:
+ 			if (idx == SPE_OP_PKT_HDR_CLASS_LD_ST_ATOMIC) {
+diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+index 59bdb7309..46a8556a9 100644
+--- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
++++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+@@ -38,6 +38,7 @@ struct arm_spe_record {
+ 	u64 timestamp;
+ 	u64 virt_addr;
+ 	u64 phys_addr;
++	u64 context_id;
+ };
  
- 	return 0;
+ struct arm_spe_insn;
 -- 
 2.25.1
 
