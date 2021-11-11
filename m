@@ -2,179 +2,129 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB07C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 11:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD19EC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 12:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F4626124C
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 11:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1A3960F4A
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 12:23:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233142AbhKKLu0 (ORCPT
+        id S232908AbhKKM0C (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 11 Nov 2021 06:50:26 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:46586 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232256AbhKKLu0 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 11 Nov 2021 06:50:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1636631256;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3FPfS7kZXFceS9Lgp1RH/lsyVsBLRGLqfS3FoOXYSuE=;
-        b=BGjnSm70KtBlGpjs0vJ7W0gmDQ4Ez6G6kqdiSunpoBEro6UoY3oO4udWrWVLdcdy/yxhdA
-        2YZo6bQxZ0T6yGZnyusZZ8fbrJe1eYyweE9px0nW3/yTQCM+qPccCMupapWq5M5prB1Cr+
-        uF5rmyjCY/ah0JrjHLk+gdatf6NyLBI=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-268-ESxPPATSM-CQmuix1HLoUw-1; Thu, 11 Nov 2021 06:47:35 -0500
-X-MC-Unique: ESxPPATSM-CQmuix1HLoUw-1
-Received: by mail-wr1-f72.google.com with SMTP id h13-20020adfa4cd000000b001883fd029e8so976353wrb.11
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Nov 2021 03:47:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:organization:in-reply-to
-         :content-transfer-encoding;
-        bh=3FPfS7kZXFceS9Lgp1RH/lsyVsBLRGLqfS3FoOXYSuE=;
-        b=UxfaGEZF+dN+RMwqEUDbTfieUaW/5OXwRAu29/E9c3XF7OGoAzg53ggAvDpoiimgoF
-         yo4dnFBsLcYP+PmrKwp5AtcMr0t3AO+VYwOsd2nTzBNgpitKH1LXPsIbTYWfvDYRycsj
-         AuV3TQ9fLFynsD3qFmlVYlL6T/jVbOOue9sZG/prDWBi7qWHuwA+i6YBqigEbNCLBtAv
-         OSt1y6s6cYFN32PcQHwJISt2PO5k6DP/2DsEC4h/+DE8JTX8FHtTB1njbzHxkzlLaGzN
-         /v63RBoS8pr3Ez//xp/XiOj4twotCGG7zRpBOlakiA282gc46Qu7R4K/6dn5OwJgMqwf
-         iUhQ==
-X-Gm-Message-State: AOAM5315GGIujdzaixoNEP1zEM5+HDZG70il4fk7+4zo3si+BAazWOTJ
-        P5O3kPqvZ6bLMDc4uHh821ed4dpcql/Rpe8VmglimXrapbvvdxOEk+eexQyamPxpcOGvOQ5cviE
-        ANoCOcKKvJbPxKTFwrkuWT57nA5fuPQ==
-X-Received: by 2002:a5d:45cc:: with SMTP id b12mr8082377wrs.164.1636631254683;
-        Thu, 11 Nov 2021 03:47:34 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwO566pckJvXEcwz+OG93YPsApF+toGZKExvaMFLBrnliRRTv/LgjAiYUOFAAaeaDr4bLvTMw==
-X-Received: by 2002:a5d:45cc:: with SMTP id b12mr8082352wrs.164.1636631254480;
-        Thu, 11 Nov 2021 03:47:34 -0800 (PST)
-Received: from [192.168.3.132] (p4ff23ee8.dip0.t-ipconnect.de. [79.242.62.232])
-        by smtp.gmail.com with ESMTPSA id d8sm2782565wrm.76.2021.11.11.03.47.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Nov 2021 03:47:33 -0800 (PST)
-Message-ID: <70dd5e1c-99c9-c1ca-4e3f-1a894896cf06@redhat.com>
-Date:   Thu, 11 Nov 2021 12:47:33 +0100
+        Thu, 11 Nov 2021 07:26:02 -0500
+Received: from foss.arm.com ([217.140.110.172]:38528 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230400AbhKKM0C (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 11 Nov 2021 07:26:02 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 08B50101E;
+        Thu, 11 Nov 2021 04:23:13 -0800 (PST)
+Received: from [10.57.58.62] (unknown [10.57.58.62])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 621D03F70D;
+        Thu, 11 Nov 2021 04:23:10 -0800 (PST)
+Subject: Re: [PATCH v2 4/4] perf arm-spe: Support hardware-based PID tracing
+To:     Leo Yan <leo.yan@linaro.org>, Namhyung Kim <namhyung@kernel.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <20211109115020.31623-1-german.gomez@arm.com>
+ <20211109115020.31623-5-german.gomez@arm.com>
+ <CAM9d7cg7Lp49xOc3BOhM4O9fqs7i+v6cNd=eaKWjDbREiE3Pvg@mail.gmail.com>
+ <20211111074148.GC102075@leoy-ThinkPad-X240s>
+ <CAM9d7cjW_=hDkHVWchNFDyqZXbbBwMb224hbZTMsCe34MLL-4Q@mail.gmail.com>
+ <20211111083002.GA106401@leoy-ThinkPad-X240s>
+From:   German Gomez <german.gomez@arm.com>
+Message-ID: <5c0e255b-e140-d157-7dfd-b27a43e128c9@arm.com>
+Date:   Thu, 11 Nov 2021 12:23:08 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Subject: Re: [PATCH 4/7] fs/binfmt_elf: use get_task_comm instead of
- open-coded string copy
-Content-Language: en-US
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Yafang Shao <laoar.shao@gmail.com>, akpm@linux-foundation.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        oliver.sang@intel.com, lkp@intel.com,
-        Kees Cook <keescook@chromium.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-References: <20211108083840.4627-1-laoar.shao@gmail.com>
- <20211108083840.4627-5-laoar.shao@gmail.com>
- <a13c0541-59a3-6561-6d42-b51fef9f7c8b@redhat.com>
- <b495d38d-5cdd-8a33-b9d3-de721095ccab@redhat.com> <YYz/4bSdSXR3Palz@alley>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <YYz/4bSdSXR3Palz@alley>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20211111083002.GA106401@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 11.11.21 12:34, Petr Mladek wrote:
-> On Thu 2021-11-11 11:06:04, David Hildenbrand wrote:
->> On 11.11.21 11:03, David Hildenbrand wrote:
->>> On 08.11.21 09:38, Yafang Shao wrote:
->>>> It is better to use get_task_comm() instead of the open coded string
->>>> copy as we do in other places.
->>>>
->>>> struct elf_prpsinfo is used to dump the task information in userspace
->>>> coredump or kernel vmcore. Below is the verfication of vmcore,
->>>>
->>>> crash> ps
->>>>    PID    PPID  CPU       TASK        ST  %MEM     VSZ    RSS  COMM
->>>>       0      0   0  ffffffff9d21a940  RU   0.0       0      0  [swapper/0]
->>>>>     0      0   1  ffffa09e40f85e80  RU   0.0       0      0  [swapper/1]
->>>>>     0      0   2  ffffa09e40f81f80  RU   0.0       0      0  [swapper/2]
->>>>>     0      0   3  ffffa09e40f83f00  RU   0.0       0      0  [swapper/3]
->>>>>     0      0   4  ffffa09e40f80000  RU   0.0       0      0  [swapper/4]
->>>>>     0      0   5  ffffa09e40f89f80  RU   0.0       0      0  [swapper/5]
->>>>       0      0   6  ffffa09e40f8bf00  RU   0.0       0      0  [swapper/6]
->>>>>     0      0   7  ffffa09e40f88000  RU   0.0       0      0  [swapper/7]
->>>>>     0      0   8  ffffa09e40f8de80  RU   0.0       0      0  [swapper/8]
->>>>>     0      0   9  ffffa09e40f95e80  RU   0.0       0      0  [swapper/9]
->>>>>     0      0  10  ffffa09e40f91f80  RU   0.0       0      0  [swapper/10]
->>>>>     0      0  11  ffffa09e40f93f00  RU   0.0       0      0  [swapper/11]
->>>>>     0      0  12  ffffa09e40f90000  RU   0.0       0      0  [swapper/12]
->>>>>     0      0  13  ffffa09e40f9bf00  RU   0.0       0      0  [swapper/13]
->>>>>     0      0  14  ffffa09e40f98000  RU   0.0       0      0  [swapper/14]
->>>>>     0      0  15  ffffa09e40f9de80  RU   0.0       0      0  [swapper/15]
->>>>
->>>> It works well as expected.
->>>>
->>>> Suggested-by: Kees Cook <keescook@chromium.org>
->>>> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
->>>> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
->>>> Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
->>>> Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
->>>> Cc: Michal Miroslaw <mirq-linux@rere.qmqm.pl>
->>>> Cc: Peter Zijlstra <peterz@infradead.org>
->>>> Cc: Steven Rostedt <rostedt@goodmis.org>
->>>> Cc: Matthew Wilcox <willy@infradead.org>
->>>> Cc: David Hildenbrand <david@redhat.com>
->>>> Cc: Al Viro <viro@zeniv.linux.org.uk>
->>>> Cc: Kees Cook <keescook@chromium.org>
->>>> Cc: Petr Mladek <pmladek@suse.com>
->>>> ---
->>>>  fs/binfmt_elf.c | 2 +-
->>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
->>>> index a813b70f594e..138956fd4a88 100644
->>>> --- a/fs/binfmt_elf.c
->>>> +++ b/fs/binfmt_elf.c
->>>> @@ -1572,7 +1572,7 @@ static int fill_psinfo(struct elf_prpsinfo *psinfo, struct task_struct *p,
->>>>  	SET_UID(psinfo->pr_uid, from_kuid_munged(cred->user_ns, cred->uid));
->>>>  	SET_GID(psinfo->pr_gid, from_kgid_munged(cred->user_ns, cred->gid));
->>>>  	rcu_read_unlock();
->>>> -	strncpy(psinfo->pr_fname, p->comm, sizeof(psinfo->pr_fname));
->>>> +	get_task_comm(psinfo->pr_fname, p);
->>>>  
->>>>  	return 0;
->>>>  }
->>>>
+Hi Leo, Namhyung,
+
+On 11/11/2021 08:30, Leo Yan wrote:
+> Hi Namhyung,
+>
+> On Wed, Nov 10, 2021 at 11:59:05PM -0800, Namhyung Kim wrote:
+>
+> [...]
+>
+>>>>> +static void arm_spe_set_pid_tid_cpu(struct arm_spe *spe,
+>>>>> +                                   struct auxtrace_queue *queue)
+>>>>> +{
+>>>>> +       struct arm_spe_queue *speq = queue->priv;
+>>>>> +       pid_t tid;
+>>>>> +
+>>>>> +       tid = machine__get_current_tid(spe->machine, speq->cpu);
+>>>>> +       if (tid != -1) {
+>>>>> +               speq->tid = tid;
+>>>>> +               thread__zput(speq->thread);
+>>>>> +       } else
+>>>>> +               speq->tid = queue->tid;
+>>>>> +
+>>>>> +       if ((!speq->thread) && (speq->tid != -1)) {
+>>>>> +               speq->thread = machine__find_thread(spe->machine, -1,
+>>>>> +                                                   speq->tid);
+>>>>> +       }
+>>>>> +
+>>>>> +       if (speq->thread) {
+>>>>> +               speq->pid = speq->thread->pid_;
+>>>>> +               if (queue->cpu == -1)
+>>>>> +                       speq->cpu = speq->thread->cpu;
+>>>>> +       }
+>>>>> +}
+>>>>> +
+>>>>> +static int arm_spe_set_tid(struct arm_spe_queue *speq, pid_t tid)
+>>>>> +{
+>>>>> +       struct arm_spe *spe = speq->spe;
+>>>>> +       int err = machine__set_current_tid(spe->machine, speq->cpu, tid, tid);
+>>>> I think we should pass -1 as pid as we don't know the real pid.
+>>> AFAICT, I observe one case for machine__set_current_tid() returning error
+>>> is 'speq->cpu' is -1 (this is the case for per-thread tracing).  In
+>>> this case, if pass '-1' for pid/tid, it still will return failure.
 >>>
->>> We have a hard-coded "pr_fname[16]" as well, not sure if we want to
->>> adjust that to use TASK_COMM_LEN?
+>>> So here should return the error as it is.  Am I missing anything?
+>> I'm not saying about the error.  It's about thread status.
+>> In the machine__set_current_tid(), it calls
+>> machine__findnew_thread() with given pid and tid.
 >>
->> But if the intention is to chance TASK_COMM_LEN later, we might want to
->> keep that unchanged.
-> 
-> It seems that len will not change in the end. Another solution is
-> going to be used for the long names, see
-> https://lore.kernel.org/r/20211108084142.4692-1-laoar.shao@gmail.com.
+>> I suspect it can set pid to a wrong value if the thread has
+>> no pid value at the moment.
+> Here we should avoid to write pid '-1' with
+> machine__set_current_tid().
 
-Yes, that's what I recall as well. The I read the patch
-subjects+descriptions in this series "make it adopt to task comm size
-change" and was slightly confused.
+If the kernel is writing the tids to the contextidr, isn't it wrong to
+assume tid == pid when decoding the context packets here? I haven't
+observed any impact in the built-in commands though, so there must be
+something I'm not seeing.
 
-Maybe we should just remove any notion of "task comm size change" from
-this series and instead just call it a cleanup.
-
-
--- 
 Thanks,
-
-David / dhildenb
-
+German
+>
+> The function arm_spe_set_tid() is invoked when SPE trace data contains
+> context packet and it passes pid coming from the context packet.  On
+> the other hand, when SPE trace data doesn't contain context packet, we
+> relies on context switch event to set pid value.  So if we pass pid
+> '-1' in arm_spe_set_tid(), it will overwrite the pid value which has
+> been set by context switch event.
+>
+> Simply say, if SPE trace data contains context packet with valid pid,
+> perf invokes arm_spe_set_tid() to set the pid value.  Otherwise, it
+> should skip this operation and roll back to use the pid value from
+> the context switch event.
+>
+> Thanks,
+> Leo
