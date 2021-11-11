@@ -2,132 +2,118 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AB1C433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 10:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D208AC433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 10:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7519661269
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 10:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD09F61002
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Nov 2021 10:49:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232611AbhKKKOA (ORCPT
+        id S232995AbhKKKvt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 11 Nov 2021 05:14:00 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:26019 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230256AbhKKKN7 (ORCPT
+        Thu, 11 Nov 2021 05:51:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34456 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232975AbhKKKvs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 11 Nov 2021 05:13:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1636625469;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0rA+4QDY7fcYCncOWJtOa/HujeNT5Vt9NxjUSIUPHvs=;
-        b=QXVTVZPP85huloPsfDZEZ7uTJtTN6mgpd1/wdYzj8qHNiwVP5SKjIDlZT3LgRKghuYZClJ
-        A55JK1Eunwz/NhQWUq237Jr6jyqF+jI7Y8x9rFL2HZnr0WbLHEuTVRLp7H4UvUxF1Mwc3B
-        w1RNE77ZK2o0M1+KseOrLcEFHv+oIvg=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-347-VGAAWkzFM9eIffJ-7_UsGA-1; Thu, 11 Nov 2021 05:11:07 -0500
-X-MC-Unique: VGAAWkzFM9eIffJ-7_UsGA-1
-Received: by mail-wm1-f71.google.com with SMTP id o10-20020a05600c4fca00b0033312e1ed8bso2466614wmq.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Nov 2021 02:11:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:organization:in-reply-to
-         :content-transfer-encoding;
-        bh=0rA+4QDY7fcYCncOWJtOa/HujeNT5Vt9NxjUSIUPHvs=;
-        b=qHj7yUsdiYf0aal+h1PiJk0YZpROc9aGul3anTa50CTqIEumgK0LIGrgOj4M9xLXaB
-         r9Bh2hEgUWI1UO/mHcYNYYAyCyH5+JQwbTxJ+rNrq88HKARsF3RMAv4qX7rE6uxPPxEn
-         miinBXtSymzydqFZHC4D56EsDRbNXMKZmOdvKtUoeRUmiI4K0A2V+KIv2xa3yg8DUXRY
-         DMwXdgjubFdlxvhzkvig7wGRa0IioI3BeeV2vAlCBS1Rvo/tPQ0PMk5165IIhH57lrXi
-         N+d8Ge3H1BU41RdzDbjkcSNeOmtYCdN3QOh0TJ/gnyQawy96KK/xal4lfs4jJFl/TrYr
-         kr5g==
-X-Gm-Message-State: AOAM531hEelE/b6keOrzwwKhXKQG+JpLhgTyBZ0fLFoqWCGD/+x78e0u
-        XzlSoQUmCmTRe3gsyTqovupCTBK5CPuE7hiFoSE9z9qc9TtnIzhppe90Z0Bxp5GLKyy3THyzgQ+
-        6YL3fOGWnE6kYc870xwerqucqiVE2Ag==
-X-Received: by 2002:adf:f0c5:: with SMTP id x5mr7303229wro.320.1636625466724;
-        Thu, 11 Nov 2021 02:11:06 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzOcg/IBIObd/PrNSThzuPmbYflfz+NcWv98QuuE6NH2tE/x226NzWn+mDBhgZ2vITILodW1Q==
-X-Received: by 2002:adf:f0c5:: with SMTP id x5mr7303188wro.320.1636625466497;
-        Thu, 11 Nov 2021 02:11:06 -0800 (PST)
-Received: from [192.168.3.132] (p4ff23ee8.dip0.t-ipconnect.de. [79.242.62.232])
-        by smtp.gmail.com with ESMTPSA id t8sm2094352wmn.44.2021.11.11.02.11.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Nov 2021 02:11:06 -0800 (PST)
-Message-ID: <24b685c3-f16a-9ced-fb39-bf6a0b9f994e@redhat.com>
-Date:   Thu, 11 Nov 2021 11:11:04 +0100
+        Thu, 11 Nov 2021 05:51:48 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1771AC061766;
+        Thu, 11 Nov 2021 02:48:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Lk4G/R3I07fhmcAqeSUqtCqNDck8UECisYgW0RP2fZk=; b=AET3uxMt3hHFzdG81TShZLlRhA
+        lnzx4x2xkBejjcu8i+MuOlBWGAq82yBnQhP9jNhSKqzutZkvoPrE+DaFRBQ2JOb4j5DojW+YmB1TQ
+        EZfc3k1Z3m4KXMajFbDtwS9023NbK50LztQbXevsdQvS6AOv4JY3DBFmFrzKqXOH+RV3M0pyTvPbI
+        9sn7wEgLyUpWZTEsemou0MiLDGDeur8Ama9taCLIXAaN6Ru7/xY5zsA5qZdI+ad11Hfx7npvyG54r
+        SstAvX6uYL3TOGkFqkoXYIn4TKwOJvn7Eki+iTRy2VOK059F6VHaZNIoBBTll1KF9xSh0wvNlGSuH
+        NL6Mf2Yg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1ml7ce-002eyR-My; Thu, 11 Nov 2021 10:48:01 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CB96930001B;
+        Thu, 11 Nov 2021 11:47:57 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 950042D1ADCA5; Thu, 11 Nov 2021 11:47:57 +0100 (CET)
+Date:   Thu, 11 Nov 2021 11:47:57 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <seanjc@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Guo Ren <guoren@kernel.org>, Nick Hu <nickhu@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org,
+        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Artem Kashkanov <artem.kashkanov@intel.com>,
+        Like Xu <like.xu.linux@gmail.com>,
+        Like Xu <like.xu@linux.intel.com>,
+        Zhu Lingshan <lingshan.zhu@intel.com>
+Subject: Re: [PATCH v4 01/17] perf: Protect perf_guest_cbs with RCU
+Message-ID: <YYz03fcDRV9NZnyA@hirez.programming.kicks-ass.net>
+References: <20211111020738.2512932-1-seanjc@google.com>
+ <20211111020738.2512932-2-seanjc@google.com>
+ <d784dc27-72d0-d64f-e1f4-a2b9a5f86dd4@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Subject: Re: [PATCH 7/7] tools/testing/selftests/bpf: make it adopt to task
- comm size change
-Content-Language: en-US
-To:     Yafang Shao <laoar.shao@gmail.com>, akpm@linux-foundation.org
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        oliver.sang@intel.com, lkp@intel.com,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Petr Mladek <pmladek@suse.com>
-References: <20211108083840.4627-1-laoar.shao@gmail.com>
- <20211108083840.4627-8-laoar.shao@gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <20211108083840.4627-8-laoar.shao@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d784dc27-72d0-d64f-e1f4-a2b9a5f86dd4@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 08.11.21 09:38, Yafang Shao wrote:
-> The hard-coded 16 is used in various bpf progs. These progs get task
-> comm either via bpf_get_current_comm() or prctl() or
-> bpf_core_read_str(), all of which can work well even if the task comm size
-> is changed.
-> 
-> In these BPF programs, one thing to be improved is the
-> sched:sched_switch tracepoint args. As the tracepoint args are derived
-> from the kernel, we'd better make it same with the kernel. So the macro
-> TASK_COMM_LEN is converted to type enum, then all the BPF programs can
-> get it through BTF.
-> 
-> The BPF program which wants to use TASK_COMM_LEN should include the header
-> vmlinux.h. Regarding the test_stacktrace_map and test_tracepoint, as the
-> type defined in linux/bpf.h are also defined in vmlinux.h, so we don't
-> need to include linux/bpf.h again.
-> 
-> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-> Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-> Cc: Michal Miroslaw <mirq-linux@rere.qmqm.pl>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Petr Mladek <pmladek@suse.com>
+On Thu, Nov 11, 2021 at 08:26:58AM +0100, Paolo Bonzini wrote:
+> On 11/11/21 03:07, Sean Christopherson wrote:
 
+> >   EXPORT_SYMBOL_GPL(perf_register_guest_info_callbacks);
+> >   int perf_unregister_guest_info_callbacks(struct perf_guest_info_callbacks *cbs)
+> >   {
+> > -	perf_guest_cbs = NULL;
+> > +	if (WARN_ON_ONCE(rcu_access_pointer(perf_guest_cbs) != cbs))
+> > +		return -EINVAL;
+> > +
+> > +	rcu_assign_pointer(perf_guest_cbs, NULL);
+> > +	synchronize_rcu();
+> This technically could be RCU_INIT_POINTER but it's not worth a respin.
+> There are dozens of other occurrences, and if somebody wanted they
+> could use Coccinelle to fix all of them.
 
-Acked-by: David Hildenbrand <david@redhat.com>
+I've been pushing the other way, trying to get rid of RCU_INIT_POINTER()
+since rcu_assign_pointer(, NULL) actualy DTRT per __builtin_constant_p()
+etc.
 
-
--- 
-Thanks,
-
-David / dhildenb
-
+There's a very few sites where we use RCU_INIT_POINTER() with a !NULL
+argument, and those are 'special'.
