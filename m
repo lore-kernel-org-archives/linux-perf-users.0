@@ -2,174 +2,158 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B081C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 01:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A0F5C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 02:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36626610A5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 01:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AFE460F36
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 02:34:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234625AbhKLBLe (ORCPT
+        id S233638AbhKLCgw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 11 Nov 2021 20:11:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59898 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229725AbhKLBLe (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 11 Nov 2021 20:11:34 -0500
-Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FF95C061766;
-        Thu, 11 Nov 2021 17:08:44 -0800 (PST)
-Received: by mail-qt1-x82f.google.com with SMTP id v22so2396808qtx.8;
-        Thu, 11 Nov 2021 17:08:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5n/yTDCK8CRJjJdsGfPnssp0jZQU00+EZOCC5bWYfFU=;
-        b=eUFcPQH0+0JCmXaHUH4Vr/Q5I/Z1D9/oJh0q7uzMisY7Jtkb5gI3JH1sT/SXrOnOpM
-         g8HruycYIChrcCipVEllN5Jv8xJ9gLMJbZJYA+E9KWfKOR/8BBWgxzKkF36mXpIJl8mo
-         AR7yOz9wVNZCVBNfJE2jqwfJ/7PdIp7P3B5BRlZp+dIsl7df4Ul6d7n0jSVwTh+dpOjr
-         WVodnD6rwOxGWD7SPgfwN9oK2dZK8zg9hzw7+Px7+Uiy7HarZuqFKe5a4OVNJmOVTpT+
-         2CR/bSkH8UZfCQ6riWAIYRGWE9B9EqVtxsKAv26PNJPjaujKiyzLnRf0tb69K1PfaFd9
-         Ph0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5n/yTDCK8CRJjJdsGfPnssp0jZQU00+EZOCC5bWYfFU=;
-        b=u7yTapVgQVR8mJzwI72o0xRMoYMoySGn4NWOuy7tc3DZbfxvYAq8j8io/DptXca1Ws
-         ir/di8hpMHIJnOV84IHUh0cQ5n2Rc/FdN0g+pJF/ftgiqHjBYV8LnI+D70/4aQU3rLiU
-         YaOMIGWNvn3kHwWZYrIjzSfYUBWA1fDY1QlmACeRwF8i/R8eI1DoV3tD/EApEcKnGUzG
-         VdHyKkh+6Jj/HT4NPrdMHiFmz9zy7uY2C13P+zUmVt/kRlLCsc4il2rWdUjxq9vtHZcr
-         nsCrDjajBn1znyLS9frPRCbXiLBjEAYCvxEH2zpx2lZlZL/YI4pnx5fwGStYkplfMSb2
-         mvmw==
-X-Gm-Message-State: AOAM5302NBQmmMSGEP5fPMG7QEI/B0N9eXhCr+BSnqdHW4pWQ27YDJ8c
-        UTMZpTUG/u9KnK++RvrmQOYlmPPwnQW0//UHPec=
-X-Google-Smtp-Source: ABdhPJwuSkW7GcYwHPj4mRDzO3ZZvr5ZfE3/Da4Wdt9UsnAM5SMYhEoz/FAMUpgFUYTswEasTP0wQZl74+yXE4QGJ/E=
-X-Received: by 2002:a05:622a:194:: with SMTP id s20mr12344990qtw.66.1636679323658;
- Thu, 11 Nov 2021 17:08:43 -0800 (PST)
-MIME-Version: 1.0
-References: <20211108083840.4627-1-laoar.shao@gmail.com> <20211108083840.4627-5-laoar.shao@gmail.com>
- <a13c0541-59a3-6561-6d42-b51fef9f7c8b@redhat.com> <b495d38d-5cdd-8a33-b9d3-de721095ccab@redhat.com>
- <YYz/4bSdSXR3Palz@alley> <70dd5e1c-99c9-c1ca-4e3f-1a894896cf06@redhat.com>
-In-Reply-To: <70dd5e1c-99c9-c1ca-4e3f-1a894896cf06@redhat.com>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Fri, 12 Nov 2021 09:08:05 +0800
-Message-ID: <CALOAHbBcetHc9h436L9aHv17R+noERrZ0kETSEW9MfW7OOdQkg@mail.gmail.com>
-Subject: Re: [PATCH 4/7] fs/binfmt_elf: use get_task_comm instead of
- open-coded string copy
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel test robot <oliver.sang@intel.com>,
-        kbuild test robot <lkp@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
+        Thu, 11 Nov 2021 21:36:52 -0500
+Received: from mail-psaapc01on2121.outbound.protection.outlook.com ([40.107.255.121]:2112
+        "EHLO APC01-PSA-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229908AbhKLCgv (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 11 Nov 2021 21:36:51 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JapxLrOZIJpR1dDduapo0FBB3KZNo/+3oJQASVCD9Z768kB/4Ett/0mjFiM0TegnJDGF4JwUyTKTZhBxOdm8YhRS9nSsVoJoySoIS5RumgnKAHjZ0Pqy7yikMdbZ8FAdmzniT6fbyX0cXCnnBOt17EbiH53LGcv5sit5AbAj6mvbXFTeleoDUnsxtl4khE/5Z6ZzHBBHqJwqugtMujBdP8loSuNV2nrtYQIg6kBWHEYNiU6/NdtnD7gXUp2d2KdLjPMqlQeG8mfvQUl6EvRvJWBn/TBhQv4o5tOZAlv213H1kmFdFszKWO9mf6+nK3Xp8v/qzPF1hh8HQVV0tvbzhg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8I5VDXbLpw18FRCFLf6jq03In7pM1VxRJxXuOWoqaZc=;
+ b=N9bZFkKtggtx/F3mrsAeb5BZiv/EILNCH4bCv+sySoOMMhxcOrlws7RMRC+CkJinq9pAq8MLrXi4nprZzFrlY8pmHBRPpEp4vD21YWH0dGDpTWT7khwLNo9/xEULxMwmaVAEmrZN3mSefmWmE7b45YI2JnhRktoViCDr3kf55WLpRROg7rUFCDw1OU6C3joqwkVs1+mh0dohvnB47fec31fTMDh+Dr/s00MRkJ7DBrrdHxFRtt+qMOlbjMo3S7lLiMOxTdzAzYdcAXs4txgMb+ehgpTatxvk7tFRq2X79iDLW2flVhiY746N7z2062ICQWCCdsZxXpRhzXhI0E/udw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo0.onmicrosoft.com;
+ s=selector2-vivo0-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8I5VDXbLpw18FRCFLf6jq03In7pM1VxRJxXuOWoqaZc=;
+ b=UDr2+DD1NinRddSt1grnnI87q38w8jukdG9XwU3dAMEpsLEkmAyeXRR1LsjQ7kFLlzourCeOl9D6GkF17sTM+aB6ExarcUbmppDHgQ3zbT5+Ak71xaOoKO8WiJxWQ50gO5yD31PaN1aMvmi7QQ3g0Ray1aAcp09o32v+dK76AZc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from TYZPR06MB4173.apcprd06.prod.outlook.com (2603:1096:400:26::14)
+ by TYAPR06MB2191.apcprd06.prod.outlook.com (2603:1096:404:25::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.19; Fri, 12 Nov
+ 2021 02:33:59 +0000
+Received: from TYZPR06MB4173.apcprd06.prod.outlook.com
+ ([fe80::5e:78e1:eba3:7d0e]) by TYZPR06MB4173.apcprd06.prod.outlook.com
+ ([fe80::5e:78e1:eba3:7d0e%8]) with mapi id 15.20.4669.016; Fri, 12 Nov 2021
+ 02:33:59 +0000
+From:   Yihao Han <hanyihao@vivo.com>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     kernel@vivo.com, Yihao Han <hanyihao@vivo.com>
+Subject: [PATCH] perf cs-etm: use swap() to make code cleaner
+Date:   Thu, 11 Nov 2021 18:33:44 -0800
+Message-Id: <20211112023344.3642-1-hanyihao@vivo.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: HK2PR02CA0142.apcprd02.prod.outlook.com
+ (2603:1096:202:16::26) To TYZPR06MB4173.apcprd06.prod.outlook.com
+ (2603:1096:400:26::14)
+MIME-Version: 1.0
+Received: from ubuntu.localdomain (103.220.76.181) by HK2PR02CA0142.apcprd02.prod.outlook.com (2603:1096:202:16::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.15 via Frontend Transport; Fri, 12 Nov 2021 02:33:57 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f504231a-1c6b-4bd8-e21b-08d9a584e1bf
+X-MS-TrafficTypeDiagnostic: TYAPR06MB2191:
+X-Microsoft-Antispam-PRVS: <TYAPR06MB2191B4E62403962A544537C7A2959@TYAPR06MB2191.apcprd06.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: PRnFdbyNrk/hhcaRmRE0iOCS6ufDSsyArNxkutkY/zLasPHe6daPLNLUbLSWL8aPprJvQcthxcLL0KeuvYeYf15EyU3sU3+YDKnwWGvQOJmzJMIjAmbTUL5FqY6xY3oW5FwbgwNRBod5jzE1UM5Ic8SlP6mPDUwPrhGEWBGZH08GXpDAhZdAhx2EoohwmkwrTOPN5GAzGopMLryMANICViKqxZiVWCdczbfWnUfAqFQIP+cBPgt8EpaoAhsqjgkBDPyZuoBMMO6E6avtkXdW3NbSUE4LVM3FtTQ4kjHKCOF7E/iBlwasb9RsHB03uIavGhqMYnzv4C1ZNIr+AsSBwaHR2L7Kvnu9wokTVegVJL95i+s02IkWRmMnTmqSJ3A80OpKzvsMaqAs3AsLx+OUuczmPoWJS+lUrV9KX24XC458Wz4vvP8h87HJP2l366CHkM8FWAmezOqXhwHaopc8vn/xn8e4h/Oik1q8hjNvwvio4f6Wolz7Yj5AA+SAnwLXCl94ruhOgy+AVGghdyiFxXtR0SNrkjjXtYjlucSldwv6WXDEhbUznrCr4xLXoZiehEwxgtgv1iOXZ56dPXkM7VSO2TOwiXQYKvpg6rkJpeOEfLPNTzSxyeB/Lj72yj+/hsG5WfSRbhEUy6O17ugUaO+LKi0xAAY6hcQkS63q5fufU/2wdCmad6+C4rWLI/Xy3CLoaZ+7pIWZjnLRxdGrptSkweCmQA1uy9/2cM81++M=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR06MB4173.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(66946007)(38100700002)(36756003)(8936002)(4326008)(6486002)(26005)(38350700002)(2616005)(921005)(66476007)(1076003)(66556008)(52116002)(6506007)(956004)(83380400001)(7416002)(2906002)(8676002)(107886003)(86362001)(316002)(186003)(110136005)(6512007)(4744005)(5660300002)(6666004)(508600001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?c2FRVk7HKgb8lhTQCWGA2drguo0dDeBFkqTmz7BXCKzJ+sZ4hDSl9Um31mKw?=
+ =?us-ascii?Q?gXNlWx8CePwA4zxekuPm0V6O4NniY30SMMa3V5Z9BUXr8/ql1ULx+Tgqt/Xn?=
+ =?us-ascii?Q?4yIVJNHOEAUrkqa68H6/KTqGKS2zRiQJg8L75rM9AkobuuNCPxac9YDDfxDD?=
+ =?us-ascii?Q?2zLqBL9fW7HJ+qO38qErnrYZ9Adfr6G2e9uoErQd/GOPIY0RMtj1vDDyVKna?=
+ =?us-ascii?Q?kgpFpn78KCpxRjokDCLWSLV/27Ci4/KHcabUwpEr+UIa5FqmR3eE4/UcIugU?=
+ =?us-ascii?Q?Z7bcpZEAJpgjaPCaxqFT1zeYiTnx0pDOPaOUV6Ex9FCpIYVHZii4Q2vQNw9t?=
+ =?us-ascii?Q?shHQCR2KdPtRARmRrnJLEc5zdkU9hqHaGuGnYKbltMKC7erGU2Yn+ttBsN6I?=
+ =?us-ascii?Q?1shTALRcOaPNMNjpnnSHBtF70bdA7xFsbGmUOWxnTUSjc9cDzRkuJOsQbpbn?=
+ =?us-ascii?Q?2mQyAc21t4Q4YS2CNt07jAgI3GXHquOBqFLEg3voFVi8cz+cmzmw/AwmQTjD?=
+ =?us-ascii?Q?ugXqJrM1cuchk9nokROres5UjevMzUjwpWUegd0vFB50woYOiC9QPAQwi0+2?=
+ =?us-ascii?Q?rakkxlb5s6YADTzJweYPNbRfJAHzyndrbW1JFzK4Lg8fuiGCkGofS/aRNZuW?=
+ =?us-ascii?Q?Zn0usRVsqYKVQ1fFXgk4hP16LFbnNtU/ocrWXqbNBmTxjqoUliCmhONgubZn?=
+ =?us-ascii?Q?8jk8oj91xAtrELkHpxNH5mWNE3F89Gh8Fntsv/wRZ1Hy5Jyn2Ei3WhxD8WLl?=
+ =?us-ascii?Q?OBNGH1wVg0A1bJJUTwLrbeTgzwWIpOGkb8AiagIUKtSnJXIiOhaHoINC3Pa4?=
+ =?us-ascii?Q?4UHKKsTkeZrFKkrNjS1bHtpzsREf8/+p2VZYPC2wq+41STnlMxguUqqGHz/g?=
+ =?us-ascii?Q?C/7NACSSj8ZEXOCrhwow+eqrRsz8y4F89wCy0OLDVvnXBwWabqKzhtlsSlyz?=
+ =?us-ascii?Q?ZiFDDc6T2vV0IoGq/6l1x1MG8tw5q/YhKe7wAaCL3RYj8z5t9Pu2Io2n7c83?=
+ =?us-ascii?Q?BcwSQxvJD5jaQi47x5GdWW3Y/fDJYgeut1/pQx4kpgHDeP3t80iR3Ujri6b6?=
+ =?us-ascii?Q?b5a3VlaZvfKTpiRYnKE6eUHtcMEl3C7/cwVJVyuXfS0+0q1X4TorXAcbsgpn?=
+ =?us-ascii?Q?MB209W+PCzN/th4WQXE6h95Dmee3VQR/VNh+QmQ3Un55fXCfNrKARVw+/MXl?=
+ =?us-ascii?Q?2LEqLPJoQEo5EDZvEw5bzqCxrPOlAK83OA+oWkYMBKNV37bDqJcOofnOUoKq?=
+ =?us-ascii?Q?CoQCK49r8SrfoPBawj5/FklUOzJGFxib6OSjrp1r/6t/oo3fqP1pEGL0A83k?=
+ =?us-ascii?Q?X1MKyg7ixN3Sx6OBopMELUWsG2c6iHBhPj5yVl8KaEduJulA1s08LhyhCg1K?=
+ =?us-ascii?Q?mM9kU18bpGQPXCLl6drlrsui4wCbmeB4tMwGg6HTG/hcz5R3T/eVGrL0wMR1?=
+ =?us-ascii?Q?cl04Sv9INeR5oa3nYyox7gx5+PDHovRY6kJyAc7gcIjY+yf4556+M26h/ASa?=
+ =?us-ascii?Q?2v86ZT2JRkXFYkxoGOV2g+EDVMA2EOFlrjdP+oZh2D9NKnoWbCAzkAguI8fU?=
+ =?us-ascii?Q?zdIciOD75lwF0/O/9ZyoH08R6d97mcQkDWirvIi4AOw7xfmo0KeBGBqY5Dub?=
+ =?us-ascii?Q?lVvrDdxQIR6gPgERlG6ermA=3D?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f504231a-1c6b-4bd8-e21b-08d9a584e1bf
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR06MB4173.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2021 02:33:59.2734
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Spqgck8ZeJZrH+lbTGaXk8+zsOnFd3X/as89qRm9qFu9KI4+Amh5GlIImpwodwsG2hGb3+tp5jd2cfGtL0ShUA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR06MB2191
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Nov 11, 2021 at 7:47 PM David Hildenbrand <david@redhat.com> wrote:
->
-> On 11.11.21 12:34, Petr Mladek wrote:
-> > On Thu 2021-11-11 11:06:04, David Hildenbrand wrote:
-> >> On 11.11.21 11:03, David Hildenbrand wrote:
-> >>> On 08.11.21 09:38, Yafang Shao wrote:
-> >>>> It is better to use get_task_comm() instead of the open coded string
-> >>>> copy as we do in other places.
-> >>>>
-> >>>> struct elf_prpsinfo is used to dump the task information in userspace
-> >>>> coredump or kernel vmcore. Below is the verfication of vmcore,
-> >>>>
-> >>>> crash> ps
-> >>>>    PID    PPID  CPU       TASK        ST  %MEM     VSZ    RSS  COMM
-> >>>>       0      0   0  ffffffff9d21a940  RU   0.0       0      0  [swapper/0]
-> >>>>>     0      0   1  ffffa09e40f85e80  RU   0.0       0      0  [swapper/1]
-> >>>>>     0      0   2  ffffa09e40f81f80  RU   0.0       0      0  [swapper/2]
-> >>>>>     0      0   3  ffffa09e40f83f00  RU   0.0       0      0  [swapper/3]
-> >>>>>     0      0   4  ffffa09e40f80000  RU   0.0       0      0  [swapper/4]
-> >>>>>     0      0   5  ffffa09e40f89f80  RU   0.0       0      0  [swapper/5]
-> >>>>       0      0   6  ffffa09e40f8bf00  RU   0.0       0      0  [swapper/6]
-> >>>>>     0      0   7  ffffa09e40f88000  RU   0.0       0      0  [swapper/7]
-> >>>>>     0      0   8  ffffa09e40f8de80  RU   0.0       0      0  [swapper/8]
-> >>>>>     0      0   9  ffffa09e40f95e80  RU   0.0       0      0  [swapper/9]
-> >>>>>     0      0  10  ffffa09e40f91f80  RU   0.0       0      0  [swapper/10]
-> >>>>>     0      0  11  ffffa09e40f93f00  RU   0.0       0      0  [swapper/11]
-> >>>>>     0      0  12  ffffa09e40f90000  RU   0.0       0      0  [swapper/12]
-> >>>>>     0      0  13  ffffa09e40f9bf00  RU   0.0       0      0  [swapper/13]
-> >>>>>     0      0  14  ffffa09e40f98000  RU   0.0       0      0  [swapper/14]
-> >>>>>     0      0  15  ffffa09e40f9de80  RU   0.0       0      0  [swapper/15]
-> >>>>
-> >>>> It works well as expected.
-> >>>>
-> >>>> Suggested-by: Kees Cook <keescook@chromium.org>
-> >>>> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> >>>> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> >>>> Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-> >>>> Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-> >>>> Cc: Michal Miroslaw <mirq-linux@rere.qmqm.pl>
-> >>>> Cc: Peter Zijlstra <peterz@infradead.org>
-> >>>> Cc: Steven Rostedt <rostedt@goodmis.org>
-> >>>> Cc: Matthew Wilcox <willy@infradead.org>
-> >>>> Cc: David Hildenbrand <david@redhat.com>
-> >>>> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> >>>> Cc: Kees Cook <keescook@chromium.org>
-> >>>> Cc: Petr Mladek <pmladek@suse.com>
-> >>>> ---
-> >>>>  fs/binfmt_elf.c | 2 +-
-> >>>>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>>
-> >>>> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-> >>>> index a813b70f594e..138956fd4a88 100644
-> >>>> --- a/fs/binfmt_elf.c
-> >>>> +++ b/fs/binfmt_elf.c
-> >>>> @@ -1572,7 +1572,7 @@ static int fill_psinfo(struct elf_prpsinfo *psinfo, struct task_struct *p,
-> >>>>    SET_UID(psinfo->pr_uid, from_kuid_munged(cred->user_ns, cred->uid));
-> >>>>    SET_GID(psinfo->pr_gid, from_kgid_munged(cred->user_ns, cred->gid));
-> >>>>    rcu_read_unlock();
-> >>>> -  strncpy(psinfo->pr_fname, p->comm, sizeof(psinfo->pr_fname));
-> >>>> +  get_task_comm(psinfo->pr_fname, p);
-> >>>>
-> >>>>    return 0;
-> >>>>  }
-> >>>>
-> >>>
-> >>> We have a hard-coded "pr_fname[16]" as well, not sure if we want to
-> >>> adjust that to use TASK_COMM_LEN?
-> >>
-> >> But if the intention is to chance TASK_COMM_LEN later, we might want to
-> >> keep that unchanged.
-> >
-> > It seems that len will not change in the end. Another solution is
-> > going to be used for the long names, see
-> > https://lore.kernel.org/r/20211108084142.4692-1-laoar.shao@gmail.com.
->
-> Yes, that's what I recall as well. The I read the patch
-> subjects+descriptions in this series "make it adopt to task comm size
-> change" and was slightly confused.
->
-> Maybe we should just remove any notion of "task comm size change" from
-> this series and instead just call it a cleanup.
->
->
+Use the macro 'swap()' defined in 'include/linux/minmax.h' to avoid
+opencoding it.
 
-Agreed that it may make a little confused for the one who didn't
-engage in this series at the first place.
-I will improve the subjection+description.
+Signed-off-by: Yihao Han <hanyihao@vivo.com>
+---
+ tools/perf/util/cs-etm.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index f323adb1af85..aaa3ec725002 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -408,17 +408,13 @@ struct cs_etm_packet_queue
+ static void cs_etm__packet_swap(struct cs_etm_auxtrace *etm,
+ 				struct cs_etm_traceid_queue *tidq)
+ {
+-	struct cs_etm_packet *tmp;
+-
+ 	if (etm->sample_branches || etm->synth_opts.last_branch ||
+ 	    etm->sample_instructions) {
+ 		/*
+ 		 * Swap PACKET with PREV_PACKET: PACKET becomes PREV_PACKET for
+ 		 * the next incoming packet.
+ 		 */
+-		tmp = tidq->packet;
+-		tidq->packet = tidq->prev_packet;
+-		tidq->prev_packet = tmp;
++		swap(tidq->packet, tidq->prev_packet);
+ 	}
+ }
+ 
 -- 
-Thanks
-Yafang
+2.17.1
+
