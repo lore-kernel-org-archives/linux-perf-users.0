@@ -2,93 +2,107 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48153C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 10:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A13DC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 12:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 257DF60F93
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 10:34:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EFA761078
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 12:56:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232841AbhKLKgy (ORCPT
+        id S234942AbhKLM7N (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 12 Nov 2021 05:36:54 -0500
-Received: from mga03.intel.com ([134.134.136.65]:48187 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232791AbhKLKgy (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 12 Nov 2021 05:36:54 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10165"; a="233059007"
-X-IronPort-AV: E=Sophos;i="5.87,229,1631602800"; 
-   d="scan'208";a="233059007"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2021 02:34:03 -0800
-X-IronPort-AV: E=Sophos;i="5.87,229,1631602800"; 
-   d="scan'208";a="492951812"
-Received: from dehex-mobl1.ccr.corp.intel.com (HELO [10.255.31.116]) ([10.255.31.116])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2021 02:33:57 -0800
-To:     irogers@google.com
-Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
-        daniel@iogearbox.net, jolsa@redhat.com, leo.yan@linaro.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        llvm@lists.linux.dev, mark.rutland@arm.com, mingo@redhat.com,
-        mpetlan@redhat.com, namhyung@kernel.org, nathan@kernel.org,
-        ndesaulniers@google.com, peterz@infradead.org,
-        sedat.dilek@gmail.com, philip.li@intel.com
-From:   Ma Xinjian <xinjianx.ma@intel.com>
-Subject: Re: [PATCH 2/2] perf clang: Fixes for more recent LLVM/clang
-Message-ID: <1fcb636d-71ab-12e8-aa7f-c7ca4f89a5ed@intel.com>
-Date:   Fri, 12 Nov 2021 18:24:44 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Fri, 12 Nov 2021 07:59:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47932 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234881AbhKLM7N (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 12 Nov 2021 07:59:13 -0500
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B001FC061766;
+        Fri, 12 Nov 2021 04:56:22 -0800 (PST)
+Received: by mail-pl1-x62d.google.com with SMTP id b13so8380776plg.2;
+        Fri, 12 Nov 2021 04:56:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=g+fNIRpzo2sLghB9sgoem/xkpimyK2WeQcIa3G2jAk4=;
+        b=fFO+dQTOs7hF8CbwuxCH4FypYoZgO/F/ddXxMphcWjE90BQyQat7ruVbGemFIe4AKh
+         CxFrcjbnyTbLRW/7XQZvNhRm1ZocSXgLYT9JXytm3hTcpTczxYLYXuvXfEZYS1u7XD7l
+         xesgJRb8PzZiwdxnpCGWfiNndBnOPOWo2eP7N9VS0gKfz+6BAOmaqoIoy0ach36ZOLxw
+         jW6uW3bHmnYuzRMWCjzwkWJSK9HFpBklzpR8+7sagza5I5Dh8mvigZ1I5A78i63pc3lW
+         5QzBMmzWyzdfZuBLPhmLI5jWSLgLnReQ9yoqZznJMwjtpAhFGtn1IMn4MODP7HOGeJ7C
+         QC+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=g+fNIRpzo2sLghB9sgoem/xkpimyK2WeQcIa3G2jAk4=;
+        b=QWpEtZB+bbCsYfi5b1lWqNhjU1s90prussoaEDRpBeAAydcNgI6lfVkoXVXg9CqU2c
+         V4c4l0cPK7VoocPMV0uIkOPBAcO6hYlU+x/hh1yNkJ5MuhJ3Gdmve80L8Ijpb0WAUXy2
+         M7UaL8X/M5A78T6tAQtsDUCy6n2YSM9EPJaGyaeYfHOXgDn+fWIeKp91cKZUyFyQQXpj
+         cEW4+hpVzc8vfb/rXew0fzmroYME+iDXMwPpLbP7+qd6y7u3ic+Zk3DlKk0bidsjM6Wj
+         Pwiw5yh2lq9Fsk0iO/vUefZv0XCy/SumiiPVCdeciMYnPPquBj+iJjapFp5xW6+LMF0d
+         Sj3g==
+X-Gm-Message-State: AOAM531mn8SRBBPhMuyP7ZedCyB7MDdzEBrPrTY3iqeU7wQXHEK/I6Lv
+        vNHnzEHu4UUEBbBd8Q2i7gc=
+X-Google-Smtp-Source: ABdhPJyoZUkmCjbtpH0+fi3C6/PtsN9O2NdWoKUkvRPZ0eNm/ux/A61mh9WH0+NaN4S5cdh/MICkVA==
+X-Received: by 2002:a17:902:7c02:b0:143:9d6a:8e42 with SMTP id x2-20020a1709027c0200b001439d6a8e42mr7739240pll.80.1636721782272;
+        Fri, 12 Nov 2021 04:56:22 -0800 (PST)
+Received: from localhost.localdomain ([193.203.214.57])
+        by smtp.gmail.com with ESMTPSA id q9sm7206553pfj.88.2021.11.12.04.56.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Nov 2021 04:56:21 -0800 (PST)
+From:   cgel.zte@gmail.com
+X-Google-Original-From: deng.changcheng@zte.com.cn
+To:     acme@kernel.org
+Cc:     mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, kan.liang@linux.intel.com, irogers@google.com,
+        deng.changcheng@zte.com.cn, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Zeal Robot <zealci@zte.com.cn>
+Subject: [PATCH] perf tools: remove unneeded variable
+Date:   Fri, 12 Nov 2021 12:56:15 +0000
+Message-Id: <20211112125615.10504-1-deng.changcheng@zte.com.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi
+From: Changcheng Deng <deng.changcheng@zte.com.cn>
 
-We build perf with clang also recently, but unlucky that failed with 
-following errors:
+Fix the following coccicheck review:
+./tools/perf/util/perf_event_attr_fprintf.c: 97: 5-8: Unneeded variable
 
+Remove unneeded variable used to store return value.
 
-```
-In file included from /usr/lib/llvm-7/include/llvm/ADT/STLExtras.h:21,
-                  from /usr/lib/llvm-7/include/llvm/ADT/StringRef.h:13,
-                  from /usr/lib/llvm-7/include/clang/Basic/Version.h:20,
-                  from test-clang.cpp:2:
-/usr/lib/llvm-7/include/llvm/ADT/SmallVector.h: In instantiation of 
-'void llvm::SmallVectorTemplateBase<T, true>::push_back(const T&) [with 
-T = clang::driver::OffloadUnbundlingJobAction::DependentActionInfo]':
-/usr/lib/llvm-7/include/clang/Driver/Action.h:579:61:   required from here
-/usr/lib/llvm-7/include/llvm/ADT/SmallVector.h:313:11: error: 'void* 
-memcpy(void*, const void*, size_t)' writing to an object of type 'struct 
-clang::driver::OffloadUnbundlingJobAction::DependentActionInfo' with no 
-trivial copy-assignment; use copy-initialization instead 
-[-Werror=class-memaccess]
-      memcpy(this->end(), &Elt, sizeof(T));
-      ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In file included from /usr/lib/llvm-7/include/clang/Driver/Driver.h:15,
-                  from test-clang.cpp:6:
-/usr/lib/llvm-7/include/clang/Driver/Action.h:549:10: note: 'struct 
-clang::driver::OffloadUnbundlingJobAction::DependentActionInfo' declared 
-here
-    struct DependentActionInfo final {
-           ^~~~~~~~~~~~~~~~~~~
-cc1plus: all warnings being treated as errors
-```
+Reported-by: Zeal Robot <zealci@zte.com.cn>
+Signed-off-by: Changcheng Deng <deng.changcheng@zte.com.cn>
+---
+ tools/perf/util/perf_event_attr_fprintf.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-llvm version: 7
-rootfs: Debian10
-kernel: v5.8 v5.11 v5.15
-reproduce:
-$ cd linux/tools/perf
-$ make LIBCLANGLLVM=1 ARCH= EXTRA_CFLAGS='-fno-omit-frame-pointer 
--fsanitize=undefined -fsanitize=address'
+diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
+index 47b7531f51da..111180bcd466 100644
+--- a/tools/perf/util/perf_event_attr_fprintf.c
++++ b/tools/perf/util/perf_event_attr_fprintf.c
+@@ -94,7 +94,6 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
+ 			     attr__fprintf_f attr__fprintf, void *priv)
+ {
+ 	char buf[BUF_SIZE];
+-	int ret = 0;
+ 
+ 	PRINT_ATTRf(type, p_unsigned);
+ 	PRINT_ATTRf(size, p_unsigned);
+@@ -155,5 +154,5 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
+ 	PRINT_ATTRf(aux_sample_size, p_unsigned);
+ 	PRINT_ATTRf(sig_data, p_unsigned);
+ 
+-	return ret;
++	return 0;
+ }
+-- 
+2.25.1
 
-Would you please kindly point out what's wrong with our steps? Or can 
-you give us your command to make perf with clang?
-
-
-Thanks
-Ma Xinjian
