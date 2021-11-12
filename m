@@ -2,132 +2,136 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCD7C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 07:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D283CC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 08:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AB5A60FBF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 07:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF5F860FE3
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 08:38:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231173AbhKLH6b (ORCPT
+        id S234144AbhKLIlT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 12 Nov 2021 02:58:31 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:51110 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232841AbhKLH6a (ORCPT
+        Fri, 12 Nov 2021 03:41:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45672 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233998AbhKLIlR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 12 Nov 2021 02:58:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1636703739;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lF7lzRoeZrlEIt3gHEFyVsRoWpbej1ntDFwYNAiQdJI=;
-        b=OoH/RlDgLrBZ4NE0Egiv2jYH8u01kIkq7gOxapj3QCEpGv+UEvV8YL1k8ZDawXVwBCBY9L
-        S/PngiPfgXjne44ijbUWRyM9MJdCI2gzYe1HdEMfP3KVnjv+4tEjyXNuQeDess5Ff4y0/O
-        eBFVMOdsntqB/H6Yt6IMd0RSpBwt2rg=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-20-cB2FLwLAMlSpCE31wUtIFQ-1; Fri, 12 Nov 2021 02:55:38 -0500
-X-MC-Unique: cB2FLwLAMlSpCE31wUtIFQ-1
-Received: by mail-ed1-f71.google.com with SMTP id i22-20020a05640242d600b003e28aecc0afso7604748edc.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Nov 2021 23:55:38 -0800 (PST)
+        Fri, 12 Nov 2021 03:41:17 -0500
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7002EC061767
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Nov 2021 00:38:27 -0800 (PST)
+Received: by mail-pj1-x1034.google.com with SMTP id np3so6161511pjb.4
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Nov 2021 00:38:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Gr5eo6lh6tOCmqLZBPxylS6DQQWushgkeRkakiksvqM=;
+        b=AcbubQbvJYtTNJPR9YUQ3l4fihMXd4tvXzbiLJEU+CtAZpagjrtwTIHwo9NOMLDumT
+         vsErY2wgGazp9qtULJRl+3UJmsBiE+HVsnpiNGMNCNMsSE8Q6j5jA50ubTzeyCRmRN+a
+         xdWktaArWzIYfFwOJ9By0h+hq4F3g3LKtz/NLf/etja30zrgIpDX16KNRUGEvzDRkKuO
+         2Z5SWP6+fuwvQW9DTZ0mbGf4fFf3HGpKSND1nrXMOiC7T24vYYtPOc/4Ox6jBn3kOK3E
+         etbpq9Fmlj1VcstFaU1lKnIa58F3OHONXr285tkjyHD8Rgd9ZMg1oDRgj6Tr8Vv7lNSt
+         o5MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=lF7lzRoeZrlEIt3gHEFyVsRoWpbej1ntDFwYNAiQdJI=;
-        b=Vlr3WUs83BQ4X7WbNN7YzhFMqw4TRhoPU1CTpfoeiRpjCUbbzyh7CjVMrwMnyumh6Y
-         h0Ju6sVDOy3qASgP9gVClH7e3/nezZKv5iLN9/ALSXnTZIdiieGvO942LN9aTrGEza56
-         AoczcDfmnxIyHdVdpkuyqrLn8xzv6nXRQa8ZsZxyDBLYbs3cAmZnEuvE5aITixp9dhM1
-         ZxfyU8w5hsWZCLuFznRDyB6gjyAuYKhRV9IYY2UEvTapgURspf/pGjkuWhBlN8OJNEQB
-         iXiROZYbc0rB8PuwTGb0df6jhMtPjQeZ87PAMbT7F725021WodQLEAsPbn4m8GHTeFjp
-         PCIA==
-X-Gm-Message-State: AOAM532Pd45nPEtjjgsEPgQWOkCj7rvz15hKcugDqG0fquMl2zJ422L3
-        bVqhjIzubj284k5KoI7R3N6lYiHBSqAjKPzb91eXmO4FWJrgUPPh15GjKdyvVPuRcyBKvVXHLyF
-        J1fFcZR0rTCqYGKLI3JL+r3Rrd1s/wQ==
-X-Received: by 2002:a17:907:6e10:: with SMTP id sd16mr17768039ejc.158.1636703737526;
-        Thu, 11 Nov 2021 23:55:37 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzVTSyaI9bwf+cK3HRTYkkEGrfXsl4Cvt+Fkmz/7JDyaorMKEA4Mec75P9Nt6V8a8edl3Ld8g==
-X-Received: by 2002:a17:907:6e10:: with SMTP id sd16mr17767982ejc.158.1636703737318;
-        Thu, 11 Nov 2021 23:55:37 -0800 (PST)
-Received: from ?IPV6:2001:b07:6468:f312:5e2c:eb9a:a8b6:fd3e? ([2001:b07:6468:f312:5e2c:eb9a:a8b6:fd3e])
-        by smtp.gmail.com with ESMTPSA id n1sm2700678edf.45.2021.11.11.23.55.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Nov 2021 23:55:36 -0800 (PST)
-Message-ID: <016d5b91-6910-2aca-0db1-a65079449454@redhat.com>
-Date:   Fri, 12 Nov 2021 08:55:31 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Subject: Re: [PATCH v4 01/17] perf: Protect perf_guest_cbs with RCU
-Content-Language: en-US
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Sean Christopherson <seanjc@google.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Gr5eo6lh6tOCmqLZBPxylS6DQQWushgkeRkakiksvqM=;
+        b=N8Fg57tTkja+d19cC7G93Q95XyMmdH4BNcLBqRGj8tJqX/swTz6/dePUe+PdFVpRz2
+         H2LG6VEYEFrmRhs2e56i8BU1PjB9uWtA82ZwMZn1FWCn/JPdGFQf+MXflTL2qI2zGrJW
+         OB/GFYNORxGbkA17gTgNxDApQzKtxE/4ncGnePDN0CLoYgwSYKziewzq+QdoY3uiCFWy
+         HbVQbD8pGIBVh7MEWQp1Qk4C40V8OTimaVtSs4q9UU2qLrzxOnatxXkeicpflejfb9mH
+         bwxhWtz5KE06HDmxfC7iHsiDWH0tNULEolFDUpCHiOLTBjX4G0fS8njfgZ3p+27mY6vf
+         Uf9w==
+X-Gm-Message-State: AOAM5316jGTFkBLzyN0f/dZy0W9y3fOmLTqeK24EbameKpjNSwG8ek5I
+        xIzjqLi98UOqdvxLW6b9rjDljA==
+X-Google-Smtp-Source: ABdhPJzzUAz3lEYq+ljbLBoCEcvv7E3wlCIkE/msZHBv1aCcYqnGaITkGIqkPsNRmjSIgA6ZIRH1dA==
+X-Received: by 2002:a17:902:6acb:b0:142:76c3:d35f with SMTP id i11-20020a1709026acb00b0014276c3d35fmr5978730plt.89.1636706306920;
+        Fri, 12 Nov 2021 00:38:26 -0800 (PST)
+Received: from leoy-ThinkPad-X240s ([134.195.101.46])
+        by smtp.gmail.com with ESMTPSA id v16sm4270928pgo.71.2021.11.12.00.38.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Nov 2021 00:38:26 -0800 (PST)
+Date:   Fri, 12 Nov 2021 16:38:19 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Yihao Han <hanyihao@vivo.com>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Guo Ren <guoren@kernel.org>, Nick Hu <nickhu@andestech.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Stefano Stabellini <sstabellini@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org,
-        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
-        Artem Kashkanov <artem.kashkanov@intel.com>,
-        Like Xu <like.xu.linux@gmail.com>,
-        Like Xu <like.xu@linux.intel.com>,
-        Zhu Lingshan <lingshan.zhu@intel.com>
-References: <20211111020738.2512932-1-seanjc@google.com>
- <20211111020738.2512932-2-seanjc@google.com>
- <d784dc27-72d0-d64f-e1f4-a2b9a5f86dd4@redhat.com>
- <YYz03fcDRV9NZnyA@hirez.programming.kicks-ass.net>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-In-Reply-To: <YYz03fcDRV9NZnyA@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        kernel@vivo.com
+Subject: Re: [PATCH] perf cs-etm: use swap() to make code cleaner
+Message-ID: <20211112083819.GE106654@leoy-ThinkPad-X240s>
+References: <20211112023344.3642-1-hanyihao@vivo.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211112023344.3642-1-hanyihao@vivo.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 11/11/21 11:47, Peter Zijlstra wrote:
->> This technically could be RCU_INIT_POINTER but it's not worth a respin.
->> There are dozens of other occurrences, and if somebody wanted they
->> could use Coccinelle to fix all of them.
-> I've been pushing the other way, trying to get rid of RCU_INIT_POINTER()
-> since rcu_assign_pointer(, NULL) actualy DTRT per __builtin_constant_p()
-> etc.
+Hi Yihao,
 
-Oh, that's pretty cool to know, thanks!
+On Thu, Nov 11, 2021 at 06:33:44PM -0800, Yihao Han wrote:
+> Use the macro 'swap()' defined in 'include/linux/minmax.h' to avoid
+> opencoding it.
 
-Paolo
+The header 'include/linux/minmax.h' is used for kernel but it's not
+provided for user space program?
 
-> There's a very few sites where we use RCU_INIT_POINTER() with a !NULL
-> argument, and those are 'special'.
+> Signed-off-by: Yihao Han <hanyihao@vivo.com>
+> ---
+>  tools/perf/util/cs-etm.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
 > 
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index f323adb1af85..aaa3ec725002 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -408,17 +408,13 @@ struct cs_etm_packet_queue
+>  static void cs_etm__packet_swap(struct cs_etm_auxtrace *etm,
+>  				struct cs_etm_traceid_queue *tidq)
+>  {
+> -	struct cs_etm_packet *tmp;
+> -
+>  	if (etm->sample_branches || etm->synth_opts.last_branch ||
+>  	    etm->sample_instructions) {
+>  		/*
+>  		 * Swap PACKET with PREV_PACKET: PACKET becomes PREV_PACKET for
+>  		 * the next incoming packet.
+>  		 */
+> -		tmp = tidq->packet;
+> -		tidq->packet = tidq->prev_packet;
+> -		tidq->prev_packet = tmp;
+> +		swap(tidq->packet, tidq->prev_packet);
 
+NAK - This patch will introduce compilation error:
+
+util/cs-etm.c: In function ‘cs_etm__packet_swap’:
+util/cs-etm.c:417:3: error: implicit declaration of function ‘swap’; did you mean ‘swab’? [-Werror=implicit-function-declaration]
+   swap(tidq->packet, tidq->prev_packet);
+   ^~~~
+   swab
+
+Thanks,
+Leo
+
+>  	}
+>  }
+>  
+> -- 
+> 2.17.1
+> 
