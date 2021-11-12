@@ -2,136 +2,137 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D283CC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 08:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C5EC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 09:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF5F860FE3
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 08:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBD2A60EE2
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 09:30:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234144AbhKLIlT (ORCPT
+        id S234812AbhKLJdg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 12 Nov 2021 03:41:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45672 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233998AbhKLIlR (ORCPT
+        Fri, 12 Nov 2021 04:33:36 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6548 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234811AbhKLJdf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 12 Nov 2021 03:41:17 -0500
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7002EC061767
-        for <linux-perf-users@vger.kernel.org>; Fri, 12 Nov 2021 00:38:27 -0800 (PST)
-Received: by mail-pj1-x1034.google.com with SMTP id np3so6161511pjb.4
-        for <linux-perf-users@vger.kernel.org>; Fri, 12 Nov 2021 00:38:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Gr5eo6lh6tOCmqLZBPxylS6DQQWushgkeRkakiksvqM=;
-        b=AcbubQbvJYtTNJPR9YUQ3l4fihMXd4tvXzbiLJEU+CtAZpagjrtwTIHwo9NOMLDumT
-         vsErY2wgGazp9qtULJRl+3UJmsBiE+HVsnpiNGMNCNMsSE8Q6j5jA50ubTzeyCRmRN+a
-         xdWktaArWzIYfFwOJ9By0h+hq4F3g3LKtz/NLf/etja30zrgIpDX16KNRUGEvzDRkKuO
-         2Z5SWP6+fuwvQW9DTZ0mbGf4fFf3HGpKSND1nrXMOiC7T24vYYtPOc/4Ox6jBn3kOK3E
-         etbpq9Fmlj1VcstFaU1lKnIa58F3OHONXr285tkjyHD8Rgd9ZMg1oDRgj6Tr8Vv7lNSt
-         o5MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Gr5eo6lh6tOCmqLZBPxylS6DQQWushgkeRkakiksvqM=;
-        b=N8Fg57tTkja+d19cC7G93Q95XyMmdH4BNcLBqRGj8tJqX/swTz6/dePUe+PdFVpRz2
-         H2LG6VEYEFrmRhs2e56i8BU1PjB9uWtA82ZwMZn1FWCn/JPdGFQf+MXflTL2qI2zGrJW
-         OB/GFYNORxGbkA17gTgNxDApQzKtxE/4ncGnePDN0CLoYgwSYKziewzq+QdoY3uiCFWy
-         HbVQbD8pGIBVh7MEWQp1Qk4C40V8OTimaVtSs4q9UU2qLrzxOnatxXkeicpflejfb9mH
-         bwxhWtz5KE06HDmxfC7iHsiDWH0tNULEolFDUpCHiOLTBjX4G0fS8njfgZ3p+27mY6vf
-         Uf9w==
-X-Gm-Message-State: AOAM5316jGTFkBLzyN0f/dZy0W9y3fOmLTqeK24EbameKpjNSwG8ek5I
-        xIzjqLi98UOqdvxLW6b9rjDljA==
-X-Google-Smtp-Source: ABdhPJzzUAz3lEYq+ljbLBoCEcvv7E3wlCIkE/msZHBv1aCcYqnGaITkGIqkPsNRmjSIgA6ZIRH1dA==
-X-Received: by 2002:a17:902:6acb:b0:142:76c3:d35f with SMTP id i11-20020a1709026acb00b0014276c3d35fmr5978730plt.89.1636706306920;
-        Fri, 12 Nov 2021 00:38:26 -0800 (PST)
-Received: from leoy-ThinkPad-X240s ([134.195.101.46])
-        by smtp.gmail.com with ESMTPSA id v16sm4270928pgo.71.2021.11.12.00.38.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Nov 2021 00:38:26 -0800 (PST)
-Date:   Fri, 12 Nov 2021 16:38:19 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Yihao Han <hanyihao@vivo.com>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@vivo.com
-Subject: Re: [PATCH] perf cs-etm: use swap() to make code cleaner
-Message-ID: <20211112083819.GE106654@leoy-ThinkPad-X240s>
-References: <20211112023344.3642-1-hanyihao@vivo.com>
+        Fri, 12 Nov 2021 04:33:35 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1AC9IFDX012623
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Nov 2021 09:30:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : to : from : subject : content-type :
+ content-transfer-encoding; s=pp1;
+ bh=vX/Rba8TeAA95s6MZkdbJd6PXtdhd0pnQZaTZNF6jVs=;
+ b=k+t2pLbyEZMRZ6KCKwFOa0XAj5ULO+hIC3u7BHGTBu2wT+aW+jzBs7b/zqlhACcA1B8l
+ +IQon+3YyzQ4cZWB0oLp/x0Vq2lkEjd8WWMvST1mKaSSUWgyN9UH9s1LDA31RJmQn4RQ
+ HEk9UaKdVBs9LphkBdAKTTQi4Xk7amLfw8jpcFssalBmoYeAsp63XgMBBSdC8of+09Fm
+ hSmsCErcG3eyf9MW9ras+60JsmWoyWWo4Uq9HZAr+M5Ct9DvzP9AIQfuqZizkJ6nSAcw
+ 1Z6g3naDcuYKGtloyUZo1B5+lFkP2G+RmxGwn6K9YdsCYEqpCWfNwym/dhldb4rLPu8r Aw== 
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3c9nh4r6hn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Nov 2021 09:30:45 +0000
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1AC9HvFG030645
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Nov 2021 09:30:36 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma06fra.de.ibm.com with ESMTP id 3c5gykunv5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Nov 2021 09:30:36 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1AC9UY3U65143208
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Nov 2021 09:30:34 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 172DE4C05A
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Nov 2021 09:30:34 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0408F4C06D
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Nov 2021 09:30:34 +0000 (GMT)
+Received: from [9.152.212.95] (unknown [9.152.212.95])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Nov 2021 09:30:33 +0000 (GMT)
+Message-ID: <13ec9620-dbd6-a8a9-b51d-46aaec764351@linux.ibm.com>
+Date:   Fri, 12 Nov 2021 10:30:33 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Content-Language: en-US
+To:     "linux-perf-use." <linux-perf-users@vger.kernel.org>
+From:   Thomas Richter <tmricht@linux.ibm.com>
+Subject: Counting page fault per PID
+Organization: IBM
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211112023344.3642-1-hanyihao@vivo.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: kyIBLgIJxlIimFGfjM3OZTIqvRJ_jEDB
+X-Proofpoint-ORIG-GUID: kyIBLgIJxlIimFGfjM3OZTIqvRJ_jEDB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
+ definitions=2021-11-12_03,2021-11-11_01,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ mlxlogscore=999 clxscore=1015 impostorscore=0 priorityscore=1501
+ suspectscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 malwarescore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2111120053
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Yihao,
+Hi,
 
-On Thu, Nov 11, 2021 at 06:33:44PM -0800, Yihao Han wrote:
-> Use the macro 'swap()' defined in 'include/linux/minmax.h' to avoid
-> opencoding it.
+I have a question regarding perf tool usage. I would like to know
+which process caused how many page faults?
 
-The header 'include/linux/minmax.h' is used for kernel but it's not
-provided for user space program?
+I ran these commands:
 
-> Signed-off-by: Yihao Han <hanyihao@vivo.com>
-> ---
->  tools/perf/util/cs-etm.c | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
-> 
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index f323adb1af85..aaa3ec725002 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -408,17 +408,13 @@ struct cs_etm_packet_queue
->  static void cs_etm__packet_swap(struct cs_etm_auxtrace *etm,
->  				struct cs_etm_traceid_queue *tidq)
->  {
-> -	struct cs_etm_packet *tmp;
-> -
->  	if (etm->sample_branches || etm->synth_opts.last_branch ||
->  	    etm->sample_instructions) {
->  		/*
->  		 * Swap PACKET with PREV_PACKET: PACKET becomes PREV_PACKET for
->  		 * the next incoming packet.
->  		 */
-> -		tmp = tidq->packet;
-> -		tidq->packet = tidq->prev_packet;
-> -		tidq->prev_packet = tmp;
-> +		swap(tidq->packet, tidq->prev_packet);
+ # perf stat -e faults -a -- sleep 4 &
+ # find / -ls > /dev/null 2>&1 &
+ # dd if=/dev/zero of=/dev/null bs=1M count=10K &
+Performance counter stats for 'system wide':
 
-NAK - This patch will introduce compilation error:
+               606      faults
 
-util/cs-etm.c: In function ‘cs_etm__packet_swap’:
-util/cs-etm.c:417:3: error: implicit declaration of function ‘swap’; did you mean ‘swab’? [-Werror=implicit-function-declaration]
-   swap(tidq->packet, tidq->prev_packet);
-   ^~~~
-   swab
+       3.994941053 seconds time elapsed
 
-Thanks,
-Leo
+This tells me 606 page faults in total, but how to find out how many
+page faults did hit my two processes dd and find?
 
->  	}
->  }
->  
-> -- 
-> 2.17.1
-> 
+When I do this
+ # perf report -e faults -a -- sleep 4 &
+ # find / -ls > /dev/null 2>&1 &
+ 36033
+ # dd if=/dev/zero of=/dev/null bs=1M count=10K &
+ 36034
+ sleep 4
+
+Now I have a perf.data file and can check for PERF_RECORD_SAMPLE from
+pid 36033 and 36034? Is the number of sample entries for pid 36034 identical
+with the page faults?
+
+PERF_RECORD_FORK(36034:36034):(36031:36031)
+PERF_RECORD_COMM: dd:36034/36034
+...
+PERF_RECORD_SAMPLE(IP, 0x2): 36034/36034: 0x3ffbaa12d00 period: 1 addr: 0
+ ... thread: dd:36034
+PERF_RECORD_SAMPLE(IP, 0x2): 36034/36034: 0x3ffba978cc4 period: 1 addr: 0
+ ... thread: dd:36034
+PERF_RECORD_SAMPLE(IP, 0x2): 36034/36034: 0x3ffba978d02 period: 1 addr: 0
+ ... thread: dd:36034
+PERF_RECORD_SAMPLE(IP, 0x2): 36034/36034: 0x3ffba9768d2 period: 2 addr: 0
+ ... thread: dd:36034
+PERF_RECORD_SAMPLE(IP, 0x2): 36034/36034: 0x3ffba961550 period: 9 addr: 0
+ ... thread: dd:36034
+PERF_RECORD_EXIT(36034:36034):(36031:36031)
+
+Since I detect 5 sample entries from dd command, I can attribute 5 page
+faults to the running dd command?
+
+Thanks a lot.
+
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Gregor Pillen
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
