@@ -2,163 +2,132 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32526C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 07:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCD7C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 07:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0824D60F26
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 07:45:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AB5A60FBF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 07:55:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233883AbhKLHsV (ORCPT
+        id S231173AbhKLH6b (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 12 Nov 2021 02:48:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33852 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233593AbhKLHsU (ORCPT
+        Fri, 12 Nov 2021 02:58:31 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:51110 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232841AbhKLH6a (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 12 Nov 2021 02:48:20 -0500
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FC44C06127A
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Nov 2021 23:45:30 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id w5-20020a25ac05000000b005c55592df4dso13265358ybi.12
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Nov 2021 23:45:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=lBk8dGY4hFJkFmSHmPRQmSxy6IAflxMTO27FP9s8b+w=;
-        b=OTwDuIdL8CRDE4t/A+7voiAtQtDhuLkEOav8gVsu8YQHJpcmQjg0Ymj0XLxITAEx61
-         +gIHzmRepKXd2Dmvxfl/Zir6uirlc/VRoo/FDs7lO28ZaX0USpBUrQ6l6RYKJ4iDiABi
-         v5PE/XDJVDlmtX+dc6uns0KL44Efq9VxexECohoyGKWK0qqvDmXpb+5rBpxUMduEdWIf
-         zUdn+AIr/KNU36T26BKIWbMNu/bmR5nu/LNHXKMncamGUszfd+NSjK0z+evloDdt3Bmc
-         Nxqzm3hE9iWqencUaWPWHFEcdA8bXX3ZCrtnB8NDQvW75NpcNsjpTFEM172C1hT5vWxf
-         +8ww==
+        Fri, 12 Nov 2021 02:58:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1636703739;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lF7lzRoeZrlEIt3gHEFyVsRoWpbej1ntDFwYNAiQdJI=;
+        b=OoH/RlDgLrBZ4NE0Egiv2jYH8u01kIkq7gOxapj3QCEpGv+UEvV8YL1k8ZDawXVwBCBY9L
+        S/PngiPfgXjne44ijbUWRyM9MJdCI2gzYe1HdEMfP3KVnjv+4tEjyXNuQeDess5Ff4y0/O
+        eBFVMOdsntqB/H6Yt6IMd0RSpBwt2rg=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-20-cB2FLwLAMlSpCE31wUtIFQ-1; Fri, 12 Nov 2021 02:55:38 -0500
+X-MC-Unique: cB2FLwLAMlSpCE31wUtIFQ-1
+Received: by mail-ed1-f71.google.com with SMTP id i22-20020a05640242d600b003e28aecc0afso7604748edc.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Nov 2021 23:55:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=lBk8dGY4hFJkFmSHmPRQmSxy6IAflxMTO27FP9s8b+w=;
-        b=lfKiGEQ8b7Zd6b21xDba1szHL4W4uobwF1Qn1dxDj8CYzrsoKXeQHasgEXYFTDjx4f
-         v7ZuSf8RHmA+dmf/bVHG79/ZBQB/KQw9YL8Xq6roBuMhzq6Mqfh3EuCIansPq/2PQ8Ms
-         8YUdVaqkmnJtFz3gxEz1JD12r4imVVlrDGKE2WNUcTtORqDNuw/ppANIfMCxsEw1HtoR
-         KG2ARW4dvmVIBI2jeeoSSvjI86qkcm3Xxn+J1E4QwpXg45+TDaESaHJP3wLcgaJQkxQX
-         JE6NkQp61remHOpUzUrbP7kHM7UtlRw1V51YsxNsKJbD7+WE6UkMJgVt4zUW/5O8hHta
-         M2Lg==
-X-Gm-Message-State: AOAM533Ss8hvsuCDxUdfJmK3IiU6j2IAaxD4yw2EisU7hKp1dNQCKKdN
-        rtuECDyPNfSdjkHcaRQq/L0r+NHjYJTj
-X-Google-Smtp-Source: ABdhPJyzg/K2BXrzWNNCTEC82Wr4M/VaVTvD03vyOuSvcRJzqozFC7v08rJvrUrHF/y+btADRBPrseTPWBF5
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:5ce9:74ca:7ed9:75f2])
- (user=irogers job=sendgmr) by 2002:a25:3341:: with SMTP id
- z62mr14319876ybz.101.1636703129304; Thu, 11 Nov 2021 23:45:29 -0800 (PST)
-Date:   Thu, 11 Nov 2021 23:45:25 -0800
-Message-Id: <20211112074525.121633-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.34.0.rc1.387.gb447b232ab-goog
-Subject: [PATCH v2] perf bpf: Avoid memory leak from perf_env__insert_btf
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=lF7lzRoeZrlEIt3gHEFyVsRoWpbej1ntDFwYNAiQdJI=;
+        b=Vlr3WUs83BQ4X7WbNN7YzhFMqw4TRhoPU1CTpfoeiRpjCUbbzyh7CjVMrwMnyumh6Y
+         h0Ju6sVDOy3qASgP9gVClH7e3/nezZKv5iLN9/ALSXnTZIdiieGvO942LN9aTrGEza56
+         AoczcDfmnxIyHdVdpkuyqrLn8xzv6nXRQa8ZsZxyDBLYbs3cAmZnEuvE5aITixp9dhM1
+         ZxfyU8w5hsWZCLuFznRDyB6gjyAuYKhRV9IYY2UEvTapgURspf/pGjkuWhBlN8OJNEQB
+         iXiROZYbc0rB8PuwTGb0df6jhMtPjQeZ87PAMbT7F725021WodQLEAsPbn4m8GHTeFjp
+         PCIA==
+X-Gm-Message-State: AOAM532Pd45nPEtjjgsEPgQWOkCj7rvz15hKcugDqG0fquMl2zJ422L3
+        bVqhjIzubj284k5KoI7R3N6lYiHBSqAjKPzb91eXmO4FWJrgUPPh15GjKdyvVPuRcyBKvVXHLyF
+        J1fFcZR0rTCqYGKLI3JL+r3Rrd1s/wQ==
+X-Received: by 2002:a17:907:6e10:: with SMTP id sd16mr17768039ejc.158.1636703737526;
+        Thu, 11 Nov 2021 23:55:37 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzVTSyaI9bwf+cK3HRTYkkEGrfXsl4Cvt+Fkmz/7JDyaorMKEA4Mec75P9Nt6V8a8edl3Ld8g==
+X-Received: by 2002:a17:907:6e10:: with SMTP id sd16mr17767982ejc.158.1636703737318;
+        Thu, 11 Nov 2021 23:55:37 -0800 (PST)
+Received: from ?IPV6:2001:b07:6468:f312:5e2c:eb9a:a8b6:fd3e? ([2001:b07:6468:f312:5e2c:eb9a:a8b6:fd3e])
+        by smtp.gmail.com with ESMTPSA id n1sm2700678edf.45.2021.11.11.23.55.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Nov 2021 23:55:36 -0800 (PST)
+Message-ID: <016d5b91-6910-2aca-0db1-a65079449454@redhat.com>
+Date:   Fri, 12 Nov 2021 08:55:31 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [PATCH v4 01/17] perf: Protect perf_guest_cbs with RCU
+Content-Language: en-US
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Sean Christopherson <seanjc@google.com>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Guo Ren <guoren@kernel.org>, Nick Hu <nickhu@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        linux-perf-users@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        James Morse <james.morse@arm.com>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org,
+        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Artem Kashkanov <artem.kashkanov@intel.com>,
+        Like Xu <like.xu.linux@gmail.com>,
+        Like Xu <like.xu@linux.intel.com>,
+        Zhu Lingshan <lingshan.zhu@intel.com>
+References: <20211111020738.2512932-1-seanjc@google.com>
+ <20211111020738.2512932-2-seanjc@google.com>
+ <d784dc27-72d0-d64f-e1f4-a2b9a5f86dd4@redhat.com>
+ <YYz03fcDRV9NZnyA@hirez.programming.kicks-ass.net>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+In-Reply-To: <YYz03fcDRV9NZnyA@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-perf_env__insert_btf doesn't insert if a duplicate btf id is
-encountered and this causes a memory leak. Modify the function to return
-a success/error value and then free the memory if insertion didn't
-happen.
+On 11/11/21 11:47, Peter Zijlstra wrote:
+>> This technically could be RCU_INIT_POINTER but it's not worth a respin.
+>> There are dozens of other occurrences, and if somebody wanted they
+>> could use Coccinelle to fix all of them.
+> I've been pushing the other way, trying to get rid of RCU_INIT_POINTER()
+> since rcu_assign_pointer(, NULL) actualy DTRT per __builtin_constant_p()
+> etc.
 
-v2. Adds a return -1 when the insertion error occurs in
-    perf_env__fetch_btf. This doesn't affect anything as the result is
-    never checked.
+Oh, that's pretty cool to know, thanks!
 
-Fixes: 3792cb2ff43b ("perf bpf: Save BTF in a rbtree in perf_env")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/bpf-event.c | 6 +++++-
- tools/perf/util/env.c       | 5 ++++-
- tools/perf/util/env.h       | 2 +-
- 3 files changed, 10 insertions(+), 3 deletions(-)
+Paolo
 
-diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-index 4d3b4cdce176..d49cdff8fb39 100644
---- a/tools/perf/util/bpf-event.c
-+++ b/tools/perf/util/bpf-event.c
-@@ -119,7 +119,11 @@ static int perf_env__fetch_btf(struct perf_env *env,
- 	node->data_size = data_size;
- 	memcpy(node->data, data, data_size);
- 
--	perf_env__insert_btf(env, node);
-+	if (!perf_env__insert_btf(env, node)) {
-+		/* Insertion failed because of a duplicate. */
-+		free(node);
-+		return -1;
-+	}
- 	return 0;
- }
- 
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index 17f1dd0680b4..b9904896eb97 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -75,12 +75,13 @@ struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
- 	return node;
- }
- 
--void perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
-+bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
- {
- 	struct rb_node *parent = NULL;
- 	__u32 btf_id = btf_node->id;
- 	struct btf_node *node;
- 	struct rb_node **p;
-+	bool ret = true;
- 
- 	down_write(&env->bpf_progs.lock);
- 	p = &env->bpf_progs.btfs.rb_node;
-@@ -94,6 +95,7 @@ void perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
- 			p = &(*p)->rb_right;
- 		} else {
- 			pr_debug("duplicated btf %u\n", btf_id);
-+			ret = false;
- 			goto out;
- 		}
- 	}
-@@ -103,6 +105,7 @@ void perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
- 	env->bpf_progs.btfs_cnt++;
- out:
- 	up_write(&env->bpf_progs.lock);
-+	return ret;
- }
- 
- struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id)
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index 1383876f72b3..163e5ec503a2 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -167,7 +167,7 @@ void perf_env__insert_bpf_prog_info(struct perf_env *env,
- 				    struct bpf_prog_info_node *info_node);
- struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
- 							__u32 prog_id);
--void perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
-+bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
- struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id);
- 
- int perf_env__numa_node(struct perf_env *env, int cpu);
--- 
-2.34.0.rc1.387.gb447b232ab-goog
+> There's a very few sites where we use RCU_INIT_POINTER() with a !NULL
+> argument, and those are 'special'.
+> 
 
