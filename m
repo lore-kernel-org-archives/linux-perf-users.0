@@ -2,135 +2,154 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E00C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 14:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE3BC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 14:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F11861075
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 14:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E4D961054
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 14:49:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235161AbhKLOtE (ORCPT
+        id S235215AbhKLOw3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 12 Nov 2021 09:49:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57398 "EHLO mail.kernel.org"
+        Fri, 12 Nov 2021 09:52:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232403AbhKLOtC (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 12 Nov 2021 09:49:02 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C419561039;
-        Fri, 12 Nov 2021 14:46:10 +0000 (UTC)
+        id S235124AbhKLOw2 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 12 Nov 2021 09:52:28 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C9A1D61039;
+        Fri, 12 Nov 2021 14:49:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636728371;
-        bh=FtxtfwPqOIwsbQD7uHzaZmEXMWTRq5bNtKNI9Y3lgs4=;
+        s=k20201202; t=1636728578;
+        bh=542ExInSeFahal2lHxYWLJ/CKxe0cym24ATsD09o1xE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZOr/ZmF78IiY1zE9t+ggdr6eqLjXltRRN2OoCdINZufTKKBrkBtDX7Tbd33BI/Aos
-         AT3ZCVHckwFOSbFXgYKAE78Va2jzBnxXpXf/UHM4ZT7GWAOu+C4+dYO9riTlfmSKp0
-         /sQG2IXa3NCjXcDipWb+8ov4PN8yxWn1LF1xcz7jnfVIMvSMkbtsmbd7RtL8f9qo3S
-         SDeAohe9cEFXk5Q0x1+tXosVmKlY03QB4Sv02g+0B+MC88DWaIzjpoofqUoCzsY+l8
-         7M3pKY1YBtNOThKFMgZRqMZa/gSWShzHbmGoF5KuoNOwdd6F4df12MiQBPNjTBODup
-         xszft8JoQbhMQ==
+        b=TVMJeBUjYgC6LL0BBRbbMhXeNR+bDS0TxLSJBrUj2Nd2zejqp4UiJJ2fKtPFcGCy8
+         ggcSTYtWAEID/LaJQrmOMNRQRLNxDBzf196CaULofv//I5uMpEj2a/Wa114p4LpbiH
+         RPO6U0BL9U/vDYU+ZLPXCyKRk02U3j9xUXYmpyEbAgSYa+yuEDUQprsGkUE2HqtzbF
+         UHpzHpCcDc7fXpI4OaWrpqaiXPq2kaWn8+snRlO3/7iYpcHxDx1jiDJlkS+2qahHDs
+         5cNAIKB9Hy4tiEidp3h/Z7ME3gJBVGq5SEb9F/TkRRr2TxPY7cmijgx7yqjy0tD2R/
+         kjzMbQqZ+lExg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 50FA8410A1; Fri, 12 Nov 2021 11:46:07 -0300 (-03)
-Date:   Fri, 12 Nov 2021 11:46:07 -0300
+        id 40282410A1; Fri, 12 Nov 2021 11:49:35 -0300 (-03)
+Date:   Fri, 12 Nov 2021 11:49:35 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
-        James Clark <james.clark@arm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 1/3] perf symbols: Add documentation to struct symbol.
-Message-ID: <YY5+L3RBCbR+Mly1@kernel.org>
-References: <20211112035124.94327-1-irogers@google.com>
- <CAM9d7cji1Mtqap+TbMRn6ZeBb1v4ykKv4uBQxKtCQ3Zv9vY_jg@mail.gmail.com>
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        linux-perf-users@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v2] perf bpf: Avoid memory leak from perf_env__insert_btf
+Message-ID: <YY5+/35QWGlGsyuF@kernel.org>
+References: <20211112074525.121633-1-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAM9d7cji1Mtqap+TbMRn6ZeBb1v4ykKv4uBQxKtCQ3Zv9vY_jg@mail.gmail.com>
+In-Reply-To: <20211112074525.121633-1-irogers@google.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Nov 11, 2021 at 08:04:35PM -0800, Namhyung Kim escreveu:
-> Hi Ian,
+Em Thu, Nov 11, 2021 at 11:45:25PM -0800, Ian Rogers escreveu:
+> perf_env__insert_btf doesn't insert if a duplicate btf id is
+> encountered and this causes a memory leak. Modify the function to return
+> a success/error value and then free the memory if insertion didn't
+> happen.
 > 
-> On Thu, Nov 11, 2021 at 7:51 PM Ian Rogers <irogers@google.com> wrote:
-> >
-> > Refactor some existing comments and then infer the rest.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> 
-> For all 3 patches,
-> 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> v2. Adds a return -1 when the insertion error occurs in
+>     perf_env__fetch_btf. This doesn't affect anything as the result is
+>     never checked.
 
-b4 doesn't catch these Acked-by for the whole series when sent to one of
-the patches, please consider to send your Acked-by/etc to the [PATCH
-0/N] message in that case.
-
-Thanks, applied!
+Thanks, applied.
 
 - Arnaldo
 
  
-> Thanks,
-> Namhyung
+> Fixes: 3792cb2ff43b ("perf bpf: Save BTF in a rbtree in perf_env")
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/bpf-event.c | 6 +++++-
+>  tools/perf/util/env.c       | 5 ++++-
+>  tools/perf/util/env.h       | 2 +-
+>  3 files changed, 10 insertions(+), 3 deletions(-)
 > 
-> 
-> > ---
-> >  tools/perf/util/symbol.h | 17 ++++++++++++++---
-> >  1 file changed, 14 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-> > index 166196686f2e..3586fa549f44 100644
-> > --- a/tools/perf/util/symbol.h
-> > +++ b/tools/perf/util/symbol.h
-> > @@ -40,22 +40,33 @@ Elf_Scn *elf_section_by_name(Elf *elf, GElf_Ehdr *ep,
-> >                              GElf_Shdr *shp, const char *name, size_t *idx);
-> >  #endif
-> >
-> > -/** struct symbol - symtab entry
-> > - *
-> > - * @ignore - resolvable but tools ignore it (e.g. idle routines)
-> > +/**
-> > + * A symtab entry. When allocated this may be preceded by an annotation (see
-> > + * symbol__annotation), a browser_index (see symbol__browser_index) and rb_node
-> > + * to sort by name (see struct symbol_name_rb_node).
-> >   */
-> >  struct symbol {
-> >         struct rb_node  rb_node;
-> > +       /** Range of symbol [start, end). */
-> >         u64             start;
-> >         u64             end;
-> > +       /** Length of the string name. */
-> >         u16             namelen;
-> > +       /** ELF symbol type as defined for st_info. E.g STT_OBJECT or STT_FUNC. */
-> >         u8              type:4;
-> > +       /** ELF binding type as defined for st_info. E.g. STB_WEAK or STB_GLOBAL. */
-> >         u8              binding:4;
-> > +       /** Set true for kernel symbols of idle routines. */
-> >         u8              idle:1;
-> > +       /** Resolvable but tools ignore it (e.g. idle routines). */
-> >         u8              ignore:1;
-> > +       /** Symbol for an inlined function. */
-> >         u8              inlined:1;
-> > +       /** Architecture specific. Unused except on PPC where it holds st_other. */
-> >         u8              arch_sym;
-> > +       /** Has symbol__annotate2 been performed. */
-> >         bool            annotate2;
-> > +       /** The name of length namelen associated with the symbol. */
-> >         char            name[];
-> >  };
-> >
-> > --
-> > 2.34.0.rc1.387.gb447b232ab-goog
-> >
+> diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+> index 4d3b4cdce176..d49cdff8fb39 100644
+> --- a/tools/perf/util/bpf-event.c
+> +++ b/tools/perf/util/bpf-event.c
+> @@ -119,7 +119,11 @@ static int perf_env__fetch_btf(struct perf_env *env,
+>  	node->data_size = data_size;
+>  	memcpy(node->data, data, data_size);
+>  
+> -	perf_env__insert_btf(env, node);
+> +	if (!perf_env__insert_btf(env, node)) {
+> +		/* Insertion failed because of a duplicate. */
+> +		free(node);
+> +		return -1;
+> +	}
+>  	return 0;
+>  }
+>  
+> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+> index 17f1dd0680b4..b9904896eb97 100644
+> --- a/tools/perf/util/env.c
+> +++ b/tools/perf/util/env.c
+> @@ -75,12 +75,13 @@ struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
+>  	return node;
+>  }
+>  
+> -void perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
+> +bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
+>  {
+>  	struct rb_node *parent = NULL;
+>  	__u32 btf_id = btf_node->id;
+>  	struct btf_node *node;
+>  	struct rb_node **p;
+> +	bool ret = true;
+>  
+>  	down_write(&env->bpf_progs.lock);
+>  	p = &env->bpf_progs.btfs.rb_node;
+> @@ -94,6 +95,7 @@ void perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
+>  			p = &(*p)->rb_right;
+>  		} else {
+>  			pr_debug("duplicated btf %u\n", btf_id);
+> +			ret = false;
+>  			goto out;
+>  		}
+>  	}
+> @@ -103,6 +105,7 @@ void perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
+>  	env->bpf_progs.btfs_cnt++;
+>  out:
+>  	up_write(&env->bpf_progs.lock);
+> +	return ret;
+>  }
+>  
+>  struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id)
+> diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+> index 1383876f72b3..163e5ec503a2 100644
+> --- a/tools/perf/util/env.h
+> +++ b/tools/perf/util/env.h
+> @@ -167,7 +167,7 @@ void perf_env__insert_bpf_prog_info(struct perf_env *env,
+>  				    struct bpf_prog_info_node *info_node);
+>  struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
+>  							__u32 prog_id);
+> -void perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
+> +bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
+>  struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id);
+>  
+>  int perf_env__numa_node(struct perf_env *env, int cpu);
+> -- 
+> 2.34.0.rc1.387.gb447b232ab-goog
 
 -- 
 
