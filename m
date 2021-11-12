@@ -2,73 +2,72 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A820C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 20:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBD4C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 21:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30B2A60EC0
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 20:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1F6560FBF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 21:53:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232468AbhKLUPT (ORCPT
+        id S235714AbhKLV4t (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 12 Nov 2021 15:15:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34732 "EHLO
+        Fri, 12 Nov 2021 16:56:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231779AbhKLUPS (ORCPT
+        with ESMTP id S230388AbhKLV4s (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 12 Nov 2021 15:15:18 -0500
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 583E6C061766;
-        Fri, 12 Nov 2021 12:12:27 -0800 (PST)
-Received: by mail-wm1-x32b.google.com with SMTP id o29so8727380wms.2;
-        Fri, 12 Nov 2021 12:12:27 -0800 (PST)
+        Fri, 12 Nov 2021 16:56:48 -0500
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82638C061766;
+        Fri, 12 Nov 2021 13:53:57 -0800 (PST)
+Received: by mail-wm1-x333.google.com with SMTP id y196so8882791wmc.3;
+        Fri, 12 Nov 2021 13:53:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=O4rIIrsttUsePissnIe88gzATsf5V9UOhpR5a/3h7jI=;
-        b=R6FsShsPX/TJC30uAKGfUUwFXkFAfxPJLSfqyM9vMWNT7DwYepXXeUNHxqR7dSow90
-         twT58TZA4zL/UG9247mafzKcogYO/FD7tcgjmTn47SBzPWJpNZlK8dFGYQuaYG3Fs39g
-         mHRM7EHNoQEKpDfgN9OoQeqXrQ4RiVmWZZY2meS+BpeRQPTGuZ8iy2WjM9DA+Hxrcyhc
-         tN7AtcMQpLXsitdl+BcWwWVlcLhJ8PTVQpuQQREDHBTfNFpgvX2hEqgLEy+7YK04900s
-         7BxwgVW/tskzQfrTUOINZa6vp5W0g8xD1E+idAQCR11w86a+WB5Th+3k3xixtkzLKpms
-         pUIg==
+        bh=7cFjb/lDzzlXVJnZfz1as4jhxMaf6Lx1QqAEp4XJUqg=;
+        b=b7A7QfCdpPbJyRls7yWUAUdTlkwy3RQjasXDIK1XYMULHIJesVfghnCB7HtJTBufD+
+         28TiYhXDBw/CBMBf9NjgvPY6RzeW3ri3Y8WFfjPEOWHJTufXAlBRPAQM8qo5UCiwB0+e
+         Xb6VWNn/dVLjdsgKmqdOxgyPdFFJnSEdn31QuAIRTOoWvNHMd/FOevUzujWDLy6p/iis
+         3562u+JfAFhdkIlm+2uFycueXlJMZHTe7Lx+ilP/cvTFWNrnKmUYBrREwRHoTkuMPChg
+         OGRq7tCKCmcAZ5E3HMeXCQYO2Dof3CSp/g9h+OlzkiotzC5NVasOrZSKKKgYr4wavD8g
+         ewdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=O4rIIrsttUsePissnIe88gzATsf5V9UOhpR5a/3h7jI=;
-        b=Mp4wT3DLmtf3Du8w3I76vhAImvzI80cgQGzAhTgorM1m26F6u0VVCeUwaD3Z6iZgOc
-         NornU4e2PcI54LC1UDiLcbmLVFddHd+ZwCI0zP2Kw6GzNPdFM0cs4pK9NXAW695cVusG
-         M1LvzNDQC9FRosl4V+vfq12rw3tjNROoqdRLytRrZZkXT7XvnMUVaILoimmW7V4XOPL8
-         Gj2kb42aSBdPOzX7Psmz5b0NrLCb0ngylrs2QmZ/T6kc73Mzqmggpp2iMv0xCm93FR79
-         yAwCU1Hhn+fGNnWWMKR9Erszk5gPeanRWdkG1HI/ajBG4l73Ls3xS1tWLwtLbjtHOPSn
-         msnw==
-X-Gm-Message-State: AOAM5322FD18XPQvDI0m/zuJtNVbzW/lMyqufa0aqumf+J60Oa1A9UVU
-        rO/cXJCgxmBh+8saXIXAacY=
-X-Google-Smtp-Source: ABdhPJz9DXyIAMh6MLbWWEBujREHpwb2hb+K59ByYhtJVcFHsEQJrMzuru+RTfTIy1CoPTAuUFbYhQ==
-X-Received: by 2002:a05:600c:c1:: with SMTP id u1mr36777721wmm.163.1636747945911;
-        Fri, 12 Nov 2021 12:12:25 -0800 (PST)
+        bh=7cFjb/lDzzlXVJnZfz1as4jhxMaf6Lx1QqAEp4XJUqg=;
+        b=idxDUffSbuuX9OPsei54Vb8pa2b1jlcdzWU6jatibhip2bkoJ2/EaDzrUq/XmiEBsi
+         Wwl7LTp5gn3hXP8/avX9NqK0N10cRPWuJRbF8j8sJvwF+osjiVy+VssotYwvPFCSsuf0
+         Hbdgs9gI5TarijFHBMJkArL4ZKwyIoen8djxBV6oK5Qa8Ua/hL0qVuLqejPPcqPOE6aF
+         RrAjPm3+jQZchdM9Utr0imHwSh64cp9jCXqnwZOmX0RdA1M5AN/iAJGfbatcw7JWu3Hb
+         5sHifdIrqo+iHyJNlDyzc8JzCUNt9T4mDWUiM1ELHFLq8Qly9Bkd97sctnCQc4ZvI4bv
+         YcaQ==
+X-Gm-Message-State: AOAM531Kp/Ga7UWUJgWKEOXSpMGfRg4eD5KVd4M3uWy5GPGiufgizi7o
+        R+tflRbhjbHb31MKfN3RR9IAcAXaoP7eLg==
+X-Google-Smtp-Source: ABdhPJyMgtVQZ/MpQOF2AuJPkBhdoZDSBgAEp2yBjG4kGYPpC5oDwfVmPAPAyiUNosNf6yzsdztpxw==
+X-Received: by 2002:a7b:ce16:: with SMTP id m22mr20178245wmc.39.1636754035994;
+        Fri, 12 Nov 2021 13:53:55 -0800 (PST)
 Received: from localhost.localdomain ([197.49.250.127])
-        by smtp.gmail.com with ESMTPSA id 9sm8925833wry.0.2021.11.12.12.12.23
+        by smtp.gmail.com with ESMTPSA id x21sm12498686wmc.14.2021.11.12.13.53.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Nov 2021 12:12:25 -0800 (PST)
+        Fri, 12 Nov 2021 13:53:55 -0800 (PST)
 From:   Sohaib Mohamed <sohaib.amhmd@gmail.com>
-Cc:     sohaib.amhmd@gmail.com, irogers@google.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
+Cc:     sohaib.amhmd@gmail.com, rickyman7@gmail.com, irogers@google.com,
         Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf bench: futex: Fix memory leak of perf_cpu_map__new
-Date:   Fri, 12 Nov 2021 22:11:33 +0200
-Message-Id: <20211112201134.77892-1-sohaib.amhmd@gmail.com>
+        Yury Norov <yury.norov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] perf bench: flush stats when pipe it to a file or to tee
+Date:   Fri, 12 Nov 2021 23:53:12 +0200
+Message-Id: <20211112215313.108823-1-sohaib.amhmd@gmail.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -77,71 +76,61 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-ASan reports memory leaks while running:
+The output of perf bench gets buffered when I pipe it to a file or to
+tee, in such a way that I can see it only at the end.
 
-$ sudo ./perf bench futex all
+E.g.
+$ perf bench internals synthesize -t
+< output comes out fine after each test run >
 
-The leaks are caused by perf_cpu_map__new not being freed.
-This patch adds the missing perf_cpu_map__put since it calls
-cpu_map_delete implicitly.
+$ perf bench internals synthesize -t | tee file.txt
+< output comes out only at the end of all tests >
 
-Fixes: 9c3516d1b850 ("libperf: Add perf_cpu_map__new()/perf_cpu_map__read() functions")
+See, also:
+$ perf bench mem all | tee file.txt
+$ perf bench sched all | tee file.txt
+$ perf bench internals all -t | tee file.txt
+$ perf bench internals all | tee file.txt
 
+Suggested-by: Riccardo Mancini <rickyman7@gmail.com>
 Signed-off-by: Sohaib Mohamed <sohaib.amhmd@gmail.com>
 ---
- tools/perf/bench/futex-lock-pi.c       | 1 +
- tools/perf/bench/futex-requeue.c       | 1 +
- tools/perf/bench/futex-wake-parallel.c | 1 +
- tools/perf/bench/futex-wake.c          | 1 +
- 4 files changed, 4 insertions(+)
+ tools/perf/bench/find-bit-bench.c | 1 +
+ tools/perf/bench/synthesize.c     | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/tools/perf/bench/futex-lock-pi.c b/tools/perf/bench/futex-lock-pi.c
-index 5d1fe9c35807..137890f78e17 100644
---- a/tools/perf/bench/futex-lock-pi.c
-+++ b/tools/perf/bench/futex-lock-pi.c
-@@ -233,6 +233,7 @@ int bench_futex_lock_pi(int argc, const char **argv)
- 	print_summary();
+diff --git a/tools/perf/bench/find-bit-bench.c b/tools/perf/bench/find-bit-bench.c
+index 22b5cfe97023..39fb4184fbcb 100644
+--- a/tools/perf/bench/find-bit-bench.c
++++ b/tools/perf/bench/find-bit-bench.c
+@@ -113,6 +113,7 @@ static int do_for_each_set_bit(unsigned int num_bits)
 
- 	free(worker);
-+	perf_cpu_map__put(cpu);
- 	return ret;
- err:
- 	usage_with_options(bench_futex_lock_pi_usage, options);
-diff --git a/tools/perf/bench/futex-requeue.c b/tools/perf/bench/futex-requeue.c
-index 97fe31fd3a23..f7a5ffebb940 100644
---- a/tools/perf/bench/futex-requeue.c
-+++ b/tools/perf/bench/futex-requeue.c
-@@ -294,6 +294,7 @@ int bench_futex_requeue(int argc, const char **argv)
- 	print_summary();
+ 		if (use_of_val == accumulator)  /* Try to avoid compiler tricks. */
+ 			printf("\n");
++		fflush(stdout);
+ 	}
+ 	bitmap_free(to_test);
+ 	return 0;
+diff --git a/tools/perf/bench/synthesize.c b/tools/perf/bench/synthesize.c
+index 7401ebbac100..d21d311df61b 100644
+--- a/tools/perf/bench/synthesize.c
++++ b/tools/perf/bench/synthesize.c
+@@ -92,6 +92,7 @@ static int do_run_single_threaded(struct perf_session *session,
+ 		update_stats(&event_stats, atomic_read(&event_count));
+ 	}
 
- 	free(worker);
-+	perf_cpu_map__put(cpu);
- 	return ret;
- err:
- 	usage_with_options(bench_futex_requeue_usage, options);
-diff --git a/tools/perf/bench/futex-wake-parallel.c b/tools/perf/bench/futex-wake-parallel.c
-index e970e6b9ad53..0983f40b4b40 100644
---- a/tools/perf/bench/futex-wake-parallel.c
-+++ b/tools/perf/bench/futex-wake-parallel.c
-@@ -329,6 +329,7 @@ int bench_futex_wake_parallel(int argc, const char **argv)
- 	print_summary();
++	fflush(stdout);
+ 	time_average = avg_stats(&time_stats);
+ 	time_stddev = stddev_stats(&time_stats);
+ 	printf("  Average %ssynthesis took: %.3f usec (+- %.3f usec)\n",
+@@ -186,6 +187,7 @@ static int do_run_multi_threaded(struct target *target,
+ 		perf_session__delete(session);
+ 	}
 
- 	free(blocked_worker);
-+	perf_cpu_map__put(cpu);
- 	return ret;
- }
- #endif /* HAVE_PTHREAD_BARRIER */
-diff --git a/tools/perf/bench/futex-wake.c b/tools/perf/bench/futex-wake.c
-index 77f058a47790..2226a475e782 100644
---- a/tools/perf/bench/futex-wake.c
-+++ b/tools/perf/bench/futex-wake.c
-@@ -222,5 +222,6 @@ int bench_futex_wake(int argc, const char **argv)
- 	print_summary();
-
- 	free(worker);
-+	perf_cpu_map__put(cpu);
- 	return ret;
- }
++	fflush(stdout);
+ 	time_average = avg_stats(&time_stats);
+ 	time_stddev = stddev_stats(&time_stats);
+ 	printf("    Average synthesis took: %.3f usec (+- %.3f usec)\n",
 --
 2.25.1
 
