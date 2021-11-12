@@ -2,114 +2,136 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87592C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 14:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E00C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 14:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7012460F39
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 14:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F11861075
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 14:46:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235087AbhKLOl7 (ORCPT
+        id S235161AbhKLOtE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 12 Nov 2021 09:41:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55636 "EHLO mail.kernel.org"
+        Fri, 12 Nov 2021 09:49:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231553AbhKLOl6 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 12 Nov 2021 09:41:58 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E862B60D43;
-        Fri, 12 Nov 2021 14:39:07 +0000 (UTC)
+        id S232403AbhKLOtC (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 12 Nov 2021 09:49:02 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C419561039;
+        Fri, 12 Nov 2021 14:46:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636727948;
-        bh=JAa7NCY+oENx/lVL6Gfrcsu2H0fqnD17kiSKndaVdUs=;
+        s=k20201202; t=1636728371;
+        bh=FtxtfwPqOIwsbQD7uHzaZmEXMWTRq5bNtKNI9Y3lgs4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SjoS8WacygdhTFaVWTEurPrV0ZeuPmuntwYJPuLybD7m+gPHCPubBF/4toMnFddbO
-         dVeMBMffjkGB4qKi4wQJ+fPu8z8FBCOjZlnmednrow8cwZIiHnJ09T/pgA8wsKMn7J
-         0BwqdKiMkLPwBoOnx6RjcoN8qWzCF7VEf/H1cg7HJjAqxETm+s1zkH1tc+sxVEX0Yk
-         ucEAgLQrtPxppAO9NN0Dxe3tD2eHRWSORc0lxd3WmrRGrUUmI+K3giQkFo0KoGDl1M
-         O5YrR/XdvUiZcQ58wxl7zWWt32149QDNtSCn+mfoba0qftzg9257twEqV0xDdv/9Sf
-         B0vRft4e4eBWA==
+        b=ZOr/ZmF78IiY1zE9t+ggdr6eqLjXltRRN2OoCdINZufTKKBrkBtDX7Tbd33BI/Aos
+         AT3ZCVHckwFOSbFXgYKAE78Va2jzBnxXpXf/UHM4ZT7GWAOu+C4+dYO9riTlfmSKp0
+         /sQG2IXa3NCjXcDipWb+8ov4PN8yxWn1LF1xcz7jnfVIMvSMkbtsmbd7RtL8f9qo3S
+         SDeAohe9cEFXk5Q0x1+tXosVmKlY03QB4Sv02g+0B+MC88DWaIzjpoofqUoCzsY+l8
+         7M3pKY1YBtNOThKFMgZRqMZa/gSWShzHbmGoF5KuoNOwdd6F4df12MiQBPNjTBODup
+         xszft8JoQbhMQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 5E264410A1; Fri, 12 Nov 2021 11:39:05 -0300 (-03)
-Date:   Fri, 12 Nov 2021 11:39:05 -0300
+        id 50FA8410A1; Fri, 12 Nov 2021 11:46:07 -0300 (-03)
+Date:   Fri, 12 Nov 2021 11:46:07 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     debian-kernel@lists.debian.org,
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
+        James Clark <james.clark@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
         linux-perf-users <linux-perf-users@vger.kernel.org>,
-        ben@decadent.org.uk, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: Getting the latest and greatest Linux perf features on every
- Debian kernel
-Message-ID: <YY58idSor+lJ84KF@kernel.org>
-References: <CAP-5=fW7La9ZNv8Z6LHRRNXne4+dWK6dR1ye2P=zETFELtK=fg@mail.gmail.com>
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 1/3] perf symbols: Add documentation to struct symbol.
+Message-ID: <YY5+L3RBCbR+Mly1@kernel.org>
+References: <20211112035124.94327-1-irogers@google.com>
+ <CAM9d7cji1Mtqap+TbMRn6ZeBb1v4ykKv4uBQxKtCQ3Zv9vY_jg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fW7La9ZNv8Z6LHRRNXne4+dWK6dR1ye2P=zETFELtK=fg@mail.gmail.com>
+In-Reply-To: <CAM9d7cji1Mtqap+TbMRn6ZeBb1v4ykKv4uBQxKtCQ3Zv9vY_jg@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Nov 11, 2021 at 10:34:33PM -0800, Ian Rogers escreveu:
-> Hi,
+Em Thu, Nov 11, 2021 at 08:04:35PM -0800, Namhyung Kim escreveu:
+> Hi Ian,
+> 
+> On Thu, Nov 11, 2021 at 7:51 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > Refactor some existing comments and then infer the rest.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> 
+> For all 3 patches,
+> 
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
+
+b4 doesn't catch these Acked-by for the whole series when sent to one of
+the patches, please consider to send your Acked-by/etc to the [PATCH
+0/N] message in that case.
+
+Thanks, applied!
+
+- Arnaldo
+
  
-> Debian currently tries to match the Linux perf tool to the version of
-> the kernel that it is being run upon. Reaching out to Ben Hutchings,
-> he explained to me that this was done back in 2010 due to kernel and
-> Linux perf incompatibilities. This was likely the case, but it was a
-> bug in the Linux perf tool that should have been fixed. It is the goal
-> of the tool to be backward compatible. A problem with matching the
-> tool to the kernel version is that users miss out on new features and
-> fixes (this topic came up in a recent interview of the maintainer
-> Arnaldo Carvalho de Melo [1]).
- 
-> Ben Hutchings informs me that making it so that Debian ships the
-> latest Linux perf tool requires updates both to the linux-base and
-> linux source packages. The Linux perf tool also has many other often
-> optional dependencies, like libunwind, libbpf, libpfm4, libtraceevent,
-> etc. In general, having the dependency will unlock more features.
-> Linux tools has its own copies of libbpf and libtraceevent, and so
-> these may pose some versioning issues.
+> Thanks,
+> Namhyung
+> 
+> 
+> > ---
+> >  tools/perf/util/symbol.h | 17 ++++++++++++++---
+> >  1 file changed, 14 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+> > index 166196686f2e..3586fa549f44 100644
+> > --- a/tools/perf/util/symbol.h
+> > +++ b/tools/perf/util/symbol.h
+> > @@ -40,22 +40,33 @@ Elf_Scn *elf_section_by_name(Elf *elf, GElf_Ehdr *ep,
+> >                              GElf_Shdr *shp, const char *name, size_t *idx);
+> >  #endif
+> >
+> > -/** struct symbol - symtab entry
+> > - *
+> > - * @ignore - resolvable but tools ignore it (e.g. idle routines)
+> > +/**
+> > + * A symtab entry. When allocated this may be preceded by an annotation (see
+> > + * symbol__annotation), a browser_index (see symbol__browser_index) and rb_node
+> > + * to sort by name (see struct symbol_name_rb_node).
+> >   */
+> >  struct symbol {
+> >         struct rb_node  rb_node;
+> > +       /** Range of symbol [start, end). */
+> >         u64             start;
+> >         u64             end;
+> > +       /** Length of the string name. */
+> >         u16             namelen;
+> > +       /** ELF symbol type as defined for st_info. E.g STT_OBJECT or STT_FUNC. */
+> >         u8              type:4;
+> > +       /** ELF binding type as defined for st_info. E.g. STB_WEAK or STB_GLOBAL. */
+> >         u8              binding:4;
+> > +       /** Set true for kernel symbols of idle routines. */
+> >         u8              idle:1;
+> > +       /** Resolvable but tools ignore it (e.g. idle routines). */
+> >         u8              ignore:1;
+> > +       /** Symbol for an inlined function. */
+> >         u8              inlined:1;
+> > +       /** Architecture specific. Unused except on PPC where it holds st_other. */
+> >         u8              arch_sym;
+> > +       /** Has symbol__annotate2 been performed. */
+> >         bool            annotate2;
+> > +       /** The name of length namelen associated with the symbol. */
+> >         char            name[];
+> >  };
+> >
+> > --
+> > 2.34.0.rc1.387.gb447b232ab-goog
+> >
 
-We can use LIBBPF_DYNAMIC=1 to use the distro libbpf-dev package, which
-currently is going thru some growing pains as libbpf is 0.x, with
-several APIs being deprecated, others renamed, and that has been a
-source of friction, but should be past us with v1.0. Till then the perf
-codebase is being adjusted to allow it to be seamlessly built with the
-in-kernel version and with whatever libbpf-devel the distro has.
- 
-> I think it'd be great to get Debian shipping the latest version of
-> Linux perf for its users. Hopefully we can agree to change how Debian
-> packages perf currently and then work out the best way to package and
-> keep it up-to-date. I look forward to everyone's help and input.
-
-I also keep the tarballs available at:
-
-https://mirrors.edge.kernel.org/pub/linux/kernel/tools/perf/
-
-Where there are instructions on how to build this detached tarball.
-
-I regularly build perf on lots of distros, including:
-
-  debian:9                      : Ok   gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516 , clang version 3.8.1-24 (tags/RELEASE_381/final)
-  debian:10                     : Ok   gcc (Debian 8.3.0-6) 8.3.0 , clang version 7.0.1-8+deb10u2 (tags/RELEASE_701/final)
-  debian:11                     : Ok   gcc (Debian 10.2.1-6) 10.2.1 20210110 , Debian clang version 11.0.1-2
-  debian:experimental           : Ok   gcc (Debian 11.2.0-10) 11.2.0 , Debian clang version 11.1.0-4
-  debian:experimental-x-arm64   : Ok   aarch64-linux-gnu-gcc (Debian 11.2.0-9) 11.2.0
-  debian:experimental-x-mips    : Ok   mips-linux-gnu-gcc (Debian 10.2.1-6) 10.2.1 20210110
-  debian:experimental-x-mips64  : Ok   mips64-linux-gnuabi64-gcc (Debian 10.2.1-6) 10.2.1 20210110
-  debian:experimental-x-mipsel  : Ok   mipsel-linux-gnu-gcc (Debian 11.2.0-9) 11.2.0
-
-Ditto for ubuntu.
-
-A complete list can be found in each pull request I send to Linus, see
-in the last one:
-
-  https://lore.kernel.org/all/20211107204947.1394255-1-acme@kernel.org/
-
-Search for BUILD_TARBALL.
-
-There is also the output for 'make -C tools/perf build-test' that tests
-building with lots of combinations of optional libraries, for instance,
-with LIBBPF_DYNAMIC=1, etc.
+-- 
 
 - Arnaldo
