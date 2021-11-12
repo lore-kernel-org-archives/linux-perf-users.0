@@ -2,155 +2,165 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE3BC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 14:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2251C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 15:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E4D961054
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 14:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9C6A60F14
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 15:34:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235215AbhKLOw3 (ORCPT
+        id S233843AbhKLPh0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 12 Nov 2021 09:52:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58394 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235124AbhKLOw2 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 12 Nov 2021 09:52:28 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C9A1D61039;
-        Fri, 12 Nov 2021 14:49:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636728578;
-        bh=542ExInSeFahal2lHxYWLJ/CKxe0cym24ATsD09o1xE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TVMJeBUjYgC6LL0BBRbbMhXeNR+bDS0TxLSJBrUj2Nd2zejqp4UiJJ2fKtPFcGCy8
-         ggcSTYtWAEID/LaJQrmOMNRQRLNxDBzf196CaULofv//I5uMpEj2a/Wa114p4LpbiH
-         RPO6U0BL9U/vDYU+ZLPXCyKRk02U3j9xUXYmpyEbAgSYa+yuEDUQprsGkUE2HqtzbF
-         UHpzHpCcDc7fXpI4OaWrpqaiXPq2kaWn8+snRlO3/7iYpcHxDx1jiDJlkS+2qahHDs
-         5cNAIKB9Hy4tiEidp3h/Z7ME3gJBVGq5SEb9F/TkRRr2TxPY7cmijgx7yqjy0tD2R/
-         kjzMbQqZ+lExg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 40282410A1; Fri, 12 Nov 2021 11:49:35 -0300 (-03)
-Date:   Fri, 12 Nov 2021 11:49:35 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        linux-perf-users@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2] perf bpf: Avoid memory leak from perf_env__insert_btf
-Message-ID: <YY5+/35QWGlGsyuF@kernel.org>
-References: <20211112074525.121633-1-irogers@google.com>
+        Fri, 12 Nov 2021 10:37:26 -0500
+Received: from smtp-out2.suse.de ([195.135.220.29]:35168 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233776AbhKLPhZ (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 12 Nov 2021 10:37:25 -0500
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id B0C631FD3D;
+        Fri, 12 Nov 2021 15:34:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1636731273; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=u2sbpI/plwivBXzGwyojuYWpzjgBzhbo5rCRsZexXDo=;
+        b=J/RTt8c++HduhLkKS5rLA4+TiIwxyYV10ziRyMv+dozhao5sHlKMoBS9gf6Cs/sHn7rcGo
+        Ef4aSmlfrpSgaeHtAODLG9J4Us2ZnXt6tLKE3n1UGZhSKA35lwosCHstCh4qsx27IZt1rJ
+        dDnw20mLk5aN5UF7wVKNIOQ7ZVy5xUg=
+Received: from suse.cz (unknown [10.100.224.162])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 17FCBA3B81;
+        Fri, 12 Nov 2021 15:34:33 +0000 (UTC)
+Date:   Fri, 12 Nov 2021 16:34:29 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     akpm@linux-foundation.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, oliver.sang@intel.com, lkp@intel.com,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Hildenbrand <david@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] kthread: dynamically allocate memory to store kthread's
+ full name
+Message-ID: <YY6JhZK/oiLUwHyZ@alley>
+References: <20211108084142.4692-1-laoar.shao@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211112074525.121633-1-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20211108084142.4692-1-laoar.shao@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Nov 11, 2021 at 11:45:25PM -0800, Ian Rogers escreveu:
-> perf_env__insert_btf doesn't insert if a duplicate btf id is
-> encountered and this causes a memory leak. Modify the function to return
-> a success/error value and then free the memory if insertion didn't
-> happen.
+On Mon 2021-11-08 08:41:42, Yafang Shao wrote:
+> When I was implementing a new per-cpu kthread cfs_migration, I found the
+> comm of it "cfs_migration/%u" is truncated due to the limitation of
+> TASK_COMM_LEN. For example, the comm of the percpu thread on CPU10~19 are
+> all with the same name "cfs_migration/1", which will confuse the user. This
+> issue is not critical, because we can get the corresponding CPU from the
+> task's Cpus_allowed. But for kthreads correspoinding to other hardware
+> devices, it is not easy to get the detailed device info from task comm,
+> for example,
 > 
-> v2. Adds a return -1 when the insertion error occurs in
->     perf_env__fetch_btf. This doesn't affect anything as the result is
->     never checked.
-
-Thanks, applied.
-
-- Arnaldo
-
- 
-> Fixes: 3792cb2ff43b ("perf bpf: Save BTF in a rbtree in perf_env")
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/bpf-event.c | 6 +++++-
->  tools/perf/util/env.c       | 5 ++++-
->  tools/perf/util/env.h       | 2 +-
->  3 files changed, 10 insertions(+), 3 deletions(-)
+> After this change, the full name of these truncated kthreads will be
+> displayed via /proc/[pid]/comm:
 > 
-> diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-> index 4d3b4cdce176..d49cdff8fb39 100644
-> --- a/tools/perf/util/bpf-event.c
-> +++ b/tools/perf/util/bpf-event.c
-> @@ -119,7 +119,11 @@ static int perf_env__fetch_btf(struct perf_env *env,
->  	node->data_size = data_size;
->  	memcpy(node->data, data, data_size);
+> --- a/fs/proc/array.c
+> +++ b/fs/proc/array.c
+> @@ -102,6 +103,8 @@ void proc_task_name(struct seq_file *m, struct task_struct *p, bool escape)
 >  
-> -	perf_env__insert_btf(env, node);
-> +	if (!perf_env__insert_btf(env, node)) {
-> +		/* Insertion failed because of a duplicate. */
-> +		free(node);
-> +		return -1;
-> +	}
->  	return 0;
->  }
->  
-> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-> index 17f1dd0680b4..b9904896eb97 100644
-> --- a/tools/perf/util/env.c
-> +++ b/tools/perf/util/env.c
-> @@ -75,12 +75,13 @@ struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
->  	return node;
->  }
->  
-> -void perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
-> +bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
->  {
->  	struct rb_node *parent = NULL;
->  	__u32 btf_id = btf_node->id;
->  	struct btf_node *node;
->  	struct rb_node **p;
-> +	bool ret = true;
->  
->  	down_write(&env->bpf_progs.lock);
->  	p = &env->bpf_progs.btfs.rb_node;
-> @@ -94,6 +95,7 @@ void perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
->  			p = &(*p)->rb_right;
->  		} else {
->  			pr_debug("duplicated btf %u\n", btf_id);
-> +			ret = false;
->  			goto out;
->  		}
->  	}
-> @@ -103,6 +105,7 @@ void perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
->  	env->bpf_progs.btfs_cnt++;
->  out:
->  	up_write(&env->bpf_progs.lock);
-> +	return ret;
->  }
->  
->  struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id)
-> diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-> index 1383876f72b3..163e5ec503a2 100644
-> --- a/tools/perf/util/env.h
-> +++ b/tools/perf/util/env.h
-> @@ -167,7 +167,7 @@ void perf_env__insert_bpf_prog_info(struct perf_env *env,
->  				    struct bpf_prog_info_node *info_node);
->  struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
->  							__u32 prog_id);
-> -void perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
-> +bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
->  struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id);
->  
->  int perf_env__numa_node(struct perf_env *env, int cpu);
-> -- 
-> 2.34.0.rc1.387.gb447b232ab-goog
+>  	if (p->flags & PF_WQ_WORKER)
+>  		wq_worker_comm(tcomm, sizeof(tcomm), p);
 
--- 
+Just for record. I though that this patch obsoleted wq_worker_comm()
+but it did not. wq_worker_comm() returns different values
+depending on the last proceed work item and has to stay.
 
-- Arnaldo
+> +	else if (p->flags & PF_KTHREAD)
+> +		get_kthread_comm(tcomm, sizeof(tcomm), p);
+>  	else
+>  		__get_task_comm(tcomm, sizeof(tcomm), p);
+>  
+> --- a/kernel/kthread.c
+> +++ b/kernel/kthread.c
+> @@ -121,6 +135,7 @@ void free_kthread_struct(struct task_struct *k)
+
+Hmm, there is the following comment:
+
+	/*
+	 * Can be NULL if this kthread was created by kernel_thread()
+	 * or if kmalloc() in kthread() failed.
+	 */
+	kthread = to_kthread(k);
+
+And indeed, set_kthread_struct() is called only by kthread()
+and init_idle().
+
+For example, call_usermodehelper_exec_sync() calls kernel_thread()
+but given @fn does not call set_kthread_struct(). Also init_idle()
+continues even when the allocation failed.
+
+
+>  #ifdef CONFIG_BLK_CGROUP
+>  	WARN_ON_ONCE(kthread && kthread->blkcg_css);
+>  #endif
+> +	kfree(kthread->full_name);
+
+Hence, we have to make sure that it is not NULL here. I suggest
+something like:
+
+void free_kthread_struct(struct task_struct *k)
+{
+	struct kthread *kthread;
+
+	/*
+	 * Can be NULL if this kthread was created by kernel_thread()
+	 * or if kmalloc() in kthread() failed.
+	 */
+	kthread = to_kthread(k);
+	if (!kthread)
+		return;
+
+#ifdef CONFIG_BLK_CGROUP
+	WARN_ON_ONCE(kthread->blkcg_css);
+#endif
+	kfree(kthread->full_name);
+	kfree(kthread);
+}
+
+
+Side note: The possible NULL pointer looks dangerous to
+    me. to_kthread() is dereferenced without any check on
+    several locations.
+
+    For example, kthread_create_on_cpu() looks safe. It is a kthread
+    crated by kthread(). It will exists only when the allocation
+    succeeded.
+
+    kthread_stop() is probably safe only because it used only for
+    the classic kthreads created by kthread(). But the API
+    is not safe.
+
+    kthread_use_mm() is probably used only by classic kthreads as
+    well. But it is less clear to me.
+
+    All this unsafe APIs looks like a ticking bomb to me. But
+    it is beyond this patchset.
+
+
+>  	kfree(kthread);
+>  }
+>  
+
+Best Regards,
+Petr
