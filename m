@@ -2,198 +2,113 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CA9C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat, 13 Nov 2021 15:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC61C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat, 13 Nov 2021 21:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 682CB61159
-	for <linux-perf-users@archiver.kernel.org>; Sat, 13 Nov 2021 15:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6457661154
+	for <linux-perf-users@archiver.kernel.org>; Sat, 13 Nov 2021 21:11:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235897AbhKMPvP (ORCPT
+        id S234129AbhKMVN7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 13 Nov 2021 10:51:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37220 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230001AbhKMPvP (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 13 Nov 2021 10:51:15 -0500
-Received: from mail-qv1-xf2c.google.com (mail-qv1-xf2c.google.com [IPv6:2607:f8b0:4864:20::f2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C153DC061766;
-        Sat, 13 Nov 2021 07:48:22 -0800 (PST)
-Received: by mail-qv1-xf2c.google.com with SMTP id bu11so8359946qvb.0;
-        Sat, 13 Nov 2021 07:48:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oXbQA6YsK/Yb8I1ufwTowmeWehU5ZLa6WqLwd/WJnR0=;
-        b=ImBzKERFqdjBGrGwyXdvLPxokVVH/YOD6syxy5Ry7EoZ7JA1ZgRpH36/Ir2IBUSx8W
-         gS0HmCEFLrPn8WeyKPwEHIKMJ8MsoQKXk07euxX0IcdQLNiTUxjGZQqX9d7aI435mJq7
-         QePMM1Q6vqImAExonnt61+8iV7HOUhqKsJvwCo+s5DSG0p8dfVub4pnX3y3g9rWeXJGP
-         s9Mi2AmGn/L6seJC8NjdI8dnnTh/v07eZIEcb9LSYEY+5wguwcQdBUGlxdKg1fR7SASX
-         PlYXoa7CPenBQheitAgVSHtWNxpkfdc6wMn6uumIY9JQJs7Eb1xfWp0PpdG4DXYQNu/x
-         ADAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oXbQA6YsK/Yb8I1ufwTowmeWehU5ZLa6WqLwd/WJnR0=;
-        b=Gk/WIU2vM07u3Zx6rEpgVFkjLlWAMk/MWTkuCjka30m4LQZGnLWqzbzMDMv6E1UllS
-         ihwXA/9gtyQUHELXOKx+KSrvrPSxr0lxLoFMhe2gLXOvd7Xef9mSKhYvSsTk3BX4Ytpj
-         BPMxZl8PChFqowG88kF/0bxsSPNUfGZ0qMUa4GFV1MWA7B9Fiin6uWmCI5VMBCASjFWx
-         lmyCapcRQOLv8LmCN1t4zArH3HaRo7qok6UzXpm+3JC6In1gdhvCJTPblhDcONtAo9BS
-         EGfS5GlQbsjpw9kLl1vGLedPh6hlUvwetHMxU86q8a77csS0tbLISRGPp4H6U4o9+r3u
-         HOGA==
-X-Gm-Message-State: AOAM531SEEUOXfA1ss0BGonTBbQ8kl6lo5bFZc8OBCevLOyozQ4rGt+8
-        CM6W8SKzoGhAJxF/82OaX7TrB/Usws++vsuuPzs=
-X-Google-Smtp-Source: ABdhPJwHPNIdUDZB1WofY0EyhE09P++WglgHkH4uOkSjWwuZbEIP1MOmjqdsr8nWmrB6p2F41NZVSXMsSppxTlGYQ68=
-X-Received: by 2002:a05:6214:f2d:: with SMTP id iw13mr23317601qvb.13.1636818501919;
- Sat, 13 Nov 2021 07:48:21 -0800 (PST)
+        Sat, 13 Nov 2021 16:13:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42216 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230189AbhKMVN6 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Sat, 13 Nov 2021 16:13:58 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6CD6760EFE;
+        Sat, 13 Nov 2021 21:11:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1636837865;
+        bh=DNAiApXHVj+drlYL00cNv7Qe2n+gbdgDqCvHvFDCwxc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YRWRBbKTMRvWcWeYJ/2nb/265oeUe2ykcri9ENfzyntmrA8TqswTaM3VPfbvtlpae
+         I7Tu9UR5oDNb7L22DzN5i70fy6oVqMG6RsGEGFZMmYjp/CFlLLJpQ9o9c4InbULHBG
+         XYHac6vZ4LBkP9Mq6GKUteZhJhYKuGu2VLW6zx0oh+FVibxOxJDBNUo59GvgKLaHnz
+         kJfI/Nf2jwzcAFhEpTxOZRKLUu89nyucbuOfvKym8f37BnIHEUPGHZD2eAIQdlpsjR
+         SaIsai2e4umLVXbT9W4/rlSPZtW8ip3J2HkYNl8cXKsGqRb4VU9HX+8qiYd6LLJGHh
+         X91AS8XMLMPnw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 4EB274088E; Sat, 13 Nov 2021 18:11:02 -0300 (-03)
+Date:   Sat, 13 Nov 2021 18:11:02 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Daniel Latypov <dlatypov@google.com>,
+        David Gow <davidgow@google.com>, eranian@google.com
+Subject: Re: [PATCH v2 11/22] perf test: Convert watch point tests to test
+ cases.
+Message-ID: <YZAp5kGiZ3gP+5Zd@kernel.org>
+References: <20211013174604.747276-1-irogers@google.com>
+ <20211013174604.747276-12-irogers@google.com>
 MIME-Version: 1.0
-References: <20211108084142.4692-1-laoar.shao@gmail.com> <YY6JhZK/oiLUwHyZ@alley>
-In-Reply-To: <YY6JhZK/oiLUwHyZ@alley>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Sat, 13 Nov 2021 23:47:45 +0800
-Message-ID: <CALOAHbA5LBHyJn=EC1roHYt7ar-QqHzLE=KHQ6uC=a__3Pwxfw@mail.gmail.com>
-Subject: Re: [PATCH] kthread: dynamically allocate memory to store kthread's
- full name
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel test robot <oliver.sang@intel.com>,
-        kbuild test robot <lkp@intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Hildenbrand <david@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211013174604.747276-12-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Nov 12, 2021 at 11:34 PM Petr Mladek <pmladek@suse.com> wrote:
->
-> On Mon 2021-11-08 08:41:42, Yafang Shao wrote:
-> > When I was implementing a new per-cpu kthread cfs_migration, I found the
-> > comm of it "cfs_migration/%u" is truncated due to the limitation of
-> > TASK_COMM_LEN. For example, the comm of the percpu thread on CPU10~19 are
-> > all with the same name "cfs_migration/1", which will confuse the user. This
-> > issue is not critical, because we can get the corresponding CPU from the
-> > task's Cpus_allowed. But for kthreads correspoinding to other hardware
-> > devices, it is not easy to get the detailed device info from task comm,
-> > for example,
-> >
-> > After this change, the full name of these truncated kthreads will be
-> > displayed via /proc/[pid]/comm:
-> >
-> > --- a/fs/proc/array.c
-> > +++ b/fs/proc/array.c
-> > @@ -102,6 +103,8 @@ void proc_task_name(struct seq_file *m, struct task_struct *p, bool escape)
-> >
-> >       if (p->flags & PF_WQ_WORKER)
-> >               wq_worker_comm(tcomm, sizeof(tcomm), p);
->
-> Just for record. I though that this patch obsoleted wq_worker_comm()
-> but it did not. wq_worker_comm() returns different values
-> depending on the last proceed work item and has to stay.
->
+Em Wed, Oct 13, 2021 at 10:45:53AM -0700, Ian Rogers escreveu:
+> Use null terminated array of test cases rather than the previous sub
+> test functions.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/tests/wp.c | 128 ++++++++++--------------------------------
+>  1 file changed, 30 insertions(+), 98 deletions(-)
+> 
+> diff --git a/tools/perf/tests/wp.c b/tools/perf/tests/wp.c
+> index 904bdf2dcf81..2c0513257b15 100644
+> --- a/tools/perf/tests/wp.c
+> +++ b/tools/perf/tests/wp.c
+> @@ -62,8 +62,12 @@ static int __event(int wp_type, void *wp_addr, unsigned long wp_len)
+>  	return fd;
+>  }
+>  
 
-Right. worker comm is changed dynamically, which is combined by
-(task_comm+worker_desc) or (task_comm-worker_desc).
-I planned to remove the whole worker->desc and set it dynamically to
-the new kthread full_name but I found it may not be a good idea.
+  65     6.29 ubuntu:16.04-x-s390           : FAIL gcc version 5.4.0 20160609 (Ubuntu 5.4.0-6ubuntu1~16.04.9)
+    tests/wp.c:24:12: error: 'wp_read' defined but not used [-Werror=unused-function]
+     static int wp_read(int fd, long long *count, int size)
+                ^
+    tests/wp.c:51:12: error: '__event' defined but not used [-Werror=unused-function]
+     static int __event(int wp_type, void *wp_addr, unsigned long wp_len)
+                ^
+    cc1: all warnings being treated as errors
+    /git/perf-5.15.0/tools/build/Makefile.build:139: recipe for target 'tests' failed
+    make[3]: *** [tests] Error 2
 
 
-> > +     else if (p->flags & PF_KTHREAD)
-> > +             get_kthread_comm(tcomm, sizeof(tcomm), p);
-> >       else
-> >               __get_task_comm(tcomm, sizeof(tcomm), p);
-> >
-> > --- a/kernel/kthread.c
-> > +++ b/kernel/kthread.c
-> > @@ -121,6 +135,7 @@ void free_kthread_struct(struct task_struct *k)
->
-> Hmm, there is the following comment:
->
->         /*
->          * Can be NULL if this kthread was created by kernel_thread()
->          * or if kmalloc() in kthread() failed.
->          */
->         kthread = to_kthread(k);
->
-> And indeed, set_kthread_struct() is called only by kthread()
-> and init_idle().
->
-> For example, call_usermodehelper_exec_sync() calls kernel_thread()
-> but given @fn does not call set_kthread_struct(). Also init_idle()
-> continues even when the allocation failed.
->
-
-Yes, it really can be NULL.
-
->
-> >  #ifdef CONFIG_BLK_CGROUP
-> >       WARN_ON_ONCE(kthread && kthread->blkcg_css);
-> >  #endif
-> > +     kfree(kthread->full_name);
->
-> Hence, we have to make sure that it is not NULL here. I suggest
-> something like:
->
-
-Agreed.  I will do it.
-
-> void free_kthread_struct(struct task_struct *k)
-> {
->         struct kthread *kthread;
->
->         /*
->          * Can be NULL if this kthread was created by kernel_thread()
->          * or if kmalloc() in kthread() failed.
->          */
->         kthread = to_kthread(k);
->         if (!kthread)
->                 return;
->
-> #ifdef CONFIG_BLK_CGROUP
->         WARN_ON_ONCE(kthread->blkcg_css);
-> #endif
->         kfree(kthread->full_name);
->         kfree(kthread);
-> }
->
->
-> Side note: The possible NULL pointer looks dangerous to
->     me. to_kthread() is dereferenced without any check on
->     several locations.
->
->     For example, kthread_create_on_cpu() looks safe. It is a kthread
->     crated by kthread(). It will exists only when the allocation
->     succeeded.
->
->     kthread_stop() is probably safe only because it used only for
->     the classic kthreads created by kthread(). But the API
->     is not safe.
->
->     kthread_use_mm() is probably used only by classic kthreads as
->     well. But it is less clear to me.
->
->     All this unsafe APIs looks like a ticking bomb to me. But
->     it is beyond this patchset.
->
-
-I will analyze it in depth and try to dismantle this ticking bomb.
+Trying with:
 
 
--- 
-Thanks
-Yafang
+diff --git a/tools/perf/tests/wp.c b/tools/perf/tests/wp.c
+index 2c0513257b15c041..820d942b30c390e9 100644
+--- a/tools/perf/tests/wp.c
++++ b/tools/perf/tests/wp.c
+@@ -48,6 +48,7 @@ static void get__perf_event_attr(struct perf_event_attr *attr, int wp_type,
+ 	attr->exclude_hv     = 1;
+ }
+ 
++#ifndef __s390x__
+ static int __event(int wp_type, void *wp_addr, unsigned long wp_len)
+ {
+ 	int fd;
+@@ -61,6 +62,7 @@ static int __event(int wp_type, void *wp_addr, unsigned long wp_len)
+ 
+ 	return fd;
+ }
++#endif
+ 
+ static int test__wp_ro(struct test_suite *test __maybe_unused,
+ 		       int subtest __maybe_unused)
