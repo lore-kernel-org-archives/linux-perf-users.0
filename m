@@ -2,135 +2,148 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBD4C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 21:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CB8C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat, 13 Nov 2021 07:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1F6560FBF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Nov 2021 21:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBF7960FE3
+	for <linux-perf-users@archiver.kernel.org>; Sat, 13 Nov 2021 07:15:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235714AbhKLV4t (ORCPT
+        id S230239AbhKMHSq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 12 Nov 2021 16:56:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57816 "EHLO
+        Sat, 13 Nov 2021 02:18:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230388AbhKLV4s (ORCPT
+        with ESMTP id S229553AbhKMHSp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 12 Nov 2021 16:56:48 -0500
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82638C061766;
-        Fri, 12 Nov 2021 13:53:57 -0800 (PST)
-Received: by mail-wm1-x333.google.com with SMTP id y196so8882791wmc.3;
-        Fri, 12 Nov 2021 13:53:57 -0800 (PST)
+        Sat, 13 Nov 2021 02:18:45 -0500
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3AD4C061767
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Nov 2021 23:15:53 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id l28-20020a25b31c000000b005c27dd4987bso18145332ybj.18
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Nov 2021 23:15:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7cFjb/lDzzlXVJnZfz1as4jhxMaf6Lx1QqAEp4XJUqg=;
-        b=b7A7QfCdpPbJyRls7yWUAUdTlkwy3RQjasXDIK1XYMULHIJesVfghnCB7HtJTBufD+
-         28TiYhXDBw/CBMBf9NjgvPY6RzeW3ri3Y8WFfjPEOWHJTufXAlBRPAQM8qo5UCiwB0+e
-         Xb6VWNn/dVLjdsgKmqdOxgyPdFFJnSEdn31QuAIRTOoWvNHMd/FOevUzujWDLy6p/iis
-         3562u+JfAFhdkIlm+2uFycueXlJMZHTe7Lx+ilP/cvTFWNrnKmUYBrREwRHoTkuMPChg
-         OGRq7tCKCmcAZ5E3HMeXCQYO2Dof3CSp/g9h+OlzkiotzC5NVasOrZSKKKgYr4wavD8g
-         ewdg==
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=VdnfAA7CUmCEI8U4fjFQFwNxnsq/Nxa4FP/+oD/MraA=;
+        b=CRbx9W44DN6vvYx50LcoXajUy62kmT3n5F+7mEbV8b247GgToXb0Y7xQYciZESPEOc
+         NGTbC+IhZ+4JoqsiXuF7VUScB/ot1S4CA8HpO87tTP6zAS5Fe/MhXSLE16qfiNS0RZHg
+         pIxrig77hLjJ39pXIrAjobvi5TvItwezr/xZSoaXyaJXaGTf0Us8xf4uPBPTh9aEiKmf
+         lpACyRK7bqn/jEM68gfgHvKNuMp4j0RiOTCnr/oQUyALe+z4lWykr9qIXm0w00CUbhT/
+         q1o0v8mNaiZKA5C0CHw74Y5YfUcHWo/3ovEtTpSbtussbAT6YSh5UREu5p7Q2DcVMITE
+         KUnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7cFjb/lDzzlXVJnZfz1as4jhxMaf6Lx1QqAEp4XJUqg=;
-        b=idxDUffSbuuX9OPsei54Vb8pa2b1jlcdzWU6jatibhip2bkoJ2/EaDzrUq/XmiEBsi
-         Wwl7LTp5gn3hXP8/avX9NqK0N10cRPWuJRbF8j8sJvwF+osjiVy+VssotYwvPFCSsuf0
-         Hbdgs9gI5TarijFHBMJkArL4ZKwyIoen8djxBV6oK5Qa8Ua/hL0qVuLqejPPcqPOE6aF
-         RrAjPm3+jQZchdM9Utr0imHwSh64cp9jCXqnwZOmX0RdA1M5AN/iAJGfbatcw7JWu3Hb
-         5sHifdIrqo+iHyJNlDyzc8JzCUNt9T4mDWUiM1ELHFLq8Qly9Bkd97sctnCQc4ZvI4bv
-         YcaQ==
-X-Gm-Message-State: AOAM531Kp/Ga7UWUJgWKEOXSpMGfRg4eD5KVd4M3uWy5GPGiufgizi7o
-        R+tflRbhjbHb31MKfN3RR9IAcAXaoP7eLg==
-X-Google-Smtp-Source: ABdhPJyMgtVQZ/MpQOF2AuJPkBhdoZDSBgAEp2yBjG4kGYPpC5oDwfVmPAPAyiUNosNf6yzsdztpxw==
-X-Received: by 2002:a7b:ce16:: with SMTP id m22mr20178245wmc.39.1636754035994;
-        Fri, 12 Nov 2021 13:53:55 -0800 (PST)
-Received: from localhost.localdomain ([197.49.250.127])
-        by smtp.gmail.com with ESMTPSA id x21sm12498686wmc.14.2021.11.12.13.53.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Nov 2021 13:53:55 -0800 (PST)
-From:   Sohaib Mohamed <sohaib.amhmd@gmail.com>
-Cc:     sohaib.amhmd@gmail.com, rickyman7@gmail.com, irogers@google.com,
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=VdnfAA7CUmCEI8U4fjFQFwNxnsq/Nxa4FP/+oD/MraA=;
+        b=mArqng+snIcM/ImIeyet3D4sRKi6t7Xo8XY0F6gRSnR3vumNinuDo9KE3l4YOk6OFU
+         jT0PahtTymroxv9gE2EAhCqOUelgkrxpycdJjQPdeQCouPeyTalbQBCr3mn1ARG1+Wx8
+         YapB1HyLT8I6MartreDDjqyjfyxRJegKsoxlNvhkL+6k2pkZlHOZmgPGSnkLqNEFMtUp
+         Ma+jCxt1DBQzkUUZ5Fse8+SwyoXrfzZaL8r+EFfya78VsbXd87gXAmK32csCTuIjdMHq
+         z/HmN365BQ12wWJlYxnQFInh+g2KsspivIDYVn1jx5Na1Gdzc8ZnCWY41iM89cAZR53b
+         2JsA==
+X-Gm-Message-State: AOAM530rMphCSry+0oFnhfUIWP7XtORiIMYvR3CZXUUZqh1pJtk+QBLo
+        BBZihErmPXcgQq9hmdpBhF24nFr2rYeW
+X-Google-Smtp-Source: ABdhPJzchJra2nBK1aFykE4SPEUOhNHoubxkz1EaRlErGPrQLRK/U2rg7y6JGmeI+QLCBA1EeJkJjDjP0eqw
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:7363:ca3f:1032:5f2d])
+ (user=irogers job=sendgmr) by 2002:a5b:145:: with SMTP id c5mr22782502ybp.60.1636787752705;
+ Fri, 12 Nov 2021 23:15:52 -0800 (PST)
+Date:   Fri, 12 Nov 2021 23:15:47 -0800
+Message-Id: <20211113071548.372572-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.34.0.rc1.387.gb447b232ab-goog
+Subject: [PATCH 1/2] perf evlist: Allow setting arbitrary leader
+From:   Ian Rogers <irogers@google.com>
+To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] perf bench: flush stats when pipe it to a file or to tee
-Date:   Fri, 12 Nov 2021 23:53:12 +0200
-Message-Id: <20211112215313.108823-1-sohaib.amhmd@gmail.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Cc:     eranian@google.com, Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The output of perf bench gets buffered when I pipe it to a file or to
-tee, in such a way that I can see it only at the end.
+The leader of a group is the first, but allow it to be an arbitrary
+list member so that for Intel topdown events slots may always be the
+group leader.
 
-E.g.
-$ perf bench internals synthesize -t
-< output comes out fine after each test run >
-
-$ perf bench internals synthesize -t | tee file.txt
-< output comes out only at the end of all tests >
-
-See, also:
-$ perf bench mem all | tee file.txt
-$ perf bench sched all | tee file.txt
-$ perf bench internals all -t | tee file.txt
-$ perf bench internals all | tee file.txt
-
-Suggested-by: Riccardo Mancini <rickyman7@gmail.com>
-Signed-off-by: Sohaib Mohamed <sohaib.amhmd@gmail.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/bench/find-bit-bench.c | 1 +
- tools/perf/bench/synthesize.c     | 2 ++
- 2 files changed, 3 insertions(+)
+ tools/lib/perf/evlist.c                  | 15 +++++++++------
+ tools/lib/perf/include/internal/evlist.h |  2 +-
+ tools/perf/util/parse-events.c           |  2 +-
+ 3 files changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/bench/find-bit-bench.c b/tools/perf/bench/find-bit-bench.c
-index 22b5cfe97023..39fb4184fbcb 100644
---- a/tools/perf/bench/find-bit-bench.c
-+++ b/tools/perf/bench/find-bit-bench.c
-@@ -113,6 +113,7 @@ static int do_for_each_set_bit(unsigned int num_bits)
-
- 		if (use_of_val == accumulator)  /* Try to avoid compiler tricks. */
- 			printf("\n");
-+		fflush(stdout);
+diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+index e37dfad31383..974da341b8b0 100644
+--- a/tools/lib/perf/evlist.c
++++ b/tools/lib/perf/evlist.c
+@@ -643,14 +643,14 @@ perf_evlist__next_mmap(struct perf_evlist *evlist, struct perf_mmap *map,
+ 	return overwrite ? evlist->mmap_ovw_first : evlist->mmap_first;
+ }
+ 
+-void __perf_evlist__set_leader(struct list_head *list)
++void __perf_evlist__set_leader(struct list_head *list, struct perf_evsel *leader)
+ {
+-	struct perf_evsel *evsel, *leader;
++	struct perf_evsel *first, *last, *evsel;
+ 
+-	leader = list_entry(list->next, struct perf_evsel, node);
+-	evsel = list_entry(list->prev, struct perf_evsel, node);
++	first = list_entry(list->next, struct perf_evsel, node);
++	last = list_entry(list->prev, struct perf_evsel, node);
+ 
+-	leader->nr_members = evsel->idx - leader->idx + 1;
++	leader->nr_members = last->idx - first->idx + 1;
+ 
+ 	__perf_evlist__for_each_entry(list, evsel)
+ 		evsel->leader = leader;
+@@ -659,7 +659,10 @@ void __perf_evlist__set_leader(struct list_head *list)
+ void perf_evlist__set_leader(struct perf_evlist *evlist)
+ {
+ 	if (evlist->nr_entries) {
++		struct perf_evsel *first = list_entry(evlist->entries.next,
++						struct perf_evsel, node);
++
+ 		evlist->nr_groups = evlist->nr_entries > 1 ? 1 : 0;
+-		__perf_evlist__set_leader(&evlist->entries);
++		__perf_evlist__set_leader(&evlist->entries, first);
  	}
- 	bitmap_free(to_test);
- 	return 0;
-diff --git a/tools/perf/bench/synthesize.c b/tools/perf/bench/synthesize.c
-index 7401ebbac100..d21d311df61b 100644
---- a/tools/perf/bench/synthesize.c
-+++ b/tools/perf/bench/synthesize.c
-@@ -92,6 +92,7 @@ static int do_run_single_threaded(struct perf_session *session,
- 		update_stats(&event_stats, atomic_read(&event_count));
- 	}
-
-+	fflush(stdout);
- 	time_average = avg_stats(&time_stats);
- 	time_stddev = stddev_stats(&time_stats);
- 	printf("  Average %ssynthesis took: %.3f usec (+- %.3f usec)\n",
-@@ -186,6 +187,7 @@ static int do_run_multi_threaded(struct target *target,
- 		perf_session__delete(session);
- 	}
-
-+	fflush(stdout);
- 	time_average = avg_stats(&time_stats);
- 	time_stddev = stddev_stats(&time_stats);
- 	printf("    Average synthesis took: %.3f usec (+- %.3f usec)\n",
---
-2.25.1
+ }
+diff --git a/tools/lib/perf/include/internal/evlist.h b/tools/lib/perf/include/internal/evlist.h
+index f366dbad6a88..6f74269a3ad4 100644
+--- a/tools/lib/perf/include/internal/evlist.h
++++ b/tools/lib/perf/include/internal/evlist.h
+@@ -127,5 +127,5 @@ int perf_evlist__id_add_fd(struct perf_evlist *evlist,
+ 
+ void perf_evlist__reset_id_hash(struct perf_evlist *evlist);
+ 
+-void __perf_evlist__set_leader(struct list_head *list);
++void __perf_evlist__set_leader(struct list_head *list, struct perf_evsel *leader);
+ #endif /* __LIBPERF_INTERNAL_EVLIST_H */
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 5bfb6f892489..6308ba739d19 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1834,8 +1834,8 @@ void parse_events__set_leader(char *name, struct list_head *list,
+ 	if (parse_events__set_leader_for_uncore_aliase(name, list, parse_state))
+ 		return;
+ 
+-	__perf_evlist__set_leader(list);
+ 	leader = list_entry(list->next, struct evsel, core.node);
++	__perf_evlist__set_leader(list, &leader->core);
+ 	leader->group_name = name ? strdup(name) : NULL;
+ }
+ 
+-- 
+2.34.0.rc1.387.gb447b232ab-goog
 
