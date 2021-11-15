@@ -2,116 +2,126 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 385A2C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Nov 2021 12:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A1BDC433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Nov 2021 12:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 165E2613A7
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Nov 2021 12:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 841536137B
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Nov 2021 12:39:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230318AbhKOMKP (ORCPT
+        id S230288AbhKOMmJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 15 Nov 2021 07:10:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51350 "EHLO
+        Mon, 15 Nov 2021 07:42:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230376AbhKOMKN (ORCPT
+        with ESMTP id S230170AbhKOMmF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 Nov 2021 07:10:13 -0500
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DD44C061746;
-        Mon, 15 Nov 2021 04:07:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=JvoktfdODrK+E6Hn17SM3KNIUHT3t1bSzP+0XvL3miU=; b=Qxt6K4DGfAfHP4nOIfR8UYymv9
-        nO61k3APNFN2HOJDkAIn8DspLzn8w0L8hempXmMnWSixhCHz9/NZniqFEa/xXCNpS4HmHEfuKCw42
-        Dj423D6Kbmkn1mFvqZvdZosBjP5mMJ8ejXOu8qni3+yoHTV/2V01kCrvbuamOcRSlbI61iCIAVF1f
-        RlFFQ4sQc+pV9JBsuu0c62uIjIK0FKZ70fEJtx/yaupP3Y/c1FgNnvsucDcGJW9NjU9GjDoEr0R+r
-        vArT4+YEm6E/TUsSX8/aj578bvFEPZSJ8l3ZeVQL7owb63sAhA0H137fq9L1w5rFv3SWi6/kgLMzw
-        /wopZJZA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mmalK-00G8u0-Os; Mon, 15 Nov 2021 12:07:03 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A6FE030001B;
-        Mon, 15 Nov 2021 13:07:01 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 967412CCBCBAD; Mon, 15 Nov 2021 13:07:01 +0100 (CET)
-Date:   Mon, 15 Nov 2021 13:07:01 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     kim.phillips@amd.com, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, santosh.shukla@amd.com,
-        sandipan.das@amd.com
-Subject: Re: [RFC] perf/amd/ibs: Move ibs pmus under perf_sw_context
-Message-ID: <YZJNZRuXjND9zqjL@hirez.programming.kicks-ass.net>
-References: <20211115094838.3359-1-ravi.bangoria@amd.com>
- <YZJB5FVHpzhwFMtZ@hirez.programming.kicks-ass.net>
- <7ee6951e-eda1-7872-4158-e3bbb9eb31b7@amd.com>
+        Mon, 15 Nov 2021 07:42:05 -0500
+X-Greylist: delayed 121 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 15 Nov 2021 04:39:06 PST
+Received: from forwardcorp1j.mail.yandex.net (forwardcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::183])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3343AC061570
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Nov 2021 04:39:05 -0800 (PST)
+Received: from vla1-a78d115f8d22.qloud-c.yandex.net (vla1-a78d115f8d22.qloud-c.yandex.net [IPv6:2a02:6b8:c0d:2906:0:640:a78d:115f])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id C67542E0A49;
+        Mon, 15 Nov 2021 15:36:59 +0300 (MSK)
+Received: from vla1-81430ab5870b.qloud-c.yandex.net (vla1-81430ab5870b.qloud-c.yandex.net [2a02:6b8:c0d:35a1:0:640:8143:ab5])
+        by vla1-a78d115f8d22.qloud-c.yandex.net (mxbackcorp/Yandex) with ESMTP id R6fiPkel6m-axsiSKon;
+        Mon, 15 Nov 2021 15:36:59 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1636979819; bh=WeD0Jx6jb58Og4dG/gGc7oe0t+qBbAbV4+yW7cMyObk=;
+        h=Cc:Date:Subject:To:From:Message-Id;
+        b=rv4G54xDJtEY7Nq9va6hxkB+bveGXxOsi34siI07EKLrDrtVlgDe8rv2y+JVtaZuQ
+         CmTw8IoQ0N6aFwve7jKveihRq8lhZOa3KIFusR1jUzWf64AWx2bpI9SR3hUOsNwaDh
+         trC8EJFU8DWSTsps4maBD9zHMC1Vc9n1+xcu5ILA=
+Authentication-Results: vla1-a78d115f8d22.qloud-c.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from oleglatin-nix.yandex.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:c367:9f24:3433:3e57])
+        by vla1-81430ab5870b.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPS id N1AtIpsZFc-axwK3sCK;
+        Mon, 15 Nov 2021 15:36:59 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+X-Yandex-Fwd: 2
+From:   Oleg Latin <oleglatin@yandex-team.ru>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nicholas Fraser <nfraser@codeweavers.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     dmtrmonakhov@yandex-team.ru
+Subject: [PATCH] perf: add event name to json output
+Date:   Mon, 15 Nov 2021 15:36:29 +0300
+Message-Id: <20211115123632.150711-1-oleglatin@yandex-team.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7ee6951e-eda1-7872-4158-e3bbb9eb31b7@amd.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Nov 15, 2021 at 05:31:21PM +0530, Ravi Bangoria wrote:
-> 
-> 
-> On 15-Nov-21 4:47 PM, Peter Zijlstra wrote:
-> > On Mon, Nov 15, 2021 at 03:18:38PM +0530, Ravi Bangoria wrote:
-> >> Ideally, a pmu which is present in each hw thread belongs to
-> >> perf_hw_context, but perf_hw_context has limitation of allowing only
-> >> one pmu (a core pmu) and thus other hw pmus need to use either sw or
-> >> invalid context which limits pmu functionalities.
-> >>
-> >> This is not a new problem. It has been raised in the past, for example,
-> >> Arm big.LITTLE (same for Intel ADL) and s390 had this issue:
-> >>
-> >>   Arm:  https://lore.kernel.org/lkml/20160425175837.GB3141@leverpostej
-> >>   s390: https://lore.kernel.org/lkml/20160606082124.GA30154@twins.programming.kicks-ass.net
-> >>
-> >> Arm big.LITTLE (followed by Intel ADL) solved this by allowing multiple
-> >> (heterogeneous) pmus inside perf_hw_context. It makes sense as they are
-> >> still registering single pmu for each hw thread.
-> >>
-> >> s390 solved it by moving 2nd hw pmu to perf_sw_context, though that 2nd
-> >> hw pmu is count mode only, i.e. no sampling.
-> >>
-> >> AMD IBS also has similar problem. IBS pmu is present in each hw thread.
-> >> But because of perf_hw_context restriction, currently it belongs to
-> >> perf_invalid_context and thus important functionalities like per-task
-> >> profiling is not possible with IBS pmu. Moving it to perf_sw_context
-> >> will:
-> >>  - allow per-task monitoring
-> >>  - allow cgroup wise profiling
-> >>  - allow grouping of IBS with other pmu events
-> >>  - disallow multiplexing
-> >>
-> >> Please let me know if I missed any major benefit or drawback of
-> >> perf_sw_context. I'm also not sure how easy it would be to lift
-> >> perf_hw_context restriction and start allowing more pmus in it.
-> >>
-> >> Suggestions?
-> > 
-> > Same as I do every time this comes up... this patch is still lingering
-> > and wanting TLC:
-> > 
-> >   https://lore.kernel.org/lkml/20181010104559.GO5728@hirez.programming.kicks-ass.net/
-> 
-> Thanks for the pointer Peter. I have looked at the patch and it is quite complex,
-> altering the very way perf event scheduling works.
-> 
-> I don't dispute that is the right 'fix' for the issue, but do you think adding a
-> new perf context can help alleviate some of the issues in the interim?
+After converting perf.data to json it missing event name entry.
 
-And take away the motivation for people to do the right thing? How does
-that work out in my favour?
+In perf script output it is clear that events have different types:
+
+    $ perf script -F -ip
+    ...
+    dd 130321 [001] 10282.698083:     117995       cycles:
+    dd 130321 [001] 10282.698091:     225856 instructions:
+    ...
+
+But json output lack of this information and it hard to distinguish
+different event types:
+
+    ...
+    {
+        "timestamp": 10282698083472,
+        "pid": 130321,
+        "tid": 130321,
+        "comm": "dd",
+        "callchain": [
+            {
+                "ip": "0xffffffff901f4cd5",
+                "symbol": "syscall_exit_to_user_mode",
+                "dso": "[kernel.kallsyms]"
+            }
+        ]
+    },
+    {
+        "timestamp": 10282698091328,
+        "pid": 130321,
+        "tid": 130321,
+        "comm": "dd",
+        "callchain": [
+            {
+                "ip": "0x7fb7f0c271e7",
+                "symbol": "__GI___libc_write",
+                "dso": "libc-2.31.so"
+            }
+        ]
+    },
+    ...
+
+This patch adds event name entry to resulting json.
+
+Signed-off-by: Oleg Latin <oleglatin@yandex-team.ru>
+---
+ tools/perf/util/data-convert-json.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
+index b0e3d69c6835..72aaf6babc22 100644
+--- a/tools/perf/util/data-convert-json.c
++++ b/tools/perf/util/data-convert-json.c
+@@ -168,6 +168,9 @@ static int process_sample_event(struct perf_tool *tool,
+ 	output_json_key_format(out, true, 3, "pid", "%i", al.thread->pid_);
+ 	output_json_key_format(out, true, 3, "tid", "%i", al.thread->tid);
+ 
++	if (evsel->name)
++		output_json_key_string(out, true, 3, "event", evsel->name);
++
+ 	if (al.cpu >= 0)
+ 		output_json_key_format(out, true, 3, "cpu", "%i", al.cpu);
+ 
+-- 
+2.25.1
+
