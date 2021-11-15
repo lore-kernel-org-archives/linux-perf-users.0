@@ -2,312 +2,151 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C67C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun, 14 Nov 2021 18:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0599FC433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Nov 2021 04:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7206860E73
-	for <linux-perf-users@archiver.kernel.org>; Sun, 14 Nov 2021 18:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA93263237
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Nov 2021 04:45:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230314AbhKNSUg (ORCPT
+        id S230150AbhKOEsk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 14 Nov 2021 13:20:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40584 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230194AbhKNSUf (ORCPT
+        Sun, 14 Nov 2021 23:48:40 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:13398 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229790AbhKOEsi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 14 Nov 2021 13:20:35 -0500
-Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3981C061766
-        for <linux-perf-users@vger.kernel.org>; Sun, 14 Nov 2021 10:17:39 -0800 (PST)
-Received: by mail-io1-xd30.google.com with SMTP id m9so18439366iop.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 14 Nov 2021 10:17:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0I3Dj4cRZEuH1OFxrITVXe3FN1mpUaw/QNisedy5p2U=;
-        b=DQHr9uDzxuAreVv0lPHbedYEA61hz2QT0TsZHTsD4dM62+DfEkiq2gPXAbuRgzVkhh
-         VHD+LEA9XNYP08rdlshF6bYXnGp8PotuWa7Asv4jl1u8jO29zw+hphJWks6j8sulG+yZ
-         Z/qC7Hq8TZNdZCumF9Lc+Vl/CAKHc0EBOriR/bjG7yswixvGRDor1diJZPgQyjEry2tN
-         cYg7ztqhGPrv8P8d/oJ8ORObnT1oAhWuLFslcRexUc8c1GjFXvTLmma2Zkg0fjJgt/rg
-         QeHQTVOi6h+nYDgwEbpYv95LkMZ4V7LBhlXp65s24RpcSg+E0w4hMfliAyeuRzyOpkA0
-         fTKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0I3Dj4cRZEuH1OFxrITVXe3FN1mpUaw/QNisedy5p2U=;
-        b=g2gXwnv4056KMFu3q35NKJ497uzZ/GYC9mJl1xdlFivh/MZMMHX+FA0HZk6nZ8iYv9
-         u/RrMkpkblG5x8iCB76E7zekwGVdVeGks7e9KuBe3xvdOkhVIELi98p8avciF6C4ZucE
-         R0DBq1pFRMv+sGANcIPVCKFnGyjZcwinns0K1r/Be9+EuV6vhGkpbWHaUlp8Ac/yzPen
-         2frenqP+yNQ80VDws7OD7HPMHcFVpVQr6Lo/QcHzveeqsgKzhthUs8PYcbLMEIHCw++9
-         YUm7K6+aBA6FRZZgRXXPQqXcH9EHDguUfCHO9AB4VgBbD8C7x1IGkjhWVEsozBp3OYfz
-         mTqQ==
-X-Gm-Message-State: AOAM531PBga/oZisGWXfrjTq8bGVW26GMHFUBHRHOIF4X2cDMiDNY4Sx
-        y1XKlF6ZDheelIkM/IR0KHoWWdJAKAeyPCUWoF+dMA==
-X-Google-Smtp-Source: ABdhPJxVQQKT6yj/rniC7zOp0NcZdDzbxr9GFM3vUzzKf10ZaIb4q+edf+QsU7tIAQIRj0cbqEcXA/VSfcVAhqz3H50=
-X-Received: by 2002:a02:950e:: with SMTP id y14mr24684865jah.88.1636913858259;
- Sun, 14 Nov 2021 10:17:38 -0800 (PST)
+        Sun, 14 Nov 2021 23:48:38 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1AF2i8eG018734;
+        Mon, 15 Nov 2021 04:45:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=lpvOwaRxKrxUcq3pF62L2S7luuODp2ko37HAwXLJdcA=;
+ b=MA6xiBdpy3WgszOBuZAdAQDIPoMyVK9KeO4KNfju4GSMgUahD+DHOAvbHNlCwDwxb215
+ iwZ7uRKZLzGCqKMHK+PBnFcdy1T7DBS27uoB0rhSccRAPhCuwU0FcoSPDjWiVD0xmHsO
+ L6D6Tzy0YxBcYSTtpVg1LiEXkcwVCBIaN+W8jTYR3beAezKZjwBJsNmftsHW5L0vamDl
+ WDMZ4hDtLfOQBt6E1N/yI3wmNth49rFWNd4c1xd8M6g7TEMm4KpYX0twUZM6o/mlQ5El
+ YAR6hnsZjm03UbSbEXjhokpRyq2IU3UgDwpNtd0BCXyFvFvKakz5w98v+7M8U8OzO3Lh 6w== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3cbf181yrj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Nov 2021 04:45:13 +0000
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1AF4TMGa001735;
+        Mon, 15 Nov 2021 04:45:12 GMT
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3cbf181ypx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Nov 2021 04:45:12 +0000
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1AF4ggIf025481;
+        Mon, 15 Nov 2021 04:45:10 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma06fra.de.ibm.com with ESMTP id 3ca4mjgs7s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Nov 2021 04:45:10 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1AF4j6V146530866
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Nov 2021 04:45:06 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B93F8AE05F;
+        Mon, 15 Nov 2021 04:45:06 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2BF7DAE045;
+        Mon, 15 Nov 2021 04:45:01 +0000 (GMT)
+Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com.com (unknown [9.43.4.103])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 15 Nov 2021 04:45:00 +0000 (GMT)
+From:   Kajol Jain <kjain@linux.ibm.com>
+To:     bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     acme@kernel.org, peterz@infradead.org, songliubraving@fb.com,
+        daniel@iogearbox.net, andrii@kernel.org, kafai@fb.com, yhs@fb.com,
+        john.fastabend@gmail.com, davem@davemloft.net, kpsingh@kernel.org,
+        hawk@kernel.org, kuba@kernel.org, maddy@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, linux-perf-users@vger.kernel.org,
+        rnsastry@linux.ibm.com, kjain@linux.ibm.com
+Subject: [PATCH] bpf: Enable bpf support for reading branch records in powerpc
+Date:   Mon, 15 Nov 2021 10:14:37 +0530
+Message-Id: <20211115044437.12047-1-kjain@linux.ibm.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20211113071548.372572-1-irogers@google.com> <20211113071548.372572-2-irogers@google.com>
- <YZFBDI6oPMidX0KO@krava>
-In-Reply-To: <YZFBDI6oPMidX0KO@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Sun, 14 Nov 2021 10:17:25 -0800
-Message-ID: <CAP-5=fWzzggdSv7bUm-+Ed6LfoUa1ce02n-bEOCqWWip4L8TLg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf parse-events: Architecture specific leader override
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        eranian@google.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: c0-yq0-S8LeDucJ7wZuPPcwKlv6r9XGm
+X-Proofpoint-ORIG-GUID: l-8JHcdGQCpR-O5pBRSI67xYxRjnUNaW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
+ definitions=2021-11-15_03,2021-11-12_01,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ mlxscore=0 suspectscore=0 bulkscore=0 priorityscore=1501 spamscore=0
+ malwarescore=0 lowpriorityscore=0 clxscore=1011 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2111150025
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Nov 14, 2021 at 9:02 AM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Fri, Nov 12, 2021 at 11:15:48PM -0800, Ian Rogers wrote:
-> > Currently topdown events must appear after a slots event:
-> >
-> > $ perf stat -e '{slots,topdown-fe-bound}' /bin/true
-> >
-> >  Performance counter stats for '/bin/true':
-> >
-> >          3,183,090      slots
-> >            986,133      topdown-fe-bound
-> >
-> > Reversing the events yields:
-> >
-> > $ perf stat -e '{topdown-fe-bound,slots}' /bin/true
-> > Error:
-> > The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (topdown-fe-bound).
->
-> why is this actually failing?
->
-> >
-> > For metrics the order of events is determined by iterating over a
-> > hashmap, and so slots isn't guaranteed to be first which can yield this
-> > error.
-> >
-> > Change the set_leader in parse-events, called when a group is closed, so
-> > that rather than always making the first event the leader, if the slots
-> > event exists then it is made the leader. It is then moved to the head of
-> > the evlist otherwise it won't be opened in the correct order.
-> >
-> > The result is:
-> >
-> > $ perf stat -e '{topdown-fe-bound,slots}' /bin/true
-> >
-> >  Performance counter stats for '/bin/true':
-> >
-> >          3,274,795      slots
-> >          1,001,702      topdown-fe-bound
-> >
-> > A problem with this approach is the slots event is identified by name,
-> > names can be overwritten like 'cpu/slots,name=foo/' and this causes the
-> > leader change to fail.
->
-> would it be better then to move this shuffle to the metric code directly,
-> and make sure it only spits 'good' order of events?
->
-> and keep "-e '{topdown-fe-bound,slots}'" to fail if user specifies that on
-> the command line
+Branch data available to bpf programs can be very useful to get
+stack traces out of userspace applications.
 
-It's an alternative to do that, but the people I spoke to preferred
-having parse-events do this. I'm not sure what Andi's opinion is.
-There is a general frustration about how brittle the slots event is,
-and so this does make it less brittle.
+Commit fff7b64355ea ("bpf: Add bpf_read_branch_records() helper")
+added bpf support to capture branch records in x86. Enable this feature
+for powerpc as well.
 
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/arch/x86/util/evlist.c | 17 +++++++++++++++++
-> >  tools/perf/util/evlist.h          |  1 +
-> >  tools/perf/util/parse-events.c    | 16 +++++++++++-----
-> >  tools/perf/util/parse-events.h    |  4 ++--
-> >  tools/perf/util/parse-events.y    | 12 ++++++++----
-> >  5 files changed, 39 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
-> > index 0b0951030a2f..1624372b2da2 100644
-> > --- a/tools/perf/arch/x86/util/evlist.c
-> > +++ b/tools/perf/arch/x86/util/evlist.c
-> > @@ -17,3 +17,20 @@ int arch_evlist__add_default_attrs(struct evlist *evlist)
-> >       else
-> >               return parse_events(evlist, TOPDOWN_L1_EVENTS, NULL);
-> >  }
-> > +
-> > +struct evsel *arch_evlist__leader(struct list_head *list)
-> > +{
-> > +     struct evsel *evsel, *first;
-> > +
-> > +     first = list_entry(list->next, struct evsel, core.node);
-> > +
-> > +     if (!pmu_have_event("cpu", "slots"))
-> > +             return first;
-> > +
-> > +     __evlist__for_each_entry(list, evsel) {
-> > +             if (evsel->pmu_name && !strcmp(evsel->pmu_name, "cpu") &&
-> > +                     evsel->name && strstr(evsel->name, "slots"))
-> > +                     return evsel;
-> > +     }
-> > +     return first;
-> > +}
-> > diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-> > index 97bfb8d0be4f..993437ffe429 100644
-> > --- a/tools/perf/util/evlist.h
-> > +++ b/tools/perf/util/evlist.h
-> > @@ -110,6 +110,7 @@ int __evlist__add_default_attrs(struct evlist *evlist,
-> >       __evlist__add_default_attrs(evlist, array, ARRAY_SIZE(array))
-> >
-> >  int arch_evlist__add_default_attrs(struct evlist *evlist);
-> > +struct evsel *arch_evlist__leader(struct list_head *list);
-> >
-> >  int evlist__add_dummy(struct evlist *evlist);
-> >
-> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> > index 6308ba739d19..a2f4c086986f 100644
-> > --- a/tools/perf/util/parse-events.c
-> > +++ b/tools/perf/util/parse-events.c
-> > @@ -1821,22 +1821,28 @@ parse_events__set_leader_for_uncore_aliase(char *name, struct list_head *list,
-> >       return ret;
-> >  }
-> >
-> > -void parse_events__set_leader(char *name, struct list_head *list,
-> > -                           struct parse_events_state *parse_state)
-> > +__weak struct evsel *arch_evlist__leader(struct list_head *list)
-> > +{
-> > +     return list_entry(list->next, struct evsel, core.node);
-> > +}
-> > +
-> > +struct list_head *parse_events__set_leader(char *name, struct list_head *list,
-> > +                                     struct parse_events_state *parse_state)
-> >  {
-> >       struct evsel *leader;
-> >
-> >       if (list_empty(list)) {
-> >               WARN_ONCE(true, "WARNING: failed to set leader: empty list");
-> > -             return;
-> > +             return NULL;
-> >       }
-> >
-> >       if (parse_events__set_leader_for_uncore_aliase(name, list, parse_state))
-> > -             return;
-> > +             return NULL;
-> >
-> > -     leader = list_entry(list->next, struct evsel, core.node);
-> > +     leader = arch_evlist__leader(list);
-> >       __perf_evlist__set_leader(list, &leader->core);
-> >       leader->group_name = name ? strdup(name) : NULL;
-> > +     return &leader->core.node;
-> >  }
-> >
-> >  /* list_event is assumed to point to malloc'ed memory */
-> > diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-> > index c7fc93f54577..8a6e6b4d5cbe 100644
-> > --- a/tools/perf/util/parse-events.h
-> > +++ b/tools/perf/util/parse-events.h
-> > @@ -211,8 +211,8 @@ int parse_events_copy_term_list(struct list_head *old,
-> >
-> >  enum perf_pmu_event_symbol_type
-> >  perf_pmu__parse_check(const char *name);
-> > -void parse_events__set_leader(char *name, struct list_head *list,
-> > -                           struct parse_events_state *parse_state);
-> > +struct list_head *parse_events__set_leader(char *name, struct list_head *list,
-> > +                                     struct parse_events_state *parse_state);
-> >  void parse_events_update_lists(struct list_head *list_event,
-> >                              struct list_head *list_all);
-> >  void parse_events_evlist_error(struct parse_events_state *parse_state,
-> > diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-> > index 174158982fae..5358c400f938 100644
-> > --- a/tools/perf/util/parse-events.y
-> > +++ b/tools/perf/util/parse-events.y
-> > @@ -199,20 +199,24 @@ group_def
-> >  group_def:
-> >  PE_NAME '{' events '}'
-> >  {
-> > -     struct list_head *list = $3;
-> > +     struct list_head *new_head, *list = $3;
-> >
-> >       inc_group_count(list, _parse_state);
-> > -     parse_events__set_leader($1, list, _parse_state);
-> > +     new_head = parse_events__set_leader($1, list, _parse_state);
-> > +     if (new_head)
-> > +             list_move(new_head, list);
->
-> why not put these last 2 lines to parse_events__set_leader as well?
+Commit 67306f84ca78 ("selftests/bpf: Add bpf_read_branch_records()
+selftest") adds selftest corresponding to bpf branch read
+function bpf_read_branch_records(). Used this selftest to
+test bpf support, for reading branch records in powerpc.
 
-I can move that, but I'll try to motivate having it this way. The list
-logic in Linux I find troublesome. In parse-events.y we have a list
-head that is just a next, prev pointer and not full evsel in a list.
-So for {topdown-fe-bound,slots} in parse-events.y we have a list of:
+Selftest result in power9 box before this patch changes:
 
-head -next-> evsel("topdown-fe-bound") -next-> evsel("slots")
+[command]# ./test_progs -t perf_branches
+Failed to load bpf_testmod.ko into the kernel: -8
+WARNING! Selftests relying on bpf_testmod.ko will be skipped.
+test_perf_branches_common:PASS:test_perf_branches_load 0 nsec
+test_perf_branches_common:PASS:attach_perf_event 0 nsec
+test_perf_branches_common:PASS:set_affinity 0 nsec
+check_good_sample:PASS:output not valid 0 nsec
+check_good_sample:FAIL:read_branches_size err -2
+check_good_sample:FAIL:read_branches_stack err -2
+check_good_sample:FAIL:read_branches_stack stack bytes written=-2
+not multiple of struct size=24
+check_good_sample:FAIL:read_branches_global err -2
+check_good_sample:FAIL:read_branches_global global bytes written=-2
+not multiple of struct size=24
+check_good_sample:PASS:read_branches_size 0 nsec
+ #75/1 perf_branches_hw:FAIL
+ #75/2 perf_branches_no_hw:OK
+ #75 perf_branches:FAIL
+Summary: 0/1 PASSED, 0 SKIPPED, 2 FAILED
 
-But in __perf_evlist__set_leader the list doesn't have the head:
+Selftest result in power9 box after this patch changes:
 
-evsel("topdown-fe-bound") -next-> evsel("slots")
+[command]#: ./test_progs -t perf_branches
+ #75/1 perf_branches_hw:OK
+ #75/2 perf_branches_no_hw:OK
+ #75 perf_branches:OK
+Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
 
-The list_move is changing the list to:
+Signed-off-by: Kajol Jain<kjain@linux.ibm.com>
+---
+ kernel/trace/bpf_trace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-head -next-> evsel("slots") -next-> evsel("topdown-fe-bound")
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index fdd14072fc3b..2b7343b64bb7 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -1245,7 +1245,7 @@ static const struct bpf_func_proto bpf_perf_prog_read_value_proto = {
+ BPF_CALL_4(bpf_read_branch_records, struct bpf_perf_event_data_kern *, ctx,
+ 	   void *, buf, u32, size, u64, flags)
+ {
+-#ifndef CONFIG_X86
++#if !(defined(CONFIG_X86) || defined(CONFIG_PPC64))
+ 	return -ENOENT;
+ #else
+ 	static const u32 br_entry_size = sizeof(struct perf_branch_entry);
+-- 
+2.27.0
 
-which isn't possible in __perf_evlist__set_leader as the head has
-gone. I felt having the list_move in parse_events__set_leader made it
-look like the leader is being placed second rather than at the head.
-So this was an attempt to make the code more intention revealing, but
-that could also be done by some comments, it's just in
-parse_events__set_leader we have the two styles of lists in play.
-
-While I'm complaining, there are many brittle assumptions about evlist
-that it may be worth adding some more assertions for. There is already
-an assertion that the leader was opened before its siblings. There are
-assumptions that the idx given to an evsel are incremental and that
-for the leader 'idx - prev->idx' will yield the number of list
-elements. My concern is for libperf users, it doesn't seem
-unreasonable that they will want to manipulate the evlist but given
-the assumptions they will likely find bugs - such as idx being used to
-index an array and reordering breaking things. The metric code would
-be a customer of reordering were it to need to move slots, but when I
-experimented with this it easily broke things - which motivates doing
-it in parse-events or more likely for the metrics, when generating the
-parse-events string.
-
-Thanks,
-Ian
-
-
-
-
-> >       free($1);
-> >       $$ = list;
-> >  }
-> >  |
-> >  '{' events '}'
-> >  {
-> > -     struct list_head *list = $2;
-> > +     struct list_head *new_head, *list = $2;
-> >
-> >       inc_group_count(list, _parse_state);
-> > -     parse_events__set_leader(NULL, list, _parse_state);
-> > +     new_head = parse_events__set_leader(NULL, list, _parse_state);
-> > +     if (new_head)
-> > +             list_move(new_head, list);
->
-> same
->
-> thanks,
-> jirka
->
