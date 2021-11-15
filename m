@@ -2,189 +2,122 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8C3C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Nov 2021 21:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E16C4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Nov 2021 23:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B92F61B2C
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Nov 2021 21:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EF1861AFF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Nov 2021 23:32:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343743AbhKOVgo (ORCPT
+        id S243652AbhKOXfU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 15 Nov 2021 16:36:44 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:27480 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1348982AbhKOVNx (ORCPT
+        Mon, 15 Nov 2021 18:35:20 -0500
+Received: from www62.your-server.de ([213.133.104.62]:53340 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1353101AbhKOXdO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 Nov 2021 16:13:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1637010652;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=z3jupCc4IITmY9q0ereyU1/OdqsEHxFt+kRYI5gk66Y=;
-        b=S//l6sJp8KP/kNTtqyDBvLDek4VN6q2l+AYEM1EjeA6Vel2dD+B+P6SJc/IaFwLg15xLX3
-        LAxt16ImHXhGiVxIdU3eFaVrOrD4alCbRicBDhuB7/Z+h0yXc/NLGWLaKyeYyvEgTFg3aa
-        wdb3UxHQj3agieIQcflNwGmsnr14xhQ=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-208-h4JtFdcIO9CJrmHJwDbJYg-1; Mon, 15 Nov 2021 16:10:51 -0500
-X-MC-Unique: h4JtFdcIO9CJrmHJwDbJYg-1
-Received: by mail-wr1-f69.google.com with SMTP id z5-20020a5d6405000000b00182083d7d2aso4004858wru.13
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Nov 2021 13:10:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=z3jupCc4IITmY9q0ereyU1/OdqsEHxFt+kRYI5gk66Y=;
-        b=QvdHwdCSMHpqh7YCHYO0ZFisSJGfGSH/f0KotafJEdwicH5kMY36AsB5qSHDjV23wh
-         3wWk8X/lJAYRD3PD175rr1Q6TfyUKC4FJG1V0P876uJYjfmdcoz7mTpVvS5EkSVPF21F
-         utCClwje8Rv8ifij/drx9L7JH4M7usesFVu03YPrpR60/rr2qEyq49oS6o05lWAukih8
-         EhuP9GbeX7GjdQ8wiuZpFmTCZ1vpqtCZsgdc/U7f9MZEkPaQHAWAIZmPeYq4nCnCHxUm
-         4GehBxledn1HSP0UzN3biEM8SyX9X8C6F3vYBFHiyow+jkhMqhXfDgIiJtF8eB3Bz+Jn
-         PCwQ==
-X-Gm-Message-State: AOAM531kEVKOgVEq/CADNFhdMca1Kc/m4+pu26Bqw3xridaHdy4XKsPO
-        mPMoa9abhwwiAY4GSHCY9G9IjkqwZ1cFnFaL/crDgyTFvmNYtmhXgQjl6WGJtSkDml0ON6FY6a6
-        E0tCCaixA57DGRDBs/u32LugAr9s30Q==
-X-Received: by 2002:adf:ce03:: with SMTP id p3mr2615235wrn.145.1637010650139;
-        Mon, 15 Nov 2021 13:10:50 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJx/+t1dna98ZvBpdsgt6maHPw++KLX3my6Ka4lFa3gZ4EizHSuM3/6PybxsV1tC0sXHh+dyGA==
-X-Received: by 2002:adf:ce03:: with SMTP id p3mr2615210wrn.145.1637010649990;
-        Mon, 15 Nov 2021 13:10:49 -0800 (PST)
-Received: from krava ([83.240.60.218])
-        by smtp.gmail.com with ESMTPSA id m36sm503171wms.25.2021.11.15.13.10.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Nov 2021 13:10:49 -0800 (PST)
-Date:   Mon, 15 Nov 2021 22:10:48 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     John Garry <john.garry@huawei.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        masahiroy@kernel.org, Laura Abbott <labbott@kernel.org>,
-        peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        irogers@google.com
-Subject: Re: [PATCH] perf tools: Enable warnings through HOSTCFLAGS
-Message-ID: <YZLM2BmFo+cK4B4J@krava>
-References: <1635525041-151876-1-git-send-email-john.garry@huawei.com>
- <YYbXMd3N4+aXYLTJ@kernel.org>
- <591edce2-5aaa-22bc-6fd3-5a247f623eb3@huawei.com>
- <239840A9-F713-4FED-B638-14D6B91FBBF2@gmail.com>
+        Mon, 15 Nov 2021 18:33:14 -0500
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+        by www62.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1mmlQO-000Ci8-7O; Tue, 16 Nov 2021 00:30:08 +0100
+Received: from [85.1.206.226] (helo=linux.home)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1mmlQN-000GXA-PZ; Tue, 16 Nov 2021 00:30:07 +0100
+Subject: Re: [PATCH] bpf: Enable bpf support for reading branch records in
+ powerpc
+To:     Kajol Jain <kjain@linux.ibm.com>, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     acme@kernel.org, peterz@infradead.org, songliubraving@fb.com,
+        andrii@kernel.org, kafai@fb.com, yhs@fb.com,
+        john.fastabend@gmail.com, davem@davemloft.net, kpsingh@kernel.org,
+        hawk@kernel.org, kuba@kernel.org, maddy@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, linux-perf-users@vger.kernel.org,
+        rnsastry@linux.ibm.com
+References: <20211115044437.12047-1-kjain@linux.ibm.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <5a185d6b-7090-23f0-1ec9-140a31ee5fb4@iogearbox.net>
+Date:   Tue, 16 Nov 2021 00:30:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <239840A9-F713-4FED-B638-14D6B91FBBF2@gmail.com>
+In-Reply-To: <20211115044437.12047-1-kjain@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.3/26354/Mon Nov 15 10:21:07 2021)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Nov 15, 2021 at 02:44:59PM -0300, Arnaldo Carvalho de Melo wrote:
+On 11/15/21 5:44 AM, Kajol Jain wrote:
+> Branch data available to bpf programs can be very useful to get
+> stack traces out of userspace applications.
 > 
+> Commit fff7b64355ea ("bpf: Add bpf_read_branch_records() helper")
+> added bpf support to capture branch records in x86. Enable this feature
+> for powerpc as well.
 > 
-> On November 15, 2021 12:53:33 PM GMT-03:00, John Garry <john.garry@huawei.com> wrote:
-> >On 06/11/2021 19:27, Arnaldo Carvalho de Melo wrote:
-> >> Em Sat, Oct 30, 2021 at 12:30:41AM +0800, John Garry escreveu:
-> >>> The tools build system uses KBUILD_HOSTCFLAGS symbol for obvious purposes.
-> >>>
-> >>> However this is not set for anything under tools/
-> >>>
-> >>> As such, host tools apps built have no compiler warnings enabled.
-> >>>
-> >>> Declare HOSTCFLAGS for perf tools build, and also use that symbol in
-> >>> declaration of host_c_flags. HOSTCFLAGS comes from EXTRA_WARNINGS, which
-> >>> is independent of target platform/arch warning flags.
-> >>>
-> >>> Suggested-by: Jiri Olsa <jolsa@redhat.com>
-> >>> Signed-off-by: John Garry <john.garry@huawei.com>
-> >>> --
-> >>> Using HOSTCFLAGS, as opposed to KBUILD_HOSTCFLAGS, is going opposite
-> >>> direction to commit 96f14fe738b6 ("kbuild: Rename HOSTCFLAGS to
-> >>> KBUILD_HOSTCFLAGS"), so would like further opinion from Laura and
-> >>> Masahiro.
-> >> 
-> >> Laura's redhat e-mail bouncedm updated it to her kernel.org one, Laura,
-> >> Masahiro, would you please comment? Jiri?
-> >
-> >Any opinion on this one? Shall I just resend ... ? or just apply it if 
-> >no one cares too much :)
+> Commit 67306f84ca78 ("selftests/bpf: Add bpf_read_branch_records()
+> selftest") adds selftest corresponding to bpf branch read
+> function bpf_read_branch_records(). Used this selftest to
+> test bpf support, for reading branch records in powerpc.
 > 
-> I'll apply it now that everybody got enough time to review it . :-)
-
-sorry, overlooked this one, looks good
-
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-
-thanks,
-jirka
-
+> Selftest result in power9 box before this patch changes:
 > 
-> - Arnaldo
-> >
-> >Thanks,
-> >John
-> >
-> >> 
-> >> - Arnaldo
-> >>   
-> >>> diff --git a/tools/build/Build.include b/tools/build/Build.include
-> >>> index 2cf3b1bde86e..c2a95ab47379 100644
-> >>> --- a/tools/build/Build.include
-> >>> +++ b/tools/build/Build.include
-> >>> @@ -99,7 +99,7 @@ cxx_flags = -Wp,-MD,$(depfile) -Wp,-MT,$@ $(CXXFLAGS) -D"BUILD_STR(s)=\#s" $(CXX
-> >>>   ###
-> >>>   ## HOSTCC C flags
-> >>>   
-> >>> -host_c_flags = -Wp,-MD,$(depfile) -Wp,-MT,$@ $(KBUILD_HOSTCFLAGS) -D"BUILD_STR(s)=\#s" $(HOSTCFLAGS_$(basetarget).o) $(HOSTCFLAGS_$(obj))
-> >>> +host_c_flags = -Wp,-MD,$(depfile) -Wp,-MT,$@ $(HOSTCFLAGS) -D"BUILD_STR(s)=\#s" $(HOSTCFLAGS_$(basetarget).o) $(HOSTCFLAGS_$(obj))
-> >>>   
-> >>>   # output directory for tests below
-> >>>   TMPOUT = .tmp_$$$$
-> >>> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> >>> index 4a9baed28f2e..9b95ba09657f 100644
-> >>> --- a/tools/perf/Makefile.config
-> >>> +++ b/tools/perf/Makefile.config
-> >>> @@ -17,6 +17,7 @@ detected     = $(shell echo "$(1)=y"       >> $(OUTPUT).config-detected)
-> >>>   detected_var = $(shell echo "$(1)=$($(1))" >> $(OUTPUT).config-detected)
-> >>>   
-> >>>   CFLAGS := $(EXTRA_CFLAGS) $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
-> >>> +HOSTCFLAGS := $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
-> >>>   
-> >>>   include $(srctree)/tools/scripts/Makefile.arch
-> >>>   
-> >>> @@ -211,6 +212,7 @@ endif
-> >>>   ifneq ($(WERROR),0)
-> >>>     CORE_CFLAGS += -Werror
-> >>>     CXXFLAGS += -Werror
-> >>> +  HOSTCFLAGS += -Werror
-> >>>   endif
-> >>>   
-> >>>   ifndef DEBUG
-> >>> @@ -292,6 +294,9 @@ CXXFLAGS += -ggdb3
-> >>>   CXXFLAGS += -funwind-tables
-> >>>   CXXFLAGS += -Wno-strict-aliasing
-> >>>   
-> >>> +HOSTCFLAGS += -Wall
-> >>> +HOSTCFLAGS += -Wextra
-> >>> +
-> >>>   # Enforce a non-executable stack, as we may regress (again) in the future by
-> >>>   # adding assembler files missing the .GNU-stack linker note.
-> >>>   LDFLAGS += -Wl,-z,noexecstack
-> >>> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> >>> index a3966f290297..8ca656aa8b06 100644
-> >>> --- a/tools/perf/Makefile.perf
-> >>> +++ b/tools/perf/Makefile.perf
-> >>> @@ -226,7 +226,7 @@ else
-> >>>   endif
-> >>>   
-> >>>   export srctree OUTPUT RM CC CXX LD AR CFLAGS CXXFLAGS V BISON FLEX AWK
-> >>> -export HOSTCC HOSTLD HOSTAR
-> >>> +export HOSTCC HOSTLD HOSTAR HOSTCFLAGS
-> >>>   
-> >>>   include $(srctree)/tools/build/Makefile.include
-> >>>   
-> >>> -- 
-> >>> 2.17.1
-> >> 
-> >
+> [command]# ./test_progs -t perf_branches
+> Failed to load bpf_testmod.ko into the kernel: -8
+> WARNING! Selftests relying on bpf_testmod.ko will be skipped.
+> test_perf_branches_common:PASS:test_perf_branches_load 0 nsec
+> test_perf_branches_common:PASS:attach_perf_event 0 nsec
+> test_perf_branches_common:PASS:set_affinity 0 nsec
+> check_good_sample:PASS:output not valid 0 nsec
+> check_good_sample:FAIL:read_branches_size err -2
+> check_good_sample:FAIL:read_branches_stack err -2
+> check_good_sample:FAIL:read_branches_stack stack bytes written=-2
+> not multiple of struct size=24
+> check_good_sample:FAIL:read_branches_global err -2
+> check_good_sample:FAIL:read_branches_global global bytes written=-2
+> not multiple of struct size=24
+> check_good_sample:PASS:read_branches_size 0 nsec
+>   #75/1 perf_branches_hw:FAIL
+>   #75/2 perf_branches_no_hw:OK
+>   #75 perf_branches:FAIL
+> Summary: 0/1 PASSED, 0 SKIPPED, 2 FAILED
+> 
+> Selftest result in power9 box after this patch changes:
+> 
+> [command]#: ./test_progs -t perf_branches
+>   #75/1 perf_branches_hw:OK
+>   #75/2 perf_branches_no_hw:OK
+>   #75 perf_branches:OK
+> Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
+> 
+> Signed-off-by: Kajol Jain<kjain@linux.ibm.com>
+> ---
+>   kernel/trace/bpf_trace.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index fdd14072fc3b..2b7343b64bb7 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -1245,7 +1245,7 @@ static const struct bpf_func_proto bpf_perf_prog_read_value_proto = {
+>   BPF_CALL_4(bpf_read_branch_records, struct bpf_perf_event_data_kern *, ctx,
+>   	   void *, buf, u32, size, u64, flags)
+>   {
+> -#ifndef CONFIG_X86
+> +#if !(defined(CONFIG_X86) || defined(CONFIG_PPC64))
+
+Can this really be enabled generically? Looking at 3925f46bb590 ("powerpc/perf: Enable
+branch stack sampling framework") it says POWER8 [and beyond]. Should there be a generic
+Kconfig symbol like ARCH_HAS_BRANCH_RECORDS that can be selected by archs instead?
+
+>   	return -ENOENT;
+>   #else
+>   	static const u32 br_entry_size = sizeof(struct perf_branch_entry);
 > 
 
