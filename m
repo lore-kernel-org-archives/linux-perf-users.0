@@ -2,122 +2,209 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E16C4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Nov 2021 23:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E881C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Nov 2021 23:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EF1861AFF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Nov 2021 23:32:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4572861A0C
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Nov 2021 23:43:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243652AbhKOXfU (ORCPT
+        id S242236AbhKOXpy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 15 Nov 2021 18:35:20 -0500
-Received: from www62.your-server.de ([213.133.104.62]:53340 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353101AbhKOXdO (ORCPT
+        Mon, 15 Nov 2021 18:45:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36340 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1343898AbhKOXm1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 Nov 2021 18:33:14 -0500
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-        by www62.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1mmlQO-000Ci8-7O; Tue, 16 Nov 2021 00:30:08 +0100
-Received: from [85.1.206.226] (helo=linux.home)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1mmlQN-000GXA-PZ; Tue, 16 Nov 2021 00:30:07 +0100
-Subject: Re: [PATCH] bpf: Enable bpf support for reading branch records in
- powerpc
-To:     Kajol Jain <kjain@linux.ibm.com>, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     acme@kernel.org, peterz@infradead.org, songliubraving@fb.com,
-        andrii@kernel.org, kafai@fb.com, yhs@fb.com,
-        john.fastabend@gmail.com, davem@davemloft.net, kpsingh@kernel.org,
-        hawk@kernel.org, kuba@kernel.org, maddy@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com, linux-perf-users@vger.kernel.org,
-        rnsastry@linux.ibm.com
-References: <20211115044437.12047-1-kjain@linux.ibm.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <5a185d6b-7090-23f0-1ec9-140a31ee5fb4@iogearbox.net>
-Date:   Tue, 16 Nov 2021 00:30:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 15 Nov 2021 18:42:27 -0500
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4243C079789;
+        Mon, 15 Nov 2021 14:41:55 -0800 (PST)
+Received: by mail-wm1-x334.google.com with SMTP id g191-20020a1c9dc8000000b0032fbf912885so925114wme.4;
+        Mon, 15 Nov 2021 14:41:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1wcRoUsi7m4so1ILzmSN202bo8uzxCLDy3lmO8Chj0s=;
+        b=A6p8nlOgTxhb0XhsUTWEURq5tT7Io7Z5Q7zNDcascjpnruwYSLkz3L6hLjxGwNFxyl
+         PJb/CoLuSrtanJwZF2woFycJ1knpO+EmTSH520PPS9kjm8nsA0QKNfbzQMVnBlLfD2/T
+         +a3jF/tf1jw11k7khy2fXKD3uIvbKmqNDsu2EBMwcWsTIRxjVcQwIR0Snuurh7qo9Hns
+         d+Ynts/T+OYP2yhQGl6kMFSbi/ha+s8QNZLB2egLZuUB5RvI7wEg29cIMdhKMbMYcnTp
+         fhRb10DKuwP6MdDG2E1XjIc8w+Bvwvg7YQXJ67+tPy2yoy4vaqqAyD9pJJgFx/25u1QC
+         LZIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1wcRoUsi7m4so1ILzmSN202bo8uzxCLDy3lmO8Chj0s=;
+        b=H5DQ6I8EfcXQLEM/Sr1+v5YkP4SbnqwsSapM1t/0JKCUKL7fOQjZg8aITDpYBiwquC
+         C0wpCm2RKPZeExkUqyhl2v6IlGqb26qdsCd5kqa/d5mkT7KIAKUKTzEF+fMXs+i+slLP
+         g+gcd6eZPbglMgDue4/geQrllCHSwAo544D83bF/HZQ+sG237ChTpmoyoubwODrWh4E5
+         Fgr67UKXby6aryY7v62l/WO3zLeHzvnnt95swWBAp1xtE3bAghl4dLEMATT5S8HlCJ/x
+         t0d4g51GpuNjKCpLIgk+jGXGboNwUropzQA62X8DZmNn1qMCSkLG9o6+RImUVSmHQ6zI
+         0HnQ==
+X-Gm-Message-State: AOAM533aAT38NytPDTB1vePgV0GUEqXKhEcurEStwwD307PhW4gu+NlO
+        nvKTdtsDSt+Ia/dLHrGjRiY=
+X-Google-Smtp-Source: ABdhPJxa52tQBjaB2iU8+hZZNsx2OY72vhMth8Lqzlaj1rlosTCBAsZBjh6xbfcKET/RaPALdPBXYg==
+X-Received: by 2002:a7b:c155:: with SMTP id z21mr62053756wmi.107.1637016114281;
+        Mon, 15 Nov 2021 14:41:54 -0800 (PST)
+Received: from pc ([197.49.250.127])
+        by smtp.gmail.com with ESMTPSA id r8sm19649518wrz.43.2021.11.15.14.41.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Nov 2021 14:41:53 -0800 (PST)
+Date:   Tue, 16 Nov 2021 00:41:51 +0200
+From:   Sohaib Mohamed <sohaib.amhmd@gmail.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     rickyman7@gmail.com, irogers@google.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Yury Norov <yury.norov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf bench: flush stats when pipe it to a file or to tee
+Message-ID: <20211115224151.odaewu62ltx7smty@pc>
+References: <20211112215313.108823-1-sohaib.amhmd@gmail.com>
+ <YY+sqrAm1sAFEUQ4@kernel.org>
+ <YY+tDhLJ5R6dijUv@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20211115044437.12047-1-kjain@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.103.3/26354/Mon Nov 15 10:21:07 2021)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YY+tDhLJ5R6dijUv@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 11/15/21 5:44 AM, Kajol Jain wrote:
-> Branch data available to bpf programs can be very useful to get
-> stack traces out of userspace applications.
-> 
-> Commit fff7b64355ea ("bpf: Add bpf_read_branch_records() helper")
-> added bpf support to capture branch records in x86. Enable this feature
-> for powerpc as well.
-> 
-> Commit 67306f84ca78 ("selftests/bpf: Add bpf_read_branch_records()
-> selftest") adds selftest corresponding to bpf branch read
-> function bpf_read_branch_records(). Used this selftest to
-> test bpf support, for reading branch records in powerpc.
-> 
-> Selftest result in power9 box before this patch changes:
-> 
-> [command]# ./test_progs -t perf_branches
-> Failed to load bpf_testmod.ko into the kernel: -8
-> WARNING! Selftests relying on bpf_testmod.ko will be skipped.
-> test_perf_branches_common:PASS:test_perf_branches_load 0 nsec
-> test_perf_branches_common:PASS:attach_perf_event 0 nsec
-> test_perf_branches_common:PASS:set_affinity 0 nsec
-> check_good_sample:PASS:output not valid 0 nsec
-> check_good_sample:FAIL:read_branches_size err -2
-> check_good_sample:FAIL:read_branches_stack err -2
-> check_good_sample:FAIL:read_branches_stack stack bytes written=-2
-> not multiple of struct size=24
-> check_good_sample:FAIL:read_branches_global err -2
-> check_good_sample:FAIL:read_branches_global global bytes written=-2
-> not multiple of struct size=24
-> check_good_sample:PASS:read_branches_size 0 nsec
->   #75/1 perf_branches_hw:FAIL
->   #75/2 perf_branches_no_hw:OK
->   #75 perf_branches:FAIL
-> Summary: 0/1 PASSED, 0 SKIPPED, 2 FAILED
-> 
-> Selftest result in power9 box after this patch changes:
-> 
-> [command]#: ./test_progs -t perf_branches
->   #75/1 perf_branches_hw:OK
->   #75/2 perf_branches_no_hw:OK
->   #75 perf_branches:OK
-> Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
-> 
-> Signed-off-by: Kajol Jain<kjain@linux.ibm.com>
-> ---
->   kernel/trace/bpf_trace.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index fdd14072fc3b..2b7343b64bb7 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -1245,7 +1245,7 @@ static const struct bpf_func_proto bpf_perf_prog_read_value_proto = {
->   BPF_CALL_4(bpf_read_branch_records, struct bpf_perf_event_data_kern *, ctx,
->   	   void *, buf, u32, size, u64, flags)
->   {
-> -#ifndef CONFIG_X86
-> +#if !(defined(CONFIG_X86) || defined(CONFIG_PPC64))
+Hello, Arnaldo
 
-Can this really be enabled generically? Looking at 3925f46bb590 ("powerpc/perf: Enable
-branch stack sampling framework") it says POWER8 [and beyond]. Should there be a generic
-Kconfig symbol like ARCH_HAS_BRANCH_RECORDS that can be selected by archs instead?
+On Sat, Nov 13, 2021 at 09:18:22AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Sat, Nov 13, 2021 at 09:16:42AM -0300, Arnaldo Carvalho de Melo escreveu:
+> > Em Fri, Nov 12, 2021 at 11:53:12PM +0200, Sohaib Mohamed escreveu:
+> > > The output of perf bench gets buffered when I pipe it to a file or to
+> > > tee, in such a way that I can see it only at the end.
+> >
+> > Good, now try with 'perf test' :-)
+> >
+> > Applying,
+>
+> Humm, take that back, when I almost did it for 'perf test' I used
+> setvbuf(), take a look at it so that you don't have to go sprinkling
+> fflush() calls and missing some places.
+>
+> - Arnaldo
 
->   	return -ENOENT;
->   #else
->   	static const u32 br_entry_size = sizeof(struct perf_branch_entry);
-> 
+I'm not sure about the meaning of 'perf test' here, Should I write new unit
+tests?
 
+I found I could invoke this function at the beginning of perf-bench:
+setvbuf(stdout, NULL, _IONBF, 0);
+This looks to me will resolve the issue for all perf-bench subcommands.
+I'm not sure if a good practice...
+
+This probably is version 2 of this patch:
+
+
+diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
+index d0895162c2ba..a0b812cde1ee 100644
+--- a/tools/perf/builtin-bench.c
++++ b/tools/perf/builtin-bench.c
+@@ -226,7 +226,6 @@ static void run_collection(struct collection *coll)
+                if (!bench->fn)
+                        break;
+                printf("# Running %s/%s benchmark...\n", coll->name, bench->name);
+-               fflush(stdout);
+
+                argv[1] = bench->name;
+                run_bench(coll->name, bench->name, bench->fn, 1, argv);
+@@ -247,6 +246,8 @@ int cmd_bench(int argc, const char **argv)
+        struct collection *coll;
+        int ret = 0;
+
++       setvbuf(stdout, NULL, _IONBF, 0);
++
+        if (argc < 2) {
+                /* No collection specified. */
+                print_usage();
+@@ -300,7 +301,6 @@ int cmd_bench(int argc, const char **argv)
+
+                        if (bench_format == BENCH_FORMAT_DEFAULT)
+                                printf("# Running '%s/%s' benchmark:\n", coll->name, bench->name);
+-                       fflush(stdout);
+                        ret = run_bench(coll->name, bench->name, bench->fn, argc-1, argv+1);
+                        goto end;
+                }
+
+
+
+Thanks,
+- Sohaib
+
+>
+> > - Arnaldo
+> >
+> > > E.g.
+> > > $ perf bench internals synthesize -t
+> > > < output comes out fine after each test run >
+> > >
+> > > $ perf bench internals synthesize -t | tee file.txt
+> > > < output comes out only at the end of all tests >
+> > >
+> > > See, also:
+> > > $ perf bench mem all | tee file.txt
+> > > $ perf bench sched all | tee file.txt
+> > > $ perf bench internals all -t | tee file.txt
+> > > $ perf bench internals all | tee file.txt
+> > >
+> > > Suggested-by: Riccardo Mancini <rickyman7@gmail.com>
+> > > Signed-off-by: Sohaib Mohamed <sohaib.amhmd@gmail.com>
+> > > ---
+> > >  tools/perf/bench/find-bit-bench.c | 1 +
+> > >  tools/perf/bench/synthesize.c     | 2 ++
+> > >  2 files changed, 3 insertions(+)
+> > >
+> > > diff --git a/tools/perf/bench/find-bit-bench.c b/tools/perf/bench/find-bit-bench.c
+> > > index 22b5cfe97023..39fb4184fbcb 100644
+> > > --- a/tools/perf/bench/find-bit-bench.c
+> > > +++ b/tools/perf/bench/find-bit-bench.c
+> > > @@ -113,6 +113,7 @@ static int do_for_each_set_bit(unsigned int num_bits)
+> > >
+> > >  		if (use_of_val == accumulator)  /* Try to avoid compiler tricks. */
+> > >  			printf("\n");
+> > > +		fflush(stdout);
+> > >  	}
+> > >  	bitmap_free(to_test);
+> > >  	return 0;
+> > > diff --git a/tools/perf/bench/synthesize.c b/tools/perf/bench/synthesize.c
+> > > index 7401ebbac100..d21d311df61b 100644
+> > > --- a/tools/perf/bench/synthesize.c
+> > > +++ b/tools/perf/bench/synthesize.c
+> > > @@ -92,6 +92,7 @@ static int do_run_single_threaded(struct perf_session *session,
+> > >  		update_stats(&event_stats, atomic_read(&event_count));
+> > >  	}
+> > >
+> > > +	fflush(stdout);
+> > >  	time_average = avg_stats(&time_stats);
+> > >  	time_stddev = stddev_stats(&time_stats);
+> > >  	printf("  Average %ssynthesis took: %.3f usec (+- %.3f usec)\n",
+> > > @@ -186,6 +187,7 @@ static int do_run_multi_threaded(struct target *target,
+> > >  		perf_session__delete(session);
+> > >  	}
+> > >
+> > > +	fflush(stdout);
+> > >  	time_average = avg_stats(&time_stats);
+> > >  	time_stddev = stddev_stats(&time_stats);
+> > >  	printf("    Average synthesis took: %.3f usec (+- %.3f usec)\n",
+> > > --
+> > > 2.25.1
+> >
+> > --
+> >
+> > - Arnaldo
+>
+> --
+>
+> - Arnaldo
