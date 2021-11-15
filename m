@@ -2,164 +2,277 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 303E9C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Nov 2021 09:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A9DC433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Nov 2021 09:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F30E8615E1
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Nov 2021 09:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48B6A630EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Nov 2021 09:59:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236514AbhKOJwf (ORCPT
+        id S230405AbhKOKB7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 15 Nov 2021 04:52:35 -0500
-Received: from mail-dm6nam10on2083.outbound.protection.outlook.com ([40.107.93.83]:53672
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        Mon, 15 Nov 2021 05:01:59 -0500
+Received: from mail-bn7nam10on2080.outbound.protection.outlook.com ([40.107.92.80]:34913
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S236726AbhKOJwe (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 Nov 2021 04:52:34 -0500
+        id S229456AbhKOKB4 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 15 Nov 2021 05:01:56 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=g23OsItLmXMGKwjED8jsi7nCjcHrIUoEwuO/cmgMbR55GHS+1gYm7DL3Jk7tGOeUAFlE+xpjehAS3QdyQ518wTDLtpESMjj+0ZJL9vwuzYlw5FWzRNrQ4bN9VXeamg+fEZ2zh7H9gc86GVKOxdfe5CnOrjQ2OZnWgKW/yyaocZBsS5BemlQdarH4wQzN0/Y4f7m8eLwjlCmc6QZS15U3kGn6C6yUPr186c1TfEE97t5YSLwxbHhYh3KPham9XoTK8Vxfe1yPcZ6+lRvYKKSjErgimpAtolNwFz5mZhrck1O1td/D5kBIDq+IUxf/3qSnByeLUu+2oik+ZO7bbUuE/w==
+ b=PAKt5dpXTqEEUHHBZfW8XYp7H9A1Bcvsy2XJpl78t+M8Euh7wkwBWm6MryxK9DJfOeBhdjqMUY1yg29CUxCZB/yiqbNU89AaOddjWN0R7yL3D7ClGNuaji1EL8JA/3lpDcua7jrfywzEH1bS3BSPnrXZDAvgTK6WYgS+6nZ7eyx4wy/Uhr+saz3qXyYzh56kwYaBJmMLM5mMsiDoYQr16Jp/oAAfSqOFU0FnMR0n4afcSqGaa/oVE+ZZHTnJbB0t2jVYJ56si23DIa4CkB8mSzUi8m2bovaW7mTKeEBRX54fWPzMuWLFcaESPMkPaGefzCrziJrJTbKOBhxCeAnsJA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Kkos9xsCM0B4L5tso6htIqQQ1Vp7M6bAlCCI5NSxTgo=;
- b=SQ33q+Z1d2r4CgAwvZTSkihOFBBAM38K/WO+iHSFfjBabQcUh4ZLeFrjg++jplsQKpeczTx/vlwkLYmVZ5BCt2X7m99D3gcwzevnijb9/fUb2NYbxn5PIUGCdBbtEOS3hUNDZCKcUrYuud5oaT79sHZ2mU3kcTjkDa0kQURpkNmySOHJP7CwqyBpblD18wQAWSqrN2ZXnUBaM4+SjhO3DJAskGfPjR6Wp889lg4wq+vtxvlJXIna8PBO7qDs0yUZEFsGvmvJ7aRmZlVsWaVE5xwlar3m7a+IXIS+lCvlnIxyB2OXkELWxSB95artw1URd+boRMHvoWgUT8Mb1ErxZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
+ bh=liH80Na9eQj/S+12Z/QHXRQwJhXbUZr4QQ50yo7As8w=;
+ b=W+E42to3TjsxjkdHw0NAUImMzJSN0mlmFE00bSZ4w67MaUdJ3RS51D+jO27GPo2aL179/058Op7n9FSzGaZjZxs50V5sUXVtL3mm32JSjjGCm+iWVdDMyLJBAVQH2OUotRn9K/JIDJP0c+IJTd69QhmA3hw6zx8vEmoWxabfnPvjfDrV3TWQhsTPACJcmHSjcr55NauL91N1DkZmA43NzYfz53mmpB5qOD9RqhO4oN73oWf+ZYYvc1S+HiHgUGWkLSWHQKeLbcJ3fqJXeslHIDvVOgutxb+lowBQaMT61kbvUKh1Qy9kiTDVnTcp4SLdjHOerzetZaTlkUBBwOuQbg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Kkos9xsCM0B4L5tso6htIqQQ1Vp7M6bAlCCI5NSxTgo=;
- b=PKzXtnRxavSFy99hGGodYew7KNhcbX49fDvuKbRwWuBdmj8EZ9e4AuGo+rz7+Tv+IIn35LZqCcNHfFXbDYLVloCRLVApQ04XeCvVVVJffY9GkjY0H69/OB45l9i4+IW5SSg/9i1JbPnmsD2cPDBmGgUrvYXChDbJZWqp46NMv9A=
-Received: from MW4PR03CA0059.namprd03.prod.outlook.com (2603:10b6:303:8e::34)
- by MN2PR12MB4536.namprd12.prod.outlook.com (2603:10b6:208:263::19) with
+ bh=liH80Na9eQj/S+12Z/QHXRQwJhXbUZr4QQ50yo7As8w=;
+ b=OlSRj3CUdSXO+S+S3L3U9YNqHXAnBIfJ+fZe1zrGEaSRjU2YRXmS2rmbFSfbr7qOTN6ycQqfPR/fj+tolctsu7dva0Ld67EjxpmuxI5gT6IjP8USN0HO5gKAMBr3rgs0CYzA+bPUoICPV2qXOlcFH0O7/0bxTUwrQgKLlgWH3JY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BN8PR12MB4788.namprd12.prod.outlook.com (2603:10b6:408:a3::19)
+ by BN6PR1201MB2531.namprd12.prod.outlook.com (2603:10b6:404:b2::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.27; Mon, 15 Nov
- 2021 09:49:24 +0000
-Received: from CO1NAM11FT022.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:8e:cafe::a0) by MW4PR03CA0059.outlook.office365.com
- (2603:10b6:303:8e::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.26 via Frontend
- Transport; Mon, 15 Nov 2021 09:49:24 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT022.mail.protection.outlook.com (10.13.175.199) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4690.15 via Frontend Transport; Mon, 15 Nov 2021 09:49:23 +0000
-Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17; Mon, 15 Nov
- 2021 03:49:15 -0600
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-To:     <peterz@infradead.org>
-CC:     <ravi.bangoria@amd.com>, <kim.phillips@amd.com>,
-        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
-        <namhyung@kernel.org>, <tglx@linutronix.de>, <bp@alien8.de>,
-        <dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <santosh.shukla@amd.com>, <sandipan.das@amd.com>
-Subject: [RFC] perf/amd/ibs: Move ibs pmus under perf_sw_context
-Date:   Mon, 15 Nov 2021 15:18:38 +0530
-Message-ID: <20211115094838.3359-1-ravi.bangoria@amd.com>
-X-Mailer: git-send-email 2.25.1
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.16; Mon, 15 Nov
+ 2021 09:59:00 +0000
+Received: from BN8PR12MB4788.namprd12.prod.outlook.com
+ ([fe80::9037:903e:25fd:51cb]) by BN8PR12MB4788.namprd12.prod.outlook.com
+ ([fe80::9037:903e:25fd:51cb%5]) with mapi id 15.20.4690.027; Mon, 15 Nov 2021
+ 09:58:59 +0000
+Message-ID: <9dc5cb10-2faf-a17b-ad4b-a22dbe688209@amd.com>
+Date:   Mon, 15 Nov 2021 15:28:45 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [RFC PATCH] tools/perf/x86: Use alternative format for AMD raw
+ events
+Content-Language: en-CA
+To:     Jiri Olsa <jolsa@redhat.com>, acme@kernel.org
+Cc:     ravi.bangoria@amd.com, ananth.narayan@amd.com,
+        kim.phillips@amd.com, rrichter@amd.com,
+        linux-perf-users@vger.kernel.org, namhyung@kernel.org,
+        alexander.shishkin@linux.intel.com, mark.rutland@arm.com
+References: <20211111125646.581021-1-sandipan.das@amd.com>
+ <YZE8SDkzq0OMcmhS@krava>
+From:   Sandipan Das <sandipan.das@amd.com>
+In-Reply-To: <YZE8SDkzq0OMcmhS@krava>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0030.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:97::21) To BN8PR12MB4788.namprd12.prod.outlook.com
+ (2603:10b6:408:a3::19)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
+Received: from [172.31.37.160] (165.204.159.242) by PN3PR01CA0030.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:97::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.15 via Frontend Transport; Mon, 15 Nov 2021 09:58:54 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 80fbd132-e78b-42b8-fd4d-08d9a81d3494
-X-MS-TrafficTypeDiagnostic: MN2PR12MB4536:
-X-Microsoft-Antispam-PRVS: <MN2PR12MB45362E33909FFC6D8A32F704E0989@MN2PR12MB4536.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:350;
+X-MS-Office365-Filtering-Correlation-Id: 0e8fdb1e-ae25-4ff1-abec-08d9a81e8b7a
+X-MS-TrafficTypeDiagnostic: BN6PR1201MB2531:
+X-Microsoft-Antispam-PRVS: <BN6PR1201MB2531F47F162410956427A5AF8B989@BN6PR1201MB2531.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: bbNPVcgCNIegXU9VE/wH79Dgu1mNOgSz4qqoZ8zqUpAbPGtzxfA1V3R5dPedHF7diQOqETKtAfYUWYwS4/SWy2dPMESJbyMIQC/3lrMT6aXyZ8MTD387UmuO2coldadbJzmAiHLhI0CgT6VaumHKzjbEPtRiz3csOPmLNZycAOPQlqfxiYfSWyMgsk54v5LsaU/lcmhDIy1jfZTrUrpXr8Kve1LYyo62b6YxDDWjK+2eB/D+6ABTFZzmaBzMJNlkPLvKC08Xjv9ygi5huRFbzbHhuB2LvHt7CQSqmLYwCk3rJjMCbsYMuZOwYTmaQYxRubN7uOqZQtckpNRaEGapBx+EZ7uVv+C92uZXfVQyBBdiV3ED8+8DslXfWvHsu4qmkW/2T8jz0tt8nZ9TuYfXlFGduooMhKSUZfcbF1yS3KVO+G2TSHDFb2lYd+Mz7oVr6o2eUXTPuE4atU/70XVnBcwFfC87iwwlldYb/haAbwU0hIqxiuTqLuJQPJW78tAtSadNCmBBuoTdcuccosAc7bzRFqGMJ0aPVPYDwnGrunPZG8OYLvMEkUrS1af9ISuoya+uwm6/lLI4ZLh9OO+w5l2vn7oqBfyorPLhxWKMakqG0TMhLQYGzuu74hSA7e+DUryJbVkg1p+8brEO/zpEGbSI6yQvg97Fql/Yx1LvWk63As8aEklACC+jO+kwY/6VOyIgVgnG/8mFfscVis/RNva4fW4T0ppxTCsNnBJvrUcCR5U79pZoH2uDwU03OpMzs01jWXMBURco0xNKAbF+vDsRFL/6QaNsXS1hFJWuSdAsh5gTJi+mRtl9xp90nq5ZsQSSJ9MotwsdwZjkHxobzJS2t8AelrUHi0zY6LSkqzI=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(508600001)(82310400003)(81166007)(7696005)(356005)(70586007)(8676002)(86362001)(47076005)(36756003)(70206006)(8936002)(7416002)(6916009)(336012)(316002)(1076003)(5660300002)(4326008)(6666004)(2906002)(44832011)(54906003)(36860700001)(186003)(2616005)(16526019)(426003)(966005)(83380400001)(26005)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: BmOwCurCHbof+4uFR47W67b5lFdmie7jEgDMBr40sPy2p9mcG4FhbtQbU16tbh7e/iofISp/clh2tCYSoIZx+OG+eLXO3074kaFqo6PxFjVV9iIF3YrDUkIzc4ddOY6viyHZS3f/PJq6V0lnLOQAz1VyKREgd9mYIAOERBjouJhokNOA3GJK8j5HzCCj/bjwWc7PSQqZf50/ssHMg+6ufOJYi2HT+CXlJbxtFYaflbsTMscvi00vXhASutw6XJZFRQmSdnkE06slPf0QiZ+ou3+AwR7MLEiK+J7Zfj6hEUafkiga7bXvdLg6iP65mYHk29bwJtTgIoSM4Gvx+DI4aAI4EZEMcOo0nrrhQHd81Ty8hh3nHUMD1mewxhuZvh+yarZzj+3/uSncdSWL91d0W7koJ3jxrnyqbLDn2wm4LY770PXnt4QwF3fuHYx6zQVm5nrlsl/IcLwLb7L2PNkReihXA06KAxZ3Vh+sqM9hyWxoeEaVzDL67fJqGqsKuaHfDUDqmBvJDvgFgkuzL6e/QdaPiWEpjZPfdC9IQhJ2MKpHj6DPp/uD4zDFo2YeTuF3GWIEuEz6SXbpWtACLQ2hn/C+Ls/MGzP6yNh7PzThCAo18bnQBUbMw9zzjfF3Wco33sdx/XQEpVVR1EDN6XtDcAtcF8wGiLWvfct3LBrbnZX2KdzhkxwZVWnZ4sab1NUQ6OG3F9qFORjW0fe/WAYs9Kif0XDhnxNQhmGA3vSR1XA=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB4788.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(4326008)(36756003)(86362001)(31686004)(5660300002)(508600001)(26005)(8936002)(53546011)(44832011)(6486002)(186003)(66946007)(2906002)(8676002)(31696002)(6666004)(66476007)(83380400001)(66556008)(956004)(38100700002)(16576012)(316002)(2616005)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UkNncEZMellESEhqMnV3VGQxR3lZaS9jb3BjZHIwNUg2blkzRjhJTllkbUN2?=
+ =?utf-8?B?c3hrUTAxK3JrUk9oWHRoZTV2NEtCcGE1YkRSbVVNNmwvRzllbyszYm1iY3E0?=
+ =?utf-8?B?bGkzT1lIc25rUFZOUGhFYUsrNkQza09UcFNHUy9UMWpqV0loNDdrZEhzaTR3?=
+ =?utf-8?B?ZnVmbnVnRmZ2TkoycmtBSms2a3ZLTFlJL2VTL2lXRzdUd3cybjdHNTBVcUF2?=
+ =?utf-8?B?OUNZc3RtaGZYQWNzei9LNGRHbmVPbXhSYnRwSE94Z3c5cHVydkU5Rm0yQjF4?=
+ =?utf-8?B?VEwvNGlkcE1FRFhTbmEzNG5aQTdWaFRBNEgwS1JFUjhYdnAzbU1pWGZwd3My?=
+ =?utf-8?B?eFFQWlplbmhlZGVQNWd3ajNTcGV4d3QySXZvWlExSENQdElyQjlOU0JzT0ow?=
+ =?utf-8?B?MGZBSTA1anFDYWEwV0R4WVNCSm5WUjdxV0d5Sm1ZTS8vTTNyVDE2SmZlT3VS?=
+ =?utf-8?B?Z0VGRHBSSm4zdkVrcEtTS2ZYT3VuQzUrMjR1V1hjTDBZTTR5ZUxzOVh6cFhq?=
+ =?utf-8?B?YUNZeHQrc0tDQ1dyaFlRSndMTmptQ285QkpqcFRNODg3U0JOUE1iWFRVdUJj?=
+ =?utf-8?B?SWg3Snp0bHQ1VEYyNXpReTFiVTQ4N0pSMStQM2krTHQ1L05Ca1VCcUw0cGtZ?=
+ =?utf-8?B?VDdlcDhMWnZUOHpqaDRlT1NqdTNsV0VFZmJNRnB3N1lEUy9CSnVXMzduOW1x?=
+ =?utf-8?B?eDFDZUlwRjVZWXhZV1VXWGkxdEtkWWY0Mi8xdjdVb0syZU04SWdGN1J5cHpm?=
+ =?utf-8?B?T1Q0NTVkNTFmWGNBN1RhSlllMG4zazJCN212WGJQWWttZC9NQjlORllWdENq?=
+ =?utf-8?B?SDFuakcvY3BvTzEwdWZGRkdMbWR5U1owOGhBY0xkQlAyZ0RBWnhGalNuR00z?=
+ =?utf-8?B?UW9vTnhNQ2VRUk5sZEtaRTdoZG82bmsxTUZkTWZFZUVKT2o1Vi9KU3ZoM1FB?=
+ =?utf-8?B?OFFoVmhudlY1RDFSTzNxOXkyaXI0SmNJdk9FVjNLaGtEMGpvNFRHUzhad3FJ?=
+ =?utf-8?B?eit0NVIzNVBYNU9sQ3BZYXQyTjIyTXdSZFFpSDBLQUtHKzlLb2Z0UndrM0R2?=
+ =?utf-8?B?QVZkZ3BvNysyMC9RMVNJM0szT0Z3cThQMEdxQXV0VkNtb3o0bTBSVTgwdTln?=
+ =?utf-8?B?RGx3bFNyN0tzZ0RDNkR0T3UxbjhTRkh2MUVRNHFDSmNCMzIxbzBZK3JzTmVU?=
+ =?utf-8?B?dVc1Tmd3VEtFK0M0RHl1K2I0OFBxTStacXZjRitablJ4ZDRVMDhwZHl1V0xt?=
+ =?utf-8?B?K0hvZUYrSG8rQnVzVTNia1dLMlpVbFhicVc4eXROZnp5VTdTYUY3K1JrQkNQ?=
+ =?utf-8?B?Lzl2aWJBTnpyZnBBeTB6SHhRVnBQeGhSUy80T3NYZmxyRlJFYTBVN1NJT3Vn?=
+ =?utf-8?B?bUNncXB3TXRLeG5iYzVZaDhCWkJBVVgvdVVtTk1kKzVrbTJpTmNsdEdldlNt?=
+ =?utf-8?B?VjVsY3lZZVBzR3NXcGdyMy9hOVhlSXRHSnBWS3RNNjlvTmYxTEpqdmpPQzE4?=
+ =?utf-8?B?OFBMWkR5WXRYVURadnNvU0JzWkJCcHVKMkg2cWIzSWJDM1BoanV2Unl2eTJB?=
+ =?utf-8?B?YUpkZTBrUHExdXpxVWlIOHV1cjhQU0FWdXhRUTF5MXZibzN3TTJSR3BwYXZv?=
+ =?utf-8?B?bHM5TG9XMWU1am44MW8rcnp2bTdGekxOTnQwSTRwbXArUE9FdmhuU2NWOEE2?=
+ =?utf-8?B?NXo0azlpa3JCdFlsaTU4SGdnc1FLT2wvM0ZYQXNXbmdKa1duN1AvTWFOY0E2?=
+ =?utf-8?B?TlBEcGNnay9SU1VCKzI1dVR3dlp5MjdZRnZxYjEraEtBSEpNOVdBSFl2N3RX?=
+ =?utf-8?B?WUFUL2E1b1hVNVJGTHg2NUJmNHkzcEtKdVozc3hoUWFpMEJsWDA0aGJxbUxy?=
+ =?utf-8?B?aVEyaGRCZWYwaDV0dFk0S2QwK2FVVWFOQVdBNzdKN2pEV2lQYnhHK0pmMXNr?=
+ =?utf-8?B?ajN2WHY4MlJnK2ROQ3NaZ3k2THZoMlVWNmtpME5wSTc3Q2xncm9WcERuNzFL?=
+ =?utf-8?B?NWlUL2hjbDAyTkN5dHBORFFYbHFaWG9nK2lpL3haRm5QRW9jc0daZTFmZ0lC?=
+ =?utf-8?B?azYvZ2svUEhLNG9kMlgxVlVZOUtpV1Q0Tlh1UGFHdDJWTGN4b0d4SmFmT3Ix?=
+ =?utf-8?B?VXRDRnhPLzU5d21XRVZaaDZ5V2Vsc0Jud2VCbU9nNGxkc082NzJYQkxXMEtF?=
+ =?utf-8?Q?Ofa3EyGhPHoFhUw7gvWMQys=3D?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Nov 2021 09:49:23.7774
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0e8fdb1e-ae25-4ff1-abec-08d9a81e8b7a
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB4788.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Nov 2021 09:58:59.7070
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 80fbd132-e78b-42b8-fd4d-08d9a81d3494
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT022.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4536
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4n13pbxjj74KiyYtNjdL72l+edpQTe4AfCpr4XLJhcN2+vPDYZMxCUWaUf+UX6qPKGAq+vKJNIdcNnbOnhBLrA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1201MB2531
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Ideally, a pmu which is present in each hw thread belongs to
-perf_hw_context, but perf_hw_context has limitation of allowing only
-one pmu (a core pmu) and thus other hw pmus need to use either sw or
-invalid context which limits pmu functionalities.
 
-This is not a new problem. It has been raised in the past, for example,
-Arm big.LITTLE (same for Intel ADL) and s390 had this issue:
+On 11/14/2021 10:11 PM, Jiri Olsa wrote:
+> On Thu, Nov 11, 2021 at 06:26:46PM +0530, Sandipan Das wrote:
+> 
+> SNIP
+> 
+>> Before:
+>>
+>>   $ sudo perf --debug perf-event-open stat -e ic_tag_hit_miss.all_instruction_cache_accesses sleep 1
+>>   ------------------------------------------------------------
+>>   perf_event_attr:
+>>     type                             4
+>>     size                             128
+>>     config                           0x100001f8e
+>>     sample_type                      IDENTIFIER
+>>     read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+>>     disabled                         1
+>>     inherit                          1
+>>     enable_on_exec                   1
+>>     exclude_guest                    1
+>>   ------------------------------------------------------------
+>>   [...]
+>>
+>>   $ sudo perf --debug perf-event-open stat -e r1f18e sleep 1
+>>   ------------------------------------------------------------
+>>   perf_event_attr:
+>>     type                             4
+>>     size                             128
+>>     config                           0x1f18e
+>>     sample_type                      IDENTIFIER
+>>     read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+>>     disabled                         1
+>>     inherit                          1
+>>     enable_on_exec                   1
+>>     exclude_guest                    1
+>>   ------------------------------------------------------------
+>>   [...]
+>>
+>>   $ sudo perf --debug perf-event-open stat -e r100001f8e sleep 1
+>>   ------------------------------------------------------------
+>>   perf_event_attr:
+>>     type                             4
+>>     size                             128
+>>     config                           0x100001f8e
+>>     sample_type                      IDENTIFIER
+>>     read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+>>     disabled                         1
+>>     inherit                          1
+>>     enable_on_exec                   1
+>>     exclude_guest                    1
+>>   ------------------------------------------------------------
+>>   [...]
+>>
+>> After:
+>>
+>>   $ sudo perf --debug perf-event-open stat -e ic_tag_hit_miss.all_instruction_cache_accesses sleep 1
+>>   ------------------------------------------------------------
+>>   perf_event_attr:
+>>     type                             4
+>>     size                             128
+>>     config                           0x100001f8e
+>>     sample_type                      IDENTIFIER
+>>     read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+>>     disabled                         1
+>>     inherit                          1
+>>     enable_on_exec                   1
+>>     exclude_guest                    1
+>>   ------------------------------------------------------------
+>>   [...]
+>>
+>>   $ sudo perf --debug perf-event-open stat -e r1f18e sleep 1
+>>   ------------------------------------------------------------
+>>   perf_event_attr:
+>>     type                             4
+>>     size                             128
+>>     config                           0x100001f8e
+>>     sample_type                      IDENTIFIER
+>>     read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+>>     disabled                         1
+>>     inherit                          1
+>>     enable_on_exec                   1
+>>     exclude_guest                    1
+>>   ------------------------------------------------------------
+>>   [...]
+>>
+>>   $ sudo perf --debug perf-event-open stat -e r100001f8e sleep 1
+>>   ------------------------------------------------------------
+>>   perf_event_attr:
+>>     type                             4
+>>     size                             128
+>>     config                           0x100001f8e
+>>     sample_type                      IDENTIFIER
+>>     read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+>>     disabled                         1
+>>     inherit                          1
+>>     enable_on_exec                   1
+>>     exclude_guest                    1
+>>   ------------------------------------------------------------
+>>   [...]
+>>
+>> It is understandable that raw events must follow the native
+>> PERF_CTL register format but it is worthwhile to pursue such
+>> alternative formats for usability?
+> 
+> good question.. I see raw events as a way to put to config whatever
+> the user wants and IMO adding changes/quirks that silently changes
+> config could create confusion and angry users ;-)
+> 
+> I'd think that if user is composing/using raw events then using
+> directly r100001f8e is not such a big deal?
+> 
 
-  Arm:  https://lore.kernel.org/lkml/20160425175837.GB3141@leverpostej
-  s390: https://lore.kernel.org/lkml/20160606082124.GA30154@twins.programming.kicks-ass.net
+Sure. Some of the confusion may be due to the fact that the man pages
+for perf-{stat,record,top} state that raw events are "eventsel+umask".
+While that is technically true, it does not describe the encoding
+scheme (/sys/bus/event_source/devices/<pmu>/format/*)
 
-Arm big.LITTLE (followed by Intel ADL) solved this by allowing multiple
-(heterogeneous) pmus inside perf_hw_context. It makes sense as they are
-still registering single pmu for each hw thread.
+Would another option be to update the man pages with a reference to
+these sysfs files when describing raw events?
 
-s390 solved it by moving 2nd hw pmu to perf_sw_context, though that 2nd
-hw pmu is count mode only, i.e. no sampling.
+Something like:
 
-AMD IBS also has similar problem. IBS pmu is present in each hw thread.
-But because of perf_hw_context restriction, currently it belongs to
-perf_invalid_context and thus important functionalities like per-task
-profiling is not possible with IBS pmu. Moving it to perf_sw_context
-will:
- - allow per-task monitoring
- - allow cgroup wise profiling
- - allow grouping of IBS with other pmu events
- - disallow multiplexing
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 2d7df8703cf2..5dfdfeba594b 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -30,8 +30,10 @@ OPTIONS
 
-Please let me know if I missed any major benefit or drawback of
-perf_sw_context. I'm also not sure how easy it would be to lift
-perf_hw_context restriction and start allowing more pmus in it.
+         - a symbolic event name        (use 'perf list' to list all events)
 
-Suggestions?
+-        - a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
+-         hexadecimal event descriptor.
++        - a raw PMU event (eventsel+umask) in the form of rN..NN where N..NN
++          is a hexadecimal value representing the raw encoding with the layout
++          of the corresponding event control register as defined by entries in
++          /sys/bus/event_sources/devices/<pmu>/format/*
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
----
- arch/x86/events/amd/ibs.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+         - a symbolic or raw PMU event followed by an optional colon
+          and a list of event modifiers, e.g., cpu-cycles:p.  See the
 
-diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 9739019d4b67..3cedd3f0c364 100644
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -533,7 +533,7 @@ static struct attribute *ibs_op_format_attrs[] = {
- 
- static struct perf_ibs perf_ibs_fetch = {
- 	.pmu = {
--		.task_ctx_nr	= perf_invalid_context,
-+		.task_ctx_nr	= perf_sw_context,
- 
- 		.event_init	= perf_ibs_init,
- 		.add		= perf_ibs_add,
-@@ -558,7 +558,7 @@ static struct perf_ibs perf_ibs_fetch = {
- 
- static struct perf_ibs perf_ibs_op = {
- 	.pmu = {
--		.task_ctx_nr	= perf_invalid_context,
-+		.task_ctx_nr	= perf_sw_context,
- 
- 		.event_init	= perf_ibs_init,
- 		.add		= perf_ibs_add,
--- 
-2.27.0
 
+> perhaps there was some some discussion about this that I missed?
+> 
+
+I am not aware of one but may be Arnaldo has come across something
+similar before?
+
+
+- Sandipan
