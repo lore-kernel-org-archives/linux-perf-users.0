@@ -2,282 +2,180 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B367C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Nov 2021 11:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5FEC433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Nov 2021 12:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFADB61C4F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Nov 2021 11:29:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4B78617E3
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Nov 2021 12:02:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231354AbhKOLb7 (ORCPT
+        id S231167AbhKOME6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 15 Nov 2021 06:31:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42428 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229974AbhKOLb4 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 Nov 2021 06:31:56 -0500
-Received: from mail-wr1-x449.google.com (mail-wr1-x449.google.com [IPv6:2a00:1450:4864:20::449])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DCCEC061746
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Nov 2021 03:29:00 -0800 (PST)
-Received: by mail-wr1-x449.google.com with SMTP id b1-20020a5d6341000000b001901ddd352eso2651422wrw.7
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Nov 2021 03:29:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=xf9u2CscKkkxKfWTXnB3UoCYnr7mB7Mfxpso9hhGJvU=;
-        b=lCCgT0Pg/s0d5kWjOirDWetiOTfHhG/rOIc+xzoJMaGxpLGfVM815S16HQ7dw0go19
-         sb7L0qY4qRM8Id5NXOfaPLPzRyFlgPrvtqti4swO7J5wfLURaRu0Q3WQCUEMa940SVal
-         thwlHIAIUtbbSTqZEzhqzGRSKqNeLcMNyxjZ8QjWYQ9H+5y4JMcQB0Fwbd6cgGxBEjsh
-         s/7exRMWG3X1Ccdr6e2sKTnMH/4c3DNlGE0UemYSnc+NBo5d/ng+9NlbqTDgxZEaSGdx
-         ntq1CpHrMFbIXloxSiA5qr2CIo07yENP8hBvxp0HE9ZIBdrcWUca2+KmJl7AssUxKeuo
-         OhCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=xf9u2CscKkkxKfWTXnB3UoCYnr7mB7Mfxpso9hhGJvU=;
-        b=RX3cjl9bCDgVmT4TtSXYFa3mqNMSJWEwKhhW8bqW9eWmCnJOCG8IvNoZ5TgqVJbZda
-         seW7CmwquYrocHiFm3XAdihBodlHCico6FyM5DhTbfO6LBXhh4YDIBI+T1VFm+lBBHUj
-         MfpbGZmsa5xT9eZB+SIphFi7SEME6G6adlF0BOSVjokTZZQb32LjSItzbdUSb6ObY74v
-         b9Qsd05oAzr9KbmJfhXq7xywuPTo0p/TLjdDlWUsBItFoc2UvGiTSc/oJNHyZM+gHCDA
-         dycYD8IscjdVBnB5Ug2jRS7wGMj6zcA/S+xWn9HjMKqOjtvGL4XgmMxddp5IdncmMLlZ
-         DgDw==
-X-Gm-Message-State: AOAM531IIMCpdZzmInl7oDwFpfaXm1szyiiM6RFWw7lqqf17mFv0tHgp
-        s8gKRRWKyokMwU9HyXf5tqvGIp/rgw==
-X-Google-Smtp-Source: ABdhPJy44OmjsRfhXZqtGzrTHSHnR7sJeJ592+WMWmAMcYSNScvLc0qF4MOaa/uij/ycYan2ozVuYFPuAQ==
-X-Received: from elver.muc.corp.google.com ([2a00:79e0:15:13:6385:6bd0:4ede:d8c6])
- (user=elver job=sendgmr) by 2002:a05:600c:104b:: with SMTP id
- 11mr60511649wmx.54.1636975739083; Mon, 15 Nov 2021 03:28:59 -0800 (PST)
-Date:   Mon, 15 Nov 2021 12:28:23 +0100
-Message-Id: <20211115112822.4077224-1-elver@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.34.0.rc1.387.gb447b232ab-goog
-Subject: [PATCH] perf test: Add basic stress test for sigtrap handling
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com, Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Fabian Hemmer <copy@copy.sh>, Ian Rogers <irogers@google.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        kasan-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 15 Nov 2021 07:04:58 -0500
+Received: from mail-dm6nam12on2064.outbound.protection.outlook.com ([40.107.243.64]:42081
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S230438AbhKOMEv (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 15 Nov 2021 07:04:51 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ineHndxbbRjDNEn8PUXx7/U728+T/KpHSaOjcRDAKN5gAwbXlAszviF0cXMNKpGih2QhVk9z1J5dfc8y1mCb+8Yj7EnruFtdzOtum5Q1AVz7Ra9kWcLmg+ZMITB0gUrNBspKkO6nl4LIE8s+GaOZ41cavq5dB6fZgCgmwtChaZckPX8FbMlz5jUrXzT3Os+t7fognkuzuKLnjkonkWaF1ahBknNuCcHWmNT/FjLVB1md4ThiSLwlcBSkPNd0CRfbQJu/pfA74EKzZYHDYmZJFftHltPvZgCfKoEUibhirfYCumGzpU7Gxd1pMroALuEq202uiBKaYbeGgW52aYFhEQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jay/sxUrvqXb7RccsxlqOVWjE6dgyMzpsLQ8IPJ7EWo=;
+ b=fIRNFO3Tu8xQTWHQDff/DCilus+1tXNhWhwn5ckhVSXvyI6vdYM+ChyqU/MMUNY4thrHux1b47h8LBAzAyzgXR5urElO8+pKZ5p7sSqv7t8v3GhrrtI8gkRuD40VIPgARVgfCIoH4rz00ei4k0sp3SVrQQL8VgEDT7XtmaHwcr0PHUwexqvbapdf+N0Q2l3C4eX0l0s7n3lw+32Xy5MLPwRFgiZxGnBm+yd3cl8BPoHmhHhq+2oCiGAXnzHl6egYq8EvhiHakIARXJF285EybPyL+UMnoaS9Hfu2CuUi3jMaS9jxCRa79AdHTudoccBkBxt5riwOKShOTmloT+UZcQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jay/sxUrvqXb7RccsxlqOVWjE6dgyMzpsLQ8IPJ7EWo=;
+ b=qTQjCEOAWSl5zdZ58qEs8WqlQ4etw7cXakhv4lRqllSQtyqOHZ23bVHi1G5/3HqXk+JlY50kACDsWcF4u3Gj1k1lyaRlq8h+f5vGu03tvy4Y2/MkZ+hMGBEExzWj/0CqhGYvD+X+j2odUlBBEQHkIUIetwvAWyiQmrHd+iYmJgg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from SN6PR12MB2654.namprd12.prod.outlook.com (2603:10b6:805:73::28)
+ by SN6PR12MB2814.namprd12.prod.outlook.com (2603:10b6:805:72::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.26; Mon, 15 Nov
+ 2021 12:01:38 +0000
+Received: from SN6PR12MB2654.namprd12.prod.outlook.com
+ ([fe80::906a:a3c6:9f9a:5fc6]) by SN6PR12MB2654.namprd12.prod.outlook.com
+ ([fe80::906a:a3c6:9f9a:5fc6%5]) with mapi id 15.20.4690.027; Mon, 15 Nov 2021
+ 12:01:38 +0000
+Message-ID: <7ee6951e-eda1-7872-4158-e3bbb9eb31b7@amd.com>
+Date:   Mon, 15 Nov 2021 17:31:21 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [RFC] perf/amd/ibs: Move ibs pmus under perf_sw_context
+Content-Language: en-US
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     kim.phillips@amd.com, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, tglx@linutronix.de,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, santosh.shukla@amd.com,
+        sandipan.das@amd.com, ravi.bangoria@amd.com
+References: <20211115094838.3359-1-ravi.bangoria@amd.com>
+ <YZJB5FVHpzhwFMtZ@hirez.programming.kicks-ass.net>
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <YZJB5FVHpzhwFMtZ@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0170.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:26::25) To SN6PR12MB2654.namprd12.prod.outlook.com
+ (2603:10b6:805:73::28)
+MIME-Version: 1.0
+Received: from [10.252.93.92] (165.204.159.242) by PN2PR01CA0170.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:26::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.15 via Frontend Transport; Mon, 15 Nov 2021 12:01:30 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 506d23c6-58bf-4809-9e8f-08d9a82fad5d
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2814:
+X-Microsoft-Antispam-PRVS: <SN6PR12MB28144F494FAAD92B81036F38E0989@SN6PR12MB2814.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2733;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: AIAE5Bb33iAUt/EbkptKpYDKseSdm8hX4qectCeh6R9YuxtPInGcAHqO8cNDU0MPrYffUR56IZ2IAQq32DziZ7mSE4nPmHWmPdK9YDQfjV++9hFgCwTwoC1sU7n9gWlw+wFPt4F6pUGhYLixgNF7RcjpDGUZSmldy9F5heeKdDaVMrsk46DYHPObTLp0aa+1kC5GHtv7L0c8TIjgMUB6VJonYBtIrXrCEsz9C023KnWM/RDfd6ilbT67zBYjFiOWtUDjlscL5ViNAG4Xrx61oTSBzc1yXTiR6+2i1dXwCbfBWX8LNmDvuVp9iDFH+Qkoy7Fw7mUCqKsBoC6tysZ6kgDqXo9jvvFMzgLs77YeK5OMv6AoinO7eZMqx3Gz8m8w+dkgIVeuo7CJe4ynsSNSqBCLrTLmlC9jvQp6UFWki9dLl9/0TXl27LZkrr6zrJp/+PgesJZbwfqDWTi4EVLYAWIbWyJtBFHk1WA43FOlxYEnRZZroNu02KPgLQqQsAhWUniar8yGSFYhw0o6FIJmpXe9LijaZeueaFk2QkkhnqevpZa7tqD/oWwo5BuFbVl3drsZPTQJsuFtwaCZ7YApi0Ulh54vJnC8bq/wQImM7oKv//YbwiFjnjfnr7TBfDWhTcjjFC1XBipT+xDJhFu2BhyU2JEl4xdUigZq5hGQgr3L6KB+mAfeuX6IL3q6odqgyoEQDI1gZhg7CwweVu/CNs9LkbkPYdx9M9GehxfKNRaV/tH0MKgqdCeXH8uhhgeehKre8CrNWRMlHyLVNXE9iGka1Db+RbXvJfvUkVe34LR6sU8SwnTEVVZot58vgEgSL2HtC5hHGND3VLozap1o+CsX2ksr3uxTxKidZSuvIlY=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2654.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(31696002)(6916009)(5660300002)(66556008)(86362001)(66476007)(36756003)(8676002)(66946007)(31686004)(2906002)(6666004)(26005)(7416002)(53546011)(956004)(186003)(6486002)(4326008)(8936002)(16576012)(44832011)(508600001)(966005)(2616005)(83380400001)(316002)(38100700002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cUgram5PWU1uWG4xTmprTmJhQ29Cc1A2OVUzaElHQkx0SU9uQmlQaXE5YWQ2?=
+ =?utf-8?B?dmpaU29nNFl3enNFMzlJYmRWbzJhdzNRMm9zcEFGREJrSkhpaEt0VzcvTmlF?=
+ =?utf-8?B?bmdnU0lZeXZWUmpnVmc3RXFtdmcyUW5Sa3hnWEFkTFhMcGhTVnplOUNWWVVx?=
+ =?utf-8?B?TjFsMnNHOFFsWTlmTHB1eVBZMEZoc2Vzc1lTZlJ5Qk5pMHpDd0x5M1VUYmpZ?=
+ =?utf-8?B?UTBPT0ZzRWhvSU1xemxDRkNiZDdJbGtpbUdVVFBmaFpyZTcvMTZQYlZ0M2pr?=
+ =?utf-8?B?TVltZW1vZFBCbHNnMnFMcTNUQmQ4V0w3dWtVY1IwSjNJNEJMdzRYLzV6R25V?=
+ =?utf-8?B?dHhmNzJvalN0Z3UwQWY2dm5pTWFta05xWExFUFhtR3J4QUtBV3lRSGNLb01u?=
+ =?utf-8?B?VkFIZU1acnp6WDVHLzJVVEJlNHpiZm1ERmxUV3BUL25pUEI4TWtjQ1ZYNktr?=
+ =?utf-8?B?WXp6UEI3T0cyd1IvLzVQNXhaanNtTll5MWtjaHlmclhMTmdKNmhEdFRMMHRC?=
+ =?utf-8?B?UFFFVytPNE0yWXRyWDRkbXB4WlpXdnBwcDg0NWxpUy8vTjdYUG9qcG9zVTBI?=
+ =?utf-8?B?cDZyTStxTXNjZ1BmYW1RRHJuY3BxczdKRUVTTXdQR1BMRUxxTE1LaTVHSEtq?=
+ =?utf-8?B?TmxYNFY0ZGVMN0FQZEd3NnFGZjZJRjNRUWFUNUh6ZTVPZDd1YVdGc3daY3Bt?=
+ =?utf-8?B?ZWUrZDAwdGpkcXlnUjQva3NPZnBLeU9XMGp5NGtZTG9HS0d5ZUhCYzJLUU9M?=
+ =?utf-8?B?QzQ5eEMxczRSamJuQWFMcFd1dG5yb1dZZGMvdTBOUE5YaDRnbTRuU3NhSWh1?=
+ =?utf-8?B?eFRyTm9aUHM5dmsrMmROK1JVNHZ5dGdPS3JFdUtvSitQRkZEYnhZUFZ0YWFo?=
+ =?utf-8?B?dTlYc0xNeTZGWE1IbWNONjYvL0g2b0FXeGxwUXIwdnRmSGZkdFhadFJaZlZi?=
+ =?utf-8?B?QkJqT0ZDTTBUcmpoWm9oeERBVlgvTmFrbWQwNjZyNStMTjMrc29NdndsUzhY?=
+ =?utf-8?B?dWJKRWJXc1NocnhBUVMvUlF1WVgxaTRUdm42Y3ZBaEJaOWhmek5ENDg2bnlM?=
+ =?utf-8?B?WFNBR2ZlVlVvMUxiYWJIdGJJM3VObTZweFMwOEVTeDZjZFlPZit3YndZaHZt?=
+ =?utf-8?B?WXlYOFI2YmxJbnkwNHl0ZTJOb3hBQUxmUno1bHF0ckFtcGZRMGgrMkxFTndM?=
+ =?utf-8?B?anlremlSM3IzWXorZ0pPTGRrSUZJM0xsOVU0VERLa3QySGovVElsUEVqd0t0?=
+ =?utf-8?B?UzRRRW5LQ1VsS2dDbVZDOTZ5OXhydk1vUHpqRVYybG1IL1NsZ2oycy9FNnFK?=
+ =?utf-8?B?djRPcjc4ODJKOVh5cXozQm9pR2preHpqQzdLWWVOSCtBSkV5YldVdTBzUStt?=
+ =?utf-8?B?cndYSnZRQ0l5U2lVMFNDK2xkMm80ZDMxMWh0VHd0TjdwYVZoMllXUVN5Vkwz?=
+ =?utf-8?B?bEVCZE9kSVMrVExDSFNYdXZ6UVdBWktncVF5Z0dhSnZrSFI1RW9ES0g5N1Nw?=
+ =?utf-8?B?WVNDSmppbkprZFBFZUQwNHY2a0pvb3FBbjR3UGY3bFZqU1lFb3NJU3Y0ejhR?=
+ =?utf-8?B?em1BdHZsV1ZVZEIyaUtodTFjV05LbDBVcThZdi9mendodkJuMDhqN3FEVUFy?=
+ =?utf-8?B?VlRtdTRFcVlxWDJBZ2NteXRxYjg3WTdVWnlhT1puL1Zqc3VLWitHLzhJRTgx?=
+ =?utf-8?B?bnp3cWNZamtMR3BjQTd6WWdzZmJaQi9SdUdKTHQ0SkNVQk1xMlJwZlhhNStw?=
+ =?utf-8?B?d3hYTnQyaTdJdEtOQkx2V2c4eWoyQWJzQlJCMW05d2NtWWZGOUJTbDZ2R0tR?=
+ =?utf-8?B?ZXdnTXlzd1VmQkFSU0c1eXVuY1lMRnRiSS91ZWt4UVNCY0xyWS9LZWxxQk5O?=
+ =?utf-8?B?T21hazhyTURrT0c1Y0tNVU83NFFWYkhLdlYxTTZ4OVIyMmpkOVU5SUNoaHh4?=
+ =?utf-8?B?SEszS2FXbmZVOWhYWmNjUmlpV1lrK28zaVFpVTl0QndNVHdvVDN4diszMW10?=
+ =?utf-8?B?K09HU1BLUVJvSWk0UW5hNkpJYUpCdEg0eGo4Z3lOcFk1cEw2by9hbkNYV0Yz?=
+ =?utf-8?B?UndCaDFrNGpiMHIyMVVVWmNYaUVZZWhhaDhCenJqdDdaMUJjUGJUbmlHK0Ex?=
+ =?utf-8?B?N0Q2VXZzNkd2WE1PS1RCbUpEdW1lVDJLbEpva2tkWjJDOXNmbEdGS09UcGtT?=
+ =?utf-8?Q?yxTdLGKhkVm1UmEYeB+ohsQ=3D?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 506d23c6-58bf-4809-9e8f-08d9a82fad5d
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2654.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Nov 2021 12:01:37.8626
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: i7tv2I0DtTWEUYyvsjCGnSaxg/3vIJiC6xLXzpS/MEgl3GIVeeUCTm2Sy4/MJsPUSoBg/J6cCj4t/Ykb+sKdsA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2814
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add basic stress test for sigtrap handling as a perf tool built-in test.
-This allows sanity checking the basic sigtrap functionality from within
-the perf tool.
 
-Signed-off-by: Marco Elver <elver@google.com>
----
- tools/perf/tests/Build          |   1 +
- tools/perf/tests/builtin-test.c |   1 +
- tools/perf/tests/sigtrap.c      | 154 ++++++++++++++++++++++++++++++++
- tools/perf/tests/tests.h        |   1 +
- 4 files changed, 157 insertions(+)
- create mode 100644 tools/perf/tests/sigtrap.c
 
-diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-index 803ca426f8e6..af2b37ef7c70 100644
---- a/tools/perf/tests/Build
-+++ b/tools/perf/tests/Build
-@@ -65,6 +65,7 @@ perf-y += pe-file-parsing.o
- perf-y += expand-cgroup.o
- perf-y += perf-time-to-tsc.o
- perf-y += dlfilter-test.o
-+perf-y += sigtrap.o
- 
- $(OUTPUT)tests/llvm-src-base.c: tests/bpf-script-example.c tests/Build
- 	$(call rule_mkdir)
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 8cb5a1c3489e..f1e6d2a3a578 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -107,6 +107,7 @@ static struct test_suite *generic_tests[] = {
- 	&suite__expand_cgroup_events,
- 	&suite__perf_time_to_tsc,
- 	&suite__dlfilter,
-+	&suite__sigtrap,
- 	NULL,
- };
- 
-diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
-new file mode 100644
-index 000000000000..febfa1609356
---- /dev/null
-+++ b/tools/perf/tests/sigtrap.c
-@@ -0,0 +1,154 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Basic test for sigtrap support.
-+ *
-+ * Copyright (C) 2021, Google LLC.
-+ */
-+
-+#include <stdint.h>
-+#include <stdlib.h>
-+#include <linux/hw_breakpoint.h>
-+#include <pthread.h>
-+#include <signal.h>
-+#include <sys/ioctl.h>
-+#include <sys/syscall.h>
-+#include <unistd.h>
-+
-+#include "cloexec.h"
-+#include "debug.h"
-+#include "event.h"
-+#include "tests.h"
-+#include "../perf-sys.h"
-+
-+#define NUM_THREADS 5
-+
-+static struct {
-+	int tids_want_signal;		/* Which threads still want a signal. */
-+	int signal_count;		/* Sanity check number of signals received. */
-+	volatile int iterate_on;	/* Variable to set breakpoint on. */
-+	siginfo_t first_siginfo;	/* First observed siginfo_t. */
-+} ctx;
-+
-+#define TEST_SIG_DATA (~(unsigned long)(&ctx.iterate_on))
-+
-+static struct perf_event_attr make_event_attr(void)
-+{
-+	struct perf_event_attr attr = {
-+		.type		= PERF_TYPE_BREAKPOINT,
-+		.size		= sizeof(attr),
-+		.sample_period	= 1,
-+		.disabled	= 1,
-+		.bp_addr	= (unsigned long)&ctx.iterate_on,
-+		.bp_type	= HW_BREAKPOINT_RW,
-+		.bp_len		= HW_BREAKPOINT_LEN_1,
-+		.inherit	= 1, /* Children inherit events ... */
-+		.inherit_thread = 1, /* ... but only cloned with CLONE_THREAD. */
-+		.remove_on_exec = 1, /* Required by sigtrap. */
-+		.sigtrap	= 1, /* Request synchronous SIGTRAP on event. */
-+		.sig_data	= TEST_SIG_DATA,
-+	};
-+	return attr;
-+}
-+
-+static void
-+sigtrap_handler(int signum __maybe_unused, siginfo_t *info, void *ucontext __maybe_unused)
-+{
-+	if (!__atomic_fetch_add(&ctx.signal_count, 1, __ATOMIC_RELAXED))
-+		ctx.first_siginfo = *info;
-+	__atomic_fetch_sub(&ctx.tids_want_signal, syscall(SYS_gettid), __ATOMIC_RELAXED);
-+}
-+
-+static void *test_thread(void *arg)
-+{
-+	pthread_barrier_t *barrier = (pthread_barrier_t *)arg;
-+	pid_t tid = syscall(SYS_gettid);
-+	int i;
-+
-+	pthread_barrier_wait(barrier);
-+
-+	__atomic_fetch_add(&ctx.tids_want_signal, tid, __ATOMIC_RELAXED);
-+	for (i = 0; i < ctx.iterate_on - 1; i++)
-+		__atomic_fetch_add(&ctx.tids_want_signal, tid, __ATOMIC_RELAXED);
-+
-+	return NULL;
-+}
-+
-+static int run_test_threads(pthread_t *threads, pthread_barrier_t *barrier)
-+{
-+	int i;
-+
-+	pthread_barrier_wait(barrier);
-+	for (i = 0; i < NUM_THREADS; i++)
-+		TEST_ASSERT_EQUAL("pthread_join() failed", pthread_join(threads[i], NULL), 0);
-+
-+	return TEST_OK;
-+}
-+
-+static int run_stress_test(int fd, pthread_t *threads, pthread_barrier_t *barrier)
-+{
-+	int ret;
-+
-+	ctx.iterate_on = 3000;
-+
-+	TEST_ASSERT_EQUAL("misfired signal?", ctx.signal_count, 0);
-+	TEST_ASSERT_EQUAL("enable failed", ioctl(fd, PERF_EVENT_IOC_ENABLE, 0), 0);
-+	ret = run_test_threads(threads, barrier);
-+	TEST_ASSERT_EQUAL("disable failed", ioctl(fd, PERF_EVENT_IOC_DISABLE, 0), 0);
-+
-+	TEST_ASSERT_EQUAL("unexpected sigtraps", ctx.signal_count, NUM_THREADS * ctx.iterate_on);
-+	TEST_ASSERT_EQUAL("missing signals or incorrectly delivered", ctx.tids_want_signal, 0);
-+	TEST_ASSERT_VAL("unexpected si_addr", ctx.first_siginfo.si_addr == &ctx.iterate_on);
-+#if 0 /* FIXME: enable when libc's signal.h has si_perf_{type,data} */
-+	TEST_ASSERT_EQUAL("unexpected si_perf_type", ctx.first_siginfo.si_perf_type,
-+			  PERF_TYPE_BREAKPOINT);
-+	TEST_ASSERT_EQUAL("unexpected si_perf_data", ctx.first_siginfo.si_perf_data,
-+			  TEST_SIG_DATA);
-+#endif
-+
-+	return ret;
-+}
-+
-+static int test__sigtrap(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
-+{
-+	struct perf_event_attr attr = make_event_attr();
-+	struct sigaction action = {};
-+	struct sigaction oldact;
-+	pthread_t threads[NUM_THREADS];
-+	pthread_barrier_t barrier;
-+	int i, fd, ret = TEST_FAIL;
-+
-+	pthread_barrier_init(&barrier, NULL, NUM_THREADS + 1);
-+
-+	action.sa_flags = SA_SIGINFO | SA_NODEFER;
-+	action.sa_sigaction = sigtrap_handler;
-+	sigemptyset(&action.sa_mask);
-+	if (sigaction(SIGTRAP, &action, &oldact)) {
-+		pr_debug("FAILED sigaction()\n");
-+		goto out;
-+	}
-+
-+	fd = sys_perf_event_open(&attr, 0, -1, -1, perf_event_open_cloexec_flag());
-+	if (fd < 0) {
-+		pr_debug("FAILED sys_perf_event_open()\n");
-+		goto out_restore_sigaction;
-+	}
-+
-+	for (i = 0; i < NUM_THREADS; i++) {
-+		if (pthread_create(&threads[i], NULL, test_thread, &barrier)) {
-+			pr_debug("FAILED pthread_create()");
-+			goto out_close_perf_event;
-+		}
-+	}
-+
-+	ret = run_stress_test(fd, threads, &barrier);
-+
-+out_close_perf_event:
-+	close(fd);
-+out_restore_sigaction:
-+	sigaction(SIGTRAP, &oldact, NULL);
-+out:
-+	pthread_barrier_destroy(&barrier);
-+	return ret;
-+}
-+
-+DEFINE_SUITE("Sigtrap", sigtrap);
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 8f65098110fc..5bbb8f6a48fc 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -146,6 +146,7 @@ DECLARE_SUITE(pe_file_parsing);
- DECLARE_SUITE(expand_cgroup_events);
- DECLARE_SUITE(perf_time_to_tsc);
- DECLARE_SUITE(dlfilter);
-+DECLARE_SUITE(sigtrap);
- 
- /*
-  * PowerPC and S390 do not support creation of instruction breakpoints using the
--- 
-2.34.0.rc1.387.gb447b232ab-goog
+On 15-Nov-21 4:47 PM, Peter Zijlstra wrote:
+> On Mon, Nov 15, 2021 at 03:18:38PM +0530, Ravi Bangoria wrote:
+>> Ideally, a pmu which is present in each hw thread belongs to
+>> perf_hw_context, but perf_hw_context has limitation of allowing only
+>> one pmu (a core pmu) and thus other hw pmus need to use either sw or
+>> invalid context which limits pmu functionalities.
+>>
+>> This is not a new problem. It has been raised in the past, for example,
+>> Arm big.LITTLE (same for Intel ADL) and s390 had this issue:
+>>
+>>   Arm:  https://lore.kernel.org/lkml/20160425175837.GB3141@leverpostej
+>>   s390: https://lore.kernel.org/lkml/20160606082124.GA30154@twins.programming.kicks-ass.net
+>>
+>> Arm big.LITTLE (followed by Intel ADL) solved this by allowing multiple
+>> (heterogeneous) pmus inside perf_hw_context. It makes sense as they are
+>> still registering single pmu for each hw thread.
+>>
+>> s390 solved it by moving 2nd hw pmu to perf_sw_context, though that 2nd
+>> hw pmu is count mode only, i.e. no sampling.
+>>
+>> AMD IBS also has similar problem. IBS pmu is present in each hw thread.
+>> But because of perf_hw_context restriction, currently it belongs to
+>> perf_invalid_context and thus important functionalities like per-task
+>> profiling is not possible with IBS pmu. Moving it to perf_sw_context
+>> will:
+>>  - allow per-task monitoring
+>>  - allow cgroup wise profiling
+>>  - allow grouping of IBS with other pmu events
+>>  - disallow multiplexing
+>>
+>> Please let me know if I missed any major benefit or drawback of
+>> perf_sw_context. I'm also not sure how easy it would be to lift
+>> perf_hw_context restriction and start allowing more pmus in it.
+>>
+>> Suggestions?
+> 
+> Same as I do every time this comes up... this patch is still lingering
+> and wanting TLC:
+> 
+>   https://lore.kernel.org/lkml/20181010104559.GO5728@hirez.programming.kicks-ass.net/
 
+Thanks for the pointer Peter. I have looked at the patch and it is quite complex,
+altering the very way perf event scheduling works.
+
+I don't dispute that is the right 'fix' for the issue, but do you think adding a
+new perf context can help alleviate some of the issues in the interim?
+
+Ravi
