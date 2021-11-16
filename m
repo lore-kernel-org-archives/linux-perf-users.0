@@ -2,120 +2,359 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69427C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Nov 2021 11:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B220C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Nov 2021 12:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D78C63332
-	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Nov 2021 11:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6637961BFB
+	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Nov 2021 12:51:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235044AbhKPLmi (ORCPT
+        id S236307AbhKPMyW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 16 Nov 2021 06:42:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56144 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235125AbhKPLlh (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 16 Nov 2021 06:41:37 -0500
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3FEEC06120F;
-        Tue, 16 Nov 2021 03:37:50 -0800 (PST)
-Received: by mail-pj1-x1033.google.com with SMTP id gx15-20020a17090b124f00b001a695f3734aso2640750pjb.0;
-        Tue, 16 Nov 2021 03:37:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1YkV59UUDuaHjxt/1El7vRrZli8yesHvirxeJm8kUfY=;
-        b=SUhAh/UqrXAsmszhI7xHQZcaUnqK2mNWfaOcVLbS2AsTCZhY0kvmfUnvW7MVtakrWs
-         EUg4rpiSRzYTMXcSMm2SUBX+VAHWPVu3qSf8sGMKN+qUuchzdLIAJR7OginiyWMdDm6w
-         G0BTPFdLmesv2Q8qVHBhPh08sth/MgLSHJzf9agbmefULJr1ctjbVuYWtibhrJsm/BgG
-         97wGjRNdnARtjQ4ZIraX69LzupqtrxabjkPppfG33q5Xt6fiEIMMkzh4szCntow17Uex
-         wAoXpgRxtj5Eylgd044FzXF+kBwgzw3dMYZLJpzR9xfWiGoUkzCyL3fxRKD+1vCtOZHe
-         tWHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1YkV59UUDuaHjxt/1El7vRrZli8yesHvirxeJm8kUfY=;
-        b=Ew4mNzIit00SJ061Lo4NP+haBcLFhvoF5wdzlSvIdcV8YvBMbJx18JFmba5ojQX82O
-         SC+RGgtgY22K69RNRJNz/mcIs4EgiIlrZAEY4avSdpHC5aYcPmVG+5p073Ih2e6YORqD
-         LiAxC3d5RrAbKHA3D1QQ1wtXtllKiByoqUvt7lL6ado+lYGG1CtYbdW7J/4s9hxjRmXJ
-         vOHVuPsvOdgyT3fV9Fr7aQzdI//AqAKYptHeFKXiIFolwYNHcXKJ47by5x8RYZr/nqmt
-         AY7K0y6/Eav4Q8WN2Zc1SHKJLI/Hq/SCkyB+OHSaIoft5e4aw2th1mVT7LGlwoyHLh/z
-         j3HQ==
-X-Gm-Message-State: AOAM531WiqhX6rWpVwsRZY5+X7z0BtX/v0JUxDOxU4oF2g4wP6QjJO00
-        WurD+UpbePQTc/9b7HtVrVo=
-X-Google-Smtp-Source: ABdhPJyNbNWxjZ1rGxCKGL7DETShGe0vZaEhJ0qTJ11ZfJ5vXM9qB0HpSgW1IyFnaogtSABdUYAoNg==
-X-Received: by 2002:a17:902:e546:b0:141:f4f7:7460 with SMTP id n6-20020a170902e54600b00141f4f77460mr44777686plf.17.1637062670458;
-        Tue, 16 Nov 2021 03:37:50 -0800 (PST)
-Received: from localhost.localdomain ([193.203.214.57])
-        by smtp.gmail.com with ESMTPSA id w17sm14874358pfu.58.2021.11.16.03.37.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Nov 2021 03:37:50 -0800 (PST)
-From:   cgel.zte@gmail.com
-X-Google-Original-From: deng.changcheng@zte.com.cn
-To:     mingo@redhat.com
-Cc:     acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        x86@kernel.org, hpa@zytor.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Changcheng Deng <deng.changcheng@zte.com.cn>,
-        Zeal Robot <zealci@zte.com.cn>
-Subject: [PATCH] perf/x86/intel: replace scnprintf in show functions with sysfs_emit
-Date:   Tue, 16 Nov 2021 11:37:39 +0000
-Message-Id: <20211116113739.156706-1-deng.changcheng@zte.com.cn>
-X-Mailer: git-send-email 2.25.1
+        Tue, 16 Nov 2021 07:54:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59906 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236390AbhKPMyV (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 16 Nov 2021 07:54:21 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E695361BF6;
+        Tue, 16 Nov 2021 12:51:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1637067084;
+        bh=hNWrCBvNIwOpy/dKK0KAFyGJtAhtz+Xu5PosDrypwq8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mK/jhGYpFezl5TgLzDAbRd4kYcIoYnDPMpyQAD9hvGKELZ72CQghA6Ej6IElnndKx
+         diINfNGmHMTsBzvWB+fGdnrtVTaV15msrnKTWMWpFIl+kNtiiOTn0Lj97/W1hOeZez
+         k5TzZf/4jR5hCsyzFckWKlPi1ky74FZPkUnmDdDvAEdo5dDCkpG+QdrLnY9xUDtBSJ
+         0hpOy9KC1UF0fh/TijvfwsxL8TWNiNf3MdD3huD58V6xz5ida+pGHwg7jEtWWob3Ur
+         IM7HQDFje4io2UNQhx2d+V7jB7BzOvHVSZf3QfFmwwOpptvYw0D64d4A90deUYcyJA
+         DDguqmazGvd5Q==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 371D54088E; Tue, 16 Nov 2021 09:51:21 -0300 (-03)
+Date:   Tue, 16 Nov 2021 09:51:21 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Marco Elver <elver@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Fabian Hemmer <copy@copy.sh>, Ian Rogers <irogers@google.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        kasan-dev@googlegroups.com
+Subject: Re: [PATCH] perf test: Add basic stress test for sigtrap handling
+Message-ID: <YZOpSVOCXe0zWeRs@kernel.org>
+References: <20211115112822.4077224-1-elver@google.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211115112822.4077224-1-elver@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Changcheng Deng <deng.changcheng@zte.com.cn>
+Em Mon, Nov 15, 2021 at 12:28:23PM +0100, Marco Elver escreveu:
+> Add basic stress test for sigtrap handling as a perf tool built-in test.
+> This allows sanity checking the basic sigtrap functionality from within
+> the perf tool.
 
-Fix the coccicheck warning:
-WARNING: use scnprintf or sprintf
+Works as root:
 
-Use sysfs_emit instead of scnprintf or sprintf makes more sense.
+[root@five ~]# perf test sigtrap
+73: Sigtrap                                                         : Ok
+[root@five ~]
 
-Reported-by: Zeal Robot <zealci@zte.com.cn>
-Signed-off-by: Changcheng Deng <deng.changcheng@zte.com.cn>
----
- arch/x86/events/intel/core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Not for !root:
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 4d679b2d6024..ad87a48bfb41 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -5115,7 +5115,7 @@ static ssize_t show_sysctl_tfa(struct device *cdev,
- 			      struct device_attribute *attr,
- 			      char *buf)
- {
--	return snprintf(buf, 40, "%d\n", allow_tsx_force_abort);
-+	return sysfs_emit(buf, "%d\n", allow_tsx_force_abort);
- }
+⬢[acme@toolbox perf]$ perf test sigtrap
+73: Sigtrap                                                         : FAILED!
+⬢[acme@toolbox perf]$ perf test -v sigtrap
+Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
+73: Sigtrap                                                         :
+--- start ---
+test child forked, pid 3812428
+FAILED sys_perf_event_open()
+test child finished with -1
+---- end ----
+Sigtrap: FAILED!
+⬢[acme@toolbox perf]$
+
+I'll add the following patch on top of it, with it I get:
+
+⬢[acme@toolbox perf]$ perf test sigtrap
+73: Sigtrap                                                         : FAILED!
+⬢[acme@toolbox perf]$ perf test -v sigtrap
+Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
+73: Sigtrap                                                         :
+--- start ---
+test child forked, pid 3816772
+FAILED sys_perf_event_open(): Permission denied
+test child finished with -1
+---- end ----
+Sigtrap: FAILED!
+⬢[acme@toolbox perf]$
+
+
+diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
+index febfa1609356c4c5..6344704619cd8a49 100644
+--- a/tools/perf/tests/sigtrap.c
++++ b/tools/perf/tests/sigtrap.c
+@@ -5,9 +5,11 @@
+  * Copyright (C) 2021, Google LLC.
+  */
  
- static ssize_t set_sysctl_tfa(struct device *cdev,
-@@ -5149,7 +5149,7 @@ static ssize_t branches_show(struct device *cdev,
- 			     struct device_attribute *attr,
- 			     char *buf)
- {
--	return snprintf(buf, PAGE_SIZE, "%d\n", x86_pmu.lbr_nr);
-+	return sysfs_emit(buf, "%d\n", x86_pmu.lbr_nr);
- }
++#include <errno.h>
+ #include <stdint.h>
+ #include <stdlib.h>
+ #include <linux/hw_breakpoint.h>
++#include <linux/string.h>
+ #include <pthread.h>
+ #include <signal.h>
+ #include <sys/ioctl.h>
+@@ -115,6 +117,7 @@ static int test__sigtrap(struct test_suite *test __maybe_unused, int subtest __m
+ 	struct sigaction oldact;
+ 	pthread_t threads[NUM_THREADS];
+ 	pthread_barrier_t barrier;
++	char sbuf[STRERR_BUFSIZE];
+ 	int i, fd, ret = TEST_FAIL;
  
- static DEVICE_ATTR_RO(branches);
-@@ -5165,7 +5165,7 @@ static ssize_t pmu_name_show(struct device *cdev,
- 			     struct device_attribute *attr,
- 			     char *buf)
- {
--	return snprintf(buf, PAGE_SIZE, "%s\n", pmu_name_str);
-+	return sysfs_emit(buf, "%s\n", pmu_name_str);
- }
+ 	pthread_barrier_init(&barrier, NULL, NUM_THREADS + 1);
+@@ -123,19 +126,19 @@ static int test__sigtrap(struct test_suite *test __maybe_unused, int subtest __m
+ 	action.sa_sigaction = sigtrap_handler;
+ 	sigemptyset(&action.sa_mask);
+ 	if (sigaction(SIGTRAP, &action, &oldact)) {
+-		pr_debug("FAILED sigaction()\n");
++		pr_debug("FAILED sigaction(): %s\n", str_error_r(errno, sbuf, sizeof(sbuf)));
+ 		goto out;
+ 	}
  
- static DEVICE_ATTR_RO(pmu_name);
+ 	fd = sys_perf_event_open(&attr, 0, -1, -1, perf_event_open_cloexec_flag());
+ 	if (fd < 0) {
+-		pr_debug("FAILED sys_perf_event_open()\n");
++		pr_debug("FAILED sys_perf_event_open(): %s\n", str_error_r(errno, sbuf, sizeof(sbuf)));
+ 		goto out_restore_sigaction;
+ 	}
+ 
+ 	for (i = 0; i < NUM_THREADS; i++) {
+ 		if (pthread_create(&threads[i], NULL, test_thread, &barrier)) {
+-			pr_debug("FAILED pthread_create()");
++			pr_debug("FAILED pthread_create(): %s\n", str_error_r(errno, sbuf, sizeof(sbuf)));
+ 			goto out_close_perf_event;
+ 		}
+ 	}
+
+
+ 
+> Signed-off-by: Marco Elver <elver@google.com>
+> ---
+>  tools/perf/tests/Build          |   1 +
+>  tools/perf/tests/builtin-test.c |   1 +
+>  tools/perf/tests/sigtrap.c      | 154 ++++++++++++++++++++++++++++++++
+>  tools/perf/tests/tests.h        |   1 +
+>  4 files changed, 157 insertions(+)
+>  create mode 100644 tools/perf/tests/sigtrap.c
+> 
+> diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+> index 803ca426f8e6..af2b37ef7c70 100644
+> --- a/tools/perf/tests/Build
+> +++ b/tools/perf/tests/Build
+> @@ -65,6 +65,7 @@ perf-y += pe-file-parsing.o
+>  perf-y += expand-cgroup.o
+>  perf-y += perf-time-to-tsc.o
+>  perf-y += dlfilter-test.o
+> +perf-y += sigtrap.o
+>  
+>  $(OUTPUT)tests/llvm-src-base.c: tests/bpf-script-example.c tests/Build
+>  	$(call rule_mkdir)
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+> index 8cb5a1c3489e..f1e6d2a3a578 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
+> @@ -107,6 +107,7 @@ static struct test_suite *generic_tests[] = {
+>  	&suite__expand_cgroup_events,
+>  	&suite__perf_time_to_tsc,
+>  	&suite__dlfilter,
+> +	&suite__sigtrap,
+>  	NULL,
+>  };
+>  
+> diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
+> new file mode 100644
+> index 000000000000..febfa1609356
+> --- /dev/null
+> +++ b/tools/perf/tests/sigtrap.c
+> @@ -0,0 +1,154 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Basic test for sigtrap support.
+> + *
+> + * Copyright (C) 2021, Google LLC.
+> + */
+> +
+> +#include <stdint.h>
+> +#include <stdlib.h>
+> +#include <linux/hw_breakpoint.h>
+> +#include <pthread.h>
+> +#include <signal.h>
+> +#include <sys/ioctl.h>
+> +#include <sys/syscall.h>
+> +#include <unistd.h>
+> +
+> +#include "cloexec.h"
+> +#include "debug.h"
+> +#include "event.h"
+> +#include "tests.h"
+> +#include "../perf-sys.h"
+> +
+> +#define NUM_THREADS 5
+> +
+> +static struct {
+> +	int tids_want_signal;		/* Which threads still want a signal. */
+> +	int signal_count;		/* Sanity check number of signals received. */
+> +	volatile int iterate_on;	/* Variable to set breakpoint on. */
+> +	siginfo_t first_siginfo;	/* First observed siginfo_t. */
+> +} ctx;
+> +
+> +#define TEST_SIG_DATA (~(unsigned long)(&ctx.iterate_on))
+> +
+> +static struct perf_event_attr make_event_attr(void)
+> +{
+> +	struct perf_event_attr attr = {
+> +		.type		= PERF_TYPE_BREAKPOINT,
+> +		.size		= sizeof(attr),
+> +		.sample_period	= 1,
+> +		.disabled	= 1,
+> +		.bp_addr	= (unsigned long)&ctx.iterate_on,
+> +		.bp_type	= HW_BREAKPOINT_RW,
+> +		.bp_len		= HW_BREAKPOINT_LEN_1,
+> +		.inherit	= 1, /* Children inherit events ... */
+> +		.inherit_thread = 1, /* ... but only cloned with CLONE_THREAD. */
+> +		.remove_on_exec = 1, /* Required by sigtrap. */
+> +		.sigtrap	= 1, /* Request synchronous SIGTRAP on event. */
+> +		.sig_data	= TEST_SIG_DATA,
+> +	};
+> +	return attr;
+> +}
+> +
+> +static void
+> +sigtrap_handler(int signum __maybe_unused, siginfo_t *info, void *ucontext __maybe_unused)
+> +{
+> +	if (!__atomic_fetch_add(&ctx.signal_count, 1, __ATOMIC_RELAXED))
+> +		ctx.first_siginfo = *info;
+> +	__atomic_fetch_sub(&ctx.tids_want_signal, syscall(SYS_gettid), __ATOMIC_RELAXED);
+> +}
+> +
+> +static void *test_thread(void *arg)
+> +{
+> +	pthread_barrier_t *barrier = (pthread_barrier_t *)arg;
+> +	pid_t tid = syscall(SYS_gettid);
+> +	int i;
+> +
+> +	pthread_barrier_wait(barrier);
+> +
+> +	__atomic_fetch_add(&ctx.tids_want_signal, tid, __ATOMIC_RELAXED);
+> +	for (i = 0; i < ctx.iterate_on - 1; i++)
+> +		__atomic_fetch_add(&ctx.tids_want_signal, tid, __ATOMIC_RELAXED);
+> +
+> +	return NULL;
+> +}
+> +
+> +static int run_test_threads(pthread_t *threads, pthread_barrier_t *barrier)
+> +{
+> +	int i;
+> +
+> +	pthread_barrier_wait(barrier);
+> +	for (i = 0; i < NUM_THREADS; i++)
+> +		TEST_ASSERT_EQUAL("pthread_join() failed", pthread_join(threads[i], NULL), 0);
+> +
+> +	return TEST_OK;
+> +}
+> +
+> +static int run_stress_test(int fd, pthread_t *threads, pthread_barrier_t *barrier)
+> +{
+> +	int ret;
+> +
+> +	ctx.iterate_on = 3000;
+> +
+> +	TEST_ASSERT_EQUAL("misfired signal?", ctx.signal_count, 0);
+> +	TEST_ASSERT_EQUAL("enable failed", ioctl(fd, PERF_EVENT_IOC_ENABLE, 0), 0);
+> +	ret = run_test_threads(threads, barrier);
+> +	TEST_ASSERT_EQUAL("disable failed", ioctl(fd, PERF_EVENT_IOC_DISABLE, 0), 0);
+> +
+> +	TEST_ASSERT_EQUAL("unexpected sigtraps", ctx.signal_count, NUM_THREADS * ctx.iterate_on);
+> +	TEST_ASSERT_EQUAL("missing signals or incorrectly delivered", ctx.tids_want_signal, 0);
+> +	TEST_ASSERT_VAL("unexpected si_addr", ctx.first_siginfo.si_addr == &ctx.iterate_on);
+> +#if 0 /* FIXME: enable when libc's signal.h has si_perf_{type,data} */
+> +	TEST_ASSERT_EQUAL("unexpected si_perf_type", ctx.first_siginfo.si_perf_type,
+> +			  PERF_TYPE_BREAKPOINT);
+> +	TEST_ASSERT_EQUAL("unexpected si_perf_data", ctx.first_siginfo.si_perf_data,
+> +			  TEST_SIG_DATA);
+> +#endif
+> +
+> +	return ret;
+> +}
+> +
+> +static int test__sigtrap(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
+> +{
+> +	struct perf_event_attr attr = make_event_attr();
+> +	struct sigaction action = {};
+> +	struct sigaction oldact;
+> +	pthread_t threads[NUM_THREADS];
+> +	pthread_barrier_t barrier;
+> +	int i, fd, ret = TEST_FAIL;
+> +
+> +	pthread_barrier_init(&barrier, NULL, NUM_THREADS + 1);
+> +
+> +	action.sa_flags = SA_SIGINFO | SA_NODEFER;
+> +	action.sa_sigaction = sigtrap_handler;
+> +	sigemptyset(&action.sa_mask);
+> +	if (sigaction(SIGTRAP, &action, &oldact)) {
+> +		pr_debug("FAILED sigaction()\n");
+> +		goto out;
+> +	}
+> +
+> +	fd = sys_perf_event_open(&attr, 0, -1, -1, perf_event_open_cloexec_flag());
+> +	if (fd < 0) {
+> +		pr_debug("FAILED sys_perf_event_open()\n");
+> +		goto out_restore_sigaction;
+> +	}
+> +
+> +	for (i = 0; i < NUM_THREADS; i++) {
+> +		if (pthread_create(&threads[i], NULL, test_thread, &barrier)) {
+> +			pr_debug("FAILED pthread_create()");
+> +			goto out_close_perf_event;
+> +		}
+> +	}
+> +
+> +	ret = run_stress_test(fd, threads, &barrier);
+> +
+> +out_close_perf_event:
+> +	close(fd);
+> +out_restore_sigaction:
+> +	sigaction(SIGTRAP, &oldact, NULL);
+> +out:
+> +	pthread_barrier_destroy(&barrier);
+> +	return ret;
+> +}
+> +
+> +DEFINE_SUITE("Sigtrap", sigtrap);
+> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+> index 8f65098110fc..5bbb8f6a48fc 100644
+> --- a/tools/perf/tests/tests.h
+> +++ b/tools/perf/tests/tests.h
+> @@ -146,6 +146,7 @@ DECLARE_SUITE(pe_file_parsing);
+>  DECLARE_SUITE(expand_cgroup_events);
+>  DECLARE_SUITE(perf_time_to_tsc);
+>  DECLARE_SUITE(dlfilter);
+> +DECLARE_SUITE(sigtrap);
+>  
+>  /*
+>   * PowerPC and S390 do not support creation of instruction breakpoints using the
+> -- 
+> 2.34.0.rc1.387.gb447b232ab-goog
+
 -- 
-2.25.1
 
+- Arnaldo
