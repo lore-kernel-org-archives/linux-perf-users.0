@@ -2,81 +2,109 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE2CC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Nov 2021 08:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A223C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Nov 2021 09:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4D6F61546
-	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Nov 2021 08:36:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7325A60E78
+	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Nov 2021 09:09:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232065AbhKPIjH (ORCPT
+        id S232799AbhKPJMK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 16 Nov 2021 03:39:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232515AbhKPIiT (ORCPT
+        Tue, 16 Nov 2021 04:12:10 -0500
+Received: from szxga02-in.huawei.com ([45.249.212.188]:15825 "EHLO
+        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232734AbhKPJMJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 16 Nov 2021 03:38:19 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5FF9C061200;
-        Tue, 16 Nov 2021 00:35:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=sU/4DH/+XhhXpbKXlYS/Eskb40hxc9he/91nSaQu5vc=; b=Y7f/Wtw7YpekMwuS6LpLvp6DQR
-        UIdcXo4qyYBlCUOQ7Si4ZT2z/HVHtgCMt53XCGCe5/oxxEkTG0eoR0Cmbz33MVVB/UiOVJ6PKb9eG
-        BKeVj6jdxbpZXDR+p0xI1pE1oCb0R9sls3t1gK4IzcEdii8MHE0HrCUxi6pHsVrDKaqKwTaXXmDQs
-        0pvXFektuXsBSuM0r2kRphRqBqP+HPaeDGSBSFEue1WZdplqmBNn9/xwUccN0QXgO8JAw2yt4VxOq
-        3DKEbOaz8uNaWHOKeTYhISiAR5MCH2qOXNtyEA9EiuQWwXFmzJ2q+8a2mLHwq4TXPffRHtmVYd9i0
-        6VCCPi8g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mmtva-006ab5-K8; Tue, 16 Nov 2021 08:34:55 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D370498651D; Tue, 16 Nov 2021 09:34:54 +0100 (CET)
-Date:   Tue, 16 Nov 2021 09:34:54 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Kajol Jain <kjain@linux.ibm.com>, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, acme@kernel.org,
-        songliubraving@fb.com, andrii@kernel.org, kafai@fb.com, yhs@fb.com,
-        john.fastabend@gmail.com, davem@davemloft.net, kpsingh@kernel.org,
-        hawk@kernel.org, kuba@kernel.org, maddy@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com, linux-perf-users@vger.kernel.org,
-        rnsastry@linux.ibm.com
-Subject: Re: [PATCH] bpf: Enable bpf support for reading branch records in
- powerpc
-Message-ID: <20211116083454.GY174703@worktop.programming.kicks-ass.net>
-References: <20211115044437.12047-1-kjain@linux.ibm.com>
- <5a185d6b-7090-23f0-1ec9-140a31ee5fb4@iogearbox.net>
+        Tue, 16 Nov 2021 04:12:09 -0500
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4HtgGT3hNbz918F;
+        Tue, 16 Nov 2021 17:08:49 +0800 (CST)
+Received: from dggema772-chm.china.huawei.com (10.1.198.214) by
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.2308.20; Tue, 16 Nov 2021 17:09:09 +0800
+Received: from localhost.localdomain (10.67.165.2) by
+ dggema772-chm.china.huawei.com (10.1.198.214) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.20; Tue, 16 Nov 2021 17:09:09 +0800
+From:   Yicong Yang <yangyicong@hisilicon.com>
+To:     <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <lorenzo.pieralisi@arm.com>,
+        <will@kernel.org>, <mark.rutland@arm.com>,
+        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
+        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
+        <jonathan.cameron@huawei.com>, <daniel.thompson@linaro.org>,
+        <joro@8bytes.org>, <john.garry@huawei.com>,
+        <shameerali.kolothum.thodi@huawei.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>
+CC:     <prime.zeng@huawei.com>, <liuqi115@huawei.com>,
+        <zhangshaokun@hisilicon.com>, <linuxarm@huawei.com>,
+        <yangyicong@hisilicon.com>, <song.bao.hua@hisilicon.com>
+Subject: [PATCH v2 1/6] iommu: Export iommu_{get,put}_resv_regions()
+Date:   Tue, 16 Nov 2021 17:06:20 +0800
+Message-ID: <20211116090625.53702-2-yangyicong@hisilicon.com>
+X-Mailer: git-send-email 2.31.0
+In-Reply-To: <20211116090625.53702-1-yangyicong@hisilicon.com>
+References: <20211116090625.53702-1-yangyicong@hisilicon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5a185d6b-7090-23f0-1ec9-140a31ee5fb4@iogearbox.net>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.165.2]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggema772-chm.china.huawei.com (10.1.198.214)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Nov 16, 2021 at 12:30:07AM +0100, Daniel Borkmann wrote:
+Export iommu_{get,put}_resv_regions() to the modules so that the driver
+can retrieve and use the reserved regions of the device.
 
-> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> > index fdd14072fc3b..2b7343b64bb7 100644
-> > --- a/kernel/trace/bpf_trace.c
-> > +++ b/kernel/trace/bpf_trace.c
-> > @@ -1245,7 +1245,7 @@ static const struct bpf_func_proto bpf_perf_prog_read_value_proto = {
-> >   BPF_CALL_4(bpf_read_branch_records, struct bpf_perf_event_data_kern *, ctx,
-> >   	   void *, buf, u32, size, u64, flags)
-> >   {
-> > -#ifndef CONFIG_X86
-> > +#if !(defined(CONFIG_X86) || defined(CONFIG_PPC64))
-> 
-> Can this really be enabled generically? Looking at 3925f46bb590 ("powerpc/perf: Enable
-> branch stack sampling framework") it says POWER8 [and beyond]. Should there be a generic
-> Kconfig symbol like ARCH_HAS_BRANCH_RECORDS that can be selected by archs instead?
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+---
+ drivers/iommu/iommu.c | 2 ++
+ include/linux/iommu.h | 4 ++--
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-I conplained about it before as well. I'd just take it out entirely.
-
-If perf_snapshot_branch_stack isn't implemnted it'll return 0 and then
-we'll -Esomething anyway.
-
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index dd7863e453a5..e96711eee965 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -2792,6 +2792,7 @@ void iommu_get_resv_regions(struct device *dev, struct list_head *list)
+ 	if (ops && ops->get_resv_regions)
+ 		ops->get_resv_regions(dev, list);
+ }
++EXPORT_SYMBOL_GPL(iommu_get_resv_regions);
+ 
+ void iommu_put_resv_regions(struct device *dev, struct list_head *list)
+ {
+@@ -2800,6 +2801,7 @@ void iommu_put_resv_regions(struct device *dev, struct list_head *list)
+ 	if (ops && ops->put_resv_regions)
+ 		ops->put_resv_regions(dev, list);
+ }
++EXPORT_SYMBOL_GPL(iommu_put_resv_regions);
+ 
+ /**
+  * generic_iommu_put_resv_regions - Reserved region driver helper
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index d2f3435e7d17..1b7b0f370e28 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -450,8 +450,8 @@ extern phys_addr_t iommu_iova_to_phys(struct iommu_domain *domain, dma_addr_t io
+ extern void iommu_set_fault_handler(struct iommu_domain *domain,
+ 			iommu_fault_handler_t handler, void *token);
+ 
+-extern void iommu_get_resv_regions(struct device *dev, struct list_head *list);
+-extern void iommu_put_resv_regions(struct device *dev, struct list_head *list);
++void iommu_get_resv_regions(struct device *dev, struct list_head *list);
++void iommu_put_resv_regions(struct device *dev, struct list_head *list);
+ extern void generic_iommu_put_resv_regions(struct device *dev,
+ 					   struct list_head *list);
+ extern void iommu_set_default_passthrough(bool cmd_line);
+-- 
+2.33.0
 
