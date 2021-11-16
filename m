@@ -2,205 +2,282 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC775C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Nov 2021 16:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA072C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Nov 2021 22:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C95163219
-	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Nov 2021 16:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E7D0619E1
+	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Nov 2021 22:16:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238773AbhKPQEa (ORCPT
+        id S231997AbhKPWS7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 16 Nov 2021 11:04:30 -0500
-Received: from mail-bn1nam07on2087.outbound.protection.outlook.com ([40.107.212.87]:53636
-        "EHLO NAM02-BN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S238635AbhKPQEX (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 16 Nov 2021 11:04:23 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ghcV6fX0OqqKrFqUDBS1lp+J3u3nja5I9Tq2ddZ3o4yMD939I5KzmC61manbHiHUqRsfZKzgxX7F8A0YzJPjXbC3HG88MzZ6N0iPsjp0GeZQusfuBK0nubZcdTB87RxE/7vXYQG+Ep54uzzlWBDNJ/9Y/8igoeumlwm2DmET3qicdgHJ1iBEzmaiLmZPjxwXflAN1RgSK00UW5joOs2QVsEPaR6mahfUFDqjEgeS1dS/kVozpdvU1ym7h+EdptJMEDuu+JlJCwieG36b2d1lrMbOQSRUy/2CHwnmdUDODineRZVKft34jMLjiXMMo64le6I/WWQVVzqpBbTgu6r4hA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EVNjACHGUX/DqpNzxCRd3S83mjiHbmYqg5eKV3SCkY0=;
- b=JeQDTOVHuiciH5rlN5c353aUimCF8JZgiPIJ30aaCGFf7D904pTCJVk11xIgmLirFnFs66NnGbC3OMwVfLNtV4xsK09VW7rkutyLPvb6cXnE3YHmdxi3rUXTcdNi92N/y6fxnJluR3xy2Vga8+eolSq27ueZwVBrmKGBxc+rV1sgQh80IwXFh6IlpYHCuGuYWYIHIKYuqZJpSYlQBbg8KnH0m+2e5Ws+d+gh5octuIdCE+1PDdF82RkUrp5pULqvy+xKZ6jnhUV8+Kr3778fKuknrkGWY52BmMx/7AAleby6qPtulGOjrsoP6MGgaNK3/jbrMiOTPv76kB97KVoNYA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EVNjACHGUX/DqpNzxCRd3S83mjiHbmYqg5eKV3SCkY0=;
- b=X10ujXAAe/tNm6QBewXL8v/pMK0QIgl24NtGrzehvzRdQEAH7x+W8w6NADHQpZXrQ4J2piNsqtjY3CItfhNeVJdozBns27QthL4SEpWVxhu+j2AvM4YKBmY+Invp6cB35/7uG4cXugZahaWjXNyYj4rlbPJnSP5aKJjNoWqLhsk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BN8PR12MB3505.namprd12.prod.outlook.com (2603:10b6:408:69::17)
- by BN6PR12MB1715.namprd12.prod.outlook.com (2603:10b6:404:105::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.19; Tue, 16 Nov
- 2021 16:01:23 +0000
-Received: from BN8PR12MB3505.namprd12.prod.outlook.com
- ([fe80::704c:60ed:36f:4e4c]) by BN8PR12MB3505.namprd12.prod.outlook.com
- ([fe80::704c:60ed:36f:4e4c%7]) with mapi id 15.20.4713.019; Tue, 16 Nov 2021
- 16:01:23 +0000
-Message-ID: <301c0693-f982-1769-6e3f-8b77a4201a69@amd.com>
-Date:   Tue, 16 Nov 2021 10:01:20 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.1
-Subject: Re: [RFC PATCH] tools/perf/x86: Use alternative format for AMD raw
- events
-Content-Language: en-US
-To:     kajoljain <kjain@linux.ibm.com>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Jiri Olsa <jolsa@redhat.com>, acme@kernel.org
-Cc:     ravi.bangoria@amd.com, ananth.narayan@amd.com, rrichter@amd.com,
-        linux-perf-users@vger.kernel.org, namhyung@kernel.org,
-        alexander.shishkin@linux.intel.com, mark.rutland@arm.com
-References: <20211111125646.581021-1-sandipan.das@amd.com>
- <YZE8SDkzq0OMcmhS@krava> <9dc5cb10-2faf-a17b-ad4b-a22dbe688209@amd.com>
- <bdbd0a4b-6221-ed90-0882-47248112ed3d@linux.ibm.com>
-From:   Kim Phillips <kim.phillips@amd.com>
-In-Reply-To: <bdbd0a4b-6221-ed90-0882-47248112ed3d@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BLAPR03CA0143.namprd03.prod.outlook.com
- (2603:10b6:208:32e::28) To BN8PR12MB3505.namprd12.prod.outlook.com
- (2603:10b6:408:69::17)
+        Tue, 16 Nov 2021 17:18:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34512 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231948AbhKPWS6 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 16 Nov 2021 17:18:58 -0500
+Received: from mail-ot1-x330.google.com (mail-ot1-x330.google.com [IPv6:2607:f8b0:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25E6FC061746
+        for <linux-perf-users@vger.kernel.org>; Tue, 16 Nov 2021 14:16:01 -0800 (PST)
+Received: by mail-ot1-x330.google.com with SMTP id x43-20020a056830246b00b00570d09d34ebso991640otr.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 16 Nov 2021 14:16:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cvqerKpItNHr5q1atRt6ZhIkz5mKaPHj1/meM2hDIc0=;
+        b=dC8TjwvueYKLlFA+ndZGH+h/ngLuQzuXIEc+FpnwynJzu5kOc0/nT8uliG7MpmjmBk
+         +jD50YO5t5RNR82SHt10qxskKOynh0b4FcXu84YHxzeDryJjTl5FkVb0/4K1C0B5/rM3
+         jn3OHVXZB5QP6V1I7Ej7TtPo1SnN4dpbotpxvxAAXbx0d3OzH49WOdIK5kSRbckvZXAN
+         vfxxwJhNQHBbbgaVMJe6wJhCJV0AjvdaYadcpl6OWAY4U/3HRKXvtIfPgpHJdpPJGK2Q
+         jVGks+ykb7p985vN+9yFN0frXPXb0VT+FH8hfs0KwQkjr1LZ2a3iFhpaIKz6PbTr87X3
+         UNuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cvqerKpItNHr5q1atRt6ZhIkz5mKaPHj1/meM2hDIc0=;
+        b=ulxC0SFQicprvfvFUAHvFiCuM+AB3o5L+1MuGKKkLGua0YGdfjL3gy35dWQpVwBAPi
+         QbJ6OGb7Ptq042BKZojje9+7q1tSpMquLvh88ETaIqRaXaU48sncPofJb8NtiASvvJMo
+         VMUn0a8PKyZHG4I684CunLXFVJ50HU9i/gcjd3jpOQ9UJUlBt2CVk3oVEQD2G4JDxrqp
+         7xk6nDy7Lkik7NIgmo/VS0N5zGgluFlF3Ts0Tqi0T2FU5WVL7ZjjNF3A3WGOU9MAqY49
+         UN9oF1RYyQ757QFHSWF3atDlJfFC4c2mqOxSVTlP/FcTbg4h6MdJNQG91KhvFPwbHIGM
+         A/mQ==
+X-Gm-Message-State: AOAM532cCB4mM0zXeWJyv9nkt2wcNmEeZxgNdjN4WmKfM49YRa9GzhEj
+        cdx8jN9G431t0+2PkMsMh0rqVXeMueuI1iI+2yktzg==
+X-Google-Smtp-Source: ABdhPJzuic6u3AEPWs1d/L+enm11nLdMRi7+E+iOB0lwXr8y/zF8roIt4TULozxIyAYpbCZft3v1sFPtiTHP7nWNrvw=
+X-Received: by 2002:a05:6830:1417:: with SMTP id v23mr9258682otp.367.1637100960083;
+ Tue, 16 Nov 2021 14:16:00 -0800 (PST)
 MIME-Version: 1.0
-Received: from [10.236.30.70] (165.204.77.1) by BLAPR03CA0143.namprd03.prod.outlook.com (2603:10b6:208:32e::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.27 via Frontend Transport; Tue, 16 Nov 2021 16:01:22 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d6bdab48-b8ea-477d-a48a-08d9a91a5603
-X-MS-TrafficTypeDiagnostic: BN6PR12MB1715:
-X-Microsoft-Antispam-PRVS: <BN6PR12MB1715EDEBB0C449D06E19010E87999@BN6PR12MB1715.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /qDO6uXGtLnz8r7hkKeGFNxcThmI0P3NeW0TRS1W7e9eEkqwdn7omI7ovO+JEyBXrjlRT8/c/qBBGdCRERYtpCpsbw6YGG+jN8rsRWw+d0PPzRwFIRarpDnYyII9wHjxz25hzHrnN1mTgW95VWXu+Ub3dMPsWKliMYGevrRgwZOW4T2G5i7dT8L+H3WDp5/tYTuxrX/yS72mlnzjLZYKAgu7Ovibw4Aff/xqRmjtNdl/3W9JAftPg8gP0VWoxeUgY1x/8vWuv+BJ+qrlpNGnSUyAkgPi92UdGr5n29FuEtBEQKnrJjLzDAiJw8Y6GEZ3qAlsW1RcRJxR4bq+DAe+sZfj5GGR/9kYumAZJEKnlLNhhGSIDqwwl6GFv13GYZxMlUl5iEkTyt+HvH+punjknl9N5/2cbF3lRTjRiDv3HDhCIKIkzYR/EjwS8K8KcspaH33amp7+EZGH1f8fOd2lagJ3zza/z+5qCt9dUS1zhWJYo1cP7U0t0dQeChwTZWkXb6E12y8a+Ikruff/ZYP38A1FG/Vf5WOUwDhz2mzCO+U2Hd356K1mZgUtkPeeQTlyl5SmU74cro647Lmbf+TUFDKDxNVs81VtsdkcpoilMESynIVlAol4KJB+VvMI23IRvUiCVzXEnY/L2a1VIvykktFUN5UXgxsmDwlnoeNQsXCWE3FU4dx0W2y+K4WnIzkCCDrmAKOvajgqz9VPUSYsDMAJlkFuwqY5AWAhy8sdqwg=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3505.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(31686004)(36756003)(31696002)(66946007)(44832011)(6486002)(2616005)(66556008)(26005)(66476007)(956004)(508600001)(83380400001)(2906002)(316002)(38100700002)(16576012)(110136005)(8676002)(186003)(53546011)(4326008)(8936002)(86362001)(5660300002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RUMvSmE1eDdXZ2pUK1E4b2I4NEN5am00M3lid0Fad1Q5ZHVUWWZraTk2TTlu?=
- =?utf-8?B?V3RNemlhWmZJNXpiZHpVdytQa08rbThiSmlkN0xlWkhVNFNSeEo1dDdaSWNU?=
- =?utf-8?B?eUM0SkFMUjBBaU9wOVpuMHQrTkY3aFVOMGVNSHpIMjhYdEtRZFVRMXNhWDZ2?=
- =?utf-8?B?NkVQKzdUdWlwd1FBaXJwaTk0VWZaUDEzajdwWXphZW5lR0lacklrbDJhVlVh?=
- =?utf-8?B?NVNaREVvcXJUVFJXWlBDdWVBOWZmUXpIanFKMTZMWDlpRlpncnNKZHJ3UkpQ?=
- =?utf-8?B?TllPZHh5dXFiNHViNEIrWW56ZnBtZWQxMFV1R0djTWZzVUQ5QkVQbXBaclp1?=
- =?utf-8?B?L0Jvbm9wQjQ2a3NueWh4NDA2eUMwQSt5M3RwZHFaQ2NiU1lTOFA0ZVNxS3pl?=
- =?utf-8?B?ZmE1K2V1M29CdXdidXZ5QlF0ZllLV1ZxN2dicG1SNDJTVXBMNndPOEJ1OXVS?=
- =?utf-8?B?QjBTdE95b3c4WXN6L0dGMlVCSG9WWkxPVytQM3ZpQVhFZ2c3R3k1ZW1WN0hu?=
- =?utf-8?B?bnZEU01vZGdnK3JqNHVreng3K2s0YUc4ZkpEL0tQYWQ2LytGNnhxK2dDL0d5?=
- =?utf-8?B?RSt1NEdBTlo4T1k3bHlHb2JndFN4bW5XMXJYRkkzNFRIV2pMN2tCMVBrZW53?=
- =?utf-8?B?V3F6dGd1ZmU1aytPSU82NFphNUVxSkxWWmtoRldUYW9lNEM0VFROeDF6TG0z?=
- =?utf-8?B?SGlFTVQvVmxRd2Q0OEU2NTZUN2tzWlN2THp6MXdRRHVYRG9ieklXVENCbUtp?=
- =?utf-8?B?RkUybHMxTU1GZ2tEcnowUEFPRnJ5Y2NzTFVucU1Cc2dTbjJPbk9vd2lQS2lQ?=
- =?utf-8?B?b3lNb1Jkb1JmVjFBd3NBTldScHBBNWwxRlQ4dm5mUE1xZEpvejJ6NGJQN0w1?=
- =?utf-8?B?Nk9HMXhrQ1VUY0VxR1dpNmU2YU1ycnRpdDVONEtmRVo3M0gvZE1JNHFzdFdj?=
- =?utf-8?B?cVM2VTJ4MVRMdWx6RjUwUzUwaTJSaldjNGtaOUVjcFc3alAvak9zS0liK3VK?=
- =?utf-8?B?d0lPMjh6eW9oa0dycVNMcVp0dUVKMEN1NTR6bDBQUmYwbVhUQjdiTWxUL2Fp?=
- =?utf-8?B?SjBOMlRhNk92ZEtsVS9oR3hyTmhBdGNYcDVBVjJ2VkdDcUpxejMyM3hoU2gz?=
- =?utf-8?B?T2lVWXR2R1hIK0RweCtOOEwzTzZEMkhFWVYrUUplY01KTHFVLzBwTWtLRXZj?=
- =?utf-8?B?QUw0bGJRL0tBWTkrNjVCTHcxamhZMGZteHhnZ1lTZ0VoUm5ndHZyOEN4MitR?=
- =?utf-8?B?VW5paE1WNVBYL2cwY09mYTFjcFVvVC9qTFpqOGI2WVFBMXYvT3ZZU3ZQOVd6?=
- =?utf-8?B?bzZIak9Db2x4VUdzRW5NNWdSMC9WUzZ5bXd5SWllRTJMeFA4Tk9KVGJxQlM2?=
- =?utf-8?B?RExTNzUzUHNrc3cxNExaYXVFc0RtOUNQc2tCUER5dEt0SzZraDFnVWxxNmp5?=
- =?utf-8?B?RGxkdlBJbTd5NWRVUGpkdHdYNHdLZ3NVcXdjNG5wc3NSVGNYaURhMTV6alJ6?=
- =?utf-8?B?RmhrRTZ0NFB5bkxKd1hIaGpUY1JNTlU1WW9kamt1T2QwelRVWmtLMHc2NFhK?=
- =?utf-8?B?OWY3S2tZRkRUL0J3MWh6U3VPRlFJdmJPZkpKVG1URUtEUUJHd1JtOHlFd2Vm?=
- =?utf-8?B?c2JqTjh1c2VMM0JHdzB0LzZ5WTMrYjJLcVo5R0RkYnZiMmIzR3ViQnpzTmgz?=
- =?utf-8?B?YW1Yazdlek5Ua2RSdFVXbFZicEdIaS8wdDlHMW14RTJ6NVFUTER2V2xjbTFQ?=
- =?utf-8?B?V3dIVWsyUkF6Z3V1TURkSXlpRDFrTmRRZStpejBLR3BOblBEdjdCMXEwczVE?=
- =?utf-8?B?TFZ2TUlLaDJEUi85ODRHeDRsTDBjZERxZVJpL2srK0pxNEtWN09XT2xUMHBm?=
- =?utf-8?B?alNEazlCZElmRmU2RWNlb2F5dmtpUFE2V3N6S1dLczkxMmlOT3hiblNJdmJG?=
- =?utf-8?B?Y1NvOVpSZVlhcko2YXBnVkNEQ0p1d3J6bkFUcmoxTXBaaVBucnd6R3NyQmNh?=
- =?utf-8?B?NW90Rm9NN1NxTUVBR3AzdkEzeXVwM0xtUWNEUDJqYVZNMStRY3FUOTAwMVBL?=
- =?utf-8?B?ZEQveXNWZFc3U0VHZWxjYlg0Lzd1b2NHTkdBbFhTL0p5d3dHanZYWVYzdEsz?=
- =?utf-8?B?ZmtQZjV2bU81MXhKNStCZkd0MFVyVzVFTkIrQ1orZ2UwY2k0WUNTU1NSeU5z?=
- =?utf-8?Q?ik5hpQpOE4QwSTwE+n1+r5I=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d6bdab48-b8ea-477d-a48a-08d9a91a5603
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3505.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Nov 2021 16:01:22.8488
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LVBzmVqHCzwCA6kjp5pgmb1Me1U42UB0GLLxtatAGzet0Zq+AVW/nafKxyBe4CayG5UjPTyBrXRK9sChLCsprA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1715
+References: <20211112235235.1125060-1-jmattson@google.com> <20211112235235.1125060-2-jmattson@google.com>
+ <fcb9aea5-2cf5-897f-5a3d-054ead555da4@gmail.com>
+In-Reply-To: <fcb9aea5-2cf5-897f-5a3d-054ead555da4@gmail.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Tue, 16 Nov 2021 14:15:49 -0800
+Message-ID: <CALMp9eR5oi=ZrrEsZpcAJ7AP-Jo2cLGz9GA=SoTjX--TiG4=sw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] KVM: x86: Update vPMCs when retiring instructions
+To:     Like Xu <like.xu.linux@gmail.com>
+Cc:     Eric Hankland <ehankland@google.com>, kvm@vger.kernel.org,
+        "Paolo Bonzini - Distinguished Engineer (kernel-recipes.org)" 
+        <pbonzini@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 11/15/21 10:38 PM, kajoljain wrote:
-> On 11/15/21 3:28 PM, Sandipan Das wrote:
->>
->> On 11/14/2021 10:11 PM, Jiri Olsa wrote:
->>> good question.. I see raw events as a way to put to config whatever
->>> the user wants and IMO adding changes/quirks that silently changes
->>> config could create confusion and angry users ;-)
->>>
-> 
-> I agree, making quirks in config will only going to confuse users as
-> It's against the encodings we had in
-> /sys/bus/event_source/devices/<pmu>/format/*
-> 
->>> I'd think that if user is composing/using raw events then using
->>> directly r100001f8e is not such a big deal?
->>>
->>
->> Sure. Some of the confusion may be due to the fact that the man pages
->> for perf-{stat,record,top} state that raw events are "eventsel+umask".
->> While that is technically true, it does not describe the encoding
->> scheme (/sys/bus/event_source/devices/<pmu>/format/*)
->>
->> Would another option be to update the man pages with a reference to
->> these sysfs files when describing raw events?
->>
->> Something like:
->>
->> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
->> index 2d7df8703cf2..5dfdfeba594b 100644
->> --- a/tools/perf/Documentation/perf-record.txt
->> +++ b/tools/perf/Documentation/perf-record.txt
->> @@ -30,8 +30,10 @@ OPTIONS
->>
->>           - a symbolic event name        (use 'perf list' to list all events)
->>
->> -        - a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
->> -         hexadecimal event descriptor.
->> +        - a raw PMU event (eventsel+umask) in the form of rN..NN where N..NN
->> +          is a hexadecimal value representing the raw encoding with the layout
->> +          of the corresponding event control register as defined by entries in
->> +          /sys/bus/event_sources/devices/<pmu>/format/*
-> 
-> Do we need to specify (eventsel+umask) in the raw event description? As
-> the format/fields totally depend on PMU and umask name convention is
-> specific to one arch.
-> 
-> Can we just update it to:
-> 
-> - a raw PMU event in the form of rNNN where NNN is a hexadecimal value
-> representing the raw encoding, with the layout of the corresponding
-> event control register as defined by entries in
-> /sys/bus/event_sources/devices/<pmu>/format/*
+On Tue, Nov 16, 2021 at 4:44 AM Like Xu <like.xu.linux@gmail.com> wrote:
+>
+> Hi Jim,
+>
+> On 13/11/2021 7:52 am, Jim Mattson wrote:
+> > When KVM retires a guest instruction through emulation, increment any
+> > vPMCs that are configured to monitor "instructions retired," and
+> > update the sample period of those counters so that they will overflow
+> > at the right time.
+> >
+> > Signed-off-by: Eric Hankland <ehankland@google.com>
+> > [jmattson:
+> >    - Split the code to increment "branch instructions retired" into a
+> >      separate commit.
+> >    - Added 'static' to kvm_pmu_incr_counter() definition.
+> >    - Modified kvm_pmu_incr_counter() to check pmc->perf_event->state ==
+> >      PERF_EVENT_STATE_ACTIVE.
+> > ]
+> > Signed-off-by: Jim Mattson <jmattson@google.com>
+> > Fixes: f5132b01386b ("KVM: Expose a version 2 architectural PMU to a guests")
+> > ---
+> >   arch/x86/kvm/pmu.c | 31 +++++++++++++++++++++++++++++++
+> >   arch/x86/kvm/pmu.h |  1 +
+> >   arch/x86/kvm/x86.c |  3 +++
+> >   3 files changed, 35 insertions(+)
+> >
+> > diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+> > index 09873f6488f7..153c488032a5 100644
+> > --- a/arch/x86/kvm/pmu.c
+> > +++ b/arch/x86/kvm/pmu.c
+> > @@ -490,6 +490,37 @@ void kvm_pmu_destroy(struct kvm_vcpu *vcpu)
+> >       kvm_pmu_reset(vcpu);
+> >   }
+> >
+> > +static void kvm_pmu_incr_counter(struct kvm_pmc *pmc, u64 evt)
+> > +{
+> > +     u64 counter_value, sample_period;
+> > +
+> > +     if (pmc->perf_event &&
+>
+> We need to incr pmc->counter whether it has a perf_event or not.
+>
+> > +         pmc->perf_event->attr.type == PERF_TYPE_HARDWARE &&
+>
+> We need to cover PERF_TYPE_RAW as well, for example,
+> it has the basic bits for "{ 0xc0, 0x00, PERF_COUNT_HW_INSTRUCTIONS },"
+> plus HSW_IN_TX or ARCH_PERFMON_EVENTSEL_EDGE stuff.
+>
+> We just need to focus on checking the select and umask bits:
 
-The r notation is for the cpu pmu only.
+[What follows applies only to Intel CPUs. I haven't looked at AMD's
+PMU implementation yet.]
 
-The triple-digit 'NNN' is what's most misleading for 12-bit
-event implementation users, such as AMD's core PMUs.  It
-tells users 'see your processor's documentation's triple-
-hex-digit PMCx18e event?  All you need to do is make that
-"-e r18e" on the perf stat/record command line.
+Looking at the SDM, volume 3, Figure 18-1: Layout of IA32_PERFEVTSELx
+MSRs, there seems to be a lot of complexity here, actually. In
+addition to checking for the desired event select and unit mask, it
+looks like we need to check the following:
 
-So all notions of what size of parameter 'r' takes, esp. 'NNN'
-should be removed IMO.  Perhaps an AMD/12-bit-specific
-example can be provided.
+1. The EN bit is set.
+2. The CMASK field is 0 (for events that can only happen once per cycle).
+3. The E bit is clear (maybe?).
+4. The OS bit is set if the guest is running at CPL0.
+5. The USR bit is set if the guest is running at CPL>0.
 
-I had thought that the shorthand command line r spec alone
-could be modified to be smarter and more accommodating
-for conventional rUUEE users migrating to AMD/12-bit,
-which AFAICT is not what this patch does.  I think it
-modifies even the  cpu/config=0xNNNNN/ specification,
-which, granted, is bad.
 
-Thanks,
+> static inline bool eventsel_match_perf_hw_id(struct kvm_pmc *pmc,
+>         unsigned int perf_hw_id)
+> {
+>         u64 old_eventsel = pmc->eventsel;
+>         unsigned int config;
+>
+>         pmc->eventsel &=
+>                 (ARCH_PERFMON_EVENTSEL_EVENT | ARCH_PERFMON_EVENTSEL_UMASK);
+>         config = kvm_x86_ops.pmu_ops->find_perf_hw_id(pmc);
+>         pmc->eventsel = old_eventsel;
+>         return config == perf_hw_id;
+> }
+>
+> > +         pmc->perf_event->state == PERF_EVENT_STATE_ACTIVE &&
+>
+> Again, we should not care the pmc->perf_event.
 
-Kim
+This test was intended as a proxy for checking that the counter is
+enabled in the guest's IA32_PERF_GLOBAL_CTRL MSR.
+
+> > +         pmc->perf_event->attr.config == evt) {
+>
+> So how about the emulated instructions for
+> ARCH_PERFMON_EVENTSEL_USR and ARCH_PERFMON_EVENTSEL_USR ?
+
+I assume you're referring to the OS and USR bits of the corresponding
+IA32_PERFEVTSELx MSR. I agree that these bits have to be consulted,
+along with guest privilege level, before deciding whether or not to
+count the event.
+
+> > +             pmc->counter++;
+> > +             counter_value = pmc_read_counter(pmc);
+> > +             sample_period = get_sample_period(pmc, counter_value);
+> > +             if (!counter_value)
+> > +                     perf_event_overflow(pmc->perf_event, NULL, NULL);
+>
+> We need to call kvm_perf_overflow() or kvm_perf_overflow_intr().
+> And the patch set doesn't export the perf_event_overflow() SYMBOL.
+
+Oops. I was compiling with kvm built into vmlinux, so I missed this.
+
+> > +             if (local64_read(&pmc->perf_event->hw.period_left) >
+> > +                 sample_period)
+> > +                     perf_event_period(pmc->perf_event, sample_period);
+> > +     }
+> > +}
+>
+> Not cc PeterZ or perf reviewers for this part of code is not a good thing.
+
+Added.
+
+> How about this:
+>
+> static void kvm_pmu_incr_counter(struct kvm_pmc *pmc)
+> {
+>         struct kvm_pmu *pmu = pmc_to_pmu(pmc);
+>
+>         pmc->counter++;
+>         reprogram_counter(pmu, pmc->idx);
+>         if (!pmc_read_counter(pmc))
+>                 // https://lore.kernel.org/kvm/20211116122030.4698-1-likexu@tencent.com/T/#t
+>                 kvm_pmu_counter_overflow(pmc, need_overflow_intr(pmc));
+> }
+>
+> > +
+> > +void kvm_pmu_record_event(struct kvm_vcpu *vcpu, u64 evt)
+>
+> s/kvm_pmu_record_event/kvm_pmu_trigger_event/
+>
+> > +{
+> > +     struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+> > +     int i;
+> > +
+> > +     for (i = 0; i < pmu->nr_arch_gp_counters; i++)
+> > +             kvm_pmu_incr_counter(&pmu->gp_counters[i], evt);
+>
+> Why do we need to accumulate a counter that is not enabled at all ?
+
+In the original code, the condition checked in kmu_pmu_incr_counter()
+was intended to filter out disabled counters.
+
+> > +     for (i = 0; i < pmu->nr_arch_fixed_counters; i++)
+> > +             kvm_pmu_incr_counter(&pmu->fixed_counters[i], evt);
+>
+> How about this:
+>
+>         for_each_set_bit(i, pmu->all_valid_pmc_idx, X86_PMC_IDX_MAX) {
+>                 pmc = kvm_x86_ops.pmu_ops->pmc_idx_to_pmc(pmu, i);
+>
+>                 if (!pmc || !pmc_is_enabled(pmc) || !pmc_speculative_in_use(pmc))
+>                         continue;
+>
+>                 // https://lore.kernel.org/kvm/20211116122030.4698-1-likexu@tencent.com/T/#t
+>                 if (eventsel_match_perf_hw_id(pmc, perf_hw_id))
+>                         kvm_pmu_incr_counter(pmc);
+>         }
+>
+
+Let me expand the list of reviewers and come back with v2 after I
+collect more input.
+
+Thanks!
+
+
+> > +}
+> > +EXPORT_SYMBOL_GPL(kvm_pmu_record_event);
+> > +
+> >   int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp)
+> >   {
+> >       struct kvm_pmu_event_filter tmp, *filter;
+> > diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
+> > index 59d6b76203d5..d1dd2294f8fb 100644
+> > --- a/arch/x86/kvm/pmu.h
+> > +++ b/arch/x86/kvm/pmu.h
+> > @@ -159,6 +159,7 @@ void kvm_pmu_init(struct kvm_vcpu *vcpu);
+> >   void kvm_pmu_cleanup(struct kvm_vcpu *vcpu);
+> >   void kvm_pmu_destroy(struct kvm_vcpu *vcpu);
+> >   int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp);
+> > +void kvm_pmu_record_event(struct kvm_vcpu *vcpu, u64 evt);
+> >
+> >   bool is_vmware_backdoor_pmc(u32 pmc_idx);
+> >
+> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > index d7def720227d..bd49e2a204d5 100644
+> > --- a/arch/x86/kvm/x86.c
+> > +++ b/arch/x86/kvm/x86.c
+> > @@ -7854,6 +7854,8 @@ int kvm_skip_emulated_instruction(struct kvm_vcpu *vcpu)
+> >       if (unlikely(!r))
+> >               return 0;
+> >
+> > +     kvm_pmu_record_event(vcpu, PERF_COUNT_HW_INSTRUCTIONS);
+> > +
+> >       /*
+> >        * rflags is the old, "raw" value of the flags.  The new value has
+> >        * not been saved yet.
+> > @@ -8101,6 +8103,7 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+> >               vcpu->arch.emulate_regs_need_sync_to_vcpu = false;
+> >               if (!ctxt->have_exception ||
+> >                   exception_type(ctxt->exception.vector) == EXCPT_TRAP) {
+> > +                     kvm_pmu_record_event(vcpu, PERF_COUNT_HW_INSTRUCTIONS);
+> >                       kvm_rip_write(vcpu, ctxt->eip);
+> >                       if (r && (ctxt->tf || (vcpu->guest_debug & KVM_GUESTDBG_SINGLESTEP)))
+> >                               r = kvm_vcpu_do_singlestep(vcpu);
+> >
