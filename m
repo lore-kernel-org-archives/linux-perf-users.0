@@ -2,207 +2,136 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CB0C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Nov 2021 13:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EBEC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Nov 2021 13:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58C6A61C4F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Nov 2021 13:47:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6FE263213
+	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Nov 2021 13:57:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236864AbhKPNuw (ORCPT
+        id S236957AbhKPOAk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 16 Nov 2021 08:50:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59698 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236798AbhKPNuu (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 16 Nov 2021 08:50:50 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A947761B49;
-        Tue, 16 Nov 2021 13:47:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637070473;
-        bh=L0/b5A0ZQAlrQCQ9zkoxCpHSFp5715/1sSWroaWRkvk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LRpkJ6ZTVi2gdfregIDk41LH1kHqUcVLhJPraAw//U+SitZUvNRUS2b8WmEMENKdP
-         kIY+UE5d903gig8jkwavug7MWqDFyYwP1aYdvd1HrHKh7yoLaKXk87jYXRd+k51QjT
-         4trC61ZTUTSjFgNPLe8J0eZx+EsA0PD7/bHpSF9eZGqD//2ArxbP5pXxx6kUIDA3X2
-         T9QVtulXtbGZmrI0FgOuv0GM7yzx/oXPWcFpijcVtzVQJcEKIZbFdzRvQSo36NyRRi
-         gDEpBj+u1ch4Fy6ZQoQ1PcD7atLyCR2HnEh/urmFzfB+DCzQcTOgK1IeBUsCR5ZW0M
-         2mXWYvtPcBlxA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4F34E4088E; Tue, 16 Nov 2021 10:47:50 -0300 (-03)
-Date:   Tue, 16 Nov 2021 10:47:50 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Sohaib Mohamed <sohaib.amhmd@gmail.com>
-Cc:     rickyman7@gmail.com, irogers@google.com,
-        Peter Zijlstra <peterz@infradead.org>,
+        Tue, 16 Nov 2021 09:00:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236145AbhKPOAi (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 16 Nov 2021 09:00:38 -0500
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56321C061746
+        for <linux-perf-users@vger.kernel.org>; Tue, 16 Nov 2021 05:57:41 -0800 (PST)
+Received: by mail-wm1-x332.google.com with SMTP id i12so16211209wmq.4
+        for <linux-perf-users@vger.kernel.org>; Tue, 16 Nov 2021 05:57:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=czQYblp0zgAV+YCvrQJmphHgmDDB70J1rcuR+hc1jL0=;
+        b=Hv5EIh28LAn/jDH20bl/EzdKWL9UBJqQGqFzVfD7o6qctL1feG1XytrbQ+eBji/FQo
+         +jqKQRi0sBHRJryE8ib3lI5zg0Prdf1YruFAG4C8EC3AIZsTPqMk4QD9OfMyteqgva0G
+         r6lzKrlhq6VvcaG23Z7qvuA4GqE/u96wFURt5f7PnWDAX4t1OpfGatNgOEMThDP4qS4t
+         l4cuzHy3baMjogAT+RwEu1iqTA4RljJ1QeHGiUouaSw8YkHhjvzTwYcgBXoIkxeHv+7k
+         QNe8RTgVaj6ZmL8i1iemR7rp+EgYrcgGALuZGsVENu653f+ACkQDXD44OwqiFCn7JW/i
+         f4EA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=czQYblp0zgAV+YCvrQJmphHgmDDB70J1rcuR+hc1jL0=;
+        b=OS1oB5DdAaYzDLrKwHC3DWnYNscr4xsp8qpIMRMMbVniLRPXiR5ILuu55ETPmp5nu7
+         12AJCdisBsf8uJByOZZ2wZILTElybZHFHPyidTup5Gu6Lswm5FNu1J3yuFz7hXYg3Moz
+         0S7YzWHwWE9PWPD1m0W+InKBRFiKgUgrZUvWoN1Hg5KpxfHn/odwlmhX8XuppovECGEk
+         L2US/hlpY+YBTFEsWQeBWCIYP6xg0OOJGQEbEjeetKKroThvOkSb1Up6SVwxyqrW4Bbz
+         bP3863R0eRhqy6mJddWceEjKHf9UQNdYhlsyQzD553+Lo2ymsaEKqkIAsHgYdBHd2IHq
+         u46g==
+X-Gm-Message-State: AOAM531Aj3pKfIGCuBzOjMj2n6gu6wPqMl2mY2GuAWOnaDgLyd/QrBA+
+        CCSGxY3aQ+k6C7hTPJ5G3tw1jA==
+X-Google-Smtp-Source: ABdhPJxoFqhe/4nZuGv1S0NlwQyvuS5IQH2O148D+gI46TPfM8tCKxOx87N4Ji0HxBXiv2YefBoudQ==
+X-Received: by 2002:a05:600c:4154:: with SMTP id h20mr67679498wmm.189.1637071059802;
+        Tue, 16 Nov 2021 05:57:39 -0800 (PST)
+Received: from elver.google.com ([2a00:79e0:15:13:ee27:74df:199e:beab])
+        by smtp.gmail.com with ESMTPSA id t8sm17491703wrv.30.2021.11.16.05.57.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Nov 2021 05:57:38 -0800 (PST)
+Date:   Tue, 16 Nov 2021 14:57:33 +0100
+From:   Marco Elver <elver@google.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf bench: flush stats when pipe it to a file or to tee
-Message-ID: <YZO2hn+gDDa/Mhyj@kernel.org>
-References: <20211112215313.108823-1-sohaib.amhmd@gmail.com>
- <YY+sqrAm1sAFEUQ4@kernel.org>
- <YY+tDhLJ5R6dijUv@kernel.org>
- <20211115224151.odaewu62ltx7smty@pc>
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Fabian Hemmer <copy@copy.sh>, Ian Rogers <irogers@google.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        kasan-dev@googlegroups.com
+Subject: Re: [PATCH] perf test: Add basic stress test for sigtrap handling
+Message-ID: <YZO4zVusjQ+zu9PJ@elver.google.com>
+References: <20211115112822.4077224-1-elver@google.com>
+ <YZOpSVOCXe0zWeRs@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211115224151.odaewu62ltx7smty@pc>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <YZOpSVOCXe0zWeRs@kernel.org>
+User-Agent: Mutt/2.0.5 (2021-01-21)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Nov 16, 2021 at 12:41:51AM +0200, Sohaib Mohamed escreveu:
-> Hello, Arnaldo
+On Tue, Nov 16, 2021 at 09:51AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Mon, Nov 15, 2021 at 12:28:23PM +0100, Marco Elver escreveu:
+> > Add basic stress test for sigtrap handling as a perf tool built-in test.
+> > This allows sanity checking the basic sigtrap functionality from within
+> > the perf tool.
 > 
-> On Sat, Nov 13, 2021 at 09:18:22AM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Sat, Nov 13, 2021 at 09:16:42AM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > Em Fri, Nov 12, 2021 at 11:53:12PM +0200, Sohaib Mohamed escreveu:
-> > > > The output of perf bench gets buffered when I pipe it to a file or to
-> > > > tee, in such a way that I can see it only at the end.
-> > >
-> > > Good, now try with 'perf test' :-)
-> > >
-> > > Applying,
-> >
-> > Humm, take that back, when I almost did it for 'perf test' I used
-> > setvbuf(), take a look at it so that you don't have to go sprinkling
-> > fflush() calls and missing some places.
-> >
-> > - Arnaldo
+> Works as root:
 > 
-> I'm not sure about the meaning of 'perf test' here, Should I write new unit
-> tests?
+> [root@five ~]# perf test sigtrap
+> 73: Sigtrap                                                         : Ok
+> [root@five ~]
+> 
+> Not for !root:
+[...]
+> FAILED sys_perf_event_open(): Permission denied
+> test child finished with -1
+> ---- end ----
+> Sigtrap: FAILED!
 
-Try:
+Ah, that shouldn't be the case. It's missing exclude_kernel/hv, and this
+test should work just fine as non-root. Please squash the below as well.
+Let me know if you'd like a v2.
 
-$ perf test 2>&1 | tee /tmp/bla
+Ack for your change printing errors as well.
 
-It uses buffered output, so we see the output in bumps, would be better
-to use unbuffered.
- 
-> I found I could invoke this function at the beginning of perf-bench:
-> setvbuf(stdout, NULL, _IONBF, 0);
-> This looks to me will resolve the issue for all perf-bench subcommands.
-> I'm not sure if a good practice...
+Thanks,
+-- Marco
 
-Well, it will achieve what you want, right? Unbuffered output, which I
-think is desirable.
+------ >8 ------
 
-> This probably is version 2 of this patch:
+From: Marco Elver <elver@google.com>
+Date: Tue, 16 Nov 2021 14:52:18 +0100
+Subject: [PATCH] fixup! perf test: Add basic stress test for sigtrap handling
 
-Yeah, looks ok.
+Exclude kernel/hypervisor so the test can run as non-root.
 
-- Arnaldo
- 
-> 
-> diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
-> index d0895162c2ba..a0b812cde1ee 100644
-> --- a/tools/perf/builtin-bench.c
-> +++ b/tools/perf/builtin-bench.c
-> @@ -226,7 +226,6 @@ static void run_collection(struct collection *coll)
->                 if (!bench->fn)
->                         break;
->                 printf("# Running %s/%s benchmark...\n", coll->name, bench->name);
-> -               fflush(stdout);
-> 
->                 argv[1] = bench->name;
->                 run_bench(coll->name, bench->name, bench->fn, 1, argv);
-> @@ -247,6 +246,8 @@ int cmd_bench(int argc, const char **argv)
->         struct collection *coll;
->         int ret = 0;
-> 
-> +       setvbuf(stdout, NULL, _IONBF, 0);
-> +
->         if (argc < 2) {
->                 /* No collection specified. */
->                 print_usage();
-> @@ -300,7 +301,6 @@ int cmd_bench(int argc, const char **argv)
-> 
->                         if (bench_format == BENCH_FORMAT_DEFAULT)
->                                 printf("# Running '%s/%s' benchmark:\n", coll->name, bench->name);
-> -                       fflush(stdout);
->                         ret = run_bench(coll->name, bench->name, bench->fn, argc-1, argv+1);
->                         goto end;
->                 }
-> 
-> 
-> 
-> Thanks,
-> - Sohaib
-> 
-> >
-> > > - Arnaldo
-> > >
-> > > > E.g.
-> > > > $ perf bench internals synthesize -t
-> > > > < output comes out fine after each test run >
-> > > >
-> > > > $ perf bench internals synthesize -t | tee file.txt
-> > > > < output comes out only at the end of all tests >
-> > > >
-> > > > See, also:
-> > > > $ perf bench mem all | tee file.txt
-> > > > $ perf bench sched all | tee file.txt
-> > > > $ perf bench internals all -t | tee file.txt
-> > > > $ perf bench internals all | tee file.txt
-> > > >
-> > > > Suggested-by: Riccardo Mancini <rickyman7@gmail.com>
-> > > > Signed-off-by: Sohaib Mohamed <sohaib.amhmd@gmail.com>
-> > > > ---
-> > > >  tools/perf/bench/find-bit-bench.c | 1 +
-> > > >  tools/perf/bench/synthesize.c     | 2 ++
-> > > >  2 files changed, 3 insertions(+)
-> > > >
-> > > > diff --git a/tools/perf/bench/find-bit-bench.c b/tools/perf/bench/find-bit-bench.c
-> > > > index 22b5cfe97023..39fb4184fbcb 100644
-> > > > --- a/tools/perf/bench/find-bit-bench.c
-> > > > +++ b/tools/perf/bench/find-bit-bench.c
-> > > > @@ -113,6 +113,7 @@ static int do_for_each_set_bit(unsigned int num_bits)
-> > > >
-> > > >  		if (use_of_val == accumulator)  /* Try to avoid compiler tricks. */
-> > > >  			printf("\n");
-> > > > +		fflush(stdout);
-> > > >  	}
-> > > >  	bitmap_free(to_test);
-> > > >  	return 0;
-> > > > diff --git a/tools/perf/bench/synthesize.c b/tools/perf/bench/synthesize.c
-> > > > index 7401ebbac100..d21d311df61b 100644
-> > > > --- a/tools/perf/bench/synthesize.c
-> > > > +++ b/tools/perf/bench/synthesize.c
-> > > > @@ -92,6 +92,7 @@ static int do_run_single_threaded(struct perf_session *session,
-> > > >  		update_stats(&event_stats, atomic_read(&event_count));
-> > > >  	}
-> > > >
-> > > > +	fflush(stdout);
-> > > >  	time_average = avg_stats(&time_stats);
-> > > >  	time_stddev = stddev_stats(&time_stats);
-> > > >  	printf("  Average %ssynthesis took: %.3f usec (+- %.3f usec)\n",
-> > > > @@ -186,6 +187,7 @@ static int do_run_multi_threaded(struct target *target,
-> > > >  		perf_session__delete(session);
-> > > >  	}
-> > > >
-> > > > +	fflush(stdout);
-> > > >  	time_average = avg_stats(&time_stats);
-> > > >  	time_stddev = stddev_stats(&time_stats);
-> > > >  	printf("    Average synthesis took: %.3f usec (+- %.3f usec)\n",
-> > > > --
-> > > > 2.25.1
-> > >
-> > > --
-> > >
-> > > - Arnaldo
-> >
-> > --
-> >
-> > - Arnaldo
+Signed-off-by: Marco Elver <elver@google.com>
+---
+ tools/perf/tests/sigtrap.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
+index febfa1609356..e566f855bf74 100644
+--- a/tools/perf/tests/sigtrap.c
++++ b/tools/perf/tests/sigtrap.c
+@@ -46,6 +46,8 @@ static struct perf_event_attr make_event_attr(void)
+ 		.remove_on_exec = 1, /* Required by sigtrap. */
+ 		.sigtrap	= 1, /* Request synchronous SIGTRAP on event. */
+ 		.sig_data	= TEST_SIG_DATA,
++		.exclude_kernel = 1,
++		.exclude_hv	= 1,
+ 	};
+ 	return attr;
+ }
 -- 
+2.34.0.rc1.387.gb447b232ab-goog
 
-- Arnaldo
