@@ -2,120 +2,120 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B2CC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Nov 2021 11:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69427C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Nov 2021 11:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 477BA63259
-	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Nov 2021 11:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D78C63332
+	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Nov 2021 11:39:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234978AbhKPLlP (ORCPT
+        id S235044AbhKPLmi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 16 Nov 2021 06:41:15 -0500
-Received: from szxga01-in.huawei.com ([45.249.212.187]:14751 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235441AbhKPLkV (ORCPT
+        Tue, 16 Nov 2021 06:42:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235125AbhKPLlh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 16 Nov 2021 06:40:21 -0500
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4HtkW73C6CzZd79;
-        Tue, 16 Nov 2021 19:34:59 +0800 (CST)
-Received: from dggema772-chm.china.huawei.com (10.1.198.214) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2308.20; Tue, 16 Nov 2021 19:37:21 +0800
-Received: from [10.67.102.169] (10.67.102.169) by
- dggema772-chm.china.huawei.com (10.1.198.214) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.20; Tue, 16 Nov 2021 19:37:20 +0800
-CC:     <yangyicong@hisilicon.com>, <prime.zeng@huawei.com>,
-        <linuxarm@huawei.com>, <zhangshaokun@hisilicon.com>,
-        <liuqi115@huawei.com>
-Subject: Re: [PATCH v2 2/6] hwtracing: Add trace function support for
- HiSilicon PCIe Tune and Trace device
-To:     Robin Murphy <robin.murphy@arm.com>, <gregkh@linuxfoundation.org>,
-        <helgaas@kernel.org>, <alexander.shishkin@linux.intel.com>,
-        <lorenzo.pieralisi@arm.com>, <will@kernel.org>,
-        <mark.rutland@arm.com>, <mathieu.poirier@linaro.org>,
-        <suzuki.poulose@arm.com>, <mike.leach@linaro.org>,
-        <leo.yan@linaro.org>, <jonathan.cameron@huawei.com>,
-        <daniel.thompson@linaro.org>, <joro@8bytes.org>,
-        <john.garry@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>
-References: <20211116090625.53702-1-yangyicong@hisilicon.com>
- <20211116090625.53702-3-yangyicong@hisilicon.com>
- <0b67745c-13dd-1fea-1b8b-d55212bad232@arm.com>
-From:   Yicong Yang <yangyicong@hisilicon.com>
-Message-ID: <3644ad6e-d800-c84b-9d62-6dda8462450f@hisilicon.com>
-Date:   Tue, 16 Nov 2021 19:37:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        Tue, 16 Nov 2021 06:41:37 -0500
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3FEEC06120F;
+        Tue, 16 Nov 2021 03:37:50 -0800 (PST)
+Received: by mail-pj1-x1033.google.com with SMTP id gx15-20020a17090b124f00b001a695f3734aso2640750pjb.0;
+        Tue, 16 Nov 2021 03:37:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1YkV59UUDuaHjxt/1El7vRrZli8yesHvirxeJm8kUfY=;
+        b=SUhAh/UqrXAsmszhI7xHQZcaUnqK2mNWfaOcVLbS2AsTCZhY0kvmfUnvW7MVtakrWs
+         EUg4rpiSRzYTMXcSMm2SUBX+VAHWPVu3qSf8sGMKN+qUuchzdLIAJR7OginiyWMdDm6w
+         G0BTPFdLmesv2Q8qVHBhPh08sth/MgLSHJzf9agbmefULJr1ctjbVuYWtibhrJsm/BgG
+         97wGjRNdnARtjQ4ZIraX69LzupqtrxabjkPppfG33q5Xt6fiEIMMkzh4szCntow17Uex
+         wAoXpgRxtj5Eylgd044FzXF+kBwgzw3dMYZLJpzR9xfWiGoUkzCyL3fxRKD+1vCtOZHe
+         tWHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1YkV59UUDuaHjxt/1El7vRrZli8yesHvirxeJm8kUfY=;
+        b=Ew4mNzIit00SJ061Lo4NP+haBcLFhvoF5wdzlSvIdcV8YvBMbJx18JFmba5ojQX82O
+         SC+RGgtgY22K69RNRJNz/mcIs4EgiIlrZAEY4avSdpHC5aYcPmVG+5p073Ih2e6YORqD
+         LiAxC3d5RrAbKHA3D1QQ1wtXtllKiByoqUvt7lL6ado+lYGG1CtYbdW7J/4s9hxjRmXJ
+         vOHVuPsvOdgyT3fV9Fr7aQzdI//AqAKYptHeFKXiIFolwYNHcXKJ47by5x8RYZr/nqmt
+         AY7K0y6/Eav4Q8WN2Zc1SHKJLI/Hq/SCkyB+OHSaIoft5e4aw2th1mVT7LGlwoyHLh/z
+         j3HQ==
+X-Gm-Message-State: AOAM531WiqhX6rWpVwsRZY5+X7z0BtX/v0JUxDOxU4oF2g4wP6QjJO00
+        WurD+UpbePQTc/9b7HtVrVo=
+X-Google-Smtp-Source: ABdhPJyNbNWxjZ1rGxCKGL7DETShGe0vZaEhJ0qTJ11ZfJ5vXM9qB0HpSgW1IyFnaogtSABdUYAoNg==
+X-Received: by 2002:a17:902:e546:b0:141:f4f7:7460 with SMTP id n6-20020a170902e54600b00141f4f77460mr44777686plf.17.1637062670458;
+        Tue, 16 Nov 2021 03:37:50 -0800 (PST)
+Received: from localhost.localdomain ([193.203.214.57])
+        by smtp.gmail.com with ESMTPSA id w17sm14874358pfu.58.2021.11.16.03.37.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Nov 2021 03:37:50 -0800 (PST)
+From:   cgel.zte@gmail.com
+X-Google-Original-From: deng.changcheng@zte.com.cn
+To:     mingo@redhat.com
+Cc:     acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
+        x86@kernel.org, hpa@zytor.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Changcheng Deng <deng.changcheng@zte.com.cn>,
+        Zeal Robot <zealci@zte.com.cn>
+Subject: [PATCH] perf/x86/intel: replace scnprintf in show functions with sysfs_emit
+Date:   Tue, 16 Nov 2021 11:37:39 +0000
+Message-Id: <20211116113739.156706-1-deng.changcheng@zte.com.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <0b67745c-13dd-1fea-1b8b-d55212bad232@arm.com>
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggema772-chm.china.huawei.com (10.1.198.214)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2021/11/16 18:56, Robin Murphy wrote:
-> On 2021-11-16 09:06, Yicong Yang via iommu wrote:
-> [...]
->> +/*
->> + * Get RMR address if provided by the firmware.
->> + * Return 0 if the IOMMU doesn't present or the policy of the
->> + * IOMMU domain is passthrough or we get a usable RMR region.
->> + * Otherwise a negative value is returned.
->> + */
->> +static int hisi_ptt_get_rmr(struct hisi_ptt *hisi_ptt)
->> +{
->> +    struct pci_dev *pdev = hisi_ptt->pdev;
->> +    struct iommu_domain *iommu_domain;
->> +    struct iommu_resv_region *region;
->> +    LIST_HEAD(list);
->> +
->> +    /*
->> +     * Use direct DMA if IOMMU does not present or the policy of the
->> +     * IOMMU domain is passthrough.
->> +     */
->> +    iommu_domain = iommu_get_domain_for_dev(&pdev->dev);
->> +    if (!iommu_domain || iommu_domain->type == IOMMU_DOMAIN_IDENTITY)
->> +        return 0;
->> +
->> +    iommu_get_resv_regions(&pdev->dev, &list);
->> +    list_for_each_entry(region, &list, list)
->> +        if (region->type == IOMMU_RESV_DIRECT &&
->> +            region->length >= HISI_PTT_TRACE_BUFFER_SIZE) {
->> +            hisi_ptt->trace_ctrl.has_rmr = true;
->> +            hisi_ptt->trace_ctrl.rmr_addr = region->start;
->> +            hisi_ptt->trace_ctrl.rmr_length = region->length;
->> +            break;
->> +        }
->> +
->> +    iommu_put_resv_regions(&pdev->dev, &list);
->> +    return hisi_ptt->trace_ctrl.has_rmr ? 0 : -ENOMEM;
->> +}
-> 
-> No.
-> 
-> The whole point of RMRs is for devices that are already configured to access the given address range in a manner beyond the kernel's control. If you can do this, it proves that you should not have an RMR in the first place.
-> 
-> The notion of a kernel driver explicitly configuring its device to DMA into any random RMR that looks big enough is so egregiously wrong that I'm almost lost for words...
-> 
+From: Changcheng Deng <deng.changcheng@zte.com.cn>
 
-our bios will reserve such a region and reported it through iort. the device will write to the region and in the driver we need to access the region
-to get the traced data. the region is reserved exclusively and will not be accessed by kernel or other devices.
+Fix the coccicheck warning:
+WARNING: use scnprintf or sprintf
 
-is it ok to let bios configure the address to the device and from CPU side we just read it?
+Use sysfs_emit instead of scnprintf or sprintf makes more sense.
 
-Thanks,
-Yicong
+Reported-by: Zeal Robot <zealci@zte.com.cn>
+Signed-off-by: Changcheng Deng <deng.changcheng@zte.com.cn>
+---
+ arch/x86/events/intel/core.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 4d679b2d6024..ad87a48bfb41 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -5115,7 +5115,7 @@ static ssize_t show_sysctl_tfa(struct device *cdev,
+ 			      struct device_attribute *attr,
+ 			      char *buf)
+ {
+-	return snprintf(buf, 40, "%d\n", allow_tsx_force_abort);
++	return sysfs_emit(buf, "%d\n", allow_tsx_force_abort);
+ }
+ 
+ static ssize_t set_sysctl_tfa(struct device *cdev,
+@@ -5149,7 +5149,7 @@ static ssize_t branches_show(struct device *cdev,
+ 			     struct device_attribute *attr,
+ 			     char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%d\n", x86_pmu.lbr_nr);
++	return sysfs_emit(buf, "%d\n", x86_pmu.lbr_nr);
+ }
+ 
+ static DEVICE_ATTR_RO(branches);
+@@ -5165,7 +5165,7 @@ static ssize_t pmu_name_show(struct device *cdev,
+ 			     struct device_attribute *attr,
+ 			     char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%s\n", pmu_name_str);
++	return sysfs_emit(buf, "%s\n", pmu_name_str);
+ }
+ 
+ static DEVICE_ATTR_RO(pmu_name);
+-- 
+2.25.1
 
