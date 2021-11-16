@@ -2,189 +2,341 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E66C43219
-	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Nov 2021 01:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E68E0C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Nov 2021 04:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E51CD6324A
-	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Nov 2021 01:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B426561A07
+	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Nov 2021 04:09:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352560AbhKPBjS (ORCPT
+        id S233520AbhKPEMY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 15 Nov 2021 20:39:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53648 "EHLO
+        Mon, 15 Nov 2021 23:12:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242005AbhKOScU (ORCPT
+        with ESMTP id S232512AbhKPEMA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 Nov 2021 13:32:20 -0500
-Received: from mail-ua1-x933.google.com (mail-ua1-x933.google.com [IPv6:2607:f8b0:4864:20::933])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 670D2C04A186;
-        Mon, 15 Nov 2021 09:46:01 -0800 (PST)
-Received: by mail-ua1-x933.google.com with SMTP id i6so36577591uae.6;
-        Mon, 15 Nov 2021 09:46:01 -0800 (PST)
+        Mon, 15 Nov 2021 23:12:00 -0500
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C248C07E456
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Nov 2021 17:01:55 -0800 (PST)
+Received: by mail-wm1-x332.google.com with SMTP id i12so14621106wmq.4
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Nov 2021 17:01:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:user-agent:in-reply-to:references
-         :message-id:mime-version:content-transfer-encoding;
-        bh=sZywcLSDmIQPbI6r1LbyMv5+Wpsnx09V/Ks0vRfdKnE=;
-        b=hktlfPgCOnIbxTUxtV8RbkbUZmrGA/0N2oRbhlVSVTyX/NWn3cAnLcwe1cP9PZ0EX2
-         e6jkbh757dnIOPhR0ZdS7e/dH0BigR3CSxeifpnTX8PIlXEva19RXx+DUbcAY/9DC562
-         vPIyIKXWvyzXx8WgZacpvwPVdf0tgqB1hvs9BMOJLO8nr7bu2ISl+H32Oc0tsHgHXzAB
-         X3lMkfTumdjKJ/jCbnLnC8sfMJpN6FB31OrYHS7BT5BEJ9qAoT4mZjcvUueLXT8AXZhd
-         lwoVOO7l+75XplYfrQay23xJgrEFQ0TQcoUrfh0xt7CXZ8yFSompmrIBTlRw3xdElYSU
-         S6fQ==
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3IsMMFTy4UmwEq9GMGKIyKs8DntXlqJM8USlfRw44Yc=;
+        b=VhYuIlnwo+hPNpMeUbWeCC9GFZNq1NHrAX9VC0LyvT496pvS7nw9MkQlN+2C1JugkJ
+         1SuuGzHn3LEvY6Ukal7A3fzZvqSwpWejj8Afdvm3J5Hxkysi79IT4T3JJudVg9Lc+WEJ
+         lc7iY1Q1PVmNo/p5vroJsEOvQK3ED/y1Z8bLapJgNCIUQKBvdjvdjg9Vo+3tV15rbnOF
+         HbN7JM+SN7f4c9U9/PNw8xp/M7nHWOtp5a2IE8ZP/zet3KLFzRXhFjAsY3ZNdTORNpe8
+         wSFYQXE4tfzo1E42eKxS0kCFAgKCdiQGFtWn0BrLl/TNqo5N1g0Ifb12BEuokb6H4EFq
+         IBwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:user-agent:in-reply-to
-         :references:message-id:mime-version:content-transfer-encoding;
-        bh=sZywcLSDmIQPbI6r1LbyMv5+Wpsnx09V/Ks0vRfdKnE=;
-        b=IHXX74LGzeM+/rxLbztU9mc0sYarQRWlk2bRp5XIDKhOPF5sjm95Lna/a+bP++PSQI
-         EkjmP/OjBMMmey9QipL0W0AsCXV4PchuMwWYZnHOa/ShfYFR2W+6XDoJnvzHq7TJ1hLK
-         D4mQAXrUIT0vVkqPArupfvV58ixpbrI3hDG06mjd+G/E+rASR/BTJJ++J0S3illAAInL
-         owczu8nBi+6Qcubj1UCnARwZcgk9lXvosNivEfpvMsqIkPODUcbuBI60NFMQ6I8ifEQs
-         tE3+24fiVGI5tHMJp8Mj+zue3HCew40pX3d9yYCTqOQZglZR8Q4c/hqZhPZC9VsAC716
-         U3Pg==
-X-Gm-Message-State: AOAM531fpywQtDvQ4fIvVFZtsbZN+EwdTFPFiCYACdMWsj5no6SS38Q4
-        /8xyDrjp/jFFSpIZf9MqKe4=
-X-Google-Smtp-Source: ABdhPJxzTxW2CXoaJP9CO+GNDzoKF40lGOZ7Tnkjg84p9LUajN28B9HytJ4mNxi22WWir7YP7ItbLw==
-X-Received: by 2002:a05:6102:e07:: with SMTP id o7mr45987356vst.27.1636998360126;
-        Mon, 15 Nov 2021 09:46:00 -0800 (PST)
-Received: from [127.0.0.1] ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id t5sm9649586vsk.24.2021.11.15.09.45.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Nov 2021 09:45:58 -0800 (PST)
-Date:   Mon, 15 Nov 2021 14:44:59 -0300
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-To:     John Garry <john.garry@huawei.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        jolsa@redhat.com, masahiroy@kernel.org,
-        Laura Abbott <labbott@kernel.org>
-CC:     peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        irogers@google.com
-Subject: Re: [PATCH] perf tools: Enable warnings through HOSTCFLAGS
-User-Agent: K-9 Mail for Android
-In-Reply-To: <591edce2-5aaa-22bc-6fd3-5a247f623eb3@huawei.com>
-References: <1635525041-151876-1-git-send-email-john.garry@huawei.com> <YYbXMd3N4+aXYLTJ@kernel.org> <591edce2-5aaa-22bc-6fd3-5a247f623eb3@huawei.com>
-Message-ID: <239840A9-F713-4FED-B638-14D6B91FBBF2@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3IsMMFTy4UmwEq9GMGKIyKs8DntXlqJM8USlfRw44Yc=;
+        b=ltW6hx/9pHKpGlWtW2/AMAI4BvJ6df4/oABAijvxjSzu03AOzJ85Rw8tz4YLauaBTg
+         HKh99Q1EggBMy4SELdxzR0yLuHBSlOAwlVl2w5I0U9iKGaESE2qhi7dAt6VEYJ39yEOb
+         Yszluw+9npc5FjUErTtsAxXydl6GiMrVGpyZmFJ9X2pb3rfvEqGgpjcxaTXjR3HEI4o5
+         JTI/Bg7KbMv3r9G2UzP0LkUvyxDm6LEQ/oJmrLY8OdjbjvEpRfmqNXYuNS/apK4A8tfJ
+         sqs4l3X4Qtdc/L/ROu0Z90WOpiy6+nlJKfCrxwg+W0sOuXSA0CVLoPrO/d7SqU8zFolW
+         PObA==
+X-Gm-Message-State: AOAM531h24Mrnl/jRE0+/pbVICBo5mmVEc7n3hdP3F2o/G8G/hOW2Ipc
+        XZnG9Z9CURxQZ13ziID+uRBqW+ooI/fSJQJjFfcGgw==
+X-Google-Smtp-Source: ABdhPJzErI4qOUtsPLAlm8cMU8RU69Cu8TaHNKnp878pSu/QDWiysZcmI9VSEeY5j38PC+vPjRyVpxNGRGekxJ11v88=
+X-Received: by 2002:a1c:4d13:: with SMTP id o19mr3115830wmh.164.1637024513634;
+ Mon, 15 Nov 2021 17:01:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20211113071548.372572-1-irogers@google.com> <20211113071548.372572-2-irogers@google.com>
+ <YZFBDI6oPMidX0KO@krava> <CAP-5=fWzzggdSv7bUm-+Ed6LfoUa1ce02n-bEOCqWWip4L8TLg@mail.gmail.com>
+In-Reply-To: <CAP-5=fWzzggdSv7bUm-+Ed6LfoUa1ce02n-bEOCqWWip4L8TLg@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 15 Nov 2021 17:01:40 -0800
+Message-ID: <CAP-5=fWSHDS3GQorpYEK3qhWSCJE-KJdOK36c0OznZQT88C3YQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] perf parse-events: Architecture specific leader override
+To:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        eranian@google.com, Kan Liang <kan.liang@linux.intel.com>
+Cc:     John Garry <john.garry@huawei.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On November 15, 2021 12:53:33 PM GMT-03:00, John Garry <john=2Egarry@huawe=
-i=2Ecom> wrote:
->On 06/11/2021 19:27, Arnaldo Carvalho de Melo wrote:
->> Em Sat, Oct 30, 2021 at 12:30:41AM +0800, John Garry escreveu:
->>> The tools build system uses KBUILD_HOSTCFLAGS symbol for obvious purpo=
-ses=2E
->>>
->>> However this is not set for anything under tools/
->>>
->>> As such, host tools apps built have no compiler warnings enabled=2E
->>>
->>> Declare HOSTCFLAGS for perf tools build, and also use that symbol in
->>> declaration of host_c_flags=2E HOSTCFLAGS comes from EXTRA_WARNINGS, w=
-hich
->>> is independent of target platform/arch warning flags=2E
->>>
->>> Suggested-by: Jiri Olsa <jolsa@redhat=2Ecom>
->>> Signed-off-by: John Garry <john=2Egarry@huawei=2Ecom>
->>> --
->>> Using HOSTCFLAGS, as opposed to KBUILD_HOSTCFLAGS, is going opposite
->>> direction to commit 96f14fe738b6 ("kbuild: Rename HOSTCFLAGS to
->>> KBUILD_HOSTCFLAGS"), so would like further opinion from Laura and
->>> Masahiro=2E
->>=20
->> Laura's redhat e-mail bouncedm updated it to her kernel=2Eorg one, Laur=
-a,
->> Masahiro, would you please comment? Jiri?
+On Sun, Nov 14, 2021 at 10:17 AM Ian Rogers <irogers@google.com> wrote:
 >
->Any opinion on this one? Shall I just resend =2E=2E=2E ? or just apply it=
- if=20
->no one cares too much :)
+> On Sun, Nov 14, 2021 at 9:02 AM Jiri Olsa <jolsa@redhat.com> wrote:
+> >
+> > On Fri, Nov 12, 2021 at 11:15:48PM -0800, Ian Rogers wrote:
+> > > Currently topdown events must appear after a slots event:
+> > >
+> > > $ perf stat -e '{slots,topdown-fe-bound}' /bin/true
+> > >
+> > >  Performance counter stats for '/bin/true':
+> > >
+> > >          3,183,090      slots
+> > >            986,133      topdown-fe-bound
+> > >
+> > > Reversing the events yields:
+> > >
+> > > $ perf stat -e '{topdown-fe-bound,slots}' /bin/true
+> > > Error:
+> > > The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (topdown-fe-bound).
+> >
+> > why is this actually failing?
+> >
+> > >
+> > > For metrics the order of events is determined by iterating over a
+> > > hashmap, and so slots isn't guaranteed to be first which can yield this
+> > > error.
+> > >
+> > > Change the set_leader in parse-events, called when a group is closed, so
+> > > that rather than always making the first event the leader, if the slots
+> > > event exists then it is made the leader. It is then moved to the head of
+> > > the evlist otherwise it won't be opened in the correct order.
+> > >
+> > > The result is:
+> > >
+> > > $ perf stat -e '{topdown-fe-bound,slots}' /bin/true
+> > >
+> > >  Performance counter stats for '/bin/true':
+> > >
+> > >          3,274,795      slots
+> > >          1,001,702      topdown-fe-bound
+> > >
+> > > A problem with this approach is the slots event is identified by name,
+> > > names can be overwritten like 'cpu/slots,name=foo/' and this causes the
+> > > leader change to fail.
+> >
+> > would it be better then to move this shuffle to the metric code directly,
+> > and make sure it only spits 'good' order of events?
+> >
+> > and keep "-e '{topdown-fe-bound,slots}'" to fail if user specifies that on
+> > the command line
+>
+> It's an alternative to do that, but the people I spoke to preferred
+> having parse-events do this. I'm not sure what Andi's opinion is.
+> There is a general frustration about how brittle the slots event is,
+> and so this does make it less brittle.
 
-I'll apply it now that everybody got enough time to review it =2E :-)
+A different problem this fixes is if you have a group like
+'{instructions,slots,topdown-fe-bound}' then slots still has to be the
+group leader even though it is appearing before the topdown event. So
+before the patch:
 
-- Arnaldo
+$ perf stat -e '{instructions,slots,topdown-fe-bound}' -a -- sleep 2
+
+ Performance counter stats for 'system wide':
+
+     <not counted>      instructions
+     <not counted>      slots
+   <not supported>      topdown-fe-bound
+
+       2.006410898 seconds time elapsed
+
+After:
+
+$ perf stat -e '{instructions,slots,topdown-fe-bound}' -a -- sleep 2
+
+ Performance counter stats for 'system wide':
+
+        2572632080      slots
+         362537420      instructions
+         742416906      topdown-fe-bound
+
+       2.005875050 seconds time elapsed
+
+Thanks,
+Ian
+
+> > >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > >  tools/perf/arch/x86/util/evlist.c | 17 +++++++++++++++++
+> > >  tools/perf/util/evlist.h          |  1 +
+> > >  tools/perf/util/parse-events.c    | 16 +++++++++++-----
+> > >  tools/perf/util/parse-events.h    |  4 ++--
+> > >  tools/perf/util/parse-events.y    | 12 ++++++++----
+> > >  5 files changed, 39 insertions(+), 11 deletions(-)
+> > >
+> > > diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
+> > > index 0b0951030a2f..1624372b2da2 100644
+> > > --- a/tools/perf/arch/x86/util/evlist.c
+> > > +++ b/tools/perf/arch/x86/util/evlist.c
+> > > @@ -17,3 +17,20 @@ int arch_evlist__add_default_attrs(struct evlist *evlist)
+> > >       else
+> > >               return parse_events(evlist, TOPDOWN_L1_EVENTS, NULL);
+> > >  }
+> > > +
+> > > +struct evsel *arch_evlist__leader(struct list_head *list)
+> > > +{
+> > > +     struct evsel *evsel, *first;
+> > > +
+> > > +     first = list_entry(list->next, struct evsel, core.node);
+> > > +
+> > > +     if (!pmu_have_event("cpu", "slots"))
+> > > +             return first;
+> > > +
+> > > +     __evlist__for_each_entry(list, evsel) {
+> > > +             if (evsel->pmu_name && !strcmp(evsel->pmu_name, "cpu") &&
+> > > +                     evsel->name && strstr(evsel->name, "slots"))
+> > > +                     return evsel;
+> > > +     }
+> > > +     return first;
+> > > +}
+> > > diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+> > > index 97bfb8d0be4f..993437ffe429 100644
+> > > --- a/tools/perf/util/evlist.h
+> > > +++ b/tools/perf/util/evlist.h
+> > > @@ -110,6 +110,7 @@ int __evlist__add_default_attrs(struct evlist *evlist,
+> > >       __evlist__add_default_attrs(evlist, array, ARRAY_SIZE(array))
+> > >
+> > >  int arch_evlist__add_default_attrs(struct evlist *evlist);
+> > > +struct evsel *arch_evlist__leader(struct list_head *list);
+> > >
+> > >  int evlist__add_dummy(struct evlist *evlist);
+> > >
+> > > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> > > index 6308ba739d19..a2f4c086986f 100644
+> > > --- a/tools/perf/util/parse-events.c
+> > > +++ b/tools/perf/util/parse-events.c
+> > > @@ -1821,22 +1821,28 @@ parse_events__set_leader_for_uncore_aliase(char *name, struct list_head *list,
+> > >       return ret;
+> > >  }
+> > >
+> > > -void parse_events__set_leader(char *name, struct list_head *list,
+> > > -                           struct parse_events_state *parse_state)
+> > > +__weak struct evsel *arch_evlist__leader(struct list_head *list)
+> > > +{
+> > > +     return list_entry(list->next, struct evsel, core.node);
+> > > +}
+> > > +
+> > > +struct list_head *parse_events__set_leader(char *name, struct list_head *list,
+> > > +                                     struct parse_events_state *parse_state)
+> > >  {
+> > >       struct evsel *leader;
+> > >
+> > >       if (list_empty(list)) {
+> > >               WARN_ONCE(true, "WARNING: failed to set leader: empty list");
+> > > -             return;
+> > > +             return NULL;
+> > >       }
+> > >
+> > >       if (parse_events__set_leader_for_uncore_aliase(name, list, parse_state))
+> > > -             return;
+> > > +             return NULL;
+> > >
+> > > -     leader = list_entry(list->next, struct evsel, core.node);
+> > > +     leader = arch_evlist__leader(list);
+> > >       __perf_evlist__set_leader(list, &leader->core);
+> > >       leader->group_name = name ? strdup(name) : NULL;
+> > > +     return &leader->core.node;
+> > >  }
+> > >
+> > >  /* list_event is assumed to point to malloc'ed memory */
+> > > diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+> > > index c7fc93f54577..8a6e6b4d5cbe 100644
+> > > --- a/tools/perf/util/parse-events.h
+> > > +++ b/tools/perf/util/parse-events.h
+> > > @@ -211,8 +211,8 @@ int parse_events_copy_term_list(struct list_head *old,
+> > >
+> > >  enum perf_pmu_event_symbol_type
+> > >  perf_pmu__parse_check(const char *name);
+> > > -void parse_events__set_leader(char *name, struct list_head *list,
+> > > -                           struct parse_events_state *parse_state);
+> > > +struct list_head *parse_events__set_leader(char *name, struct list_head *list,
+> > > +                                     struct parse_events_state *parse_state);
+> > >  void parse_events_update_lists(struct list_head *list_event,
+> > >                              struct list_head *list_all);
+> > >  void parse_events_evlist_error(struct parse_events_state *parse_state,
+> > > diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+> > > index 174158982fae..5358c400f938 100644
+> > > --- a/tools/perf/util/parse-events.y
+> > > +++ b/tools/perf/util/parse-events.y
+> > > @@ -199,20 +199,24 @@ group_def
+> > >  group_def:
+> > >  PE_NAME '{' events '}'
+> > >  {
+> > > -     struct list_head *list = $3;
+> > > +     struct list_head *new_head, *list = $3;
+> > >
+> > >       inc_group_count(list, _parse_state);
+> > > -     parse_events__set_leader($1, list, _parse_state);
+> > > +     new_head = parse_events__set_leader($1, list, _parse_state);
+> > > +     if (new_head)
+> > > +             list_move(new_head, list);
+> >
+> > why not put these last 2 lines to parse_events__set_leader as well?
 >
->Thanks,
->John
+> I can move that, but I'll try to motivate having it this way. The list
+> logic in Linux I find troublesome. In parse-events.y we have a list
+> head that is just a next, prev pointer and not full evsel in a list.
+> So for {topdown-fe-bound,slots} in parse-events.y we have a list of:
 >
->>=20
->> - Arnaldo
->>  =20
->>> diff --git a/tools/build/Build=2Einclude b/tools/build/Build=2Einclude
->>> index 2cf3b1bde86e=2E=2Ec2a95ab47379 100644
->>> --- a/tools/build/Build=2Einclude
->>> +++ b/tools/build/Build=2Einclude
->>> @@ -99,7 +99,7 @@ cxx_flags =3D -Wp,-MD,$(depfile) -Wp,-MT,$@ $(CXXFLA=
-GS) -D"BUILD_STR(s)=3D\#s" $(CXX
->>>   ###
->>>   ## HOSTCC C flags
->>>  =20
->>> -host_c_flags =3D -Wp,-MD,$(depfile) -Wp,-MT,$@ $(KBUILD_HOSTCFLAGS) -=
-D"BUILD_STR(s)=3D\#s" $(HOSTCFLAGS_$(basetarget)=2Eo) $(HOSTCFLAGS_$(obj))
->>> +host_c_flags =3D -Wp,-MD,$(depfile) -Wp,-MT,$@ $(HOSTCFLAGS) -D"BUILD=
-_STR(s)=3D\#s" $(HOSTCFLAGS_$(basetarget)=2Eo) $(HOSTCFLAGS_$(obj))
->>>  =20
->>>   # output directory for tests below
->>>   TMPOUT =3D =2Etmp_$$$$
->>> diff --git a/tools/perf/Makefile=2Econfig b/tools/perf/Makefile=2Econf=
-ig
->>> index 4a9baed28f2e=2E=2E9b95ba09657f 100644
->>> --- a/tools/perf/Makefile=2Econfig
->>> +++ b/tools/perf/Makefile=2Econfig
->>> @@ -17,6 +17,7 @@ detected     =3D $(shell echo "$(1)=3Dy"       >> $(=
-OUTPUT)=2Econfig-detected)
->>>   detected_var =3D $(shell echo "$(1)=3D$($(1))" >> $(OUTPUT)=2Econfig=
--detected)
->>>  =20
->>>   CFLAGS :=3D $(EXTRA_CFLAGS) $(filter-out -Wnested-externs,$(EXTRA_WA=
-RNINGS))
->>> +HOSTCFLAGS :=3D $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
->>>  =20
->>>   include $(srctree)/tools/scripts/Makefile=2Earch
->>>  =20
->>> @@ -211,6 +212,7 @@ endif
->>>   ifneq ($(WERROR),0)
->>>     CORE_CFLAGS +=3D -Werror
->>>     CXXFLAGS +=3D -Werror
->>> +  HOSTCFLAGS +=3D -Werror
->>>   endif
->>>  =20
->>>   ifndef DEBUG
->>> @@ -292,6 +294,9 @@ CXXFLAGS +=3D -ggdb3
->>>   CXXFLAGS +=3D -funwind-tables
->>>   CXXFLAGS +=3D -Wno-strict-aliasing
->>>  =20
->>> +HOSTCFLAGS +=3D -Wall
->>> +HOSTCFLAGS +=3D -Wextra
->>> +
->>>   # Enforce a non-executable stack, as we may regress (again) in the f=
-uture by
->>>   # adding assembler files missing the =2EGNU-stack linker note=2E
->>>   LDFLAGS +=3D -Wl,-z,noexecstack
->>> diff --git a/tools/perf/Makefile=2Eperf b/tools/perf/Makefile=2Eperf
->>> index a3966f290297=2E=2E8ca656aa8b06 100644
->>> --- a/tools/perf/Makefile=2Eperf
->>> +++ b/tools/perf/Makefile=2Eperf
->>> @@ -226,7 +226,7 @@ else
->>>   endif
->>>  =20
->>>   export srctree OUTPUT RM CC CXX LD AR CFLAGS CXXFLAGS V BISON FLEX A=
-WK
->>> -export HOSTCC HOSTLD HOSTAR
->>> +export HOSTCC HOSTLD HOSTAR HOSTCFLAGS
->>>  =20
->>>   include $(srctree)/tools/build/Makefile=2Einclude
->>>  =20
->>> --=20
->>> 2=2E17=2E1
->>=20
+> head -next-> evsel("topdown-fe-bound") -next-> evsel("slots")
 >
+> But in __perf_evlist__set_leader the list doesn't have the head:
+>
+> evsel("topdown-fe-bound") -next-> evsel("slots")
+>
+> The list_move is changing the list to:
+>
+> head -next-> evsel("slots") -next-> evsel("topdown-fe-bound")
+>
+> which isn't possible in __perf_evlist__set_leader as the head has
+> gone. I felt having the list_move in parse_events__set_leader made it
+> look like the leader is being placed second rather than at the head.
+> So this was an attempt to make the code more intention revealing, but
+> that could also be done by some comments, it's just in
+> parse_events__set_leader we have the two styles of lists in play.
+>
+> While I'm complaining, there are many brittle assumptions about evlist
+> that it may be worth adding some more assertions for. There is already
+> an assertion that the leader was opened before its siblings. There are
+> assumptions that the idx given to an evsel are incremental and that
+> for the leader 'idx - prev->idx' will yield the number of list
+> elements. My concern is for libperf users, it doesn't seem
+> unreasonable that they will want to manipulate the evlist but given
+> the assumptions they will likely find bugs - such as idx being used to
+> index an array and reordering breaking things. The metric code would
+> be a customer of reordering were it to need to move slots, but when I
+> experimented with this it easily broke things - which motivates doing
+> it in parse-events or more likely for the metrics, when generating the
+> parse-events string.
+>
+> Thanks,
+> Ian
+>
+>
+>
+>
+> > >       free($1);
+> > >       $$ = list;
+> > >  }
+> > >  |
+> > >  '{' events '}'
+> > >  {
+> > > -     struct list_head *list = $2;
+> > > +     struct list_head *new_head, *list = $2;
+> > >
+> > >       inc_group_count(list, _parse_state);
+> > > -     parse_events__set_leader(NULL, list, _parse_state);
+> > > +     new_head = parse_events__set_leader(NULL, list, _parse_state);
+> > > +     if (new_head)
+> > > +             list_move(new_head, list);
+> >
+> > same
+> >
+> > thanks,
+> > jirka
+> >
