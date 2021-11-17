@@ -2,34 +2,34 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BE8C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Nov 2021 15:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AAE3C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Nov 2021 15:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C866613C8
-	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Nov 2021 15:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C9F061AA3
+	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Nov 2021 15:29:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231330AbhKQPat (ORCPT
+        id S237595AbhKQPcp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 17 Nov 2021 10:30:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40150 "EHLO mail.kernel.org"
+        Wed, 17 Nov 2021 10:32:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229721AbhKQPat (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 17 Nov 2021 10:30:49 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 82FEC6112D;
-        Wed, 17 Nov 2021 15:27:50 +0000 (UTC)
+        id S237806AbhKQPcp (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 17 Nov 2021 10:32:45 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1BFAF61A64;
+        Wed, 17 Nov 2021 15:29:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637162870;
-        bh=enZ2QdOp/6F2W+MIAIGWqVYhk1KVAOIrZCV9SVd4z0g=;
+        s=k20201202; t=1637162986;
+        bh=wBhs8OiE6DLnIqc6LmSUDGkwqqTdHTFdXmF1wF4mCRg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=I8jnLVJCv/ZOaNpPeYbJQtKfHHuJBpntnU/Z8cMzKvW8Jw5YIj+mDyDSY9hxMKh6e
-         KEvyi0cY4jnCTRYzXKGwM1/dC1PemC7C9LOXbxDIFV5qEjsiWxmwdY4fNK60AI+Dgs
-         ZIMYLFMy2S9vrvw7G/S78NqEy8XIzsPAShLgZM0rsXhToB6jxSmSKI/rH66QlEsxmR
-         BxOau/jNmVKddydJPoVQVf7s69OfaMrm/4/eVch4xiDgucuIRSpO5U9Kcqjt7+l3tx
-         02QwqylJ6Lt85Iz4nj62qUpdnkNRPwk0PTRV7n7SDTjg57iuLC0maGe0ylT6NXiEhB
-         t1DAFu7+oF5Xg==
+        b=Z2btentXfgkYyQ0S6rVw8FlO/LHbCdFdN3JtLIzdRV2fceovBrfW0n9lTv9cQ8Uvp
+         FAtU8R6MEmg7p+xj9GIBXr4I+/CCtSrJ0iclUEeVdZIZwES3OHOrDi6aUgk2xuF9q0
+         fRONEr7FD+3rbBgmY/yDjfAlwp6Legyw/6qVzUf03xzntNjG+bUNWfeX4emHcbO0s7
+         XGIfWKQy2MCrCz7+g4sEC2uNO7GXqAXdeO+qXbymkSGgU3uZZyGs7Q4KAq1cAiXS2H
+         +IBokbRk3YbCCZOKkL/utss1/eSspytWJCCXqHn6QCiJPSCucwn7dsVQ4p0hv8BP/j
+         sARiXvkAlmfzw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 5B1AA4088E; Wed, 17 Nov 2021 12:27:48 -0300 (-03)
-Date:   Wed, 17 Nov 2021 12:27:48 -0300
+        id B07654088E; Wed, 17 Nov 2021 12:29:43 -0300 (-03)
+Date:   Wed, 17 Nov 2021 12:29:43 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     James Clark <james.clark@arm.com>
 Cc:     German Gomez <german.gomez@arm.com>, linux-kernel@vger.kernel.org,
@@ -44,7 +44,7 @@ Cc:     German Gomez <german.gomez@arm.com>, linux-kernel@vger.kernel.org,
         Namhyung Kim <namhyung@kernel.org>,
         linux-arm-kernel@lists.infradead.org
 Subject: Re: [PATCH 1/1] perf arm-spe: Inject SPE samples in perf-inject
-Message-ID: <YZUfdLsoQJ5Unq1z@kernel.org>
+Message-ID: <YZUf5zu4aOfoIhFl@kernel.org>
 References: <20211105104130.28186-1-german.gomez@arm.com>
  <20211105104130.28186-2-german.gomez@arm.com>
  <5163f41f-2337-6557-ca91-fb2c66738872@arm.com>
@@ -67,11 +67,11 @@ Em Mon, Nov 08, 2021 at 08:39:58PM +0000, James Clark escreveu:
 > 
 > Reviewed-by: James Clark <james.clark@arm.com>
 
-
-Thanks, applied.
+Next time please expand this explanations a bit more: why should we
+inject such samples? Is this enabling some new mode of operation, fixing
+something, what is an example of output before this patch and after it?
 
 - Arnaldo
-
 
 > > ---
 > >  tools/perf/util/arm-spe.c | 15 +++++++++++++++
