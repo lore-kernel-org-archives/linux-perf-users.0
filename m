@@ -2,100 +2,129 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A361C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Nov 2021 15:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BE8C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Nov 2021 15:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E39D613C8
-	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Nov 2021 15:25:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C866613C8
+	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Nov 2021 15:27:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229737AbhKQP21 (ORCPT
+        id S231330AbhKQPat (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 17 Nov 2021 10:28:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39812 "EHLO mail.kernel.org"
+        Wed, 17 Nov 2021 10:30:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238038AbhKQP2X (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 17 Nov 2021 10:28:23 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C8F57613C8;
-        Wed, 17 Nov 2021 15:25:23 +0000 (UTC)
+        id S229721AbhKQPat (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 17 Nov 2021 10:30:49 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 82FEC6112D;
+        Wed, 17 Nov 2021 15:27:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637162724;
-        bh=R25fmkeDsTohW55S+4oxgo7vBySu9f8sHLX0EbzuNys=;
+        s=k20201202; t=1637162870;
+        bh=enZ2QdOp/6F2W+MIAIGWqVYhk1KVAOIrZCV9SVd4z0g=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Couya29XjivwLpqDvF6qzd9AyufVubHLKeajGkW3oLDxmiNC+PDU0QfVLPETdVyci
-         wQUCCsnAuhf8yOM2E+9REVq9imdnin7fhU9CzzQpJlNNcQ0up/EaBSfYMx9Mlhh6qP
-         QtiJiyvby47rO8X7M+TeAQr6yYhWoeFw0sCZ9bFwo9EA+p0E+3j+MRjKII4C50JWiv
-         e5i6uyaCvrkvPIwS+0vup72jJZwjIrHk3gXSVOKl2IXibAUmBlPv4VaWn9o2zgWZhA
-         hvb3+r6UONGNVJvwJiciymDIc3LA1QVdBaE7LLvYYFqwvkJGAiE1GVux7fg8AYRdUF
-         Oiz/CUnM0dc+A==
+        b=I8jnLVJCv/ZOaNpPeYbJQtKfHHuJBpntnU/Z8cMzKvW8Jw5YIj+mDyDSY9hxMKh6e
+         KEvyi0cY4jnCTRYzXKGwM1/dC1PemC7C9LOXbxDIFV5qEjsiWxmwdY4fNK60AI+Dgs
+         ZIMYLFMy2S9vrvw7G/S78NqEy8XIzsPAShLgZM0rsXhToB6jxSmSKI/rH66QlEsxmR
+         BxOau/jNmVKddydJPoVQVf7s69OfaMrm/4/eVch4xiDgucuIRSpO5U9Kcqjt7+l3tx
+         02QwqylJ6Lt85Iz4nj62qUpdnkNRPwk0PTRV7n7SDTjg57iuLC0maGe0ylT6NXiEhB
+         t1DAFu7+oF5Xg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 0752B4088E; Wed, 17 Nov 2021 12:25:20 -0300 (-03)
-Date:   Wed, 17 Nov 2021 12:25:20 -0300
+        id 5B1AA4088E; Wed, 17 Nov 2021 12:27:48 -0300 (-03)
+Date:   Wed, 17 Nov 2021 12:27:48 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Sohaib Mohamed <sohaib.amhmd@gmail.com>
-Cc:     irogers@google.com, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+To:     James Clark <james.clark@arm.com>
+Cc:     German Gomez <german.gomez@arm.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Pierre Gondois <Pierre.Gondois@arm.com>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Hitoshi Mitake <mitake@dcl.info.waseda.ac.jp>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf bench: Fix memory leaks.
-Message-ID: <YZUe4C7laP5BkMmu@kernel.org>
-References: <20211110022012.16620-1-sohaib.amhmd@gmail.com>
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/1] perf arm-spe: Inject SPE samples in perf-inject
+Message-ID: <YZUfdLsoQJ5Unq1z@kernel.org>
+References: <20211105104130.28186-1-german.gomez@arm.com>
+ <20211105104130.28186-2-german.gomez@arm.com>
+ <5163f41f-2337-6557-ca91-fb2c66738872@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211110022012.16620-1-sohaib.amhmd@gmail.com>
+In-Reply-To: <5163f41f-2337-6557-ca91-fb2c66738872@arm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Nov 10, 2021 at 04:20:11AM +0200, Sohaib Mohamed escreveu:
-> ASan reports memory leaks while running:
-> $ perf bench sched all
+Em Mon, Nov 08, 2021 at 08:39:58PM +0000, James Clark escreveu:
 > 
-> Fixes: e27454cc6352 ("perf bench: Add sched-messaging.c: Benchmark for
-> scheduler and IPC mechanisms based on hackbench")
+> 
+> On 05/11/2021 10:41, German Gomez wrote:
+> > Inject synthesized SPE samples during perf-inject run.
+> > 
+> > Signed-off-by: German Gomez <german.gomez@arm.com>
+> 
+> Reviewed-by: James Clark <james.clark@arm.com>
+
 
 Thanks, applied.
 
 - Arnaldo
 
- 
-> Signed-off-by: Sohaib Mohamed <sohaib.amhmd@gmail.com>
-> Acked-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/bench/sched-messaging.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/tools/perf/bench/sched-messaging.c b/tools/perf/bench/sched-messaging.c
-> index 488f6e6ba1a5..fa0ff4ce2b74 100644
-> --- a/tools/perf/bench/sched-messaging.c
-> +++ b/tools/perf/bench/sched-messaging.c
-> @@ -223,6 +223,8 @@ static unsigned int group(pthread_t *pth,
->  		snd_ctx->out_fds[i] = fds[1];
->  		if (!thread_mode)
->  			close(fds[0]);
-> +
-> +		free(ctx);
->  	}
-> 
->  	/* Now we have all the fds, fork the senders */
-> @@ -239,6 +241,8 @@ static unsigned int group(pthread_t *pth,
->  		for (i = 0; i < num_fds; i++)
->  			close(snd_ctx->out_fds[i]);
-> 
-> +	free(snd_ctx);
-> +
->  	/* Return number of children to reap */
->  	return num_fds * 2;
->  }
-> --
-> 2.25.1
+
+> > ---
+> >  tools/perf/util/arm-spe.c | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> > 
+> > diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+> > index 58b7069c5..7054f2315 100644
+> > --- a/tools/perf/util/arm-spe.c
+> > +++ b/tools/perf/util/arm-spe.c
+> > @@ -51,6 +51,7 @@ struct arm_spe {
+> >  	u8				timeless_decoding;
+> >  	u8				data_queued;
+> >  
+> > +	u64				sample_type;
+> >  	u8				sample_flc;
+> >  	u8				sample_llc;
+> >  	u8				sample_tlb;
+> > @@ -248,6 +249,12 @@ static void arm_spe_prep_sample(struct arm_spe *spe,
+> >  	event->sample.header.size = sizeof(struct perf_event_header);
+> >  }
+> >  
+> > +static int arm_spe__inject_event(union perf_event *event, struct perf_sample *sample, u64 type)
+> > +{
+> > +	event->header.size = perf_event__sample_event_size(sample, type, 0);
+> > +	return perf_event__synthesize_sample(event, type, 0, sample);
+> > +}
+> > +
+> >  static inline int
+> >  arm_spe_deliver_synth_event(struct arm_spe *spe,
+> >  			    struct arm_spe_queue *speq __maybe_unused,
+> > @@ -256,6 +263,12 @@ arm_spe_deliver_synth_event(struct arm_spe *spe,
+> >  {
+> >  	int ret;
+> >  
+> > +	if (spe->synth_opts.inject) {
+> > +		ret = arm_spe__inject_event(event, sample, spe->sample_type);
+> > +		if (ret)
+> > +			return ret;
+> > +	}
+> > +
+> >  	ret = perf_session__deliver_synth_event(spe->session, event, sample);
+> >  	if (ret)
+> >  		pr_err("ARM SPE: failed to deliver event, error %d\n", ret);
+> > @@ -920,6 +933,8 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+> >  	else
+> >  		attr.sample_type |= PERF_SAMPLE_TIME;
+> >  
+> > +	spe->sample_type = attr.sample_type;
+> > +
+> >  	attr.exclude_user = evsel->core.attr.exclude_user;
+> >  	attr.exclude_kernel = evsel->core.attr.exclude_kernel;
+> >  	attr.exclude_hv = evsel->core.attr.exclude_hv;
+> > 
 
 -- 
 
