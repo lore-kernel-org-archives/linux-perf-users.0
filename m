@@ -2,192 +2,157 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA58DC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Nov 2021 04:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E37C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Nov 2021 08:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F59B61BF9
-	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Nov 2021 04:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCA1E61A02
+	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Nov 2021 08:26:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229710AbhKQEeO (ORCPT
+        id S233740AbhKQI3S (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 16 Nov 2021 23:34:14 -0500
-Received: from mail-sn1anam02on2056.outbound.protection.outlook.com ([40.107.96.56]:16462
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229632AbhKQEeO (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 16 Nov 2021 23:34:14 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OMKpTIhtZ+2/sHsYL7DQpvGQeeZsxEnQ376jQze8ffznMThn93glUYz6tx7cIDge2u29wf2nTYTdLPCeSddtha84YjFSW63DC0AmzAbhKG+0zaHiyYnstlBWla3vmVdVjxpFfjSDcgHFPDSWQKlXzr+56UH2SKv7PipCC08Yai2vwogRIiYd/j6XEQYxM0N8yVg7gvXHPTvg6kv+quHZPHgV8+6yhjvK3SqIWRkVzu5rszlgGSZ7GP/k3I3jmQBXuCuohw2UH+ExPng85Ag3SZsCGbucjIDPrTg3lIXvKGwam7fBu+rsJSm7ZgwK3dDoLp5YPYkmJhaD9Z2RXFdvPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WlHDB7MKHrf3soPVBu3BbKWgsz3z97QXhIT1flBpHJM=;
- b=EH9n5YtyC7zhIjwSjTY4cWmRMxKn3EYvYJpPfiU0VFCqEarmT64NHRFeARV9jssOuwGN+7fCNZb5JYKlx0Hl7DCnr6zduniGhWPU37c+ouZAX45eZZ0X/BfOCzap/ohHzhYvYD2oqFJBeloqf/vMX1n3bqox5T8Jcco6PQO0OBTwI5tHHiE5bKA/7DUoWUs9nzusgVHWVguQWa/Ybdu0oJ4x2fbbr+yDumVcUAXTzGgU3XdBFDCDNqNsqSb7Aper8lzvlGbXA9ELFlpXXfMDJpWbLAFtLg5ZwyLHvn6T0YlGvO9Q3XxgzzVO9SGXNJ8aZeHezxZJCTCn8351O+HUyw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WlHDB7MKHrf3soPVBu3BbKWgsz3z97QXhIT1flBpHJM=;
- b=M3EE7lqQQZwy5Vg7F8PrdaBH70rWyHsM29D0tIQsxwJIduhOnlVpkvQpeJghLyZcO7jvGAjfjs3SqVYra+pWRJhc4IZgI9buOgWtuB8GPLXvRiX2oE7fST3R3xdjg4nbLYrnSVxXrqX5BgH0msMBtg3h98rKPwU+LkdxlQkeU04=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from SN6PR12MB2654.namprd12.prod.outlook.com (2603:10b6:805:73::28)
- by SA0PR12MB4461.namprd12.prod.outlook.com (2603:10b6:806:9c::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.19; Wed, 17 Nov
- 2021 04:31:14 +0000
-Received: from SN6PR12MB2654.namprd12.prod.outlook.com
- ([fe80::906a:a3c6:9f9a:5fc6]) by SN6PR12MB2654.namprd12.prod.outlook.com
- ([fe80::906a:a3c6:9f9a:5fc6%5]) with mapi id 15.20.4690.027; Wed, 17 Nov 2021
- 04:31:14 +0000
-Message-ID: <3136ff3c-9b5a-383a-efc5-43b3d174765b@amd.com>
-Date:   Wed, 17 Nov 2021 10:00:55 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.1
-Subject: Re: [RFC] perf/amd/ibs: Move ibs pmus under perf_sw_context
-Content-Language: en-US
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     kim.phillips@amd.com, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, santosh.shukla@amd.com,
-        sandipan.das@amd.com, Ravi Bangoria <ravi.bangoria@amd.com>
-References: <20211115094838.3359-1-ravi.bangoria@amd.com>
- <YZJB5FVHpzhwFMtZ@hirez.programming.kicks-ass.net>
- <7ee6951e-eda1-7872-4158-e3bbb9eb31b7@amd.com>
- <YZJNZRuXjND9zqjL@hirez.programming.kicks-ass.net>
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <YZJNZRuXjND9zqjL@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0133.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:bf::15) To SN6PR12MB2654.namprd12.prod.outlook.com
- (2603:10b6:805:73::28)
+        Wed, 17 Nov 2021 03:29:18 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49230 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229944AbhKQI3R (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 17 Nov 2021 03:29:17 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1AH5gWq9005972;
+        Wed, 17 Nov 2021 08:26:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : references : to : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=MYrAnugj5IIkIbGnWyB40B4Gzvju9U7lJ9d8SbyMPPI=;
+ b=KlNOL2tPci8Aq6D4+lnm+gm0gtxWR8Ga0BRsRFYNKnjKnazP8kDTOJB4ZpKZLyAgTjL7
+ xjMvNtCYc2g5HP679tlZgNuAnSpzeHoKS8YW3xjFt7VoGByi1xVBIUC1cMGEnFAHPUW2
+ 41hs33WCcxWOHrM0gPaaPLf/8NloDrmoReY65WvfOuMJBU3LMDXbTcDmQG+y/r3aPAoh
+ hTSFZQELaal0Rj+wz2TCluw+oMTWGLRb84bujKB46z7EtKtevcVcty8Kiy+gMYGEMtCI
+ AUSzuYAvX4rG5LedJ3sUwHV2uwNyqPHvWbqsK5G11+RenHrLHyo7xMgWbgADbyU/2D6O +Q== 
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3ccuttb7me-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Nov 2021 08:26:17 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1AH8PS2T019252;
+        Wed, 17 Nov 2021 08:26:15 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 3ca50b7dmm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Nov 2021 08:26:15 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1AH8QATx28508598
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Nov 2021 08:26:10 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DBB69A4053;
+        Wed, 17 Nov 2021 08:26:09 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B6862A4055;
+        Wed, 17 Nov 2021 08:26:09 +0000 (GMT)
+Received: from [9.145.67.37] (unknown [9.145.67.37])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 17 Nov 2021 08:26:09 +0000 (GMT)
+Message-ID: <54077e81-503e-3405-6cb0-6541eb5532cc@linux.ibm.com>
+Date:   Wed, 17 Nov 2021 09:26:09 +0100
 MIME-Version: 1.0
-Received: from [10.252.93.92] (165.204.159.242) by PN3PR01CA0133.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:bf::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.19 via Frontend Transport; Wed, 17 Nov 2021 04:31:05 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 29400ac3-9c8b-4985-f2d6-08d9a98316d3
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4461:
-X-Microsoft-Antispam-PRVS: <SA0PR12MB4461F8C035E46F15E8A7DFD5E09A9@SA0PR12MB4461.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2512;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 90DBbRFM4Q8R6ftm2s00bDFOszfQzWPURH4Uvz9t+52la42g5mx4WNBjSU5Jbgbd3NlQo+dM7JE7P2h3WMUdyxvPi1ZD4zS9yVJ3KG/Qsy9ImiYtAc4WKERYGhRC3jxuBSlNZa4F8CbgxyHB+nMFniE7wKMJrmct9vMJf7x9110gg3hUNWI2qFkf+x3vJLwJyRB9nZNPb0cW+SF42FLhpB2A+LPFjhGrEFkySmBR1PWIGIgyQdKSXywJD/ndM5pYiyQ5BeHeHNOC+Asgb2wutksnFj1GvFXmqyrV61QKfGyL3jMxRk7h0tYjxhUUcIgL3sneWO7Uf6Wy+W3mGZETpMZkSd88ZqbsF/Jgl7/IGiBEZV0hCyl8Zd2c9Rm5vGTNt1wjwF+U/+qx/pIfnMDe2T6cgeg8vFhDgUzU2t0vZWJL0sbFVJY/eNuxdt1obbLiGpdYU6t/L1r8Lt8jpUPYsYs2nJuPppjZiRsliA19EW83pHvaps0C/hEL8EvvJGfeZVk1WwvKAKueMOJZaVZp/qDWtQtlzomG8uh4Qs91dY8hiJXjphmcGiMeBwPgx0x39e/NUipmGldDESo8p1l1i8qYukfL5JOwDHKaidE+MRAubWnnEoYwcHs6DlGfK4sWpmR1SN2TL1Of8Qw6OW1ZNrB6FAEmh7wTsimGiYLl/kKuyttKteoYGiJpyeTDKaakr0U7IvLk2EyygCHjuIt02IuU1+wVNefuXEWRTFXtn0dGIyaPt2PyfiuPWbJpUcVWfZ0w49GAW8TCI1hjDXz95YXL4frPCSmeElyaEjd/VhT8e2B1DOcie61+q4kDD5zFg8j8Qj4IV+l5zL//kum17Bt1Ztg6sxH3nPLZMNRJPn0=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2654.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(66946007)(8676002)(66476007)(6666004)(66556008)(53546011)(508600001)(186003)(956004)(2616005)(44832011)(6916009)(86362001)(4326008)(966005)(26005)(6486002)(45080400002)(8936002)(36756003)(31686004)(38100700002)(83380400001)(31696002)(5660300002)(7416002)(2906002)(316002)(16576012)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MkNhNDN5ZWIxcmNpMmMzcnZHTjhJUEhoOWl2UHd5SHFkMC9wWW9TMi9FUGZ0?=
- =?utf-8?B?ZmdjYlQrTG5CRitCRFZ4UjFJcTNuTmlPSE85QkpWYmJ3MnEzcnRYQVphUXRi?=
- =?utf-8?B?cTFmUzREMDI3ZTFlNzFXZndxRkt0TmVvYjBzeXNrdjRQL2tMZ0RFUVNTYnFm?=
- =?utf-8?B?OFg1ejBsckRRYkkwT1RDK0VtMkp1WkhpU3JIWllMUjdvamVETENBRk9ZTWNp?=
- =?utf-8?B?MkRCMU9sbjV6YTV5RHgvT0dFV0YvOXdqcWpjWi8yZHpZbkUzQmRSYXNjTWRF?=
- =?utf-8?B?WWZWcEhpRDNQNFpKSnlOb21FNGErWmhXYkRnbHEyeGM0TURPTE16Y1FSTlpQ?=
- =?utf-8?B?N0liQ1V6TkxZampmdklCd1NGYUNLcUN0YWh2cnBGUzZ1OGxVT0x4bXF2ZHBy?=
- =?utf-8?B?VXd3dmJuM3pTaEhGN3ZpdVAvMTRVYjA3TjQ4Mk80L0V0TlFvdWlnZStRT1Jv?=
- =?utf-8?B?M2Rld3pnYTYzMis5dzNFQlRrTzZWY1V3Z3FDWENXUVo5SXlpL3hybmdQNEpt?=
- =?utf-8?B?M0pHdTNTLzRjUlFIcDBkWTAvWlJTWXF4TWg3bktaUjBnVmtkYW5LQmRMcUR5?=
- =?utf-8?B?S21ldlBFaGJCUTRveU1IYVlsZWhwOVFBbzM2WTQySDhXeWhxZ2FLNE14Rldq?=
- =?utf-8?B?TDcxYlJWdkRYZXNITnBZMm12SFdNdlNPZ1pNVFA4YkU5L1VXWmJPOGw5KzBh?=
- =?utf-8?B?ckRzaHNqUnVJZmZWeXRjK05CSmw0Y09JejBWcmgvalVmeWJRRjFGOEg2QlZv?=
- =?utf-8?B?cm9yQkUvQmlQTEV6cURKQTZkT1RuUlpzcm1jZWRHcjUvekZnOXN5VmRVSUky?=
- =?utf-8?B?UUgrd0o5UmlJQ2cvcTVpNnExQk9SbVRweklRMUcxeXUzS1lRcS9scWhNQVRZ?=
- =?utf-8?B?dTgyOFl6aWRTQzJhcnljVGViWXptRkgwMnBraHhqYUxpMG55d0VuMmR0WCth?=
- =?utf-8?B?UWdOdUhmQVpmYzZsYm1wQWNxWUF1RkNSOEhWakErQ05ZMFFQU1BaQ1ByZmxv?=
- =?utf-8?B?NzVyS29JNUJGUnJQa2xRMUZwS0FyRVhHalFtR1orazJnejBZbVF0N096M29h?=
- =?utf-8?B?SFJpWVV3ci8xMHY5UitTazlEMDR1c3ZRTnYyM3hqTFN1Q2xyWW1iVmxWOEhW?=
- =?utf-8?B?UlIzMXVLS0piOSszdVk0dWN2V05ncEZtWUUvN09EbHQrS1ZuOUpuSU9BdUgx?=
- =?utf-8?B?NGZLOWxtU3VhMVlsOTljeElQZjJyNVlRRm9nZVYzSHFqKzdCeHp6ZE0vNzdv?=
- =?utf-8?B?SnZxU3V3WDlwSDRlUUlQV28zdHZLaUhwZ1dBMVU5UkdURndpZVh2ODZDVFNW?=
- =?utf-8?B?R1JkU0RFT2xUdDc2eVNzb3ZkeXVucWNyck4ySGVVUTFyOE9DK2craUdqTXJI?=
- =?utf-8?B?Vyt6dkd6S0pkZDBLUWllUEl0UWh1OGVSV2JLSTN6QzRBQnVySXJSWnhXSWlF?=
- =?utf-8?B?bEVqNzNCUzZ1MjFFTWxlQmpVMjh1U2l3OExXOVJ5Z2VZNFRyRTJRblk3Wm54?=
- =?utf-8?B?ays3c1NRTHNyV1drWXo3NlBpa21PL2djSWJGN2FtNGNTdXBBQjZFZkJyN0pT?=
- =?utf-8?B?M3pPRmltcXdnaTEwT2o1aUV2TlNrR0NJeFVNN05RZ093NkVzUTIvVUhTMW9R?=
- =?utf-8?B?WVFFSk41SFJOVjNIK3JidFZwdlV6OW1XWWRmWEsrSUg5RlBoM2hMUDFRK2pv?=
- =?utf-8?B?Vm05and6aGhsL2NGUjdRdTV5M3FCVWpqb2hUQU10VnNlQTJkTGg3OFg2Rmlp?=
- =?utf-8?B?Y1BFWEFvZERKS2h4SzRIWWxwSWhCK1UreFZIbmw2dDBQWEV5OWQ0T21telQ0?=
- =?utf-8?B?MlVJSUhQUy9UdU5VK2hJdXhrL0FyQkI2aEREN2FlTW82QW5QbkRMVWhhSVN1?=
- =?utf-8?B?WERYRnhrYXpISGJIOWV2Uy9CRGNTVW5wTnRvY0pvUGpwSUoxcGVaR2IzUG9J?=
- =?utf-8?B?MXQ2SGlzV29uS0hTUm9rbDRCYWExcFVjUHB6Wm1UK1ZIQnlFTkVPV1crYmNv?=
- =?utf-8?B?RHlLanhaUjdEZlFIMGJYMW9yTFFpWTgxZmlneTBuem5wTUtqdUNPcWs1MVhw?=
- =?utf-8?B?WXl3ODZEWXJ3cjB3Mlh1UTMvelc2VE0ybHh0ejNUcXFMUDJ4ZFB2WURIYXVl?=
- =?utf-8?B?LzJJNTYyS0l2U01KRjJKcTNLQklBTkFPNTBqVDh4bjZDVFJMeWFRMi93ckds?=
- =?utf-8?Q?A00L95TQH36/y8p0kNcxPUs=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 29400ac3-9c8b-4985-f2d6-08d9a98316d3
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2654.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Nov 2021 04:31:14.2932
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DFuP+rY95fQOSLOZ2DqWBW7NzqhZzmrA+cGZa2gTnjzTZwbj5tNv4ef8BjLWYM7us78pEdvbC3txmVt5AWdykw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4461
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: PING [PATCH] perf/test: Test case 27 broken on s390 in linux-next
+References: <20211103155215.2941895-1-tmricht@linux.ibm.com>
+Content-Language: en-US
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>, maddy@linux.ibm.com,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>
+From:   Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <20211103155215.2941895-1-tmricht@linux.ibm.com>
+X-Forwarded-Message-Id: <20211103155215.2941895-1-tmricht@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: oEt43jJRnSMEecknz31uTVbQ8b4Rueg5
+X-Proofpoint-GUID: oEt43jJRnSMEecknz31uTVbQ8b4Rueg5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
+ definitions=2021-11-17_03,2021-11-16_01,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 phishscore=0 impostorscore=0 clxscore=1015 adultscore=0
+ priorityscore=1501 mlxscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2111170037
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi Arnaldo, 
+
+since I have not received any ACK from Maddy and the issue still shows up on s390 in
+our daily test suite, can you go ahead and pick this patch.
+
+Thanks 
+
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Gregor Pillen
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
 
 
-On 15-Nov-21 5:37 PM, Peter Zijlstra wrote:
-> On Mon, Nov 15, 2021 at 05:31:21PM +0530, Ravi Bangoria wrote:
->>
->>
->> On 15-Nov-21 4:47 PM, Peter Zijlstra wrote:
->>> On Mon, Nov 15, 2021 at 03:18:38PM +0530, Ravi Bangoria wrote:
->>>> Ideally, a pmu which is present in each hw thread belongs to
->>>> perf_hw_context, but perf_hw_context has limitation of allowing only
->>>> one pmu (a core pmu) and thus other hw pmus need to use either sw or
->>>> invalid context which limits pmu functionalities.
->>>>
->>>> This is not a new problem. It has been raised in the past, for example,
->>>> Arm big.LITTLE (same for Intel ADL) and s390 had this issue:
->>>>
->>>>   Arm:  https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Flkml%2F20160425175837.GB3141%40leverpostej&amp;data=04%7C01%7Cravi.bangoria%40amd.com%7C8b30ce7e52c0414dc65e08d9a8307149%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637725748302455206%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=59fepiNH9du3ZR0owjPcquQ4YLc%2B8hE74H%2BpdnQggQY%3D&amp;reserved=0
->>>>   s390: https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Flkml%2F20160606082124.GA30154%40twins.programming.kicks-ass.net&amp;data=04%7C01%7Cravi.bangoria%40amd.com%7C8b30ce7e52c0414dc65e08d9a8307149%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637725748302455206%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=cSEGVgRbClDXeGJmEuGr1P8YXSIvhx%2FxbQjmdydQiuU%3D&amp;reserved=0
->>>>
->>>> Arm big.LITTLE (followed by Intel ADL) solved this by allowing multiple
->>>> (heterogeneous) pmus inside perf_hw_context. It makes sense as they are
->>>> still registering single pmu for each hw thread.
->>>>
->>>> s390 solved it by moving 2nd hw pmu to perf_sw_context, though that 2nd
->>>> hw pmu is count mode only, i.e. no sampling.
->>>>
->>>> AMD IBS also has similar problem. IBS pmu is present in each hw thread.
->>>> But because of perf_hw_context restriction, currently it belongs to
->>>> perf_invalid_context and thus important functionalities like per-task
->>>> profiling is not possible with IBS pmu. Moving it to perf_sw_context
->>>> will:
->>>>  - allow per-task monitoring
->>>>  - allow cgroup wise profiling
->>>>  - allow grouping of IBS with other pmu events
->>>>  - disallow multiplexing
->>>>
->>>> Please let me know if I missed any major benefit or drawback of
->>>> perf_sw_context. I'm also not sure how easy it would be to lift
->>>> perf_hw_context restriction and start allowing more pmus in it.
->>>>
->>>> Suggestions?
->>>
->>> Same as I do every time this comes up... this patch is still lingering
->>> and wanting TLC:
->>>
->>>   https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Flkml%2F20181010104559.GO5728%40hirez.programming.kicks-ass.net%2F&amp;data=04%7C01%7Cravi.bangoria%40amd.com%7C8b30ce7e52c0414dc65e08d9a8307149%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637725748302455206%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=sn7QOMMjrzsbBsvdEAPttouujDel0JuDptIFMHkm3Q0%3D&amp;reserved=0
->>
->> Thanks for the pointer Peter. I have looked at the patch and it is quite complex,
->> altering the very way perf event scheduling works.
->>
->> I don't dispute that is the right 'fix' for the issue, but do you think adding a
->> new perf context can help alleviate some of the issues in the interim?
-> 
-> And take away the motivation for people to do the right thing? How does
-> that work out in my favour?
-> 
 
-:-) Understood Peter. I will take a stab at making your patch upstream ready.
+-------- Forwarded Message --------
+Subject: [PATCH] perf/test: Test case 27 broken on s390 in linux-next
+Date: Wed,  3 Nov 2021 16:52:15 +0100
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org, sumanthk@linux.ibm.com, maddy@linux.ibm.com, jolsa@redhat.com
+CC: svens@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 
-Ravi
+Commit 10269a2ca2b08c ("perf test sample-parsing: Add endian test for struct branch_flags")
+broke the test case 27 (Sample parsing) on s390 on linux-next tree:
+
+  # ./perf test -Fv 27
+  27: Sample parsing
+  --- start ---
+  parsing failed for sample_type 0x800
+  ---- end ----
+  Sample parsing: FAILED!
+  #
+
+The cause of the failure is a wrong #define BS_EXPECTED_BE statement
+in above commit.  Correct this define and the test case runs fine.
+
+Output After:
+  # ./perf test -Fv 27
+  27: Sample parsing                                                  :
+  --- start ---
+  ---- end ----
+  Sample parsing: Ok
+  #
+
+Fixes: 10269a2ca2b08c ("perf test sample-parsing: Add endian test for struct branch_flags")
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/tests/sample-parsing.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/tests/sample-parsing.c b/tools/perf/tests/sample-parsing.c
+index c83a11514129..9c7af55b74db 100644
+--- a/tools/perf/tests/sample-parsing.c
++++ b/tools/perf/tests/sample-parsing.c
+@@ -36,7 +36,7 @@
+  * These are based on the input value (213) specified
+  * in branch_stack variable.
+  */
+-#define BS_EXPECTED_BE	0xa00d000000000000
++#define BS_EXPECTED_BE	0xa000d00000000000
+ #define BS_EXPECTED_LE	0xd5000000
+ #define FLAG(s)	s->branch_stack->entries[i].flags
+ 
+-- 
+2.25.1
+
+
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Gregor Pillen
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
