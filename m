@@ -2,108 +2,155 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C2D2C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 13:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D02C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 13:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F81C61AE2
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 13:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8341461ABA
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 13:16:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229929AbhKRNRs (ORCPT
+        id S229514AbhKRNTe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 Nov 2021 08:17:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56466 "EHLO mail.kernel.org"
+        Thu, 18 Nov 2021 08:19:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229461AbhKRNRs (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 Nov 2021 08:17:48 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 26486615A4;
-        Thu, 18 Nov 2021 13:14:48 +0000 (UTC)
+        id S229461AbhKRNTc (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 18 Nov 2021 08:19:32 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BF06D61547;
+        Thu, 18 Nov 2021 13:16:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637241288;
-        bh=pTcJU8CLw9tYli7PCfSZBvemce1fIuhhD1AKOiyQnYU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=GfsO53Kd9ftllE+E0+wyqwuy9sEnNxb/gIhlMkei/ppnbagjcc7aLhE4aQJE4oNbC
-         TtrWNXcc32q7XeufM7VRGvPsjoAL3Sj1YBvbHL2qekundYwNUXw04HVw1Km4Bgqgy1
-         MuFaUh59WIVrl2FD72DYsBfeGgAN4rEQEHYiZRmsX2XIGFkN3XwG+/jmMWEOrD0H2Y
-         8WjIWu3KrwPPaG4EKFZyPuGN03cQ1qWNXtGvDf1pIUU+F4htfuuj03VmdWL1ynxPrT
-         Jrp2fwrDlccKU83TO96H7aEDJGCHQHWn7DaqwtHrDEBVFwHfGOfqD+LqlWtsmnc1bz
-         J7Q8wx2f6MMJQ==
+        s=k20201202; t=1637241392;
+        bh=cPAF16SBowIODw3FuSRAWX7tX6zRNrTh0gOArqArR3Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RSm5pTiT3O/wUDfsCjlTZdHBV5UfpO96wvxn7Q7+Iw9l9QKuyspXNo6u/MxH5NnS2
+         72O4JdM3Lr9E3pUdHAW1NIJ/AeH2DwsJ+PrRALv6PAyZR9vsMAByS1ycaGIcDRWuDI
+         +8D6zQ2ISq6yAtHRwIhF8k1FrAEKLwmPfNz2MTQb9IqLz3rRpZHLFfsLqIJ/Tq3I9n
+         vVuV/7IuLJ0AucmFhKU4amWHUXl5o2bNWDVWfoSceIDT5lJDXBCIHFFfUwh/SPIXZY
+         /TPPTlPByX0uluyS8Gh3y6W4AQ6UqYXvy1syKPhMgQydU2isKj6AtbajkSM2gz2J3N
+         e/aOC+CP14hvg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2931C4088E; Thu, 18 Nov 2021 10:14:46 -0300 (-03)
-Date:   Thu, 18 Nov 2021 10:14:46 -0300
+        id E63424088E; Thu, 18 Nov 2021 10:16:30 -0300 (-03)
+Date:   Thu, 18 Nov 2021 10:16:30 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Wang Haojun <jiangliuer01@gmail.com>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+To:     kajoljain <kjain@linux.ibm.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: [FYI][PATCH 1/1] tools headers UAPI: Sync MIPS syscall table file
- changed by new futex_waitv syscall
-Message-ID: <YZZRxuIyvSGLZhM4@kernel.org>
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH] perf hist: Fix memory leak of a perf_hpp_fmt
+Message-ID: <YZZSLlhHjuDz8sSu@kernel.org>
+References: <20211118071247.2140392-1-irogers@google.com>
+ <b4ad6246-b402-ebe7-d35a-2f485dccbaf4@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <b4ad6246-b402-ebe7-d35a-2f485dccbaf4@linux.ibm.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-To pick the changes in these csets:
+Em Thu, Nov 18, 2021 at 01:28:11PM +0530, kajoljain escreveu:
+> 
+> 
+> On 11/18/21 12:42 PM, Ian Rogers wrote:
+> > perf_hpp__column_unregister removes an entry from a list but doesn't
+> > free the memory causing a memory leak spotted by leak sanitizer. Add the
+> > free while at the same time reducing the scope of the function to
+> > static.
+> 
+> Patch looks good to me.
+> 
+> Reviewed-by: Kajol Jain<kjain@linux.ibm.com>
 
-  b3ff2881ba18b852 ("MIPS: syscalls: Wire up futex_waitv syscall")
+Thanks, applied.
 
-That add support for this new syscall in tools such as 'perf trace'.
+- Arnaldo
 
-For instance, this is now possible (adapted from the x86_64 test output):
+ 
+> Thanks,
+> Kajol jain
+> 
+> > 
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/ui/hist.c   | 28 ++++++++++++++--------------
+> >  tools/perf/util/hist.h |  1 -
+> >  2 files changed, 14 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
+> > index c1f24d004852..5075ecead5f3 100644
+> > --- a/tools/perf/ui/hist.c
+> > +++ b/tools/perf/ui/hist.c
+> > @@ -535,6 +535,18 @@ struct perf_hpp_list perf_hpp_list = {
+> >  #undef __HPP_SORT_ACC_FN
+> >  #undef __HPP_SORT_RAW_FN
+> >  
+> > +static void fmt_free(struct perf_hpp_fmt *fmt)
+> > +{
+> > +	/*
+> > +	 * At this point fmt should be completely
+> > +	 * unhooked, if not it's a bug.
+> > +	 */
+> > +	BUG_ON(!list_empty(&fmt->list));
+> > +	BUG_ON(!list_empty(&fmt->sort_list));
+> > +
+> > +	if (fmt->free)
+> > +		fmt->free(fmt);
+> > +}
+> >  
+> >  void perf_hpp__init(void)
+> >  {
+> > @@ -598,9 +610,10 @@ void perf_hpp_list__prepend_sort_field(struct perf_hpp_list *list,
+> >  	list_add(&format->sort_list, &list->sorts);
+> >  }
+> >  
+> > -void perf_hpp__column_unregister(struct perf_hpp_fmt *format)
+> > +static void perf_hpp__column_unregister(struct perf_hpp_fmt *format)
+> >  {
+> >  	list_del_init(&format->list);
+> > +	fmt_free(format);
+> >  }
+> >  
+> >  void perf_hpp__cancel_cumulate(void)
+> > @@ -672,19 +685,6 @@ void perf_hpp__append_sort_keys(struct perf_hpp_list *list)
+> >  }
+> >  
+> >  
+> > -static void fmt_free(struct perf_hpp_fmt *fmt)
+> > -{
+> > -	/*
+> > -	 * At this point fmt should be completely
+> > -	 * unhooked, if not it's a bug.
+> > -	 */
+> > -	BUG_ON(!list_empty(&fmt->list));
+> > -	BUG_ON(!list_empty(&fmt->sort_list));
+> > -
+> > -	if (fmt->free)
+> > -		fmt->free(fmt);
+> > -}
+> > -
+> >  void perf_hpp__reset_output_field(struct perf_hpp_list *list)
+> >  {
+> >  	struct perf_hpp_fmt *fmt, *tmp;
+> > diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+> > index 5343b62476e6..621f35ae1efa 100644
+> > --- a/tools/perf/util/hist.h
+> > +++ b/tools/perf/util/hist.h
+> > @@ -369,7 +369,6 @@ enum {
+> >  };
+> >  
+> >  void perf_hpp__init(void);
+> > -void perf_hpp__column_unregister(struct perf_hpp_fmt *format);
+> >  void perf_hpp__cancel_cumulate(void);
+> >  void perf_hpp__setup_output_field(struct perf_hpp_list *list);
+> >  void perf_hpp__reset_output_field(struct perf_hpp_list *list);
+> > 
 
-  # perf trace -e futex_waitv
-  ^C#
-  # perf trace -v -e futex_waitv
-  event qualifier tracepoint filter: (common_pid != 807333 && common_pid != 3564) && (id == 449)
-  ^C#
-  # perf trace -v -e futex* --max-events 10
-  event qualifier tracepoint filter: (common_pid != 812168 && common_pid != 3564) && (id == 202 || id == 449)
-  mmap size 528384B
-           ? (         ): Timer/219310  ... [continued]: futex())                                            = -1 ETIMEDOUT (Connection timed out)
-       0.012 ( 0.002 ms): Timer/219310 futex(uaddr: 0x7fd0b152d3c8, op: WAKE|PRIVATE_FLAG, val: 1)           = 0
-       0.024 ( 0.060 ms): Timer/219310 futex(uaddr: 0x7fd0b152d420, op: WAIT_BITSET|PRIVATE_FLAG, utime: 0x7fd0b1657840, val3: MATCH_ANY) = 0
-       0.086 ( 0.001 ms): Timer/219310 futex(uaddr: 0x7fd0b152d3c8, op: WAKE|PRIVATE_FLAG, val: 1)           = 0
-       0.088 (         ): Timer/219310 futex(uaddr: 0x7fd0b152d424, op: WAIT_BITSET|PRIVATE_FLAG, utime: 0x7fd0b1657840, val3: MATCH_ANY) ...
-       0.075 ( 0.005 ms): Web Content/219299 futex(uaddr: 0x7fd0b152d420, op: WAKE|PRIVATE_FLAG, val: 1)     = 1
-       0.169 ( 0.004 ms): Web Content/219299 futex(uaddr: 0x7fd0b152d424, op: WAKE|PRIVATE_FLAG, val: 1)     = 1
-       0.088 ( 0.089 ms): Timer/219310  ... [continued]: futex())                                            = 0
-       0.179 ( 0.001 ms): Timer/219310 futex(uaddr: 0x7fd0b152d3c8, op: WAKE|PRIVATE_FLAG, val: 1)           = 0
-       0.181 (         ): Timer/219310 futex(uaddr: 0x7fd0b152d420, op: WAIT_BITSET|PRIVATE_FLAG, utime: 0x7fd0b1657840, val3: MATCH_ANY) ...
-  #
-
-That is the filter expression attached to the raw_syscalls:sys_{enter,exit}
-tracepoints.
-
-  $ grep futex_waitv tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
-  449	n64	futex_waitv			sys_futex_waitv
-  $
-
-This addresses these perf build warnings:
-
-  Warning: Kernel ABI header at 'tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl' differs from latest version at 'arch/mips/kernel/syscalls/syscall_n64.tbl'
-  diff -u tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl arch/mips/kernel/syscalls/syscall_n64.tbl
-
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Wang Haojun <jiangliuer01@gmail.com>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl b/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
-index 1ca7bc337932bcae..e2c481fcede6bd11 100644
---- a/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
-+++ b/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
-@@ -363,3 +363,4 @@
- 446	n64	landlock_restrict_self		sys_landlock_restrict_self
- # 447 reserved for memfd_secret
- 448	n64	process_mrelease		sys_process_mrelease
-+449	n64	futex_waitv			sys_futex_waitv
 -- 
-2.31.1
 
+- Arnaldo
