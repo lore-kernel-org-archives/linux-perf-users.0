@@ -2,66 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F7CC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 07:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E17C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 08:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC72E61264
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 07:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33E7661BA1
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 08:48:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244145AbhKRIBf (ORCPT
+        id S244776AbhKRIvC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 Nov 2021 03:01:35 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44798 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S244066AbhKRIBf (ORCPT
+        Thu, 18 Nov 2021 03:51:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50860 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244764AbhKRIu5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 Nov 2021 03:01:35 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1AI7g4Zi023504;
-        Thu, 18 Nov 2021 07:58:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=UoLBrerhNR7ZSLMwpGlxYzr+0iTbvlmqx2zVA4EYnzg=;
- b=UTvEmYcSH7uOO7XITNZxAqijtsEkl6c66/Fg1NXdOj5EvtKm0JZKeOUNZj+8P68HT2yH
- +i2stEm1v6YYvxass1I3KSFcEbvC2F+Qc5pZxJy87sIQ273sKwMHFoVWKV0nvYcOiwxn
- fAQHn3bwMbV+qmtKinscg7rwaTcBOuygGoQXHPIyLF4RlEJL+mgnTC1VCWOjt25+YsOZ
- E1SnMl8JuXaXYn1Q5EbDtX0mDNNYuePX0Lmz3sHI6BMOYtthEstBk6k937WO7ITMZQyS
- 6haab0vClA0/QocnbvZh5FI7RSOrNNT7RzbRjgfzXfqkjFyAgi1nVwfdOWwdRun2amfP JQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3cdjnxra45-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Nov 2021 07:58:21 +0000
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1AI7hkHP030725;
-        Thu, 18 Nov 2021 07:58:20 GMT
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3cdjnxra32-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Nov 2021 07:58:20 +0000
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1AI7mM4d012654;
-        Thu, 18 Nov 2021 07:58:19 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma01fra.de.ibm.com with ESMTP id 3ca50a8tmn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Nov 2021 07:58:18 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1AI7pJdU63439162
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Nov 2021 07:51:19 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8884DA4065;
-        Thu, 18 Nov 2021 07:58:16 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 35D5EA4054;
-        Thu, 18 Nov 2021 07:58:13 +0000 (GMT)
-Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com (unknown [9.43.63.210])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 18 Nov 2021 07:58:12 +0000 (GMT)
-Subject: Re: [PATCH] perf hist: Fix memory leak of a perf_hpp_fmt
-To:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Thu, 18 Nov 2021 03:50:57 -0500
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AB58C061570
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Nov 2021 00:47:57 -0800 (PST)
+Received: by mail-yb1-xb49.google.com with SMTP id d8-20020a253608000000b005c202405f52so8676761yba.7
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Nov 2021 00:47:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=pCS4krbp8/9ryX5JXUbnLD3SMSAP/4yh89FdAPAwBV4=;
+        b=PLn1UCXJ/rEZ2BwAsP/Vtu9NEH4ZhjC/sDX+ZInIrsefXPFi/IjGJm/ZlRFj//tghB
+         oJq+pp1iRUXJF2/FwdJmL5jfaurgBlU3QLPKH+RasVgq8atyO0+vepj5ifgGvzHfVlyc
+         NtWrgo5Hzs/l/cj3wICv+7fl/UxsfUlO0J9A8UvxjdwNGUfK6WN3xvKr8JpBOXJS+WRd
+         8liFD31R3ih7wQp+m2sMtT+tFtep1s6dGzxMLV/P9BM2qwFwG24UZEMrlTimZqrqzYJt
+         6wl3PK/3WSEXVL4j2SFzuY3JuRGKCmNdV/tBTfhQq5K7/oWozqozbdVyDmDp8f4oFqoF
+         jPlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=pCS4krbp8/9ryX5JXUbnLD3SMSAP/4yh89FdAPAwBV4=;
+        b=LIWMxfyKIorMCpTWMD7VYQf+h8qi4G0qb4qv00rhE+tDlXh2Y8pMvM/0FS13AiO43/
+         AjXrVjwYPgJQBv/YB14MQyeE37HcJHfJAhFGMVUUAKMv3ReMBU1yipyrw+vq6c2lpnwz
+         nqpK85Wl4NboSwd2JVTdW9tel/dap6I54SPgzV0wMeQ9GCQTGMEMpdrU0ZhjIRXtWMMV
+         2KKa5FvbkpOKvmHeVGyjgyP0QmqFX21mATJ5xy52dJPAh5LbC3olA4ZoNwrtO3nTEoWQ
+         7QBJpijZsQFt0NcBe4b29xcFASXrRI30NcKhuUqf+Z18U9pCecwjpFZOQ2Zbi/lqD0wT
+         bBDQ==
+X-Gm-Message-State: AOAM531jXvCSVcFlcSo+tHXqeoTzi3WATh41fFmz795aQuwoGmL+Pq6d
+        n/1Jfm8GKbNU54FOTzXIp6O3DKN1xqNX
+X-Google-Smtp-Source: ABdhPJxXlZxDGG5aR72qlruiig9cf6+euWqg+b8nuX/f9NUvlH4QWB1p2701GKPi6fLzZ4UU0M1bil/Jcz7P
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:b539:25b3:faf2:d1b3])
+ (user=irogers job=sendgmr) by 2002:a25:2503:: with SMTP id
+ l3mr19973658ybl.42.1637225276422; Thu, 18 Nov 2021 00:47:56 -0800 (PST)
+Date:   Thu, 18 Nov 2021 00:47:49 -0800
+Message-Id: <20211118084749.2191447-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.34.0.rc1.387.gb447b232ab-goog
+Subject: [PATCH] perf evsel: Fix memory leaks relating to unit
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -69,120 +61,165 @@ To:     Ian Rogers <irogers@google.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>
-References: <20211118071247.2140392-1-irogers@google.com>
-From:   kajoljain <kjain@linux.ibm.com>
-Message-ID: <b4ad6246-b402-ebe7-d35a-2f485dccbaf4@linux.ibm.com>
-Date:   Thu, 18 Nov 2021 13:28:11 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
-MIME-Version: 1.0
-In-Reply-To: <20211118071247.2140392-1-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: X0rHiTddIQu0CcvCmpJyv1Vk-zntiOe9
-X-Proofpoint-ORIG-GUID: HQ6w97rPIi3mB5xt0TgO7o_DtXjZvfII
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
- definitions=2021-11-18_02,2021-11-17_01,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- lowpriorityscore=0 suspectscore=0 bulkscore=0 adultscore=0 clxscore=1015
- impostorscore=0 spamscore=0 mlxlogscore=999 mlxscore=0 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2110150000 definitions=main-2111180043
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+unit may have a strdup pointer or be to a literal, consequently memory
+assocciated with it isn't freed. Change it so the unit is always strdup
+and so the memory can be safely freed. Fix related issue in
+perf_event__process_event_update for name and own_cpus. Leaks were
+spotted by leak sanitizer.
 
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/event_update.c |  5 ++---
+ tools/perf/util/evsel.c         | 18 +++++++++---------
+ tools/perf/util/header.c        |  8 +++++---
+ tools/perf/util/parse-events.c  |  9 ++++++---
+ 4 files changed, 22 insertions(+), 18 deletions(-)
 
-On 11/18/21 12:42 PM, Ian Rogers wrote:
-> perf_hpp__column_unregister removes an entry from a list but doesn't
-> free the memory causing a memory leak spotted by leak sanitizer. Add the
-> free while at the same time reducing the scope of the function to
-> static.
+diff --git a/tools/perf/tests/event_update.c b/tools/perf/tests/event_update.c
+index fbb68deba59f..d01532d40acb 100644
+--- a/tools/perf/tests/event_update.c
++++ b/tools/perf/tests/event_update.c
+@@ -88,7 +88,6 @@ static int test__event_update(struct test_suite *test __maybe_unused, int subtes
+ 	struct evsel *evsel;
+ 	struct event_name tmp;
+ 	struct evlist *evlist = evlist__new_default();
+-	char *unit = strdup("KRAVA");
+ 
+ 	TEST_ASSERT_VAL("failed to get evlist", evlist);
+ 
+@@ -99,7 +98,8 @@ static int test__event_update(struct test_suite *test __maybe_unused, int subtes
+ 
+ 	perf_evlist__id_add(&evlist->core, &evsel->core, 0, 0, 123);
+ 
+-	evsel->unit = unit;
++	free((char *)evsel->unit);
++	evsel->unit = strdup("KRAVA");
+ 
+ 	TEST_ASSERT_VAL("failed to synthesize attr update unit",
+ 			!perf_event__synthesize_event_update_unit(NULL, evsel, process_event_unit));
+@@ -119,7 +119,6 @@ static int test__event_update(struct test_suite *test __maybe_unused, int subtes
+ 	TEST_ASSERT_VAL("failed to synthesize attr update cpus",
+ 			!perf_event__synthesize_event_update_cpus(&tmp.tool, evsel, process_event_cpus));
+ 
+-	free(unit);
+ 	evlist__delete(evlist);
+ 	return 0;
+ }
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index a59fb2ecb84e..ac0127be0459 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -241,7 +241,7 @@ void evsel__init(struct evsel *evsel,
+ {
+ 	perf_evsel__init(&evsel->core, attr, idx);
+ 	evsel->tracking	   = !idx;
+-	evsel->unit	   = "";
++	evsel->unit	   = strdup("");
+ 	evsel->scale	   = 1.0;
+ 	evsel->max_events  = ULONG_MAX;
+ 	evsel->evlist	   = NULL;
+@@ -276,13 +276,8 @@ struct evsel *evsel__new_idx(struct perf_event_attr *attr, int idx)
+ 	}
+ 
+ 	if (evsel__is_clock(evsel)) {
+-		/*
+-		 * The evsel->unit points to static alias->unit
+-		 * so it's ok to use static string in here.
+-		 */
+-		static const char *unit = "msec";
+-
+-		evsel->unit = unit;
++		free((char *)evsel->unit);
++		evsel->unit = strdup("msec");
+ 		evsel->scale = 1e-6;
+ 	}
+ 
+@@ -420,7 +415,11 @@ struct evsel *evsel__clone(struct evsel *orig)
+ 
+ 	evsel->max_events = orig->max_events;
+ 	evsel->tool_event = orig->tool_event;
+-	evsel->unit = orig->unit;
++	free((char *)evsel->unit);
++	evsel->unit = strdup(orig->unit);
++	if (evsel->unit == NULL)
++		goto out_err;
++
+ 	evsel->scale = orig->scale;
+ 	evsel->snapshot = orig->snapshot;
+ 	evsel->per_pkg = orig->per_pkg;
+@@ -1441,6 +1440,7 @@ void evsel__exit(struct evsel *evsel)
+ 	zfree(&evsel->group_name);
+ 	zfree(&evsel->name);
+ 	zfree(&evsel->pmu_name);
++	zfree(&evsel->unit);
+ 	zfree(&evsel->metric_id);
+ 	evsel__zero_per_pkg(evsel);
+ 	hashmap__free(evsel->per_pkg_mask);
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index fda8d14c891f..79cce216727e 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -4257,9 +4257,11 @@ int perf_event__process_event_update(struct perf_tool *tool __maybe_unused,
+ 
+ 	switch (ev->type) {
+ 	case PERF_EVENT_UPDATE__UNIT:
++		free((char *)evsel->unit);
+ 		evsel->unit = strdup(ev->data);
+ 		break;
+ 	case PERF_EVENT_UPDATE__NAME:
++		free(evsel->name);
+ 		evsel->name = strdup(ev->data);
+ 		break;
+ 	case PERF_EVENT_UPDATE__SCALE:
+@@ -4268,11 +4270,11 @@ int perf_event__process_event_update(struct perf_tool *tool __maybe_unused,
+ 		break;
+ 	case PERF_EVENT_UPDATE__CPUS:
+ 		ev_cpus = (struct perf_record_event_update_cpus *)ev->data;
+-
+ 		map = cpu_map__new_data(&ev_cpus->cpus);
+-		if (map)
++		if (map) {
++			perf_cpu_map__put(evsel->core.own_cpus);
+ 			evsel->core.own_cpus = map;
+-		else
++		} else
+ 			pr_err("failed to get event_update cpus\n");
+ 	default:
+ 		break;
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index a2f4c086986f..12d925a6d27f 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -402,8 +402,10 @@ static int add_event_tool(struct list_head *list, int *idx,
+ 	if (!evsel)
+ 		return -ENOMEM;
+ 	evsel->tool_event = tool_event;
+-	if (tool_event == PERF_TOOL_DURATION_TIME)
+-		evsel->unit = "ns";
++	if (tool_event == PERF_TOOL_DURATION_TIME) {
++		free((char *)evsel->unit);
++		evsel->unit = strdup("ns");
++	}
+ 	return 0;
+ }
+ 
+@@ -1630,7 +1632,8 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+ 	if (parse_state->fake_pmu)
+ 		return 0;
+ 
+-	evsel->unit = info.unit;
++	free((char *)evsel->unit);
++	evsel->unit = strdup(info.unit);
+ 	evsel->scale = info.scale;
+ 	evsel->per_pkg = info.per_pkg;
+ 	evsel->snapshot = info.snapshot;
+-- 
+2.34.0.rc1.387.gb447b232ab-goog
 
-Patch looks good to me.
-
-Reviewed-by: Kajol Jain<kjain@linux.ibm.com>
-
-Thanks,
-Kajol jain
-
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/ui/hist.c   | 28 ++++++++++++++--------------
->  tools/perf/util/hist.h |  1 -
->  2 files changed, 14 insertions(+), 15 deletions(-)
-> 
-> diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
-> index c1f24d004852..5075ecead5f3 100644
-> --- a/tools/perf/ui/hist.c
-> +++ b/tools/perf/ui/hist.c
-> @@ -535,6 +535,18 @@ struct perf_hpp_list perf_hpp_list = {
->  #undef __HPP_SORT_ACC_FN
->  #undef __HPP_SORT_RAW_FN
->  
-> +static void fmt_free(struct perf_hpp_fmt *fmt)
-> +{
-> +	/*
-> +	 * At this point fmt should be completely
-> +	 * unhooked, if not it's a bug.
-> +	 */
-> +	BUG_ON(!list_empty(&fmt->list));
-> +	BUG_ON(!list_empty(&fmt->sort_list));
-> +
-> +	if (fmt->free)
-> +		fmt->free(fmt);
-> +}
->  
->  void perf_hpp__init(void)
->  {
-> @@ -598,9 +610,10 @@ void perf_hpp_list__prepend_sort_field(struct perf_hpp_list *list,
->  	list_add(&format->sort_list, &list->sorts);
->  }
->  
-> -void perf_hpp__column_unregister(struct perf_hpp_fmt *format)
-> +static void perf_hpp__column_unregister(struct perf_hpp_fmt *format)
->  {
->  	list_del_init(&format->list);
-> +	fmt_free(format);
->  }
->  
->  void perf_hpp__cancel_cumulate(void)
-> @@ -672,19 +685,6 @@ void perf_hpp__append_sort_keys(struct perf_hpp_list *list)
->  }
->  
->  
-> -static void fmt_free(struct perf_hpp_fmt *fmt)
-> -{
-> -	/*
-> -	 * At this point fmt should be completely
-> -	 * unhooked, if not it's a bug.
-> -	 */
-> -	BUG_ON(!list_empty(&fmt->list));
-> -	BUG_ON(!list_empty(&fmt->sort_list));
-> -
-> -	if (fmt->free)
-> -		fmt->free(fmt);
-> -}
-> -
->  void perf_hpp__reset_output_field(struct perf_hpp_list *list)
->  {
->  	struct perf_hpp_fmt *fmt, *tmp;
-> diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-> index 5343b62476e6..621f35ae1efa 100644
-> --- a/tools/perf/util/hist.h
-> +++ b/tools/perf/util/hist.h
-> @@ -369,7 +369,6 @@ enum {
->  };
->  
->  void perf_hpp__init(void);
-> -void perf_hpp__column_unregister(struct perf_hpp_fmt *format);
->  void perf_hpp__cancel_cumulate(void);
->  void perf_hpp__setup_output_field(struct perf_hpp_list *list);
->  void perf_hpp__reset_output_field(struct perf_hpp_list *list);
-> 
