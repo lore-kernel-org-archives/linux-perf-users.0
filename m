@@ -2,145 +2,150 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA647C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 03:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8C4C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 07:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A45B161A40
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 03:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E2466138D
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 07:13:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242763AbhKRDkg (ORCPT
+        id S243695AbhKRHQZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 17 Nov 2021 22:40:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38268 "EHLO
+        Thu, 18 Nov 2021 02:16:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242758AbhKRDke (ORCPT
+        with ESMTP id S243614AbhKRHQO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 17 Nov 2021 22:40:34 -0500
-Received: from mail-oi1-x230.google.com (mail-oi1-x230.google.com [IPv6:2607:f8b0:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CC0AC061764
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 Nov 2021 19:37:35 -0800 (PST)
-Received: by mail-oi1-x230.google.com with SMTP id m6so11244709oim.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 Nov 2021 19:37:35 -0800 (PST)
+        Thu, 18 Nov 2021 02:16:14 -0500
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E86B4C061208
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 Nov 2021 23:12:52 -0800 (PST)
+Received: by mail-yb1-xb49.google.com with SMTP id x16-20020a25b910000000b005b6b7f2f91cso8477532ybj.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 Nov 2021 23:12:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hhREUrClrSZH2dV69k4dP6KEPon/EeosTqyONwAMhE8=;
-        b=h/yswSEAHXoaF3XDllZ4EdSdNP33Ep69dECFNQYXbaRditDnzLEo4TqssOXwXaj32t
-         AQbthw/p59KIuAXL4ARg13SKPvyhy9L3f0xOD5gOCeUgH2yhW5Sld7DZO/l1vZJvYeuX
-         HyZKWIlMVm3NHv2MzlGheO9/AfcspzqI4FZKmksdlHWttWg0bGRVHaeSBK6pxvhVMNXz
-         aZGNnsDzqCFs9fqr8r7Bhi4w260aA2dLIo7sQIkIWAWBnBB3ZhqW+vF+SETeXiz3Zl+6
-         joWHQZDSV6OE/Zy5IaoUSvoVXbH1K6NdRUwO9CgmBpyv1cR5B5V9pqD2M5CnhYFkM9Xo
-         HBUQ==
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=skq4P9T6KtKDwyZw1ZKeY27aIa6yFc8QolZIysalVnQ=;
+        b=pMhXGuz+NjsXR9CxpSpB+s0xuJZqv/3iQYQHwVTKv/36M9oLhmMUWwEBtvvDrbJsV0
+         D9N8hxTFaiyLh5RdrRezPZ6Q5SkmNEXVqNXVT46ejojaLI6F5ClwpF0oiU0LuyH6d/rZ
+         U4wBO1Pr7xFiMUDJg6w3EC4c9BXeBQ5yIu4Mt5C7I1YG+ITclzrKGGwtLaPSYvzcfz+4
+         h0MUR6Qp4e7BM9QpLupceF+QaCntui9UqI59lK6lR7TOvrQTQWFSgYWr7IG6WqHvwSkp
+         dSpSIm/kapllKtzijhjSBIgB+8rdipsYTnn+DG7lTtPwcRzVz7N70/T24jrSB/GMgh2r
+         Eruw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hhREUrClrSZH2dV69k4dP6KEPon/EeosTqyONwAMhE8=;
-        b=4C3ECsDdPfvW4N+2AICD4F1q2zD7uKKrqYARIw3JaVtUUu8Rd2npgGzi0Ny1QhzPpm
-         0PPHT3aYhPPr3myrBhwPwnOhLXYmey3tuaChLGXDsXAsqO8SEco/9XYBlJkhJfWA0yvJ
-         RQ9h0jPOrAVTQLgzc4QdydafpcWJMJSCDZHFobUTVoERNm1Hq87cVFAq9AdQYWv9Q1Mt
-         xw7xoPlx/Bcbi7kWjFjtswbV/h/+6khaSaJcCmp7c0Qx4VvWpHmyMrAp93jcUonV795U
-         ShiFermkuPWEyAFtpI9r4vj9pK/ELjgdkM/Bkw2KrIXSXLPzw0iZ95q+pcQcSQavLy9Y
-         XVYA==
-X-Gm-Message-State: AOAM531ZM0Qup+p1TNLci9NKOwTkN3ixRVHeH2SY83hgBbdou59fOjD/
-        QV0oy94h068AqcY9VHowbGMsfeMnj0+u0Y6+69fxkQ==
-X-Google-Smtp-Source: ABdhPJw6R6EijKAAU+9v2Nbg4ShYSOpnsofIgXJ09MpaMRaqAeT1b23OwC/u1/kbpmjWdUSdyH+SvqaRgHaRjcNrlFQ=
-X-Received: by 2002:aca:3055:: with SMTP id w82mr4614339oiw.2.1637206653715;
- Wed, 17 Nov 2021 19:37:33 -0800 (PST)
-MIME-Version: 1.0
-References: <20211112235235.1125060-1-jmattson@google.com> <20211112235235.1125060-2-jmattson@google.com>
- <fcb9aea5-2cf5-897f-5a3d-054ead555da4@gmail.com> <CALMp9eR5oi=ZrrEsZpcAJ7AP-Jo2cLGz9GA=SoTjX--TiG4=sw@mail.gmail.com>
- <afb108ed-a2f3-cb49-d0b4-b1bd6739cdb6@gmail.com> <CALMp9eSYvGW=EfuDCyc+fu7gVNnKHmEvFMackYcuZ-sGT8H5uA@mail.gmail.com>
-In-Reply-To: <CALMp9eSYvGW=EfuDCyc+fu7gVNnKHmEvFMackYcuZ-sGT8H5uA@mail.gmail.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Wed, 17 Nov 2021 19:37:22 -0800
-Message-ID: <CALMp9eTq2NwhB5cq_LknUjJncKHK2xPuQ5vpTaDN_zCDPT_JWw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] KVM: x86: Update vPMCs when retiring instructions
-To:     Like Xu <like.xu.linux@gmail.com>
-Cc:     "Paolo Bonzini - Distinguished Engineer (kernel-recipes.org)" 
-        <pbonzini@redhat.com>, Eric Hankland <ehankland@google.com>,
-        kvm@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=skq4P9T6KtKDwyZw1ZKeY27aIa6yFc8QolZIysalVnQ=;
+        b=rJgw3An8WWQ+zRQPpmvBIiYz67MUHzmNHjx8a1RBzjDJaPWHQ2yiqrBxtf/gUdXSeT
+         7oVAxF6Gc1fLaMPqqlLxlMXzgwvjKYMksvcy53X8Tssaw4e0N1lkHQJ0CU1IksgwbOiX
+         pTua/MRotjG3Oo5p6/+VIG6fh5FAT5PwZ9h72ML/rZdFDCo3nDxHQtvDwA33Oo0/Aam1
+         FOyWdhT+XCAE+Bz94WOhK27msXmR+1QB8UU8EH6qoQqnrGOTTuaeia73FweIKdblq5Sh
+         RdCBIzCbM0GoqYYv57XzfUey0AN8BLuOo1G8cPgG+XPdqDtk+g08Zr4GnVC/wLIICnhi
+         G9Fw==
+X-Gm-Message-State: AOAM531qXk+nBKW9i0OnX0Qv8iLT/jJwUrC8KAikolTrDfeHcfNxTTwp
+        rE42aRTkG0DlENBOtwYMCrKzdS78TP0H
+X-Google-Smtp-Source: ABdhPJzX4Vz+h0R6UP4eA/RJSLyOSp0dl9Mb4hEzxj2xfVawuOLFv44oQxi/ze358O3kc+HxRL6sWRybBrwM
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:b539:25b3:faf2:d1b3])
+ (user=irogers job=sendgmr) by 2002:a25:abe3:: with SMTP id
+ v90mr23979943ybi.315.1637219572118; Wed, 17 Nov 2021 23:12:52 -0800 (PST)
+Date:   Wed, 17 Nov 2021 23:12:47 -0800
+Message-Id: <20211118071247.2140392-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.34.0.rc1.387.gb447b232ab-goog
+Subject: [PATCH] perf hist: Fix memory leak of a perf_hpp_fmt
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Peter Zijlstra (Intel OTC, Netherlander)" <peterz@infradead.org>
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Nov 17, 2021 at 12:01 PM Jim Mattson <jmattson@google.com> wrote:
->
-> On Tue, Nov 16, 2021 at 7:22 PM Like Xu <like.xu.linux@gmail.com> wrote:
-> >
-> > On 17/11/2021 6:15 am, Jim Mattson wrote:
-> > > On Tue, Nov 16, 2021 at 4:44 AM Like Xu <like.xu.linux@gmail.com> wrote:
-> > >>
-> > >> Hi Jim,
-> > >>
-> > >> On 13/11/2021 7:52 am, Jim Mattson wrote:
-> > >>> When KVM retires a guest instruction through emulation, increment any
-> > >>> vPMCs that are configured to monitor "instructions retired," and
-> > >>> update the sample period of those counters so that they will overflow
-> > >>> at the right time.
-> > >>>
-> > >>> Signed-off-by: Eric Hankland <ehankland@google.com>
-> > >>> [jmattson:
-> > >>>     - Split the code to increment "branch instructions retired" into a
-> > >>>       separate commit.
-> > >>>     - Added 'static' to kvm_pmu_incr_counter() definition.
-> > >>>     - Modified kvm_pmu_incr_counter() to check pmc->perf_event->state ==
-> > >>>       PERF_EVENT_STATE_ACTIVE.
-> > >>> ]
-> > >>> Signed-off-by: Jim Mattson <jmattson@google.com>
-> > >>> Fixes: f5132b01386b ("KVM: Expose a version 2 architectural PMU to a guests")
-> > >>> ---
-> > >>>    arch/x86/kvm/pmu.c | 31 +++++++++++++++++++++++++++++++
-> > >>>    arch/x86/kvm/pmu.h |  1 +
-> > >>>    arch/x86/kvm/x86.c |  3 +++
-> > >>>    3 files changed, 35 insertions(+)
-> > >>>
-> > >>> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-> > >>> index 09873f6488f7..153c488032a5 100644
-> > >>> --- a/arch/x86/kvm/pmu.c
-> > >>> +++ b/arch/x86/kvm/pmu.c
-> > >>> @@ -490,6 +490,37 @@ void kvm_pmu_destroy(struct kvm_vcpu *vcpu)
-> > >>>        kvm_pmu_reset(vcpu);
-> > >>>    }
-> > >>>
-> > >>> +static void kvm_pmu_incr_counter(struct kvm_pmc *pmc, u64 evt)
-> > >>> +{
-> > >>> +     u64 counter_value, sample_period;
-> > >>> +
-> > >>> +     if (pmc->perf_event &&
-> > >>
-> > >> We need to incr pmc->counter whether it has a perf_event or not.
-> > >>
-> > >>> +         pmc->perf_event->attr.type == PERF_TYPE_HARDWARE &&
-> > >>
-> > >> We need to cover PERF_TYPE_RAW as well, for example,
-> > >> it has the basic bits for "{ 0xc0, 0x00, PERF_COUNT_HW_INSTRUCTIONS },"
-> > >> plus HSW_IN_TX or ARCH_PERFMON_EVENTSEL_EDGE stuff.
-> > >>
-> > >> We just need to focus on checking the select and umask bits:
-> > >
-> > > [What follows applies only to Intel CPUs. I haven't looked at AMD's
-> > > PMU implementation yet.]
-> >
-> > x86 has the same bit definition and semantics on at least the select and umask bits.
->
-> Yes, but AMD supports 12 bits of event selector. AMD also has the
-> HG_ONLY bits, which affect whether or not to count the event based on
-> context.
+perf_hpp__column_unregister removes an entry from a list but doesn't
+free the memory causing a memory leak spotted by leak sanitizer. Add the
+free while at the same time reducing the scope of the function to
+static.
 
-It looks like we already have an issue with event selector truncation
-on the AMD side. It's not clear from the APM if AMD has always had a
-12-bit event selector field, but it's 12 bits now. Milan, for example,
-has at least 6 different events with selectors > 255. I don't see how
-a guest could monitor those events with the existing KVM
-implementation.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/ui/hist.c   | 28 ++++++++++++++--------------
+ tools/perf/util/hist.h |  1 -
+ 2 files changed, 14 insertions(+), 15 deletions(-)
+
+diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
+index c1f24d004852..5075ecead5f3 100644
+--- a/tools/perf/ui/hist.c
++++ b/tools/perf/ui/hist.c
+@@ -535,6 +535,18 @@ struct perf_hpp_list perf_hpp_list = {
+ #undef __HPP_SORT_ACC_FN
+ #undef __HPP_SORT_RAW_FN
+ 
++static void fmt_free(struct perf_hpp_fmt *fmt)
++{
++	/*
++	 * At this point fmt should be completely
++	 * unhooked, if not it's a bug.
++	 */
++	BUG_ON(!list_empty(&fmt->list));
++	BUG_ON(!list_empty(&fmt->sort_list));
++
++	if (fmt->free)
++		fmt->free(fmt);
++}
+ 
+ void perf_hpp__init(void)
+ {
+@@ -598,9 +610,10 @@ void perf_hpp_list__prepend_sort_field(struct perf_hpp_list *list,
+ 	list_add(&format->sort_list, &list->sorts);
+ }
+ 
+-void perf_hpp__column_unregister(struct perf_hpp_fmt *format)
++static void perf_hpp__column_unregister(struct perf_hpp_fmt *format)
+ {
+ 	list_del_init(&format->list);
++	fmt_free(format);
+ }
+ 
+ void perf_hpp__cancel_cumulate(void)
+@@ -672,19 +685,6 @@ void perf_hpp__append_sort_keys(struct perf_hpp_list *list)
+ }
+ 
+ 
+-static void fmt_free(struct perf_hpp_fmt *fmt)
+-{
+-	/*
+-	 * At this point fmt should be completely
+-	 * unhooked, if not it's a bug.
+-	 */
+-	BUG_ON(!list_empty(&fmt->list));
+-	BUG_ON(!list_empty(&fmt->sort_list));
+-
+-	if (fmt->free)
+-		fmt->free(fmt);
+-}
+-
+ void perf_hpp__reset_output_field(struct perf_hpp_list *list)
+ {
+ 	struct perf_hpp_fmt *fmt, *tmp;
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index 5343b62476e6..621f35ae1efa 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -369,7 +369,6 @@ enum {
+ };
+ 
+ void perf_hpp__init(void);
+-void perf_hpp__column_unregister(struct perf_hpp_fmt *format);
+ void perf_hpp__cancel_cumulate(void);
+ void perf_hpp__setup_output_field(struct perf_hpp_list *list);
+ void perf_hpp__reset_output_field(struct perf_hpp_list *list);
+-- 
+2.34.0.rc1.387.gb447b232ab-goog
+
