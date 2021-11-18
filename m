@@ -2,285 +2,228 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD24C4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 14:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3793C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 16:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C6C361414
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 14:19:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9F1561391
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 16:51:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232103AbhKROWU (ORCPT
+        id S229647AbhKRQyy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 Nov 2021 09:22:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41420 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232009AbhKROWT (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 Nov 2021 09:22:19 -0500
-Received: from mail-qv1-xf33.google.com (mail-qv1-xf33.google.com [IPv6:2607:f8b0:4864:20::f33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26749C061570;
-        Thu, 18 Nov 2021 06:19:19 -0800 (PST)
-Received: by mail-qv1-xf33.google.com with SMTP id i13so4665524qvm.1;
-        Thu, 18 Nov 2021 06:19:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e6eAxrQg08U61GwOYJ6FpVD9sNYF+r9lJrh7l4b1WNE=;
-        b=ceQLeWGFJlX01qZKM0k8jv8h/NV/ImHyioYkbmAt3d5LnHO1Pgd1K5ENEamypIsbeM
-         dl7Pk6S1eDhQr70u1reiTESUSjldgDV8OK6VKS1LB2Ec9tLs78+TeVoAT6l5kfRR5cWy
-         Uzn5r7Oyf7lf4C72vEcBPTUPRGaeKzd53YEVRtFlyThGBN+6ciYt3ABHGjTYVvBg6S6T
-         LuPqtSWYF2oGzPzvtf3btc+hajGp7n1Vy3Oxbq5FWO3RacQlS0qS14WaGCjAT0d+vdUm
-         uVei/f5SZJ0S5dDKWGRrRB8L1ewiBrJDvDZ6AThxrQMp3r6mfBCNDA1NdpN02tmNNoO/
-         Dn9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e6eAxrQg08U61GwOYJ6FpVD9sNYF+r9lJrh7l4b1WNE=;
-        b=tmVu+rBgKGWQK0ZVXVVERW7pc9HaQn0M0L5zI2bUZmQEMf1va2FuI6Wio14UQeIlDM
-         IXl+IeNvfGov6pI+J1RAaS/Ih3wbmbPTrYopizyRzS+0mYKkYAnnwoJ2cyCCls1SNTEs
-         O2KgDD7wXIVh8GWSfeyQHoyOAp4hl0i+9/UIUqym7Gm43vkQHcQNf2gAqLvVteDMf/1R
-         yoKzG1yi8eNLKSNFGA31GsPW7hlGVvoIgHFc57ufpVWBA20HIh3ms+/J73Uz2KkLrdyb
-         BoRYdKqakwfUWepbVPTLNNNhjOdzDudD6oJqWvoHkEs8leUQZ7N6ggt7OZi9r++uQMGf
-         DF3g==
-X-Gm-Message-State: AOAM5327L6CX8BbApQB/NWPwWEJP+HVPjvn8s8PzA2JpF8JSi/fKciIs
-        ZWvLkSfeRcaz007OE44tSM1caQweiatc4JOX9uQ=
-X-Google-Smtp-Source: ABdhPJz4dvN9TbvidJ1IREL08Pf8NNt1u3tGdxzzmc1QnHnlHcrTa+cHIEZ6g53Ci2pGTfQBeJENQHyAu6T8AQ7SC6M=
-X-Received: by 2002:ad4:5dea:: with SMTP id jn10mr64653681qvb.17.1637245158273;
- Thu, 18 Nov 2021 06:19:18 -0800 (PST)
+        Thu, 18 Nov 2021 11:54:54 -0500
+Received: from mail-dm6nam11on2071.outbound.protection.outlook.com ([40.107.223.71]:20584
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229580AbhKRQyx (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 18 Nov 2021 11:54:53 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bFHXsHtLFcBX1vnEJbgu/QNs9VdDiJRV80DRTTZB8Hh30/rio3TR4+WIPRE7YosWMWPCXNqszY2n9m9ukaqEQaMGxAeosbAmBQsXrLnTf0x8ENQ88q7w11whfzJsML2GtKRiqnW/0Sy7DBM0E7gvfplapdnx2GD4af1SDJEeD2gZ1zFt7OaYpIY7McZHMhVElbpQ1bOzFbF1S7qeEx6b6dvwukmuvljNasQn6UIfxmJzmntk/dpUIiXFICIa+TcyxySBJcKUWKH4LePLk04HliL6qbD55mqEN0RTTl7yGvNfFtCcmtxYsHJr5lZ29OfvJ1OPn3W1F96i/xQFTVEMNw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vn0OkTalGiRwo+Fm+XY7vWoxG7dC3OZDqYa52IwOF2Q=;
+ b=kCsb1mrJ/f0rZGiWBPwdZtTrELscu9/5XILeZuG5twXPzjysULGPqa1n0/roEP1j8MqqkkPfBlsbmIquuCcUnl3+/x9kNNIfWrb/OttEK7R0HIbDIJyRvkaz2NosTIHPhYLiIwsmvCpWzzJUokY9+41/9LMqy0udb5pTIJli4ORY9x9m34a/ojWLswrNYvf7RK63iKd/o0/ZDEZquJUbLqtW3Vd3KaGHRhP2FPUWEg+m6dMkLSdu1L/SsIZgGnlyvTPyHvRZ8Mo8JAJGbJ5entXoNx6zQxWGLdiQKlrvz6RBXSa3OH8EKuGWDtZGAFlYdIDvi1ox3Wf0JYu5ZD88pg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vn0OkTalGiRwo+Fm+XY7vWoxG7dC3OZDqYa52IwOF2Q=;
+ b=gfArEf/1Nh1EPcwFYqiyYFbx0TYgNbMdJD8LX5lBNNPt4HlyhtnWoNxNx0X5aS5CrDhyCSeqvS4yZ6ktcoM+2hbUb9j/dnglhv57EBThlEpXPzTwlafUZwGBqA+B7g8U9wqhd7Pw1vNrm5oKFwos49otHzYwuQX5EeWzcbakOFw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BN8PR12MB3505.namprd12.prod.outlook.com (2603:10b6:408:69::17)
+ by BN8PR12MB3011.namprd12.prod.outlook.com (2603:10b6:408:4a::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.19; Thu, 18 Nov
+ 2021 16:51:50 +0000
+Received: from BN8PR12MB3505.namprd12.prod.outlook.com
+ ([fe80::704c:60ed:36f:4e4c]) by BN8PR12MB3505.namprd12.prod.outlook.com
+ ([fe80::704c:60ed:36f:4e4c%7]) with mapi id 15.20.4713.022; Thu, 18 Nov 2021
+ 16:51:49 +0000
+Subject: Re: [RFC PATCH] tools/perf/x86: Use alternative format for AMD raw
+ events
+To:     Sandipan Das <sandipan.das@amd.com>
+Cc:     ravi.bangoria@amd.com, ananth.narayan@amd.com, rrichter@amd.com,
+        linux-perf-users@vger.kernel.org, namhyung@kernel.org,
+        alexander.shishkin@linux.intel.com, mark.rutland@arm.com,
+        kajoljain <kjain@linux.ibm.com>, Jiri Olsa <jolsa@redhat.com>,
+        acme@kernel.org
+References: <20211111125646.581021-1-sandipan.das@amd.com>
+ <YZE8SDkzq0OMcmhS@krava> <9dc5cb10-2faf-a17b-ad4b-a22dbe688209@amd.com>
+ <bdbd0a4b-6221-ed90-0882-47248112ed3d@linux.ibm.com>
+ <301c0693-f982-1769-6e3f-8b77a4201a69@amd.com>
+ <783c4cbc-667c-b6d0-fb05-5250e444d9b2@amd.com>
+From:   Kim Phillips <kim.phillips@amd.com>
+Organization: AMD
+Message-ID: <51cff547-4f13-bfa2-f977-75d51f0ce2ae@amd.com>
+Date:   Thu, 18 Nov 2021 10:51:45 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
+In-Reply-To: <783c4cbc-667c-b6d0-fb05-5250e444d9b2@amd.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BL1PR13CA0198.namprd13.prod.outlook.com
+ (2603:10b6:208:2be::23) To BN8PR12MB3505.namprd12.prod.outlook.com
+ (2603:10b6:408:69::17)
 MIME-Version: 1.0
-References: <20211101060419.4682-1-laoar.shao@gmail.com> <20211101060419.4682-9-laoar.shao@gmail.com>
- <YZUSJQqDeY06nBsB@kernel.org>
-In-Reply-To: <YZUSJQqDeY06nBsB@kernel.org>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Thu, 18 Nov 2021 22:18:42 +0800
-Message-ID: <CALOAHbC1Cn7RA_X5TrKQb9nmKMxuinfh+Z9j51yMoaSBPx3DuA@mail.gmail.com>
-Subject: Re: [PATCH v7 08/11] tools/perf/test: make perf test adopt to task
- comm size change
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Qiang Zhang <qiang.zhang@windriver.com>,
-        robdclark <robdclark@chromium.org>,
-        christian <christian@brauner.io>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>, Martin Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        mike.marciniszyn@cornelisnetworks.com, dledford@redhat.com,
-        jgg@ziepe.ca, linux-rdma@vger.kernel.org,
-        netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel test robot <oliver.sang@intel.com>,
-        kbuild test robot <lkp@intel.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Received: from [IPv6:2603:8080:1540:87c:fedf:2f0f:c0e6:d56d] (2603:8080:1540:87c:fedf:2f0f:c0e6:d56d) by BL1PR13CA0198.namprd13.prod.outlook.com (2603:10b6:208:2be::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.18 via Frontend Transport; Thu, 18 Nov 2021 16:51:47 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f89b319e-047f-4e45-9a12-08d9aab3b6ca
+X-MS-TrafficTypeDiagnostic: BN8PR12MB3011:
+X-Microsoft-Antispam-PRVS: <BN8PR12MB3011B85F75B2C62B7BFFAAB4879B9@BN8PR12MB3011.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: sZGvtHZ++DXGAMR4++48PpfaIANWydOGMTJ8WD4mNV85uvNq+FfFUTgzNiLzR9vQ4wQ1s7asPAPDo/8D1FIuWwBtgtXLq/cYkKVCtqGyvbV+hYK3P+G10q6zC+bWln3V2UMuKQnQ4wxGAQhjF9jnQLzdR2BiTjhTzacuJySKZx5GujPol6Zgbz5TC8cvQ5o8p8NQt1/EEv9JtweI5Ndykb1fbxy1BggqK/2YQJX08ZXkWHBtZ1op0nPBf6O4saDGGrwgb7boq5uhQAT3oLa9wXmu/GMvI99UdgB8x9tBBLp5xPpSaeIdDpULvKzMwBIARfdxMEnAqOMC0etoMXJ5pVWJi2jC5reZYyb+EzK2sayOe+xRboQ3JLUErvEGCi9WjIC9/E8B9BLPy/2L5yidwnzbogAEMrGoSR+Ek25Ti5IgXExUcNYnVS8rktfcEPbupUvc70MZntBKFGOz3Pw0c+Z5ZVd+wsmc+jki3wjyuOESuK+FzGbOJad1jBLGbFCdhQsLJymB9CQc3kyXsBXm+dbMf3Jcv1vzFpuiRv/wv79HjXqdwHYRDqIcZ8aRqVf/UvbQmUIzY/KBvhqISqUhOR+uFamaXd0PWs/YqNwijbXurf6FQueCqdhJKS2FqKcKqc0fCaQXwr/gp41v0YOr0hb9C9XrfttJIgAFJhXPvSwNgUua606Jlu397959Y7AQyEjP57aPfJiS8GEaLRa+rNH1K0bxjri+VB03yGP5trw=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3505.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(8936002)(53546011)(38100700002)(6486002)(2616005)(6636002)(44832011)(37006003)(508600001)(66946007)(54906003)(83380400001)(8676002)(2906002)(66556008)(6862004)(36756003)(4326008)(86362001)(31696002)(36916002)(31686004)(5660300002)(186003)(316002)(66476007)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bENMK1dtdmtSK2YzOThLYVlFOUFrU1ZmRWtTQVlPVW1LYUJ6Vmw4cXhuOE43?=
+ =?utf-8?B?R2czUHV6QS9pVW94NXBsNzAxb1hYSUVkTHQ4VWdpUXJzYThXWVk1cXlYKzNC?=
+ =?utf-8?B?Qy9ySGoxTDJ2WEFuR21vVG9tTnppNGJwaXFyUUk0NmNUdG0zSHlKYVJKRTFB?=
+ =?utf-8?B?OFdydy9GaWZKSDFXTUhTaUFYbmZ2R0JBajN4ZHloSUVLaHFYWUhwVlRFVHg4?=
+ =?utf-8?B?aHlrK1BKL2JmSUNWU1FFNk1GZWFqdTYxYktpeVFCaXR5TFNXZXBTWmg1d2RD?=
+ =?utf-8?B?bUt1MmRkZU9wSTdFUlVMOG9PTVk1UUd4NitZVDZJSFU5ek9lSFNSYUpvRnVY?=
+ =?utf-8?B?OVNodFNIbnlkalMvRlpkMVVoNC9yVWl5dHJoTVRhMHZ6c0d5OTFpUDJMazJB?=
+ =?utf-8?B?eWh1YWpEeCtPWEU2M2MxOHAyQ3VZeG9CU3BKbTBxOHBGNDRMVFJOR0tTb2Jk?=
+ =?utf-8?B?bHF5ZGxkMitpNzQ2K0VTL0ZnZXhWd2NmV3RSNnRJRU54ZXZoYzBJM3RXMWlh?=
+ =?utf-8?B?Q0xIRlhGdDNXVXdRUUlRWjBqM1FCVjFzOVNHczVZV01qTFd0QVB5RzM3dWky?=
+ =?utf-8?B?Q2Y1NjhyUFM3a1dIY2Q4N3NieEhQNHJqeTZ5N2paSENsd3VZcndicndLek9p?=
+ =?utf-8?B?NzhOOXZlQk5mWjNSTU1CRmVCN1loQXZvNStoeUJDTC9KMG9GZFBoaFcvZkZs?=
+ =?utf-8?B?cUxOV080d2cyMFE0WDE0Y2RDdnN4cnpuUUxqSjdOQjZSQnVYMWdSNVRMRG5t?=
+ =?utf-8?B?cC9HVUxrZjRMdTJTazM4czJhTlJqYzlyYjFPbzkxR24wMnFoNHZWSmlINmdX?=
+ =?utf-8?B?REQ4TUNSSmxPdkhCYnJnWU10QzJ2THRXWHlKU2lWRFFIdUplUnIrdkJvNkdN?=
+ =?utf-8?B?Z2FDS1h6WUVydlBHbjdBNHoxRWJyQjRpU0szTCtJNUlOaUx3TlpXcEtzK284?=
+ =?utf-8?B?d3BYZHB3ek9sNUI3ZHJGU3lnb1hQNmNrUkRkSkl5WWNSSzhMYmpqeXdZYm44?=
+ =?utf-8?B?cFVDbnREUUVDL0dvMzBPL0c1b1ZZQUxDS1orYmQzdDlDc2ViUm0xUEpOK2tk?=
+ =?utf-8?B?OEJBcjV6QVNwYnh6Q0VpQllDZXQ1aWlOZGV2cXV3RXI3ZHNFZTVzMjZBRUt6?=
+ =?utf-8?B?ZDNRdVM1MEhSdDJnWGFkV0VBYVRUVW9xaTdMSTJRQktQWFZ4SGJ4RzN3VWk1?=
+ =?utf-8?B?TmZ3Tm0rNmNKamtXK0VYM1Z6dUZoS1Z6bjhBY0xnZ09pSUJUQmpRd2V0WFZq?=
+ =?utf-8?B?eTNLL3lHTkFhV1ZLUUNTTzZHRFljbkFMOGloNkJidm5iR3Q4OC9kclNQdUU1?=
+ =?utf-8?B?WENXenVnQzhUZnc1cUVaVW9DTkJaSkhvdUtoVG4wY3Fna2xIYTVabzhva1Rx?=
+ =?utf-8?B?QXN5N2F1dFVPU01HR1BIQ3hTMDhhMk55dnkzTDh3Ni8vU292S0NPRmN5R01k?=
+ =?utf-8?B?emZsdVM4b1Izbk1mQXF2Z3l6YVA0MWdZZ0c4c0ZMNnhFWFF2Z3REWDdDdVFm?=
+ =?utf-8?B?emFaTXQ5VEg2REtNV04xdXhrR1dhNTBYOVV2NTFaSU54TlNScnkzczc5aThX?=
+ =?utf-8?B?Y2ZwLzRycHJDZ2RvdzY4RE9KOGoxby8yL0RUT09HcnhpQ3h6a0hLbEhXd3BU?=
+ =?utf-8?B?VCs3dkdIbGxsWVZ3b3dpOW1ZSE00cmdEdnoxNWNsYURYZHJjWEt5a045bFJG?=
+ =?utf-8?B?dlVaVDVwSzJOeXZkU0tGTU81R2QyQ29mc083OE1ic0psa29vN2xnNG01SlhG?=
+ =?utf-8?B?YUlsck5tb0J1cEtLdVVZWmlKWTBUSzhLUm5tR0ZlMG9SeUhjVGIyUnYwcUdy?=
+ =?utf-8?B?QTBQZXM3dHppR0ZVVGg4QVd0RUowaWk0R1k2UTVNNGFXdGQ0d0NQMC9BZEVk?=
+ =?utf-8?B?ekJTa0xWNUI0ZlE1VU5aL1BtRWoycXNFTzRHUFZIK3A5ZXVmTmVjbWhqekto?=
+ =?utf-8?B?WlNsWWxnWFZrYkpVYTJLWkMvaTF3MEh5eW1JWUtWaFFQY3VBSm9xZndlMVJs?=
+ =?utf-8?B?cnlNcmtydHBjSU5CNlZEb1EwdkZTTXVWZ2h6S3lZUHNqdWM4UEdya0pnYUcr?=
+ =?utf-8?B?Q1ppS1lXQUQ3ZjRpaUplMjBaVjVRakpJZ2pLQ3dROEMwUUR3UDMxUC9hMFNV?=
+ =?utf-8?B?b0lUUlQxcHE5N05GS2ZDSjBBOHJtVXhoc3BGTml6WXQrMkxWRExITkxXUngv?=
+ =?utf-8?B?ZzMrSlpmT0s4NUF5TmhOeFRtU3JzdXpsZlFXMmFHZzR2Qjltc2tEdkV0ZEI3?=
+ =?utf-8?Q?E/PSzstwTAH3kDybXw64pZxD7LkmyYGbB2X7w3UGdI=3D?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f89b319e-047f-4e45-9a12-08d9aab3b6ca
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3505.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2021 16:51:49.5413
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: d0ECM3iONtNg3l7s/sld40ldruC0UEosK/yvRWRKoCxECcyy4ge2/pJa4CX+Knaq1rTNUJeEsyBMcqIQjmWaUQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3011
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Nov 17, 2021 at 10:31 PM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
->
-> Em Mon, Nov 01, 2021 at 06:04:16AM +0000, Yafang Shao escreveu:
-> > kernel test robot reported a perf-test failure after I extended task comm
-> > size from 16 to 24. The failure as follows,
-> >
-> > 2021-10-13 18:00:46 sudo /usr/src/perf_selftests-x86_64-rhel-8.3-317419b91ef4eff4e2f046088201e4dc4065caa0/tools/perf/perf test 15
-> > 15: Parse sched tracepoints fields                                  : FAILED!
-> >
-> > The reason is perf-test requires a fixed-size task comm. If we extend
-> > task comm size to 24, it will not equil with the required size 16 in perf
-> > test.
-> >
-> > After some analyzation, I found perf itself can adopt to the size
-> > change, for example, below is the output of perf-sched after I extend
-> > comm size to 24 -
-> >
-> > task    614 (            kthreadd:        84), nr_events: 1
-> > task    615 (             systemd:       843), nr_events: 1
-> > task    616 (     networkd-dispat:      1026), nr_events: 1
-> > task    617 (             systemd:       846), nr_events: 1
-> >
-> > $ cat /proc/843/comm
-> > networkd-dispatcher
-> >
-> > The task comm can be displayed correctly as expected.
-> >
-> > Replace old hard-coded 16 with the new one can fix the warning, but we'd
-> > better make the test accept both old and new sizes, then it can be
-> > backward compatibility.
-> >
-> > After this patch, the perf-test succeeds no matter task comm is 16 or
-> > 24 -
-> >
-> > 15: Parse sched tracepoints fields                                  : Ok
-> >
-> > This patch is a preparation for the followup patch.
-> >
-> > Reported-by: kernel test robot <oliver.sang@intel.com>
-> > Suggested-by: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-> > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> > Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-> > Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-> > Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > Cc: Al Viro <viro@zeniv.linux.org.uk>
-> > Cc: Kees Cook <keescook@chromium.org>
-> > Cc: Petr Mladek <pmladek@suse.com>
-> > ---
-> >  tools/include/linux/sched.h       | 11 +++++++++++
-> >  tools/perf/tests/evsel-tp-sched.c | 26 ++++++++++++++++++++------
-> >  2 files changed, 31 insertions(+), 6 deletions(-)
-> >  create mode 100644 tools/include/linux/sched.h
-> >
-> > diff --git a/tools/include/linux/sched.h b/tools/include/linux/sched.h
-> > new file mode 100644
-> > index 000000000000..0d575afd7f43
-> > --- /dev/null
-> > +++ b/tools/include/linux/sched.h
-> > @@ -0,0 +1,11 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#ifndef _TOOLS_LINUX_SCHED_H
-> > +#define _TOOLS_LINUX_SCHED_H
-> > +
-> > +/* Keep both length for backward compatibility */
-> > +enum {
-> > +     TASK_COMM_LEN_16 = 16,
-> > +     TASK_COMM_LEN = 24,
-> > +};
-> > +
->
-> I don't think this is a good idea, to have it in tools/include/linux/,
-> we have /usr/include/linux/sched.h, this may end up confusing the build
-> at some point as your proposal is for a trimmed down header while what
-> is in /usr/include/linux/sched.h doesn't have just this.
->
-> But since we're using enums for this, we can't check for it with:
->
-> #ifdef TASK_COMM_LEN_16
-> #define TASK_COMM_LEN_16 16
-> #endif
->
-> ditto for TASK_COMM_LEN and be future proof, so I'd say just use
-> hardcoded values in tools/perf/tests/evsel-tp-sched.c?
->
+On 11/18/21 1:28 AM, Sandipan Das wrote:
+> 
+> On 11/16/2021 9:31 PM, Kim Phillips wrote:
+>> On 11/15/21 10:38 PM, kajoljain wrote:
+>>> On 11/15/21 3:28 PM, Sandipan Das wrote:
+>>>>
+>>>> On 11/14/2021 10:11 PM, Jiri Olsa wrote:
+>>>>> good question.. I see raw events as a way to put to config whatever
+>>>>> the user wants and IMO adding changes/quirks that silently changes
+>>>>> config could create confusion and angry users ;-)
+>>>>>
+>>>
+>>> I agree, making quirks in config will only going to confuse users as
+>>> It's against the encodings we had in
+>>> /sys/bus/event_source/devices/<pmu>/format/*
+>>>
+>>>>> I'd think that if user is composing/using raw events then using
+>>>>> directly r100001f8e is not such a big deal?
+>>>>>
+>>>>
+>>>> Sure. Some of the confusion may be due to the fact that the man pages
+>>>> for perf-{stat,record,top} state that raw events are "eventsel+umask".
+>>>> While that is technically true, it does not describe the encoding
+>>>> scheme (/sys/bus/event_source/devices/<pmu>/format/*)
+>>>>
+>>>> Would another option be to update the man pages with a reference to
+>>>> these sysfs files when describing raw events?
+>>>>
+>>>> Something like:
+>>>>
+>>>> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+>>>> index 2d7df8703cf2..5dfdfeba594b 100644
+>>>> --- a/tools/perf/Documentation/perf-record.txt
+>>>> +++ b/tools/perf/Documentation/perf-record.txt
+>>>> @@ -30,8 +30,10 @@ OPTIONS
+>>>>
+>>>>            - a symbolic event name        (use 'perf list' to list all events)
+>>>>
+>>>> -        - a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
+>>>> -         hexadecimal event descriptor.
+>>>> +        - a raw PMU event (eventsel+umask) in the form of rN..NN where N..NN
+>>>> +          is a hexadecimal value representing the raw encoding with the layout
+>>>> +          of the corresponding event control register as defined by entries in
+>>>> +          /sys/bus/event_sources/devices/<pmu>/format/*
+>>>
+>>> Do we need to specify (eventsel+umask) in the raw event description? As
+>>> the format/fields totally depend on PMU and umask name convention is
+>>> specific to one arch.
+>>>
+>>> Can we just update it to:
+>>>
+>>> - a raw PMU event in the form of rNNN where NNN is a hexadecimal value
+>>> representing the raw encoding, with the layout of the corresponding
+>>> event control register as defined by entries in
+>>> /sys/bus/event_sources/devices/<pmu>/format/*
+>>
+>> The r notation is for the cpu pmu only.
+>>
+>> The triple-digit 'NNN' is what's most misleading for 12-bit
+>> event implementation users, such as AMD's core PMUs.  It
+>> tells users 'see your processor's documentation's triple-
+>> hex-digit PMCx18e event?  All you need to do is make that
+>> "-e r18e" on the perf stat/record command line.
+>>
+>> So all notions of what size of parameter 'r' takes, esp. 'NNN'
+>> should be removed IMO.  Perhaps an AMD/12-bit-specific
+>> example can be provided.
+>>
+>> I had thought that the shorthand command line r spec alone
+>> could be modified to be smarter and more accommodating
+>> for conventional rUUEE users migrating to AMD/12-bit,
+>> which AFAICT is not what this patch does.  I think it
+>> modifies even the  cpu/config=0xNNNNN/ specification,
+>> which, granted, is bad.
+>>
+> 
+> Sorry I didn't know that events could be programmed with "config=...".
+> Thanks for pointing that out. For basic '-e r...' usage, modifying
+> parse_events_add_numeric() and leaving parse_events_add_pmu() as is
+> should take care of it.
+> 
+> I thought about using the same fixup for the pmu format i.e. cpu/r0xNNNNN/
+> but as you rightly mentioned, it breaks when using cpu/config=0xNNNNN/.
 
-Hi Arnaldo,
+I think we'd be breaking compatibility with changing -r,
+even if the two (0x100 and 0x200) event bits used for most
+three-digit AMD events are being masked.
 
-Thanks for the review.
-This perf tests code won't be changed in the latest version as we
-don't want to extend comm size any more, see also
-https://lore.kernel.org/lkml/20211108083840.4627-1-laoar.shao@gmail.com/
-The hard-coded 16 in tools/perf/tests/evsel-tp-sched.c is kept as-is.
+Shall we just add an AMD-specific real-world 0xE0000UUEE example
+to the {stat,record} documentation to clear the mud?
 
->
-> > +#endif  /* _TOOLS_LINUX_SCHED_H */
-> > diff --git a/tools/perf/tests/evsel-tp-sched.c b/tools/perf/tests/evsel-tp-sched.c
-> > index f9e34bd26cf3..029f2a8c8e51 100644
-> > --- a/tools/perf/tests/evsel-tp-sched.c
-> > +++ b/tools/perf/tests/evsel-tp-sched.c
-> > @@ -1,11 +1,13 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> >  #include <linux/err.h>
-> > +#include <linux/sched.h>
-> >  #include <traceevent/event-parse.h>
-> >  #include "evsel.h"
-> >  #include "tests.h"
-> >  #include "debug.h"
-> >
-> > -static int evsel__test_field(struct evsel *evsel, const char *name, int size, bool should_be_signed)
-> > +static int evsel__test_field_alt(struct evsel *evsel, const char *name,
-> > +                              int size, int alternate_size, bool should_be_signed)
-> >  {
-> >       struct tep_format_field *field = evsel__field(evsel, name);
-> >       int is_signed;
-> > @@ -23,15 +25,24 @@ static int evsel__test_field(struct evsel *evsel, const char *name, int size, bo
-> >               ret = -1;
-> >       }
-> >
-> > -     if (field->size != size) {
-> > -             pr_debug("%s: \"%s\" size (%d) should be %d!\n",
-> > +     if (field->size != size && field->size != alternate_size) {
-> > +             pr_debug("%s: \"%s\" size (%d) should be %d",
-> >                        evsel->name, name, field->size, size);
-> > +             if (alternate_size > 0)
-> > +                     pr_debug(" or %d", alternate_size);
-> > +             pr_debug("!\n");
-> >               ret = -1;
-> >       }
-> >
-> >       return ret;
-> >  }
-> >
-> > +static int evsel__test_field(struct evsel *evsel, const char *name,
-> > +                          int size, bool should_be_signed)
-> > +{
-> > +     return evsel__test_field_alt(evsel, name, size, -1, should_be_signed);
-> > +}
-> > +
-> >  int test__perf_evsel__tp_sched_test(struct test *test __maybe_unused, int subtest __maybe_unused)
-> >  {
-> >       struct evsel *evsel = evsel__newtp("sched", "sched_switch");
-> > @@ -42,7 +53,8 @@ int test__perf_evsel__tp_sched_test(struct test *test __maybe_unused, int subtes
-> >               return -1;
-> >       }
-> >
-> > -     if (evsel__test_field(evsel, "prev_comm", 16, false))
-> > +     if (evsel__test_field_alt(evsel, "prev_comm", TASK_COMM_LEN_16,
-> > +                               TASK_COMM_LEN, false))
-> >               ret = -1;
-> >
-> >       if (evsel__test_field(evsel, "prev_pid", 4, true))
-> > @@ -54,7 +66,8 @@ int test__perf_evsel__tp_sched_test(struct test *test __maybe_unused, int subtes
-> >       if (evsel__test_field(evsel, "prev_state", sizeof(long), true))
-> >               ret = -1;
-> >
-> > -     if (evsel__test_field(evsel, "next_comm", 16, false))
-> > +     if (evsel__test_field_alt(evsel, "next_comm", TASK_COMM_LEN_16,
-> > +                               TASK_COMM_LEN, false))
-> >               ret = -1;
-> >
-> >       if (evsel__test_field(evsel, "next_pid", 4, true))
-> > @@ -72,7 +85,8 @@ int test__perf_evsel__tp_sched_test(struct test *test __maybe_unused, int subtes
-> >               return -1;
-> >       }
-> >
-> > -     if (evsel__test_field(evsel, "comm", 16, false))
-> > +     if (evsel__test_field_alt(evsel, "comm", TASK_COMM_LEN_16,
-> > +                               TASK_COMM_LEN, false))
-> >               ret = -1;
-> >
-> >       if (evsel__test_field(evsel, "pid", 4, true))
-> > --
-> > 2.17.1
->
-> --
->
-> - Arnaldo
+Thanks,
 
-
-
--- 
-Thanks
-Yafang
+Kim
