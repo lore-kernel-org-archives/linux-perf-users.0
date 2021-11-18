@@ -2,57 +2,57 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FAEC433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 19:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1D1C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 20:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D02361279
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 19:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BAB561ACE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 20:17:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232252AbhKRTkU (ORCPT
+        id S231833AbhKRUUg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 Nov 2021 14:40:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59098 "EHLO
+        Thu, 18 Nov 2021 15:20:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231215AbhKRTkT (ORCPT
+        with ESMTP id S231522AbhKRUUg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 Nov 2021 14:40:19 -0500
-Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 904F0C061574
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Nov 2021 11:37:19 -0800 (PST)
-Received: by mail-pl1-x649.google.com with SMTP id m15-20020a170902bb8f00b0014382b67873so3444958pls.19
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Nov 2021 11:37:19 -0800 (PST)
+        Thu, 18 Nov 2021 15:20:36 -0500
+Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3447EC06173E
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Nov 2021 12:17:36 -0800 (PST)
+Received: by mail-pj1-x104a.google.com with SMTP id d3-20020a17090a6a4300b001a70e45f34cso3630479pjm.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Nov 2021 12:17:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:message-id:mime-version:subject:from:to:cc;
-        bh=R5/tL/rDWxPQEUOLlylgnRCNYpZbnkH43K1OGrjgMBQ=;
-        b=GZ+2yw4W+dbPb+KsAI3xbbsFG+EC/IJLhoTZ9CrO3c2d/3fTlQUXBnW/UtQizCe2wx
-         t2X5jMJmBKZQdpfFJYegwJgx1RNYOdJLhRST4amEdbnhnRizOf00Nc8Bmq5vYoCL3CPM
-         44Mi8MJyH37svWN8Bvgz0cPrwtlF84wOQWE6XZlChqib1G8MMAaA14XHCdlIyR8bIV54
-         YaWNTZHlzhgHfmxHXLaN4Hzhs07BwApsG8hT49MK7ExrcJwOC9cAsd2CWrfRPmOwdaUZ
-         jEngiJB5T79RhA4VFbO8r2NKDcXQGC/RGXV1Aeo5ELkf+zlSmWmIx9s0hddoAGUraNqL
-         eclA==
+        bh=yvIsiU4fo0PY3oKFjGIIQ+X2k7DatrTvg/7PGB6w3us=;
+        b=PidhYQBy9IPs44X/8FB3GEYdAXP3nJDDI3K3siYRXZ7n9gVt2JhMqQOiqcCogz8AM1
+         MPUQ/Hwggh4jdSwu5h6Wpw9JHzj3yKpZuZ5NzXFk6bHZRN0ioRr2/GXlvmCdILUb4RVo
+         WUcaMVEEuH/jfie2oZtuJH3TZrNT+KkvR7+giD+wu6edC/rGDjk7zVSwaz9mKR7DPnQ2
+         uRpyqTf4eFBhCSISjFITn9wlJ3blx3c2kSRgEJqSEJNVjNIqFf+r3IDvXiXqQcrTOEGL
+         itNsGULC+3/FAPWJdUXxLGfimClG6CTxZ28948M2hVnftfgn5u9/+yOjQ/tYaShr50lV
+         AbTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=R5/tL/rDWxPQEUOLlylgnRCNYpZbnkH43K1OGrjgMBQ=;
-        b=uRYq6kq9eegYwZoxB9n/vFzGfc/mGnnLeNAHi4zI+GJO6s3GfKc+kS9pt9Sd45dNqX
-         fPqRL96ZpVAkXAW5b0GFlEvmVtWx4BZreduXyJP6jnzjwNtd0PPgGmySzZLC3eKhB+4F
-         We1gfIAK+atMXP3KHISsDwWmLFVHIarEZNYTeSF7+6seaF0dQoD0IVEbmDfS/EpDfHdo
-         ZC5EbP/+CrfkoyCzBxXRq+pkUaZkjkIM7WGF/fFDLKV8nEJRQHaMmtPeiu881Miw5Bsj
-         z+V08xzcJpaqYYYYMLpFBn1MlUGp8D09toauC8Jaxoan676lj7T7Sr3PpvDka04VRUIp
-         M0NQ==
-X-Gm-Message-State: AOAM530/VNqNsdQKc7kYhCSeqRSLciZdw/Uza7vJtVnFpIiBGXX/pkqL
-        vfNO7RUHBlcTPZVoyjFU3r3Bi7VjOC6y
-X-Google-Smtp-Source: ABdhPJxyTIPodpBQC30q2dnJ0SXUgdh0ksxpTRbcPgsXkxz7LfVbGKOyJWndsDShbNsNUWNH9Vi3UC+Zbmxu
+        bh=yvIsiU4fo0PY3oKFjGIIQ+X2k7DatrTvg/7PGB6w3us=;
+        b=xMC9IfLWfzm9/E2C0MYZvAu9l9BvY8UyEfkArjbSY6y0P2gHVb4tKR4d059yLn5RXl
+         SD2THILtDrzZF6QGH1y5TgGHHp7+VAOHSCSg4/xJjQTUn7JeMpA57zGlopabZnYzxzP4
+         tRg/ZdYOp+YA82tj6DM0eUyC4NH1tW+kNM73V3URXvW88ldDntLw9B37N9R6QviogYFw
+         jKGChOgkNDEdtOpFbRlHrsQ1xs+CU8k8iHsWP7GDE1hb2dsyLF0JAqFHuwGSgQ/7DD4M
+         +45dzG0BCVjXB7UUMwXlY46jGfw9rEM0tOTzXKAemUfbr7uhcoVaUkKDMcnCpCYynN6t
+         fkWg==
+X-Gm-Message-State: AOAM5336TEI7onMxfyrwGkdbGGkSvTgDqpS+zv9BqwewN3Z0sUE+Y0xz
+        trktNUgJ4zoXTDnR7kiRcP39ONWruaof
+X-Google-Smtp-Source: ABdhPJyYTUhZvjoijd9kXyTauJHLqV071pawmKUqV1uPlP0G2WQjzi3dWrzJzX0hciubliQSkzUtiV2yBz84
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:3908:af20:80e3:e47])
- (user=irogers job=sendgmr) by 2002:a05:6a00:84c:b0:494:6d40:ed76 with SMTP id
- q12-20020a056a00084c00b004946d40ed76mr58534568pfk.65.1637264238666; Thu, 18
- Nov 2021 11:37:18 -0800 (PST)
-Date:   Thu, 18 Nov 2021 11:37:14 -0800
-Message-Id: <20211118193714.2293728-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:6a00:1686:b0:44d:50e:de9e with SMTP id
+ k6-20020a056a00168600b0044d050ede9emr59075424pfc.4.1637266655684; Thu, 18 Nov
+ 2021 12:17:35 -0800 (PST)
+Date:   Thu, 18 Nov 2021 12:17:30 -0800
+Message-Id: <20211118201730.2302927-1-irogers@google.com>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.34.0.rc2.393.gf8c9666880-goog
-Subject: [PATCH] perf map: Fix namespace memory leak
+Subject: [PATCH] perf header: Fix memory leaks
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -69,48 +69,65 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This leak was happening reliably with test "Lookup mmap thread" with
-stack traces like:
-
-Direct leak of 5504 byte(s) in 172 object(s) allocated from:
-    #0 0x7f4685e47987 in __interceptor_calloc
-    #1 0x56063b974c2a in nsinfo__new util/namespaces.c:142
-    #2 0x56063b9781ff in thread__new util/thread.c:70
-    #3 0x56063b944953 in ____machine__findnew_thread util/machine.c:543
-    #4 0x56063b944ac6 in __machine__findnew_thread util/machine.c:574
-    #5 0x56063b944b36 in machine__findnew_thread util/machine.c:584
-    #6 0x56063b94c892 in machine__process_fork_event util/machine.c:1954
-    #7 0x56063b94cc1f in machine__process_event util/machine.c:2019
-    #8 0x56063b894f18 in perf_event__process util/event.c:567
-    #9 0x56063ba17951 in perf_tool__process_synth_event util/synthetic-events.c:65
-    #10 0x56063ba19086 in perf_event__synthesize_fork util/synthetic-events.c:287
-    #11 0x56063ba1c39d in __event__synthesize_thread util/synthetic-events.c:775
-    #12 0x56063ba1cf6f in __perf_event__synthesize_threads util/synthetic-events.c:929
-    #13 0x56063ba1d4ab in perf_event__synthesize_threads util/synthetic-events.c:1000
-    #14 0x56063b821a3d in synth_all tests/mmap-thread-lookup.c:136
-    #15 0x56063b821c86 in mmap_events tests/mmap-thread-lookup.c:174
-    #16 0x56063b8221b7 in test__mmap_thread_lookup tests/mmap-thread-lookup.c:230
-
-The dso->nsinfo is overwritten, but without a nsinfo__put this can leak
-the overwritten nsinfo.
+These leaks were found with leak sanitizer running "perf pipe recording
+and injection test". In pipe mode feat_fd may hold onto an events struct
+that needs freeing. When string features are processed they may
+overwrite an already created string, so free this before the overwrite.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/map.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/header.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 8af693d9678c..ceed8f407bc0 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -192,6 +192,7 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
- 			if (!(prot & PROT_EXEC))
- 				dso__set_loaded(dso);
- 		}
-+		nsinfo__put(dso->nsinfo);
- 		dso->nsinfo = nsi;
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 79cce216727e..e3c1a532d059 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -2321,6 +2321,7 @@ static int perf_header__read_build_ids(struct perf_header *header,
+ #define FEAT_PROCESS_STR_FUN(__feat, __feat_env) \
+ static int process_##__feat(struct feat_fd *ff, void *data __maybe_unused) \
+ {\
++	free(ff->ph->env.__feat_env);		     \
+ 	ff->ph->env.__feat_env = do_read_string(ff); \
+ 	return ff->ph->env.__feat_env ? 0 : -ENOMEM; \
+ }
+@@ -4124,6 +4125,7 @@ int perf_event__process_feature(struct perf_session *session,
+ 	struct perf_record_header_feature *fe = (struct perf_record_header_feature *)event;
+ 	int type = fe->header.type;
+ 	u64 feat = fe->feat_id;
++	int ret = 0;
  
- 		if (build_id__is_defined(bid))
+ 	if (type < 0 || type >= PERF_RECORD_HEADER_MAX) {
+ 		pr_warning("invalid record type %d in pipe-mode\n", type);
+@@ -4141,11 +4143,13 @@ int perf_event__process_feature(struct perf_session *session,
+ 	ff.size = event->header.size - sizeof(*fe);
+ 	ff.ph = &session->header;
+ 
+-	if (feat_ops[feat].process(&ff, NULL))
+-		return -1;
++	if (feat_ops[feat].process(&ff, NULL)) {
++		ret = -1;
++		goto out;
++	}
+ 
+ 	if (!feat_ops[feat].print || !tool->show_feat_hdr)
+-		return 0;
++		goto out;
+ 
+ 	if (!feat_ops[feat].full_only ||
+ 	    tool->show_feat_hdr >= SHOW_FEAT_HEADER_FULL_INFO) {
+@@ -4154,8 +4158,9 @@ int perf_event__process_feature(struct perf_session *session,
+ 		fprintf(stdout, "# %s info available, use -I to display\n",
+ 			feat_ops[feat].name);
+ 	}
+-
+-	return 0;
++out:
++	free_event_desc(ff.events);
++	return ret;
+ }
+ 
+ size_t perf_event__fprintf_event_update(union perf_event *event, FILE *fp)
 -- 
 2.34.0.rc2.393.gf8c9666880-goog
 
