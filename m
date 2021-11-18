@@ -2,168 +2,171 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F13C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 11:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A684C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 13:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD50060FED
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 11:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D1E361B1B
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 13:10:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343989AbhKRLbt (ORCPT
+        id S229519AbhKRNN4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 Nov 2021 06:31:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58302 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343997AbhKRL3p (ORCPT
+        Thu, 18 Nov 2021 08:13:56 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:24330 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S229714AbhKRNNz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 Nov 2021 06:29:45 -0500
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D356C061210;
-        Thu, 18 Nov 2021 03:26:45 -0800 (PST)
-Received: by mail-pg1-x532.google.com with SMTP id p17so5078598pgj.2;
-        Thu, 18 Nov 2021 03:26:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:organization:in-reply-to
-         :content-transfer-encoding;
-        bh=HbcBPjl/CgPhWyR8EGJxFeqoCcz/Im26xERRkTRsJVE=;
-        b=fdcJFKtEEe/N3oiO0PXGJxzCO1DVsRsGaSYGWx3n8JzhRgr7mreSexDUTUIP+GqDaN
-         WCQGE5/EK1heKKPrtoOBr+k0pgvTAD3Pcs/cuv8F+2uv60vaueuSvkKo+nHGiRscaaiB
-         Jsjj5N9jf0TMAlQw78rs+LGHMuFLYPLtpuRJyamDSw3RbGc3Zy0ZZ6nW/ZTXL8ly8LjB
-         sAd0FC8ZMUT3vBXAIL7Vc6TjSDyPpGYnHpJmiNBKD82yeq/AyhoGLtgsqHzQ2E47XQeV
-         U/dBUJ7JPjNLew2V+0wnUxY2+uTLE3O135TvOsVHMUt48jaRIzI8KydES4RzsQiQXDVY
-         m75A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:organization:in-reply-to
-         :content-transfer-encoding;
-        bh=HbcBPjl/CgPhWyR8EGJxFeqoCcz/Im26xERRkTRsJVE=;
-        b=lQktIChqja62rRlHmkzmvB65C6QXz+hA1u9ZwBqhH0MsDWY2KLrjUDuOxdIVAvkpAg
-         kzpPyPxwbVJEkKs9s0nBmiEexRcajF2XG2ErI0fRJG9hAz/X/6QVjhCNUMKUAJoIn1KM
-         tSjQBf6AAqRf0iJyN2mGGeOaLAzMi6zQZQcfrH0I14V2hW+SSt4/gyfbvDG4wAxqe7Vy
-         LJrZqY6JuO4w3Ox6jXHM14qVIuQTX+KKh1TWKn8Z+T6qigTNdk48NgNJdhrXLGTc+WWI
-         QW3dXJ/KKZt6INcaNyADaV/1SOM9WUhZPpx8Aw2jDz1UqE3iGDj17LGaHDs9t2ccmE/6
-         WQOQ==
-X-Gm-Message-State: AOAM532aJR0+e0RuH4Y4UtE8WMFYtjL5lU8ikBige445H1YnVJvLtglj
-        i2CtVBvPd7qTWjVUHkkKAPU=
-X-Google-Smtp-Source: ABdhPJwTpqdmuP41PuWg/EvQku7vKhRdxKEhZbmwiPbBPIEqItBhjdB9bDOGTfrk3JCfMKPbk3A0yw==
-X-Received: by 2002:a05:6a00:a02:b0:47b:f59a:2c80 with SMTP id p2-20020a056a000a0200b0047bf59a2c80mr55672733pfh.41.1637234805021;
-        Thu, 18 Nov 2021 03:26:45 -0800 (PST)
-Received: from [192.168.255.10] ([103.7.29.32])
-        by smtp.gmail.com with ESMTPSA id k129sm2119992pgk.72.2021.11.18.03.26.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Nov 2021 03:26:44 -0800 (PST)
-Message-ID: <92782a36-82ce-a76b-289b-3635f801d4a1@gmail.com>
-Date:   Thu, 18 Nov 2021 19:26:32 +0800
+        Thu, 18 Nov 2021 08:13:55 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1AICMfqW022013;
+        Thu, 18 Nov 2021 13:10:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=tMCS1XwUVl1BKDDgYe0FkgqBtanlugS0urknWgn/Wow=;
+ b=OklhY3S5nFBWEzK3M5QcCz17xAf3ceha2KKGKgBRN8MrNoyBozLg8azg08OVs8LbftZH
+ N9wba5HifEGR2GGQz9xvzjiaIQJT8WG912FRwj81qTlakL602R12txYZXDQW44SXq47U
+ qwniCJZxRThrZZ1SYH0ZDw95nUVj4epRq2/u8WktdbWDQh1ftTppu1v60QUc+PdvyTl9
+ PAbiJLuHP6C8XgNYmZegU505Nn8H4SXa3KcpJOjbp3wokpYZ0i51rjK3SDhxYD2pANO4
+ d+Z0aDW6GcdtHYrGl/8/7PxKPuMvra9nXDV5jjnlu5/yptDen9UPha/E+bLeBeaIcDhO GQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3cdpsks570-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Nov 2021 13:10:31 +0000
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1AICNF01026779;
+        Thu, 18 Nov 2021 13:10:31 GMT
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3cdpsks561-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Nov 2021 13:10:31 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1AID3QCK007459;
+        Thu, 18 Nov 2021 13:05:29 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma06ams.nl.ibm.com with ESMTP id 3ca4mkdw6f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Nov 2021 13:05:29 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1AID5QT56423228
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Nov 2021 13:05:26 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E253A42049;
+        Thu, 18 Nov 2021 13:05:25 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 70A554205C;
+        Thu, 18 Nov 2021 13:05:19 +0000 (GMT)
+Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com.com (unknown [9.43.63.210])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 18 Nov 2021 13:05:19 +0000 (GMT)
+From:   Kajol Jain <kjain@linux.ibm.com>
+To:     bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     acme@kernel.org, peterz@infradead.org, songliubraving@fb.com,
+        daniel@iogearbox.net, andrii@kernel.org, kafai@fb.com, yhs@fb.com,
+        john.fastabend@gmail.com, davem@davemloft.net, kpsingh@kernel.org,
+        hawk@kernel.org, kuba@kernel.org, maddy@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, linux-perf-users@vger.kernel.org,
+        rnsastry@linux.ibm.com, kjain@linux.ibm.com
+Subject: [PATCH v2] bpf: Remove config check to enable bpf support for branch records
+Date:   Thu, 18 Nov 2021 18:35:07 +0530
+Message-Id: <20211118130507.170154-1-kjain@linux.ibm.com>
+X-Mailer: git-send-email 2.27.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: MCevU-shEbSRuNzovsdhbppeKZB9e8_n
+X-Proofpoint-ORIG-GUID: vpgw9Kmdqd1TLSRMqtw29oaGpD0hXakL
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.3.0
-Subject: Re: [PATCH 1/2] KVM: x86: Update vPMCs when retiring instructions
-Content-Language: en-US
-To:     Jim Mattson <jmattson@google.com>
-Cc:     "Paolo Bonzini - Distinguished Engineer (kernel-recipes.org)" 
-        <pbonzini@redhat.com>, Eric Hankland <ehankland@google.com>,
-        kvm@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Peter Zijlstra (Intel OTC, Netherlander)" <peterz@infradead.org>
-References: <20211112235235.1125060-1-jmattson@google.com>
- <20211112235235.1125060-2-jmattson@google.com>
- <fcb9aea5-2cf5-897f-5a3d-054ead555da4@gmail.com>
- <CALMp9eR5oi=ZrrEsZpcAJ7AP-Jo2cLGz9GA=SoTjX--TiG4=sw@mail.gmail.com>
- <afb108ed-a2f3-cb49-d0b4-b1bd6739cdb6@gmail.com>
- <CALMp9eSYvGW=EfuDCyc+fu7gVNnKHmEvFMackYcuZ-sGT8H5uA@mail.gmail.com>
- <CALMp9eTq2NwhB5cq_LknUjJncKHK2xPuQ5vpTaDN_zCDPT_JWw@mail.gmail.com>
-From:   Like Xu <like.xu.linux@gmail.com>
-Organization: Tencent
-In-Reply-To: <CALMp9eTq2NwhB5cq_LknUjJncKHK2xPuQ5vpTaDN_zCDPT_JWw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
+ definitions=2021-11-18_05,2021-11-17_01,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
+ mlxlogscore=999 bulkscore=0 spamscore=0 lowpriorityscore=0 suspectscore=0
+ priorityscore=1501 impostorscore=0 phishscore=0 adultscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2110150000
+ definitions=main-2111180075
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 18/11/2021 11:37 am, Jim Mattson wrote:
-> On Wed, Nov 17, 2021 at 12:01 PM Jim Mattson <jmattson@google.com> wrote:
->>
->> On Tue, Nov 16, 2021 at 7:22 PM Like Xu <like.xu.linux@gmail.com> wrote:
->>>
->>> On 17/11/2021 6:15 am, Jim Mattson wrote:
->>>> On Tue, Nov 16, 2021 at 4:44 AM Like Xu <like.xu.linux@gmail.com> wrote:
->>>>>
->>>>> Hi Jim,
->>>>>
->>>>> On 13/11/2021 7:52 am, Jim Mattson wrote:
->>>>>> When KVM retires a guest instruction through emulation, increment any
->>>>>> vPMCs that are configured to monitor "instructions retired," and
->>>>>> update the sample period of those counters so that they will overflow
->>>>>> at the right time.
->>>>>>
->>>>>> Signed-off-by: Eric Hankland <ehankland@google.com>
->>>>>> [jmattson:
->>>>>>      - Split the code to increment "branch instructions retired" into a
->>>>>>        separate commit.
->>>>>>      - Added 'static' to kvm_pmu_incr_counter() definition.
->>>>>>      - Modified kvm_pmu_incr_counter() to check pmc->perf_event->state ==
->>>>>>        PERF_EVENT_STATE_ACTIVE.
->>>>>> ]
->>>>>> Signed-off-by: Jim Mattson <jmattson@google.com>
->>>>>> Fixes: f5132b01386b ("KVM: Expose a version 2 architectural PMU to a guests")
->>>>>> ---
->>>>>>     arch/x86/kvm/pmu.c | 31 +++++++++++++++++++++++++++++++
->>>>>>     arch/x86/kvm/pmu.h |  1 +
->>>>>>     arch/x86/kvm/x86.c |  3 +++
->>>>>>     3 files changed, 35 insertions(+)
->>>>>>
->>>>>> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
->>>>>> index 09873f6488f7..153c488032a5 100644
->>>>>> --- a/arch/x86/kvm/pmu.c
->>>>>> +++ b/arch/x86/kvm/pmu.c
->>>>>> @@ -490,6 +490,37 @@ void kvm_pmu_destroy(struct kvm_vcpu *vcpu)
->>>>>>         kvm_pmu_reset(vcpu);
->>>>>>     }
->>>>>>
->>>>>> +static void kvm_pmu_incr_counter(struct kvm_pmc *pmc, u64 evt)
->>>>>> +{
->>>>>> +     u64 counter_value, sample_period;
->>>>>> +
->>>>>> +     if (pmc->perf_event &&
->>>>>
->>>>> We need to incr pmc->counter whether it has a perf_event or not.
->>>>>
->>>>>> +         pmc->perf_event->attr.type == PERF_TYPE_HARDWARE &&
->>>>>
->>>>> We need to cover PERF_TYPE_RAW as well, for example,
->>>>> it has the basic bits for "{ 0xc0, 0x00, PERF_COUNT_HW_INSTRUCTIONS },"
->>>>> plus HSW_IN_TX or ARCH_PERFMON_EVENTSEL_EDGE stuff.
->>>>>
->>>>> We just need to focus on checking the select and umask bits:
->>>>
->>>> [What follows applies only to Intel CPUs. I haven't looked at AMD's
->>>> PMU implementation yet.]
->>>
->>> x86 has the same bit definition and semantics on at least the select and umask bits.
->>
->> Yes, but AMD supports 12 bits of event selector. AMD also has the
->> HG_ONLY bits, which affect whether or not to count the event based on
->> context.
-> 
-> It looks like we already have an issue with event selector truncation
-> on the AMD side. It's not clear from the APM if AMD has always had a
-> 12-bit event selector field, but it's 12 bits now. Milan, for example,
-> has at least 6 different events with selectors > 255. I don't see how
-> a guest could monitor those events with the existing KVM
-> implementation.
+Branch data available to bpf programs can be very useful to get
+stack traces out of userspace application.
 
-Yes and I have reproduced the issue on a Milan.
-Thanks for your input, and let me try to fix it.
+Commit fff7b64355ea ("bpf: Add bpf_read_branch_records() helper")
+added bpf support to capture branch records in x86. Enable this feature
+for other architectures as well by removing check specific to x86.
+Incase any platform didn't support branch stack, it will return with
+-EINVAL.
 
-Thanks,
-Like Xu
+Selftest 'perf_branches' result on power9 machine with branch stacks
+support.
+
+Before this patch changes:
+[command]# ./test_progs -t perf_branches
+ #88/1 perf_branches/perf_branches_hw:FAIL
+ #88/2 perf_branches/perf_branches_no_hw:OK
+ #88 perf_branches:FAIL
+Summary: 0/1 PASSED, 0 SKIPPED, 1 FAILED
+
+After this patch changes:
+[command]# ./test_progs -t perf_branches
+ #88/1 perf_branches/perf_branches_hw:OK
+ #88/2 perf_branches/perf_branches_no_hw:OK
+ #88 perf_branches:OK
+Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
+
+Selftest 'perf_branches' result on power9 machine which doesn't
+support branch stack
+
+After this patch changes:
+[command]# ./test_progs -t perf_branches
+ #88/1 perf_branches/perf_branches_hw:SKIP
+ #88/2 perf_branches/perf_branches_no_hw:OK
+ #88 perf_branches:OK
+Summary: 1/1 PASSED, 1 SKIPPED, 0 FAILED
+
+Fixes: fff7b64355eac ("bpf: Add bpf_read_branch_records() helper")
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+---
+
+Tested this patch changes on power9 machine using selftest
+'perf branches' which is added in commit 67306f84ca78 ("selftests/bpf:
+Add bpf_read_branch_records()")
+
+Changelog:
+v1 -> v2
+- Inorder to add bpf support to capture branch record in
+  powerpc, rather then adding config for powerpc, entirely
+  remove config check from bpf_read_branch_records function
+  as suggested by Peter Zijlstra
+
+- Link to the v1 patch: https://lkml.org/lkml/2021/11/14/434
+
+ kernel/trace/bpf_trace.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 7396488793ff..5e445985c6b4 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -1402,9 +1402,6 @@ static const struct bpf_func_proto bpf_perf_prog_read_value_proto = {
+ BPF_CALL_4(bpf_read_branch_records, struct bpf_perf_event_data_kern *, ctx,
+ 	   void *, buf, u32, size, u64, flags)
+ {
+-#ifndef CONFIG_X86
+-	return -ENOENT;
+-#else
+ 	static const u32 br_entry_size = sizeof(struct perf_branch_entry);
+ 	struct perf_branch_stack *br_stack = ctx->data->br_stack;
+ 	u32 to_copy;
+@@ -1425,7 +1422,6 @@ BPF_CALL_4(bpf_read_branch_records, struct bpf_perf_event_data_kern *, ctx,
+ 	memcpy(buf, br_stack->entries, to_copy);
+ 
+ 	return to_copy;
+-#endif
+ }
+ 
+ static const struct bpf_func_proto bpf_read_branch_records_proto = {
+-- 
+2.27.0
 
