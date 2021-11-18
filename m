@@ -2,125 +2,115 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 501F9C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 17:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FAEC433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 19:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A386613DB
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 17:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D02361279
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 19:37:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233973AbhKRRRT (ORCPT
+        id S232252AbhKRTkU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 Nov 2021 12:17:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54296 "EHLO
+        Thu, 18 Nov 2021 14:40:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229678AbhKRRRR (ORCPT
+        with ESMTP id S231215AbhKRTkT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 Nov 2021 12:17:17 -0500
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E8FEC06173E
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Nov 2021 09:14:17 -0800 (PST)
-Received: by mail-pg1-x536.google.com with SMTP id 200so5978938pga.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Nov 2021 09:14:17 -0800 (PST)
+        Thu, 18 Nov 2021 14:40:19 -0500
+Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 904F0C061574
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Nov 2021 11:37:19 -0800 (PST)
+Received: by mail-pl1-x649.google.com with SMTP id m15-20020a170902bb8f00b0014382b67873so3444958pls.19
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Nov 2021 11:37:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=J+5qoZN6RFmZ8I4gX8ZKa9PdwhWdgu4uQ/QeSOkGnT4=;
-        b=TSa+pkzB5HxxShH4xzazQWj/w5WlJOkeq9niNmoDmtSak5kedy1zQTDygLFf8tvX8F
-         XHDNTGf7VfcjX/oNgOax4AKiJq+cIpi1aR4gic7AuVhFdqe64hJ0Wm8HJ29lGSqXZBCq
-         UYPDlWc2pVy1AaV9pixcGiuoMHl8U35mRM8vp/Dyy1mpcZGomlg8Z+WVQuWF1gG29O70
-         ZihfStszLVRHs2bWtyf6sngdvVRQQ9d/INeRJvtD+rI/EJT83EfFd05HcC2W1+Q0CAD9
-         FocP7Zh1qIcUTmBOaqdkny0H/mOsNuKHVFAlRu17/aanCq0ac9dYQF0xOchC68TyuB8i
-         2czQ==
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=R5/tL/rDWxPQEUOLlylgnRCNYpZbnkH43K1OGrjgMBQ=;
+        b=GZ+2yw4W+dbPb+KsAI3xbbsFG+EC/IJLhoTZ9CrO3c2d/3fTlQUXBnW/UtQizCe2wx
+         t2X5jMJmBKZQdpfFJYegwJgx1RNYOdJLhRST4amEdbnhnRizOf00Nc8Bmq5vYoCL3CPM
+         44Mi8MJyH37svWN8Bvgz0cPrwtlF84wOQWE6XZlChqib1G8MMAaA14XHCdlIyR8bIV54
+         YaWNTZHlzhgHfmxHXLaN4Hzhs07BwApsG8hT49MK7ExrcJwOC9cAsd2CWrfRPmOwdaUZ
+         jEngiJB5T79RhA4VFbO8r2NKDcXQGC/RGXV1Aeo5ELkf+zlSmWmIx9s0hddoAGUraNqL
+         eclA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=J+5qoZN6RFmZ8I4gX8ZKa9PdwhWdgu4uQ/QeSOkGnT4=;
-        b=q93xJnFySfGResCmMc7PQuUPRCh4FukKX7gDmIqYJNFGX96WwkbmndamyZR9wOylEi
-         IADkMNedejf3jctejH40e4x+eqPUVpl3el1COeDF6iyhwBd6YKYUph0t0wcypLM3RsIZ
-         sTo9BjGeg6otf45x38eLh7bd4iGTr1YuObPSyTgHn66W4d9Y9cOYGmCUdXtL0mfIrxUq
-         CzTvU3yUuyDiepktzGP2R6vvbGN02Ob0e6pRUTto8AXqZ2AK6sQ2/YMVCvpgyz7+Q4G1
-         kotxNy7nqCOCoQ+WnczxufSf91FLvcGSnc1pMyZQZ2y4NB+ulvlvyngMxq8Uz28SgwBB
-         HOJg==
-X-Gm-Message-State: AOAM533MbYs7Rjq2gRgx/UvLnTcTlw5g34HCgGApV1Uo48/EbkIbrtTq
-        lq/cgTlW3aqr0Vn1elOw2nbAZ7aLRzJNyA==
-X-Google-Smtp-Source: ABdhPJyC5yO7VYar9XM1O9Y16uC2oeR27KBNZfFJ+wvJfp3UpQLLsPuJSfTDFqrEcufxnvHW73mTBg==
-X-Received: by 2002:a05:6a00:2290:b0:49f:c63a:2a5f with SMTP id f16-20020a056a00229000b0049fc63a2a5fmr57690492pfe.69.1637255656872;
-        Thu, 18 Nov 2021 09:14:16 -0800 (PST)
-Received: from p14s (S0106889e681aac74.cg.shawcable.net. [68.147.0.187])
-        by smtp.gmail.com with ESMTPSA id f15sm212467pfe.171.2021.11.18.09.14.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Nov 2021 09:14:15 -0800 (PST)
-Date:   Thu, 18 Nov 2021 10:14:12 -0700
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=R5/tL/rDWxPQEUOLlylgnRCNYpZbnkH43K1OGrjgMBQ=;
+        b=uRYq6kq9eegYwZoxB9n/vFzGfc/mGnnLeNAHi4zI+GJO6s3GfKc+kS9pt9Sd45dNqX
+         fPqRL96ZpVAkXAW5b0GFlEvmVtWx4BZreduXyJP6jnzjwNtd0PPgGmySzZLC3eKhB+4F
+         We1gfIAK+atMXP3KHISsDwWmLFVHIarEZNYTeSF7+6seaF0dQoD0IVEbmDfS/EpDfHdo
+         ZC5EbP/+CrfkoyCzBxXRq+pkUaZkjkIM7WGF/fFDLKV8nEJRQHaMmtPeiu881Miw5Bsj
+         z+V08xzcJpaqYYYYMLpFBn1MlUGp8D09toauC8Jaxoan676lj7T7Sr3PpvDka04VRUIp
+         M0NQ==
+X-Gm-Message-State: AOAM530/VNqNsdQKc7kYhCSeqRSLciZdw/Uza7vJtVnFpIiBGXX/pkqL
+        vfNO7RUHBlcTPZVoyjFU3r3Bi7VjOC6y
+X-Google-Smtp-Source: ABdhPJxyTIPodpBQC30q2dnJ0SXUgdh0ksxpTRbcPgsXkxz7LfVbGKOyJWndsDShbNsNUWNH9Vi3UC+Zbmxu
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:3908:af20:80e3:e47])
+ (user=irogers job=sendgmr) by 2002:a05:6a00:84c:b0:494:6d40:ed76 with SMTP id
+ q12-20020a056a00084c00b004946d40ed76mr58534568pfk.65.1637264238666; Thu, 18
+ Nov 2021 11:37:18 -0800 (PST)
+Date:   Thu, 18 Nov 2021 11:37:14 -0800
+Message-Id: <20211118193714.2293728-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.34.0.rc2.393.gf8c9666880-goog
+Subject: [PATCH] perf map: Fix namespace memory leak
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+        Namhyung Kim <namhyung@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf cs-etm: Pass -1 as pid value for
- machine__set_current_tid()
-Message-ID: <20211118171412.GB2530497@p14s>
-References: <20211113143540.53957-1-leo.yan@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211113143540.53957-1-leo.yan@linaro.org>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Good morning Leo,
+This leak was happening reliably with test "Lookup mmap thread" with
+stack traces like:
 
-On Sat, Nov 13, 2021 at 10:35:40PM +0800, Leo Yan wrote:
-> Currently, cs-etm passes the tid value for both tid and pid parameters
-> when calling machine__set_current_tid(), this can lead to confusion for
-> thread handling.  E.g. we arbitrarily pass the same value for pid and
-> tid, perf tool will be misled to consider it is a main thread (see
-> thread__main_thread()).
-> 
-> On the other hand, Perf tool only can retrieve tid from Arm CoreSight
-> context packet, and we have no chance to know pid (it maps to kernel's
-> task_struct::tgid) from hardware tracing data.  For this reason, this
-> patch passes -1 as pid for function machine__set_current_tid().
-> 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  tools/perf/util/cs-etm.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index f323adb1af85..eed1a5930072 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -1118,7 +1118,7 @@ int cs_etm__etmq_set_tid(struct cs_etm_queue *etmq,
->  	if (cs_etm__get_cpu(trace_chan_id, &cpu) < 0)
->  		return err;
->  
-> -	err = machine__set_current_tid(etm->machine, cpu, tid, tid);
-> +	err = machine__set_current_tid(etm->machine, cpu, -1, tid);
+Direct leak of 5504 byte(s) in 172 object(s) allocated from:
+    #0 0x7f4685e47987 in __interceptor_calloc
+    #1 0x56063b974c2a in nsinfo__new util/namespaces.c:142
+    #2 0x56063b9781ff in thread__new util/thread.c:70
+    #3 0x56063b944953 in ____machine__findnew_thread util/machine.c:543
+    #4 0x56063b944ac6 in __machine__findnew_thread util/machine.c:574
+    #5 0x56063b944b36 in machine__findnew_thread util/machine.c:584
+    #6 0x56063b94c892 in machine__process_fork_event util/machine.c:1954
+    #7 0x56063b94cc1f in machine__process_event util/machine.c:2019
+    #8 0x56063b894f18 in perf_event__process util/event.c:567
+    #9 0x56063ba17951 in perf_tool__process_synth_event util/synthetic-events.c:65
+    #10 0x56063ba19086 in perf_event__synthesize_fork util/synthetic-events.c:287
+    #11 0x56063ba1c39d in __event__synthesize_thread util/synthetic-events.c:775
+    #12 0x56063ba1cf6f in __perf_event__synthesize_threads util/synthetic-events.c:929
+    #13 0x56063ba1d4ab in perf_event__synthesize_threads util/synthetic-events.c:1000
+    #14 0x56063b821a3d in synth_all tests/mmap-thread-lookup.c:136
+    #15 0x56063b821c86 in mmap_events tests/mmap-thread-lookup.c:174
+    #16 0x56063b8221b7 in test__mmap_thread_lookup tests/mmap-thread-lookup.c:230
 
-I remember wondering about what to do with the pid parameter when I wrote this
-patch... 
+The dso->nsinfo is overwritten, but without a nsinfo__put this can leak
+the overwritten nsinfo.
 
-Do you have a before-and-after snapshot you can add to the changelog?  I also
-think it will require a "Fixes" tag.  In your next revision please CC James
-since you guys are working in that area nowadays.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/map.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks,
-Mathieu
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index 8af693d9678c..ceed8f407bc0 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -192,6 +192,7 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
+ 			if (!(prot & PROT_EXEC))
+ 				dso__set_loaded(dso);
+ 		}
++		nsinfo__put(dso->nsinfo);
+ 		dso->nsinfo = nsi;
+ 
+ 		if (build_id__is_defined(bid))
+-- 
+2.34.0.rc2.393.gf8c9666880-goog
 
->  	if (err)
->  		return err;
->  
-> -- 
-> 2.25.1
-> 
