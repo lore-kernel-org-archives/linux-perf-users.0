@@ -2,171 +2,108 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A684C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 13:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C2D2C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 13:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D1E361B1B
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 13:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F81C61AE2
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 13:14:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229519AbhKRNN4 (ORCPT
+        id S229929AbhKRNRs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 Nov 2021 08:13:56 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:24330 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S229714AbhKRNNz (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 Nov 2021 08:13:55 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1AICMfqW022013;
-        Thu, 18 Nov 2021 13:10:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : content-transfer-encoding : mime-version; s=pp1;
- bh=tMCS1XwUVl1BKDDgYe0FkgqBtanlugS0urknWgn/Wow=;
- b=OklhY3S5nFBWEzK3M5QcCz17xAf3ceha2KKGKgBRN8MrNoyBozLg8azg08OVs8LbftZH
- N9wba5HifEGR2GGQz9xvzjiaIQJT8WG912FRwj81qTlakL602R12txYZXDQW44SXq47U
- qwniCJZxRThrZZ1SYH0ZDw95nUVj4epRq2/u8WktdbWDQh1ftTppu1v60QUc+PdvyTl9
- PAbiJLuHP6C8XgNYmZegU505Nn8H4SXa3KcpJOjbp3wokpYZ0i51rjK3SDhxYD2pANO4
- d+Z0aDW6GcdtHYrGl/8/7PxKPuMvra9nXDV5jjnlu5/yptDen9UPha/E+bLeBeaIcDhO GQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3cdpsks570-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Nov 2021 13:10:31 +0000
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1AICNF01026779;
-        Thu, 18 Nov 2021 13:10:31 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3cdpsks561-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Nov 2021 13:10:31 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1AID3QCK007459;
-        Thu, 18 Nov 2021 13:05:29 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma06ams.nl.ibm.com with ESMTP id 3ca4mkdw6f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Nov 2021 13:05:29 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1AID5QT56423228
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Nov 2021 13:05:26 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E253A42049;
-        Thu, 18 Nov 2021 13:05:25 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 70A554205C;
-        Thu, 18 Nov 2021 13:05:19 +0000 (GMT)
-Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com.com (unknown [9.43.63.210])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 18 Nov 2021 13:05:19 +0000 (GMT)
-From:   Kajol Jain <kjain@linux.ibm.com>
-To:     bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     acme@kernel.org, peterz@infradead.org, songliubraving@fb.com,
-        daniel@iogearbox.net, andrii@kernel.org, kafai@fb.com, yhs@fb.com,
-        john.fastabend@gmail.com, davem@davemloft.net, kpsingh@kernel.org,
-        hawk@kernel.org, kuba@kernel.org, maddy@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com, linux-perf-users@vger.kernel.org,
-        rnsastry@linux.ibm.com, kjain@linux.ibm.com
-Subject: [PATCH v2] bpf: Remove config check to enable bpf support for branch records
-Date:   Thu, 18 Nov 2021 18:35:07 +0530
-Message-Id: <20211118130507.170154-1-kjain@linux.ibm.com>
-X-Mailer: git-send-email 2.27.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: MCevU-shEbSRuNzovsdhbppeKZB9e8_n
-X-Proofpoint-ORIG-GUID: vpgw9Kmdqd1TLSRMqtw29oaGpD0hXakL
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Thu, 18 Nov 2021 08:17:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56466 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229461AbhKRNRs (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 18 Nov 2021 08:17:48 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 26486615A4;
+        Thu, 18 Nov 2021 13:14:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1637241288;
+        bh=pTcJU8CLw9tYli7PCfSZBvemce1fIuhhD1AKOiyQnYU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=GfsO53Kd9ftllE+E0+wyqwuy9sEnNxb/gIhlMkei/ppnbagjcc7aLhE4aQJE4oNbC
+         TtrWNXcc32q7XeufM7VRGvPsjoAL3Sj1YBvbHL2qekundYwNUXw04HVw1Km4Bgqgy1
+         MuFaUh59WIVrl2FD72DYsBfeGgAN4rEQEHYiZRmsX2XIGFkN3XwG+/jmMWEOrD0H2Y
+         8WjIWu3KrwPPaG4EKFZyPuGN03cQ1qWNXtGvDf1pIUU+F4htfuuj03VmdWL1ynxPrT
+         Jrp2fwrDlccKU83TO96H7aEDJGCHQHWn7DaqwtHrDEBVFwHfGOfqD+LqlWtsmnc1bz
+         J7Q8wx2f6MMJQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 2931C4088E; Thu, 18 Nov 2021 10:14:46 -0300 (-03)
+Date:   Thu, 18 Nov 2021 10:14:46 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Wang Haojun <jiangliuer01@gmail.com>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: [FYI][PATCH 1/1] tools headers UAPI: Sync MIPS syscall table file
+ changed by new futex_waitv syscall
+Message-ID: <YZZRxuIyvSGLZhM4@kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
- definitions=2021-11-18_05,2021-11-17_01,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
- mlxlogscore=999 bulkscore=0 spamscore=0 lowpriorityscore=0 suspectscore=0
- priorityscore=1501 impostorscore=0 phishscore=0 adultscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2110150000
- definitions=main-2111180075
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Branch data available to bpf programs can be very useful to get
-stack traces out of userspace application.
+To pick the changes in these csets:
 
-Commit fff7b64355ea ("bpf: Add bpf_read_branch_records() helper")
-added bpf support to capture branch records in x86. Enable this feature
-for other architectures as well by removing check specific to x86.
-Incase any platform didn't support branch stack, it will return with
--EINVAL.
+  b3ff2881ba18b852 ("MIPS: syscalls: Wire up futex_waitv syscall")
 
-Selftest 'perf_branches' result on power9 machine with branch stacks
-support.
+That add support for this new syscall in tools such as 'perf trace'.
 
-Before this patch changes:
-[command]# ./test_progs -t perf_branches
- #88/1 perf_branches/perf_branches_hw:FAIL
- #88/2 perf_branches/perf_branches_no_hw:OK
- #88 perf_branches:FAIL
-Summary: 0/1 PASSED, 0 SKIPPED, 1 FAILED
+For instance, this is now possible (adapted from the x86_64 test output):
 
-After this patch changes:
-[command]# ./test_progs -t perf_branches
- #88/1 perf_branches/perf_branches_hw:OK
- #88/2 perf_branches/perf_branches_no_hw:OK
- #88 perf_branches:OK
-Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
+  # perf trace -e futex_waitv
+  ^C#
+  # perf trace -v -e futex_waitv
+  event qualifier tracepoint filter: (common_pid != 807333 && common_pid != 3564) && (id == 449)
+  ^C#
+  # perf trace -v -e futex* --max-events 10
+  event qualifier tracepoint filter: (common_pid != 812168 && common_pid != 3564) && (id == 202 || id == 449)
+  mmap size 528384B
+           ? (         ): Timer/219310  ... [continued]: futex())                                            = -1 ETIMEDOUT (Connection timed out)
+       0.012 ( 0.002 ms): Timer/219310 futex(uaddr: 0x7fd0b152d3c8, op: WAKE|PRIVATE_FLAG, val: 1)           = 0
+       0.024 ( 0.060 ms): Timer/219310 futex(uaddr: 0x7fd0b152d420, op: WAIT_BITSET|PRIVATE_FLAG, utime: 0x7fd0b1657840, val3: MATCH_ANY) = 0
+       0.086 ( 0.001 ms): Timer/219310 futex(uaddr: 0x7fd0b152d3c8, op: WAKE|PRIVATE_FLAG, val: 1)           = 0
+       0.088 (         ): Timer/219310 futex(uaddr: 0x7fd0b152d424, op: WAIT_BITSET|PRIVATE_FLAG, utime: 0x7fd0b1657840, val3: MATCH_ANY) ...
+       0.075 ( 0.005 ms): Web Content/219299 futex(uaddr: 0x7fd0b152d420, op: WAKE|PRIVATE_FLAG, val: 1)     = 1
+       0.169 ( 0.004 ms): Web Content/219299 futex(uaddr: 0x7fd0b152d424, op: WAKE|PRIVATE_FLAG, val: 1)     = 1
+       0.088 ( 0.089 ms): Timer/219310  ... [continued]: futex())                                            = 0
+       0.179 ( 0.001 ms): Timer/219310 futex(uaddr: 0x7fd0b152d3c8, op: WAKE|PRIVATE_FLAG, val: 1)           = 0
+       0.181 (         ): Timer/219310 futex(uaddr: 0x7fd0b152d420, op: WAIT_BITSET|PRIVATE_FLAG, utime: 0x7fd0b1657840, val3: MATCH_ANY) ...
+  #
 
-Selftest 'perf_branches' result on power9 machine which doesn't
-support branch stack
+That is the filter expression attached to the raw_syscalls:sys_{enter,exit}
+tracepoints.
 
-After this patch changes:
-[command]# ./test_progs -t perf_branches
- #88/1 perf_branches/perf_branches_hw:SKIP
- #88/2 perf_branches/perf_branches_no_hw:OK
- #88 perf_branches:OK
-Summary: 1/1 PASSED, 1 SKIPPED, 0 FAILED
+  $ grep futex_waitv tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
+  449	n64	futex_waitv			sys_futex_waitv
+  $
 
-Fixes: fff7b64355eac ("bpf: Add bpf_read_branch_records() helper")
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+This addresses these perf build warnings:
+
+  Warning: Kernel ABI header at 'tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl' differs from latest version at 'arch/mips/kernel/syscalls/syscall_n64.tbl'
+  diff -u tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl arch/mips/kernel/syscalls/syscall_n64.tbl
+
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Wang Haojun <jiangliuer01@gmail.com>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
+ tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl | 1 +
+ 1 file changed, 1 insertion(+)
 
-Tested this patch changes on power9 machine using selftest
-'perf branches' which is added in commit 67306f84ca78 ("selftests/bpf:
-Add bpf_read_branch_records()")
-
-Changelog:
-v1 -> v2
-- Inorder to add bpf support to capture branch record in
-  powerpc, rather then adding config for powerpc, entirely
-  remove config check from bpf_read_branch_records function
-  as suggested by Peter Zijlstra
-
-- Link to the v1 patch: https://lkml.org/lkml/2021/11/14/434
-
- kernel/trace/bpf_trace.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 7396488793ff..5e445985c6b4 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -1402,9 +1402,6 @@ static const struct bpf_func_proto bpf_perf_prog_read_value_proto = {
- BPF_CALL_4(bpf_read_branch_records, struct bpf_perf_event_data_kern *, ctx,
- 	   void *, buf, u32, size, u64, flags)
- {
--#ifndef CONFIG_X86
--	return -ENOENT;
--#else
- 	static const u32 br_entry_size = sizeof(struct perf_branch_entry);
- 	struct perf_branch_stack *br_stack = ctx->data->br_stack;
- 	u32 to_copy;
-@@ -1425,7 +1422,6 @@ BPF_CALL_4(bpf_read_branch_records, struct bpf_perf_event_data_kern *, ctx,
- 	memcpy(buf, br_stack->entries, to_copy);
- 
- 	return to_copy;
--#endif
- }
- 
- static const struct bpf_func_proto bpf_read_branch_records_proto = {
+diff --git a/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl b/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
+index 1ca7bc337932bcae..e2c481fcede6bd11 100644
+--- a/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
++++ b/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
+@@ -363,3 +363,4 @@
+ 446	n64	landlock_restrict_self		sys_landlock_restrict_self
+ # 447 reserved for memfd_secret
+ 448	n64	process_mrelease		sys_process_mrelease
++449	n64	futex_waitv			sys_futex_waitv
 -- 
-2.27.0
+2.31.1
 
