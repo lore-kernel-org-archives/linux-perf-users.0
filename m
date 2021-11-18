@@ -2,45 +2,45 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5010EC4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 20:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED8CC433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 20:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3391761361
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 20:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B984861361
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 20:29:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232454AbhKRUbz (ORCPT
+        id S233976AbhKRUcB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 Nov 2021 15:31:55 -0500
-Received: from mail-bn8nam11hn2202.outbound.protection.outlook.com ([52.100.171.202]:19007
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        Thu, 18 Nov 2021 15:32:01 -0500
+Received: from mail-mw2nam12on2041.outbound.protection.outlook.com ([40.107.244.41]:13192
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230013AbhKRUbz (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 Nov 2021 15:31:55 -0500
+        id S233895AbhKRUb6 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 18 Nov 2021 15:31:58 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mhtKXf055qMpGDQIxQk+zH6jxcFhW2bnMpJYdXuHBKA0WrvUuvFbVwM8TvtYZYhmwX1Xpk35dZkS1mCqExtQ5mb01WZ2E8J8dK/M8sC6q3irF5tbITZT98JzoKo+akpI2b9Vl7EkTtDlKMazhojh+Lfz/eqlU9ecu7VtVaV1kVma7/3z/1M7+TpRLgK00SgvdB0q/XgyaJOhh2Y17t+ch+JR9XxX4CDJ2zFdWKKMtKSuw4Vmva1vwW8vpfYF3Gq4YaDWv/mbDDpgcOw8Tr5u9RphC5ZvZ7lxq4HdaDNVdtNuR2rvXA/uV5Y893X5RKzaHx1Sq2m0g/wyDKELQuOq+g==
+ b=Q0hMj4rk06u/kij7N+os4PjyJFKO0l2DDhi5mbOxJUbuJxj+zg+HDAJw3g0j8O2agYudK9qNnxPBleAO57OJgIisjLf/MNKDCtcyV3CHWAHJpJV9VfCbyhIeV9ZerCeS/mIGLEw3q4Vm17nicVpfNo+c6nUR0jZjH+UUzrAAj1MDLnzaBhwHFFq+KbKqjTV/FbnLbr12ccy98fCTg7QGdkfMdRQzFLAwcuzLN0s6OIrirTbgVGwthw0Q94C5L5+lUJDhqCLJnQNsKFVoqSi9rUn86CkHi8LKBoEXXPSHzeDGBXp6o4uzltBYpET4vH7MAG12h32SM0aLYpiS8q02Dg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3Bemx6QLhgKhSDBo3I2D4fFXgf9muLskl2EoJJes6X4=;
- b=cKmgxG0z1ksUai2WjsYNgXgTzqKjsqUjqwPV7jOn6q9mIwiXQsVU8Qq4yjUV7PF1f5QfVvxK9agsMPo93jT54vOHlN0+QViGoQTROFv/0luIfsJ2EmoirP6pTe9O80D+bQsWGFuZJFsN15ezMffPQ7Rpulx5ByEOo2mSVydNaxFbc2JF3JkyzDTEHC957RIGwE++kCBBvPkfwpqBDNk2V0EbNHQkt9xkBF7v1B4kGrVE6sezSBwGH2HhqnG7jG4Ifjq6U7/8k7m0wZw0DOiC8eOg/HzLNK3JuVreQx6Mu7ntWS2iWm/hcvI0EP++NuvypWYeZ2usZOLSfoJisS+qhA==
+ bh=zNMAi1WdxhVnAKx+riu3QqHHlJ+TKfyDHX8K1xNetEE=;
+ b=fQy7+xyB7cSLNE4tB2FR9ky0LQRTiYLsdg0B4D4Vgvmnl9Lru5Uoq7Sz4IErmBZ8swEfzBmP/WZqwkZ/JMc4u9+M4a+H/s5C14ng+z698AUMr/yPRkUjs5u36h4Q9DxFw7Kkc/fQRvN/awINscJ8OjNsNdOb6yGrZVcu+d/6lPmZwI4pt0bEbvTrf80r+Fh4ilhd1StXC0BlyQnXmyPjtJPi0u9mdm4eKih9vj7jduwN6Rh1GIxmpdh1vKrFnoyQXxbNJq+7TfPR1rshHbKlOY4482mdmW0h+PCAAEPJIwjpEmWho/YVxZSAbx9yscgEI6LiGDGj5W4IhzyJLf24ag==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3Bemx6QLhgKhSDBo3I2D4fFXgf9muLskl2EoJJes6X4=;
- b=tEjp0YOqIHIPK+3S5MXJrEePEHMNu5BECso0gwG4zAmNMt4tW8hg52G7uGfX/SLWDNQkokz6f7eFOpnrgB8Oq4URzLVT99mJIYDLtFNi/fJvmVfCXmXwmCMnQ8HVtrc46zKZjfeb5LFHD5/cdYE6YHJFa23NBBuWc39YUvn7w/E=
-Received: from BN8PR16CA0003.namprd16.prod.outlook.com (2603:10b6:408:4c::16)
- by MWHPR1201MB0029.namprd12.prod.outlook.com (2603:10b6:301:4d::15) with
+ bh=zNMAi1WdxhVnAKx+riu3QqHHlJ+TKfyDHX8K1xNetEE=;
+ b=5TqTqCfvd+8BmSaBqAPtukxZWjL5/LDuG2DsrNn11en8iKpMDJY2dgGjheSYYcQ5mgPbIkzeyUDWnglQQNw0doP33el4b8S8+KtixeXTdAJgalyL3mpPGedVvJwCEfMeMBWhB7XYu3BHoWRMeE5gX/vvgTNnggdRXoRH2BQ4hVU=
+Received: from BN9PR03CA0249.namprd03.prod.outlook.com (2603:10b6:408:ff::14)
+ by DM4PR12MB5165.namprd12.prod.outlook.com (2603:10b6:5:394::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.19; Thu, 18 Nov
- 2021 20:28:51 +0000
-Received: from BN8NAM11FT063.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:4c:cafe::47) by BN8PR16CA0003.outlook.office365.com
- (2603:10b6:408:4c::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.21 via Frontend
- Transport; Thu, 18 Nov 2021 20:28:51 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.26; Thu, 18 Nov
+ 2021 20:28:55 +0000
+Received: from BN8NAM11FT059.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:ff:cafe::9b) by BN9PR03CA0249.outlook.office365.com
+ (2603:10b6:408:ff::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.19 via Frontend
+ Transport; Thu, 18 Nov 2021 20:28:54 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,20 +48,20 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB03.amd.com;
 Received: from SATLEXMB03.amd.com (165.204.84.17) by
- BN8NAM11FT063.mail.protection.outlook.com (10.13.177.110) with Microsoft SMTP
+ BN8NAM11FT059.mail.protection.outlook.com (10.13.177.120) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4713.20 via Frontend Transport; Thu, 18 Nov 2021 20:28:51 +0000
-Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB03.amd.com
+ 15.20.4713.20 via Frontend Transport; Thu, 18 Nov 2021 20:28:54 +0000
+Received: from SATLEXMB07.amd.com (10.181.41.45) by SATLEXMB03.amd.com
  (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17; Thu, 18 Nov
- 2021 14:28:47 -0600
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB05.amd.com
- (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
+ 2021 14:28:54 -0600
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB07.amd.com
+ (10.181.41.45) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17; Thu, 18 Nov
- 2021 14:28:47 -0600
+ 2021 12:28:54 -0800
 Received: from yuho-dev.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server id 15.1.2375.17 via Frontend
- Transport; Thu, 18 Nov 2021 14:28:44 -0600
+ Transport; Thu, 18 Nov 2021 14:28:52 -0600
 From:   Kenny Ho <Kenny.Ho@amd.com>
 To:     Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
@@ -84,103 +84,153 @@ To:     Alexei Starovoitov <ast@kernel.org>,
         <cgroups@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
         <y2kenny@gmail.com>, <Kenny.Ho@amd.com>,
         <amd-gfx@lists.freedesktop.org>
-Subject: [PATCH RFC 0/4] Add ability to attach bpf programs to a tracepoint inside a cgroup
-Date:   Thu, 18 Nov 2021 15:28:36 -0500
-Message-ID: <20211118202840.1001787-1-Kenny.Ho@amd.com>
+Subject: [PATCH RFC 3/4] bpf,cgroup,tracing: add new BPF_PROG_TYPE_CGROUP_TRACEPOINT
+Date:   Thu, 18 Nov 2021 15:28:39 -0500
+Message-ID: <20211118202840.1001787-4-Kenny.Ho@amd.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20211118202840.1001787-1-Kenny.Ho@amd.com>
+References: <20211118202840.1001787-1-Kenny.Ho@amd.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 892a928d-b93e-4c9b-d3b1-08d9aad20881
-X-MS-TrafficTypeDiagnostic: MWHPR1201MB0029:
-X-Microsoft-Antispam-PRVS: <MWHPR1201MB0029BF8CE418CD17445DD605839B9@MWHPR1201MB0029.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Office365-Filtering-Correlation-Id: 395f279e-781e-4e25-18a4-08d9aad20aaf
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5165:
+X-Microsoft-Antispam-PRVS: <DM4PR12MB51655D5738C6801CA20BCB3E839B9@DM4PR12MB5165.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:792;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?1wf/H3SYvm7UbzmigTCwR+DzZB6nw87vx94yyhSXnyEG6WQE5zooa7WpTCsv?=
- =?us-ascii?Q?yi57gTeuaZnAxA8VYMgL7pkC2MAZf6upyoGbzcj4fBN0wYiPf7qAftSWpyhb?=
- =?us-ascii?Q?1MJsTlydYSXHSdqkmwMumds1arB4FVbL7NoB6/kvpk8eQSN9fL/xH6+ew4PU?=
- =?us-ascii?Q?Q9jsgdWG28ZJmRf6/NH0UOjzdvPm8f110aRdKMywDLANg39sJshw8nDmY9g4?=
- =?us-ascii?Q?3u73QtgeTjs6Oh1Pud7+bexr9QQnYR7mdRPVbEk1UA44Smg8WXv0VvMs3zAn?=
- =?us-ascii?Q?VRYYRmWuo7fQ5lf37q55OPveLvXS9RV+rN2CQZim/Pd4PjdoLTQAL13ZdbaA?=
- =?us-ascii?Q?oib1yCg8klZIS/QeB43xtPHbH8P/uRJkqjvrs0EXlR9F7fNco8I2xBHpjlQq?=
- =?us-ascii?Q?FSnlgexQ0fydpH+aPjZE9lC9D2ZLQEwRzoxCcv+wWlB2qMNfSVLEI05FR5eF?=
- =?us-ascii?Q?vFPCKkASLGEH4AThYhScSXNNRHBN+HMQ10n0F4O7M1NfphquXr/WceDGOFWl?=
- =?us-ascii?Q?qTqLoxzowCY4p30O1oPw7hVujMqG9BiTVglhbpptS8m5r3JyBtHm/oMvD0fa?=
- =?us-ascii?Q?IdJckRJOlb/bEBkZHVoaDiGe3wysw4CBAUtoVdIW/cxCBP5rJ6novmdPudVu?=
- =?us-ascii?Q?Bb1aRDwL5N11fcfaQWhkNyf5Z9ImDcOg/nd0uG+ESFYlK7TeuKC99KAmqsR9?=
- =?us-ascii?Q?bdS7uXQC+nGSuUEmZJDwXymJ4KAK7peu/th49h9VkuaQ9cHEd1mKhwg+8Kfa?=
- =?us-ascii?Q?Ipm9Dm/mTYNz9fkqjH67ahS9sut2uhNVrJzJC8SIz/0js1iMv3A7M2b2Gjtt?=
- =?us-ascii?Q?7PxuD+E26okP2UdCTsw02wxSxNnSyjXwOqJMgZiCCaprMRDacwwRgYNkDg1V?=
- =?us-ascii?Q?dJJ6Lz76rdl83xOknfrv2wqVbhwn61McecswkZqJ3DuvebqlctXNU7HTtuTc?=
- =?us-ascii?Q?Z/cnt2Dn3xtXggZqECE6W4OBGTWTptDa9GUiuYX/arHZPce4T5OImE6ZMyB/?=
- =?us-ascii?Q?7frwqE3N/Mry+ftqa7uGAN59E+jVA3BlRNezCbKhb2owo3dMj2Z7CzxDmd26?=
- =?us-ascii?Q?MWYxQSx1yTHL4emu1fY69ZVlrT4zuUniKmkGPtJGodiQx5ViYKodIhpUoaXU?=
- =?us-ascii?Q?uywO5Tmq7UBBtOJFQOYnreeiIh1L9KQy9NO5OF9VaDSYGB+OnuWlkgQQhD9c?=
- =?us-ascii?Q?mcwE6j0toRJqoWszRaN38YX0YbuydqMbCAPMezJJTltpbDD0Jz1VcZY06Lc?=
- =?us-ascii?Q?=3D?=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:5;SRV:;IPV:CAL;SFV:SPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:OSPM;SFS:(4636009)(36840700001)(46966006)(2906002)(336012)(6666004)(508600001)(316002)(81166007)(7416002)(2616005)(921005)(426003)(1076003)(86362001)(36756003)(5660300002)(8936002)(110136005)(70206006)(36860700001)(8676002)(70586007)(186003)(966005)(26005)(356005)(83380400001)(7696005)(82310400003)(47076005)(87590200002)(36900700001)(266184004);DIR:OUT;SFP:1501;
+X-Microsoft-Antispam-Message-Info: Xmy7P12GEdvXiwAcGgcttINUgXRCHwWPK9L3Cx2TE21hc9kQ1bjueMkH/4X7Ow+qOb9m4S4iJAhLVh+ro52meoV4Tov90msY0Pm0JgcorIwu2svw1jQQKdWwq4jOiPzdz/tUuq5JzOg40rPRWbIT9QJrj3fUzqy8D41N4scFWDzB/kPa02PYMTFjiqcY7aaa2xOqAgahuivaUAYN3X/cPy7VNAH6s2Qq9pyXib7sTdJ8u0JIerE4Nv90Qt6GJqUs8v7ywclNPsot0ki6YTgxzPsJi5xyiWL4SrafZbGtFMSXVLuVSjCwWOnkjq0Wx4EqATnhlIRKPkgPN0107xEfPimPKznk8uy92Vef64sNAts1Mnj2FWaKaPZdKRSzltjH+U27bdSPjfI7wRe1kPqlSTLmdWSsjHMpEsEyimuMUSM7LZVWSVr8xLTIcfiL0+7tl97eX/6J0lD+kho8gBl9bjeew9wPRM6Fbd1x7JbGGucWUa91wuLZjArkY2YMkkV4d105JQHR4cEos8EKFEOzQVHacDlA79tmCijMZvUf9/rZ3wARz+56MTZPDEpbB0GwI7UC1XjwpBaitxFJK6ZVIjPgewVJuNUkNuOR8X/2JfM8eTrMy3McuHru3hD4idcthXuBpgsmLO6TMt31muNgdqYN/8PnAtYCC1OKSHgO1Uhm0dhMh/9Ul1fgOlDLbjT9j6HGsud5WVFGkJWXVSuacZu82bJKVIgavJ7afUFeUqJJxqNwgtzfq7UtWSYiv63S
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(81166007)(921005)(316002)(6666004)(110136005)(186003)(2906002)(36756003)(26005)(2616005)(36860700001)(336012)(7416002)(82310400003)(83380400001)(5660300002)(356005)(86362001)(8676002)(1076003)(7696005)(426003)(47076005)(70206006)(508600001)(70586007)(8936002)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2021 20:28:51.1636
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2021 20:28:54.8297
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 892a928d-b93e-4c9b-d3b1-08d9aad20881
+X-MS-Exchange-CrossTenant-Network-Message-Id: 395f279e-781e-4e25-18a4-08d9aad20aaf
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT063.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT059.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1201MB0029
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5165
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Per an earlier discussion last year[1], I have been looking for a mechanism to a) collect resource usages for devices (GPU for now but there could be other device type in the future) and b) possibly enforce some of the resource usages.  An obvious mechanism was to use cgroup but there are too much diversity in GPU hardware architecture to have a common cgroup interface at this point.  An alternative is to leverage tracepoint with a bpf program inside a cgroup hierarchy for usage collection and enforcement (via writable tracepoint.)
+Change-Id: Ic9727186bb8c76c757e48635143b16e607f2299f
+Signed-off-by: Kenny Ho <Kenny.Ho@amd.com>
+---
+ include/linux/bpf-cgroup.h | 2 ++
+ include/linux/bpf_types.h  | 4 ++++
+ include/uapi/linux/bpf.h   | 2 ++
+ kernel/bpf/syscall.c       | 4 ++++
+ kernel/trace/bpf_trace.c   | 8 ++++++++
+ 5 files changed, 20 insertions(+)
 
-This is a prototype for such idea.  It is incomplete but I would like to solicit some feedback before continuing to make sure I am going down the right path.  This prototype is built based on my understanding of the followings:
-
-- tracepoint (and kprobe, uprobe) is associated with perf event
-- perf events/tracepoint can be a hook for bpf progs but those bpf progs are not part of the cgroup hierarchy
-- bpf progs can be attached to the cgroup hierarchy with cgroup local storage and other benefits
-- separately, perf subsystem has a cgroup controller (perf cgroup) that allow perf event to be triggered with a cgroup filter
-
-So the key idea of this RFC is to leverage hierarchical organization of bpf-cgroup for the purpose of perf event/tracepoints.
-
-==Known unresolved topics (feedback very much welcome)==
-Storage:
-I came across the idea of "preallocated" memory for bpf hash map/storage to avoid deadlock[2] but I don't have a good understanding about it currently.  If existing bpf_cgroup_storage_type are not considered pre-allocated then I am thinking we can introduce a new type but I am not sure if this is needed yet.
-
-Scalability:
-Scalability concern has been raised about perf cgroup [3] and there seems to be a solution to it recently with bperf [4].  This RFC does not change the status quo on the scalability question but if I understand the bperf idea correctly, this RFC may have some similarity.
-
-[1] https://lore.kernel.org/netdev/YJXRHXIykyEBdnTF@slm.duckdns.org/T/#m52bc26bbbf16131c48e6b34d875c87660943c452
-[2] https://lwn.net/Articles/679074/
-[3] https://www.linuxplumbersconf.org/event/4/contributions/291/attachments/313/528/Linux_Plumbers_Conference_2019.pdf
-[4] https://linuxplumbersconf.org/event/11/contributions/899/
-
-Kenny Ho (4):
-  cgroup, perf: Add ability to connect to perf cgroup from other cgroup
-    controller
-  bpf, perf: add ability to attach complete array of bpf prog to perf
-    event
-  bpf,cgroup,tracing: add new BPF_PROG_TYPE_CGROUP_TRACEPOINT
-  bpf,cgroup,perf: extend bpf-cgroup to support tracepoint attachment
-
- include/linux/bpf-cgroup.h   | 17 +++++--
- include/linux/bpf_types.h    |  4 ++
- include/linux/cgroup.h       |  2 +
- include/linux/perf_event.h   |  6 +++
- include/linux/trace_events.h |  9 ++++
- include/uapi/linux/bpf.h     |  2 +
- kernel/bpf/cgroup.c          | 96 +++++++++++++++++++++++++++++-------
- kernel/bpf/syscall.c         |  4 ++
- kernel/cgroup/cgroup.c       | 13 ++---
- kernel/events/core.c         | 62 +++++++++++++++++++++++
- kernel/trace/bpf_trace.c     | 36 ++++++++++++++
- 11 files changed, 222 insertions(+), 29 deletions(-)
-
+diff --git a/include/linux/bpf-cgroup.h b/include/linux/bpf-cgroup.h
+index 2746fd804216..a5e4d9b19470 100644
+--- a/include/linux/bpf-cgroup.h
++++ b/include/linux/bpf-cgroup.h
+@@ -48,6 +48,7 @@ enum cgroup_bpf_attach_type {
+ 	CGROUP_INET4_GETSOCKNAME,
+ 	CGROUP_INET6_GETSOCKNAME,
+ 	CGROUP_INET_SOCK_RELEASE,
++	CGROUP_TRACEPOINT,
+ 	MAX_CGROUP_BPF_ATTACH_TYPE
+ };
+ 
+@@ -81,6 +82,7 @@ to_cgroup_bpf_attach_type(enum bpf_attach_type attach_type)
+ 	CGROUP_ATYPE(CGROUP_INET4_GETSOCKNAME);
+ 	CGROUP_ATYPE(CGROUP_INET6_GETSOCKNAME);
+ 	CGROUP_ATYPE(CGROUP_INET_SOCK_RELEASE);
++	CGROUP_ATYPE(CGROUP_TRACEPOINT);
+ 	default:
+ 		return CGROUP_BPF_ATTACH_TYPE_INVALID;
+ 	}
+diff --git a/include/linux/bpf_types.h b/include/linux/bpf_types.h
+index 9c81724e4b98..c108f498a35e 100644
+--- a/include/linux/bpf_types.h
++++ b/include/linux/bpf_types.h
+@@ -57,6 +57,10 @@ BPF_PROG_TYPE(BPF_PROG_TYPE_CGROUP_SYSCTL, cg_sysctl,
+ BPF_PROG_TYPE(BPF_PROG_TYPE_CGROUP_SOCKOPT, cg_sockopt,
+ 	      struct bpf_sockopt, struct bpf_sockopt_kern)
+ #endif
++#if defined (CONFIG_BPF_EVENTS) && defined (CONFIG_CGROUP_BPF)
++BPF_PROG_TYPE(BPF_PROG_TYPE_CGROUP_TRACEPOINT, cg_tracepoint,
++	      __u64, u64)
++#endif
+ #ifdef CONFIG_BPF_LIRC_MODE2
+ BPF_PROG_TYPE(BPF_PROG_TYPE_LIRC_MODE2, lirc_mode2,
+ 	      __u32, u32)
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index 6fc59d61937a..014ffaa3fc2a 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -949,6 +949,7 @@ enum bpf_prog_type {
+ 	BPF_PROG_TYPE_LSM,
+ 	BPF_PROG_TYPE_SK_LOOKUP,
+ 	BPF_PROG_TYPE_SYSCALL, /* a program that can execute syscalls */
++	BPF_PROG_TYPE_CGROUP_TRACEPOINT,
+ };
+ 
+ enum bpf_attach_type {
+@@ -994,6 +995,7 @@ enum bpf_attach_type {
+ 	BPF_SK_REUSEPORT_SELECT,
+ 	BPF_SK_REUSEPORT_SELECT_OR_MIGRATE,
+ 	BPF_PERF_EVENT,
++	BPF_CGROUP_TRACEPOINT,
+ 	__MAX_BPF_ATTACH_TYPE
+ };
+ 
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 4e50c0bfdb7d..d77598fa4eb2 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -2149,6 +2149,7 @@ static bool is_perfmon_prog_type(enum bpf_prog_type prog_type)
+ 	case BPF_PROG_TYPE_LSM:
+ 	case BPF_PROG_TYPE_STRUCT_OPS: /* has access to struct sock */
+ 	case BPF_PROG_TYPE_EXT: /* extends any prog */
++	case BPF_PROG_TYPE_CGROUP_TRACEPOINT:
+ 		return true;
+ 	default:
+ 		return false;
+@@ -3137,6 +3138,8 @@ attach_type_to_prog_type(enum bpf_attach_type attach_type)
+ 		return BPF_PROG_TYPE_SK_LOOKUP;
+ 	case BPF_XDP:
+ 		return BPF_PROG_TYPE_XDP;
++	case BPF_CGROUP_TRACEPOINT:
++		return BPF_PROG_TYPE_CGROUP_TRACEPOINT;
+ 	default:
+ 		return BPF_PROG_TYPE_UNSPEC;
+ 	}
+@@ -3189,6 +3192,7 @@ static int bpf_prog_attach(const union bpf_attr *attr)
+ 	case BPF_PROG_TYPE_CGROUP_SOCK_ADDR:
+ 	case BPF_PROG_TYPE_CGROUP_SOCKOPT:
+ 	case BPF_PROG_TYPE_CGROUP_SYSCTL:
++	case BPF_PROG_TYPE_CGROUP_TRACEPOINT:
+ 	case BPF_PROG_TYPE_SOCK_OPS:
+ 		ret = cgroup_bpf_prog_attach(attr, ptype, prog);
+ 		break;
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 8addd10202c2..4ad864a4852a 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -1798,6 +1798,14 @@ const struct bpf_verifier_ops perf_event_verifier_ops = {
+ const struct bpf_prog_ops perf_event_prog_ops = {
+ };
+ 
++const struct bpf_verifier_ops cg_tracepoint_verifier_ops = {
++	.get_func_proto  = tp_prog_func_proto,
++	.is_valid_access = tp_prog_is_valid_access,
++};
++
++const struct bpf_prog_ops cg_tracepoint_prog_ops = {
++};
++
+ static DEFINE_MUTEX(bpf_event_mutex);
+ 
+ #define BPF_TRACE_MAX_PROGS 64
 -- 
 2.25.1
 
