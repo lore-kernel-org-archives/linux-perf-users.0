@@ -2,227 +2,289 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C381EC433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Nov 2021 09:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD59C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Nov 2021 11:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACD956139F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Nov 2021 09:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F14560F9B
+	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Nov 2021 11:12:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232004AbhKSJit (ORCPT
+        id S234954AbhKSLPu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 19 Nov 2021 04:38:49 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45554 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229633AbhKSJit (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 19 Nov 2021 04:38:49 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1AJ9UBZO027172;
-        Fri, 19 Nov 2021 09:35:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=Xug8Gy6TD6znYTxUHQl+mdaGuaFAbHiD9jNinLp3BUU=;
- b=fgngt3xr9zMArB1p4ik8ppXrcWCAIGKyMDEUOLzXsnurmgUHJscoe95+YB6KBF31PHFL
- 5ffAyjDGmqit9wEJIL7oyzDN2Bya4aei+M97AzenqKZp0pkcJp52dM4lhgz7RiuLfj56
- +2TFHbfGug0q7Nil6vciuT9Te29FJGqp8iIKpc+cEZL9FVwxo56vgfEy9uGFFLyJP9tf
- 55AsBOCjLjOc0bAe64gIMPRW9ssfd1qC9utHhkQSjvHXQNUaN9liMwiG29MCfHK/jOsw
- 9vGyKXoHCErY/rHZjFPaDmaW6NS9It58UGkhB/AcGnIrhM+R6R+FKNzn/pgtTkBh4uwk Sw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3ce9bqr212-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 19 Nov 2021 09:35:27 +0000
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1AJ9W6Bl031001;
-        Fri, 19 Nov 2021 09:35:26 GMT
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3ce9bqr201-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 19 Nov 2021 09:35:26 +0000
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1AJ9Xi40006804;
-        Fri, 19 Nov 2021 09:35:23 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04fra.de.ibm.com with ESMTP id 3ca50d4p7e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 19 Nov 2021 09:35:23 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1AJ9ZKBa63701344
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 19 Nov 2021 09:35:20 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D38B54204D;
-        Fri, 19 Nov 2021 09:35:19 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5003142049;
-        Fri, 19 Nov 2021 09:35:15 +0000 (GMT)
-Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com (unknown [9.43.68.135])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 19 Nov 2021 09:35:15 +0000 (GMT)
-Subject: Re: [PATCH v2] bpf: Remove config check to enable bpf support for
- branch records
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Ziljstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>, Martin Lau <kafai@fb.com>,
-        Yonghong Song <yhs@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        KP Singh <kpsingh@kernel.org>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>, maddy@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        rnsastry@linux.ibm.com
-References: <20211118130507.170154-1-kjain@linux.ibm.com>
- <CAEf4BzbDgCVLj0r=3iponPp81aVAGokhGti8WLfWKhHuTLdA8w@mail.gmail.com>
-From:   kajoljain <kjain@linux.ibm.com>
-Message-ID: <ce150f51-ef50-de85-fc52-0f2ee3a3000f@linux.ibm.com>
-Date:   Fri, 19 Nov 2021 15:05:13 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
-In-Reply-To: <CAEf4BzbDgCVLj0r=3iponPp81aVAGokhGti8WLfWKhHuTLdA8w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: BTMwSCzJdMjSFUlVn9qfWIWBcFRxr229
-X-Proofpoint-GUID: ItR1F47NJwouHmlHhT9qCJamckrdlKdd
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Fri, 19 Nov 2021 06:15:50 -0500
+Received: from mail-dm6nam12on2056.outbound.protection.outlook.com ([40.107.243.56]:40929
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232004AbhKSLPu (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 19 Nov 2021 06:15:50 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B71HkPx0mOhk1nWR4ECbIcjgmt8ngD5vLyLXnZVMQeBkmTH/QQT6mbQ7SkrJz/wUC2QN1Wm/BInG6nkyeqNgkIOGrdSCva3MCsgkTuNGTovMSO+UGfBKB4z+fVnm+Z2OoFPJJDNCG3ofNnpG3lzWE8+Nt3ZIGFq53wmupeO0P5kXbPcT1P+vBDMI01QqHAm35OvdlaTgY6Acz1xFyQzQB4wIivdfg/NW3v3VnC6NgftfJu47TvJ2Y2jjNytEK68qS45KR1E/hiPmUvIu2oHOt0O02Fodv3C9jP0rMRiUw2ZkGACRyNZpJo9CayvQUmaLzwIE6+LZKJuSiExY29xL1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IellHVAKutcgUqJTqWYnePIJwB2tiSzNGDOuVt+IZoE=;
+ b=Qz1qe73Ontu3vhKKSCiQ8U7aPGl02abZJ7VN2IbmiYhdjL11BS2lj9vTxNnty2N27zcLIoWNko/U9jCYjce7Q+/U5ya1Iw1Aw5QUrD169+0aLx/cLALeivRxfiZRoMNCjID7AuZ9NrM0fQy4JhYy1KuY1hxJ5FebF4JqdQtGiyAP0xV9Xs0tqo8O2Zj535f0mYNY2c1Hdjt9MwIeDmNaDX2V6ajKm50jyb6OjUQg0TFTiIux2kHRcELLvxJt15T87zjaMuiDY62ZAPY4bjUOg0NMMTBx3YW4Vs1K3KX/L4Su/LLwMp7tjgHmvL6h1Gp/wm43GNiOFeiv2GIE/UKKFw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IellHVAKutcgUqJTqWYnePIJwB2tiSzNGDOuVt+IZoE=;
+ b=AZ38OOvR4ApuK+VBJD71Bz36rmNN0UTcdWv+qZ2xn9dRqUjNQ1qeU1OSpXi/O0N1TMfNLNPzDsbKz1dr0/omoZ1cEp7mE+mDNMWt/4toqZNk+9vfZsUd5ZhHWb1am9tbcL0yXGaTfh5wUYQdxgGPYWGVn1sbc4vSWJmqG8KJ6ZE=
+Received: from DS7PR03CA0296.namprd03.prod.outlook.com (2603:10b6:5:3ad::31)
+ by CY4PR12MB1255.namprd12.prod.outlook.com (2603:10b6:903:36::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.22; Fri, 19 Nov
+ 2021 11:12:46 +0000
+Received: from DM6NAM11FT024.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:3ad:cafe::5c) by DS7PR03CA0296.outlook.office365.com
+ (2603:10b6:5:3ad::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.19 via Frontend
+ Transport; Fri, 19 Nov 2021 11:12:46 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT024.mail.protection.outlook.com (10.13.172.159) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4713.20 via Frontend Transport; Fri, 19 Nov 2021 11:12:45 +0000
+Received: from sindhu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17; Fri, 19 Nov
+ 2021 05:12:42 -0600
+From:   Sandipan Das <sandipan.das@amd.com>
+To:     <acme@kernel.org>
+CC:     <santosh.shukla@amd.com>, <ravi.bangoria@amd.com>,
+        <ananth.narayan@amd.com>, <kim.phillips@amd.com>,
+        <rrichter@amd.com>, <linux-perf-users@vger.kernel.org>,
+        <jolsa@redhat.com>, <kjain@linux.ibm.com>
+Subject: [PATCH 1/2] perf/docs: Add info on AMD raw event encoding
+Date:   Fri, 19 Nov 2021 16:42:33 +0530
+Message-ID: <20211119111234.170726-1-sandipan.das@amd.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
- definitions=2021-11-19_08,2021-11-17_01,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 bulkscore=0 clxscore=1015 mlxlogscore=999
- spamscore=0 impostorscore=0 adultscore=0 lowpriorityscore=0 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2110150000 definitions=main-2111190052
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6be0e724-b176-4cb5-bae3-08d9ab4d83a1
+X-MS-TrafficTypeDiagnostic: CY4PR12MB1255:
+X-Microsoft-Antispam-PRVS: <CY4PR12MB1255977A4BC5E19C9610A3228B9C9@CY4PR12MB1255.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: U0vBxABEvUhDwfai6sF8bIrB7ZuqR7boBVL02do/264bi184JfxFyH2O0Dol++xPW0L6Juqo0WPQ9EW41wvGZp21junYgtOcYyNGc5v/yobOu7/dxn5x1HW9mzBrdDAEJKufVKZiubw/OPMKw985r8Hxj/guunASLG8WZsFgx5UQwG46sZHDPF1upelgyWJQlFasCti9fcDFWCfnhj3lvzcb3fhww5MOQJV62sjhxIKfM73OjknFXly2C7WfXu/0GILxKvaDlMz2yycPpfw4wikQV6O79XfdhxSWwR3XBBTZOyh68N4oPgQSI7zewpB/CiLsW1qkyYDfxkq7uLB2BcrXYGWQ3dvlEHuqz8nynakq8KY/W8vptGMpWMUdcsVt7nvNzZoGMOifH4n4OeOZ3yTPJ6BEeb/y+brvo+J6fS9gSooDCYNx0SPpVbc6YTGZzNBcfQUXt3TOJDZOqSuOr8CTc5Mq4u800jKlWCYdobAjY5ZpKVPkHZaJgVpas+3LQcep3EwgiQ79aT87iwhyDsUq+myrrklCDCdenwkJhSswL4qTqAjyVCBwU3t+f5ovXZnZiCKYnNM1D9sKrZuwqJvvIk1FRbx5nWt9I/ndiU/yI8+FMSJos4yf4Guj0H1EfaWme7U5gT+e4Hv/6GwjwINnP82/7EqOqn4XVQhlB/vz5zPgMc/WpuQ5efbl+BM5j+Mpumnc/OJMM0RLkWvPbHhQIbMDaqjXdRc3wIOyTR0=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(336012)(6916009)(2616005)(5660300002)(83380400001)(44832011)(36756003)(4326008)(26005)(54906003)(82310400003)(426003)(356005)(86362001)(8676002)(2906002)(1076003)(70586007)(6666004)(81166007)(508600001)(16526019)(186003)(7696005)(316002)(47076005)(36860700001)(8936002)(70206006)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Nov 2021 11:12:45.8092
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6be0e724-b176-4cb5-bae3-08d9ab4d83a1
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT024.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1255
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Processors from the AMD Zen family have events with event
+select codes and unit masks larger than a byte. The core
+PMU, for example, uses 12-bit event select codes split
+between bits 0-7 and 32-35 of the PERF_CTL MSRs as can
+be seen from /sys/bus/event_sources/devices/cpu/format/*.
 
+The Processor Programming Reference (PPR) lists the event
+codes as unified 12-bit hexadecimal values instead and the
+split between the bits is not apparent to someone who is
+not aware of the layout of the PERF_CTL MSRs.
 
-On 11/19/21 4:18 AM, Andrii Nakryiko wrote:
-> On Thu, Nov 18, 2021 at 5:10 AM Kajol Jain <kjain@linux.ibm.com> wrote:
->>
->> Branch data available to bpf programs can be very useful to get
->> stack traces out of userspace application.
->>
->> Commit fff7b64355ea ("bpf: Add bpf_read_branch_records() helper")
->> added bpf support to capture branch records in x86. Enable this feature
->> for other architectures as well by removing check specific to x86.
->> Incase any platform didn't support branch stack, it will return with
->> -EINVAL.
->>
->> Selftest 'perf_branches' result on power9 machine with branch stacks
->> support.
->>
->> Before this patch changes:
->> [command]# ./test_progs -t perf_branches
->>  #88/1 perf_branches/perf_branches_hw:FAIL
->>  #88/2 perf_branches/perf_branches_no_hw:OK
->>  #88 perf_branches:FAIL
->> Summary: 0/1 PASSED, 0 SKIPPED, 1 FAILED
->>
->> After this patch changes:
->> [command]# ./test_progs -t perf_branches
->>  #88/1 perf_branches/perf_branches_hw:OK
->>  #88/2 perf_branches/perf_branches_no_hw:OK
->>  #88 perf_branches:OK
->> Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
->>
->> Selftest 'perf_branches' result on power9 machine which doesn't
->> support branch stack
->>
->> After this patch changes:
->> [command]# ./test_progs -t perf_branches
->>  #88/1 perf_branches/perf_branches_hw:SKIP
->>  #88/2 perf_branches/perf_branches_no_hw:OK
->>  #88 perf_branches:OK
->> Summary: 1/1 PASSED, 1 SKIPPED, 0 FAILED
->>
->> Fixes: fff7b64355eac ("bpf: Add bpf_read_branch_records() helper")
->> Suggested-by: Peter Zijlstra <peterz@infradead.org>
->> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
->> ---
->>
->> Tested this patch changes on power9 machine using selftest
->> 'perf branches' which is added in commit 67306f84ca78 ("selftests/bpf:
->> Add bpf_read_branch_records()")
->>
->> Changelog:
->> v1 -> v2
->> - Inorder to add bpf support to capture branch record in
->>   powerpc, rather then adding config for powerpc, entirely
->>   remove config check from bpf_read_branch_records function
->>   as suggested by Peter Zijlstra
-> 
-> what will be returned for architectures that don't support branch
-> records? Will it be zero instead of -ENOENT?
-> 
+8-bit event select codes continue to work as the layout
+matches that of the PERF_CTL MSRs i.e. bits 0-7 for event
+select and 8-15 for unit mask.
 
-Hi Andrii,
-     Incase any architecture doesn't support branch records and if it
-tries to do branch sampling with sample type as
-PERF_SAMPLE_BRANCH_STACK, perf_event_open itself will fail.
+This adds details in the perf man pages about using
+/sys/bus/event_sources/devices/*/format/* for determining
+the correct raw event encoding scheme.
 
-And even if, perf_event_open succeeds  we have appropriate checks in
-bpf_read_branch_records function, which will return -EINVAL for those
-architectures.
+E.g. the "ic_tag_hit_miss.all_instruction_cache_accesses"
+event with code 0x18e and umask 0x1f can be programmed
+using its symbolic name as:
 
-Reference from linux/kernel/trace/bpf_trace.c
+  $ sudo perf --debug perf-event-open stat -e ic_tag_hit_miss.all_instruction_cache_accesses sleep 1
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             4
+    size                             128
+    config                           0x100001f8e
+    sample_type                      IDENTIFIER
+    read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+    disabled                         1
+    inherit                          1
+    enable_on_exec                   1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  [...]
 
-Here, br_stack will be empty, for unsupported architectures.
+In raw format, it may be programmed incorrectly as:
 
-BPF_CALL_4(bpf_read_branch_records, struct bpf_perf_event_data_kern *, ctx,
-	   void *, buf, u32, size, u64, flags)
-{
-.....
-	if (unlikely(flags & ~BPF_F_GET_BRANCH_RECORDS_SIZE))
-		return -EINVAL;
+  $ sudo perf --debug perf-event-open stat -e r1f18e sleep 1
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             4
+    size                             128
+    config                           0x1f18e
+    sample_type                      IDENTIFIER
+    read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+    disabled                         1
+    inherit                          1
+    enable_on_exec                   1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  [...]
 
-	if (unlikely(!br_stack))
-		return -EINVAL;
-....
-}
+When it should have been based on the format from sysfs:
 
-Thanks,
-Kajol Jain
+  $ cat /sys/bus/event_source/devices/cpu/format/event
+  config:0-7,32-35
 
->>
->> - Link to the v1 patch: https://lkml.org/lkml/2021/11/14/434
->>
->>  kernel/trace/bpf_trace.c | 4 ----
->>  1 file changed, 4 deletions(-)
->>
->> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
->> index 7396488793ff..5e445985c6b4 100644
->> --- a/kernel/trace/bpf_trace.c
->> +++ b/kernel/trace/bpf_trace.c
->> @@ -1402,9 +1402,6 @@ static const struct bpf_func_proto bpf_perf_prog_read_value_proto = {
->>  BPF_CALL_4(bpf_read_branch_records, struct bpf_perf_event_data_kern *, ctx,
->>            void *, buf, u32, size, u64, flags)
->>  {
->> -#ifndef CONFIG_X86
->> -       return -ENOENT;
->> -#else
->>         static const u32 br_entry_size = sizeof(struct perf_branch_entry);
->>         struct perf_branch_stack *br_stack = ctx->data->br_stack;
->>         u32 to_copy;
->> @@ -1425,7 +1422,6 @@ BPF_CALL_4(bpf_read_branch_records, struct bpf_perf_event_data_kern *, ctx,
->>         memcpy(buf, br_stack->entries, to_copy);
->>
->>         return to_copy;
->> -#endif
->>  }
->>
->>  static const struct bpf_func_proto bpf_read_branch_records_proto = {
->> --
->> 2.27.0
->>
+  $ sudo perf --debug perf-event-open stat -e r100001f8e sleep 1
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             4
+    size                             128
+    config                           0x100001f8e
+    sample_type                      IDENTIFIER
+    read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+    disabled                         1
+    inherit                          1
+    enable_on_exec                   1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  [...]
+
+Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+---
+ tools/perf/Documentation/perf-list.txt   | 36 +++++++++++++++++++++++-
+ tools/perf/Documentation/perf-record.txt |  6 ++--
+ tools/perf/Documentation/perf-stat.txt   |  6 ++--
+ tools/perf/Documentation/perf-top.txt    |  7 +++--
+ 4 files changed, 47 insertions(+), 8 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
+index 4dc8d0af19df..9c54c0566fda 100644
+--- a/tools/perf/Documentation/perf-list.txt
++++ b/tools/perf/Documentation/perf-list.txt
+@@ -94,7 +94,7 @@ RAW HARDWARE EVENT DESCRIPTOR
+ Even when an event is not available in a symbolic form within perf right now,
+ it can be encoded in a per processor specific way.
+ 
+-For instance For x86 CPUs NNN represents the raw register encoding with the
++For instance on x86 CPUs, N is a hexadecimal value that represents the raw register encoding with the
+ layout of IA32_PERFEVTSELx MSRs (see [Intel® 64 and IA-32 Architectures Software Developer's Manual Volume 3B: System Programming Guide] Figure 30-1 Layout
+ of IA32_PERFEVTSELx MSRs) or AMD's PerfEvtSeln (see [AMD64 Architecture Programmer’s Manual Volume 2: System Programming], Page 344,
+ Figure 13-7 Performance Event-Select Register (PerfEvtSeln)).
+@@ -126,6 +126,40 @@ It's also possible to use pmu syntax:
+  perf record -e cpu/r1a8/ ...
+  perf record -e cpu/r0x1a8/ ...
+ 
++Some processors, like those from the AMD Zen family, support event codes and
++unit masks larger than a byte. In such cases, the bits corresponding to the
++event configuration parameters can be seen with:
++
++  cat /sys/bus/event_source/devices/<pmu>/format/<config>
++
++Example:
++
++If the AMD docs for an EPYC 7713 processor describe an event as:
++
++  Event  Umask  Event Mask
++  Num.   Value  Mnemonic                                        Description     Comment
++
++  18EH     1FH  ic_tag_hit_miss.all_instruction_cache_accesses  Counts various  Use umask=1f to count
++                                                                IC tag related  all instruction cache
++								hit and miss    accesses
++								events
++
++raw encoding of 0x1F18E cannot be used since the upper nibble of the
++EventSelect bits have to be specified via bits 32-35 as can be seen with:
++
++  cat /sys/bus/event_source/devices/cpu/format/event
++
++raw encoding of 0x100001F8E should be used instead:
++
++ perf stat -e r100001f8e -a sleep 1
++ perf record -e r100001f8e ...
++
++It's also possible to use pmu syntax:
++
++ perf record -e r100001f8e -a sleep 1
++ perf record -e cpu/r100001f8e/ ...
++ perf record -e cpu/r0x100001f8e/ ...
++
+ You should refer to the processor specific documentation for getting these
+ details. Some of them are referenced in the SEE ALSO section below.
+ 
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 3cf7bac67239..43d945e12d97 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -30,8 +30,10 @@ OPTIONS
+ 
+         - a symbolic event name	(use 'perf list' to list all events)
+ 
+-        - a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
+-	  hexadecimal event descriptor.
++        - a raw PMU event in the form of rN where N is a hexadecimal value
++          that represents the raw register encoding with the layout of the
++          event control registers as described by entries in
++          /sys/bus/event_sources/devices/<pmu>/format/*.
+ 
+         - a symbolic or raw PMU event followed by an optional colon
+ 	  and a list of event modifiers, e.g., cpu-cycles:p.  See the
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index 7e6fb7cbc0f4..0f279b5498e4 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -36,8 +36,10 @@ report::
+ 
+ 	- a symbolic event name (use 'perf list' to list all events)
+ 
+-	- a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
+-	  hexadecimal event descriptor.
++	- a raw PMU event in the form of rN where N is a hexadecimal value
++	  that represents the raw register encoding with the layout of the
++	  event control registers as described by entries in
++	  /sys/bus/event_sources/devices/<pmu>/format/*.
+ 
+         - a symbolic or raw PMU event followed by an optional colon
+ 	  and a list of event modifiers, e.g., cpu-cycles:p.  See the
+diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
+index 9898a32b8d9c..21028910561f 100644
+--- a/tools/perf/Documentation/perf-top.txt
++++ b/tools/perf/Documentation/perf-top.txt
+@@ -38,9 +38,10 @@ Default is to monitor all CPUS.
+ -e <event>::
+ --event=<event>::
+ 	Select the PMU event. Selection can be a symbolic event name
+-	(use 'perf list' to list all events) or a raw PMU
+-	event (eventsel+umask) in the form of rNNN where NNN is a
+-	hexadecimal event descriptor.
++	(use 'perf list' to list all events) or a raw PMU event in the form
++	of rN where N is a hexadecimal value that represents the raw register
++	encoding with the layout of the event control registers as described
++	by entries in /sys/bus/event_sources/devices/<pmu>/format/*.
+ 
+ -E <entries>::
+ --entries=<entries>::
+-- 
+2.30.2
+
