@@ -2,156 +2,121 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B10C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Nov 2021 16:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBE7C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Nov 2021 17:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 952BE60184
-	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Nov 2021 16:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D83C961A53
+	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Nov 2021 17:11:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235488AbhKSQLx (ORCPT
+        id S236488AbhKSRO6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 19 Nov 2021 11:11:53 -0500
-Received: from www62.your-server.de ([213.133.104.62]:59818 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232454AbhKSQLw (ORCPT
+        Fri, 19 Nov 2021 12:14:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236484AbhKSRO5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 19 Nov 2021 11:11:52 -0500
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-        by www62.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1mo6RT-000EZh-K4; Fri, 19 Nov 2021 17:08:47 +0100
-Received: from [85.1.206.226] (helo=linux.home)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1mo6RT-000BTW-6J; Fri, 19 Nov 2021 17:08:47 +0100
-Subject: Re: [PATCH v2] bpf: Remove config check to enable bpf support for
- branch records
-To:     kajoljain <kjain@linux.ibm.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Ziljstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>, Martin Lau <kafai@fb.com>,
-        Yonghong Song <yhs@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        KP Singh <kpsingh@kernel.org>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>, maddy@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        rnsastry@linux.ibm.com
-References: <20211118130507.170154-1-kjain@linux.ibm.com>
- <CAEf4BzbDgCVLj0r=3iponPp81aVAGokhGti8WLfWKhHuTLdA8w@mail.gmail.com>
- <ce150f51-ef50-de85-fc52-0f2ee3a3000f@linux.ibm.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <859f8b57-7ae2-3c68-5642-93bec7a59a20@iogearbox.net>
-Date:   Fri, 19 Nov 2021 17:08:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 19 Nov 2021 12:14:57 -0500
+Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8ADEC06173E
+        for <linux-perf-users@vger.kernel.org>; Fri, 19 Nov 2021 09:11:55 -0800 (PST)
+Received: by mail-io1-xd32.google.com with SMTP id f9so13507284ioo.11
+        for <linux-perf-users@vger.kernel.org>; Fri, 19 Nov 2021 09:11:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6UtAEF3RMoWxvdmenr7jJlhUUM9QJZdlurbD3JlhdrA=;
+        b=TLwLw5txAQexwrNw1GXupt21MSixRkrPoci4c9arHuo6rEbq5YdRs3Dn3WlhaySF8t
+         XgGVqLkwjt2jNsb/uHuHelfU+iOYnupAb20l3vZ4e1r0Iy6HuQ8x5cVvxX15kroPNNH9
+         V87+AEv0RUUOXYhkc7hj5nrxdi/Z5/FSmqfqjpbDomwmYOY2IfxoYDd4KYDudmADT0Pe
+         L2OcNcUAa545JhSOF1DJZEdJEbEXEG8jpFefn35Jao7qvvMkRMp/2XlxgoE1sGFjLpCO
+         kXD+Ln5OokQA0ujzE3Edqkno/vQj4XMW1qnsJCqzdMzPZVW8OFQVxVyDwJL9l6vpY7Gd
+         DxTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6UtAEF3RMoWxvdmenr7jJlhUUM9QJZdlurbD3JlhdrA=;
+        b=w0lO1eJ64yd4J9qEkFDF3/O/XTIN+mT4CtSOpjdER1/f197iD4TeQoZMYT0efvWWNj
+         wlil4qfrpcHA+MdjcTxtU77BubsSb452CZ3m9Lj9otYfvBSAXuHlz9gfPq4fNJntCqgq
+         ENk2pczaTjDAc0bOyEe+yQ7QYXSJpEyJFSOlhKZWar5wYo0/umlznpHdCl99WAE8i57N
+         Mub7Ph8XtJivmmUBTs75qng204+orA9mN5phtKl1KF3k9nyq5uNuG/rzNVKInmsYCfbO
+         jhmrgexJkK6DbQz2ukG831L8rLS3QaGT1B8/bVVBOigorzmoRRNuuqvJLgLssv4U+AS2
+         mJkw==
+X-Gm-Message-State: AOAM530E7OONMq9cxvnXUt8Fm6V4WwUUwx9D84Ngt6usQWgB8NNIITP8
+        hEwnVhNJKV1FAi6Ol4LwJfErJFUu0nOnCXL8CWkrFA==
+X-Google-Smtp-Source: ABdhPJyta5sVRoXfrWoMVVk96IobRSjnNcryB8JFyy5Hg55pKd9es/dKLbW1z4SgwB0UW0rnJnJE7hfx+rDlEJy1cRg=
+X-Received: by 2002:a05:6638:144f:: with SMTP id l15mr28892479jad.21.1637341914947;
+ Fri, 19 Nov 2021 09:11:54 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <ce150f51-ef50-de85-fc52-0f2ee3a3000f@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.103.3/26358/Fri Nov 19 10:19:46 2021)
+References: <20211118220647.2355999-1-irogers@google.com> <20211118220647.2355999-2-irogers@google.com>
+ <17f31c73-052d-ef15-879a-c6a224977e8d@huawei.com>
+In-Reply-To: <17f31c73-052d-ef15-879a-c6a224977e8d@huawei.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 19 Nov 2021 09:11:43 -0800
+Message-ID: <CAP-5=fWh6bQ1vgzk-kK1Q0rcysXPHtbagBASgcQQ2dVgANG8Mw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] perf parse-events: Architecture specific leader override
+To:     John Garry <john.garry@huawei.com>
+Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vineet Singh <vineet.singh@intel.com>, eranian@google.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 11/19/21 10:35 AM, kajoljain wrote:
-> On 11/19/21 4:18 AM, Andrii Nakryiko wrote:
->> On Thu, Nov 18, 2021 at 5:10 AM Kajol Jain <kjain@linux.ibm.com> wrote:
->>>
->>> Branch data available to bpf programs can be very useful to get
->>> stack traces out of userspace application.
->>>
->>> Commit fff7b64355ea ("bpf: Add bpf_read_branch_records() helper")
->>> added bpf support to capture branch records in x86. Enable this feature
->>> for other architectures as well by removing check specific to x86.
->>> Incase any platform didn't support branch stack, it will return with
->>> -EINVAL.
->>>
->>> Selftest 'perf_branches' result on power9 machine with branch stacks
->>> support.
->>>
->>> Before this patch changes:
->>> [command]# ./test_progs -t perf_branches
->>>   #88/1 perf_branches/perf_branches_hw:FAIL
->>>   #88/2 perf_branches/perf_branches_no_hw:OK
->>>   #88 perf_branches:FAIL
->>> Summary: 0/1 PASSED, 0 SKIPPED, 1 FAILED
->>>
->>> After this patch changes:
->>> [command]# ./test_progs -t perf_branches
->>>   #88/1 perf_branches/perf_branches_hw:OK
->>>   #88/2 perf_branches/perf_branches_no_hw:OK
->>>   #88 perf_branches:OK
->>> Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
->>>
->>> Selftest 'perf_branches' result on power9 machine which doesn't
->>> support branch stack
->>>
->>> After this patch changes:
->>> [command]# ./test_progs -t perf_branches
->>>   #88/1 perf_branches/perf_branches_hw:SKIP
->>>   #88/2 perf_branches/perf_branches_no_hw:OK
->>>   #88 perf_branches:OK
->>> Summary: 1/1 PASSED, 1 SKIPPED, 0 FAILED
->>>
->>> Fixes: fff7b64355eac ("bpf: Add bpf_read_branch_records() helper")
->>> Suggested-by: Peter Zijlstra <peterz@infradead.org>
->>> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
->>> ---
->>>
->>> Tested this patch changes on power9 machine using selftest
->>> 'perf branches' which is added in commit 67306f84ca78 ("selftests/bpf:
->>> Add bpf_read_branch_records()")
->>>
->>> Changelog:
->>> v1 -> v2
->>> - Inorder to add bpf support to capture branch record in
->>>    powerpc, rather then adding config for powerpc, entirely
->>>    remove config check from bpf_read_branch_records function
->>>    as suggested by Peter Zijlstra
->>
->> what will be returned for architectures that don't support branch
->> records? Will it be zero instead of -ENOENT?
-> 
-> Hi Andrii,
->       Incase any architecture doesn't support branch records and if it
-> tries to do branch sampling with sample type as
-> PERF_SAMPLE_BRANCH_STACK, perf_event_open itself will fail.
-> 
-> And even if, perf_event_open succeeds  we have appropriate checks in
-> bpf_read_branch_records function, which will return -EINVAL for those
-> architectures.
-> 
-> Reference from linux/kernel/trace/bpf_trace.c
-> 
-> Here, br_stack will be empty, for unsupported architectures.
-> 
-> BPF_CALL_4(bpf_read_branch_records, struct bpf_perf_event_data_kern *, ctx,
-> 	   void *, buf, u32, size, u64, flags)
-> {
-> .....
-> 	if (unlikely(flags & ~BPF_F_GET_BRANCH_RECORDS_SIZE))
-> 		return -EINVAL;
-> 
-> 	if (unlikely(!br_stack))
-> 		return -EINVAL;
+On Fri, Nov 19, 2021 at 6:47 AM John Garry <john.garry@huawei.com> wrote:
+>
+> On 18/11/2021 22:06, Ian Rogers wrote:
+> > Currently topdown events must appear after a slots event:
+> >
+> > $ perf stat -e '{slots,topdown-fe-bound}' /bin/true
+> >
+> >   Performance counter stats for '/bin/true':
+> >
+> >           3,183,090      slots
+> >             986,133      topdown-fe-bound
+> >
+> > Reversing the events yields:
+> >
+> > $ perf stat -e '{topdown-fe-bound,slots}' /bin/true
+> > Error:
+> > The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (topdown-fe-bound).
+> >
+> > For metrics the order of events is determined by iterating over a
+> > hashmap, and so slots isn't guaranteed to be first which can yield this
+> > error.
+> >
+> > Change the set_leader in parse-events, called when a group is closed, so
+> > that rather than always making the first event the leader, if the slots
+> > event exists then it is made the leader. It is then moved to the head of
+> > the evlist otherwise it won't be opened in the correct order.
+> >
+> > The result is:
+> >
+> > $ perf stat -e '{topdown-fe-bound,slots}' /bin/true
+>
+> Just curious - does this just affect topdown events? I think x86 is the
+> only arch which has them.
 
-In that case for unsupported archs we should probably bail out with -ENOENT here
-as helper doc says '**-ENOENT** if architecture does not support branch records'
-(see bpf_read_branch_records() doc in include/uapi/linux/bpf.h).
+The change is specific to x86 as the weak symbol override only happens
+on x86. For x86 it only applies if the cpu/slots/ event exists. In the
+future it may be used for more than just this - Kajol Jain mentioned a
+similar problem for powerpc:
+https://lore.kernel.org/lkml/6d1fcb97-223d-7d8e-b5cb-0f10dbc62880@linux.ibm.com/
 
-> ....
-> }
-> 
+Thanks,
+Ian
+
 > Thanks,
-> Kajol Jain
+> John
