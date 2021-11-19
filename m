@@ -1,77 +1,76 @@
 Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DB3A0C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Nov 2021 20:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A70EE61A03
-	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Nov 2021 20:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDF7C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Nov 2021 22:20:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232069AbhKSUyQ (ORCPT
+        id S235433AbhKSWXV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 19 Nov 2021 15:54:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34068 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231958AbhKSUyP (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 19 Nov 2021 15:54:15 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id 78A7961A64;
-        Fri, 19 Nov 2021 20:51:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637355073;
-        bh=pjK3yyRBt7f5kUH+hIc65x/yD0QMGt36utbDtlncIN0=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=uKnlLV1B1/iLQ1WgCNfcosaYr+g6TJUhcoWSAuYV4Ri+z5rIGNH9zi18hI+HznckG
-         QkSAtyYeMTB27r9lftGAf6deX5j9tPZ/1gdI0NxNEuKCJ8Tgk+Yr6GypED4spnztKn
-         3E4k60tknVrI9vAJJtCuVuUajJYh6IChb0bAO+y6uSvEeCA1Xkdj0U3f2hJc+mQmPK
-         9az388vVRYq8NwIrNeyviiWsvQbHB3fyLoyZTHmx5Bmemf4KwT0tU6Ug+Gq/rc/wG9
-         +S2B+PhmfIJjGJFnoJ+H5wJcKoHcPJToo8+dmKN9TTaoXpNv3dfw6oNAnpZHlUKES6
-         EStPmtrZysksQ==
-Subject: Re: [GIT PULL] perf tools fixes for v5.16: 1st batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20211119133615.31727-1-acme@kernel.org>
-References: <20211119133615.31727-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20211119133615.31727-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.16-2021-11-19
-X-PR-Tracked-Commit-Id: b194c9cd09dd98af76beaa32a041af674260d730
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8b98436af2c0d6a6fc970700a290666600e2ba13
-Message-Id: <163735507334.1617.537207187548031491.pr-tracker-bot@kernel.org>
-Date:   Fri, 19 Nov 2021 20:51:13 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-        German Gomez <german.gomez@arm.com>,
-        Ian Rogers <irogers@google.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Sohaib Mohamed <sohaib.amhmd@gmail.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        Fri, 19 Nov 2021 17:23:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53376 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235124AbhKSWXV (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 19 Nov 2021 17:23:21 -0500
+Received: from mail-qv1-xf2f.google.com (mail-qv1-xf2f.google.com [IPv6:2607:f8b0:4864:20::f2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67F6BC061574
+        for <linux-perf-users@vger.kernel.org>; Fri, 19 Nov 2021 14:20:19 -0800 (PST)
+Received: by mail-qv1-xf2f.google.com with SMTP id bu11so8144933qvb.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 19 Nov 2021 14:20:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=markhansen.co.nz; s=google;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=3rgttafRN8yJanrY1wAix8slM+oNPE68AvVTnDmPzOc=;
+        b=WBrR6xUhWARJfStLDut28onkSRJCUArAPfiztK7ooGJUxP4ONrDh+zpKlogH1ddVDt
+         KQBClK9TcS4t5NKB2+x3/LhPvLhty2Moop3j7aTvr+9N1EKq2D33AakuFtkMqH/2GpQ5
+         SJ9A/2r0JhBWM2lD9qqnPrgvHq2LKA1SF8UGg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=3rgttafRN8yJanrY1wAix8slM+oNPE68AvVTnDmPzOc=;
+        b=DL7j0C/f7WK0FN6ifLh2dsVShiJL561NCCuoNkOu0z6r7bo1kJkF+X0IGosBRnt9Rs
+         0RihE4qQ67ydEyhFxA3WHuZQqqSOm6tFUHcrYQ7oYdHVRjhoh2PzcSrQzznRKL47AEcg
+         LTddKxHhtc2SXkMrf1tcibtYDshvkw4qG+Lw7iyVO1wISMjJsSTjiQ6enLD7QQ5img25
+         /WQKcTxkToVNNUl9SHNZ/i2Udpkld7pQzvUSLh7VWDfRtlLazX/pp6xmabTi7XhMjJvp
+         s0PlE6w9dequxqeL3W4tyDGRzY3p10oO9Ncen3e3SjHSWNDMrvnNVkXzE0++lj9R78bX
+         K7TQ==
+X-Gm-Message-State: AOAM530rPD+FWcoaMkIM+KPdRlntoZM2BWNYQBNa/NEJl+1rfUj6ASIA
+        9TpAMOXmztHlZYZGwqOEcl7jdeVK55P2fJWmtYNrntU8pKxUeA==
+X-Google-Smtp-Source: ABdhPJyVzlv7j9ka1eMJ9/xbFqI5+zsCrvIFlqFsSBNeuOxx9pN7fdish5Ir8vQGXcCIyodQWJopUas+DmrsVmFbZAQ=
+X-Received: by 2002:a05:6214:2428:: with SMTP id gy8mr76714413qvb.18.1637360418144;
+ Fri, 19 Nov 2021 14:20:18 -0800 (PST)
+MIME-Version: 1.0
+From:   Mark Hansen <mark@markhansen.co.nz>
+Date:   Sat, 20 Nov 2021 09:20:05 +1100
+Message-ID: <CAM07o6RciG0DWRGMwEFUZ+j=TvmULUzYau5rexnetPdc1aPm7Q@mail.gmail.com>
+Subject: Analysis UIs, and other profile data formats you can convert
+ perf.data to
+To:     linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Fri, 19 Nov 2021 10:36:15 -0300:
+Hi perf'ormers,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.16-2021-11-19
+I'm trying to map the profiling ecosystem (profilers, data formats,
+converters, analysis UIs, and the connections between). I'm
+cataloguing these at Profilerpedia:
+https://profilerpedia.markhansen.co.nz/.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8b98436af2c0d6a6fc970700a290666600e2ba13
+Profilerpedia graphs transitive data format conversions, which will
+hopefully allow users to find converters to other profile formats, to
+access powerful analysis UIs that only read those other formats.
 
-Thank you!
+Of particular interest to this group, here's a transitive graph of
+other data formats you can convert Linux perf.data to:
+https://profilerpedia.markhansen.co.nz/formats/linux-perf-data/#converts-to-transitive.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+It's a bit messy (scroll horizontally and click the elements to go to
+their pages), but hopefully still useful.
+
+I'd love any feedback on conversions I've missed.
+
+Thanks,
+Mark
