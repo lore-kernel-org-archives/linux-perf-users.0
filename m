@@ -2,167 +2,130 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 611A6C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 22:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F13C433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Nov 2021 00:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46063611EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Nov 2021 22:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8EF861A81
+	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Nov 2021 00:33:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231270AbhKRWv1 (ORCPT
+        id S233650AbhKSAga (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 Nov 2021 17:51:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45960 "EHLO
+        Thu, 18 Nov 2021 19:36:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229580AbhKRWv1 (ORCPT
+        with ESMTP id S233645AbhKSAg3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 Nov 2021 17:51:27 -0500
-Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6C50C061574;
-        Thu, 18 Nov 2021 14:48:26 -0800 (PST)
-Received: by mail-yb1-xb2b.google.com with SMTP id v138so22642340ybb.8;
-        Thu, 18 Nov 2021 14:48:26 -0800 (PST)
+        Thu, 18 Nov 2021 19:36:29 -0500
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46CFCC06173E
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Nov 2021 16:33:29 -0800 (PST)
+Received: by mail-pl1-x629.google.com with SMTP id u11so6777974plf.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Nov 2021 16:33:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1A4I+IvpMnd1wIeiEMqnfEVMSvtyrpGJNH7+WyrCADg=;
-        b=XPMPejQ4hp2jZEecf8S1x6d/hnxHl1myxWtrkVVOmM+/h4+9WyAkpMOtdPU9tZyJ7u
-         0WQb62j2C7OKPp0I/2a4UsVmQZtuJk4yTj3nvvwt9ev4r6FDADcLdjAuFAjdWElPmS53
-         pMOkWcLnonOZPjbbWCI6pd3gEnvmjc3gnmEzwZYm6xQa/TmseBChoCc41alLALVwIczz
-         JIu/gO76XnEI4aKW6Bfpq/CrJUbN+n680utr5GPjKzSx9Ond368KrPs4S90e0O/IEg+T
-         OSbRoMU4MbjXKUbeBW1CSH9eihXsz9EAfmncPfGu0xzn2uXiyek9VIQ+kiUfRvtWMWRI
-         qksg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=UkcM1rTecmJ25KsUoXFTZKIn9eyzcYLgTJdNQlzShK8=;
+        b=nNONCxvj70orXmFEPPlUSDO3mt6Wtl927JrNDbPxGbq3nLI7dP4aUomf4ikpaAWno1
+         E5tZ/1qd+TfTbpG3LKaqN3/Q005utHPSi5xYtFL481zC+BGznNHJIpSCAxcReahqhnBX
+         tFfQGDSsOCTvTJzQl80RCaDg+QR/KouVZUOeNuIg3nccU7JjgzDrTQl0U/n93pd4wC6E
+         XxzpObxnLdf9bS/XDIelOHQBYzAx3azq/h3nJh7vThyhUxl3MelJlTwXx+EMRGwpO58E
+         rGWhe2M3G001XQnWRJJksjXDSpugEK1Sh26xTl+BRMz9DQbU6lo6LNZyYUXrfqgk+4MQ
+         y+Ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1A4I+IvpMnd1wIeiEMqnfEVMSvtyrpGJNH7+WyrCADg=;
-        b=Em7GTfiWb73eyGHGxTgeG5WKTFtQSyTUBRFaYQLBBRRCPkrv1s+ZoDpxyOXbhdCm2W
-         mAHwRlJzw57GTxUynLaxdyWG/4p9D0+r8D7sT6Dzwu8Q3j1iW6tKQcVCbfDX646HFEB1
-         BP0ROt2+9ddHLUAJR1Va8tRUMyKNQp//sTmWrtImGA4QdzwkWYcPCP59jrnoBNVqR/Qg
-         WIxsdlSqwpZUNFCV8PZeRVAQdbDeuuRyqcuGEBZbsVHGV6bpPJhz47XLcWEWug4KmXfD
-         1+kdRlkB6OFEV2bQ8my0pPcQjxMzHp940ZG356g2mUsnDJ00ZU84CTxRo9MwKm2Zp1UX
-         xmwQ==
-X-Gm-Message-State: AOAM531uzkxT8s4RaG/XzacYFsAkr7JFtOlWMpd9rzdtjBXEgLpQZnuO
-        mVr+sG0L1KUJkdKbHsDs4d+XVGBdG+YpWirtYtLS3r4Q
-X-Google-Smtp-Source: ABdhPJwUgfAuSgKLD26HnNHOrJPhk6SCNwQM2Dn26pOeI2qdLecIAvpsaXTS1kklB/ODwGB376Xm1xXl2h4EKAoY5X8=
-X-Received: by 2002:a25:d187:: with SMTP id i129mr31194995ybg.2.1637275705946;
- Thu, 18 Nov 2021 14:48:25 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UkcM1rTecmJ25KsUoXFTZKIn9eyzcYLgTJdNQlzShK8=;
+        b=yGcplQk3wY8rZm8lKhdZZYqW0Q9rZHJlPQ4Q+DPcr46socQdmjLAZB52oVkINiVSJF
+         sEzxeatUw6QpTmHL81gHax1GLIAZ9ZKYN7OR1z2rRSUkaQzn62luHu6nvREHjFiFSZfd
+         pPNYov5AuMUv/9DLNN/888fF8fnhTx3vfkHzDf22oN2yztAfxwxKDQ0Lla6h2bQMmEy0
+         MsV0Ao8uKwPPRCry/VdEkHix4Iij+SMrgmbyleayeAF0L3Gd1+NMo8aALQLtwYHFbY22
+         A2I5qmZZPu/HdoQxHZkT+ZOn+PsMpQNnPf2KJlq2jwGyZ3EOzp41wm3/JZ6NrgzCausy
+         8A7g==
+X-Gm-Message-State: AOAM530GRyQh5Uf5RywgtoMTqL5I1JHuNWrleLEZ2nNIgEGH98kj0I5P
+        fInYsQoFV1d670Il39a8Jvhqig==
+X-Google-Smtp-Source: ABdhPJx7HLZK7jaTa73RkUrjpdUhNrR+ZBGuDJ1erNCEFL+MslOqX3V7V8oW+JO6oH3Lu4UeiweKvA==
+X-Received: by 2002:a17:90b:4a01:: with SMTP id kk1mr15807790pjb.7.1637282008706;
+        Thu, 18 Nov 2021 16:33:28 -0800 (PST)
+Received: from leoy-ThinkPad-X240s ([66.23.193.242])
+        by smtp.gmail.com with ESMTPSA id k8sm574903pgj.94.2021.11.18.16.33.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Nov 2021 16:33:28 -0800 (PST)
+Date:   Fri, 19 Nov 2021 08:33:17 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf cs-etm: Pass -1 as pid value for
+ machine__set_current_tid()
+Message-ID: <20211119003317.GD69886@leoy-ThinkPad-X240s>
+References: <20211113143540.53957-1-leo.yan@linaro.org>
+ <20211118171412.GB2530497@p14s>
 MIME-Version: 1.0
-References: <20211118130507.170154-1-kjain@linux.ibm.com>
-In-Reply-To: <20211118130507.170154-1-kjain@linux.ibm.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 18 Nov 2021 14:48:14 -0800
-Message-ID: <CAEf4BzbDgCVLj0r=3iponPp81aVAGokhGti8WLfWKhHuTLdA8w@mail.gmail.com>
-Subject: Re: [PATCH v2] bpf: Remove config check to enable bpf support for
- branch records
-To:     Kajol Jain <kjain@linux.ibm.com>
-Cc:     bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Ziljstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>, Martin Lau <kafai@fb.com>,
-        Yonghong Song <yhs@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        KP Singh <kpsingh@kernel.org>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>, maddy@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        rnsastry@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211118171412.GB2530497@p14s>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Nov 18, 2021 at 5:10 AM Kajol Jain <kjain@linux.ibm.com> wrote:
->
-> Branch data available to bpf programs can be very useful to get
-> stack traces out of userspace application.
->
-> Commit fff7b64355ea ("bpf: Add bpf_read_branch_records() helper")
-> added bpf support to capture branch records in x86. Enable this feature
-> for other architectures as well by removing check specific to x86.
-> Incase any platform didn't support branch stack, it will return with
-> -EINVAL.
->
-> Selftest 'perf_branches' result on power9 machine with branch stacks
-> support.
->
-> Before this patch changes:
-> [command]# ./test_progs -t perf_branches
->  #88/1 perf_branches/perf_branches_hw:FAIL
->  #88/2 perf_branches/perf_branches_no_hw:OK
->  #88 perf_branches:FAIL
-> Summary: 0/1 PASSED, 0 SKIPPED, 1 FAILED
->
-> After this patch changes:
-> [command]# ./test_progs -t perf_branches
->  #88/1 perf_branches/perf_branches_hw:OK
->  #88/2 perf_branches/perf_branches_no_hw:OK
->  #88 perf_branches:OK
-> Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
->
-> Selftest 'perf_branches' result on power9 machine which doesn't
-> support branch stack
->
-> After this patch changes:
-> [command]# ./test_progs -t perf_branches
->  #88/1 perf_branches/perf_branches_hw:SKIP
->  #88/2 perf_branches/perf_branches_no_hw:OK
->  #88 perf_branches:OK
-> Summary: 1/1 PASSED, 1 SKIPPED, 0 FAILED
->
-> Fixes: fff7b64355eac ("bpf: Add bpf_read_branch_records() helper")
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-> ---
->
-> Tested this patch changes on power9 machine using selftest
-> 'perf branches' which is added in commit 67306f84ca78 ("selftests/bpf:
-> Add bpf_read_branch_records()")
->
-> Changelog:
-> v1 -> v2
-> - Inorder to add bpf support to capture branch record in
->   powerpc, rather then adding config for powerpc, entirely
->   remove config check from bpf_read_branch_records function
->   as suggested by Peter Zijlstra
+Hi Mathieu,
 
-what will be returned for architectures that don't support branch
-records? Will it be zero instead of -ENOENT?
+On Thu, Nov 18, 2021 at 10:14:12AM -0700, Mathieu Poirier wrote:
+> Good morning Leo,
+> 
+> On Sat, Nov 13, 2021 at 10:35:40PM +0800, Leo Yan wrote:
+> > Currently, cs-etm passes the tid value for both tid and pid parameters
+> > when calling machine__set_current_tid(), this can lead to confusion for
+> > thread handling.  E.g. we arbitrarily pass the same value for pid and
+> > tid, perf tool will be misled to consider it is a main thread (see
+> > thread__main_thread()).
+> > 
+> > On the other hand, Perf tool only can retrieve tid from Arm CoreSight
+> > context packet, and we have no chance to know pid (it maps to kernel's
+> > task_struct::tgid) from hardware tracing data.  For this reason, this
+> > patch passes -1 as pid for function machine__set_current_tid().
+> > 
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > ---
+> >  tools/perf/util/cs-etm.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> > index f323adb1af85..eed1a5930072 100644
+> > --- a/tools/perf/util/cs-etm.c
+> > +++ b/tools/perf/util/cs-etm.c
+> > @@ -1118,7 +1118,7 @@ int cs_etm__etmq_set_tid(struct cs_etm_queue *etmq,
+> >  	if (cs_etm__get_cpu(trace_chan_id, &cpu) < 0)
+> >  		return err;
+> >  
+> > -	err = machine__set_current_tid(etm->machine, cpu, tid, tid);
+> > +	err = machine__set_current_tid(etm->machine, cpu, -1, tid);
+> 
+> I remember wondering about what to do with the pid parameter when I wrote this
+> patch... 
+> 
+> Do you have a before-and-after snapshot you can add to the changelog?
 
->
-> - Link to the v1 patch: https://lkml.org/lkml/2021/11/14/434
->
->  kernel/trace/bpf_trace.c | 4 ----
->  1 file changed, 4 deletions(-)
->
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index 7396488793ff..5e445985c6b4 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -1402,9 +1402,6 @@ static const struct bpf_func_proto bpf_perf_prog_read_value_proto = {
->  BPF_CALL_4(bpf_read_branch_records, struct bpf_perf_event_data_kern *, ctx,
->            void *, buf, u32, size, u64, flags)
->  {
-> -#ifndef CONFIG_X86
-> -       return -ENOENT;
-> -#else
->         static const u32 br_entry_size = sizeof(struct perf_branch_entry);
->         struct perf_branch_stack *br_stack = ctx->data->br_stack;
->         u32 to_copy;
-> @@ -1425,7 +1422,6 @@ BPF_CALL_4(bpf_read_branch_records, struct bpf_perf_event_data_kern *, ctx,
->         memcpy(buf, br_stack->entries, to_copy);
->
->         return to_copy;
-> -#endif
->  }
->
->  static const struct bpf_func_proto bpf_read_branch_records_proto = {
-> --
-> 2.27.0
->
+I tried to capture log but I didn't observe the difference introduced
+by this patch, this might because I didn't per-process mode for
+multi-threading case.  I will try more case for this.
+
+> I also think it will require a "Fixes" tag.  In your next revision please CC James
+> since you guys are working in that area nowadays.
+
+Will do.  And will Cc James and German in next spin.
+
+Thanks for review and suggestion.
+
+Leo
