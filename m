@@ -2,71 +2,59 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 474A8C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Nov 2021 06:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BE0C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Nov 2021 06:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA4161B2B
-	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Nov 2021 06:01:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15083617E5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Nov 2021 06:14:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229687AbhKSGEb (ORCPT
+        id S229472AbhKSGR1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 19 Nov 2021 01:04:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57238 "EHLO
+        Fri, 19 Nov 2021 01:17:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229629AbhKSGEb (ORCPT
+        with ESMTP id S229760AbhKSGRZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 19 Nov 2021 01:04:31 -0500
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DD84C061574;
-        Thu, 18 Nov 2021 22:01:29 -0800 (PST)
-Received: by mail-lf1-x135.google.com with SMTP id m27so38023535lfj.12;
-        Thu, 18 Nov 2021 22:01:29 -0800 (PST)
+        Fri, 19 Nov 2021 01:17:25 -0500
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA4C6C061574;
+        Thu, 18 Nov 2021 22:14:21 -0800 (PST)
+Received: by mail-wr1-x433.google.com with SMTP id r8so16142203wra.7;
+        Thu, 18 Nov 2021 22:14:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cpacwUyzE+yZQi2HRsigmJjkmcIiIOSGZw3OzHsfooo=;
-        b=RldlS2C/ckDa2ilqyd5cvlc3AjbT6JqCEXn82gXQCs6cELL7iYMIp14cSXKt0Pkve1
-         jTesFFg+9gJSMX1G5oBdXRmcbNMdvb2tp21b0Cny/h3y4O81NUztrQExa82xCOsaoSYp
-         ZUTJhomesLSaZWLLRMRpB+jgTQkwqv7IEDCbLcEBADbtKyUw6915Z5srh7D55OKNossi
-         h0dcACKcphWlDBXg6grG4gE7CPxc7kyPmJwHgO8qCxXOWCpyvmhf3cQRglqv5k807Hd9
-         x9bareYiM2HG5ucRSP21DZl0qs3ZYj8HICCV5GfknAxsyJYEJmZNSkr1YDswhBvmK47K
-         GNKg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=c6hJoQP/qTYzgOj5iX39aXQFUKoO5JZyoxh9IrlQx1Y=;
+        b=XCLzn0h+OjuKUpRT6kK3BEloHaWkW7+NyKcHHe9P3AQ3av0C/u6r2/mGvok7xRfLaM
+         VUvgRVs2yp8veYSVOpVEB7MTjKQbzVdhNzUBznvJ7lzEc9fYpZxhnJIFXLTrTJedlGmH
+         0iVCCPyhvf/AzGfDQZyKnJvQmBQ9Ho+NHhnA9Nz8d723skiuCHu97w3+SXm//lO3Tlx9
+         yIbFh3Un7TX/TEKdie2c2iwoTtkC2NJfKHBGmDxX86Bkii6J0dV9sI/d2+Ab6lZrPBLF
+         sLd2z/6DsSJns6Vh15Z7zCNvUAG0M3vaNNQ4QlUBFnhli/khBsFnQ3viNzXMZi/SVtFX
+         LDrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cpacwUyzE+yZQi2HRsigmJjkmcIiIOSGZw3OzHsfooo=;
-        b=S/v/ZwkLwAnq5eOdCAVsxxFMAO6Jz+izzQO3aTsvT/Vq3qfkhgyR/aPxWWXmkvf6fe
-         WYfEO1zGmniQJ1odysjUt34HNABP5RI3yEElfoBDP7QdbNYefsN/UQJ0evdIUR5xfMmm
-         J88BGcgDiVPIImwIzKosFw7imylZaXTgiWZckkIJvV8bw1wZfEvws5Q8WmuskXJwOsV6
-         vD1M5JxJc3YAkDMANbrsPPpWyaTl0pmu+KT6dhwjKx+4Mx8gn2FZIum4Tk2yudjYoO5Z
-         19TG1CXWxfxiSUaeNMW0HFb55dHwrTaxKz+GrmFbJIE11gKxUaW095WigOSMvdA1edbI
-         KKaw==
-X-Gm-Message-State: AOAM533Nywbhy8TECdAa3YqrkvNKYOE3SVP7R+KMaLxuSPiiK6KI7weN
-        shwMqHueOxbzZ5LHJDZqRk+j70ign6PxGVhchskLlqA3DB0XWKyi
-X-Google-Smtp-Source: ABdhPJwlfHbZdUmS+LrGu/838FzHKha8BHY1wMTXd2lj5AAMagnhC97ToIXsmSKtjIb5cKExksbkS2+JiTQteRHu6FM=
-X-Received: by 2002:a2e:b6d4:: with SMTP id m20mr23968361ljo.471.1637301687274;
- Thu, 18 Nov 2021 22:01:27 -0800 (PST)
-MIME-Version: 1.0
-References: <20211118202840.1001787-1-Kenny.Ho@amd.com> <20211118202840.1001787-5-Kenny.Ho@amd.com>
- <20211119043326.a4pmgitlkljpamgh@ast-mbp.dhcp.thefacebook.com>
-In-Reply-To: <20211119043326.a4pmgitlkljpamgh@ast-mbp.dhcp.thefacebook.com>
-From:   Kenny Ho <y2kenny@gmail.com>
-Date:   Fri, 19 Nov 2021 01:01:15 -0500
-Message-ID: <CAOWid-dFFjrBx1YxRxssP=uAWAjQ75iU2jj_uRkBnx4Vt5YrpA@mail.gmail.com>
-Subject: Re: [PATCH RFC 4/4] bpf,cgroup,perf: extend bpf-cgroup to support
- tracepoint attachment
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Kenny Ho <Kenny.Ho@amd.com>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=c6hJoQP/qTYzgOj5iX39aXQFUKoO5JZyoxh9IrlQx1Y=;
+        b=iE/WOtv6uTe3HUlcBaJu0NPG/5gsZoiVHI/JaVe2uwTMNXkmjSiY3/0ubphpgrbRfb
+         sOhPUyJXwvYyDNMOi1lgt/gL7ybNe4osregAn6FnCIW8uyA3Na81rXo58xXR+ht90ZGw
+         pZ32Fnjz5aB9j3yLi4C0P5bYpaM7xMLQOjRSV6Pxc1kmXq8XoaDfUKTiObakB9R00uPa
+         0AmNkkosP/mo5vfdVYUjDiNWsoGGz6Lju25lnChniglQRtmWEBvmLqWMSiJ5uZyX9WDZ
+         IN7pHVvJMZEv1bDkNKGBCc1ABqYW9l8GDdCN8af9pWccUeHmePm6M2s6Htt6+IqHQZCN
+         FCXw==
+X-Gm-Message-State: AOAM5337scnFY/a3Os9cK2WSvnGg1udIjaMgIx7trs/DmhjWmrPL5vw3
+        +eDqNCZL2DeDwDKIn1SHU3g=
+X-Google-Smtp-Source: ABdhPJwtTivKcqlWFwAAcJC4AqckhTgLDs7q3KCslBhO8mCOGgJ6z0QEf0KPfz2EesWqcr8wgMMT+Q==
+X-Received: by 2002:a05:6000:1544:: with SMTP id 4mr4396926wry.358.1637302460183;
+        Thu, 18 Nov 2021 22:14:20 -0800 (PST)
+Received: from localhost.localdomain ([197.49.250.127])
+        by smtp.gmail.com with ESMTPSA id 10sm2510887wrb.75.2021.11.18.22.14.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Nov 2021 22:14:19 -0800 (PST)
+From:   Sohaib Mohamed <sohaib.amhmd@gmail.com>
+Cc:     sohaib.amhmd@gmail.com, irogers@google.com,
+        Riccardo Mancini <rickyman7@gmail.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -74,66 +62,94 @@ Cc:     Kenny Ho <Kenny.Ho@amd.com>, Alexei Starovoitov <ast@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Fabian Hemmer <copy@copy.sh>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] Unbuffered output when pipe/tee to a file
+Date:   Fri, 19 Nov 2021 08:14:08 +0200
+Message-Id: <20211119061409.78004-1-sohaib.amhmd@gmail.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Nov 18, 2021 at 11:33 PM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Thu, Nov 18, 2021 at 03:28:40PM -0500, Kenny Ho wrote:
-> > +     for_each_possible_cpu(cpu) {
-> > +             /* allocate first, connect the cgroup later */
-> > +             events[i] = perf_event_create_kernel_counter(attr, cpu, NULL, NULL, NULL);
->
-> This is a very heavy hammer for this task.
-> There is really no need for perf_event to be created.
-> Did you consider using raw_tp approach instead?
+The output of Perf bench gets buffered when I pipe it to a file or to
+tee, in such a way that I can see it only at the end.
 
-I came across raw_tp but I don't have a good understanding of it yet.
-Initially I was hoping perf event/tracepoint is a stepping stone to
-raw tp but that doesn't seem to be the case (and unfortunately I
-picked the perf event/tracepoint route to dive in first because I saw
-cgroup usage.)  Can you confirm if the following statements are true?
+E.g.
+$ perf bench internals synthesize -t
+< output comes out fine after each test run >
 
-- is raw_tp related to writable tracepoint
-- are perf_event/tracepoint/kprobe/uprobe and fentry/fexit/raw_tp
-considered two separate 'things' (even though both of their purpose is
-tracing)?
+$ perf bench internals synthesize -t | tee file.txt
+< output comes out only at the end of all tests >
 
-> It doesn't need this heavy stuff.
-> Also I suspect in follow up you'd be adding tracepoints to GPU code?
-> Did you consider just leaving few __weak global functions in GPU code
-> and let bpf progs attach to them as fentry?
-There are already tracepoints in the GPU code.  And I do like fentry
-way of doing things more but my head was very much focused on cgroup,
-and tracepoint/kprobe path seems to have something for it.  I
-suspected this would be a bit too heavy after seeing the scalability
-discussion but I wasn't sure so I whip this up quickly to get some
-feedback (while learning more about perf/bpf/cgroup.)
+This patch resolves this issue for 'bench' and 'test' subcommands.
 
-> I suspect the true hierarchical nature of bpf-cgroup framework isn't necessary.
-> The bpf program itself can filter for given cgroup.
-> We have bpf_current_task_under_cgroup() and friends.
-Is there a way to access cgroup local storage from a prog that is not
-attached to a bpf-cgroup?  Although, I guess I can just store/read
-things using a map with the cg id as key.  And with the
-bpf_get_current_ancestor_cgroup_id below I can just simulate the
-values being propagated if the hierarchy ends up being relevant.  Then
-again, is there a way to atomically update multiple elements of a map?
- I am trying to figure out how to support a multi-user multi-app
-sharing use case (like user A given quota X and user B given quota Y
-with app 1 and 2 each having a quota assigned by A and app 8 and 9
-each having quota assigned by B.)  Is there some kind of 'lock'
-mechanism for me to keep quota 1,2,X in sync? (Same for 8,9,Y.)
+See, also:
+$ perf bench mem all | tee file.txt
+$ perf bench sched all | tee file.txt
+$ perf bench internals all -t | tee file.txt
+$ perf bench internals all | tee file.txt
 
-> I suggest to sprinkle __weak empty funcs in GPU and see what
-> you can do with it with fentry and bpf_current_task_under_cgroup.
-> There is also bpf_get_current_ancestor_cgroup_id().
+Suggested-by: Riccardo Mancini <rickyman7@gmail.com>
+Signed-off-by: Sohaib Mohamed <sohaib.amhmd@gmail.com>
+---
+v1 -> v2:
+- Use setvbuf(), instead of sprinkling fflush() calls and missing some places.
+
+v1: https://lore.kernel.org/linux-perf-users/20211112215313.108823-1-sohaib.amhmd@gmail.com/
+---
+ tools/perf/builtin-bench.c      | 5 +++--
+ tools/perf/tests/builtin-test.c | 3 +++
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
+index d0895162c2ba..d291f3a8af5f 100644
+--- a/tools/perf/builtin-bench.c
++++ b/tools/perf/builtin-bench.c
+@@ -226,7 +226,6 @@ static void run_collection(struct collection *coll)
+ 		if (!bench->fn)
+ 			break;
+ 		printf("# Running %s/%s benchmark...\n", coll->name, bench->name);
+-		fflush(stdout);
+
+ 		argv[1] = bench->name;
+ 		run_bench(coll->name, bench->name, bench->fn, 1, argv);
+@@ -247,6 +246,9 @@ int cmd_bench(int argc, const char **argv)
+ 	struct collection *coll;
+ 	int ret = 0;
+
++	/* Unbuffered output */
++	setvbuf(stdout, NULL, _IONBF, 0);
++
+ 	if (argc < 2) {
+ 		/* No collection specified. */
+ 		print_usage();
+@@ -300,7 +302,6 @@ int cmd_bench(int argc, const char **argv)
+
+ 			if (bench_format == BENCH_FORMAT_DEFAULT)
+ 				printf("# Running '%s/%s' benchmark:\n", coll->name, bench->name);
+-			fflush(stdout);
+ 			ret = run_bench(coll->name, bench->name, bench->fn, argc-1, argv+1);
+ 			goto end;
+ 		}
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 8cb5a1c3489e..d92ae4efd2e6 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -606,6 +606,9 @@ int cmd_test(int argc, const char **argv)
+         if (ret < 0)
+                 return ret;
+
++	/* Unbuffered output */
++	setvbuf(stdout, NULL, _IONBF, 0);
++
+ 	argc = parse_options_subcommand(argc, argv, test_options, test_subcommands, test_usage, 0);
+ 	if (argc >= 1 && !strcmp(argv[0], "list"))
+ 		return perf_test__list(argc - 1, argv + 1);
+--
+2.25.1
+
