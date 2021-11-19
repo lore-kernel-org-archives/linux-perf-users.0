@@ -2,130 +2,109 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F13C433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Nov 2021 00:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE38C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Nov 2021 04:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8EF861A81
-	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Nov 2021 00:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC71B61A8A
+	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Nov 2021 04:26:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233650AbhKSAga (ORCPT
+        id S229914AbhKSE3v (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 Nov 2021 19:36:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40924 "EHLO
+        Thu, 18 Nov 2021 23:29:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233645AbhKSAg3 (ORCPT
+        with ESMTP id S229754AbhKSE3u (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 Nov 2021 19:36:29 -0500
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46CFCC06173E
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Nov 2021 16:33:29 -0800 (PST)
-Received: by mail-pl1-x629.google.com with SMTP id u11so6777974plf.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Nov 2021 16:33:29 -0800 (PST)
+        Thu, 18 Nov 2021 23:29:50 -0500
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80F3FC061574;
+        Thu, 18 Nov 2021 20:26:49 -0800 (PST)
+Received: by mail-wr1-x434.google.com with SMTP id c4so15743911wrd.9;
+        Thu, 18 Nov 2021 20:26:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=UkcM1rTecmJ25KsUoXFTZKIn9eyzcYLgTJdNQlzShK8=;
-        b=nNONCxvj70orXmFEPPlUSDO3mt6Wtl927JrNDbPxGbq3nLI7dP4aUomf4ikpaAWno1
-         E5tZ/1qd+TfTbpG3LKaqN3/Q005utHPSi5xYtFL481zC+BGznNHJIpSCAxcReahqhnBX
-         tFfQGDSsOCTvTJzQl80RCaDg+QR/KouVZUOeNuIg3nccU7JjgzDrTQl0U/n93pd4wC6E
-         XxzpObxnLdf9bS/XDIelOHQBYzAx3azq/h3nJh7vThyhUxl3MelJlTwXx+EMRGwpO58E
-         rGWhe2M3G001XQnWRJJksjXDSpugEK1Sh26xTl+BRMz9DQbU6lo6LNZyYUXrfqgk+4MQ
-         y+Ng==
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zvKedbEblsFvFz/lugA32GWFMXFY2GUZc/320XQiSXU=;
+        b=mdId0OhSJMOY7iRTyp9+N/wXqaLYh4mFbXs38jXv13mLH1pb8/Hgb9PPFPupAWdM26
+         4+dAG9VMcRMl5g/8xXjkWhmlTlZeO29xCQ3CuQ/kqXJsN9kJ5/8Bg2KIwe+yfc1Qz74s
+         39SR12KLyxwkNZehgbHqm71Bkbx3csF2vyYIC7HwA9X2Wu+dTN48uoq41brcbxb5w/cm
+         eO9AFZIVmYvq8R+BboltlJk4wF1q2gyprH9AsXAObzhELamJ6Rty+McFBq9IQnouE5Zt
+         pUmSH7Qw7XwjSK4ozk850DAIyDwXgqleogqaqLw8z3D34nCAUkW30UPvHDOpqxnmPr/T
+         HPwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UkcM1rTecmJ25KsUoXFTZKIn9eyzcYLgTJdNQlzShK8=;
-        b=yGcplQk3wY8rZm8lKhdZZYqW0Q9rZHJlPQ4Q+DPcr46socQdmjLAZB52oVkINiVSJF
-         sEzxeatUw6QpTmHL81gHax1GLIAZ9ZKYN7OR1z2rRSUkaQzn62luHu6nvREHjFiFSZfd
-         pPNYov5AuMUv/9DLNN/888fF8fnhTx3vfkHzDf22oN2yztAfxwxKDQ0Lla6h2bQMmEy0
-         MsV0Ao8uKwPPRCry/VdEkHix4Iij+SMrgmbyleayeAF0L3Gd1+NMo8aALQLtwYHFbY22
-         A2I5qmZZPu/HdoQxHZkT+ZOn+PsMpQNnPf2KJlq2jwGyZ3EOzp41wm3/JZ6NrgzCausy
-         8A7g==
-X-Gm-Message-State: AOAM530GRyQh5Uf5RywgtoMTqL5I1JHuNWrleLEZ2nNIgEGH98kj0I5P
-        fInYsQoFV1d670Il39a8Jvhqig==
-X-Google-Smtp-Source: ABdhPJx7HLZK7jaTa73RkUrjpdUhNrR+ZBGuDJ1erNCEFL+MslOqX3V7V8oW+JO6oH3Lu4UeiweKvA==
-X-Received: by 2002:a17:90b:4a01:: with SMTP id kk1mr15807790pjb.7.1637282008706;
-        Thu, 18 Nov 2021 16:33:28 -0800 (PST)
-Received: from leoy-ThinkPad-X240s ([66.23.193.242])
-        by smtp.gmail.com with ESMTPSA id k8sm574903pgj.94.2021.11.18.16.33.22
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zvKedbEblsFvFz/lugA32GWFMXFY2GUZc/320XQiSXU=;
+        b=OaovIay2pwJeCs3h2ajG2bYiMa9ENpuWxZhbSjo84VVDYF9lU5//JIX8edY1U5Ii6O
+         K6AmeM5Zx0L2lUxbN+g3ur48SzaGC8rjK+LcCPKJKx+s0y5gddjBenRCc/zGUZz1jxy5
+         4MBBnLKG1giTPRg4iJXzY7sIalP0dDEJzjhFnFzD49CWeNdrviOKMicGp1f2MqPR1QR7
+         qLeM1/VaxfHV2d1vRP70xSqzyyS/uprpdMrQxHHHoOaXzbZMd4DtUPM6ItDvzimVn3qT
+         H5gwLuLi+Aoe3tKoZ76e4KgebyNLpho5RpyEfQmdRQ5/+cX5hzEZ05K9lej2MkQ//b/u
+         OGwA==
+X-Gm-Message-State: AOAM532kjjyfekNoMEQ2ufUPgleYxpa7k/RXn2/znADZlvEMnKh0wVig
+        fWaEy+Fqw6pOV6LGkiq98uI=
+X-Google-Smtp-Source: ABdhPJyvp7OD7XRv2+qqheWDVg1EJff7aJHgDRJz+WJfF1gOPETvqTCtt7EQxsDH5PTugiOxlTuFkw==
+X-Received: by 2002:a05:6000:23a:: with SMTP id l26mr3624844wrz.215.1637296008031;
+        Thu, 18 Nov 2021 20:26:48 -0800 (PST)
+Received: from localhost.localdomain ([197.49.250.127])
+        by smtp.gmail.com with ESMTPSA id az4sm11030557wmb.20.2021.11.18.20.26.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Nov 2021 16:33:28 -0800 (PST)
-Date:   Fri, 19 Nov 2021 08:33:17 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Thu, 18 Nov 2021 20:26:47 -0800 (PST)
+From:   Sohaib Mohamed <sohaib.amhmd@gmail.com>
+Cc:     sohaib.amhmd@gmail.com, irogers@google.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf cs-etm: Pass -1 as pid value for
- machine__set_current_tid()
-Message-ID: <20211119003317.GD69886@leoy-ThinkPad-X240s>
-References: <20211113143540.53957-1-leo.yan@linaro.org>
- <20211118171412.GB2530497@p14s>
+Subject: [PATCH] perf machine: Free machine__findnew_dso
+Date:   Fri, 19 Nov 2021 06:26:04 +0200
+Message-Id: <20211119042607.48924-1-sohaib.amhmd@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211118171412.GB2530497@p14s>
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Mathieu,
+ASan reports memory leaks while running:
 
-On Thu, Nov 18, 2021 at 10:14:12AM -0700, Mathieu Poirier wrote:
-> Good morning Leo,
-> 
-> On Sat, Nov 13, 2021 at 10:35:40PM +0800, Leo Yan wrote:
-> > Currently, cs-etm passes the tid value for both tid and pid parameters
-> > when calling machine__set_current_tid(), this can lead to confusion for
-> > thread handling.  E.g. we arbitrarily pass the same value for pid and
-> > tid, perf tool will be misled to consider it is a main thread (see
-> > thread__main_thread()).
-> > 
-> > On the other hand, Perf tool only can retrieve tid from Arm CoreSight
-> > context packet, and we have no chance to know pid (it maps to kernel's
-> > task_struct::tgid) from hardware tracing data.  For this reason, this
-> > patch passes -1 as pid for function machine__set_current_tid().
-> > 
-> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> > ---
-> >  tools/perf/util/cs-etm.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> > index f323adb1af85..eed1a5930072 100644
-> > --- a/tools/perf/util/cs-etm.c
-> > +++ b/tools/perf/util/cs-etm.c
-> > @@ -1118,7 +1118,7 @@ int cs_etm__etmq_set_tid(struct cs_etm_queue *etmq,
-> >  	if (cs_etm__get_cpu(trace_chan_id, &cpu) < 0)
-> >  		return err;
-> >  
-> > -	err = machine__set_current_tid(etm->machine, cpu, tid, tid);
-> > +	err = machine__set_current_tid(etm->machine, cpu, -1, tid);
-> 
-> I remember wondering about what to do with the pid parameter when I wrote this
-> patch... 
-> 
-> Do you have a before-and-after snapshot you can add to the changelog?
+$ rm perf.data*
+$ perf report
 
-I tried to capture log but I didn't observe the difference introduced
-by this patch, this might because I didn't per-process mode for
-multi-threading case.  I will try more case for this.
+This patch adds the missing dso__put.
 
-> I also think it will require a "Fixes" tag.  In your next revision please CC James
-> since you guys are working in that area nowadays.
+Fixes: 8c7f1bb37b29 ("perf machine: Move kernel mmap name into struct
+machine")
 
-Will do.  And will Cc James and German in next spin.
+Signed-off-by: Sohaib Mohamed <sohaib.amhmd@gmail.com>
+---
+ tools/perf/util/machine.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks for review and suggestion.
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index fb8496df8432..826be7a12da1 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -1742,6 +1742,8 @@ static int machine__process_kernel_mmap_event(struct machine *machine,
+ 			 */
+ 			dso__load(kernel, machine__kernel_map(machine));
+ 		}
++
++		dso__put(kernel);
+ 	} else if (perf_event__is_extra_kernel_mmap(machine, xm)) {
+ 		return machine__process_extra_kernel_map(machine, xm);
+ 	}
+-- 
+2.25.1
 
-Leo
