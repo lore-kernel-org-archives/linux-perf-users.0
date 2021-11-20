@@ -2,191 +2,137 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FA7C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat, 20 Nov 2021 03:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C121DC433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat, 20 Nov 2021 11:28:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236655AbhKTDEC (ORCPT
+        id S237362AbhKTLbD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 19 Nov 2021 22:04:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59012 "EHLO
+        Sat, 20 Nov 2021 06:31:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236559AbhKTDEB (ORCPT
+        with ESMTP id S230324AbhKTLbC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 19 Nov 2021 22:04:01 -0500
-Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1A8FC061574
-        for <linux-perf-users@vger.kernel.org>; Fri, 19 Nov 2021 19:00:58 -0800 (PST)
-Received: by mail-pl1-x649.google.com with SMTP id y6-20020a17090322c600b001428ab3f888so5600656plg.8
-        for <linux-perf-users@vger.kernel.org>; Fri, 19 Nov 2021 19:00:58 -0800 (PST)
+        Sat, 20 Nov 2021 06:31:02 -0500
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F467C061574;
+        Sat, 20 Nov 2021 03:27:59 -0800 (PST)
+Received: by mail-pj1-x1035.google.com with SMTP id p18-20020a17090ad31200b001a78bb52876so12921130pju.3;
+        Sat, 20 Nov 2021 03:27:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=R1DnboryHFg+rFRaLaj3Lm7I2twjI4y664AaJ2cbzRk=;
-        b=I1fE+KzUrGfqPgVYXFfk5IslyBzfgN56sJs31K56LIhdGPikNAGbpIvdLSYYm6fpQB
-         VrzgBEMCIGY+IIo6d7CpbZup5aQw7tJMnrQAUKJD9729WWo8lhoAjT0sRVjUnO3FDj20
-         703eeSO4uL6raWREHDAiO3G+3mumHFQSAM9CEErAMdB+bQkzby0l4CG528aonVFwUwe3
-         gaagdMnSZq551G4WI3nd0fxG94cDI0sCGzeyRPc6WL2TDcg2R82iE82og3USJmvsMzYQ
-         vPyWn6GNcdp77gtlhsLCWqD25SZz9oV0a1vAnvBjwB/VL5HhItwb2Dc49g5fl89lwHQv
-         kVIg==
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mgmaoQ7WVjX7ocxIMV0FACmVlj4LoHfwU5mj0OexKdM=;
+        b=S4y3JwNRrMAGuMJwsosIe3PcJ6XbMkUHIl9d954eAGt+u+QBFQcKtabuwG91d5g0jl
+         IrZqpSurc/H8YMbS9n/LDTla/KFUN9aX9mVT75HQ5Qa06BJQ5Fb2wAE544GL63b123Ey
+         6/PEmk/PWD18fAIWvNaXduPSG8WPUa+D0QY+rlqnXhr8EGUwJ5oUXPs/9QlGXcv+aXSS
+         3emz8G442htfK6TmiJ1jgPNS68AEnqsD2UnWYg2sgq/H/MeZ1E/A3PR7otTqF9lEa13J
+         wV8AnvYPh99RbLsZTetAkg9ad+hQcTJzbdMcM+QtNSPJXYP6sNdWzlcUqrgjWKk5Wn59
+         XqlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=R1DnboryHFg+rFRaLaj3Lm7I2twjI4y664AaJ2cbzRk=;
-        b=PMBjFO4zxYSpXdr/XcXoPUjA/FIXyr6ZYej92Z3zYJ/oJSOwdri5VJdLqigwgpsSr5
-         UlE0m1m/RbkSA0BOwxPFaQ50OfLg11T78zKr7bV9vCKC8tbzgCMehXRy34NI+SbjDNRK
-         EL7b46bSfdUEuRb3V9oF/r4e/ULcliya+7M30GOhBoNE8//yKBj5P016rkpfL5RoSbBt
-         J1Xx1gz7SB3Vkc+tRLZ7MIK+jGky4zml2tAQNfQLX9bqaltiNHyBqNFpgRC1nGkhW/uR
-         KuWs316FGjfOuyyY5LkYOTD4npIa8+MeTicenMseYTfmhe0DKlsgvIYUQmTn1DYAAXop
-         phGg==
-X-Gm-Message-State: AOAM531NCw1zdSJLzEK+JSRs+8KRL01mzdXQfS6JYsVH9FMJruUGPMgy
-        yAdljlcTkc+BQCivtmaRCR9ex5RtkxYm
-X-Google-Smtp-Source: ABdhPJwrRsIIi5U4I132j7Yjx/VCG6jELgFqX4PIF8N0/tgI8CNF3fn3nFm9caiOpQqd7m68CRmcNLI4u1N3
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:9122:1607:8323:8ea2])
- (user=irogers job=sendgmr) by 2002:a63:5c20:: with SMTP id
- q32mr20568505pgb.173.1637377258239; Fri, 19 Nov 2021 19:00:58 -0800 (PST)
-Date:   Fri, 19 Nov 2021 19:00:53 -0800
-Message-Id: <20211120030053.2649499-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.34.0.rc2.393.gf8c9666880-goog
-Subject: [PATCH] perf metric: Reduce multiplexing with duration_time
-From:   Ian Rogers <irogers@google.com>
-To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mgmaoQ7WVjX7ocxIMV0FACmVlj4LoHfwU5mj0OexKdM=;
+        b=NPr1042hhLFAixHTEeWCF2b5u1kGwbc+Vtj7PddkZ4pl6pyVHYBBKX/uoWbiE77TNR
+         kcpP5257lXmV6Dato2qOu0Ied9dMtA2fRxmHlrUDF7kb/Y2hDx/oF1jNU4GS+i6D/6bd
+         uxEh516RF/FK8tbNZRb7mJkjYzMiIxq7fcDsdwO3ORXEO1+wgbzr+VXWm4q237qM7wZt
+         ToKoEASkg5rENMiHQzz7wfnSa094XFFth0Kxa+4KbkORJ6fi5N7cs7XTNrz8naF1ZuQT
+         V2UDLf/G/hQatgscYec99NPhJw5fxVzFxPuSXaRLdn80+c4tAnc6LdmGukp9QcDTxTf5
+         g+wA==
+X-Gm-Message-State: AOAM5314fpfPPRmMEJolaeGubtrpUTuAQtVWBN2FKcl86cONpgqv1QNS
+        VvSLiDLzkyyyaMIzDlqNgHU=
+X-Google-Smtp-Source: ABdhPJyxGUG4Lf6ezqV5ps6fISVl14knM2EzOSeswUoGLe+KRCige/jJED6Ic8dKukjHNTV2PFTiKA==
+X-Received: by 2002:a17:90a:c398:: with SMTP id h24mr9332156pjt.73.1637407679121;
+        Sat, 20 Nov 2021 03:27:59 -0800 (PST)
+Received: from vultr.guest ([66.42.104.82])
+        by smtp.gmail.com with ESMTPSA id q17sm2835490pfu.117.2021.11.20.03.27.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 20 Nov 2021 03:27:58 -0800 (PST)
+From:   Yafang Shao <laoar.shao@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        oliver.sang@intel.com, lkp@intel.com,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     eranian@google.com, Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Steven Rostedt <rostedt@goodmis.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Hildenbrand <david@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Petr Mladek <pmladek@suse.com>
+Subject: [PATCH v2 0/7] task comm cleanups 
+Date:   Sat, 20 Nov 2021 11:27:31 +0000
+Message-Id: <20211120112738.45980-1-laoar.shao@gmail.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-It is common to use the same counters with and without
-duration_time. The ID sharing code treats duration_time as if it
-were a hardware event placed in the same group. This causes
-unnecessary multiplexing such as in the following example where
-l3_cache_access isn't shared:
+This patchset is part of the patchset "extend task comm from 16 to 24"[1].
+Now we have different opinion that dynamically allocates memory to store
+kthread's long name into a separate pointer, so I decide to take the useful
+cleanups apart from the original patchset and send it separately[2].
 
-$ perf stat -M l3 -a sleep 1
+These useful cleanups can make the usage around task comm less
+error-prone. Furthermore, it will be useful if we want to extend task
+comm in the future.
 
- Performance counter stats for 'system wide':
+[1]. https://lore.kernel.org/lkml/20211101060419.4682-1-laoar.shao@gmail.com/
+[2]. https://lore.kernel.org/lkml/CALOAHbAx55AUo3bm8ZepZSZnw7A08cvKPdPyNTf=E_tPqmw5hw@mail.gmail.com/
 
-         3,117,007      l3_cache_miss             #    199.5 MB/s  l3_rd_bw
-                                                  #     43.6 %  l3_hits
-                                                  #     56.4 %  l3_miss               (50.00%)
-         5,526,447      l3_cache_access                                               (50.00%)
-         5,392,435      l3_cache_access           # 5389191.2 access/s  l3_access_rate  (50.00%)
-     1,000,601,901 ns   duration_time
+Changes since v1:
+- improve the subject and description
+- add comment to explain the hard-coded 16 in patch #4
 
-       1.000601901 seconds time elapsed
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Michal Miroslaw <mirq-linux@rere.qmqm.pl>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Petr Mladek <pmladek@suse.com>
 
-Fix this by placing duration_time in all groups unless metric
-sharing has been disabled on the command line:
+Yafang Shao (7):
+  fs/exec: replace strlcpy with strscpy_pad in __set_task_comm
+  fs/exec: replace strncpy with strscpy_pad in __get_task_comm
+  drivers/infiniband: replace open-coded string copy with get_task_comm
+  fs/binfmt_elf: replace open-coded string copy with get_task_comm
+  samples/bpf/test_overhead_kprobe_kern: replace bpf_probe_read_kernel
+    with bpf_probe_read_kernel_str to get task comm
+  tools/bpf/bpftool/skeleton: replace bpf_probe_read_kernel with
+    bpf_probe_read_kernel_str to get task comm
+  tools/testing/selftests/bpf: replace open-coded 16 with TASK_COMM_LEN
 
-$ perf stat -M l3 -a sleep 1
+ drivers/infiniband/hw/qib/qib.h                       |  2 +-
+ drivers/infiniband/hw/qib/qib_file_ops.c              |  2 +-
+ fs/binfmt_elf.c                                       |  2 +-
+ fs/exec.c                                             |  5 +++--
+ include/linux/elfcore-compat.h                        |  5 +++++
+ include/linux/elfcore.h                               |  5 +++++
+ include/linux/sched.h                                 |  9 +++++++--
+ samples/bpf/offwaketime_kern.c                        |  4 ++--
+ samples/bpf/test_overhead_kprobe_kern.c               | 11 ++++++-----
+ samples/bpf/test_overhead_tp_kern.c                   |  5 +++--
+ tools/bpf/bpftool/skeleton/pid_iter.bpf.c             |  4 ++--
+ .../testing/selftests/bpf/progs/test_stacktrace_map.c |  6 +++---
+ tools/testing/selftests/bpf/progs/test_tracepoint.c   |  6 +++---
+ 13 files changed, 42 insertions(+), 24 deletions(-)
 
- Performance counter stats for 'system wide':
-
-         3,597,972      l3_cache_miss             #    230.3 MB/s  l3_rd_bw
-                                                  #     48.0 %  l3_hits
-                                                  #     52.0 %  l3_miss
-         6,914,459      l3_cache_access           # 6909935.9 access/s  l3_access_rate
-     1,000,654,579 ns   duration_time
-
-       1.000654579 seconds time elapsed
-
-$ perf stat --metric-no-merge -M l3 -a sleep 1
-
- Performance counter stats for 'system wide':
-
-         3,501,834      l3_cache_miss             #     53.5 %  l3_miss               (24.99%)
-         6,548,173      l3_cache_access                                               (24.99%)
-         3,417,622      l3_cache_miss             #     45.7 %  l3_hits               (25.04%)
-         6,294,062      l3_cache_access                                               (25.04%)
-         5,923,238      l3_cache_access           # 5919688.1 access/s  l3_access_rate  (24.99%)
-     1,000,599,683 ns   duration_time
-         3,607,486      l3_cache_miss             #    230.9 MB/s  l3_rd_bw           (49.97%)
-
-       1.000599683 seconds time elapsed
-
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/metricgroup.c | 26 ++++++++++++++++++--------
- 1 file changed, 18 insertions(+), 8 deletions(-)
-
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index fffe02aae3ed..145c59ba2ddc 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -1299,14 +1299,16 @@ static int build_combined_expr_ctx(const struct list_head *metric_list,
- /**
-  * parse_ids - Build the event string for the ids and parse them creating an
-  *             evlist. The encoded metric_ids are decoded.
-+ * @metric_no_merge: is metric sharing explicitly disabled.
-  * @fake_pmu: used when testing metrics not supported by the current CPU.
-  * @ids: the event identifiers parsed from a metric.
-  * @modifier: any modifiers added to the events.
-  * @has_constraint: false if events should be placed in a weak group.
-  * @out_evlist: the created list of events.
-  */
--static int parse_ids(struct perf_pmu *fake_pmu, struct expr_parse_ctx *ids,
--		     const char *modifier, bool has_constraint, struct evlist **out_evlist)
-+static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
-+		     struct expr_parse_ctx *ids, const char *modifier,
-+		     bool has_constraint, struct evlist **out_evlist)
- {
- 	struct parse_events_error parse_error;
- 	struct evlist *parsed_evlist;
-@@ -1314,12 +1316,19 @@ static int parse_ids(struct perf_pmu *fake_pmu, struct expr_parse_ctx *ids,
- 	int ret;
- 
- 	*out_evlist = NULL;
--	if (hashmap__size(ids->ids) == 0) {
-+	if (!metric_no_merge || hashmap__size(ids->ids) == 0) {
- 		char *tmp;
- 		/*
--		 * No ids/events in the expression parsing context. Events may
--		 * have been removed because of constant evaluation, e.g.:
--		 *  event1 if #smt_on else 0
-+		 * We may fail to share events between metrics because
-+		 * duration_time isn't present in one metric. For example, a
-+		 * ratio of cache misses doesn't need duration_time but the same
-+		 * events may be used for a misses per second. Events without
-+		 * sharing implies multiplexing, that is best avoided, so place
-+		 * duration_time in every group.
-+		 *
-+		 * Also, there may be no ids/events in the expression parsing
-+		 * context because of constant evaluation, e.g.:
-+		 *    event1 if #smt_on else 0
- 		 * Add a duration_time event to avoid a parse error on an empty
- 		 * string.
- 		 */
-@@ -1387,7 +1396,8 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
- 		ret = build_combined_expr_ctx(&metric_list, &combined);
- 
- 		if (!ret && combined && hashmap__size(combined->ids)) {
--			ret = parse_ids(fake_pmu, combined, /*modifier=*/NULL,
-+			ret = parse_ids(metric_no_merge, fake_pmu, combined,
-+					/*modifier=*/NULL,
- 					/*has_constraint=*/true,
- 					&combined_evlist);
- 		}
-@@ -1435,7 +1445,7 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
- 			}
- 		}
- 		if (!metric_evlist) {
--			ret = parse_ids(fake_pmu, m->pctx, m->modifier,
-+			ret = parse_ids(metric_no_merge, fake_pmu, m->pctx, m->modifier,
- 					m->has_constraint, &m->evlist);
- 			if (ret)
- 				goto out;
 -- 
-2.34.0.rc2.393.gf8c9666880-goog
+2.17.1
 
