@@ -2,69 +2,114 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07476C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 22 Nov 2021 13:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4310C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 22 Nov 2021 15:02:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231307AbhKVNt4 (ORCPT
+        id S238365AbhKVPFr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 22 Nov 2021 08:49:56 -0500
-Received: from foss.arm.com ([217.140.110.172]:41664 "EHLO foss.arm.com"
+        Mon, 22 Nov 2021 10:05:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230322AbhKVNtz (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 22 Nov 2021 08:49:55 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C65481063;
-        Mon, 22 Nov 2021 05:46:48 -0800 (PST)
-Received: from [10.1.35.125] (e127744.cambridge.arm.com [10.1.35.125])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0A40F3F66F;
-        Mon, 22 Nov 2021 05:46:46 -0800 (PST)
-Subject: Re: [PATCH 1/1] perf arm-spe: extend Arm SPE test script with
- regression testing
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc:     James Clark <james.clark@arm.com>, leo.yan@linaro.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-References: <20211112162005.11876-1-german.gomez@arm.com>
- <20211112162005.11876-2-german.gomez@arm.com>
-From:   German Gomez <german.gomez@arm.com>
-Message-ID: <f5abae0b-acf8-f674-30f1-4b5c1fe6a49e@arm.com>
-Date:   Mon, 22 Nov 2021 13:46:45 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S230152AbhKVPFr (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 22 Nov 2021 10:05:47 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9B9FF60F25;
+        Mon, 22 Nov 2021 15:02:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1637593360;
+        bh=7wSNO75bXfuaahDi3J/uQGND5FRPawk02C/zGNv5tMU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dOXzJmRn+LJwPy2lt2M0fWhPHiq6aHHSBvbQlOGMUrG06SH9TMdknykGvJBEwEbpO
+         CcgR+TP0F7ZVIc3yqLKHvKTU8jt2Mzl9Lh64jN2qxTg5J2RGoeum5GAGMAxHdB09hB
+         dJEQjZ3dmGIIj9XSbQJnsB4uX7ylKLCNdpPJ0svhXeBOBF+gLX9Ry4bI3EntkmFUBx
+         z/Cfjvarxjpf/K6+delha/+6BBKXwA4CP1CK+zSIXWYOvBxD/gtCRNT/RBbqIuPsYJ
+         dWMMkofFwwfuxGfO3SnirG6cKbVvFole31Y4CDXa4T06EKZlVD/TQj4GYAZD2BNH76
+         QOkquvIjKNBcQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id CA42F40002; Mon, 22 Nov 2021 12:02:37 -0300 (-03)
+Date:   Mon, 22 Nov 2021 12:02:37 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Milian Wolff <milian.wolff@kdab.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-perf-users <linux-perf-users@vger.kernel.org>
+Subject: Re: /sys/kernel/tracing/events permissions
+Message-ID: <YZuxDVm7q07hRdPy@kernel.org>
+References: <2315137.Eos4xDj3du@milian-workstation>
 MIME-Version: 1.0
-In-Reply-To: <20211112162005.11876-2-german.gomez@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2315137.Eos4xDj3du@milian-workstation>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Em Mon, Nov 22, 2021 at 11:55:11AM +0100, Milian Wolff escreveu:
+> Hello,
+> 
+> a recent kernel update on my arch system has lead to breakage with regard to 
+> accessing trace events from perf. For example:
 
-On 12/11/2021 16:20, German Gomez wrote:
-> Extend the test_arm_spe.sh script to test for regressions in the
-> decoding flow of Arm SPE samples. In order to support the tests, a set
-> of perf.data files has been generated offline and is being hosted under
-> tools/perf/tests/shell/test_arm_spe.tgz:
->
-> (See perf report --header-only to see the actual commands used)
+I saw some recent changes but haven't yet tried to reflect it into the
+perf tools:
 
-Looking back at this patch, I don't think it can be applied as is. I
-notice that the docs for the --itrace argument aren't up to date (it
-says the default is --itrace=ibxwpe but lately it has changed ([1] &
-[2]). The value of --itrace should be locked in the test script.
+commit 79ef0c00142519bc34e1341447f3797436cc48bf
+Merge: d54f486035fd89f1 feea69ec121f0670
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon Nov 1 20:05:19 2021 -0700
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/Documentation/itrace.txt?id=136057256686de39cc3a07c2e39ef6bc43003ff6#n26
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/util/auxtrace.c?id=136057256686de39cc3a07c2e39ef6bc43003ff6#n1335
+    Merge tag 'trace-v5.16' of git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace
 
->
->   - test_arm_spe.tgz
->     `- arm_spe_decode_contextidr.data
->     `- arm_spe_decode_contextidr.data.inject
->     `- arm_spe_decode_switch_events.data
->     `- arm_spe_decode_switch_events.data.inject
->
-> [...]
+    Pull tracing updates from Steven Rostedt:
+<SNIP>
+     - Have tracefs allow owner and group permissions by default (only
+       denying others). There's been pressure to allow non root to tracefs
+       in a controlled fashion, and using groups is probably the safest.
+<SNIP>
+
+ 
+> ```
+> $ perf record -e sched:sched_switch ls 
+> event syntax error: 'sched:sched_switch'
+>                      \___ can't access trace events
+> 
+> Error:  No permissions to read /sys/kernel/tracing/events/sched/sched_switch
+> Hint:   Try 'sudo mount -o remount,mode=755 /sys/kernel/tracing/'
+> 
+> Run 'perf list' for a list of valid events
+> 
+>  Usage: perf record [<options>] [<command>]
+>     or: perf record [<options>] -- <command> [<options>]
+> 
+>     -e, --event <event>   event selector. use 'perf list' to list available 
+> events
+> ```
+> 
+> When I then try to run the remount hint from the message above, which used to 
+> work just fine, then the error persists, because:
+> 
+> ```
+> $ mount | grep tracing
+> tracefs on /sys/kernel/tracing type tracefs 
+> (rw,nosuid,nodev,noexec,relatime,mode=755)
+> tracefs on /sys/kernel/debug/tracing type tracefs 
+> (rw,nosuid,nodev,noexec,relatime,mode=755)
+> ```
+> 
+> and:
+> 
+> ```
+> $ ls -ld /sys/kernel/tracing/
+> drwxr-xr-x root root 0 B Mon Nov 22 08:39:15 2021 /sys/kernel/tracing/
+> $ ls -ld /sys/kernel/tracing/events/
+> drwxr-x--- root root 0 B Mon Nov 22 08:39:26 2021 /sys/kernel/tracing/events/
+> ```
+> 
+> How should this be handled? Is it now required to manually `chmod` the 
+> `events` folder, or is there another means to allow non-root to record kernel 
+> trace events?
+
+Rostedt, I looked for documentation for this on Documentation/trace/ but
+couldn't find, so its just a matter of creating a 'tracing' group and
+adding users to this group that then can use tracefs files?
+
+- Arnaldo
