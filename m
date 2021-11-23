@@ -2,92 +2,161 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B64A7C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 23 Nov 2021 11:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA2BC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 23 Nov 2021 12:03:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236212AbhKWLoy (ORCPT
+        id S234586AbhKWMG4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 23 Nov 2021 06:44:54 -0500
-Received: from foss.arm.com ([217.140.110.172]:51418 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229939AbhKWLox (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 23 Nov 2021 06:44:53 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D4D671063;
-        Tue, 23 Nov 2021 03:41:45 -0800 (PST)
-Received: from [10.1.38.165] (e127744.cambridge.arm.com [10.1.38.165])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 202913F5A1;
-        Tue, 23 Nov 2021 03:41:43 -0800 (PST)
-Subject: Re: [PATCH 1/1] perf arm-spe: extend Arm SPE test script with
- regression testing
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-References: <20211112162005.11876-1-german.gomez@arm.com>
- <20211112162005.11876-2-german.gomez@arm.com>
- <20211123051924.GE124250@leoy-ThinkPad-X240s>
-From:   German Gomez <german.gomez@arm.com>
-Message-ID: <4ab0260a-3acb-e515-c963-91de35385d07@arm.com>
-Date:   Tue, 23 Nov 2021 11:41:41 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Tue, 23 Nov 2021 07:06:56 -0500
+Received: from www62.your-server.de ([213.133.104.62]:39652 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234506AbhKWMGz (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 23 Nov 2021 07:06:55 -0500
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www62.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1mpUWX-0005MI-4M; Tue, 23 Nov 2021 13:03:45 +0100
+Received: from [85.1.206.226] (helo=linux.home)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1mpUWW-000C6f-M7; Tue, 23 Nov 2021 13:03:44 +0100
+Subject: Re: [PATCH v3] bpf: Remove config check to enable bpf support for
+ branch records
+To:     Kajol Jain <kjain@linux.ibm.com>, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     acme@kernel.org, peterz@infradead.org, songliubraving@fb.com,
+        andrii@kernel.org, kafai@fb.com, yhs@fb.com,
+        john.fastabend@gmail.com, davem@davemloft.net, kpsingh@kernel.org,
+        hawk@kernel.org, kuba@kernel.org, maddy@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, linux-perf-users@vger.kernel.org,
+        rnsastry@linux.ibm.com, andrii.nakryiko@gmail.com
+References: <20211123095104.54330-1-kjain@linux.ibm.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <d5436a4c-f4dc-7d6c-f521-505e35c57fb5@iogearbox.net>
+Date:   Tue, 23 Nov 2021 13:03:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20211123051924.GE124250@leoy-ThinkPad-X240s>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20211123095104.54330-1-kjain@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.3/26362/Tue Nov 23 10:18:04 2021)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Leo,
+On 11/23/21 10:51 AM, Kajol Jain wrote:
+> Branch data available to bpf programs can be very useful to get
+> stack traces out of userspace application.
+> 
+> Commit fff7b64355ea ("bpf: Add bpf_read_branch_records() helper")
+> added bpf support to capture branch records in x86. Enable this feature
+> for other architectures as well by removing check specific to x86.
+> 
+> Incase any architecture doesn't support branch records,
+> bpf_read_branch_records still have appropriate checks and it
+> will return error number -EINVAL in that scenario. But based on
+> documentation there in include/uapi/linux/bpf.h file, incase of
+> unsupported archs, this function should return -ENOENT. Hence update
+> the appropriate checks to return -ENOENT instead.
+> 
+> Selftest 'perf_branches' result on power9 machine which has branch stacks
+> support.
+> 
+> Before this patch changes:
+> [command]# ./test_progs -t perf_branches
+>   #88/1 perf_branches/perf_branches_hw:FAIL
+>   #88/2 perf_branches/perf_branches_no_hw:OK
+>   #88 perf_branches:FAIL
+> Summary: 0/1 PASSED, 0 SKIPPED, 1 FAILED
+> 
+> After this patch changes:
+> [command]# ./test_progs -t perf_branches
+>   #88/1 perf_branches/perf_branches_hw:OK
+>   #88/2 perf_branches/perf_branches_no_hw:OK
+>   #88 perf_branches:OK
+> Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
+> 
+> Selftest 'perf_branches' result on power9 machine which doesn't
+> have branch stack report.
+> 
+> After this patch changes:
+> [command]# ./test_progs -t perf_branches
+>   #88/1 perf_branches/perf_branches_hw:SKIP
+>   #88/2 perf_branches/perf_branches_no_hw:OK
+>   #88 perf_branches:OK
+> Summary: 1/1 PASSED, 1 SKIPPED, 0 FAILED
+> 
+> Fixes: fff7b64355eac ("bpf: Add bpf_read_branch_records() helper")
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> ---
+> 
+> Tested this patch changes on power9 machine using selftest
+> 'perf branches' which is added in commit 67306f84ca78 ("selftests/bpf:
+> Add bpf_read_branch_records()")
+> 
+> Changelog:
+> v2 -> v3
+> - Change the return error number for bpf_read_branch_records
+>    function from -EINVAL to -ENOENT for appropriate checks
+>    as suggested by Daniel Borkmann.
+> 
+> - Link to the v2 patch: https://lkml.org/lkml/2021/11/18/510
+> 
+> v1 -> v2
+> - Inorder to add bpf support to capture branch record in
+>    powerpc, rather then adding config for powerpc, entirely
+>    remove config check from bpf_read_branch_records function
+>    as suggested by Peter Zijlstra
+> 
+> - Link to the v1 patch: https://lkml.org/lkml/2021/11/14/434
+> 
+>   kernel/trace/bpf_trace.c | 8 ++------
+>   1 file changed, 2 insertions(+), 6 deletions(-)
+> 
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 7396488793ff..b94a00f92759 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -1402,18 +1402,15 @@ static const struct bpf_func_proto bpf_perf_prog_read_value_proto = {
+>   BPF_CALL_4(bpf_read_branch_records, struct bpf_perf_event_data_kern *, ctx,
+>   	   void *, buf, u32, size, u64, flags)
+>   {
+> -#ifndef CONFIG_X86
+> -	return -ENOENT;
+> -#else
+>   	static const u32 br_entry_size = sizeof(struct perf_branch_entry);
+>   	struct perf_branch_stack *br_stack = ctx->data->br_stack;
+>   	u32 to_copy;
+>   
+>   	if (unlikely(flags & ~BPF_F_GET_BRANCH_RECORDS_SIZE))
+> -		return -EINVAL;
+> +		return -ENOENT;
 
-Thanks for the comments.
+What's the rationale for also changing the above? Invalid/unsupported flags should
+still return -EINVAL as they did before ...
 
-On 23/11/2021 05:19, Leo Yan wrote:
-> Hi German,
->
-> On Fri, Nov 12, 2021 at 04:20:03PM +0000, German Gomez wrote:
->> Extend the test_arm_spe.sh script to test for regressions in the
->> decoding flow of Arm SPE samples. In order to support the tests, a set
->> of perf.data files has been generated offline and is being hosted under
->> tools/perf/tests/shell/test_arm_spe.tgz:
-> Seems to me it's not a good idea to upstream perf data binaries into the
-> mainline kernel.  I understood you want to test the perf data with
-> different context tracing modes (using contextidr vs switch events),
-> since these two different modes we cannot capture them with the same
-> kernel Image, I think this is the main reason you upstreamed the perf
-> data binaries in this patch.
+>   	if (unlikely(!br_stack))
+> -		return -EINVAL;
+> +		return -ENOENT;
 
-For this patch I wanted to test the decoding of SPE events, given fixed
-inputs, in order to lock the current implementation of the decoder.
+... meaning only this one here was necessary.
 
->
-> On the other hand, like CoreSight smoke testing, by default we can give
-> priority for testing root PID namespace, so you could do the test with
-> below commands, which is assumed that tracing PID in contextidr:
->
->   perf record -e arm_spe_0// -- test_program
->   perf report
->   perf script
->
-> Then, for testing non-root PID namespace, can we use the command
-> "unshare" to create a namespace and run perf tool in a non-root
-> PID namespace?  In this way, you could record Arm SPE trace data and
-> decode it on the fly.  Finally we can avoid to upstream perf data
-> binaries.
+>   	if (flags & BPF_F_GET_BRANCH_RECORDS_SIZE)
+>   		return br_stack->nr * br_entry_size;
+> @@ -1425,7 +1422,6 @@ BPF_CALL_4(bpf_read_branch_records, struct bpf_perf_event_data_kern *, ctx,
+>   	memcpy(buf, br_stack->entries, to_copy);
+>   
+>   	return to_copy;
+> -#endif
+>   }
+>   
+>   static const struct bpf_func_proto bpf_read_branch_records_proto = {
+> 
 
-I think adding additional smoke testing is a good idea. We could also
-check if CONTEXTIDR is enabled in the config (either /boot/config... or
-/proc/config.gz).
-
-
-Thanks,
-German
-
->
-> Thanks,
-> Leo
