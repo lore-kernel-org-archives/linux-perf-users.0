@@ -2,291 +2,294 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27688C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 23 Nov 2021 08:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F25D2C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 23 Nov 2021 08:46:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234312AbhKWIoW (ORCPT
+        id S232666AbhKWItg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 23 Nov 2021 03:44:22 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44702 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233911AbhKWIoW (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 23 Nov 2021 03:44:22 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1AN6Gns8028323;
-        Tue, 23 Nov 2021 08:41:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=MeQboweeNUheoUVo5xUsdCc1WYoGzzBJH6hVFYrK75s=;
- b=e/1QnsWNxjCtk8V/5BiCNfxbxol1t+u6mB1ySNNVoi2euPD4O2f3Q0pmeKjsfBRTco/l
- elj/KRzD6EQCRckQae5PRcy5oCJBaAxX/p/c1s1GdjpquDGOnYeTWHdov7LqYOXdvmJ8
- ygBIvqwYQwbgb/W7U2HPJoQjDdRPkqbEk83FDkppfVACXBfNUcgk3Xrz++otcf0a+ZgN
- rA78RYOn3wAxQPCqJqlpOrvDiCG7daZVtf7+TIUqOxgwTs6gIqc37NCw/u5bS/h2k43h
- L+P3b88qJDym9reYvcNAGWHRK1jKdbs4ktBJghbSr96Vt52+1N/R+XJlVJqKb/T/L7bb HQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3cgtw32agd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Nov 2021 08:41:05 +0000
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1AN8TgLl025108;
-        Tue, 23 Nov 2021 08:41:05 GMT
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3cgtw32afe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Nov 2021 08:41:05 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1AN8atW4011315;
-        Tue, 23 Nov 2021 08:41:02 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 3cern9wfgj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Nov 2021 08:41:02 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1AN8XnUY63242520
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Nov 2021 08:33:49 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 89CA7A405C;
-        Tue, 23 Nov 2021 08:41:00 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 08FBCA405F;
-        Tue, 23 Nov 2021 08:40:55 +0000 (GMT)
-Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com (unknown [9.43.21.81])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 23 Nov 2021 08:40:54 +0000 (GMT)
-Subject: Re: [PATCH 2/2] perf tools: Improve IBS error handling
-To:     Kim Phillips <kim.phillips@amd.com>, Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Joao Martins <joao.m.martins@oracle.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Robert Richter <robert.richter@amd.com>,
-        Stephane Eranian <eranian@google.com>
-References: <20211004214114.188477-1-kim.phillips@amd.com>
- <20211004214114.188477-2-kim.phillips@amd.com> <YV8uQVnMnnMd1Led@krava>
- <8a8583dc-5a5d-f107-8ef0-6be96e2f9095@amd.com>
-From:   kajoljain <kjain@linux.ibm.com>
-Message-ID: <fdcfec83-01c6-5e25-5b99-dac05287fdae@linux.ibm.com>
-Date:   Tue, 23 Nov 2021 14:10:53 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Tue, 23 Nov 2021 03:49:36 -0500
+Received: from mail-bn7nam10on2050.outbound.protection.outlook.com ([40.107.92.50]:47700
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229617AbhKWItg (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 23 Nov 2021 03:49:36 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iZFaT2l8+SCGYlRUaR+fNI6zQ5sfrj7Sl/nTXnfMWQaUg4LolNuyGkmDauoDeqNj0XgG99Dukl2fggUjRH3ngPnJcPL2+Nfl+2+blBa7l3Aj+allflaV7kj98j41TuP5SBBwrnF2865wMV6llASJle3Tjqya5x9kOSqH9E+iZ4ZhQp/hqw8Li+s81u952fzEPcVnaWtiHKRyKFMhfFZ838zmDT1eFbl9N1UDRn3sz7i0/3qwtE7xCF1t8pojPmSkCKSnDxYfS81Ee9ULFhXGXgbc+gIXRme6Iu+GYxQJVGpHG4xeIO7OlFkguTpJHJzethuvrkT/FVPThb7+fp7iQQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KxDDrgRyqnfcIFvv/zxemAPl3FIWMUTk56DRJh84pLM=;
+ b=Zy0SaH8ev33ZAHO+IJVOqLX5yZlz0ZZ4RJOtMt0oNVcTp1FfxsUBalEN7SOAmGWEsVyhNSa0ovqEfLP4j5Fc7mCh4RAv9iuLI53HRNQEoPTTVyODqO3Qdk0VOWsus0D2eqC6qjMjkb9oMfF8vvPfZH0DCuusrbvkEydDYPm+v+7w/VkoxlslmGWiJWqFV3Ey6VVcBjKr5TlZyQPesr0eul98mUgxxqe1ueY+jRgLmPf5zN/dP6m96i0HiwvMeNF+CvzdnZ+2dqc8f4CLa1T9/bWAVNQmw8FlIo+0RTINAW/D29o46uyKoSacDU5kYCcnQefdM6gxSUBxWIm3s6ooyA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KxDDrgRyqnfcIFvv/zxemAPl3FIWMUTk56DRJh84pLM=;
+ b=a6hfdWpR19tdvTt7q0qjcMDoBVIx++Rp0rnfv1wSdIF1SqPle0NbSKEsiodSZ/DH/w+qAb05Foj8l7lcRLlNXKs4vLaeYMxT+kYfXiqNNLHNU+fBhtEEUn1p0BK6VB/IeEaXG+Uyfu1TyYqIGF5Z71TBkfyqHouMMIWA8jdpscc=
+Received: from MW4P223CA0013.NAMP223.PROD.OUTLOOK.COM (2603:10b6:303:80::18)
+ by CO6PR12MB5460.namprd12.prod.outlook.com (2603:10b6:5:357::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4669.10; Tue, 23 Nov
+ 2021 08:46:26 +0000
+Received: from CO1NAM11FT035.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:80:cafe::bd) by MW4P223CA0013.outlook.office365.com
+ (2603:10b6:303:80::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.19 via Frontend
+ Transport; Tue, 23 Nov 2021 08:46:26 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT035.mail.protection.outlook.com (10.13.175.36) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4713.20 via Frontend Transport; Tue, 23 Nov 2021 08:46:25 +0000
+Received: from sindhu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17; Tue, 23 Nov
+ 2021 02:46:21 -0600
+From:   Sandipan Das <sandipan.das@amd.com>
+To:     <acme@kernel.org>
+CC:     <santosh.shukla@amd.com>, <ravi.bangoria@amd.com>,
+        <ananth.narayan@amd.com>, <kim.phillips@amd.com>,
+        <rrichter@amd.com>, <linux-perf-users@vger.kernel.org>,
+        <jolsa@redhat.com>, <kjain@linux.ibm.com>
+Subject: [PATCH v3 1/2] perf/docs: Add info on AMD raw event encoding
+Date:   Tue, 23 Nov 2021 14:16:12 +0530
+Message-ID: <20211123084613.243792-1-sandipan.das@amd.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-In-Reply-To: <8a8583dc-5a5d-f107-8ef0-6be96e2f9095@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 0-N56oZramO-N8aeoMfxUYulu64rAE-7
-X-Proofpoint-GUID: gRj-FzQnfUpxJfyi4ery2nWZF02C6Isb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
- definitions=2021-11-23_02,2021-11-22_02,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- phishscore=0 mlxlogscore=999 adultscore=0 spamscore=0 lowpriorityscore=0
- mlxscore=0 impostorscore=0 priorityscore=1501 clxscore=1015 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2110150000
- definitions=main-2111230044
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 733b937b-d17c-4b05-8505-08d9ae5dbbe4
+X-MS-TrafficTypeDiagnostic: CO6PR12MB5460:
+X-Microsoft-Antispam-PRVS: <CO6PR12MB54605A0B1D4EA8DA8E3E8FA28B609@CO6PR12MB5460.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1728;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: KGLkJsaL9pVTUUdlVkenvzZtrUyUmrdXXui23Qc1oI9GpLBy+OAkDTFTwiJNjLQeNqJdiGRM5lVfRWeqBYBOlE8HYrkWHZzRAtqdf2TL30mbFWu/+9VZubh9NGhySEJZhcZ+utu3Vc+D8JKejGUB9R/3C4Gshl/H9BXCVLVkfrgjz59Sb74gIi0BBn3Tl7nj093Ze9o62Lmtyd6jhXQDxxRRYFsfq/Gbd7IomDQMXLaxYIaiXYTotNf74jlJEg8O/f+mW57wsqgi5WQ+ucdRs7rqbojSAhEaymYqD08bvTRM3QiHbigoBbmdDk94Rx5Cc4rD3PH6KWQR1bKhjzX+//jt/oGeG/TBjz0cHyzW7OeiHf5ZcdEwHZLNVJgtgKz94wzQ2AQEXt88wH1P7hQ19oaqqoEY7GveYOo0v6phVkUFyp53KETlUyjgPtVxXbDlt9aFJ2l0Us13kmf7YliK9tpyurkLsW7ISo/aAsPTCKNSr2SzkSGWiExtnAO3a2e+LaZ/ixyQX2FOm84S5fDfIm40Vqgb+5qbvoNTt+CRPpHxpzJThvjkqOnp/xP+Y0E/E8JBt3Xx6ZpiN7k8pdXKa+VatDfY30XlIBqU6MUfc0vUS9QZDJZ+86PSfnd2+/GO9HYzm2HNPSdA4tewxQyHSclLJ+TG/SvNuDn+mstk/PrpKtWDcLqN4C9BfaV7WWnWF0unibQlqyTQaE/05nLzi8nYCHQqxa6IJAdsRYHTD9JrDIPA4hAjDv1ovYLTDIAjyUztaAd22+UGMnYhbihvDn/gJHeCGVdPrDimMUkgO0MeIGPy9T8wfA7VeeUMohyIkACA6lal1EBub2dHxVMV2s3z3iqk+QtmbV6YJHQSYWE=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(5660300002)(70586007)(47076005)(508600001)(70206006)(1076003)(8936002)(966005)(2616005)(7696005)(8676002)(36860700001)(6916009)(426003)(54906003)(26005)(186003)(44832011)(336012)(6666004)(2906002)(81166007)(86362001)(83380400001)(16526019)(316002)(356005)(4326008)(82310400004)(36756003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Nov 2021 08:46:25.5573
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 733b937b-d17c-4b05-8505-08d9ae5dbbe4
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT035.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR12MB5460
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+AMD processors have events with event select codes and unit
+masks larger than a byte. The core PMU, for example, uses
+12-bit event select codes split between bits 0-7 and 32-35
+of the PERF_CTL MSRs as can be seen from
+/sys/bus/event_sources/devices/cpu/format/*.
 
+The Processor Programming Reference (PPR) lists the event
+codes as unified 12-bit hexadecimal values instead and the
+split between the bits is not apparent to someone who is
+not aware of the layout of the PERF_CTL MSRs.
 
-On 10/8/21 12:47 AM, Kim Phillips wrote:
-> On 10/7/21 12:28 PM, Jiri Olsa wrote:
->> On Mon, Oct 04, 2021 at 04:41:14PM -0500, Kim Phillips wrote:
->>> ---
->>>   tools/perf/util/evsel.c | 24 ++++++++++++++++++++++++
->>>   1 file changed, 24 insertions(+)
->>>
->>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
->>> index b915840690d4..f8a9cbd99314 100644
->>> --- a/tools/perf/util/evsel.c
->>> +++ b/tools/perf/util/evsel.c
->>> @@ -2743,9 +2743,22 @@ static bool find_process(const char *name)
->>>       return ret ? false : true;
->>>   }
->>>   +static bool is_amd(const char *arch, const char *cpuid)
->>> +{
->>> +    return arch && !strcmp("x86", arch) && cpuid && strstarts(cpuid,
->>> "AuthenticAMD");
->>> +}
->>> +
->>> +static bool is_amd_ibs(struct evsel *evsel)
->>> +{
->>> +    return evsel->core.attr.precise_ip || !strncmp(evsel->pmu_name,
->>> "ibs", 3);
->>> +}
->>> +
->>>   int evsel__open_strerror(struct evsel *evsel, struct target *target,
->>>                int err, char *msg, size_t size)
->>>   {
->>> +    struct perf_env *env = evsel__env(evsel);
->>> +    const char *arch = perf_env__arch(env);
->>> +    const char *cpuid = perf_env__cpuid(env);
->>>       char sbuf[STRERR_BUFSIZE];
->>>       int printed = 0, enforced = 0;
->>>   @@ -2841,6 +2854,17 @@ int evsel__open_strerror(struct evsel
->>> *evsel, struct target *target,
->>>               return scnprintf(msg, size, "wrong clockid (%d).",
->>> clockid);
->>>           if (perf_missing_features.aux_output)
->>>               return scnprintf(msg, size, "The 'aux_output' feature
->>> is not supported, update the kernel.");
->>> +        if (is_amd(arch, cpuid)) {
->>> +            if (is_amd_ibs(evsel)) {
->>
->> would single 'is_amd_ibs' call be better? checking on both amd and ibs
-> 
-> Good suggestion. If you look at the later patch in the
-> BRS series, I have rewritten it to add the new
-> AMD PMU like so:
-> 
->  if (is_amd()) {
->      if (is_amd_ibs()) {
->          if (evsel->this)
->              return
->          if (evsel->that)
->              return
->      }
-> +    if (is_amd_brs()) {
-> +        if (evsel->this)
-> +            return
-> +        if (evsel->that)
-> +            return
-> +    }
->  }
+8-bit event select codes continue to work as the layout
+matches that of the PERF_CTL MSRs i.e. bits 0-7 for event
+select and 8-15 for unit mask.
 
-Hi Kim,
-     From my point of view, it won't be a good idea of adding so many
-checks in common function definition itself.
+This adds more details in the perf man pages about using
+/sys/bus/event_sources/devices/*/format/* for determining
+the correct raw event encoding scheme.
 
-Can you just create a check to see if its amd machine and then add a
-function call which will handle all four conditions together?
+E.g. the "op_cache_hit_miss.op_cache_hit" event with code
+0x28f and umask 0x03 can be programmed using its symbolic
+name as:
 
-which is basically for:
+  $ sudo perf --debug perf-event-open stat -e op_cache_hit_miss.op_cache_hit sleep 1
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             4
+    size                             128
+    config                           0x20000038f
+    sample_type                      IDENTIFIER
+    read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+    disabled                         1
+    inherit                          1
+    enable_on_exec                   1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  [...]
 
-+		if (is_amd(arch, cpuid)) {
-+			if (is_amd_ibs(evsel)) {
-+				if (evsel->core.attr.exclude_kernel)
-+					return scnprintf(msg, size,
-+	"AMD IBS can't exclude kernel events.  Try running at a higher
-privilege level.");
-+				if (!evsel->core.system_wide)
-+					return scnprintf(msg, size,
-+	"AMD IBS may only be available in system-wide/per-cpu mode.  Try using
--a, or -C and workload affinity");
-+			}
+One might use a simple eventsel+umask combination based on
+what the current man pages say and incorrectly program the
+event as:
 
-and this:
+  $ sudo perf --debug perf-event-open stat -e r0328f sleep 1
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             4
+    size                             128
+    config                           0x328f
+    sample_type                      IDENTIFIER
+    read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+    disabled                         1
+    inherit                          1
+    enable_on_exec                   1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  [...]
 
-+            if (is_amd_brs(evsel)) {
-+                if (evsel->core.attr.freq)
-+                    return scnprintf(msg, size,
-+    "AMD Branch Sampling does not support frequency mode sampling, must
-pass a fixed sampling period via -c option or
-cpu/branch-brs,period=xxxx/.");
-+                /* another reason is that the period is too small */
-+                return scnprintf(msg, size,
-+    "AMD Branch Sampling does not support sampling period smaller than
-what is reported in /sys/devices/cpu/caps/branches.");
-+            }
+When it should have been based on the format from sysfs:
 
-So, incase we are in amd machine,  common function evsel__open_strerror
-will call function may be something like amd_evesel_open_strerror_check
-which will look for both ibs and brs conditions and return corresponding
-error statement.
+  $ cat /sys/bus/event_source/devices/cpu/format/event
+  config:0-7,32-35
 
-Thanks,
-Kajol Jain
+  $ sudo perf --debug perf-event-open stat -e r20000038f sleep 1
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             4
+    size                             128
+    config                           0x20000038f
+    sample_type                      IDENTIFIER
+    read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+    disabled                         1
+    inherit                          1
+    enable_on_exec                   1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  [...]
 
-> 
-> Below is the full proposed replacement patch for patch 12
-> of 13 of the BRS series.
-> 
-> Another option is to have the is_amd_{ibs,brs} functions
-> call is_amd() themselves, so the if (evsel->) code could be
-> unindented by one tab, would that be better?
-> 
-> Thanks,
-> 
-> Kim
-> 
-> From a4cbab762719b30bddec2e278cf8b8eb82e83865 Mon Sep 17 00:00:00 2001
-> From: Stephane Eranian <eranian@google.com>
-> Date: Thu, 9 Sep 2021 00:56:59 -0700
-> Subject: [PATCH] perf tools: Improve error handling of AMD Branch Sampling
-> 
-> This patch improves the error message printed by perf when
-> perf_event_open() fails on AMD Zen3 when using the branch sampling
-> feature. In the case of EINVAL, there are two main reasons: frequency
-> mode or period is smaller than the depth of the branch sampling
-> buffer (16). The patch checks the parameters of the call and tries
-> to print a relevant message to explain the error:
-> 
-> $ perf record -b -e cpu/branch-brs/ -c 10 ls
-> Error:
-> AMD Branch Sampling does not support sampling period smaller than what
-> is reported in /sys/devices/cpu/caps/branches.
-> 
-> $ perf record -b -e cpu/branch-brs/ ls
-> Error:
-> AMD Branch Sampling does not support frequency mode sampling, must pass
-> a fixed sampling period via -c option or cpu/branch-brs,period=xxxx/.
-> 
-> Signed-off-by: Stephane Eranian <eranian@google.com>
-> [Rebased on commit 9fe8895a27a84 ("perf env: Add perf_env__cpuid,
-> perf_env__{nr_}pmu_mappings")]
-> Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-> ---
->  tools/perf/util/evsel.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index f8a9cbd99314..e1f5eff07355 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -2753,6 +2753,12 @@ static bool is_amd_ibs(struct evsel *evsel)
->      return evsel->core.attr.precise_ip || !strncmp(evsel->pmu_name,
-> "ibs", 3);
->  }
-> 
-> +static bool is_amd_brs(struct evsel *evsel)
-> +{
-> +    return ((evsel->core.attr.config & 0xff) == 0xc4) &&
-> +           (evsel->core.attr.sample_type & PERF_SAMPLE_BRANCH_STACK);
-> +}
-> +
->  int evsel__open_strerror(struct evsel *evsel, struct target *target,
->               int err, char *msg, size_t size)
->  {
-> @@ -2863,6 +2869,14 @@ int evsel__open_strerror(struct evsel *evsel,
-> struct target *target,
->                      return scnprintf(msg, size,
->      "AMD IBS may only be available in system-wide/per-cpu mode.  Try
-> using -a, or -C and workload affinity");
->              }
-> +            if (is_amd_brs(evsel)) {
-> +                if (evsel->core.attr.freq)
-> +                    return scnprintf(msg, size,
-> +    "AMD Branch Sampling does not support frequency mode sampling, must
-> pass a fixed sampling period via -c option or
-> cpu/branch-brs,period=xxxx/.");
-> +                /* another reason is that the period is too small */
-> +                return scnprintf(msg, size,
-> +    "AMD Branch Sampling does not support sampling period smaller than
-> what is reported in /sys/devices/cpu/caps/branches.");
-> +            }
->          }
-> 
->          break;
+Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+---
+v1: https://lore.kernel.org/linux-perf-users/20211119111234.170726-1-sandipan.das@amd.com/
+v2: https://lore.kernel.org/linux-perf-users/20211123065104.236717-1-sandipan.das@amd.com/
+
+v3:
+- Mention why simple eventsel+umask combinations will not
+  work in the commit message.
+
+---
+ tools/perf/Documentation/perf-list.txt   | 34 +++++++++++++++++++++++-
+ tools/perf/Documentation/perf-record.txt |  6 +++--
+ tools/perf/Documentation/perf-stat.txt   |  6 +++--
+ tools/perf/Documentation/perf-top.txt    |  7 ++---
+ 4 files changed, 45 insertions(+), 8 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
+index 4dc8d0af19df..a922a95289a9 100644
+--- a/tools/perf/Documentation/perf-list.txt
++++ b/tools/perf/Documentation/perf-list.txt
+@@ -94,7 +94,7 @@ RAW HARDWARE EVENT DESCRIPTOR
+ Even when an event is not available in a symbolic form within perf right now,
+ it can be encoded in a per processor specific way.
+ 
+-For instance For x86 CPUs NNN represents the raw register encoding with the
++For instance on x86 CPUs, N is a hexadecimal value that represents the raw register encoding with the
+ layout of IA32_PERFEVTSELx MSRs (see [Intel® 64 and IA-32 Architectures Software Developer's Manual Volume 3B: System Programming Guide] Figure 30-1 Layout
+ of IA32_PERFEVTSELx MSRs) or AMD's PerfEvtSeln (see [AMD64 Architecture Programmer’s Manual Volume 2: System Programming], Page 344,
+ Figure 13-7 Performance Event-Select Register (PerfEvtSeln)).
+@@ -126,6 +126,38 @@ It's also possible to use pmu syntax:
+  perf record -e cpu/r1a8/ ...
+  perf record -e cpu/r0x1a8/ ...
+ 
++Some processors, like those from AMD, support event codes and unit masks
++larger than a byte. In such cases, the bits corresponding to the event
++configuration parameters can be seen with:
++
++  cat /sys/bus/event_source/devices/<pmu>/format/<config>
++
++Example:
++
++If the AMD docs for an EPYC 7713 processor describe an event as:
++
++  Event  Umask  Event Mask
++  Num.   Value  Mnemonic                        Description
++
++  28FH     03H  op_cache_hit_miss.op_cache_hit  Counts Op Cache micro-tag
++                                                hit events.
++
++raw encoding of 0x0328F cannot be used since the upper nibble of the
++EventSelect bits have to be specified via bits 32-35 as can be seen with:
++
++  cat /sys/bus/event_source/devices/cpu/format/event
++
++raw encoding of 0x20000038F should be used instead:
++
++ perf stat -e r20000038f -a sleep 1
++ perf record -e r20000038f ...
++
++It's also possible to use pmu syntax:
++
++ perf record -e r20000038f -a sleep 1
++ perf record -e cpu/r20000038f/ ...
++ perf record -e cpu/r0x20000038f/ ...
++
+ You should refer to the processor specific documentation for getting these
+ details. Some of them are referenced in the SEE ALSO section below.
+ 
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 3cf7bac67239..55df7b073a55 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -30,8 +30,10 @@ OPTIONS
+ 
+         - a symbolic event name	(use 'perf list' to list all events)
+ 
+-        - a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
+-	  hexadecimal event descriptor.
++        - a raw PMU event in the form of rN where N is a hexadecimal value
++          that represents the raw register encoding with the layout of the
++          event control registers as described by entries in
++          /sys/bus/event_sources/devices/cpu/format/*.
+ 
+         - a symbolic or raw PMU event followed by an optional colon
+ 	  and a list of event modifiers, e.g., cpu-cycles:p.  See the
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index 7e6fb7cbc0f4..604e6f2301ea 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -36,8 +36,10 @@ report::
+ 
+ 	- a symbolic event name (use 'perf list' to list all events)
+ 
+-	- a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
+-	  hexadecimal event descriptor.
++	- a raw PMU event in the form of rN where N is a hexadecimal value
++	  that represents the raw register encoding with the layout of the
++	  event control registers as described by entries in
++	  /sys/bus/event_sources/devices/cpu/format/*.
+ 
+         - a symbolic or raw PMU event followed by an optional colon
+ 	  and a list of event modifiers, e.g., cpu-cycles:p.  See the
+diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
+index 9898a32b8d9c..cac3dfbee7d8 100644
+--- a/tools/perf/Documentation/perf-top.txt
++++ b/tools/perf/Documentation/perf-top.txt
+@@ -38,9 +38,10 @@ Default is to monitor all CPUS.
+ -e <event>::
+ --event=<event>::
+ 	Select the PMU event. Selection can be a symbolic event name
+-	(use 'perf list' to list all events) or a raw PMU
+-	event (eventsel+umask) in the form of rNNN where NNN is a
+-	hexadecimal event descriptor.
++	(use 'perf list' to list all events) or a raw PMU event in the form
++	of rN where N is a hexadecimal value that represents the raw register
++	encoding with the layout of the event control registers as described
++	by entries in /sys/bus/event_sources/devices/cpu/format/*.
+ 
+ -E <entries>::
+ --entries=<entries>::
+-- 
+2.30.2
+
