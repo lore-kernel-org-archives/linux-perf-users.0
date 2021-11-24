@@ -2,134 +2,68 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A0A0C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Nov 2021 15:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5CEC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Nov 2021 16:37:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344953AbhKXPpE (ORCPT
+        id S242263AbhKXQk6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 24 Nov 2021 10:45:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36986 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344914AbhKXPpD (ORCPT
+        Wed, 24 Nov 2021 11:40:58 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4161 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242220AbhKXQkt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 24 Nov 2021 10:45:03 -0500
-Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D0C1C061574
-        for <linux-perf-users@vger.kernel.org>; Wed, 24 Nov 2021 07:41:53 -0800 (PST)
-Received: by mail-il1-x130.google.com with SMTP id j21so2908291ila.5
-        for <linux-perf-users@vger.kernel.org>; Wed, 24 Nov 2021 07:41:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Rayr/Ta3skw4nHGq7Cjbx5KeQztTWRrECFJXOMRV5CU=;
-        b=Uu8EOkQOmJx6uYnwHna6/f9g95Cyo+dNifA5T6ZESd4i9V0kAMuf0dcxNF4vinUkHg
-         RRpHnHaTr7PYIe8Pl5hqNbWiM6mX+X7cPmY+XA/L5AmtozYBZCQNz1gSo+rFrpbnXi98
-         y3vkUr51JoYQfPV2OJUiodNKclJeX20esaTIrV09nT3SwQZnhUzYoVOUKPVHMKk6+ZkA
-         w+o+PBw0mPkluA+lQLx9/t+a5UdlUMFNMPXdfN8MLpnKcrK+gz7HahaQ8shsfvyXb1Tt
-         enw9BSe+O8e9UducNAJsnf+lPRCFe++TWx3Ry/ErEfCnhYRYhL+RxPZ/emFCyTk6NMz2
-         2/6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Rayr/Ta3skw4nHGq7Cjbx5KeQztTWRrECFJXOMRV5CU=;
-        b=F6jtEffLz3moebS5g8HFqM3ZIYZHMFD1Aj7ypCcHoMloeVYnSzr7T8wyvNuOVuQmSG
-         W9J58gTUb+EREjA89Rqchrqu8rowLIsOTZGOXc5o+thbSGs4gl5G9StDRxRJh0YqHZ7U
-         FLbFnp4QHCudLzrga7WKDy0uQdK6jTPsS72kkE0JgONUuDa2+bS9bT52P30XzkVif5TQ
-         axbzzivf8p/jtfDnrNFij3YiQQgROtEepUBGwQ66oKXE8hK7ejAv7MINTQhqgS0eClEW
-         c/k8G0Q8+S5QRlVF9PDXVQPWawknZChIru4Pzc56mME3CCCFRyCICh/ldWG9Kk9LyMOg
-         ZAXQ==
-X-Gm-Message-State: AOAM533VfrtoCe+07mm7jH/lImBIMngLhYkXSe4nZMmH1pOKsGbp6E0U
-        ss68Ojl1fWGJunrAEZsLBqJM7gEmGEu161C5L7cIng==
-X-Google-Smtp-Source: ABdhPJxyNQ6t96LtxnQP7D8WfNiMYSBBHq4d3TUsQf3F1+DIaGodncIEBAmHU63X067/VNTPPOD6VyxIUsP2bO4sgi0=
-X-Received: by 2002:a05:6e02:f51:: with SMTP id y17mr418208ilj.2.1637768512611;
- Wed, 24 Nov 2021 07:41:52 -0800 (PST)
+        Wed, 24 Nov 2021 11:40:49 -0500
+Received: from fraeml742-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HzmqN69jYz67lv8;
+        Thu, 25 Nov 2021 00:36:32 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml742-chm.china.huawei.com (10.206.15.223) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Wed, 24 Nov 2021 17:37:36 +0100
+Received: from [10.202.227.179] (10.202.227.179) by
+ lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Wed, 24 Nov 2021 16:37:35 +0000
+Subject: Re: [PATCH v2 2/4] perf tools: Fix SMT not detected
+To:     Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
+        "Jiri Olsa" <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Konstantin Khlebnikov <koct9i@gmail.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <eranian@google.com>
+References: <20211124001231.3277836-1-irogers@google.com>
+ <20211124001231.3277836-2-irogers@google.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <087b81b9-311c-0d75-1255-1122d0a05223@huawei.com>
+Date:   Wed, 24 Nov 2021 16:37:34 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-References: <20211124090343.9436-1-tmricht@linux.ibm.com>
-In-Reply-To: <20211124090343.9436-1-tmricht@linux.ibm.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 24 Nov 2021 07:41:40 -0800
-Message-ID: <CAP-5=fXdOQUNDTXvt7GHRvu_7jyTPp_53f8_5DzDCXWCpWLtEQ@mail.gmail.com>
-Subject: Re: [PATCH] tools/perf: Fix perf test 7 Simple expression parser on s390
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, svens@linux.ibm.com, gor@linux.ibm.com,
-        sumanthk@linux.ibm.com, hca@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20211124001231.3277836-2-irogers@google.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.179]
+X-ClientProxiedBy: lhreml721-chm.china.huawei.com (10.201.108.72) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Nov 24, 2021 at 1:04 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
->
-> Commit fdf1e29b6118 ("perf expr: Add metric literals for topology.")
-> fails on s390:
->  # ./perf test -Fv 7
->    ...
->  # FAILED tests/expr.c:173 #num_dies >= #num_packages
->    ---- end ----
->    Simple expression parser: FAILED!
->  #
->
-> Investigating this issue leads to these functions:
->  build_cpu_topology()
->    +--> has_die_topology(void)
->         {
->            struct utsname uts;
->
->            if (uname(&uts) < 0)
->                   return false;
->            if (strncmp(uts.machine, "x86_64", 6))
->                   return false;
->            ....
->         }
->
-> which always returns false on s390. The caller build_cpu_topology()
-> checks has_die_topology() return value. On false the
-> the struct cpu_topology::die_cpu_list is not contructed and has zero
-> entries. This leads to the failing comparison: #num_dies >= #num_packages.
-> s390 of course has a positive number of packages.
->
-> Fix this by adding s390 architecture to support CPU die list.
->
-> Output after:
->  # ./perf test -Fv 7
->   7: Simple expression parser                                        :
->   --- start ---
->   division by zero
->   syntax error
->   ---- end ----
->   Simple expression parser: Ok
->  #
-> Cc: Ian Rogers <irogers@google.com>
-> Fixes: fdf1e29b6118 ("perf expr: Add metric literals for topology.")
->
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-
-Reviewed-by: Ian Rogers <irogers@google.com>
-
-Thanks!
-Ian
-
+On 24/11/2021 00:12, Ian Rogers wrote:
+> sysfs__read_int returns 0 on success, and so the fast read path was
+> always failing.
+> 
+> Fixes: bb629484d924 (perf tools: Simplify checking if SMT is active.)
+> Signed-off-by: Ian Rogers<irogers@google.com>
 > ---
->  tools/perf/util/cputopo.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/cputopo.c b/tools/perf/util/cputopo.c
-> index 51b429c86f98..aad7a9e6e31b 100644
-> --- a/tools/perf/util/cputopo.c
-> +++ b/tools/perf/util/cputopo.c
-> @@ -165,7 +165,8 @@ static bool has_die_topology(void)
->         if (uname(&uts) < 0)
->                 return false;
->
-> -       if (strncmp(uts.machine, "x86_64", 6))
-> +       if (strncmp(uts.machine, "x86_64", 6) &&
-> +           strncmp(uts.machine, "s390x", 5))
->                 return false;
->
->         scnprintf(filename, MAXPATHLEN, DIE_CPUS_FMT,
-> --
-> 2.31.1
->
+
+Reviewed-by: John Garry <john.garry@huawei.com>
