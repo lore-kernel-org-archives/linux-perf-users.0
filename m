@@ -2,226 +2,312 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A6CC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Nov 2021 01:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E74C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Nov 2021 08:01:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238281AbhKXBzm (ORCPT
+        id S240934AbhKXIEZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 23 Nov 2021 20:55:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50458 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238207AbhKXBzk (ORCPT
+        Wed, 24 Nov 2021 03:04:25 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56722 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232944AbhKXIEZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 23 Nov 2021 20:55:40 -0500
-Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF3B2C06173E
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Nov 2021 17:52:30 -0800 (PST)
-Received: by mail-pj1-x104a.google.com with SMTP id pg9-20020a17090b1e0900b001a689204b52so2473980pjb.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Nov 2021 17:52:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=qCgAZNpP6++lkRf299wPMYpVTG2XAg9F0zJlPBozgfc=;
-        b=lxcz1JpCdJmaW4PoJnXX8Ah9Gc0QjezdvkAHkm3dM71bXub7gTnuP4HqTSEmPxmdtO
-         sF4Y3OID/zrpf4G+TNhQ4A+cCKN/zm+8WEdOMq8Sr5MSOM0vRuZxVnkkPJAeikU+AyK7
-         z11RsztYfHJARjz9Ft30deTwOj4jGzCHtoW+eRNkBBroODSwA3834oWKfzWxw/lQCXCC
-         g/ZzESwEU/LJx+IeQwNBWNQSFeq7upn90A/ykS6/tsWHDwtNmBB8ttvY8iRyDlKai/YH
-         YGnvcvKbY+UtMPSWU4eufgb3Siu3CPSgvX0yYuM4piDATqat31mh8azUhZZQzOSesDuX
-         YI5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=qCgAZNpP6++lkRf299wPMYpVTG2XAg9F0zJlPBozgfc=;
-        b=Ac+wYnQfE1olog6rK2uHpqzn2zc4LcYXwNQFhCRdaHivzCxTh3hz7qbN/fQXvBpYxV
-         HJWKlh+yaCZlbaQcpkLwGHA7uJ1TbiCMUn+SKsObQUVeHV6WNaRU6I6NLklCmUlqLWvm
-         wD2RVk607Ow8hsbx/mAquudPxxcLIR+iAdk/E8pErWN6/qkDavH0lrQmp+FmsN2W3G39
-         WpcxEVk7oxNP0Dc+573ZMyLdBLNqKeKSSTv9WowToxddhde91eHAOhXOEyEX3yxyfJ8N
-         fe/P+ZpnJGgUhJ+4VeTK4EGqSOcnXtSNpFI908KEHuMt6jD9AAZAuVg9JjSrYDnzFBlF
-         7A2w==
-X-Gm-Message-State: AOAM531/dGiLVk4zc8ZgjcZNU62ZtEdhCuBLICcJgv8oJA7ODBbjQfV3
-        PBzcDTJdu0Oe/HXaIIj/jCsHDCHk4Y88
-X-Google-Smtp-Source: ABdhPJybnLxu/eQaljlooi+bWcg8G7+Nsyjo1JQW75DRvy8cdgfxPy3CLCXnRekJAXy4p2rinnXWzLMOKoDP
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:dbab:a6fe:1e3a:91fa])
- (user=irogers job=sendgmr) by 2002:aa7:9903:0:b0:49f:e368:4fc3 with SMTP id
- z3-20020aa79903000000b0049fe3684fc3mr2189795pff.1.1637718750203; Tue, 23 Nov
- 2021 17:52:30 -0800 (PST)
-Date:   Tue, 23 Nov 2021 17:52:26 -0800
-Message-Id: <20211124015226.3317994-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.34.0.rc2.393.gf8c9666880-goog
-Subject: [PATCH v2] perf metric: Reduce multiplexing with duration_time
-From:   Ian Rogers <irogers@google.com>
-To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Wed, 24 Nov 2021 03:04:25 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1AO7HLnc026789;
+        Wed, 24 Nov 2021 08:01:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=pa9nXzRMlG8thI4bC+/EFpLYmgwn0p2lmoO1w9AlEaI=;
+ b=ePozwjrAdngzPMwCDWBgvds+aBDdCiNjgkho8lNfG/XAznKrEvd77xXWJSddOEQ4k2Pp
+ ISXfgje8YarvfkVZ+bnOScaRG0LV82WvQvz79yq/eBIyTA9Bd0BFYXy6dBsHELEYduyM
+ yDp0h2fY3Dxv9FtTY1vKpAIVp7IiEdMYibEsoWQIUMN7WDDsFklB1WOE6OQf5sRDlOSq
+ VHdJhhCP94FBZguzOc+jlecI6GsE0hV4hBcUGakEaLcv6hhvXNsAYx/p+poGxXc7K9ww
+ 1O+64LYWiM7q3Ve+DYlSpJIPTwqdN0zMkOf04QZ/M6NU2wu0zsmq7zmIznY7d/K2JYN4 TQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3chgvfrrtm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Nov 2021 08:01:00 +0000
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1AO7sRBK006948;
+        Wed, 24 Nov 2021 08:01:00 GMT
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3chgvfrrsq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Nov 2021 08:00:59 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1AO7lCvB009983;
+        Wed, 24 Nov 2021 08:00:57 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 3cernaxqpj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Nov 2021 08:00:56 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1AO80rL532440676
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Nov 2021 08:00:53 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6B42211CC50;
+        Wed, 24 Nov 2021 08:00:53 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9A49611CC38;
+        Wed, 24 Nov 2021 08:00:48 +0000 (GMT)
+Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com (unknown [9.43.71.39])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 24 Nov 2021 08:00:48 +0000 (GMT)
+Subject: Re: [PATCH 2/2] perf tools: Improve IBS error handling
+To:     Kim Phillips <kim.phillips@amd.com>, Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     eranian@google.com, Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Ian Rogers <irogers@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Joao Martins <joao.m.martins@oracle.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Robert Richter <robert.richter@amd.com>,
+        Stephane Eranian <eranian@google.com>
+References: <20211004214114.188477-1-kim.phillips@amd.com>
+ <20211004214114.188477-2-kim.phillips@amd.com> <YV8uQVnMnnMd1Led@krava>
+ <8a8583dc-5a5d-f107-8ef0-6be96e2f9095@amd.com>
+ <fdcfec83-01c6-5e25-5b99-dac05287fdae@linux.ibm.com>
+ <74e17a71-98ff-e0b1-61d4-d37992b1ae15@amd.com>
+From:   kajoljain <kjain@linux.ibm.com>
+Message-ID: <f095bebf-77d5-94c7-5787-13a6f38867cc@linux.ibm.com>
+Date:   Wed, 24 Nov 2021 13:30:47 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
+MIME-Version: 1.0
+In-Reply-To: <74e17a71-98ff-e0b1-61d4-d37992b1ae15@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: AAPNts8oBqWVWo2QzUej6oYjQN5-Ky9I
+X-Proofpoint-ORIG-GUID: AZ4xGN0K4_p-lptSxfBOBUsjBvt7dfAE
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
+ definitions=2021-11-24_02,2021-11-23_01,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 phishscore=0 spamscore=0 impostorscore=0 adultscore=0
+ clxscore=1015 suspectscore=0 bulkscore=0 priorityscore=1501
+ mlxlogscore=999 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2111240042
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-It is common to use the same counters with and without
-duration_time. The ID sharing code treats duration_time as if it
-were a hardware event placed in the same group. This causes
-unnecessary multiplexing such as in the following example where
-l3_cache_access isn't shared:
 
-$ perf stat -M l3 -a sleep 1
 
- Performance counter stats for 'system wide':
+On 11/23/21 8:55 PM, Kim Phillips wrote:
+> On 11/23/21 2:40 AM, kajoljain wrote:
+>> On 10/8/21 12:47 AM, Kim Phillips wrote:
+>>> On 10/7/21 12:28 PM, Jiri Olsa wrote:
+>>>> On Mon, Oct 04, 2021 at 04:41:14PM -0500, Kim Phillips wrote:
+>>>>> ---
+>>>>>    tools/perf/util/evsel.c | 24 ++++++++++++++++++++++++
+>>>>>    1 file changed, 24 insertions(+)
+>>>>>
+>>>>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+>>>>> index b915840690d4..f8a9cbd99314 100644
+>>>>> --- a/tools/perf/util/evsel.c
+>>>>> +++ b/tools/perf/util/evsel.c
+>>>>> @@ -2743,9 +2743,22 @@ static bool find_process(const char *name)
+>>>>>        return ret ? false : true;
+>>>>>    }
+>>>>>    +static bool is_amd(const char *arch, const char *cpuid)
+>>>>> +{
+>>>>> +    return arch && !strcmp("x86", arch) && cpuid && strstarts(cpuid,
+>>>>> "AuthenticAMD");
+>>>>> +}
+>>>>> +
+>>>>> +static bool is_amd_ibs(struct evsel *evsel)
+>>>>> +{
+>>>>> +    return evsel->core.attr.precise_ip || !strncmp(evsel->pmu_name,
+>>>>> "ibs", 3);
+>>>>> +}
+>>>>> +
+>>>>>    int evsel__open_strerror(struct evsel *evsel, struct target
+>>>>> *target,
+>>>>>                 int err, char *msg, size_t size)
+>>>>>    {
+>>>>> +    struct perf_env *env = evsel__env(evsel);
+>>>>> +    const char *arch = perf_env__arch(env);
+>>>>> +    const char *cpuid = perf_env__cpuid(env);
+>>>>>        char sbuf[STRERR_BUFSIZE];
+>>>>>        int printed = 0, enforced = 0;
+>>>>>    @@ -2841,6 +2854,17 @@ int evsel__open_strerror(struct evsel
+>>>>> *evsel, struct target *target,
+>>>>>                return scnprintf(msg, size, "wrong clockid (%d).",
+>>>>> clockid);
+>>>>>            if (perf_missing_features.aux_output)
+>>>>>                return scnprintf(msg, size, "The 'aux_output' feature
+>>>>> is not supported, update the kernel.");
+>>>>> +        if (is_amd(arch, cpuid)) {
+>>>>> +            if (is_amd_ibs(evsel)) {
+>>>>
+>>>> would single 'is_amd_ibs' call be better? checking on both amd and ibs
+>>>
+>>> Good suggestion. If you look at the later patch in the
+>>> BRS series, I have rewritten it to add the new
+>>> AMD PMU like so:
+>>>
+>>>   if (is_amd()) {
+>>>       if (is_amd_ibs()) {
+>>>           if (evsel->this)
+>>>               return
+>>>           if (evsel->that)
+>>>               return
+>>>       }
+>>> +    if (is_amd_brs()) {
+>>> +        if (evsel->this)
+>>> +            return
+>>> +        if (evsel->that)
+>>> +            return
+>>> +    }
+>>>   }
+>>
+>> Hi Kim,
+>>       From my point of view, it won't be a good idea of adding so many
+>> checks in common function definition itself.
+>> Can you just create a check to see if its amd machine and then add a
+>> function call which will handle all four conditions together?
+>>
+>> which is basically for:
+>>
+>> +        if (is_amd(arch, cpuid)) {
+>> +            if (is_amd_ibs(evsel)) {
+>> +                if (evsel->core.attr.exclude_kernel)
+>> +                    return scnprintf(msg, size,
+>> +    "AMD IBS can't exclude kernel events.  Try running at a higher
+>> privilege level.");
+>> +                if (!evsel->core.system_wide)
+>> +                    return scnprintf(msg, size,
+>> +    "AMD IBS may only be available in system-wide/per-cpu mode.  Try
+>> using
+>> -a, or -C and workload affinity");
+>> +            }
+>>
+>> and this:
+>>
+>> +            if (is_amd_brs(evsel)) {
+>> +                if (evsel->core.attr.freq)
+>> +                    return scnprintf(msg, size,
+>> +    "AMD Branch Sampling does not support frequency mode sampling, must
+>> pass a fixed sampling period via -c option or
+>> cpu/branch-brs,period=xxxx/.");
+>> +                /* another reason is that the period is too small */
+>> +                return scnprintf(msg, size,
+>> +    "AMD Branch Sampling does not support sampling period smaller than
+>> what is reported in /sys/devices/cpu/caps/branches.");
+>> +            }
+> 
+> IIRC, I tried something like that but carrying the
+> 
+> 
+> struct target *target, int err, char *msg, size_t size
+> 
+> parameters made things worse.
+> 
+>> So, incase we are in amd machine,  common function evsel__open_strerror
+>> will call function may be something like amd_evesel_open_strerror_check
+>> which will look for both ibs and brs conditions and return corresponding
+>> error statement.
+> 
+> The vast majority of decisions made by evsel__open_strerror are
+> going to be common across most arch/uarches.  AMD has only these
+> two pesky exceptions to the rule and therefore IMO it's ok
+> to have them inline with the common function, since the decisions
+> are so deeply intertwined.  A new amd_evsel_open_strerror_check
+> sounds like it'd duplicate too much of the common function code
+> in order to handle the common error cases.
 
-         3,117,007      l3_cache_miss             #    199.5 MB/s  l3_rd_bw
-                                                  #     43.6 %  l3_hits
-                                                  #     56.4 %  l3_miss               (50.00%)
-         5,526,447      l3_cache_access                                               (50.00%)
-         5,392,435      l3_cache_access           # 5389191.2 access/s  l3_access_rate  (50.00%)
-     1,000,601,901 ns   duration_time
+Hi Kim,
+   Sorry for the confusion, what I meant by adding new function is just
+to handle these corner error cases and not duplicating whole
+evsel__open_strerror code.
 
-       1.000601901 seconds time elapsed
+Maybe something like below code, Its just prototype of code to show you
+the flow, you can refine it and check for any build or indentation
+issues using checkpatch.pl script.
 
-Fix this by placing duration_time in all groups unless metric
-sharing has been disabled on the command line:
+So basically, in common function we can just have 2 calls, first to
+check if we are in amd system and second to return corresponding error
+message, rather then adding whole chunk of if's which are specific to amd.
 
-$ perf stat -M l3 -a sleep 1
-
- Performance counter stats for 'system wide':
-
-         3,597,972      l3_cache_miss             #    230.3 MB/s  l3_rd_bw
-                                                  #     48.0 %  l3_hits
-                                                  #     52.0 %  l3_miss
-         6,914,459      l3_cache_access           # 6909935.9 access/s  l3_access_rate
-     1,000,654,579 ns   duration_time
-
-       1.000654579 seconds time elapsed
-
-$ perf stat --metric-no-merge -M l3 -a sleep 1
-
- Performance counter stats for 'system wide':
-
-         3,501,834      l3_cache_miss             #     53.5 %  l3_miss               (24.99%)
-         6,548,173      l3_cache_access                                               (24.99%)
-         3,417,622      l3_cache_miss             #     45.7 %  l3_hits               (25.04%)
-         6,294,062      l3_cache_access                                               (25.04%)
-         5,923,238      l3_cache_access           # 5919688.1 access/s  l3_access_rate  (24.99%)
-     1,000,599,683 ns   duration_time
-         3,607,486      l3_cache_miss             #    230.9 MB/s  l3_rd_bw           (49.97%)
-
-       1.000599683 seconds time elapsed
-
-v2. Doesn't count duration_time in the metric_list_cmp function that
-    sorts larger metrics first. Without this a metric with duration_time
-    and an event is sorted the same as a metric with two events,
-    possibly not allowing the first metric to share with the second.
-
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/metricgroup.c | 42 +++++++++++++++++++++++++++--------
- 1 file changed, 33 insertions(+), 9 deletions(-)
-
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index fffe02aae3ed..51c99cb08abf 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -1115,13 +1115,27 @@ static int metricgroup__add_metric_sys_event_iter(const struct pmu_event *pe,
- 	return ret;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index ac0127be0459..adefb162ae08 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2852,9 +2852,40 @@ static bool find_process(const char *name)
+        return ret ? false : true;
  }
- 
-+/**
-+ * metric_list_cmp - list_sort comparator that sorts metrics with more events to
-+ *                   the front. duration_time is excluded from the count.
-+ */
- static int metric_list_cmp(void *priv __maybe_unused, const struct list_head *l,
- 			   const struct list_head *r)
- {
- 	const struct metric *left = container_of(l, struct metric, nd);
- 	const struct metric *right = container_of(r, struct metric, nd);
-+	struct expr_id_data *data;
-+	int left_count, right_count;
-+
-+	left_count = hashmap__size(left->pctx->ids);
-+	if (!expr__get_id(left->pctx, "duration_time", &data))
-+		left_count--;
-+
-+	right_count = hashmap__size(right->pctx->ids);
-+	if (!expr__get_id(right->pctx, "duration_time", &data))
-+		right_count--;
- 
--	return hashmap__size(right->pctx->ids) - hashmap__size(left->pctx->ids);
-+	return right_count - left_count;
- }
- 
- /**
-@@ -1299,14 +1313,16 @@ static int build_combined_expr_ctx(const struct list_head *metric_list,
- /**
-  * parse_ids - Build the event string for the ids and parse them creating an
-  *             evlist. The encoded metric_ids are decoded.
-+ * @metric_no_merge: is metric sharing explicitly disabled.
-  * @fake_pmu: used when testing metrics not supported by the current CPU.
-  * @ids: the event identifiers parsed from a metric.
-  * @modifier: any modifiers added to the events.
-  * @has_constraint: false if events should be placed in a weak group.
-  * @out_evlist: the created list of events.
-  */
--static int parse_ids(struct perf_pmu *fake_pmu, struct expr_parse_ctx *ids,
--		     const char *modifier, bool has_constraint, struct evlist **out_evlist)
-+static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
-+		     struct expr_parse_ctx *ids, const char *modifier,
-+		     bool has_constraint, struct evlist **out_evlist)
- {
- 	struct parse_events_error parse_error;
- 	struct evlist *parsed_evlist;
-@@ -1314,12 +1330,19 @@ static int parse_ids(struct perf_pmu *fake_pmu, struct expr_parse_ctx *ids,
- 	int ret;
- 
- 	*out_evlist = NULL;
--	if (hashmap__size(ids->ids) == 0) {
-+	if (!metric_no_merge || hashmap__size(ids->ids) == 0) {
- 		char *tmp;
- 		/*
--		 * No ids/events in the expression parsing context. Events may
--		 * have been removed because of constant evaluation, e.g.:
--		 *  event1 if #smt_on else 0
-+		 * We may fail to share events between metrics because
-+		 * duration_time isn't present in one metric. For example, a
-+		 * ratio of cache misses doesn't need duration_time but the same
-+		 * events may be used for a misses per second. Events without
-+		 * sharing implies multiplexing, that is best avoided, so place
-+		 * duration_time in every group.
-+		 *
-+		 * Also, there may be no ids/events in the expression parsing
-+		 * context because of constant evaluation, e.g.:
-+		 *    event1 if #smt_on else 0
- 		 * Add a duration_time event to avoid a parse error on an empty
- 		 * string.
- 		 */
-@@ -1387,7 +1410,8 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
- 		ret = build_combined_expr_ctx(&metric_list, &combined);
- 
- 		if (!ret && combined && hashmap__size(combined->ids)) {
--			ret = parse_ids(fake_pmu, combined, /*modifier=*/NULL,
-+			ret = parse_ids(metric_no_merge, fake_pmu, combined,
-+					/*modifier=*/NULL,
- 					/*has_constraint=*/true,
- 					&combined_evlist);
- 		}
-@@ -1435,7 +1459,7 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
- 			}
- 		}
- 		if (!metric_evlist) {
--			ret = parse_ids(fake_pmu, m->pctx, m->modifier,
-+			ret = parse_ids(metric_no_merge, fake_pmu, m->pctx, m->modifier,
- 					m->has_constraint, &m->evlist);
- 			if (ret)
- 				goto out;
--- 
-2.34.0.rc2.393.gf8c9666880-goog
 
++static bool is_amd(const char *arch, const char *cpuid)
++{
++       return arch && !strcmp("x86", arch) && cpuid && strstarts(cpuid,
+"AuthenticAMD");
++}
++
++static int error_amd_ibs_brs(struct evsel *evsel, char *msg, size_t size)
++{
++       if (evsel->core.attr.precise_ip || !strncmp(evsel->pmu_name,
+"ibs", 3)) {
++               if (evsel->core.attr.exclude_kernel)
++                       return scnprintf(msg, size,
++       "AMD IBS can't exclude kernel events.  Try running at a higher
+privilege level.");
++               if (!evsel->core.system_wide)
++                       return scnprintf(msg, size,
++       "AMD IBS may only be available in system-wide/per-cpu mode.  Try
+using -a, or -C and workload affinity");
++       }
++
++       if (((evsel->core.attr.config & 0xff) == 0xc4) &&
+(evsel->core.attr.sample_type & PERF_SAMPLE_BRANCH_STACK)) {
++               if (evsel->core.attr.freq) {
++                       return scnprintf(msg, size,
++       "AMD Branch Sampling does not support frequency mode sampling,
+must pass a fixed sampling
++          period via -c option or cpu/branch-brs,period=xxxx/.");
++                /* another reason is that the period is too small */
++               return scnprintf(msg, size,
++       "AMD Branch Sampling does not support sampling period smaller
+than what is reported in /sys/devices/cpu/caps/branches.");
++               }
++       }
++}
++
+ int evsel__open_strerror(struct evsel *evsel, struct target *target,
+                         int err, char *msg, size_t size)
+ {
++       struct perf_env *env = evsel__env(evsel);
++       const char *arch = perf_env__arch(env);
++       const char *cpuid = perf_env__cpuid(env);
+        char sbuf[STRERR_BUFSIZE];
+        int printed = 0, enforced = 0;
+
+@@ -2950,6 +2981,8 @@ int evsel__open_strerror(struct evsel *evsel,
+struct target *target,
+                        return scnprintf(msg, size, "wrong clockid
+(%d).", clockid);
+                if (perf_missing_features.aux_output)
+                        return scnprintf(msg, size, "The 'aux_output'
+feature is not supported, update the kernel.");
++               if (is_amd(arch, cpuid))
++                       return error_amd_ibs_brs(evsel, msg, size);
+                break;
+        case ENODATA:
+                return scnprintf(msg, size, "Cannot collect data source
+with the load latency event alone. "
+
+Thanks,
+Kajol Jain
+
+> 
+> Kim
