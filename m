@@ -2,57 +2,57 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB994C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Nov 2021 00:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CACC433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Nov 2021 00:12:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240598AbhKXAPq (ORCPT
+        id S240599AbhKXAPs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 23 Nov 2021 19:15:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56544 "EHLO
+        Tue, 23 Nov 2021 19:15:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240589AbhKXAPp (ORCPT
+        with ESMTP id S240609AbhKXAPr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 23 Nov 2021 19:15:45 -0500
-Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC80DC061574
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Nov 2021 16:12:36 -0800 (PST)
-Received: by mail-pl1-x649.google.com with SMTP id l14-20020a170903120e00b00143cc292bc3so238891plh.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Nov 2021 16:12:36 -0800 (PST)
+        Tue, 23 Nov 2021 19:15:47 -0500
+Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3AFCC061574
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 Nov 2021 16:12:38 -0800 (PST)
+Received: by mail-pj1-x104a.google.com with SMTP id x18-20020a17090a789200b001a7317f995cso2285945pjk.4
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 Nov 2021 16:12:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=yN9AxgVhP403euh96vyR/P6B46ndFdybNrT4U7XWKGA=;
-        b=O9McHgH/Odph1UfwBgVrusQu4D4wnX0ek4cbT2T05joLVmnA9D62D9n+LmfYeEb5/Z
-         FYICZZWKu72FKhzHlImtfy4+Vz05Bda+Mq2y7IgUgzfuAWOWwG2h9fyouPPxKiw71Tai
-         6pMC42SYZW3JLNKU9PY8K37ldxYRgX6y9J6M0jr5eYS5+IEmN6ClFLR3MmDSyjQuEyvY
-         18E+HZBBHHeM3ah2hcrWlQYvMKHN29yZNbJXU9Kgxbx2r8bO/M88siQZbsH7YQBAUUjm
-         6nfL0PHuD4t0NRd/JfqU7QBaGIWNeC4ti8K+LMDpzN13Iu/P2H5qZ1voKJ0+gTn6c/yV
-         D9tQ==
+        bh=dYxWWLQR2AueZjWPaZwF5Hcz730Itl6Y4oL2JqKhOwA=;
+        b=KKhM2pSGmxAdoUG2ZbJlzGPYN+chL2co3ivh/yrifROdkYPuUHB7Tr+C9KVUhUpNZS
+         cC/dZMUYoI/Qg/Kbw6aQQysTy59+8GL70M6nLAPKBOTjEM7lNgweL3WlIO+x11HnBw2d
+         BcgVtC3/jBTBHg7eJBxSstBSoBBQRPq6kEyyL051w2YVq/UOJvJjg6ZHLOIExu0hGHno
+         mJTaLkIOCfwxloTeL6Z9HTbXIKr6ehjAjIPPU6jEl8wGviaLS0F+I9cTa7rYjUvG8foe
+         oDSnlyb78puU7MXtEThHy6F6UsWn7F1LJd/xkoXmICmf7mGi484AkJu198fco9jGcqU6
+         HRLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=yN9AxgVhP403euh96vyR/P6B46ndFdybNrT4U7XWKGA=;
-        b=3cm8As0p6SXUYuDgb/AxipfXqtdy7AlJSi8ANH7eckpQ5RGEor6TBjC9NKBgVRHltn
-         3linwhAokYIA+QxdmmRHXN2GYJVObxcGleicCparll8ijI4gf3QGwYprUcgZj8nz6RcZ
-         rmA61n4FkMhSrxUk67nIg6QsGs4tXeAtt0BHfTCY/YvgruVPz4IHvphRiKAImL8EiPI8
-         oyQdiye3piek8tnlcsBwmpO1vBIXMd7a66sIEQUjzZG7d5Btgm5FLGUj6XMNYxFcZsVi
-         sF3mHfdxKz7966ineMga0pFYmpvAiXDCB0EPhYQEmkwM4QgEytrooSN6Xz+NdMRvYBGq
-         XRaA==
-X-Gm-Message-State: AOAM533WOBfthTXmAFOK3nv4eMyI4soJhdoO0Fp8mBXV+tfUGrBF5zsM
-        0pIFsTgeZlpP7pV+cmUEJnBSZTQNmojV
-X-Google-Smtp-Source: ABdhPJzNEuRRRYrc29XxGDMCWIspDpqFXUsZC0T1lx1Ih2r01Z7AkyiJfWQCCAEP165v2BXeYTAglRSi+vpZ
+        bh=dYxWWLQR2AueZjWPaZwF5Hcz730Itl6Y4oL2JqKhOwA=;
+        b=3Nut6aVkDMOyedZy05MfRzWo7kXi5kAmvYDtDijEnyXL8uoD46sXm+hWvR/ecXRNYv
+         CnDYXlznEX+epTUcdrx9qMyf1Qjw1rC7Yn7R0ORfcqJjFtrUfTFwofZElGULxeFW8wQB
+         DthINNTcmaBwi7flAq85USXNi3kGwKrzAxPORpVRh/eGIAtHN7Wvw2JOSe6tBxXFgVSV
+         6omQRYGdAn/4iCrxo2QL44oFyPTizDA9fytuwpF2eVyCU9jlI+uZR6iBhGfVazkh/sCu
+         v65NmyJxIJab3w634IIFaEtfXDsaKTJgNn7/cAZVORbIqUAyoYqMGarLj+OTm5NBxiYP
+         CpYA==
+X-Gm-Message-State: AOAM532FdBCFoxr0Jr5EZjjdr3o4FaY6Or/roFW+ioyQfmYvp2Q5ThhB
+        GwxApzsOFc0BP9tXI1Yc62btZIOJWJ7J
+X-Google-Smtp-Source: ABdhPJxKOaTWZcbrF7Z4IY5OaGdjtnvHoaxZ/vm1Fs9H3/MKVq25R+IQZqX3XD2EA9Hl5hWhMUwX+JFnwgNC
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:dbab:a6fe:1e3a:91fa])
- (user=irogers job=sendgmr) by 2002:a17:90b:1486:: with SMTP id
- js6mr92355pjb.0.1637712756019; Tue, 23 Nov 2021 16:12:36 -0800 (PST)
-Date:   Tue, 23 Nov 2021 16:12:29 -0800
+ (user=irogers job=sendgmr) by 2002:a17:90a:cb98:: with SMTP id
+ a24mr2128308pju.153.1637712758232; Tue, 23 Nov 2021 16:12:38 -0800 (PST)
+Date:   Tue, 23 Nov 2021 16:12:30 -0800
 In-Reply-To: <20211124001231.3277836-1-irogers@google.com>
-Message-Id: <20211124001231.3277836-2-irogers@google.com>
+Message-Id: <20211124001231.3277836-3-irogers@google.com>
 Mime-Version: 1.0
 References: <20211124001231.3277836-1-irogers@google.com>
 X-Mailer: git-send-email 2.34.0.rc2.393.gf8c9666880-goog
-Subject: [PATCH v2 2/4] perf tools: Fix SMT not detected
+Subject: [PATCH v2 3/4] perf tools: Fix SMT fallback with large core counts
 From:   Ian Rogers <irogers@google.com>
 To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -73,28 +73,115 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-sysfs__read_int returns 0 on success, and so the fast read path was
-always failing.
+strtoull can only read a 64-bit bitmap. On an AMD EPYC core_cpus may look
+like:
+00000000,00000000,00000000,00000001,00000000,00000000,00000000,00000001
+and so the sibling wasn't spotted. Fix by writing a simple hweight string
+parser.
 
-Fixes: bb629484d924 (perf tools: Simplify checking if SMT is active.)
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/smt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/smt.c | 68 ++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 58 insertions(+), 10 deletions(-)
 
 diff --git a/tools/perf/util/smt.c b/tools/perf/util/smt.c
-index 20bacd5972ad..34f1b1b1176c 100644
+index 34f1b1b1176c..2636be65305a 100644
 --- a/tools/perf/util/smt.c
 +++ b/tools/perf/util/smt.c
-@@ -15,7 +15,7 @@ int smt_on(void)
+@@ -5,6 +5,56 @@
+ #include "api/fs/fs.h"
+ #include "smt.h"
+ 
++/**
++ * hweight_str - Returns the number of bits set in str. Stops at first non-hex
++ *	       or ',' character.
++ */
++static int hweight_str(char *str)
++{
++	int result = 0;
++
++	while (*str) {
++		switch (*str++) {
++		case '0':
++		case ',':
++			break;
++		case '1':
++		case '2':
++		case '4':
++		case '8':
++			result++;
++			break;
++		case '3':
++		case '5':
++		case '6':
++		case '9':
++		case 'a':
++		case 'A':
++		case 'c':
++		case 'C':
++			result += 2;
++			break;
++		case '7':
++		case 'b':
++		case 'B':
++		case 'd':
++		case 'D':
++		case 'e':
++		case 'E':
++			result += 3;
++			break;
++		case 'f':
++		case 'F':
++			result += 4;
++			break;
++		default:
++			goto done;
++		}
++	}
++done:
++	return result;
++}
++
+ int smt_on(void)
+ {
+ 	static bool cached;
+@@ -15,9 +65,12 @@ int smt_on(void)
  	if (cached)
  		return cached_result;
  
--	if (sysfs__read_int("devices/system/cpu/smt/active", &cached_result) > 0)
-+	if (sysfs__read_int("devices/system/cpu/smt/active", &cached_result) >= 0)
- 		goto done;
+-	if (sysfs__read_int("devices/system/cpu/smt/active", &cached_result) >= 0)
+-		goto done;
++	if (sysfs__read_int("devices/system/cpu/smt/active", &cached_result) >= 0) {
++		cached = true;
++		return cached_result;
++	}
  
++	cached_result = 0;
  	ncpu = sysconf(_SC_NPROCESSORS_CONF);
+ 	for (cpu = 0; cpu < ncpu; cpu++) {
+ 		unsigned long long siblings;
+@@ -35,18 +88,13 @@ int smt_on(void)
+ 				continue;
+ 		}
+ 		/* Entry is hex, but does not have 0x, so need custom parser */
+-		siblings = strtoull(str, NULL, 16);
++		siblings = hweight_str(str);
+ 		free(str);
+-		if (hweight64(siblings) > 1) {
++		if (siblings > 1) {
+ 			cached_result = 1;
+-			cached = true;
+ 			break;
+ 		}
+ 	}
+-	if (!cached) {
+-		cached_result = 0;
+-done:
+-		cached = true;
+-	}
++	cached = true;
+ 	return cached_result;
+ }
 -- 
 2.34.0.rc2.393.gf8c9666880-goog
 
