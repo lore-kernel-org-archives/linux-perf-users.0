@@ -2,215 +2,146 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B4CC4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Nov 2021 08:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87879C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Nov 2021 09:04:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240988AbhKXIGs (ORCPT
+        id S229833AbhKXJHK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 24 Nov 2021 03:06:48 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48218 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233552AbhKXIGp (ORCPT
+        Wed, 24 Nov 2021 04:07:10 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55122 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229829AbhKXJHK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 24 Nov 2021 03:06:45 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1AO4Hcgf025927;
-        Wed, 24 Nov 2021 08:02:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=tQZPgisxY8eFDaoQ79EXgG/GivVXmlg6047GWXWgzyc=;
- b=B4+1zb1l+j2ICThgJQVcgw9I1Kb1t9r7wzQ6JzAYtwo8mMPZR0R6t1KGlh4f4eNd7iOh
- wFS9ZtRrUGel1BpJWnEz/k0KDLl0cKT+TPCuRHCiudIeMvYwtbaD+0uyI8g1qDt6iv/W
- wk/u1PNeSfE02WFTiFnHx2v3avZfdnqymDjYVDMRod/UzJcIa+n7W4AgJSh3Lr3ZUt1o
- XgPpy1MNjyNUEQjoqDQORV/CCn+tnInhktc9npHHiNHGTLWahNpUYBkgQdFhGvPq7ZDQ
- F5r8deUTLBKuPa4WAair8OhD6WgBbJDe8R7W5ERP/NAbNYYfJX50NEyWEW4DCcBeS44/ wQ== 
+        Wed, 24 Nov 2021 04:07:10 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1AO7HON5026892;
+        Wed, 24 Nov 2021 09:04:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=9Vgz3T9kFl+gBK9ezHEyJYFv2Ykz+cPLVwZrhziGFdI=;
+ b=sX6Aic0iN+ADVKW8k/aRTAaSSIRHDCUdBQvUas3c8rozakZXiwIPv0HJQvkFWC8+rGMY
+ gjx0AUKadLCHMUba6khsHqUmrzfcb4TDf/0JqvbPANhzeW/MtJpDKKX8DHK8vLXYBcDl
+ HAUUpmktrmnaSJh69Hhljd82eMjeuhsVhGPpXsoun0gxjI7vXIBn5u1NkfpxmrTnZ872
+ VZQt2/n3pEUCy5gpUbpXrD6Hq/JKQ8KE3IaE2bpe+ELkQblwb7pAVOsrRPflVsd/bVJt
+ BfBv2hEMFEzYzuXDv3No/4jLLQdWv5TEUB8MBacZ4lfy72VacnAs8voKtSuiW9aVMPvZ xg== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3che853ka5-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3chgvft1c8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 24 Nov 2021 08:02:54 +0000
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1AO81X2x024913;
-        Wed, 24 Nov 2021 08:02:54 GMT
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3che853k9j-1
+        Wed, 24 Nov 2021 09:03:59 +0000
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1AO8otH8002746;
+        Wed, 24 Nov 2021 09:03:59 GMT
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3chgvft1bh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 24 Nov 2021 08:02:53 +0000
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1AO7mcUd028533;
-        Wed, 24 Nov 2021 08:02:52 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma01fra.de.ibm.com with ESMTP id 3cern9nccd-1
+        Wed, 24 Nov 2021 09:03:59 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1AO93B9E025080;
+        Wed, 24 Nov 2021 09:03:57 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma06ams.nl.ibm.com with ESMTP id 3cer9jyhtq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 24 Nov 2021 08:02:51 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1AO82mOb38666720
+        Wed, 24 Nov 2021 09:03:56 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1AO8uhhL28115212
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Nov 2021 08:02:48 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 62F2A11CE16;
-        Wed, 24 Nov 2021 08:02:48 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6200A11CDEF;
-        Wed, 24 Nov 2021 08:02:42 +0000 (GMT)
-Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com (unknown [9.43.71.39])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 24 Nov 2021 08:02:42 +0000 (GMT)
-Subject: Re: [PATCH v3] bpf: Remove config check to enable bpf support for
- branch records
-To:     Daniel Borkmann <daniel@iogearbox.net>, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     acme@kernel.org, peterz@infradead.org, songliubraving@fb.com,
-        andrii@kernel.org, kafai@fb.com, yhs@fb.com,
-        john.fastabend@gmail.com, davem@davemloft.net, kpsingh@kernel.org,
-        hawk@kernel.org, kuba@kernel.org, maddy@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com, linux-perf-users@vger.kernel.org,
-        rnsastry@linux.ibm.com, andrii.nakryiko@gmail.com
-References: <20211123095104.54330-1-kjain@linux.ibm.com>
- <d5436a4c-f4dc-7d6c-f521-505e35c57fb5@iogearbox.net>
-From:   kajoljain <kjain@linux.ibm.com>
-Message-ID: <511fb009-74cf-fd15-5f03-e1bbef296681@linux.ibm.com>
-Date:   Wed, 24 Nov 2021 13:32:41 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
-In-Reply-To: <d5436a4c-f4dc-7d6c-f521-505e35c57fb5@iogearbox.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: MgXOcIoPr3bzeaJ-Xb7Y74WdmntZcInV
-X-Proofpoint-GUID: _F7egUO9JzV_jx1TkgrqLXn8DGMWwgCN
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Wed, 24 Nov 2021 08:56:43 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A5F684C058;
+        Wed, 24 Nov 2021 09:03:53 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5B65A4C05A;
+        Wed, 24 Nov 2021 09:03:53 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 24 Nov 2021 09:03:53 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, irogers@google.com
+Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] tools/perf: Fix perf test 7 Simple expression parser on s390
+Date:   Wed, 24 Nov 2021 10:03:43 +0100
+Message-Id: <20211124090343.9436-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Cfx5rNvz7yPCWnY13h6ILxo8OyUx3DwZ
+X-Proofpoint-ORIG-GUID: QyeHBjpnVYmEYaYqDZ5hpCJtRGkNUVpV
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
- definitions=2021-11-24_02,2021-11-23_01,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- adultscore=0 spamscore=0 clxscore=1015 bulkscore=0 malwarescore=0
- mlxlogscore=999 lowpriorityscore=0 priorityscore=1501 impostorscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2110150000 definitions=main-2111240042
+ definitions=2021-11-24_03,2021-11-23_01,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 phishscore=0 spamscore=0 impostorscore=0 adultscore=0
+ clxscore=1015 suspectscore=0 bulkscore=0 priorityscore=1501
+ mlxlogscore=999 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2111240050
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Commit fdf1e29b6118 ("perf expr: Add metric literals for topology.")
+fails on s390:
+ # ./perf test -Fv 7
+   ...
+ # FAILED tests/expr.c:173 #num_dies >= #num_packages
+   ---- end ----
+   Simple expression parser: FAILED!
+ #
 
+Investigating this issue leads to these functions:
+ build_cpu_topology()
+   +--> has_die_topology(void)
+        {
+           struct utsname uts;
 
-On 11/23/21 5:33 PM, Daniel Borkmann wrote:
-> On 11/23/21 10:51 AM, Kajol Jain wrote:
->> Branch data available to bpf programs can be very useful to get
->> stack traces out of userspace application.
->>
->> Commit fff7b64355ea ("bpf: Add bpf_read_branch_records() helper")
->> added bpf support to capture branch records in x86. Enable this feature
->> for other architectures as well by removing check specific to x86.
->>
->> Incase any architecture doesn't support branch records,
->> bpf_read_branch_records still have appropriate checks and it
->> will return error number -EINVAL in that scenario. But based on
->> documentation there in include/uapi/linux/bpf.h file, incase of
->> unsupported archs, this function should return -ENOENT. Hence update
->> the appropriate checks to return -ENOENT instead.
->>
->> Selftest 'perf_branches' result on power9 machine which has branch stacks
->> support.
->>
->> Before this patch changes:
->> [command]# ./test_progs -t perf_branches
->>   #88/1 perf_branches/perf_branches_hw:FAIL
->>   #88/2 perf_branches/perf_branches_no_hw:OK
->>   #88 perf_branches:FAIL
->> Summary: 0/1 PASSED, 0 SKIPPED, 1 FAILED
->>
->> After this patch changes:
->> [command]# ./test_progs -t perf_branches
->>   #88/1 perf_branches/perf_branches_hw:OK
->>   #88/2 perf_branches/perf_branches_no_hw:OK
->>   #88 perf_branches:OK
->> Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
->>
->> Selftest 'perf_branches' result on power9 machine which doesn't
->> have branch stack report.
->>
->> After this patch changes:
->> [command]# ./test_progs -t perf_branches
->>   #88/1 perf_branches/perf_branches_hw:SKIP
->>   #88/2 perf_branches/perf_branches_no_hw:OK
->>   #88 perf_branches:OK
->> Summary: 1/1 PASSED, 1 SKIPPED, 0 FAILED
->>
->> Fixes: fff7b64355eac ("bpf: Add bpf_read_branch_records() helper")
->> Suggested-by: Peter Zijlstra <peterz@infradead.org>
->> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
->> ---
->>
->> Tested this patch changes on power9 machine using selftest
->> 'perf branches' which is added in commit 67306f84ca78 ("selftests/bpf:
->> Add bpf_read_branch_records()")
->>
->> Changelog:
->> v2 -> v3
->> - Change the return error number for bpf_read_branch_records
->>    function from -EINVAL to -ENOENT for appropriate checks
->>    as suggested by Daniel Borkmann.
->>
->> - Link to the v2 patch: https://lkml.org/lkml/2021/11/18/510
->>
->> v1 -> v2
->> - Inorder to add bpf support to capture branch record in
->>    powerpc, rather then adding config for powerpc, entirely
->>    remove config check from bpf_read_branch_records function
->>    as suggested by Peter Zijlstra
->>
->> - Link to the v1 patch: https://lkml.org/lkml/2021/11/14/434
->>
->>   kernel/trace/bpf_trace.c | 8 ++------
->>   1 file changed, 2 insertions(+), 6 deletions(-)
->>
->> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
->> index 7396488793ff..b94a00f92759 100644
->> --- a/kernel/trace/bpf_trace.c
->> +++ b/kernel/trace/bpf_trace.c
->> @@ -1402,18 +1402,15 @@ static const struct bpf_func_proto
->> bpf_perf_prog_read_value_proto = {
->>   BPF_CALL_4(bpf_read_branch_records, struct bpf_perf_event_data_kern
->> *, ctx,
->>          void *, buf, u32, size, u64, flags)
->>   {
->> -#ifndef CONFIG_X86
->> -    return -ENOENT;
->> -#else
->>       static const u32 br_entry_size = sizeof(struct perf_branch_entry);
->>       struct perf_branch_stack *br_stack = ctx->data->br_stack;
->>       u32 to_copy;
->>         if (unlikely(flags & ~BPF_F_GET_BRANCH_RECORDS_SIZE))
->> -        return -EINVAL;
->> +        return -ENOENT;
-> 
-> What's the rationale for also changing the above? Invalid/unsupported
-> flags should
-> still return -EINVAL as they did before ...
+           if (uname(&uts) < 0)
+                  return false;
+           if (strncmp(uts.machine, "x86_64", 6))
+                  return false;
+           ....
+        }
 
-Thanks for pointing it, I will make this change in the next version.
+which always returns false on s390. The caller build_cpu_topology()
+checks has_die_topology() return value. On false the
+the struct cpu_topology::die_cpu_list is not contructed and has zero
+entries. This leads to the failing comparison: #num_dies >= #num_packages.
+s390 of course has a positive number of packages.
 
-Thanks,
-Kajol Jain
+Fix this by adding s390 architecture to support CPU die list.
 
-> 
->>       if (unlikely(!br_stack))
->> -        return -EINVAL;
->> +        return -ENOENT;
-> 
-> ... meaning only this one here was necessary.
-> 
->>       if (flags & BPF_F_GET_BRANCH_RECORDS_SIZE)
->>           return br_stack->nr * br_entry_size;
->> @@ -1425,7 +1422,6 @@ BPF_CALL_4(bpf_read_branch_records, struct
->> bpf_perf_event_data_kern *, ctx,
->>       memcpy(buf, br_stack->entries, to_copy);
->>         return to_copy;
->> -#endif
->>   }
->>     static const struct bpf_func_proto bpf_read_branch_records_proto = {
->>
-> 
+Output after:
+ # ./perf test -Fv 7
+  7: Simple expression parser                                        :
+  --- start ---
+  division by zero
+  syntax error
+  ---- end ----
+  Simple expression parser: Ok
+ #
+Cc: Ian Rogers <irogers@google.com>
+Fixes: fdf1e29b6118 ("perf expr: Add metric literals for topology.")
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/util/cputopo.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/cputopo.c b/tools/perf/util/cputopo.c
+index 51b429c86f98..aad7a9e6e31b 100644
+--- a/tools/perf/util/cputopo.c
++++ b/tools/perf/util/cputopo.c
+@@ -165,7 +165,8 @@ static bool has_die_topology(void)
+ 	if (uname(&uts) < 0)
+ 		return false;
+ 
+-	if (strncmp(uts.machine, "x86_64", 6))
++	if (strncmp(uts.machine, "x86_64", 6) &&
++	    strncmp(uts.machine, "s390x", 5))
+ 		return false;
+ 
+ 	scnprintf(filename, MAXPATHLEN, DIE_CPUS_FMT,
+-- 
+2.31.1
+
