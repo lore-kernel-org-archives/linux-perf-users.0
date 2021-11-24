@@ -2,96 +2,128 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 110AEC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Nov 2021 17:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC500C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Nov 2021 17:51:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243330AbhKXRbP (ORCPT
+        id S243323AbhKXRy1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 24 Nov 2021 12:31:15 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4165 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242931AbhKXRbO (ORCPT
+        Wed, 24 Nov 2021 12:54:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38770 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242420AbhKXRy0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 24 Nov 2021 12:31:14 -0500
-Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HznyD53Cgz67sTc;
-        Thu, 25 Nov 2021 01:27:32 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Wed, 24 Nov 2021 18:28:03 +0100
-Received: from [10.202.227.179] (10.202.227.179) by
- lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Wed, 24 Nov 2021 17:28:02 +0000
-Subject: Re: [PATCH v2 1/4] perf expr: Add debug logging for literals
-To:     Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
-        "Jiri Olsa" <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Konstantin Khlebnikov <koct9i@gmail.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <eranian@google.com>
-References: <20211124001231.3277836-1-irogers@google.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <5a516c85-695c-60da-a3cc-ab1c1b08c87f@huawei.com>
-Date:   Wed, 24 Nov 2021 17:28:01 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        Wed, 24 Nov 2021 12:54:26 -0500
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47AC3C061746
+        for <linux-perf-users@vger.kernel.org>; Wed, 24 Nov 2021 09:51:16 -0800 (PST)
+Received: by mail-pg1-x52f.google.com with SMTP id t4so2812686pgn.9
+        for <linux-perf-users@vger.kernel.org>; Wed, 24 Nov 2021 09:51:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=oTDchkafpOp/46IgeNxQuNHz+bM7M0+5Ox+wOnWqwfQ=;
+        b=Qb2R4+I+DtEcOkXq0TYH/CagTNAxs9vdwiKlDdzULoiuVos13Xj0bBoEZSIPlJijzR
+         C478wnOgwX2OIroiZLUXmkCPPl7ne/tYZ6BhKk2rJK6CwWNPOkQPdhuayJPTVdRrDcgL
+         lYvMSdRGlCmlv6Yx0LePe8p8yv07r0peWf6/ErtsteaCes01s8SNwZ2q+UfiZQEciJ5R
+         14+qbgLpmXR5b1sK15zTGPdKVkRwKQ9vgA4LZtRxlhr6dxnNSySqCpZULAsRTj6j4ZuC
+         AymmMd7hKuQHEFmtp6YoDZPpoqm3daj0NDEv0m+0NdMYu4USrjQ47MKRLlI/ImkVjBPx
+         BcWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oTDchkafpOp/46IgeNxQuNHz+bM7M0+5Ox+wOnWqwfQ=;
+        b=tQG6JAf5rLlw+IUSNG3NWg5gMccqpdgf/1fv90AE4wEsu7qpcmq3+3P8mDEbxEohc4
+         3F3DHEg76llMmeL3S85QIm5RTaw+KhKMmd7K0cq6nR1qSvr55kiRHvW6j4yJgZbtyyF9
+         v0h1rInQaH+V9rqXNyshGLwJ0v09xoKiqANAK8e+R2qwQjCJWRxWk5KM2Uea0pirVw6a
+         gUReZAQyiQYJ5Tmslb9R6XhWiBhVgEa4wUMEXEGMChTE9zH5RLPvlOWgPsgZHrqw0tNp
+         MxXCZ1nlBsAJ98Hxg23BBE3q4y3fk7uieyotSQ0ll4+CqjWJXpf7X5WRBwUjQb1cqJLh
+         TjPg==
+X-Gm-Message-State: AOAM533I0rP2kUVrSJqeSQbNEXyoUyQpalS8ZSnYtrt52kRznWYganUM
+        O2leE/gMS8ZqV/Y2UXn/64sVXw==
+X-Google-Smtp-Source: ABdhPJwuLqZldVSYdI75Ai+PcBDkHa+xkpmfqt3+9vDSJ2R9/PWi5Orovy471RaYzID644RlCM4n+A==
+X-Received: by 2002:aa7:9404:0:b0:494:6e78:67cd with SMTP id x4-20020aa79404000000b004946e7867cdmr7671622pfo.84.1637776275657;
+        Wed, 24 Nov 2021 09:51:15 -0800 (PST)
+Received: from p14s (S0106889e681aac74.cg.shawcable.net. [68.147.0.187])
+        by smtp.gmail.com with ESMTPSA id d2sm330981pfu.203.2021.11.24.09.51.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Nov 2021 09:51:14 -0800 (PST)
+Date:   Wed, 24 Nov 2021 10:51:11 -0700
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Yicong Yang <yangyicong@hisilicon.com>
+Cc:     gregkh@linuxfoundation.org, helgaas@kernel.org,
+        alexander.shishkin@linux.intel.com, lorenzo.pieralisi@arm.com,
+        will@kernel.org, mark.rutland@arm.com, suzuki.poulose@arm.com,
+        mike.leach@linaro.org, leo.yan@linaro.org,
+        jonathan.cameron@huawei.com, daniel.thompson@linaro.org,
+        joro@8bytes.org, john.garry@huawei.com,
+        shameerali.kolothum.thodi@huawei.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+        linux-pci@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        iommu@lists.linux-foundation.org, prime.zeng@huawei.com,
+        liuqi115@huawei.com, zhangshaokun@hisilicon.com,
+        linuxarm@huawei.com, song.bao.hua@hisilicon.com
+Subject: Re: [PATCH v2 1/6] iommu: Export iommu_{get,put}_resv_regions()
+Message-ID: <20211124175111.GA35341@p14s>
+References: <20211116090625.53702-1-yangyicong@hisilicon.com>
+ <20211116090625.53702-2-yangyicong@hisilicon.com>
 MIME-Version: 1.0
-In-Reply-To: <20211124001231.3277836-1-irogers@google.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.179]
-X-ClientProxiedBy: lhreml721-chm.china.huawei.com (10.201.108.72) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211116090625.53702-2-yangyicong@hisilicon.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Tue, Nov 16, 2021 at 05:06:20PM +0800, Yicong Yang wrote:
+> Export iommu_{get,put}_resv_regions() to the modules so that the driver
+> can retrieve and use the reserved regions of the device.
+> 
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> ---
+>  drivers/iommu/iommu.c | 2 ++
+>  include/linux/iommu.h | 4 ++--
+>  2 files changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index dd7863e453a5..e96711eee965 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -2792,6 +2792,7 @@ void iommu_get_resv_regions(struct device *dev, struct list_head *list)
+>  	if (ops && ops->get_resv_regions)
+>  		ops->get_resv_regions(dev, list);
+>  }
+> +EXPORT_SYMBOL_GPL(iommu_get_resv_regions);
+>  
+>  void iommu_put_resv_regions(struct device *dev, struct list_head *list)
+>  {
+> @@ -2800,6 +2801,7 @@ void iommu_put_resv_regions(struct device *dev, struct list_head *list)
+>  	if (ops && ops->put_resv_regions)
+>  		ops->put_resv_regions(dev, list);
+>  }
+> +EXPORT_SYMBOL_GPL(iommu_put_resv_regions);
+>  
+>  /**
+>   * generic_iommu_put_resv_regions - Reserved region driver helper
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index d2f3435e7d17..1b7b0f370e28 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -450,8 +450,8 @@ extern phys_addr_t iommu_iova_to_phys(struct iommu_domain *domain, dma_addr_t io
+>  extern void iommu_set_fault_handler(struct iommu_domain *domain,
+>  			iommu_fault_handler_t handler, void *token);
+>  
+> -extern void iommu_get_resv_regions(struct device *dev, struct list_head *list);
+> -extern void iommu_put_resv_regions(struct device *dev, struct list_head *list);
+> +void iommu_get_resv_regions(struct device *dev, struct list_head *list);
+> +void iommu_put_resv_regions(struct device *dev, struct list_head *list);
 
->   	}
-> -	if (!strcmp("#num_packages", literal))
-> -		return topology->package_cpus_lists;
-> -	if (!strcmp("#num_dies", literal))
-> -		return topology->die_cpus_lists;
-> -	if (!strcmp("#num_cores", literal))
-> -		return topology->core_cpus_lists;
-> +	if (!strcmp("#num_packages", literal)) {
-> +		result = topology->package_cpus_lists;
-> +		goto out;
-> +	}
-> +	if (!strcmp("#num_dies", literal)) {
-> +		result = topology->die_cpus_lists;
-> +		goto out;
-> +	}
-> +	if (!strcmp("#num_cores", literal)) {
-> +		result = topology->core_cpus_lists;
+Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-if we find that we now get the same print many times, how about:
-		pr_debug2_once("literal: num_cores = %f\n", result);
-
-... not sure if it scales though
-
-Thanks,
-John
-
-
-> +		goto out;
-> +	}
->   
->   	pr_err("Unrecognized literal '%s'", literal);
-> -	return NAN;
-> +out:
-> +	pr_debug2("literal: %s = %f\n", literal, result);
-> +	return result;
->   }
-
+>  extern void generic_iommu_put_resv_regions(struct device *dev,
+>  					   struct list_head *list);
+>  extern void iommu_set_default_passthrough(bool cmd_line);
+> -- 
+> 2.33.0
+> 
