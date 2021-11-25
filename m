@@ -2,221 +2,221 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 853D0C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 25 Nov 2021 02:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 101F2C433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 25 Nov 2021 07:58:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229963AbhKYCy2 (ORCPT
+        id S1344932AbhKYIBu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 24 Nov 2021 21:54:28 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:27924 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S230237AbhKYCw1 (ORCPT
+        Thu, 25 Nov 2021 03:01:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56368 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1346111AbhKYH7t (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 24 Nov 2021 21:52:27 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1AONkjXo002981;
-        Thu, 25 Nov 2021 02:49:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=1Mx/9rcdiejhb3favUpy+m2RlbXBA4VLHV7pszuFbx0=;
- b=DCNffZM0oyXAk4riKe2rXDE7jksFgFukrX/f2MNwbQNH9PJjaYyyTUkSdklAggL/R8HH
- IyJA9JO4YEPcQbw28ZXjixyZ/yJx49kWHbHjAHtTfHos7WJjeojUBKmvLW3nIdOIWOt0
- f4CzSC4Ar24sKSu1aXEP8XcrwCxxuBZvuaQ1GkwIdq8mqGDMAnphE2RRAGtxIWngPajp
- GTDW19OdnZdedih3zdJbAnSDe7Jtvr9LpjC2c7GPYPYV7l3UEnGpBNIXgG5zBUQbB7WP
- osWa1E9bZAQ6G2KjmhH6nem4UQDTkWAN0TJYrhcnablcwyja0ohcup1CPdbs5RzxIzus Rg== 
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3chyc8jedn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Nov 2021 02:49:05 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1AP2l9oK028557;
-        Thu, 25 Nov 2021 02:49:04 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma06fra.de.ibm.com with ESMTP id 3cer9k50es-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Nov 2021 02:49:03 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1AP2fjkV64160030
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 25 Nov 2021 02:41:45 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 64CBAAE051;
-        Thu, 25 Nov 2021 02:49:00 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 119C9AE053;
-        Thu, 25 Nov 2021 02:48:56 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.211.111.17])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 25 Nov 2021 02:48:55 +0000 (GMT)
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To:     acme@kernel.org, jolsa@kernel.org
-Cc:     mpe@ellerman.id.au, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com,
-        rnsastry@linux.ibm.com, kjain@linux.ibm.com, namhyung@kernel.org
-Subject: [PATCH 1/2] tools/perf: Include global and local variants for p_stage_cyc sort key
-Date:   Thu, 25 Nov 2021 08:18:50 +0530
-Message-Id: <20211125024851.22895-1-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.33.0
+        Thu, 25 Nov 2021 02:59:49 -0500
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6BC4C061748
+        for <linux-perf-users@vger.kernel.org>; Wed, 24 Nov 2021 23:54:09 -0800 (PST)
+Received: by mail-pf1-x434.google.com with SMTP id i12so5166919pfd.6
+        for <linux-perf-users@vger.kernel.org>; Wed, 24 Nov 2021 23:54:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8Wv822/jiFy6kR7lmixyoAId5E8/Qt673Ad/6b/9Axc=;
+        b=EyBk6nqeZEB4YkZczQkzU0lrvLC3eGGModtukK2alJlo+0jTFZ4Nt7pIqB6ALbzxf9
+         tXJ/C0/6s6CO/HuuKBwTKG6BLEaPJ2vstMIXSpcCfl1HKvc3915ObU4lEmkZ3qOvaMK7
+         FWpTSYrQB3n74QRBzmT39CH/gJ0lH1nkpMZR53mvPZ0BBUnQ5w05St7l01VeU2y7MUiJ
+         CXEi7659N+6GyeJjScXO2/W2kAmVUMfVBMzGuRnCAikp1xIZufB3bcDeVUHfm+PjA9BL
+         CMb1GC6hXC0ZIjrVLfsy7pJ/yM8bJeoUpsMjA7/IgyEaR0u07ISE5wxWdh3VRPUfN1b4
+         wTYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8Wv822/jiFy6kR7lmixyoAId5E8/Qt673Ad/6b/9Axc=;
+        b=EiA9Jk6AFkFstyMcQh+hKoY45aNFsh9xQj+RDw7nPdGPuCMmhW+MnsQl2Y5Y0luGS5
+         fSUeGOxjykg0LUODIMVHqWjh7rx4PnuuCFaOrRenwWuyV7hdNfzuT/VKb6/4vzg6fBkm
+         4Q5EFUI4moSVJczh59tEAKSJcCPPoX4pY8jtP31k6JEDsxL6tn5uHs9N192Gr86jqmSi
+         qnYJHEtppvtIqak/ANCh7pwl39cbaIRoYfQeu6KoVgFIgwsLmbAGWfG/fU6ULguDw0mL
+         MEjzn3zxM93wb004r83Q6XVzc3J8pOS6LtpAjX4mmtIEGLdlHWrE9J4OfeDF/Vh2dy8V
+         GnbQ==
+X-Gm-Message-State: AOAM530fE32/D47zo6I5LwhKCFZmovMTVddMjRQw7gp8Uiu5GcDpGCOU
+        xf9IxjBXj4Bd5e4gx9a2syaLgQ==
+X-Google-Smtp-Source: ABdhPJweeLGCcXw+DnNYd9KB0VW0F5kTCBoJcSRTiIoppce2exLhlc8gTsBBmnp7rSRmlhO1W+UdLQ==
+X-Received: by 2002:a05:6a00:2391:b0:4a2:cb64:2e43 with SMTP id f17-20020a056a00239100b004a2cb642e43mr12694041pfc.49.1637826849228;
+        Wed, 24 Nov 2021 23:54:09 -0800 (PST)
+Received: from leoy-ThinkPad-X240s ([66.23.193.248])
+        by smtp.gmail.com with ESMTPSA id u30sm1483831pgo.60.2021.11.24.23.54.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Nov 2021 23:54:08 -0800 (PST)
+Date:   Thu, 25 Nov 2021 15:53:58 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     German Gomez <german.gomez@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, James Clark <james.clark@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [RESEND PATCH 1/1] perf arm-spe: report all SPE records as "all"
+ events
+Message-ID: <20211125075358.GA1599216@leoy-ThinkPad-X240s>
+References: <20211117142833.226629-1-german.gomez@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 8R87vlfEyu8shgyj3mcK3SKaVHo6EX2y
-X-Proofpoint-ORIG-GUID: 8R87vlfEyu8shgyj3mcK3SKaVHo6EX2y
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
- definitions=2021-11-24_06,2021-11-24_01,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- priorityscore=1501 malwarescore=0 suspectscore=0 clxscore=1011
- phishscore=0 mlxlogscore=999 impostorscore=0 adultscore=0
- lowpriorityscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2110150000 definitions=main-2111250011
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211117142833.226629-1-german.gomez@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Sort key p_stage_cyc is used to present the latency
-cycles spend in pipeline stages. perf tool has local
-p_stage_cyc sort key to display this info. There is no
-global variant available for this sort key. local variant
-shows latency in a sinlge sample, whereas, global value
-will be useful to present the total latency (sum of
-latencies) in the hist entry. It represents latency
-number multiplied by the number of samples.
+On Wed, Nov 17, 2021 at 02:28:32PM +0000, German Gomez wrote:
+> From: James Clark <james.clark@arm.com>
+> 
+> Currently perf-report and perf-inject are dropping a large number of SPE
+> records because they don't contain any of the existing events, but the
+> contextual information of the records is still useful to keep.
+> 
+> The synthesized event "all" is generated for every SPE record that is
+> processed, regardless of whether the record contains interesting events
+> or not. The event can be filtered with the flag "--itrace=o".
+> 
+> Signed-off-by: James Clark <james.clark@arm.com>
+> Signed-off-by: German Gomez <german.gomez@arm.com>
+> ---
+>  tools/perf/Documentation/itrace.txt |  2 +-
+>  tools/perf/util/arm-spe.c           | 36 +++++++++++++++++++++++++++++
+>  tools/perf/util/auxtrace.h          |  2 +-
+>  3 files changed, 38 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/Documentation/itrace.txt b/tools/perf/Documentation/itrace.txt
+> index c52755481..57dc12b83 100644
+> --- a/tools/perf/Documentation/itrace.txt
+> +++ b/tools/perf/Documentation/itrace.txt
+> @@ -6,7 +6,7 @@
+>  		w	synthesize ptwrite events
+>  		p	synthesize power events (incl. PSB events for Intel PT)
+>  		o	synthesize other events recorded due to the use
+> -			of aux-output (refer to perf record)
+> +			of aux-output (refer to perf record) (all events for Arm SPE)
+>  		e	synthesize error events
+>  		d	create a debug log
+>  		f	synthesize first level cache events
+> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+> index ce77abf90..6428351db 100644
+> --- a/tools/perf/util/arm-spe.c
+> +++ b/tools/perf/util/arm-spe.c
+> @@ -58,6 +58,7 @@ struct arm_spe {
+>  	u8				sample_branch;
+>  	u8				sample_remote_access;
+>  	u8				sample_memory;
+> +	u8				sample_other;
+>  
+>  	u64				l1d_miss_id;
+>  	u64				l1d_access_id;
+> @@ -68,6 +69,7 @@ struct arm_spe {
+>  	u64				branch_miss_id;
+>  	u64				remote_access_id;
+>  	u64				memory_id;
+> +	u64				all_id;
+>  
+>  	u64				kernel_start;
+>  
+> @@ -351,6 +353,23 @@ static int arm_spe__synth_branch_sample(struct arm_spe_queue *speq,
+>  	return arm_spe_deliver_synth_event(spe, speq, event, &sample);
+>  }
+>  
+> +static int arm_spe__synth_other_sample(struct arm_spe_queue *speq,
+> +				       u64 spe_events_id)
+> +{
+> +	struct arm_spe *spe = speq->spe;
+> +	struct arm_spe_record *record = &speq->decoder->record;
+> +	union perf_event *event = speq->event_buf;
+> +	struct perf_sample sample = { .ip = 0, };
+> +
+> +	arm_spe_prep_sample(spe, speq, event, &sample);
+> +
+> +	sample.id = spe_events_id;
+> +	sample.stream_id = spe_events_id;
+> +	sample.addr = record->to_ip;
 
-Add global (p_stage_cyc) and local variant
-(local_p_stage_cyc) for this sort key. Use the
-local_p_stage_cyc as default option for "mem" sort mode.
-Also add this to list of dynamic sort keys.
+After checked the event types, I think "other" samples would include
+below raw event types:
 
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Reported-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/hist.c |  4 +++-
- tools/perf/util/hist.h |  3 ++-
- tools/perf/util/sort.c | 34 +++++++++++++++++++++++++---------
- tools/perf/util/sort.h |  3 ++-
- 4 files changed, 32 insertions(+), 12 deletions(-)
+  EV_EXCEPTION_GEN
+  EV_RETIRED
+  EV_NOT_TAKEN
+  EV_ALIGNMENT
+  EV_PARTIAL_PREDICATE
+  EV_EMPTY_PREDICATE
 
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index b776465e04ef..0a8033b09e28 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -211,7 +211,9 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
- 	hists__new_col_len(hists, HISTC_MEM_BLOCKED, 10);
- 	hists__new_col_len(hists, HISTC_LOCAL_INS_LAT, 13);
- 	hists__new_col_len(hists, HISTC_GLOBAL_INS_LAT, 13);
--	hists__new_col_len(hists, HISTC_P_STAGE_CYC, 13);
-+	hists__new_col_len(hists, HISTC_LOCAL_P_STAGE_CYC, 13);
-+	hists__new_col_len(hists, HISTC_GLOBAL_P_STAGE_CYC, 13);
-+
- 	if (symbol_conf.nanosecs)
- 		hists__new_col_len(hists, HISTC_TIME, 16);
- 	else
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 5343b62476e6..2752ce681108 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -75,7 +75,8 @@ enum hist_column {
- 	HISTC_MEM_BLOCKED,
- 	HISTC_LOCAL_INS_LAT,
- 	HISTC_GLOBAL_INS_LAT,
--	HISTC_P_STAGE_CYC,
-+	HISTC_LOCAL_P_STAGE_CYC,
-+	HISTC_GLOBAL_P_STAGE_CYC,
- 	HISTC_NR_COLS, /* Last entry */
- };
- 
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index e9216a292a04..e978f7883e07 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -37,7 +37,7 @@ const char	default_parent_pattern[] = "^sys_|^do_page_fault";
- const char	*parent_pattern = default_parent_pattern;
- const char	*default_sort_order = "comm,dso,symbol";
- const char	default_branch_sort_order[] = "comm,dso_from,symbol_from,symbol_to,cycles";
--const char	default_mem_sort_order[] = "local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked,blocked,local_ins_lat,p_stage_cyc";
-+const char	default_mem_sort_order[] = "local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked,blocked,local_ins_lat,local_p_stage_cyc";
- const char	default_top_sort_order[] = "dso,symbol";
- const char	default_diff_sort_order[] = "dso,symbol";
- const char	default_tracepoint_sort_order[] = "trace";
-@@ -46,8 +46,8 @@ const char	*field_order;
- regex_t		ignore_callees_regex;
- int		have_ignore_callees = 0;
- enum sort_mode	sort__mode = SORT_MODE__NORMAL;
--const char	*dynamic_headers[] = {"local_ins_lat", "p_stage_cyc"};
--const char	*arch_specific_sort_keys[] = {"p_stage_cyc"};
-+const char	*dynamic_headers[] = {"local_ins_lat", "ins_lat", "local_p_stage_cyc", "p_stage_cyc"};
-+const char	*arch_specific_sort_keys[] = {"local_p_stage_cyc", "p_stage_cyc"};
- 
- /*
-  * Replaces all occurrences of a char used with the:
-@@ -1392,22 +1392,37 @@ struct sort_entry sort_global_ins_lat = {
- };
- 
- static int64_t
--sort__global_p_stage_cyc_cmp(struct hist_entry *left, struct hist_entry *right)
-+sort__p_stage_cyc_cmp(struct hist_entry *left, struct hist_entry *right)
- {
- 	return left->p_stage_cyc - right->p_stage_cyc;
- }
- 
-+static int hist_entry__global_p_stage_cyc_snprintf(struct hist_entry *he, char *bf,
-+					size_t size, unsigned int width)
-+{
-+	return repsep_snprintf(bf, size, "%-*u", width,
-+			he->p_stage_cyc * he->stat.nr_events);
-+}
-+
-+
- static int hist_entry__p_stage_cyc_snprintf(struct hist_entry *he, char *bf,
- 					size_t size, unsigned int width)
- {
- 	return repsep_snprintf(bf, size, "%-*u", width, he->p_stage_cyc);
- }
- 
--struct sort_entry sort_p_stage_cyc = {
--	.se_header      = "Pipeline Stage Cycle",
--	.se_cmp         = sort__global_p_stage_cyc_cmp,
-+struct sort_entry sort_local_p_stage_cyc = {
-+	.se_header      = "Local Pipeline Stage Cycle",
-+	.se_cmp         = sort__p_stage_cyc_cmp,
- 	.se_snprintf	= hist_entry__p_stage_cyc_snprintf,
--	.se_width_idx	= HISTC_P_STAGE_CYC,
-+	.se_width_idx	= HISTC_LOCAL_P_STAGE_CYC,
-+};
-+
-+struct sort_entry sort_global_p_stage_cyc = {
-+	.se_header      = "Pipeline Stage Cycle",
-+	.se_cmp         = sort__p_stage_cyc_cmp,
-+	.se_snprintf    = hist_entry__global_p_stage_cyc_snprintf,
-+	.se_width_idx   = HISTC_GLOBAL_P_STAGE_CYC,
- };
- 
- struct sort_entry sort_mem_daddr_sym = {
-@@ -1858,7 +1873,8 @@ static struct sort_dimension common_sort_dimensions[] = {
- 	DIM(SORT_CODE_PAGE_SIZE, "code_page_size", sort_code_page_size),
- 	DIM(SORT_LOCAL_INS_LAT, "local_ins_lat", sort_local_ins_lat),
- 	DIM(SORT_GLOBAL_INS_LAT, "ins_lat", sort_global_ins_lat),
--	DIM(SORT_PIPELINE_STAGE_CYC, "p_stage_cyc", sort_p_stage_cyc),
-+	DIM(SORT_LOCAL_PIPELINE_STAGE_CYC, "local_p_stage_cyc", sort_local_p_stage_cyc),
-+	DIM(SORT_GLOBAL_PIPELINE_STAGE_CYC, "p_stage_cyc", sort_global_p_stage_cyc),
- };
- 
- #undef DIM
-diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-index 3c7518378d62..83abe5e6812a 100644
---- a/tools/perf/util/sort.h
-+++ b/tools/perf/util/sort.h
-@@ -235,7 +235,8 @@ enum sort_type {
- 	SORT_CODE_PAGE_SIZE,
- 	SORT_LOCAL_INS_LAT,
- 	SORT_GLOBAL_INS_LAT,
--	SORT_PIPELINE_STAGE_CYC,
-+	SORT_LOCAL_PIPELINE_STAGE_CYC,
-+	SORT_GLOBAL_PIPELINE_STAGE_CYC,
- 
- 	/* branch stack specific sort keys */
- 	__SORT_BRANCH_STACK,
--- 
-2.27.0
+I am just wander if we can use sample.transaction to store these event
+types, otherwise, we cannot distinguish the event type for the samples.
 
+And it's good fill more sample fields for complete info, like:
+
+  sample.addr = record->virt_addr;
+  sample.phys_addr = record->phys_addr;
+  sample.data_src = data_src;
+
+Thanks,
+Leo
+
+> +
+> +	return arm_spe_deliver_synth_event(spe, speq, event, &sample);
+> +}
+> +
+>  #define SPE_MEM_TYPE	(ARM_SPE_L1D_ACCESS | ARM_SPE_L1D_MISS | \
+>  			 ARM_SPE_LLC_ACCESS | ARM_SPE_LLC_MISS | \
+>  			 ARM_SPE_REMOTE_ACCESS)
+> @@ -480,6 +499,12 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
+>  			return err;
+>  	}
+>  
+> +	if (spe->sample_other) {
+> +		err = arm_spe__synth_other_sample(speq, spe->all_id);
+> +		if (err)
+> +			return err;
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> @@ -1107,6 +1132,17 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+>  			return err;
+>  		spe->memory_id = id;
+>  		arm_spe_set_event_name(evlist, id, "memory");
+> +		id += 1;
+> +	}
+> +
+> +	if (spe->synth_opts.other_events) {
+> +		spe->sample_other = true;
+> +
+> +		err = arm_spe_synth_event(session, &attr, id);
+> +		if (err)
+> +			return err;
+> +		spe->all_id = id;
+> +		arm_spe_set_event_name(evlist, id, "all");
+>  	}
+>  
+>  	return 0;
+> diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+> index bbf0d78c6..efe1bdc06 100644
+> --- a/tools/perf/util/auxtrace.h
+> +++ b/tools/perf/util/auxtrace.h
+> @@ -74,7 +74,7 @@ enum itrace_period_type {
+>   * @ptwrites: whether to synthesize events for ptwrites
+>   * @pwr_events: whether to synthesize power events
+>   * @other_events: whether to synthesize other events recorded due to the use of
+> - *                aux_output
+> + *                aux_output (all events for Arm SPE)
+>   * @errors: whether to synthesize decoder error events
+>   * @dont_decode: whether to skip decoding entirely
+>   * @log: write a decoding log
+> -- 
+> 2.25.1
+> 
