@@ -2,89 +2,101 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D680C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 25 Nov 2021 21:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C8BC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 25 Nov 2021 21:40:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351308AbhKYVgJ (ORCPT
+        id S230105AbhKYVoB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 25 Nov 2021 16:36:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34852 "EHLO mail.kernel.org"
+        Thu, 25 Nov 2021 16:44:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244962AbhKYVeI (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 25 Nov 2021 16:34:08 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id EA2F3610D1;
-        Thu, 25 Nov 2021 21:30:56 +0000 (UTC)
+        id S235878AbhKYVmA (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 25 Nov 2021 16:42:00 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C385060E98;
+        Thu, 25 Nov 2021 21:38:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637875857;
-        bh=BZ2XRrPuxKdfNaEoH/zDFQqwXwupV+aI8Q7TqqkjnnY=;
+        s=k20201202; t=1637876329;
+        bh=auWWidTUNtArwtfT9R8nJx470uMai1FoJWv1Km49Rmk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ikYRx3FDzFKyzSH3hD8lm5xuhQgVPMZiaBKYafBPJfIv5Mx9wShXOG6u/tldl9Wxj
-         2JZtavx55eeNNVfntKC2kJN4GhViymCXY0kS9qS1fQk7bbNYKnXTB0cV5dTWhv/ASf
-         4ACTAVf8s2rfPJPAUf7xc+gfawImhpzb0mrgqH5JBkbojqv3SdLYC87W+26XQUk1BJ
-         PuYtgsFrv19X86sHCm418+hzcxvj1K/FECbP4OdEI+gSSg7v9Io/OhBFtYHgJ3TTZv
-         drXhtbR8G1B6Fa93CtfgtqywRUAIsFABx0LRNlF7vlb0IOZXSn3mtIFKGtUtrz/1lk
-         5+7MrQNGwUF/Q==
+        b=L3funUInWs+y0XIpunPSjO+UvJgwSjjxrhVcSakEmLwtujzKR8xQToMg5wfIF9EL0
+         jKmY7q7hqWejllkyJaIW9O3HOX3YqSPOgF3EKKnCSTo23/dRLvfqqVWJgg+0tLqot0
+         1F7JEPXmneKck7zAaGpkWvlDDVQbW68q5aOuiMD/i7untLvayHHimXQ7iE1WiAdeMD
+         fguTLDYJhkwdyk7JgFzaNLl6MeSHba8G+fn/ZkA/4LQMqvIFw4kt/hK0dhkY87LrMg
+         /Vo10DgcBsDivuLQSjnWVjF8Jl97CFwribFQjmVeRT/LCXtqiHoEOFdBm4XuS3jLoZ
+         x+edhq8ghII4g==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C343640002; Thu, 25 Nov 2021 18:30:52 -0300 (-03)
-Date:   Thu, 25 Nov 2021 18:30:52 -0300
+        id 88B3C40002; Thu, 25 Nov 2021 18:38:46 -0300 (-03)
+Date:   Thu, 25 Nov 2021 18:38:46 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Konstantin Khlebnikov <koct9i@gmail.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        eranian@google.com
-Subject: Re: [PATCH v2 2/4] perf tools: Fix SMT not detected
-Message-ID: <YaAAjHUXqY8pkiOA@kernel.org>
-References: <20211124001231.3277836-1-irogers@google.com>
- <20211124001231.3277836-2-irogers@google.com>
+To:     Sohaib Mohamed <sohaib.amhmd@gmail.com>
+Cc:     irogers@google.com, linux-perf-users@vger.kernel.org,
+        Ingo Molnar <mingo@elte.hu>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf_counter tools: Fix memory leaks of add_cmdname()
+Message-ID: <YaACZsT6pupginXC@kernel.org>
+References: <20211119084637.178890-1-sohaib.amhmd@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211124001231.3277836-2-irogers@google.com>
+In-Reply-To: <20211119084637.178890-1-sohaib.amhmd@gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Nov 23, 2021 at 04:12:29PM -0800, Ian Rogers escreveu:
-> sysfs__read_int returns 0 on success, and so the fast read path was
-> always failing.
+Em Fri, Nov 19, 2021 at 10:46:36AM +0200, Sohaib Mohamed escreveu:
+> ASan reports some memory leaks when running:
 > 
-> Fixes: bb629484d924 (perf tools: Simplify checking if SMT is active.)
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> $ perf xyz
+> 
+> This patch adds the missing clean_cmdnames()
+> 
+> Fixes: 078006012401 ("perf_counter tools: add in basic glue from Git")
+> 
+> Signed-off-by: Sohaib Mohamed <sohaib.amhmd@gmail.com>
+> ---
+>  tools/lib/subcmd/help.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/tools/lib/subcmd/help.c b/tools/lib/subcmd/help.c
+> index bf02d62a3b2b..4a433f4d19a1 100644
+> --- a/tools/lib/subcmd/help.c
+> +++ b/tools/lib/subcmd/help.c
+> @@ -187,6 +187,7 @@ static void list_commands_in_dir(struct cmdnames *cmds,
+>  
+>  		add_cmdname(cmds, de->d_name + prefix_len, entlen);
+>  	}
+> +	clean_cmdnames(cmds);
 
-Thanks, applied to perf/urgent.
+Have you tested this?
+
+Look at this usage:
+
+void load_command_list(const char *prefix,
+                struct cmdnames *main_cmds,
+                struct cmdnames *other_cmds)
+{
+        const char *env_path = getenv("PATH");
+        char *exec_path = get_argv_exec_path();
+
+        if (exec_path) {
+                list_commands_in_dir(main_cmds, exec_path, prefix);
+                qsort(main_cmds->names, main_cmds->cnt,
+                      sizeof(*main_cmds->names), cmdname_compare);
+                uniq(main_cmds);
+        }
+
+
+If you call clean_cmdnames() in list_commands_in_dir() that call to
+qsort will be with main_cmds emptied, no?
 
 - Arnaldo
 
-> ---
->  tools/perf/util/smt.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/smt.c b/tools/perf/util/smt.c
-> index 20bacd5972ad..34f1b1b1176c 100644
-> --- a/tools/perf/util/smt.c
-> +++ b/tools/perf/util/smt.c
-> @@ -15,7 +15,7 @@ int smt_on(void)
->  	if (cached)
->  		return cached_result;
->  
-> -	if (sysfs__read_int("devices/system/cpu/smt/active", &cached_result) > 0)
-> +	if (sysfs__read_int("devices/system/cpu/smt/active", &cached_result) >= 0)
->  		goto done;
->  
->  	ncpu = sysconf(_SC_NPROCESSORS_CONF);
+
+>  	closedir(dir);
+>  	free(buf);
+>  }
 > -- 
-> 2.34.0.rc2.393.gf8c9666880-goog
+> 2.25.1
 
 -- 
 
