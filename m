@@ -2,29 +2,29 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 240E0C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Nov 2021 02:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA80C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Nov 2021 02:47:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358320AbhKZCrN (ORCPT
+        id S1358149AbhKZCuh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 25 Nov 2021 21:47:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50236 "EHLO mail.kernel.org"
+        Thu, 25 Nov 2021 21:50:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1358424AbhKZCpM (ORCPT
+        id S1359062AbhKZCpt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 25 Nov 2021 21:45:12 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 608B8611CB;
-        Fri, 26 Nov 2021 02:36:06 +0000 (UTC)
+        Thu, 25 Nov 2021 21:45:49 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1018461359;
+        Fri, 26 Nov 2021 02:36:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637894168;
-        bh=SeSMkjyRDpZNWnCMn+xyOsw1I7EY6CpDakkWDcHl04Y=;
+        s=k20201202; t=1637894199;
+        bh=y+8q+hLdttGkz44v+lZ2Nla17jSAKFdBohakvYvY5rU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=glUQVZY3fL4Yr4md2xUu9ONQPGYO4tcHOSjNaIAXGjCfjN8EQ/yYLMxla0QNaaf9U
-         jVVeFTm3Zbc8dcVcgsU5mvopE33evqkZ6Q1yNFuXzGIbY+2sb9E3w0H1cJWO2b2l/6
-         mKpv2VZDLpVBH9iTGHpJazqSgbDeGPCtZAOoI3GmXpe/cPGLF6BSY4HHipca6Nnqa/
-         hWdK72eguF4+0SmdtntN6f87USNoJCY9X0mt4OR+OyFe/Rxk0A4nk+NGG2qhZOOUkh
-         VD/EgAIN6Ib1NCJ+pHF6v27IjyEueFxqCSrH0n1aAsNkE0wNAnZ3RCnHIuFFgxGgz5
-         xDRHmoFZR4UkQ==
+        b=aY7snWlm4y3qfpMBuVY0MvyNjhmdOvf3NVbJY6m4yxuCZvE2NQ77GuIVP5YgavwQ9
+         nNlWXuUJNv+pcEFXmNdbfxR6aZDVqtCmNg48vulNUeNSJ0yNiTpSQFc/e9pXnxK3Tp
+         gzmy3EVoIX0VMlXa6FCNT7FTpOtAkNpeUJomA9mYBZxxx7cCUHl1ZOdzOC1mXWT/Yr
+         a097rmFwysjC82tDDCIhVdHxtNz6o78edtFaxPqR6k9awxFebTA3ctnvy4K14/H9jy
+         VpJscYVSzNJQ2XzbO7hzbW3bI3JRHmr3PbPtiGvH2HbqaO2hT17uSPk3Jz7Pe4J64E
+         pwh/vSX7ZgTlg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Ian Rogers <irogers@google.com>, Kajol Jain <kjain@linux.ibm.com>,
@@ -37,13 +37,13 @@ Cc:     Ian Rogers <irogers@google.com>, Kajol Jain <kjain@linux.ibm.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>, mingo@redhat.com,
         acme@kernel.org, kan.liang@linux.intel.com, ak@linux.intel.com,
-        atrajeev@linux.vnet.ibm.com, linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 15/15] perf hist: Fix memory leak of a perf_hpp_fmt
-Date:   Thu, 25 Nov 2021 21:35:33 -0500
-Message-Id: <20211126023533.442895-15-sashal@kernel.org>
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 12/12] perf hist: Fix memory leak of a perf_hpp_fmt
+Date:   Thu, 25 Nov 2021 21:36:08 -0500
+Message-Id: <20211126023611.443098-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211126023533.442895-1-sashal@kernel.org>
-References: <20211126023533.442895-1-sashal@kernel.org>
+In-Reply-To: <20211126023611.443098-1-sashal@kernel.org>
+References: <20211126023611.443098-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -79,7 +79,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 14 insertions(+), 15 deletions(-)
 
 diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
-index fe3dfaa64a916..4afb63cea41b9 100644
+index 706f6f1e9c7d6..445a7012b1179 100644
 --- a/tools/perf/ui/hist.c
 +++ b/tools/perf/ui/hist.c
 @@ -468,6 +468,18 @@ struct perf_hpp_list perf_hpp_list = {
@@ -134,10 +134,10 @@ index fe3dfaa64a916..4afb63cea41b9 100644
  {
  	struct perf_hpp_fmt *fmt, *tmp;
 diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 7173e1f410930..899c1ca5e7dce 100644
+index 595f91f46811f..2eb71eeec4858 100644
 --- a/tools/perf/util/hist.h
 +++ b/tools/perf/util/hist.h
-@@ -346,7 +346,6 @@ enum {
+@@ -339,7 +339,6 @@ enum {
  };
  
  void perf_hpp__init(void);
