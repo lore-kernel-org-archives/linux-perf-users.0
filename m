@@ -2,293 +2,113 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4966DC433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Nov 2021 06:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CFBC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Nov 2021 07:15:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358756AbhKZGIa (ORCPT
+        id S1352804AbhKZHSo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 Nov 2021 01:08:30 -0500
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:11810 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358763AbhKZGGa (ORCPT
+        Fri, 26 Nov 2021 02:18:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52672 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1352874AbhKZHQo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 Nov 2021 01:06:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1637906597; x=1669442597;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=oUs8KHpPoES62pGveh25YWvNvWsKpMxtp/olrjhpVBo=;
-  b=YXe+c9t/GQ9zDUpPBhlaesx1udIX32JmIW2UVsC4oCn2z+ndv+PwV1la
-   gZO3YPGS/3gItBqlZ2INwDt2CGeHefHzHYkCIUzXWVhyYPkFZ5EYRpahc
-   PlnqisB5598pl57XxypfZFEHpL8621zTCp9iwGR3RouhduEeFyDB7/ibS
-   I5hKW4vX/nL4nqeCszy0erQ2qxgryPhtjGPb8NZFrQSBwkygvC6E2s3XE
-   KUqNOKPgF7bXGSsd5gHHDaUeALW5+77NWiAGCHzkkFs05wIISnKrYecyi
-   ZTETo4PquI0J6vRvSZC6pMD35LJJ26Ayd1k7bQHQ0QfMbSMt6MoCdl653
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.87,263,1631548800"; 
-   d="scan'208";a="191493926"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 26 Nov 2021 14:01:27 +0800
-IronPort-SDR: FUZObnQiMyKM30Np/taksJZWEwr6EEJoOANv9y0UG6uIaiLKihVV36LaP31RkR6rZplkfOIzTX
- QMhjvyfiN1Eh4WPl+MNZqVB0qKlj71zFcC8xexFAk8/vphp/vvm0rQC9qGh4m+F7+gtMiaWr1p
- 4TKUeKr+8Tp4O75+qbzxBYROpADnhUqQtaSuT9eG6UolbxvUMLxqC3yS3MqshVR/PbuV/CsRR5
- NzlQS32D3hBNHgIU7oUWTdLy1mKUt77CWSE6wW32K1/W9D9MCC7ESY8GAE1Xe57icAiaQyjJ1r
- HZiYyPLTv/WFRNHUsy8a5rl+
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2021 21:34:46 -0800
-IronPort-SDR: ueQOVVBDKmwgN2MiEQ2ZO4Ifi7VQet0yYk4pMsJq7HJ9VNEtQSmP+j6D4y5f/zfd2KM6DfLDt9
- fOasDuJRBK/6yccCHKVzgP+MlXYYETvvoR3UbLjFxH/Wi2bJN6Dh/D17tBmXpkjUTCrAgIQl5Q
- uJneh1bAUnVg/jtoUxrOyu4Aoc5EzHT20oAoiBivVUgDqt7kSEwflUcMt1dFuwO9pasmXZ2zgR
- R/58YaxqOVjD9XIxgey6rb6zajlFNVDnMGjl4tdGeWhNhRliVLYuJtg52zvCeZyPcMc/dsRJ46
- Grs=
-WDCIronportException: Internal
-Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
-  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2021 22:01:27 -0800
-Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4J0kdf65tPz1RtVv
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 Nov 2021 22:01:26 -0800 (PST)
-Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
-        reason="pass (just generated, assumed good)"
-        header.d=opensource.wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
-        opensource.wdc.com; h=content-transfer-encoding:mime-version
-        :references:in-reply-to:x-mailer:message-id:date:subject:to
-        :from; s=dkim; t=1637906485; x=1640498486; bh=oUs8KHpPoES62pGveh
-        25YWvNvWsKpMxtp/olrjhpVBo=; b=ADB3Iga72GY66n+Uk4bV4rpd9x0Ognceny
-        byUnLSah0nVg7yvJK5Aq1Mj+bX2p4AqBYvGWHYAYtLWQWQjvWbeWOITmKpkA9RFv
-        hh34RuaH0uEyAAnbEJqNlBOy22wvJD0wWpnjyFkE2n1AlYWA4QwbJ53vKIIcnNll
-        Rt8486s/kqn/6uq4oX5E8YPeUmkeaho9v0Sxkfa1Cp1sxY/5aTjyMR0daR94Yaj9
-        GJGeuLN+rmsJ65GSQnG4jNWiTsMKNrxTtHkkW2HnOVQ+rsH/kuth0qIrGIlpvBSk
-        ZfwekZfEez2+Ge676qILQLIu3Qml1LRIQUwf4uuLhyCGWWia7UJA==
-X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
-Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
-        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 3TBaCYNdvCv3 for <linux-perf-users@vger.kernel.org>;
-        Thu, 25 Nov 2021 22:01:25 -0800 (PST)
-Received: from toolbox.wdc.com (unknown [10.225.165.62])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4J0kdT2FD4z1RtW3;
-        Thu, 25 Nov 2021 22:01:16 -0800 (PST)
-From:   Alistair Francis <alistair.francis@opensource.wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, arnd@arndb.de, namhyung@kernel.org,
-        peterz@infradead.org, alistair23@gmail.com, jolsa@redhat.com,
-        dave@stgolabs.net, mingo@redhat.com, dvhart@infradead.org,
-        acme@kernel.org, linux-perf-users@vger.kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        Alistair Francis <alistair.francis@wdc.com>
-Subject: [PATCH v3 6/6] selftests: futex: Use futex_waitv helper function
-Date:   Fri, 26 Nov 2021 16:00:24 +1000
-Message-Id: <20211126060024.3290177-6-alistair.francis@opensource.wdc.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20211126060024.3290177-1-alistair.francis@opensource.wdc.com>
-References: <20211126060024.3290177-1-alistair.francis@opensource.wdc.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+        Fri, 26 Nov 2021 02:16:44 -0500
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACF8DC061748
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 Nov 2021 23:13:10 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id l145-20020a25cc97000000b005c5d04a1d52so9379797ybf.23
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 Nov 2021 23:13:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=W8hS1aIz252p/mMAVTvx9qDScElm2mCtCgsM5bMoDEk=;
+        b=LtNaVZTVTBAxfs2FCwbd1IbM2oYejVO8saSuKjZwaKdsFsd/5e8cjS31/FErDyX2OJ
+         vK40XcqfAe5++itK3t7bQ9k9xOF2xEatZWiwTV7W7r6XcYBAL3VIB3+ezGuns9n9RXjK
+         eQTrDSFOm/47+6afws4MwbOv55vtblxBZVEnY+LNDtw4A/2LuoYp29L0HA/91gIasRcP
+         4P8ZKM4scKYbjW6rsBzekXUtIoYFCdSvcsJoPV7ew9avb3l0G6w7ZinMuVyHD32l7kRi
+         FfWVrbOxX0G3qqhKRgSoU1W3avNh1PsFxuDyHEXGketLoLlplkTGLtLDFGyEmeaEsfVP
+         Y8sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=W8hS1aIz252p/mMAVTvx9qDScElm2mCtCgsM5bMoDEk=;
+        b=taZ/DTXD3VuCkjlVon6DyZwAcAVylPEF7qbzdvxEB1+HUpgCOd4aIsPd9ePyoYZhw8
+         f3cf/I7nRpcvrPaE5FCJQrurlaqMcdbJ46i1Mi0LmxSxPyQOCF1xLVTSIkDxXhC4kZ6h
+         v5t1YBy48M/6tWyHmPb5HNypTvwIQWTIqq9aA7weflw+ahUmHS9FAXlQDnXqSkrPotRb
+         7ohiY0M7fiM2VvBL4qDN6vGf+RfNhGSkInDcTXjQ2+KIe1KyMZmO706iaIAab1mG6CpO
+         LbTpOYj0Nhiu6HlFHPr56M1UBSE8G0jbqoY7Cz3sxjdbdFAjCP2g+8nsxF8ZyBXFSwaA
+         wXQw==
+X-Gm-Message-State: AOAM531EfHV66vU6iW3TZfaaENJepp9/jyn1SwyrldS23JSsL69vnt3v
+        csxmdR593ItGsR1j/H6xDetLP9Pno+8Q
+X-Google-Smtp-Source: ABdhPJyMhAlET7BZdwEfgs2s181EBLy1PpYEzdwf1yfnsLaCeGL40f4p8cmXJrPvHAP2UI8xq9+bWPWE4QGW
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:cdec:1c24:b91d:377e])
+ (user=irogers job=sendgmr) by 2002:a5b:b91:: with SMTP id l17mr12092261ybq.198.1637910789950;
+ Thu, 25 Nov 2021 23:13:09 -0800 (PST)
+Date:   Thu, 25 Nov 2021 23:13:05 -0800
+Message-Id: <20211126071305.3733878-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.34.0.rc2.393.gf8c9666880-goog
+Subject: [RFC PATCH] perf pmu-events: Don't lower case MetricExpr
+From:   Ian Rogers <irogers@google.com>
+To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     eranian@google.com, Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Alistair Francis <alistair.francis@wdc.com>
+This patch changes MetricExpr to be written out in the same case. This
+enables events in metrics to use modifiers like 'G' which currently
+yield parse errors when made lower case. To keep tests passing the
+literal #smt_on is compared in a non-case sensitive way - #SMT_on is
+present in at least SkylakeX metrics.
 
-Use the publically exposed __kernel_futex_syscall_waitv() helper
-function for the futex_waitv tests.
+This patch is on top of:
+https://lore.kernel.org/lkml/20211124001231.3277836-1-irogers@google.com/
 
-Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../futex/functional/futex_wait_timeout.c     |  6 ++---
- .../futex/functional/futex_wait_wouldblock.c  |  4 ++--
- .../selftests/futex/functional/futex_waitv.c  | 16 ++++++++------
- .../selftests/futex/include/futex2test.h      | 22 -------------------
- 4 files changed, 14 insertions(+), 34 deletions(-)
- delete mode 100644 tools/testing/selftests/futex/include/futex2test.h
+ tools/perf/pmu-events/jevents.c | 2 --
+ tools/perf/util/expr.c          | 2 +-
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/futex/functional/futex_wait_timeout.=
-c b/tools/testing/selftests/futex/functional/futex_wait_timeout.c
-index 3651ce17beeb..f25e3bd8222e 100644
---- a/tools/testing/selftests/futex/functional/futex_wait_timeout.c
-+++ b/tools/testing/selftests/futex/functional/futex_wait_timeout.c
-@@ -15,9 +15,9 @@
-  *
-  ***********************************************************************=
-******/
-=20
-+#include <linux/futex_syscall.h>
- #include <pthread.h>
- #include "futextest.h"
--#include "futex2test.h"
- #include "logging.h"
-=20
- #define TEST_NAME "futex-wait-timeout"
-@@ -185,13 +185,13 @@ int main(int argc, char *argv[])
- 	/* futex_waitv with CLOCK_MONOTONIC */
- 	if (futex_get_abs_timeout(CLOCK_MONOTONIC, &to, timeout_ns))
- 		return RET_FAIL;
--	res =3D futex_waitv(&waitv, 1, 0, &to, CLOCK_MONOTONIC);
-+	res =3D __kernel_futex_syscall_waitv(&waitv, 1, 0, &to, CLOCK_MONOTONIC=
-);
- 	test_timeout(res, &ret, "futex_waitv monotonic", ETIMEDOUT);
-=20
- 	/* futex_waitv with CLOCK_REALTIME */
- 	if (futex_get_abs_timeout(CLOCK_REALTIME, &to, timeout_ns))
- 		return RET_FAIL;
--	res =3D futex_waitv(&waitv, 1, 0, &to, CLOCK_REALTIME);
-+	res =3D __kernel_futex_syscall_waitv(&waitv, 1, 0, &to, CLOCK_REALTIME)=
-;
- 	test_timeout(res, &ret, "futex_waitv realtime", ETIMEDOUT);
-=20
- 	ksft_print_cnts();
-diff --git a/tools/testing/selftests/futex/functional/futex_wait_wouldblo=
-ck.c b/tools/testing/selftests/futex/functional/futex_wait_wouldblock.c
-index 7d7a6a06cdb7..399ac636524b 100644
---- a/tools/testing/selftests/futex/functional/futex_wait_wouldblock.c
-+++ b/tools/testing/selftests/futex/functional/futex_wait_wouldblock.c
-@@ -17,12 +17,12 @@
-=20
- #include <errno.h>
- #include <getopt.h>
-+#include <linux/futex_syscall.h>
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
- #include <time.h>
- #include "futextest.h"
--#include "futex2test.h"
- #include "logging.h"
-=20
- #define TEST_NAME "futex-wait-wouldblock"
-@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index 2e7c4153875b..1a57c3f81dd4 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -672,8 +672,6 @@ static int json_events(const char *fn,
+ 				addfield(map, &je.metric_constraint, "", "", val);
+ 			} else if (json_streq(map, field, "MetricExpr")) {
+ 				addfield(map, &je.metric_expr, "", "", val);
+-				for (s = je.metric_expr; *s; s++)
+-					*s = tolower(*s);
+ 			} else if (json_streq(map, field, "ArchStdEvent")) {
+ 				addfield(map, &arch_std, "", "", val);
+ 				for (s = arch_std; *s; s++)
+diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+index cdbab4f959fe..5cd6b9ff2489 100644
+--- a/tools/perf/util/expr.c
++++ b/tools/perf/util/expr.c
+@@ -397,7 +397,7 @@ double expr__get_literal(const char *literal)
+ 	static struct cpu_topology *topology;
+ 	double result = NAN;
+ 
+-	if (!strcmp("#smt_on", literal)) {
++	if (!strcasecmp("#smt_on", literal)) {
+ 		result =  smt_on() > 0 ? 1.0 : 0.0;
+ 		goto out;
  	}
-=20
- 	info("Calling futex_waitv on f1: %u @ %p with val=3D%u\n", f1, &f1, f1+=
-1);
--	res =3D futex_waitv(&waitv, 1, 0, &to, CLOCK_MONOTONIC);
-+	res =3D __kernel_futex_syscall_waitv(&waitv, 1, 0, &to, CLOCK_MONOTONIC=
-);
- 	if (!res || errno !=3D EWOULDBLOCK) {
- 		ksft_test_result_pass("futex_waitv returned: %d %s\n",
- 				      res ? errno : res,
-diff --git a/tools/testing/selftests/futex/functional/futex_waitv.c b/too=
-ls/testing/selftests/futex/functional/futex_waitv.c
-index a94337f677e1..8ba45363c094 100644
---- a/tools/testing/selftests/futex/functional/futex_waitv.c
-+++ b/tools/testing/selftests/futex/functional/futex_waitv.c
-@@ -8,6 +8,7 @@
- #include <errno.h>
- #include <error.h>
- #include <getopt.h>
-+#include <linux/futex_syscall.h>
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
-@@ -16,7 +17,6 @@
- #include <stdint.h>
- #include <sys/shm.h>
- #include "futextest.h"
--#include "futex2test.h"
- #include "logging.h"
-=20
- #define TEST_NAME "futex-wait"
-@@ -25,6 +25,8 @@
- static struct futex_waitv waitv[NR_FUTEXES];
- u_int32_t futexes[NR_FUTEXES] =3D {0};
-=20
-+#define u64_to_ptr(x) ((void *)(uintptr_t)(x))
-+
- void usage(char *prog)
- {
- 	printf("Usage: %s\n", prog);
-@@ -45,7 +47,7 @@ void *waiterfn(void *arg)
-=20
- 	to.tv_sec++;
-=20
--	res =3D futex_waitv(waitv, NR_FUTEXES, 0, &to, CLOCK_MONOTONIC);
-+	res =3D __kernel_futex_syscall_waitv(waitv, NR_FUTEXES, 0, &to, CLOCK_M=
-ONOTONIC);
- 	if (res < 0) {
- 		ksft_test_result_fail("futex_waitv returned: %d %s\n",
- 				      errno, strerror(errno));
-@@ -153,7 +155,7 @@ int main(int argc, char *argv[])
-=20
- 	to.tv_sec++;
-=20
--	res =3D futex_waitv(waitv, NR_FUTEXES, 0, &to, CLOCK_MONOTONIC);
-+	res =3D __kernel_futex_syscall_waitv(waitv, NR_FUTEXES, 0, &to, CLOCK_M=
-ONOTONIC);
- 	if (res =3D=3D EINVAL) {
- 		ksft_test_result_fail("futex_waitv private returned: %d %s\n",
- 				      res ? errno : res,
-@@ -172,7 +174,7 @@ int main(int argc, char *argv[])
-=20
- 	to.tv_sec++;
-=20
--	res =3D futex_waitv(waitv, NR_FUTEXES, 0, &to, CLOCK_MONOTONIC);
-+	res =3D __kernel_futex_syscall_waitv(waitv, NR_FUTEXES, 0, &to, CLOCK_M=
-ONOTONIC);
- 	if (res =3D=3D EINVAL) {
- 		ksft_test_result_fail("futex_wake private returned: %d %s\n",
- 				      res ? errno : res,
-@@ -190,7 +192,7 @@ int main(int argc, char *argv[])
-=20
- 	to.tv_sec++;
-=20
--	res =3D futex_waitv(waitv, NR_FUTEXES, 0, &to, CLOCK_MONOTONIC);
-+	res =3D __kernel_futex_syscall_waitv(waitv, NR_FUTEXES, 0, &to, CLOCK_M=
-ONOTONIC);
- 	if (res =3D=3D EINVAL) {
- 		ksft_test_result_fail("futex_waitv private returned: %d %s\n",
- 				      res ? errno : res,
-@@ -206,7 +208,7 @@ int main(int argc, char *argv[])
-=20
- 	to.tv_sec++;
-=20
--	res =3D futex_waitv(NULL, NR_FUTEXES, 0, &to, CLOCK_MONOTONIC);
-+	res =3D __kernel_futex_syscall_waitv(NULL, NR_FUTEXES, 0, &to, CLOCK_MO=
-NOTONIC);
- 	if (res =3D=3D EINVAL) {
- 		ksft_test_result_fail("futex_waitv private returned: %d %s\n",
- 				      res ? errno : res,
-@@ -222,7 +224,7 @@ int main(int argc, char *argv[])
-=20
- 	to.tv_sec++;
-=20
--	res =3D futex_waitv(NULL, NR_FUTEXES, 0, &to, CLOCK_TAI);
-+	res =3D __kernel_futex_syscall_waitv(NULL, NR_FUTEXES, 0, &to, CLOCK_TA=
-I);
- 	if (res =3D=3D EINVAL) {
- 		ksft_test_result_fail("futex_waitv private returned: %d %s\n",
- 				      res ? errno : res,
-diff --git a/tools/testing/selftests/futex/include/futex2test.h b/tools/t=
-esting/selftests/futex/include/futex2test.h
-deleted file mode 100644
-index 9d305520e849..000000000000
---- a/tools/testing/selftests/futex/include/futex2test.h
-+++ /dev/null
-@@ -1,22 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-or-later */
--/*
-- * Futex2 library addons for futex tests
-- *
-- * Copyright 2021 Collabora Ltd.
-- */
--#include <stdint.h>
--
--#define u64_to_ptr(x) ((void *)(uintptr_t)(x))
--
--/**
-- * futex_waitv - Wait at multiple futexes, wake on any
-- * @waiters:    Array of waiters
-- * @nr_waiters: Length of waiters array
-- * @flags: Operation flags
-- * @timo:  Optional timeout for operation
-- */
--static inline int futex_waitv(volatile struct futex_waitv *waiters, unsi=
-gned long nr_waiters,
--			      unsigned long flags, struct timespec *timo, clockid_t clockid)
--{
--	return syscall(__NR_futex_waitv, waiters, nr_waiters, flags, timo, cloc=
-kid);
--}
---=20
-2.31.1
+-- 
+2.34.0.rc2.393.gf8c9666880-goog
 
