@@ -2,47 +2,52 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C50C4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Nov 2021 02:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA3F8C4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Nov 2021 02:40:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358372AbhKZCkM (ORCPT
+        id S1358277AbhKZCnh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 25 Nov 2021 21:40:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48578 "EHLO mail.kernel.org"
+        Thu, 25 Nov 2021 21:43:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1358174AbhKZCiK (ORCPT
+        id S1358467AbhKZClU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 25 Nov 2021 21:38:10 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id BB4FB604DC;
-        Fri, 26 Nov 2021 02:33:39 +0000 (UTC)
+        Thu, 25 Nov 2021 21:41:20 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6984C611BF;
+        Fri, 26 Nov 2021 02:34:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637894021;
-        bh=KXXdDp/3cazYHXGVfu1X17GIxb11AbudzK4kR9l8DeI=;
+        s=k20201202; t=1637894076;
+        bh=UIpFhI+ZxW78Zsk2Sx6TEyfvqhS6JuBdNd2I6o9pxl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WWxSOAHDnJiZUexBwKUCKhYqVda62i8U7zxwsc4T0Ic18L8U1SfdpIUi++9orDFU6
-         yj+Z0G46JGiZ6fCqu5frKteHGo44iFygAfzeIB/XMeZddyeXxVBp9/P+E37gICrCN7
-         klDoZq5fBw0SwGV4s2nJLuyFXdnutAOXK6VsfPovbwbhrRIiCrHY4jdaHTFqB+WXZd
-         dkytAQuxXN/342ZE3WQ3UoK5OrWbqOs6+ENQNjHFqnEAXh+FfGx2FgsGnToQ0M3T6y
-         CPL3MNLoHp/CGcYT5cBpEpaPeR2xRooXRtFs/1zYYeFjg9jNgPka55uJXOtBvIB5LX
-         2rSu0XpOhxTwQ==
+        b=R0Go85qJO5mdTSyfMp1LcJnlNAuQu5lWfiNeQ31C0K7QjruTCrX8cq1zad3j/qALb
+         Xt67YxxuCOGG5Ac/KpoXbcNbX+LVNnqJ7T9Eq5HBWjUioFlYvF3QqYD20/IHsUoxmZ
+         tNolMo+htm9ZuPnBJNv6/6+iahRdNflGHpm3N/FD5lqMLrEUGg+3C/HWDHa4N0Hy0i
+         8LKqHb6cOViSg2HkRoTMjvY6kuu+OasyiFu9DFyilSvR+el8/eM1hFppBRZmAztu3D
+         UymSlEqOrWMHSnCbQ9+8XMYfY+b0YU3oEWKHqe2/NIgBuCN2nzNSxGpOyAO7mOf6pv
+         DTPD/fbu8MJIw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ian Rogers <irogers@google.com>,
+Cc:     German Gomez <german.gomez@arm.com>,
+        James Clark <james.clark@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
+        John Garry <john.garry@huawei.com>,
+        Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, mingo@redhat.com,
-        acme@kernel.org, linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 38/39] perf report: Fix memory leaks around perf_tip()
-Date:   Thu, 25 Nov 2021 21:31:55 -0500
-Message-Id: <20211126023156.441292-38-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, andrew.kilroy@arm.com,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 26/28] perf inject: Fix ARM SPE handling
+Date:   Thu, 25 Nov 2021 21:33:41 -0500
+Message-Id: <20211126023343.442045-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211126023156.441292-1-sashal@kernel.org>
-References: <20211126023156.441292-1-sashal@kernel.org>
+In-Reply-To: <20211126023343.442045-1-sashal@kernel.org>
+References: <20211126023343.442045-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -51,125 +56,94 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: German Gomez <german.gomez@arm.com>
 
-[ Upstream commit d9fc706108c15f8bc2d4ccccf8e50f74830fabd9 ]
+[ Upstream commit 9e1a8d9f683260d50e0a14176d3f7c46a93b2700 ]
 
-perf_tip() may allocate memory or use a literal, this means memory
-wasn't freed if allocated. Change the API so that literals aren't used.
+'perf inject' is currently not working for Arm SPE. When you try to run
+'perf inject' and 'perf report' with a perf.data file that contains SPE
+traces, the tool reports a "Bad address" error:
 
-At the same time add missing frees for system_path. These issues were
-spotted using leak sanitizer.
+  # ./perf record -e arm_spe_0/ts_enable=1,store_filter=1,branch_filter=1,load_filter=1/ -a -- sleep 1
+  # ./perf inject -i perf.data -o perf.inject.data --itrace
+  # ./perf report -i perf.inject.data --stdio
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+  0x42c00 [0x8]: failed to process type: 9 [Bad address]
+  Error:
+  failed to process sample
+
+As far as I know, the issue was first spotted in [1], but 'perf inject'
+was not yet injecting the samples. This patch does something similar to
+what cs_etm does for injecting the samples [2], but for SPE.
+
+[1] https://patchwork.kernel.org/project/linux-arm-kernel/cover/20210412091006.468557-1-leo.yan@linaro.org/#24117339
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/cs-etm.c?h=perf/core&id=133fe2e617e48ca0948983329f43877064ffda3e#n1196
+
+Reviewed-by: James Clark <james.clark@arm.com>
+Signed-off-by: German Gomez <german.gomez@arm.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: John Garry <john.garry@huawei.com>
+Cc: Leo Yan <leo.yan@linaro.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lore.kernel.org/lkml/20211118073804.2149974-1-irogers@google.com
+Cc: Will Deacon <will@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Link: https://lore.kernel.org/r/20211105104130.28186-2-german.gomez@arm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-report.c | 15 +++++++++------
- tools/perf/util/util.c      | 14 +++++++-------
- tools/perf/util/util.h      |  2 +-
- 3 files changed, 17 insertions(+), 14 deletions(-)
+ tools/perf/util/arm-spe.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index a0316ce910db6..997e0a4b0902a 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -619,14 +619,17 @@ static int report__browse_hists(struct report *rep)
- 	int ret;
- 	struct perf_session *session = rep->session;
- 	struct evlist *evlist = session->evlist;
--	const char *help = perf_tip(system_path(TIPDIR));
-+	char *help = NULL, *path = NULL;
+diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+index 3882a5360ada4..0350020acb96f 100644
+--- a/tools/perf/util/arm-spe.c
++++ b/tools/perf/util/arm-spe.c
+@@ -48,6 +48,7 @@ struct arm_spe {
+ 	u8				timeless_decoding;
+ 	u8				data_queued;
  
--	if (help == NULL) {
-+	path = system_path(TIPDIR);
-+	if (perf_tip(&help, path) || help == NULL) {
- 		/* fallback for people who don't install perf ;-) */
--		help = perf_tip(DOCDIR);
--		if (help == NULL)
--			help = "Cannot load tips.txt file, please install perf!";
-+		free(path);
-+		path = system_path(DOCDIR);
-+		if (perf_tip(&help, path) || help == NULL)
-+			help = strdup("Cannot load tips.txt file, please install perf!");
- 	}
-+	free(path);
- 
- 	switch (use_browser) {
- 	case 1:
-@@ -651,7 +654,7 @@ static int report__browse_hists(struct report *rep)
- 		ret = evlist__tty_browse_hists(evlist, rep, help);
- 		break;
- 	}
--
-+	free(help);
- 	return ret;
++	u64				sample_type;
+ 	u8				sample_flc;
+ 	u8				sample_llc;
+ 	u8				sample_tlb;
+@@ -244,6 +245,12 @@ static void arm_spe_prep_sample(struct arm_spe *spe,
+ 	event->sample.header.size = sizeof(struct perf_event_header);
  }
  
-diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-index 37a9492edb3eb..df3c4671be72a 100644
---- a/tools/perf/util/util.c
-+++ b/tools/perf/util/util.c
-@@ -379,32 +379,32 @@ fetch_kernel_version(unsigned int *puint, char *str,
- 	return 0;
- }
- 
--const char *perf_tip(const char *dirpath)
-+int perf_tip(char **strp, const char *dirpath)
++static int arm_spe__inject_event(union perf_event *event, struct perf_sample *sample, u64 type)
++{
++	event->header.size = perf_event__sample_event_size(sample, type, 0);
++	return perf_event__synthesize_sample(event, type, 0, sample);
++}
++
+ static inline int
+ arm_spe_deliver_synth_event(struct arm_spe *spe,
+ 			    struct arm_spe_queue *speq __maybe_unused,
+@@ -252,6 +259,12 @@ arm_spe_deliver_synth_event(struct arm_spe *spe,
  {
- 	struct strlist *tips;
- 	struct str_node *node;
--	char *tip = NULL;
- 	struct strlist_config conf = {
- 		.dirname = dirpath,
- 		.file_only = true,
- 	};
-+	int ret = 0;
+ 	int ret;
  
-+	*strp = NULL;
- 	tips = strlist__new("tips.txt", &conf);
- 	if (tips == NULL)
--		return errno == ENOENT ? NULL :
--			"Tip: check path of tips.txt or get more memory! ;-p";
-+		return -errno;
++	if (spe->synth_opts.inject) {
++		ret = arm_spe__inject_event(event, sample, spe->sample_type);
++		if (ret)
++			return ret;
++	}
++
+ 	ret = perf_session__deliver_synth_event(spe->session, event, sample);
+ 	if (ret)
+ 		pr_err("ARM SPE: failed to deliver event, error %d\n", ret);
+@@ -809,6 +822,8 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+ 	else
+ 		attr.sample_type |= PERF_SAMPLE_TIME;
  
- 	if (strlist__nr_entries(tips) == 0)
- 		goto out;
- 
- 	node = strlist__entry(tips, random() % strlist__nr_entries(tips));
--	if (asprintf(&tip, "Tip: %s", node->s) < 0)
--		tip = (char *)"Tip: get more memory! ;-)";
-+	if (asprintf(strp, "Tip: %s", node->s) < 0)
-+		ret = -ENOMEM;
- 
- out:
- 	strlist__delete(tips);
- 
--	return tip;
-+	return ret;
- }
- 
- char *perf_exe(char *buf, int len)
-diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
-index ad737052e5977..9f0d36ba77f2d 100644
---- a/tools/perf/util/util.h
-+++ b/tools/perf/util/util.h
-@@ -39,7 +39,7 @@ int fetch_kernel_version(unsigned int *puint,
- #define KVER_FMT	"%d.%d.%d"
- #define KVER_PARAM(x)	KVER_VERSION(x), KVER_PATCHLEVEL(x), KVER_SUBLEVEL(x)
- 
--const char *perf_tip(const char *dirpath);
-+int perf_tip(char **strp, const char *dirpath);
- 
- #ifndef HAVE_SCHED_GETCPU_SUPPORT
- int sched_getcpu(void);
++	spe->sample_type = attr.sample_type;
++
+ 	attr.exclude_user = evsel->core.attr.exclude_user;
+ 	attr.exclude_kernel = evsel->core.attr.exclude_kernel;
+ 	attr.exclude_hv = evsel->core.attr.exclude_hv;
 -- 
 2.33.0
 
