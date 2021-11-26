@@ -2,149 +2,221 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA80C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Nov 2021 02:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D60C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Nov 2021 06:02:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358149AbhKZCuh (ORCPT
+        id S1358736AbhKZGGG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 25 Nov 2021 21:50:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50970 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1359062AbhKZCpt (ORCPT
+        Fri, 26 Nov 2021 01:06:06 -0500
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:5907 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1345845AbhKZGEE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 25 Nov 2021 21:45:49 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1018461359;
-        Fri, 26 Nov 2021 02:36:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637894199;
-        bh=y+8q+hLdttGkz44v+lZ2Nla17jSAKFdBohakvYvY5rU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aY7snWlm4y3qfpMBuVY0MvyNjhmdOvf3NVbJY6m4yxuCZvE2NQ77GuIVP5YgavwQ9
-         nNlWXuUJNv+pcEFXmNdbfxR6aZDVqtCmNg48vulNUeNSJ0yNiTpSQFc/e9pXnxK3Tp
-         gzmy3EVoIX0VMlXa6FCNT7FTpOtAkNpeUJomA9mYBZxxx7cCUHl1ZOdzOC1mXWT/Yr
-         a097rmFwysjC82tDDCIhVdHxtNz6o78edtFaxPqR6k9awxFebTA3ctnvy4K14/H9jy
-         VpJscYVSzNJQ2XzbO7hzbW3bI3JRHmr3PbPtiGvH2HbqaO2hT17uSPk3Jz7Pe4J64E
-         pwh/vSX7ZgTlg==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ian Rogers <irogers@google.com>, Kajol Jain <kjain@linux.ibm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, mingo@redhat.com,
-        acme@kernel.org, kan.liang@linux.intel.com, ak@linux.intel.com,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 12/12] perf hist: Fix memory leak of a perf_hpp_fmt
-Date:   Thu, 25 Nov 2021 21:36:08 -0500
-Message-Id: <20211126023611.443098-12-sashal@kernel.org>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211126023611.443098-1-sashal@kernel.org>
-References: <20211126023611.443098-1-sashal@kernel.org>
+        Fri, 26 Nov 2021 01:04:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1637906451; x=1669442451;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=EbRQaPC5mcE8TRYTTGUiLeoUuaS4O51bfJDEd0m/Nic=;
+  b=D6P1eHxaBemEiN38EGSZz3EvyOW4qc+Dy4WDTBs7jc+6YMCcXOrn7I7E
+   Z6+grM6Ed9HAZ2YvCpr6FsW2TcdegC4Jby6pvU8bJCXTPQy8eZjY3oQd1
+   4Rz4iLBDXHTj+/9oz+V/RR6zqnQNLHhQeEa6Wllbf7sdmGcjxcIooRU+5
+   MBi3qO4EUiNVnXydJP8tINE8v5IWWDX0nvbf8dAHJwSQs8E+nYNkoa2VN
+   VmEog3NjP7nj+SaJcrNlSzM66MvIGpy5ZoybMOnE7eaDLSE6eqkQ+bGLm
+   KLAlKO0KomcOddAQfIiin6o1/+eCtes2s7/8wAu8jYZi3KiX0Otpz66Iy
+   w==;
+X-IronPort-AV: E=Sophos;i="5.87,263,1631548800"; 
+   d="scan'208";a="290649418"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 26 Nov 2021 14:00:43 +0800
+IronPort-SDR: ZD1L63U+3a+MwnUjPA2wKH6Jno5TzqDoSiO5SlN4NY7zPomvVeFp+dwe43pDie1tkgtJdXDLjy
+ /Ho6ak4ehStjNFqS+/gC4/LTCq5FjXDukcF5OwTjtiQFbaawzXF9II4cZBHxw3Vmsp232+75gZ
+ xuPi71mTE8mohKPYamC356FNeoBtvFj8z5OL1EDe7v/n2hxQyp4xO2bpZkFo+oAYPD/vE0QuHW
+ fOtsRnHIHcGnL0EebD0oz6nkvShjBKmVG+le53kLPOfJTByrCPkcPKSJ33P/FHqcVSoFHtQ8o3
+ Gzj6LLfZRS48M3UUVV+dCx+H
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2021 21:35:33 -0800
+IronPort-SDR: 51AkQKh8OM5kYFlZXM0Wm01Ju4IRG2K1KAHvqvbriczUygrVjzpBcZoMsreEDa4tXUWNQydlHU
+ ftqWIegFTXbnyFQlq/N//bh7LsjlSrbh7hqAowLFC1YHHgKWF7zK8XYpqWu+5RMs/Apnz6klku
+ a1dHPc9DGRyRa3OH6Yhk4Lt/bseAcfU1thEonDVLC/zusyMo9m/8JqjhwW5qENWTMrStUch8Ni
+ nn3+EWD/Nezj1dvnj0y5qYKxvH11spee+xY/jANpGlm2RKfltYxJRPjLQgrVNJkqldl28xIalN
+ K1A=
+WDCIronportException: Internal
+Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
+  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2021 22:00:42 -0800
+Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4J0kcp2tFtz1RtW1
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 Nov 2021 22:00:42 -0800 (PST)
+Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
+        reason="pass (just generated, assumed good)"
+        header.d=opensource.wdc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
+        opensource.wdc.com; h=content-transfer-encoding:mime-version
+        :x-mailer:message-id:date:subject:to:from; s=dkim; t=1637906441;
+         x=1640498442; bh=EbRQaPC5mcE8TRYTTGUiLeoUuaS4O51bfJDEd0m/Nic=; b=
+        fNz005kQFISzqSYZXNF868n282+1+jomk9Z5KjcCoexdWPKniu5tjRv0oXJASf9Q
+        FsP929dUv5qazL3RSFp80EzlkDnj14CAQHhih7Tap+Ape5Xj47RJJCWNI3fZnaX7
+        PGAXPaaaLCrBKYIzAz0jFLPu7TDlQr+n9LUcYc+5kQkisnfnP1opJ4lYpM8kjpb3
+        T6vsc5YZ6apmdv2V9iLPfsGnsbLoW1Xws8LbH5ubJYjAv+ft33wBvP0MmVq7hcaU
+        Y1Eb1UiBpxaX1BnoPVrKisaAUEuY0R0lck0sqTXqiQq42rdU8D1O7s7wQszmAFjp
+        XWzG0Le4RbsJxdU/xyYVSw==
+X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
+Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
+        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 5ziWnHa28vDW for <linux-perf-users@vger.kernel.org>;
+        Thu, 25 Nov 2021 22:00:41 -0800 (PST)
+Received: from toolbox.wdc.com (unknown [10.225.165.62])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4J0kcb0sp4z1RtVl;
+        Thu, 25 Nov 2021 22:00:30 -0800 (PST)
+From:   Alistair Francis <alistair.francis@opensource.wdc.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, arnd@arndb.de, namhyung@kernel.org,
+        peterz@infradead.org, alistair23@gmail.com, jolsa@redhat.com,
+        dave@stgolabs.net, mingo@redhat.com, dvhart@infradead.org,
+        acme@kernel.org, linux-perf-users@vger.kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        Alistair Francis <alistair.francis@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        linux-riscv@lists.infradead.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH v3 1/6] perf bench futex: Add support for 32-bit systems with 64-bit time_t
+Date:   Fri, 26 Nov 2021 16:00:19 +1000
+Message-Id: <20211126060024.3290177-1-alistair.francis@opensource.wdc.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: Alistair Francis <alistair.francis@wdc.com>
 
-[ Upstream commit 0ca1f534a776cc7d42f2c33da4732b74ec2790cd ]
+Some 32-bit architectures (such are 32-bit RISC-V) only have a 64-bit
+time_t and as such don't have the SYS_futex syscall. This patch will
+allow us to use the SYS_futex_time64 syscall on those platforms.
 
-perf_hpp__column_unregister() removes an entry from a list but doesn't
-free the memory causing a memory leak spotted by leak sanitizer.
+This also converts the futex calls to be y2038 safe (when built for a
+5.1+ kernel).
 
-Add the free while at the same time reducing the scope of the function
-to static.
+This is a revert of commit ba4026b09d83acf56c040b6933eac7916c27e728
+"Revert "perf bench futex: Add support for 32-bit systems with 64-bit tim=
+e_t"".
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
+The original commit was reverted as including linux/time_types.h would
+fail to compile on older kernels. This commit doesn't include
+linux/time_types.h to avoid this issue.
+
+Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alistair Francis <alistair23@gmail.com>
+Cc: Atish Patra <atish.patra@wdc.com>
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lore.kernel.org/lkml/20211118071247.2140392-1-irogers@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-riscv@lists.infradead.org
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/hist.c   | 28 ++++++++++++++--------------
- tools/perf/util/hist.h |  1 -
- 2 files changed, 14 insertions(+), 15 deletions(-)
+ tools/perf/bench/futex.h | 52 +++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 49 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
-index 706f6f1e9c7d6..445a7012b1179 100644
---- a/tools/perf/ui/hist.c
-+++ b/tools/perf/ui/hist.c
-@@ -468,6 +468,18 @@ struct perf_hpp_list perf_hpp_list = {
- #undef __HPP_SORT_ACC_FN
- #undef __HPP_SORT_RAW_FN
- 
-+static void fmt_free(struct perf_hpp_fmt *fmt)
-+{
-+	/*
-+	 * At this point fmt should be completely
-+	 * unhooked, if not it's a bug.
-+	 */
-+	BUG_ON(!list_empty(&fmt->list));
-+	BUG_ON(!list_empty(&fmt->sort_list));
-+
-+	if (fmt->free)
-+		fmt->free(fmt);
-+}
- 
- void perf_hpp__init(void)
- {
-@@ -531,9 +543,10 @@ void perf_hpp_list__prepend_sort_field(struct perf_hpp_list *list,
- 	list_add(&format->sort_list, &list->sorts);
- }
- 
--void perf_hpp__column_unregister(struct perf_hpp_fmt *format)
-+static void perf_hpp__column_unregister(struct perf_hpp_fmt *format)
- {
- 	list_del_init(&format->list);
-+	fmt_free(format);
- }
- 
- void perf_hpp__cancel_cumulate(void)
-@@ -605,19 +618,6 @@ void perf_hpp__append_sort_keys(struct perf_hpp_list *list)
- }
- 
- 
--static void fmt_free(struct perf_hpp_fmt *fmt)
--{
--	/*
--	 * At this point fmt should be completely
--	 * unhooked, if not it's a bug.
--	 */
--	BUG_ON(!list_empty(&fmt->list));
--	BUG_ON(!list_empty(&fmt->sort_list));
--
--	if (fmt->free)
--		fmt->free(fmt);
--}
--
- void perf_hpp__reset_output_field(struct perf_hpp_list *list)
- {
- 	struct perf_hpp_fmt *fmt, *tmp;
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 595f91f46811f..2eb71eeec4858 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -339,7 +339,6 @@ enum {
+diff --git a/tools/perf/bench/futex.h b/tools/perf/bench/futex.h
+index ebdc2b032afc..385d2bdfaa9f 100644
+--- a/tools/perf/bench/futex.h
++++ b/tools/perf/bench/futex.h
+@@ -8,6 +8,7 @@
+ #ifndef _FUTEX_H
+ #define _FUTEX_H
+=20
++#include <errno.h>
+ #include <unistd.h>
+ #include <sys/syscall.h>
+ #include <sys/types.h>
+@@ -28,7 +29,17 @@ struct bench_futex_parameters {
  };
- 
- void perf_hpp__init(void);
--void perf_hpp__column_unregister(struct perf_hpp_fmt *format);
- void perf_hpp__cancel_cumulate(void);
- void perf_hpp__setup_output_field(struct perf_hpp_list *list);
- void perf_hpp__reset_output_field(struct perf_hpp_list *list);
--- 
-2.33.0
+=20
+ /**
+- * futex_syscall() - SYS_futex syscall wrapper
++ * This is copied from linux/time_types.h.
++ * We copy this here to avoid compilation failures when running
++ * on systems that don't ship with linux/time_types.h.
++ */
++struct __kernel_old_timespec {
++	__kernel_old_time_t	tv_sec;		/* seconds */
++	long			tv_nsec;	/* nanoseconds */
++};
++
++/**
++ * futex_syscall() - __NR_futex syscall wrapper
+  * @uaddr:	address of first futex
+  * @op:		futex op code
+  * @val:	typically expected value of uaddr, but varies by op
+@@ -49,14 +60,49 @@ static inline int
+ futex_syscall(volatile u_int32_t *uaddr, int op, u_int32_t val, struct t=
+imespec *timeout,
+ 	      volatile u_int32_t *uaddr2, int val3, int opflags)
+ {
+-	return syscall(SYS_futex, uaddr, op | opflags, val, timeout, uaddr2, va=
+l3);
++#if defined(__NR_futex_time64)
++	if (sizeof(*timeout) !=3D sizeof(struct __kernel_old_timespec)) {
++		int ret =3D syscall(__NR_futex_time64, uaddr, op | opflags, val, timeo=
+ut,
++				  uaddr2, val3);
++	if (ret =3D=3D 0 || errno !=3D ENOSYS)
++		return ret;
++	}
++#endif
++
++#if defined(__NR_futex)
++	if (sizeof(*timeout) =3D=3D sizeof(struct __kernel_old_timespec))
++		return syscall(__NR_futex, uaddr, op | opflags, val, timeout, uaddr2, =
+val3);
++
++	if (timeout && timeout->tv_sec =3D=3D (long)timeout->tv_sec) {
++		struct __kernel_old_timespec ts32;
++
++		ts32.tv_sec =3D (__kernel_long_t) timeout->tv_sec;
++		ts32.tv_nsec =3D (__kernel_long_t) timeout->tv_nsec;
++
++		return syscall(__NR_futex, uaddr, op | opflags, val, ts32, uaddr2, val=
+3);
++	} else if (!timeout) {
++		return syscall(__NR_futex, uaddr, op | opflags, val, NULL, uaddr2, val=
+3);
++	}
++#endif
++
++	errno =3D ENOSYS;
++	return -1;
+ }
+=20
+ static inline int
+ futex_syscall_nr_requeue(volatile u_int32_t *uaddr, int op, u_int32_t va=
+l, int nr_requeue,
+ 			 volatile u_int32_t *uaddr2, int val3, int opflags)
+ {
+-	return syscall(SYS_futex, uaddr, op | opflags, val, nr_requeue, uaddr2,=
+ val3);
++#if defined(__NR_futex_time64)
++	int ret =3D  syscall(__NR_futex_time64, uaddr, op | opflags, val, nr_re=
+queue,
++			   uaddr2, val3);
++	if (ret =3D=3D 0 || errno !=3D ENOSYS)
++		return ret;
++#endif
++
++#if defined(__NR_futex)
++	return syscall(__NR_futex, uaddr, op | opflags, val, nr_requeue, uaddr2=
+, val3);
++#endif
+ }
+=20
+ /**
+--=20
+2.31.1
 
