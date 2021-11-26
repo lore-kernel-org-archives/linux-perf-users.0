@@ -2,53 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2626AC433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Nov 2021 22:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE7ECC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Nov 2021 22:34:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232660AbhKZW22 (ORCPT
+        id S242815AbhKZWhX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 Nov 2021 17:28:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54588 "EHLO
+        Fri, 26 Nov 2021 17:37:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233729AbhKZW02 (ORCPT
+        with ESMTP id S243492AbhKZWfX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 Nov 2021 17:26:28 -0500
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9267C06173E;
-        Fri, 26 Nov 2021 14:23:14 -0800 (PST)
-Received: by mail-wm1-x332.google.com with SMTP id r9-20020a7bc089000000b00332f4abf43fso8173513wmh.0;
-        Fri, 26 Nov 2021 14:23:14 -0800 (PST)
+        Fri, 26 Nov 2021 17:35:23 -0500
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23A60C06175A;
+        Fri, 26 Nov 2021 14:31:26 -0800 (PST)
+Received: by mail-wr1-x434.google.com with SMTP id l16so21487351wrp.11;
+        Fri, 26 Nov 2021 14:31:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=Z+4t5OMP+y8asfHJx9yemcdXWelcG0CCFormBoppS2w=;
-        b=Gzxae8UGy2wtl+rrwGkZkZQPrLUDgc0Nc9kSYiZm5VyR4AcHrSzQE1oIXHanuNvRlS
-         1COJ8mspv1pFLIiNp+fQiWfqN+bt1VwfFl4A53f95zL/Dgz8Nf5Qrbz1TN6DY79QXC5n
-         I1C8c9Vr859QaoU2P23LgpGx2F861z9dHPKs/okYG9jkSjH6NoayVuMnjkw90spw6aSy
-         vd30uuk2MUSBBVJ5oSdHS2ERGWYE3nswWJLhmne6f0d4EM0LhIXvvZSJpJuHvvVKM/Gd
-         W/Pyj6CStsRIcW6pj7SzAE0Z8A7LYK2qnJ65VdusgNkoZisOd6e4qedsS+52/dEtREPr
-         w+Rw==
+        bh=vzycsHuQSReBj1bUpfhIwziDiaIARC7YgVu13ZE149E=;
+        b=o4OMEDcGL6/mJDWKAAnXfWf3+FumNwYF/Mz+F8k9Jlbk9rBawRIMRlwE8roTEwiUua
+         5PCvCiaU0/Z8mQ1+Bx99n0ETdB7ZOheFh9w6g47+7USuc2DhibxVv+2PeOS3JnKmG+76
+         w+Vhj2FOqOwDs9ojaydbVbHac6FL9b/eLajx6Vk0RV5VT0/9klfD+t/6kJR57cqz8pAD
+         kulrlUbLJ11DAp6R4Jo8UDJyCmwr4cvaaeSeaj9s+F/D7mqv5qioT9PFRMnm7Kw38nOD
+         tHXYCfTJ6AKkaDQ57Os68xYmfW6zP9OYwTuyxp6vB/FzSmaLK/ipY4pMPk1T9sISpBrO
+         ru6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=Z+4t5OMP+y8asfHJx9yemcdXWelcG0CCFormBoppS2w=;
-        b=uobiXqoruj1envOpUFQcVSHq1mI7uV41uePzkcJKVI4LLGJQW+8mRX4eLxr+NGdlMk
-         bpYIaGbCAfYepjogg5MafxagRPAS2DbMmSSEQGBBe0YV4mWEdjOlb1CKrlqbsLjiVOLI
-         BuahldWJ4qJZBYFmDjF0qJAokCCgg/6ABccvXacJd35gDBX/d/BNAazLCE+qD7iIIOTh
-         qBi440S/gu7m/VNtkvMZ3mVXIZMdmNImoRZ5I0gVWUXSHVxXob9fpWFdfk9t2aoKqDr/
-         9zuk7j19FII0xGoNf4UMvmzRrXlvBlQsLdDOv/cvhMIO8Nly4ZyBpPHnkA8qJTrTP8YJ
-         Susg==
-X-Gm-Message-State: AOAM532KJvypWQjuC25wzhODacsAhE2HZKBPH4za7vRz6LdIvqdJrip0
-        /JQxPCxwooHx8Q==
-X-Google-Smtp-Source: ABdhPJzMntEXDyGjqAPNcqmlryFDYENzBgRQiOuclEM7RYDtf91okuklzP7kFyID/PcFnkVcWS1P5Q==
-X-Received: by 2002:a05:600c:19d1:: with SMTP id u17mr18789968wmq.148.1637965393404;
-        Fri, 26 Nov 2021 14:23:13 -0800 (PST)
+        bh=vzycsHuQSReBj1bUpfhIwziDiaIARC7YgVu13ZE149E=;
+        b=0H5AkdUol2bvxHTvhWYV0X3za6HwoQ6FmGNRlKa/rIZT1y5CtnSRnct2L3b6HaQSfT
+         KbR9n4wRsgKljHk+8lfPHsdFHP+bonH+r6iCyfms6LtZYw6lH2cJln6JCHzN5R70z53u
+         jf8/QsM79SS2NDu0o1WNITmvlKPqHTvHyLGr6AnRlOdNvjw9y8SUBW4LJhjXZhrHyUWv
+         4sZ57eajpApSQ9RByVGjp9ZYg+RZiGZm4RsKzDdnw6bJcJdYrS7/RCX/dikzWCNNxgzZ
+         qwatfWGoGy0xLMptR/a4yBxz6zVEhV8U2TSJMdgm6P2fr7zkIxdh1zR8qLWimY8tiOtG
+         ow/w==
+X-Gm-Message-State: AOAM530/sdPh6cVM0YUZHU+tim65av8ye2yA0spt8DQGnBKaIEuOFaJN
+        120n0lRk49wDKw==
+X-Google-Smtp-Source: ABdhPJyo/IITKp614mlK65Ll6L5bsQWurHOd2/rQpQSYeyJCW6LbTL0lSFK5lvUF1wwiy51mEm2CRQ==
+X-Received: by 2002:adf:8296:: with SMTP id 22mr16446971wrc.581.1637965884784;
+        Fri, 26 Nov 2021 14:31:24 -0800 (PST)
 Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
-        by smtp.gmail.com with ESMTPSA id d7sm6349690wrw.87.2021.11.26.14.23.12
+        by smtp.gmail.com with ESMTPSA id w4sm7070745wrs.88.2021.11.26.14.31.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Nov 2021 14:23:13 -0800 (PST)
+        Fri, 26 Nov 2021 14:31:24 -0800 (PST)
 From:   Colin Ian King <colin.i.king@googlemail.com>
 X-Google-Original-From: Colin Ian King <colin.i.king@gmail.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
@@ -58,13 +58,14 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Vineet Gupta <vgupta@kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org
 Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARC: perf: Remove redundant initialization of variable idx
-Date:   Fri, 26 Nov 2021 22:23:12 +0000
-Message-Id: <20211126222312.1125594-1-colin.i.king@gmail.com>
+Subject: [PATCH] riscv: perf_event: Remove redundant initialization of variable ret
+Date:   Fri, 26 Nov 2021 22:31:23 +0000
+Message-Id: <20211126223123.1125916-1-colin.i.king@gmail.com>
 X-Mailer: git-send-email 2.33.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -73,28 +74,31 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The variable idx is being initialized with a value that is never
+The variable ret is being initialized with a value that is never
 read, it is being updated later on. The assignment is redundant and
-can be removed.
+can be removed. Clean up the incorrectly indented following
+declaration of variable code and move to the same line as the
+declaration of variable ret.
 
 Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 ---
- arch/arc/kernel/perf_event.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/riscv/kernel/perf_event.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arc/kernel/perf_event.c b/arch/arc/kernel/perf_event.c
-index 145722f80c9b..f5dd799ddb9e 100644
---- a/arch/arc/kernel/perf_event.c
-+++ b/arch/arc/kernel/perf_event.c
-@@ -361,7 +361,7 @@ static int arc_pmu_add(struct perf_event *event, int flags)
+diff --git a/arch/riscv/kernel/perf_event.c b/arch/riscv/kernel/perf_event.c
+index c835f0362d94..cf3e2ac9bbb2 100644
+--- a/arch/riscv/kernel/perf_event.c
++++ b/arch/riscv/kernel/perf_event.c
+@@ -156,8 +156,7 @@ static int riscv_map_cache_decode(u64 config, unsigned int *type,
+ static int riscv_map_cache_event(u64 config)
  {
- 	struct arc_pmu_cpu *pmu_cpu = this_cpu_ptr(&arc_pmu_cpu);
- 	struct hw_perf_event *hwc = &event->hw;
--	int idx = hwc->idx;
-+	int idx;
+ 	unsigned int type, op, result;
+-	int err = -ENOENT;
+-		int code;
++	int err, code;
  
- 	idx = ffz(pmu_cpu->used_mask[0]);
- 	if (idx == arc_pmu->n_counters)
+ 	err = riscv_map_cache_decode(config, &type, &op, &result);
+ 	if (!riscv_pmu->cache_events || err)
 -- 
 2.33.1
 
