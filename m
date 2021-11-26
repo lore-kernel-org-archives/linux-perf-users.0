@@ -2,46 +2,44 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B4FCC433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Nov 2021 02:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C50C4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Nov 2021 02:37:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358178AbhKZCkN (ORCPT
+        id S1358372AbhKZCkM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 25 Nov 2021 21:40:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48048 "EHLO mail.kernel.org"
+        Thu, 25 Nov 2021 21:40:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1358173AbhKZCiK (ORCPT
+        id S1358174AbhKZCiK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Thu, 25 Nov 2021 21:38:10 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1B05461207;
-        Fri, 26 Nov 2021 02:33:26 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BB4FB604DC;
+        Fri, 26 Nov 2021 02:33:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637894007;
-        bh=6I5DmSQZEADLjxC+pKn5XQFg0mPjdZPlh4S2otOmnOM=;
+        s=k20201202; t=1637894021;
+        bh=KXXdDp/3cazYHXGVfu1X17GIxb11AbudzK4kR9l8DeI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kTttzGbdC8wkJ89DjRs4TNHNkKiW9dH6U0DN6EPyqU33dScLAhI+VURwjGMP+cWDd
-         ARSt1Au1cn+JAFZ0vQ5vjxS+n1P87F8OlHyAsQJq0PL4xRjJbUdHVs3RwAcs+04TeX
-         NGF05148cx+KL9LpDpUtqibf64ARxNg9aA9pQeYOzTQHDD5FDzwSUKF6+MPlSfSr4e
-         tRAN5zTk6t9NRpyNt4CPCuGlI9EwU0MKS1u4T8X6rrJM7YZSRdpVmQ4vKTLlzGSOQR
-         gADdNoAx0/nnpf3bfkwxm1sXo2D/3+Srzni5uDwqRkKsFqnXVmlCtXYUQ6niQ0Vn1H
-         4W5+V/AAMru8g==
+        b=WWxSOAHDnJiZUexBwKUCKhYqVda62i8U7zxwsc4T0Ic18L8U1SfdpIUi++9orDFU6
+         yj+Z0G46JGiZ6fCqu5frKteHGo44iFygAfzeIB/XMeZddyeXxVBp9/P+E37gICrCN7
+         klDoZq5fBw0SwGV4s2nJLuyFXdnutAOXK6VsfPovbwbhrRIiCrHY4jdaHTFqB+WXZd
+         dkytAQuxXN/342ZE3WQ3UoK5OrWbqOs6+ENQNjHFqnEAXh+FfGx2FgsGnToQ0M3T6y
+         CPL3MNLoHp/CGcYT5cBpEpaPeR2xRooXRtFs/1zYYeFjg9jNgPka55uJXOtBvIB5LX
+         2rSu0XpOhxTwQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
+Cc:     Ian Rogers <irogers@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Stephane Eranian <eranian@google.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>, mingo@redhat.com,
-        acme@kernel.org, ravi.bangoria@linux.ibm.com, rickyman7@gmail.com,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 35/39] perf sort: Fix the 'p_stage_cyc' sort key behavior
-Date:   Thu, 25 Nov 2021 21:31:52 -0500
-Message-Id: <20211126023156.441292-35-sashal@kernel.org>
+        acme@kernel.org, linux-perf-users@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 38/39] perf report: Fix memory leaks around perf_tip()
+Date:   Thu, 25 Nov 2021 21:31:55 -0500
+Message-Id: <20211126023156.441292-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20211126023156.441292-1-sashal@kernel.org>
 References: <20211126023156.441292-1-sashal@kernel.org>
@@ -53,142 +51,125 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Namhyung Kim <namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
 
-[ Upstream commit db4b284029099224f387d75198e5995df1cb8aef ]
+[ Upstream commit d9fc706108c15f8bc2d4ccccf8e50f74830fabd9 ]
 
-andle 'p_stage_cyc' (for pipeline stage cycles) sort key with the same
-rationale as for the 'weight' and 'local_weight', see the fix in this
-series for a full explanation.
+perf_tip() may allocate memory or use a literal, this means memory
+wasn't freed if allocated. Change the API so that literals aren't used.
 
-Not sure it also needs the local and global variants.
+At the same time add missing frees for system_path. These issues were
+spotted using leak sanitizer.
 
-But I couldn't test it actually because I don't have the machine.
-
-Reviewed-by: Athira Jajeev <atrajeev@linux.vnet.ibm.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Tested-by: Athira Jajeev <atrajeev@linux.vnet.ibm.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Athira Jajeev <atrajeev@linux.vnet.ibm.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Stephane Eranian <eranian@google.com>
-Link: https://lore.kernel.org/r/20211105225617.151364-3-namhyung@kernel.org
+Link: http://lore.kernel.org/lkml/20211118073804.2149974-1-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/hist.c | 12 ++++--------
- tools/perf/util/sort.c |  4 ++--
- tools/perf/util/sort.h |  2 +-
- 3 files changed, 7 insertions(+), 11 deletions(-)
+ tools/perf/builtin-report.c | 15 +++++++++------
+ tools/perf/util/util.c      | 14 +++++++-------
+ tools/perf/util/util.h      |  2 +-
+ 3 files changed, 17 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 54fe97dd191cf..b776465e04ef3 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -289,12 +289,10 @@ static long hist_time(unsigned long htime)
- 	return htime;
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index a0316ce910db6..997e0a4b0902a 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -619,14 +619,17 @@ static int report__browse_hists(struct report *rep)
+ 	int ret;
+ 	struct perf_session *session = rep->session;
+ 	struct evlist *evlist = session->evlist;
+-	const char *help = perf_tip(system_path(TIPDIR));
++	char *help = NULL, *path = NULL;
+ 
+-	if (help == NULL) {
++	path = system_path(TIPDIR);
++	if (perf_tip(&help, path) || help == NULL) {
+ 		/* fallback for people who don't install perf ;-) */
+-		help = perf_tip(DOCDIR);
+-		if (help == NULL)
+-			help = "Cannot load tips.txt file, please install perf!";
++		free(path);
++		path = system_path(DOCDIR);
++		if (perf_tip(&help, path) || help == NULL)
++			help = strdup("Cannot load tips.txt file, please install perf!");
+ 	}
++	free(path);
+ 
+ 	switch (use_browser) {
+ 	case 1:
+@@ -651,7 +654,7 @@ static int report__browse_hists(struct report *rep)
+ 		ret = evlist__tty_browse_hists(evlist, rep, help);
+ 		break;
+ 	}
+-
++	free(help);
+ 	return ret;
  }
  
--static void he_stat__add_period(struct he_stat *he_stat, u64 period,
--				u64 p_stage_cyc)
-+static void he_stat__add_period(struct he_stat *he_stat, u64 period)
+diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
+index 37a9492edb3eb..df3c4671be72a 100644
+--- a/tools/perf/util/util.c
++++ b/tools/perf/util/util.c
+@@ -379,32 +379,32 @@ fetch_kernel_version(unsigned int *puint, char *str,
+ 	return 0;
+ }
+ 
+-const char *perf_tip(const char *dirpath)
++int perf_tip(char **strp, const char *dirpath)
  {
- 	he_stat->period		+= period;
- 	he_stat->nr_events	+= 1;
--	he_stat->p_stage_cyc	+= p_stage_cyc;
+ 	struct strlist *tips;
+ 	struct str_node *node;
+-	char *tip = NULL;
+ 	struct strlist_config conf = {
+ 		.dirname = dirpath,
+ 		.file_only = true,
+ 	};
++	int ret = 0;
+ 
++	*strp = NULL;
+ 	tips = strlist__new("tips.txt", &conf);
+ 	if (tips == NULL)
+-		return errno == ENOENT ? NULL :
+-			"Tip: check path of tips.txt or get more memory! ;-p";
++		return -errno;
+ 
+ 	if (strlist__nr_entries(tips) == 0)
+ 		goto out;
+ 
+ 	node = strlist__entry(tips, random() % strlist__nr_entries(tips));
+-	if (asprintf(&tip, "Tip: %s", node->s) < 0)
+-		tip = (char *)"Tip: get more memory! ;-)";
++	if (asprintf(strp, "Tip: %s", node->s) < 0)
++		ret = -ENOMEM;
+ 
+ out:
+ 	strlist__delete(tips);
+ 
+-	return tip;
++	return ret;
  }
  
- static void he_stat__add_stat(struct he_stat *dest, struct he_stat *src)
-@@ -305,7 +303,6 @@ static void he_stat__add_stat(struct he_stat *dest, struct he_stat *src)
- 	dest->period_guest_sys	+= src->period_guest_sys;
- 	dest->period_guest_us	+= src->period_guest_us;
- 	dest->nr_events		+= src->nr_events;
--	dest->p_stage_cyc	+= src->p_stage_cyc;
- }
+ char *perf_exe(char *buf, int len)
+diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
+index ad737052e5977..9f0d36ba77f2d 100644
+--- a/tools/perf/util/util.h
++++ b/tools/perf/util/util.h
+@@ -39,7 +39,7 @@ int fetch_kernel_version(unsigned int *puint,
+ #define KVER_FMT	"%d.%d.%d"
+ #define KVER_PARAM(x)	KVER_VERSION(x), KVER_PATCHLEVEL(x), KVER_SUBLEVEL(x)
  
- static void he_stat__decay(struct he_stat *he_stat)
-@@ -593,7 +590,6 @@ static struct hist_entry *hists__findnew_entry(struct hists *hists,
- 	struct hist_entry *he;
- 	int64_t cmp;
- 	u64 period = entry->stat.period;
--	u64 p_stage_cyc = entry->stat.p_stage_cyc;
- 	bool leftmost = true;
+-const char *perf_tip(const char *dirpath);
++int perf_tip(char **strp, const char *dirpath);
  
- 	p = &hists->entries_in->rb_root.rb_node;
-@@ -612,11 +608,11 @@ static struct hist_entry *hists__findnew_entry(struct hists *hists,
- 
- 		if (!cmp) {
- 			if (sample_self) {
--				he_stat__add_period(&he->stat, period, p_stage_cyc);
-+				he_stat__add_period(&he->stat, period);
- 				hist_entry__add_callchain_period(he, period);
- 			}
- 			if (symbol_conf.cumulate_callchain)
--				he_stat__add_period(he->stat_acc, period, p_stage_cyc);
-+				he_stat__add_period(he->stat_acc, period);
- 
- 			/*
- 			 * This mem info was allocated from sample__resolve_mem
-@@ -726,7 +722,6 @@ __hists__add_entry(struct hists *hists,
- 		.stat = {
- 			.nr_events = 1,
- 			.period	= sample->period,
--			.p_stage_cyc = sample->p_stage_cyc,
- 		},
- 		.parent = sym_parent,
- 		.filtered = symbol__parent_filter(sym_parent) | al->filtered,
-@@ -741,6 +736,7 @@ __hists__add_entry(struct hists *hists,
- 		.time = hist_time(sample->time),
- 		.weight = sample->weight,
- 		.ins_lat = sample->ins_lat,
-+		.p_stage_cyc = sample->p_stage_cyc,
- 	}, *he = hists__findnew_entry(hists, &entry, al, sample_self);
- 
- 	if (!hists->has_callchains && he && he->callchain_size != 0)
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index adc0584695d62..a111065b484ef 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -1394,13 +1394,13 @@ struct sort_entry sort_global_ins_lat = {
- static int64_t
- sort__global_p_stage_cyc_cmp(struct hist_entry *left, struct hist_entry *right)
- {
--	return left->stat.p_stage_cyc - right->stat.p_stage_cyc;
-+	return left->p_stage_cyc - right->p_stage_cyc;
- }
- 
- static int hist_entry__p_stage_cyc_snprintf(struct hist_entry *he, char *bf,
- 					size_t size, unsigned int width)
- {
--	return repsep_snprintf(bf, size, "%-*u", width, he->stat.p_stage_cyc);
-+	return repsep_snprintf(bf, size, "%-*u", width, he->p_stage_cyc);
- }
- 
- struct sort_entry sort_p_stage_cyc = {
-diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-index 22ae7c6ae3986..7b7145501933f 100644
---- a/tools/perf/util/sort.h
-+++ b/tools/perf/util/sort.h
-@@ -49,7 +49,6 @@ struct he_stat {
- 	u64			period_us;
- 	u64			period_guest_sys;
- 	u64			period_guest_us;
--	u64			p_stage_cyc;
- 	u32			nr_events;
- };
- 
-@@ -109,6 +108,7 @@ struct hist_entry {
- 	u64			code_page_size;
- 	u64			weight;
- 	u64			ins_lat;
-+	u64			p_stage_cyc;
- 	u8			cpumode;
- 	u8			depth;
- 
+ #ifndef HAVE_SCHED_GETCPU_SUPPORT
+ int sched_getcpu(void);
 -- 
 2.33.0
 
