@@ -2,35 +2,35 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B06C0C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Nov 2021 07:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB7FC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Nov 2021 07:29:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348129AbhKZH36 (ORCPT
+        id S1344031AbhKZHcp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 Nov 2021 02:29:58 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:44177 "EHLO
+        Fri, 26 Nov 2021 02:32:45 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:46441 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353246AbhKZH15 (ORCPT
+        with ESMTP id S1359187AbhKZHap (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 Nov 2021 02:27:57 -0500
-Received: from mail-wm1-f53.google.com ([209.85.128.53]) by
- mrelayeu.kundenserver.de (mreue106 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1MXYEr-1n7wfs36IZ-00Z0Rr; Fri, 26 Nov 2021 08:24:43 +0100
-Received: by mail-wm1-f53.google.com with SMTP id n33-20020a05600c502100b0032fb900951eso10010827wmr.4;
-        Thu, 25 Nov 2021 23:24:43 -0800 (PST)
-X-Gm-Message-State: AOAM533KFagvVUpnlGiBQsRgRI6y7wlQqQ93m/ydP9SfWoWta9eS07dF
-        R9ph5OtC+meHZkRmFyh998u/za3eb4rHVg6BGc8=
-X-Google-Smtp-Source: ABdhPJwAO3CUAvnlu6Qda1rXtP4fAQBHSqQQusqjcnXzgpNOGFGdcJ+o5PrYCGSoHD9L6TjxioravH6C0gmOepq7z4o=
-X-Received: by 2002:a1c:770e:: with SMTP id t14mr13024587wmi.173.1637911483399;
- Thu, 25 Nov 2021 23:24:43 -0800 (PST)
+        Fri, 26 Nov 2021 02:30:45 -0500
+Received: from mail-wm1-f46.google.com ([209.85.128.46]) by
+ mrelayeu.kundenserver.de (mreue010 [213.165.67.97]) with ESMTPSA (Nemesis) id
+ 1N8oKc-1mW8px1Dz4-015uBr; Fri, 26 Nov 2021 08:27:31 +0100
+Received: by mail-wm1-f46.google.com with SMTP id y196so7311768wmc.3;
+        Thu, 25 Nov 2021 23:27:22 -0800 (PST)
+X-Gm-Message-State: AOAM532PJ5TLi39uUBALKFdumHYVhqQ/+IjIi3R4c8D46jKXHgLKF3OO
+        j1mi+rd8pH2fwpSKWhB8KmT8F/dafBnKjZ7GyG4=
+X-Google-Smtp-Source: ABdhPJwK86Skrk2YmCmSiuMFmnHaqvZ1U3KPASRzBlbM0wrP/xDhUqP4iFQAlSro++uvXuH7ec3ujn7iCmdS8Z6gAaY=
+X-Received: by 2002:a05:600c:6d2:: with SMTP id b18mr13791114wmn.98.1637911641786;
+ Thu, 25 Nov 2021 23:27:21 -0800 (PST)
 MIME-Version: 1.0
-References: <20211126060024.3290177-1-alistair.francis@opensource.wdc.com> <20211126060024.3290177-3-alistair.francis@opensource.wdc.com>
-In-Reply-To: <20211126060024.3290177-3-alistair.francis@opensource.wdc.com>
+References: <20211126060024.3290177-1-alistair.francis@opensource.wdc.com> <20211126060024.3290177-5-alistair.francis@opensource.wdc.com>
+In-Reply-To: <20211126060024.3290177-5-alistair.francis@opensource.wdc.com>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 26 Nov 2021 08:24:27 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1sFSaMGhXkKJcLKgd68xSK3MMQuySXb62sWEacwzxt=g@mail.gmail.com>
-Message-ID: <CAK8P3a1sFSaMGhXkKJcLKgd68xSK3MMQuySXb62sWEacwzxt=g@mail.gmail.com>
-Subject: Re: [PATCH v3 3/6] uapi: futex: Add a futex syscall
+Date:   Fri, 26 Nov 2021 08:27:06 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a18g4J9k2GaPp2-MR3AGFi31yP_CkrqZUhELFyyJr_w-w@mail.gmail.com>
+Message-ID: <CAK8P3a18g4J9k2GaPp2-MR3AGFi31yP_CkrqZUhELFyyJr_w-w@mail.gmail.com>
+Subject: Re: [PATCH v3 5/6] uapi: futex: Add a futex waitv syscall
 To:     Alistair Francis <alistair.francis@opensource.wdc.com>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -48,23 +48,28 @@ Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Alistair Francis <alistair.francis@wdc.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:OZ/uSEDC0g+pvoXH7tVbdJm7+l3DzPwQ86SqhTkvYzt90ZseHNN
- 5KAlBpfHSFdnl42j4nnFobsl/Zpwgd9q64tGt21cRyat3PQFaf9h1vJyKYPYkOBs+XdnsLw
- BQJIa0lxXcP1wJbx0kiUPN5SSk7LmPh5n99ofsf11dyvXOYwN/B65sGp3s5cgnAwHK8WsBo
- hhbFWEcyN5bWaWjGOsM9w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:4ajmlY0db98=:zqgy+sdECuRY6C+J/IRw1B
- PW4aLCqGMpcn1st28d/YXqmJc6eW72fAnweHptDED0HdU5tymMb4+PxGvhGMjc8LzmG2tMMiJ
- iXok6UVnDtQikp4AO1q/feo+nALdVTVPUBoabn6tEJmvNCSfefFB02uVZyb0X6FjCpeV7dg0G
- j6xfjDhTu3W89gHHkYYoVEja+HgTjsCMsHwcWPzbbjExiHHhyTR5a/MjrKFZpe8Z70iv/T9w6
- wNmX2m5tOW70mNzhKr4FcYnbZvn1MGRvesirV+xnfo5YzRoHzDhw4yUF+8gR5HU9bE0+esJHc
- eT05EZmGVla+t5spiabl4PHECRAtAzQoJUlnnNCkaV/ppFUWN57935ymIqToR0/lCXxeyi9bW
- pfSl6BzkcckmAD7Bgjfa/kwZSSGeAuNCZhIJy4o6cQbuEhOzPgM2AGBgXKIPdDOAQkli46lhi
- e5WF35q2gtD4/s0iZcAzf9gTwyh7dlBdVG8vi9lMQcnwgQQ6RJ0BrzmR8m7EMgcd0iMxNOIcN
- BDGlllwqZS6zNHTmkcUPCvZ8AabdavuGKzfW+1uhbIcJ8AEyLPvsudJjANjSMnjiVN2QHQ2d4
- D1RD3xQzb3Be+o5Y73hto8nrJHyjht8tJHneYPosGKi6m9t2IjsDXcCYY5gmR9vQDSkhIa3Ny
- fGv5zYKBHhdP79BjUZlpZF2On8VH8JiqPzSt1V06xmycjYKz/Ik/bgOOfAjJX3I8UAQjCpyS6
- ln46INYlbsnU/QZEklEnJPGtFH8Jr6gOQVYUhRNkevP+snkZY2Yd8M0PpG1IZHJ2DIeZt27mK
- j3n6Oh+ZEvvDKS8Xzinak9A/8WNLz9qNdsuPjwZAx75CtDWgNI=
+X-Provags-ID: V03:K1:hDMB6BPhy7ucXmPCswZzwURCLbdvyS1tqmVFI60//t5sIbWD5/o
+ zeJNlVe/9CNnd5grUHhSwsf2CvHlZuYBqaF+5h1YSrYfgakho8p7JLvQtmxSWUrLp5MsqrL
+ ev59aZEgvn7ybeLsVxe1TPwN7t7VZlxNlWYFhimuCcSnHM1nECoARDHK8FfPwOBG8sGPLPz
+ bFxutrLaaEIdnUTP1svbQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Kh0i1O50Cto=:oRppCdZj7w8e2kkmC5I3Qp
+ 4w2g16rmLp2ArQjMoXSbGlUv1+W1zYuZoMI79ketRD73QMmTXgUfuHHuRe9jmL4MPcV/mxP6A
+ gC2qewMmZvw6DQ9qrHXx937Yy1psZ2CKIL2TdkQOKhotPds+PhgSrY4LxSr5jhStJ3FFOTgvG
+ LRp4Eirdd36eBxGQEEeJVapFHluXmdDds4QRVOrl1sOnG3k0hL5uVxc/dn/Koa0TdzRii3Zpf
+ Tog2IFzjBTNLH5h4vDm7CZOtzKzmGHVhDXICXtdXLYSoN9XGmAvQu3u2d4iZ59pQ9++g4LaK9
+ Ve73xQNKnmuRzdhF3RKmKUQHz5r6UX7nmvOzEHXq9CyHz1c9wQV7FYa2x58Vehgycp5Ag6+oY
+ Ys38sBdqb02zKjBqIE0kz0SBvvM1NI8ihglQ+tIJ+R1bZphiFCR/KP+EfPVQxGOIwTBPbTH4O
+ QwMfLhBJqn3Yy3lAshDo8opYqsQnBhslQxW6xDjP/3F3cgYEJtBgRmPPrbEGMLKK8jlBP3Y6F
+ pBscGM15X2wjsVjMwAEQQCWEO20PpRPHFHvs5kaWBRVrSmzW9lpoNWJv2R67N1u8Eln2RapQW
+ QWcnX18YWQFIM1iskvaJXoA7R/3M9++rMMOs/yF6Chnx27cjDH8kRVc1C62PxPzn4MsXfDZDT
+ QT8G14KFG6dMBtCZo5FfErRIrWhzbVD6IFSqz4/MSFx5tuFgcsQ/PCgsSCSwUfRa+ADipXEko
+ FX+PuaH1RmkSzKOB8QfCqfllZuWpZQQ69Vr0eQrYnNMRihzDyarSFLKcLvWq+6EyYTP+lGSyP
+ hA5+M8xcvkTEKpsLg+Dgv0mZCgAT8nqido7+kzXRzm9BZhS6xAwbhQYmAtLM3TroALNbabv0i
+ oW6Q965nzYHj/uX3Mc179PwWZt2pWJbVFPH87doKVq1WnzlcbfeobMxoACL9XOCILfYKBtbjX
+ 47vGt9FwwC759aK3jpvCEpneI5yjY1P8Z4LIO0scmq3Oi5se6Lh2JhweEiuib/9yDdeHytS1y
+ /wCcAvWSVpVvEIYFI5TWgloJRq3Xr9I4danfxOzmnJV2BbZR3j8BnTT1SzQn/bP+S1xnvdFzS
+ 4wlbLqqjYo6kikKzgExs0WBDJmOyoUj5Aw8KTg1vDjFF3EUhH5vxy/RacgxGA2kcEeKuCCoxi
+ 2c3SI=
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -74,49 +79,32 @@ On Fri, Nov 26, 2021 at 7:00 AM Alistair Francis
 >
 > From: Alistair Francis <alistair.francis@wdc.com>
 >
-> This commit adds two futex syscall wrappers that are exposed to
+> This commit adds a futex waitv syscall wrapper that is exposed to
 > userspace.
 >
 > Neither the kernel or glibc currently expose a futex wrapper, so
-> userspace is left performing raw syscalls. This has mostly been because
-> the overloading of one of the arguments makes it impossible to provide a
-> single type safe function.
+> userspace is left performing raw syscalls. As the futex_waitv syscall
+> always expects a 64-bit time_t this can be tricky for 32-bit systems to
+> get correct.
 >
-> Until recently the single syscall has worked fine. With the introduction
-> of a 64-bit time_t futex call on 32-bit architectures, this has become
-> more complex. The logic of handling the two possible futex syscalls is
-> complex and often implemented incorrectly.
->
-> This patch adds two futux syscall functions that correctly handle the
-
-s/futux/futex/
-
-> time_t complexity for userspace.
->
-> This idea is based on previous discussions:
-> https://lore.kernel.org/lkml/CAK8P3a3x_EyCiPDpMK54y=Rtm-Wb08ym2TNiuAZgXhYrThcWTw@mail.gmail.com/
+> In order to avoid userspace incorrectly passing the wrong timeouts let's
+> expose a public helper function that ensures the kernel is passed the
+> correct timeout struct.
 >
 > Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
 
-The implementation looks correct to me, the calling conventions seem
-"good enough"
-to me, but I wouldn't object if someone else can suggest a better interface.
-
-One minor detail:
-
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 > +/**
-> + * futex_syscall_timeout() - __NR_futex/__NR_futex_time64 syscall wrapper
-> + * @uaddr:  address of first futex
-> + * @op:   futex op code
-> + * @val:  typically expected value of uaddr, but varies by op
-> + * @timeout:  an absolute struct timespec
-> + * @uaddr2: address of second futex for some ops
-> + * @val3: varies by op
+> + * futex_waitv - Wait at multiple futexes, wake on any
+> + * @waiters:    Array of waiters
+> + * @nr_waiters: Length of waiters array
+> + * @flags: Operation flags
+> + * @timo:  Optional timeout for operation
 > + */
 > +static inline int
-> +__kernel_futex_syscall_timeout(volatile uint32_t *uaddr, int op, uint32_t val,
-> +                     struct timespec *timeout, volatile uint32_t *uaddr2, int val3)
+> +__kernel_futex_syscall_waitv(volatile struct futex_waitv *waiters, unsigned long nr_waiters,
+> +                             unsigned long flags, struct timespec *timo, clockid_t clockid)
 
-The two function names do not match the respective documentation.
+Same thing about the mismatched function name
 
-        Arnd
+       Arnd
