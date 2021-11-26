@@ -2,35 +2,36 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A357C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Nov 2021 07:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C562C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Nov 2021 07:39:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359169AbhKZHjb (ORCPT
+        id S1344851AbhKZHmN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 Nov 2021 02:39:31 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:39701 "EHLO
+        Fri, 26 Nov 2021 02:42:13 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:35271 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359172AbhKZHha (ORCPT
+        with ESMTP id S1353785AbhKZHkM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 Nov 2021 02:37:30 -0500
-Received: from mail-wm1-f46.google.com ([209.85.128.46]) by
+        Fri, 26 Nov 2021 02:40:12 -0500
+Received: from mail-wr1-f50.google.com ([209.85.221.50]) by
  mrelayeu.kundenserver.de (mreue108 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1MqJyX-1mDeXq0eKx-00nQTh; Fri, 26 Nov 2021 08:34:17 +0100
-Received: by mail-wm1-f46.google.com with SMTP id p18so7327402wmq.5;
-        Thu, 25 Nov 2021 23:34:09 -0800 (PST)
-X-Gm-Message-State: AOAM5336bNQOlvzMTg304JaftQFOXdMh7m01kbJrjHCd+xpAL6hNuQAf
-        3l556sZuvdNmFVlF6wTe90WxzMkk74wE7R3vhCg=
-X-Google-Smtp-Source: ABdhPJxp5EqM4wHfXdz4pLs9xKz8Rq2xZ+tJjDPCTW21MFnsGEjZ2KLKdyfGZGKrZ542uGzfxCDQaVNpVpxwzTgooeI=
-X-Received: by 2002:a05:600c:6d2:: with SMTP id b18mr13827477wmn.98.1637912049389;
- Thu, 25 Nov 2021 23:34:09 -0800 (PST)
+ id 1MDhth-1mjfNE1AfP-00Aldj; Fri, 26 Nov 2021 08:36:59 +0100
+Received: by mail-wr1-f50.google.com with SMTP id d24so16767234wra.0;
+        Thu, 25 Nov 2021 23:36:59 -0800 (PST)
+X-Gm-Message-State: AOAM532uLvDwSqnJJPhm3IpzqjnOI19vTLKJc3EPUtZ4+UrFqTyLTQ3p
+        CweDxlMhJs4wRj35qzhrL4EHNhVNwHn8YhycXu0=
+X-Google-Smtp-Source: ABdhPJxSj0rezcz4IfyWjfYsOWvMXGXNMnkGvFoWgiLLP3fW4pdm3tA67p68pITqojNXldDVfKE4N/+eM/LzDnTfLeI=
+X-Received: by 2002:a05:6000:110b:: with SMTP id z11mr12328335wrw.32.1637912218852;
+ Thu, 25 Nov 2021 23:36:58 -0800 (PST)
 MIME-Version: 1.0
-References: <20211126060024.3290177-1-alistair.francis@opensource.wdc.com> <20211126060024.3290177-6-alistair.francis@opensource.wdc.com>
-In-Reply-To: <20211126060024.3290177-6-alistair.francis@opensource.wdc.com>
+References: <20211126060024.3290177-1-alistair.francis@opensource.wdc.com> <20211126060024.3290177-4-alistair.francis@opensource.wdc.com>
+In-Reply-To: <20211126060024.3290177-4-alistair.francis@opensource.wdc.com>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 26 Nov 2021 08:33:53 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3EMyg5SuKnbjnUvUhRkoqNuWoEPh_hoTU4abjR4a8PgQ@mail.gmail.com>
-Message-ID: <CAK8P3a3EMyg5SuKnbjnUvUhRkoqNuWoEPh_hoTU4abjR4a8PgQ@mail.gmail.com>
-Subject: Re: [PATCH v3 6/6] selftests: futex: Use futex_waitv helper function
+Date:   Fri, 26 Nov 2021 08:36:43 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a3QT+hu-nPBn=nBMYO50Tn4qenLNox7qEAg33KUPtAXSg@mail.gmail.com>
+Message-ID: <CAK8P3a3QT+hu-nPBn=nBMYO50Tn4qenLNox7qEAg33KUPtAXSg@mail.gmail.com>
+Subject: Re: [PATCH v3 4/6] selftests: futex: Add support for 32-bit systems
+ with 64-bit time_t
 To:     Alistair Francis <alistair.francis@opensource.wdc.com>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -48,23 +49,23 @@ Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Alistair Francis <alistair.francis@wdc.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:/7avdmX9M783BFe12nqah47RZPB2F9uEmjOg/9l2em/jqCDP6LP
- FPfAbKDopfoMGkWA3H+e3pKw95T7ZgiJZPBU7ak2B8cWPu7dN3MM1BKbLbwsaro7u3IgmS1
- U2iUKsLEqMXtOSSXXyxPq+79nGlbxUWrnbQ3kRGL46yrZcwc8047dEKUv3jO55YIl/mwskH
- /mlOlYny4YWt62IUDsRjw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:sUiUVFMQWn4=:qKtIAB3wMHU+hlGi+V4NAC
- 23LbHUyMjqHOXt/FZrzjiuLw5Y8WJQlVmOs84CY2oXmPIUzEmy4q4Lb0HYNzF6GhAeOB2ngB/
- /bEkKWOnTReyb5mOz9E7qas/K1mDIhPrLHIzuQLqnhLnYspE77DC6iaIbMld22YaLDZOAOPf9
- dCa8RyHqZy3sauNMkgxS6BfWhv/EBv8/QOmOncolUCvGaBIEYVPTq4/CX3Fu308aLV+UuxWx2
- jP/iUKOq+a4BJeSJcENmrie5+OfZQdRHKHBl15x3JU4rKiZg+XQxHV+UFzw8gXc4PQUESwhYr
- RuR+WWcJ/zALv6TveltpjbCPaAS0JGnO4DShW3esEu4GW39/WsSR71+zj8N4+cWlrhN8clJJC
- ZxyZC6Mikun4sXoh0qmBc4Yhmeqj+h8Z2CCgX6x9evEFlMMFGuDrqjCf2imQppK+d5tKaNw5j
- HYTvl4DOx3kZ3mMeX+CMX4PvsXQmSOQDMi0ctFXnTONkUOeKLSf6JcEg53hy+QZYbTyWpKbUk
- EDHmzMjeEFsR0al8RQlweH4WimBegNmnxA8o4mrzp3fHNnLGErKk9Oz9LXeE4wUQkdgEGPzRc
- l2tTJtOCfm8h89gYQZRIlMdFHMdrIkpWsSnHiafKzvUR+9HQyCVzYPMUIgTM34nCTARW+I5RD
- PpZkMLYNjRaZOEjwmYaiuvEdes8Lkc7niSGikSLgLOTu38c9SlH5dhqXELZ34oP22anW1Qkl8
- epCCAxw+ux/DE2lkgOhuXd7+7F+iSo835fw++IxSswbutb2ukiV/5bbydEKgl6LwZ9v9iXzw7
- oHjL8ljlGc/+57VaDUt405z+GwAZmGh3JWn+ctIUSDv9ExecHk=
+X-Provags-ID: V03:K1:yidijYki8m7Z5c3Wmn5yuCSxsj1OTWmNgnOXelDww7nBoWyNem2
+ FQ5IXshkLlMQMsm+FAtacU/KYIBSSeJj9JUj65fxuJecGn1VW/LxCkQAaOTsLkrUs36dq+0
+ eVRWnb7Z7Kz86LhtJDpJhxJLUuub68p05qtyKpd8EYN7HpUBK6OjHqgf5/AHOIUmCOSD2+V
+ /Vc6ExNlhSSofIe+XOlDQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:oBRD5kkSWDw=:U0uUcwd592I2duZ3ubroZr
+ +9cZDbnW1PaUD8W5JXci4rhmiDe1ySlAw1gdeFNkWkDfqCDYYQZtQ2N3XZ+DQEqyCY6+nngRV
+ MqrFuFIs0nW9KbzaiIrUdwshupiqd2Vowk5QHnXj7LdZfG6N1+wMpwTV5fofJezXPA/c/WTlr
+ M/CFdxr5kj6MT22LBGFPHkecVMS3UZFfV7yxxZlJYYOJFzgyUK2CbaePLMlcnIkY2lDO6eZI1
+ hLhpO+5h9s/ngq+oz1Ou2HA1KgpTC4mZbKaBn6/BBBWI/vW4zVJgdcpWdz0xplksPiYPWUD4Q
+ eq6mQn6yW5pIECsKe7nYX8g5UOIfZ9IN8/M8pwy2XIzR9+ql6KK1ezLQPFLezT7qgr5sUDFhv
+ LYclgcATyTAwhqeHKIX9clqGujOkwqGUAxmI8YSFlHtMP2ZYg1YOGDGEE4z41htK5HZw9gJLn
+ flxtQx3A6vg8k7qmrpksncQpi84Cyi7ghVr0LnsjQbt80wcTgklNfLCIxdwBKGxRfVuH7pd0Z
+ RtLLwf8cN0tYVXvCEBKuRwTEDS8OniPsWSNaBXSYT6G0Ij0w0PKuOpk8TW2XhPCiV5RSnUDij
+ CatFFLEa+WzmorKtUaweezEMX30EM+62VJ/dY9PaHR1NW7/e3fS1MI7+2a+yZ/g/joG4kp/iF
+ YBqaY0So/m+IcH4PwRazuvliW7mzL5ViMPKSixtlFSf7SarGtqCPNgShI6169HbQ9gZU45ssh
+ Z5ZqxUXyNWpgjG/3NnJ9Vki83RJKfOJKTghPqYWmu268PcmvA3Qhsrz9dHvFwvGS1X9EOsp6i
+ 8wX5+GB0DLhZJiqKaFRvRaRqijjVSKwJavVtwsq2L0NopPalvU=
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -74,19 +75,33 @@ On Fri, Nov 26, 2021 at 7:00 AM Alistair Francis
 >
 > From: Alistair Francis <alistair.francis@wdc.com>
 >
-> Use the publically exposed __kernel_futex_syscall_waitv() helper
-> function for the futex_waitv tests.
+> Using the new __kernel_futex_syscall*() functions let's add support for
+> 32-bit systems with a 64-bit time_t. We can just direclty call the
+> publically exposed __kernel_futex_syscall_timeout() and
+> __kernel_futex_syscall_nr_requeue() functions to do this.
 >
 > Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+> ---
+>  tools/testing/selftests/futex/functional/futex_requeue_pi.c | 2 +-
+>  tools/testing/selftests/futex/include/futextest.h           | 5 +++--
+>  2 files changed, 4 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/testing/selftests/futex/functional/futex_requeue_pi.c b/tools/testing/selftests/futex/functional/futex_requeue_pi.c
+> index 1ee5518ee6b7..d3673996fed4 100644
+> --- a/tools/testing/selftests/futex/functional/futex_requeue_pi.c
+> +++ b/tools/testing/selftests/futex/functional/futex_requeue_pi.c
+> @@ -294,7 +294,7 @@ int unit_test(int broadcast, long lock, int third_party_owner, long timeout_ns)
+>                 secs = (ts.tv_nsec + timeout_ns) / 1000000000;
+>                 ts.tv_nsec = ((int64_t)ts.tv_nsec + timeout_ns) % 1000000000;
+>                 ts.tv_sec += secs;
+> -               info("ts.tv_sec  = %ld\n", ts.tv_sec);
+> +               info("ts.tv_sec  = %lld\n", ts.tv_sec);
+>                 info("ts.tv_nsec = %ld\n", ts.tv_nsec);
+>                 tsp = &ts;
+>         }
 
-I think it would be nicer to wrap __kernel_futex_syscall_waitv() here
-
-> -static inline int futex_waitv(volatile struct futex_waitv *waiters, unsigned long nr_waiters,
-> -                             unsigned long flags, struct timespec *timo, clockid_t clockid)
-> -{
-> -       return syscall(__NR_futex_waitv, waiters, nr_waiters, flags, timo, clockid);
-> -}
-
-Basically just changing this part to call the new function
+I think this causes a warning on 64-bit builds now, you have to add a
+cast to 'long long'
+to make it work everywhere.
 
          Arnd
