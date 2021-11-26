@@ -2,46 +2,49 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F20C43217
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Nov 2021 02:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED119C433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Nov 2021 02:37:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358141AbhKZCjv (ORCPT
+        id S1357800AbhKZCkL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 25 Nov 2021 21:39:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47894 "EHLO mail.kernel.org"
+        Thu, 25 Nov 2021 21:40:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1358132AbhKZChr (ORCPT
+        id S1358178AbhKZCiK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 25 Nov 2021 21:37:47 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 36492611AF;
-        Fri, 26 Nov 2021 02:33:20 +0000 (UTC)
+        Thu, 25 Nov 2021 21:38:10 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B778861208;
+        Fri, 26 Nov 2021 02:33:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637894001;
-        bh=higaiy19hTMVm9wdu3LUEVyWxBKuznw/D0yw5+vC4Cw=;
+        s=k20201202; t=1637894011;
+        bh=G+uJ+8D7YKvOkP3fd64zmX16MEa7z/wGhYSj/H8TW74=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nsRaYRoNsCgeocjvAQTwCPTZEHwo7fP6Xk1xLuNA8PDWUXxCPdTFVuzdjW29bQzr3
-         Hpq6frsvzy0wxoe4+wIZqDhls5EIjXVnnCv8Eji+VTSxCV4+w2qppy0W9YuHGU9EvV
-         LvKjZEEs5EO/Jo+HVIaHWbFXxew8FM2MG8XUEXuW9+Bb0RPEibGdTG7dGlWw2y7zw3
-         Om83ECW/B6nKTy0fXZcD0SWeHeJ5sqJvOvxyupuz6l6tTd6IV+qbZtRv6PpqsRrBRe
-         F0Fo6b0c0zq2mmutEujctukQ1w9vTdIXmXnU8K/6yXMxsiMUA8UH3CL6g3KBsXa+P1
-         xaR5kqReKiHug==
+        b=rF9jCVYNrrBnyOla6GQHbhOzcbn5xcj+hRx550dLkPnBspBJVJuzfCRuilKDqwgSL
+         SpykD2Vo3XVvaHOv1zEwpZj/azqly8hQnaCRH+c8p2mzY9lRnieI+wgGrVBQfOhHDo
+         daK/XgiIfL9b0YrU/vrfI4o1g/OkrEaiHeksto2XL6y8Dl7ZhDAwAybTI8iAQDqfbZ
+         d8f4EqycYsb+mCvkeDZHHWpqR+wT+9KG2/h29Q8/AnM0+/zN4M866TfZMjIqe5hnw1
+         tDGMidnsCVVn5O8Hl/wrqPca34MrLHPxmDi93yCeZiERTCPdcNNv/ReZOC+KY1paHQ
+         MBTPDbdtFJ6yQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
+Cc:     German Gomez <german.gomez@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        John Garry <john.garry@huawei.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, mingo@redhat.com,
-        acme@kernel.org, rickyman7@gmail.com,
+        Sasha Levin <sashal@kernel.org>, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, andrew.kilroy@arm.com,
         linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 34/39] perf sort: Fix the 'ins_lat' sort key behavior
-Date:   Thu, 25 Nov 2021 21:31:51 -0500
-Message-Id: <20211126023156.441292-34-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 36/39] perf inject: Fix ARM SPE handling
+Date:   Thu, 25 Nov 2021 21:31:53 -0500
+Message-Id: <20211126023156.441292-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20211126023156.441292-1-sashal@kernel.org>
 References: <20211126023156.441292-1-sashal@kernel.org>
@@ -53,176 +56,94 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Namhyung Kim <namhyung@kernel.org>
+From: German Gomez <german.gomez@arm.com>
 
-[ Upstream commit 4d03c75363eeca861c843319a0e6f4426234ed6c ]
+[ Upstream commit 9e1a8d9f683260d50e0a14176d3f7c46a93b2700 ]
 
-Handle 'ins_lat' (for instruction latency) and 'local_ins_lat' sort keys
-with the same rationale as for the 'weight' and 'local_weight', see the
-previous fix in this series for a full explanation.
+'perf inject' is currently not working for Arm SPE. When you try to run
+'perf inject' and 'perf report' with a perf.data file that contains SPE
+traces, the tool reports a "Bad address" error:
 
-But I couldn't test it actually, so only build tested.
+  # ./perf record -e arm_spe_0/ts_enable=1,store_filter=1,branch_filter=1,load_filter=1/ -a -- sleep 1
+  # ./perf inject -i perf.data -o perf.inject.data --itrace
+  # ./perf report -i perf.inject.data --stdio
 
-Reviewed-by: Athira Jajeev <atrajeev@linux.vnet.ibm.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Tested-by: Athira Jajeev <atrajeev@linux.vnet.ibm.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Athira Jajeev <atrajeev@linux.vnet.ibm.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Ingo Molnar <mingo@kernel.org>
+  0x42c00 [0x8]: failed to process type: 9 [Bad address]
+  Error:
+  failed to process sample
+
+As far as I know, the issue was first spotted in [1], but 'perf inject'
+was not yet injecting the samples. This patch does something similar to
+what cs_etm does for injecting the samples [2], but for SPE.
+
+[1] https://patchwork.kernel.org/project/linux-arm-kernel/cover/20210412091006.468557-1-leo.yan@linaro.org/#24117339
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/cs-etm.c?h=perf/core&id=133fe2e617e48ca0948983329f43877064ffda3e#n1196
+
+Reviewed-by: James Clark <james.clark@arm.com>
+Signed-off-by: German Gomez <german.gomez@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: https://lore.kernel.org/r/20211105225617.151364-2-namhyung@kernel.org
+Cc: John Garry <john.garry@huawei.com>
+Cc: Leo Yan <leo.yan@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Link: https://lore.kernel.org/r/20211105104130.28186-2-german.gomez@arm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/hist.c | 11 ++++-------
- tools/perf/util/sort.c | 24 +++++++-----------------
- tools/perf/util/sort.h |  2 +-
- 3 files changed, 12 insertions(+), 25 deletions(-)
+ tools/perf/util/arm-spe.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 4e9bd7b589b1a..54fe97dd191cf 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -290,11 +290,10 @@ static long hist_time(unsigned long htime)
+diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+index 58b7069c5a5f8..7054f23150e1b 100644
+--- a/tools/perf/util/arm-spe.c
++++ b/tools/perf/util/arm-spe.c
+@@ -51,6 +51,7 @@ struct arm_spe {
+ 	u8				timeless_decoding;
+ 	u8				data_queued;
+ 
++	u64				sample_type;
+ 	u8				sample_flc;
+ 	u8				sample_llc;
+ 	u8				sample_tlb;
+@@ -248,6 +249,12 @@ static void arm_spe_prep_sample(struct arm_spe *spe,
+ 	event->sample.header.size = sizeof(struct perf_event_header);
  }
  
- static void he_stat__add_period(struct he_stat *he_stat, u64 period,
--				u64 ins_lat, u64 p_stage_cyc)
-+				u64 p_stage_cyc)
++static int arm_spe__inject_event(union perf_event *event, struct perf_sample *sample, u64 type)
++{
++	event->header.size = perf_event__sample_event_size(sample, type, 0);
++	return perf_event__synthesize_sample(event, type, 0, sample);
++}
++
+ static inline int
+ arm_spe_deliver_synth_event(struct arm_spe *spe,
+ 			    struct arm_spe_queue *speq __maybe_unused,
+@@ -256,6 +263,12 @@ arm_spe_deliver_synth_event(struct arm_spe *spe,
  {
- 	he_stat->period		+= period;
- 	he_stat->nr_events	+= 1;
--	he_stat->ins_lat	+= ins_lat;
- 	he_stat->p_stage_cyc	+= p_stage_cyc;
- }
+ 	int ret;
  
-@@ -306,7 +305,6 @@ static void he_stat__add_stat(struct he_stat *dest, struct he_stat *src)
- 	dest->period_guest_sys	+= src->period_guest_sys;
- 	dest->period_guest_us	+= src->period_guest_us;
- 	dest->nr_events		+= src->nr_events;
--	dest->ins_lat		+= src->ins_lat;
- 	dest->p_stage_cyc	+= src->p_stage_cyc;
- }
++	if (spe->synth_opts.inject) {
++		ret = arm_spe__inject_event(event, sample, spe->sample_type);
++		if (ret)
++			return ret;
++	}
++
+ 	ret = perf_session__deliver_synth_event(spe->session, event, sample);
+ 	if (ret)
+ 		pr_err("ARM SPE: failed to deliver event, error %d\n", ret);
+@@ -920,6 +933,8 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+ 	else
+ 		attr.sample_type |= PERF_SAMPLE_TIME;
  
-@@ -595,7 +593,6 @@ static struct hist_entry *hists__findnew_entry(struct hists *hists,
- 	struct hist_entry *he;
- 	int64_t cmp;
- 	u64 period = entry->stat.period;
--	u64 ins_lat = entry->stat.ins_lat;
- 	u64 p_stage_cyc = entry->stat.p_stage_cyc;
- 	bool leftmost = true;
- 
-@@ -615,11 +612,11 @@ static struct hist_entry *hists__findnew_entry(struct hists *hists,
- 
- 		if (!cmp) {
- 			if (sample_self) {
--				he_stat__add_period(&he->stat, period, ins_lat, p_stage_cyc);
-+				he_stat__add_period(&he->stat, period, p_stage_cyc);
- 				hist_entry__add_callchain_period(he, period);
- 			}
- 			if (symbol_conf.cumulate_callchain)
--				he_stat__add_period(he->stat_acc, period, ins_lat, p_stage_cyc);
-+				he_stat__add_period(he->stat_acc, period, p_stage_cyc);
- 
- 			/*
- 			 * This mem info was allocated from sample__resolve_mem
-@@ -729,7 +726,6 @@ __hists__add_entry(struct hists *hists,
- 		.stat = {
- 			.nr_events = 1,
- 			.period	= sample->period,
--			.ins_lat = sample->ins_lat,
- 			.p_stage_cyc = sample->p_stage_cyc,
- 		},
- 		.parent = sym_parent,
-@@ -744,6 +740,7 @@ __hists__add_entry(struct hists *hists,
- 		.ops = ops,
- 		.time = hist_time(sample->time),
- 		.weight = sample->weight,
-+		.ins_lat = sample->ins_lat,
- 	}, *he = hists__findnew_entry(hists, &entry, al, sample_self);
- 
- 	if (!hists->has_callchains && he && he->callchain_size != 0)
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 903f34fff27e1..adc0584695d62 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -1358,45 +1358,35 @@ struct sort_entry sort_global_weight = {
- 	.se_width_idx	= HISTC_GLOBAL_WEIGHT,
- };
- 
--static u64 he_ins_lat(struct hist_entry *he)
--{
--		return he->stat.nr_events ? he->stat.ins_lat / he->stat.nr_events : 0;
--}
--
- static int64_t
--sort__local_ins_lat_cmp(struct hist_entry *left, struct hist_entry *right)
-+sort__ins_lat_cmp(struct hist_entry *left, struct hist_entry *right)
- {
--		return he_ins_lat(left) - he_ins_lat(right);
-+	return left->ins_lat - right->ins_lat;
- }
- 
- static int hist_entry__local_ins_lat_snprintf(struct hist_entry *he, char *bf,
- 					      size_t size, unsigned int width)
- {
--		return repsep_snprintf(bf, size, "%-*u", width, he_ins_lat(he));
-+	return repsep_snprintf(bf, size, "%-*u", width, he->ins_lat);
- }
- 
- struct sort_entry sort_local_ins_lat = {
- 	.se_header	= "Local INSTR Latency",
--	.se_cmp		= sort__local_ins_lat_cmp,
-+	.se_cmp		= sort__ins_lat_cmp,
- 	.se_snprintf	= hist_entry__local_ins_lat_snprintf,
- 	.se_width_idx	= HISTC_LOCAL_INS_LAT,
- };
- 
--static int64_t
--sort__global_ins_lat_cmp(struct hist_entry *left, struct hist_entry *right)
--{
--		return left->stat.ins_lat - right->stat.ins_lat;
--}
--
- static int hist_entry__global_ins_lat_snprintf(struct hist_entry *he, char *bf,
- 					       size_t size, unsigned int width)
- {
--		return repsep_snprintf(bf, size, "%-*u", width, he->stat.ins_lat);
-+	return repsep_snprintf(bf, size, "%-*u", width,
-+			       he->ins_lat * he->stat.nr_events);
- }
- 
- struct sort_entry sort_global_ins_lat = {
- 	.se_header	= "INSTR Latency",
--	.se_cmp		= sort__global_ins_lat_cmp,
-+	.se_cmp		= sort__ins_lat_cmp,
- 	.se_snprintf	= hist_entry__global_ins_lat_snprintf,
- 	.se_width_idx	= HISTC_GLOBAL_INS_LAT,
- };
-diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-index e18b79916f638..22ae7c6ae3986 100644
---- a/tools/perf/util/sort.h
-+++ b/tools/perf/util/sort.h
-@@ -49,7 +49,6 @@ struct he_stat {
- 	u64			period_us;
- 	u64			period_guest_sys;
- 	u64			period_guest_us;
--	u64			ins_lat;
- 	u64			p_stage_cyc;
- 	u32			nr_events;
- };
-@@ -109,6 +108,7 @@ struct hist_entry {
- 	s32			cpu;
- 	u64			code_page_size;
- 	u64			weight;
-+	u64			ins_lat;
- 	u8			cpumode;
- 	u8			depth;
- 
++	spe->sample_type = attr.sample_type;
++
+ 	attr.exclude_user = evsel->core.attr.exclude_user;
+ 	attr.exclude_kernel = evsel->core.attr.exclude_kernel;
+ 	attr.exclude_hv = evsel->core.attr.exclude_hv;
 -- 
 2.33.0
 
