@@ -2,97 +2,179 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A9EC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun, 28 Nov 2021 09:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AACCEC433FE
+	for <linux-perf-users@archiver.kernel.org>; Sun, 28 Nov 2021 11:10:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230018AbhK1JDg (ORCPT
+        id S1357276AbhK1LOG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 28 Nov 2021 04:03:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50242 "EHLO
+        Sun, 28 Nov 2021 06:14:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232145AbhK1JBe (ORCPT
+        with ESMTP id S1344301AbhK1LME (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 28 Nov 2021 04:01:34 -0500
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5807C061746
-        for <linux-perf-users@vger.kernel.org>; Sun, 28 Nov 2021 00:58:18 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id s189-20020a252cc6000000b005c1f206d91eso17567206ybs.14
-        for <linux-perf-users@vger.kernel.org>; Sun, 28 Nov 2021 00:58:18 -0800 (PST)
+        Sun, 28 Nov 2021 06:12:04 -0500
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4CC9C061746;
+        Sun, 28 Nov 2021 03:08:48 -0800 (PST)
+Received: by mail-pj1-x1029.google.com with SMTP id nh10-20020a17090b364a00b001a69adad5ebso11464943pjb.2;
+        Sun, 28 Nov 2021 03:08:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=B+bepFFO60RHu083vmt4BCiYb9T8HQxbga3/n6RHU9Q=;
-        b=XDdX8MnED/VSwoaAVg6qptHPu+vCMYQdvGnOvsXMUpiwlqBuZrvj5FZJ2eIa9SJ40v
-         QRg7EbhhPPEzzgdt4BRNFS8ADBlpl1pR2MhJh1k15vfAKAIH/Dp+YrSBwxu/P2Hp+Uv5
-         gpH0LzbgViA0A5KbSKvSBARAx4iB9kwWzW5OCwfQYZwDKyo3QoWFk/4S/WBB0CmB4Olp
-         sEvNtmkrSoy2uXDiUJz7zKE2ohIbuuNIOIH1ooYb3sbjnAw8PX/TPBRNGNK7Kmi4YDkB
-         eIGMaB2wkpU5Mbyv0spIXKR94guJma9vLTz+imcP1MqfVRH6XCdtJB4GatrZjS0VpewY
-         wr7g==
+        d=gmail.com; s=20210112;
+        h=date:from:subject:to:references:in-reply-to:mime-version:message-id
+         :content-transfer-encoding;
+        bh=RLGVormZNrRFWCDJ7jdRt19siDEPnOtSgoMRMWSMPpw=;
+        b=JS75cm1kNmau6QTu2rqjTEH1lacCTylUddbQig/MfaOv87fU1R4ixeZwUTvWkojCLe
+         FVsH5wJQluo9fnDCJtLxlNsFRugI2zkbabpCQ9VhDSP+vCMkQ9XcDyPUZsKoAN0XUVPp
+         aHUTDQx+GNGjfhDN5ufjzO429xe7p71bZ6QrT/eU2apwdj3VV4bcd4Oz9OEiXGFLWmkO
+         KTg66HtHflRGYT80QQO1K0h4MxrasFS2dEY2Sip94P5OybBl2LvseRqW7ZJqQswnXYN6
+         Cntrs/UrWT/QrCgRauE5NdDXQthF0aHKCC9fzaz2Cb2jdPmYhTY0PX3z2F7VkaSzQTfW
+         T9/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=B+bepFFO60RHu083vmt4BCiYb9T8HQxbga3/n6RHU9Q=;
-        b=f1C5CmFxK7BT4+hkh8Q8TLymvW+C/uwaSOeDnXqIkybLDx1LeAAEK4CpwLA+Kjmg99
-         qJl8wSkvfFvsciwan8Ok963Qhy50ZMtaPiN6x1qypbqRD1qZIs2qwaVxu6TlgVK0v0Ka
-         fqIWMETJLhntBjp1W3iaWCQydkcMzdOLJ6xPhvh66DhbbVY7b7cMe57S1WMAZ67OPs6m
-         krjZHIIX7yTQgZK3kK0f/yWxuFyz0gsrrPluuOboY3B6YCtYd7exX32mT4ZM9atPg19n
-         mQZHHn2XipTkIqKO8tfK4mFcHAd6Ar801JLhxZpetfM5IZcNrIans+xTScFivYXN2BH1
-         b53g==
-X-Gm-Message-State: AOAM532C2NuwgAVXlkRrqk7QodC9XnwyI4iueXfg3lYn7J0xhway3WTi
-        kS+yrQrxtvCE495ct2mWAffrBb3oH3lY
-X-Google-Smtp-Source: ABdhPJzmEIPX+KpstpW0QlHCvyNyp2Hfk5Y4i62l/KwfAm7bAHYPdiwD98ymagB8SC72m50dmi8i6a5yFWL6
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:24f5:bc1a:df07:6b3d])
- (user=irogers job=sendgmr) by 2002:a25:311:: with SMTP id 17mr27600974ybd.483.1638089897440;
- Sun, 28 Nov 2021 00:58:17 -0800 (PST)
-Date:   Sun, 28 Nov 2021 00:58:10 -0800
-Message-Id: <20211128085810.4027314-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.34.0.rc2.393.gf8c9666880-goog
-Subject: [PATCH] perf test: Reset shadow counts before loading
-From:   Ian Rogers <irogers@google.com>
-To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        h=x-gm-message-state:date:from:subject:to:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=RLGVormZNrRFWCDJ7jdRt19siDEPnOtSgoMRMWSMPpw=;
+        b=XvQmWbOnY1KJ8efcHdlz8dJ4QUKM6HPeB8t3/uHg8nlPFXkdA40On4Qi1JqcnvSVHb
+         te/xmBG/YXk9WzJYfwuSugZqAOjbO6bN61i5qLDpgjc3HSrHIevaXWaVDwNPcaiK43sS
+         2ofrv7fH65flVKdAfpi1a186ohuNpGI2SahFcJV0WYYtxqjBgKfrHiAqAcq11njF895q
+         yTli+iONG94MAl7QLZXG6Wupa29+RPpNSdJp4i3TCMtQQ+gT2Rq3nP0gATda5NzFn6Bv
+         cNxg/lH35P65Ms/vGfHTPVMGffQavin8QvBg8gNHFMIDre1eYQcpaBaaO4pFdHSfIbFA
+         b1Pw==
+X-Gm-Message-State: AOAM531w1Tg5lfqOzfF/tURJNbNdPfCs2yOh4+DPRWrOp+0cFIsY3qyt
+        p+o/H+vzwzcxJCuwEW2bj1k=
+X-Google-Smtp-Source: ABdhPJwy0Op9mcVC2NuBsFMopKknqC2dkNsLfr7KDw0piI/fX2AvzDRr44yqwWjkuQxAQyAX4DCrnA==
+X-Received: by 2002:a17:902:7fc3:b0:144:e29c:228d with SMTP id t3-20020a1709027fc300b00144e29c228dmr51588052plb.4.1638097728470;
+        Sun, 28 Nov 2021 03:08:48 -0800 (PST)
+Received: from localhost (115-64-213-93.static.tpgi.com.au. [115.64.213.93])
+        by smtp.gmail.com with ESMTPSA id 9sm9412647pgq.57.2021.11.28.03.08.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Nov 2021 03:08:48 -0800 (PST)
+Date:   Sun, 28 Nov 2021 21:08:41 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH 0/9] lib/bitmap: optimize bitmap_weight() usage
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Alexey Klimov <aklimov@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     eranian@google.com, Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Andy Shevchenko <andy@infradead.org>,
+        Anup Patel <anup.patel@wdc.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@fb.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Lameter <cl@linux.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Dennis Zhou <dennis@kernel.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Geetha sowjanya <gakula@marvell.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guo Ren <guoren@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Ian Rogers <irogers@google.com>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>, kvm@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Russell King <linux@armlinux.org.uk>,
+        linux-crypto@vger.kernel.org, linux-csky@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-mm@kvack.org,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Mark Gross <markgross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Matti Vaittinen <mazziesaccount@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Marcin Wojtas <mw@semihalf.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Solomon Peachy <pizza@shaftnet.org>,
+        Petr Mladek <pmladek@suse.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Roy Pledge <Roy.Pledge@nxp.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Subbaraya Sundeep <sbhatta@marvell.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Sunil Goutham <sgoutham@marvell.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Tariq Toukan <tariqt@nvidia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Vineet Gupta <vgupta@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Yury Norov <yury.norov@gmail.com>
+References: <20211128035704.270739-1-yury.norov@gmail.com>
+In-Reply-To: <20211128035704.270739-1-yury.norov@gmail.com>
+MIME-Version: 1.0
+Message-Id: <1638096766.3elxdzb8ly.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Otherwise load counting is an average. Without this change
-duration_time in test_memory_bandwidth will alter its value if an
-earlier test contains duration_time.
+Excerpts from Yury Norov's message of November 28, 2021 1:56 pm:
+> In many cases people use bitmap_weight()-based functions like this:
+>=20
+> 	if (num_present_cpus() > 1)
+> 		do_something();
+>=20
+> This may take considerable amount of time on many-cpus machines because
+> num_present_cpus() will traverse every word of underlying cpumask
+> unconditionally.
+>=20
+> We can significantly improve on it for many real cases if stop traversing
+> the mask as soon as we count present cpus to any number greater than 1:
+>=20
+> 	if (num_present_cpus_gt(1))
+> 		do_something();
+>=20
+> To implement this idea, the series adds bitmap_weight_{eq,gt,le}
+> functions together with corresponding wrappers in cpumask and nodemask.
 
-This patch fixes an issue that's introduced in the proposed patch:
-https://lore.kernel.org/lkml/20211124015226.3317994-1-irogers@google.com/
-in perf test "Parse and process metrics".
+There would be no change to callers if you maintain counters like what
+is done for num_online_cpus() today. Maybe some fixes to arch code that
+does not use set_cpu_possible() etc APIs required, but AFAIKS it would
+be better to fix such cases anyway.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/parse-metric.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
-index 574b7e4efd3a..07b6f4ec024f 100644
---- a/tools/perf/tests/parse-metric.c
-+++ b/tools/perf/tests/parse-metric.c
-@@ -109,6 +109,7 @@ static void load_runtime_stat(struct runtime_stat *st, struct evlist *evlist,
- 	struct evsel *evsel;
- 	u64 count;
- 
-+	perf_stat__reset_shadow_stats();
- 	evlist__for_each_entry(evlist, evsel) {
- 		count = find_value(evsel->name, vals);
- 		perf_stat__update_shadow_stats(evsel, count, 0, st);
--- 
-2.34.0.rc2.393.gf8c9666880-goog
-
+Thanks,
+Nick
