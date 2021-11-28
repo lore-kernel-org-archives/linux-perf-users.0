@@ -2,115 +2,234 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9401C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun, 28 Nov 2021 16:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E62AC433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun, 28 Nov 2021 16:37:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344278AbhK1Qev (ORCPT
+        id S231424AbhK1QkS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 28 Nov 2021 11:34:51 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:23141 "EHLO
+        Sun, 28 Nov 2021 11:40:18 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:45864 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1358289AbhK1Qcu (ORCPT
+        by vger.kernel.org with ESMTP id S1358508AbhK1QiS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 28 Nov 2021 11:32:50 -0500
+        Sun, 28 Nov 2021 11:38:18 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1638116974;
+        s=mimecast20190719; t=1638117301;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=vZW4/JuATNmbqT39WM6Wldifr5uJSWbgQDWe+YfFz5w=;
-        b=DIjZUd96utj8x9pzVj226jPF0ADSfPhuL7GjZFWtBXZvJbU2SpI6tvHILDwIDYQL5SqWtf
-        qLRp2JqsgGs87SFJknMiVeL75WiPNiJMOBP8yHq1cMm7UqtrZaKCvjbamOV3aj85L5bwvn
-        Gb2Tg+S7l8Pxb/6oQzLSNf1UyurcUlM=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=u0WPuZI03sGDlrZl0+AEkcj4kDjxnWzt/i4KWwzVe9o=;
+        b=iDoXQB26GZUb6nerfg+R8VNIJXve7d6an+weAIoQBely9nhw0wXT9Nk1BeWrLQrjdeE3cv
+        WEPpWbsUPMfMRiGVdxNZVx28DuPwnoqdigvWVi39RD/dj9MdXqKkqhiXWTeM2bgADN396m
+        f9FTRQzGeMYIx3YqHYURGwCqZO3wxic=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-52-mOZ6WwEgPICHNpwlBBX07A-1; Sun, 28 Nov 2021 11:29:33 -0500
-X-MC-Unique: mOZ6WwEgPICHNpwlBBX07A-1
-Received: by mail-wm1-f71.google.com with SMTP id a85-20020a1c7f58000000b0033ddc0eacc8so8615307wmd.9
-        for <linux-perf-users@vger.kernel.org>; Sun, 28 Nov 2021 08:29:32 -0800 (PST)
+ us-mta-548-x4aTDjIrPyqmvJpiTB34RQ-1; Sun, 28 Nov 2021 11:35:00 -0500
+X-MC-Unique: x4aTDjIrPyqmvJpiTB34RQ-1
+Received: by mail-wm1-f70.google.com with SMTP id ay34-20020a05600c1e2200b00337fd217772so9045756wmb.4
+        for <linux-perf-users@vger.kernel.org>; Sun, 28 Nov 2021 08:35:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=vZW4/JuATNmbqT39WM6Wldifr5uJSWbgQDWe+YfFz5w=;
-        b=SMP8AOZAmIld86TR3P8H2HuBS+gmNE5TLl0vEDOQKVKHASPkCMMXUyaCx4Y3TCnhF5
-         p8xIDKRr0kN7c03DcvKFt4XsRi7wOsRUpv3JTEsCjYW+NhoQbhs6gBASDaRGZjQXM7Tp
-         HLNRyfLn+DLxy4gVFApfSAy9reZTFmWK15wcc0xYJ9bO5lKiY8AVA98IF+PMI+I9Y4cb
-         Zn5S5EJKWqszZU6RbWyQlG/456rxy1IVpZ2fpPsz8sIOB13lvexbuKypTyWMMwapXuB2
-         SXROsOybWxau75q6wgAsLgKu5JiwfbY5iFFH3U68iF2jbmAZ1jgsvz08mQJeUkttOKsz
-         MD0g==
-X-Gm-Message-State: AOAM530tFnqqiolT2OFMSCxf6Kcm3m1K2aUTBNcYR0eRNd4ncba88Zqq
-        IhN3TFOdMIsNSl2OO78dai4SJKvjlC1IrS+OEdhI5YTu+vYiSDxh5mMX4nOXmixcQxdXCOUgXHo
-        V4R2Jkm/gBgyD2b6ukOr77NsPUwgc6g==
-X-Received: by 2002:a05:600c:34c2:: with SMTP id d2mr31197755wmq.102.1638116971747;
-        Sun, 28 Nov 2021 08:29:31 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxRc/Z3kDamUWfpAby3d8t9ZRNczcVQJkH5WO/uB63rEhSVcY5GG5mAxuBcGDc1Sdf0fdN8Zg==
-X-Received: by 2002:a05:600c:34c2:: with SMTP id d2mr31197734wmq.102.1638116971552;
-        Sun, 28 Nov 2021 08:29:31 -0800 (PST)
+        bh=u0WPuZI03sGDlrZl0+AEkcj4kDjxnWzt/i4KWwzVe9o=;
+        b=FgYYcwu7wzSgX7ISGaJLcjn+bSuOTzMeogEK+/09yhGSDsJtRM/uE8QeGDbyIlmdBZ
+         IZg3c8tlvtjiWiBGw3sujXwGw0s2CNfH9v7WQTNYR/TPdB0S9Gf9VZjnOtZoYI2GpvmS
+         mBpMPLwAcjWmYi7JA0DIfATNYAJjWdYK6N95FWCpCb0bP2g45onzpVUeLOsux33jRYxJ
+         DQksyvIVy/ueDxMBSGeTEaikYgoKM9lmlFCBrpO7x7WhWj6C9MozdpIEMWBNYIhuODQ7
+         HAmWQRFQ0fcCwiIL2K3EvJ6TUixriUmKEj1UbLZYjCxTH4+srKOGUQnL2QM3zhXTAgSG
+         nBng==
+X-Gm-Message-State: AOAM531kCpQYwvpYfWqPpY4PeM8Mz8RG39k8dzVkGYT3dqyQVWqYpILM
+        oswisv2IeIn45Rieg05J0bZMqDtH+YEDU9Bblp/qIUKEDAwZsSZi4wEzxDr5RzWpmPRXimNY1+D
+        oTLC8xD3e7GIGz2aE22jhaCe9ke3joQ==
+X-Received: by 2002:a7b:c008:: with SMTP id c8mr29691459wmb.87.1638117298894;
+        Sun, 28 Nov 2021 08:34:58 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJx5P9GnGdwAy0/ojmvNAW+hWNTvpo6486QdE0YrLbmC7PJ9DePf+HWFFV/x9KAiHv1LGL6pqA==
+X-Received: by 2002:a7b:c008:: with SMTP id c8mr29691434wmb.87.1638117298695;
+        Sun, 28 Nov 2021 08:34:58 -0800 (PST)
 Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
-        by smtp.gmail.com with ESMTPSA id l8sm18321556wmc.40.2021.11.28.08.29.30
+        by smtp.gmail.com with ESMTPSA id m9sm13461067wmq.1.2021.11.28.08.34.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Nov 2021 08:29:31 -0800 (PST)
-Date:   Sun, 28 Nov 2021 17:29:29 +0100
+        Sun, 28 Nov 2021 08:34:58 -0800 (PST)
+Date:   Sun, 28 Nov 2021 17:34:56 +0100
 From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        eranian@google.com
-Subject: Re: [PATCH] perf test: Reset shadow counts before loading
-Message-ID: <YaOuadwZWje6HeTg@krava>
-References: <20211128085810.4027314-1-irogers@google.com>
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, mpe@ellerman.id.au,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
+        kjain@linux.ibm.com, namhyung@kernel.org
+Subject: Re: [PATCH 1/2] tools/perf: Include global and local variants for
+ p_stage_cyc sort key
+Message-ID: <YaOvsDAnuS+mXnrf@krava>
+References: <20211125024851.22895-1-atrajeev@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211128085810.4027314-1-irogers@google.com>
+In-Reply-To: <20211125024851.22895-1-atrajeev@linux.vnet.ibm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Nov 28, 2021 at 12:58:10AM -0800, Ian Rogers wrote:
-> Otherwise load counting is an average. Without this change
-> duration_time in test_memory_bandwidth will alter its value if an
-> earlier test contains duration_time.
+On Thu, Nov 25, 2021 at 08:18:50AM +0530, Athira Rajeev wrote:
+> Sort key p_stage_cyc is used to present the latency
+> cycles spend in pipeline stages. perf tool has local
+> p_stage_cyc sort key to display this info. There is no
+> global variant available for this sort key. local variant
+> shows latency in a sinlge sample, whereas, global value
+> will be useful to present the total latency (sum of
+> latencies) in the hist entry. It represents latency
+> number multiplied by the number of samples.
 > 
-> This patch fixes an issue that's introduced in the proposed patch:
-> https://lore.kernel.org/lkml/20211124015226.3317994-1-irogers@google.com/
-> in perf test "Parse and process metrics".
+> Add global (p_stage_cyc) and local variant
+> (local_p_stage_cyc) for this sort key. Use the
+> local_p_stage_cyc as default option for "mem" sort mode.
+> Also add this to list of dynamic sort keys.
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> Reported-by: Namhyung Kim <namhyung@kernel.org>
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+I can't apply this to Arnaldo's perf/core, could you please rebase?
 
+patching file util/hist.c
+patching file util/hist.h
+patching file util/sort.c
+Hunk #3 FAILED at 1392.
+Hunk #4 succeeded at 1878 (offset 20 lines).
+1 out of 4 hunks FAILED -- saving rejects to file util/sort.c.rej
+patching file util/sort.h
+
+thanks,
 jirka
 
 > ---
->  tools/perf/tests/parse-metric.c | 1 +
->  1 file changed, 1 insertion(+)
+>  tools/perf/util/hist.c |  4 +++-
+>  tools/perf/util/hist.h |  3 ++-
+>  tools/perf/util/sort.c | 34 +++++++++++++++++++++++++---------
+>  tools/perf/util/sort.h |  3 ++-
+>  4 files changed, 32 insertions(+), 12 deletions(-)
 > 
-> diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
-> index 574b7e4efd3a..07b6f4ec024f 100644
-> --- a/tools/perf/tests/parse-metric.c
-> +++ b/tools/perf/tests/parse-metric.c
-> @@ -109,6 +109,7 @@ static void load_runtime_stat(struct runtime_stat *st, struct evlist *evlist,
->  	struct evsel *evsel;
->  	u64 count;
+> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+> index b776465e04ef..0a8033b09e28 100644
+> --- a/tools/perf/util/hist.c
+> +++ b/tools/perf/util/hist.c
+> @@ -211,7 +211,9 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
+>  	hists__new_col_len(hists, HISTC_MEM_BLOCKED, 10);
+>  	hists__new_col_len(hists, HISTC_LOCAL_INS_LAT, 13);
+>  	hists__new_col_len(hists, HISTC_GLOBAL_INS_LAT, 13);
+> -	hists__new_col_len(hists, HISTC_P_STAGE_CYC, 13);
+> +	hists__new_col_len(hists, HISTC_LOCAL_P_STAGE_CYC, 13);
+> +	hists__new_col_len(hists, HISTC_GLOBAL_P_STAGE_CYC, 13);
+> +
+>  	if (symbol_conf.nanosecs)
+>  		hists__new_col_len(hists, HISTC_TIME, 16);
+>  	else
+> diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+> index 5343b62476e6..2752ce681108 100644
+> --- a/tools/perf/util/hist.h
+> +++ b/tools/perf/util/hist.h
+> @@ -75,7 +75,8 @@ enum hist_column {
+>  	HISTC_MEM_BLOCKED,
+>  	HISTC_LOCAL_INS_LAT,
+>  	HISTC_GLOBAL_INS_LAT,
+> -	HISTC_P_STAGE_CYC,
+> +	HISTC_LOCAL_P_STAGE_CYC,
+> +	HISTC_GLOBAL_P_STAGE_CYC,
+>  	HISTC_NR_COLS, /* Last entry */
+>  };
 >  
-> +	perf_stat__reset_shadow_stats();
->  	evlist__for_each_entry(evlist, evsel) {
->  		count = find_value(evsel->name, vals);
->  		perf_stat__update_shadow_stats(evsel, count, 0, st);
+> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> index e9216a292a04..e978f7883e07 100644
+> --- a/tools/perf/util/sort.c
+> +++ b/tools/perf/util/sort.c
+> @@ -37,7 +37,7 @@ const char	default_parent_pattern[] = "^sys_|^do_page_fault";
+>  const char	*parent_pattern = default_parent_pattern;
+>  const char	*default_sort_order = "comm,dso,symbol";
+>  const char	default_branch_sort_order[] = "comm,dso_from,symbol_from,symbol_to,cycles";
+> -const char	default_mem_sort_order[] = "local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked,blocked,local_ins_lat,p_stage_cyc";
+> +const char	default_mem_sort_order[] = "local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked,blocked,local_ins_lat,local_p_stage_cyc";
+>  const char	default_top_sort_order[] = "dso,symbol";
+>  const char	default_diff_sort_order[] = "dso,symbol";
+>  const char	default_tracepoint_sort_order[] = "trace";
+> @@ -46,8 +46,8 @@ const char	*field_order;
+>  regex_t		ignore_callees_regex;
+>  int		have_ignore_callees = 0;
+>  enum sort_mode	sort__mode = SORT_MODE__NORMAL;
+> -const char	*dynamic_headers[] = {"local_ins_lat", "p_stage_cyc"};
+> -const char	*arch_specific_sort_keys[] = {"p_stage_cyc"};
+> +const char	*dynamic_headers[] = {"local_ins_lat", "ins_lat", "local_p_stage_cyc", "p_stage_cyc"};
+> +const char	*arch_specific_sort_keys[] = {"local_p_stage_cyc", "p_stage_cyc"};
+>  
+>  /*
+>   * Replaces all occurrences of a char used with the:
+> @@ -1392,22 +1392,37 @@ struct sort_entry sort_global_ins_lat = {
+>  };
+>  
+>  static int64_t
+> -sort__global_p_stage_cyc_cmp(struct hist_entry *left, struct hist_entry *right)
+> +sort__p_stage_cyc_cmp(struct hist_entry *left, struct hist_entry *right)
+>  {
+>  	return left->p_stage_cyc - right->p_stage_cyc;
+>  }
+>  
+> +static int hist_entry__global_p_stage_cyc_snprintf(struct hist_entry *he, char *bf,
+> +					size_t size, unsigned int width)
+> +{
+> +	return repsep_snprintf(bf, size, "%-*u", width,
+> +			he->p_stage_cyc * he->stat.nr_events);
+> +}
+> +
+> +
+>  static int hist_entry__p_stage_cyc_snprintf(struct hist_entry *he, char *bf,
+>  					size_t size, unsigned int width)
+>  {
+>  	return repsep_snprintf(bf, size, "%-*u", width, he->p_stage_cyc);
+>  }
+>  
+> -struct sort_entry sort_p_stage_cyc = {
+> -	.se_header      = "Pipeline Stage Cycle",
+> -	.se_cmp         = sort__global_p_stage_cyc_cmp,
+> +struct sort_entry sort_local_p_stage_cyc = {
+> +	.se_header      = "Local Pipeline Stage Cycle",
+> +	.se_cmp         = sort__p_stage_cyc_cmp,
+>  	.se_snprintf	= hist_entry__p_stage_cyc_snprintf,
+> -	.se_width_idx	= HISTC_P_STAGE_CYC,
+> +	.se_width_idx	= HISTC_LOCAL_P_STAGE_CYC,
+> +};
+> +
+> +struct sort_entry sort_global_p_stage_cyc = {
+> +	.se_header      = "Pipeline Stage Cycle",
+> +	.se_cmp         = sort__p_stage_cyc_cmp,
+> +	.se_snprintf    = hist_entry__global_p_stage_cyc_snprintf,
+> +	.se_width_idx   = HISTC_GLOBAL_P_STAGE_CYC,
+>  };
+>  
+>  struct sort_entry sort_mem_daddr_sym = {
+> @@ -1858,7 +1873,8 @@ static struct sort_dimension common_sort_dimensions[] = {
+>  	DIM(SORT_CODE_PAGE_SIZE, "code_page_size", sort_code_page_size),
+>  	DIM(SORT_LOCAL_INS_LAT, "local_ins_lat", sort_local_ins_lat),
+>  	DIM(SORT_GLOBAL_INS_LAT, "ins_lat", sort_global_ins_lat),
+> -	DIM(SORT_PIPELINE_STAGE_CYC, "p_stage_cyc", sort_p_stage_cyc),
+> +	DIM(SORT_LOCAL_PIPELINE_STAGE_CYC, "local_p_stage_cyc", sort_local_p_stage_cyc),
+> +	DIM(SORT_GLOBAL_PIPELINE_STAGE_CYC, "p_stage_cyc", sort_global_p_stage_cyc),
+>  };
+>  
+>  #undef DIM
+> diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+> index 3c7518378d62..83abe5e6812a 100644
+> --- a/tools/perf/util/sort.h
+> +++ b/tools/perf/util/sort.h
+> @@ -235,7 +235,8 @@ enum sort_type {
+>  	SORT_CODE_PAGE_SIZE,
+>  	SORT_LOCAL_INS_LAT,
+>  	SORT_GLOBAL_INS_LAT,
+> -	SORT_PIPELINE_STAGE_CYC,
+> +	SORT_LOCAL_PIPELINE_STAGE_CYC,
+> +	SORT_GLOBAL_PIPELINE_STAGE_CYC,
+>  
+>  	/* branch stack specific sort keys */
+>  	__SORT_BRANCH_STACK,
 > -- 
-> 2.34.0.rc2.393.gf8c9666880-goog
+> 2.27.0
 > 
 
