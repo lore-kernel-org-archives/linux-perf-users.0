@@ -2,162 +2,178 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B962C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun, 28 Nov 2021 15:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F99C433F5
+	for <linux-perf-users@archiver.kernel.org>; Sun, 28 Nov 2021 15:39:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358158AbhK1Pj1 (ORCPT
+        id S1358051AbhK1PmT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 28 Nov 2021 10:39:27 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:43191 "EHLO
+        Sun, 28 Nov 2021 10:42:19 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:55953 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1358057AbhK1Ph1 (ORCPT
+        by vger.kernel.org with ESMTP id S1358065AbhK1PkT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 28 Nov 2021 10:37:27 -0500
+        Sun, 28 Nov 2021 10:40:19 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1638113650;
+        s=mimecast20190719; t=1638113822;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=VNpPAkWiidfifefiXJODArZxI0qvSofN4bgHmwfU3Oo=;
-        b=GltdJTwLhfdD7Mq2L9dOV+1Akoi8qS9QmvBmQleLQPlVD84zMW8SfD2c/7ARtFasNyHn/9
-        U1Y09wy4M5B1JZ4k4pq77Sp9MiOqe9Y6wsrmeUfhlwoN+4KY/9B2pOWgIHygqfwy7m+/Ky
-        gxbQbinT4PFoVBftYT5ffF+ZvW0aHlc=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=Mv1NvOXeQyiJrvL3ER4pPIxQ4R1Jg99P0t2qq4Q302o=;
+        b=Rby+9wqUeKmxN9bCOzueXUmbwKSURJjbCuQJ4exj+O6A2UkzmPJ+ZA4/lE0C3gDx3OaoMT
+        6DX559tvBh79LzWFDzNU9/GBzr3k6qGdYKAQtse6nF7/4q12JbP9r0yzOoH6B+Bbv3hqs2
+        D9t701HF3i1qBcr6k/sh1KnuXMLXKhI=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-447-2gfvhUO6OxqsYv_pmbIgFw-1; Sun, 28 Nov 2021 10:34:09 -0500
-X-MC-Unique: 2gfvhUO6OxqsYv_pmbIgFw-1
-Received: by mail-wm1-f71.google.com with SMTP id 144-20020a1c0496000000b003305ac0e03aso10423773wme.8
-        for <linux-perf-users@vger.kernel.org>; Sun, 28 Nov 2021 07:34:08 -0800 (PST)
+ us-mta-363-vUf9qJUCPg-JWSqKtkXnpg-1; Sun, 28 Nov 2021 10:37:01 -0500
+X-MC-Unique: vUf9qJUCPg-JWSqKtkXnpg-1
+Received: by mail-wm1-f72.google.com with SMTP id m14-20020a05600c3b0e00b0033308dcc933so8963007wms.7
+        for <linux-perf-users@vger.kernel.org>; Sun, 28 Nov 2021 07:37:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VNpPAkWiidfifefiXJODArZxI0qvSofN4bgHmwfU3Oo=;
-        b=T2uDZl2kOqSF1mQCZaMa+7FMr8vaHaf1UYDBIGKWTbYmCGtDdNQPbAFM4+KP5xabyE
-         1uGkmAbUXyUPYxIYAI0P6bJtppCkOgIMHVWfzzU4KfyZ49eGPRY5tUVkFVSoIV8Ibvg6
-         hdUEmEOVS0GyaTNoUpHKrENjTbL8JUggGWhrpQxvY2rMYPmRwY7q13sH/Grmlic2v88h
-         UVl5nPuBwfAqV1SqdmS/3iTSB7XNwXYHZcO/1HSfXD7wkZSTVHfANTTS469pxZuh8d4L
-         yN2cxJprQx8m92lz0H2U4jxzk13dCRG3MGqDUXfLHuioR7l8U65pZfYZ333P7+KpuRGv
-         vjeA==
-X-Gm-Message-State: AOAM5313/nRbnQ8WmgYOdMVOe6BYf+HrIXE2Jkpd7EVtecpIbUr7v6bm
-        NXTqre95Rf3qRcialcTeAZu+OqJPjsJ9DO7fnwvacaOT1GacLyJD0V0T3DuOBzZftMrSSUAI1LJ
-        I03rFrqB1eT42vPxrs3DvuTWcSywevA==
-X-Received: by 2002:a5d:570b:: with SMTP id a11mr27540293wrv.600.1638113647965;
-        Sun, 28 Nov 2021 07:34:07 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwKAI+uCDhKCXKciMPZW3z9b+FqtdLLvtiubB0T9Btutrr4JEImS5bnFpxct/cLy1nlCgwqQA==
-X-Received: by 2002:a5d:570b:: with SMTP id a11mr27540271wrv.600.1638113647746;
-        Sun, 28 Nov 2021 07:34:07 -0800 (PST)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Mv1NvOXeQyiJrvL3ER4pPIxQ4R1Jg99P0t2qq4Q302o=;
+        b=JeWLZ1d8XDAHDQjzLLwecDI6na9Zc3je0E2h+gHUrT+qaA6cqmJcmaryL6uL/hgzLA
+         eMWUOjN+PM9DIt6oZ3dW4txXaONrd6IpI3nqQ0F8xlPT3iQ/pCI8Y99JZt/VThlmdNlA
+         3lEmwspeqCqAxR5JiV6nUNIYT+8BI6MW7NAxUdSrJuvO5Nw7hefjFtWcz5TsB2W1w8+g
+         A3yghHXMq4C0mWcr21fScoglD2bYvou/eV8buBYJFr09+Ml/ERNXZQSFS6cb1zulv9MS
+         2SC95hUZY2H9t+oUjEjHzQaYOLxeeAoGSWq8UUszKyHHy7kPsDy5Omc/ox05nmD/6PnL
+         vX0A==
+X-Gm-Message-State: AOAM533KRmv4nRw8PQk1+ijuHrBhFoTbB9cl28vPbVli7sf8NCrOS2J+
+        wYIAfuIJxQs136n1V7krHR8XUir9dFL+0Eo8/pmFGKv0INW4B/u9uMbUsNahFNMyimzghAWpty3
+        enDXAIsYbovKKHiREK6ED/94bdcf/Jw==
+X-Received: by 2002:a1c:7ed3:: with SMTP id z202mr29565358wmc.110.1638113820331;
+        Sun, 28 Nov 2021 07:37:00 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxbeqR2RRDiywdsMZOmOMyncoPQuWlXCUSYpchdlFYZ0AGA8v+oxHm/WykAmLmag3FKmXJpSw==
+X-Received: by 2002:a1c:7ed3:: with SMTP id z202mr29565324wmc.110.1638113820091;
+        Sun, 28 Nov 2021 07:37:00 -0800 (PST)
 Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
-        by smtp.gmail.com with ESMTPSA id d6sm11115711wrx.60.2021.11.28.07.34.06
+        by smtp.gmail.com with ESMTPSA id a1sm14391161wri.89.2021.11.28.07.36.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Nov 2021 07:34:07 -0800 (PST)
-Date:   Sun, 28 Nov 2021 16:34:05 +0100
+        Sun, 28 Nov 2021 07:36:59 -0800 (PST)
+Date:   Sun, 28 Nov 2021 16:36:57 +0100
 From:   Jiri Olsa <jolsa@redhat.com>
-To:     Sohaib Mohamed <sohaib.amhmd@gmail.com>
-Cc:     irogers@google.com, Riccardo Mancini <rickyman7@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Fabian Hemmer <copy@copy.sh>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] Unbuffered output when pipe/tee to a file
-Message-ID: <YaOhbfWzMv/uvKKi@krava>
-References: <20211119061409.78004-1-sohaib.amhmd@gmail.com>
+To:     Kim Phillips <kim.phillips@amd.com>
+Cc:     Sandipan Das <sandipan.das@amd.com>, ravi.bangoria@amd.com,
+        ananth.narayan@amd.com, rrichter@amd.com,
+        linux-perf-users@vger.kernel.org, namhyung@kernel.org,
+        alexander.shishkin@linux.intel.com, mark.rutland@arm.com,
+        kajoljain <kjain@linux.ibm.com>, acme@kernel.org
+Subject: Re: [RFC PATCH] tools/perf/x86: Use alternative format for AMD raw
+ events
+Message-ID: <YaOiGUNl7V83baEL@krava>
+References: <20211111125646.581021-1-sandipan.das@amd.com>
+ <YZE8SDkzq0OMcmhS@krava>
+ <9dc5cb10-2faf-a17b-ad4b-a22dbe688209@amd.com>
+ <bdbd0a4b-6221-ed90-0882-47248112ed3d@linux.ibm.com>
+ <301c0693-f982-1769-6e3f-8b77a4201a69@amd.com>
+ <783c4cbc-667c-b6d0-fb05-5250e444d9b2@amd.com>
+ <51cff547-4f13-bfa2-f977-75d51f0ce2ae@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20211119061409.78004-1-sohaib.amhmd@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <51cff547-4f13-bfa2-f977-75d51f0ce2ae@amd.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Nov 19, 2021 at 08:14:08AM +0200, Sohaib Mohamed wrote:
-> The output of Perf bench gets buffered when I pipe it to a file or to
-> tee, in such a way that I can see it only at the end.
+On Thu, Nov 18, 2021 at 10:51:45AM -0600, Kim Phillips wrote:
+> On 11/18/21 1:28 AM, Sandipan Das wrote:
+> > 
+> > On 11/16/2021 9:31 PM, Kim Phillips wrote:
+> > > On 11/15/21 10:38 PM, kajoljain wrote:
+> > > > On 11/15/21 3:28 PM, Sandipan Das wrote:
+> > > > > 
+> > > > > On 11/14/2021 10:11 PM, Jiri Olsa wrote:
+> > > > > > good question.. I see raw events as a way to put to config whatever
+> > > > > > the user wants and IMO adding changes/quirks that silently changes
+> > > > > > config could create confusion and angry users ;-)
+> > > > > > 
+> > > > 
+> > > > I agree, making quirks in config will only going to confuse users as
+> > > > It's against the encodings we had in
+> > > > /sys/bus/event_source/devices/<pmu>/format/*
+> > > > 
+> > > > > > I'd think that if user is composing/using raw events then using
+> > > > > > directly r100001f8e is not such a big deal?
+> > > > > > 
+> > > > > 
+> > > > > Sure. Some of the confusion may be due to the fact that the man pages
+> > > > > for perf-{stat,record,top} state that raw events are "eventsel+umask".
+> > > > > While that is technically true, it does not describe the encoding
+> > > > > scheme (/sys/bus/event_source/devices/<pmu>/format/*)
+> > > > > 
+> > > > > Would another option be to update the man pages with a reference to
+> > > > > these sysfs files when describing raw events?
+> > > > > 
+> > > > > Something like:
+> > > > > 
+> > > > > diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+> > > > > index 2d7df8703cf2..5dfdfeba594b 100644
+> > > > > --- a/tools/perf/Documentation/perf-record.txt
+> > > > > +++ b/tools/perf/Documentation/perf-record.txt
+> > > > > @@ -30,8 +30,10 @@ OPTIONS
+> > > > > 
+> > > > >            - a symbolic event name        (use 'perf list' to list all events)
+> > > > > 
+> > > > > -        - a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
+> > > > > -         hexadecimal event descriptor.
+> > > > > +        - a raw PMU event (eventsel+umask) in the form of rN..NN where N..NN
+> > > > > +          is a hexadecimal value representing the raw encoding with the layout
+> > > > > +          of the corresponding event control register as defined by entries in
+> > > > > +          /sys/bus/event_sources/devices/<pmu>/format/*
+> > > > 
+> > > > Do we need to specify (eventsel+umask) in the raw event description? As
+> > > > the format/fields totally depend on PMU and umask name convention is
+> > > > specific to one arch.
+> > > > 
+> > > > Can we just update it to:
+> > > > 
+> > > > - a raw PMU event in the form of rNNN where NNN is a hexadecimal value
+> > > > representing the raw encoding, with the layout of the corresponding
+> > > > event control register as defined by entries in
+> > > > /sys/bus/event_sources/devices/<pmu>/format/*
+> > > 
+> > > The r notation is for the cpu pmu only.
+> > > 
+> > > The triple-digit 'NNN' is what's most misleading for 12-bit
+> > > event implementation users, such as AMD's core PMUs.  It
+> > > tells users 'see your processor's documentation's triple-
+> > > hex-digit PMCx18e event?  All you need to do is make that
+> > > "-e r18e" on the perf stat/record command line.
+> > > 
+> > > So all notions of what size of parameter 'r' takes, esp. 'NNN'
+> > > should be removed IMO.  Perhaps an AMD/12-bit-specific
+> > > example can be provided.
+> > > 
+> > > I had thought that the shorthand command line r spec alone
+> > > could be modified to be smarter and more accommodating
+> > > for conventional rUUEE users migrating to AMD/12-bit,
+> > > which AFAICT is not what this patch does.  I think it
+> > > modifies even the  cpu/config=0xNNNNN/ specification,
+> > > which, granted, is bad.
+> > > 
+> > 
+> > Sorry I didn't know that events could be programmed with "config=...".
+> > Thanks for pointing that out. For basic '-e r...' usage, modifying
+> > parse_events_add_numeric() and leaving parse_events_add_pmu() as is
+> > should take care of it.
+> > 
+> > I thought about using the same fixup for the pmu format i.e. cpu/r0xNNNNN/
+> > but as you rightly mentioned, it breaks when using cpu/config=0xNNNNN/.
 > 
-> E.g.
-> $ perf bench internals synthesize -t
-> < output comes out fine after each test run >
+> I think we'd be breaking compatibility with changing -r,
+> even if the two (0x100 and 0x200) event bits used for most
+> three-digit AMD events are being masked.
 > 
-> $ perf bench internals synthesize -t | tee file.txt
-> < output comes out only at the end of all tests >
-> 
-> This patch resolves this issue for 'bench' and 'test' subcommands.
+> Shall we just add an AMD-specific real-world 0xE0000UUEE example
+> to the {stat,record} documentation to clear the mud?
 
-I can reproduce this for bench, but not for test subcommand
-other that that it makes sense to me
+sorry for late answer, but that seems to me like good idea
 
 jirka
-
-> 
-> See, also:
-> $ perf bench mem all | tee file.txt
-> $ perf bench sched all | tee file.txt
-> $ perf bench internals all -t | tee file.txt
-> $ perf bench internals all | tee file.txt
-> 
-> Suggested-by: Riccardo Mancini <rickyman7@gmail.com>
-> Signed-off-by: Sohaib Mohamed <sohaib.amhmd@gmail.com>
-> ---
-> v1 -> v2:
-> - Use setvbuf(), instead of sprinkling fflush() calls and missing some places.
-> 
-> v1: https://lore.kernel.org/linux-perf-users/20211112215313.108823-1-sohaib.amhmd@gmail.com/
-> ---
->  tools/perf/builtin-bench.c      | 5 +++--
->  tools/perf/tests/builtin-test.c | 3 +++
->  2 files changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
-> index d0895162c2ba..d291f3a8af5f 100644
-> --- a/tools/perf/builtin-bench.c
-> +++ b/tools/perf/builtin-bench.c
-> @@ -226,7 +226,6 @@ static void run_collection(struct collection *coll)
->  		if (!bench->fn)
->  			break;
->  		printf("# Running %s/%s benchmark...\n", coll->name, bench->name);
-> -		fflush(stdout);
-> 
->  		argv[1] = bench->name;
->  		run_bench(coll->name, bench->name, bench->fn, 1, argv);
-> @@ -247,6 +246,9 @@ int cmd_bench(int argc, const char **argv)
->  	struct collection *coll;
->  	int ret = 0;
-> 
-> +	/* Unbuffered output */
-> +	setvbuf(stdout, NULL, _IONBF, 0);
-> +
->  	if (argc < 2) {
->  		/* No collection specified. */
->  		print_usage();
-> @@ -300,7 +302,6 @@ int cmd_bench(int argc, const char **argv)
-> 
->  			if (bench_format == BENCH_FORMAT_DEFAULT)
->  				printf("# Running '%s/%s' benchmark:\n", coll->name, bench->name);
-> -			fflush(stdout);
->  			ret = run_bench(coll->name, bench->name, bench->fn, argc-1, argv+1);
->  			goto end;
->  		}
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> index 8cb5a1c3489e..d92ae4efd2e6 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -606,6 +606,9 @@ int cmd_test(int argc, const char **argv)
->          if (ret < 0)
->                  return ret;
-> 
-> +	/* Unbuffered output */
-> +	setvbuf(stdout, NULL, _IONBF, 0);
-> +
->  	argc = parse_options_subcommand(argc, argv, test_options, test_subcommands, test_usage, 0);
->  	if (argc >= 1 && !strcmp(argv[0], "list"))
->  		return perf_test__list(argc - 1, argv + 1);
-> --
-> 2.25.1
-> 
 
