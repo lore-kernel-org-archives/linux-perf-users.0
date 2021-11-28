@@ -2,144 +2,129 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B86AC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun, 28 Nov 2021 15:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDEFC433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun, 28 Nov 2021 16:00:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358184AbhK1PwQ (ORCPT
+        id S1358248AbhK1QD0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 28 Nov 2021 10:52:16 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:47178 "EHLO
+        Sun, 28 Nov 2021 11:03:26 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:36366 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1358185AbhK1PuQ (ORCPT
+        by vger.kernel.org with ESMTP id S1352864AbhK1QB0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 28 Nov 2021 10:50:16 -0500
+        Sun, 28 Nov 2021 11:01:26 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1638114419;
+        s=mimecast20190719; t=1638115089;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=jzhBUSLHkvu2uQWnXVXCSs3RwPUOQ2M7ZMGyRnC3QHo=;
-        b=SdEhF37q0tJrHeuIjgjjgDitsIFjHqvH4F149BWzFbTCHS1ghf9Yq40FMXDKAMDkXMkEzR
-        ij4d/EooU63ikk4D2dJiPqiRSJ7hP87j+mNh9Ju7p6ZLVZho47W1VwN/2WmDPU4r2JgSTL
-        x/W4M2uWT31d6kX7/Y/kLoR3uNd3Q/s=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=oUkv4nUiQ3mkbfdCluK09ueedbskIKmpMx99orQD+k0=;
+        b=CqnAig/WSfM5Pr5QKr2EyNa58HcXV5x/EFcY/pHq9UwxnzxHRZb0FSlymQ4jEj6MUuF7He
+        XwgEGXA/oc88DsiJjMXJtzKGjE/wWT2+sO1pr9d9VeV+84a7T2UNI5tK9EgkP02pIcQtKO
+        27KNs8psWSeLu1LU7Kfm1nMepvzK0tI=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-124-Ffu8kA0uPia5vDxS1ULU3g-1; Sun, 28 Nov 2021 10:46:58 -0500
-X-MC-Unique: Ffu8kA0uPia5vDxS1ULU3g-1
-Received: by mail-wm1-f71.google.com with SMTP id n16-20020a05600c3b9000b003331973fdbbso9012971wms.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 28 Nov 2021 07:46:57 -0800 (PST)
+ us-mta-580-mbucFCDsOPyuWq_XmN7mTw-1; Sun, 28 Nov 2021 10:58:08 -0500
+X-MC-Unique: mbucFCDsOPyuWq_XmN7mTw-1
+Received: by mail-wm1-f69.google.com with SMTP id p12-20020a05600c1d8c00b0033a22e48203so8999493wms.6
+        for <linux-perf-users@vger.kernel.org>; Sun, 28 Nov 2021 07:58:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=jzhBUSLHkvu2uQWnXVXCSs3RwPUOQ2M7ZMGyRnC3QHo=;
-        b=6XfOw3x+9h704WSyDFQ3B0ggjLXQaVGDrIGCDVq0mc5hYrgr5WyxFU+F24NBDCaV2y
-         t0RYg0zHttzuOlqTfkgEdORUj6EuoJTGSVF3mYkQRVvFNkHWUNNMviO1oV++P77S3ZZU
-         /xaI7J0uRSEUBKbjvewe0pPpPbt+I8rny/eHt7KFjvJNrvYLy27YwjyTQnw25ZqfvF7Z
-         G04tGjw1oTo1t1zv+Drb7QJyNByXBBpgMWMXOkwmaDnIWtjJiA99QSE/XOir8MU696JO
-         LqQrz43SwG3Y7k/514LxGIKqi1a7CabwdkkN8dQEieQsiLnlKQWppnEPC4k26FS3ibHj
-         NGng==
-X-Gm-Message-State: AOAM532zGOpXuPyXCvFbRJhWJmFSBz6Y8kTMYQJbvK7kjAk+0cKjz0Af
-        o05Zm7hlHn+BLER/Gz5gbwEBYgveQFE5UeK8y+w3NkQeFYeyYRC2hoka0v0OGn/+tjGOcgUfz56
-        R7X0fSW9aGsZSUgCrQfVC5NVRAnyCaw==
-X-Received: by 2002:adf:a319:: with SMTP id c25mr27991825wrb.629.1638114416913;
-        Sun, 28 Nov 2021 07:46:56 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJz7xAb4udvo/ymkXj/pu7DzjgJCDLhQtNvKrcA+r2EkjcEbwJ8W/lrVqwFUy5ntiie0VMX6wQ==
-X-Received: by 2002:adf:a319:: with SMTP id c25mr27991812wrb.629.1638114416779;
-        Sun, 28 Nov 2021 07:46:56 -0800 (PST)
+        bh=oUkv4nUiQ3mkbfdCluK09ueedbskIKmpMx99orQD+k0=;
+        b=pt3x6jLUyQqUHGDb+9WJ9xYG7UnUP9/CWuEnFSrOHMBJ040FGwrTeZvxxdBUlnsegE
+         t33k8iQP77MUXhHkGFTY50AV7oKHovXnVHwsNcDrOnC6o8rSFCJp7/klhYZLpGxUfT7/
+         Gk3vEdkRshAlJAUoehQ9n/JwILMbbCImTQciFZ1pN7bMlLKbYzARQaADFaxMG+xbM9N8
+         ugc0Dm/OJmfCOipGm2ARkmlfTggh7J+WQV3lzN/EnoFyr46gd3N7l2ffAQ/zb4btL1Yg
+         U0oV8pH77XwbSCfaLBhw9sNTsgsevBkfDSiqYMB5VG/C0j+IkbFpMsAivzcKyBnRzaY2
+         tWUQ==
+X-Gm-Message-State: AOAM532boeUythEtxw2FUgt2AnHiiySzv2nXh4OtzribS7egvI7sBTbs
+        /Ou7bkeKNRhpXh4MygYp0ZxCPvOrMcMPh+aUa37ayZe1OW5/fBTeLmFQ2mIJiTidkqgBYwxtFHB
+        8zSdnkXOxGETx5lar6ZSln4Q1G6MbXw==
+X-Received: by 2002:adf:f352:: with SMTP id e18mr28448057wrp.39.1638115087237;
+        Sun, 28 Nov 2021 07:58:07 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxkxnCSub6fUdntBZoh1lxeWIT1SoiIYoj3yADzcyG0D5WPoPX50FTR+Dg4LDbksCWZf//MKg==
+X-Received: by 2002:adf:f352:: with SMTP id e18mr28448033wrp.39.1638115087047;
+        Sun, 28 Nov 2021 07:58:07 -0800 (PST)
 Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
-        by smtp.gmail.com with ESMTPSA id j40sm19133082wms.19.2021.11.28.07.46.56
+        by smtp.gmail.com with ESMTPSA id o4sm19983401wmq.31.2021.11.28.07.58.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Nov 2021 07:46:56 -0800 (PST)
-Date:   Sun, 28 Nov 2021 16:46:54 +0100
+        Sun, 28 Nov 2021 07:58:06 -0800 (PST)
+Date:   Sun, 28 Nov 2021 16:58:04 +0100
 From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+To:     Sohaib Mohamed <sohaib.amhmd@gmail.com>
+Cc:     irogers@google.com, Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf header: Fix memory leaks
-Message-ID: <YaOkbojVb2gZtfCk@krava>
-References: <20211118201730.2302927-1-irogers@google.com>
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf machine: Free machine__findnew_dso
+Message-ID: <YaOnDKwNuk/quLBJ@krava>
+References: <20211119042607.48924-1-sohaib.amhmd@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211118201730.2302927-1-irogers@google.com>
+In-Reply-To: <20211119042607.48924-1-sohaib.amhmd@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Nov 18, 2021 at 12:17:30PM -0800, Ian Rogers wrote:
-> These leaks were found with leak sanitizer running "perf pipe recording
-> and injection test". In pipe mode feat_fd may hold onto an events struct
-> that needs freeing. When string features are processed they may
-> overwrite an already created string, so free this before the overwrite.
+On Fri, Nov 19, 2021 at 06:26:04AM +0200, Sohaib Mohamed wrote:
+> ASan reports memory leaks while running:
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> $ rm perf.data*
+> $ perf report
+> 
+> This patch adds the missing dso__put.
+> 
+> Fixes: 8c7f1bb37b29 ("perf machine: Move kernel mmap name into struct
+> machine")
+> 
+> Signed-off-by: Sohaib Mohamed <sohaib.amhmd@gmail.com>
 > ---
->  tools/perf/util/header.c | 15 ++++++++++-----
->  1 file changed, 10 insertions(+), 5 deletions(-)
+>  tools/perf/util/machine.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index 79cce216727e..e3c1a532d059 100644
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-> @@ -2321,6 +2321,7 @@ static int perf_header__read_build_ids(struct perf_header *header,
->  #define FEAT_PROCESS_STR_FUN(__feat, __feat_env) \
->  static int process_##__feat(struct feat_fd *ff, void *data __maybe_unused) \
->  {\
-> +	free(ff->ph->env.__feat_env);		     \
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index fb8496df8432..826be7a12da1 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -1742,6 +1742,8 @@ static int machine__process_kernel_mmap_event(struct machine *machine,
+>  			 */
+>  			dso__load(kernel, machine__kernel_map(machine));
+>  		}
+> +
+> +		dso__put(kernel);
 
-hm, how is this set before this callback is triggered?
+nice catch, after machine__findnew_dso we need to do that
 
+but there's also dso search before we call machine__findnew_dso,
+that can find dso, so I wonder we need to add change below as well
+
+thanks,
 jirka
 
->  	ff->ph->env.__feat_env = do_read_string(ff); \
->  	return ff->ph->env.__feat_env ? 0 : -ENOMEM; \
->  }
-> @@ -4124,6 +4125,7 @@ int perf_event__process_feature(struct perf_session *session,
->  	struct perf_record_header_feature *fe = (struct perf_record_header_feature *)event;
->  	int type = fe->header.type;
->  	u64 feat = fe->feat_id;
-> +	int ret = 0;
->  
->  	if (type < 0 || type >= PERF_RECORD_HEADER_MAX) {
->  		pr_warning("invalid record type %d in pipe-mode\n", type);
-> @@ -4141,11 +4143,13 @@ int perf_event__process_feature(struct perf_session *session,
->  	ff.size = event->header.size - sizeof(*fe);
->  	ff.ph = &session->header;
->  
-> -	if (feat_ops[feat].process(&ff, NULL))
-> -		return -1;
-> +	if (feat_ops[feat].process(&ff, NULL)) {
-> +		ret = -1;
-> +		goto out;
-> +	}
->  
->  	if (!feat_ops[feat].print || !tool->show_feat_hdr)
-> -		return 0;
-> +		goto out;
->  
->  	if (!feat_ops[feat].full_only ||
->  	    tool->show_feat_hdr >= SHOW_FEAT_HEADER_FULL_INFO) {
-> @@ -4154,8 +4158,9 @@ int perf_event__process_feature(struct perf_session *session,
->  		fprintf(stdout, "# %s info available, use -I to display\n",
->  			feat_ops[feat].name);
->  	}
-> -
-> -	return 0;
-> +out:
-> +	free_event_desc(ff.events);
-> +	return ret;
->  }
->  
->  size_t perf_event__fprintf_event_update(union perf_event *event, FILE *fp)
-> -- 
-> 2.34.0.rc2.393.gf8c9666880-goog
-> 
+
+---
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 826be7a12da1..cd9bdf723aba 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -1700,7 +1700,7 @@ static int machine__process_kernel_mmap_event(struct machine *machine,
+ 				continue;
+ 
+ 
+-			kernel = dso;
++			kernel = dso__get(dso);
+ 			break;
+ 		}
+ 
 
