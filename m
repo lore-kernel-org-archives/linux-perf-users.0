@@ -2,234 +2,283 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E62AC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun, 28 Nov 2021 16:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC6AC433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun, 28 Nov 2021 16:40:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231424AbhK1QkS (ORCPT
+        id S1346254AbhK1Qnj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 28 Nov 2021 11:40:18 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:45864 "EHLO
+        Sun, 28 Nov 2021 11:43:39 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:48794 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1358508AbhK1QiS (ORCPT
+        by vger.kernel.org with ESMTP id S1358361AbhK1Qlj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 28 Nov 2021 11:38:18 -0500
+        Sun, 28 Nov 2021 11:41:39 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1638117301;
+        s=mimecast20190719; t=1638117502;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=u0WPuZI03sGDlrZl0+AEkcj4kDjxnWzt/i4KWwzVe9o=;
-        b=iDoXQB26GZUb6nerfg+R8VNIJXve7d6an+weAIoQBely9nhw0wXT9Nk1BeWrLQrjdeE3cv
-        WEPpWbsUPMfMRiGVdxNZVx28DuPwnoqdigvWVi39RD/dj9MdXqKkqhiXWTeM2bgADN396m
-        f9FTRQzGeMYIx3YqHYURGwCqZO3wxic=
+        bh=rh9OiEKNFzqLO0F+hIXDImjWnQoH3cBeCq9fHny1mzU=;
+        b=RVa0XrmNEVKSkiF8w0dYq7XZQYE89IAs3eaFwiy/3JY5ScmbU6FTKZ4IYIrZTyK/pxJVzD
+        fw3OYlPv5cVuwTl/CUC9cokhdWEHCqYcVmKKV1hGcipH2oQ9V0X7tt66T+BBtMYxkvULbW
+        +3/wGs+6TFDZt2qEppws/1LiwHcgNOw=
 Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
  [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-548-x4aTDjIrPyqmvJpiTB34RQ-1; Sun, 28 Nov 2021 11:35:00 -0500
-X-MC-Unique: x4aTDjIrPyqmvJpiTB34RQ-1
-Received: by mail-wm1-f70.google.com with SMTP id ay34-20020a05600c1e2200b00337fd217772so9045756wmb.4
-        for <linux-perf-users@vger.kernel.org>; Sun, 28 Nov 2021 08:35:00 -0800 (PST)
+ us-mta-375-A1mbjyR7OKykPuZYMQc3Vw-1; Sun, 28 Nov 2021 11:38:21 -0500
+X-MC-Unique: A1mbjyR7OKykPuZYMQc3Vw-1
+Received: by mail-wm1-f70.google.com with SMTP id n16-20020a05600c3b9000b003331973fdbbso9076512wms.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 28 Nov 2021 08:38:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=u0WPuZI03sGDlrZl0+AEkcj4kDjxnWzt/i4KWwzVe9o=;
-        b=FgYYcwu7wzSgX7ISGaJLcjn+bSuOTzMeogEK+/09yhGSDsJtRM/uE8QeGDbyIlmdBZ
-         IZg3c8tlvtjiWiBGw3sujXwGw0s2CNfH9v7WQTNYR/TPdB0S9Gf9VZjnOtZoYI2GpvmS
-         mBpMPLwAcjWmYi7JA0DIfATNYAJjWdYK6N95FWCpCb0bP2g45onzpVUeLOsux33jRYxJ
-         DQksyvIVy/ueDxMBSGeTEaikYgoKM9lmlFCBrpO7x7WhWj6C9MozdpIEMWBNYIhuODQ7
-         HAmWQRFQ0fcCwiIL2K3EvJ6TUixriUmKEj1UbLZYjCxTH4+srKOGUQnL2QM3zhXTAgSG
-         nBng==
-X-Gm-Message-State: AOAM531kCpQYwvpYfWqPpY4PeM8Mz8RG39k8dzVkGYT3dqyQVWqYpILM
-        oswisv2IeIn45Rieg05J0bZMqDtH+YEDU9Bblp/qIUKEDAwZsSZi4wEzxDr5RzWpmPRXimNY1+D
-        oTLC8xD3e7GIGz2aE22jhaCe9ke3joQ==
-X-Received: by 2002:a7b:c008:: with SMTP id c8mr29691459wmb.87.1638117298894;
-        Sun, 28 Nov 2021 08:34:58 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJx5P9GnGdwAy0/ojmvNAW+hWNTvpo6486QdE0YrLbmC7PJ9DePf+HWFFV/x9KAiHv1LGL6pqA==
-X-Received: by 2002:a7b:c008:: with SMTP id c8mr29691434wmb.87.1638117298695;
-        Sun, 28 Nov 2021 08:34:58 -0800 (PST)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=rh9OiEKNFzqLO0F+hIXDImjWnQoH3cBeCq9fHny1mzU=;
+        b=bgB2JEZEY6lh/EfWoaSPKSDOsyvB+aREOJxPTQArDuIu4WGZSLcvkg5HNSpPO7JEjd
+         x+uZ404LyB4XRWKbUkkOdTJP4PUo7+eR/7MSHFD+WEgPvRx1jjpy2Y0nBWMMTyr7QTvz
+         dScombBi22WDX62kEB6/ZJ65YPehLCCT61/SgV7lZckNnkPNI6eCUf/Nsue9EcBE5pqZ
+         WzjJicH6wpSoPp5+MhUzUdvS/vUjbpOgoj73MHYLdm4Y9I3u9MIML52bNSBQFIRNqpsN
+         QBmXJYVpNvOSFzyNI0KJW9IwtpKLkyjdonJrKfV2C/wYKGBXR9JwJSOdGNNfgCiVblAz
+         9apg==
+X-Gm-Message-State: AOAM533/g934Jns9DTHP0KeFnGAEu924YCFI1tjm2xyNm/mMCxM3Zn+g
+        htl+41yLrvSdnz8y+8yGbgZ3peCnMEuEIzNIt31/rPOyN+Zf6uKH6h1VA2KYYhjm6uRDNAtZ7bj
+        5mewi5y+4Cj2/eQuiU46Xb13Y1PTCDA==
+X-Received: by 2002:a1c:7714:: with SMTP id t20mr30193035wmi.139.1638117500047;
+        Sun, 28 Nov 2021 08:38:20 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxwJcaPa5Bre80fju80nFD08TGjwL99vV0Eg6fE547Hqd2vV9i/v9cS0GfiX9cupNDqtdquvw==
+X-Received: by 2002:a1c:7714:: with SMTP id t20mr30193001wmi.139.1638117499785;
+        Sun, 28 Nov 2021 08:38:19 -0800 (PST)
 Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
-        by smtp.gmail.com with ESMTPSA id m9sm13461067wmq.1.2021.11.28.08.34.58
+        by smtp.gmail.com with ESMTPSA id f13sm14503875wmq.29.2021.11.28.08.38.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Nov 2021 08:34:58 -0800 (PST)
-Date:   Sun, 28 Nov 2021 17:34:56 +0100
+        Sun, 28 Nov 2021 08:38:19 -0800 (PST)
+Date:   Sun, 28 Nov 2021 17:38:17 +0100
 From:   Jiri Olsa <jolsa@redhat.com>
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, mpe@ellerman.id.au,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
-        kjain@linux.ibm.com, namhyung@kernel.org
-Subject: Re: [PATCH 1/2] tools/perf: Include global and local variants for
- p_stage_cyc sort key
-Message-ID: <YaOvsDAnuS+mXnrf@krava>
-References: <20211125024851.22895-1-atrajeev@linux.vnet.ibm.com>
+To:     Sandipan Das <sandipan.das@amd.com>
+Cc:     acme@kernel.org, santosh.shukla@amd.com, ravi.bangoria@amd.com,
+        ananth.narayan@amd.com, kim.phillips@amd.com, rrichter@amd.com,
+        linux-perf-users@vger.kernel.org, kjain@linux.ibm.com
+Subject: Re: [PATCH v3 1/2] perf/docs: Add info on AMD raw event encoding
+Message-ID: <YaOweUHKRlMpTOTf@krava>
+References: <20211123084613.243792-1-sandipan.das@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20211125024851.22895-1-atrajeev@linux.vnet.ibm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211123084613.243792-1-sandipan.das@amd.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Nov 25, 2021 at 08:18:50AM +0530, Athira Rajeev wrote:
-> Sort key p_stage_cyc is used to present the latency
-> cycles spend in pipeline stages. perf tool has local
-> p_stage_cyc sort key to display this info. There is no
-> global variant available for this sort key. local variant
-> shows latency in a sinlge sample, whereas, global value
-> will be useful to present the total latency (sum of
-> latencies) in the hist entry. It represents latency
-> number multiplied by the number of samples.
+On Tue, Nov 23, 2021 at 02:16:12PM +0530, Sandipan Das wrote:
+> AMD processors have events with event select codes and unit
+> masks larger than a byte. The core PMU, for example, uses
+> 12-bit event select codes split between bits 0-7 and 32-35
+> of the PERF_CTL MSRs as can be seen from
+> /sys/bus/event_sources/devices/cpu/format/*.
 > 
-> Add global (p_stage_cyc) and local variant
-> (local_p_stage_cyc) for this sort key. Use the
-> local_p_stage_cyc as default option for "mem" sort mode.
-> Also add this to list of dynamic sort keys.
+> The Processor Programming Reference (PPR) lists the event
+> codes as unified 12-bit hexadecimal values instead and the
+> split between the bits is not apparent to someone who is
+> not aware of the layout of the PERF_CTL MSRs.
 > 
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> Reported-by: Namhyung Kim <namhyung@kernel.org>
+> 8-bit event select codes continue to work as the layout
+> matches that of the PERF_CTL MSRs i.e. bits 0-7 for event
+> select and 8-15 for unit mask.
+> 
+> This adds more details in the perf man pages about using
+> /sys/bus/event_sources/devices/*/format/* for determining
+> the correct raw event encoding scheme.
+> 
+> E.g. the "op_cache_hit_miss.op_cache_hit" event with code
+> 0x28f and umask 0x03 can be programmed using its symbolic
+> name as:
+> 
+>   $ sudo perf --debug perf-event-open stat -e op_cache_hit_miss.op_cache_hit sleep 1
+>   ------------------------------------------------------------
+>   perf_event_attr:
+>     type                             4
+>     size                             128
+>     config                           0x20000038f
+>     sample_type                      IDENTIFIER
+>     read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+>     disabled                         1
+>     inherit                          1
+>     enable_on_exec                   1
+>     exclude_guest                    1
+>   ------------------------------------------------------------
+>   [...]
+> 
+> One might use a simple eventsel+umask combination based on
+> what the current man pages say and incorrectly program the
+> event as:
+> 
+>   $ sudo perf --debug perf-event-open stat -e r0328f sleep 1
+>   ------------------------------------------------------------
+>   perf_event_attr:
+>     type                             4
+>     size                             128
+>     config                           0x328f
+>     sample_type                      IDENTIFIER
+>     read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+>     disabled                         1
+>     inherit                          1
+>     enable_on_exec                   1
+>     exclude_guest                    1
+>   ------------------------------------------------------------
+>   [...]
+> 
+> When it should have been based on the format from sysfs:
+> 
+>   $ cat /sys/bus/event_source/devices/cpu/format/event
+>   config:0-7,32-35
+> 
+>   $ sudo perf --debug perf-event-open stat -e r20000038f sleep 1
+>   ------------------------------------------------------------
+>   perf_event_attr:
+>     type                             4
+>     size                             128
+>     config                           0x20000038f
+>     sample_type                      IDENTIFIER
+>     read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+>     disabled                         1
+>     inherit                          1
+>     enable_on_exec                   1
+>     exclude_guest                    1
+>   ------------------------------------------------------------
+>   [...]
+> 
+> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+> ---
+> v1: https://lore.kernel.org/linux-perf-users/20211119111234.170726-1-sandipan.das@amd.com/
+> v2: https://lore.kernel.org/linux-perf-users/20211123065104.236717-1-sandipan.das@amd.com/
+> 
+> v3:
+> - Mention why simple eventsel+umask combinations will not
+>   work in the commit message.
 
-I can't apply this to Arnaldo's perf/core, could you please rebase?
+for both patches:
 
-patching file util/hist.c
-patching file util/hist.h
-patching file util/sort.c
-Hunk #3 FAILED at 1392.
-Hunk #4 succeeded at 1878 (offset 20 lines).
-1 out of 4 hunks FAILED -- saving rejects to file util/sort.c.rej
-patching file util/sort.h
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 
 thanks,
 jirka
 
-> ---
->  tools/perf/util/hist.c |  4 +++-
->  tools/perf/util/hist.h |  3 ++-
->  tools/perf/util/sort.c | 34 +++++++++++++++++++++++++---------
->  tools/perf/util/sort.h |  3 ++-
->  4 files changed, 32 insertions(+), 12 deletions(-)
 > 
-> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-> index b776465e04ef..0a8033b09e28 100644
-> --- a/tools/perf/util/hist.c
-> +++ b/tools/perf/util/hist.c
-> @@ -211,7 +211,9 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
->  	hists__new_col_len(hists, HISTC_MEM_BLOCKED, 10);
->  	hists__new_col_len(hists, HISTC_LOCAL_INS_LAT, 13);
->  	hists__new_col_len(hists, HISTC_GLOBAL_INS_LAT, 13);
-> -	hists__new_col_len(hists, HISTC_P_STAGE_CYC, 13);
-> +	hists__new_col_len(hists, HISTC_LOCAL_P_STAGE_CYC, 13);
-> +	hists__new_col_len(hists, HISTC_GLOBAL_P_STAGE_CYC, 13);
+> ---
+>  tools/perf/Documentation/perf-list.txt   | 34 +++++++++++++++++++++++-
+>  tools/perf/Documentation/perf-record.txt |  6 +++--
+>  tools/perf/Documentation/perf-stat.txt   |  6 +++--
+>  tools/perf/Documentation/perf-top.txt    |  7 ++---
+>  4 files changed, 45 insertions(+), 8 deletions(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
+> index 4dc8d0af19df..a922a95289a9 100644
+> --- a/tools/perf/Documentation/perf-list.txt
+> +++ b/tools/perf/Documentation/perf-list.txt
+> @@ -94,7 +94,7 @@ RAW HARDWARE EVENT DESCRIPTOR
+>  Even when an event is not available in a symbolic form within perf right now,
+>  it can be encoded in a per processor specific way.
+>  
+> -For instance For x86 CPUs NNN represents the raw register encoding with the
+> +For instance on x86 CPUs, N is a hexadecimal value that represents the raw register encoding with the
+>  layout of IA32_PERFEVTSELx MSRs (see [Intel® 64 and IA-32 Architectures Software Developer's Manual Volume 3B: System Programming Guide] Figure 30-1 Layout
+>  of IA32_PERFEVTSELx MSRs) or AMD's PerfEvtSeln (see [AMD64 Architecture Programmer’s Manual Volume 2: System Programming], Page 344,
+>  Figure 13-7 Performance Event-Select Register (PerfEvtSeln)).
+> @@ -126,6 +126,38 @@ It's also possible to use pmu syntax:
+>   perf record -e cpu/r1a8/ ...
+>   perf record -e cpu/r0x1a8/ ...
+>  
+> +Some processors, like those from AMD, support event codes and unit masks
+> +larger than a byte. In such cases, the bits corresponding to the event
+> +configuration parameters can be seen with:
 > +
->  	if (symbol_conf.nanosecs)
->  		hists__new_col_len(hists, HISTC_TIME, 16);
->  	else
-> diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-> index 5343b62476e6..2752ce681108 100644
-> --- a/tools/perf/util/hist.h
-> +++ b/tools/perf/util/hist.h
-> @@ -75,7 +75,8 @@ enum hist_column {
->  	HISTC_MEM_BLOCKED,
->  	HISTC_LOCAL_INS_LAT,
->  	HISTC_GLOBAL_INS_LAT,
-> -	HISTC_P_STAGE_CYC,
-> +	HISTC_LOCAL_P_STAGE_CYC,
-> +	HISTC_GLOBAL_P_STAGE_CYC,
->  	HISTC_NR_COLS, /* Last entry */
->  };
->  
-> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-> index e9216a292a04..e978f7883e07 100644
-> --- a/tools/perf/util/sort.c
-> +++ b/tools/perf/util/sort.c
-> @@ -37,7 +37,7 @@ const char	default_parent_pattern[] = "^sys_|^do_page_fault";
->  const char	*parent_pattern = default_parent_pattern;
->  const char	*default_sort_order = "comm,dso,symbol";
->  const char	default_branch_sort_order[] = "comm,dso_from,symbol_from,symbol_to,cycles";
-> -const char	default_mem_sort_order[] = "local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked,blocked,local_ins_lat,p_stage_cyc";
-> +const char	default_mem_sort_order[] = "local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked,blocked,local_ins_lat,local_p_stage_cyc";
->  const char	default_top_sort_order[] = "dso,symbol";
->  const char	default_diff_sort_order[] = "dso,symbol";
->  const char	default_tracepoint_sort_order[] = "trace";
-> @@ -46,8 +46,8 @@ const char	*field_order;
->  regex_t		ignore_callees_regex;
->  int		have_ignore_callees = 0;
->  enum sort_mode	sort__mode = SORT_MODE__NORMAL;
-> -const char	*dynamic_headers[] = {"local_ins_lat", "p_stage_cyc"};
-> -const char	*arch_specific_sort_keys[] = {"p_stage_cyc"};
-> +const char	*dynamic_headers[] = {"local_ins_lat", "ins_lat", "local_p_stage_cyc", "p_stage_cyc"};
-> +const char	*arch_specific_sort_keys[] = {"local_p_stage_cyc", "p_stage_cyc"};
->  
->  /*
->   * Replaces all occurrences of a char used with the:
-> @@ -1392,22 +1392,37 @@ struct sort_entry sort_global_ins_lat = {
->  };
->  
->  static int64_t
-> -sort__global_p_stage_cyc_cmp(struct hist_entry *left, struct hist_entry *right)
-> +sort__p_stage_cyc_cmp(struct hist_entry *left, struct hist_entry *right)
->  {
->  	return left->p_stage_cyc - right->p_stage_cyc;
->  }
->  
-> +static int hist_entry__global_p_stage_cyc_snprintf(struct hist_entry *he, char *bf,
-> +					size_t size, unsigned int width)
-> +{
-> +	return repsep_snprintf(bf, size, "%-*u", width,
-> +			he->p_stage_cyc * he->stat.nr_events);
-> +}
+> +  cat /sys/bus/event_source/devices/<pmu>/format/<config>
 > +
+> +Example:
 > +
->  static int hist_entry__p_stage_cyc_snprintf(struct hist_entry *he, char *bf,
->  					size_t size, unsigned int width)
->  {
->  	return repsep_snprintf(bf, size, "%-*u", width, he->p_stage_cyc);
->  }
->  
-> -struct sort_entry sort_p_stage_cyc = {
-> -	.se_header      = "Pipeline Stage Cycle",
-> -	.se_cmp         = sort__global_p_stage_cyc_cmp,
-> +struct sort_entry sort_local_p_stage_cyc = {
-> +	.se_header      = "Local Pipeline Stage Cycle",
-> +	.se_cmp         = sort__p_stage_cyc_cmp,
->  	.se_snprintf	= hist_entry__p_stage_cyc_snprintf,
-> -	.se_width_idx	= HISTC_P_STAGE_CYC,
-> +	.se_width_idx	= HISTC_LOCAL_P_STAGE_CYC,
-> +};
+> +If the AMD docs for an EPYC 7713 processor describe an event as:
 > +
-> +struct sort_entry sort_global_p_stage_cyc = {
-> +	.se_header      = "Pipeline Stage Cycle",
-> +	.se_cmp         = sort__p_stage_cyc_cmp,
-> +	.se_snprintf    = hist_entry__global_p_stage_cyc_snprintf,
-> +	.se_width_idx   = HISTC_GLOBAL_P_STAGE_CYC,
->  };
+> +  Event  Umask  Event Mask
+> +  Num.   Value  Mnemonic                        Description
+> +
+> +  28FH     03H  op_cache_hit_miss.op_cache_hit  Counts Op Cache micro-tag
+> +                                                hit events.
+> +
+> +raw encoding of 0x0328F cannot be used since the upper nibble of the
+> +EventSelect bits have to be specified via bits 32-35 as can be seen with:
+> +
+> +  cat /sys/bus/event_source/devices/cpu/format/event
+> +
+> +raw encoding of 0x20000038F should be used instead:
+> +
+> + perf stat -e r20000038f -a sleep 1
+> + perf record -e r20000038f ...
+> +
+> +It's also possible to use pmu syntax:
+> +
+> + perf record -e r20000038f -a sleep 1
+> + perf record -e cpu/r20000038f/ ...
+> + perf record -e cpu/r0x20000038f/ ...
+> +
+>  You should refer to the processor specific documentation for getting these
+>  details. Some of them are referenced in the SEE ALSO section below.
 >  
->  struct sort_entry sort_mem_daddr_sym = {
-> @@ -1858,7 +1873,8 @@ static struct sort_dimension common_sort_dimensions[] = {
->  	DIM(SORT_CODE_PAGE_SIZE, "code_page_size", sort_code_page_size),
->  	DIM(SORT_LOCAL_INS_LAT, "local_ins_lat", sort_local_ins_lat),
->  	DIM(SORT_GLOBAL_INS_LAT, "ins_lat", sort_global_ins_lat),
-> -	DIM(SORT_PIPELINE_STAGE_CYC, "p_stage_cyc", sort_p_stage_cyc),
-> +	DIM(SORT_LOCAL_PIPELINE_STAGE_CYC, "local_p_stage_cyc", sort_local_p_stage_cyc),
-> +	DIM(SORT_GLOBAL_PIPELINE_STAGE_CYC, "p_stage_cyc", sort_global_p_stage_cyc),
->  };
+> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+> index 3cf7bac67239..55df7b073a55 100644
+> --- a/tools/perf/Documentation/perf-record.txt
+> +++ b/tools/perf/Documentation/perf-record.txt
+> @@ -30,8 +30,10 @@ OPTIONS
 >  
->  #undef DIM
-> diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-> index 3c7518378d62..83abe5e6812a 100644
-> --- a/tools/perf/util/sort.h
-> +++ b/tools/perf/util/sort.h
-> @@ -235,7 +235,8 @@ enum sort_type {
->  	SORT_CODE_PAGE_SIZE,
->  	SORT_LOCAL_INS_LAT,
->  	SORT_GLOBAL_INS_LAT,
-> -	SORT_PIPELINE_STAGE_CYC,
-> +	SORT_LOCAL_PIPELINE_STAGE_CYC,
-> +	SORT_GLOBAL_PIPELINE_STAGE_CYC,
+>          - a symbolic event name	(use 'perf list' to list all events)
 >  
->  	/* branch stack specific sort keys */
->  	__SORT_BRANCH_STACK,
+> -        - a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
+> -	  hexadecimal event descriptor.
+> +        - a raw PMU event in the form of rN where N is a hexadecimal value
+> +          that represents the raw register encoding with the layout of the
+> +          event control registers as described by entries in
+> +          /sys/bus/event_sources/devices/cpu/format/*.
+>  
+>          - a symbolic or raw PMU event followed by an optional colon
+>  	  and a list of event modifiers, e.g., cpu-cycles:p.  See the
+> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+> index 7e6fb7cbc0f4..604e6f2301ea 100644
+> --- a/tools/perf/Documentation/perf-stat.txt
+> +++ b/tools/perf/Documentation/perf-stat.txt
+> @@ -36,8 +36,10 @@ report::
+>  
+>  	- a symbolic event name (use 'perf list' to list all events)
+>  
+> -	- a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
+> -	  hexadecimal event descriptor.
+> +	- a raw PMU event in the form of rN where N is a hexadecimal value
+> +	  that represents the raw register encoding with the layout of the
+> +	  event control registers as described by entries in
+> +	  /sys/bus/event_sources/devices/cpu/format/*.
+>  
+>          - a symbolic or raw PMU event followed by an optional colon
+>  	  and a list of event modifiers, e.g., cpu-cycles:p.  See the
+> diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
+> index 9898a32b8d9c..cac3dfbee7d8 100644
+> --- a/tools/perf/Documentation/perf-top.txt
+> +++ b/tools/perf/Documentation/perf-top.txt
+> @@ -38,9 +38,10 @@ Default is to monitor all CPUS.
+>  -e <event>::
+>  --event=<event>::
+>  	Select the PMU event. Selection can be a symbolic event name
+> -	(use 'perf list' to list all events) or a raw PMU
+> -	event (eventsel+umask) in the form of rNNN where NNN is a
+> -	hexadecimal event descriptor.
+> +	(use 'perf list' to list all events) or a raw PMU event in the form
+> +	of rN where N is a hexadecimal value that represents the raw register
+> +	encoding with the layout of the event control registers as described
+> +	by entries in /sys/bus/event_sources/devices/cpu/format/*.
+>  
+>  -E <entries>::
+>  --entries=<entries>::
 > -- 
-> 2.27.0
+> 2.30.2
 > 
 
