@@ -2,118 +2,164 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4DAC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun, 28 Nov 2021 17:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B854C4332F
+	for <linux-perf-users@archiver.kernel.org>; Sun, 28 Nov 2021 17:18:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358526AbhK1RFa (ORCPT
+        id S1346861AbhK1RVl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 28 Nov 2021 12:05:30 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:30153 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1358608AbhK1RD3 (ORCPT
+        Sun, 28 Nov 2021 12:21:41 -0500
+Received: from smtprelay0209.hostedemail.com ([216.40.44.209]:52266 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S236142AbhK1RTl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 28 Nov 2021 12:03:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1638118813;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Hv3mUN/Ti1jWQO+IHXGJK90zoQnHriwLvawJYNBsi0M=;
-        b=QNfHzDMeG/nofNCRfDIY9l6p/YfetgEIiLoIDO60rFhXeTUA3SQ07o1eMPzBlcQVtWJsNu
-        0wqT/solC81jRGCMbUqp4Rty64GCawr62xOKrjBZ5QRv2GIH5kw28DLOED1gKxRoCHkirT
-        6bLqQbAuCxCovdHFBJTamVF8bSSNHnI=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-94-ZWDUxrGjNACMtGLquv_6ow-1; Sun, 28 Nov 2021 12:00:11 -0500
-X-MC-Unique: ZWDUxrGjNACMtGLquv_6ow-1
-Received: by mail-wm1-f71.google.com with SMTP id l4-20020a05600c1d0400b00332f47a0fa3so9069701wms.8
-        for <linux-perf-users@vger.kernel.org>; Sun, 28 Nov 2021 09:00:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Hv3mUN/Ti1jWQO+IHXGJK90zoQnHriwLvawJYNBsi0M=;
-        b=261Irfk563dD1MfytiturNxG0A85pcBBqIj3SyAf0OsNZjhXvJgSPRVbS7cI23GLO7
-         2/QZtwuPkNehvbyUiIw4vSScu2v6o4439qVOY0Ry8E93yzdRwKYEAVu7eX356FMSNwdO
-         qkdnNYtY8/6qEuUy/aY1JHZfv57NJGP2xLjjz/sir8zfhCZ8Xxy6c7DXeAOcQx4gFkjR
-         y/2hMRAxQ85zaLbXGkUKERXdlBXp7up8IP8ls9GPm9s8jkrYvIoav0GFpV5fHmTl422n
-         jriUBe0n2m7DMyqoCEqJMvc2TlVQbzsQYEifr32GH6D6AeR3QKSqOBOG9WdvSzKXN0pO
-         Kbww==
-X-Gm-Message-State: AOAM5322BRa+og31IqV+OCGzGQaEHBap4vDGHexsThlmTJ6aAX87UJDo
-        PJugMYw6s3pjbVFVO1MBAE2/7x5BaSTGUeANF/mZhSoyhM0HNgE9AJfxdaPLuIVeDi0n8MKfE0v
-        gQbEoLVqg8QdOYYkLm7Eg6LZMlx3B2Q==
-X-Received: by 2002:adf:f2ca:: with SMTP id d10mr27762986wrp.79.1638118810597;
-        Sun, 28 Nov 2021 09:00:10 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwhNeic8ASk3JN4l+USlK6zRcaKtMEX2TtZEIKpe/ZHIMchluzOnJC7qMWZIxiEBPDrZ3fbaA==
-X-Received: by 2002:adf:f2ca:: with SMTP id d10mr27762967wrp.79.1638118810466;
-        Sun, 28 Nov 2021 09:00:10 -0800 (PST)
-Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
-        by smtp.gmail.com with ESMTPSA id u23sm12141760wru.21.2021.11.28.09.00.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Nov 2021 09:00:10 -0800 (PST)
-Date:   Sun, 28 Nov 2021 18:00:08 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     cgel.zte@gmail.com
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        namhyung@kernel.org, yao.jin@linux.intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ran jianping <ran.jianping@zte.com.cn>,
-        Zeal Robot <zealci@zte.com.cn>
-Subject: Re: [PATCH] perf tools: remove unneeded variable
-Message-ID: <YaO1mETPEL+QLPak@krava>
-References: <20211122014159.25317-1-ran.jianping@zte.com.cn>
+        Sun, 28 Nov 2021 12:19:41 -0500
+X-Greylist: delayed 460 seconds by postgrey-1.27 at vger.kernel.org; Sun, 28 Nov 2021 12:19:40 EST
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave08.hostedemail.com (Postfix) with ESMTP id 862BB182D5121;
+        Sun, 28 Nov 2021 17:10:46 +0000 (UTC)
+Received: from omf04.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id D5832182CED2A;
+        Sun, 28 Nov 2021 17:08:43 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf04.hostedemail.com (Postfix) with ESMTPA id 5EF1EA00041C;
+        Sun, 28 Nov 2021 17:07:48 +0000 (UTC)
+Message-ID: <8f389151c39a8a5b6b31d5238cb680305225d9f2.camel@perches.com>
+Subject: Re: [PATCH 7/9] lib/cpumask: add
+ num_{possible,present,active}_cpus_{eq,gt,le}
+From:   Joe Perches <joe@perches.com>
+To:     Yury Norov <yury.norov@gmail.com>, linux-kernel@vger.kernel.org,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexey Klimov <aklimov@redhat.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Andi Kleen <ak@linux.intel.com>, Andrew Lunn <andrew@lunn.ch>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Gross <agross@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Anup Patel <anup.patel@wdc.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Christoph Lameter <cl@linux.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Airlie <airlied@linux.ie>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Dennis Zhou <dennis@kernel.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Geetha sowjanya <gakula@marvell.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guo Ren <guoren@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Ian Rogers <irogers@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Jens Axboe <axboe@fb.com>, Jiri Olsa <jolsa@redhat.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Kees Cook <keescook@chromium.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Marc Zyngier <maz@kernel.org>, Marcin Wojtas <mw@semihalf.com>,
+        Mark Gross <markgross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matti Vaittinen <mazziesaccount@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Roy Pledge <Roy.Pledge@nxp.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Solomon Peachy <pizza@shaftnet.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Subbaraya Sundeep <sbhatta@marvell.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Sunil Goutham <sgoutham@marvell.com>,
+        Tariq Toukan <tariqt@nvidia.com>, Tejun Heo <tj@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Vineet Gupta <vgupta@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Will Deacon <will@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com, kvm@vger.kernel.org,
+        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-crypto@vger.kernel.org, linux-csky@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+Date:   Sun, 28 Nov 2021 09:07:52 -0800
+In-Reply-To: <20211128035704.270739-8-yury.norov@gmail.com>
+References: <20211128035704.270739-1-yury.norov@gmail.com>
+         <20211128035704.270739-8-yury.norov@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.40.4-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211122014159.25317-1-ran.jianping@zte.com.cn>
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: umd6ft7bscstit6mcsb41shstont4bff
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 5EF1EA00041C
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX1+NoJl8n1YyBqeqY0nk94+uRiGfczHPVi8=
+X-HE-Tag: 1638119268-113142
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Nov 22, 2021 at 01:41:59AM +0000, cgel.zte@gmail.com wrote:
-> From: ran jianping <ran.jianping@zte.com.cn>
-> 
-> Fix the following coccicheck review:
-> ./tools/perf/util/evlist.c:1303:5-8: Unneeded variable
-> 
-> Remove unneeded variable used to store return value.
-> 
-> Reported-by: Zeal Robot <zealci@zte.com.cn>
-> Signed-off-by: ran jianping <ran.jianping@zte.com.cn>
+On Sat, 2021-11-27 at 19:57 -0800, Yury Norov wrote:
+> Add num_{possible,present,active}_cpus_{eq,gt,le} and replace num_*_cpus()
+> with one of new functions where appropriate. This allows num_*_cpus_*()
+> to return earlier depending on the condition.
+[]
+> diff --git a/arch/arc/kernel/smp.c b/arch/arc/kernel/smp.c
+[]
+> @@ -103,7 +103,7 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
+>  	 * if platform didn't set the present map already, do it now
+>  	 * boot cpu is set to present already by init/main.c
+>  	 */
+> -	if (num_present_cpus() <= 1)
+> +	if (num_present_cpus_le(2))
+>  		init_cpu_present(cpu_possible_mask);
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+?  is this supposed to be 2 or 1
 
-thanks,
-jirka
-
-> ---
->  tools/perf/util/evlist.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index 5f92319ce258..d64fe767f583 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -1300,7 +1300,6 @@ static int evlist__create_syswide_maps(struct evlist *evlist)
->  {
->  	struct perf_cpu_map *cpus;
->  	struct perf_thread_map *threads;
-> -	int err = -ENOMEM;
+> diff --git a/drivers/cpufreq/pcc-cpufreq.c b/drivers/cpufreq/pcc-cpufreq.c
+[]
+> @@ -593,7 +593,7 @@ static int __init pcc_cpufreq_init(void)
+>  		return ret;
+>  	}
 >  
->  	/*
->  	 * Try reading /sys/devices/system/cpu/online to get
-> @@ -1325,7 +1324,7 @@ static int evlist__create_syswide_maps(struct evlist *evlist)
->  out_put:
->  	perf_cpu_map__put(cpus);
->  out:
-> -	return err;
-> +	return -ENOMEM;
->  }
->  
->  int evlist__open(struct evlist *evlist)
-> -- 
-> 2.25.1
-> 
+> -	if (num_present_cpus() > 4) {
+> +	if (num_present_cpus_gt(4)) {
+>  		pcc_cpufreq_driver.flags |= CPUFREQ_NO_AUTO_DYNAMIC_SWITCHING;
+>  		pr_err("%s: Too many CPUs, dynamic performance scaling disabled\n",
+>  		       __func__);
+
+It looks as if the present variants should be using the same values
+so the _le test above with 1 changed to 2 looks odd.
+
 
