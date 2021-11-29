@@ -2,267 +2,211 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9356C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 29 Nov 2021 16:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5184C4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 29 Nov 2021 16:36:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232431AbhK2QbF (ORCPT
+        id S1346608AbhK2Qjr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 29 Nov 2021 11:31:05 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:57611 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S242583AbhK2Q3F (ORCPT
+        Mon, 29 Nov 2021 11:39:47 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:50146 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1345506AbhK2Qhq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 29 Nov 2021 11:29:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1638203147;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=s61dW7qp/Dn7xiZ/8rcywFqJa4Ks/spCNOJ0XnY9yJc=;
-        b=DCEkuS//lnKBjaTnlwEfSuLxxD+iom/xBcVIuQNX6jUa1TFRPMiV/wOYerTnUSwfwYxlwe
-        w3Br1jmMQBVos8rMb4YO4AKhoWfc9q+avKuzb3B4wIm3gjfqLwvwYobJacVfq3Bx/Jd8Fc
-        jFuCVWdEGT77B2JZ15ZRk9uctqqAWls=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-557-wrXf5-7aNeCf8aELxJar_Q-1; Mon, 29 Nov 2021 11:25:44 -0500
-X-MC-Unique: wrXf5-7aNeCf8aELxJar_Q-1
-Received: by mail-wm1-f70.google.com with SMTP id 205-20020a1c00d6000000b003335d1384f1so12123752wma.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 29 Nov 2021 08:25:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=s61dW7qp/Dn7xiZ/8rcywFqJa4Ks/spCNOJ0XnY9yJc=;
-        b=MAwWSzuMK6+nhPdDi4eywONH1obKRD3qFqBHVucGO9BADETeokIc1CPAr6G9PcU60C
-         tgBBr0vSImVg9grhZyDOnWV6/ptk3IDAoOiDB1xxsAWTMHt2jOqkp2/utW+tBOyd+fKZ
-         8ZrfPrVkVnHkNImloLb9ZQnJr5s0jmCme8/yAIZZPZT4RjqhiVtE7YHX8VI9YOHZTDbY
-         ZidNTL7rwybxbdb0mNwt63zNqIIaBV6V0tocCsKxyTCT3BVHNj58rmTxjCPiIIGiK5AO
-         bCpZmes3FfZucE7hEEPU0DM6IDrN0CVUF21a5TRCEHCBReN3XuGrzm1B8UB8HC2bhOxj
-         8x9A==
-X-Gm-Message-State: AOAM532gxOdic5hSd1PVtBepfi3TMlDz1iEjYkIdW+cAOfSUMHsM9ktD
-        7vSPTpyLhBCWPdBx1xHWBKZ3JHiK0jrYWfdgm0Ecq4qB9QxGIpy4thF4r3JrK4NxjdDtftNKs6f
-        VBgsgyQ0Slv0cFDHmMm4Z2enM43aZ+A==
-X-Received: by 2002:a5d:4843:: with SMTP id n3mr34041711wrs.335.1638203142592;
-        Mon, 29 Nov 2021 08:25:42 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJx0D6KZ4Pn9I9mfiOw5e0fq2msxYdH/aTS7EQp14hEZqTbiirsR0UUrmNx9U5BQ/yXaknvxkw==
-X-Received: by 2002:a5d:4843:: with SMTP id n3mr34041686wrs.335.1638203142389;
-        Mon, 29 Nov 2021 08:25:42 -0800 (PST)
-Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
-        by smtp.gmail.com with ESMTPSA id g5sm18773110wri.45.2021.11.29.08.25.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Nov 2021 08:25:41 -0800 (PST)
-Date:   Mon, 29 Nov 2021 17:25:39 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, mpe@ellerman.id.au,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
-        kjain@linux.ibm.com, Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH 1/2] tools/perf: Include global and local variants for
- p_stage_cyc sort key
-Message-ID: <YaT/A3LdRuSzAp5w@krava>
-References: <20211125024851.22895-1-atrajeev@linux.vnet.ibm.com>
- <YaOvsDAnuS+mXnrf@krava>
- <F095C610-FAEC-4764-9046-4392B3C9F37A@linux.vnet.ibm.com>
+        Mon, 29 Nov 2021 11:37:46 -0500
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 4J2rXL58g0z9h;
+        Mon, 29 Nov 2021 17:34:10 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1638203665; bh=qlu3mL+FOvVS9aPE/gZoS7KdAdQ/avBctxZ8QxqT38I=;
+        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+        b=GV8Md+4wLJhNSJZqrJvdjyVU0DlzlhbpPkGnTNqVApkG+uUQ6A+MoaqEQT9dgrjXq
+         q+escBY9SwJTtDVYNHqesyY22ZcfBKeLVi2I4yINeaBpICc3EsCTOMz8/JkEhkxKwH
+         5jlUqEb0yuAf8eVUX8cWy9bi6RovdDbzWpM+g8ZdNeFAwiFdkLHHM+FUiQ+x0Dv37t
+         bEpCos1VGSJffWt42H8cWp9GNUDKdAgiFLCcBLScmau30GyMgUFylkw6qvpMGUFype
+         xiTzGA2klsrhcAXTQoeGJ7H6y00R/3ukWQ3tN7aMIYo31vE1Ni41oAjMZVdXQclWDE
+         FhYcDpXStxEZw==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.103.3 at mail
+Date:   Mon, 29 Nov 2021 16:34:07 +0000
+From:   =?UTF-8?Q?Micha=C5=82_Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+To:     Yury Norov <yury.norov@gmail.com>
+CC:     linux-kernel@vger.kernel.org,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Alexey Klimov <aklimov@redhat.com>,
+        linux-alpha@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrew Lunn <andrew@lunn.ch>, Andi Kleen <ak@linux.intel.com>,
+        Tejun Heo <tj@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Anup Patel <anup.patel@wdc.com>, linux-ia64@vger.kernel.org,
+        Andy Shevchenko <andy@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Matti Vaittinen <mazziesaccount@gmail.com>,
+        Mel Gorman <mgorman@suse.de>, Christoph Hellwig <hch@lst.de>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Borislav Petkov <bp@alien8.de>, Arnd Bergmann <arnd@arndb.de>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Laight <David.Laight@aculab.com>,
+        Sunil Goutham <sgoutham@marvell.com>,
+        David Airlie <airlied@linux.ie>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Christoph Lameter <cl@linux.com>, linux-crypto@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>, linux-mm@kvack.org,
+        Guo Ren <guoren@kernel.org>,
+        linux-snps-arc@lists.infradead.org,
+        Geetha sowjanya <gakula@marvell.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dennis Zhou <dennis@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Roy Pledge <Roy.Pledge@nxp.com>,
+        Saeed Mahameed <saeedm@nvidia.com>, Jens Axboe <axboe@fb.com>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Tariq Toukan <tariqt@nvidia.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Jiri Olsa <jolsa@redhat.com>, Vineet Gupta <vgupta@kernel.org>,
+        Solomon Peachy <pizza@shaftnet.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        kvm@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Subbaraya Sundeep <sbhatta@marvell.com>,
+        linux-csky@vger.kernel.org, Marcin Wojtas <mw@semihalf.com>,
+        linux-mips@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-s390@vger.kernel.org, Mark Gross <markgross@kernel.org>,
+        linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 0/9] lib/bitmap: optimize bitmap_weight() usage
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20211129063839.GA338729@lapt>
+References: <20211128035704.270739-1-yury.norov@gmail.com> <YaPEfZ0t9UFGwpml@qmqm.qmqm.pl> <20211129063839.GA338729@lapt>
+Message-ID: <3CD9ECD8-901E-497B-9AE1-0DDB02346892@rere.qmqm.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <F095C610-FAEC-4764-9046-4392B3C9F37A@linux.vnet.ibm.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Nov 29, 2021 at 02:43:48PM +0530, Athira Rajeev wrote:
-> 
-> 
-> > On 28-Nov-2021, at 10:04 PM, Jiri Olsa <jolsa@redhat.com> wrote:
-> > 
-> > On Thu, Nov 25, 2021 at 08:18:50AM +0530, Athira Rajeev wrote:
-> >> Sort key p_stage_cyc is used to present the latency
-> >> cycles spend in pipeline stages. perf tool has local
-> >> p_stage_cyc sort key to display this info. There is no
-> >> global variant available for this sort key. local variant
-> >> shows latency in a sinlge sample, whereas, global value
-> >> will be useful to present the total latency (sum of
-> >> latencies) in the hist entry. It represents latency
-> >> number multiplied by the number of samples.
-> >> 
-> >> Add global (p_stage_cyc) and local variant
-> >> (local_p_stage_cyc) for this sort key. Use the
-> >> local_p_stage_cyc as default option for "mem" sort mode.
-> >> Also add this to list of dynamic sort keys.
-> >> 
-> >> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> >> Reported-by: Namhyung Kim <namhyung@kernel.org>
-> > 
-> > I can't apply this to Arnaldo's perf/core, could you please rebase?
-> > 
-> > patching file util/hist.c
-> > patching file util/hist.h
-> > patching file util/sort.c
-> > Hunk #3 FAILED at 1392.
-> > Hunk #4 succeeded at 1878 (offset 20 lines).
-> > 1 out of 4 hunks FAILED -- saving rejects to file util/sort.c.rej
-> > patching file util/sort.h
-> > 
-> > thanks,
-> > jirka
-> 
-> Hi Jiri,
-> 
-> Thanks for checking this patch. 
-> 
-> Actually these changes are on top of three other fixes from Namhyung which are already part of upstream. Below are the commits.
-> 
-> 784e8adda4cd ("perf sort: Fix the 'weight' sort key behavior”)
-> 4d03c75363ee ("perf sort: Fix the 'ins_lat' sort key behavior”)
-> db4b28402909 ("perf sort: Fix the 'p_stage_cyc' sort key behavior”)
-> 
-> I checked in Arnaldo’s perf/core, but these commits are not there. But I could see them in 'tmp.perf/urgent'
-> I think perf/core is not yet updated.
+Dnia 29 listopada 2021 06:38:39 UTC, Yury Norov <yury=2Enorov@gmail=2Ecom> =
+napisa=C5=82/a:
+>On Sun, Nov 28, 2021 at 07:03:41PM +0100, mirq-test@rere=2Eqmqm=2Epl wrot=
+e:
+>> On Sat, Nov 27, 2021 at 07:56:55PM -0800, Yury Norov wrote:
+>> > In many cases people use bitmap_weight()-based functions like this:
+>> >=20
+>> > 	if (num_present_cpus() > 1)
+>> > 		do_something();
+>> >=20
+>> > This may take considerable amount of time on many-cpus machines becau=
+se
+>> > num_present_cpus() will traverse every word of underlying cpumask
+>> > unconditionally=2E
+>> >=20
+>> > We can significantly improve on it for many real cases if stop traver=
+sing
+>> > the mask as soon as we count present cpus to any number greater than =
+1:
+>> >=20
+>> > 	if (num_present_cpus_gt(1))
+>> > 		do_something();
+>> >=20
+>> > To implement this idea, the series adds bitmap_weight_{eq,gt,le}
+>> > functions together with corresponding wrappers in cpumask and nodemas=
+k=2E
+>>=20
+>> Having slept on it I have more structured thoughts:
+>>=20
+>> First, I like substituting bitmap_empty/full where possible - I think
+>> the change stands on its own, so could be split and sent as is=2E
+>
+>Ok, I can do it=2E
+>
+>> I don't like the proposed API very much=2E One problem is that it hides
+>> the comparison operator and makes call sites less readable:
+>>=20
+>> 	bitmap_weight(=2E=2E=2E) > N
+>>=20
+>> becomes:
+>>=20
+>> 	bitmap_weight_gt(=2E=2E=2E, N)
+>>=20
+>> and:
+>> 	bitmap_weight(=2E=2E=2E) <=3D N
+>>=20
+>> becomes:
+>>=20
+>> 	bitmap_weight_lt(=2E=2E=2E, N+1)
+>> or:
+>> 	!bitmap_weight_gt(=2E=2E=2E, N)
+>>=20
+>> I'd rather see something resembling memcmp() API that's known enough
+>> to be easier to grasp=2E For above examples:
+>>=20
+>> 	bitmap_weight_cmp(=2E=2E=2E, N) > 0
+>> 	bitmap_weight_cmp(=2E=2E=2E, N) <=3D 0
+>> 	=2E=2E=2E
+>
+>bitmap_weight_cmp() cannot be efficient=2E Consider this example:
+>
+>bitmap_weight_lt(1000 0000 0000 0000, 1) =3D=3D false
+>                 ^
+>                 stop here
+>
+>bitmap_weight_cmp(1000 0000 0000 0000, 1) =3D=3D 0
+>                                 ^
+>                                 stop here
+>
+>I agree that '_gt' is less verbose than '>', but the advantage of=20
+>'_gt' over '>' is proportional to length of bitmap, and it means
+>that this API should exist=2E
 
-ah ok, I got it applied on perf/urgent, thanks
+Thank you for the example=2E Indeed, for less-than to be efficient here yo=
+u would need to replace
+ bitmap_weight_cmp(=2E=2E=2E, N) < 0
+with
+ bitmap_weight_cmp(=2E=2E=2E, N-1) <=3D 0
 
-jirka
+It would still be more readable, I think=2E
 
-> 
-> Thanks
-> Athira Rajeev
-> 
-> > 
-> >> ---
-> >> tools/perf/util/hist.c |  4 +++-
-> >> tools/perf/util/hist.h |  3 ++-
-> >> tools/perf/util/sort.c | 34 +++++++++++++++++++++++++---------
-> >> tools/perf/util/sort.h |  3 ++-
-> >> 4 files changed, 32 insertions(+), 12 deletions(-)
-> >> 
-> >> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-> >> index b776465e04ef..0a8033b09e28 100644
-> >> --- a/tools/perf/util/hist.c
-> >> +++ b/tools/perf/util/hist.c
-> >> @@ -211,7 +211,9 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
-> >> 	hists__new_col_len(hists, HISTC_MEM_BLOCKED, 10);
-> >> 	hists__new_col_len(hists, HISTC_LOCAL_INS_LAT, 13);
-> >> 	hists__new_col_len(hists, HISTC_GLOBAL_INS_LAT, 13);
-> >> -	hists__new_col_len(hists, HISTC_P_STAGE_CYC, 13);
-> >> +	hists__new_col_len(hists, HISTC_LOCAL_P_STAGE_CYC, 13);
-> >> +	hists__new_col_len(hists, HISTC_GLOBAL_P_STAGE_CYC, 13);
-> >> +
-> >> 	if (symbol_conf.nanosecs)
-> >> 		hists__new_col_len(hists, HISTC_TIME, 16);
-> >> 	else
-> >> diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-> >> index 5343b62476e6..2752ce681108 100644
-> >> --- a/tools/perf/util/hist.h
-> >> +++ b/tools/perf/util/hist.h
-> >> @@ -75,7 +75,8 @@ enum hist_column {
-> >> 	HISTC_MEM_BLOCKED,
-> >> 	HISTC_LOCAL_INS_LAT,
-> >> 	HISTC_GLOBAL_INS_LAT,
-> >> -	HISTC_P_STAGE_CYC,
-> >> +	HISTC_LOCAL_P_STAGE_CYC,
-> >> +	HISTC_GLOBAL_P_STAGE_CYC,
-> >> 	HISTC_NR_COLS, /* Last entry */
-> >> };
-> >> 
-> >> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-> >> index e9216a292a04..e978f7883e07 100644
-> >> --- a/tools/perf/util/sort.c
-> >> +++ b/tools/perf/util/sort.c
-> >> @@ -37,7 +37,7 @@ const char	default_parent_pattern[] = "^sys_|^do_page_fault";
-> >> const char	*parent_pattern = default_parent_pattern;
-> >> const char	*default_sort_order = "comm,dso,symbol";
-> >> const char	default_branch_sort_order[] = "comm,dso_from,symbol_from,symbol_to,cycles";
-> >> -const char	default_mem_sort_order[] = "local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked,blocked,local_ins_lat,p_stage_cyc";
-> >> +const char	default_mem_sort_order[] = "local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked,blocked,local_ins_lat,local_p_stage_cyc";
-> >> const char	default_top_sort_order[] = "dso,symbol";
-> >> const char	default_diff_sort_order[] = "dso,symbol";
-> >> const char	default_tracepoint_sort_order[] = "trace";
-> >> @@ -46,8 +46,8 @@ const char	*field_order;
-> >> regex_t		ignore_callees_regex;
-> >> int		have_ignore_callees = 0;
-> >> enum sort_mode	sort__mode = SORT_MODE__NORMAL;
-> >> -const char	*dynamic_headers[] = {"local_ins_lat", "p_stage_cyc"};
-> >> -const char	*arch_specific_sort_keys[] = {"p_stage_cyc"};
-> >> +const char	*dynamic_headers[] = {"local_ins_lat", "ins_lat", "local_p_stage_cyc", "p_stage_cyc"};
-> >> +const char	*arch_specific_sort_keys[] = {"local_p_stage_cyc", "p_stage_cyc"};
-> >> 
-> >> /*
-> >>  * Replaces all occurrences of a char used with the:
-> >> @@ -1392,22 +1392,37 @@ struct sort_entry sort_global_ins_lat = {
-> >> };
-> >> 
-> >> static int64_t
-> >> -sort__global_p_stage_cyc_cmp(struct hist_entry *left, struct hist_entry *right)
-> >> +sort__p_stage_cyc_cmp(struct hist_entry *left, struct hist_entry *right)
-> >> {
-> >> 	return left->p_stage_cyc - right->p_stage_cyc;
-> >> }
-> >> 
-> >> +static int hist_entry__global_p_stage_cyc_snprintf(struct hist_entry *he, char *bf,
-> >> +					size_t size, unsigned int width)
-> >> +{
-> >> +	return repsep_snprintf(bf, size, "%-*u", width,
-> >> +			he->p_stage_cyc * he->stat.nr_events);
-> >> +}
-> >> +
-> >> +
-> >> static int hist_entry__p_stage_cyc_snprintf(struct hist_entry *he, char *bf,
-> >> 					size_t size, unsigned int width)
-> >> {
-> >> 	return repsep_snprintf(bf, size, "%-*u", width, he->p_stage_cyc);
-> >> }
-> >> 
-> >> -struct sort_entry sort_p_stage_cyc = {
-> >> -	.se_header      = "Pipeline Stage Cycle",
-> >> -	.se_cmp         = sort__global_p_stage_cyc_cmp,
-> >> +struct sort_entry sort_local_p_stage_cyc = {
-> >> +	.se_header      = "Local Pipeline Stage Cycle",
-> >> +	.se_cmp         = sort__p_stage_cyc_cmp,
-> >> 	.se_snprintf	= hist_entry__p_stage_cyc_snprintf,
-> >> -	.se_width_idx	= HISTC_P_STAGE_CYC,
-> >> +	.se_width_idx	= HISTC_LOCAL_P_STAGE_CYC,
-> >> +};
-> >> +
-> >> +struct sort_entry sort_global_p_stage_cyc = {
-> >> +	.se_header      = "Pipeline Stage Cycle",
-> >> +	.se_cmp         = sort__p_stage_cyc_cmp,
-> >> +	.se_snprintf    = hist_entry__global_p_stage_cyc_snprintf,
-> >> +	.se_width_idx   = HISTC_GLOBAL_P_STAGE_CYC,
-> >> };
-> >> 
-> >> struct sort_entry sort_mem_daddr_sym = {
-> >> @@ -1858,7 +1873,8 @@ static struct sort_dimension common_sort_dimensions[] = {
-> >> 	DIM(SORT_CODE_PAGE_SIZE, "code_page_size", sort_code_page_size),
-> >> 	DIM(SORT_LOCAL_INS_LAT, "local_ins_lat", sort_local_ins_lat),
-> >> 	DIM(SORT_GLOBAL_INS_LAT, "ins_lat", sort_global_ins_lat),
-> >> -	DIM(SORT_PIPELINE_STAGE_CYC, "p_stage_cyc", sort_p_stage_cyc),
-> >> +	DIM(SORT_LOCAL_PIPELINE_STAGE_CYC, "local_p_stage_cyc", sort_local_p_stage_cyc),
-> >> +	DIM(SORT_GLOBAL_PIPELINE_STAGE_CYC, "p_stage_cyc", sort_global_p_stage_cyc),
-> >> };
-> >> 
-> >> #undef DIM
-> >> diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-> >> index 3c7518378d62..83abe5e6812a 100644
-> >> --- a/tools/perf/util/sort.h
-> >> +++ b/tools/perf/util/sort.h
-> >> @@ -235,7 +235,8 @@ enum sort_type {
-> >> 	SORT_CODE_PAGE_SIZE,
-> >> 	SORT_LOCAL_INS_LAT,
-> >> 	SORT_GLOBAL_INS_LAT,
-> >> -	SORT_PIPELINE_STAGE_CYC,
-> >> +	SORT_LOCAL_PIPELINE_STAGE_CYC,
-> >> +	SORT_GLOBAL_PIPELINE_STAGE_CYC,
-> >> 
-> >> 	/* branch stack specific sort keys */
-> >> 	__SORT_BRANCH_STACK,
-> >> -- 
-> >> 2.27.0
-> 
-
+Best Regards
+Micha=C5=82 Miros=C5=82aw
