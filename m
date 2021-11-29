@@ -2,66 +2,67 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9358C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 29 Nov 2021 17:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDB8C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 29 Nov 2021 19:08:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350693AbhK2SC6 (ORCPT
+        id S1350052AbhK2TLv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 29 Nov 2021 13:02:58 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28338 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S235871AbhK2SA6 (ORCPT
+        Mon, 29 Nov 2021 14:11:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43476 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234077AbhK2TJv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 29 Nov 2021 13:00:58 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1ATHlSjv030769;
-        Mon, 29 Nov 2021 17:56:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : references : date : in-reply-to : message-id : mime-version :
- content-type; s=pp1; bh=ji692FR3Mz1r0MiNEkxX/c6ZHq97AskB3w5QWFypXGo=;
- b=b16Q7OX+ghgVZuUSv4mHyRHEiyEIFbqnMfmdr6rLvcDGDyAo5hvhzXMqnLZfBoWRyUTZ
- w4biEwhOxnKzV0pdmWp/5FQ54zKQvLgntaJLjsVw1xCfe9JThX1ojJo0HE5nz5C1gH4B
- mqEloUmu/Zlybw8u3MYRV7Qv7iqQJ/LytQHNyIsJiqBudHaMP3jIyCv08x+8NhfP3/eb
- 14dkYA8a4IkBgVtYiExmtaoFficoc4lGAeX4SKfyzxEjIbXXPy9ppY2ObULM1G3SXfeU
- Bl0UZrje3AGFt6sy+JQy7F/iTSi/8FJnq1oBRKje74rp2l8xKh5ndSXMJFDaYwLudI/V WQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3cn3jsg61x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Nov 2021 17:56:59 +0000
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1ATHmXfk001537;
-        Mon, 29 Nov 2021 17:56:58 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3cn3jsg61a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Nov 2021 17:56:58 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1ATHsCNU006974;
-        Mon, 29 Nov 2021 17:56:56 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma06ams.nl.ibm.com with ESMTP id 3ckbxjqgk2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Nov 2021 17:56:56 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1ATHus0V29360440
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Nov 2021 17:56:54 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E678EAE055;
-        Mon, 29 Nov 2021 17:56:53 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5283EAE053;
-        Mon, 29 Nov 2021 17:56:53 +0000 (GMT)
-Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 29 Nov 2021 17:56:53 +0000 (GMT)
-From:   Sven Schnelle <svens@linux.ibm.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Yafang Shao <laoar.shao@gmail.com>, akpm@linux-foundation.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        oliver.sang@intel.com, lkp@intel.com,
+        Mon, 29 Nov 2021 14:09:51 -0500
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 227A5C05291D;
+        Mon, 29 Nov 2021 07:29:33 -0800 (PST)
+Received: by mail-qt1-x833.google.com with SMTP id j17so16933171qtx.2;
+        Mon, 29 Nov 2021 07:29:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=m35Uj2krYxANxP9t+ed7LtTcj7TW2cw/dyEjVSPqQT0=;
+        b=cLxEFDVZ3ieInC8MJrsJ5iFSKK9uDzj3PngLBEurfcrviDABbKTIBY6sTQBjtHJOv3
+         Ni8rIxlC5DijGOg8Wnn0akJyo1johm1HAE/5/FFQQiwVJUeffYQBu1pwT3x+DnmTon1l
+         vFM9/PRzXA6MHHZs0WrVPWn8eSasotEsV4txjD6kLTJ4NVvB4fd3n8K62k3tPpuQIfJd
+         8x2NSloB+uGcQ+3biCQLBCjqa45fT2l6yAYOiQm/Lu4mszLhDR2gttec7GUHtNfy3cC1
+         WHqbC+vWCfoYglwsbF76sr4YYKYmvd79v1Gb2VGXNQ+qN18PLDQsIgt5jTuKo5NUXoi9
+         AqFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=m35Uj2krYxANxP9t+ed7LtTcj7TW2cw/dyEjVSPqQT0=;
+        b=rpcOW8jFW3NqWOjdchojf68z+puKDXDbALSuJXJn3K4tk9MgsHETvMDPxQuhrtjX4Y
+         BZbCI8nYRimjWX0ceB8NrgaCTUzI0KdWJatFsH6zU9eHFjjq3I3DTKx9VxIvJR/TjsdB
+         uoNCLDxk0JkV8zY02ThYZzWuMqTfAQpljbHGzhtEbNnPa/+q4kSP4fOa6JdDTWfxi+5l
+         n5Q7i47yMyyKh4VSNNbA9yMDk9WfChlJehDBUCLnLp8RfBBlNwlVVmPV1HGk2TEEsaoU
+         2xpT5YXUkJslOsr69OxnCH8ObLUNAAnOq3RtslfEMsS+5Am+nbWpeEMuBBqOGGMkRHed
+         CsMA==
+X-Gm-Message-State: AOAM532s5N2/7wjtuem72EM/9t8bSlE5p1rVCDpVXUc7GV4L4Z/mMrWr
+        UQ6BO6k1Tu9WuemLPofLfeyTeUgT3j6ptWLmt5A=
+X-Google-Smtp-Source: ABdhPJx61ZVmuKVGRhNCeSofdileIyrk+FUExv2FizSt9Nt5h8WQbouFLRUsTYW6uEQteyHw9o/8rapqVl00ixIucm8=
+X-Received: by 2002:ac8:7e83:: with SMTP id w3mr45058346qtj.160.1638199772122;
+ Mon, 29 Nov 2021 07:29:32 -0800 (PST)
+MIME-Version: 1.0
+References: <20211120112738.45980-1-laoar.shao@gmail.com> <20211120112738.45980-8-laoar.shao@gmail.com>
+ <yt9d35nf1d84.fsf@linux.ibm.com> <CALOAHbDtqpkN4D0vHvGxTSpQkksMWtFm3faMy0n+pazxN_RPPg@mail.gmail.com>
+ <yt9d35nfvy8s.fsf@linux.ibm.com>
+In-Reply-To: <yt9d35nfvy8s.fsf@linux.ibm.com>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Mon, 29 Nov 2021 23:28:55 +0800
+Message-ID: <CALOAHbCeRXO7xMWC3Zpjbk4Dh3nGvQdEYBx_aUaQJOUE0z4H3A@mail.gmail.com>
+Subject: Re: [PATCH v2 7/7] tools/testing/selftests/bpf: replace open-coded 16
+ with TASK_COMM_LEN
+To:     Sven Schnelle <svens@linux.ibm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel test robot <oliver.sang@intel.com>,
+        kbuild test robot <lkp@intel.com>,
         Andrii Nakryiko <andrii@kernel.org>,
         David Hildenbrand <david@redhat.com>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
@@ -69,77 +70,83 @@ Cc:     Yafang Shao <laoar.shao@gmail.com>, akpm@linux-foundation.org,
         Andrii Nakryiko <andrii.nakryiko@gmail.com>,
         Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
         Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Matthew Wilcox <willy@infradead.org>,
         Al Viro <viro@zeniv.linux.org.uk>,
         Kees Cook <keescook@chromium.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH v2 7/7] tools/testing/selftests/bpf: replace open-coded
- 16 with TASK_COMM_LEN
-References: <20211120112738.45980-1-laoar.shao@gmail.com>
-        <20211120112738.45980-8-laoar.shao@gmail.com>
-        <yt9d35nf1d84.fsf@linux.ibm.com>
-        <20211129123043.5cfd687a@gandalf.local.home>
-Date:   Mon, 29 Nov 2021 18:56:53 +0100
-In-Reply-To: <20211129123043.5cfd687a@gandalf.local.home> (Steven Rostedt's
-        message of "Mon, 29 Nov 2021 12:30:43 -0500")
-Message-ID: <yt9dsfvesv4q.fsf@linux.ibm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: htLDRgK8ppBcOGDZPtY3fNCU6FdZEDnP
-X-Proofpoint-ORIG-GUID: IvWG1lU-w3IH0aApjQ2nUWGJ9ljZGTna
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
- definitions=2021-11-29_10,2021-11-28_01,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 mlxlogscore=999
- malwarescore=0 bulkscore=0 spamscore=0 impostorscore=0 phishscore=0
- priorityscore=1501 mlxscore=0 adultscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2110150000 definitions=main-2111290082
+        Petr Mladek <pmladek@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Steven Rostedt <rostedt@goodmis.org> writes:
+On Mon, Nov 29, 2021 at 10:21 PM Sven Schnelle <svens@linux.ibm.com> wrote:
+>
+> Hi,
+>
+> Yafang Shao <laoar.shao@gmail.com> writes:
+>
+> > On Mon, Nov 29, 2021 at 6:13 PM Sven Schnelle <svens@linux.ibm.com> wrote:
+> >> > diff --git a/include/linux/sched.h b/include/linux/sched.h
+> >> > index 78c351e35fec..cecd4806edc6 100644
+> >> > --- a/include/linux/sched.h
+> >> > +++ b/include/linux/sched.h
+> >> > @@ -274,8 +274,13 @@ struct task_group;
+> >> >
+> >> >  #define get_current_state()  READ_ONCE(current->__state)
+> >> >
+> >> > -/* Task command name length: */
+> >> > -#define TASK_COMM_LEN                        16
+> >> > +/*
+> >> > + * Define the task command name length as enum, then it can be visible to
+> >> > + * BPF programs.
+> >> > + */
+> >> > +enum {
+> >> > +     TASK_COMM_LEN = 16,
+> >> > +};
+> >>
+> >> This breaks the trigger-field-variable-support.tc from the ftrace test
+> >> suite at least on s390:
+> >>
+> >> echo
+> >> 'hist:keys=next_comm:wakeup_lat=common_timestamp.usecs-$ts0:onmatch(sched.sched_waking).wakeup_latency($wakeup_lat,next_pid,sched.sched_waking.prio,next_comm)
+> >> if next_comm=="ping"'
+> >> linux/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-field-variable-support.tc: line 15: echo: write error: Invalid argument
+> >>
+> >> I added a debugging line into check_synth_field():
+> >>
+> >> [   44.091037] field->size 16, hist_field->size 16, field->is_signed 1, hist_field->is_signed 0
+> >>
+> >> Note the difference in the signed field.
+> >>
+> >
+> > Hi Sven,
+> >
+> > Thanks for the report and debugging!
+> > Seems we should explicitly define it as signed ?
+> > Could you pls. help verify it?
+> >
+> > diff --git a/include/linux/sched.h b/include/linux/sched.h
+> > index cecd4806edc6..44d36c6af3e1 100644
+> > --- a/include/linux/sched.h
+> > +++ b/include/linux/sched.h
+> > @@ -278,7 +278,7 @@ struct task_group;
+> >   * Define the task command name length as enum, then it can be visible to
+> >   * BPF programs.
+> >   */
+> > -enum {
+> > +enum SignedEnum {
+> >         TASK_COMM_LEN = 16,
+> >  };
+>
+> Umm no. What you're doing here is to define the name of the enum as
+> 'SignedEnum'. This doesn't change the type. I think before C++0x you
+> couldn't force an enum type.
+>
 
-> On Mon, 29 Nov 2021 11:13:31 +0100
-> Sven Schnelle <svens@linux.ibm.com> wrote:
->
->
->> This breaks the trigger-field-variable-support.tc from the ftrace test
->> suite at least on s390:
->> 
->> echo
->> 'hist:keys=next_comm:wakeup_lat=common_timestamp.usecs-$ts0:onmatch(sched.sched_waking).wakeup_latency($wakeup_lat,next_pid,sched.sched_waking.prio,next_comm)
->> if next_comm=="ping"'
->> linux/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-field-variable-support.tc: line 15: echo: write error: Invalid argument
->> 
->> I added a debugging line into check_synth_field():
->> 
->> [   44.091037] field->size 16, hist_field->size 16, field->is_signed 1, hist_field->is_signed 0
->> 
->> Note the difference in the signed field.
->
-> That should not break on strings.
->
-> Does this fix it (if you keep the patch)?
+Ah, I made a stupid mistake....
 
-It does. Thanks!
 
-> -- Steve
->
-> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-> index 9555b8e1d1e3..319f9c8ca7e7 100644
-> --- a/kernel/trace/trace_events_hist.c
-> +++ b/kernel/trace/trace_events_hist.c
-> @@ -3757,7 +3757,7 @@ static int check_synth_field(struct synth_event *event,
->  
->  	if (strcmp(field->type, hist_field->type) != 0) {
->  		if (field->size != hist_field->size ||
-> -		    field->is_signed != hist_field->is_signed)
-> +		    (!field->is_string && field->is_signed != hist_field->is_signed))
->  			return -EINVAL;
->  	}
->  
+-- 
+Thanks
+Yafang
