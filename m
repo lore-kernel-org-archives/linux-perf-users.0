@@ -2,362 +2,165 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71333C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 29 Nov 2021 09:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF904C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 29 Nov 2021 10:16:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242544AbhK2JUe (ORCPT
+        id S231590AbhK2KTr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 29 Nov 2021 04:20:34 -0500
-Received: from esa12.hc1455-7.c3s2.iphmx.com ([139.138.37.100]:50387 "EHLO
-        esa12.hc1455-7.c3s2.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S244608AbhK2JSe (ORCPT
+        Mon, 29 Nov 2021 05:19:47 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10164 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232318AbhK2KRp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 29 Nov 2021 04:18:34 -0500
-X-Greylist: delayed 432 seconds by postgrey-1.27 at vger.kernel.org; Mon, 29 Nov 2021 04:18:33 EST
-IronPort-SDR: S8KD/lbdg+ll88AHZyTdrlgam7AIbg7Ucvb+SaoBYEtYwEeXenfxLuGSf39Tac0fPXU6i4s8hN
- FHFJBxHtQO/D62xu+dTBmipvVCyj9EW4BoW4WyuDzXOi0GyYgPlBA0GGZF7bX6Cjwkz6BVGI4G
- SYehIdo2Ku1+jlRCZ7826r0G8WKY724n3qDt93cZNI3J3aa+miSPXtD+irrA2bnZgg21Aq+DNH
- sdi7VgSoQ/L0dFOEJPF+psP7twg9JXmi74rFTEW604h6dvopaDAxlQwb9XUaw3WJ4tQ9zkCpSx
- vbdJe7KnmigD+w0qo4omA+f8
-X-IronPort-AV: E=McAfee;i="6200,9189,10182"; a="34056482"
-X-IronPort-AV: E=Sophos;i="5.87,272,1631545200"; 
-   d="scan'208";a="34056482"
-Received: from unknown (HELO oym-r2.gw.nic.fujitsu.com) ([210.162.30.90])
-  by esa12.hc1455-7.c3s2.iphmx.com with ESMTP; 29 Nov 2021 18:07:59 +0900
-Received: from oym-m1.gw.nic.fujitsu.com (oym-nat-oym-m1.gw.nic.fujitsu.com [192.168.87.58])
-        by oym-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id AA611F30DD;
-        Mon, 29 Nov 2021 18:08:00 +0900 (JST)
-Received: from yto-om1.fujitsu.com (yto-om1.o.css.fujitsu.com [10.128.89.162])
-        by oym-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id D2D9ED9948;
-        Mon, 29 Nov 2021 18:07:59 +0900 (JST)
-Received: from localhost.localdomain (bakeccha.fct.css.fujitsu.com [10.126.195.136])
-        by yto-om1.fujitsu.com (Postfix) with ESMTP id B1F7D4004C629;
-        Mon, 29 Nov 2021 18:07:59 +0900 (JST)
-From:   Shunsuke <nakamura.shun@fujitsu.com>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, robh@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Jiri Olsa <jolsa@kernel.org>,
-        Shunsuke Nakamura <nakamura.shun@fujitsu.com>
-Subject: [PATCH v4 3/3] libperf tests: Add test_stat_multiplexing test
-Date:   Mon, 29 Nov 2021 18:06:27 +0900
-Message-Id: <20211129090627.592149-4-nakamura.shun@fujitsu.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211129090627.592149-1-nakamura.shun@fujitsu.com>
-References: <20211129090627.592149-1-nakamura.shun@fujitsu.com>
+        Mon, 29 Nov 2021 05:17:45 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1AT9lO29006206;
+        Mon, 29 Nov 2021 10:13:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=pp1; bh=bTykWiZilsgvIEF8053GRPR7j2ZWFDbGpwj1KiG5Zb8=;
+ b=ZRE/D4iZlWQha3YL2zQJ5zfjlQOQWX3mJjlDDOtDsbip+iNART4SQ9TYsBVlt6sQ9Lvg
+ lhcgSJ/vR8ria0U2HK7ve1FWaeu13ghyyPlTALSRwVqkoO5J4f+oRgQ3GJ1jENxs4mlD
+ wBCb/yvDvJfJrIqHSupTFsxkmGEVI8h2KHSVa4efgopiXMJNh2WvFLOJ1Lp9kiK1Zx2e
+ YoMGsqehghyuHXuDSSMvq/2AR6MJAfB5XHx5vadvs6QPCRefk3mCDyGkHdvUQXt0KudR
+ EzqoKVBLFwyoApWg7k40rBgQ0UjvJDgR2H5t8gDOMcDc24QUtZA4STRUEYv8NTKgCZ7f Nw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3cmvht8gh0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 Nov 2021 10:13:39 +0000
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1AT9nGP2013939;
+        Mon, 29 Nov 2021 10:13:38 GMT
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3cmvht8gg8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 Nov 2021 10:13:38 +0000
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1ATADJsi020937;
+        Mon, 29 Nov 2021 10:13:35 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma01fra.de.ibm.com with ESMTP id 3ckca9ajq7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 Nov 2021 10:13:35 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1ATADWKX22544770
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 29 Nov 2021 10:13:32 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 83AC611C04A;
+        Mon, 29 Nov 2021 10:13:32 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E328911C04C;
+        Mon, 29 Nov 2021 10:13:31 +0000 (GMT)
+Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 29 Nov 2021 10:13:31 +0000 (GMT)
+From:   Sven Schnelle <svens@linux.ibm.com>
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     akpm@linux-foundation.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, oliver.sang@intel.com, lkp@intel.com,
+        Andrii Nakryiko <andrii@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH v2 7/7] tools/testing/selftests/bpf: replace open-coded
+ 16 with TASK_COMM_LEN
+References: <20211120112738.45980-1-laoar.shao@gmail.com>
+        <20211120112738.45980-8-laoar.shao@gmail.com>
+Date:   Mon, 29 Nov 2021 11:13:31 +0100
+In-Reply-To: <20211120112738.45980-8-laoar.shao@gmail.com> (Yafang Shao's
+        message of "Sat, 20 Nov 2021 11:27:38 +0000")
+Message-ID: <yt9d35nf1d84.fsf@linux.ibm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: tCV3Q3i4lUvrnwlJ9X-_0skwr0F3PEoJ
+X-Proofpoint-ORIG-GUID: 9MlKZj6a0c4TU5bozMc3VrKzCk8L9suc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
+ definitions=2021-11-29_07,2021-11-28_01,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1011
+ bulkscore=0 phishscore=0 impostorscore=0 lowpriorityscore=0
+ priorityscore=1501 mlxscore=0 mlxlogscore=999 malwarescore=0 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2111290049
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
+Hi,
 
-Adds a test for a counter obtained using read() system call during
-multiplexing.
+Yafang Shao <laoar.shao@gmail.com> writes:
 
-Committer testing:
+> As the sched:sched_switch tracepoint args are derived from the kernel,
+> we'd better make it same with the kernel. So the macro TASK_COMM_LEN is
+> converted to type enum, then all the BPF programs can get it through BTF.
+>
+> The BPF program which wants to use TASK_COMM_LEN should include the header
+> vmlinux.h. Regarding the test_stacktrace_map and test_tracepoint, as the
+> type defined in linux/bpf.h are also defined in vmlinux.h, so we don't
+> need to include linux/bpf.h again.
+>
+> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> Acked-by: David Hildenbrand <david@redhat.com>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+> Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+> Cc: Michal Miroslaw <mirq-linux@rere.qmqm.pl>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Petr Mladek <pmladek@suse.com>
+> ---
+>  include/linux/sched.h                                   | 9 +++++++--
+>  tools/testing/selftests/bpf/progs/test_stacktrace_map.c | 6 +++---
+>  tools/testing/selftests/bpf/progs/test_tracepoint.c     | 6 +++---
+>  3 files changed, 13 insertions(+), 8 deletions(-)
+>
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 78c351e35fec..cecd4806edc6 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -274,8 +274,13 @@ struct task_group;
+>  
+>  #define get_current_state()	READ_ONCE(current->__state)
+>  
+> -/* Task command name length: */
+> -#define TASK_COMM_LEN			16
+> +/*
+> + * Define the task command name length as enum, then it can be visible to
+> + * BPF programs.
+> + */
+> +enum {
+> +	TASK_COMM_LEN = 16,
+> +};
 
-  $ sudo make tests -C ./tools/lib/perf V=1
-  make[1]: Entering directory '/home/nakamura/build_work/build_kernel/linux-kernel/linux/tools/lib/perf'
-  make -f /home/nakamura/build_work/build_kernel/linux-kernel/linux/tools/build/Makefile.build dir=. obj=libperf
-  make -C /home/nakamura/build_work/build_kernel/linux-kernel/linux/tools/lib/api/ O= libapi.a
-  make -f /home/nakamura/build_work/build_kernel/linux-kernel/linux/tools/build/Makefile.build dir=./fd obj=libapi
-  make -f /home/nakamura/build_work/build_kernel/linux-kernel/linux/tools/build/Makefile.build dir=./fs obj=libapi
-  make -f /home/nakamura/build_work/build_kernel/linux-kernel/linux/tools/build/Makefile.build dir=. obj=tests
-  make -f /home/nakamura/build_work/build_kernel/linux-kernel/linux/tools/build/Makefile.build dir=./tests obj=tests
-  running static:
-  - running tests/test-cpumap.c...OK
-  - running tests/test-threadmap.c...OK
-  - running tests/test-evlist.c...
-  Event  0 -- Raw count = 299302036, run = 288430205, enable = 486235490
-           Scaled count = 504563217 (59.32%, 288430205/486235490)
-  Event  1 -- Raw count = 298545418, run = 289425078, enable = 486232769
-           Scaled count = 501554897 (59.52%, 289425078/486232769)
-  Event  2 -- Raw count = 298838327, run = 290411278, enable = 486229222
-           Scaled count = 500338444 (59.73%, 290411278/486229222)
-  Event  3 -- Raw count = 299382984, run = 291406006, enable = 486225338
-           Scaled count = 499535320 (59.93%, 291406006/486225338)
-  Event  4 -- Raw count = 300119283, run = 292411181, enable = 486220615
-           Scaled count = 499037628 (60.14%, 292411181/486220615)
-  Event  5 -- Raw count = 300255891, run = 293404372, enable = 486215261
-           Scaled count = 497569260 (60.34%, 293404372/486215261)
-  Event  6 -- Raw count = 302390604, run = 294222082, enable = 486209147
-           Scaled count = 499707828 (60.51%, 294222082/486209147)
-  Event  7 -- Raw count = 303524473, run = 294214550, enable = 486202374
-           Scaled count = 501587427 (60.51%, 294214550/486202374)
-  Event  8 -- Raw count = 304282474, run = 294206637, enable = 486194647
-           Scaled count = 502845590 (60.51%, 294206637/486194647)
-  Event  9 -- Raw count = 303969062, run = 293818554, enable = 486185895
-           Scaled count = 502982090 (60.43%, 293818554/486185895)
-  Event 10 -- Raw count = 303784907, run = 292808731, enable = 486174252
-           Scaled count = 504398893 (60.23%, 292808731/486174252)
-  Event 11 -- Raw count = 304129077, run = 291818946, enable = 486164475
-           Scaled count = 506672904 (60.02%, 291818946/486164475)
-  Event 12 -- Raw count = 302677227, run = 290819976, enable = 486155254
-           Scaled count = 505976673 (59.82%, 290819976/486155254)
-  Event 13 -- Raw count = 301748186, run = 289821793, enable = 486146028
-           Scaled count = 506151316 (59.62%, 289821793/486146028)
-  Event 14 -- Raw count = 300216852, run = 288823624, enable = 486136825
-           Scaled count = 505313468 (59.41%, 288823624/486136825)
-     Expected: 501623296
-     High: 506672904   Low:  299302036   Average:  502548997
-     Average Error = 0.18%
-  OK
-  - running tests/test-evsel.c...
-          loop = 65536, count = 354844
-          loop = 131072, count = 693386
-          loop = 262144, count = 1339140
-          loop = 524288, count = 2726813
-          loop = 1048576, count = 5263081
-          loop = 65536, count = 472935
-          loop = 131072, count = 1018641
-          loop = 262144, count = 1840393
-          loop = 524288, count = 3349520
-          loop = 1048576, count = 6759085
-  OK
-  running dynamic:
-  - running tests/test-cpumap.c...OK
-  - running tests/test-threadmap.c...OK
-  - running tests/test-evlist.c...
-  Event  0 -- Raw count = 297934481, run = 297856898, enable = 501847789
-           Scaled count = 501978505 (59.35%, 297856898/501847789)
-  Event  1 -- Raw count = 298651420, run = 297970032, enable = 501845063
-           Scaled count = 502992665 (59.37%, 297970032/501845063)
-  Event  2 -- Raw count = 299731258, run = 298965119, enable = 501841526
-           Scaled count = 503127563 (59.57%, 298965119/501841526)
-  Event  3 -- Raw count = 300644680, run = 299960013, enable = 501837664
-           Scaled count = 502983122 (59.77%, 299960013/501837664)
-  Event  4 -- Raw count = 301854645, run = 300947092, enable = 501833170
-           Scaled count = 503346526 (59.97%, 300947092/501833170)
-  Event  5 -- Raw count = 303228020, run = 302371294, enable = 501827577
-           Scaled count = 503249433 (60.25%, 302371294/501827577)
-  Event  6 -- Raw count = 304162593, run = 303363734, enable = 501820925
-           Scaled count = 503142388 (60.45%, 303363734/501820925)
-  Event  7 -- Raw count = 304802876, run = 304254160, enable = 501814005
-           Scaled count = 502719016 (60.63%, 304254160/501814005)
-  Event  8 -- Raw count = 304797825, run = 304246193, enable = 501805969
-           Scaled count = 502715798 (60.63%, 304246193/501805969)
-  Event  9 -- Raw count = 304678040, run = 303884090, enable = 501797023
-           Scaled count = 503108054 (60.56%, 303884090/501797023)
-  Event 10 -- Raw count = 303209569, run = 302886553, enable = 501785047
-           Scaled count = 502320180 (60.36%, 302886553/501785047)
-  Event 11 -- Raw count = 301801701, run = 301456719, enable = 501775302
-           Scaled count = 502349525 (60.08%, 301456719/501775302)
-  Event 12 -- Raw count = 300744781, run = 300457620, enable = 501765832
-           Scaled count = 502245392 (59.88%, 300457620/501765832)
-  Event 13 -- Raw count = 299656316, run = 299458825, enable = 501756687
-           Scaled count = 502087592 (59.68%, 299458825/501756687)
-  Event 14 -- Raw count = 298616379, run = 298460087, enable = 501747345
-           Scaled count = 502010090 (59.48%, 298460087/501747345)
-     Expected: 501618012
-     High: 503346526   Low:  297934481   Average:  502691723
-     Average Error = 0.21%
-  OK
-  - running tests/test-evsel.c...
-          loop = 65536, count = 328183
-          loop = 131072, count = 681853
-          loop = 262144, count = 1334936
-          loop = 524288, count = 2702197
-          loop = 1048576, count = 5294233
-          loop = 65536, count = 486498
-          loop = 131072, count = 928179
-          loop = 262144, count = 1921944
-          loop = 524288, count = 3687007
-          loop = 1048576, count = 6721087
-  OK
-  make[1]: Leaving directory '/home/nakamura/build_work/build_kernel/linux-kernel/linux/tools/lib/perf'
+This breaks the trigger-field-variable-support.tc from the ftrace test
+suite at least on s390:
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
----
- tools/lib/perf/tests/test-evlist.c | 157 +++++++++++++++++++++++++++++
- 1 file changed, 157 insertions(+)
+echo 'hist:keys=next_comm:wakeup_lat=common_timestamp.usecs-$ts0:onmatch(sched.sched_waking).wakeup_latency($wakeup_lat,next_pid,sched.sched_waking.prio,next_comm) if next_comm=="ping"'
+linux/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-field-variable-support.tc: line 15: echo: write error: Invalid argument
 
-diff --git a/tools/lib/perf/tests/test-evlist.c b/tools/lib/perf/tests/test-evlist.c
-index ce91a582f0e4..064edd0e995c 100644
---- a/tools/lib/perf/tests/test-evlist.c
-+++ b/tools/lib/perf/tests/test-evlist.c
-@@ -21,6 +21,9 @@
- #include "tests.h"
- #include <internal/evsel.h>
- 
-+#define EVENT_NUM 15
-+#define WAIT_COUNT 100000000UL
-+
- static int libperf_print(enum libperf_print_level level,
- 			 const char *fmt, va_list ap)
- {
-@@ -413,6 +416,159 @@ static int test_mmap_cpus(void)
- 	return 0;
- }
- 
-+static double display_error(long long average,
-+			    long long high,
-+			    long long low,
-+			    long long expected)
-+{
-+	double error;
-+
-+	error = (((double)average - expected) / expected) * 100.0;
-+
-+	__T_VERBOSE("   Expected: %lld\n", expected);
-+	__T_VERBOSE("   High: %lld   Low:  %lld   Average:  %lld\n",
-+		    high, low, average);
-+
-+	__T_VERBOSE("   Average Error = %.2f%%\n", error);
-+
-+	return error;
-+}
-+
-+static int test_stat_multiplexing(void)
-+{
-+	struct perf_counts_values expected_counts = { .val = 0 };
-+	struct perf_counts_values counts[EVENT_NUM] = {{ .val = 0 },};
-+	struct perf_thread_map *threads;
-+	struct perf_evlist *evlist;
-+	struct perf_evsel *evsel;
-+	struct perf_event_attr attr = {
-+		.type	     = PERF_TYPE_HARDWARE,
-+		.config	     = PERF_COUNT_HW_INSTRUCTIONS,
-+		.read_format = PERF_FORMAT_TOTAL_TIME_ENABLED |
-+			       PERF_FORMAT_TOTAL_TIME_RUNNING,
-+		.disabled    = 1,
-+	};
-+	int err, i, nonzero = 0;
-+	unsigned long count;
-+	long long max = 0, min = 0, avg = 0;
-+	double error = 0.0;
-+	__s8 scaled = 0;
-+
-+	/* read for non-multiplexing event count */
-+	threads = perf_thread_map__new_dummy();
-+	__T("failed to create threads", threads);
-+
-+	perf_thread_map__set_pid(threads, 0, 0);
-+
-+	evsel = perf_evsel__new(&attr);
-+	__T("failed to create evsel", evsel);
-+
-+	err = perf_evsel__open(evsel, NULL, threads);
-+	__T("failed to open evsel", err == 0);
-+
-+	err = perf_evsel__enable(evsel);
-+	__T("failed to enable evsel", err == 0);
-+
-+	/* wait loop */
-+	count = WAIT_COUNT;
-+	while (count--)
-+		;
-+
-+	perf_evsel__read(evsel, 0, 0, &expected_counts);
-+	__T("failed to read value for evsel", expected_counts.val != 0);
-+	__T("failed to read non-multiplexing event count",
-+	    expected_counts.ena == expected_counts.run);
-+
-+	err = perf_evsel__disable(evsel);
-+	__T("failed to enable evsel", err == 0);
-+
-+	perf_evsel__close(evsel);
-+	perf_evsel__delete(evsel);
-+
-+	perf_thread_map__put(threads);
-+
-+	/* read for multiplexing event count */
-+	threads = perf_thread_map__new_dummy();
-+	__T("failed to create threads", threads);
-+
-+	perf_thread_map__set_pid(threads, 0, 0);
-+
-+	evlist = perf_evlist__new();
-+	__T("failed to create evlist", evlist);
-+
-+	for (i = 0; i < EVENT_NUM; i++) {
-+		evsel = perf_evsel__new(&attr);
-+		__T("failed to create evsel", evsel);
-+
-+		perf_evlist__add(evlist, evsel);
-+	}
-+	perf_evlist__set_maps(evlist, NULL, threads);
-+
-+	err = perf_evlist__open(evlist);
-+	__T("failed to open evsel", err == 0);
-+
-+	perf_evlist__enable(evlist);
-+
-+	/* wait loop */
-+	count = WAIT_COUNT;
-+	while (count--)
-+		;
-+
-+	i = 0;
-+	perf_evlist__for_each_evsel(evlist, evsel) {
-+		perf_evsel__read(evsel, 0, 0, &counts[i]);
-+		__T("failed to read value for evsel", counts[i].val != 0);
-+		i++;
-+	}
-+
-+	perf_evlist__disable(evlist);
-+
-+	min = counts[0].val;
-+	for (i = 0; i < EVENT_NUM; i++) {
-+		__T_VERBOSE("Event %2d -- Raw count = %lu, run = %lu, enable = %lu\n",
-+			    i, counts[i].val, counts[i].run, counts[i].ena);
-+
-+		perf_counts_values__scale(&counts[i], true, &scaled);
-+		if (scaled == 1) {
-+			__T_VERBOSE("\t Scaled count = %lu (%.2lf%%, %lu/%lu)\n",
-+				    counts[i].val,
-+				    (double)counts[i].run / (double)counts[i].ena * 100.0,
-+				    counts[i].run, counts[i].ena);
-+		} else if (scaled == -1) {
-+			__T_VERBOSE("\t Not Runnnig\n");
-+		} else {
-+			__T_VERBOSE("\t Not Scaling\n");
-+		}
-+
-+		if (counts[i].val > max)
-+			max = counts[i].val;
-+
-+		if (counts[i].val < min)
-+			min = counts[i].val;
-+
-+		avg += counts[i].val;
-+
-+		if (counts[i].val != 0)
-+			nonzero++;
-+	}
-+
-+	if (nonzero != 0)
-+		avg = avg / nonzero;
-+	else
-+		avg = 0;
-+
-+	error = display_error(avg, max, min, expected_counts.val);
-+
-+	__T("Error out of range!", ((error <= 1.0) && (error >= -1.0)));
-+
-+	perf_evlist__close(evlist);
-+	perf_evlist__delete(evlist);
-+
-+	perf_thread_map__put(threads);
-+
-+	return 0;
-+}
-+
- int test_evlist(int argc, char **argv)
- {
- 	__T_START;
-@@ -424,6 +580,7 @@ int test_evlist(int argc, char **argv)
- 	test_stat_thread_enable();
- 	test_mmap_thread();
- 	test_mmap_cpus();
-+	test_stat_multiplexing();
- 
- 	__T_END;
- 	return tests_failed == 0 ? 0 : -1;
--- 
-2.25.1
+I added a debugging line into check_synth_field():
 
+[   44.091037] field->size 16, hist_field->size 16, field->is_signed 1, hist_field->is_signed 0
+
+Note the difference in the signed field.
+
+Regards
+Sven
