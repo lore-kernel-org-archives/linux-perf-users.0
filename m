@@ -2,56 +2,57 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EEBC433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 29 Nov 2021 23:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34884C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 29 Nov 2021 23:48:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232693AbhK2XmE (ORCPT
+        id S233380AbhK2Xvi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 29 Nov 2021 18:42:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49474 "EHLO
+        Mon, 29 Nov 2021 18:51:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232428AbhK2Xl7 (ORCPT
+        with ESMTP id S233336AbhK2Xvh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 29 Nov 2021 18:41:59 -0500
-Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 501EBC061714
-        for <linux-perf-users@vger.kernel.org>; Mon, 29 Nov 2021 15:38:41 -0800 (PST)
-Received: by mail-il1-x12c.google.com with SMTP id i6so19319683ila.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 29 Nov 2021 15:38:41 -0800 (PST)
+        Mon, 29 Nov 2021 18:51:37 -0500
+Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 796DFC061714
+        for <linux-perf-users@vger.kernel.org>; Mon, 29 Nov 2021 15:48:19 -0800 (PST)
+Received: by mail-il1-x136.google.com with SMTP id s11so12053209ilv.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 29 Nov 2021 15:48:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=cM4LLC7Ra6uzwcuWSM5NZXc4z65RXTzgZXg9TfzcrF0=;
-        b=NjvrXefV+Tyz/6qIt23esO3IWA1rwOrUFvNgUnPxtLiRG8g5rEQxg9nsMJLXpZr3FK
-         tU4ts056l/QVt0QnFbNLCAmiWh1+34UbklkMHozBzMVJfUe/vaRiB5ZYIu8Wx5nKspwL
-         U+8KBLfAqLorkIDfctmoyGJ9T3ma4NnUm7KUTB/NKv4dYWw6iRyv/YlJDMlTmSue5KaW
-         qWpNqaMvQ7NTbDnoXJ0dBTT6aL+nkUEFZZg1wgCxy92+V1kih/O98c8JHHCB/6+jP/92
-         y8DvUnwagDbvGsCMClD+gGtexD2VsxNZIl+N3WABP7cE5SZIJlR/ahYfAiuN99RxsPoW
-         oPEw==
+        bh=zp15zRundB/Hha02wZX4a60zrBKiLIyu7v5URoolVVM=;
+        b=fcx5mF/00Z0YicmJ73Lh2DvEw9G7dVYuY45un3tlQU5WwjCBsfktmHoLkhX5EDDlPl
+         oa0KBldjkp92Coxjcv1hobCAeghCDimjUXtq91eaC3iFfX7wuwKPcNxRyNquUoqCbacC
+         VaAhJSKu3jeWtjpn1vZ2ri/nKyVXt5OBS1jnSKnlH/5fxsrDRUg/Ec/Mwne9kQBM+KRf
+         2DFbIEEjWFWbqJ9yyTnWoZls+yIOCYaOHiv05xJlRo281l1DmvY6Q12TDK1V6EusAFXJ
+         bgOLgIa9Xr13jGLV+4iG7IN+4LbShw3BE09AfdwUd17aNBE/vFljSVXhFg/iUSeA6+Ef
+         fJfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cM4LLC7Ra6uzwcuWSM5NZXc4z65RXTzgZXg9TfzcrF0=;
-        b=YJ5ux5nYlCVyjf/XQ+mDvPojBgHrelstcBiNc5UffBTszs4e3gYPalMTEJbYBZsB2k
-         IG3CL1ndgA0k2Yt2a6mtSCtdFa4KFQOdKobuyb4TiGAL44DZHMvTedrz0ivuqzujJd4i
-         TsrA1r0bI2jEKtpfRiND1UNXvAW7OgZmLg/Vd2CjIvoQmVSVsf6ip6LBJSgSwPiKaPAU
-         7Rwb8QE6srlO8LPD0ZGLSOkqC+gNvKs2of+ItdtGO9H4e7bLOPLpp4+YtuD4MGwShgsr
-         C0N4pETfnwQKh28G1frRJF2x/SUYu9zw7LkxhNF4yzMbHELDtzHjY9qVG9ThZVReCohg
-         C9Xw==
-X-Gm-Message-State: AOAM533awxYn7oFVp8+dWhAPesJ4OHXNGtrgMi5hshOxVejNhvr1JwJc
-        YkK0TFdJpqD+9Jatk1wJ+ETo9Yb2+1VAv0+kX9OvIg==
-X-Google-Smtp-Source: ABdhPJzK9K+KVbfmPIZ+m0ojXFZFrobizxDicP6iM3RcGMNmXCBfxijWX476XWcc/i38FLLnoATKPFzu88o5GajmOqc=
-X-Received: by 2002:a05:6e02:f51:: with SMTP id y17mr38013668ilj.2.1638229120515;
- Mon, 29 Nov 2021 15:38:40 -0800 (PST)
+        bh=zp15zRundB/Hha02wZX4a60zrBKiLIyu7v5URoolVVM=;
+        b=xqM6KnLWOyFhw4pnwITcsBl0hBVquDJ4VChA1Ye8kddWyqbciNxs7uS39CajfS1moT
+         XBjLIyI+u7f0cT30Fp/8WjPP6clJCRd/RWs1kR8bYeC/m3Zfe5j7yNA/BZ/faivIpb2o
+         wvvC8s57jzkA7o1wtIPflk6BJq2poLPlxq0JhlVerhIMR/zhpWrbWYZiggeUJm5vDCkj
+         dvFtWgcPdrDYlwtCI8TrzL3zMqaiStIr69i86ol17TRrvFyH9iJmZog5S/U0aKuPrzOU
+         zolgiJ9v1STJWY6eD1Kre7l7ynSMH9xBrtEoa6S3mrXMmNny1FeCLLwtusbqaUg0ZB0p
+         7Ysg==
+X-Gm-Message-State: AOAM533i+9wv710yi55Yi1AMuwibm84xVA60lpsCL7BA6pUH+1hvne5s
+        ll78MMu4OyBLJ7mxoVkXeJU+M+k3fzGirWWhqCMEzg==
+X-Google-Smtp-Source: ABdhPJySalFBc/rMmzKvvFyj+waGeAoRaOeSShWAl3OZmvdyBYPbnivFX/jc1FleWGk6HBna6KisP3IgpuuXsMHs97E=
+X-Received: by 2002:a05:6e02:f51:: with SMTP id y17mr38037345ilj.2.1638229698614;
+ Mon, 29 Nov 2021 15:48:18 -0800 (PST)
 MIME-Version: 1.0
-References: <20211118201730.2302927-1-irogers@google.com> <YaOkbojVb2gZtfCk@krava>
-In-Reply-To: <YaOkbojVb2gZtfCk@krava>
+References: <20211123020341.3073673-1-irogers@google.com> <20211123020341.3073673-2-irogers@google.com>
+ <YaO1FIOYpF/Y5BDK@krava>
+In-Reply-To: <YaO1FIOYpF/Y5BDK@krava>
 From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 29 Nov 2021 15:38:28 -0800
-Message-ID: <CAP-5=fVRE8dcDtivYaAm=DQze4d2966X7oWTWVzstzWeC-xeSw@mail.gmail.com>
-Subject: Re: [PATCH] perf header: Fix memory leaks
+Date:   Mon, 29 Nov 2021 15:48:04 -0800
+Message-ID: <CAP-5=fU5MFQAidNWTp0hRjesKpFper6wy9MJ0taL9k804amn6A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] perf evsel: Improve error message for uncore events
 To:     Jiri Olsa <jolsa@redhat.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -59,132 +60,100 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
+        eranian@google.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Nov 28, 2021 at 7:47 AM Jiri Olsa <jolsa@redhat.com> wrote:
+On Sun, Nov 28, 2021 at 8:58 AM Jiri Olsa <jolsa@redhat.com> wrote:
 >
-> On Thu, Nov 18, 2021 at 12:17:30PM -0800, Ian Rogers wrote:
-> > These leaks were found with leak sanitizer running "perf pipe recording
-> > and injection test". In pipe mode feat_fd may hold onto an events struct
-> > that needs freeing. When string features are processed they may
-> > overwrite an already created string, so free this before the overwrite.
+> On Mon, Nov 22, 2021 at 06:03:41PM -0800, Ian Rogers wrote:
+> > When a group has multiple events and the leader fails it can yield
+> > errors like:
+> >
+> > $ perf stat -e '{uncore_imc/cas_count_read/},instructions' /bin/true
+> > Error:
+> > The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (uncore_imc/cas_count_read/).
+> > /bin/dmesg | grep -i perf may provide additional information.
+> >
+> > However, when not the group leader <not supported> is given:
+> >
+> > $ perf stat -e '{instructions,uncore_imc/cas_count_read/}' /bin/true
+> > ...
+> >          1,619,057      instructions
+> >    <not supported> MiB  uncore_imc/cas_count_read/
+> >
+> > This is necessary because get_group_fd will fail if the leader fails and
+> > is the direct result of the check on line 750 of builtin-stat.c in
+> > stat_handle_error that returns COUNTER_SKIP for the latter case.
+> >
+> > This patch improves the error message to:
+> >
+> > $ perf stat -e '{uncore_imc/cas_count_read/},instructions' /bin/true
+> > Error:
+> > Invalid event (uncore_imc/cas_count_read/) in per-thread mode, enable system wide with '-a'.
 > >
 > > Signed-off-by: Ian Rogers <irogers@google.com>
 > > ---
-> >  tools/perf/util/header.c | 15 ++++++++++-----
-> >  1 file changed, 10 insertions(+), 5 deletions(-)
+> >  tools/perf/util/evsel.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
 > >
-> > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> > index 79cce216727e..e3c1a532d059 100644
-> > --- a/tools/perf/util/header.c
-> > +++ b/tools/perf/util/header.c
-> > @@ -2321,6 +2321,7 @@ static int perf_header__read_build_ids(struct perf_header *header,
-> >  #define FEAT_PROCESS_STR_FUN(__feat, __feat_env) \
-> >  static int process_##__feat(struct feat_fd *ff, void *data __maybe_unused) \
-> >  {\
-> > +     free(ff->ph->env.__feat_env);                \
+> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > index a59fb2ecb84e..48696ff4bddb 100644
+> > --- a/tools/perf/util/evsel.c
+> > +++ b/tools/perf/util/evsel.c
+> > @@ -2950,6 +2950,11 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
+> >                       return scnprintf(msg, size, "wrong clockid (%d).", clockid);
+> >               if (perf_missing_features.aux_output)
+> >                       return scnprintf(msg, size, "The 'aux_output' feature is not supported, update the kernel.");
+> > +             if ((evsel__leader(evsel) == evsel) &&
+> > +                 (evsel->core.leader->nr_members > 1))
+> > +                     return scnprintf(msg, size,
+> > +     "Invalid event (%s) in per-thread mode, enable system wide with '-a'.",
+> > +                                     evsel__name(evsel));
 >
-> hm, how is this set before this callback is triggered?
+> should we rather check 'target' pointer for the per-thread mode?
+> I'm not sure that per-thread mode will always be the case for the failure
 
-I see it for cpuid which is initially set in:
-#0  perf_env__read_cpuid (env=0x62b000007240) at util/env.c:363
-#1  0x0000555556325153 in perf_env__cpuid (env=0x62b000007240) at util/env.c:456
-#2  0x00005555564002ff in evlist__init_trace_event_sample_raw
-(evlist=0x61e000000080) at util/sample-raw.c:17
-#3  0x00005555563f01f4 in __perf_session__new (data=0x7fffffffb8b0,
-repipe=false, repipe_fd=-1, tool=0x7fffffffbaa0)
-    at util/session.c:228
-#4  0x000055555615f26b in perf_session__new (data=0x7fffffffb8b0,
-tool=0x7fffffffbaa0) at util/session.h:70
-#5  0x000055555616d991 in cmd_report (argc=0, argv=0x7fffffffe468) at
-builtin-report.c:1408
-#6  0x00005555562f36b8 in run_builtin (p=0x5555586bacd0
-<commands+240>, argc=5, argv=0x7fffffffe468) at perf.c:313
-#7  0x00005555562f3c11 in handle_internal_command (argc=5,
-argv=0x7fffffffe468) at perf.c:365
-#8  0x00005555562f3fce in run_argv (argcp=0x7fffffffe240,
-argv=0x7fffffffe250) at perf.c:409
-#9  0x00005555562f47bd in main (argc=5, argv=0x7fffffffe468) at perf.c:539
+Unfortunately the target isn't populated at that point:
 
-And then overwritten causing the leak:
-#0  0x00005555563b965a in process_cpuid (ff=0x7fffffffad50, data=0x0)
-at util/header.c:2333
-#1  0x00005555563c53d2 in perf_event__process_feature
-(session=0x62b000007200, event=0x621000006500) at util/header.c:4144
-#2  0x000055555615fdef in process_feature_event
-(session=0x62b000007200, event=0x621000006500) at builtin-report.c:230
-#3  0x00005555563fa033 in perf_session__process_user_event
-(session=0x62b000007200, event=0x621000006500, file_offset=868)
-    at util/session.c:1668
-#4  0x00005555563fae08 in perf_session__process_event
-(session=0x62b000007200, event=0x621000006500, file_offset=868)
-    at util/session.c:1803
-#5  0x00005555563fc4e6 in __perf_session__process_pipe_events
-(session=0x62b000007200) at util/session.c:2044
-#6  0x00005555563ff005 in perf_session__process_events
-(session=0x62b000007200) at util/session.c:2418
-#7  0x000055555616508a in __cmd_report (rep=0x7fffffffbaa0) at
-builtin-report.c:940
-#8  0x000055555616f5c9 in cmd_report (argc=0, argv=0x7fffffffe468) at
-builtin-report.c:1629
-#9  0x00005555562f36b8 in run_builtin (p=0x5555586bacd0
-<commands+240>, argc=5, argv=0x7fffffffe468) at perf.c:313
-#10 0x00005555562f3c11 in handle_internal_command (argc=5,
-argv=0x7fffffffe468) at perf.c:365
-#11 0x00005555562f3fce in run_argv (argcp=0x7fffffffe240,
-argv=0x7fffffffe250) at perf.c:409
-#12 0x00005555562f47bd in main (argc=5, argv=0x7fffffffe468) at perf.c:539
+gdb --args perf stat -e '{uncore_imc/cas_count_write/},instructions' /bin/true
+(gdb) p *target
+$2 = {pid = 0x0, tid = 0x0, cpu_list = 0x0, uid_str = 0x0, bpf_str =
+0x0, uid = 4294967295, system_wide = false, uses_mmap = false,
+  default_per_cpu = false, per_thread = false, use_bpf = false, hybrid
+= false, attr_map = 0x0}
+
+#0  evsel__open_strerror (evsel=0x616000015680, target=0x5555586aa140
+<target>, err=22, msg=0x7fffffff78d0 "]k\264WUU", size=8192)
+    at util/evsel.c:2857
+#1  0x00005555561744e8 in stat_handle_error (counter=0x616000015680)
+at builtin-stat.c:771
+#2  0x0000555556174f05 in __run_perf_stat (argc=1,
+argv=0x7fffffffe450, run_idx=0) at builtin-stat.c:852
+#3  0x00005555561763e1 in run_perf_stat (argc=1, argv=0x7fffffffe450,
+run_idx=0) at builtin-stat.c:1048
+#4  0x000055555617df82 in cmd_stat (argc=1, argv=0x7fffffffe450) at
+builtin-stat.c:2550
+#5  0x00005555562f36b8 in run_builtin (p=0x5555586bad00
+<commands+288>, argc=4, argv=0x7fffffffe450) at perf.c:313
+#6  0x00005555562f3c11 in handle_internal_command (argc=4,
+argv=0x7fffffffe450) at perf.c:365
+#7  0x00005555562f3fce in run_argv (argcp=0x7fffffffe230,
+argv=0x7fffffffe240) at perf.c:409
+#8  0x00005555562f47bd in main (argc=4, argv=0x7fffffffe450) at perf.c:539
 
 Thanks,
 Ian
 
 > jirka
 >
-> >       ff->ph->env.__feat_env = do_read_string(ff); \
-> >       return ff->ph->env.__feat_env ? 0 : -ENOMEM; \
-> >  }
-> > @@ -4124,6 +4125,7 @@ int perf_event__process_feature(struct perf_session *session,
-> >       struct perf_record_header_feature *fe = (struct perf_record_header_feature *)event;
-> >       int type = fe->header.type;
-> >       u64 feat = fe->feat_id;
-> > +     int ret = 0;
-> >
-> >       if (type < 0 || type >= PERF_RECORD_HEADER_MAX) {
-> >               pr_warning("invalid record type %d in pipe-mode\n", type);
-> > @@ -4141,11 +4143,13 @@ int perf_event__process_feature(struct perf_session *session,
-> >       ff.size = event->header.size - sizeof(*fe);
-> >       ff.ph = &session->header;
-> >
-> > -     if (feat_ops[feat].process(&ff, NULL))
-> > -             return -1;
-> > +     if (feat_ops[feat].process(&ff, NULL)) {
-> > +             ret = -1;
-> > +             goto out;
-> > +     }
-> >
-> >       if (!feat_ops[feat].print || !tool->show_feat_hdr)
-> > -             return 0;
-> > +             goto out;
-> >
-> >       if (!feat_ops[feat].full_only ||
-> >           tool->show_feat_hdr >= SHOW_FEAT_HEADER_FULL_INFO) {
-> > @@ -4154,8 +4158,9 @@ int perf_event__process_feature(struct perf_session *session,
-> >               fprintf(stdout, "# %s info available, use -I to display\n",
-> >                       feat_ops[feat].name);
-> >       }
-> > -
-> > -     return 0;
-> > +out:
-> > +     free_event_desc(ff.events);
-> > +     return ret;
-> >  }
-> >
-> >  size_t perf_event__fprintf_event_update(union perf_event *event, FILE *fp)
+> >               break;
+> >       case ENODATA:
+> >               return scnprintf(msg, size, "Cannot collect data source with the load latency event alone. "
 > > --
 > > 2.34.0.rc2.393.gf8c9666880-goog
 > >
