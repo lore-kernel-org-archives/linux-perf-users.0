@@ -2,265 +2,208 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC2A2C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 30 Nov 2021 18:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 684FAC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 30 Nov 2021 18:15:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233213AbhK3SPD (ORCPT
+        id S245394AbhK3SSp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 30 Nov 2021 13:15:03 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:29477 "EHLO
+        Tue, 30 Nov 2021 13:18:45 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:58997 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S243416AbhK3SPC (ORCPT
+        by vger.kernel.org with ESMTP id S245371AbhK3SSn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 30 Nov 2021 13:15:02 -0500
+        Tue, 30 Nov 2021 13:18:43 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1638295902;
+        s=mimecast20190719; t=1638296124;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=ddL8n8P0TCUoTeHHnDhgCoDcqA2h1iCOGqF7iCcQ86E=;
-        b=DLO0GpdWV9TE06zw2OiDBOyImD58nvwt5BVJq/cRwBmKaj7oQ1TT9tAb/y4XhDoQQpKAnq
-        nOZ5xBH+AMYLuvSW00PAWOC88bULIUyNy3GLEv2pWsk5JnBywI4njRK5NYG5dChYHJkUHs
-        frr1waPsLOoxSi2bkT1mkCtPHi/Wkaw=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=y0D83E+cNuncrGmthDykUEYreLlJf9PXpFpFy6oL8G4=;
+        b=Zp8A0njKRoJfpairmBeIKBqiUzoNjKBwgJRMZ2Li/D4zKlbOQQsTbsMYF4f55nSzxOzhyc
+        yZH81KIQ4t2xZyb72sWWbuzRpCMshxcFocWAJlZDAtN+PLNFpHcN3271pbzSAtHQpciE+s
+        8B4cY4SyTlDXKPAf6+WGSnYOeK1LJgw=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-320-GPOaOLB7MWKNkTpgFdrv3w-1; Tue, 30 Nov 2021 13:11:41 -0500
-X-MC-Unique: GPOaOLB7MWKNkTpgFdrv3w-1
-Received: by mail-wm1-f71.google.com with SMTP id l6-20020a05600c4f0600b0033321934a39so13352533wmq.9
-        for <linux-perf-users@vger.kernel.org>; Tue, 30 Nov 2021 10:11:40 -0800 (PST)
+ us-mta-253-X2rDXp03MbSJNlMC8U7PWw-1; Tue, 30 Nov 2021 13:15:22 -0500
+X-MC-Unique: X2rDXp03MbSJNlMC8U7PWw-1
+Received: by mail-wm1-f69.google.com with SMTP id 187-20020a1c02c4000000b003335872db8dso10846713wmc.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 30 Nov 2021 10:15:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ddL8n8P0TCUoTeHHnDhgCoDcqA2h1iCOGqF7iCcQ86E=;
-        b=Xfm8WN9U5687eA+WyZruTcPVZNpDCuKo1SHnV+mFZey5yKU/moaIbC1FHgam2iRaYn
-         7iU0cypF69oW63AQ2YU8aEgkHwZAQ1FkYAZA5nWnyNPVAvnK0rJ5Veu0eOxfF/pHRvTV
-         CZj4rKOv49iBqothaszHaepJ00EaIOQD1oQh5ExraWZZAOaVqUHeAOynCJTP6istE8NB
-         IhAQL+N9L0pvyqRx345hVF8sTk9+8tgjO/7HMaaZPLdh7OLwxFEBNnjjF4OE9Sue2h7t
-         +USItcYv1BBm52lGxx4X3L6iLTQyWnTGC2EylllKhQT0qhtKgXvWmh1EA8OAvepUw2Ud
-         NUzw==
-X-Gm-Message-State: AOAM532p3RVG6xuotM8hJ78qoyMofDo9eQRABgeSXbeeRWEkBbxbsMM1
-        CRfV+oN5AQnLtLm+4FliXCyQNbLJvz8w710K33BYmozD8H20oNYII+3ujbBzIQRJHRLIQCYKeiD
-        wYER14yTr4HxoXpS1EMNe4XnSnGpuOQ==
-X-Received: by 2002:a05:600c:2f10:: with SMTP id r16mr288617wmn.141.1638295899681;
-        Tue, 30 Nov 2021 10:11:39 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJx5wN+F933qqKEgjN80+OQ468Igi/bARHDXAHS1GcmhJ/HGDfcsCzvIk6/yQO6vb4K4Dwe8jA==
-X-Received: by 2002:a05:600c:2f10:: with SMTP id r16mr288572wmn.141.1638295899406;
-        Tue, 30 Nov 2021 10:11:39 -0800 (PST)
+        bh=y0D83E+cNuncrGmthDykUEYreLlJf9PXpFpFy6oL8G4=;
+        b=InRgiHWs2cJLacGZ0nt31w59SbuLXy+W3WnlBMCZDD1z4McJ+cDFvnfl6BXDrsmDEC
+         YnCsvz6IzDphQn/hI4vRj+9bLjtRtw4WH0z/FblMLmNjrt9WmUPHZxn4NccD7iERf3Lr
+         chwTUsk6AXYZ+emmEOIGBLIz72LiVTkC/871Ti/93JrgFh99O65ryYjZtXb2kGyX4Qnk
+         GABpVArz9zZiD5xDRNDxCLQbQmHTuzCfhzMRHOGfYk3YIwfUJ7aTHq4+UD85y54Kzp/I
+         0x14WEL5uYCFefq7wL78TTeZ0rTBmW/wN68oarVmxBRJX7gACmAhm0FQSTki7ALLgtGc
+         D8Ow==
+X-Gm-Message-State: AOAM531K98S0Mx06WRNe6KhE7hq8XkMgYJZC2ASKVZGzyWaYmQzmsdMD
+        9qIR1rszeefx6eBU0iSgOMfcToeoI71K7TEZ5kwYGEkRcg1DQnduSFJ9CWbPvy8prf9K5zUSNbD
+        uV+hII3Vgy5UOQhX9JRKZPx8tb565lw==
+X-Received: by 2002:a7b:c2f7:: with SMTP id e23mr379464wmk.92.1638296121324;
+        Tue, 30 Nov 2021 10:15:21 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxJOfgIgumC5g74zQIlaoVNpamCUEIoCBerSrxJ7TK28QsNQXxRyH3lzwA87n0HLFsyC3Og3Q==
+X-Received: by 2002:a7b:c2f7:: with SMTP id e23mr379437wmk.92.1638296121134;
+        Tue, 30 Nov 2021 10:15:21 -0800 (PST)
 Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
-        by smtp.gmail.com with ESMTPSA id e12sm22632784wrq.20.2021.11.30.10.11.38
+        by smtp.gmail.com with ESMTPSA id g16sm3959688wmq.20.2021.11.30.10.15.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Nov 2021 10:11:38 -0800 (PST)
-Date:   Tue, 30 Nov 2021 19:11:36 +0100
+        Tue, 30 Nov 2021 10:15:20 -0800 (PST)
+Date:   Tue, 30 Nov 2021 19:15:19 +0100
 From:   Jiri Olsa <jolsa@redhat.com>
 To:     Ian Rogers <irogers@google.com>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        eranian@google.com
-Subject: Re: [PATCH v2] perf metric: Reduce multiplexing with duration_time
-Message-ID: <YaZpWOi26cLgYnPz@krava>
-References: <20211124015226.3317994-1-irogers@google.com>
- <YaOs+DjuoQvuqIrC@krava>
- <CAP-5=fXBRa7+ugLAWjuOkwr3vqWtaby86e8zovUvkX2wmYV4ag@mail.gmail.com>
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH] perf header: Fix memory leaks
+Message-ID: <YaZqN5UQfhBmgznT@krava>
+References: <20211118201730.2302927-1-irogers@google.com>
+ <YaOkbojVb2gZtfCk@krava>
+ <CAP-5=fVRE8dcDtivYaAm=DQze4d2966X7oWTWVzstzWeC-xeSw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fXBRa7+ugLAWjuOkwr3vqWtaby86e8zovUvkX2wmYV4ag@mail.gmail.com>
+In-Reply-To: <CAP-5=fVRE8dcDtivYaAm=DQze4d2966X7oWTWVzstzWeC-xeSw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Nov 29, 2021 at 09:46:31AM -0800, Ian Rogers wrote:
-> On Sun, Nov 28, 2021 at 8:23 AM Jiri Olsa <jolsa@redhat.com> wrote:
+On Mon, Nov 29, 2021 at 03:38:28PM -0800, Ian Rogers wrote:
+> On Sun, Nov 28, 2021 at 7:47 AM Jiri Olsa <jolsa@redhat.com> wrote:
 > >
-> > On Tue, Nov 23, 2021 at 05:52:26PM -0800, Ian Rogers wrote:
-> > > It is common to use the same counters with and without
-> > > duration_time. The ID sharing code treats duration_time as if it
-> > > were a hardware event placed in the same group. This causes
-> > > unnecessary multiplexing such as in the following example where
-> > > l3_cache_access isn't shared:
+> > On Thu, Nov 18, 2021 at 12:17:30PM -0800, Ian Rogers wrote:
+> > > These leaks were found with leak sanitizer running "perf pipe recording
+> > > and injection test". In pipe mode feat_fd may hold onto an events struct
+> > > that needs freeing. When string features are processed they may
+> > > overwrite an already created string, so free this before the overwrite.
 > > >
-> > > $ perf stat -M l3 -a sleep 1
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > >  tools/perf/util/header.c | 15 ++++++++++-----
+> > >  1 file changed, 10 insertions(+), 5 deletions(-)
 > > >
-> > >  Performance counter stats for 'system wide':
-> > >
-> > >          3,117,007      l3_cache_miss             #    199.5 MB/s  l3_rd_bw
-> > >                                                   #     43.6 %  l3_hits
-> > >                                                   #     56.4 %  l3_miss               (50.00%)
-> > >          5,526,447      l3_cache_access                                               (50.00%)
-> > >          5,392,435      l3_cache_access           # 5389191.2 access/s  l3_access_rate  (50.00%)
-> > >      1,000,601,901 ns   duration_time
-> > >
-> > >        1.000601901 seconds time elapsed
-> > >
-> > > Fix this by placing duration_time in all groups unless metric
-> > > sharing has been disabled on the command line:
-> > >
-> > > $ perf stat -M l3 -a sleep 1
-> > >
-> > >  Performance counter stats for 'system wide':
-> > >
-> > >          3,597,972      l3_cache_miss             #    230.3 MB/s  l3_rd_bw
-> > >                                                   #     48.0 %  l3_hits
-> > >                                                   #     52.0 %  l3_miss
-> > >          6,914,459      l3_cache_access           # 6909935.9 access/s  l3_access_rate
-> > >      1,000,654,579 ns   duration_time
-> > >
-> > >        1.000654579 seconds time elapsed
-> > >
-> > > $ perf stat --metric-no-merge -M l3 -a sleep 1
-> > >
-> > >  Performance counter stats for 'system wide':
-> > >
-> > >          3,501,834      l3_cache_miss             #     53.5 %  l3_miss               (24.99%)
-> > >          6,548,173      l3_cache_access                                               (24.99%)
-> > >          3,417,622      l3_cache_miss             #     45.7 %  l3_hits               (25.04%)
-> > >          6,294,062      l3_cache_access                                               (25.04%)
-> > >          5,923,238      l3_cache_access           # 5919688.1 access/s  l3_access_rate  (24.99%)
-> > >      1,000,599,683 ns   duration_time
-> > >          3,607,486      l3_cache_miss             #    230.9 MB/s  l3_rd_bw           (49.97%)
-> > >
-> > >        1.000599683 seconds time elapsed
-> > >
-> > > v2. Doesn't count duration_time in the metric_list_cmp function that
-> > >     sorts larger metrics first. Without this a metric with duration_time
-> > >     and an event is sorted the same as a metric with two events,
-> > >     possibly not allowing the first metric to share with the second.
+> > > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> > > index 79cce216727e..e3c1a532d059 100644
+> > > --- a/tools/perf/util/header.c
+> > > +++ b/tools/perf/util/header.c
+> > > @@ -2321,6 +2321,7 @@ static int perf_header__read_build_ids(struct perf_header *header,
+> > >  #define FEAT_PROCESS_STR_FUN(__feat, __feat_env) \
+> > >  static int process_##__feat(struct feat_fd *ff, void *data __maybe_unused) \
+> > >  {\
+> > > +     free(ff->ph->env.__feat_env);                \
 > >
-> > hum, isn't the change about adding duration_time in every metric?
-> > or you could still end up with metric without duration_time
+> > hm, how is this set before this callback is triggered?
 > 
-> It is about adding duration_time to all metrics. Sorting of the
-> metrics by number of IDs happens before we insert duration_time which
-> happens just prior to parsing. duration_time needn't be inserted if
-> --metric-no-merge is passed.
+> I see it for cpuid which is initially set in:
+> #0  perf_env__read_cpuid (env=0x62b000007240) at util/env.c:363
+> #1  0x0000555556325153 in perf_env__cpuid (env=0x62b000007240) at util/env.c:456
+> #2  0x00005555564002ff in evlist__init_trace_event_sample_raw
 
-I see, so that sorting takes place before it's added, makes sense then
+ok, I forgot we do this one, thanks for explanation
 
 Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-thanks,
 jirka
 
+
+> (evlist=0x61e000000080) at util/sample-raw.c:17
+> #3  0x00005555563f01f4 in __perf_session__new (data=0x7fffffffb8b0,
+> repipe=false, repipe_fd=-1, tool=0x7fffffffbaa0)
+>     at util/session.c:228
+> #4  0x000055555615f26b in perf_session__new (data=0x7fffffffb8b0,
+> tool=0x7fffffffbaa0) at util/session.h:70
+> #5  0x000055555616d991 in cmd_report (argc=0, argv=0x7fffffffe468) at
+> builtin-report.c:1408
+> #6  0x00005555562f36b8 in run_builtin (p=0x5555586bacd0
+> <commands+240>, argc=5, argv=0x7fffffffe468) at perf.c:313
+> #7  0x00005555562f3c11 in handle_internal_command (argc=5,
+> argv=0x7fffffffe468) at perf.c:365
+> #8  0x00005555562f3fce in run_argv (argcp=0x7fffffffe240,
+> argv=0x7fffffffe250) at perf.c:409
+> #9  0x00005555562f47bd in main (argc=5, argv=0x7fffffffe468) at perf.c:539
+> 
+> And then overwritten causing the leak:
+> #0  0x00005555563b965a in process_cpuid (ff=0x7fffffffad50, data=0x0)
+> at util/header.c:2333
+> #1  0x00005555563c53d2 in perf_event__process_feature
+> (session=0x62b000007200, event=0x621000006500) at util/header.c:4144
+> #2  0x000055555615fdef in process_feature_event
+> (session=0x62b000007200, event=0x621000006500) at builtin-report.c:230
+> #3  0x00005555563fa033 in perf_session__process_user_event
+> (session=0x62b000007200, event=0x621000006500, file_offset=868)
+>     at util/session.c:1668
+> #4  0x00005555563fae08 in perf_session__process_event
+> (session=0x62b000007200, event=0x621000006500, file_offset=868)
+>     at util/session.c:1803
+> #5  0x00005555563fc4e6 in __perf_session__process_pipe_events
+> (session=0x62b000007200) at util/session.c:2044
+> #6  0x00005555563ff005 in perf_session__process_events
+> (session=0x62b000007200) at util/session.c:2418
+> #7  0x000055555616508a in __cmd_report (rep=0x7fffffffbaa0) at
+> builtin-report.c:940
+> #8  0x000055555616f5c9 in cmd_report (argc=0, argv=0x7fffffffe468) at
+> builtin-report.c:1629
+> #9  0x00005555562f36b8 in run_builtin (p=0x5555586bacd0
+> <commands+240>, argc=5, argv=0x7fffffffe468) at perf.c:313
+> #10 0x00005555562f3c11 in handle_internal_command (argc=5,
+> argv=0x7fffffffe468) at perf.c:365
+> #11 0x00005555562f3fce in run_argv (argcp=0x7fffffffe240,
+> argv=0x7fffffffe250) at perf.c:409
+> #12 0x00005555562f47bd in main (argc=5, argv=0x7fffffffe468) at perf.c:539
 > 
 > Thanks,
 > Ian
 > 
-> > thanks,
 > > jirka
 > >
+> > >       ff->ph->env.__feat_env = do_read_string(ff); \
+> > >       return ff->ph->env.__feat_env ? 0 : -ENOMEM; \
+> > >  }
+> > > @@ -4124,6 +4125,7 @@ int perf_event__process_feature(struct perf_session *session,
+> > >       struct perf_record_header_feature *fe = (struct perf_record_header_feature *)event;
+> > >       int type = fe->header.type;
+> > >       u64 feat = fe->feat_id;
+> > > +     int ret = 0;
 > > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> > >  tools/perf/util/metricgroup.c | 42 +++++++++++++++++++++++++++--------
-> > >  1 file changed, 33 insertions(+), 9 deletions(-)
+> > >       if (type < 0 || type >= PERF_RECORD_HEADER_MAX) {
+> > >               pr_warning("invalid record type %d in pipe-mode\n", type);
+> > > @@ -4141,11 +4143,13 @@ int perf_event__process_feature(struct perf_session *session,
+> > >       ff.size = event->header.size - sizeof(*fe);
+> > >       ff.ph = &session->header;
 > > >
-> > > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> > > index fffe02aae3ed..51c99cb08abf 100644
-> > > --- a/tools/perf/util/metricgroup.c
-> > > +++ b/tools/perf/util/metricgroup.c
-> > > @@ -1115,13 +1115,27 @@ static int metricgroup__add_metric_sys_event_iter(const struct pmu_event *pe,
-> > >       return ret;
+> > > -     if (feat_ops[feat].process(&ff, NULL))
+> > > -             return -1;
+> > > +     if (feat_ops[feat].process(&ff, NULL)) {
+> > > +             ret = -1;
+> > > +             goto out;
+> > > +     }
+> > >
+> > >       if (!feat_ops[feat].print || !tool->show_feat_hdr)
+> > > -             return 0;
+> > > +             goto out;
+> > >
+> > >       if (!feat_ops[feat].full_only ||
+> > >           tool->show_feat_hdr >= SHOW_FEAT_HEADER_FULL_INFO) {
+> > > @@ -4154,8 +4158,9 @@ int perf_event__process_feature(struct perf_session *session,
+> > >               fprintf(stdout, "# %s info available, use -I to display\n",
+> > >                       feat_ops[feat].name);
+> > >       }
+> > > -
+> > > -     return 0;
+> > > +out:
+> > > +     free_event_desc(ff.events);
+> > > +     return ret;
 > > >  }
 > > >
-> > > +/**
-> > > + * metric_list_cmp - list_sort comparator that sorts metrics with more events to
-> > > + *                   the front. duration_time is excluded from the count.
-> > > + */
-> > >  static int metric_list_cmp(void *priv __maybe_unused, const struct list_head *l,
-> > >                          const struct list_head *r)
-> > >  {
-> > >       const struct metric *left = container_of(l, struct metric, nd);
-> > >       const struct metric *right = container_of(r, struct metric, nd);
-> > > +     struct expr_id_data *data;
-> > > +     int left_count, right_count;
-> > > +
-> > > +     left_count = hashmap__size(left->pctx->ids);
-> > > +     if (!expr__get_id(left->pctx, "duration_time", &data))
-> > > +             left_count--;
-> > > +
-> > > +     right_count = hashmap__size(right->pctx->ids);
-> > > +     if (!expr__get_id(right->pctx, "duration_time", &data))
-> > > +             right_count--;
-> > >
-> > > -     return hashmap__size(right->pctx->ids) - hashmap__size(left->pctx->ids);
-> > > +     return right_count - left_count;
-> > >  }
-> > >
-> > >  /**
-> > > @@ -1299,14 +1313,16 @@ static int build_combined_expr_ctx(const struct list_head *metric_list,
-> > >  /**
-> > >   * parse_ids - Build the event string for the ids and parse them creating an
-> > >   *             evlist. The encoded metric_ids are decoded.
-> > > + * @metric_no_merge: is metric sharing explicitly disabled.
-> > >   * @fake_pmu: used when testing metrics not supported by the current CPU.
-> > >   * @ids: the event identifiers parsed from a metric.
-> > >   * @modifier: any modifiers added to the events.
-> > >   * @has_constraint: false if events should be placed in a weak group.
-> > >   * @out_evlist: the created list of events.
-> > >   */
-> > > -static int parse_ids(struct perf_pmu *fake_pmu, struct expr_parse_ctx *ids,
-> > > -                  const char *modifier, bool has_constraint, struct evlist **out_evlist)
-> > > +static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
-> > > +                  struct expr_parse_ctx *ids, const char *modifier,
-> > > +                  bool has_constraint, struct evlist **out_evlist)
-> > >  {
-> > >       struct parse_events_error parse_error;
-> > >       struct evlist *parsed_evlist;
-> > > @@ -1314,12 +1330,19 @@ static int parse_ids(struct perf_pmu *fake_pmu, struct expr_parse_ctx *ids,
-> > >       int ret;
-> > >
-> > >       *out_evlist = NULL;
-> > > -     if (hashmap__size(ids->ids) == 0) {
-> > > +     if (!metric_no_merge || hashmap__size(ids->ids) == 0) {
-> > >               char *tmp;
-> > >               /*
-> > > -              * No ids/events in the expression parsing context. Events may
-> > > -              * have been removed because of constant evaluation, e.g.:
-> > > -              *  event1 if #smt_on else 0
-> > > +              * We may fail to share events between metrics because
-> > > +              * duration_time isn't present in one metric. For example, a
-> > > +              * ratio of cache misses doesn't need duration_time but the same
-> > > +              * events may be used for a misses per second. Events without
-> > > +              * sharing implies multiplexing, that is best avoided, so place
-> > > +              * duration_time in every group.
-> > > +              *
-> > > +              * Also, there may be no ids/events in the expression parsing
-> > > +              * context because of constant evaluation, e.g.:
-> > > +              *    event1 if #smt_on else 0
-> > >                * Add a duration_time event to avoid a parse error on an empty
-> > >                * string.
-> > >                */
-> > > @@ -1387,7 +1410,8 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
-> > >               ret = build_combined_expr_ctx(&metric_list, &combined);
-> > >
-> > >               if (!ret && combined && hashmap__size(combined->ids)) {
-> > > -                     ret = parse_ids(fake_pmu, combined, /*modifier=*/NULL,
-> > > +                     ret = parse_ids(metric_no_merge, fake_pmu, combined,
-> > > +                                     /*modifier=*/NULL,
-> > >                                       /*has_constraint=*/true,
-> > >                                       &combined_evlist);
-> > >               }
-> > > @@ -1435,7 +1459,7 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
-> > >                       }
-> > >               }
-> > >               if (!metric_evlist) {
-> > > -                     ret = parse_ids(fake_pmu, m->pctx, m->modifier,
-> > > +                     ret = parse_ids(metric_no_merge, fake_pmu, m->pctx, m->modifier,
-> > >                                       m->has_constraint, &m->evlist);
-> > >                       if (ret)
-> > >                               goto out;
+> > >  size_t perf_event__fprintf_event_update(union perf_event *event, FILE *fp)
 > > > --
 > > > 2.34.0.rc2.393.gf8c9666880-goog
 > > >
