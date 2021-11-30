@@ -2,87 +2,99 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC406C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 30 Nov 2021 15:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95450C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 30 Nov 2021 15:47:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245597AbhK3PVG (ORCPT
+        id S237816AbhK3Pu5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 30 Nov 2021 10:21:06 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:40258 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243848AbhK3PUD (ORCPT
+        Tue, 30 Nov 2021 10:50:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46372 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237639AbhK3Puy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 30 Nov 2021 10:20:03 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B7658B81A23;
-        Tue, 30 Nov 2021 15:16:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ABB5C53FC7;
-        Tue, 30 Nov 2021 15:16:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638285401;
-        bh=tmCIJXhsQSYZuiSF05bSR0dpSBbVRu8wuc+GEoqjBB4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EoCCkC5yJ7E6dAyx3V0w81P8exBIFXK0ru97Z8fAg+nTW8Wx1GmJvx7WfmcL2XTwS
-         pEJDFkdj/cWat22rwrM4Q3DCrLTQADq5DtGpY14PnTqkvCiVYNfpupnsTgjyybWjvJ
-         tGWKAh/3etl5qCqFUEXoDA3B3sQCb8FDu9TGkCIOGDPMc5OrKv4uyPYe1oATS3zWYi
-         i0NA8JExuq9RQsMliCcSe/goB2mqOBRLtImjJpGsObP8EOeb+Ib36P/JiKColBW3/Y
-         Z7j7caiB812t9NOHVLZ6O7ZEwZqjwVYrgiqxjaQj99Y24P3Kq9T3PJqeWeHe0qaPqJ
-         QPxq0Yz4bu+Ww==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 0551540002; Tue, 30 Nov 2021 12:16:38 -0300 (-03)
-Date:   Tue, 30 Nov 2021 12:16:38 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Gang Li <ligang.bdlg@bytedance.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf trace: Enable ignore_missing_thread for trace
-Message-ID: <YaZAVjjPmAApJOG9@kernel.org>
-References: <20211123074018.11406-1-ligang.bdlg@bytedance.com>
+        Tue, 30 Nov 2021 10:50:54 -0500
+Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD748C061574;
+        Tue, 30 Nov 2021 07:47:30 -0800 (PST)
+Received: by mail-qk1-x732.google.com with SMTP id 193so27223356qkh.10;
+        Tue, 30 Nov 2021 07:47:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0E8rI2pldC/kJRYfFj5pOe4f4oCd/4elC+07mJ7cezg=;
+        b=M3TECrBfeRNcmU2wzwJW8xakJwOsl96F7/wzhKVZtGVC4XSClhkZtPmX4O/ArG22Sh
+         jjA+g1x4pyJ/4pviilYQPG+KhhSz3F4DZuFRxnjDPTFhjqCEG4DtQvvJ8KQb64m6allX
+         yyKpYEUobSoiHyXxASAEYQUGG6RRUph0Z3VWpZpdz7lmDRWto1u3+zXWvSbLxkDosk3G
+         7B4KO4BxCe1+OrGLaCgzq2a913mzBdZ+eBV/20lQAFekOCsIcFyVxoB2ZV2YfjeK8rzK
+         SXg7rom0+dWxy0uNUSNNlxxK6f6+bXyctj/awauwEt7A4J/lXSd6tDQSaieEQdgMmo+8
+         LQbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0E8rI2pldC/kJRYfFj5pOe4f4oCd/4elC+07mJ7cezg=;
+        b=aEDwJF6lOKVALR1v3UyQRQHeogd81xev40Ew9jIUQetifgumoPkmSjjzUdbBwJT8gh
+         Aox3c91O/AsZOkas/dnjUVoMHEKtOpCjn/UUfA6phKawDM/kKaQ1B9Jr5QkDaIf6nDCH
+         PfW8pzA2oVoG51jWAqeerte6/2x2L78t2d5Ru4qh5G3cUhWIae1/IOJNKhGXebFubQZ/
+         r7H/QT/CWsGNkIbnt2nj1GG+HkiVc2hpTBie2sgjFp2N7MrxiHQZ2+CLyrYRvWHXwDZ0
+         hkBJf7DXD5f00W1s4GzRDqMTV6Zdg1unpDcr5IvLN92/hkPlP0uQwsGrZWki6uEYxrjz
+         89cQ==
+X-Gm-Message-State: AOAM533lBt32BQn2kBPAMjB0bGD6Ra/DUZEVGI4su675A82UvO8XfFFU
+        D13u9KzrvtZDYnMof721w+pUpy489osVr2bX3rA=
+X-Google-Smtp-Source: ABdhPJztrZJR8wzz1uvKDh9tgCXsCwcvYHaAV5LAj9Tyfjkwz7VlVZjHRc1l9DQlQzaVs/JoaW2gQFPu+qw5proo6JA=
+X-Received: by 2002:a05:620a:134a:: with SMTP id c10mr46334061qkl.207.1638287249916;
+ Tue, 30 Nov 2021 07:47:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211123074018.11406-1-ligang.bdlg@bytedance.com>
-X-Url:  http://acmel.wordpress.com
+References: <20211120112738.45980-1-laoar.shao@gmail.com> <20211120112738.45980-8-laoar.shao@gmail.com>
+ <yt9d35nf1d84.fsf@linux.ibm.com> <20211129123043.5cfd687a@gandalf.local.home>
+ <CALOAHbCVJcPdYq2j_VvhHBE-xLBnizRRx2oBu-KNgOr5jMf6RQ@mail.gmail.com> <20211130092333.77408a81@gandalf.local.home>
+In-Reply-To: <20211130092333.77408a81@gandalf.local.home>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Tue, 30 Nov 2021 23:46:54 +0800
+Message-ID: <CALOAHbDvxpjW9eD2_FeKMJzXdbEkWJykbdcjtk1Et_+=ybvgVw@mail.gmail.com>
+Subject: Re: [PATCH v2 7/7] tools/testing/selftests/bpf: replace open-coded 16
+ with TASK_COMM_LEN
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Sven Schnelle <svens@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel test robot <oliver.sang@intel.com>,
+        kbuild test robot <lkp@intel.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Tom Zanussi <zanussi@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Nov 23, 2021 at 03:40:17PM +0800, Gang Li escreveu:
-> perf already support ignore_missing_thread for -u/-p, but not yet
-> applied to `perf trace`. This patch enable ignore_missing_thread
-> for `perf trace`.
-> 
-> ref:
-> Link: http://lkml.kernel.org/r/1481538943-21874-6-git-send-email-jolsa@kernel.org
-> Link: http://lkml.kernel.org/r/1513148513-6974-1-git-send-email-zhangmengting@huawei.com
-> Signed-off-by: Gang Li <ligang.bdlg@bytedance.com>
-> ---
->  tools/perf/builtin-trace.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 0b52e08e558e..94d62a92f1a1 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -3950,6 +3950,9 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
->  		evlist__add(evlist, pgfault_min);
->  	}
->  
-> +	/* Enable ignoring missing threads when -u/-p option is defined. */
-> +	trace->opts.ignore_missing_thread = trace->opts.target.uid != UINT_MAX || trace->opts.target.pid;
-> +
->  	if (trace->sched &&
->  	    evlist__add_newtp(evlist, "sched", "sched_stat_runtime", trace__sched_stat_runtime))
->  		goto out_error_sched_stat_runtime;
+On Tue, Nov 30, 2021 at 10:23 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Tue, 30 Nov 2021 11:03:48 +0800
+> Yafang Shao <laoar.shao@gmail.com> wrote:
+>
+> > Many thanks for the quick fix!
+> > It seems this fix should be ahead of patch #7.
+> > I will send v3 which contains your fix.
+>
+> Don't bother. I'm actually going to send this to Linus as a bug fix.
+>
 
-Thanks, applied.
+Great!  Thanks for the work.
 
-- Arnaldo
-
+-- 
+Thanks
+Yafang
