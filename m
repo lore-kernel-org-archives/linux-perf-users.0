@@ -2,284 +2,152 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A9BEC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 30 Nov 2021 17:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A05C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 30 Nov 2021 17:50:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232734AbhK3RYC (ORCPT
+        id S244672AbhK3Rxz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 30 Nov 2021 12:24:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39996 "EHLO
+        Tue, 30 Nov 2021 12:53:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229959AbhK3RYC (ORCPT
+        with ESMTP id S244726AbhK3Rxx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 30 Nov 2021 12:24:02 -0500
-Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF6E3C061574
-        for <linux-perf-users@vger.kernel.org>; Tue, 30 Nov 2021 09:20:42 -0800 (PST)
-Received: by mail-il1-x129.google.com with SMTP id e8so22041450ilu.9
-        for <linux-perf-users@vger.kernel.org>; Tue, 30 Nov 2021 09:20:42 -0800 (PST)
+        Tue, 30 Nov 2021 12:53:53 -0500
+Received: from mail-pj1-x1049.google.com (mail-pj1-x1049.google.com [IPv6:2607:f8b0:4864:20::1049])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E92EAC061746
+        for <linux-perf-users@vger.kernel.org>; Tue, 30 Nov 2021 09:50:31 -0800 (PST)
+Received: by mail-pj1-x1049.google.com with SMTP id gf15-20020a17090ac7cf00b001a9a31687d0so7176482pjb.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 30 Nov 2021 09:50:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eyG9OXV4P5tX+vmnVX1tnOviKmV0Xh2bT7c5syeukro=;
-        b=M2TfxHCbx+Mgd28DC6d3EcqY4dznfFsmEXPFVxqbAphT4gm+lNRn9uQX1/3THwEciW
-         e3S9Urf7GDttTG24PWDWVAKYi2n4c3c3QVUXBoB6K15UL9nBO6xfP98ZPXVTMtie2FLz
-         4Xit5MwZObRMkY1xyfWTTfKCMjYtN2V0NWl+ffKZYXTY0SW/gEOTIjA0PgVdXSkGFkzp
-         HyoiT1JBJn6wxVZWiilxdQtVRfO/gdI/pAuErI1MyIa/5tK+jz8i3C7SzbT5gPJTemZ5
-         7M/ot2YFayGjH7Ml6ViFYcJ3XpjGM18P33MDiabkr47xivLohcwI+Acqg4crvEv/hZNQ
-         zgww==
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=KiCz3H5tdXkEbVfso8mDhZdEvp8PjEmgkQ1PXwPZG3Y=;
+        b=oN1EhBqjyTaJsgzHaZkerl9/TWhUU6QQzLU3hlilqoUKxaEwPnMevQlR6Tnfl3vleJ
+         SNshsukX9eSBTi2oVaG2j2nlyfq5i2Ddw+b3FHvqg7stNcHdvQba7kPInJrpUiCJRsVX
+         Vh+l/H3m9BgVxTwUi8CPZz4lHjP0AjgbXbFRjXYhaE8SGDaGd2hyfCDiVVY+xVbtQzEq
+         Ll6263efqsNy6MBASWI9agMSP58lN0z+yW+0iWkPNoOLKc4Ml9zwh6aqG9umBdufgp05
+         sCNaPUYSY9FYCHT8IbbWub7cW51GhdRsiOMSJGd7uwkh/N9TeYmvvozH56QmgnTFaxRv
+         FEpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eyG9OXV4P5tX+vmnVX1tnOviKmV0Xh2bT7c5syeukro=;
-        b=ZJSNFY+FnSzap7gATqt38tFraDJe19c0aooM7daKi8qwXrZs/5gU8Tiri+ZkmWQLxa
-         80Ugv4JkpKaFFRLTQ8pUuL72603HHdmB0qzOmA4pqy4w5+zLRLML6TAXfKtfDUDZt3co
-         gS0DgxASA7yfDOQw6Q98Hq4gDmexh3Rbr14lVgQ0I4FRkyl6Z3Tv2ooqGlkI0c342sVn
-         y6pRwr0UpixZBiwtqziuMlSIB/BZO3ABD8v6JtOfyZJ21U90ouDuGDirVrobNyKFpEcM
-         kxM2bcOFPiHe7Dt/09IzjvzuL46fYfypfARvAZfK39iYePAw7Ddb/WhiYRbm7BaGe190
-         QPcw==
-X-Gm-Message-State: AOAM531C8m/yZneuG6reqXsfaWuXfQKk+dv01m/iqdDOxPiBYEsnKnbh
-        y65PehL8qxCK2V97hxPqeBD168QFSMnRaOhw+jcO5Q==
-X-Google-Smtp-Source: ABdhPJzW1qM8ezAH7rMCm/B3X07huZgeytdoKj4zxrZFCqeCAhgGCra7cEgv/V/grjDwHsBF0htzfjkhGIVsEAEnov0=
-X-Received: by 2002:a05:6e02:148c:: with SMTP id n12mr365913ilk.89.1638292841854;
- Tue, 30 Nov 2021 09:20:41 -0800 (PST)
-MIME-Version: 1.0
-References: <20211118193714.2293728-1-irogers@google.com> <YaOi6pYqoc3boYX/@krava>
- <YaY8eBB+PnklIxZA@kernel.org>
-In-Reply-To: <YaY8eBB+PnklIxZA@kernel.org>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=KiCz3H5tdXkEbVfso8mDhZdEvp8PjEmgkQ1PXwPZG3Y=;
+        b=Gz5HnTd4rBy3Gd5evZ0AWBvs9/rKExEyyvFqNZqRxL45s9IAdzwrnOd37C/jE+iPMa
+         REAT0dCUR7CA7hJyTwLT/VMtqYxXdV5UztAIjRBswjzIPPZxjuNreTFYc+t8UkSezNaL
+         U/LYFC1bch8NkCTW073p5iLSMZzTi7kYpqRn5tSppqKylUfIKhal5A92fe6kMMyXVusA
+         iMMttAXNrzQh98DUdfQxMKKpRq0VtpeXt5srWr2BR3gNVW1rYxssCdDeuDmVOC2aRvpR
+         4Ftnv84KkjdvWBC7DhvsrA2hBsyD8eQom14r/epvloxCccB3OXzHwXR5hJjJyrNumhJA
+         Uiuw==
+X-Gm-Message-State: AOAM531AHtw17IDbHGNM5sUlhqIE45yaVwwKc1fdjJfnQ6VmiqXMSuuV
+        Y49VD18PCMGFlyDWq3Mc6fatY6H7HROx
+X-Google-Smtp-Source: ABdhPJyMX+za+dRQ9OY5tluXtc4ZIXqWSdZxJs8B+y/Hi53vXdCkv98q84YI3yjI3tlSGfRlowjIorghKoR7
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:e82d:9b6a:8f25:a0c4])
+ (user=irogers job=sendgmr) by 2002:a63:a45:: with SMTP id z5mr517223pgk.392.1638294631404;
+ Tue, 30 Nov 2021 09:50:31 -0800 (PST)
+Date:   Tue, 30 Nov 2021 09:49:44 -0800
+Message-Id: <20211130174945.247604-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.34.0.rc2.393.gf8c9666880-goog
+Subject: [PATCH v3 1/2] perf evlist: Allow setting arbitrary leader
 From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 30 Nov 2021 09:20:25 -0800
-Message-ID: <CAP-5=fXR952+Rfa8yPAwO7FmHTctuTxfY0yEREtvJkHtx=PfYA@mail.gmail.com>
-Subject: Re: [PATCH] perf map: Fix namespace memory leak
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Riccardo Mancini <rickyman7@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
+To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>,
-        Sohaib Mohamed <sohaib.amhmd@gmail.com>
+        Vineet Singh <vineet.singh@intel.com>
+Cc:     eranian@google.com, Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Nov 30, 2021 at 7:00 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Sun, Nov 28, 2021 at 04:40:26PM +0100, Jiri Olsa escreveu:
-> > On Thu, Nov 18, 2021 at 11:37:14AM -0800, Ian Rogers wrote:
-> > > This leak was happening reliably with test "Lookup mmap thread" with
-> > > stack traces like:
-> > >
-> > > Direct leak of 5504 byte(s) in 172 object(s) allocated from:
-> > >     #0 0x7f4685e47987 in __interceptor_calloc
-> > >     #1 0x56063b974c2a in nsinfo__new util/namespaces.c:142
-> > >     #2 0x56063b9781ff in thread__new util/thread.c:70
-> > >     #3 0x56063b944953 in ____machine__findnew_thread util/machine.c:543
-> > >     #4 0x56063b944ac6 in __machine__findnew_thread util/machine.c:574
-> > >     #5 0x56063b944b36 in machine__findnew_thread util/machine.c:584
-> > >     #6 0x56063b94c892 in machine__process_fork_event util/machine.c:1954
-> > >     #7 0x56063b94cc1f in machine__process_event util/machine.c:2019
-> > >     #8 0x56063b894f18 in perf_event__process util/event.c:567
-> > >     #9 0x56063ba17951 in perf_tool__process_synth_event util/synthetic-events.c:65
-> > >     #10 0x56063ba19086 in perf_event__synthesize_fork util/synthetic-events.c:287
-> > >     #11 0x56063ba1c39d in __event__synthesize_thread util/synthetic-events.c:775
-> > >     #12 0x56063ba1cf6f in __perf_event__synthesize_threads util/synthetic-events.c:929
-> > >     #13 0x56063ba1d4ab in perf_event__synthesize_threads util/synthetic-events.c:1000
-> > >     #14 0x56063b821a3d in synth_all tests/mmap-thread-lookup.c:136
-> > >     #15 0x56063b821c86 in mmap_events tests/mmap-thread-lookup.c:174
-> > >     #16 0x56063b8221b7 in test__mmap_thread_lookup tests/mmap-thread-lookup.c:230
-> > >
-> > > The dso->nsinfo is overwritten, but without a nsinfo__put this can leak
-> > > the overwritten nsinfo.
-> > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> >
-> > nice catch!
-> >
-> > Acked-by: Jiri Olsa <jolsa@redhat.com>
->
-> This one is tricky, I have to retrieve the details from last time this
-> surfaced, but try:
->
-> # perf top -F 10000
->
-> leave it for a while and press 'q':
->
-> perf: /home/acme/git/perf/tools/include/linux/refcount.h:131: refcount_sub_and_test: Assertion `!(new > val)' failed.
->                                                                                                                      Aborted (core dumped)
->
-> I reproduced the above assertion a few times, now I'm not being able,
-> probably some namespace related activity took place when it hit.
+The leader of a group is the first, but allow it to be an arbitrary
+list member so that for Intel topdown events slots may always be the
+group leader.
 
-I was able to reproduce in about 1 run in 3. With address sanitizer
-the core dump turns into a heap-use-after-free with a report of:
+v3. Switched list_entry to list_first_entry as suggested by Arnaldo
+    Carvalho de Melo <acme@kernel.org>.
 
-==235440==ERROR: AddressSanitizer: heap-use-after-free on address
-0x6030000485c8 at pc 0x55d8b882bfb7 bp 0x7fffd3426e90 sp
-0x7fffd3426e88
-READ of size 4 at 0x6030000485c8 thread T0
-    #0 0x55d8b882bfb6 in __read_once_size ./tools/include/linux/compiler.h:132
-    #1 0x55d8b882bfb6 in atomic_read
-./tools/include/asm/../../arch/x86/include/asm/atomic.h:28
-    #2 0x55d8b882c35c in refcount_sub_and_test
-./tools/include/linux/refcount.h:123
-    #3 0x55d8b882c45e in refcount_dec_and_test
-./tools/include/linux/refcount.h:148
-    #4 0x55d8b882d4af in nsinfo__put util/namespaces.c:204
-    #5 0x55d8b87adecd in __nsinfo__zput util/namespaces.h:65
-    #6 0x55d8b87b4bcc in dso__delete util/dso.c:1327
-    #7 0x55d8b87b4c8d in dso__put util/dso.c:1342
-    #8 0x55d8b87fb23b in dsos__purge util/machine.c:182
-    #9 0x55d8b87fb2e3 in dsos__exit util/machine.c:190
-    #10 0x55d8b87fb46e in machine__exit util/machine.c:222
-    #11 0x55d8b87fb715 in machines__exit util/machine.c:262
-    #12 0x55d8b88149d2 in perf_session__delete util/session.c:305
-    #13 0x55d8b85c0924 in cmd_top ./tools/perf/builtin-top.c:1781
-    #14 0x55d8b87176b7 in run_builtin ./tools/perf/perf.c:313
-    #15 0x55d8b8717c10 in handle_internal_command ./tools/perf/perf.c:365
-    #16 0x55d8b8717fcd in run_argv ./tools/perf/perf.c:409
-    #17 0x55d8b87187bc in main ./tools/perf/perf.c:539
+Reviewed-by: Kajol Jain<kjain@linux.ibm.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/lib/perf/evlist.c                  | 15 +++++++++------
+ tools/lib/perf/include/internal/evlist.h |  2 +-
+ tools/perf/util/parse-events.c           |  4 ++--
+ 3 files changed, 12 insertions(+), 9 deletions(-)
 
-0x6030000485c8 is located 24 bytes inside of 32-byte region
-[0x6030000485b0,0x6030000485d0)
-freed by thread T0 here:
-    #0 0x7fb6e7c454d7 in __interceptor_free
-../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:127
-    #1 0x55d8b882d41a in nsinfo__delete util/namespaces.c:192
-    #2 0x55d8b882d4bf in nsinfo__put util/namespaces.c:205
-    #3 0x55d8b87adecd in __nsinfo__zput util/namespaces.h:65
-    #4 0x55d8b87b4bcc in dso__delete util/dso.c:1327
-    #5 0x55d8b87b4c8d in dso__put util/dso.c:1342
-    #6 0x55d8b87fb23b in dsos__purge util/machine.c:182
-    #7 0x55d8b87fb2e3 in dsos__exit util/machine.c:190
-    #8 0x55d8b87fb46e in machine__exit util/machine.c:222
-    #9 0x55d8b87fb715 in machines__exit util/machine.c:262
-    #10 0x55d8b88149d2 in perf_session__delete util/session.c:305
-    #11 0x55d8b85c0924 in cmd_top ./tools/perf/builtin-top.c:1781
-    #12 0x55d8b87176b7 in run_builtin ./tools/perf/perf.c:313
-    #13 0x55d8b8717c10 in handle_internal_command ./tools/perf/perf.c:365
-    #14 0x55d8b8717fcd in run_argv ./tools/perf/perf.c:409
-    #15 0x55d8b87187bc in main ./tools/perf/perf.c:539
+diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+index e37dfad31383..245acbc53bd3 100644
+--- a/tools/lib/perf/evlist.c
++++ b/tools/lib/perf/evlist.c
+@@ -643,14 +643,14 @@ perf_evlist__next_mmap(struct perf_evlist *evlist, struct perf_mmap *map,
+ 	return overwrite ? evlist->mmap_ovw_first : evlist->mmap_first;
+ }
+ 
+-void __perf_evlist__set_leader(struct list_head *list)
++void __perf_evlist__set_leader(struct list_head *list, struct perf_evsel *leader)
+ {
+-	struct perf_evsel *evsel, *leader;
++	struct perf_evsel *first, *last, *evsel;
+ 
+-	leader = list_entry(list->next, struct perf_evsel, node);
+-	evsel = list_entry(list->prev, struct perf_evsel, node);
++	first = list_first_entry(list, struct perf_evsel, node);
++	last = list_last_entry(list, struct perf_evsel, node);
+ 
+-	leader->nr_members = evsel->idx - leader->idx + 1;
++	leader->nr_members = last->idx - first->idx + 1;
+ 
+ 	__perf_evlist__for_each_entry(list, evsel)
+ 		evsel->leader = leader;
+@@ -659,7 +659,10 @@ void __perf_evlist__set_leader(struct list_head *list)
+ void perf_evlist__set_leader(struct perf_evlist *evlist)
+ {
+ 	if (evlist->nr_entries) {
++		struct perf_evsel *first = list_entry(evlist->entries.next,
++						struct perf_evsel, node);
++
+ 		evlist->nr_groups = evlist->nr_entries > 1 ? 1 : 0;
+-		__perf_evlist__set_leader(&evlist->entries);
++		__perf_evlist__set_leader(&evlist->entries, first);
+ 	}
+ }
+diff --git a/tools/lib/perf/include/internal/evlist.h b/tools/lib/perf/include/internal/evlist.h
+index f366dbad6a88..6f74269a3ad4 100644
+--- a/tools/lib/perf/include/internal/evlist.h
++++ b/tools/lib/perf/include/internal/evlist.h
+@@ -127,5 +127,5 @@ int perf_evlist__id_add_fd(struct perf_evlist *evlist,
+ 
+ void perf_evlist__reset_id_hash(struct perf_evlist *evlist);
+ 
+-void __perf_evlist__set_leader(struct list_head *list);
++void __perf_evlist__set_leader(struct list_head *list, struct perf_evsel *leader);
+ #endif /* __LIBPERF_INTERNAL_EVLIST_H */
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 5bfb6f892489..c2935aca4b67 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1834,8 +1834,8 @@ void parse_events__set_leader(char *name, struct list_head *list,
+ 	if (parse_events__set_leader_for_uncore_aliase(name, list, parse_state))
+ 		return;
+ 
+-	__perf_evlist__set_leader(list);
+-	leader = list_entry(list->next, struct evsel, core.node);
++	leader = list_first_entry(list, struct evsel, core.node);
++	__perf_evlist__set_leader(list, &leader->core);
+ 	leader->group_name = name ? strdup(name) : NULL;
+ }
+ 
+-- 
+2.34.0.rc2.393.gf8c9666880-goog
 
-previously allocated by thread T11 here:
-    #0 0x7fb6e7c45987 in __interceptor_calloc
-../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:154
-    #1 0x55d8b882ceaa in nsinfo__new util/namespaces.c:142
-    #2 0x55d8b883047f in thread__new util/thread.c:70
-    #3 0x55d8b87fcb93 in ____machine__findnew_thread util/machine.c:543
-    #4 0x55d8b87fcd06 in __machine__findnew_thread util/machine.c:574
-    #5 0x55d8b87fcd76 in machine__findnew_thread util/machine.c:584
-    #6 0x55d8b8804ad2 in machine__process_fork_event util/machine.c:1954
-    #7 0x55d8b8804e5f in machine__process_event util/machine.c:2019
-    #8 0x55d8b874cf18 in perf_event__process util/event.c:567
-    #9 0x55d8b88cfbd1 in perf_tool__process_synth_event
-util/synthetic-events.c:65
-    #10 0x55d8b88d1306 in perf_event__synthesize_fork
-util/synthetic-events.c:287
-    #11 0x55d8b88d461d in __event__synthesize_thread util/synthetic-events.c:775
-    #12 0x55d8b88d51ef in __perf_event__synthesize_threads
-util/synthetic-events.c:929
-    #13 0x55d8b88d54af in synthesize_threads_worker util/synthetic-events.c:961
-    #14 0x7fb6e7b1eead in start_thread nptl/pthread_create.c:463
-
-Thread T11 created by T0 here:
-    #0 0x7fb6e7bed716 in __interceptor_pthread_create
-../../../../src/libsanitizer/asan/asan_interceptors.cpp:216
-    #1 0x55d8b88d5ddd in perf_event__synthesize_threads
-util/synthetic-events.c:1039
-    #2 0x55d8b88da3b8 in __machine__synthesize_threads
-util/synthetic-events.c:1791
-    #3 0x55d8b88da43d in machine__synthesize_threads
-util/synthetic-events.c:1802
-    #4 0x55d8b85b9378 in __cmd_top ./tools/perf/builtin-top.c:1273
-    #5 0x55d8b85c0811 in cmd_top ./tools/perf/builtin-top.c:1774
-    #6 0x55d8b87176b7 in run_builtin ./tools/perf/perf.c:313
-    #7 0x55d8b8717c10 in handle_internal_command ./tools/perf/perf.c:365
-    #8 0x55d8b8717fcd in run_argv ./tools/perf/perf.c:409
-    #9 0x55d8b87187bc in main ./tools/perf/perf.c:539
-
-SUMMARY: AddressSanitizer: heap-use-after-free
-./tools/include/linux/compiler.h:132 in __read_once_size
-Shadow bytes around the buggy address:
-  0x0c0680001060: fa fa fa fa fa fa fa fa fd fd fd fd fa fa fa fa
-  0x0c0680001070: fa fa fa fa fa fa fa fa fa fa fd fd fd fd fa fa
-  0x0c0680001080: fa fa fa fa fa fa fa fa fa fa fa fa fd fd fd fd
-  0x0c0680001090: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x0c06800010a0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-=>0x0c06800010b0: fa fa fa fa fa fa fd fd fd[fd]fa fa fa fa fa fa
-  0x0c06800010c0: fa fa fa fa fa fa fa fa fd fd fd fa fa fa fd fd
-  0x0c06800010d0: fd fa fa fa fd fd fd fd fa fa fd fd fd fa fa fa
-  0x0c06800010e0: fd fd fd fd fa fa fd fd fd fd fa fa fd fd fd fa
-  0x0c06800010f0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fd fd
-  0x0c0680001100: fd fd fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-Shadow byte legend (one shadow byte represents 8 application bytes):
-  Addressable:           00
-  Partially addressable: 01 02 03 04 05 06 07
-  Heap left redzone:       fa
-  Freed heap region:       fd
-  Stack left redzone:      f1
-  Stack mid redzone:       f2
-  Stack right redzone:     f3
-  Stack after return:      f5
-  Stack use after scope:   f8
-  Global redzone:          f9
-  Global init order:       f6
-  Poisoned by user:        f7
-  Container overflow:      fc
-  Array cookie:            ac
-  Intra object redzone:    bb
-  ASan internal:           fe
-  Left alloca redzone:     ca
-  Right alloca redzone:    cb
-  Shadow gap:              cc
-==235440==ABORTING
-
-My hope was to land this so that 'perf test' wouldn't have new
-failures caused by leak sanitizer. So one option could be to guard the
-change with an address sanitizer #ifdef. The larger fix is to rework
-the reference counting logic, but I'd really hope we could switch that
-work to being in a language like Rust to get us out of the current
-memory leak vs crash wac-a-mole.
-
-+Riccardo as he did some great and related fixes over the summer.
-
-Thanks,
-Ian
-
-
-
-> - Arnaldo
->
-> > thanks,
-> > jirka
-> >
-> > > ---
-> > >  tools/perf/util/map.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-> > > index 8af693d9678c..ceed8f407bc0 100644
-> > > --- a/tools/perf/util/map.c
-> > > +++ b/tools/perf/util/map.c
-> > > @@ -192,6 +192,7 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
-> > >                     if (!(prot & PROT_EXEC))
-> > >                             dso__set_loaded(dso);
-> > >             }
-> > > +           nsinfo__put(dso->nsinfo);
-> > >             dso->nsinfo = nsi;
-> > >
-> > >             if (build_id__is_defined(bid))
-> > > --
-> > > 2.34.0.rc2.393.gf8c9666880-goog
-> > >
->
-> --
->
-> - Arnaldo
