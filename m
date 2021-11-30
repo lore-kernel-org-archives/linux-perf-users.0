@@ -2,157 +2,237 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62AD1C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 30 Nov 2021 13:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3A5C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 30 Nov 2021 13:59:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240925AbhK3Ni4 (ORCPT
+        id S241918AbhK3OCe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 30 Nov 2021 08:38:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42726 "EHLO
+        Tue, 30 Nov 2021 09:02:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240824AbhK3Niy (ORCPT
+        with ESMTP id S241867AbhK3OC3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 30 Nov 2021 08:38:54 -0500
+        Tue, 30 Nov 2021 09:02:29 -0500
 Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01F53C061574;
-        Tue, 30 Nov 2021 05:35:35 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C7C6C061746;
+        Tue, 30 Nov 2021 05:59:07 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 5A983CE19E4;
-        Tue, 30 Nov 2021 13:35:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E0A6C53FCD;
-        Tue, 30 Nov 2021 13:35:31 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id A24DBCE19E4;
+        Tue, 30 Nov 2021 13:59:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68A4AC53FC1;
+        Tue, 30 Nov 2021 13:59:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638279331;
-        bh=ZbYLOHwzBNV66bp8ROGzwP/TR4kHipcxNWlYHuOAOmc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MaSxuMrmNxsGhqI3WRNG8WdL5yDQ5Js63JL9Sqp6vghKZNVX5G8E5dC3s+je1XJvS
-         DOEl+qFtu6iHJF1SwBYo+/cIz4ySOWWmPwEqgNmCc5pzQn+Ro0Iz5g+vMDNzXPRFHF
-         /wct65DWgyjHgust84PDyAXq+PsLHbQMNrw/paU7YBeUFaOEyMBWPFERhf4GaANXDr
-         6nq3ckmqeUelKR0zIXWMpsLSVyfNCBKgRKvAIffR6GlEmYZI7qY8tYSZUG+6MFThuS
-         cdBjPH57iDu3pX+/rFnL4f4g4mvvnliirekmL3CXeeSxclw7BBRR/PFVvd5QNKaHsk
-         gN7JQ5Pe/AfTQ==
+        s=k20201202; t=1638280743;
+        bh=tdQPUdVcTsxUACtFJrMjBgTPOOpzMdMgvCMghNLdcr8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Uu6/esCmRVmicjdIHUBA6BbgYWqOUKQ/4SRBxGuG4vvbzPt9EXSyIo9SS5z3YKBcn
+         C+dGAuXItzrtYzmPKm599lfnKiXKj3+O6m0525FH8pebGeq8ZdK4nd4Ujun6oudtuW
+         0gnk2haT8K5/3A14tCiweO+XHnVDnw52da5Bxf5d2txwyPhu+XWLp0aCEZ4X12D5O6
+         S2Y18zoe2jNXVgdlPp9rmrNzz4k3gfh77bZEDFfHkzFR4TzJwIvf5Hvme7fOIhzk8E
+         Q1g9hdrT3onGYO320ER3l3X7kt2mbBUpVgcLM5BL74RnrfdgFE6Z+sJvA/7PMp0M6l
+         Ic2o3syEwWivg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C14C640866; Fri, 26 Nov 2021 15:51:55 -0300 (-03)
-Date:   Fri, 26 Nov 2021 15:51:55 -0300
+        id B2E9240002; Tue, 30 Nov 2021 10:26:17 -0300 (-03)
+Date:   Tue, 30 Nov 2021 10:26:17 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@collabora.com>,
-        Arnd Bergmann <arnd@arndb.de>,
+To:     Jaroslav =?utf-8?B?xaBrYXJ2YWRh?= <jskarvad@redhat.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [FYI][PATCH 1/1] tools headers UAPI: Sync powerpc syscall table
- file changed by new futex_waitv syscall
-Message-ID: <YaEsy1PwzN/vPJAO@kernel.org>
-References: <YZ/1OU9mJuyS2HMa@kernel.org>
- <308BB8D5-95DF-40EF-9155-CEAC0422BBD4@linux.vnet.ibm.com>
+        linux-perf-users@vger.kernel.org
+Subject: [FYI][PATCH 1/1] tools build: Remove needless libpython-version
+ feature check that breaks test-all fast path
+Message-ID: <YaYmeeC6CS2b8OSz@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <308BB8D5-95DF-40EF-9155-CEAC0422BBD4@linux.vnet.ibm.com>
-X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Nov 26, 2021 at 03:19:32PM +0530, Athira Rajeev escreveu:
-> 
-> 
-> > On 26-Nov-2021, at 2:12 AM, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > 
-> > To pick the changes in this cset:
-> > 
-> >  a0eb2da92b715d0c ("futex: Wireup futex_waitv syscall")
-> > 
-> > That add support for this new syscall in tools such as 'perf trace'.
-> > 
-> > For instance, this is now possible (adapted from the x86_64 test output):
-> > 
-> >  # perf trace -e futex_waitv
-> >  ^C#
-> >  # perf trace -v -e futex_waitv
-> >  event qualifier tracepoint filter: (common_pid != 807333 && common_pid != 3564) && (id == 449)
-> >  ^C#
-> >  # perf trace -v -e futex* --max-events 10
-> >  event qualifier tracepoint filter: (common_pid != 812168 && common_pid != 3564) && (id == 221 || id == 449)
-> >  mmap size 528384B
-> >           ? (         ): Timer/219310  ... [continued]: futex())                                            = -1 ETIMEDOUT (Connection timed out)
-> >       0.012 ( 0.002 ms): Timer/219310 futex(uaddr: 0x7fd0b152d3c8, op: WAKE|PRIVATE_FLAG, val: 1)           = 0
-> >       0.024 ( 0.060 ms): Timer/219310 futex(uaddr: 0x7fd0b152d420, op: WAIT_BITSET|PRIVATE_FLAG, utime: 0x7fd0b1657840, val3: MATCH_ANY) = 0
-> >       0.086 ( 0.001 ms): Timer/219310 futex(uaddr: 0x7fd0b152d3c8, op: WAKE|PRIVATE_FLAG, val: 1)           = 0
-> >       0.088 (         ): Timer/219310 futex(uaddr: 0x7fd0b152d424, op: WAIT_BITSET|PRIVATE_FLAG, utime: 0x7fd0b1657840, val3: MATCH_ANY) ...
-> >       0.075 ( 0.005 ms): Web Content/219299 futex(uaddr: 0x7fd0b152d420, op: WAKE|PRIVATE_FLAG, val: 1)     = 1
-> >       0.169 ( 0.004 ms): Web Content/219299 futex(uaddr: 0x7fd0b152d424, op: WAKE|PRIVATE_FLAG, val: 1)     = 1
-> >       0.088 ( 0.089 ms): Timer/219310  ... [continued]: futex())                                            = 0
-> >       0.179 ( 0.001 ms): Timer/219310 futex(uaddr: 0x7fd0b152d3c8, op: WAKE|PRIVATE_FLAG, val: 1)           = 0
-> >       0.181 (         ): Timer/219310 futex(uaddr: 0x7fd0b152d420, op: WAIT_BITSET|PRIVATE_FLAG, utime: 0x7fd0b1657840, val3: MATCH_ANY) ...
-> >  #
-> > 
-> > That is the filter expression attached to the raw_syscalls:sys_{enter,exit}
-> > tracepoints.
-> > 
-> >  $ grep futex tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-> >  221	32	futex				sys_futex_time32
-> >  221	64	futex				sys_futex
-> >  221	spu	futex				sys_futex
-> >  422	32	futex_time64			sys_futex			sys_futex
-> >  449	common  futex_waitv                     sys_futex_waitv
-> >  $
-> > 
-> 
-> Hi Arnaldo,
-> 
-> I checked this in powerpc by using :
-> perf trace -v -e futex_waitv 
-> And also using functional selftest from 'tools/testing/selftests/futex/functional/futex_waitv’, to make sure ‘futex_waitv’ comes in the perf trace result.
-> 
-> Just a minor suggestion change. Below warning mentioned in this patch is for s390. But I verified that this patch fixes the perf build warning in powerpc also. So would be good to put the warning logs for powerpc:
+Since 66dfdff03d196e51 ("perf tools: Add Python 3 support") we don't use
+the tools/build/feature/test-libpython-version.c version in any Makefile
+feature check:
 
-I'll fix that. Thanks for pointing it out!
+  $ find tools/ -type f | xargs grep feature-libpython-version
+  $
+
+The only place where this was used was removed in 66dfdff03d196e51:
+
+  -        ifneq ($(feature-libpython-version), 1)
+  -          $(warning Python 3 is not yet supported; please set)
+  -          $(warning PYTHON and/or PYTHON_CONFIG appropriately.)
+  -          $(warning If you also have Python 2 installed, then)
+  -          $(warning try something like:)
+  -          $(warning $(and ,))
+  -          $(warning $(and ,)  make PYTHON=python2)
+  -          $(warning $(and ,))
+  -          $(warning Otherwise, disable Python support entirely:)
+  -          $(warning $(and ,))
+  -          $(warning $(and ,)  make NO_LIBPYTHON=1)
+  -          $(warning $(and ,))
+  -          $(error   $(and ,))
+  -        else
+  -          LDFLAGS += $(PYTHON_EMBED_LDFLAGS)
+  -          EXTLIBS += $(PYTHON_EMBED_LIBADD)
+  -          LANG_BINDINGS += $(obj-perf)python/perf.so
+  -          $(call detected,CONFIG_LIBPYTHON)
+  -        endif
+
+And nowadays we either build with PYTHON=python3 or just install the
+python3 devel packages and perf will build against it.
+
+But the leftover feature-libpython-version check made the fast path
+feature detection to break in all cases except when python2 devel files
+were installed:
+
+  $ rpm -qa | grep python.*devel
+  python3-devel-3.9.7-1.fc34.x86_64
+  $ rm -rf /tmp/build/perf ; mkdir -p /tmp/build/perf ;
+  $ make -C tools/perf O=/tmp/build/perf install-bin
+  make: Entering directory '/var/home/acme/git/perf/tools/perf'
+    BUILD:   Doing 'make -j32' parallel build
+    HOSTCC  /tmp/build/perf/fixdep.o
+  <SNIP>
+  $ cat /tmp/build/perf/feature/test-all.make.output
+  In file included from test-all.c:18:
+  test-libpython-version.c:5:10: error: #error
+      5 |         #error
+        |          ^~~~~
+  $ ldd ~/bin/perf | grep python
+	libpython3.9.so.1.0 => /lib64/libpython3.9.so.1.0 (0x00007fda6dbcf000)
+  $
+
+As python3 is the norm these days, fix this by just removing the unused
+feature-libpython-version feature check, making the test-all fast path
+to work with the common case.
+
+With this:
+
+  $ rm -rf /tmp/build/perf ; mkdir -p /tmp/build/perf ;
+  $ make -C tools/perf O=/tmp/build/perf install-bin |& head
+  make: Entering directory '/var/home/acme/git/perf/tools/perf'
+    BUILD:   Doing 'make -j32' parallel build
+    HOSTCC  /tmp/build/perf/fixdep.o
+    HOSTLD  /tmp/build/perf/fixdep-in.o
+    LINK    /tmp/build/perf/fixdep
+
+  Auto-detecting system features:
+  ...                         dwarf: [ on  ]
+  ...            dwarf_getlocations: [ on  ]
+  ...                         glibc: [ on  ]
+  $ ldd ~/bin/perf | grep python
+	libpython3.9.so.1.0 => /lib64/libpython3.9.so.1.0 (0x00007f58800b0000)
+  $ cat /tmp/build/perf/feature/test-all.make.output
+  $
+
+Fixes: 66dfdff03d196e51 ("perf tools: Add Python 3 support")
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jaroslav Škarvada <jskarvad@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/build/Makefile.feature                 |  1 -
+ tools/build/feature/Makefile                 |  4 ----
+ tools/build/feature/test-all.c               |  5 -----
+ tools/build/feature/test-libpython-version.c | 11 -----------
+ tools/perf/Makefile.config                   |  2 --
+ 5 files changed, 23 deletions(-)
+ delete mode 100644 tools/build/feature/test-libpython-version.c
+
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 45a9a59828c3c09d..ae61f464043a11fb 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -48,7 +48,6 @@ FEATURE_TESTS_BASIC :=                  \
+         numa_num_possible_cpus          \
+         libperl                         \
+         libpython                       \
+-        libpython-version               \
+         libslang                        \
+         libslang-include-subdir         \
+         libtraceevent                   \
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 0a3244ad967307ce..1480910c792e2cb3 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -32,7 +32,6 @@ FILES=                                          \
+          test-numa_num_possible_cpus.bin        \
+          test-libperl.bin                       \
+          test-libpython.bin                     \
+-         test-libpython-version.bin             \
+          test-libslang.bin                      \
+          test-libslang-include-subdir.bin       \
+          test-libtraceevent.bin                 \
+@@ -227,9 +226,6 @@ $(OUTPUT)test-libperl.bin:
+ $(OUTPUT)test-libpython.bin:
+ 	$(BUILD) $(FLAGS_PYTHON_EMBED)
  
-> Warning: Kernel ABI header at 'tools/perf/arch/powerpc/entry/syscalls/syscall.tbl' differs from latest version at 'arch/powerpc/kernel/syscalls/syscall.tbl'
-> diff -u tools/perf/arch/powerpc/entry/syscalls/syscall.tbl arch/powerpc/kernel/syscalls/syscall.tbl
-> 
-> Reviewed-and-Tested-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-
-Thanks, tags collected!
-
-- Arnaldo
+-$(OUTPUT)test-libpython-version.bin:
+-	$(BUILD)
+-
+ $(OUTPUT)test-libbfd.bin:
+ 	$(BUILD) -DPACKAGE='"perf"' -lbfd -ldl
  
-> Thanks
-> Athira
-> 
-> > This addresses this perf build warnings:
-> > 
-> >  Warning: Kernel ABI header at 'tools/perf/arch/s390/entry/syscalls/syscall.tbl' differs from latest version at 'arch/s390/kernel/syscalls/syscall.tbl'
-> >  diff -u tools/perf/arch/s390/entry/syscalls/syscall.tbl arch/s390/kernel/syscalls/syscall.tbl
-> > 
-> > Cc: AndrÃ© Almeida <andrealmeid@collabora.com>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > ---
-> > tools/perf/arch/powerpc/entry/syscalls/syscall.tbl | 1 +
-> > 1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-> > index 7bef917cc84e6499..15109af9d0754d5f 100644
-> > --- a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-> > +++ b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-> > @@ -528,3 +528,4 @@
-> > 446	common	landlock_restrict_self		sys_landlock_restrict_self
-> > # 447 reserved for memfd_secret
-> > 448	common	process_mrelease		sys_process_mrelease
-> > +449	common  futex_waitv                     sys_futex_waitv
-> > -- 
-> > 2.31.1
-> > 
-> > 
-
+diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
+index 0b243ce842be3383..5ffafb967b6e4952 100644
+--- a/tools/build/feature/test-all.c
++++ b/tools/build/feature/test-all.c
+@@ -14,10 +14,6 @@
+ # include "test-libpython.c"
+ #undef main
+ 
+-#define main main_test_libpython_version
+-# include "test-libpython-version.c"
+-#undef main
+-
+ #define main main_test_libperl
+ # include "test-libperl.c"
+ #undef main
+@@ -177,7 +173,6 @@
+ int main(int argc, char *argv[])
+ {
+ 	main_test_libpython();
+-	main_test_libpython_version();
+ 	main_test_libperl();
+ 	main_test_hello();
+ 	main_test_libelf();
+diff --git a/tools/build/feature/test-libpython-version.c b/tools/build/feature/test-libpython-version.c
+deleted file mode 100644
+index 47714b942d4d35bf..0000000000000000
+--- a/tools/build/feature/test-libpython-version.c
++++ /dev/null
+@@ -1,11 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-#include <Python.h>
+-
+-#if PY_VERSION_HEX >= 0x03000000
+-	#error
+-#endif
+-
+-int main(void)
+-{
+-	return 0;
+-}
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index afd144725a0bf766..3df74cf5651af9dd 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -271,8 +271,6 @@ endif
+ 
+ FEATURE_CHECK_CFLAGS-libpython := $(PYTHON_EMBED_CCOPTS)
+ FEATURE_CHECK_LDFLAGS-libpython := $(PYTHON_EMBED_LDOPTS)
+-FEATURE_CHECK_CFLAGS-libpython-version := $(PYTHON_EMBED_CCOPTS)
+-FEATURE_CHECK_LDFLAGS-libpython-version := $(PYTHON_EMBED_LDOPTS)
+ 
+ FEATURE_CHECK_LDFLAGS-libaio = -lrt
+ 
 -- 
+2.31.1
 
-- Arnaldo
