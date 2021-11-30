@@ -2,128 +2,105 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB0EC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 30 Nov 2021 14:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F70C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 30 Nov 2021 14:51:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242351AbhK3OpQ (ORCPT
+        id S242720AbhK3Oyp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 30 Nov 2021 09:45:16 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:41948 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232476AbhK3Oo7 (ORCPT
+        Tue, 30 Nov 2021 09:54:45 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:57940 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242896AbhK3Ox0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 30 Nov 2021 09:44:59 -0500
+        Tue, 30 Nov 2021 09:53:26 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 14C9FB817C0;
-        Tue, 30 Nov 2021 14:41:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E32AC53FC7;
-        Tue, 30 Nov 2021 14:41:37 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 55A98CE1A5E;
+        Tue, 30 Nov 2021 14:50:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A54BC53FD0;
+        Tue, 30 Nov 2021 14:50:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638283297;
-        bh=Ouj+XDtVgzgbk0sY9IFub0J8BvaA2jvIyNSF0SOcSj0=;
+        s=k20201202; t=1638283804;
+        bh=HE2oOh39yQJe14YTlEp9AbmC1U5Mk6YUUJMA2GaCuS4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SsyFzsD15+xk8uOcAye3QD3RZXaz7mfbR9L4uegn5dC5LcHn5Ave1Kg7pEg5IU2cS
-         3hupVxqKep78pHo630sOaimf1MaUdPKIVvsrk+id3KB2qpq/5OFJzCMR9Rz6A88OWO
-         h4UwUULOpXZ3ALrcMZnG34Q2XP9e86Vj0WJAmQNUce9TQ5RsTKEtmpjXD5w+kADIUM
-         wiCIXLh97KTmt7DiJ9cm2j1MXxxI3l/eR5ptWhyZ53+czYUYSA0DIfjFDFRJXupbhG
-         1Vc39L53ZRNDj/IpDHzjzwhAWEfXVxRDyVYSDbuAJtsPkS3FPFWcgmgVA0oms0vM2j
-         /Ud16eg0ZlbOQ==
+        b=bxU7M1ihXn0ifIMt4wcUTYI9XK3AUWlleOmrC/9NE3DBSZj0V9PpkCArhlFmT+Oqj
+         SCW5jYPbQToje7FMzAxkhxDsZQldk+nX4eVggy3aCTGlKudRMDzlpgf4Mz708pglZI
+         qrwS8E1nLNruZQtgWSByVIS37DP5PQqHb1LHnkTgR1ohG/MLB8q9ku5KoM2TjEteSk
+         qQFvm2reuIebnqYlgj4R4R6NvsO8cmp4Bng5MZHQtZiH9qeYJrBRt+4RGV1cVMAngJ
+         4+X2CFbsiun+6kv1g1+KPORW83+Bh9Vp42zJ/3aAa1SyN4/Ayti2GmrV5ft/ktsLHX
+         R2PbpttWOLCqg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 65A8640002; Tue, 30 Nov 2021 11:41:35 -0300 (-03)
-Date:   Tue, 30 Nov 2021 11:41:35 -0300
+        id 5F33540002; Tue, 30 Nov 2021 11:50:01 -0300 (-03)
+Date:   Tue, 30 Nov 2021 11:50:01 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        irogers@google.com, svens@linux.ibm.com, gor@linux.ibm.com,
-        sumanthk@linux.ibm.com, hca@linux.ibm.com
-Subject: Re: [PATCH v2] tools/perf: Fix perf test 7 Simple expression parser
-Message-ID: <YaY4HwSEJHszy64Y@kernel.org>
-References: <20211129112339.3003036-1-tmricht@linux.ibm.com>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        eranian@google.com
+Subject: Re: [PATCH] perf test: Reset shadow counts before loading
+Message-ID: <YaY6GXquDQoviL66@kernel.org>
+References: <20211128085810.4027314-1-irogers@google.com>
+ <YaOuadwZWje6HeTg@krava>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211129112339.3003036-1-tmricht@linux.ibm.com>
+In-Reply-To: <YaOuadwZWje6HeTg@krava>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Nov 29, 2021 at 12:23:39PM +0100, Thomas Richter escreveu:
-> Some platforms do not have CPU die support, for example s390.
-> Commit fdf1e29b6118 ("perf expr: Add metric literals for topology.")
-> fails on s390:
->  # ./perf test -Fv 7
->    ...
->  # FAILED tests/expr.c:173 #num_dies >= #num_packages
->    ---- end ----
->    Simple expression parser: FAILED!
->  #
+Em Sun, Nov 28, 2021 at 05:29:29PM +0100, Jiri Olsa escreveu:
+> On Sun, Nov 28, 2021 at 12:58:10AM -0800, Ian Rogers wrote:
+> > Otherwise load counting is an average. Without this change
+> > duration_time in test_memory_bandwidth will alter its value if an
+> > earlier test contains duration_time.
+> > 
+> > This patch fixes an issue that's introduced in the proposed patch:
+> > https://lore.kernel.org/lkml/20211124015226.3317994-1-irogers@google.com/
+> > in perf test "Parse and process metrics".
+> > 
+> > Signed-off-by: Ian Rogers <irogers@google.com>
 > 
-> Investigating this issue leads to these functions:
->  build_cpu_topology()
->    +--> has_die_topology(void)
->         {
->            struct utsname uts;
-> 
->            if (uname(&uts) < 0)
->                   return false;
->            if (strncmp(uts.machine, "x86_64", 6))
->                   return false;
->            ....
->         }
-> 
-> which always returns false on s390. The caller build_cpu_topology()
-> checks has_die_topology() return value. On false the
-> the struct cpu_topology::die_cpu_list is not contructed and has zero
-> entries. This leads to the failing comparison: #num_dies >= #num_packages.
-> s390 of course has a positive number of packages.
-> 
-> Fix this and check if the function build_cpu_topology() did build up
-> a die_cpus_list. The number of entries in this list should be larger
-> than 0. If the number of list element is zero, the die_cpus_list has
-> not been created and the check in function test__expr()
->     TEST_ASSERT_VAL("#num_dies >= #num_packages", \
-> 		    num_dies >= num_packages)
-> always fails.
-> 
-> Output after:
->  # ./perf test -Fv 7
->   7: Simple expression parser                                        :
->   --- start ---
->   division by zero
->   syntax error
->   ---- end ----
->   Simple expression parser: Ok
->  #
-> Cc: Ian Rogers <irogers@google.com>
-> Fixes: fdf1e29b6118 ("perf expr: Add metric literals for topology.")
-> 
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Acked-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/tests/expr.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-> index c895de481fe1..9356d90bf8db 100644
-> --- a/tools/perf/tests/expr.c
-> +++ b/tools/perf/tests/expr.c
-> @@ -169,7 +169,8 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
->  	TEST_ASSERT_VAL("#num_dies", expr__parse(&num_dies, ctx, "#num_dies") == 0);
->  	TEST_ASSERT_VAL("#num_cores >= #num_dies", num_cores >= num_dies);
->  	TEST_ASSERT_VAL("#num_packages", expr__parse(&num_packages, ctx, "#num_packages") == 0);
-> -	TEST_ASSERT_VAL("#num_dies >= #num_packages", num_dies >= num_packages);
-> +	if (num_dies)
-> +		TEST_ASSERT_VAL("#num_dies >= #num_packages", num_dies >= num_packages);
->  
->  	/*
->  	 * Source count returns the number of events aggregating in a leader
-> -- 
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
 
+Thanks, applied.
 
-I'll add a comment for the casual reader:
+- Arnaldo
 
-+	if (num_dies) // Some platforms do not have CPU die support, for example s390
-+		TEST_ASSERT_VAL("#num_dies >= #num_packages", num_dies >= num_packages);
+ 
+> jirka
+> 
+> > ---
+> >  tools/perf/tests/parse-metric.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
+> > index 574b7e4efd3a..07b6f4ec024f 100644
+> > --- a/tools/perf/tests/parse-metric.c
+> > +++ b/tools/perf/tests/parse-metric.c
+> > @@ -109,6 +109,7 @@ static void load_runtime_stat(struct runtime_stat *st, struct evlist *evlist,
+> >  	struct evsel *evsel;
+> >  	u64 count;
+> >  
+> > +	perf_stat__reset_shadow_stats();
+> >  	evlist__for_each_entry(evlist, evsel) {
+> >  		count = find_value(evsel->name, vals);
+> >  		perf_stat__update_shadow_stats(evsel, count, 0, st);
+> > -- 
+> > 2.34.0.rc2.393.gf8c9666880-goog
+> > 
+
+-- 
+
+- Arnaldo
