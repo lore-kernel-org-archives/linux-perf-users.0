@@ -2,217 +2,149 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2475EC433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 30 Nov 2021 15:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C58B9C4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 30 Nov 2021 15:10:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234566AbhK3PL0 (ORCPT
+        id S239401AbhK3PNu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 30 Nov 2021 10:11:26 -0500
-Received: from sin.source.kernel.org ([145.40.73.55]:37602 "EHLO
+        Tue, 30 Nov 2021 10:13:50 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:38524 "EHLO
         sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245211AbhK3PJX (ORCPT
+        with ESMTP id S242976AbhK3PL7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 30 Nov 2021 10:09:23 -0500
+        Tue, 30 Nov 2021 10:11:59 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id DE1CACE1A33;
-        Tue, 30 Nov 2021 15:06:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A40D3C53FC1;
-        Tue, 30 Nov 2021 15:06:00 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 65D86CE1A0D
+        for <linux-perf-users@vger.kernel.org>; Tue, 30 Nov 2021 15:08:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68FC7C53FC1;
+        Tue, 30 Nov 2021 15:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638284761;
-        bh=cQ2ta2KnJavaEcUz/4BnQNed6TgZ/ORE1gdu1CXK3lE=;
+        s=k20201202; t=1638284917;
+        bh=2Q80uES3AKG6t4JI2w6xPRmdjpDM9dY8nO1Hmqpz+XM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=B6Nbny/4yuC58//4VOL+glWfpP0BKPShYfl931RkoOiZ5d6dDiij3imC2+1/zqxkb
-         Hr0yfGWxuXUzkVU7CD6AaY9gh8w2dlALzyBvLyfRH2x9Ktq+Qx3Xx869K04qAtXEu7
-         9z5Wv+Yo7tjFNfSmgOK8mxH/hjnfQqNsdBs0ZNdGt61Hgv6HHy4H2seVsgvBhJB0T4
-         KjPpfsm94lLXfOnY2JenLXFnY71QmNn3ZjqZsBUgzS5r6v4p+ozhx9dP7tM43/N3nZ
-         67YLPQrKjEXHFibTLU0C1ZZAiTBzv+7BdbzxnSuyHxRlToFoAzIf/1sPgnghODQBs+
-         CAyNCXtDSxaBw==
+        b=Ps/l2HsgtLguTZvYET97DCmHL5XlGmDaaUTt7e69CgN855FRKoGYZCmrz35VHp346
+         CfnfbH2ZhXgr5GoJWVY+e/f59VUjys5qr2TnofK4OyKazjxYL/O+p6y+2+Zn54VrdH
+         wLQtfrUSy7o72YWjuo1/qzJtZAgJ85jkjJfni9TU5Jwk6mYpxjs0yaoOBccAtwafne
+         gfJSHmFKEZRVj10Tk64wGh5Qw0lQBlP4P5omxFqIvB2lAzh+/0cuWVf4Y7QE+k1FpL
+         sRoUdyfPaXXVXznqZH74GXDPZxjQb1SW/rMgZ/gmQg3uxlnjQdUk2Xmegp5mx2gWU5
+         Yed51X36p+MIg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 037EE40002; Tue, 30 Nov 2021 12:05:57 -0300 (-03)
-Date:   Tue, 30 Nov 2021 12:05:57 -0300
+        id D856C40002; Tue, 30 Nov 2021 12:08:34 -0300 (-03)
+Date:   Tue, 30 Nov 2021 12:08:34 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vineet Singh <vineet.singh@intel.com>, eranian@google.com
-Subject: Re: [PATCH v2 2/2] perf parse-events: Architecture specific leader
- override
-Message-ID: <YaY91Ytf3x4DGgJ+@kernel.org>
-References: <20211118220647.2355999-1-irogers@google.com>
- <20211118220647.2355999-2-irogers@google.com>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Sandipan Das <sandipan.das@amd.com>, santosh.shukla@amd.com,
+        ravi.bangoria@amd.com, ananth.narayan@amd.com,
+        kim.phillips@amd.com, rrichter@amd.com,
+        linux-perf-users@vger.kernel.org, kjain@linux.ibm.com
+Subject: Re: [PATCH v3 1/2] perf/docs: Add info on AMD raw event encoding
+Message-ID: <YaY+cvt8JyixHvz4@kernel.org>
+References: <20211123084613.243792-1-sandipan.das@amd.com>
+ <YaOweUHKRlMpTOTf@krava>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211118220647.2355999-2-irogers@google.com>
+In-Reply-To: <YaOweUHKRlMpTOTf@krava>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Nov 18, 2021 at 02:06:47PM -0800, Ian Rogers escreveu:
-> Currently topdown events must appear after a slots event:
+Em Sun, Nov 28, 2021 at 05:38:17PM +0100, Jiri Olsa escreveu:
+> On Tue, Nov 23, 2021 at 02:16:12PM +0530, Sandipan Das wrote:
+> > AMD processors have events with event select codes and unit
+> > masks larger than a byte. The core PMU, for example, uses
+> > 12-bit event select codes split between bits 0-7 and 32-35
+> > of the PERF_CTL MSRs as can be seen from
+> > /sys/bus/event_sources/devices/cpu/format/*.
+> > 
+> > The Processor Programming Reference (PPR) lists the event
+> > codes as unified 12-bit hexadecimal values instead and the
+> > split between the bits is not apparent to someone who is
+> > not aware of the layout of the PERF_CTL MSRs.
+> > 
+> > 8-bit event select codes continue to work as the layout
+> > matches that of the PERF_CTL MSRs i.e. bits 0-7 for event
+> > select and 8-15 for unit mask.
+> > 
+> > This adds more details in the perf man pages about using
+> > /sys/bus/event_sources/devices/*/format/* for determining
+> > the correct raw event encoding scheme.
+> > 
+> > E.g. the "op_cache_hit_miss.op_cache_hit" event with code
+> > 0x28f and umask 0x03 can be programmed using its symbolic
+> > name as:
+> > 
+> >   $ sudo perf --debug perf-event-open stat -e op_cache_hit_miss.op_cache_hit sleep 1
+> >   ------------------------------------------------------------
+> >   perf_event_attr:
+> >     type                             4
+> >     size                             128
+> >     config                           0x20000038f
+> >     sample_type                      IDENTIFIER
+> >     read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+> >     disabled                         1
+> >     inherit                          1
+> >     enable_on_exec                   1
+> >     exclude_guest                    1
+> >   ------------------------------------------------------------
+> >   [...]
+> > 
+> > One might use a simple eventsel+umask combination based on
+> > what the current man pages say and incorrectly program the
+> > event as:
+> > 
+> >   $ sudo perf --debug perf-event-open stat -e r0328f sleep 1
+> >   ------------------------------------------------------------
+> >   perf_event_attr:
+> >     type                             4
+> >     size                             128
+> >     config                           0x328f
+> >     sample_type                      IDENTIFIER
+> >     read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+> >     disabled                         1
+> >     inherit                          1
+> >     enable_on_exec                   1
+> >     exclude_guest                    1
+> >   ------------------------------------------------------------
+> >   [...]
+> > 
+> > When it should have been based on the format from sysfs:
+> > 
+> >   $ cat /sys/bus/event_source/devices/cpu/format/event
+> >   config:0-7,32-35
+> > 
+> >   $ sudo perf --debug perf-event-open stat -e r20000038f sleep 1
+> >   ------------------------------------------------------------
+> >   perf_event_attr:
+> >     type                             4
+> >     size                             128
+> >     config                           0x20000038f
+> >     sample_type                      IDENTIFIER
+> >     read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+> >     disabled                         1
+> >     inherit                          1
+> >     enable_on_exec                   1
+> >     exclude_guest                    1
+> >   ------------------------------------------------------------
+> >   [...]
+> > 
+> > Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+> > ---
+> > v1: https://lore.kernel.org/linux-perf-users/20211119111234.170726-1-sandipan.das@amd.com/
+> > v2: https://lore.kernel.org/linux-perf-users/20211123065104.236717-1-sandipan.das@amd.com/
+> > 
+> > v3:
+> > - Mention why simple eventsel+umask combinations will not
+> >   work in the commit message.
 > 
-> $ perf stat -e '{slots,topdown-fe-bound}' /bin/true
+> for both patches:
 > 
->  Performance counter stats for '/bin/true':
-> 
->          3,183,090      slots
->            986,133      topdown-fe-bound
-> 
-> Reversing the events yields:
-> 
-> $ perf stat -e '{topdown-fe-bound,slots}' /bin/true
-> Error:
-> The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (topdown-fe-bound).
-> 
-> For metrics the order of events is determined by iterating over a
-> hashmap, and so slots isn't guaranteed to be first which can yield this
-> error.
-> 
-> Change the set_leader in parse-events, called when a group is closed, so
-> that rather than always making the first event the leader, if the slots
-> event exists then it is made the leader. It is then moved to the head of
-> the evlist otherwise it won't be opened in the correct order.
-> 
-> The result is:
-> 
-> $ perf stat -e '{topdown-fe-bound,slots}' /bin/true
-> 
->  Performance counter stats for '/bin/true':
-> 
->          3,274,795      slots
->          1,001,702      topdown-fe-bound
-> 
-> A problem with this approach is the slots event is identified by name,
-> names can be overwritten like 'cpu/slots,name=foo/' and this causes the
-> leader change to fail.
-> 
-> The change also modifies and fixes mixed groups like, with the change:
-> 
-> $ perf stat -e '{instructions,slots,topdown-fe-bound}' -a -- sleep 2
-> 
->  Performance counter stats for 'system wide':
-> 
->         5574985410      slots
->          971981616      instructions
->         1348461887      topdown-fe-bound
-> 
->        2.001263120 seconds time elapsed
-> 
-> Without the change:
-> 
-> $ perf stat -e '{instructions,slots,topdown-fe-bound}' -a -- sleep 2
-> 
->  Performance counter stats for 'system wide':
-> 
->      <not counted>      instructions
->      <not counted>      slots
->    <not supported>      topdown-fe-bound
-> 
->        2.006247990 seconds time elapsed
-> 
-> Something that may be undesirable here is that the events are reordered
-> in the output.
-> 
-> v2. Move the list_move operation into parse_events__set_leader as
->     suggested by Jiri Olsa <jolsa@redhat.com>.
-> 
-> Reviewed-by: Kajol Jain<kjain@linux.ibm.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/arch/x86/util/evlist.c | 17 +++++++++++++++++
->  tools/perf/util/evlist.h          |  1 +
->  tools/perf/util/parse-events.c    |  8 +++++++-
->  3 files changed, 25 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
-> index 0b0951030a2f..1624372b2da2 100644
-> --- a/tools/perf/arch/x86/util/evlist.c
-> +++ b/tools/perf/arch/x86/util/evlist.c
-> @@ -17,3 +17,20 @@ int arch_evlist__add_default_attrs(struct evlist *evlist)
->  	else
->  		return parse_events(evlist, TOPDOWN_L1_EVENTS, NULL);
->  }
-> +
-> +struct evsel *arch_evlist__leader(struct list_head *list)
-> +{
-> +	struct evsel *evsel, *first;
-> +
-> +	first = list_entry(list->next, struct evsel, core.node);
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-Can we make this:
-
-	struct *evsel, *first = list_first_entry(list, struct evsel, core.node);
-
-?
-
-> +
-> +	if (!pmu_have_event("cpu", "slots"))
-> +		return first;
-> +
-> +	__evlist__for_each_entry(list, evsel) {
-> +		if (evsel->pmu_name && !strcmp(evsel->pmu_name, "cpu") &&
-> +			evsel->name && strstr(evsel->name, "slots"))
-> +			return evsel;
-> +	}
-> +	return first;
-> +}
-> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-> index 97bfb8d0be4f..993437ffe429 100644
-> --- a/tools/perf/util/evlist.h
-> +++ b/tools/perf/util/evlist.h
-> @@ -110,6 +110,7 @@ int __evlist__add_default_attrs(struct evlist *evlist,
->  	__evlist__add_default_attrs(evlist, array, ARRAY_SIZE(array))
->  
->  int arch_evlist__add_default_attrs(struct evlist *evlist);
-> +struct evsel *arch_evlist__leader(struct list_head *list);
->  
->  int evlist__add_dummy(struct evlist *evlist);
->  
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index 6308ba739d19..774c163eae9c 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -1821,6 +1821,11 @@ parse_events__set_leader_for_uncore_aliase(char *name, struct list_head *list,
->  	return ret;
->  }
->  
-> +__weak struct evsel *arch_evlist__leader(struct list_head *list)
-> +{
-> +	return list_entry(list->next, struct evsel, core.node);
-> +}
-> +
->  void parse_events__set_leader(char *name, struct list_head *list,
->  			      struct parse_events_state *parse_state)
->  {
-> @@ -1834,9 +1839,10 @@ void parse_events__set_leader(char *name, struct list_head *list,
->  	if (parse_events__set_leader_for_uncore_aliase(name, list, parse_state))
->  		return;
->  
-> -	leader = list_entry(list->next, struct evsel, core.node);
-> +	leader = arch_evlist__leader(list);
->  	__perf_evlist__set_leader(list, &leader->core);
->  	leader->group_name = name ? strdup(name) : NULL;
-> +	list_move(&leader->core.node, list);
->  }
->  
->  /* list_event is assumed to point to malloc'ed memory */
-> -- 
-> 2.34.0.rc2.393.gf8c9666880-goog
-
--- 
+Thanks, applied.
 
 - Arnaldo
+
