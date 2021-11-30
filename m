@@ -2,184 +2,285 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89668C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 30 Nov 2021 07:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF95DC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 30 Nov 2021 13:30:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234420AbhK3IA7 (ORCPT
+        id S233967AbhK3Nde (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 30 Nov 2021 03:00:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48414 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239323AbhK3IAv (ORCPT
+        Tue, 30 Nov 2021 08:33:34 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61496 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230495AbhK3Ndd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 30 Nov 2021 03:00:51 -0500
-Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C31AC061574
-        for <linux-perf-users@vger.kernel.org>; Mon, 29 Nov 2021 23:57:32 -0800 (PST)
-Received: by mail-io1-xd31.google.com with SMTP id b187so13758583iof.11
-        for <linux-perf-users@vger.kernel.org>; Mon, 29 Nov 2021 23:57:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ANwdMOL5b2y3RX/fmlScMbR5sfXgdjPAWQRFJ08uvUw=;
-        b=plZJO0HRqe+GhQPlFiNUiQ4FmsS/vSGPcixliMx+8yRfacPCCYr2hVJosl/YY1iBMy
-         N6HqRFQM+Hs5YUOMvuita6QtneqC2rJoogozkt8is2EBx4g/zBeoh4dtM5GQtpLzGGsD
-         fa2ZzrNTvje+TusQQUFyNs4FIAZQa9dmR4FrFv2hU6xxWqnz8+IkjJU5VyQIdzF9Prjp
-         D2s18S7IUbddmxz2DA8V418O6BEWY3Y4HvhHM/FTRkF9CsPXhfy8RAui2MvMkeXQ/qw0
-         p0kKA6qPjMk49D/k2sCr4w4nyxKxLRoV6PHZc6Zbt5HIPRJHIshNbsRyjjAlzpsh3rpd
-         yysQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ANwdMOL5b2y3RX/fmlScMbR5sfXgdjPAWQRFJ08uvUw=;
-        b=hssyyhvOx4cEfHxNMc4Pfj4Qvhiv6ykt1LxK5Y/XmpPoEcO9nkgYUcWroXDup6rl+2
-         EHNghgKoApFBzwfa9/DLwDbOVSlbbxTW0Xh1ELDXkuxgVrgXQ+REIJVaSTX2wuNq49IP
-         PwxGhbNJ6orQa7CuTRBwuN6aH8SB4NgKeK2aL2tsLNYNdhXzRX5zy3z9hsOiYVObrHEz
-         wFV+XAu263dN9pJCDnuFg8mnngocLRsy99gmzjwu3/zhnuzbR4XA9UduoPQPqFrXx6gB
-         QZYU99e4c1DMlQWizuBBRwrs7h9babG4Rx4762PdoMzyohdSQDu5xzjTBwvfSOLwomLy
-         75BQ==
-X-Gm-Message-State: AOAM531zFlhFb8J71p4arScO/O8aFzUkw+0JT4kK5teU3oJIOAmP/EcE
-        O9SMYGlMwZYeLwoMvbsnehtHAyTMx9o76Bw9Ws10mw==
-X-Google-Smtp-Source: ABdhPJxjBF0LZNIDXFuDLc4mx/wWydE35Z6CuXhkYqD4OllkmOmYjOjnmpo1wl+xa/eAPu9mH/7jNh7DCFZcSnB9nps=
-X-Received: by 2002:a05:6638:144f:: with SMTP id l15mr70873142jad.21.1638259051695;
- Mon, 29 Nov 2021 23:57:31 -0800 (PST)
-MIME-Version: 1.0
-References: <20211123020341.3073673-1-irogers@google.com> <20211123020341.3073673-2-irogers@google.com>
- <YaO1FIOYpF/Y5BDK@krava> <CAP-5=fU5MFQAidNWTp0hRjesKpFper6wy9MJ0taL9k804amn6A@mail.gmail.com>
- <CAM9d7cgiy4at+Tc1n9xRHNi=icYnurYDtxWJ=BPO-pLV=aVBEA@mail.gmail.com>
-In-Reply-To: <CAM9d7cgiy4at+Tc1n9xRHNi=icYnurYDtxWJ=BPO-pLV=aVBEA@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 29 Nov 2021 23:57:19 -0800
-Message-ID: <CAP-5=fUYO2ebkQ_1=Wn50MouymbJ4DFHogG-JcM-XT4uaD-CGw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf evsel: Improve error message for uncore events
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 30 Nov 2021 08:33:33 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1AUDI7JG002806;
+        Tue, 30 Nov 2021 13:30:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=CVjwGkb7p5udWMQVSq4oYFBOvcOFjuiIzwPA+NteRIA=;
+ b=ODqiebSFQz2+R3MOt/BdEFmZIiYbLL6k9KfyLEXpiWWFukxVMs/A5NfNPt86fmKF2uqV
+ SakoFEeDWrGpUc+ynOOL6ldteBU3vdwMpt3E3KHegK2WbU5XtX5cxZTd505fpjzCDeEX
+ LxngNWeqHHsTSkPzkeqQeiTH3ZejpsxhA59KmuyXCEoUxhDnBni/vJkdC+ToixyNkmxe
+ 2ZyQT0ZtremVKOHdA2APgnfteptirJXvqxt4tcs0PM9pNphsEqCIpoO8kJ1qikdtAjxB
+ Ohm7RFvFsQCgfrg8FiDfO7qyfyzkOJlX1p1BG4qdV+bTQlvVZhQ0ufpoJVqrNEjkEm5K 8Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3cnmqc07st-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Nov 2021 13:29:59 +0000
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1AUDKtJW013557;
+        Tue, 30 Nov 2021 13:29:59 GMT
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3cnmqc07s5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Nov 2021 13:29:59 +0000
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1AUDOe5m004394;
+        Tue, 30 Nov 2021 13:29:56 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma02fra.de.ibm.com with ESMTP id 3ckca9wreu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Nov 2021 13:29:56 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1AUDTqhQ22217204
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Nov 2021 13:29:52 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 941B0A408D;
+        Tue, 30 Nov 2021 13:29:52 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 335C8A4085;
+        Tue, 30 Nov 2021 13:29:48 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.211.87.86])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 30 Nov 2021 13:29:47 +0000 (GMT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.120.0.1.13\))
+Subject: Re: [PATCH 1/2] tools/perf: Include global and local variants for
+ p_stage_cyc sort key
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <YaUJwxHPTz1J7K1e@krava>
+Date:   Tue, 30 Nov 2021 18:59:43 +0530
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, mpe@ellerman.id.au,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
+        kjain@linux.ibm.com, Namhyung Kim <namhyung@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <6597729D-0CBE-4872-A78E-ADA10A76F765@linux.vnet.ibm.com>
+References: <20211125024851.22895-1-atrajeev@linux.vnet.ibm.com>
+ <YaUJwxHPTz1J7K1e@krava>
+To:     Jiri Olsa <jolsa@redhat.com>
+X-Mailer: Apple Mail (2.3654.120.0.1.13)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: bbJb1Oovm4ji3i0wFcaBsXON0MDf5B-6
+X-Proofpoint-GUID: 72xBwhf1G5BTtDhRk0p9hIcHrrhV7x6S
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
+ definitions=2021-11-30_07,2021-11-28_01,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ spamscore=0 malwarescore=0 impostorscore=0 adultscore=0 phishscore=0
+ clxscore=1015 mlxscore=0 mlxlogscore=999 priorityscore=1501
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2111300075
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Nov 29, 2021 at 10:55 PM Namhyung Kim <namhyung@kernel.org> wrote:
->
-> Hi Ian,
->
-> On Mon, Nov 29, 2021 at 3:48 PM Ian Rogers <irogers@google.com> wrote:
-> >
-> > On Sun, Nov 28, 2021 at 8:58 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> > >
-> > > On Mon, Nov 22, 2021 at 06:03:41PM -0800, Ian Rogers wrote:
-> > > > When a group has multiple events and the leader fails it can yield
-> > > > errors like:
-> > > >
-> > > > $ perf stat -e '{uncore_imc/cas_count_read/},instructions' /bin/true
-> > > > Error:
-> > > > The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (uncore_imc/cas_count_read/).
-> > > > /bin/dmesg | grep -i perf may provide additional information.
-> > > >
-> > > > However, when not the group leader <not supported> is given:
-> > > >
-> > > > $ perf stat -e '{instructions,uncore_imc/cas_count_read/}' /bin/true
-> > > > ...
-> > > >          1,619,057      instructions
-> > > >    <not supported> MiB  uncore_imc/cas_count_read/
-> > > >
-> > > > This is necessary because get_group_fd will fail if the leader fails and
-> > > > is the direct result of the check on line 750 of builtin-stat.c in
-> > > > stat_handle_error that returns COUNTER_SKIP for the latter case.
-> > > >
-> > > > This patch improves the error message to:
-> > > >
-> > > > $ perf stat -e '{uncore_imc/cas_count_read/},instructions' /bin/true
-> > > > Error:
-> > > > Invalid event (uncore_imc/cas_count_read/) in per-thread mode, enable system wide with '-a'.
-> > > >
-> > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > ---
-> > > >  tools/perf/util/evsel.c | 5 +++++
-> > > >  1 file changed, 5 insertions(+)
-> > > >
-> > > > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > > > index a59fb2ecb84e..48696ff4bddb 100644
-> > > > --- a/tools/perf/util/evsel.c
-> > > > +++ b/tools/perf/util/evsel.c
-> > > > @@ -2950,6 +2950,11 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
-> > > >                       return scnprintf(msg, size, "wrong clockid (%d).", clockid);
-> > > >               if (perf_missing_features.aux_output)
-> > > >                       return scnprintf(msg, size, "The 'aux_output' feature is not supported, update the kernel.");
-> > > > +             if ((evsel__leader(evsel) == evsel) &&
-> > > > +                 (evsel->core.leader->nr_members > 1))
-> > > > +                     return scnprintf(msg, size,
-> > > > +     "Invalid event (%s) in per-thread mode, enable system wide with '-a'.",
-> > > > +                                     evsel__name(evsel));
-> > >
-> > > should we rather check 'target' pointer for the per-thread mode?
-> > > I'm not sure that per-thread mode will always be the case for the failure
-> >
-> > Unfortunately the target isn't populated at that point:
->
-> It might be populated properly, as in this case
-> it should have no target.  I think you can use
-> !target__has_cpu().
 
-Thanks :-) I'm not sure having !target__has_cpu is intention
-revealing. Perhaps changing the error to say that an
-invalid/unsupported event can't be the group leader, unless it is the
-only event, and then suggest system wide mode.
 
-Thanks,
-Ian
+> On 29-Nov-2021, at 10:41 PM, Jiri Olsa <jolsa@redhat.com> wrote:
+>=20
+> On Thu, Nov 25, 2021 at 08:18:50AM +0530, Athira Rajeev wrote:
+>> Sort key p_stage_cyc is used to present the latency
+>> cycles spend in pipeline stages. perf tool has local
+>> p_stage_cyc sort key to display this info. There is no
+>> global variant available for this sort key. local variant
+>> shows latency in a sinlge sample, whereas, global value
+>> will be useful to present the total latency (sum of
+>> latencies) in the hist entry. It represents latency
+>> number multiplied by the number of samples.
+>>=20
+>> Add global (p_stage_cyc) and local variant
+>> (local_p_stage_cyc) for this sort key. Use the
+>> local_p_stage_cyc as default option for "mem" sort mode.
+>> Also add this to list of dynamic sort keys.
+>>=20
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>> Reported-by: Namhyung Kim <namhyung@kernel.org>
+>> ---
+>> tools/perf/util/hist.c |  4 +++-
+>> tools/perf/util/hist.h |  3 ++-
+>> tools/perf/util/sort.c | 34 +++++++++++++++++++++++++---------
+>> tools/perf/util/sort.h |  3 ++-
+>> 4 files changed, 32 insertions(+), 12 deletions(-)
+>>=20
+>> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+>> index b776465e04ef..0a8033b09e28 100644
+>> --- a/tools/perf/util/hist.c
+>> +++ b/tools/perf/util/hist.c
+>> @@ -211,7 +211,9 @@ void hists__calc_col_len(struct hists *hists, =
+struct hist_entry *h)
+>> 	hists__new_col_len(hists, HISTC_MEM_BLOCKED, 10);
+>> 	hists__new_col_len(hists, HISTC_LOCAL_INS_LAT, 13);
+>> 	hists__new_col_len(hists, HISTC_GLOBAL_INS_LAT, 13);
+>> -	hists__new_col_len(hists, HISTC_P_STAGE_CYC, 13);
+>> +	hists__new_col_len(hists, HISTC_LOCAL_P_STAGE_CYC, 13);
+>> +	hists__new_col_len(hists, HISTC_GLOBAL_P_STAGE_CYC, 13);
+>> +
+>> 	if (symbol_conf.nanosecs)
+>> 		hists__new_col_len(hists, HISTC_TIME, 16);
+>> 	else
+>> diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+>> index 5343b62476e6..2752ce681108 100644
+>> --- a/tools/perf/util/hist.h
+>> +++ b/tools/perf/util/hist.h
+>> @@ -75,7 +75,8 @@ enum hist_column {
+>> 	HISTC_MEM_BLOCKED,
+>> 	HISTC_LOCAL_INS_LAT,
+>> 	HISTC_GLOBAL_INS_LAT,
+>> -	HISTC_P_STAGE_CYC,
+>> +	HISTC_LOCAL_P_STAGE_CYC,
+>> +	HISTC_GLOBAL_P_STAGE_CYC,
+>> 	HISTC_NR_COLS, /* Last entry */
+>> };
+>>=20
+>> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+>> index e9216a292a04..e978f7883e07 100644
+>> --- a/tools/perf/util/sort.c
+>> +++ b/tools/perf/util/sort.c
+>> @@ -37,7 +37,7 @@ const char	default_parent_pattern[] =3D =
+"^sys_|^do_page_fault";
+>> const char	*parent_pattern =3D default_parent_pattern;
+>> const char	*default_sort_order =3D "comm,dso,symbol";
+>> const char	default_branch_sort_order[] =3D =
+"comm,dso_from,symbol_from,symbol_to,cycles";
+>> -const char	default_mem_sort_order[] =3D =
+"local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked,blocked,=
+local_ins_lat,p_stage_cyc";
+>> +const char	default_mem_sort_order[] =3D =
+"local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked,blocked,=
+local_ins_lat,local_p_stage_cyc";
+>> const char	default_top_sort_order[] =3D "dso,symbol";
+>> const char	default_diff_sort_order[] =3D "dso,symbol";
+>> const char	default_tracepoint_sort_order[] =3D "trace";
+>> @@ -46,8 +46,8 @@ const char	*field_order;
+>> regex_t		ignore_callees_regex;
+>> int		have_ignore_callees =3D 0;
+>> enum sort_mode	sort__mode =3D SORT_MODE__NORMAL;
+>> -const char	*dynamic_headers[] =3D {"local_ins_lat", "p_stage_cyc"};
+>> -const char	*arch_specific_sort_keys[] =3D {"p_stage_cyc"};
+>> +const char	*dynamic_headers[] =3D {"local_ins_lat", "ins_lat", =
+"local_p_stage_cyc", "p_stage_cyc"};
+>=20
+> so you also add global ins_lat, right? will this change
+> some default behaviour?
 
-> Thanks,
-> Namhyung
->
->
-> >
-> > gdb --args perf stat -e '{uncore_imc/cas_count_write/},instructions' /bin/true
-> > (gdb) p *target
-> > $2 = {pid = 0x0, tid = 0x0, cpu_list = 0x0, uid_str = 0x0, bpf_str =
-> > 0x0, uid = 4294967295, system_wide = false, uses_mmap = false,
-> >   default_per_cpu = false, per_thread = false, use_bpf = false, hybrid
-> > = false, attr_map = 0x0}
-> >
-> > #0  evsel__open_strerror (evsel=0x616000015680, target=0x5555586aa140
-> > <target>, err=22, msg=0x7fffffff78d0 "]k\264WUU", size=8192)
-> >     at util/evsel.c:2857
-> > #1  0x00005555561744e8 in stat_handle_error (counter=0x616000015680)
-> > at builtin-stat.c:771
-> > #2  0x0000555556174f05 in __run_perf_stat (argc=1,
-> > argv=0x7fffffffe450, run_idx=0) at builtin-stat.c:852
-> > #3  0x00005555561763e1 in run_perf_stat (argc=1, argv=0x7fffffffe450,
-> > run_idx=0) at builtin-stat.c:1048
-> > #4  0x000055555617df82 in cmd_stat (argc=1, argv=0x7fffffffe450) at
-> > builtin-stat.c:2550
-> > #5  0x00005555562f36b8 in run_builtin (p=0x5555586bad00
-> > <commands+288>, argc=4, argv=0x7fffffffe450) at perf.c:313
-> > #6  0x00005555562f3c11 in handle_internal_command (argc=4,
-> > argv=0x7fffffffe450) at perf.c:365
-> > #7  0x00005555562f3fce in run_argv (argcp=0x7fffffffe230,
-> > argv=0x7fffffffe240) at perf.c:409
-> > #8  0x00005555562f47bd in main (argc=4, argv=0x7fffffffe450) at perf.c:539
-> >
-> > Thanks,
-> > Ian
-> >
-> > > jirka
-> > >
-> > > >               break;
-> > > >       case ENODATA:
-> > > >               return scnprintf(msg, size, "Cannot collect data source with the load latency event alone. "
-> > > > --
-> > > > 2.34.0.rc2.393.gf8c9666880-goog
-> > > >
-> > >
+Hi Jiri,
+
+By default, if the architecture doesn=E2=80=99t have a dynamic header =
+entry for this sort key ( taken care by arch_perf_header_entry() =
+function ),
+It will use the default se_header value in perf report. So default =
+behaviour will not be changed.
+
+>=20
+>> +const char	*arch_specific_sort_keys[] =3D {"local_p_stage_cyc", =
+"p_stage_cyc"};
+>=20
+> nit.. both dynamic_headers and arch_specific_sort_keys could be static =
+right?
+
+Sure, this is used only in util/sort.c=20
+I will add the change to make these static in next version.
+
+Thanks
+Athira
+>=20
+> thanks,
+> jirka
+>=20
+>>=20
+>> /*
+>>  * Replaces all occurrences of a char used with the:
+>> @@ -1392,22 +1392,37 @@ struct sort_entry sort_global_ins_lat =3D {
+>> };
+>>=20
+>> static int64_t
+>> -sort__global_p_stage_cyc_cmp(struct hist_entry *left, struct =
+hist_entry *right)
+>> +sort__p_stage_cyc_cmp(struct hist_entry *left, struct hist_entry =
+*right)
+>> {
+>> 	return left->p_stage_cyc - right->p_stage_cyc;
+>> }
+>>=20
+>> +static int hist_entry__global_p_stage_cyc_snprintf(struct hist_entry =
+*he, char *bf,
+>> +					size_t size, unsigned int width)
+>> +{
+>> +	return repsep_snprintf(bf, size, "%-*u", width,
+>> +			he->p_stage_cyc * he->stat.nr_events);
+>> +}
+>> +
+>> +
+>> static int hist_entry__p_stage_cyc_snprintf(struct hist_entry *he, =
+char *bf,
+>> 					size_t size, unsigned int width)
+>> {
+>> 	return repsep_snprintf(bf, size, "%-*u", width, =
+he->p_stage_cyc);
+>> }
+>>=20
+>> -struct sort_entry sort_p_stage_cyc =3D {
+>> -	.se_header      =3D "Pipeline Stage Cycle",
+>> -	.se_cmp         =3D sort__global_p_stage_cyc_cmp,
+>> +struct sort_entry sort_local_p_stage_cyc =3D {
+>> +	.se_header      =3D "Local Pipeline Stage Cycle",
+>> +	.se_cmp         =3D sort__p_stage_cyc_cmp,
+>> 	.se_snprintf	=3D hist_entry__p_stage_cyc_snprintf,
+>> -	.se_width_idx	=3D HISTC_P_STAGE_CYC,
+>> +	.se_width_idx	=3D HISTC_LOCAL_P_STAGE_CYC,
+>> +};
+>> +
+>> +struct sort_entry sort_global_p_stage_cyc =3D {
+>> +	.se_header      =3D "Pipeline Stage Cycle",
+>> +	.se_cmp         =3D sort__p_stage_cyc_cmp,
+>> +	.se_snprintf    =3D hist_entry__global_p_stage_cyc_snprintf,
+>> +	.se_width_idx   =3D HISTC_GLOBAL_P_STAGE_CYC,
+>> };
+>>=20
+>> struct sort_entry sort_mem_daddr_sym =3D {
+>> @@ -1858,7 +1873,8 @@ static struct sort_dimension =
+common_sort_dimensions[] =3D {
+>> 	DIM(SORT_CODE_PAGE_SIZE, "code_page_size", sort_code_page_size),
+>> 	DIM(SORT_LOCAL_INS_LAT, "local_ins_lat", sort_local_ins_lat),
+>> 	DIM(SORT_GLOBAL_INS_LAT, "ins_lat", sort_global_ins_lat),
+>> -	DIM(SORT_PIPELINE_STAGE_CYC, "p_stage_cyc", sort_p_stage_cyc),
+>> +	DIM(SORT_LOCAL_PIPELINE_STAGE_CYC, "local_p_stage_cyc", =
+sort_local_p_stage_cyc),
+>> +	DIM(SORT_GLOBAL_PIPELINE_STAGE_CYC, "p_stage_cyc", =
+sort_global_p_stage_cyc),
+>> };
+>>=20
+>> #undef DIM
+>> diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+>> index 3c7518378d62..83abe5e6812a 100644
+>> --- a/tools/perf/util/sort.h
+>> +++ b/tools/perf/util/sort.h
+>> @@ -235,7 +235,8 @@ enum sort_type {
+>> 	SORT_CODE_PAGE_SIZE,
+>> 	SORT_LOCAL_INS_LAT,
+>> 	SORT_GLOBAL_INS_LAT,
+>> -	SORT_PIPELINE_STAGE_CYC,
+>> +	SORT_LOCAL_PIPELINE_STAGE_CYC,
+>> +	SORT_GLOBAL_PIPELINE_STAGE_CYC,
+>>=20
+>> 	/* branch stack specific sort keys */
+>> 	__SORT_BRANCH_STACK,
+>> --=20
+>> 2.27.0
+
