@@ -2,247 +2,222 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD84BC4167B
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Dec 2021 00:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC30C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Dec 2021 11:17:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354512AbhLBAfR (ORCPT
+        id S1357227AbhLBLUp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 1 Dec 2021 19:35:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44596 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354555AbhLBAfF (ORCPT
+        Thu, 2 Dec 2021 06:20:45 -0500
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:31703 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1346015AbhLBLUo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 1 Dec 2021 19:35:05 -0500
-Received: from mail-qv1-xf32.google.com (mail-qv1-xf32.google.com [IPv6:2607:f8b0:4864:20::f32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95CCCC061748;
-        Wed,  1 Dec 2021 16:31:43 -0800 (PST)
-Received: by mail-qv1-xf32.google.com with SMTP id g9so21510077qvd.2;
-        Wed, 01 Dec 2021 16:31:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=UYmHlVbMSQbQAn62a50WlYWlw5WYikEw/HKO8MU8o20=;
-        b=d9ufFBZIjBeCnfJhxkhOJHR4U6gA3sYY5/+OartHrmtyqhNuwpEH+tfc93YA7tEDao
-         yOKDodcNFRle3eMMLCg2FH/Tcgr7cW593yntXLl1utZLUJtVShRNQEOc9NvEo4hEL1rm
-         L2l6bxTExKPSRmbnMRKqIcZhoOpd63W1ZKagDrFCRbYIcYvSgN+CxBxrwTxGRSsHeVKf
-         UXZK5TS9EbCKBOwmJzZ51FgzKmkah4fU/bnP1hNtNTskTK6qjluwzPEk7uWUTAkKCdZ1
-         XxzA5TtEBQPg9PU9R4bStLW9Ne4zdJoIM+RpRwYI7AmQcqEYlTEIoOnEsCuvtTzXmNFj
-         00eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=UYmHlVbMSQbQAn62a50WlYWlw5WYikEw/HKO8MU8o20=;
-        b=DqgKolkPKqrXWQ9HL31Gh9PdPZs17c/UeEKZhGq60VRHXQ6uTNba6E/gNEUxut08dv
-         BHOQn9E98Ihcvm1zXUgxhpbpnnEjF0jlav6odkYf/Joq6Rr7OvVz5ikG1n3dScMllSfV
-         bbib4a7agBzI+XqmGmgPWRjrmrEbqzKgWOQs9W9OXoh95Jeb73VIC5Ybs0Cf8BEJN7zO
-         dw6xVat2T54fpTuZzynPwMSsduLVyroCpi+LqLusdQDuUXsk3/Lfup4/2g+Aik850tNm
-         vsC1vU3KSAOFl9M0aptStnfAVXSUAL9aj52YcX/gpW68+Od52EgD/S5I7nmCouZhGygC
-         KWlA==
-X-Gm-Message-State: AOAM531xs/j1H7toXiM+CsSCkZxtlJtD5205OnDQr9ckExVG1T5rtFcu
-        djcGDJZSzKqo5WWxMOuislJkR1zSj3cXaQ==
-X-Google-Smtp-Source: ABdhPJwpuPpSi7n83vlL+jLX5fyPRTIJyAHbiKfUe+xvjm76YV/xzPPNg/iMW1GhI6PSi3iKc0YBEA==
-X-Received: by 2002:a05:6214:ccc:: with SMTP id 12mr9930154qvx.8.1638405102640;
-        Wed, 01 Dec 2021 16:31:42 -0800 (PST)
-Received: from localhost ([66.216.211.25])
-        by smtp.gmail.com with ESMTPSA id l1sm690890qkp.125.2021.12.01.16.31.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Dec 2021 16:31:42 -0800 (PST)
-Date:   Wed, 1 Dec 2021 16:31:40 -0800
-From:   Yury Norov <yury.norov@gmail.com>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     linux-kernel@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Alexey Klimov <aklimov@redhat.com>,
-        linux-alpha@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrew Lunn <andrew@lunn.ch>, Andi Kleen <ak@linux.intel.com>,
-        Tejun Heo <tj@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Anup Patel <anup.patel@wdc.com>, linux-ia64@vger.kernel.org,
-        Andy Shevchenko <andy@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Matti Vaittinen <mazziesaccount@gmail.com>,
-        Mel Gorman <mgorman@suse.de>, Christoph Hellwig <hch@lst.de>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Borislav Petkov <bp@alien8.de>, Arnd Bergmann <arnd@arndb.de>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        David Laight <David.Laight@aculab.com>,
-        Sunil Goutham <sgoutham@marvell.com>,
-        David Airlie <airlied@linux.ie>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Christoph Lameter <cl@linux.com>, linux-crypto@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>, linux-mm@kvack.org,
-        Guo Ren <guoren@kernel.org>,
-        linux-snps-arc@lists.infradead.org,
-        Geetha sowjanya <gakula@marvell.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Dennis Zhou <dennis@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Roy Pledge <Roy.Pledge@nxp.com>,
-        Saeed Mahameed <saeedm@nvidia.com>, Jens Axboe <axboe@fb.com>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Tariq Toukan <tariqt@nvidia.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Jiri Olsa <jolsa@redhat.com>, Vineet Gupta <vgupta@kernel.org>,
-        Solomon Peachy <pizza@shaftnet.org>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        kvm@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Subbaraya Sundeep <sbhatta@marvell.com>,
-        linux-csky@vger.kernel.org, Marcin Wojtas <mw@semihalf.com>,
-        linux-mips@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-s390@vger.kernel.org, Mark Gross <markgross@kernel.org>,
-        linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 0/9] lib/bitmap: optimize bitmap_weight() usage
-Message-ID: <20211202003140.GA430494@lapt>
-References: <20211128035704.270739-1-yury.norov@gmail.com>
- <YaPEfZ0t9UFGwpml@qmqm.qmqm.pl>
- <20211129063839.GA338729@lapt>
- <3CD9ECD8-901E-497B-9AE1-0DDB02346892@rere.qmqm.pl>
+        Thu, 2 Dec 2021 06:20:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1638443842; x=1669979842;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=cnkxM+v3e7Rw5Wac6Yp3jXRam56qrhimBukSct1R/EI=;
+  b=nB4ruPEP9C3RqHln3eE7OTZw9ofpuFCiJ/GLWBjzC7Y2dp6iLM9s6Z+G
+   7i44EXhXmtI0JryWd8CgIsN1cFGJPA99DCwQlUHz9p+H/oL0W7Zo2rJuz
+   2g5HndR4nLqq+fXwzwcby++l5EVYmz5b0STGGSMCQ9V01ZLkjNjrY4Anu
+   MT6zNgMBWFpVFei1Odtg39CxLltlsWJu1Yr8GF0sjECkKMdv/LujCSB4L
+   TN8jUzwK2kH0v9zKsYBwbgeJjSseFtLHirzhfY9aViPXNtcurvGkdlDru
+   BhBr6e48tnOlJjCSUHmzJM7cyPvCawoCHvKHW5e8aEiQU3Vtkq7wuuW/4
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.87,281,1631548800"; 
+   d="scan'208";a="187279434"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 02 Dec 2021 19:17:21 +0800
+IronPort-SDR: oHHo6KrlDa4JY1VFUBc2hKTxWk2YLgGfF6tEkLS+x5wtYVAxsBhGPBbQcCHOe1TuNmJe4qvs9p
+ Fem9wEXgNCe4PknDyJ/IBLupkKKSB4EZvR3UIR9FBhOq17iCcV5k8nzmaVk/MAP8QRDJbIuvWh
+ LDUkTOcBV6qjF6Tq+fT5se9jrx6E9epJaoifBitejxmbMGlMFTgHqtcJb17INF5F0hrgmcylhb
+ qw8ititRZQLDnAJ4u5qOHnUe97z0cF6yPPQ7dpnzxoUMHZ15r/JNGUtTbN8tZIXdD2n+Gc7Cn8
+ U5TDilAF/Ht4Oy3DQ8ou/ByX
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2021 02:50:31 -0800
+IronPort-SDR: Alg/rV18C0XO69Hu2lHyIcpYMmpddIcLw9OLqM0bb3Y2xXs4+Dn3+2hUgerYclXNKUBbsJa0CV
+ 2cALP70jFkmo70mt1kMJOwBsYXAyjsBmL6blCA/pwx2KKpYeiZQtto1cFyru4XzLHSrkPpzNWL
+ CTsFYJeQPq2uz17v1UpZodTZEhybTfEPCQC887i81GOJD5ucM7yrQf5CfgJo36QwCeLWxnXOfx
+ XwGLaLSFTmQYQ0GYgKSRl9VzeP4K9/7Aq+Sbu0WIWBhtUsz6YmCrPXOhEU9cDlsv7lwn2d3sRm
+ Sek=
+WDCIronportException: Internal
+Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
+  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2021 03:17:19 -0800
+Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4J4YML1gtmz1Rx0t
+        for <linux-perf-users@vger.kernel.org>; Thu,  2 Dec 2021 03:17:18 -0800 (PST)
+Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
+        reason="pass (just generated, assumed good)"
+        header.d=opensource.wdc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
+        opensource.wdc.com; h=content-transfer-encoding:mime-version
+        :x-mailer:message-id:date:subject:to:from; s=dkim; t=1638443836;
+         x=1641035837; bh=cnkxM+v3e7Rw5Wac6Yp3jXRam56qrhimBukSct1R/EI=; b=
+        NvOX2HEUID+K9U/so1rCf3rt2od4i2D5D8/9KReU2Gzgn+rYbD1QBg12XrmxeN+5
+        UajHyKG/Lg/9QyhVEAlDkyNy86gyogoJxBh/gvKWiEEX/XKEdfJRe4DMACztqDzy
+        6Jx/frBFwSNaokMKMe2EzULbRiRoTaGp3T54dTOfhqvIK0DnKiuGn5uuxmdOETVw
+        1TRdcCr6aNL4vkoMePsDpStDYGurY3GCbLkjS8AZ5sO86ukxYsHLj2iHYeipJIgw
+        EqVcCUX5TTEE4ms3zDEWJxgdESrjz9y0AGgV4jdw7rFzuN9blRh45pdLKARuxpXy
+        /25lvYU7EF4mLMAK2/4nNQ==
+X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
+Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
+        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id XIssCc_6C9Ux for <linux-perf-users@vger.kernel.org>;
+        Thu,  2 Dec 2021 03:17:16 -0800 (PST)
+Received: from toolbox.alistair23.me (unknown [10.225.165.64])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4J4YM56Fjkz1RtVG;
+        Thu,  2 Dec 2021 03:17:05 -0800 (PST)
+From:   Alistair Francis <alistair.francis@opensource.wdc.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     jolsa@redhat.com, mingo@redhat.com, dave@stgolabs.net,
+        linux-perf-users@vger.kernel.org, arnd@arndb.de,
+        namhyung@kernel.org, alistair23@gmail.com, mark.rutland@arm.com,
+        tglx@linutronix.de, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, peterz@infradead.org,
+        dvhart@infradead.org, Alistair Francis <alistair.francis@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        linux-riscv@lists.infradead.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH v4 1/6] perf bench futex: Add support for 32-bit systems with 64-bit time_t
+Date:   Thu,  2 Dec 2021 21:16:54 +1000
+Message-Id: <20211202111659.2077911-1-alistair.francis@opensource.wdc.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3CD9ECD8-901E-497B-9AE1-0DDB02346892@rere.qmqm.pl>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Nov 29, 2021 at 04:34:07PM +0000, Michał Mirosław wrote:
-> Dnia 29 listopada 2021 06:38:39 UTC, Yury Norov <yury.norov@gmail.com> napisał/a:
-> >On Sun, Nov 28, 2021 at 07:03:41PM +0100, mirq-test@rere.qmqm.pl wrote:
-> >> On Sat, Nov 27, 2021 at 07:56:55PM -0800, Yury Norov wrote:
-> >> > In many cases people use bitmap_weight()-based functions like this:
-> >> > 
-> >> > 	if (num_present_cpus() > 1)
-> >> > 		do_something();
-> >> > 
-> >> > This may take considerable amount of time on many-cpus machines because
-> >> > num_present_cpus() will traverse every word of underlying cpumask
-> >> > unconditionally.
-> >> > 
-> >> > We can significantly improve on it for many real cases if stop traversing
-> >> > the mask as soon as we count present cpus to any number greater than 1:
-> >> > 
-> >> > 	if (num_present_cpus_gt(1))
-> >> > 		do_something();
-> >> > 
-> >> > To implement this idea, the series adds bitmap_weight_{eq,gt,le}
-> >> > functions together with corresponding wrappers in cpumask and nodemask.
-> >> 
-> >> Having slept on it I have more structured thoughts:
-> >> 
-> >> First, I like substituting bitmap_empty/full where possible - I think
-> >> the change stands on its own, so could be split and sent as is.
-> >
-> >Ok, I can do it.
-> >
-> >> I don't like the proposed API very much. One problem is that it hides
-> >> the comparison operator and makes call sites less readable:
-> >> 
-> >> 	bitmap_weight(...) > N
-> >> 
-> >> becomes:
-> >> 
-> >> 	bitmap_weight_gt(..., N)
-> >> 
-> >> and:
-> >> 	bitmap_weight(...) <= N
-> >> 
-> >> becomes:
-> >> 
-> >> 	bitmap_weight_lt(..., N+1)
-> >> or:
-> >> 	!bitmap_weight_gt(..., N)
-> >> 
-> >> I'd rather see something resembling memcmp() API that's known enough
-> >> to be easier to grasp. For above examples:
-> >> 
-> >> 	bitmap_weight_cmp(..., N) > 0
-> >> 	bitmap_weight_cmp(..., N) <= 0
-> >> 	...
-> >
-> >bitmap_weight_cmp() cannot be efficient. Consider this example:
-> >
-> >bitmap_weight_lt(1000 0000 0000 0000, 1) == false
-> >                 ^
-> >                 stop here
-> >
-> >bitmap_weight_cmp(1000 0000 0000 0000, 1) == 0
-> >                                 ^
-> >                                 stop here
-> >
-> >I agree that '_gt' is less verbose than '>', but the advantage of 
-> >'_gt' over '>' is proportional to length of bitmap, and it means
-> >that this API should exist.
-> 
-> Thank you for the example. Indeed, for less-than to be efficient here you would need to replace
->  bitmap_weight_cmp(..., N) < 0
-> with
->  bitmap_weight_cmp(..., N-1) <= 0
+From: Alistair Francis <alistair.francis@wdc.com>
 
-Indeed, thanks for pointing to it.
- 
-> It would still be more readable, I think.
+Some 32-bit architectures (such are 32-bit RISC-V) only have a 64-bit
+time_t and as such don't have the SYS_futex syscall. This patch will
+allow us to use the SYS_futex_time64 syscall on those platforms.
 
-To be honest, I'm not sure that
-        bitmap_weight_cmp(..., N-1) <= 0
-would be an obvious replacement for the original
-        bitmap_weight(...) < N
-comparing to 
-        bitmap_weight_lt(..., N)
+This also converts the futex calls to be y2038 safe (when built for a
+5.1+ kernel).
 
-I think the best thing I can do is to add bitmap_weight_cmp() as
-you suggested, and turn lt and others to be wrappers on it. This
-will let people choose a better function in each case.
+This is a revert of commit ba4026b09d83acf56c040b6933eac7916c27e728
+"Revert "perf bench futex: Add support for 32-bit systems with 64-bit tim=
+e_t"".
 
-I also think that for v2 it would be better to drop the conversion
-for short bitmaps, except for switching to bitmap_empty(), because
-in that case readability wins over performance; if no objections. 
+The original commit was reverted as including linux/time_types.h would
+fail to compile on older kernels. This commit doesn't include
+linux/time_types.h to avoid this issue.
 
-Thanks,
-Yury
+Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alistair Francis <alistair23@gmail.com>
+Cc: Atish Patra <atish.patra@wdc.com>
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-riscv@lists.infradead.org
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+---
+ tools/perf/bench/futex.h | 52 +++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 49 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/bench/futex.h b/tools/perf/bench/futex.h
+index ebdc2b032afc..385d2bdfaa9f 100644
+--- a/tools/perf/bench/futex.h
++++ b/tools/perf/bench/futex.h
+@@ -8,6 +8,7 @@
+ #ifndef _FUTEX_H
+ #define _FUTEX_H
+=20
++#include <errno.h>
+ #include <unistd.h>
+ #include <sys/syscall.h>
+ #include <sys/types.h>
+@@ -28,7 +29,17 @@ struct bench_futex_parameters {
+ };
+=20
+ /**
+- * futex_syscall() - SYS_futex syscall wrapper
++ * This is copied from linux/time_types.h.
++ * We copy this here to avoid compilation failures when running
++ * on systems that don't ship with linux/time_types.h.
++ */
++struct __kernel_old_timespec {
++	__kernel_old_time_t	tv_sec;		/* seconds */
++	long			tv_nsec;	/* nanoseconds */
++};
++
++/**
++ * futex_syscall() - __NR_futex syscall wrapper
+  * @uaddr:	address of first futex
+  * @op:		futex op code
+  * @val:	typically expected value of uaddr, but varies by op
+@@ -49,14 +60,49 @@ static inline int
+ futex_syscall(volatile u_int32_t *uaddr, int op, u_int32_t val, struct t=
+imespec *timeout,
+ 	      volatile u_int32_t *uaddr2, int val3, int opflags)
+ {
+-	return syscall(SYS_futex, uaddr, op | opflags, val, timeout, uaddr2, va=
+l3);
++#if defined(__NR_futex_time64)
++	if (sizeof(*timeout) !=3D sizeof(struct __kernel_old_timespec)) {
++		int ret =3D syscall(__NR_futex_time64, uaddr, op | opflags, val, timeo=
+ut,
++				  uaddr2, val3);
++	if (ret =3D=3D 0 || errno !=3D ENOSYS)
++		return ret;
++	}
++#endif
++
++#if defined(__NR_futex)
++	if (sizeof(*timeout) =3D=3D sizeof(struct __kernel_old_timespec))
++		return syscall(__NR_futex, uaddr, op | opflags, val, timeout, uaddr2, =
+val3);
++
++	if (timeout && timeout->tv_sec =3D=3D (long)timeout->tv_sec) {
++		struct __kernel_old_timespec ts32;
++
++		ts32.tv_sec =3D (__kernel_long_t) timeout->tv_sec;
++		ts32.tv_nsec =3D (__kernel_long_t) timeout->tv_nsec;
++
++		return syscall(__NR_futex, uaddr, op | opflags, val, ts32, uaddr2, val=
+3);
++	} else if (!timeout) {
++		return syscall(__NR_futex, uaddr, op | opflags, val, NULL, uaddr2, val=
+3);
++	}
++#endif
++
++	errno =3D ENOSYS;
++	return -1;
+ }
+=20
+ static inline int
+ futex_syscall_nr_requeue(volatile u_int32_t *uaddr, int op, u_int32_t va=
+l, int nr_requeue,
+ 			 volatile u_int32_t *uaddr2, int val3, int opflags)
+ {
+-	return syscall(SYS_futex, uaddr, op | opflags, val, nr_requeue, uaddr2,=
+ val3);
++#if defined(__NR_futex_time64)
++	int ret =3D  syscall(__NR_futex_time64, uaddr, op | opflags, val, nr_re=
+queue,
++			   uaddr2, val3);
++	if (ret =3D=3D 0 || errno !=3D ENOSYS)
++		return ret;
++#endif
++
++#if defined(__NR_futex)
++	return syscall(__NR_futex, uaddr, op | opflags, val, nr_requeue, uaddr2=
+, val3);
++#endif
+ }
+=20
+ /**
+--=20
+2.31.1
+
