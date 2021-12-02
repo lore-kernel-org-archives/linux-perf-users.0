@@ -2,129 +2,109 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CBFBC433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Dec 2021 15:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C9DC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Dec 2021 15:36:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347557AbhLBPfx (ORCPT
+        id S234735AbhLBPjl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Dec 2021 10:35:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51166 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347637AbhLBPfw (ORCPT
+        Thu, 2 Dec 2021 10:39:41 -0500
+Received: from foss.arm.com ([217.140.110.172]:36680 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1347849AbhLBPji (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Dec 2021 10:35:52 -0500
-X-Greylist: delayed 505 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 02 Dec 2021 07:32:29 PST
-Received: from algol.kleine-koenig.org (algol.kleine-koenig.org [IPv6:2a01:4f8:c010:8611::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 786A5C06174A
-        for <linux-perf-users@vger.kernel.org>; Thu,  2 Dec 2021 07:32:28 -0800 (PST)
-Received: from localhost (localhost [127.0.0.1])
-        by algol.kleine-koenig.org (Postfix) with ESMTP id 570F01B87A0;
-        Thu,  2 Dec 2021 16:24:00 +0100 (CET)
-Received: from algol.kleine-koenig.org ([IPv6:::1])
-        by localhost (algol.kleine-koenig.org [IPv6:::1]) (amavisd-new, port 10024)
-        with ESMTP id tgLV4Xv-Lpjz; Thu,  2 Dec 2021 16:23:59 +0100 (CET)
-Received: from taurus.defre.kleine-koenig.org (unknown [IPv6:2a02:8071:b7c2:dbfc:4acd:9c00:d202:ebce])
-        by algol.kleine-koenig.org (Postfix) with ESMTPSA;
-        Thu,  2 Dec 2021 16:23:59 +0100 (CET)
-Message-ID: <c92d401b-cf53-e27e-b26d-870463494df1@kleine-koenig.org>
-Date:   Thu, 2 Dec 2021 16:23:53 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Content-Language: en-US
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
+        Thu, 2 Dec 2021 10:39:38 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 83C2D142F;
+        Thu,  2 Dec 2021 07:36:15 -0800 (PST)
+Received: from [10.57.35.237] (unknown [10.57.35.237])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D97173F73B;
+        Thu,  2 Dec 2021 07:36:13 -0800 (PST)
+Subject: Re: [PATCH] perf: Drop -lstdc++ from OPENCSDLIBS
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Branislav Rankov <Branislav.Rankov@arm.com>
 Cc:     Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-perf-users@vger.kernel.org,
         Diederik de Haas <didi.debian@cknow.org>,
-        Tamas Zsoldos <tamas.zsoldos@arm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Bunk <bunk@debian.org>
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
 References: <20211202134337.1109300-1-u.kleine-koenig@pengutronix.de>
-From:   =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
-Subject: Re: [PATCH] perf: Drop -lstdc++ from OPENCSDLIBS
+From:   James Clark <james.clark@arm.com>
+Message-ID: <8a5aead5-369d-5c0b-1ef7-362f777c5b9a@arm.com>
+Date:   Thu, 2 Dec 2021 15:36:12 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
+MIME-Version: 1.0
 In-Reply-To: <20211202134337.1109300-1-u.kleine-koenig@pengutronix.de>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------kyGEEI0acnzmRWxoCaJzL1h4"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------kyGEEI0acnzmRWxoCaJzL1h4
-Content-Type: multipart/mixed; boundary="------------5aoDVM3L5nQ5p907nzXEgDaA";
- protected-headers="v1"
-From: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
- linux-perf-users@vger.kernel.org, Diederik de Haas <didi.debian@cknow.org>,
- Tamas Zsoldos <tamas.zsoldos@arm.com>,
- Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Bunk <bunk@debian.org>
-Message-ID: <c92d401b-cf53-e27e-b26d-870463494df1@kleine-koenig.org>
-Subject: Re: [PATCH] perf: Drop -lstdc++ from OPENCSDLIBS
-References: <20211202134337.1109300-1-u.kleine-koenig@pengutronix.de>
-In-Reply-To: <20211202134337.1109300-1-u.kleine-koenig@pengutronix.de>
 
---------------5aoDVM3L5nQ5p907nzXEgDaA
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
 
-SGVsbG8sDQoNCkkgcGlja2VkIHRoZSB3cm9uZyBzY3JpcHQgc28gdGhlIHNlbmRlciBhZGRy
-ZXNzIHdhcyB3cm9uZy4gSSBhc3N1bWUgSSdsbCANCmhhdmUgdG8gZml4IHRoYXQuIFdpbGwg
-cGF5IG1vcmUgYXR0ZW50aW9uIGZvciB2Mi4NCg0KT24gMTIvMi8yMSAxNDo0MywgVXdlIEts
-ZWluZS1Lw7ZuaWcgd3JvdGU6DQo+IEZyb206IFV3ZSBLbGVpbmUtS8O2bmlnIDx1d2VAa2xl
-aW5lLWtvZW5pZy5vcmc+DQo+IA0KPiBXaGVuIGNyb3NzIGNvbXBpbGluZyBvbiBhbWQ2NCBm
-b3IgYXJtNjQgdGhlIGJ1aWxkIGZhaWxlZCBvbiBteSBtYWNoaW5lIHdpdGg6DQo+IA0KPiAJ
-TWFrZWZpbGUuY29uZmlnOjQ5MzogKioqIEVycm9yOiBObyBsaWJvcGVuY3NkIGxpYnJhcnkg
-Zm91bmQgb3IgdGhlIHZlcnNpb24gaXMgbm90IHVwLXRvLWRhdGUuIFBsZWFzZSBpbnN0YWxs
-IHJlY2VudCBsaWJvcGVuY3NkIHRvIGJ1aWxkIHdpdGggQ09SRVNJR0hUPTEuICBTdG9wLg0K
-PiANCj4gZXZlbiB0aG91Z2ggbGlib3BlbmNzZCB3YXMgaW5zdGFsbGVkIChmb3IgYm90aCBh
-bWQ2NCBhbmQgYXJtNjQpLiBBZnRlcg0KPiBzb21lIGRpZ2dpbmcgYXJvdW5kIEkgZm91bmQg
-dGhlIHJlbGV2YW50IGVycm9yIG1lc3NhZ2UgaW4NCj4gdG9vbHMvcGVyZi9mZWF0dXJlL3Rl
-c3QtbGlib3BlbmNzZC5tYWtlLm91dHB1dDoNCj4gDQo+IAkvdXNyL2xpYi9nY2MtY3Jvc3Mv
-YWFyY2g2NC1saW51eC1nbnUvMTEvLi4vLi4vLi4vLi4vYWFyY2g2NC1saW51eC1nbnUvYmlu
-L2xkOiBjYW5ub3QgZmluZCAtbHN0ZGMrKw0KPiANCj4gSW5zdGVhZCBvZiBmaXhpbmcgdGhl
-IGVycm9yIG1lc3NhZ2UgdG8gYWxzbyBpbmNsdWRlIGEgcmVxdWVzdCB0byBpbnN0YWxsDQo+
-IGxpYnN0ZGMrKywganVzdCBkcm9wIC1sc3RkYysrLiBXaXRoIHRoaXMgY2hhbmdlIHRoZSBi
-dWlsZCBjb21wbGV0ZWQuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBVd2UgS2xlaW5lLUvDtm5p
-ZyA8dXdlQGtsZWluZS1rb2VuaWcub3JnPg0KPiAtLS0NCj4gSGVsbG8sDQo+IA0KPiBub3Qg
-c3VyZSB0aGlzIGlzIGEgcHVyZSBjcm9zcyBjb21waWxhdGlvbiBwcm9ibGVtLiBJIHRoaW5r
-IGluIGdlbmVyYWwNCj4gaXQncyBhIGJhZCBpZGVhIHRvIGxpbmsgYWdhaW5zdCBsaWJzdGRj
-KysgZXhwbGljaXRseS4gU3RpbGwgbW9yZSBpZg0KPiB0aGVyZSBpcyBubyBDKysgaW52b2x2
-ZWQuDQoNCkluIHRoZSBtZWFudGltZSBJIHdhcyBwb2ludGVkIHRvIDU3M2NmNWM5YTE1MiAo
-InBlcmYgYnVpbGQ6IEFkZCBtaXNzaW5nIA0KLWxzdGRjKysgd2hlbiBsaW5raW5nIHdpdGgg
-bGlib3BlbmNzZCIpLCBhbmQgSSB3b25kZXIgd2hhdCBJJ20gbWlzc2luZy4gDQpNYXliZSBt
-eSBwYXRjaCBicmVha3MgdGhlIGJ1aWxkIGlmIGxpYm9wZW5jc2QgaXMgb25seSBhdmFpbGFi
-bGUgYXMgLmE/DQoNCkkgYWRkZWQgdGhlIHBlb3BsZSBpbnZvbHZlZCBpbiB0aGF0IGNvbW1p
-dCB0byBDYzogYW5kIGxvb2sgZm9yd2FyZCB0byANCmRldGFpbHMuIFRoZSBtb3RpdmF0aW9u
-IHRvIGFkZCAtbHN0ZGMrKyBzZWVtcyB0byBiZSAiSXQgZG9lcyBub3QgaHVydCIgDQp3aGlj
-aCBpcyBhIGJpdCB3ZWFrLg0KDQpCZXN0IHJlZ2FyZHMNClV3ZQ0K
+On 02/12/2021 13:43, Uwe Kleine-König wrote:
+> From: Uwe Kleine-König <uwe@kleine-koenig.org>
+> 
+> When cross compiling on amd64 for arm64 the build failed on my machine with:
+> 
+> 	Makefile.config:493: *** Error: No libopencsd library found or the version is not up-to-date. Please install recent libopencsd to build with CORESIGHT=1.  Stop.
+> 
+> even though libopencsd was installed (for both amd64 and arm64). After
+> some digging around I found the relevant error message in
+> tools/perf/feature/test-libopencsd.make.output:
+> 
+> 	/usr/lib/gcc-cross/aarch64-linux-gnu/11/../../../../aarch64-linux-gnu/bin/ld: cannot find -lstdc++
 
---------------5aoDVM3L5nQ5p907nzXEgDaA--
+Do you have this library installed for arm64? I know you said you had OpenCSD installed, but
+maybe the arm64 stdc++ lib is missing?
 
---------------kyGEEI0acnzmRWxoCaJzL1h4
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
+> 
+> Instead of fixing the error message to also include a request to install
+> libstdc++, just drop -lstdc++. With this change the build completed.
+> 
+> Signed-off-by: Uwe Kleine-König <uwe@kleine-koenig.org>
+> ---
+> Hello,
+> 
+> not sure this is a pure cross compilation problem. I think in general
+> it's a bad idea to link against libstdc++ explicitly. Still more if
+> there is no C++ involved.
 
------BEGIN PGP SIGNATURE-----
+This -lstdc++ was only just added a few months ago by Branislav so I'm
+not sure if it should be removed. OpenCSD does use C++ so it is involved,
+although I would have thought that stdc++ was a dependency of opencsd so
+it would automatically get pulled in.
 
-iQEzBAEBCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmGo5QoACgkQwfwUeK3K
-7AnNtgf/UQzSdqV4tWvVwG9LnNI8p3x2oaj0NDtChPsf9+pEoJuFgbPICE0E89XH
-tK8F2NGM06NPrcba2hoDAgfOB2QQJCCGEcNnVPRB2L+A1efRpcQEYIZ4OBHQdaKZ
-BSPtICm+SxZnxVz2wAuvPYLzPcFP340ji6T+6aC2T/ypzfwigy35+QVJPjABmAO+
-S/vPGiqBuhWAVwchcKfVjWVeR9NiHhZrtQlWaCdKzHBZH6UDPw1dZK/lHT6SxwkK
-odIj0QqlZJrR8UdnCoFLhWz6sG2kU8TyvPobJl41kOvrHG74v+mkVHrFpMASRDln
-kzGjoBIVGOaqovVevOHPd/nBtnk3Eg==
-=+kRg
------END PGP SIGNATURE-----
+@Branislav, what was the build error that you were fixing with the recent
+change? I checked the commit message but it's not listed.
 
---------------kyGEEI0acnzmRWxoCaJzL1h4--
+James
+
+> 
+> Best regards
+> Uwe
+> 
+>  tools/perf/Makefile.config | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index afd144725a0b..dc946b7a802e 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -143,7 +143,7 @@ FEATURE_CHECK_LDFLAGS-libcrypto = -lcrypto
+>  ifdef CSINCLUDES
+>    LIBOPENCSD_CFLAGS := -I$(CSINCLUDES)
+>  endif
+> -OPENCSDLIBS := -lopencsd_c_api -lopencsd -lstdc++
+> +OPENCSDLIBS := -lopencsd_c_api -lopencsd
+>  ifdef CSLIBS
+>    LIBOPENCSD_LDFLAGS := -L$(CSLIBS)
+>  endif
+> 
