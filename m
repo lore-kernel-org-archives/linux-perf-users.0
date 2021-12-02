@@ -2,126 +2,104 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80983C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Dec 2021 11:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E78C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Dec 2021 13:44:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346242AbhLBLVb (ORCPT
+        id S239255AbhLBNrb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Dec 2021 06:21:31 -0500
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:38692 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357274AbhLBLVa (ORCPT
+        Thu, 2 Dec 2021 08:47:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235268AbhLBNra (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Dec 2021 06:21:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1638443888; x=1669979888;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=nl5CWwCo+HyJCS82sRYKOmxVIBP7Goz/nQOWZ6792B8=;
-  b=PugC9wAb4MZRY1dGXvhFqf+eUdvlD20KFaFgSw5pWlE4yV0eg0DGyBu/
-   xDTKjf8U5DpwFjQQmy9lKVXKrL9BPdZU+43gYadczDMiMisDrNZKpEFg2
-   1NGKJ7t7WGX542hz/wRgO8+EVfjDa5kAgNFofiSVHGOldUV13D1hdu+S8
-   U9TFSfsaWXHKYE1LPrzR8XlKCfZF4ysr3jkE9RSfmrp2nwEPeOJTgv2Sf
-   YBTDqmFuIoswdx+yKwynNluktOrjheTugW0+saaKHurTc0P9zf1/kdYKb
-   QIjY3ZHuMVCSYqY7JlBRe5PVPicvvb5JnTkOF3FLe4IKNTUode3fSVtpg
-   A==;
-X-IronPort-AV: E=Sophos;i="5.87,281,1631548800"; 
-   d="scan'208";a="186259547"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 02 Dec 2021 19:18:07 +0800
-IronPort-SDR: VFBbobicz3cEwC57YzSR3YXnMqXFq5VesX7BzLLpcGR7Qy1fTU3tfIpujGeoxWo8s47kG4UShO
- Y46+tz4JB8TRsnjAGZndy43NzHmI3xRIX0NcgQA8qucRiF493vlynzDq7Gi5s2BYz6OvNoQBml
- 7a3w62HS3CQTdUVvOyrKSIU3TRwIlP6PhczafxRh6BdF6PMtMwhU2/B216RdRrP33bHZ5+lvoN
- +MVhUaVx57zTaYjwWlQ28aVzjwNSWCt4z6aXnBcy5eQc3uCPKV3WcdZG4DyOH0o6wGUaqo4ezU
- AZd5voAk0iULTdLKRxnvwDGi
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2021 02:52:50 -0800
-IronPort-SDR: 2M4040oE2aHSO6W80PrhkB63kqat0TPbmfNV4bpFYS/3CnNjS5/+vHU9ciTqRJgjhyZYU/9+L/
- /UPbB1yNewjpg+Z/k53qidrSXSIaH3p/0WzJdN0N/g26YPqRTM7GXHFThwl9xqakoZ+9A6n4bT
- R0N+QFcUGHjW0WCy0W2DUZUJkCV9Lwks/UAAU8MQgdRyLS2CaqLq+m2kb9aTlboDQaJGaYObJq
- fWUxMRYslvZqRTYfl03Rc6CiljhgrR/GzDAhwkLO429rutLruAJoOUgAFbf04eeWbKPhGBFJgx
- 5RA=
-WDCIronportException: Internal
-Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
-  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2021 03:18:07 -0800
-Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4J4YNH22zjz1TFlw
-        for <linux-perf-users@vger.kernel.org>; Thu,  2 Dec 2021 03:18:07 -0800 (PST)
-Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
-        reason="pass (just generated, assumed good)"
-        header.d=opensource.wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
-        opensource.wdc.com; h=content-transfer-encoding:mime-version
-        :references:in-reply-to:x-mailer:message-id:date:subject:to
-        :from; s=dkim; t=1638443886; x=1641035887; bh=nl5CWwCo+HyJCS82sR
-        YKOmxVIBP7Goz/nQOWZ6792B8=; b=ZBaBgjYBGtfY2X8siccP2z8zE8wIXrCR5W
-        meKK49dRKRY/dOVcZixP6TxnjRvI+ZBY9brrPuACeRI1AUCFKjLgIXRWahkoPX+T
-        +tUSQSUC/t2AbEoK75jo6LjsiyUEUi7LYvAtvL6RzMY/0oT2tLigwWwjRDbRj0jM
-        MogY7ddNcXl3v9y3JSnJ68qoh7ypTX3Y2K0SSpdDcruK2aEaHc1j60qOkxcylBkv
-        E3e1L6uzD/e5v0ZCsIFNHCwb1kpDegWADl/5nsISoRsld3A72GyEgZiZVU883pRy
-        ozB7KhYuhhUJ8qHCagtJuWd4aOQSaYfB7q6WqYuQhd6ASxyq5Tcw==
-X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
-Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
-        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id P_SiqtjQSIFc for <linux-perf-users@vger.kernel.org>;
-        Thu,  2 Dec 2021 03:18:06 -0800 (PST)
-Received: from toolbox.alistair23.me (unknown [10.225.165.64])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4J4YN50X3fz1TFlx;
-        Thu,  2 Dec 2021 03:17:56 -0800 (PST)
-From:   Alistair Francis <alistair.francis@opensource.wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     jolsa@redhat.com, mingo@redhat.com, dave@stgolabs.net,
-        linux-perf-users@vger.kernel.org, arnd@arndb.de,
-        namhyung@kernel.org, alistair23@gmail.com, mark.rutland@arm.com,
-        tglx@linutronix.de, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, peterz@infradead.org,
-        dvhart@infradead.org, Alistair Francis <alistair.francis@wdc.com>
-Subject: [PATCH v4 6/6] selftests: futex: Use futex_waitv helper function
-Date:   Thu,  2 Dec 2021 21:16:59 +1000
-Message-Id: <20211202111659.2077911-6-alistair.francis@opensource.wdc.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20211202111659.2077911-1-alistair.francis@opensource.wdc.com>
-References: <20211202111659.2077911-1-alistair.francis@opensource.wdc.com>
+        Thu, 2 Dec 2021 08:47:30 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA32DC06174A
+        for <linux-perf-users@vger.kernel.org>; Thu,  2 Dec 2021 05:44:07 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1msmNE-0007Ax-C0; Thu, 02 Dec 2021 14:43:44 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1msmNB-002It9-Oh; Thu, 02 Dec 2021 14:43:41 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1msmNA-00068C-Am; Thu, 02 Dec 2021 14:43:40 +0100
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Diederik de Haas <didi.debian@cknow.org>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
+Subject: [PATCH] perf: Drop -lstdc++ from OPENCSDLIBS
+Date:   Thu,  2 Dec 2021 14:43:37 +0100
+Message-Id: <20211202134337.1109300-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+X-Patch-Hashes: v=1; h=sha256; i=eNmWpT5xZuUpfAnUFna2ET4cRiEnJepungZWi4gorcw=; m=2Y93WzTmNHFeNOC6sfmoEraTmDu3R6WR9czfJqHYQSk=; p=E0sCFmjtI6d4B5nzjgPxbC24bXq02w0W7HZDaRAazI4=; g=488bce8d2eb84fe39e82c97afcd58e79d01a8ca6
+X-Patch-Sig: m=pgp; i=u.kleine-koenig@pengutronix.de; s=0x0D2511F322BFAB1C1580266BE2DCDD9132669BD6; b=iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmGozYYACgkQwfwUeK3K7Am6Wgf8DFK VlLwhBzKCs2QHfWcOQEgkT9FkfquZ4V0aqrgLaG7vcP/jz03YiaaMH5fQk/yIKsFkrKpSPuIGc/QL T973qAnegO5W24Pcfr/Kx7En7T8wvlVapxjSCYqOKQb58TOhxqlgEcGs3HgWVjnJ7lRDIPp8X2xzs hBuBSmDVkdtotfceMPg+joP2trjkwxWLpI73moO1bo0JE8T+WK0d1ERgh2Ka6dR3Jho6EswuhO0ts z/7/vNlPMM1vt9RVUFKTEfbOB5lwa2vy88gfngRMLKKscwsEnClbtm2u1ACY7CUcwRYyUIDNVgdON QhcvxNQlDDR2QtlsZ5vvUIYX6oADDHA==
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-perf-users@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Alistair Francis <alistair.francis@wdc.com>
+From: Uwe Kleine-König <uwe@kleine-koenig.org>
 
-Use the publically exposed __kernel_futex_syscall_waitv() helper
-function for the futex_waitv tests.
+When cross compiling on amd64 for arm64 the build failed on my machine with:
 
-Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+	Makefile.config:493: *** Error: No libopencsd library found or the version is not up-to-date. Please install recent libopencsd to build with CORESIGHT=1.  Stop.
+
+even though libopencsd was installed (for both amd64 and arm64). After
+some digging around I found the relevant error message in
+tools/perf/feature/test-libopencsd.make.output:
+
+	/usr/lib/gcc-cross/aarch64-linux-gnu/11/../../../../aarch64-linux-gnu/bin/ld: cannot find -lstdc++
+
+Instead of fixing the error message to also include a request to install
+libstdc++, just drop -lstdc++. With this change the build completed.
+
+Signed-off-by: Uwe Kleine-König <uwe@kleine-koenig.org>
 ---
- tools/testing/selftests/futex/include/futex2test.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Hello,
 
-diff --git a/tools/testing/selftests/futex/include/futex2test.h b/tools/t=
-esting/selftests/futex/include/futex2test.h
-index 9d305520e849..fdc0a0a270cd 100644
---- a/tools/testing/selftests/futex/include/futex2test.h
-+++ b/tools/testing/selftests/futex/include/futex2test.h
-@@ -5,6 +5,7 @@
-  * Copyright 2021 Collabora Ltd.
-  */
- #include <stdint.h>
-+#include <linux/futex_syscall.h>
-=20
- #define u64_to_ptr(x) ((void *)(uintptr_t)(x))
-=20
-@@ -18,5 +19,5 @@
- static inline int futex_waitv(volatile struct futex_waitv *waiters, unsi=
-gned long nr_waiters,
- 			      unsigned long flags, struct timespec *timo, clockid_t clockid)
- {
--	return syscall(__NR_futex_waitv, waiters, nr_waiters, flags, timo, cloc=
-kid);
-+	return __kernel_futex_syscall_waitv(waiters, nr_waiters, flags, timo, c=
-lockid);
- }
---=20
-2.31.1
+not sure this is a pure cross compilation problem. I think in general
+it's a bad idea to link against libstdc++ explicitly. Still more if
+there is no C++ involved.
+
+Best regards
+Uwe
+
+ tools/perf/Makefile.config | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index afd144725a0b..dc946b7a802e 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -143,7 +143,7 @@ FEATURE_CHECK_LDFLAGS-libcrypto = -lcrypto
+ ifdef CSINCLUDES
+   LIBOPENCSD_CFLAGS := -I$(CSINCLUDES)
+ endif
+-OPENCSDLIBS := -lopencsd_c_api -lopencsd -lstdc++
++OPENCSDLIBS := -lopencsd_c_api -lopencsd
+ ifdef CSLIBS
+   LIBOPENCSD_LDFLAGS := -L$(CSLIBS)
+ endif
+-- 
+2.30.2
 
