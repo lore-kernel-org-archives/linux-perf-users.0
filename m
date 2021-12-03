@@ -2,74 +2,91 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3218EC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Dec 2021 12:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2865C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Dec 2021 13:10:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380855AbhLCMlf (ORCPT
+        id S244636AbhLCNOM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 3 Dec 2021 07:41:35 -0500
-Received: from foss.arm.com ([217.140.110.172]:48856 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1380863AbhLCMlJ (ORCPT
+        Fri, 3 Dec 2021 08:14:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34732 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244454AbhLCNOM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 3 Dec 2021 07:41:09 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 36A231396;
-        Fri,  3 Dec 2021 04:37:45 -0800 (PST)
-Received: from e124483.arm.com (unknown [10.57.35.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 83B383F5A1;
-        Fri,  3 Dec 2021 04:37:42 -0800 (PST)
-From:   Andrew Kilroy <andrew.kilroy@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc:     Andrew Kilroy <andrew.kilroy@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 3/3] perf vendor events: Rename arm64 arch std event files
-Date:   Fri,  3 Dec 2021 12:35:23 +0000
-Message-Id: <20211203123525.31127-3-andrew.kilroy@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20211203123525.31127-1-andrew.kilroy@arm.com>
-References: <20211203123525.31127-1-andrew.kilroy@arm.com>
+        Fri, 3 Dec 2021 08:14:12 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EBD8C06173E;
+        Fri,  3 Dec 2021 05:10:48 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7225862A6C;
+        Fri,  3 Dec 2021 13:10:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1636C53FAD;
+        Fri,  3 Dec 2021 13:10:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638537046;
+        bh=2Sim5sCOA4Vjpren5n6lSsplxT5g17QdmKazX6LcTX0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=qlR167VUksb8O1JjqzrF5em7YCvj5iUoH5pPLebNNBitTog/d04FwcSSUKlw806ep
+         tBSq9Fw4gKX/piksOpvRUbijX3ordVFwCQdrViaxzJnP0NKKOqSVxB+q7lAr7dsQKn
+         8EBT4q+8bB4DlvCEUfn8+EBjkwRUWuWWCwNuKRaBA7NchE7KViTCZXE940oJPBP0re
+         j03kjCnHjMSBX3TFYyGchB3wQF5eRQl0VmM2RKH33Y+/inmbRJ5FZdsv7RkoTIMxrC
+         RTyY65d8n/m9GNLVWRFOHxcc9NTlwn8tyX7J7CPeq4ysLixiu6VLPvCISKSUy/Pmt3
+         w2yDA6Y7YRg9A==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id BD01F40002; Fri,  3 Dec 2021 10:10:42 -0300 (-03)
+Date:   Fri, 3 Dec 2021 10:10:42 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: Building perf with BUILD_BPF_SKEL=1 by default
+Message-ID: <YaoXUrLUZt1scVb0@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The previous commit adds pmu events into the files
+Hi Song,
 
-  armv8-common-and-microarch.json
-  armv8-recommended.json
+	So I'm changing all my containers to build with BUILD_BPF_SKEL=1
+to then make this the default, so far older containers fail either
+because the clang available is too old, so I've added a NO_BUILD_BPF_SKEL=1
+env var to disable that in those containers and then there is this other
+case where clang is recent enough but:
 
-that are actually specified in an armv9 reference supplement, not armv8.
-As such, naming the files with the armv8 prefix seems artificial.
+    util/bpf_skel/bperf_leader.bpf.c:13:20: error: use of undeclared identifier 'BPF_F_PRESERVE_ELEMS'
+            __uint(map_flags, BPF_F_PRESERVE_ELEMS);
 
-This patch renames the files to reflect that these two files are for
-arch std events regardless of whether they are defined in armv8 or
-armv9.
+Because the system's /usr/include/linux/bpf.h doesn't have that
+BPF_F_PRESERVE_ELEMS enum entry.
 
-Signed-off-by: Andrew Kilroy <andrew.kilroy@arm.com>
----
- ...{armv8-common-and-microarch.json => common-and-microarch.json} | 0
- .../arch/arm64/{armv8-recommended.json => recommended.json}       | 0
- 2 files changed, 0 insertions(+), 0 deletions(-)
- rename tools/perf/pmu-events/arch/arm64/{armv8-common-and-microarch.json => common-and-microarch.json} (100%)
- rename tools/perf/pmu-events/arch/arm64/{armv8-recommended.json => recommended.json} (100%)
+These are enums to make them available via BTF, but then I can't use
+the:
 
-diff --git a/tools/perf/pmu-events/arch/arm64/armv8-common-and-microarch.json b/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
-similarity index 100%
-rename from tools/perf/pmu-events/arch/arm64/armv8-common-and-microarch.json
-rename to tools/perf/pmu-events/arch/arm64/common-and-microarch.json
-diff --git a/tools/perf/pmu-events/arch/arm64/armv8-recommended.json b/tools/perf/pmu-events/arch/arm64/recommended.json
-similarity index 100%
-rename from tools/perf/pmu-events/arch/arm64/armv8-recommended.json
-rename to tools/perf/pmu-events/arch/arm64/recommended.json
--- 
-2.17.1
+#ifdef BPF_F_PRESERVE_ELEMS
+#define BPF_F_PRESERVE_ELEMS (1U << 11)
+#endif
 
+approach.
+
+But then we _have_ it in the tools/include/uapi/linux/bpf.h we ship:
+
+$ grep BPF_F_PRESERVE_ELEMS tools/include/uapi/linux/bpf.h
+	BPF_F_PRESERVE_ELEMS	= (1U << 11),
+$
+
+so we need to switch to using it somehow, this way we can build in more
+systems and make bperf and other BPF enabled features.
+
+From a quick look I couldn't find where to add
+$(sourcedir)/tools/include/uapi/ to the include path used to build
+util/bpf_skel/bperf_leader.bpf.c, should be easy, can you take a look?
+
+Thanks,
+
+- Arnaldo
