@@ -2,114 +2,122 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBD7C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Dec 2021 16:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BEFDC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Dec 2021 01:03:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347275AbhLBQKl (ORCPT
+        id S245650AbhLCBG0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Dec 2021 11:10:41 -0500
-Received: from algol.kleine-koenig.org ([162.55.41.232]:40658 "EHLO
-        algol.kleine-koenig.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241791AbhLBQKl (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Dec 2021 11:10:41 -0500
-X-Greylist: delayed 2592 seconds by postgrey-1.27 at vger.kernel.org; Thu, 02 Dec 2021 11:10:40 EST
-Received: from localhost (localhost [127.0.0.1])
-        by algol.kleine-koenig.org (Postfix) with ESMTP id 7037B1B895B;
-        Thu,  2 Dec 2021 17:07:17 +0100 (CET)
-Received: from algol.kleine-koenig.org ([IPv6:::1])
-        by localhost (algol.kleine-koenig.org [IPv6:::1]) (amavisd-new, port 10024)
-        with ESMTP id r1UKWp54YrC2; Thu,  2 Dec 2021 17:07:16 +0100 (CET)
-Received: from taurus.defre.kleine-koenig.org (unknown [IPv6:2a02:8071:b7c2:dbfc:4acd:9c00:d202:ebce])
-        by algol.kleine-koenig.org (Postfix) with ESMTPSA;
-        Thu,  2 Dec 2021 17:07:16 +0100 (CET)
-Message-ID: <f4518dad-b02a-368b-99d7-7a57b57f36eb@kleine-koenig.org>
-Date:   Thu, 2 Dec 2021 17:07:03 +0100
+        Thu, 2 Dec 2021 20:06:26 -0500
+Received: from mga04.intel.com ([192.55.52.120]:61814 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233835AbhLCBGY (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 2 Dec 2021 20:06:24 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10186"; a="235618654"
+X-IronPort-AV: E=Sophos;i="5.87,283,1631602800"; 
+   d="scan'208";a="235618654"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2021 17:02:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,283,1631602800"; 
+   d="scan'208";a="597382158"
+Received: from lkp-server02.sh.intel.com (HELO 9e1e9f9b3bcb) ([10.239.97.151])
+  by FMSMGA003.fm.intel.com with ESMTP; 02 Dec 2021 17:02:50 -0800
+Received: from kbuild by 9e1e9f9b3bcb with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1mswyP-000GwB-W5; Fri, 03 Dec 2021 01:02:49 +0000
+Date:   Fri, 3 Dec 2021 09:01:49 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Alistair Francis <alistair.francis@opensource.wdc.com>,
+        linux-kernel@vger.kernel.org
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org, jolsa@redhat.com,
+        mingo@redhat.com, dave@stgolabs.net,
+        linux-perf-users@vger.kernel.org, arnd@arndb.de,
+        namhyung@kernel.org, alistair23@gmail.com, mark.rutland@arm.com,
+        tglx@linutronix.de
+Subject: Re: [PATCH v4 3/6] uapi: futex: Add a futex syscall
+Message-ID: <202112030822.dtjQPM06-lkp@intel.com>
+References: <20211202111659.2077911-3-alistair.francis@opensource.wdc.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Subject: Re: [PATCH] perf: Drop -lstdc++ from OPENCSDLIBS
-Content-Language: en-US
-To:     Branislav Rankov <branislav.rankov@arm.com>,
-        James Clark <james.clark@arm.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Diederik de Haas <didi.debian@cknow.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-References: <20211202134337.1109300-1-u.kleine-koenig@pengutronix.de>
- <8a5aead5-369d-5c0b-1ef7-362f777c5b9a@arm.com>
- <241b28ec-4acf-b30f-90c1-e1f7ef6c1443@arm.com>
-From:   =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
-In-Reply-To: <241b28ec-4acf-b30f-90c1-e1f7ef6c1443@arm.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------82Fmu32NBaCJbh4MCCLVPg20"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211202111659.2077911-3-alistair.francis@opensource.wdc.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------82Fmu32NBaCJbh4MCCLVPg20
-Content-Type: multipart/mixed; boundary="------------zLYSanCvkBOpNH9Gac25Hqnq";
- protected-headers="v1"
-From: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
-To: Branislav Rankov <branislav.rankov@arm.com>,
- James Clark <james.clark@arm.com>,
- =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
- linux-perf-users@vger.kernel.org, Diederik de Haas <didi.debian@cknow.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>
-Message-ID: <f4518dad-b02a-368b-99d7-7a57b57f36eb@kleine-koenig.org>
-Subject: Re: [PATCH] perf: Drop -lstdc++ from OPENCSDLIBS
-References: <20211202134337.1109300-1-u.kleine-koenig@pengutronix.de>
- <8a5aead5-369d-5c0b-1ef7-362f777c5b9a@arm.com>
- <241b28ec-4acf-b30f-90c1-e1f7ef6c1443@arm.com>
-In-Reply-To: <241b28ec-4acf-b30f-90c1-e1f7ef6c1443@arm.com>
+Hi Alistair,
 
---------------zLYSanCvkBOpNH9Gac25Hqnq
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Thank you for the patch! Yet something to improve:
 
-T24gMTIvMi8yMSAxNzowMCwgQnJhbmlzbGF2IFJhbmtvdiB3cm90ZToNCj4gSSBkaWQgbm90
-IGhhdmUgcHJvYmxlbXMgd2hlbiB0cnlpbmcgY3Jvc3Njb21waWxlIGluIGJvdGggZHluYW1p
-YyBhbmQgc3RhdGljIGNhc2UuDQo+IEJ1dCBtYXliZSB5b3UgaGF2ZSBhIGNhc2Ugd2hlcmUg
-dGhpcyBpcyBhIHByb2JsZW0uIEkgd291bGQgbGlrZSB0byB1bmRlcnN0YW5kIHdoYXQNCj4g
-eW91ciBjYXNlIGlzLg0KPiBEb2VzIHlvdXIgbGliT3BlbkNTRC5zbyBoYXZlIGEgZGVwZW5k
-ZW5jeSBvbiBsaWJzdGRjKysuc28/DQo+IElmIHNvLCB3aGVyZSBpcyB0aGUgbGlic3RkYysr
-LnNvPw0KDQpBcyBub3RlZCBpbiBhbiBvdGhlciB0aHJlYWQgYnJhbmNoOiBJIGhhdmUgbGli
-c3RkYysrLnNvLjYuMC4yOSBidXQgbm90IA0KbGlic3RkYysrLnNvLiBGb3IgbGlua2luZyB0
-aGlzIGlzIGVub3VnaCBhcyB0aGUgYmluYXJ5IHRoYXQgaXMgbGlua2VkIA0KZG9lc24ndCBu
-ZWVkIGFueSBzeW1ib2xzIGZyb20gbGlic3RkYysrLnNvLg0KDQo+IElmIHRoaXMgaXMgYSBn
-ZW51aW5lIHByb2JsZW0sIHdlIGNvdWxkIGFkZCAtbHN0ZGMrKyBjb25kaXRpb25hbGx5IG9u
-bHkgZm9yIHRoZQ0KPiBzdGF0aWMgYnVpbGQuDQoNClRoYXQgc2VlbXMgdG8gYmUgdGhlIHBh
-dGggdG8gZ28gdGhlbi4NCg0KQmVzdCByZWdhcmRzDQpVd2UNCg==
+[auto build test ERROR on tip/locking/core]
+[also build test ERROR on linux/master soc/for-next linus/master v5.16-rc3 next-20211202]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
---------------zLYSanCvkBOpNH9Gac25Hqnq--
+url:    https://github.com/0day-ci/linux/commits/Alistair-Francis/perf-bench-futex-Add-support-for-32-bit-systems-with-64-bit-time_t/20211202-192015
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git 4e0d84634445ed550498d613a49ea8f6cfa5e66c
+config: x86_64-randconfig-a002-20211202 (https://download.01.org/0day-ci/archive/20211203/202112030822.dtjQPM06-lkp@intel.com/config)
+compiler: clang version 14.0.0 (https://github.com/llvm/llvm-project 4b553297ef3ee4dc2119d5429adf3072e90fac38)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/0day-ci/linux/commit/710fc0b1a255e93e04efbaccf76f6445db51ff1f
+        git remote add linux-review https://github.com/0day-ci/linux
+        git fetch --no-tags linux-review Alistair-Francis/perf-bench-futex-Add-support-for-32-bit-systems-with-64-bit-time_t/20211202-192015
+        git checkout 710fc0b1a255e93e04efbaccf76f6445db51ff1f
+        # save the config file to linux build tree
+        mkdir build_dir
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash
 
---------------82Fmu32NBaCJbh4MCCLVPg20
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
 
------BEGIN PGP SIGNATURE-----
+All errors (new ones prefixed by >>):
 
-iQEzBAEBCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmGo7ycACgkQwfwUeK3K
-7AlTAgf/Vlq7/0c8V4/F4EsnPnpOi79yqkmghLXVgdAi3/U9zhECOL+zkWHph3nP
-HNQf7b696seSN3D7AACYG1YBFKu3CXrkCrHQVWIAZFY6+oogxA1AOfgxHEMXzoKo
-UqVJqRuyM3Yk0KlzyZ6jaCj279GjAwJmMd5G5LCb5f6T5Czc+yG0HdnPdG+v78G8
-NEfVIiP0dpvwbUKAhpZQoMaeEdxrancQ9hi60RYmRu9ExSf92fzsITT8NW01yySk
-oRr2+rF+a1dyZBFSjmZ2I0dElz3Shc2vuQ+bfK/i/OWHYwuybY8fnV8/VoUefyIS
-0pbHLDPj0NOBZQP9H7FV4RmDOC1EIw==
-=IpN2
------END PGP SIGNATURE-----
+   In file included from <built-in>:1:
+   ./usr/include/linux/futex_syscall.h:33:16: warning: declaration of 'struct timespec' will not be visible outside of this function [-Wvisibility]
+                         struct timespec *timeout, __volatile__ uint32_t *uaddr2, int val3)
+                                ^
+>> ./usr/include/linux/futex_syscall.h:45:12: error: invalid application of 'sizeof' to an incomplete type 'struct timespec'
+           if (sizeof(*timeout) == sizeof(struct __kernel_old_timespec))
+                     ^~~~~~~~~~
+   ./usr/include/linux/futex_syscall.h:33:16: note: forward declaration of 'struct timespec'
+                         struct timespec *timeout, __volatile__ uint32_t *uaddr2, int val3)
+                                ^
+>> ./usr/include/linux/futex_syscall.h:46:10: error: implicit declaration of function 'syscall' [-Werror,-Wimplicit-function-declaration]
+                   return syscall(__NR_futex, uaddr, op, val, timeout, uaddr2, val3);
+                          ^
+>> ./usr/include/linux/futex_syscall.h:48:24: error: incomplete definition of type 'struct timespec'
+           if (timeout && timeout->tv_sec == (long)timeout->tv_sec) {
+                          ~~~~~~~^
+   ./usr/include/linux/futex_syscall.h:33:16: note: forward declaration of 'struct timespec'
+                         struct timespec *timeout, __volatile__ uint32_t *uaddr2, int val3)
+                                ^
+   ./usr/include/linux/futex_syscall.h:48:49: error: incomplete definition of type 'struct timespec'
+           if (timeout && timeout->tv_sec == (long)timeout->tv_sec) {
+                                                   ~~~~~~~^
+   ./usr/include/linux/futex_syscall.h:33:16: note: forward declaration of 'struct timespec'
+                         struct timespec *timeout, __volatile__ uint32_t *uaddr2, int val3)
+                                ^
+   ./usr/include/linux/futex_syscall.h:51:44: error: incomplete definition of type 'struct timespec'
+                   ts_old.tv_sec = (__kernel_long_t) timeout->tv_sec;
+                                                     ~~~~~~~^
+   ./usr/include/linux/futex_syscall.h:33:16: note: forward declaration of 'struct timespec'
+                         struct timespec *timeout, __volatile__ uint32_t *uaddr2, int val3)
+                                ^
+   ./usr/include/linux/futex_syscall.h:52:45: error: incomplete definition of type 'struct timespec'
+                   ts_old.tv_nsec = (__kernel_long_t) timeout->tv_nsec;
+                                                      ~~~~~~~^
+   ./usr/include/linux/futex_syscall.h:33:16: note: forward declaration of 'struct timespec'
+                         struct timespec *timeout, __volatile__ uint32_t *uaddr2, int val3)
+                                ^
+   ./usr/include/linux/futex_syscall.h:85:9: error: implicit declaration of function 'syscall' [-Werror,-Wimplicit-function-declaration]
+           return syscall(__NR_futex, uaddr, op, val, nr_requeue, uaddr2, val3);
+                  ^
+   1 warning and 7 errors generated.
 
---------------82Fmu32NBaCJbh4MCCLVPg20--
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
