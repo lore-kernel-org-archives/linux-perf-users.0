@@ -2,87 +2,115 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59641C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Dec 2021 09:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50EC3C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Dec 2021 09:38:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379509AbhLCJZd (ORCPT
+        id S1351430AbhLCJmQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 3 Dec 2021 04:25:33 -0500
-Received: from foss.arm.com ([217.140.110.172]:46070 "EHLO foss.arm.com"
+        Fri, 3 Dec 2021 04:42:16 -0500
+Received: from foss.arm.com ([217.140.110.172]:46298 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1351316AbhLCJZd (ORCPT
+        id S1351418AbhLCJmP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 3 Dec 2021 04:25:33 -0500
+        Fri, 3 Dec 2021 04:42:15 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1D73913D5;
-        Fri,  3 Dec 2021 01:22:09 -0800 (PST)
-Received: from [10.57.33.246] (unknown [10.57.33.246])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 793B03F5A1;
-        Fri,  3 Dec 2021 01:22:07 -0800 (PST)
-Subject: Re: [PATCH] perf: Drop -lstdc++ from OPENCSDLIBS
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>,
-        Branislav Rankov <branislav.rankov@arm.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E2DBD1435;
+        Fri,  3 Dec 2021 01:38:51 -0800 (PST)
+Received: from [10.57.82.187] (unknown [10.57.82.187])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 25C633F5A1;
+        Fri,  3 Dec 2021 01:38:49 -0800 (PST)
+Subject: Re: [PATCH v1 4/4] perf tools: Support register names from all
+ architectures
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Diederik de Haas <didi.debian@cknow.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-References: <20211202134337.1109300-1-u.kleine-koenig@pengutronix.de>
- <8a5aead5-369d-5c0b-1ef7-362f777c5b9a@arm.com>
- <241b28ec-4acf-b30f-90c1-e1f7ef6c1443@arm.com>
- <f4518dad-b02a-368b-99d7-7a57b57f36eb@kleine-koenig.org>
-From:   James Clark <james.clark@arm.com>
-Message-ID: <4d9761e7-083c-0d94-526b-1513d0eb1576@arm.com>
-Date:   Fri, 3 Dec 2021 09:22:06 +0000
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+References: <20211201123334.679131-1-german.gomez@arm.com>
+ <20211201123334.679131-5-german.gomez@arm.com>
+From:   German Gomez <german.gomez@arm.com>
+Message-ID: <c78b2533-6960-99c9-543a-965d669d1ece@arm.com>
+Date:   Fri, 3 Dec 2021 09:38:43 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-In-Reply-To: <f4518dad-b02a-368b-99d7-7a57b57f36eb@kleine-koenig.org>
+In-Reply-To: <20211201123334.679131-5-german.gomez@arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
+On 01/12/2021 12:33, German Gomez wrote:
+> [...]
+>
+> diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
+> index eeac181eb..a201181fc 100644
+> --- a/tools/perf/util/perf_regs.h
+> +++ b/tools/perf/util/perf_regs.h
+> @@ -27,15 +27,42 @@ uint64_t arch__user_reg_mask(void);
+>  #ifdef HAVE_PERF_REGS_SUPPORT
+>  extern const struct sample_reg sample_reg_masks[];
+>  
+> +#include <string.h>
+>  #include <perf_regs.h>
+>  
+>  #define DWARF_MINIMAL_REGS ((1ULL << PERF_REG_IP) | (1ULL << PERF_REG_SP))
+>  
+>  int perf_reg_value(u64 *valp, struct regs_dump *regs, int id);
+>  
+> -static inline const char *perf_reg_name(int id)
+> +#include "perf_regs_csky.h"
+> +#include "perf_regs_mips.h"
+> +#include "perf_regs_powerpc.h"
+> +#include "perf_regs_riscv.h"
+> +#include "perf_regs_s390.h"
+> +#include "perf_regs_x86.h"
+> +#include "perf_regs_arm.h"
+> +#include "perf_regs_arm64.h"
 
-On 02/12/2021 16:07, Uwe Kleine-König wrote:
-> On 12/2/21 17:00, Branislav Rankov wrote:
->> I did not have problems when trying crosscompile in both dynamic and static case.
->> But maybe you have a case where this is a problem. I would like to understand what
->> your case is.
->> Does your libOpenCSD.so have a dependency on libstdc++.so?
->> If so, where is the libstdc++.so?
-> 
-> As noted in an other thread branch: I have libstdc++.so.6.0.29 but not libstdc++.so. For linking this is enough as the binary that is linked doesn't need any symbols from libstdc++.so.
-> 
->> If this is a genuine problem, we could add -lstdc++ conditionally only for the
->> static build.
-> 
-> That seems to be the path to go then.
+Something that slipped through: this is failing to compile perf on ARM32
+due to the order of the imports:
 
-Hi Uwe,
+util/../../arch/arm64/include/uapi/asm/perf_regs.h:5:6: error: nested redefinition of ‘enum perf_event_arm_regs’
+    5 | enum perf_event_arm_regs {
+      |      ^~~~~~~~~~~~~~~~~~~
 
-Yes I think so. There are also quite a few similar cases in the makefiles like:
+Both #import <perf_regs.h> and "perf_regs_arm.h" are importing the same
+header (/tools/arch/arm/include/uapi/asm/perf_regs.h) so this part of
+the [PATCH 3/4] isn't doing anything:
 
-  ifeq ($(findstring -static,${LDFLAGS}),-static)
-    DWARFLIBS += -lelf -lebl -ldl -lz -llzma -lbz2
-  endif
+diff --git a/tools/perf/util/perf_regs_arm.h b/tools/perf/util/perf_regs_arm.h
+new file mode 100644
+index 000000000..779b40d6c
+--- /dev/null
++++ b/tools/perf/util/perf_regs_arm.h
+@@ -0,0 +1,57 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++#ifndef __PERF_REGS_ARM_H
++#define __PERF_REGS_ARM_H
++
++/*
++ * ARM and ARM64 registers are grouped under enums of the same name.
++ * Temporarily rename the name of the enum to prevent the naming collision.
++ */
++#define perf_event_arm_regs perf_event_arm_regs_workaround
++
++#include "../../arch/arm/include/uapi/asm/perf_regs.h"
 
-With the conditional added to this patch:
+There is a similar workaround in the csky version. Although it should
+compile, I think some of the register names might be missing (the ones
+under #if defined(__CSKYABIV2__)).
 
-Reviewed-by: James Clark <james.clark@arm.com>
+I'm wondering if it would be wiser to update this changeset to only
+consider a small number of platforms (maybe x86 and arm64) and see how
+it goes.
 
-
-Thanks
-James
-
-> 
-> Best regards
-> Uwe
