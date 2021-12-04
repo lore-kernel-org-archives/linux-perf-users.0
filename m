@@ -2,369 +2,79 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 291A8C433F5
-	for <linux-perf-users@archiver.kernel.org>; Sat,  4 Dec 2021 09:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B687C433F5
+	for <linux-perf-users@archiver.kernel.org>; Sat,  4 Dec 2021 14:23:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1384608AbhLDJ4q (ORCPT
+        id S241124AbhLDO1H (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 4 Dec 2021 04:56:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57874 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1384564AbhLDJ4j (ORCPT
+        Sat, 4 Dec 2021 09:27:07 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:33050 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233795AbhLDO1G (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 4 Dec 2021 04:56:39 -0500
-Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09B02C061A83;
-        Sat,  4 Dec 2021 01:53:14 -0800 (PST)
-Received: by mail-pg1-x530.google.com with SMTP id f125so5605749pgc.0;
-        Sat, 04 Dec 2021 01:53:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=czJoVryBJuRcT/ehuX/TDIeW+lRJT86wq9/OvXnh70g=;
-        b=E6qLZya8+ifZxNJOIPiTCTofzYjJThBlfeuM51/2mqfsnjW5NtrNTz/6a0nEh7jmKU
-         VGTTs3/RbA7s8syhuDBh+k70qRK3hetMq9n8itSkvFJ+mtTIN0Uc+WJOANDPdKHwH8vs
-         k8udbqT/eL9Tzpjtsu+6e9o/SLIkzrLwPCDSvquIL+N5FwmpTXeP1wqnmE7nQK/1dJZO
-         ksP728T5KeU42m8NPGDNz1UCB83nn0OrhifZgrDL+dypJQ5KxuroJ3f30wEMYdTajgp1
-         tA72KBktvSwUiATQBi7Hc+gb1PlQJIXCz0eUPuwixg5JmBdOEYIRfpkwowmfkmIn30dq
-         VNVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=czJoVryBJuRcT/ehuX/TDIeW+lRJT86wq9/OvXnh70g=;
-        b=KN0cAaCvFMtL9uhNfN9W6wPZotL0glCFfEQGFDqthn+N2v6LMTUqTUOvbwyKhw3fEs
-         QRgOew7yEGuOASD+t6Hi3W5F14xm+KUlTrvGjo/6lHx/WlFz+ysEYWRjfxIa+BfkeO8i
-         aESEtAXF4Rf1cSji95NHolZY/TI4RZzImrN5uRLEBmVt4kyFwqy0vmeSH2VNjk48qHdB
-         1Nx+P0QHcl6ohImJgTgEHbezpW8yscCsng1mhIVQrbefXQieKdSFndzx0U6KKbXJl/7Y
-         BNRDQrSzbg+6FccbHulfv/NMEn+MdfCuHJ9MRpDFJGJDtRdJwtXLOH8bvkJaRrZUiLTA
-         LjLg==
-X-Gm-Message-State: AOAM53300BVZIi/DEJ3OY307FecX0/xCLirwSu4SJSHwPpZIsAwrT2rx
-        nxle5PBYVMs5T73r2yuK9S8=
-X-Google-Smtp-Source: ABdhPJxzLifxgl4vQbzEDYn+z7ENKxXxDFCDs3LmIROFaOViZ6d6BbSiRJPdAV7fU9k00bDw17QoEA==
-X-Received: by 2002:a65:6790:: with SMTP id e16mr8839078pgr.112.1638611593497;
-        Sat, 04 Dec 2021 01:53:13 -0800 (PST)
-Received: from vultr.guest ([45.76.74.237])
-        by smtp.gmail.com with ESMTPSA id ms15sm4343198pjb.26.2021.12.04.01.53.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Dec 2021 01:53:13 -0800 (PST)
-From:   Yafang Shao <laoar.shao@gmail.com>
-To:     akpm@linux-foundation.org, rostedt@goodmis.org,
-        keescook@chromium.org, pmladek@suse.com, david@redhat.com,
-        arnaldo.melo@gmail.com, andrii.nakryiko@gmail.com
-Cc:     linux-mm@kvack.org, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
+        Sat, 4 Dec 2021 09:27:06 -0500
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1638627820;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+5b2uriykKgPHTmlAG2P2NYmE9drKwdyejG/Ik80gAI=;
+        b=VqEkpk2BgU6O+Y29MaX161OU2b9yWfNAz2iUaQOubA4FiYI7+iPJIKB3dD8MJ7Fe6QNgEp
+        5tYeFFc2azHcNvMAseXMzTGvxCkAobZBxeMlf2usJ3wpBFiuOxbgy+KmYSrnvbeWQzy7V4
+        YPtSZYoAbm+JGhBexbQnPh90Cd1q8Bfed7Isi8siUwjujmPCzgKjImp7UQw8UONUz4FGDC
+        UeExIEKucbZ6rfPnEN4no3d3Jk/WwdQVUdY0VhveaYiwBdI2XdoTSrVPObCtq3rR8L6xtH
+        V21tMU4govDAsN5oT/Jxnmufigw6H7u9kROUfLXpun3a2Bb4VKxqCa9n3eE+gg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1638627820;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+5b2uriykKgPHTmlAG2P2NYmE9drKwdyejG/Ik80gAI=;
+        b=0mYQi0hLjkh5+1Gk0y47xn63zi1Sl239lQwP8uAeKzqHB/VVTlmmg+ceXlmtv8eFGxrht/
+        W8VMLZUqE0hMtLDw==
+To:     Rob Herring <robh@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH -mm 5/5] bpf/progs: replace hard-coded 16 with TASK_COMM_LEN
-Date:   Sat,  4 Dec 2021 09:52:56 +0000
-Message-Id: <20211204095256.78042-6-laoar.shao@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20211204095256.78042-1-laoar.shao@gmail.com>
-References: <20211204095256.78042-1-laoar.shao@gmail.com>
+        Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v12 2/5] perf: Add a counter for number of user access
+ events in context
+In-Reply-To: <CAL_JsqJ9kkch_SB6LT_fwxk9QS36zbwsj5wu+dtY7yWe6SEMug@mail.gmail.com>
+References: <20211027201641.2076427-1-robh@kernel.org>
+ <20211027201641.2076427-3-robh@kernel.org> <87zgpl9rqq.ffs@tglx>
+ <CAL_JsqJ9kkch_SB6LT_fwxk9QS36zbwsj5wu+dtY7yWe6SEMug@mail.gmail.com>
+Date:   Sat, 04 Dec 2021 15:23:39 +0100
+Message-ID: <87sfv84ff8.ffs@tglx>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The comm used in these bpf progs should have the same size with the comm
-field in struct task_struct defined in linux/sched.h. We'd better define
-the size as TASK_COMM_LEN to make it more grepable.
+On Fri, Dec 03 2021 at 09:58, Rob Herring wrote:
+> On Tue, Nov 30, 2021 at 4:57 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> I've rewritten it like this:
+>
+> On arm64, user space counter access will be controlled differently
+> compared to x86. On x86, access in the strictest mode is enabled for all
+> tasks in an MM when any event is mmap'ed. For arm64, access is
+> explicitly requested for an event and only enabled when the event's
+> context is active. This avoids hooks into the arch context switch code
+> and gives better control of when access is enabled.
+>
+> In order to configure user space access when the PMU is enabled, it is
+> necessary to know if any event (currently active or not) in the current
+> context has user space accessed enabled. Add a counter similar to other
+> counters in the context to avoid walking the event list every time.
 
-The bpf progs kernel code can inlcude vmlinux.h generated by BTF CO-RE
-to use TASK_COMM_LEN, while the userspace code can't include it so
-TASK_COMM_LEN is specifically defined in the userspace code.
-
-In order to fix redefinitions caused by the new included vmlinux.h, some
-headers are removed and some structs are renamed.
-
-Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Michal Miroslaw <mirq-linux@rere.qmqm.pl>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Petr Mladek <pmladek@suse.com>
----
- tools/testing/selftests/bpf/prog_tests/ringbuf.c      |  9 +++++----
- .../testing/selftests/bpf/prog_tests/ringbuf_multi.c  |  8 +++++---
- .../selftests/bpf/prog_tests/sk_storage_tracing.c     |  3 ++-
- .../testing/selftests/bpf/prog_tests/test_overhead.c  |  3 ++-
- .../selftests/bpf/prog_tests/trampoline_count.c       |  3 ++-
- .../selftests/bpf/progs/test_core_reloc_kernel.c      | 11 +++++------
- tools/testing/selftests/bpf/progs/test_ringbuf.c      |  8 ++++----
- .../testing/selftests/bpf/progs/test_ringbuf_multi.c  |  8 ++++----
- .../selftests/bpf/progs/test_sk_storage_tracing.c     |  4 ++--
- 9 files changed, 31 insertions(+), 26 deletions(-)
-
-diff --git a/tools/testing/selftests/bpf/prog_tests/ringbuf.c b/tools/testing/selftests/bpf/prog_tests/ringbuf.c
-index 9a80fe8a6427..39e43245db0a 100644
---- a/tools/testing/selftests/bpf/prog_tests/ringbuf.c
-+++ b/tools/testing/selftests/bpf/prog_tests/ringbuf.c
-@@ -15,14 +15,15 @@
- #include "test_ringbuf.lskel.h"
- 
- #define EDONE 7777
-+#define TASK_COMM_LEN 16
- 
- static int duration = 0;
- 
--struct sample {
-+struct sample_ringbuf {
- 	int pid;
- 	int seq;
- 	long value;
--	char comm[16];
-+	char comm[TASK_COMM_LEN];
- };
- 
- static int sample_cnt;
-@@ -39,7 +40,7 @@ static int atomic_xchg(int *cnt, int val)
- 
- static int process_sample(void *ctx, void *data, size_t len)
- {
--	struct sample *s = data;
-+	struct sample_ringbuf *s = data;
- 
- 	atomic_inc(&sample_cnt);
- 
-@@ -83,7 +84,7 @@ static void *poll_thread(void *input)
- 
- void test_ringbuf(void)
- {
--	const size_t rec_sz = BPF_RINGBUF_HDR_SZ + sizeof(struct sample);
-+	const size_t rec_sz = BPF_RINGBUF_HDR_SZ + sizeof(struct sample_ringbuf);
- 	pthread_t thread;
- 	long bg_ret = -1;
- 	int err, cnt, rb_fd;
-diff --git a/tools/testing/selftests/bpf/prog_tests/ringbuf_multi.c b/tools/testing/selftests/bpf/prog_tests/ringbuf_multi.c
-index e945195b24c9..cb592555513f 100644
---- a/tools/testing/selftests/bpf/prog_tests/ringbuf_multi.c
-+++ b/tools/testing/selftests/bpf/prog_tests/ringbuf_multi.c
-@@ -4,19 +4,21 @@
- #include <sys/epoll.h>
- #include "test_ringbuf_multi.skel.h"
- 
-+#define TASK_COMM_LEN 16
-+
- static int duration = 0;
- 
--struct sample {
-+struct sample_ringbuf {
- 	int pid;
- 	int seq;
- 	long value;
--	char comm[16];
-+	char comm[TASK_COMM_LEN];
- };
- 
- static int process_sample(void *ctx, void *data, size_t len)
- {
- 	int ring = (unsigned long)ctx;
--	struct sample *s = data;
-+	struct sample_ringbuf *s = data;
- 
- 	switch (s->seq) {
- 	case 0:
-diff --git a/tools/testing/selftests/bpf/prog_tests/sk_storage_tracing.c b/tools/testing/selftests/bpf/prog_tests/sk_storage_tracing.c
-index 547ae53cde74..dbbdbf4400d7 100644
---- a/tools/testing/selftests/bpf/prog_tests/sk_storage_tracing.c
-+++ b/tools/testing/selftests/bpf/prog_tests/sk_storage_tracing.c
-@@ -11,11 +11,12 @@
- 
- #define LO_ADDR6 "::1"
- #define TEST_COMM "test_progs"
-+#define TASK_COMM_LEN 16
- 
- struct sk_stg {
- 	__u32 pid;
- 	__u32 last_notclose_state;
--	char comm[16];
-+	char comm[TASK_COMM_LEN];
- };
- 
- static struct test_sk_storage_tracing *skel;
-diff --git a/tools/testing/selftests/bpf/prog_tests/test_overhead.c b/tools/testing/selftests/bpf/prog_tests/test_overhead.c
-index 123c68c1917d..7fe60ec12fc4 100644
---- a/tools/testing/selftests/bpf/prog_tests/test_overhead.c
-+++ b/tools/testing/selftests/bpf/prog_tests/test_overhead.c
-@@ -6,6 +6,7 @@
- #include <test_progs.h>
- 
- #define MAX_CNT 100000
-+#define TASK_COMM_LEN 16
- 
- static __u64 time_get_ns(void)
- {
-@@ -67,7 +68,7 @@ void test_test_overhead(void)
- 	struct bpf_object *obj;
- 	struct bpf_link *link;
- 	int err, duration = 0;
--	char comm[16] = {};
-+	char comm[TASK_COMM_LEN] = {};
- 
- 	if (CHECK_FAIL(prctl(PR_GET_NAME, comm, 0L, 0L, 0L)))
- 		return;
-diff --git a/tools/testing/selftests/bpf/prog_tests/trampoline_count.c b/tools/testing/selftests/bpf/prog_tests/trampoline_count.c
-index fc146671b20a..da83f7408aa8 100644
---- a/tools/testing/selftests/bpf/prog_tests/trampoline_count.c
-+++ b/tools/testing/selftests/bpf/prog_tests/trampoline_count.c
-@@ -5,6 +5,7 @@
- #include <test_progs.h>
- 
- #define MAX_TRAMP_PROGS 38
-+#define TASK_COMM_LEN 16
- 
- struct inst {
- 	struct bpf_object *obj;
-@@ -51,7 +52,7 @@ void serial_test_trampoline_count(void)
- 	int err, i = 0, duration = 0;
- 	struct bpf_object *obj;
- 	struct bpf_link *link;
--	char comm[16] = {};
-+	char comm[TASK_COMM_LEN] = {};
- 
- 	/* attach 'allowed' trampoline programs */
- 	for (i = 0; i < MAX_TRAMP_PROGS; i++) {
-diff --git a/tools/testing/selftests/bpf/progs/test_core_reloc_kernel.c b/tools/testing/selftests/bpf/progs/test_core_reloc_kernel.c
-index 145028b52ad8..7b1bb73c3501 100644
---- a/tools/testing/selftests/bpf/progs/test_core_reloc_kernel.c
-+++ b/tools/testing/selftests/bpf/progs/test_core_reloc_kernel.c
-@@ -1,8 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- // Copyright (c) 2019 Facebook
- 
--#include <linux/bpf.h>
--#include <stdint.h>
-+#include <vmlinux.h>
- #include <stdbool.h>
- #include <bpf/bpf_helpers.h>
- #include <bpf/bpf_core_read.h>
-@@ -23,11 +22,11 @@ struct core_reloc_kernel_output {
- 	int comm_len;
- };
- 
--struct task_struct {
-+struct task_struct_reloc {
- 	int pid;
- 	int tgid;
--	char comm[16];
--	struct task_struct *group_leader;
-+	char comm[TASK_COMM_LEN];
-+	struct task_struct_reloc *group_leader;
- };
- 
- #define CORE_READ(dst, src) bpf_core_read(dst, sizeof(*(dst)), src)
-@@ -35,7 +34,7 @@ struct task_struct {
- SEC("raw_tracepoint/sys_enter")
- int test_core_kernel(void *ctx)
- {
--	struct task_struct *task = (void *)bpf_get_current_task();
-+	struct task_struct_reloc *task = (void *)bpf_get_current_task();
- 	struct core_reloc_kernel_output *out = (void *)&data.out;
- 	uint64_t pid_tgid = bpf_get_current_pid_tgid();
- 	uint32_t real_tgid = (uint32_t)pid_tgid;
-diff --git a/tools/testing/selftests/bpf/progs/test_ringbuf.c b/tools/testing/selftests/bpf/progs/test_ringbuf.c
-index eaa7d9dba0be..45b28965f3a5 100644
---- a/tools/testing/selftests/bpf/progs/test_ringbuf.c
-+++ b/tools/testing/selftests/bpf/progs/test_ringbuf.c
-@@ -1,16 +1,16 @@
- // SPDX-License-Identifier: GPL-2.0
- // Copyright (c) 2020 Facebook
- 
--#include <linux/bpf.h>
-+#include <vmlinux.h>
- #include <bpf/bpf_helpers.h>
- 
- char _license[] SEC("license") = "GPL";
- 
--struct sample {
-+struct sample_ringbuf {
- 	int pid;
- 	int seq;
- 	long value;
--	char comm[16];
-+	char comm[TASK_COMM_LEN];
- };
- 
- struct {
-@@ -39,7 +39,7 @@ SEC("fentry/__x64_sys_getpgid")
- int test_ringbuf(void *ctx)
- {
- 	int cur_pid = bpf_get_current_pid_tgid() >> 32;
--	struct sample *sample;
-+	struct sample_ringbuf *sample;
- 	int zero = 0;
- 
- 	if (cur_pid != pid)
-diff --git a/tools/testing/selftests/bpf/progs/test_ringbuf_multi.c b/tools/testing/selftests/bpf/progs/test_ringbuf_multi.c
-index 197b86546dca..7c9db148f168 100644
---- a/tools/testing/selftests/bpf/progs/test_ringbuf_multi.c
-+++ b/tools/testing/selftests/bpf/progs/test_ringbuf_multi.c
-@@ -1,16 +1,16 @@
- // SPDX-License-Identifier: GPL-2.0
- // Copyright (c) 2020 Facebook
- 
--#include <linux/bpf.h>
-+#include <vmlinux.h>
- #include <bpf/bpf_helpers.h>
- 
- char _license[] SEC("license") = "GPL";
- 
--struct sample {
-+struct sample_ringbuf {
- 	int pid;
- 	int seq;
- 	long value;
--	char comm[16];
-+	char comm[TASK_COMM_LEN];
- };
- 
- struct ringbuf_map {
-@@ -55,7 +55,7 @@ SEC("tp/syscalls/sys_enter_getpgid")
- int test_ringbuf(void *ctx)
- {
- 	int cur_pid = bpf_get_current_pid_tgid() >> 32;
--	struct sample *sample;
-+	struct sample_ringbuf *sample;
- 	void *rb;
- 	int zero = 0;
- 
-diff --git a/tools/testing/selftests/bpf/progs/test_sk_storage_tracing.c b/tools/testing/selftests/bpf/progs/test_sk_storage_tracing.c
-index 6dc1f28fc4b6..cc41a09e3130 100644
---- a/tools/testing/selftests/bpf/progs/test_sk_storage_tracing.c
-+++ b/tools/testing/selftests/bpf/progs/test_sk_storage_tracing.c
-@@ -9,7 +9,7 @@
- struct sk_stg {
- 	__u32 pid;
- 	__u32 last_notclose_state;
--	char comm[16];
-+	char comm[TASK_COMM_LEN];
- };
- 
- struct {
-@@ -27,7 +27,7 @@ struct {
- 	__type(value, int);
- } del_sk_stg_map SEC(".maps");
- 
--char task_comm[16] = "";
-+char task_comm[TASK_COMM_LEN] = "";
- 
- SEC("tp_btf/inet_sock_set_state")
- int BPF_PROG(trace_inet_sock_set_state, struct sock *sk, int oldstate,
--- 
-2.17.1
-
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
