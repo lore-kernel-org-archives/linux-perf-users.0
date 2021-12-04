@@ -2,79 +2,105 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B687C433F5
-	for <linux-perf-users@archiver.kernel.org>; Sat,  4 Dec 2021 14:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 830E4C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat,  4 Dec 2021 16:45:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241124AbhLDO1H (ORCPT
+        id S1344741AbhLDQsY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 4 Dec 2021 09:27:07 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:33050 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233795AbhLDO1G (ORCPT
+        Sat, 4 Dec 2021 11:48:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35384 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234749AbhLDQsY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 4 Dec 2021 09:27:06 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1638627820;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+5b2uriykKgPHTmlAG2P2NYmE9drKwdyejG/Ik80gAI=;
-        b=VqEkpk2BgU6O+Y29MaX161OU2b9yWfNAz2iUaQOubA4FiYI7+iPJIKB3dD8MJ7Fe6QNgEp
-        5tYeFFc2azHcNvMAseXMzTGvxCkAobZBxeMlf2usJ3wpBFiuOxbgy+KmYSrnvbeWQzy7V4
-        YPtSZYoAbm+JGhBexbQnPh90Cd1q8Bfed7Isi8siUwjujmPCzgKjImp7UQw8UONUz4FGDC
-        UeExIEKucbZ6rfPnEN4no3d3Jk/WwdQVUdY0VhveaYiwBdI2XdoTSrVPObCtq3rR8L6xtH
-        V21tMU4govDAsN5oT/Jxnmufigw6H7u9kROUfLXpun3a2Bb4VKxqCa9n3eE+gg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1638627820;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+5b2uriykKgPHTmlAG2P2NYmE9drKwdyejG/Ik80gAI=;
-        b=0mYQi0hLjkh5+1Gk0y47xn63zi1Sl239lQwP8uAeKzqHB/VVTlmmg+ceXlmtv8eFGxrht/
-        W8VMLZUqE0hMtLDw==
-To:     Rob Herring <robh@kernel.org>
-Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v12 2/5] perf: Add a counter for number of user access
- events in context
-In-Reply-To: <CAL_JsqJ9kkch_SB6LT_fwxk9QS36zbwsj5wu+dtY7yWe6SEMug@mail.gmail.com>
-References: <20211027201641.2076427-1-robh@kernel.org>
- <20211027201641.2076427-3-robh@kernel.org> <87zgpl9rqq.ffs@tglx>
- <CAL_JsqJ9kkch_SB6LT_fwxk9QS36zbwsj5wu+dtY7yWe6SEMug@mail.gmail.com>
-Date:   Sat, 04 Dec 2021 15:23:39 +0100
-Message-ID: <87sfv84ff8.ffs@tglx>
+        Sat, 4 Dec 2021 11:48:24 -0500
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9575BC061751;
+        Sat,  4 Dec 2021 08:44:58 -0800 (PST)
+Received: by mail-pg1-x52e.google.com with SMTP id l190so6201847pge.7;
+        Sat, 04 Dec 2021 08:44:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0pJd316SntFE8CJG8ZCyQl9bn0yi8tTdr3ZLeWI3me0=;
+        b=iqDgKWpZ8/yGsyIc1QVsUbdjKIcOGhY306eHV8Xue00e+0UNFR+PYukXpJr3aReD/D
+         aXV99tRptOmdDvPczpKDaTFwg2CyOe76eGtRVp89T6LH5XE9mB6MTl6nH8td/chG6OH2
+         YodeKvj7BB0cmf3O8iq2ZSfVymebaM9+2OidYFpxLUe0YJwBGQqsXGngzX96nLCjjpaL
+         y04LXK/aFShnoDVTvy1DY6MHELbRkTu8Jh0J3dP4mzCUKxIxqX6xG9vbBznm2SLiH94W
+         gzZY0jS4vBx5FiVzxCuSBV3G/3PYMjouuQtaIOzbesCQSWp5XPhefRiXs/aPKOJ+kVz5
+         eH4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0pJd316SntFE8CJG8ZCyQl9bn0yi8tTdr3ZLeWI3me0=;
+        b=mhONlYkW3Hfi3lf+Vjhq/ioIXzmSZBwYMmkvNd4wdxepjswTad353uHzYqCkN5yxPO
+         VQbtpG++g1X4jcHf8JKZ13lR4MbHBTwKKXm74rekDOg+wRXIAjCCYXnkTx5jRCn9ycnZ
+         wevb7efwCbBrIqZ+yMDKVwf7d5b57n+wc7V/W/D7brvn0K/ciVvtla1KaOmFUgDApZak
+         L3mfghciCdZ7qy0mK6sNscYH9uJcBFWesPgAQKwWmYJ7ZhOItr6+29sjdbMknfk7GG4W
+         bOnaZ0GcsG/OxRRDcOAk48ktjbqlCAEMp89eDBkYRjg1IEQqsHdIw6jBTC03/U5lv8+J
+         zCMw==
+X-Gm-Message-State: AOAM532FBLnb7WlBb8Gdg1GxqwuAfXNKP1kgVwllYDdrsd5Glb00c/0V
+        qtHO1iaouhq7RxJLyfbXUX71d7SmyY5xE/m+BoM=
+X-Google-Smtp-Source: ABdhPJxyPZhkNrj88wcz0m7CaY2bBbLI9Vc3tBg7UND42s+Qqzyjc3Vwwi+fAgQizw3zp7zWD23+pDsDAAmJ8AhZMCk=
+X-Received: by 2002:a63:6881:: with SMTP id d123mr9847445pgc.497.1638636297919;
+ Sat, 04 Dec 2021 08:44:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20211204095256.78042-1-laoar.shao@gmail.com> <20211204095256.78042-6-laoar.shao@gmail.com>
+In-Reply-To: <20211204095256.78042-6-laoar.shao@gmail.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Sat, 4 Dec 2021 08:44:46 -0800
+Message-ID: <CAADnVQLS4Ev7xChqCMbbJiFZ_kYSB+rbiVT6AJotheFJb1f5=w@mail.gmail.com>
+Subject: Re: [PATCH -mm 5/5] bpf/progs: replace hard-coded 16 with TASK_COMM_LEN
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Kees Cook <keescook@chromium.org>,
+        Petr Mladek <pmladek@suse.com>, david@redhat.com,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        linux-mm <linux-mm@kvack.org>, bpf <bpf@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Dec 03 2021 at 09:58, Rob Herring wrote:
-> On Tue, Nov 30, 2021 at 4:57 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> I've rewritten it like this:
+On Sat, Dec 4, 2021 at 1:53 AM Yafang Shao <laoar.shao@gmail.com> wrote:
 >
-> On arm64, user space counter access will be controlled differently
-> compared to x86. On x86, access in the strictest mode is enabled for all
-> tasks in an MM when any event is mmap'ed. For arm64, access is
-> explicitly requested for an event and only enabled when the event's
-> context is active. This avoids hooks into the arch context switch code
-> and gives better control of when access is enabled.
->
-> In order to configure user space access when the PMU is enabled, it is
-> necessary to know if any event (currently active or not) in the current
-> context has user space accessed enabled. Add a counter similar to other
-> counters in the context to avoid walking the event list every time.
+>  static int process_sample(void *ctx, void *data, size_t len)
+>  {
+> -       struct sample *s = data;
+> +       struct sample_ringbuf *s = data;
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+This is becoming pointless churn.
+Nack.
+
+> index 145028b52ad8..7b1bb73c3501 100644
+> --- a/tools/testing/selftests/bpf/progs/test_core_reloc_kernel.c
+> +++ b/tools/testing/selftests/bpf/progs/test_core_reloc_kernel.c
+> @@ -1,8 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  // Copyright (c) 2019 Facebook
+>
+> -#include <linux/bpf.h>
+> -#include <stdint.h>
+> +#include <vmlinux.h>
+>  #include <stdbool.h>
+>  #include <bpf/bpf_helpers.h>
+>  #include <bpf/bpf_core_read.h>
+> @@ -23,11 +22,11 @@ struct core_reloc_kernel_output {
+>         int comm_len;
+>  };
+>
+> -struct task_struct {
+> +struct task_struct_reloc {
+
+Churn that is not even compile tested.
