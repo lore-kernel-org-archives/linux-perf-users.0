@@ -2,116 +2,133 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B134C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat,  4 Dec 2021 02:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC923C433FE
+	for <linux-perf-users@archiver.kernel.org>; Sat,  4 Dec 2021 09:53:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345167AbhLDChk (ORCPT
+        id S1384540AbhLDJ4e (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 3 Dec 2021 21:37:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47748 "EHLO
+        Sat, 4 Dec 2021 04:56:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245064AbhLDChj (ORCPT
+        with ESMTP id S231345AbhLDJ4c (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 3 Dec 2021 21:37:39 -0500
-Received: from mail-pf1-x44a.google.com (mail-pf1-x44a.google.com [IPv6:2607:f8b0:4864:20::44a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17B59C061354
-        for <linux-perf-users@vger.kernel.org>; Fri,  3 Dec 2021 18:34:15 -0800 (PST)
-Received: by mail-pf1-x44a.google.com with SMTP id p1-20020aa79e81000000b004a82ea1b82bso3051138pfq.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 03 Dec 2021 18:34:15 -0800 (PST)
+        Sat, 4 Dec 2021 04:56:32 -0500
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33710C061751;
+        Sat,  4 Dec 2021 01:53:07 -0800 (PST)
+Received: by mail-pj1-x1033.google.com with SMTP id gx15-20020a17090b124f00b001a695f3734aso4565926pjb.0;
+        Sat, 04 Dec 2021 01:53:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=4Ci0sRMJzuLU7V3ApoNCZ/NoeeTh2TBWFA1UKK1rdeE=;
-        b=DHy+8Igq3mWlQBglekabtF7x4gZIF+rY8rSOU/BF/e0eWbp+bOMEJr+GCMyMNjqcBt
-         1j49Ni9hVErvFykqGnDCW0+iuXdONZj7PwnmIoVXWJENU+fGp3NF56P3MLaoioBRvt6e
-         KjMGfoxzVdZMc1g9dIG3v4p5zBSpQsLYfyR6dPes0lVy8gFnR+zToIfLXuO/KprLJ7hs
-         /kFMPjlxoQQ+SYEFgk4/HeCBYRDbmpuzt4oO10tIgPW4V/ej1xfuw4+Yh7r2CECEN9Qq
-         rdUjpnGv6WLJU1pxgAlIlj/3Vn7yrCdv6qgh2fDADopg+fRA70n2Ck8iKk14C2dTBl5X
-         ZRtg==
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+JuXsVUnS+mGqaHxKyE0o/YKYrOHZGXxsAcg+PajcAw=;
+        b=iAXXWVOx9HNr6e7AStRCe78OXfyen74stssIx+IspwcnYxedIjo/XrtfOv1040hRjR
+         ImfCvgBr+l0CoPZ+nlbDKQui2IoZZE3KbqgpzcdOD9X0Y6O9Oc2W017XddVHTI/SY45S
+         i3iySAFhXUek0YFLJI9/O4UsrX64RNWBtLux+vCU7IsezQJ1H9Vto5cxfPwnEPNuVsuf
+         8ApKoHaJFIv/y5H4LXqVe9cSW/By8ffUGcnMi8XWIT6LAfrN1o7JSFeUf3Ov0J06WKKw
+         TYsxSBz/hNkNNdrbVBfuaf82Fj2rHB90VTgcEdkh/7QtHZoOgV6+mUAv2ApSssKR4Hfc
+         GA6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=4Ci0sRMJzuLU7V3ApoNCZ/NoeeTh2TBWFA1UKK1rdeE=;
-        b=IVFpWh6m/SyrjQiP9XJaux/T8GEGGyJqY3cZ8WgEAJ7OR44tfJ1S+TVvlSgNicWY+5
-         DvjYtxhGlqnJCbfvjfsjDCyCHI0Oyc/CBNsSb1wuImVmbAo77vwUGhQEqF4M4MUASPWB
-         ObJzxPDBu88C5oxWmwyvhxUs69I5ZMjj8Pvfn3OWvqR1c6Sa44/jnADUzc53kxg+uYAS
-         P6MPWUICB9m2DHyWqQoIgbWTtoC9s1l2I1KEIgz+UkdeHts97sShlxeJAkrsavtt5czR
-         sNoC46Pw3S39ZbTe5ikBsyKZKSRV2oW4OpH4RKH3r7VAY9v4gv5judIu8+9s9xyi9pUp
-         1a8w==
-X-Gm-Message-State: AOAM530VMmWUJ/REq0oXPRX7pf8sQlWQ/8nN0G/YTbb1RVTlFXJZmLj/
-        NIS2TOkadHKVfjfcMg5ixmSBhirMdYfI
-X-Google-Smtp-Source: ABdhPJyV9Ee5RttEz8aKJHUiD7FVP3vuSylfGOTM66Dxx+qlExDfWscNPnVleMWq5Tbq7fEMuhc4e5YJzPeX
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:6ed3:4caa:939f:d51c])
- (user=irogers job=sendgmr) by 2002:a17:903:285:b0:142:7a83:6dd2 with SMTP id
- j5-20020a170903028500b001427a836dd2mr26876166plr.59.1638585254467; Fri, 03
- Dec 2021 18:34:14 -0800 (PST)
-Date:   Fri,  3 Dec 2021 18:34:09 -0800
-Message-Id: <20211204023409.969668-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.34.1.400.ga245620fadb-goog
-Subject: [PATCH] perf stat: Fix per socket shadow aggregation
-From:   Ian Rogers <irogers@google.com>
-To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+JuXsVUnS+mGqaHxKyE0o/YKYrOHZGXxsAcg+PajcAw=;
+        b=XAHw1Yvrw5KgOQme+P6ndDemqLKxeiAicq9rO3MULhDp8jm9qAdC/pISXwNQwLGoll
+         MkG7pQYd7j46sFzALY3+jMWJXt6TE7sFf/+oQfvOVdaZ9vD29d8vXWu3qcWxAGLoMc8q
+         QrTkvNoJfUC/mETyp4WikkFXkwfDAMBSUmOIlNzAOynhUa2UuWnQmTGqkv8QtW8fhMVF
+         sAVaE5Jnb+irhn0LILzFodF5i6zk+d+JwMKPD/AkIVXlwHpxzjfWFoZiK1tVr9Bnwxtv
+         N1Q2DgakBpDp1sbp37OceBlQAGqrSdLcOJmqLc6Vl1KcMfX+rnQk7w3ThpDvR804b3oc
+         L2Dg==
+X-Gm-Message-State: AOAM533mGdpv+l8ZrPFhhcTM41tpeoTi8t0klsoDvxtCmoEnhUsOMo6a
+        ge8h9x4aBEihG8u8qGmitKA=
+X-Google-Smtp-Source: ABdhPJzaXGdpxyp5qIfx9US29iDUhZtFjsXlPg+SLpc8UsVegALcv/ZDWvLIdf1ITkI+JLfT1DRSEw==
+X-Received: by 2002:a17:90b:38c1:: with SMTP id nn1mr21160422pjb.91.1638611586767;
+        Sat, 04 Dec 2021 01:53:06 -0800 (PST)
+Received: from vultr.guest ([45.76.74.237])
+        by smtp.gmail.com with ESMTPSA id ms15sm4343198pjb.26.2021.12.04.01.53.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Dec 2021 01:53:06 -0800 (PST)
+From:   Yafang Shao <laoar.shao@gmail.com>
+To:     akpm@linux-foundation.org, rostedt@goodmis.org,
+        keescook@chromium.org, pmladek@suse.com, david@redhat.com,
+        arnaldo.melo@gmail.com, andrii.nakryiko@gmail.com
+Cc:     linux-mm@kvack.org, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vineet Singh <vineet.singh@intel.com>
-Cc:     eranian@google.com, Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Matthew Wilcox <willy@infradead.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH -mm 0/5] Phase 2 of task comm cleanups
+Date:   Sat,  4 Dec 2021 09:52:51 +0000
+Message-Id: <20211204095256.78042-1-laoar.shao@gmail.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-An uncore device may have a CPU mask that specifies one CPU per socket:
-$ cat /sys/devices/uncore_imc_0/cpumask
-0,18
-The perf_stat_config aggr_map will map a CPU to the socket and other
-aggregation values for it. Fix an error where the index into CPU mask
-was being used as the index into the aggr_map. For the cpumask above the
-indexes 0 and 1 are passed to aggr_map rather than the CPUs 0 and 18.
+This is the followup work of task comm cleanups[1].
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/stat-display.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+In this phase, the hard-coded 16 is replaced by either TASK_COMM_LEN or
+TASK_COMM_LEN_16, to make it grepable. The difference between this two 
+marcos is: 
+- TASK_COMM_LEN
+  The size should be same with the TASK_COMM_LEN defined in linux/sched.h.
+  For the src file which can't include linux/sched.h, a macro with the 
+  the same name is defined in this file specifically. 
+- TASK_COMM_LEN_16
+  The size must be a fixed-size 16. It may be exposed to userspace so we
+  can't change it. 
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 588601000f3f..7cfad5cfec38 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -516,7 +516,7 @@ static void printout(struct perf_stat_config *config, struct aggr_cpu_id id, int
- static void aggr_update_shadow(struct perf_stat_config *config,
- 			       struct evlist *evlist)
- {
--	int cpu, s;
-+	int idx, cpu, s;
- 	struct aggr_cpu_id s2, id;
- 	u64 val;
- 	struct evsel *counter;
-@@ -525,11 +525,12 @@ static void aggr_update_shadow(struct perf_stat_config *config,
- 		id = config->aggr_map->map[s];
- 		evlist__for_each_entry(evlist, counter) {
- 			val = 0;
--			for (cpu = 0; cpu < evsel__nr_cpus(counter); cpu++) {
-+			for (idx = 0; idx < evsel__nr_cpus(counter); idx++) {
-+				cpu = perf_cpu_map__cpu(evsel__cpus(counter), idx);
- 				s2 = config->aggr_get_id(config, evlist->core.cpus, cpu);
- 				if (!cpu_map__compare_aggr_cpu_id(s2, id))
- 					continue;
--				val += perf_counts(counter->counts, cpu, 0)->val;
-+				val += perf_counts(counter->counts, idx, 0)->val;
- 			}
- 			perf_stat__update_shadow_stats(counter, val,
- 					first_shadow_cpu(config, counter, id),
+In order to include vmlinux.h in bpf progs under sample/bpf or
+tools/testing/selftests/bpf, some structs are renamed and some included
+headers are removed.
+
+1. https://lore.kernel.org/lkml/20211120112738.45980-1-laoar.shao@gmail.com/
+
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Michal Miroslaw <mirq-linux@rere.qmqm.pl>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Petr Mladek <pmladek@suse.com>
+
+Yafang Shao (5):
+  elfcore: replace old hard-code 16 with TASK_COMM_LEN_16
+  cn_proc: replaced old hard-coded 16 with TASK_COMM_LEN_16
+  samples/bpf/tracex2: replace hard-coded 16 with TASK_COMM_LEN
+  tools/perf: replace hard-coded 16 with TASK_COMM_LEN
+  bpf/progs: replace hard-coded 16 with TASK_COMM_LEN
+
+ include/linux/elfcore-compat.h                        |  8 ++------
+ include/linux/elfcore.h                               |  9 ++-------
+ include/linux/sched.h                                 |  5 +++++
+ include/uapi/linux/cn_proc.h                          |  4 +++-
+ samples/bpf/tracex2_kern.c                            |  3 ++-
+ samples/bpf/tracex2_user.c                            |  3 ++-
+ tools/perf/tests/evsel-tp-sched.c                     |  8 +++++---
+ tools/testing/selftests/bpf/prog_tests/ringbuf.c      |  9 +++++----
+ .../testing/selftests/bpf/prog_tests/ringbuf_multi.c  |  8 +++++---
+ .../selftests/bpf/prog_tests/sk_storage_tracing.c     |  3 ++-
+ .../testing/selftests/bpf/prog_tests/test_overhead.c  |  3 ++-
+ .../selftests/bpf/prog_tests/trampoline_count.c       |  3 ++-
+ .../selftests/bpf/progs/test_core_reloc_kernel.c      | 11 +++++------
+ tools/testing/selftests/bpf/progs/test_ringbuf.c      |  8 ++++----
+ .../testing/selftests/bpf/progs/test_ringbuf_multi.c  |  8 ++++----
+ .../selftests/bpf/progs/test_sk_storage_tracing.c     |  4 ++--
+ 16 files changed, 52 insertions(+), 45 deletions(-)
+
 -- 
-2.34.1.400.ga245620fadb-goog
+2.17.1
 
