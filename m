@@ -2,139 +2,153 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D3DC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun,  5 Dec 2021 07:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B5FC433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun,  5 Dec 2021 13:06:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232066AbhLEH3a (ORCPT
+        id S233994AbhLENKN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 5 Dec 2021 02:29:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56756 "EHLO
+        Sun, 5 Dec 2021 08:10:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232010AbhLEH3a (ORCPT
+        with ESMTP id S233993AbhLENKN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 5 Dec 2021 02:29:30 -0500
-Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0065AC061751;
-        Sat,  4 Dec 2021 23:26:02 -0800 (PST)
-Received: by mail-qk1-x731.google.com with SMTP id m186so8129175qkb.4;
-        Sat, 04 Dec 2021 23:26:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zowSszGCjMgYZHdPz1ZCQ1VnEOEblLnUPR7Gj0ga0Vs=;
-        b=H8L2+8nVJ1TzoM56VfiynvmoGFyaKEcyjMd1peEexDpDjB9ClTekh46kJx5dHglpsN
-         LEnfx63YLMZOjFknCW+9ZNJocppmoS3NwNLzYuv7CvaeJvq0RXniwrT+olAZ9h/3aOD/
-         8VL6fGXO3kxlVOTdYGfWjhHcWlb/AN0MEBYJ1H+8lrYCxV1yN63EAYVLHaDO1k4OrLQ4
-         vVQppnxQ5JynrTKFam9ElX1hiZGq1BA6v4jh9D/Al6M140wUyxGa2TtFyVM9On32QaXP
-         rhe+1LJWKyiL9g6Ddc8BJQNrENHUyco6Kyd2O+6yZ7lo0TWWojZGsKlKtFsUy97h2MbY
-         VjAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zowSszGCjMgYZHdPz1ZCQ1VnEOEblLnUPR7Gj0ga0Vs=;
-        b=XK+sOOWQoZ2OgnQeNcEJX6b1jNKf9Rv7K/Bx3CsgFzac85gbyNv6e479Uc1PsfawJp
-         kuFf6hNCWQdRcmfCBvCAVJZ33I0pY8bFUejfEm5lamQLlXuGg+1rvBUvxv0MMOKxadMN
-         8ZRBCJBakwr0YTwb49dvwgkvEAso/qifN1jaYk/DFmHFtanTQ8vl9kHHFto6njqC+8ZJ
-         s4bgttFNsHyw8Wz03sFAN/WJWwLcWvfzTxqULOtwxN+4NA9VUTShAMDBzIwSGfPeby+9
-         KGrJFjUlB28nBRak6xg5mptFtH4ABhzWhUiXPaPB1bmTHoJTjaAGtNK+jHq2v8/H2DQV
-         mlng==
-X-Gm-Message-State: AOAM533maehMG5PBkGcqcz66WpuRv4zoRGIic4ZAYWHCrGIdlex2YCxi
-        t2E5euImzsyOml2EdrFA03ncQ0E86Fh+7vkirkA=
-X-Google-Smtp-Source: ABdhPJxJLKvaTSR4/NERlECHBcz96OgqGrG1jCo7M7WsfQN7m2yL5KJ1ECd+GDH+HUX2k6HIT1BhZZN0LElX5ftUrQ4=
-X-Received: by 2002:a05:620a:2148:: with SMTP id m8mr26529583qkm.435.1638689161996;
- Sat, 04 Dec 2021 23:26:01 -0800 (PST)
+        Sun, 5 Dec 2021 08:10:13 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B29E2C061714;
+        Sun,  5 Dec 2021 05:06:46 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3AEFD60F50;
+        Sun,  5 Dec 2021 13:06:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F637C341C1;
+        Sun,  5 Dec 2021 13:06:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638709605;
+        bh=Acngvl9GAxv9Qw1oess40U2Ddn77HI6sPJ8K4U9I7E8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Gvpr9MMaho9ENhmR8tHbkiCfzuG5QoIP82Ygja0cjVkb65J/yfzmQz5RP3qCbfUEM
+         qnV4sj8uSEW59x2vcHCuWpNZf+dLajcPueDnZ1yqo5fsgi2mmweWvM0wJB1P3+P3PI
+         ji+w4GiXN8+pVlwGmw6eljIzLoRDW724EjJuz9SKa2lmyW6XXO19Z3QJvWinQps6yT
+         9N/MWZ+0oApkrc7sN6xHyxPXPMx1qg5S5RMCAqv03VCtqga1W+GQgoVlQrhKNleDLk
+         jo/o1qjjmQOAQOG1hGZmgB4p2ySkpyPQqe2ryiAQVHhzA3FudgAur8oeanVsTsznPS
+         aNASmUH+K1Ayg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 5EC6140002; Sun,  5 Dec 2021 10:06:42 -0300 (-03)
+Date:   Sun, 5 Dec 2021 10:06:42 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+Subject: Re: Building perf with BUILD_BPF_SKEL=1 by default
+Message-ID: <Yay5Yjnj7LUodupy@kernel.org>
+References: <YaoXUrLUZt1scVb0@kernel.org>
+ <CF175681-8101-43D1-ABDB-449E644BE986@fb.com>
 MIME-Version: 1.0
-References: <20211204095256.78042-1-laoar.shao@gmail.com> <20211204095256.78042-6-laoar.shao@gmail.com>
- <CAADnVQLS4Ev7xChqCMbbJiFZ_kYSB+rbiVT6AJotheFJb1f5=w@mail.gmail.com>
- <CALOAHbCud62ivvoRuz1SV-d3sL9Y9knEga0N-jiXnM3SYzWxNA@mail.gmail.com> <CAADnVQLu+RWSeMfOe5eBuTsp9gxPsFC_bRTXoWmvWP+Lv_rZzQ@mail.gmail.com>
-In-Reply-To: <CAADnVQLu+RWSeMfOe5eBuTsp9gxPsFC_bRTXoWmvWP+Lv_rZzQ@mail.gmail.com>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Sun, 5 Dec 2021 15:25:27 +0800
-Message-ID: <CALOAHbBv-_5uF=T4MyC_6J08PRX6KTGora4FArdYKLC0dOy8HQ@mail.gmail.com>
-Subject: Re: [PATCH -mm 5/5] bpf/progs: replace hard-coded 16 with TASK_COMM_LEN
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Kees Cook <keescook@chromium.org>,
-        Petr Mladek <pmladek@suse.com>,
-        David Hildenbrand <david@redhat.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        linux-mm <linux-mm@kvack.org>, bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CF175681-8101-43D1-ABDB-449E644BE986@fb.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Dec 5, 2021 at 11:13 AM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Sat, Dec 4, 2021 at 6:45 PM Yafang Shao <laoar.shao@gmail.com> wrote:
-> >
-> > On Sun, Dec 5, 2021 at 12:44 AM Alexei Starovoitov
-> > <alexei.starovoitov@gmail.com> wrote:
-> > >
-> > > On Sat, Dec 4, 2021 at 1:53 AM Yafang Shao <laoar.shao@gmail.com> wrote:
-> > > >
-> > > >  static int process_sample(void *ctx, void *data, size_t len)
-> > > >  {
-> > > > -       struct sample *s = data;
-> > > > +       struct sample_ringbuf *s = data;
-> > >
-> > > This is becoming pointless churn.
-> > > Nack.
-> > >
-> > > > index 145028b52ad8..7b1bb73c3501 100644
-> > > > --- a/tools/testing/selftests/bpf/progs/test_core_reloc_kernel.c
-> > > > +++ b/tools/testing/selftests/bpf/progs/test_core_reloc_kernel.c
-> > > > @@ -1,8 +1,7 @@
-> > > >  // SPDX-License-Identifier: GPL-2.0
-> > > >  // Copyright (c) 2019 Facebook
-> > > >
-> > > > -#include <linux/bpf.h>
-> > > > -#include <stdint.h>
-> > > > +#include <vmlinux.h>
-> > > >  #include <stdbool.h>
-> > > >  #include <bpf/bpf_helpers.h>
-> > > >  #include <bpf/bpf_core_read.h>
-> > > > @@ -23,11 +22,11 @@ struct core_reloc_kernel_output {
-> > > >         int comm_len;
-> > > >  };
-> > > >
-> > > > -struct task_struct {
-> > > > +struct task_struct_reloc {
-> > >
-> > > Churn that is not even compile tested.
-> >
-> > It is strange that I have successfully compiled it....
-> > Below is the compile log,
-> >
-> > $ cat make.log | grep test_core_reloc_kernel
-> >   CLNG-BPF [test_maps] test_core_reloc_kernel.o
-> >   GEN-SKEL [test_progs] test_core_reloc_kernel.skel.h
-> >   CLNG-BPF [test_maps] test_core_reloc_kernel.o
-> >   GEN-SKEL [test_progs-no_alu32] test_core_reloc_kernel.skel.h
-> >
-> > Also there's no error in the compile log.
->
-> and ran the tests too?
+Em Fri, Dec 03, 2021 at 07:32:34PM +0000, Song Liu escreveu:
+> 
+> 
+> > On Dec 3, 2021, at 5:10 AM, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > 
+> > Hi Song,
+> > 
+> > 	So I'm changing all my containers to build with BUILD_BPF_SKEL=1
+> > to then make this the default, so far older containers fail either
+> > because the clang available is too old, so I've added a NO_BUILD_BPF_SKEL=1
+> > env var to disable that in those containers and then there is this other
+> > case where clang is recent enough but:
+> > 
+> >    util/bpf_skel/bperf_leader.bpf.c:13:20: error: use of undeclared identifier 'BPF_F_PRESERVE_ELEMS'
+> >            __uint(map_flags, BPF_F_PRESERVE_ELEMS);
+> > 
+> > Because the system's /usr/include/linux/bpf.h doesn't have that
+> > BPF_F_PRESERVE_ELEMS enum entry.
+> > 
+> > These are enums to make them available via BTF, but then I can't use
+> > the:
+> > 
+> > #ifdef BPF_F_PRESERVE_ELEMS
+> > #define BPF_F_PRESERVE_ELEMS (1U << 11)
+> > #endif
+> > 
+> > approach.
+> > 
+> > But then we _have_ it in the tools/include/uapi/linux/bpf.h we ship:
+> > 
+> > $ grep BPF_F_PRESERVE_ELEMS tools/include/uapi/linux/bpf.h
+> > 	BPF_F_PRESERVE_ELEMS	= (1U << 11),
+> > $
+> > 
+> > so we need to switch to using it somehow, this way we can build in more
+> > systems and make bperf and other BPF enabled features.
+> > 
+> > From a quick look I couldn't find where to add
+> > $(sourcedir)/tools/include/uapi/ to the include path used to build
+> > util/bpf_skel/bperf_leader.bpf.c, should be easy, can you take a look?
+> > 
+> > Thanks,
+> > 
+> > - Arnaldo
+> 
+> I think the following should fix it
 
-My bad. I thought it was just a name change, which will work well if
-it can be compiled successfully.
-But it seems the task_struct in this file is a dummy struct, which
-will be relocated to the real task_struct defined in the kernel.
-We can't include vmlinux.h in this file, as it is for the relocation test.
+I'm trying this now and tentatively sticking a Signed-off-by: you to it,
+ok?
+
+- Arnaldo
+ 
+> Thanks,
+> Song
+> 
+> 
+> diff --git i/tools/perf/util/bpf_skel/bperf_follower.bpf.c w/tools/perf/util/bpf_skel/bperf_follower.bpf.c
+> index b8fa3cb2da230..4a6acfde14937 100644
+> --- i/tools/perf/util/bpf_skel/bperf_follower.bpf.c
+> +++ w/tools/perf/util/bpf_skel/bperf_follower.bpf.c
+> @@ -1,7 +1,6 @@
+>  // SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>  // Copyright (c) 2021 Facebook
+> -#include <linux/bpf.h>
+> -#include <linux/perf_event.h>
+> +#include "vmlinux.h"
+>  #include <bpf/bpf_helpers.h>
+>  #include <bpf/bpf_tracing.h>
+>  #include "bperf.h"
+> diff --git i/tools/perf/util/bpf_skel/bperf_leader.bpf.c w/tools/perf/util/bpf_skel/bperf_leader.bpf.c
+> index 4f70d1459e86c..40d962b058634 100644
+> --- i/tools/perf/util/bpf_skel/bperf_leader.bpf.c
+> +++ w/tools/perf/util/bpf_skel/bperf_leader.bpf.c
+> @@ -1,7 +1,6 @@
+>  // SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>  // Copyright (c) 2021 Facebook
+> -#include <linux/bpf.h>
+> -#include <linux/perf_event.h>
+> +#include "vmlinux.h"
+>  #include <bpf/bpf_helpers.h>
+>  #include <bpf/bpf_tracing.h>
+>  #include "bperf.h"
+> diff --git i/tools/perf/util/bpf_skel/bpf_prog_profiler.bpf.c w/tools/perf/util/bpf_skel/bpf_prog_profiler.bpf.c
+> index ab12b4c4ece21..97037d3b3d9fa 100644
+> --- i/tools/perf/util/bpf_skel/bpf_prog_profiler.bpf.c
+> +++ w/tools/perf/util/bpf_skel/bpf_prog_profiler.bpf.c
+> @@ -1,6 +1,6 @@
+>  // SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>  // Copyright (c) 2020 Facebook
+> -#include <linux/bpf.h>
+> +#include "vmlinux.h"
+>  #include <bpf/bpf_helpers.h>
+>  #include <bpf/bpf_tracing.h>
+> 
 
 -- 
-Thanks
-Yafang
+
+- Arnaldo
