@@ -2,89 +2,112 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24173C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Dec 2021 10:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FEC4C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Dec 2021 10:44:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234467AbhLFKS3 (ORCPT
+        id S238624AbhLFKsJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 6 Dec 2021 05:18:29 -0500
-Received: from foss.arm.com ([217.140.110.172]:53002 "EHLO foss.arm.com"
+        Mon, 6 Dec 2021 05:48:09 -0500
+Received: from foss.arm.com ([217.140.110.172]:53770 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233768AbhLFKS3 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 6 Dec 2021 05:18:29 -0500
+        id S238305AbhLFKsI (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 6 Dec 2021 05:48:08 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB01C152F;
-        Mon,  6 Dec 2021 02:15:00 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F1F5A11FB;
+        Mon,  6 Dec 2021 02:44:39 -0800 (PST)
 Received: from [10.57.34.109] (unknown [10.57.34.109])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5061B3F73D;
-        Mon,  6 Dec 2021 02:14:59 -0800 (PST)
-Subject: Re: [PATCH v2] perf: Drop requirement for libstdc++.so for libopencsd
- check
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 921103F73D;
+        Mon,  6 Dec 2021 02:44:37 -0800 (PST)
+Subject: Re: [PATCH] perf stat: Fix per socket shadow aggregation
+To:     Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Diederik de Haas <didi.debian@cknow.org>,
-        Branislav Rankov <Branislav.Rankov@arm.com>,
-        Adrian Bunk <bunk@debian.org>
-References: <20211203210544.1137935-1-uwe@kleine-koenig.org>
+        John Garry <john.garry@huawei.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vineet Singh <vineet.singh@intel.com>
+Cc:     eranian@google.com
+References: <20211204023409.969668-1-irogers@google.com>
 From:   James Clark <james.clark@arm.com>
-Message-ID: <2d97dd02-fd30-005e-5578-065706986a0c@arm.com>
-Date:   Mon, 6 Dec 2021 10:14:57 +0000
+Message-ID: <52237d2a-2be2-cb93-e29d-ac6eea82a2f9@arm.com>
+Date:   Mon, 6 Dec 2021 10:44:36 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.13.0
 MIME-Version: 1.0
-In-Reply-To: <20211203210544.1137935-1-uwe@kleine-koenig.org>
+In-Reply-To: <20211204023409.969668-1-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 03/12/2021 21:05, Uwe Kleine-König wrote:
-> It's possible to link against libopencsd_c_api without having
-> libstdc++.so available, only libstdc++.so.6.0.28 (or whatever version is
-> in use) needs to be available. The same holds true for libopencsd.so.
-> When -lstdc++ (or -lopencsd) is explicitly passed to the linker however
-> the .so file must be available.
+On 04/12/2021 02:34, Ian Rogers wrote:
+> An uncore device may have a CPU mask that specifies one CPU per socket:
+> $ cat /sys/devices/uncore_imc_0/cpumask
+> 0,18
+> The perf_stat_config aggr_map will map a CPU to the socket and other
+> aggregation values for it. Fix an error where the index into CPU mask
+> was being used as the index into the aggr_map. For the cpumask above the
+> indexes 0 and 1 are passed to aggr_map rather than the CPUs 0 and 18.
 > 
-> So wrap adding the dependencies into a check for static linking that
-> actually requires adding them all. The same construct is already used
-> for some other tests in the same file to reduce dependencies in the
-> dynamic linking case.
-> 
-> Fixes: 573cf5c9a152 ("perf build: Add missing -lstdc++ when linking with libopencsd")
-> Signed-off-by: Uwe Kleine-König <uwe@kleine-koenig.org>
-
-Reviewed-by: James Clark <james.clark@arm.com>
-
-Thanks!
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/Makefile.config | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>  tools/perf/util/stat-display.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 > 
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index afd144725a0b..3311fa321754 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -143,7 +143,10 @@ FEATURE_CHECK_LDFLAGS-libcrypto = -lcrypto
->  ifdef CSINCLUDES
->    LIBOPENCSD_CFLAGS := -I$(CSINCLUDES)
->  endif
-> -OPENCSDLIBS := -lopencsd_c_api -lopencsd -lstdc++
-> +OPENCSDLIBS := -lopencsd_c_api
-> +ifeq ($(findstring -static,${LDFLAGS}),-static)
-> +  OPENCSDLIBS += -lopencsd -lstdc++
-> +endif
->  ifdef CSLIBS
->    LIBOPENCSD_LDFLAGS := -L$(CSLIBS)
->  endif
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> index 588601000f3f..7cfad5cfec38 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -516,7 +516,7 @@ static void printout(struct perf_stat_config *config, struct aggr_cpu_id id, int
+>  static void aggr_update_shadow(struct perf_stat_config *config,
+>  			       struct evlist *evlist)
+>  {
+> -	int cpu, s;
+> +	int idx, cpu, s;
+>  	struct aggr_cpu_id s2, id;
+>  	u64 val;
+>  	struct evsel *counter;
+> @@ -525,11 +525,12 @@ static void aggr_update_shadow(struct perf_stat_config *config,
+>  		id = config->aggr_map->map[s];
+>  		evlist__for_each_entry(evlist, counter) {
+>  			val = 0;
+> -			for (cpu = 0; cpu < evsel__nr_cpus(counter); cpu++) {
+> +			for (idx = 0; idx < evsel__nr_cpus(counter); idx++) {
+> +				cpu = perf_cpu_map__cpu(evsel__cpus(counter), idx);
+>  				s2 = config->aggr_get_id(config, evlist->core.cpus, cpu);
+
+Hi Ian,
+
+This same pattern of looping over the CPUs and calling aggr_get_id() is used a couple of
+other times. For example in aggr_cb() and first_shadow_cpu(). Do you think these also
+need updating?
+
+Or could we fix it in the aggr_get_id() functions so that they expect an index instead
+of CPU ID and do the conversion themselves? The callbacks do say "idx" rather than "cpu"
+so maybe there is still come confusion.
+
+For example: 
+
+	perf_stat__get_die_cached(struct perf_stat_config *config,
+					struct perf_cpu_map *map, int idx)
+
+>  				if (!cpu_map__compare_aggr_cpu_id(s2, id))
+>  					continue;
+> -				val += perf_counts(counter->counts, cpu, 0)->val;
+> +				val += perf_counts(counter->counts, idx, 0)->val;
+>  			}
+>  			perf_stat__update_shadow_stats(counter, val,
+>  					first_shadow_cpu(config, counter, id),
 > 
