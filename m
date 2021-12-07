@@ -2,45 +2,41 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 438F9C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Dec 2021 14:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 955CCC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Dec 2021 14:50:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238208AbhLGOvc (ORCPT
+        id S233381AbhLGOxe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 7 Dec 2021 09:51:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49280 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238223AbhLGOvb (ORCPT
+        Tue, 7 Dec 2021 09:53:34 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:50696 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229455AbhLGOxc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 7 Dec 2021 09:51:31 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77FC0C061756;
-        Tue,  7 Dec 2021 06:48:01 -0800 (PST)
+        Tue, 7 Dec 2021 09:53:32 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id C5D28CE1AC9;
-        Tue,  7 Dec 2021 14:47:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3D43C341C3;
-        Tue,  7 Dec 2021 14:47:57 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id CA881CE1AB3;
+        Tue,  7 Dec 2021 14:50:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D137BC341C3;
+        Tue,  7 Dec 2021 14:49:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638888478;
-        bh=raY7TDVvO4iQeKqEdPapwVP53dHEH5mYEaAInMVEuqE=;
+        s=k20201202; t=1638888599;
+        bh=QASQ4r6wPYhYJnlffLIsiV/Atwvn7C2vRnKmQNa+YRQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vK3D3A7o3oTpRUezl8iWzRB0JkKdEjzdRAbrCMssuUkiZayupdqE48ePy3glh27Jp
-         lh9jK2nizdgM2AQkdNvFQ/0Zg2rui75jZSyWfnrC2BrC6Fwgr2DjhkLdO2kcKvpvvx
-         bIv2p4dg+GA2Oj2I45yvMiRBoNsDJ6dqcbN8sObTfDQPBJm3EnScUiIKIWjXhN+xDQ
-         bsQ7vX/T7po7U+kfX+5vKq+mzHreW02SkyIxjKbHHQ9y+rEAeop+82ynltcarhMMYO
-         F6dcYliKgKzFTmcKdHetyzInVTOvOX6+ke4bX3Bp1IoTu5Mrho4/z3ZFOCnHo94KuR
-         +JSZVFqOWcXNQ==
+        b=duaMdAUghKFj7lfWTUX9jfjTW//bHdeOkQzHGuF3HNAPLML01x71wuJROI2S0LFB/
+         GqqoMIaNRjj0+VKrM0pml9vGIBeaD+VRMxys5jOWArCFG26dRDJysHHqdIEeeFKj6m
+         hZt6sLD8Q6XNgs1Vs6utmKoNe9qPheZMOgsClJ/WfJrzA/5ASt/QQYowzIGWs2WF8i
+         ksIIaYgs6n0nrnhCNDLB3m/VoUOkDRvy5chUdwjmL1nbRugFblYiwT8gpcm17ak+Wt
+         jLOBfX6Ywyi5fP1mi1LYniF6YioU+HDj+Kwu93rvN5RC0I7qWt6lTyYhOM+3fFNgwH
+         R5BE6GAPFsCPQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2E81B406C1; Tue,  7 Dec 2021 11:47:56 -0300 (-03)
-Date:   Tue, 7 Dec 2021 11:47:56 -0300
+        id EC418406C1; Tue,  7 Dec 2021 11:49:56 -0300 (-03)
+Date:   Tue, 7 Dec 2021 11:49:56 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     Andrew Kilroy <andrew.kilroy@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Will Deacon <will@kernel.org>,
+To:     Andrew Kilroy <andrew.kilroy@arm.com>
+Cc:     John Garry <john.garry@huawei.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
         Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -48,32 +44,70 @@ Cc:     Andrew Kilroy <andrew.kilroy@arm.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/3] perf vendor events: Fix whitespace
-Message-ID: <Ya90HDV9HHTANmkx@kernel.org>
+Subject: Re: [PATCH 1/3] perf vendor events: For the Neoverse N2
+Message-ID: <Ya90lK/PqJDIrXlB@kernel.org>
 References: <20211203123525.31127-1-andrew.kilroy@arm.com>
- <20211203123525.31127-2-andrew.kilroy@arm.com>
- <aabc45c7-cea4-2e8b-bddc-7ea1bd18910f@huawei.com>
+ <2e1a7a96-4ec6-e1f2-5bd4-133480391053@huawei.com>
+ <e7aaacd8-7972-6ab9-ff0c-e286bf23993a@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <aabc45c7-cea4-2e8b-bddc-7ea1bd18910f@huawei.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e7aaacd8-7972-6ab9-ff0c-e286bf23993a@arm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Dec 07, 2021 at 09:36:40AM +0000, John Garry escreveu:
-> On 03/12/2021 12:35, Andrew Kilroy wrote:
-> > Correct indentation to 4 spaces, same as the other json files.
+Em Tue, Dec 07, 2021 at 12:13:16PM +0000, Andrew Kilroy escreveu:
+> 
+> 
+> On 07/12/2021 09:57, John Garry wrote:
+> > On 03/12/2021 12:35, Andrew Kilroy wrote:
+> > > Updates the common and microarch json file to add counters
+> > > available in the Neoverse N2 chip, but should also apply to other ArmV8
+> > > and ArmV9 cpus.  Specified in ArmV8 architecture reference manual
+> > > 
+> > >    https://developer.arm.com/documentation/ddi0487/gb/?lang=en
+> > > 
+> > > Some of the counters added to armv8-common-and-microarch.json are
+> > > specified in the ArmV9 architecture reference manual supplement
+> > > (issue A.a):
+> > > 
+> > >    https://developer.arm.com/documentation/ddi0608/aa
+> > > 
+> > > The additional ArmV9 counters are
+> > > 
+> > >    TRB_WRAP
+> > >    TRCEXTOUT0
+> > >    TRCEXTOUT1
+> > >    TRCEXTOUT2
+> > >    TRCEXTOUT3
+> > >    CTI_TRIGOUT4
+> > >    CTI_TRIGOUT5
+> > >    CTI_TRIGOUT6
+> > >    CTI_TRIGOUT7
+> > > 
+> > > This patch also adds files in pmu-events/arch/arm64/arm/neoverse-n2 for
+> > > perf list to output the counter names in categories.
+> > > 
+> > > A subsequent patch renames armv8-common-and-microarch.json and
+> > > armv8-recommended.json to reflect that counters for armv9 are being
+> > > added.
 > > 
-> > Signed-off-by: Andrew Kilroy<andrew.kilroy@arm.com>
+> > This commentary should be in a cover letter. Please do that.
+> > 
+> > And did you consider just adding a armv9-common-and-microarch.json and
+> > armv9-recommended.json instead of adding to and renaming the v8 version?
+> > I know that it creates scattered definitions, but we already have that in
+> > dividing the common and the recommended JSONs.
+> > 
 > 
-> Reviewed-by: John Garry <john.garry@huawei.com>
-> 
-> As an aside,  maybe we should improve the parser to find these inconsistencies in formatting.
+> I considered it, but I wasn't sure what was preferable.  I thought I'd get
+> some feedback.  Do you consider the separation important?  Any particular
+> reason?
 
-
-Thanks, applied.
+Applied the second patch, waiting for a conclusion to this discussion to
+pick the other two patches.
 
 - Arnaldo
-
