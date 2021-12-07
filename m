@@ -2,98 +2,150 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37270C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Dec 2021 12:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C19DC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Dec 2021 13:44:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236263AbhLGMRL (ORCPT
+        id S232033AbhLGNrw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 7 Dec 2021 07:17:11 -0500
-Received: from foss.arm.com ([217.140.110.172]:58418 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236151AbhLGMQ6 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 7 Dec 2021 07:16:58 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 60D3A11FB;
-        Tue,  7 Dec 2021 04:13:28 -0800 (PST)
-Received: from [10.57.34.196] (unknown [10.57.34.196])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E07FF3F5A1;
-        Tue,  7 Dec 2021 04:13:25 -0800 (PST)
-Message-ID: <e7aaacd8-7972-6ab9-ff0c-e286bf23993a@arm.com>
-Date:   Tue, 7 Dec 2021 12:13:16 +0000
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Subject: Re: [PATCH 1/3] perf vendor events: For the Neoverse N2
-Content-Language: en-US
-To:     John Garry <john.garry@huawei.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org
-Cc:     Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Tue, 7 Dec 2021 08:47:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33808 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231515AbhLGNrv (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 7 Dec 2021 08:47:51 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C4BAC061574;
+        Tue,  7 Dec 2021 05:44:21 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 50403CE1AAA;
+        Tue,  7 Dec 2021 13:44:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02EEAC341C1;
+        Tue,  7 Dec 2021 13:44:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638884657;
+        bh=m0QY6eSd4eysjx/pplZv/DlOFo4cx2m1MJtbgBhtqXM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=sHHl4sPA2McLdK52IJCzumvrG3pmmWluycbBov9vSm5rPFmQG0FWmqCRcfhwH1L86
+         IusS81Kl5kZ98sy8K1t/+FE1xn1znZ+HWuxWbNt1P0vYi7rA5A0eYNLb/4he483Dof
+         prQipeY4UgHBsAm7wI0MNcUZ6QmJZHYAcXlbmPR02eOm33RIEwOH0oyvZJ379ZaJFz
+         TR/chxCdnv4smzKFBu92B/pr/lOy4WqOW7ze2Mmue62LAxE0xTEtAUA81Vk5FSvuHO
+         N9gZcMmoFWFFlACouR02nepB+4JxYGaQeIFNUsHFUZK3nBVYtb3y8mqZqGNkUXuNsH
+         q4MXvx1SYmZtA==
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <20211203123525.31127-1-andrew.kilroy@arm.com>
- <2e1a7a96-4ec6-e1f2-5bd4-133480391053@huawei.com>
-From:   Andrew Kilroy <andrew.kilroy@arm.com>
-In-Reply-To: <2e1a7a96-4ec6-e1f2-5bd4-133480391053@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Ian Rogers <irogers@google.com>,
+        Song Liu <songliubraving@fb.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [GIT PULL] perf tools fixes for v5.16: 2nd batch
+Date:   Tue,  7 Dec 2021 10:44:07 -0300
+Message-Id: <20211207134407.297788-1-acme@kernel.org>
+X-Mailer: git-send-email 2.33.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi Linus,
 
+	Please consider pulling,
 
-On 07/12/2021 09:57, John Garry wrote:
-> On 03/12/2021 12:35, Andrew Kilroy wrote:
->> Updates the common and microarch json file to add counters
->> available in the Neoverse N2 chip, but should also apply to other ArmV8
->> and ArmV9 cpus.  Specified in ArmV8 architecture reference manual
->>
->>    https://developer.arm.com/documentation/ddi0487/gb/?lang=en
->>
->> Some of the counters added to armv8-common-and-microarch.json are
->> specified in the ArmV9 architecture reference manual supplement
->> (issue A.a):
->>
->>    https://developer.arm.com/documentation/ddi0608/aa
->>
->> The additional ArmV9 counters are
->>
->>    TRB_WRAP
->>    TRCEXTOUT0
->>    TRCEXTOUT1
->>    TRCEXTOUT2
->>    TRCEXTOUT3
->>    CTI_TRIGOUT4
->>    CTI_TRIGOUT5
->>    CTI_TRIGOUT6
->>    CTI_TRIGOUT7
->>
->> This patch also adds files in pmu-events/arch/arm64/arm/neoverse-n2 for
->> perf list to output the counter names in categories.
->>
->> A subsequent patch renames armv8-common-and-microarch.json and
->> armv8-recommended.json to reflect that counters for armv9 are being
->> added.
-> 
-> This commentary should be in a cover letter. Please do that.
-> 
-> And did you consider just adding a armv9-common-and-microarch.json and
-> armv9-recommended.json instead of adding to and renaming the v8 version?
-> I know that it creates scattered definitions, but we already have that in
-> dividing the common and the recommended JSONs.
-> 
+Best regards,
 
-I considered it, but I wasn't sure what was preferable.  I thought I'd 
-get some feedback.  Do you consider the separation important?  Any 
-particular reason?
+- Arnaldo
 
+The following changes since commit cd8c917a56f20f48748dd43d9ae3caff51d5b987:
 
-> Thanks,
-> John
+  Makefile: Do not quote value for CONFIG_CC_IMPLICIT_FALLTHROUGH (2021-12-06 16:42:47 -0800)
 
-Andrew
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.16-2021-12-07
+
+for you to fetch changes up to 5a897531e00243cebbcc4dbe4ab06cd559ccf53f:
+
+  perf bpf_skel: Do not use typedef to avoid error on old clang (2021-12-06 21:57:53 -0300)
+
+----------------------------------------------------------------
+perf tools fixes for v5.16: 2nd batch
+
+- Fix SMT detection fast read path on sysfs.
+
+- Fix memory leaks when processing feature headers in perf.data files.
+
+- Fix 'Simple expression parser' 'perf test' on arch without CPU die topology
+  info, such as s/390.
+
+- Fix building perf with BUILD_BPF_SKEL=1.
+
+- Fix 'perf bench' by reverting "perf bench: Fix two memory leaks detected with ASan".
+
+- Fix itrace space allowed for new attributes in 'perf script'.
+
+- Fix the build feature detection fast path, that was always failing on systems
+  with python3 development packages, speeding up the build.
+
+- Reset shadow counts before loading, fixing metrics using duration_time.
+
+- Sync more kernel headers changed by the new futex_waitv syscall: s390 and powerpc.
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+----------------------------------------------------------------
+Adrian Hunter (1):
+      perf inject: Fix itrace space allowed for new attributes
+
+Arnaldo Carvalho de Melo (3):
+      tools headers UAPI: Sync s390 syscall table file changed by new futex_waitv syscall
+      tools headers UAPI: Sync powerpc syscall table file changed by new futex_waitv syscall
+      tools build: Remove needless libpython-version feature check that breaks test-all fast path
+
+Ian Rogers (3):
+      perf tools: Fix SMT detection fast read path
+      perf test: Reset shadow counts before loading
+      perf header: Fix memory leaks when processing feature headers
+
+Jiri Olsa (1):
+      Revert "perf bench: Fix two memory leaks detected with ASan"
+
+Song Liu (2):
+      perf bpf: Fix building perf with BUILD_BPF_SKEL=1 by default in more distros
+      perf bpf_skel: Do not use typedef to avoid error on old clang
+
+Thomas Richter (1):
+      perf test: Fix 'Simple expression parser' test on arch without CPU die topology info
+
+ tools/build/Makefile.feature                       |  1 -
+ tools/build/feature/Makefile                       |  4 ----
+ tools/build/feature/test-all.c                     |  5 -----
+ tools/build/feature/test-libpython-version.c       | 11 -----------
+ tools/perf/Makefile.config                         |  2 --
+ tools/perf/arch/powerpc/entry/syscalls/syscall.tbl |  1 +
+ tools/perf/arch/s390/entry/syscalls/syscall.tbl    |  1 +
+ tools/perf/bench/sched-messaging.c                 |  4 ----
+ tools/perf/builtin-inject.c                        |  2 +-
+ tools/perf/tests/expr.c                            |  4 +++-
+ tools/perf/tests/parse-metric.c                    |  1 +
+ tools/perf/util/bpf_skel/bperf.h                   | 14 --------------
+ tools/perf/util/bpf_skel/bperf_follower.bpf.c      | 19 ++++++++++++++-----
+ tools/perf/util/bpf_skel/bperf_leader.bpf.c        | 19 ++++++++++++++-----
+ tools/perf/util/bpf_skel/bpf_prog_profiler.bpf.c   |  2 +-
+ tools/perf/util/header.c                           | 15 ++++++++++-----
+ tools/perf/util/smt.c                              |  2 +-
+ 17 files changed, 47 insertions(+), 60 deletions(-)
+ delete mode 100644 tools/build/feature/test-libpython-version.c
+ delete mode 100644 tools/perf/util/bpf_skel/bperf.h
