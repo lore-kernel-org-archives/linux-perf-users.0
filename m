@@ -2,187 +2,165 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6D6C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Dec 2021 08:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F32C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Dec 2021 08:49:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232678AbhLGI2x (ORCPT
+        id S233209AbhLGIwa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 7 Dec 2021 03:28:53 -0500
-Received: from esa12.hc1455-7.c3s2.iphmx.com ([139.138.37.100]:9552 "EHLO
-        esa12.hc1455-7.c3s2.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232549AbhLGI2h (ORCPT
+        Tue, 7 Dec 2021 03:52:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48922 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233269AbhLGIwa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 7 Dec 2021 03:28:37 -0500
-IronPort-SDR: m+fE/L5HU/Wj7bjeR2mNKao409+YQGgjhP7mQUcx/lpEtIXRf5dmpvkxG9v7N8rJkFaPqEehN3
- d47qqHVx61WQrics3BAmbATpeBPGsfcnhApwWMx4qRThtwXK62ETRc0Flgjub8BphDYIBsBBrf
- nYJQApKsAD0YsN6F6a3tgQyqx+sreTy3zqLhDBd+WS/+2hEv/yCjc1JBJaYN7nqIp3Y6PydOfN
- Y37IG55Mytih5prd8CDpFZy/R8EtXGJU4MJZe/b17eG15O3BZMYHS+xEyWi2w3vc8fCIcrnS1o
- W3KFBXLn+1Yne8mktLEk3mqP
-X-IronPort-AV: E=McAfee;i="6200,9189,10190"; a="35199835"
-X-IronPort-AV: E=Sophos;i="5.87,293,1631545200"; 
-   d="scan'208";a="35199835"
-Received: from unknown (HELO oym-r4.gw.nic.fujitsu.com) ([210.162.30.92])
-  by esa12.hc1455-7.c3s2.iphmx.com with ESMTP; 07 Dec 2021 17:25:05 +0900
-Received: from oym-m4.gw.nic.fujitsu.com (oym-nat-oym-m4.gw.nic.fujitsu.com [192.168.87.61])
-        by oym-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id C065DE6C27;
-        Tue,  7 Dec 2021 17:25:04 +0900 (JST)
-Received: from yto-om4.fujitsu.com (yto-om4.o.css.fujitsu.com [10.128.89.165])
-        by oym-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id B9D81C13FB;
-        Tue,  7 Dec 2021 17:25:03 +0900 (JST)
-Received: from localhost.localdomain (bakeccha.fct.css.fujitsu.com [10.126.195.136])
-        by yto-om4.fujitsu.com (Postfix) with ESMTP id 996D940061D49;
-        Tue,  7 Dec 2021 17:25:03 +0900 (JST)
-From:   Shunsuke <nakamura.shun@fujitsu.com>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, robh@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Shunsuke Nakamura <nakamura.shun@fujitsu.com>
-Subject: [PATCH v5 1/3] libperf: Move perf_counts_values__scale to tools/lib/perf
-Date:   Tue,  7 Dec 2021 17:22:43 +0900
-Message-Id: <20211207082245.604654-2-nakamura.shun@fujitsu.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211207082245.604654-1-nakamura.shun@fujitsu.com>
-References: <20211207082245.604654-1-nakamura.shun@fujitsu.com>
+        Tue, 7 Dec 2021 03:52:30 -0500
+Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37AD3C061748
+        for <linux-perf-users@vger.kernel.org>; Tue,  7 Dec 2021 00:49:00 -0800 (PST)
+Received: by mail-io1-xd36.google.com with SMTP id z18so16161877iof.5
+        for <linux-perf-users@vger.kernel.org>; Tue, 07 Dec 2021 00:49:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EwLAaq+CdYhTs6k2hGnNMtqsNVHBqeUIpo47LKyaTcA=;
+        b=PV8MJZ36qERysBQhRg+IknDWj9Jj3NPsUDIBWw+pVDFlly9g41r39/KfzlPT7/LzUA
+         +PGvpIS3SLZsCqVKE7JZvLfyktVL//8VBvLO1ioL+CdIqyjkjIw+SobjsTUTjv1er0wL
+         PMIQaAatVTfkSmAmWj5D6jkYAKDnRA9U/53S80bje0mCFlevdxE+Cf8eFEf9JXy3n6fU
+         eXxQmnWe6lodyTe6tUv50lA0JA5ULOXYOg9AvoGv7LBsK+mzc6JlB2dRwIoGgSg0JiQF
+         8KQkAHGw/SatidPSuMJYfvF8aNiEyXNAECHaFUnCWNM+0AT5y3ty8IYmZq5BD1SEgd1H
+         +zGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EwLAaq+CdYhTs6k2hGnNMtqsNVHBqeUIpo47LKyaTcA=;
+        b=bnHr0jHgqHJXSTKRmUC88g4qyq6p6ZeJHE20krKLrqgCwxaEBWzzE9o2OyeOk1Ify+
+         m5NDjp+vjU9DemlCs5GQd5G4IqlCBLcm6+B4Eja/wfjNHnh85N/vq0I9Wvhx1vrjSyaP
+         SbG2OPhWUtrmquJb9RIZoc/rc8QpOlOMF4Ao6smEGhIvJ+ZUEaJ0PFwEEN63hUbH/dC8
+         H9b6ogjZafjnuMx/lk5ja23X/LyneXYjPXMVtfuCXCTiLmSVPetETsYyGpATwtKB8C6W
+         aIAa66/kQjbTejFRb8yWCqvC5KFXrMfxYTWK0sSJCkMOAuEM2smhYPuLd/G0EeZ7JJ5u
+         hPFw==
+X-Gm-Message-State: AOAM532XPVo5M+HKpIJPbSf62W/INCt6He2NK/Kig4hbgko1xMm+umpL
+        zZyfuFH+O77gPkjpBkXiIFuOnuIW1gfsnYFOgSoyew==
+X-Google-Smtp-Source: ABdhPJw+AVvYPwABXQWnTrKGl9scUly5Mng238k6iF0YZeDTkJRUQf/paaamDr7pTfWpcRdbq36A/Hpht3H8Irg5ws8=
+X-Received: by 2002:a05:6638:144f:: with SMTP id l15mr48256794jad.21.1638866939332;
+ Tue, 07 Dec 2021 00:48:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
+References: <20211204023409.969668-1-irogers@google.com> <52237d2a-2be2-cb93-e29d-ac6eea82a2f9@arm.com>
+ <CAP-5=fVn-uKs+_647D+O6r=n9N98iK=Z3U53WYkPm9NxMEz3gg@mail.gmail.com>
+In-Reply-To: <CAP-5=fVn-uKs+_647D+O6r=n9N98iK=Z3U53WYkPm9NxMEz3gg@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 7 Dec 2021 00:48:47 -0800
+Message-ID: <CAP-5=fXrJU1s_W9o5XXWk2-ch+mynq8VyN2e1kd_AZ2AZ5R=vQ@mail.gmail.com>
+Subject: Re: [PATCH] perf stat: Fix per socket shadow aggregation
+To:     James Clark <james.clark@arm.com>
+Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vineet Singh <vineet.singh@intel.com>, eranian@google.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
+On Mon, Dec 6, 2021 at 2:16 PM Ian Rogers <irogers@google.com> wrote:
+>
+> On Mon, Dec 6, 2021 at 2:44 AM James Clark <james.clark@arm.com> wrote:
+> >
+> >
+> >
+> > On 04/12/2021 02:34, Ian Rogers wrote:
+> > > An uncore device may have a CPU mask that specifies one CPU per socket:
+> > > $ cat /sys/devices/uncore_imc_0/cpumask
+> > > 0,18
+> > > The perf_stat_config aggr_map will map a CPU to the socket and other
+> > > aggregation values for it. Fix an error where the index into CPU mask
+> > > was being used as the index into the aggr_map. For the cpumask above the
+> > > indexes 0 and 1 are passed to aggr_map rather than the CPUs 0 and 18.
+> > >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > >  tools/perf/util/stat-display.c | 7 ++++---
+> > >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> > > index 588601000f3f..7cfad5cfec38 100644
+> > > --- a/tools/perf/util/stat-display.c
+> > > +++ b/tools/perf/util/stat-display.c
+> > > @@ -516,7 +516,7 @@ static void printout(struct perf_stat_config *config, struct aggr_cpu_id id, int
+> > >  static void aggr_update_shadow(struct perf_stat_config *config,
+> > >                              struct evlist *evlist)
+> > >  {
+> > > -     int cpu, s;
+> > > +     int idx, cpu, s;
+> > >       struct aggr_cpu_id s2, id;
+> > >       u64 val;
+> > >       struct evsel *counter;
+> > > @@ -525,11 +525,12 @@ static void aggr_update_shadow(struct perf_stat_config *config,
+> > >               id = config->aggr_map->map[s];
+> > >               evlist__for_each_entry(evlist, counter) {
+> > >                       val = 0;
+> > > -                     for (cpu = 0; cpu < evsel__nr_cpus(counter); cpu++) {
+> > > +                     for (idx = 0; idx < evsel__nr_cpus(counter); idx++) {
+> > > +                             cpu = perf_cpu_map__cpu(evsel__cpus(counter), idx);
+> > >                               s2 = config->aggr_get_id(config, evlist->core.cpus, cpu);
+> >
+> > Hi Ian,
+> >
+> > This same pattern of looping over the CPUs and calling aggr_get_id() is used a couple of
+> > other times. For example in aggr_cb() and first_shadow_cpu(). Do you think these also
+> > need updating?
+>
+> Thanks for the feedback James!
+>
+> For first_shadow_cpu the index is translated to the the cpu via the
+> cpu map here:
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/stat-display.c?h=perf/core#n343
+> so I think it is sound.
+>
+> aggr_cb looks to have the same bug as the index is being passed as the cpu:
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/stat-display.c?h=perf/core#n643
+>
+> > Or could we fix it in the aggr_get_id() functions so that they expect an index instead
+> > of CPU ID and do the conversion themselves? The callbacks do say "idx" rather than "cpu"
+> > so maybe there is still come confusion.
+> >
+> > For example:
+> >
+> >         perf_stat__get_die_cached(struct perf_stat_config *config,
+> >                                         struct perf_cpu_map *map, int idx)
+>
+> Agreed on the naming confusion. I'm a fan of using single element
+> structs to get type safety in code like this. I wonder here if a
+> for_each_cpu on perf_cpu_map would clean this up best. I'll play with
+> a v2 patch set that addresses this problem more widely.
 
-Move perf_counts_values__scale from tools/perf/util to tools/lib/perf
-so that it can be used with libperf.
+So the real issue is the cpu map for the evlist (populated with all
+CPUs) is being indexed from values from the uncore counter's cpu mask
+in aggr_update_shadow. Given the easy confusion of index and cpu, I'm
+pushing to eliminate the passing of the map and index in v2.
 
-Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
----
- tools/lib/perf/Documentation/libperf.txt |  2 ++
- tools/lib/perf/evsel.c                   | 19 +++++++++++++++++++
- tools/lib/perf/include/perf/evsel.h      |  4 ++++
- tools/lib/perf/libperf.map               |  1 +
- tools/perf/util/evsel.c                  | 19 -------------------
- tools/perf/util/evsel.h                  |  3 ---
- 6 files changed, 26 insertions(+), 22 deletions(-)
+Thanks,
+Ian
 
-diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
-index 63ae5e0195ce..dfda92e0f0a0 100644
---- a/tools/lib/perf/Documentation/libperf.txt
-+++ b/tools/lib/perf/Documentation/libperf.txt
-@@ -141,6 +141,8 @@ SYNOPSIS
-   void *perf_evsel__mmap_base(struct perf_evsel *evsel, int cpu, int thread);
-   int perf_evsel__read(struct perf_evsel *evsel, int cpu, int thread,
-                        struct perf_counts_values *count);
-+  void perf_counts_values__scale(struct perf_counts_values *count,
-+                                 bool scale, __s8 *pscaled);
-   int perf_evsel__enable(struct perf_evsel *evsel);
-   int perf_evsel__enable_cpu(struct perf_evsel *evsel, int cpu);
-   int perf_evsel__disable(struct perf_evsel *evsel);
-diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-index 8441e3e1aaac..782d1466df1f 100644
---- a/tools/lib/perf/evsel.c
-+++ b/tools/lib/perf/evsel.c
-@@ -431,3 +431,22 @@ void perf_evsel__free_id(struct perf_evsel *evsel)
- 	zfree(&evsel->id);
- 	evsel->ids = 0;
- }
-+
-+void perf_counts_values__scale(struct perf_counts_values *count,
-+			       bool scale, __s8 *pscaled)
-+{
-+	__s8 scaled = 0;
-+
-+	if (scale) {
-+		if (count->run == 0) {
-+			scaled = -1;
-+			count->val = 0;
-+		} else if (count->run < count->ena) {
-+			scaled = 1;
-+			count->val = (u64)((double)count->val * count->ena / count->run);
-+		}
-+	}
-+
-+	if (pscaled)
-+		*pscaled = scaled;
-+}
-diff --git a/tools/lib/perf/include/perf/evsel.h b/tools/lib/perf/include/perf/evsel.h
-index 60eae25076d3..f401c7484bec 100644
---- a/tools/lib/perf/include/perf/evsel.h
-+++ b/tools/lib/perf/include/perf/evsel.h
-@@ -4,6 +4,8 @@
- 
- #include <stdint.h>
- #include <perf/core.h>
-+#include <stdbool.h>
-+#include <linux/types.h>
- 
- struct perf_evsel;
- struct perf_event_attr;
-@@ -39,5 +41,7 @@ LIBPERF_API int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu);
- LIBPERF_API struct perf_cpu_map *perf_evsel__cpus(struct perf_evsel *evsel);
- LIBPERF_API struct perf_thread_map *perf_evsel__threads(struct perf_evsel *evsel);
- LIBPERF_API struct perf_event_attr *perf_evsel__attr(struct perf_evsel *evsel);
-+LIBPERF_API void perf_counts_values__scale(struct perf_counts_values *count,
-+					   bool scale, __s8 *pscaled);
- 
- #endif /* __LIBPERF_EVSEL_H */
-diff --git a/tools/lib/perf/libperf.map b/tools/lib/perf/libperf.map
-index 71468606e8a7..5979bf92d98f 100644
---- a/tools/lib/perf/libperf.map
-+++ b/tools/lib/perf/libperf.map
-@@ -50,6 +50,7 @@ LIBPERF_0.0.1 {
- 		perf_mmap__read_init;
- 		perf_mmap__read_done;
- 		perf_mmap__read_event;
-+		perf_counts_values__scale;
- 	local:
- 		*;
- };
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index ac0127be0459..656c30b988ce 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1476,25 +1476,6 @@ void evsel__compute_deltas(struct evsel *evsel, int cpu, int thread,
- 	count->run = count->run - tmp.run;
- }
- 
--void perf_counts_values__scale(struct perf_counts_values *count,
--			       bool scale, s8 *pscaled)
--{
--	s8 scaled = 0;
--
--	if (scale) {
--		if (count->run == 0) {
--			scaled = -1;
--			count->val = 0;
--		} else if (count->run < count->ena) {
--			scaled = 1;
--			count->val = (u64)((double) count->val * count->ena / count->run);
--		}
--	}
--
--	if (pscaled)
--		*pscaled = scaled;
--}
--
- static int evsel__read_one(struct evsel *evsel, int cpu, int thread)
- {
- 	struct perf_counts_values *count = perf_counts(evsel->counts, cpu, thread);
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 29d49a8c1e92..99aa3363def7 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -195,9 +195,6 @@ static inline int evsel__nr_cpus(struct evsel *evsel)
- 	return evsel__cpus(evsel)->nr;
- }
- 
--void perf_counts_values__scale(struct perf_counts_values *count,
--			       bool scale, s8 *pscaled);
--
- void evsel__compute_deltas(struct evsel *evsel, int cpu, int thread,
- 			   struct perf_counts_values *count);
- 
--- 
-2.25.1
-
+> Thanks,
+> Ian
+>
+> > >                               if (!cpu_map__compare_aggr_cpu_id(s2, id))
+> > >                                       continue;
+> > > -                             val += perf_counts(counter->counts, cpu, 0)->val;
+> > > +                             val += perf_counts(counter->counts, idx, 0)->val;
+> > >                       }
+> > >                       perf_stat__update_shadow_stats(counter, val,
+> > >                                       first_shadow_cpu(config, counter, id),
+> > >
