@@ -2,138 +2,99 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AD6C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Dec 2021 17:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 446CDC433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Dec 2021 18:07:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239786AbhLGRHy (ORCPT
+        id S240343AbhLGSKr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 7 Dec 2021 12:07:54 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:26049 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235159AbhLGRHy (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 7 Dec 2021 12:07:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1638896663;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IXSzrQOI/K5tZY+kjNzeUmFO3T6QyzyAUaamIjn3uk8=;
-        b=idxzV9kQzsXkoybSf6uoXg5hjn0hT0lMfZuzD3VaHuEZhPL4aLG0Dc81Vxzx7tna+6iH2V
-        DkanrNNylOgnhh4qV5orPcZR9Ety1soGhMJ03XHWecl1bzChMqsfQWYB1u2JAmHIQlL0QA
-        4hknGj07YRFHOfJiiltLbYLBS634Zf4=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-185-3V3f1jqNNWi0iI4m1GJrZg-1; Tue, 07 Dec 2021 12:04:22 -0500
-X-MC-Unique: 3V3f1jqNNWi0iI4m1GJrZg-1
-Received: by mail-ed1-f72.google.com with SMTP id m17-20020aa7d351000000b003e7c0bc8523so12033241edr.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 07 Dec 2021 09:04:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=IXSzrQOI/K5tZY+kjNzeUmFO3T6QyzyAUaamIjn3uk8=;
-        b=XF58aZ6AMDQPGtUrJdvj7jXgZkRTPvg3Hm3hSBLWiTEsyGHBUHUqk0XWxrnkzk8OMU
-         A45rT/6IZCh87SJJXgkyWe/CLAB8kf2mLqPEd8RkPGDKAqKWdYtgwgDVUCNhS17kR3Qr
-         mXUiPl8RhjLzdsk0hjttP5C+0R3iJ0b09tAkgTO+bVRQsuiC9a2Pgx+LmLlit7w+sy6R
-         v22mHhlnR+hZQliQsJNuzTQfEnpLaofOC5snNrK7KWurZIosJGNNcdjCc9zaV9uJDtLM
-         wFtqgexg3zikx3kaTG+JxTDKvqGBGbXmIMk6e/0zqe0Y/dCwyDZGbtrDhu/ilFnbOixT
-         n58w==
-X-Gm-Message-State: AOAM532XHNNWpvlcSDNZhzQXzAvNyeEmtDvJhl1IItW7fps9YoGgxaKQ
-        C05sXKghxRNTpT6ZznDyXkd3JRma7oeQWeySdUP4l2nhADNr5Kc4RuzmegvIBd5i+EDDUiWmZgk
-        K3J8k2QQOJWRRJTLjHqWaxdvVYWpWIg==
-X-Received: by 2002:a05:6402:1914:: with SMTP id e20mr11175894edz.96.1638896661288;
-        Tue, 07 Dec 2021 09:04:21 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzwAgfWRJ0ycKbIJkQMQpvQquErHiSiNvlEGv/U09VDwMX7lCMbFfZBtuIWHyyCb05mtdvIrg==
-X-Received: by 2002:a05:6402:1914:: with SMTP id e20mr11175865edz.96.1638896661130;
-        Tue, 07 Dec 2021 09:04:21 -0800 (PST)
-Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
-        by smtp.gmail.com with ESMTPSA id y15sm202023edr.35.2021.12.07.09.04.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Dec 2021 09:04:20 -0800 (PST)
-Date:   Tue, 7 Dec 2021 18:04:18 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     "nakamura.shun@fujitsu.com" <nakamura.shun@fujitsu.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
+        Tue, 7 Dec 2021 13:10:47 -0500
+Received: from foss.arm.com ([217.140.110.172]:37990 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230390AbhLGSKq (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 7 Dec 2021 13:10:46 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F3A9111FB;
+        Tue,  7 Dec 2021 10:07:15 -0800 (PST)
+Received: from e127744.cambridge.arm.com (e127744.cambridge.arm.com [10.1.37.151])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7D95D3F73B;
+        Tue,  7 Dec 2021 10:07:12 -0800 (PST)
+From:   German Gomez <german.gomez@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     German Gomez <german.gomez@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-Subject: Re: libperf: lack of interface
-Message-ID: <Ya+UEn+qjUEzgKfq@krava>
-References: <OSBPR01MB460016842A4310264B1CC5A0F7CD9@OSBPR01MB4600.jpnprd01.prod.outlook.com>
- <YS+B6PVHtiTmqZS+@kernel.org>
- <YTCOVGyffe+VwL6G@krava>
- <OSBPR01MB4600E7C8C79D64125270D034F7A19@OSBPR01MB4600.jpnprd01.prod.outlook.com>
- <OSBPR01MB4600A616AD3341EAF6AA3DE8F7BC9@OSBPR01MB4600.jpnprd01.prod.outlook.com>
- <YXAJhTC9aqOS/GWy@krava>
- <OSBPR01MB460067F4CE80D8EF6B707D4CF7809@OSBPR01MB4600.jpnprd01.prod.outlook.com>
- <OSBPR01MB46002D1F64E2349CA9E742A4F76A9@OSBPR01MB4600.jpnprd01.prod.outlook.com>
- <OSBPR01MB46003CB99B9AAC0A574D341DF76E9@OSBPR01MB4600.jpnprd01.prod.outlook.com>
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH v2 0/3] Support register names of all architectures
+Date:   Tue,  7 Dec 2021 18:06:49 +0000
+Message-Id: <20211207180653.1147374-1-german.gomez@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <OSBPR01MB46003CB99B9AAC0A574D341DF76E9@OSBPR01MB4600.jpnprd01.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Dec 07, 2021 at 05:49:16AM +0000, nakamura.shun@fujitsu.com wrote:
-> Hi jirka
-> 
-> > > > On Mon, Oct 18, 2021 at 08:57:20AM +0000, nakamura.shun@fujitsu.com wrote:
-> > > > > Hi
-> > > > > 
-> > > > > > > On Wed, Sep 01, 2021 at 10:36:40AM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > > > > > Em Wed, Sep 01, 2021 at 09:45:10AM +0000, nakamura.shun@fujitsu.com escreveu:
-> > > > > > > > > Hello.
-> > > > > > > > >
-> > > > > > > > > I'm trying to change rdpmc test in perf_event_tests[1] to use libperf, but libperf doesn't have enough interfaces.
-> > > > > > > > > Does anyone plan to implement any of these libperf features?
-> > > > > > > > >
-> > > > > > > > > - Interfaces that can run ioctl (PERF_EVENT_IOC_RESET) from userland
-> > > > > > > > > - Interfaces that can run fcntl (SIGIO) from userland
-> > > > > > >
-> > > > > > > hi,
-> > > > > > > we could add perf_evsel__fd like below, would it help your usecase?
-> > > > > > >
-> > > > > > > if you described your usecases in more details we could
-> > > > > > > see if we could add/move something to libperf for that
-> > > > > > >
-> > > > > > > as Arnaldo said below it could be already in tools/perf/util/*.c
-> > > > > > > somewhere ;-)
-> > > > > > 
-> > > > > > As Peter says, I understood that for rdpmc, no reset is needed.
-> > > > > > 
-> > > > > > However, PAPI resets it explicitly, for example, at PAPI_reset.
-> > > > > > In other, PAPI also has the ability to call PERF_EVENT_IOC_REFLESH on overflow to call a user-registered handler, using SIGIO.
-> > > > > > 
-> > > > > > I think it is desirable to be able to achieve similar functionality.
-> > > > > 
-> > > > > Does anyone have any comments?
-> > > > 
-> > > > I'll try to add that functionality soon,
-> > > > I'll cc you on patch
-> > > 
-> > > Thank you.
-> > > I look forward to your patch.
-> > 
-> > Do you have a specific plan? 
-> > I would like to know the rough period until your patch is made.
->  
-> I will also try to implement these interfaces.
+The following changeset applies some corrections to the way system
+registers are processed and presented when reading perf.data files using
+the various perf tools.
 
-sorry for late reply, please do
+The commit message from [3/3] shows how register names aren't correctly
+presented when performing x-arch analysis of perf.data files (recording
+in one arch, then reading the file from a different arch).
 
-thanks,
-jirka
+  - [PATCH 1/3] Fixes a potential out-of-bounds access when reading the
+    values of the registers in the perf.data file.
+  - [PATCH 2/3] Fixes an issue of ARM and ARM64 registers having the
+    same enum name.
+  - [PATCH 3/3] Refactors the function "perf_reg_name" declared in the
+   "tools/perf/util/perf_regs.h" header, in order to support every arch.
+
+Thanks,
+German
+
+--
+Changes since v1
+
+  - Added "Reported-by" tags.
+  - Removed [PATCH 2/4] because it's not needed (suggested by Athira
+    Rajeev).
+  - Removed [PATCH 3/4] which created additional header files with the
+    register names of every arch.
+  - Introduced [PATCH 2/3] to deal with ARM and ARM64 registers having the
+    same enum name across "/tools/perf/".
+  - Reworked the refactor of "perf_reg_name" function (now implemented in
+    perf_regs.c, rather than in the header file) in [PATCH 3/3].
+
+German Gomez (3):
+  perf tools: Prevent out-of-bounds access to registers
+  perf tools: Rename perf_event_arm_regs for ARM64 registers
+  perf tools: Support register names from all archs
+
+ tools/perf/arch/arm/include/perf_regs.h       |  42 --
+ tools/perf/arch/arm64/include/perf_regs.h     |  78 +-
+ tools/perf/arch/csky/include/perf_regs.h      |  82 ---
+ tools/perf/arch/mips/include/perf_regs.h      |  69 --
+ tools/perf/arch/powerpc/include/perf_regs.h   |  66 --
+ tools/perf/arch/riscv/include/perf_regs.h     |  74 --
+ tools/perf/arch/s390/include/perf_regs.h      |  78 --
+ tools/perf/arch/x86/include/perf_regs.h       |  82 ---
+ tools/perf/builtin-script.c                   |  18 +-
+ tools/perf/util/event.h                       |   5 +-
+ tools/perf/util/libunwind/arm64.c             |   2 +
+ tools/perf/util/perf_regs.c                   | 671 +++++++++++++++++-
+ tools/perf/util/perf_regs.h                   |  10 +-
+ .../scripting-engines/trace-event-python.c    |  10 +-
+ tools/perf/util/session.c                     |  25 +-
+ 15 files changed, 709 insertions(+), 603 deletions(-)
+
+-- 
+2.25.1
 
