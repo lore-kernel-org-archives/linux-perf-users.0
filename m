@@ -2,218 +2,188 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2503C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Dec 2021 14:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3354C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Dec 2021 16:31:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238268AbhLGO4H (ORCPT
+        id S234986AbhLGQfK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 7 Dec 2021 09:56:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50366 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229455AbhLGO4G (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 7 Dec 2021 09:56:06 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B053EC061574
-        for <linux-perf-users@vger.kernel.org>; Tue,  7 Dec 2021 06:52:35 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id C205CCE1B22
-        for <linux-perf-users@vger.kernel.org>; Tue,  7 Dec 2021 14:52:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2AE1C341C1;
-        Tue,  7 Dec 2021 14:52:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638888752;
-        bh=UPlYzu8zK9sCxqUM9Z3ruJ57CLQ7PFmjIvjY+14o3k4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RY6Z8lGq7kmQODbw3MeMmyzDwJlRCy3kFLCsMmD/lyM2/bDI+WoqKXeEkLJhHKbfq
-         rVCRAI9e1f1y7E+gFqtzmWo/he9Z+cY9n/XY4yW5vtN+7xYIcXZlw3OoZ5p4FsJQT6
-         89uDV8c6/1sc591snay8gTL0q0QChgD2qjVjRp5xPXHrxA7N9Wgti6wKQJmgwE7oJb
-         xUili3TjOke0Wkrx87wdo7JSPIKpIIFB1wxX7EUuoxvPJXUlWpzI5OF7fv9H+XZPuH
-         QOBFnNQDx4MSbZw4HBW5e+KIpjEb0I/sxrAX79p5oU5YHyu6L8uL6JzS0gIl9OkNph
-         fPkE+/8XMTDdw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D1FBC406C1; Tue,  7 Dec 2021 11:52:29 -0300 (-03)
-Date:   Tue, 7 Dec 2021 11:52:29 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     jolsa@kernel.org, mpe@ellerman.id.au,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
-        kjain@linux.ibm.com, namhyung@kernel.org
-Subject: Re: [PATCH V2 1/2] tools/perf: Include global and local variants for
- p_stage_cyc sort key
-Message-ID: <Ya91LXxp13Nz3JyC@kernel.org>
-References: <20211203022038.48240-1-atrajeev@linux.vnet.ibm.com>
+        Tue, 7 Dec 2021 11:35:10 -0500
+Received: from foss.arm.com ([217.140.110.172]:36182 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232748AbhLGQfK (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 7 Dec 2021 11:35:10 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A71AF11D4;
+        Tue,  7 Dec 2021 08:31:39 -0800 (PST)
+Received: from [10.57.34.58] (unknown [10.57.34.58])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E436C3F73D;
+        Tue,  7 Dec 2021 08:31:35 -0800 (PST)
+Message-ID: <e60d17fb-58c5-cbbc-391c-043ec15a47b6@arm.com>
+Date:   Tue, 7 Dec 2021 16:31:31 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211203022038.48240-1-atrajeev@linux.vnet.ibm.com>
-X-Url:  http://acmel.wordpress.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+Subject: Re: [PATCH v2 2/6] hwtracing: Add trace function support for
+ HiSilicon PCIe Tune and Trace device
+Content-Language: en-GB
+To:     Yicong Yang <yangyicong@hisilicon.com>, gregkh@linuxfoundation.org,
+        helgaas@kernel.org, alexander.shishkin@linux.intel.com,
+        lorenzo.pieralisi@arm.com, will@kernel.org, mark.rutland@arm.com,
+        mathieu.poirier@linaro.org, suzuki.poulose@arm.com,
+        mike.leach@linaro.org, leo.yan@linaro.org,
+        jonathan.cameron@huawei.com, daniel.thompson@linaro.org,
+        joro@8bytes.org, john.garry@huawei.com,
+        shameerali.kolothum.thodi@huawei.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+        linux-pci@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Cc:     zhangshaokun@hisilicon.com, liuqi115@huawei.com,
+        linuxarm@huawei.com, prime.zeng@huawei.com
+References: <20211116090625.53702-1-yangyicong@hisilicon.com>
+ <20211116090625.53702-3-yangyicong@hisilicon.com>
+ <0b67745c-13dd-1fea-1b8b-d55212bad232@arm.com>
+ <3644ad6e-d800-c84b-9d62-6dda8462450f@hisilicon.com>
+ <e7d4afb7-e4e4-e581-872b-2477850ad8da@hisilicon.com>
+ <38bfa372-54c8-2e81-adab-ca24051a0fe6@arm.com>
+ <288856a6-d1eb-d4cc-f3ca-0134b7e4d1dc@hisilicon.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <288856a6-d1eb-d4cc-f3ca-0134b7e4d1dc@hisilicon.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Dec 03, 2021 at 07:50:37AM +0530, Athira Rajeev escreveu:
-> Sort key p_stage_cyc is used to present the latency
-> cycles spend in pipeline stages. perf tool has local
-> p_stage_cyc sort key to display this info. There is no
-> global variant available for this sort key. local variant
-> shows latency in a sinlge sample, whereas, global value
-> will be useful to present the total latency (sum of
-> latencies) in the hist entry. It represents latency
-> number multiplied by the number of samples.
+On 2021-11-29 08:22, Yicong Yang via iommu wrote:
+> On 2021/11/25 23:49, Robin Murphy wrote:
+>> On 2021-11-18 09:01, Yicong Yang via iommu wrote:
+>>> Hi Robin,
+>>>
+>>> On 2021/11/16 19:37, Yicong Yang wrote:
+>>>> On 2021/11/16 18:56, Robin Murphy wrote:
+>>>>> On 2021-11-16 09:06, Yicong Yang via iommu wrote:
+>>>>> [...]
+>>>>>> +/*
+>>>>>> + * Get RMR address if provided by the firmware.
+>>>>>> + * Return 0 if the IOMMU doesn't present or the policy of the
+>>>>>> + * IOMMU domain is passthrough or we get a usable RMR region.
+>>>>>> + * Otherwise a negative value is returned.
+>>>>>> + */
+>>>>>> +static int hisi_ptt_get_rmr(struct hisi_ptt *hisi_ptt)
+>>>>>> +{
+>>>>>> +    struct pci_dev *pdev = hisi_ptt->pdev;
+>>>>>> +    struct iommu_domain *iommu_domain;
+>>>>>> +    struct iommu_resv_region *region;
+>>>>>> +    LIST_HEAD(list);
+>>>>>> +
+>>>>>> +    /*
+>>>>>> +     * Use direct DMA if IOMMU does not present or the policy of the
+>>>>>> +     * IOMMU domain is passthrough.
+>>>>>> +     */
+>>>>>> +    iommu_domain = iommu_get_domain_for_dev(&pdev->dev);
+>>>>>> +    if (!iommu_domain || iommu_domain->type == IOMMU_DOMAIN_IDENTITY)
+>>>>>> +        return 0;
+>>>>>> +
+>>>>>> +    iommu_get_resv_regions(&pdev->dev, &list);
+>>>>>> +    list_for_each_entry(region, &list, list)
+>>>>>> +        if (region->type == IOMMU_RESV_DIRECT &&
+>>>>>> +            region->length >= HISI_PTT_TRACE_BUFFER_SIZE) {
+>>>>>> +            hisi_ptt->trace_ctrl.has_rmr = true;
+>>>>>> +            hisi_ptt->trace_ctrl.rmr_addr = region->start;
+>>>>>> +            hisi_ptt->trace_ctrl.rmr_length = region->length;
+>>>>>> +            break;
+>>>>>> +        }
+>>>>>> +
+>>>>>> +    iommu_put_resv_regions(&pdev->dev, &list);
+>>>>>> +    return hisi_ptt->trace_ctrl.has_rmr ? 0 : -ENOMEM;
+>>>>>> +}
+>>>>>
+>>>>> No.
+>>>>>
+>>>>> The whole point of RMRs is for devices that are already configured to access the given address range in a manner beyond the kernel's control. If you can do this, it proves that you should not have an RMR in the first place.
+>>>>>
+>>>>> The notion of a kernel driver explicitly configuring its device to DMA into any random RMR that looks big enough is so egregiously wrong that I'm almost lost for words...
+>>>>>
+>>>>
+>>>> our bios will reserve such a region and reported it through iort. the device will write to the region and in the driver we need to access the region
+>>>> to get the traced data. the region is reserved exclusively and will not be accessed by kernel or other devices.
+>>>>
+>>>> is it ok to let bios configure the address to the device and from CPU side we just read it?
+>>>>
+>>>
+>>> Any suggestion?  Is this still an issue you concern if we move the configuration of the device address to BIOS and just read from the CPU side?
+>>
+>> If the firmware configures the device so that it's actively tracing and writing out to memory while the kernel boots, then that is a valid reason to have an RMR. However what you're doing in the driver is still complete nonsense. As far as I can follow, the way it's working is this:
+>>
+>> - At probe time, the initial state of the hardware is entirely ignored. If it *is* already active, there appears to be a fun chance of crashing if TRACE_INT_MASK is clear and an interrupt happens to fire before anyone has got round to calling perf_aux_output_begin() to make trace_ctrl.handle.rb non-NULL.
+>>
+>> - Later, once the user starts a tracing session, a buffer is set up *either* as a completely normal DMA allocation, or by memremap()ing some random IOVA carveout which may or may not be whatever memory the firmware was tracing to.
+>>
+>> - The hardware is then reset and completely reprogrammed to use the new buffer, again without any consideration of its previous state (other than possibly timing out and failing if it's already running and that means it never goes idle).
+>>
+>> Therefore the driver does not seem to respect any prior configuration of the device by firmware, does not seem to expect it to be running at boot time, does not seem to have any way to preserve and export any trace data captured in an RMR if it *was* running at boot time, and thus without loss of generality could simply use the dma_alloc_coherent() path all the time. Am I missing anything?
+>>
 > 
-> Add global (p_stage_cyc) and local variant
-> (local_p_stage_cyc) for this sort key. Use the
-> local_p_stage_cyc as default option for "mem" sort mode.
-> Also add this to list of dynamic sort keys and made the
-> "dynamic_headers" and "arch_specific_sort_keys" as static.
+> Thanks for the further explanation and I think I understand your concerns more clearer.
 > 
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> Reported-by: Namhyung Kim <namhyung@kernel.org>
-
-I got this for v1, does it stand for v2?
-
-Tested-by: Nageswara R Sastry <rnsastry@linux.ibm.com>
-
-> ---
-> Changelog:
-> v1 -> v2:
->  Addressed review comments from Jiri by making the
->  "dynamic_headers" and "arch_specific_sort_keys"
->  as static.
+> The trace is not supposed to begin by the firmware at boot time. Due to some hardware restriction, the device cannot trace with non-identical mapping.
+> So we'd like to use RMR to make the device work when the dma mapping is non-identical. Thus we check here to decide whether to use RMR or not: if the iommu
+> is not presented or in the passthrough mode, we can use direct DMA by dma_alloc_coherent(); if the iommu is present and the mode is not passthrough, we try
+> to retrieve RMR or we fail the probe. The firmware is expected to reserve a range of memory and reports it to the driver and is not expected to configure
+> the trace and do boot time tracing.
 > 
->  tools/perf/util/hist.c |  4 +++-
->  tools/perf/util/hist.h |  3 ++-
->  tools/perf/util/sort.c | 34 +++++++++++++++++++++++++---------
->  tools/perf/util/sort.h |  3 ++-
->  4 files changed, 32 insertions(+), 12 deletions(-)
+>> As things stand, RMRs are not yet supported upstream (FYI we're still working on fixing the spec...), so the code above is at best dead, and at worst actively wrong. Furthermore, if the expected usage model *is* that the kernel driver completely resets and reprograms the hardware, then even if there is an RMR for boot-time tracing I would rather expect it to be flagged as remappable, and thus potentially end up as an IOMMU_RESV_DIRECT_RELAXABLE reservation which you wouldn't match anyway.
+>>
 > 
-> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-> index b776465e04ef..0a8033b09e28 100644
-> --- a/tools/perf/util/hist.c
-> +++ b/tools/perf/util/hist.c
-> @@ -211,7 +211,9 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
->  	hists__new_col_len(hists, HISTC_MEM_BLOCKED, 10);
->  	hists__new_col_len(hists, HISTC_LOCAL_INS_LAT, 13);
->  	hists__new_col_len(hists, HISTC_GLOBAL_INS_LAT, 13);
-> -	hists__new_col_len(hists, HISTC_P_STAGE_CYC, 13);
-> +	hists__new_col_len(hists, HISTC_LOCAL_P_STAGE_CYC, 13);
-> +	hists__new_col_len(hists, HISTC_GLOBAL_P_STAGE_CYC, 13);
-> +
->  	if (symbol_conf.nanosecs)
->  		hists__new_col_len(hists, HISTC_TIME, 16);
->  	else
-> diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-> index 621f35ae1efa..2a15e22fb89c 100644
-> --- a/tools/perf/util/hist.h
-> +++ b/tools/perf/util/hist.h
-> @@ -75,7 +75,8 @@ enum hist_column {
->  	HISTC_MEM_BLOCKED,
->  	HISTC_LOCAL_INS_LAT,
->  	HISTC_GLOBAL_INS_LAT,
-> -	HISTC_P_STAGE_CYC,
-> +	HISTC_LOCAL_P_STAGE_CYC,
-> +	HISTC_GLOBAL_P_STAGE_CYC,
->  	HISTC_NR_COLS, /* Last entry */
->  };
->  
-> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-> index a111065b484e..e417e47f51b9 100644
-> --- a/tools/perf/util/sort.c
-> +++ b/tools/perf/util/sort.c
-> @@ -37,7 +37,7 @@ const char	default_parent_pattern[] = "^sys_|^do_page_fault";
->  const char	*parent_pattern = default_parent_pattern;
->  const char	*default_sort_order = "comm,dso,symbol";
->  const char	default_branch_sort_order[] = "comm,dso_from,symbol_from,symbol_to,cycles";
-> -const char	default_mem_sort_order[] = "local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked,blocked,local_ins_lat,p_stage_cyc";
-> +const char	default_mem_sort_order[] = "local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked,blocked,local_ins_lat,local_p_stage_cyc";
->  const char	default_top_sort_order[] = "dso,symbol";
->  const char	default_diff_sort_order[] = "dso,symbol";
->  const char	default_tracepoint_sort_order[] = "trace";
-> @@ -46,8 +46,8 @@ const char	*field_order;
->  regex_t		ignore_callees_regex;
->  int		have_ignore_callees = 0;
->  enum sort_mode	sort__mode = SORT_MODE__NORMAL;
-> -const char	*dynamic_headers[] = {"local_ins_lat", "p_stage_cyc"};
-> -const char	*arch_specific_sort_keys[] = {"p_stage_cyc"};
-> +static const char *const dynamic_headers[] = {"local_ins_lat", "ins_lat", "local_p_stage_cyc", "p_stage_cyc"};
-> +static const char *const arch_specific_sort_keys[] = {"local_p_stage_cyc", "p_stage_cyc"};
->  
->  /*
->   * Replaces all occurrences of a char used with the:
-> @@ -1392,22 +1392,37 @@ struct sort_entry sort_global_ins_lat = {
->  };
->  
->  static int64_t
-> -sort__global_p_stage_cyc_cmp(struct hist_entry *left, struct hist_entry *right)
-> +sort__p_stage_cyc_cmp(struct hist_entry *left, struct hist_entry *right)
->  {
->  	return left->p_stage_cyc - right->p_stage_cyc;
->  }
->  
-> +static int hist_entry__global_p_stage_cyc_snprintf(struct hist_entry *he, char *bf,
-> +					size_t size, unsigned int width)
-> +{
-> +	return repsep_snprintf(bf, size, "%-*u", width,
-> +			he->p_stage_cyc * he->stat.nr_events);
-> +}
-> +
-> +
->  static int hist_entry__p_stage_cyc_snprintf(struct hist_entry *he, char *bf,
->  					size_t size, unsigned int width)
->  {
->  	return repsep_snprintf(bf, size, "%-*u", width, he->p_stage_cyc);
->  }
->  
-> -struct sort_entry sort_p_stage_cyc = {
-> -	.se_header      = "Pipeline Stage Cycle",
-> -	.se_cmp         = sort__global_p_stage_cyc_cmp,
-> +struct sort_entry sort_local_p_stage_cyc = {
-> +	.se_header      = "Local Pipeline Stage Cycle",
-> +	.se_cmp         = sort__p_stage_cyc_cmp,
->  	.se_snprintf	= hist_entry__p_stage_cyc_snprintf,
-> -	.se_width_idx	= HISTC_P_STAGE_CYC,
-> +	.se_width_idx	= HISTC_LOCAL_P_STAGE_CYC,
-> +};
-> +
-> +struct sort_entry sort_global_p_stage_cyc = {
-> +	.se_header      = "Pipeline Stage Cycle",
-> +	.se_cmp         = sort__p_stage_cyc_cmp,
-> +	.se_snprintf    = hist_entry__global_p_stage_cyc_snprintf,
-> +	.se_width_idx   = HISTC_GLOBAL_P_STAGE_CYC,
->  };
->  
->  struct sort_entry sort_mem_daddr_sym = {
-> @@ -1858,7 +1873,8 @@ static struct sort_dimension common_sort_dimensions[] = {
->  	DIM(SORT_CODE_PAGE_SIZE, "code_page_size", sort_code_page_size),
->  	DIM(SORT_LOCAL_INS_LAT, "local_ins_lat", sort_local_ins_lat),
->  	DIM(SORT_GLOBAL_INS_LAT, "ins_lat", sort_global_ins_lat),
-> -	DIM(SORT_PIPELINE_STAGE_CYC, "p_stage_cyc", sort_p_stage_cyc),
-> +	DIM(SORT_LOCAL_PIPELINE_STAGE_CYC, "local_p_stage_cyc", sort_local_p_stage_cyc),
-> +	DIM(SORT_GLOBAL_PIPELINE_STAGE_CYC, "p_stage_cyc", sort_global_p_stage_cyc),
->  };
->  
->  #undef DIM
-> diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-> index 7b7145501933..f994261888e1 100644
-> --- a/tools/perf/util/sort.h
-> +++ b/tools/perf/util/sort.h
-> @@ -235,7 +235,8 @@ enum sort_type {
->  	SORT_CODE_PAGE_SIZE,
->  	SORT_LOCAL_INS_LAT,
->  	SORT_GLOBAL_INS_LAT,
-> -	SORT_PIPELINE_STAGE_CYC,
-> +	SORT_LOCAL_PIPELINE_STAGE_CYC,
-> +	SORT_GLOBAL_PIPELINE_STAGE_CYC,
->  
->  	/* branch stack specific sort keys */
->  	__SORT_BRANCH_STACK,
-> -- 
-> 2.33.0
+> Yes the firmware is not expected to start the trace. Will change the desired flag to IOMMU_RESV_DIRECT_RELAXABLE and have a test.
+> 
+>> And after all that, if you really do have a genuine need to respect and preserve prior firmware configuration of the device, then I would surely expect to see the driver actually doing exactly that. Presumably: at probe time, look at TRACE_CTRL; if the device is already configured, read out that configuration - especially including TRACE_ADDR_* - and make sure to reuse it. Not go off on a tangent blindly poking into internal IOMMU API abstractions in the vain hope that the first thing you find happens to be sort-of-related to the information that you actually care about.
+>>
+> 
+> Yes, we do need RMR to make the device work at situation where the mapping is non-identical.
+> 
+> We're certain that the bios won't start and configure the trace in this device's usage, is it still necessary to make
+> firmware configure the TRACE_ADDR_* to the device?
+> 
+> As suggested, I think I'll need to modify the RMR codes like
+> 
+> - check TRACE_CTRL, and stop it if it's started. (won't happen but check for sanity)
+> - if smmu is not presented, use direct DMA
+> - try to retrieve RMR address with flag IOMMU_RESV_DIRECT_RELAXABLE , if presented set hisi_ptt->has_rmr. in this case we won't use direct DMA
+> - check if the TRACE_ADDR_* has been configured. if so don't reconfigure it when trace
+> - if no rmr but smmu works in passthrough mode, use direct DMA
+> - otherwise fails the probe
+> 
+> If I miss something please point it out.
 
--- 
+Thanks for clarifying. Unfortunately it also confirms my suspicion that 
+this is exactly the kind of misuse of RMRs that we don't want to 
+support. You can ignore most of what I said above which applies to the 
+genuine RMR use-case of the device already being configured.
 
-- Arnaldo
+If the device really can't handle SMMU translation then that can be 
+dealt with entirely within Linux. Give it a iommu_def_domain_type quirk 
+to force passthrough; or maybe fail probe if a DMA domain is present and 
+tell the user to change the domain type via sysfs manually; or maybe set 
+up your own IOMMU domain and manually map things 1:1 if you really want 
+to; there are plenty of possible options for implementing that kind of 
+internal software policy. Abusing external firmware mechanisms is not a 
+reasonable one, however.
+
+I also can't help be curious as to exactly *why* the device doesn't work 
+with translation. If it's an RCiEP with some different path to memory 
+that physically bypasses the SMMU compared to "normal" PCIe traffic, 
+then that should be fixed by having the IORT mappings describe the 
+underlying topology correctly in the first place. If it turns out just 
+to be the case that the device only actually drives enough address bits 
+to cover the physical memory map, and using translation happens to 
+result in IOVAs larger than that which then get truncated and go wrong, 
+that's fixed by simply setting the right DMA mask in the driver. If it's 
+some complicated interconnect latency/deadlock thing related to 
+translation delays as traffic flows through the SMMU, I'd expect that to 
+matter regardless of whether the input address happens to match the 
+output address or not. At this point I'm starting to get slightly 
+suspicious of whether we're even trying to solve the right problem at all.
+
+Thanks,
+Robin.
