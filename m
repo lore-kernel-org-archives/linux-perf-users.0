@@ -2,195 +2,135 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D03C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Dec 2021 20:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE866C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Dec 2021 21:19:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240105AbhLHUPK (ORCPT
+        id S237045AbhLHVWg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Dec 2021 15:15:10 -0500
-Received: from mail-ot1-f53.google.com ([209.85.210.53]:40562 "EHLO
-        mail-ot1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240071AbhLHUPH (ORCPT
+        Wed, 8 Dec 2021 16:22:36 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:49756 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231419AbhLHVWf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Dec 2021 15:15:07 -0500
-Received: by mail-ot1-f53.google.com with SMTP id v15-20020a9d604f000000b0056cdb373b82so3895938otj.7;
-        Wed, 08 Dec 2021 12:11:34 -0800 (PST)
+        Wed, 8 Dec 2021 16:22:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1638998343;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=i3DaNxZ+DCtlOdYYs61z7M12v8oVSYtpfxHsaarpyvw=;
+        b=CQy5JOqLo9Uab0QIT+t+PSWmKksA0RmIPEcIzUgayAE/nga47GnkznljaUe7EnerqKgAY3
+        3oHD9bv375LbyqwjATQ1v5LPa1OzRhXXuwxMD4gMaRnBzJZeEixv54BXEkd3eVK+x20tau
+        Y4bLaAwxm8VeoCkdh4Xg8+GWHcF1df0=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-446-F5FnEG2bNdCjiQfSDeX8qQ-1; Wed, 08 Dec 2021 16:19:01 -0500
+X-MC-Unique: F5FnEG2bNdCjiQfSDeX8qQ-1
+Received: by mail-wm1-f72.google.com with SMTP id n41-20020a05600c502900b003335ab97f41so1852544wmr.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 Dec 2021 13:19:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=HfrUN45cqHgCg9PtoxrLRh/H00SV7ZMBqcSirS6LsG8=;
-        b=VklFbMHEQT/a2RsTTjGSgdd0LIFi4b0AwHS76jL7jagexV3eRhwz22UWqsM1wv3DzS
-         bBDbjM3mtPA063/EYznd/3avaFRPu5nve7uOSqND2jT75sWji3LFCPvFaC5Fvq7f3YAc
-         KpUuNYdm2SMtGsuqs2f1KC0g+RjLCPgUHeGDAnw2szbBI3TiJHO05KuD4TT4jZJTUOg7
-         rFPDdHIqNhjlXQkIr63RCZR35Ox6x07fr8c7Hc9bflSIqW+jvDaSl0rq9FSnNZxuqzLQ
-         Rx9/BcwdNbbbHW0X8t/BFXO2PSaJ7IVJxSJKrt6uC/qjNrerC2sTjcriHZigkNxdGNMd
-         x7ZQ==
-X-Gm-Message-State: AOAM531nCSU+qew7ChV+X54lttfziIgskUz8+/ctQ4304jiFXe2K53/J
-        T0r0jJNkHoN6HA01Y7QVz7STbS+o6w==
-X-Google-Smtp-Source: ABdhPJxDVbsu/R+ZkLZstGVEnjuXnCzcMbNzLaZUGm/zjME28B1n39Bze0KAdBNmWudsmig1cuerSA==
-X-Received: by 2002:a05:6830:2646:: with SMTP id f6mr1553396otu.182.1638994294507;
-        Wed, 08 Dec 2021 12:11:34 -0800 (PST)
-Received: from xps15.herring.priv (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.googlemail.com with ESMTPSA id o2sm927926oik.11.2021.12.08.12.11.33
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=i3DaNxZ+DCtlOdYYs61z7M12v8oVSYtpfxHsaarpyvw=;
+        b=zGrdpUO5ROTnbZvEqxWPYhkZf/5xvqXdq4G3Ua0kebI3yuMCy9ojJeDkxIT389kPsG
+         GzxWzuJpSvNJPIJFNC4XkceDbAyfz+inB8poHHrJEbyHNtPIPCEGcYW/GtANBhdMoVml
+         5GIhlUERRYQ1hu0zFteS2mz/HOIpmBs7OTmavXXW3RI0b/vm+5sH1AcHYQ5JDOd2fZ5S
+         Unl6q/hvSyMbKutX5bG4L1rSv8VSdiynuAqRSA99PjfVO6EfJOgoVoymbEEtjaG656VK
+         HXnuh2osAskEoV5Aim/MGubG+F2jYpoqySDhkvPAOAyCoBMq/gTOuYQbIG9caQXtZXqq
+         TJQQ==
+X-Gm-Message-State: AOAM531JWOEaYVscAI59Bq+XHdCidENaooVwXqpZeBvfWbdpJPSJoAtg
+        z96GU69WBtEC8RXm2JxU5A9P+C995l0U5/dhyuiL1OrChfOM5hk7P1Dd4B03LCGXN/UGm8vGzBu
+        6jlCYdLHpkIM7M8CWLCscDzpdQT/k/A==
+X-Received: by 2002:a7b:ce16:: with SMTP id m22mr1474974wmc.39.1638998340655;
+        Wed, 08 Dec 2021 13:19:00 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyAZb+D1/TGDxkBCGwSmISvdDV38qwpS2yyMvufggSdypDmeUA1tumVaXCcWxVzlmlI36HXTw==
+X-Received: by 2002:a7b:ce16:: with SMTP id m22mr1474935wmc.39.1638998340376;
+        Wed, 08 Dec 2021 13:19:00 -0800 (PST)
+Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
+        by smtp.gmail.com with ESMTPSA id p12sm4697373wrr.10.2021.12.08.13.18.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Dec 2021 12:11:33 -0800 (PST)
-From:   Rob Herring <robh@kernel.org>
-To:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Vince Weaver <vincent.weaver@maine.edu>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org,
-        Raphael Gault <raphael.gault@arm.com>
-Subject: [PATCH v13 5/5] Documentation: arm64: Document PMU counters access from userspace
-Date:   Wed,  8 Dec 2021 14:11:24 -0600
-Message-Id: <20211208201124.310740-6-robh@kernel.org>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20211208201124.310740-1-robh@kernel.org>
-References: <20211208201124.310740-1-robh@kernel.org>
+        Wed, 08 Dec 2021 13:18:59 -0800 (PST)
+Date:   Wed, 8 Dec 2021 22:18:58 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Shunsuke <nakamura.shun@fujitsu.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        namhyung@kernel.org, robh@kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v5 0/3] libperf: Unify scaling of counters obtained from
+ perf_evsel__read()
+Message-ID: <YbEhQvkGRzX2K1pq@krava>
+References: <20211207082245.604654-1-nakamura.shun@fujitsu.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211207082245.604654-1-nakamura.shun@fujitsu.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Raphael Gault <raphael.gault@arm.com>
+On Tue, Dec 07, 2021 at 05:22:42PM +0900, Shunsuke wrote:
+> This patch series unifies the counters that can be obtained from
+> perf_evsel__read() to "no scaling".
+> The counter scaling will be done using a function moved from
+> tools/perf/util.
+> 
+> The first patch move perf_counts_values__scale from tools/perf/util
+> to tools/lib/perf so that it can be used with libperf.
+> 
+> The second patch removes the scaling process from
+> perf_mmap__read_self().
+> 
+> The third patch adds a verification test to make sure that it scales
+> correctly when multiplexed.
+> 
+> ---
+> Previous version at:
+> https://lore.kernel.org/linux-perf-users/20211129090627.592149-1-nakamura.shun@fujitsu.com/
+> 
+> Changes in v5:
+>  - Update tools/lib/perf/Documentation/libperf.txt
 
-Add documentation to describe the access to the pmu hardware counters from
-userspace.
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-Signed-off-by: Raphael Gault <raphael.gault@arm.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-v12:
- - Add note about accessing PMU registers and PMSELR_EL0 being zeroed
-v11:
- - Rework chained event section to reflect 64-bit counter request may
-   fail and 32-bit counters may be 64-bit with upper bits UNKNOWN.
-v10:
- - Add details on perf_user_access sysctl
-v9:
- - No change
-v8:
- - Reword that config1:1 must always be set to request user access
-v7:
- - Merge into existing arm64 perf.rst
-v6:
-  - Update the chained event section with attr.config1 details
-v2:
-  - Update links to test examples
+thanks,
+jirka
 
-Changes from Raphael's v4:
-  - Convert to rSt
-  - Update chained event status
-  - Add section for heterogeneous systems
----
- Documentation/arm64/perf.rst | 78 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 77 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/arm64/perf.rst b/Documentation/arm64/perf.rst
-index b567f177d385..1f87b57c2332 100644
---- a/Documentation/arm64/perf.rst
-+++ b/Documentation/arm64/perf.rst
-@@ -2,7 +2,10 @@
- 
- .. _perf_index:
- 
--=====================
-+====
-+Perf
-+====
-+
- Perf Event Attributes
- =====================
- 
-@@ -88,3 +91,76 @@ exclude_host. However when using !exclude_hv there is a small blackout
- window at the guest entry/exit where host events are not captured.
- 
- On VHE systems there are no blackout windows.
-+
-+Perf Userspace PMU Hardware Counter Access
-+==========================================
-+
-+Overview
-+--------
-+The perf userspace tool relies on the PMU to monitor events. It offers an
-+abstraction layer over the hardware counters since the underlying
-+implementation is cpu-dependent.
-+Arm64 allows userspace tools to have access to the registers storing the
-+hardware counters' values directly.
-+
-+This targets specifically self-monitoring tasks in order to reduce the overhead
-+by directly accessing the registers without having to go through the kernel.
-+
-+How-to
-+------
-+The focus is set on the armv8 PMUv3 which makes sure that the access to the pmu
-+registers is enabled and that the userspace has access to the relevant
-+information in order to use them.
-+
-+In order to have access to the hardware counters, the global sysctl
-+kernel/perf_user_access must first be enabled:
-+
-+.. code-block:: sh
-+
-+  echo 1 > /proc/sys/kernel/perf_user_access
-+
-+It is necessary to open the event using the perf tool interface with config1:1
-+attr bit set: the sys_perf_event_open syscall returns a fd which can
-+subsequently be used with the mmap syscall in order to retrieve a page of memory
-+containing information about the event. The PMU driver uses this page to expose
-+to the user the hardware counter's index and other necessary data. Using this
-+index enables the user to access the PMU registers using the `mrs` instruction.
-+Access to the PMU registers is only valid while the sequence lock is unchanged.
-+In particular, the PMSELR_EL0 register is zeroed each time the sequence lock is
-+changed.
-+
-+The userspace access is supported in libperf using the perf_evsel__mmap()
-+and perf_evsel__read() functions. See `tools/lib/perf/tests/test-evsel.c`_ for
-+an example.
-+
-+About heterogeneous systems
-+---------------------------
-+On heterogeneous systems such as big.LITTLE, userspace PMU counter access can
-+only be enabled when the tasks are pinned to a homogeneous subset of cores and
-+the corresponding PMU instance is opened by specifying the 'type' attribute.
-+The use of generic event types is not supported in this case.
-+
-+Have a look at `tools/perf/arch/arm64/tests/user-events.c`_ for an example. It
-+can be run using the perf tool to check that the access to the registers works
-+correctly from userspace:
-+
-+.. code-block:: sh
-+
-+  perf test -v user
-+
-+About chained events and counter sizes
-+--------------------------------------
-+The user can request either a 32-bit (config1:0 == 0) or 64-bit (config1:0 == 1)
-+counter along with userspace access. The sys_perf_event_open syscall will fail
-+if a 64-bit counter is requested and the hardware doesn't support 64-bit
-+counters. Chained events are not supported in conjunction with userspace counter
-+access. If a 32-bit counter is requested on hardware with 64-bit counters, then
-+userspace must treat the upper 32-bits read from the counter as UNKNOWN. The
-+'pmc_width' field in the user page will indicate the valid width of the counter
-+and should be used to mask the upper bits as needed.
-+
-+.. Links
-+.. _tools/perf/arch/arm64/tests/user-events.c:
-+   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/arch/arm64/tests/user-events.c
-+.. _tools/lib/perf/tests/test-evsel.c:
-+   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/lib/perf/tests/test-evsel.c
--- 
-2.32.0
+> 
+> Changes in v4:
+>  - Modify type s8 to type __s8
+> 
+> Changes in v3:
+>  - Move scaling process from tools/perf/util to tools/lib/perf
+>  - Remove scaling process from perf_mmap__read_self()
+>  - Remove test to verify that no division by zero occurs
+> 
+> Changes in v2:
+>  - Fix not to divide by zero when counter scaling
+>  - Add test to verify that no division by zero occurs
+> 
+> 
+> [1] https://github.com/deater/perf_event_tests/blob/master/tests/rdpmc/rdpmc_multiplexing.c
+> 
+> 
+> Shunsuke Nakamura (3):
+>   libperf: Move perf_counts_values__scale to tools/lib/perf
+>   libperf: Remove scaling process from perf_mmap__read_self()
+>   libperf tests: Add test_stat_multiplexing test
+> 
+>  tools/lib/perf/Documentation/libperf.txt |   2 +
+>  tools/lib/perf/evsel.c                   |  19 +++
+>  tools/lib/perf/include/perf/evsel.h      |   4 +
+>  tools/lib/perf/libperf.map               |   1 +
+>  tools/lib/perf/mmap.c                    |   2 -
+>  tools/lib/perf/tests/test-evlist.c       | 157 +++++++++++++++++++++++
+>  tools/perf/util/evsel.c                  |  19 ---
+>  tools/perf/util/evsel.h                  |   3 -
+>  8 files changed, 183 insertions(+), 24 deletions(-)
+> 
+> -- 
+> 2.25.1
+> 
 
