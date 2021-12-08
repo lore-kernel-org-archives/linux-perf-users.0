@@ -2,39 +2,39 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBB8C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Dec 2021 20:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0301CC433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Dec 2021 20:11:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240030AbhLHUPB (ORCPT
+        id S240058AbhLHUPE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Dec 2021 15:15:01 -0500
-Received: from mail-oi1-f175.google.com ([209.85.167.175]:34641 "EHLO
-        mail-oi1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236644AbhLHUPB (ORCPT
+        Wed, 8 Dec 2021 15:15:04 -0500
+Received: from mail-ot1-f53.google.com ([209.85.210.53]:38504 "EHLO
+        mail-ot1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236644AbhLHUPE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Dec 2021 15:15:01 -0500
-Received: by mail-oi1-f175.google.com with SMTP id t19so5660915oij.1;
-        Wed, 08 Dec 2021 12:11:29 -0800 (PST)
+        Wed, 8 Dec 2021 15:15:04 -0500
+Received: by mail-ot1-f53.google.com with SMTP id n104-20020a9d2071000000b005799790cf0bso3911228ota.5;
+        Wed, 08 Dec 2021 12:11:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2Bt69g7JEtyL8nxUPLM3lwudhNzUVs8G1dLLiIbYufw=;
-        b=veFj3+60ioTHH/3ER0jQSbpFUtrJSR/dxJWcw9wQ46hH3EemNizG+4Z6TgaCfc5TtI
-         h9HOn+EPCowHLFORHETCsbZ7GjYpcypYLHagAGTSlb7MFc357zGAX4m/Hd3aJgXw5AGr
-         udLRzXxmCITjgPpnXyRCT//gqNb7Ww3gFsuoOtKFKq9yh4eTfMFu9RPuMPi9H/S4qcnN
-         x0Vspg+H8RLtKhG8rjGpVpoOlSzpTuoRIg7p7W8BmZdga9aCub9K5d7WibYFLKty4wz2
-         eB+cTRSHS5C5GimuOo+uYiqKGqv71DHh8YnfN/pXU2jZTFzvmvlLnqUoN/Q3KZEIOwgE
-         zZ4Q==
-X-Gm-Message-State: AOAM532Zs3bbxQXxyRHms6MJI7ks+4ucsdUMmbGfzLIu10ITcKgS9yRQ
-        Oglg9LCDaqxTa90xu6xGMQ==
-X-Google-Smtp-Source: ABdhPJwvH530RaHWucWdv+YbueZwsPjC+RghKvfLL3DNUKGtJxPg6W+0ClqvWEu+W1O9Dj+B6ZPHzQ==
-X-Received: by 2002:a05:6808:118a:: with SMTP id j10mr1695273oil.101.1638994288574;
-        Wed, 08 Dec 2021 12:11:28 -0800 (PST)
+        bh=gs33L1/6raqSK9QUUTnv7TCH3v7KbK1ze/ld1T0DSZo=;
+        b=B/w+6pY2y8+0kS2I6IcKc66NFyao1W38QrtxDr9SSrdUOd07fOl0wN+H3z1AGIfCmM
+         mc6xj/G0zsU4SnjPG6hVo+2jtBC5AydB+u+QPVY3FrmiEan76cx3L0cWiDnIuTmn9loi
+         ofr1UuNuzkvW1oIi6TfNxj2jDJ30pUKeNZwSEsQkCdWkJnFpn5idjM2QLn4hG3s0E6fz
+         v9Cz6FqgHZh3Oo3wavQyHvKaopiGOoYFh6/Qd0pGx/fpSwOxOB/RDNyY0aqz7F+8saVL
+         eUiSUHLTSHranVO9G/JWf+pPE43sTU3+AJ2CpkRjht2pWX5FV9OraGCLCKSiv8Ky7tSy
+         Kr5g==
+X-Gm-Message-State: AOAM530H/RBbdtufQg3gG9C7Agk5cqoYet7YK1wxUuugSvqcgmMFtlf5
+        hePKjV6ytlzmypAVDsdNow==
+X-Google-Smtp-Source: ABdhPJzTkAp++P+k4YZ8yivYOkuhUUlUlVJBOscVMAisWtQ4rlwNPi6M2Nify7bCMowWee8PHJw04Q==
+X-Received: by 2002:a9d:750c:: with SMTP id r12mr1428810otk.273.1638994291415;
+        Wed, 08 Dec 2021 12:11:31 -0800 (PST)
 Received: from xps15.herring.priv (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.googlemail.com with ESMTPSA id o2sm927926oik.11.2021.12.08.12.11.27
+        by smtp.googlemail.com with ESMTPSA id o2sm927926oik.11.2021.12.08.12.11.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Dec 2021 12:11:27 -0800 (PST)
+        Wed, 08 Dec 2021 12:11:30 -0800 (PST)
 From:   Rob Herring <robh@kernel.org>
 To:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
         Peter Zijlstra <peterz@infradead.org>
@@ -50,11 +50,10 @@ Cc:     Vince Weaver <vincent.weaver@maine.edu>,
         Borislav Petkov <bp@alien8.de>, x86@kernel.org,
         "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH v13 1/5] x86: perf: Move RDPMC event flag to a common definition
-Date:   Wed,  8 Dec 2021 14:11:20 -0600
-Message-Id: <20211208201124.310740-2-robh@kernel.org>
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH v13 3/5] arm64: perf: Add userspace counter access disable switch
+Date:   Wed,  8 Dec 2021 14:11:22 -0600
+Message-Id: <20211208201124.310740-4-robh@kernel.org>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20211208201124.310740-1-robh@kernel.org>
 References: <20211208201124.310740-1-robh@kernel.org>
@@ -64,12 +63,15 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-In preparation to enable user counter access on arm64 and to move some
-of the user access handling to perf core, create a common event flag for
-user counter access and convert x86 to use it.
+Like x86, some users may want to disable userspace PMU counter
+altogether. Add a sysctl 'perf_user_access' file to control userspace
+counter access. The default is '0' which is disabled. Writing '1'
+enables access.
 
-Since the architecture specific flags start at the LSB, starting at the
-MSB for common flags.
+Note that x86 supports globally enabling user access by writing '2' to
+/sys/bus/event_source/devices/cpu/rdpmc. As there's not existing
+userspace support to worry about, this shouldn't be necessary for Arm.
+It could be added later if the need arises.
 
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>
@@ -77,106 +79,91 @@ Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: linux-perf-users@vger.kernel.org
+Acked-by: Will Deacon <will@kernel.org>
 Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
 v11:
- - Move PERF_EVENT_FLAG_USER_READ_CNT definition above struct
+ - Move custom handler to next patch
+v10:
+ - Add documentation
+ - Use a custom handler (needed on the next patch)
+v9:
+ - Use sysctl instead of sysfs attr
+ - Default to disabled
+v8:
+ - New patch
 ---
- arch/x86/events/core.c       | 10 +++++-----
- arch/x86/events/perf_event.h |  2 +-
- include/linux/perf_event.h   |  9 +++++++++
- 3 files changed, 15 insertions(+), 6 deletions(-)
+ Documentation/admin-guide/sysctl/kernel.rst | 11 +++++++++++
+ arch/arm64/kernel/perf_event.c              | 17 +++++++++++++++++
+ 2 files changed, 28 insertions(+)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 38b2c779146f..68dea7ce6a22 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2476,7 +2476,7 @@ static int x86_pmu_event_init(struct perf_event *event)
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index 426162009ce9..346a0dba5703 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -905,6 +905,17 @@ enabled, otherwise writing to this file will return ``-EBUSY``.
+ The default value is 8.
  
- 	if (READ_ONCE(x86_pmu.attr_rdpmc) &&
- 	    !(event->hw.flags & PERF_X86_EVENT_LARGE_PEBS))
--		event->hw.flags |= PERF_X86_EVENT_RDPMC_ALLOWED;
-+		event->hw.flags |= PERF_EVENT_FLAG_USER_READ_CNT;
  
- 	return err;
++perf_user_access (arm64 only)
++=================================
++
++Controls user space access for reading perf event counters. When set to 1,
++user space can read performance monitor counter registers directly.
++
++The default value is 0 (access disabled).
++
++See Documentation/arm64/perf.rst for more information.
++
++
+ pid_max
+ =======
+ 
+diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
+index b4044469527e..6ae20c4217af 100644
+--- a/arch/arm64/kernel/perf_event.c
++++ b/arch/arm64/kernel/perf_event.c
+@@ -286,6 +286,8 @@ static const struct attribute_group armv8_pmuv3_events_attr_group = {
+ PMU_FORMAT_ATTR(event, "config:0-15");
+ PMU_FORMAT_ATTR(long, "config1:0");
+ 
++static int sysctl_perf_user_access __read_mostly;
++
+ static inline bool armv8pmu_event_is_64bit(struct perf_event *event)
+ {
+ 	return event->attr.config1 & 0x1;
+@@ -1104,6 +1106,19 @@ static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
+ 	return probe.present ? 0 : -ENODEV;
  }
-@@ -2510,7 +2510,7 @@ void perf_clear_dirty_counters(void)
  
- static void x86_pmu_event_mapped(struct perf_event *event, struct mm_struct *mm)
- {
--	if (!(event->hw.flags & PERF_X86_EVENT_RDPMC_ALLOWED))
-+	if (!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT))
- 		return;
- 
- 	/*
-@@ -2531,7 +2531,7 @@ static void x86_pmu_event_mapped(struct perf_event *event, struct mm_struct *mm)
- 
- static void x86_pmu_event_unmapped(struct perf_event *event, struct mm_struct *mm)
- {
--	if (!(event->hw.flags & PERF_X86_EVENT_RDPMC_ALLOWED))
-+	if (!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT))
- 		return;
- 
- 	if (atomic_dec_and_test(&mm->context.perf_rdpmc_allowed))
-@@ -2542,7 +2542,7 @@ static int x86_pmu_event_idx(struct perf_event *event)
- {
- 	struct hw_perf_event *hwc = &event->hw;
- 
--	if (!(hwc->flags & PERF_X86_EVENT_RDPMC_ALLOWED))
-+	if (!(hwc->flags & PERF_EVENT_FLAG_USER_READ_CNT))
- 		return 0;
- 
- 	if (is_metric_idx(hwc->idx))
-@@ -2725,7 +2725,7 @@ void arch_perf_update_userpage(struct perf_event *event,
- 	userpg->cap_user_time = 0;
- 	userpg->cap_user_time_zero = 0;
- 	userpg->cap_user_rdpmc =
--		!!(event->hw.flags & PERF_X86_EVENT_RDPMC_ALLOWED);
-+		!!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT);
- 	userpg->pmc_width = x86_pmu.cntval_bits;
- 
- 	if (!using_native_sched_clock() || !sched_clock_stable())
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 5480db242083..9d376e528dfc 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -74,7 +74,7 @@ static inline bool constraint_match(struct event_constraint *c, u64 ecode)
- #define PERF_X86_EVENT_PEBS_NA_HSW	0x0010 /* haswell style datala, unknown */
- #define PERF_X86_EVENT_EXCL		0x0020 /* HT exclusivity on counter */
- #define PERF_X86_EVENT_DYNAMIC		0x0040 /* dynamic alloc'd constraint */
--#define PERF_X86_EVENT_RDPMC_ALLOWED	0x0080 /* grant rdpmc permission */
++static struct ctl_table armv8_pmu_sysctl_table[] = {
++	{
++		.procname       = "perf_user_access",
++		.data		= &sysctl_perf_user_access,
++		.maxlen		= sizeof(unsigned int),
++		.mode           = 0644,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_ONE,
++	},
++	{ }
++};
 +
- #define PERF_X86_EVENT_EXCL_ACCT	0x0100 /* accounted EXCL event */
- #define PERF_X86_EVENT_AUTO_RELOAD	0x0200 /* use PEBS auto-reload */
- #define PERF_X86_EVENT_LARGE_PEBS	0x0400 /* use large PEBS */
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 0dcfd265beed..ba9467972c09 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -129,6 +129,15 @@ struct hw_perf_event_extra {
- 	int		idx;	/* index in shared_regs->regs[] */
- };
+ static int armv8_pmu_init(struct arm_pmu *cpu_pmu, char *name,
+ 			  int (*map_event)(struct perf_event *event),
+ 			  const struct attribute_group *events,
+@@ -1136,6 +1151,8 @@ static int armv8_pmu_init(struct arm_pmu *cpu_pmu, char *name,
+ 	cpu_pmu->attr_groups[ARMPMU_ATTR_GROUP_CAPS] = caps ?
+ 			caps : &armv8_pmuv3_caps_attr_group;
  
-+/**
-+ * hw_perf_event::flag values
-+ *
-+ * PERF_EVENT_FLAG_ARCH bits are reserved for architecture-specific
-+ * usage.
-+ */
-+#define PERF_EVENT_FLAG_ARCH			0x0000ffff
-+#define PERF_EVENT_FLAG_USER_READ_CNT		0x80000000
++	register_sysctl("kernel", armv8_pmu_sysctl_table);
 +
- /**
-  * struct hw_perf_event - performance event hardware details:
-  */
+ 	return 0;
+ }
+ 
 -- 
 2.32.0
 
