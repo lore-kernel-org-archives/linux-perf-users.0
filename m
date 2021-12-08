@@ -2,91 +2,92 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 111FEC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Dec 2021 16:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0048C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Dec 2021 17:11:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236564AbhLHQM4 (ORCPT
+        id S237602AbhLHRPA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Dec 2021 11:12:56 -0500
-Received: from foss.arm.com ([217.140.110.172]:35494 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236550AbhLHQMz (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Dec 2021 11:12:55 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9EB3C13A1;
-        Wed,  8 Dec 2021 08:09:23 -0800 (PST)
-Received: from e121896.arm.com (unknown [10.57.34.62])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 643413F5A1;
-        Wed,  8 Dec 2021 08:09:21 -0800 (PST)
-From:   James Clark <james.clark@arm.com>
-To:     mathieu.poirier@linaro.org, coresight@lists.linaro.org
-Cc:     suzuki.poulose@arm.com, James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH 3/3] perf cs-etm: Update deduction of TRCCONFIGR register for branch broadcast
-Date:   Wed,  8 Dec 2021 16:09:07 +0000
-Message-Id: <20211208160907.749482-3-james.clark@arm.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20211208160907.749482-1-james.clark@arm.com>
-References: <20211208160907.749482-1-james.clark@arm.com>
+        Wed, 8 Dec 2021 12:15:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51602 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234605AbhLHRPA (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 8 Dec 2021 12:15:00 -0500
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FE9BC061746;
+        Wed,  8 Dec 2021 09:11:28 -0800 (PST)
+Received: by mail-wm1-x334.google.com with SMTP id o19-20020a1c7513000000b0033a93202467so2250778wmc.2;
+        Wed, 08 Dec 2021 09:11:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AxVAPKYsTcOcslHUBIs4NmVmCnEOU4UXVolRlRZG2D0=;
+        b=Lei62emZnhZk6JiogaT460xQ9SVE67RI2fh1G6BTxik+QwHLoRH0Ca1bVVJjCey1EB
+         p+UuuL0fFsLHbjHckgqEqVQ0BK791+CYxcTzXF2E4AuE08E+r8ye0XlgjXDXUuVW8CNR
+         A4sP40D1V9t3BTs1V9gSkngH5W+3RFKUBBthYfTgnp5wkeHRQx+6ka7yoWKVN7+yubvX
+         bJFj992LF2VlPJX9i1pMQBqg/WYrwGn73DO2dvcZoX/11DNY5jmVq1tNdJ1S92i/qWoo
+         SemJHfTIayvejCw38Dxii9sg8VOpisLFLJAgysN3gcLgGOG+c2SxSmeMoJnOzRscu/4J
+         8llA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AxVAPKYsTcOcslHUBIs4NmVmCnEOU4UXVolRlRZG2D0=;
+        b=ETezGhje+oHNlUG4sxrkp47YYnZusiDQgX1mWrzKtUH8wv9IfeGaOJwRP4gjpv0sq1
+         WzYokg/NghbjI22h75Ui4JKpFkKXIh+6IPN6IhrzYgUWvvd1MO+bZ+3WEhHQStAox10C
+         ILj9jzQF+FYeduHpqzZeHY/lispXYyS9Dhk+DkTvfdFRuLO6nyHDX+FpXzYK/mr59T27
+         KfcOoPSYOTAFMjLd2OJYPFwV8Mc4pV4wbMiU4Y3EZn43i8ghracQ0dJRrrpmMYKTsAFH
+         IQXQntbEd6rBNHvgQ/w54A8dGh4sfrvQLdE1hsIROHRmOCWLx2lMupRxzUXd3CtXbkc/
+         36Bg==
+X-Gm-Message-State: AOAM533lFUBgM7Bu6aISUQatt5rZ8bXeRzuwYv3O4SpCPTadDuf0D3Os
+        LzQkvXTHTXky7clFMgwMzF4=
+X-Google-Smtp-Source: ABdhPJx8PkSp7b8YjFdeUth4hCMLI8vYeP/HBkVPmGJiHD7IaTalA5SdXuaodo1kXbHH2bBpnJZbtQ==
+X-Received: by 2002:a05:600c:3486:: with SMTP id a6mr17604580wmq.32.1638983486700;
+        Wed, 08 Dec 2021 09:11:26 -0800 (PST)
+Received: from localhost.localdomain ([217.113.240.86])
+        by smtp.gmail.com with ESMTPSA id e12sm4481332wrq.20.2021.12.08.09.11.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Dec 2021 09:11:26 -0800 (PST)
+From:   =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
+To:     peterz@infradead.org
+Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, irogers@google.com, ak@linux.intel.com,
+        john.garry@huawei.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
+Subject: [PATCH] perf util: Fix use after free in metric__new
+Date:   Wed,  8 Dec 2021 18:11:13 +0100
+Message-Id: <20211208171113.22089-1-jose.exposito89@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Now that a config flag for branch broadcast has been added, take it into
-account when trying to deduce what the driver would have programmed the
-TRCCONFIGR register to.
-
-Signed-off-by: James Clark <james.clark@arm.com>
+Addresses-Coverity-ID: 1494000
+Signed-off-by: José Expósito <jose.exposito89@gmail.com>
 ---
- tools/include/linux/coresight-pmu.h | 2 ++
- tools/perf/arch/arm/util/cs-etm.c   | 3 +++
- 2 files changed, 5 insertions(+)
+ tools/perf/util/metricgroup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/include/linux/coresight-pmu.h b/tools/include/linux/coresight-pmu.h
-index 4ac5c081af93..6c2fd6cc5a98 100644
---- a/tools/include/linux/coresight-pmu.h
-+++ b/tools/include/linux/coresight-pmu.h
-@@ -18,6 +18,7 @@
-  * ETMv3.5/PTM doesn't define ETMCR config bits with prefix "ETM3_" and
-  * directly use below macros as config bits.
-  */
-+#define ETM_OPT_BRANCH_BROADCAST 8
- #define ETM_OPT_CYCACC		12
- #define ETM_OPT_CTXTID		14
- #define ETM_OPT_CTXTID2		15
-@@ -25,6 +26,7 @@
- #define ETM_OPT_RETSTK		29
- 
- /* ETMv4 CONFIGR programming bits for the ETM OPTs */
-+#define ETM4_CFG_BIT_BB         3
- #define ETM4_CFG_BIT_CYCACC	4
- #define ETM4_CFG_BIT_CTXTID	6
- #define ETM4_CFG_BIT_VMID	7
-diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-index 293a23bf8be3..c7ef4e9b4a3a 100644
---- a/tools/perf/arch/arm/util/cs-etm.c
-+++ b/tools/perf/arch/arm/util/cs-etm.c
-@@ -527,6 +527,9 @@ static u64 cs_etmv4_get_config(struct auxtrace_record *itr)
- 	if (config_opts & BIT(ETM_OPT_CTXTID2))
- 		config |= BIT(ETM4_CFG_BIT_VMID) |
- 			  BIT(ETM4_CFG_BIT_VMID_OPT);
-+	if (config_opts & BIT(ETM_OPT_BRANCH_BROADCAST))
-+		config |= BIT(ETM4_CFG_BIT_BB);
-+
- 	return config;
- }
- 
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index fffe02aae3ed..4d2fed3aefd1 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -209,8 +209,8 @@ static struct metric *metric__new(const struct pmu_event *pe,
+ 	m->metric_name = pe->metric_name;
+ 	m->modifier = modifier ? strdup(modifier) : NULL;
+ 	if (modifier && !m->modifier) {
+-		free(m);
+ 		expr__ctx_free(m->pctx);
++		free(m);
+ 		return NULL;
+ 	}
+ 	m->metric_expr = pe->metric_expr;
 -- 
-2.28.0
+2.25.1
 
