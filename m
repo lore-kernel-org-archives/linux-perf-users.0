@@ -2,142 +2,115 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A927EC433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Dec 2021 21:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5F5C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Dec 2021 23:33:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237341AbhLHViq (ORCPT
+        id S238008AbhLHXg4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Dec 2021 16:38:46 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:38591 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237272AbhLHVip (ORCPT
+        Wed, 8 Dec 2021 18:36:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54736 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233080AbhLHXg4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Dec 2021 16:38:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1638999312;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=CeXKyb655iDPT4A+Z5xrV0y1RP5TDI3g9ay8C+HT3HE=;
-        b=eIVd5avwxD1Bdftyf4pMjmDfJoPE4lzUMU+1sJLmyCrkrSrC++lEyKCRa5cj91zguzMpQO
-        ENXZV845cDnyIBl72dd0s2ZMeT+TLbXID+BIs3Qy5G78/e6a2DgVt0Jnc5hE51ciNtIHM3
-        2wk9ev1oIYevtraqRmpU1YjRpkOAi1o=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-347-rH1QMfDjPiuxGFLYPP1MeA-1; Wed, 08 Dec 2021 16:35:11 -0500
-X-MC-Unique: rH1QMfDjPiuxGFLYPP1MeA-1
-Received: by mail-wm1-f69.google.com with SMTP id g80-20020a1c2053000000b003331a764709so3700497wmg.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 Dec 2021 13:35:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CeXKyb655iDPT4A+Z5xrV0y1RP5TDI3g9ay8C+HT3HE=;
-        b=lpP6Awwrvizef8n00BpK4mDmIVmmcQja4l9xKP/DmbxoOm0j/0vwyEDWm8sqWSbZqb
-         LaTuaB9rC992jWJJr3YV39kEKJ0q5C8GeWaJrZ+MkpqCCYqEUJSCYsH6qEySRzPok3JO
-         FU2Blp9xsWD6tE0TPItexrYSTuDzYk0iki8aheajlU0I4+wDCRPFffuMl3A1JigJeLz5
-         mEPWDQK1JtzdGQlfdiTFKyv64fiYs97PBupfk61qhaGweRfu4JGdtPIrcl+HOqvPTd9j
-         qrroRoGU4w2B5uyg0thEtxhaRdL5cB4IdzecPjPe1/Xz2kZNZBz6W8gebN0paFldIau2
-         Tw0w==
-X-Gm-Message-State: AOAM5310rYNx5uc3k5a5AiDhDAXgW+hXcHhG8ldUzB+JuSl01fu0oIFs
-        Z6yjFWuW1Pgn4d5qVK32O9Nb+4GwVscMaCKoPLD5+P39tto/ltoYw7WyBi01VG4xFMd4nfv19DV
-        UkAPjxccnti2FlL1tVlfZgjcjsM7Tsw==
-X-Received: by 2002:adf:e391:: with SMTP id e17mr1405781wrm.613.1638999310064;
-        Wed, 08 Dec 2021 13:35:10 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJx56PDcQ9x4W4KPUCMLY+uuyJihSBiRNIwzduX5rQ30E/1Tn92gPDE60lBy2g7CxuCj7cySQA==
-X-Received: by 2002:adf:e391:: with SMTP id e17mr1405757wrm.613.1638999309893;
-        Wed, 08 Dec 2021 13:35:09 -0800 (PST)
-Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
-        by smtp.gmail.com with ESMTPSA id b6sm7152187wmq.45.2021.12.08.13.35.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Dec 2021 13:35:09 -0800 (PST)
-Date:   Wed, 8 Dec 2021 22:35:07 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     German Gomez <german.gomez@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v1 1/4] perf tools: Prevent out-of-bounds access to
- registers
-Message-ID: <YbElC/fEgduFMAuo@krava>
-References: <20211201123334.679131-1-german.gomez@arm.com>
- <20211201123334.679131-2-german.gomez@arm.com>
+        Wed, 8 Dec 2021 18:36:56 -0500
+Received: from mx0a-00190b01.pphosted.com (mx0a-00190b01.pphosted.com [IPv6:2620:100:9001:583::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8D2EC061746
+        for <linux-perf-users@vger.kernel.org>; Wed,  8 Dec 2021 15:33:23 -0800 (PST)
+Received: from pps.filterd (m0050095.ppops.net [127.0.0.1])
+        by m0050095.ppops.net-00190b01. (8.16.1.2/8.16.1.2) with ESMTP id 1B8LWaUO007451
+        for <linux-perf-users@vger.kernel.org>; Wed, 8 Dec 2021 23:33:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=to : from : subject :
+ message-id : date : mime-version : content-type :
+ content-transfer-encoding; s=jan2016.eng;
+ bh=4tW3/uWz7pscOI/+4VxbINvQugMurupO+xqy2oZtdhw=;
+ b=QHi/e4g0dSDRb5nRP1uEU8LYZeHwEWelRF5JLExePhpbQZe/m89+Gw1CXf9Rsx1O8rev
+ suhaBcCZ26Kr9/B6gAXkYkhBkvZLTM00iJhE3T6Q1rqidAGwA9HCfkZSMUT4C/dJgw5h
+ lfYa986RgpJM0YukSzsbUmkPIOKM4gZhw5YqlLJq8appnBWN9pxMDkmmL4XY/QlpgQRQ
+ Lg/53Do+UZhHNXZfXS0ASm3moN1ctXM9aC+dTjcWuTutzJHW7Cv/7Tsi4K776knPwsHt
+ ovdbvViUrlJTKPgUwebq/CQZEJHwCZCw4dcz4/ZAk/hUjjHGWsjEq0Lz3IkqTDoDmENM rQ== 
+Received: from prod-mail-ppoint8 (a72-247-45-34.deploy.static.akamaitechnologies.com [72.247.45.34] (may be forged))
+        by m0050095.ppops.net-00190b01. (PPS) with ESMTPS id 3ctxbm3agn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 Dec 2021 23:33:21 +0000
+Received: from pps.filterd (prod-mail-ppoint8.akamai.com [127.0.0.1])
+        by prod-mail-ppoint8.akamai.com (8.16.1.2/8.16.1.2) with SMTP id 1B8N4ZAu014171
+        for <linux-perf-users@vger.kernel.org>; Wed, 8 Dec 2021 18:33:19 -0500
+Received: from prod-mail-relay19.dfw02.corp.akamai.com ([172.27.165.173])
+        by prod-mail-ppoint8.akamai.com with ESMTP id 3ct8cs94tb-1
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 Dec 2021 18:33:19 -0500
+Received: from [0.0.0.0] (prod-ssh-gw02.sanmateo.corp.akamai.com [172.22.187.166])
+        by prod-mail-relay19.dfw02.corp.akamai.com (Postfix) with ESMTP id 3E4A0604D5
+        for <linux-perf-users@vger.kernel.org>; Wed,  8 Dec 2021 23:33:19 +0000 (GMT)
+To:     linux-perf-users@vger.kernel.org
+From:   Josh Hunt <johunt@akamai.com>
+Subject: perf record per-thread vs per-cpu behavior
+Message-ID: <40cd791f-c9fd-bf2f-2119-7225460a5e2c@akamai.com>
+Date:   Wed, 8 Dec 2021 15:33:18 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211201123334.679131-2-german.gomez@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.425,18.0.790
+ definitions=2021-12-08_08:2021-12-08,2021-12-08 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=579 spamscore=0 phishscore=0 adultscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2112080127
+X-Proofpoint-GUID: gWnM4scpQ5wPWcmT833Qn27aH1qDE6-Z
+X-Proofpoint-ORIG-GUID: gWnM4scpQ5wPWcmT833Qn27aH1qDE6-Z
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
+ definitions=2021-12-08_08,2021-12-08_01,2021-12-02_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 malwarescore=0
+ priorityscore=1501 mlxscore=0 impostorscore=0 bulkscore=0 adultscore=0
+ phishscore=0 lowpriorityscore=0 suspectscore=0 spamscore=0 mlxlogscore=542
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2110150000
+ definitions=main-2112080128
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Dec 01, 2021 at 12:33:29PM +0000, German Gomez wrote:
-> The size of the cache of register values is arch-dependant
-> (PERF_REGS_MAX). This has the potential of causing an out-of-bounds
-> access in the function "perf_reg_value" if the local architecture
-> contains less registers than the one the perf.data file was recorded on.
-> 
-> Since the maximum number of registers is bound by the bitmask "u64
-> cache_mask", and the size of the cache when running under x86 systems is
-> 64 already, fix the size to 64 and add a range-check to the function
-> "perf_reg_value" to prevent out-of-bounds access.
-> 
-> Signed-off-by: German Gomez <german.gomez@arm.com>
+Hi
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+I'm seeing what I believe to be incorrect behavior when running perf 
+record -p and was hoping I could get some clarification from someone 
+here. We have an application which has around 800 threads and when I run 
+perf record -p <pid> on that the # of samples returned seems impossible 
+given the # of cpus, sampling freq, and duration of profile.
 
-thanks,
-jirka
+I'm running on a 5.4 LTS kernel and the machine has 40 hw threads.
 
-> ---
->  tools/perf/util/event.h     | 5 ++++-
->  tools/perf/util/perf_regs.c | 3 +++
->  2 files changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-> index 95ffed663..c59331eea 100644
-> --- a/tools/perf/util/event.h
-> +++ b/tools/perf/util/event.h
-> @@ -44,13 +44,16 @@ struct perf_event_attr;
->  /* perf sample has 16 bits size limit */
->  #define PERF_SAMPLE_MAX_SIZE (1 << 16)
->  
-> +/* number of register is bound by the number of bits in regs_dump::mask (64) */
-> +#define PERF_SAMPLE_REGS_CACHE_SIZE (8 * sizeof(u64))
-> +
->  struct regs_dump {
->  	u64 abi;
->  	u64 mask;
->  	u64 *regs;
->  
->  	/* Cached values/mask filled by first register access. */
-> -	u64 cache_regs[PERF_REGS_MAX];
-> +	u64 cache_regs[PERF_SAMPLE_REGS_CACHE_SIZE];
->  	u64 cache_mask;
->  };
->  
-> diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
-> index 5ee47ae15..06a7461ba 100644
-> --- a/tools/perf/util/perf_regs.c
-> +++ b/tools/perf/util/perf_regs.c
-> @@ -25,6 +25,9 @@ int perf_reg_value(u64 *valp, struct regs_dump *regs, int id)
->  	int i, idx = 0;
->  	u64 mask = regs->mask;
->  
-> +	if ((u64)id >= PERF_SAMPLE_REGS_CACHE_SIZE)
-> +		return -EINVAL;
-> +
->  	if (regs->cache_mask & (1ULL << id))
->  		goto out;
->  
-> -- 
-> 2.25.1
-> 
+Running with -p <pid> I see:
+# perf record -p 7297 -s -F 49 --call-graph lbr -- sleep 5
+[ perf record: Woken up 32 times to write data ]
+[ perf record: Captured and wrote 11.798 MB perf.data (58430 samples) ]
 
+and I've confirmed there are actually 58k samples in the data file, but 
+the # of samples should be closer to 5 * 49 * 40 = 9800.
+
+Running with -a I see something closer to what I would expect:
+
+# perf record -a -s -F 49 --call-graph lbr -- sleep 5
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 3.405 MB perf.data (9745 samples) ]
+
+Running with -p on applications with fewer threads seems to produce 
+something closer to what I would expect since the pid being profiled 
+isn't on cpu 100% of the time:
+
+# perf record -p 11629 -s -F 49 --call-graph lbr -- sleep 5
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.279 MB perf.data (1324 samples) ]
+
+It's very possible I'm doing something wrong or don't understand things 
+:) but if anyone has any insights into the above I'd appreciate your help!
+
+I should also say that the resulting reports look different and it has 
+me questioning the validity of the -p data.
+
+I'm happy to provide more info if needed, and thanks for any guidance 
+you can provide.
+
+Josh
