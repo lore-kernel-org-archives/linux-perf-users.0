@@ -2,256 +2,353 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2CAC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Dec 2021 03:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF40DC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Dec 2021 06:33:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243958AbhLHDzO (ORCPT
+        id S240277AbhLHGhQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 7 Dec 2021 22:55:14 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:5656 "EHLO
+        Wed, 8 Dec 2021 01:37:16 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56652 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S232748AbhLHDzO (ORCPT
+        by vger.kernel.org with ESMTP id S235346AbhLHGhQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 7 Dec 2021 22:55:14 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1B80bRRK018781;
-        Wed, 8 Dec 2021 03:51:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
+        Wed, 8 Dec 2021 01:37:16 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1B85GFcY022610;
+        Wed, 8 Dec 2021 06:33:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
  content-type : content-transfer-encoding; s=pp1;
- bh=suyl+7p8nK7tF7O3bPVPRgyf4NZ8aeOCkiUGWxM5l1M=;
- b=s5oFHdLbBeVju4CPr9QvMOd955EN2ZQZkDkW0gS46Dlw1yIxKuGmGgBcD90FYh4idFLs
- Q2TISQzFTAwjA1eXgaONKANzGYJUHwABuDKm2Ckv+kBnhBIS4m3vOiwadDjfHFqvTGia
- 6E52z0G+dmd4b8SQu/VopzarNaz730Wso/Vfd8Gt7yD1cTzPc+gK6rFNA0BnTCQx6sRi
- Hp/IdMzDY2bKR/z6SiWC0QQrSYR0ireyrkyzcAVNgU17Oh+5xf3SKtDTOIjsrFABdocV
- Ow5nwMTAMKt/pzTgiIjzDoYTrVL/XasvM8qbtTncicOAaZGUAPPnmif6fQTf1yY1/jFa aw== 
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3ctdn6ftu6-1
+ bh=DULwrPD7AZfuc1iKz19PNHX8TzFDSz7Y7ar+WuR+Wlk=;
+ b=omwoVqLA+7wjJJDVOU45BG+2V5eFu8CtJtooneoufwdm6REGvSdpyNsMr1F6dnd06ZeM
+ z0xrjrrbpWRTIJQtJvkZVH39pQtdYK6x09ngqZb0YyZEXhBaKuJIQrnSZmlqy/3a8svA
+ DMsJ/EbGfY0QbJQUy85M5ce44E+WJvDFvB/EUUqYXtwpsS0KR/m1bwG0CR8TLUGs4A6z
+ zZAwUmiD2SGboKf7jZcAYiKpf2qcXXzC4/7+MkU5vuYL1y7V5C+AmGhFDHvSE/Ig5XzN
+ 9Zs5tFGEz2ms25aY0Avx8syHMRUB75Ub5/ByP/8MI6312EYR24sbt7zrv8I4aVQUCIB6 Qw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3ctjfud2kj-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Dec 2021 03:51:31 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1B83hnZD029134;
-        Wed, 8 Dec 2021 03:51:30 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma06fra.de.ibm.com with ESMTP id 3cqykft8gd-1
+        Wed, 08 Dec 2021 06:33:13 +0000
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1B85n5pU024765;
+        Wed, 8 Dec 2021 06:33:12 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3ctjfud2jq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Dec 2021 03:51:29 +0000
+        Wed, 08 Dec 2021 06:33:12 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1B86DvRr022610;
+        Wed, 8 Dec 2021 06:33:10 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma03ams.nl.ibm.com with ESMTP id 3cqyya4cr5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Dec 2021 06:33:10 +0000
 Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1B83pRV330146920
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1B86X7IK29032812
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 Dec 2021 03:51:27 GMT
+        Wed, 8 Dec 2021 06:33:07 GMT
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 87B6E4C046;
-        Wed,  8 Dec 2021 03:51:27 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id B0EBC4C040;
+        Wed,  8 Dec 2021 06:33:07 +0000 (GMT)
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 80B2E4C044;
-        Wed,  8 Dec 2021 03:51:25 +0000 (GMT)
-Received: from [9.43.89.40] (unknown [9.43.89.40])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed,  8 Dec 2021 03:51:25 +0000 (GMT)
-Message-ID: <afd3af8c-a450-79b2-e678-e07766c5efd1@linux.ibm.com>
-Date:   Wed, 8 Dec 2021 09:21:23 +0530
+        by IMSVA (Postfix) with ESMTP id 579CD4C04E;
+        Wed,  8 Dec 2021 06:33:03 +0000 (GMT)
+Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com (unknown [9.43.15.149])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  8 Dec 2021 06:33:03 +0000 (GMT)
+Subject: Re: [PATCH 2/2] perf tools: Improve IBS error handling
+To:     Kim Phillips <kim.phillips@amd.com>, Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Ian Rogers <irogers@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Joao Martins <joao.m.martins@oracle.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Robert Richter <robert.richter@amd.com>,
+        Stephane Eranian <eranian@google.com>
+References: <20211004214114.188477-1-kim.phillips@amd.com>
+ <20211004214114.188477-2-kim.phillips@amd.com> <YV8uQVnMnnMd1Led@krava>
+ <8a8583dc-5a5d-f107-8ef0-6be96e2f9095@amd.com>
+ <fdcfec83-01c6-5e25-5b99-dac05287fdae@linux.ibm.com>
+ <74e17a71-98ff-e0b1-61d4-d37992b1ae15@amd.com>
+ <f095bebf-77d5-94c7-5787-13a6f38867cc@linux.ibm.com>
+ <4281dce8-0e2a-cfe8-3b05-1b9a455d09a9@amd.com>
+From:   kajoljain <kjain@linux.ibm.com>
+Message-ID: <e937591b-542d-c3ac-bc64-d5223c27f70d@linux.ibm.com>
+Date:   Wed, 8 Dec 2021 12:03:01 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.2.1
-Subject: Re: [PATCH V2 1/2] tools/perf: Include global and local variants for
- p_stage_cyc sort key
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     jolsa@kernel.org, mpe@ellerman.id.au,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.vnet.ibm.com, kjain@linux.ibm.com, namhyung@kernel.org
-References: <20211203022038.48240-1-atrajeev@linux.vnet.ibm.com>
- <Ya91LXxp13Nz3JyC@kernel.org>
-From:   Nageswara Sastry <rnsastry@linux.ibm.com>
-In-Reply-To: <Ya91LXxp13Nz3JyC@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <4281dce8-0e2a-cfe8-3b05-1b9a455d09a9@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: pussbAvTkn1rciXRO5cdWyeTwtzgNrb9
-X-Proofpoint-ORIG-GUID: pussbAvTkn1rciXRO5cdWyeTwtzgNrb9
+X-Proofpoint-ORIG-GUID: hBXggjY0dUVmSLOk5BGJueYSgzrKkYoH
+X-Proofpoint-GUID: 3p-vra87S7emHTGL1HLqO050UtxL9qWa
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2021-12-08_01,2021-12-06_02,2021-12-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=0 bulkscore=0 impostorscore=0 mlxscore=0 adultscore=0
- clxscore=1015 spamscore=0 malwarescore=0 priorityscore=1501 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2110150000 definitions=main-2112080024
+ definitions=2021-12-08_02,2021-12-06_02,2021-12-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=0 adultscore=0 clxscore=1015 spamscore=0 bulkscore=0
+ mlxlogscore=999 phishscore=0 lowpriorityscore=0 malwarescore=0
+ impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2112080044
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 07/12/21 8:22 pm, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Dec 03, 2021 at 07:50:37AM +0530, Athira Rajeev escreveu:
->> Sort key p_stage_cyc is used to present the latency
->> cycles spend in pipeline stages. perf tool has local
->> p_stage_cyc sort key to display this info. There is no
->> global variant available for this sort key. local variant
->> shows latency in a sinlge sample, whereas, global value
->> will be useful to present the total latency (sum of
->> latencies) in the hist entry. It represents latency
->> number multiplied by the number of samples.
+On 11/30/21 3:39 AM, Kim Phillips wrote:
+> On 11/24/21 2:00 AM, kajoljain wrote:
+>> On 11/23/21 8:55 PM, Kim Phillips wrote:
+>>> On 11/23/21 2:40 AM, kajoljain wrote:
+>>>> On 10/8/21 12:47 AM, Kim Phillips wrote:
+>>>>> On 10/7/21 12:28 PM, Jiri Olsa wrote:
+>>>>>> On Mon, Oct 04, 2021 at 04:41:14PM -0500, Kim Phillips wrote:
+>>>>>>> ---
+>>>>>>>     tools/perf/util/evsel.c | 24 ++++++++++++++++++++++++
+>>>>>>>     1 file changed, 24 insertions(+)
+>>>>>>>
+>>>>>>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+>>>>>>> index b915840690d4..f8a9cbd99314 100644
+>>>>>>> --- a/tools/perf/util/evsel.c
+>>>>>>> +++ b/tools/perf/util/evsel.c
+>>>>>>> @@ -2743,9 +2743,22 @@ static bool find_process(const char *name)
+>>>>>>>         return ret ? false : true;
+>>>>>>>     }
+>>>>>>>     +static bool is_amd(const char *arch, const char *cpuid)
+>>>>>>> +{
+>>>>>>> +    return arch && !strcmp("x86", arch) && cpuid &&
+>>>>>>> strstarts(cpuid,
+>>>>>>> "AuthenticAMD");
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +static bool is_amd_ibs(struct evsel *evsel)
+>>>>>>> +{
+>>>>>>> +    return evsel->core.attr.precise_ip || !strncmp(evsel->pmu_name,
+>>>>>>> "ibs", 3);
+>>>>>>> +}
+>>>>>>> +
+>>>>>>>     int evsel__open_strerror(struct evsel *evsel, struct target
+>>>>>>> *target,
+>>>>>>>                  int err, char *msg, size_t size)
+>>>>>>>     {
+>>>>>>> +    struct perf_env *env = evsel__env(evsel);
+>>>>>>> +    const char *arch = perf_env__arch(env);
+>>>>>>> +    const char *cpuid = perf_env__cpuid(env);
+>>>>>>>         char sbuf[STRERR_BUFSIZE];
+>>>>>>>         int printed = 0, enforced = 0;
+>>>>>>>     @@ -2841,6 +2854,17 @@ int evsel__open_strerror(struct evsel
+>>>>>>> *evsel, struct target *target,
+>>>>>>>                 return scnprintf(msg, size, "wrong clockid (%d).",
+>>>>>>> clockid);
+>>>>>>>             if (perf_missing_features.aux_output)
+>>>>>>>                 return scnprintf(msg, size, "The 'aux_output'
+>>>>>>> feature
+>>>>>>> is not supported, update the kernel.");
+>>>>>>> +        if (is_amd(arch, cpuid)) {
+>>>>>>> +            if (is_amd_ibs(evsel)) {
+>>>>>>
+>>>>>> would single 'is_amd_ibs' call be better? checking on both amd and
+>>>>>> ibs
+>>>>>
+>>>>> Good suggestion. If you look at the later patch in the
+>>>>> BRS series, I have rewritten it to add the new
+>>>>> AMD PMU like so:
+>>>>>
+>>>>>    if (is_amd()) {
+>>>>>        if (is_amd_ibs()) {
+>>>>>            if (evsel->this)
+>>>>>                return
+>>>>>            if (evsel->that)
+>>>>>                return
+>>>>>        }
+>>>>> +    if (is_amd_brs()) {
+>>>>> +        if (evsel->this)
+>>>>> +            return
+>>>>> +        if (evsel->that)
+>>>>> +            return
+>>>>> +    }
+>>>>>    }
+>>>>
+>>>> Hi Kim,
+>>>>        From my point of view, it won't be a good idea of adding so many
+>>>> checks in common function definition itself.
+>>>> Can you just create a check to see if its amd machine and then add a
+>>>> function call which will handle all four conditions together?
+>>>>
+>>>> which is basically for:
+>>>>
+>>>> +        if (is_amd(arch, cpuid)) {
+>>>> +            if (is_amd_ibs(evsel)) {
+>>>> +                if (evsel->core.attr.exclude_kernel)
+>>>> +                    return scnprintf(msg, size,
+>>>> +    "AMD IBS can't exclude kernel events.  Try running at a higher
+>>>> privilege level.");
+>>>> +                if (!evsel->core.system_wide)
+>>>> +                    return scnprintf(msg, size,
+>>>> +    "AMD IBS may only be available in system-wide/per-cpu mode.  Try
+>>>> using
+>>>> -a, or -C and workload affinity");
+>>>> +            }
+>>>>
+>>>> and this:
+>>>>
+>>>> +            if (is_amd_brs(evsel)) {
+>>>> +                if (evsel->core.attr.freq)
+>>>> +                    return scnprintf(msg, size,
+>>>> +    "AMD Branch Sampling does not support frequency mode sampling,
+>>>> must
+>>>> pass a fixed sampling period via -c option or
+>>>> cpu/branch-brs,period=xxxx/.");
+>>>> +                /* another reason is that the period is too small */
+>>>> +                return scnprintf(msg, size,
+>>>> +    "AMD Branch Sampling does not support sampling period smaller than
+>>>> what is reported in /sys/devices/cpu/caps/branches.");
+>>>> +            }
+>>>
+>>> IIRC, I tried something like that but carrying the
+>>>
+>>>
+>>> struct target *target, int err, char *msg, size_t size
+>>>
+>>> parameters made things worse.
+>>>
+>>>> So, incase we are in amd machine,  common function evsel__open_strerror
+>>>> will call function may be something like amd_evesel_open_strerror_check
+>>>> which will look for both ibs and brs conditions and return
+>>>> corresponding
+>>>> error statement.
+>>>
+>>> The vast majority of decisions made by evsel__open_strerror are
+>>> going to be common across most arch/uarches.  AMD has only these
+>>> two pesky exceptions to the rule and therefore IMO it's ok
+>>> to have them inline with the common function, since the decisions
+>>> are so deeply intertwined.  A new amd_evsel_open_strerror_check
+>>> sounds like it'd duplicate too much of the common function code
+>>> in order to handle the common error cases.
 >>
->> Add global (p_stage_cyc) and local variant
->> (local_p_stage_cyc) for this sort key. Use the
->> local_p_stage_cyc as default option for "mem" sort mode.
->> Also add this to list of dynamic sort keys and made the
->> "dynamic_headers" and "arch_specific_sort_keys" as static.
+>> Hi Kim,
+>>     Sorry for the confusion, what I meant by adding new function is just
+>> to handle these corner error cases and not duplicating whole
+>> evsel__open_strerror code.
 >>
->> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->> Reported-by: Namhyung Kim <namhyung@kernel.org>
-> 
-> I got this for v1, does it stand for v2?
-> 
-> Tested-by: Nageswara R Sastry <rnsastry@linux.ibm.com>
-
-
-Tested with v2 also.
-
-
-Tested-by: Nageswara R Sastry <rnsastry@linux.ibm.com>
-
-> 
->> ---
->> Changelog:
->> v1 -> v2:
->>   Addressed review comments from Jiri by making the
->>   "dynamic_headers" and "arch_specific_sort_keys"
->>   as static.
+>> Maybe something like below code, Its just prototype of code to show you
+>> the flow, you can refine it and check for any build or indentation
+>> issues using checkpatch.pl script.
 >>
->>   tools/perf/util/hist.c |  4 +++-
->>   tools/perf/util/hist.h |  3 ++-
->>   tools/perf/util/sort.c | 34 +++++++++++++++++++++++++---------
->>   tools/perf/util/sort.h |  3 ++-
->>   4 files changed, 32 insertions(+), 12 deletions(-)
+>> So basically, in common function we can just have 2 calls, first to
+>> check if we are in amd system and second to return corresponding error
+>> message, rather then adding whole chunk of if's which are specific to
+>> amd.
 >>
->> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
->> index b776465e04ef..0a8033b09e28 100644
->> --- a/tools/perf/util/hist.c
->> +++ b/tools/perf/util/hist.c
->> @@ -211,7 +211,9 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
->>   	hists__new_col_len(hists, HISTC_MEM_BLOCKED, 10);
->>   	hists__new_col_len(hists, HISTC_LOCAL_INS_LAT, 13);
->>   	hists__new_col_len(hists, HISTC_GLOBAL_INS_LAT, 13);
->> -	hists__new_col_len(hists, HISTC_P_STAGE_CYC, 13);
->> +	hists__new_col_len(hists, HISTC_LOCAL_P_STAGE_CYC, 13);
->> +	hists__new_col_len(hists, HISTC_GLOBAL_P_STAGE_CYC, 13);
->> +
->>   	if (symbol_conf.nanosecs)
->>   		hists__new_col_len(hists, HISTC_TIME, 16);
->>   	else
->> diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
->> index 621f35ae1efa..2a15e22fb89c 100644
->> --- a/tools/perf/util/hist.h
->> +++ b/tools/perf/util/hist.h
->> @@ -75,7 +75,8 @@ enum hist_column {
->>   	HISTC_MEM_BLOCKED,
->>   	HISTC_LOCAL_INS_LAT,
->>   	HISTC_GLOBAL_INS_LAT,
->> -	HISTC_P_STAGE_CYC,
->> +	HISTC_LOCAL_P_STAGE_CYC,
->> +	HISTC_GLOBAL_P_STAGE_CYC,
->>   	HISTC_NR_COLS, /* Last entry */
->>   };
->>   
->> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
->> index a111065b484e..e417e47f51b9 100644
->> --- a/tools/perf/util/sort.c
->> +++ b/tools/perf/util/sort.c
->> @@ -37,7 +37,7 @@ const char	default_parent_pattern[] = "^sys_|^do_page_fault";
->>   const char	*parent_pattern = default_parent_pattern;
->>   const char	*default_sort_order = "comm,dso,symbol";
->>   const char	default_branch_sort_order[] = "comm,dso_from,symbol_from,symbol_to,cycles";
->> -const char	default_mem_sort_order[] = "local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked,blocked,local_ins_lat,p_stage_cyc";
->> +const char	default_mem_sort_order[] = "local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked,blocked,local_ins_lat,local_p_stage_cyc";
->>   const char	default_top_sort_order[] = "dso,symbol";
->>   const char	default_diff_sort_order[] = "dso,symbol";
->>   const char	default_tracepoint_sort_order[] = "trace";
->> @@ -46,8 +46,8 @@ const char	*field_order;
->>   regex_t		ignore_callees_regex;
->>   int		have_ignore_callees = 0;
->>   enum sort_mode	sort__mode = SORT_MODE__NORMAL;
->> -const char	*dynamic_headers[] = {"local_ins_lat", "p_stage_cyc"};
->> -const char	*arch_specific_sort_keys[] = {"p_stage_cyc"};
->> +static const char *const dynamic_headers[] = {"local_ins_lat", "ins_lat", "local_p_stage_cyc", "p_stage_cyc"};
->> +static const char *const arch_specific_sort_keys[] = {"local_p_stage_cyc", "p_stage_cyc"};
->>   
->>   /*
->>    * Replaces all occurrences of a char used with the:
->> @@ -1392,22 +1392,37 @@ struct sort_entry sort_global_ins_lat = {
->>   };
->>   
->>   static int64_t
->> -sort__global_p_stage_cyc_cmp(struct hist_entry *left, struct hist_entry *right)
->> +sort__p_stage_cyc_cmp(struct hist_entry *left, struct hist_entry *right)
->>   {
->>   	return left->p_stage_cyc - right->p_stage_cyc;
->>   }
->>   
->> +static int hist_entry__global_p_stage_cyc_snprintf(struct hist_entry *he, char *bf,
->> +					size_t size, unsigned int width)
+>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+>> index ac0127be0459..adefb162ae08 100644
+>> --- a/tools/perf/util/evsel.c
+>> +++ b/tools/perf/util/evsel.c
+>> @@ -2852,9 +2852,40 @@ static bool find_process(const char *name)
+>>          return ret ? false : true;
+>>   }
+>>
+>> +static bool is_amd(const char *arch, const char *cpuid)
 >> +{
->> +	return repsep_snprintf(bf, size, "%-*u", width,
->> +			he->p_stage_cyc * he->stat.nr_events);
+>> +       return arch && !strcmp("x86", arch) && cpuid && strstarts(cpuid,
+>> "AuthenticAMD");
 >> +}
 >> +
+>> +static int error_amd_ibs_brs(struct evsel *evsel, char *msg, size_t
+>> size)
+>> +{
+>> +       if (evsel->core.attr.precise_ip || !strncmp(evsel->pmu_name,
+>> "ibs", 3)) {
+>> +               if (evsel->core.attr.exclude_kernel)
+>> +                       return scnprintf(msg, size,
+>> +       "AMD IBS can't exclude kernel events.  Try running at a higher
+>> privilege level.");
+>> +               if (!evsel->core.system_wide)
+>> +                       return scnprintf(msg, size,
+>> +       "AMD IBS may only be available in system-wide/per-cpu mode.  Try
+>> using -a, or -C and workload affinity");
+>> +       }
 >> +
->>   static int hist_entry__p_stage_cyc_snprintf(struct hist_entry *he, char *bf,
->>   					size_t size, unsigned int width)
->>   {
->>   	return repsep_snprintf(bf, size, "%-*u", width, he->p_stage_cyc);
->>   }
->>   
->> -struct sort_entry sort_p_stage_cyc = {
->> -	.se_header      = "Pipeline Stage Cycle",
->> -	.se_cmp         = sort__global_p_stage_cyc_cmp,
->> +struct sort_entry sort_local_p_stage_cyc = {
->> +	.se_header      = "Local Pipeline Stage Cycle",
->> +	.se_cmp         = sort__p_stage_cyc_cmp,
->>   	.se_snprintf	= hist_entry__p_stage_cyc_snprintf,
->> -	.se_width_idx	= HISTC_P_STAGE_CYC,
->> +	.se_width_idx	= HISTC_LOCAL_P_STAGE_CYC,
->> +};
+>> +       if (((evsel->core.attr.config & 0xff) == 0xc4) &&
+>> (evsel->core.attr.sample_type & PERF_SAMPLE_BRANCH_STACK)) {
+>> +               if (evsel->core.attr.freq) {
+>> +                       return scnprintf(msg, size,
+>> +       "AMD Branch Sampling does not support frequency mode sampling,
+>> must pass a fixed sampling
+>> +          period via -c option or cpu/branch-brs,period=xxxx/.");
+>> +                /* another reason is that the period is too small */
+>> +               return scnprintf(msg, size,
+>> +       "AMD Branch Sampling does not support sampling period smaller
+>> than what is reported in /sys/devices/cpu/caps/branches.");
+>> +               }
+>> +       }
+>> +}
 >> +
->> +struct sort_entry sort_global_p_stage_cyc = {
->> +	.se_header      = "Pipeline Stage Cycle",
->> +	.se_cmp         = sort__p_stage_cyc_cmp,
->> +	.se_snprintf    = hist_entry__global_p_stage_cyc_snprintf,
->> +	.se_width_idx   = HISTC_GLOBAL_P_STAGE_CYC,
->>   };
->>   
->>   struct sort_entry sort_mem_daddr_sym = {
->> @@ -1858,7 +1873,8 @@ static struct sort_dimension common_sort_dimensions[] = {
->>   	DIM(SORT_CODE_PAGE_SIZE, "code_page_size", sort_code_page_size),
->>   	DIM(SORT_LOCAL_INS_LAT, "local_ins_lat", sort_local_ins_lat),
->>   	DIM(SORT_GLOBAL_INS_LAT, "ins_lat", sort_global_ins_lat),
->> -	DIM(SORT_PIPELINE_STAGE_CYC, "p_stage_cyc", sort_p_stage_cyc),
->> +	DIM(SORT_LOCAL_PIPELINE_STAGE_CYC, "local_p_stage_cyc", sort_local_p_stage_cyc),
->> +	DIM(SORT_GLOBAL_PIPELINE_STAGE_CYC, "p_stage_cyc", sort_global_p_stage_cyc),
->>   };
->>   
->>   #undef DIM
->> diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
->> index 7b7145501933..f994261888e1 100644
->> --- a/tools/perf/util/sort.h
->> +++ b/tools/perf/util/sort.h
->> @@ -235,7 +235,8 @@ enum sort_type {
->>   	SORT_CODE_PAGE_SIZE,
->>   	SORT_LOCAL_INS_LAT,
->>   	SORT_GLOBAL_INS_LAT,
->> -	SORT_PIPELINE_STAGE_CYC,
->> +	SORT_LOCAL_PIPELINE_STAGE_CYC,
->> +	SORT_GLOBAL_PIPELINE_STAGE_CYC,
->>   
->>   	/* branch stack specific sort keys */
->>   	__SORT_BRANCH_STACK,
->> -- 
->> 2.33.0
+>>   int evsel__open_strerror(struct evsel *evsel, struct target *target,
+>>                           int err, char *msg, size_t size)
+>>   {
+>> +       struct perf_env *env = evsel__env(evsel);
+>> +       const char *arch = perf_env__arch(env);
+>> +       const char *cpuid = perf_env__cpuid(env);
+>>          char sbuf[STRERR_BUFSIZE];
+>>          int printed = 0, enforced = 0;
+>>
+>> @@ -2950,6 +2981,8 @@ int evsel__open_strerror(struct evsel *evsel,
+>> struct target *target,
+>>                          return scnprintf(msg, size, "wrong clockid
+>> (%d).", clockid);
+>>                  if (perf_missing_features.aux_output)
+>>                          return scnprintf(msg, size, "The 'aux_output'
+>> feature is not supported, update the kernel.");
+>> +               if (is_amd(arch, cpuid))
+>> +                       return error_amd_ibs_brs(evsel, msg, size);
+>>                  break;
+>>          case ENODATA:
+>>                  return scnprintf(msg, size, "Cannot collect data source
+>> with the load latency event alone. "
+> 
+> That change will makes AMD machines fail to fall back to the default
+> "The sys_perf_event_open() syscall returned with..." error string
+> in case it's not those AMD IBS and BRS sub-conditions.
+
+Yes right, as I mentioned before, the code I pointed was just a
+prototype to show you the flow, these corner cases can be handled on top
+of it.
+
+> 
+> Is having the AMD error code checking in the main evsel__open_strerror()
+> so bad?  Other arches and their PMU implementations may find error
+> conditions that they have in common with AMD's, therefore
+> opening up the code for opposite types of refactoring and
+> reuse than what is being requested here.  E.g., I've seen
+> other hardware configurations - not specific to one architecture -
+> that could also use this message:
 > 
 
--- 
-Thanks and Regards
-R.Nageswara Sastry
+From my understanding, adding too many checks in common function
+for a specific arch is not a good practice. Since you already adding
+multiple functions to get information like ,if current system is
+amd/ibs/brs. Can't we rather just add a single function and handled all
+these checks there?
+That's just my thoughts, if maintainers are ok with it, then its fine
+for me too.
+
+Thanks,
+Kajol Jain
+
+> {"AMD IBS"->"%s",pmu_name} may only be available in system-wide/per-cpu
+> mode.  Try using -a, or -C and workload affinity");
+> 
+> Thanks,
+> 
+> Kim
