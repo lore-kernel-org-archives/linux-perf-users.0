@@ -2,100 +2,96 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21153C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Dec 2021 11:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B5CC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Dec 2021 12:06:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229487AbhLHL6f (ORCPT
+        id S232885AbhLHMJo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Dec 2021 06:58:35 -0500
-Received: from foss.arm.com ([217.140.110.172]:57990 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231862AbhLHL6f (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Dec 2021 06:58:35 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6FBF61042;
-        Wed,  8 Dec 2021 03:55:02 -0800 (PST)
-Received: from e121896.arm.com (unknown [10.57.34.62])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 316613F73B;
-        Wed,  8 Dec 2021 03:55:00 -0800 (PST)
-From:   James Clark <james.clark@arm.com>
-To:     mathieu.poirier@linaro.org, coresight@lists.linaro.org
-Cc:     suzuki.poulose@arm.com, James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
+        Wed, 8 Dec 2021 07:09:44 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4230 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229675AbhLHMJn (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 8 Dec 2021 07:09:43 -0500
+Received: from fraeml714-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4J8G7c27GDz67b2S;
+        Wed,  8 Dec 2021 20:05:00 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Wed, 8 Dec 2021 13:06:09 +0100
+Received: from [10.47.91.245] (10.47.91.245) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Wed, 8 Dec
+ 2021 12:06:08 +0000
+Subject: Re: [PATCH 01/22] libperf: Add comments to perf_cpu_map.
+To:     Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
+        "Jiri Olsa" <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Ingo Molnar" <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] perf cs-etm: Remove duplicate and incorrect aux size checks
-Date:   Wed,  8 Dec 2021 11:54:35 +0000
-Message-Id: <20211208115435.610101-1-james.clark@arm.com>
-X-Mailer: git-send-email 2.28.0
+        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Vineet Singh" <vineet.singh@intel.com>,
+        James Clark <james.clark@arm.com>,
+        "Mathieu Poirier" <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, <coresight@lists.linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <eranian@google.com>
+References: <20211208024607.1784932-1-irogers@google.com>
+ <20211208024607.1784932-2-irogers@google.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <a3cf5b74-1a1b-ef85-1ad3-034e797848e2@huawei.com>
+Date:   Wed, 8 Dec 2021 12:05:49 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211208024607.1784932-2-irogers@google.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.91.245]
+X-ClientProxiedBy: lhreml724-chm.china.huawei.com (10.201.108.75) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-There are two checks, one is for size when running without admin, but
-this one is covered by the driver and reported on in more detail here
-(builtin-record.c):
+On 08/12/2021 02:45, Ian Rogers wrote:
+> diff --git a/tools/lib/perf/include/internal/cpumap.h b/tools/lib/perf/include/internal/cpumap.h
+> index 840d4032587b..1c1726f4a04e 100644
+> --- a/tools/lib/perf/include/internal/cpumap.h
+> +++ b/tools/lib/perf/include/internal/cpumap.h
+> @@ -4,9 +4,16 @@
+>   
+>   #include <linux/refcount.h>
+>   
+> +/**
+> + * A sized, reference counted, sorted array of integers representing CPU
+> + * numbers. This is commonly used to capture which CPUs a PMU is associated
+> + * with.
+> + */
+>   struct perf_cpu_map {
+>   	refcount_t	refcnt;
+> +	/** Length of the map array. */
+>   	int		nr;
+> +	/** The CPU values. */
+>   	int		map[];
 
-  pr_err("Permission error mapping pages.\n"
-         "Consider increasing "
-         "/proc/sys/kernel/perf_event_mlock_kb,\n"
-         "or try again with a smaller value of -m/--mmap_pages.\n"
-         "(current value: %u,%u)\n",
+would simply more distinct names for the variables help instead of or in 
+addition to comments?
 
-This had the effect of artificially limiting the aux buffer size to a
-value smaller than what was allowed because perf_event_mlock_kb wasn't
-taken into account.
+Generally developers don't always check comments where the struct is 
+defined when the meaning could be judged intuitively
 
-The second is to check for a power of two, but this is covered here
-(evlist.c):
-
-  pr_info("rounding mmap pages size to %s (%lu pages)\n",
-          buf, pages);
-
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/arch/arm/util/cs-etm.c | 19 -------------------
- 1 file changed, 19 deletions(-)
-
-diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-index 293a23bf8be3..8a3d54a86c9c 100644
---- a/tools/perf/arch/arm/util/cs-etm.c
-+++ b/tools/perf/arch/arm/util/cs-etm.c
-@@ -407,25 +407,6 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
- 
- 	}
- 
--	/* Validate auxtrace_mmap_pages provided by user */
--	if (opts->auxtrace_mmap_pages) {
--		unsigned int max_page = (KiB(128) / page_size);
--		size_t sz = opts->auxtrace_mmap_pages * (size_t)page_size;
--
--		if (!privileged &&
--		    opts->auxtrace_mmap_pages > max_page) {
--			opts->auxtrace_mmap_pages = max_page;
--			pr_err("auxtrace too big, truncating to %d\n",
--			       max_page);
--		}
--
--		if (!is_power_of_2(sz)) {
--			pr_err("Invalid mmap size for %s: must be a power of 2\n",
--			       CORESIGHT_ETM_PMU_NAME);
--			return -EINVAL;
--		}
--	}
--
- 	if (opts->auxtrace_snapshot_mode)
- 		pr_debug2("%s snapshot size: %zu\n", CORESIGHT_ETM_PMU_NAME,
- 			  opts->auxtrace_snapshot_size);
--- 
-2.28.0
+Thanks,
+John
 
