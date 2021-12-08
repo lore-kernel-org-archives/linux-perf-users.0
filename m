@@ -2,113 +2,158 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 972AFC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Dec 2021 12:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE98C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Dec 2021 13:18:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233763AbhLHMyT (ORCPT
+        id S230024AbhLHNVd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Dec 2021 07:54:19 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4232 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233750AbhLHMyT (ORCPT
+        Wed, 8 Dec 2021 08:21:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52880 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229716AbhLHNVc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Dec 2021 07:54:19 -0500
-Received: from fraeml737-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4J8H3W3mtnz67nPb;
-        Wed,  8 Dec 2021 20:46:31 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml737-chm.china.huawei.com (10.206.15.218) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Wed, 8 Dec 2021 13:50:45 +0100
-Received: from [10.47.91.245] (10.47.91.245) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Wed, 8 Dec
- 2021 12:50:43 +0000
-Subject: Re: [PATCH 02/22] perf stat: Add aggr creators that are passed a cpu.
-To:     Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
-        "Jiri Olsa" <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Ingo Molnar" <mingo@redhat.com>,
+        Wed, 8 Dec 2021 08:21:32 -0500
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D67E4C061746
+        for <linux-perf-users@vger.kernel.org>; Wed,  8 Dec 2021 05:18:00 -0800 (PST)
+Received: by mail-ed1-x529.google.com with SMTP id t5so8509449edd.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 Dec 2021 05:18:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=f1C2XMALRqUxMKamwSGI4XRtJrpSBCcZ7f42PdWgTTQ=;
+        b=S/o1FSBwdEQX4yRmrkEgFJTTTLgQXG3Hju2WpJqjSDNp22nHUhbnfNw6yaXbOMMnmy
+         866RWxDbiK9NyFuanca1Y2cn3fQYcCmFb3hC/CP2XQ7RVa44hRPNIiLklFLylzjly7J4
+         Ased7VljxR7mudSiy6DGGTzRBBhm+y3R4NEgnW9xDmUzJGt/R3Zc5TKbIt8h7NUGrLZW
+         TX4QiL7ULa9JRrn/9IDRvxQETKzphS+VFqANOgGMd8dvatKmtdecEf8/xRY5XJ2suAAg
+         Hff4xvUaXDcZbQ/YUHR15ylOBATJ6MkW5ovLygB1eJgW+mj2F4NByoxjHuZNeWCkgQls
+         Zyrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=f1C2XMALRqUxMKamwSGI4XRtJrpSBCcZ7f42PdWgTTQ=;
+        b=wgDr+KO+KRzLk4eqy/YvxWsdhhvBRMqGDu/hTtuLV+L3q1+XAv3pYq0ea+lpDf1jBG
+         11iKtr7VFhUJZQxjwvRV9cyh1r1nJg/4HBO9BGaHCp6T3N/fYTNxuNH7KDEJSijFy5S5
+         gseCp3+pmxhdtcGxcXtlDUBgEZKczfmOAh5oYR2qbWt6xAQvamv/OZlpSLJ8N/AL6Bv1
+         etRMskq+V1wlhyt/tqchBiVOms+gt6v6wOlFYz49XuSsd3NnJSAOLjA+ews5HgQogO5U
+         8RImYdkvaGmqDQ3Ajrf0zspjiC4l8+R/TM6OzwSpBMhbOsY3tTYvZCsy9nlw/HRGqe40
+         z0uA==
+X-Gm-Message-State: AOAM532A5h3mvKIrOiMgIigh1Q/zoPCNv5vLSAAFpiGbQ4dBxa6gah7E
+        5mYEPLJzoSTOABliCWvXmyymBg==
+X-Google-Smtp-Source: ABdhPJyxmxcF192VGmGLUTaU86PkWz7/dpExas+Dv1oI7Wn/2vbdXn8US6JiysEv3D9tPLZlh4x+aw==
+X-Received: by 2002:a17:907:6e16:: with SMTP id sd22mr7015589ejc.542.1638969479299;
+        Wed, 08 Dec 2021 05:17:59 -0800 (PST)
+Received: from leoy-ThinkPad-X240s ([104.245.96.202])
+        by smtp.gmail.com with ESMTPSA id j17sm2095850edj.0.2021.12.08.05.17.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Dec 2021 05:17:58 -0800 (PST)
+Date:   Wed, 8 Dec 2021 21:17:53 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     mathieu.poirier@linaro.org, coresight@lists.linaro.org,
+        suzuki.poulose@arm.com, Mike Leach <mike.leach@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Vineet Singh" <vineet.singh@intel.com>,
-        James Clark <james.clark@arm.com>,
-        "Mathieu Poirier" <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>, <coresight@lists.linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <eranian@google.com>
-References: <20211208024607.1784932-1-irogers@google.com>
- <20211208024607.1784932-3-irogers@google.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <b3a5622d-ad63-5112-607e-8a79c7c52ef7@huawei.com>
-Date:   Wed, 8 Dec 2021 12:50:24 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf cs-etm: Remove duplicate and incorrect aux size
+ checks
+Message-ID: <20211208131753.GC273781@leoy-ThinkPad-X240s>
+References: <20211208115435.610101-1-james.clark@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20211208024607.1784932-3-irogers@google.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.91.245]
-X-ClientProxiedBy: lhreml724-chm.china.huawei.com (10.201.108.75) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211208115435.610101-1-james.clark@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 08/12/2021 02:45, Ian Rogers wrote:
-> The cpu_map and index can get confused. Add variants of the cpu_map__get
-> routines that are passed a cpu. Make the existing cpu_map__get routines
-> use the new functions with a view to remove them when no longer used.
-> 
-> Signed-off-by: Ian Rogers<irogers@google.com>
-> ---
->   tools/perf/util/cpumap.c | 79 +++++++++++++++++++++++-----------------
->   tools/perf/util/cpumap.h |  6 ++-
->   2 files changed, 51 insertions(+), 34 deletions(-)
-> 
-> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-> index 87d3eca9b872..49fba2c53822 100644
-> --- a/tools/perf/util/cpumap.c
-> +++ b/tools/perf/util/cpumap.c
-> @@ -128,21 +128,23 @@ int cpu_map__get_socket_id(int cpu)
->   	return ret ?: value;
->   }
->   
-> -struct aggr_cpu_id cpu_map__get_socket(struct perf_cpu_map *map, int idx,
-> -					void *data __maybe_unused)
-> +struct aggr_cpu_id cpu_map__get_socket_aggr_by_cpu(int cpu, void *data __maybe_unused)
->   {
-> -	int cpu;
->   	struct aggr_cpu_id id = cpu_map__empty_aggr_cpu_id();
->   
-> -	if (idx > map->nr)
-> -		return id;
-> -
-> -	cpu = map->map[idx];
-> -
->   	id.socket = cpu_map__get_socket_id(cpu);
->   	return id;
->   }
->   
-> +struct aggr_cpu_id cpu_map__get_socket(struct perf_cpu_map *map, int idx,
+Hi James,
 
-This is code added in this patch - so is "idx" a cpu map index? that's 
-what the commit message implies.
+On Wed, Dec 08, 2021 at 11:54:35AM +0000, James Clark wrote:
+> There are two checks, one is for size when running without admin, but
+> this one is covered by the driver and reported on in more detail here
+> (builtin-record.c):
+> 
+>   pr_err("Permission error mapping pages.\n"
+>          "Consider increasing "
+>          "/proc/sys/kernel/perf_event_mlock_kb,\n"
+>          "or try again with a smaller value of -m/--mmap_pages.\n"
+>          "(current value: %u,%u)\n",
 
-regardless of this - you add code here and then remove it later in the 
-series. Can you arrange the series such that any code added in the 
-series is not removed (later in that series)? That's a general practice 
-we adhere to.
+I looked into the kernel code and found:
+
+  sysctl_perf_event_mlock = 512 + (PAGE_SIZE / 1024);  // 512KB + 1 page
+
+If the system have multiple cores, let's say 8 cores, then kernel even
+can relax the limitaion with:
+
+  user_lock_limit *= num_online_cpus();
+
+So means the memory lock limitation is:
+
+  (512KB + 1 page) * 8 = 4MB + 8 pages.
+
+Seems to me, it's much relax than the user space's limitaion 128KB.
+And let's imagine for Arm server, the permitted buffer size can be a
+huge value (e.g. for a system with 128 cores).
+
+Could you confirm if this is right?
 
 Thanks,
-John
+Leo
+
+> This had the effect of artificially limiting the aux buffer size to a
+> value smaller than what was allowed because perf_event_mlock_kb wasn't
+> taken into account.
+> 
+> The second is to check for a power of two, but this is covered here
+> (evlist.c):
+> 
+>   pr_info("rounding mmap pages size to %s (%lu pages)\n",
+>           buf, pages);
+> 
+> Signed-off-by: James Clark <james.clark@arm.com>
+> ---
+>  tools/perf/arch/arm/util/cs-etm.c | 19 -------------------
+>  1 file changed, 19 deletions(-)
+> 
+> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+> index 293a23bf8be3..8a3d54a86c9c 100644
+> --- a/tools/perf/arch/arm/util/cs-etm.c
+> +++ b/tools/perf/arch/arm/util/cs-etm.c
+> @@ -407,25 +407,6 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+>  
+>  	}
+>  
+> -	/* Validate auxtrace_mmap_pages provided by user */
+> -	if (opts->auxtrace_mmap_pages) {
+> -		unsigned int max_page = (KiB(128) / page_size);
+> -		size_t sz = opts->auxtrace_mmap_pages * (size_t)page_size;
+> -
+> -		if (!privileged &&
+> -		    opts->auxtrace_mmap_pages > max_page) {
+> -			opts->auxtrace_mmap_pages = max_page;
+> -			pr_err("auxtrace too big, truncating to %d\n",
+> -			       max_page);
+> -		}
+> -
+> -		if (!is_power_of_2(sz)) {
+> -			pr_err("Invalid mmap size for %s: must be a power of 2\n",
+> -			       CORESIGHT_ETM_PMU_NAME);
+> -			return -EINVAL;
+> -		}
+> -	}
+> -
+>  	if (opts->auxtrace_snapshot_mode)
+>  		pr_debug2("%s snapshot size: %zu\n", CORESIGHT_ETM_PMU_NAME,
+>  			  opts->auxtrace_snapshot_size);
+> -- 
+> 2.28.0
+> 
