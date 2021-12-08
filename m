@@ -2,61 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B5CC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Dec 2021 12:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0F1C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Dec 2021 12:31:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232885AbhLHMJo (ORCPT
+        id S231686AbhLHMek (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Dec 2021 07:09:44 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4230 "EHLO
+        Wed, 8 Dec 2021 07:34:40 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4231 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229675AbhLHMJn (ORCPT
+        with ESMTP id S231841AbhLHMek (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Dec 2021 07:09:43 -0500
-Received: from fraeml714-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4J8G7c27GDz67b2S;
-        Wed,  8 Dec 2021 20:05:00 +0800 (CST)
+        Wed, 8 Dec 2021 07:34:40 -0500
+Received: from fraeml709-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4J8Gcs2p5cz685wS;
+        Wed,  8 Dec 2021 20:26:53 +0800 (CST)
 Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
+ fraeml709-chm.china.huawei.com (10.206.15.37) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Wed, 8 Dec 2021 13:06:09 +0100
+ 15.1.2308.20; Wed, 8 Dec 2021 13:31:07 +0100
 Received: from [10.47.91.245] (10.47.91.245) by lhreml724-chm.china.huawei.com
  (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Wed, 8 Dec
- 2021 12:06:08 +0000
-Subject: Re: [PATCH 01/22] libperf: Add comments to perf_cpu_map.
-To:     Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
-        "Jiri Olsa" <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Ingo Molnar" <mingo@redhat.com>,
+ 2021 12:31:05 +0000
+Subject: Re: [PATCH 1/3] perf vendor events: For the Neoverse N2
+To:     Andrew Kilroy <andrew.kilroy@arm.com>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <acme@kernel.org>
+CC:     Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Vineet Singh" <vineet.singh@intel.com>,
-        James Clark <james.clark@arm.com>,
-        "Mathieu Poirier" <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>, <coresight@lists.linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        "Namhyung Kim" <namhyung@kernel.org>,
         <linux-arm-kernel@lists.infradead.org>
-CC:     <eranian@google.com>
-References: <20211208024607.1784932-1-irogers@google.com>
- <20211208024607.1784932-2-irogers@google.com>
+References: <20211203123525.31127-1-andrew.kilroy@arm.com>
+ <2e1a7a96-4ec6-e1f2-5bd4-133480391053@huawei.com>
+ <e7aaacd8-7972-6ab9-ff0c-e286bf23993a@arm.com>
 From:   John Garry <john.garry@huawei.com>
-Message-ID: <a3cf5b74-1a1b-ef85-1ad3-034e797848e2@huawei.com>
-Date:   Wed, 8 Dec 2021 12:05:49 +0000
+Message-ID: <e22a2fe2-051f-5395-9118-99617ffcab3d@huawei.com>
+Date:   Wed, 8 Dec 2021 12:30:46 +0000
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.12.1
 MIME-Version: 1.0
-In-Reply-To: <20211208024607.1784932-2-irogers@google.com>
+In-Reply-To: <e7aaacd8-7972-6ab9-ff0c-e286bf23993a@arm.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Originating-IP: [10.47.91.245]
 X-ClientProxiedBy: lhreml724-chm.china.huawei.com (10.201.108.75) To
  lhreml724-chm.china.huawei.com (10.201.108.75)
@@ -65,33 +57,55 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 08/12/2021 02:45, Ian Rogers wrote:
-> diff --git a/tools/lib/perf/include/internal/cpumap.h b/tools/lib/perf/include/internal/cpumap.h
-> index 840d4032587b..1c1726f4a04e 100644
-> --- a/tools/lib/perf/include/internal/cpumap.h
-> +++ b/tools/lib/perf/include/internal/cpumap.h
-> @@ -4,9 +4,16 @@
->   
->   #include <linux/refcount.h>
->   
-> +/**
-> + * A sized, reference counted, sorted array of integers representing CPU
-> + * numbers. This is commonly used to capture which CPUs a PMU is associated
-> + * with.
-> + */
->   struct perf_cpu_map {
->   	refcount_t	refcnt;
-> +	/** Length of the map array. */
->   	int		nr;
-> +	/** The CPU values. */
->   	int		map[];
+On 07/12/2021 12:13, Andrew Kilroy wrote:
+> On 07/12/2021 09:57, John Garry wrote:
+>> On 03/12/2021 12:35, Andrew Kilroy wrote:
+>>> Updates the common and microarch json file to add counters
+>>> available in the Neoverse N2 chip, but should also apply to other ArmV8
+>>> and ArmV9 cpus.  Specified in ArmV8 architecture reference manual
+>>>
+>>> https://developer.arm.com/documentation/ddi0487/gb/?lang=en
+>>>
+>>> Some of the counters added to armv8-common-and-microarch.json are
+>>> specified in the ArmV9 architecture reference manual supplement
+>>> (issue A.a):
+>>>
+>>> https://developer.arm.com/documentation/ddi0608/aa
+>>>
+>>> The additional ArmV9 counters are
+>>>
+>>>    TRB_WRAP
+>>>    TRCEXTOUT0
+>>>    TRCEXTOUT1
+>>>    TRCEXTOUT2
+>>>    TRCEXTOUT3
+>>>    CTI_TRIGOUT4
+>>>    CTI_TRIGOUT5
+>>>    CTI_TRIGOUT6
+>>>    CTI_TRIGOUT7
+>>>
+>>> This patch also adds files in pmu-events/arch/arm64/arm/neoverse-n2 for
+>>> perf list to output the counter names in categories.
+>>>
+>>> A subsequent patch renames armv8-common-and-microarch.json and
+>>> armv8-recommended.json to reflect that counters for armv9 are being
+>>> added.
+>>
+>> This commentary should be in a cover letter. Please do that.
+>>
+>> And did you consider just adding a armv9-common-and-microarch.json and
+>> armv9-recommended.json instead of adding to and renaming the v8 version?
+>> I know that it creates scattered definitions, but we already have that in
+>> dividing the common and the recommended JSONs.
+>>
+> 
+> I considered it, but I wasn't sure what was preferable.  I thought I'd 
+> get some feedback.  Do you consider the separation important?  Any 
+> particular reason?
 
-would simply more distinct names for the variables help instead of or in 
-addition to comments?
-
-Generally developers don't always check comments where the struct is 
-defined when the meaning could be judged intuitively
+At the moment I don't think that it's a big issue. I just thought it 
+better to keep a structured and distinct file organisation by having 
+separate files. v9 stuff is quite new, so we can wait for other input here.
 
 Thanks,
 John
-
