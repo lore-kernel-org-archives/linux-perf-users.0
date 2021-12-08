@@ -2,178 +2,216 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B2CC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Dec 2021 20:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FD2C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Dec 2021 20:11:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234093AbhLHUL4 (ORCPT
+        id S240016AbhLHUPA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Dec 2021 15:11:56 -0500
-Received: from mail.kdab.com ([176.9.126.58]:47922 "EHLO mail.kdab.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240011AbhLHULz (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Dec 2021 15:11:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kdab.com; h=
- content-type:content-type:mime-version:organization:message-id
- :date:date:subject:subject:from:from; s=dkim; t=1638994100; x=
- 1639858101; bh=3XQWRQEiY+EJBR/o4/xdYoDxF9pfkwI9KexOIu1+wjI=; b=j
- Fhm4rv7lzHkvqJ5za/XOOJ5H9SE05RktNx1+tKvs/gdCM9HYMliFI0RelLwIW8HL
- 7pQ9c9+ExiR1jjXQKGstOWRn+kixQ+zV0XWtheDwysig3YcgBwHYxxM8kEarVIX0
- dDAcz8V7bN8xZ6rZbjFz8kINHeUYUU2LALTsKiTYDc=
-X-Virus-Scanned: amavisd-new at kdab.com
-From:   Milian Wolff <milian.wolff@kdab.com>
-To:     linux-perf-users@vger.kernel.org
-Cc:     Arnaldo Carvalho de Melo <acme@kenel.org>
-Subject: perf probe: adding probe on C++ member/namespace function or
- versioned symbols
-Date:   Wed, 08 Dec 2021 21:08:13 +0100
-Message-ID: <2119579.vFYbnVOWES@milian-workstation>
-Organization: KDAB
+        Wed, 8 Dec 2021 15:15:00 -0500
+Received: from mail-ot1-f48.google.com ([209.85.210.48]:41767 "EHLO
+        mail-ot1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236644AbhLHUO7 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 8 Dec 2021 15:14:59 -0500
+Received: by mail-ot1-f48.google.com with SMTP id n17-20020a9d64d1000000b00579cf677301so3898381otl.8;
+        Wed, 08 Dec 2021 12:11:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AELjAd4b3S3tf/ePBV+Cx1TSm36KyhFZBSK2yZI5YiM=;
+        b=z+r66Tng1ze5QtaY9vcYkNWHbDzeb7fbvJJw4MYutk5hyfUVTdAGUKawg3Y6lbllBi
+         nqkm7jdHzhbR+VUSyFJt+lwKbUL/SExTynw+9xhICX5SPKuOsRThU4g8XWy8HIvWpPIO
+         w9onX4xQBF+D2/Zu66QrSSUV+Uyqo7XgEUjAhscGIJHZXN6qB9be38Va6xc0o2Bm7gEU
+         NTj4gSzHtJdYTNcbbBfmEB8eK5//WdIKfscflw3H/xQnsglvgSGIZR+zPMXIdvUrr9Yc
+         YHKJSiYfE4ipgAjTD9NQ3plrJTOWFzMYkj8GAGL7CMJ1ELg9CxvQ33gUGxUX8/60Z3E1
+         FC6g==
+X-Gm-Message-State: AOAM531EsGMn1UIULbyisIExQOg8RLBVydYv4jq5oTEoDC2Ra0+RMSzM
+        FgNcOItPi7bxBvfGoad2xg==
+X-Google-Smtp-Source: ABdhPJyBMTmdW9XxEQGQMIB1AwfttIBC0iu9MkUcdJVrSzwgf/vmbR6igXEzr/qMOjP0VspRMNOk8Q==
+X-Received: by 2002:a9d:2206:: with SMTP id o6mr1495313ota.148.1638994286994;
+        Wed, 08 Dec 2021 12:11:26 -0800 (PST)
+Received: from xps15.herring.priv (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.googlemail.com with ESMTPSA id o2sm927926oik.11.2021.12.08.12.11.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Dec 2021 12:11:26 -0800 (PST)
+From:   Rob Herring <robh@kernel.org>
+To:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Vince Weaver <vincent.weaver@maine.edu>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH v13 0/5] arm64 userspace counter support
+Date:   Wed,  8 Dec 2021 14:11:19 -0600
+Message-Id: <20211208201124.310740-1-robh@kernel.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart4248114.VSFRxQCndH";
- micalg="sha256"; protocol="application/pkcs7-signature"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
---nextPart4248114.VSFRxQCndH
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Another version of arm64 userspace counter access support. No changes from
+the last version except rebasing and rewriting a commit message.
 
-Hey there,
+The arm64 support departs from the x86 implementation by requiring the user
+to explicitly request user access (via attr.config1) and only enables access
+for task bound events. Since usage is explicitly requested, access is
+enabled at perf_event_open() rather than on mmap() as that greatly
+simplifies the implementation. Rather than trying to lock down the access
+as the x86 implementation has been doing, we can start with only a limited
+use case enabled and later expand it if needed.
 
-how can one escape function names for `perf probe`? It seems like the current 
-parser is confused by the `:` which is common in C++ symbol names.
+I've run this version thru Vince's perf tests[15] with arm64 support added.
+I wish I'd found these tests sooner...
 
-```
-$ perf probe -F --exec /usr/lib/libQt5Widgets.so | grep syncBacking
-QWidgetPrivate::syncBackingStore
-QWidgetPrivate::syncBackingStore
+This originally resurrected Raphael's series[1] to enable userspace counter
+access on arm64. My previous versions are here
+[2][3][4][5][6][7][8][9][10][11][12][13].
+A git branch is here[14].
 
-$ perf probe --exec /usr/lib/libQt5Widgets.so --add 
-QWidgetPrivate::syncBackingStore
-Semantic error :There is non-digit char in line number.
-...
-```
+Changes in v13:
+ - Rebase on v5.16-rc1 (no changes)
+ - Rewrite patch 2 commit message
 
-Additionally, it is also not possible to pass a versioned symbol either:
-```
-$ nm -aD /usr/lib/libQt5Widgets.so | grep syncBacking
-0000000000197480 T 
-_ZN14QWidgetPrivate16syncBackingStoreERK7QRegion@@Qt_5_PRIVATE_API
-00000000001973b0 T _ZN14QWidgetPrivate16syncBackingStoreEv@@Qt_5_PRIVATE_API
-Semantic error :SRC@SRC is not allowed.
-...
-```
+Changes in v12:
+ - Zero PMSELR_EL0 when userspace access is enabled
+ - Return -EOPNOTSUPP for if h/w doesn't support 64-bit counters
 
-Is there a workaround available for this?
+Changes in v11:
+ - User request for 64-bit counters and userspace access will fail on
+   open if h/w doesn't support 64-bit counters instead of reporting the
+   maximum counter size. The open will also fail if not a task bound
+   event.
 
-Thanks
+Changes in v10:
+ - Drop changing event_mapped/event_unmapped ops to run on the event's
+   current CPU. This won't work for x86 where any thread sharing an mm
+   context will have rdpmc enabled. Instead, simply track user access
+   events when added to a perf context and use that count.
+ - Documentation for the sysctl disable
 
--- 
-Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
-KDAB (Deutschland) GmbH, a KDAB Group company
-Tel: +49-30-521325470
-KDAB - The Qt, C++ and OpenGL Experts
---nextPart4248114.VSFRxQCndH
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
+Changes in v9:
+ - Reworked x86 and perf core to handle user access tracking and call
+   .event_mapped() and .event_unmapped() on the CPU with the event like
+   other changes to events.
+ - Use sysctl instead of sysfs to disable user access.
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEekw
-ggWBMIIEaaADAgECAhA5ckQ6+SK3UdfTbBDdMTWVMA0GCSqGSIb3DQEBDAUAMHsxCzAJBgNVBAYT
-AkdCMRswGQYDVQQIDBJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcMB1NhbGZvcmQxGjAYBgNV
-BAoMEUNvbW9kbyBDQSBMaW1pdGVkMSEwHwYDVQQDDBhBQUEgQ2VydGlmaWNhdGUgU2VydmljZXMw
-HhcNMTkwMzEyMDAwMDAwWhcNMjgxMjMxMjM1OTU5WjCBiDELMAkGA1UEBhMCVVMxEzARBgNVBAgT
-Ck5ldyBKZXJzZXkxFDASBgNVBAcTC0plcnNleSBDaXR5MR4wHAYDVQQKExVUaGUgVVNFUlRSVVNU
-IE5ldHdvcmsxLjAsBgNVBAMTJVVTRVJUcnVzdCBSU0EgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkw
-ggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQCAEmUXNg7D2wiz0KxXDXbtzSfTTK1Qg2Hi
-qiBNCS1kCdzOiZ/MPans9s/B3PHTsdZ7NygRK0faOca8Ohm0X6a9fZ2jY0K2dvKpOyuR+OJv0OwW
-IJAJPuLodMkYtJHUYmTbf6MG8YgYapAiPLz+E/CHFHv25B+O1ORRxhFnRghRy4YUVD+8M/5+bJz/
-Fp0YvVGONaanZshyZ9shZrHUm3gDwFA66Mzw3LyeTP6vBZY1H1dat//O+T23LLb2VN3I5xI6Ta5M
-irdcmrS3ID3KfyI0rn47aGYBROcBTkZTmzNg95S+UzeQc0PzMsNT79uq/nROacdrjGCT3sTHDN/h
-Mq7MkztReJVni+49Vv4M0GkPGw/zJSZrM233bkf6c0Plfg6lZrEpfDKEY1WJxA3Bk1QwGROs0303
-p+tdOmw1XNtB1xLaqUkL39iAigmTYo61Zs8liM2EuLE/pDkP2QKe6xJMlXzzawWpXhaDzLhn4ugT
-ncxbgtNMs+1b/97lc6wjOy0AvzVVdAlJ2ElYGn+SNuZRkg7zJn0cTRe8yexDJtC/QV9AqURE9Jnn
-V4eeUB9XVKg+/XRjL7FQZQnmWEIuQxpMtPAlR1n6BB6T1CZGSlCBst6+eLf8ZxXhyVeEHg9j1uli
-utZfVS7qXMYoCAQlObgOK6nyTJccBz8NUvXt7y+CDwIDAQABo4HyMIHvMB8GA1UdIwQYMBaAFKAR
-CiM+lvEH7OKvKe+CpX/QMKS0MB0GA1UdDgQWBBRTeb9aqitKz1SA4dibwJ3ysgNmyzAOBgNVHQ8B
-Af8EBAMCAYYwDwYDVR0TAQH/BAUwAwEB/zARBgNVHSAECjAIMAYGBFUdIAAwQwYDVR0fBDwwOjA4
-oDagNIYyaHR0cDovL2NybC5jb21vZG9jYS5jb20vQUFBQ2VydGlmaWNhdGVTZXJ2aWNlcy5jcmww
-NAYIKwYBBQUHAQEEKDAmMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wDQYJ
-KoZIhvcNAQEMBQADggEBABiHUdx0IT2ciuAntzPQLszs8ObLXhHeIm+bdY6ecv7k1v6qH5yWLe8D
-Sn6u9I1vcjxDO8A/67jfXKqpxq7y/Njuo3tD9oY2fBTgzfT3P/7euLSK8JGW/v1DZH79zNIBoX19
-+BkZyUIrE79Yi7qkomYEdoiRTgyJFM6iTckys7roFBq8cfFb8EELmAAKIgMQ5Qyx+c2SNxntO/Hk
-Orb5RRMmda+7qu8/e3c70sQCkT0ZANMXXDnbP3sYDUXNk4WWL13fWRZPP1G91UUYP+1KjugGYXQj
-FrUNUHMnREd/EF2JKmuFMRTE6KlqTIC8anjPuH+OdnKZDJ3+15EIFqGjX5UwggYQMIID+KADAgEC
-AhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQGEwJVUzETMBEGA1UE
-CBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoTFVRoZSBVU0VSVFJV
-U1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0
-eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UE
-CBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdv
-IExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQg
-U2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyjztlApB/975
-Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUfItMltrMaXqcESJuK
-8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeWQcpGEGFUUd0kN+oH
-ox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YBrf24k5Ee1sLTHsLt
-piK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewDch/8kHPo5fZl5u1B
-0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAUU3m/WqorSs9UgOHY
-m8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1UdDwEB/wQEAwIBhjAS
-BgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDARBgNVHSAE
-CjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2VydHJ1c3QuY29tL1VT
-RVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUFBwEBBGowaDA/Bggr
-BgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJTQUFkZFRydXN0Q0Eu
-Y3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0GCSqGSIb3DQEBDAUA
-A4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+xswhh2GqkW5JQrM8
-zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9IHk96VwsacIvBF8J
-fqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7kkmka2RQb9d90nmN
-HdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1eoYV7lNwNBKpeHdN
-uO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4KxaYIhvqPqUMWqRd
-Wyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL1Ygz3SBsyECa0waq
-4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQOZ1YL5ezMTX0ZSLw
-rymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qodx/PL+5jR87myx5uY
-dBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i5ZgtwCLXgAIe5W8m
-ybM2JzCCBkwwggU0oAMCAQICEHR8gsPqhWo7MMOepQh9ypIwDQYJKoZIhvcNAQELBQAwgZYxCzAJ
-BgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQx
-GDAWBgNVBAoTD1NlY3RpZ28gTGltaXRlZDE+MDwGA1UEAxM1U2VjdGlnbyBSU0EgQ2xpZW50IEF1
-dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMjAwNTEyMDAwMDAwWhcNMjMwNTEy
-MjM1OTU5WjCCAVkxCzAJBgNVBAYTAlNFMQ8wDQYDVQQREwY2ODMgMzExEjAQBgNVBAgTCVZhZXJt
-bGFuZDEQMA4GA1UEBxMHSGFnZm9yczEYMBYGA1UECRMPTm9ycmluZ3MgdmFlZyAyMQ8wDQYDVQQS
-EwZCb3ggMzAxJjAkBgNVBAoMHUtsYXLDpGx2ZGFsZW5zIERhdGFrb25zdWx0IEFCMR0wGwYDVQQL
-ExRBIEtEQUIgR3JvdXAgQ29tcGFueTFDMEEGA1UECww6SXNzdWVkIHRocm91Z2ggS2xhcsOkbHZk
-YWxlbnMgRGF0YWtvbnN1bHQgQUIgRS1QS0kgTWFuYWdlcjEfMB0GA1UECxMWQ29ycG9yYXRlIFNl
-Y3VyZSBFbWFpbDEVMBMGA1UEAxMMTWlsaWFuIFdvbGZmMSQwIgYJKoZIhvcNAQkBFhVtaWxpYW4u
-d29sZmZAa2RhYi5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC8vdk66W4eo0O1
-1Dh3zPXW/zrkwzzxRR0Air/VRxAIG5q/klE9mF2gsGBPXQpCtDMvkuvSLQ+5mR50Cb+V+4Y9n0W6
-98JoyQHYAo6uswLyTchcF6IVckkkZrm1RD1DXnlIHpCsacO7PDDxMslzFs5XZfRkH4F1SKkiVwup
-/Nsn0z12SGRzxSUUxr4VHZgIqgRGqVSbVJfjtTRigAu+fmXUXHs0bMRv8TonzrDRlN61m1UakrFu
-qvKAgXYfZULZ52IKNK/jq8nPHJDD9oOr5pVi4Yx9GyVeMM0qNPC74fJnGh7lOpJiAcqYBEis73lm
-U+RtH3Bj85Qdqvwxo3bf7s1zAgMBAAGjggHOMIIByjAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+o
-mULPyeCtADAdBgNVHQ4EFgQUMc6p+s2l6xbyh8jLYeP7fQrRiW4wDgYDVR0PAQH/BAQDAgWgMAwG
-A1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYM
-KwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1Ud
-HwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhl
-bnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcw
-AoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25h
-bmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20w
-IAYDVR0RBBkwF4EVbWlsaWFuLndvbGZmQGtkYWIuY29tMA0GCSqGSIb3DQEBCwUAA4IBAQBW3rFX
-47Cnu8JMNm8row/96V8xGwPzir9lEpnasNxi+GhvQjGzvoP5oxMoBJ+hgD8fMk5X15IDuKa9KVHb
-BzBG9kOPGB4h/89voWpzWIVy7Q3k+dPByfghbufR+83TvN20lV9VqXYjPeYypHlD/vJ4Z8iWn3s3
-0iUfYr1CCr8zoje1hijPM9A0wN7K8iCtIc4OAfJpwKsXMCNAv1SdxD196vCKrTnWiEmAw0g8FpDM
-GWIww0+2Qq+Peeoe53+34GetRPIbS5jPlCEy7xgC8c7qoJTNzhCyVENRByoA5dsLzK+Nv0IT1h2C
-gu2w5VxHo0DjlCmYddu46uwpWjKpNuhaMYICbTCCAmkCAQEwgaswgZYxCzAJBgNVBAYTAkdCMRsw
-GQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGDAWBgNVBAoTD1Nl
-Y3RpZ28gTGltaXRlZDE+MDwGA1UEAxM1U2VjdGlnbyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9u
-IGFuZCBTZWN1cmUgRW1haWwgQ0ECEHR8gsPqhWo7MMOepQh9ypIwDQYJYIZIAWUDBAIBBQCggZMw
-GAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjExMjA4MjAwODEzWjAo
-BgkqhkiG9w0BCQ8xGzAZMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzAvBgkqhkiG9w0BCQQxIgQg
-VHUxeWhYX19nb7it6gtTy1d/Rb0O0S1E5qFcbXovEOQwDQYJKoZIhvcNAQEBBQAEggEAVJ86Mjol
-V0bANir8ea0H7tqOunVEQaVOdZckjkujsBS9bawEwQcaB0ZUrK7w2Nw5nrjUEC/VjuLO8Uq5ZTWK
-LxsQiFy5jv1HfaP0o0+WvhxxBhmUdnSnWIv0wUU3AEFo4EK4tRaj+wZCHctWZGakWegsSvBgPVii
-dcaqYEvzVvRKu8pVcfUNzd114WGfvG9NPrtq32ud0OoybzClxPvvmzz2AULdy7PjyPKUmQxSuU/2
-amb6KDRDcIXUZyEO9Mrhfot2CO8vGM5WvcGhOPpB7swhX6BOKX+8R8LgHYzmu6k5a4eHvLry7FQF
-tqB+d3uhEVXm263BaWdgHxDFWgt3mAAAAAAAAA==
+Changes in v8:
+ - Restrict user access to thread bound events which simplifies the
+   implementation. A couple of perf core changes (patches 1 and 2) are
+   needed to do this.
+ - Always require the user to request userspace access.
+
+Changes in v7:
+ - Handling of dirty counter leakage and reworking of context switch and
+   user access enabling. The .sched_task hook and undef instruction handler
+   are now utilized. (Patch 3)
+ - Add a userspace disable switch like x86. (Patch 5)
+
+Changes in v6:
+ - Reworking of the handling of 64-bit counters and user access. There's
+   a new config1 flag to request user access. This takes priority over
+   the 64-bit flag and the user will get the maximum size the h/w
+   supports without chaining.
+ - The libperf evsel mmap struct is stored in its own xyarray
+ - New tests for user 64-bit and 32-bit counters
+ - Rebase to v5.12-rc2
+
+Changes in v5:
+ - Limit enabling/disabling access to CPUs associated with the PMU
+   (supported_cpus) and with the mm_struct matching current->active_mm.
+   The x86 method of using mm_cpumask doesn't work for arm64 as it is not
+   updated.
+ - Only set cap_user_rdpmc if event is on current cpu. See patch 2.
+ - Create an mmap for every event in an evsel. This results in some changes
+   to the libperf mmap API from the last version.
+ - Rebase to v5.11-rc2
+
+Changes in v4:
+ - Dropped 'arm64: pmu: Add hook to handle pmu-related undefined instructions'.
+   The onus is on userspace to pin itself to a homogeneous subset of CPUs
+   and avoid any aborts on heterogeneous systems, so the hook is not needed.
+ - Make perf_evsel__mmap() take pages rather than bytes for size
+ - Fix building arm64 heterogeneous test.
+
+Changes in v3:
+ - Dropped removing x86 rdpmc test until libperf tests can run via 'perf test'
+ - Added verbose prints for tests
+ - Split adding perf_evsel__mmap() to separate patch
+
+The following changes to the arm64 support have been made compared to
+Raphael's last version:
+
+The major change is support for heterogeneous systems with some
+restrictions. Specifically, userspace must pin itself to like CPUs, open
+a specific PMU by type, and use h/w specific events. The tests have been
+reworked to demonstrate this.
+
+Chained events are not supported. The problem with supporting chained
+events was there's no way to distinguish between a chained event and a
+native 64-bit counter. We could add some flag, but do self monitoring
+processes really need that? Native 64-bit counters are supported if the
+PMU h/w has support. As there's already an explicit ABI to request 64-bit
+counters, userspace can request 64-bit counters and if user
+access is not enabled, then it must retry with 32-bit counters.
+
+Prior versions broke the build on arm32 (surprisingly never caught by
+0-day). As a result, event_mapped and event_unmapped implementations have
+been moved into the arm64 code.
+
+There was a bug in that pmc_width was not set in the user page. The tests
+now check for this.
+
+The documentation has been converted to rST. I've added sections on
+chained events and heterogeneous.
+
+Rob
+
+[1] https://lore.kernel.org/r/20190822144220.27860-1-raphael.gault@arm.com/
+[2] https://lore.kernel.org/r/20200707205333.624938-1-robh@kernel.org/
+[3] https://lore.kernel.org/r/20200828205614.3391252-1-robh@kernel.org/
+[4] https://lore.kernel.org/r/20200911215118.2887710-1-robh@kernel.org/
+[5] https://lore.kernel.org/r/20201001140116.651970-1-robh@kernel.org/
+[6] https://lore.kernel.org/r/20210114020605.3943992-1-robh@kernel.org/
+[7] https://lore.kernel.org/r/20210311000837.3630499-1-robh@kernel.org/
+[8] https://lore.kernel.org/r/20210420031511.2348977-1-robh@kernel.org/
+[9] https://lore.kernel.org/r/20210517195405.3079458-1-robh@kernel.org/
+[10] https://lore.kernel.org/all/20210806225123.1958497-1-robh@kernel.org/
+[11] https://lore.kernel.org/all/20210914204800.3945732-1-robh@kernel.org/
+[12] https://lore.kernel.org/all/20211019231907.1009567-1-robh@kernel.org/
+[13] https://lore.kernel.org/all/20211027201641.2076427-1-robh@kernel.org/
+[14] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git arm64-user-perf-event-v12
+[15] https://github.com/deater/perf_event_tests
 
 
---nextPart4248114.VSFRxQCndH--
+Raphael Gault (1):
+  Documentation: arm64: Document PMU counters access from userspace
 
+Rob Herring (4):
+  x86: perf: Move RDPMC event flag to a common definition
+  perf: Add a counter for number of user access events in context
+  arm64: perf: Add userspace counter access disable switch
+  arm64: perf: Enable PMU counter userspace access for perf event
 
+ Documentation/admin-guide/sysctl/kernel.rst |  11 ++
+ Documentation/arm64/perf.rst                |  78 +++++++++++-
+ arch/arm64/kernel/perf_event.c              | 134 +++++++++++++++++++-
+ arch/x86/events/core.c                      |  10 +-
+ arch/x86/events/perf_event.h                |   2 +-
+ include/linux/perf_event.h                  |  10 ++
+ kernel/events/core.c                        |   4 +
+ 7 files changed, 236 insertions(+), 13 deletions(-)
+
+--
+2.32.0
