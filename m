@@ -2,124 +2,125 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6CDC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Dec 2021 01:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B69C433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Dec 2021 02:42:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229506AbhLIB7t (ORCPT
+        id S230396AbhLICqZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Dec 2021 20:59:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58710 "EHLO
+        Wed, 8 Dec 2021 21:46:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229489AbhLIB7t (ORCPT
+        with ESMTP id S229455AbhLICqY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Dec 2021 20:59:49 -0500
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91EAEC061746;
-        Wed,  8 Dec 2021 17:56:16 -0800 (PST)
-Received: by mail-pf1-x42c.google.com with SMTP id z6so4031428pfe.7;
-        Wed, 08 Dec 2021 17:56:16 -0800 (PST)
+        Wed, 8 Dec 2021 21:46:24 -0500
+Received: from mail-qk1-x72f.google.com (mail-qk1-x72f.google.com [IPv6:2607:f8b0:4864:20::72f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F35B1C061746;
+        Wed,  8 Dec 2021 18:42:51 -0800 (PST)
+Received: by mail-qk1-x72f.google.com with SMTP id w14so3847850qkf.5;
+        Wed, 08 Dec 2021 18:42:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Yj/KHzXtiJk54EmuUvfEvZXW5iSFJAcLfourAbdrQ04=;
-        b=AvC7qQ3fY6ARHqbdXisocOVt0TFLn2o+xgvRtMf5tiqVV0QssI7ZKcRtyfCwftHTTq
-         fDLtNTbVoNqo3xkhiJi37KOz9yUyNcIqhBZtlwyvUNnWwH0lArPpTrdvq5c5ELMFuG/o
-         WkXRkeedt08NP4gqnPr5OKCpR6zw7vE0hlv6sEWMlGMz5aimc4HH3NY/Jj/1y2ErVwbE
-         ym6YCZQsFw+gfu4GrvFR980QGa9tmpJiPt1KGZ0d47Lo7RDXvp0tc82mNJzaPOb+cDdd
-         FxU80RU0j+7bcYXMopeknAMOYzKyxRqxyolx8bQp41/jPKcgNHYuZmwVT571jApHTxmX
-         +9rA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ni8ukBhnwq4xfJn2KEfRGFk9CvW/EaamTsKpCF9U5jw=;
+        b=FledoWYccQAWv6FRpva8r4lIbEIfgQM+BjswBkDz+Ede5Wkeo8QjIZfKPDzFnpjhRl
+         QxEn1AjrahGgFvRzd0cqSJ2eUckDV58c4ITNjL0+zpwShqj3e3GzQEJJrRPRDFoVUbqy
+         o30GCFnGk5euP4CXUr97UvPvq8KYjwaf3iQZUJP4LvlcPSpLmp29dzjB+vLPQnYPOImv
+         5/62MrA1RYw6hgl+MJlK/vZBz7MfRRWvJC7nVMIx/grd+5AnrUm6g22228Or3MWIOGMV
+         FijRDzb8IFS4aOCXYGiqC2nBprxecfD8vuc9vHLcuwXLUJiobdQUv/tz+wefcirK74rv
+         ty3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Yj/KHzXtiJk54EmuUvfEvZXW5iSFJAcLfourAbdrQ04=;
-        b=RP2lYpQ827VpqLCjRRQaW/mCe7Y3msS7GyAOSFUJAGUx+/tojLFpfaFzpYM0OVKr7D
-         v+ykOBHzdua60urjrMgw4K40HxTu2BibYdhGG9bnfVrxLuIkTgn9e4klsfEwVYD64ORj
-         aJcG7jZs+x+gR78tW9xyaYNWU3efI60D3lfO0nX8j1I6F090dbAwD+Wo+vMndhhqgnix
-         LJSiZ4EZpRr/HsG3iHiiHWllonbaM1OsyPySfXIonxHj35FEWySjEgt+QlmPAvokWBJj
-         Ksnk5Q07j9uNt8Y6nntCH0qeKEhc0NP3AzJd+Y2c7s0CJG9htpLyR3tywcSAYG5nD7Ek
-         JzZA==
-X-Gm-Message-State: AOAM532/QhRvj+zwkuGQL5IsPiQcBLvNpwCly86+PwoLbcFKtGn7iovh
-        hk3XZdAfhx603JjhBVJ4aHU=
-X-Google-Smtp-Source: ABdhPJx54V5jIoQN0/D/P22BeZiOxi7m+wS62SX9TKLJijQ4OTJrOPF4yeYIsv7T2jW0QNqkgR5Igw==
-X-Received: by 2002:a63:af4e:: with SMTP id s14mr14935456pgo.273.1639014976134;
-        Wed, 08 Dec 2021 17:56:16 -0800 (PST)
-Received: from localhost.localdomain ([193.203.214.57])
-        by smtp.gmail.com with ESMTPSA id g22sm5376431pfj.29.2021.12.08.17.56.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Dec 2021 17:56:15 -0800 (PST)
-From:   cgel.zte@gmail.com
-X-Google-Original-From: chi.minghao@zte.com.cn
-To:     peterz@infradead.org
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        chiminghao <chi.minghao@zte.com.cn>,
-        Zeal Robot <zealci@zte.com.cm>
-Subject: [PATCH] x86:intel:remove unneeded variable
-Date:   Thu,  9 Dec 2021 01:56:10 +0000
-Message-Id: <20211209015610.409791-1-chi.minghao@zte.com.cn>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ni8ukBhnwq4xfJn2KEfRGFk9CvW/EaamTsKpCF9U5jw=;
+        b=Lbw3tgFt8InLmhEHNUnCPaswAlqsyLIcnHNOoEYcVAPpIrUtC+2fS3qCcd7uxpjPmM
+         dYz761rGR4uPT8emYvNmblNu/0OpIXG70VqySy2StgN1heKXvddKH5HxuSrzvHRYWrQ0
+         5dLuj0Q3Fz9M08MQf+cJDuFZ49zEOKz7w304Tmf4zSc9wROj9aX4FMykV8i+Yvwm20Tb
+         WafM2yublUuKiQxVoGYMz0yZCz95bknV3vE4iRxhclwTsTvaM7uYGP7I5mkLeznbuxtu
+         eX2FIx9p9EoMg7Yz3F0Lg2DTAhm3J+IchyZN37K7nEyWP7V2z2tif8ZT3wokQlFT3usj
+         F9zw==
+X-Gm-Message-State: AOAM5327uNf5nweCk1Vg1hCBxxYnazr1eyLOvIlr2K3mlNITc7G3mI2x
+        mMPsSZm8SUEV6XYliycKF5tAUfY1EmDskdC7cUli2et6n5diekSU
+X-Google-Smtp-Source: ABdhPJzPyV2mTICg4ujehOAo8kaXJvx2de02S+39TMWQ8+kUht18v3fGS9QAWvbiXI0QEc1UOZ9N36zfY4aRtfuIbw0=
+X-Received: by 2002:a05:620a:2e3:: with SMTP id a3mr10866422qko.451.1639017771202;
+ Wed, 08 Dec 2021 18:42:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20211204095256.78042-1-laoar.shao@gmail.com> <20211204095256.78042-5-laoar.shao@gmail.com>
+ <20211208134304.615abbbf@gandalf.local.home>
+In-Reply-To: <20211208134304.615abbbf@gandalf.local.home>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Thu, 9 Dec 2021 10:42:15 +0800
+Message-ID: <CALOAHbAP7w95r_soihp+i1NjWxz4KVHGizARpX80wuL3ZLO7Uw@mail.gmail.com>
+Subject: Re: [PATCH -mm 4/5] tools/perf: replace hard-coded 16 with TASK_COMM_LEN
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Petr Mladek <pmladek@suse.com>,
+        David Hildenbrand <david@redhat.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Linux MM <linux-mm@kvack.org>, bpf <bpf@vger.kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: chiminghao <chi.minghao@zte.com.cn>
+On Thu, Dec 9, 2021 at 2:43 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Sat,  4 Dec 2021 09:52:55 +0000
+> Yafang Shao <laoar.shao@gmail.com> wrote:
+>
+> > @@ -43,7 +45,7 @@ static int test__perf_evsel__tp_sched_test(struct test_suite *test __maybe_unuse
+> >               return -1;
+> >       }
+> >
+> > -     if (evsel__test_field(evsel, "prev_comm", 16, false))
+> > +     if (evsel__test_field(evsel, "prev_comm", TASK_COMM_LEN, false))
+> >               ret = -1;
+> >
+> >       if (evsel__test_field(evsel, "prev_pid", 4, true))
+> > @@ -55,7 +57,7 @@ static int test__perf_evsel__tp_sched_test(struct test_suite *test __maybe_unuse
+> >       if (evsel__test_field(evsel, "prev_state", sizeof(long), true))
+> >               ret = -1;
+> >
+> > -     if (evsel__test_field(evsel, "next_comm", 16, false))
+> > +     if (evsel__test_field(evsel, "next_comm", TASK_COMM_LEN, false))
+> >               ret = -1;
+> >
+> >       if (evsel__test_field(evsel, "next_pid", 4, true))
+> > @@ -73,7 +75,7 @@ static int test__perf_evsel__tp_sched_test(struct test_suite *test __maybe_unuse
+> >               return -1;
+> >       }
+> >
+> > -     if (evsel__test_field(evsel, "comm", 16, false))
+> > +     if (evsel__test_field(evsel, "comm", TASK_COMM_LEN, false))
+>
+> Shouldn't all these be TASK_COMM_LEN_16?
+>
 
-return value form directly instead of
-taking this in another redundant variable.
+The value here must be the same with TASK_COMM_LEN, so I use TASK_COMM_LEN here.
+But we may also change the code as
+https://lore.kernel.org/lkml/20211101060419.4682-9-laoar.shao@gmail.com/
+if TASK_COMM_LEN is changed, so TASK_COMM_LEN_16 is also okay here.
+I will change it to TASK_COMM_LEN_16 in the next version.
 
-Reported-by: Zeal Robot <zealci@zte.com.cm>
-Signed-off-by: chiminghao <chi.minghao@zte.com.cn>
----
- arch/x86/events/intel/core.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+>
+> >               ret = -1;
+> >
+> >       if (evsel__test_field(evsel, "pid", 4, true))
+>
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 603964408d2d..6ba7e0ef8db4 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -4106,23 +4106,17 @@ static struct event_constraint *
- glp_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
- 			  struct perf_event *event)
- {
--	struct event_constraint *c;
--
- 	/* :ppp means to do reduced skid PEBS which is PMC0 only. */
- 	if (event->attr.precise_ip == 3)
- 		return &counter0_constraint;
- 
--	c = intel_get_event_constraints(cpuc, idx, event);
--
--	return c;
-+	return intel_get_event_constraints(cpuc, idx, event);
- }
- 
- static struct event_constraint *
- tnt_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
- 			  struct perf_event *event)
- {
--	struct event_constraint *c;
--
- 	/*
- 	 * :ppp means to do reduced skid PEBS,
- 	 * which is available on PMC0 and fixed counter 0.
-@@ -4135,9 +4129,7 @@ tnt_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
- 		return &counter0_constraint;
- 	}
- 
--	c = intel_get_event_constraints(cpuc, idx, event);
--
--	return c;
-+	return intel_get_event_constraints(cpuc, idx, event);
- }
- 
- static bool allow_tsx_force_abort = true;
+
 -- 
-2.25.1
-
+Thanks
+Yafang
