@@ -2,115 +2,124 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5F5C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Dec 2021 23:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6CDC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Dec 2021 01:56:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238008AbhLHXg4 (ORCPT
+        id S229506AbhLIB7t (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Dec 2021 18:36:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54736 "EHLO
+        Wed, 8 Dec 2021 20:59:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233080AbhLHXg4 (ORCPT
+        with ESMTP id S229489AbhLIB7t (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Dec 2021 18:36:56 -0500
-Received: from mx0a-00190b01.pphosted.com (mx0a-00190b01.pphosted.com [IPv6:2620:100:9001:583::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8D2EC061746
-        for <linux-perf-users@vger.kernel.org>; Wed,  8 Dec 2021 15:33:23 -0800 (PST)
-Received: from pps.filterd (m0050095.ppops.net [127.0.0.1])
-        by m0050095.ppops.net-00190b01. (8.16.1.2/8.16.1.2) with ESMTP id 1B8LWaUO007451
-        for <linux-perf-users@vger.kernel.org>; Wed, 8 Dec 2021 23:33:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=to : from : subject :
- message-id : date : mime-version : content-type :
- content-transfer-encoding; s=jan2016.eng;
- bh=4tW3/uWz7pscOI/+4VxbINvQugMurupO+xqy2oZtdhw=;
- b=QHi/e4g0dSDRb5nRP1uEU8LYZeHwEWelRF5JLExePhpbQZe/m89+Gw1CXf9Rsx1O8rev
- suhaBcCZ26Kr9/B6gAXkYkhBkvZLTM00iJhE3T6Q1rqidAGwA9HCfkZSMUT4C/dJgw5h
- lfYa986RgpJM0YukSzsbUmkPIOKM4gZhw5YqlLJq8appnBWN9pxMDkmmL4XY/QlpgQRQ
- Lg/53Do+UZhHNXZfXS0ASm3moN1ctXM9aC+dTjcWuTutzJHW7Cv/7Tsi4K776knPwsHt
- ovdbvViUrlJTKPgUwebq/CQZEJHwCZCw4dcz4/ZAk/hUjjHGWsjEq0Lz3IkqTDoDmENM rQ== 
-Received: from prod-mail-ppoint8 (a72-247-45-34.deploy.static.akamaitechnologies.com [72.247.45.34] (may be forged))
-        by m0050095.ppops.net-00190b01. (PPS) with ESMTPS id 3ctxbm3agn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 Dec 2021 23:33:21 +0000
-Received: from pps.filterd (prod-mail-ppoint8.akamai.com [127.0.0.1])
-        by prod-mail-ppoint8.akamai.com (8.16.1.2/8.16.1.2) with SMTP id 1B8N4ZAu014171
-        for <linux-perf-users@vger.kernel.org>; Wed, 8 Dec 2021 18:33:19 -0500
-Received: from prod-mail-relay19.dfw02.corp.akamai.com ([172.27.165.173])
-        by prod-mail-ppoint8.akamai.com with ESMTP id 3ct8cs94tb-1
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 Dec 2021 18:33:19 -0500
-Received: from [0.0.0.0] (prod-ssh-gw02.sanmateo.corp.akamai.com [172.22.187.166])
-        by prod-mail-relay19.dfw02.corp.akamai.com (Postfix) with ESMTP id 3E4A0604D5
-        for <linux-perf-users@vger.kernel.org>; Wed,  8 Dec 2021 23:33:19 +0000 (GMT)
-To:     linux-perf-users@vger.kernel.org
-From:   Josh Hunt <johunt@akamai.com>
-Subject: perf record per-thread vs per-cpu behavior
-Message-ID: <40cd791f-c9fd-bf2f-2119-7225460a5e2c@akamai.com>
-Date:   Wed, 8 Dec 2021 15:33:18 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Wed, 8 Dec 2021 20:59:49 -0500
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91EAEC061746;
+        Wed,  8 Dec 2021 17:56:16 -0800 (PST)
+Received: by mail-pf1-x42c.google.com with SMTP id z6so4031428pfe.7;
+        Wed, 08 Dec 2021 17:56:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Yj/KHzXtiJk54EmuUvfEvZXW5iSFJAcLfourAbdrQ04=;
+        b=AvC7qQ3fY6ARHqbdXisocOVt0TFLn2o+xgvRtMf5tiqVV0QssI7ZKcRtyfCwftHTTq
+         fDLtNTbVoNqo3xkhiJi37KOz9yUyNcIqhBZtlwyvUNnWwH0lArPpTrdvq5c5ELMFuG/o
+         WkXRkeedt08NP4gqnPr5OKCpR6zw7vE0hlv6sEWMlGMz5aimc4HH3NY/Jj/1y2ErVwbE
+         ym6YCZQsFw+gfu4GrvFR980QGa9tmpJiPt1KGZ0d47Lo7RDXvp0tc82mNJzaPOb+cDdd
+         FxU80RU0j+7bcYXMopeknAMOYzKyxRqxyolx8bQp41/jPKcgNHYuZmwVT571jApHTxmX
+         +9rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Yj/KHzXtiJk54EmuUvfEvZXW5iSFJAcLfourAbdrQ04=;
+        b=RP2lYpQ827VpqLCjRRQaW/mCe7Y3msS7GyAOSFUJAGUx+/tojLFpfaFzpYM0OVKr7D
+         v+ykOBHzdua60urjrMgw4K40HxTu2BibYdhGG9bnfVrxLuIkTgn9e4klsfEwVYD64ORj
+         aJcG7jZs+x+gR78tW9xyaYNWU3efI60D3lfO0nX8j1I6F090dbAwD+Wo+vMndhhqgnix
+         LJSiZ4EZpRr/HsG3iHiiHWllonbaM1OsyPySfXIonxHj35FEWySjEgt+QlmPAvokWBJj
+         Ksnk5Q07j9uNt8Y6nntCH0qeKEhc0NP3AzJd+Y2c7s0CJG9htpLyR3tywcSAYG5nD7Ek
+         JzZA==
+X-Gm-Message-State: AOAM532/QhRvj+zwkuGQL5IsPiQcBLvNpwCly86+PwoLbcFKtGn7iovh
+        hk3XZdAfhx603JjhBVJ4aHU=
+X-Google-Smtp-Source: ABdhPJx54V5jIoQN0/D/P22BeZiOxi7m+wS62SX9TKLJijQ4OTJrOPF4yeYIsv7T2jW0QNqkgR5Igw==
+X-Received: by 2002:a63:af4e:: with SMTP id s14mr14935456pgo.273.1639014976134;
+        Wed, 08 Dec 2021 17:56:16 -0800 (PST)
+Received: from localhost.localdomain ([193.203.214.57])
+        by smtp.gmail.com with ESMTPSA id g22sm5376431pfj.29.2021.12.08.17.56.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Dec 2021 17:56:15 -0800 (PST)
+From:   cgel.zte@gmail.com
+X-Google-Original-From: chi.minghao@zte.com.cn
+To:     peterz@infradead.org
+Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        chiminghao <chi.minghao@zte.com.cn>,
+        Zeal Robot <zealci@zte.com.cm>
+Subject: [PATCH] x86:intel:remove unneeded variable
+Date:   Thu,  9 Dec 2021 01:56:10 +0000
+Message-Id: <20211209015610.409791-1-chi.minghao@zte.com.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.425,18.0.790
- definitions=2021-12-08_08:2021-12-08,2021-12-08 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
- suspectscore=0 mlxlogscore=579 spamscore=0 phishscore=0 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2110150000 definitions=main-2112080127
-X-Proofpoint-GUID: gWnM4scpQ5wPWcmT833Qn27aH1qDE6-Z
-X-Proofpoint-ORIG-GUID: gWnM4scpQ5wPWcmT833Qn27aH1qDE6-Z
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2021-12-08_08,2021-12-08_01,2021-12-02_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 malwarescore=0
- priorityscore=1501 mlxscore=0 impostorscore=0 bulkscore=0 adultscore=0
- phishscore=0 lowpriorityscore=0 suspectscore=0 spamscore=0 mlxlogscore=542
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2110150000
- definitions=main-2112080128
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi
+From: chiminghao <chi.minghao@zte.com.cn>
 
-I'm seeing what I believe to be incorrect behavior when running perf 
-record -p and was hoping I could get some clarification from someone 
-here. We have an application which has around 800 threads and when I run 
-perf record -p <pid> on that the # of samples returned seems impossible 
-given the # of cpus, sampling freq, and duration of profile.
+return value form directly instead of
+taking this in another redundant variable.
 
-I'm running on a 5.4 LTS kernel and the machine has 40 hw threads.
+Reported-by: Zeal Robot <zealci@zte.com.cm>
+Signed-off-by: chiminghao <chi.minghao@zte.com.cn>
+---
+ arch/x86/events/intel/core.c | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
 
-Running with -p <pid> I see:
-# perf record -p 7297 -s -F 49 --call-graph lbr -- sleep 5
-[ perf record: Woken up 32 times to write data ]
-[ perf record: Captured and wrote 11.798 MB perf.data (58430 samples) ]
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 603964408d2d..6ba7e0ef8db4 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4106,23 +4106,17 @@ static struct event_constraint *
+ glp_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
+ 			  struct perf_event *event)
+ {
+-	struct event_constraint *c;
+-
+ 	/* :ppp means to do reduced skid PEBS which is PMC0 only. */
+ 	if (event->attr.precise_ip == 3)
+ 		return &counter0_constraint;
+ 
+-	c = intel_get_event_constraints(cpuc, idx, event);
+-
+-	return c;
++	return intel_get_event_constraints(cpuc, idx, event);
+ }
+ 
+ static struct event_constraint *
+ tnt_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
+ 			  struct perf_event *event)
+ {
+-	struct event_constraint *c;
+-
+ 	/*
+ 	 * :ppp means to do reduced skid PEBS,
+ 	 * which is available on PMC0 and fixed counter 0.
+@@ -4135,9 +4129,7 @@ tnt_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
+ 		return &counter0_constraint;
+ 	}
+ 
+-	c = intel_get_event_constraints(cpuc, idx, event);
+-
+-	return c;
++	return intel_get_event_constraints(cpuc, idx, event);
+ }
+ 
+ static bool allow_tsx_force_abort = true;
+-- 
+2.25.1
 
-and I've confirmed there are actually 58k samples in the data file, but 
-the # of samples should be closer to 5 * 49 * 40 = 9800.
-
-Running with -a I see something closer to what I would expect:
-
-# perf record -a -s -F 49 --call-graph lbr -- sleep 5
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 3.405 MB perf.data (9745 samples) ]
-
-Running with -p on applications with fewer threads seems to produce 
-something closer to what I would expect since the pid being profiled 
-isn't on cpu 100% of the time:
-
-# perf record -p 11629 -s -F 49 --call-graph lbr -- sleep 5
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.279 MB perf.data (1324 samples) ]
-
-It's very possible I'm doing something wrong or don't understand things 
-:) but if anyone has any insights into the above I'd appreciate your help!
-
-I should also say that the resulting reports look different and it has 
-me questioning the validity of the -p data.
-
-I'm happy to provide more info if needed, and thanks for any guidance 
-you can provide.
-
-Josh
