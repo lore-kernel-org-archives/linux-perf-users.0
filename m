@@ -2,376 +2,222 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5688FC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Dec 2021 23:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D301C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Dec 2021 23:59:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234590AbhLJAA4 (ORCPT
+        id S233036AbhLJACz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Dec 2021 19:00:56 -0500
-Received: from mail-lj1-f175.google.com ([209.85.208.175]:40718 "EHLO
-        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233036AbhLJAAz (ORCPT
+        Thu, 9 Dec 2021 19:02:55 -0500
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:20816 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232120AbhLJACz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Dec 2021 19:00:55 -0500
-Received: by mail-lj1-f175.google.com with SMTP id u22so11417136lju.7;
-        Thu, 09 Dec 2021 15:57:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HjMn4hH+fC4J4PgBgRqmBIzeV9G9Pp9PN/xEyS3F9rA=;
-        b=7+bYk6PeL7CJ09WjLpnpi49n8qKkT7PWYwkJZPqd+dcAbAigmnOh/ObjRJCn67hzhB
-         Rj3U0FBuSpAIWpP9h4Yrd+igiufWN/xlwrKI1k0WOCqQCmecVoXAS53ahDRpK/nlj+rb
-         t26BcXiZxPlAvLtkN75BRUM9fLm2a3bSbiPpLnPtvzK5mbXNviR7NI0lxGWWrVHayWib
-         9Y1lamQDgu1fNkTzd+3y+eq4ies7pUvaiQEcM9MhbC8PqYf847+VqKs1Xt0Obrq5nQN/
-         /ya/a3vSdP8h17ZrgJCk2zyA8QEPbzw+d/H3NG3lOlYSGeAvoLZE4lwCXzWlHjsTGeqt
-         6fSQ==
-X-Gm-Message-State: AOAM530BMzTi1B4LUvKXSo1dxyM5EQEgfb+mD9N82h44O7JoOFp6BeHZ
-        a/eBmJYja+HK+JFIZ/7YYeKYG+h46duWOwZLMz8=
-X-Google-Smtp-Source: ABdhPJxJDoQAPjAYs1r/bKNKJa+HLQfkI6ZRQ3PWiX55tE2B5ebNNV/4Edwf2jyuGDmfUX73FDVsgI+k0mB8ogahtV0=
-X-Received: by 2002:a2e:781a:: with SMTP id t26mr9584425ljc.90.1639094240083;
- Thu, 09 Dec 2021 15:57:20 -0800 (PST)
+        Thu, 9 Dec 2021 19:02:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1639094361; x=1670630361;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=cnkxM+v3e7Rw5Wac6Yp3jXRam56qrhimBukSct1R/EI=;
+  b=PQcofmeAVXwpVMJipAQFEfHRzXVRIg0dXTz+Uok5pNx1KUkKl06BNtoi
+   F273Hnj6FDuGf7hkoh1gypPICEErCeSbbEoMGJ18bbOHX0pZ+7WTjHGTT
+   /ia05XbdODK/3GAmrUCvhiexMitSpKtv0oqCVGWTDFtgjaqvz6ydMvH9b
+   MSrWwgc31rEx9n8Or2xKXywLtnJcblpsEJ+jIGbh8Y4nALGGKkzf2RxHx
+   1XUkX7rKM/jM0eEQMZCo39IlXAFJGBHtBJlWRqcvZHTc1EE5en2wxGD8M
+   mJpZnZ+6ik5ApZpL/dt/++SfOCHiHX9KZqvyvidklFKvt5mPYpGChL7cU
+   A==;
+X-IronPort-AV: E=Sophos;i="5.88,194,1635177600"; 
+   d="scan'208";a="299733815"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 10 Dec 2021 07:59:20 +0800
+IronPort-SDR: wqUhh96yn8hEJvKhlwVD2gXAi92rGQntpTS0PG03SJZmF4lYxzMKFqdI+b0PE88zNBprk6xuQt
+ 7cEZt0GQSndOg1dizuK1Z7BA+xIyUOrzSShv18GJQZKWRDM/F9HmKidBjWm3NKP2grA6jWamOF
+ P0wbmIvkh4fbJlVnbKDQCrLvwACGFVFquGudLl5xJqKL0osBcbJZ9naWHwSS66IU+7DCnNAi8P
+ af0Y+ISx+ONaFukA7fGISVtISsvANKta5f6IYUzw+dV4vs+6tYTa7ed+jQtx7gwDuGPpG6Wp/f
+ B/cZCFf16g81ZIBLa4m9rYjF
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2021 15:32:22 -0800
+IronPort-SDR: pNkC+0dK+2fJSgYTLwIKBolQkbyJRUIl01WpUTXGTVkyIpEHxPWb5MpYmiBuXIJQhaFvIHWCIt
+ MVxx/XyPWc6B0v5294aOg4VuCJngUgL7bAHSU2a1f27HzIpYQSMSFCbwf5nj4/w9tB07geyd+Q
+ +IJBvK4+i2GMW6tWUyvDiW4Tm2vtG5X7Jv600HFx/mQDaEnaz8cXXNPsBrojZ49l38CV/AdXBC
+ /CrF76E9bGKGZ2Pv4+Q/PHbbql9T3EbdkHFgtK4SltNVEuetFWevyPsFrgsw0BTRn4sjdUTwue
+ dKU=
+WDCIronportException: Internal
+Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
+  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2021 15:59:22 -0800
+Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4J99xN4ZdQz1Rwvj
+        for <linux-perf-users@vger.kernel.org>; Thu,  9 Dec 2021 15:59:20 -0800 (PST)
+Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
+        reason="pass (just generated, assumed good)"
+        header.d=opensource.wdc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
+        opensource.wdc.com; h=content-transfer-encoding:mime-version
+        :x-mailer:message-id:date:subject:to:from; s=dkim; t=1639094359;
+         x=1641686360; bh=cnkxM+v3e7Rw5Wac6Yp3jXRam56qrhimBukSct1R/EI=; b=
+        QQ2lIM0w8R5/FXjkEH0OugTtSDERPVkfLnsvK1UEfiTOtWgcTpfIjHLxj2tWf84/
+        NwirDS1cU3ZjutIIkIafGap0mT4LMuZ9EBEaWidR5Nhww14V+8gSsnJjm7hcZ5tB
+        CfJQGyo+NlKCCgM9unnCFZB2XByLQG+XuqM6vnx7oQ6xsgl0B0msEawD/TDjdSY/
+        VBJ7zsXib3uiLqBuCqf9ODs4iSkKMFXfvPzbF0LrUPpqnk2FrbsNQoZV7u/S52xB
+        6xKAGhJsGSjoC7MBKfULXVGUWoigq/qzga02Q8ReibV7N3TDRWLc8iw0gA2/NCUi
+        fMsPG8TGV0RMASQDC59NxQ==
+X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
+Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
+        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id h0hRvUB3hwz1 for <linux-perf-users@vger.kernel.org>;
+        Thu,  9 Dec 2021 15:59:19 -0800 (PST)
+Received: from localhost.localdomain (unknown [10.225.165.65])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4J99x959wWz1RtVG;
+        Thu,  9 Dec 2021 15:59:09 -0800 (PST)
+From:   Alistair Francis <alistair.francis@opensource.wdc.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     dave@stgolabs.net, dvhart@infradead.org, arnd@arndb.de,
+        alistair23@gmail.com, namhyung@kernel.org, acme@kernel.org,
+        jolsa@redhat.com, linux-perf-users@vger.kernel.org,
+        alexander.shishkin@linux.intel.com, mark.rutland@arm.com,
+        mingo@redhat.com, peterz@infradead.org, tglx@linutronix.de,
+        Alistair Francis <alistair.francis@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        linux-riscv@lists.infradead.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH v5 1/6] perf bench futex: Add support for 32-bit systems with 64-bit time_t
+Date:   Fri, 10 Dec 2021 09:58:52 +1000
+Message-Id: <20211209235857.423773-1-alistair.francis@opensource.wdc.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-References: <20211207082245.604654-1-nakamura.shun@fujitsu.com> <20211207082245.604654-4-nakamura.shun@fujitsu.com>
-In-Reply-To: <20211207082245.604654-4-nakamura.shun@fujitsu.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 9 Dec 2021 15:57:08 -0800
-Message-ID: <CAM9d7ci3Uycj21X4XXu-MxV--k=gtYkS-H+vGWheKC-YG+d3Wg@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] libperf tests: Add test_stat_multiplexing test
-To:     Shunsuke <nakamura.shun@fujitsu.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Rob Herring <robh@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+From: Alistair Francis <alistair.francis@wdc.com>
 
-On Tue, Dec 7, 2021 at 12:25 AM Shunsuke <nakamura.shun@fujitsu.com> wrote:
->
-> From: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
->
-> Adds a test for a counter obtained using read() system call during
-> multiplexing.
->
-> Committer testing:
->
->   $ sudo make tests -C ./tools/lib/perf V=1
->     make[1]: Entering directory '/home/nakamura/build_work/build_kernel/linux-kernel/linux/tools/lib/perf'
->     make -f /home/nakamura/build_work/build_kernel/linux-kernel/linux/tools/build/Makefile.build dir=. obj=libperf
->     make -C /home/nakamura/build_work/build_kernel/linux-kernel/linux/tools/lib/api/ O= libapi.a
->     make -f /home/nakamura/build_work/build_kernel/linux-kernel/linux/tools/build/Makefile.build dir=./fd obj=libapi
->     make -f /home/nakamura/build_work/build_kernel/linux-kernel/linux/tools/build/Makefile.build dir=./fs obj=libapi
->     make -f /home/nakamura/build_work/build_kernel/linux-kernel/linux/tools/build/Makefile.build dir=. obj=tests
->     make -f /home/nakamura/build_work/build_kernel/linux-kernel/linux/tools/build/Makefile.build dir=./tests obj=tests
->     running static:
->     - running tests/test-cpumap.c...OK
->     - running tests/test-threadmap.c...OK
->     - running tests/test-evlist.c...
->     Event  0 -- Raw count = 297991478, run = 289848838, enable = 487833990
->              Scaled count = 501538569 (59.42%, 289848838/487833990)
->     Event  1 -- Raw count = 298202297, run = 289842833, enable = 487828457
->              Scaled count = 501898097 (59.41%, 289842833/487828457)
->     Event  2 -- Raw count = 298838708, run = 290229672, enable = 487824119
->              Scaled count = 502294367 (59.49%, 290229672/487824119)
->     Event  3 -- Raw count = 299636384, run = 291223455, enable = 487819672
->              Scaled count = 501911916 (59.70%, 291223455/487819672)
->     Event  4 -- Raw count = 301039452, run = 292217461, enable = 487814690
->              Scaled count = 502541725 (59.90%, 292217461/487814690)
->     Event  5 -- Raw count = 301835436, run = 293210150, enable = 487808943
->              Scaled count = 502158690 (60.11%, 293210150/487808943)
->     Event  6 -- Raw count = 304060357, run = 294621959, enable = 487802339
->              Scaled count = 503429390 (60.40%, 294621959/487802339)
->     Event  7 -- Raw count = 305283685, run = 295613727, enable = 487794884
->              Scaled count = 503751369 (60.60%, 295613727/487794884)
->     Event  8 -- Raw count = 305475229, run = 296220779, enable = 487786737
->              Scaled count = 503026039 (60.73%, 296220779/487786737)
->     Event  9 -- Raw count = 305141917, run = 295602628, enable = 487777537
->              Scaled count = 503518435 (60.60%, 295602628/487777537)
->     Event 10 -- Raw count = 303495328, run = 294604639, enable = 487765440
->              Scaled count = 502485407 (60.40%, 294604639/487765440)
->     Event 11 -- Raw count = 302667296, run = 293605945, enable = 487755909
->              Scaled count = 502809171 (60.20%, 293605945/487755909)
->     Event 12 -- Raw count = 301051839, run = 292174676, enable = 487746418
->              Scaled count = 502565650 (59.90%, 292174676/487746418)
->     Event 13 -- Raw count = 299861567, run = 291175260, enable = 487737096
->              Scaled count = 502287213 (59.70%, 291175260/487737096)
->     Event 14 -- Raw count = 299075896, run = 290177159, enable = 487727626
->              Scaled count = 502684557 (59.50%, 290177159/487727626)
->        Expected: 501627347
->        High: 503751369   Low:  297991478   Average:  502593373
->        Average Error = 0.19%
->     OK
->     - running tests/test-evsel.c...
->             loop = 65536, count = 328182
->             loop = 131072, count = 660212
->             loop = 262144, count = 1344434
->             loop = 524288, count = 2665921
->             loop = 1048576, count = 5292260
->             loop = 65536, count = 525695
->             loop = 131072, count = 1039025
->             loop = 262144, count = 2022367
->             loop = 524288, count = 3807896
->             loop = 1048576, count = 7026126
->     OK
->     running dynamic:
->     - running tests/test-cpumap.c...OK
->     - running tests/test-threadmap.c...OK
->     - running tests/test-evlist.c...
->     Event  0 -- Raw count = 301261995, run = 297151831, enable = 496168657
->              Scaled count = 503031594 (59.89%, 297151831/496168657)
->     Event  1 -- Raw count = 301949118, run = 298145404, enable = 496165648
->              Scaled count = 502495687 (60.09%, 298145404/496165648)
->     Event  2 -- Raw count = 301996384, run = 298170976, enable = 496162496
->              Scaled count = 502528051 (60.10%, 298170976/496162496)
->     Event  3 -- Raw count = 302266025, run = 298167975, enable = 496158896
->              Scaled count = 502978152 (60.10%, 298167975/496158896)
->     Event  4 -- Raw count = 302326299, run = 298162895, enable = 496154322
->              Scaled count = 503082383 (60.09%, 298162895/496154322)
->     Event  5 -- Raw count = 301984135, run = 298160272, enable = 496149190
->              Scaled count = 502512232 (60.09%, 298160272/496149190)
->     Event  6 -- Raw count = 302227412, run = 298150911, enable = 496142936
->              Scaled count = 502926504 (60.09%, 298150911/496142936)
->     Event  7 -- Raw count = 302124492, run = 298154219, enable = 496135963
->              Scaled count = 502742595 (60.10%, 298154219/496135963)
->     Event  8 -- Raw count = 302044822, run = 298146667, enable = 496128143
->              Scaled count = 502614830 (60.09%, 298146667/496128143)
->     Event  9 -- Raw count = 301592560, run = 298031312, enable = 496119275
->              Scaled count = 502047523 (60.07%, 298031312/496119275)
->     Event 10 -- Raw count = 300695500, run = 297033588, enable = 496108098
->              Scaled count = 502224255 (59.87%, 297033588/496108098)
->     Event 11 -- Raw count = 300948104, run = 296983965, enable = 496098673
->              Scaled count = 502720593 (59.86%, 296983965/496098673)
->     Event 12 -- Raw count = 300864958, run = 296983483, enable = 496089228
->              Scaled count = 502572948 (59.86%, 296983483/496089228)
->     Event 13 -- Raw count = 301117898, run = 296973717, enable = 496079647
->              Scaled count = 503002292 (59.86%, 296973717/496079647)
->     Event 14 -- Raw count = 301224163, run = 296977949, enable = 496070093
->              Scaled count = 503162942 (59.87%, 296977949/496070093)
->        Expected: 501650928
->        High: 503162942   Low:  301261995   Average:  502709505
->        Average Error = 0.21%
->     OK
->     - running tests/test-evsel.c...
->             loop = 65536, count = 328183
->             loop = 131072, count = 740142
->             loop = 262144, count = 1339999
->             loop = 524288, count = 2696817
->             loop = 1048576, count = 5294518
->             loop = 65536, count = 517941
->             loop = 131072, count = 871035
->             loop = 262144, count = 1835805
->             loop = 524288, count = 3391920
->             loop = 1048576, count = 6891764
->     OK
->     make[1]: Leaving directory '/home/nakamura/build_work/build_kernel/linux-kernel/linux/tools/lib/perf'
->
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
-> Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
-> ---
->  tools/lib/perf/tests/test-evlist.c | 157 +++++++++++++++++++++++++++++
->  1 file changed, 157 insertions(+)
->
-> diff --git a/tools/lib/perf/tests/test-evlist.c b/tools/lib/perf/tests/test-evlist.c
-> index ce91a582f0e4..064edd0e995c 100644
-> --- a/tools/lib/perf/tests/test-evlist.c
-> +++ b/tools/lib/perf/tests/test-evlist.c
-> @@ -21,6 +21,9 @@
->  #include "tests.h"
->  #include <internal/evsel.h>
->
-> +#define EVENT_NUM 15
-> +#define WAIT_COUNT 100000000UL
-> +
->  static int libperf_print(enum libperf_print_level level,
->                          const char *fmt, va_list ap)
->  {
-> @@ -413,6 +416,159 @@ static int test_mmap_cpus(void)
->         return 0;
->  }
->
-> +static double display_error(long long average,
-> +                           long long high,
-> +                           long long low,
-> +                           long long expected)
-> +{
-> +       double error;
-> +
-> +       error = (((double)average - expected) / expected) * 100.0;
-> +
-> +       __T_VERBOSE("   Expected: %lld\n", expected);
-> +       __T_VERBOSE("   High: %lld   Low:  %lld   Average:  %lld\n",
-> +                   high, low, average);
-> +
-> +       __T_VERBOSE("   Average Error = %.2f%%\n", error);
-> +
-> +       return error;
-> +}
-> +
-> +static int test_stat_multiplexing(void)
-> +{
-> +       struct perf_counts_values expected_counts = { .val = 0 };
-> +       struct perf_counts_values counts[EVENT_NUM] = {{ .val = 0 },};
-> +       struct perf_thread_map *threads;
-> +       struct perf_evlist *evlist;
-> +       struct perf_evsel *evsel;
-> +       struct perf_event_attr attr = {
-> +               .type        = PERF_TYPE_HARDWARE,
-> +               .config      = PERF_COUNT_HW_INSTRUCTIONS,
-> +               .read_format = PERF_FORMAT_TOTAL_TIME_ENABLED |
-> +                              PERF_FORMAT_TOTAL_TIME_RUNNING,
-> +               .disabled    = 1,
+Some 32-bit architectures (such are 32-bit RISC-V) only have a 64-bit
+time_t and as such don't have the SYS_futex syscall. This patch will
+allow us to use the SYS_futex_time64 syscall on those platforms.
 
-It'd be nice if you use a less restrictive event attribute
-so that we can test it on VM or with non-root.
+This also converts the futex calls to be y2038 safe (when built for a
+5.1+ kernel).
 
-How about using SOFTWARE / CPU_CLOCKS with
-exclude_kernel = 1 ?
+This is a revert of commit ba4026b09d83acf56c040b6933eac7916c27e728
+"Revert "perf bench futex: Add support for 32-bit systems with 64-bit tim=
+e_t"".
 
-Thanks,
-Namhyung
+The original commit was reverted as including linux/time_types.h would
+fail to compile on older kernels. This commit doesn't include
+linux/time_types.h to avoid this issue.
 
-> +       };
-> +       int err, i, nonzero = 0;
-> +       unsigned long count;
-> +       long long max = 0, min = 0, avg = 0;
-> +       double error = 0.0;
-> +       __s8 scaled = 0;
-> +
-> +       /* read for non-multiplexing event count */
-> +       threads = perf_thread_map__new_dummy();
-> +       __T("failed to create threads", threads);
-> +
-> +       perf_thread_map__set_pid(threads, 0, 0);
-> +
-> +       evsel = perf_evsel__new(&attr);
-> +       __T("failed to create evsel", evsel);
-> +
-> +       err = perf_evsel__open(evsel, NULL, threads);
-> +       __T("failed to open evsel", err == 0);
-> +
-> +       err = perf_evsel__enable(evsel);
-> +       __T("failed to enable evsel", err == 0);
-> +
-> +       /* wait loop */
-> +       count = WAIT_COUNT;
-> +       while (count--)
-> +               ;
-> +
-> +       perf_evsel__read(evsel, 0, 0, &expected_counts);
-> +       __T("failed to read value for evsel", expected_counts.val != 0);
-> +       __T("failed to read non-multiplexing event count",
-> +           expected_counts.ena == expected_counts.run);
-> +
-> +       err = perf_evsel__disable(evsel);
-> +       __T("failed to enable evsel", err == 0);
-> +
-> +       perf_evsel__close(evsel);
-> +       perf_evsel__delete(evsel);
-> +
-> +       perf_thread_map__put(threads);
-> +
-> +       /* read for multiplexing event count */
-> +       threads = perf_thread_map__new_dummy();
-> +       __T("failed to create threads", threads);
-> +
-> +       perf_thread_map__set_pid(threads, 0, 0);
-> +
-> +       evlist = perf_evlist__new();
-> +       __T("failed to create evlist", evlist);
-> +
-> +       for (i = 0; i < EVENT_NUM; i++) {
-> +               evsel = perf_evsel__new(&attr);
-> +               __T("failed to create evsel", evsel);
-> +
-> +               perf_evlist__add(evlist, evsel);
-> +       }
-> +       perf_evlist__set_maps(evlist, NULL, threads);
-> +
-> +       err = perf_evlist__open(evlist);
-> +       __T("failed to open evsel", err == 0);
-> +
-> +       perf_evlist__enable(evlist);
-> +
-> +       /* wait loop */
-> +       count = WAIT_COUNT;
-> +       while (count--)
-> +               ;
-> +
-> +       i = 0;
-> +       perf_evlist__for_each_evsel(evlist, evsel) {
-> +               perf_evsel__read(evsel, 0, 0, &counts[i]);
-> +               __T("failed to read value for evsel", counts[i].val != 0);
-> +               i++;
-> +       }
-> +
-> +       perf_evlist__disable(evlist);
-> +
-> +       min = counts[0].val;
-> +       for (i = 0; i < EVENT_NUM; i++) {
-> +               __T_VERBOSE("Event %2d -- Raw count = %lu, run = %lu, enable = %lu\n",
-> +                           i, counts[i].val, counts[i].run, counts[i].ena);
-> +
-> +               perf_counts_values__scale(&counts[i], true, &scaled);
-> +               if (scaled == 1) {
-> +                       __T_VERBOSE("\t Scaled count = %lu (%.2lf%%, %lu/%lu)\n",
-> +                                   counts[i].val,
-> +                                   (double)counts[i].run / (double)counts[i].ena * 100.0,
-> +                                   counts[i].run, counts[i].ena);
-> +               } else if (scaled == -1) {
-> +                       __T_VERBOSE("\t Not Runnnig\n");
-> +               } else {
-> +                       __T_VERBOSE("\t Not Scaling\n");
-> +               }
-> +
-> +               if (counts[i].val > max)
-> +                       max = counts[i].val;
-> +
-> +               if (counts[i].val < min)
-> +                       min = counts[i].val;
-> +
-> +               avg += counts[i].val;
-> +
-> +               if (counts[i].val != 0)
-> +                       nonzero++;
-> +       }
-> +
-> +       if (nonzero != 0)
-> +               avg = avg / nonzero;
-> +       else
-> +               avg = 0;
-> +
-> +       error = display_error(avg, max, min, expected_counts.val);
-> +
-> +       __T("Error out of range!", ((error <= 1.0) && (error >= -1.0)));
-> +
-> +       perf_evlist__close(evlist);
-> +       perf_evlist__delete(evlist);
-> +
-> +       perf_thread_map__put(threads);
-> +
-> +       return 0;
-> +}
-> +
->  int test_evlist(int argc, char **argv)
->  {
->         __T_START;
-> @@ -424,6 +580,7 @@ int test_evlist(int argc, char **argv)
->         test_stat_thread_enable();
->         test_mmap_thread();
->         test_mmap_cpus();
-> +       test_stat_multiplexing();
->
->         __T_END;
->         return tests_failed == 0 ? 0 : -1;
-> --
-> 2.25.1
->
+Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alistair Francis <alistair23@gmail.com>
+Cc: Atish Patra <atish.patra@wdc.com>
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-riscv@lists.infradead.org
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+---
+ tools/perf/bench/futex.h | 52 +++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 49 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/bench/futex.h b/tools/perf/bench/futex.h
+index ebdc2b032afc..385d2bdfaa9f 100644
+--- a/tools/perf/bench/futex.h
++++ b/tools/perf/bench/futex.h
+@@ -8,6 +8,7 @@
+ #ifndef _FUTEX_H
+ #define _FUTEX_H
+=20
++#include <errno.h>
+ #include <unistd.h>
+ #include <sys/syscall.h>
+ #include <sys/types.h>
+@@ -28,7 +29,17 @@ struct bench_futex_parameters {
+ };
+=20
+ /**
+- * futex_syscall() - SYS_futex syscall wrapper
++ * This is copied from linux/time_types.h.
++ * We copy this here to avoid compilation failures when running
++ * on systems that don't ship with linux/time_types.h.
++ */
++struct __kernel_old_timespec {
++	__kernel_old_time_t	tv_sec;		/* seconds */
++	long			tv_nsec;	/* nanoseconds */
++};
++
++/**
++ * futex_syscall() - __NR_futex syscall wrapper
+  * @uaddr:	address of first futex
+  * @op:		futex op code
+  * @val:	typically expected value of uaddr, but varies by op
+@@ -49,14 +60,49 @@ static inline int
+ futex_syscall(volatile u_int32_t *uaddr, int op, u_int32_t val, struct t=
+imespec *timeout,
+ 	      volatile u_int32_t *uaddr2, int val3, int opflags)
+ {
+-	return syscall(SYS_futex, uaddr, op | opflags, val, timeout, uaddr2, va=
+l3);
++#if defined(__NR_futex_time64)
++	if (sizeof(*timeout) !=3D sizeof(struct __kernel_old_timespec)) {
++		int ret =3D syscall(__NR_futex_time64, uaddr, op | opflags, val, timeo=
+ut,
++				  uaddr2, val3);
++	if (ret =3D=3D 0 || errno !=3D ENOSYS)
++		return ret;
++	}
++#endif
++
++#if defined(__NR_futex)
++	if (sizeof(*timeout) =3D=3D sizeof(struct __kernel_old_timespec))
++		return syscall(__NR_futex, uaddr, op | opflags, val, timeout, uaddr2, =
+val3);
++
++	if (timeout && timeout->tv_sec =3D=3D (long)timeout->tv_sec) {
++		struct __kernel_old_timespec ts32;
++
++		ts32.tv_sec =3D (__kernel_long_t) timeout->tv_sec;
++		ts32.tv_nsec =3D (__kernel_long_t) timeout->tv_nsec;
++
++		return syscall(__NR_futex, uaddr, op | opflags, val, ts32, uaddr2, val=
+3);
++	} else if (!timeout) {
++		return syscall(__NR_futex, uaddr, op | opflags, val, NULL, uaddr2, val=
+3);
++	}
++#endif
++
++	errno =3D ENOSYS;
++	return -1;
+ }
+=20
+ static inline int
+ futex_syscall_nr_requeue(volatile u_int32_t *uaddr, int op, u_int32_t va=
+l, int nr_requeue,
+ 			 volatile u_int32_t *uaddr2, int val3, int opflags)
+ {
+-	return syscall(SYS_futex, uaddr, op | opflags, val, nr_requeue, uaddr2,=
+ val3);
++#if defined(__NR_futex_time64)
++	int ret =3D  syscall(__NR_futex_time64, uaddr, op | opflags, val, nr_re=
+queue,
++			   uaddr2, val3);
++	if (ret =3D=3D 0 || errno !=3D ENOSYS)
++		return ret;
++#endif
++
++#if defined(__NR_futex)
++	return syscall(__NR_futex, uaddr, op | opflags, val, nr_requeue, uaddr2=
+, val3);
++#endif
+ }
+=20
+ /**
+--=20
+2.31.1
+
