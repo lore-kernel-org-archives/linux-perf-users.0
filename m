@@ -2,154 +2,107 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5550C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Dec 2021 18:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AD7C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Dec 2021 19:17:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229790AbhLISzT (ORCPT
+        id S229488AbhLITVU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Dec 2021 13:55:19 -0500
-Received: from sin.source.kernel.org ([145.40.73.55]:38392 "EHLO
-        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229813AbhLISzQ (ORCPT
+        Thu, 9 Dec 2021 14:21:20 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:46624 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229379AbhLITVU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Dec 2021 13:55:16 -0500
+        Thu, 9 Dec 2021 14:21:20 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 345DECE27AF;
-        Thu,  9 Dec 2021 18:51:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 432FDC004DD;
-        Thu,  9 Dec 2021 18:51:39 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 114F1B82614;
+        Thu,  9 Dec 2021 19:17:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B08CEC341C6;
+        Thu,  9 Dec 2021 19:17:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639075899;
-        bh=6RDtEcVmRXZthfvwi1qdvQByNAKkBB0mgA+IKMkVDt4=;
+        s=k20201202; t=1639077463;
+        bh=l8aT2KFL66nTXjJzC+nFcTYlOzHn82GOsxi5oeVWqXE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TucwtocMnOQPXvaUYiMIpxkozppXxyfdabFA0TuTv/IwwfVCBtO66uqnPILGY0ltK
-         QTMiLevMqHDwFyVNyrxknT5VDU2lOvlyPYA/Yf09Rs9w+8bL6VtD/JsfkftKRqiFBY
-         mN2S9ZWo7Z3PlaZh8nOL39zNTAhe0AF26flFwgJFWbuVixnfo6X5vBO0XoXiWIwMae
-         6ft/X5whx+zjOAwtT6xRM//fqEVofc9VISQr/k6SD3c0xJgfJzUQrvO6CZGhsfyXek
-         ux46KBRWZRw4lb/+ZO90NWlvbA8qL5g9hJ/mrJNtKAx4+rHRahV8VKb0au9ZaxU8hI
-         4Sur2eab51GIQ==
+        b=ckgeEJQIO8DMz1SvfiIwuXablyJcWbuWPrlZfMFBsL7PHVeL+tKZC5OQhmYbvMoJS
+         2MAnUpmjSgIZJcwQV7maFNq67++Jv+PeWQwGJIF1shOh+jMQlXfBqS0RfkNxl/nwoK
+         /c8U2jJ2E0RSEDn8zbypb1bbuvC7IgET/dqeGLCtqHleCQyL74ptX/ovL+OOjnTk4/
+         svFVOKla7gMg4bdxhHiv99W8HfKviDpsOth4+qsZr053ksruRrkNgTyDNgxyXgPdJZ
+         EkdzOR0TkZJMvKrLIxJp6wXHQA8AW1FeTsQanJKzzvfC1ekiX/92ddtHef/Y+xW/oz
+         ouBiUv7YQ5AcQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B7F7D405D8; Thu,  9 Dec 2021 15:51:37 -0300 (-03)
-Date:   Thu, 9 Dec 2021 15:51:37 -0300
+        id 77CF3405D8; Thu,  9 Dec 2021 16:17:41 -0300 (-03)
+Date:   Thu, 9 Dec 2021 16:17:41 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Sohaib Mohamed <sohaib.amhmd@gmail.com>, irogers@google.com,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Fabian Hemmer <copy@copy.sh>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] Unbuffered output when pipe/tee to a file
-Message-ID: <YbJQOfeeAoJ1GzJZ@kernel.org>
-References: <20211119061409.78004-1-sohaib.amhmd@gmail.com>
- <YaOhbfWzMv/uvKKi@krava>
+To:     Kajol Jain <kjain@linux.ibm.com>
+Cc:     mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        mingo@redhat.com, jolsa@kernel.org, namhyung@kernel.org,
+        ak@linux.intel.com, linux-perf-users@vger.kernel.org,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+        rnsastry@linux.ibm.com, yao.jin@linux.intel.com, ast@kernel.org,
+        daniel@iogearbox.net, songliubraving@fb.com,
+        kan.liang@linux.intel.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, paulus@samba.org
+Subject: Re: [PATCH 0/4] perf: Add new macros for mem_hops field
+Message-ID: <YbJWVYZg1el9PR1I@kernel.org>
+References: <20211206091749.87585-1-kjain@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YaOhbfWzMv/uvKKi@krava>
+In-Reply-To: <20211206091749.87585-1-kjain@linux.ibm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Sun, Nov 28, 2021 at 04:34:05PM +0100, Jiri Olsa escreveu:
-> On Fri, Nov 19, 2021 at 08:14:08AM +0200, Sohaib Mohamed wrote:
-> > The output of Perf bench gets buffered when I pipe it to a file or to
-> > tee, in such a way that I can see it only at the end.
-> > 
-> > E.g.
-> > $ perf bench internals synthesize -t
-> > < output comes out fine after each test run >
-> > 
-> > $ perf bench internals synthesize -t | tee file.txt
-> > < output comes out only at the end of all tests >
-> > 
-> > This patch resolves this issue for 'bench' and 'test' subcommands.
+Em Mon, Dec 06, 2021 at 02:47:45PM +0530, Kajol Jain escreveu:
+> Patchset adds new macros for mem_hops field which can be
+> used to represent remote-node, socket and board level details.
 > 
-> I can reproduce this for bench, but not for test subcommand
-> other that that it makes sense to me
+> Currently the code had macro for HOPS_0, which corresponds
+> to data coming from another core but same node.
+> Add new macros for HOPS_1 to HOPS_3 to represent
+> remote-node, socket and board level data.
+> 
+> For ex: Encodings for mem_hops fields with L2 cache:
 
-I reproduced it, see my comment to Sohaib's message, its not at the end,
-its when the buffer fills up.
-
-From the "it makes sense to me" I'm deriving an Acked-by you, ok?
+I checked and this hasn't hit mainstream, is it already merged on a tree
+where this is slated to be submitted in the next window? If so please
+let me know which one so that I can merge it on perf/core.
 
 - Arnaldo
  
-> jirka
+> L2                      - local L2
+> L2 | REMOTE | HOPS_0    - remote core, same node L2
+> L2 | REMOTE | HOPS_1    - remote node, same socket L2
+> L2 | REMOTE | HOPS_2    - remote socket, same board L2
+> L2 | REMOTE | HOPS_3    - remote board L2
 > 
-> > 
-> > See, also:
-> > $ perf bench mem all | tee file.txt
-> > $ perf bench sched all | tee file.txt
-> > $ perf bench internals all -t | tee file.txt
-> > $ perf bench internals all | tee file.txt
-> > 
-> > Suggested-by: Riccardo Mancini <rickyman7@gmail.com>
-> > Signed-off-by: Sohaib Mohamed <sohaib.amhmd@gmail.com>
-> > ---
-> > v1 -> v2:
-> > - Use setvbuf(), instead of sprinkling fflush() calls and missing some places.
-> > 
-> > v1: https://lore.kernel.org/linux-perf-users/20211112215313.108823-1-sohaib.amhmd@gmail.com/
-> > ---
-> >  tools/perf/builtin-bench.c      | 5 +++--
-> >  tools/perf/tests/builtin-test.c | 3 +++
-> >  2 files changed, 6 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
-> > index d0895162c2ba..d291f3a8af5f 100644
-> > --- a/tools/perf/builtin-bench.c
-> > +++ b/tools/perf/builtin-bench.c
-> > @@ -226,7 +226,6 @@ static void run_collection(struct collection *coll)
-> >  		if (!bench->fn)
-> >  			break;
-> >  		printf("# Running %s/%s benchmark...\n", coll->name, bench->name);
-> > -		fflush(stdout);
-> > 
-> >  		argv[1] = bench->name;
-> >  		run_bench(coll->name, bench->name, bench->fn, 1, argv);
-> > @@ -247,6 +246,9 @@ int cmd_bench(int argc, const char **argv)
-> >  	struct collection *coll;
-> >  	int ret = 0;
-> > 
-> > +	/* Unbuffered output */
-> > +	setvbuf(stdout, NULL, _IONBF, 0);
-> > +
-> >  	if (argc < 2) {
-> >  		/* No collection specified. */
-> >  		print_usage();
-> > @@ -300,7 +302,6 @@ int cmd_bench(int argc, const char **argv)
-> > 
-> >  			if (bench_format == BENCH_FORMAT_DEFAULT)
-> >  				printf("# Running '%s/%s' benchmark:\n", coll->name, bench->name);
-> > -			fflush(stdout);
-> >  			ret = run_bench(coll->name, bench->name, bench->fn, argc-1, argv+1);
-> >  			goto end;
-> >  		}
-> > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> > index 8cb5a1c3489e..d92ae4efd2e6 100644
-> > --- a/tools/perf/tests/builtin-test.c
-> > +++ b/tools/perf/tests/builtin-test.c
-> > @@ -606,6 +606,9 @@ int cmd_test(int argc, const char **argv)
-> >          if (ret < 0)
-> >                  return ret;
-> > 
-> > +	/* Unbuffered output */
-> > +	setvbuf(stdout, NULL, _IONBF, 0);
-> > +
-> >  	argc = parse_options_subcommand(argc, argv, test_options, test_subcommands, test_usage, 0);
-> >  	if (argc >= 1 && !strcmp(argv[0], "list"))
-> >  		return perf_test__list(argc - 1, argv + 1);
-> > --
-> > 2.25.1
-> > 
+> Patch 1 & 2 adds tool and kernel side changes to add new macros for
+> mem_hops field
+> 
+> Patch 3 add data source encodings for power10 and older platforms
+> to represent data based on newer composite  PERF_MEM_LVLNUM* fields
+> 
+> Patch 4 add data source encodings with proper sub_index used to
+> represent memory/cache level data for power10 platform.
+> 
+> Kajol Jain (4):
+>   perf: Add new macros for mem_hops field
+>   tools/perf: Add new macros for mem_hops field
+>   powerpc/perf: Add encodings to represent data based on newer composite
+>     PERF_MEM_LVLNUM* fields
+>   powerpc/perf: Add data source encodings for power10 platform
+> 
+>  arch/powerpc/perf/isa207-common.c     | 60 ++++++++++++++++++++-------
+>  include/uapi/linux/perf_event.h       |  5 ++-
+>  tools/include/uapi/linux/perf_event.h |  5 ++-
+>  tools/perf/util/mem-events.c          | 29 ++++++++-----
+>  4 files changed, 71 insertions(+), 28 deletions(-)
+> 
+> -- 
+> 2.27.0
 
 -- 
 
