@@ -2,156 +2,151 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA1EC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Dec 2021 17:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74816C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Dec 2021 18:50:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237108AbhLIR4i (ORCPT
+        id S229711AbhLISy3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Dec 2021 12:56:38 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:50653 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235869AbhLIR4i (ORCPT
+        Thu, 9 Dec 2021 13:54:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229596AbhLISyY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Dec 2021 12:56:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1639072383;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ykeGzsdNOBrGlCb40v8EGvyxBXDB7d5oL6GZtHOQfP4=;
-        b=i4g8Ou0cJHBbIXhvmYEOLwYWIB6A7c/eL8t28elngIwkCpcWm+nqHH71KOqlF9G+8udsQZ
-        MI3Kdp24/0lLHat/ASatN39/M51ogmntDGsjJbJHNUIchtpD1eI6WXX4ZwzyjzxxeToLpJ
-        ML9YWUf4LwdXGx7lzxACGKpvqD/oe44=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-451-TxyzGFn4PQCuEplbWRs9Gg-1; Thu, 09 Dec 2021 12:53:02 -0500
-X-MC-Unique: TxyzGFn4PQCuEplbWRs9Gg-1
-Received: by mail-wm1-f71.google.com with SMTP id j25-20020a05600c1c1900b00332372c252dso2773320wms.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Dec 2021 09:53:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ykeGzsdNOBrGlCb40v8EGvyxBXDB7d5oL6GZtHOQfP4=;
-        b=hXsFk8mubsqQAeh+LBDbNyr9z2bAP3eBQwJJZaZcLMXIssOG3VZJ7VfXuMpFj3cT1u
-         4eF/S4v3ix4ofuZ4kUw0xs4RSsud1L3Ke9baL8JnDXazHoVpLTvlgbEPWmiJ1E0zqYaK
-         fPRXh0hZj3vuh87jXDff66oL3nBStC/7kKpxi+r3z8e5pv6VRSsDvZiYaVKtfxQAyO+b
-         Aiji4Rly3IcZnV3KF0Rifh4emqvSJAMxG2bRe6mBSUh0noZnEeA5371vzt+6QWCQW7J7
-         N1XMCR59Bc0E1B3prq8ZL1shLskrP6oImEH0Xwq5C3uSEBorwzfKVEl9LFJbCf0aIOFy
-         MO6A==
-X-Gm-Message-State: AOAM531pb0GEdqI4JuUUIOE5nF99Gl3Pgxcq5FjRHJVd9uUIfbrAjcxo
-        RxP/niNuvypTXrHtfn6aE4vCNw936Fw0xeAO03c+KbmdOf6rQGBQgpdUZAdNeawtKPHbSF+3MP3
-        CB34pRiwQD1F+vA5e48QV1UvVRjk4cQ==
-X-Received: by 2002:a05:600c:4104:: with SMTP id j4mr9037713wmi.178.1639072380851;
-        Thu, 09 Dec 2021 09:53:00 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwbsO2TcC5f2/0v+DOYSsG5pJMtYTJaN+0qN9M9JFSFywQIjjK3EBzV2ZgSpOwQ1UusdPn8RQ==
-X-Received: by 2002:a05:600c:4104:: with SMTP id j4mr9037684wmi.178.1639072380580;
-        Thu, 09 Dec 2021 09:53:00 -0800 (PST)
-Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
-        by smtp.gmail.com with ESMTPSA id g13sm569367wrd.57.2021.12.09.09.52.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Dec 2021 09:53:00 -0800 (PST)
-Date:   Thu, 9 Dec 2021 18:52:58 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Josh Hunt <johunt@akamai.com>
-Cc:     linux-perf-users@vger.kernel.org
-Subject: Re: perf record per-thread vs per-cpu behavior
-Message-ID: <YbJCeiV6iTitxYEb@krava>
-References: <40cd791f-c9fd-bf2f-2119-7225460a5e2c@akamai.com>
+        Thu, 9 Dec 2021 13:54:24 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21D4AC061746;
+        Thu,  9 Dec 2021 10:50:50 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 696E1CE27D7;
+        Thu,  9 Dec 2021 18:50:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63EB1C004DD;
+        Thu,  9 Dec 2021 18:50:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1639075846;
+        bh=w7new5tncWvYjVhAOuqtDPgqyOKIbxL/GcszJGXds3s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oYQwsraAmn+3N5TaeLgpotH78Kz4Dxo7oOgj2tM3kWFAD6vIXsmqmtBE3Xiet4cya
+         P3ra0UkF/4BFH6M12XFdn+maaoMgfqGP3OhlbynY+vibCw+HLraQ7iwyC5X4OgPjQI
+         /qaHs8JJbDqiSLWUc+/5eRdKJhUfckYX6JTE0vAL7JbSlggHgXIzbMpIXIuyfkHAiV
+         r5066xIGcxRtzWulHizT2d19C7NxaT8E0ZkIF1rdXfIaDuIb3cNY+O3k/hOsuhQlqh
+         OeGdzFDrMIqqVcFY+ibLSMSKPnqZm/oGAR0FRskEk2hbjQavGQaA0DO4IwkuHbEXlF
+         Ln3LeOXBomCcQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id AD988405D8; Thu,  9 Dec 2021 15:50:42 -0300 (-03)
+Date:   Thu, 9 Dec 2021 15:50:42 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Sohaib Mohamed <sohaib.amhmd@gmail.com>
+Cc:     irogers@google.com, Riccardo Mancini <rickyman7@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Fabian Hemmer <copy@copy.sh>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] Unbuffered output when pipe/tee to a file
+Message-ID: <YbJQAp6/gz4kHdi8@kernel.org>
+References: <20211119061409.78004-1-sohaib.amhmd@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <40cd791f-c9fd-bf2f-2119-7225460a5e2c@akamai.com>
+In-Reply-To: <20211119061409.78004-1-sohaib.amhmd@gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Dec 08, 2021 at 03:33:18PM -0800, Josh Hunt wrote:
-> Hi
-> 
-> I'm seeing what I believe to be incorrect behavior when running perf record
-> -p and was hoping I could get some clarification from someone here. We have
-> an application which has around 800 threads and when I run perf record -p
-> <pid> on that the # of samples returned seems impossible given the # of
-> cpus, sampling freq, and duration of profile.
-> 
-> I'm running on a 5.4 LTS kernel and the machine has 40 hw threads.
-> 
-> Running with -p <pid> I see:
-> # perf record -p 7297 -s -F 49 --call-graph lbr -- sleep 5
-> [ perf record: Woken up 32 times to write data ]
-> [ perf record: Captured and wrote 11.798 MB perf.data (58430 samples) ]
-> 
-> and I've confirmed there are actually 58k samples in the data file, but the
-> # of samples should be closer to 5 * 49 * 40 = 9800.
-> 
-> Running with -a I see something closer to what I would expect:
-> 
-> # perf record -a -s -F 49 --call-graph lbr -- sleep 5
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 3.405 MB perf.data (9745 samples) ]
-> 
-> Running with -p on applications with fewer threads seems to produce
-> something closer to what I would expect since the pid being profiled isn't
-> on cpu 100% of the time:
-> 
-> # perf record -p 11629 -s -F 49 --call-graph lbr -- sleep 5
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.279 MB perf.data (1324 samples) ]
-> 
-> It's very possible I'm doing something wrong or don't understand things :)
-> but if anyone has any insights into the above I'd appreciate your help!
+Em Fri, Nov 19, 2021 at 08:14:08AM +0200, Sohaib Mohamed escreveu:
+> The output of Perf bench gets buffered when I pipe it to a file or to
+> tee, in such a way that I can see it only at the end.
 
-hi,
-so with -p x you monitor also all the 800 threads
+Humm, not at the end, the output is staggered, i.e. only when the buffer
+fills up it is drained and then we have to wait for it to fill up again,
+rinse repeat.
 
-and IIRC the way -F works is by gradually moving counter's period into
-proper value, to reach the desired frequency
+I just tested and applied it, adding a note about this patch fixing the
+previous output bursty behaviour.
 
-so I think you get initial burst of samples when thread gets scheduled
-(from 800 threads), which screws the expected count, like:
-
-# ./perf script
-                                           value:
- sched-messaging 281355 413544.604702:          1 cycles:  ffffffff8106f094 native_write_msr+0x4 ([kernel.kallsyms])
- sched-messaging 281355 413544.604707:          1 cycles:  ffffffff8106f094 native_write_msr+0x4 ([kernel.kallsyms])
- sched-messaging 281355 413544.604709:        195 cycles:  ffffffff8106f094 native_write_msr+0x4 ([kernel.kallsyms])
- sched-messaging 281355 413544.604711:     108360 cycles:  ffffffff8106f094 native_write_msr+0x4 ([kernel.kallsyms])
- sched-messaging 281355 413544.604758:   60054506 cycles:  ffffffff81653ced __list_del_entry_valid+0x2d ([kernel.kallsyms])
- sched-messaging 281341 413544.604778:          1 cycles:  ffffffff8106f094 native_write_msr+0x4 ([kernel.kallsyms])
- sched-messaging 281341 413544.604780:          1 cycles:  ffffffff8106f094 native_write_msr+0x4 ([kernel.kallsyms])
- sched-messaging 281341 413544.604782:        566 cycles:  ffffffff8106f094 native_write_msr+0x4 ([kernel.kallsyms])
- sched-messaging 281341 413544.604784:     357999 cycles:  ffffffff81c53ae7 rcu_nmi_exit+0x17 ([kernel.kallsyms])
- sched-messaging 281467 413544.604823:          1 cycles:  ffffffff8106f094 native_write_msr+0x4 ([kernel.kallsyms])
- sched-messaging 281467 413544.604825:          1 cycles:  ffffffff8106f094 native_write_msr+0x4 ([kernel.kallsyms])
- sched-messaging 281467 413544.604827:        645 cycles:  ffffffff8106f094 native_write_msr+0x4 ([kernel.kallsyms])
- sched-messaging 281467 413544.604829:     484508 cycles:  ffffffff81e015c6 nmi_restore+0x25 ([kernel.kallsyms])
- sched-messaging 281467 413544.605025:  345122294 cycles:  ffffffff81312f3a memcg_slab_post_alloc_hook+0x17a ([kernel.kallsyms])
- sched-messaging 281346 413544.605262:          1 cycles:  ffffffff8106f094 native_write_msr+0x4 ([kernel.kallsyms])
- sched-messaging 281346 413544.605266:          1 cycles:  ffffffff8106f094 native_write_msr+0x4 ([kernel.kallsyms])
- sched-messaging 281346 413544.605268:        260 cycles:  ffffffff8106f094 native_write_msr+0x4 ([kernel.kallsyms])
- sched-messaging 281346 413544.605270:     124558 cycles:  ffffffff8106f098 native_write_msr+0x8 ([kernel.kallsyms])
- sched-messaging 281345 413544.605306:          1 cycles:  ffffffff8106f094 native_write_msr+0x4 ([kernel.kallsyms])
- sched-messaging 281345 413544.605308:          1 cycles:  ffffffff8106f094 native_write_msr+0x4 ([kernel.kallsyms])
- sched-messaging 281345 413544.605310:        518 cycles:  ffffffff8106f094 native_write_msr+0x4 ([kernel.kallsyms])
- sched-messaging 281345 413544.605312:     344137 cycles:  ffffffff81c53ce2 irqentry_nmi_exit+0x32 ([kernel.kallsyms])
- ...
-
-check the 'value:' column
-
-with system wide monitoring you don't see this issue and the counter
-stabilize fast, because it's not scheduled in/out all the time
-
-jirka
-
+- Arnaldo
+ 
+> E.g.
+> $ perf bench internals synthesize -t
+> < output comes out fine after each test run >
 > 
-> I should also say that the resulting reports look different and it has me
-> questioning the validity of the -p data.
+> $ perf bench internals synthesize -t | tee file.txt
+> < output comes out only at the end of all tests >
 > 
-> I'm happy to provide more info if needed, and thanks for any guidance you
-> can provide.
+> This patch resolves this issue for 'bench' and 'test' subcommands.
 > 
-> Josh
+> See, also:
+> $ perf bench mem all | tee file.txt
+> $ perf bench sched all | tee file.txt
+> $ perf bench internals all -t | tee file.txt
+> $ perf bench internals all | tee file.txt
 > 
+> Suggested-by: Riccardo Mancini <rickyman7@gmail.com>
+> Signed-off-by: Sohaib Mohamed <sohaib.amhmd@gmail.com>
+> ---
+> v1 -> v2:
+> - Use setvbuf(), instead of sprinkling fflush() calls and missing some places.
+> 
+> v1: https://lore.kernel.org/linux-perf-users/20211112215313.108823-1-sohaib.amhmd@gmail.com/
+> ---
+>  tools/perf/builtin-bench.c      | 5 +++--
+>  tools/perf/tests/builtin-test.c | 3 +++
+>  2 files changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
+> index d0895162c2ba..d291f3a8af5f 100644
+> --- a/tools/perf/builtin-bench.c
+> +++ b/tools/perf/builtin-bench.c
+> @@ -226,7 +226,6 @@ static void run_collection(struct collection *coll)
+>  		if (!bench->fn)
+>  			break;
+>  		printf("# Running %s/%s benchmark...\n", coll->name, bench->name);
+> -		fflush(stdout);
+> 
+>  		argv[1] = bench->name;
+>  		run_bench(coll->name, bench->name, bench->fn, 1, argv);
+> @@ -247,6 +246,9 @@ int cmd_bench(int argc, const char **argv)
+>  	struct collection *coll;
+>  	int ret = 0;
+> 
+> +	/* Unbuffered output */
+> +	setvbuf(stdout, NULL, _IONBF, 0);
+> +
+>  	if (argc < 2) {
+>  		/* No collection specified. */
+>  		print_usage();
+> @@ -300,7 +302,6 @@ int cmd_bench(int argc, const char **argv)
+> 
+>  			if (bench_format == BENCH_FORMAT_DEFAULT)
+>  				printf("# Running '%s/%s' benchmark:\n", coll->name, bench->name);
+> -			fflush(stdout);
+>  			ret = run_bench(coll->name, bench->name, bench->fn, argc-1, argv+1);
+>  			goto end;
+>  		}
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+> index 8cb5a1c3489e..d92ae4efd2e6 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
+> @@ -606,6 +606,9 @@ int cmd_test(int argc, const char **argv)
+>          if (ret < 0)
+>                  return ret;
+> 
+> +	/* Unbuffered output */
+> +	setvbuf(stdout, NULL, _IONBF, 0);
+> +
+>  	argc = parse_options_subcommand(argc, argv, test_options, test_subcommands, test_usage, 0);
+>  	if (argc >= 1 && !strcmp(argv[0], "list"))
+>  		return perf_test__list(argc - 1, argv + 1);
+> --
+> 2.25.1
 
+-- 
+
+- Arnaldo
