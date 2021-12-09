@@ -2,125 +2,106 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B69C433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Dec 2021 02:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB27C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Dec 2021 09:21:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230396AbhLICqZ (ORCPT
+        id S234578AbhLIJY6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Dec 2021 21:46:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229455AbhLICqY (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Dec 2021 21:46:24 -0500
-Received: from mail-qk1-x72f.google.com (mail-qk1-x72f.google.com [IPv6:2607:f8b0:4864:20::72f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F35B1C061746;
-        Wed,  8 Dec 2021 18:42:51 -0800 (PST)
-Received: by mail-qk1-x72f.google.com with SMTP id w14so3847850qkf.5;
-        Wed, 08 Dec 2021 18:42:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ni8ukBhnwq4xfJn2KEfRGFk9CvW/EaamTsKpCF9U5jw=;
-        b=FledoWYccQAWv6FRpva8r4lIbEIfgQM+BjswBkDz+Ede5Wkeo8QjIZfKPDzFnpjhRl
-         QxEn1AjrahGgFvRzd0cqSJ2eUckDV58c4ITNjL0+zpwShqj3e3GzQEJJrRPRDFoVUbqy
-         o30GCFnGk5euP4CXUr97UvPvq8KYjwaf3iQZUJP4LvlcPSpLmp29dzjB+vLPQnYPOImv
-         5/62MrA1RYw6hgl+MJlK/vZBz7MfRRWvJC7nVMIx/grd+5AnrUm6g22228Or3MWIOGMV
-         FijRDzb8IFS4aOCXYGiqC2nBprxecfD8vuc9vHLcuwXLUJiobdQUv/tz+wefcirK74rv
-         ty3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ni8ukBhnwq4xfJn2KEfRGFk9CvW/EaamTsKpCF9U5jw=;
-        b=Lbw3tgFt8InLmhEHNUnCPaswAlqsyLIcnHNOoEYcVAPpIrUtC+2fS3qCcd7uxpjPmM
-         dYz761rGR4uPT8emYvNmblNu/0OpIXG70VqySy2StgN1heKXvddKH5HxuSrzvHRYWrQ0
-         5dLuj0Q3Fz9M08MQf+cJDuFZ49zEOKz7w304Tmf4zSc9wROj9aX4FMykV8i+Yvwm20Tb
-         WafM2yublUuKiQxVoGYMz0yZCz95bknV3vE4iRxhclwTsTvaM7uYGP7I5mkLeznbuxtu
-         eX2FIx9p9EoMg7Yz3F0Lg2DTAhm3J+IchyZN37K7nEyWP7V2z2tif8ZT3wokQlFT3usj
-         F9zw==
-X-Gm-Message-State: AOAM5327uNf5nweCk1Vg1hCBxxYnazr1eyLOvIlr2K3mlNITc7G3mI2x
-        mMPsSZm8SUEV6XYliycKF5tAUfY1EmDskdC7cUli2et6n5diekSU
-X-Google-Smtp-Source: ABdhPJzPyV2mTICg4ujehOAo8kaXJvx2de02S+39TMWQ8+kUht18v3fGS9QAWvbiXI0QEc1UOZ9N36zfY4aRtfuIbw0=
-X-Received: by 2002:a05:620a:2e3:: with SMTP id a3mr10866422qko.451.1639017771202;
- Wed, 08 Dec 2021 18:42:51 -0800 (PST)
+        Thu, 9 Dec 2021 04:24:58 -0500
+Received: from foss.arm.com ([217.140.110.172]:52196 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232940AbhLIJY5 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 9 Dec 2021 04:24:57 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5DF6011FB;
+        Thu,  9 Dec 2021 01:21:24 -0800 (PST)
+Received: from [10.57.82.128] (unknown [10.57.82.128])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3D31C3F73B;
+        Thu,  9 Dec 2021 01:21:22 -0800 (PST)
+Message-ID: <b49450ca-5193-5815-8355-41ef133f3015@arm.com>
+Date:   Thu, 9 Dec 2021 09:21:20 +0000
 MIME-Version: 1.0
-References: <20211204095256.78042-1-laoar.shao@gmail.com> <20211204095256.78042-5-laoar.shao@gmail.com>
- <20211208134304.615abbbf@gandalf.local.home>
-In-Reply-To: <20211208134304.615abbbf@gandalf.local.home>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Thu, 9 Dec 2021 10:42:15 +0800
-Message-ID: <CALOAHbAP7w95r_soihp+i1NjWxz4KVHGizARpX80wuL3ZLO7Uw@mail.gmail.com>
-Subject: Re: [PATCH -mm 4/5] tools/perf: replace hard-coded 16 with TASK_COMM_LEN
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Petr Mladek <pmladek@suse.com>,
-        David Hildenbrand <david@redhat.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Linux MM <linux-mm@kvack.org>, bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.3.2
+Subject: Re: [PATCH 1/3] coresight: Add config flag to enable branch broadcast
+To:     James Clark <james.clark@arm.com>, mathieu.poirier@linaro.org,
+        coresight@lists.linaro.org
+Cc:     Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+References: <20211208160907.749482-1-james.clark@arm.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20211208160907.749482-1-james.clark@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Dec 9, 2021 at 2:43 AM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Sat,  4 Dec 2021 09:52:55 +0000
-> Yafang Shao <laoar.shao@gmail.com> wrote:
->
-> > @@ -43,7 +45,7 @@ static int test__perf_evsel__tp_sched_test(struct test_suite *test __maybe_unuse
-> >               return -1;
-> >       }
-> >
-> > -     if (evsel__test_field(evsel, "prev_comm", 16, false))
-> > +     if (evsel__test_field(evsel, "prev_comm", TASK_COMM_LEN, false))
-> >               ret = -1;
-> >
-> >       if (evsel__test_field(evsel, "prev_pid", 4, true))
-> > @@ -55,7 +57,7 @@ static int test__perf_evsel__tp_sched_test(struct test_suite *test __maybe_unuse
-> >       if (evsel__test_field(evsel, "prev_state", sizeof(long), true))
-> >               ret = -1;
-> >
-> > -     if (evsel__test_field(evsel, "next_comm", 16, false))
-> > +     if (evsel__test_field(evsel, "next_comm", TASK_COMM_LEN, false))
-> >               ret = -1;
-> >
-> >       if (evsel__test_field(evsel, "next_pid", 4, true))
-> > @@ -73,7 +75,7 @@ static int test__perf_evsel__tp_sched_test(struct test_suite *test __maybe_unuse
-> >               return -1;
-> >       }
-> >
-> > -     if (evsel__test_field(evsel, "comm", 16, false))
-> > +     if (evsel__test_field(evsel, "comm", TASK_COMM_LEN, false))
->
-> Shouldn't all these be TASK_COMM_LEN_16?
->
+On 08/12/2021 16:09, James Clark wrote:
+> When enabled, all taken branch addresses are output, even if the branch
+> was because of a direct branch instruction. This enables reconstruction
+> of the program flow without having access to the memory image of the
+> code being executed.
+> 
+> Use bit 8 for the config option which would be the correct bit for
+> programming ETMv3. Although branch broadcast can't be enabled on ETMv3
+> because it's not in the define ETM3X_SUPPORTED_OPTIONS, using the
+> correct bit might help prevent future collisions or allow it to be
+> enabled if needed.
+> 
+> Signed-off-by: James Clark <james.clark@arm.com>
+> ---
+>   drivers/hwtracing/coresight/coresight-etm-perf.c   | 2 ++
+>   drivers/hwtracing/coresight/coresight-etm4x-core.c | 9 +++++++++
+>   include/linux/coresight-pmu.h                      | 2 ++
+>   3 files changed, 13 insertions(+)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> index c039b6ae206f..43bbd5dc3d3b 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> @@ -52,6 +52,7 @@ static DEFINE_PER_CPU(struct coresight_device *, csdev_src);
+>    * The PMU formats were orignally for ETMv3.5/PTM's ETMCR 'config';
+>    * now take them as general formats and apply on all ETMs.
+>    */
+> +PMU_FORMAT_ATTR(branch_broadcast, "config:"__stringify(ETM_OPT_BRANCH_BROADCAST));
+>   PMU_FORMAT_ATTR(cycacc,		"config:" __stringify(ETM_OPT_CYCACC));
+>   /* contextid1 enables tracing CONTEXTIDR_EL1 for ETMv4 */
+>   PMU_FORMAT_ATTR(contextid1,	"config:" __stringify(ETM_OPT_CTXTID));
+> @@ -97,6 +98,7 @@ static struct attribute *etm_config_formats_attr[] = {
+>   	&format_attr_sinkid.attr,
+>   	&format_attr_preset.attr,
+>   	&format_attr_configid.attr,
+> +	&format_attr_branch_broadcast.attr,
+>   	NULL,
+>   };
+>   
+> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> index bf18128cf5de..d2bafb50c66a 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> @@ -692,6 +692,15 @@ static int etm4_parse_event_config(struct coresight_device *csdev,
+>   		ret = cscfg_csdev_enable_active_config(csdev, cfg_hash, preset);
+>   	}
+>   
+> +	/* branch broadcast - enable if selected and supported */
+> +	if (attr->config & BIT(ETM_OPT_BRANCH_BROADCAST)) {
+> +		if (!drvdata->trcbb) {
+> +			ret = -EINVAL;
+> +			goto out;
+> +		} else
+> +			config->cfg |= BIT(ETM4_CFG_BIT_BB);
 
-The value here must be the same with TASK_COMM_LEN, so I use TASK_COMM_LEN here.
-But we may also change the code as
-https://lore.kernel.org/lkml/20211101060419.4682-9-laoar.shao@gmail.com/
-if TASK_COMM_LEN is changed, so TASK_COMM_LEN_16 is also okay here.
-I will change it to TASK_COMM_LEN_16 in the next version.
+nit: For consistent styling, I would recommend to wrap the else case
+also in { }.
 
->
-> >               ret = -1;
-> >
-> >       if (evsel__test_field(evsel, "pid", 4, true))
->
+Otherwise looks good to me.
 
-
--- 
-Thanks
-Yafang
+Suzuki
