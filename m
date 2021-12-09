@@ -2,126 +2,82 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D68EFC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Dec 2021 20:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62634C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Dec 2021 23:39:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231771AbhLIUSl (ORCPT
+        id S234437AbhLIXnH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Dec 2021 15:18:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33242 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229522AbhLIUSl (ORCPT
+        Thu, 9 Dec 2021 18:43:07 -0500
+Received: from mail-lf1-f43.google.com ([209.85.167.43]:36506 "EHLO
+        mail-lf1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229760AbhLIXnH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Dec 2021 15:18:41 -0500
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36436C061746;
-        Thu,  9 Dec 2021 12:15:07 -0800 (PST)
-Received: by mail-wm1-x330.google.com with SMTP id m25-20020a7bcb99000000b0033aa12cdd33so5934242wmi.1;
-        Thu, 09 Dec 2021 12:15:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=UpOHznmuWyfzyJGYZKWpvpptLU0bCNBsLqMfixSniLA=;
-        b=JiQ8N0lIkkYeNQfo56n7WlvF8GupU3Ueu9BFvUJI06cDBAVjNpOW50fyCskPYnMFN7
-         axBheVhgdpwoPZE6x171seWPlRYU7mS11mDQTbpB8/JFMN8AkmHkMV9vwQdFuk7lbVHh
-         13gcXh1yGjyroSPWdY/MDlXSRqjTzdKJbg88ifMuhYxaokhpXNNi3YSpmXAqp+DY8oYx
-         X/I4AhfXIFqVhjhq24XSPPw+r5JpDJN9AyUP1x/0hQ8Sq/hzr7ECsQN9IvwsAowo11DQ
-         KC1cNaCdfraXYRlmrFePj+GXXSjLYljSLlEuCyeySk7q3Zbqi/x8p7GH7lvA+7iMY/90
-         UngA==
+        Thu, 9 Dec 2021 18:43:07 -0500
+Received: by mail-lf1-f43.google.com with SMTP id k37so15087590lfv.3;
+        Thu, 09 Dec 2021 15:39:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=UpOHznmuWyfzyJGYZKWpvpptLU0bCNBsLqMfixSniLA=;
-        b=O9aUxYOd0as3/bQwUMFjwwtv50/vz/ACtFvHpk35Dv0JftwqFW57fhhKS9bK0B8SSU
-         02ruZN47BngagCZ8jIGVRVd7Zx6EdY64w7gJy3Ne6f02csxIj72q/IINEp+AESSBIOKU
-         b1zlCbgsvkjt+945jeHMLYmqC5Te6ClFUH9sZN3ITBYB6a0FL6sStqwTsH5gBkJG9gwZ
-         dsaGCVR4vICj9y3ChbUFqALb9LBqzDrtg9O8WZG6Z9NOGo8u+MbV6V9OS2y2n2NpHJmx
-         NhvnoPNJsEfrd7r9CUs7bSWzPExWNqAZu9s7GHEbXmNckXVHSa/p8yxEjGwZJQoGe+ki
-         Mm/w==
-X-Gm-Message-State: AOAM530yhPs44Y8z1A1fTC3dw0d2TxvfKhgYlYNLAu74pxBIFMRBQdBg
-        f3cw0Xn7zBGQAiz4kGbmGlL4Uy60T1HC2g==
-X-Google-Smtp-Source: ABdhPJwbxi9Ru8FHQ++cIWXnVMdV4c4F71qdwB3gluKRQiZ87SvUfKv78DYdFtbDtThxSilJGdCjZA==
-X-Received: by 2002:a05:600c:3658:: with SMTP id y24mr10181648wmq.161.1639080905693;
-        Thu, 09 Dec 2021 12:15:05 -0800 (PST)
-Received: from eldamar (80-218-24-251.dclient.hispeed.ch. [80.218.24.251])
-        by smtp.gmail.com with ESMTPSA id n2sm9689063wmi.36.2021.12.09.12.15.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Dec 2021 12:15:05 -0800 (PST)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Date:   Thu, 9 Dec 2021 21:15:04 +0100
-From:   Salvatore Bonaccorso <carnil@debian.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        German Gomez <german.gomez@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R1sOw782ij7VT+oHmIJRrDqdq4cl5dydAg6hTJDnPW8=;
+        b=wNwOW14ghCN0gKJh7NKJg4B8LWADf4ahHueRn2gdPqd9WH6JTz8/zfeGriJHm78cbX
+         ZoCjbE0mmxhye+UKyQ/hAV5iU7PMVJbKxeUkX/Jzg94UykjDPk3yukgYEs0KEhiVjULu
+         3+zMahgUObWFL5r4pIU1iN0+CWZiHjuZr+pWRuye/di8lqvuODHbsDuOxy0p/9Rw7ueC
+         afkc79mgMBriDuIIOTaHRNfjWrSf/d8wn6Uc2poCWs3I8YEJZn0ergTNJa5Hds9CjkSg
+         mcQmFxz/2ppfDoBwN/IHKEPM8l/DsymUMKrLCwJDup4sXR8TfzLb6oZtYy+BRz3zA7ib
+         KSsw==
+X-Gm-Message-State: AOAM533fnsfzZ79k3EzSWpWc8OhgpsLjTZbtMKnp+wRnWgYbEAv6LQHR
+        a7kCS9oxS+7hEmMwWKqJ4ph7Bu7UQIwdofK1tdIYKp96
+X-Google-Smtp-Source: ABdhPJwdyV40u3vYU6XnMrwwSDxehp6b2A7BvLtcZSa/cqBYJn2UVm9XZsRjmkM+BmnxSJZs1MOlAQY08QxCCeXFuHk=
+X-Received: by 2002:a05:6512:b8c:: with SMTP id b12mr8847965lfv.99.1639093172216;
+ Thu, 09 Dec 2021 15:39:32 -0800 (PST)
+MIME-Version: 1.0
+References: <20211209200425.303561-1-jolsa@kernel.org>
+In-Reply-To: <20211209200425.303561-1-jolsa@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Thu, 9 Dec 2021 15:39:20 -0800
+Message-ID: <CAM9d7cjyN_sxMe9yajgnuDRy5234NZQ5sd0e4ynBmCnQSv=WFQ@mail.gmail.com>
+Subject: Re: [RFC] perf record: Disable debuginfod by default
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf dlfilter: Drop unused variable
-Message-ID: <YbJjyMRIcW49HVXa@eldamar.lan>
-References: <20211123211821.132924-1-carnil@debian.org>
- <5603b487-3e42-cfbd-200b-250c46dc0bc6@arm.com>
- <YbCS/xEis4QKbH6D@eldamar.lan>
- <YbJW9sHObkXC5lcz@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <YbJW9sHObkXC5lcz@kernel.org>
+        Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        "Frank Ch. Eigler" <fche@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+Hi Jiri,
 
-On Thu, Dec 09, 2021 at 04:20:22PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Dec 08, 2021 at 12:11:59PM +0100, Salvatore Bonaccorso escreveu:
-> > Hi German,
-> > 
-> > On Wed, Dec 08, 2021 at 10:44:01AM +0000, German Gomez wrote:
-> > > 
-> > > On 23/11/2021 21:18, Salvatore Bonaccorso wrote:
-> > > > Compiling tools/perf/dlfilters/dlfilter-test-api-v0.c result in:
-> > > >
-> > > > 	checking for stdlib.h... dlfilters/dlfilter-test-api-v0.c: In function ‘filter_event’:
-> > > > 	dlfilters/dlfilter-test-api-v0.c:311:29: warning: unused variable ‘d’ [-Wunused-variable]
-> > > > 	  311 |         struct filter_data *d = data;
-> > > > 	      |
-> > > 
-> > > Did you get this warning when issuing "make"? From my side, it generated
-> > > this gcc command so I didn't get it (make DEBUG=1):
-> > > 
-> > >   gcc -c -Iinclude  -o dlfilters/dlfilter-test-api-v0.o -fpic dlfilters/dlfilter-test-api-v0.c
-> > > 
-> > > Reviewed-by: German Gomez <german.gomez@arm.com>
-> > 
-> > Only when passing -Wall (this is the case when building the kernel packages in
-> > Debian with additional flags, so this is why this was spotted):
-> > 
-> > gcc -Wall -c -Iinclude  -o dlfilters/dlfilter-test-api-v0.o -fpic dlfilters/dlfilter-test-api-v0.c
-> > dlfilters/dlfilter-test-api-v0.c: In function ‘filter_event’:
-> > dlfilters/dlfilter-test-api-v0.c:311:29: warning: unused variable ‘d’ [-Wunused-variable]
-> >   311 |         struct filter_data *d = data;
-> >       |
-> > 
-> 
-> So I'm applying this, its an obvious cleanup, but please CC the author
-> next time, I'm doing it in this reply, Adrian, ok?
+On Thu, Dec 9, 2021 at 12:04 PM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> hi,
+> after migrating to fedora 35 I found perf record hanging on exit
+> and it's because fedora 35 sets DEBUGINFOD_URLS that triggers
+> debuginfod query which might take long time to process.
+>
+> I discussed this briefly with Frank and I'm sending the change
+> to disable debuginfod by default in perf record.
+>
+> Frank had other idea we could discuss here to fork or just spawn
+> "/usr/bin/debuginfod-find ...." into background after perf record.
+>
+> Perhaps there are other ways as well, hence this is RFC ;-)
 
-Yes right, I apologies for that, something went wrong when I generated
-the list of people to contact using 
+I thought the debuginfod was for perf report, not record.
+Maybe I'm missing something but how about moving it to
+report?  We can talk to debuginfod after checking the local
+build-id cache and binary on the system.
 
-./scripts/get_maintainer.pl ./tools/perf/dlfilters/dlfilter-test-api-v0.c
+Still, we can have perf buildid-cache to move it from the
+debuginfod to local cache.
 
-and write up the persons to contact.
-
-Thank you!
-
-Regards,
-Salvatore
+Thanks,
+Namhyung
