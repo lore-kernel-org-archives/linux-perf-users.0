@@ -2,108 +2,94 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AD7C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Dec 2021 19:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BC2C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Dec 2021 19:20:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229488AbhLITVU (ORCPT
+        id S229477AbhLITYA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Dec 2021 14:21:20 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:46624 "EHLO
+        Thu, 9 Dec 2021 14:24:00 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:48040 "EHLO
         ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229379AbhLITVU (ORCPT
+        with ESMTP id S229548AbhLITYA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Dec 2021 14:21:20 -0500
+        Thu, 9 Dec 2021 14:24:00 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 114F1B82614;
-        Thu,  9 Dec 2021 19:17:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B08CEC341C6;
-        Thu,  9 Dec 2021 19:17:43 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3F5BBB8261E;
+        Thu,  9 Dec 2021 19:20:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE28EC004DD;
+        Thu,  9 Dec 2021 19:20:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639077463;
-        bh=l8aT2KFL66nTXjJzC+nFcTYlOzHn82GOsxi5oeVWqXE=;
+        s=k20201202; t=1639077624;
+        bh=1CyxqH3Ile4Tu0K1fbYd2p4o6u/8+0oTDj5FQH4uFX0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ckgeEJQIO8DMz1SvfiIwuXablyJcWbuWPrlZfMFBsL7PHVeL+tKZC5OQhmYbvMoJS
-         2MAnUpmjSgIZJcwQV7maFNq67++Jv+PeWQwGJIF1shOh+jMQlXfBqS0RfkNxl/nwoK
-         /c8U2jJ2E0RSEDn8zbypb1bbuvC7IgET/dqeGLCtqHleCQyL74ptX/ovL+OOjnTk4/
-         svFVOKla7gMg4bdxhHiv99W8HfKviDpsOth4+qsZr053ksruRrkNgTyDNgxyXgPdJZ
-         EkdzOR0TkZJMvKrLIxJp6wXHQA8AW1FeTsQanJKzzvfC1ekiX/92ddtHef/Y+xW/oz
-         ouBiUv7YQ5AcQ==
+        b=XTORxXtyGdai/WJ3g6ZzWBHAAHwxATXvL/zAznFNZZFPj1NGVVX9gH1LaH3rZjMaZ
+         6F+qzYt95SUr5yDuX8bgT51ztaSm6F7oHISaPA04za11kGyW2pIb/hUu7+oAy0dva3
+         XVSf+GWQ9BeY1fBOgEo2h7KYeWhhBhi0+zwPj/4GaHHEC6L5bNoeNoPVYWpiyHmwYQ
+         KhsbYRx3SsXUKO/g53Ws3gZ9rxX7KRkpzVNctoDAtMabz70RkG7kavU2uAmcTNsIe4
+         9BE/QN2y+pfXhj5vaUGF0hsmaxPK6M6VJoO2CnMzTihqG21uwYuVM+LXuo/lnG/FM4
+         0iZsGyx0hhLSA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 77CF3405D8; Thu,  9 Dec 2021 16:17:41 -0300 (-03)
-Date:   Thu, 9 Dec 2021 16:17:41 -0300
+        id 5C2F7405D8; Thu,  9 Dec 2021 16:20:22 -0300 (-03)
+Date:   Thu, 9 Dec 2021 16:20:22 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Kajol Jain <kjain@linux.ibm.com>
-Cc:     mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, jolsa@kernel.org, namhyung@kernel.org,
-        ak@linux.intel.com, linux-perf-users@vger.kernel.org,
-        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
-        rnsastry@linux.ibm.com, yao.jin@linux.intel.com, ast@kernel.org,
-        daniel@iogearbox.net, songliubraving@fb.com,
-        kan.liang@linux.intel.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, paulus@samba.org
-Subject: Re: [PATCH 0/4] perf: Add new macros for mem_hops field
-Message-ID: <YbJWVYZg1el9PR1I@kernel.org>
-References: <20211206091749.87585-1-kjain@linux.ibm.com>
+To:     Salvatore Bonaccorso <carnil@debian.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Cc:     German Gomez <german.gomez@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf dlfilter: Drop unused variable
+Message-ID: <YbJW9sHObkXC5lcz@kernel.org>
+References: <20211123211821.132924-1-carnil@debian.org>
+ <5603b487-3e42-cfbd-200b-250c46dc0bc6@arm.com>
+ <YbCS/xEis4QKbH6D@eldamar.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20211206091749.87585-1-kjain@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <YbCS/xEis4QKbH6D@eldamar.lan>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Dec 06, 2021 at 02:47:45PM +0530, Kajol Jain escreveu:
-> Patchset adds new macros for mem_hops field which can be
-> used to represent remote-node, socket and board level details.
+Em Wed, Dec 08, 2021 at 12:11:59PM +0100, Salvatore Bonaccorso escreveu:
+> Hi German,
 > 
-> Currently the code had macro for HOPS_0, which corresponds
-> to data coming from another core but same node.
-> Add new macros for HOPS_1 to HOPS_3 to represent
-> remote-node, socket and board level data.
+> On Wed, Dec 08, 2021 at 10:44:01AM +0000, German Gomez wrote:
+> > 
+> > On 23/11/2021 21:18, Salvatore Bonaccorso wrote:
+> > > Compiling tools/perf/dlfilters/dlfilter-test-api-v0.c result in:
+> > >
+> > > 	checking for stdlib.h... dlfilters/dlfilter-test-api-v0.c: In function ‘filter_event’:
+> > > 	dlfilters/dlfilter-test-api-v0.c:311:29: warning: unused variable ‘d’ [-Wunused-variable]
+> > > 	  311 |         struct filter_data *d = data;
+> > > 	      |
+> > 
+> > Did you get this warning when issuing "make"? From my side, it generated
+> > this gcc command so I didn't get it (make DEBUG=1):
+> > 
+> >   gcc -c -Iinclude  -o dlfilters/dlfilter-test-api-v0.o -fpic dlfilters/dlfilter-test-api-v0.c
+> > 
+> > Reviewed-by: German Gomez <german.gomez@arm.com>
 > 
-> For ex: Encodings for mem_hops fields with L2 cache:
+> Only when passing -Wall (this is the case when building the kernel packages in
+> Debian with additional flags, so this is why this was spotted):
+> 
+> gcc -Wall -c -Iinclude  -o dlfilters/dlfilter-test-api-v0.o -fpic dlfilters/dlfilter-test-api-v0.c
+> dlfilters/dlfilter-test-api-v0.c: In function ‘filter_event’:
+> dlfilters/dlfilter-test-api-v0.c:311:29: warning: unused variable ‘d’ [-Wunused-variable]
+>   311 |         struct filter_data *d = data;
+>       |
+> 
 
-I checked and this hasn't hit mainstream, is it already merged on a tree
-where this is slated to be submitted in the next window? If so please
-let me know which one so that I can merge it on perf/core.
-
-- Arnaldo
- 
-> L2                      - local L2
-> L2 | REMOTE | HOPS_0    - remote core, same node L2
-> L2 | REMOTE | HOPS_1    - remote node, same socket L2
-> L2 | REMOTE | HOPS_2    - remote socket, same board L2
-> L2 | REMOTE | HOPS_3    - remote board L2
-> 
-> Patch 1 & 2 adds tool and kernel side changes to add new macros for
-> mem_hops field
-> 
-> Patch 3 add data source encodings for power10 and older platforms
-> to represent data based on newer composite  PERF_MEM_LVLNUM* fields
-> 
-> Patch 4 add data source encodings with proper sub_index used to
-> represent memory/cache level data for power10 platform.
-> 
-> Kajol Jain (4):
->   perf: Add new macros for mem_hops field
->   tools/perf: Add new macros for mem_hops field
->   powerpc/perf: Add encodings to represent data based on newer composite
->     PERF_MEM_LVLNUM* fields
->   powerpc/perf: Add data source encodings for power10 platform
-> 
->  arch/powerpc/perf/isa207-common.c     | 60 ++++++++++++++++++++-------
->  include/uapi/linux/perf_event.h       |  5 ++-
->  tools/include/uapi/linux/perf_event.h |  5 ++-
->  tools/perf/util/mem-events.c          | 29 ++++++++-----
->  4 files changed, 71 insertions(+), 28 deletions(-)
-> 
-> -- 
-> 2.27.0
-
--- 
+So I'm applying this, its an obvious cleanup, but please CC the author
+next time, I'm doing it in this reply, Adrian, ok?
 
 - Arnaldo
