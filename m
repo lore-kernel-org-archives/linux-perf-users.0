@@ -2,81 +2,88 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD252C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 09:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CB5C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 09:18:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239082AbhLJJP6 (ORCPT
+        id S239120AbhLJJVv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 10 Dec 2021 04:15:58 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18386 "EHLO
+        Fri, 10 Dec 2021 04:21:51 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7556 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229993AbhLJJP6 (ORCPT
+        by vger.kernel.org with ESMTP id S233028AbhLJJVu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Dec 2021 04:15:58 -0500
+        Fri, 10 Dec 2021 04:21:50 -0500
 Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1BA6wdaL040191;
-        Fri, 10 Dec 2021 09:12:06 GMT
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1BA6wbUV040152;
+        Fri, 10 Dec 2021 09:18:03 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
  references : from : message-id : date : mime-version : in-reply-to :
  content-type : content-transfer-encoding; s=pp1;
- bh=BsXP9UVCLcAFtZkosEH2P+zvjgKhRwjP/47j/E1kryc=;
- b=dQRqDCTdAn6niEA9VTfkjJ2jYMOymvFIKPNmcd0gHT2hlldlPkr1Ejs0K5TLRyDjugR5
- YEy7t10CdBvx5o7V7p0+cbxN4ZpO+7rGfiA83MM2d6+/9ub4YNRygdpUYlVgg0hZdyIU
- 2/oA1COIoNpdKVrG6U8drQLjjeZn8TR0ln8mBlN9cLiPLYw1dQFHOlvN+Jxz7LNOMxuS
- wesevpnTYD5KvvC8bBi1b5Y7i+cwDkfSYri5QqwGhxoWewHY1OUspz4qABtcAQesFyt7
- qhHrva9b1hgR0Csb/7GA++6Kwbtw2FpEVmIhPFMdCXVAvo5pi+G2UFbQFAeyQq6mRzr7 hQ== 
+ bh=sCUp2gunpgsst+Ptkr0udx0VT2ivxJ/IAL0EVGqMlw8=;
+ b=P9ACkXV32i6ejvxsr8YthLLr35rCLRZ75dW5EmHut9PztuV0NMkX/sepfJFLtYltAoxq
+ 9vFUq/RPXSa1zC13NpNyFBcpQCiaDhu6bGP9k7UgVrntzrRe4QSZxu5NTgKoOE/7LobR
+ 0PkJoAPocNMgx+5ZBu12yP9slPjkwG5fV9FmYqbzuLkyFG1cyoBzGYlYLZhIGL6hB72H
+ /WMLyBD9rX8ej2Q5GV91WVVoU+wP75svY3xW0nCK0mwzUMTzWkIb12BG2qQV0wmzIlle
+ CzPyJaRSUJQ4Gqkl5/jKEGN2Nhx6YIF1RDYI2qwSVVSBgI/9kPqee5TRB+r3K7mcz4v9 pQ== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3cv23njg4r-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3cv23njkee-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Dec 2021 09:12:06 +0000
+        Fri, 10 Dec 2021 09:18:02 +0000
 Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1BA904AU003331;
-        Fri, 10 Dec 2021 09:12:06 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3cv23njg45-1
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1BA7RgrO021771;
+        Fri, 10 Dec 2021 09:18:02 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3cv23njkdd-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Dec 2021 09:12:05 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1BA9BYUH031424;
-        Fri, 10 Dec 2021 09:12:03 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 3cqyybh8w9-1
+        Fri, 10 Dec 2021 09:18:02 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1BA9EC7j030790;
+        Fri, 10 Dec 2021 09:17:59 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 3cqyyasbdy-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Dec 2021 09:12:03 +0000
+        Fri, 10 Dec 2021 09:17:59 +0000
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1BA9C0HC27984320
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1BA9Hu8s32571702
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Dec 2021 09:12:00 GMT
+        Fri, 10 Dec 2021 09:17:56 GMT
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 55BC1A405B;
-        Fri, 10 Dec 2021 09:12:00 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id E41A9A405F;
+        Fri, 10 Dec 2021 09:17:55 +0000 (GMT)
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C7B0FA4066;
-        Fri, 10 Dec 2021 09:11:56 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id B24F7A4062;
+        Fri, 10 Dec 2021 09:17:50 +0000 (GMT)
 Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com (unknown [9.43.86.88])
         by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 10 Dec 2021 09:11:56 +0000 (GMT)
-Subject: Re: [PATCH] tools/perf: remove unneeded variable make code cleaner
-To:     cgel.zte@gmail.com, peterz@infradead.org
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, chi.minghao@zte.com.cn,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Zeal Robot <zealci@zte.com.cm>
-References: <20211210022911.424512-1-chi.minghao@zte.com.cn>
+        Fri, 10 Dec 2021 09:17:50 +0000 (GMT)
+Subject: Re: [PATCH v1 1/4] perf tools: Prevent out-of-bounds access to
+ registers
+To:     German Gomez <german.gomez@arm.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+References: <20211201123334.679131-1-german.gomez@arm.com>
+ <20211201123334.679131-2-german.gomez@arm.com>
 From:   kajoljain <kjain@linux.ibm.com>
-Message-ID: <708b524c-2af5-98a1-f56a-4bb4f268de7a@linux.ibm.com>
-Date:   Fri, 10 Dec 2021 14:41:55 +0530
+Message-ID: <6705021e-5b02-3323-7dbc-4b774f22a435@linux.ibm.com>
+Date:   Fri, 10 Dec 2021 14:47:49 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.14.0
 MIME-Version: 1.0
-In-Reply-To: <20211210022911.424512-1-chi.minghao@zte.com.cn>
+In-Reply-To: <20211201123334.679131-2-german.gomez@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 6ZWxi_GHZuSkWBuqrymKYVn23-hj7AyD
-X-Proofpoint-GUID: 4SEUWh7V6MbxbA7xixaRJdpt6tYvgGVW
+X-Proofpoint-ORIG-GUID: 3VwXn0xGApwvvGnybtVArkK_c3fXbUfh
+X-Proofpoint-GUID: S8D0NhTU3ovY96fl9qCknqis3HFEGLgh
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
  definitions=2021-12-10_03,2021-12-08_01,2021-12-02_01
@@ -91,57 +98,65 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 12/10/21 7:59 AM, cgel.zte@gmail.com wrote:
-> From: Minghao Chi <chi.minghao@zte.com.cn>
+On 12/1/21 6:03 PM, German Gomez wrote:
+> The size of the cache of register values is arch-dependant
+> (PERF_REGS_MAX). This has the potential of causing an out-of-bounds
+> access in the function "perf_reg_value" if the local architecture
+> contains less registers than the one the perf.data file was recorded on.
 > 
-> return value form directly instead of
-> taking this in another redundant variable.
+> Since the maximum number of registers is bound by the bitmask "u64
+> cache_mask", and the size of the cache when running under x86 systems is
+> 64 already, fix the size to 64 and add a range-check to the function
+> "perf_reg_value" to prevent out-of-bounds access.
+> 
 
-Can we reword the commit message stating what and
-from where we are removing it. Its not too clear.
-Other than that patch looks good to me.
+Patch looks good to me.
 
-Reviewed-By: Kajol Jain<kjain@linux.ibm.com>
+Reviewed-by: Kajol Jain<kjain@linux.ibm.com>
 
 Thanks,
 Kajol Jain
 
-> 
-> Reported-by: Zeal Robot <zealci@zte.com.cm>
-> Signed-off-by: Minghao Chi <chi.minghao@zte.com.cn>
+> Signed-off-by: German Gomez <german.gomez@arm.com>
 > ---
->  tools/perf/util/callchain.c | 12 ++----------
->  1 file changed, 2 insertions(+), 10 deletions(-)
+>  tools/perf/util/event.h     | 5 ++++-
+>  tools/perf/util/perf_regs.c | 3 +++
+>  2 files changed, 7 insertions(+), 1 deletion(-)
 > 
-> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-> index 8e2777133bd9..ed30da7e14ab 100644
-> --- a/tools/perf/util/callchain.c
-> +++ b/tools/perf/util/callchain.c
-> @@ -1301,24 +1301,16 @@ int callchain_branch_counts(struct callchain_root *root,
+> diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+> index 95ffed663..c59331eea 100644
+> --- a/tools/perf/util/event.h
+> +++ b/tools/perf/util/event.h
+> @@ -44,13 +44,16 @@ struct perf_event_attr;
+>  /* perf sample has 16 bits size limit */
+>  #define PERF_SAMPLE_MAX_SIZE (1 << 16)
 >  
->  static int count_pri64_printf(int idx, const char *str, u64 value, char *bf, int bfsize)
->  {
-> -	int printed;
-> -
-> -	printed = scnprintf(bf, bfsize, "%s%s:%" PRId64 "", (idx) ? " " : " (", str, value);
-> -
-> -	return printed;
-> +	return scnprintf(bf, bfsize, "%s%s:%" PRId64 "", (idx) ? " " : " (", str, value);
->  }
+> +/* number of register is bound by the number of bits in regs_dump::mask (64) */
+> +#define PERF_SAMPLE_REGS_CACHE_SIZE (8 * sizeof(u64))
+> +
+>  struct regs_dump {
+>  	u64 abi;
+>  	u64 mask;
+>  	u64 *regs;
 >  
->  static int count_float_printf(int idx, const char *str, float value,
->  			      char *bf, int bfsize, float threshold)
->  {
-> -	int printed;
-> -
->  	if (threshold != 0.0 && value < threshold)
->  		return 0;
+>  	/* Cached values/mask filled by first register access. */
+> -	u64 cache_regs[PERF_REGS_MAX];
+> +	u64 cache_regs[PERF_SAMPLE_REGS_CACHE_SIZE];
+>  	u64 cache_mask;
+>  };
 >  
-> -	printed = scnprintf(bf, bfsize, "%s%s:%.1f%%", (idx) ? " " : " (", str, value);
-> -
-> -	return printed;
-> +	return scnprintf(bf, bfsize, "%s%s:%.1f%%", (idx) ? " " : " (", str, value);
->  }
+> diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
+> index 5ee47ae15..06a7461ba 100644
+> --- a/tools/perf/util/perf_regs.c
+> +++ b/tools/perf/util/perf_regs.c
+> @@ -25,6 +25,9 @@ int perf_reg_value(u64 *valp, struct regs_dump *regs, int id)
+>  	int i, idx = 0;
+>  	u64 mask = regs->mask;
 >  
->  static int branch_to_str(char *bf, int bfsize,
+> +	if ((u64)id >= PERF_SAMPLE_REGS_CACHE_SIZE)
+> +		return -EINVAL;
+> +
+>  	if (regs->cache_mask & (1ULL << id))
+>  		goto out;
+>  
 > 
