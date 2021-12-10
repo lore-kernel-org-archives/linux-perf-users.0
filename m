@@ -2,45 +2,42 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCF9C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 19:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0544C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 19:10:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238666AbhLJTLx (ORCPT
+        id S233923AbhLJTN5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 10 Dec 2021 14:11:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38668 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229761AbhLJTLx (ORCPT
+        Fri, 10 Dec 2021 14:13:57 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:33684 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233395AbhLJTN5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Dec 2021 14:11:53 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB632C061746;
-        Fri, 10 Dec 2021 11:08:17 -0800 (PST)
+        Fri, 10 Dec 2021 14:13:57 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 13785CE2D0F;
-        Fri, 10 Dec 2021 19:08:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C990C00446;
-        Fri, 10 Dec 2021 19:08:14 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7749EB829BE;
+        Fri, 10 Dec 2021 19:10:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF196C00446;
+        Fri, 10 Dec 2021 19:10:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639163294;
-        bh=z3sezbLgZh/y8qDAsW6jd6WdSWNncBRZ7pPOSFYAk48=;
+        s=k20201202; t=1639163419;
+        bh=MjW1Fpjxl/djfZyI0SFVyxDpWQY7QPvsplp+v8eHKWE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=G/1UpjXnbt8RpBhSm1bxPs0Fgj8o7daTj17D5QRdevmhIB2fsHTuvraPmiBHd7GAL
-         z1rnKuhO+HgU9FMwY+UUWGn+fXwK5ob2eEXReQgk8NdDGfiWvY6lQjoXTc61EC4ov0
-         KftOIOmChIxwzQKvl9i3VqO/7IExEAXhNWolt7Dqo6hAGR00T7t3ESva7f2JYKFI1q
-         U0OBpyxj2YMBpQNVeInlbDd3T4nsYqn7AooGYieabL8LojyzfjCz4KZQ9Rotd1s4wk
-         z1RSFZhBc+Aa4u2mYYkPHxj19TuMHClOEmx8aByZUAFKVDBRjWuKOlxZqVnyHhbpv7
-         trr9249WvRPLA==
+        b=ACMXnaKtN/7NtK3bR1qiAB/GomO+x70mlr9jJTIh+uFVhDPs3LBveOldxk2YV7/XZ
+         0YaFJ/6no+l2/7k7rX8uwYWCaOVdDjdpyFjdz8McUmwLeZtBaNRd6/1pUxyjAqHq9F
+         3qPn/w5itIv2Cpk9oWdgq0/duPXqH8wv3F46U82SYv+jyTt2OKaIA1yY/dMEHZSr3w
+         RyD+jZ8uh2yk0GPSGDmC7TAmsTS3rDwJCR6NiTVn/Y+Dz2guGFKHjmc8mFmWmqMqU8
+         QDUPD9fNZlt3iwoG+OhGbM/d/ESiY3Og0ul+cG6Fu1nJnDQe3yllUJQmZDUY8ZOTQL
+         wFTwdrJ/Xxc8Q==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 425A9405D8; Fri, 10 Dec 2021 16:08:12 -0300 (-03)
-Date:   Fri, 10 Dec 2021 16:08:12 -0300
+        id 68B80405D8; Fri, 10 Dec 2021 16:10:17 -0300 (-03)
+Date:   Fri, 10 Dec 2021 16:10:17 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
-Cc:     John Garry <john.garry@huawei.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
         Kajol Jain <kjain@linux.ibm.com>,
         "Paul A . Clarke" <pc@us.ibm.com>,
         Riccardo Mancini <rickyman7@gmail.com>,
@@ -57,97 +54,201 @@ Cc:     John Garry <john.garry@huawei.com>,
         Mike Leach <mike.leach@linaro.org>,
         Leo Yan <leo.yan@linaro.org>, coresight@lists.linaro.org,
         linux-arm-kernel@lists.infradead.org, eranian@google.com
-Subject: Re: [PATCH 01/22] libperf: Add comments to perf_cpu_map.
-Message-ID: <YbOlnH0NLQdAECcK@kernel.org>
+Subject: Re: [PATCH 02/22] perf stat: Add aggr creators that are passed a cpu.
+Message-ID: <YbOmGdzZAJ8q8Lz6@kernel.org>
 References: <20211208024607.1784932-1-irogers@google.com>
- <20211208024607.1784932-2-irogers@google.com>
- <a3cf5b74-1a1b-ef85-1ad3-034e797848e2@huawei.com>
- <CAP-5=fV5YDghE5pHZX2+OxguZaeO_JSSXimghUGLhCaCOoCH0w@mail.gmail.com>
+ <20211208024607.1784932-3-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fV5YDghE5pHZX2+OxguZaeO_JSSXimghUGLhCaCOoCH0w@mail.gmail.com>
+In-Reply-To: <20211208024607.1784932-3-irogers@google.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Dec 08, 2021 at 06:34:14AM -0800, Ian Rogers escreveu:
-> On Wed, Dec 8, 2021 at 4:06 AM John Garry <john.garry@huawei.com> wrote:
-> >
-> > On 08/12/2021 02:45, Ian Rogers wrote:
-> > > diff --git a/tools/lib/perf/include/internal/cpumap.h b/tools/lib/perf/include/internal/cpumap.h
-> > > index 840d4032587b..1c1726f4a04e 100644
-> > > --- a/tools/lib/perf/include/internal/cpumap.h
-> > > +++ b/tools/lib/perf/include/internal/cpumap.h
-> > > @@ -4,9 +4,16 @@
-> > >
-> > >   #include <linux/refcount.h>
-> > >
-> > > +/**
-> > > + * A sized, reference counted, sorted array of integers representing CPU
-> > > + * numbers. This is commonly used to capture which CPUs a PMU is associated
-> > > + * with.
-> > > + */
-> > >   struct perf_cpu_map {
-> > >       refcount_t      refcnt;
-> > > +     /** Length of the map array. */
-> > >       int             nr;
-> > > +     /** The CPU values. */
-> > >       int             map[];
-> >
-> > would simply more distinct names for the variables help instead of or in
-> > addition to comments?
+Em Tue, Dec 07, 2021 at 06:45:47PM -0800, Ian Rogers escreveu:
+> The cpu_map and index can get confused. Add variants of the cpu_map__get
+> routines that are passed a cpu. Make the existing cpu_map__get routines
+> use the new functions with a view to remove them when no longer used.
 
-Well, in this case the typical usage doesn't help, as 'struct
-perf_cpu_map' are being used simply as "map" where it should be cpu_map,
-so we would have:
-
-	cpu_map->nr
-
-And all should be obvious, no? Otherwise we would have redundant 'cpu',
-like:
-
-	cpu_map->nr_cpus
-
-And 'map' should really be entries, so:
-
-	cpu_map->entries[index];
-
-Would be clear enough, o?
+Looks ok from a quick lock
  
-> Thanks John! I agree. The phrase that is often used is intention
-> revealing names. The kernel style for naming is to be brief:
-> https://www.kernel.org/doc/html/v4.10/process/coding-style.html#naming
-> These names are both brief. nr is a little unusual, of course an
-> integer is a number - size and length are common names in situations
-> like these. In this case number makes sense as it is the number of
-> CPUs in the array, and there is a certain readability in saying number
-> of CPUs and not length or size of CPUs. The name map I have issue
-> with, it is always a smell if you are calling a variable a data type.
-> Given the convention in the context of this code I decided to leave
-> it. Something like array_of_cpu_values would be more intention
-> revealing but when run through the variable name shrinkifier could end
-> up as just being array, which would be little better than map.
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/cpumap.c | 79 +++++++++++++++++++++++-----------------
+>  tools/perf/util/cpumap.h |  6 ++-
+>  2 files changed, 51 insertions(+), 34 deletions(-)
 > 
-> The guidance on comments is that they are good and to focus on the
-> what of what the code is doing:
-> https://www.kernel.org/doc/html/v4.10/process/coding-style.html#commenting
-> refcnt was intention revealing enough and so I didn't add a comment to it.
-> 
-> > Generally developers don't always check comments where the struct is
-> > defined when the meaning could be judged intuitively
-> 
-> Agreed. I think there could be a follow up to change to better names.
-> As I was lacking a better suggestion I think for the time being, and
-> in this patch set, we can keep things as they are.
-> 
-> Thanks,
-> Ian
-> 
-> > Thanks,
-> > John
-> >
+> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+> index 87d3eca9b872..49fba2c53822 100644
+> --- a/tools/perf/util/cpumap.c
+> +++ b/tools/perf/util/cpumap.c
+> @@ -128,21 +128,23 @@ int cpu_map__get_socket_id(int cpu)
+>  	return ret ?: value;
+>  }
+>  
+> -struct aggr_cpu_id cpu_map__get_socket(struct perf_cpu_map *map, int idx,
+> -					void *data __maybe_unused)
+> +struct aggr_cpu_id cpu_map__get_socket_aggr_by_cpu(int cpu, void *data __maybe_unused)
+>  {
+> -	int cpu;
+>  	struct aggr_cpu_id id = cpu_map__empty_aggr_cpu_id();
+>  
+> -	if (idx > map->nr)
+> -		return id;
+> -
+> -	cpu = map->map[idx];
+> -
+>  	id.socket = cpu_map__get_socket_id(cpu);
+>  	return id;
+>  }
+>  
+> +struct aggr_cpu_id cpu_map__get_socket(struct perf_cpu_map *map, int idx,
+> +				       void *data)
+> +{
+> +	if (idx < 0 || idx > map->nr)
+> +		return cpu_map__empty_aggr_cpu_id();
+> +
+> +	return cpu_map__get_socket_aggr_by_cpu(map->map[idx], data);
+> +}
+> +
+>  static int cmp_aggr_cpu_id(const void *a_pointer, const void *b_pointer)
+>  {
+>  	struct aggr_cpu_id *a = (struct aggr_cpu_id *)a_pointer;
+> @@ -200,15 +202,10 @@ int cpu_map__get_die_id(int cpu)
+>  	return ret ?: value;
+>  }
+>  
+> -struct aggr_cpu_id cpu_map__get_die(struct perf_cpu_map *map, int idx, void *data)
+> +struct aggr_cpu_id cpu_map__get_die_aggr_by_cpu(int cpu, void *data)
+>  {
+> -	int cpu, die;
+> -	struct aggr_cpu_id id = cpu_map__empty_aggr_cpu_id();
+> -
+> -	if (idx > map->nr)
+> -		return id;
+> -
+> -	cpu = map->map[idx];
+> +	struct aggr_cpu_id id;
+> +	int die;
+>  
+>  	die = cpu_map__get_die_id(cpu);
+>  	/* There is no die_id on legacy system. */
+> @@ -220,7 +217,7 @@ struct aggr_cpu_id cpu_map__get_die(struct perf_cpu_map *map, int idx, void *dat
+>  	 * with the socket ID and then add die to
+>  	 * make a unique ID.
+>  	 */
+> -	id = cpu_map__get_socket(map, idx, data);
+> +	id = cpu_map__get_socket_aggr_by_cpu(cpu, data);
+>  	if (cpu_map__aggr_cpu_id_is_empty(id))
+>  		return id;
+>  
+> @@ -228,6 +225,15 @@ struct aggr_cpu_id cpu_map__get_die(struct perf_cpu_map *map, int idx, void *dat
+>  	return id;
+>  }
+>  
+> +struct aggr_cpu_id cpu_map__get_die(struct perf_cpu_map *map, int idx,
+> +				    void *data)
+> +{
+> +	if (idx < 0 || idx > map->nr)
+> +		return cpu_map__empty_aggr_cpu_id();
+> +
+> +	return cpu_map__get_die_aggr_by_cpu(map->map[idx], data);
+> +}
+> +
+>  int cpu_map__get_core_id(int cpu)
+>  {
+>  	int value, ret = cpu__get_topology_int(cpu, "core_id", &value);
+> @@ -239,20 +245,13 @@ int cpu_map__get_node_id(int cpu)
+>  	return cpu__get_node(cpu);
+>  }
+>  
+> -struct aggr_cpu_id cpu_map__get_core(struct perf_cpu_map *map, int idx, void *data)
+> +struct aggr_cpu_id cpu_map__get_core_aggr_by_cpu(int cpu, void *data)
+>  {
+> -	int cpu;
+> -	struct aggr_cpu_id id = cpu_map__empty_aggr_cpu_id();
+> -
+> -	if (idx > map->nr)
+> -		return id;
+> -
+> -	cpu = map->map[idx];
+> -
+> -	cpu = cpu_map__get_core_id(cpu);
+> +	struct aggr_cpu_id id;
+> +	int core = cpu_map__get_core_id(cpu);
+>  
+>  	/* cpu_map__get_die returns a struct with socket and die set*/
+> -	id = cpu_map__get_die(map, idx, data);
+> +	id = cpu_map__get_die_aggr_by_cpu(cpu, data);
+>  	if (cpu_map__aggr_cpu_id_is_empty(id))
+>  		return id;
+>  
+> @@ -260,19 +259,33 @@ struct aggr_cpu_id cpu_map__get_core(struct perf_cpu_map *map, int idx, void *da
+>  	 * core_id is relative to socket and die, we need a global id.
+>  	 * So we combine the result from cpu_map__get_die with the core id
+>  	 */
+> -	id.core = cpu;
+> +	id.core = core;
+>  	return id;
+> +
+>  }
+>  
+> -struct aggr_cpu_id cpu_map__get_node(struct perf_cpu_map *map, int idx, void *data __maybe_unused)
+> +struct aggr_cpu_id cpu_map__get_core(struct perf_cpu_map *map, int idx, void *data)
+> +{
+> +	if (idx < 0 || idx > map->nr)
+> +		return cpu_map__empty_aggr_cpu_id();
+> +
+> +	return cpu_map__get_core_aggr_by_cpu(map->map[idx], data);
+> +}
+> +
+> +struct aggr_cpu_id cpu_map__get_node_aggr_by_cpu(int cpu, void *data __maybe_unused)
+>  {
+>  	struct aggr_cpu_id id = cpu_map__empty_aggr_cpu_id();
+>  
+> +	id.node = cpu_map__get_node_id(cpu);
+> +	return id;
+> +}
+> +
+> +struct aggr_cpu_id cpu_map__get_node(struct perf_cpu_map *map, int idx, void *data)
+> +{
+>  	if (idx < 0 || idx >= map->nr)
+> -		return id;
+> +		return cpu_map__empty_aggr_cpu_id();
+>  
+> -	id.node = cpu_map__get_node_id(map->map[idx]);
+> -	return id;
+> +	return cpu_map__get_node_aggr_by_cpu(map->map[idx], data);
+>  }
+>  
+>  int cpu_map__build_socket_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **sockp)
+> diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
+> index a27eeaf086e8..c62d67704425 100644
+> --- a/tools/perf/util/cpumap.h
+> +++ b/tools/perf/util/cpumap.h
+> @@ -31,13 +31,17 @@ size_t cpu_map__snprint(struct perf_cpu_map *map, char *buf, size_t size);
+>  size_t cpu_map__snprint_mask(struct perf_cpu_map *map, char *buf, size_t size);
+>  size_t cpu_map__fprintf(struct perf_cpu_map *map, FILE *fp);
+>  int cpu_map__get_socket_id(int cpu);
+> +struct aggr_cpu_id cpu_map__get_socket_aggr_by_cpu(int cpu, void *data);
+>  struct aggr_cpu_id cpu_map__get_socket(struct perf_cpu_map *map, int idx, void *data);
+>  int cpu_map__get_die_id(int cpu);
+> +struct aggr_cpu_id cpu_map__get_die_aggr_by_cpu(int cpu, void *data);
+>  struct aggr_cpu_id cpu_map__get_die(struct perf_cpu_map *map, int idx, void *data);
+>  int cpu_map__get_core_id(int cpu);
+> +struct aggr_cpu_id cpu_map__get_core_aggr_by_cpu(int cpu, void *data);
+>  struct aggr_cpu_id cpu_map__get_core(struct perf_cpu_map *map, int idx, void *data);
+>  int cpu_map__get_node_id(int cpu);
+> -struct aggr_cpu_id  cpu_map__get_node(struct perf_cpu_map *map, int idx, void *data);
+> +struct aggr_cpu_id cpu_map__get_node_aggr_by_cpu(int cpu, void *data);
+> +struct aggr_cpu_id cpu_map__get_node(struct perf_cpu_map *map, int idx, void *data);
+>  int cpu_map__build_socket_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **sockp);
+>  int cpu_map__build_die_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **diep);
+>  int cpu_map__build_core_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **corep);
+> -- 
+> 2.34.1.400.ga245620fadb-goog
 
 -- 
 
