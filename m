@@ -2,87 +2,153 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 937B5C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 19:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D04B6C433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 19:03:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245727AbhLJTEx (ORCPT
+        id S237589AbhLJTHH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 10 Dec 2021 14:04:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36934 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238887AbhLJTEv (ORCPT
+        Fri, 10 Dec 2021 14:07:07 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:58572 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235573AbhLJTHH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Dec 2021 14:04:51 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 171D0C061746;
-        Fri, 10 Dec 2021 11:01:15 -0800 (PST)
+        Fri, 10 Dec 2021 14:07:07 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D4EE9B829B8;
-        Fri, 10 Dec 2021 19:01:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A67E7C00446;
-        Fri, 10 Dec 2021 19:01:11 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B523BB829BB;
+        Fri, 10 Dec 2021 19:03:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FE5BC00446;
+        Fri, 10 Dec 2021 19:03:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639162872;
-        bh=zgB+bjKPrWYZ2x6sT/TcpMl0LVsdv1gHVr5Ek+A2J4g=;
+        s=k20201202; t=1639163009;
+        bh=JOiolUAx3L5MxkUAVXE7PyChsErEriCCe8q1eTmoOgU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gjOV1anw7DP7Jb5NvNf8NlFpKkhej9aEG41NheqqLfrIuGJj6hoSQcIVqN5RmZbZ4
-         ioc0/SdQ3GrPRJgQL8c72LZmjgPCdGS+/LDi8sNLEkobhFS/2W5avsNjR7MMu+lKjV
-         X7hfM5qSRgjTq6ajuzne8HN3yN45tOfCHakUd8VG1+Gm01smZJLI3ZgAMZT0o+eNFh
-         WfK7osNfiHxRuJsjzG7QFUbO12LbE8cARtu/59dZHwP7WmEdnUG2+bd1HJJZVDQbvO
-         Kpz8Lt7n4DXI0lz4CbPWfuUXIGtAi2dJ6m+oJ8CjrKOu9g/sdW5q2zeymt0DMecNTa
-         KAzWslgV3WMfw==
+        b=ZRDysF11OdoxdSegspzuBZX3mQ4nnhL0+Mcy62/cAzNdIUmMNl0e/kd5LBce6f+qL
+         dVkljIKl18a4PeLsEi7ItQpYMaKqBpGkWhTctWIaY/A8bnmGvcx7fQr3/Fvo0tuHSh
+         JzeNF6vkO0lL1VwkKG7IgWdc5n+vZ9KXurVtT2/YYAwJ1Gn6Rt8B2y6r2PwfFBvF5L
+         2Zy1W9S3defbLesjC8RtgRvo3yDVlKcYX0GrSGJTjf3/DN2WekW+e2Gfs8/TW5vufd
+         r4njAV1XPLI4ldoFygn6X6xoW+B16c3qKEq8NxnBDp0vBMBoMdc+FI0w3dJFsJmQjC
+         jamuMkXzFx+Qw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 7A3E4405D8; Fri, 10 Dec 2021 16:01:02 -0300 (-03)
-Date:   Fri, 10 Dec 2021 16:01:02 -0300
+        id 5B6DC405D8; Fri, 10 Dec 2021 16:03:27 -0300 (-03)
+Date:   Fri, 10 Dec 2021 16:03:27 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     Andrew Kilroy <andrew.kilroy@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+To:     James Clark <james.clark@arm.com>
+Cc:     Leo Yan <leo.yan@linaro.org>, mathieu.poirier@linaro.org,
+        coresight@lists.linaro.org, suzuki.poulose@arm.com,
+        Mike Leach <mike.leach@linaro.org>,
+        John Garry <john.garry@huawei.com>,
         Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 2/2] perf vendor events: Rename arm64 arch std event
- files
-Message-ID: <YbOj7q+OIM8crbpY@kernel.org>
-References: <20211210123706.7490-1-andrew.kilroy@arm.com>
- <20211210123706.7490-3-andrew.kilroy@arm.com>
- <292d3ee6-c8f8-8155-9c90-e05026ea1f76@huawei.com>
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf cs-etm: Remove duplicate and incorrect aux size
+ checks
+Message-ID: <YbOkf5C46OZGEJVM@kernel.org>
+References: <20211208115435.610101-1-james.clark@arm.com>
+ <20211208131753.GC273781@leoy-ThinkPad-X240s>
+ <269d2f14-0594-c73e-97b5-82e72f76e826@arm.com>
+ <20211209134413.GA622826@leoy-ThinkPad-X240s>
+ <6a7fd600-91f3-5feb-d21f-ec7cb704f84c@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <292d3ee6-c8f8-8155-9c90-e05026ea1f76@huawei.com>
+In-Reply-To: <6a7fd600-91f3-5feb-d21f-ec7cb704f84c@arm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Dec 10, 2021 at 01:46:48PM +0000, John Garry escreveu:
-> On 10/12/2021 12:37, Andrew Kilroy wrote:
-> > A previous commit adds pmu events into the files
-> > 
-> >    armv8-common-and-microarch.json
-> >    armv8-recommended.json
-> > 
-> > that are actually specified in an armv9 reference supplement, not armv8.
-> > As such, naming the files with the armv8 prefix seems artificial.
-> > 
-> > This patch renames the files to reflect that these two files are for
-> > arch std events regardless of whether they are defined in armv8 or
-> > armv9.
-> > 
-> > Signed-off-by: Andrew Kilroy<andrew.kilroy@arm.com>
+Em Thu, Dec 09, 2021 at 02:16:43PM +0000, James Clark escreveu:
 > 
-> Reviewed-by: John Garry <john.garry@huawei.com>
+> 
+> On 09/12/2021 13:44, Leo Yan wrote:
+> > On Wed, Dec 08, 2021 at 02:08:04PM +0000, James Clark wrote:
+> >> On 08/12/2021 13:17, Leo Yan wrote:
+> >>> Hi James,
+> >>>
+> >>> On Wed, Dec 08, 2021 at 11:54:35AM +0000, James Clark wrote:
+> >>>> There are two checks, one is for size when running without admin, but
+> >>>> this one is covered by the driver and reported on in more detail here
+> >>>> (builtin-record.c):
+> >>>>
+> >>>>   pr_err("Permission error mapping pages.\n"
+> >>>>          "Consider increasing "
+> >>>>          "/proc/sys/kernel/perf_event_mlock_kb,\n"
+> >>>>          "or try again with a smaller value of -m/--mmap_pages.\n"
+> >>>>          "(current value: %u,%u)\n",
+> >>>
+> >>> I looked into the kernel code and found:
+> >>>
+> >>>   sysctl_perf_event_mlock = 512 + (PAGE_SIZE / 1024);  // 512KB + 1 page
+> >>>
+> >>> If the system have multiple cores, let's say 8 cores, then kernel even
+> >>> can relax the limitaion with:
+> >>>
+> >>>   user_lock_limit *= num_online_cpus();
+> >>>
+> >>> So means the memory lock limitation is:
+> >>>
+> >>>   (512KB + 1 page) * 8 = 4MB + 8 pages.
+> >>>
+> >>> Seems to me, it's much relax than the user space's limitaion 128KB.
+> >>> And let's imagine for Arm server, the permitted buffer size can be a
+> >>> huge value (e.g. for a system with 128 cores).
+> >>>
+> >>> Could you confirm if this is right?
+> >>
+> >> Yes that seems to be the case. And the commit message for that addition
+> >> states the reasoning:
+> >>
+> >>   perf_counter: Increase mmap limit
+> >>   
+> >>   In a default 'perf top' run the tool will create a counter for
+> >>   each online CPU. With enough CPUs this will eventually exhaust
+> >>   the default limit.
+> >>
+> >>   So scale it up with the number of online CPUs.
+> >>
+> >> To me that makes sense. Normally the memory installed also scales with the
+> >> number of cores.
+> >>
+> >> Are you saying that we should look into modifying that scaling factor in
+> >> perf_mmap()? Or that we should still add something to userspace for
+> >> coresight to limit user supplied buffer sizes?
+> > 
+> > I don't think we should modify the scaling factor in perf_mmap(), the
+> > logic is not only used by AUX buffer, it's shared by normal event
+> > ring buffer.
+> > 
+> >> I think it makes sense to allow the user to specify any value that will work,
+> >> it's up to them.
+> > 
+> > Understand, I verified this patch with below steps:
+> > 
+> > root@debian:~# echo 0 > /proc/sys/kernel/perf_event_paranoid
+> > 
+> > leoy@debian:~$ perf record -e cs_etm// -m 4M,8M -o perf_test.data -- sleep 1
+> > Permission error mapping pages.
+> > Consider increasing /proc/sys/kernel/perf_event_mlock_kb,
+> > or try again with a smaller value of -m/--mmap_pages.
+> > (current value: 1024,2048)
+> > 
+> > leoy@debian:~$ perf record -e cs_etm// -m 4M,4M -o perf_test.data -- sleep 1
+> > Couldn't synthesize bpf events.
+> > [ perf record: Woken up 1 times to write data ]
+> > [ perf record: Captured and wrote 0.607 MB perf_test.data ]
+> > 
+> > So this patch looks good for me:
+> > 
+> > Reviewed-by: Leo Yan <leo.yan@linaro.org>
+> > 
+> Thanks Leo!
 
 
-Thanks, applied both patches.
+Thanks, applied.
 
 - Arnaldo
 
