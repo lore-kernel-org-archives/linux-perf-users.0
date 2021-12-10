@@ -2,128 +2,137 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF34CC433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 13:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A37BC4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 13:38:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242263AbhLJNkl (ORCPT
+        id S234217AbhLJNmF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 10 Dec 2021 08:40:41 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:53186 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242267AbhLJNkK (ORCPT
+        Fri, 10 Dec 2021 08:42:05 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:42224 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229605AbhLJNmE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Dec 2021 08:40:10 -0500
+        Fri, 10 Dec 2021 08:42:04 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4886CB82805;
-        Fri, 10 Dec 2021 13:36:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC381C00446;
-        Fri, 10 Dec 2021 13:36:32 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 4B351CE2ABC;
+        Fri, 10 Dec 2021 13:38:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 535BAC00446;
+        Fri, 10 Dec 2021 13:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639143393;
-        bh=BIgzNKwn5a+Qf2+x0BULu3MOaPmkyzwvIzGH5LceSnk=;
+        s=k20201202; t=1639143506;
+        bh=TSZLd0cQ6W5FOQxcItdNTu6RRbzr8QhL5d5532cVRM4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vMT4fLCeHiMkKcm5rumE4SU+A+lvFD+KiquycxqekyalPOnWsNiRjX+ALZ+/N+3hE
-         DKShBfGT2F/QPwnjmQp6Q8i/ZVcbyyW//fhQQc4WdkHTIujlp72GQDgKOfPr/n60is
-         jpSNJ4HF0oRPj6OGXIELJK9EPrIysVr1CXHAtkR7sYEu0oWpo75Dn1RtqSlT16Irke
-         w7i1wuBABmXJsRllft4xQfbo3hZTsW8cov8kY+xX6x8DdKlDGHwKASVNZLiUUnhJ8D
-         BqsA0pZX8dOGykwx8Ya+Qyq1ABL3nNt7Y/NQemgkBuFvFgYicDahWSghtBC9ek17zK
-         l0H7LVCxqoGBw==
+        b=QMN1s1oH0zhFZVR866WPNHX0udD2En2bJtWjo6RV+xnqn/0Nj4QOYNLiWUZvO0K5s
+         b9qaKzcvq3/7wOTe2Qz3Ez1GQBAtLsrQsE91CTzcPyyfZL64p0KrU7pI7zR005mwlN
+         8Z3fVtnr5LFFZHBCkRZNPNe3XSAJnHS48Yp31f7DCaQcmXkiedVuzpW7Csc+aVxqcK
+         J/3udTN74rR/Y+7vJOOIMkOU6fYnC1f0sfazQymvV/zdWuF8Tn5/7dRjn8fYP5IpUA
+         vrslFgPbAkOELaQsMmHVaNSP56eAxvB5HiBrpBMn3b6A3BmSe27EHXZBZa1AnwGZ1O
+         p+40k+n/ktRww==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id EADD5405D8; Fri, 10 Dec 2021 10:36:30 -0300 (-03)
-Date:   Fri, 10 Dec 2021 10:36:30 -0300
+        id B2890405D8; Fri, 10 Dec 2021 10:38:24 -0300 (-03)
+Date:   Fri, 10 Dec 2021 10:38:24 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Alistair Francis <alistair.francis@opensource.wdc.com>
-Cc:     linux-kernel@vger.kernel.org, dave@stgolabs.net,
-        dvhart@infradead.org, arnd@arndb.de, alistair23@gmail.com,
-        namhyung@kernel.org, jolsa@redhat.com,
+To:     kajoljain <kjain@linux.ibm.com>
+Cc:     German Gomez <german.gomez@arm.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
-        alexander.shishkin@linux.intel.com, mark.rutland@arm.com,
-        mingo@redhat.com, peterz@infradead.org, tglx@linutronix.de,
-        Alistair Francis <alistair.francis@wdc.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        linux-riscv@lists.infradead.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v5 1/6] perf bench futex: Add support for 32-bit systems
- with 64-bit time_t
-Message-ID: <YbNX3mRT0A9/N2il@kernel.org>
-References: <20211209235857.423773-1-alistair.francis@opensource.wdc.com>
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v1 1/4] perf tools: Prevent out-of-bounds access to
+ registers
+Message-ID: <YbNYUC1poqzrWynP@kernel.org>
+References: <20211201123334.679131-1-german.gomez@arm.com>
+ <20211201123334.679131-2-german.gomez@arm.com>
+ <6705021e-5b02-3323-7dbc-4b774f22a435@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211209235857.423773-1-alistair.francis@opensource.wdc.com>
+In-Reply-To: <6705021e-5b02-3323-7dbc-4b774f22a435@linux.ibm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Dec 10, 2021 at 09:58:52AM +1000, Alistair Francis escreveu:
-> From: Alistair Francis <alistair.francis@wdc.com>
+Em Fri, Dec 10, 2021 at 02:47:49PM +0530, kajoljain escreveu:
 > 
-> Some 32-bit architectures (such are 32-bit RISC-V) only have a 64-bit
-> time_t and as such don't have the SYS_futex syscall. This patch will
-> allow us to use the SYS_futex_time64 syscall on those platforms.
 > 
-> This also converts the futex calls to be y2038 safe (when built for a
-> 5.1+ kernel).
+> On 12/1/21 6:03 PM, German Gomez wrote:
+> > The size of the cache of register values is arch-dependant
+> > (PERF_REGS_MAX). This has the potential of causing an out-of-bounds
+> > access in the function "perf_reg_value" if the local architecture
+> > contains less registers than the one the perf.data file was recorded on.
+> > 
+> > Since the maximum number of registers is bound by the bitmask "u64
+> > cache_mask", and the size of the cache when running under x86 systems is
+> > 64 already, fix the size to 64 and add a range-check to the function
+> > "perf_reg_value" to prevent out-of-bounds access.
+> > 
 > 
-> This is a revert of commit ba4026b09d83acf56c040b6933eac7916c27e728
-> "Revert "perf bench futex: Add support for 32-bit systems with 64-bit time_t"".
+> Patch looks good to me.
 > 
-> The original commit was reverted as including linux/time_types.h would
-> fail to compile on older kernels. This commit doesn't include
-> linux/time_types.h to avoid this issue.
+> Reviewed-by: Kajol Jain<kjain@linux.ibm.com>
 
-  10     9.99 alpine:3.12                   : FAIL gcc version 9.3.0 (Alpine 9.3.0)
-    In file included from bench/futex-hash.c:29:
-    bench/futex.h:37:2: error: unknown type name '__kernel_old_time_t'
-       37 |  __kernel_old_time_t tv_sec;  /* seconds */
-          |  ^~~~~~~~~~~~~~~~~~~
-    In file included from bench/futex-wake.c:25:
-    bench/futex.h:37:2: error: unknown type name '__kernel_old_time_t'
-       37 |  __kernel_old_time_t tv_sec;  /* seconds */
-          |  ^~~~~~~~~~~~~~~~~~~
-    make[3]: *** [/git/perf-5.16.0-rc4/tools/build/Makefile.build:139: bench] Error 2
-  11   114.27 alpine:3.13                   : Ok   gcc (Alpine 10.2.1_pre1) 10.2.1 20201203 , Alpine clang version 10.0.1
-  12   100.12 alpine:3.14                   : Ok   gcc (Alpine 10.3.1_git20210424) 10.3.1 20210424 , Alpine clang version 11.1.0
-  13   101.06 alpine:3.15                   : Ok   gcc (Alpine 10.3.1_git20211027) 10.3.1 20211027 , Alpine clang version 12.0.1
-  14   101.96 alpine:edge                   : Ok   gcc (Alpine 11.2.1_git20211128) 11.2.1 20211128 , Alpine clang version 12.0.1
-  15     6.98 alt:p8                        : FAIL gcc version 5.3.1 20151207 (ALT p8 5.3.1-alt3.M80P.1) (GCC)
-    In file included from bench/futex-hash.c:29:0:
-    bench/futex.h:37:2: error: unknown type name '__kernel_old_time_t'
-      __kernel_old_time_t tv_sec;  /* seconds */
-      ^
-    In file included from bench/futex-wake.c:25:0:
-    bench/futex.h:37:2: error: unknown type name '__kernel_old_time_t'
-      __kernel_old_time_t tv_sec;  /* seconds */
-      ^
-    In file included from bench/futex-wake-parallel.c:31:0:
-    bench/futex.h:37:2: error: unknown type name '__kernel_old_time_t'
-      __kernel_old_time_t tv_sec;  /* seconds */
-      ^
-    make[3]: *** [bench] Error 2
-  16    73.65 alt:p9                        : Ok   x86_64-alt-linux-gcc (GCC) 8.4.1 20200305 (ALT p9 8.4.1-alt0.p9.1) , clang version 10.0.0
-  17    72.34 alt:sisyphus                  : Ok   x86_64-alt-linux-gcc (GCC) 11.2.1 20210911 (ALT Sisyphus 11.2.1-alt1) , ALT Linux Team clang version 12.0.1
-  18     7.58 amazonlinux:1                 : FAIL gcc version 7.2.1 20170915 (Red Hat 7.2.1-2) (GCC)
-    In file included from bench/futex-hash.c:29:0:
-    bench/futex.h:37:2: error: unknown type name '__kernel_old_time_t'
-      __kernel_old_time_t tv_sec;  /* seconds */
-      ^~~~~~~~~~~~~~~~~~~
-    In file included from bench/futex-wake.c:25:0:
-    bench/futex.h:37:2: error: unknown type name '__kernel_old_time_t'
-      __kernel_old_time_t tv_sec;  /* seconds */
-      ^~~~~~~~~~~~~~~~~~~
-    make[3]: *** [bench] Error 2
-  19     8.28 amazonlinux:2                 : FAIL gcc version 7.3.1 20180712 (Red Hat 7.3.1-13) (GCC)
-    In file included from bench/futex-hash.c:29:0:
-    bench/futex.h:37:2: error: unknown type name '__kernel_old_time_t'
-      __kernel_old_time_t tv_sec;  /* seconds */
-      ^~~~~~~~~~~~~~~~~~~
-    make[3]: *** [bench] Error 2
-  20    79.16 centos:8                      : Ok   gcc (GCC) 8.4.1 20200928 (Red Hat 8.4.1-1) , clang version 11.0.1 (Red Hat 11.0.1-1.module_el8.4.0+966+2995ef20)
+Thanks, applied.
 
+- Arnaldo
 
-Still building on the other containers.
+ 
+> Thanks,
+> Kajol Jain
+> 
+> > Signed-off-by: German Gomez <german.gomez@arm.com>
+> > ---
+> >  tools/perf/util/event.h     | 5 ++++-
+> >  tools/perf/util/perf_regs.c | 3 +++
+> >  2 files changed, 7 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+> > index 95ffed663..c59331eea 100644
+> > --- a/tools/perf/util/event.h
+> > +++ b/tools/perf/util/event.h
+> > @@ -44,13 +44,16 @@ struct perf_event_attr;
+> >  /* perf sample has 16 bits size limit */
+> >  #define PERF_SAMPLE_MAX_SIZE (1 << 16)
+> >  
+> > +/* number of register is bound by the number of bits in regs_dump::mask (64) */
+> > +#define PERF_SAMPLE_REGS_CACHE_SIZE (8 * sizeof(u64))
+> > +
+> >  struct regs_dump {
+> >  	u64 abi;
+> >  	u64 mask;
+> >  	u64 *regs;
+> >  
+> >  	/* Cached values/mask filled by first register access. */
+> > -	u64 cache_regs[PERF_REGS_MAX];
+> > +	u64 cache_regs[PERF_SAMPLE_REGS_CACHE_SIZE];
+> >  	u64 cache_mask;
+> >  };
+> >  
+> > diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
+> > index 5ee47ae15..06a7461ba 100644
+> > --- a/tools/perf/util/perf_regs.c
+> > +++ b/tools/perf/util/perf_regs.c
+> > @@ -25,6 +25,9 @@ int perf_reg_value(u64 *valp, struct regs_dump *regs, int id)
+> >  	int i, idx = 0;
+> >  	u64 mask = regs->mask;
+> >  
+> > +	if ((u64)id >= PERF_SAMPLE_REGS_CACHE_SIZE)
+> > +		return -EINVAL;
+> > +
+> >  	if (regs->cache_mask & (1ULL << id))
+> >  		goto out;
+> >  
+> > 
+
+-- 
 
 - Arnaldo
