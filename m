@@ -2,172 +2,86 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4492AC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 16:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D69C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 16:50:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239707AbhLJQX3 (ORCPT
+        id S240722AbhLJQxx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 10 Dec 2021 11:23:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54030 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233117AbhLJQX3 (ORCPT
+        Fri, 10 Dec 2021 11:53:53 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:39761 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233248AbhLJQxw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Dec 2021 11:23:29 -0500
-Received: from mail-qv1-xf36.google.com (mail-qv1-xf36.google.com [IPv6:2607:f8b0:4864:20::f36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F69EC061746;
-        Fri, 10 Dec 2021 08:19:54 -0800 (PST)
-Received: by mail-qv1-xf36.google.com with SMTP id p3so8389994qvj.9;
-        Fri, 10 Dec 2021 08:19:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:user-agent:in-reply-to:references
-         :message-id:mime-version:content-transfer-encoding;
-        bh=tMMxFmdx6MfMkYIe7s/tX2fGsd/7SaUGLt53xeNBSto=;
-        b=jHaNUOm+bAFT/71ZTymVQb/kmN4r5rYXWFg+VqSDFuvYGhNE+xv4y1Y+bnH2sb+fhj
-         NV919Z87+m+44Qr4B7KsYG4OujDtURNuCUuqHDtU3xv4d/RbPDoPsRgyllsKOLKHqNiq
-         ufBBokrSbKEDD8kj0nZnTl3JaT8Nstvuxfev+U0iEv6QotJD7DRirfQMLB2KI0CvSOS/
-         vDTh9L0/QWze5Aqk8HRlsWW8O5Aa5sVaj4QDc2+PH7Fk454q3wl2/k59cshgL2mBYhvR
-         kWFDXIgne1fyDDwJnK4lufmM9r6u+SOrZ6Llz6vhyOOauwgoFnbav/nHigDNqgPed3l+
-         sD8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:user-agent:in-reply-to
-         :references:message-id:mime-version:content-transfer-encoding;
-        bh=tMMxFmdx6MfMkYIe7s/tX2fGsd/7SaUGLt53xeNBSto=;
-        b=R/XCFXvtti1gRu44gPJL5UdNvYPsZ190gKAzXh84w+TYquy0S4KW2ylR7cmobV4RrV
-         Efrgjsl6HNJnxQTit8UcRSTkV/skylKSUtzzhWWr8GZJaGav0tX8LOl13HJi88YjuwOf
-         Pd7LdPioXtwNgwLi3rHBYrTvtMq3RYqDCF4Q1fElP0/9K6qzmKcKOcqD6p9xllO5pBxy
-         mFAc9QcK1na6otw7nyZ8ERTPwI7NHJ9R3hJ6NuNHKCP6lKD/AwXhpl7tLuRKdS7/sarm
-         wQJAkexknamDTDxoQvD8ZQy2btoabuon9WGg4ycsVA9z/xFybUD4ozyaNGRrv//cALXD
-         MxUw==
-X-Gm-Message-State: AOAM532oJPjCDt/RCkj/FHNzt2qHgyS3hpB9/F9cfHtUjQNDdZxhyB7c
-        aUmh6M5/MByKTAHWmmR7cVc=
-X-Google-Smtp-Source: ABdhPJzdk7VpNonY+bRlvorAlgEXJPEuVKPvG89stBQW6JD1wHoFdSsWe1YbNMAuaoBBJCFP3aNM4A==
-X-Received: by 2002:a05:6214:27ee:: with SMTP id jt14mr25674296qvb.112.1639153193232;
-        Fri, 10 Dec 2021 08:19:53 -0800 (PST)
-Received: from [127.0.0.1] ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id t9sm1379657qkp.110.2021.12.10.08.19.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Dec 2021 08:19:52 -0800 (PST)
-Date:   Fri, 10 Dec 2021 13:19:47 -0300
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-To:     German Gomez <german.gomez@arm.com>,
+        Fri, 10 Dec 2021 11:53:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1639155017;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=JOYJ/utoBMVaS9HCfRFEQqBbZe9TQqR0k0Gsd0aUb4o=;
+        b=OT9xhKdF9Cqo9VhLs/JJg4u9SFSUr+oJRPVtNf1/qqReECw0r6xaZyIW7nfeVdDFXM5/KK
+        6lvgjL4YizWrJS22isXgzHBZZn7lVl21e5p1mgUUmeSL9m1XyU0hooWnd3PweFFEtbTDFH
+        lg/LJO7ud8iOMKKqv4wvpJf81CPfeCg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-330-XoRgWfLXO7qfWOWiInyj1w-1; Fri, 10 Dec 2021 11:50:14 -0500
+X-MC-Unique: XoRgWfLXO7qfWOWiInyj1w-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 964BD593AE;
+        Fri, 10 Dec 2021 16:50:12 +0000 (UTC)
+Received: from redhat.com (unknown [10.2.16.5])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 642095D6D7;
+        Fri, 10 Dec 2021 16:50:12 +0000 (UTC)
+Received: from fche by redhat.com with local (Exim 4.94.2)
+        (envelope-from <fche@redhat.com>)
+        id 1mvj62-0008Hz-GG; Fri, 10 Dec 2021 11:50:10 -0500
+Date:   Fri, 10 Dec 2021 11:50:10 -0500
+From:   "Frank Ch. Eigler" <fche@redhat.com>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        kajoljain <kjain@linux.ibm.com>
-CC:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v1_1/4=5D_perf_tools=3A_Preve?= =?US-ASCII?Q?nt_out-of-bounds_access_to_registers?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <42c6ea29-5904-bb8b-d9c6-a0516c3a564f@arm.com>
-References: <20211201123334.679131-1-german.gomez@arm.com> <20211201123334.679131-2-german.gomez@arm.com> <6705021e-5b02-3323-7dbc-4b774f22a435@linux.ibm.com> <YbNYUC1poqzrWynP@kernel.org> <42c6ea29-5904-bb8b-d9c6-a0516c3a564f@arm.com>
-Message-ID: <95E7589C-3822-4F73-A0CA-42E64654E021@gmail.com>
+        Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+Subject: Re: [RFC] perf record: Disable debuginfod by default
+Message-ID: <20211210165010.GA30236@redhat.com>
+References: <20211209200425.303561-1-jolsa@kernel.org>
+ <CAM9d7cjyN_sxMe9yajgnuDRy5234NZQ5sd0e4ynBmCnQSv=WFQ@mail.gmail.com>
+ <YbNGxMAu5LYvqtpq@krava>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YbNGxMAu5LYvqtpq@krava>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi -
 
+On Fri, Dec 10, 2021 at 01:23:32PM +0100, Jiri Olsa wrote:
+> [...]
+> at the end of the perf record we populate buildid cache
+> with profiled binaries for the current perf.data
+> 
+> **IF** there's DEBUGINFOD_URLS defined, that code will
+> also ask debuginfod for binaries it could not find on
+> the system
 
-On December 10, 2021 12:28:56 PM GMT-03:00, German Gomez <german=2Egomez@a=
-rm=2Ecom> wrote:
->
->On 10/12/2021 13:38, Arnaldo Carvalho de Melo wrote:
->> Em Fri, Dec 10, 2021 at 02:47:49PM +0530, kajoljain escreveu:
->>>
->>> On 12/1/21 6:03 PM, German Gomez wrote:
->>>> The size of the cache of register values is arch-dependant
->>>> (PERF_REGS_MAX)=2E This has the potential of causing an out-of-bounds
->>>> access in the function "perf_reg_value" if the local architecture
->>>> contains less registers than the one the perf=2Edata file was recorde=
-d on=2E
->>>>
->>>> Since the maximum number of registers is bound by the bitmask "u64
->>>> cache_mask", and the size of the cache when running under x86 systems=
- is
->>>> 64 already, fix the size to 64 and add a range-check to the function
->>>> "perf_reg_value" to prevent out-of-bounds access=2E
->>>>
->>> Patch looks good to me=2E
->>>
->>> Reviewed-by: Kajol Jain<kjain@linux=2Eibm=2Ecom>
->> Thanks, applied=2E
->>
->> - Arnaldo
->
->Thanks Arnaldo, and the rest for the review=2E
->
->I did send a v2 of this patch afterwards=2E The only difference was to
->give credit to the reporter in the commit message with:
->
->Reported-by: Alexandre Truong <alexandre=2Etruong@arm=2Ecom>
+Consider doing this only at the end of the run, and in the background,
+just as a prefetch for the perf report step?  The main downside there
+could be if one runs many perf record jobs in close proximity,
+overlapping larger prefetch download tasks.  That might waste some
+network traffic.
 
+- FChE
 
-I'll add it=2E
-
-- Arnaldo
->
->Thanks,
->German
->
->> =20
->>> Thanks,
->>> Kajol Jain
->>>
->>>> Signed-off-by: German Gomez <german=2Egomez@arm=2Ecom>
->>>> ---
->>>>  tools/perf/util/event=2Eh     | 5 ++++-
->>>>  tools/perf/util/perf_regs=2Ec | 3 +++
->>>>  2 files changed, 7 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/tools/perf/util/event=2Eh b/tools/perf/util/event=2Eh
->>>> index 95ffed663=2E=2Ec59331eea 100644
->>>> --- a/tools/perf/util/event=2Eh
->>>> +++ b/tools/perf/util/event=2Eh
->>>> @@ -44,13 +44,16 @@ struct perf_event_attr;
->>>>  /* perf sample has 16 bits size limit */
->>>>  #define PERF_SAMPLE_MAX_SIZE (1 << 16)
->>>> =20
->>>> +/* number of register is bound by the number of bits in regs_dump::m=
-ask (64) */
->>>> +#define PERF_SAMPLE_REGS_CACHE_SIZE (8 * sizeof(u64))
->>>> +
->>>>  struct regs_dump {
->>>>  	u64 abi;
->>>>  	u64 mask;
->>>>  	u64 *regs;
->>>> =20
->>>>  	/* Cached values/mask filled by first register access=2E */
->>>> -	u64 cache_regs[PERF_REGS_MAX];
->>>> +	u64 cache_regs[PERF_SAMPLE_REGS_CACHE_SIZE];
->>>>  	u64 cache_mask;
->>>>  };
->>>> =20
->>>> diff --git a/tools/perf/util/perf_regs=2Ec b/tools/perf/util/perf_reg=
-s=2Ec
->>>> index 5ee47ae15=2E=2E06a7461ba 100644
->>>> --- a/tools/perf/util/perf_regs=2Ec
->>>> +++ b/tools/perf/util/perf_regs=2Ec
->>>> @@ -25,6 +25,9 @@ int perf_reg_value(u64 *valp, struct regs_dump *reg=
-s, int id)
->>>>  	int i, idx =3D 0;
->>>>  	u64 mask =3D regs->mask;
->>>> =20
->>>> +	if ((u64)id >=3D PERF_SAMPLE_REGS_CACHE_SIZE)
->>>> +		return -EINVAL;
->>>> +
->>>>  	if (regs->cache_mask & (1ULL << id))
->>>>  		goto out;
->>>> =20
->>>>
