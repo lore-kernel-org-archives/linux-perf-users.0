@@ -2,200 +2,142 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D01C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 13:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F52CC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 13:22:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238003AbhLJNQT (ORCPT
+        id S241612AbhLJNZp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 10 Dec 2021 08:16:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37988 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237980AbhLJNQS (ORCPT
+        Fri, 10 Dec 2021 08:25:45 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4244 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241521AbhLJNZo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Dec 2021 08:16:18 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F055C061746;
-        Fri, 10 Dec 2021 05:12:43 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 232D0B827F5;
-        Fri, 10 Dec 2021 13:12:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A709C00446;
-        Fri, 10 Dec 2021 13:12:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639141960;
-        bh=xeC3EkvUFHpiDr5FgrRv5JNGrk2OmtdVcSw4zbaTxnE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=joM5WuPGODNozSFBwpKpEBgfUvelhwB0O3Ct2j1/6wQo5PB5dWEvrprDGrRvZFx1P
-         V9+k0lfaGrMrWwa4HijseDsysjOwFnNln68GnSKBLt/3wChkKvjbW+sA/g5Z5b4qOh
-         z8j6k5KgSPzB4pYzlK0J1u0Laanuc/HyPxu6q1RxnuHW6R7gROVuKJFZ9yhtlPrHZ+
-         3Rao80/eYVnRINqGOAqwJLHv1LeG26zXmRjrolJddMQd1ize2h/KiZQ9sNfr0jVX8P
-         zh7UzKt1Mx15XfBBhBushG0DnqAl5tL5P/GaOyAxVqUzvEEIw8MxwyjOO64CzCfyZQ
-         DECDEWFR0ZlwA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id F1419405D8; Fri, 10 Dec 2021 10:12:37 -0300 (-03)
-Date:   Fri, 10 Dec 2021 10:12:37 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Alistair Francis <alistair.francis@opensource.wdc.com>,
-        Arnd Bergmann <arnd@arndb.de>, Davidlohr Bueso <dbueso@suse.de>
-Cc:     linux-kernel@vger.kernel.org, dave@stgolabs.net,
-        dvhart@infradead.org, alistair23@gmail.com,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Fri, 10 Dec 2021 08:25:44 -0500
+Received: from fraeml712-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4J9Wfl2PhCz684R2;
+        Fri, 10 Dec 2021 21:17:51 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml712-chm.china.huawei.com (10.206.15.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Fri, 10 Dec 2021 14:22:07 +0100
+Received: from [10.47.85.63] (10.47.85.63) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Fri, 10 Dec
+ 2021 13:22:06 +0000
+Subject: Re: [PATCH v2 1/2] perf vendor events: For the Arm Neoverse N2
+To:     Andrew Kilroy <andrew.kilroy@arm.com>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <acme@kernel.org>
+CC:     Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alistair Francis <alistair.francis@wdc.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v5 1/6] perf bench futex: Add support for 32-bit systems
- with 64-bit time_t
-Message-ID: <YbNSRcSrAaurqDEv@kernel.org>
-References: <20211209235857.423773-1-alistair.francis@opensource.wdc.com>
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Zhangshaokun <zhangshaokun@hisilicon.com>
+References: <20211210123706.7490-1-andrew.kilroy@arm.com>
+ <20211210123706.7490-2-andrew.kilroy@arm.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <4c375d34-bf20-496d-22fc-aed8597126e2@huawei.com>
+Date:   Fri, 10 Dec 2021 13:21:41 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211209235857.423773-1-alistair.francis@opensource.wdc.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20211210123706.7490-2-andrew.kilroy@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.85.63]
+X-ClientProxiedBy: lhreml716-chm.china.huawei.com (10.201.108.67) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Dec 10, 2021 at 09:58:52AM +1000, Alistair Francis escreveu:
-> From: Alistair Francis <alistair.francis@wdc.com>
+On 10/12/2021 12:37, Andrew Kilroy wrote:
+> Updates the common and microarch json file to add counters available in
+> the Arm Neoverse N2 chip, but should also apply to other ArmV8 and ArmV9
+> cpus.  Specified in ArmV8 architecture reference manual
 > 
-> Some 32-bit architectures (such are 32-bit RISC-V) only have a 64-bit
-> time_t and as such don't have the SYS_futex syscall. This patch will
-> allow us to use the SYS_futex_time64 syscall on those platforms.
+>    https://developer.arm.com/documentation/ddi0487/gb/?lang=en
 > 
-> This also converts the futex calls to be y2038 safe (when built for a
-> 5.1+ kernel).
+> Some of the counters added to armv8-common-and-microarch.json are
+> specified in the ArmV9 architecture reference manual supplement
+> (issue A.a):
 > 
-> This is a revert of commit ba4026b09d83acf56c040b6933eac7916c27e728
-> "Revert "perf bench futex: Add support for 32-bit systems with 64-bit time_t"".
+>    https://developer.arm.com/documentation/ddi0608/aa
 > 
-> The original commit was reverted as including linux/time_types.h would
-> fail to compile on older kernels. This commit doesn't include
-> linux/time_types.h to avoid this issue.
+> The additional ArmV9 counters are
+> 
+>    TRB_WRAP
+>    TRCEXTOUT0
+>    TRCEXTOUT1
+>    TRCEXTOUT2
+>    TRCEXTOUT3
+>    CTI_TRIGOUT4
+>    CTI_TRIGOUT5
+>    CTI_TRIGOUT6
+>    CTI_TRIGOUT7
+> 
+> This patch also adds files in pmu-events/arch/arm64/arm/neoverse-n2 for
+> perf list to output the counter names in categories.
+> 
+> Counters on the Neoverse N2 are stated in its reference manual:
+> 
+>    https://developer.arm.com/documentation/102099/0000
+> 
+> Signed-off-by: Andrew Kilroy<andrew.kilroy@arm.com>
+> ---
+>   .../arch/arm64/arm/neoverse-n2/branch.json    |   8 +
+>   .../arch/arm64/arm/neoverse-n2/bus.json       |  20 ++
+>   .../arch/arm64/arm/neoverse-n2/cache.json     | 155 ++++++++++++++
+>   .../arch/arm64/arm/neoverse-n2/exception.json |  47 +++++
+>   .../arm64/arm/neoverse-n2/instruction.json    | 143 +++++++++++++
+>   .../arch/arm64/arm/neoverse-n2/memory.json    |  38 ++++
+>   .../arch/arm64/arm/neoverse-n2/other.json     |   5 +
+>   .../arch/arm64/arm/neoverse-n2/pipeline.json  |  23 ++
+>   .../arch/arm64/arm/neoverse-n2/spe.json       |  14 ++
+>   .../arch/arm64/arm/neoverse-n2/trace.json     |  29 +++
+>   .../arm64/armv8-common-and-microarch.json     | 198 ++++++++++++++++++
+>   tools/perf/pmu-events/arch/arm64/mapfile.csv  |   1 +
+>   12 files changed, 681 insertions(+)
+>   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/branch.json
+>   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/bus.json
+>   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/cache.json
+>   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/exception.json
+>   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/instruction.json
+>   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/memory.json
+>   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/other.json
+>   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/pipeline.json
+>   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/spe.json
+>   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/trace.json
+> 
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/branch.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/branch.json
 
-The reverted commit had:
+This looks ok,
 
-    Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-    Acked-by: Davidlohr Bueso <dbueso@suse.de>
+Reviewed-by: John Garry <john.garry@huawei.com>
 
-Does that stands for this new patch?
+BTW, I was looking at adding perf tool --topdown support for arm64. This 
+will require L1 metricgroup support per core - see what I did here for 
+our hisilicon platform already:
+
+[0] 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/metrics.json
+
+I would like to add support for more cores. Generally the arm common 
+events match up to the definitions here:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/Documentation/perf-stat.txt#n400
+
+Apart from frontend_bound - would you have an equivalent metric 
+expression for this for these Neoverse cores?
+
+[0] Note that I think that the divisor in the metric expressions is max 
+uops that the core can deal with.
 
 Thanks,
+John
 
-- Arnaldo
- 
-> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Alistair Francis <alistair23@gmail.com>
-> Cc: Atish Patra <atish.patra@wdc.com>
-> Cc: Darren Hart <dvhart@infradead.org>
-> Cc: Davidlohr Bueso <dave@stgolabs.net>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: linux-riscv@lists.infradead.org
-> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  tools/perf/bench/futex.h | 52 +++++++++++++++++++++++++++++++++++++---
->  1 file changed, 49 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/bench/futex.h b/tools/perf/bench/futex.h
-> index ebdc2b032afc..385d2bdfaa9f 100644
-> --- a/tools/perf/bench/futex.h
-> +++ b/tools/perf/bench/futex.h
-> @@ -8,6 +8,7 @@
->  #ifndef _FUTEX_H
->  #define _FUTEX_H
->  
-> +#include <errno.h>
->  #include <unistd.h>
->  #include <sys/syscall.h>
->  #include <sys/types.h>
-> @@ -28,7 +29,17 @@ struct bench_futex_parameters {
->  };
->  
->  /**
-> - * futex_syscall() - SYS_futex syscall wrapper
-> + * This is copied from linux/time_types.h.
-> + * We copy this here to avoid compilation failures when running
-> + * on systems that don't ship with linux/time_types.h.
-> + */
-> +struct __kernel_old_timespec {
-> +	__kernel_old_time_t	tv_sec;		/* seconds */
-> +	long			tv_nsec;	/* nanoseconds */
-> +};
-> +
-> +/**
-> + * futex_syscall() - __NR_futex syscall wrapper
->   * @uaddr:	address of first futex
->   * @op:		futex op code
->   * @val:	typically expected value of uaddr, but varies by op
-> @@ -49,14 +60,49 @@ static inline int
->  futex_syscall(volatile u_int32_t *uaddr, int op, u_int32_t val, struct timespec *timeout,
->  	      volatile u_int32_t *uaddr2, int val3, int opflags)
->  {
-> -	return syscall(SYS_futex, uaddr, op | opflags, val, timeout, uaddr2, val3);
-> +#if defined(__NR_futex_time64)
-> +	if (sizeof(*timeout) != sizeof(struct __kernel_old_timespec)) {
-> +		int ret = syscall(__NR_futex_time64, uaddr, op | opflags, val, timeout,
-> +				  uaddr2, val3);
-> +	if (ret == 0 || errno != ENOSYS)
-> +		return ret;
-> +	}
-> +#endif
-> +
-> +#if defined(__NR_futex)
-> +	if (sizeof(*timeout) == sizeof(struct __kernel_old_timespec))
-> +		return syscall(__NR_futex, uaddr, op | opflags, val, timeout, uaddr2, val3);
-> +
-> +	if (timeout && timeout->tv_sec == (long)timeout->tv_sec) {
-> +		struct __kernel_old_timespec ts32;
-> +
-> +		ts32.tv_sec = (__kernel_long_t) timeout->tv_sec;
-> +		ts32.tv_nsec = (__kernel_long_t) timeout->tv_nsec;
-> +
-> +		return syscall(__NR_futex, uaddr, op | opflags, val, ts32, uaddr2, val3);
-> +	} else if (!timeout) {
-> +		return syscall(__NR_futex, uaddr, op | opflags, val, NULL, uaddr2, val3);
-> +	}
-> +#endif
-> +
-> +	errno = ENOSYS;
-> +	return -1;
->  }
->  
->  static inline int
->  futex_syscall_nr_requeue(volatile u_int32_t *uaddr, int op, u_int32_t val, int nr_requeue,
->  			 volatile u_int32_t *uaddr2, int val3, int opflags)
->  {
-> -	return syscall(SYS_futex, uaddr, op | opflags, val, nr_requeue, uaddr2, val3);
-> +#if defined(__NR_futex_time64)
-> +	int ret =  syscall(__NR_futex_time64, uaddr, op | opflags, val, nr_requeue,
-> +			   uaddr2, val3);
-> +	if (ret == 0 || errno != ENOSYS)
-> +		return ret;
-> +#endif
-> +
-> +#if defined(__NR_futex)
-> +	return syscall(__NR_futex, uaddr, op | opflags, val, nr_requeue, uaddr2, val3);
-> +#endif
->  }
->  
->  /**
-> -- 
-> 2.31.1
-
--- 
-
-- Arnaldo
