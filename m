@@ -2,102 +2,76 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE059C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 08:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C92C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 08:22:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235374AbhLJIIP (ORCPT
+        id S235682AbhLJIZ4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 10 Dec 2021 03:08:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50918 "EHLO
+        Fri, 10 Dec 2021 03:25:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238114AbhLJIIP (ORCPT
+        with ESMTP id S235649AbhLJIZ4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Dec 2021 03:08:15 -0500
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F319C061746;
-        Fri, 10 Dec 2021 00:04:40 -0800 (PST)
+        Fri, 10 Dec 2021 03:25:56 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80FC3C061746;
+        Fri, 10 Dec 2021 00:22:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=7L65AS+iimZqb2KNq4M1+cHyGgzNH5bSSF+sipkws9Q=; b=QgAue25EBlx6PiAjs8AnPi7N/X
-        noz9jSlC5ezpQEgdvmE87qwlmv9m/UJgTm8IBWVidNZdxmPVsuhW2ShH0bnDZaFWJGu2pAaQCVnTv
-        AQ5ny/2c9qZpL/7Cqi1SpiWt1/+ntRdVRkm0/0jqPrfWfEQAHcGcDyLJxe+G9/SbI8gx7VpGBs0K5
-        QsRrrtHcgibnmzompha8Y9T63Ngnbe0zMXdCGJe1DqIzj4SEkG2V38HCzn+lpcdAFrvNf9XyjUtvr
-        H9TVN1Rw4cZdJyIUSLdSebEg9rwrlIvHSHVOL0LaCGem9hBcJw7wcl3A9mNRmHg8ltTA+iM+e40O/
-        /VnCSzcw==;
+        bh=GopIij0BzU8QEXq7yj6L1CinZaI6/cuY3bDW5pw222A=; b=F/o31sxFTsrtg2zfzbX+IuThCy
+        vNr9S3QP17ySgsripnuSAiqM2CVTPdXQDKH8O7Jacsxo8cOjv2rzmpX/EJdbBLHZIWNChkWJEQFU0
+        hO9Q/2w+V/+P+mPaicovylNNMIQ+AmizhbUxTvn8OtpyEO8WNiAxyJTXhw4456VJ1R94yNpqdN1pp
+        nXSaDMBQEytS1HgxeL8GYxgCK8EaDTeqXkWWHgXqqC7iNgReQcQiFEfXPgFiM7JizXBVMwsAemUtx
+        mfST4Z3En5ZdepblWeQ/stx0bUNISUoKTnpYr0sDaU2YJv+9ApadzKF5vWRpUrobV2XtkBj4XuTPJ
+        vfplG+Uw==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mvatE-000Wrg-TR; Fri, 10 Dec 2021 08:04:25 +0000
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mvb9p-00A9bg-5r; Fri, 10 Dec 2021 08:21:34 +0000
 Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 227079817E0; Fri, 10 Dec 2021 09:04:25 +0100 (CET)
-Date:   Fri, 10 Dec 2021 09:04:25 +0100
+        id 7C3789817E0; Fri, 10 Dec 2021 09:21:33 +0100 (CET)
+Date:   Fri, 10 Dec 2021 09:21:33 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org,
-        "Frank Ch. Eigler" <fche@redhat.com>
-Subject: Re: [RFC] perf record: Disable debuginfod by default
-Message-ID: <20211210080425.GO16608@worktop.programming.kicks-ass.net>
-References: <20211209200425.303561-1-jolsa@kernel.org>
+To:     Kajol Jain <kjain@linux.ibm.com>
+Cc:     mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, mingo@redhat.com, acme@kernel.org,
+        jolsa@kernel.org, namhyung@kernel.org, ak@linux.intel.com,
+        linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
+        yao.jin@linux.intel.com, ast@kernel.org, daniel@iogearbox.net,
+        songliubraving@fb.com, kan.liang@linux.intel.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        paulus@samba.org
+Subject: Re: [PATCH 1/4] perf: Add new macros for mem_hops field
+Message-ID: <20211210082133.GP16608@worktop.programming.kicks-ass.net>
+References: <20211206091749.87585-1-kjain@linux.ibm.com>
+ <20211206091749.87585-2-kjain@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211209200425.303561-1-jolsa@kernel.org>
+In-Reply-To: <20211206091749.87585-2-kjain@linux.ibm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Dec 09, 2021 at 09:04:25PM +0100, Jiri Olsa wrote:
-> hi,
-> after migrating to fedora 35 I found perf record hanging on exit
-> and it's because fedora 35 sets DEBUGINFOD_URLS that triggers
-> debuginfod query which might take long time to process.
+On Mon, Dec 06, 2021 at 02:47:46PM +0530, Kajol Jain wrote:
+> Add new macros for mem_hops field which can be used to
+> represent remote-node, socket and board level details.
 > 
-> I discussed this briefly with Frank and I'm sending the change
-> to disable debuginfod by default in perf record.
+> Currently the code had macro for HOPS_0, which corresponds
+> to data coming from another core but same node.
+> Add new macros for HOPS_1 to HOPS_3 to represent
+> remote-node, socket and board level data.
 > 
-> Frank had other idea we could discuss here to fork or just spawn
-> "/usr/bin/debuginfod-find ...." into background after perf record.
+> For ex: Encodings for mem_hops fields with L2 cache:
 > 
-> Perhaps there are other ways as well, hence this is RFC ;-)
+> L2			- local L2
+> L2 | REMOTE | HOPS_0	- remote core, same node L2
+> L2 | REMOTE | HOPS_1	- remote node, same socket L2
+> L2 | REMOTE | HOPS_2	- remote socket, same board L2
+> L2 | REMOTE | HOPS_3	- remote board L2
 > 
-> thanks,
-> jirka
-> 
-> 
-> ---
-> Fedora 35 sets by default DEBUGINFOD_URLS, which might lead
-> to unexpected stalls in perf record exit path, when we try
-> to cache profiled binaries.
-> 
->   # DEBUGINFOD_PROGRESS=1 ./perf record -a
->   ^C[ perf record: Woken up 1 times to write data ]
->   Downloading from https://debuginfod.fedoraproject.org/ 447069
->   Downloading from https://debuginfod.fedoraproject.org/ 1502175
->   Downloading \^Z
-> 
-> Disabling DEBUGINFOD_URLS by default in perf record and adding
-> debuginfod option and .perfconfig variable support to enable id.
-> 
->   Default without debuginfo processing:
->   # perf record -a
-> 
->   Using system debuginfod setup:
->   # perf record -a --debuginfod
-> 
->   Using custom debuginfd url:
->   # perf record -a --debuginfod='https://evenbetterdebuginfodserver.krava'
-> 
-> Adding single perf_debuginfod_setup function and using
-> it also in perf buildid-cache command.
+> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
 
-I'm still running with --no-buildid --no-buildid-cache or something like
-that by default. As long as that remains working I'm good.
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
