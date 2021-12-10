@@ -2,165 +2,141 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8784CC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 16:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2E1C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 17:22:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244272AbhLJQ6Q (ORCPT
+        id S243095AbhLJR0B (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 10 Dec 2021 11:58:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35112 "EHLO
+        Fri, 10 Dec 2021 12:26:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241023AbhLJQ6P (ORCPT
+        with ESMTP id S233629AbhLJR0A (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Dec 2021 11:58:15 -0500
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8AE5C061746
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Dec 2021 08:54:40 -0800 (PST)
-Received: by mail-pg1-x52a.google.com with SMTP id 133so8535647pgc.12
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Dec 2021 08:54:40 -0800 (PST)
+        Fri, 10 Dec 2021 12:26:00 -0500
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21A25C0617A1
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 Dec 2021 09:22:25 -0800 (PST)
+Received: by mail-pj1-x102e.google.com with SMTP id y14-20020a17090a2b4e00b001a5824f4918so9898096pjc.4
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 Dec 2021 09:22:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=pmeRkqZDK00GW81o5V76FJNx8cnKybCMVGo2V/GvQbU=;
-        b=BgrY4m9/7KdpGZ/v9yUtCOOuyUcziugxMmdJO/AzA1KbDU9SMFMC64iY5DJBHNshtp
-         q5IUUz5vGaN9ks+P7aXSl7qLR4nH5Dk29sAaZHub7ZijcnzvpH0JsfgHexXmCAYJrOXj
-         kANf10P+Ay/3+2AHzbAJUrBeamaHEOwHOPBv9veQSMLy5dTxhxxHI81byMGdfuu5RY+U
-         UJ9ifUWRNNL+v8X5qU+4ShMo220uG8Y2KJgz6qgKO5bpJvOPMdHzqlwL6V0whapVICJ1
-         aGY/6YxsYfOsnEmdkqXMXyRNCsrbB+MQhR0asbUmaoSs7svBDLCRYS3w6K8yO4S5ukwA
-         vAkA==
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=wXxIFl9RShCE91zPfAkRMM2xkNysozE7SyLpZ9J+nMQ=;
+        b=EpE/rgKdOcYRenD95ZbWiQrngH8Tl15OH1snNOs8EPxs3GgWkEvorwVblkx2wsBJUg
+         WA+LTAFlx2XwAeZr3dV3mIAIjR9vXel5L/1w3zL8PpIYRc6aoBxfFrNowMuiolR8T7hU
+         7EpFi6deY8yIV1h0OjLPFhXPScAQYwqYMi2tndjchJBe921C8lJDx8fk4UTYBGT2gGyB
+         JOz7BhUosg66vAmhJkHA2QSfqnU0tkxSYJYnARFGaLBCwvuNKkuTRXCd3tCqu1cSCC+J
+         PlMrXVfKzQKW9+/1/BkY5DQXDsC5eqvUWki3FrzIo9wgpEPzQRjehGuL+1vDtm+SPOaI
+         GTAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pmeRkqZDK00GW81o5V76FJNx8cnKybCMVGo2V/GvQbU=;
-        b=J0yBKB9okCz55fA2rbxUVnRZmn+bOCm1hof3erLQmVPcAH6yZXN631Fb9YpuTEHBLN
-         fHBn7WQWcrfImp/sncN1UJSo56OewzXtrb1F8MgJR/9Rl5vLkya5CxQ5fXuQMcZUA/QS
-         xbijsUhp78lcqy8bIvTGQh7e8XyTUOz1MEZ8OrBYpqIR+m+b1TPJGJiA8GzVMIlhjwMO
-         n4OQjMYO+c6SYS2d94RLKbZ3mxO/1ES+HrnzAQL68A40CsImBp+bcwpK7OWWnfI5jawv
-         4vqVQX044KmgsIhW4mjUBW/I4sEU/d3RkqMLHF1s9siuZVs36InzjylXCzaNJc7vwO34
-         9b1g==
-X-Gm-Message-State: AOAM532/tZRz8hz4FOMaQPvdctxfOkpTR9nqIRBmjH3WhY8e9dwAKwWs
-        51+VQjLnJ8rq80GCIdJJAIS6kA==
-X-Google-Smtp-Source: ABdhPJxHROttO6bm9CXzM9iK3z0M2D/k5KQih15Yy1kSvs/gXnl0V1Hx/hy+tJFs38RMU1nllXe/Sg==
-X-Received: by 2002:a63:6ecb:: with SMTP id j194mr39322605pgc.46.1639155280299;
-        Fri, 10 Dec 2021 08:54:40 -0800 (PST)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=wXxIFl9RShCE91zPfAkRMM2xkNysozE7SyLpZ9J+nMQ=;
+        b=X8tq2jRIhwtPbgJCWNoyIdgM2N0KPlpq2ghDxQs4u68CjfVQcf2c0Fwr/h5RwF+gWl
+         DDFqsIzd8C3vymNYL/0CwEWn/RrEtjzmlaDynCie6NL5CP2StdNXlLbs68JJKHTXmtSU
+         0pYVS2eUJ06kZ0E5OeMC/fAdHftaqYazhDgrvcI4Pfk9qQogkgUZOpsCo8UreLNyi9pU
+         EanddxC9FAkhreUgKXuXQ3GGDeOZud6zS5MM2Q9xVqXdr5Xuphw43F7n2lW6m/z0fAcR
+         s/LAwUAs69JTkoKTI23D/lzULkl7t/ddzLS/aab4p7Cyj/wP4ZYtbokuZj9s9ZNJSZv4
+         z5Ng==
+X-Gm-Message-State: AOAM530GCZ+eVyiV7ONrfRUJ9cbFiDIoxhjqFJTiW6uPEp4G9wVPctTa
+        4sEt31leUMCQ+Kl87IgLHotusg==
+X-Google-Smtp-Source: ABdhPJx7Vdr5SMDMisR3Ceovs6RgrPHB/lYT7Zy/5wLyTyte6MMYQevltUY2u+OivAZiAKVpeaB1Pw==
+X-Received: by 2002:a17:90b:4f49:: with SMTP id pj9mr24773259pjb.159.1639156944110;
+        Fri, 10 Dec 2021 09:22:24 -0800 (PST)
 Received: from p14s (S0106889e681aac74.cg.shawcable.net. [68.147.0.187])
-        by smtp.gmail.com with ESMTPSA id ot18sm3435741pjb.14.2021.12.10.08.54.38
+        by smtp.gmail.com with ESMTPSA id h66sm3110587pgc.34.2021.12.10.09.22.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Dec 2021 08:54:39 -0800 (PST)
-Date:   Fri, 10 Dec 2021 09:54:36 -0700
+        Fri, 10 Dec 2021 09:22:23 -0800 (PST)
+Date:   Fri, 10 Dec 2021 10:22:20 -0700
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     James Clark <james.clark@arm.com>
-Cc:     Leo Yan <leo.yan@linaro.org>, coresight@lists.linaro.org,
-        suzuki.poulose@arm.com, Mike Leach <mike.leach@linaro.org>,
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        coresight@lists.linaro.org, Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         John Garry <john.garry@huawei.com>,
         Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf cs-etm: Remove duplicate and incorrect aux size
- checks
-Message-ID: <20211210165436.GA1236662@p14s>
-References: <20211208115435.610101-1-james.clark@arm.com>
- <20211208131753.GC273781@leoy-ThinkPad-X240s>
- <269d2f14-0594-c73e-97b5-82e72f76e826@arm.com>
- <20211209134413.GA622826@leoy-ThinkPad-X240s>
- <6a7fd600-91f3-5feb-d21f-ec7cb704f84c@arm.com>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 2/3] coresight: Fail to open with return stacks if they
+ are unavailable
+Message-ID: <20211210172220.GA1238770@p14s>
+References: <20211208160907.749482-1-james.clark@arm.com>
+ <20211208160907.749482-2-james.clark@arm.com>
+ <b52ef2f3-9e30-59a6-2aea-e46c93915868@arm.com>
+ <b61ef2e3-e573-4867-af5d-fd5fabece4b1@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <6a7fd600-91f3-5feb-d21f-ec7cb704f84c@arm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b61ef2e3-e573-4867-af5d-fd5fabece4b1@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Dec 09, 2021 at 02:16:43PM +0000, James Clark wrote:
+Hi James,
+
+On Thu, Dec 09, 2021 at 11:13:55AM +0000, James Clark wrote:
 > 
 > 
-> On 09/12/2021 13:44, Leo Yan wrote:
-> > On Wed, Dec 08, 2021 at 02:08:04PM +0000, James Clark wrote:
-> >> On 08/12/2021 13:17, Leo Yan wrote:
-> >>> Hi James,
-> >>>
-> >>> On Wed, Dec 08, 2021 at 11:54:35AM +0000, James Clark wrote:
-> >>>> There are two checks, one is for size when running without admin, but
-> >>>> this one is covered by the driver and reported on in more detail here
-> >>>> (builtin-record.c):
-> >>>>
-> >>>>   pr_err("Permission error mapping pages.\n"
-> >>>>          "Consider increasing "
-> >>>>          "/proc/sys/kernel/perf_event_mlock_kb,\n"
-> >>>>          "or try again with a smaller value of -m/--mmap_pages.\n"
-> >>>>          "(current value: %u,%u)\n",
-> >>>
-> >>> I looked into the kernel code and found:
-> >>>
-> >>>   sysctl_perf_event_mlock = 512 + (PAGE_SIZE / 1024);  // 512KB + 1 page
-> >>>
-> >>> If the system have multiple cores, let's say 8 cores, then kernel even
-> >>> can relax the limitaion with:
-> >>>
-> >>>   user_lock_limit *= num_online_cpus();
-> >>>
-> >>> So means the memory lock limitation is:
-> >>>
-> >>>   (512KB + 1 page) * 8 = 4MB + 8 pages.
-> >>>
-> >>> Seems to me, it's much relax than the user space's limitaion 128KB.
-> >>> And let's imagine for Arm server, the permitted buffer size can be a
-> >>> huge value (e.g. for a system with 128 cores).
-> >>>
-> >>> Could you confirm if this is right?
+> On 09/12/2021 11:00, Suzuki K Poulose wrote:
+> > On 08/12/2021 16:09, James Clark wrote:
+> >> Maintain consistency with the other options by failing to open when they
+> >> aren't supported. For example ETM_OPT_TS, ETM_OPT_CTXTID2 and the newly
+> >> added ETM_OPT_BRANCH_BROADCAST all return with -EINVAL if they are
+> >> requested but not supported by hardware.
 > >>
-> >> Yes that seems to be the case. And the commit message for that addition
-> >> states the reasoning:
+> >> The consequence of not doing this is that the user may not be
+> >> aware that they are not enabling the feature as it is silently disabled.
 > >>
-> >>   perf_counter: Increase mmap limit
-> >>   
-> >>   In a default 'perf top' run the tool will create a counter for
-> >>   each online CPU. With enough CPUs this will eventually exhaust
-> >>   the default limit.
+> >> Signed-off-by: James Clark <james.clark@arm.com>
+> >> ---
+> >>   drivers/hwtracing/coresight/coresight-etm4x-core.c | 13 +++++++++----
+> >>   1 file changed, 9 insertions(+), 4 deletions(-)
 > >>
-> >>   So scale it up with the number of online CPUs.
-> >>
-> >> To me that makes sense. Normally the memory installed also scales with the
-> >> number of cores.
-> >>
-> >> Are you saying that we should look into modifying that scaling factor in
-> >> perf_mmap()? Or that we should still add something to userspace for
-> >> coresight to limit user supplied buffer sizes?
+> >> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> >> index d2bafb50c66a..0a9bb943a5e5 100644
+> >> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> >> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> >> @@ -674,10 +674,15 @@ static int etm4_parse_event_config(struct coresight_device *csdev,
+> >>       }
+> >>         /* return stack - enable if selected and supported */
+> >> -    if ((attr->config & BIT(ETM_OPT_RETSTK)) && drvdata->retstack)
+> >> -        /* bit[12], Return stack enable bit */
+> >> -        config->cfg |= BIT(12);
+> >> -
+> >> +    if (attr->config & BIT(ETM_OPT_RETSTK)) {
+> >> +        if (!drvdata->retstack) {
+> >> +            ret = -EINVAL;
+> >> +            goto out;
+> >> +        } else {
+> >> +            /* bit[12], Return stack enable bit */
+> >> +            config->cfg |= BIT(12);
+> >> +        }
 > > 
-> > I don't think we should modify the scaling factor in perf_mmap(), the
-> > logic is not only used by AUX buffer, it's shared by normal event
-> > ring buffer.
+> > nit: While at this, please could you change the hard coded value
+> > to ETM4_CFG_BIT_RETSTK ?
 > > 
-> >> I think it makes sense to allow the user to specify any value that will work,
-> >> it's up to them.
-> > 
-> > Understand, I verified this patch with below steps:
-> > 
-> > root@debian:~# echo 0 > /proc/sys/kernel/perf_event_paranoid
-> > 
-> > leoy@debian:~$ perf record -e cs_etm// -m 4M,8M -o perf_test.data -- sleep 1
-> > Permission error mapping pages.
-> > Consider increasing /proc/sys/kernel/perf_event_mlock_kb,
-> > or try again with a smaller value of -m/--mmap_pages.
-> > (current value: 1024,2048)
-> > 
-> > leoy@debian:~$ perf record -e cs_etm// -m 4M,4M -o perf_test.data -- sleep 1
-> > Couldn't synthesize bpf events.
-> > [ perf record: Woken up 1 times to write data ]
-> > [ perf record: Captured and wrote 0.607 MB perf_test.data ]
-> > 
-> > So this patch looks good for me:
-> > 
-> > Reviewed-by: Leo Yan <leo.yan@linaro.org>
-> > 
-> Thanks Leo!
+> I started changing them all because I had trouble searching for bits by name but then
+> I thought it would snowball into a bigger change so I undid it.
+> 
+> I think I'll just go and do it now if it's an issue here.
 
-Arnaldo is not on the recipient list and as such he won't see this patch...
+I can apply this set right away and you send another patch to fix all hard coded
+bitfields or you can send another revision with all 4 patches included in it
+(bitfields fix plus these 3).  Just let me know what you want to do.  And next
+time please add a cover letter.
 
+Thanks,
+Mathieu
+
+> 
+> > Otherwise, looks good to me
+> > 
+> > Suzuki
