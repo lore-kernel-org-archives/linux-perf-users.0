@@ -2,104 +2,99 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE854C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 14:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C41CEC433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 15:21:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232310AbhLJO1f (ORCPT
+        id S242757AbhLJPY4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 10 Dec 2021 09:27:35 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:56313 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229761AbhLJO1e (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Dec 2021 09:27:34 -0500
-Received: from mail-wr1-f50.google.com ([209.85.221.50]) by
- mrelayeu.kundenserver.de (mreue107 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1MNtny-1nB2rm2KTI-00OD1G; Fri, 10 Dec 2021 15:23:58 +0100
-Received: by mail-wr1-f50.google.com with SMTP id o13so15149661wrs.12;
-        Fri, 10 Dec 2021 06:23:58 -0800 (PST)
-X-Gm-Message-State: AOAM533wz7XECtJUX0ESB+KBsca0DDoWI7X1qj4Si7uAZ8jsPildWC2y
-        eMfhbZfbqILDUzDO1HuL6rAfYb1OAHYwVBMebJ0=
-X-Google-Smtp-Source: ABdhPJwpNfkCK35q4J84bet4qsNK0G78Iv/Ey+WuTXxUs4+UKKI6lcSJU/n3x5OpVFEpmYRVEt/ijnGMwe5NdNQgfZA=
-X-Received: by 2002:a5d:4107:: with SMTP id l7mr14337051wrp.209.1639146238200;
- Fri, 10 Dec 2021 06:23:58 -0800 (PST)
-MIME-Version: 1.0
-References: <20211209235857.423773-1-alistair.francis@opensource.wdc.com>
- <YbNX3mRT0A9/N2il@kernel.org> <YbNZw1/cUXJ8up5b@kernel.org>
-In-Reply-To: <YbNZw1/cUXJ8up5b@kernel.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 10 Dec 2021 15:23:42 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a05D=fb9stZEL6rUMs7c=S6gJxN5gR7HG_i8RiXAbaB5Q@mail.gmail.com>
-Message-ID: <CAK8P3a05D=fb9stZEL6rUMs7c=S6gJxN5gR7HG_i8RiXAbaB5Q@mail.gmail.com>
-Subject: Re: [PATCH v5 1/6] perf bench futex: Add support for 32-bit systems
- with 64-bit time_t
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Alistair Francis <alistair.francis@opensource.wdc.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Darren Hart <dvhart@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Alistair Francis <alistair23@gmail.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Fri, 10 Dec 2021 10:24:56 -0500
+Received: from foss.arm.com ([217.140.110.172]:43176 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S239316AbhLJPY4 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 10 Dec 2021 10:24:56 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 07B9712FC;
+        Fri, 10 Dec 2021 07:21:21 -0800 (PST)
+Received: from [10.57.6.190] (unknown [10.57.6.190])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 15F073F5A1;
+        Fri, 10 Dec 2021 07:21:17 -0800 (PST)
+Subject: Re: [PATCH v2 3/3] perf tools: Support register names from all archs
+From:   German Gomez <german.gomez@arm.com>
+To:     John Garry <john.garry@huawei.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc:     Alexandre Truong <alexandre.truong@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alistair Francis <alistair.francis@wdc.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:fHc4RHHMJlxTeV0sv7QOsI/dozLNE2nXidF5V+81PW8jjqqb8YU
- OHwS3jBq+dqYNcJF4eYcF9dt9P8F7dweGbvaMuQIfOgYCnqVWAJ1OLb6+t5f3al6jbaix0m
- BBTrsjX4ztFXyox4mFgqIrVuXcqKUFj+bK1MaJt1a/8ziCkblY0z0i7fnazY1ZfIukowJba
- Nxku9SydqXjS8UOdlCtbQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:HYNBLUA0EkQ=:87xE//JIGnXIIGQ+lNti3q
- aSCxqlDeXddY5j+a+wZsKB+nA8a+2DEvLk+SA0sqkzB6qQ0Ys7Y+PFTky1yXoTav2WM9k5lc/
- FmcCjBdoPz8XFuaDppnRCZ/vsUasxbxwfuUGLNlTZT5F/rSgiIH6sjrkdi6Sby7sPT4bWZQM0
- F38nepKtgRLfKKq/fp7x1kAinOLtEkrxxeJDc1ROihNOoJLiekvye2kD/s5iJi20a+CRSH2dJ
- 1rQhZUCPLKn64h+ZMLtOcqaGo/sjyCy3wvOrN/AluWfjdeL+L6cVTAXJrY+dOgvUVaTnMTlrT
- ccu1zEko+3B1v19gaPFj4p0O4oIzO3ZvJqQXvjsn1TCMH4FpSveL0AFWbhM9ARYcoGjV86MGi
- Mp3Pk//pImnDWphTW+I0PieibISh6OFanQ5u9fy01LY33aY00WnagR5f0yzk+ODdEMgDdiBa0
- NNqfOBOrakYMIzH9kmjEYleTRNRVTkMQj+iuzClLIpWB75un5qedK6lP+RSP7MqLntgO5QlqX
- 3s2X4oBl+ngn5VwoI+qCsWaYd/mA+wSWEHXsjL85XCHwMJ1An7bS1wRCpt3ygClVdF4r84e12
- oApGLn1J15g0bqXuN6xYTakddbbPPByBCDwNo9pNOCrKMOn8qdAcLAKwVOVgWNmOcTfqFdo5p
- +H93VW0rUY6IwGHdSbB3/FfWpo75xNFRpYnvAtYc6khUJ0gSwzzQLU+yD+5GClm0PDuU=
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+References: <20211207180653.1147374-1-german.gomez@arm.com>
+ <20211207180653.1147374-4-german.gomez@arm.com>
+ <90bcce69-9585-3fb4-de89-bbf2bd6def05@huawei.com>
+ <aee0c3b8-4d8c-6f1e-24ed-5539a7c1a7b5@arm.com>
+Message-ID: <9828a385-acde-145a-33db-76043e799344@arm.com>
+Date:   Fri, 10 Dec 2021 15:21:09 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
+MIME-Version: 1.0
+In-Reply-To: <aee0c3b8-4d8c-6f1e-24ed-5539a7c1a7b5@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Dec 10, 2021 at 2:44 PM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
-> Em Fri, Dec 10, 2021 at 10:36:30AM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Fri, Dec 10, 2021 at 09:58:52AM +1000, Alistair Francis escreveu:
-> > > From: Alistair Francis <alistair.francis@wdc.com>
-> > >
-> > > Some 32-bit architectures (such are 32-bit RISC-V) only have a 64-bit
-> > > time_t and as such don't have the SYS_futex syscall. This patch will
-> > > allow us to use the SYS_futex_time64 syscall on those platforms.
-> > >
-> > > This also converts the futex calls to be y2038 safe (when built for a
-> > > 5.1+ kernel).
-> > >
-> > > This is a revert of commit ba4026b09d83acf56c040b6933eac7916c27e728
-> > > "Revert "perf bench futex: Add support for 32-bit systems with 64-bit time_t"".
-> > >
-> > > The original commit was reverted as including linux/time_types.h would
-> > > fail to compile on older kernels. This commit doesn't include
-> > > linux/time_types.h to avoid this issue.
-> >
-> >   10     9.99 alpine:3.12                   : FAIL gcc version 9.3.0 (Alpine 9.3.0)
-> >     In file included from bench/futex-hash.c:29:
-> >     bench/futex.h:37:2: error: unknown type name '__kernel_old_time_t'
-> >        37 |  __kernel_old_time_t tv_sec;  /* seconds */
-> >           |  ^~~~~~~~~~~~~~~~~~~
-> >     In file included from bench/futex-wake.c:25:
 
-It looks like we need to add include/uapi/linux/time_types.h to
-tools/include/linux/ and update tools/include/linux/types.h
-in order to address this.
+On 08/12/2021 13:55, German Gomez wrote:
+> Hi John,
+>
+> On 08/12/2021 11:51, John Garry wrote:
+>> On 07/12/2021 18:06, German Gomez wrote:
+>>>   tools/perf/arch/arm/include/perf_regs.h       |  42 --
+>>>   tools/perf/arch/arm64/include/perf_regs.h     |  76 --
+>>>   tools/perf/arch/csky/include/perf_regs.h      |  82 ---
+>>>   tools/perf/arch/mips/include/perf_regs.h      |  69 --
+>>>   tools/perf/arch/powerpc/include/perf_regs.h   |  66 --
+>>>   tools/perf/arch/riscv/include/perf_regs.h     |  74 --
+>>>   tools/perf/arch/s390/include/perf_regs.h      |  78 --
+>>>   tools/perf/arch/x86/include/perf_regs.h       |  82 ---
+>>>   tools/perf/builtin-script.c                   |  18 +-
+>>>   tools/perf/util/perf_regs.c                   | 666 ++++++++++++++++++
+>>>   tools/perf/util/perf_regs.h                   |  10 +-
+>>>   .../scripting-engines/trace-event-python.c    |  10 +-
+>>>   tools/perf/util/session.c                     |  25 +-
+>>>   13 files changed, 697 insertions(+), 601 deletions(-)
+>> Did you consider leaving the register structures where they are while
+>> renaming to include the arch name and then having as externs or similar? I see an example of that idea for arm64_unwind_libunwind_ops.
+>>
+> If by register structures you are referring to "__perf_reg_name(int)", I
+> can't leave them where they are. Only one of them would be included in
+> the build.
 
-         Arnd
+I think I need to elaborate a bit more on this since some of the files
+involved share the same name but are serving different purposes and it
+could lead to confusion.
+
+The linux repo has "perf_regs.h" for each architecture enumerating the
+registers from each architecture. These are the files I #include'd in
+"/tools/perf/util/perf_regs.c".
+
+The other "perf_regs.h" affected by this patch are local only to perf.
+Likewise there is one file for each architecture, but contrary to the
+linux ones, they are mutually exclusive, so I can't #include them all:
+
+#ifndef ARCH_PERF_REGS_H
+#define ARCH_PERF_REGS_H
+//...
+#undef ARCH_PERF_REGS_H
+
+Before the patch, the functions "__perf_reg_name" were declared &
+implemented in these headers, so I had to take them out.
+
+Thanks,
+German
