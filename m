@@ -2,69 +2,116 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 103E7C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 10:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF4A3C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 12:23:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238196AbhLJKpz (ORCPT
+        id S240916AbhLJM1M (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 10 Dec 2021 05:45:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59628 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234468AbhLJKpz (ORCPT
+        Fri, 10 Dec 2021 07:27:12 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:21814 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S240915AbhLJM1M (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Dec 2021 05:45:55 -0500
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86511C061746;
-        Fri, 10 Dec 2021 02:42:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=1C2ia18pafY4IU20rFG09aGHbn8SRx8sSSD9xUMea6Y=; b=b7OCQ1b9q/Lu4bUBBAi9iUnCqE
-        3raxEI3VmSSCMfPLi/pl/gtWqi7LJTu3pdzNMMckhRxjLI5INSzYxnR5ecXPS0RVmisLLTJRzYw6S
-        1VkClhoXTs5rWiz/gpefNfjrn1Av5EPkzMhOCzOS1fG6UeGr93I4qD+gpNa0I8suXLlVYimZZvtqi
-        Zhxwt8uOQOODqcN0/R64soTgxUFiTFKgDNJudEvxfnCLnuK9gsLuV0a/cWTKus4xoyBj4QncrvMdJ
-        xkWyrQDReJK9iCHgQNT8YhYzVgYZ5/+eA7HP1P4l+ptm/dGgfrIHqhrcrTSkEdnSkbX1MhYhvgrmD
-        o0sR016Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mvdLo-000Y4j-7f; Fri, 10 Dec 2021 10:42:04 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D3386984E0B; Fri, 10 Dec 2021 11:42:03 +0100 (CET)
-Date:   Fri, 10 Dec 2021 11:42:03 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     kajoljain <kjain@linux.ibm.com>
-Cc:     cgel.zte@gmail.com, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, chi.minghao@zte.com.cn,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Zeal Robot <zealci@zte.com.cm>
-Subject: Re: [PATCH] tools/perf: remove unneeded variable make code cleaner
-Message-ID: <20211210104203.GT16608@worktop.programming.kicks-ass.net>
-References: <20211210022911.424512-1-chi.minghao@zte.com.cn>
- <708b524c-2af5-98a1-f56a-4bb4f268de7a@linux.ibm.com>
+        Fri, 10 Dec 2021 07:27:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1639139017;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=KioUMvWRyu6MZM3/L8Y/jHqD4lh7+63A4Z1HNFMR0vs=;
+        b=ZyIse436iYxUfu9pcmMFojUfgCR6exzMGUBs81GPP9khsfGQija1gYI6sxxDz2cpQoWnu5
+        mz2fqMzHrmX2eQnIrN+d+FSC1/xbl7c3OE2QdB1TNhRaktzgCCW6BjwnBgBeCyL4mgITtH
+        QJQQOTWnjs7Ogwxm1bA6+zlIlrsgxQ8=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-51-IibnnIvdNNCcmJaF9e_KSA-1; Fri, 10 Dec 2021 07:23:36 -0500
+X-MC-Unique: IibnnIvdNNCcmJaF9e_KSA-1
+Received: by mail-wm1-f72.google.com with SMTP id j71-20020a1c234a000000b00342f418ae7cso6600668wmj.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 Dec 2021 04:23:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KioUMvWRyu6MZM3/L8Y/jHqD4lh7+63A4Z1HNFMR0vs=;
+        b=YYEq8bnL9TizOxFT9bX5l2ELMzHugPI8bzay2BnMJ7mnXlWzF4kuw3bl60NcmGMm74
+         7tx8qhDyr3jLKhKoql9K83/KvU4TAKegGq1fJUUPTm22T4CJCCTSO1r1F/ECFCyUd5jJ
+         sh+TSyrS2ZE2grDbPcEKGjuK+9lzCtbOJYLIi9GCMrDKqO3LNzf517GV+pobN5fyycS+
+         3yqmZA2vlO6PaRjkAk/vsU7JCU/fSmGArR2EKbtpmMYuHGZZ71C1DofGpyMC04eYSUuT
+         HUy+7eItVSMCnNn8fuzqznLH4HoZusyAnBhG7yhnnTih9HleN/zFrdtWNgRJz8xnM8dP
+         S91g==
+X-Gm-Message-State: AOAM533f5IfT7KEd8X5RRJARRbP2F4j2C+L/YVRNQkleupERwbxgYfAh
+        d4uHUKq9MVijoKB9ps+esXKGSYbcISE/SJv/BemfazpaEgct7sz31t49k4RmZg3z04UzyG6jvZe
+        hjWAtwEMM9oyo47rUZPGpmR9I5Os1RA==
+X-Received: by 2002:adf:f352:: with SMTP id e18mr13953158wrp.39.1639139014735;
+        Fri, 10 Dec 2021 04:23:34 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyZdAIQO1BeoJ43lLB5AhJ1t+/ESbqQBresHP3hRbQSRzO+zkD1RIkj4eHCsDEjipAo3EGUGA==
+X-Received: by 2002:adf:f352:: with SMTP id e18mr13953136wrp.39.1639139014568;
+        Fri, 10 Dec 2021 04:23:34 -0800 (PST)
+Received: from krava ([83.240.60.218])
+        by smtp.gmail.com with ESMTPSA id l5sm3298402wrs.59.2021.12.10.04.23.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Dec 2021 04:23:34 -0800 (PST)
+Date:   Fri, 10 Dec 2021 13:23:32 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        "Frank Ch. Eigler" <fche@redhat.com>
+Subject: Re: [RFC] perf record: Disable debuginfod by default
+Message-ID: <YbNGxMAu5LYvqtpq@krava>
+References: <20211209200425.303561-1-jolsa@kernel.org>
+ <CAM9d7cjyN_sxMe9yajgnuDRy5234NZQ5sd0e4ynBmCnQSv=WFQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <708b524c-2af5-98a1-f56a-4bb4f268de7a@linux.ibm.com>
+In-Reply-To: <CAM9d7cjyN_sxMe9yajgnuDRy5234NZQ5sd0e4ynBmCnQSv=WFQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Dec 10, 2021 at 02:41:55PM +0530, kajoljain wrote:
+On Thu, Dec 09, 2021 at 03:39:20PM -0800, Namhyung Kim wrote:
+> Hi Jiri,
 > 
+> On Thu, Dec 9, 2021 at 12:04 PM Jiri Olsa <jolsa@redhat.com> wrote:
+> >
+> > hi,
+> > after migrating to fedora 35 I found perf record hanging on exit
+> > and it's because fedora 35 sets DEBUGINFOD_URLS that triggers
+> > debuginfod query which might take long time to process.
+> >
+> > I discussed this briefly with Frank and I'm sending the change
+> > to disable debuginfod by default in perf record.
+> >
+> > Frank had other idea we could discuss here to fork or just spawn
+> > "/usr/bin/debuginfod-find ...." into background after perf record.
+> >
+> > Perhaps there are other ways as well, hence this is RFC ;-)
 > 
-> On 12/10/21 7:59 AM, cgel.zte@gmail.com wrote:
-> > From: Minghao Chi <chi.minghao@zte.com.cn>
-> > 
-> > return value form directly instead of
-> > taking this in another redundant variable.
-> 
-> Can we reword the commit message stating what and
-> from where we are removing it. Its not too clear.
-> Other than that patch looks good to me.
-> 
-> Reviewed-By: Kajol Jain<kjain@linux.ibm.com>
+> I thought the debuginfod was for perf report, not record.
+> Maybe I'm missing something but how about moving it to
+> report?  We can talk to debuginfod after checking the local
+> build-id cache and binary on the system.
 
-Never reply or accept email from cgel.zte@gmail.com, there's multiple
-people using it to send email, this cannot be right.
+at the end of the perf record we populate buildid cache
+with profiled binaries for the current perf.data
+
+**IF** there's DEBUGINFOD_URLS defined, that code will
+also ask debuginfod for binaries it could not find on
+the system
+
+> 
+> Still, we can have perf buildid-cache to move it from the
+> debuginfod to local cache.
+
+yep, we have that already
+
+jirka
+
