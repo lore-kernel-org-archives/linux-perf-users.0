@@ -2,77 +2,102 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18CDAC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 06:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE059C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 08:04:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236965AbhLJGjV (ORCPT
+        id S235374AbhLJIIP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 10 Dec 2021 01:39:21 -0500
-Received: from gandalf.ozlabs.org ([150.107.74.76]:41397 "EHLO
-        gandalf.ozlabs.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233089AbhLJGjV (ORCPT
+        Fri, 10 Dec 2021 03:08:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50918 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238114AbhLJIIP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Dec 2021 01:39:21 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4J9Lkk74ZCz4xRB;
-        Fri, 10 Dec 2021 17:35:42 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-        s=201909; t=1639118145;
-        bh=0BDvfT/lwdOWFPr+nWUoB/LHFtw+9sdQTq7qe6HZorY=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=HuAweMSI/91u6qoNG9Nr6QgxHHZJNJ3170r1TGwu6xACxU3/yU9dtisbEOX/cxh1k
-         IdKUXo/OGZH5WEPAI/fJBXMjdSCkG6ama18Lu+4fxR27mASmwt/rn6hEHT/IUBfAWX
-         6wHKeDkzH6H+S0+ucVXnhcO8lpfmcosYxJBydFdKNfBteu2AOBoX0eDZUpUeXU3c8Y
-         PTgE+zKkjDCUpFWFNRUrYjQqva+6L4+2tCQ36y4tWNRgTdXvmqf0Ep7C9kAX2zYKVl
-         9NPwgCobClTPiZs/6V+4PX9YlX7K71JNO138kn8/S1MG9cwphiI6Kqw8uDwJE/skkz
-         IYzzjwujUmYUw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kajol Jain <kjain@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, mingo@redhat.com, jolsa@kernel.org,
-        namhyung@kernel.org, ak@linux.intel.com,
-        linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
-        yao.jin@linux.intel.com, ast@kernel.org, daniel@iogearbox.net,
-        songliubraving@fb.com, kan.liang@linux.intel.com,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        paulus@samba.org
-Subject: Re: [PATCH 0/4] perf: Add new macros for mem_hops field
-In-Reply-To: <YbJWVYZg1el9PR1I@kernel.org>
-References: <20211206091749.87585-1-kjain@linux.ibm.com>
- <YbJWVYZg1el9PR1I@kernel.org>
-Date:   Fri, 10 Dec 2021 17:35:41 +1100
-Message-ID: <87o85pm0g2.fsf@mpe.ellerman.id.au>
+        Fri, 10 Dec 2021 03:08:15 -0500
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F319C061746;
+        Fri, 10 Dec 2021 00:04:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=7L65AS+iimZqb2KNq4M1+cHyGgzNH5bSSF+sipkws9Q=; b=QgAue25EBlx6PiAjs8AnPi7N/X
+        noz9jSlC5ezpQEgdvmE87qwlmv9m/UJgTm8IBWVidNZdxmPVsuhW2ShH0bnDZaFWJGu2pAaQCVnTv
+        AQ5ny/2c9qZpL/7Cqi1SpiWt1/+ntRdVRkm0/0jqPrfWfEQAHcGcDyLJxe+G9/SbI8gx7VpGBs0K5
+        QsRrrtHcgibnmzompha8Y9T63Ngnbe0zMXdCGJe1DqIzj4SEkG2V38HCzn+lpcdAFrvNf9XyjUtvr
+        H9TVN1Rw4cZdJyIUSLdSebEg9rwrlIvHSHVOL0LaCGem9hBcJw7wcl3A9mNRmHg8ltTA+iM+e40O/
+        /VnCSzcw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mvatE-000Wrg-TR; Fri, 10 Dec 2021 08:04:25 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 227079817E0; Fri, 10 Dec 2021 09:04:25 +0100 (CET)
+Date:   Fri, 10 Dec 2021 09:04:25 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org,
+        "Frank Ch. Eigler" <fche@redhat.com>
+Subject: Re: [RFC] perf record: Disable debuginfod by default
+Message-ID: <20211210080425.GO16608@worktop.programming.kicks-ass.net>
+References: <20211209200425.303561-1-jolsa@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211209200425.303561-1-jolsa@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Arnaldo Carvalho de Melo <acme@kernel.org> writes:
-> Em Mon, Dec 06, 2021 at 02:47:45PM +0530, Kajol Jain escreveu:
->> Patchset adds new macros for mem_hops field which can be
->> used to represent remote-node, socket and board level details.
->> 
->> Currently the code had macro for HOPS_0, which corresponds
->> to data coming from another core but same node.
->> Add new macros for HOPS_1 to HOPS_3 to represent
->> remote-node, socket and board level data.
->> 
->> For ex: Encodings for mem_hops fields with L2 cache:
->
-> I checked and this hasn't hit mainstream, is it already merged on a tree
-> where this is slated to be submitted in the next window? If so please
-> let me know which one so that I can merge it on perf/core.
+On Thu, Dec 09, 2021 at 09:04:25PM +0100, Jiri Olsa wrote:
+> hi,
+> after migrating to fedora 35 I found perf record hanging on exit
+> and it's because fedora 35 sets DEBUGINFOD_URLS that triggers
+> debuginfod query which might take long time to process.
+> 
+> I discussed this briefly with Frank and I'm sending the change
+> to disable debuginfod by default in perf record.
+> 
+> Frank had other idea we could discuss here to fork or just spawn
+> "/usr/bin/debuginfod-find ...." into background after perf record.
+> 
+> Perhaps there are other ways as well, hence this is RFC ;-)
+> 
+> thanks,
+> jirka
+> 
+> 
+> ---
+> Fedora 35 sets by default DEBUGINFOD_URLS, which might lead
+> to unexpected stalls in perf record exit path, when we try
+> to cache profiled binaries.
+> 
+>   # DEBUGINFOD_PROGRESS=1 ./perf record -a
+>   ^C[ perf record: Woken up 1 times to write data ]
+>   Downloading from https://debuginfod.fedoraproject.org/ 447069
+>   Downloading from https://debuginfod.fedoraproject.org/ 1502175
+>   Downloading \^Z
+> 
+> Disabling DEBUGINFOD_URLS by default in perf record and adding
+> debuginfod option and .perfconfig variable support to enable id.
+> 
+>   Default without debuginfo processing:
+>   # perf record -a
+> 
+>   Using system debuginfod setup:
+>   # perf record -a --debuginfod
+> 
+>   Using custom debuginfd url:
+>   # perf record -a --debuginfod='https://evenbetterdebuginfodserver.krava'
+> 
+> Adding single perf_debuginfod_setup function and using
+> it also in perf buildid-cache command.
 
-I haven't picked it up. I guess the kernel changes are mainly in
-powerpc, but I'd at least need an ack from eg. Peter for the generic
-perf uapi change.
-
-Equally the whole series could go via tip.
-
-cheers
+I'm still running with --no-buildid --no-buildid-cache or something like
+that by default. As long as that remains working I'm good.
