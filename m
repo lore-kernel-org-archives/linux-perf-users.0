@@ -2,115 +2,200 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 093DAC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 12:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D01C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 13:12:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241304AbhLJMsr (ORCPT
+        id S238003AbhLJNQT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 10 Dec 2021 07:48:47 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:18386 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S241161AbhLJMsq (ORCPT
+        Fri, 10 Dec 2021 08:16:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37988 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237980AbhLJNQS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Dec 2021 07:48:46 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1BABGmXg002917;
-        Fri, 10 Dec 2021 12:44:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=BpJ9KVSCJ8ZQ9zK7QSKfVb6aWWCf7K6BxzU3qB4ulYU=;
- b=hRXiwZI1cBImue2/gg5Tch2tgaX+HNN2HGblxaSky7gh2J6nIfoyiQYrzKXPHhk+YmUU
- jM5fqJkf/KtR5nGr08nZI5mAGaMlWzjhIa/6mw3eX0vybDF8mCR6kHakjAbI9WFE9StP
- 4qmVv/LGy0HrqgNMe92OIdD7n1Kwe9W/hbkEZXwPXvdXb57rZ7bndgK3Wcs4WwHOziCL
- tmht7CAPwPctCILf+rxBeGzuwvdCa9iCVz28UEIdX8FpSRWfQQCIn95mz8QzYhw8Nc6r
- JdJribNHO2ZK4/0aK/0bzUblxmtThPwAsgEIlMP7lUZ/5Jc21jBuzNlMQpy839/Q7bSr vA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3cv49nbkwm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Dec 2021 12:44:57 +0000
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1BACaTcA014524;
-        Fri, 10 Dec 2021 12:44:56 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3cv49nbkvp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Dec 2021 12:44:56 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1BACh81T009868;
-        Fri, 10 Dec 2021 12:44:54 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma06ams.nl.ibm.com with ESMTP id 3cqykk31pk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Dec 2021 12:44:54 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1BACiqXT34079152
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Dec 2021 12:44:52 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2FA0A5205F;
-        Fri, 10 Dec 2021 12:44:52 +0000 (GMT)
-Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com (unknown [9.43.72.154])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 3D41752054;
-        Fri, 10 Dec 2021 12:44:47 +0000 (GMT)
-Subject: Re: [PATCH] tools/perf: remove unneeded variable make code cleaner
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     cgel.zte@gmail.com, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, chi.minghao@zte.com.cn,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Zeal Robot <zealci@zte.com.cm>
-References: <20211210022911.424512-1-chi.minghao@zte.com.cn>
- <708b524c-2af5-98a1-f56a-4bb4f268de7a@linux.ibm.com>
- <20211210104203.GT16608@worktop.programming.kicks-ass.net>
-From:   kajoljain <kjain@linux.ibm.com>
-Message-ID: <500a4cce-1e71-fd8a-8fa3-39eb09964e97@linux.ibm.com>
-Date:   Fri, 10 Dec 2021 18:14:46 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Fri, 10 Dec 2021 08:16:18 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F055C061746;
+        Fri, 10 Dec 2021 05:12:43 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 232D0B827F5;
+        Fri, 10 Dec 2021 13:12:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A709C00446;
+        Fri, 10 Dec 2021 13:12:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1639141960;
+        bh=xeC3EkvUFHpiDr5FgrRv5JNGrk2OmtdVcSw4zbaTxnE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=joM5WuPGODNozSFBwpKpEBgfUvelhwB0O3Ct2j1/6wQo5PB5dWEvrprDGrRvZFx1P
+         V9+k0lfaGrMrWwa4HijseDsysjOwFnNln68GnSKBLt/3wChkKvjbW+sA/g5Z5b4qOh
+         z8j6k5KgSPzB4pYzlK0J1u0Laanuc/HyPxu6q1RxnuHW6R7gROVuKJFZ9yhtlPrHZ+
+         3Rao80/eYVnRINqGOAqwJLHv1LeG26zXmRjrolJddMQd1ize2h/KiZQ9sNfr0jVX8P
+         zh7UzKt1Mx15XfBBhBushG0DnqAl5tL5P/GaOyAxVqUzvEEIw8MxwyjOO64CzCfyZQ
+         DECDEWFR0ZlwA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id F1419405D8; Fri, 10 Dec 2021 10:12:37 -0300 (-03)
+Date:   Fri, 10 Dec 2021 10:12:37 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Alistair Francis <alistair.francis@opensource.wdc.com>,
+        Arnd Bergmann <arnd@arndb.de>, Davidlohr Bueso <dbueso@suse.de>
+Cc:     linux-kernel@vger.kernel.org, dave@stgolabs.net,
+        dvhart@infradead.org, alistair23@gmail.com,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alistair Francis <alistair.francis@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v5 1/6] perf bench futex: Add support for 32-bit systems
+ with 64-bit time_t
+Message-ID: <YbNSRcSrAaurqDEv@kernel.org>
+References: <20211209235857.423773-1-alistair.francis@opensource.wdc.com>
 MIME-Version: 1.0
-In-Reply-To: <20211210104203.GT16608@worktop.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: gQdk6yDzIHg92xSTJhw9FQnD3NfrexX6
-X-Proofpoint-GUID: Y1GG5TjhOmQDFvlgOR3MW-0anEzIvrBl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2021-12-10_03,2021-12-10_01,2021-12-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 adultscore=0 spamscore=0 clxscore=1015 mlxscore=0
- bulkscore=0 priorityscore=1501 mlxlogscore=835 impostorscore=0
- malwarescore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2110150000 definitions=main-2112100070
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211209235857.423773-1-alistair.francis@opensource.wdc.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 12/10/21 4:12 PM, Peter Zijlstra wrote:
-> On Fri, Dec 10, 2021 at 02:41:55PM +0530, kajoljain wrote:
->>
->>
->> On 12/10/21 7:59 AM, cgel.zte@gmail.com wrote:
->>> From: Minghao Chi <chi.minghao@zte.com.cn>
->>>
->>> return value form directly instead of
->>> taking this in another redundant variable.
->>
->> Can we reword the commit message stating what and
->> from where we are removing it. Its not too clear.
->> Other than that patch looks good to me.
->>
->> Reviewed-By: Kajol Jain<kjain@linux.ibm.com>
+Em Fri, Dec 10, 2021 at 09:58:52AM +1000, Alistair Francis escreveu:
+> From: Alistair Francis <alistair.francis@wdc.com>
 > 
-> Never reply or accept email from cgel.zte@gmail.com, there's multiple
-> people using it to send email, this cannot be right.
+> Some 32-bit architectures (such are 32-bit RISC-V) only have a 64-bit
+> time_t and as such don't have the SYS_futex syscall. This patch will
+> allow us to use the SYS_futex_time64 syscall on those platforms.
 > 
+> This also converts the futex calls to be y2038 safe (when built for a
+> 5.1+ kernel).
+> 
+> This is a revert of commit ba4026b09d83acf56c040b6933eac7916c27e728
+> "Revert "perf bench futex: Add support for 32-bit systems with 64-bit time_t"".
+> 
+> The original commit was reverted as including linux/time_types.h would
+> fail to compile on older kernels. This commit doesn't include
+> linux/time_types.h to avoid this issue.
 
-Sure peter, Thanks for pointing it. Will take care next time.
+The reverted commit had:
+
+    Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+    Acked-by: Davidlohr Bueso <dbueso@suse.de>
+
+Does that stands for this new patch?
 
 Thanks,
-Kajol Jain
+
+- Arnaldo
+ 
+> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Alistair Francis <alistair23@gmail.com>
+> Cc: Atish Patra <atish.patra@wdc.com>
+> Cc: Darren Hart <dvhart@infradead.org>
+> Cc: Davidlohr Bueso <dave@stgolabs.net>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: linux-riscv@lists.infradead.org
+> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  tools/perf/bench/futex.h | 52 +++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 49 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/bench/futex.h b/tools/perf/bench/futex.h
+> index ebdc2b032afc..385d2bdfaa9f 100644
+> --- a/tools/perf/bench/futex.h
+> +++ b/tools/perf/bench/futex.h
+> @@ -8,6 +8,7 @@
+>  #ifndef _FUTEX_H
+>  #define _FUTEX_H
+>  
+> +#include <errno.h>
+>  #include <unistd.h>
+>  #include <sys/syscall.h>
+>  #include <sys/types.h>
+> @@ -28,7 +29,17 @@ struct bench_futex_parameters {
+>  };
+>  
+>  /**
+> - * futex_syscall() - SYS_futex syscall wrapper
+> + * This is copied from linux/time_types.h.
+> + * We copy this here to avoid compilation failures when running
+> + * on systems that don't ship with linux/time_types.h.
+> + */
+> +struct __kernel_old_timespec {
+> +	__kernel_old_time_t	tv_sec;		/* seconds */
+> +	long			tv_nsec;	/* nanoseconds */
+> +};
+> +
+> +/**
+> + * futex_syscall() - __NR_futex syscall wrapper
+>   * @uaddr:	address of first futex
+>   * @op:		futex op code
+>   * @val:	typically expected value of uaddr, but varies by op
+> @@ -49,14 +60,49 @@ static inline int
+>  futex_syscall(volatile u_int32_t *uaddr, int op, u_int32_t val, struct timespec *timeout,
+>  	      volatile u_int32_t *uaddr2, int val3, int opflags)
+>  {
+> -	return syscall(SYS_futex, uaddr, op | opflags, val, timeout, uaddr2, val3);
+> +#if defined(__NR_futex_time64)
+> +	if (sizeof(*timeout) != sizeof(struct __kernel_old_timespec)) {
+> +		int ret = syscall(__NR_futex_time64, uaddr, op | opflags, val, timeout,
+> +				  uaddr2, val3);
+> +	if (ret == 0 || errno != ENOSYS)
+> +		return ret;
+> +	}
+> +#endif
+> +
+> +#if defined(__NR_futex)
+> +	if (sizeof(*timeout) == sizeof(struct __kernel_old_timespec))
+> +		return syscall(__NR_futex, uaddr, op | opflags, val, timeout, uaddr2, val3);
+> +
+> +	if (timeout && timeout->tv_sec == (long)timeout->tv_sec) {
+> +		struct __kernel_old_timespec ts32;
+> +
+> +		ts32.tv_sec = (__kernel_long_t) timeout->tv_sec;
+> +		ts32.tv_nsec = (__kernel_long_t) timeout->tv_nsec;
+> +
+> +		return syscall(__NR_futex, uaddr, op | opflags, val, ts32, uaddr2, val3);
+> +	} else if (!timeout) {
+> +		return syscall(__NR_futex, uaddr, op | opflags, val, NULL, uaddr2, val3);
+> +	}
+> +#endif
+> +
+> +	errno = ENOSYS;
+> +	return -1;
+>  }
+>  
+>  static inline int
+>  futex_syscall_nr_requeue(volatile u_int32_t *uaddr, int op, u_int32_t val, int nr_requeue,
+>  			 volatile u_int32_t *uaddr2, int val3, int opflags)
+>  {
+> -	return syscall(SYS_futex, uaddr, op | opflags, val, nr_requeue, uaddr2, val3);
+> +#if defined(__NR_futex_time64)
+> +	int ret =  syscall(__NR_futex_time64, uaddr, op | opflags, val, nr_requeue,
+> +			   uaddr2, val3);
+> +	if (ret == 0 || errno != ENOSYS)
+> +		return ret;
+> +#endif
+> +
+> +#if defined(__NR_futex)
+> +	return syscall(__NR_futex, uaddr, op | opflags, val, nr_requeue, uaddr2, val3);
+> +#endif
+>  }
+>  
+>  /**
+> -- 
+> 2.31.1
+
+-- 
+
+- Arnaldo
