@@ -2,185 +2,94 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BF8C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 17:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A8BC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 18:42:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244897AbhLJR7T (ORCPT
+        id S231417AbhLJSph (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 10 Dec 2021 12:59:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49426 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245073AbhLJR7P (ORCPT
+        Fri, 10 Dec 2021 13:45:37 -0500
+Received: from mail-lf1-f54.google.com ([209.85.167.54]:44928 "EHLO
+        mail-lf1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242028AbhLJSph (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Dec 2021 12:59:15 -0500
-Received: from mail-qv1-xf33.google.com (mail-qv1-xf33.google.com [IPv6:2607:f8b0:4864:20::f33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE0A8C061746;
-        Fri, 10 Dec 2021 09:55:39 -0800 (PST)
-Received: by mail-qv1-xf33.google.com with SMTP id a24so8686355qvb.5;
-        Fri, 10 Dec 2021 09:55:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:user-agent:in-reply-to:references
-         :message-id:mime-version:content-transfer-encoding;
-        bh=1wtvNcOdkbKIyNXdwFNs06IFmsjU6gWbejdXvtZbfgs=;
-        b=R8DUHYY4CEUvoGJf0fYI3YwuKddeDeV1uozdv2ZFKmbSEmbDElBpwJgC4k1KHCPWW2
-         B+1iXji/PkL2aavGlKTyNZd8yLzordol90wmGaE/P0Hcsn3/jfWC5beh4Vl0IgeNxQeN
-         GCgnGpsIDjvrCslI/HF5EBobR3zt7j/MpqJZTH7tfNsCtgwJX0EYWIHC2RUDlpRYP/s1
-         wo8cKKku49yIs/J9/5Yitw86NmmUiavwHGM6JgFn+z9rNfGoRK/4huTHs2k1jYkyFYbo
-         U6IKaQDTDhBIRswQDSn8+ZXS93PBr+fxNLB0SspTLVTlruyY2IAFAzg4K81/07PPEvck
-         kvWw==
+        Fri, 10 Dec 2021 13:45:37 -0500
+Received: by mail-lf1-f54.google.com with SMTP id z7so19599455lfi.11;
+        Fri, 10 Dec 2021 10:42:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:user-agent:in-reply-to
-         :references:message-id:mime-version:content-transfer-encoding;
-        bh=1wtvNcOdkbKIyNXdwFNs06IFmsjU6gWbejdXvtZbfgs=;
-        b=qiPC29bUu1O4J9s6bgp5xwLIVP3sVyA3ljAHmuXCYNTE0zV/ymwVMZ67Wg/mDS/oVp
-         PsuIEt0/m05t8TqPS6SaIGvwbwfEKfpOrQ1zr6e68LKUrU1CrK4HrEvO8zJPMWvXPmRO
-         iCiFNdsnEpSksTim86wdsR3Tcd8syU+UQL8MHosVKWGbIGkTcovbPbYF6cqwyJiMcLkR
-         0xjD6/4ZyDkn0pmYbuZ9/gFvvWyEZPI/EwoBEMv2/IwzE31dnD0QsuiyzymclXPqAhe9
-         i7Bg1ZUMsIB2+x6ljJ7WIohigAxnwm8YApH+VvLJSNgPrXll9VyCUch54lpxH3XtB1Tg
-         Z6ZQ==
-X-Gm-Message-State: AOAM5331ZCSSf4VwsnUrR5ylpso8wcT/eBG88JIwCX75hfPsQMO6P7sx
-        DqanGXyl4MT97iyljQjXG94=
-X-Google-Smtp-Source: ABdhPJzFnXKUAFn/kChcD4UaKYPmAqPgLJb7FmFJSAxtuVX8JsA6C7iCgJ3Z5dWk+55zp/UjDHKlYg==
-X-Received: by 2002:ad4:5bac:: with SMTP id 12mr27871888qvq.63.1639158938893;
-        Fri, 10 Dec 2021 09:55:38 -0800 (PST)
-Received: from [127.0.0.1] ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id i16sm2465161qtx.57.2021.12.10.09.55.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Dec 2021 09:55:38 -0800 (PST)
-Date:   Fri, 10 Dec 2021 14:55:32 -0300
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        James Clark <james.clark@arm.com>
-CC:     Leo Yan <leo.yan@linaro.org>, coresight@lists.linaro.org,
-        suzuki.poulose@arm.com, Mike Leach <mike.leach@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7/vZFfyyGbtD8bnHKJffHn0egoSdbRjyGjsJBHQqKr8=;
+        b=4t3D4KnQtNe0e8m2yj+Ke9lWji8fQ6sEIbq1hsHiHw7dQDDrphsWCUVCZMGsZ0Z8E4
+         cBqkLGV6xNjeIauAgfB5ARa5EefabYKsPEuuRd5gidnQyV2x84/pfBF1jyyBXCafPJu0
+         ZhBXOtRcCUqdG33+GDuhOsoTLKx32+f+iSdD59hrfrx0CHPvSLc5mm9pzhMANUQCDKhF
+         G09OGFFMMiLdjyMjuwAmJxBgo56GkSZ5k/GEZIUjgv8rzuqJziIghzHVri3/cyPXufqF
+         3tsKlcbAF6C9bKQAfpMx0iZfWL4+tv9/H13qG/AOZ5A9Fzwf93XBSgouNtpUp9/r4Ekc
+         g1WA==
+X-Gm-Message-State: AOAM531ijSZAGikZvOdi+Nwcndj3Uwq3YGm+T/jPejA2xxPdWZtUepIV
+        gpT8wiP9ZfRVfIHYDQyCt0vWeg/1qNwt9jmfdu4=
+X-Google-Smtp-Source: ABdhPJzSirnbrYv9rYoyj9m7S/o4CrKa5bGDf0xNi1iC5x1U8HaTeAfyjlyTD8zPTC5izteDBuj/fwXR4s7T4JgWNNo=
+X-Received: by 2002:a05:6512:3d09:: with SMTP id d9mr14452961lfv.481.1639161720961;
+ Fri, 10 Dec 2021 10:42:00 -0800 (PST)
+MIME-Version: 1.0
+References: <20211209200425.303561-1-jolsa@kernel.org> <CAM9d7cjyN_sxMe9yajgnuDRy5234NZQ5sd0e4ynBmCnQSv=WFQ@mail.gmail.com>
+ <YbNGxMAu5LYvqtpq@krava>
+In-Reply-To: <YbNGxMAu5LYvqtpq@krava>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 10 Dec 2021 10:41:49 -0800
+Message-ID: <CAM9d7cit-GKyDcVp435np7WSe_KW-+NYD7rHSC10EEoW1EpTSA@mail.gmail.com>
+Subject: Re: [RFC] perf record: Disable debuginfod by default
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_perf_cs-etm=3A_Remove_dup?= =?US-ASCII?Q?licate_and_incorrect_aux_size_checks?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20211210165436.GA1236662@p14s>
-References: <20211208115435.610101-1-james.clark@arm.com> <20211208131753.GC273781@leoy-ThinkPad-X240s> <269d2f14-0594-c73e-97b5-82e72f76e826@arm.com> <20211209134413.GA622826@leoy-ThinkPad-X240s> <6a7fd600-91f3-5feb-d21f-ec7cb704f84c@arm.com> <20211210165436.GA1236662@p14s>
-Message-ID: <B3677362-D2A0-4341-A6C1-53E50A3B8C49@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        "Frank Ch. Eigler" <fche@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On December 10, 2021 1:54:36 PM GMT-03:00, Mathieu Poirier <mathieu=2Epoir=
-ier@linaro=2Eorg> wrote:
->On Thu, Dec 09, 2021 at 02:16:43PM +0000, James Clark wrote:
->>=20
->>=20
->> On 09/12/2021 13:44, Leo Yan wrote:
->> > On Wed, Dec 08, 2021 at 02:08:04PM +0000, James Clark wrote:
->> >> On 08/12/2021 13:17, Leo Yan wrote:
->> >>> Hi James,
->> >>>
->> >>> On Wed, Dec 08, 2021 at 11:54:35AM +0000, James Clark wrote:
->> >>>> There are two checks, one is for size when running without admin, =
-but
->> >>>> this one is covered by the driver and reported on in more detail h=
-ere
->> >>>> (builtin-record=2Ec):
->> >>>>
->> >>>>   pr_err("Permission error mapping pages=2E\n"
->> >>>>          "Consider increasing "
->> >>>>          "/proc/sys/kernel/perf_event_mlock_kb,\n"
->> >>>>          "or try again with a smaller value of -m/--mmap_pages=2E\=
-n"
->> >>>>          "(current value: %u,%u)\n",
->> >>>
->> >>> I looked into the kernel code and found:
->> >>>
->> >>>   sysctl_perf_event_mlock =3D 512 + (PAGE_SIZE / 1024);  // 512KB +=
- 1 page
->> >>>
->> >>> If the system have multiple cores, let's say 8 cores, then kernel e=
-ven
->> >>> can relax the limitaion with:
->> >>>
->> >>>   user_lock_limit *=3D num_online_cpus();
->> >>>
->> >>> So means the memory lock limitation is:
->> >>>
->> >>>   (512KB + 1 page) * 8 =3D 4MB + 8 pages=2E
->> >>>
->> >>> Seems to me, it's much relax than the user space's limitaion 128KB=
-=2E
->> >>> And let's imagine for Arm server, the permitted buffer size can be =
-a
->> >>> huge value (e=2Eg=2E for a system with 128 cores)=2E
->> >>>
->> >>> Could you confirm if this is right?
->> >>
->> >> Yes that seems to be the case=2E And the commit message for that add=
-ition
->> >> states the reasoning:
->> >>
->> >>   perf_counter: Increase mmap limit
->> >>  =20
->> >>   In a default 'perf top' run the tool will create a counter for
->> >>   each online CPU=2E With enough CPUs this will eventually exhaust
->> >>   the default limit=2E
->> >>
->> >>   So scale it up with the number of online CPUs=2E
->> >>
->> >> To me that makes sense=2E Normally the memory installed also scales =
-with the
->> >> number of cores=2E
->> >>
->> >> Are you saying that we should look into modifying that scaling facto=
-r in
->> >> perf_mmap()? Or that we should still add something to userspace for
->> >> coresight to limit user supplied buffer sizes?
->> >=20
->> > I don't think we should modify the scaling factor in perf_mmap(), the
->> > logic is not only used by AUX buffer, it's shared by normal event
->> > ring buffer=2E
->> >=20
->> >> I think it makes sense to allow the user to specify any value that w=
-ill work,
->> >> it's up to them=2E
->> >=20
->> > Understand, I verified this patch with below steps:
->> >=20
->> > root@debian:~# echo 0 > /proc/sys/kernel/perf_event_paranoid
->> >=20
->> > leoy@debian:~$ perf record -e cs_etm// -m 4M,8M -o perf_test=2Edata -=
-- sleep 1
->> > Permission error mapping pages=2E
->> > Consider increasing /proc/sys/kernel/perf_event_mlock_kb,
->> > or try again with a smaller value of -m/--mmap_pages=2E
->> > (current value: 1024,2048)
->> >=20
->> > leoy@debian:~$ perf record -e cs_etm// -m 4M,4M -o perf_test=2Edata -=
-- sleep 1
->> > Couldn't synthesize bpf events=2E
->> > [ perf record: Woken up 1 times to write data ]
->> > [ perf record: Captured and wrote 0=2E607 MB perf_test=2Edata ]
->> >=20
->> > So this patch looks good for me:
->> >=20
->> > Reviewed-by: Leo Yan <leo=2Eyan@linaro=2Eorg>
->> >=20
->> Thanks Leo!
+On Fri, Dec 10, 2021 at 4:23 AM Jiri Olsa <jolsa@redhat.com> wrote:
 >
->Arnaldo is not on the recipient list and as such he won't see this patch=
-=2E=2E=2E
+> On Thu, Dec 09, 2021 at 03:39:20PM -0800, Namhyung Kim wrote:
+> > Hi Jiri,
+> >
+> > On Thu, Dec 9, 2021 at 12:04 PM Jiri Olsa <jolsa@redhat.com> wrote:
+> > >
+> > > hi,
+> > > after migrating to fedora 35 I found perf record hanging on exit
+> > > and it's because fedora 35 sets DEBUGINFOD_URLS that triggers
+> > > debuginfod query which might take long time to process.
+> > >
+> > > I discussed this briefly with Frank and I'm sending the change
+> > > to disable debuginfod by default in perf record.
+> > >
+> > > Frank had other idea we could discuss here to fork or just spawn
+> > > "/usr/bin/debuginfod-find ...." into background after perf record.
+> > >
+> > > Perhaps there are other ways as well, hence this is RFC ;-)
+> >
+> > I thought the debuginfod was for perf report, not record.
+> > Maybe I'm missing something but how about moving it to
+> > report?  We can talk to debuginfod after checking the local
+> > build-id cache and binary on the system.
 >
+> at the end of the perf record we populate buildid cache
+> with profiled binaries for the current perf.data
+>
+> **IF** there's DEBUGINFOD_URLS defined, that code will
+> also ask debuginfod for binaries it could not find on
+> the system
 
-I saw it now, can I take this as an acked-by: Matthieu too?
+Yeah, I know what you're doing.  But I guess debuginfod
+contains binaries for the distro and they'd be available for
+a while.  Then I think we don't need to do it at perf record.
 
-- Arnaldo
+Thanks,
+Namhyung
