@@ -2,86 +2,165 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D69C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 16:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8784CC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 16:54:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240722AbhLJQxx (ORCPT
+        id S244272AbhLJQ6Q (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 10 Dec 2021 11:53:53 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:39761 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233248AbhLJQxw (ORCPT
+        Fri, 10 Dec 2021 11:58:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35112 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241023AbhLJQ6P (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Dec 2021 11:53:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1639155017;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JOYJ/utoBMVaS9HCfRFEQqBbZe9TQqR0k0Gsd0aUb4o=;
-        b=OT9xhKdF9Cqo9VhLs/JJg4u9SFSUr+oJRPVtNf1/qqReECw0r6xaZyIW7nfeVdDFXM5/KK
-        6lvgjL4YizWrJS22isXgzHBZZn7lVl21e5p1mgUUmeSL9m1XyU0hooWnd3PweFFEtbTDFH
-        lg/LJO7ud8iOMKKqv4wvpJf81CPfeCg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-330-XoRgWfLXO7qfWOWiInyj1w-1; Fri, 10 Dec 2021 11:50:14 -0500
-X-MC-Unique: XoRgWfLXO7qfWOWiInyj1w-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 964BD593AE;
-        Fri, 10 Dec 2021 16:50:12 +0000 (UTC)
-Received: from redhat.com (unknown [10.2.16.5])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 642095D6D7;
-        Fri, 10 Dec 2021 16:50:12 +0000 (UTC)
-Received: from fche by redhat.com with local (Exim 4.94.2)
-        (envelope-from <fche@redhat.com>)
-        id 1mvj62-0008Hz-GG; Fri, 10 Dec 2021 11:50:10 -0500
-Date:   Fri, 10 Dec 2021 11:50:10 -0500
-From:   "Frank Ch. Eigler" <fche@redhat.com>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@kernel.org>,
+        Fri, 10 Dec 2021 11:58:15 -0500
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8AE5C061746
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 Dec 2021 08:54:40 -0800 (PST)
+Received: by mail-pg1-x52a.google.com with SMTP id 133so8535647pgc.12
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 Dec 2021 08:54:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=pmeRkqZDK00GW81o5V76FJNx8cnKybCMVGo2V/GvQbU=;
+        b=BgrY4m9/7KdpGZ/v9yUtCOOuyUcziugxMmdJO/AzA1KbDU9SMFMC64iY5DJBHNshtp
+         q5IUUz5vGaN9ks+P7aXSl7qLR4nH5Dk29sAaZHub7ZijcnzvpH0JsfgHexXmCAYJrOXj
+         kANf10P+Ay/3+2AHzbAJUrBeamaHEOwHOPBv9veQSMLy5dTxhxxHI81byMGdfuu5RY+U
+         UJ9ifUWRNNL+v8X5qU+4ShMo220uG8Y2KJgz6qgKO5bpJvOPMdHzqlwL6V0whapVICJ1
+         aGY/6YxsYfOsnEmdkqXMXyRNCsrbB+MQhR0asbUmaoSs7svBDLCRYS3w6K8yO4S5ukwA
+         vAkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pmeRkqZDK00GW81o5V76FJNx8cnKybCMVGo2V/GvQbU=;
+        b=J0yBKB9okCz55fA2rbxUVnRZmn+bOCm1hof3erLQmVPcAH6yZXN631Fb9YpuTEHBLN
+         fHBn7WQWcrfImp/sncN1UJSo56OewzXtrb1F8MgJR/9Rl5vLkya5CxQ5fXuQMcZUA/QS
+         xbijsUhp78lcqy8bIvTGQh7e8XyTUOz1MEZ8OrBYpqIR+m+b1TPJGJiA8GzVMIlhjwMO
+         n4OQjMYO+c6SYS2d94RLKbZ3mxO/1ES+HrnzAQL68A40CsImBp+bcwpK7OWWnfI5jawv
+         4vqVQX044KmgsIhW4mjUBW/I4sEU/d3RkqMLHF1s9siuZVs36InzjylXCzaNJc7vwO34
+         9b1g==
+X-Gm-Message-State: AOAM532/tZRz8hz4FOMaQPvdctxfOkpTR9nqIRBmjH3WhY8e9dwAKwWs
+        51+VQjLnJ8rq80GCIdJJAIS6kA==
+X-Google-Smtp-Source: ABdhPJxHROttO6bm9CXzM9iK3z0M2D/k5KQih15Yy1kSvs/gXnl0V1Hx/hy+tJFs38RMU1nllXe/Sg==
+X-Received: by 2002:a63:6ecb:: with SMTP id j194mr39322605pgc.46.1639155280299;
+        Fri, 10 Dec 2021 08:54:40 -0800 (PST)
+Received: from p14s (S0106889e681aac74.cg.shawcable.net. [68.147.0.187])
+        by smtp.gmail.com with ESMTPSA id ot18sm3435741pjb.14.2021.12.10.08.54.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Dec 2021 08:54:39 -0800 (PST)
+Date:   Fri, 10 Dec 2021 09:54:36 -0700
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     Leo Yan <leo.yan@linaro.org>, coresight@lists.linaro.org,
+        suzuki.poulose@arm.com, Mike Leach <mike.leach@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
-Subject: Re: [RFC] perf record: Disable debuginfod by default
-Message-ID: <20211210165010.GA30236@redhat.com>
-References: <20211209200425.303561-1-jolsa@kernel.org>
- <CAM9d7cjyN_sxMe9yajgnuDRy5234NZQ5sd0e4ynBmCnQSv=WFQ@mail.gmail.com>
- <YbNGxMAu5LYvqtpq@krava>
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf cs-etm: Remove duplicate and incorrect aux size
+ checks
+Message-ID: <20211210165436.GA1236662@p14s>
+References: <20211208115435.610101-1-james.clark@arm.com>
+ <20211208131753.GC273781@leoy-ThinkPad-X240s>
+ <269d2f14-0594-c73e-97b5-82e72f76e826@arm.com>
+ <20211209134413.GA622826@leoy-ThinkPad-X240s>
+ <6a7fd600-91f3-5feb-d21f-ec7cb704f84c@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YbNGxMAu5LYvqtpq@krava>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <6a7fd600-91f3-5feb-d21f-ec7cb704f84c@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi -
-
-On Fri, Dec 10, 2021 at 01:23:32PM +0100, Jiri Olsa wrote:
-> [...]
-> at the end of the perf record we populate buildid cache
-> with profiled binaries for the current perf.data
+On Thu, Dec 09, 2021 at 02:16:43PM +0000, James Clark wrote:
 > 
-> **IF** there's DEBUGINFOD_URLS defined, that code will
-> also ask debuginfod for binaries it could not find on
-> the system
+> 
+> On 09/12/2021 13:44, Leo Yan wrote:
+> > On Wed, Dec 08, 2021 at 02:08:04PM +0000, James Clark wrote:
+> >> On 08/12/2021 13:17, Leo Yan wrote:
+> >>> Hi James,
+> >>>
+> >>> On Wed, Dec 08, 2021 at 11:54:35AM +0000, James Clark wrote:
+> >>>> There are two checks, one is for size when running without admin, but
+> >>>> this one is covered by the driver and reported on in more detail here
+> >>>> (builtin-record.c):
+> >>>>
+> >>>>   pr_err("Permission error mapping pages.\n"
+> >>>>          "Consider increasing "
+> >>>>          "/proc/sys/kernel/perf_event_mlock_kb,\n"
+> >>>>          "or try again with a smaller value of -m/--mmap_pages.\n"
+> >>>>          "(current value: %u,%u)\n",
+> >>>
+> >>> I looked into the kernel code and found:
+> >>>
+> >>>   sysctl_perf_event_mlock = 512 + (PAGE_SIZE / 1024);  // 512KB + 1 page
+> >>>
+> >>> If the system have multiple cores, let's say 8 cores, then kernel even
+> >>> can relax the limitaion with:
+> >>>
+> >>>   user_lock_limit *= num_online_cpus();
+> >>>
+> >>> So means the memory lock limitation is:
+> >>>
+> >>>   (512KB + 1 page) * 8 = 4MB + 8 pages.
+> >>>
+> >>> Seems to me, it's much relax than the user space's limitaion 128KB.
+> >>> And let's imagine for Arm server, the permitted buffer size can be a
+> >>> huge value (e.g. for a system with 128 cores).
+> >>>
+> >>> Could you confirm if this is right?
+> >>
+> >> Yes that seems to be the case. And the commit message for that addition
+> >> states the reasoning:
+> >>
+> >>   perf_counter: Increase mmap limit
+> >>   
+> >>   In a default 'perf top' run the tool will create a counter for
+> >>   each online CPU. With enough CPUs this will eventually exhaust
+> >>   the default limit.
+> >>
+> >>   So scale it up with the number of online CPUs.
+> >>
+> >> To me that makes sense. Normally the memory installed also scales with the
+> >> number of cores.
+> >>
+> >> Are you saying that we should look into modifying that scaling factor in
+> >> perf_mmap()? Or that we should still add something to userspace for
+> >> coresight to limit user supplied buffer sizes?
+> > 
+> > I don't think we should modify the scaling factor in perf_mmap(), the
+> > logic is not only used by AUX buffer, it's shared by normal event
+> > ring buffer.
+> > 
+> >> I think it makes sense to allow the user to specify any value that will work,
+> >> it's up to them.
+> > 
+> > Understand, I verified this patch with below steps:
+> > 
+> > root@debian:~# echo 0 > /proc/sys/kernel/perf_event_paranoid
+> > 
+> > leoy@debian:~$ perf record -e cs_etm// -m 4M,8M -o perf_test.data -- sleep 1
+> > Permission error mapping pages.
+> > Consider increasing /proc/sys/kernel/perf_event_mlock_kb,
+> > or try again with a smaller value of -m/--mmap_pages.
+> > (current value: 1024,2048)
+> > 
+> > leoy@debian:~$ perf record -e cs_etm// -m 4M,4M -o perf_test.data -- sleep 1
+> > Couldn't synthesize bpf events.
+> > [ perf record: Woken up 1 times to write data ]
+> > [ perf record: Captured and wrote 0.607 MB perf_test.data ]
+> > 
+> > So this patch looks good for me:
+> > 
+> > Reviewed-by: Leo Yan <leo.yan@linaro.org>
+> > 
+> Thanks Leo!
 
-Consider doing this only at the end of the run, and in the background,
-just as a prefetch for the perf report step?  The main downside there
-could be if one runs many perf record jobs in close proximity,
-overlapping larger prefetch download tasks.  That might waste some
-network traffic.
-
-- FChE
+Arnaldo is not on the recipient list and as such he won't see this patch...
 
