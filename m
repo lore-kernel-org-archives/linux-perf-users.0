@@ -2,142 +2,124 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F52CC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 13:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62EB8C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 13:33:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241612AbhLJNZp (ORCPT
+        id S241680AbhLJNh2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 10 Dec 2021 08:25:45 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4244 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241521AbhLJNZo (ORCPT
+        Fri, 10 Dec 2021 08:37:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232658AbhLJNh2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Dec 2021 08:25:44 -0500
-Received: from fraeml712-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4J9Wfl2PhCz684R2;
-        Fri, 10 Dec 2021 21:17:51 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml712-chm.china.huawei.com (10.206.15.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Fri, 10 Dec 2021 14:22:07 +0100
-Received: from [10.47.85.63] (10.47.85.63) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Fri, 10 Dec
- 2021 13:22:06 +0000
-Subject: Re: [PATCH v2 1/2] perf vendor events: For the Arm Neoverse N2
-To:     Andrew Kilroy <andrew.kilroy@arm.com>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <acme@kernel.org>
-CC:     Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
+        Fri, 10 Dec 2021 08:37:28 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31D3EC061746;
+        Fri, 10 Dec 2021 05:33:53 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E753BB82803;
+        Fri, 10 Dec 2021 13:33:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DED6C341C8;
+        Fri, 10 Dec 2021 13:33:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1639143230;
+        bh=uB6Jj9dxJpPC/J9UHECaOsrSSLTxFGGtQTNDbAV223w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ssgMAvnsyt6HuREzMNi9cWFCr1gfL8gn+XhiXT/z8WG6JB3Gby6vUVuQ1sQm1StHQ
+         ci9v/Elq4YcOQ59OkUtJXopU9DzxJx+0Kj6S1KupTyDXB73ZS3FGBD4BetKtDUIOo4
+         9l+V6KKIcDUrlBCYFVkDZGPuEoDdGrJQHiAOxATm/S2IfynjUXFTkV3EkZygehxDh9
+         OfsoCFivtR1bbL1sXgXMz+6WXd66m8QGtpzzgIHhYrHShDBre4aqZXIyFLRheqMIkk
+         tfUXby2ZhLjE/Ivhi8ijQ11JRExdiI3KZUB2lknq2T3dhu0Yy+X/R0QkS18roC1W1n
+         aZA0IfH/wR2hQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 8E3AB405D8; Fri, 10 Dec 2021 10:33:48 -0300 (-03)
+Date:   Fri, 10 Dec 2021 10:33:48 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Zhangshaokun <zhangshaokun@hisilicon.com>
-References: <20211210123706.7490-1-andrew.kilroy@arm.com>
- <20211210123706.7490-2-andrew.kilroy@arm.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <4c375d34-bf20-496d-22fc-aed8597126e2@huawei.com>
-Date:   Fri, 10 Dec 2021 13:21:41 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org,
+        "Frank Ch. Eigler" <fche@redhat.com>
+Subject: Re: [RFC] perf record: Disable debuginfod by default
+Message-ID: <YbNXPDVhplHIgayp@kernel.org>
+References: <20211209200425.303561-1-jolsa@kernel.org>
+ <20211210080425.GO16608@worktop.programming.kicks-ass.net>
+ <YbNHCLi/OdMUfgI0@krava>
 MIME-Version: 1.0
-In-Reply-To: <20211210123706.7490-2-andrew.kilroy@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.85.63]
-X-ClientProxiedBy: lhreml716-chm.china.huawei.com (10.201.108.67) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YbNHCLi/OdMUfgI0@krava>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 10/12/2021 12:37, Andrew Kilroy wrote:
-> Updates the common and microarch json file to add counters available in
-> the Arm Neoverse N2 chip, but should also apply to other ArmV8 and ArmV9
-> cpus.  Specified in ArmV8 architecture reference manual
-> 
->    https://developer.arm.com/documentation/ddi0487/gb/?lang=en
-> 
-> Some of the counters added to armv8-common-and-microarch.json are
-> specified in the ArmV9 architecture reference manual supplement
-> (issue A.a):
-> 
->    https://developer.arm.com/documentation/ddi0608/aa
-> 
-> The additional ArmV9 counters are
-> 
->    TRB_WRAP
->    TRCEXTOUT0
->    TRCEXTOUT1
->    TRCEXTOUT2
->    TRCEXTOUT3
->    CTI_TRIGOUT4
->    CTI_TRIGOUT5
->    CTI_TRIGOUT6
->    CTI_TRIGOUT7
-> 
-> This patch also adds files in pmu-events/arch/arm64/arm/neoverse-n2 for
-> perf list to output the counter names in categories.
-> 
-> Counters on the Neoverse N2 are stated in its reference manual:
-> 
->    https://developer.arm.com/documentation/102099/0000
-> 
-> Signed-off-by: Andrew Kilroy<andrew.kilroy@arm.com>
-> ---
->   .../arch/arm64/arm/neoverse-n2/branch.json    |   8 +
->   .../arch/arm64/arm/neoverse-n2/bus.json       |  20 ++
->   .../arch/arm64/arm/neoverse-n2/cache.json     | 155 ++++++++++++++
->   .../arch/arm64/arm/neoverse-n2/exception.json |  47 +++++
->   .../arm64/arm/neoverse-n2/instruction.json    | 143 +++++++++++++
->   .../arch/arm64/arm/neoverse-n2/memory.json    |  38 ++++
->   .../arch/arm64/arm/neoverse-n2/other.json     |   5 +
->   .../arch/arm64/arm/neoverse-n2/pipeline.json  |  23 ++
->   .../arch/arm64/arm/neoverse-n2/spe.json       |  14 ++
->   .../arch/arm64/arm/neoverse-n2/trace.json     |  29 +++
->   .../arm64/armv8-common-and-microarch.json     | 198 ++++++++++++++++++
->   tools/perf/pmu-events/arch/arm64/mapfile.csv  |   1 +
->   12 files changed, 681 insertions(+)
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/branch.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/bus.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/cache.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/exception.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/instruction.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/memory.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/other.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/pipeline.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/spe.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/trace.json
-> 
-> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/branch.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/branch.json
+Em Fri, Dec 10, 2021 at 01:24:40PM +0100, Jiri Olsa escreveu:
+> On Fri, Dec 10, 2021 at 09:04:25AM +0100, Peter Zijlstra wrote:
+> > On Thu, Dec 09, 2021 at 09:04:25PM +0100, Jiri Olsa wrote:
+> > > Adding single perf_debuginfod_setup function and using
+> > > it also in perf buildid-cache command.
 
-This looks ok,
+> > I'm still running with --no-buildid --no-buildid-cache or something like
+> > that by default. As long as that remains working I'm good.
 
-Reviewed-by: John Garry <john.garry@huawei.com>
+> you're good ;-) that will bypass the problem completely
 
-BTW, I was looking at adding perf tool --topdown support for arm64. This 
-will require L1 metricgroup support per core - see what I did here for 
-our hisilicon platform already:
+And these days buildids come in PERF_RECORD_MMAP records when possible
+(kernel new enough), so no extra step at the end for traversing
+PERF_RECORD_MMAP records, read the DSO, find the build id, etc:
 
-[0] 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/metrics.json
+$ git log --pretty=fuller -1 --author=jolsa kernel/events/
+commit 88a16a1309333e43d328621ece3e9fa37027e8eb
+Author:     Jiri Olsa <jolsa@kernel.org>
+AuthorDate: Thu Jan 14 14:40:44 2021 +0100
+Commit:     Alexei Starovoitov <ast@kernel.org>
+CommitDate: Thu Jan 14 19:29:58 2021 -0800
 
-I would like to add support for more cores. Generally the arm common 
-events match up to the definitions here:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/Documentation/perf-stat.txt#n400
+    perf: Add build id data in mmap2 event
 
-Apart from frontend_bound - would you have an equivalent metric 
-expression for this for these Neoverse cores?
+    Adding support to carry build id data in mmap2 event.
 
-[0] Note that I think that the divisor in the metric expressions is max 
-uops that the core can deal with.
+    The build id data replaces maj/min/ino/ino_generation
+    fields, which are also used to identify map's binary,
+    so it's ok to replace them with build id data:
 
-Thanks,
-John
+      union {
+              struct {
+                      u32       maj;
+                      u32       min;
+                      u64       ino;
+                      u64       ino_generation;
+              };
+              struct {
+                      u8        build_id_size;
+                      u8        __reserved_1;
+                      u16       __reserved_2;
+                      u8        build_id[20];
+              };
+      };
 
+    Replaced maj/min/ino/ino_generation fields give us size
+    of 24 bytes. We use 20 bytes for build id data, 1 byte
+    for size and rest is unused.
+
+    There's new misc bit for mmap2 to signal there's build
+    id data in it:
+
+      #define PERF_RECORD_MISC_MMAP_BUILD_ID   (1 << 14)
+
+    Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+    Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+    Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+    Link: https://lore.kernel.org/bpf/20210114134044.1418404-4-jolsa@kernel.org
+$
+
+- Arnaldo
