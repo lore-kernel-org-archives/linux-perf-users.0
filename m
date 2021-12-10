@@ -2,124 +2,128 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62EB8C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 13:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF34CC433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Dec 2021 13:37:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241680AbhLJNh2 (ORCPT
+        id S242263AbhLJNkl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 10 Dec 2021 08:37:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232658AbhLJNh2 (ORCPT
+        Fri, 10 Dec 2021 08:40:41 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:53186 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242267AbhLJNkK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Dec 2021 08:37:28 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31D3EC061746;
-        Fri, 10 Dec 2021 05:33:53 -0800 (PST)
+        Fri, 10 Dec 2021 08:40:10 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E753BB82803;
-        Fri, 10 Dec 2021 13:33:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DED6C341C8;
-        Fri, 10 Dec 2021 13:33:50 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4886CB82805;
+        Fri, 10 Dec 2021 13:36:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC381C00446;
+        Fri, 10 Dec 2021 13:36:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639143230;
-        bh=uB6Jj9dxJpPC/J9UHECaOsrSSLTxFGGtQTNDbAV223w=;
+        s=k20201202; t=1639143393;
+        bh=BIgzNKwn5a+Qf2+x0BULu3MOaPmkyzwvIzGH5LceSnk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ssgMAvnsyt6HuREzMNi9cWFCr1gfL8gn+XhiXT/z8WG6JB3Gby6vUVuQ1sQm1StHQ
-         ci9v/Elq4YcOQ59OkUtJXopU9DzxJx+0Kj6S1KupTyDXB73ZS3FGBD4BetKtDUIOo4
-         9l+V6KKIcDUrlBCYFVkDZGPuEoDdGrJQHiAOxATm/S2IfynjUXFTkV3EkZygehxDh9
-         OfsoCFivtR1bbL1sXgXMz+6WXd66m8QGtpzzgIHhYrHShDBre4aqZXIyFLRheqMIkk
-         tfUXby2ZhLjE/Ivhi8ijQ11JRExdiI3KZUB2lknq2T3dhu0Yy+X/R0QkS18roC1W1n
-         aZA0IfH/wR2hQ==
+        b=vMT4fLCeHiMkKcm5rumE4SU+A+lvFD+KiquycxqekyalPOnWsNiRjX+ALZ+/N+3hE
+         DKShBfGT2F/QPwnjmQp6Q8i/ZVcbyyW//fhQQc4WdkHTIujlp72GQDgKOfPr/n60is
+         jpSNJ4HF0oRPj6OGXIELJK9EPrIysVr1CXHAtkR7sYEu0oWpo75Dn1RtqSlT16Irke
+         w7i1wuBABmXJsRllft4xQfbo3hZTsW8cov8kY+xX6x8DdKlDGHwKASVNZLiUUnhJ8D
+         BqsA0pZX8dOGykwx8Ya+Qyq1ABL3nNt7Y/NQemgkBuFvFgYicDahWSghtBC9ek17zK
+         l0H7LVCxqoGBw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 8E3AB405D8; Fri, 10 Dec 2021 10:33:48 -0300 (-03)
-Date:   Fri, 10 Dec 2021 10:33:48 -0300
+        id EADD5405D8; Fri, 10 Dec 2021 10:36:30 -0300 (-03)
+Date:   Fri, 10 Dec 2021 10:36:30 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Ian Rogers <irogers@google.com>,
+To:     Alistair Francis <alistair.francis@opensource.wdc.com>
+Cc:     linux-kernel@vger.kernel.org, dave@stgolabs.net,
+        dvhart@infradead.org, arnd@arndb.de, alistair23@gmail.com,
+        namhyung@kernel.org, jolsa@redhat.com,
         linux-perf-users@vger.kernel.org,
-        "Frank Ch. Eigler" <fche@redhat.com>
-Subject: Re: [RFC] perf record: Disable debuginfod by default
-Message-ID: <YbNXPDVhplHIgayp@kernel.org>
-References: <20211209200425.303561-1-jolsa@kernel.org>
- <20211210080425.GO16608@worktop.programming.kicks-ass.net>
- <YbNHCLi/OdMUfgI0@krava>
+        alexander.shishkin@linux.intel.com, mark.rutland@arm.com,
+        mingo@redhat.com, peterz@infradead.org, tglx@linutronix.de,
+        Alistair Francis <alistair.francis@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        linux-riscv@lists.infradead.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v5 1/6] perf bench futex: Add support for 32-bit systems
+ with 64-bit time_t
+Message-ID: <YbNX3mRT0A9/N2il@kernel.org>
+References: <20211209235857.423773-1-alistair.francis@opensource.wdc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YbNHCLi/OdMUfgI0@krava>
+In-Reply-To: <20211209235857.423773-1-alistair.francis@opensource.wdc.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Dec 10, 2021 at 01:24:40PM +0100, Jiri Olsa escreveu:
-> On Fri, Dec 10, 2021 at 09:04:25AM +0100, Peter Zijlstra wrote:
-> > On Thu, Dec 09, 2021 at 09:04:25PM +0100, Jiri Olsa wrote:
-> > > Adding single perf_debuginfod_setup function and using
-> > > it also in perf buildid-cache command.
+Em Fri, Dec 10, 2021 at 09:58:52AM +1000, Alistair Francis escreveu:
+> From: Alistair Francis <alistair.francis@wdc.com>
+> 
+> Some 32-bit architectures (such are 32-bit RISC-V) only have a 64-bit
+> time_t and as such don't have the SYS_futex syscall. This patch will
+> allow us to use the SYS_futex_time64 syscall on those platforms.
+> 
+> This also converts the futex calls to be y2038 safe (when built for a
+> 5.1+ kernel).
+> 
+> This is a revert of commit ba4026b09d83acf56c040b6933eac7916c27e728
+> "Revert "perf bench futex: Add support for 32-bit systems with 64-bit time_t"".
+> 
+> The original commit was reverted as including linux/time_types.h would
+> fail to compile on older kernels. This commit doesn't include
+> linux/time_types.h to avoid this issue.
 
-> > I'm still running with --no-buildid --no-buildid-cache or something like
-> > that by default. As long as that remains working I'm good.
+  10     9.99 alpine:3.12                   : FAIL gcc version 9.3.0 (Alpine 9.3.0)
+    In file included from bench/futex-hash.c:29:
+    bench/futex.h:37:2: error: unknown type name '__kernel_old_time_t'
+       37 |  __kernel_old_time_t tv_sec;  /* seconds */
+          |  ^~~~~~~~~~~~~~~~~~~
+    In file included from bench/futex-wake.c:25:
+    bench/futex.h:37:2: error: unknown type name '__kernel_old_time_t'
+       37 |  __kernel_old_time_t tv_sec;  /* seconds */
+          |  ^~~~~~~~~~~~~~~~~~~
+    make[3]: *** [/git/perf-5.16.0-rc4/tools/build/Makefile.build:139: bench] Error 2
+  11   114.27 alpine:3.13                   : Ok   gcc (Alpine 10.2.1_pre1) 10.2.1 20201203 , Alpine clang version 10.0.1
+  12   100.12 alpine:3.14                   : Ok   gcc (Alpine 10.3.1_git20210424) 10.3.1 20210424 , Alpine clang version 11.1.0
+  13   101.06 alpine:3.15                   : Ok   gcc (Alpine 10.3.1_git20211027) 10.3.1 20211027 , Alpine clang version 12.0.1
+  14   101.96 alpine:edge                   : Ok   gcc (Alpine 11.2.1_git20211128) 11.2.1 20211128 , Alpine clang version 12.0.1
+  15     6.98 alt:p8                        : FAIL gcc version 5.3.1 20151207 (ALT p8 5.3.1-alt3.M80P.1) (GCC)
+    In file included from bench/futex-hash.c:29:0:
+    bench/futex.h:37:2: error: unknown type name '__kernel_old_time_t'
+      __kernel_old_time_t tv_sec;  /* seconds */
+      ^
+    In file included from bench/futex-wake.c:25:0:
+    bench/futex.h:37:2: error: unknown type name '__kernel_old_time_t'
+      __kernel_old_time_t tv_sec;  /* seconds */
+      ^
+    In file included from bench/futex-wake-parallel.c:31:0:
+    bench/futex.h:37:2: error: unknown type name '__kernel_old_time_t'
+      __kernel_old_time_t tv_sec;  /* seconds */
+      ^
+    make[3]: *** [bench] Error 2
+  16    73.65 alt:p9                        : Ok   x86_64-alt-linux-gcc (GCC) 8.4.1 20200305 (ALT p9 8.4.1-alt0.p9.1) , clang version 10.0.0
+  17    72.34 alt:sisyphus                  : Ok   x86_64-alt-linux-gcc (GCC) 11.2.1 20210911 (ALT Sisyphus 11.2.1-alt1) , ALT Linux Team clang version 12.0.1
+  18     7.58 amazonlinux:1                 : FAIL gcc version 7.2.1 20170915 (Red Hat 7.2.1-2) (GCC)
+    In file included from bench/futex-hash.c:29:0:
+    bench/futex.h:37:2: error: unknown type name '__kernel_old_time_t'
+      __kernel_old_time_t tv_sec;  /* seconds */
+      ^~~~~~~~~~~~~~~~~~~
+    In file included from bench/futex-wake.c:25:0:
+    bench/futex.h:37:2: error: unknown type name '__kernel_old_time_t'
+      __kernel_old_time_t tv_sec;  /* seconds */
+      ^~~~~~~~~~~~~~~~~~~
+    make[3]: *** [bench] Error 2
+  19     8.28 amazonlinux:2                 : FAIL gcc version 7.3.1 20180712 (Red Hat 7.3.1-13) (GCC)
+    In file included from bench/futex-hash.c:29:0:
+    bench/futex.h:37:2: error: unknown type name '__kernel_old_time_t'
+      __kernel_old_time_t tv_sec;  /* seconds */
+      ^~~~~~~~~~~~~~~~~~~
+    make[3]: *** [bench] Error 2
+  20    79.16 centos:8                      : Ok   gcc (GCC) 8.4.1 20200928 (Red Hat 8.4.1-1) , clang version 11.0.1 (Red Hat 11.0.1-1.module_el8.4.0+966+2995ef20)
 
-> you're good ;-) that will bypass the problem completely
 
-And these days buildids come in PERF_RECORD_MMAP records when possible
-(kernel new enough), so no extra step at the end for traversing
-PERF_RECORD_MMAP records, read the DSO, find the build id, etc:
-
-$ git log --pretty=fuller -1 --author=jolsa kernel/events/
-commit 88a16a1309333e43d328621ece3e9fa37027e8eb
-Author:     Jiri Olsa <jolsa@kernel.org>
-AuthorDate: Thu Jan 14 14:40:44 2021 +0100
-Commit:     Alexei Starovoitov <ast@kernel.org>
-CommitDate: Thu Jan 14 19:29:58 2021 -0800
-
-    perf: Add build id data in mmap2 event
-
-    Adding support to carry build id data in mmap2 event.
-
-    The build id data replaces maj/min/ino/ino_generation
-    fields, which are also used to identify map's binary,
-    so it's ok to replace them with build id data:
-
-      union {
-              struct {
-                      u32       maj;
-                      u32       min;
-                      u64       ino;
-                      u64       ino_generation;
-              };
-              struct {
-                      u8        build_id_size;
-                      u8        __reserved_1;
-                      u16       __reserved_2;
-                      u8        build_id[20];
-              };
-      };
-
-    Replaced maj/min/ino/ino_generation fields give us size
-    of 24 bytes. We use 20 bytes for build id data, 1 byte
-    for size and rest is unused.
-
-    There's new misc bit for mmap2 to signal there's build
-    id data in it:
-
-      #define PERF_RECORD_MISC_MMAP_BUILD_ID   (1 << 14)
-
-    Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-    Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-    Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-    Link: https://lore.kernel.org/bpf/20210114134044.1418404-4-jolsa@kernel.org
-$
+Still building on the other containers.
 
 - Arnaldo
