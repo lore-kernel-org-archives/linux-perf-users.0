@@ -2,90 +2,117 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0053BC433F5
-	for <linux-perf-users@archiver.kernel.org>; Sat, 11 Dec 2021 05:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A25C433F5
+	for <linux-perf-users@archiver.kernel.org>; Sat, 11 Dec 2021 06:40:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229656AbhLKFmn (ORCPT
+        id S229497AbhLKGkC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 11 Dec 2021 00:42:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39218 "EHLO
+        Sat, 11 Dec 2021 01:40:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229502AbhLKFmn (ORCPT
+        with ESMTP id S229461AbhLKGkC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 11 Dec 2021 00:42:43 -0500
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60B58C061714;
-        Fri, 10 Dec 2021 21:39:07 -0800 (PST)
-Received: by mail-pl1-x633.google.com with SMTP id y7so7683035plp.0;
-        Fri, 10 Dec 2021 21:39:07 -0800 (PST)
+        Sat, 11 Dec 2021 01:40:02 -0500
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4195C061714;
+        Fri, 10 Dec 2021 22:40:01 -0800 (PST)
+Received: by mail-pl1-x634.google.com with SMTP id z6so7694499plk.6;
+        Fri, 10 Dec 2021 22:40:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id;
-        bh=gExo+9LSOFvzelbVI7aRCNITnFhUMkz0yaY6vF4ivZQ=;
-        b=Hld5XYcBIvQIljYeR5tpN530Ni6TuiHQEQFvlzcvNf2CPbKh3XGH19+s/Zc3uEoTIG
-         pJ9uCJVqMu9H5VO2HTbqZvTmBhB0JwJ+WEduaAM5kVYookb3uShBj0Fp76FN3cGBqu5+
-         WPIICHpuLNuUSHtxC3e17S5gdbaF826Nz1hucIgD+OAxm5C2UgIdtAvErWgeL3joHEr2
-         qt6udC5lmhDXR0REXqao3I4t4/J9Pzy3Q3lgb/sVT9J6AoVU9NjYcWYgDcmeKl7kZS7F
-         EcbhZjNfe3H0nYRmOnTN69vu7IXVJRCqAzyYyo/lxdS5JHLUo/blf19jqNeOEYP+EkoH
-         60Sg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6TTBLJjhklbgzaorxrN5YNkFqXZat3dzZj3OM3PWduE=;
+        b=FcBnjgd+cmQ5JxcCoDykVJaF4bZWiPRhpgAyOGgiCRi83+lVWgaSJT3Q8sxAI8b67L
+         a/Lu60kjlr8+hGGhtkbgIPtZL2KTOlobi3jaNj2/qw3MzZIItnxnJ9vYmZwfxuJgPOJS
+         0hY21zVD27Ah3/Fie+1utflqjviajWileOHP9lrwnnpgvrbCoYv+s7db9iohAJ0lK/q5
+         HSrvQBQtHjJraMcvMuAQpeskYpNIlBLayj0nOZeYk+oVG7IR5RyM97ITOj/1zdagzYUf
+         OoIlD0XJLwsihCddx/vUEu2NGGjFd11krwaJb936Y69OPgQ2KgDzXWIb2lNmwk7nnRui
+         ncaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=gExo+9LSOFvzelbVI7aRCNITnFhUMkz0yaY6vF4ivZQ=;
-        b=tPHZGr6SMUHUjmFRV/ZfLFkVOmVQLQNny3DOfHgJ3XbaisnHqBwuogS+pezo2zYI9Y
-         QwZolNQgkEjaC484+RtClzqS/8RNIftWTw4wR131raQzXFzIgn3Im7bwcm7s+4QsIVzc
-         Cvw+TNoEEKaHcII8tfjRu+KRT7dgX7sXetmzrBM2lxPoawC6odYBSWI1Ue+RAKNGQPx4
-         OzP2YbiEo76X3TnVf+WwCCfcxnKcYjv7K9rFQ/bJnuAbz5JBhH0aRNMe/4LfrPJhjC+P
-         UugSV5g8G9sans4CUVye91cIzPD30CHeWo0qetgY6+AjWrP0/9vGMdqoXnOsEmUxbYsE
-         Zy6Q==
-X-Gm-Message-State: AOAM532gjyTxKpozBCQDa3LU8VDQ/5AugFkUtJnvRVfLlx4n1xQJtNVh
-        3Amly4Pv6JUjUQdlE3FgyveFK3+Mtn3eLjop9hE=
-X-Google-Smtp-Source: ABdhPJzdxEGZHm8N7MwTO8Cv/wiv+u9jOP8jZeKzRGU8ON6S106Cwb6ByNe7ysBfKXmb6z6Q5JRV6A==
-X-Received: by 2002:a17:90a:e2c3:: with SMTP id fr3mr28792182pjb.187.1639201146893;
-        Fri, 10 Dec 2021 21:39:06 -0800 (PST)
-Received: from localhost.localdomain ([159.226.95.43])
-        by smtp.googlemail.com with ESMTPSA id y37sm4113997pga.78.2021.12.10.21.39.04
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6TTBLJjhklbgzaorxrN5YNkFqXZat3dzZj3OM3PWduE=;
+        b=zEPwJzx/tLw8VjFEjdy8ZItBIGZ6V26vbPjWviFselbzVPEofnUDEV74mnM1Qerm6w
+         1xkqSMeL2ju8zQU+S8iU6jVPK4YDWLI/5SGDAu6hAMF/OW5aCTgOEjB/dSKDKpT+R8qW
+         ABdZ/JVgyGvF7eMcEUBAOt3r+GzsLRRaoY0OdgiYRtKOjcEwfoERWdqjx5JL9fh0SpJM
+         7Z1KS3rEEIJzLObl8oduVAc3R1Toed2ByQRsta2qo6/Lvridtpe8p3Cq4Dkdu/dqwL3v
+         XZX3+LL8Lql2oxt+NccTiETFQoZyaZunp3dL4NEef7tsUNdGMz4uK/jYURTdoiGgVHAJ
+         EB7Q==
+X-Gm-Message-State: AOAM533wOfKk6bdVqf/QeuPoIrqG7YcknJNYW1JM4y1c3F1wg2drp8hr
+        QflcM2ajLrfXyL0LvbQgWRo=
+X-Google-Smtp-Source: ABdhPJwIh7sOCDWjFOxGKD2DybyXks0pbOAHtYI/ZjEXWDeEyOyf77V+kWHcehoxUrGeXkhT3oAauw==
+X-Received: by 2002:a17:902:e544:b0:144:e3fa:3c2e with SMTP id n4-20020a170902e54400b00144e3fa3c2emr81575705plf.17.1639204801449;
+        Fri, 10 Dec 2021 22:40:01 -0800 (PST)
+Received: from vultr.guest ([45.76.74.237])
+        by smtp.gmail.com with ESMTPSA id mr2sm869638pjb.25.2021.12.10.22.40.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Dec 2021 21:39:06 -0800 (PST)
-From:   Miaoqian Lin <linmq006@gmail.com>
-Cc:     linmq006@gmail.com, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>, Song Liu <song@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] perf tools: Fix NULL vs IS_ERR_OR_NULL() checking
-Date:   Sat, 11 Dec 2021 05:38:53 +0000
-Message-Id: <20211211053856.19827-1-linmq006@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Fri, 10 Dec 2021 22:40:00 -0800 (PST)
+From:   Yafang Shao <laoar.shao@gmail.com>
+To:     akpm@linux-foundation.org, rostedt@goodmis.org,
+        keescook@chromium.org, pmladek@suse.com, david@redhat.com,
+        arnaldo.melo@gmail.com, andrii.nakryiko@gmail.com,
+        alexei.starovoitov@gmail.com
+Cc:     linux-mm@kvack.org, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH -mm v2 0/3] Phase 2 of task comm cleanups 
+Date:   Sat, 11 Dec 2021 06:39:46 +0000
+Message-Id: <20211211063949.49533-1-laoar.shao@gmail.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The function trace_event__tp_format_id may return ERR_PTR(-ENOMEM).
-Use IS_ERR_OR_NULL to check tp_format.
+This is the followup work of task comm cleanups[1].
 
-Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
----
- tools/perf/util/python.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+In this phase, the hard-coded 16 is replaced by TASK_COMM_LEN_16 to make
+it grepable. The difference between this two marcos is: 
+- TASK_COMM_LEN
+  The size should be same with the TASK_COMM_LEN defined in linux/sched.h.
+- TASK_COMM_LEN_16
+  The size must be a fixed-size 16 no matter what TASK_COMM_LEN is. It may
+  be exposed to userspace so we can't change it. 
 
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 563a9ba8954f..7f782a31bda3 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -461,7 +461,7 @@ get_tracepoint_field(struct pyrf_event *pevent, PyObject *attr_name)
- 		struct tep_event *tp_format;
- 
- 		tp_format = trace_event__tp_format_id(evsel->core.attr.config);
--		if (!tp_format)
-+		if (IS_ERR_OR_NULL(tp_format))
- 			return NULL;
- 
- 		evsel->tp_format = tp_format;
+1. https://lore.kernel.org/lkml/20211120112738.45980-1-laoar.shao@gmail.com/
+
+Changes since v1:
+- use TASK_COMM_LEN_16 instead of TASK_COMM_LEN in patch #3 (Steven)
+- avoid changing samples/bpf and bpf/progs (Alexei)
+
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Michal Miroslaw <mirq-linux@rere.qmqm.pl>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Petr Mladek <pmladek@suse.com>
+
+Yafang Shao (3):
+  elfcore: replace old hard-code 16 with TASK_COMM_LEN_16
+  cn_proc: replaced old hard-coded 16 with TASK_COMM_LEN_16
+  tools/perf: replace old hard-coded 16 with TASK_COMM_LEN_16
+
+ include/linux/elfcore-compat.h    | 8 ++------
+ include/linux/elfcore.h           | 9 ++-------
+ include/linux/sched.h             | 5 +++++
+ include/uapi/linux/cn_proc.h      | 4 +++-
+ tools/perf/tests/evsel-tp-sched.c | 8 +++++---
+ 5 files changed, 17 insertions(+), 17 deletions(-)
+
 -- 
 2.17.1
 
