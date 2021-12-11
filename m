@@ -2,122 +2,91 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA042C433FE
-	for <linux-perf-users@archiver.kernel.org>; Sat, 11 Dec 2021 06:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A53DC433F5
+	for <linux-perf-users@archiver.kernel.org>; Sat, 11 Dec 2021 11:26:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229567AbhLKGkI (ORCPT
+        id S230018AbhLKL0D (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 11 Dec 2021 01:40:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52368 "EHLO
+        Sat, 11 Dec 2021 06:26:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229527AbhLKGkF (ORCPT
+        with ESMTP id S229531AbhLKL0D (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 11 Dec 2021 01:40:05 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7EA1C061714;
-        Fri, 10 Dec 2021 22:40:04 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id v23so8298700pjr.5;
-        Fri, 10 Dec 2021 22:40:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/I2CQOSPxPl3e4Yr2uDBAw9mvwLM+fXKuKYxA0ZrAYc=;
-        b=VIOouOyVNGP8AMS7vH25R7ezTHIuVaLkOsH1g8p5QlmHTgcBJDKschh6e69WqeS5lg
-         1A+26/jKzb+DENoLnSfK/GkVY1ny5DfT8VcQfNhTXBj4n4Cx+tkzLOViWV04Zl2FZ+gY
-         i56ke3Yog79crQ2m03IiInSJjf2DqTjTz/HO5dOHu33LzJmYCpsT02C2SeZRj5TBaQVQ
-         y9aV+JJA33lbAA/0CqRqIdEnKMNrPSWeav3knE0MLSq6ln2gbFu7jRxL149TNAmm4X7Y
-         ELabuPWamLYFojIGKpiAYr0Ef/CKj3V2RsEs/lJplEihtkM9YuMLB1w23mGqB7ZjcIfl
-         SEKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/I2CQOSPxPl3e4Yr2uDBAw9mvwLM+fXKuKYxA0ZrAYc=;
-        b=DtYsJeUeLLueZxJAZlA9mpxvszZP9+UajFhmCcTYAh4pLfhjPF5GDPpErkzNNkhFoW
-         GMdfEkp5A3y/iasOa7LYkERKOOSgIkkKd7bTBjXk1MTvVnwiK/8zrsOcA9gD6Ob9LHa2
-         C99GyAxCzAkbek0MTHD6e0iAlR9kPuKR+iSpeoiY+AVAlduncjbT1eqqwb7zlIASreY7
-         jt4SOnJSN6MGbHb2SfDVbUcGLG8AIQH3/oesKP6J3MAYvmABC/4TzDdq9O0WlWM2lCcr
-         A1QqNHFHnvpL/xm6eDrZt1C/8/k3E90q4zuooytxleHEkFJfKX9AkTQYSbwFjip7XVgv
-         1KxA==
-X-Gm-Message-State: AOAM5336zj7vVoEjQ2M0S1MXF5xElVE304eorVSw7yGdN22D3GM+zm5w
-        PyrvMEOmqqwxtzDb4iqtoX8=
-X-Google-Smtp-Source: ABdhPJwawVgqpJxNH0/hvqcqPlFrrhcBZidD0MqAaYCGD9tZ+aPQrl2q+kL/z2lm1d9TKwQ7RMOMaQ==
-X-Received: by 2002:a17:903:11c4:b0:141:da55:6158 with SMTP id q4-20020a17090311c400b00141da556158mr81495925plh.7.1639204804265;
-        Fri, 10 Dec 2021 22:40:04 -0800 (PST)
-Received: from vultr.guest ([45.76.74.237])
-        by smtp.gmail.com with ESMTPSA id mr2sm869638pjb.25.2021.12.10.22.40.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Dec 2021 22:40:03 -0800 (PST)
-From:   Yafang Shao <laoar.shao@gmail.com>
-To:     akpm@linux-foundation.org, rostedt@goodmis.org,
-        keescook@chromium.org, pmladek@suse.com, david@redhat.com,
-        arnaldo.melo@gmail.com, andrii.nakryiko@gmail.com,
-        alexei.starovoitov@gmail.com
-Cc:     linux-mm@kvack.org, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH -mm v2 2/3] cn_proc: replaced old hard-coded 16 with TASK_COMM_LEN_16
-Date:   Sat, 11 Dec 2021 06:39:48 +0000
-Message-Id: <20211211063949.49533-3-laoar.shao@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20211211063949.49533-1-laoar.shao@gmail.com>
-References: <20211211063949.49533-1-laoar.shao@gmail.com>
+        Sat, 11 Dec 2021 06:26:03 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA680C061714;
+        Sat, 11 Dec 2021 03:26:02 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 45D2FB80935;
+        Sat, 11 Dec 2021 11:26:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E464AC004DD;
+        Sat, 11 Dec 2021 11:25:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1639221960;
+        bh=PHU+6bwJbN3vxmPhHKk0TqqTJ4YRMYdtHRcfi13UnRk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aJtXOJ2unJiHbtj1GfKOgVvh20x6DQ6LA8xQt39M2qxUEof7hg29khlLh7cxVQTip
+         8iyg8FSUIFu6SJzaVysHqyB3p1eJ/D4Q67I8uIv6VlLbEDmvAvNbzWimpFdeIuBg0F
+         6RmbPuwF5dd2+mEQOIEGN2Uu5nGHIqQ430bK0BKYIAdmtmOnbFVVokudbwm/QJ/m0q
+         aYtnEoWjil0+l8FBJyOpCOdhLopCnJAO3nZptUL5TryqTlQf570PPTGKq9aq9BXXnk
+         VbBQJaa0xhsX8qHQI53dYOQJH5O1ZctKcgSdpkRmbqMtcA/K5BGxlOOIci86slQxyW
+         vxyZ+hI3ky0dg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 57173405D8; Sat, 11 Dec 2021 08:25:57 -0300 (-03)
+Date:   Sat, 11 Dec 2021 08:25:57 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Miaoqian Lin <linmq006@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>, Song Liu <song@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf tools: Fix NULL vs IS_ERR_OR_NULL() checking
+Message-ID: <YbSKxcj7Ld+0JQ/F@kernel.org>
+References: <20211211053856.19827-1-linmq006@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211211053856.19827-1-linmq006@gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This TASK_COMM_LEN_16 has the same meaning with the macro defined in
-linux/sched.h, but we can't include linux/sched.h in a UAPI header, so
-we should specifically define it in the cn_proc.h.
+Em Sat, Dec 11, 2021 at 05:38:53AM +0000, Miaoqian Lin escreveu:
+> The function trace_event__tp_format_id may return ERR_PTR(-ENOMEM).
+> Use IS_ERR_OR_NULL to check tp_format.
 
-Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Michal Miroslaw <mirq-linux@rere.qmqm.pl>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Petr Mladek <pmladek@suse.com>
----
- include/uapi/linux/cn_proc.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Thanks, applied.
 
-diff --git a/include/uapi/linux/cn_proc.h b/include/uapi/linux/cn_proc.h
-index db210625cee8..6dcccaed383f 100644
---- a/include/uapi/linux/cn_proc.h
-+++ b/include/uapi/linux/cn_proc.h
-@@ -21,6 +21,8 @@
+- Arnaldo
+
  
- #include <linux/types.h>
- 
-+#define TASK_COMM_LEN_16 16
-+
- /*
-  * Userspace sends this enum to register with the kernel that it is listening
-  * for events on the connector.
-@@ -110,7 +112,7 @@ struct proc_event {
- 		struct comm_proc_event {
- 			__kernel_pid_t process_pid;
- 			__kernel_pid_t process_tgid;
--			char           comm[16];
-+			char           comm[TASK_COMM_LEN_16];
- 		} comm;
- 
- 		struct coredump_proc_event {
+> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+> ---
+>  tools/perf/util/python.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index 563a9ba8954f..7f782a31bda3 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+> @@ -461,7 +461,7 @@ get_tracepoint_field(struct pyrf_event *pevent, PyObject *attr_name)
+>  		struct tep_event *tp_format;
+>  
+>  		tp_format = trace_event__tp_format_id(evsel->core.attr.config);
+> -		if (!tp_format)
+> +		if (IS_ERR_OR_NULL(tp_format))
+>  			return NULL;
+>  
+>  		evsel->tp_format = tp_format;
+> -- 
+> 2.17.1
+
 -- 
-2.17.1
 
+- Arnaldo
