@@ -2,107 +2,94 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84492C433F5
-	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Dec 2021 16:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA66AC433F5
+	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Dec 2021 22:21:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231625AbhLLQ0o (ORCPT
+        id S229782AbhLLWV0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 12 Dec 2021 11:26:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39206 "EHLO
+        Sun, 12 Dec 2021 17:21:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229648AbhLLQ0n (ORCPT
+        with ESMTP id S229762AbhLLWVZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 12 Dec 2021 11:26:43 -0500
-Received: from mail-qv1-xf34.google.com (mail-qv1-xf34.google.com [IPv6:2607:f8b0:4864:20::f34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4342C061714;
-        Sun, 12 Dec 2021 08:26:43 -0800 (PST)
-Received: by mail-qv1-xf34.google.com with SMTP id kl8so12486537qvb.3;
-        Sun, 12 Dec 2021 08:26:43 -0800 (PST)
+        Sun, 12 Dec 2021 17:21:25 -0500
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30152C06173F;
+        Sun, 12 Dec 2021 14:21:25 -0800 (PST)
+Received: by mail-wr1-x42c.google.com with SMTP id j3so24200708wrp.1;
+        Sun, 12 Dec 2021 14:21:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bNwHjQhCMbCngDQX0H2Ckug8Srm3laq1CXvl0Hu0lM4=;
-        b=TN+GNEmKaM7kZ83XqRhVGt6qR97dFjj2J2am6DzEXDqdOCFKNJ7/f4op+u4uknQvtE
-         LZMq3wH8qQk3WE/BcbZe6Zh2Xhm2Miy2dnLuy/5/Y7ITxSNSuq+4TZS18qpuJLXdSKBr
-         FNBky3Sz17QI0vaTJ7y/T6uPtk5gnjBw8/2eCvmn+F+xjesAV3S9r9kKWHksA8CvznMZ
-         AqpH69+Y7r82RSNyl3AWz7cAnVodlsuk68rVVfbXtiAdcW9gv9CaV3YuNxaV+SXM+eq+
-         mHbJZeSN/yoT8a4L9dkv7793323d86qrOZzQUbPVv8NKNF5sCT2DDPPt8WOCh0FC0LEA
-         IRLw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7eDS74LpyA4frPSMwjjpOHEgUo/4S5rJ+isae+pfC4s=;
+        b=bpBy9vGXoqqpZox387Ye5rQni0fMcNgsX/u6iextlwu/sVGNU51eEEXWKPh+Gz4buh
+         oKOuN00BXR08mQWUuu8XQblM3iJ5c6cNTXpyA3aqzLuE50LYMyOGR5/N15nYp6DCGtO0
+         pmkI+CrL0aCcQNioauCYFrTBSPFRqlKQY0Fpp2Ah0ecEMWFmpSQc88fqpPhEqDHaUN7s
+         TH2OAYmIBGyj5jiXHjWea/Fc9nWj7a2M2r8NfZNrbrCYs2ja8j0E9kYt8WnwVZFkp1oD
+         cl6fBW25Zya5sTJMphBEXJ+MPo5baxef3ZsankCWTYm6TnVbV1JZCwHn4YP8fQJPaiTS
+         wIVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bNwHjQhCMbCngDQX0H2Ckug8Srm3laq1CXvl0Hu0lM4=;
-        b=aT9nuvwK4rbzWeDXa3zfOIof6SQOxjPr2WACpGdXHjElUJLBZNrtXG0ifHPh/2mUoI
-         00FyFJz1ovRWOOSSdjIgnCBctvXrHDB7TRQd/xxojAqMhOnQ26B5ezG/7y2RQtLNqQk4
-         i8+Cw6CBqVUsqCx1ZFzE7yt405YjC9BvNkVWAZ0Wy0teKahr76vDqbllPeU4Al57kfic
-         4E7ROmmFSJJd3r9BH1I7D24FeTp+SOuEHyY1008hkNypYW69AK4s4YHvBVgfmWsX/sp3
-         O79KRsm7c/jlpNhmMZ27gplj3uTFdbrFf8WtwCSRk+noxuSBVj1ErHSaOdwv2bMrIvU9
-         cFKA==
-X-Gm-Message-State: AOAM532OQuXFp+cyDdlDEj6uhGzabrVqWSyxNUVnRMVXXtsyrAmuoobF
-        WImT8NTsENRdKJqkWoEYYai/W5fo3P6Dzo67Pbg=
-X-Google-Smtp-Source: ABdhPJz5keJkRw3D5mHm9P4v597lE0nNgF4GdVDHC/Rk0AvaTN8JHYTdOZU++IiRJNA0ndiLIg1li+HMZ/66oZZqZeE=
-X-Received: by 2002:a05:6214:3019:: with SMTP id ke25mr36724071qvb.69.1639326402741;
- Sun, 12 Dec 2021 08:26:42 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7eDS74LpyA4frPSMwjjpOHEgUo/4S5rJ+isae+pfC4s=;
+        b=JBvY/6lArinfnv3DaEW3qXStwedokkRufhz/H/H3eT4wUjtGtKNXbOGE9aSPvG4u4j
+         2eSAXXt/cW48BavOfsFhz/XJzZeV23YJGlu46FT+tQPKdZ0lQLa/4KxrDqFTPylhPZcv
+         DvLN6ZsPSUV69+yV9AiI4tirKTeMkYQD/xXGtplnwGp9dvhWYAVHHeNQVDQdUd9jzWcd
+         fHF82k7rvkHggM7rxeZ/6Viua+e9ZzwjreiG1pvf+gdm1r/2mQLEY9kGzBy3au2yTpcS
+         RKeBTV15islnIT//q6TKCFU5o8pM8WdZJ3PAfrzGsSVT+Zpt+CXxKUtBgYfAJqV0rB3Y
+         duaA==
+X-Gm-Message-State: AOAM532akbthPMx69fidJ9hQYb48atDB1mgw50mJSv4jKzj+QKoPwZ4f
+        NfVZ4iHgYgMFl435aaS4EW0=
+X-Google-Smtp-Source: ABdhPJx6pob1SEOL7xPRpcRuOCpxcFDV6sWdOlb24PyMt32k6FS6/u74LDTUwyYVNU756HLHV2t4Sw==
+X-Received: by 2002:adf:e0c7:: with SMTP id m7mr28507060wri.530.1639347683811;
+        Sun, 12 Dec 2021 14:21:23 -0800 (PST)
+Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
+        by smtp.gmail.com with ESMTPSA id a198sm6202105wme.1.2021.12.12.14.21.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Dec 2021 14:21:23 -0800 (PST)
+From:   Colin Ian King <colin.i.king@gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] libperf tests: Fix a spelling mistake "Runnnig" -> "Running"
+Date:   Sun, 12 Dec 2021 22:21:22 +0000
+Message-Id: <20211212222122.478537-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.33.1
 MIME-Version: 1.0
-References: <20211211063949.49533-1-laoar.shao@gmail.com> <20211211063949.49533-3-laoar.shao@gmail.com>
- <YbWSQy0pmO9RgRUu@qmqm.qmqm.pl>
-In-Reply-To: <YbWSQy0pmO9RgRUu@qmqm.qmqm.pl>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Mon, 13 Dec 2021 00:26:04 +0800
-Message-ID: <CALOAHbA+i96zO+XHOBM+k3F1viOnhe=e=z=Vobc+1Bh8NAP9SA@mail.gmail.com>
-Subject: Re: [PATCH -mm v2 2/3] cn_proc: replaced old hard-coded 16 with TASK_COMM_LEN_16
-To:     Michal Miroslaw <mirq-linux@rere.qmqm.pl>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Kees Cook <keescook@chromium.org>,
-        Petr Mladek <pmladek@suse.com>,
-        David Hildenbrand <david@redhat.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Linux MM <linux-mm@kvack.org>, bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Dec 12, 2021 at 2:10 PM Michal Miroslaw <mirq-linux@rere.qmqm.pl> wrote:
->
-> On Sat, Dec 11, 2021 at 06:39:48AM +0000, Yafang Shao wrote:
-> > This TASK_COMM_LEN_16 has the same meaning with the macro defined in
-> > linux/sched.h, but we can't include linux/sched.h in a UAPI header, so
-> > we should specifically define it in the cn_proc.h.
-> [...]
-> > index db210625cee8..6dcccaed383f 100644
-> > --- a/include/uapi/linux/cn_proc.h
-> > +++ b/include/uapi/linux/cn_proc.h
-> > @@ -21,6 +21,8 @@
-> >
-> >  #include <linux/types.h>
-> >
-> > +#define TASK_COMM_LEN_16 16
->
-> Hi,
->
-> Since this is added to UAPI header, maybe you could make it a single
-> instance also used elsewhere? Even though this is constant and not
-> going to change I don't really like multiplying the sources of truth.
->
+There is a spelling mistake in a __T_VERBOSE message. Fix it.
 
-Hmm, what about defining it in include/uapi/linux/sched.h ?
-Then include "sched.h" in cn_proc.h
-And we also define it in tools/include/uapi/linux/sched.h for the
-usage in tools.
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ tools/lib/perf/tests/test-evlist.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/tools/lib/perf/tests/test-evlist.c b/tools/lib/perf/tests/test-evlist.c
+index 520a78267743..e7afff12c35a 100644
+--- a/tools/lib/perf/tests/test-evlist.c
++++ b/tools/lib/perf/tests/test-evlist.c
+@@ -535,7 +535,7 @@ static int test_stat_multiplexing(void)
+ 				    (double)counts[i].run / (double)counts[i].ena * 100.0,
+ 				    counts[i].run, counts[i].ena);
+ 		} else if (scaled == -1) {
+-			__T_VERBOSE("\t Not Runnnig\n");
++			__T_VERBOSE("\t Not Running\n");
+ 		} else {
+ 			__T_VERBOSE("\t Not Scaling\n");
+ 		}
 -- 
-Thanks
-Yafang
+2.33.1
+
