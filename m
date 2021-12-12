@@ -2,76 +2,94 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 187F6C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Dec 2021 06:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C3B7C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Dec 2021 06:25:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230373AbhLLGKT (ORCPT
+        id S232970AbhLLGZQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 12 Dec 2021 01:10:19 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:19140 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229511AbhLLGKS (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 12 Dec 2021 01:10:18 -0500
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 4JBZ4Q0SSxz64;
-        Sun, 12 Dec 2021 07:10:13 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1639289416; bh=VuSaSqZcrW41+uEiAuo1l/ttygVpq/wNgVGxyoOZ6fE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Se5KLieRBNcATvBBOunx0rHx7HuEfdgOk9WDp7fVx4+6kG3zs28wFtU9k/J4M21SE
-         zGcMLgd4EFo5i4VsU2OyUytJnB5P94a2dy7o+rL1f5PqdCY6d1I1l+qVZNYrcYWrnF
-         emwF88A1fMLkqFpXhi+rmLgCnUB9GT6Lbk3X/XxfcLyE1I6QUX4ArcKzTP4BR8qAsC
-         Z/viU6GxVCXZkj3WtqkWtv3+favkbkgBsXAzkniR9xhKmlcfQVqXMR9dhyt3143syq
-         FQxwbfFM9ShuoiBiNVEdno8gl1Xr7tvt5T2BQs9wrkf2d59rFTKXbIXACuxeWnwjN6
-         a9cjxE1oiuL9g==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.103.3 at mail
-Date:   Sun, 12 Dec 2021 07:10:11 +0100
-From:   Michal Miroslaw <mirq-linux@rere.qmqm.pl>
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     akpm@linux-foundation.org, rostedt@goodmis.org,
-        keescook@chromium.org, pmladek@suse.com, david@redhat.com,
-        arnaldo.melo@gmail.com, andrii.nakryiko@gmail.com,
-        alexei.starovoitov@gmail.com, linux-mm@kvack.org,
-        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH -mm v2 2/3] cn_proc: replaced old hard-coded 16 with
- TASK_COMM_LEN_16
-Message-ID: <YbWSQy0pmO9RgRUu@qmqm.qmqm.pl>
-References: <20211211063949.49533-1-laoar.shao@gmail.com>
- <20211211063949.49533-3-laoar.shao@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211211063949.49533-3-laoar.shao@gmail.com>
+        Sun, 12 Dec 2021 01:25:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232600AbhLLGZP (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Sun, 12 Dec 2021 01:25:15 -0500
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B03B9C061714;
+        Sat, 11 Dec 2021 22:25:15 -0800 (PST)
+Received: by mail-pj1-x1031.google.com with SMTP id iq11so9655939pjb.3;
+        Sat, 11 Dec 2021 22:25:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id;
+        bh=E42zDEBHHI43u/VnmtlaEGIlOlcdDBkK8+T0r9ImGs0=;
+        b=CL3CSAzm3J+rHFNPPLVJw2UG2KLLjo6bFK0Pz4AESue0sIL/fLzXazqIUQon9zWW/+
+         47+WJucnPvP0ZXLZ9ojIHbPNtMWYuYXVzqOjYW+6ySTnzfrsb4+hJk0+F+vbhxoPEeFP
+         Vq9ICxAiUhN9gt5Xmg4Wq/JCgEWfdhg9vJpqWN2Kf76PYaEepsEerUdUElW1F1MxfhRt
+         HgVasVghxxZhdq3oOl5QdsOIU0w6JHrj3cDae4mUdLd3WyiBvjqKkQj2WNqFrsWEsUtA
+         8mSKde92saIt2cCi+DrLoB2cDLuHxxf+6qs7N6ydf0+gm+0s7w0Ld5yJxuNcXhc7r/yb
+         WsGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=E42zDEBHHI43u/VnmtlaEGIlOlcdDBkK8+T0r9ImGs0=;
+        b=4BEmAQrGmUaigDHxzXbbPlcUVU4Xdq6kvBQtWi2dxXRHtNbU9UOJoTvnhFEnG5wYaz
+         sB4rJAcWeVMhhg5+Mdu2bI+upaP73qDV4olx/G51yHWxYX4s9xEIbpiK4yrYXOR71+Z1
+         AHxzo+E+IbiDl+X/f/JJuAm5CeAIj3GbAqRAKauq57ZVzivhKPc0Vuml6ksZMAmRUN6t
+         jB59Q1q1/CLpP2s1l+JOJZUnM+wH3MDAsRcRigZACdsco9kZnqh76j+/chWwZM6E1piW
+         BRl7G601Pb+osYs6yg2p4S/TxwO7TiFooPn/J3rjNyUbuYx8+SDokFZGCvtAFPSel03h
+         KWbg==
+X-Gm-Message-State: AOAM532O3aFYo/hU+wr2YzaKiat3cCoDEO5pneUFVQ1DKSsTZxuYjFKB
+        bK53go84O1L0Ni3gSD+bzz4pRw5hvbDN+kTrleE=
+X-Google-Smtp-Source: ABdhPJzdin6rH7Ej77x35b5jQQP/VMMYTiMuidzvj1ELDb29qDGqzRE6XzkqxXih3qW71mOk7BxzVw==
+X-Received: by 2002:a17:902:be06:b0:142:5a21:9e8a with SMTP id r6-20020a170902be0600b001425a219e8amr86656188pls.17.1639290315314;
+        Sat, 11 Dec 2021 22:25:15 -0800 (PST)
+Received: from localhost.localdomain ([159.226.95.43])
+        by smtp.googlemail.com with ESMTPSA id v9sm6542900pgk.55.2021.12.11.22.25.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Dec 2021 22:25:15 -0800 (PST)
+From:   Miaoqian Lin <linmq006@gmail.com>
+Cc:     linmq006@gmail.com, Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] perf expr: Fix missing check for return value of hashmap__new
+Date:   Sun, 12 Dec 2021 06:25:02 +0000
+Message-Id: <20211212062504.25841-1-linmq006@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Dec 11, 2021 at 06:39:48AM +0000, Yafang Shao wrote:
-> This TASK_COMM_LEN_16 has the same meaning with the macro defined in
-> linux/sched.h, but we can't include linux/sched.h in a UAPI header, so
-> we should specifically define it in the cn_proc.h.
-[...]
-> index db210625cee8..6dcccaed383f 100644
-> --- a/include/uapi/linux/cn_proc.h
-> +++ b/include/uapi/linux/cn_proc.h
-> @@ -21,6 +21,8 @@
->  
->  #include <linux/types.h>
->  
-> +#define TASK_COMM_LEN_16 16
+The hashmap__new() function may return ERR_PTR(-ENOMEM) when malloc
+fails, add IS_ERR checking for ctx->ids.
 
-Hi,
+Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+---
+ tools/perf/util/expr.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Since this is added to UAPI header, maybe you could make it a single
-instance also used elsewhere? Even though this is constant and not
-going to change I don't really like multiplying the sources of truth.
+diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+index 1d532b9fed29..c94c9ea30d1a 100644
+--- a/tools/perf/util/expr.c
++++ b/tools/perf/util/expr.c
+@@ -299,6 +299,10 @@ struct expr_parse_ctx *expr__ctx_new(void)
+ 		return NULL;
+ 
+ 	ctx->ids = hashmap__new(key_hash, key_equal, NULL);
++	if (IS_ERR(ctx->ids)) {
++		kfree(ctx);
++		return NULL;
++	}
+ 	ctx->runtime = 0;
+ 
+ 	return ctx;
+-- 
+2.17.1
 
-Best Regards
-Micha³ Miros³aw
