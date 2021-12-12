@@ -2,53 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A9AC4332F
-	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Dec 2021 13:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8230AC433FE
+	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Dec 2021 13:47:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231237AbhLLNrg (ORCPT
+        id S231256AbhLLNrm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 12 Dec 2021 08:47:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60678 "EHLO
+        Sun, 12 Dec 2021 08:47:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231232AbhLLNrf (ORCPT
+        with ESMTP id S231250AbhLLNri (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 12 Dec 2021 08:47:35 -0500
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E443FC0613F8
-        for <linux-perf-users@vger.kernel.org>; Sun, 12 Dec 2021 05:47:34 -0800 (PST)
-Received: by mail-ed1-x52f.google.com with SMTP id w1so43953845edc.6
-        for <linux-perf-users@vger.kernel.org>; Sun, 12 Dec 2021 05:47:34 -0800 (PST)
+        Sun, 12 Dec 2021 08:47:38 -0500
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DDD9C061751
+        for <linux-perf-users@vger.kernel.org>; Sun, 12 Dec 2021 05:47:37 -0800 (PST)
+Received: by mail-ed1-x52e.google.com with SMTP id v1so44559781edx.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 12 Dec 2021 05:47:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=CiSpeKrc6xdYQkaSsrV1saCX+tLWJIyEe2AX2g4FsfY=;
-        b=ulXWmXYH8stsLnZOejOmSZSyeTh0HECoohO+a4rGro7VxdhFGeTSbSpdkZiikNDQAa
-         BJp/CtQQveMhJwiLLfiWtnjVT91BnXMuDq3W6dD/uiGOcYRj3DgsJICtCbRtDQqZ8v2A
-         pooR5iHRk7nxRaylbwRV9wpCgx3rOtnmF6r31KHyp8l4oQKf6IrktXzathKEF08WX1o2
-         9AX5b3TvOe9JlvTFhMQIObJg5d1fDCUxYh1Fhy0R3CqC5a0O+dfG3f9pLb8c+VH3CwTb
-         tWvG70NjiHsK6M2Ea1d00xkeo+5XbhIIEZId81CW6346jHUlJ6LHjaXS9pJ+74FwI3vD
-         Fwcw==
+        bh=rK1kg3BdhZ6vLWzAC/NJououZjpKNDWOeE95mIOHLwM=;
+        b=ldSwe0RjVRHsN8mMDq8u31wWcE0Ai3OmoE/gzxo9Ee3YJREu6xjReDIro45Uk+mZC2
+         PUXywo8tMs4T/Z4qdwrFNYHQJqX33Vf94B7C+Cn2wILZncUXqKm2UaB9Ce3cBG94cD8Z
+         MGUbvOpVuxJxWf16wDm5LzPjN4vKr7vWLQSixfUtE/MPP5NYnx9RoVcl69krk4qWV7QO
+         RgZZ3FcjcJxFsmliE3cuLA0+KRzOzL2sKhDiiO5gaCX6X0dr2iAYBq6sTJd768vj0mT5
+         9fc5XLoSOOq31k7MYQg7DWH2doGIhUEuYsc5vrpgrU8K8yMOBdC7ZwhpHa5R8FAFNCDS
+         UEag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=CiSpeKrc6xdYQkaSsrV1saCX+tLWJIyEe2AX2g4FsfY=;
-        b=Uaow8rm3V3yhS8R0Xptb7XCOFGDF8mRG/Mex+tSxBpEhS1K9La1Y0llagQcIVbyG9g
-         2Q2tzlci3mHU9KIVWFHtHGw+O1pH9GbjexU4F1SGmtZv7XuiZ9L+jwurXRvrb+DyUYi1
-         eH3qq4gWTRxBPQ1qUfP4y7ruyohQub4DBy6Jsh0YpWGKeqQp9ZR/C/vbij/uAKXQ+CzA
-         vLKuQ71bPUfXQ9YcTGhDoxBZFI2ZzjwNFOOkdY4yNosEcnYoebo63uAuButVqJSNWhbb
-         +eMwHbZSpukfGRb1G3V0QVceZUT9vS42gDic25tjItBjVUmFXbz4R+S6zZTgOBY0cnnZ
-         hQnA==
-X-Gm-Message-State: AOAM533WMRdi3l9Z4SVCklxRf7KR/93M33+9EE5xcgnPtzvcSwu9kM/c
-        BWNu9D1xd5TFvw6kqrW+S13lUg==
-X-Google-Smtp-Source: ABdhPJxbZDcMAGyCRfoQKuWsGxx685XQpDHyN9I0NfvgAcYf1nJUdb72Q3Ihv9iHIsidz8HWrql1mg==
-X-Received: by 2002:a05:6402:3514:: with SMTP id b20mr55160604edd.169.1639316853318;
-        Sun, 12 Dec 2021 05:47:33 -0800 (PST)
+        bh=rK1kg3BdhZ6vLWzAC/NJououZjpKNDWOeE95mIOHLwM=;
+        b=TNKGVH2K19mHTUbmN48TS+Q8IypajV/hJhXfDplSQ+Z/I2bQadf5E8sAFbcD+IrvNe
+         rAi53FDSXgnxBhFmPR83ZXmi5tH8SWW2mnHmAE2jNY/p5MVFm9VsdJ0G5B22Q8A1ftH0
+         Qk/yCU1X+ypYBVoaGYx5+MA5++9f0AaPWKta68dpW+JEcZKDxYHY24Wi/VxJSDV6RJi9
+         wInqCcW0feoMwXyTmXIy5zwQ5zozEbWmZuR4cJLRyGM6jW+DQNrCIPZguTz+89wOPRRf
+         4KM+uQ4glZYl7ClmUSsi2beb0d0WT7X5/DWsk2fm4iWv+oNgZLuPJGTxgHIv0PCaK+q7
+         aaAg==
+X-Gm-Message-State: AOAM532/H/XXrCOCMe7hgFhDwUU04RG4qtn5AEjFgNntNkab7I/+amfg
+        oM+87q5P9zswO9TWz4H3lTWwmw==
+X-Google-Smtp-Source: ABdhPJzjWwtlbpO7/42zB/Kq1uP/6C0lh8G/iFpj6GJmFlQsf7lZb5/ZwrXmB5hFGU/usI1ePolpfw==
+X-Received: by 2002:a50:e0c9:: with SMTP id j9mr56003635edl.336.1639316855926;
+        Sun, 12 Dec 2021 05:47:35 -0800 (PST)
 Received: from localhost ([104.245.96.202])
-        by smtp.gmail.com with ESMTPSA id r13sm4669936edo.71.2021.12.12.05.47.32
+        by smtp.gmail.com with ESMTPSA id i4sm4082449ejz.122.2021.12.12.05.47.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Dec 2021 05:47:33 -0800 (PST)
+        Sun, 12 Dec 2021 05:47:35 -0800 (PST)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@redhat.com>,
@@ -70,9 +70,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org, bpf@vger.kernel.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v1 1/2] perf namespaces: Add helper nsinfo__is_in_root_namespace()
-Date:   Sun, 12 Dec 2021 21:47:20 +0800
-Message-Id: <20211212134721.1721245-2-leo.yan@linaro.org>
+Subject: [PATCH v1 2/2] perf evlist: Don't run perf in non-root PID namespace when launch workload
+Date:   Sun, 12 Dec 2021 21:47:21 +0800
+Message-Id: <20211212134721.1721245-3-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20211212134721.1721245-1-leo.yan@linaro.org>
 References: <20211212134721.1721245-1-leo.yan@linaro.org>
@@ -82,139 +82,61 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Refactors code for gathering PID infos, it creates the function
-nsinfo__get_nspid() to parse process 'status' node in folder '/proc'.
+In function evlist__prepare_workload(), after perf forks a child process
+and launches a workload in the created process, it needs to retrieve
+process and namespace related info via '/proc/$PID/' node.
 
-Base on the refactoring, this patch introduces a new helper
-nsinfo__is_in_root_namespace(), it returns true when the caller runs in
-the root PID namespace.
+The process folders under 'proc' file system use the PID number from the
+root PID namespace, when perf tool runs in non-root PID namespace and
+creates new process for profiled program, this leads to the perf tool
+wrongly gather process info since it uses PID from non-root namespace to
+access nodes under '/proc'.
+
+Let's see an example:
+
+  unshare --fork --pid perf record -e cs_etm//u -a -- test_program
+
+This command runs perf tool and the profiled program 'test_program' in
+the non-root PID namespace.  When perf tool launches 'test_program',
+e.g. the forked PID number is 2, perf tool retrieves process info for
+'test_program' from the folder '/proc/2'.  But '/proc/2' is actually for
+a kernel thread so perf tool wrongly gather info for 'test_program'.
+
+To fix this issue, we don't allow perf tool runs in non-root PID
+namespace when it launches workload and reports error in this
+case.  This can notify users to run the perf tool in root PID namespace
+to gather correct info for profiled program.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- tools/perf/util/namespaces.c | 76 ++++++++++++++++++++++--------------
- tools/perf/util/namespaces.h |  2 +
- 2 files changed, 48 insertions(+), 30 deletions(-)
+ tools/perf/util/evlist.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/tools/perf/util/namespaces.c b/tools/perf/util/namespaces.c
-index 608b20c72a5c..48aa3217300b 100644
---- a/tools/perf/util/namespaces.c
-+++ b/tools/perf/util/namespaces.c
-@@ -60,17 +60,49 @@ void namespaces__free(struct namespaces *namespaces)
- 	free(namespaces);
- }
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 5f92319ce258..bdf79a97db66 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -11,6 +11,7 @@
+ #include <poll.h>
+ #include "cpumap.h"
+ #include "util/mmap.h"
++#include "util/namespaces.h"
+ #include "thread_map.h"
+ #include "target.h"
+ #include "evlist.h"
+@@ -1364,6 +1365,12 @@ int evlist__prepare_workload(struct evlist *evlist, struct target *target, const
+ 	int child_ready_pipe[2], go_pipe[2];
+ 	char bf;
  
-+static int nsinfo__get_nspid(struct nsinfo *nsi, const char *path)
-+{
-+	FILE *f = NULL;
-+	char *statln = NULL;
-+	size_t linesz = 0;
-+	char *nspid;
-+
-+	f = fopen(path, "r");
-+	if (f == NULL)
-+		return -1;
-+
-+	while (getline(&statln, &linesz, f) != -1) {
-+		/* Use tgid if CONFIG_PID_NS is not defined. */
-+		if (strstr(statln, "Tgid:") != NULL) {
-+			nsi->tgid = (pid_t)strtol(strrchr(statln, '\t'),
-+						     NULL, 10);
-+			nsi->nstgid = nsi->tgid;
-+		}
-+
-+		if (strstr(statln, "NStgid:") != NULL) {
-+			nspid = strrchr(statln, '\t');
-+			nsi->nstgid = (pid_t)strtol(nspid, NULL, 10);
-+			/*
-+			 * If innermost tgid is not the first, process is in a different
-+			 * PID namespace.
-+			 */
-+			nsi->in_pidns = (statln + sizeof("NStgid:") - 1) != nspid;
-+			break;
-+		}
++	if (!nsinfo__is_in_root_namespace()) {
++		pr_err("Perf runs in non-root PID namespace; please run perf tool ");
++		pr_err("in the root PID namespace for gathering process info.\n");
++		return -EPERM;
 +	}
 +
-+	fclose(f);
-+	free(statln);
-+	return 0;
-+}
-+
- int nsinfo__init(struct nsinfo *nsi)
- {
- 	char oldns[PATH_MAX];
- 	char spath[PATH_MAX];
- 	char *newns = NULL;
--	char *statln = NULL;
--	char *nspid;
- 	struct stat old_stat;
- 	struct stat new_stat;
--	FILE *f = NULL;
--	size_t linesz = 0;
- 	int rv = -1;
- 
- 	if (snprintf(oldns, PATH_MAX, "/proc/self/ns/mnt") >= PATH_MAX)
-@@ -100,34 +132,9 @@ int nsinfo__init(struct nsinfo *nsi)
- 	if (snprintf(spath, PATH_MAX, "/proc/%d/status", nsi->pid) >= PATH_MAX)
- 		goto out;
- 
--	f = fopen(spath, "r");
--	if (f == NULL)
--		goto out;
--
--	while (getline(&statln, &linesz, f) != -1) {
--		/* Use tgid if CONFIG_PID_NS is not defined. */
--		if (strstr(statln, "Tgid:") != NULL) {
--			nsi->tgid = (pid_t)strtol(strrchr(statln, '\t'),
--						     NULL, 10);
--			nsi->nstgid = nsi->tgid;
--		}
--
--		if (strstr(statln, "NStgid:") != NULL) {
--			nspid = strrchr(statln, '\t');
--			nsi->nstgid = (pid_t)strtol(nspid, NULL, 10);
--			/* If innermost tgid is not the first, process is in a different
--			 * PID namespace.
--			 */
--			nsi->in_pidns = (statln + sizeof("NStgid:") - 1) != nspid;
--			break;
--		}
--	}
--	rv = 0;
-+	rv = nsinfo__get_nspid(nsi, spath);
- 
- out:
--	if (f != NULL)
--		(void) fclose(f);
--	free(statln);
- 	free(newns);
- 	return rv;
- }
-@@ -299,3 +306,12 @@ int nsinfo__stat(const char *filename, struct stat *st, struct nsinfo *nsi)
- 
- 	return ret;
- }
-+
-+bool nsinfo__is_in_root_namespace(void)
-+{
-+	struct nsinfo nsi;
-+
-+	memset(&nsi, 0x0, sizeof(nsi));
-+	nsinfo__get_nspid(&nsi, "/proc/self/status");
-+	return !nsi.in_pidns;
-+}
-diff --git a/tools/perf/util/namespaces.h b/tools/perf/util/namespaces.h
-index ad9775db7b9c..9ceea9643507 100644
---- a/tools/perf/util/namespaces.h
-+++ b/tools/perf/util/namespaces.h
-@@ -59,6 +59,8 @@ void nsinfo__mountns_exit(struct nscookie *nc);
- char *nsinfo__realpath(const char *path, struct nsinfo *nsi);
- int nsinfo__stat(const char *filename, struct stat *st, struct nsinfo *nsi);
- 
-+bool nsinfo__is_in_root_namespace(void);
-+
- static inline void __nsinfo__zput(struct nsinfo **nsip)
- {
- 	if (nsip) {
+ 	if (pipe(child_ready_pipe) < 0) {
+ 		perror("failed to create 'ready' pipe");
+ 		return -1;
 -- 
 2.25.1
 
