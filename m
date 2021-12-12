@@ -2,94 +2,98 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C3B7C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Dec 2021 06:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8361EC433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Dec 2021 11:58:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232970AbhLLGZQ (ORCPT
+        id S230288AbhLLL64 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 12 Dec 2021 01:25:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49828 "EHLO
+        Sun, 12 Dec 2021 06:58:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232600AbhLLGZP (ORCPT
+        with ESMTP id S229464AbhLLL64 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 12 Dec 2021 01:25:15 -0500
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B03B9C061714;
-        Sat, 11 Dec 2021 22:25:15 -0800 (PST)
-Received: by mail-pj1-x1031.google.com with SMTP id iq11so9655939pjb.3;
-        Sat, 11 Dec 2021 22:25:15 -0800 (PST)
+        Sun, 12 Dec 2021 06:58:56 -0500
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 151FFC061714;
+        Sun, 12 Dec 2021 03:58:56 -0800 (PST)
+Received: by mail-wm1-x32f.google.com with SMTP id i8-20020a7bc948000000b0030db7b70b6bso12228187wml.1;
+        Sun, 12 Dec 2021 03:58:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id;
-        bh=E42zDEBHHI43u/VnmtlaEGIlOlcdDBkK8+T0r9ImGs0=;
-        b=CL3CSAzm3J+rHFNPPLVJw2UG2KLLjo6bFK0Pz4AESue0sIL/fLzXazqIUQon9zWW/+
-         47+WJucnPvP0ZXLZ9ojIHbPNtMWYuYXVzqOjYW+6ySTnzfrsb4+hJk0+F+vbhxoPEeFP
-         Vq9ICxAiUhN9gt5Xmg4Wq/JCgEWfdhg9vJpqWN2Kf76PYaEepsEerUdUElW1F1MxfhRt
-         HgVasVghxxZhdq3oOl5QdsOIU0w6JHrj3cDae4mUdLd3WyiBvjqKkQj2WNqFrsWEsUtA
-         8mSKde92saIt2cCi+DrLoB2cDLuHxxf+6qs7N6ydf0+gm+0s7w0Ld5yJxuNcXhc7r/yb
-         WsGw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gI5AbykJRB0TFFUKnulBm0TsiZ6k0flpyMLKZYV3MWM=;
+        b=QGkqCB+8A2egwxvZKgrW8cFjmg/VzHoqEKinykjTNTzrkjhdSK3qm6hT3ZMgsGss0V
+         CD0Da3yqZtLleRF9xouH/PUl2SvrIwL/3izKEKeEwJmgSYSwsTPUviudUUU+b343mXXk
+         7XA1CvWGNYnkEZaWIjwD4BpzsHE3gkIKSMfoOchlnhA5QCCaIjdGEpEFko1xU0bsA+I7
+         OyNL+nDTa31k7o0Z5Ko0HTyIdqKdz5qBcq+rLfl+6uTxzbhS371p0+dn2L7bZfZHUwSu
+         uTLWOp9gEuup87jjr83yV7xTTtklqf4x3J7PjxNvOgjhdZwWDTurdMyZ32/k1Tp8ITtU
+         N0jQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=E42zDEBHHI43u/VnmtlaEGIlOlcdDBkK8+T0r9ImGs0=;
-        b=4BEmAQrGmUaigDHxzXbbPlcUVU4Xdq6kvBQtWi2dxXRHtNbU9UOJoTvnhFEnG5wYaz
-         sB4rJAcWeVMhhg5+Mdu2bI+upaP73qDV4olx/G51yHWxYX4s9xEIbpiK4yrYXOR71+Z1
-         AHxzo+E+IbiDl+X/f/JJuAm5CeAIj3GbAqRAKauq57ZVzivhKPc0Vuml6ksZMAmRUN6t
-         jB59Q1q1/CLpP2s1l+JOJZUnM+wH3MDAsRcRigZACdsco9kZnqh76j+/chWwZM6E1piW
-         BRl7G601Pb+osYs6yg2p4S/TxwO7TiFooPn/J3rjNyUbuYx8+SDokFZGCvtAFPSel03h
-         KWbg==
-X-Gm-Message-State: AOAM532O3aFYo/hU+wr2YzaKiat3cCoDEO5pneUFVQ1DKSsTZxuYjFKB
-        bK53go84O1L0Ni3gSD+bzz4pRw5hvbDN+kTrleE=
-X-Google-Smtp-Source: ABdhPJzdin6rH7Ej77x35b5jQQP/VMMYTiMuidzvj1ELDb29qDGqzRE6XzkqxXih3qW71mOk7BxzVw==
-X-Received: by 2002:a17:902:be06:b0:142:5a21:9e8a with SMTP id r6-20020a170902be0600b001425a219e8amr86656188pls.17.1639290315314;
-        Sat, 11 Dec 2021 22:25:15 -0800 (PST)
-Received: from localhost.localdomain ([159.226.95.43])
-        by smtp.googlemail.com with ESMTPSA id v9sm6542900pgk.55.2021.12.11.22.25.12
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gI5AbykJRB0TFFUKnulBm0TsiZ6k0flpyMLKZYV3MWM=;
+        b=5MGP5e6Dc6g39MchYN4x03ygyjTWrhK7z+DC/MgEESDiJdmlZ40hK16h8xFqfaadnw
+         KwG29war8rkVgkuvjvzskGlyQf8A/QvXnrchc1oXXsf/9+saWjMVODKh2BTM98Umy7Lf
+         CO4dU7BUB1LWs+Oi/RUXYTbvhyAdPPoYlEOuoS0jK2d2fftqMwrt9a9raLTBo9mBBNzQ
+         elRtP/W0NPUXqrGe/e4z+RAEHWoS8zNuRgOHHikQ1AcaxEqUZlqJUuXshrZ9KYknjIa5
+         YQGTtrxKk+6PZCG6BD5g/HS2a65MDkgsegm3dPzLsOA6Dy5uJA2R34elgXbcEvkSpNak
+         zg/A==
+X-Gm-Message-State: AOAM531bEG6aAoJD88/cW9dqkLBVTiBb+MG6BLpx/l3VfUrZ7v+JeI3A
+        kROgu2ZbUkdXJfenAHcorFY=
+X-Google-Smtp-Source: ABdhPJxSbkcxibd4xOWVVCaCAn2gFxnO0aXCLeT43nuse8WMMyfU8U6tYdTfGbfwdSS9xswRRD2pVw==
+X-Received: by 2002:a05:600c:a01:: with SMTP id z1mr8049662wmp.52.1639310334627;
+        Sun, 12 Dec 2021 03:58:54 -0800 (PST)
+Received: from localhost.localdomain ([217.113.240.86])
+        by smtp.gmail.com with ESMTPSA id g124sm3789045wme.28.2021.12.12.03.58.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Dec 2021 22:25:15 -0800 (PST)
-From:   Miaoqian Lin <linmq006@gmail.com>
-Cc:     linmq006@gmail.com, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] perf expr: Fix missing check for return value of hashmap__new
-Date:   Sun, 12 Dec 2021 06:25:02 +0000
-Message-Id: <20211212062504.25841-1-linmq006@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Sun, 12 Dec 2021 03:58:54 -0800 (PST)
+From:   =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
+To:     peterz@infradead.org
+Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, irogers@google.com, ak@linux.intel.com,
+        john.garry@huawei.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
+Subject: [PATCH v2] perf util: Fix use after free in metric__new
+Date:   Sun, 12 Dec 2021 12:58:19 +0100
+Message-Id: <20211212115818.267011-1-jose.exposito89@gmail.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The hashmap__new() function may return ERR_PTR(-ENOMEM) when malloc
-fails, add IS_ERR checking for ctx->ids.
+Fixes: b85a4d61d302 (perf metric: Allow modifiers on metrics)
+Addresses-Coverity-ID: 1494000
+Acked-by: Ian Rogers <irogers@google.com>
+Signed-off-by: José Expósito <jose.exposito89@gmail.com>
 
-Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
 ---
- tools/perf/util/expr.c | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-index 1d532b9fed29..c94c9ea30d1a 100644
---- a/tools/perf/util/expr.c
-+++ b/tools/perf/util/expr.c
-@@ -299,6 +299,10 @@ struct expr_parse_ctx *expr__ctx_new(void)
+v2: Add Fixes and Acked-by tags
+---
+ tools/perf/util/metricgroup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index fffe02aae3ed..4d2fed3aefd1 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -209,8 +209,8 @@ static struct metric *metric__new(const struct pmu_event *pe,
+ 	m->metric_name = pe->metric_name;
+ 	m->modifier = modifier ? strdup(modifier) : NULL;
+ 	if (modifier && !m->modifier) {
+-		free(m);
+ 		expr__ctx_free(m->pctx);
++		free(m);
  		return NULL;
- 
- 	ctx->ids = hashmap__new(key_hash, key_equal, NULL);
-+	if (IS_ERR(ctx->ids)) {
-+		kfree(ctx);
-+		return NULL;
-+	}
- 	ctx->runtime = 0;
- 
- 	return ctx;
+ 	}
+ 	m->metric_expr = pe->metric_expr;
 -- 
-2.17.1
+2.25.1
 
