@@ -2,97 +2,76 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDDCC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Dec 2021 04:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 187F6C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Dec 2021 06:10:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230117AbhLLEXd (ORCPT
+        id S230373AbhLLGKT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 11 Dec 2021 23:23:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52044 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232874AbhLLEXc (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 11 Dec 2021 23:23:32 -0500
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2258BC061714;
-        Sat, 11 Dec 2021 20:23:32 -0800 (PST)
-Received: by mail-pg1-x533.google.com with SMTP id m15so11485593pgu.11;
-        Sat, 11 Dec 2021 20:23:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id;
-        bh=MjGexAc/ud9Dqu0t2aWNPXdYMBoR95/keIm6CI6GLNk=;
-        b=aJ10pRFl8dsuUvzVwh2YrZME8VqQPvjDyaRnNuSqrAJtu7/Q3Wsu5DOS959BCIvw8t
-         POlZ5EX6tlCQfDujQrA/Lm86BpXc+CwVPWUtdGotM/iRLHVOpbUFFZviryf7XDcxB1+V
-         R0jHLIaqipvhmX1C5bWJTt2r2QfU1sc/wkLyi+p7S/wn82xqRsFW/dK0r/vFudDvUA4s
-         8/WkYaTVnY7Am1mvYzo9+fZZJQ3TCnnPXd584Vo0LIrOJxRsTPQjwgiiAlbilxr6DXUK
-         k0Vx/0MmDCu2JikElVm4sl+CugmbOlKGXmy4BPz9nIKKyEXIRNS6gj+SW11lObXmMQwc
-         VZGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=MjGexAc/ud9Dqu0t2aWNPXdYMBoR95/keIm6CI6GLNk=;
-        b=ASsRtDAKSk+DZriddqnDvD1EkqIz8XcsJZ67Zn1atD+QqMnzEfdB0TMPZf88Ns/cNs
-         SkGAvLj1EUPtWIk3uUihlfrFE2QVKrSkghXCe+sS8JnYyhBd84Q/UY3hpFv83mqkwkaT
-         R4/5kfI9l8ZW9xh61xonIV3fDXCGhnnP4WSB/pRcbx1hyNKCBJL6d/0hgZIb8Ahowkng
-         cNPNLGTrddk61X8I/e67q1jnbCMJbic4P4Fo9HNVd4Xf3zx1wwQ9cojxMvUYU1vIsxwD
-         Vbtm8m/ruaS/BV22bHqNXQIxsnonDgaR4dv0VdEwIxxbbMalL5SKyT6i77mdjozNryUp
-         S4OA==
-X-Gm-Message-State: AOAM531q3A2xe00OglbKPtrlAHKJp0Pgxy934zJHqpYLb+v1wpeXGosb
-        uONLSBsvvLAhJDUUWmnav5E=
-X-Google-Smtp-Source: ABdhPJw2ex+IY8mqXukKhHb0PseMEOlTJo0J/mLc+xjY3QpPza8ApoH8vevgaEfdQAOI07a6tfvY1g==
-X-Received: by 2002:a63:ef44:: with SMTP id c4mr45904825pgk.146.1639283011696;
-        Sat, 11 Dec 2021 20:23:31 -0800 (PST)
-Received: from localhost.localdomain ([159.226.95.43])
-        by smtp.googlemail.com with ESMTPSA id w19sm3045869pjh.10.2021.12.11.20.23.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Dec 2021 20:23:31 -0800 (PST)
-From:   Miaoqian Lin <linmq006@gmail.com>
-Cc:     linmq006@gmail.com, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] perf stat: Fix NULL vs IS_ERR() checking in check_per_pkg
-Date:   Sun, 12 Dec 2021 04:23:21 +0000
-Message-Id: <20211212042325.9751-1-linmq006@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Sun, 12 Dec 2021 01:10:19 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:19140 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229511AbhLLGKS (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Sun, 12 Dec 2021 01:10:18 -0500
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 4JBZ4Q0SSxz64;
+        Sun, 12 Dec 2021 07:10:13 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1639289416; bh=VuSaSqZcrW41+uEiAuo1l/ttygVpq/wNgVGxyoOZ6fE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Se5KLieRBNcATvBBOunx0rHx7HuEfdgOk9WDp7fVx4+6kG3zs28wFtU9k/J4M21SE
+         zGcMLgd4EFo5i4VsU2OyUytJnB5P94a2dy7o+rL1f5PqdCY6d1I1l+qVZNYrcYWrnF
+         emwF88A1fMLkqFpXhi+rmLgCnUB9GT6Lbk3X/XxfcLyE1I6QUX4ArcKzTP4BR8qAsC
+         Z/viU6GxVCXZkj3WtqkWtv3+favkbkgBsXAzkniR9xhKmlcfQVqXMR9dhyt3143syq
+         FQxwbfFM9ShuoiBiNVEdno8gl1Xr7tvt5T2BQs9wrkf2d59rFTKXbIXACuxeWnwjN6
+         a9cjxE1oiuL9g==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.103.3 at mail
+Date:   Sun, 12 Dec 2021 07:10:11 +0100
+From:   Michal Miroslaw <mirq-linux@rere.qmqm.pl>
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     akpm@linux-foundation.org, rostedt@goodmis.org,
+        keescook@chromium.org, pmladek@suse.com, david@redhat.com,
+        arnaldo.melo@gmail.com, andrii.nakryiko@gmail.com,
+        alexei.starovoitov@gmail.com, linux-mm@kvack.org,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH -mm v2 2/3] cn_proc: replaced old hard-coded 16 with
+ TASK_COMM_LEN_16
+Message-ID: <YbWSQy0pmO9RgRUu@qmqm.qmqm.pl>
+References: <20211211063949.49533-1-laoar.shao@gmail.com>
+ <20211211063949.49533-3-laoar.shao@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211211063949.49533-3-laoar.shao@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The hashmap__new() function does not return NULL on errors. It returns
-ERR_PTR(-ENOMEM). Using IS_ERR() to check the return value
-to fix this.
+On Sat, Dec 11, 2021 at 06:39:48AM +0000, Yafang Shao wrote:
+> This TASK_COMM_LEN_16 has the same meaning with the macro defined in
+> linux/sched.h, but we can't include linux/sched.h in a UAPI header, so
+> we should specifically define it in the cn_proc.h.
+[...]
+> index db210625cee8..6dcccaed383f 100644
+> --- a/include/uapi/linux/cn_proc.h
+> +++ b/include/uapi/linux/cn_proc.h
+> @@ -21,6 +21,8 @@
+>  
+>  #include <linux/types.h>
+>  
+> +#define TASK_COMM_LEN_16 16
 
-Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
----
- tools/perf/util/stat.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Hi,
 
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index 09ea334586f2..a77052680087 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -311,8 +311,8 @@ static int check_per_pkg(struct evsel *counter,
- 
- 	if (!mask) {
- 		mask = hashmap__new(pkg_id_hash, pkg_id_equal, NULL);
--		if (!mask)
--			return -ENOMEM;
-+		if (IS_ERR(mask))
-+			return PTR_ERR(mask);
- 
- 		counter->per_pkg_mask = mask;
- 	}
--- 
-2.17.1
+Since this is added to UAPI header, maybe you could make it a single
+instance also used elsewhere? Even though this is constant and not
+going to change I don't really like multiplying the sources of truth.
 
+Best Regards
+Micha³ Miros³aw
