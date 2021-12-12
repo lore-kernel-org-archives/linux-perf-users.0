@@ -2,88 +2,107 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F07C433F5
-	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Dec 2021 15:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84492C433F5
+	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Dec 2021 16:26:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231250AbhLLPhw (ORCPT
+        id S231625AbhLLQ0o (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 12 Dec 2021 10:37:52 -0500
-Received: from foss.arm.com ([217.140.110.172]:33182 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229468AbhLLPhw (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 12 Dec 2021 10:37:52 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B8FD0106F;
-        Sun, 12 Dec 2021 07:37:51 -0800 (PST)
-Received: from [192.168.0.5] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC6E33F793;
-        Sun, 12 Dec 2021 07:37:48 -0800 (PST)
-Subject: Re: [PATCH] perf stat: Fix NULL vs IS_ERR() checking in check_per_pkg
-From:   German Gomez <german.gomez@arm.com>
-To:     Miaoqian Lin <linmq006@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20211212042325.9751-1-linmq006@gmail.com>
- <864ad02d-6afe-791c-f742-56582b633482@arm.com>
-Message-ID: <5f4cf208-386e-6a22-5b05-185ed6cdf069@arm.com>
-Date:   Sun, 12 Dec 2021 15:37:40 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Sun, 12 Dec 2021 11:26:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229648AbhLLQ0n (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Sun, 12 Dec 2021 11:26:43 -0500
+Received: from mail-qv1-xf34.google.com (mail-qv1-xf34.google.com [IPv6:2607:f8b0:4864:20::f34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4342C061714;
+        Sun, 12 Dec 2021 08:26:43 -0800 (PST)
+Received: by mail-qv1-xf34.google.com with SMTP id kl8so12486537qvb.3;
+        Sun, 12 Dec 2021 08:26:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bNwHjQhCMbCngDQX0H2Ckug8Srm3laq1CXvl0Hu0lM4=;
+        b=TN+GNEmKaM7kZ83XqRhVGt6qR97dFjj2J2am6DzEXDqdOCFKNJ7/f4op+u4uknQvtE
+         LZMq3wH8qQk3WE/BcbZe6Zh2Xhm2Miy2dnLuy/5/Y7ITxSNSuq+4TZS18qpuJLXdSKBr
+         FNBky3Sz17QI0vaTJ7y/T6uPtk5gnjBw8/2eCvmn+F+xjesAV3S9r9kKWHksA8CvznMZ
+         AqpH69+Y7r82RSNyl3AWz7cAnVodlsuk68rVVfbXtiAdcW9gv9CaV3YuNxaV+SXM+eq+
+         mHbJZeSN/yoT8a4L9dkv7793323d86qrOZzQUbPVv8NKNF5sCT2DDPPt8WOCh0FC0LEA
+         IRLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bNwHjQhCMbCngDQX0H2Ckug8Srm3laq1CXvl0Hu0lM4=;
+        b=aT9nuvwK4rbzWeDXa3zfOIof6SQOxjPr2WACpGdXHjElUJLBZNrtXG0ifHPh/2mUoI
+         00FyFJz1ovRWOOSSdjIgnCBctvXrHDB7TRQd/xxojAqMhOnQ26B5ezG/7y2RQtLNqQk4
+         i8+Cw6CBqVUsqCx1ZFzE7yt405YjC9BvNkVWAZ0Wy0teKahr76vDqbllPeU4Al57kfic
+         4E7ROmmFSJJd3r9BH1I7D24FeTp+SOuEHyY1008hkNypYW69AK4s4YHvBVgfmWsX/sp3
+         O79KRsm7c/jlpNhmMZ27gplj3uTFdbrFf8WtwCSRk+noxuSBVj1ErHSaOdwv2bMrIvU9
+         cFKA==
+X-Gm-Message-State: AOAM532OQuXFp+cyDdlDEj6uhGzabrVqWSyxNUVnRMVXXtsyrAmuoobF
+        WImT8NTsENRdKJqkWoEYYai/W5fo3P6Dzo67Pbg=
+X-Google-Smtp-Source: ABdhPJz5keJkRw3D5mHm9P4v597lE0nNgF4GdVDHC/Rk0AvaTN8JHYTdOZU++IiRJNA0ndiLIg1li+HMZ/66oZZqZeE=
+X-Received: by 2002:a05:6214:3019:: with SMTP id ke25mr36724071qvb.69.1639326402741;
+ Sun, 12 Dec 2021 08:26:42 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <864ad02d-6afe-791c-f742-56582b633482@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20211211063949.49533-1-laoar.shao@gmail.com> <20211211063949.49533-3-laoar.shao@gmail.com>
+ <YbWSQy0pmO9RgRUu@qmqm.qmqm.pl>
+In-Reply-To: <YbWSQy0pmO9RgRUu@qmqm.qmqm.pl>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Mon, 13 Dec 2021 00:26:04 +0800
+Message-ID: <CALOAHbA+i96zO+XHOBM+k3F1viOnhe=e=z=Vobc+1Bh8NAP9SA@mail.gmail.com>
+Subject: Re: [PATCH -mm v2 2/3] cn_proc: replaced old hard-coded 16 with TASK_COMM_LEN_16
+To:     Michal Miroslaw <mirq-linux@rere.qmqm.pl>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Kees Cook <keescook@chromium.org>,
+        Petr Mladek <pmladek@suse.com>,
+        David Hildenbrand <david@redhat.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Linux MM <linux-mm@kvack.org>, bpf <bpf@vger.kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-On 12/12/2021 14:55, German Gomez wrote:
-> Hi Miaoqian,
+On Sun, Dec 12, 2021 at 2:10 PM Michal Miroslaw <mirq-linux@rere.qmqm.pl> wrote:
 >
-> On 12/12/2021 04:23, Miaoqian Lin wrote:
->> The hashmap__new() function does not return NULL on errors. It returns
->> ERR_PTR(-ENOMEM). Using IS_ERR() to check the return value
->> to fix this.
->>
->> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
->> ---
->>  tools/perf/util/stat.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
->> index 09ea334586f2..a77052680087 100644
->> --- a/tools/perf/util/stat.c
->> +++ b/tools/perf/util/stat.c
->> @@ -311,8 +311,8 @@ static int check_per_pkg(struct evsel *counter,
->>  
->>  	if (!mask) {
->>  		mask = hashmap__new(pkg_id_hash, pkg_id_equal, NULL);
->> -		if (!mask)
->> -			return -ENOMEM;
->> +		if (IS_ERR(mask))
->> +			return PTR_ERR(mask);
-
-Also (sorry, I haven't tried/tested the patch yet) is this return
-necessary? To me it seems it's still ok to keep the "return -ENOMEM".
-
-> I see that callers to "ids__new" are also missing these checks. Did you
-> consider patching those also?
+> On Sat, Dec 11, 2021 at 06:39:48AM +0000, Yafang Shao wrote:
+> > This TASK_COMM_LEN_16 has the same meaning with the macro defined in
+> > linux/sched.h, but we can't include linux/sched.h in a UAPI header, so
+> > we should specifically define it in the cn_proc.h.
+> [...]
+> > index db210625cee8..6dcccaed383f 100644
+> > --- a/include/uapi/linux/cn_proc.h
+> > +++ b/include/uapi/linux/cn_proc.h
+> > @@ -21,6 +21,8 @@
+> >
+> >  #include <linux/types.h>
+> >
+> > +#define TASK_COMM_LEN_16 16
 >
-> Thanks,
-> German
+> Hi,
 >
->>  
->>  		counter->per_pkg_mask = mask;
->>  	}
+> Since this is added to UAPI header, maybe you could make it a single
+> instance also used elsewhere? Even though this is constant and not
+> going to change I don't really like multiplying the sources of truth.
+>
+
+Hmm, what about defining it in include/uapi/linux/sched.h ?
+Then include "sched.h" in cn_proc.h
+And we also define it in tools/include/uapi/linux/sched.h for the
+usage in tools.
+
+-- 
+Thanks
+Yafang
