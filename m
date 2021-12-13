@@ -2,44 +2,27 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B342CC433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Dec 2021 13:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9A4C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Dec 2021 13:14:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233274AbhLMNIz (ORCPT
+        id S233419AbhLMNOE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Dec 2021 08:08:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48656 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231616AbhLMNIy (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Dec 2021 08:08:54 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91CBEC061574;
-        Mon, 13 Dec 2021 05:08:54 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 7DB65CE1025;
-        Mon, 13 Dec 2021 13:08:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EEA2C34602;
-        Mon, 13 Dec 2021 13:08:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639400930;
-        bh=kA8WYL7HDd9N7LxzJvbTR/JzuMaZNOP8xCfj2QVjNP0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FdGH+0GNmTitFJ2dqbUofH2JnZQbQLMvkZzq2xROWGp8CVdCiNaKmhClSuZATjewT
-         MInwA5w0qY+31+n833X5klztNYOBuGxjok63U2Mge/XpcykSqYQBZ914wag75WOYxS
-         tjLL69MD9Onm49TLFd8wkI6+nPz6oJTcN/weeKc0lMxwQnt8W8JcCnOxxI+H6JGIE+
-         8RK479knzqndnOyZ8GsKzFdyKS9PwTJJuxuU/jmFqDDjwzclQj0RtKG8Aux8x2lzsO
-         xYOB0+5aq/PxtYMcgvbp7VYEjxiZy3cQiGcJUNPUrJcOAHLJUyPSBxk9PhQ8I+MJLs
-         7Xs8NQdo3ErhQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D50CE405D8; Mon, 13 Dec 2021 10:08:48 -0300 (-03)
-Date:   Mon, 13 Dec 2021 10:08:48 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+        Mon, 13 Dec 2021 08:14:04 -0500
+Received: from foss.arm.com ([217.140.110.172]:54580 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232266AbhLMNOE (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 13 Dec 2021 08:14:04 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA8881FB;
+        Mon, 13 Dec 2021 05:14:03 -0800 (PST)
+Received: from [10.57.7.82] (unknown [10.57.7.82])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 755A53F793;
+        Mon, 13 Dec 2021 05:14:01 -0800 (PST)
+Subject: Re: [PATCH] perf expr: Fix return value of ids__new
 To:     Miaoqian Lin <linmq006@gmail.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
@@ -47,65 +30,113 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ian Rogers <irogers@google.com>,
         Andi Kleen <ak@linux.intel.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf expr: Fix missing check for return value of
- hashmap__new
-Message-ID: <YbdF4FtPY77Y6faW@kernel.org>
-References: <20211212062504.25841-1-linmq006@gmail.com>
- <YbdFOvHedDCVZ04A@kernel.org>
+References: <864ad02d-6afe-791c-f742-56582b633482@arm.com>
+ <20211213070956.15119-1-linmq006@gmail.com>
+From:   German Gomez <german.gomez@arm.com>
+Message-ID: <d0fabb42-399f-2b72-412b-4f5ba6b9eea4@arm.com>
+Date:   Mon, 13 Dec 2021 13:13:47 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
+In-Reply-To: <20211213070956.15119-1-linmq006@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <YbdFOvHedDCVZ04A@kernel.org>
-X-Url:  http://acmel.wordpress.com
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Dec 13, 2021 at 10:06:02AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Sun, Dec 12, 2021 at 06:25:02AM +0000, Miaoqian Lin escreveu:
-> > The hashmap__new() function may return ERR_PTR(-ENOMEM) when malloc
-> > fails, add IS_ERR checking for ctx->ids.
-> > 
-> > Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
-> 
-> Thanks, applied.
+Hi Miaoqian,
 
-I take that back, kfree()? Are you compile testing this?
+Fails to build due to missing import: "#import <linux/err.h>".
 
-  CC      /tmp/build/perf/util/expr.o
-util/expr.c: In function ‘expr__ctx_new’:
-util/expr.c:302:13: error: implicit declaration of function ‘IS_ERR’ [-Werror=implicit-function-declaration]
-  302 |         if (IS_ERR(ctx->ids)) {
-      |             ^~~~~~
-util/expr.c:303:17: error: implicit declaration of function ‘kfree’; did you mean ‘free’? [-Werror=implicit-function-declaration]
-  303 |                 kfree(ctx);
-      |                 ^~~~~
-      |                 free
-cc1: all warnings being treated as errors
+Could you please verify?
 
-I had to fix it applying this on top, please compile test your patches.
+Other than that, it looks good to me. I shared the testing below:
 
-- Arnaldo
+On 13/12/2021 07:09, Miaoqian Lin wrote:
+> callers of ids__new() function only do NULL checking for the return
+> value. ids__new() calles hashmap__new(), which may return
+> ERR_PTR(-ENOMEM). Instead of changing the checking one-by-one.
+> return NULL instead of ERR_PTR(-ENOMEM) to keep
+> consistent.
+>
+> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+> ---
+>  tools/perf/util/expr.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+> index 1d532b9fed29..aabdc112300c 100644
+> --- a/tools/perf/util/expr.c
+> +++ b/tools/perf/util/expr.c
+> @@ -65,7 +65,13 @@ static bool key_equal(const void *key1, const void *key2,
+>  
+>  struct hashmap *ids__new(void)
+>  {
+> -	return hashmap__new(key_hash, key_equal, NULL);
+> +	struct hashmap *hash;
+> +
+> +	hash = hashmap__new(key_hash, key_equal, NULL);
+> +	if (IS_ERR(hash))
+> +		return NULL;
+> +	else
+> +		return hash;
+>  }
+>  
+>  void ids__free(struct hashmap *ids)
+Before this patch, perf-test was segfaulting instead of a graceful fail.
+I think this could have been an issue in the perf tool as well.
 
-diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-index c94c9ea30d1abd6a..254601060b392c42 100644
---- a/tools/perf/util/expr.c
-+++ b/tools/perf/util/expr.c
-@@ -12,6 +12,7 @@
- #include "expr-bison.h"
- #include "expr-flex.h"
- #include "smt.h"
-+#include <linux/err.h>
- #include <linux/kernel.h>
- #include <linux/zalloc.h>
- #include <ctype.h>
-@@ -300,7 +301,7 @@ struct expr_parse_ctx *expr__ctx_new(void)
- 
- 	ctx->ids = hashmap__new(key_hash, key_equal, NULL);
- 	if (IS_ERR(ctx->ids)) {
--		kfree(ctx);
-+		free(ctx);
- 		return NULL;
- 	}
- 	ctx->runtime = 0;
+(I forced hashmap__new in "tools/perf/util/hashmap.c" to always return
+the error for the purposes of the test).
+
+  $ make DEBUG=1 NO_LIBBPF=1 # builds with tools/perf/util/hashmap.c
+  $ ./perf test 7 -v
+  Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
+   7: Simple expression parser                                        :
+  --- start ---
+  test child forked, pid 1953536
+  perf: Segmentation fault
+  Obtained 16 stack frames.
+  ./perf(dump_stack+0x31) [0x559222b3ae48]
+  ./perf(sighandler_dump_stack+0x33) [0x559222b3af30]
+  /lib/x86_64-linux-gnu/libc.so.6(+0x4620f) [0x7ff81df6220f]
+  ./perf(hashmap__size+0x23) [0x559222bf9f47]
+  ./perf(ids__union+0x5f) [0x559222be1f0e]
+  ./perf(+0x2d9ba8) [0x559222ac7ba8]
+  ./perf(+0x2da223) [0x559222ac8223]
+  ./perf(+0x2a5fe9) [0x559222a93fe9]
+  ./perf(+0x2a6119) [0x559222a94119]
+  ./perf(+0x2a6de7) [0x559222a94de7]
+  ./perf(cmd_test+0x25f) [0x559222a95686]
+  ./perf(+0x2e4d25) [0x559222ad2d25]
+  ./perf(+0x2e4faa) [0x559222ad2faa]
+  ./perf(+0x2e50fd) [0x559222ad30fd]
+  ./perf(main+0x29d) [0x559222ad3500]
+  /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf2) [0x7ff81df430b2]
+  test child interrupted
+  ---- end ----
+  Simple expression parser: FAILED!
+
+After the patch:
+
+  $ make DEBUG=1 NO_LIBBPF=1
+  $ ./perf test 7 -v
+  Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
+   7: Simple expression parser                                        :
+  --- start ---
+  test child forked, pid 1960026
+  FAILED tests/expr.c:16 ids__new
+  FAILED tests/expr.c:16 ids__new
+  FAILED tests/expr.c:73 ids_union (-1 != 0)
+  test child finished with -1
+  ---- end ----
+
+  Simple expression parser: FAILED!
+
+so with the missing import fixex:
+
+Tested-by: German Gomez <german.gomez@arm.com>
+Reviewed-by: German Gomez <german.gomez@arm.com>
+
