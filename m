@@ -2,86 +2,162 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 520E7C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Dec 2021 16:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 398EFC433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Dec 2021 16:10:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240403AbhLMQDB (ORCPT
+        id S235577AbhLMQKQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Dec 2021 11:03:01 -0500
-Received: from foss.arm.com ([217.140.110.172]:58906 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240377AbhLMQCx (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Dec 2021 11:02:53 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B3921FB;
-        Mon, 13 Dec 2021 08:02:52 -0800 (PST)
-Received: from [10.1.34.138] (e127744.cambridge.arm.com [10.1.34.138])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B14AD3F73B;
-        Mon, 13 Dec 2021 08:02:49 -0800 (PST)
-Subject: Re: [PATCH] perf expr: Fix return value of ids__new
-From:   German Gomez <german.gomez@arm.com>
-To:     Miaoqian Lin <linmq006@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mon, 13 Dec 2021 11:10:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36278 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234980AbhLMQKQ (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 13 Dec 2021 11:10:16 -0500
+Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 381ADC06173F
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Dec 2021 08:10:16 -0800 (PST)
+Received: by mail-io1-xd36.google.com with SMTP id p65so19112215iof.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Dec 2021 08:10:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DtD0mEb50I7aZGSUK6tagzUKH6gP/G5BXylrgwHSko8=;
+        b=jhyho1evvUYVgGY6Y/EMFo0OWrpcH5OEFzSnbhkAVsMmFL/XOxgyu8nmSMBfPGr1IG
+         hDGG4OTb4zjswGYyNLFKYQmcukSigaMIcDiLzc0q+ydMylBN1eH+tabibsoirxorrAnv
+         q9xw3GWbLLHyuwbU8z74zL37KBObCTVa2CQ3KwlIYY9MzxH6hmtH/N5YCYhYz6TRlD7z
+         /30hfbZc0Z7K/J1EtqLIM4zUs1mDYATFiSGgjvijEyLm2H08XZd1l3PiP2rVCT2WkIa/
+         jeDkmDTXlyhNn7ehw0GvXMmHUA7O+JVLSuwxEJG5sVn+BmAjqeP9CqS0kZcyivUCihPh
+         yb9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DtD0mEb50I7aZGSUK6tagzUKH6gP/G5BXylrgwHSko8=;
+        b=mgQ5ALzfoRUMW3+51vk2EY4bV9MBi5qoASYdZNZjozEaUaZh5mx+Ys4H9SQ628L1/t
+         NYUdFSHOIAQOMf1FZY444ToqHBrAhHeR26siPlQizxCzKsyZgwj7oj9RXx0dBBfNozkV
+         uavyZABm/DgczU6axMv9sEttN7E/NZY+vFsML7sZFeSd5BwAL+g4MnGMaXmlbwYabfXy
+         bStpVTRsC5HC4gH4nfZtWnu9rrzsfjVxxduZ8cKFQtE6Sm0huz+dmkfmA3itRRUKxhYb
+         2kntrfyNKznX0ed8SWFgnhKjgTYbyxWdAzYxeQaYhcX4ErBqxffXyH+5vmVno1ZlZmuE
+         w7GQ==
+X-Gm-Message-State: AOAM532i8Sxh5tmUMNNnAaNN6jIxhOy9QbsAHvXr2ew2qQiNDLs3zkeF
+        8nglzjMoYF+txcXR65CZtlQ37SeTZgybabLOSliO/g==
+X-Google-Smtp-Source: ABdhPJxkOBCIc1higoQpTE6i07rWNH/y+S/K4/kf4WrljzAwludPzIqFp8MZyIOrGJkP4CXhASvTjgWV3hkmk9PVaeI=
+X-Received: by 2002:a05:6638:144f:: with SMTP id l15mr33654639jad.21.1639411815204;
+ Mon, 13 Dec 2021 08:10:15 -0800 (PST)
+MIME-Version: 1.0
+References: <20211208024607.1784932-1-irogers@google.com> <c0c88d24-a609-bf4a-ec23-dfe555ab9cfc@arm.com>
+In-Reply-To: <c0c88d24-a609-bf4a-ec23-dfe555ab9cfc@arm.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 13 Dec 2021 08:10:03 -0800
+Message-ID: <CAP-5=fVHNqHym1xNCx_WhmUWHEWa9MDW9QAdOhkLGXuD6+0bqA@mail.gmail.com>
+Subject: Re: [PATCH 00/22] Refactor perf cpumap
+To:     James Clark <james.clark@arm.com>
+Cc:     eranian@google.com, Andi Kleen <ak@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <864ad02d-6afe-791c-f742-56582b633482@arm.com>
- <20211213070956.15119-1-linmq006@gmail.com>
- <d0fabb42-399f-2b72-412b-4f5ba6b9eea4@arm.com>
-Message-ID: <b3992bba-04ac-ff0b-7970-8f9cf410d786@arm.com>
-Date:   Mon, 13 Dec 2021 16:02:40 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
-MIME-Version: 1.0
-In-Reply-To: <d0fabb42-399f-2b72-412b-4f5ba6b9eea4@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        John Garry <john.garry@huawei.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vineet Singh <vineet.singh@intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-On 13/12/2021 13:13, German Gomez wrote:
-> [...]
+On Mon, Dec 13, 2021 at 3:39 AM James Clark <james.clark@arm.com> wrote:
 >
-> On 13/12/2021 07:09, Miaoqian Lin wrote:
->> callers of ids__new() function only do NULL checking for the return
->> value. ids__new() calles hashmap__new(), which may return
->> ERR_PTR(-ENOMEM). Instead of changing the checking one-by-one.
->> return NULL instead of ERR_PTR(-ENOMEM) to keep
->> consistent.
->>
->> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
->> ---
->>  tools/perf/util/expr.c | 8 +++++++-
->>  1 file changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
->> index 1d532b9fed29..aabdc112300c 100644
->> --- a/tools/perf/util/expr.c
->> +++ b/tools/perf/util/expr.c
->> @@ -65,7 +65,13 @@ static bool key_equal(const void *key1, const void *key2,
->>  
->>  struct hashmap *ids__new(void)
->>  {
->> -	return hashmap__new(key_hash, key_equal, NULL);
->> +	struct hashmap *hash;
->> +
->> +	hash = hashmap__new(key_hash, key_equal, NULL);
->> +	if (IS_ERR(hash))
->> +		return NULL;
->> +	else
->> +		return hash;
+>
+>
+> On 08/12/2021 02:45, Ian Rogers wrote:
+> > Perf cpu map has various functions where a cpumap and index are passed
+> > in order to load the cpu. A problem with this is that the wrong index
+> > may be passed for the cpumap, causing problems like aggregation on the
+> > wrong CPU:
+> > https://lore.kernel.org/lkml/20211204023409.969668-1-irogers@google.com/
+> >
+> > This patch set refactors the cpu map API, greatly reducing it and
+> > explicitly passing the cpu (rather than the pair) to functions that
+> > need it. Comments are added at the same time.
+> >
+> > Ian Rogers (22):
+> >   libperf: Add comments to perf_cpu_map.
+> >   perf stat: Add aggr creators that are passed a cpu.
+> >   perf stat: Switch aggregation to use for_each loop
+> >   perf stat: Switch to cpu version of cpu_map__get
+> >   perf cpumap: Switch cpu_map__build_map to cpu function
+> >   perf cpumap: Remove map+index get_socket
+> >   perf cpumap: Remove map+index get_die
+> >   perf cpumap: Remove map+index get_core
+> >   perf cpumap: Remove map+index get_node
+> >   perf cpumap: Add comments to aggr_cpu_id
+> >   perf cpumap: Remove unused cpu_map__socket
+> >   perf cpumap: Simplify equal function name.
+> >   perf cpumap: Rename empty functions.
+> >   perf cpumap: Document cpu__get_node and remove redundant function
+> >   perf cpumap: Remove map from function names that don't use a map.
+> >   perf cpumap: Remove cpu_map__cpu, use libperf function.
+> >   perf cpumap: Refactor cpu_map__build_map
+> >   perf cpumap: Rename cpu_map__get_X_aggr_by_cpu functions
+> >   perf cpumap: Move 'has' function to libperf
+> >   perf cpumap: Add some comments to cpu_aggr_map
+> >   perf cpumap: Trim the cpu_aggr_map
+> >   perf stat: Fix memory leak in check_per_pkg
+> >
+> >  tools/lib/perf/cpumap.c                  |   7 +-
+> >  tools/lib/perf/include/internal/cpumap.h |   9 +-
+> >  tools/lib/perf/include/perf/cpumap.h     |   1 +
+> >  tools/perf/arch/arm/util/cs-etm.c        |  16 +-
+> >  tools/perf/builtin-ftrace.c              |   2 +-
+> >  tools/perf/builtin-sched.c               |   6 +-
+> >  tools/perf/builtin-stat.c                | 273 ++++++++++++-----------
+> >  tools/perf/tests/topology.c              |  10 +-
+> >  tools/perf/util/cpumap.c                 | 182 ++++++---------
+> >  tools/perf/util/cpumap.h                 | 102 ++++++---
+> >  tools/perf/util/cputopo.c                |   2 +-
+> >  tools/perf/util/env.c                    |   6 +-
+> >  tools/perf/util/stat-display.c           |  69 +++---
+> >  tools/perf/util/stat.c                   |   9 +-
+> >  tools/perf/util/stat.h                   |   3 +-
+> >  15 files changed, 361 insertions(+), 336 deletions(-)
+> >
+>
+> For the whole set:
+>
+> Reviewed-by: James Clark <james.clark@arm.com>
+>
+> I didn't see any obvious issues with mixing up aggregation modes or CPU/idx types. Also
+> gave perf stat a test in the different modes and didn't see an issue.
+>
+> But I'm wondering if it's possible to go further and add a struct around the CPU int so that the
+> compiler checks for correctness instead. It still seems quite easy to mix up index and
+> CPU, for example these functions are subtly different, but both use int:
+>
+>   LIBPERF_API int perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx);
+>   LIBPERF_API bool perf_cpu_map__has(const struct perf_cpu_map *map, int cpu);
+>
+> Something like this would make it impossible to make a mistake:
+>
+>   struct cpu { int cpu };
+>
+> I mean it's more of a coincidence that CPUs can be identified by an integer, but they are more
+> of an object than an integer, so it could make sense to wrap it. But maybe it could be quite
+> cumbersome to use and be overkill.
 
-Small nitpick but can remove the else branch and simply return at the
-end? Your patch still compiles for me but I think most other functions
-do that.
+Thanks James! I am working on a v2 patch set and will have a go at
+adding this to the end.
 
->> [...]
+Ian
