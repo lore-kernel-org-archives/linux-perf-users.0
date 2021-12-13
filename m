@@ -2,122 +2,183 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A520C433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Dec 2021 14:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B742C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Dec 2021 14:41:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238173AbhLMOXy (ORCPT
+        id S239658AbhLMOly (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Dec 2021 09:23:54 -0500
-Received: from foss.arm.com ([217.140.110.172]:56514 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238184AbhLMOXx (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Dec 2021 09:23:53 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D4DFA1FB;
-        Mon, 13 Dec 2021 06:23:51 -0800 (PST)
-Received: from [10.57.34.21] (unknown [10.57.34.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 00BE83F73B;
-        Mon, 13 Dec 2021 06:23:49 -0800 (PST)
-Subject: Re: [PATCH 2/3] coresight: Fail to open with return stacks if they
- are unavailable
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        coresight@lists.linaro.org, Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-References: <20211208160907.749482-1-james.clark@arm.com>
- <20211208160907.749482-2-james.clark@arm.com>
- <b52ef2f3-9e30-59a6-2aea-e46c93915868@arm.com>
- <b61ef2e3-e573-4867-af5d-fd5fabece4b1@arm.com>
- <20211210172220.GA1238770@p14s>
-From:   James Clark <james.clark@arm.com>
-Message-ID: <36c3469c-4fc4-e156-048a-47f9d001f47f@arm.com>
-Date:   Mon, 13 Dec 2021 14:23:48 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        Mon, 13 Dec 2021 09:41:54 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:60358 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233094AbhLMOlv (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 13 Dec 2021 09:41:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1639406509;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7pRXXV0v9giuYsYC3tANypl3E9qVvVmrrv2MfnznAFU=;
+        b=gyh77Vy4kzNlOLenR9rWyDAHV8LWRLYMHaDQD1g6LQIRm+gLE9DxEgdtzZo/cRGjyeuIRw
+        3hFo6vBxdY2UyrGLatV7YY1GjCb+zxjmB8apNt397guNbO8bT7+2H3iJGnX2cA3EJPJDao
+        QYDd7D/IekwOhGf+O6Lykr4sF6eGqRI=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-85-ltUz_kqjOiS20Bhbw-E7xA-1; Mon, 13 Dec 2021 09:41:46 -0500
+X-MC-Unique: ltUz_kqjOiS20Bhbw-E7xA-1
+Received: by mail-wm1-f72.google.com with SMTP id i131-20020a1c3b89000000b00337f92384e0so11684209wma.5
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Dec 2021 06:41:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:organization:in-reply-to
+         :content-transfer-encoding;
+        bh=7pRXXV0v9giuYsYC3tANypl3E9qVvVmrrv2MfnznAFU=;
+        b=Q0TpeP0dts/n8c5w1rNs+jxnT+k/Nf+NicK/1dnj1aKsrohwWX5n0tXtz/QlOqiDce
+         v33Xtj+/AkEBahBBPHeua9E2joh8HwfNFTgrJoF4O/I3pH4A/zrf1lX6E5FlGS/bUoGT
+         pzOChDQozlow3le1rtpqqOabB1lhPrO3O4rfxK+28nenwF8wDaZ9D7MR1Fe0xrV9xLmR
+         hN2UZfM9W1AONqxvGPnsl2qiKJkNOw+vlmn7qa6bIg2TS8/dcg6RszWfL7IDwXlkWujP
+         SB2kWC+gnEQEESFaUP1Yk6luNy/mD8FCGUAkw6v7/V27Op41UytDcJvI0P0uluxKTJxS
+         SZvw==
+X-Gm-Message-State: AOAM532LSp/4XskZDDeCPMuQ3hD5Ik24syUe1NDzOgftbMUjxEMogoQS
+        +O6YWmO13ckgGz0wJ9E7RCU6zxVU1vAZXvN9xuL827QfC0w6UVnKgrt5chPkG8RA4IIdY/wl9wy
+        V4ImBCCzJGlp4mivjyvCTX5vwqYDSHA==
+X-Received: by 2002:a5d:58c5:: with SMTP id o5mr32290718wrf.15.1639406505607;
+        Mon, 13 Dec 2021 06:41:45 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxPAxLL4xqt1e2lYLjiNAvw/yEFjfmet00BfOTBtz3NKFTpNLzYP5C8W/QeX/MZCf+tcLiyLA==
+X-Received: by 2002:a5d:58c5:: with SMTP id o5mr32290677wrf.15.1639406505341;
+        Mon, 13 Dec 2021 06:41:45 -0800 (PST)
+Received: from [192.168.3.132] (p5b0c6276.dip0.t-ipconnect.de. [91.12.98.118])
+        by smtp.gmail.com with ESMTPSA id u13sm8658152wmq.14.2021.12.13.06.41.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Dec 2021 06:41:44 -0800 (PST)
+Message-ID: <b0539137-c91d-0787-721e-c6ed4ced69ec@redhat.com>
+Date:   Mon, 13 Dec 2021 15:41:43 +0100
 MIME-Version: 1.0
-In-Reply-To: <20211210172220.GA1238770@p14s>
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [PATCH -mm v2 1/3] elfcore: replace old hard-code 16 with
+ TASK_COMM_LEN_16
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+To:     Yafang Shao <laoar.shao@gmail.com>, akpm@linux-foundation.org,
+        rostedt@goodmis.org, keescook@chromium.org, pmladek@suse.com,
+        arnaldo.melo@gmail.com, andrii.nakryiko@gmail.com,
+        alexei.starovoitov@gmail.com
+Cc:     linux-mm@kvack.org, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+References: <20211211063949.49533-1-laoar.shao@gmail.com>
+ <20211211063949.49533-2-laoar.shao@gmail.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+In-Reply-To: <20211211063949.49533-2-laoar.shao@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 10/12/2021 17:22, Mathieu Poirier wrote:
-> Hi James,
+On 11.12.21 07:39, Yafang Shao wrote:
+> A new macro TASK_COMM_LEN_16 is introduced for the old hard-coded 16 to
+> make it more grepable. As explained above this marco, the difference
+> between TASK_COMM_LEN and TASK_COMM_LEN_16 is that TASK_COMM_LEN_16 must
+> be a fixed size 16 and can't be changed.
 > 
-> On Thu, Dec 09, 2021 at 11:13:55AM +0000, James Clark wrote:
->>
->>
->> On 09/12/2021 11:00, Suzuki K Poulose wrote:
->>> On 08/12/2021 16:09, James Clark wrote:
->>>> Maintain consistency with the other options by failing to open when they
->>>> aren't supported. For example ETM_OPT_TS, ETM_OPT_CTXTID2 and the newly
->>>> added ETM_OPT_BRANCH_BROADCAST all return with -EINVAL if they are
->>>> requested but not supported by hardware.
->>>>
->>>> The consequence of not doing this is that the user may not be
->>>> aware that they are not enabling the feature as it is silently disabled.
->>>>
->>>> Signed-off-by: James Clark <james.clark@arm.com>
->>>> ---
->>>> ï¿½ drivers/hwtracing/coresight/coresight-etm4x-core.c | 13 +++++++++----
->>>> ï¿½ 1 file changed, 9 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
->>>> index d2bafb50c66a..0a9bb943a5e5 100644
->>>> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
->>>> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
->>>> @@ -674,10 +674,15 @@ static int etm4_parse_event_config(struct coresight_device *csdev,
->>>> ï¿½ï¿½ï¿½ï¿½ï¿½ }
->>>> ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ /* return stack - enable if selected and supported */
->>>> -ï¿½ï¿½ï¿½ if ((attr->config & BIT(ETM_OPT_RETSTK)) && drvdata->retstack)
->>>> -ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ /* bit[12], Return stack enable bit */
->>>> -ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ config->cfg |= BIT(12);
->>>> -
->>>> +ï¿½ï¿½ï¿½ if (attr->config & BIT(ETM_OPT_RETSTK)) {
->>>> +ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ if (!drvdata->retstack) {
->>>> +ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ret = -EINVAL;
->>>> +ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ goto out;
->>>> +ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ } else {
->>>> +ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ /* bit[12], Return stack enable bit */
->>>> +ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ config->cfg |= BIT(12);
->>>> +ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ }
->>>
->>> nit: While at this, please could you change the hard coded value
->>> to ETM4_CFG_BIT_RETSTK ?
->>>
->> I started changing them all because I had trouble searching for bits by name but then
->> I thought it would snowball into a bigger change so I undid it.
->>
->> I think I'll just go and do it now if it's an issue here.
+> Suggested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+> Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+> Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+> Cc: Michal Miroslaw <mirq-linux@rere.qmqm.pl>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Petr Mladek <pmladek@suse.com>
+> ---
+>  include/linux/elfcore-compat.h | 8 ++------
+>  include/linux/elfcore.h        | 9 ++-------
+>  include/linux/sched.h          | 5 +++++
+>  3 files changed, 9 insertions(+), 13 deletions(-)
 > 
-> I can apply this set right away and you send another patch to fix all hard coded
-> bitfields or you can send another revision with all 4 patches included in it
-> (bitfields fix plus these 3).  Just let me know what you want to do.  And next
-> time please add a cover letter.
-
-I think I would like to hold off for a bit based on Mike's feedback. Seems like I may
-need to make a change about return stacks.
-
-Thanks
-James
-
+> diff --git a/include/linux/elfcore-compat.h b/include/linux/elfcore-compat.h
+> index 54feb64e9b5d..69fa1a728964 100644
+> --- a/include/linux/elfcore-compat.h
+> +++ b/include/linux/elfcore-compat.h
+> @@ -5,6 +5,7 @@
+>  #include <linux/elf.h>
+>  #include <linux/elfcore.h>
+>  #include <linux/compat.h>
+> +#include <linux/sched.h>
+>  
+>  /*
+>   * Make sure these layouts match the linux/elfcore.h native definitions.
+> @@ -43,12 +44,7 @@ struct compat_elf_prpsinfo
+>  	__compat_uid_t			pr_uid;
+>  	__compat_gid_t			pr_gid;
+>  	compat_pid_t			pr_pid, pr_ppid, pr_pgrp, pr_sid;
+> -	/*
+> -	 * The hard-coded 16 is derived from TASK_COMM_LEN, but it can't be
+> -	 * changed as it is exposed to userspace. We'd better make it hard-coded
+> -	 * here.
+> -	 */
+> -	char				pr_fname[16];
+> +	char				pr_fname[TASK_COMM_LEN_16];
+>  	char				pr_psargs[ELF_PRARGSZ];
+>  };
+>  
+> diff --git a/include/linux/elfcore.h b/include/linux/elfcore.h
+> index 746e081879a5..d3bb4bd3c985 100644
+> --- a/include/linux/elfcore.h
+> +++ b/include/linux/elfcore.h
+> @@ -65,13 +65,8 @@ struct elf_prpsinfo
+>  	__kernel_gid_t	pr_gid;
+>  	pid_t	pr_pid, pr_ppid, pr_pgrp, pr_sid;
+>  	/* Lots missing */
+> -	/*
+> -	 * The hard-coded 16 is derived from TASK_COMM_LEN, but it can't be
+> -	 * changed as it is exposed to userspace. We'd better make it hard-coded
+> -	 * here.
+> -	 */
+> -	char	pr_fname[16];	/* filename of executable */
+> -	char	pr_psargs[ELF_PRARGSZ];	/* initial part of arg list */
+> +	char	pr_fname[TASK_COMM_LEN_16];	/* filename of executable */
+> +	char	pr_psargs[ELF_PRARGSZ];		/* initial part of arg list */
+>  };
+>  
+>  static inline void elf_core_copy_regs(elf_gregset_t *elfregs, struct pt_regs *regs)
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index c79bd7ee6029..8d963a50a2a8 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -279,6 +279,11 @@ struct task_group;
+>   * BPF programs.
+>   */
+>  enum {
+> +	/*
+> +	 * For the old hard-coded 16, which is exposed to userspace and can't
+> +	 * be changed.
+> +	 */
+> +	TASK_COMM_LEN_16 = 16,
+>  	TASK_COMM_LEN = 16,
+>  };
+>  
 > 
-> Thanks,
-> Mathieu
-> 
->>
->>> Otherwise, looks good to me
->>>
->>> Suzuki
+
+Reviewed-by: David Hildenbrand <david@redhat.com>
+
+-- 
+Thanks,
+
+David / dhildenb
+
