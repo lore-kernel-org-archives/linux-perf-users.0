@@ -2,46 +2,64 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F03AC433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Dec 2021 08:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C9E3C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Dec 2021 08:56:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231616AbhLMIsQ (ORCPT
+        id S230103AbhLMI4k (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Dec 2021 03:48:16 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4249 "EHLO
+        Mon, 13 Dec 2021 03:56:40 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4250 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229873AbhLMIsQ (ORCPT
+        with ESMTP id S229733AbhLMI4k (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Dec 2021 03:48:16 -0500
-Received: from fraeml715-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JCFVf68Smz67tWy;
-        Mon, 13 Dec 2021 16:46:50 +0800 (CST)
+        Mon, 13 Dec 2021 03:56:40 -0500
+Received: from fraeml710-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JCFgc3hB3z67Zt3;
+        Mon, 13 Dec 2021 16:54:36 +0800 (CST)
 Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml715-chm.china.huawei.com (10.206.15.34) with Microsoft SMTP Server
+ fraeml710-chm.china.huawei.com (10.206.15.59) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Mon, 13 Dec 2021 09:48:14 +0100
+ 15.1.2308.20; Mon, 13 Dec 2021 09:56:38 +0100
 Received: from [10.47.80.231] (10.47.80.231) by lhreml724-chm.china.huawei.com
  (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Mon, 13 Dec
- 2021 08:48:13 +0000
-Subject: Re: [PATCH v2] perf util: Fix use after free in metric__new
-To:     =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>,
-        <peterz@infradead.org>
-CC:     <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
-        <namhyung@kernel.org>, <irogers@google.com>, <ak@linux.intel.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20211212115818.267011-1-jose.exposito89@gmail.com>
+ 2021 08:56:36 +0000
+Subject: Re: [PATCH 01/22] libperf: Add comments to perf_cpu_map.
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>
+CC:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Ingo Molnar" <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Vineet Singh" <vineet.singh@intel.com>,
+        James Clark <james.clark@arm.com>,
+        "Mathieu Poirier" <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, <coresight@lists.linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>, <eranian@google.com>
+References: <20211208024607.1784932-1-irogers@google.com>
+ <20211208024607.1784932-2-irogers@google.com>
+ <a3cf5b74-1a1b-ef85-1ad3-034e797848e2@huawei.com>
+ <CAP-5=fV5YDghE5pHZX2+OxguZaeO_JSSXimghUGLhCaCOoCH0w@mail.gmail.com>
+ <YbOlnH0NLQdAECcK@kernel.org>
 From:   John Garry <john.garry@huawei.com>
-Message-ID: <690406fd-306c-9786-bacc-fd27e2e531fb@huawei.com>
-Date:   Mon, 13 Dec 2021 08:47:53 +0000
+Message-ID: <02b330aa-ebce-11b2-9d3f-9b2497ae7133@huawei.com>
+Date:   Mon, 13 Dec 2021 08:56:17 +0000
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.12.1
 MIME-Version: 1.0
-In-Reply-To: <20211212115818.267011-1-jose.exposito89@gmail.com>
+In-Reply-To: <YbOlnH0NLQdAECcK@kernel.org>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.47.80.231]
 X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
  lhreml724-chm.china.huawei.com (10.201.108.75)
@@ -50,35 +68,47 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 12/12/2021 11:58, José Expósito wrote:
-> Fixes: b85a4d61d302 (perf metric: Allow modifiers on metrics)
-> Addresses-Coverity-ID: 1494000
-> Acked-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: José Expósito <jose.exposito89@gmail.com>
+On 10/12/2021 19:08, Arnaldo Carvalho de Melo wrote:
+>>>> +/**
+>>>> + * A sized, reference counted, sorted array of integers representing CPU
+>>>> + * numbers. This is commonly used to capture which CPUs a PMU is associated
+>>>> + * with.
+>>>> + */
+>>>>    struct perf_cpu_map {
+>>>>        refcount_t      refcnt;
+>>>> +     /** Length of the map array. */
+>>>>        int             nr;
 
-Reviewed-by: John Garry <john.garry@huawei.com>
+I'd have /s/nr/len/, as it means the map length, as opposed to confusing 
+nr meaning with number of cpus in the host or something else. And the 
+new comment uses "Length" also.
 
+>>>> +     /** The CPU values. */
+>>>>        int             map[];
+>>> would simply more distinct names for the variables help instead of or in
+>>> addition to comments?
+> Well, in this case the typical usage doesn't help, as 'struct
+> perf_cpu_map' are being used simply as "map"
+
+There are a lot of instances to change ... but I am all up for using 
+consistent and well-meaning variable / argument names per type.
+
+> where it should be cpu_map,
+> so we would have:
 > 
-> ---
+> 	cpu_map->nr
 > 
-> v2: Add Fixes and Acked-by tags
-> ---
->   tools/perf/util/metricgroup.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> And all should be obvious, no? Otherwise we would have redundant 'cpu',
+> like:
 > 
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index fffe02aae3ed..4d2fed3aefd1 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -209,8 +209,8 @@ static struct metric *metric__new(const struct pmu_event *pe,
->   	m->metric_name = pe->metric_name;
->   	m->modifier = modifier ? strdup(modifier) : NULL;
->   	if (modifier && !m->modifier) {
-> -		free(m);
->   		expr__ctx_free(m->pctx);
-> +		free(m);
->   		return NULL;
->   	}
->   	m->metric_expr = pe->metric_expr;
+> 	cpu_map->nr_cpus
 > 
+> And 'map' should really be entries, so:
+> 
+> 	cpu_map->entries[index];
+> 
+> Would be clear enough, o?
+>   
+>> Thanks John! I agree. The phrase that is often used is intention
+>> revealing names. The kernel style for naming is to be brief:
 
