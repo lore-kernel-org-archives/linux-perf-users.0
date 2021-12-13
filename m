@@ -2,94 +2,104 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA66AC433F5
-	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Dec 2021 22:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFACC433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Dec 2021 07:10:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229782AbhLLWV0 (ORCPT
+        id S231133AbhLMHKF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 12 Dec 2021 17:21:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46364 "EHLO
+        Mon, 13 Dec 2021 02:10:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229762AbhLLWVZ (ORCPT
+        with ESMTP id S230516AbhLMHKE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 12 Dec 2021 17:21:25 -0500
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30152C06173F;
-        Sun, 12 Dec 2021 14:21:25 -0800 (PST)
-Received: by mail-wr1-x42c.google.com with SMTP id j3so24200708wrp.1;
-        Sun, 12 Dec 2021 14:21:25 -0800 (PST)
+        Mon, 13 Dec 2021 02:10:04 -0500
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D5A9C06173F;
+        Sun, 12 Dec 2021 23:10:04 -0800 (PST)
+Received: by mail-pl1-x62d.google.com with SMTP id u17so10502630plg.9;
+        Sun, 12 Dec 2021 23:10:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7eDS74LpyA4frPSMwjjpOHEgUo/4S5rJ+isae+pfC4s=;
-        b=bpBy9vGXoqqpZox387Ye5rQni0fMcNgsX/u6iextlwu/sVGNU51eEEXWKPh+Gz4buh
-         oKOuN00BXR08mQWUuu8XQblM3iJ5c6cNTXpyA3aqzLuE50LYMyOGR5/N15nYp6DCGtO0
-         pmkI+CrL0aCcQNioauCYFrTBSPFRqlKQY0Fpp2Ah0ecEMWFmpSQc88fqpPhEqDHaUN7s
-         TH2OAYmIBGyj5jiXHjWea/Fc9nWj7a2M2r8NfZNrbrCYs2ja8j0E9kYt8WnwVZFkp1oD
-         cl6fBW25Zya5sTJMphBEXJ+MPo5baxef3ZsankCWTYm6TnVbV1JZCwHn4YP8fQJPaiTS
-         wIVQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=yohP78D4atzOPK9Zw6Tkph8dapgndeH2XkAEwCLnI1U=;
+        b=p9Em6pnsstx60gGKlIgJdxmMa5vXilRhxGQaNMhrOngb6Dil/sU8dopn08Q0cXY9de
+         fPZy/d2r7CMR3JxaGPGM6WKWAelUjG2QGmIotEeqi4U0NFtc9ZoIWciRazflzBAulH3l
+         O02IAD9bm8LtbwjSFnJGW3Gb1oM0bbuveWQlSUZKvY119vEE3L6rKTjJOnScMQa7STaJ
+         Cu4wXXtJyOENNUAqQKcXQe+g5nC36YgHwWa1cx94KBDztnK/vFDXXPWwWgScgLyMIEl2
+         u+l+N0z8U++/CwGY7n98XwQVv/79tkf0vtxa7N3AJhFP2tDSqtEWE3A32vjPKF1X1ML5
+         ClfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7eDS74LpyA4frPSMwjjpOHEgUo/4S5rJ+isae+pfC4s=;
-        b=JBvY/6lArinfnv3DaEW3qXStwedokkRufhz/H/H3eT4wUjtGtKNXbOGE9aSPvG4u4j
-         2eSAXXt/cW48BavOfsFhz/XJzZeV23YJGlu46FT+tQPKdZ0lQLa/4KxrDqFTPylhPZcv
-         DvLN6ZsPSUV69+yV9AiI4tirKTeMkYQD/xXGtplnwGp9dvhWYAVHHeNQVDQdUd9jzWcd
-         fHF82k7rvkHggM7rxeZ/6Viua+e9ZzwjreiG1pvf+gdm1r/2mQLEY9kGzBy3au2yTpcS
-         RKeBTV15islnIT//q6TKCFU5o8pM8WdZJ3PAfrzGsSVT+Zpt+CXxKUtBgYfAJqV0rB3Y
-         duaA==
-X-Gm-Message-State: AOAM532akbthPMx69fidJ9hQYb48atDB1mgw50mJSv4jKzj+QKoPwZ4f
-        NfVZ4iHgYgMFl435aaS4EW0=
-X-Google-Smtp-Source: ABdhPJx6pob1SEOL7xPRpcRuOCpxcFDV6sWdOlb24PyMt32k6FS6/u74LDTUwyYVNU756HLHV2t4Sw==
-X-Received: by 2002:adf:e0c7:: with SMTP id m7mr28507060wri.530.1639347683811;
-        Sun, 12 Dec 2021 14:21:23 -0800 (PST)
-Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
-        by smtp.gmail.com with ESMTPSA id a198sm6202105wme.1.2021.12.12.14.21.23
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=yohP78D4atzOPK9Zw6Tkph8dapgndeH2XkAEwCLnI1U=;
+        b=45smfwxLv785fLBObQ5X/NVvn4IQoiHvO7Pwn37S1l9MBSbB51wCeWhSt+Fp7KueVV
+         fu0xwNf8r1BmAINmfgGv7W6mNR5aRCmLyHcZIis0jgzHKqdQNq9mO+cmXlfNEtlDxeG4
+         MbwyD0VBF3IUb3+UiQjFnOfy8k+rT+Phlt8ou4KBJl0aOfqsTJz45SfsZ6vvxXZv40Im
+         VayDwb1yaEfU2hZiBEBt4mMZsOZj+VILlIEULYWrj9i4x4hHXrCOsIbwHxDKALWhrWg9
+         Sz9vPodtvbIsHRhYyavNct+5VxPw7QKtKAaHfynMlUyZGVadu6aTCiOmnJ0NaosMzuyq
+         nFOA==
+X-Gm-Message-State: AOAM532NELuaRoh78JEgQFJ+rVzgteHUTbTcmDwOu0nk3yWIbsBdutD7
+        IkXxCzORsI9WWw6aW7JyoFk=
+X-Google-Smtp-Source: ABdhPJwzH/0NYxOyiHQwoJ/QV7LDvG/vfPms2iwsyO6Hn6nlajNJfX3LAO7q3f7pFWzyTzlqeIW4hA==
+X-Received: by 2002:a17:90b:4ace:: with SMTP id mh14mr42540020pjb.164.1639379403048;
+        Sun, 12 Dec 2021 23:10:03 -0800 (PST)
+Received: from localhost.localdomain ([159.226.95.43])
+        by smtp.googlemail.com with ESMTPSA id qe12sm6057681pjb.29.2021.12.12.23.10.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Dec 2021 14:21:23 -0800 (PST)
-From:   Colin Ian King <colin.i.king@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        Sun, 12 Dec 2021 23:10:02 -0800 (PST)
+From:   Miaoqian Lin <linmq006@gmail.com>
+Cc:     linmq006@gmail.com, Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] libperf tests: Fix a spelling mistake "Runnnig" -> "Running"
-Date:   Sun, 12 Dec 2021 22:21:22 +0000
-Message-Id: <20211212222122.478537-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.33.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Ian Rogers <irogers@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] perf expr: Fix return value of ids__new
+Date:   Mon, 13 Dec 2021 07:09:53 +0000
+Message-Id: <20211213070956.15119-1-linmq006@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <864ad02d-6afe-791c-f742-56582b633482@arm.com>
+References: <864ad02d-6afe-791c-f742-56582b633482@arm.com>
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-There is a spelling mistake in a __T_VERBOSE message. Fix it.
+callers of ids__new() function only do NULL checking for the return
+value. ids__new() calles hashmap__new(), which may return
+ERR_PTR(-ENOMEM). Instead of changing the checking one-by-one.
+return NULL instead of ERR_PTR(-ENOMEM) to keep
+consistent.
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
 ---
- tools/lib/perf/tests/test-evlist.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/expr.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/tools/lib/perf/tests/test-evlist.c b/tools/lib/perf/tests/test-evlist.c
-index 520a78267743..e7afff12c35a 100644
---- a/tools/lib/perf/tests/test-evlist.c
-+++ b/tools/lib/perf/tests/test-evlist.c
-@@ -535,7 +535,7 @@ static int test_stat_multiplexing(void)
- 				    (double)counts[i].run / (double)counts[i].ena * 100.0,
- 				    counts[i].run, counts[i].ena);
- 		} else if (scaled == -1) {
--			__T_VERBOSE("\t Not Runnnig\n");
-+			__T_VERBOSE("\t Not Running\n");
- 		} else {
- 			__T_VERBOSE("\t Not Scaling\n");
- 		}
+diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+index 1d532b9fed29..aabdc112300c 100644
+--- a/tools/perf/util/expr.c
++++ b/tools/perf/util/expr.c
+@@ -65,7 +65,13 @@ static bool key_equal(const void *key1, const void *key2,
+ 
+ struct hashmap *ids__new(void)
+ {
+-	return hashmap__new(key_hash, key_equal, NULL);
++	struct hashmap *hash;
++
++	hash = hashmap__new(key_hash, key_equal, NULL);
++	if (IS_ERR(hash))
++		return NULL;
++	else
++		return hash;
+ }
+ 
+ void ids__free(struct hashmap *ids)
 -- 
-2.33.1
+2.17.1
 
