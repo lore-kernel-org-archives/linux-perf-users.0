@@ -2,113 +2,184 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C9E3C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Dec 2021 08:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18131C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Dec 2021 10:04:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230103AbhLMI4k (ORCPT
+        id S240345AbhLMKEc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Dec 2021 03:56:40 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4250 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229733AbhLMI4k (ORCPT
+        Mon, 13 Dec 2021 05:04:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60330 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240299AbhLMKBA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Dec 2021 03:56:40 -0500
-Received: from fraeml710-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JCFgc3hB3z67Zt3;
-        Mon, 13 Dec 2021 16:54:36 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml710-chm.china.huawei.com (10.206.15.59) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Mon, 13 Dec 2021 09:56:38 +0100
-Received: from [10.47.80.231] (10.47.80.231) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Mon, 13 Dec
- 2021 08:56:36 +0000
-Subject: Re: [PATCH 01/22] libperf: Add comments to perf_cpu_map.
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>
-CC:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Ingo Molnar" <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Vineet Singh" <vineet.singh@intel.com>,
-        James Clark <james.clark@arm.com>,
-        "Mathieu Poirier" <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>, <coresight@lists.linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <eranian@google.com>
-References: <20211208024607.1784932-1-irogers@google.com>
- <20211208024607.1784932-2-irogers@google.com>
- <a3cf5b74-1a1b-ef85-1ad3-034e797848e2@huawei.com>
- <CAP-5=fV5YDghE5pHZX2+OxguZaeO_JSSXimghUGLhCaCOoCH0w@mail.gmail.com>
- <YbOlnH0NLQdAECcK@kernel.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <02b330aa-ebce-11b2-9d3f-9b2497ae7133@huawei.com>
-Date:   Mon, 13 Dec 2021 08:56:17 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        Mon, 13 Dec 2021 05:01:00 -0500
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F32C6C09B132
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Dec 2021 01:49:08 -0800 (PST)
+Received: by mail-wm1-x332.google.com with SMTP id j140-20020a1c2392000000b003399ae48f58so13573031wmj.5
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Dec 2021 01:49:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mcSDirnuruPYtCN32bQ78CUK9bGGfX21Psk5mubRymc=;
+        b=rx86q3KyeOaDPbmRyuxzvLBUSlHYCv4JC/1G0pwjzcdS1VIR3XaYXGb5cFsnaZK2ZX
+         V7+w9fU2jsxuiU79JaVhajtALFAB/FyHQKiogR2VH+nlh9VzJI8jua/mcgGx2TmFL4i8
+         mPLsdrQVtk0HaW45aCnIzH8X2N9RHvTcBMDINJJENW+Z6YCsfZiTjH3OPjaFCkRrryTc
+         LcA+rCiUYLBZYbE7KqXnx7rQTdDyllJLKIymh0EUSBLHGPoDH5NCpNPuf1hbwceKDydx
+         4opHq2T1wUhJY7PPo3wROeBOC0TZZDKeCb3GnZ+nzc+hcChIfTzw88EVO1zcXB18j77c
+         yGpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mcSDirnuruPYtCN32bQ78CUK9bGGfX21Psk5mubRymc=;
+        b=MNkVIiJDOYnUGOFAYTKaVicq0qXQoQDdJLT5LUFrNxcplT2TqiGr/PI3oJ4mZgctg9
+         cAuPxzdcG5uJ4JuuY1+Ms/0eiw4UerI83yiGq5Dogh+lv6t3HZfJD8eldqsRlTW+p5jh
+         oejupihNYP6wtnu8pjgtGA/PKw7wPWmfsaPueDoWCXY8A17ZfROLPQaxuRvpnawlDbkQ
+         5hsu619IbjQ55UDF/PSJEC+Px0DLu5Qz+A4Jt9hW3/3HwYOu0v9YKfMXeQZlTrMW96fv
+         w8veu7IrfTmcgSh5HI9zfFajNqK5c/UZqXW0UPMx8ixdC/ugu9KwiXD1bHsg1P2g/Zgt
+         Eo1w==
+X-Gm-Message-State: AOAM533sM1ATGrWZDxfZplZ9xhRw/vKbuUCEVX21UckX3tXtJaI3WbJM
+        Pdd/Of3djBx5DDv7i3HvBJJ/dX5W4lilEBtkR0zsCQ==
+X-Google-Smtp-Source: ABdhPJwGPvf897zKrfEaiVQJPiIpbfihpMX+HCalDhTRUPfCDbostdOtET6QWAEYoG0Z+/501Ad5gXEmSDuLKQR2nzs=
+X-Received: by 2002:a1c:a5c3:: with SMTP id o186mr36876304wme.63.1639388947467;
+ Mon, 13 Dec 2021 01:49:07 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <YbOlnH0NLQdAECcK@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.80.231]
-X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+References: <20211208160907.749482-1-james.clark@arm.com> <20211208160907.749482-2-james.clark@arm.com>
+ <b52ef2f3-9e30-59a6-2aea-e46c93915868@arm.com> <b61ef2e3-e573-4867-af5d-fd5fabece4b1@arm.com>
+ <20211210172220.GA1238770@p14s>
+In-Reply-To: <20211210172220.GA1238770@p14s>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Mon, 13 Dec 2021 09:48:55 +0000
+Message-ID: <CAJ9a7VgBxO0-R4jX6+-Vu10DtcsOeMiq9YrPkEEFQ=6ixNXXVQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] coresight: Fail to open with return stacks if they
+ are unavailable
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     James Clark <James.Clark@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        coresight@lists.linaro.org, Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 10/12/2021 19:08, Arnaldo Carvalho de Melo wrote:
->>>> +/**
->>>> + * A sized, reference counted, sorted array of integers representing CPU
->>>> + * numbers. This is commonly used to capture which CPUs a PMU is associated
->>>> + * with.
->>>> + */
->>>>    struct perf_cpu_map {
->>>>        refcount_t      refcnt;
->>>> +     /** Length of the map array. */
->>>>        int             nr;
+Hi James,
 
-I'd have /s/nr/len/, as it means the map length, as opposed to confusing 
-nr meaning with number of cpus in the host or something else. And the 
-new comment uses "Length" also.
+A couple of points - relating mainly to docs:
 
->>>> +     /** The CPU values. */
->>>>        int             map[];
->>> would simply more distinct names for the variables help instead of or in
->>> addition to comments?
-> Well, in this case the typical usage doesn't help, as 'struct
-> perf_cpu_map' are being used simply as "map"
+1. Activating branch broadcast overrides any setting of return stack.
+As a minimum there needs to be a documentation update to reflect this
+-Setting both options is not prohibited in hardware - and in the case
+where we can use branch broadcast over a range both are then relevant.
 
-There are a lot of instances to change ... but I am all up for using 
-consistent and well-meaning variable / argument names per type.
+2. A documented note to reflect that choosing this option will result
+in a significant increase in the amount of trace generated - possible
+danger of overflows, or less actual instructions covered. In addition
+perhaps documents could reflect the intended use-case for this option,
+given the disadvantages.
 
-> where it should be cpu_map,
-> so we would have:
-> 
-> 	cpu_map->nr
-> 
-> And all should be obvious, no? Otherwise we would have redundant 'cpu',
-> like:
-> 
-> 	cpu_map->nr_cpus
-> 
-> And 'map' should really be entries, so:
-> 
-> 	cpu_map->entries[index];
-> 
-> Would be clear enough, o?
->   
->> Thanks John! I agree. The phrase that is often used is intention
->> revealing names. The kernel style for naming is to be brief:
+3. Has this been tested in a situation where it will be of use?
+Testing against static code images will show the same decoded trace
+output as not using branch broadcast. (although the packet dumps will
+show additional output)
 
+Given a primary use is for situations where code is patched or
+dynamically altered at runtime - then this can affect the full decode
+output. If the code is being patched to only alter the branch
+addresses then decode should work against static images.
+If, however, we are tracing code that adds in new branches, on top of
+NOPs for example, then the decoding against the original static image
+will be wrong, as the image will have the NOPs, rather than the branch
+instructions so the apparent location of E atoms will be in a
+different position to the actual code. Is there anything in perf that
+will ensure that the patched code is presented to the decoder?
+
+If there are potential decode issues - these too need documenting.
+
+Other than the documents and testing,  I cannot see any issues with
+this patch set in terms of setting and enabling the option.
+
+Regards
+
+Mike
+
+
+On Fri, 10 Dec 2021 at 17:22, Mathieu Poirier
+<mathieu.poirier@linaro.org> wrote:
+>
+> Hi James,
+>
+> On Thu, Dec 09, 2021 at 11:13:55AM +0000, James Clark wrote:
+> >
+> >
+> > On 09/12/2021 11:00, Suzuki K Poulose wrote:
+> > > On 08/12/2021 16:09, James Clark wrote:
+> > >> Maintain consistency with the other options by failing to open when they
+> > >> aren't supported. For example ETM_OPT_TS, ETM_OPT_CTXTID2 and the newly
+> > >> added ETM_OPT_BRANCH_BROADCAST all return with -EINVAL if they are
+> > >> requested but not supported by hardware.
+> > >>
+> > >> The consequence of not doing this is that the user may not be
+> > >> aware that they are not enabling the feature as it is silently disabled.
+> > >>
+> > >> Signed-off-by: James Clark <james.clark@arm.com>
+> > >> ---
+> > >>   drivers/hwtracing/coresight/coresight-etm4x-core.c | 13 +++++++++----
+> > >>   1 file changed, 9 insertions(+), 4 deletions(-)
+> > >>
+> > >> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> > >> index d2bafb50c66a..0a9bb943a5e5 100644
+> > >> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> > >> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> > >> @@ -674,10 +674,15 @@ static int etm4_parse_event_config(struct coresight_device *csdev,
+> > >>       }
+> > >>         /* return stack - enable if selected and supported */
+> > >> -    if ((attr->config & BIT(ETM_OPT_RETSTK)) && drvdata->retstack)
+> > >> -        /* bit[12], Return stack enable bit */
+> > >> -        config->cfg |= BIT(12);
+> > >> -
+> > >> +    if (attr->config & BIT(ETM_OPT_RETSTK)) {
+> > >> +        if (!drvdata->retstack) {
+> > >> +            ret = -EINVAL;
+> > >> +            goto out;
+> > >> +        } else {
+> > >> +            /* bit[12], Return stack enable bit */
+> > >> +            config->cfg |= BIT(12);
+> > >> +        }
+> > >
+> > > nit: While at this, please could you change the hard coded value
+> > > to ETM4_CFG_BIT_RETSTK ?
+> > >
+> > I started changing them all because I had trouble searching for bits by name but then
+> > I thought it would snowball into a bigger change so I undid it.
+> >
+> > I think I'll just go and do it now if it's an issue here.
+>
+> I can apply this set right away and you send another patch to fix all hard coded
+> bitfields or you can send another revision with all 4 patches included in it
+> (bitfields fix plus these 3).  Just let me know what you want to do.  And next
+> time please add a cover letter.
+>
+> Thanks,
+> Mathieu
+>
+> >
+> > > Otherwise, looks good to me
+> > >
+> > > Suzuki
+
+
+
+-- 
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
