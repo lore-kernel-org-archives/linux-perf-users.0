@@ -2,213 +2,117 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD891C4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Dec 2021 18:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32960C433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Dec 2021 18:22:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241823AbhLMSUf (ORCPT
+        id S238156AbhLMSWz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Dec 2021 13:20:35 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:52718 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235476AbhLMSUe (ORCPT
+        Mon, 13 Dec 2021 13:22:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39362 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232192AbhLMSWz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Dec 2021 13:20:34 -0500
+        Mon, 13 Dec 2021 13:22:55 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA1EFC061574;
+        Mon, 13 Dec 2021 10:22:54 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 27DFAB8120C;
-        Mon, 13 Dec 2021 18:20:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE72FC34604;
-        Mon, 13 Dec 2021 18:20:31 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9303C611B7;
+        Mon, 13 Dec 2021 18:22:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD28AC34600;
+        Mon, 13 Dec 2021 18:22:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639419631;
-        bh=NqhADOz46JoKzAQFwiPf89sY/cliSz2oGKNXFw3TUVQ=;
+        s=k20201202; t=1639419774;
+        bh=/z8URsSr6mo957ROYpUpoGEmX7urlXEv6NBT41IGEDw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oxnTrCMh3/PJ6utpsuFIm6PbgK2e6EUzMl1KyGthiOe3plrZTY09A76kB2eRCCWiQ
-         glMmnXE77P0kj7qofXTRTSP+XOEupVm8fE1kAtHFGJyoB46ONhbihxnKMds697J4h+
-         yEhogH3CrAFyOHvJL3pAJNROor6SZpju35EbqgSnX1ETjp03eh85wTNgL3vLh9pild
-         ru1ArUyHwARvrOjhd0LfWO1YMkcXAvSSrYzwbdEYc4avX1OsnI47w4ee6m3qyrcwxS
-         5CKBqSZF9tIlSjgcNSUTNJEfLBDryJB+vSZOmGd4ZNmy2yR/v+kPni9d7ntU3Xcq6z
-         rrqyPTv0KeFfg==
+        b=IY6gab16/5ywFSg7jsSYQwRBO1tC0bSXlTIYlBV1ALeZ/o/JbWlPLTp8oilYcRCgv
+         rG0bYSj0Pray5X4cZ1KB6Qjg4rdQ6QqWAmWUJLsM5IIzmdrxOT6HcMy6NgSGsmymu7
+         2Wv2e+3Nemug2DcLdm52z7Kk16g9tbnxhjtsNVAPI45eqGSpB+11bDAGeJGkcOKjZq
+         aAPovi8oHCfRq1+gryvUXQ/FWhCv99pj4iwQRGFx1tkcZ0k1+wYzeDNmweCtJ3/V7R
+         Vdq1/7sGj2DQX+St1lZNVh2CNTnoZI9nIAv7Fb4Pqwq5NhZueiu90JTC9YIuYmiAC8
+         v/s0oeWbHDOLg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3426F405D8; Mon, 13 Dec 2021 15:20:30 -0300 (-03)
-Date:   Mon, 13 Dec 2021 15:20:30 -0300
+        id 3C36B405D8; Mon, 13 Dec 2021 15:22:52 -0300 (-03)
+Date:   Mon, 13 Dec 2021 15:22:52 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+To:     German Gomez <german.gomez@arm.com>
+Cc:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Yonatan Goldschmidt <yonatan.goldschmidt@granulate.io>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] perf namespaces: Add helper
- nsinfo__is_in_root_namespace()
-Message-ID: <YbeO7sHHL0AvDl5g@kernel.org>
-References: <20211212134721.1721245-1-leo.yan@linaro.org>
- <20211212134721.1721245-2-leo.yan@linaro.org>
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v1 2/4] perf script: Add "struct machine" parameter to
+ process_event callback
+Message-ID: <YbePfOMaiJjoDb3b@kernel.org>
+References: <20211201123334.679131-1-german.gomez@arm.com>
+ <20211201123334.679131-3-german.gomez@arm.com>
+ <D6A3A8F3-9946-44FE-A70F-42977C6F38A1@linux.vnet.ibm.com>
+ <38fd4992-63ae-4871-ddfd-27d40b5c48d2@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20211212134721.1721245-2-leo.yan@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <38fd4992-63ae-4871-ddfd-27d40b5c48d2@arm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Sun, Dec 12, 2021 at 09:47:20PM +0800, Leo Yan escreveu:
-> Refactors code for gathering PID infos, it creates the function
-> nsinfo__get_nspid() to parse process 'status' node in folder '/proc'.
+Em Fri, Dec 03, 2021 at 12:00:26PM +0000, German Gomez escreveu:
+> Hi Athira,
 > 
-> Base on the refactoring, this patch introduces a new helper
-> nsinfo__is_in_root_namespace(), it returns true when the caller runs in
-> the root PID namespace.
-
-Thanks, applied.
-
-- Arnaldo
-
- 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  tools/perf/util/namespaces.c | 76 ++++++++++++++++++++++--------------
->  tools/perf/util/namespaces.h |  2 +
->  2 files changed, 48 insertions(+), 30 deletions(-)
+> On 02/12/2021 16:03, Athira Rajeev wrote:
+> >
+> >> On 01-Dec-2021, at 6:03 PM, German Gomez <german.gomez@arm.com> wrote:
+> >>
+> >> Include a "struct machine*" parameter to the process_event callback in
+> >> the scripting layer. This will allow access to the perf_env from within
+> >> this callback.
+> >>
+> >> Followup patches will build on top of this to report the correct name of
+> >> the registers in a perf.data file, consistently with the architecture
+> >> the file was recorded in.
+> >>
+> >> Signed-off-by: German Gomez <german.gomez@arm.com>
+> >> ---
+> >> tools/perf/builtin-script.c                   |  2 +-
+> >> .../util/scripting-engines/trace-event-perl.c |  3 ++-
+> >> .../scripting-engines/trace-event-python.c    | 23 +++++++++++--------
+> >> tools/perf/util/trace-event-scripting.c       |  3 ++-
+> >> tools/perf/util/trace-event.h                 |  3 ++-
+> >> 5 files changed, 21 insertions(+), 13 deletions(-)
+> >>
+> >> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> >> index 9434367af..711132f0b 100644
+> >> --- a/tools/perf/builtin-script.c
+> >> +++ b/tools/perf/builtin-script.c
+> >> @@ -2256,7 +2256,7 @@ static int process_sample_event(struct perf_tool *tool,
+> >> 				thread__resolve(al.thread, &addr_al, sample);
+> >> 			addr_al_ptr = &addr_al;
+> >> 		}
+> >> -		scripting_ops->process_event(event, sample, evsel, &al, addr_al_ptr);
+> >> +		scripting_ops->process_event(event, sample, evsel, &al, addr_al_ptr, machine);
+> > Hi,
+> >
+> > Looks like the patch is using “machine” to allow access to perf_env__arch and there by to get the “arch” value.
+> > But can we use from evsel, like  "perf_env__arch(evsel__env(evsel))” to get arch value instead of including new parameter for “struct machine” ?
+> >
+> > Thanks
+> > Athira
 > 
-> diff --git a/tools/perf/util/namespaces.c b/tools/perf/util/namespaces.c
-> index 608b20c72a5c..48aa3217300b 100644
-> --- a/tools/perf/util/namespaces.c
-> +++ b/tools/perf/util/namespaces.c
-> @@ -60,17 +60,49 @@ void namespaces__free(struct namespaces *namespaces)
->  	free(namespaces);
->  }
->  
-> +static int nsinfo__get_nspid(struct nsinfo *nsi, const char *path)
-> +{
-> +	FILE *f = NULL;
-> +	char *statln = NULL;
-> +	size_t linesz = 0;
-> +	char *nspid;
-> +
-> +	f = fopen(path, "r");
-> +	if (f == NULL)
-> +		return -1;
-> +
-> +	while (getline(&statln, &linesz, f) != -1) {
-> +		/* Use tgid if CONFIG_PID_NS is not defined. */
-> +		if (strstr(statln, "Tgid:") != NULL) {
-> +			nsi->tgid = (pid_t)strtol(strrchr(statln, '\t'),
-> +						     NULL, 10);
-> +			nsi->nstgid = nsi->tgid;
-> +		}
-> +
-> +		if (strstr(statln, "NStgid:") != NULL) {
-> +			nspid = strrchr(statln, '\t');
-> +			nsi->nstgid = (pid_t)strtol(nspid, NULL, 10);
-> +			/*
-> +			 * If innermost tgid is not the first, process is in a different
-> +			 * PID namespace.
-> +			 */
-> +			nsi->in_pidns = (statln + sizeof("NStgid:") - 1) != nspid;
-> +			break;
-> +		}
-> +	}
-> +
-> +	fclose(f);
-> +	free(statln);
-> +	return 0;
-> +}
-> +
->  int nsinfo__init(struct nsinfo *nsi)
->  {
->  	char oldns[PATH_MAX];
->  	char spath[PATH_MAX];
->  	char *newns = NULL;
-> -	char *statln = NULL;
-> -	char *nspid;
->  	struct stat old_stat;
->  	struct stat new_stat;
-> -	FILE *f = NULL;
-> -	size_t linesz = 0;
->  	int rv = -1;
->  
->  	if (snprintf(oldns, PATH_MAX, "/proc/self/ns/mnt") >= PATH_MAX)
-> @@ -100,34 +132,9 @@ int nsinfo__init(struct nsinfo *nsi)
->  	if (snprintf(spath, PATH_MAX, "/proc/%d/status", nsi->pid) >= PATH_MAX)
->  		goto out;
->  
-> -	f = fopen(spath, "r");
-> -	if (f == NULL)
-> -		goto out;
-> -
-> -	while (getline(&statln, &linesz, f) != -1) {
-> -		/* Use tgid if CONFIG_PID_NS is not defined. */
-> -		if (strstr(statln, "Tgid:") != NULL) {
-> -			nsi->tgid = (pid_t)strtol(strrchr(statln, '\t'),
-> -						     NULL, 10);
-> -			nsi->nstgid = nsi->tgid;
-> -		}
-> -
-> -		if (strstr(statln, "NStgid:") != NULL) {
-> -			nspid = strrchr(statln, '\t');
-> -			nsi->nstgid = (pid_t)strtol(nspid, NULL, 10);
-> -			/* If innermost tgid is not the first, process is in a different
-> -			 * PID namespace.
-> -			 */
-> -			nsi->in_pidns = (statln + sizeof("NStgid:") - 1) != nspid;
-> -			break;
-> -		}
-> -	}
-> -	rv = 0;
-> +	rv = nsinfo__get_nspid(nsi, spath);
->  
->  out:
-> -	if (f != NULL)
-> -		(void) fclose(f);
-> -	free(statln);
->  	free(newns);
->  	return rv;
->  }
-> @@ -299,3 +306,12 @@ int nsinfo__stat(const char *filename, struct stat *st, struct nsinfo *nsi)
->  
->  	return ret;
->  }
-> +
-> +bool nsinfo__is_in_root_namespace(void)
-> +{
-> +	struct nsinfo nsi;
-> +
-> +	memset(&nsi, 0x0, sizeof(nsi));
-> +	nsinfo__get_nspid(&nsi, "/proc/self/status");
-> +	return !nsi.in_pidns;
-> +}
-> diff --git a/tools/perf/util/namespaces.h b/tools/perf/util/namespaces.h
-> index ad9775db7b9c..9ceea9643507 100644
-> --- a/tools/perf/util/namespaces.h
-> +++ b/tools/perf/util/namespaces.h
-> @@ -59,6 +59,8 @@ void nsinfo__mountns_exit(struct nscookie *nc);
->  char *nsinfo__realpath(const char *path, struct nsinfo *nsi);
->  int nsinfo__stat(const char *filename, struct stat *st, struct nsinfo *nsi);
->  
-> +bool nsinfo__is_in_root_namespace(void);
-> +
->  static inline void __nsinfo__zput(struct nsinfo **nsip)
->  {
->  	if (nsip) {
-> -- 
-> 2.25.1
+> Thanks for the suggestion. It looks like we can skip this patch if we
+> can get the arch value that way.
 
--- 
+So the first one is already upstream, will you post a v2?
 
 - Arnaldo
