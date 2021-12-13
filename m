@@ -2,184 +2,133 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18131C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Dec 2021 10:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 098F7C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Dec 2021 11:39:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240345AbhLMKEc (ORCPT
+        id S236292AbhLMLjj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Dec 2021 05:04:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60330 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240299AbhLMKBA (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Dec 2021 05:01:00 -0500
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F32C6C09B132
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Dec 2021 01:49:08 -0800 (PST)
-Received: by mail-wm1-x332.google.com with SMTP id j140-20020a1c2392000000b003399ae48f58so13573031wmj.5
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Dec 2021 01:49:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mcSDirnuruPYtCN32bQ78CUK9bGGfX21Psk5mubRymc=;
-        b=rx86q3KyeOaDPbmRyuxzvLBUSlHYCv4JC/1G0pwjzcdS1VIR3XaYXGb5cFsnaZK2ZX
-         V7+w9fU2jsxuiU79JaVhajtALFAB/FyHQKiogR2VH+nlh9VzJI8jua/mcgGx2TmFL4i8
-         mPLsdrQVtk0HaW45aCnIzH8X2N9RHvTcBMDINJJENW+Z6YCsfZiTjH3OPjaFCkRrryTc
-         LcA+rCiUYLBZYbE7KqXnx7rQTdDyllJLKIymh0EUSBLHGPoDH5NCpNPuf1hbwceKDydx
-         4opHq2T1wUhJY7PPo3wROeBOC0TZZDKeCb3GnZ+nzc+hcChIfTzw88EVO1zcXB18j77c
-         yGpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mcSDirnuruPYtCN32bQ78CUK9bGGfX21Psk5mubRymc=;
-        b=MNkVIiJDOYnUGOFAYTKaVicq0qXQoQDdJLT5LUFrNxcplT2TqiGr/PI3oJ4mZgctg9
-         cAuPxzdcG5uJ4JuuY1+Ms/0eiw4UerI83yiGq5Dogh+lv6t3HZfJD8eldqsRlTW+p5jh
-         oejupihNYP6wtnu8pjgtGA/PKw7wPWmfsaPueDoWCXY8A17ZfROLPQaxuRvpnawlDbkQ
-         5hsu619IbjQ55UDF/PSJEC+Px0DLu5Qz+A4Jt9hW3/3HwYOu0v9YKfMXeQZlTrMW96fv
-         w8veu7IrfTmcgSh5HI9zfFajNqK5c/UZqXW0UPMx8ixdC/ugu9KwiXD1bHsg1P2g/Zgt
-         Eo1w==
-X-Gm-Message-State: AOAM533sM1ATGrWZDxfZplZ9xhRw/vKbuUCEVX21UckX3tXtJaI3WbJM
-        Pdd/Of3djBx5DDv7i3HvBJJ/dX5W4lilEBtkR0zsCQ==
-X-Google-Smtp-Source: ABdhPJwGPvf897zKrfEaiVQJPiIpbfihpMX+HCalDhTRUPfCDbostdOtET6QWAEYoG0Z+/501Ad5gXEmSDuLKQR2nzs=
-X-Received: by 2002:a1c:a5c3:: with SMTP id o186mr36876304wme.63.1639388947467;
- Mon, 13 Dec 2021 01:49:07 -0800 (PST)
-MIME-Version: 1.0
-References: <20211208160907.749482-1-james.clark@arm.com> <20211208160907.749482-2-james.clark@arm.com>
- <b52ef2f3-9e30-59a6-2aea-e46c93915868@arm.com> <b61ef2e3-e573-4867-af5d-fd5fabece4b1@arm.com>
- <20211210172220.GA1238770@p14s>
-In-Reply-To: <20211210172220.GA1238770@p14s>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Mon, 13 Dec 2021 09:48:55 +0000
-Message-ID: <CAJ9a7VgBxO0-R4jX6+-Vu10DtcsOeMiq9YrPkEEFQ=6ixNXXVQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] coresight: Fail to open with return stacks if they
- are unavailable
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     James Clark <James.Clark@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        coresight@lists.linaro.org, Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mon, 13 Dec 2021 06:39:39 -0500
+Received: from foss.arm.com ([217.140.110.172]:52630 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236352AbhLMLjf (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 13 Dec 2021 06:39:35 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D3F3D6E;
+        Mon, 13 Dec 2021 03:39:35 -0800 (PST)
+Received: from [10.57.34.21] (unknown [10.57.34.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D894E3F793;
+        Mon, 13 Dec 2021 03:39:31 -0800 (PST)
+Subject: Re: [PATCH 00/22] Refactor perf cpumap
+To:     Ian Rogers <irogers@google.com>
+Cc:     eranian@google.com, Andi Kleen <ak@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        John Garry <john.garry@huawei.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vineet Singh <vineet.singh@intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20211208024607.1784932-1-irogers@google.com>
+From:   James Clark <james.clark@arm.com>
+Message-ID: <c0c88d24-a609-bf4a-ec23-dfe555ab9cfc@arm.com>
+Date:   Mon, 13 Dec 2021 11:39:30 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
+MIME-Version: 1.0
+In-Reply-To: <20211208024607.1784932-1-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi James,
-
-A couple of points - relating mainly to docs:
-
-1. Activating branch broadcast overrides any setting of return stack.
-As a minimum there needs to be a documentation update to reflect this
--Setting both options is not prohibited in hardware - and in the case
-where we can use branch broadcast over a range both are then relevant.
-
-2. A documented note to reflect that choosing this option will result
-in a significant increase in the amount of trace generated - possible
-danger of overflows, or less actual instructions covered. In addition
-perhaps documents could reflect the intended use-case for this option,
-given the disadvantages.
-
-3. Has this been tested in a situation where it will be of use?
-Testing against static code images will show the same decoded trace
-output as not using branch broadcast. (although the packet dumps will
-show additional output)
-
-Given a primary use is for situations where code is patched or
-dynamically altered at runtime - then this can affect the full decode
-output. If the code is being patched to only alter the branch
-addresses then decode should work against static images.
-If, however, we are tracing code that adds in new branches, on top of
-NOPs for example, then the decoding against the original static image
-will be wrong, as the image will have the NOPs, rather than the branch
-instructions so the apparent location of E atoms will be in a
-different position to the actual code. Is there anything in perf that
-will ensure that the patched code is presented to the decoder?
-
-If there are potential decode issues - these too need documenting.
-
-Other than the documents and testing,  I cannot see any issues with
-this patch set in terms of setting and enabling the option.
-
-Regards
-
-Mike
 
 
-On Fri, 10 Dec 2021 at 17:22, Mathieu Poirier
-<mathieu.poirier@linaro.org> wrote:
->
-> Hi James,
->
-> On Thu, Dec 09, 2021 at 11:13:55AM +0000, James Clark wrote:
-> >
-> >
-> > On 09/12/2021 11:00, Suzuki K Poulose wrote:
-> > > On 08/12/2021 16:09, James Clark wrote:
-> > >> Maintain consistency with the other options by failing to open when they
-> > >> aren't supported. For example ETM_OPT_TS, ETM_OPT_CTXTID2 and the newly
-> > >> added ETM_OPT_BRANCH_BROADCAST all return with -EINVAL if they are
-> > >> requested but not supported by hardware.
-> > >>
-> > >> The consequence of not doing this is that the user may not be
-> > >> aware that they are not enabling the feature as it is silently disabled.
-> > >>
-> > >> Signed-off-by: James Clark <james.clark@arm.com>
-> > >> ---
-> > >>   drivers/hwtracing/coresight/coresight-etm4x-core.c | 13 +++++++++----
-> > >>   1 file changed, 9 insertions(+), 4 deletions(-)
-> > >>
-> > >> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> > >> index d2bafb50c66a..0a9bb943a5e5 100644
-> > >> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> > >> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> > >> @@ -674,10 +674,15 @@ static int etm4_parse_event_config(struct coresight_device *csdev,
-> > >>       }
-> > >>         /* return stack - enable if selected and supported */
-> > >> -    if ((attr->config & BIT(ETM_OPT_RETSTK)) && drvdata->retstack)
-> > >> -        /* bit[12], Return stack enable bit */
-> > >> -        config->cfg |= BIT(12);
-> > >> -
-> > >> +    if (attr->config & BIT(ETM_OPT_RETSTK)) {
-> > >> +        if (!drvdata->retstack) {
-> > >> +            ret = -EINVAL;
-> > >> +            goto out;
-> > >> +        } else {
-> > >> +            /* bit[12], Return stack enable bit */
-> > >> +            config->cfg |= BIT(12);
-> > >> +        }
-> > >
-> > > nit: While at this, please could you change the hard coded value
-> > > to ETM4_CFG_BIT_RETSTK ?
-> > >
-> > I started changing them all because I had trouble searching for bits by name but then
-> > I thought it would snowball into a bigger change so I undid it.
-> >
-> > I think I'll just go and do it now if it's an issue here.
->
-> I can apply this set right away and you send another patch to fix all hard coded
-> bitfields or you can send another revision with all 4 patches included in it
-> (bitfields fix plus these 3).  Just let me know what you want to do.  And next
-> time please add a cover letter.
->
-> Thanks,
-> Mathieu
->
-> >
-> > > Otherwise, looks good to me
-> > >
-> > > Suzuki
+On 08/12/2021 02:45, Ian Rogers wrote:
+> Perf cpu map has various functions where a cpumap and index are passed
+> in order to load the cpu. A problem with this is that the wrong index
+> may be passed for the cpumap, causing problems like aggregation on the
+> wrong CPU:
+> https://lore.kernel.org/lkml/20211204023409.969668-1-irogers@google.com/
+> 
+> This patch set refactors the cpu map API, greatly reducing it and
+> explicitly passing the cpu (rather than the pair) to functions that
+> need it. Comments are added at the same time.
+> 
+> Ian Rogers (22):
+>   libperf: Add comments to perf_cpu_map.
+>   perf stat: Add aggr creators that are passed a cpu.
+>   perf stat: Switch aggregation to use for_each loop
+>   perf stat: Switch to cpu version of cpu_map__get
+>   perf cpumap: Switch cpu_map__build_map to cpu function
+>   perf cpumap: Remove map+index get_socket
+>   perf cpumap: Remove map+index get_die
+>   perf cpumap: Remove map+index get_core
+>   perf cpumap: Remove map+index get_node
+>   perf cpumap: Add comments to aggr_cpu_id
+>   perf cpumap: Remove unused cpu_map__socket
+>   perf cpumap: Simplify equal function name.
+>   perf cpumap: Rename empty functions.
+>   perf cpumap: Document cpu__get_node and remove redundant function
+>   perf cpumap: Remove map from function names that don't use a map.
+>   perf cpumap: Remove cpu_map__cpu, use libperf function.
+>   perf cpumap: Refactor cpu_map__build_map
+>   perf cpumap: Rename cpu_map__get_X_aggr_by_cpu functions
+>   perf cpumap: Move 'has' function to libperf
+>   perf cpumap: Add some comments to cpu_aggr_map
+>   perf cpumap: Trim the cpu_aggr_map
+>   perf stat: Fix memory leak in check_per_pkg
+> 
+>  tools/lib/perf/cpumap.c                  |   7 +-
+>  tools/lib/perf/include/internal/cpumap.h |   9 +-
+>  tools/lib/perf/include/perf/cpumap.h     |   1 +
+>  tools/perf/arch/arm/util/cs-etm.c        |  16 +-
+>  tools/perf/builtin-ftrace.c              |   2 +-
+>  tools/perf/builtin-sched.c               |   6 +-
+>  tools/perf/builtin-stat.c                | 273 ++++++++++++-----------
+>  tools/perf/tests/topology.c              |  10 +-
+>  tools/perf/util/cpumap.c                 | 182 ++++++---------
+>  tools/perf/util/cpumap.h                 | 102 ++++++---
+>  tools/perf/util/cputopo.c                |   2 +-
+>  tools/perf/util/env.c                    |   6 +-
+>  tools/perf/util/stat-display.c           |  69 +++---
+>  tools/perf/util/stat.c                   |   9 +-
+>  tools/perf/util/stat.h                   |   3 +-
+>  15 files changed, 361 insertions(+), 336 deletions(-)
+> 
 
+For the whole set:
 
+Reviewed-by: James Clark <james.clark@arm.com>
 
--- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+I didn't see any obvious issues with mixing up aggregation modes or CPU/idx types. Also
+gave perf stat a test in the different modes and didn't see an issue.
+
+But I'm wondering if it's possible to go further and add a struct around the CPU int so that the
+compiler checks for correctness instead. It still seems quite easy to mix up index and
+CPU, for example these functions are subtly different, but both use int:
+
+  LIBPERF_API int perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx);
+  LIBPERF_API bool perf_cpu_map__has(const struct perf_cpu_map *map, int cpu);
+
+Something like this would make it impossible to make a mistake:
+
+  struct cpu { int cpu };
+
+I mean it's more of a coincidence that CPUs can be identified by an integer, but they are more
+of an object than an integer, so it could make sense to wrap it. But maybe it could be quite
+cumbersome to use and be overkill.
+
