@@ -2,104 +2,83 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFACC433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Dec 2021 07:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F03AC433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Dec 2021 08:48:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231133AbhLMHKF (ORCPT
+        id S231616AbhLMIsQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Dec 2021 02:10:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230516AbhLMHKE (ORCPT
+        Mon, 13 Dec 2021 03:48:16 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4249 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229873AbhLMIsQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Dec 2021 02:10:04 -0500
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D5A9C06173F;
-        Sun, 12 Dec 2021 23:10:04 -0800 (PST)
-Received: by mail-pl1-x62d.google.com with SMTP id u17so10502630plg.9;
-        Sun, 12 Dec 2021 23:10:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=yohP78D4atzOPK9Zw6Tkph8dapgndeH2XkAEwCLnI1U=;
-        b=p9Em6pnsstx60gGKlIgJdxmMa5vXilRhxGQaNMhrOngb6Dil/sU8dopn08Q0cXY9de
-         fPZy/d2r7CMR3JxaGPGM6WKWAelUjG2QGmIotEeqi4U0NFtc9ZoIWciRazflzBAulH3l
-         O02IAD9bm8LtbwjSFnJGW3Gb1oM0bbuveWQlSUZKvY119vEE3L6rKTjJOnScMQa7STaJ
-         Cu4wXXtJyOENNUAqQKcXQe+g5nC36YgHwWa1cx94KBDztnK/vFDXXPWwWgScgLyMIEl2
-         u+l+N0z8U++/CwGY7n98XwQVv/79tkf0vtxa7N3AJhFP2tDSqtEWE3A32vjPKF1X1ML5
-         ClfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=yohP78D4atzOPK9Zw6Tkph8dapgndeH2XkAEwCLnI1U=;
-        b=45smfwxLv785fLBObQ5X/NVvn4IQoiHvO7Pwn37S1l9MBSbB51wCeWhSt+Fp7KueVV
-         fu0xwNf8r1BmAINmfgGv7W6mNR5aRCmLyHcZIis0jgzHKqdQNq9mO+cmXlfNEtlDxeG4
-         MbwyD0VBF3IUb3+UiQjFnOfy8k+rT+Phlt8ou4KBJl0aOfqsTJz45SfsZ6vvxXZv40Im
-         VayDwb1yaEfU2hZiBEBt4mMZsOZj+VILlIEULYWrj9i4x4hHXrCOsIbwHxDKALWhrWg9
-         Sz9vPodtvbIsHRhYyavNct+5VxPw7QKtKAaHfynMlUyZGVadu6aTCiOmnJ0NaosMzuyq
-         nFOA==
-X-Gm-Message-State: AOAM532NELuaRoh78JEgQFJ+rVzgteHUTbTcmDwOu0nk3yWIbsBdutD7
-        IkXxCzORsI9WWw6aW7JyoFk=
-X-Google-Smtp-Source: ABdhPJwzH/0NYxOyiHQwoJ/QV7LDvG/vfPms2iwsyO6Hn6nlajNJfX3LAO7q3f7pFWzyTzlqeIW4hA==
-X-Received: by 2002:a17:90b:4ace:: with SMTP id mh14mr42540020pjb.164.1639379403048;
-        Sun, 12 Dec 2021 23:10:03 -0800 (PST)
-Received: from localhost.localdomain ([159.226.95.43])
-        by smtp.googlemail.com with ESMTPSA id qe12sm6057681pjb.29.2021.12.12.23.10.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Dec 2021 23:10:02 -0800 (PST)
-From:   Miaoqian Lin <linmq006@gmail.com>
-Cc:     linmq006@gmail.com, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] perf expr: Fix return value of ids__new
-Date:   Mon, 13 Dec 2021 07:09:53 +0000
-Message-Id: <20211213070956.15119-1-linmq006@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <864ad02d-6afe-791c-f742-56582b633482@arm.com>
-References: <864ad02d-6afe-791c-f742-56582b633482@arm.com>
-To:     unlisted-recipients:; (no To-header on input)
+        Mon, 13 Dec 2021 03:48:16 -0500
+Received: from fraeml715-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JCFVf68Smz67tWy;
+        Mon, 13 Dec 2021 16:46:50 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml715-chm.china.huawei.com (10.206.15.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Mon, 13 Dec 2021 09:48:14 +0100
+Received: from [10.47.80.231] (10.47.80.231) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Mon, 13 Dec
+ 2021 08:48:13 +0000
+Subject: Re: [PATCH v2] perf util: Fix use after free in metric__new
+To:     =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>,
+        <peterz@infradead.org>
+CC:     <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
+        <namhyung@kernel.org>, <irogers@google.com>, <ak@linux.intel.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20211212115818.267011-1-jose.exposito89@gmail.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <690406fd-306c-9786-bacc-fd27e2e531fb@huawei.com>
+Date:   Mon, 13 Dec 2021 08:47:53 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
+MIME-Version: 1.0
+In-Reply-To: <20211212115818.267011-1-jose.exposito89@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.47.80.231]
+X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-callers of ids__new() function only do NULL checking for the return
-value. ids__new() calles hashmap__new(), which may return
-ERR_PTR(-ENOMEM). Instead of changing the checking one-by-one.
-return NULL instead of ERR_PTR(-ENOMEM) to keep
-consistent.
+On 12/12/2021 11:58, José Expósito wrote:
+> Fixes: b85a4d61d302 (perf metric: Allow modifiers on metrics)
+> Addresses-Coverity-ID: 1494000
+> Acked-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: José Expósito <jose.exposito89@gmail.com>
 
-Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
----
- tools/perf/util/expr.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Reviewed-by: John Garry <john.garry@huawei.com>
 
-diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-index 1d532b9fed29..aabdc112300c 100644
---- a/tools/perf/util/expr.c
-+++ b/tools/perf/util/expr.c
-@@ -65,7 +65,13 @@ static bool key_equal(const void *key1, const void *key2,
- 
- struct hashmap *ids__new(void)
- {
--	return hashmap__new(key_hash, key_equal, NULL);
-+	struct hashmap *hash;
-+
-+	hash = hashmap__new(key_hash, key_equal, NULL);
-+	if (IS_ERR(hash))
-+		return NULL;
-+	else
-+		return hash;
- }
- 
- void ids__free(struct hashmap *ids)
--- 
-2.17.1
+> 
+> ---
+> 
+> v2: Add Fixes and Acked-by tags
+> ---
+>   tools/perf/util/metricgroup.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> index fffe02aae3ed..4d2fed3aefd1 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -209,8 +209,8 @@ static struct metric *metric__new(const struct pmu_event *pe,
+>   	m->metric_name = pe->metric_name;
+>   	m->modifier = modifier ? strdup(modifier) : NULL;
+>   	if (modifier && !m->modifier) {
+> -		free(m);
+>   		expr__ctx_free(m->pctx);
+> +		free(m);
+>   		return NULL;
+>   	}
+>   	m->metric_expr = pe->metric_expr;
+> 
 
