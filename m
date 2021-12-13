@@ -2,102 +2,89 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF0DC433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Dec 2021 16:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD9DC433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Dec 2021 18:18:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234563AbhLMQYR (ORCPT
+        id S241795AbhLMSSw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Dec 2021 11:24:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39736 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231150AbhLMQYQ (ORCPT
+        Mon, 13 Dec 2021 13:18:52 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:52066 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241796AbhLMSSw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Dec 2021 11:24:16 -0500
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A389AC061574;
-        Mon, 13 Dec 2021 08:24:16 -0800 (PST)
-Received: by mail-pj1-x102b.google.com with SMTP id nh10-20020a17090b364a00b001a69adad5ebso13769616pjb.2;
-        Mon, 13 Dec 2021 08:24:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id;
-        bh=yohP78D4atzOPK9Zw6Tkph8dapgndeH2XkAEwCLnI1U=;
-        b=Xll60V/m0S95rYuhVfojo9Nw7jbki/iv4FSXFFhY5VEgcQ9m72peACREIzDKbSbqVP
-         ywzeprVpIQrwcNSgxI7EN/ZPZN8SoNkMmrcn406bCmkJS1s/XWpLaP0K3NA47/f+meA1
-         FUHYw5pNqJoIMwVnOwILlU5gkVZt8y9/D62lKQuJYXGZSBZgXy1tCVDbM38Fvcs9K9xP
-         KJLpkP9ewa6wHdLZuUzs4Mo614BYipy2etpApuVHuIdusyYsvBfFqw4E2Y0cgDUUIBmu
-         aPnfnyZ9K9aBWD/UNPFMbtblp8qX3a7e7hMPVcLs3YBKCIqod3APWJ5vh9UrPYQOcTpp
-         XrSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=yohP78D4atzOPK9Zw6Tkph8dapgndeH2XkAEwCLnI1U=;
-        b=oYIpeX+GDWGUqNlR/6vZQOPRGx9PvwvaHjILGEyp6r1u+xeUUZeZi97rj3MzV46gpq
-         rndJ3puHtYi1fKw8VtZ0/JZPClchgK7aH7jCZruIXgEs14ZBMFjo6qoR/x/065wrmoZr
-         mPWDADkn7fMouiZZGRoKaCxuNR3hQXHy0/EwcEVJixd5WdI+mYZRn+X/ni7afK3B8Q6B
-         KIdiKlWjtS5eHoonioUyUpMU0d7ZbXWkWAcKcwuuhOpbKb0I64NY6OBvOGvWWZIWjPBU
-         Eu/PNDXzBJHexEYpeZavNQuBqe412e6sbi862ZqpULSHrnZBwsRBa6bHjHZ5jdQ28Nx2
-         FXXg==
-X-Gm-Message-State: AOAM532xNlBH6dLzZ8EgNzWNQ+nSEZwa40ObtDnZe5AObrf5KrpRXaI6
-        BoeoADwgfK68IG2xh+4dzHw=
-X-Google-Smtp-Source: ABdhPJz1NtidICjKTR7YYbrVG7R82YdUQIJkchkYd22sLpaFVtbilpYb8BG/hYKGXyWfJ7EKgMnXCA==
-X-Received: by 2002:a17:90b:11c1:: with SMTP id gv1mr45294855pjb.208.1639412656189;
-        Mon, 13 Dec 2021 08:24:16 -0800 (PST)
-Received: from localhost.localdomain ([159.226.95.43])
-        by smtp.googlemail.com with ESMTPSA id fs21sm6043868pjb.1.2021.12.13.08.24.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Dec 2021 08:24:15 -0800 (PST)
-From:   Miaoqian Lin <linmq006@gmail.com>
-Cc:     linmq006@gmail.com, Peter Zijlstra <peterz@infradead.org>,
+        Mon, 13 Dec 2021 13:18:52 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DC40AB8120F;
+        Mon, 13 Dec 2021 18:18:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70716C34602;
+        Mon, 13 Dec 2021 18:18:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1639419529;
+        bh=uNmf5NWVYUtNQ8nh5+KS4K67JFhPM7HjDGgf0WnTdWU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gHtP84tBhprZ2fc90bhFRo6O9ygxBUuEusx2rYdLlVwRrltRIVFWzqJ65JBMH1NCr
+         WXshnuigxHn1PVa3UIIH/WUqL9F9VYnxSMH+SSWwMDRhE8ruAS9OhJGXz9mGXqEmU/
+         fypFGHHtFYIhKDZ0yPiSV0MIVdr/dYpFqc/+KdWcxQk7z3hg22bhlTJF9MUn66BniX
+         FMrZbCRRcX6BM1U3wo9w4PbLijvLiasm5+4vAVTsC6oU5KHa/LbJCVoAd/m7mj1jPs
+         C6JtVIM5yRBwP/i3JvVyMXtl6Qh901+m8RDvVI/TSAIEmrFqVSInotjT4vZFOTLvHl
+         zCTeCBxpPa2dw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 4BB16405D8; Mon, 13 Dec 2021 15:18:47 -0300 (-03)
+Date:   Mon, 13 Dec 2021 15:18:47 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Colin Ian King <colin.i.king@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        German Gomez <german.gomez@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] perf expr: Fix return value of ids__new
-Date:   Mon, 13 Dec 2021 16:24:00 +0000
-Message-Id: <20211213162403.10970-1-linmq006@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        linux-perf-users@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] libperf tests: Fix a spelling mistake "Runnnig" ->
+ "Running"
+Message-ID: <YbeOhwfDoxYfICRP@kernel.org>
+References: <20211212222122.478537-1-colin.i.king@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211212222122.478537-1-colin.i.king@gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-callers of ids__new() function only do NULL checking for the return
-value. ids__new() calles hashmap__new(), which may return
-ERR_PTR(-ENOMEM). Instead of changing the checking one-by-one.
-return NULL instead of ERR_PTR(-ENOMEM) to keep
-consistent.
+Em Sun, Dec 12, 2021 at 10:21:22PM +0000, Colin Ian King escreveu:
+> There is a spelling mistake in a __T_VERBOSE message. Fix it.
 
-Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
----
- tools/perf/util/expr.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Thanks, applied.
 
-diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-index 1d532b9fed29..aabdc112300c 100644
---- a/tools/perf/util/expr.c
-+++ b/tools/perf/util/expr.c
-@@ -65,7 +65,13 @@ static bool key_equal(const void *key1, const void *key2,
+- Arnaldo
+
  
- struct hashmap *ids__new(void)
- {
--	return hashmap__new(key_hash, key_equal, NULL);
-+	struct hashmap *hash;
-+
-+	hash = hashmap__new(key_hash, key_equal, NULL);
-+	if (IS_ERR(hash))
-+		return NULL;
-+	else
-+		return hash;
- }
- 
- void ids__free(struct hashmap *ids)
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> ---
+>  tools/lib/perf/tests/test-evlist.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/lib/perf/tests/test-evlist.c b/tools/lib/perf/tests/test-evlist.c
+> index 520a78267743..e7afff12c35a 100644
+> --- a/tools/lib/perf/tests/test-evlist.c
+> +++ b/tools/lib/perf/tests/test-evlist.c
+> @@ -535,7 +535,7 @@ static int test_stat_multiplexing(void)
+>  				    (double)counts[i].run / (double)counts[i].ena * 100.0,
+>  				    counts[i].run, counts[i].ena);
+>  		} else if (scaled == -1) {
+> -			__T_VERBOSE("\t Not Runnnig\n");
+> +			__T_VERBOSE("\t Not Running\n");
+>  		} else {
+>  			__T_VERBOSE("\t Not Scaling\n");
+>  		}
+> -- 
+> 2.33.1
+
 -- 
-2.17.1
 
+- Arnaldo
