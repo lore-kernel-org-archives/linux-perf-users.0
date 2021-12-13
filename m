@@ -2,141 +2,132 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9A4C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Dec 2021 13:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14937C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Dec 2021 13:54:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233419AbhLMNOE (ORCPT
+        id S238319AbhLMNyj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Dec 2021 08:14:04 -0500
-Received: from foss.arm.com ([217.140.110.172]:54580 "EHLO foss.arm.com"
+        Mon, 13 Dec 2021 08:54:39 -0500
+Received: from foss.arm.com ([217.140.110.172]:55602 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232266AbhLMNOE (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Dec 2021 08:14:04 -0500
+        id S233777AbhLMNyi (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 13 Dec 2021 08:54:38 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA8881FB;
-        Mon, 13 Dec 2021 05:14:03 -0800 (PST)
-Received: from [10.57.7.82] (unknown [10.57.7.82])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 755A53F793;
-        Mon, 13 Dec 2021 05:14:01 -0800 (PST)
-Subject: Re: [PATCH] perf expr: Fix return value of ids__new
-To:     Miaoqian Lin <linmq006@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B5EF1FB;
+        Mon, 13 Dec 2021 05:54:38 -0800 (PST)
+Received: from [10.57.34.21] (unknown [10.57.34.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 203BD3F73B;
+        Mon, 13 Dec 2021 05:54:35 -0800 (PST)
+Subject: Re: [PATCH v1 2/2] perf evlist: Don't run perf in non-root PID
+ namespace when launch workload
+To:     Leo Yan <leo.yan@linaro.org>
+References: <20211212134721.1721245-1-leo.yan@linaro.org>
+ <20211212134721.1721245-3-leo.yan@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <864ad02d-6afe-791c-f742-56582b633482@arm.com>
- <20211213070956.15119-1-linmq006@gmail.com>
-From:   German Gomez <german.gomez@arm.com>
-Message-ID: <d0fabb42-399f-2b72-412b-4f5ba6b9eea4@arm.com>
-Date:   Mon, 13 Dec 2021 13:13:47 +0000
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Yonatan Goldschmidt <yonatan.goldschmidt@granulate.io>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+From:   James Clark <james.clark@arm.com>
+Message-ID: <6cad0a2e-c4b8-9788-fa0d-05405453a0dd@arm.com>
+Date:   Mon, 13 Dec 2021 13:54:33 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-In-Reply-To: <20211213070956.15119-1-linmq006@gmail.com>
+In-Reply-To: <20211212134721.1721245-3-leo.yan@linaro.org>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Miaoqian,
 
-Fails to build due to missing import: "#import <linux/err.h>".
 
-Could you please verify?
+On 12/12/2021 13:47, Leo Yan wrote:
+> In function evlist__prepare_workload(), after perf forks a child process
+> and launches a workload in the created process, it needs to retrieve
+> process and namespace related info via '/proc/$PID/' node.
+> 
+> The process folders under 'proc' file system use the PID number from the
+> root PID namespace, when perf tool runs in non-root PID namespace and
+> creates new process for profiled program, this leads to the perf tool
+> wrongly gather process info since it uses PID from non-root namespace to
+> access nodes under '/proc'.
+> 
+> Let's see an example:
+> 
+>   unshare --fork --pid perf record -e cs_etm//u -a -- test_program
+> 
+> This command runs perf tool and the profiled program 'test_program' in
+> the non-root PID namespace.  When perf tool launches 'test_program',
+> e.g. the forked PID number is 2, perf tool retrieves process info for
+> 'test_program' from the folder '/proc/2'.  But '/proc/2' is actually for
+> a kernel thread so perf tool wrongly gather info for 'test_program'.
 
-Other than that, it looks good to me. I shared the testing below:
+Hi Leo,
 
-On 13/12/2021 07:09, Miaoqian Lin wrote:
-> callers of ids__new() function only do NULL checking for the return
-> value. ids__new() calles hashmap__new(), which may return
-> ERR_PTR(-ENOMEM). Instead of changing the checking one-by-one.
-> return NULL instead of ERR_PTR(-ENOMEM) to keep
-> consistent.
->
-> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+Which features aren't working exactly when you run in a non root namespace?
+
+I did "perf record -- ls" and it seemed to be working for me. At least kernel
+sampling would be working in a namespace, even if there was something wrong
+with userspace.
+
+I think causing a failure might be too restrictive and would prevent people
+from using perf in a container. Maybe we could show a warning instead, but
+I'm not sure exactly what's not working because I thought perf looked up stuff
+based on the path of the process not the pid.
+
+James
+
+> 
+> To fix this issue, we don't allow perf tool runs in non-root PID
+> namespace when it launches workload and reports error in this
+> case.  This can notify users to run the perf tool in root PID namespace
+> to gather correct info for profiled program.
+> 
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
 > ---
->  tools/perf/util/expr.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-> index 1d532b9fed29..aabdc112300c 100644
-> --- a/tools/perf/util/expr.c
-> +++ b/tools/perf/util/expr.c
-> @@ -65,7 +65,13 @@ static bool key_equal(const void *key1, const void *key2,
+>  tools/perf/util/evlist.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index 5f92319ce258..bdf79a97db66 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
+> @@ -11,6 +11,7 @@
+>  #include <poll.h>
+>  #include "cpumap.h"
+>  #include "util/mmap.h"
+> +#include "util/namespaces.h"
+>  #include "thread_map.h"
+>  #include "target.h"
+>  #include "evlist.h"
+> @@ -1364,6 +1365,12 @@ int evlist__prepare_workload(struct evlist *evlist, struct target *target, const
+>  	int child_ready_pipe[2], go_pipe[2];
+>  	char bf;
 >  
->  struct hashmap *ids__new(void)
->  {
-> -	return hashmap__new(key_hash, key_equal, NULL);
-> +	struct hashmap *hash;
+> +	if (!nsinfo__is_in_root_namespace()) {
+> +		pr_err("Perf runs in non-root PID namespace; please run perf tool ");
+> +		pr_err("in the root PID namespace for gathering process info.\n");
+> +		return -EPERM;
+> +	}
 > +
-> +	hash = hashmap__new(key_hash, key_equal, NULL);
-> +	if (IS_ERR(hash))
-> +		return NULL;
-> +	else
-> +		return hash;
->  }
->  
->  void ids__free(struct hashmap *ids)
-Before this patch, perf-test was segfaulting instead of a graceful fail.
-I think this could have been an issue in the perf tool as well.
-
-(I forced hashmap__new in "tools/perf/util/hashmap.c" to always return
-the error for the purposes of the test).
-
-  $ make DEBUG=1 NO_LIBBPF=1 # builds with tools/perf/util/hashmap.c
-  $ ./perf test 7 -v
-  Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
-   7: Simple expression parser                                        :
-  --- start ---
-  test child forked, pid 1953536
-  perf: Segmentation fault
-  Obtained 16 stack frames.
-  ./perf(dump_stack+0x31) [0x559222b3ae48]
-  ./perf(sighandler_dump_stack+0x33) [0x559222b3af30]
-  /lib/x86_64-linux-gnu/libc.so.6(+0x4620f) [0x7ff81df6220f]
-  ./perf(hashmap__size+0x23) [0x559222bf9f47]
-  ./perf(ids__union+0x5f) [0x559222be1f0e]
-  ./perf(+0x2d9ba8) [0x559222ac7ba8]
-  ./perf(+0x2da223) [0x559222ac8223]
-  ./perf(+0x2a5fe9) [0x559222a93fe9]
-  ./perf(+0x2a6119) [0x559222a94119]
-  ./perf(+0x2a6de7) [0x559222a94de7]
-  ./perf(cmd_test+0x25f) [0x559222a95686]
-  ./perf(+0x2e4d25) [0x559222ad2d25]
-  ./perf(+0x2e4faa) [0x559222ad2faa]
-  ./perf(+0x2e50fd) [0x559222ad30fd]
-  ./perf(main+0x29d) [0x559222ad3500]
-  /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf2) [0x7ff81df430b2]
-  test child interrupted
-  ---- end ----
-  Simple expression parser: FAILED!
-
-After the patch:
-
-  $ make DEBUG=1 NO_LIBBPF=1
-  $ ./perf test 7 -v
-  Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
-   7: Simple expression parser                                        :
-  --- start ---
-  test child forked, pid 1960026
-  FAILED tests/expr.c:16 ids__new
-  FAILED tests/expr.c:16 ids__new
-  FAILED tests/expr.c:73 ids_union (-1 != 0)
-  test child finished with -1
-  ---- end ----
-
-  Simple expression parser: FAILED!
-
-so with the missing import fixex:
-
-Tested-by: German Gomez <german.gomez@arm.com>
-Reviewed-by: German Gomez <german.gomez@arm.com>
-
+>  	if (pipe(child_ready_pipe) < 0) {
+>  		perror("failed to create 'ready' pipe");
+>  		return -1;
+> 
