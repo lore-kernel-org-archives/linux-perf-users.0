@@ -2,173 +2,115 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A200FC433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Dec 2021 22:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34829C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Dec 2021 01:10:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237196AbhLMWG4 (ORCPT
+        id S238980AbhLNBKh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Dec 2021 17:06:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34986 "EHLO
+        Mon, 13 Dec 2021 20:10:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240310AbhLMWGz (ORCPT
+        with ESMTP id S232173AbhLNBKh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Dec 2021 17:06:55 -0500
-Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD246C061574
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Dec 2021 14:06:55 -0800 (PST)
-Received: by mail-il1-x12f.google.com with SMTP id l5so16248145ilv.7
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Dec 2021 14:06:55 -0800 (PST)
+        Mon, 13 Dec 2021 20:10:37 -0500
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBE04C061574;
+        Mon, 13 Dec 2021 17:10:36 -0800 (PST)
+Received: by mail-pf1-x42b.google.com with SMTP id x5so16558574pfr.0;
+        Mon, 13 Dec 2021 17:10:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zTPn8auGutn38LvbgcksVlp70zD3zIxdnxqFAr/xw18=;
-        b=UdsKx5QAwKAV6vhCEmgcG/KiXBU89WcrU9K87mz06/QwqRIxE2MRNPdp90VlGq1K6q
-         1Q1FdyAzVQIIGrHmuR48JEDsdFZETrOFmhKpC7Q7LesjrCsCsGwQmKHDC5hQaOb6xWzz
-         vAbkXts4r8QbWQHBtlC0bFOkwTKcomEu2zjuT2ocTCQe2t/wPooUm7rE5qhpNjCdWYPP
-         D35i0fu9ijrF0q1COAKePyofG5XwTOtInwbIP/pijUrbOfbt43UEiWIRGLhbxWw1r/N/
-         VFdnegr3b5dQqqQpW1z6v7MMH3OnhGGIt9hPgwKGyHaADtKEAw3x5XDDB+w43aN/8G7b
-         0AiQ==
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id;
+        bh=lUu+bu7URw0KVLywB7Idrn3tSFU11ChSitfBhMfHIN0=;
+        b=KfscuHmPEC8q4PlFz/F9HD61zflzlTiWXSmCGDhiLMZtTDaDcwodhIIv1vtHE1LCG2
+         MnFcyGYArCmyWAN3r8Lg8TdMRwbN7f6k+obC49ovFNr3Y9lZwfJdvT22wKqMWEPmXaNo
+         MsULv2boPgZN3f67xV+UWCFqkWcUUqVkgdKQRoHL5UH70rFvuo2yUHNqc9Yt0g+X6mKc
+         JyU5uIuGOupTBUr68QVI3qM25dyzYH36NtnEB4hZXLwIrpp9DD095zvl9OPOxZwv/KEM
+         3jOZEz9Ej5wPRLRLuCDyV8pC0TZo/IvkXuKxHBQXjD5Uics/XZ/J42oZ60FFqs3f4YBD
+         giJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zTPn8auGutn38LvbgcksVlp70zD3zIxdnxqFAr/xw18=;
-        b=hOE/VS3aCRU9z7Y4+fO8gJqAxfG25pTxYOwdsNfacTLeIGznKvfZY81pnohvMDO8dR
-         u4begoj9VTf4XlezKkCNGo1cj14PlSbJi7XvS2SyZUL4As7QJTuAONhWLzoHx4+M5zOD
-         r0Q+M5SwAT2mXdV5tL9CgKYgJVS+cpWVZQjRke8XPD95y05x3TuPJoc9gYTYWBRQ4Gdn
-         wCThtPRguDD1v2ipmlweJnoaGRCFHf3/usghWTuolGdKn9dgBAI0kKMuix9NGxPEdxXH
-         FWiwY9fYLpzysU8ZXMD/pRx/ncTOP6VFNV36QqBysbAZPUXK/i5xFrz83hOIjseLNPK7
-         k1AQ==
-X-Gm-Message-State: AOAM531uwAGaZzgAsQCFCQDZstRs+OQyM67lpIQMrA9SMvoQcKMdGjqC
-        VK+VJRBQ32k0G6DhvsmcWtUCaqLG2cZdA36i15pIJdj5MD2TfA==
-X-Google-Smtp-Source: ABdhPJyhSyitxMBa16ebH4CTLm7N7+9UX1SAFoyjyVTUuKqfFMLJg1lVmWnS1g/w6yifUHT3I1BSdBZH/ytTfpR/FOw=
-X-Received: by 2002:a05:6e02:168a:: with SMTP id f10mr904394ila.2.1639433214840;
- Mon, 13 Dec 2021 14:06:54 -0800 (PST)
-MIME-Version: 1.0
-References: <20211208024607.1784932-1-irogers@google.com> <c0c88d24-a609-bf4a-ec23-dfe555ab9cfc@arm.com>
- <CAP-5=fVHNqHym1xNCx_WhmUWHEWa9MDW9QAdOhkLGXuD6+0bqA@mail.gmail.com>
-In-Reply-To: <CAP-5=fVHNqHym1xNCx_WhmUWHEWa9MDW9QAdOhkLGXuD6+0bqA@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 13 Dec 2021 14:06:43 -0800
-Message-ID: <CAP-5=fWkJdW3Jr1NX115=nWdGhUvPMbMzi5fZZ0-REUSq-bkig@mail.gmail.com>
-Subject: Re: [PATCH 00/22] Refactor perf cpumap
-To:     James Clark <james.clark@arm.com>
-Cc:     eranian@google.com, Andi Kleen <ak@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=lUu+bu7URw0KVLywB7Idrn3tSFU11ChSitfBhMfHIN0=;
+        b=Cca0ZQWE/tWDG3FcVamw+50nLPZRqd2UvgWBmEmGcJ/EYbOFLm6oN9qs5k44ECAXh2
+         142Rgb+uR+BBQaGanNDRsCq4eAwhf1wDUDacn4RxU0CaitVvTjW1oBXg4ytfguGdXRyk
+         YDBueKSkHigdVfsDvXQ131zJhSB0uQ/5lLu5L86+3GO5tVdVHxF6ht9syJSFODoRLgYy
+         kmqzuVOKVWW/PcRMRc22dww2Xvkuyzwl4ZJLQ6kC5D2b/imcUwMw3sW/85eMKpcBQOtX
+         XOJTazxMA8OHg0bMkodlYPguBaldyrRGj0lXg1Ck4BJl/4xNLyQm/t23/WGh7M463dnM
+         ZF+A==
+X-Gm-Message-State: AOAM533d9wI7nd2GItCrrssHaLWoEJ0eNb+Jv2l4KoanvPHt2GA62RRQ
+        Nh3p05hMesK+T+YTf1aeX58=
+X-Google-Smtp-Source: ABdhPJyI2d8ywYcmXhtLZ30IKHr7+IqYvjctMql6cLXNogZzELWmqL2BUimg/gFE4FRVucPbNxfRYQ==
+X-Received: by 2002:a63:175c:: with SMTP id 28mr1575950pgx.66.1639444236411;
+        Mon, 13 Dec 2021 17:10:36 -0800 (PST)
+Received: from localhost.localdomain ([159.226.95.43])
+        by smtp.googlemail.com with ESMTPSA id d23sm5968461pgm.37.2021.12.13.17.10.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Dec 2021 17:10:36 -0800 (PST)
+From:   Miaoqian Lin <linmq006@gmail.com>
+Cc:     linmq006@gmail.com, Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vineet Singh <vineet.singh@intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        German Gomez <german.gomez@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] perf expr: Fix return value of ids__new
+Date:   Tue, 14 Dec 2021 01:10:27 +0000
+Message-Id: <20211214011030.20200-1-linmq006@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Dec 13, 2021 at 8:10 AM Ian Rogers <irogers@google.com> wrote:
->
-> On Mon, Dec 13, 2021 at 3:39 AM James Clark <james.clark@arm.com> wrote:
-> >
-> >
-> >
-> > On 08/12/2021 02:45, Ian Rogers wrote:
-> > > Perf cpu map has various functions where a cpumap and index are passed
-> > > in order to load the cpu. A problem with this is that the wrong index
-> > > may be passed for the cpumap, causing problems like aggregation on the
-> > > wrong CPU:
-> > > https://lore.kernel.org/lkml/20211204023409.969668-1-irogers@google.com/
-> > >
-> > > This patch set refactors the cpu map API, greatly reducing it and
-> > > explicitly passing the cpu (rather than the pair) to functions that
-> > > need it. Comments are added at the same time.
-> > >
-> > > Ian Rogers (22):
-> > >   libperf: Add comments to perf_cpu_map.
-> > >   perf stat: Add aggr creators that are passed a cpu.
-> > >   perf stat: Switch aggregation to use for_each loop
-> > >   perf stat: Switch to cpu version of cpu_map__get
-> > >   perf cpumap: Switch cpu_map__build_map to cpu function
-> > >   perf cpumap: Remove map+index get_socket
-> > >   perf cpumap: Remove map+index get_die
-> > >   perf cpumap: Remove map+index get_core
-> > >   perf cpumap: Remove map+index get_node
-> > >   perf cpumap: Add comments to aggr_cpu_id
-> > >   perf cpumap: Remove unused cpu_map__socket
-> > >   perf cpumap: Simplify equal function name.
-> > >   perf cpumap: Rename empty functions.
-> > >   perf cpumap: Document cpu__get_node and remove redundant function
-> > >   perf cpumap: Remove map from function names that don't use a map.
-> > >   perf cpumap: Remove cpu_map__cpu, use libperf function.
-> > >   perf cpumap: Refactor cpu_map__build_map
-> > >   perf cpumap: Rename cpu_map__get_X_aggr_by_cpu functions
-> > >   perf cpumap: Move 'has' function to libperf
-> > >   perf cpumap: Add some comments to cpu_aggr_map
-> > >   perf cpumap: Trim the cpu_aggr_map
-> > >   perf stat: Fix memory leak in check_per_pkg
-> > >
-> > >  tools/lib/perf/cpumap.c                  |   7 +-
-> > >  tools/lib/perf/include/internal/cpumap.h |   9 +-
-> > >  tools/lib/perf/include/perf/cpumap.h     |   1 +
-> > >  tools/perf/arch/arm/util/cs-etm.c        |  16 +-
-> > >  tools/perf/builtin-ftrace.c              |   2 +-
-> > >  tools/perf/builtin-sched.c               |   6 +-
-> > >  tools/perf/builtin-stat.c                | 273 ++++++++++++-----------
-> > >  tools/perf/tests/topology.c              |  10 +-
-> > >  tools/perf/util/cpumap.c                 | 182 ++++++---------
-> > >  tools/perf/util/cpumap.h                 | 102 ++++++---
-> > >  tools/perf/util/cputopo.c                |   2 +-
-> > >  tools/perf/util/env.c                    |   6 +-
-> > >  tools/perf/util/stat-display.c           |  69 +++---
-> > >  tools/perf/util/stat.c                   |   9 +-
-> > >  tools/perf/util/stat.h                   |   3 +-
-> > >  15 files changed, 361 insertions(+), 336 deletions(-)
-> > >
-> >
-> > For the whole set:
-> >
-> > Reviewed-by: James Clark <james.clark@arm.com>
-> >
-> > I didn't see any obvious issues with mixing up aggregation modes or CPU/idx types. Also
-> > gave perf stat a test in the different modes and didn't see an issue.
-> >
-> > But I'm wondering if it's possible to go further and add a struct around the CPU int so that the
-> > compiler checks for correctness instead. It still seems quite easy to mix up index and
-> > CPU, for example these functions are subtly different, but both use int:
-> >
-> >   LIBPERF_API int perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx);
-> >   LIBPERF_API bool perf_cpu_map__has(const struct perf_cpu_map *map, int cpu);
-> >
-> > Something like this would make it impossible to make a mistake:
-> >
-> >   struct cpu { int cpu };
-> >
-> > I mean it's more of a coincidence that CPUs can be identified by an integer, but they are more
-> > of an object than an integer, so it could make sense to wrap it. But maybe it could be quite
-> > cumbersome to use and be overkill.
->
-> Thanks James! I am working on a v2 patch set and will have a go at
-> adding this to the end.
->
-> Ian
+callers of ids__new() function only do NULL checking for the return
+value. ids__new() calles hashmap__new(), which may return
+ERR_PTR(-ENOMEM). Instead of changing the checking one-by-one.
+return NULL instead of ERR_PTR(-ENOMEM) to keep
+consistent.
 
-I was checking on the style issues around wrapping an int with a
-struct, and it is preferred style to enforce strict type checking (by
-way of an old post):
-https://lore.kernel.org/all/ancug3$iq1$1@penguin.transmeta.com/
+---
+Changes in v3:
+fix compilation error and add tags.
+---
+Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+Tested-by: German Gomez <german.gomez@arm.com>
+Reviewed-by: German Gomez <german.gomez@arm.com>
+---
+ tools/perf/util/expr.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-Thanks,
-Ian
+diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+index 1d532b9fed29..f225247acc01 100644
+--- a/tools/perf/util/expr.c
++++ b/tools/perf/util/expr.c
+@@ -12,6 +12,7 @@
+ #include "expr-bison.h"
+ #include "expr-flex.h"
+ #include "smt.h"
++#include <linux/err.h>
+ #include <linux/kernel.h>
+ #include <linux/zalloc.h>
+ #include <ctype.h>
+@@ -65,7 +66,12 @@ static bool key_equal(const void *key1, const void *key2,
+ 
+ struct hashmap *ids__new(void)
+ {
+-	return hashmap__new(key_hash, key_equal, NULL);
++	struct hashmap *hash;
++
++	hash = hashmap__new(key_hash, key_equal, NULL);
++	if (IS_ERR(hash))
++		return NULL;
++	return hash;
+ }
+ 
+ void ids__free(struct hashmap *ids)
+-- 
+2.17.1
+
