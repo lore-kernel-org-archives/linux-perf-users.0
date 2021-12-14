@@ -2,200 +2,171 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FC1C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Dec 2021 03:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD32C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Dec 2021 08:50:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232762AbhLNDYt (ORCPT
+        id S231709AbhLNIu6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Dec 2021 22:24:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51026 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230155AbhLNDYs (ORCPT
+        Tue, 14 Dec 2021 03:50:58 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63062 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229577AbhLNIu4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Dec 2021 22:24:48 -0500
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75C73C061574
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Dec 2021 19:24:48 -0800 (PST)
-Received: by mail-pf1-x432.google.com with SMTP id r130so16744034pfc.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Dec 2021 19:24:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/FP25EAS0jWe9Bmq1xKTTtZhdfUiLLbdKe0jZzbjmTg=;
-        b=JjM/bjXFKsWhsVueD0GfNyJfbJKjzqPTfF/ptMJ3m+MFnQ/dlMCZMjSYyiCOXk1TiN
-         lyRxMDBc/hbhJAiB46dd/DM51W1AbpXTs4xyIcHCA4EdxN+JXwjqw80o8PMsotzboZ1L
-         9K9LuPB+DRXC22uUFXl5LGSuqRW/4vnNBdrxTAKHvsZvU5NZUAHfExbKC8arFiMcnyF9
-         8lbssUZJqfACm7bn8Q3t2x1k+a0Cwkrl5LmaMrIpqPO1l6R1lWM9fycG1NoDKOZzST5N
-         X6XlFpsGntjn5l9wJxVNLgR2JChtqOgsdDBS+407YEuufF0Ct1eTNNdydjD5EgKwKMS1
-         CBGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/FP25EAS0jWe9Bmq1xKTTtZhdfUiLLbdKe0jZzbjmTg=;
-        b=3tbe/cQws0F5AFOY8KXr1EJrCI0gmgvwgLNK8At6NdNkyL7AP1DfVlC1eXNZ6P1YYw
-         tDKqhszBwP9gvPbOF37NZHi5N7leNz+Vivp3ywBPHJSAth3KGK3/ps7ckoan/6ECNAtN
-         OZEUDf0w4VNERTA96+EUPgHp+JhCDSivmp+TNLr/MND1nbHFNTydrSG3Q+LH8WKB+8YF
-         3B8OkvSNTKud9tLiJfFHEUQSfjVTDdaEFa6UdJea4f8QLTFr2hSdGYJHUn+NAHP9TyJn
-         LSDvU3AXVAz8Rk80VaslZy7NlhKQkvjAyZETpcXtezQd9ZQDHEO0PCCWZaGHdLftbD0F
-         VJsw==
-X-Gm-Message-State: AOAM530GvbCuUajwNm3yWGxF9LEN1M3gCL34C4W1DlVoSjYViKiyYw8Q
-        tPP+QaGkryIxciNwBLMZomtjpw==
-X-Google-Smtp-Source: ABdhPJzGkMINKutzwLWAkv9ZT/ZuLyFvXUivYQOMJM0rW7WzL+i0zVRuVrlUPS+0PfxiYFMwS/SHVQ==
-X-Received: by 2002:a63:db17:: with SMTP id e23mr1940721pgg.420.1639452287590;
-        Mon, 13 Dec 2021 19:24:47 -0800 (PST)
-Received: from leoy-ThinkPad-X240s ([134.195.101.46])
-        by smtp.gmail.com with ESMTPSA id k15sm12876168pff.215.2021.12.13.19.24.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Dec 2021 19:24:47 -0800 (PST)
-Date:   Tue, 14 Dec 2021 11:24:36 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Tue, 14 Dec 2021 03:50:56 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1BE7RMvO008810;
+        Tue, 14 Dec 2021 08:50:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=BcpJ/UpqeJxNIiveNXiVlQEre/+90wWr4F5MRPHXDJY=;
+ b=Ky5uk5Y6zntkdzwrpA5FLrpyAUgyNFuOxlMkaY8ptVdoW89pG1HmK7NnbhqEcRUJFsA+
+ Aq9Ygw1DMkrY5aD88V9hO8yr1WTniXs8y8lztIgAPPdJsxTO21BfgTr8FaX0mHTKIk+W
+ 8iL/rqhxPgA+Fvhrl6DTSuXjr8eolUgKu+g2DvYALYxWcphSxqVjAHA9TlvBvs5k1gM1
+ rJP8YnQ432BgK1Ofiv3mDPQiw/R5HD7JNb36AOEDZ00LsqYcxrI9SQ68x+sQc+tVIDMv
+ 9WRmsugZLP5cWKGrRf0GXkX7/j1D3m8AmuiTnIKqpjFaFoTosANmtdWGxwbXCYTqLTiL Bw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3cx9r959qr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Dec 2021 08:50:44 +0000
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1BE8d3SV009362;
+        Tue, 14 Dec 2021 08:50:44 GMT
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3cx9r959pt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Dec 2021 08:50:43 +0000
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1BE8mImx010315;
+        Tue, 14 Dec 2021 08:50:41 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04fra.de.ibm.com with ESMTP id 3cvkma3a2y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Dec 2021 08:50:41 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1BE8ocVW23331222
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Dec 2021 08:50:38 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1B27D11C05C;
+        Tue, 14 Dec 2021 08:50:38 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8D58D11C050;
+        Tue, 14 Dec 2021 08:50:31 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.211.58.61])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 14 Dec 2021 08:50:31 +0000 (GMT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.120.0.1.13\))
+Subject: Re: [PATCH v2 0/3] Support register names of all architectures
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <20211207180653.1147374-1-german.gomez@arm.com>
+Date:   Tue, 14 Dec 2021 14:20:26 +0530
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Yonatan Goldschmidt <yonatan.goldschmidt@granulate.io>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] perf evlist: Don't run perf in non-root PID
- namespace when launch workload
-Message-ID: <20211214032436.GA1884193@leoy-ThinkPad-X240s>
-References: <20211212134721.1721245-1-leo.yan@linaro.org>
- <20211212134721.1721245-3-leo.yan@linaro.org>
- <6cad0a2e-c4b8-9788-fa0d-05405453a0dd@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6cad0a2e-c4b8-9788-fa0d-05405453a0dd@arm.com>
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <EAC4AC1D-A305-42E2-B22F-8B64B0968841@linux.vnet.ibm.com>
+References: <20211207180653.1147374-1-german.gomez@arm.com>
+To:     German Gomez <german.gomez@arm.com>
+X-Mailer: Apple Mail (2.3654.120.0.1.13)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 4pYMR2650eenVfoF_xsIo28t9GtHCBeW
+X-Proofpoint-ORIG-GUID: -TQEdgAQJkuIRqdFhVg5trriuFWzZKJb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
+ definitions=2021-12-14_03,2021-12-13_01,2021-12-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 phishscore=0 impostorscore=0 adultscore=0 spamscore=0
+ clxscore=1015 mlxlogscore=999 mlxscore=0 malwarescore=0 lowpriorityscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2112140048
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi James,
 
-On Mon, Dec 13, 2021 at 01:54:33PM +0000, James Clark wrote:
-> 
-> 
-> On 12/12/2021 13:47, Leo Yan wrote:
-> > In function evlist__prepare_workload(), after perf forks a child process
-> > and launches a workload in the created process, it needs to retrieve
-> > process and namespace related info via '/proc/$PID/' node.
-> > 
-> > The process folders under 'proc' file system use the PID number from the
-> > root PID namespace, when perf tool runs in non-root PID namespace and
-> > creates new process for profiled program, this leads to the perf tool
-> > wrongly gather process info since it uses PID from non-root namespace to
-> > access nodes under '/proc'.
-> > 
-> > Let's see an example:
-> > 
-> >   unshare --fork --pid perf record -e cs_etm//u -a -- test_program
-> > 
-> > This command runs perf tool and the profiled program 'test_program' in
-> > the non-root PID namespace.  When perf tool launches 'test_program',
-> > e.g. the forked PID number is 2, perf tool retrieves process info for
-> > 'test_program' from the folder '/proc/2'.  But '/proc/2' is actually for
-> > a kernel thread so perf tool wrongly gather info for 'test_program'.
-> 
-> Hi Leo,
-> 
-> Which features aren't working exactly when you run in a non root namespace?
 
-When perf tool lanches workload, it needs to synthesize samples for
-PERF_RECORD_COMM and PERF_RECORD_NAMESPACES, this can make sure the
-thread info has been prepared ahead before we decode hardware trace
-data (e.g. using Arm CoreSight, SPE, or Intel PT, etc).
+> On 07-Dec-2021, at 11:36 PM, German Gomez <german.gomez@arm.com> =
+wrote:
+>=20
+> The following changeset applies some corrections to the way system
+> registers are processed and presented when reading perf.data files =
+using
+> the various perf tools.
+>=20
+> The commit message from [3/3] shows how register names aren't =
+correctly
+> presented when performing x-arch analysis of perf.data files =
+(recording
+> in one arch, then reading the file from a different arch).
+>=20
+>  - [PATCH 1/3] Fixes a potential out-of-bounds access when reading the
+>    values of the registers in the perf.data file.
+>  - [PATCH 2/3] Fixes an issue of ARM and ARM64 registers having the
+>    same enum name.
+>  - [PATCH 3/3] Refactors the function "perf_reg_name" declared in the
+>   "tools/perf/util/perf_regs.h" header, in order to support every =
+arch.
+>=20
+> Thanks,
+> German
 
-Also please see the comment in perf record tool [1]:
+Looks good to me. Tested this patchset in powerpc by capturing regs in =
+powerpc and doing
+perf report to read the data from x86.
 
-"Some H/W events are generated before COMM event
-* which is emitted during exec(), so perf script
-* cannot see a correct process name for those events.
-* Synthesize COMM event to prevent it."
+Reviewed-and-Tested-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>=20
+> --
+> Changes since v1
+>=20
+>  - Added "Reported-by" tags.
+>  - Removed [PATCH 2/4] because it's not needed (suggested by Athira
+>    Rajeev).
+>  - Removed [PATCH 3/4] which created additional header files with the
+>    register names of every arch.
+>  - Introduced [PATCH 2/3] to deal with ARM and ARM64 registers having =
+the
+>    same enum name across "/tools/perf/".
+>  - Reworked the refactor of "perf_reg_name" function (now implemented =
+in
+>    perf_regs.c, rather than in the header file) in [PATCH 3/3].
+>=20
+> German Gomez (3):
+>  perf tools: Prevent out-of-bounds access to registers
+>  perf tools: Rename perf_event_arm_regs for ARM64 registers
+>  perf tools: Support register names from all archs
+>=20
+> tools/perf/arch/arm/include/perf_regs.h       |  42 --
+> tools/perf/arch/arm64/include/perf_regs.h     |  78 +-
+> tools/perf/arch/csky/include/perf_regs.h      |  82 ---
+> tools/perf/arch/mips/include/perf_regs.h      |  69 --
+> tools/perf/arch/powerpc/include/perf_regs.h   |  66 --
+> tools/perf/arch/riscv/include/perf_regs.h     |  74 --
+> tools/perf/arch/s390/include/perf_regs.h      |  78 --
+> tools/perf/arch/x86/include/perf_regs.h       |  82 ---
+> tools/perf/builtin-script.c                   |  18 +-
+> tools/perf/util/event.h                       |   5 +-
+> tools/perf/util/libunwind/arm64.c             |   2 +
+> tools/perf/util/perf_regs.c                   | 671 +++++++++++++++++-
+> tools/perf/util/perf_regs.h                   |  10 +-
+> .../scripting-engines/trace-event-python.c    |  10 +-
+> tools/perf/util/session.c                     |  25 +-
+> 15 files changed, 709 insertions(+), 603 deletions(-)
+>=20
+> --=20
+> 2.25.1
+>=20
 
-Unfortunately, when using the command "unshare --fork --pid perf
-record -e cs_etm//u --namespaces -a -- test_program", it uses
-the PID from non-root namespace to synthesize RECORD_COMM and
-RECORD_NAMESPACES events, but the PID number doesn't match with the
-process folders under /proc folder (which uses the root namespace's PID
-to create file node).  As result, perf tool uses pid 2 (from non-root
-namespace to capture a kernel thread info rather than the info for
-created workload:
-
-0x1ea90 [0x40]: event: 3
-.
-. ... raw event: size 64 bytes
-.  0000:  03 00 00 00 00 00 40 00 02 00 00 00 02 00 00 00  ......@.........
-.  0010:  6b 74 68 72 65 61 64 64 00 00 00 00 00 00 00 00  kthreadd........
-.  0020:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-.  0030:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-
-0 0 0x1ea90 [0x40]: PERF_RECORD_COMM: kthreadd:2/2
-
-0x1ead0 [0xa8]: event: 16
-.
-. ... raw event: size 168 bytes
-.  0000:  10 00 00 00 00 00 a8 00 02 00 00 00 02 00 00 00  ......?.........
-.  0010:  07 00 00 00 00 00 00 00 04 00 00 00 00 00 00 00  ................
-.  0020:  91 00 00 f0 00 00 00 00 04 00 00 00 00 00 00 00  ...?............
-.  0030:  fe ff ff ef 00 00 00 00 04 00 00 00 00 00 00 00  ????............
-.  0040:  ff ff ff ef 00 00 00 00 04 00 00 00 00 00 00 00  ????............
-.  0050:  fc ff ff ef 00 00 00 00 04 00 00 00 00 00 00 00  ????............
-.  0060:  fd ff ff ef 00 00 00 00 04 00 00 00 00 00 00 00  ????............
-.  0070:  00 00 00 f0 00 00 00 00 04 00 00 00 00 00 00 00  ...?............
-.  0080:  fb ff ff ef 00 00 00 00 00 00 00 00 00 00 00 00  ????............
-.  0090:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-.  00a0:  00 00 00 00 00 00 00 00                          ........        
-
-0 0 0x1ead0 [0xa8]: PERF_RECORD_NAMESPACES 2/2 - nr_namespaces: 7
-                [0/net: 4/0xf0000091, 1/uts: 4/0xeffffffe, 2/ipc: 4/0xefffffff, 3/pid: 4/0xeffffffc, 
-                 4/user: 4/0xeffffffd, 5/mnt: 4/0xf0000000, 6/cgroup: 4/0xeffffffb]
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/builtin-record.c#n1823
-
-> I did "perf record -- ls" and it seemed to be working for me. At least kernel
-> sampling would be working in a namespace, even if there was something wrong
-> with userspace.
-
-The issue is relevant with the hardware trace events.
-
-> I think causing a failure might be too restrictive and would prevent people
-> from using perf in a container. Maybe we could show a warning instead, but
-> I'm not sure exactly what's not working because I thought perf looked up stuff
-> based on the path of the process not the pid.
-
-Good point.  I am also worry that it is arbitrary to prevent perf to be
-used in the namespace, so this patch it doesn't forbid all cases for
-perf tool.  It only returns failure when perf tool tries to fork a
-new program.
-
-When perf tool runs in non-root PID namespace, since it still can access
-the process info from root file system's /proc node, this causes mess that
-the perf tool gathers process info from the root PID namespace.
-
-One thing I think I should dig deeper: can we dynamically update (or mount)
-/proc node when perf tool runs in non-root PID namespace so can ensure
-perf tool to only see the process nodes in the same non-root namespace?
-This can be a solution to avoid the perf tool gathers mess process info.
-If anyone know for this, also welcome suggestion, thanks a lot!
-
-Otherwise if we cannot find method to update '/proc' nodes, I think we
-still need this patch to return failure when detects perf running in
-non-root PID namespace.
-
-Thanks,
-Leo
