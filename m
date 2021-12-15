@@ -2,28 +2,30 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5031C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Dec 2021 16:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9D0C4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Dec 2021 16:23:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244556AbhLOQW6 (ORCPT
+        id S244753AbhLOQW7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Dec 2021 11:22:58 -0500
-Received: from foss.arm.com ([217.140.110.172]:56832 "EHLO foss.arm.com"
+        Wed, 15 Dec 2021 11:22:59 -0500
+Received: from foss.arm.com ([217.140.110.172]:56836 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244501AbhLOQW6 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Dec 2021 11:22:58 -0500
+        id S244501AbhLOQW7 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 15 Dec 2021 11:22:59 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CC5C46D
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Dec 2021 08:22:57 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC2CC6D
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Dec 2021 08:22:58 -0800 (PST)
 Received: from e126387.extremechicken.org (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 75F033F5A1
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Dec 2021 08:22:57 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 96F703F5A1
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Dec 2021 08:22:58 -0800 (PST)
 From:   carsten.haitzler@foss.arm.com
 To:     linux-perf-users@vger.kernel.org
-Subject: [PATCH 01/12] perf test: Shell - Limit to only run executable scripts in tests
-Date:   Wed, 15 Dec 2021 16:22:39 +0000
-Message-Id: <20211215162250.70322-1-carsten.haitzler@foss.arm.com>
+Subject: [PATCH 03/12] perf test: Use 3 digits for test numbering now we can have more tests
+Date:   Wed, 15 Dec 2021 16:22:41 +0000
+Message-Id: <20211215162250.70322-3-carsten.haitzler@foss.arm.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20211215162250.70322-1-carsten.haitzler@foss.arm.com>
+References: <20211215162250.70322-1-carsten.haitzler@foss.arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -32,67 +34,71 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 From: Carsten Haitzler <carsten.haitzler@arm.com>
 
-Perf test's shell runner will just run everything in the tests
-directory (as long as it's not another directory or does not begin
-with a dot), but sometimes you find files in there that are not shell
-scripts - perf.data output for example if you do some testing and then
-the next time you run perf test it tries to run these. Check the files
-are executable so they are actually intended to be test scripts and
-not just some "random junk" files there.
+This is in preparation for adding more tests that will need the test
+number to be 3 digts so they align nicely in the output.
 
 Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
 ---
- tools/perf/tests/builtin-test.c |  4 +++-
- tools/perf/util/path.c          | 12 ++++++++++++
- tools/perf/util/path.h          |  1 +
- 3 files changed, 16 insertions(+), 1 deletion(-)
+ tools/perf/tests/builtin-test.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 8cb5a1c3489e..ece272b55587 100644
+index 849737ead9fd..8652dcc4912c 100644
 --- a/tools/perf/tests/builtin-test.c
 +++ b/tools/perf/tests/builtin-test.c
-@@ -295,7 +295,9 @@ static const char *shell_test__description(char *description, size_t size,
+@@ -435,7 +435,7 @@ static int run_shell_tests(int argc, const char *argv[], int i, int width,
+ 			continue;
  
- #define for_each_shell_test(entlist, nr, base, ent)	                \
- 	for (int __i = 0; __i < nr && (ent = entlist[__i]); __i++)	\
--		if (!is_directory(base, ent) && ent->d_name[0] != '.')
-+		if (!is_directory(base, ent) && \
-+			is_executable_file(base, ent) && \
-+			ent->d_name[0] != '.')
+ 		st.file = ent->d_name;
+-		pr_info("%2d: %-*s:", i, width, test_suite.desc);
++		pr_info("%3d: %-*s:", i, width, test_suite.desc);
  
- static const char *shell_tests__dir(char *path, size_t size)
- {
-diff --git a/tools/perf/util/path.c b/tools/perf/util/path.c
-index caed0336429f..7dde8c230ae8 100644
---- a/tools/perf/util/path.c
-+++ b/tools/perf/util/path.c
-@@ -92,3 +92,15 @@ bool is_directory(const char *base_path, const struct dirent *dent)
+ 		if (intlist__find(skiplist, i)) {
+ 			color_fprintf(stderr, PERF_COLOR_YELLOW, " Skip (user override)\n");
+@@ -485,7 +485,7 @@ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
+ 				continue;
+ 		}
  
- 	return S_ISDIR(st.st_mode);
- }
-+
-+bool is_executable_file(const char *base_path, const struct dirent *dent)
-+{
-+	char path[PATH_MAX];
-+	struct stat st;
-+
-+	sprintf(path, "%s/%s", base_path, dent->d_name);
-+	if (stat(path, &st))
-+		return false;
-+
-+	return !S_ISDIR(st.st_mode) && (st.st_mode & S_IXUSR);
-+}
-diff --git a/tools/perf/util/path.h b/tools/perf/util/path.h
-index 083429b7efa3..d94902c22222 100644
---- a/tools/perf/util/path.h
-+++ b/tools/perf/util/path.h
-@@ -12,5 +12,6 @@ int path__join3(char *bf, size_t size, const char *path1, const char *path2, con
+-		pr_info("%2d: %-*s:", i, width, test_description(t, -1));
++		pr_info("%3d: %-*s:", i, width, test_description(t, -1));
  
- bool is_regular_file(const char *file);
- bool is_directory(const char *base_path, const struct dirent *dent);
-+bool is_executable_file(const char *base_path, const struct dirent *dent);
+ 		if (intlist__find(skiplist, i)) {
+ 			color_fprintf(stderr, PERF_COLOR_YELLOW, " Skip (user override)\n");
+@@ -525,7 +525,7 @@ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
+ 							curr, argc, argv))
+ 					continue;
  
- #endif /* _PERF_PATH_H */
+-				pr_info("%2d.%1d: %-*s:", i, subi + 1, subw,
++				pr_info("%3d.%1d: %-*s:", i, subi + 1, subw,
+ 					test_description(t, subi));
+ 				test_and_print(t, subi);
+ 			}
+@@ -560,7 +560,7 @@ static int perf_test__list_shell(int argc, const char **argv, int i)
+ 		if (!perf_test__matches(t.desc, curr, argc, argv))
+ 			continue;
+ 
+-		pr_info("%2d: %s\n", i, t.desc);
++		pr_info("%3d: %s\n", i, t.desc);
+ 
+ 	}
+ 
+@@ -582,14 +582,14 @@ static int perf_test__list(int argc, const char **argv)
+ 		if (!perf_test__matches(test_description(t, -1), curr, argc, argv))
+ 			continue;
+ 
+-		pr_info("%2d: %s\n", i, test_description(t, -1));
++		pr_info("%3d: %s\n", i, test_description(t, -1));
+ 
+ 		if (has_subtests(t)) {
+ 			int subn = num_subtests(t);
+ 			int subi;
+ 
+ 			for (subi = 0; subi < subn; subi++)
+-				pr_info("%2d:%1d: %s\n", i, subi + 1,
++				pr_info("%3d:%1d: %s\n", i, subi + 1,
+ 					test_description(t, subi));
+ 		}
+ 	}
 -- 
 2.32.0
 
