@@ -2,164 +2,106 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BB4C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Dec 2021 16:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 771DEC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Dec 2021 17:34:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234927AbhLOQhx (ORCPT
+        id S229941AbhLORe5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Dec 2021 11:37:53 -0500
-Received: from foss.arm.com ([217.140.110.172]:57304 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230350AbhLOQhx (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Dec 2021 11:37:53 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A94886D;
-        Wed, 15 Dec 2021 08:37:52 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.67.176])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A283E3F5A1;
-        Wed, 15 Dec 2021 08:37:50 -0800 (PST)
-Date:   Wed, 15 Dec 2021 16:37:47 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     German Gomez <german.gomez@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, Alexandre Truong <alexandre.truong@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 4/6] perf tools: enable dwarf_callchain_users on arm64
-Message-ID: <YboZ24EMD/4lVkyp@FVFF77S0Q05N>
-References: <20211215151139.40854-1-german.gomez@arm.com>
- <20211215151139.40854-5-german.gomez@arm.com>
+        Wed, 15 Dec 2021 12:34:57 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4297 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232118AbhLORe5 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 15 Dec 2021 12:34:57 -0500
+Received: from fraeml701-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JDj4Z2zBFz6H7jn;
+        Thu, 16 Dec 2021 01:32:46 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml701-chm.china.huawei.com (10.206.15.50) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.20; Wed, 15 Dec 2021 18:34:55 +0100
+Received: from [10.47.93.135] (10.47.93.135) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Wed, 15 Dec
+ 2021 17:34:54 +0000
+Subject: Re: [PATCH v2] perf list: Display hybrid pmu events with cpu type
+From:   John Garry <john.garry@huawei.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     <jolsa@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <alexander.shishkin@linux.intel.com>,
+        <Linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <ak@linux.intel.com>, <kan.liang@intel.com>,
+        "irogers@google.com" <irogers@google.com>
+References: <20210903025239.22754-1-yao.jin@linux.intel.com>
+ <YW81L7j06Mf13QmC@kernel.org>
+ <be6e0b56-ba29-a2ee-c153-d5aec102b587@huawei.com>
+Message-ID: <2bf7048d-2c20-8d3f-1b37-18a4056490a3@huawei.com>
+Date:   Wed, 15 Dec 2021 17:34:32 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211215151139.40854-5-german.gomez@arm.com>
+In-Reply-To: <be6e0b56-ba29-a2ee-c153-d5aec102b587@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.93.135]
+X-ClientProxiedBy: lhreml734-chm.china.huawei.com (10.201.108.85) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Dec 15, 2021 at 03:11:36PM +0000, German Gomez wrote:
-> From: Alexandre Truong <alexandre.truong@arm.com>
-> 
-> On arm64, enable dwarf_callchain_users which will be needed
-> to do a dwarf unwind in order to get the caller of the leaf frame.
-> 
-> Signed-off-by: Alexandre Truong <alexandre.truong@arm.com>
-> Signed-off-by: German Gomez <german.gomez@arm.com>
-> ---
->  tools/perf/builtin-report.c | 4 ++--
->  tools/perf/builtin-script.c | 4 ++--
->  tools/perf/util/callchain.c | 9 ++++++++-
->  tools/perf/util/callchain.h | 2 +-
->  4 files changed, 13 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> index 8167ebfe776a..a31ad60ba66e 100644
-> --- a/tools/perf/builtin-report.c
-> +++ b/tools/perf/builtin-report.c
-> @@ -410,7 +410,7 @@ static int report__setup_sample_type(struct report *rep)
->  		}
->  	}
->  
-> -	callchain_param_setup(sample_type);
-> +	callchain_param_setup(sample_type, perf_env__arch(&rep->session->header.env));
->  
->  	if (rep->stitch_lbr && (callchain_param.record_mode != CALLCHAIN_LBR)) {
->  		ui__warning("Can't find LBR callchain. Switch off --stitch-lbr.\n"
-> @@ -1124,7 +1124,7 @@ static int process_attr(struct perf_tool *tool __maybe_unused,
->  	 * on events sample_type.
->  	 */
->  	sample_type = evlist__combined_sample_type(*pevlist);
-> -	callchain_param_setup(sample_type);
-> +	callchain_param_setup(sample_type, perf_env__arch((*pevlist)->env));
->  	return 0;
->  }
->  
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index ab7d575f97f2..d308adfd1176 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -2318,7 +2318,7 @@ static int process_attr(struct perf_tool *tool, union perf_event *event,
->  	 * on events sample_type.
->  	 */
->  	sample_type = evlist__combined_sample_type(evlist);
-> -	callchain_param_setup(sample_type);
-> +	callchain_param_setup(sample_type, perf_env__arch((*pevlist)->env));
->  
->  	/* Enable fields for callchain entries */
->  	if (symbol_conf.use_callchain &&
-> @@ -3468,7 +3468,7 @@ static void script__setup_sample_type(struct perf_script *script)
->  	struct perf_session *session = script->session;
->  	u64 sample_type = evlist__combined_sample_type(session->evlist);
->  
-> -	callchain_param_setup(sample_type);
-> +	callchain_param_setup(sample_type, perf_env__arch(session->machines.host.env));
->  
->  	if (script->stitch_lbr && (callchain_param.record_mode != CALLCHAIN_LBR)) {
->  		pr_warning("Can't find LBR callchain. Switch off --stitch-lbr.\n"
-> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-> index 8e2777133bd9..aaab9a674807 100644
-> --- a/tools/perf/util/callchain.c
-> +++ b/tools/perf/util/callchain.c
-> @@ -1600,7 +1600,7 @@ void callchain_cursor_reset(struct callchain_cursor *cursor)
->  		map__zput(node->ms.map);
->  }
->  
-> -void callchain_param_setup(u64 sample_type)
-> +void callchain_param_setup(u64 sample_type, const char *arch)
->  {
->  	if (symbol_conf.use_callchain || symbol_conf.cumulate_callchain) {
->  		if ((sample_type & PERF_SAMPLE_REGS_USER) &&
-> @@ -1612,6 +1612,13 @@ void callchain_param_setup(u64 sample_type)
->  		else
->  			callchain_param.record_mode = CALLCHAIN_FP;
->  	}
-> +
-> +	/*
-> +	 * It's possible to determine the caller of leaf frames with omitted
-> +	 * frame pointers on aarch64 using libunwind, so enable it.
-> +	 */
+On 15/12/2021 16:18, John Garry wrote:
 
-I reckon it's worth mentioning *why* we need to do this; how about:
+- yao.jin@linux.intel.com, yao.jin@intel.com
 
-	/*
-	 * It's necessary to use libunwind to reliably determine the caller of
-	 * a leaf function on aarch64, as otherwise we cannot know whether to
-	 * start from the LR or FP.
-	 *
-	 * Always starting from the LR can result in duplicate or entirely
-	 * erroneous entries. Always skipping the LR and starting from the FP
-	 * can result in missing entries.
-	 */
+Both these author addresses bounce for me :(
 
-Other than that, this looks fine to me!
+And it's not just my arm64 platform which is damaged, but also my x86 
+broadwell machine - uncore aliasing for perf list is broken
+
+Before snippet:
+unc_cbo_cache_lookup.any_es
+[Unit: uncore_cbox L3 Lookup any request that access cache and found 
+line in E or S-state]
+unc_cbo_cache_lookup.any_i
+[Unit: uncore_cbox L3 Lookup any request that access cache and found 
+line in I-state]
+
+After snippet:
+unc_cbo_cache_lookup.any_es
+[Unit: uncore_cbox L3 Lookup any request that access cache and found 
+line in E or S-state]
+unc_cbo_cache_lookup.any_es
+[Unit: uncore_cbox L3 Lookup any request that access cache and found 
+line in E or S-state]
+unc_cbo_cache_lookup.any_i
+[Unit: uncore_cbox L3 Lookup any request that access cache and found 
+line in I-state]
+unc_cbo_cache_lookup.any_i
+[Unit: uncore_cbox L3 Lookup any request that access cache and found 
+line in I-state]
+
+Notice how the events are repeated (twice, for each cbox PMU) after, 
+when they should not be.
+
+This seems to be the broken code added in print_pmu_events():
+
+ > qsort(aliases, len, sizeof(struct sevent), cmp_sevent);
+ > for (j = 0; j < len; j++) {
+ > /* Skip duplicates */
+ > - if (j > 0 && !strcmp(aliases[j].name, aliases[j - 1].name))
+ > - continue;
+ > + if (j > 0 && !strcmp(aliases[j].name, aliases[j - 1].name)) {
+ > + if (!aliases[j].pmu || !aliases[j - 1].pmu ||
+ > + !strcmp(aliases[j].pmu, aliases[j - 1].pmu)) {
+ > + continue;
+ > + }
+ > + }
+
+Anyone an idea on the !strcmp(aliases[j].pmu, aliases[j - 1].pmu) check 
+or how to fix it?
 
 Thanks,
-Mark.
-
-> +	if (callchain_param.record_mode == CALLCHAIN_FP && !strcmp(arch, "arm64"))
-> +		dwarf_callchain_users = true;
->  }
->  
->  static bool chain_match(struct callchain_list *base_chain,
-> diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
-> index 77fba053c677..d95615daed73 100644
-> --- a/tools/perf/util/callchain.h
-> +++ b/tools/perf/util/callchain.h
-> @@ -300,7 +300,7 @@ int callchain_branch_counts(struct callchain_root *root,
->  			    u64 *branch_count, u64 *predicted_count,
->  			    u64 *abort_count, u64 *cycles_count);
->  
-> -void callchain_param_setup(u64 sample_type);
-> +void callchain_param_setup(u64 sample_type, const char *arch);
->  
->  bool callchain_cnode_matched(struct callchain_node *base_cnode,
->  			     struct callchain_node *pair_cnode);
-> -- 
-> 2.25.1
-> 
+John
