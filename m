@@ -2,23 +2,23 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7037C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Dec 2021 16:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BB4C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Dec 2021 16:37:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244843AbhLOQdt (ORCPT
+        id S234927AbhLOQhx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Dec 2021 11:33:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:57148 "EHLO foss.arm.com"
+        Wed, 15 Dec 2021 11:37:53 -0500
+Received: from foss.arm.com ([217.140.110.172]:57304 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244841AbhLOQds (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Dec 2021 11:33:48 -0500
+        id S230350AbhLOQhx (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 15 Dec 2021 11:37:53 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6EBF26D;
-        Wed, 15 Dec 2021 08:33:48 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A94886D;
+        Wed, 15 Dec 2021 08:37:52 -0800 (PST)
 Received: from FVFF77S0Q05N (unknown [10.57.67.176])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7279A3F5A1;
-        Wed, 15 Dec 2021 08:33:46 -0800 (PST)
-Date:   Wed, 15 Dec 2021 16:33:43 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A283E3F5A1;
+        Wed, 15 Dec 2021 08:37:50 -0800 (PST)
+Date:   Wed, 15 Dec 2021 16:37:47 +0000
 From:   Mark Rutland <mark.rutland@arm.com>
 To:     German Gomez <german.gomez@arm.com>
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
@@ -31,303 +31,135 @@ Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 6/6] perf tools: determine if LR is the return address
-Message-ID: <YboY541H4dVJDjyp@FVFF77S0Q05N>
+Subject: Re: [PATCH v4 4/6] perf tools: enable dwarf_callchain_users on arm64
+Message-ID: <YboZ24EMD/4lVkyp@FVFF77S0Q05N>
 References: <20211215151139.40854-1-german.gomez@arm.com>
- <20211215151139.40854-7-german.gomez@arm.com>
+ <20211215151139.40854-5-german.gomez@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211215151139.40854-7-german.gomez@arm.com>
+In-Reply-To: <20211215151139.40854-5-german.gomez@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
-
-On Wed, Dec 15, 2021 at 03:11:38PM +0000, German Gomez wrote:
+On Wed, Dec 15, 2021 at 03:11:36PM +0000, German Gomez wrote:
 > From: Alexandre Truong <alexandre.truong@arm.com>
 > 
-> On arm64 and frame pointer mode (e.g: perf record --callgraph fp),
-> use dwarf unwind info to check if the link register is the return
-> address in order to inject it to the frame pointer stack.
-
-This series looks good overall, but as a general note the commit messages are a
-bit hard to read because they jump into implementation details of the patch
-(i.e. the change the patch makes) before explaining the problem (i.e. what the
-patch is trying to solve).
-
-It would be nice to have a short introduction, e.g.
-
-  When unwinding using frame pointers on arm64, the return address of the
-  current leaf function may be missed. The return address of a leaf function
-  may live in the LR and/or a frame record (and the location can change within
-  a function), so it is necessary to use DWARF to identify where to look for
-  the return address at any given point during a function.
-
-  For example:
-
-  unsigned long foo(unsigned long i)
-  {
-          i += 2;
-	  i += 5;
-  }
-
-  ... could be compiled as:
-
-  foo:
-  	// return addr in LR
-  	add	x0, x0, #2
-	// return addr in LR
-	stp	x29, x30, [SP, #-16]!
-	// return addr in LR
-	mov	x29, sp
-	// return addr in LR *and* frame record
-	add	x0, x0, #5
-	// return addr in LR *and* frame record
-	ldp	x29, x30, [sp], #16
-	// return addr in LR
-	ret
-
-> Write the following application:
-> 
-> 	int a = 10;
-> 
-> 	void f2(void)
-> 	{
-> 		for (int i = 0; i < 1000000; i++)
-> 			a *= a;
-> 	}
-> 
-> 	void f1()
-> 	{
-> 		for (int i = 0; i < 10; i++)
-> 			f2();
-> 	}
-> 
-> 	int main(void)
-> 	{
-> 		f1();
-> 		return 0;
-> 	}
-> 
-> with the following compilation flags:
->         gcc -fno-omit-frame-pointer -fno-inline -O2
-> 
-> The compiler omits the frame pointer for f2 on arm. This is a problem
-> with any leaf call, for example an application with many different
-> calls to malloc() would always omit the calling frame, even if it
-> can be determined.
-
-I think the wording here is slightly misleading. For f2, the compiler *doesn't
-create a frame record*, but the frame pointer (to the caller's frame record)
-remains and is not omitted.
-
-Also, I think it's woth noting (as per the example I gave above) this applies
-to *any* function which is the current leaf function, regardless of whether
-that function creates a frame record at some point. For example, if `f1` is
-interrupted before it creates its own frame record (or after it destroys the
-frame record), the FP will point at the record created by `main` (containing
-the caller of main), and `main` itself will be missing from the unwind as it
-will only exist in the LR.
-
-> 	./perf record --call-graph fp ./a.out
-> 	./perf report
-> 
-> currently gives the following stack:
-> 
-> 0xffffea52f361
-> _start
-> __libc_start_main
-> main
-> f2
-> 
-> After this change, perf report correctly shows f1() calling f2(),
-> even though it was missing from the frame pointer unwind:
-> 
-> 	./perf report
-> 
-> 0xffffea52f361
-> _start
-> __libc_start_main
-> main
-> f1
-> f2
+> On arm64, enable dwarf_callchain_users which will be needed
+> to do a dwarf unwind in order to get the caller of the leaf frame.
 > 
 > Signed-off-by: Alexandre Truong <alexandre.truong@arm.com>
 > Signed-off-by: German Gomez <german.gomez@arm.com>
 > ---
->  tools/perf/util/Build                         |  1 +
->  .../util/arm64-frame-pointer-unwind-support.c | 63 +++++++++++++++++++
->  .../util/arm64-frame-pointer-unwind-support.h | 10 +++
->  tools/perf/util/machine.c                     | 19 ++++--
->  tools/perf/util/machine.h                     |  1 +
->  5 files changed, 89 insertions(+), 5 deletions(-)
->  create mode 100644 tools/perf/util/arm64-frame-pointer-unwind-support.c
->  create mode 100644 tools/perf/util/arm64-frame-pointer-unwind-support.h
+>  tools/perf/builtin-report.c | 4 ++--
+>  tools/perf/builtin-script.c | 4 ++--
+>  tools/perf/util/callchain.c | 9 ++++++++-
+>  tools/perf/util/callchain.h | 2 +-
+>  4 files changed, 13 insertions(+), 6 deletions(-)
 > 
-> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> index 2e5bfbb69960..03d4c647bd86 100644
-> --- a/tools/perf/util/Build
-> +++ b/tools/perf/util/Build
-> @@ -1,3 +1,4 @@
-> +perf-y += arm64-frame-pointer-unwind-support.o
->  perf-y += annotate.o
->  perf-y += block-info.o
->  perf-y += block-range.o
-> diff --git a/tools/perf/util/arm64-frame-pointer-unwind-support.c b/tools/perf/util/arm64-frame-pointer-unwind-support.c
-> new file mode 100644
-> index 000000000000..4f5ecf51ed38
-> --- /dev/null
-> +++ b/tools/perf/util/arm64-frame-pointer-unwind-support.c
-> @@ -0,0 +1,63 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include "arm64-frame-pointer-unwind-support.h"
-> +#include "callchain.h"
-> +#include "event.h"
-> +#include "perf_regs.h" // SMPL_REG_MASK
-> +#include "unwind.h"
-> +
-> +#define perf_event_arm_regs perf_event_arm64_regs
-> +#include "../arch/arm64/include/uapi/asm/perf_regs.h"
-> +#undef perf_event_arm_regs
-> +
-> +struct entries {
-> +	u64 stack[2];
-> +	size_t length;
-> +};
-> +
-> +static bool get_leaf_frame_caller_enabled(struct perf_sample *sample)
-> +{
-> +	return callchain_param.record_mode == CALLCHAIN_FP && sample->user_regs.regs
-> +		&& sample->user_regs.mask & SMPL_REG_MASK(PERF_REG_ARM64_LR);
-> +}
-> +
-> +static int add_entry(struct unwind_entry *entry, void *arg)
-> +{
-> +	struct entries *entries = arg;
-> +
-> +	entries->stack[entries->length++] = entry->ip;
-> +	return 0;
-> +}
-> +
-> +u64 get_leaf_frame_caller_aarch64(struct perf_sample *sample, struct thread *thread, int usr_idx)
-> +{
-> +	int ret;
-> +	struct entries entries = {};
-> +	struct regs_dump old_regs = sample->user_regs;
-> +
-> +	if (!get_leaf_frame_caller_enabled(sample))
-> +		return 0;
+> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> index 8167ebfe776a..a31ad60ba66e 100644
+> --- a/tools/perf/builtin-report.c
+> +++ b/tools/perf/builtin-report.c
+> @@ -410,7 +410,7 @@ static int report__setup_sample_type(struct report *rep)
+>  		}
+>  	}
+>  
+> -	callchain_param_setup(sample_type);
+> +	callchain_param_setup(sample_type, perf_env__arch(&rep->session->header.env));
+>  
+>  	if (rep->stitch_lbr && (callchain_param.record_mode != CALLCHAIN_LBR)) {
+>  		ui__warning("Can't find LBR callchain. Switch off --stitch-lbr.\n"
+> @@ -1124,7 +1124,7 @@ static int process_attr(struct perf_tool *tool __maybe_unused,
+>  	 * on events sample_type.
+>  	 */
+>  	sample_type = evlist__combined_sample_type(*pevlist);
+> -	callchain_param_setup(sample_type);
+> +	callchain_param_setup(sample_type, perf_env__arch((*pevlist)->env));
+>  	return 0;
+>  }
+>  
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index ab7d575f97f2..d308adfd1176 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -2318,7 +2318,7 @@ static int process_attr(struct perf_tool *tool, union perf_event *event,
+>  	 * on events sample_type.
+>  	 */
+>  	sample_type = evlist__combined_sample_type(evlist);
+> -	callchain_param_setup(sample_type);
+> +	callchain_param_setup(sample_type, perf_env__arch((*pevlist)->env));
+>  
+>  	/* Enable fields for callchain entries */
+>  	if (symbol_conf.use_callchain &&
+> @@ -3468,7 +3468,7 @@ static void script__setup_sample_type(struct perf_script *script)
+>  	struct perf_session *session = script->session;
+>  	u64 sample_type = evlist__combined_sample_type(session->evlist);
+>  
+> -	callchain_param_setup(sample_type);
+> +	callchain_param_setup(sample_type, perf_env__arch(session->machines.host.env));
+>  
+>  	if (script->stitch_lbr && (callchain_param.record_mode != CALLCHAIN_LBR)) {
+>  		pr_warning("Can't find LBR callchain. Switch off --stitch-lbr.\n"
+> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+> index 8e2777133bd9..aaab9a674807 100644
+> --- a/tools/perf/util/callchain.c
+> +++ b/tools/perf/util/callchain.c
+> @@ -1600,7 +1600,7 @@ void callchain_cursor_reset(struct callchain_cursor *cursor)
+>  		map__zput(node->ms.map);
+>  }
+>  
+> -void callchain_param_setup(u64 sample_type)
+> +void callchain_param_setup(u64 sample_type, const char *arch)
+>  {
+>  	if (symbol_conf.use_callchain || symbol_conf.cumulate_callchain) {
+>  		if ((sample_type & PERF_SAMPLE_REGS_USER) &&
+> @@ -1612,6 +1612,13 @@ void callchain_param_setup(u64 sample_type)
+>  		else
+>  			callchain_param.record_mode = CALLCHAIN_FP;
+>  	}
 > +
 > +	/*
-> +	 * If PC and SP are not recorded, get the value of PC from the stack
-> +	 * and set its mask. SP is not used when doing the unwinding but it
-> +	 * still needs to be set to prevent failures.
+> +	 * It's possible to determine the caller of leaf frames with omitted
+> +	 * frame pointers on aarch64 using libunwind, so enable it.
 > +	 */
 
-To prevent failures where? Is this something libunwind requires?
+I reckon it's worth mentioning *why* we need to do this; how about:
+
+	/*
+	 * It's necessary to use libunwind to reliably determine the caller of
+	 * a leaf function on aarch64, as otherwise we cannot know whether to
+	 * start from the LR or FP.
+	 *
+	 * Always starting from the LR can result in duplicate or entirely
+	 * erroneous entries. Always skipping the LR and starting from the FP
+	 * can result in missing entries.
+	 */
+
+Other than that, this looks fine to me!
 
 Thanks,
 Mark.
 
-> +	if (!(sample->user_regs.mask & SMPL_REG_MASK(PERF_REG_ARM64_PC))) {
-> +		sample->user_regs.cache_mask |= SMPL_REG_MASK(PERF_REG_ARM64_PC);
-> +		sample->user_regs.cache_regs[PERF_REG_ARM64_PC] = sample->callchain->ips[usr_idx+1];
-> +	}
-> +
-> +	if (!(sample->user_regs.mask & SMPL_REG_MASK(PERF_REG_ARM64_SP))) {
-> +		sample->user_regs.cache_mask |= SMPL_REG_MASK(PERF_REG_ARM64_SP);
-> +		sample->user_regs.cache_regs[PERF_REG_ARM64_SP] = 0;
-> +	}
-> +
-> +	ret = unwind__get_entries(add_entry, &entries, thread, sample, 2);
-> +	sample->user_regs = old_regs;
-> +
-> +	if (ret || entries.length != 2)
-> +		return ret;
-> +
-> +	return callchain_param.order == ORDER_CALLER ? entries.stack[0] : entries.stack[1];
-> +}
-> diff --git a/tools/perf/util/arm64-frame-pointer-unwind-support.h b/tools/perf/util/arm64-frame-pointer-unwind-support.h
-> new file mode 100644
-> index 000000000000..32af9ce94398
-> --- /dev/null
-> +++ b/tools/perf/util/arm64-frame-pointer-unwind-support.h
-> @@ -0,0 +1,10 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __PERF_ARM_FRAME_POINTER_UNWIND_SUPPORT_H
-> +#define __PERF_ARM_FRAME_POINTER_UNWIND_SUPPORT_H
-> +
-> +#include "event.h"
-> +#include "thread.h"
-> +
-> +u64 get_leaf_frame_caller_aarch64(struct perf_sample *sample, struct thread *thread, int user_idx);
-> +
-> +#endif /* __PERF_ARM_FRAME_POINTER_UNWIND_SUPPORT_H */
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index 3eddad009f78..a00fd6796b35 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -34,6 +34,7 @@
->  #include "bpf-event.h"
->  #include <internal/lib.h> // page_size
->  #include "cgroup.h"
-> +#include "arm64-frame-pointer-unwind-support.h"
->  
->  #include <linux/ctype.h>
->  #include <symbol/kallsyms.h>
-> @@ -2710,10 +2711,13 @@ static int find_prev_cpumode(struct ip_callchain *chain, struct thread *thread,
->  	return err;
+> +	if (callchain_param.record_mode == CALLCHAIN_FP && !strcmp(arch, "arm64"))
+> +		dwarf_callchain_users = true;
 >  }
 >  
-> -static u64 get_leaf_frame_caller(struct perf_sample *sample __maybe_unused,
-> -		struct thread *thread __maybe_unused, int usr_idx __maybe_unused)
-> +static u64 get_leaf_frame_caller(struct perf_sample *sample,
-> +		struct thread *thread, int usr_idx)
->  {
-> -	return 0;
-> +	if (machine__normalize_is(thread->maps->machine, "arm64"))
-> +		return get_leaf_frame_caller_aarch64(sample, thread, usr_idx);
-> +	else
-> +		return 0;
->  }
+>  static bool chain_match(struct callchain_list *base_chain,
+> diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
+> index 77fba053c677..d95615daed73 100644
+> --- a/tools/perf/util/callchain.h
+> +++ b/tools/perf/util/callchain.h
+> @@ -300,7 +300,7 @@ int callchain_branch_counts(struct callchain_root *root,
+>  			    u64 *branch_count, u64 *predicted_count,
+>  			    u64 *abort_count, u64 *cycles_count);
 >  
->  static int thread__resolve_callchain_sample(struct thread *thread,
-> @@ -3114,14 +3118,19 @@ int machine__set_current_tid(struct machine *machine, int cpu, pid_t pid,
->  }
+> -void callchain_param_setup(u64 sample_type);
+> +void callchain_param_setup(u64 sample_type, const char *arch);
 >  
->  /*
-> - * Compares the raw arch string. N.B. see instead perf_env__arch() if a
-> - * normalized arch is needed.
-> + * Compares the raw arch string. N.B. see instead perf_env__arch() or
-> + * machine__normalize_is() if a normalized arch is needed.
->   */
->  bool machine__is(struct machine *machine, const char *arch)
->  {
->  	return machine && !strcmp(perf_env__raw_arch(machine->env), arch);
->  }
->  
-> +bool machine__normalize_is(struct machine *machine, const char *arch)
-> +{
-> +	return machine && !strcmp(perf_env__arch(machine->env), arch);
-> +}
-> +
->  int machine__nr_cpus_avail(struct machine *machine)
->  {
->  	return machine ? perf_env__nr_cpus_avail(machine->env) : 0;
-> diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-> index a143087eeb47..665535153411 100644
-> --- a/tools/perf/util/machine.h
-> +++ b/tools/perf/util/machine.h
-> @@ -208,6 +208,7 @@ static inline bool machine__is_host(struct machine *machine)
->  }
->  
->  bool machine__is(struct machine *machine, const char *arch);
-> +bool machine__normalize_is(struct machine *machine, const char *arch);
->  int machine__nr_cpus_avail(struct machine *machine);
->  
->  struct thread *__machine__findnew_thread(struct machine *machine, pid_t pid, pid_t tid);
+>  bool callchain_cnode_matched(struct callchain_node *base_cnode,
+>  			     struct callchain_node *pair_cnode);
 > -- 
 > 2.25.1
 > 
