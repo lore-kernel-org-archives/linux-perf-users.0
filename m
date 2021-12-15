@@ -2,171 +2,78 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A161C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Dec 2021 18:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 675E4C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Dec 2021 23:56:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238841AbhLOSqP (ORCPT
+        id S232108AbhLOX4t (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Dec 2021 13:46:15 -0500
-Received: from foss.arm.com ([217.140.110.172]:60270 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232870AbhLOSqO (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Dec 2021 13:46:14 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B12931435;
-        Wed, 15 Dec 2021 10:46:13 -0800 (PST)
-Received: from ip-10-252-15-108.eu-west-1.compute.internal (unknown [10.252.15.108])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9F90C3F5A1;
-        Wed, 15 Dec 2021 10:46:11 -0800 (PST)
-From:   German Gomez <german.gomez@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc:     German Gomez <german.gomez@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2] perf arm-spe: Synthesize SPE instruction events
-Date:   Wed, 15 Dec 2021 18:46:05 +0000
-Message-Id: <20211215184605.92787-1-german.gomez@arm.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 15 Dec 2021 18:56:49 -0500
+Received: from st43p00im-ztfb10071701.me.com ([17.58.63.173]:51168 "EHLO
+        st43p00im-ztfb10071701.me.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232079AbhLOX4s (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 15 Dec 2021 18:56:48 -0500
+X-Greylist: delayed 575 seconds by postgrey-1.27 at vger.kernel.org; Wed, 15 Dec 2021 18:56:48 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai;
+        t=1639612033; bh=nabJC3GdjoIrUeYiQY+wdpND8yaRU8eF0J3qCFIkJHI=;
+        h=From:Content-Type:Mime-Version:Subject:Message-Id:Date:To;
+        b=heza7IPpQGOtXfhQ/+mEElhzjeuPLs+qWmg/LzyiJirGa9uV+OCgVsFzofG2JgUY2
+         lW5AtZn5pB+nCbe6Vg/CXsQmN5c4w7aQFW2uo8l6zhwo/YB3JT3p9NMLwQqAi8+3Nv
+         lV+6+NjJ3P7VlO9CKQ98C58Z0i9y95xiInNrN8d6skw9Va7vRgPZeQEmEhmOPgSlJz
+         oD+7H/1l6MUOOvrQ1Xi7xkEVFI+nle3vlObYYwxDOGkNQVmUWc4z4h3cFzUMpVeOBy
+         KH0yyhRhALLnaWt43O18QxyVgb/NeP92T6ebS+KSNd4PqCY5EDdkD9c3TEFCTNi13j
+         8+I9cwjlWRVFw==
+Received: from smtpclient.apple (cpe-66-24-82-52.stny.res.rr.com [66.24.82.52])
+        by st43p00im-ztfb10071701.me.com (Postfix) with ESMTPSA id 3606E8A069C
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Dec 2021 23:47:13 +0000 (UTC)
+From:   Timothy Miller <theosib@me.com>
+Content-Type: text/plain;
+        charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.120.0.1.13\))
+Subject: perf not showing me call graph for memcpy no matter what.
+Message-Id: <4296BD20-DEBC-4A20-ACF0-EE46A1AD20CC@me.com>
+Date:   Wed, 15 Dec 2021 18:47:12 -0500
+To:     linux-perf-users@vger.kernel.org
+X-Mailer: Apple Mail (2.3654.120.0.1.13)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.425,18.0.790
+ definitions=2021-12-15_09:2021-12-13,2021-12-15 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 clxscore=1011 mlxscore=0
+ mlxlogscore=600 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-2009150000 definitions=main-2112150129
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Synthesize instruction events per every decoded ARM SPE record.
+Hi,
 
-Because Arm SPE implements a hardware-based sample period, and perf
-implements a software-based one that gets applied on top, also add a
-warning to make the user aware.
+I am doing some software profiling on an aarch64 system, and I=E2=80=99m =
+using the Linux perf tool. The problem I=E2=80=99m running into is that =
+=E2=80=9C__GI___memcpy_simd=E2=80=9D keeps showing up as the function =
+with the most CPU usage.
 
-Signed-off-by: German Gomez <german.gomez@arm.com>
----
-Changes since v1 [https://lore.kernel.org/all/20211117142833.226629-1-german.gomez@arm.com]
-  - Generate events with "--itrace=i" instead of "--itrace=o".
-  - Generate events with virt_addr, phys_addr, and data_src values.
----
- tools/perf/util/arm-spe.c | 58 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
+Unfortunately, no matter what I do, this function keeps showing up as =
+orphaned. That is, I cannot get a stack trace for it so I can find out =
+who is calling it.
 
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index fccac06b573a..879583822c8f 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -58,6 +58,8 @@ struct arm_spe {
- 	u8				sample_branch;
- 	u8				sample_remote_access;
- 	u8				sample_memory;
-+	u8				sample_instructions;
-+	u64				instructions_sample_period;
- 
- 	u64				l1d_miss_id;
- 	u64				l1d_access_id;
-@@ -68,6 +70,7 @@ struct arm_spe {
- 	u64				branch_miss_id;
- 	u64				remote_access_id;
- 	u64				memory_id;
-+	u64				instructions_id;
- 
- 	u64				kernel_start;
- 
-@@ -90,6 +93,7 @@ struct arm_spe_queue {
- 	u64				time;
- 	u64				timestamp;
- 	struct thread			*thread;
-+	u64				period_instructions;
- };
- 
- static void arm_spe_dump(struct arm_spe *spe __maybe_unused,
-@@ -202,6 +206,7 @@ static struct arm_spe_queue *arm_spe__alloc_queue(struct arm_spe *spe,
- 	speq->pid = -1;
- 	speq->tid = -1;
- 	speq->cpu = -1;
-+	speq->period_instructions = 0;
- 
- 	/* params set */
- 	params.get_trace = arm_spe_get_trace;
-@@ -351,6 +356,33 @@ static int arm_spe__synth_branch_sample(struct arm_spe_queue *speq,
- 	return arm_spe_deliver_synth_event(spe, speq, event, &sample);
- }
- 
-+static int arm_spe__synth_instruction_sample(struct arm_spe_queue *speq,
-+					     u64 spe_events_id, u64 data_src)
-+{
-+	struct arm_spe *spe = speq->spe;
-+	struct arm_spe_record *record = &speq->decoder->record;
-+	union perf_event *event = speq->event_buf;
-+	struct perf_sample sample = { .ip = 0, };
-+
-+	/*
-+	 * Handles perf instruction sampling period.
-+	 */
-+	speq->period_instructions++;
-+	if (speq->period_instructions < spe->instructions_sample_period)
-+		return 0;
-+	speq->period_instructions = 0;
-+
-+	arm_spe_prep_sample(spe, speq, event, &sample);
-+
-+	sample.id = spe_events_id;
-+	sample.stream_id = spe_events_id;
-+	sample.addr = record->virt_addr;
-+	sample.phys_addr = record->phys_addr;
-+	sample.data_src = data_src;
-+
-+	return arm_spe_deliver_synth_event(spe, speq, event, &sample);
-+}
-+
- #define SPE_MEM_TYPE	(ARM_SPE_L1D_ACCESS | ARM_SPE_L1D_MISS | \
- 			 ARM_SPE_LLC_ACCESS | ARM_SPE_LLC_MISS | \
- 			 ARM_SPE_REMOTE_ACCESS)
-@@ -480,6 +512,12 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
- 			return err;
- 	}
- 
-+	if (spe->sample_instructions) {
-+		err = arm_spe__synth_instruction_sample(speq, spe->instructions_id, data_src);
-+		if (err)
-+			return err;
-+	}
-+
- 	return 0;
- }
- 
-@@ -1107,6 +1145,26 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
- 			return err;
- 		spe->memory_id = id;
- 		arm_spe_set_event_name(evlist, id, "memory");
-+		id += 1;
-+	}
-+
-+	if (spe->synth_opts.instructions) {
-+		if (spe->synth_opts.period_type != PERF_ITRACE_PERIOD_INSTRUCTIONS)
-+			return -EINVAL;
-+
-+		if (spe->synth_opts.period > 1)
-+			pr_warning("Arm SPE has a hardware-based sample period.\n"
-+				   "More instruction events will be discarded by --itrace\n");
-+
-+		spe->sample_instructions = true;
-+		attr.config = PERF_COUNT_HW_INSTRUCTIONS;
-+		attr.sample_period = spe->synth_opts.period;
-+		spe->instructions_sample_period = attr.sample_period;
-+		err = arm_spe_synth_event(session, &attr, id);
-+		if (err)
-+			return err;
-+		spe->instructions_id = id;
-+		arm_spe_set_event_name(evlist, id, "instructions");
- 	}
- 
- 	return 0;
--- 
-2.25.1
+I have tried using dwarf mode, but it always gets overloaded.
 
+I have tried using lbr mode, but I get the following error:
+    Error:
+    PMU Hardware doesn't support sampling/overflow-interrupts.
+
+I=E2=80=99ve rebuilt my application and all relevant libraries with =
+-no-omit-frame-pointer so that I could use the default frame pointer =
+mode. Unfortunately, I still can=E2=80=99t get a call graph for this =
+function.
+
+I emailed the glibc mailing list about this, trying to find out how to =
+work around this problem, perhaps adding frame pointer to the assembly =
+implementation of memcpy. They suggested I try attaching a debugger, and =
+I=E2=80=99ve found that I can get stack traces just fine. They suggest =
+that I seem to be running into some kind of bug in perf.=20
+
+Any help/advice would be appreciated.
+
+Thanks.=
