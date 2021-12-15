@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21645C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Dec 2021 16:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C79C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Dec 2021 16:23:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244762AbhLOQXG (ORCPT
+        id S244755AbhLOQXG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Wed, 15 Dec 2021 11:23:06 -0500
-Received: from foss.arm.com ([217.140.110.172]:56856 "EHLO foss.arm.com"
+Received: from foss.arm.com ([217.140.110.172]:56854 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244765AbhLOQXF (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Dec 2021 11:23:05 -0500
+        id S244764AbhLOQXE (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 15 Dec 2021 11:23:04 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9A93214BF
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 123F36D
         for <linux-perf-users@vger.kernel.org>; Wed, 15 Dec 2021 08:23:04 -0800 (PST)
 Received: from e126387.extremechicken.org (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 45AAB3F5A1
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Dec 2021 08:23:04 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B13A53F5A1
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Dec 2021 08:23:03 -0800 (PST)
 From:   carsten.haitzler@foss.arm.com
 To:     linux-perf-users@vger.kernel.org
-Subject: [PATCH 12/12] perf test: Add docs for coresight and related tests
-Date:   Wed, 15 Dec 2021 16:22:50 +0000
-Message-Id: <20211215162250.70322-12-carsten.haitzler@foss.arm.com>
+Subject: [PATCH 11/12] perf test: Add unrolled loop tests for coresight aux data
+Date:   Wed, 15 Dec 2021 16:22:49 +0000
+Message-Id: <20211215162250.70322-11-carsten.haitzler@foss.arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20211215162250.70322-1-carsten.haitzler@foss.arm.com>
 References: <20211215162250.70322-1-carsten.haitzler@foss.arm.com>
@@ -34,174 +34,278 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 From: Carsten Haitzler <carsten.haitzler@arm.com>
 
-This adds documentation about the coresight specific tests as part of
-perf test
+These tests have large batches of code manually unrolled with macros
+to ensure that the processor has to walk through a lot of instructions
+and memory for those instructions to generate the coresight aux data.
 
 Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
 ---
- MAINTAINERS                                |   1 +
- tools/perf/Documentation/arm-coresight.txt | 140 +++++++++++++++++++++
- 2 files changed, 141 insertions(+)
- create mode 100644 tools/perf/Documentation/arm-coresight.txt
+ .../shell/coresight_unroll_loop_thread_1.sh   | 18 +++++
+ .../shell/coresight_unroll_loop_thread_10.sh  | 18 +++++
+ .../shell/coresight_unroll_loop_thread_2.sh   | 18 +++++
+ .../shell/coresight_unroll_loop_thread_25.sh  | 18 +++++
+ .../shell/coresight_unroll_loop_thread_250.sh | 18 +++++
+ .../perf/tests/shell/tools/coresight/Makefile |  3 +-
+ .../coresight/unroll_loop_thread/Makefile     | 29 ++++++++
+ .../unroll_loop_thread/unroll_loop_thread.c   | 74 +++++++++++++++++++
+ 8 files changed, 195 insertions(+), 1 deletion(-)
+ create mode 100755 tools/perf/tests/shell/coresight_unroll_loop_thread_1.sh
+ create mode 100755 tools/perf/tests/shell/coresight_unroll_loop_thread_10.sh
+ create mode 100755 tools/perf/tests/shell/coresight_unroll_loop_thread_2.sh
+ create mode 100755 tools/perf/tests/shell/coresight_unroll_loop_thread_25.sh
+ create mode 100755 tools/perf/tests/shell/coresight_unroll_loop_thread_250.sh
+ create mode 100644 tools/perf/tests/shell/tools/coresight/unroll_loop_thread/Makefile
+ create mode 100644 tools/perf/tests/shell/tools/coresight/unroll_loop_thread/unroll_loop_thread.c
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d46e8469c467..1a93977a0132 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1890,6 +1890,7 @@ F:	Documentation/trace/coresight/*
- F:	drivers/hwtracing/coresight/*
- F:	include/dt-bindings/arm/coresight-cti-dt.h
- F:	include/linux/coresight*
-+F:	tools/perf/Documentation/arm-coresight.txt
- F:	tools/perf/arch/arm/util/auxtrace.c
- F:	tools/perf/arch/arm/util/cs-etm.c
- F:	tools/perf/arch/arm/util/cs-etm.h
-diff --git a/tools/perf/Documentation/arm-coresight.txt b/tools/perf/Documentation/arm-coresight.txt
-new file mode 100644
-index 000000000000..3a9e6c573c58
+diff --git a/tools/perf/tests/shell/coresight_unroll_loop_thread_1.sh b/tools/perf/tests/shell/coresight_unroll_loop_thread_1.sh
+new file mode 100755
+index 000000000000..9175ec532bd8
 --- /dev/null
-+++ b/tools/perf/Documentation/arm-coresight.txt
-@@ -0,0 +1,140 @@
-+Arm Coresight Support
-+=====================
++++ b/tools/perf/tests/shell/coresight_unroll_loop_thread_1.sh
+@@ -0,0 +1,18 @@
++#!/bin/sh -e
++# Coresight / Unroll Loop Thread 1
 +
-+Coresight is a feature of some Arm based processors that allows for
-+debugging. One of the things it can do is trace every instruction
-+executed and remotely expose that information in a hardware compressed
-+stream. Perf is able to locally access that stream and store it to the
-+output perf data files. This stream can then be later decoded to give the
-+instructions that were traced for debugging or profiling purposes. You
-+can log such data with a perf record command like:
++# SPDX-License-Identifier: GPL-2.0
++# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
 +
-+    perf record -e cs_etm//u testbinary
++TEST="unroll_loop_thread"
++. $(dirname $0)/lib/coresight.sh
++ARGS="1"
++DATV="1"
++DATA="$DATD/perf-$TEST-$DATV.data"
 +
-+This would run some test binary (testbinary) until it exits and record
-+a perf.data trace file. That file would have AUX sections if coresight
-+is working correctly. You can dump the content of this file as
-+readable text with a command like:
++perf record $PERFRECOPT -o "$DATA" "$BIN" $ARGS
 +
-+    perf report --stdio --dump -i perf.data
++perf_dump_aux_verify "$DATA" 118 14 14
 +
-+You should find some sections of this file have AUX data blocks like:
++err=$?
++exit $err
+diff --git a/tools/perf/tests/shell/coresight_unroll_loop_thread_10.sh b/tools/perf/tests/shell/coresight_unroll_loop_thread_10.sh
+new file mode 100755
+index 000000000000..66cf0245294e
+--- /dev/null
++++ b/tools/perf/tests/shell/coresight_unroll_loop_thread_10.sh
+@@ -0,0 +1,18 @@
++#!/bin/sh -e
++# Coresight / Unroll Loop Thread 10
 +
-+    0x1e78 [0x30]: PERF_RECORD_AUXTRACE size: 0x11dd0  offset: 0  ref: 0x1b614fc1061b0ad1  idx: 0  tid: 531230  cpu: -1
++# SPDX-License-Identifier: GPL-2.0
++# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
 +
-+    . ... CoreSight ETM Trace data: size 73168 bytes
-+            Idx:0; ID:10;   I_ASYNC : Alignment Synchronisation.
-+              Idx:12; ID:10;  I_TRACE_INFO : Trace Info.; INFO=0x0 { CC.0 }
-+              Idx:17; ID:10;  I_ADDR_L_64IS0 : Address, Long, 64 bit, IS0.; Addr=0x0000000000000000;
-+              Idx:26; ID:10;  I_TRACE_ON : Trace On.
-+              Idx:27; ID:10;  I_ADDR_CTXT_L_64IS0 : Address & Context, Long, 64 bit, IS0.; Addr=0x0000FFFFB6069140; Ctxt: AArch64,EL0, NS;
-+              Idx:38; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEEEEEEEEEEEEEE
-+              Idx:39; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEEEEEEEEEEEEEE
-+              Idx:40; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEEEEEEEEEEEEEE
-+              Idx:41; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEN
-+              ...
++TEST="unroll_loop_thread"
++. $(dirname $0)/lib/coresight.sh
++ARGS="10"
++DATV="10"
++DATA="$DATD/perf-$TEST-$DATV.data"
 +
-+If you see these above, then your system is tracing coresight data
-+correctly.
++perf record $PERFRECOPT -o "$DATA" "$BIN" $ARGS
 +
-+To compile perf with coresight support in the perf directory do
++perf_dump_aux_verify "$DATA" 127 17 17
 +
-+    make CORESIGHT=1
++err=$?
++exit $err
+diff --git a/tools/perf/tests/shell/coresight_unroll_loop_thread_2.sh b/tools/perf/tests/shell/coresight_unroll_loop_thread_2.sh
+new file mode 100755
+index 000000000000..ff2e293699b0
+--- /dev/null
++++ b/tools/perf/tests/shell/coresight_unroll_loop_thread_2.sh
+@@ -0,0 +1,18 @@
++#!/bin/sh -e
++# Coresight / Unroll Loop Thread 2
 +
-+This will compile the perf tool with coresight support as well as
-+build some small test binaries for perf test. This requires you also
-+be compiling for 64bit Arm (ARM64/aarch64). The tools run as part of
-+perf coresight tracing are in tests/shell/tools/coresight.
++# SPDX-License-Identifier: GPL-2.0
++# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
 +
-+You will also want coresight support enabled in your kernel config.
-+Ensure it is enabled with:
++TEST="unroll_loop_thread"
++. $(dirname $0)/lib/coresight.sh
++ARGS="2"
++DATV="2"
++DATA="$DATD/perf-$TEST-$DATV.data"
 +
-+    CONFIG_CORESIGHT=y
++perf record $PERFRECOPT -o "$DATA" "$BIN" $ARGS
 +
-+There are various other coresight options you probably also want
-+enabled like:
++perf_dump_aux_verify "$DATA" 65 6 6
 +
-+    CONFIG_CORESIGHT_LINKS_AND_SINKS=y
-+    CONFIG_CORESIGHT_LINK_AND_SINK_TMC=y
-+    CONFIG_CORESIGHT_CATU=y
-+    CONFIG_CORESIGHT_SINK_TPIU=y
-+    CONFIG_CORESIGHT_SINK_ETBV10=y
-+    CONFIG_CORESIGHT_SOURCE_ETM4X=y
-+    CONFIG_CORESIGHT_STM=y
-+    CONFIG_CORESIGHT_CPU_DEBUG=y
-+    CONFIG_CORESIGHT_CTI=y
-+    CONFIG_CORESIGHT_CTI_INTEGRATION_REGS=y
++err=$?
++exit $err
+diff --git a/tools/perf/tests/shell/coresight_unroll_loop_thread_25.sh b/tools/perf/tests/shell/coresight_unroll_loop_thread_25.sh
+new file mode 100755
+index 000000000000..7d7669a797ab
+--- /dev/null
++++ b/tools/perf/tests/shell/coresight_unroll_loop_thread_25.sh
+@@ -0,0 +1,18 @@
++#!/bin/sh -e
++# Coresight / Unroll Loop Thread 25
 +
-+Please refer to the kernel configuration help for more information.
++# SPDX-License-Identifier: GPL-2.0
++# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
 +
-+Perf test - Verify kernel and userspace perf coresight work
-+===========================================================
++TEST="unroll_loop_thread"
++. $(dirname $0)/lib/coresight.sh
++ARGS="25"
++DATV="25"
++DATA="$DATD/perf-$TEST-$DATV.data"
 +
-+When you run perf test, it will do a lot of self tests. Some of those
-+tests will cover Coresight (only if enabled and on ARM64). You
-+generally would run perf test from the tools/perf directory in the
-+kernel tree. Some tests will check some internal perf support like:
++perf record $PERFRECOPT -o "$DATA" "$BIN" $ARGS
 +
-+    Check Arm CoreSight trace data recording and synthesized samples
++perf_dump_aux_verify "$DATA" 72 26 25
 +
-+Some others will actually use perf record and some test binaries that
-+are in tests/shell/tools/coresight and will collect traces to ensure a
-+minimum level of functionality is met. The scripts that launch these
-+tests are in tests/shell. These will all look like:
++err=$?
++exit $err
+diff --git a/tools/perf/tests/shell/coresight_unroll_loop_thread_250.sh b/tools/perf/tests/shell/coresight_unroll_loop_thread_250.sh
+new file mode 100755
+index 000000000000..7a0e23aff0dc
+--- /dev/null
++++ b/tools/perf/tests/shell/coresight_unroll_loop_thread_250.sh
+@@ -0,0 +1,18 @@
++#!/bin/sh -e
++# Coresight / Unroll Loop Thread 250
 +
-+    Coresight / Memcpy 1M 25 Threads
-+    Coresight / Unroll Loop Thread 2
-+    ...
++# SPDX-License-Identifier: GPL-2.0
++# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
 +
-+These perf record tests will not run if the tool binaries do not exist
-+in tests/shell/tools/coresight/*/ and will be skipped. If you do not
-+have coresight support in hardware then either do not build perf with
-+coresight support or remove these binaries in order to not have these
-+tests fail and have them skip instead.
++TEST="unroll_loop_thread"
++. $(dirname $0)/lib/coresight.sh
++ARGS="250"
++DATV="250"
++DATA="$DATD/perf-$TEST-$DATV.data"
 +
-+These tests will log historical results in the current working
-+directory (e.g. tools/perf) and will be named stats-*.csv like:
++perf record $PERFRECOPT -o "$DATA" "$BIN" $ARGS
 +
-+    stats-asm_pure_loop-out.csv
-+    stats-bubble_sort-random.csv
-+    ...
++perf_dump_aux_verify "$DATA" 544 2417 2417
 +
-+These statistic files log some aspects of the AUX data sections in
-+the perf data output counting some numbers of certain encodings (a
-+good way to know that it's working in a very simple way). One problem
-+with coresight is that given a large enough amount of data needing to
-+be logged, some of it can be lost due to the processor not waking up
-+in time to read out all the data from buffers etc.. You will notice
-+that the amount of data collected can vary a lot per run of perf test.
-+If you wish to see how this changes over time, simply run perf test
-+multiple times and all these csv files will have more and more data
-+appended to it that you can later examine, graph and otherwise use to
-+figure out if things have become worse or better.
++err=$?
++exit $err
+diff --git a/tools/perf/tests/shell/tools/coresight/Makefile b/tools/perf/tests/shell/tools/coresight/Makefile
+index be671aac06b8..b9cdeff1149b 100644
+--- a/tools/perf/tests/shell/tools/coresight/Makefile
++++ b/tools/perf/tests/shell/tools/coresight/Makefile
+@@ -10,7 +10,8 @@ SUBDIRS = \
+ 	bubble_sort \
+ 	bubble_sort_thread \
+         memcpy \
+-        memcpy_thread
++        memcpy_thread \
++        unroll_loop_thread
+ 
+ all: $(SUBDIRS)
+ $(SUBDIRS):
+diff --git a/tools/perf/tests/shell/tools/coresight/unroll_loop_thread/Makefile b/tools/perf/tests/shell/tools/coresight/unroll_loop_thread/Makefile
+new file mode 100644
+index 000000000000..45ab2be8be92
+--- /dev/null
++++ b/tools/perf/tests/shell/tools/coresight/unroll_loop_thread/Makefile
+@@ -0,0 +1,29 @@
++# SPDX-License-Identifier: GPL-2.0
++# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
++include ../Makefile.miniconfig
 +
-+Be aware that amny of these tests take quite a while to run, specifically
-+in processing the perf data file and dumping contents to then examine what
-+is inside.
++BIN=unroll_loop_thread
++LIB=-pthread
 +
-+You can change where these csv logs are stored by setting the
-+PERF_TEST_CORESIGHT_STATDIR environment variable before running perf
-+test like:
++all: $(BIN)
 +
-+    export PERF_TEST_CORESIGHT_STATDIR=/var/tmp
-+    perf test
++$(BIN): $(BIN).c
++ifdef CORESIGHT
++ifeq ($(ARCH),arm64)
++	$(Q)$(CC) $(BIN).c -o $(BIN) $(LIB)
++endif
++endif
 +
-+They will also store resulting perf output data in the current
-+directory for later inspection like:
++install-tests: all
++ifdef CORESIGHT
++ifeq ($(ARCH),arm64)
++	$(call QUIET_INSTALL, tests) \
++		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/tools/$(BIN)'; \
++		$(INSTALL) $(BIN) '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/tools/$(BIN)/$(BIN)'
++endif
++endif
 +
-+    perf-memcpy-1m.data
-+    perf-thread_loop-2th.data
-+    ...
++clean:
++	$(Q)$(RM) -f $(BIN)
 +
-+You can alter where the perf data files are stored by setting the
-+PERF_TEST_CORESIGHT_DATADIR environment variable such as:
++.PHONY: all clean install-tests
+diff --git a/tools/perf/tests/shell/tools/coresight/unroll_loop_thread/unroll_loop_thread.c b/tools/perf/tests/shell/tools/coresight/unroll_loop_thread/unroll_loop_thread.c
+new file mode 100644
+index 000000000000..cb9d22c7dfb9
+--- /dev/null
++++ b/tools/perf/tests/shell/tools/coresight/unroll_loop_thread/unroll_loop_thread.c
+@@ -0,0 +1,74 @@
++// SPDX-License-Identifier: GPL-2.0
++// Carsten Haitzler <carsten.haitzler@arm.com>, 2021
++#include <stdio.h>
++#include <stdlib.h>
++#include <unistd.h>
++#include <string.h>
++#include <pthread.h>
 +
-+    PERF_TEST_CORESIGHT_DATADIR=/var/tmp
-+    perf test
++struct args {
++	pthread_t th;
++	unsigned int in, out;
++	void *ret;
++};
 +
-+You may wish to set these above environment variables if you which to
-+keep the output of tests outside of the current working directory for
-+longer term storage and examination.
++static void *thrfn(void *arg)
++{
++	struct args *a = arg;
++	unsigned int i, in = a->in;
++
++	for (i = 0; i < 10000; i++) {
++		asm volatile (
++// force an unroll of thia add instruction so we can test long runs of code
++#define SNIP1 "add %[in], %[in], #1\n"
++// 10
++#define SNIP2 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1
++// 100
++#define SNIP3 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2
++// 1000
++#define SNIP4 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3
++// 10000
++#define SNIP5 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4
++// 100000
++			SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5
++			: /* out */
++			: /* in */ [in] "r" (in)
++			: /* clobber */
++		);
++	}
++}
++
++static pthread_t new_thr(void *(*fn) (void *arg), void *arg)
++{
++	pthread_t t;
++	pthread_attr_t attr;
++
++	pthread_attr_init(&attr);
++	pthread_create(&t, &attr, fn, arg);
++	return t;
++}
++
++int main(int argc, char **argv)
++{
++	unsigned int i, thr;
++	pthread_t threads[256];
++	struct args args[256];
++
++	if (argc < 2) {
++		printf("ERR: %s [numthreads]\n", argv[0]);
++		exit(1);
++	}
++
++	thr = atoi(argv[1]);
++	if ((thr > 256) || (thr < 1)) {
++		printf("ERR: threads 1-256\n");
++		exit(1);
++	}
++	for (i = 0; i < thr; i++) {
++		args[i].in = rand();
++		args[i].th = new_thr(thrfn, &(args[i]));
++	}
++	for (i = 0; i < thr; i++)
++		pthread_join(args[i].th, &(args[i].ret));
++	return 0;
++}
 -- 
 2.32.0
 
