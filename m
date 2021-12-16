@@ -2,218 +2,148 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0F5C433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Dec 2021 15:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D3AC433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Dec 2021 15:15:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238194AbhLPPAk (ORCPT
+        id S237951AbhLPPPR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 16 Dec 2021 10:00:40 -0500
-Received: from foss.arm.com ([217.140.110.172]:44790 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238197AbhLPPAi (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 16 Dec 2021 10:00:38 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5B081435;
-        Thu, 16 Dec 2021 07:00:36 -0800 (PST)
-Received: from [10.1.26.143] (e127744.cambridge.arm.com [10.1.26.143])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB3F93F73B;
-        Thu, 16 Dec 2021 07:00:34 -0800 (PST)
-Subject: Re: [PATCH v2] perf arm-spe: Synthesize SPE instruction events
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <20211215184605.92787-1-german.gomez@arm.com>
- <20211216111157.GA27239@leoy-ThinkPad-X240s>
-From:   German Gomez <german.gomez@arm.com>
-Message-ID: <76953319-ec86-02b9-75c3-6e62c15b7f11@arm.com>
-Date:   Thu, 16 Dec 2021 15:00:23 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Thu, 16 Dec 2021 10:15:17 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7964 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S238360AbhLPPPQ (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 16 Dec 2021 10:15:16 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1BGEDKOd015755;
+        Thu, 16 Dec 2021 15:15:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=hKNKycRym3x9GHWCfz5lPHDwoZeaptYTWMEuVKi0io0=;
+ b=X1zfZ2A1zak2cBZeKz4w10dF8KH3xFIXZDGAj06SgZrkdjGEVUyPMgPS1FAeLD5iSycJ
+ 92G/LgMaZBJxYCn3CUVaXe7HLZ/vlX6lWqKNCiDoU2FyF++Sjk0Og2g/bqsxlhwz12w4
+ KE2fxoGektgxETYXm8oa85TommdItC1d2hf7o21ZW4468+tlGOef3hAfq/McDWnjV6aR
+ OI0OOU7LE3WPwrtjBmedx8ekxm6hW+uZxK6R6fs06KJq3DTp8o7scLlVsN+glEnDYVzV
+ 4Fas4MTYkd3NO6u2AI3u4PMVvXIOLu6Y+chzkDg6u0F6AQFak04VHKLBJA4S77wNSiLK eg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3cyfdprxue-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Dec 2021 15:15:14 +0000
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1BGEfiSJ017181;
+        Thu, 16 Dec 2021 15:15:14 GMT
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3cyfdprxth-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Dec 2021 15:15:14 +0000
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1BGFDO9j030426;
+        Thu, 16 Dec 2021 15:15:12 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma06fra.de.ibm.com with ESMTP id 3cy77pfrdk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Dec 2021 15:15:11 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1BGFF89f44433800
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Dec 2021 15:15:08 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 59A81A405B;
+        Thu, 16 Dec 2021 15:15:08 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 09736A4067;
+        Thu, 16 Dec 2021 15:15:08 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 16 Dec 2021 15:15:07 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, elver@google.com
+Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf test: Test 73 Sig_trap fails on s390
+Date:   Thu, 16 Dec 2021 16:14:54 +0100
+Message-Id: <20211216151454.752066-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-In-Reply-To: <20211216111157.GA27239@leoy-ThinkPad-X240s>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: SfazHpssHIBWLqbeXf5A0qrVQZ8GLHQl
+X-Proofpoint-ORIG-GUID: g43JBdnIIbzwi1s_H2pnMktZt41VATPJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
+ definitions=2021-12-16_05,2021-12-16_01,2021-12-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 mlxlogscore=999 adultscore=0 priorityscore=1501
+ phishscore=0 malwarescore=0 spamscore=0 impostorscore=0 bulkscore=0
+ mlxscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2112160085
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Leo,
+In Linux next kernel
+Commit 5504f67944484 ("perf test sigtrap: Add basic stress test for sigtrap handling")
+introduced the new test which uses breakpoint events.
+These events are not supported on s390 and PowerPC and always fail:
 
-Thanks for your comments. I'll send a revised patch shortly.
+ # perf test -F 73
+ 73: Sigtrap                                                         : FAILED!
+ #
 
-Thanks,
-German
+Fix it the same way as in the breakpoint tests in file
+tests/bp_account.c where these type of tests are skipped on
+s390 and PowerPC platforms.
 
-On 16/12/2021 11:11, Leo Yan wrote:
-> Hi German,
->
-> On Wed, Dec 15, 2021 at 06:46:05PM +0000, German Gomez wrote:
->> Synthesize instruction events per every decoded ARM SPE record.
->>
->> Because Arm SPE implements a hardware-based sample period, and perf
->> implements a software-based one that gets applied on top, also add a
->> warning to make the user aware.
->>
->> Signed-off-by: German Gomez <german.gomez@arm.com>
->> ---
->> Changes since v1 [https://lore.kernel.org/all/20211117142833.226629-1-german.gomez@arm.com]
->>   - Generate events with "--itrace=i" instead of "--itrace=o".
->>   - Generate events with virt_addr, phys_addr, and data_src values.
->> ---
->>  tools/perf/util/arm-spe.c | 58 +++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 58 insertions(+)
->>
->> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
->> index fccac06b573a..879583822c8f 100644
->> --- a/tools/perf/util/arm-spe.c
->> +++ b/tools/perf/util/arm-spe.c
->> @@ -58,6 +58,8 @@ struct arm_spe {
->>  	u8				sample_branch;
->>  	u8				sample_remote_access;
->>  	u8				sample_memory;
->> +	u8				sample_instructions;
->> +	u64				instructions_sample_period;
->>  
->>  	u64				l1d_miss_id;
->>  	u64				l1d_access_id;
->> @@ -68,6 +70,7 @@ struct arm_spe {
->>  	u64				branch_miss_id;
->>  	u64				remote_access_id;
->>  	u64				memory_id;
->> +	u64				instructions_id;
->>  
->>  	u64				kernel_start;
->>  
->> @@ -90,6 +93,7 @@ struct arm_spe_queue {
->>  	u64				time;
->>  	u64				timestamp;
->>  	struct thread			*thread;
->> +	u64				period_instructions;
->>  };
->>  
->>  static void arm_spe_dump(struct arm_spe *spe __maybe_unused,
->> @@ -202,6 +206,7 @@ static struct arm_spe_queue *arm_spe__alloc_queue(struct arm_spe *spe,
->>  	speq->pid = -1;
->>  	speq->tid = -1;
->>  	speq->cpu = -1;
->> +	speq->period_instructions = 0;
->>  
->>  	/* params set */
->>  	params.get_trace = arm_spe_get_trace;
->> @@ -351,6 +356,33 @@ static int arm_spe__synth_branch_sample(struct arm_spe_queue *speq,
->>  	return arm_spe_deliver_synth_event(spe, speq, event, &sample);
->>  }
->>  
->> +static int arm_spe__synth_instruction_sample(struct arm_spe_queue *speq,
->> +					     u64 spe_events_id, u64 data_src)
->> +{
->> +	struct arm_spe *spe = speq->spe;
->> +	struct arm_spe_record *record = &speq->decoder->record;
->> +	union perf_event *event = speq->event_buf;
->> +	struct perf_sample sample = { .ip = 0, };
->> +
->> +	/*
->> +	 * Handles perf instruction sampling period.
->> +	 */
->> +	speq->period_instructions++;
->> +	if (speq->period_instructions < spe->instructions_sample_period)
->> +		return 0;
->> +	speq->period_instructions = 0;
->> +
->> +	arm_spe_prep_sample(spe, speq, event, &sample);
->> +
->> +	sample.id = spe_events_id;
->> +	sample.stream_id = spe_events_id;
->> +	sample.addr = record->virt_addr;
->> +	sample.phys_addr = record->phys_addr;
->> +	sample.data_src = data_src;
->> +
->> +	return arm_spe_deliver_synth_event(spe, speq, event, &sample);
->> +}
->> +
->>  #define SPE_MEM_TYPE	(ARM_SPE_L1D_ACCESS | ARM_SPE_L1D_MISS | \
->>  			 ARM_SPE_LLC_ACCESS | ARM_SPE_LLC_MISS | \
->>  			 ARM_SPE_REMOTE_ACCESS)
->> @@ -480,6 +512,12 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
->>  			return err;
->>  	}
->>  
->> +	if (spe->sample_instructions) {
->> +		err = arm_spe__synth_instruction_sample(speq, spe->instructions_id, data_src);
->> +		if (err)
->> +			return err;
->> +	}
->> +
->>  	return 0;
->>  }
->>  
->> @@ -1107,6 +1145,26 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
->>  			return err;
->>  		spe->memory_id = id;
->>  		arm_spe_set_event_name(evlist, id, "memory");
->> +		id += 1;
->> +	}
->> +
->> +	if (spe->synth_opts.instructions) {
->> +		if (spe->synth_opts.period_type != PERF_ITRACE_PERIOD_INSTRUCTIONS)
->> +			return -EINVAL;
-> Will this break some perf commands, like "perf report" or other perf
-> report commands?
->
-> See the the function arm_spe_process_auxtrace_info(), it invokes [1]:
->
->     itrace_synth_opts__set_default(&spe->synth_opts, false);
->
-> So synth_opts.instructions is initialized to true,
-> synth_opts.period_type is set to PERF_ITRACE_DEFAULT_PERIOD_TYPE (2),
-> so the perf tool will directly bail out when synth_opts.period_type is
-> not equal to PERF_ITRACE_PERIOD_INSTRUCTIONS.
->
-> If we only support period type PERF_ITRACE_PERIOD_INSTRUCTIONS at
-> current stage, I think we use the checking like below:
->
->   if (spe->synth_opts.instructions &&
->       (spe->synth_opts.period_type == PERF_ITRACE_PERIOD_INSTRUCTIONS)) {
->
->      ...
->   }
->
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/util/arm-spe.c#n1180
->
->> +
->> +		if (spe->synth_opts.period > 1)
->> +			pr_warning("Arm SPE has a hardware-based sample period.\n"
->> +				   "More instruction events will be discarded by --itrace\n");
-> Okay, Since Arm SPE is statistical profiling, so this is the right thing to
-> do.
->
-> Please also address Namhyung's two comments, the rest of this patch looks
-> good to me.
->
-> Thanks,
-> Leo
->
->> +
->> +		spe->sample_instructions = true;
->> +		attr.config = PERF_COUNT_HW_INSTRUCTIONS;
->> +		attr.sample_period = spe->synth_opts.period;
->> +		spe->instructions_sample_period = attr.sample_period;
->> +		err = arm_spe_synth_event(session, &attr, id);
->> +		if (err)
->> +			return err;
->> +		spe->instructions_id = id;
->> +		arm_spe_set_event_name(evlist, id, "instructions");
->>  	}
->>  
->>  	return 0;
->> -- 
->> 2.25.1
->>
+With this patch skip this test on both platforms.
+
+Output after:
+ # ./perf test -F 73
+ 73: Sigtrap
+
+Fixes: 5504f67944484 ("perf test sigtrap: Add basic stress test for sigtrap handling")
+
+Cc: Marco Elver <elver@google.com>
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/tests/sigtrap.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
+index 1004bf0e7cc9..1f147fe6595f 100644
+--- a/tools/perf/tests/sigtrap.c
++++ b/tools/perf/tests/sigtrap.c
+@@ -22,6 +22,19 @@
+ #include "tests.h"
+ #include "../perf-sys.h"
+ 
++/*
++ * PowerPC and S390 do not support creation of instruction breakpoints using the
++ * perf_event interface.
++ *
++ * Just disable the test for these architectures until these issues are
++ * resolved.
++ */
++#if defined(__powerpc__) || defined(__s390x__)
++#define BP_ACCOUNT_IS_SUPPORTED 0
++#else
++#define BP_ACCOUNT_IS_SUPPORTED 1
++#endif
++
+ #define NUM_THREADS 5
+ 
+ static struct {
+@@ -122,6 +135,11 @@ static int test__sigtrap(struct test_suite *test __maybe_unused, int subtest __m
+ 	char sbuf[STRERR_BUFSIZE];
+ 	int i, fd, ret = TEST_FAIL;
+ 
++	if (!BP_ACCOUNT_IS_SUPPORTED) {
++		pr_debug("Test not supported on this architecture");
++		return TEST_SKIP;
++	}
++
+ 	pthread_barrier_init(&barrier, NULL, NUM_THREADS + 1);
+ 
+ 	action.sa_flags = SA_SIGINFO | SA_NODEFER;
+-- 
+2.33.1
+
