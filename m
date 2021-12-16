@@ -2,84 +2,75 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDE3C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Dec 2021 17:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D5AC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Dec 2021 22:21:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240224AbhLPRXy (ORCPT
+        id S231400AbhLPWVz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 16 Dec 2021 12:23:54 -0500
-Received: from foss.arm.com ([217.140.110.172]:46436 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240204AbhLPRXy (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 16 Dec 2021 12:23:54 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C5CD01435;
-        Thu, 16 Dec 2021 09:23:53 -0800 (PST)
-Received: from [10.57.6.4] (unknown [10.57.6.4])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 477173F774;
-        Thu, 16 Dec 2021 09:23:53 -0800 (PST)
-Subject: Re: perf not showing me call graph for memcpy no matter what
-To:     Timothy Miller <theosib@icloud.com>,
-        linux-perf-users@vger.kernel.org
-References: <55BDE53A-EF97-4EF6-80C4-11821372A842@icloud.com>
-From:   James Clark <james.clark@arm.com>
-Cc:     German Gomez <german.gomez@arm.com>
-Message-ID: <2edea69f-f1b2-f970-75c0-99bc9ae084b9@arm.com>
-Date:   Thu, 16 Dec 2021 17:23:51 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Thu, 16 Dec 2021 17:21:55 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:43948 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230340AbhLPWVy (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 16 Dec 2021 17:21:54 -0500
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 1BGHJWgh013154
+        for <linux-perf-users@vger.kernel.org>; Thu, 16 Dec 2021 14:21:54 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=facebook; bh=H7ixoRWxvGmGbBlf67SqKO38E2i95W6A6B7ZCgwUlHY=;
+ b=L04ljmLj65sGMSx+45YccoV39RdU26KGng3l7g77CHysrJgoVU6pnwRxH+Cz6oXTvg2u
+ /njvRVzq8USSvdKYBkP42Qz7PqUsYTLVtwy02DbZs4NBBQe6KhH7iPx7frn2OtUgWN4L
+ QJ8XPhePKJPiDHg747nWz34RWiUIj/uoPBE= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3cyyrr6fcd-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Thu, 16 Dec 2021 14:21:54 -0800
+Received: from twshared10426.24.prn2.facebook.com (2620:10d:c085:208::f) by
+ mail.thefacebook.com (2620:10d:c085:21d::5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Thu, 16 Dec 2021 14:21:51 -0800
+Received: by devbig921.prn2.facebook.com (Postfix, from userid 132113)
+        id DB871790646; Thu, 16 Dec 2021 14:21:41 -0800 (PST)
+From:   Christy Lee <christylee@fb.com>
+To:     <andrii@kernel.org>, <acme@kernel.org>
+CC:     <christylee@fb.com>, <christyc.y.lee@gmail.com>,
+        <bpf@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <kernel-team@fb.com>
+Subject: [PATCH bpf-next 0/2] perf: stop using deprecated bpf APIs
+Date:   Thu, 16 Dec 2021 14:21:06 -0800
+Message-ID: <20211216222108.110518-1-christylee@fb.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-In-Reply-To: <55BDE53A-EF97-4EF6-80C4-11821372A842@icloud.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-GUID: Qgu3KFMhxEkL-bZ6ar5UQPV1chyDbkKi
+X-Proofpoint-ORIG-GUID: Qgu3KFMhxEkL-bZ6ar5UQPV1chyDbkKi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
+ definitions=2021-12-16_09,2021-12-16_01,2021-12-02_01
+X-Proofpoint-Spam-Details: rule=fb_outbound_notspam policy=fb_outbound score=0 malwarescore=0
+ impostorscore=0 mlxscore=0 suspectscore=0 bulkscore=0 clxscore=1011
+ mlxlogscore=781 priorityscore=1501 lowpriorityscore=0 adultscore=0
+ spamscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2112160117
+X-FB-Internal: deliver
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Except for multi-instance bpf program APIs, remove perf use cases
+of deprecated bpf APIs.
 
+Christy Lee (2):
+  perf: stop using deprecated bpf_prog_load() API
+  perf: stop using deprecated bpf__object_next() API
 
-On 16/12/2021 13:37, Timothy Miller wrote:
-> Hi,
-> 
-> I am doing some software profiling on an aarch64 system, and I’m using the Linux perf tool. The problem I’m running into is that “__GI___memcpy_simd” keeps showing up as the function with the most CPU usage.
-> 
+ tools/perf/tests/bpf.c       | 14 ++-----
+ tools/perf/util/bpf-loader.c | 73 +++++++++++++++++++++++++++---------
+ tools/perf/util/bpf-loader.h |  1 +
+ 3 files changed, 60 insertions(+), 28 deletions(-)
 
-> Unfortunately, no matter what I do, this function keeps showing up as orphaned. That is, I cannot get a stack trace for it so I can find out who is calling it.
->
-Hi Timothy,
-
-Do you have a full reproducer? Maybe one that works in a fresh docker container, and with what you expect to see vs what you actually see.
-
-What version of perf and libunwind are you using?
-
- 
-> I have tried using dwarf mode, but it always gets overloaded.
-
-Not sure what you mean by overloaded.
-
-> 
-> I have tried using lbr mode, but I get the following error:
->    Error:
->    PMU Hardware doesn't support sampling/overflow-interrupts.
-> 
-> I’ve rebuilt my application and all relevant libraries with -no-omit-frame-pointer so that I could use the default frame pointer mode. Unfortunately, I still can’t get a call graph for this function.
-
-Even with that option the compiler will still omit frame pointers if there is absolutely no need for them,
-for example for a leaf function call. Although it doesn't sound exactly like that's your issue.
-
-You could try the patch "[PATCH v4 0/6] Fix missing leaf-function callers when recording" which is currently on
-the mailing list, but that will only give you the caller of the last function. It sounds like you have more
-frames missing?
-
-> 
-> I emailed the glibc mailing list about this, trying to find out how to work around this problem, perhaps adding frame pointer to the assembly implementation of memcpy. They suggested I try attaching a debugger, and I’ve found that I can get stack traces just fine. They suggest that I seem to be running into some kind of bug in perf. 
-> 
-> Any help/advice would be appreciated.
-> 
-> Thanks.
-> 
-> 
-
-Thanks
-James
+--
+2.30.2
