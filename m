@@ -2,155 +2,206 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFBFC433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Dec 2021 08:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4FCC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Dec 2021 11:11:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234715AbhLPIHx (ORCPT
+        id S231422AbhLPLL6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 16 Dec 2021 03:07:53 -0500
-Received: from mail-ed1-f44.google.com ([209.85.208.44]:39471 "EHLO
-        mail-ed1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230324AbhLPIHx (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 16 Dec 2021 03:07:53 -0500
-Received: by mail-ed1-f44.google.com with SMTP id b7so24572337edd.6;
-        Thu, 16 Dec 2021 00:07:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=B1dCGNE6Asc15QtzoN3T9KZucJE0Zy9VdUaTThMxTwM=;
-        b=o/+RL0EYFzBxC+Yth/B/bKRLABwixamMp99z/+Imjvcj3Bqom9f9BqdwD2IF/amNs4
-         28n/g8PM5ikKnNeBxvlrQAtncCyiaGfWy/YRshbRiuuggVzJEKihEAejLwCE6laxaFNy
-         LjJ1D5L94+ZShWR7T66+z79K5AdEmnPxRer8jLyi4qhELwZ3ZOBQhzeeBjxob1r3uD1A
-         ZSULTnp0dMm4cXTrzDel8GjI+NMnAU6clrrElp5MRlJx4HajjTzKe+LK8Cx06Jm0738A
-         623C9oVcOAsT98X1mk9Yl5LgfABDOVmGz2ufOmJQFMuy7IEwBIjETzFpe2qoLheEVTe1
-         Ln3g==
-X-Gm-Message-State: AOAM531sTM8bKlZFFkwwaJqRyPwt2VlByD2sHoyabrbsnmAQqJGYuI2t
-        KDlyQqY4YbQ4XqoxV1vFGqw=
-X-Google-Smtp-Source: ABdhPJwDtn7isN+9tUuLN7MDegOWlqxV9xYLaCuE2KjMB7ND875Fz3Tzav+ULBI4zNECCjyxko0cwQ==
-X-Received: by 2002:a17:906:b003:: with SMTP id v3mr14837935ejy.770.1639642071889;
-        Thu, 16 Dec 2021 00:07:51 -0800 (PST)
-Received: from ?IPV6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
-        by smtp.gmail.com with ESMTPSA id p7sm2020784edu.84.2021.12.16.00.07.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Dec 2021 00:07:51 -0800 (PST)
-Message-ID: <bc2b0786-8965-1bcd-2316-9d9bb37b9c31@kernel.org>
-Date:   Thu, 16 Dec 2021 09:07:50 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH v3 4/4] libtraceevent: Increase libtraceevent logging when
- verbose
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Thu, 16 Dec 2021 06:11:58 -0500
+Received: from foss.arm.com ([217.140.110.172]:42122 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231372AbhLPLL6 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 16 Dec 2021 06:11:58 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B14291474;
+        Thu, 16 Dec 2021 03:11:57 -0800 (PST)
+Received: from [10.57.5.180] (unknown [10.57.5.180])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8237F3F774;
+        Thu, 16 Dec 2021 03:11:55 -0800 (PST)
+Subject: Re: [PATCH v2] perf arm-spe: Synthesize SPE instruction events
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     eranian@google.com
-References: <20210923001024.550263-1-irogers@google.com>
- <20210923001024.550263-4-irogers@google.com>
-From:   Jiri Slaby <jirislaby@kernel.org>
-In-Reply-To: <20210923001024.550263-4-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        linux-arm-kernel@lists.infradead.org
+References: <20211215184605.92787-1-german.gomez@arm.com>
+ <CAM9d7ch1eotRphCwFi_ryQdWD8DPNsZUN+aW7kaxovWtmCJcMQ@mail.gmail.com>
+From:   German Gomez <german.gomez@arm.com>
+Message-ID: <3df80677-1894-54c3-6383-94902c6e9ee8@arm.com>
+Date:   Thu, 16 Dec 2021 11:11:44 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
+MIME-Version: 1.0
+In-Reply-To: <CAM9d7ch1eotRphCwFi_ryQdWD8DPNsZUN+aW7kaxovWtmCJcMQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+Hi Namhyung, thanks for your comments.
 
-On 23. 09. 21, 2:10, Ian Rogers wrote:
-> libtraceevent has added more levels of debug printout and with changes
-> like:
-> https://lore.kernel.org/linux-trace-devel/20210507095022.1079364-3-tz.stoyanov@gmail.com
-> previously generated output like "registering plugin" is no longer
-> displayed. This change makes it so that if perf's verbose debug output
-> is enabled then the debug and info libtraceevent messages can be
-> displayed.
-> The code is conditionally enabled based on the libtraceevent version as
-> discussed in the RFC:
-> https://lore.kernel.org/lkml/20210610060643.595673-1-irogers@google.com/
-> 
-> v2. Is a rebase and handles the case of building without
->      LIBTRACEEVENT_DYNAMIC.
+On 16/12/2021 01:18, Namhyung Kim wrote:
+> Hello,
+>
+> On Wed, Dec 15, 2021 at 10:46 AM German Gomez <german.gomez@arm.com> wrote:
+>> Synthesize instruction events per every decoded ARM SPE record.
+>>
+>> Because Arm SPE implements a hardware-based sample period, and perf
+>> implements a software-based one that gets applied on top, also add a
+>> warning to make the user aware.
+>>
+>> Signed-off-by: German Gomez <german.gomez@arm.com>
+>> ---
+>> Changes since v1 [https://lore.kernel.org/all/20211117142833.226629-1-german.gomez@arm.com]
+>>   - Generate events with "--itrace=i" instead of "--itrace=o".
+>>   - Generate events with virt_addr, phys_addr, and data_src values.
+>> ---
+>>  tools/perf/util/arm-spe.c | 58 +++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 58 insertions(+)
+>>
+>> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+>> index fccac06b573a..879583822c8f 100644
+>> --- a/tools/perf/util/arm-spe.c
+>> +++ b/tools/perf/util/arm-spe.c
+>> @@ -58,6 +58,8 @@ struct arm_spe {
+>>         u8                              sample_branch;
+>>         u8                              sample_remote_access;
+>>         u8                              sample_memory;
+>> +       u8                              sample_instructions;
+>> +       u64                             instructions_sample_period;
+>>
+>>         u64                             l1d_miss_id;
+>>         u64                             l1d_access_id;
+>> @@ -68,6 +70,7 @@ struct arm_spe {
+>>         u64                             branch_miss_id;
+>>         u64                             remote_access_id;
+>>         u64                             memory_id;
+>> +       u64                             instructions_id;
+>>
+>>         u64                             kernel_start;
+>>
+>> @@ -90,6 +93,7 @@ struct arm_spe_queue {
+>>         u64                             time;
+>>         u64                             timestamp;
+>>         struct thread                   *thread;
+>> +       u64                             period_instructions;
+>>  };
+>>
+>>  static void arm_spe_dump(struct arm_spe *spe __maybe_unused,
+>> @@ -202,6 +206,7 @@ static struct arm_spe_queue *arm_spe__alloc_queue(struct arm_spe *spe,
+>>         speq->pid = -1;
+>>         speq->tid = -1;
+>>         speq->cpu = -1;
+>> +       speq->period_instructions = 0;
+>>
+>>         /* params set */
+>>         params.get_trace = arm_spe_get_trace;
+>> @@ -351,6 +356,33 @@ static int arm_spe__synth_branch_sample(struct arm_spe_queue *speq,
+>>         return arm_spe_deliver_synth_event(spe, speq, event, &sample);
+>>  }
+>>
+>> +static int arm_spe__synth_instruction_sample(struct arm_spe_queue *speq,
+>> +                                            u64 spe_events_id, u64 data_src)
+>> +{
+>> +       struct arm_spe *spe = speq->spe;
+>> +       struct arm_spe_record *record = &speq->decoder->record;
+>> +       union perf_event *event = speq->event_buf;
+>> +       struct perf_sample sample = { .ip = 0, };
+>> +
+>> +       /*
+>> +        * Handles perf instruction sampling period.
+>> +        */
+>> +       speq->period_instructions++;
+>> +       if (speq->period_instructions < spe->instructions_sample_period)
+>> +               return 0;
+>> +       speq->period_instructions = 0;
+>> +
+>> +       arm_spe_prep_sample(spe, speq, event, &sample);
+>> +
+>> +       sample.id = spe_events_id;
+>> +       sample.stream_id = spe_events_id;
+>> +       sample.addr = record->virt_addr;
+>> +       sample.phys_addr = record->phys_addr;
+>> +       sample.data_src = data_src;
+> I think it should set sample.period to spe->instructions_sample_period.
 
-It breaks build with LIBTRACEEVENT_DYNAMIC and version 1.3.0:
- > util/debug.c: In function ‘perf_debug_option’:
- > util/debug.c:243:17: error: implicit declaration of function 
-‘tep_set_loglevel’ [-Werror=implicit-function-declaration]
- >   243 |                 tep_set_loglevel(TEP_LOG_INFO);
- >       |                 ^~~~~~~~~~~~~~~~
- > util/debug.c:243:34: error: ‘TEP_LOG_INFO’ undeclared (first use in 
-this function); did you mean ‘TEP_PRINT_INFO’?
- >   243 |                 tep_set_loglevel(TEP_LOG_INFO);
- >       |                                  ^~~~~~~~~~~~
- >       |                                  TEP_PRINT_INFO
- > util/debug.c:243:34: note: each undeclared identifier is reported 
-only once for each function it appears in
- > util/debug.c:245:34: error: ‘TEP_LOG_DEBUG’ undeclared (first use in 
-this function)
- >   245 |                 tep_set_loglevel(TEP_LOG_DEBUG);
- >       |                                  ^~~~~~~~~~~~~
- > util/debug.c:247:34: error: ‘TEP_LOG_ALL’ undeclared (first use in 
-this function)
- >   247 |                 tep_set_loglevel(TEP_LOG_ALL);
- >       |                                  ^~~~~~~~~~~
+Ack!
 
-It is because the gcc's command line looks like:
-gcc
-...
--I/home/abuild/rpmbuild/BUILD/tools/lib/
-...
--DLIBTRACEEVENT_VERSION=65790
-...
+>
+> Also it can set sample.weight but I think we lost my patch
 
-So:
+I forgot to apply your latency patch first. I will add it.
 
+Thanks,
+German
 
-> --- a/tools/perf/util/debug.c
-> +++ b/tools/perf/util/debug.c
-> @@ -24,6 +24,16 @@
->   #include "util/parse-sublevel-options.h"
->   
->   #include <linux/ctype.h>
-> +#include <traceevent/event-parse.h>
-
-/home/abuild/rpmbuild/BUILD/tools/lib/traceevent/event-parse.h is taken 
-here.
-
-> @@ -228,6 +238,15 @@ int perf_debug_option(const char *str)
->   	/* Allow only verbose value in range (0, 10), otherwise set 0. */
->   	verbose = (verbose < 0) || (verbose > 10) ? 0 : verbose;
->   
-> +#if MAKE_LIBTRACEEVENT_VERSION(1, 3, 0) <= LIBTRACEEVENT_VERSION
-
-But
--DLIBTRACEEVENT_VERSION=65790
-is taken here (which is 1.3.0).
-
-> +	if (verbose == 1)
-> +		tep_set_loglevel(TEP_LOG_INFO);
-> +	else if (verbose == 2)
-> +		tep_set_loglevel(TEP_LOG_DEBUG);
-> +	else if (verbose >= 3)
-> +		tep_set_loglevel(TEP_LOG_ALL);
-> +#endif
-> +
->   	return 0;
->   }
->   
-
-regards,
--- 
-js
-suse labs
+>
+>   https://lore.kernel.org/r/20211201220855.1260688-1-namhyung@kernel.org
+>
+> Arnaldo, can you please take a look?
+>
+>> +
+>> +       return arm_spe_deliver_synth_event(spe, speq, event, &sample);
+>> +}
+>> +
+>>  #define SPE_MEM_TYPE   (ARM_SPE_L1D_ACCESS | ARM_SPE_L1D_MISS | \
+>>                          ARM_SPE_LLC_ACCESS | ARM_SPE_LLC_MISS | \
+>>                          ARM_SPE_REMOTE_ACCESS)
+>> @@ -480,6 +512,12 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
+>>                         return err;
+>>         }
+>>
+>> +       if (spe->sample_instructions) {
+>> +               err = arm_spe__synth_instruction_sample(speq, spe->instructions_id, data_src);
+>> +               if (err)
+>> +                       return err;
+>> +       }
+>> +
+>>         return 0;
+>>  }
+>>
+>> @@ -1107,6 +1145,26 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+>>                         return err;
+>>                 spe->memory_id = id;
+>>                 arm_spe_set_event_name(evlist, id, "memory");
+>> +               id += 1;
+>> +       }
+>> +
+>> +       if (spe->synth_opts.instructions) {
+>> +               if (spe->synth_opts.period_type != PERF_ITRACE_PERIOD_INSTRUCTIONS)
+>> +                       return -EINVAL;
+>> +
+>> +               if (spe->synth_opts.period > 1)
+>> +                       pr_warning("Arm SPE has a hardware-based sample period.\n"
+>> +                                  "More instruction events will be discarded by --itrace\n");
+>> +
+>> +               spe->sample_instructions = true;
+>> +               attr.config = PERF_COUNT_HW_INSTRUCTIONS;
+>> +               attr.sample_period = spe->synth_opts.period;
+>> +               spe->instructions_sample_period = attr.sample_period;
+>> +               err = arm_spe_synth_event(session, &attr, id);
+>> +               if (err)
+>> +                       return err;
+>> +               spe->instructions_id = id;
+>> +               arm_spe_set_event_name(evlist, id, "instructions");
+> Yeah, I think it's a better name than "all". :)
+>
+> Thanks,
+> Namhyung
+>
+>
+>>         }
+>>
+>>         return 0;
+>> --
+>> 2.25.1
+>>
