@@ -2,92 +2,218 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9FCC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Dec 2021 13:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0F5C433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Dec 2021 15:00:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236970AbhLPNyP (ORCPT
+        id S238194AbhLPPAk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 16 Dec 2021 08:54:15 -0500
-Received: from st43p00im-zteg10063401.me.com ([17.58.63.175]:38328 "EHLO
-        st43p00im-zteg10063401.me.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237058AbhLPNyP (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 16 Dec 2021 08:54:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-        s=1a1hai; t=1639662854;
-        bh=hIwCA46n4X8DBGy4YUjX7M53fn8LLYnEOCVe4AB7nec=;
-        h=From:Content-Type:Mime-Version:Subject:Date:To:Message-Id;
-        b=v/ZWwVzxmItPqXHjulmDVIZ4/BnJKwdA1wbPqYAnfrjk6UGfPRI2Ilqf8kOS1yd8g
-         VEs8qGl3HH85li7bRV0A4W15Qno56v2C+sI5TBvYRoqc2eZV5QXMfU6iIsMv0yWsIw
-         XhttKVwfxwPXB9CqhhWaEdDaMbpGcknSB0HVea08Qv/94bKLfqbRAp1u8lmYEo0LKq
-         5yajEhyv6f+cafXuP7ACIXSHcgmjg1BiWtMmoOTtntkvImNMynZJHvr2XTDl8Ibd93
-         w06YaCypQj0U2X/0HK+E72+iGBzLza2rhWjArt2oOhyt3A7qmzAsGlZcwAwqSpkD8G
-         M5exCZwdDYhgA==
-Received: from smtpclient.apple (cpe-66-24-82-52.stny.res.rr.com [66.24.82.52])
-        by st43p00im-zteg10063401.me.com (Postfix) with ESMTPSA id 495A74A05A6
-        for <linux-perf-users@vger.kernel.org>; Thu, 16 Dec 2021 13:54:14 +0000 (UTC)
-From:   Timothy Miller <theosib@icloud.com>
-Content-Type: text/plain;
-        charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Mime-Version: 1.0 (Mac OS X Mail 15.0 \(3693.40.0.1.81\))
-Subject: Re: perf not showing me call graph for memcpy no matter what
-Date:   Thu, 16 Dec 2021 08:54:12 -0500
-References: <55BDE53A-EF97-4EF6-80C4-11821372A842@icloud.com>
-To:     linux-perf-users@vger.kernel.org
-In-Reply-To: <55BDE53A-EF97-4EF6-80C4-11821372A842@icloud.com>
-Message-Id: <BA01400F-BB83-4873-8087-D4B777FDEBA0@icloud.com>
-X-Mailer: Apple Mail (2.3693.40.0.1.81)
-X-Proofpoint-Virus-Version: =?UTF-8?Q?vendor=3Dfsecure_engine=3D1.1.170-22c6f66c430a71ce266a39bfe25bc?=
- =?UTF-8?Q?2903e8d5c8f:6.0.425,18.0.790,17.11.62.513.0000000_definitions?=
- =?UTF-8?Q?=3D2021-12-16=5F04:2021-12-14=5F01,2021-12-16=5F04,2021-12-02?=
- =?UTF-8?Q?=5F01_signatures=3D0?=
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 adultscore=0
- mlxlogscore=829 phishscore=0 bulkscore=0 mlxscore=0 suspectscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2112160078
+        Thu, 16 Dec 2021 10:00:40 -0500
+Received: from foss.arm.com ([217.140.110.172]:44790 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S238197AbhLPPAi (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 16 Dec 2021 10:00:38 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5B081435;
+        Thu, 16 Dec 2021 07:00:36 -0800 (PST)
+Received: from [10.1.26.143] (e127744.cambridge.arm.com [10.1.26.143])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB3F93F73B;
+        Thu, 16 Dec 2021 07:00:34 -0800 (PST)
+Subject: Re: [PATCH v2] perf arm-spe: Synthesize SPE instruction events
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <20211215184605.92787-1-german.gomez@arm.com>
+ <20211216111157.GA27239@leoy-ThinkPad-X240s>
+From:   German Gomez <german.gomez@arm.com>
+Message-ID: <76953319-ec86-02b9-75c3-6e62c15b7f11@arm.com>
+Date:   Thu, 16 Dec 2021 15:00:23 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
+MIME-Version: 1.0
+In-Reply-To: <20211216111157.GA27239@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Sorry about the duplicate. Majordomo kept throwing errors when I would =
-try to join or verify. It really didn=E2=80=99t like the email address I =
-tried to use before, so I assumed that it wasn=E2=80=99t going to accept =
-the post either.
+Hi Leo,
 
-> On Dec 16, 2021, at 8:37 AM, Timothy Miller <theosib@icloud.com> =
-wrote:
->=20
-> Hi,
->=20
-> I am doing some software profiling on an aarch64 system, and I=E2=80=99m=
- using the Linux perf tool. The problem I=E2=80=99m running into is that =
-=E2=80=9C__GI___memcpy_simd=E2=80=9D keeps showing up as the function =
-with the most CPU usage.
->=20
-> Unfortunately, no matter what I do, this function keeps showing up as =
-orphaned. That is, I cannot get a stack trace for it so I can find out =
-who is calling it.
->=20
-> I have tried using dwarf mode, but it always gets overloaded.
->=20
-> I have tried using lbr mode, but I get the following error:
->   Error:
->   PMU Hardware doesn't support sampling/overflow-interrupts.
->=20
-> I=E2=80=99ve rebuilt my application and all relevant libraries with =
--no-omit-frame-pointer so that I could use the default frame pointer =
-mode. Unfortunately, I still can=E2=80=99t get a call graph for this =
-function.
->=20
-> I emailed the glibc mailing list about this, trying to find out how to =
-work around this problem, perhaps adding frame pointer to the assembly =
-implementation of memcpy. They suggested I try attaching a debugger, and =
-I=E2=80=99ve found that I can get stack traces just fine. They suggest =
-that I seem to be running into some kind of bug in perf.=20
->=20
-> Any help/advice would be appreciated.
->=20
-> Thanks.
->=20
+Thanks for your comments. I'll send a revised patch shortly.
 
+Thanks,
+German
+
+On 16/12/2021 11:11, Leo Yan wrote:
+> Hi German,
+>
+> On Wed, Dec 15, 2021 at 06:46:05PM +0000, German Gomez wrote:
+>> Synthesize instruction events per every decoded ARM SPE record.
+>>
+>> Because Arm SPE implements a hardware-based sample period, and perf
+>> implements a software-based one that gets applied on top, also add a
+>> warning to make the user aware.
+>>
+>> Signed-off-by: German Gomez <german.gomez@arm.com>
+>> ---
+>> Changes since v1 [https://lore.kernel.org/all/20211117142833.226629-1-german.gomez@arm.com]
+>>   - Generate events with "--itrace=i" instead of "--itrace=o".
+>>   - Generate events with virt_addr, phys_addr, and data_src values.
+>> ---
+>>  tools/perf/util/arm-spe.c | 58 +++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 58 insertions(+)
+>>
+>> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+>> index fccac06b573a..879583822c8f 100644
+>> --- a/tools/perf/util/arm-spe.c
+>> +++ b/tools/perf/util/arm-spe.c
+>> @@ -58,6 +58,8 @@ struct arm_spe {
+>>  	u8				sample_branch;
+>>  	u8				sample_remote_access;
+>>  	u8				sample_memory;
+>> +	u8				sample_instructions;
+>> +	u64				instructions_sample_period;
+>>  
+>>  	u64				l1d_miss_id;
+>>  	u64				l1d_access_id;
+>> @@ -68,6 +70,7 @@ struct arm_spe {
+>>  	u64				branch_miss_id;
+>>  	u64				remote_access_id;
+>>  	u64				memory_id;
+>> +	u64				instructions_id;
+>>  
+>>  	u64				kernel_start;
+>>  
+>> @@ -90,6 +93,7 @@ struct arm_spe_queue {
+>>  	u64				time;
+>>  	u64				timestamp;
+>>  	struct thread			*thread;
+>> +	u64				period_instructions;
+>>  };
+>>  
+>>  static void arm_spe_dump(struct arm_spe *spe __maybe_unused,
+>> @@ -202,6 +206,7 @@ static struct arm_spe_queue *arm_spe__alloc_queue(struct arm_spe *spe,
+>>  	speq->pid = -1;
+>>  	speq->tid = -1;
+>>  	speq->cpu = -1;
+>> +	speq->period_instructions = 0;
+>>  
+>>  	/* params set */
+>>  	params.get_trace = arm_spe_get_trace;
+>> @@ -351,6 +356,33 @@ static int arm_spe__synth_branch_sample(struct arm_spe_queue *speq,
+>>  	return arm_spe_deliver_synth_event(spe, speq, event, &sample);
+>>  }
+>>  
+>> +static int arm_spe__synth_instruction_sample(struct arm_spe_queue *speq,
+>> +					     u64 spe_events_id, u64 data_src)
+>> +{
+>> +	struct arm_spe *spe = speq->spe;
+>> +	struct arm_spe_record *record = &speq->decoder->record;
+>> +	union perf_event *event = speq->event_buf;
+>> +	struct perf_sample sample = { .ip = 0, };
+>> +
+>> +	/*
+>> +	 * Handles perf instruction sampling period.
+>> +	 */
+>> +	speq->period_instructions++;
+>> +	if (speq->period_instructions < spe->instructions_sample_period)
+>> +		return 0;
+>> +	speq->period_instructions = 0;
+>> +
+>> +	arm_spe_prep_sample(spe, speq, event, &sample);
+>> +
+>> +	sample.id = spe_events_id;
+>> +	sample.stream_id = spe_events_id;
+>> +	sample.addr = record->virt_addr;
+>> +	sample.phys_addr = record->phys_addr;
+>> +	sample.data_src = data_src;
+>> +
+>> +	return arm_spe_deliver_synth_event(spe, speq, event, &sample);
+>> +}
+>> +
+>>  #define SPE_MEM_TYPE	(ARM_SPE_L1D_ACCESS | ARM_SPE_L1D_MISS | \
+>>  			 ARM_SPE_LLC_ACCESS | ARM_SPE_LLC_MISS | \
+>>  			 ARM_SPE_REMOTE_ACCESS)
+>> @@ -480,6 +512,12 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
+>>  			return err;
+>>  	}
+>>  
+>> +	if (spe->sample_instructions) {
+>> +		err = arm_spe__synth_instruction_sample(speq, spe->instructions_id, data_src);
+>> +		if (err)
+>> +			return err;
+>> +	}
+>> +
+>>  	return 0;
+>>  }
+>>  
+>> @@ -1107,6 +1145,26 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+>>  			return err;
+>>  		spe->memory_id = id;
+>>  		arm_spe_set_event_name(evlist, id, "memory");
+>> +		id += 1;
+>> +	}
+>> +
+>> +	if (spe->synth_opts.instructions) {
+>> +		if (spe->synth_opts.period_type != PERF_ITRACE_PERIOD_INSTRUCTIONS)
+>> +			return -EINVAL;
+> Will this break some perf commands, like "perf report" or other perf
+> report commands?
+>
+> See the the function arm_spe_process_auxtrace_info(), it invokes [1]:
+>
+>     itrace_synth_opts__set_default(&spe->synth_opts, false);
+>
+> So synth_opts.instructions is initialized to true,
+> synth_opts.period_type is set to PERF_ITRACE_DEFAULT_PERIOD_TYPE (2),
+> so the perf tool will directly bail out when synth_opts.period_type is
+> not equal to PERF_ITRACE_PERIOD_INSTRUCTIONS.
+>
+> If we only support period type PERF_ITRACE_PERIOD_INSTRUCTIONS at
+> current stage, I think we use the checking like below:
+>
+>   if (spe->synth_opts.instructions &&
+>       (spe->synth_opts.period_type == PERF_ITRACE_PERIOD_INSTRUCTIONS)) {
+>
+>      ...
+>   }
+>
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/util/arm-spe.c#n1180
+>
+>> +
+>> +		if (spe->synth_opts.period > 1)
+>> +			pr_warning("Arm SPE has a hardware-based sample period.\n"
+>> +				   "More instruction events will be discarded by --itrace\n");
+> Okay, Since Arm SPE is statistical profiling, so this is the right thing to
+> do.
+>
+> Please also address Namhyung's two comments, the rest of this patch looks
+> good to me.
+>
+> Thanks,
+> Leo
+>
+>> +
+>> +		spe->sample_instructions = true;
+>> +		attr.config = PERF_COUNT_HW_INSTRUCTIONS;
+>> +		attr.sample_period = spe->synth_opts.period;
+>> +		spe->instructions_sample_period = attr.sample_period;
+>> +		err = arm_spe_synth_event(session, &attr, id);
+>> +		if (err)
+>> +			return err;
+>> +		spe->instructions_id = id;
+>> +		arm_spe_set_event_name(evlist, id, "instructions");
+>>  	}
+>>  
+>>  	return 0;
+>> -- 
+>> 2.25.1
+>>
