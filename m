@@ -2,128 +2,84 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BEFC433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Dec 2021 15:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDE3C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Dec 2021 17:23:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238438AbhLPP66 (ORCPT
+        id S240224AbhLPRXy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 16 Dec 2021 10:58:58 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4301 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235387AbhLPP65 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 16 Dec 2021 10:58:57 -0500
-Received: from fraeml713-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JFGvH1zSMz67w0f;
-        Thu, 16 Dec 2021 23:56:43 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml713-chm.china.huawei.com (10.206.15.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Thu, 16 Dec 2021 16:58:55 +0100
-Received: from localhost.localdomain (10.69.192.58) by
- lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Thu, 16 Dec 2021 15:58:52 +0000
-From:   John Garry <john.garry@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>, <irogers@google.com>,
-        <kan.liang@linux.intel.com>
-CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "John Garry" <john.garry@huawei.com>
-Subject: [PATCH] perf pmu: Fix event list for uncore PMUs
-Date:   Thu, 16 Dec 2021 23:53:37 +0800
-Message-ID: <1639670017-74918-1-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Thu, 16 Dec 2021 12:23:54 -0500
+Received: from foss.arm.com ([217.140.110.172]:46436 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S240204AbhLPRXy (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 16 Dec 2021 12:23:54 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C5CD01435;
+        Thu, 16 Dec 2021 09:23:53 -0800 (PST)
+Received: from [10.57.6.4] (unknown [10.57.6.4])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 477173F774;
+        Thu, 16 Dec 2021 09:23:53 -0800 (PST)
+Subject: Re: perf not showing me call graph for memcpy no matter what
+To:     Timothy Miller <theosib@icloud.com>,
+        linux-perf-users@vger.kernel.org
+References: <55BDE53A-EF97-4EF6-80C4-11821372A842@icloud.com>
+From:   James Clark <james.clark@arm.com>
+Cc:     German Gomez <german.gomez@arm.com>
+Message-ID: <2edea69f-f1b2-f970-75c0-99bc9ae084b9@arm.com>
+Date:   Thu, 16 Dec 2021 17:23:51 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+In-Reply-To: <55BDE53A-EF97-4EF6-80C4-11821372A842@icloud.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Commit 0e0ae8742207 ("perf list: Display hybrid PMU events with cpu type")
-changed the list for uncore PMUs, such that duplicate aliases are now
-listed per PMU (which they should not be), like:
 
-./perf list
-...
-unc_cbo_cache_lookup.any_es
-[Unit: uncore_cbox L3 Lookup any request that access cache and found
-line in E or S-state]
-unc_cbo_cache_lookup.any_es
-[Unit: uncore_cbox L3 Lookup any request that access cache and found
-line in E or S-state]
-unc_cbo_cache_lookup.any_i
-[Unit: uncore_cbox L3 Lookup any request that access cache and found
-line in I-state]
-unc_cbo_cache_lookup.any_i
-[Unit: uncore_cbox L3 Lookup any request that access cache and found
-line in I-state]
-...
 
-Notice how the events are listed twice.
+On 16/12/2021 13:37, Timothy Miller wrote:
+> Hi,
+> 
+> I am doing some software profiling on an aarch64 system, and I’m using the Linux perf tool. The problem I’m running into is that “__GI___memcpy_simd” keeps showing up as the function with the most CPU usage.
+> 
 
-The named commit changed how we remove duplicate events, in that events
-for different PMUs are not treated as duplicates. I suppose this is to
-handle how "Each hybrid pmu event has been assigned with a pmu name".
+> Unfortunately, no matter what I do, this function keeps showing up as orphaned. That is, I cannot get a stack trace for it so I can find out who is calling it.
+>
+Hi Timothy,
 
-Fix uncore PMU alias list by also checking if events with PMU name are not
-cpu PMUs.
+Do you have a full reproducer? Maybe one that works in a fresh docker container, and with what you expect to see vs what you actually see.
 
-Fixes: 0e0ae8742207 ("perf list: Display hybrid PMU events with cpu type")
-Signed-off-by: John Garry <john.garry@huawei.com>
----
-It would be helpful if someone with some of these hybrid CPU systems could
-test this change, thanks!
+What version of perf and libunwind are you using?
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 6ae58406f4fc..392f6a36418b 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1659,6 +1659,24 @@ bool is_pmu_core(const char *name)
- 	return !strcmp(name, "cpu") || is_arm_pmu_core(name);
- }
  
-+static bool pmu_alias_is_duplicate(struct sevent *alias_a,
-+				   struct sevent *alias_b)
-+{
-+	/* Different names -> never duplicates */
-+	if (strcmp(alias_a->name, alias_b->name))
-+		return false;
-+	if (!alias_a->pmu)
-+		return true;
-+	if (!alias_b->pmu)
-+		return true;
-+	if (!strcmp(alias_a->pmu, alias_b->pmu))
-+		return true;
-+	/* uncore PMUs */
-+	if (!alias_a->is_cpu && !alias_b->is_cpu)
-+		return true;
-+	return false;
-+}
-+
- void print_pmu_events(const char *event_glob, bool name_only, bool quiet_flag,
- 			bool long_desc, bool details_flag, bool deprecated,
- 			const char *pmu_name)
-@@ -1744,12 +1762,8 @@ void print_pmu_events(const char *event_glob, bool name_only, bool quiet_flag,
- 	qsort(aliases, len, sizeof(struct sevent), cmp_sevent);
- 	for (j = 0; j < len; j++) {
- 		/* Skip duplicates */
--		if (j > 0 && !strcmp(aliases[j].name, aliases[j - 1].name)) {
--			if (!aliases[j].pmu || !aliases[j - 1].pmu ||
--			    !strcmp(aliases[j].pmu, aliases[j - 1].pmu)) {
--				continue;
--			}
--		}
-+		if (j > 0 && pmu_alias_is_duplicate(&aliases[j], &aliases[j - 1]))
-+			continue;
- 
- 		if (name_only) {
- 			printf("%s ", aliases[j].name);
--- 
-2.26.2
+> I have tried using dwarf mode, but it always gets overloaded.
 
+Not sure what you mean by overloaded.
+
+> 
+> I have tried using lbr mode, but I get the following error:
+>    Error:
+>    PMU Hardware doesn't support sampling/overflow-interrupts.
+> 
+> I’ve rebuilt my application and all relevant libraries with -no-omit-frame-pointer so that I could use the default frame pointer mode. Unfortunately, I still can’t get a call graph for this function.
+
+Even with that option the compiler will still omit frame pointers if there is absolutely no need for them,
+for example for a leaf function call. Although it doesn't sound exactly like that's your issue.
+
+You could try the patch "[PATCH v4 0/6] Fix missing leaf-function callers when recording" which is currently on
+the mailing list, but that will only give you the caller of the last function. It sounds like you have more
+frames missing?
+
+> 
+> I emailed the glibc mailing list about this, trying to find out how to work around this problem, perhaps adding frame pointer to the assembly implementation of memcpy. They suggested I try attaching a debugger, and I’ve found that I can get stack traces just fine. They suggest that I seem to be running into some kind of bug in perf. 
+> 
+> Any help/advice would be appreciated.
+> 
+> Thanks.
+> 
+> 
+
+Thanks
+James
