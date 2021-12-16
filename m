@@ -2,135 +2,128 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F07C5C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Dec 2021 15:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BEFC433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Dec 2021 15:58:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238713AbhLPPs1 (ORCPT
+        id S238438AbhLPP66 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 16 Dec 2021 10:48:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34118 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238722AbhLPPs0 (ORCPT
+        Thu, 16 Dec 2021 10:58:58 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4301 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235387AbhLPP65 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 16 Dec 2021 10:48:26 -0500
-Received: from mail-oo1-xc2f.google.com (mail-oo1-xc2f.google.com [IPv6:2607:f8b0:4864:20::c2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F213FC061746
-        for <linux-perf-users@vger.kernel.org>; Thu, 16 Dec 2021 07:48:25 -0800 (PST)
-Received: by mail-oo1-xc2f.google.com with SMTP id e17-20020a4a8291000000b002c5ee0645e7so7030238oog.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 16 Dec 2021 07:48:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yLYVphrI03cOaMaXMsK21ZtL1XoGKJxPiFCER5CAOEQ=;
-        b=gtSDAbPFlBKKXa7Ijtgbyly6I0ScHq4dki0xsbGQjPydbRdl6ep2++FAi13gCdCsgh
-         n6M+Kbqn34TivRx7BQnoUSozl2AyJ1twjlUi3M4r0usw8IO3WE9ibT5ydmXfdE/fcx9V
-         q7IfEuHB0j8TLNLPxsNmPIHlYDUIc7FcBjnsAUYpxn29cPdLz0BeKSjBKUSxlHeNGLXS
-         km3pO8vnmo55pVnbuSVrxqEDN5U69lIn99EBvlz3vPd+PTQ5HEjw/Jto5/gBBnU+SfxL
-         A6hg6xR4CKKMTxH0FsiwrF2y383VeXB+clqoaeRBOTE5ZZCVmn7WfpWZL1F5UuprbKBP
-         6KrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yLYVphrI03cOaMaXMsK21ZtL1XoGKJxPiFCER5CAOEQ=;
-        b=DNFbejPYVaMIEJaTzCGxMwDOCDwCUXHqtuWkAyyPyXfD2Bh7kVoloiQwlR1xhs0liz
-         xoHhD9761uiGXKArKx9fQsDcE75OYsymzxr2Mg5p8APaGAUruu+Qj2jPzW8W+dRRnO4+
-         WI2I/8B0VvHTIww0M9r7MzwNjxlWbpU0vB5dtGo9e2bvxLEV2fqwGwuhitMwS3LGJpap
-         l5BEmHRmhO6FRRG5v7tdlob0uNVTimEeG1XJK/38HP00ywYSNb9zJmmAkz3zgtNG1fEK
-         UOZZZh/tZJ+pAw0hpVNfAdz/+oC8qS0wzzt8rZPUUeDUSbqzZ5SOva+AQlc0GB5JblT3
-         PyGA==
-X-Gm-Message-State: AOAM530MjVj0HKQT/4GqMpUxi5/cc4naKSD3/rVwP0v01kqfgAH/21o0
-        M46bd/VNJoPMy/ga1BLDl1Ti9DaCxOhlYUPIDgP9nA==
-X-Google-Smtp-Source: ABdhPJwC53NEY9Ob9ITeOGSLZd5G3Un2sKLRHSxfJ6wWkqlQgmq9oG5Bdha0Qj28lftpYeogouu5vfZdvpvP2yQYevw=
-X-Received: by 2002:a4a:a5cf:: with SMTP id k15mr11421017oom.70.1639669705074;
- Thu, 16 Dec 2021 07:48:25 -0800 (PST)
+        Thu, 16 Dec 2021 10:58:57 -0500
+Received: from fraeml713-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JFGvH1zSMz67w0f;
+        Thu, 16 Dec 2021 23:56:43 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml713-chm.china.huawei.com (10.206.15.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Thu, 16 Dec 2021 16:58:55 +0100
+Received: from localhost.localdomain (10.69.192.58) by
+ lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Thu, 16 Dec 2021 15:58:52 +0000
+From:   John Garry <john.garry@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <namhyung@kernel.org>, <irogers@google.com>,
+        <kan.liang@linux.intel.com>
+CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "John Garry" <john.garry@huawei.com>
+Subject: [PATCH] perf pmu: Fix event list for uncore PMUs
+Date:   Thu, 16 Dec 2021 23:53:37 +0800
+Message-ID: <1639670017-74918-1-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-References: <20211216151454.752066-1-tmricht@linux.ibm.com>
-In-Reply-To: <20211216151454.752066-1-tmricht@linux.ibm.com>
-From:   Marco Elver <elver@google.com>
-Date:   Thu, 16 Dec 2021 16:48:13 +0100
-Message-ID: <CANpmjNNMWtjcKa961SjEvRbbPXyw5M5SkrXbb3tnyL3_XyniCw@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Test 73 Sig_trap fails on s390
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, svens@linux.ibm.com, gor@linux.ibm.com,
-        sumanthk@linux.ibm.com, hca@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, 16 Dec 2021 at 16:15, Thomas Richter <tmricht@linux.ibm.com> wrote:
->
-> In Linux next kernel
-> Commit 5504f67944484 ("perf test sigtrap: Add basic stress test for sigtrap handling")
-> introduced the new test which uses breakpoint events.
-> These events are not supported on s390 and PowerPC and always fail:
->
->  # perf test -F 73
->  73: Sigtrap                                                         : FAILED!
->  #
->
-> Fix it the same way as in the breakpoint tests in file
-> tests/bp_account.c where these type of tests are skipped on
-> s390 and PowerPC platforms.
->
-> With this patch skip this test on both platforms.
->
-> Output after:
->  # ./perf test -F 73
->  73: Sigtrap
->
-> Fixes: 5504f67944484 ("perf test sigtrap: Add basic stress test for sigtrap handling")
->
-> Cc: Marco Elver <elver@google.com>
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Commit 0e0ae8742207 ("perf list: Display hybrid PMU events with cpu type")
+changed the list for uncore PMUs, such that duplicate aliases are now
+listed per PMU (which they should not be), like:
 
-Acked-by: Marco Elver <elver@google.com>
+./perf list
+...
+unc_cbo_cache_lookup.any_es
+[Unit: uncore_cbox L3 Lookup any request that access cache and found
+line in E or S-state]
+unc_cbo_cache_lookup.any_es
+[Unit: uncore_cbox L3 Lookup any request that access cache and found
+line in E or S-state]
+unc_cbo_cache_lookup.any_i
+[Unit: uncore_cbox L3 Lookup any request that access cache and found
+line in I-state]
+unc_cbo_cache_lookup.any_i
+[Unit: uncore_cbox L3 Lookup any request that access cache and found
+line in I-state]
+...
 
-Thanks, and sorry for missing this case!
+Notice how the events are listed twice.
 
-> ---
->  tools/perf/tests/sigtrap.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->
-> diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
-> index 1004bf0e7cc9..1f147fe6595f 100644
-> --- a/tools/perf/tests/sigtrap.c
-> +++ b/tools/perf/tests/sigtrap.c
-> @@ -22,6 +22,19 @@
->  #include "tests.h"
->  #include "../perf-sys.h"
->
-> +/*
-> + * PowerPC and S390 do not support creation of instruction breakpoints using the
-> + * perf_event interface.
-> + *
-> + * Just disable the test for these architectures until these issues are
-> + * resolved.
-> + */
-> +#if defined(__powerpc__) || defined(__s390x__)
-> +#define BP_ACCOUNT_IS_SUPPORTED 0
-> +#else
-> +#define BP_ACCOUNT_IS_SUPPORTED 1
-> +#endif
-> +
->  #define NUM_THREADS 5
->
->  static struct {
-> @@ -122,6 +135,11 @@ static int test__sigtrap(struct test_suite *test __maybe_unused, int subtest __m
->         char sbuf[STRERR_BUFSIZE];
->         int i, fd, ret = TEST_FAIL;
->
-> +       if (!BP_ACCOUNT_IS_SUPPORTED) {
-> +               pr_debug("Test not supported on this architecture");
-> +               return TEST_SKIP;
-> +       }
-> +
->         pthread_barrier_init(&barrier, NULL, NUM_THREADS + 1);
->
->         action.sa_flags = SA_SIGINFO | SA_NODEFER;
-> --
-> 2.33.1
->
+The named commit changed how we remove duplicate events, in that events
+for different PMUs are not treated as duplicates. I suppose this is to
+handle how "Each hybrid pmu event has been assigned with a pmu name".
+
+Fix uncore PMU alias list by also checking if events with PMU name are not
+cpu PMUs.
+
+Fixes: 0e0ae8742207 ("perf list: Display hybrid PMU events with cpu type")
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+It would be helpful if someone with some of these hybrid CPU systems could
+test this change, thanks!
+
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 6ae58406f4fc..392f6a36418b 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -1659,6 +1659,24 @@ bool is_pmu_core(const char *name)
+ 	return !strcmp(name, "cpu") || is_arm_pmu_core(name);
+ }
+ 
++static bool pmu_alias_is_duplicate(struct sevent *alias_a,
++				   struct sevent *alias_b)
++{
++	/* Different names -> never duplicates */
++	if (strcmp(alias_a->name, alias_b->name))
++		return false;
++	if (!alias_a->pmu)
++		return true;
++	if (!alias_b->pmu)
++		return true;
++	if (!strcmp(alias_a->pmu, alias_b->pmu))
++		return true;
++	/* uncore PMUs */
++	if (!alias_a->is_cpu && !alias_b->is_cpu)
++		return true;
++	return false;
++}
++
+ void print_pmu_events(const char *event_glob, bool name_only, bool quiet_flag,
+ 			bool long_desc, bool details_flag, bool deprecated,
+ 			const char *pmu_name)
+@@ -1744,12 +1762,8 @@ void print_pmu_events(const char *event_glob, bool name_only, bool quiet_flag,
+ 	qsort(aliases, len, sizeof(struct sevent), cmp_sevent);
+ 	for (j = 0; j < len; j++) {
+ 		/* Skip duplicates */
+-		if (j > 0 && !strcmp(aliases[j].name, aliases[j - 1].name)) {
+-			if (!aliases[j].pmu || !aliases[j - 1].pmu ||
+-			    !strcmp(aliases[j].pmu, aliases[j - 1].pmu)) {
+-				continue;
+-			}
+-		}
++		if (j > 0 && pmu_alias_is_duplicate(&aliases[j], &aliases[j - 1]))
++			continue;
+ 
+ 		if (name_only) {
+ 			printf("%s ", aliases[j].name);
+-- 
+2.26.2
+
