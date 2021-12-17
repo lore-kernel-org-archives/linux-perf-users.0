@@ -2,252 +2,248 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EE1C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Dec 2021 11:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3E6C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Dec 2021 11:57:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235460AbhLQLxM (ORCPT
+        id S235754AbhLQL5Z (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 17 Dec 2021 06:53:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34424 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233609AbhLQLxM (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Dec 2021 06:53:12 -0500
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D24DC06173E
-        for <linux-perf-users@vger.kernel.org>; Fri, 17 Dec 2021 03:53:12 -0800 (PST)
-Received: by mail-wr1-x42d.google.com with SMTP id t26so3556649wrb.4
-        for <linux-perf-users@vger.kernel.org>; Fri, 17 Dec 2021 03:53:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fmSFeBMdoKB6nNlLBhYwLQX9VUtS9B/Ded0JWBpXr30=;
-        b=KaW7fnSq7/x6dnLqp7/ORQGvsGjd3ampuFNmmeWWbAOrumsqS6e707B9ZAuNyh4Lnh
-         pXyp26r3Q5+4n+AY11NBgF2rCel6tsO9MOH258wNNRn/JYrp0JVOUOZBa2WuQh+0tddk
-         a4Y8VlFRjZLB05kXNofdLdEPYGxMNQFZsWJ3fKrj7CX02lHxvMbSF8NtvU2nf6etiFig
-         afh+WfDies3nKkvMm/yWRT2ll4WawCGa8jDL/ylTaUSMwKb1h4faUzSiJhE2GOk8biFI
-         xNzTsO9+bbZus3OP88+KzAdYRSuM1zIgkplMzoTA54A59oz8n+RDLJFXcsqlbMa9XSmo
-         3g5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fmSFeBMdoKB6nNlLBhYwLQX9VUtS9B/Ded0JWBpXr30=;
-        b=UfffBKa3EPIw/WipNzbBCSESxhHRbG3dQHbF0wEQZyYKsHYDK0QazzcFTjWtvNv3EV
-         S6tmZivep0f1Hy7WpI1+nj/3wQ4vJ41HqZbk/3Xn4pgpWGS4q3FbIFGDIe9W9cEE36dc
-         2LVK/Gq0VhTsuE4APdzfZuEi4Ly1k7lclm+Trd9GMXe+ECc+cY5mGKVLsX+bB+UuKZOF
-         qUwf7T9I4fkvyiGSCfbzTyNhqEUiKvCSJdh63kf2+/6j3l4zlLuq4k6AdweZEuQx4z5t
-         85zfiw8eNgEHFp35kmYRz+SbnKjXBm34bAbyZiOrbA++hvA8u5qXrAEGyYvKhV1Q1Pdr
-         nNYw==
-X-Gm-Message-State: AOAM530INKUPGFbTminEpOjClB0OWRcfrPZoxUETjThEXMPc2chsjZ3G
-        dMZSNx5/bLhGftR242RhtuIZSkjbvkikIe9RzB5AXw==
-X-Google-Smtp-Source: ABdhPJwuyp3x8ZyunFVNbTsrTBCxHBA9wfNE70ycAmi6k2MDX934plSAKdwEC81FvMD32uuoPa53cbVLOZjLzB2jF6M=
-X-Received: by 2002:adf:ec09:: with SMTP id x9mr2295080wrn.111.1639741990497;
- Fri, 17 Dec 2021 03:53:10 -0800 (PST)
-MIME-Version: 1.0
-References: <20211208160907.749482-1-james.clark@arm.com> <20211208160907.749482-2-james.clark@arm.com>
- <b52ef2f3-9e30-59a6-2aea-e46c93915868@arm.com> <b61ef2e3-e573-4867-af5d-fd5fabece4b1@arm.com>
- <20211210172220.GA1238770@p14s> <CAJ9a7VgBxO0-R4jX6+-Vu10DtcsOeMiq9YrPkEEFQ=6ixNXXVQ@mail.gmail.com>
- <d884f96c-1d4c-119e-5e83-3674260a9694@arm.com>
-In-Reply-To: <d884f96c-1d4c-119e-5e83-3674260a9694@arm.com>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Fri, 17 Dec 2021 11:52:59 +0000
-Message-ID: <CAJ9a7VgUGhjOq2p5oitnCj9HY=vA8Byfi+-W8OB8949-Q49=oA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] coresight: Fail to open with return stacks if they
- are unavailable
-To:     James Clark <James.Clark@arm.com>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        coresight@lists.linaro.org, Leo Yan <leo.yan@linaro.org>,
+        Fri, 17 Dec 2021 06:57:25 -0500
+Received: from foss.arm.com ([217.140.110.172]:56626 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229742AbhLQL5Z (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 17 Dec 2021 06:57:25 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 770BE1435;
+        Fri, 17 Dec 2021 03:57:24 -0800 (PST)
+Received: from [10.57.7.47] (unknown [10.57.7.47])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D67473F5A1;
+        Fri, 17 Dec 2021 03:57:21 -0800 (PST)
+Subject: Re: [PATCH v4 6/6] perf tools: determine if LR is the return address
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, Alexandre Truong <alexandre.truong@arm.com>,
         John Garry <john.garry@huawei.com>,
         Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-arm-kernel@lists.infradead.org
+References: <20211215151139.40854-1-german.gomez@arm.com>
+ <20211215151139.40854-7-german.gomez@arm.com> <YboY541H4dVJDjyp@FVFF77S0Q05N>
+From:   German Gomez <german.gomez@arm.com>
+Message-ID: <154f4a3b-d575-b1ab-cb78-8275aac61eac@arm.com>
+Date:   Fri, 17 Dec 2021 11:57:10 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
+MIME-Version: 1.0
+In-Reply-To: <YboY541H4dVJDjyp@FVFF77S0Q05N>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi James
+Hi Mark,
 
-On Fri, 17 Dec 2021 at 09:41, James Clark <james.clark@arm.com> wrote:
->
->
->
-> On 13/12/2021 09:48, Mike Leach wrote:
-> > Hi James,
-> >
-> > A couple of points - relating mainly to docs:
-> >
->
-> Hi Mike,
->
-> Thanks for the feedback. I was in the process of adding some docs and
-> ran into this https://lkml.org/lkml/2021/12/16/1087 so I went to fix
-> that first. Now I will add some more details and resubmit.
->
-> > 1. Activating branch broadcast overrides any setting of return stack.
-> > As a minimum there needs to be a documentation update to reflect this
-> > -Setting both options is not prohibited in hardware - and in the case
-> > where we can use branch broadcast over a range both are then relevant.
-> >
->
-> Do you mean that if branch broadcast and return stacks are both requested,
-> but branch broadcast is limited to a range, return stacks will only be
-> available outside that branch broadcast range? But if branch broadcast is
-> enabled for all ranges there will be no return stacks at all?
->
+Thanks for your review comments
 
-Correct - you may want to branch broadcast over a small ranges, but
-otherwise use return stack to decrease the amount of trace in other
-areas.
-Once the complex config sets are accepted upstream then this set-up
-will be possible by writing a config to do this.
-
-> > 2. A documented note to reflect that choosing this option will result
-> > in a significant increase in the amount of trace generated - possible
-> > danger of overflows, or less actual instructions covered. In addition
-> > perhaps documents could reflect the intended use-case for this option,
-> > given the disadvantages.
-> >
+On 15/12/2021 16:33, Mark Rutland wrote:
+> Hi,
 >
-> Will do.
+> On Wed, Dec 15, 2021 at 03:11:38PM +0000, German Gomez wrote:
+>> From: Alexandre Truong <alexandre.truong@arm.com>
+>>
+>> On arm64 and frame pointer mode (e.g: perf record --callgraph fp),
+>> use dwarf unwind info to check if the link register is the return
+>> address in order to inject it to the frame pointer stack.
+> This series looks good overall, but as a general note the commit messages are a
+> bit hard to read because they jump into implementation details of the patch
+> (i.e. the change the patch makes) before explaining the problem (i.e. what the
+> patch is trying to solve).
 >
-> > 3. Has this been tested in a situation where it will be of use?
-> > Testing against static code images will show the same decoded trace
-> > output as not using branch broadcast. (although the packet dumps will
-> > show additional output)>
-> > Given a primary use is for situations where code is patched or
-> > dynamically altered at runtime - then this can affect the full decode
-> > output. If the code is being patched to only alter the branch
-> > addresses then decode should work against static images.
-> > If, however, we are tracing code that adds in new branches, on top of
-> > NOPs for example, then the decoding against the original static image
-> > will be wrong, as the image will have the NOPs, rather than the branch
-> > instructions so the apparent location of E atoms will be in a
-> > different position to the actual code. Is there anything in perf that
-> > will ensure that the patched code is presented to the decoder?
-> >
-> > If there are potential decode issues - these too need documenting.
-> >
+> It would be nice to have a short introduction, e.g.
+
+Thanks for the suggestion! I'll run through the logs to see if I can
+improve them.
+
 >
-> I'm not sure this should be a blocking issue for this set. Branch broadcast
-> could already be enabled by setting the mode via sysfs. And the perf decode
-> part isn't necessarily a step in the workflow, maybe someone wants to gather
-> data for another tool.
+>   When unwinding using frame pointers on arm64, the return address of the
+>   current leaf function may be missed. The return address of a leaf function
+>   may live in the LR and/or a frame record (and the location can change within
+>   a function), so it is necessary to use DWARF to identify where to look for
+>   the return address at any given point during a function.
 >
-
-Someone could set this in sysfs - when collecting data via sysfs.  In
-this case they would not be using perf for decode anyway as you say.
-
-What you have added here is a new method for perf to set this feature
-and perf always starts off with a clean configuration - then adds
-according to command line options.
-Therefore this will be the first time anyone will have been able to
-set this for a perf session.
-
-It there are potential limitations, then we need to be clear about
-them - then users of perf, and other hypothetical tools can make a
-good choice about if this option is appropriate - and we avoid mailing
-list complaints (or at least can point to the docs) if users find
-issues that they were warned about!
-
-> I will do some testing after this change though, but I imagine we would have
-> had issues reported it it wasn't working already which lowers the priority.
+>   For example:
 >
-
-really depends on what was tested! If it is being used over static
-code then the subsequent decode will be fine,
-
-Regards
-
-Mike
-
-> James
+>   unsigned long foo(unsigned long i)
+>   {
+>           i += 2;
+> 	  i += 5;
+>   }
 >
-> > Other than the documents and testing,  I cannot see any issues with
-> > this patch set in terms of setting and enabling the option.
-> >
-> > Regards
-> >
-> > Mike
-> >
-> >
-> > On Fri, 10 Dec 2021 at 17:22, Mathieu Poirier
-> > <mathieu.poirier@linaro.org> wrote:
-> >>
-> >> Hi James,
-> >>
-> >> On Thu, Dec 09, 2021 at 11:13:55AM +0000, James Clark wrote:
-> >>>
-> >>>
-> >>> On 09/12/2021 11:00, Suzuki K Poulose wrote:
-> >>>> On 08/12/2021 16:09, James Clark wrote:
-> >>>>> Maintain consistency with the other options by failing to open when they
-> >>>>> aren't supported. For example ETM_OPT_TS, ETM_OPT_CTXTID2 and the newly
-> >>>>> added ETM_OPT_BRANCH_BROADCAST all return with -EINVAL if they are
-> >>>>> requested but not supported by hardware.
-> >>>>>
-> >>>>> The consequence of not doing this is that the user may not be
-> >>>>> aware that they are not enabling the feature as it is silently disabled.
-> >>>>>
-> >>>>> Signed-off-by: James Clark <james.clark@arm.com>
-> >>>>> ---
-> >>>>>   drivers/hwtracing/coresight/coresight-etm4x-core.c | 13 +++++++++----
-> >>>>>   1 file changed, 9 insertions(+), 4 deletions(-)
-> >>>>>
-> >>>>> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> >>>>> index d2bafb50c66a..0a9bb943a5e5 100644
-> >>>>> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> >>>>> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> >>>>> @@ -674,10 +674,15 @@ static int etm4_parse_event_config(struct coresight_device *csdev,
-> >>>>>       }
-> >>>>>         /* return stack - enable if selected and supported */
-> >>>>> -    if ((attr->config & BIT(ETM_OPT_RETSTK)) && drvdata->retstack)
-> >>>>> -        /* bit[12], Return stack enable bit */
-> >>>>> -        config->cfg |= BIT(12);
-> >>>>> -
-> >>>>> +    if (attr->config & BIT(ETM_OPT_RETSTK)) {
-> >>>>> +        if (!drvdata->retstack) {
-> >>>>> +            ret = -EINVAL;
-> >>>>> +            goto out;
-> >>>>> +        } else {
-> >>>>> +            /* bit[12], Return stack enable bit */
-> >>>>> +            config->cfg |= BIT(12);
-> >>>>> +        }
-> >>>>
-> >>>> nit: While at this, please could you change the hard coded value
-> >>>> to ETM4_CFG_BIT_RETSTK ?
-> >>>>
-> >>> I started changing them all because I had trouble searching for bits by name but then
-> >>> I thought it would snowball into a bigger change so I undid it.
-> >>>
-> >>> I think I'll just go and do it now if it's an issue here.
-> >>
-> >> I can apply this set right away and you send another patch to fix all hard coded
-> >> bitfields or you can send another revision with all 4 patches included in it
-> >> (bitfields fix plus these 3).  Just let me know what you want to do.  And next
-> >> time please add a cover letter.
-> >>
-> >> Thanks,
-> >> Mathieu
-> >>
-> >>>
-> >>>> Otherwise, looks good to me
-> >>>>
-> >>>> Suzuki
-> >
-> >
-> >
+>   ... could be compiled as:
+>
+>   foo:
+>   	// return addr in LR
+>   	add	x0, x0, #2
+> 	// return addr in LR
+> 	stp	x29, x30, [SP, #-16]!
+> 	// return addr in LR
+> 	mov	x29, sp
+> 	// return addr in LR *and* frame record
+> 	add	x0, x0, #5
+> 	// return addr in LR *and* frame record
+> 	ldp	x29, x30, [sp], #16
+> 	// return addr in LR
+> 	ret
+>
+>> Write the following application:
+>>
+>> 	int a = 10;
+>>
+>> 	void f2(void)
+>> 	{
+>> 		for (int i = 0; i < 1000000; i++)
+>> 			a *= a;
+>> 	}
+>>
+>> 	void f1()
+>> 	{
+>> 		for (int i = 0; i < 10; i++)
+>> 			f2();
+>> 	}
+>>
+>> 	int main(void)
+>> 	{
+>> 		f1();
+>> 		return 0;
+>> 	}
+>>
+>> with the following compilation flags:
+>>         gcc -fno-omit-frame-pointer -fno-inline -O2
+>>
+>> The compiler omits the frame pointer for f2 on arm. This is a problem
+>> with any leaf call, for example an application with many different
+>> calls to malloc() would always omit the calling frame, even if it
+>> can be determined.
+> I think the wording here is slightly misleading. For f2, the compiler *doesn't
+> create a frame record*, but the frame pointer (to the caller's frame record)
+> remains and is not omitted.
+>
+> Also, I think it's woth noting (as per the example I gave above) this applies
+> to *any* function which is the current leaf function, regardless of whether
+> that function creates a frame record at some point. For example, if `f1` is
+> interrupted before it creates its own frame record (or after it destroys the
+> frame record), the FP will point at the record created by `main` (containing
+> the caller of main), and `main` itself will be missing from the unwind as it
+> will only exist in the LR.
 
+I see! I hadn't considered this. I guess it's not as likely to happen
+but it's worth noting indeed.
 
+>
+>> 	./perf record --call-graph fp ./a.out
+>> 	./perf report
+>>
+>> currently gives the following stack:
+>>
+>> 0xffffea52f361
+>> _start
+>> __libc_start_main
+>> main
+>> f2
+>>
+>> After this change, perf report correctly shows f1() calling f2(),
+>> even though it was missing from the frame pointer unwind:
+>>
+>> 	./perf report
+>>
+>> 0xffffea52f361
+>> _start
+>> __libc_start_main
+>> main
+>> f1
+>> f2
+>>
+>> Signed-off-by: Alexandre Truong <alexandre.truong@arm.com>
+>> Signed-off-by: German Gomez <german.gomez@arm.com>
+>> ---
+>>  tools/perf/util/Build                         |  1 +
+>>  .../util/arm64-frame-pointer-unwind-support.c | 63 +++++++++++++++++++
+>>  .../util/arm64-frame-pointer-unwind-support.h | 10 +++
+>>  tools/perf/util/machine.c                     | 19 ++++--
+>>  tools/perf/util/machine.h                     |  1 +
+>>  5 files changed, 89 insertions(+), 5 deletions(-)
+>>  create mode 100644 tools/perf/util/arm64-frame-pointer-unwind-support.c
+>>  create mode 100644 tools/perf/util/arm64-frame-pointer-unwind-support.h
+>>
+>> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+>> index 2e5bfbb69960..03d4c647bd86 100644
+>> --- a/tools/perf/util/Build
+>> +++ b/tools/perf/util/Build
+>> @@ -1,3 +1,4 @@
+>> +perf-y += arm64-frame-pointer-unwind-support.o
+>>  perf-y += annotate.o
+>>  perf-y += block-info.o
+>>  perf-y += block-range.o
+>> diff --git a/tools/perf/util/arm64-frame-pointer-unwind-support.c b/tools/perf/util/arm64-frame-pointer-unwind-support.c
+>> new file mode 100644
+>> index 000000000000..4f5ecf51ed38
+>> --- /dev/null
+>> +++ b/tools/perf/util/arm64-frame-pointer-unwind-support.c
+>> @@ -0,0 +1,63 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +#include "arm64-frame-pointer-unwind-support.h"
+>> +#include "callchain.h"
+>> +#include "event.h"
+>> +#include "perf_regs.h" // SMPL_REG_MASK
+>> +#include "unwind.h"
+>> +
+>> +#define perf_event_arm_regs perf_event_arm64_regs
+>> +#include "../arch/arm64/include/uapi/asm/perf_regs.h"
+>> +#undef perf_event_arm_regs
+>> +
+>> +struct entries {
+>> +	u64 stack[2];
+>> +	size_t length;
+>> +};
+>> +
+>> +static bool get_leaf_frame_caller_enabled(struct perf_sample *sample)
+>> +{
+>> +	return callchain_param.record_mode == CALLCHAIN_FP && sample->user_regs.regs
+>> +		&& sample->user_regs.mask & SMPL_REG_MASK(PERF_REG_ARM64_LR);
+>> +}
+>> +
+>> +static int add_entry(struct unwind_entry *entry, void *arg)
+>> +{
+>> +	struct entries *entries = arg;
+>> +
+>> +	entries->stack[entries->length++] = entry->ip;
+>> +	return 0;
+>> +}
+>> +
+>> +u64 get_leaf_frame_caller_aarch64(struct perf_sample *sample, struct thread *thread, int usr_idx)
+>> +{
+>> +	int ret;
+>> +	struct entries entries = {};
+>> +	struct regs_dump old_regs = sample->user_regs;
+>> +
+>> +	if (!get_leaf_frame_caller_enabled(sample))
+>> +		return 0;
+>> +
+>> +	/*
+>> +	 * If PC and SP are not recorded, get the value of PC from the stack
+>> +	 * and set its mask. SP is not used when doing the unwinding but it
+>> +	 * still needs to be set to prevent failures.
+>> +	 */
+> To prevent failures where? Is this something libunwind requires?
 
--- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+Admittedly I haven't look very deep into libunwind, but SP seems to go
+ignored when getting the last 2 entries only, so here we set it to any
+value.
+
+Thanks,
+German
