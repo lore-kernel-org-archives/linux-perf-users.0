@@ -2,102 +2,89 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD00C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Dec 2021 12:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43710C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Dec 2021 15:45:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236057AbhLQMJS (ORCPT
+        id S234993AbhLQPpb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 17 Dec 2021 07:09:18 -0500
-Received: from foss.arm.com ([217.140.110.172]:56794 "EHLO foss.arm.com"
+        Fri, 17 Dec 2021 10:45:31 -0500
+Received: from foss.arm.com ([217.140.110.172]:59238 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236070AbhLQMJO (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Dec 2021 07:09:14 -0500
+        id S235339AbhLQPpb (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 17 Dec 2021 10:45:31 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D6C221435;
-        Fri, 17 Dec 2021 04:09:13 -0800 (PST)
-Received: from [10.57.7.47] (unknown [10.57.7.47])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 494F33F5A1;
-        Fri, 17 Dec 2021 04:09:11 -0800 (PST)
-Subject: Re: [PATCH v4 4/6] perf tools: enable dwarf_callchain_users on arm64
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, Alexandre Truong <alexandre.truong@arm.com>,
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C720E1042;
+        Fri, 17 Dec 2021 07:45:30 -0800 (PST)
+Received: from ip-10-252-15-108.eu-west-1.compute.internal (unknown [10.252.15.108])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AEF3A3F774;
+        Fri, 17 Dec 2021 07:45:28 -0800 (PST)
+From:   German Gomez <german.gomez@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     German Gomez <german.gomez@arm.com>,
         John Garry <john.garry@huawei.com>,
         Will Deacon <will@kernel.org>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
         Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-arm-kernel@lists.infradead.org
-References: <20211215151139.40854-1-german.gomez@arm.com>
- <20211215151139.40854-5-german.gomez@arm.com> <YboZ24EMD/4lVkyp@FVFF77S0Q05N>
-From:   German Gomez <german.gomez@arm.com>
-Message-ID: <e7538b32-365e-7f0a-e77a-59d47febdd2e@arm.com>
-Date:   Fri, 17 Dec 2021 12:08:59 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+Subject: [PATCH v5 0/6] perf tools/arm64: Fix missing leaf-function callers in ARM64 when using "--call-graph=fp"
+Date:   Fri, 17 Dec 2021 15:45:14 +0000
+Message-Id: <20211217154521.80603-1-german.gomez@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <YboZ24EMD/4lVkyp@FVFF77S0Q05N>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+(This cset applies on top of [1])
 
-On 15/12/2021 16:37, Mark Rutland wrote:
-> On Wed, Dec 15, 2021 at 03:11:36PM +0000, German Gomez wrote:
->> [...]
->>
->> +
->> +	/*
->> +	 * It's possible to determine the caller of leaf frames with omitted
->> +	 * frame pointers on aarch64 using libunwind, so enable it.
->> +	 */
-> I reckon it's worth mentioning *why* we need to do this; how about:
->
-> 	/*
-> 	 * It's necessary to use libunwind to reliably determine the caller of
-> 	 * a leaf function on aarch64, as otherwise we cannot know whether to
-> 	 * start from the LR or FP.
-> 	 *
-> 	 * Always starting from the LR can result in duplicate or entirely
-> 	 * erroneous entries. Always skipping the LR and starting from the FP
-> 	 * can result in missing entries.
-> 	 */
->
-> Other than that, this looks fine to me!
->
-> Thanks,
-> Mark.
+Call-graphs on ARM64 using the option "--call-grah fp" are missing the
+callers of the leaf functions. See [PATCH 6/6] for a before and after
+after example using this cset.
 
+[1] https://lore.kernel.org/all/20211207180653.1147374-1-german.gomez@arm.com/
 
-Ack, I will update this
+---
+Changes since v4
+  - [PATCH 4/6] Apply Mark Rutland's comments.
+  - [PATCH 6/6] Rewrite commit log.
 
-Thanks,
-German
+Changes since v3
+  - Only record LR register instead of all registers in [PATCH 1/6].
+  - Introduce [PATCH 5/6] to refactor the SAMPL_REG macro.
+  - Fix compilation issues on different platforms.
 
->
->> +	if (callchain_param.record_mode == CALLCHAIN_FP && !strcmp(arch, "arm64"))
->> +		dwarf_callchain_users = true;
->>  }
->>  
->>  static bool chain_match(struct callchain_list *base_chain,
->> diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
->> index 77fba053c677..d95615daed73 100644
->> --- a/tools/perf/util/callchain.h
->> +++ b/tools/perf/util/callchain.h
->> @@ -300,7 +300,7 @@ int callchain_branch_counts(struct callchain_root *root,
->>  			    u64 *branch_count, u64 *predicted_count,
->>  			    u64 *abort_count, u64 *cycles_count);
->>  
->> -void callchain_param_setup(u64 sample_type);
->> +void callchain_param_setup(u64 sample_type, const char *arch);
->>  
->>  bool callchain_cnode_matched(struct callchain_node *base_cnode,
->>  			     struct callchain_node *pair_cnode);
->> -- 
->> 2.25.1
->>
+Alexandre Truong (5):
+  perf tools: record ARM64 LR register automatically
+  perf tools: add a mechanism to inject stack frames
+  perf tools: Refactor script__setup_sample_type()
+  perf tools: enable dwarf_callchain_users on arm64
+  perf tools: determine if LR is the return address
+
+German Gomez (1):
+  perf tools: Refactor SMPL_REG macro in perf_regs.h
+
+ tools/perf/arch/arm64/util/machine.c          |  7 +++
+ tools/perf/builtin-record.c                   |  8 +++
+ tools/perf/builtin-report.c                   |  4 +-
+ tools/perf/builtin-script.c                   | 13 +---
+ tools/perf/util/Build                         |  1 +
+ .../util/arm64-frame-pointer-unwind-support.c | 63 +++++++++++++++++++
+ .../util/arm64-frame-pointer-unwind-support.h | 10 +++
+ tools/perf/util/callchain.c                   | 14 ++++-
+ tools/perf/util/callchain.h                   |  4 +-
+ tools/perf/util/machine.c                     | 50 ++++++++++++++-
+ tools/perf/util/machine.h                     |  1 +
+ tools/perf/util/perf_regs.h                   |  7 ++-
+ 12 files changed, 162 insertions(+), 20 deletions(-)
+ create mode 100644 tools/perf/util/arm64-frame-pointer-unwind-support.c
+ create mode 100644 tools/perf/util/arm64-frame-pointer-unwind-support.h
+
+-- 
+2.25.1
+
