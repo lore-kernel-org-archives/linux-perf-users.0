@@ -2,121 +2,252 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D464EC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Dec 2021 10:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EE1C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Dec 2021 11:53:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234599AbhLQKUC (ORCPT
+        id S235460AbhLQLxM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 17 Dec 2021 05:20:02 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4302 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229608AbhLQKUC (ORCPT
+        Fri, 17 Dec 2021 06:53:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34424 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233609AbhLQLxM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Dec 2021 05:20:02 -0500
-Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JFlKh4mnQz6896L;
-        Fri, 17 Dec 2021 18:17:44 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Fri, 17 Dec 2021 11:19:59 +0100
-Received: from [10.47.26.158] (10.47.26.158) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Fri, 17 Dec
- 2021 10:19:58 +0000
-Subject: Re: [RFC PATCH 1/1] perf arm64: Implement --topdown with metrics
-To:     Andrew Kilroy <andrew.kilroy@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "acme@kernel.org" <acme@kernel.org>
-CC:     Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
+        Fri, 17 Dec 2021 06:53:12 -0500
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D24DC06173E
+        for <linux-perf-users@vger.kernel.org>; Fri, 17 Dec 2021 03:53:12 -0800 (PST)
+Received: by mail-wr1-x42d.google.com with SMTP id t26so3556649wrb.4
+        for <linux-perf-users@vger.kernel.org>; Fri, 17 Dec 2021 03:53:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fmSFeBMdoKB6nNlLBhYwLQX9VUtS9B/Ded0JWBpXr30=;
+        b=KaW7fnSq7/x6dnLqp7/ORQGvsGjd3ampuFNmmeWWbAOrumsqS6e707B9ZAuNyh4Lnh
+         pXyp26r3Q5+4n+AY11NBgF2rCel6tsO9MOH258wNNRn/JYrp0JVOUOZBa2WuQh+0tddk
+         a4Y8VlFRjZLB05kXNofdLdEPYGxMNQFZsWJ3fKrj7CX02lHxvMbSF8NtvU2nf6etiFig
+         afh+WfDies3nKkvMm/yWRT2ll4WawCGa8jDL/ylTaUSMwKb1h4faUzSiJhE2GOk8biFI
+         xNzTsO9+bbZus3OP88+KzAdYRSuM1zIgkplMzoTA54A59oz8n+RDLJFXcsqlbMa9XSmo
+         3g5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fmSFeBMdoKB6nNlLBhYwLQX9VUtS9B/Ded0JWBpXr30=;
+        b=UfffBKa3EPIw/WipNzbBCSESxhHRbG3dQHbF0wEQZyYKsHYDK0QazzcFTjWtvNv3EV
+         S6tmZivep0f1Hy7WpI1+nj/3wQ4vJ41HqZbk/3Xn4pgpWGS4q3FbIFGDIe9W9cEE36dc
+         2LVK/Gq0VhTsuE4APdzfZuEi4Ly1k7lclm+Trd9GMXe+ECc+cY5mGKVLsX+bB+UuKZOF
+         qUwf7T9I4fkvyiGSCfbzTyNhqEUiKvCSJdh63kf2+/6j3l4zlLuq4k6AdweZEuQx4z5t
+         85zfiw8eNgEHFp35kmYRz+SbnKjXBm34bAbyZiOrbA++hvA8u5qXrAEGyYvKhV1Q1Pdr
+         nNYw==
+X-Gm-Message-State: AOAM530INKUPGFbTminEpOjClB0OWRcfrPZoxUETjThEXMPc2chsjZ3G
+        dMZSNx5/bLhGftR242RhtuIZSkjbvkikIe9RzB5AXw==
+X-Google-Smtp-Source: ABdhPJwuyp3x8ZyunFVNbTsrTBCxHBA9wfNE70ycAmi6k2MDX934plSAKdwEC81FvMD32uuoPa53cbVLOZjLzB2jF6M=
+X-Received: by 2002:adf:ec09:: with SMTP id x9mr2295080wrn.111.1639741990497;
+ Fri, 17 Dec 2021 03:53:10 -0800 (PST)
+MIME-Version: 1.0
+References: <20211208160907.749482-1-james.clark@arm.com> <20211208160907.749482-2-james.clark@arm.com>
+ <b52ef2f3-9e30-59a6-2aea-e46c93915868@arm.com> <b61ef2e3-e573-4867-af5d-fd5fabece4b1@arm.com>
+ <20211210172220.GA1238770@p14s> <CAJ9a7VgBxO0-R4jX6+-Vu10DtcsOeMiq9YrPkEEFQ=6ixNXXVQ@mail.gmail.com>
+ <d884f96c-1d4c-119e-5e83-3674260a9694@arm.com>
+In-Reply-To: <d884f96c-1d4c-119e-5e83-3674260a9694@arm.com>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Fri, 17 Dec 2021 11:52:59 +0000
+Message-ID: <CAJ9a7VgUGhjOq2p5oitnCj9HY=vA8Byfi+-W8OB8949-Q49=oA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] coresight: Fail to open with return stacks if they
+ are unavailable
+To:     James Clark <James.Clark@arm.com>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        coresight@lists.linaro.org, Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <4c375d34-bf20-496d-22fc-aed8597126e2@huawei.com>
- <20211214184240.24215-1-andrew.kilroy@arm.com>
- <20211214184240.24215-2-andrew.kilroy@arm.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <48437bee-9c39-38ba-e990-ba9a6a5378b4@huawei.com>
-Date:   Fri, 17 Dec 2021 10:19:31 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
-MIME-Version: 1.0
-In-Reply-To: <20211214184240.24215-2-andrew.kilroy@arm.com>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.26.158]
-X-ClientProxiedBy: lhreml751-chm.china.huawei.com (10.201.108.201) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 14/12/2021 18:42, Andrew Kilroy wrote:
-> This patch implements the --topdown option by making use of metrics to
-> dictate what counters are obtained in order to show the various topdown
-> columns, e.g.  Frontend Bound, Backend Bound, Retiring and Bad
-> Speculation.
-> 
-> The MetricGroup name is used to identify which set of metrics are to be
-> shown.  For the moment use TopDownL1 and enable for arm64
-> 
-> Signed-off-by: Andrew Kilroy<andrew.kilroy@arm.com>
+Hi James
 
-This works in that it gives results, but does not supply the same output 
-format as for x86 nor has same restrictions in usage (-a commandline 
-required, for example, below).
+On Fri, 17 Dec 2021 at 09:41, James Clark <james.clark@arm.com> wrote:
+>
+>
+>
+> On 13/12/2021 09:48, Mike Leach wrote:
+> > Hi James,
+> >
+> > A couple of points - relating mainly to docs:
+> >
+>
+> Hi Mike,
+>
+> Thanks for the feedback. I was in the process of adding some docs and
+> ran into this https://lkml.org/lkml/2021/12/16/1087 so I went to fix
+> that first. Now I will add some more details and resubmit.
+>
+> > 1. Activating branch broadcast overrides any setting of return stack.
+> > As a minimum there needs to be a documentation update to reflect this
+> > -Setting both options is not prohibited in hardware - and in the case
+> > where we can use branch broadcast over a range both are then relevant.
+> >
+>
+> Do you mean that if branch broadcast and return stacks are both requested,
+> but branch broadcast is limited to a range, return stacks will only be
+> available outside that branch broadcast range? But if branch broadcast is
+> enabled for all ranges there will be no return stacks at all?
+>
 
-For my x86 broadwell:
+Correct - you may want to branch broadcast over a small ranges, but
+otherwise use return stack to decrease the amount of trace in other
+areas.
+Once the complex config sets are accepted upstream then this set-up
+will be possible by writing a config to do this.
 
-john@localhost:~/linux/tools/perf> sudo ./perf stat --topdown  sleep 1
-top down event configuration requires system-wide mode (-a)
+> > 2. A documented note to reflect that choosing this option will result
+> > in a significant increase in the amount of trace generated - possible
+> > danger of overflows, or less actual instructions covered. In addition
+> > perhaps documents could reflect the intended use-case for this option,
+> > given the disadvantages.
+> >
+>
+> Will do.
+>
+> > 3. Has this been tested in a situation where it will be of use?
+> > Testing against static code images will show the same decoded trace
+> > output as not using branch broadcast. (although the packet dumps will
+> > show additional output)>
+> > Given a primary use is for situations where code is patched or
+> > dynamically altered at runtime - then this can affect the full decode
+> > output. If the code is being patched to only alter the branch
+> > addresses then decode should work against static images.
+> > If, however, we are tracing code that adds in new branches, on top of
+> > NOPs for example, then the decoding against the original static image
+> > will be wrong, as the image will have the NOPs, rather than the branch
+> > instructions so the apparent location of E atoms will be in a
+> > different position to the actual code. Is there anything in perf that
+> > will ensure that the patched code is presented to the decoder?
+> >
+> > If there are potential decode issues - these too need documenting.
+> >
+>
+> I'm not sure this should be a blocking issue for this set. Branch broadcast
+> could already be enabled by setting the mode via sysfs. And the perf decode
+> part isn't necessarily a step in the workflow, maybe someone wants to gather
+> data for another tool.
+>
 
-john@localhost:~/linux/tools/perf> sudo ./perf stat --topdown -a sleep 1
-Performance counter stats for 'system wide':
+Someone could set this in sysfs - when collecting data via sysfs.  In
+this case they would not be using perf for decode anyway as you say.
 
-                                    retiring      bad speculation 
-frontend bound        backend bound
-S0-D0-C0           2                29.2%                 6.3% 
-      37.4%                27.1%
-S0-D0-C1           2                20.4%                 6.2% 
-      42.1%                31.3%
+What you have added here is a new method for perf to set this feature
+and perf always starts off with a clean configuration - then adds
+according to command line options.
+Therefore this will be the first time anyone will have been able to
+set this for a perf session.
 
-       0.998007338 seconds time elapsed
+It there are potential limitations, then we need to be clear about
+them - then users of perf, and other hypothetical tools can make a
+good choice about if this option is appropriate - and we avoid mailing
+list complaints (or at least can point to the docs) if users find
+issues that they were warned about!
 
-john@localhost:~/linux/tools/perf>
+> I will do some testing after this change though, but I imagine we would have
+> had issues reported it it wasn't working already which lowers the priority.
+>
 
----
+really depends on what was tested! If it is being used over static
+code then the subsequent decode will be fine,
 
-Then my arm64 hip08 platform:
+Regards
 
-john@debian:~/kernel-dev/tools/perf$ sudo ./perf stat  --topdown sleep 1
+Mike
 
-  Performance counter stats for 'sleep 1':
+> James
+>
+> > Other than the documents and testing,  I cannot see any issues with
+> > this patch set in terms of setting and enabling the option.
+> >
+> > Regards
+> >
+> > Mike
+> >
+> >
+> > On Fri, 10 Dec 2021 at 17:22, Mathieu Poirier
+> > <mathieu.poirier@linaro.org> wrote:
+> >>
+> >> Hi James,
+> >>
+> >> On Thu, Dec 09, 2021 at 11:13:55AM +0000, James Clark wrote:
+> >>>
+> >>>
+> >>> On 09/12/2021 11:00, Suzuki K Poulose wrote:
+> >>>> On 08/12/2021 16:09, James Clark wrote:
+> >>>>> Maintain consistency with the other options by failing to open when they
+> >>>>> aren't supported. For example ETM_OPT_TS, ETM_OPT_CTXTID2 and the newly
+> >>>>> added ETM_OPT_BRANCH_BROADCAST all return with -EINVAL if they are
+> >>>>> requested but not supported by hardware.
+> >>>>>
+> >>>>> The consequence of not doing this is that the user may not be
+> >>>>> aware that they are not enabling the feature as it is silently disabled.
+> >>>>>
+> >>>>> Signed-off-by: James Clark <james.clark@arm.com>
+> >>>>> ---
+> >>>>>   drivers/hwtracing/coresight/coresight-etm4x-core.c | 13 +++++++++----
+> >>>>>   1 file changed, 9 insertions(+), 4 deletions(-)
+> >>>>>
+> >>>>> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> >>>>> index d2bafb50c66a..0a9bb943a5e5 100644
+> >>>>> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> >>>>> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> >>>>> @@ -674,10 +674,15 @@ static int etm4_parse_event_config(struct coresight_device *csdev,
+> >>>>>       }
+> >>>>>         /* return stack - enable if selected and supported */
+> >>>>> -    if ((attr->config & BIT(ETM_OPT_RETSTK)) && drvdata->retstack)
+> >>>>> -        /* bit[12], Return stack enable bit */
+> >>>>> -        config->cfg |= BIT(12);
+> >>>>> -
+> >>>>> +    if (attr->config & BIT(ETM_OPT_RETSTK)) {
+> >>>>> +        if (!drvdata->retstack) {
+> >>>>> +            ret = -EINVAL;
+> >>>>> +            goto out;
+> >>>>> +        } else {
+> >>>>> +            /* bit[12], Return stack enable bit */
+> >>>>> +            config->cfg |= BIT(12);
+> >>>>> +        }
+> >>>>
+> >>>> nit: While at this, please could you change the hard coded value
+> >>>> to ETM4_CFG_BIT_RETSTK ?
+> >>>>
+> >>> I started changing them all because I had trouble searching for bits by name but then
+> >>> I thought it would snowball into a bigger change so I undid it.
+> >>>
+> >>> I think I'll just go and do it now if it's an issue here.
+> >>
+> >> I can apply this set right away and you send another patch to fix all hard coded
+> >> bitfields or you can send another revision with all 4 patches included in it
+> >> (bitfields fix plus these 3).  Just let me know what you want to do.  And next
+> >> time please add a cover letter.
+> >>
+> >> Thanks,
+> >> Mathieu
+> >>
+> >>>
+> >>>> Otherwise, looks good to me
+> >>>>
+> >>>> Suzuki
+> >
+> >
+> >
 
-             retiring      bad_speculation        backend_bound 
-frontend_bound
-                 0.19                 0.17                 0.27 
-        0.37
 
-        1.000832714 seconds time elapsed
 
-        0.000891000 seconds user
-        0.000000000 seconds sys
-
-And there is no colouring for results which are above/below standard 
-thresholds (see stat-shadow.c:get_radio_color()).
-
-My impression is that we're not plugging the results from 
-metricgroup__parse_groups_to_evlist() into the --topdown print 
-functionality properly.
-
-Thanks,
-John
+-- 
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
