@@ -2,110 +2,202 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21629C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Dec 2021 22:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06AEEC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Dec 2021 00:54:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233727AbhLPWXK (ORCPT
+        id S231405AbhLQAx7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 16 Dec 2021 17:23:10 -0500
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:64072 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233713AbhLPWXK (ORCPT
+        Thu, 16 Dec 2021 19:53:59 -0500
+Received: from mail-lf1-f46.google.com ([209.85.167.46]:36437 "EHLO
+        mail-lf1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231376AbhLQAx6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 16 Dec 2021 17:23:10 -0500
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 1BGJ1qDL006085
-        for <linux-perf-users@vger.kernel.org>; Thu, 16 Dec 2021 14:23:09 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=facebook;
- bh=kZGp4SALCBQYWguUiQk5w6Jyl0sb+Yx0G89kpUgWXKM=;
- b=nsuFEeWbhPZZMf6rHggVEjV4gTA1gYXOrrfvhggkSgBVd83klhYnT+j6gRol+o9GWIHM
- IN8zvdiEdIkztbj+MNuMlXS7ksXL49bgdEnjKEvJhOcN9USLAwDl8MDEzg8c8flWK7kp
- PVGo8weG2fIVWF+o1QndysOI2XcYn8rb+jU= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3d03d5w86m-4
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Thu, 16 Dec 2021 14:23:09 -0800
-Received: from twshared10140.39.prn1.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Thu, 16 Dec 2021 14:22:07 -0800
-Received: by devbig921.prn2.facebook.com (Postfix, from userid 132113)
-        id E4B707909AD; Thu, 16 Dec 2021 14:22:02 -0800 (PST)
-From:   Christy Lee <christylee@fb.com>
-To:     <andrii@kernel.org>, <acme@kernel.org>
-CC:     <christylee@fb.com>, <christyc.y.lee@gmail.com>,
-        <bpf@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <kernel-team@fb.com>
-Subject: [PATCH bpf-next 1/2] perf: stop using deprecated bpf_prog_load() API
-Date:   Thu, 16 Dec 2021 14:21:07 -0800
-Message-ID: <20211216222108.110518-2-christylee@fb.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20211216222108.110518-1-christylee@fb.com>
-References: <20211216222108.110518-1-christylee@fb.com>
+        Thu, 16 Dec 2021 19:53:58 -0500
+Received: by mail-lf1-f46.google.com with SMTP id k37so1360111lfv.3;
+        Thu, 16 Dec 2021 16:53:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=moakT1DzWowm1fn/gXYGcfSGbEyAF7ouY/FD59Ggba0=;
+        b=5usuid3KGaQUmjd4cwdkanEnYpQPnVxFRS0RcrIJXm+PwLh3quMfHkELpSMfpO9qGi
+         8n1kKr7f0ecNxe6cGItvZ2zFcdIgsyIRhghT7NJngbs/GbyIA5tLtz29kSeUY348SIDN
+         CqO6wME08Dvd6jLUzJqOGrVLEg26biXRelco6IHbPQJuJIfEqj+uohDhIVfK6sah/jAy
+         zJmiG+k634qzkWiAFvjFx6JvUBNeif1YewE4Q7vkVEoP32yF4QeJ0bzk9z7oXEFsvZD/
+         2spzbmanGXAi/vTWkkU+3R7Sp1jtWCwHj1csQl2UoDfC90LDldkjJGKweo9K7syRgm9C
+         y/UA==
+X-Gm-Message-State: AOAM531H+qr2S5n7hfaX3lbJDoA4hddhL5kX9c7G82fnYHjeuGzSLI9X
+        mPtCNt8XqtxQxr8bh856Q1i5R8r1GoIn2MpFe+w=
+X-Google-Smtp-Source: ABdhPJzSgjb9WoL9RBNiQm06jwRoyKlhnS6SGmZMpDHxLc66XubQpjf+GEl0D9Mi2gS8p2svW22Gnt8qaqQcdMT/v0U=
+X-Received: by 2002:ac2:5e8b:: with SMTP id b11mr667647lfq.47.1639702437172;
+ Thu, 16 Dec 2021 16:53:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: QEyh1M2upd8NUIFVGCiqUcPKbtoimBbu
-X-Proofpoint-GUID: QEyh1M2upd8NUIFVGCiqUcPKbtoimBbu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2021-12-16_09,2021-12-16_01,2021-12-02_01
-X-Proofpoint-Spam-Details: rule=fb_outbound_notspam policy=fb_outbound score=0 suspectscore=0
- mlxscore=0 priorityscore=1501 adultscore=0 clxscore=1015
- lowpriorityscore=0 phishscore=0 mlxlogscore=999 spamscore=0 bulkscore=0
- impostorscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2110150000 definitions=main-2112160117
-X-FB-Internal: deliver
+References: <20211216152404.52474-1-german.gomez@arm.com>
+In-Reply-To: <20211216152404.52474-1-german.gomez@arm.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Thu, 16 Dec 2021 16:53:45 -0800
+Message-ID: <CAM9d7cjyuJnFmz5vAuZtzGWD6ttG94owfJW4i53x50n8+a=kJA@mail.gmail.com>
+Subject: Re: [PATCH v3] perf arm-spe: Synthesize SPE instruction events
+To:     German Gomez <german.gomez@arm.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Signed-off-by: Christy Lee <christylee@fb.com>
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
----
- tools/perf/tests/bpf.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
+On Thu, Dec 16, 2021 at 7:24 AM German Gomez <german.gomez@arm.com> wrote:
+>
+> Synthesize instruction events for every ARM SPE record.
+>
+> Arm SPE implements a hardware-based sample period, and perf implements a
+> software-based one. Add a warning message to inform the user of this.
+>
+> Signed-off-by: German Gomez <german.gomez@arm.com>
 
-diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
-index 573490530194..57b9591f7cbb 100644
---- a/tools/perf/tests/bpf.c
-+++ b/tools/perf/tests/bpf.c
-@@ -281,8 +281,8 @@ static int __test__bpf(int idx)
-=20
- static int check_env(void)
- {
-+	LIBBPF_OPTS(bpf_prog_load_opts, opts);
- 	int err;
--	unsigned int kver_int;
- 	char license[] =3D "GPL";
-=20
- 	struct bpf_insn insns[] =3D {
-@@ -290,19 +290,13 @@ static int check_env(void)
- 		BPF_EXIT_INSN(),
- 	};
-=20
--	err =3D fetch_kernel_version(&kver_int, NULL, 0);
-+	err =3D fetch_kernel_version(&opts.kern_version, NULL, 0);
- 	if (err) {
- 		pr_debug("Unable to get kernel version\n");
- 		return err;
- 	}
--
--/* temporarily disable libbpf deprecation warnings */
--#pragma GCC diagnostic push
--#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
--	err =3D bpf_load_program(BPF_PROG_TYPE_KPROBE, insns,
--			       ARRAY_SIZE(insns),
--			       license, kver_int, NULL, 0);
--#pragma GCC diagnostic pop
-+	err =3D bpf_prog_load(BPF_PROG_TYPE_KPROBE, NULL, license, insns,
-+			    ARRAY_SIZE(insns), &opts);
- 	if (err < 0) {
- 		pr_err("Missing basic BPF support, skip this test: %s\n",
- 		       strerror(errno));
---=20
-2.30.2
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
+Thanks,
+Namhyung
+
+
+> ---
+> Changes since v2
+>   - Rebase patch on top of https://lore.kernel.org/r/20211201220855.1260688-1-namhyung@kernel.org
+>   - Don't error out when using unsupported sample period type.
+>   - Store instructions_sample_period into samples.
+> Changes since v1 [https://lore.kernel.org/all/20211117142833.226629-1-german.gomez@arm.com]
+>   - Generate events with "--itrace=i" instead of "--itrace=o".
+>   - Generate events with virt_addr, phys_addr, and data_src values.
+> ---
+>  tools/perf/util/arm-spe.c | 62 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+>
+> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+> index 8a3828f86901..d2b64e3f588b 100644
+> --- a/tools/perf/util/arm-spe.c
+> +++ b/tools/perf/util/arm-spe.c
+> @@ -58,6 +58,8 @@ struct arm_spe {
+>         u8                              sample_branch;
+>         u8                              sample_remote_access;
+>         u8                              sample_memory;
+> +       u8                              sample_instructions;
+> +       u64                             instructions_sample_period;
+>
+>         u64                             l1d_miss_id;
+>         u64                             l1d_access_id;
+> @@ -68,6 +70,7 @@ struct arm_spe {
+>         u64                             branch_miss_id;
+>         u64                             remote_access_id;
+>         u64                             memory_id;
+> +       u64                             instructions_id;
+>
+>         u64                             kernel_start;
+>
+> @@ -90,6 +93,7 @@ struct arm_spe_queue {
+>         u64                             time;
+>         u64                             timestamp;
+>         struct thread                   *thread;
+> +       u64                             period_instructions;
+>  };
+>
+>  static void arm_spe_dump(struct arm_spe *spe __maybe_unused,
+> @@ -202,6 +206,7 @@ static struct arm_spe_queue *arm_spe__alloc_queue(struct arm_spe *spe,
+>         speq->pid = -1;
+>         speq->tid = -1;
+>         speq->cpu = -1;
+> +       speq->period_instructions = 0;
+>
+>         /* params set */
+>         params.get_trace = arm_spe_get_trace;
+> @@ -353,6 +358,35 @@ static int arm_spe__synth_branch_sample(struct arm_spe_queue *speq,
+>         return arm_spe_deliver_synth_event(spe, speq, event, &sample);
+>  }
+>
+> +static int arm_spe__synth_instruction_sample(struct arm_spe_queue *speq,
+> +                                            u64 spe_events_id, u64 data_src)
+> +{
+> +       struct arm_spe *spe = speq->spe;
+> +       struct arm_spe_record *record = &speq->decoder->record;
+> +       union perf_event *event = speq->event_buf;
+> +       struct perf_sample sample = { .ip = 0, };
+> +
+> +       /*
+> +        * Handles perf instruction sampling period.
+> +        */
+> +       speq->period_instructions++;
+> +       if (speq->period_instructions < spe->instructions_sample_period)
+> +               return 0;
+> +       speq->period_instructions = 0;
+> +
+> +       arm_spe_prep_sample(spe, speq, event, &sample);
+> +
+> +       sample.id = spe_events_id;
+> +       sample.stream_id = spe_events_id;
+> +       sample.addr = record->virt_addr;
+> +       sample.phys_addr = record->phys_addr;
+> +       sample.data_src = data_src;
+> +       sample.period = spe->instructions_sample_period;
+> +       sample.weight = record->latency;
+> +
+> +       return arm_spe_deliver_synth_event(spe, speq, event, &sample);
+> +}
+> +
+>  #define SPE_MEM_TYPE   (ARM_SPE_L1D_ACCESS | ARM_SPE_L1D_MISS | \
+>                          ARM_SPE_LLC_ACCESS | ARM_SPE_LLC_MISS | \
+>                          ARM_SPE_REMOTE_ACCESS)
+> @@ -482,6 +516,12 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
+>                         return err;
+>         }
+>
+> +       if (spe->sample_instructions) {
+> +               err = arm_spe__synth_instruction_sample(speq, spe->instructions_id, data_src);
+> +               if (err)
+> +                       return err;
+> +       }
+> +
+>         return 0;
+>  }
+>
+> @@ -1110,7 +1150,29 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+>                         return err;
+>                 spe->memory_id = id;
+>                 arm_spe_set_event_name(evlist, id, "memory");
+> +               id += 1;
+> +       }
+> +
+> +       if (spe->synth_opts.instructions) {
+> +               if (spe->synth_opts.period_type != PERF_ITRACE_PERIOD_INSTRUCTIONS) {
+> +                       pr_warning("Only instruction-based sampling period is currently supported by Arm SPE.\n");
+> +                       goto synth_instructions_out;
+> +               }
+> +               if (spe->synth_opts.period > 1)
+> +                       pr_warning("Arm SPE has a hardware-based sample period.\n"
+> +                                  "Additional instruction events will be discarded by --itrace\n");
+> +
+> +               spe->sample_instructions = true;
+> +               attr.config = PERF_COUNT_HW_INSTRUCTIONS;
+> +               attr.sample_period = spe->synth_opts.period;
+> +               spe->instructions_sample_period = attr.sample_period;
+> +               err = arm_spe_synth_event(session, &attr, id);
+> +               if (err)
+> +                       return err;
+> +               spe->instructions_id = id;
+> +               arm_spe_set_event_name(evlist, id, "instructions");
+>         }
+> +synth_instructions_out:
+>
+>         return 0;
+>  }
+> --
+> 2.25.1
+>
