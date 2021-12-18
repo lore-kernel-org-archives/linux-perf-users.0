@@ -2,327 +2,180 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D0BC433F5
-	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Dec 2021 11:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D65C5C433F5
+	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Dec 2021 12:47:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232972AbhLRLfK (ORCPT
+        id S231977AbhLRMrN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 18 Dec 2021 06:35:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42840 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230098AbhLRLfK (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 18 Dec 2021 06:35:10 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DB79C061574;
-        Sat, 18 Dec 2021 03:35:10 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B721660A3A;
-        Sat, 18 Dec 2021 11:35:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B982AC36AE5;
-        Sat, 18 Dec 2021 11:35:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639827309;
-        bh=04pLrZFuqCkSrnuUu0DYS0PBuxWp5YCZIGjnTuEqInU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DTpOi9HQx42hFEtJp9seBAkBDfNJedd7fjzn5h6c5cxPt8HFPnToDm+kAoXj3lzzv
-         k2Q6ESN2kSVHVB53FEPEBnCh7GXyrPKF74W3PHDdy4x+SAu9efZrrq6xinhwvYCPDp
-         CskYXYpVHjdOmRVXUVNeRAK6nzTooGWgCO2yPFQDOUYJNqJLbzH4+YbKDSYSrYXJXd
-         LKb2/rJIgvQ+KTZ2rLfozJ9xB+Vm+KsNnvhRJp7X6AFBg/+EIFJLnNoORW1AJTnkiL
-         WjEU/xeLzAASlpUoBhJq5230mm4NoX2r+usIG4Cb+++wy6CTeQ0hq5IO9Isst9ciuP
-         8FYs1YEkCLMaQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E701C40B92; Sat, 18 Dec 2021 08:35:05 -0300 (-03)
-Date:   Sat, 18 Dec 2021 08:35:05 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     German Gomez <german.gomez@arm.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Alexandre Truong <alexandre.truong@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 6/6] perf arm64: inject missing frames if perf-record
- used "--call-graph=fp"
-Message-ID: <Yb3HaQrm1RuI52/j@kernel.org>
-References: <20211217154521.80603-1-german.gomez@arm.com>
- <20211217154521.80603-7-german.gomez@arm.com>
- <207eade3-6719-f028-22a1-d050c10288e0@arm.com>
+        Sat, 18 Dec 2021 07:47:13 -0500
+Received: from mail.kdab.com ([176.9.126.58]:39289 "EHLO mail.kdab.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231748AbhLRMrN (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Sat, 18 Dec 2021 07:47:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kdab.com; h=
+ content-type:content-type:mime-version:references:in-reply-to
+ :organization:message-id:date:date:subject:subject:from:from; s=
+ dkim; t=1639831630; x=1640695631; bh=lWiq7JRl2GWLJLzRIh2XeiN0iha
+ QK0lhNOtr3PPqrVM=; b=tTf6NMjrCEMU9KVrOH4sBsjIY/8bZpssRQS7HJvHMz5
+ 6ODw12LsZWROmLo5fpdDKekWdipIRi9PobHitBPEILheyiqwD4VTbDgv3AOLZBeP
+ Oma8FDVCRk78uaXfm40rG/GOphA/aMD18xiazcwjM4HIeFDfEPGwC9pg17gUVQww
+ =
+X-Virus-Scanned: amavisd-new at kdab.com
+From:   Milian Wolff <milian.wolff@kdab.com>
+To:     Timothy Miller <theosib@icloud.com>
+Cc:     linux-perf-users@vger.kernel.org
+Subject: Re: perf not showing me call graph for memcpy no matter what
+Date:   Sat, 18 Dec 2021 13:47:07 +0100
+Message-ID: <3236156.g7oBW7ULBy@milian-workstation>
+Organization: KDAB
+In-Reply-To: <7319C632-64B3-419D-B46A-EA42D2A63CDD@icloud.com>
+References: <55BDE53A-EF97-4EF6-80C4-11821372A842@icloud.com>
+ <234249826.y6c5yYTOUe@milian-workstation>
+ <7319C632-64B3-419D-B46A-EA42D2A63CDD@icloud.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <207eade3-6719-f028-22a1-d050c10288e0@arm.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: multipart/signed; boundary="nextPart26884260.Ld2gX2uVeL";
+ micalg="sha256"; protocol="application/pkcs7-signature"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Dec 17, 2021 at 04:01:38PM +0000, James Clark escreveu:
-> 
-> 
-> On 17/12/2021 15:45, German Gomez wrote:
-> > From: Alexandre Truong <alexandre.truong@arm.com>
-> > 
-> > When unwinding using frame pointers on ARM64, the return address of the
-> > current function may not have been pushed into the stack when a function
-> > was interrupted, which makes perf show an incorrect call graph to the
-> > user.
-> > 
-> > Consider the following example program:
-> > 
-> >   void leaf() {
-> >       /* long computation */
-> >   }
-> > 
-> >   void parent() {
-> >       // (1)
-> >       leaf();
-> >       // (2)
-> >   }
-> > 
-> >   ... could be compiled into (using gcc -fno-inline -fno-omit-frame-pointer):
-> > 
-> >   leaf:
-> >       /* long computation */
-> >       nop
-> >       ret
-> >   parent:
-> >       // (1)
-> >       stp     x29, x30, [sp, -16]!
-> >       mov     x29, sp
-> >       bl      parent
-> >       nop
-> >       ldp     x29, x30, [sp], 16
-> >       // (2)
-> >       ret
-> > 
-> > If the program is interrupted at (1), (2), or any point in "leaf:", the
-> > call graph will skip the callers of the current function. We can unwind
-> > using the dwarf info and check if the return addr is the same as the LR
-> > register, and inject the missing frame into the call graph.
-> > 
-> > Before this patch, the above example shows the following call-graph when
-> > recording using "--call-graph fp" mode in ARM64:
-> > 
-> >   # Children      Self  Command   Shared Object     Symbol
-> >   # ........  ........  ........  ................  ......................
-> >   #
-> >       99.86%    99.86%  program3  program3          [.] leaf
-> >   	    |
-> >   	    ---_start
-> >   	       __libc_start_main
-> >   	       main
-> >   	       leaf
-> > 
-> > As can be seen, the "parent" function is missing. This is specially
-> > problematic in "leaf" because for leaf functions the compiler may always
-> > omit pushing the return addr into the stack. After this patch, it shows
-> > the correct graph:
-> > 
-> >   # Children      Self  Command   Shared Object     Symbol
-> >   # ........  ........  ........  ................  ......................
-> >   #
-> >       99.86%    99.86%  program3  program3          [.] leaf
-> >   	    |
-> >   	    ---_start
-> >   	       __libc_start_main
-> >   	       main
-> >   	       parent
-> >   	       leaf
-> > 
-> > Signed-off-by: Alexandre Truong <alexandre.truong@arm.com>
-> > Signed-off-by: German Gomez <german.gomez@arm.com>
-> > ---
-> >  tools/perf/util/Build                         |  1 +
-> >  .../util/arm64-frame-pointer-unwind-support.c | 63 +++++++++++++++++++
-> >  .../util/arm64-frame-pointer-unwind-support.h | 10 +++
-> >  tools/perf/util/machine.c                     | 19 ++++--
-> >  tools/perf/util/machine.h                     |  1 +
-> >  5 files changed, 89 insertions(+), 5 deletions(-)
-> >  create mode 100644 tools/perf/util/arm64-frame-pointer-unwind-support.c
-> >  create mode 100644 tools/perf/util/arm64-frame-pointer-unwind-support.h
-> > 
-> > diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> > index 2e5bfbb69960..03d4c647bd86 100644
-> > --- a/tools/perf/util/Build
-> > +++ b/tools/perf/util/Build
-> > @@ -1,3 +1,4 @@
-> > +perf-y += arm64-frame-pointer-unwind-support.o
-> >  perf-y += annotate.o
-> >  perf-y += block-info.o
-> >  perf-y += block-range.o
-> > diff --git a/tools/perf/util/arm64-frame-pointer-unwind-support.c b/tools/perf/util/arm64-frame-pointer-unwind-support.c
-> > new file mode 100644
-> > index 000000000000..4f5ecf51ed38
-> > --- /dev/null
-> > +++ b/tools/perf/util/arm64-frame-pointer-unwind-support.c
-> > @@ -0,0 +1,63 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +#include "arm64-frame-pointer-unwind-support.h"
-> > +#include "callchain.h"
-> > +#include "event.h"
-> > +#include "perf_regs.h" // SMPL_REG_MASK
-> > +#include "unwind.h"
-> > +
-> > +#define perf_event_arm_regs perf_event_arm64_regs
-> > +#include "../arch/arm64/include/uapi/asm/perf_regs.h"
-> > +#undef perf_event_arm_regs
-> > +
-> > +struct entries {
-> > +	u64 stack[2];
-> > +	size_t length;
-> > +};
-> > +
-> > +static bool get_leaf_frame_caller_enabled(struct perf_sample *sample)
-> > +{
-> > +	return callchain_param.record_mode == CALLCHAIN_FP && sample->user_regs.regs
-> > +		&& sample->user_regs.mask & SMPL_REG_MASK(PERF_REG_ARM64_LR);
-> > +}
-> > +
-> > +static int add_entry(struct unwind_entry *entry, void *arg)
-> > +{
-> > +	struct entries *entries = arg;
-> > +
-> > +	entries->stack[entries->length++] = entry->ip;
-> > +	return 0;
-> > +}
-> > +
-> > +u64 get_leaf_frame_caller_aarch64(struct perf_sample *sample, struct thread *thread, int usr_idx)
-> > +{
-> > +	int ret;
-> > +	struct entries entries = {};
-> > +	struct regs_dump old_regs = sample->user_regs;
-> > +
-> > +	if (!get_leaf_frame_caller_enabled(sample))
-> > +		return 0;
-> > +
-> > +	/*
-> > +	 * If PC and SP are not recorded, get the value of PC from the stack
-> > +	 * and set its mask. SP is not used when doing the unwinding but it
-> > +	 * still needs to be set to prevent failures.
-> > +	 */
-> > +
-> > +	if (!(sample->user_regs.mask & SMPL_REG_MASK(PERF_REG_ARM64_PC))) {
-> > +		sample->user_regs.cache_mask |= SMPL_REG_MASK(PERF_REG_ARM64_PC);
-> > +		sample->user_regs.cache_regs[PERF_REG_ARM64_PC] = sample->callchain->ips[usr_idx+1];
-> > +	}
-> > +
-> > +	if (!(sample->user_regs.mask & SMPL_REG_MASK(PERF_REG_ARM64_SP))) {
-> > +		sample->user_regs.cache_mask |= SMPL_REG_MASK(PERF_REG_ARM64_SP);
-> > +		sample->user_regs.cache_regs[PERF_REG_ARM64_SP] = 0;
-> > +	}
-> > +
-> > +	ret = unwind__get_entries(add_entry, &entries, thread, sample, 2);
-> > +	sample->user_regs = old_regs;
-> > +
-> > +	if (ret || entries.length != 2)
-> > +		return ret;
-> > +
-> > +	return callchain_param.order == ORDER_CALLER ? entries.stack[0] : entries.stack[1];
-> > +}
-> > diff --git a/tools/perf/util/arm64-frame-pointer-unwind-support.h b/tools/perf/util/arm64-frame-pointer-unwind-support.h
-> > new file mode 100644
-> > index 000000000000..32af9ce94398
-> > --- /dev/null
-> > +++ b/tools/perf/util/arm64-frame-pointer-unwind-support.h
-> > @@ -0,0 +1,10 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#ifndef __PERF_ARM_FRAME_POINTER_UNWIND_SUPPORT_H
-> > +#define __PERF_ARM_FRAME_POINTER_UNWIND_SUPPORT_H
-> > +
-> > +#include "event.h"
-> > +#include "thread.h"
-> > +
-> > +u64 get_leaf_frame_caller_aarch64(struct perf_sample *sample, struct thread *thread, int user_idx);
-> > +
-> > +#endif /* __PERF_ARM_FRAME_POINTER_UNWIND_SUPPORT_H */
-> > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> > index 3eddad009f78..a00fd6796b35 100644
-> > --- a/tools/perf/util/machine.c
-> > +++ b/tools/perf/util/machine.c
-> > @@ -34,6 +34,7 @@
-> >  #include "bpf-event.h"
-> >  #include <internal/lib.h> // page_size
-> >  #include "cgroup.h"
-> > +#include "arm64-frame-pointer-unwind-support.h"
-> >  
-> >  #include <linux/ctype.h>
-> >  #include <symbol/kallsyms.h>
-> > @@ -2710,10 +2711,13 @@ static int find_prev_cpumode(struct ip_callchain *chain, struct thread *thread,
-> >  	return err;
-> >  }
-> >  
-> > -static u64 get_leaf_frame_caller(struct perf_sample *sample __maybe_unused,
-> > -		struct thread *thread __maybe_unused, int usr_idx __maybe_unused)
-> > +static u64 get_leaf_frame_caller(struct perf_sample *sample,
-> > +		struct thread *thread, int usr_idx)
-> >  {
-> > -	return 0;
-> > +	if (machine__normalize_is(thread->maps->machine, "arm64"))
-> > +		return get_leaf_frame_caller_aarch64(sample, thread, usr_idx);
-> > +	else
-> > +		return 0;
-> >  }
-> >  
-> >  static int thread__resolve_callchain_sample(struct thread *thread,
-> > @@ -3114,14 +3118,19 @@ int machine__set_current_tid(struct machine *machine, int cpu, pid_t pid,
-> >  }
-> >  
-> >  /*
-> > - * Compares the raw arch string. N.B. see instead perf_env__arch() if a
-> > - * normalized arch is needed.
-> > + * Compares the raw arch string. N.B. see instead perf_env__arch() or
-> > + * machine__normalize_is() if a normalized arch is needed.
-> >   */
-> >  bool machine__is(struct machine *machine, const char *arch)
-> >  {
-> >  	return machine && !strcmp(perf_env__raw_arch(machine->env), arch);
-> >  }
-> >  
-> > +bool machine__normalize_is(struct machine *machine, const char *arch)
-> > +{
-> > +	return machine && !strcmp(perf_env__arch(machine->env), arch);
-> > +}
-> > +
-> 
-> I think this function name would be clearer as something like "machine__normalized_is" or
-> "machine__normalized_arch_is". The tense is slightly off because it's a test rather than a
-> verb.
+--nextPart26884260.Ld2gX2uVeL
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 
-Agreed, its a question, not a command.
+On Freitag, 17. Dezember 2021 16:36:36 CET Timothy Miller wrote:
+> > On Dec 17, 2021, at 4:16 AM, Milian Wolff <milian.wolff@kdab.com> wrote:
+> >=20
+> >=20
+> > Can you try the AppImage of hotspot available at [1] and see if that one
+> > works when you pass the right sysroot and potentially other flags, see
+> > [2] and `hotspot --help` for more information.
+>=20
+> Is this hotspot just a GUI front-end to perf? Or is it more?
 
-- Arnaldo
- 
-> With that change, for the whole set:
-> 
-> Reviewed-by: James Clark <james.clark@arm.com>
-> 
-> 
-> >  int machine__nr_cpus_avail(struct machine *machine)
-> >  {
-> >  	return machine ? perf_env__nr_cpus_avail(machine->env) : 0;
-> > diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-> > index a143087eeb47..665535153411 100644
-> > --- a/tools/perf/util/machine.h
-> > +++ b/tools/perf/util/machine.h
-> > @@ -208,6 +208,7 @@ static inline bool machine__is_host(struct machine *machine)
-> >  }
-> >  
-> >  bool machine__is(struct machine *machine, const char *arch);
-> > +bool machine__normalize_is(struct machine *machine, const char *arch);
-> >  int machine__nr_cpus_avail(struct machine *machine);
-> >  
-> >  struct thread *__machine__findnew_thread(struct machine *machine, pid_t pid, pid_t tid);
-> > 
+It's just a GUI front end, i.e. a replacement for `perf report`.
 
--- 
+> Is this appimage built for aarch64?
 
-- Arnaldo
+No.
+
+> I don=E2=80=99t have a Linux desktop environment set up. I=E2=80=99m just=
+ using ssh to
+> access remote servers.
+
+You could try a simple VM with any run of the mill linux desktop distributi=
+on=20
+installed.
+
+> Can I use hotspot without a GUI?
+
+No.
+
+=2D-=20
+Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
+KDAB (Deutschland) GmbH, a KDAB Group company
+Tel: +49-30-521325470
+KDAB - The Qt, C++ and OpenGL Experts
+--nextPart26884260.Ld2gX2uVeL
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEekw
+ggWBMIIEaaADAgECAhA5ckQ6+SK3UdfTbBDdMTWVMA0GCSqGSIb3DQEBDAUAMHsxCzAJBgNVBAYT
+AkdCMRswGQYDVQQIDBJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcMB1NhbGZvcmQxGjAYBgNV
+BAoMEUNvbW9kbyBDQSBMaW1pdGVkMSEwHwYDVQQDDBhBQUEgQ2VydGlmaWNhdGUgU2VydmljZXMw
+HhcNMTkwMzEyMDAwMDAwWhcNMjgxMjMxMjM1OTU5WjCBiDELMAkGA1UEBhMCVVMxEzARBgNVBAgT
+Ck5ldyBKZXJzZXkxFDASBgNVBAcTC0plcnNleSBDaXR5MR4wHAYDVQQKExVUaGUgVVNFUlRSVVNU
+IE5ldHdvcmsxLjAsBgNVBAMTJVVTRVJUcnVzdCBSU0EgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkw
+ggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQCAEmUXNg7D2wiz0KxXDXbtzSfTTK1Qg2Hi
+qiBNCS1kCdzOiZ/MPans9s/B3PHTsdZ7NygRK0faOca8Ohm0X6a9fZ2jY0K2dvKpOyuR+OJv0OwW
+IJAJPuLodMkYtJHUYmTbf6MG8YgYapAiPLz+E/CHFHv25B+O1ORRxhFnRghRy4YUVD+8M/5+bJz/
+Fp0YvVGONaanZshyZ9shZrHUm3gDwFA66Mzw3LyeTP6vBZY1H1dat//O+T23LLb2VN3I5xI6Ta5M
+irdcmrS3ID3KfyI0rn47aGYBROcBTkZTmzNg95S+UzeQc0PzMsNT79uq/nROacdrjGCT3sTHDN/h
+Mq7MkztReJVni+49Vv4M0GkPGw/zJSZrM233bkf6c0Plfg6lZrEpfDKEY1WJxA3Bk1QwGROs0303
+p+tdOmw1XNtB1xLaqUkL39iAigmTYo61Zs8liM2EuLE/pDkP2QKe6xJMlXzzawWpXhaDzLhn4ugT
+ncxbgtNMs+1b/97lc6wjOy0AvzVVdAlJ2ElYGn+SNuZRkg7zJn0cTRe8yexDJtC/QV9AqURE9Jnn
+V4eeUB9XVKg+/XRjL7FQZQnmWEIuQxpMtPAlR1n6BB6T1CZGSlCBst6+eLf8ZxXhyVeEHg9j1uli
+utZfVS7qXMYoCAQlObgOK6nyTJccBz8NUvXt7y+CDwIDAQABo4HyMIHvMB8GA1UdIwQYMBaAFKAR
+CiM+lvEH7OKvKe+CpX/QMKS0MB0GA1UdDgQWBBRTeb9aqitKz1SA4dibwJ3ysgNmyzAOBgNVHQ8B
+Af8EBAMCAYYwDwYDVR0TAQH/BAUwAwEB/zARBgNVHSAECjAIMAYGBFUdIAAwQwYDVR0fBDwwOjA4
+oDagNIYyaHR0cDovL2NybC5jb21vZG9jYS5jb20vQUFBQ2VydGlmaWNhdGVTZXJ2aWNlcy5jcmww
+NAYIKwYBBQUHAQEEKDAmMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wDQYJ
+KoZIhvcNAQEMBQADggEBABiHUdx0IT2ciuAntzPQLszs8ObLXhHeIm+bdY6ecv7k1v6qH5yWLe8D
+Sn6u9I1vcjxDO8A/67jfXKqpxq7y/Njuo3tD9oY2fBTgzfT3P/7euLSK8JGW/v1DZH79zNIBoX19
++BkZyUIrE79Yi7qkomYEdoiRTgyJFM6iTckys7roFBq8cfFb8EELmAAKIgMQ5Qyx+c2SNxntO/Hk
+Orb5RRMmda+7qu8/e3c70sQCkT0ZANMXXDnbP3sYDUXNk4WWL13fWRZPP1G91UUYP+1KjugGYXQj
+FrUNUHMnREd/EF2JKmuFMRTE6KlqTIC8anjPuH+OdnKZDJ3+15EIFqGjX5UwggYQMIID+KADAgEC
+AhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQGEwJVUzETMBEGA1UE
+CBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoTFVRoZSBVU0VSVFJV
+U1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0
+eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UE
+CBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdv
+IExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQg
+U2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyjztlApB/975
+Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUfItMltrMaXqcESJuK
+8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeWQcpGEGFUUd0kN+oH
+ox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YBrf24k5Ee1sLTHsLt
+piK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewDch/8kHPo5fZl5u1B
+0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAUU3m/WqorSs9UgOHY
+m8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1UdDwEB/wQEAwIBhjAS
+BgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDARBgNVHSAE
+CjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2VydHJ1c3QuY29tL1VT
+RVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUFBwEBBGowaDA/Bggr
+BgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJTQUFkZFRydXN0Q0Eu
+Y3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0GCSqGSIb3DQEBDAUA
+A4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+xswhh2GqkW5JQrM8
+zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9IHk96VwsacIvBF8J
+fqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7kkmka2RQb9d90nmN
+HdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1eoYV7lNwNBKpeHdN
+uO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4KxaYIhvqPqUMWqRd
+Wyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL1Ygz3SBsyECa0waq
+4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQOZ1YL5ezMTX0ZSLw
+rymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qodx/PL+5jR87myx5uY
+dBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i5ZgtwCLXgAIe5W8m
+ybM2JzCCBkwwggU0oAMCAQICEHR8gsPqhWo7MMOepQh9ypIwDQYJKoZIhvcNAQELBQAwgZYxCzAJ
+BgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQx
+GDAWBgNVBAoTD1NlY3RpZ28gTGltaXRlZDE+MDwGA1UEAxM1U2VjdGlnbyBSU0EgQ2xpZW50IEF1
+dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMjAwNTEyMDAwMDAwWhcNMjMwNTEy
+MjM1OTU5WjCCAVkxCzAJBgNVBAYTAlNFMQ8wDQYDVQQREwY2ODMgMzExEjAQBgNVBAgTCVZhZXJt
+bGFuZDEQMA4GA1UEBxMHSGFnZm9yczEYMBYGA1UECRMPTm9ycmluZ3MgdmFlZyAyMQ8wDQYDVQQS
+EwZCb3ggMzAxJjAkBgNVBAoMHUtsYXLDpGx2ZGFsZW5zIERhdGFrb25zdWx0IEFCMR0wGwYDVQQL
+ExRBIEtEQUIgR3JvdXAgQ29tcGFueTFDMEEGA1UECww6SXNzdWVkIHRocm91Z2ggS2xhcsOkbHZk
+YWxlbnMgRGF0YWtvbnN1bHQgQUIgRS1QS0kgTWFuYWdlcjEfMB0GA1UECxMWQ29ycG9yYXRlIFNl
+Y3VyZSBFbWFpbDEVMBMGA1UEAxMMTWlsaWFuIFdvbGZmMSQwIgYJKoZIhvcNAQkBFhVtaWxpYW4u
+d29sZmZAa2RhYi5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC8vdk66W4eo0O1
+1Dh3zPXW/zrkwzzxRR0Air/VRxAIG5q/klE9mF2gsGBPXQpCtDMvkuvSLQ+5mR50Cb+V+4Y9n0W6
+98JoyQHYAo6uswLyTchcF6IVckkkZrm1RD1DXnlIHpCsacO7PDDxMslzFs5XZfRkH4F1SKkiVwup
+/Nsn0z12SGRzxSUUxr4VHZgIqgRGqVSbVJfjtTRigAu+fmXUXHs0bMRv8TonzrDRlN61m1UakrFu
+qvKAgXYfZULZ52IKNK/jq8nPHJDD9oOr5pVi4Yx9GyVeMM0qNPC74fJnGh7lOpJiAcqYBEis73lm
+U+RtH3Bj85Qdqvwxo3bf7s1zAgMBAAGjggHOMIIByjAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+o
+mULPyeCtADAdBgNVHQ4EFgQUMc6p+s2l6xbyh8jLYeP7fQrRiW4wDgYDVR0PAQH/BAQDAgWgMAwG
+A1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYM
+KwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1Ud
+HwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhl
+bnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcw
+AoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25h
+bmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20w
+IAYDVR0RBBkwF4EVbWlsaWFuLndvbGZmQGtkYWIuY29tMA0GCSqGSIb3DQEBCwUAA4IBAQBW3rFX
+47Cnu8JMNm8row/96V8xGwPzir9lEpnasNxi+GhvQjGzvoP5oxMoBJ+hgD8fMk5X15IDuKa9KVHb
+BzBG9kOPGB4h/89voWpzWIVy7Q3k+dPByfghbufR+83TvN20lV9VqXYjPeYypHlD/vJ4Z8iWn3s3
+0iUfYr1CCr8zoje1hijPM9A0wN7K8iCtIc4OAfJpwKsXMCNAv1SdxD196vCKrTnWiEmAw0g8FpDM
+GWIww0+2Qq+Peeoe53+34GetRPIbS5jPlCEy7xgC8c7qoJTNzhCyVENRByoA5dsLzK+Nv0IT1h2C
+gu2w5VxHo0DjlCmYddu46uwpWjKpNuhaMYICbTCCAmkCAQEwgaswgZYxCzAJBgNVBAYTAkdCMRsw
+GQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGDAWBgNVBAoTD1Nl
+Y3RpZ28gTGltaXRlZDE+MDwGA1UEAxM1U2VjdGlnbyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9u
+IGFuZCBTZWN1cmUgRW1haWwgQ0ECEHR8gsPqhWo7MMOepQh9ypIwDQYJYIZIAWUDBAIBBQCggZMw
+GAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjExMjE4MTI0NzA4WjAo
+BgkqhkiG9w0BCQ8xGzAZMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzAvBgkqhkiG9w0BCQQxIgQg
+HrUMx2mjnryw7bJuECTDvZoBJLnCv3b0l3cQtyBEUHswDQYJKoZIhvcNAQEBBQAEggEAtliKHTga
++eqvoinvAXcd2e2uvADfFf51DijPhYq9haaSOaS9Rrv+PiJjWN58FLE+G1pcpiMbSvwvqiJwEUXM
+oFKrXdJA/2yaggJyy/6oB+hu/kCtCd/CqxgkJbrYVhULwGMZQnRDRdjlZ045mL6vcAHkRjJXAZux
++wI11ZoIDNv7qNvzg2K53ZlVv7e2pkHE4QptYOIhuZs2IrTjqCgcmTY6foz3fgPs9b2jw1PLpU9i
+57Ev8YtmF21vjQFyt8uaLebxd6zXK+UpDef4yIyC8pgErcLPEaL7cvp3al48Vb2m61SihMHKov/n
+Xy86Rpno62IRTu0MPEW3qnYtsuEksgAAAAAAAA==
+
+
+--nextPart26884260.Ld2gX2uVeL--
+
+
