@@ -2,446 +2,286 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4E3C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Dec 2021 14:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DD0C43219
+	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Dec 2021 21:20:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233429AbhLRO04 (ORCPT
+        id S234289AbhLRVUU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 18 Dec 2021 09:26:56 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:42314 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230237AbhLRO04 (ORCPT
+        Sat, 18 Dec 2021 16:20:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56170 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230480AbhLRVUS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 18 Dec 2021 09:26:56 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0F99360B92;
-        Sat, 18 Dec 2021 14:26:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B238FC36AE0;
-        Sat, 18 Dec 2021 14:26:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639837615;
-        bh=qmJhwHRjXsPQtEIyGxgMxyevv0YCEUDEsxr6uV6QlyA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=oZOuvBOg9tAXm9XKYCa6s/sAfG0YRzUDV4Xe16lVijzZr1ruh5wzF6BrmPV+NvZjG
-         KehJ+dNSOWpyoz1Kf0TTMDJAj0aKcRDd37dueXRlKTHbCeONk15MMQaLY1K4fomrNk
-         ZVd6muQtWf7HjMHNU5fKQcvB3Y6U8XTPHuC1Af/rUapt4kJCpxQp4HTZrGZ9z8oYGn
-         Cg4IL2Eap2yt09+5I5+rzXy7KL/souBFHngqBiiH1fENaJIaxC8iz1K4QFFOwz/ksI
-         9tl881vV4M2fbIvJM7JU7jVvjhsxGXGIa7B5tdMWH37IgFBauprOrqc4ZgSb/5G8/7
-         EFq31N6EdZJCg==
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
+        Sat, 18 Dec 2021 16:20:18 -0500
+Received: from mail-oi1-x230.google.com (mail-oi1-x230.google.com [IPv6:2607:f8b0:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F184C061574;
+        Sat, 18 Dec 2021 13:20:18 -0800 (PST)
+Received: by mail-oi1-x230.google.com with SMTP id r26so9354373oiw.5;
+        Sat, 18 Dec 2021 13:20:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JzsjdMdsnVfTtF2jA28Re9um5Pc1jpset8TjSm+sCCQ=;
+        b=JJsYWCM4ZBrFr/QGYcVtz1O5XpwXMR8kjk5zvlx1xd9d3Bnfs+RyARM+UF2BFzbQzh
+         Gtz0Jhiop3r+qa0tUyPUPAMdU6Jzy350IR0tNVuhpUl5a46wJZSSCfrlTroVV0iEzWQm
+         jnatXUCyMxUjx4zPd6MbwV+jlb+bcIyfWFewnkHP1g6bfMLkxOoJnBeNiY1ltSGyKLUW
+         NJO78tJlSMx+Op9iY217snQDmDuDZZGnfHCB/c9C+zObP29p/bUuiIWC4jVIoflp+GZQ
+         +vsH2Ey++3hW+p7C5pzF3cKCahFFKGna42dCmd+BpNpZItDrp0SdGfIa8OEsJ5ce8y7A
+         EIWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JzsjdMdsnVfTtF2jA28Re9um5Pc1jpset8TjSm+sCCQ=;
+        b=xgY6/Txzwb3iK+Jl2xwcNDPv2AKxxdcywww5yieirupvunu8ZI3FAYMw+1qI9A1TkZ
+         u3+0InpVcCX+xAx2Sopr2kLP1LpeuCenZNMGkh7MV1RF6JYzCRhAVxwp4RpEh62za8sW
+         Yl5tQ0S1m59XX+yvGrzyUo2R8iEAT6a/O3AwPZzc9PNg3aG+D8DVUaJ4S5EYZh+B//yx
+         ZryAXsNt49RlmFfwqYhiqFkf+rT5JYuy2AfavIvyvz6syPup41ggeZoQJZa7y4Ieg9nR
+         oDXJO3c+3uuLKzXHw5RLP4zR+NA5fKFW5vjogYFEAZotdpX6lSvwbALb1dDU2nXz8VxF
+         b04A==
+X-Gm-Message-State: AOAM532JVjUdHz3Fx8TMLVX+Yuo3KVTKXfZ7DdRO9ClLLOPlt+c0y3XO
+        lASmYyEcs+H9uLfn4LDVmHY3rL7O+I1t/Q==
+X-Google-Smtp-Source: ABdhPJx5aJcpDQGi8bZmEiNIZHDj12WYIMCd+iCUv3wO5n9NxzqY0XYaFcTOfyycv/QCCz3me1Quxg==
+X-Received: by 2002:a05:6808:a8f:: with SMTP id q15mr12338850oij.65.1639862417151;
+        Sat, 18 Dec 2021 13:20:17 -0800 (PST)
+Received: from localhost (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id g26sm2402061ots.25.2021.12.18.13.20.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Dec 2021 13:20:16 -0800 (PST)
+From:   Yury Norov <yury.norov@gmail.com>
+To:     linux-kernel@vger.kernel.org, Yury Norov <yury.norov@gmail.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexey Klimov <aklimov@redhat.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Andi Kleen <ak@linux.intel.com>, Andrew Lunn <andrew@lunn.ch>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Gross <agross@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Anup Patel <anup.patel@wdc.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Miaoqian Lin <linmq006@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [GIT PULL] perf tools fixes for v5.16: 4th batch
-Date:   Sat, 18 Dec 2021 11:26:47 -0300
-Message-Id: <20211218142647.55737-1-acme@kernel.org>
-X-Mailer: git-send-email 2.33.1
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Christoph Lameter <cl@linux.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Airlie <airlied@linux.ie>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Dennis Zhou <dennis@kernel.org>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Geetha sowjanya <gakula@marvell.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guo Ren <guoren@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Ian Rogers <irogers@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Jens Axboe <axboe@fb.com>, Jiri Olsa <jolsa@redhat.com>,
+        Joe Perches <joe@perches.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Marc Zyngier <maz@kernel.org>, Marcin Wojtas <mw@semihalf.com>,
+        Mark Gross <markgross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matti Vaittinen <mazziesaccount@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Russell King <linux@armlinux.org.uk>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Solomon Peachy <pizza@shaftnet.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Subbaraya Sundeep <sbhatta@marvell.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Sunil Goutham <sgoutham@marvell.com>,
+        Tariq Toukan <tariqt@nvidia.com>, Tejun Heo <tj@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Vineet Gupta <vgupta@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Will Deacon <will@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com, kvm@vger.kernel.org,
+        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-crypto@vger.kernel.org, linux-csky@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH v2 00/17] lib/bitmap: optimize bitmap_weight() usage
+Date:   Sat, 18 Dec 2021 13:19:56 -0800
+Message-Id: <20211218212014.1315894-1-yury.norov@gmail.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Linus,
+In many cases people use bitmap_weight()-based functions to compare
+the result against a number of expression:
 
-	Please consider pulling,
+	if (cpumask_weight(...) > 1)
+		do_something();
 
-Best regards,
+This may take considerable amount of time on many-cpus machines because
+cpumask_weight(...) will traverse every word of underlying cpumask
+unconditionally.
 
-- Arnaldo
+We can significantly improve on it for many real cases if stop traversing
+the mask as soon as we count cpus to any number greater than 1:
 
-Test results at the end of this message.
+	if (cpumask_weight_gt(..., 1))
+		do_something();
 
-The following changes since commit 9eaa88c7036eda3f6c215f87ca693594cf90559b:
+To implement this idea, the series adds bitmap_weight_cmp() function
+and bitmap_weight_{eq,gt,ge,lt,le} macros on top of it; corresponding
+wrappers in cpumask and nodemask.
 
-  Merge tag 'libata-5.16-rc6' of git://git.kernel.org/pub/scm/linux/kernel/git/dlemoal/libata (2021-12-17 17:24:53 -0800)
+There are 3 cpumasks, for which weight is counted frequently: possible,
+present and active. They all are read-mostly, and to optimize counting
+number of set bits for them, this series adds atomic counters, similarly
+to online cpumask.
 
-are available in the Git repository at:
+v1: https://lkml.org/lkml/2021/11/27/339
+v2:
+  - add bitmap_weight_cmp();
+  - fix bitmap_weight_le semantics and provide full set of {eq,gt,ge,lt,le}
+    as wrappers around bitmap_weight_cmp();
+  - don't touch small bitmaps (less than 32 bits) - optimization works
+    only for large bitmaps;
+  - move bitmap_weight() == 0 -> bitmap_empty() conversion to a separate
+    patch, ditto cpumask_weight() and nodes_weight;
+  - add counters for possible, present and active cpus;
+  - drop bitmap_empty() where possible;
+  - various fixes around bit counting that spotted my eyes.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.16-2021-12-18
+Yury Norov (17):
+  all: don't use bitmap_weight() where possible
+  drivers: rename num_*_cpus variables
+  fix open-coded for_each_set_bit()
+  all: replace bitmap_weight with bitmap_empty where appropriate
+  all: replace cpumask_weight with cpumask_empty where appropriate
+  all: replace nodes_weight with nodes_empty where appropriate
+  lib/bitmap: add bitmap_weight_{cmp,eq,gt,ge,lt,le} functions
+  all: replace bitmap_weight with bitmap_weight_{eq,gt,ge,lt,le} where
+    appropriate
+  lib/cpumask: add cpumask_weight_{eq,gt,ge,lt,le}
+  lib/nodemask: add nodemask_weight_{eq,gt,ge,lt,le}
+  lib/nodemask: add num_node_state_eq()
+  kernel/cpu.c: fix init_cpu_online
+  kernel/cpu: add num_possible_cpus counter
+  kernel/cpu: add num_present_cpu counter
+  kernel/cpu: add num_active_cpu counter
+  tools/bitmap: sync bitmap_weight
+  MAINTAINERS: add cpumask and nodemask files to BITMAP_API
 
-for you to fetch changes up to c271a55b0c6029fed0cac909fa57999a11467132:
+ MAINTAINERS                                   |   4 +
+ arch/alpha/kernel/process.c                   |   2 +-
+ arch/ia64/kernel/setup.c                      |   2 +-
+ arch/ia64/mm/tlb.c                            |   2 +-
+ arch/mips/cavium-octeon/octeon-irq.c          |   4 +-
+ arch/mips/kernel/crash.c                      |   2 +-
+ arch/nds32/kernel/perf_event_cpu.c            |   2 +-
+ arch/powerpc/kernel/smp.c                     |   2 +-
+ arch/powerpc/kernel/watchdog.c                |   2 +-
+ arch/powerpc/xmon/xmon.c                      |   4 +-
+ arch/s390/kernel/perf_cpum_cf.c               |   2 +-
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c        |  16 +--
+ arch/x86/kernel/smpboot.c                     |   4 +-
+ arch/x86/kvm/hyperv.c                         |   8 +-
+ arch/x86/mm/amdtopology.c                     |   2 +-
+ arch/x86/mm/mmio-mod.c                        |   2 +-
+ arch/x86/mm/numa_emulation.c                  |   4 +-
+ arch/x86/platform/uv/uv_nmi.c                 |   2 +-
+ drivers/acpi/numa/srat.c                      |   2 +-
+ drivers/cpufreq/qcom-cpufreq-hw.c             |   2 +-
+ drivers/cpufreq/scmi-cpufreq.c                |   2 +-
+ drivers/firmware/psci/psci_checker.c          |   2 +-
+ drivers/gpu/drm/i915/i915_pmu.c               |   2 +-
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c      |   2 +-
+ drivers/hv/channel_mgmt.c                     |   4 +-
+ drivers/iio/dummy/iio_simple_dummy_buffer.c   |   4 +-
+ drivers/iio/industrialio-trigger.c            |   2 +-
+ drivers/infiniband/hw/hfi1/affinity.c         |  13 +-
+ drivers/infiniband/hw/qib/qib_file_ops.c      |   2 +-
+ drivers/infiniband/hw/qib/qib_iba7322.c       |   2 +-
+ drivers/irqchip/irq-bcm6345-l1.c              |   2 +-
+ drivers/leds/trigger/ledtrig-cpu.c            |   6 +-
+ drivers/memstick/core/ms_block.c              |   4 +-
+ drivers/net/dsa/b53/b53_common.c              |   6 +-
+ drivers/net/ethernet/broadcom/bcmsysport.c    |   6 +-
+ .../net/ethernet/intel/ice/ice_virtchnl_pf.c  |   4 +-
+ .../net/ethernet/intel/ixgbe/ixgbe_sriov.c    |   2 +-
+ .../marvell/octeontx2/nic/otx2_ethtool.c      |   2 +-
+ .../marvell/octeontx2/nic/otx2_flows.c        |   8 +-
+ .../ethernet/marvell/octeontx2/nic/otx2_pf.c  |   2 +-
+ drivers/net/ethernet/mellanox/mlx4/cmd.c      |  33 ++---
+ drivers/net/ethernet/mellanox/mlx4/eq.c       |   4 +-
+ drivers/net/ethernet/mellanox/mlx4/fw.c       |   4 +-
+ drivers/net/ethernet/mellanox/mlx4/main.c     |   2 +-
+ drivers/net/ethernet/qlogic/qed/qed_rdma.c    |   4 +-
+ drivers/net/ethernet/qlogic/qed/qed_roce.c    |   2 +-
+ drivers/perf/arm-cci.c                        |   2 +-
+ drivers/perf/arm_pmu.c                        |   4 +-
+ drivers/perf/hisilicon/hisi_uncore_pmu.c      |   2 +-
+ drivers/perf/thunderx2_pmu.c                  |   4 +-
+ drivers/perf/xgene_pmu.c                      |   2 +-
+ drivers/scsi/lpfc/lpfc_init.c                 |   2 +-
+ drivers/scsi/storvsc_drv.c                    |   6 +-
+ drivers/soc/fsl/qbman/qman_test_stash.c       |   2 +-
+ drivers/staging/media/tegra-video/vi.c        |   2 +-
+ drivers/thermal/intel/intel_powerclamp.c      |   9 +-
+ include/linux/bitmap.h                        |  80 +++++++++++
+ include/linux/cpumask.h                       | 131 +++++++++++++-----
+ include/linux/nodemask.h                      |  40 ++++++
+ kernel/cpu.c                                  |  54 ++++++++
+ kernel/irq/affinity.c                         |   2 +-
+ kernel/padata.c                               |   2 +-
+ kernel/rcu/tree_nocb.h                        |   4 +-
+ kernel/rcu/tree_plugin.h                      |   2 +-
+ kernel/sched/core.c                           |  10 +-
+ kernel/sched/topology.c                       |   4 +-
+ kernel/time/clockevents.c                     |   2 +-
+ kernel/time/clocksource.c                     |   2 +-
+ lib/bitmap.c                                  |  21 +++
+ mm/mempolicy.c                                |   2 +-
+ mm/page_alloc.c                               |   2 +-
+ mm/vmstat.c                                   |   4 +-
+ tools/include/linux/bitmap.h                  |  44 ++++++
+ tools/lib/bitmap.c                            |  20 +++
+ tools/perf/builtin-c2c.c                      |   4 +-
+ tools/perf/util/pmu.c                         |   2 +-
+ 76 files changed, 480 insertions(+), 183 deletions(-)
 
-  perf inject: Fix segfault due to perf_data__fd() without open (2021-12-18 08:31:14 -0300)
+-- 
+2.30.2
 
-----------------------------------------------------------------
-perf tools fixes for v5.16: 4th batch
-
-- Fix segfaults in 'perf inject' related to usage of unopened files.
-
-- The return value of hashmap__new() should be checked using IS_ERR().
-
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-----------------------------------------------------------------
-Adrian Hunter (2):
-      perf inject: Fix segfault due to close without open
-      perf inject: Fix segfault due to perf_data__fd() without open
-
-Miaoqian Lin (1):
-      perf expr: Fix missing check for return value of hashmap__new()
-
- tools/perf/builtin-inject.c | 13 +++++++++----
- tools/perf/util/expr.c      |  5 +++++
- 2 files changed, 14 insertions(+), 4 deletions(-)
-
-Test results:
-
-The first ones are container based builds of tools/perf with and without libelf
-support.  Where clang is available, it is also used to build perf with/without
-libelf, and building with LIBCLANGLLVM=1 (built-in clang) with gcc and clang
-when clang and its devel libraries are installed.
-
-Several are cross builds, the ones with -x-ARCH and the android one, and those
-may not have all the features built, due to lack of multi-arch devel packages,
-available and being used so far on just a few, like
-debian:experimental-x-{arm64,mipsel}.
-
-The 'perf test' one will perform a variety of tests exercising
-tools/perf/util/, tools/lib/{bpf,traceevent,etc}, as well as run perf commands
-with a variety of command line event specifications to then intercept the
-sys_perf_event syscall to check that the perf_event_attr fields are set up as
-expected, among a variety of other unit tests.
-
-Then there is the 'make -C tools/perf build-test' ones, that build tools/perf/
-with a variety of feature sets, exercising the build with an incomplete set of
-features as well as with a complete one.
-
-There is still the mageia:7 distro + clang 8 failure, seemingly unrelated to
-the patches in this series, it'll be investigated. It builds just fine with gcc
-8.4.
-
-There is also a strange one with openmandriva:cooker, where on the feature build
-test it doesn't manage to find libpthread, looks like a distro problem, will keep
-it there to see if a refreshed container cures this soon. This has been the case
-for quite a while, probably time to drop building for those distros?
-
-Ubuntu 20.04 is failing on a corner case where perf links with libllvm and libclang,
-which isn't the default perf build.
-
-  $ grep -m1 "model name" /proc/cpuinfo 
-  model name	: AMD Ryzen 9 5950X 16-Core Processor
-  $ export BUILD_TARBALL=http://192.168.100.2/perf/perf-5.16.0-rc5.tar.xz
-  $ time dm
-     1    93.50 almalinux:8                   : Ok   gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-4) , clang version 12.0.1 (Red Hat 12.0.1-4.module_el8.5.0+1025+93159d6c)
-     2    55.79 alpine:3.4                    : Ok   gcc (Alpine 5.3.0) 5.3.0 , clang version 3.8.0 (tags/RELEASE_380/final)
-     3    53.88 alpine:3.5                    : Ok   gcc (Alpine 6.2.1) 6.2.1 20160822 , clang version 3.8.1 (tags/RELEASE_381/final)
-     4    57.78 alpine:3.6                    : Ok   gcc (Alpine 6.3.0) 6.3.0 , clang version 4.0.0 (tags/RELEASE_400/final)
-     5    65.14 alpine:3.7                    : Ok   gcc (Alpine 6.4.0) 6.4.0 , Alpine clang version 5.0.0 (tags/RELEASE_500/final) (based on LLVM 5.0.0)
-     6    64.51 alpine:3.8                    : Ok   gcc (Alpine 6.4.0) 6.4.0 , Alpine clang version 5.0.1 (tags/RELEASE_501/final) (based on LLVM 5.0.1)
-     7    69.57 alpine:3.9                    : Ok   gcc (Alpine 8.3.0) 8.3.0 , Alpine clang version 5.0.1 (tags/RELEASE_502/final) (based on LLVM 5.0.1)
-     8    91.29 alpine:3.10                   : Ok   gcc (Alpine 8.3.0) 8.3.0 , Alpine clang version 8.0.0 (tags/RELEASE_800/final) (based on LLVM 8.0.0)
-     9   132.24 alpine:3.11                   : Ok   gcc (Alpine 9.3.0) 9.3.0 , Alpine clang version 9.0.0 (https://git.alpinelinux.org/aports f7f0d2c2b8bcd6a5843401a9a702029556492689) (based on LLVM 9.0.0)
-    10   307.95 alpine:3.12                   : Ok   gcc (Alpine 9.3.0) 9.3.0 , Alpine clang version 10.0.0 (https://gitlab.alpinelinux.org/alpine/aports.git 7445adce501f8473efdb93b17b5eaf2f1445ed4c)
-    11   162.70 alpine:3.13                   : Ok   gcc (Alpine 10.2.1_pre1) 10.2.1 20201203 , Alpine clang version 10.0.1 
-    12   327.14 alpine:3.14                   : Ok   gcc (Alpine 10.3.1_git20210424) 10.3.1 20210424 , Alpine clang version 11.1.0
-    13   174.30 alpine:3.15                   : Ok   gcc (Alpine 10.3.1_git20211027) 10.3.1 20211027 , Alpine clang version 12.0.1
-    14   106.65 alpine:edge                   : Ok   gcc (Alpine 11.2.1_git20211128) 11.2.1 20211128 , Alpine clang version 12.0.1
-    15    51.37 alt:p8                        : Ok   x86_64-alt-linux-gcc (GCC) 5.3.1 20151207 (ALT p8 5.3.1-alt3.M80P.1) , clang version 3.8.0 (tags/RELEASE_380/final)
-    16    79.26 alt:p9                        : Ok   x86_64-alt-linux-gcc (GCC) 8.4.1 20200305 (ALT p9 8.4.1-alt0.p9.1) , clang version 10.0.0 
-    17    75.17 alt:p10                       : Ok   x86_64-alt-linux-gcc (GCC) 10.3.1 20210703 (ALT Sisyphus 10.3.1-alt2) , clang version 11.0.1
-    18    72.25 alt:sisyphus                  : Ok   x86_64-alt-linux-gcc (GCC) 11.2.1 20210911 (ALT Sisyphus 11.2.1-alt1) , ALT Linux Team clang version 12.0.1
-    19    50.96 amazonlinux:1                 : Ok   gcc (GCC) 7.2.1 20170915 (Red Hat 7.2.1-2) , clang version 3.6.2 (tags/RELEASE_362/final)
-    20    82.37 amazonlinux:2                 : Ok   gcc (GCC) 7.3.1 20180712 (Red Hat 7.3.1-13) , clang version 11.1.0 (Amazon Linux 2 11.1.0-1.amzn2.0.2)
-    21    78.64 centos:8                      : Ok   gcc (GCC) 8.4.1 20200928 (Red Hat 8.4.1-1) , clang version 11.0.1 (Red Hat 11.0.1-1.module_el8.4.0+966+2995ef20)
-    22    92.19 centos:stream                 : Ok   gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-3) , clang version 12.0.1 (Red Hat 12.0.1-2.module_el8.6.0+937+1cafe22c)
-    23    48.12 clearlinux:latest             : Ok   gcc (Clear Linux OS for Intel Architecture) 11.2.1 20211208 releases/gcc-11.2.0-562-gbd918acae2 , clang version 11.1.0
-    24    63.09 debian:9                      : Ok   gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516 , clang version 3.8.1-24 (tags/RELEASE_381/final)
-    25    59.27 debian:10                     : Ok   gcc (Debian 8.3.0-6) 8.3.0 , clang version 7.0.1-8+deb10u2 (tags/RELEASE_701/final)
-    26    80.26 debian:11                     : Ok   gcc (Debian 10.2.1-6) 10.2.1 20210110 , Debian clang version 11.0.1-2
-    27    83.36 debian:experimental           : Ok   gcc (Debian 11.2.0-12) 11.2.0 , Debian clang version 13.0.0-9+b1
-    28    23.05 debian:experimental-x-arm64   : Ok   aarch64-linux-gnu-gcc (Debian 11.2.0-9) 11.2.0 
-    29    18.63 debian:experimental-x-mips    : Ok   mips-linux-gnu-gcc (Debian 10.2.1-6) 10.2.1 20210110 
-    30    20.54 debian:experimental-x-mips64  : Ok   mips64-linux-gnuabi64-gcc (Debian 10.2.1-6) 10.2.1 20210110 
-    31    21.34 debian:experimental-x-mipsel  : Ok   mipsel-linux-gnu-gcc (Debian 11.2.0-9) 11.2.0 
-    32    21.34 fedora:22                     : Ok   gcc (GCC) 5.3.1 20160406 (Red Hat 5.3.1-6) , clang version 3.5.0 (tags/RELEASE_350/final)
-    33    53.86 fedora:23                     : Ok   gcc (GCC) 5.3.1 20160406 (Red Hat 5.3.1-6) , clang version 3.7.0 (tags/RELEASE_370/final)
-    34    64.29 fedora:24                     : Ok   gcc (GCC) 6.3.1 20161221 (Red Hat 6.3.1-1) , clang version 3.8.1 (tags/RELEASE_381/final)
-    35    17.13 fedora:24-x-ARC-uClibc        : Ok   arc-linux-gcc (ARCompact ISA Linux uClibc toolchain 2017.09-rc2) 7.1.1 20170710 
-    36    65.10 fedora:25                     : Ok   gcc (GCC) 6.4.1 20170727 (Red Hat 6.4.1-1) , clang version 3.9.1 (tags/RELEASE_391/final)
-    37    76.13 fedora:26                     : Ok   gcc (GCC) 7.3.1 20180130 (Red Hat 7.3.1-2) , clang version 4.0.1 (tags/RELEASE_401/final)
-    38    77.32 fedora:27                     : Ok   gcc (GCC) 7.3.1 20180712 (Red Hat 7.3.1-6) , clang version 5.0.2 (tags/RELEASE_502/final)
-    39    88.97 fedora:28                     : Ok   gcc (GCC) 8.3.1 20190223 (Red Hat 8.3.1-2) , clang version 6.0.1 (tags/RELEASE_601/final)
-    40    92.37 fedora:29                     : Ok   gcc (GCC) 8.3.1 20190223 (Red Hat 8.3.1-2) , clang version 7.0.1 (Fedora 7.0.1-6.fc29)
-    41    96.28 fedora:30                     : Ok   gcc (GCC) 9.3.1 20200408 (Red Hat 9.3.1-2) , clang version 8.0.0 (Fedora 8.0.0-3.fc30)
-    42    89.36 fedora:31                     : Ok   gcc (GCC) 9.3.1 20200408 (Red Hat 9.3.1-2) , clang version 9.0.1 (Fedora 9.0.1-4.fc31)
-    43    83.77 fedora:32                     : Ok   gcc (GCC) 10.3.1 20210422 (Red Hat 10.3.1-1) , clang version 10.0.1 (Fedora 10.0.1-3.fc32)
-    44    82.16 fedora:33                     : Ok   gcc (GCC) 10.3.1 20210422 (Red Hat 10.3.1-1) , clang version 11.0.0 (Fedora 11.0.0-3.fc33)
-    45    85.88 fedora:34                     : Ok   gcc (GCC) 11.2.1 20210728 (Red Hat 11.2.1-1) , clang version 12.0.1 (Fedora 12.0.1-1.fc34)
-    46    18.94 fedora:34-x-ARC-glibc         : Ok   arc-linux-gcc (ARC HS GNU/Linux glibc toolchain 2019.03-rc1) 8.3.1 20190225 
-    47    17.33 fedora:34-x-ARC-uClibc        : Ok   arc-linux-gcc (ARCv2 ISA Linux uClibc toolchain 2019.03-rc1) 8.3.1 20190225 
-    48    76.55 fedora:35                     : Ok   gcc (GCC) 11.2.1 20210728 (Red Hat 11.2.1-1) , clang version 13.0.0 (Fedora 13.0.0-3.fc35)
-    49    84.26 fedora:rawhide                : Ok   gcc (GCC) 11.2.1 20211203 (Red Hat 11.2.1-7) , clang version 13.0.0 (Fedora 13.0.0-5.fc36)
-    50    75.75 gentoo-stage3:latest          : Ok   gcc (Gentoo 11.2.0 p1) 11.2.0 , clang version 13.0.0
-    51    67.20 mageia:6                      : Ok   gcc (Mageia 5.5.0-1.mga6) 5.5.0 , clang version 3.9.1 (tags/RELEASE_391/final)
-    52    37.09 mageia:7                      : FAIL clang version 8.0.0 (Mageia 8.0.0-1.mga7)
-            yychar = yylex (&yylval, &yylloc, scanner);
-                     ^
-      #define yylex           parse_events_lex
-                              ^
-      1 error generated.
-      make[3]: *** [/git/perf-5.16.0-rc5/tools/build/Makefile.build:139: util] Error 2
-    53     6.27 openmandriva:cooker           : FAIL gcc version 11.2.0 20210728 (OpenMandriva) (GCC) 
-      In file included from builtin-bench.c:22:
-      bench/bench.h:66:19: error: conflicting types for 'pthread_attr_setaffinity_np'; have 'int(pthread_attr_t *, size_t,  cpu_set_t *)' {aka 'int(pthread_attr_t *, long unsigned int,  cpu_set_t *)'}
-         66 | static inline int pthread_attr_setaffinity_np(pthread_attr_t *attr __maybe_unused,
-            |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-      In file included from bench/bench.h:64,
-                       from builtin-bench.c:22:
-      /usr/include/pthread.h:394:12: note: previous declaration of 'pthread_attr_setaffinity_np' with type 'int(pthread_attr_t *, size_t,  const cpu_set_t *)' {aka 'int(pthread_attr_t *, long unsigned int,  const cpu_set_t *)'}
-        394 | extern int pthread_attr_setaffinity_np (pthread_attr_t *__attr,
-            |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-      ld: warning: -r and --gc-sections may not be used together, disabling --gc-sections
-      ld: warning: -r and --icf may not be used together, disabling --icf
-      ld: warning: -r and --gc-sections may not be used together, disabling --gc-sections
-      ld: warning: -r and --icf may not be used together, disabling --icf
-      ld: warning: -r and --gc-sections may not be used together, disabling --gc-sections
-      ld: warning: -r and --icf may not be used together, disabling --icf
-    54    95.79 opensuse:15.0                 : Ok   gcc (SUSE Linux) 7.4.1 20190905 [gcc-7-branch revision 275407] , clang version 5.0.1 (tags/RELEASE_501/final 312548)
-    55   102.31 opensuse:15.1                 : Ok   gcc (SUSE Linux) 7.5.0 , clang version 7.0.1 (tags/RELEASE_701/final 349238)
-    56    99.08 opensuse:15.2                 : Ok   gcc (SUSE Linux) 7.5.0 , clang version 9.0.1 
-    57   110.13 opensuse:15.3                 : Ok   gcc (SUSE Linux) 7.5.0 , clang version 11.0.1
-    58   109.43 opensuse:tumbleweed           : Ok   gcc (SUSE Linux) 11.2.1 20210816 [revision 056e324ce46a7924b5cf10f61010cf9dd2ca10e9] , clang version 13.0.0
-    59    90.69 oraclelinux:8                 : Ok   gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-4.0.1) , clang version 12.0.1 (Red Hat 12.0.1-4.0.1.module+el8.5.0+20428+2b4ecd47)
-    60    91.29 rockylinux:8                  : Ok   gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-4) , clang version 12.0.1 (Red Hat 12.0.1-4.module+el8.5.0+715+58f51d49)
-    61    67.82 ubuntu:16.04                  : Ok   gcc (Ubuntu 5.4.0-6ubuntu1~16.04.12) 5.4.0 20160609 , clang version 3.8.0-2ubuntu4 (tags/RELEASE_380/final)
-    62    18.43 ubuntu:16.04-x-arm            : Ok   arm-linux-gnueabihf-gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609 
-    63    18.53 ubuntu:16.04-x-arm64          : Ok   aarch64-linux-gnu-gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609 
-    64    17.93 ubuntu:16.04-x-powerpc        : Ok   powerpc-linux-gnu-gcc (Ubuntu 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609 
-    65    18.24 ubuntu:16.04-x-powerpc64      : Ok   powerpc64-linux-gnu-gcc (Ubuntu/IBM 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609 
-    66    18.34 ubuntu:16.04-x-powerpc64el    : Ok   powerpc64le-linux-gnu-gcc (Ubuntu/IBM 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609 
-    67    18.13 ubuntu:16.04-x-s390           : Ok   s390x-linux-gnu-gcc (Ubuntu 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609 
-    68    71.91 ubuntu:18.04                  : Ok   gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 , clang version 6.0.0-1ubuntu2 (tags/RELEASE_600/final)
-    69    19.43 ubuntu:18.04-x-arm            : Ok   arm-linux-gnueabihf-gcc (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04) 7.5.0 
-    70    20.04 ubuntu:18.04-x-arm64          : Ok   aarch64-linux-gnu-gcc (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04) 7.5.0 
-    71    16.12 ubuntu:18.04-x-m68k           : Ok   m68k-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 
-    72    19.34 ubuntu:18.04-x-powerpc        : Ok   powerpc-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 
-    73    20.84 ubuntu:18.04-x-powerpc64      : Ok   powerpc64-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 
-    74    20.74 ubuntu:18.04-x-powerpc64el    : Ok   powerpc64le-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 
-    75    93.21 ubuntu:18.04-x-riscv64        : Ok   riscv64-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 
-    76    17.59 ubuntu:18.04-x-s390           : Ok   s390x-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 
-    77    18.73 ubuntu:18.04-x-sh4            : Ok   sh4-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 
-    78    17.64 ubuntu:18.04-x-sparc64        : Ok   sparc64-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 
-    79    70.31 ubuntu:20.04                  : FAIL clang version 10.0.0-4ubuntu1 
-  
-    80    21.35 ubuntu:20.04-x-powerpc64el    : Ok   powerpc64le-linux-gnu-gcc (Ubuntu 10.3.0-1ubuntu1~20.04) 10.3.0 
-    81    70.22 ubuntu:20.10                  : Ok   gcc (Ubuntu 10.3.0-1ubuntu1~20.10) 10.3.0 , Ubuntu clang version 11.0.0-2
-    82    80.25 ubuntu:21.04                  : Ok   gcc (Ubuntu 10.3.0-1ubuntu1) 10.3.0 , Ubuntu clang version 12.0.0-3ubuntu1~21.04.2
-    83    83.45 ubuntu:21.10                  : Ok   gcc (Ubuntu 11.2.0-7ubuntu2) 11.2.0 , Ubuntu clang version 13.0.0-2
-  BUILD_TARBALL_HEAD=c271a55b0c6029fed0cac909fa57999a11467132
-  
-  real	96m38.445s
-  user	1m32.420s
-  sys	0m45.840s
-  $ 
-
-  $ uname -a
-  Linux quaco 5.15.7-200.fc35.x86_64 #1 SMP Wed Dec 8 19:00:47 UTC 2021 x86_64 x86_64 x86_64 GNU/Linux
-  $ git log --oneline -1
-  c271a55b0c6029fe (HEAD -> perf/urgent, five/perf/urgent) perf inject: Fix segfault due to perf_data__fd() without open
-  $ perf -v
-  perf version 5.16.rc5.gc271a55b0c60
-  $ sudo su -
-  # perf -vv
-  perf version 5.16.rc5.gc271a55b0c60
-                   dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
-      dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
-                   glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
-           syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
-                  libbfd: [ on  ]  # HAVE_LIBBFD_SUPPORT
-                  libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
-                 libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-  numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-                 libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
-               libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
-                libslang: [ on  ]  # HAVE_SLANG_SUPPORT
-               libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
-               libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
-      libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
-                    zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
-                    lzma: [ on  ]  # HAVE_LZMA_SUPPORT
-               get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
-                     bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-                     aio: [ on  ]  # HAVE_AIO_SUPPORT
-                    zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
-                 libpfm4: [ OFF ]  # HAVE_LIBPFM
-  [root@quaco ~]# perf test
-   1: vmlinux symtab matches kallsyms                                 : Ok
-   2: Detect openat syscall event                                     : Ok
-   3: Detect openat syscall event on all cpus                         : Ok
-   4: Read samples using the mmap interface                           : Ok
-   5: Test data source output                                         : Ok
-   6: Parse event definition strings                                  : Ok
-   7: Simple expression parser                                        : Ok
-   8: PERF_RECORD_* events & perf_sample fields                       : Ok
-   9: Parse perf pmu format                                           : Ok
-  10: PMU events                                                      :
-  10.1: PMU event table sanity                                        : Ok
-  10.2: PMU event map aliases                                         : Ok
-  10.3: Parsing of PMU event table metrics                            : Ok
-  10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
-  11: DSO data read                                                   : Ok
-  12: DSO data cache                                                  : Ok
-  13: DSO data reopen                                                 : Ok
-  14: Roundtrip evsel->name                                           : Ok
-  15: Parse sched tracepoints fields                                  : Ok
-  16: syscalls:sys_enter_openat event fields                          : Ok
-  17: Setup struct perf_event_attr                                    : Ok
-  18: Match and link multiple hists                                   : Ok
-  19: 'import perf' in python                                         : Ok
-  20: Breakpoint overflow signal handler                              : Ok
-  21: Breakpoint overflow sampling                                    : Ok
-  22: Breakpoint accounting                                           : Ok
-  23: Watchpoint                                                      :
-  23.1: Read Only Watchpoint                                          : Skip (missing hardware support)
-  23.2: Write Only Watchpoint                                         : Ok
-  23.3: Read / Write Watchpoint                                       : Ok
-  23.4: Modify Watchpoint                                             : Ok
-  24: Number of exit events of a simple workload                      : Ok
-  25: Software clock events period values                             : Ok
-  26: Object code reading                                             : Ok
-  27: Sample parsing                                                  : Ok
-  28: Use a dummy software event to keep tracking                     : Ok
-  29: Parse with no sample_id_all bit set                             : Ok
-  30: Filter hist entries                                             : Ok
-  31: Lookup mmap thread                                              : Ok
-  32: Share thread maps                                               : Ok
-  33: Sort output of hist entries                                     : Ok
-  34: Cumulate child hist entries                                     : Ok
-  35: Track with sched_switch                                         : Ok
-  36: Filter fds with revents mask in a fdarray                       : Ok
-  37: Add fd to a fdarray, making it autogrow                         : Ok
-  38: kmod_path__parse                                                : Ok
-  39: Thread map                                                      : Ok
-  40: LLVM search and compile                                         :
-  40.1: Basic BPF llvm compile                                        : Ok
-  40.2: kbuild searching                                              : Ok
-  40.3: Compile source for BPF prologue generation                    : Ok
-  40.4: Compile source for BPF relocation                             : Ok
-  41: Session topology                                                : Ok
-  42: BPF filter                                                      :
-  42.1: Basic BPF filtering                                           : Ok
-  42.2: BPF pinning                                                   : Ok
-  42.3: BPF prologue generation                                       : Ok
-  43: Synthesize thread map                                           : Ok
-  44: Remove thread map                                               : Ok
-  45: Synthesize cpu map                                              : Ok
-  46: Synthesize stat config                                          : Ok
-  47: Synthesize stat                                                 : Ok
-  48: Synthesize stat round                                           : Ok
-  49: Synthesize attr update                                          : Ok
-  50: Event times                                                     : Ok
-  51: Read backward ring buffer                                       : Ok
-  52: Print cpu map                                                   : Ok
-  53: Merge cpu map                                                   : Ok
-  54: Probe SDT events                                                : Ok
-  55: is_printable_array                                              : Ok
-  56: Print bitmap                                                    : Ok
-  57: perf hooks                                                      : Ok
-  58: builtin clang support                                           :
-  58.1: builtin clang compile C source to IR                          : Skip (not compiled in)
-  58.2: builtin clang compile C source to ELF object                  : Skip (not compiled in)
-  59: unit_number__scnprintf                                          : Ok
-  60: mem2node                                                        : Ok
-  61: time utils                                                      : Ok
-  62: Test jit_write_elf                                              : Ok
-  63: Test libpfm4 support                                            :
-  63.1: test of individual --pfm-events                               : Skip (not compiled in)
-  63.2: test groups of --pfm-events                                   : Skip (not compiled in)
-  64: Test api io                                                     : Ok
-  65: maps__merge_in                                                  : Ok
-  66: Demangle Java                                                   : Ok
-  67: Demangle OCaml                                                  : Ok
-  68: Parse and process metrics                                       : Ok
-  69: PE file support                                                 : Ok
-  70: Event expansion for cgroups                                     : Ok
-  71: Convert perf time to TSC                                        : Ok
-  72: dlfilter C API                                                  : Ok
-  73: x86 rdpmc                                                       : Ok
-  74: Test dwarf unwind                                               : Ok
-  75: x86 instruction decoder - new instructions                      : Ok
-  76: Intel PT packet decoder                                         : Ok
-  77: x86 bp modify                                                   : Ok
-  78: x86 Sample parsing                                              : Ok
-  79: build id cache operations                                       : Ok
-  80: daemon operations                                               : Ok
-  81: perf pipe recording and injection test                          : Ok
-  82: Add vfs_getname probe to get syscall args filenames             : Ok
-  83: probe libc's inet_pton & backtrace it with ping                 : Ok
-  84: Use vfs_getname probe to get syscall args filenames             : Ok
-  85: Zstd perf.data compression/decompression                        : Ok
-  86: perf stat csv summary test                                      : Ok
-  87: perf stat metrics (shadow stat) test                            : Ok
-  88: perf all metricgroups test                                      : FAILED!
-  89: perf all metrics test                                           : Ok
-  90: perf all PMU test                                               : Ok
-  91: perf stat --bpf-counters test                                   : Ok
-  92: Check Arm CoreSight trace data recording and synthesized samples: Skip
-  93: Check Arm SPE trace data recording and synthesized samples      : Skip
-  94: Check open filename arg using perf trace + vfs_getname          : Ok
-  #
-
-  $ git log --oneline -1 ; time make -C tools/perf build-test
-  c271a55b0c6029fe (HEAD -> perf/urgent) perf inject: Fix segfault due to perf_data__fd() without open
-  make: Entering directory '/var/home/acme/git/perf/tools/perf'
-  - tarpkg: ./tests/perf-targz-src-pkg .
-                   make_static: make LDFLAGS=-static NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 NO_JVMTI=1 -j32  DESTDIR=/tmp/tmp.89eyznDmlq
-                make_with_gtk2: make GTK2=1 -j32  DESTDIR=/tmp/tmp.etTEngeSX7
-         make_no_syscall_tbl_O: make NO_SYSCALL_TABLE=1
-           make_no_libunwind_O: make NO_LIBUNWIND=1
-                 make_perf_o_O: make perf.o
-            make_no_demangle_O: make NO_DEMANGLE=1
-            make_no_auxtrace_O: make NO_AUXTRACE=1
-                    make_doc_O: make doc
-             make_util_map_o_O: make util/map.o
-       make_util_pmu_bison_o_O: make util/pmu-bison.o
-            make_no_libaudit_O: make NO_LIBAUDIT=1
-                  make_debug_O: make DEBUG=1
-         make_install_prefix_O: make install prefix=/tmp/krava
-              make_no_libelf_O: make NO_LIBELF=1
-              make_no_libbpf_O: make NO_LIBBPF=1
-                   make_tags_O: make tags
-                make_minimal_O: make NO_LIBPERL=1 NO_LIBPYTHON=1 NO_NEWT=1 NO_GTK2=1 NO_DEMANGLE=1 NO_LIBELF=1 NO_LIBUNWIND=1 NO_BACKTRACE=1 NO_LIBNUMA=1 NO_LIBAUDIT=1 NO_LIBBIONIC=1 NO_LIBDW_DWARF_UNWIND=1 NO_AUXTRACE=1 NO_LIBBPF=1 NO_LIBCRYPTO=1 NO_SDT=1 NO_JVMTI=1 NO_LIBZSTD=1 NO_LIBCAP=1 NO_SYSCALL_TABLE=1
-                 make_no_sdt_O: make NO_SDT=1
-  make_no_libdw_dwarf_unwind_O: make NO_LIBDW_DWARF_UNWIND=1
-            make_install_bin_O: make install-bin
-                make_no_gtk2_O: make NO_GTK2=1
-             make_no_scripts_O: make NO_LIBPYTHON=1 NO_LIBPERL=1
-             make_no_libperl_O: make NO_LIBPERL=1
-         make_with_coresight_O: make CORESIGHT=1
-        make_no_libbpf_DEBUG_O: make NO_LIBBPF=1 DEBUG=1
-               make_no_slang_O: make NO_SLANG=1
-           make_no_libcrypto_O: make NO_LIBCRYPTO=1
-        make_with_babeltrace_O: make LIBBABELTRACE=1
-           make_no_backtrace_O: make NO_BACKTRACE=1
-         make_libbpf_dynamic_O: make LIBBPF_DYNAMIC=1
-   make_install_prefix_slash_O: make install prefix=/tmp/krava/
-                make_install_O: make install
-           make_with_libpfm4_O: make LIBPFM4=1
-                   make_pure_O: make
-           make_no_libbionic_O: make NO_LIBBIONIC=1
-                make_no_newt_O: make NO_NEWT=1
-                  make_no_ui_O: make NO_NEWT=1 NO_SLANG=1 NO_GTK2=1
-           make_no_libpython_O: make NO_LIBPYTHON=1
-                   make_help_O: make help
-              make_clean_all_O: make clean all
-         make_with_clangllvm_O: make LIBCLANGLLVM=1
-             make_no_libnuma_O: make NO_LIBNUMA=1
-  OK
-  make: Leaving directory '/var/home/acme/git/perf/tools/perf'
-  
-  real	4m13.398s
-  user	55m35.657s
-  sys	11m13.585s
-  $
