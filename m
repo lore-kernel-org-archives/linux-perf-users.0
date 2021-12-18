@@ -2,53 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8ABDC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Dec 2021 21:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC8A5C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Dec 2021 21:20:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229629AbhLRVUt (ORCPT
+        id S234481AbhLRVUp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 18 Dec 2021 16:20:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56324 "EHLO
+        Sat, 18 Dec 2021 16:20:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234465AbhLRVUo (ORCPT
+        with ESMTP id S232330AbhLRVUc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 18 Dec 2021 16:20:44 -0500
-Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0D48C061401;
-        Sat, 18 Dec 2021 13:20:43 -0800 (PST)
-Received: by mail-ot1-x32e.google.com with SMTP id w6-20020a9d77c6000000b0055e804fa524so7492711otl.3;
-        Sat, 18 Dec 2021 13:20:43 -0800 (PST)
+        Sat, 18 Dec 2021 16:20:32 -0500
+Received: from mail-ot1-x32b.google.com (mail-ot1-x32b.google.com [IPv6:2607:f8b0:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4728EC06173F;
+        Sat, 18 Dec 2021 13:20:31 -0800 (PST)
+Received: by mail-ot1-x32b.google.com with SMTP id u18-20020a9d7212000000b00560cb1dc10bso7423479otj.11;
+        Sat, 18 Dec 2021 13:20:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=yzUNsvJwnd0v47Q5AxP6lhYkyqcCWxa0P2De/g+O3S0=;
-        b=aeyrRdsbMj+T7Uh+RBjZZWB/kA4U6108/E5yXjYzEClA1t4rVOhg/TvjA0URGEfjoS
-         8yYx9V7mJF6lmAgq1RzTAn0dXWVtCFnCSFSksRA2bCDS1+uiI+TNu4nmPvKC0vculKAb
-         2vav+lP6DUjfNbJW+bp5U8XrXK8lFMlsnqbY6Zewmwd9n5fAAW+kNcP//A8BmAU23hFg
-         Lq0+BqGt31qmsHiR1/82tonV9twgXObMrhuAwajRpq5K5rv0K69gHMcZp/93pbohASi1
-         adq5kjwvFtWTOSo4i7GJNxLBBtYCHu1eTmkd8vxkfTbiK5L1H6Us5Ch8+PPNqfwfmUKe
-         oUZA==
+        bh=QgmvA9Ca2Chm8PCMZATSSpDkFlZwbTnbTlrFcY7ik6k=;
+        b=C6vpc1qHIlffelpAYhVIzPenpQcK4OvQdMP2z0Z7Xz1W2JTAv6om7WemWk5/xTc99M
+         NbaFuWxCB7RbpOjrMn32iklxGV5pUBXdj7ub6yez7jkOdvFsccE55nkyxFP/A4OLL3Cl
+         toEcZGvDV8S1XGi3pPE/98EFxJrC1lvtrMZhyFt3tCynjAyB5HpXb39mkL5gl3Gz+TkC
+         XzXzMiUEbVdotX7Ji6U21Z5kXDjcXwN7PlLV8EXH6g97HT30uFqfXCMRMb5PNWJLK0Qt
+         G3X7xJCte3xUnIB8/2sbk/ma7JuYfigSDZEO0jYlETC51U7Qv/eLbyNCWrbYfXiH4NiP
+         +fmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=yzUNsvJwnd0v47Q5AxP6lhYkyqcCWxa0P2De/g+O3S0=;
-        b=ybFHFk5jbFNbS500SMwAUlg12+xbWkV6a8r2GE8C/DtbbePaqdk5nviB2nYTaOIQWG
-         CCUo4K+a4GPJWeTYuIFQL3qUB4FBUeNcx7qVQtpbCnhJxrnPE+TJQ/HO+Tc+UxYYBwmK
-         PbDxtVy0KOH/698GalvD8luagi40P92AiHXDqlB0r1WewcR1YtIegaz8GA2CyyH9GGmG
-         6GJq/Z5ubPZ2dTSmhWS5nQx07nk2ZT7n9ACk3LYHhu7tnAYwBlalg7ov0rBEpAvVt4jh
-         bj4Jw3aZvrJJQtk1kyL/PVswynWXPVzlHPCVptm4Mc5pL3u/MD7fPb4/E6eax4RXyZ0s
-         u04g==
-X-Gm-Message-State: AOAM530511QBgKMz+sDnVRHADEL/8UhJExqffsrdmGbMqBkbwpq4jfOu
-        1D5NGa8FlKPk5HZS6azrE8/pJfKW0789UA==
-X-Google-Smtp-Source: ABdhPJwfIZ0Qa4eLLyeYlPDfGf2rm+0UPfH1JNF0NiYHXOLlCwWJPU0EMB/YwfrozpLsXV17jLZYCg==
-X-Received: by 2002:a05:6830:2681:: with SMTP id l1mr6437156otu.378.1639862442812;
-        Sat, 18 Dec 2021 13:20:42 -0800 (PST)
+        bh=QgmvA9Ca2Chm8PCMZATSSpDkFlZwbTnbTlrFcY7ik6k=;
+        b=mMRBNitCj9MX81Wn+eJ/o25Y4fTR2V5hYBAFHdS9/XT/ovsqCV5BDHR6Rq0Qlt5qmo
+         TSZUtmvCVAzC4tnAsP4HWw/5Mk3hcZVQxLFILjGXGq5wKeHRVIat0r997Ss/K+HN6pV2
+         WoW8B3H00EXJoW7sZl+ctZP9H6VJjiOsGNp5nMW/bxuhF2pweVqfoWJfEUPq9MV6X7Bp
+         UmwHrBvh2/DlPI1iMKuCpwKo6sdtdgFrlJ17WASFRf0RLcNTKJ2dEI0Cs0mVXSJr9/Qy
+         eEE0jhmL6XYyWI8NJTREAuBhY6/l0EvDVYr0n3pZmbl9LHHdXZfq9d32tEtOAxox1r4k
+         A5OA==
+X-Gm-Message-State: AOAM531VSSrmToot5jpnm8YtUBzR99oc6hqIDlX1IrGJtY5fN5sLkfto
+        OKh5LNYMKnJAt4ZuVZyg+k2lrrhASAopZg==
+X-Google-Smtp-Source: ABdhPJwaw7u3t5/+MQbjC6RuQMCTdkUtGmD/cEHDRk9w0P88I9M7sE6/X3ZHPxaQbcc8tqQ4RIkdtw==
+X-Received: by 2002:a9d:7459:: with SMTP id p25mr6379946otk.247.1639862430321;
+        Sat, 18 Dec 2021 13:20:30 -0800 (PST)
 Received: from localhost (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id s1sm2263399ooo.11.2021.12.18.13.20.41
+        by smtp.gmail.com with ESMTPSA id o11sm2484738oiv.10.2021.12.18.13.20.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Dec 2021 13:20:42 -0800 (PST)
+        Sat, 18 Dec 2021 13:20:30 -0800 (PST)
 From:   Yury Norov <yury.norov@gmail.com>
 To:     linux-kernel@vger.kernel.org, Yury Norov <yury.norov@gmail.com>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
@@ -136,9 +136,9 @@ To:     linux-kernel@vger.kernel.org, Yury Norov <yury.norov@gmail.com>,
         linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
         linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
         linux-snps-arc@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 08/17] all: replace bitmap_weight with bitmap_weight_{eq,gt,ge,lt,le} where appropriate
-Date:   Sat, 18 Dec 2021 13:20:04 -0800
-Message-Id: <20211218212014.1315894-9-yury.norov@gmail.com>
+Subject: [PATCH 04/17] all: replace bitmap_weight with bitmap_empty where appropriate
+Date:   Sat, 18 Dec 2021 13:20:00 -0800
+Message-Id: <20211218212014.1315894-5-yury.norov@gmail.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20211218212014.1315894-1-yury.norov@gmail.com>
 References: <20211218212014.1315894-1-yury.norov@gmail.com>
@@ -148,238 +148,255 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Kernel code calls bitmap_weight() to compare the weight of bitmap with
-a given number. We can do it more efficiently with bitmap_weight_{eq, ...}
-because conditional bitmap_weight may stop traversing the bitmap earlier,
-as soon as condition is met.
-
-This patch replaces bitmap_weight with conditional versions where possible,
-except for small bitmaps which size is not configurable and  known at
-constant time. In that case conditional version of bitmap_weight would not
-benefit due to small_const_nbits() optimization; but readability may
-suffer.
+In many cases, kernel code calls bitmap_weight() to check if any bit of
+a given bitmap is set. It's better to use bitmap_empty() in that case
+because bitmap_empty() stops traversing the bitmap as soon as it finds
+first set bit, while bitmap_weight() counts all bits unconditionally.
 
 Signed-off-by: Yury Norov <yury.norov@gmail.com>
 ---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c                 |  2 +-
- drivers/iio/dummy/iio_simple_dummy_buffer.c            |  4 ++--
- drivers/iio/industrialio-trigger.c                     |  2 +-
- drivers/memstick/core/ms_block.c                       |  4 ++--
- drivers/net/ethernet/intel/ixgbe/ixgbe_sriov.c         |  2 +-
- .../net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c  |  2 +-
- .../net/ethernet/marvell/octeontx2/nic/otx2_flows.c    |  4 ++--
- drivers/net/ethernet/mellanox/mlx4/cmd.c               | 10 +++-------
- drivers/net/ethernet/mellanox/mlx4/eq.c                |  4 ++--
- drivers/net/ethernet/mellanox/mlx4/fw.c                |  4 ++--
- drivers/net/ethernet/mellanox/mlx4/main.c              |  2 +-
- drivers/perf/thunderx2_pmu.c                           |  4 ++--
- drivers/staging/media/tegra-video/vi.c                 |  2 +-
- 13 files changed, 21 insertions(+), 25 deletions(-)
+ arch/nds32/kernel/perf_event_cpu.c                      | 2 +-
+ arch/x86/kvm/hyperv.c                                   | 8 ++++----
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c                | 2 +-
+ drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c        | 4 ++--
+ drivers/net/ethernet/marvell/octeontx2/nic/otx2_flows.c | 4 ++--
+ drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c    | 2 +-
+ drivers/net/ethernet/qlogic/qed/qed_rdma.c              | 4 ++--
+ drivers/net/ethernet/qlogic/qed/qed_roce.c              | 2 +-
+ drivers/perf/arm-cci.c                                  | 2 +-
+ drivers/perf/arm_pmu.c                                  | 4 ++--
+ drivers/perf/hisilicon/hisi_uncore_pmu.c                | 2 +-
+ drivers/perf/xgene_pmu.c                                | 2 +-
+ tools/perf/builtin-c2c.c                                | 4 ++--
+ 13 files changed, 21 insertions(+), 21 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index e23ff03290b8..9d42e592c1cf 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -2752,7 +2752,7 @@ static int __init_one_rdt_domain(struct rdt_domain *d, struct resctrl_schema *s,
- 	 * bitmap_weight() does not access out-of-bound memory.
- 	 */
- 	tmp_cbm = cfg->new_ctrl;
--	if (bitmap_weight(&tmp_cbm, r->cache.cbm_len) < r->cache.min_cbm_bits) {
-+	if (bitmap_weight_lt(&tmp_cbm, r->cache.cbm_len, r->cache.min_cbm_bits)) {
- 		rdt_last_cmd_printf("No space on %s:%d\n", s->name, d->id);
- 		return -ENOSPC;
- 	}
-diff --git a/drivers/iio/dummy/iio_simple_dummy_buffer.c b/drivers/iio/dummy/iio_simple_dummy_buffer.c
-index 59aa60d4ca37..cd2470ddf82b 100644
---- a/drivers/iio/dummy/iio_simple_dummy_buffer.c
-+++ b/drivers/iio/dummy/iio_simple_dummy_buffer.c
-@@ -72,8 +72,8 @@ static irqreturn_t iio_simple_dummy_trigger_h(int irq, void *p)
- 		int i, j;
- 
- 		for (i = 0, j = 0;
--		     i < bitmap_weight(indio_dev->active_scan_mask,
--				       indio_dev->masklength);
-+		     bitmap_weight_gt(indio_dev->active_scan_mask,
-+				       indio_dev->masklength, i);
- 		     i++, j++) {
- 			j = find_next_bit(indio_dev->active_scan_mask,
- 					  indio_dev->masklength, j);
-diff --git a/drivers/iio/industrialio-trigger.c b/drivers/iio/industrialio-trigger.c
-index f504ed351b3e..98c54022fecf 100644
---- a/drivers/iio/industrialio-trigger.c
-+++ b/drivers/iio/industrialio-trigger.c
-@@ -331,7 +331,7 @@ int iio_trigger_detach_poll_func(struct iio_trigger *trig,
+diff --git a/arch/nds32/kernel/perf_event_cpu.c b/arch/nds32/kernel/perf_event_cpu.c
+index a78a879e7ef1..ea44e9ecb5c7 100644
+--- a/arch/nds32/kernel/perf_event_cpu.c
++++ b/arch/nds32/kernel/perf_event_cpu.c
+@@ -695,7 +695,7 @@ static void nds32_pmu_enable(struct pmu *pmu)
  {
- 	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(pf->indio_dev);
- 	bool no_other_users =
--		bitmap_weight(trig->pool, CONFIG_IIO_CONSUMERS_PER_TRIGGER) == 1;
-+		bitmap_weight_eq(trig->pool, CONFIG_IIO_CONSUMERS_PER_TRIGGER, 1);
- 	int ret = 0;
+ 	struct nds32_pmu *nds32_pmu = to_nds32_pmu(pmu);
+ 	struct pmu_hw_events *hw_events = nds32_pmu->get_hw_events();
+-	int enabled = bitmap_weight(hw_events->used_mask,
++	bool enabled = !bitmap_empty(hw_events->used_mask,
+ 				    nds32_pmu->num_events);
  
- 	if (trig->ops && trig->ops->set_trigger_state && no_other_users) {
-diff --git a/drivers/memstick/core/ms_block.c b/drivers/memstick/core/ms_block.c
-index 0cda6c6baefc..5cdd987e78f7 100644
---- a/drivers/memstick/core/ms_block.c
-+++ b/drivers/memstick/core/ms_block.c
-@@ -155,8 +155,8 @@ static int msb_validate_used_block_bitmap(struct msb_data *msb)
- 	for (i = 0; i < msb->zone_count; i++)
- 		total_free_blocks += msb->free_block_count[i];
- 
--	if (msb->block_count - bitmap_weight(msb->used_blocks_bitmap,
--					msb->block_count) == total_free_blocks)
-+	if (bitmap_weight_eq(msb->used_blocks_bitmap, msb->block_count,
-+				msb->block_count - total_free_blocks))
- 		return 0;
- 
- 	pr_err("BUG: free block counts don't match the bitmap");
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_sriov.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_sriov.c
-index 214a38de3f41..35297d8a488b 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_sriov.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_sriov.c
-@@ -246,7 +246,7 @@ int ixgbe_disable_sriov(struct ixgbe_adapter *adapter)
- #endif
- 
- 	/* Disable VMDq flag so device will be set in VM mode */
--	if (bitmap_weight(adapter->fwd_bitmask, adapter->num_rx_pools) == 1) {
-+	if (bitmap_weight_eq(adapter->fwd_bitmask, adapter->num_rx_pools, 1)) {
- 		adapter->flags &= ~IXGBE_FLAG_VMDQ_ENABLED;
- 		adapter->flags &= ~IXGBE_FLAG_SRIOV_ENABLED;
- 		rss = min_t(int, ixgbe_max_rss_indices(adapter),
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c
-index d85db90632d6..a55fd1d0c653 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c
-@@ -287,7 +287,7 @@ static int otx2_set_channels(struct net_device *dev,
- 	if (!channel->rx_count || !channel->tx_count)
- 		return -EINVAL;
- 
--	if (bitmap_weight(&pfvf->rq_bmap, pfvf->hw.rx_queues) > 1) {
-+	if (bitmap_weight_gt(&pfvf->rq_bmap, pfvf->hw.rx_queues, 1)) {
- 		netdev_err(dev,
- 			   "Receive queues are in use by TC police action\n");
- 		return -EINVAL;
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_flows.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_flows.c
-index 80b2d64b4136..55c899a6fcdd 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_flows.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_flows.c
-@@ -1170,8 +1170,8 @@ int otx2_remove_flow(struct otx2_nic *pfvf, u32 location)
- 		 * interface mac address and configure CGX/RPM block in
- 		 * promiscuous mode
- 		 */
--		if (bitmap_weight(&flow_cfg->dmacflt_bmap,
--				  flow_cfg->dmacflt_max_flows) == 1)
-+		if (bitmap_weight_eq(&flow_cfg->dmacflt_bmap,
-+				     flow_cfg->dmacflt_max_flows, 1))
- 			otx2_update_rem_pfmac(pfvf, DMAC_ADDR_DEL);
- 	} else {
- 		err = otx2_remove_flow_msg(pfvf, flow->entry, false);
-diff --git a/drivers/net/ethernet/mellanox/mlx4/cmd.c b/drivers/net/ethernet/mellanox/mlx4/cmd.c
-index c56d2194cbfc..5bca0c68f00a 100644
---- a/drivers/net/ethernet/mellanox/mlx4/cmd.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/cmd.c
-@@ -2792,9 +2792,8 @@ int mlx4_slave_convert_port(struct mlx4_dev *dev, int slave, int port)
+ 	if (enabled)
+diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+index 6e38a7d22e97..2c3400dea4b3 100644
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -90,7 +90,7 @@ static void synic_update_vector(struct kvm_vcpu_hv_synic *synic,
  {
- 	unsigned n;
- 	struct mlx4_active_ports actv_ports = mlx4_get_active_ports(dev, slave);
--	unsigned m = bitmap_weight(actv_ports.ports, dev->caps.num_ports);
+ 	struct kvm_vcpu *vcpu = hv_synic_to_vcpu(synic);
+ 	struct kvm_hv *hv = to_kvm_hv(vcpu->kvm);
+-	int auto_eoi_old, auto_eoi_new;
++	bool auto_eoi_old, auto_eoi_new;
  
--	if (port <= 0 || port > m)
-+	if (port <= 0 || bitmap_weight_lt(actv_ports.ports, dev->caps.num_ports, port))
- 		return -EINVAL;
+ 	if (vector < HV_SYNIC_FIRST_VALID_VECTOR)
+ 		return;
+@@ -100,16 +100,16 @@ static void synic_update_vector(struct kvm_vcpu_hv_synic *synic,
+ 	else
+ 		__clear_bit(vector, synic->vec_bitmap);
  
- 	n = find_first_bit(actv_ports.ports, dev->caps.num_ports);
-@@ -3404,10 +3403,6 @@ int mlx4_vf_set_enable_smi_admin(struct mlx4_dev *dev, int slave, int port,
- 	struct mlx4_priv *priv = mlx4_priv(dev);
- 	struct mlx4_active_ports actv_ports = mlx4_get_active_ports(
- 			&priv->dev, slave);
--	int min_port = find_first_bit(actv_ports.ports,
--				      priv->dev.caps.num_ports) + 1;
--	int max_port = min_port - 1 +
--		bitmap_weight(actv_ports.ports, priv->dev.caps.num_ports);
+-	auto_eoi_old = bitmap_weight(synic->auto_eoi_bitmap, 256);
++	auto_eoi_old = bitmap_empty(synic->auto_eoi_bitmap, 256);
  
- 	if (slave == mlx4_master_func_num(dev))
- 		return 0;
-@@ -3417,7 +3412,8 @@ int mlx4_vf_set_enable_smi_admin(struct mlx4_dev *dev, int slave, int port,
- 	    enabled < 0 || enabled > 1)
- 		return -EINVAL;
+ 	if (synic_has_vector_auto_eoi(synic, vector))
+ 		__set_bit(vector, synic->auto_eoi_bitmap);
+ 	else
+ 		__clear_bit(vector, synic->auto_eoi_bitmap);
  
--	if (min_port == max_port && dev->caps.num_ports > 1) {
-+	if (dev->caps.num_ports > 1 &&
-+	    bitmap_weight_eq(actv_ports.ports, priv->dev.caps.num_ports, 1)) {
- 		mlx4_info(dev, "SMI access disallowed for single ported VFs\n");
- 		return -EPROTONOSUPPORT;
- 	}
-diff --git a/drivers/net/ethernet/mellanox/mlx4/eq.c b/drivers/net/ethernet/mellanox/mlx4/eq.c
-index 414e390e6b48..0c09432ff389 100644
---- a/drivers/net/ethernet/mellanox/mlx4/eq.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/eq.c
-@@ -1435,8 +1435,8 @@ int mlx4_is_eq_shared(struct mlx4_dev *dev, int vector)
- 	if (vector <= 0 || (vector >= dev->caps.num_comp_vectors + 1))
- 		return -EINVAL;
+-	auto_eoi_new = bitmap_weight(synic->auto_eoi_bitmap, 256);
++	auto_eoi_new = bitmap_empty(synic->auto_eoi_bitmap, 256);
  
--	return !!(bitmap_weight(priv->eq_table.eq[vector].actv_ports.ports,
--				dev->caps.num_ports) > 1);
-+	return bitmap_weight_gt(priv->eq_table.eq[vector].actv_ports.ports,
-+				dev->caps.num_ports, 1);
- }
- EXPORT_SYMBOL(mlx4_is_eq_shared);
- 
-diff --git a/drivers/net/ethernet/mellanox/mlx4/fw.c b/drivers/net/ethernet/mellanox/mlx4/fw.c
-index 42c96c9d7fb1..855aae326ccb 100644
---- a/drivers/net/ethernet/mellanox/mlx4/fw.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/fw.c
-@@ -1300,8 +1300,8 @@ int mlx4_QUERY_DEV_CAP_wrapper(struct mlx4_dev *dev, int slave,
- 	actv_ports = mlx4_get_active_ports(dev, slave);
- 	first_port = find_first_bit(actv_ports.ports, dev->caps.num_ports);
- 	for (slave_port = 0, real_port = first_port;
--	     real_port < first_port +
--	     bitmap_weight(actv_ports.ports, dev->caps.num_ports);
-+	     bitmap_weight_gt(actv_ports.ports, dev->caps.num_ports,
-+			      real_port - first_port);
- 	     ++real_port, ++slave_port) {
- 		if (flags & (MLX4_DEV_CAP_FLAG_WOL_PORT1 << real_port))
- 			flags |= MLX4_DEV_CAP_FLAG_WOL_PORT1 << slave_port;
-diff --git a/drivers/net/ethernet/mellanox/mlx4/main.c b/drivers/net/ethernet/mellanox/mlx4/main.c
-index b187c210d4d6..cfbaa7ac712f 100644
---- a/drivers/net/ethernet/mellanox/mlx4/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/main.c
-@@ -1383,7 +1383,7 @@ static int mlx4_mf_bond(struct mlx4_dev *dev)
- 		   dev->persist->num_vfs + 1);
- 
- 	/* only single port vfs are allowed */
--	if (bitmap_weight(slaves_port_1_2, dev->persist->num_vfs + 1) > 1) {
-+	if (bitmap_weight_gt(slaves_port_1_2, dev->persist->num_vfs + 1, 1)) {
- 		mlx4_warn(dev, "HA mode unsupported for dual ported VFs\n");
- 		return -EINVAL;
- 	}
-diff --git a/drivers/perf/thunderx2_pmu.c b/drivers/perf/thunderx2_pmu.c
-index 05378c0fd8f3..ebfa66b212c7 100644
---- a/drivers/perf/thunderx2_pmu.c
-+++ b/drivers/perf/thunderx2_pmu.c
-@@ -623,8 +623,8 @@ static void tx2_uncore_event_start(struct perf_event *event, int flags)
+-	if (!!auto_eoi_old == !!auto_eoi_new)
++	if (auto_eoi_old == auto_eoi_new)
  		return;
  
- 	/* Start timer for first event */
--	if (bitmap_weight(tx2_pmu->active_counters,
--				tx2_pmu->max_counters) == 1) {
-+	if (bitmap_weight_eq(tx2_pmu->active_counters,
-+				tx2_pmu->max_counters, 1)) {
- 		hrtimer_start(&tx2_pmu->hrtimer,
- 			ns_to_ktime(tx2_pmu->hrtimer_interval),
- 			HRTIMER_MODE_REL_PINNED);
-diff --git a/drivers/staging/media/tegra-video/vi.c b/drivers/staging/media/tegra-video/vi.c
-index 69d9787d5338..98d878a5ca6b 100644
---- a/drivers/staging/media/tegra-video/vi.c
-+++ b/drivers/staging/media/tegra-video/vi.c
-@@ -436,7 +436,7 @@ static int tegra_channel_enum_format(struct file *file, void *fh,
- 	if (!IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
- 		fmts_bitmap = chan->fmts_bitmap;
+ 	down_write(&vcpu->kvm->arch.apicv_update_lock);
+diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c
+index d7fa2c49e741..56a3063545ec 100644
+--- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c
++++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c
+@@ -68,7 +68,7 @@ static int smp_request_block(struct mdp5_smp *smp,
+ 	uint8_t reserved;
  
--	if (f->index >= bitmap_weight(fmts_bitmap, MAX_FORMAT_NUM))
-+	if (bitmap_weight_le(fmts_bitmap, MAX_FORMAT_NUM, f->index))
- 		return -EINVAL;
+ 	/* we shouldn't be requesting blocks for an in-use client: */
+-	WARN_ON(bitmap_weight(cs, cnt) > 0);
++	WARN_ON(!bitmap_empty(cs, cnt));
  
- 	for (i = 0; i < f->index + 1; i++, index++)
+ 	reserved = smp->reserved[cid];
+ 
+diff --git a/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c b/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c
+index 61b2db3342ed..ac0fe04df2e0 100644
+--- a/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c
++++ b/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c
+@@ -267,8 +267,8 @@ ice_set_pfe_link(struct ice_vf *vf, struct virtchnl_pf_event *pfe,
+  */
+ static bool ice_vf_has_no_qs_ena(struct ice_vf *vf)
+ {
+-	return (!bitmap_weight(vf->rxq_ena, ICE_MAX_RSS_QS_PER_VF) &&
+-		!bitmap_weight(vf->txq_ena, ICE_MAX_RSS_QS_PER_VF));
++	return (bitmap_empty(vf->rxq_ena, ICE_MAX_RSS_QS_PER_VF) &&
++		bitmap_empty(vf->txq_ena, ICE_MAX_RSS_QS_PER_VF));
+ }
+ 
+ /**
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_flows.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_flows.c
+index 77a13fb555fb..80b2d64b4136 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_flows.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_flows.c
+@@ -353,7 +353,7 @@ int otx2_add_macfilter(struct net_device *netdev, const u8 *mac)
+ {
+ 	struct otx2_nic *pf = netdev_priv(netdev);
+ 
+-	if (bitmap_weight(&pf->flow_cfg->dmacflt_bmap,
++	if (!bitmap_empty(&pf->flow_cfg->dmacflt_bmap,
+ 			  pf->flow_cfg->dmacflt_max_flows))
+ 		netdev_warn(netdev,
+ 			    "Add %pM to CGX/RPM DMAC filters list as well\n",
+@@ -436,7 +436,7 @@ int otx2_get_maxflows(struct otx2_flow_config *flow_cfg)
+ 		return 0;
+ 
+ 	if (flow_cfg->nr_flows == flow_cfg->max_flows ||
+-	    bitmap_weight(&flow_cfg->dmacflt_bmap,
++	    !bitmap_empty(&flow_cfg->dmacflt_bmap,
+ 			  flow_cfg->dmacflt_max_flows))
+ 		return flow_cfg->max_flows + flow_cfg->dmacflt_max_flows;
+ 	else
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
+index 6080ebd9bd94..3d369ccc7ab9 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
+@@ -1115,7 +1115,7 @@ static int otx2_cgx_config_loopback(struct otx2_nic *pf, bool enable)
+ 	struct msg_req *msg;
+ 	int err;
+ 
+-	if (enable && bitmap_weight(&pf->flow_cfg->dmacflt_bmap,
++	if (enable && !bitmap_empty(&pf->flow_cfg->dmacflt_bmap,
+ 				    pf->flow_cfg->dmacflt_max_flows))
+ 		netdev_warn(pf->netdev,
+ 			    "CGX/RPM internal loopback might not work as DMAC filters are active\n");
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_rdma.c b/drivers/net/ethernet/qlogic/qed/qed_rdma.c
+index 23b668de4640..b6e2e17bac04 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_rdma.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_rdma.c
+@@ -336,7 +336,7 @@ void qed_rdma_bmap_free(struct qed_hwfn *p_hwfn,
+ 
+ 	/* print aligned non-zero lines, if any */
+ 	for (item = 0, line = 0; line < last_line; line++, item += 8)
+-		if (bitmap_weight((unsigned long *)&pmap[item], 64 * 8))
++		if (!bitmap_empty((unsigned long *)&pmap[item], 64 * 8))
+ 			DP_NOTICE(p_hwfn,
+ 				  "line 0x%04x: 0x%016llx 0x%016llx 0x%016llx 0x%016llx 0x%016llx 0x%016llx 0x%016llx 0x%016llx\n",
+ 				  line,
+@@ -350,7 +350,7 @@ void qed_rdma_bmap_free(struct qed_hwfn *p_hwfn,
+ 
+ 	/* print last unaligned non-zero line, if any */
+ 	if ((bmap->max_count % (64 * 8)) &&
+-	    (bitmap_weight((unsigned long *)&pmap[item],
++	    (!bitmap_empty((unsigned long *)&pmap[item],
+ 			   bmap->max_count - item * 64))) {
+ 		offset = sprintf(str_last_line, "line 0x%04x: ", line);
+ 		for (; item < last_item; item++)
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_roce.c b/drivers/net/ethernet/qlogic/qed/qed_roce.c
+index 071b4aeaddf2..134ecfca96a3 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_roce.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_roce.c
+@@ -76,7 +76,7 @@ void qed_roce_stop(struct qed_hwfn *p_hwfn)
+ 	 * We delay for a short while if an async destroy QP is still expected.
+ 	 * Beyond the added delay we clear the bitmap anyway.
+ 	 */
+-	while (bitmap_weight(rcid_map->bitmap, rcid_map->max_count)) {
++	while (!bitmap_empty(rcid_map->bitmap, rcid_map->max_count)) {
+ 		/* If the HW device is during recovery, all resources are
+ 		 * immediately reset without receiving a per-cid indication
+ 		 * from HW. In this case we don't expect the cid bitmap to be
+diff --git a/drivers/perf/arm-cci.c b/drivers/perf/arm-cci.c
+index 54aca3a62814..96e09fa40909 100644
+--- a/drivers/perf/arm-cci.c
++++ b/drivers/perf/arm-cci.c
+@@ -1096,7 +1096,7 @@ static void cci_pmu_enable(struct pmu *pmu)
+ {
+ 	struct cci_pmu *cci_pmu = to_cci_pmu(pmu);
+ 	struct cci_pmu_hw_events *hw_events = &cci_pmu->hw_events;
+-	int enabled = bitmap_weight(hw_events->used_mask, cci_pmu->num_cntrs);
++	bool enabled = !bitmap_empty(hw_events->used_mask, cci_pmu->num_cntrs);
+ 	unsigned long flags;
+ 
+ 	if (!enabled)
+diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+index 295cc7952d0e..a31b302b0ade 100644
+--- a/drivers/perf/arm_pmu.c
++++ b/drivers/perf/arm_pmu.c
+@@ -524,7 +524,7 @@ static void armpmu_enable(struct pmu *pmu)
+ {
+ 	struct arm_pmu *armpmu = to_arm_pmu(pmu);
+ 	struct pmu_hw_events *hw_events = this_cpu_ptr(armpmu->hw_events);
+-	int enabled = bitmap_weight(hw_events->used_mask, armpmu->num_events);
++	bool enabled = !bitmap_empty(hw_events->used_mask, armpmu->num_events);
+ 
+ 	/* For task-bound events we may be called on other CPUs */
+ 	if (!cpumask_test_cpu(smp_processor_id(), &armpmu->supported_cpus))
+@@ -785,7 +785,7 @@ static int cpu_pm_pmu_notify(struct notifier_block *b, unsigned long cmd,
+ {
+ 	struct arm_pmu *armpmu = container_of(b, struct arm_pmu, cpu_pm_nb);
+ 	struct pmu_hw_events *hw_events = this_cpu_ptr(armpmu->hw_events);
+-	int enabled = bitmap_weight(hw_events->used_mask, armpmu->num_events);
++	bool enabled = !bitmap_empty(hw_events->used_mask, armpmu->num_events);
+ 
+ 	if (!cpumask_test_cpu(smp_processor_id(), &armpmu->supported_cpus))
+ 		return NOTIFY_DONE;
+diff --git a/drivers/perf/hisilicon/hisi_uncore_pmu.c b/drivers/perf/hisilicon/hisi_uncore_pmu.c
+index a738aeab5c04..358e4e284a62 100644
+--- a/drivers/perf/hisilicon/hisi_uncore_pmu.c
++++ b/drivers/perf/hisilicon/hisi_uncore_pmu.c
+@@ -393,7 +393,7 @@ EXPORT_SYMBOL_GPL(hisi_uncore_pmu_read);
+ void hisi_uncore_pmu_enable(struct pmu *pmu)
+ {
+ 	struct hisi_pmu *hisi_pmu = to_hisi_pmu(pmu);
+-	int enabled = bitmap_weight(hisi_pmu->pmu_events.used_mask,
++	bool enabled = !bitmap_empty(hisi_pmu->pmu_events.used_mask,
+ 				    hisi_pmu->num_counters);
+ 
+ 	if (!enabled)
+diff --git a/drivers/perf/xgene_pmu.c b/drivers/perf/xgene_pmu.c
+index 2b6d476bd213..88bd100a9633 100644
+--- a/drivers/perf/xgene_pmu.c
++++ b/drivers/perf/xgene_pmu.c
+@@ -867,7 +867,7 @@ static void xgene_perf_pmu_enable(struct pmu *pmu)
+ {
+ 	struct xgene_pmu_dev *pmu_dev = to_pmu_dev(pmu);
+ 	struct xgene_pmu *xgene_pmu = pmu_dev->parent;
+-	int enabled = bitmap_weight(pmu_dev->cntr_assign_mask,
++	bool enabled = !bitmap_empty(pmu_dev->cntr_assign_mask,
+ 			pmu_dev->max_counters);
+ 
+ 	if (!enabled)
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index b5c67ef73862..51997386fb31 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -1080,7 +1080,7 @@ node_entry(struct perf_hpp_fmt *fmt __maybe_unused, struct perf_hpp *hpp,
+ 		bitmap_zero(set, c2c.cpus_cnt);
+ 		bitmap_and(set, c2c_he->cpuset, c2c.nodes[node], c2c.cpus_cnt);
+ 
+-		if (!bitmap_weight(set, c2c.cpus_cnt)) {
++		if (bitmap_empty(set, c2c.cpus_cnt)) {
+ 			if (c2c.node_info == 1) {
+ 				ret = scnprintf(hpp->buf, hpp->size, "%21s", " ");
+ 				advance_hpp(hpp, ret);
+@@ -1944,7 +1944,7 @@ static int set_nodestr(struct c2c_hist_entry *c2c_he)
+ 	if (c2c_he->nodestr)
+ 		return 0;
+ 
+-	if (bitmap_weight(c2c_he->nodeset, c2c.nodes_cnt)) {
++	if (!bitmap_empty(c2c_he->nodeset, c2c.nodes_cnt)) {
+ 		len = bitmap_scnprintf(c2c_he->nodeset, c2c.nodes_cnt,
+ 				      buf, sizeof(buf));
+ 	} else {
 -- 
 2.30.2
 
