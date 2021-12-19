@@ -2,258 +2,104 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E86EDC433F5
-	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Dec 2021 03:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F856C433F5
+	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Dec 2021 13:04:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230389AbhLSDDV (ORCPT
+        id S235697AbhLSNEv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 18 Dec 2021 22:03:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45716 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229804AbhLSDDU (ORCPT
+        Sun, 19 Dec 2021 08:04:51 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:38057 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235694AbhLSNEv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 18 Dec 2021 22:03:20 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96CDAC061574;
-        Sat, 18 Dec 2021 19:03:20 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id gj24so5954727pjb.0;
-        Sat, 18 Dec 2021 19:03:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DoHxgraNwchjmQ3Foa7UMkDxGQIGhMw2Lx+0ONxhfqY=;
-        b=RzVzt73CTOKi1KaKzpHYyei5faX2GrgI9r7ZQnCHcKxxYvmsX27CcPBvTR0wWVK1k7
-         lIdb6lFSTCGgaSZrA5VyxysI01Slj5F4nBgUoJwwj4KQfsfn8VFwFTSwGP+7ijRhlTwZ
-         Wu9ZuxobL124j77yBXQlj4C5fXiacnEgcehqNUvyksjMzdBXOfzST5NJ8S2U71DbOOMC
-         f7b4yiV0w0NX3SRLX9d2N0F9lCrs+KDKUbqRDkwmsHMICSMRdYR5rJ229cYdoT6fOcvv
-         u02bDusRk1m7A2IUxmSrOpxxWTAt9QcmP5VB8KY10P/yrIicvh3RzRDkZ+s1Zpps/qrC
-         NVeA==
+        Sun, 19 Dec 2021 08:04:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1639919090;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=eXmHN81vfmm8jQ+V+OC16FdNhEz31y0+JZmjNOAeaus=;
+        b=MUkWoDBbFbhi5nYtdQYTEWsHMkFYsYQgVJrLbMr6lWZek2Q5oa2Ky9bSmCR4Fw/P+NUWBr
+        RzEk/ksyozt8os6KXEW5toKOCe8SqXYtTncx3weevC3BKN8sVXe0FwL3VhB222OQDbg8J1
+        TofO7vi66lhQPpsu4e+0EuiAZI8al/k=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-117-AferXSO4M2-6q-2lyAvgzQ-1; Sun, 19 Dec 2021 08:04:49 -0500
+X-MC-Unique: AferXSO4M2-6q-2lyAvgzQ-1
+Received: by mail-ed1-f71.google.com with SMTP id h7-20020a05640250c700b003f800db4193so5478458edb.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Dec 2021 05:04:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DoHxgraNwchjmQ3Foa7UMkDxGQIGhMw2Lx+0ONxhfqY=;
-        b=NSS5UmnQorWOvjXBUi8TL9DfTOcECnRHcyN0Lqg4WpZ94TKRPrJV4x8WVf9St5B6ur
-         IRMPe9dNCPIgJGZCrsYX3rvmpjZSDjILMe7LXlT+F5oB1PQeZ0Ap1hFHJuc5qCZrz3im
-         FjKV/+Z/4P618ZvvkvAEW/nSBRhWPYs6bxJHwA15BuGr508+GwpgpCCDx6oZihPkUqca
-         bw9uszwwnvYH/cHyeObi1Ces/LdtK5euYJUm2nelok5XkU2teWvl/87c9GvPSEnJxVgM
-         imxSAfbkoK0TQuUkmivtSNbV+yZL/pUyuDdaeTcveDJa7x9+o/W7RQ5zMCUyzdiCeeqN
-         P78g==
-X-Gm-Message-State: AOAM530TIdHSx+ywl5A9Je0xCqQfz5pvykGMFzuu9Zfn2QXzsmR5Jxs2
-        anbc89+N8CkbECPhbL1tIqBiXO/Xxvg=
-X-Google-Smtp-Source: ABdhPJyQIYSOuo+Acd4lT12T3KQV/ROU3csTNxsNAD5bRAOL+B30pzE963VFDwrlScOfxQ9dOyPkhA==
-X-Received: by 2002:a17:902:da8d:b0:142:4fa:9147 with SMTP id j13-20020a170902da8d00b0014204fa9147mr10477947plx.72.1639883000135;
-        Sat, 18 Dec 2021 19:03:20 -0800 (PST)
-Received: from vultr.guest ([45.76.74.237])
-        by smtp.gmail.com with ESMTPSA id h191sm12604333pge.55.2021.12.18.19.03.18
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eXmHN81vfmm8jQ+V+OC16FdNhEz31y0+JZmjNOAeaus=;
+        b=jtNELA8zSaA1gowIy+MVrIBU6T3p2JHjp8OnbWe75eMRqjziQpet+asLK1LCngqXmC
+         IChoq4FYZ7g6S+qBiKabJTAFZBnDgW+kjYVF/MD//NywCHG1ob8u7TNgYbmi+4H68DW2
+         nQjTDsaGMs5S0ToJgXOG/ALaFuYlmspE9nabdbTkfIefwKG8XJdJiYtosxKoFL54aw/u
+         JYKIDVu5Vuz85kxUM+CWK8B/nGtYYuzEOfp5PU1CMMFx6x8ct1vKPl3qdJlh9A8CFE2T
+         HPTt5JaIvZ0E9DKgXjEuaCVetNth3A0xf3JNHzGBwbLHEizsZXHWblTOgYMWRg9/t/1T
+         eidg==
+X-Gm-Message-State: AOAM533XEBSJ+qvx5YwfJGmp4ZQUXR1ZTV31yWJt+rPAY1xjL4dZKi8s
+        O1xIFBYoiBzAkyb79+h95HSCbB6XL+AVcIFnb5GUFWYwQu4Z415xxFeVktDRCSMego4fw5Mb0q0
+        YYcm+gnDNTL3J6pw95PYhOH0wBkbn1g==
+X-Received: by 2002:a05:6402:849:: with SMTP id b9mr11128665edz.373.1639919088152;
+        Sun, 19 Dec 2021 05:04:48 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwuMSvCz6jgAqcDfr8JZ5Redg8BT9D2bwd830D7+OFEPcqMx3S2r88Rr14WTIghJYYLW8PS6g==
+X-Received: by 2002:a05:6402:849:: with SMTP id b9mr11128643edz.373.1639919087909;
+        Sun, 19 Dec 2021 05:04:47 -0800 (PST)
+Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
+        by smtp.gmail.com with ESMTPSA id dm7sm1422567edb.7.2021.12.19.05.04.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Dec 2021 19:03:19 -0800 (PST)
-From:   Yafang Shao <laoar.shao@gmail.com>
-To:     akpm@linux-foundation.org, rostedt@goodmis.org,
-        keescook@chromium.org, pmladek@suse.com, david@redhat.com,
-        arnaldo.melo@gmail.com, andrii.nakryiko@gmail.com
-Cc:     linux-mm@kvack.org, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH -mm v3] replace old hard-coded 16 with TASK_COMM_LEN_16
-Date:   Sun, 19 Dec 2021 03:02:58 +0000
-Message-Id: <20211219030258.14738-1-laoar.shao@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Sun, 19 Dec 2021 05:04:47 -0800 (PST)
+Date:   Sun, 19 Dec 2021 14:04:45 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     "Frank Ch. Eigler" <fche@redhat.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+Subject: Re: [RFC] perf record: Disable debuginfod by default
+Message-ID: <Yb8t7R577H3DiJGz@krava>
+References: <20211209200425.303561-1-jolsa@kernel.org>
+ <CAM9d7cjyN_sxMe9yajgnuDRy5234NZQ5sd0e4ynBmCnQSv=WFQ@mail.gmail.com>
+ <YbNGxMAu5LYvqtpq@krava>
+ <20211210165010.GA30236@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211210165010.GA30236@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This is the followup work of task comm cleanups[1].
+On Fri, Dec 10, 2021 at 11:50:10AM -0500, Frank Ch. Eigler wrote:
+> Hi -
+> 
+> On Fri, Dec 10, 2021 at 01:23:32PM +0100, Jiri Olsa wrote:
+> > [...]
+> > at the end of the perf record we populate buildid cache
+> > with profiled binaries for the current perf.data
+> > 
+> > **IF** there's DEBUGINFOD_URLS defined, that code will
+> > also ask debuginfod for binaries it could not find on
+> > the system
+> 
+> Consider doing this only at the end of the run, and in the background,
+> just as a prefetch for the perf report step?  The main downside there
+> could be if one runs many perf record jobs in close proximity,
+> overlapping larger prefetch download tasks.  That might waste some
+> network traffic.
 
-A new macro TASK_COMM_LEN_16 is introduced to replace old hard-coded 16
-in various files, in order to make them grepable. The difference between
-TASK_COMM_LEN and TASK_COMM_LEN_16 is:
-- TASK_COMM_LEN
-  The size should be same with the TASK_COMM_LEN defined in linux/sched.h.
-- TASK_COMM_LEN_16
-  The size must be a fixed-size 16 no matter what TASK_COMM_LEN is. The
-  usage around it is exposed to userspace, so this macro is defined in
-  the UAPI header.
+right, IMO it's too much for default behaviour but I think could
+do this under new (config) option, if there's a need for that
 
-[1]. https://lore.kernel.org/lkml/20211120112738.45980-1-laoar.shao@gmail.com/
-
-Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Michal Miroslaw <mirq-linux@rere.qmqm.pl>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Petr Mladek <pmladek@suse.com>
-
----
-Changes since v2:
-- make TASK_COMM_LEN_16 a single instance (Michal)
-- merge all the patches into a single patch
-
-Changes since v1:
-- use TASK_COMM_LEN_16 instead of TASK_COMM_LEN in patch #3 (Steven)
-- avoid changing samples/bpf and bpf/progs (Alexei)
----
- include/linux/elfcore-compat.h    | 8 ++------
- include/linux/elfcore.h           | 9 ++-------
- include/uapi/linux/cn_proc.h      | 3 ++-
- include/uapi/linux/sched.h        | 7 +++++++
- tools/include/uapi/linux/sched.h  | 7 +++++++
- tools/perf/tests/evsel-tp-sched.c | 7 ++++---
- 6 files changed, 24 insertions(+), 17 deletions(-)
-
-diff --git a/include/linux/elfcore-compat.h b/include/linux/elfcore-compat.h
-index 54feb64e9b5d..319daa69bb23 100644
---- a/include/linux/elfcore-compat.h
-+++ b/include/linux/elfcore-compat.h
-@@ -2,6 +2,7 @@
- #ifndef _LINUX_ELFCORE_COMPAT_H
- #define _LINUX_ELFCORE_COMPAT_H
- 
-+#include <uapi/linux/sched.h>
- #include <linux/elf.h>
- #include <linux/elfcore.h>
- #include <linux/compat.h>
-@@ -43,12 +44,7 @@ struct compat_elf_prpsinfo
- 	__compat_uid_t			pr_uid;
- 	__compat_gid_t			pr_gid;
- 	compat_pid_t			pr_pid, pr_ppid, pr_pgrp, pr_sid;
--	/*
--	 * The hard-coded 16 is derived from TASK_COMM_LEN, but it can't be
--	 * changed as it is exposed to userspace. We'd better make it hard-coded
--	 * here.
--	 */
--	char				pr_fname[16];
-+	char				pr_fname[TASK_COMM_LEN_16];
- 	char				pr_psargs[ELF_PRARGSZ];
- };
- 
-diff --git a/include/linux/elfcore.h b/include/linux/elfcore.h
-index 746e081879a5..d3bb4bd3c985 100644
---- a/include/linux/elfcore.h
-+++ b/include/linux/elfcore.h
-@@ -65,13 +65,8 @@ struct elf_prpsinfo
- 	__kernel_gid_t	pr_gid;
- 	pid_t	pr_pid, pr_ppid, pr_pgrp, pr_sid;
- 	/* Lots missing */
--	/*
--	 * The hard-coded 16 is derived from TASK_COMM_LEN, but it can't be
--	 * changed as it is exposed to userspace. We'd better make it hard-coded
--	 * here.
--	 */
--	char	pr_fname[16];	/* filename of executable */
--	char	pr_psargs[ELF_PRARGSZ];	/* initial part of arg list */
-+	char	pr_fname[TASK_COMM_LEN_16];	/* filename of executable */
-+	char	pr_psargs[ELF_PRARGSZ];		/* initial part of arg list */
- };
- 
- static inline void elf_core_copy_regs(elf_gregset_t *elfregs, struct pt_regs *regs)
-diff --git a/include/uapi/linux/cn_proc.h b/include/uapi/linux/cn_proc.h
-index db210625cee8..88e645230ea5 100644
---- a/include/uapi/linux/cn_proc.h
-+++ b/include/uapi/linux/cn_proc.h
-@@ -20,6 +20,7 @@
- #define _UAPICN_PROC_H
- 
- #include <linux/types.h>
-+#include "sched.h"
- 
- /*
-  * Userspace sends this enum to register with the kernel that it is listening
-@@ -110,7 +111,7 @@ struct proc_event {
- 		struct comm_proc_event {
- 			__kernel_pid_t process_pid;
- 			__kernel_pid_t process_tgid;
--			char           comm[16];
-+			char           comm[TASK_COMM_LEN_16];
- 		} comm;
- 
- 		struct coredump_proc_event {
-diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
-index 3bac0a8ceab2..490fd5d48378 100644
---- a/include/uapi/linux/sched.h
-+++ b/include/uapi/linux/sched.h
-@@ -145,4 +145,11 @@ struct clone_args {
- 			 SCHED_FLAG_KEEP_ALL		| \
- 			 SCHED_FLAG_UTIL_CLAMP)
- 
-+/*
-+ * For the one which is exposed to userspace and thus can't be changed.
-+ */
-+enum {
-+	TASK_COMM_LEN_16 = 16,
-+};
-+
- #endif /* _UAPI_LINUX_SCHED_H */
-diff --git a/tools/include/uapi/linux/sched.h b/tools/include/uapi/linux/sched.h
-index 3bac0a8ceab2..490fd5d48378 100644
---- a/tools/include/uapi/linux/sched.h
-+++ b/tools/include/uapi/linux/sched.h
-@@ -145,4 +145,11 @@ struct clone_args {
- 			 SCHED_FLAG_KEEP_ALL		| \
- 			 SCHED_FLAG_UTIL_CLAMP)
- 
-+/*
-+ * For the one which is exposed to userspace and thus can't be changed.
-+ */
-+enum {
-+	TASK_COMM_LEN_16 = 16,
-+};
-+
- #endif /* _UAPI_LINUX_SCHED_H */
-diff --git a/tools/perf/tests/evsel-tp-sched.c b/tools/perf/tests/evsel-tp-sched.c
-index cf4da3d748c2..0b74bf2ca1ce 100644
---- a/tools/perf/tests/evsel-tp-sched.c
-+++ b/tools/perf/tests/evsel-tp-sched.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/err.h>
-+#include <linux/sched.h>
- #include <traceevent/event-parse.h>
- #include "evsel.h"
- #include "tests.h"
-@@ -43,7 +44,7 @@ static int test__perf_evsel__tp_sched_test(struct test_suite *test __maybe_unuse
- 		return -1;
- 	}
- 
--	if (evsel__test_field(evsel, "prev_comm", 16, false))
-+	if (evsel__test_field(evsel, "prev_comm", TASK_COMM_LEN_16, false))
- 		ret = -1;
- 
- 	if (evsel__test_field(evsel, "prev_pid", 4, true))
-@@ -55,7 +56,7 @@ static int test__perf_evsel__tp_sched_test(struct test_suite *test __maybe_unuse
- 	if (evsel__test_field(evsel, "prev_state", sizeof(long), true))
- 		ret = -1;
- 
--	if (evsel__test_field(evsel, "next_comm", 16, false))
-+	if (evsel__test_field(evsel, "next_comm", TASK_COMM_LEN_16, false))
- 		ret = -1;
- 
- 	if (evsel__test_field(evsel, "next_pid", 4, true))
-@@ -73,7 +74,7 @@ static int test__perf_evsel__tp_sched_test(struct test_suite *test __maybe_unuse
- 		return -1;
- 	}
- 
--	if (evsel__test_field(evsel, "comm", 16, false))
-+	if (evsel__test_field(evsel, "comm", TASK_COMM_LEN_16, false))
- 		ret = -1;
- 
- 	if (evsel__test_field(evsel, "pid", 4, true))
--- 
-2.17.1
+thanks,
+jirka
 
