@@ -2,104 +2,347 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F856C433F5
-	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Dec 2021 13:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B244C433FE
+	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Dec 2021 13:07:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235697AbhLSNEv (ORCPT
+        id S235726AbhLSNG7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 19 Dec 2021 08:04:51 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:38057 "EHLO
+        Sun, 19 Dec 2021 08:06:59 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:30511 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235694AbhLSNEv (ORCPT
+        by vger.kernel.org with ESMTP id S235720AbhLSNG5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 19 Dec 2021 08:04:51 -0500
+        Sun, 19 Dec 2021 08:06:57 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1639919090;
+        s=mimecast20190719; t=1639919217;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=eXmHN81vfmm8jQ+V+OC16FdNhEz31y0+JZmjNOAeaus=;
-        b=MUkWoDBbFbhi5nYtdQYTEWsHMkFYsYQgVJrLbMr6lWZek2Q5oa2Ky9bSmCR4Fw/P+NUWBr
-        RzEk/ksyozt8os6KXEW5toKOCe8SqXYtTncx3weevC3BKN8sVXe0FwL3VhB222OQDbg8J1
-        TofO7vi66lhQPpsu4e+0EuiAZI8al/k=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=8aMo0dl5uUvxzf5ypCvpOAqpk/q79wnFHxhdTzaK/bk=;
+        b=alj5fec42a5KXwnG5TNffhs4C+gE9KG6P6kUxveTwsJE92M79+HM8PVmdIRZ2GeLF8SKaD
+        tCZkK7I4kvVPI3rL8oufOXMMgLb621qDMNIi7AOy1DtpxKQPmybsqvycVL2weXDXkKrkdj
+        ahfBTxeCjZRvF4PDImIPv/RZvqKEC68=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-117-AferXSO4M2-6q-2lyAvgzQ-1; Sun, 19 Dec 2021 08:04:49 -0500
-X-MC-Unique: AferXSO4M2-6q-2lyAvgzQ-1
-Received: by mail-ed1-f71.google.com with SMTP id h7-20020a05640250c700b003f800db4193so5478458edb.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Dec 2021 05:04:49 -0800 (PST)
+ us-mta-670-CCrT8CX7O3S1y6XjFTq2gQ-1; Sun, 19 Dec 2021 08:06:55 -0500
+X-MC-Unique: CCrT8CX7O3S1y6XjFTq2gQ-1
+Received: by mail-ed1-f72.google.com with SMTP id y14-20020a056402440e00b003f81d896346so4535544eda.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Dec 2021 05:06:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=eXmHN81vfmm8jQ+V+OC16FdNhEz31y0+JZmjNOAeaus=;
-        b=jtNELA8zSaA1gowIy+MVrIBU6T3p2JHjp8OnbWe75eMRqjziQpet+asLK1LCngqXmC
-         IChoq4FYZ7g6S+qBiKabJTAFZBnDgW+kjYVF/MD//NywCHG1ob8u7TNgYbmi+4H68DW2
-         nQjTDsaGMs5S0ToJgXOG/ALaFuYlmspE9nabdbTkfIefwKG8XJdJiYtosxKoFL54aw/u
-         JYKIDVu5Vuz85kxUM+CWK8B/nGtYYuzEOfp5PU1CMMFx6x8ct1vKPl3qdJlh9A8CFE2T
-         HPTt5JaIvZ0E9DKgXjEuaCVetNth3A0xf3JNHzGBwbLHEizsZXHWblTOgYMWRg9/t/1T
-         eidg==
-X-Gm-Message-State: AOAM533XEBSJ+qvx5YwfJGmp4ZQUXR1ZTV31yWJt+rPAY1xjL4dZKi8s
-        O1xIFBYoiBzAkyb79+h95HSCbB6XL+AVcIFnb5GUFWYwQu4Z415xxFeVktDRCSMego4fw5Mb0q0
-        YYcm+gnDNTL3J6pw95PYhOH0wBkbn1g==
-X-Received: by 2002:a05:6402:849:: with SMTP id b9mr11128665edz.373.1639919088152;
-        Sun, 19 Dec 2021 05:04:48 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwuMSvCz6jgAqcDfr8JZ5Redg8BT9D2bwd830D7+OFEPcqMx3S2r88Rr14WTIghJYYLW8PS6g==
-X-Received: by 2002:a05:6402:849:: with SMTP id b9mr11128643edz.373.1639919087909;
-        Sun, 19 Dec 2021 05:04:47 -0800 (PST)
+        bh=8aMo0dl5uUvxzf5ypCvpOAqpk/q79wnFHxhdTzaK/bk=;
+        b=ogLvGLREm9Tfd623tEhf/WZZTHCn1FubzRxdv7eOnyH3vLiL2QK81d8y6nC3IuJ/Dz
+         H8WU8em+ouV6tSCf91ryCSZ2q6cuaQk09UvZpUIlCVcyAJR+RUO0t0L7BqRDAiqms1la
+         R/xxOJhWdCCxFVjxhRloB1MGFfCPgbL3aVGDS/+bP00anS0hhu5i8TOXdf1YbgJDUPW7
+         Ca+tLT/+HjwLBOdjyhpInSSmXVWeEtd8CnUTdFW95dhh0AYRVUbMXGK7AzLJDGkmP25d
+         UUIxzcuY8PB9lcQ7AqdWx/AKbL7H/Ff1NxmAssFZ8dEH2RLUQC5GDczR7D8RjuX2x9Ry
+         efrg==
+X-Gm-Message-State: AOAM533hEIdQyvYwHF0YzEGBYXGRuXC/KzRt55d6KLMC0fDDwVh/HPwp
+        z61YisJctmObWWUngFhBzvJryMolwm9eetLuMEIf4GbMYLEgupT0NtoSldNMa2M2HKHLLSyOdGe
+        35D3W7MzDBnSDlMNpZZ5CcirNgHIpiA==
+X-Received: by 2002:a17:906:b1d0:: with SMTP id bv16mr8982825ejb.742.1639919214453;
+        Sun, 19 Dec 2021 05:06:54 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwd+Bo3VJAoeq/kGdK1LpwiK/AfOqOPQF6NBMbgw6+XAwfrdmzLBpYKPUyRj/0wX8X0ZrkHdA==
+X-Received: by 2002:a17:906:b1d0:: with SMTP id bv16mr8982813ejb.742.1639919214169;
+        Sun, 19 Dec 2021 05:06:54 -0800 (PST)
 Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
-        by smtp.gmail.com with ESMTPSA id dm7sm1422567edb.7.2021.12.19.05.04.47
+        by smtp.gmail.com with ESMTPSA id j4sm5573067edk.64.2021.12.19.05.06.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Dec 2021 05:04:47 -0800 (PST)
-Date:   Sun, 19 Dec 2021 14:04:45 +0100
+        Sun, 19 Dec 2021 05:06:53 -0800 (PST)
+Date:   Sun, 19 Dec 2021 14:06:52 +0100
 From:   Jiri Olsa <jolsa@redhat.com>
-To:     "Frank Ch. Eigler" <fche@redhat.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
         Ingo Molnar <mingo@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Michael Petlan <mpetlan@redhat.com>,
         Ian Rogers <irogers@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
+        linux-perf-users@vger.kernel.org,
+        "Frank Ch. Eigler" <fche@redhat.com>
 Subject: Re: [RFC] perf record: Disable debuginfod by default
-Message-ID: <Yb8t7R577H3DiJGz@krava>
+Message-ID: <Yb8ubHK38NXDQE+O@krava>
 References: <20211209200425.303561-1-jolsa@kernel.org>
- <CAM9d7cjyN_sxMe9yajgnuDRy5234NZQ5sd0e4ynBmCnQSv=WFQ@mail.gmail.com>
- <YbNGxMAu5LYvqtpq@krava>
- <20211210165010.GA30236@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211210165010.GA30236@redhat.com>
+In-Reply-To: <20211209200425.303561-1-jolsa@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Dec 10, 2021 at 11:50:10AM -0500, Frank Ch. Eigler wrote:
-> Hi -
+On Thu, Dec 09, 2021 at 09:04:25PM +0100, Jiri Olsa wrote:
+> hi,
+> after migrating to fedora 35 I found perf record hanging on exit
+> and it's because fedora 35 sets DEBUGINFOD_URLS that triggers
+> debuginfod query which might take long time to process.
 > 
-> On Fri, Dec 10, 2021 at 01:23:32PM +0100, Jiri Olsa wrote:
-> > [...]
-> > at the end of the perf record we populate buildid cache
-> > with profiled binaries for the current perf.data
-> > 
-> > **IF** there's DEBUGINFOD_URLS defined, that code will
-> > also ask debuginfod for binaries it could not find on
-> > the system
+> I discussed this briefly with Frank and I'm sending the change
+> to disable debuginfod by default in perf record.
 > 
-> Consider doing this only at the end of the run, and in the background,
-> just as a prefetch for the perf report step?  The main downside there
-> could be if one runs many perf record jobs in close proximity,
-> overlapping larger prefetch download tasks.  That might waste some
-> network traffic.
+> Frank had other idea we could discuss here to fork or just spawn
+> "/usr/bin/debuginfod-find ...." into background after perf record.
+> 
+> Perhaps there are other ways as well, hence this is RFC ;-)
+> 
+> thanks,
+> jirka
 
-right, IMO it's too much for default behaviour but I think could
-do this under new (config) option, if there's a need for that
+Arnaldo,
+looks like there are no more comments, do you need me to repost
+it as normal patch? there's no change after rebasing on top of
+your perf/core branch
 
 thanks,
 jirka
+
+> 
+> 
+> ---
+> Fedora 35 sets by default DEBUGINFOD_URLS, which might lead
+> to unexpected stalls in perf record exit path, when we try
+> to cache profiled binaries.
+> 
+>   # DEBUGINFOD_PROGRESS=1 ./perf record -a
+>   ^C[ perf record: Woken up 1 times to write data ]
+>   Downloading from https://debuginfod.fedoraproject.org/ 447069
+>   Downloading from https://debuginfod.fedoraproject.org/ 1502175
+>   Downloading \^Z
+> 
+> Disabling DEBUGINFOD_URLS by default in perf record and adding
+> debuginfod option and .perfconfig variable support to enable id.
+> 
+>   Default without debuginfo processing:
+>   # perf record -a
+> 
+>   Using system debuginfod setup:
+>   # perf record -a --debuginfod
+> 
+>   Using custom debuginfd url:
+>   # perf record -a --debuginfod='https://evenbetterdebuginfodserver.krava'
+> 
+> Adding single perf_debuginfod_setup function and using
+> it also in perf buildid-cache command.
+> 
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  .../perf/Documentation/perf-buildid-cache.txt |  5 +++-
+>  tools/perf/Documentation/perf-config.txt      |  9 +++++++
+>  tools/perf/Documentation/perf-record.txt      |  9 +++++++
+>  tools/perf/builtin-buildid-cache.c            | 25 +++++++++++--------
+>  tools/perf/builtin-record.c                   | 13 ++++++++++
+>  tools/perf/util/util.c                        | 15 +++++++++++
+>  tools/perf/util/util.h                        |  6 +++++
+>  7 files changed, 70 insertions(+), 12 deletions(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-buildid-cache.txt b/tools/perf/Documentation/perf-buildid-cache.txt
+> index cd8ce6e8ec12..7e44b419d301 100644
+> --- a/tools/perf/Documentation/perf-buildid-cache.txt
+> +++ b/tools/perf/Documentation/perf-buildid-cache.txt
+> @@ -74,12 +74,15 @@ OPTIONS
+>  	used when creating a uprobe for a process that resides in a
+>  	different mount namespace from the perf(1) utility.
+>  
+> ---debuginfod=URLs::
+> +--debuginfod[=URLs]::
+>  	Specify debuginfod URL to be used when retrieving perf.data binaries,
+>  	it follows the same syntax as the DEBUGINFOD_URLS variable, like:
+>  
+>  	  buildid-cache.debuginfod=http://192.168.122.174:8002
+>  
+> +	If the URLs is not specified, the value of DEBUGINFOD_URLS
+> +	system environment variable is used.
+> +
+>  SEE ALSO
+>  --------
+>  linkperf:perf-record[1], linkperf:perf-report[1], linkperf:perf-buildid-list[1]
+> diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
+> index 3bb75c1f25e8..0420e71698ee 100644
+> --- a/tools/perf/Documentation/perf-config.txt
+> +++ b/tools/perf/Documentation/perf-config.txt
+> @@ -587,6 +587,15 @@ record.*::
+>  		Use 'n' control blocks in asynchronous (Posix AIO) trace writing
+>  		mode ('n' default: 1, max: 4).
+>  
+> +	record.debuginfod::
+> +		Specify debuginfod URL to be used when cacheing perf.data binaries,
+> +		it follows the same syntax as the DEBUGINFOD_URLS variable, like:
+> +
+> +		  http://192.168.122.174:8002
+> +
+> +		If the URLs is 'system', the value of DEBUGINFOD_URLS system environment
+> +		variable is used.
+> +
+>  diff.*::
+>  	diff.order::
+>  		This option sets the number of columns to sort the result.
+> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+> index 55df7b073a55..9ccc75935bc5 100644
+> --- a/tools/perf/Documentation/perf-record.txt
+> +++ b/tools/perf/Documentation/perf-record.txt
+> @@ -715,6 +715,15 @@ measurements:
+>  
+>  include::intel-hybrid.txt[]
+>  
+> +--debuginfod[=URLs]::
+> +	Specify debuginfod URL to be used when cacheing perf.data binaries,
+> +	it follows the same syntax as the DEBUGINFOD_URLS variable, like:
+> +
+> +	  http://192.168.122.174:8002
+> +
+> +	If the URLs is not specified, the value of DEBUGINFOD_URLS
+> +	system environment variable is used.
+> +
+>  SEE ALSO
+>  --------
+>  linkperf:perf-stat[1], linkperf:perf-list[1], linkperf:perf-intel-pt[1]
+> diff --git a/tools/perf/builtin-buildid-cache.c b/tools/perf/builtin-buildid-cache.c
+> index 0db3cfc04c47..cd381693658b 100644
+> --- a/tools/perf/builtin-buildid-cache.c
+> +++ b/tools/perf/builtin-buildid-cache.c
+> @@ -351,10 +351,14 @@ static int build_id_cache__show_all(void)
+>  
+>  static int perf_buildid_cache_config(const char *var, const char *value, void *cb)
+>  {
+> -	const char **debuginfod = cb;
+> +	struct perf_debuginfod *di = cb;
+>  
+> -	if (!strcmp(var, "buildid-cache.debuginfod"))
+> -		*debuginfod = strdup(value);
+> +	if (!strcmp(var, "buildid-cache.debuginfod")) {
+> +		di->urls = strdup(value);
+> +		if (!di->urls)
+> +			return -ENOMEM;
+> +		di->set = true;
+> +	}
+>  
+>  	return 0;
+>  }
+> @@ -373,8 +377,8 @@ int cmd_buildid_cache(int argc, const char **argv)
+>  		   *purge_name_list_str = NULL,
+>  		   *missing_filename = NULL,
+>  		   *update_name_list_str = NULL,
+> -		   *kcore_filename = NULL,
+> -		   *debuginfod = NULL;
+> +		   *kcore_filename = NULL;
+> +	struct perf_debuginfod debuginfod = { };
+>  	char sbuf[STRERR_BUFSIZE];
+>  
+>  	struct perf_data data = {
+> @@ -399,8 +403,10 @@ int cmd_buildid_cache(int argc, const char **argv)
+>  	OPT_BOOLEAN('f', "force", &force, "don't complain, do it"),
+>  	OPT_STRING('u', "update", &update_name_list_str, "file list",
+>  		    "file(s) to update"),
+> -	OPT_STRING(0, "debuginfod", &debuginfod, "debuginfod url",
+> -		    "set debuginfod url"),
+> +	OPT_STRING_OPTARG_SET(0, "debuginfod", &debuginfod.urls,
+> +			&debuginfod.set, "debuginfod urls",
+> +			"Enable debuginfod data retrieval from DEBUGINFOD_URLS or specified urls",
+> +			"system"),
+>  	OPT_INCR('v', "verbose", &verbose, "be more verbose"),
+>  	OPT_INTEGER(0, "target-ns", &ns_id, "target pid for namespace context"),
+>  	OPT_END()
+> @@ -425,10 +431,7 @@ int cmd_buildid_cache(int argc, const char **argv)
+>  	if (argc || !(list_files || opts_flag))
+>  		usage_with_options(buildid_cache_usage, buildid_cache_options);
+>  
+> -	if (debuginfod) {
+> -		pr_debug("DEBUGINFOD_URLS=%s\n", debuginfod);
+> -		setenv("DEBUGINFOD_URLS", debuginfod, 1);
+> -	}
+> +	perf_debuginfod_setup(&debuginfod);
+>  
+>  	/* -l is exclusive. It can not be used with other options. */
+>  	if (list_files && opts_flag) {
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 0338b813585a..2da2a6acbb8c 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -111,6 +111,7 @@ struct record {
+>  	unsigned long long	samples;
+>  	struct mmap_cpu_mask	affinity_mask;
+>  	unsigned long		output_max_size;	/* = 0: unlimited */
+> +	struct perf_debuginfod	debuginfod;
+>  };
+>  
+>  static volatile int done;
+> @@ -2177,6 +2178,12 @@ static int perf_record_config(const char *var, const char *value, void *cb)
+>  			rec->opts.nr_cblocks = nr_cblocks_default;
+>  	}
+>  #endif
+> +	if (!strcmp(var, "record.debuginfod")) {
+> +		rec->debuginfod.urls = strdup(value);
+> +		if (!rec->debuginfod.urls)
+> +			return -ENOMEM;
+> +		rec->debuginfod.set = true;
+> +	}
+>  
+>  	return 0;
+>  }
+> @@ -2663,6 +2670,10 @@ static struct option __record_options[] = {
+>  		      parse_control_option),
+>  	OPT_CALLBACK(0, "synth", &record.opts, "no|all|task|mmap|cgroup",
+>  		     "Fine-tune event synthesis: default=all", parse_record_synth_option),
+> +	OPT_STRING_OPTARG_SET(0, "debuginfod", &record.debuginfod.urls,
+> +			  &record.debuginfod.set, "debuginfod urls",
+> +			  "Enable debuginfod data retrieval from DEBUGINFOD_URLS or specified urls",
+> +			  "system"),
+>  	OPT_END()
+>  };
+>  
+> @@ -2716,6 +2727,8 @@ int cmd_record(int argc, const char **argv)
+>  	if (err)
+>  		return err;
+>  
+> +	perf_debuginfod_setup(&record.debuginfod);
+> +
+>  	/* Make system wide (-a) the default target. */
+>  	if (!argc && target__none(&rec->opts.target))
+>  		rec->opts.target.system_wide = true;
+> diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
+> index df3c4671be72..fb4f6616b5fa 100644
+> --- a/tools/perf/util/util.c
+> +++ b/tools/perf/util/util.c
+> @@ -416,3 +416,18 @@ char *perf_exe(char *buf, int len)
+>  	}
+>  	return strcpy(buf, "perf");
+>  }
+> +
+> +void perf_debuginfod_setup(struct perf_debuginfod *di)
+> +{
+> +	/*
+> +	 * By default '!di->set' we clear DEBUGINFOD_URLS, so debuginfod
+> +	 * processing is not triggered, otherwise we set it to 'di->urls'
+> +	 * value. If 'di->urls' is "system" we keep DEBUGINFOD_URLS value.
+> +	 */
+> +	if (!di->set)
+> +		setenv("DEBUGINFOD_URLS", "", 1);
+> +	else if (di->urls && strcmp(di->urls, "system"))
+> +		setenv("DEBUGINFOD_URLS", di->urls, 1);
+> +
+> +	pr_debug("DEBUGINFOD_URLS=%s\n", getenv("DEBUGINFOD_URLS"));
+> +}
+> diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
+> index 9f0d36ba77f2..4359f5af2de7 100644
+> --- a/tools/perf/util/util.h
+> +++ b/tools/perf/util/util.h
+> @@ -68,4 +68,10 @@ void test_attr__init(void);
+>  struct perf_event_attr;
+>  void test_attr__open(struct perf_event_attr *attr, pid_t pid, int cpu,
+>  		     int fd, int group_fd, unsigned long flags);
+> +
+> +struct perf_debuginfod {
+> +	const char	*urls;
+> +	bool		 set;
+> +};
+> +void perf_debuginfod_setup(struct perf_debuginfod *di);
+>  #endif /* GIT_COMPAT_UTIL_H */
+> -- 
+> 2.33.1
+> 
 
