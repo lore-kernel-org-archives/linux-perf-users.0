@@ -2,189 +2,258 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7BFC43219
-	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Dec 2021 23:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E86EDC433F5
+	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Dec 2021 03:03:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232215AbhLRX2l (ORCPT
+        id S230389AbhLSDDV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 18 Dec 2021 18:28:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56178 "EHLO
+        Sat, 18 Dec 2021 22:03:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229745AbhLRX2j (ORCPT
+        with ESMTP id S229804AbhLSDDU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 18 Dec 2021 18:28:39 -0500
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B204BC061574;
-        Sat, 18 Dec 2021 15:28:39 -0800 (PST)
-Received: by mail-pg1-x535.google.com with SMTP id d11so5761429pgl.1;
-        Sat, 18 Dec 2021 15:28:39 -0800 (PST)
+        Sat, 18 Dec 2021 22:03:20 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96CDAC061574;
+        Sat, 18 Dec 2021 19:03:20 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id gj24so5954727pjb.0;
+        Sat, 18 Dec 2021 19:03:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=pIYxkiGisug+VVJYFtmCG20TylNRXB8zO8kw91s3wyc=;
-        b=TIuyQXz6oo8PN+yMbImlC2c2rmmoCdLu5CdlQlReccXapNNMDZyLSkZvnzlgZ9AIdV
-         6+qzntuQo5gBX86FaZFlCIaH4FCNC7RUVw367F08QPEjoiFWXa2CV6SAzISHS5RZPpY/
-         QbkHqa0fdrihFEuRX0X/GeMy6P75DvnBsKWfABXcb5D5/2zTgkKaV4VEiJSuyy+zBwcd
-         zNIVzererH+Fx7ZEOWvTBpmd3THvXh1KHtzsLHvjMiIPuGFGIqMdZbyjf9H7vLYP6+7J
-         cQ/P2vAafsI3DEFtzgX9UWRj1ZmCeXy01hG6ih9PN1N9Tz70SEQsg8aJQpCrrbXl1cqP
-         QppQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DoHxgraNwchjmQ3Foa7UMkDxGQIGhMw2Lx+0ONxhfqY=;
+        b=RzVzt73CTOKi1KaKzpHYyei5faX2GrgI9r7ZQnCHcKxxYvmsX27CcPBvTR0wWVK1k7
+         lIdb6lFSTCGgaSZrA5VyxysI01Slj5F4nBgUoJwwj4KQfsfn8VFwFTSwGP+7ijRhlTwZ
+         Wu9ZuxobL124j77yBXQlj4C5fXiacnEgcehqNUvyksjMzdBXOfzST5NJ8S2U71DbOOMC
+         f7b4yiV0w0NX3SRLX9d2N0F9lCrs+KDKUbqRDkwmsHMICSMRdYR5rJ229cYdoT6fOcvv
+         u02bDusRk1m7A2IUxmSrOpxxWTAt9QcmP5VB8KY10P/yrIicvh3RzRDkZ+s1Zpps/qrC
+         NVeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pIYxkiGisug+VVJYFtmCG20TylNRXB8zO8kw91s3wyc=;
-        b=55CrRinAexYQVLLCAVeuG8I9J21GY3IqcaFC2wR8Ap2MiD9sYKYzust2I4EPxGXnlS
-         Pe0dCuc92IRHO1MDoXneWrcsOs3n++GqV+AbWUpP/Vou5TnzYWC1vO6s+RSD0/fctkrP
-         PInFYv0lzakRglwYu8kqv8ie8FPD29R5DblmhYAINOWuiKTZW7+80IQ9deoTuWfCqWnT
-         HqmOjOvMV9tFtMFrpfSWt3ekPZ74xg1blyPjdcw0tv2jvgo63uA3Es616/CIhgUtYerz
-         hBTc4KAVndNYIcaoApCeR6jtlsw4/OwO6twxIBYK2tBHgdyBIgrVer5Lcw5EuOJh5eFk
-         4Vow==
-X-Gm-Message-State: AOAM531ln7opi6qLxgmfcxBohJ4InyB6hBVL0qNWaopTWH3Rac2lqjtR
-        Pm1Msu47bv19vvsytkJ3BktocnLs6bznKqaEF9A=
-X-Google-Smtp-Source: ABdhPJxWDXMTWC77oOKCjFiIpES/JejUzoFwUACXrmSW9T47MOn3N7k2dUXoB6NpZZlsfwgvBd+k97C3LkDR7q0l13Y=
-X-Received: by 2002:a63:2a0d:: with SMTP id q13mr8815341pgq.513.1639870119035;
- Sat, 18 Dec 2021 15:28:39 -0800 (PST)
-MIME-Version: 1.0
-References: <20211218212014.1315894-1-yury.norov@gmail.com>
- <20211218212014.1315894-2-yury.norov@gmail.com> <Yb5dmqlYd3owtH29@qmqm.qmqm.pl>
-In-Reply-To: <Yb5dmqlYd3owtH29@qmqm.qmqm.pl>
-From:   Yury Norov <yury.norov@gmail.com>
-Date:   Sat, 18 Dec 2021 15:28:29 -0800
-Message-ID: <CAAH8bW9uWW+t5TvkMt_e-sKp71hiLpXhXeuGuSZPK-3kds-GgQ@mail.gmail.com>
-Subject: Re: [PATCH 01/17] all: don't use bitmap_weight() where possible
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     linux-kernel@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Klimov <aklimov@redhat.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Andi Kleen <ak@linux.intel.com>, Andrew Lunn <andrew@lunn.ch>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Anup Patel <anup.patel@wdc.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Christoph Lameter <cl@linux.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Airlie <airlied@linux.ie>,
-        David Laight <David.Laight@aculab.com>,
-        Dennis Zhou <dennis@kernel.org>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Geetha sowjanya <gakula@marvell.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guo Ren <guoren@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Jens Axboe <axboe@fb.com>, Jiri Olsa <jolsa@redhat.com>,
-        Joe Perches <joe@perches.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Marc Zyngier <maz@kernel.org>, Marcin Wojtas <mw@semihalf.com>,
-        Mark Gross <markgross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matti Vaittinen <mazziesaccount@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DoHxgraNwchjmQ3Foa7UMkDxGQIGhMw2Lx+0ONxhfqY=;
+        b=NSS5UmnQorWOvjXBUi8TL9DfTOcECnRHcyN0Lqg4WpZ94TKRPrJV4x8WVf9St5B6ur
+         IRMPe9dNCPIgJGZCrsYX3rvmpjZSDjILMe7LXlT+F5oB1PQeZ0Ap1hFHJuc5qCZrz3im
+         FjKV/+Z/4P618ZvvkvAEW/nSBRhWPYs6bxJHwA15BuGr508+GwpgpCCDx6oZihPkUqca
+         bw9uszwwnvYH/cHyeObi1Ces/LdtK5euYJUm2nelok5XkU2teWvl/87c9GvPSEnJxVgM
+         imxSAfbkoK0TQuUkmivtSNbV+yZL/pUyuDdaeTcveDJa7x9+o/W7RQ5zMCUyzdiCeeqN
+         P78g==
+X-Gm-Message-State: AOAM530TIdHSx+ywl5A9Je0xCqQfz5pvykGMFzuu9Zfn2QXzsmR5Jxs2
+        anbc89+N8CkbECPhbL1tIqBiXO/Xxvg=
+X-Google-Smtp-Source: ABdhPJyQIYSOuo+Acd4lT12T3KQV/ROU3csTNxsNAD5bRAOL+B30pzE963VFDwrlScOfxQ9dOyPkhA==
+X-Received: by 2002:a17:902:da8d:b0:142:4fa:9147 with SMTP id j13-20020a170902da8d00b0014204fa9147mr10477947plx.72.1639883000135;
+        Sat, 18 Dec 2021 19:03:20 -0800 (PST)
+Received: from vultr.guest ([45.76.74.237])
+        by smtp.gmail.com with ESMTPSA id h191sm12604333pge.55.2021.12.18.19.03.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Dec 2021 19:03:19 -0800 (PST)
+From:   Yafang Shao <laoar.shao@gmail.com>
+To:     akpm@linux-foundation.org, rostedt@goodmis.org,
+        keescook@chromium.org, pmladek@suse.com, david@redhat.com,
+        arnaldo.melo@gmail.com, andrii.nakryiko@gmail.com
+Cc:     linux-mm@kvack.org, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
         Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Russell King <linux@armlinux.org.uk>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Solomon Peachy <pizza@shaftnet.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Subbaraya Sundeep <sbhatta@marvell.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Sunil Goutham <sgoutham@marvell.com>,
-        Tariq Toukan <tariqt@nvidia.com>, Tejun Heo <tj@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Vineet Gupta <vgupta@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Will Deacon <will@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, kvm@vger.kernel.org,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-crypto@vger.kernel.org, linux-csky@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Matthew Wilcox <willy@infradead.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH -mm v3] replace old hard-coded 16 with TASK_COMM_LEN_16
+Date:   Sun, 19 Dec 2021 03:02:58 +0000
+Message-Id: <20211219030258.14738-1-laoar.shao@gmail.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Dec 18, 2021 at 2:16 PM Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.=
-qmqm.pl> wrote:
->
-> On Sat, Dec 18, 2021 at 01:19:57PM -0800, Yury Norov wrote:
-> > Don't call bitmap_weight() if the following code can get by
-> > without it.
-> >
-> > Signed-off-by: Yury Norov <yury.norov@gmail.com>
-> > ---
-> >  drivers/net/dsa/b53/b53_common.c           | 6 +-----
-> >  drivers/net/ethernet/broadcom/bcmsysport.c | 6 +-----
-> >  drivers/thermal/intel/intel_powerclamp.c   | 9 +++------
-> >  3 files changed, 5 insertions(+), 16 deletions(-)
-> [...]
->
-> Looks good,
+This is the followup work of task comm cleanups[1].
 
-Does it mean Acked-by, Reviewed-by, or something else?
+A new macro TASK_COMM_LEN_16 is introduced to replace old hard-coded 16
+in various files, in order to make them grepable. The difference between
+TASK_COMM_LEN and TASK_COMM_LEN_16 is:
+- TASK_COMM_LEN
+  The size should be same with the TASK_COMM_LEN defined in linux/sched.h.
+- TASK_COMM_LEN_16
+  The size must be a fixed-size 16 no matter what TASK_COMM_LEN is. The
+  usage around it is exposed to userspace, so this macro is defined in
+  the UAPI header.
 
-> but I think this needs to be split per subsystem.
+[1]. https://lore.kernel.org/lkml/20211120112738.45980-1-laoar.shao@gmail.com/
 
-What you ask breaks rules:
+Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Michal Miroslaw <mirq-linux@rere.qmqm.pl>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Petr Mladek <pmladek@suse.com>
 
-Documentation/process/submitting-patches.rst:
+---
+Changes since v2:
+- make TASK_COMM_LEN_16 a single instance (Michal)
+- merge all the patches into a single patch
 
-Separate each **logical change** into a separate patch.
+Changes since v1:
+- use TASK_COMM_LEN_16 instead of TASK_COMM_LEN in patch #3 (Steven)
+- avoid changing samples/bpf and bpf/progs (Alexei)
+---
+ include/linux/elfcore-compat.h    | 8 ++------
+ include/linux/elfcore.h           | 9 ++-------
+ include/uapi/linux/cn_proc.h      | 3 ++-
+ include/uapi/linux/sched.h        | 7 +++++++
+ tools/include/uapi/linux/sched.h  | 7 +++++++
+ tools/perf/tests/evsel-tp-sched.c | 7 ++++---
+ 6 files changed, 24 insertions(+), 17 deletions(-)
 
-For example, if your changes include both bug fixes and performance
-enhancements for a single driver, separate those changes into two
-or more patches.  If your changes include an API update, and a new
-driver which uses that new API, separate those into two patches.
+diff --git a/include/linux/elfcore-compat.h b/include/linux/elfcore-compat.h
+index 54feb64e9b5d..319daa69bb23 100644
+--- a/include/linux/elfcore-compat.h
++++ b/include/linux/elfcore-compat.h
+@@ -2,6 +2,7 @@
+ #ifndef _LINUX_ELFCORE_COMPAT_H
+ #define _LINUX_ELFCORE_COMPAT_H
+ 
++#include <uapi/linux/sched.h>
+ #include <linux/elf.h>
+ #include <linux/elfcore.h>
+ #include <linux/compat.h>
+@@ -43,12 +44,7 @@ struct compat_elf_prpsinfo
+ 	__compat_uid_t			pr_uid;
+ 	__compat_gid_t			pr_gid;
+ 	compat_pid_t			pr_pid, pr_ppid, pr_pgrp, pr_sid;
+-	/*
+-	 * The hard-coded 16 is derived from TASK_COMM_LEN, but it can't be
+-	 * changed as it is exposed to userspace. We'd better make it hard-coded
+-	 * here.
+-	 */
+-	char				pr_fname[16];
++	char				pr_fname[TASK_COMM_LEN_16];
+ 	char				pr_psargs[ELF_PRARGSZ];
+ };
+ 
+diff --git a/include/linux/elfcore.h b/include/linux/elfcore.h
+index 746e081879a5..d3bb4bd3c985 100644
+--- a/include/linux/elfcore.h
++++ b/include/linux/elfcore.h
+@@ -65,13 +65,8 @@ struct elf_prpsinfo
+ 	__kernel_gid_t	pr_gid;
+ 	pid_t	pr_pid, pr_ppid, pr_pgrp, pr_sid;
+ 	/* Lots missing */
+-	/*
+-	 * The hard-coded 16 is derived from TASK_COMM_LEN, but it can't be
+-	 * changed as it is exposed to userspace. We'd better make it hard-coded
+-	 * here.
+-	 */
+-	char	pr_fname[16];	/* filename of executable */
+-	char	pr_psargs[ELF_PRARGSZ];	/* initial part of arg list */
++	char	pr_fname[TASK_COMM_LEN_16];	/* filename of executable */
++	char	pr_psargs[ELF_PRARGSZ];		/* initial part of arg list */
+ };
+ 
+ static inline void elf_core_copy_regs(elf_gregset_t *elfregs, struct pt_regs *regs)
+diff --git a/include/uapi/linux/cn_proc.h b/include/uapi/linux/cn_proc.h
+index db210625cee8..88e645230ea5 100644
+--- a/include/uapi/linux/cn_proc.h
++++ b/include/uapi/linux/cn_proc.h
+@@ -20,6 +20,7 @@
+ #define _UAPICN_PROC_H
+ 
+ #include <linux/types.h>
++#include "sched.h"
+ 
+ /*
+  * Userspace sends this enum to register with the kernel that it is listening
+@@ -110,7 +111,7 @@ struct proc_event {
+ 		struct comm_proc_event {
+ 			__kernel_pid_t process_pid;
+ 			__kernel_pid_t process_tgid;
+-			char           comm[16];
++			char           comm[TASK_COMM_LEN_16];
+ 		} comm;
+ 
+ 		struct coredump_proc_event {
+diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
+index 3bac0a8ceab2..490fd5d48378 100644
+--- a/include/uapi/linux/sched.h
++++ b/include/uapi/linux/sched.h
+@@ -145,4 +145,11 @@ struct clone_args {
+ 			 SCHED_FLAG_KEEP_ALL		| \
+ 			 SCHED_FLAG_UTIL_CLAMP)
+ 
++/*
++ * For the one which is exposed to userspace and thus can't be changed.
++ */
++enum {
++	TASK_COMM_LEN_16 = 16,
++};
++
+ #endif /* _UAPI_LINUX_SCHED_H */
+diff --git a/tools/include/uapi/linux/sched.h b/tools/include/uapi/linux/sched.h
+index 3bac0a8ceab2..490fd5d48378 100644
+--- a/tools/include/uapi/linux/sched.h
++++ b/tools/include/uapi/linux/sched.h
+@@ -145,4 +145,11 @@ struct clone_args {
+ 			 SCHED_FLAG_KEEP_ALL		| \
+ 			 SCHED_FLAG_UTIL_CLAMP)
+ 
++/*
++ * For the one which is exposed to userspace and thus can't be changed.
++ */
++enum {
++	TASK_COMM_LEN_16 = 16,
++};
++
+ #endif /* _UAPI_LINUX_SCHED_H */
+diff --git a/tools/perf/tests/evsel-tp-sched.c b/tools/perf/tests/evsel-tp-sched.c
+index cf4da3d748c2..0b74bf2ca1ce 100644
+--- a/tools/perf/tests/evsel-tp-sched.c
++++ b/tools/perf/tests/evsel-tp-sched.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/err.h>
++#include <linux/sched.h>
+ #include <traceevent/event-parse.h>
+ #include "evsel.h"
+ #include "tests.h"
+@@ -43,7 +44,7 @@ static int test__perf_evsel__tp_sched_test(struct test_suite *test __maybe_unuse
+ 		return -1;
+ 	}
+ 
+-	if (evsel__test_field(evsel, "prev_comm", 16, false))
++	if (evsel__test_field(evsel, "prev_comm", TASK_COMM_LEN_16, false))
+ 		ret = -1;
+ 
+ 	if (evsel__test_field(evsel, "prev_pid", 4, true))
+@@ -55,7 +56,7 @@ static int test__perf_evsel__tp_sched_test(struct test_suite *test __maybe_unuse
+ 	if (evsel__test_field(evsel, "prev_state", sizeof(long), true))
+ 		ret = -1;
+ 
+-	if (evsel__test_field(evsel, "next_comm", 16, false))
++	if (evsel__test_field(evsel, "next_comm", TASK_COMM_LEN_16, false))
+ 		ret = -1;
+ 
+ 	if (evsel__test_field(evsel, "next_pid", 4, true))
+@@ -73,7 +74,7 @@ static int test__perf_evsel__tp_sched_test(struct test_suite *test __maybe_unuse
+ 		return -1;
+ 	}
+ 
+-	if (evsel__test_field(evsel, "comm", 16, false))
++	if (evsel__test_field(evsel, "comm", TASK_COMM_LEN_16, false))
+ 		ret = -1;
+ 
+ 	if (evsel__test_field(evsel, "pid", 4, true))
+-- 
+2.17.1
 
-On the other hand, if you make a single change to numerous files,
-group those changes into a single patch.  Thus a single logical change
-is contained within a single patch.
-
-This is not a dead rule, refer for example the 96d4f267e40f9 ("Remove
-'type' argument from access_ok() functioin.")
-
-Or this: https://lkml.org/lkml/2021/6/14/1736
-
-Thanks,
-Yury
