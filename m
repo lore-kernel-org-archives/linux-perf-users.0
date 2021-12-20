@@ -2,165 +2,115 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A07E7C43219
-	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Dec 2021 16:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3A6C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Dec 2021 17:21:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236296AbhLTQlI (ORCPT
+        id S240083AbhLTRVp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 20 Dec 2021 11:41:08 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:60774 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233061AbhLTQlG (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 20 Dec 2021 11:41:06 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A788761219;
-        Mon, 20 Dec 2021 16:41:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8EC6C36AE2;
-        Mon, 20 Dec 2021 16:41:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1640018465;
-        bh=TuP185pT5gdSlNtfNfQ+Kye5lOB+euhTli9+HNxshOM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=enGWQQJij7Gn5KXQIvc6DgLGhW8TsmstPvfbBL0Frpv76daIROB5Wk6RyCml6X1M0
-         INr/wU0RVuAcWcOkPbgbi5U7MaR0NTk6+o3rhiyEe0vywSW27g/jS59FjbvlDzhRr3
-         ovNt3nB3npaxHStYKaqE8ptag4HrP8L17DKCvcbQ=
-Date:   Mon, 20 Dec 2021 17:41:02 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Yury Norov <yury.norov@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Klimov <aklimov@redhat.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Andi Kleen <ak@linux.intel.com>, Andrew Lunn <andrew@lunn.ch>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Anup Patel <anup.patel@wdc.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Christoph Lameter <cl@linux.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Airlie <airlied@linux.ie>,
-        David Laight <David.Laight@aculab.com>,
-        Dennis Zhou <dennis@kernel.org>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Geetha sowjanya <gakula@marvell.com>,
-        Guo Ren <guoren@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Jens Axboe <axboe@fb.com>, Jiri Olsa <jolsa@redhat.com>,
-        Joe Perches <joe@perches.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Marc Zyngier <maz@kernel.org>, Marcin Wojtas <mw@semihalf.com>,
-        Mark Gross <markgross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matti Vaittinen <mazziesaccount@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Russell King <linux@armlinux.org.uk>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Solomon Peachy <pizza@shaftnet.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Subbaraya Sundeep <sbhatta@marvell.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Sunil Goutham <sgoutham@marvell.com>,
-        Tariq Toukan <tariqt@nvidia.com>, Tejun Heo <tj@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Vineet Gupta <vgupta@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Will Deacon <will@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, kvm@vger.kernel.org,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-crypto@vger.kernel.org, linux-csky@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 08/17] all: replace bitmap_weight with
- bitmap_weight_{eq,gt,ge,lt,le} where appropriate
-Message-ID: <YcCyHvr1f+Z8M9M1@kroah.com>
-References: <20211218212014.1315894-1-yury.norov@gmail.com>
- <20211218212014.1315894-9-yury.norov@gmail.com>
+        Mon, 20 Dec 2021 12:21:45 -0500
+Received: from foss.arm.com ([217.140.110.172]:59992 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S240079AbhLTRVo (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 20 Dec 2021 12:21:44 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 18596D6E;
+        Mon, 20 Dec 2021 09:21:44 -0800 (PST)
+Received: from [10.57.36.61] (unknown [10.57.36.61])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E2AE63F774;
+        Mon, 20 Dec 2021 09:21:41 -0800 (PST)
+Message-ID: <5a2e29c1-2c7e-1b55-9192-62060309aeca@arm.com>
+Date:   Mon, 20 Dec 2021 17:21:30 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211218212014.1315894-9-yury.norov@gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [RFC PATCH 1/1] perf arm64: Implement --topdown with metrics
+Content-Language: en-US
+To:     John Garry <john.garry@huawei.com>,
+        Ian Rogers <irogers@google.com>,
+        Andi Kleen <ak@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <4c375d34-bf20-496d-22fc-aed8597126e2@huawei.com>
+ <20211214184240.24215-1-andrew.kilroy@arm.com>
+ <20211214184240.24215-2-andrew.kilroy@arm.com>
+ <CAP-5=fXJeH0ZvcHPa20N5KfLwnYSw29rpK3OrnvE0o3u-vGTLA@mail.gmail.com>
+ <b1640897-10d7-c11e-4a7a-d17633916c8e@huawei.com>
+From:   Andrew Kilroy <andrew.kilroy@arm.com>
+In-Reply-To: <b1640897-10d7-c11e-4a7a-d17633916c8e@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Dec 18, 2021 at 01:20:04PM -0800, Yury Norov wrote:
-> Kernel code calls bitmap_weight() to compare the weight of bitmap with
-> a given number. We can do it more efficiently with bitmap_weight_{eq, ...}
-> because conditional bitmap_weight may stop traversing the bitmap earlier,
-> as soon as condition is met.
+
+On 15/12/2021 10:52, John Garry wrote:
+> Hi Andrew,
 > 
-> This patch replaces bitmap_weight with conditional versions where possible,
-> except for small bitmaps which size is not configurable and  known at
-> constant time. In that case conditional version of bitmap_weight would not
-> benefit due to small_const_nbits() optimization; but readability may
-> suffer.
+>>>   const struct pmu_event *metricgroup__find_metric(const char *metric,
+>>>                                                   const struct 
+>>> pmu_events_map *map);
+>>>   int metricgroup__parse_groups_test(struct evlist *evlist,
+>>> diff --git a/tools/perf/util/topdown.c b/tools/perf/util/topdown.c
+>>> index 1081b20f9891..57c0c5f2c6bd 100644
+>>> --- a/tools/perf/util/topdown.c
+>>> +++ b/tools/perf/util/topdown.c
+>>> @@ -56,3 +56,9 @@ __weak bool arch_topdown_sample_read(struct evsel 
+>>> *leader __maybe_unused)
+>>>   {
+>>>          return false;
+>>>   }
+>>> +
+>>> +__weak bool arch_topdown_use_json_metrics(void)
+>>> +{
 > 
-> Signed-off-by: Yury Norov <yury.norov@gmail.com>
-> ---
->  arch/x86/kernel/cpu/resctrl/rdtgroup.c                 |  2 +-
->  drivers/iio/dummy/iio_simple_dummy_buffer.c            |  4 ++--
->  drivers/iio/industrialio-trigger.c                     |  2 +-
->  drivers/memstick/core/ms_block.c                       |  4 ++--
->  drivers/net/ethernet/intel/ixgbe/ixgbe_sriov.c         |  2 +-
->  .../net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c  |  2 +-
->  .../net/ethernet/marvell/octeontx2/nic/otx2_flows.c    |  4 ++--
->  drivers/net/ethernet/mellanox/mlx4/cmd.c               | 10 +++-------
->  drivers/net/ethernet/mellanox/mlx4/eq.c                |  4 ++--
->  drivers/net/ethernet/mellanox/mlx4/fw.c                |  4 ++--
->  drivers/net/ethernet/mellanox/mlx4/main.c              |  2 +-
->  drivers/perf/thunderx2_pmu.c                           |  4 ++--
->  drivers/staging/media/tegra-video/vi.c                 |  2 +-
->  13 files changed, 21 insertions(+), 25 deletions(-)
+> AFAICS, only x86 supports topdown today and that is because they have 
+> special kernel topdown events exposed for the kernel CPU PMU driver. So 
+> other architectures - not only arm - would need rely on metricgroups for 
+> topdown support. So let's make this generic for all archs.
+> 
+>> I like this extension! I've ranted in the past about weak symbols
+>> breaking with archives due to lazy loading [1]. In this case
+>> tools/perf/arch/arm64/util/topdown.c has no other symbols within it
+>> and so the weak symbol has an extra chance of being linked
+>> incorrectly. We could add a new command line of --topdown-json to
+>> avoid this, but there seems little difference in doing this over just
+>> doing '-M TopDownL1'.
+> 
+> 
+>> Is it possible to use the json metric approach
+>> for when the CPU version fails?
+> 
+> I think that's a good idea.
+> 
 
-"all" is not how to submit changes to the kernel.  Please break them up
-into subsystem-specific patches, and send them after your core changes
-are accepted.
 
-good luck!
+While looking into using the json metrics approach as a fallback to the 
+original, I noticed  there are two json metricgroups 'TopdownL1' and 
+'TopDownL1' (note the case difference) on x86.  Not sure if the case 
+difference is intentional.
 
-greg k-h
+On skylake, 'TopdownL1' contains the four json metrics Retiring, 
+Bad_Speculation, Frontend_Bound, and Backend_Bound.  'TopDownL1' has 
+'SLOTS', 'CoreIPC', 'CoreIPC_SMT', 'Instructions'.  I think its a 
+similar situation on other x86 chips.
+
+The search for those metrics by metricgroup name is case insensitive, so 
+it's picking up all 8 metrics when using the lookup string 'TopDownL1'. 
+  So the extra 'SLOTS', 'CoreIPC', 'CoreIPC_SMT', 'Instructions' metrics 
+would be printed as well.
+
+Not sure what the significance of the case difference might be.
+
+Should we use a different string than 'TopDownL1' as the metric group 
+name to search for?
+
+
+Andrew
