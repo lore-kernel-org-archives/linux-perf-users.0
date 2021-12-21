@@ -2,66 +2,107 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6545FC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Dec 2021 03:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F36AC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Dec 2021 06:59:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229694AbhLUD1a (ORCPT
+        id S234322AbhLUG7I (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 20 Dec 2021 22:27:30 -0500
-Received: from smtpbg126.qq.com ([106.55.201.22]:49377 "EHLO smtpbg587.qq.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229602AbhLUD1a (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 20 Dec 2021 22:27:30 -0500
-X-QQ-mid: bizesmtp54t1640057229ty4nk7ad
-Received: from localhost.localdomain (unknown [182.148.14.81])
-        by esmtp6.qq.com (ESMTP) with 
-        id ; Tue, 21 Dec 2021 11:27:07 +0800 (CST)
-X-QQ-SSF: 01000000000000B0D000B00A0000000
-X-QQ-FEAT: PdU/eI8FBMDN3cWF//zk6F7BwJpO7VkR3CPKBKr+K25EmTb69UlggmcCDYbor
-        8L/oWjt3FuZhaOrB1BqyjOkawjPi3c/xlVKOLx5lGIOcl14+XOto2N7IMVP0M9r8mKZc1sQ
-        F1hPp8gBNB0m1DWTCses2Cqm02kAQR6oAFFkj7hl+vIOfbSIWn9oWWjHWHkOraZ6cJmRHiz
-        lVj8l89zSSmvWduWnskr2jdUydshW+lskPcS45r/EfsAUToL+aRABZTE7CvWuJ67bpDtHEo
-        s2UNofS8cqtVsq1ebIzbp9of9Yxaf29UK9abqkj8h516A7aPFxYC0WmE9CLRdCJcradkuy0
-        hO3eHxV
-X-QQ-GoodBg: 0
-From:   Xiang wangx <wangxiang@cdjrlc.com>
-To:     mingo@redhat.com
-Cc:     peterz@infradead.org, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiang wangx <wangxiang@cdjrlc.com>
-Subject: [PATCH] perf tools: Fix typo in a comment
-Date:   Tue, 21 Dec 2021 11:27:00 +0800
-Message-Id: <20211221032700.35977-1-wangxiang@cdjrlc.com>
-X-Mailer: git-send-email 2.34.1
+        Tue, 21 Dec 2021 01:59:08 -0500
+Received: from mga17.intel.com ([192.55.52.151]:57715 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233417AbhLUG7I (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 21 Dec 2021 01:59:08 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10204"; a="221015349"
+X-IronPort-AV: E=Sophos;i="5.88,222,1635231600"; 
+   d="scan'208";a="221015349"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2021 22:59:08 -0800
+X-IronPort-AV: E=Sophos;i="5.88,222,1635231600"; 
+   d="scan'208";a="521128571"
+Received: from xingzhen-mobl.ccr.corp.intel.com (HELO [10.238.4.155]) ([10.238.4.155])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2021 22:59:05 -0800
+Message-ID: <c63144a6-efd4-d266-a584-11eb34391569@linux.intel.com>
+Date:   Tue, 21 Dec 2021 14:59:02 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [PATCH] perf pmu: Fix event list for uncore PMUs
+Content-Language: en-US
+To:     "Liang, Kan" <kan.liang@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, irogers@google.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1639670017-74918-1-git-send-email-john.garry@huawei.com>
+ <Yb09t/AAFexaGE+j@kernel.org>
+ <d596837e-e3f1-33ed-b17e-d420bfcf3bd1@huawei.com>
+ <eb0fc722-5de6-04be-8440-5df6a8236847@linux.intel.com>
+From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
+In-Reply-To: <eb0fc722-5de6-04be-8440-5df6a8236847@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:cdjrlc.com:qybgspam:qybgspam2
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The double `and' in a comment is repeated, thus it should be removed.
 
-Signed-off-by: Xiang wangx <wangxiang@cdjrlc.com>
----
- tools/perf/builtin-trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 2f1d20553a0a..c1ef5000ab1b 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -2735,7 +2735,7 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
- 
- 		/*
- 		 * Suppress this argument if its value is zero and
--		 * and we don't have a string associated in an
-+		 * we don't have a string associated in an
- 		 * strarray for it.
- 		 */
- 		if (val == 0 &&
+On 12/21/2021 12:34 AM, Liang, Kan wrote:
+> 
+> 
+> On 12/20/2021 3:38 AM, John Garry wrote:
+>> On 18/12/2021 01:47, Arnaldo Carvalho de Melo wrote:
+>>>> Commit 0e0ae8742207 ("perf list: Display hybrid PMU events with cpu 
+>>>> type")
+>>>> changed the list for uncore PMUs, such that duplicate aliases are now
+>>>> listed per PMU (which they should not be), like:
+>>>>
+>>>> ./perf list
+>>>> ...
+>>>> unc_cbo_cache_lookup.any_es
+>>>> [Unit: uncore_cbox L3 Lookup any request that access cache and found
+>>>> line in E or S-state]
+>>>> unc_cbo_cache_lookup.any_es
+>>>> [Unit: uncore_cbox L3 Lookup any request that access cache and found
+>>>> line in E or S-state]
+>>>> unc_cbo_cache_lookup.any_i
+>>>> [Unit: uncore_cbox L3 Lookup any request that access cache and found
+>>>> line in I-state]
+>>>> unc_cbo_cache_lookup.any_i
+>>>> [Unit: uncore_cbox L3 Lookup any request that access cache and found
+>>>> line in I-state]
+>>>> ...
+>>>>
+>>>> Notice how the events are listed twice.
+>>> Hi Jin,
+>>>
+>>>     Can I have your acked-by/tested-by?
+>>
+>> Hi Arnaldo,
+>>
+>> I assume that address is bouncing for you also.
+>>
+> 
+> Yes, Jin Yao has left Intel.
+> 
+>> So if anyone else has one of these hybrid PMU x86 systems then it 
+>> would be appreciated to check this change.
+>>
+> 
+> + Zhengjun
+> 
+> Zhengjun,
+> 
+> Could you please help to verify the change?
+> 
+> Thanks,
+> Kan
+
+Tested this patch on one hybrid PMU x86 system, it works OK.
+
+Tested-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+
 -- 
-2.34.1
-
+Zhengjun Xing
