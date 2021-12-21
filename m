@@ -2,99 +2,66 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A853C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Dec 2021 10:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 476BCC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Dec 2021 12:15:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231590AbhLUKOq (ORCPT
+        id S229868AbhLUMPV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 21 Dec 2021 05:14:46 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4311 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229725AbhLUKOq (ORCPT
+        Tue, 21 Dec 2021 07:15:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42752 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229436AbhLUMPV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 21 Dec 2021 05:14:46 -0500
-Received: from fraeml705-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JJC2L22JSz67Mww;
-        Tue, 21 Dec 2021 18:12:58 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.20; Tue, 21 Dec 2021 11:14:43 +0100
-Received: from [10.195.32.222] (10.195.32.222) by
- lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Tue, 21 Dec 2021 10:14:43 +0000
-Subject: Re: [PATCH] perf pmu: Fix event list for uncore PMUs
-To:     Jiri Olsa <jolsa@redhat.com>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <namhyung@kernel.org>, <irogers@google.com>,
-        <kan.liang@linux.intel.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1639670017-74918-1-git-send-email-john.garry@huawei.com>
- <YcGJJ2g+i5qWea7d@krava> <bbf9c0b4-c048-3adf-5282-2355aa648acf@huawei.com>
- <YcGf/d5PPqqyXxUW@krava>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <43e185f6-9fa7-6ae1-e4fd-c90c6a50f68f@huawei.com>
-Date:   Tue, 21 Dec 2021 10:14:42 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        Tue, 21 Dec 2021 07:15:21 -0500
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee2:21ea])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E7A0C061574;
+        Tue, 21 Dec 2021 04:15:21 -0800 (PST)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4JJFlT4lm0z4xbd;
+        Tue, 21 Dec 2021 23:15:17 +1100 (AEDT)
+From:   Michael Ellerman <patch-notifications@ellerman.id.au>
+To:     ak@linux.intel.com, Kajol Jain <kjain@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, acme@kernel.org, mpe@ellerman.id.au,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, jolsa@kernel.org, peterz@infradead.org
+Cc:     alexander.shishkin@linux.intel.com, kan.liang@linux.intel.com,
+        atrajeev@linux.vnet.ibm.com, linux-perf-users@vger.kernel.org,
+        maddy@linux.ibm.com, ast@kernel.org, daniel@iogearbox.net,
+        rnsastry@linux.ibm.com, songliubraving@fb.com,
+        mark.rutland@arm.com, yao.jin@linux.intel.com, paulus@samba.org
+In-Reply-To: <20211206091749.87585-1-kjain@linux.ibm.com>
+References: <20211206091749.87585-1-kjain@linux.ibm.com>
+Subject: Re: [PATCH 0/4] perf: Add new macros for mem_hops field
+Message-Id: <164008884985.2078648.16441657679018856536.b4-ty@ellerman.id.au>
+Date:   Tue, 21 Dec 2021 23:14:09 +1100
 MIME-Version: 1.0
-In-Reply-To: <YcGf/d5PPqqyXxUW@krava>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.195.32.222]
-X-ClientProxiedBy: lhreml750-chm.china.huawei.com (10.201.108.200) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 21/12/2021 09:35, Jiri Olsa wrote:
-> On Tue, Dec 21, 2021 at 09:10:37AM +0000, John Garry wrote:
->> On 21/12/2021 07:58, Jiri Olsa wrote:
->>>> +	/* Different names -> never duplicates */
->>>> +	if (strcmp(alias_a->name, alias_b->name))
->>>> +		return false;
->>>> +	if (!alias_a->pmu)
->>>> +		return true;
->>>> +	if (!alias_b->pmu)
->>>> +		return true;
->>> nit could be:
->>>
->>> 	if (!alias_a->pmu || !alias_b->pmu)
->>> 		return true;
->>>
->>> would be great to have more comments explaining the check
->>>
->>
->> This is just a sanity check that both strings are non-NULL as we do a
->> strcmp() next. So would this be better:
->>
->> if (!alias_a->pmu || !alias_b->pmu || !strcmp(alias_a->pmu, alias_b->pmu))
->> 	return true
->>
->> ?
->>
->> It will spill a line.
+On Mon, 6 Dec 2021 14:47:45 +0530, Kajol Jain wrote:
+> Patchset adds new macros for mem_hops field which can be
+> used to represent remote-node, socket and board level details.
 > 
-> sure, it cought my eye because the is_cpu check later is done on
-> the same line, so I started wondering what's the difference ;-)
+> Currently the code had macro for HOPS_0, which corresponds
+> to data coming from another core but same node.
+> Add new macros for HOPS_1 to HOPS_3 to represent
+> remote-node, socket and board level data.
 > 
+> [...]
 
-Now thinking a bit more I am not confident that this patch is a full fix.
+Patches 1, 3 and 4 applied to powerpc/next.
 
-arm have heterogeneous CPU systems as well - which are not "hybrid" - 
-and I need to ensure that aliasing is still working properly there, as I 
-think that this following check would stop removing duplicates there:
+[1/4] perf: Add new macros for mem_hops field
+      https://git.kernel.org/powerpc/c/cb1c4aba055f928ffae0c868e8dfe08eeab302e7
+[3/4] powerpc/perf: Add encodings to represent data based on newer composite PERF_MEM_LVLNUM* fields
+      https://git.kernel.org/powerpc/c/4a20ee106154ac1765dea97932faad29f0ba57fc
+[4/4] powerpc/perf: Add data source encodings for power10 platform
+      https://git.kernel.org/powerpc/c/6ed05a8efda56e5be11081954929421de19cce88
 
-+	/* uncore PMUs */
-+	if (!alias_a->is_cpu && !alias_b->is_cpu)
-+		return true;
-+	return false;
-
-Thanks,
-John
-
+cheers
