@@ -2,129 +2,105 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD17AC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Dec 2021 16:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B038C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Dec 2021 20:49:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236218AbhLUQRC (ORCPT
+        id S234956AbhLUUtA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 21 Dec 2021 11:17:02 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4315 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232032AbhLUQRC (ORCPT
+        Tue, 21 Dec 2021 15:49:00 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:43748 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233546AbhLUUtA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 21 Dec 2021 11:17:02 -0500
-Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JJM3W4fBzz6H87X;
-        Wed, 22 Dec 2021 00:14:31 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Tue, 21 Dec 2021 17:16:59 +0100
-Received: from localhost.localdomain (10.69.192.58) by
- lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Tue, 21 Dec 2021 16:16:55 +0000
-From:   John Garry <john.garry@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>, <irogers@google.com>,
-        <kan.liang@linux.intel.com>
-CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <zhengjun.xing@linux.intel.com>, John Garry <john.garry@huawei.com>
-Subject: [PATCH v2] perf pmu: Fix alias events list
-Date:   Wed, 22 Dec 2021 00:11:30 +0800
-Message-ID: <1640103090-140490-1-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Tue, 21 Dec 2021 15:49:00 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DE027B819E7;
+        Tue, 21 Dec 2021 20:48:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70AF5C36AE9;
+        Tue, 21 Dec 2021 20:48:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1640119737;
+        bh=g6gqJ+KeVGJoBQHhgVWPalUdsd+av7U2ld9ePfN05yY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Pyy+g56HvHrz4K1K6Ooxl/9OvZQ6oY47ncyGf4v8bYg8BtTpUq6d/GHBZ+9+ihQqX
+         bTQxdRIVtVvyfrA+buN9aAX5kkSzcACCsvCNUM9y2e2r2VjK059oLbpkmoGJYiZnRb
+         czj81XiGJFoUeA6pxhLeqS9CIZCUqepVW9C0z/hqLI13wRl6mHW7bcPPINxkLlCuPN
+         L5dDOtF7AoTiQu7WePciup+zPm4e9Y6qKQwQ0vuaXSv5TeEMInvxcRx9DcTH9NZydd
+         7GOzKxA3nx+UMdM0ktpbe9ZN96lrO3sMCxe2XaX8ghtza2/SJAbRplCn6OpJl8rHL+
+         EnP2aFKpH8g3Q==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 93D0940B92; Tue, 21 Dec 2021 17:48:55 -0300 (-03)
+Date:   Tue, 21 Dec 2021 17:48:55 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     John Garry <john.garry@huawei.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, peterz@infradead.org,
+        mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        irogers@google.com, kan.liang@linux.intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf pmu: Fix event list for uncore PMUs
+Message-ID: <YcI9twHCIiFyUDOu@kernel.org>
+References: <1639670017-74918-1-git-send-email-john.garry@huawei.com>
+ <YcGJJ2g+i5qWea7d@krava>
+ <bbf9c0b4-c048-3adf-5282-2355aa648acf@huawei.com>
+ <YcGf/d5PPqqyXxUW@krava>
+ <43e185f6-9fa7-6ae1-e4fd-c90c6a50f68f@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <43e185f6-9fa7-6ae1-e4fd-c90c6a50f68f@huawei.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Commit 0e0ae8742207 ("perf list: Display hybrid PMU events with cpu type")
-changes the event list for uncore PMUs or arm64 heterogeneous CPU systems,
-such that duplicate aliases are incorrectly listed per PMU (which they
-should not be), like:
+Em Tue, Dec 21, 2021 at 10:14:42AM +0000, John Garry escreveu:
+> On 21/12/2021 09:35, Jiri Olsa wrote:
+> > On Tue, Dec 21, 2021 at 09:10:37AM +0000, John Garry wrote:
+> > > On 21/12/2021 07:58, Jiri Olsa wrote:
+> > > > > +	/* Different names -> never duplicates */
+> > > > > +	if (strcmp(alias_a->name, alias_b->name))
+> > > > > +		return false;
+> > > > > +	if (!alias_a->pmu)
+> > > > > +		return true;
+> > > > > +	if (!alias_b->pmu)
+> > > > > +		return true;
+> > > > nit could be:
+> > > > 
+> > > > 	if (!alias_a->pmu || !alias_b->pmu)
+> > > > 		return true;
+> > > > 
+> > > > would be great to have more comments explaining the check
+> > > > 
+> > > 
+> > > This is just a sanity check that both strings are non-NULL as we do a
+> > > strcmp() next. So would this be better:
+> > > 
+> > > if (!alias_a->pmu || !alias_b->pmu || !strcmp(alias_a->pmu, alias_b->pmu))
+> > > 	return true
+> > > 
+> > > ?
+> > > 
+> > > It will spill a line.
+> > 
+> > sure, it cought my eye because the is_cpu check later is done on
+> > the same line, so I started wondering what's the difference ;-)
+> > 
+> 
+> Now thinking a bit more I am not confident that this patch is a full fix.
+> 
+> arm have heterogeneous CPU systems as well - which are not "hybrid" - and I
+> need to ensure that aliasing is still working properly there, as I think
+> that this following check would stop removing duplicates there:
+> 
+> +	/* uncore PMUs */
+> +	if (!alias_a->is_cpu && !alias_b->is_cpu)
+> +		return true;
+> +	return false;
 
-./perf list
-...
-unc_cbo_cache_lookup.any_es
-[Unit: uncore_cbox L3 Lookup any request that access cache and found
-line in E or S-state]
-unc_cbo_cache_lookup.any_es
-[Unit: uncore_cbox L3 Lookup any request that access cache and found
-line in E or S-state]
-unc_cbo_cache_lookup.any_i
-[Unit: uncore_cbox L3 Lookup any request that access cache and found
-line in I-state]
-unc_cbo_cache_lookup.any_i
-[Unit: uncore_cbox L3 Lookup any request that access cache and found
-line in I-state]
-...
+I was about to process this, do you think its better to revert the
+original patch while this gets fixed?
 
-Notice how the events are listed twice.
-
-The named commit changed how we remove duplicate events, in that events
-for different PMUs are not treated as duplicates. I suppose this is to
-handle how "Each hybrid pmu event has been assigned with a pmu name".
-
-Fix PMU alias listing by restoring behaviour to remove duplicates for
-non-hybrid PMUs.
-
-Fixes: 0e0ae8742207 ("perf list: Display hybrid PMU events with cpu type")
-Signed-off-by: John Garry <john.garry@huawei.com>
----
-
-Difference in v2:
-- Change duplicate check to explicitly check for hybrid PMU
-
-@Zhengjun Xing, Can you please check this new version? Thanks! 
-
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 6ae58406f4fc..8dfbba15aeb8 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1659,6 +1659,21 @@ bool is_pmu_core(const char *name)
- 	return !strcmp(name, "cpu") || is_arm_pmu_core(name);
- }
- 
-+static bool pmu_alias_is_duplicate(struct sevent *alias_a,
-+				   struct sevent *alias_b)
-+{
-+	/* Different names -> never duplicates */
-+	if (strcmp(alias_a->name, alias_b->name))
-+		return false;
-+
-+	/* Don't remove duplicates for hybrid PMUs */
-+	if (perf_pmu__is_hybrid(alias_a->pmu) &&
-+	    perf_pmu__is_hybrid(alias_b->pmu))
-+		return false;
-+
-+	return true;
-+}
-+
- void print_pmu_events(const char *event_glob, bool name_only, bool quiet_flag,
- 			bool long_desc, bool details_flag, bool deprecated,
- 			const char *pmu_name)
-@@ -1744,12 +1759,8 @@ void print_pmu_events(const char *event_glob, bool name_only, bool quiet_flag,
- 	qsort(aliases, len, sizeof(struct sevent), cmp_sevent);
- 	for (j = 0; j < len; j++) {
- 		/* Skip duplicates */
--		if (j > 0 && !strcmp(aliases[j].name, aliases[j - 1].name)) {
--			if (!aliases[j].pmu || !aliases[j - 1].pmu ||
--			    !strcmp(aliases[j].pmu, aliases[j - 1].pmu)) {
--				continue;
--			}
--		}
-+		if (j > 0 && pmu_alias_is_duplicate(&aliases[j], &aliases[j - 1]))
-+			continue;
- 
- 		if (name_only) {
- 			printf("%s ", aliases[j].name);
--- 
-2.26.2
-
+- Arnaldo
