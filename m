@@ -2,115 +2,66 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3A6C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Dec 2021 17:21:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6545FC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Dec 2021 03:27:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240083AbhLTRVp (ORCPT
+        id S229694AbhLUD1a (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 20 Dec 2021 12:21:45 -0500
-Received: from foss.arm.com ([217.140.110.172]:59992 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240079AbhLTRVo (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 20 Dec 2021 12:21:44 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 18596D6E;
-        Mon, 20 Dec 2021 09:21:44 -0800 (PST)
-Received: from [10.57.36.61] (unknown [10.57.36.61])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E2AE63F774;
-        Mon, 20 Dec 2021 09:21:41 -0800 (PST)
-Message-ID: <5a2e29c1-2c7e-1b55-9192-62060309aeca@arm.com>
-Date:   Mon, 20 Dec 2021 17:21:30 +0000
+        Mon, 20 Dec 2021 22:27:30 -0500
+Received: from smtpbg126.qq.com ([106.55.201.22]:49377 "EHLO smtpbg587.qq.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229602AbhLUD1a (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 20 Dec 2021 22:27:30 -0500
+X-QQ-mid: bizesmtp54t1640057229ty4nk7ad
+Received: from localhost.localdomain (unknown [182.148.14.81])
+        by esmtp6.qq.com (ESMTP) with 
+        id ; Tue, 21 Dec 2021 11:27:07 +0800 (CST)
+X-QQ-SSF: 01000000000000B0D000B00A0000000
+X-QQ-FEAT: PdU/eI8FBMDN3cWF//zk6F7BwJpO7VkR3CPKBKr+K25EmTb69UlggmcCDYbor
+        8L/oWjt3FuZhaOrB1BqyjOkawjPi3c/xlVKOLx5lGIOcl14+XOto2N7IMVP0M9r8mKZc1sQ
+        F1hPp8gBNB0m1DWTCses2Cqm02kAQR6oAFFkj7hl+vIOfbSIWn9oWWjHWHkOraZ6cJmRHiz
+        lVj8l89zSSmvWduWnskr2jdUydshW+lskPcS45r/EfsAUToL+aRABZTE7CvWuJ67bpDtHEo
+        s2UNofS8cqtVsq1ebIzbp9of9Yxaf29UK9abqkj8h516A7aPFxYC0WmE9CLRdCJcradkuy0
+        hO3eHxV
+X-QQ-GoodBg: 0
+From:   Xiang wangx <wangxiang@cdjrlc.com>
+To:     mingo@redhat.com
+Cc:     peterz@infradead.org, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiang wangx <wangxiang@cdjrlc.com>
+Subject: [PATCH] perf tools: Fix typo in a comment
+Date:   Tue, 21 Dec 2021 11:27:00 +0800
+Message-Id: <20211221032700.35977-1-wangxiang@cdjrlc.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [RFC PATCH 1/1] perf arm64: Implement --topdown with metrics
-Content-Language: en-US
-To:     John Garry <john.garry@huawei.com>,
-        Ian Rogers <irogers@google.com>,
-        Andi Kleen <ak@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <4c375d34-bf20-496d-22fc-aed8597126e2@huawei.com>
- <20211214184240.24215-1-andrew.kilroy@arm.com>
- <20211214184240.24215-2-andrew.kilroy@arm.com>
- <CAP-5=fXJeH0ZvcHPa20N5KfLwnYSw29rpK3OrnvE0o3u-vGTLA@mail.gmail.com>
- <b1640897-10d7-c11e-4a7a-d17633916c8e@huawei.com>
-From:   Andrew Kilroy <andrew.kilroy@arm.com>
-In-Reply-To: <b1640897-10d7-c11e-4a7a-d17633916c8e@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:cdjrlc.com:qybgspam:qybgspam2
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+The double `and' in a comment is repeated, thus it should be removed.
 
-On 15/12/2021 10:52, John Garry wrote:
-> Hi Andrew,
-> 
->>>   const struct pmu_event *metricgroup__find_metric(const char *metric,
->>>                                                   const struct 
->>> pmu_events_map *map);
->>>   int metricgroup__parse_groups_test(struct evlist *evlist,
->>> diff --git a/tools/perf/util/topdown.c b/tools/perf/util/topdown.c
->>> index 1081b20f9891..57c0c5f2c6bd 100644
->>> --- a/tools/perf/util/topdown.c
->>> +++ b/tools/perf/util/topdown.c
->>> @@ -56,3 +56,9 @@ __weak bool arch_topdown_sample_read(struct evsel 
->>> *leader __maybe_unused)
->>>   {
->>>          return false;
->>>   }
->>> +
->>> +__weak bool arch_topdown_use_json_metrics(void)
->>> +{
-> 
-> AFAICS, only x86 supports topdown today and that is because they have 
-> special kernel topdown events exposed for the kernel CPU PMU driver. So 
-> other architectures - not only arm - would need rely on metricgroups for 
-> topdown support. So let's make this generic for all archs.
-> 
->> I like this extension! I've ranted in the past about weak symbols
->> breaking with archives due to lazy loading [1]. In this case
->> tools/perf/arch/arm64/util/topdown.c has no other symbols within it
->> and so the weak symbol has an extra chance of being linked
->> incorrectly. We could add a new command line of --topdown-json to
->> avoid this, but there seems little difference in doing this over just
->> doing '-M TopDownL1'.
-> 
-> 
->> Is it possible to use the json metric approach
->> for when the CPU version fails?
-> 
-> I think that's a good idea.
-> 
+Signed-off-by: Xiang wangx <wangxiang@cdjrlc.com>
+---
+ tools/perf/builtin-trace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 2f1d20553a0a..c1ef5000ab1b 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2735,7 +2735,7 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
+ 
+ 		/*
+ 		 * Suppress this argument if its value is zero and
+-		 * and we don't have a string associated in an
++		 * we don't have a string associated in an
+ 		 * strarray for it.
+ 		 */
+ 		if (val == 0 &&
+-- 
+2.34.1
 
-While looking into using the json metrics approach as a fallback to the 
-original, I noticed  there are two json metricgroups 'TopdownL1' and 
-'TopDownL1' (note the case difference) on x86.  Not sure if the case 
-difference is intentional.
-
-On skylake, 'TopdownL1' contains the four json metrics Retiring, 
-Bad_Speculation, Frontend_Bound, and Backend_Bound.  'TopDownL1' has 
-'SLOTS', 'CoreIPC', 'CoreIPC_SMT', 'Instructions'.  I think its a 
-similar situation on other x86 chips.
-
-The search for those metrics by metricgroup name is case insensitive, so 
-it's picking up all 8 metrics when using the lookup string 'TopDownL1'. 
-  So the extra 'SLOTS', 'CoreIPC', 'CoreIPC_SMT', 'Instructions' metrics 
-would be printed as well.
-
-Not sure what the significance of the case difference might be.
-
-Should we use a different string than 'TopDownL1' as the metric group 
-name to search for?
-
-
-Andrew
