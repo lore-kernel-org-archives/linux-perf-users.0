@@ -2,119 +2,103 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B91BCC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Dec 2021 14:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 883ECC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Dec 2021 14:32:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234213AbhLUOUC (ORCPT
+        id S238478AbhLUOcJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 21 Dec 2021 09:20:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43414 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238398AbhLUOUC (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 21 Dec 2021 09:20:02 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE424C061574;
-        Tue, 21 Dec 2021 06:20:01 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 41E93CE17AD;
-        Tue, 21 Dec 2021 14:20:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36C1BC36AE9;
-        Tue, 21 Dec 2021 14:19:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640096398;
-        bh=w+0W4nazN2afM86/V/3t4u41Se18DBzL91myJaMCIXc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=N5DzwXYvjIUHQ4NKGXFKmXQ3Gd5ieCrivd3hXeP0bYbG5FyfLC5UhI/ovQIXoDq3S
-         CXKv+QEWPQAky7OhnG2lbSd9njlFYgFapqaW7xtr2TSlfos3upLy+OKqvyu1qfiFYZ
-         iTJe3xq/ZSBy3jTwsPacvhiF0q8GtUZQ4qSmfurhIkmLM6lXd4pojUCpUz8fZMpGi4
-         eBoD8/daxaneuaXln2Hr/FG6eOFPuwr3Q+tTw/+lGXa6bk5PW/vLumSJ2gupKYgdAM
-         jblozaZLU0x/iA3UZcO3oV48BGuGHcqpSAszKx8u5nUxG8K3wTEeih8PKgKdJKt4zX
-         dockSPk4juyqw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B055A40DC5; Tue, 21 Dec 2021 11:19:55 -0300 (-03)
-Date:   Tue, 21 Dec 2021 11:19:55 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Miaoqian Lin <linmq006@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Tue, 21 Dec 2021 09:32:09 -0500
+Received: from foss.arm.com ([217.140.110.172]:54272 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234548AbhLUOcI (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 21 Dec 2021 09:32:08 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F4FE6D;
+        Tue, 21 Dec 2021 06:32:08 -0800 (PST)
+Received: from [10.57.37.41] (unknown [10.57.37.41])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7F36F3F774;
+        Tue, 21 Dec 2021 06:32:05 -0800 (PST)
+Message-ID: <bd25fae8-c78d-3c42-01e3-c7d9237ce50c@arm.com>
+Date:   Tue, 21 Dec 2021 14:31:54 +0000
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [RFC PATCH 1/1] perf arm64: Implement --topdown with metrics
+Content-Language: en-US
+To:     John Garry <john.garry@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "acme@kernel.org" <acme@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        German Gomez <german.gomez@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] perf expr: Fix return value of ids__new
-Message-ID: <YcHii0u6dusZFt6E@kernel.org>
-References: <20211214011030.20200-1-linmq006@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211214011030.20200-1-linmq006@gmail.com>
-X-Url:  http://acmel.wordpress.com
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <4c375d34-bf20-496d-22fc-aed8597126e2@huawei.com>
+ <20211214184240.24215-1-andrew.kilroy@arm.com>
+ <20211214184240.24215-2-andrew.kilroy@arm.com>
+ <48437bee-9c39-38ba-e990-ba9a6a5378b4@huawei.com>
+From:   Andrew Kilroy <andrew.kilroy@arm.com>
+In-Reply-To: <48437bee-9c39-38ba-e990-ba9a6a5378b4@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Dec 14, 2021 at 01:10:27AM +0000, Miaoqian Lin escreveu:
-> callers of ids__new() function only do NULL checking for the return
-> value. ids__new() calles hashmap__new(), which may return
-> ERR_PTR(-ENOMEM). Instead of changing the checking one-by-one.
-> return NULL instead of ERR_PTR(-ENOMEM) to keep
-> consistent.
 
-Please don't use --- as a separator inside the commit message, it breaks
-scripts that expect it to be a separator from the commit log message to
-the diffstat + patch.
 
-Applying after fixing this.
-
-- Arnaldo
- 
-> ---
-> Changes in v3:
-> fix compilation error and add tags.
-> ---
-> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
-> Tested-by: German Gomez <german.gomez@arm.com>
-> Reviewed-by: German Gomez <german.gomez@arm.com>
-> ---
->  tools/perf/util/expr.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
+On 17/12/2021 10:19, John Garry wrote:
+> On 14/12/2021 18:42, Andrew Kilroy wrote:
+>> This patch implements the --topdown option by making use of metrics to
+>> dictate what counters are obtained in order to show the various topdown
+>> columns, e.g.  Frontend Bound, Backend Bound, Retiring and Bad
+>> Speculation.
+>>
+>> The MetricGroup name is used to identify which set of metrics are to be
+>> shown.  For the moment use TopDownL1 and enable for arm64
+>>
+>> Signed-off-by: Andrew Kilroy<andrew.kilroy@arm.com>
 > 
-> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-> index 1d532b9fed29..f225247acc01 100644
-> --- a/tools/perf/util/expr.c
-> +++ b/tools/perf/util/expr.c
-> @@ -12,6 +12,7 @@
->  #include "expr-bison.h"
->  #include "expr-flex.h"
->  #include "smt.h"
-> +#include <linux/err.h>
->  #include <linux/kernel.h>
->  #include <linux/zalloc.h>
->  #include <ctype.h>
-> @@ -65,7 +66,12 @@ static bool key_equal(const void *key1, const void *key2,
->  
->  struct hashmap *ids__new(void)
->  {
-> -	return hashmap__new(key_hash, key_equal, NULL);
-> +	struct hashmap *hash;
-> +
-> +	hash = hashmap__new(key_hash, key_equal, NULL);
-> +	if (IS_ERR(hash))
-> +		return NULL;
-> +	return hash;
->  }
->  
->  void ids__free(struct hashmap *ids)
-> -- 
-> 2.17.1
+> This works in that it gives results, but does not supply the same output 
+> format as for x86 nor has same restrictions in usage (-a commandline 
+> required, for example, below).
+> 
+> For my x86 broadwell:
+> 
+> john@localhost:~/linux/tools/perf> sudo ./perf stat --topdown  sleep 1
+> top down event configuration requires system-wide mode (-a)
+> 
+> john@localhost:~/linux/tools/perf> sudo ./perf stat --topdown -a sleep 1
+> Performance counter stats for 'system wide':
+> 
+>                                     retiring      bad speculation 
+> frontend bound        backend bound
+> S0-D0-C0           2                29.2%                 6.3%      
+> 37.4%                27.1%
+> S0-D0-C1           2                20.4%                 6.2%      
+> 42.1%                31.3%
+> 
+>        0.998007338 seconds time elapsed
+> 
+> john@localhost:~/linux/tools/perf>
+> 
 
--- 
+Judging by comments in commits 44b1e60ab576c, 55c36a9fc2aaa, whether -a 
+is required or not differs depending on the cpu.  As to why, I'm not 
+sure.  The requirement was relaxed in 55c36a9fc2aaa, but I guess that 
+doesn't affect the broadwell.
 
-- Arnaldo
+The stats are printed per cpu because on your broadwell, the existing 
+code is forcing per-core mode.  Hence why -a is required.  See 
+builtin-stat.c lines 1885-1890 on commit 8ff4f20f3eb55.
+
+My patch wasn't forcing per-core, hence it didn't require -a.
+
+
+Andrew
