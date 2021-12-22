@@ -2,148 +2,134 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37986C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Dec 2021 06:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6239FC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Dec 2021 07:23:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242844AbhLVG4l (ORCPT
+        id S239489AbhLVHXg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Dec 2021 01:56:41 -0500
-Received: from mga11.intel.com ([192.55.52.93]:32311 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242846AbhLVG4k (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Dec 2021 01:56:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1640156200; x=1671692200;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=XWSmsUTqKDWedpZrNjDZUikX/jl3lS2gYyjbsE7ov4A=;
-  b=BLoz5/AtP2Bfz1pKxLGSI9vTROdPJ9Cew+c1lVwJYhaPcW+94ZIT6avh
-   VxnNmP4vecs4Q11Z8qCI2r/bX4f+l56TWyTtS+3J9JmiXZKFDTKkKWk6d
-   ph5aEuF6YBeOB93rqImrxdazvvkU3TVwoXnnbVNDtus2+S2Hl6qpvdKMk
-   XGfq5bvxJTfyu6GWEZr5am8IZHn5B7wgyDQ5j3EkWaFS2B7FKmG/UlNmR
-   BLw3W7j3E6ibN2oV6eJ4pSLKkoO8VtF4tMRt5VrifCCmaUazIpdGS9oNa
-   QLF3BvMckZAowF4q9ndol89T0zAksZJ9xANVZLaY1WrkTGWv5JTJUhflr
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10205"; a="238095855"
-X-IronPort-AV: E=Sophos;i="5.88,225,1635231600"; 
-   d="scan'208";a="238095855"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2021 22:56:40 -0800
-X-IronPort-AV: E=Sophos;i="5.88,225,1635231600"; 
-   d="scan'208";a="521562091"
-Received: from xingzhen-mobl.ccr.corp.intel.com (HELO [10.238.4.155]) ([10.238.4.155])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2021 22:56:37 -0800
-Message-ID: <70e34e8f-6acb-1406-c67e-20280f9f4946@linux.intel.com>
-Date:   Wed, 22 Dec 2021 14:56:34 +0800
+        Wed, 22 Dec 2021 02:23:36 -0500
+Received: from szxga01-in.huawei.com ([45.249.212.187]:33891 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231422AbhLVHXg (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 22 Dec 2021 02:23:36 -0500
+Received: from canpemm500010.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4JJlCz3NgMzcc6Z;
+        Wed, 22 Dec 2021 15:23:11 +0800 (CST)
+Received: from huawei.com (10.67.189.167) by canpemm500010.china.huawei.com
+ (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Wed, 22 Dec
+ 2021 15:23:34 +0800
+From:   Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <namhyung@kernel.org>, <james.clark@arm.com>,
+        <leo.yan@linaro.org>, <shaolexi@huawei.com>, <qiuxi1@huawei.com>,
+        <wangbing6@huawei.com>, <nixiaoming@huawei.com>,
+        <xiaojiangfeng@huawei.com>
+CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] perf dso: Avoid copying redundant kallsyms in th buildid_dir
+Date:   Wed, 22 Dec 2021 15:23:23 +0800
+Message-ID: <1640157803-106978-1-git-send-email-xiaojiangfeng@huawei.com>
+X-Mailer: git-send-email 1.8.5.6
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH v2] perf pmu: Fix alias events list
-Content-Language: en-US
-To:     John Garry <john.garry@huawei.com>, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, irogers@google.com, kan.liang@linux.intel.com
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1640103090-140490-1-git-send-email-john.garry@huawei.com>
-From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
-In-Reply-To: <1640103090-140490-1-git-send-email-john.garry@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.67.189.167]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ canpemm500010.china.huawei.com (7.192.105.118)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+The issue is occurs in following step:
+(1)copy the kernel module (such as test.ko) to /root directory
+(2)load the kernel module (such as insmod test.ko)
+(3)run perf-record as: perf record sleep 1
+Then /proc/kallsyms will be copied not only to
+/root/.debug/[kernel.kallsyms]/<buildid>/kallsyms,
+but also be copied to
+/root/.debug/[test]/<buildid>/kallsyms(this is redundant).
 
+Say a kallsyms file content takes 5MB memory,
+100 out-of-tree kernel modules will take 500MB,
+which is not bearable on embedded environment.
 
-On 12/22/2021 12:11 AM, John Garry wrote:
-> Commit 0e0ae8742207 ("perf list: Display hybrid PMU events with cpu type")
-> changes the event list for uncore PMUs or arm64 heterogeneous CPU systems,
-> such that duplicate aliases are incorrectly listed per PMU (which they
-> should not be), like:
-> 
-> ./perf list
-> ...
-> unc_cbo_cache_lookup.any_es
-> [Unit: uncore_cbox L3 Lookup any request that access cache and found
-> line in E or S-state]
-> unc_cbo_cache_lookup.any_es
-> [Unit: uncore_cbox L3 Lookup any request that access cache and found
-> line in E or S-state]
-> unc_cbo_cache_lookup.any_i
-> [Unit: uncore_cbox L3 Lookup any request that access cache and found
-> line in I-state]
-> unc_cbo_cache_lookup.any_i
-> [Unit: uncore_cbox L3 Lookup any request that access cache and found
-> line in I-state]
-> ...
-> 
-> Notice how the events are listed twice.
-> 
-> The named commit changed how we remove duplicate events, in that events
-> for different PMUs are not treated as duplicates. I suppose this is to
-> handle how "Each hybrid pmu event has been assigned with a pmu name".
-> 
-> Fix PMU alias listing by restoring behaviour to remove duplicates for
-> non-hybrid PMUs.
-> 
-> Fixes: 0e0ae8742207 ("perf list: Display hybrid PMU events with cpu type")
-> Signed-off-by: John Garry <john.garry@huawei.com>
-> ---
-> 
-> Difference in v2:
-> - Change duplicate check to explicitly check for hybrid PMU
-> 
-> @Zhengjun Xing, Can you please check this new version? Thanks!
+__cmd_record():
+  __perf_session__new():
+    perf_session__create_kernel_maps():
+      machine__create_kernel_maps():
+        machine__create_modules():
+          machine__set_modules_path(): perf will only search for kernel
+                                      modules in "/lib/modules/`uname -r`/"
+                                      /root/test.ko is not in scope.
+            maps__set_modules_path_dir():
+              maps__set_module_path():
+                dso__set_long_name(): the dso->long_name of test.ko has
+                                      not changed, it is still [test].
 
-Tested this new version patch on both hybrid and non-hybrid PMU x86 
-systems, it works OK with no duplicate events for the uncore.
+record__finish_output():
+  perf_session__write_header():
+    [...]
+      dso__cache_build_id():
+        bool is_kallsyms = dso__is_kallsyms(dso);
+          dso__is_kallsyms(): return dso->kernel&&dso->long_name[0] != '/';
+                              [test] will be wrongly judged as kallsyms,
+                              and then the value of is_kallsyms is true.
+        build_id_cache__add_b(, is_kallsyms,):
+          build_id_cache__add_s(, is_kallsyms,):
+            build_id_cache__add(, is_kallsyms,):
+              if (is_kallsyms)
+                copyfile("/proc/kallsyms", filename): /proc/kallsyms will
+                be copied to /root/.debug/[test]/<buildid>/kallsyms.
 
-Tested-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+Why can this modification can avoid the redundancy of kallsyms:
+  if (dso->kernel == DSO_SPACE__KERNEL) there are only two possibilities,
+  one is dso__is_kallsyms, and the other is dso__is_kmod. After
+  modification, [test] is no longer incorrectly judged as kallsyms.
+Why can dso__is_kmod judge correctly?
+  __cmd_record():
+    __perf_session__new():
+      perf_session__create_kernel_maps():
+        machine__create_kernel_maps():
+          machine__create_modules():
+            modules__parse(): for each line in /proc/modules,
+                              not just in "/lib/modules/`uname -r`/".
+              machine__create_module():
+                machine__addnew_module_map():
+                  machine__findnew_module_dso():
+                    dso__set_module_info(): assign dso->symtab_type to
+                    DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE and so on.
 
-> 
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 6ae58406f4fc..8dfbba15aeb8 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -1659,6 +1659,21 @@ bool is_pmu_core(const char *name)
->   	return !strcmp(name, "cpu") || is_arm_pmu_core(name);
->   }
->   
-> +static bool pmu_alias_is_duplicate(struct sevent *alias_a,
-> +				   struct sevent *alias_b)
-> +{
-> +	/* Different names -> never duplicates */
-> +	if (strcmp(alias_a->name, alias_b->name))
-> +		return false;
-> +
-> +	/* Don't remove duplicates for hybrid PMUs */
-> +	if (perf_pmu__is_hybrid(alias_a->pmu) &&
-> +	    perf_pmu__is_hybrid(alias_b->pmu))
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
->   void print_pmu_events(const char *event_glob, bool name_only, bool quiet_flag,
->   			bool long_desc, bool details_flag, bool deprecated,
->   			const char *pmu_name)
-> @@ -1744,12 +1759,8 @@ void print_pmu_events(const char *event_glob, bool name_only, bool quiet_flag,
->   	qsort(aliases, len, sizeof(struct sevent), cmp_sevent);
->   	for (j = 0; j < len; j++) {
->   		/* Skip duplicates */
-> -		if (j > 0 && !strcmp(aliases[j].name, aliases[j - 1].name)) {
-> -			if (!aliases[j].pmu || !aliases[j - 1].pmu ||
-> -			    !strcmp(aliases[j].pmu, aliases[j - 1].pmu)) {
-> -				continue;
-> -			}
-> -		}
-> +		if (j > 0 && pmu_alias_is_duplicate(&aliases[j], &aliases[j - 1]))
-> +			continue;
->   
->   		if (name_only) {
->   			printf("%s ", aliases[j].name);
+Reported-by: Lexi Shao <shaolexi@huawei.com>
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+---
+ tools/perf/util/dso.h | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index 011da39..57a6ab5 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -380,9 +380,17 @@ static inline bool dso__is_kcore(struct dso *dso)
+ 	       dso->binary_type == DSO_BINARY_TYPE__GUEST_KCORE;
+ }
+ 
++static inline bool dso__is_kmod(struct dso *dso)
++{
++	return dso->symtab_type == DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE ||
++		dso->symtab_type == DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP ||
++		dso->symtab_type == DSO_BINARY_TYPE__GUEST_KMODULE ||
++		dso->symtab_type == DSO_BINARY_TYPE__GUEST_KMODULE_COMP;
++}
++
+ static inline bool dso__is_kallsyms(struct dso *dso)
+ {
+-	return dso->kernel && dso->long_name[0] != '/';
++	return dso->kernel && !dso__is_kmod(dso);
+ }
+ 
+ void dso__free_a2l(struct dso *dso);
 -- 
-Zhengjun Xing
+1.8.5.6
+
