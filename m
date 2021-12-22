@@ -2,176 +2,78 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5F7C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Dec 2021 12:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11ABFC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Dec 2021 13:08:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245180AbhLVMlo (ORCPT
+        id S240694AbhLVNI0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Dec 2021 07:41:44 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:36424 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245195AbhLVMlY (ORCPT
+        Wed, 22 Dec 2021 08:08:26 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4321 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240684AbhLVNIY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Dec 2021 07:41:24 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1300561844;
-        Wed, 22 Dec 2021 12:41:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42F08C36AE5;
-        Wed, 22 Dec 2021 12:41:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640176883;
-        bh=C+xfOCVJ4pREcm2vRALjvsvHcgdWEthAsNXkbnYp6s4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V6CGQ8Ip80Aq/o+RnyQiz7PZnj8cq2MRDmBKrW5I47gkyyvO2zPq3NTlWX9V1M/O+
-         tN6c7NBTggIOxs/bd4mrmZy8Fg12FD/GGn0bWTlhsh6ItPugI4Ecy56MKsKPpZm17L
-         qcy08Zcd203UQ/yphHxUT/UqgQWR1q/UEBtNjkBbbjsuBmn8F2hMoELbEeLGD5jAGc
-         RKUzb5qF8zEl4jBf6njdEUmRw9uSQuXvx5zZfsJmhDNu3JBqFqkEa11SPH14zk3hOJ
-         bK0ExDXHYTgJqJBS7/fHUKrlPYBGGQEawfpOWaW29G01Qz/aS5mHpdoAJrJsNv9uXI
-         U+BthusFVza6w==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 9AC6740B92; Wed, 22 Dec 2021 09:41:21 -0300 (-03)
-Date:   Wed, 22 Dec 2021 09:41:21 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Kajol Jain <kjain@linux.ibm.com>
-Cc:     mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, jolsa@kernel.org, namhyung@kernel.org,
-        ak@linux.intel.com, linux-perf-users@vger.kernel.org,
-        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
-        rnsastry@linux.ibm.com, yao.jin@linux.intel.com, ast@kernel.org,
-        daniel@iogearbox.net, songliubraving@fb.com,
-        kan.liang@linux.intel.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, paulus@samba.org
-Subject: Re: [PATCH 4/4] powerpc/perf: Add data source encodings for power10
- platform
-Message-ID: <YcMc8fnIsbHxbX6i@kernel.org>
-References: <20211206091749.87585-1-kjain@linux.ibm.com>
- <20211206091749.87585-5-kjain@linux.ibm.com>
+        Wed, 22 Dec 2021 08:08:24 -0500
+Received: from fraeml711-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JJtqM4dLQz67kgW;
+        Wed, 22 Dec 2021 21:05:51 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Wed, 22 Dec 2021 14:08:22 +0100
+Received: from [10.195.32.222] (10.195.32.222) by
+ lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Wed, 22 Dec 2021 13:08:21 +0000
+Subject: Re: [PATCH] perf pmu: Fix event list for uncore PMUs
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     Jiri Olsa <jolsa@redhat.com>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <namhyung@kernel.org>,
+        <irogers@google.com>, <kan.liang@linux.intel.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1639670017-74918-1-git-send-email-john.garry@huawei.com>
+ <YcGJJ2g+i5qWea7d@krava> <bbf9c0b4-c048-3adf-5282-2355aa648acf@huawei.com>
+ <YcGf/d5PPqqyXxUW@krava> <43e185f6-9fa7-6ae1-e4fd-c90c6a50f68f@huawei.com>
+ <YcI9twHCIiFyUDOu@kernel.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <d987a1a9-3c3f-9efb-24c7-22e18d8d63e4@huawei.com>
+Date:   Wed, 22 Dec 2021 13:08:20 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211206091749.87585-5-kjain@linux.ibm.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <YcI9twHCIiFyUDOu@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.195.32.222]
+X-ClientProxiedBy: lhreml750-chm.china.huawei.com (10.201.108.200) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Dec 06, 2021 at 02:47:49PM +0530, Kajol Jain escreveu:
-> The code represent memory/cache level data based on PERF_MEM_LVL_*
-> namespace, which is in the process of deprication in the favour of
-> newer composite PERF_MEM_{LVLNUM_,REMOTE_,SNOOPX_,HOPS_} fields.
-> Add data source encodings to represent cache/memory data based on
-> newer composite PERF_MEM_{LVLNUM_,REMOTE_,SNOOPX_,HOPS_} fields.
+On 21/12/2021 20:48, Arnaldo Carvalho de Melo wrote:
+>> Now thinking a bit more I am not confident that this patch is a full fix.
+>>
+>> arm have heterogeneous CPU systems as well - which are not "hybrid" - and I
+>> need to ensure that aliasing is still working properly there, as I think
+>> that this following check would stop removing duplicates there:
+>>
+>> +	/* uncore PMUs */
+>> +	if (!alias_a->is_cpu && !alias_b->is_cpu)
+>> +		return true;
+>> +	return false;
+> I was about to process this, do you think its better to revert the
+> original patch while this gets fixed?
 
-Thanks, applied.
+I think that the v2 should now be ok.
 
-- Arnaldo
+@jirka, can you kindly help to check that?
 
- 
-> Add data source encodings to represent data coming from local
-> memory/Remote memory/distant memory and remote/distant cache hits.
-> 
-> Inorder to represent data coming from OpenCAPI cache/memory, we use
-> LVLNUM "PMEM" field which is used to present persistent memory accesses.
-> 
-> Result in power10 system with patch changes:
-> 
-> localhost:# ./perf mem report --sort="mem,sym,dso" --stdio
->  # Overhead       Samples  Memory access             Symbol                      Shared Object
->  # ........  ............  ........................  ..........................  ................
->  #
->     29.46%          2331  L1 or L1 hit              [.] __random                                     libc-2.28.so
->     23.11%          2121  L1 or L1 hit              [.] producer_populate_cache                      producer_consumer
->     18.56%          1758  L1 or L1 hit              [.] __random_r                                   libc-2.28.so
->     15.64%          1559  L2 or L2 hit              [.] __random                                     libc-2.28.so
->     .....
->     0.09%              5  Remote socket, same board Any cache hit             [.] __random         libc-2.28.so
->     0.07%              4  Remote socket, same board Any cache hit             [.] __random         libc-2.28.so
->     .....
-> 
-> Reviewed-by: Madhavan Srinivasan <maddy@linux.ibm.com>
-> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-> ---
->  arch/powerpc/perf/isa207-common.c | 54 ++++++++++++++++++++++++-------
->  1 file changed, 42 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/powerpc/perf/isa207-common.c b/arch/powerpc/perf/isa207-common.c
-> index 6c6bc8b7d887..4037ea652522 100644
-> --- a/arch/powerpc/perf/isa207-common.c
-> +++ b/arch/powerpc/perf/isa207-common.c
-> @@ -229,13 +229,28 @@ static inline u64 isa207_find_source(u64 idx, u32 sub_idx)
->  		ret = PH(LVL, L3) | LEVEL(L3) | P(SNOOP, HIT);
->  		break;
->  	case 4:
-> -		if (sub_idx <= 1)
-> -			ret = PH(LVL, LOC_RAM);
-> -		else if (sub_idx > 1 && sub_idx <= 2)
-> -			ret = PH(LVL, REM_RAM1);
-> -		else
-> -			ret = PH(LVL, REM_RAM2);
-> -		ret |= P(SNOOP, HIT);
-> +		if (cpu_has_feature(CPU_FTR_ARCH_31)) {
-> +			ret = P(SNOOP, HIT);
-> +
-> +			if (sub_idx == 1)
-> +				ret |= PH(LVL, LOC_RAM) | LEVEL(RAM);
-> +			else if (sub_idx == 2 || sub_idx == 3)
-> +				ret |= P(LVL, HIT) | LEVEL(PMEM);
-> +			else if (sub_idx == 4)
-> +				ret |= PH(LVL, REM_RAM1) | REM | LEVEL(RAM) | P(HOPS, 2);
-> +			else if (sub_idx == 5 || sub_idx == 7)
-> +				ret |= P(LVL, HIT) | LEVEL(PMEM) | REM;
-> +			else if (sub_idx == 6)
-> +				ret |= PH(LVL, REM_RAM2) | REM | LEVEL(RAM) | P(HOPS, 3);
-> +		} else {
-> +			if (sub_idx <= 1)
-> +				ret = PH(LVL, LOC_RAM);
-> +			else if (sub_idx > 1 && sub_idx <= 2)
-> +				ret = PH(LVL, REM_RAM1);
-> +			else
-> +				ret = PH(LVL, REM_RAM2);
-> +			ret |= P(SNOOP, HIT);
-> +		}
->  		break;
->  	case 5:
->  		if (cpu_has_feature(CPU_FTR_ARCH_31)) {
-> @@ -261,11 +276,26 @@ static inline u64 isa207_find_source(u64 idx, u32 sub_idx)
->  		}
->  		break;
->  	case 6:
-> -		ret = PH(LVL, REM_CCE2);
-> -		if ((sub_idx == 0) || (sub_idx == 2))
-> -			ret |= P(SNOOP, HIT);
-> -		else if ((sub_idx == 1) || (sub_idx == 3))
-> -			ret |= P(SNOOP, HITM);
-> +		if (cpu_has_feature(CPU_FTR_ARCH_31)) {
-> +			if (sub_idx == 0)
-> +				ret = PH(LVL, REM_CCE1) | LEVEL(ANY_CACHE) | REM |
-> +					P(SNOOP, HIT) | P(HOPS, 2);
-> +			else if (sub_idx == 1)
-> +				ret = PH(LVL, REM_CCE1) | LEVEL(ANY_CACHE) | REM |
-> +					P(SNOOP, HITM) | P(HOPS, 2);
-> +			else if (sub_idx == 2)
-> +				ret = PH(LVL, REM_CCE2) | LEVEL(ANY_CACHE) | REM |
-> +					P(SNOOP, HIT) | P(HOPS, 3);
-> +			else if (sub_idx == 3)
-> +				ret = PH(LVL, REM_CCE2) | LEVEL(ANY_CACHE) | REM |
-> +					P(SNOOP, HITM) | P(HOPS, 3);
-> +		} else {
-> +			ret = PH(LVL, REM_CCE2);
-> +			if (sub_idx == 0 || sub_idx == 2)
-> +				ret |= P(SNOOP, HIT);
-> +			else if (sub_idx == 1 || sub_idx == 3)
-> +				ret |= P(SNOOP, HITM);
-> +		}
->  		break;
->  	case 7:
->  		ret = PM(LVL, L1);
-> -- 
-> 2.27.0
+BTW, my patch is based on v5.16-rc5 . I assumed that I would need to be 
+based on acme/perf/urgent, but that seems to be based on 5.15
 
--- 
+Thanks,
+John
 
-- Arnaldo
