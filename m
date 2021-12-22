@@ -2,78 +2,191 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11ABFC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Dec 2021 13:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A6BC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Dec 2021 13:44:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240694AbhLVNI0 (ORCPT
+        id S234247AbhLVNo5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Dec 2021 08:08:26 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4321 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240684AbhLVNIY (ORCPT
+        Wed, 22 Dec 2021 08:44:57 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:32298 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229834AbhLVNo5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Dec 2021 08:08:24 -0500
-Received: from fraeml711-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JJtqM4dLQz67kgW;
-        Wed, 22 Dec 2021 21:05:51 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Wed, 22 Dec 2021 14:08:22 +0100
-Received: from [10.195.32.222] (10.195.32.222) by
- lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Wed, 22 Dec 2021 13:08:21 +0000
-Subject: Re: [PATCH] perf pmu: Fix event list for uncore PMUs
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-CC:     Jiri Olsa <jolsa@redhat.com>, <peterz@infradead.org>,
-        <mingo@redhat.com>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <namhyung@kernel.org>,
-        <irogers@google.com>, <kan.liang@linux.intel.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1639670017-74918-1-git-send-email-john.garry@huawei.com>
- <YcGJJ2g+i5qWea7d@krava> <bbf9c0b4-c048-3adf-5282-2355aa648acf@huawei.com>
- <YcGf/d5PPqqyXxUW@krava> <43e185f6-9fa7-6ae1-e4fd-c90c6a50f68f@huawei.com>
- <YcI9twHCIiFyUDOu@kernel.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <d987a1a9-3c3f-9efb-24c7-22e18d8d63e4@huawei.com>
-Date:   Wed, 22 Dec 2021 13:08:20 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        Wed, 22 Dec 2021 08:44:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1640180696;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=EUX0ogKpf3d14pHpuY30V0wv60QYvAzDmFZeRw8TXic=;
+        b=HvqWn3xliTo9gmnK3Ni/QVq5tLG2XP78f8kBKpDocDjq2On/meDkU4zz4JhI6bLdvPjeEf
+        f/SHuBx7m4wHrZOOgRJTNZK8WwQlR4fxQaW1Awhg1l5hfDo9tjO2ebPED1Y1jbO2s1sI84
+        C+KzI1En4JMm12AB1fo7vpGHRW1Rnog=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-656-JCTrY0znOUeYQmeyINCBdQ-1; Wed, 22 Dec 2021 08:44:55 -0500
+X-MC-Unique: JCTrY0znOUeYQmeyINCBdQ-1
+Received: by mail-ed1-f70.google.com with SMTP id dm10-20020a05640222ca00b003f808b5aa18so1900549edb.4
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 05:44:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=EUX0ogKpf3d14pHpuY30V0wv60QYvAzDmFZeRw8TXic=;
+        b=hnwZ5Eon46YXEcoO4qtBav/Kz94hsYjnxTkFbELGgsVSPdO63nFi/Fy9+bG4ExUlfB
+         XD9KFRqvNxxeDInYvaGNPuEJsFRPUh+u+7kJo25hT9eYlgFbOx4Wk/AtcJQMOQS/W0x3
+         52NmrLuzT52QF6UBxzk/MvSN+KOHgT2PsUZ9lSzpljq0Nqm03RAVxXwC59rjQIC3xo6U
+         OEIIBwqH9MUe8PUUiwyA73EJnKdKdraLHvyCEbkJBV5912a9Js31ey/MnWufNxSk51fs
+         o3Gt99PnJhEvqpsiG1eFCwiNkHmKfNTprwp2DVEHRdBCDS52YsvoIH1h7aQHwtckLd/G
+         /YRQ==
+X-Gm-Message-State: AOAM531nhIIUWu/2KnBc6yYaw7XmwNwyDuHF/44z87b3mmUb/Me9EVyG
+        CzAsmceKxU71v+mC6eLngy7P+IOzJhlBLXLkzNUx7+Hgzia5LIi8GWcKkn6aED2+nojOzoSWg3u
+        UXiPN56MxWFn8Mfl2I3D3lv6LKdqfaw==
+X-Received: by 2002:a17:907:8a06:: with SMTP id sc6mr931765ejc.214.1640180694389;
+        Wed, 22 Dec 2021 05:44:54 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzH2Ch4giRTpV+TGELmHFEzgTDQlBiWQMnDDaSrIPTcmLp/t4Ey8yKkKy7hlVrNJH2pmznoPA==
+X-Received: by 2002:a17:907:8a06:: with SMTP id sc6mr931742ejc.214.1640180694125;
+        Wed, 22 Dec 2021 05:44:54 -0800 (PST)
+Received: from krava ([83.240.60.218])
+        by smtp.gmail.com with ESMTPSA id 12sm742338eja.187.2021.12.22.05.44.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Dec 2021 05:44:53 -0800 (PST)
+Date:   Wed, 22 Dec 2021 14:44:52 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Christy Lee <christylee@fb.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Christy Lee <christyc.y.lee@gmail.com>,
+        bpf <bpf@vger.kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>,
+        He Kuang <hekuang@huawei.com>, Wang Nan <wangnan0@huawei.com>,
+        Wang ShaoBo <bobo.shaobowang@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: Re: [PATCH bpf-next 2/2] perf: stop using deprecated
+ bpf__object_next() API
+Message-ID: <YcMr1LeP6zUBdCiK@krava>
+References: <20211216222108.110518-1-christylee@fb.com>
+ <20211216222108.110518-3-christylee@fb.com>
+ <YcGO271nDvfMeSlK@krava>
+ <CAEf4BzZpNvEtfsVHUJGfwi_1xM+7-ohBPKPrRo--X=fYkYLrsw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <YcI9twHCIiFyUDOu@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.195.32.222]
-X-ClientProxiedBy: lhreml750-chm.china.huawei.com (10.201.108.200) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzZpNvEtfsVHUJGfwi_1xM+7-ohBPKPrRo--X=fYkYLrsw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 21/12/2021 20:48, Arnaldo Carvalho de Melo wrote:
->> Now thinking a bit more I am not confident that this patch is a full fix.
->>
->> arm have heterogeneous CPU systems as well - which are not "hybrid" - and I
->> need to ensure that aliasing is still working properly there, as I think
->> that this following check would stop removing duplicates there:
->>
->> +	/* uncore PMUs */
->> +	if (!alias_a->is_cpu && !alias_b->is_cpu)
->> +		return true;
->> +	return false;
-> I was about to process this, do you think its better to revert the
-> original patch while this gets fixed?
+On Tue, Dec 21, 2021 at 01:58:14PM -0800, Andrii Nakryiko wrote:
+> On Tue, Dec 21, 2021 at 12:23 AM Jiri Olsa <jolsa@redhat.com> wrote:
+> >
+> > On Thu, Dec 16, 2021 at 02:21:08PM -0800, Christy Lee wrote:
+> > > bpf__object_next is deprecated, track bpf_objects directly in
+> > > perf instead.
+> > >
+> > > Signed-off-by: Christy Lee <christylee@fb.com>
+> > > Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> > > ---
+> > >  tools/perf/util/bpf-loader.c | 72 +++++++++++++++++++++++++++---------
+> > >  tools/perf/util/bpf-loader.h |  1 +
+> > >  2 files changed, 55 insertions(+), 18 deletions(-)
+> > >
+> > > diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
+> > > index 528aeb0ab79d..9e3988fd719a 100644
+> > > --- a/tools/perf/util/bpf-loader.c
+> > > +++ b/tools/perf/util/bpf-loader.c
+> > > @@ -29,9 +29,6 @@
+> > >
+> > >  #include <internal/xyarray.h>
+> > >
+> > > -/* temporarily disable libbpf deprecation warnings */
+> > > -#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+> > > -
+> > >  static int libbpf_perf_print(enum libbpf_print_level level __attribute__((unused)),
+> > >                             const char *fmt, va_list args)
+> > >  {
+> > > @@ -49,6 +46,36 @@ struct bpf_prog_priv {
+> > >       int *type_mapping;
+> > >  };
+> > >
+> > > +struct bpf_perf_object {
+> > > +     struct bpf_object *obj;
+> > > +     struct list_head list;
+> > > +};
+> > > +
+> > > +static LIST_HEAD(bpf_objects_list);
+> >
+> > hum, so this duplicates libbpf's bpf_objects_list,
+> > how do objects get on this list?
+> 
+> yep, this list needs to be updated on perf side each time
+> bpf_object__open() (and any variant of open) is called.
+> 
+> >
+> > could you please put more comments in changelog
+> > and share how you tested this?
+> 
+> I actually have no idea how to test this as well, can you please share
+> some ideas?
+> 
 
-I think that the v2 should now be ok.
+I don't use it, I just know it's there.. that's why I asked ;-)
 
-@jirka, can you kindly help to check that?
+it's possible to specify bpf program on the perf command line
+to be attached to event, like:
 
-BTW, my patch is based on v5.16-rc5 . I assumed that I would need to be 
-based on acme/perf/urgent, but that seems to be based on 5.15
+      # cat tools/perf/examples/bpf/hello.c
+      #include <stdio.h>
+    
+      int syscall_enter(openat)(void *args)
+      {
+              puts("Hello, world\n");
+              return 0;
+      }
+    
+      license(GPL);
+      #
+      # perf trace -e openat,tools/perf/examples/bpf/hello.c cat /etc/passwd > /dev/null
+         0.016 (         ): __bpf_stdout__:Hello, world
+         0.018 ( 0.010 ms): cat/9079 openat(dfd: CWD, filename: /etc/ld.so.cache, flags: CLOEXEC) = 3
+         0.057 (         ): __bpf_stdout__:Hello, world
+         0.059 ( 0.011 ms): cat/9079 openat(dfd: CWD, filename: /lib64/libc.so.6, flags: CLOEXEC) = 3
+         0.417 (         ): __bpf_stdout__:Hello, world
+         0.419 ( 0.009 ms): cat/9079 openat(dfd: CWD, filename: /etc/passwd) = 3
+      #
 
-Thanks,
-John
+I took that example from commit message
+
+> 
+> BTW, while we are at it, Jiri, do you have any good ideas on how to
+> remove perf's usage of bpf_program__set_priv() and
+> bpf_program__set_prep() APIs in perf code base? These APIs are
+> deprecated as well, but seems like perf relies on them pretty heavily.
+> What would be the best way to stop using them?
+> 
+> For set_priv(), I think it should be totally fine to maintain a
+> separate lookup hash table by `struct bpf_program *` or its name, that
+> shouldn't be hard.
+
+ok, so there's no alternative api for this one then
+
+> 
+> But for set_prep(), what does perf use it for? I assume for cloning
+> BPF programs, right? Anything else besides that? If it's just for
+> cloning, libbpf provides bpf_program__insns() API to get access to
+> underlying bpf_insn array, do you think it's possible to switch perf
+> to that instead?
+
+look like it's used to generate prologs for programs:
+  a08357d8dc7d perf bpf: Generate prologue for BPF programs
+
+the author Wang Nan haven't touched that for some time,
+I'm cc-ing other folks that were involved..  Arnaldo? ;-)
+
+if nobody volunteers, I can check on that
+
+jirka
 
