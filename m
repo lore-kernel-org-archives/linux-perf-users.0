@@ -2,282 +2,111 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFFEC433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Dec 2021 21:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF32C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Dec 2021 04:25:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237428AbhLUV60 (ORCPT
+        id S242355AbhLVEZ6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 21 Dec 2021 16:58:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37292 "EHLO
+        Tue, 21 Dec 2021 23:25:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230251AbhLUV60 (ORCPT
+        with ESMTP id S242328AbhLVEZ6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 21 Dec 2021 16:58:26 -0500
-Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAC3CC061574;
-        Tue, 21 Dec 2021 13:58:25 -0800 (PST)
-Received: by mail-io1-xd29.google.com with SMTP id c3so368943iob.6;
-        Tue, 21 Dec 2021 13:58:25 -0800 (PST)
+        Tue, 21 Dec 2021 23:25:58 -0500
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 016C2C061574;
+        Tue, 21 Dec 2021 20:25:57 -0800 (PST)
+Received: by mail-pl1-x62c.google.com with SMTP id m24so901901pls.10;
+        Tue, 21 Dec 2021 20:25:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QZASVIBK/qYtP7TbvZbJC9S353QGDcMH4KZPgcDV5DQ=;
-        b=FSSbZ2KKk1m0wX1wT7Y8lZAYhK/05ULNtHUhl0VsvCZ54SdsJFbBpoOUq/KSMwptoe
-         Bwz8FG/SGjOKCkgmzZ7jghCHXfYsV539PHZa/alqqiueEXRrjsusDORSuve6RZC1Sz2f
-         W8rxhL1BBFsi7VJgigAXYF870D2qbkM2bcB3OhNVTDpbfXihHBaP/jcJAOMYGdKXvi42
-         ZvFw4Ru+RQhfRTTSe8UQT180NrSg9BUIfd056gXJBwyh5PL3Rdjs93fkn3mjhjvNObAn
-         23XCGSq2cY8V4alxWklDlKgUBa1GDnH68OFDAvDjLsCErF0P9T1l3nsOPxGE1BWkmX57
-         KbeQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=cwaFCWcWFdyBnD73ZnB6E87tfdGmS+vFyGgdXBUbUJM=;
+        b=X3pr4swJr3dZN1csqWdYUIpF/JzvcCpaUbVf8sCmBD/yZ1OqWXX0jMHVHVIKRv4FFP
+         l5hWB9IighbpUhuRkYCrDkW07kqRGsozPBR2fOT5czYOMLhROaegAmkPgcu9qTYWzOiz
+         Gjw5EGID7GICcKQ4+1TkFvVmqFrx2C8CzoIfdGk6CyNBjpQks//ZfswsTIWK4fx38YUE
+         BV7JPn2ABlf5+4CaJpu1AVxvcofP2UTZ5mCqx5oyYSA6Hvl9ZVbeW8A6VjLe83Fhhwx7
+         f9suguWixsFy5ujYZatAtiHMYmOhkRY9XgyAZege2RPDY+kL/6xppJOoO/d5oHljJaUk
+         D21w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QZASVIBK/qYtP7TbvZbJC9S353QGDcMH4KZPgcDV5DQ=;
-        b=VDixjImXFpV7wE0n1yITT1l0bZQQ5kQ0/F6GdCEVflXZOsN5MWSrB3QUwKLCOPwEoE
-         tWGXwxO/9HEzXglmpjlnWGbI3tU/zCl/cOMDoNj9nsLXb6CJ8q8YOVelhIsEQe0Y8P3E
-         xF6eP4RAsuv1iMKOGPiMLmpEtH4W+2uXoYpe0/3oPM+GPhG0BuBs5fFsbGyG6pnszKH3
-         zTIPX0J2zG2Vuejv0km7ANp16LNcLwZbXO8vC8Ss0iv11R3A6Yh3T7sdT380IcBKJw5y
-         uqCIG1CHCB85alhor554d3TvO/bVVIAh0/8ReQ+gjERw5yoKCofsSvFRXmepjK8/nlF6
-         Psxw==
-X-Gm-Message-State: AOAM532NVyfIb2NzdT9SJ33dqUE36eIhXbif+GJ9Pc6HI9omaCnnCszU
-        wVGYzlv7OtXb8mCl4e31XwjqcgjYDDzhf03T1Pna0Onz
-X-Google-Smtp-Source: ABdhPJyAqUYP5iC3o5Hs/GtgwA4naq3LrTSiwGejgkZnH+UX1qzngDgHujdrlluHO/CI351FTAog/HOKiV7nIYLJaOg=
-X-Received: by 2002:a5d:9f01:: with SMTP id q1mr71995iot.144.1640123905245;
- Tue, 21 Dec 2021 13:58:25 -0800 (PST)
-MIME-Version: 1.0
-References: <20211216222108.110518-1-christylee@fb.com> <20211216222108.110518-3-christylee@fb.com>
- <YcGO271nDvfMeSlK@krava>
-In-Reply-To: <YcGO271nDvfMeSlK@krava>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 21 Dec 2021 13:58:14 -0800
-Message-ID: <CAEf4BzZpNvEtfsVHUJGfwi_1xM+7-ohBPKPrRo--X=fYkYLrsw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 2/2] perf: stop using deprecated
- bpf__object_next() API
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Christy Lee <christylee@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Christy Lee <christyc.y.lee@gmail.com>,
-        bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=cwaFCWcWFdyBnD73ZnB6E87tfdGmS+vFyGgdXBUbUJM=;
+        b=DJs/QgcvnBe1qETTtz4rF+dgkyeGQ/trZjsndOh1IPs6/wXFdzUGsS90DyilQGDCBh
+         rQul5rmIlOInMHCJLwAHwk6+hnay0FOnJQZJxcCXAcDVJuc56qpUExle5E7OX+aSo4aI
+         ngTHjb4lWV35C2QqC9oVotlKVs54DKheWTfbZ/Qo+GG1akuYOeoBIhW2eExfjKmTHLxu
+         FgZv0k2v9ykdgKXIfk5jLltt8SnQdTF22mSGx7WAUz4OHcZdfiKtUE7+ZoLIGTVCt1Qn
+         T9qJ2jtizv+w4J8MlFjIrRL7flm9LGfSkqqDdHl5H62jO10Q1HWhSJij28cHdnlPx4JF
+         zubQ==
+X-Gm-Message-State: AOAM532+T9CeYSlHfahN6L1zX6RUISNScggNIXfTDIa1OQRv934bQCE/
+        PjjzZjGmZ7KdXIaeV2ILXus=
+X-Google-Smtp-Source: ABdhPJyE6PKPifVAkMPp1/9e3UYwKPr4ocE+wCM+foFyE40yj1+uUhbUnrqiSUdSQ2rCbARyGN6QgA==
+X-Received: by 2002:a17:90b:1b52:: with SMTP id nv18mr1753237pjb.43.1640147157550;
+        Tue, 21 Dec 2021 20:25:57 -0800 (PST)
+Received: from localhost.localdomain ([159.226.95.43])
+        by smtp.googlemail.com with ESMTPSA id f14sm629228pfv.215.2021.12.21.20.25.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Dec 2021 20:25:57 -0800 (PST)
+From:   Miaoqian Lin <linmq006@gmail.com>
+To:     acme@kernel.org
+Cc:     ak@linux.intel.com, alexander.shishkin@linux.intel.com,
+        german.gomez@arm.com, irogers@google.com, jolsa@redhat.com,
+        linmq006@gmail.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        mingo@redhat.com, namhyung@kernel.org, peterz@infradead.org
+Subject: [PATCH v4] perf expr: Fix return value of ids__new
+Date:   Wed, 22 Dec 2021 04:25:46 +0000
+Message-Id: <20211222042546.6750-1-linmq006@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <YcHii0u6dusZFt6E@kernel.org>
+References: <YcHii0u6dusZFt6E@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Dec 21, 2021 at 12:23 AM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Thu, Dec 16, 2021 at 02:21:08PM -0800, Christy Lee wrote:
-> > bpf__object_next is deprecated, track bpf_objects directly in
-> > perf instead.
-> >
-> > Signed-off-by: Christy Lee <christylee@fb.com>
-> > Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> > ---
-> >  tools/perf/util/bpf-loader.c | 72 +++++++++++++++++++++++++++---------
-> >  tools/perf/util/bpf-loader.h |  1 +
-> >  2 files changed, 55 insertions(+), 18 deletions(-)
-> >
-> > diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-> > index 528aeb0ab79d..9e3988fd719a 100644
-> > --- a/tools/perf/util/bpf-loader.c
-> > +++ b/tools/perf/util/bpf-loader.c
-> > @@ -29,9 +29,6 @@
-> >
-> >  #include <internal/xyarray.h>
-> >
-> > -/* temporarily disable libbpf deprecation warnings */
-> > -#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-> > -
-> >  static int libbpf_perf_print(enum libbpf_print_level level __attribute__((unused)),
-> >                             const char *fmt, va_list args)
-> >  {
-> > @@ -49,6 +46,36 @@ struct bpf_prog_priv {
-> >       int *type_mapping;
-> >  };
-> >
-> > +struct bpf_perf_object {
-> > +     struct bpf_object *obj;
-> > +     struct list_head list;
-> > +};
-> > +
-> > +static LIST_HEAD(bpf_objects_list);
->
-> hum, so this duplicates libbpf's bpf_objects_list,
-> how do objects get on this list?
+callers of ids__new() function only do NULL checking for the return
+value. ids__new() calles hashmap__new(), which may return
+ERR_PTR(-ENOMEM). Instead of changing the checking one-by-one.
+return NULL instead of ERR_PTR(-ENOMEM) to keep
+consistent.
 
-yep, this list needs to be updated on perf side each time
-bpf_object__open() (and any variant of open) is called.
+Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+Tested-by: German Gomez <german.gomez@arm.com>
+Reviewed-by: German Gomez <german.gomez@arm.com>
+---
+Changes in v4:
+fix the separator in commit message.
+---
+ tools/perf/util/expr.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
->
-> could you please put more comments in changelog
-> and share how you tested this?
+diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+index 1d532b9fed29..f225247acc01 100644
+--- a/tools/perf/util/expr.c
++++ b/tools/perf/util/expr.c
+@@ -12,6 +12,7 @@
+ #include "expr-bison.h"
+ #include "expr-flex.h"
+ #include "smt.h"
++#include <linux/err.h>
+ #include <linux/kernel.h>
+ #include <linux/zalloc.h>
+ #include <ctype.h>
+@@ -65,7 +66,12 @@ static bool key_equal(const void *key1, const void *key2,
+ 
+ struct hashmap *ids__new(void)
+ {
+-	return hashmap__new(key_hash, key_equal, NULL);
++	struct hashmap *hash;
++
++	hash = hashmap__new(key_hash, key_equal, NULL);
++	if (IS_ERR(hash))
++		return NULL;
++	return hash;
+ }
+ 
+ void ids__free(struct hashmap *ids)
+-- 
+2.17.1
 
-I actually have no idea how to test this as well, can you please share
-some ideas?
-
-
-BTW, while we are at it, Jiri, do you have any good ideas on how to
-remove perf's usage of bpf_program__set_priv() and
-bpf_program__set_prep() APIs in perf code base? These APIs are
-deprecated as well, but seems like perf relies on them pretty heavily.
-What would be the best way to stop using them?
-
-For set_priv(), I think it should be totally fine to maintain a
-separate lookup hash table by `struct bpf_program *` or its name, that
-shouldn't be hard.
-
-But for set_prep(), what does perf use it for? I assume for cloning
-BPF programs, right? Anything else besides that? If it's just for
-cloning, libbpf provides bpf_program__insns() API to get access to
-underlying bpf_insn array, do you think it's possible to switch perf
-to that instead?
-
-
-
->
-> thanks,
-> jirka
->
-> > +
-> > +struct bpf_perf_object *bpf_perf_object__next(struct bpf_perf_object *prev)
-> > +{
-> > +     struct bpf_perf_object *next;
-> > +
-> > +     if (!prev)
-> > +             next = list_first_entry(&bpf_objects_list,
-> > +                                     struct bpf_perf_object, list);
-> > +     else
-> > +             next = list_next_entry(prev, list);
-> > +
-> > +     /* Empty list is noticed here so don't need checking on entry. */
-> > +     if (&next->list == &bpf_objects_list)
-> > +             return NULL;
-> > +
-> > +     return next;
-> > +}
-> > +
-> > +#define bpf_perf_object__for_each(perf_obj, tmp, obj)                          \
-> > +     for ((perf_obj) = bpf_perf_object__next(NULL),                         \
-> > +         (tmp) = bpf_perf_object__next(perf_obj), (obj) = NULL;             \
-> > +          (perf_obj) != NULL; (perf_obj) = (tmp),                           \
-> > +         (tmp) = bpf_perf_object__next(tmp), (obj) = (perf_obj)->obj)
-> > +
-> >  static bool libbpf_initialized;
-> >
-> >  struct bpf_object *
-> > @@ -113,9 +140,10 @@ struct bpf_object *bpf__prepare_load(const char *filename, bool source)
-> >
-> >  void bpf__clear(void)
-> >  {
-> > -     struct bpf_object *obj, *tmp;
-> > +     struct bpf_perf_object *perf_obj, *tmp;
-> > +     struct bpf_object *obj;
-> >
-> > -     bpf_object__for_each_safe(obj, tmp) {
-> > +     bpf_perf_object__for_each(perf_obj, tmp, obj) {
-> >               bpf__unprobe(obj);
-> >               bpf_object__close(obj);
-> >       }
-> > @@ -621,8 +649,12 @@ static int hook_load_preprocessor(struct bpf_program *prog)
-> >       if (err)
-> >               return err;
-> >
-> > +/* temporarily disable libbpf deprecation warnings */
-> > +#pragma GCC diagnostic push
-> > +#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-> >       err = bpf_program__set_prep(prog, priv->nr_types,
-> >                                   preproc_gen_prologue);
-> > +#pragma GCC diagnostic pop
-> >       return err;
-> >  }
-> >
-> > @@ -776,7 +808,11 @@ int bpf__foreach_event(struct bpf_object *obj,
-> >                       if (priv->need_prologue) {
-> >                               int type = priv->type_mapping[i];
-> >
-> > +/* temporarily disable libbpf deprecation warnings */
-> > +#pragma GCC diagnostic push
-> > +#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-> >                               fd = bpf_program__nth_fd(prog, type);
-> > +#pragma GCC diagnostic pop
-> >                       } else {
-> >                               fd = bpf_program__fd(prog);
-> >                       }
-> > @@ -1498,10 +1534,11 @@ apply_obj_config_object(struct bpf_object *obj)
-> >
-> >  int bpf__apply_obj_config(void)
-> >  {
-> > -     struct bpf_object *obj, *tmp;
-> > +     struct bpf_perf_object *perf_obj, *tmp;
-> > +     struct bpf_object *obj;
-> >       int err;
-> >
-> > -     bpf_object__for_each_safe(obj, tmp) {
-> > +     bpf_perf_object__for_each(perf_obj, tmp, obj) {
-> >               err = apply_obj_config_object(obj);
-> >               if (err)
-> >                       return err;
-> > @@ -1510,26 +1547,25 @@ int bpf__apply_obj_config(void)
-> >       return 0;
-> >  }
-> >
-> > -#define bpf__for_each_map(pos, obj, objtmp)  \
-> > -     bpf_object__for_each_safe(obj, objtmp)  \
-> > -             bpf_object__for_each_map(pos, obj)
-> > +#define bpf__perf_for_each_map(perf_obj, tmp, obj, map)                        \
-> > +     bpf_perf_object__for_each(perf_obj, tmp, obj)                          \
-> > +             bpf_object__for_each_map(map, obj)
-> >
-> > -#define bpf__for_each_map_named(pos, obj, objtmp, name)      \
-> > -     bpf__for_each_map(pos, obj, objtmp)             \
-> > -             if (bpf_map__name(pos) &&               \
-> > -                     (strcmp(name,                   \
-> > -                             bpf_map__name(pos)) == 0))
-> > +#define bpf__perf_for_each_map_named(perf_obj, tmp, obj, map, name)            \
-> > +     bpf__perf_for_each_map(perf_obj, tmp, obj, map)                        \
-> > +             if (bpf_map__name(map) && (strcmp(name, bpf_map__name(map)) == 0))
-> >
-> >  struct evsel *bpf__setup_output_event(struct evlist *evlist, const char *name)
-> >  {
-> >       struct bpf_map_priv *tmpl_priv = NULL;
-> > -     struct bpf_object *obj, *tmp;
-> > +     struct bpf_perf_object *perf_obj, *tmp;
-> > +     struct bpf_object *obj;
-> >       struct evsel *evsel = NULL;
-> >       struct bpf_map *map;
-> >       int err;
-> >       bool need_init = false;
-> >
-> > -     bpf__for_each_map_named(map, obj, tmp, name) {
-> > +     bpf__perf_for_each_map_named(perf_obj, tmp, obj, map, name) {
-> >               struct bpf_map_priv *priv = bpf_map__priv(map);
-> >
-> >               if (IS_ERR(priv))
-> > @@ -1565,7 +1601,7 @@ struct evsel *bpf__setup_output_event(struct evlist *evlist, const char *name)
-> >               evsel = evlist__last(evlist);
-> >       }
-> >
-> > -     bpf__for_each_map_named(map, obj, tmp, name) {
-> > +     bpf__perf_for_each_map_named(perf_obj, tmp, obj, map, name) {
-> >               struct bpf_map_priv *priv = bpf_map__priv(map);
-> >
-> >               if (IS_ERR(priv))
-> > diff --git a/tools/perf/util/bpf-loader.h b/tools/perf/util/bpf-loader.h
-> > index 5d1c725cea29..95262b7e936f 100644
-> > --- a/tools/perf/util/bpf-loader.h
-> > +++ b/tools/perf/util/bpf-loader.h
-> > @@ -53,6 +53,7 @@ typedef int (*bpf_prog_iter_callback_t)(const char *group, const char *event,
-> >
-> >  #ifdef HAVE_LIBBPF_SUPPORT
-> >  struct bpf_object *bpf__prepare_load(const char *filename, bool source);
-> > +struct bpf_perf_object *bpf_perf_object__next(struct bpf_perf_object *prev);
-> >  int bpf__strerror_prepare_load(const char *filename, bool source,
-> >                              int err, char *buf, size_t size);
-> >
-> > --
-> > 2.30.2
-> >
->
