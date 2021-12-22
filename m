@@ -2,191 +2,102 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A6BC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Dec 2021 13:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E85AC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Dec 2021 21:33:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234247AbhLVNo5 (ORCPT
+        id S234639AbhLVVdY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Dec 2021 08:44:57 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:32298 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229834AbhLVNo5 (ORCPT
+        Wed, 22 Dec 2021 16:33:24 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60112 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229732AbhLVVdY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Dec 2021 08:44:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1640180696;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=EUX0ogKpf3d14pHpuY30V0wv60QYvAzDmFZeRw8TXic=;
-        b=HvqWn3xliTo9gmnK3Ni/QVq5tLG2XP78f8kBKpDocDjq2On/meDkU4zz4JhI6bLdvPjeEf
-        f/SHuBx7m4wHrZOOgRJTNZK8WwQlR4fxQaW1Awhg1l5hfDo9tjO2ebPED1Y1jbO2s1sI84
-        C+KzI1En4JMm12AB1fo7vpGHRW1Rnog=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-656-JCTrY0znOUeYQmeyINCBdQ-1; Wed, 22 Dec 2021 08:44:55 -0500
-X-MC-Unique: JCTrY0znOUeYQmeyINCBdQ-1
-Received: by mail-ed1-f70.google.com with SMTP id dm10-20020a05640222ca00b003f808b5aa18so1900549edb.4
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 05:44:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=EUX0ogKpf3d14pHpuY30V0wv60QYvAzDmFZeRw8TXic=;
-        b=hnwZ5Eon46YXEcoO4qtBav/Kz94hsYjnxTkFbELGgsVSPdO63nFi/Fy9+bG4ExUlfB
-         XD9KFRqvNxxeDInYvaGNPuEJsFRPUh+u+7kJo25hT9eYlgFbOx4Wk/AtcJQMOQS/W0x3
-         52NmrLuzT52QF6UBxzk/MvSN+KOHgT2PsUZ9lSzpljq0Nqm03RAVxXwC59rjQIC3xo6U
-         OEIIBwqH9MUe8PUUiwyA73EJnKdKdraLHvyCEbkJBV5912a9Js31ey/MnWufNxSk51fs
-         o3Gt99PnJhEvqpsiG1eFCwiNkHmKfNTprwp2DVEHRdBCDS52YsvoIH1h7aQHwtckLd/G
-         /YRQ==
-X-Gm-Message-State: AOAM531nhIIUWu/2KnBc6yYaw7XmwNwyDuHF/44z87b3mmUb/Me9EVyG
-        CzAsmceKxU71v+mC6eLngy7P+IOzJhlBLXLkzNUx7+Hgzia5LIi8GWcKkn6aED2+nojOzoSWg3u
-        UXiPN56MxWFn8Mfl2I3D3lv6LKdqfaw==
-X-Received: by 2002:a17:907:8a06:: with SMTP id sc6mr931765ejc.214.1640180694389;
-        Wed, 22 Dec 2021 05:44:54 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzH2Ch4giRTpV+TGELmHFEzgTDQlBiWQMnDDaSrIPTcmLp/t4Ey8yKkKy7hlVrNJH2pmznoPA==
-X-Received: by 2002:a17:907:8a06:: with SMTP id sc6mr931742ejc.214.1640180694125;
-        Wed, 22 Dec 2021 05:44:54 -0800 (PST)
-Received: from krava ([83.240.60.218])
-        by smtp.gmail.com with ESMTPSA id 12sm742338eja.187.2021.12.22.05.44.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Dec 2021 05:44:53 -0800 (PST)
-Date:   Wed, 22 Dec 2021 14:44:52 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Christy Lee <christylee@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Christy Lee <christyc.y.lee@gmail.com>,
-        bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>,
-        He Kuang <hekuang@huawei.com>, Wang Nan <wangnan0@huawei.com>,
-        Wang ShaoBo <bobo.shaobowang@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: Re: [PATCH bpf-next 2/2] perf: stop using deprecated
- bpf__object_next() API
-Message-ID: <YcMr1LeP6zUBdCiK@krava>
-References: <20211216222108.110518-1-christylee@fb.com>
- <20211216222108.110518-3-christylee@fb.com>
- <YcGO271nDvfMeSlK@krava>
- <CAEf4BzZpNvEtfsVHUJGfwi_1xM+7-ohBPKPrRo--X=fYkYLrsw@mail.gmail.com>
+        Wed, 22 Dec 2021 16:33:24 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1BMJBqRe024450
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 21:33:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=to : subject : from :
+ message-id : date : content-type : content-transfer-encoding :
+ mime-version; s=pp1; bh=5fjH0v+auEBXbaltPEj5RJ0gjpCPHmQLHlSv6VDQWKg=;
+ b=oyvgPOctUV6wmIPBzrXFaG165NAxHOfKijA7a4+yln2qgR6WDhLZqHBUjAFVlkF5aiMr
+ w9GJkP3DpH3wyZjDlEFsnYMIKkslU7jLF3y6gSG832TbYpB11b4YDIYSS9Cjs7/goEbg
+ yN0PN4yGMlqnlNxNMgSyhLUaOUIfo4CDl7o9p229ok3hO4/BPOC6EkXega1oeUiX/o/e
+ K5P594cXI70dos68Q9Dhg2ul9nK2OJeGzv2JkGfKd183yUBwpVPtT5CUbpq3J+57oyu/
+ hRQxNsVor3ZaIRIzvdmAIDzXB7sCgRYLmfV35HMq48pyAuwK4KnSZEWU7sCysyVvs1nm yg== 
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3d49y9aas4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 21:33:24 +0000
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1BMLNVX8028946
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 21:33:23 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma01wdc.us.ibm.com with ESMTP id 3d179b66qy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 21:33:23 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1BMLXM0H8585992
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 21:33:22 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 98D41B2066
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 21:33:22 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7C983B2065
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 21:33:22 +0000 (GMT)
+Received: from mww0091.wdc07m.mail.ibm.com (unknown [9.208.69.236])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTPS
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 21:33:22 +0000 (GMT)
+To:     linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf: Fix perf-record manual typo
+From:   "Kevin Grigorenko" <kevin.grigorenko@us.ibm.com>
+Message-ID: <OFF9778928.59F62D85-ON002587B3.00757F55-882587B3.00766874@ibm.com>
+Date:   Wed, 22 Dec 2021 14:33:20 -0700
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzZpNvEtfsVHUJGfwi_1xM+7-ohBPKPrRo--X=fYkYLrsw@mail.gmail.com>
+X-KeepSent: F9778928:59F62D85-002587B3:00757F55; name=$KeepSent; type=4
+X-Mailer: HCL Notes Build V1101FP4_10012021 October 01, 2021
+X-Disclaimed: 46975
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 3jnq213VMJcbM9MTM790hBdpReZ5M357
+X-Proofpoint-GUID: 3jnq213VMJcbM9MTM790hBdpReZ5M357
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
+ definitions=2021-12-22_09,2021-12-22_01,2021-12-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ phishscore=0 adultscore=0 mlxlogscore=999 spamscore=0 suspectscore=0
+ impostorscore=0 malwarescore=0 clxscore=1011 bulkscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2112220112
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Dec 21, 2021 at 01:58:14PM -0800, Andrii Nakryiko wrote:
-> On Tue, Dec 21, 2021 at 12:23 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> >
-> > On Thu, Dec 16, 2021 at 02:21:08PM -0800, Christy Lee wrote:
-> > > bpf__object_next is deprecated, track bpf_objects directly in
-> > > perf instead.
-> > >
-> > > Signed-off-by: Christy Lee <christylee@fb.com>
-> > > Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> > > ---
-> > >  tools/perf/util/bpf-loader.c | 72 +++++++++++++++++++++++++++---------
-> > >  tools/perf/util/bpf-loader.h |  1 +
-> > >  2 files changed, 55 insertions(+), 18 deletions(-)
-> > >
-> > > diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-> > > index 528aeb0ab79d..9e3988fd719a 100644
-> > > --- a/tools/perf/util/bpf-loader.c
-> > > +++ b/tools/perf/util/bpf-loader.c
-> > > @@ -29,9 +29,6 @@
-> > >
-> > >  #include <internal/xyarray.h>
-> > >
-> > > -/* temporarily disable libbpf deprecation warnings */
-> > > -#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-> > > -
-> > >  static int libbpf_perf_print(enum libbpf_print_level level __attribute__((unused)),
-> > >                             const char *fmt, va_list args)
-> > >  {
-> > > @@ -49,6 +46,36 @@ struct bpf_prog_priv {
-> > >       int *type_mapping;
-> > >  };
-> > >
-> > > +struct bpf_perf_object {
-> > > +     struct bpf_object *obj;
-> > > +     struct list_head list;
-> > > +};
-> > > +
-> > > +static LIST_HEAD(bpf_objects_list);
-> >
-> > hum, so this duplicates libbpf's bpf_objects_list,
-> > how do objects get on this list?
-> 
-> yep, this list needs to be updated on perf side each time
-> bpf_object__open() (and any variant of open) is called.
-> 
-> >
-> > could you please put more comments in changelog
-> > and share how you tested this?
-> 
-> I actually have no idea how to test this as well, can you please share
-> some ideas?
-> 
+From: Kevin Grigorenko <kevin.grigorenko@us.ibm.com>
+Date: Wed, 22 Dec 2021 13:21:44 -0800
+Subject: [PATCH] perf: Fix perf-record manual typo
 
-I don't use it, I just know it's there.. that's why I asked ;-)
+Signed-off-by: Kevin Grigorenko <kevin.grigorenko@us.ibm.com>
+---
+ tools/perf/Documentation/perf-record.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-it's possible to specify bpf program on the perf command line
-to be attached to event, like:
+diff --git a/tools/perf/Documentation/perf-record.txt=20
+b/tools/perf/Documentation/perf-record.txt
+index 3cf7bac67239..52f98d53a97e 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -258,7 +258,7 @@ OPTIONS
+        Call Frame Information) or "lbr" (Hardware Last Branch Record
+        facility).
+=20
+-       In some systems, where binaries are build with gcc
++       In some systems, where binaries are built with gcc
+        --fomit-frame-pointer, using the "fp" method will produce bogus
+        call graphs, using "dwarf", if available (perf tools linked to
+        the libunwind or libdw library) should be used instead.
+--=20
+2.33.0
 
-      # cat tools/perf/examples/bpf/hello.c
-      #include <stdio.h>
-    
-      int syscall_enter(openat)(void *args)
-      {
-              puts("Hello, world\n");
-              return 0;
-      }
-    
-      license(GPL);
-      #
-      # perf trace -e openat,tools/perf/examples/bpf/hello.c cat /etc/passwd > /dev/null
-         0.016 (         ): __bpf_stdout__:Hello, world
-         0.018 ( 0.010 ms): cat/9079 openat(dfd: CWD, filename: /etc/ld.so.cache, flags: CLOEXEC) = 3
-         0.057 (         ): __bpf_stdout__:Hello, world
-         0.059 ( 0.011 ms): cat/9079 openat(dfd: CWD, filename: /lib64/libc.so.6, flags: CLOEXEC) = 3
-         0.417 (         ): __bpf_stdout__:Hello, world
-         0.419 ( 0.009 ms): cat/9079 openat(dfd: CWD, filename: /etc/passwd) = 3
-      #
-
-I took that example from commit message
-
-> 
-> BTW, while we are at it, Jiri, do you have any good ideas on how to
-> remove perf's usage of bpf_program__set_priv() and
-> bpf_program__set_prep() APIs in perf code base? These APIs are
-> deprecated as well, but seems like perf relies on them pretty heavily.
-> What would be the best way to stop using them?
-> 
-> For set_priv(), I think it should be totally fine to maintain a
-> separate lookup hash table by `struct bpf_program *` or its name, that
-> shouldn't be hard.
-
-ok, so there's no alternative api for this one then
-
-> 
-> But for set_prep(), what does perf use it for? I assume for cloning
-> BPF programs, right? Anything else besides that? If it's just for
-> cloning, libbpf provides bpf_program__insns() API to get access to
-> underlying bpf_insn array, do you think it's possible to switch perf
-> to that instead?
-
-look like it's used to generate prologs for programs:
-  a08357d8dc7d perf bpf: Generate prologue for BPF programs
-
-the author Wang Nan haven't touched that for some time,
-I'm cc-ing other folks that were involved..  Arnaldo? ;-)
-
-if nobody volunteers, I can check on that
-
-jirka
 
