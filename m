@@ -2,57 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2ED7C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Dec 2021 18:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 270AFC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Dec 2021 18:56:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349872AbhLWSj7 (ORCPT
+        id S235761AbhLWS4i (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Dec 2021 13:39:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45968 "EHLO
+        Thu, 23 Dec 2021 13:56:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349865AbhLWSj5 (ORCPT
+        with ESMTP id S233751AbhLWS4h (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Dec 2021 13:39:57 -0500
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EB65C061757
-        for <linux-perf-users@vger.kernel.org>; Thu, 23 Dec 2021 10:39:57 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id j204-20020a2523d5000000b005c21574c704so11326295ybj.13
-        for <linux-perf-users@vger.kernel.org>; Thu, 23 Dec 2021 10:39:57 -0800 (PST)
+        Thu, 23 Dec 2021 13:56:37 -0500
+Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94B66C061756
+        for <linux-perf-users@vger.kernel.org>; Thu, 23 Dec 2021 10:56:37 -0800 (PST)
+Received: by mail-qk1-x74a.google.com with SMTP id bm33-20020a05620a19a100b0046f1b6f3526so4942352qkb.21
+        for <linux-perf-users@vger.kernel.org>; Thu, 23 Dec 2021 10:56:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=4EEDTZmDfhZAbqDhiNkD0X+w29KWo6DZt4UFTZYEt94=;
-        b=oxili4+eOhdfDfSC+JP6bfRidYbINU+gPPIep1nyhDU/M07MpIXBUEI7cuxyVGWjGg
-         WMR8FqgyYYHCnCpK5PHC/YTNtoUqgDqP+cGY02KwD7WeQnSLiSt1veAax7lpPE4xuBSE
-         C68MqSyRxLTbeeYx9OsiZaH3cjyfNrtjGSLzPF2NB07SGXHeBpZp+KDSeX3dsL7OD3b2
-         XKhXAZh9Nb+1afy4ehkL+4UvlUt11bJ8Ftg+MW09sRI1WUStAydlnDoX1m4/3MTgbeAk
-         3FBj5vAfQY85JPKXkPDiXtZ1J74WyBcmtwm1m73yjIGd3MOkCZjSMhvREQuQ2FeWmWwP
-         pgbg==
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=H4ACt7rfkBpsc74qNnBZfgqCqIdVNk193chJmQMr9+M=;
+        b=DVxIespipHT5nxnHKamVFs59LDtjDPZp0k/DxdnqykLGJeLDkjVjpG6m2YD6ZhVbTj
+         9uHkfIGBfJiyc9bEkfBkXUlD/m/51budPHkxdKVVcM0mj185wj7uQn632DWI20D1u7SS
+         NpwcsJqW5HsXXGjJYZqjqZxTeCPu3FhwPdB/Xsiog01Fx/lZARLq1QbQ3mRtu2ne3mKs
+         B8R31sN3L3OLZjDXGR5J/WEuZ/kYuuW+XOyIfr0r8OcNGyj323081dPCYECRFZYkQvG2
+         kQqkgDB+6prHjacvZgDyn98Hx9BOiaYUUNrXA8eztFu+KWqxKrP0NuuOq0Pe9Ct9l1pm
+         UMNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=4EEDTZmDfhZAbqDhiNkD0X+w29KWo6DZt4UFTZYEt94=;
-        b=OwLVaOsN+lsE8go47HSs8ilhwVS2/Cq3DtEB/0DFoimstHovxv+caXYcsb/X+VazZM
-         4vVRc37WzuzOljg3/YLMKEPYGel1QeaFhmx7+02a6TRM4ahQu2bdBlXL95nF5UXqtTvO
-         LtUcQVearoq0UiTAJhGMRVe0A9KhjLxOUPUhbaEmHkeZheaztuGzlwaz19p690HZACPQ
-         TPMOzfdkNy8VY2RiBFLxOgr5csqOug4dqX7LpYWbOmxK+WD4ITq/j7zEKZ9ETXakDDXr
-         IosYldcYKUIOnWBuBxDxxP20ObSFNdcBEyY+Q5bpvxDftZq2gZ4+feUECziGD291W0c0
-         frPQ==
-X-Gm-Message-State: AOAM530MO86UOZCEnHp1jCt71ykC+pRy9TTX4/f48NmvFaz+tRWGjw7N
-        2YuUfxyxCIyd+7mJPkETX8jJNsuIpMGb
-X-Google-Smtp-Source: ABdhPJzD/T2ne/P0+Tfvokle5nmv3pghifBobxdpm9J7oq4IdT+Zts20UZJKTrPxj3/sxdHdb4skmHVL7Z+x
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=H4ACt7rfkBpsc74qNnBZfgqCqIdVNk193chJmQMr9+M=;
+        b=cJmyF25X3qDCTeMi6q1ZON6ASg1PeG/fFZv5i0KKhOH27k58RIZIvzngwk7ZtM+kB2
+         6XheTB9tr6ub6wftsKvaud5piVpm9RKaIiMUFPAYDRC6uDb+XObRJ7a76ibPaAuhIyEc
+         j3qvjrCiRYUQFepKD/F8wpkSID2C4XPJ7GOe7ogxrU8cSqpn3uxOIu82PRMsCtU3eodk
+         Z29IkDIUojl5NniH0SaQjmWvTqAEUFNwaMElH/GMxG7VFQ7YlK0kTnduw6xyhiR9s26X
+         AUUQYxcXB1zHP7TOM4i7m/f3KoX4kzGI7i5hVDHznplNpffvmhmRXCwPOJiBcUHweBUk
+         mCZw==
+X-Gm-Message-State: AOAM530sGA1xUCyT2Y5Qo9MJdHe66A+o/XrdACk5ZgewaOR6GOk5Olss
+        TWy5qpnZ/ZV2y3Rh7+sHaBg8cfcZeXXJ
+X-Google-Smtp-Source: ABdhPJzO8WL9/8hPrqFSRQt/5bBdRkwvmL5i+9Ip+9gryLC2Cp+NABifKNe+Hfb5IPIt+7tamPCCHFeI4yNi
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:1c9d:afe4:ff2f:9382])
- (user=irogers job=sendgmr) by 2002:a05:6902:1144:: with SMTP id
- p4mr5262901ybu.189.1640284796416; Thu, 23 Dec 2021 10:39:56 -0800 (PST)
-Date:   Thu, 23 Dec 2021 10:39:48 -0800
-In-Reply-To: <20211223183948.3423989-1-irogers@google.com>
-Message-Id: <20211223183948.3423989-2-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:622a:f:: with SMTP id
+ x15mr2812171qtw.481.1640285796666; Thu, 23 Dec 2021 10:56:36 -0800 (PST)
+Date:   Thu, 23 Dec 2021 10:56:22 -0800
+Message-Id: <20211223185622.3435128-1-irogers@google.com>
 Mime-Version: 1.0
-References: <20211223183948.3423989-1-irogers@google.com>
 X-Mailer: git-send-email 2.34.1.307.g9b7440fafd-goog
-Subject: [PATCH v2 2/2] perf evsel: Improve error message for uncore events
+Subject: [PATCH v3] perf test: Make metric testing more robust.
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -61,7 +57,8 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     eranian@google.com, Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
@@ -69,54 +66,76 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When a group has multiple events and the leader fails it can yield
-errors like:
+When testing metric expressions we fake counter values from 1 going
+upward. For some metrics this can yield negative values that are clipped
+to zero, and then cause divide by zero failures. Such clipping is
+questionable but may be a result of tools automatically generating
+metrics. A workaround for this case is to try a second time with counter
+values going in the opposite direction.
 
-$ perf stat -e '{uncore_imc/cas_count_read/},instructions' /bin/true
-Error:
-The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (uncore_imc/cas_count_read/).
-/bin/dmesg | grep -i perf may provide additional information.
+This case was seen in a metric like:
+  event1 / max(event2 - event3, 0)
+But it may also happen in more sensible metrics like:
+  event1 / (event2 + event3 - 1 - event4)
 
-However, when not the group leader <not supported> is given:
-
-$ perf stat -e '{instructions,uncore_imc/cas_count_read/}' /bin/true
-...
-         1,619,057      instructions
-   <not supported> MiB  uncore_imc/cas_count_read/
-
-This is necessary because get_group_fd will fail if the leader fails and
-is the direct result of the check on line 750 of builtin-stat.c in
-stat_handle_error that returns COUNTER_SKIP for the latter case.
-
-This patch improves the error message to:
-
-$ perf stat -e '{uncore_imc/cas_count_read/},instructions' /bin/true
-Error:
-Invalid event (uncore_imc/cas_count_read/) in per-thread mode, enable system wide with '-a'.
-
-v2. Changed the test to use !target__has_cpu as suggested by Namhyung
-    Kim.
+v2. Rebase and more detail in commit message.
+v3. Is a rebase.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/evsel.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/perf/tests/pmu-events.c | 32 ++++++++++++++++++++++++++------
+ 1 file changed, 26 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 656c30b988ce..a0acf53a2510 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2931,6 +2931,10 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
- 			return scnprintf(msg, size, "wrong clockid (%d).", clockid);
- 		if (perf_missing_features.aux_output)
- 			return scnprintf(msg, size, "The 'aux_output' feature is not supported, update the kernel.");
-+		if (!target__has_cpu(target))
-+			return scnprintf(msg, size,
-+	"Invalid event (%s) in per-thread mode, enable system wide with '-a'.",
-+					evsel__name(evsel));
- 		break;
- 	case ENODATA:
- 		return scnprintf(msg, size, "Cannot collect data source with the load latency event alone. "
+diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+index df1c9a3cc05b..b2ddf928d32a 100644
+--- a/tools/perf/tests/pmu-events.c
++++ b/tools/perf/tests/pmu-events.c
+@@ -962,8 +962,18 @@ static int test__parsing(struct test_suite *test __maybe_unused,
+ 			}
+ 
+ 			if (expr__parse(&result, ctx, pe->metric_expr)) {
+-				expr_failure("Parse failed", map, pe);
+-				ret++;
++				/*
++				 * Parsing failed, make numbers go from large to
++				 * small which can resolve divide by zero
++				 * issues.
++				 */
++				k = 1024;
++				hashmap__for_each_entry(ctx->ids, cur, bkt)
++					expr__add_id_val(ctx, strdup(cur->key), k--);
++				if (expr__parse(&result, ctx, pe->metric_expr)) {
++					expr_failure("Parse failed", map, pe);
++					ret++;
++				}
+ 			}
+ 		}
+ 	}
+@@ -1022,10 +1032,20 @@ static int metric_parse_fake(const char *str)
+ 		}
+ 	}
+ 
+-	if (expr__parse(&result, ctx, str))
+-		pr_err("expr__parse failed\n");
+-	else
+-		ret = 0;
++	ret = 0;
++	if (expr__parse(&result, ctx, str)) {
++		/*
++		 * Parsing failed, make numbers go from large to small which can
++		 * resolve divide by zero issues.
++		 */
++		i = 1024;
++		hashmap__for_each_entry(ctx->ids, cur, bkt)
++			expr__add_id_val(ctx, strdup(cur->key), i--);
++		if (expr__parse(&result, ctx, str)) {
++			pr_err("expr__parse failed\n");
++			ret = -1;
++		}
++	}
+ 
+ out:
+ 	expr__ctx_free(ctx);
 -- 
 2.34.1.307.g9b7440fafd-goog
 
