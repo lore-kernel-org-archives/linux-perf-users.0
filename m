@@ -2,57 +2,57 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 955E1C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Dec 2021 07:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC34C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Dec 2021 07:46:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346994AbhLWHqf (ORCPT
+        id S1347009AbhLWHqg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Dec 2021 02:46:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40588 "EHLO
+        Thu, 23 Dec 2021 02:46:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346985AbhLWHqb (ORCPT
+        with ESMTP id S1347017AbhLWHqf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Dec 2021 02:46:31 -0500
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CD8AC061756
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 23:46:31 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id p133-20020a255b8b000000b006086e19f89fso8555057ybb.19
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 23:46:31 -0800 (PST)
+        Thu, 23 Dec 2021 02:46:35 -0500
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93031C06175E
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 23:46:33 -0800 (PST)
+Received: by mail-yb1-xb49.google.com with SMTP id q198-20020a25d9cf000000b005f7a6a84f9fso8566124ybg.6
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 23:46:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=MCK3PXHKxnJ+ljXLSZiTWLvHtcXTKUfApdV6xTysANE=;
-        b=KBqN6r7LevbIJ7DspJ9ZQuQ1H8mJQaV3PHwKSOvqliRrH0SmzqfHG43ZeW1Kd+mKpu
-         8wcjrP78XSYonUw1hZvvoIexqKj5cAjqs3aaFZYqsFj6YtS7sUzKdMxWb5EOiA5IR9UY
-         AJ1Lw56EryjZ0NDW58jhV2uGdg3izc2DVHPMEYeUBMG8Ku66IwtNaC9/l7EeMLSYyhFl
-         6rvnc8+k6SXJmoWrCsmV7QnzkXXVeaO/hescaBe+W4Pq/nZAn7Z/CZrc138Kf7KZpBYS
-         YI4ExYTI78g7QbmaMcGZ8vmbKe9gim6Mr2b01f8usfTgCMnPiUMgKAhNk2nxrPBAkg1a
-         jLIQ==
+        bh=IOVWCeh5kE6zfEvaqpsG89YizqzabGkupqLnB+tiwXE=;
+        b=eA5RJ3bMTokwOYkT2TLv9AwfMr248LwqYt4ywr+nUo2pLVtxMWsfRyBU0pkMiCzDKr
+         J10iB0ivit7LIduS2Ajr9DyaF/NjArZuy4PWzgoaQQI71TTS+3lfDZbCT5OYSm1D5ly5
+         EyBDLyZz/63LgICPG2eWk1ohMQxeoy+almSxrYE1ocHkrDj/EhoHOc2PvPac/CwZlFm5
+         PkTxXAfkoJ7s2ekjXHK1YovvR9eUq6DnVw//Lh6Kr9qfkO1rre14tDU1zlRhfGcLfXqI
+         1+mCPuSz5YDhVHRYiB710X6FqbY4hpEWOFW4wgj3Me87wEhg+S6XMuD70bPJZ3BNxnab
+         +kyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=MCK3PXHKxnJ+ljXLSZiTWLvHtcXTKUfApdV6xTysANE=;
-        b=Pra7YJTdwZuAxhUv2MQaAaifdVJIPtsZE22lulZeovsNIKpgTQ+nFns2T+N1DFKetC
-         VmoMvH1Ory2sO7BCha7+GZrfGyNbilo/BNw7sTDnddB872ehezvQN5OjXPqqbVcrcOcR
-         9fS7wdvCssJwJOld4gkwA1mITwTgv2avuZXfjFpYD7h5lq4OhZcxfUYlixAb+CwXxntv
-         8NCsDrRsSdI3JyXM1YvaZ7DJgCYO9a1zEDMM9lr/Ce6e0FLrAqPcXw+pznjev17gqL4n
-         fOykICr5Tp+SXTf5uoYflZbVg2GPp3EPX64gRsrhq1469AiOiiN5mMPR9iWqo90sEpF0
-         MChQ==
-X-Gm-Message-State: AOAM531g2ILdyiMe4xUhsP+e8FZX7GOnkIS1C4KsjEA91oSKnPRM+9la
-        kwsrMZweXsESkwCWCpM1ES74ecN6lxac
-X-Google-Smtp-Source: ABdhPJy8YqT1jzES8T/J1ThGT2eMjmeaj38Tu5Uwrk0WsTJnid8jvKkoKLBXCSeX8B6vtH3kyibTDWhBeHuL
+        bh=IOVWCeh5kE6zfEvaqpsG89YizqzabGkupqLnB+tiwXE=;
+        b=TuOU1KqhUPHO1/4B1nI7lK6MB2rn9GqqnMCxiXepdKITsaKNRH+YsDfDJTqqZ7vMrU
+         OQapoLVqNT7eEyWMBDGSgZHeWVHC0rbnIBLelY1j2aqeC/GwWmvxIIjp4K6oGv5wKR2m
+         gFD1SLCEEuInfSjYOSgw6WQiIK/KyjPdNvEL0o/UvPK8AAbQ/y5F1qn1zUQ4OCICzAs9
+         9cmKd90qYB62Kw3EbWOsWugXmfMlxi6w3ZhWadIQtY6j8Q1xT6eDHXFqICkeweonwMj+
+         NABoOxvVhCfOGWN8ge9K4j+0l9WU7xCEGmdqiw799WxoLbGUDJZ/LyVU7yt4jO7uOArX
+         JLMQ==
+X-Gm-Message-State: AOAM5329Cp1e1JMQbynbzxNRzmHuf9V5KfWsnWxKDLs1P94IPmhZeaNW
+        UCSj5vqNtGx6RJwPEbQxhnEy+8G1O2bt
+X-Google-Smtp-Source: ABdhPJzwr9tvOH9TYl4s/7K80EibN8uAtfYvMJRBqj6dDiXHyHmsyVYFLriMbY4RrsBHU1igLraiucp9wf52
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:4fef:90ff:589d:24ca])
- (user=irogers job=sendgmr) by 2002:a5b:c8d:: with SMTP id i13mr1771035ybq.354.1640245590498;
- Wed, 22 Dec 2021 23:46:30 -0800 (PST)
-Date:   Wed, 22 Dec 2021 23:45:02 -0800
+ (user=irogers job=sendgmr) by 2002:a25:b3cc:: with SMTP id
+ x12mr1797675ybf.243.1640245592717; Wed, 22 Dec 2021 23:46:32 -0800 (PST)
+Date:   Wed, 22 Dec 2021 23:45:03 -0800
 In-Reply-To: <20211223074541.3318938-1-irogers@google.com>
-Message-Id: <20211223074541.3318938-10-irogers@google.com>
+Message-Id: <20211223074541.3318938-11-irogers@google.com>
 Mime-Version: 1.0
 References: <20211223074541.3318938-1-irogers@google.com>
 X-Mailer: git-send-email 2.34.1.307.g9b7440fafd-goog
-Subject: [PATCH v2 09/48] perf cpumap: Remove map+index get_core
+Subject: [PATCH v2 10/48] perf cpumap: Remove map+index get_node
 From:   Ian Rogers <irogers@google.com>
 To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -91,49 +91,49 @@ Signed-off-by: Ian Rogers <irogers@google.com>
  3 files changed, 1 insertion(+), 10 deletions(-)
 
 diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
-index ce085b6f379b..9a671670415a 100644
+index 9a671670415a..5992b323c4f5 100644
 --- a/tools/perf/tests/topology.c
 +++ b/tools/perf/tests/topology.c
-@@ -121,7 +121,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
+@@ -162,7 +162,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
  
- 	// Test that core ID contains socket, die and core
+ 	// Test that node ID contains only node
  	for (i = 0; i < map->nr; i++) {
--		id = cpu_map__get_core(map, i, NULL);
-+		id = cpu_map__get_core_aggr_by_cpu(perf_cpu_map__cpu(map, i), NULL);
- 		TEST_ASSERT_VAL("Core map - Core ID doesn't match",
- 			session->header.env.cpu[map->map[i]].core_id == id.core);
- 
+-		id = cpu_map__get_node(map, i, NULL);
++		id = cpu_map__get_node_aggr_by_cpu(perf_cpu_map__cpu(map, i), NULL);
+ 		TEST_ASSERT_VAL("Node map - Node ID doesn't match",
+ 			cpu__get_node(map->map[i]) == id.node);
+ 		TEST_ASSERT_VAL("Node map - Socket is set", id.socket == -1);
 diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index ff91c32da688..e8149bcf8bfa 100644
+index e8149bcf8bfa..f67b2e7aac13 100644
 --- a/tools/perf/util/cpumap.c
 +++ b/tools/perf/util/cpumap.c
-@@ -246,14 +246,6 @@ struct aggr_cpu_id cpu_map__get_core_aggr_by_cpu(int cpu, void *data)
- 
+@@ -254,14 +254,6 @@ struct aggr_cpu_id cpu_map__get_node_aggr_by_cpu(int cpu, void *data __maybe_unu
+ 	return id;
  }
  
--struct aggr_cpu_id cpu_map__get_core(struct perf_cpu_map *map, int idx, void *data)
+-struct aggr_cpu_id cpu_map__get_node(struct perf_cpu_map *map, int idx, void *data)
 -{
--	if (idx < 0 || idx > map->nr)
+-	if (idx < 0 || idx >= map->nr)
 -		return cpu_map__empty_aggr_cpu_id();
 -
--	return cpu_map__get_core_aggr_by_cpu(map->map[idx], data);
+-	return cpu_map__get_node_aggr_by_cpu(map->map[idx], data);
 -}
 -
- struct aggr_cpu_id cpu_map__get_node_aggr_by_cpu(int cpu, void *data __maybe_unused)
+ int cpu_map__build_socket_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **sockp)
  {
- 	struct aggr_cpu_id id = cpu_map__empty_aggr_cpu_id();
+ 	return cpu_map__build_map(cpus, sockp, cpu_map__get_socket_aggr_by_cpu, NULL);
 diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
-index 365ed69699e1..7e1829468bd6 100644
+index 7e1829468bd6..f0121dd4fdcb 100644
 --- a/tools/perf/util/cpumap.h
 +++ b/tools/perf/util/cpumap.h
-@@ -36,7 +36,6 @@ int cpu_map__get_die_id(int cpu);
- struct aggr_cpu_id cpu_map__get_die_aggr_by_cpu(int cpu, void *data);
- int cpu_map__get_core_id(int cpu);
+@@ -38,7 +38,6 @@ int cpu_map__get_core_id(int cpu);
  struct aggr_cpu_id cpu_map__get_core_aggr_by_cpu(int cpu, void *data);
--struct aggr_cpu_id cpu_map__get_core(struct perf_cpu_map *map, int idx, void *data);
  int cpu_map__get_node_id(int cpu);
  struct aggr_cpu_id cpu_map__get_node_aggr_by_cpu(int cpu, void *data);
- struct aggr_cpu_id cpu_map__get_node(struct perf_cpu_map *map, int idx, void *data);
+-struct aggr_cpu_id cpu_map__get_node(struct perf_cpu_map *map, int idx, void *data);
+ int cpu_map__build_socket_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **sockp);
+ int cpu_map__build_die_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **diep);
+ int cpu_map__build_core_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **corep);
 -- 
 2.34.1.307.g9b7440fafd-goog
 
