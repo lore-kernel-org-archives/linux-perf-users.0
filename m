@@ -2,57 +2,57 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AABA1C4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Dec 2021 07:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E2CC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Dec 2021 07:46:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346921AbhLWHqS (ORCPT
+        id S1346946AbhLWHqV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Dec 2021 02:46:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40474 "EHLO
+        Thu, 23 Dec 2021 02:46:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346945AbhLWHqR (ORCPT
+        with ESMTP id S1346941AbhLWHqS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Dec 2021 02:46:17 -0500
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80FF6C06175B
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 23:46:16 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id y125-20020a25dc83000000b005c2326bf744so8486573ybe.21
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 23:46:16 -0800 (PST)
+        Thu, 23 Dec 2021 02:46:18 -0500
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0485C061756
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 23:46:18 -0800 (PST)
+Received: by mail-yb1-xb49.google.com with SMTP id i187-20020a2522c4000000b006093b616e65so8614710ybi.17
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 23:46:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=jOgZ+dsJ80gHSAYy1PEpxKlsT1rqOZcGXpM1p4DxDhE=;
-        b=ALf5lK2Ov9iU0BCplEQ5qzLZD7goP9VK6FnyebpGcOLPQu3jXAT/OSi3DRcgeN1fco
-         jwkPOMuiD1cTWg2Ad0l2cmneh3EFHLIOv69P162DKV7OWumzO8IsF2aAr6to7l7qZnPe
-         6XnF1x6GRmW2GIcUd75SIUH/pyZ0pm+Y+TFkldWmTVIJ60iz+T1Ywc4wb7nHTSYmaAad
-         1zFjWy9/eBiWNX2hjiHlYE/vCmM2q3qcYrdnBD9R/En8VltJoH7wN2kjCIdAFIOxKrYp
-         +bZyXBaC8R8aY3bPJWxaIuQfcRZPwz14V5P9VKxfa4jrg0CzPjtuf0cqebNdgcYHTq5H
-         73wg==
+        bh=KB4ymq594wnrj0TjDKrBcXeqxzyza4tPwUh3PAEieIg=;
+        b=gLzLTCVyuRpNP+y5hYI1ckNpuuCB3iXC+5EVTdqp03PKNGOk5Vnz7pHdunasKhnRoq
+         uKFiPcFa44fvKihYAmTK6OJz3dF6FVfC5d0ISNVA7kPaOYteQGZGXRG/aHNerRPStzKu
+         dHbga4i/MhbpddE0DbPARDspWrRFIbIQFW1nkBUu0jFrKMCLhqe4jUKDh9QOFMLvBD6b
+         4myCpp3acrjGfWFJGWd12AwOSZqka3rohXQONPPaciUNjScfg7R/WO0AFFbbpU/xZX6T
+         RNAICCQ5s0hRkhPSYapD9jZnmUQnF7QHEQGAy390qEG3HZvR6PIrBBQHX5RxjjbZuez2
+         at4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=jOgZ+dsJ80gHSAYy1PEpxKlsT1rqOZcGXpM1p4DxDhE=;
-        b=Pd37gjaiYrUsPC+QZ/4Yy1Z2h6Iz36hVbmibwU0uGgOwbVqOppq9mzYfGdkIVNCQsf
-         jZFerFyBzqpgvNZvwQilWrFtjnroveX5AY4Yn3PhXzpxjhMbLklJTBUsgkpcDtI8reiI
-         qBR2QeHnIMuB6Extwh0loQWvuK7Ykd3t91W8UWuXmZrXA9ZPNC0DdmgJT9LMdic0TERR
-         UDZPu7hwAmYrpsAYrqkcsYwnwvn4DJUR3zm+qe1uD4hoNX+FnWh3agznxqi7lF7XWyUx
-         lAJN3K7PWI7V2togQi/2TZ7OCVSl4O8Vbnkbxu8KjAzqVsdhyyVx5PTNCuSzu8zggDK0
-         Q4ig==
-X-Gm-Message-State: AOAM533uTCAeU9acrEYx7CcC3Y04IhNNlVi4aO9zONNFeOjgFHbWL8yc
-        aJobu9zla2O3FtU0i1PDcuHZAVGPQVUU
-X-Google-Smtp-Source: ABdhPJxfqk1AW2t7CvhGLgWlWdGHvdajhUDHd3O9XpcDl32AG8vbZ3Z1T8RUrnMO7UiDO8j9a3C8qoAvj20/
+        bh=KB4ymq594wnrj0TjDKrBcXeqxzyza4tPwUh3PAEieIg=;
+        b=vWvnlrQ07Eheaw5sfBV4x3N55myENbIvWyFFtrxza0z92NLUObfTyVAj+E7TO63L1a
+         QcyA8b5SeFwAwuvWDvK8tF5cfRuNExuUzQfVMpx52mrBVYeI9Pb6dj6A68OHIOB7yvSp
+         i8dKvA82LTPJcsCuHddM5Nm3AaWQ/cTKso+YcaRzLtHV93EhD751336Tcgu3wdIacm7P
+         Af29tUweO2H9yQnUkbNXm/MVef13QygUT5oiAM0KuR27j0NegveXCs1sBc2tG0qN4Fz3
+         sxAzdeODTwjmC+1tvZy1paUon5vqfANozxCOroePKshFCjU5AA4K8mfqpf57roWlshXd
+         kQOA==
+X-Gm-Message-State: AOAM533+qvi1YnESJXwaGqGaLay9TD7S8bDn5hbAuyaWSWlsrrKjvCwU
+        g1cKiY9EFKKXwiA6o5G821AIhIubk6tc
+X-Google-Smtp-Source: ABdhPJzIjJYNYiimurAGeGtkdiiWCY0XDEroIInYLWDQe+2ftdVyqn5oGH7ooFmQvoGPK643H7T/CMXAVV1f
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:4fef:90ff:589d:24ca])
- (user=irogers job=sendgmr) by 2002:a25:bfd2:: with SMTP id
- q18mr1882341ybm.542.1640245575752; Wed, 22 Dec 2021 23:46:15 -0800 (PST)
-Date:   Wed, 22 Dec 2021 23:44:56 -0800
+ (user=irogers job=sendgmr) by 2002:a05:6902:110d:: with SMTP id
+ o13mr1698978ybu.715.1640245577953; Wed, 22 Dec 2021 23:46:17 -0800 (PST)
+Date:   Wed, 22 Dec 2021 23:44:57 -0800
 In-Reply-To: <20211223074541.3318938-1-irogers@google.com>
-Message-Id: <20211223074541.3318938-4-irogers@google.com>
+Message-Id: <20211223074541.3318938-5-irogers@google.com>
 Mime-Version: 1.0
 References: <20211223074541.3318938-1-irogers@google.com>
 X-Mailer: git-send-email 2.34.1.307.g9b7440fafd-goog
-Subject: [PATCH v2 03/48] perf stat: Correct aggregation CPU map
+Subject: [PATCH v2 04/48] perf stat: Switch aggregation to use for_each loop
 From:   Ian Rogers <irogers@google.com>
 To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -80,61 +80,130 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Switch the perf_cpu_map in aggr_update_shadow from
-the evlist to the counter's cpu map, so the index is appropriate. This
-addresses a problem where uncore counts, with a cpumap like:
-$ cat /sys/devices/uncore_imc_0/cpumask
-0,18
-Don't aggregate counts in CPUs based on the index of those values in the
-cpumap (0 and 1) but on the actual CPU (0 and 18). Thereby correcting
-metric calculations in per-socket mode for counters without a full
-cpumask.
+Tidy up the use of cpu and index to hopefully make the code less error
+prone. Avoid unused warnings with (void) which will be removed in a
+later patch.
 
-On a SkylakeX with a tweaked DRAM_BW_Use metric, to remove unnecessary
-scaling, this gives:
-
-Before:
-$ /perf stat --per-socket -M DRAM_BW_Use -I 1000
-     1.001102293 S0        1              27.01 MiB  uncore_imc/cas_count_write/ #   103.00 DRAM_BW_Use
-     1.001102293 S0        1              30.22 MiB  uncore_imc/cas_count_read/
-     1.001102293 S0        1      1,001,102,293 ns   duration_time
-     1.001102293 S1        1              20.10 MiB  uncore_imc/cas_count_write/ #     0.00 DRAM_BW_Use
-     1.001102293 S1        1              32.74 MiB  uncore_imc/cas_count_read/
-     1.001102293 S1        0      <not counted> ns   duration_time
-     2.003517973 S0        1              83.04 MiB  uncore_imc/cas_count_write/ #   920.00 DRAM_BW_Use
-     2.003517973 S0        1             145.95 MiB  uncore_imc/cas_count_read/
-     2.003517973 S0        1      1,002,415,680 ns   duration_time
-     2.003517973 S1        1             302.45 MiB  uncore_imc/cas_count_write/ #     0.00 DRAM_BW_Use
-     2.003517973 S1        1             290.99 MiB  uncore_imc/cas_count_read/
-     2.003517973 S1        0      <not counted> ns   duration_time
-
-After:
-$ perf stat --per-socket -M DRAM_BW_Use -I 1000
-     1.001080840 S0        1              24.96 MiB  uncore_imc/cas_count_write/ #    54.00 DRAM_BW_Use
-     1.001080840 S0        1              33.64 MiB  uncore_imc/cas_count_read/
-     1.001080840 S0        1      1,001,080,840 ns   duration_time
-     1.001080840 S1        1              42.43 MiB  uncore_imc/cas_count_write/ #    84.00 DRAM_BW_Use
-     1.001080840 S1        1              47.05 MiB  uncore_imc/cas_count_read/
-     1.001080840 S1        0      <not counted> ns   duration_time
-
+Reviewed-by: James Clark <james.clark@arm.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/stat-display.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/stat-display.c | 48 +++++++++++++++++++---------------
+ 1 file changed, 27 insertions(+), 21 deletions(-)
 
 diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 588601000f3f..b0fa81ffce61 100644
+index b0fa81ffce61..efab39a759ff 100644
 --- a/tools/perf/util/stat-display.c
 +++ b/tools/perf/util/stat-display.c
-@@ -526,7 +526,7 @@ static void aggr_update_shadow(struct perf_stat_config *config,
+@@ -330,8 +330,8 @@ static void print_metric_header(struct perf_stat_config *config,
+ static int first_shadow_cpu(struct perf_stat_config *config,
+ 			    struct evsel *evsel, struct aggr_cpu_id id)
+ {
+-	struct evlist *evlist = evsel->evlist;
+-	int i;
++	struct perf_cpu_map *cpus;
++	int cpu, idx;
+ 
+ 	if (config->aggr_mode == AGGR_NONE)
+ 		return id.core;
+@@ -339,14 +339,11 @@ static int first_shadow_cpu(struct perf_stat_config *config,
+ 	if (!config->aggr_get_id)
+ 		return 0;
+ 
+-	for (i = 0; i < evsel__nr_cpus(evsel); i++) {
+-		int cpu2 = evsel__cpus(evsel)->map[i];
+-
+-		if (cpu_map__compare_aggr_cpu_id(
+-					config->aggr_get_id(config, evlist->core.cpus, cpu2),
+-					id)) {
+-			return cpu2;
+-		}
++	cpus = evsel__cpus(evsel);
++	perf_cpu_map__for_each_cpu(cpu, idx, cpus) {
++		if (cpu_map__compare_aggr_cpu_id(config->aggr_get_id(config, cpus, idx),
++						 id))
++			return cpu;
+ 	}
+ 	return 0;
+ }
+@@ -516,20 +513,23 @@ static void printout(struct perf_stat_config *config, struct aggr_cpu_id id, int
+ static void aggr_update_shadow(struct perf_stat_config *config,
+ 			       struct evlist *evlist)
+ {
+-	int cpu, s;
++	int cpu, idx, s;
+ 	struct aggr_cpu_id s2, id;
+ 	u64 val;
+ 	struct evsel *counter;
++	struct perf_cpu_map *cpus;
+ 
+ 	for (s = 0; s < config->aggr_map->nr; s++) {
+ 		id = config->aggr_map->map[s];
  		evlist__for_each_entry(evlist, counter) {
++			cpus = evsel__cpus(counter);
  			val = 0;
- 			for (cpu = 0; cpu < evsel__nr_cpus(counter); cpu++) {
--				s2 = config->aggr_get_id(config, evlist->core.cpus, cpu);
-+				s2 = config->aggr_get_id(config, evsel__cpus(counter), cpu);
+-			for (cpu = 0; cpu < evsel__nr_cpus(counter); cpu++) {
+-				s2 = config->aggr_get_id(config, evsel__cpus(counter), cpu);
++			perf_cpu_map__for_each_cpu(cpu, idx, cpus) {
++				(void)cpu;
++				s2 = config->aggr_get_id(config, cpus, idx);
  				if (!cpu_map__compare_aggr_cpu_id(s2, id))
  					continue;
- 				val += perf_counts(counter->counts, cpu, 0)->val;
+-				val += perf_counts(counter->counts, cpu, 0)->val;
++				val += perf_counts(counter->counts, idx, 0)->val;
+ 			}
+ 			perf_stat__update_shadow_stats(counter, val,
+ 					first_shadow_cpu(config, counter, id),
+@@ -634,18 +634,21 @@ static void aggr_cb(struct perf_stat_config *config,
+ 		    struct evsel *counter, void *data, bool first)
+ {
+ 	struct aggr_data *ad = data;
+-	int cpu;
++	int idx, cpu;
++	struct perf_cpu_map *cpus;
+ 	struct aggr_cpu_id s2;
+ 
+-	for (cpu = 0; cpu < evsel__nr_cpus(counter); cpu++) {
++	cpus = evsel__cpus(counter);
++	perf_cpu_map__for_each_cpu(cpu, idx, cpus) {
+ 		struct perf_counts_values *counts;
+ 
+-		s2 = config->aggr_get_id(config, evsel__cpus(counter), cpu);
++		(void)cpu;
++		s2 = config->aggr_get_id(config, cpus, idx);
+ 		if (!cpu_map__compare_aggr_cpu_id(s2, ad->id))
+ 			continue;
+ 		if (first)
+ 			ad->nr++;
+-		counts = perf_counts(counter->counts, cpu, 0);
++		counts = perf_counts(counter->counts, idx, 0);
+ 		/*
+ 		 * When any result is bad, make them all to give
+ 		 * consistent output in interval mode.
+@@ -1208,10 +1211,13 @@ static void print_percore_thread(struct perf_stat_config *config,
+ {
+ 	int s;
+ 	struct aggr_cpu_id s2, id;
++	struct perf_cpu_map *cpus;
+ 	bool first = true;
++	int idx, cpu;
+ 
+-	for (int i = 0; i < evsel__nr_cpus(counter); i++) {
+-		s2 = config->aggr_get_id(config, evsel__cpus(counter), i);
++	cpus = evsel__cpus(counter);
++	perf_cpu_map__for_each_cpu(cpu, idx, cpus) {
++		s2 = config->aggr_get_id(config, cpus, idx);
+ 		for (s = 0; s < config->aggr_map->nr; s++) {
+ 			id = config->aggr_map->map[s];
+ 			if (cpu_map__compare_aggr_cpu_id(s2, id))
+@@ -1220,7 +1226,7 @@ static void print_percore_thread(struct perf_stat_config *config,
+ 
+ 		print_counter_aggrdata(config, counter, s,
+ 				       prefix, false,
+-				       &first, i);
++				       &first, cpu);
+ 	}
+ }
+ 
 -- 
 2.34.1.307.g9b7440fafd-goog
 
