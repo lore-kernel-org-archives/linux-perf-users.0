@@ -2,100 +2,217 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE51C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Dec 2021 01:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 236D7C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Dec 2021 07:46:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239039AbhLWB6T (ORCPT
+        id S232009AbhLWHqJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Dec 2021 20:58:19 -0500
-Received: from szxga01-in.huawei.com ([45.249.212.187]:33900 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229788AbhLWB6S (ORCPT
+        Thu, 23 Dec 2021 02:46:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40426 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229493AbhLWHqJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Dec 2021 20:58:18 -0500
-Received: from dggpeml500023.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4JKCy86Pbwzcc69;
-        Thu, 23 Dec 2021 09:57:52 +0800 (CST)
-Received: from dggpeml500002.china.huawei.com (7.185.36.158) by
- dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Thu, 23 Dec 2021 09:58:16 +0800
-Received: from [10.174.179.208] (10.174.179.208) by
- dggpeml500002.china.huawei.com (7.185.36.158) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Thu, 23 Dec 2021 09:58:15 +0800
-Message-ID: <1f7127f4-6f32-8b4f-5bc2-3f35a337bc1a@huawei.com>
-Date:   Thu, 23 Dec 2021 09:58:15 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.1
-From:   yaowenbin <yaowenbin1@huawei.com>
-Subject: [PATCH] perf record: Add O_EXCL flag for opening perf.data file
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>,
-        <thunder.leizhen@huawei.com>, <rickyman7@gmail.com>,
-        <ak@linux.intel.com>, <adrian.hunter@intel.com>,
-        <yaowenbin1@huawei.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <hewenliang4@huawei.com>, <wuxu.wu@huawei.com>
+        Thu, 23 Dec 2021 02:46:09 -0500
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 112ACC061756
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 23:46:09 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id l28-20020a25b31c000000b005c27dd4987bso8669680ybj.18
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 23:46:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=8OacQYAYwPbCfIned3XtwIucyM9DBcJ+V45pY7EGNyE=;
+        b=De4m7XhqQ1rRQ2n0wBe9DWLTBQt83b00BijY/S0MxhPf2wR/ZiBu9xg+jjE4222+VC
+         3L4EfVeQ6fwLtwcOh8hwYN07y14fswg6CL5/Jjx5vwuHseDVd6lDoaSkPidCT6r00DMH
+         m3qSe3OckBkq5TqROF2F4JY63NVWICEMY3z6BOa3Op3atBuT6oz30enzg6yJ0ekwU6iy
+         BduSX+Q4XXZzwlwzvs8Bsh6SY8U40CBturyrnVQ6z+MpfZaQzg5v2MqnojbenYqpMJ66
+         6q0vahE8eeKgPhFuezA8UiwY2LEP4b59MiVTQ7KvwFceDGmYcpm/Pwo7E8ni9zO3Uor5
+         D+bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=8OacQYAYwPbCfIned3XtwIucyM9DBcJ+V45pY7EGNyE=;
+        b=YaiSyCglzpIgQX9NOxRCDcqAyiPTN3NgIjsQtIzfM6H73cDrJ5a9MeyMDK8qpwM6Xz
+         yYX8o9l2KfnZo2E0cy/NXuBt3tBaq7VjIF/cYkresj81LUqFCiOecY3b9vfKKgpTi0nq
+         XRoB2Vq1RzpsTdzpO4UQWKcJgVtUK3trzRNLKKNMGybM2z2osiQlmS/56T4ZqrEnCKTZ
+         RdFXuLeYyzsi6SlR+UrGX5RmZ9NY1czcbiznv2kbxMmwWeyXbYI94aAtuqm3f9BBC8LM
+         DXyROgRrLJ3PL81OHCElCXe36M0o98OcOI2YS0lrJ8sK6TdPKUaLHy1aazlJbQ3CSNgN
+         jHjQ==
+X-Gm-Message-State: AOAM533kfwbARjPpa+ZYLAG1LIIu9GxcLG5UHYJ/+D54g/zVlmtLqZ0D
+        AWFDFlD9JnBi1qFDlBvQv92FEND0AdAk
+X-Google-Smtp-Source: ABdhPJybyDv6HxTsgTHMPa5EgdxcuJbYv7im1j+H596KI0xDBuyOKMeegC0iPetLNIL3mXlPvexX1cq981fI
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:4fef:90ff:589d:24ca])
+ (user=irogers job=sendgmr) by 2002:a5b:f0e:: with SMTP id x14mr1669372ybr.671.1640245568263;
+ Wed, 22 Dec 2021 23:46:08 -0800 (PST)
+Date:   Wed, 22 Dec 2021 23:44:53 -0800
+Message-Id: <20211223074541.3318938-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.34.1.307.g9b7440fafd-goog
+Subject: [PATCH v2 00/48] Refactor perf cpumap
+From:   Ian Rogers <irogers@google.com>
+To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vineet Singh <vineet.singh@intel.com>,
+        James Clark <james.clark@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     eranian@google.com, Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.179.208]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpeml500002.china.huawei.com (7.185.36.158)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When the following command is executed, a coredump file is generated.
-	$ perf record -e cpu-clock sleep 3 & perf record -e cpu-clock sleep 3 &
-	[1] 213456
-	[2] 213457
-	[ perf record: Woken up 1 times to write data ]
-	[ perf record: Woken up 1 times to write data ]
-	[ perf record: Captured and wrote 0.012 MB perf.data (4 samples) ]
-	[1]-  Bus error               (core dumped) perf record -e cpu-clock sleep 3
-	[2]+  Done                    perf record -e cpu-clock sleep 3
+Perf cpu map has various functions where a cpumap and index are passed
+in order to load the cpu. A problem with this is that the wrong index
+may be passed for the cpumap, causing problems like aggregation on the
+wrong CPU:
+https://lore.kernel.org/lkml/20211204023409.969668-1-irogers@google.com/
 
-It is a problem of concurrent access of perf.data file. When several
-processes execute "perf record" command in the same directory
-concurrently, they may open the same perf.data file, and write
-the same file, causing data confusion. It may cause coredump when
-reading the file. Then add O_EXCL flag to ensure that there is only
-one process operating the perf.data file in the same directory concurrently.
+This patch set refactors the cpu map API, reducing it and explicitly
+passing the cpu (rather than the pair) to functions that need
+it. Comments are added at the same time. Changes modify the same
+file/function more than once as refactoring and fixes are broken apart
+for the sake of bisection.
 
-After adding O_EXCL flag, the open operation will fail if there is
-a perf.data file existing in the same directory, so also rename the
-perf.data file to perf.data.old even if the size of perf.data is zero.
+v2. Incorproates fixes suggested Jiri Olsa, rewrites the evlist CPU
+    iterator in part in a way suggested by Riccardo Mancini. The new
+    fixes start at patch 23. The final change was suggested by John
+    Garry to make the CPUs have their own struct wrapper.
 
-Signed-off-by: yaowenbin <yaowenbin1@huawei.com>
----
- tools/perf/util/data.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Ian Rogers (48):
+  libperf: Add comments to perf_cpu_map.
+  perf stat: Add aggr creators that are passed a cpu.
+  perf stat: Correct aggregation CPU map
+  perf stat: Switch aggregation to use for_each loop
+  perf stat: Switch to cpu version of cpu_map__get
+  perf cpumap: Switch cpu_map__build_map to cpu function
+  perf cpumap: Remove map+index get_socket
+  perf cpumap: Remove map+index get_die
+  perf cpumap: Remove map+index get_core
+  perf cpumap: Remove map+index get_node
+  perf cpumap: Add comments to aggr_cpu_id
+  perf cpumap: Remove unused cpu_map__socket
+  perf cpumap: Simplify equal function name.
+  perf cpumap: Rename empty functions.
+  perf cpumap: Document cpu__get_node and remove redundant function
+  perf cpumap: Remove map from function names that don't use a map.
+  perf cpumap: Remove cpu_map__cpu, use libperf function.
+  perf cpumap: Refactor cpu_map__build_map
+  perf cpumap: Rename cpu_map__get_X_aggr_by_cpu functions
+  perf cpumap: Move 'has' function to libperf
+  perf cpumap: Add some comments to cpu_aggr_map
+  perf cpumap: Trim the cpu_aggr_map
+  perf stat: Fix memory leak in check_per_pkg
+  perf cpumap: Add CPU to aggr_cpu_id
+  perf stat-display: Avoid use of core for CPU.
+  perf evsel: Derive CPUs and threads in alloc_counts
+  libperf: Switch cpu to more accurate cpu_map_idx
+  libperf: Use cpu not index for evsel mmap
+  perf counts: Switch name cpu to cpu_map_idx
+  perf stat: Rename aggr_data cpu to imply it's an index
+  perf stat: Use perf_cpu_map__for_each_cpu
+  perf script: Use for each cpu to aid readability
+  libperf: Allow NULL in perf_cpu_map__idx
+  perf evlist: Refactor evlist__for_each_cpu.
+  perf evsel: Pass cpu not cpu map index to synthesize
+  perf stat: Correct variable name for read counter
+  perf evsel: Rename CPU around get_group_fd
+  perf evsel: Reduce scope of evsel__ignore_missing_thread
+  perf evsel: Rename variable cpu to index
+  perf test: Use perf_cpu_map__for_each_cpu
+  perf stat: Correct check_per_pkg cpu
+  perf stat: Swap variable name cpu to index
+  libperf: Sync evsel documentation
+  perf bpf: Rename cpu to cpu_map_idx
+  perf c2c: Use more intention revealing iterator
+  perf script: Fix flipped index and cpu
+  perf stat: Correct first_shadow_cpu to return index
+  perf cpumap: Give CPUs their own type.
 
-diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-index f5d260b1df4d..92cf0aa3ed83 100644
---- a/tools/perf/util/data.c
-+++ b/tools/perf/util/data.c
-@@ -201,7 +201,7 @@ static int check_backup(struct perf_data *data)
- 	if (perf_data__is_read(data))
- 		return 0;
+ tools/lib/perf/Documentation/libperf.txt      |  10 +-
+ tools/lib/perf/cpumap.c                       | 131 +++--
+ tools/lib/perf/evlist.c                       |   4 +-
+ tools/lib/perf/evsel.c                        |  92 ++--
+ tools/lib/perf/include/internal/cpumap.h      |  18 +-
+ tools/lib/perf/include/internal/evlist.h      |   3 +-
+ tools/lib/perf/include/internal/evsel.h       |   4 +-
+ tools/lib/perf/include/internal/mmap.h        |   5 +-
+ tools/lib/perf/include/perf/cpumap.h          |   8 +-
+ tools/lib/perf/include/perf/evsel.h           |  10 +-
+ tools/lib/perf/mmap.c                         |   2 +-
+ tools/perf/arch/arm/util/cs-etm.c             |  16 +-
+ tools/perf/bench/epoll-ctl.c                  |   2 +-
+ tools/perf/bench/epoll-wait.c                 |   2 +-
+ tools/perf/bench/futex-hash.c                 |   2 +-
+ tools/perf/bench/futex-lock-pi.c              |   2 +-
+ tools/perf/bench/futex-requeue.c              |   2 +-
+ tools/perf/bench/futex-wake-parallel.c        |   2 +-
+ tools/perf/bench/futex-wake.c                 |   2 +-
+ tools/perf/builtin-c2c.c                      |  15 +-
+ tools/perf/builtin-ftrace.c                   |   2 +-
+ tools/perf/builtin-kmem.c                     |   2 +-
+ tools/perf/builtin-record.c                   |   2 +-
+ tools/perf/builtin-sched.c                    |  71 +--
+ tools/perf/builtin-script.c                   |  10 +-
+ tools/perf/builtin-stat.c                     | 516 +++++++++---------
+ tools/perf/tests/attr.c                       |   6 +-
+ tools/perf/tests/bitmap.c                     |   2 +-
+ tools/perf/tests/cpumap.c                     |   6 +-
+ tools/perf/tests/event_update.c               |   6 +-
+ tools/perf/tests/mem2node.c                   |   2 +-
+ tools/perf/tests/mmap-basic.c                 |   4 +-
+ tools/perf/tests/openat-syscall-all-cpus.c    |  39 +-
+ tools/perf/tests/stat.c                       |   3 +-
+ tools/perf/tests/topology.c                   |  43 +-
+ tools/perf/util/affinity.c                    |   2 +-
+ tools/perf/util/auxtrace.c                    |  12 +-
+ tools/perf/util/auxtrace.h                    |   5 +-
+ tools/perf/util/bpf_counter.c                 |  16 +-
+ tools/perf/util/bpf_counter.h                 |   4 +-
+ tools/perf/util/counts.c                      |   8 +-
+ tools/perf/util/counts.h                      |  14 +-
+ tools/perf/util/cpumap.c                      | 250 ++++-----
+ tools/perf/util/cpumap.h                      | 116 ++--
+ tools/perf/util/cputopo.c                     |   6 +-
+ tools/perf/util/env.c                         |  29 +-
+ tools/perf/util/env.h                         |   3 +-
+ tools/perf/util/evlist.c                      | 148 ++---
+ tools/perf/util/evlist.h                      |  50 +-
+ tools/perf/util/evsel.c                       | 143 ++---
+ tools/perf/util/evsel.h                       |  27 +-
+ tools/perf/util/expr.c                        |   2 +-
+ tools/perf/util/header.c                      |   6 +-
+ tools/perf/util/mmap.c                        |  19 +-
+ tools/perf/util/mmap.h                        |   3 +-
+ tools/perf/util/perf_api_probe.c              |  15 +-
+ tools/perf/util/python.c                      |   2 +-
+ tools/perf/util/record.c                      |  11 +-
+ .../scripting-engines/trace-event-python.c    |   6 +-
+ tools/perf/util/session.c                     |  10 +-
+ tools/perf/util/stat-display.c                | 138 ++---
+ tools/perf/util/stat-shadow.c                 | 308 +++++------
+ tools/perf/util/stat.c                        |  47 +-
+ tools/perf/util/stat.h                        |   9 +-
+ tools/perf/util/svghelper.c                   |   6 +-
+ tools/perf/util/synthetic-events.c            |  12 +-
+ tools/perf/util/synthetic-events.h            |   3 +-
+ tools/perf/util/util.h                        |   5 +-
+ 68 files changed, 1327 insertions(+), 1154 deletions(-)
 
--	if (!stat(data->path, &st) && st.st_size) {
-+	if (!stat(data->path, &st)) {
- 		char oldname[PATH_MAX];
- 		int ret;
+-- 
+2.34.1.307.g9b7440fafd-goog
 
-@@ -285,7 +285,7 @@ static int open_file_write(struct perf_data *data)
- 	int fd;
- 	char sbuf[STRERR_BUFSIZE];
-
--	fd = open(data->file.path, O_CREAT|O_RDWR|O_TRUNC|O_CLOEXEC,
-+	fd = open(data->file.path, O_CREAT|O_RDWR|O_TRUNC|O_CLOEXEC|O_EXCL,
- 		  S_IRUSR|S_IWUSR);
-
- 	if (fd < 0)
---
-2.27.0
