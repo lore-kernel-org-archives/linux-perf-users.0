@@ -2,57 +2,57 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17467C43219
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Dec 2021 07:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD31C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Dec 2021 07:48:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347221AbhLWHs0 (ORCPT
+        id S1347422AbhLWHsZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Dec 2021 02:48:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40972 "EHLO
+        Thu, 23 Dec 2021 02:48:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347230AbhLWHrr (ORCPT
+        with ESMTP id S1347248AbhLWHrv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Dec 2021 02:47:47 -0500
+        Thu, 23 Dec 2021 02:47:51 -0500
 Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C012C061377
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 23:47:30 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id t24-20020a252d18000000b005c225ae9e16so8618835ybt.15
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 23:47:30 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BD0AC061401
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 23:47:40 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id i187-20020a2522c4000000b006093b616e65so8619265ybi.17
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 23:47:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=gS702mZNdqaqGqsGN8/od6/9eJfsTdX5XaCwO/CHnxg=;
-        b=ZAG5FsujH76QsBUz/tYbzeEG+GrdHE0RRbhUkLTKIjXs8evI8wAwEzY1h9EMDJqLnH
-         hlWlHw8ziKRJadI9FWV7TXuil8dvJNhJdyncQg+B0ziD3qhSeeGq9zd8RStul7QZcUHP
-         nLgq9PAndLX+i87S/32ECHBitev9Eh0Ep/uGVfLee+lL+BdKoKPAUlgUEFWZvOiIwJld
-         9RGSqm7s322Kdx9GRuLW6iLuqNsN5wQqpiwwM2KspOhUZUSB0WHBTF0FV7MJMUm5PikU
-         7a8JPVmxmEa9NuVRw/kcDPUHBeKeJE5lbmgn1WFsX9OJ5W6RcdOIsS2rG/xSt8AG48z3
-         3XLQ==
+        bh=k6RAlIhwSy4euwiiIyrIldZt9nlK1nan7mAyKCFApFY=;
+        b=ownxiw/vt2pjo97xGiLh2jcneMKFLYvx94XaBGlQ9zY7NqjFWQWTCDCEg1THWtCc/W
+         dJhdPDyIFLbXvqZM+ilqQebhX3F0g3cFfenyfeaDQrhDyiq0i1jfF+3pKFIDlRPZw4tq
+         vWXVZgVuoOOUILCkelA8guBbmFertL/X5dsm+QmTGT5y7WoWOGP0+6xjlnGTfcguI8rn
+         B5d9Oi+59MBPvpZa24vNKq9RhAYxOJosnlgAeazGLoz5G2D4y8h1M1JbPb+P8hnwUXSV
+         RwroxgnaO3VWhcYgtjd7rwVNVjsRbpHNNTKjX+CMqwBSnuSHM1fCnpiJUcbHXDBg9WHr
+         b8lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=gS702mZNdqaqGqsGN8/od6/9eJfsTdX5XaCwO/CHnxg=;
-        b=uaAfeJunkxi0Dvd1ahwEuU65Vs2D7GMzgEc+xaIsby2Izu05NpMWSsO9I5noExGm4W
-         oQ9b9s9CxxzC1DnueA0c1IL2bSuTY3ozSAzV6yf4ja+4fjSo07XoIUllZWXjN7z6yRjm
-         Jm5OT5xOD4HnoS7TcNRtSD1blZMoHURX9zs0oyc3UtJnnvFBzxiUgxGD7LZldVV2WHbJ
-         E0wzoTZSr8VnBgMqhS1mQt1Kfd/MgLoAdyVsi/Z2f8IST+vbtTRb7AQQNAKY2rCifgD2
-         aMGmSFk5AkTv13wF86NiT4Q32R0AftAsTU5WfOtqhYkpHsyzZnqj3+mjNSEwiynv6jfb
-         jv3w==
-X-Gm-Message-State: AOAM5331joeLdi+aVDh9+F1/SdcFd/THp8ppsTVHTPfNS9p6Z8/Jhh3h
-        mZCLz5Hkhkv+bp/xc/1HC53r5DCPnOvU
-X-Google-Smtp-Source: ABdhPJzky4057KHzG/tA4tur8qNXghY66f9kz+2zvw0XyPAyGCbP0JD3U0gIN/QaSj9xsR799MWG2pDgUs+J
+        bh=k6RAlIhwSy4euwiiIyrIldZt9nlK1nan7mAyKCFApFY=;
+        b=tUWkjt0R0eQCa6N+LzJybppL1lVjpxMvHkHvPawTYQOKOimVkQDUSbA97nnbFJE/tW
+         xhHcG78Fa02Pm2/rPnWez8QWPxQ6ENv8wO459zUVjBXpkIoJrX+EiYf8Hl6lOWqz8COf
+         ymzPUX96ru6Uxlr1z3TTMDQFCo5uFq9j9jy+J5eRO2fl8/1qz7gGWzLkof2802q7N4yZ
+         z/QY4K23SxcbdePmWrjVkEFSPtHTg/ohGHKy9CqzsZnzBcMd4qYwGsHVQ1Sp8FrEfXNM
+         OqgGjF3xz/Nlhj81bgcHbRU8/zIcYmV7+II/2nZ5JMC1106XX+zWcstolmoKJLW0SGcq
+         Wt6Q==
+X-Gm-Message-State: AOAM530+8AtWkrY1TrbWPzWWK5le7Kbbm80xOR51VE9jyZZqNOp/sPVt
+        rRvDiU1vRlalIuEkHoVQTLJfmambldaX
+X-Google-Smtp-Source: ABdhPJxGfT1ZdlQrMY0/6tpguRYtWDuKzA9SMuP697ld+ynfqgOCvWi9XDayYfxaps23g8rcEctfjkec1+NU
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:4fef:90ff:589d:24ca])
- (user=irogers job=sendgmr) by 2002:a25:258c:: with SMTP id
- l134mr1685364ybl.40.1640245649513; Wed, 22 Dec 2021 23:47:29 -0800 (PST)
-Date:   Wed, 22 Dec 2021 23:45:25 -0800
+ (user=irogers job=sendgmr) by 2002:a25:e755:: with SMTP id
+ e82mr1616261ybh.389.1640245659626; Wed, 22 Dec 2021 23:47:39 -0800 (PST)
+Date:   Wed, 22 Dec 2021 23:45:29 -0800
 In-Reply-To: <20211223074541.3318938-1-irogers@google.com>
-Message-Id: <20211223074541.3318938-33-irogers@google.com>
+Message-Id: <20211223074541.3318938-37-irogers@google.com>
 Mime-Version: 1.0
 References: <20211223074541.3318938-1-irogers@google.com>
 X-Mailer: git-send-email 2.34.1.307.g9b7440fafd-goog
-Subject: [PATCH v2 32/48] perf script: Use for each cpu to aid readability
+Subject: [PATCH v2 36/48] perf stat: Correct variable name for read counter
 From:   Ian Rogers <irogers@google.com>
 To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -80,43 +80,217 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Use perf_cpu_map__for_each_cpu to help with readability.
+Switch from cpu to cpu_map_idx to reduce confusion.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-script.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ tools/perf/builtin-stat.c | 24 ++++++++++++------------
+ tools/perf/util/evsel.c   | 30 +++++++++++++++---------------
+ tools/perf/util/evsel.h   | 16 ++++++++--------
+ 3 files changed, 35 insertions(+), 35 deletions(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 9434367af166..af06fe1271cc 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -2113,8 +2113,7 @@ static struct scripting_ops	*scripting_ops;
- static void __process_stat(struct evsel *counter, u64 tstamp)
- {
- 	int nthreads = perf_thread_map__nr(counter->core.threads);
--	int ncpus = evsel__nr_cpus(counter);
--	int cpu, thread;
-+	int idx, cpu, thread;
- 	static int header_printed;
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index ec252579b587..68543bc7459f 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -337,25 +337,25 @@ static int evsel__write_stat_event(struct evsel *counter, int cpu_map_idx, u32 t
+ 					   process_synthesized_event, NULL);
+ }
  
- 	if (counter->core.system_wide)
-@@ -2127,13 +2126,13 @@ static void __process_stat(struct evsel *counter, u64 tstamp)
+-static int read_single_counter(struct evsel *counter, int cpu,
++static int read_single_counter(struct evsel *counter, int cpu_map_idx,
+ 			       int thread, struct timespec *rs)
+ {
+ 	if (counter->tool_event == PERF_TOOL_DURATION_TIME) {
+ 		u64 val = rs->tv_nsec + rs->tv_sec*1000000000ULL;
+ 		struct perf_counts_values *count =
+-			perf_counts(counter->counts, cpu, thread);
++			perf_counts(counter->counts, cpu_map_idx, thread);
+ 		count->ena = count->run = val;
+ 		count->val = val;
+ 		return 0;
+ 	}
+-	return evsel__read_counter(counter, cpu, thread);
++	return evsel__read_counter(counter, cpu_map_idx, thread);
+ }
+ 
+ /*
+  * Read out the results of a single counter:
+  * do not aggregate counts across CPUs in system-wide mode
+  */
+-static int read_counter_cpu(struct evsel *counter, struct timespec *rs, int cpu)
++static int read_counter_cpu(struct evsel *counter, struct timespec *rs, int cpu_map_idx)
+ {
+ 	int nthreads = perf_thread_map__nr(evsel_list->core.threads);
+ 	int thread;
+@@ -369,24 +369,24 @@ static int read_counter_cpu(struct evsel *counter, struct timespec *rs, int cpu)
+ 	for (thread = 0; thread < nthreads; thread++) {
+ 		struct perf_counts_values *count;
+ 
+-		count = perf_counts(counter->counts, cpu, thread);
++		count = perf_counts(counter->counts, cpu_map_idx, thread);
+ 
+ 		/*
+ 		 * The leader's group read loads data into its group members
+ 		 * (via evsel__read_counter()) and sets their count->loaded.
+ 		 */
+-		if (!perf_counts__is_loaded(counter->counts, cpu, thread) &&
+-		    read_single_counter(counter, cpu, thread, rs)) {
++		if (!perf_counts__is_loaded(counter->counts, cpu_map_idx, thread) &&
++		    read_single_counter(counter, cpu_map_idx, thread, rs)) {
+ 			counter->counts->scaled = -1;
+-			perf_counts(counter->counts, cpu, thread)->ena = 0;
+-			perf_counts(counter->counts, cpu, thread)->run = 0;
++			perf_counts(counter->counts, cpu_map_idx, thread)->ena = 0;
++			perf_counts(counter->counts, cpu_map_idx, thread)->run = 0;
+ 			return -1;
+ 		}
+ 
+-		perf_counts__set_loaded(counter->counts, cpu, thread, false);
++		perf_counts__set_loaded(counter->counts, cpu_map_idx, thread, false);
+ 
+ 		if (STAT_RECORD) {
+-			if (evsel__write_stat_event(counter, cpu, thread, count)) {
++			if (evsel__write_stat_event(counter, cpu_map_idx, thread, count)) {
+ 				pr_err("failed to write stat event\n");
+ 				return -1;
+ 			}
+@@ -396,7 +396,7 @@ static int read_counter_cpu(struct evsel *counter, struct timespec *rs, int cpu)
+ 			fprintf(stat_config.output,
+ 				"%s: %d: %" PRIu64 " %" PRIu64 " %" PRIu64 "\n",
+ 					evsel__name(counter),
+-					cpu,
++					perf_cpu_map__cpu(evsel__cpus(counter), cpu_map_idx),
+ 					count->val, count->ena, count->run);
+ 		}
+ 	}
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 6c9af21776e6..b4a2c5034cfe 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1476,11 +1476,11 @@ void evsel__compute_deltas(struct evsel *evsel, int cpu, int thread,
+ 	count->run = count->run - tmp.run;
+ }
+ 
+-static int evsel__read_one(struct evsel *evsel, int cpu, int thread)
++static int evsel__read_one(struct evsel *evsel, int cpu_map_idx, int thread)
+ {
+-	struct perf_counts_values *count = perf_counts(evsel->counts, cpu, thread);
++	struct perf_counts_values *count = perf_counts(evsel->counts, cpu_map_idx, thread);
+ 
+-	return perf_evsel__read(&evsel->core, cpu, thread, count);
++	return perf_evsel__read(&evsel->core, cpu_map_idx, thread, count);
+ }
+ 
+ static void evsel__set_count(struct evsel *counter, int cpu, int thread, u64 val, u64 ena, u64 run)
+@@ -1530,7 +1530,7 @@ static int evsel__process_group_data(struct evsel *leader, int cpu, int thread,
+ 	return 0;
+ }
+ 
+-static int evsel__read_group(struct evsel *leader, int cpu, int thread)
++static int evsel__read_group(struct evsel *leader, int cpu_map_idx, int thread)
+ {
+ 	struct perf_stat_evsel *ps = leader->stats;
+ 	u64 read_format = leader->core.attr.read_format;
+@@ -1551,42 +1551,42 @@ static int evsel__read_group(struct evsel *leader, int cpu, int thread)
+ 		ps->group_data = data;
  	}
  
- 	for (thread = 0; thread < nthreads; thread++) {
--		for (cpu = 0; cpu < ncpus; cpu++) {
-+		perf_cpu_map__for_each_cpu(cpu, idx, evsel__cpus(counter)) {
- 			struct perf_counts_values *counts;
+-	if (FD(leader, cpu, thread) < 0)
++	if (FD(leader, cpu_map_idx, thread) < 0)
+ 		return -EINVAL;
  
- 			counts = perf_counts(counter->counts, cpu, thread);
+-	if (readn(FD(leader, cpu, thread), data, size) <= 0)
++	if (readn(FD(leader, cpu_map_idx, thread), data, size) <= 0)
+ 		return -errno;
  
- 			printf("%3d %8d %15" PRIu64 " %15" PRIu64 " %15" PRIu64 " %15" PRIu64 " %s\n",
--				counter->core.cpus->map[cpu],
-+				cpu,
- 				perf_thread_map__pid(counter->core.threads, thread),
- 				counts->val,
- 				counts->ena,
+-	return evsel__process_group_data(leader, cpu, thread, data);
++	return evsel__process_group_data(leader, cpu_map_idx, thread, data);
+ }
+ 
+-int evsel__read_counter(struct evsel *evsel, int cpu, int thread)
++int evsel__read_counter(struct evsel *evsel, int cpu_map_idx, int thread)
+ {
+ 	u64 read_format = evsel->core.attr.read_format;
+ 
+ 	if (read_format & PERF_FORMAT_GROUP)
+-		return evsel__read_group(evsel, cpu, thread);
++		return evsel__read_group(evsel, cpu_map_idx, thread);
+ 
+-	return evsel__read_one(evsel, cpu, thread);
++	return evsel__read_one(evsel, cpu_map_idx, thread);
+ }
+ 
+-int __evsel__read_on_cpu(struct evsel *evsel, int cpu, int thread, bool scale)
++int __evsel__read_on_cpu(struct evsel *evsel, int cpu_map_idx, int thread, bool scale)
+ {
+ 	struct perf_counts_values count;
+ 	size_t nv = scale ? 3 : 1;
+ 
+-	if (FD(evsel, cpu, thread) < 0)
++	if (FD(evsel, cpu_map_idx, thread) < 0)
+ 		return -EINVAL;
+ 
+ 	if (evsel->counts == NULL && evsel__alloc_counts(evsel) < 0)
+ 		return -ENOMEM;
+ 
+-	if (readn(FD(evsel, cpu, thread), &count, nv * sizeof(u64)) <= 0)
++	if (readn(FD(evsel, cpu_map_idx, thread), &count, nv * sizeof(u64)) <= 0)
+ 		return -errno;
+ 
+-	evsel__compute_deltas(evsel, cpu, thread, &count);
++	evsel__compute_deltas(evsel, cpu_map_idx, thread, &count);
+ 	perf_counts_values__scale(&count, scale, NULL);
+-	*perf_counts(evsel->counts, cpu, thread) = count;
++	*perf_counts(evsel->counts, cpu_map_idx, thread) = count;
+ 	return 0;
+ }
+ 
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 7cb7c9c77ab0..c3db41282400 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -333,32 +333,32 @@ static inline bool evsel__match2(struct evsel *e1, struct evsel *e2)
+ 	       (e1->core.attr.config == e2->core.attr.config);
+ }
+ 
+-int evsel__read_counter(struct evsel *evsel, int cpu, int thread);
++int evsel__read_counter(struct evsel *evsel, int cpu_map_idx, int thread);
+ 
+-int __evsel__read_on_cpu(struct evsel *evsel, int cpu, int thread, bool scale);
++int __evsel__read_on_cpu(struct evsel *evsel, int cpu_map_idx, int thread, bool scale);
+ 
+ /**
+  * evsel__read_on_cpu - Read out the results on a CPU and thread
+  *
+  * @evsel - event selector to read value
+- * @cpu - CPU of interest
++ * @cpu_map_idx - CPU of interest
+  * @thread - thread of interest
+  */
+-static inline int evsel__read_on_cpu(struct evsel *evsel, int cpu, int thread)
++static inline int evsel__read_on_cpu(struct evsel *evsel, int cpu_map_idx, int thread)
+ {
+-	return __evsel__read_on_cpu(evsel, cpu, thread, false);
++	return __evsel__read_on_cpu(evsel, cpu_map_idx, thread, false);
+ }
+ 
+ /**
+  * evsel__read_on_cpu_scaled - Read out the results on a CPU and thread, scaled
+  *
+  * @evsel - event selector to read value
+- * @cpu - CPU of interest
++ * @cpu_map_idx - CPU of interest
+  * @thread - thread of interest
+  */
+-static inline int evsel__read_on_cpu_scaled(struct evsel *evsel, int cpu, int thread)
++static inline int evsel__read_on_cpu_scaled(struct evsel *evsel, int cpu_map_idx, int thread)
+ {
+-	return __evsel__read_on_cpu(evsel, cpu, thread, true);
++	return __evsel__read_on_cpu(evsel, cpu_map_idx, thread, true);
+ }
+ 
+ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
 -- 
 2.34.1.307.g9b7440fafd-goog
 
