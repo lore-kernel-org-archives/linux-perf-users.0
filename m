@@ -2,57 +2,57 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CD5C4332F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD71C433FE
 	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Dec 2021 07:49:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347101AbhLWHtF (ORCPT
+        id S1347326AbhLWHtD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Dec 2021 02:49:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41118 "EHLO
+        Thu, 23 Dec 2021 02:49:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347347AbhLWHsP (ORCPT
+        with ESMTP id S1347101AbhLWHsQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Dec 2021 02:48:15 -0500
+        Thu, 23 Dec 2021 02:48:16 -0500
 Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75D60C0617A0
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 23:47:58 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id t184-20020a2546c1000000b006008b13c80bso8749327yba.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 23:47:58 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02494C061394
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 23:48:01 -0800 (PST)
+Received: by mail-yb1-xb49.google.com with SMTP id e131-20020a25d389000000b005fb5e6eb757so8561674ybf.22
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Dec 2021 23:48:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=57/+4CL2ERGKB8wcFmTlsb9+ddyZs/YCDFj+XQK+r0Y=;
-        b=Kmw2HMz8OnTT8+e6Av5zTsnabJHV8YuPlY4nBiiHSrQaqFlf8OO8BaE6JhznIb+SkY
-         VbqZrgtC4iehGZ7B79QmLrZdOtspJq5LF9uzHuUOCAFNmOfeWXOL1obfpVpL699oH31r
-         RMl4gBPGQa5La8+7Mb7usxHC/DEYrY3rgqrQ/8f1Js0gwjznxcIY/fwlRyNgnH2fPbKQ
-         TXgOSJrulJ12P/58l9iRWaPGNYN7knQGXt4VJS/5PeyX3P28yZJyE6IdNO6uOr1Aka5L
-         fXWzycF1yUW/PHYWg4mkth7nRHn4Qx4qFCwINtwn1FAmf6VVPFS+bEt+pEQTGGEvrMrm
-         04eA==
+        bh=ZhtwMx5XmOUxargn0OJvoWgG4zJ20RlnI8nSzXmFBiA=;
+        b=cF/W+j1wUQlcKvSQ/5mNaIKiUE9tza12393fzA6WaZLhsDYM1r7PIYKxYMlEcDRnSs
+         03+Wgtma4aC7HAWdsPHD9UZA1990+E9LTOO2L6HKoi8iPBYr72A3zQTZSnogBntc5r/1
+         HI77yATkA+EOu4Zru5R2FbaeTqKbDCf+GNrPuIh5H74KbOVOlS/MYCbQurlMekaL89qM
+         YE3ftGgjvTdWKy/GbuXk5VyaTMq6QUq3SiBkSSFQWS7povraNIfsioyV8NxLMZ/ujR/1
+         l9ktc/vehndZvQPzDmnWRjKo43H0k4NQ0qAYbRxr6i1Sm7S/VvOx7RkMT/Z3HXCVkXwi
+         DiYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=57/+4CL2ERGKB8wcFmTlsb9+ddyZs/YCDFj+XQK+r0Y=;
-        b=hOzjiSP0x0ZKb9oJymfe/iWb97m0paWR8M8lVZzH4cph3TcxHkybwOswdoLehAARiz
-         ZtfYfNx1kfHwPTi6gv1LHp0aTmeUBjy2j0QAi1DyCPqMAhNZNhCc7thBvfM896JHJ0Xw
-         yvnbZKVRxFeE9c4Rn/JbpYEvFGCqRiJk0HouJGcFbJSAcE3b6WzoY/qd9P/a2/ilm4lP
-         W4ykYEkxPk55nQb9sPK6D+tO2U0T8vqAtGXMgFQFpagNm0Gl7sFn3jbi6VEsxpxEKHH+
-         i/JA25PAvB6vGOEXJeQPRCVkRa3BCOY68o48ovRy3zg2TPrGVI+xkaL3CHkmsjU5ICwO
-         B5ag==
-X-Gm-Message-State: AOAM531pLDALX2R/JI2vrbXbociytrAzBjZkFDDtsM+ogbZkIqwvX6mH
-        nPcZGUZ24QJQWnPPt8+ifs6Sqeu3jt7m
-X-Google-Smtp-Source: ABdhPJz7s6JPrDDNZF3on+3gorJfYhIFzNZiyO0pXViekCWuxfoR7TVmFQdx4NTB8GlHaIJ5D01ruOND6QQL
+        bh=ZhtwMx5XmOUxargn0OJvoWgG4zJ20RlnI8nSzXmFBiA=;
+        b=TRHMPJdQvhe801qaDXlq8PWbFs+fC4ASSfx+FGm4F8/uu1Dz/PA7PUkmyfZo1BECcx
+         9nyHB4sQUpQNxbBAZ/70lF1ok9UIKgR+cKFAE88jkiAMoXbk4og1MgAQ4srpmrQPZFvr
+         +59aH090M7g5G9X0+mrXtXOdLpekhIUepwNU9uQxA9rtMgLelGKjxNdVMLwDarE8IjEs
+         h4buZ3rVoQSKDiExbZud/IzzqaK970TVe4MeRHIyOHsjXOP6CdKBuU5kmZJ3Bz3cHxnM
+         cSv/j4msfnnBxTKFtGPmmi4kZCAYcA83Ias1hmbBm3Ee1QcO97R+kc1cyxBSpkIvNvn7
+         MamA==
+X-Gm-Message-State: AOAM5314cOOrMyRH2Nm+MjXOqVECDp2vxJ7WrL9nK+4okU4YCcmQiyEO
+        +qtPgIIKDbh6PeZyfDS09EqWDBpWR+ZF
+X-Google-Smtp-Source: ABdhPJzUOFTBp8xme2THzFqg1XjnHXFKMcITvfTbSeai3tZhHOQotzeL83lYSQ4TOw+DRzlH02104Y+uqKDN
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:4fef:90ff:589d:24ca])
- (user=irogers job=sendgmr) by 2002:a25:516:: with SMTP id 22mr1724778ybf.294.1640245677712;
- Wed, 22 Dec 2021 23:47:57 -0800 (PST)
-Date:   Wed, 22 Dec 2021 23:45:36 -0800
+ (user=irogers job=sendgmr) by 2002:a25:37cb:: with SMTP id
+ e194mr1730367yba.449.1640245680254; Wed, 22 Dec 2021 23:48:00 -0800 (PST)
+Date:   Wed, 22 Dec 2021 23:45:37 -0800
 In-Reply-To: <20211223074541.3318938-1-irogers@google.com>
-Message-Id: <20211223074541.3318938-44-irogers@google.com>
+Message-Id: <20211223074541.3318938-45-irogers@google.com>
 Mime-Version: 1.0
 References: <20211223074541.3318938-1-irogers@google.com>
 X-Mailer: git-send-email 2.34.1.307.g9b7440fafd-goog
-Subject: [PATCH v2 43/48] libperf: Sync evsel documentation
+Subject: [PATCH v2 44/48] perf bpf: Rename cpu to cpu_map_idx
 From:   Ian Rogers <irogers@google.com>
 To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -80,39 +80,103 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-cpu was renamed cpu_map_idx, for clarity.
+Synchronize the caller in evsel with the called function.
+Shorten 3 lines of code in bperf_read by using
+perf_cpu_map__for_each_cpu.
+This code is frequently using variables named cpu as cpu map indices,
+which doesn't matter as all CPUs are in the CPU map. It is strange in
+some cases the cpumap is used at all.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/perf/Documentation/libperf.txt | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ tools/perf/util/bpf_counter.c | 16 +++++++---------
+ tools/perf/util/bpf_counter.h |  4 ++--
+ 2 files changed, 9 insertions(+), 11 deletions(-)
 
-diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
-index 63ae5e0195ce..88a9335421ab 100644
---- a/tools/lib/perf/Documentation/libperf.txt
-+++ b/tools/lib/perf/Documentation/libperf.txt
-@@ -135,16 +135,16 @@ SYNOPSIS
-   int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
-                        struct perf_thread_map *threads);
-   void perf_evsel__close(struct perf_evsel *evsel);
--  void perf_evsel__close_cpu(struct perf_evsel *evsel, int cpu);
-+  void perf_evsel__close_cpu(struct perf_evsel *evsel, int cpu_map_idx);
-   int perf_evsel__mmap(struct perf_evsel *evsel, int pages);
-   void perf_evsel__munmap(struct perf_evsel *evsel);
--  void *perf_evsel__mmap_base(struct perf_evsel *evsel, int cpu, int thread);
--  int perf_evsel__read(struct perf_evsel *evsel, int cpu, int thread,
-+  void *perf_evsel__mmap_base(struct perf_evsel *evsel, int cpu_map_idx, int thread);
-+  int perf_evsel__read(struct perf_evsel *evsel, int cpu_map_idx, int thread,
-                        struct perf_counts_values *count);
-   int perf_evsel__enable(struct perf_evsel *evsel);
--  int perf_evsel__enable_cpu(struct perf_evsel *evsel, int cpu);
-+  int perf_evsel__enable_cpu(struct perf_evsel *evsel, int cpu_map_idx);
-   int perf_evsel__disable(struct perf_evsel *evsel);
--  int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu);
-+  int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu_map_idx);
-   struct perf_cpu_map *perf_evsel__cpus(struct perf_evsel *evsel);
-   struct perf_thread_map *perf_evsel__threads(struct perf_evsel *evsel);
-   struct perf_event_attr *perf_evsel__attr(struct perf_evsel *evsel);
+diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
+index c17d4a43ce06..ae5bd87ff020 100644
+--- a/tools/perf/util/bpf_counter.c
++++ b/tools/perf/util/bpf_counter.c
+@@ -265,7 +265,7 @@ static int bpf_program_profiler__read(struct evsel *evsel)
+ 	return 0;
+ }
+ 
+-static int bpf_program_profiler__install_pe(struct evsel *evsel, int cpu,
++static int bpf_program_profiler__install_pe(struct evsel *evsel, int cpu_map_idx,
+ 					    int fd)
+ {
+ 	struct bpf_prog_profiler_bpf *skel;
+@@ -277,7 +277,7 @@ static int bpf_program_profiler__install_pe(struct evsel *evsel, int cpu,
+ 		assert(skel != NULL);
+ 
+ 		ret = bpf_map_update_elem(bpf_map__fd(skel->maps.events),
+-					  &cpu, &fd, BPF_ANY);
++					  &cpu_map_idx, &fd, BPF_ANY);
+ 		if (ret)
+ 			return ret;
+ 	}
+@@ -566,12 +566,12 @@ static int bperf__load(struct evsel *evsel, struct target *target)
+ 	return err;
+ }
+ 
+-static int bperf__install_pe(struct evsel *evsel, int cpu, int fd)
++static int bperf__install_pe(struct evsel *evsel, int cpu_map_idx, int fd)
+ {
+ 	struct bperf_leader_bpf *skel = evsel->leader_skel;
+ 
+ 	return bpf_map_update_elem(bpf_map__fd(skel->maps.events),
+-				   &cpu, &fd, BPF_ANY);
++				   &cpu_map_idx, &fd, BPF_ANY);
+ }
+ 
+ /*
+@@ -623,9 +623,7 @@ static int bperf__read(struct evsel *evsel)
+ 		case BPERF_FILTER_GLOBAL:
+ 			assert(i == 0);
+ 
+-			num_cpu = all_cpu_map->nr;
+-			for (j = 0; j < num_cpu; j++) {
+-				cpu = all_cpu_map->map[j];
++			perf_cpu_map__for_each_cpu(cpu, j, all_cpu_map) {
+ 				perf_counts(evsel->counts, cpu, 0)->val = values[cpu].counter;
+ 				perf_counts(evsel->counts, cpu, 0)->ena = values[cpu].enabled;
+ 				perf_counts(evsel->counts, cpu, 0)->run = values[cpu].running;
+@@ -757,11 +755,11 @@ static inline bool bpf_counter_skip(struct evsel *evsel)
+ 		evsel->follower_skel == NULL;
+ }
+ 
+-int bpf_counter__install_pe(struct evsel *evsel, int cpu, int fd)
++int bpf_counter__install_pe(struct evsel *evsel, int cpu_map_idx, int fd)
+ {
+ 	if (bpf_counter_skip(evsel))
+ 		return 0;
+-	return evsel->bpf_counter_ops->install_pe(evsel, cpu, fd);
++	return evsel->bpf_counter_ops->install_pe(evsel, cpu_map_idx, fd);
+ }
+ 
+ int bpf_counter__load(struct evsel *evsel, struct target *target)
+diff --git a/tools/perf/util/bpf_counter.h b/tools/perf/util/bpf_counter.h
+index 65ebaa6694fb..4dbf26408b69 100644
+--- a/tools/perf/util/bpf_counter.h
++++ b/tools/perf/util/bpf_counter.h
+@@ -16,7 +16,7 @@ typedef int (*bpf_counter_evsel_op)(struct evsel *evsel);
+ typedef int (*bpf_counter_evsel_target_op)(struct evsel *evsel,
+ 					   struct target *target);
+ typedef int (*bpf_counter_evsel_install_pe_op)(struct evsel *evsel,
+-					       int cpu,
++					       int cpu_map_idx,
+ 					       int fd);
+ 
+ struct bpf_counter_ops {
+@@ -40,7 +40,7 @@ int bpf_counter__enable(struct evsel *evsel);
+ int bpf_counter__disable(struct evsel *evsel);
+ int bpf_counter__read(struct evsel *evsel);
+ void bpf_counter__destroy(struct evsel *evsel);
+-int bpf_counter__install_pe(struct evsel *evsel, int cpu, int fd);
++int bpf_counter__install_pe(struct evsel *evsel, int cpu_map_idx, int fd);
+ 
+ #else /* HAVE_BPF_SKEL */
+ 
 -- 
 2.34.1.307.g9b7440fafd-goog
 
