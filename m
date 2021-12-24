@@ -2,94 +2,138 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA180C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Dec 2021 02:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5047DC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Dec 2021 08:49:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350901AbhLXCEC (ORCPT
+        id S1343642AbhLXItq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Dec 2021 21:04:02 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:36236 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230044AbhLXCEC (ORCPT
+        Fri, 24 Dec 2021 03:49:46 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4322 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1343657AbhLXItl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Dec 2021 21:04:02 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0B143B82004
-        for <linux-perf-users@vger.kernel.org>; Fri, 24 Dec 2021 02:04:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7396AC36AE9;
-        Fri, 24 Dec 2021 02:03:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640311439;
-        bh=wftTPT18IiQ1tylWBMHbgZSJ5k23Isv0k6mWuASkwaQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RuZKIfMexQA2gVisqETia5F3V6I5iC7x1TlUYYSEOM6ZrROpXXM3mmmGLw9sPzo3c
-         h720Fl2nT8CzH3eUDblIdE/Ck7FCpuEAqPDgxvT/Iv/o4BrJVgaY7LDErVSjUMsvmn
-         48A4JxkIsV5chLFskWlYQ2esau6zp2G8E5GhOWWY/S8cgY+NO+yJiwGwNEuZNEFD8M
-         rc2X3lX8iexu3X902LzsV91YYgwdZmxEkSf6UPeoFDmk4n74S5v1tqKSTZ6exeC0nX
-         nAGk4+q9xBF9AHKWT2SQPaSKe5hK35uih0U1PshCYfJ/tdpRtbnq9s/z4hyh269MLl
-         spqYfYOVp9k8A==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E1C6140B92; Thu, 23 Dec 2021 23:03:56 -0300 (-03)
-Date:   Thu, 23 Dec 2021 23:03:56 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Kevin Grigorenko <kevin.grigorenko@us.ibm.com>
-Cc:     linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf: Fix perf-record manual typo
-Message-ID: <YcUqjPeawdnH2JeV@kernel.org>
-References: <OFF9778928.59F62D85-ON002587B3.00757F55-882587B3.00766874@ibm.com>
+        Fri, 24 Dec 2021 03:49:41 -0500
+Received: from fraeml708-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JL0xV4zSPz67cpv;
+        Fri, 24 Dec 2021 16:45:02 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml708-chm.china.huawei.com (10.206.15.36) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Fri, 24 Dec 2021 09:49:38 +0100
+Received: from [10.195.32.200] (10.195.32.200) by
+ lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Fri, 24 Dec 2021 08:49:37 +0000
+Subject: Re: [PATCH v3] perf test: Make metric testing more robust.
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <eranian@google.com>
+References: <20211223185622.3435128-1-irogers@google.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <e078ac0f-6165-9670-926f-d1f2c536ea9e@huawei.com>
+Date:   Fri, 24 Dec 2021 08:49:35 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <OFF9778928.59F62D85-ON002587B3.00757F55-882587B3.00766874@ibm.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20211223185622.3435128-1-irogers@google.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.195.32.200]
+X-ClientProxiedBy: lhreml729-chm.china.huawei.com (10.201.108.80) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Dec 22, 2021 at 02:33:20PM -0700, Kevin Grigorenko escreveu:
-> From: Kevin Grigorenko <kevin.grigorenko@us.ibm.com>
-> Date: Wed, 22 Dec 2021 13:21:44 -0800
-> Subject: [PATCH] perf: Fix perf-record manual typo
+On 23/12/2021 18:56, Ian Rogers wrote:
+> When testing metric expressions we fake counter values from 1 going
+> upward. For some metrics this can yield negative values that are clipped
+> to zero, and then cause divide by zero failures. Such clipping is
+> questionable but may be a result of tools automatically generating
+> metrics. A workaround for this case is to try a second time with counter
+> values going in the opposite direction.
 > 
-> Signed-off-by: Kevin Grigorenko <kevin.grigorenko@us.ibm.com>
+> This case was seen in a metric like:
+>    event1 / max(event2 - event3, 0)
+> But it may also happen in more sensible metrics like:
+>    event1 / (event2 + event3 - 1 - event4)
+> 
+> v2. Rebase and more detail in commit message.
+> v3. Is a rebase.
+
+Incorrect location for this info
+
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+
+Reviewed-by: John Garry <john.garry@huawei.com>
+
 > ---
->  tools/perf/Documentation/perf-record.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>   tools/perf/tests/pmu-events.c | 32 ++++++++++++++++++++++++++------
+>   1 file changed, 26 insertions(+), 6 deletions(-)
 > 
-> diff --git a/tools/perf/Documentation/perf-record.txt 
-> b/tools/perf/Documentation/perf-record.txt
-> index 3cf7bac67239..52f98d53a97e 100644
-> --- a/tools/perf/Documentation/perf-record.txt
-> +++ b/tools/perf/Documentation/perf-record.txt
-> @@ -258,7 +258,7 @@ OPTIONS
->         Call Frame Information) or "lbr" (Hardware Last Branch Record
->         facility).
->  
-> -       In some systems, where binaries are build with gcc
-> +       In some systems, where binaries are built with gcc
->         --fomit-frame-pointer, using the "fp" method will produce bogus
->         call graphs, using "dwarf", if available (perf tools linked to
->         the libunwind or libdw library) should be used instead.
+> diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+> index df1c9a3cc05b..b2ddf928d32a 100644
+> --- a/tools/perf/tests/pmu-events.c
+> +++ b/tools/perf/tests/pmu-events.c
+> @@ -962,8 +962,18 @@ static int test__parsing(struct test_suite *test __maybe_unused,
+>   			}
+>   
+>   			if (expr__parse(&result, ctx, pe->metric_expr)) {
+> -				expr_failure("Parse failed", map, pe);
+> -				ret++;
+> +				/*
+> +				 * Parsing failed, make numbers go from large to
+> +				 * small which can resolve divide by zero
 
-Can you please check this works with what is in acme/perf/core?
+can or may?
 
-⬢[acme@toolbox perf]$ git checkout perf/core
-Switched to branch 'perf/core'
-⬢[acme@toolbox perf]$ am
-Applying: perf: Fix perf-record manual typo
-error: git diff header lacks filename information when removing 1 leading pathname component (line 6)
-Patch failed at 0001 perf: Fix perf-record manual typo
-hint: Use 'git am --show-current-patch=diff' to see the failed patch
-When you have resolved this problem, run "git am --continue".
-If you prefer to skip this patch, run "git am --skip" instead.
-To restore the original branch and stop patching, run "git am --abort".
-⬢[acme@toolbox perf]$ git am --abort
-⬢[acme@toolbox perf]$ git diff
-⬢[acme@toolbox perf]$ patch -p1 < ~/wb/1.patch
-patching file tools/perf/Documentation/perf-record.txt
-Hunk #1 FAILED at 258.
-1 out of 1 hunk FAILED -- saving rejects to file tools/perf/Documentation/perf-record.txt.rej
-⬢[acme@toolbox perf]$
+> +				 * issues.
+> +				 */
+> +				k = 1024;
+> +				hashmap__for_each_entry(ctx->ids, cur, bkt)
+> +					expr__add_id_val(ctx, strdup(cur->key), k--);
+> +				if (expr__parse(&result, ctx, pe->metric_expr)) {
+> +					expr_failure("Parse failed", map, pe);
+> +					ret++;
+> +				}
+>   			}
+>   		}
+>   	}
+> @@ -1022,10 +1032,20 @@ static int metric_parse_fake(const char *str)
+>   		}
+>   	}
+>   
+> -	if (expr__parse(&result, ctx, str))
+> -		pr_err("expr__parse failed\n");
+> -	else
+> -		ret = 0;
+> +	ret = 0;
+> +	if (expr__parse(&result, ctx, str)) {
+> +		/*
+> +		 * Parsing failed, make numbers go from large to small which can
+> +		 * resolve divide by zero issues.
+> +		 */
+> +		i = 1024;
+> +		hashmap__for_each_entry(ctx->ids, cur, bkt)
+> +			expr__add_id_val(ctx, strdup(cur->key), i--);
+> +		if (expr__parse(&result, ctx, str)) {
+> +			pr_err("expr__parse failed\n");
+> +			ret = -1;
+> +		}
+> +	}
+>   
+>   out:
+>   	expr__ctx_free(ctx);
+> 
+
