@@ -2,87 +2,81 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8D1C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Dec 2021 18:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC65C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Dec 2021 21:00:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237032AbhL1SZ2 (ORCPT
+        id S236240AbhL1VAZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 28 Dec 2021 13:25:28 -0500
-Received: from mail-lf1-f43.google.com ([209.85.167.43]:40758 "EHLO
-        mail-lf1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237030AbhL1SZ2 (ORCPT
+        Tue, 28 Dec 2021 16:00:25 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4326 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236170AbhL1VAY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 28 Dec 2021 13:25:28 -0500
-Received: by mail-lf1-f43.google.com with SMTP id bu9so43059378lfb.7;
-        Tue, 28 Dec 2021 10:25:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IKBT3fVk+5Ze7NnqHlV8mvrLrX1N9Lsru+aK5EZ1DF8=;
-        b=3eWJBQgcJa20v1TPqVAEAae9Erxczyi5LbLqlrEI24MLkKHOdWFuBle/VxCDsnMcaM
-         NphfJJazS0kZOw1Ov5K0larJTnJxj9OJ5jQQRo623Piqox+xDEXpkELa3hgGVGjYuTBd
-         Od7uXhtCleCSU/26IjB9Aj+xw0Cxf8cINB26pbq1uT+bRVNuywN9SHcUS3m++83kxhYV
-         5KE6I/uAVWAC51RytDHB7z2SuyXfu15hD7lJjPUZmOa7F4H+KeVlBL2QNY/9kjurEbRf
-         oUCKAuc16B3F6NcAr/xvjH4OnHvhOj7VSbBgZwL8xuGfb2pCm/2OeDI/lDYCAhKw9LF3
-         avAQ==
-X-Gm-Message-State: AOAM533Lx6ERSf6v/iCKbFFpDDfyeKkRGxRCSpaGdF7lKnj4hZix69DM
-        lxCG5H1KO+xEFbZ4XBs0d1cfzkLWZFHMaBR4wlA=
-X-Google-Smtp-Source: ABdhPJyyFBRF35kVUSEDJz3P8BXqrVfQ80r4TpH8NbNlUiO8eSbhXahKQ5aLrAcoEmxoqo10qmly0tg23Tze8xqyTJQ=
-X-Received: by 2002:a05:6512:3d21:: with SMTP id d33mr20525401lfv.481.1640715926035;
- Tue, 28 Dec 2021 10:25:26 -0800 (PST)
+        Tue, 28 Dec 2021 16:00:24 -0500
+Received: from fraeml735-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JNmyh2Yj2z685wS;
+        Wed, 29 Dec 2021 04:55:40 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml735-chm.china.huawei.com (10.206.15.216) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Tue, 28 Dec 2021 22:00:22 +0100
+Received: from [10.47.90.53] (10.47.90.53) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.20; Tue, 28 Dec
+ 2021 21:00:21 +0000
+Subject: Re: [PATCH v2] perf pmu: Fix alias events list
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <namhyung@kernel.org>, <irogers@google.com>,
+        <kan.liang@linux.intel.com>
+CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <zhengjun.xing@linux.intel.com>
+References: <1640103090-140490-1-git-send-email-john.garry@huawei.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <05dcd009-084c-b8ee-c4a5-35c0862ee26d@huawei.com>
+Date:   Tue, 28 Dec 2021 21:00:18 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-References: <20211225005558.503935-1-standby24x7@gmail.com>
-In-Reply-To: <20211225005558.503935-1-standby24x7@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 28 Dec 2021 10:25:08 -0800
-Message-ID: <CAM9d7cj0dQvoio-T0yNZzo+AGGDxCFtRWuDxBunFEkipWtDxZA@mail.gmail.com>
-Subject: Re: [PATCH] perf bpf: Fix a typo in bpf_counter_cgroup.c
-To:     Masanari Iida <standby24x7@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1640103090-140490-1-git-send-email-john.garry@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.90.53]
+X-ClientProxiedBy: lhreml701-chm.china.huawei.com (10.201.108.50) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+On 21/12/2021 16:11, John Garry wrote:
+> Commit 0e0ae8742207 ("perf list: Display hybrid PMU events with cpu type")
+> changes the event list for uncore PMUs or arm64 heterogeneous CPU systems,
+> such that duplicate aliases are incorrectly listed per PMU (which they
+> should not be), like:
+> 
+> ./perf list
+> ...
+> unc_cbo_cache_lookup.any_es
+> [Unit: uncore_cbox L3 Lookup any request that access cache and found
+> line in E or S-state]
+> unc_cbo_cache_lookup.any_es
+> [Unit: uncore_cbox L3 Lookup any request that access cache and found
+> line in E or S-state]
+> unc_cbo_cache_lookup.any_i
+> [Unit: uncore_cbox L3 Lookup any request that access cache and found
+> line in I-state]
+> unc_cbo_cache_lookup.any_i
+> [Unit: uncore_cbox L3 Lookup any request that access cache and found
+> line in I-state]
+> ...
+> 
+> Notice how the events are listed twice.
 
-On Fri, Dec 24, 2021 at 4:57 PM Masanari Iida <standby24x7@gmail.com> wrote:
->
-> This patch fixes a spelling typo in error message.
->
-> Signed-off-by: Masanari Iida <standby24x7@gmail.com>
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Hi Arnaldo,
 
-Thanks,
-Namhyung
+Can you kindly consider picking up this change for v5.16?
 
-
-> ---
->  tools/perf/util/bpf_counter_cgroup.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/bpf_counter_cgroup.c b/tools/perf/util/bpf_counter_cgroup.c
-> index cbc6c2bca488..fea5f2ca03f6 100644
-> --- a/tools/perf/util/bpf_counter_cgroup.c
-> +++ b/tools/perf/util/bpf_counter_cgroup.c
-> @@ -266,7 +266,7 @@ static int bperf_cgrp__read(struct evsel *evsel)
->                 idx = evsel->core.idx;
->                 err = bpf_map_lookup_elem(reading_map_fd, &idx, values);
->                 if (err) {
-> -                       pr_err("bpf map lookup falied: idx=%u, event=%s, cgrp=%s\n",
-> +                       pr_err("bpf map lookup failed: idx=%u, event=%s, cgrp=%s\n",
->                                idx, evsel__name(evsel), evsel->cgrp->name);
->                         goto out;
->                 }
-> --
-> 2.25.0
->
+Thanks!
