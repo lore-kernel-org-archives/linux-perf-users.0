@@ -2,42 +2,42 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA3DC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Dec 2021 23:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BFAC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Dec 2021 23:55:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231229AbhL1XsX (ORCPT
+        id S232013AbhL1XzJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 28 Dec 2021 18:48:23 -0500
-Received: from mail-lf1-f45.google.com ([209.85.167.45]:38568 "EHLO
-        mail-lf1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231682AbhL1XsW (ORCPT
+        Tue, 28 Dec 2021 18:55:09 -0500
+Received: from mail-lj1-f174.google.com ([209.85.208.174]:37658 "EHLO
+        mail-lj1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231929AbhL1XzJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 28 Dec 2021 18:48:22 -0500
-Received: by mail-lf1-f45.google.com with SMTP id x21so44399542lfa.5;
-        Tue, 28 Dec 2021 15:48:22 -0800 (PST)
+        Tue, 28 Dec 2021 18:55:09 -0500
+Received: by mail-lj1-f174.google.com with SMTP id k27so32990214ljc.4;
+        Tue, 28 Dec 2021 15:55:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=43RunENc9BGgUTy24GSL/O+U7jxvlHOGKJ/isDXkZcY=;
-        b=bSsctSbok+AR/lieV93EniDu3PelUAZg4u1qgAkeW5XGc830HCh2aHvZOYA8maWIhu
-         B6aJX/uzhOeIu+lSRIpBMGn7kXify0n0Yq8sgPhL3jJ9mvN0ykhYKSuUA5nrVsZfwEIs
-         /NS1HhdU0BJTpm+4KG4yz8Es4rp0+DAy/2YDxuKizbZ6cIrAV45vbS8gm4lowC6+UdbX
-         y/EMMFz+b9gK3tEolI0DfIcoP+YN8F0lIJqcc7+idNIroQkOR17M9hl09+3qvudUxcO5
-         vL/HzFt/KH9P5rjOjmEtELdUxNnxdQec46mcN+tAB9y+0x3XHB7sXK5nAfAi2JJYkFiU
-         JhMA==
-X-Gm-Message-State: AOAM5320kuqJmEen6SZb61xQrZIkw1FWxoWLfmF2AkOBaVWt5rSXheEP
-        6KooO9EcKgBQ964T7Lo5kr8u52EwNxtjKtTmczI=
-X-Google-Smtp-Source: ABdhPJwoibq9jpmkzRcCRwexFVs7p98pjuahrASVfI9ZwKiJdXNKZHZCJTbxHkq4sU3L57ahFbfSr/Ltc8ZyxsZJAUg=
-X-Received: by 2002:a05:6512:3d21:: with SMTP id d33mr21678706lfv.481.1640735301239;
- Tue, 28 Dec 2021 15:48:21 -0800 (PST)
+        bh=CKJz/AtcJmpCiEvIzViyhh95QG7qUmjpMJgihccbkCs=;
+        b=PvDVzKTaqiPh2OqgLIJCiu7WbBrGDGQBZJGTF+b1Y7U06FAYwwDooPNg4zdYP6/eap
+         hgq76x1yk7fnQDavBI1/7u6vJcwpnF77n2u5gjx9/A9LMU950TbWSBAIdigdzJ3VCvJ+
+         ua4nrsU3qb4WkaVi0k9aJbfKaICy2eDZbezTwzrZja94uSrrO0NUG/CtVgU1gXDKSuQQ
+         3oc6hLXb8npUHlKfwslmGNZfzeW7H8kJP6h4fP0OL4rMLtRXBLRqFNrPCPikocxWTZVX
+         AKFYezzL6KzfUEhC5F2/1pD3cHkjFrWjCzvZprsYSacURrHAq7mQCImy5GMGMStsaNTv
+         cHTA==
+X-Gm-Message-State: AOAM530Rir0L6E3SGbrDC36txGO/lWZMDaaDLXHQgX1RjV3AR0qDzJY9
+        XoOWRjuHNU5StAbKGOT1befZ40QR3PAQcf6VEMw=
+X-Google-Smtp-Source: ABdhPJzeVaNtQh2PYBhyRcZvRYpN27TgPCYnrsUr+ZHkFSjQrU+k1+FkqGmEwkHUIhVBUf8j36D39viYfLBFnidZBQI=
+X-Received: by 2002:a2e:a288:: with SMTP id k8mr7061145lja.204.1640735707979;
+ Tue, 28 Dec 2021 15:55:07 -0800 (PST)
 MIME-Version: 1.0
-References: <20211223074541.3318938-1-irogers@google.com> <20211223074541.3318938-21-irogers@google.com>
-In-Reply-To: <20211223074541.3318938-21-irogers@google.com>
+References: <20211223074541.3318938-1-irogers@google.com> <20211223074541.3318938-23-irogers@google.com>
+In-Reply-To: <20211223074541.3318938-23-irogers@google.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 28 Dec 2021 15:48:10 -0800
-Message-ID: <CAM9d7chcAXiqWTSUxniPrdYM5hdbwPV1oyxUVvg6B-JfL89vNw@mail.gmail.com>
-Subject: Re: [PATCH v2 20/48] perf cpumap: Move 'has' function to libperf
+Date:   Tue, 28 Dec 2021 15:54:56 -0800
+Message-ID: <CAM9d7ch+0gCxGe1yJWDa0cLkcHtQLVcbnW6t04NjBRbwP9ASwQ@mail.gmail.com>
+Subject: Re: [PATCH v2 22/48] perf cpumap: Trim the cpu_aggr_map
 To:     Ian Rogers <irogers@google.com>
 Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         John Garry <john.garry@huawei.com>,
@@ -65,32 +65,43 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
-
 On Wed, Dec 22, 2021 at 11:47 PM Ian Rogers <irogers@google.com> wrote:
 >
-> Make the cpu map argument const for consistency with the rest of the
-> API. Modify cpu_map__idx accordingly.
+> cpu_aggr_map__new removes duplicates, when this happens shrink the
+> array.
 >
 > Reviewed-by: James Clark <james.clark@arm.com>
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/lib/perf/cpumap.c                  |  7 ++++++-
->  tools/lib/perf/include/internal/cpumap.h |  2 +-
->  tools/lib/perf/include/perf/cpumap.h     |  1 +
+>  tools/perf/util/cpumap.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+> index 8a72ee996722..985c87f1f1ca 100644
+> --- a/tools/perf/util/cpumap.c
+> +++ b/tools/perf/util/cpumap.c
+> @@ -185,7 +185,12 @@ struct cpu_aggr_map *cpu_aggr_map__new(const struct perf_cpu_map *cpus,
+>                         c->nr++;
+>                 }
+>         }
+> -
+> +       /* Trim. */
+> +       if (c->nr != cpus->nr) {
+> +               c = realloc(c, sizeof(struct cpu_aggr_map) + sizeof(struct aggr_cpu_id) * c->nr);
+> +               if (!c)
+> +                       return NULL;
 
-You need to update tools/lib/perf/libperf.map to have
-the new API.
+This leaks the original 'c'.  Maybe we can just use it
+in case of a failure.
 
 Thanks,
 Namhyung
 
 
->  tools/perf/arch/arm/util/cs-etm.c        | 16 ++++++++--------
->  tools/perf/builtin-sched.c               |  6 +++---
->  tools/perf/tests/topology.c              |  2 +-
->  tools/perf/util/cpumap.c                 |  5 -----
->  tools/perf/util/cpumap.h                 |  2 --
->  tools/perf/util/cputopo.c                |  2 +-
->  9 files changed, 21 insertions(+), 22 deletions(-)
+> +       }
+>         /* ensure we process id in increasing order */
+>         qsort(c->map, c->nr, sizeof(struct aggr_cpu_id), aggr_cpu_id__cmp);
+>
+> --
+> 2.34.1.307.g9b7440fafd-goog
 >
