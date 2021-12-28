@@ -2,89 +2,87 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF714C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Dec 2021 11:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8D1C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Dec 2021 18:25:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233927AbhL1LNp (ORCPT
+        id S237032AbhL1SZ2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 28 Dec 2021 06:13:45 -0500
-Received: from szxga02-in.huawei.com ([45.249.212.188]:17306 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231721AbhL1LNp (ORCPT
+        Tue, 28 Dec 2021 13:25:28 -0500
+Received: from mail-lf1-f43.google.com ([209.85.167.43]:40758 "EHLO
+        mail-lf1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237030AbhL1SZ2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 28 Dec 2021 06:13:45 -0500
-Received: from dggpemm500024.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4JNX276M6vz9rvf;
-        Tue, 28 Dec 2021 19:12:47 +0800 (CST)
-Received: from dggpemm500017.china.huawei.com (7.185.36.178) by
- dggpemm500024.china.huawei.com (7.185.36.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Tue, 28 Dec 2021 19:13:43 +0800
-Received: from linux-suspe12sp5.huawei.com (10.67.133.38) by
- dggpemm500017.china.huawei.com (7.185.36.178) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Tue, 28 Dec 2021 19:13:43 +0800
-From:   Zechuan Chen <chenzechuan1@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>, <mhiramat@kernel.org>,
-        <Jianlin.Lv@arm.com>, <chenzechuan1@huawei.com>,
-        <ravi.bangoria@linux.ibm.com>, <yao.jin@linux.intel.com>,
-        <yangjihong1@huawei.com>, <mpe@ellerman.id.au>,
-        <naveen.n.rao@linux.vnet.ibm.com>
-CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] powerpc/perf: fix ppc64 perf probe add events failed
-Date:   Tue, 28 Dec 2021 19:13:38 +0800
-Message-ID: <20211228111338.218602-1-chenzechuan1@huawei.com>
-X-Mailer: git-send-email 2.12.3
+        Tue, 28 Dec 2021 13:25:28 -0500
+Received: by mail-lf1-f43.google.com with SMTP id bu9so43059378lfb.7;
+        Tue, 28 Dec 2021 10:25:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IKBT3fVk+5Ze7NnqHlV8mvrLrX1N9Lsru+aK5EZ1DF8=;
+        b=3eWJBQgcJa20v1TPqVAEAae9Erxczyi5LbLqlrEI24MLkKHOdWFuBle/VxCDsnMcaM
+         NphfJJazS0kZOw1Ov5K0larJTnJxj9OJ5jQQRo623Piqox+xDEXpkELa3hgGVGjYuTBd
+         Od7uXhtCleCSU/26IjB9Aj+xw0Cxf8cINB26pbq1uT+bRVNuywN9SHcUS3m++83kxhYV
+         5KE6I/uAVWAC51RytDHB7z2SuyXfu15hD7lJjPUZmOa7F4H+KeVlBL2QNY/9kjurEbRf
+         oUCKAuc16B3F6NcAr/xvjH4OnHvhOj7VSbBgZwL8xuGfb2pCm/2OeDI/lDYCAhKw9LF3
+         avAQ==
+X-Gm-Message-State: AOAM533Lx6ERSf6v/iCKbFFpDDfyeKkRGxRCSpaGdF7lKnj4hZix69DM
+        lxCG5H1KO+xEFbZ4XBs0d1cfzkLWZFHMaBR4wlA=
+X-Google-Smtp-Source: ABdhPJyyFBRF35kVUSEDJz3P8BXqrVfQ80r4TpH8NbNlUiO8eSbhXahKQ5aLrAcoEmxoqo10qmly0tg23Tze8xqyTJQ=
+X-Received: by 2002:a05:6512:3d21:: with SMTP id d33mr20525401lfv.481.1640715926035;
+ Tue, 28 Dec 2021 10:25:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.133.38]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm500017.china.huawei.com (7.185.36.178)
-X-CFilter-Loop: Reflected
+References: <20211225005558.503935-1-standby24x7@gmail.com>
+In-Reply-To: <20211225005558.503935-1-standby24x7@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 28 Dec 2021 10:25:08 -0800
+Message-ID: <CAM9d7cj0dQvoio-T0yNZzo+AGGDxCFtRWuDxBunFEkipWtDxZA@mail.gmail.com>
+Subject: Re: [PATCH] perf bpf: Fix a typo in bpf_counter_cgroup.c
+To:     Masanari Iida <standby24x7@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Because of commit bf794bf52a80 ("powerpc/kprobes: Fix kallsyms lookup
-across powerpc ABIv1 and ABIv2"), in ppc64 ABIv1, our perf command
-eliminates the need to use the prefix "." at the symbol name. But when
-the command "perf probe -a schedule" is executed on ppc64 ABIv1, it
-obtains two symbol address information through /proc/kallsyms, for example:
+Hello,
 
-cat /proc/kallsyms | grep -w schedule
-c000000000657020 T .schedule
-c000000000d4fdb8 D schedule
+On Fri, Dec 24, 2021 at 4:57 PM Masanari Iida <standby24x7@gmail.com> wrote:
+>
+> This patch fixes a spelling typo in error message.
+>
+> Signed-off-by: Masanari Iida <standby24x7@gmail.com>
 
-The symbol "D schedule" is not a function symbol, and perf will print:
-"p:probe/schedule _text+13958584"Failed to write event: Invalid argument
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-Therefore, when searching symbols from map and adding probe point for
-them, a symbol type check is added. If the type of symbol is not a
-function, skip it.
+Thanks,
+Namhyung
 
-Fixes: bf794bf52a80 ("powerpc/kprobes: Fix kallsyms lookup across powerpc ABIv1 and ABIv2")
 
-Signed-off-by: Zechuan Chen <chenzechuan1@huawei.com>
----
- tools/perf/util/probe-event.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index b2a02c9ab8ea..a834918a0a0d 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -3083,6 +3083,9 @@ static int find_probe_trace_events_from_map(struct perf_probe_event *pev,
- 	for (j = 0; j < num_matched_functions; j++) {
- 		sym = syms[j];
- 
-+		if (sym->type != STT_FUNC)
-+			continue;
-+
- 		/* There can be duplicated symbols in the map */
- 		for (i = 0; i < j; i++)
- 			if (sym->start == syms[i]->start) {
--- 
-2.12.3
-
+> ---
+>  tools/perf/util/bpf_counter_cgroup.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/bpf_counter_cgroup.c b/tools/perf/util/bpf_counter_cgroup.c
+> index cbc6c2bca488..fea5f2ca03f6 100644
+> --- a/tools/perf/util/bpf_counter_cgroup.c
+> +++ b/tools/perf/util/bpf_counter_cgroup.c
+> @@ -266,7 +266,7 @@ static int bperf_cgrp__read(struct evsel *evsel)
+>                 idx = evsel->core.idx;
+>                 err = bpf_map_lookup_elem(reading_map_fd, &idx, values);
+>                 if (err) {
+> -                       pr_err("bpf map lookup falied: idx=%u, event=%s, cgrp=%s\n",
+> +                       pr_err("bpf map lookup failed: idx=%u, event=%s, cgrp=%s\n",
+>                                idx, evsel__name(evsel), evsel->cgrp->name);
+>                         goto out;
+>                 }
+> --
+> 2.25.0
+>
