@@ -2,81 +2,95 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC65C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Dec 2021 21:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA3DC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Dec 2021 23:48:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236240AbhL1VAZ (ORCPT
+        id S231229AbhL1XsX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 28 Dec 2021 16:00:25 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4326 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236170AbhL1VAY (ORCPT
+        Tue, 28 Dec 2021 18:48:23 -0500
+Received: from mail-lf1-f45.google.com ([209.85.167.45]:38568 "EHLO
+        mail-lf1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231682AbhL1XsW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 28 Dec 2021 16:00:24 -0500
-Received: from fraeml735-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JNmyh2Yj2z685wS;
-        Wed, 29 Dec 2021 04:55:40 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml735-chm.china.huawei.com (10.206.15.216) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Tue, 28 Dec 2021 22:00:22 +0100
-Received: from [10.47.90.53] (10.47.90.53) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.20; Tue, 28 Dec
- 2021 21:00:21 +0000
-Subject: Re: [PATCH v2] perf pmu: Fix alias events list
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>, <irogers@google.com>,
-        <kan.liang@linux.intel.com>
-CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <zhengjun.xing@linux.intel.com>
-References: <1640103090-140490-1-git-send-email-john.garry@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <05dcd009-084c-b8ee-c4a5-35c0862ee26d@huawei.com>
-Date:   Tue, 28 Dec 2021 21:00:18 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        Tue, 28 Dec 2021 18:48:22 -0500
+Received: by mail-lf1-f45.google.com with SMTP id x21so44399542lfa.5;
+        Tue, 28 Dec 2021 15:48:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=43RunENc9BGgUTy24GSL/O+U7jxvlHOGKJ/isDXkZcY=;
+        b=bSsctSbok+AR/lieV93EniDu3PelUAZg4u1qgAkeW5XGc830HCh2aHvZOYA8maWIhu
+         B6aJX/uzhOeIu+lSRIpBMGn7kXify0n0Yq8sgPhL3jJ9mvN0ykhYKSuUA5nrVsZfwEIs
+         /NS1HhdU0BJTpm+4KG4yz8Es4rp0+DAy/2YDxuKizbZ6cIrAV45vbS8gm4lowC6+UdbX
+         y/EMMFz+b9gK3tEolI0DfIcoP+YN8F0lIJqcc7+idNIroQkOR17M9hl09+3qvudUxcO5
+         vL/HzFt/KH9P5rjOjmEtELdUxNnxdQec46mcN+tAB9y+0x3XHB7sXK5nAfAi2JJYkFiU
+         JhMA==
+X-Gm-Message-State: AOAM5320kuqJmEen6SZb61xQrZIkw1FWxoWLfmF2AkOBaVWt5rSXheEP
+        6KooO9EcKgBQ964T7Lo5kr8u52EwNxtjKtTmczI=
+X-Google-Smtp-Source: ABdhPJwoibq9jpmkzRcCRwexFVs7p98pjuahrASVfI9ZwKiJdXNKZHZCJTbxHkq4sU3L57ahFbfSr/Ltc8ZyxsZJAUg=
+X-Received: by 2002:a05:6512:3d21:: with SMTP id d33mr21678706lfv.481.1640735301239;
+ Tue, 28 Dec 2021 15:48:21 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1640103090-140490-1-git-send-email-john.garry@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.90.53]
-X-ClientProxiedBy: lhreml701-chm.china.huawei.com (10.201.108.50) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+References: <20211223074541.3318938-1-irogers@google.com> <20211223074541.3318938-21-irogers@google.com>
+In-Reply-To: <20211223074541.3318938-21-irogers@google.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 28 Dec 2021 15:48:10 -0800
+Message-ID: <CAM9d7chcAXiqWTSUxniPrdYM5hdbwPV1oyxUVvg6B-JfL89vNw@mail.gmail.com>
+Subject: Re: [PATCH v2 20/48] perf cpumap: Move 'has' function to libperf
+To:     Ian Rogers <irogers@google.com>
+Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        John Garry <john.garry@huawei.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Vineet Singh <vineet.singh@intel.com>,
+        James Clark <james.clark@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 21/12/2021 16:11, John Garry wrote:
-> Commit 0e0ae8742207 ("perf list: Display hybrid PMU events with cpu type")
-> changes the event list for uncore PMUs or arm64 heterogeneous CPU systems,
-> such that duplicate aliases are incorrectly listed per PMU (which they
-> should not be), like:
-> 
-> ./perf list
-> ...
-> unc_cbo_cache_lookup.any_es
-> [Unit: uncore_cbox L3 Lookup any request that access cache and found
-> line in E or S-state]
-> unc_cbo_cache_lookup.any_es
-> [Unit: uncore_cbox L3 Lookup any request that access cache and found
-> line in E or S-state]
-> unc_cbo_cache_lookup.any_i
-> [Unit: uncore_cbox L3 Lookup any request that access cache and found
-> line in I-state]
-> unc_cbo_cache_lookup.any_i
-> [Unit: uncore_cbox L3 Lookup any request that access cache and found
-> line in I-state]
-> ...
-> 
-> Notice how the events are listed twice.
+Hi Ian,
+
+On Wed, Dec 22, 2021 at 11:47 PM Ian Rogers <irogers@google.com> wrote:
+>
+> Make the cpu map argument const for consistency with the rest of the
+> API. Modify cpu_map__idx accordingly.
+>
+> Reviewed-by: James Clark <james.clark@arm.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/lib/perf/cpumap.c                  |  7 ++++++-
+>  tools/lib/perf/include/internal/cpumap.h |  2 +-
+>  tools/lib/perf/include/perf/cpumap.h     |  1 +
+
+You need to update tools/lib/perf/libperf.map to have
+the new API.
+
+Thanks,
+Namhyung
 
 
-Hi Arnaldo,
-
-Can you kindly consider picking up this change for v5.16?
-
-Thanks!
+>  tools/perf/arch/arm/util/cs-etm.c        | 16 ++++++++--------
+>  tools/perf/builtin-sched.c               |  6 +++---
+>  tools/perf/tests/topology.c              |  2 +-
+>  tools/perf/util/cpumap.c                 |  5 -----
+>  tools/perf/util/cpumap.h                 |  2 --
+>  tools/perf/util/cputopo.c                |  2 +-
+>  9 files changed, 21 insertions(+), 22 deletions(-)
+>
