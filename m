@@ -2,57 +2,57 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E86F1C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Dec 2021 07:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C166EC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Dec 2021 07:22:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237875AbhL3HWC (ORCPT
+        id S237673AbhL3HWF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 30 Dec 2021 02:22:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57866 "EHLO
+        Thu, 30 Dec 2021 02:22:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237632AbhL3HV3 (ORCPT
+        with ESMTP id S237732AbhL3HVg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 30 Dec 2021 02:21:29 -0500
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A36BC061799
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Dec 2021 23:21:29 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id k130-20020a255688000000b0060c3dcae580so22464298ybb.6
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Dec 2021 23:21:29 -0800 (PST)
+        Thu, 30 Dec 2021 02:21:36 -0500
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C47AEC0617A2
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Dec 2021 23:21:36 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id b144-20020a253496000000b0060bddc72114so24592826yba.4
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Dec 2021 23:21:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=/eITL1ud9gY+pNLOxXpUZ+Agv/4R8qHeM61cfQMFl6I=;
-        b=FXQki9PF9/r40bB/B/wEN5JugIfl1eU1ogXEYiMA55Ql0GGr5mdA5DZH2uKWLha1yA
-         UqUiKDBU+mvJ7VhBzF8x4wHWyJNNqD9eTHXIiG0hLFR03LPky8D1BP579qRBhVTBekCd
-         78Alsd2Pbp529nPqNlMe7SZs8uBrJ1d1EZf9snuTd7OYi5CGOf1IOIfz+jhxyxg6D8eR
-         G0TpFPuaxYpxL1n6f/Ur7ykXeiz0AvePqSo8aF4e1i52iI/ZX4NyMxWOjG2+cbtsXTRe
-         iw/A19LIQ21BsGmNeG8ltnH0utNkvzxKbnZXO8XsM+y6++h9MPw9Dy2tj0kE/DqyCmX2
-         p/rw==
+        bh=r8DPKd9/Sw54Ic+0J53LiDeJxVBy3KIktvCz7ol2teU=;
+        b=Y1olYxL5xdUbS/5Pur5YSEFeIndFNzsuvsDwKkPACbpQcTfSpvtFSjcBTYFJCD3T2R
+         DhjEeBCngbuFsTWdcHY09UHqCJ5h8gHusC2bMXCZSlJpIxdtOxQs5aPD4P7LtihMm8c3
+         vz5seXS3n8pqgqhoF1uTJlZL1bAVkbmcmebD7kQkYt8wOh4q7GEfPAjLsRqJW7wh/beY
+         +qb3x1Sb8X9eGeDRssv1t7Z04GNyYaojaBVX5aj6vDum9cTWKxXJRhZT7BtTowMAoga/
+         /XIILBYPx7eY9BDFL3pK0OPbnsrEK5oT/Kjm7eqV7tWYMqgqxHU7Xl+QE6C90QyzAq7j
+         schA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=/eITL1ud9gY+pNLOxXpUZ+Agv/4R8qHeM61cfQMFl6I=;
-        b=EE2HXVm19BArkLsKbWjVEk+LKTGxmzQVNZZNJJCMmiS3jolcPjNonfHG4sJhalD5Ux
-         iV+Umvc+fePxtxhWl83SG4rD+mrc68Vb0ij2cdD9HK32KX5Qa7kLWbR6nmemMdakdyQx
-         Jd+4L3fL/2x2Gbj7xVaqNTdwbiqNCES0ZKIfBu0VllIGrOqpVcEPqoJfd/S1ejlEZThc
-         yOpMxoiwJ1+1P3LaBKY7VrX1JGaWcdItdganuoPRX2+B4KIYH2bV+FtkcpV2dCZm8dLI
-         xvJoiRoO3rg6NrG+DStbmE7V0Vs342UGmLwu+nLemZczgNedQeAJRFbzad0P19CPmdll
-         qa8A==
-X-Gm-Message-State: AOAM533BMrSyAzAKFzkfSMWSB1IJDLWRZbn5uQysL0l1XaUvMYpk8PFc
-        13RELJBccvc4hoojDfA3CQOf1+/L/gLw
-X-Google-Smtp-Source: ABdhPJzEeaDm1Dy0zbYQ2MEb4aZRPZTf9RsIdHeGT3gBRWBmwg0kBQBZkr9mivj91qXcQWl0YNfIXejcTly9
+        bh=r8DPKd9/Sw54Ic+0J53LiDeJxVBy3KIktvCz7ol2teU=;
+        b=PdPh5AK9a91KTemxFvzp2Vxc7OYReqQ92R8MyjNomkuTLyW8FEAaHPNAF30F1srKKO
+         KOwukpTl63K/nwO5hwANbmzfSrspxjbVMDi7s5VcccSG6+Y9Y6J+epsw9ekx0OB1n+84
+         I4EH8ZUHWUenzI7CuO8lvZxfTSOrTj/lFzzIEV2orUbozaop2++XyRGs6TQub605dxz5
+         jvbtCuD1h7OnAvkum6h8UpgPF3VcesYGBQf2305R/WJC4uRAb8VufzLBwV2sxw0+84+M
+         1qcYJnQ1koW4DHfqRg7hcWny8/3j0Ah/+vvMjQ4t3xNrUXgiebNnssFXT9A3UeD4lJD7
+         GkeQ==
+X-Gm-Message-State: AOAM531NbEI7W8u1LC4vNIiqDtBaKC1kJA6wa9tFDLix0yfSBuNttrVx
+        E2gX0fGPXcGiwcOx2uvecJfuEq0U3LmZ
+X-Google-Smtp-Source: ABdhPJyO73+i/r0f/wr2X4131/M6h8Mhaxy8uZEgH3Y5Xbw/y8CbL842aFLHLlGs6FD/PPgL2o8I90TL0Brz
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:31c4:9539:dba1:a82b])
- (user=irogers job=sendgmr) by 2002:a25:4188:: with SMTP id
- o130mr18341081yba.271.1640848888460; Wed, 29 Dec 2021 23:21:28 -0800 (PST)
-Date:   Wed, 29 Dec 2021 23:20:02 -0800
+ (user=irogers job=sendgmr) by 2002:a25:a184:: with SMTP id
+ a4mr36612571ybi.56.1640848895883; Wed, 29 Dec 2021 23:21:35 -0800 (PST)
+Date:   Wed, 29 Dec 2021 23:20:05 -0800
 In-Reply-To: <20211230072030.302559-1-irogers@google.com>
-Message-Id: <20211230072030.302559-22-irogers@google.com>
+Message-Id: <20211230072030.302559-25-irogers@google.com>
 Mime-Version: 1.0
 References: <20211230072030.302559-1-irogers@google.com>
 X-Mailer: git-send-email 2.34.1.448.ga2b2bfdf31-goog
-Subject: [PATCH v3 20/48] perf cpumap: Move 'has' function to libperf
+Subject: [PATCH v3 23/48] perf stat: Fix memory leak in check_per_pkg
 From:   Ian Rogers <irogers@google.com>
 To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -80,234 +80,51 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Make the cpu map argument const for consistency with the rest of the
-API. Modify cpu_map__idx accordingly.
+If the key is already present then free the key used for lookup.
+
+Found with:
+$ perf stat -M IO_Read_BW /bin/true
+
+==1749112==ERROR: LeakSanitizer: detected memory leaks
+
+Direct leak of 32 byte(s) in 4 object(s) allocated from:
+    #0 0x7f6f6fa7d7cf in __interceptor_malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:145
+    #1 0x55acecd9d7a6 in check_per_pkg util/stat.c:343
+    #2 0x55acecd9d9c5 in process_counter_values util/stat.c:365
+    #3 0x55acecd9e0ab in process_counter_maps util/stat.c:421
+    #4 0x55acecd9e292 in perf_stat_process_counter util/stat.c:443
+    #5 0x55aceca8553e in read_counters ./tools/perf/builtin-stat.c:470
+    #6 0x55aceca88fe3 in __run_perf_stat ./tools/perf/builtin-stat.c:1023
+    #7 0x55aceca89146 in run_perf_stat ./tools/perf/builtin-stat.c:1048
+    #8 0x55aceca90858 in cmd_stat ./tools/perf/builtin-stat.c:2555
+    #9 0x55acecc05fa5 in run_builtin ./tools/perf/perf.c:313
+    #10 0x55acecc064fe in handle_internal_command ./tools/perf/perf.c:365
+    #11 0x55acecc068bb in run_argv ./tools/perf/perf.c:409
+    #12 0x55acecc070aa in main ./tools/perf/perf.c:539
 
 Reviewed-by: James Clark <james.clark@arm.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/perf/Documentation/libperf.txt |  1 +
- tools/lib/perf/cpumap.c                  |  7 ++++++-
- tools/lib/perf/include/internal/cpumap.h |  2 +-
- tools/lib/perf/include/perf/cpumap.h     |  1 +
- tools/lib/perf/libperf.map               |  1 +
- tools/perf/arch/arm/util/cs-etm.c        | 16 ++++++++--------
- tools/perf/builtin-sched.c               |  6 +++---
- tools/perf/tests/topology.c              |  2 +-
- tools/perf/util/cpumap.c                 |  5 -----
- tools/perf/util/cpumap.h                 |  2 --
- tools/perf/util/cputopo.c                |  2 +-
- 11 files changed, 23 insertions(+), 22 deletions(-)
+ tools/perf/util/stat.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
-index 63ae5e0195ce..faef9ba3a540 100644
---- a/tools/lib/perf/Documentation/libperf.txt
-+++ b/tools/lib/perf/Documentation/libperf.txt
-@@ -48,6 +48,7 @@ SYNOPSIS
-   int perf_cpu_map__nr(const struct perf_cpu_map *cpus);
-   bool perf_cpu_map__empty(const struct perf_cpu_map *map);
-   int perf_cpu_map__max(struct perf_cpu_map *map);
-+  bool perf_cpu_map__has(const struct perf_cpu_map *map, int cpu);
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index 5c24aca0968c..c69b221f5e3e 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -345,9 +345,10 @@ static int check_per_pkg(struct evsel *counter,
+ 		return -ENOMEM;
  
-   #define perf_cpu_map__for_each_cpu(cpu, idx, cpus)
- --
-diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-index adaad3dddf6e..3c36a06771af 100644
---- a/tools/lib/perf/cpumap.c
-+++ b/tools/lib/perf/cpumap.c
-@@ -268,7 +268,7 @@ bool perf_cpu_map__empty(const struct perf_cpu_map *map)
- 	return map ? map->map[0] == -1 : true;
- }
+ 	*key = (uint64_t)d << 32 | s;
+-	if (hashmap__find(mask, (void *)key, NULL))
++	if (hashmap__find(mask, (void *)key, NULL)) {
+ 		*skip = true;
+-	else
++		free(key);
++	} else
+ 		ret = hashmap__add(mask, (void *)key, (void *)1);
  
--int perf_cpu_map__idx(struct perf_cpu_map *cpus, int cpu)
-+int perf_cpu_map__idx(const struct perf_cpu_map *cpus, int cpu)
- {
- 	int low = 0, high = cpus->nr;
- 
-@@ -288,6 +288,11 @@ int perf_cpu_map__idx(struct perf_cpu_map *cpus, int cpu)
- 	return -1;
- }
- 
-+bool perf_cpu_map__has(const struct perf_cpu_map *cpus, int cpu)
-+{
-+	return perf_cpu_map__idx(cpus, cpu) != -1;
-+}
-+
- int perf_cpu_map__max(struct perf_cpu_map *map)
- {
- 	// cpu_map__trim_new() qsort()s it, cpu_map__default_new() sorts it as well.
-diff --git a/tools/lib/perf/include/internal/cpumap.h b/tools/lib/perf/include/internal/cpumap.h
-index 4054169c12c5..71a31ed738c9 100644
---- a/tools/lib/perf/include/internal/cpumap.h
-+++ b/tools/lib/perf/include/internal/cpumap.h
-@@ -23,6 +23,6 @@ struct perf_cpu_map {
- #define MAX_NR_CPUS	2048
- #endif
- 
--int perf_cpu_map__idx(struct perf_cpu_map *cpus, int cpu);
-+int perf_cpu_map__idx(const struct perf_cpu_map *cpus, int cpu);
- 
- #endif /* __LIBPERF_INTERNAL_CPUMAP_H */
-diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
-index 7c27766ea0bf..3f1c0afa3ccd 100644
---- a/tools/lib/perf/include/perf/cpumap.h
-+++ b/tools/lib/perf/include/perf/cpumap.h
-@@ -20,6 +20,7 @@ LIBPERF_API int perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx);
- LIBPERF_API int perf_cpu_map__nr(const struct perf_cpu_map *cpus);
- LIBPERF_API bool perf_cpu_map__empty(const struct perf_cpu_map *map);
- LIBPERF_API int perf_cpu_map__max(struct perf_cpu_map *map);
-+LIBPERF_API bool perf_cpu_map__has(const struct perf_cpu_map *map, int cpu);
- 
- #define perf_cpu_map__for_each_cpu(cpu, idx, cpus)		\
- 	for ((idx) = 0, (cpu) = perf_cpu_map__cpu(cpus, idx);	\
-diff --git a/tools/lib/perf/libperf.map b/tools/lib/perf/libperf.map
-index 5979bf92d98f..93696affda2e 100644
---- a/tools/lib/perf/libperf.map
-+++ b/tools/lib/perf/libperf.map
-@@ -10,6 +10,7 @@ LIBPERF_0.0.1 {
- 		perf_cpu_map__cpu;
- 		perf_cpu_map__empty;
- 		perf_cpu_map__max;
-+		perf_cpu_map__has;
- 		perf_thread_map__new_dummy;
- 		perf_thread_map__set_pid;
- 		perf_thread_map__comm;
-diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-index 8a3d54a86c9c..129c0272d65b 100644
---- a/tools/perf/arch/arm/util/cs-etm.c
-+++ b/tools/perf/arch/arm/util/cs-etm.c
-@@ -204,8 +204,8 @@ static int cs_etm_set_option(struct auxtrace_record *itr,
- 
- 	/* Set option of each CPU we have */
- 	for (i = 0; i < cpu__max_cpu(); i++) {
--		if (!cpu_map__has(event_cpus, i) ||
--		    !cpu_map__has(online_cpus, i))
-+		if (!perf_cpu_map__has(event_cpus, i) ||
-+		    !perf_cpu_map__has(online_cpus, i))
- 			continue;
- 
- 		if (option & BIT(ETM_OPT_CTXTID)) {
-@@ -523,8 +523,8 @@ cs_etm_info_priv_size(struct auxtrace_record *itr __maybe_unused,
- 	/* cpu map is not empty, we have specific CPUs to work with */
- 	if (!perf_cpu_map__empty(event_cpus)) {
- 		for (i = 0; i < cpu__max_cpu(); i++) {
--			if (!cpu_map__has(event_cpus, i) ||
--			    !cpu_map__has(online_cpus, i))
-+			if (!perf_cpu_map__has(event_cpus, i) ||
-+			    !perf_cpu_map__has(online_cpus, i))
- 				continue;
- 
- 			if (cs_etm_is_ete(itr, i))
-@@ -537,7 +537,7 @@ cs_etm_info_priv_size(struct auxtrace_record *itr __maybe_unused,
- 	} else {
- 		/* get configuration for all CPUs in the system */
- 		for (i = 0; i < cpu__max_cpu(); i++) {
--			if (!cpu_map__has(online_cpus, i))
-+			if (!perf_cpu_map__has(online_cpus, i))
- 				continue;
- 
- 			if (cs_etm_is_ete(itr, i))
-@@ -722,8 +722,8 @@ static int cs_etm_info_fill(struct auxtrace_record *itr,
- 	} else {
- 		/* Make sure all specified CPUs are online */
- 		for (i = 0; i < perf_cpu_map__nr(event_cpus); i++) {
--			if (cpu_map__has(event_cpus, i) &&
--			    !cpu_map__has(online_cpus, i))
-+			if (perf_cpu_map__has(event_cpus, i) &&
-+			    !perf_cpu_map__has(online_cpus, i))
- 				return -EINVAL;
- 		}
- 
-@@ -744,7 +744,7 @@ static int cs_etm_info_fill(struct auxtrace_record *itr,
- 	offset = CS_ETM_SNAPSHOT + 1;
- 
- 	for (i = 0; i < cpu__max_cpu() && offset < priv_size; i++)
--		if (cpu_map__has(cpu_map, i))
-+		if (perf_cpu_map__has(cpu_map, i))
- 			cs_etm_get_metadata(i, &offset, itr, info);
- 
- 	perf_cpu_map__put(online_cpus);
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 4527f632ebe4..9da1da4749c9 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -1617,10 +1617,10 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
- 		if (curr_thread && thread__has_color(curr_thread))
- 			pid_color = COLOR_PIDS;
- 
--		if (sched->map.cpus && !cpu_map__has(sched->map.cpus, cpu))
-+		if (sched->map.cpus && !perf_cpu_map__has(sched->map.cpus, cpu))
- 			continue;
- 
--		if (sched->map.color_cpus && cpu_map__has(sched->map.color_cpus, cpu))
-+		if (sched->map.color_cpus && perf_cpu_map__has(sched->map.color_cpus, cpu))
- 			cpu_color = COLOR_CPUS;
- 
- 		if (cpu != this_cpu)
-@@ -1639,7 +1639,7 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
- 			color_fprintf(stdout, color, "   ");
- 	}
- 
--	if (sched->map.cpus && !cpu_map__has(sched->map.cpus, this_cpu))
-+	if (sched->map.cpus && !perf_cpu_map__has(sched->map.cpus, this_cpu))
- 		goto out;
- 
- 	timestamp__scnprintf_usec(timestamp, stimestamp, sizeof(stimestamp));
-diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
-index 0cb7b015b4b9..cb29ea7ec409 100644
---- a/tools/perf/tests/topology.c
-+++ b/tools/perf/tests/topology.c
-@@ -112,7 +112,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- 	TEST_ASSERT_VAL("Session header CPU map not set", session->header.env.cpu);
- 
- 	for (i = 0; i < session->header.env.nr_cpus_avail; i++) {
--		if (!cpu_map__has(map, i))
-+		if (!perf_cpu_map__has(map, i))
- 			continue;
- 		pr_debug("CPU %d, core %d, socket %d\n", i,
- 			 session->header.env.cpu[i].core_id,
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index 0e325559c33c..8a72ee996722 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -463,11 +463,6 @@ int cpu__setup_cpunode_map(void)
- 	return 0;
- }
- 
--bool cpu_map__has(struct perf_cpu_map *cpus, int cpu)
--{
--	return perf_cpu_map__idx(cpus, cpu) != -1;
--}
--
- size_t cpu_map__snprint(struct perf_cpu_map *map, char *buf, size_t size)
- {
- 	int i, cpu, start = -1;
-diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
-index 15043e764fa6..832fc53f3c11 100644
---- a/tools/perf/util/cpumap.h
-+++ b/tools/perf/util/cpumap.h
-@@ -78,8 +78,6 @@ struct cpu_aggr_map *cpu_aggr_map__new(const struct perf_cpu_map *cpus,
- 				       aggr_cpu_id_get_t f,
- 				       void *data);
- 
--bool cpu_map__has(struct perf_cpu_map *cpus, int cpu);
--
- bool aggr_cpu_id__equal(const struct aggr_cpu_id *a, const struct aggr_cpu_id *b);
- bool aggr_cpu_id__is_empty(const struct aggr_cpu_id *a);
- struct aggr_cpu_id aggr_cpu_id__empty(void);
-diff --git a/tools/perf/util/cputopo.c b/tools/perf/util/cputopo.c
-index 51b429c86f98..8affb37d90e7 100644
---- a/tools/perf/util/cputopo.c
-+++ b/tools/perf/util/cputopo.c
-@@ -218,7 +218,7 @@ struct cpu_topology *cpu_topology__new(void)
- 	tp->core_cpus_list = addr;
- 
- 	for (i = 0; i < nr; i++) {
--		if (!cpu_map__has(map, i))
-+		if (!perf_cpu_map__has(map, i))
- 			continue;
- 
- 		ret = build_cpu_topology(tp, i);
+ 	return ret;
 -- 
 2.34.1.448.ga2b2bfdf31-goog
 
