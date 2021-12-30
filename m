@@ -2,59 +2,56 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A18FC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Dec 2021 06:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA07C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Dec 2021 07:20:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236340AbhL3GXI (ORCPT
+        id S236854AbhL3HUh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 30 Dec 2021 01:23:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44948 "EHLO
+        Thu, 30 Dec 2021 02:20:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236343AbhL3GXI (ORCPT
+        with ESMTP id S229666AbhL3HUh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 30 Dec 2021 01:23:08 -0500
-Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CD5BC061574
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Dec 2021 22:23:08 -0800 (PST)
-Received: by mail-il1-x12a.google.com with SMTP id 9so1421734ill.9
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Dec 2021 22:23:08 -0800 (PST)
+        Thu, 30 Dec 2021 02:20:37 -0500
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E981FC06173E
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Dec 2021 23:20:36 -0800 (PST)
+Received: by mail-yb1-xb49.google.com with SMTP id b10-20020a251b0a000000b0060a7fbb7a64so31550830ybb.23
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Dec 2021 23:20:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i2TxMwsHZNPtq/d/P+qfXrYHTkaKdkXbSSb+eiNHpsM=;
-        b=ry98a5PuCeXkwPEcdP1EW5U4BjNw1eOrXJfkkFHa0FNjJrHq+bughRPjlOt5IO2r6h
-         Fb3FPAmq7HZtl+CUM+XVVRY2yiDChcB/LfrCTElnfAYDCHNjDo03dz8TxM5QojpaPpzv
-         3FDdGbPEBJKpKpST1obTmTySzZXIZZOYQQeBvRqIMFjKqRxaFR2AO0AoVaRtoQlWOrDH
-         PQZ8YXomA38K4LUIFMOKQuSCyBCSJUM584NQzvgtcwOVykTIPofo9Jgsyb8/TyMjZuhR
-         9Ane+Ll+sJmomoTPPhthbAz5atfcMoJxlViDfD7ONRNyxrzwe1W0VTj+OoxuKP+9tDJJ
-         Kspg==
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=V0pq/SW2J85hDS+DwC0KI/Vw7c1WWgn1iSK93YnvM/k=;
+        b=kF39lToh4gGXQ9Wvef6Oh7e4BNmzcWw6lOnMFyr+LMtdwPTOUNWF0Vu7Oem0wZA9a4
+         rQfHVMjq3VPn8X3aMI33yAzW3YZOu8/8UARkyLFuUnVxmkr4OYYFOpNlmLdPiF/tYY5A
+         mihg3k7WWAamGRCMllXkgAy74an8PeFU4fPr3roA3sWRTCb+eLO1iWIFQbykSOxi60+3
+         UKOfgv0rXbCjLZIupiIXQMkC7v374YPlg8QmJeoZiCBVWX9roQpqoeSy1jjMhME31E59
+         DiNLiyNh4E2NeyvBmfNCkyapVJCE4MdY7echKGCyUqChlAWjmmKlaifCCgcKj/Ixc8Ff
+         wh8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i2TxMwsHZNPtq/d/P+qfXrYHTkaKdkXbSSb+eiNHpsM=;
-        b=Zi0aY3HP8Ad1bx8IhYVOnjOY8pWyCguDYJB+R5XgZs/WwL81z1YxqnQqtRn/pLSkve
-         Tsrvgd6hGNn2lYAjxn2hbH442zl/47woJuYRMPcW144IkJRggEJf5zDhlqMp5kGxYQz5
-         ZZbH4eLgYzVVAKS6KUuOqju1NlKcFa2H/DxtrWrK078uKi03NEVn547oVyIRtjnNeQEJ
-         fVXSpnu45Gjh7LHyxfdfvL7EaT8IWMvzAV4ZPkLAObvZbyrqIVQtVGFtmMNI1Zw/NSag
-         bPhF2BKBZXI0BVFaKxRXBthVz4e0NabdDik2Y49cy0Zws2kB/KACiVudDg6onSkJvfPG
-         v90Q==
-X-Gm-Message-State: AOAM5300J1XeUU9Y/pnpse6rzsqgxQ89OaIG6YVrqPwYrQfEuJfY8E3E
-        JAzbhrKIy4C1YjZs29NMwRHUUq8K9id584LU/e7mSCV/5j1Yeg==
-X-Google-Smtp-Source: ABdhPJxURa09a84uJiPmJqds9H+BFMta07IDQnqz2FabsRk3bbIShLmckiC0LD193mlmpZ9pnoKSURuy9u4EHuUBVNI=
-X-Received: by 2002:a92:d8d0:: with SMTP id l16mr13238900ilo.174.1640845387187;
- Wed, 29 Dec 2021 22:23:07 -0800 (PST)
-MIME-Version: 1.0
-References: <20211223074541.3318938-1-irogers@google.com> <20211223074541.3318938-26-irogers@google.com>
- <CAM9d7cgCoEc5UXCWm9Cstt0_QMNu4jMK1WH3WEjSBxvCnESfYg@mail.gmail.com>
-In-Reply-To: <CAM9d7cgCoEc5UXCWm9Cstt0_QMNu4jMK1WH3WEjSBxvCnESfYg@mail.gmail.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=V0pq/SW2J85hDS+DwC0KI/Vw7c1WWgn1iSK93YnvM/k=;
+        b=6OzO/uKhSakJP+RgIN0lkr5SS1fp5up5rG7og6NNX9DMeNS5P9VxTi/2dXYa819u5/
+         giw07588rdze3giZJmsvrd+FCl8VMoznH8LlL0FSLGpVXmzTzB7g3k94i1vD1ULKqS6i
+         m1Pjs1bImLwA12lhdrFlpy80C5E8vbrTMYSAzcAB2pzvGHHQ3SPznHyjyR/n2Tsoyoa0
+         bd3y2cfwoX5o5weZHl80jNCJMGYiWiMsOTCye2fMhEMYzMkAGV5oQcHKkg2jFvZ6AYQT
+         8scoFy4r2nwAJmPLlPXHLQxg4gk9JalGQKf7aIcmPlxHfdxqU02cGIybLEVSJ2mT4a+A
+         7s1w==
+X-Gm-Message-State: AOAM532AK1AiG+Z91bPmVdCwu8XEeK9D3VwHtvbh+wUyecv6eaWGf0Xz
+        P8egoP3z96GYNqMZTxuP+/GrTsnEALNu
+X-Google-Smtp-Source: ABdhPJzGyz/QxzTGSuqr3bFyyEC2xwto/Uzb440yRbsxqtgq0zoxtbTyVcshWY7RwZs7JlNyCXpw5py41XmE
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:31c4:9539:dba1:a82b])
+ (user=irogers job=sendgmr) by 2002:a25:3496:: with SMTP id
+ b144mr25093094yba.177.1640848836103; Wed, 29 Dec 2021 23:20:36 -0800 (PST)
+Date:   Wed, 29 Dec 2021 23:19:41 -0800
+Message-Id: <20211230072030.302559-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.34.1.448.ga2b2bfdf31-goog
+Subject: [PATCH v3 00/48] Refactor perf cpumap
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 29 Dec 2021 22:22:54 -0800
-Message-ID: <CAP-5=fWu+H-n57E52JgoEnAdGoJXs_P69-URum4UATx8bfrEOw@mail.gmail.com>
-Subject: Re: [PATCH v2 25/48] perf stat-display: Avoid use of core for CPU.
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         John Garry <john.garry@huawei.com>,
         Kajol Jain <kjain@linux.ibm.com>,
         "Paul A . Clarke" <pc@us.ibm.com>,
@@ -65,92 +62,160 @@ Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         Vineet Singh <vineet.singh@intel.com>,
         James Clark <james.clark@arm.com>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mike Leach <mike.leach@linaro.org>,
         Leo Yan <leo.yan@linaro.org>, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org,
-        Stephane Eranian <eranian@google.com>
+        linux-arm-kernel@lists.infradead.org, zhengjun.xing@intel.com
+Cc:     eranian@google.com, Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Dec 28, 2021 at 4:09 PM Namhyung Kim <namhyung@kernel.org> wrote:
->
-> On Wed, Dec 22, 2021 at 11:47 PM Ian Rogers <irogers@google.com> wrote:
-> >
-> > Correct use of cpumap index in print_no_aggr_metric.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> [SNIP]
-> > @@ -924,29 +921,32 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
-> >                                  struct evlist *evlist,
-> >                                  char *prefix)
-> >  {
-> > -       int cpu;
-> > -       int nrcpus = 0;
-> > -       struct evsel *counter;
-> > -       u64 ena, run, val;
-> > -       double uval;
-> > -       struct aggr_cpu_id id;
-> > +       int cpu, nrcpus;
-> >
-> >         nrcpus = evlist->core.cpus->nr;
-> >         for (cpu = 0; cpu < nrcpus; cpu++) {
-> > +               struct evsel *counter;
-> >                 bool first = true;
-> >
-> >                 if (prefix)
-> >                         fputs(prefix, config->output);
-> >                 evlist__for_each_entry(evlist, counter) {
-> > -                       id = aggr_cpu_id__empty();
-> > -                       id.core = cpu;
-> > +                       u64 ena, run, val;
-> > +                       double uval;
-> > +                       struct aggr_cpu_id id;
-> > +                       int idx = perf_cpu_map__idx(evsel__cpus(counter), cpu);
->
-> Not sure about this.  Here the 'cpu' is an index for the
-> evlist->core.cpus, not a CPU number.  But the
-> perf_cpu_map__idx() requires a CPU number, right?
+Perf cpu map has various functions where a cpumap and index are passed
+in order to load the cpu. A problem with this is that the wrong index
+may be passed for the cpumap, causing problems like aggregation on the
+wrong CPU:
+https://lore.kernel.org/lkml/20211204023409.969668-1-irogers@google.com/
 
-Thanks for the reviews! You are right, I think it makes sense two have
-two indices here, evlist and counter. I will change the outer loop to
-use perf_cpu_map__for_each_cpu. v3 will have the other fixes you've
-pointed out too.
+This patch set refactors the cpu map API, reducing it and explicitly
+passing the cpu (rather than the pair) to functions that need
+it. Comments are added at the same time. Changes modify the same
+file/function more than once as refactoring and fixes are broken apart
+for the sake of bisection.
 
-Thanks,
-Ian
+v2. Incorproates fixes suggested Jiri Olsa, rewrites the evlist CPU
+    iterator in part in a way suggested by Riccardo Mancini. The new
+    fixes start at patch 23. The final change was suggested by John
+    Garry to make the CPUs have their own struct wrapper.
 
+v3. Incorporates fixes suggested by Namhyung Kim.
 
-> Thanks,
-> Namhyung
->
->
-> > +
-> > +                       if (idx < 0)
-> > +                               continue;
-> > +
-> > +                       id = aggr_cpu_id__cpu(cpu, /*data=*/NULL);
-> >                         if (first) {
-> >                                 aggr_printout(config, counter, id, 0);
-> >                                 first = false;
-> >                         }
-> > -                       val = perf_counts(counter->counts, cpu, 0)->val;
-> > -                       ena = perf_counts(counter->counts, cpu, 0)->ena;
-> > -                       run = perf_counts(counter->counts, cpu, 0)->run;
-> > +                       val = perf_counts(counter->counts, idx, 0)->val;
-> > +                       ena = perf_counts(counter->counts, idx, 0)->ena;
-> > +                       run = perf_counts(counter->counts, idx, 0)->run;
-> >
-> >                         uval = val * counter->scale;
-> >                         printout(config, id, 0, counter, uval, prefix,
-> > --
-> > 2.34.1.307.g9b7440fafd-goog
-> >
+Ian Rogers (48):
+  libperf: Add comments to perf_cpu_map.
+  perf stat: Add aggr creators that are passed a cpu.
+  perf stat: Correct aggregation CPU map
+  perf stat: Switch aggregation to use for_each loop
+  perf stat: Switch to cpu version of cpu_map__get
+  perf cpumap: Switch cpu_map__build_map to cpu function
+  perf cpumap: Remove map+index get_socket
+  perf cpumap: Remove map+index get_die
+  perf cpumap: Remove map+index get_core
+  perf cpumap: Remove map+index get_node
+  perf cpumap: Add comments to aggr_cpu_id
+  perf cpumap: Remove unused cpu_map__socket
+  perf cpumap: Simplify equal function name.
+  perf cpumap: Rename empty functions.
+  perf cpumap: Document cpu__get_node and remove redundant function
+  perf cpumap: Remove map from function names that don't use a map.
+  perf cpumap: Remove cpu_map__cpu, use libperf function.
+  perf cpumap: Refactor cpu_map__build_map
+  perf cpumap: Rename cpu_map__get_X_aggr_by_cpu functions
+  perf cpumap: Move 'has' function to libperf
+  perf cpumap: Add some comments to cpu_aggr_map
+  perf cpumap: Trim the cpu_aggr_map
+  perf stat: Fix memory leak in check_per_pkg
+  perf cpumap: Add CPU to aggr_cpu_id
+  perf stat-display: Avoid use of core for CPU.
+  perf evsel: Derive CPUs and threads in alloc_counts
+  libperf: Switch cpu to more accurate cpu_map_idx
+  libperf: Use cpu not index for evsel mmap
+  perf counts: Switch name cpu to cpu_map_idx
+  perf stat: Rename aggr_data cpu to imply it's an index
+  perf stat: Use perf_cpu_map__for_each_cpu
+  perf script: Use for each cpu to aid readability
+  libperf: Allow NULL in perf_cpu_map__idx
+  perf evlist: Refactor evlist__for_each_cpu.
+  perf evsel: Pass cpu not cpu map index to synthesize
+  perf stat: Correct variable name for read counter
+  perf evsel: Rename CPU around get_group_fd
+  perf evsel: Reduce scope of evsel__ignore_missing_thread
+  perf evsel: Rename variable cpu to index
+  perf test: Use perf_cpu_map__for_each_cpu
+  perf stat: Correct check_per_pkg cpu
+  perf stat: Swap variable name cpu to index
+  libperf: Sync evsel documentation
+  perf bpf: Rename cpu to cpu_map_idx
+  perf c2c: Use more intention revealing iterator
+  perf script: Fix flipped index and cpu
+  perf stat: Correct first_shadow_cpu to return index
+  perf cpumap: Give CPUs their own type.
+
+ tools/lib/perf/Documentation/libperf.txt      |  11 +-
+ tools/lib/perf/cpumap.c                       | 131 +++--
+ tools/lib/perf/evlist.c                       |   4 +-
+ tools/lib/perf/evsel.c                        |  92 ++--
+ tools/lib/perf/include/internal/cpumap.h      |  18 +-
+ tools/lib/perf/include/internal/evlist.h      |   3 +-
+ tools/lib/perf/include/internal/evsel.h       |   4 +-
+ tools/lib/perf/include/internal/mmap.h        |   5 +-
+ tools/lib/perf/include/perf/cpumap.h          |   8 +-
+ tools/lib/perf/include/perf/evsel.h           |  10 +-
+ tools/lib/perf/libperf.map                    |   1 +
+ tools/lib/perf/mmap.c                         |   2 +-
+ tools/perf/arch/arm/util/cs-etm.c             |  16 +-
+ tools/perf/bench/epoll-ctl.c                  |   2 +-
+ tools/perf/bench/epoll-wait.c                 |   2 +-
+ tools/perf/bench/futex-hash.c                 |   2 +-
+ tools/perf/bench/futex-lock-pi.c              |   2 +-
+ tools/perf/bench/futex-requeue.c              |   2 +-
+ tools/perf/bench/futex-wake-parallel.c        |   2 +-
+ tools/perf/bench/futex-wake.c                 |   2 +-
+ tools/perf/builtin-c2c.c                      |  15 +-
+ tools/perf/builtin-ftrace.c                   |   2 +-
+ tools/perf/builtin-kmem.c                     |   2 +-
+ tools/perf/builtin-record.c                   |   2 +-
+ tools/perf/builtin-sched.c                    |  71 +--
+ tools/perf/builtin-script.c                   |  10 +-
+ tools/perf/builtin-stat.c                     | 516 +++++++++---------
+ tools/perf/tests/attr.c                       |   6 +-
+ tools/perf/tests/bitmap.c                     |   2 +-
+ tools/perf/tests/cpumap.c                     |   6 +-
+ tools/perf/tests/event_update.c               |   6 +-
+ tools/perf/tests/mem2node.c                   |   2 +-
+ tools/perf/tests/mmap-basic.c                 |   4 +-
+ tools/perf/tests/openat-syscall-all-cpus.c    |  39 +-
+ tools/perf/tests/stat.c                       |   3 +-
+ tools/perf/tests/topology.c                   |  43 +-
+ tools/perf/util/affinity.c                    |   2 +-
+ tools/perf/util/auxtrace.c                    |  12 +-
+ tools/perf/util/auxtrace.h                    |   5 +-
+ tools/perf/util/bpf_counter.c                 |  16 +-
+ tools/perf/util/bpf_counter.h                 |   4 +-
+ tools/perf/util/counts.c                      |   8 +-
+ tools/perf/util/counts.h                      |  14 +-
+ tools/perf/util/cpumap.c                      | 253 ++++-----
+ tools/perf/util/cpumap.h                      | 116 ++--
+ tools/perf/util/cputopo.c                     |   6 +-
+ tools/perf/util/env.c                         |  29 +-
+ tools/perf/util/env.h                         |   3 +-
+ tools/perf/util/evlist.c                      | 148 ++---
+ tools/perf/util/evlist.h                      |  50 +-
+ tools/perf/util/evsel.c                       | 143 ++---
+ tools/perf/util/evsel.h                       |  27 +-
+ tools/perf/util/expr.c                        |   2 +-
+ tools/perf/util/header.c                      |   6 +-
+ tools/perf/util/mmap.c                        |  19 +-
+ tools/perf/util/mmap.h                        |   3 +-
+ tools/perf/util/perf_api_probe.c              |  15 +-
+ tools/perf/util/python.c                      |   4 +-
+ tools/perf/util/record.c                      |  11 +-
+ .../scripting-engines/trace-event-python.c    |   6 +-
+ tools/perf/util/session.c                     |  10 +-
+ tools/perf/util/stat-display.c                | 138 ++---
+ tools/perf/util/stat-shadow.c                 | 308 +++++------
+ tools/perf/util/stat.c                        |  47 +-
+ tools/perf/util/stat.h                        |   9 +-
+ tools/perf/util/svghelper.c                   |   6 +-
+ tools/perf/util/synthetic-events.c            |  12 +-
+ tools/perf/util/synthetic-events.h            |   3 +-
+ tools/perf/util/util.h                        |   5 +-
+ 69 files changed, 1333 insertions(+), 1155 deletions(-)
+
+-- 
+2.34.1.448.ga2b2bfdf31-goog
+
