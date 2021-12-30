@@ -2,57 +2,57 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D87D7C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Dec 2021 07:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D13E1C433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Dec 2021 07:23:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238309AbhL3HXL (ORCPT
+        id S237872AbhL3HXN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 30 Dec 2021 02:23:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58046 "EHLO
+        Thu, 30 Dec 2021 02:23:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237090AbhL3HWc (ORCPT
+        with ESMTP id S237597AbhL3HWa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 30 Dec 2021 02:22:32 -0500
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 728AFC061401
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Dec 2021 23:22:32 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id e2-20020a25d302000000b0060c57942183so22012833ybf.18
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Dec 2021 23:22:32 -0800 (PST)
+        Thu, 30 Dec 2021 02:22:30 -0500
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2B30C061574
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Dec 2021 23:22:29 -0800 (PST)
+Received: by mail-yb1-xb49.google.com with SMTP id a9-20020a251a09000000b0060b2c94d515so27976579yba.20
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Dec 2021 23:22:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=l4aITqAr4kAWUMdh1BRMLGLBNjKWhPafS6IoiJKe+3o=;
-        b=eG/VkvxCAxv7FJdaMjw7BxI6/KZEFoB/JPtBET2zF5N6elUc1+n1tZcMFnSVRzn92A
-         dWMCahCjXzUunPAFJ3rARUiOB/EKWyM5cN1+CzaVLlWO0cs00flPnuLlLeL4KzGfbp3j
-         0erZlMjNvKHGmrV4rOV2zd+aRP00m40w6sUQrt0+dbGaeN7uRIvazydNUmM1+lAFJAwn
-         OzfE5iaB29vSXL4omRM5aUC1h6pIl3DBtFzZ9bjiNkHEQQqcPUwbxq16EeGX/Sh+siCd
-         nhLbxfDL9cOhigw3uzfRUFWGBr0IYFZAysIa+l8pSc5YoGXgygNhgasPX5PYLGWuiMag
-         qyyw==
+        bh=Uc3y2XubM268HoD+IkmNJwiXqvYvgqQuPR9NEiJZLmc=;
+        b=UU9Pps5USbCJB4bMY54SQPTOXdYoggeqA3PNH6FHoGJpEWCJcemclzPo3evy9MM9Tw
+         PFOiwuSZsYroPQcFSKpYwzB5ZfSSv7dGEOOoc0quUBwg0uPmdY/GztO9m31OIDCEizc5
+         hmU2hv7EmRANtiTJbTXr1O6zp+YQKyUFq1Bp/1PWYZsvlNdDknRqgzMZDggwdNMcknXP
+         B25Dix/qD0wblGheSYh68qCPU2AIrUHzja2sf/xFx5v79YZKDINeE/Whrz2w7VYK29k2
+         ZPf1nH4RVbBAyH4aci0WckZMl/RZDFVZ/ryooqZ7YSTBO4Vajwx0CbhtYW9Jw+0WKqfl
+         BI0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=l4aITqAr4kAWUMdh1BRMLGLBNjKWhPafS6IoiJKe+3o=;
-        b=gCSGYZMkKj4xq8RWnz06rp2fAiaIqTjpw0uiMmqrbIxCpzeA0qfeD1wk3AxMrrODz+
-         hKH+9LBrg2eVjYPNg+1ZgsFev5PV4RIi+QrjaeW95XIuVos/ICeeF65JdAHnA61oAc4F
-         r/kNzbdPMWqzY71H8C4OvBVca6yFgmL6JJhBgBOAZd84Wy5VIFGaTkgkfs7e6Bg59vjF
-         PYZXe+W2TO3bIFE/3hcnj06QT7T/N9UIBAolbStMVn+iJbebbeQdEfowHoZUNm7jeZxQ
-         /VxvD/+eEOw7vAvNcrUHi9sLe0sh4dXZvG8ljvpsVNjSOO7c6RCFwexIKztgPfLHJfRl
-         GItQ==
-X-Gm-Message-State: AOAM532yXID8csfsJs2nvHwZvGDhI0JK1ICQfjyI/QIUfUGLDu772m1X
-        aewkimRQ8keMKRpDXyPDOpoYnRZ22LcE
-X-Google-Smtp-Source: ABdhPJz4PObQBINBLDM7ybJfAZH1GdUHrMFnx3ClsT9yMsZFN7tl4Vm/ezlizX+D+12RXPI8Dt+8uIx9LRhJ
+        bh=Uc3y2XubM268HoD+IkmNJwiXqvYvgqQuPR9NEiJZLmc=;
+        b=HiBHfki7SCWmj48o524oNjhCHLlHWixxKOsihqG6hx61S8jIYXwsJAgQJlcRTsldJ4
+         sMsB9eAKkaayDsilEcOymjForlzQ/1IO1F7NJuh+uutPbftYBowQjruDFDgGiloSgYNX
+         +axrxmZWj2DpI0WIX2J+fp365tM8/zvXwklamqzlpfdrKLwZyFrvhgs3zkZroLjl5wLI
+         K0gPWlD3OLw3RpqjaO1vMg8SqSLbWNA4nXSbojY0dJgFt7fbSwMYljTCAnzPBWlQoRVC
+         uZIXKfCTMKKo6e7/3ORIzPykqGDtkYWGo9v1EnXPO6B8/3iS1lI+DRAM0oLQ15VMnWyd
+         vZkA==
+X-Gm-Message-State: AOAM531d0H6BTz442Yn7vmEv0xnWfV8SSYNbrV277L3pmcajKpCGmR97
+        meDHGfgqfCcSjLQjj01sA+nXWitisrq9
+X-Google-Smtp-Source: ABdhPJzmwD+JdTmKcnf+ab8su0Q2JjY8n7yE3uUXboDJEjQ387d40mnduQF8z1OV90YmVB5fjNjmBzrjrFrO
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:31c4:9539:dba1:a82b])
- (user=irogers job=sendgmr) by 2002:a25:bc85:: with SMTP id
- e5mr22499668ybk.330.1640848951716; Wed, 29 Dec 2021 23:22:31 -0800 (PST)
-Date:   Wed, 29 Dec 2021 23:20:27 -0800
+ (user=irogers job=sendgmr) by 2002:a25:cc55:: with SMTP id
+ l82mr29556005ybf.433.1640848949072; Wed, 29 Dec 2021 23:22:29 -0800 (PST)
+Date:   Wed, 29 Dec 2021 23:20:26 -0800
 In-Reply-To: <20211230072030.302559-1-irogers@google.com>
-Message-Id: <20211230072030.302559-47-irogers@google.com>
+Message-Id: <20211230072030.302559-46-irogers@google.com>
 Mime-Version: 1.0
 References: <20211230072030.302559-1-irogers@google.com>
 X-Mailer: git-send-email 2.34.1.448.ga2b2bfdf31-goog
-Subject: [PATCH v3 45/48] perf c2c: Use more intention revealing iterator
+Subject: [PATCH v3 44/48] perf bpf: Rename cpu to cpu_map_idx
 From:   Ian Rogers <irogers@google.com>
 To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -80,43 +80,102 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Use perf_cpu_map__for_each_cpu in setup_nodes.
+Synchronize the caller in evsel with the called function.
+Shorten 3 lines of code in bperf_read by using
+perf_cpu_map__for_each_cpu.
+This code is frequently using variables named cpu as cpu map indices,
+which doesn't matter as all CPUs are in the CPU map. It is strange in
+some cases the cpumap is used at all.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-c2c.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ tools/perf/util/bpf_counter.c | 16 +++++++---------
+ tools/perf/util/bpf_counter.h |  4 ++--
+ 2 files changed, 9 insertions(+), 11 deletions(-)
 
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index b5c67ef73862..ad1fbeafc93d 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -2015,7 +2015,7 @@ static int setup_nodes(struct perf_session *session)
+diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
+index c17d4a43ce06..ae5bd87ff020 100644
+--- a/tools/perf/util/bpf_counter.c
++++ b/tools/perf/util/bpf_counter.c
+@@ -265,7 +265,7 @@ static int bpf_program_profiler__read(struct evsel *evsel)
+ 	return 0;
+ }
+ 
+-static int bpf_program_profiler__install_pe(struct evsel *evsel, int cpu,
++static int bpf_program_profiler__install_pe(struct evsel *evsel, int cpu_map_idx,
+ 					    int fd)
  {
- 	struct numa_node *n;
- 	unsigned long **nodes;
--	int node, cpu;
-+	int node, cpu, idx;
- 	int *cpu2node;
+ 	struct bpf_prog_profiler_bpf *skel;
+@@ -277,7 +277,7 @@ static int bpf_program_profiler__install_pe(struct evsel *evsel, int cpu,
+ 		assert(skel != NULL);
  
- 	if (c2c.node_info > 2)
-@@ -2057,13 +2057,13 @@ static int setup_nodes(struct perf_session *session)
- 		if (perf_cpu_map__empty(map))
- 			continue;
- 
--		for (cpu = 0; cpu < map->nr; cpu++) {
--			set_bit(map->map[cpu], set);
-+		perf_cpu_map__for_each_cpu(cpu, idx, map) {
-+			set_bit(cpu, set);
- 
--			if (WARN_ONCE(cpu2node[map->map[cpu]] != -1, "node/cpu topology bug"))
-+			if (WARN_ONCE(cpu2node[cpu] != -1, "node/cpu topology bug"))
- 				return -EINVAL;
- 
--			cpu2node[map->map[cpu]] = node;
-+			cpu2node[cpu] = node;
- 		}
+ 		ret = bpf_map_update_elem(bpf_map__fd(skel->maps.events),
+-					  &cpu, &fd, BPF_ANY);
++					  &cpu_map_idx, &fd, BPF_ANY);
+ 		if (ret)
+ 			return ret;
  	}
+@@ -566,12 +566,12 @@ static int bperf__load(struct evsel *evsel, struct target *target)
+ 	return err;
+ }
+ 
+-static int bperf__install_pe(struct evsel *evsel, int cpu, int fd)
++static int bperf__install_pe(struct evsel *evsel, int cpu_map_idx, int fd)
+ {
+ 	struct bperf_leader_bpf *skel = evsel->leader_skel;
+ 
+ 	return bpf_map_update_elem(bpf_map__fd(skel->maps.events),
+-				   &cpu, &fd, BPF_ANY);
++				   &cpu_map_idx, &fd, BPF_ANY);
+ }
+ 
+ /*
+@@ -623,9 +623,7 @@ static int bperf__read(struct evsel *evsel)
+ 		case BPERF_FILTER_GLOBAL:
+ 			assert(i == 0);
+ 
+-			num_cpu = all_cpu_map->nr;
+-			for (j = 0; j < num_cpu; j++) {
+-				cpu = all_cpu_map->map[j];
++			perf_cpu_map__for_each_cpu(cpu, j, all_cpu_map) {
+ 				perf_counts(evsel->counts, cpu, 0)->val = values[cpu].counter;
+ 				perf_counts(evsel->counts, cpu, 0)->ena = values[cpu].enabled;
+ 				perf_counts(evsel->counts, cpu, 0)->run = values[cpu].running;
+@@ -757,11 +755,11 @@ static inline bool bpf_counter_skip(struct evsel *evsel)
+ 		evsel->follower_skel == NULL;
+ }
+ 
+-int bpf_counter__install_pe(struct evsel *evsel, int cpu, int fd)
++int bpf_counter__install_pe(struct evsel *evsel, int cpu_map_idx, int fd)
+ {
+ 	if (bpf_counter_skip(evsel))
+ 		return 0;
+-	return evsel->bpf_counter_ops->install_pe(evsel, cpu, fd);
++	return evsel->bpf_counter_ops->install_pe(evsel, cpu_map_idx, fd);
+ }
+ 
+ int bpf_counter__load(struct evsel *evsel, struct target *target)
+diff --git a/tools/perf/util/bpf_counter.h b/tools/perf/util/bpf_counter.h
+index 65ebaa6694fb..4dbf26408b69 100644
+--- a/tools/perf/util/bpf_counter.h
++++ b/tools/perf/util/bpf_counter.h
+@@ -16,7 +16,7 @@ typedef int (*bpf_counter_evsel_op)(struct evsel *evsel);
+ typedef int (*bpf_counter_evsel_target_op)(struct evsel *evsel,
+ 					   struct target *target);
+ typedef int (*bpf_counter_evsel_install_pe_op)(struct evsel *evsel,
+-					       int cpu,
++					       int cpu_map_idx,
+ 					       int fd);
+ 
+ struct bpf_counter_ops {
+@@ -40,7 +40,7 @@ int bpf_counter__enable(struct evsel *evsel);
+ int bpf_counter__disable(struct evsel *evsel);
+ int bpf_counter__read(struct evsel *evsel);
+ void bpf_counter__destroy(struct evsel *evsel);
+-int bpf_counter__install_pe(struct evsel *evsel, int cpu, int fd);
++int bpf_counter__install_pe(struct evsel *evsel, int cpu_map_idx, int fd);
+ 
+ #else /* HAVE_BPF_SKEL */
  
 -- 
 2.34.1.448.ga2b2bfdf31-goog
