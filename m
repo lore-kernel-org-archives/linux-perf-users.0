@@ -2,320 +2,169 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B4B2C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Jan 2022 14:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5738DC433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Jan 2022 15:05:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232388AbiACOyG (ORCPT
+        id S231384AbiACPE7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 3 Jan 2022 09:54:06 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:53552 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229605AbiACOyG (ORCPT
+        Mon, 3 Jan 2022 10:04:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48552 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231166AbiACPE7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 3 Jan 2022 09:54:06 -0500
+        Mon, 3 Jan 2022 10:04:59 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04A2BC061761;
+        Mon,  3 Jan 2022 07:04:58 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 304CBB80EF2;
-        Mon,  3 Jan 2022 14:54:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9876FC36AEB;
-        Mon,  3 Jan 2022 14:54:03 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id E6EADCE1106;
+        Mon,  3 Jan 2022 15:04:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF9B3C36AED;
+        Mon,  3 Jan 2022 15:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641221644;
-        bh=ZKRXbXIL57BA0aWBAxv3+SWbfv19RZyITq0IuJTyZwM=;
+        s=k20201202; t=1641222295;
+        bh=B8L56doV/O+NhQYVTxg/SJXgAZSDi4xvlVx6yMyyI0w=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sJfd7Po/w5HhZia59mB09HNqXXMMPAt6ULTfbRPtyWannYrjg8P/P9IAoJ700bjH+
-         KAg23fbSfCAzgz3zk0dH/Bybj0SKV3qFOL7KYHqSAv94iQ294AK8272p0+C5fb5IZb
-         qndvzPAtx6skQILg+6tHzBwv0Ka3XJvd83cI4kSkrsOtzL6AjsUaA9deWy9NEl8wDF
-         EpFhNX3sj3W4/4SuOA2sWRXcpYqEEl+r1ULHq0AMwkHhaaNiVlKd9YvddaPFNIm54W
-         FZE0355YPQWkc5daKsC4kJjDUuWO03QTOxBupgPNWqq5j45AT0qKtRhSyqoIt+qgLh
-         t+Jehwnt/SZcA==
+        b=gG2PrOWM0tdqhHpeKmcWe/Ko97GTuu6shhr3z3b6QxbzUw/qG1UIdKwPS9ajxkRpU
+         R/DSbc2oTIsACPGb8CBQYuG+sLptUv8WbgMb4Vcx/640vfcnu7OaK08V+x+A9U1gX+
+         k8ipY6W/lALKRDon6dMSR7aBAhvnoI2D7Gi4TepbZIpF8dJ/qwpUWPVDcOS0fSqYXL
+         bH+rLJ02PJJWkqCobLeGZ+yTgpQPD0r03ZVlzHUpNdTyZYh6/HtNwVPLYxDNdwkky7
+         /nR3NDApJShwkGVhba+M1522KxnFG/hUxKTVaeBDDIJ1leF+rZp3aby18g7nlTOWeQ
+         9lROweWJdTpGg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 8B8EF40B92; Mon,  3 Jan 2022 11:53:59 -0300 (-03)
-Date:   Mon, 3 Jan 2022 11:53:59 -0300
+        id 2D54540B92; Mon,  3 Jan 2022 12:04:53 -0300 (-03)
+Date:   Mon, 3 Jan 2022 12:04:53 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Claire Jensen <cjense@google.com>, Jiri Olsa <jolsa@redhat.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        yao.jin@linux.intel.com, song@kernel.org, andi@firstfloor.org,
-        adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        james.clark@arm.com, alexander.antonov@linux.intel.com,
-        changbin.du@intel.com, liuqi115@huawei.com, irogers@google.com,
-        eranian@google.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, clairej735@gmail.com
-Subject: Re: [PATCH v2 1/1] Add field checking tests for perf stat JSON
- output.
-Message-ID: <YdMOB4tamyCsHs2f@kernel.org>
-References: <20210813220936.2105426-1-cjense@google.com>
- <YS6HAvjCxq4kDk5z@krava>
+To:     Jiri Slaby <jirislaby@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        eranian@google.com
+Subject: Re: [was: libtraceevent: Increase libtraceevent logging when verbose]
+Message-ID: <YdMQlctMPpHIvf+I@kernel.org>
+References: <20210923001024.550263-1-irogers@google.com>
+ <20210923001024.550263-4-irogers@google.com>
+ <bc2b0786-8965-1bcd-2316-9d9bb37b9c31@kernel.org>
+ <c19ca2a2-54c9-88b1-b705-5a2cd4dd9580@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <YS6HAvjCxq4kDk5z@krava>
+In-Reply-To: <c19ca2a2-54c9-88b1-b705-5a2cd4dd9580@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Aug 31, 2021 at 09:46:10PM +0200, Jiri Olsa escreveu:
-> On Fri, Aug 13, 2021 at 10:09:37PM +0000, Claire Jensen wrote:
-> > Counts number of fields to make sure expected fields are present.
+Em Mon, Jan 03, 2022 at 09:25:26AM +0100, Jiri Slaby escreveu:
+> Ping -- perf build is still broken in 5.16-rc8 due to this.
+
+Back from year end vacation, I'll try to fix this, from a quick read it
+uses in tree tools/lib/traceevent headers while building with the distro
+provided libtraceevent-devel package.
+
+- Arnaldo
+ 
+> On 16. 12. 21, 9:07, Jiri Slaby wrote:
+> > Hi,
 > > 
-> > Signed-off-by: Claire Jensen <cjense@google.com>
-> > ---
-> >  .../tests/shell/lib/perf_json_output_lint.py  |  48 ++++++++
-> >  tools/perf/tests/shell/stat+json_output.sh    | 114 ++++++++++++++++++
-> >  2 files changed, 162 insertions(+)
-> >  create mode 100644 tools/perf/tests/shell/lib/perf_json_output_lint.py
-> >  create mode 100644 tools/perf/tests/shell/stat+json_output.sh
-> 
-> this one needs to have exec priv, right?
-> 
+> > On 23. 09. 21, 2:10, Ian Rogers wrote:
+> > > libtraceevent has added more levels of debug printout and with changes
+> > > like:
+> > > https://lore.kernel.org/linux-trace-devel/20210507095022.1079364-3-tz.stoyanov@gmail.com
+> > > 
+> > > previously generated output like "registering plugin" is no longer
+> > > displayed. This change makes it so that if perf's verbose debug output
+> > > is enabled then the debug and info libtraceevent messages can be
+> > > displayed.
+> > > The code is conditionally enabled based on the libtraceevent version as
+> > > discussed in the RFC:
+> > > https://lore.kernel.org/lkml/20210610060643.595673-1-irogers@google.com/
+> > > 
+> > > v2. Is a rebase and handles the case of building without
+> > >      LIBTRACEEVENT_DYNAMIC.
 > > 
-> > diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-> > new file mode 100644
-> > index 000000000000..45d9163e7423
-> > --- /dev/null
+> > It breaks build with LIBTRACEEVENT_DYNAMIC and version 1.3.0:
+> >  > util/debug.c: In function ‘perf_debug_option’:
+> >  > util/debug.c:243:17: error: implicit declaration of function
+> > ‘tep_set_loglevel’ [-Werror=implicit-function-declaration]
+> >  >   243 |                 tep_set_loglevel(TEP_LOG_INFO);
+> >  >       |                 ^~~~~~~~~~~~~~~~
+> >  > util/debug.c:243:34: error: ‘TEP_LOG_INFO’ undeclared (first use in
+> > this function); did you mean ‘TEP_PRINT_INFO’?
+> >  >   243 |                 tep_set_loglevel(TEP_LOG_INFO);
+> >  >       |                                  ^~~~~~~~~~~~
+> >  >       |                                  TEP_PRINT_INFO
+> >  > util/debug.c:243:34: note: each undeclared identifier is reported
+> > only once for each function it appears in
+> >  > util/debug.c:245:34: error: ‘TEP_LOG_DEBUG’ undeclared (first use in
+> > this function)
+> >  >   245 |                 tep_set_loglevel(TEP_LOG_DEBUG);
+> >  >       |                                  ^~~~~~~~~~~~~
+> >  > util/debug.c:247:34: error: ‘TEP_LOG_ALL’ undeclared (first use in
+> > this function)
+> >  >   247 |                 tep_set_loglevel(TEP_LOG_ALL);
+> >  >       |                                  ^~~~~~~~~~~
+> > 
+> > It is because the gcc's command line looks like:
+> > gcc
+> > ...
+> > -I/home/abuild/rpmbuild/BUILD/tools/lib/
+> > ...
+> > -DLIBTRACEEVENT_VERSION=65790
+> > ...
+> > 
+> > So:
+> > 
+> > 
+> > > --- a/tools/perf/util/debug.c
+> > > +++ b/tools/perf/util/debug.c
+> > > @@ -24,6 +24,16 @@
+> > >   #include "util/parse-sublevel-options.h"
+> > >   #include <linux/ctype.h>
+> > > +#include <traceevent/event-parse.h>
+> > 
+> > /home/abuild/rpmbuild/BUILD/tools/lib/traceevent/event-parse.h is taken
+> > here.
+> > 
+> > > @@ -228,6 +238,15 @@ int perf_debug_option(const char *str)
+> > >       /* Allow only verbose value in range (0, 10), otherwise set 0. */
+> > >       verbose = (verbose < 0) || (verbose > 10) ? 0 : verbose;
+> > > +#if MAKE_LIBTRACEEVENT_VERSION(1, 3, 0) <= LIBTRACEEVENT_VERSION
+> > 
+> > But
+> > -DLIBTRACEEVENT_VERSION=65790
+> > is taken here (which is 1.3.0).
+> > 
+> > > +    if (verbose == 1)
+> > > +        tep_set_loglevel(TEP_LOG_INFO);
+> > > +    else if (verbose == 2)
+> > > +        tep_set_loglevel(TEP_LOG_DEBUG);
+> > > +    else if (verbose >= 3)
+> > > +        tep_set_loglevel(TEP_LOG_ALL);
+> > > +#endif
+> > > +
+> > >       return 0;
+> > >   }
+> > 
+> > regards,
 > 
-> SNIP
 > 
-> > diff --git a/tools/perf/tests/shell/stat+json_output.sh b/tools/perf/tests/shell/stat+json_output.sh
-> > new file mode 100644
-> > index 000000000000..8a772badae45
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/stat+json_output.sh
-> > @@ -0,0 +1,114 @@
-> > +#!/bin/bash
-> > +# perf stat JSON output linter
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +# Checks various perf stat JSON output commands for the
-> > +# correct number of fields.
-> > +
-> > +set -e
-> > +set -x
-> > +
-> > +pythonchecker=$(dirname $0)/lib/perf_json_output_lint.py
-> > +file="/proc/sys/kernel/perf_event_paranoid"
-> > +paranoia=$(cat "$file" | grep -o -E '[0-9]+')
-> > +
-> > +check_no_args()
-> > +{
-> > +	perf stat -j sleep 1 2>&1 | \
-> 
-> hum, is this based on some other change? I don't see -j option in perf stat
+> -- 
+> js
+> suse labs
 
-Yeah, testing it I stumbled in both problems as reported by Jiri:
+-- 
 
-⬢[acme@toolbox perf]$ perf test -v linter
-Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
-87: perf stat JSON output linter                                    :
---- start ---
-test child forked, pid 1826327
-sh: line 1: ./tools/perf/tests/shell/stat+json_output.sh: Permission denied
-test child finished with -1
----- end ----
-perf stat JSON output linter: FAILED!
-⬢[acme@toolbox perf]$
-⬢[acme@toolbox perf]$ ls -la tools/perf/tests/shell/stat+json_output.sh
--rw-r--r--. 1 acme acme 2113 Jan  3 11:51 tools/perf/tests/shell/stat+json_output.sh
-⬢[acme@toolbox perf]$ chmod +x tools/perf/tests/shell/stat+json_output.sh
-⬢[acme@toolbox perf]$ perf test -v linter
-Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
-87: perf stat JSON output linter                                    :
---- start ---
-test child forked, pid 1826350
-++ dirname ./tools/perf/tests/shell/stat+json_output.sh
-+ pythonchecker=./tools/perf/tests/shell/lib/perf_json_output_lint.py
-+ file=/proc/sys/kernel/perf_event_paranoid
-++ cat /proc/sys/kernel/perf_event_paranoid
-++ grep -o -E '[0-9]+'
-+ paranoia=2
-+ '[' 2 -gt 0 ']'
-+ echo check_all_cpus test skipped because of paranoia level.
-check_all_cpus test skipped because of paranoia level.
-+ '[' 2 -gt 0 ']'
-+ echo check_all_cpus test skipped because of paranoia level.
-check_all_cpus test skipped because of paranoia level.
-+ '[' 2 -gt 0 ']'
-+ echo check_all_cpus test skipped because of paranoia level.
-check_all_cpus test skipped because of paranoia level.
-+ '[' 2 -gt 0 ']'
-+ echo check_per_die test skipped because of paranoia level.
-check_per_die test skipped because of paranoia level.
-+ '[' 2 -gt 0 ']'
-+ echo check_per_node test skipped because of paranoia level.
-check_per_node test skipped because of paranoia level.
-+ '[' 2 -gt 0 ']'
-+ echo check_per_socket test skipped because of paranoia level.
-check_per_socket test skipped because of paranoia level.
-+ check_no_args
-+ perf stat -j sleep 1
-+ python ./tools/perf/tests/shell/lib/perf_json_output_lint.py --no-args
-  Error: unknown switch `j'
-
- Usage: perf stat [<options>] [<command>]
-
-    -a, --all-cpus        system-wide collection from all CPUs
-    -A, --no-aggr         disable CPU count aggregation
-    -B, --big-num         print large numbers with thousands' separators
-    -b, --bpf-prog <bpf-prog-id>
-                          stat events on existing bpf program id
-    -C, --cpu <cpu>       list of cpus to monitor in system-wide
-    -D, --delay <n>       ms to wait before starting measurement after program start (-1: start with events disabled)
-    -d, --detailed        detailed run - start a lot of events
-    -e, --event <event>   event selector. use 'perf list' to list available events
-    -G, --cgroup <name>   monitor event in cgroup name only
-    -g, --group           put the counters into a counter group
-    -I, --interval-print <n>
-                          print counts at regular interval in ms (overhead is possible for values <= 100ms)
-    -i, --no-inherit      child tasks do not inherit counters
-    -M, --metrics <metric/metric group list>
-                          monitor specified metrics or metric groups (separated by ,)
-    -n, --null            null run - dont start any counters
-    -o, --output <file>   output file name
-    -p, --pid <pid>       stat events on existing process id
-    -r, --repeat <n>      repeat command and print average + stddev (max: 100, forever: 0)
-    -S, --sync            call sync() before starting a run
-    -t, --tid <tid>       stat events on existing thread id
-    -T, --transaction     hardware transaction statistics
-    -v, --verbose         be more verbose (show counter open errors, etc)
-    -x, --field-separator <separator>
-                          print counts with custom separator
-        --all-kernel      Configure all used events to run in kernel space.
-        --all-user        Configure all used events to run in user space.
-        --append          append to the output file
-        --bpf-attr-map <attr-map-path>
-                          path to perf_event_attr map
-        --bpf-counters    use bpf program to count events
-        --control <fd:ctl-fd[,ack-fd] or fifo:ctl-fifo[,ack-fifo]>
-                          Listen on ctl-fd descriptor for command to control measurement ('enable': enable events, 'disable': disable events).
-			  Optionally send control command completion ('ack\n') to ack-fd descriptor.
-			  Alternatively, ctl-fifo / ack-fifo will be opened and used as ctl-fd / ack-fd.
-        --filter <filter>
-                          event filter
-        --for-each-cgroup <name>
-                          expand events for each cgroup
-        --interval-clear  clear screen in between new interval
-        --interval-count <n>
-                          print counts for fixed number of times
-        --iostat[=<default>]
-                          measure I/O performance metrics provided by arch/platform
-        --log-fd <n>      log output to fd, instead of stderr
-        --metric-no-group
-                          don't group metric events, impacts multiplexing
-        --metric-no-merge
-                          don't try to share events between metrics in a group
-        --metric-only     Only print computed metrics. No raw values
-        --no-csv-summary  don't print 'summary' for CSV summary output
-        --no-merge        Do not merge identical named events
-        --per-core        aggregate counts per physical processor core
-        --per-die         aggregate counts per processor die
-        --per-node        aggregate counts per numa node
-        --per-socket      aggregate counts per processor socket
-        --per-thread      aggregate counts per thread
-        --percore-show-thread
-                          Use with 'percore' event qualifier to show the event counts of one hardware thread by sum up total hardware threads of same physical core
-        --post <command>  command to run after to the measured command
-        --pre <command>   command to run prior to the measured command
-        --quiet           don't print output (useful with record)
-        --scale           Use --no-scale to disable counter scaling for multiplexing
-        --smi-cost        measure SMI cost
-        --summary         print summary for interval mode
-        --table           display details about each run (only with -r option)
-        --td-level <n>    Set the metrics level for the top-down statistics (0: max level)
-        --timeout <n>     stop workload and print counts after a timeout period in ms (>= 10ms)
-        --topdown         measure top-down statistics
-
-Test failed for input:
-  Error: unknown switch `j'
-
- Usage: perf stat [<options>] [<command>]
-
-    -a, --all-cpus        system-wide collection from all CPUs
-    -A, --no-aggr         disable CPU count aggregation
-    -B, --big-num         print large numbers with thousands' separators
-    -b, --bpf-prog <bpf-prog-id>
-                          stat events on existing bpf program id
-    -C, --cpu <cpu>       list of cpus to monitor in system-wide
-    -D, --delay <n>       ms to wait before starting measurement after program start (-1: start with events disabled)
-    -d, --detailed        detailed run - start a lot of events
-    -e, --event <event>   event selector. use 'perf list' to list available events
-    -G, --cgroup <name>   monitor event in cgroup name only
-    -g, --group           put the counters into a counter group
-    -I, --interval-print <n>
-                          print counts at regular interval in ms (overhead is possible for values <= 100ms)
-    -i, --no-inherit      child tasks do not inherit counters
-    -M, --metrics <metric/metric group list>
-                          monitor specified metrics or metric groups (separated by ,)
-    -n, --null            null run - dont start any counters
-    -o, --output <file>   output file name
-    -p, --pid <pid>       stat events on existing process id
-    -r, --repeat <n>      repeat command and print average + stddev (max: 100, forever: 0)
-    -S, --sync            call sync() before starting a run
-    -t, --tid <tid>       stat events on existing thread id
-    -T, --transaction     hardware transaction statistics
-    -v, --verbose         be more verbose (show counter open errors, etc)
-    -x, --field-separator <separator>
-                          print counts with custom separator
-        --all-kernel      Configure all used events to run in kernel space.
-        --all-user        Configure all used events to run in user space.
-        --append          append to the output file
-        --bpf-attr-map <attr-map-path>
-                          path to perf_event_attr map
-        --bpf-counters    use bpf program to count events
-        --control <fd:ctl-fd[,ack-fd] or fifo:ctl-fifo[,ack-fifo]>
-                          Listen on ctl-fd descriptor for command to control measurement ('enable': enable events, 'disable': disable events).
-			  Optionally send control command completion ('ack\n') to ack-fd descriptor.
-			  Alternatively, ctl-fifo / ack-fifo will be opened and used as ctl-fd / ack-fd.
-        --filter <filter>
-                          event filter
-        --for-each-cgroup <name>
-                          expand events for each cgroup
-        --interval-clear  clear screen in between new interval
-        --interval-count <n>
-                          print counts for fixed number of times
-        --iostat[=<default>]
-                          measure I/O performance metrics provided by arch/platform
-        --log-fd <n>      log output to fd, instead of stderr
-        --metric-no-group
-                          don't group metric events, impacts multiplexing
-        --metric-no-merge
-                          don't try to share events between metrics in a group
-        --metric-only     Only print computed metrics. No raw values
-        --no-csv-summary  don't print 'summary' for CSV summary output
-        --no-merge        Do not merge identical named events
-        --per-core        aggregate counts per physical processor core
-        --per-die         aggregate counts per processor die
-        --per-node        aggregate counts per numa node
-        --per-socket      aggregate counts per processor socket
-        --per-thread      aggregate counts per thread
-        --percore-show-thread
-                          Use with 'percore' event qualifier to show the event counts of one hardware thread by sum up total hardware threads of same physical core
-        --post <command>  command to run after to the measured command
-        --pre <command>   command to run prior to the measured command
-        --quiet           don't print output (useful with record)
-        --scale           Use --no-scale to disable counter scaling for multiplexing
-        --smi-cost        measure SMI cost
-        --summary         print summary for interval mode
-        --table           display details about each run (only with -r option)
-        --td-level <n>    Set the metrics level for the top-down statistics (0: max level)
-        --timeout <n>     stop workload and print counts after a timeout period in ms (>= 10ms)
-        --topdown         measure top-down statistics
-
-Traceback (most recent call last):
-  File "/var/home/acme/git/perf/./tools/perf/tests/shell/lib/perf_json_output_lint.py", line 40, in <module>
-    check_json_output(6)
-  File "/var/home/acme/git/perf/./tools/perf/tests/shell/lib/perf_json_output_lint.py", line 34, in check_json_output
-    raise RuntimeError('wrong number of fields. counted {0}'
-RuntimeError: wrong number of fields. counted 0 expected 6 in   Error: unknown switch `j'
-
-
-test child finished with -1
----- end ----
-perf stat JSON output linter: FAILED!
-⬢[acme@toolbox perf]$
-
-
-
-
+- Arnaldo
