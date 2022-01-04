@@ -2,39 +2,48 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E22E7C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Jan 2022 15:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB750C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Jan 2022 06:17:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232832AbiACPPy (ORCPT
+        id S232921AbiADGRq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 3 Jan 2022 10:15:54 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:38616 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229995AbiACPPw (ORCPT
+        Tue, 4 Jan 2022 01:17:46 -0500
+Received: from mail-ed1-f43.google.com ([209.85.208.43]:34360 "EHLO
+        mail-ed1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231533AbiADGRq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 3 Jan 2022 10:15:52 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 55623B80EFC;
-        Mon,  3 Jan 2022 15:15:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A17F0C36AED;
-        Mon,  3 Jan 2022 15:15:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641222950;
-        bh=JlsPW+XrEU2GAaGgYw+gRc7fXysdOHvhf4ucIuTXWwA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j+TKAu/VWbwINQiN+cy4dJvGI4Pp93ZQQ9Xw8Q0568LoeqlZQ9HMtxajwxbzg7Q7N
-         rFWdSJqWRFOu04e8JZGN3suKf7UCYUtKJfAq0/mCZyp0Fj5bGT2xIfEv9m2u0zLfuC
-         bojiet0Jg7yx6/5cngumnJHmKjsgMvQK1WFGnccMMcbvGWt/ejIpqbNz1xkff8fVyN
-         KDF8tv55FQgwdSmvShKUAU59yPRuFWt/4cod+CPoiBlYAPowu3xNF3TUj+mBBNim7m
-         ytP6oO8zJB62z1UZP9R7wWLP3dmhMZElhYqOqmgm112d4xWXhUOTl1JGf2uGJ46B7c
-         ViYJuDJq/xxAw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 0889840B92; Mon,  3 Jan 2022 12:15:47 -0300 (-03)
-Date:   Mon, 3 Jan 2022 12:15:46 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Slaby <jirislaby@kernel.org>
+        Tue, 4 Jan 2022 01:17:46 -0500
+Received: by mail-ed1-f43.google.com with SMTP id u25so22959951edf.1;
+        Mon, 03 Jan 2022 22:17:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=pHkaFCQ7pu2TR8eztQX9gVwPPOBVlFAaACaZ0iSfECg=;
+        b=IRZ8c3oLhc/wSFGxAb5y7K+hBK68R3umxspE/XjqNywzsKw6PYFqJfexRXvwxYfhwA
+         /nuR1eiSt3GRqjFDGWHy4Irf+9lGgLZqiY/5ChE6Ap0PjhLB0J9VFjkbCpRgwrLW9pIf
+         zCKHW9rRD8Nw6MWuiermX80bi7UqfjzPJRomE462TudoUUBScCaY/oq1F2PrIDbN6PkO
+         VVvI9cwnKHDKN+G+w3eI7PV4Bw/aNL2l1nfDwlwajESmMU98OAqszQaj4R/G6xRPeBii
+         UfEiX25dqvNYaDmzUGGbo02Tli2qPL6ZLlnDKJwN2f2DbZOwKtIZY4/THqieCak2d5f8
+         ucaA==
+X-Gm-Message-State: AOAM530NxyjFW4OlHCOJOHNxqrm0tMin+L+zd6Jgi+gHUv76kj8lF0xO
+        Ok27hEsiM6sInyTykewSUUo=
+X-Google-Smtp-Source: ABdhPJwLdBXMrng9HGpEUbQe43EeRAgi7WoS98rK5bcmSkZR5943V2fvIkVKOdDmAmvXm7SLu7RjIQ==
+X-Received: by 2002:a17:906:dc94:: with SMTP id cs20mr37131508ejc.316.1641277065191;
+        Mon, 03 Jan 2022 22:17:45 -0800 (PST)
+Received: from [192.168.1.49] (185-219-167-24-static.vivo.cz. [185.219.167.24])
+        by smtp.gmail.com with ESMTPSA id i20sm14319867edv.44.2022.01.03.22.17.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Jan 2022 22:17:44 -0800 (PST)
+Message-ID: <44a258b0-048d-9e32-1583-ae52aaee0a1a@kernel.org>
+Date:   Tue, 4 Jan 2022 07:17:43 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [was: libtraceevent: Increase libtraceevent logging when verbose]
+Content-Language: en-US
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -48,132 +57,27 @@ Cc:     Ian Rogers <irogers@google.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
         eranian@google.com
-Subject: Re: [was: libtraceevent: Increase libtraceevent logging when verbose]
-Message-ID: <YdMTIl7jn25XrUn8@kernel.org>
 References: <20210923001024.550263-1-irogers@google.com>
  <20210923001024.550263-4-irogers@google.com>
  <bc2b0786-8965-1bcd-2316-9d9bb37b9c31@kernel.org>
  <c19ca2a2-54c9-88b1-b705-5a2cd4dd9580@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c19ca2a2-54c9-88b1-b705-5a2cd4dd9580@kernel.org>
-X-Url:  http://acmel.wordpress.com
+ <YdMTIl7jn25XrUn8@kernel.org>
+From:   Jiri Slaby <jirislaby@kernel.org>
+In-Reply-To: <YdMTIl7jn25XrUn8@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Jan 03, 2022 at 09:25:26AM +0100, Jiri Slaby escreveu:
-> Ping -- perf build is still broken in 5.16-rc8 due to this.
-> 
-> On 16. 12. 21, 9:07, Jiri Slaby wrote:
-> > Hi,
-> > 
-> > On 23. 09. 21, 2:10, Ian Rogers wrote:
-> > > libtraceevent has added more levels of debug printout and with changes
-> > > like:
-> > > https://lore.kernel.org/linux-trace-devel/20210507095022.1079364-3-tz.stoyanov@gmail.com
-> > > 
-> > > previously generated output like "registering plugin" is no longer
-> > > displayed. This change makes it so that if perf's verbose debug output
-> > > is enabled then the debug and info libtraceevent messages can be
-> > > displayed.
-> > > The code is conditionally enabled based on the libtraceevent version as
-> > > discussed in the RFC:
-> > > https://lore.kernel.org/lkml/20210610060643.595673-1-irogers@google.com/
-> > > 
-> > > v2. Is a rebase and handles the case of building without
-> > >      LIBTRACEEVENT_DYNAMIC.
-> > 
-> > It breaks build with LIBTRACEEVENT_DYNAMIC and version 1.3.0:
-> >  > util/debug.c: In function ‘perf_debug_option’:
-> >  > util/debug.c:243:17: error: implicit declaration of function
-> > ‘tep_set_loglevel’ [-Werror=implicit-function-declaration]
-> >  >   243 |                 tep_set_loglevel(TEP_LOG_INFO);
-> >  >       |                 ^~~~~~~~~~~~~~~~
-> >  > util/debug.c:243:34: error: ‘TEP_LOG_INFO’ undeclared (first use in
-> > this function); did you mean ‘TEP_PRINT_INFO’?
-> >  >   243 |                 tep_set_loglevel(TEP_LOG_INFO);
-> >  >       |                                  ^~~~~~~~~~~~
-> >  >       |                                  TEP_PRINT_INFO
-> >  > util/debug.c:243:34: note: each undeclared identifier is reported
-> > only once for each function it appears in
-> >  > util/debug.c:245:34: error: ‘TEP_LOG_DEBUG’ undeclared (first use in
-> > this function)
-> >  >   245 |                 tep_set_loglevel(TEP_LOG_DEBUG);
-> >  >       |                                  ^~~~~~~~~~~~~
-> >  > util/debug.c:247:34: error: ‘TEP_LOG_ALL’ undeclared (first use in
-> > this function)
-> >  >   247 |                 tep_set_loglevel(TEP_LOG_ALL);
-> >  >       |                                  ^~~~~~~~~~~
-> > 
-> > It is because the gcc's command line looks like:
-> > gcc
-> > ...
-> > -I/home/abuild/rpmbuild/BUILD/tools/lib/
-> > ...
-> > -DLIBTRACEEVENT_VERSION=65790
-> > ...
-> > 
-> > So:
-> > 
-> > 
-> > > --- a/tools/perf/util/debug.c
-> > > +++ b/tools/perf/util/debug.c
-> > > @@ -24,6 +24,16 @@
-> > >   #include "util/parse-sublevel-options.h"
-> > >   #include <linux/ctype.h>
-> > > +#include <traceevent/event-parse.h>
-> > 
-> > /home/abuild/rpmbuild/BUILD/tools/lib/traceevent/event-parse.h is taken
-> > here.
-> > 
-> > > @@ -228,6 +238,15 @@ int perf_debug_option(const char *str)
-> > >       /* Allow only verbose value in range (0, 10), otherwise set 0. */
-> > >       verbose = (verbose < 0) || (verbose > 10) ? 0 : verbose;
-> > > +#if MAKE_LIBTRACEEVENT_VERSION(1, 3, 0) <= LIBTRACEEVENT_VERSION
-> > 
-> > But
-> > -DLIBTRACEEVENT_VERSION=65790
-> > is taken here (which is 1.3.0).
-> > 
-> > > +    if (verbose == 1)
-> > > +        tep_set_loglevel(TEP_LOG_INFO);
-> > > +    else if (verbose == 2)
-> > > +        tep_set_loglevel(TEP_LOG_DEBUG);
-> > > +    else if (verbose >= 3)
-> > > +        tep_set_loglevel(TEP_LOG_ALL);
-> > > +#endif
-> > > +
-> > >       return 0;
-> > >   }
+On 03. 01. 22, 16:15, Arnaldo Carvalho de Melo wrote:
+> Tried reproducing here on fedora 34 but it is at 1.1.1:
 
-Tried reproducing here on fedora 34 but it is at 1.1.1:
+FWIW, it's openSUSE Tumbleweed:
+$ rpm -q libtraceevent1
+libtraceevent1-1.3.0-1.3.x86_64
 
-make: Leaving directory '/var/home/acme/git/perf/tools/perf'
-
- Performance counter stats for 'make -k LIBTRACEEVENT_DYNAMIC=1 BUILD_BPF_SKEL=1 CORESIGHT=1 PYTHON=python3 O=/tmp/build/perf -C tools/perf install-bin':
-
-   397,176,418,790      cycles:u                                                    
-   493,885,896,752      instructions:u            #    1.24  insn per cycle         
-
-       8.664957770 seconds time elapsed
-
-      97.706894000 seconds user
-      23.714293000 seconds sys
-
-
-On branch perf/urgent
-Your branch is ahead of 'quaco/perf/urgent' by 369 commits.
-  (use "git push" to publish your local commits)
-
-nothing to commit, working tree clean
-19: 'import perf' in python                                         : Ok
-⬢[acme@toolbox perf]$ git diff
-⬢[acme@toolbox perf]$ rpm -q libtraceevent-devel
-libtraceevent-devel-1.1.1-2.fc34.x86_64
-
-Lemme see in a container so that I can also test the fix.
-
-- Arnaldo
+thanks,
+-- 
+js
+suse labs
