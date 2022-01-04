@@ -2,57 +2,56 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03AA5C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Jan 2022 17:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE4D0C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Jan 2022 17:08:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234909AbiADRBq (ORCPT
+        id S231153AbiADRIm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Jan 2022 12:01:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33544 "EHLO
+        Tue, 4 Jan 2022 12:08:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234144AbiADRBp (ORCPT
+        with ESMTP id S230128AbiADRIl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Jan 2022 12:01:45 -0500
-Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97799C061784
-        for <linux-perf-users@vger.kernel.org>; Tue,  4 Jan 2022 09:01:45 -0800 (PST)
-Received: by mail-io1-xd34.google.com with SMTP id y18so36673010iob.8
-        for <linux-perf-users@vger.kernel.org>; Tue, 04 Jan 2022 09:01:45 -0800 (PST)
+        Tue, 4 Jan 2022 12:08:41 -0500
+Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4E2CC061761
+        for <linux-perf-users@vger.kernel.org>; Tue,  4 Jan 2022 09:08:41 -0800 (PST)
+Received: by mail-io1-xd2f.google.com with SMTP id y70so45058882iof.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Jan 2022 09:08:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+e+H7/zWSIXqVq2THQZSwH8X/rsfhLcfNE1CJkEArEY=;
-        b=gYpGHvksYyEqXrOa03cCtnrVf5ek4IA3ORUGIUk89j/ZVejBTwK2BZ00U//41OQXv8
-         H3HGFpznGo369Hc3PtPuBTzqhYPEehA+7rfKSRoh3eWhnz8DUoCeGIOXtHeA9J+7pauD
-         zvYMasOv1PRWYECjLUYdMth0+v9Ggzopq8hZ5k/H8xRNsfSc3cOMN4aD9Zb6xGtsMXOi
-         PGgWHRvibc9cDjHrk5IyugjMzwO0yK7Mn81DKd40IolWWwzJLlZInCZk2QWScr6E2Dpx
-         VbTB+8Y/qZQvHaqyYxtf3zgycKTNaAnGo2pxK1jL429s27F4cvFl1Q+BpAyxKgA5/okn
-         WSxA==
+        bh=eNWy2s9rz0FLnCuaNfyjnf9kuom2tgn2/ycw/EInc2I=;
+        b=pswDZTE8m9o1E7YgwGw4JHpc4nf4cyidZqzTNv0WZv44hV2N12KcXdzYX8OBYBVsSg
+         1mt0BMy74iRvSIdmHz18WPLL9UEXG9gcPgQmc3rrlA+AIaaHdZD7Y2G5aC96iLa2BEaW
+         ikp5oV3Ir4yr5Rld3A4FSbW4HVPrmXOGKrJ2lj9o0VCkFGM+Z7j7M3ka4JMgCEu511K+
+         Y5zyARniP7ovRKZefdS4iMMF/lsR4NrrEZz74gUImD1Rkz+lcjh4mhf6epnvIrfZ7X6V
+         GPCYvsYgjBhLcHK5u/BeHJ1As3iASGOVXT51Bl34JmAQ4QLtxDegIXPvNQ4BESPXLe+U
+         o1Gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+e+H7/zWSIXqVq2THQZSwH8X/rsfhLcfNE1CJkEArEY=;
-        b=7fuT592KfuEGTnQP3XfQtDKV44bgfDE2V8Dim3hQKkExBU6h5bv3lGwuegB9/aGfkr
-         tpBa1KixZBqnS/rkkXlKd9h7EE+xuCqZ8L3kwpnMGjJ7zqoW3mndVhVZgCrfA9/bf8cM
-         wlfcM+8D/dBNVm3256wGndx0F4tvVZ0udLfQ7E54apBYtsIX5pO9QyEBCqF12/BXRt0A
-         nH90Hl9ZGMt6ZtBHoO8OGNLGzUHGhWtNrSSy45X/mA2fvsZBbZ807im5+vRSqHI89CPF
-         HE7W9haYYXKAm27t4l3a286BwNZ8s5gZzn9GPSqeBBQEQ01QRPCD38TTEuyAqEM4zoGM
-         twMg==
-X-Gm-Message-State: AOAM531sHi5CnsrIVARrTp0Yqx7oB5ClBokEe5FK4NzpybfQLVjz7iD8
-        OPygEYqiLP9qf72v91WvPZ+00CGEOuGvKM02/pB0sg==
-X-Google-Smtp-Source: ABdhPJyooJkIhAMqTYvnUUyqkCZrx7rLO3Dzq47P/K6gkovkrCiyyChZXaSuciLKXJ16jJHu8ohu5D0vjIE5M6rSj5Q=
-X-Received: by 2002:a02:cce5:: with SMTP id l5mr21543654jaq.126.1641315704497;
- Tue, 04 Jan 2022 09:01:44 -0800 (PST)
+        bh=eNWy2s9rz0FLnCuaNfyjnf9kuom2tgn2/ycw/EInc2I=;
+        b=1UuPNO3D/7y1PvWaA+5Ui1XL2aXJxgD6kF+E03qMR1s4Kloev1NcqFP0RWpirxs7yr
+         o0TVQCCe9+45/oBVmbE0YcTStQk2CxQBv4SkE1xPBbLa8MNaUnFziirFwFjKQAvlx5W6
+         3tZvoNSkRmANK+wNR28UbkoBkxF3K3phs/KGMMJYdwGu76mDKXa5B1rz+XupGvo7qOJn
+         1zq2NWV0duna9ic8TIkBCuZwnzVBXUZGcMMEjAdhHbYcluYRRYauZwmzlelWPCSwS0RJ
+         xqAZ55mBTEj/ReGO4pOItF8k+zQ8FJPcB+ZG8Cs0DXuDW+bjMJ7YAfNeOgdn/3sFKDQU
+         lqCw==
+X-Gm-Message-State: AOAM5335zZhma60c2GiBPdVJ3XTYtWsCedC74+mdNDsGBbGl/EK4rN0S
+        HnAuBEiU8o19QYT2keiVuA5Cnf6qFSCb7JEgr7rj/Q==
+X-Google-Smtp-Source: ABdhPJzy79VvXhXYiRGwOpMtjUD0yi61E9rAbv6x16EfhG2JnQ9J49w+3y+LnvkZSOQlGOsYp4j9tjfBcqYOadWbkgc=
+X-Received: by 2002:a02:294b:: with SMTP id p72mr18328692jap.263.1641316119537;
+ Tue, 04 Jan 2022 09:08:39 -0800 (PST)
 MIME-Version: 1.0
-References: <20211230072030.302559-1-irogers@google.com> <20211230072030.302559-3-irogers@google.com>
- <YdRX5zgB3AORM/Wd@krava>
-In-Reply-To: <YdRX5zgB3AORM/Wd@krava>
+References: <20211230072030.302559-1-irogers@google.com> <YdRYk8Ic8qdEAhQz@krava>
+In-Reply-To: <YdRYk8Ic8qdEAhQz@krava>
 From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 4 Jan 2022 09:01:32 -0800
-Message-ID: <CAP-5=fXyBU4yF=S2FSjd6sZXCwqqJ=BS5eOynPk0C4KTs9EcsQ@mail.gmail.com>
-Subject: Re: [PATCH v3] perf evlist: Remove group option.
+Date:   Tue, 4 Jan 2022 09:08:27 -0800
+Message-ID: <CAP-5=fUbM-miTBqQNhuTdevBF7VMBmd=LH+GxXkP2_z5n9nmtQ@mail.gmail.com>
+Subject: Re: [PATCH v3 00/48] Refactor perf cpumap
 To:     Jiri Olsa <jolsa@redhat.com>
 Cc:     Andi Kleen <ak@linux.intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -80,293 +79,174 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jan 4, 2022 at 6:21 AM Jiri Olsa <jolsa@redhat.com> wrote:
+On Tue, Jan 4, 2022 at 6:24 AM Jiri Olsa <jolsa@redhat.com> wrote:
 >
-> On Wed, Dec 29, 2021 at 11:19:43PM -0800, Ian Rogers wrote:
-> > The group option predates grouping events using curly braces added in
-> > commit 89efb029502d ("perf tools: Add support to parse event group syntax")
-> > The --group option was retained for legacy support (in August 2012) but
-> > keeping it adds complexity.
+> On Wed, Dec 29, 2021 at 11:19:41PM -0800, Ian Rogers wrote:
+> > Perf cpu map has various functions where a cpumap and index are passed
+> > in order to load the cpu. A problem with this is that the wrong index
+> > may be passed for the cpumap, causing problems like aggregation on the
+> > wrong CPU:
+> > https://lore.kernel.org/lkml/20211204023409.969668-1-irogers@google.com/
 > >
-> > v2 and v3. were rebases.
+> > This patch set refactors the cpu map API, reducing it and explicitly
+> > passing the cpu (rather than the pair) to functions that need
+> > it. Comments are added at the same time. Changes modify the same
+> > file/function more than once as refactoring and fixes are broken apart
+> > for the sake of bisection.
 > >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > v2. Incorproates fixes suggested Jiri Olsa, rewrites the evlist CPU
+> >     iterator in part in a way suggested by Riccardo Mancini. The new
+> >     fixes start at patch 23. The final change was suggested by John
+> >     Garry to make the CPUs have their own struct wrapper.
+> >
+> > v3. Incorporates fixes suggested by Namhyung Kim.
+> >
+> > Ian Rogers (48):
 >
-> it should not be part of this patchset right?
-> I see it was posted separately
+> you doubled the amount of patches from v1? ;-)
 
-Yep, sorry. Not part of this patch set I hadn't realized I had another
-v3 patch when I ran send-mail. This patch was sent out a little
-earlier already.
+Ah yes, sorry about that. I wasn't trying to imply you'd reviewed the
+new patches but I see where the wording is confusing. I was worried
+about the number of patches, but less so after:
+https://lore.kernel.org/lkml/YdIfz+LMewetSaEB@gmail.com/
+:-)
+
+> I had small comments for the first 22 patches and would be ok
+> with them merged.. will try to go through the rest soon
+
+Thanks. The v1 wasn't as complete as I'd have liked and Namhyung had
+some feedback to that effect as well (it was great to get feedback to
+make sure I wasn't flogging a dead horse). For v4 I see a request to
+rename a variable/parameter, which I can do. I'll hold off a bit and
+send out a v4 later today hopefully.
 
 Thanks,
 Ian
 
+> thanks,
 > jirka
 >
-> > ---
-> >  tools/perf/Documentation/perf-record.txt |  4 ----
-> >  tools/perf/Documentation/perf-top.txt    |  7 ++-----
-> >  tools/perf/builtin-record.c              |  2 --
-> >  tools/perf/builtin-stat.c                |  6 ------
-> >  tools/perf/builtin-top.c                 |  2 --
-> >  tools/perf/tests/attr/README             |  2 --
-> >  tools/perf/tests/attr/test-record-group  | 22 ----------------------
-> >  tools/perf/tests/attr/test-stat-group    | 17 -----------------
-> >  tools/perf/util/evlist.c                 |  2 +-
-> >  tools/perf/util/evlist.h                 |  2 --
-> >  tools/perf/util/python.c                 |  8 --------
-> >  tools/perf/util/record.c                 |  7 -------
-> >  tools/perf/util/record.h                 |  1 -
-> >  13 files changed, 3 insertions(+), 79 deletions(-)
-> >  delete mode 100644 tools/perf/tests/attr/test-record-group
-> >  delete mode 100644 tools/perf/tests/attr/test-stat-group
+> >   libperf: Add comments to perf_cpu_map.
+> >   perf stat: Add aggr creators that are passed a cpu.
+> >   perf stat: Correct aggregation CPU map
+> >   perf stat: Switch aggregation to use for_each loop
+> >   perf stat: Switch to cpu version of cpu_map__get
+> >   perf cpumap: Switch cpu_map__build_map to cpu function
+> >   perf cpumap: Remove map+index get_socket
+> >   perf cpumap: Remove map+index get_die
+> >   perf cpumap: Remove map+index get_core
+> >   perf cpumap: Remove map+index get_node
+> >   perf cpumap: Add comments to aggr_cpu_id
+> >   perf cpumap: Remove unused cpu_map__socket
+> >   perf cpumap: Simplify equal function name.
+> >   perf cpumap: Rename empty functions.
+> >   perf cpumap: Document cpu__get_node and remove redundant function
+> >   perf cpumap: Remove map from function names that don't use a map.
+> >   perf cpumap: Remove cpu_map__cpu, use libperf function.
+> >   perf cpumap: Refactor cpu_map__build_map
+> >   perf cpumap: Rename cpu_map__get_X_aggr_by_cpu functions
+> >   perf cpumap: Move 'has' function to libperf
+> >   perf cpumap: Add some comments to cpu_aggr_map
+> >   perf cpumap: Trim the cpu_aggr_map
+> >   perf stat: Fix memory leak in check_per_pkg
+> >   perf cpumap: Add CPU to aggr_cpu_id
+> >   perf stat-display: Avoid use of core for CPU.
+> >   perf evsel: Derive CPUs and threads in alloc_counts
+> >   libperf: Switch cpu to more accurate cpu_map_idx
+> >   libperf: Use cpu not index for evsel mmap
+> >   perf counts: Switch name cpu to cpu_map_idx
+> >   perf stat: Rename aggr_data cpu to imply it's an index
+> >   perf stat: Use perf_cpu_map__for_each_cpu
+> >   perf script: Use for each cpu to aid readability
+> >   libperf: Allow NULL in perf_cpu_map__idx
+> >   perf evlist: Refactor evlist__for_each_cpu.
+> >   perf evsel: Pass cpu not cpu map index to synthesize
+> >   perf stat: Correct variable name for read counter
+> >   perf evsel: Rename CPU around get_group_fd
+> >   perf evsel: Reduce scope of evsel__ignore_missing_thread
+> >   perf evsel: Rename variable cpu to index
+> >   perf test: Use perf_cpu_map__for_each_cpu
+> >   perf stat: Correct check_per_pkg cpu
+> >   perf stat: Swap variable name cpu to index
+> >   libperf: Sync evsel documentation
+> >   perf bpf: Rename cpu to cpu_map_idx
+> >   perf c2c: Use more intention revealing iterator
+> >   perf script: Fix flipped index and cpu
+> >   perf stat: Correct first_shadow_cpu to return index
+> >   perf cpumap: Give CPUs their own type.
 > >
-> > diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-> > index 55df7b073a55..960fb1ad3f27 100644
-> > --- a/tools/perf/Documentation/perf-record.txt
-> > +++ b/tools/perf/Documentation/perf-record.txt
-> > @@ -238,10 +238,6 @@ OPTIONS
-> >       Also, by adding a comma, the number of mmap pages for AUX
-> >       area tracing can be specified.
+> >  tools/lib/perf/Documentation/libperf.txt      |  11 +-
+> >  tools/lib/perf/cpumap.c                       | 131 +++--
+> >  tools/lib/perf/evlist.c                       |   4 +-
+> >  tools/lib/perf/evsel.c                        |  92 ++--
+> >  tools/lib/perf/include/internal/cpumap.h      |  18 +-
+> >  tools/lib/perf/include/internal/evlist.h      |   3 +-
+> >  tools/lib/perf/include/internal/evsel.h       |   4 +-
+> >  tools/lib/perf/include/internal/mmap.h        |   5 +-
+> >  tools/lib/perf/include/perf/cpumap.h          |   8 +-
+> >  tools/lib/perf/include/perf/evsel.h           |  10 +-
+> >  tools/lib/perf/libperf.map                    |   1 +
+> >  tools/lib/perf/mmap.c                         |   2 +-
+> >  tools/perf/arch/arm/util/cs-etm.c             |  16 +-
+> >  tools/perf/bench/epoll-ctl.c                  |   2 +-
+> >  tools/perf/bench/epoll-wait.c                 |   2 +-
+> >  tools/perf/bench/futex-hash.c                 |   2 +-
+> >  tools/perf/bench/futex-lock-pi.c              |   2 +-
+> >  tools/perf/bench/futex-requeue.c              |   2 +-
+> >  tools/perf/bench/futex-wake-parallel.c        |   2 +-
+> >  tools/perf/bench/futex-wake.c                 |   2 +-
+> >  tools/perf/builtin-c2c.c                      |  15 +-
+> >  tools/perf/builtin-ftrace.c                   |   2 +-
+> >  tools/perf/builtin-kmem.c                     |   2 +-
+> >  tools/perf/builtin-record.c                   |   2 +-
+> >  tools/perf/builtin-sched.c                    |  71 +--
+> >  tools/perf/builtin-script.c                   |  10 +-
+> >  tools/perf/builtin-stat.c                     | 516 +++++++++---------
+> >  tools/perf/tests/attr.c                       |   6 +-
+> >  tools/perf/tests/bitmap.c                     |   2 +-
+> >  tools/perf/tests/cpumap.c                     |   6 +-
+> >  tools/perf/tests/event_update.c               |   6 +-
+> >  tools/perf/tests/mem2node.c                   |   2 +-
+> >  tools/perf/tests/mmap-basic.c                 |   4 +-
+> >  tools/perf/tests/openat-syscall-all-cpus.c    |  39 +-
+> >  tools/perf/tests/stat.c                       |   3 +-
+> >  tools/perf/tests/topology.c                   |  43 +-
+> >  tools/perf/util/affinity.c                    |   2 +-
+> >  tools/perf/util/auxtrace.c                    |  12 +-
+> >  tools/perf/util/auxtrace.h                    |   5 +-
+> >  tools/perf/util/bpf_counter.c                 |  16 +-
+> >  tools/perf/util/bpf_counter.h                 |   4 +-
+> >  tools/perf/util/counts.c                      |   8 +-
+> >  tools/perf/util/counts.h                      |  14 +-
+> >  tools/perf/util/cpumap.c                      | 253 ++++-----
+> >  tools/perf/util/cpumap.h                      | 116 ++--
+> >  tools/perf/util/cputopo.c                     |   6 +-
+> >  tools/perf/util/env.c                         |  29 +-
+> >  tools/perf/util/env.h                         |   3 +-
+> >  tools/perf/util/evlist.c                      | 148 ++---
+> >  tools/perf/util/evlist.h                      |  50 +-
+> >  tools/perf/util/evsel.c                       | 143 ++---
+> >  tools/perf/util/evsel.h                       |  27 +-
+> >  tools/perf/util/expr.c                        |   2 +-
+> >  tools/perf/util/header.c                      |   6 +-
+> >  tools/perf/util/mmap.c                        |  19 +-
+> >  tools/perf/util/mmap.h                        |   3 +-
+> >  tools/perf/util/perf_api_probe.c              |  15 +-
+> >  tools/perf/util/python.c                      |   4 +-
+> >  tools/perf/util/record.c                      |  11 +-
+> >  .../scripting-engines/trace-event-python.c    |   6 +-
+> >  tools/perf/util/session.c                     |  10 +-
+> >  tools/perf/util/stat-display.c                | 138 ++---
+> >  tools/perf/util/stat-shadow.c                 | 308 +++++------
+> >  tools/perf/util/stat.c                        |  47 +-
+> >  tools/perf/util/stat.h                        |   9 +-
+> >  tools/perf/util/svghelper.c                   |   6 +-
+> >  tools/perf/util/synthetic-events.c            |  12 +-
+> >  tools/perf/util/synthetic-events.h            |   3 +-
+> >  tools/perf/util/util.h                        |   5 +-
+> >  69 files changed, 1333 insertions(+), 1155 deletions(-)
 > >
-> > ---group::
-> > -     Put all events in a single event group.  This precedes the --event
-> > -     option and remains only for backward compatibility.  See --event.
-> > -
-> >  -g::
-> >       Enables call-graph (stack chain/backtrace) recording for both
-> >       kernel space and user space.
-> > diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
-> > index cac3dfbee7d8..acbafe777e52 100644
-> > --- a/tools/perf/Documentation/perf-top.txt
-> > +++ b/tools/perf/Documentation/perf-top.txt
-> > @@ -51,9 +51,6 @@ Default is to monitor all CPUS.
-> >  --count-filter=<count>::
-> >       Only display functions with more events than this.
-> >
-> > ---group::
-> > -        Put the counters into a counter group.
-> > -
-> >  --group-sort-idx::
-> >       Sort the output by the event at the index n in group. If n is invalid,
-> >       sort by the first event. It can support multiple groups with different
-> > @@ -313,10 +310,10 @@ use '-e e1 -e e2 -G foo,foo' or just use '-e e1 -e e2 -G foo'.
-> >
-> >               perf top -e cycles,probe:icmp_rcv --switch-on=probe:icmp_rcv
-> >
-> > -        Alternatively one can ask for --group and then two overhead columns
-> > +        Alternatively one can ask for a group and then two overhead columns
-> >             will appear, the first for cycles and the second for the switch-on event.
-> >
-> > -             perf top --group -e cycles,probe:icmp_rcv --switch-on=probe:icmp_rcv
-> > +             perf top -e '{cycles,probe:icmp_rcv}' --switch-on=probe:icmp_rcv
-> >
-> >       This may be interesting to measure a workload only after some initialization
-> >       phase is over, i.e. insert a perf probe at that point and use the above
-> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> > index 6ac2160913ea..54eff61f78eb 100644
-> > --- a/tools/perf/builtin-record.c
-> > +++ b/tools/perf/builtin-record.c
-> > @@ -2521,8 +2521,6 @@ static struct option __record_options[] = {
-> >       OPT_CALLBACK(0, "mmap-flush", &record.opts, "number",
-> >                    "Minimal number of bytes that is extracted from mmap data pages (default: 1)",
-> >                    record__mmap_flush_parse),
-> > -     OPT_BOOLEAN(0, "group", &record.opts.group,
-> > -                 "put the counters into a counter group"),
-> >       OPT_CALLBACK_NOOPT('g', NULL, &callchain_param,
-> >                          NULL, "enables call-graph recording" ,
-> >                          &record_callchain_opt),
-> > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> > index f6ca2b054c5b..8ce4ca6111ae 100644
-> > --- a/tools/perf/builtin-stat.c
-> > +++ b/tools/perf/builtin-stat.c
-> > @@ -180,7 +180,6 @@ static bool                       topdown_run                     = false;
-> >  static bool                  smi_cost                        = false;
-> >  static bool                  smi_reset                       = false;
-> >  static int                   big_num_opt                     =  -1;
-> > -static bool                  group                           = false;
-> >  static const char            *pre_cmd                        = NULL;
-> >  static const char            *post_cmd                       = NULL;
-> >  static bool                  sync_run                        = false;
-> > @@ -800,9 +799,6 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
-> >               child_pid = evsel_list->workload.pid;
-> >       }
-> >
-> > -     if (group)
-> > -             evlist__set_leader(evsel_list);
-> > -
-> >       if (affinity__setup(&affinity) < 0)
-> >               return -1;
-> >
-> > @@ -1212,8 +1208,6 @@ static struct option stat_options[] = {
-> >  #endif
-> >       OPT_BOOLEAN('a', "all-cpus", &target.system_wide,
-> >                   "system-wide collection from all CPUs"),
-> > -     OPT_BOOLEAN('g', "group", &group,
-> > -                 "put the counters into a counter group"),
-> >       OPT_BOOLEAN(0, "scale", &stat_config.scale,
-> >                   "Use --no-scale to disable counter scaling for multiplexing"),
-> >       OPT_INCR('v', "verbose", &verbose,
-> > diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> > index 1fc390f136dd..0d8441942f34 100644
-> > --- a/tools/perf/builtin-top.c
-> > +++ b/tools/perf/builtin-top.c
-> > @@ -1472,8 +1472,6 @@ int cmd_top(int argc, const char **argv)
-> >                           "dump the symbol table used for profiling"),
-> >       OPT_INTEGER('f', "count-filter", &top.count_filter,
-> >                   "only display functions with more events than this"),
-> > -     OPT_BOOLEAN(0, "group", &opts->group,
-> > -                         "put the counters into a counter group"),
-> >       OPT_BOOLEAN('i', "no-inherit", &opts->no_inherit,
-> >                   "child tasks do not inherit counters"),
-> >       OPT_STRING(0, "sym-annotate", &top.sym_filter, "symbol name",
-> > diff --git a/tools/perf/tests/attr/README b/tools/perf/tests/attr/README
-> > index a36f49fb4dbe..f538272af57b 100644
-> > --- a/tools/perf/tests/attr/README
-> > +++ b/tools/perf/tests/attr/README
-> > @@ -47,7 +47,6 @@ Following tests are defined (with perf commands):
-> >    perf record -g kill                           (test-record-graph-default)
-> >    perf record --call-graph dwarf kill                (test-record-graph-dwarf)
-> >    perf record --call-graph fp kill              (test-record-graph-fp)
-> > -  perf record --group -e cycles,instructions kill (test-record-group)
-> >    perf record -e '{cycles,instructions}' kill   (test-record-group1)
-> >    perf record -e '{cycles/period=1/,instructions/period=2/}:S' kill (test-record-group2)
-> >    perf record -D kill                           (test-record-no-delay)
-> > @@ -61,6 +60,5 @@ Following tests are defined (with perf commands):
-> >    perf stat -d kill                             (test-stat-detailed-1)
-> >    perf stat -dd kill                            (test-stat-detailed-2)
-> >    perf stat -ddd kill                           (test-stat-detailed-3)
-> > -  perf stat --group -e cycles,instructions kill (test-stat-group)
-> >    perf stat -e '{cycles,instructions}' kill     (test-stat-group1)
-> >    perf stat -i -e cycles kill                   (test-stat-no-inherit)
-> > diff --git a/tools/perf/tests/attr/test-record-group b/tools/perf/tests/attr/test-record-group
-> > deleted file mode 100644
-> > index 14ee60fd3f41..000000000000
-> > --- a/tools/perf/tests/attr/test-record-group
-> > +++ /dev/null
-> > @@ -1,22 +0,0 @@
-> > -[config]
-> > -command = record
-> > -args    = --no-bpf-event --group -e cycles,instructions kill >/dev/null 2>&1
-> > -ret     = 1
-> > -
-> > -[event-1:base-record]
-> > -fd=1
-> > -group_fd=-1
-> > -sample_type=327
-> > -read_format=4
-> > -
-> > -[event-2:base-record]
-> > -fd=2
-> > -group_fd=1
-> > -config=1
-> > -sample_type=327
-> > -read_format=4
-> > -mmap=0
-> > -comm=0
-> > -task=0
-> > -enable_on_exec=0
-> > -disabled=0
-> > diff --git a/tools/perf/tests/attr/test-stat-group b/tools/perf/tests/attr/test-stat-group
-> > deleted file mode 100644
-> > index e15d6946e9b3..000000000000
-> > --- a/tools/perf/tests/attr/test-stat-group
-> > +++ /dev/null
-> > @@ -1,17 +0,0 @@
-> > -[config]
-> > -command = stat
-> > -args    = --group -e cycles,instructions kill >/dev/null 2>&1
-> > -ret     = 1
-> > -
-> > -[event-1:base-stat]
-> > -fd=1
-> > -group_fd=-1
-> > -read_format=3|15
-> > -
-> > -[event-2:base-stat]
-> > -fd=2
-> > -group_fd=1
-> > -config=1
-> > -disabled=0
-> > -enable_on_exec=0
-> > -read_format=3|15
-> > diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> > index 5f92319ce258..2e11d82d15e0 100644
-> > --- a/tools/perf/util/evlist.c
-> > +++ b/tools/perf/util/evlist.c
-> > @@ -224,7 +224,7 @@ int __evlist__set_tracepoints_handlers(struct evlist *evlist,
-> >       return err;
-> >  }
-> >
-> > -void evlist__set_leader(struct evlist *evlist)
-> > +static void evlist__set_leader(struct evlist *evlist)
-> >  {
-> >       perf_evlist__set_leader(&evlist->core);
-> >  }
-> > diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-> > index 27594900a052..ebab48a8120f 100644
-> > --- a/tools/perf/util/evlist.h
-> > +++ b/tools/perf/util/evlist.h
-> > @@ -203,8 +203,6 @@ void evlist__set_selected(struct evlist *evlist, struct evsel *evsel);
-> >  int evlist__create_maps(struct evlist *evlist, struct target *target);
-> >  int evlist__apply_filters(struct evlist *evlist, struct evsel **err_evsel);
-> >
-> > -void evlist__set_leader(struct evlist *evlist);
-> > -
-> >  u64 __evlist__combined_sample_type(struct evlist *evlist);
-> >  u64 evlist__combined_sample_type(struct evlist *evlist);
-> >  u64 evlist__combined_branch_type(struct evlist *evlist);
-> > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> > index 7f782a31bda3..d063375c346a 100644
-> > --- a/tools/perf/util/python.c
-> > +++ b/tools/perf/util/python.c
-> > @@ -1121,14 +1121,6 @@ static PyObject *pyrf_evlist__open(struct pyrf_evlist *pevlist,
-> >                                  PyObject *args, PyObject *kwargs)
-> >  {
-> >       struct evlist *evlist = &pevlist->evlist;
-> > -     int group = 0;
-> > -     static char *kwlist[] = { "group", NULL };
-> > -
-> > -     if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|OOii", kwlist, &group))
-> > -             return NULL;
-> > -
-> > -     if (group)
-> > -             evlist__set_leader(evlist);
-> >
-> >       if (evlist__open(evlist) < 0) {
-> >               PyErr_SetFromErrno(PyExc_OSError);
-> > diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
-> > index bff669b615ee..9e694db7c7ee 100644
-> > --- a/tools/perf/util/record.c
-> > +++ b/tools/perf/util/record.c
-> > @@ -99,13 +99,6 @@ void evlist__config(struct evlist *evlist, struct record_opts *opts, struct call
-> >       bool use_comm_exec;
-> >       bool sample_id = opts->sample_id;
-> >
-> > -     /*
-> > -      * Set the evsel leader links before we configure attributes,
-> > -      * since some might depend on this info.
-> > -      */
-> > -     if (opts->group)
-> > -             evlist__set_leader(evlist);
-> > -
-> >       if (evlist->core.cpus->map[0] < 0)
-> >               opts->no_inherit = true;
-> >
-> > diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
-> > index ef6c2715fdd9..0a7a8dbbea9c 100644
-> > --- a/tools/perf/util/record.h
-> > +++ b/tools/perf/util/record.h
-> > @@ -13,7 +13,6 @@ struct option;
-> >
-> >  struct record_opts {
-> >       struct target target;
-> > -     bool          group;
-> >       bool          inherit_stat;
-> >       bool          no_buffering;
-> >       bool          no_inherit;
 > > --
-> > 2.34.1.307.g9b7440fafd-goog
+> > 2.34.1.448.ga2b2bfdf31-goog
 > >
 >
