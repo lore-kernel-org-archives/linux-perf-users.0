@@ -2,166 +2,155 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D06C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Jan 2022 13:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F1AC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Jan 2022 14:19:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232631AbiADN5K (ORCPT
+        id S230092AbiADOTl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Jan 2022 08:57:10 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:55482 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229655AbiADN5J (ORCPT
+        Tue, 4 Jan 2022 09:19:41 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:35298 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229702AbiADOTl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Jan 2022 08:57:09 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 16BA4B810B3;
-        Tue,  4 Jan 2022 13:57:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47123C36AED;
-        Tue,  4 Jan 2022 13:57:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641304626;
-        bh=OZ0f7tUVt0pRqeuyYIwF4uJjwkRgSIkddO3+gxXzU28=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XPTU3Ic2LMotntRgbC7j3XdoRwKaXQd3itYu9WeU6v5J4oCfm6dF1o1MFDUCyLshj
-         7k335DQFq5lyvm3hWVZLxHvwwr4bGiuvzgwxEjTwjl/QZ395arVRRET3BDh84lZN/j
-         Zkey+mFkYaqwBOkKXUWrgXUlxjCc4hh0PxjHCOqtWOnO8FlWpVtt9iz1FIlqQn6UR8
-         JNp4NvwdkNAHuAbQx5h2wCVBz8gBkixppBOIcwbPv7dLcb2mF1RZYMYf1DyM9z1vo4
-         lXlq/dhdcSBsy8hfXVuvKT8DvJCNvJJp6YLP6yZPHHQRz6I6p+d3HtiaufgZ7l5KNu
-         kIadDSUcXpQow==
-Date:   Tue, 4 Jan 2022 13:56:59 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Tue, 4 Jan 2022 09:19:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1641305980;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ztPwQbcR7E3FSo8LAE3RE42xQfVhZkttEdVXnDtSjVo=;
+        b=RIuzOuPB5xKhQHMYRF4eqiJqtsc3OLv3945snbIUy8Qm0O7FpUeixO4RAKVLSwK9o2i9O5
+        hgovax2I8JeruRMgp6SCpPJ1UyxM09FXxWTr658fiabW8fanrSXVp8Cx8MfKnsJ59LT3fo
+        iFzyAz1JotwvDy+GmTPRKf06Dd49sz8=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-428-OGyQo1TkOwa_Nh7Fep4mlA-1; Tue, 04 Jan 2022 09:19:39 -0500
+X-MC-Unique: OGyQo1TkOwa_Nh7Fep4mlA-1
+Received: by mail-ed1-f72.google.com with SMTP id z3-20020a05640240c300b003f9154816ffso16217584edb.9
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Jan 2022 06:19:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ztPwQbcR7E3FSo8LAE3RE42xQfVhZkttEdVXnDtSjVo=;
+        b=zfUwGeVETZSyXVikE5GzCCYNyubtFNf71IiGU4voPkZmsD6KEld9H4hxjxpJqBOOsN
+         3/Ddio30dUqR3tADzJjJOT/RFLBuzmNBbWhpdm75Lw0RqtwCP28Wd0nT90OLfBfTHW1Q
+         dxFMrhR6I3SuHJLxNr6cfhcky1WdcshJzU4hJpYA9znI74z8fYNDaP9bpIumV4mBhl9A
+         pLKZniYyFJB/Ovkv3jpBGxBPYMo61yw2jlhRExJ4AurbyXTjfbt4SXDl7Aq7ohEemfsY
+         XqYOeq8ml+DUastIkh4m2DHzPZJuvm0Ta2xb7755hhu6icT9ZwC/gZvKWdAqEMgpYHVP
+         DHlg==
+X-Gm-Message-State: AOAM532XyJg10MqHtjtItPeRFt+23zk/ivHzffuLWB7j0Oe0lXP7j+Lk
+        W/W8RQIguiNanFjfbtzYJ1oLOqoC+5Ru3tOj1Tx0h3wiQuv5NHHjwkfZLYwB/swsIeNsA3YVfso
+        5EqHEeGSIiCTmzesbZ3SmYdE1iki0TA==
+X-Received: by 2002:a17:907:160b:: with SMTP id hb11mr41650572ejc.189.1641305978269;
+        Tue, 04 Jan 2022 06:19:38 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyiJHqaCQNImwOzgATU/PasDtEuAT2Pa4ZJzVW95oxpDZvx/sCFqJMS8e58GPQQ4vQKElCjaQ==
+X-Received: by 2002:a17:907:160b:: with SMTP id hb11mr41650554ejc.189.1641305978060;
+        Tue, 04 Jan 2022 06:19:38 -0800 (PST)
+Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
+        by smtp.gmail.com with ESMTPSA id 2sm4252772ejx.123.2022.01.04.06.19.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Jan 2022 06:19:37 -0800 (PST)
+Date:   Tue, 4 Jan 2022 15:19:35 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Andi Kleen <ak@linux.intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-perf-users@vger.kernel.org,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v13 3/5] arm64: perf: Add userspace counter access
- disable switch
-Message-ID: <20220104135658.GC1827@willie-the-truck>
-References: <20211208201124.310740-1-robh@kernel.org>
- <20211208201124.310740-4-robh@kernel.org>
- <CAMuHMdVcDxR9sGzc5pcnORiotonERBgc6dsXZXMd6wTvLGA9iw@mail.gmail.com>
+        John Garry <john.garry@huawei.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vineet Singh <vineet.singh@intel.com>,
+        James Clark <james.clark@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, zhengjun.xing@intel.com,
+        eranian@google.com
+Subject: Re: [PATCH v3 03/48] perf stat: Correct aggregation CPU map
+Message-ID: <YdRXd4jBUfduSSAY@krava>
+References: <20211230072030.302559-1-irogers@google.com>
+ <20211230072030.302559-5-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdVcDxR9sGzc5pcnORiotonERBgc6dsXZXMd6wTvLGA9iw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20211230072030.302559-5-irogers@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Geert,
-
-On Tue, Dec 28, 2021 at 12:07:02PM +0100, Geert Uytterhoeven wrote:
-> On Wed, Dec 8, 2021 at 9:19 PM Rob Herring <robh@kernel.org> wrote:
-> > Like x86, some users may want to disable userspace PMU counter
-> > altogether. Add a sysctl 'perf_user_access' file to control userspace
-> > counter access. The default is '0' which is disabled. Writing '1'
-> > enables access.
-> >
-> > Note that x86 supports globally enabling user access by writing '2' to
-> > /sys/bus/event_source/devices/cpu/rdpmc. As there's not existing
-> > userspace support to worry about, this shouldn't be necessary for Arm.
-> > It could be added later if the need arises.
+On Wed, Dec 29, 2021 at 11:19:45PM -0800, Ian Rogers wrote:
+> Switch the perf_cpu_map in aggr_update_shadow from
+> the evlist to the counter's cpu map, so the index is appropriate. This
+> addresses a problem where uncore counts, with a cpumap like:
+> $ cat /sys/devices/uncore_imc_0/cpumask
+> 0,18
+> Don't aggregate counts in CPUs based on the index of those values in the
+> cpumap (0 and 1) but on the actual CPU (0 and 18). Thereby correcting
+> metric calculations in per-socket mode for counters without a full
+> cpumask.
 > 
-> Thanks for your patch, which is now commit e2012600810c9ded ("arm64:
-> perf: Add userspace counter access disable switch") in arm64/for-next/core.
+> On a SkylakeX with a tweaked DRAM_BW_Use metric, to remove unnecessary
+> scaling, this gives:
 > 
-> This is causing two issues on Renesas Salvator-XS with R-Car H3.
-> One during kernel boot:
+> Before:
+> $ /perf stat --per-socket -M DRAM_BW_Use -I 1000
+>      1.001102293 S0        1              27.01 MiB  uncore_imc/cas_count_write/ #   103.00 DRAM_BW_Use
+>      1.001102293 S0        1              30.22 MiB  uncore_imc/cas_count_read/
+>      1.001102293 S0        1      1,001,102,293 ns   duration_time
+>      1.001102293 S1        1              20.10 MiB  uncore_imc/cas_count_write/ #     0.00 DRAM_BW_Use
+>      1.001102293 S1        1              32.74 MiB  uncore_imc/cas_count_read/
+>      1.001102293 S1        0      <not counted> ns   duration_time
+>      2.003517973 S0        1              83.04 MiB  uncore_imc/cas_count_write/ #   920.00 DRAM_BW_Use
+>      2.003517973 S0        1             145.95 MiB  uncore_imc/cas_count_read/
+>      2.003517973 S0        1      1,002,415,680 ns   duration_time
+>      2.003517973 S1        1             302.45 MiB  uncore_imc/cas_count_write/ #     0.00 DRAM_BW_Use
+>      2.003517973 S1        1             290.99 MiB  uncore_imc/cas_count_read/
+>      2.003517973 S1        0      <not counted> ns   duration_time
 > 
->      hw perfevents: enabled with armv8_cortex_a53 PMU driver, 7
-> counters available
->     +sysctl duplicate entry: /kernel//perf_user_access
->     +CPU: 0 PID: 1 Comm: swapper/0 Not tainted
-> 5.16.0-rc3-arm64-renesas-00003-ge2012600810c #1420
->     +Hardware name: Renesas Salvator-X 2nd version board based on r8a77951 (DT)
->     +Call trace:
->     + dump_backtrace+0x0/0x190
->     + show_stack+0x14/0x20
->     + dump_stack_lvl+0x88/0xb0
->     + dump_stack+0x14/0x2c
->     + __register_sysctl_table+0x384/0x818
->     + register_sysctl+0x20/0x28
->     + armv8_pmu_init.constprop.0+0x118/0x150
->     + armv8_a57_pmu_init+0x1c/0x28
->     + arm_pmu_device_probe+0x1b4/0x558
->     + armv8_pmu_device_probe+0x18/0x20
->     + platform_probe+0x64/0xd0
->     + really_probe+0xb4/0x2f8
->     + __driver_probe_device+0x74/0xd8
->     + driver_probe_device+0x3c/0xe0
->     + __driver_attach+0x80/0x110
->     + bus_for_each_dev+0x6c/0xc0
->     + driver_attach+0x20/0x28
->     + bus_add_driver+0x138/0x1e0
->     + driver_register+0x60/0x110
->     + __platform_driver_register+0x24/0x30
->     + armv8_pmu_driver_init+0x18/0x20
->     + do_one_initcall+0x15c/0x31c
->     + kernel_init_freeable+0x2f0/0x354
->     + kernel_init+0x20/0x120
->     + ret_from_fork+0x10/0x20
->      hw perfevents: enabled with armv8_cortex_a57 PMU driver, 7
-> counters available
+> After:
+> $ perf stat --per-socket -M DRAM_BW_Use -I 1000
+>      1.001080840 S0        1              24.96 MiB  uncore_imc/cas_count_write/ #    54.00 DRAM_BW_Use
+>      1.001080840 S0        1              33.64 MiB  uncore_imc/cas_count_read/
+>      1.001080840 S0        1      1,001,080,840 ns   duration_time
+>      1.001080840 S1        1              42.43 MiB  uncore_imc/cas_count_write/ #    84.00 DRAM_BW_Use
+>      1.001080840 S1        1              47.05 MiB  uncore_imc/cas_count_read/
+>      1.001080840 S1        0      <not counted> ns   duration_time
 > 
-> Presumably the same entry is added twice, once for the A53 PMU,
-> and a second time for the A57 PMU?
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/stat-display.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> index 588601000f3f..b0fa81ffce61 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -526,7 +526,7 @@ static void aggr_update_shadow(struct perf_stat_config *config,
+>  		evlist__for_each_entry(evlist, counter) {
+>  			val = 0;
+>  			for (cpu = 0; cpu < evsel__nr_cpus(counter); cpu++) {
+> -				s2 = config->aggr_get_id(config, evlist->core.cpus, cpu);
+> +				s2 = config->aggr_get_id(config, evsel__cpus(counter), cpu);
+>  				if (!cpu_map__compare_aggr_cpu_id(s2, id))
+>  					continue;
+>  				val += perf_counts(counter->counts, cpu, 0)->val;
 
-Looks like it, and perhaps that's also what is confusing systemd?
-Rob -- how come you didn't see this during your testing?
+makes sense, there's another instance of this in first_shadow_cpu
 
-Anywho, please can you try the untested diff below?
+thanks,
+jirka
 
-Thanks,
-
-Will
-
---->8
-
-diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-index 81cc9f0e718a..639f632aaa66 100644
---- a/arch/arm64/kernel/perf_event.c
-+++ b/arch/arm64/kernel/perf_event.c
-@@ -1214,6 +1214,14 @@ static struct ctl_table armv8_pmu_sysctl_table[] = {
-        { }
- };
- 
-+static void armv8_pmu_register_sysctl_table(void)
-+{
-+       static u32 tbl_registered = 0;
-+
-+       if (!cmpxchg_relaxed(&tbl_registered, 0, 1))
-+               register_sysctl("kernel", armv8_pmu_sysctl_table);
-+}
-+
- static int armv8_pmu_init(struct arm_pmu *cpu_pmu, char *name,
-                          int (*map_event)(struct perf_event *event),
-                          const struct attribute_group *events,
-@@ -1248,8 +1256,7 @@ static int armv8_pmu_init(struct arm_pmu *cpu_pmu, char *name,
-        cpu_pmu->attr_groups[ARMPMU_ATTR_GROUP_CAPS] = caps ?
-                        caps : &armv8_pmuv3_caps_attr_group;
- 
--       register_sysctl("kernel", armv8_pmu_sysctl_table);
--
-+       armv8_pmu_register_sysctl_table();
-        return 0;
- }
- 
+> -- 
+> 2.34.1.448.ga2b2bfdf31-goog
+> 
 
