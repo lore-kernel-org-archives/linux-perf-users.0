@@ -2,57 +2,57 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 116B2C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jan 2022 06:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 999B9C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jan 2022 06:15:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230274AbiAEGP3 (ORCPT
+        id S237787AbiAEGPb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Jan 2022 01:15:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42548 "EHLO
+        Wed, 5 Jan 2022 01:15:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237787AbiAEGO4 (ORCPT
+        with ESMTP id S237850AbiAEGOy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Jan 2022 01:14:56 -0500
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D7D0C0617A0
-        for <linux-perf-users@vger.kernel.org>; Tue,  4 Jan 2022 22:14:55 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id i65-20020a252244000000b0060b2e5fd54cso56202894ybi.13
-        for <linux-perf-users@vger.kernel.org>; Tue, 04 Jan 2022 22:14:55 -0800 (PST)
+        Wed, 5 Jan 2022 01:14:54 -0500
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEC50C061374
+        for <linux-perf-users@vger.kernel.org>; Tue,  4 Jan 2022 22:14:50 -0800 (PST)
+Received: by mail-qt1-x84a.google.com with SMTP id a26-20020ac8001a000000b002b6596897dcso30041029qtg.19
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Jan 2022 22:14:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=r8DPKd9/Sw54Ic+0J53LiDeJxVBy3KIktvCz7ol2teU=;
-        b=HBMlA2KadWcwX2FzLRQ5h+1YJL9X3Dqma5iVPe+Xqm2XydhFFUMHc6CqJURQW/7C8B
-         TL8VX3FBbdJWzc66C0vhI83a6bNagUWRbWe6FVWqRisLvGAZGOyUHeA+MVQ7vbCk9nzW
-         Z/SBP93UGVNl2wH0DunhBTatoQdlqY1VeTKtW1Y0RUd9D40bDnVT+V1vbxpvx0FiAr+C
-         rLKdmkh0aVltbOvt/AuM5d8TzHhaIMgV8vGJcK7rj+kavpOlIQEGDmwR7Fx44biaFQVb
-         cJipVtLYk97VvX2imuKTUSWn8RSrv3vL+ZwxU92kQQ5IraQirXAuZid2mxHu+JfWmBeA
-         koeg==
+        bh=dJyDU+u/GJKBsmxifkeZSF2d3RNx4NXgNE9GZmNvqGo=;
+        b=mfQ93GOFFQWwD1/V9zuwhoc7hdP1dIU+1SS/UsaRXnOZEXp2o3lSvg/Qq6XwyRZV46
+         rcwK19RHfa10XGoRSwXyV+KG5Z2jEUOCPUWgJmP+vpN3PcDAGL7f7IsqOMWbq4JbKOUD
+         HnlaPQHyk2HvZCsZ58MRV/wmsoxxSX0b8eeVlfvC5PRo0fOyGptmSsKr3MumTDoDNday
+         JztogXJ0rf/hx4FBZeA1jPgbe7y24crpHiSHMK6Nwk20J121VoTQh68U2Sf8EuJ5D/Kg
+         2XWCl05liCE/bBZsWfBj+eFE2yZAjyqkthV5ETu8UKPc4vCvtHg3MHy2oM2yYw1fLyPc
+         8wcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=r8DPKd9/Sw54Ic+0J53LiDeJxVBy3KIktvCz7ol2teU=;
-        b=Z790nKGiYZd4mucCIxnZFAAuyJ1ecp0o88Pe6ADVOtlxFjP78uTsQk0cQB+7kkbC5O
-         gdpYomPtAoV2ZINO6IR7/0amjAp2cw4sEgpAwlhLS/zexd6hQm+aawPyDs1dSQzP2dT9
-         ZESmIyQw7Y/A8+lf/JJRdfFxCobz+45NSkb7JkQ9Bsdlu2orfxvjndoHLl/oxXe7UiEK
-         sPoassPcF6dK7uybVSAI5bMEROxMa6EScNY6WKk3are8lMCKcmmMX8xyDsBN5vefEc+g
-         XXwmhlJTsCQaY+SoMXUDZmBtGEc3CwVu6iWPADILxfgfb1cRQil4cTtXMD6Crwc774Rv
-         qq0A==
-X-Gm-Message-State: AOAM531Hs4T82eI1q79VlurtpyvGa0iUSyWJOlKcn6goJGkp4qo5391G
-        pPmbWBDbqkCmyr62EnL5gShOG4v8Ian2
-X-Google-Smtp-Source: ABdhPJwMnPpSXvqStwNRxjWDSxSYlgpyBmDjbRt440xLrEAxRu1GX1iqvkntwe1DCVc13O39DOH+OJYRg+Ny
+        bh=dJyDU+u/GJKBsmxifkeZSF2d3RNx4NXgNE9GZmNvqGo=;
+        b=fPwgSKwiaC2r1riMapeOjhmq41tMCPyW/16WKin8qB314GaH6evsPoj4LI9vjhDDo4
+         Ml6iAhh2MIzaBBTMU7H47aIAAuwqMnUjReX15uwKy7fXlziqpt2oK/Y8xsmnBfMyN01p
+         dPvJCJFiR1MIsCoqUtIRhs00kZI8o504Y0vqQWgerYJJSffvuKLq8r6+fq28pYYeAnpw
+         09Dfu8Cwy2cx9sDuZTimNQk1t+4X2FVMbMRSJAoAQu/8yDW5CocqRTpvYuBTA2yFTdmw
+         5/eZu4Aw861C2jUw0dN3O0z6L5zyK6DCHvWc8Mn6Vi0TwbvWsLlFPBusAQkJ5ujUfJUf
+         GKKw==
+X-Gm-Message-State: AOAM532rn+bFmMmpv9Gaj06v7fSVif0y4k+QpId7wSYzhEeuibNHEQef
+        I5CxzUJcEloAhEFbzO6IMh8eCduShwaI
+X-Google-Smtp-Source: ABdhPJx5WDAPqLbwXmPGrLlPvWLCgrymybmT0k5DF0hFbjzwUl/a129iO3FIhWM9PkkwuRxHgk1U/xqVl43b
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:3af1:caef:2937:5d2b])
- (user=irogers job=sendgmr) by 2002:a25:4cc5:: with SMTP id
- z188mr67981499yba.248.1641363294753; Tue, 04 Jan 2022 22:14:54 -0800 (PST)
-Date:   Tue,  4 Jan 2022 22:13:26 -0800
+ (user=irogers job=sendgmr) by 2002:a05:622a:144:: with SMTP id
+ v4mr46433782qtw.191.1641363290011; Tue, 04 Jan 2022 22:14:50 -0800 (PST)
+Date:   Tue,  4 Jan 2022 22:13:24 -0800
 In-Reply-To: <20220105061351.120843-1-irogers@google.com>
-Message-Id: <20220105061351.120843-24-irogers@google.com>
+Message-Id: <20220105061351.120843-22-irogers@google.com>
 Mime-Version: 1.0
 References: <20220105061351.120843-1-irogers@google.com>
 X-Mailer: git-send-email 2.34.1.448.ga2b2bfdf31-goog
-Subject: [PATCH v4 23/48] perf stat: Fix memory leak in check_per_pkg
+Subject: [PATCH v4 21/48] perf cpumap: Add some comments to cpu_aggr_map
 From:   Ian Rogers <irogers@google.com>
 To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -80,51 +80,51 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If the key is already present then free the key used for lookup.
-
-Found with:
-$ perf stat -M IO_Read_BW /bin/true
-
-==1749112==ERROR: LeakSanitizer: detected memory leaks
-
-Direct leak of 32 byte(s) in 4 object(s) allocated from:
-    #0 0x7f6f6fa7d7cf in __interceptor_malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:145
-    #1 0x55acecd9d7a6 in check_per_pkg util/stat.c:343
-    #2 0x55acecd9d9c5 in process_counter_values util/stat.c:365
-    #3 0x55acecd9e0ab in process_counter_maps util/stat.c:421
-    #4 0x55acecd9e292 in perf_stat_process_counter util/stat.c:443
-    #5 0x55aceca8553e in read_counters ./tools/perf/builtin-stat.c:470
-    #6 0x55aceca88fe3 in __run_perf_stat ./tools/perf/builtin-stat.c:1023
-    #7 0x55aceca89146 in run_perf_stat ./tools/perf/builtin-stat.c:1048
-    #8 0x55aceca90858 in cmd_stat ./tools/perf/builtin-stat.c:2555
-    #9 0x55acecc05fa5 in run_builtin ./tools/perf/perf.c:313
-    #10 0x55acecc064fe in handle_internal_command ./tools/perf/perf.c:365
-    #11 0x55acecc068bb in run_argv ./tools/perf/perf.c:409
-    #12 0x55acecc070aa in main ./tools/perf/perf.c:539
+Move cpu_aggr_map__empty_new to be with other cpu_aggr_map function.
 
 Reviewed-by: James Clark <james.clark@arm.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/stat.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/perf/util/cpumap.h | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index 5c24aca0968c..c69b221f5e3e 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -345,9 +345,10 @@ static int check_per_pkg(struct evsel *counter,
- 		return -ENOMEM;
+diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
+index 32b8b5178f01..25a08d640d81 100644
+--- a/tools/perf/util/cpumap.h
++++ b/tools/perf/util/cpumap.h
+@@ -24,16 +24,18 @@ struct aggr_cpu_id {
+ 	int core;
+ };
  
- 	*key = (uint64_t)d << 32 | s;
--	if (hashmap__find(mask, (void *)key, NULL))
-+	if (hashmap__find(mask, (void *)key, NULL)) {
- 		*skip = true;
--	else
-+		free(key);
-+	} else
- 		ret = hashmap__add(mask, (void *)key, (void *)1);
++/** A collection of aggr_cpu_id values, the "built" version is sorted and uniqued. */
+ struct cpu_aggr_map {
+ 	refcount_t refcnt;
++	/** Number of valid entries. */
+ 	int nr;
++	/** The entries. */
+ 	struct aggr_cpu_id map[];
+ };
  
- 	return ret;
+ struct perf_record_cpu_map_data;
+ 
+ struct perf_cpu_map *perf_cpu_map__empty_new(int nr);
+-struct cpu_aggr_map *cpu_aggr_map__empty_new(int nr);
+ 
+ struct perf_cpu_map *cpu_map__new_data(struct perf_record_cpu_map_data *data);
+ size_t cpu_map__snprint(struct perf_cpu_map *map, char *buf, size_t size);
+@@ -67,6 +69,12 @@ int cpu__get_die_id(int cpu);
+  */
+ int cpu__get_core_id(int cpu);
+ 
++/**
++ * cpu_aggr_map__empty_new - Create a cpu_aggr_map of size nr with every entry
++ * being empty.
++ */
++struct cpu_aggr_map *cpu_aggr_map__empty_new(int nr);
++
+ typedef struct aggr_cpu_id (*aggr_cpu_id_get_t)(int cpu, void *data);
+ 
+ /**
 -- 
 2.34.1.448.ga2b2bfdf31-goog
 
