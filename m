@@ -2,102 +2,88 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1A2C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jan 2022 17:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F59C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jan 2022 23:01:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242075AbiAERAH (ORCPT
+        id S245242AbiAEXBP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Jan 2022 12:00:07 -0500
-Received: from foss.arm.com ([217.140.110.172]:45960 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242066AbiAERAD (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Jan 2022 12:00:03 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6CB6311D4;
-        Wed,  5 Jan 2022 09:00:03 -0800 (PST)
-Received: from [10.57.37.41] (unknown [10.57.37.41])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9FBF33F774;
-        Wed,  5 Jan 2022 09:00:00 -0800 (PST)
-Message-ID: <6ba550d1-61bc-e229-2a64-331cfa59c388@arm.com>
-Date:   Wed, 5 Jan 2022 16:58:42 +0000
+        Wed, 5 Jan 2022 18:01:15 -0500
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:49422 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S245232AbiAEXBN (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 5 Jan 2022 18:01:13 -0500
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.1.2/8.16.1.2) with ESMTP id 205L2aCW023687
+        for <linux-perf-users@vger.kernel.org>; Wed, 5 Jan 2022 15:01:12 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=facebook; bh=2TC5eeBaMTo2WtQhZ3Ayp1PI6+oX/dxFjI9JY4ydg38=;
+ b=AAajtM7MnsF5Pqtv5EsE9V/dSKFH93tqJZmLwyIPKeDkbQI+xAAtAnFRHn3wtsfqh8JL
+ YonIqli45rcoBedfAd9PcG8IHAmSingAPxPRyELxyoFk+mbvboCwEBrfJlab92WXTseH
+ bo1A+zzKg0RkwBZc/XU6p1+dmBY07JEj3WQ= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0001303.ppops.net (PPS) with ESMTPS id 3dcxpr77r6-6
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Wed, 05 Jan 2022 15:01:12 -0800
+Received: from twshared10140.39.prn1.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::7) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Wed, 5 Jan 2022 15:01:10 -0800
+Received: by devbig921.prn2.facebook.com (Postfix, from userid 132113)
+        id A91531506002; Wed,  5 Jan 2022 15:01:03 -0800 (PST)
+From:   Christy Lee <christylee@fb.com>
+To:     <andrii@kernel.org>, <acme@kernel.org>
+CC:     <christyc.y.lee@gmail.com>, <bpf@vger.kernel.org>,
+        <kernel-team@fb.com>, <linux-perf-users@vger.kernel.org>,
+        Christy Lee <christylee@fb.com>
+Subject: [PATCH bpf-next 0/5] libbpf 1.0: deprecate bpf_map__def() API
+Date:   Wed, 5 Jan 2022 15:00:52 -0800
+Message-ID: <20220105230057.853163-1-christylee@fb.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [RFC PATCH 1/1] perf arm64: Implement --topdown with metrics
-Content-Language: en-US
-To:     John Garry <john.garry@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "acme@kernel.org" <acme@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <4c375d34-bf20-496d-22fc-aed8597126e2@huawei.com>
- <20211214184240.24215-1-andrew.kilroy@arm.com>
- <20211214184240.24215-2-andrew.kilroy@arm.com>
- <48437bee-9c39-38ba-e990-ba9a6a5378b4@huawei.com>
-From:   Andrew Kilroy <andrew.kilroy@arm.com>
-In-Reply-To: <48437bee-9c39-38ba-e990-ba9a6a5378b4@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: M5apv_rIH78WePPk9rIgs1lmBY3Q5Crf
+X-Proofpoint-GUID: M5apv_rIH78WePPk9rIgs1lmBY3Q5Crf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
+ definitions=2022-01-05_08,2022-01-04_01,2021-12-02_01
+X-Proofpoint-Spam-Details: rule=fb_outbound_notspam policy=fb_outbound score=0 clxscore=1015
+ mlxlogscore=999 spamscore=0 suspectscore=0 impostorscore=0 malwarescore=0
+ lowpriorityscore=0 priorityscore=1501 bulkscore=0 phishscore=0
+ adultscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2201050145
+X-FB-Internal: deliver
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+bpf_map__def() is rarely used and non-extensible. bpf_map_def fields
+can be accessed with appropriate map getters and setters instead.
+Deprecate bpf_map__def() API and replace use cases with getters and sette=
+rs.
 
+Christy Lee (5):
+  samples/bpf: stop using bpf_map__def() API
+  bpftool: stop using bpf_map__def() API
+  perf: stop using bpf_map__def() API
+  selftests/bpf: stop using bpf_map__def() API
+  libbpf: deprecate bpf_map__def() API
 
-On 17/12/2021 10:19, John Garry wrote:
-> 
-> And there is no colouring for results which are above/below standard 
-> thresholds (see stat-shadow.c:get_radio_color()).
-> 
-> My impression is that we're not plugging the results from 
-> metricgroup__parse_groups_to_evlist() into the --topdown print 
-> functionality properly.
-> 
+ samples/bpf/xdp_rxq_info_user.c               | 10 ++--
+ tools/bpf/bpftool/gen.c                       | 12 ++--
+ tools/bpf/bpftool/struct_ops.c                |  4 +-
+ tools/lib/bpf/libbpf.h                        |  3 +-
+ tools/perf/util/bpf-loader.c                  | 58 ++++++++-----------
+ tools/perf/util/bpf_map.c                     | 28 ++++-----
+ .../selftests/bpf/prog_tests/flow_dissector.c |  2 +-
+ .../selftests/bpf/prog_tests/global_data.c    |  2 +-
+ .../bpf/prog_tests/global_data_init.c         |  2 +-
+ .../selftests/bpf/prog_tests/sockmap_listen.c | 12 ++--
+ .../selftests/bpf/prog_tests/tailcalls.c      | 36 ++++++------
+ 11 files changed, 79 insertions(+), 90 deletions(-)
 
-The --topdown kernel event colouring is dictated by a large if-else 
-statement in stat-shadow.c:perf_stat__print_shadow_stats.
-
-There are branches depending on what is returned by 
-perf_stat_evsel__is() for example
-
-	} else if (perf_stat_evsel__is(evsel, TOPDOWN_FETCH_BUBBLES)) {
-		double fe_bound = td_fe_bound(cpu, st, &rsd);
-
-		if (fe_bound > 0.2)
-			color = PERF_COLOR_RED;
-		print_metric(config, ctxp, color, "%8.1f%%", "frontend bound",
-				fe_bound * 100.);
-	} else if (perf_stat_evsel__is(evsel, TOPDOWN_SLOTS_RETIRED)) {
-
-
-
-Because the patches are enabling metrics (equivalent of the -M 
-'somemetricname' option), the perf_stat__print_shadow_stats function 
-always makes calls to generic_metric(), where colours are never picked.
-
-Seeing thresholds like:
-
-   retiring > 0.7
-   fe_bound > 0.2
-   be_bound > 0.2
-   bad_spec > 0.1
-
-
-I'm not sure about adding the colouring really.  Are these thresholds 
-x86 specific?
-
-
-> Thanks,
-> John
-
-
-Andrew
+--
+2.30.2
