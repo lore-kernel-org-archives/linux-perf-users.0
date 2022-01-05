@@ -2,57 +2,57 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1899DC43217
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jan 2022 06:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0FAC4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jan 2022 06:15:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237890AbiAEGPJ (ORCPT
+        id S236513AbiAEGPL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Jan 2022 01:15:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42652 "EHLO
+        Wed, 5 Jan 2022 01:15:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237780AbiAEGOz (ORCPT
+        with ESMTP id S237862AbiAEGO6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Jan 2022 01:14:55 -0500
+        Wed, 5 Jan 2022 01:14:58 -0500
 Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ED16C061784
-        for <linux-perf-users@vger.kernel.org>; Tue,  4 Jan 2022 22:14:53 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id z188-20020a2565c5000000b0060be1f32877so53257791ybb.7
-        for <linux-perf-users@vger.kernel.org>; Tue, 04 Jan 2022 22:14:53 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C544C061396
+        for <linux-perf-users@vger.kernel.org>; Tue,  4 Jan 2022 22:14:58 -0800 (PST)
+Received: by mail-yb1-xb49.google.com with SMTP id e137-20020a25378f000000b0060c1f2f4939so51886998yba.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Jan 2022 22:14:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=1/7nME/op8w7Xw8Ct+c++XCwH/8x/MyevrC1VX7Tajk=;
-        b=RJrLSnxc5JxUa6ZYoNewWHV+2aK8Z/muSepTRwKPqYKfEc+gAy7TukBfscpP1lIlA+
-         lnKcMr1SS9sOindg9cEfikme79arHm0IKkB7dHoONl+A978BodnC66P8kBH4zCb0/WTo
-         o62W+ZkcMBYkyFCMM8ETa/FO0P3XdA/YVC2n/VjMdnETl7atU98EmBeeB8YU5TJl/AFG
-         /sJOL3tSF6P5SCcbsU4IfgGoTUX68u6hPSwMFhO0vhswgSClGbYdehxtbCEdejwK3Ocb
-         EfCrj/BmcvF48idrFSKPQOGEBGD+XYTjHKzRMi7tMOw6sYJ5L4kkRuO5DUu3WNmW15m6
-         PF2w==
+        bh=u+LdW+lyUkI2NE4p4LcQuSrlWFNUmwlWA5f438wkJ9A=;
+        b=YJNnWCLe5li8AXB12kFgrxUZh7e6WMGq2pd+QOy3DQnx2gkW4F/AQxpUHHPYvH8V83
+         c2F4CbfQrS3SsFGZ7ohcOqkHVXB0RHJAj1+wiSZIBvzE0GBFaA5CSfUcH17CFyEDNv2Z
+         TlQqj72b3xp23XVx2WLGmE+5Z8LpOdTYwh8j4H3i11TCAr5gMJCSFPIvRYTHpc2fmQ5Y
+         4p+9ZPyxNsxOrintwcwLXrJ2dXgepq58waPd/ybV7mur3Unm52wFFmbm+tJY+yFdHvq6
+         ObCklgORQ08wHBcb7dkJ0LmiFSn3bzwSslA9/p1Ja0wnBA+z6utVufAbC8q5PChOfFbu
+         ZEpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=1/7nME/op8w7Xw8Ct+c++XCwH/8x/MyevrC1VX7Tajk=;
-        b=Iz/qW9qi2hwkVJELvEZn3JD5F6OaxMBWFLWPIwpogGsbWSO7c8MC9hgxBFPIZ51YEH
-         r1ZJlnBT+eAANAyCAchRBBflvILyeBB5G5uWVWXzfW/oFywdIPmPb5e7eBrBc+a5ZAl4
-         dqOoZ/WlOwoCqxcN/LB3PDiBv1NWWD2xWK1wu+J5EPGaRVw2WCO/jqWrD2GsYSOdG7nU
-         iTFcrgIzu0bSBXeuOQNJEIszYJ2MouX508dOliGPV5he+gMhtCV7JmScAwA8UjNKEajH
-         KTmTRUHAzb3poHOQ+SA4ZzhajA2qORQ95SzNuGhzeqsO+1iR8tl3HCaiSHOsByy3CsPn
-         ofUw==
-X-Gm-Message-State: AOAM5313NCi26QahaADOw2ESJNDC7Ue+wVqovCNGLHWbvu/YzqchOu0/
-        iHxfNJvu4y/fgDwrcyZpXfK19mynBjmQ
-X-Google-Smtp-Source: ABdhPJwsZz3Z7YaXUyXAOxmUXrnu/jXT+I7MJ/5bK9KlVVcutDnnM8+3CEoIwkwuNqXjluLZaWPbs0Z6igD3
+        bh=u+LdW+lyUkI2NE4p4LcQuSrlWFNUmwlWA5f438wkJ9A=;
+        b=eDKRW5m/n6aLayIGqS7qJaWV8tAYkm2O/NwecIQUhtpFv+2S/SH+n3OHrsuqMCvvsW
+         IfdzTttyJLRzI5tavdN2ab4nkBt4ySZv5EDPkcPna2/9T8rGDjOyFcSanfRX3q/JwVgH
+         Oh1vZaLpwJRDSodFq4e5rn2nagj2bK64DRhaf3erQHLbPzPym45Fc4Ns1pVfzRIt0EXi
+         1UE+I4hiB7yfL6SFHNgWAwEkTG2KkaAypo2HlCKZEuDQHrhOofn7tm7k6YhOm8yVmy+H
+         nd/TtjhXZ9WseLr/Cm5FgeyjqgZB5M6ah7thYwWb+Q3QPxp+/BKjdU0X1r6Tg/0ryk4X
+         6ijw==
+X-Gm-Message-State: AOAM532v6gi+J8fRCA25wmJsmrXmKc2UeKKh8gI/tP6gbILv1/KD4rx8
+        3jyvR+AKFSLAS1FBwv7aSlkHQWKL7Hi8
+X-Google-Smtp-Source: ABdhPJyEQkpnXczIcyI/Cab13UYlyDLu2cNhMqbIsdMME/gnNpeMq4w/KPxh1DwEeb77FMNLctsRaZPaOP8E
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:3af1:caef:2937:5d2b])
- (user=irogers job=sendgmr) by 2002:a25:86c4:: with SMTP id
- y4mr51236247ybm.440.1641363292381; Tue, 04 Jan 2022 22:14:52 -0800 (PST)
-Date:   Tue,  4 Jan 2022 22:13:25 -0800
+ (user=irogers job=sendgmr) by 2002:a25:d81:: with SMTP id 123mr55489015ybn.496.1641363297315;
+ Tue, 04 Jan 2022 22:14:57 -0800 (PST)
+Date:   Tue,  4 Jan 2022 22:13:27 -0800
 In-Reply-To: <20220105061351.120843-1-irogers@google.com>
-Message-Id: <20220105061351.120843-23-irogers@google.com>
+Message-Id: <20220105061351.120843-25-irogers@google.com>
 Mime-Version: 1.0
 References: <20220105061351.120843-1-irogers@google.com>
 X-Mailer: git-send-email 2.34.1.448.ga2b2bfdf31-goog
-Subject: [PATCH v4 22/48] perf cpumap: Trim the cpu_aggr_map
+Subject: [PATCH v4 24/48] perf cpumap: Add CPU to aggr_cpu_id
 From:   Ian Rogers <irogers@google.com>
 To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -80,36 +80,160 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-cpu_aggr_map__new removes duplicates, when this happens shrink the
-array.
+With no aggregration, such as 'perf stat -A', the aggr_cpu_id lacks a
+way to describe per CPU aggregation and the core is set to the CPU in
+places like print_counter_aggrdata in stat-display.c. Setting the core
+to the CPU is undesirable as the CPU will exceed valid core values and
+lead to confusion. Add a CPU variable to address this.
 
-Reviewed-by: James Clark <james.clark@arm.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/cpumap.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ tools/perf/tests/topology.c | 19 +++++++++++++++++++
+ tools/perf/util/cpumap.c    | 25 +++++++++++++++++++++----
+ tools/perf/util/cpumap.h    |  8 ++++++++
+ 3 files changed, 48 insertions(+), 4 deletions(-)
 
+diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
+index cb29ea7ec409..33e4cb81265c 100644
+--- a/tools/perf/tests/topology.c
++++ b/tools/perf/tests/topology.c
+@@ -119,6 +119,22 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
+ 			 session->header.env.cpu[i].socket_id);
+ 	}
+ 
++	// Test that CPU ID contains socket, die, core and CPU
++	for (i = 0; i < map->nr; i++) {
++		id = aggr_cpu_id__cpu(perf_cpu_map__cpu(map, i), NULL);
++		TEST_ASSERT_VAL("Cpu map - CPU ID doesn't match", map->map[i] == id.cpu);
++
++		TEST_ASSERT_VAL("Cpu map - Core ID doesn't match",
++			session->header.env.cpu[map->map[i]].core_id == id.core);
++		TEST_ASSERT_VAL("Cpu map - Socket ID doesn't match",
++			session->header.env.cpu[map->map[i]].socket_id == id.socket);
++
++		TEST_ASSERT_VAL("Cpu map - Die ID doesn't match",
++			session->header.env.cpu[map->map[i]].die_id == id.die);
++		TEST_ASSERT_VAL("Cpu map - Node ID is set", id.node == -1);
++		TEST_ASSERT_VAL("Cpu map - Thread is set", id.thread == -1);
++	}
++
+ 	// Test that core ID contains socket, die and core
+ 	for (i = 0; i < map->nr; i++) {
+ 		id = aggr_cpu_id__core(perf_cpu_map__cpu(map, i), NULL);
+@@ -145,6 +161,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
+ 
+ 		TEST_ASSERT_VAL("Die map - Node ID is set", id.node == -1);
+ 		TEST_ASSERT_VAL("Die map - Core is set", id.core == -1);
++		TEST_ASSERT_VAL("Die map - CPU is set", id.cpu == -1);
+ 		TEST_ASSERT_VAL("Die map - Thread is set", id.thread == -1);
+ 	}
+ 
+@@ -157,6 +174,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
+ 		TEST_ASSERT_VAL("Socket map - Node ID is set", id.node == -1);
+ 		TEST_ASSERT_VAL("Socket map - Die ID is set", id.die == -1);
+ 		TEST_ASSERT_VAL("Socket map - Core is set", id.core == -1);
++		TEST_ASSERT_VAL("Socket map - CPU is set", id.cpu == -1);
+ 		TEST_ASSERT_VAL("Socket map - Thread is set", id.thread == -1);
+ 	}
+ 
+@@ -168,6 +186,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
+ 		TEST_ASSERT_VAL("Node map - Socket is set", id.socket == -1);
+ 		TEST_ASSERT_VAL("Node map - Die ID is set", id.die == -1);
+ 		TEST_ASSERT_VAL("Node map - Core is set", id.core == -1);
++		TEST_ASSERT_VAL("Node map - CPU is set", id.cpu == -1);
+ 		TEST_ASSERT_VAL("Node map - Thread is set", id.thread == -1);
+ 	}
+ 	perf_session__delete(session);
 diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index f1d76a8e92e8..2779474f39db 100644
+index 2779474f39db..48ce583af0ec 100644
 --- a/tools/perf/util/cpumap.c
 +++ b/tools/perf/util/cpumap.c
-@@ -185,7 +185,15 @@ struct cpu_aggr_map *cpu_aggr_map__new(const struct perf_cpu_map *cpus,
- 			c->nr++;
- 		}
- 	}
--
-+	/* Trim. */
-+	if (c->nr != cpus->nr) {
-+		struct cpu_aggr_map *trimmed_c =
-+			realloc(c,
-+				sizeof(struct cpu_aggr_map) + sizeof(struct aggr_cpu_id) * c->nr);
-+
-+		if (trimmed_c)
-+			c = trimmed_c;
-+	}
- 	/* ensure we process id in increasing order */
- 	qsort(c->map, c->nr, sizeof(struct aggr_cpu_id), aggr_cpu_id__cmp);
+@@ -242,7 +242,7 @@ struct aggr_cpu_id aggr_cpu_id__core(int cpu, void *data)
+ 	struct aggr_cpu_id id;
+ 	int core = cpu__get_core_id(cpu);
  
+-	/* aggr_cpu_id__die returns a struct with socket and die set*/
++	/* aggr_cpu_id__die returns a struct with socket and die set. */
+ 	id = aggr_cpu_id__die(cpu, data);
+ 	if (aggr_cpu_id__is_empty(&id))
+ 		return id;
+@@ -256,6 +256,20 @@ struct aggr_cpu_id aggr_cpu_id__core(int cpu, void *data)
+ 
+ }
+ 
++struct aggr_cpu_id aggr_cpu_id__cpu(int cpu, void *data)
++{
++	struct aggr_cpu_id id;
++
++	/* aggr_cpu_id__core returns a struct with socket, die and core set. */
++	id = aggr_cpu_id__core(cpu, data);
++	if (aggr_cpu_id__is_empty(&id))
++		return id;
++
++	id.cpu = cpu;
++	return id;
++
++}
++
+ struct aggr_cpu_id aggr_cpu_id__node(int cpu, void *data __maybe_unused)
+ {
+ 	struct aggr_cpu_id id = aggr_cpu_id__empty();
+@@ -579,7 +593,8 @@ bool aggr_cpu_id__equal(const struct aggr_cpu_id *a, const struct aggr_cpu_id *b
+ 		a->node == b->node &&
+ 		a->socket == b->socket &&
+ 		a->die == b->die &&
+-		a->core == b->core;
++		a->core == b->core &&
++		a->cpu == b->cpu;
+ }
+ 
+ bool aggr_cpu_id__is_empty(const struct aggr_cpu_id *a)
+@@ -588,7 +603,8 @@ bool aggr_cpu_id__is_empty(const struct aggr_cpu_id *a)
+ 		a->node == -1 &&
+ 		a->socket == -1 &&
+ 		a->die == -1 &&
+-		a->core == -1;
++		a->core == -1 &&
++		a->cpu == -1;
+ }
+ 
+ struct aggr_cpu_id aggr_cpu_id__empty(void)
+@@ -598,7 +614,8 @@ struct aggr_cpu_id aggr_cpu_id__empty(void)
+ 		.node = -1,
+ 		.socket = -1,
+ 		.die = -1,
+-		.core = -1
++		.core = -1,
++		.cpu = -1
+ 	};
+ 	return ret;
+ }
+diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
+index 25a08d640d81..b98cd1739677 100644
+--- a/tools/perf/util/cpumap.h
++++ b/tools/perf/util/cpumap.h
+@@ -22,6 +22,8 @@ struct aggr_cpu_id {
+ 	int die;
+ 	/** The core id as read from /sys/devices/system/cpu/cpuX/topology/core_id. */
+ 	int core;
++	/** CPU aggregation, note there is one CPU for each SMT thread. */
++	int cpu;
+ };
+ 
+ /** A collection of aggr_cpu_id values, the "built" version is sorted and uniqued. */
+@@ -109,6 +111,12 @@ struct aggr_cpu_id aggr_cpu_id__die(int cpu, void *data);
+  * compatible with aggr_cpu_id_get_t.
+  */
+ struct aggr_cpu_id aggr_cpu_id__core(int cpu, void *data);
++/**
++ * aggr_cpu_id__core - Create an aggr_cpu_id with the cpu, core, die and socket
++ * populated with the cpu, core, die and socket for cpu. The function signature
++ * is compatible with aggr_cpu_id_get_t.
++ */
++struct aggr_cpu_id aggr_cpu_id__cpu(int cpu, void *data);
+ /**
+  * aggr_cpu_id__node - Create an aggr_cpu_id with the numa node populated for
+  * cpu. The function signature is compatible with aggr_cpu_id_get_t.
 -- 
 2.34.1.448.ga2b2bfdf31-goog
 
