@@ -2,57 +2,57 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8426C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jan 2022 06:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 116B2C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jan 2022 06:15:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230055AbiAEGPY (ORCPT
+        id S230274AbiAEGP3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Jan 2022 01:15:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42648 "EHLO
+        Wed, 5 Jan 2022 01:15:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237869AbiAEGPF (ORCPT
+        with ESMTP id S237787AbiAEGO4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Jan 2022 01:15:05 -0500
+        Wed, 5 Jan 2022 01:14:56 -0500
 Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48035C061784
-        for <linux-perf-users@vger.kernel.org>; Tue,  4 Jan 2022 22:15:05 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id c132-20020a251c8a000000b0060c39ab7d36so51973878ybc.12
-        for <linux-perf-users@vger.kernel.org>; Tue, 04 Jan 2022 22:15:05 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D7D0C0617A0
+        for <linux-perf-users@vger.kernel.org>; Tue,  4 Jan 2022 22:14:55 -0800 (PST)
+Received: by mail-yb1-xb49.google.com with SMTP id i65-20020a252244000000b0060b2e5fd54cso56202894ybi.13
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Jan 2022 22:14:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=jSsFFLhWB7MnpKAldIeOinUTQRyOvwUdMysgsTlE4q4=;
-        b=VdqVOwvoOMcCw4Z1k1OWvj566yvzrIGcrNZlvdngwH2ZKntAOegzzzh9RaUkpteU8d
-         EG+/G8W/w9rIEztRkIASbCxgUckOhxb5GoGoqCKnAh2zDBJlzxn7cW0qAU3pxvfOfNzd
-         /1hD2zrfNbKFvpLQZvKueoRasIJKfCnmNKGakoEIBWatUgPYoiUvu4t7fevHATIvcex0
-         PG21QGAe7FZlq0HUiomvkNF3U8gX1u6NQwhNR2CV0ZD57X927asz84E9d/aBTdGD8eik
-         XUZYloXaQPLyIXT4MHITAF/b0Y1XRQkYyvosqOFHcNl1DEhrmM1VtNCR92Xc3pPja3dV
-         CskQ==
+        bh=r8DPKd9/Sw54Ic+0J53LiDeJxVBy3KIktvCz7ol2teU=;
+        b=HBMlA2KadWcwX2FzLRQ5h+1YJL9X3Dqma5iVPe+Xqm2XydhFFUMHc6CqJURQW/7C8B
+         TL8VX3FBbdJWzc66C0vhI83a6bNagUWRbWe6FVWqRisLvGAZGOyUHeA+MVQ7vbCk9nzW
+         Z/SBP93UGVNl2wH0DunhBTatoQdlqY1VeTKtW1Y0RUd9D40bDnVT+V1vbxpvx0FiAr+C
+         rLKdmkh0aVltbOvt/AuM5d8TzHhaIMgV8vGJcK7rj+kavpOlIQEGDmwR7Fx44biaFQVb
+         cJipVtLYk97VvX2imuKTUSWn8RSrv3vL+ZwxU92kQQ5IraQirXAuZid2mxHu+JfWmBeA
+         koeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=jSsFFLhWB7MnpKAldIeOinUTQRyOvwUdMysgsTlE4q4=;
-        b=POanB4XyBYsizp2tDADN70+HLE5T53MuVvUWZi1MueIS6aLwCfS5KTgdcKvp4auPo8
-         Q6gtZeHaWK+HKUgDJ81xOPb2nPkGVD+XvI1AkTVN1lvUwbV15xLLRJtb1QZb6YFyXxO4
-         MzlRRT+1+7KJctey8VF9Dur1RnMjA8gcWHC3gbVwm2Rb6J2wN2lxpsikx7TNZrCXwZhR
-         7fdXGahRhD06WVWKdhLvwZeyLDllEwvylJ9GuPzilOx9WNIQ0K/YVreA/jA635ml50Vi
-         lmdig+rALzwWWMWFUHlJsdJQBjbTa4B6fOUggp+GfjoakQ4DmTW6m6sr/K2C+tgawIkH
-         jUZw==
-X-Gm-Message-State: AOAM533HiqzHIgVEWkhY+MEIft1kyMBRj2mIMlxZa2U4+bIdFKa+kO/3
-        72FXMHKP5rPiEKUDAf6YSPJW2i+M2brb
-X-Google-Smtp-Source: ABdhPJxJni4sdSLrT8nZXKaIZ7nSXCkpVps94xCL8LJ6uKaLwqmbIzMHvISv/YIO2ehdN7IxNsuZYaqA5XDS
+        bh=r8DPKd9/Sw54Ic+0J53LiDeJxVBy3KIktvCz7ol2teU=;
+        b=Z790nKGiYZd4mucCIxnZFAAuyJ1ecp0o88Pe6ADVOtlxFjP78uTsQk0cQB+7kkbC5O
+         gdpYomPtAoV2ZINO6IR7/0amjAp2cw4sEgpAwlhLS/zexd6hQm+aawPyDs1dSQzP2dT9
+         ZESmIyQw7Y/A8+lf/JJRdfFxCobz+45NSkb7JkQ9Bsdlu2orfxvjndoHLl/oxXe7UiEK
+         sPoassPcF6dK7uybVSAI5bMEROxMa6EScNY6WKk3are8lMCKcmmMX8xyDsBN5vefEc+g
+         XXwmhlJTsCQaY+SoMXUDZmBtGEc3CwVu6iWPADILxfgfb1cRQil4cTtXMD6Crwc774Rv
+         qq0A==
+X-Gm-Message-State: AOAM531Hs4T82eI1q79VlurtpyvGa0iUSyWJOlKcn6goJGkp4qo5391G
+        pPmbWBDbqkCmyr62EnL5gShOG4v8Ian2
+X-Google-Smtp-Source: ABdhPJwMnPpSXvqStwNRxjWDSxSYlgpyBmDjbRt440xLrEAxRu1GX1iqvkntwe1DCVc13O39DOH+OJYRg+Ny
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:3af1:caef:2937:5d2b])
- (user=irogers job=sendgmr) by 2002:a25:e705:: with SMTP id
- e5mr18720895ybh.618.1641363304489; Tue, 04 Jan 2022 22:15:04 -0800 (PST)
-Date:   Tue,  4 Jan 2022 22:13:30 -0800
+ (user=irogers job=sendgmr) by 2002:a25:4cc5:: with SMTP id
+ z188mr67981499yba.248.1641363294753; Tue, 04 Jan 2022 22:14:54 -0800 (PST)
+Date:   Tue,  4 Jan 2022 22:13:26 -0800
 In-Reply-To: <20220105061351.120843-1-irogers@google.com>
-Message-Id: <20220105061351.120843-28-irogers@google.com>
+Message-Id: <20220105061351.120843-24-irogers@google.com>
 Mime-Version: 1.0
 References: <20220105061351.120843-1-irogers@google.com>
 X-Mailer: git-send-email 2.34.1.448.ga2b2bfdf31-goog
-Subject: [PATCH v4 27/48] libperf: Switch cpu to more accurate cpu_map_idx
+Subject: [PATCH v4 23/48] perf stat: Fix memory leak in check_per_pkg
 From:   Ian Rogers <irogers@google.com>
 To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -80,306 +80,51 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Modify variable names and adopt perf_cpu_map__for_each_cpu in
-perf_evsel__open. Renaming is done by looking for consistency in API
-usage.
+If the key is already present then free the key used for lookup.
 
+Found with:
+$ perf stat -M IO_Read_BW /bin/true
+
+==1749112==ERROR: LeakSanitizer: detected memory leaks
+
+Direct leak of 32 byte(s) in 4 object(s) allocated from:
+    #0 0x7f6f6fa7d7cf in __interceptor_malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:145
+    #1 0x55acecd9d7a6 in check_per_pkg util/stat.c:343
+    #2 0x55acecd9d9c5 in process_counter_values util/stat.c:365
+    #3 0x55acecd9e0ab in process_counter_maps util/stat.c:421
+    #4 0x55acecd9e292 in perf_stat_process_counter util/stat.c:443
+    #5 0x55aceca8553e in read_counters ./tools/perf/builtin-stat.c:470
+    #6 0x55aceca88fe3 in __run_perf_stat ./tools/perf/builtin-stat.c:1023
+    #7 0x55aceca89146 in run_perf_stat ./tools/perf/builtin-stat.c:1048
+    #8 0x55aceca90858 in cmd_stat ./tools/perf/builtin-stat.c:2555
+    #9 0x55acecc05fa5 in run_builtin ./tools/perf/perf.c:313
+    #10 0x55acecc064fe in handle_internal_command ./tools/perf/perf.c:365
+    #11 0x55acecc068bb in run_argv ./tools/perf/perf.c:409
+    #12 0x55acecc070aa in main ./tools/perf/perf.c:539
+
+Reviewed-by: James Clark <james.clark@arm.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/perf/evsel.c              | 88 +++++++++++++++--------------
- tools/lib/perf/include/perf/evsel.h | 10 ++--
- 2 files changed, 50 insertions(+), 48 deletions(-)
+ tools/perf/util/stat.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-index 68f83d2c27c1..8028b5a4da69 100644
---- a/tools/lib/perf/evsel.c
-+++ b/tools/lib/perf/evsel.c
-@@ -43,18 +43,22 @@ void perf_evsel__delete(struct perf_evsel *evsel)
- 	free(evsel);
- }
- 
--#define FD(e, x, y) ((int *) xyarray__entry(e->fd, x, y))
--#define MMAP(e, x, y) (e->mmap ? ((struct perf_mmap *) xyarray__entry(e->mmap, x, y)) : NULL)
-+#define FD(_evsel, _cpu_map_idx, _thread)				\
-+	((int *)xyarray__entry(_evsel->fd, _cpu_map_idx, _thread))
-+#define MMAP(_evsel, _cpu_map_idx, _thread)				\
-+	(_evsel->mmap ? ((struct perf_mmap *) xyarray__entry(_evsel->mmap, _cpu_map_idx, _thread)) \
-+		      : NULL)
- 
- int perf_evsel__alloc_fd(struct perf_evsel *evsel, int ncpus, int nthreads)
- {
- 	evsel->fd = xyarray__new(ncpus, nthreads, sizeof(int));
- 
- 	if (evsel->fd) {
--		int cpu, thread;
--		for (cpu = 0; cpu < ncpus; cpu++) {
-+		int idx, thread;
-+
-+		for (idx = 0; idx < ncpus; idx++) {
- 			for (thread = 0; thread < nthreads; thread++) {
--				int *fd = FD(evsel, cpu, thread);
-+				int *fd = FD(evsel, idx, thread);
- 
- 				if (fd)
- 					*fd = -1;
-@@ -80,7 +84,7 @@ sys_perf_event_open(struct perf_event_attr *attr,
- 	return syscall(__NR_perf_event_open, attr, pid, cpu, group_fd, flags);
- }
- 
--static int get_group_fd(struct perf_evsel *evsel, int cpu, int thread, int *group_fd)
-+static int get_group_fd(struct perf_evsel *evsel, int cpu_map_idx, int thread, int *group_fd)
- {
- 	struct perf_evsel *leader = evsel->leader;
- 	int *fd;
-@@ -97,7 +101,7 @@ static int get_group_fd(struct perf_evsel *evsel, int cpu, int thread, int *grou
- 	if (!leader->fd)
- 		return -ENOTCONN;
- 
--	fd = FD(leader, cpu, thread);
-+	fd = FD(leader, cpu_map_idx, thread);
- 	if (fd == NULL || *fd == -1)
- 		return -EBADF;
- 
-@@ -109,7 +113,7 @@ static int get_group_fd(struct perf_evsel *evsel, int cpu, int thread, int *grou
- int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
- 		     struct perf_thread_map *threads)
- {
--	int cpu, thread, err = 0;
-+	int cpu, idx, thread, err = 0;
- 
- 	if (cpus == NULL) {
- 		static struct perf_cpu_map *empty_cpu_map;
-@@ -139,21 +143,21 @@ int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
- 	    perf_evsel__alloc_fd(evsel, cpus->nr, threads->nr) < 0)
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index 5c24aca0968c..c69b221f5e3e 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -345,9 +345,10 @@ static int check_per_pkg(struct evsel *counter,
  		return -ENOMEM;
  
--	for (cpu = 0; cpu < cpus->nr; cpu++) {
-+	perf_cpu_map__for_each_cpu(cpu, idx, cpus) {
- 		for (thread = 0; thread < threads->nr; thread++) {
- 			int fd, group_fd, *evsel_fd;
+ 	*key = (uint64_t)d << 32 | s;
+-	if (hashmap__find(mask, (void *)key, NULL))
++	if (hashmap__find(mask, (void *)key, NULL)) {
+ 		*skip = true;
+-	else
++		free(key);
++	} else
+ 		ret = hashmap__add(mask, (void *)key, (void *)1);
  
--			evsel_fd = FD(evsel, cpu, thread);
-+			evsel_fd = FD(evsel, idx, thread);
- 			if (evsel_fd == NULL)
- 				return -EINVAL;
- 
--			err = get_group_fd(evsel, cpu, thread, &group_fd);
-+			err = get_group_fd(evsel, idx, thread, &group_fd);
- 			if (err < 0)
- 				return err;
- 
- 			fd = sys_perf_event_open(&evsel->attr,
- 						 threads->map[thread].pid,
--						 cpus->map[cpu], group_fd, 0);
-+						 cpu, group_fd, 0);
- 
- 			if (fd < 0)
- 				return -errno;
-@@ -165,12 +169,12 @@ int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
- 	return err;
- }
- 
--static void perf_evsel__close_fd_cpu(struct perf_evsel *evsel, int cpu)
-+static void perf_evsel__close_fd_cpu(struct perf_evsel *evsel, int cpu_map_idx)
- {
- 	int thread;
- 
- 	for (thread = 0; thread < xyarray__max_y(evsel->fd); ++thread) {
--		int *fd = FD(evsel, cpu, thread);
-+		int *fd = FD(evsel, cpu_map_idx, thread);
- 
- 		if (fd && *fd >= 0) {
- 			close(*fd);
-@@ -181,10 +185,8 @@ static void perf_evsel__close_fd_cpu(struct perf_evsel *evsel, int cpu)
- 
- void perf_evsel__close_fd(struct perf_evsel *evsel)
- {
--	int cpu;
--
--	for (cpu = 0; cpu < xyarray__max_x(evsel->fd); cpu++)
--		perf_evsel__close_fd_cpu(evsel, cpu);
-+	for (int idx = 0; idx < xyarray__max_x(evsel->fd); idx++)
-+		perf_evsel__close_fd_cpu(evsel, idx);
- }
- 
- void perf_evsel__free_fd(struct perf_evsel *evsel)
-@@ -202,29 +204,29 @@ void perf_evsel__close(struct perf_evsel *evsel)
- 	perf_evsel__free_fd(evsel);
- }
- 
--void perf_evsel__close_cpu(struct perf_evsel *evsel, int cpu)
-+void perf_evsel__close_cpu(struct perf_evsel *evsel, int cpu_map_idx)
- {
- 	if (evsel->fd == NULL)
- 		return;
- 
--	perf_evsel__close_fd_cpu(evsel, cpu);
-+	perf_evsel__close_fd_cpu(evsel, cpu_map_idx);
- }
- 
- void perf_evsel__munmap(struct perf_evsel *evsel)
- {
--	int cpu, thread;
-+	int idx, thread;
- 
- 	if (evsel->fd == NULL || evsel->mmap == NULL)
- 		return;
- 
--	for (cpu = 0; cpu < xyarray__max_x(evsel->fd); cpu++) {
-+	for (idx = 0; idx < xyarray__max_x(evsel->fd); idx++) {
- 		for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
--			int *fd = FD(evsel, cpu, thread);
-+			int *fd = FD(evsel, idx, thread);
- 
- 			if (fd == NULL || *fd < 0)
- 				continue;
- 
--			perf_mmap__munmap(MMAP(evsel, cpu, thread));
-+			perf_mmap__munmap(MMAP(evsel, idx, thread));
- 		}
- 	}
- 
-@@ -234,7 +236,7 @@ void perf_evsel__munmap(struct perf_evsel *evsel)
- 
- int perf_evsel__mmap(struct perf_evsel *evsel, int pages)
- {
--	int ret, cpu, thread;
-+	int ret, idx, thread;
- 	struct perf_mmap_param mp = {
- 		.prot = PROT_READ | PROT_WRITE,
- 		.mask = (pages * page_size) - 1,
-@@ -246,18 +248,18 @@ int perf_evsel__mmap(struct perf_evsel *evsel, int pages)
- 	if (perf_evsel__alloc_mmap(evsel, xyarray__max_x(evsel->fd), xyarray__max_y(evsel->fd)) < 0)
- 		return -ENOMEM;
- 
--	for (cpu = 0; cpu < xyarray__max_x(evsel->fd); cpu++) {
-+	for (idx = 0; idx < xyarray__max_x(evsel->fd); idx++) {
- 		for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
--			int *fd = FD(evsel, cpu, thread);
-+			int *fd = FD(evsel, idx, thread);
- 			struct perf_mmap *map;
- 
- 			if (fd == NULL || *fd < 0)
- 				continue;
- 
--			map = MMAP(evsel, cpu, thread);
-+			map = MMAP(evsel, idx, thread);
- 			perf_mmap__init(map, NULL, false, NULL);
- 
--			ret = perf_mmap__mmap(map, &mp, *fd, cpu);
-+			ret = perf_mmap__mmap(map, &mp, *fd, idx);
- 			if (ret) {
- 				perf_evsel__munmap(evsel);
- 				return ret;
-@@ -268,14 +270,14 @@ int perf_evsel__mmap(struct perf_evsel *evsel, int pages)
- 	return 0;
- }
- 
--void *perf_evsel__mmap_base(struct perf_evsel *evsel, int cpu, int thread)
-+void *perf_evsel__mmap_base(struct perf_evsel *evsel, int cpu_map_idx, int thread)
- {
--	int *fd = FD(evsel, cpu, thread);
-+	int *fd = FD(evsel, cpu_map_idx, thread);
- 
--	if (fd == NULL || *fd < 0 || MMAP(evsel, cpu, thread) == NULL)
-+	if (fd == NULL || *fd < 0 || MMAP(evsel, cpu_map_idx, thread) == NULL)
- 		return NULL;
- 
--	return MMAP(evsel, cpu, thread)->base;
-+	return MMAP(evsel, cpu_map_idx, thread)->base;
- }
- 
- int perf_evsel__read_size(struct perf_evsel *evsel)
-@@ -303,19 +305,19 @@ int perf_evsel__read_size(struct perf_evsel *evsel)
- 	return size;
- }
- 
--int perf_evsel__read(struct perf_evsel *evsel, int cpu, int thread,
-+int perf_evsel__read(struct perf_evsel *evsel, int cpu_map_idx, int thread,
- 		     struct perf_counts_values *count)
- {
- 	size_t size = perf_evsel__read_size(evsel);
--	int *fd = FD(evsel, cpu, thread);
-+	int *fd = FD(evsel, cpu_map_idx, thread);
- 
- 	memset(count, 0, sizeof(*count));
- 
- 	if (fd == NULL || *fd < 0)
- 		return -EINVAL;
- 
--	if (MMAP(evsel, cpu, thread) &&
--	    !perf_mmap__read_self(MMAP(evsel, cpu, thread), count))
-+	if (MMAP(evsel, cpu_map_idx, thread) &&
-+	    !perf_mmap__read_self(MMAP(evsel, cpu_map_idx, thread), count))
- 		return 0;
- 
- 	if (readn(*fd, count->values, size) <= 0)
-@@ -326,13 +328,13 @@ int perf_evsel__read(struct perf_evsel *evsel, int cpu, int thread,
- 
- static int perf_evsel__run_ioctl(struct perf_evsel *evsel,
- 				 int ioc,  void *arg,
--				 int cpu)
-+				 int cpu_map_idx)
- {
- 	int thread;
- 
- 	for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
- 		int err;
--		int *fd = FD(evsel, cpu, thread);
-+		int *fd = FD(evsel, cpu_map_idx, thread);
- 
- 		if (fd == NULL || *fd < 0)
- 			return -1;
-@@ -346,9 +348,9 @@ static int perf_evsel__run_ioctl(struct perf_evsel *evsel,
- 	return 0;
- }
- 
--int perf_evsel__enable_cpu(struct perf_evsel *evsel, int cpu)
-+int perf_evsel__enable_cpu(struct perf_evsel *evsel, int cpu_map_idx)
- {
--	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, NULL, cpu);
-+	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, NULL, cpu_map_idx);
- }
- 
- int perf_evsel__enable(struct perf_evsel *evsel)
-@@ -361,9 +363,9 @@ int perf_evsel__enable(struct perf_evsel *evsel)
- 	return err;
- }
- 
--int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu)
-+int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu_map_idx)
- {
--	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, NULL, cpu);
-+	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, NULL, cpu_map_idx);
- }
- 
- int perf_evsel__disable(struct perf_evsel *evsel)
-diff --git a/tools/lib/perf/include/perf/evsel.h b/tools/lib/perf/include/perf/evsel.h
-index f401c7484bec..2a9516b42d15 100644
---- a/tools/lib/perf/include/perf/evsel.h
-+++ b/tools/lib/perf/include/perf/evsel.h
-@@ -28,16 +28,16 @@ LIBPERF_API void perf_evsel__delete(struct perf_evsel *evsel);
- LIBPERF_API int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
- 				 struct perf_thread_map *threads);
- LIBPERF_API void perf_evsel__close(struct perf_evsel *evsel);
--LIBPERF_API void perf_evsel__close_cpu(struct perf_evsel *evsel, int cpu);
-+LIBPERF_API void perf_evsel__close_cpu(struct perf_evsel *evsel, int cpu_map_idx);
- LIBPERF_API int perf_evsel__mmap(struct perf_evsel *evsel, int pages);
- LIBPERF_API void perf_evsel__munmap(struct perf_evsel *evsel);
--LIBPERF_API void *perf_evsel__mmap_base(struct perf_evsel *evsel, int cpu, int thread);
--LIBPERF_API int perf_evsel__read(struct perf_evsel *evsel, int cpu, int thread,
-+LIBPERF_API void *perf_evsel__mmap_base(struct perf_evsel *evsel, int cpu_map_idx, int thread);
-+LIBPERF_API int perf_evsel__read(struct perf_evsel *evsel, int cpu_map_idx, int thread,
- 				 struct perf_counts_values *count);
- LIBPERF_API int perf_evsel__enable(struct perf_evsel *evsel);
--LIBPERF_API int perf_evsel__enable_cpu(struct perf_evsel *evsel, int cpu);
-+LIBPERF_API int perf_evsel__enable_cpu(struct perf_evsel *evsel, int cpu_map_idx);
- LIBPERF_API int perf_evsel__disable(struct perf_evsel *evsel);
--LIBPERF_API int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu);
-+LIBPERF_API int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu_map_idx);
- LIBPERF_API struct perf_cpu_map *perf_evsel__cpus(struct perf_evsel *evsel);
- LIBPERF_API struct perf_thread_map *perf_evsel__threads(struct perf_evsel *evsel);
- LIBPERF_API struct perf_event_attr *perf_evsel__attr(struct perf_evsel *evsel);
+ 	return ret;
 -- 
 2.34.1.448.ga2b2bfdf31-goog
 
