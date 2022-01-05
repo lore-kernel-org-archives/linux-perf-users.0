@@ -2,158 +2,138 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4117EC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jan 2022 06:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0F7C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jan 2022 11:26:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231462AbiAEG1f (ORCPT
+        id S239662AbiAEL0F (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Jan 2022 01:27:35 -0500
-Received: from beige.elm.relay.mailchannels.net ([23.83.212.16]:25239 "EHLO
-        beige.elm.relay.mailchannels.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231226AbiAEG1f (ORCPT
+        Wed, 5 Jan 2022 06:26:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239665AbiAEL0F (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Jan 2022 01:27:35 -0500
-X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 58FA68815EF
-        for <linux-perf-users@vger.kernel.org>; Wed,  5 Jan 2022 06:19:46 +0000 (UTC)
-Received: from pdx1-sub0-mail-a305.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 8C4988817CE
-        for <linux-perf-users@vger.kernel.org>; Wed,  5 Jan 2022 06:19:45 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
-Received: from pdx1-sub0-mail-a305.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.100.11.97 (trex/6.4.3);
-        Wed, 05 Jan 2022 06:19:46 +0000
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|kjlx@templeofstupid.com
-X-MailChannels-Auth-Id: dreamhost
-X-Bubble-Zesty: 39ca5cca03320f96_1641363586241_2999127059
-X-MC-Loop-Signature: 1641363586241:3024226889
-X-MC-Ingress-Time: 1641363586241
-Received: from kmjvbox (c-98-207-114-56.hsd1.ca.comcast.net [98.207.114.56])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Wed, 5 Jan 2022 06:26:05 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 019D2C061761;
+        Wed,  5 Jan 2022 03:26:05 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kjlx@templeofstupid.com)
-        by pdx1-sub0-mail-a305.dreamhost.com (Postfix) with ESMTPSA id 4JTK8J1JRzz1PZ
-        for <linux-perf-users@vger.kernel.org>; Tue,  4 Jan 2022 22:19:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; d=templeofstupid.com;
-        s=templeofstupid.com; t=1641363584; bh=DdLVDGCXyiVR7k/+OIBTxOcBchQ=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=Rde473Xaj8mKAB79jbYwfTvgdUOLcM/rebNbONuCwbgGfVEZsS6SO7UL43G1dHbh/
-         JMUBMkyaG7Q6SvtLmsU5HCW0sq9/BUfYGKZhH/jQrdutliwQJeMe1NCO7NnDmQx8mn
-         TJcYx70NOP8QyDX05ujZgnyO9S40WluLooMRDMTQ=
-Received: from johansen (uid 1000)
-        (envelope-from kjlx@templeofstupid.com)
-        id e00d9
-        by kmjvbox (DragonFly Mail Agent v0.9);
-        Tue, 04 Jan 2022 22:19:42 -0800
-Date:   Tue, 4 Jan 2022 22:19:42 -0800
-From:   Krister Johansen <kjlx@templeofstupid.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Riccardo Mancini <rickyman7@gmail.com>,
-        Ian Rogers <irogers@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        by ams.source.kernel.org (Postfix) with ESMTPS id A3DE5B81A5F;
+        Wed,  5 Jan 2022 11:26:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AE60C36AEB;
+        Wed,  5 Jan 2022 11:25:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1641381962;
+        bh=p7ARozmpHvdBcT5Sr9I/4lpUUJk42PlcQIdWxwnken8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=f085ntndt8wl1xZbURfzaE4LBumsXRrBAOzVzTWwKQUPQIzjxy1HKaK9h+S2ume8G
+         D7qitRy09jLdWFQ6oaz0VVniaWFsa3ynQ2176GyOoePj2cYVMoLGIm9JRka0bUgn5f
+         9wmuAr0/HkdiWrzcz03ztA02HKm1i42tNYb6qnJHUcIVJIMLE/y8KHgGrxUW248RTV
+         uPJUzeWm7ghp7fKTc7oPDnqBer3UVc5uDolxzyaOKEeDfpM/V1lAhOW3ZUdQ9L8btR
+         96Jcmc1htW1mypF5aS4jnDOfVfWE5v7bvtaLygOcX+xY963g+uxEneJbI/B+ZZsjfL
+         UOdhbMn+SSVzA==
+Date:   Wed, 5 Jan 2022 11:25:55 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 01/20] perf nsinfo: fix refcounting
-Message-ID: <20220105061942.GA20464@templeofstupid.com>
-References: <cover.1626343282.git.rickyman7@gmail.com>
- <55223bc8821b34ccb01f92ef1401c02b6a32e61f.1626343282.git.rickyman7@gmail.com>
- <YPCGONcQx5SxEKdY@kernel.org>
- <YPCKeDvyLOQzKTln@kernel.org>
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-perf-users@vger.kernel.org,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH v13 3/5] arm64: perf: Add userspace counter access
+ disable switch
+Message-ID: <20220105112555.GA3113@willie-the-truck>
+References: <20211208201124.310740-1-robh@kernel.org>
+ <20211208201124.310740-4-robh@kernel.org>
+ <CAMuHMdVcDxR9sGzc5pcnORiotonERBgc6dsXZXMd6wTvLGA9iw@mail.gmail.com>
+ <20220104135658.GC1827@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YPCKeDvyLOQzKTln@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20220104135658.GC1827@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jul 15, 2021 at 04:20:24PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Jul 15, 2021 at 04:02:16PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Thu, Jul 15, 2021 at 06:07:06PM +0200, Riccardo Mancini escreveu:
-> > > ASan reports a memory leak of nsinfo during the execution of the perf
-> > > test "31: Lookup mmap thread".
-> > > The leak is caused by a refcounted variable being replaced without
-> > > dropping the refcount.
+On Tue, Jan 04, 2022 at 01:56:59PM +0000, Will Deacon wrote:
+> On Tue, Dec 28, 2021 at 12:07:02PM +0100, Geert Uytterhoeven wrote:
+> > On Wed, Dec 8, 2021 at 9:19 PM Rob Herring <robh@kernel.org> wrote:
+> > > Like x86, some users may want to disable userspace PMU counter
+> > > altogether. Add a sysctl 'perf_user_access' file to control userspace
+> > > counter access. The default is '0' which is disabled. Writing '1'
+> > > enables access.
+> > >
+> > > Note that x86 supports globally enabling user access by writing '2' to
+> > > /sys/bus/event_source/devices/cpu/rdpmc. As there's not existing
+> > > userspace support to worry about, this shouldn't be necessary for Arm.
+> > > It could be added later if the need arises.
+> > 
+> > Thanks for your patch, which is now commit e2012600810c9ded ("arm64:
+> > perf: Add userspace counter access disable switch") in arm64/for-next/core.
+> > 
+> > This is causing two issues on Renesas Salvator-XS with R-Car H3.
+> > One during kernel boot:
+> > 
+> >      hw perfevents: enabled with armv8_cortex_a53 PMU driver, 7
+> > counters available
+> >     +sysctl duplicate entry: /kernel//perf_user_access
+> >     +CPU: 0 PID: 1 Comm: swapper/0 Not tainted
+> > 5.16.0-rc3-arm64-renesas-00003-ge2012600810c #1420
+> >     +Hardware name: Renesas Salvator-X 2nd version board based on r8a77951 (DT)
+> >     +Call trace:
+> >     + dump_backtrace+0x0/0x190
+> >     + show_stack+0x14/0x20
+> >     + dump_stack_lvl+0x88/0xb0
+> >     + dump_stack+0x14/0x2c
+> >     + __register_sysctl_table+0x384/0x818
+> >     + register_sysctl+0x20/0x28
+> >     + armv8_pmu_init.constprop.0+0x118/0x150
+> >     + armv8_a57_pmu_init+0x1c/0x28
+> >     + arm_pmu_device_probe+0x1b4/0x558
+> >     + armv8_pmu_device_probe+0x18/0x20
+> >     + platform_probe+0x64/0xd0
+> >     + really_probe+0xb4/0x2f8
+> >     + __driver_probe_device+0x74/0xd8
+> >     + driver_probe_device+0x3c/0xe0
+> >     + __driver_attach+0x80/0x110
+> >     + bus_for_each_dev+0x6c/0xc0
+> >     + driver_attach+0x20/0x28
+> >     + bus_add_driver+0x138/0x1e0
+> >     + driver_register+0x60/0x110
+> >     + __platform_driver_register+0x24/0x30
+> >     + armv8_pmu_driver_init+0x18/0x20
+> >     + do_one_initcall+0x15c/0x31c
+> >     + kernel_init_freeable+0x2f0/0x354
+> >     + kernel_init+0x20/0x120
+> >     + ret_from_fork+0x10/0x20
+> >      hw perfevents: enabled with armv8_cortex_a57 PMU driver, 7
+> > counters available
+> > 
+> > Presumably the same entry is added twice, once for the A53 PMU,
+> > and a second time for the A57 PMU?
 > 
-> > > This patch makes sure that the refcnt of nsinfo is decreased whenever
-> > > a refcounted variable is replaced with a new value.
+> Looks like it, and perhaps that's also what is confusing systemd?
+> Rob -- how come you didn't see this during your testing?
 > 
-> > So, there are multiple fixes in just one patch, I'll split it into
-> > three, no need to resend.
-> 
-> > I'll try and check if finding Fixes: for the three is easy, that way
-> > stable@vger.kernel.org will figure out which of the supported releases
-> > need each of them.
-> 
-> The second is at the end of this message, and looking at it I think
-> there is a problem with where this nsinfo reference is stored, it should
-> be in the 'struct map', that is per-thread, not in the 'struct dso',
-> that may be shared by multiple 'struct map's in different cgroups, so we
-> can't set dso->nsinfo in map__new(), right? Kristen?
+> Anywho, please can you try the untested diff below?
 
-Apologies for the long delayed reply, and for the hassle that this has
-caused.
+I just remembered I have a big/little SoC on my desk after borrowing a
+NanoPi (RK3399) from Marc Z, so I took this diff for a spin there and
+both the kernel and systemd seem happy.
 
-You're right, Arnaldo, that namespace mapping could differ on a per
-thread basis.  If the dso objects are intended to be read by multiple
-threads with different views of the target process's namespaces.  With
-containers, though, there might be many different versions of the same
-object with the same filename, and the only ways we can disambiguate are
-through the build-ids or by ensuring that the dso refers to a single
-pid and mount namespace.  I may have erred in assuming that all of
-perf's threads would be able to access the target namespace via the same
-identifiers.  Is that what's going on here?
-
--K
-
-
-> commit 280f3933661f9ca9563ed04ce82313fdbcbb8f75
-> Author: Riccardo Mancini <rickyman7@gmail.com>
-> Date:   Thu Jul 15 18:07:06 2021 +0200
-> 
->     perf map: Fix dso->nsinfo refcounting
->     
->     ASan reports a memory leak of nsinfo during the execution of
->     
->       # perf test "31: Lookup mmap thread"
->     
->     The leak is caused by a refcounted variable being replaced without
->     dropping the refcount.
->     
->     This patch makes sure that the refcnt of nsinfo is decreased whenever a
->     refcounted variable is replaced with a new value.
->     
->     Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
->     Fixes: bf2e710b3cb8445c ("perf maps: Lookup maps in both intitial mountns and inner mountns.")
->     Cc: Ian Rogers <irogers@google.com>
->     Cc: Jiri Olsa <jolsa@redhat.com>
->     Cc: Krister Johansen <kjlx@templeofstupid.com>
->     Cc: Mark Rutland <mark.rutland@arm.com>
->     Cc: Namhyung Kim <namhyung@kernel.org>
->     Cc: Peter Zijlstra <peterz@infradead.org>
->     Link: http://lore.kernel.org/lkml/55223bc8821b34ccb01f92ef1401c02b6a32e61f.1626343282.git.rickyman7@gmail.com
->     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-> index 8af693d9678cefe0..72e7f3616157ead4 100644
-> --- a/tools/perf/util/map.c
-> +++ b/tools/perf/util/map.c
-> @@ -192,6 +192,8 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
->  			if (!(prot & PROT_EXEC))
->  				dso__set_loaded(dso);
->  		}
-> +
-> +		nsinfo__put(dso->nsinfo);
->  		dso->nsinfo = nsi;
->  
->  		if (build_id__is_defined(bid))
-> 
+Will
