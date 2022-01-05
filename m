@@ -2,57 +2,57 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C501C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jan 2022 06:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACF0C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jan 2022 06:17:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237946AbiAEGRV (ORCPT
+        id S238195AbiAEGRW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Jan 2022 01:17:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42648 "EHLO
+        Wed, 5 Jan 2022 01:17:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238198AbiAEGQO (ORCPT
+        with ESMTP id S237739AbiAEGQM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Jan 2022 01:16:14 -0500
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A739C0698E1
-        for <linux-perf-users@vger.kernel.org>; Tue,  4 Jan 2022 22:15:55 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id u130-20020a254788000000b0060a9645f781so58771992yba.19
-        for <linux-perf-users@vger.kernel.org>; Tue, 04 Jan 2022 22:15:55 -0800 (PST)
+        Wed, 5 Jan 2022 01:16:12 -0500
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E25CC0698D6
+        for <linux-perf-users@vger.kernel.org>; Tue,  4 Jan 2022 22:15:50 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id s127-20020a252c85000000b0060be2b7b8e9so53251842ybs.8
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Jan 2022 22:15:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=on9cMkVsbDIIWgmJUXNGZPB7xxaMgvNoxu0hM4zjpQ4=;
-        b=cCPa+SHUCrMw8an8q45ZtRv/i64BmCmjROSrKJPgOM2PlHDZB4+gvUCwJ1zG+hj8fU
-         IGxUB7AKkBFoSB9Iq/g5ay3aE4WzGhPsoWQn26bxpPYxsG8MFY2yG2H0Rn0JwycHgoMM
-         f+Yu6rhevihqhazqUEML2fUjYVtCw0GRBAa/Jtuvu0haKFsRyHQdnq20hXmax0lUfN60
-         JyS6G7j64n3+q1DAcdkOdPw35XZCVVJPVoX9dWmjAdM8FDDYcFwCJkF/wmuJcE/8OOhS
-         kcXb95CGgvWhzwN9Gjyj2OWN1UkZrO3kbC7uP7QgfmWOpEpSNx7iFR3WtmpOfoWT+vc6
-         4bbg==
+        bh=l4aITqAr4kAWUMdh1BRMLGLBNjKWhPafS6IoiJKe+3o=;
+        b=oq4qaiIdVmKbNmPSmU1ee7EYSBOWVUs0qBp1DNmNPiE1i6LOTJgd4U49eU8Qud+eAF
+         BK9YPVFgysNVn0Jm0gzZFN+8U+8/pwXJB5sDD7nPgk/0MX309k1smI8yLpMytm2wK2G8
+         jLg7oTVi0CiVtoZgHy1xC/sT6JbceUZ9QjAARlngFZklHrkJTRLucA4QxGBgamZoYfjh
+         qB50KKL9C5/cjkAx+UNaSgDC1VX/tQ9Vqg2DtKfJ8MNPRa4D9fbpZ8crbtlOj79WX5qG
+         xqCVMQokJemgqj7YoOC/pIJCI+MPyNWib/3uJMLOGnZcfzdt8LP1eJPEdtPS+eYN9P/b
+         TsuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=on9cMkVsbDIIWgmJUXNGZPB7xxaMgvNoxu0hM4zjpQ4=;
-        b=ZRncpPdr+jJuv3NOaAke2uHjelIqeAZ2Wk/enNcBg7cMPFuUV5EVMA4MoZCngTn76U
-         SR6dxZr8Ic9Q7B0S0Li0y/3OuzzMajc48ZJ4nPzzatFSuTQwf1Z82toY52JH6zQw02dx
-         XfxfWFfeNSXpr6zFHcoSvd1FStj78kM61TttMS2XAYWc4ZmijiorC2OiDN4dnphfGKbh
-         KLFXZQrXRvPY8Z3slk+xbbI+t+PKr94r4WuuBtFETDhgPJqF4yJXa5aFHMHPAzjLyHde
-         EsOVnG0tmg/+5379qAdHiT1u4guE0pZcJq37wN8G3tQ37/GJch4YEB6u8nIbazBlLQYv
-         QoZg==
-X-Gm-Message-State: AOAM533Iy8Q2yv2IrfmFM5Hxp5m4DBk610ZMrBDE4uuVlXrvjswcALba
-        J7SiOBDhOVkvyS5qVU7Z59kep2kw/qb2
-X-Google-Smtp-Source: ABdhPJyMIB+6RXZ4fgulTItYs0MJRIuoDNybHTF5irVS16tYmpzKDDP+9Nut1QNjJ9zINgchGiHA954cHJ4D
+        bh=l4aITqAr4kAWUMdh1BRMLGLBNjKWhPafS6IoiJKe+3o=;
+        b=6yMDWZubqhQ+vTKxuIjpGkOG+Oe1UMrAogVxiwRUyMBtXI+gnYl76cccmmWfxUtOGt
+         jtIwbiiCZDt374PTO4s0lE6Z//LJGhS6ztJfksEm6QLdRSVQOQpaq4VASdJmGK/iqk1K
+         77K2mcsncPuI2GTGcQUfBcmemXLPBHYdaK4CJlRyuDn0m6Or2bbw1zaZVPwvDmoUHLbW
+         M044rtnq5zbTG1vnS6IYusvpMithGphYV6U7Eo/vGUJzuCJn2HQUTmUfdGPaR+XOVKvS
+         ZaNgxQXClvvv9GR1uHfht+UGY5GElT+V4N3zT2mt0rKzt0/k15KGxVQcrUtAG1pUbmKp
+         C4DQ==
+X-Gm-Message-State: AOAM5328gLbNHiOoAv4yVpYgzaayIbJpfm4wcFZS/4GToiOZEOIAhcho
+        CMSyvUGQmAZfX8tGGaKayj3JYerlmS9B
+X-Google-Smtp-Source: ABdhPJyPnXyAbZfjaFcz67v+Kw7nE2hg5GCzoqNQvaO7noAreCoYlyuiuJVgyHV9sb+ADV8pJ+AK+odgpgfW
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:3af1:caef:2937:5d2b])
- (user=irogers job=sendgmr) by 2002:a25:9b45:: with SMTP id
- u5mr24170194ybo.76.1641363354738; Tue, 04 Jan 2022 22:15:54 -0800 (PST)
-Date:   Tue,  4 Jan 2022 22:13:50 -0800
+ (user=irogers job=sendgmr) by 2002:a25:40ca:: with SMTP id
+ n193mr64096091yba.683.1641363349798; Tue, 04 Jan 2022 22:15:49 -0800 (PST)
+Date:   Tue,  4 Jan 2022 22:13:48 -0800
 In-Reply-To: <20220105061351.120843-1-irogers@google.com>
-Message-Id: <20220105061351.120843-48-irogers@google.com>
+Message-Id: <20220105061351.120843-46-irogers@google.com>
 Mime-Version: 1.0
 References: <20220105061351.120843-1-irogers@google.com>
 X-Mailer: git-send-email 2.34.1.448.ga2b2bfdf31-goog
-Subject: [PATCH v4 47/48] perf stat: Correct first_shadow_cpu to return index
+Subject: [PATCH v4 45/48] perf c2c: Use more intention revealing iterator
 From:   Ian Rogers <irogers@google.com>
 To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -80,68 +80,44 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-perf_stat__update_shadow_stats and perf_stat__print_shadow_stats use a
-cpu map index rather than a CPU, but first_shadow_cpu is returning the
-wrong value for this. Change first_shadow_cpu to
-first_shadow_cpu_map_idx to make things agree.
+Use perf_cpu_map__for_each_cpu in setup_nodes.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/stat-display.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ tools/perf/builtin-c2c.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 0f192360b6c6..ba95379efcfb 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -327,24 +327,23 @@ static void print_metric_header(struct perf_stat_config *config,
- 		fprintf(os->fh, "%*s ", config->metric_only_len, unit);
- }
- 
--static int first_shadow_cpu(struct perf_stat_config *config,
--			    struct evsel *evsel, const struct aggr_cpu_id *id)
-+static int first_shadow_cpu_map_idx(struct perf_stat_config *config,
-+				struct evsel *evsel, const struct aggr_cpu_id *id)
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index b5c67ef73862..ad1fbeafc93d 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -2015,7 +2015,7 @@ static int setup_nodes(struct perf_session *session)
  {
--	struct perf_cpu_map *cpus;
-+	struct perf_cpu_map *cpus = evsel__cpus(evsel);
- 	int cpu, idx;
+ 	struct numa_node *n;
+ 	unsigned long **nodes;
+-	int node, cpu;
++	int node, cpu, idx;
+ 	int *cpu2node;
  
- 	if (config->aggr_mode == AGGR_NONE)
--		return id->cpu;
-+		return perf_cpu_map__idx(cpus, id->cpu);
+ 	if (c2c.node_info > 2)
+@@ -2057,13 +2057,13 @@ static int setup_nodes(struct perf_session *session)
+ 		if (perf_cpu_map__empty(map))
+ 			continue;
  
- 	if (!config->aggr_get_id)
- 		return 0;
+-		for (cpu = 0; cpu < map->nr; cpu++) {
+-			set_bit(map->map[cpu], set);
++		perf_cpu_map__for_each_cpu(cpu, idx, map) {
++			set_bit(cpu, set);
  
--	cpus = evsel__cpus(evsel);
- 	perf_cpu_map__for_each_cpu(cpu, idx, cpus) {
- 		struct aggr_cpu_id cpu_id = config->aggr_get_id(config, cpu);
+-			if (WARN_ONCE(cpu2node[map->map[cpu]] != -1, "node/cpu topology bug"))
++			if (WARN_ONCE(cpu2node[cpu] != -1, "node/cpu topology bug"))
+ 				return -EINVAL;
  
- 		if (aggr_cpu_id__equal(&cpu_id, id))
--			return cpu;
-+			return idx;
- 	}
- 	return 0;
- }
-@@ -503,7 +502,7 @@ static void printout(struct perf_stat_config *config, struct aggr_cpu_id id, int
- 	}
- 
- 	perf_stat__print_shadow_stats(config, counter, uval,
--				first_shadow_cpu(config, counter, &id),
-+				first_shadow_cpu_map_idx(config, counter, &id),
- 				&out, &config->metric_events, st);
- 	if (!config->csv_output && !config->metric_only) {
- 		print_noise(config, counter, noise);
-@@ -532,7 +531,7 @@ static void aggr_update_shadow(struct perf_stat_config *config,
- 				val += perf_counts(counter->counts, idx, 0)->val;
- 			}
- 			perf_stat__update_shadow_stats(counter, val,
--					first_shadow_cpu(config, counter, &id),
-+					first_shadow_cpu_map_idx(config, counter, &id),
- 					&rt_stat);
+-			cpu2node[map->map[cpu]] = node;
++			cpu2node[cpu] = node;
  		}
  	}
+ 
 -- 
 2.34.1.448.ga2b2bfdf31-goog
 
