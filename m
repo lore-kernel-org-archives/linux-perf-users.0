@@ -2,185 +2,222 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DA8C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jan 2022 02:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 681B2C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jan 2022 06:13:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234877AbiAEC4t (ORCPT
+        id S234875AbiAEGN6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Jan 2022 21:56:49 -0500
-Received: from szxga08-in.huawei.com ([45.249.212.255]:31069 "EHLO
-        szxga08-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229584AbiAEC4t (ORCPT
+        Wed, 5 Jan 2022 01:13:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42342 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234822AbiAEGN6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Jan 2022 21:56:49 -0500
-Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.56])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4JTDZ85B39z1DKRp;
-        Wed,  5 Jan 2022 10:53:20 +0800 (CST)
-Received: from dggpemm500017.china.huawei.com (7.185.36.178) by
- dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Wed, 5 Jan 2022 10:56:47 +0800
-Received: from [10.67.109.79] (10.67.109.79) by dggpemm500017.china.huawei.com
- (7.185.36.178) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Wed, 5 Jan
- 2022 10:56:46 +0800
-Message-ID: <8ad8db22-e9af-7e0a-2e39-da99a4a0539a@huawei.com>
-Date:   Wed, 5 Jan 2022 10:56:46 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.1
-Subject: Re: [PATCH] powerpc/perf: fix ppc64 perf probe add events failed
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
-        <namhyung@kernel.org>, <Jianlin.Lv@arm.com>,
-        <ravi.bangoria@linux.ibm.com>, <yao.jin@linux.intel.com>,
-        <yangjihong1@huawei.com>, <mpe@ellerman.id.au>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <qiuxi1@huawei.com>, <wangbing6@huawei.com>
-References: <20211228111338.218602-1-chenzechuan1@huawei.com>
- <YdG9CSk9ayoVmBhz@kernel.org>
-From:   chenzechuan <chenzechuan1@huawei.com>
-In-Reply-To: <YdG9CSk9ayoVmBhz@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.109.79]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpemm500017.china.huawei.com (7.185.36.178)
-X-CFilter-Loop: Reflected
+        Wed, 5 Jan 2022 01:13:58 -0500
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62B02C061784
+        for <linux-perf-users@vger.kernel.org>; Tue,  4 Jan 2022 22:13:57 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id e137-20020a25378f000000b0060c1f2f4939so51882357yba.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Jan 2022 22:13:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Vi4rVjVmeQxEHb6oKpmmCJAi3Ubdt1NQwnvisyi/dEc=;
+        b=tNfeQNWtkevwX71kuVSQEyyaNn8skLyhOhW50TH0hP1NC/qd/EGMGomdHCGhqRJquj
+         tF+YWfUz6DosnRjmDp7p8pVpN33/Jlnw8TM0/upQlCi9/Nj8a57cYg/RGwrwX24kAJBb
+         qRHvPV7CR8x1F+aBHYGlcj46bV/k7PxgTRjfZrVWSoHyApMPO/JQ/cw9x5piOQemn9b0
+         KRZgFm0RpZ8bNyiFwmDm1pB1u6G/E8udOkIjCswOj5BaOXh3811U0Jqi9eJUoYoohYMg
+         wsyy67BcRdO5A0Xq5LDyzMv44JgjDz5WWxebaKutAsuaOnao638tlnkhOThbtFOwD+PY
+         TMmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Vi4rVjVmeQxEHb6oKpmmCJAi3Ubdt1NQwnvisyi/dEc=;
+        b=am8x6QsLh0as8kV9AeLBDra8mR/xNATCnzZsGEV6SUnrMM5r6gjx9npRg3eWCPcm5H
+         rz0/ig+qSY1gdYc9Ea6/1XQ1TbKcGZxD3MKHp1a314D/WXhca4sm1aBmPluZg85gpLvn
+         jarD74wfD8L3r5+o9Eetqg298KCYvcp0ctry2d7r7pQadfFWDmj/He/wJ107nLXz42rj
+         djN3uS3oNlHVG3KYDzzeK06Nzum/KkaUA8XYrHHHowK+OZgGcFVs7DeuwAsFBQSQCD6A
+         34abnRg7zIiUOhTedN7Xvly5XpmwcxqfWqqkH5mTiIw24wo1XOcmG9GaOmU7DeneI9ih
+         yOuA==
+X-Gm-Message-State: AOAM533vuuAM1iLyTAuE3iEbIstAdSxT6kzZXvO8WKcoI7jgNPxV6LRF
+        p+/ZKZ96bWDdnxUFZofLI+EP1Q5ip65B
+X-Google-Smtp-Source: ABdhPJwKqQuWxGX39aFT4XFie9kXMFjwX68/GkJ7ouMH+edh5dFBSa2WmE83CrSIxVIH5IOhO8ha3fQURhae
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:3af1:caef:2937:5d2b])
+ (user=irogers job=sendgmr) by 2002:a5b:590:: with SMTP id l16mr62312607ybp.629.1641363237009;
+ Tue, 04 Jan 2022 22:13:57 -0800 (PST)
+Date:   Tue,  4 Jan 2022 22:13:03 -0800
+Message-Id: <20220105061351.120843-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.34.1.448.ga2b2bfdf31-goog
+Subject: [PATCH v4 00/48] Refactor perf cpumap
+From:   Ian Rogers <irogers@google.com>
+To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vineet Singh <vineet.singh@intel.com>,
+        James Clark <james.clark@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, zhengjun.xing@intel.com
+Cc:     eranian@google.com, Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Perf cpu map has various functions where a cpumap and index are passed
+in order to load the cpu. A problem with this is that the wrong index
+may be passed for the cpumap, causing problems like aggregation on the
+wrong CPU:
+https://lore.kernel.org/lkml/20211204023409.969668-1-irogers@google.com/
 
-在 2022/1/2 22:56, Arnaldo Carvalho de Melo 写道:
-> Em Tue, Dec 28, 2021 at 07:13:38PM +0800, Zechuan Chen escreveu:
->> Because of commit bf794bf52a80 ("powerpc/kprobes: Fix kallsyms lookup
->> across powerpc ABIv1 and ABIv2"), in ppc64 ABIv1, our perf command
->> eliminates the need to use the prefix "." at the symbol name. But when
->> the command "perf probe -a schedule" is executed on ppc64 ABIv1, it
->> obtains two symbol address information through /proc/kallsyms, for example:
->>
->> cat /proc/kallsyms | grep -w schedule
->> c000000000657020 T .schedule
->> c000000000d4fdb8 D schedule
->>
->> The symbol "D schedule" is not a function symbol, and perf will print:
->> "p:probe/schedule _text+13958584"Failed to write event: Invalid argument
->>
->> Therefore, when searching symbols from map and adding probe point for
->> them, a symbol type check is added. If the type of symbol is not a
->> function, skip it.
->>
->> Fixes: bf794bf52a80 ("powerpc/kprobes: Fix kallsyms lookup across powerpc ABIv1 and ABIv2")
->>
->> Signed-off-by: Zechuan Chen <chenzechuan1@huawei.com>
->> ---
->>   tools/perf/util/probe-event.c | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
->> index b2a02c9ab8ea..a834918a0a0d 100644
->> --- a/tools/perf/util/probe-event.c
->> +++ b/tools/perf/util/probe-event.c
->> @@ -3083,6 +3083,9 @@ static int find_probe_trace_events_from_map(struct perf_probe_event *pev,
->>   	for (j = 0; j < num_matched_functions; j++) {
->>   		sym = syms[j];
->>   
->> +		if (sym->type != STT_FUNC)
->> +			continue;
->> +
-> Humm, shouldn't this be handled by find_probe_functions(), i.e. it
-> shoudn't return data symbols, right? Otherwise other places using this
-> function may malfunction as well?
->
-> Naveen? Masami?
->
-> - Arnaldo
+This patch set refactors the cpu map API, reducing it and explicitly
+passing the cpu (rather than the pair) to functions that need
+it. Comments are added at the same time. Changes modify the same
+file/function more than once as refactoring and fixes are broken apart
+for the sake of bisection.
 
-Re：Thanks for your review. You are right.
-     1. Only function symbols should be returned here, not function descriptors.
-        I've moved the modification into function "find_probe_functions()",
-        and the new patch is added at the end of this email. I've re-tested it on my environment.
-        Please review it again, thanks.
+v2. Incorproates fixes suggested Jiri Olsa, rewrites the evlist CPU
+    iterator in part in a way suggested by Riccardo Mancini. The new
+    fixes start at patch 23. The final change was suggested by John
+    Garry to make the CPUs have their own struct wrapper.
 
-     2. Function find_probe_functions only use in "perf probe".
-        Malfunction exist for all export functions, another example:
+v3. Incorporates fixes suggested by Namhyung Kim.
 
-     cat /proc/kallsyms | grep -w sys_fork
-     c000000000058100 T .sys_fork
-     c000000000d485e0 D sys_fork
+v4. Rebases and incorporates fixes suggested by Jiri Olsa.
 
-     perf probe -a sys_fork -v
-     No kprobe blacklist support, ignored
-     Looking at the vmlinux_path (8 entries long)
-     symsrc__init: cannot get elf header.
-     Could not open debuginfo. Try to use symbols.
-     Looking at the vmlinux_path (8 entries long)
-     symsrc__init: cannot get elf header.
-     Using /proc/kcore for kernel data
-     Using /proc/kallsyms for symbols
-     Opening /sys/kernel/tracing//kprobe_events write=1
-     Opening /sys/kernel/tracing//README write=0
-     Writing event: p:probe/sys_fork _text+360704
-     Writing event: p:probe/sys_fork _text+13927904
-     Failed to write event: Invalid argument
-       Error: Failed to add events. Reason: Invalid argument (Code: -22)
+Ian Rogers (48):
+  libperf: Add comments to perf_cpu_map.
+  perf stat: Add aggr creators that are passed a cpu.
+  perf stat: Correct aggregation CPU map
+  perf stat: Switch aggregation to use for_each loop
+  perf stat: Switch to cpu version of cpu_map__get
+  perf cpumap: Switch cpu_map__build_map to cpu function
+  perf cpumap: Remove map+index get_socket
+  perf cpumap: Remove map+index get_die
+  perf cpumap: Remove map+index get_core
+  perf cpumap: Remove map+index get_node
+  perf cpumap: Add comments to aggr_cpu_id
+  perf cpumap: Remove unused cpu_map__socket
+  perf cpumap: Simplify equal function name.
+  perf cpumap: Rename empty functions.
+  perf cpumap: Document cpu__get_node and remove redundant function
+  perf cpumap: Remove map from function names that don't use a map.
+  perf cpumap: Remove cpu_map__cpu, use libperf function.
+  perf cpumap: Refactor cpu_map__build_map
+  perf cpumap: Rename cpu_map__get_X_aggr_by_cpu functions
+  perf cpumap: Move 'has' function to libperf
+  perf cpumap: Add some comments to cpu_aggr_map
+  perf cpumap: Trim the cpu_aggr_map
+  perf stat: Fix memory leak in check_per_pkg
+  perf cpumap: Add CPU to aggr_cpu_id
+  perf stat-display: Avoid use of core for CPU.
+  perf evsel: Derive CPUs and threads in alloc_counts
+  libperf: Switch cpu to more accurate cpu_map_idx
+  libperf: Use cpu not index for evsel mmap
+  perf counts: Switch name cpu to cpu_map_idx
+  perf stat: Rename aggr_data cpu to imply it's an index
+  perf stat: Use perf_cpu_map__for_each_cpu
+  perf script: Use for each cpu to aid readability
+  libperf: Allow NULL in perf_cpu_map__idx
+  perf evlist: Refactor evlist__for_each_cpu.
+  perf evsel: Pass cpu not cpu map index to synthesize
+  perf stat: Correct variable name for read counter
+  perf evsel: Rename CPU around get_group_fd
+  perf evsel: Reduce scope of evsel__ignore_missing_thread
+  perf evsel: Rename variable cpu to index
+  perf test: Use perf_cpu_map__for_each_cpu
+  perf stat: Correct check_per_pkg cpu
+  perf stat: Swap variable name cpu to index
+  libperf: Sync evsel documentation
+  perf bpf: Rename cpu to cpu_map_idx
+  perf c2c: Use more intention revealing iterator
+  perf script: Fix flipped index and cpu
+  perf stat: Correct first_shadow_cpu to return index
+  perf cpumap: Give CPUs their own type.
 
->>   		/* There can be duplicated symbols in the map */
->>   		for (i = 0; i < j; i++)
->>   			if (sym->start == syms[i]->start) {
->> -- 
->> 2.12.3
-> .
+ tools/lib/perf/Documentation/libperf.txt      |  11 +-
+ tools/lib/perf/cpumap.c                       | 131 +++--
+ tools/lib/perf/evlist.c                       |   4 +-
+ tools/lib/perf/evsel.c                        |  92 ++--
+ tools/lib/perf/include/internal/cpumap.h      |  18 +-
+ tools/lib/perf/include/internal/evlist.h      |   3 +-
+ tools/lib/perf/include/internal/evsel.h       |   4 +-
+ tools/lib/perf/include/internal/mmap.h        |   5 +-
+ tools/lib/perf/include/perf/cpumap.h          |   8 +-
+ tools/lib/perf/include/perf/evsel.h           |  10 +-
+ tools/lib/perf/libperf.map                    |   1 +
+ tools/lib/perf/mmap.c                         |   2 +-
+ tools/perf/arch/arm/util/cs-etm.c             |  16 +-
+ tools/perf/bench/epoll-ctl.c                  |   2 +-
+ tools/perf/bench/epoll-wait.c                 |   2 +-
+ tools/perf/bench/futex-hash.c                 |   2 +-
+ tools/perf/bench/futex-lock-pi.c              |   2 +-
+ tools/perf/bench/futex-requeue.c              |   2 +-
+ tools/perf/bench/futex-wake-parallel.c        |   2 +-
+ tools/perf/bench/futex-wake.c                 |   2 +-
+ tools/perf/builtin-c2c.c                      |  15 +-
+ tools/perf/builtin-ftrace.c                   |   2 +-
+ tools/perf/builtin-kmem.c                     |   2 +-
+ tools/perf/builtin-record.c                   |   2 +-
+ tools/perf/builtin-sched.c                    |  71 +--
+ tools/perf/builtin-script.c                   |  10 +-
+ tools/perf/builtin-stat.c                     | 516 +++++++++---------
+ tools/perf/tests/attr.c                       |   6 +-
+ tools/perf/tests/bitmap.c                     |   2 +-
+ tools/perf/tests/cpumap.c                     |   6 +-
+ tools/perf/tests/event_update.c               |   6 +-
+ tools/perf/tests/mem2node.c                   |   2 +-
+ tools/perf/tests/mmap-basic.c                 |   4 +-
+ tools/perf/tests/openat-syscall-all-cpus.c    |  39 +-
+ tools/perf/tests/stat.c                       |   3 +-
+ tools/perf/tests/topology.c                   |  43 +-
+ tools/perf/util/affinity.c                    |   2 +-
+ tools/perf/util/auxtrace.c                    |  12 +-
+ tools/perf/util/auxtrace.h                    |   5 +-
+ tools/perf/util/bpf_counter.c                 |  16 +-
+ tools/perf/util/bpf_counter.h                 |   4 +-
+ tools/perf/util/counts.c                      |   8 +-
+ tools/perf/util/counts.h                      |  14 +-
+ tools/perf/util/cpumap.c                      | 253 ++++-----
+ tools/perf/util/cpumap.h                      | 116 ++--
+ tools/perf/util/cputopo.c                     |   6 +-
+ tools/perf/util/env.c                         |  29 +-
+ tools/perf/util/env.h                         |   3 +-
+ tools/perf/util/evlist.c                      | 148 ++---
+ tools/perf/util/evlist.h                      |  50 +-
+ tools/perf/util/evsel.c                       | 143 ++---
+ tools/perf/util/evsel.h                       |  27 +-
+ tools/perf/util/expr.c                        |   2 +-
+ tools/perf/util/header.c                      |   6 +-
+ tools/perf/util/mmap.c                        |  19 +-
+ tools/perf/util/mmap.h                        |   3 +-
+ tools/perf/util/perf_api_probe.c              |  15 +-
+ tools/perf/util/python.c                      |   4 +-
+ tools/perf/util/record.c                      |  11 +-
+ .../scripting-engines/trace-event-python.c    |   6 +-
+ tools/perf/util/session.c                     |  10 +-
+ tools/perf/util/stat-display.c                | 138 ++---
+ tools/perf/util/stat-shadow.c                 | 308 +++++------
+ tools/perf/util/stat.c                        |  47 +-
+ tools/perf/util/stat.h                        |   9 +-
+ tools/perf/util/svghelper.c                   |   6 +-
+ tools/perf/util/synthetic-events.c            |  12 +-
+ tools/perf/util/synthetic-events.h            |   3 +-
+ tools/perf/util/util.h                        |   5 +-
+ 69 files changed, 1333 insertions(+), 1155 deletions(-)
 
- From 8d8f5de99d16e6aa8179ecbc33c0692fc887e2af Mon Sep 17 00:00:00 2001
-From: Zechuan Chen <chenzechuan1@huawei.com>
-Date: Mon, 27 Dec 2021 09:55:11 +0800
-Subject: [PATCH] powerpc/perf: fix ppc64 perf probe add events failed
-
-Because of commit bf794bf52a80 ("powerpc/kprobes: Fix kallsyms lookup
-across powerpc ABIv1 and ABIv2"), in ppc64 ABIv1, our perf command
-eliminates the need to use the prefix "." at the symbol name. But when
-the command "perf probe -a schedule" is executed on ppc64 ABIv1, it
-obtains two symbol address information through /proc/kallsyms, for example:
-
-cat /proc/kallsyms | grep -w schedule
-c000000000657020 T .schedule
-c000000000d4fdb8 D schedule
-
-The symbol "D schedule" is not a function symbol, and perf will print:
-"p:probe/schedule _text+13958584"Failed to write event: Invalid argument
-
-Therefore, when searching symbols from map and adding probe point for
-them, a symbol type check is added. If the type of symbol is not a
-function, skip it.
-
-Fixes: bf794bf52a80 ("powerpc/kprobes: Fix kallsyms lookup across 
-powerpc ABIv1 and ABIv2")
-
-Signed-off-by: Zechuan Chen <chenzechuan1@huawei.com>
----
-  tools/perf/util/probe-event.c | 3 +++
-  1 file changed, 3 insertions(+)
-
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index b2a02c9ab8ea..4bd6f438d73c 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -2959,6 +2959,9 @@ static int find_probe_functions(struct map *map, 
-char *name,
-                 cut_version = false;
-
-         map__for_each_symbol(map, sym, tmp) {
-+               if (sym->type != STT_FUNC)
-+                       continue;
-+
-                 norm = arch__normalize_symbol_name(sym->name);
-                 if (!norm)
-                         continue;
---
-2.12.3
+-- 
+2.34.1.448.ga2b2bfdf31-goog
 
