@@ -2,57 +2,57 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3410EC433EF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA392C4332F
 	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jan 2022 06:16:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231740AbiAEGQb (ORCPT
+        id S236452AbiAEGQb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Wed, 5 Jan 2022 01:16:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42500 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237735AbiAEGOX (ORCPT
+        with ESMTP id S237871AbiAEGPd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Jan 2022 01:14:23 -0500
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2FA5C0617A1
-        for <linux-perf-users@vger.kernel.org>; Tue,  4 Jan 2022 22:14:22 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id s7-20020a5b0447000000b005fb83901511so71115308ybp.11
-        for <linux-perf-users@vger.kernel.org>; Tue, 04 Jan 2022 22:14:22 -0800 (PST)
+        Wed, 5 Jan 2022 01:15:33 -0500
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 593D5C0613B5
+        for <linux-perf-users@vger.kernel.org>; Tue,  4 Jan 2022 22:15:33 -0800 (PST)
+Received: by mail-yb1-xb49.google.com with SMTP id s7-20020a5b0447000000b005fb83901511so71120566ybp.11
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Jan 2022 22:15:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=K2wBwOVyFri8+1g7YkCIisUBaXjxQi5efEY6sDY0QS0=;
-        b=nVn71VGOgLwfr+GmVqVo1K35CBgy/AFV5UxEuzVlA8ZZSNL/7vpugvAw/J8MVfrgc3
-         +rTa+81IyJ8PRvEnYWYqUunC6z/clp7I0YJjIkZNxY7P24sBC0KxH4oOXQx2fCvUdHbF
-         LTcukjuSTrQYab2na6rucy1FBiMBXvUgVDd6GyrAy0tx8jbOwSrUuRCoQdYylUQMjRV0
-         w3gooDlUSh2sgMyT1gs2+TItf5syO/8aCwP6y+76UKr8rbaLHXa6GwPcwNV64oGmDq1O
-         Wqk8Bz/MPDWWvO5gOsbOtah7JCblCWGdEAvmHw0ArTM9KR9U/952O5ySv+NFY+ULG5UO
-         nWOA==
+        bh=z9Tf8Q4+BM5aumLuJFIjYqIwLRxLkiAzP1niqb/X+d4=;
+        b=jkujgjBLTT3h9KKEmYDVCkFAPtUkFYS8HCyUVrge2WFiJckFCjZQRaJRCFebsjIrgm
+         PY8DEABju9DTjD2PNiEwlMzMjVqttB57+VlG5QUg7/yPPUd/QXz+KnHE7mT2h0UDHvET
+         B8fkSNSltuX8zDN40GxhCc3d7iYd/5UKXAclMyf5P9B0JDxBXnUWJeut6dYQMcpHr3Cy
+         PI8h5t1+2ks0vLmUTH6tECasa4+ZYgaMN0s7gprIv+wPXNaP2SoF0TkUNKdIgpA/9OPo
+         7rnORPwJdfdlldewDdZ+msIh4LfnbW4GNjnW848Ub2EJA/2VtLhIPqsw0YSht1iA0e9u
+         Dzig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=K2wBwOVyFri8+1g7YkCIisUBaXjxQi5efEY6sDY0QS0=;
-        b=4XgtxvEWKIwZDAuFUbaeSw3XwN41elhMDkv2Abz+WlDiZ1GY2vkuHtg3yCeAqT8PBB
-         gjqBO/GaVphbzjFleRd3URR0r7wWHNp1CYykS8M0YBNHR0uHKv6Xwqmp/XREWBCzXMLO
-         MG6iKlrWryzAev75JGVnk3rLFqBHxXpHoFLXJuDqFKwrCqv7wZCLdJDKT26zydm+MBhx
-         YRGgek+vk15iQkEyhLcKL5gNS3kXrQbQ985cua6R4GxZHyNroffZcUh0R+rqzRSoNtGx
-         hd9Zs++uGkdD/QzwhQLHQqDcC9Dw+EQIGntNtl9eAFS4S4/2gGlAhKMrZ665zstgjaon
-         NxMQ==
-X-Gm-Message-State: AOAM532jpQD4I7iRCSkeqZSOSDYrgHxxRINf6DqtmhTL+o4oRA+w4M7S
-        p3QpmlX+QikXFxSrIS2i7fSq8qVaYqk2
-X-Google-Smtp-Source: ABdhPJxzM8p/CvjXb5jSkfNIAE2Koghi+sxiWFRQaRz/IQIj55KwLm3rFowpJHwwJwFmUxd2gyqSBJoYE9Fo
+        bh=z9Tf8Q4+BM5aumLuJFIjYqIwLRxLkiAzP1niqb/X+d4=;
+        b=Hr+rgn9kr/n9ZxpRWGhNT+riNTNWTpniVt6EWIB1pWcriMcJ2X9V86SxrtmnOARLip
+         uf4aoMbWemQveTP4st3+i2/DuUQYNIkVXFiLPECYpvgTllRpcjnY8WIe9LM5uwcNNo7u
+         jBvSJnHQq5nmXF9R2R+5pg+yyyOAbRFfBYxQGdfee73I/IyGVGN1doZz5jQ21FoRq5Ba
+         GylvyeXpAUi7N0PdHM060dpqfhFKRI8+lGL0u10hxIFHpk+Yz25jqOZXnuIPGRKPyZ+4
+         R0lzMgzwqGwQ3OdZVa7DxTyvK4Ln4ix4Xjo2A+qlkuTK9vfuVqdpmBY06f5Jv4KmgW21
+         brwg==
+X-Gm-Message-State: AOAM531tUG488RB+VtKtlIcuXcVcRXL8bZlyrwp8ZZJK4O69XX81a1fz
+        oUV4BwGe96NCIE7H6h70KuGXHNaXhljE
+X-Google-Smtp-Source: ABdhPJyy6HehMHXqdWnhi7VRSyiwU6JJU89gF1Mo6uJqWqgqR8gsfo6YYt2sbh7jNyIMQxS6dRZR/H63Q3nM
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:3af1:caef:2937:5d2b])
- (user=irogers job=sendgmr) by 2002:a25:868c:: with SMTP id
- z12mr47594241ybk.12.1641363262213; Tue, 04 Jan 2022 22:14:22 -0800 (PST)
-Date:   Tue,  4 Jan 2022 22:13:13 -0800
+ (user=irogers job=sendgmr) by 2002:a05:6902:154b:: with SMTP id
+ r11mr34534690ybu.358.1641363332606; Tue, 04 Jan 2022 22:15:32 -0800 (PST)
+Date:   Tue,  4 Jan 2022 22:13:41 -0800
 In-Reply-To: <20220105061351.120843-1-irogers@google.com>
-Message-Id: <20220105061351.120843-11-irogers@google.com>
+Message-Id: <20220105061351.120843-39-irogers@google.com>
 Mime-Version: 1.0
 References: <20220105061351.120843-1-irogers@google.com>
 X-Mailer: git-send-email 2.34.1.448.ga2b2bfdf31-goog
-Subject: [PATCH v4 10/48] perf cpumap: Remove map+index get_node
+Subject: [PATCH v4 38/48] perf evsel: Reduce scope of evsel__ignore_missing_thread
 From:   Ian Rogers <irogers@google.com>
 To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -80,60 +80,48 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Migrate final users to appropriate cpu variant.
+Move to being static.
 
-Reviewed-by: James Clark <james.clark@arm.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/topology.c | 2 +-
- tools/perf/util/cpumap.c    | 8 --------
- tools/perf/util/cpumap.h    | 1 -
- 3 files changed, 1 insertion(+), 10 deletions(-)
+ tools/perf/util/evsel.c | 8 ++++----
+ tools/perf/util/evsel.h | 4 ----
+ 2 files changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
-index 9a671670415a..5992b323c4f5 100644
---- a/tools/perf/tests/topology.c
-+++ b/tools/perf/tests/topology.c
-@@ -162,7 +162,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- 
- 	// Test that node ID contains only node
- 	for (i = 0; i < map->nr; i++) {
--		id = cpu_map__get_node(map, i, NULL);
-+		id = cpu_map__get_node_aggr_by_cpu(perf_cpu_map__cpu(map, i), NULL);
- 		TEST_ASSERT_VAL("Node map - Node ID doesn't match",
- 			cpu__get_node(map->map[i]) == id.node);
- 		TEST_ASSERT_VAL("Node map - Socket is set", id.socket == -1);
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index e8149bcf8bfa..f67b2e7aac13 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -254,14 +254,6 @@ struct aggr_cpu_id cpu_map__get_node_aggr_by_cpu(int cpu, void *data __maybe_unu
- 	return id;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 4b3ba4408af2..8911ebde54d6 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1666,10 +1666,10 @@ static int update_fds(struct evsel *evsel,
+ 	return 0;
  }
  
--struct aggr_cpu_id cpu_map__get_node(struct perf_cpu_map *map, int idx, void *data)
--{
--	if (idx < 0 || idx >= map->nr)
--		return cpu_map__empty_aggr_cpu_id();
--
--	return cpu_map__get_node_aggr_by_cpu(map->map[idx], data);
--}
--
- int cpu_map__build_socket_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **sockp)
+-bool evsel__ignore_missing_thread(struct evsel *evsel,
+-				  int nr_cpus, int cpu,
+-				  struct perf_thread_map *threads,
+-				  int thread, int err)
++static bool evsel__ignore_missing_thread(struct evsel *evsel,
++					 int nr_cpus, int cpu,
++					 struct perf_thread_map *threads,
++					 int thread, int err)
  {
- 	return cpu_map__build_map(cpus, sockp, cpu_map__get_socket_aggr_by_cpu, NULL);
-diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
-index 7e1829468bd6..f0121dd4fdcb 100644
---- a/tools/perf/util/cpumap.h
-+++ b/tools/perf/util/cpumap.h
-@@ -38,7 +38,6 @@ int cpu_map__get_core_id(int cpu);
- struct aggr_cpu_id cpu_map__get_core_aggr_by_cpu(int cpu, void *data);
- int cpu_map__get_node_id(int cpu);
- struct aggr_cpu_id cpu_map__get_node_aggr_by_cpu(int cpu, void *data);
--struct aggr_cpu_id cpu_map__get_node(struct perf_cpu_map *map, int idx, void *data);
- int cpu_map__build_socket_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **sockp);
- int cpu_map__build_die_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **diep);
- int cpu_map__build_core_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **corep);
+ 	pid_t ignore_pid = perf_thread_map__pid(threads, thread);
+ 
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index c3db41282400..84e597f6c395 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -301,10 +301,6 @@ bool evsel__detect_missing_features(struct evsel *evsel);
+ enum rlimit_action { NO_CHANGE, SET_TO_MAX, INCREASED_MAX };
+ bool evsel__increase_rlimit(enum rlimit_action *set_rlimit);
+ 
+-bool evsel__ignore_missing_thread(struct evsel *evsel,
+-				  int nr_cpus, int cpu,
+-				  struct perf_thread_map *threads,
+-				  int thread, int err);
+ bool evsel__precise_ip_fallback(struct evsel *evsel);
+ 
+ struct perf_sample;
 -- 
 2.34.1.448.ga2b2bfdf31-goog
 
