@@ -2,57 +2,57 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9646EC433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jan 2022 06:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D15C4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jan 2022 06:16:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238073AbiAEGPw (ORCPT
+        id S238113AbiAEGQA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Jan 2022 01:15:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42748 "EHLO
+        Wed, 5 Jan 2022 01:16:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237912AbiAEGPN (ORCPT
+        with ESMTP id S237924AbiAEGPP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Jan 2022 01:15:13 -0500
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E631C0617A2
-        for <linux-perf-users@vger.kernel.org>; Tue,  4 Jan 2022 22:15:13 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id a9-20020a251a09000000b0060b2c94d515so56597229yba.20
-        for <linux-perf-users@vger.kernel.org>; Tue, 04 Jan 2022 22:15:13 -0800 (PST)
+        Wed, 5 Jan 2022 01:15:15 -0500
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E290C061397
+        for <linux-perf-users@vger.kernel.org>; Tue,  4 Jan 2022 22:15:15 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id b144-20020a253496000000b0060bddc72114so53307446yba.4
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Jan 2022 22:15:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=ewN6TgeYhi7NNspT4fCbrjPDfPPrcTRTO0RxDMRaTEI=;
-        b=T4QTIVVf6MChV8kYFahTMIlnIWjfDM2Pz4nZGLcvbAgVmMvSnAfRZzR3TWKRnTT8Qg
-         uW84zNDkePRuuqvBP+GaSI0aSYMHhSvvV2enYbfYt3qm176fWAtaX7S4FRbee/wIqxp3
-         L/k3jjOAbBR0QFqB0Hzdv0thUW4H1DbTmCl596UpOj6qstJuZpl52Rm3aEJV+z/QGSDC
-         iE0XS9XqpPzBPfD/Nd/WNjjGkM6MbRnrSmoGo6YVT00qfc8/iTojNxB2ZjuCxRPGsAqB
-         lVODIyrsyA0su0WMr/kjGr+UekZnVI/BlKzo35vZS06DZC9TW3l/gGe3wPA8pemnDXwQ
-         5CiQ==
+        bh=cJxFT+Wieuw1JhmOKv6vMYAg7VBOnu+0BYOqRINi2fw=;
+        b=GY4V9f2WtfCAOmHqpJBCqaE/DJ4FJtSTe+IVPCFmccXWe49Vv0FjqmefOnmUwI23+W
+         jq3PcHHD6BViFF3wUo+pGethaE9NU3tyo+Rnf9lMyIhXZblYiEu5txW2DngMfAqoBPb8
+         W2R2n/KYV+jkKtzaxPIPs4RLpYBE9KgOLZ/gS311i/+YCLZwZT95M4M1Ff811MZJ6exW
+         ux+EflSLc6zan/QxZAJ0AZt+gcDD5ofVL+kzUjhXTaw4tPjiLx+ZYwChn0F+Bpd28eaB
+         NnTbohPifYf7x7C6W6LqrboGsVyq+f2Ssm2vPiq5ZDU1OCpVRMHr+aP0iKZeE8qls+Cv
+         LnBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=ewN6TgeYhi7NNspT4fCbrjPDfPPrcTRTO0RxDMRaTEI=;
-        b=MSW7zyq9M+KrKjE70fW57Lvoc8M/MMpfCCxfEyik1SkUw3HyXHg189pyHpuDnVHHB0
-         yez/xJYw0myPg+WmxoN4uMhDdM4irRzzI2cqmRqHOfRvfAzpvlViyowRzzzUOYtbkc2T
-         4sKZz84hwfHgONCNP5EH9DiGZBIPg8UejJwxrlKDDIMhhpFsp4qzIQn3XI9BhCqfrlpf
-         cZmfVTyMmcsAEbvtW1BVYm87uwY36AmbOXL5xU76zWQzEcyvDMqFSa4yiXiMCCvbUaH3
-         toiLo4dwUojp0eAMDfAdLM7WXlp3CnbTcAMEsJFpZjGi2FEWhnKNNhVqJShBtcMcSmgD
-         rjsQ==
-X-Gm-Message-State: AOAM531MjnEDzOlIHp07kBhw5BX4cJp0XKfPRSyh2LWMBUHCoCIS1YRg
-        OWl7Fpm0dlvTBV0Ix0b9HKP3Zu0rvkGF
-X-Google-Smtp-Source: ABdhPJwwG3mTg4oT2fYpRqR1bZ5fv8nAUrwDtQtv9qYKgk1o53MMLlA/bzYOULWt31L4uSwq3pHmdOdhDpKP
+        bh=cJxFT+Wieuw1JhmOKv6vMYAg7VBOnu+0BYOqRINi2fw=;
+        b=AdrEEXL2iTHe6qKcrxUrxanQyhQ5FoXkyofS1ydsAgP+Ei3VfA5lxGWbi4W47jX5nQ
+         Y2UmGSUHQrg7cEXzv/ppJwLANJug1G8g6pVU1OP1xX53keg8Vd8JsKeNT3CgNM7gwz4Y
+         W/DBpOmiH4Hq9O4xAkRxROAHD4SO1PDBZW7f5wKUlMeUYRWG4RCR0cWA1FCJukXX4wFi
+         nlsm7H87gdeilYCngDyGiFRMzMB3SLg4IRvJuznGvd+MQSSIuYnd/SbIvbjuYnobltzZ
+         VVU+eNuiV8qiPr6/5VGoXmmdnstUg1wCaYr1iipRMwPtkThZB6aUph3OV/AjwR4mGerV
+         4Ssw==
+X-Gm-Message-State: AOAM533Q4shCj4B2E2drBzyah/wG2bgm6GvpucJTjUt2l0eIZKNC6585
+        8H7S3ySAUFdzVxU9YyEcpzIpgFEJVS9e
+X-Google-Smtp-Source: ABdhPJz6BllTP+8MyBqztKvpwQ5+7lh8jn7/LAXMClEP1dR7F0dfNkdd6z0dxvFXLKRs8hhzihx5lUCGaFjr
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:3af1:caef:2937:5d2b])
- (user=irogers job=sendgmr) by 2002:a25:2e0a:: with SMTP id
- u10mr43339373ybu.246.1641363312500; Tue, 04 Jan 2022 22:15:12 -0800 (PST)
-Date:   Tue,  4 Jan 2022 22:13:33 -0800
+ (user=irogers job=sendgmr) by 2002:a25:dbc8:: with SMTP id
+ g191mr22901094ybf.623.1641363314707; Tue, 04 Jan 2022 22:15:14 -0800 (PST)
+Date:   Tue,  4 Jan 2022 22:13:34 -0800
 In-Reply-To: <20220105061351.120843-1-irogers@google.com>
-Message-Id: <20220105061351.120843-31-irogers@google.com>
+Message-Id: <20220105061351.120843-32-irogers@google.com>
 Mime-Version: 1.0
 References: <20220105061351.120843-1-irogers@google.com>
 X-Mailer: git-send-email 2.34.1.448.ga2b2bfdf31-goog
-Subject: [PATCH v4 30/48] perf stat: Rename aggr_data cpu to imply it's an index
+Subject: [PATCH v4 31/48] perf stat: Use perf_cpu_map__for_each_cpu
 From:   Ian Rogers <irogers@google.com>
 To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -80,48 +80,58 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Trying to make cpu maps less error prone.
+Correct in print_counter where an index was being used as a cpu.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/stat-display.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ tools/perf/util/stat-display.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index f48d1678861c..7e933a8fee68 100644
+index 7e933a8fee68..0f192360b6c6 100644
 --- a/tools/perf/util/stat-display.c
 +++ b/tools/perf/util/stat-display.c
-@@ -626,7 +626,7 @@ struct aggr_data {
+@@ -4,6 +4,7 @@
+ #include <linux/string.h>
+ #include <linux/time64.h>
+ #include <math.h>
++#include <perf/cpumap.h>
+ #include "color.h"
+ #include "counts.h"
+ #include "evlist.h"
+@@ -732,7 +733,7 @@ static void print_aggr(struct perf_stat_config *config,
+ 		evlist__for_each_entry(evlist, counter) {
+ 			print_counter_aggrdata(config, counter, s,
+ 					       prefix, metric_only,
+-					       &first, -1);
++					       &first, /*cpu=*/-1);
+ 		}
+ 		if (metric_only)
+ 			fputc('\n', output);
+@@ -893,11 +894,11 @@ static void print_counter(struct perf_stat_config *config,
+ 	FILE *output = config->output;
  	u64 ena, run, val;
- 	struct aggr_cpu_id id;
- 	int nr;
+ 	double uval;
 -	int cpu;
-+	int cpu_map_idx;
- };
- 
- static void aggr_cb(struct perf_stat_config *config,
-@@ -878,9 +878,9 @@ static void counter_cb(struct perf_stat_config *config __maybe_unused,
- {
- 	struct aggr_data *ad = data;
- 
--	ad->val += perf_counts(counter->counts, ad->cpu, 0)->val;
--	ad->ena += perf_counts(counter->counts, ad->cpu, 0)->ena;
--	ad->run += perf_counts(counter->counts, ad->cpu, 0)->run;
-+	ad->val += perf_counts(counter->counts, ad->cpu_map_idx, 0)->val;
-+	ad->ena += perf_counts(counter->counts, ad->cpu_map_idx, 0)->ena;
-+	ad->run += perf_counts(counter->counts, ad->cpu_map_idx, 0)->run;
- }
- 
- /*
-@@ -897,7 +897,7 @@ static void print_counter(struct perf_stat_config *config,
++	int idx, cpu;
  	struct aggr_cpu_id id;
  
- 	for (cpu = 0; cpu < evsel__nr_cpus(counter); cpu++) {
--		struct aggr_data ad = { .cpu = cpu };
-+		struct aggr_data ad = { .cpu_map_idx = cpu };
+-	for (cpu = 0; cpu < evsel__nr_cpus(counter); cpu++) {
+-		struct aggr_data ad = { .cpu_map_idx = cpu };
++	perf_cpu_map__for_each_cpu(cpu, idx, evsel__cpus(counter)) {
++		struct aggr_data ad = { .cpu_map_idx = idx };
  
  		if (!collect_data(config, counter, counter_cb, &ad))
  			return;
+@@ -1248,7 +1249,7 @@ static void print_percore(struct perf_stat_config *config,
+ 
+ 		print_counter_aggrdata(config, counter, s,
+ 				       prefix, metric_only,
+-				       &first, -1);
++				       &first, /*cpu=*/-1);
+ 	}
+ 
+ 	if (metric_only)
 -- 
 2.34.1.448.ga2b2bfdf31-goog
 
