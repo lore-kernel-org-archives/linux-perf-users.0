@@ -2,138 +2,311 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0F7C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jan 2022 11:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 103C1C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jan 2022 13:49:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239662AbiAEL0F (ORCPT
+        id S240431AbiAENtJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Jan 2022 06:26:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56548 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239665AbiAEL0F (ORCPT
+        Wed, 5 Jan 2022 08:49:09 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:21464 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229890AbiAENtJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Jan 2022 06:26:05 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 019D2C061761;
-        Wed,  5 Jan 2022 03:26:05 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A3DE5B81A5F;
-        Wed,  5 Jan 2022 11:26:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AE60C36AEB;
-        Wed,  5 Jan 2022 11:25:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641381962;
-        bh=p7ARozmpHvdBcT5Sr9I/4lpUUJk42PlcQIdWxwnken8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f085ntndt8wl1xZbURfzaE4LBumsXRrBAOzVzTWwKQUPQIzjxy1HKaK9h+S2ume8G
-         D7qitRy09jLdWFQ6oaz0VVniaWFsa3ynQ2176GyOoePj2cYVMoLGIm9JRka0bUgn5f
-         9wmuAr0/HkdiWrzcz03ztA02HKm1i42tNYb6qnJHUcIVJIMLE/y8KHgGrxUW248RTV
-         uPJUzeWm7ghp7fKTc7oPDnqBer3UVc5uDolxzyaOKEeDfpM/V1lAhOW3ZUdQ9L8btR
-         96Jcmc1htW1mypF5aS4jnDOfVfWE5v7bvtaLygOcX+xY963g+uxEneJbI/B+ZZsjfL
-         UOdhbMn+SSVzA==
-Date:   Wed, 5 Jan 2022 11:25:55 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
+        Wed, 5 Jan 2022 08:49:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1641390548;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wjYgGuw4Zk5dcQmCqQHbQoehaFaFy3CpDal4JFjPY8E=;
+        b=YPJx5hOwjsA5G2NONeB5Zh3lBukXKAZnTQDzvrUFohgVb9Ua3JHuGkobmB8U8TE/YwaXm7
+        yywki2UUDdy1RZydX5wKtd/HcpQf/qYNX8/Qe0FbxG2g8Kph3yCPGpfvIiXpFtQxEytzxz
+        +nfqMJMwL3+dxTPWzMu9hmNCzEn6lpI=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-198-mGVl_rKEPVeihL2TjhGGng-1; Wed, 05 Jan 2022 08:49:07 -0500
+X-MC-Unique: mGVl_rKEPVeihL2TjhGGng-1
+Received: by mail-ed1-f72.google.com with SMTP id b8-20020a056402350800b003f8f42a883dso20786777edd.16
+        for <linux-perf-users@vger.kernel.org>; Wed, 05 Jan 2022 05:49:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wjYgGuw4Zk5dcQmCqQHbQoehaFaFy3CpDal4JFjPY8E=;
+        b=hBPQR5+tthhb1/0gz0IUoW5Gufijh9jnLEvfKZ9/o531+dNoHgyYIEsOZYiHmrLnJ3
+         BSQWhOQHhWpSwPbaXMfnnx1S/XX9A2+CbkTrRYvVuuKjEACX2JUdlTuUN90pZRgKoPTf
+         VtkLaDZbKwhLiwd2nFbYJH9zoC7ttc9aGfvAkJ7QlBIEOnQVH188LFFApzeEdwZjyeAQ
+         hPH/hPsFu4ZOIK7aOMxrpihtifH8a3npN108C5wZ9zK9tlE+21DW10GwEy3HRhWu+YfK
+         qPzIPK4oW9gUg88NsLmmRf7AeQ30d4+Yr868LhXARmyCm2F1ian1sK1AtT314f1oe6i3
+         uYyA==
+X-Gm-Message-State: AOAM531hKQznJ9Kaz3aJ8U/qPpAIBa2umToc8E01wfrfDxMNoDGGTKAK
+        gjA7wfxzDxxveQmg90JbMEXjHutjvBXo1uVJgHEBKRj5fr5tRGJq6KAuHHITKfN2r2Qlnzcl1iY
+        CU+97Xwhuf1D67ONk5O4gYKK86i2T2Q==
+X-Received: by 2002:a05:6402:4389:: with SMTP id o9mr54234844edc.348.1641390545792;
+        Wed, 05 Jan 2022 05:49:05 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJy2Y9oNM7XCcgkrsJ6wBG8m6R+T/yVq/nZamloPtpDvxaUNhE4Kw/7PSg7jxK9IqKxg0lGyyA==
+X-Received: by 2002:a05:6402:4389:: with SMTP id o9mr54234821edc.348.1641390545504;
+        Wed, 05 Jan 2022 05:49:05 -0800 (PST)
+Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
+        by smtp.gmail.com with ESMTPSA id hq29sm12486729ejc.141.2022.01.05.05.49.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Jan 2022 05:49:05 -0800 (PST)
+Date:   Wed, 5 Jan 2022 14:49:03 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Christy Lee <christyc.y.lee@gmail.com>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Christy Lee <christylee@fb.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-perf-users@vger.kernel.org,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v13 3/5] arm64: perf: Add userspace counter access
- disable switch
-Message-ID: <20220105112555.GA3113@willie-the-truck>
-References: <20211208201124.310740-1-robh@kernel.org>
- <20211208201124.310740-4-robh@kernel.org>
- <CAMuHMdVcDxR9sGzc5pcnORiotonERBgc6dsXZXMd6wTvLGA9iw@mail.gmail.com>
- <20220104135658.GC1827@willie-the-truck>
+        bpf <bpf@vger.kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>,
+        He Kuang <hekuang@huawei.com>, Wang Nan <wangnan0@huawei.com>,
+        Wang ShaoBo <bobo.shaobowang@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: Re: [PATCH bpf-next 2/2] perf: stop using deprecated
+ bpf__object_next() API
+Message-ID: <YdWhz1qaRncxNC/6@krava>
+References: <20211216222108.110518-1-christylee@fb.com>
+ <20211216222108.110518-3-christylee@fb.com>
+ <YcGO271nDvfMeSlK@krava>
+ <CAEf4BzZpNvEtfsVHUJGfwi_1xM+7-ohBPKPrRo--X=fYkYLrsw@mail.gmail.com>
+ <YcMr1LeP6zUBdCiK@krava>
+ <CAEf4Bzb2HWiuJmeb6WxE2Dift5qQOLBE=j1ZqfpVMjuWV3+EDg@mail.gmail.com>
+ <CAPqJDZouQHpUXv4dEGKKe=UjwkZu3=GMQ2M9g2zLYOV6a=gZbw@mail.gmail.com>
+ <YdRccTaunl9Fo63X@krava>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220104135658.GC1827@willie-the-truck>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <YdRccTaunl9Fo63X@krava>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jan 04, 2022 at 01:56:59PM +0000, Will Deacon wrote:
-> On Tue, Dec 28, 2021 at 12:07:02PM +0100, Geert Uytterhoeven wrote:
-> > On Wed, Dec 8, 2021 at 9:19 PM Rob Herring <robh@kernel.org> wrote:
-> > > Like x86, some users may want to disable userspace PMU counter
-> > > altogether. Add a sysctl 'perf_user_access' file to control userspace
-> > > counter access. The default is '0' which is disabled. Writing '1'
-> > > enables access.
-> > >
-> > > Note that x86 supports globally enabling user access by writing '2' to
-> > > /sys/bus/event_source/devices/cpu/rdpmc. As there's not existing
-> > > userspace support to worry about, this shouldn't be necessary for Arm.
-> > > It could be added later if the need arises.
-> > 
-> > Thanks for your patch, which is now commit e2012600810c9ded ("arm64:
-> > perf: Add userspace counter access disable switch") in arm64/for-next/core.
-> > 
-> > This is causing two issues on Renesas Salvator-XS with R-Car H3.
-> > One during kernel boot:
-> > 
-> >      hw perfevents: enabled with armv8_cortex_a53 PMU driver, 7
-> > counters available
-> >     +sysctl duplicate entry: /kernel//perf_user_access
-> >     +CPU: 0 PID: 1 Comm: swapper/0 Not tainted
-> > 5.16.0-rc3-arm64-renesas-00003-ge2012600810c #1420
-> >     +Hardware name: Renesas Salvator-X 2nd version board based on r8a77951 (DT)
-> >     +Call trace:
-> >     + dump_backtrace+0x0/0x190
-> >     + show_stack+0x14/0x20
-> >     + dump_stack_lvl+0x88/0xb0
-> >     + dump_stack+0x14/0x2c
-> >     + __register_sysctl_table+0x384/0x818
-> >     + register_sysctl+0x20/0x28
-> >     + armv8_pmu_init.constprop.0+0x118/0x150
-> >     + armv8_a57_pmu_init+0x1c/0x28
-> >     + arm_pmu_device_probe+0x1b4/0x558
-> >     + armv8_pmu_device_probe+0x18/0x20
-> >     + platform_probe+0x64/0xd0
-> >     + really_probe+0xb4/0x2f8
-> >     + __driver_probe_device+0x74/0xd8
-> >     + driver_probe_device+0x3c/0xe0
-> >     + __driver_attach+0x80/0x110
-> >     + bus_for_each_dev+0x6c/0xc0
-> >     + driver_attach+0x20/0x28
-> >     + bus_add_driver+0x138/0x1e0
-> >     + driver_register+0x60/0x110
-> >     + __platform_driver_register+0x24/0x30
-> >     + armv8_pmu_driver_init+0x18/0x20
-> >     + do_one_initcall+0x15c/0x31c
-> >     + kernel_init_freeable+0x2f0/0x354
-> >     + kernel_init+0x20/0x120
-> >     + ret_from_fork+0x10/0x20
-> >      hw perfevents: enabled with armv8_cortex_a57 PMU driver, 7
-> > counters available
-> > 
-> > Presumably the same entry is added twice, once for the A53 PMU,
-> > and a second time for the A57 PMU?
+On Tue, Jan 04, 2022 at 03:40:49PM +0100, Jiri Olsa wrote:
+> On Wed, Dec 29, 2021 at 11:01:35AM -0800, Christy Lee wrote:
 > 
-> Looks like it, and perhaps that's also what is confusing systemd?
-> Rob -- how come you didn't see this during your testing?
+> SNIP
 > 
-> Anywho, please can you try the untested diff below?
+> > > >
+> > > > I don't use it, I just know it's there.. that's why I asked ;-)
+> > > >
+> > > > it's possible to specify bpf program on the perf command line
+> > > > to be attached to event, like:
+> > > >
+> > > >       # cat tools/perf/examples/bpf/hello.c
+> > > >       #include <stdio.h>
+> > > >
+> > > >       int syscall_enter(openat)(void *args)
+> > > >       {
+> > > >               puts("Hello, world\n");
+> > > >               return 0;
+> > > >       }
+> > > >
+> > > >       license(GPL);
+> > > >       #
+> > > >       # perf trace -e openat,tools/perf/examples/bpf/hello.c cat /etc/passwd > /dev/null
+> > > >          0.016 (         ): __bpf_stdout__:Hello, world
+> > > >          0.018 ( 0.010 ms): cat/9079 openat(dfd: CWD, filename: /etc/ld.so.cache, flags: CLOEXEC) = 3
+> > > >          0.057 (         ): __bpf_stdout__:Hello, world
+> > > >          0.059 ( 0.011 ms): cat/9079 openat(dfd: CWD, filename: /lib64/libc.so.6, flags: CLOEXEC) = 3
+> > > >          0.417 (         ): __bpf_stdout__:Hello, world
+> > > >          0.419 ( 0.009 ms): cat/9079 openat(dfd: CWD, filename: /etc/passwd) = 3
+> > > >       #
+> > > >
+> > > > I took that example from commit message
+> > [...]
+> > 
+> > I found the original commit aa3abf30bb28addcf593578d37447d42e3f65fc3
+> > that included a test case, but I'm having trouble reproducing it due to syntax
+> > error. I am running this on bpf-next master without my patches.
+> > 
+> > I ran 'perf test -v LLVM' and used it's output to generate a script for
+> > compiling the perf test object:
+> > 
+> > --------------------------------------------------
+> > $ cat ~/bin/hello-ebpf
+> > INPUT_FILE=/tmp/test.c
+> > OUTPUT_FILE=/tmp/test.o
+> > 
+> > export KBUILD_DIR=/lib/modules/5.12.0-0_fbk2_3390_g7ecb4ac46d7f/build
+> > export NR_CPUS=56
+> > export LINUX_VERSION_CODE=0x50c00
+> > export CLANG_EXEC=/data/users/christylee/devtools/llvm/latest/bin/clang
+> > export CLANG_OPTIONS=-xc
+> > export KERNEL_INC_OPTIONS="-nostdinc -isystem
+> > /data/users/christylee/devtools/gcc/10.3.0/lib/gcc/x86_64-pc-linux-gnu/10.3.0/include
+> > -I./arch/\
+> > x86/include -I./arch/x86/include/generated  -I./include
+> > -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi
+> > -I./include/uapi -I./in\
+> > clude/generated/uapi -include ./include/linux/compiler-version.h
+> > -include ./include/linux/kconfig.h"
+> > export PERF_BPF_INC_OPTIONS=-I/home/christylee/lib/perf/include/bpf
+> > export WORKING_DIR=/lib/modules/5.12.0-0_fbk2_3390_g7ecb4ac46d7f/build
+> > export CLANG_SOURCE=-
+> > 
+> > rm -f $OUTPUT_FILE
+> > cat $INPUT_FILE |
+> > /data/users/christylee/devtools/llvm/latest/bin/clang -D__KERNEL__
+> > -D__NR_CPUS__=56 -DLINUX_VERSION_CODE=0x50c00 -xc  -I/ho\
+> > me/christylee/lib/perf/include/bpf  -nostdinc -isystem
+> > /data/users/christylee/devtools/gcc/10.3.0/lib/gcc/x86_64-pc-linux-gnu/10.3.0/include
+> > \
+> > -I./arch/x86/include -I./arch/x86/include/generated  -I./include
+> > -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi
+> > -I./include/ua\
+> > pi -I./include/generated/uapi -include
+> > ./include/linux/compiler-version.h -include ./include/linux/kconfig.h
+> > -Wno-unused-value -Wno-pointer-\
+> > sign -working-directory
+> > /lib/modules/5.12.0-0_fbk2_3390_g7ecb4ac46d7f/build -c - -target bpf
+> > -O2 -o $OUTPUT_FILE
+> > --------------------------------------------------
+> > 
+> > I then wrote and compiled a script that ask to get asks to put a probe
+> > at a function that
+> > does not exists in the kernel, it errors out as expected:
+> > 
+> > $ cat /tmp/test.c
+> > __attribute__((section("fork=does_not_exist"), used)) int fork(void *ctx) {
+> >     return 0;
+> > }
+> > 
+> > char _license[] __attribute__((section("license"), used)) = "GPL";
+> > int _version __attribute__((section("version"), used)) = 0x40100;
+> > $ cd ~/bin && ./hello-ebpf
+> > $ perf record --event /tmp/test.o sleep 1
+> > Using perf wrapper that supports hot-text. Try perf.real if you
+> > encounter any issues.
+> > Probe point 'does_not_exist' not found.
+> > event syntax error: '/tmp/test.o'
+> >                      \___ You need to check probing points in BPF file
+> > 
+> > (add -v to see detail)
+> > Run 'perf list' for a list of valid events
+> > 
+> >  Usage: perf record [<options>] [<command>]
+> >     or: perf record [<options>] -- <command> [<options>]
+> > 
+> >     -e, --event <event>   event selector. use 'perf list' to list
+> > available events
+> > 
+> > ---------------------------------------------------
+> > 
+> > Next I changed the attribute to something that exists in the kernel.
+> > As expected, it errors out
+> > with permission problem:
+> > $ cat /tmp/test.c
+> > __attribute__((section("fork=fork_init"), used)) int fork(void *ctx) {
+> >     return 0;
+> > }
+> > char _license[] __attribute__((section("license"), used)) = "GPL";
+> > int _version __attribute__((section("version"), used)) = 0x40100;
+> > $ grep fork_init /proc/kallsyms
+> > ffffffff8146e250 T xfs_ifork_init_cow
+> > ffffffff83980481 T fork_init
+> > $ cd ~/bin && ./hello-ebpf
+> > $ perf record --event /tmp/test.o sleep 1
+> > Using perf wrapper that supports hot-text. Try perf.real if you
+> > encounter any issues.
+> > Failed to open kprobe_events: Permission denied
+> > event syntax error: '/tmp/test.o'
+> >                      \___ You need to be root
+> > 
+> > (add -v to see detail)
+> > Run 'perf list' for a list of valid events
+> > 
+> >  Usage: perf record [<options>] [<command>]
+> >     or: perf record [<options>] -- <command> [<options>]
+> > 
+> >     -e, --event <event>   event selector. use 'perf list' to list
+> > available events
+> > 
+> > ---------------------------------------------------
+> > 
+> > So I reran as root, but this time I get an invalid syntax error:
+> > 
+> > # perf record --event /tmp/test.o -v sleep 1
+> > Using perf wrapper that supports hot-text. Try perf.real if you
+> > encounter any issues.
+> > Failed to write event: Invalid argument
+> > event syntax error: '/tmp/test.o'
+> >                      \___ Invalid argument
+> > 
+> > (add -v to see detail)
+> > Run 'perf list' for a list of valid events
+> > 
+> >  Usage: perf record [<options>] [<command>]
+> >     or: perf record [<options>] -- <command> [<options>]
+> > 
+> >     -e, --event <event>   event selector. use 'perf list' to list
+> > available events
+> > ---------------------------------------------------
+> > 
+> > Is there a different way to attach a custom event probe point?
+> > 
+> 
+> nice, good question ;-)
+> 
+> looks like there are no volunteers from original authors,
+> I'll check on that
 
-I just remembered I have a big/little SoC on my desk after borrowing a
-NanoPi (RK3399) from Marc Z, so I took this diff for a spin there and
-both the kernel and systemd seem happy.
+there's small bug in perf trace that makes it to die early,
+(fix below) but other than that it works.. I'll send full
+patch later
 
-Will
+you need to specify full path for bpf object, not like in the
+example I pasted above.. I recall fixing that in code because
+it clashed with pmu syntax
+
+so on fedora 35 I can run following with the change below:
+
+	# ./perf trace -e openat,/home/jolsa/linux-qemu/tools/perf/examples/bpf/hello.c  
+	/home/jolsa/linux-qemu/tools/perf/examples/bpf/hello.c:5:2: warning: variable length array folded to constant array as an extension [-Wgnu-folding-constant]
+		puts("Hello, world\n");
+		^
+	/home/jolsa/lib/perf/include/bpf/stdio.h:14:10: note: expanded from macro 'puts'
+		   char __from[__len] = from; \
+			^
+	1 warning generated.
+	     0.000 (         ): systemd-resolv/1142 __bpf_stdout__(Hello, world)
+	     0.016 ( 0.031 ms): systemd-resolv/1142 openat(dfd: CWD, filename: 0x6b1c4a70, flags: RDONLY|CLOEXEC)         = -1 ENOENT (No such file or directory)
+	     0.070 (         ): systemd-resolv/1142 __bpf_stdout__(Hello, world)
+	     0.074 ( 0.011 ms): systemd-resolv/1142 openat(dfd: CWD, filename: 0x6b1c4a70, flags: RDONLY|CLOEXEC)         = -1 ENOENT (No such file or directory)
+	     0.097 (         ): systemd-resolv/1142 __bpf_stdout__(Hello, world)
+	     0.101 ( 0.010 ms): systemd-resolv/1142 openat(dfd: CWD, filename: 0x6b1c4a70, flags: RDONLY|CLOEXEC)         = -1 ENOENT (No such file or directory)
+	     0.123 (         ): systemd-resolv/1142 __bpf_stdout__(Hello, world)
+	     0.127 ( 0.010 ms): systemd-resolv/1142 openat(dfd: CWD, filename: 0x6b1c4a70, flags: RDONLY|CLOEXEC)         = -1 ENOENT (No such file or directory)
+	     0.148 (         ): systemd-resolv/1142 __bpf_stdout__(Hello, world)
+	     0.152 ( 0.010 ms): systemd-resolv/1142 openat(dfd: CWD, filename: 0x6b1c4a70, flags: RDONLY|CLOEXEC)         = -1 ENOENT (No such file or directory)
+	     0.219 (         ): systemd-resolv/1142 __bpf_stdout__(Hello, world)
+	...
+
+
+jirka
+
+
+---
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 97121fb45842..df9fc00b4cd6 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -3936,6 +3936,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 	bool draining = false;
+ 
+ 	trace->live = true;
++	signal(SIGCHLD, sig_handler);
+ 
+ 	if (!trace->raw_augmented_syscalls) {
+ 		if (trace->trace_syscalls && trace__add_syscall_newtp(trace))
+@@ -4884,7 +4885,6 @@ int cmd_trace(int argc, const char **argv)
+ 
+ 	signal(SIGSEGV, sighandler_dump_stack);
+ 	signal(SIGFPE, sighandler_dump_stack);
+-	signal(SIGCHLD, sig_handler);
+ 	signal(SIGINT, sig_handler);
+ 
+ 	trace.evlist = evlist__new();
+
