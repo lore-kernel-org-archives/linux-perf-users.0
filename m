@@ -2,58 +2,57 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA211C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jan 2022 06:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9646EC433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jan 2022 06:15:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237989AbiAEGPh (ORCPT
+        id S238073AbiAEGPw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Jan 2022 01:15:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42484 "EHLO
+        Wed, 5 Jan 2022 01:15:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237808AbiAEGOf (ORCPT
+        with ESMTP id S237912AbiAEGPN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Jan 2022 01:14:35 -0500
+        Wed, 5 Jan 2022 01:15:13 -0500
 Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D14FC061799
-        for <linux-perf-users@vger.kernel.org>; Tue,  4 Jan 2022 22:14:35 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id s84-20020a254557000000b0060ac37f4bb1so58175873yba.5
-        for <linux-perf-users@vger.kernel.org>; Tue, 04 Jan 2022 22:14:35 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E631C0617A2
+        for <linux-perf-users@vger.kernel.org>; Tue,  4 Jan 2022 22:15:13 -0800 (PST)
+Received: by mail-yb1-xb49.google.com with SMTP id a9-20020a251a09000000b0060b2c94d515so56597229yba.20
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Jan 2022 22:15:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=s2CIczuM8teFDrPnQG9a+NBNIXG/EojqlmU2x3Abtwk=;
-        b=iQIZP6v+aQzjsT+5N9yl+8VS+kP6IxJ2BXJmJAzub0bF7IeOeuU7wpoypLHRvvE45g
-         GSaRw8X3Y0A90fQUhksSvAjePe5Zngijp3bk1+2ATCPhZ2gWYhwiep91Y/BX6/nFlqXR
-         30Jjpui33ZCipogp0BV2hT5XhnjhXi1z+Lug+4tzC2wtshmzaGUWK3UAK6+m8/M9feR6
-         j+Hn/BahVyZXzVQ+PwZNOYnVw8MguTX+cV8+mUKu3PBvHwHyplaRXioz4W8Bi7ei4g9l
-         U/qIol0P4d5CfKIx8LOBaNH5yeN5lS3uj8vyniPf9tYX0zpe2hG1ED81s5UHmhLXfVPh
-         ToOA==
+        bh=ewN6TgeYhi7NNspT4fCbrjPDfPPrcTRTO0RxDMRaTEI=;
+        b=T4QTIVVf6MChV8kYFahTMIlnIWjfDM2Pz4nZGLcvbAgVmMvSnAfRZzR3TWKRnTT8Qg
+         uW84zNDkePRuuqvBP+GaSI0aSYMHhSvvV2enYbfYt3qm176fWAtaX7S4FRbee/wIqxp3
+         L/k3jjOAbBR0QFqB0Hzdv0thUW4H1DbTmCl596UpOj6qstJuZpl52Rm3aEJV+z/QGSDC
+         iE0XS9XqpPzBPfD/Nd/WNjjGkM6MbRnrSmoGo6YVT00qfc8/iTojNxB2ZjuCxRPGsAqB
+         lVODIyrsyA0su0WMr/kjGr+UekZnVI/BlKzo35vZS06DZC9TW3l/gGe3wPA8pemnDXwQ
+         5CiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=s2CIczuM8teFDrPnQG9a+NBNIXG/EojqlmU2x3Abtwk=;
-        b=BVtEqYwRqGbJOaYS/bbjZ4Nr2kKdhu4lOaEpJFQ4NILVKH+vXUrfT1xvx8qPZ4YFjP
-         kuk6N6yVrXSuqFwS5FizehRW3mmY1Do1I4LEhUspgU1gh02oxchT/wj2kXGYP1E3wK5C
-         l2651J+Y1/xCxmjqK9IBPzh2W6rXZUjBZNJiUpXFz3vY0M/1B4Na5Dxud5ig+fVLdZkG
-         itdFghYSre6+xs20GNDkDmJGqIc1BF6TxHMiRlbtNjOjfGJ3yE+v5xgdKlMQFJqUJzUC
-         CJngHFKucUJSQK1sof0W38GMETvzAus4RpbEoQ90PUj9z/qlmYE62LkQ6Jtl+2gjVG/5
-         c2yQ==
-X-Gm-Message-State: AOAM531mtmcgOsQJ0OGW2l1Ue/jqLUOzmni2Uz58lH0YSC/Ig4bzNdkN
-        5+kfatiOerniv1/qFN8Jq0G1G0B05C5O
-X-Google-Smtp-Source: ABdhPJwhi3sud4t5iO6w6NBX4cfopeOHeN4mFoamBz1INVVY+4KehX3qmXCk55EYnJNSBhZQ2PieSk8uqis8
+        bh=ewN6TgeYhi7NNspT4fCbrjPDfPPrcTRTO0RxDMRaTEI=;
+        b=MSW7zyq9M+KrKjE70fW57Lvoc8M/MMpfCCxfEyik1SkUw3HyXHg189pyHpuDnVHHB0
+         yez/xJYw0myPg+WmxoN4uMhDdM4irRzzI2cqmRqHOfRvfAzpvlViyowRzzzUOYtbkc2T
+         4sKZz84hwfHgONCNP5EH9DiGZBIPg8UejJwxrlKDDIMhhpFsp4qzIQn3XI9BhCqfrlpf
+         cZmfVTyMmcsAEbvtW1BVYm87uwY36AmbOXL5xU76zWQzEcyvDMqFSa4yiXiMCCvbUaH3
+         toiLo4dwUojp0eAMDfAdLM7WXlp3CnbTcAMEsJFpZjGi2FEWhnKNNhVqJShBtcMcSmgD
+         rjsQ==
+X-Gm-Message-State: AOAM531MjnEDzOlIHp07kBhw5BX4cJp0XKfPRSyh2LWMBUHCoCIS1YRg
+        OWl7Fpm0dlvTBV0Ix0b9HKP3Zu0rvkGF
+X-Google-Smtp-Source: ABdhPJwwG3mTg4oT2fYpRqR1bZ5fv8nAUrwDtQtv9qYKgk1o53MMLlA/bzYOULWt31L4uSwq3pHmdOdhDpKP
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:3af1:caef:2937:5d2b])
- (user=irogers job=sendgmr) by 2002:a25:3b10:: with SMTP id
- i16mr48115251yba.292.1641363274287; Tue, 04 Jan 2022 22:14:34 -0800 (PST)
-Date:   Tue,  4 Jan 2022 22:13:18 -0800
+ (user=irogers job=sendgmr) by 2002:a25:2e0a:: with SMTP id
+ u10mr43339373ybu.246.1641363312500; Tue, 04 Jan 2022 22:15:12 -0800 (PST)
+Date:   Tue,  4 Jan 2022 22:13:33 -0800
 In-Reply-To: <20220105061351.120843-1-irogers@google.com>
-Message-Id: <20220105061351.120843-16-irogers@google.com>
+Message-Id: <20220105061351.120843-31-irogers@google.com>
 Mime-Version: 1.0
 References: <20220105061351.120843-1-irogers@google.com>
 X-Mailer: git-send-email 2.34.1.448.ga2b2bfdf31-goog
-Subject: [PATCH v4 15/48] perf cpumap: Document cpu__get_node and remove
- redundant function
+Subject: [PATCH v4 30/48] perf stat: Rename aggr_data cpu to imply it's an index
 From:   Ian Rogers <irogers@google.com>
 To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -81,75 +80,48 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-cpu_map__get_node_id isn't used externally and merely delegates to
-cpu__get_node.
+Trying to make cpu maps less error prone.
 
-Reviewed-by: James Clark <james.clark@arm.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/cpumap.c | 11 +++++------
- tools/perf/util/cpumap.h |  5 ++++-
- 2 files changed, 9 insertions(+), 7 deletions(-)
+ tools/perf/util/stat-display.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index b3e1304aca0c..1626b0991408 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -16,6 +16,10 @@
- static int max_cpu_num;
- static int max_present_cpu_num;
- static int max_node_num;
-+/**
-+ * The numa node X as read from /sys/devices/system/node/nodeX indexed by the
-+ * CPU number.
-+ */
- static int *cpunode_map;
- 
- static struct perf_cpu_map *cpu_map__from_entries(struct cpu_map_entries *cpus)
-@@ -222,11 +226,6 @@ int cpu_map__get_core_id(int cpu)
- 	return ret ?: value;
- }
- 
--int cpu_map__get_node_id(int cpu)
--{
--	return cpu__get_node(cpu);
--}
--
- struct aggr_cpu_id cpu_map__get_core_aggr_by_cpu(int cpu, void *data)
- {
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index f48d1678861c..7e933a8fee68 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -626,7 +626,7 @@ struct aggr_data {
+ 	u64 ena, run, val;
  	struct aggr_cpu_id id;
-@@ -250,7 +249,7 @@ struct aggr_cpu_id cpu_map__get_node_aggr_by_cpu(int cpu, void *data __maybe_unu
- {
- 	struct aggr_cpu_id id = aggr_cpu_id__empty();
+ 	int nr;
+-	int cpu;
++	int cpu_map_idx;
+ };
  
--	id.node = cpu_map__get_node_id(cpu);
-+	id.node = cpu__get_node(cpu);
- 	return id;
+ static void aggr_cb(struct perf_stat_config *config,
+@@ -878,9 +878,9 @@ static void counter_cb(struct perf_stat_config *config __maybe_unused,
+ {
+ 	struct aggr_data *ad = data;
+ 
+-	ad->val += perf_counts(counter->counts, ad->cpu, 0)->val;
+-	ad->ena += perf_counts(counter->counts, ad->cpu, 0)->ena;
+-	ad->run += perf_counts(counter->counts, ad->cpu, 0)->run;
++	ad->val += perf_counts(counter->counts, ad->cpu_map_idx, 0)->val;
++	ad->ena += perf_counts(counter->counts, ad->cpu_map_idx, 0)->ena;
++	ad->run += perf_counts(counter->counts, ad->cpu_map_idx, 0)->run;
  }
  
-diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
-index 9589b0001a28..f849f01c5860 100644
---- a/tools/perf/util/cpumap.h
-+++ b/tools/perf/util/cpumap.h
-@@ -45,7 +45,6 @@ int cpu_map__get_die_id(int cpu);
- struct aggr_cpu_id cpu_map__get_die_aggr_by_cpu(int cpu, void *data);
- int cpu_map__get_core_id(int cpu);
- struct aggr_cpu_id cpu_map__get_core_aggr_by_cpu(int cpu, void *data);
--int cpu_map__get_node_id(int cpu);
- struct aggr_cpu_id cpu_map__get_node_aggr_by_cpu(int cpu, void *data);
- int cpu_map__build_socket_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **sockp);
- int cpu_map__build_die_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **diep);
-@@ -58,6 +57,10 @@ int cpu__setup_cpunode_map(void);
- int cpu__max_node(void);
- int cpu__max_cpu(void);
- int cpu__max_present_cpu(void);
-+/**
-+ * cpu__get_node - Returns the numa node X as read from
-+ * /sys/devices/system/node/nodeX for the given CPU.
-+ */
- int cpu__get_node(int cpu);
+ /*
+@@ -897,7 +897,7 @@ static void print_counter(struct perf_stat_config *config,
+ 	struct aggr_cpu_id id;
  
- int cpu_map__build_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **res,
+ 	for (cpu = 0; cpu < evsel__nr_cpus(counter); cpu++) {
+-		struct aggr_data ad = { .cpu = cpu };
++		struct aggr_data ad = { .cpu_map_idx = cpu };
+ 
+ 		if (!collect_data(config, counter, counter_cb, &ad))
+ 			return;
 -- 
 2.34.1.448.ga2b2bfdf31-goog
 
