@@ -2,45 +2,45 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75975C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jan 2022 23:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20435C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Jan 2022 23:01:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245232AbiAEXBV (ORCPT
+        id S245244AbiAEXB0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Jan 2022 18:01:21 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:36552 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S245245AbiAEXBS (ORCPT
+        Wed, 5 Jan 2022 18:01:26 -0500
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:24430 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S245245AbiAEXB0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Jan 2022 18:01:18 -0500
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 205LDQvT029936
-        for <linux-perf-users@vger.kernel.org>; Wed, 5 Jan 2022 15:01:18 -0800
+        Wed, 5 Jan 2022 18:01:26 -0500
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 205FrEqr010654
+        for <linux-perf-users@vger.kernel.org>; Wed, 5 Jan 2022 15:01:25 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=facebook;
- bh=WZEw60ZWQad/kWMWGh6Nn9kIVrLEm3RjtbfSrmbf/CE=;
- b=WQrhTAn0ZkVm0Bpg27ksvkrOL1ck2dLAUAQihaQVEGLm4BFtChak9Cv9NGtQORxlbQb4
- NJiCxipQG9xJhkczYqh4Vbya1uII4jUrT1GYWjEZLepw3ttCFGrKUbMIhW0Rwrbe4YJD
- bkHZIM7fO5/0M/8c+GeUxR5RzqnqFKlTj04= 
+ bh=Ypjie98s/5TPxkA7bCDaRMRrG6UC+Vfd9VquV7Dqn68=;
+ b=NSAcxGtbP9f2ZbBuduFzu/rH+MS4MMZWN/4qm6l0xEx+B/bcyZvhMvW/DEYX0lmkiiTJ
+ ISC6EeuCG3P5o8bIBvJTDEzLzNnxDnNzib6rFfiKwlZY/bIskCaUDKLWjsl/lsPlAqfu
+ SPevB1wpKAJDuu+pgnqnLSJRB6boAhY2aNY= 
 Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3dd15ned7r-3
+        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3ddec0jmf6-8
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Wed, 05 Jan 2022 15:01:18 -0800
-Received: from twshared10140.39.prn1.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
+        for <linux-perf-users@vger.kernel.org>; Wed, 05 Jan 2022 15:01:25 -0800
+Received: from twshared14302.24.prn2.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Wed, 5 Jan 2022 15:01:16 -0800
+ 15.1.2308.20; Wed, 5 Jan 2022 15:01:22 -0800
 Received: by devbig921.prn2.facebook.com (Postfix, from userid 132113)
-        id 6549915060B2; Wed,  5 Jan 2022 15:01:10 -0800 (PST)
+        id 768D915060B6; Wed,  5 Jan 2022 15:01:10 -0800 (PST)
 From:   Christy Lee <christylee@fb.com>
 To:     <andrii@kernel.org>, <acme@kernel.org>
 CC:     <christyc.y.lee@gmail.com>, <bpf@vger.kernel.org>,
         <kernel-team@fb.com>, <linux-perf-users@vger.kernel.org>,
         Christy Lee <christylee@fb.com>
-Subject: [PATCH bpf-next 2/5] bpftool: stop using bpf_map__def() API
-Date:   Wed, 5 Jan 2022 15:00:54 -0800
-Message-ID: <20220105230057.853163-3-christylee@fb.com>
+Subject: [PATCH bpf-next 4/5] selftests/bpf: stop using bpf_map__def() API
+Date:   Wed, 5 Jan 2022 15:00:56 -0800
+Message-ID: <20220105230057.853163-5-christylee@fb.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220105230057.853163-1-christylee@fb.com>
 References: <20220105230057.853163-1-christylee@fb.com>
@@ -48,16 +48,16 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-FB-Internal: Safe
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: dpjroc7Y9UybQajM6T3quhLH3gKd2Auv
-X-Proofpoint-GUID: dpjroc7Y9UybQajM6T3quhLH3gKd2Auv
+X-Proofpoint-ORIG-GUID: Z1OwJdTptf5erVSoFYXl11evBrqgoeMC
+X-Proofpoint-GUID: Z1OwJdTptf5erVSoFYXl11evBrqgoeMC
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
  definitions=2022-01-05_08,2022-01-04_01,2021-12-02_01
-X-Proofpoint-Spam-Details: rule=fb_outbound_notspam policy=fb_outbound score=0 suspectscore=0
- spamscore=0 clxscore=1015 adultscore=0 impostorscore=0 bulkscore=0
- lowpriorityscore=0 priorityscore=1501 mlxlogscore=999 mlxscore=0
- phishscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2110150000 definitions=main-2201050145
+X-Proofpoint-Spam-Details: rule=fb_outbound_notspam policy=fb_outbound score=0 adultscore=0
+ impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0 bulkscore=0
+ phishscore=0 mlxscore=0 mlxlogscore=999 clxscore=1015 lowpriorityscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2201050145
 X-FB-Internal: deliver
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
@@ -68,90 +68,250 @@ usage with the appropriate getters and setters.
 
 Signed-off-by: Christy Lee <christylee@fb.com>
 ---
- tools/bpf/bpftool/gen.c        | 12 ++++++------
- tools/bpf/bpftool/struct_ops.c |  4 +---
- 2 files changed, 7 insertions(+), 9 deletions(-)
+ .../selftests/bpf/prog_tests/flow_dissector.c |  2 +-
+ .../selftests/bpf/prog_tests/global_data.c    |  2 +-
+ .../bpf/prog_tests/global_data_init.c         |  2 +-
+ .../selftests/bpf/prog_tests/sockmap_listen.c | 12 +++----
+ .../selftests/bpf/prog_tests/tailcalls.c      | 36 +++++++++----------
+ 5 files changed, 26 insertions(+), 28 deletions(-)
 
-diff --git a/tools/bpf/bpftool/gen.c b/tools/bpf/bpftool/gen.c
-index b4695df2ea3d..0b6f1553db0b 100644
---- a/tools/bpf/bpftool/gen.c
-+++ b/tools/bpf/bpftool/gen.c
-@@ -227,7 +227,7 @@ static int codegen_datasecs(struct bpf_object *obj, c=
-onst char *obj_name)
- 		/* only generate definitions for memory-mapped internal maps */
- 		if (!bpf_map__is_internal(map))
- 			continue;
--		if (!(bpf_map__def(map)->map_flags & BPF_F_MMAPABLE))
-+		if (!(bpf_map__map_flags(map) & BPF_F_MMAPABLE))
- 			continue;
+diff --git a/tools/testing/selftests/bpf/prog_tests/flow_dissector.c b/to=
+ols/testing/selftests/bpf/prog_tests/flow_dissector.c
+index ac54e3f91d42..dfafd62df50b 100644
+--- a/tools/testing/selftests/bpf/prog_tests/flow_dissector.c
++++ b/tools/testing/selftests/bpf/prog_tests/flow_dissector.c
+@@ -457,7 +457,7 @@ static int init_prog_array(struct bpf_object *obj, st=
+ruct bpf_map *prog_array)
+ 	if (map_fd < 0)
+ 		return -1;
 =20
- 		if (!get_map_ident(map, map_ident, sizeof(map_ident)))
-@@ -468,7 +468,7 @@ static void codegen_destroy(struct bpf_object *obj, c=
-onst char *obj_name)
- 		if (!get_map_ident(map, ident, sizeof(ident)))
- 			continue;
- 		if (bpf_map__is_internal(map) &&
--		    (bpf_map__def(map)->map_flags & BPF_F_MMAPABLE))
-+		    (bpf_map__map_flags(map) & BPF_F_MMAPABLE))
- 			printf("\tmunmap(skel->%1$s, %2$zd);\n",
- 			       ident, bpf_map_mmap_sz(map));
- 		codegen("\
-@@ -536,7 +536,7 @@ static int gen_trace(struct bpf_object *obj, const ch=
-ar *obj_name, const char *h
- 			continue;
+-	for (i =3D 0; i < bpf_map__def(prog_array)->max_entries; i++) {
++	for (i =3D 0; i < bpf_map__max_entries(prog_array); i++) {
+ 		snprintf(prog_name, sizeof(prog_name), "flow_dissector_%d", i);
 =20
- 		if (!bpf_map__is_internal(map) ||
--		    !(bpf_map__def(map)->map_flags & BPF_F_MMAPABLE))
-+		    !(bpf_map__map_flags(map) & BPF_F_MMAPABLE))
- 			continue;
+ 		prog =3D bpf_object__find_program_by_name(obj, prog_name);
+diff --git a/tools/testing/selftests/bpf/prog_tests/global_data.c b/tools=
+/testing/selftests/bpf/prog_tests/global_data.c
+index 9da131b32e13..917165e04427 100644
+--- a/tools/testing/selftests/bpf/prog_tests/global_data.c
++++ b/tools/testing/selftests/bpf/prog_tests/global_data.c
+@@ -121,7 +121,7 @@ static void test_global_data_rdonly(struct bpf_object=
+ *obj, __u32 duration)
+ 	if (CHECK_FAIL(map_fd < 0))
+ 		return;
 =20
- 		codegen("\
-@@ -600,10 +600,10 @@ static int gen_trace(struct bpf_object *obj, const =
-char *obj_name, const char *h
- 			continue;
+-	buff =3D malloc(bpf_map__def(map)->value_size);
++	buff =3D malloc(bpf_map__value_size(map));
+ 	if (buff)
+ 		err =3D bpf_map_update_elem(map_fd, &zero, buff, 0);
+ 	free(buff);
+diff --git a/tools/testing/selftests/bpf/prog_tests/global_data_init.c b/=
+tools/testing/selftests/bpf/prog_tests/global_data_init.c
+index 1db86eab101b..57331c606964 100644
+--- a/tools/testing/selftests/bpf/prog_tests/global_data_init.c
++++ b/tools/testing/selftests/bpf/prog_tests/global_data_init.c
+@@ -20,7 +20,7 @@ void test_global_data_init(void)
+ 	if (CHECK_FAIL(!map || !bpf_map__is_internal(map)))
+ 		goto out;
 =20
- 		if (!bpf_map__is_internal(map) ||
--		    !(bpf_map__def(map)->map_flags & BPF_F_MMAPABLE))
-+		    !(bpf_map__map_flags(map) & BPF_F_MMAPABLE))
- 			continue;
+-	sz =3D bpf_map__def(map)->value_size;
++	sz =3D bpf_map__value_size(map);
+ 	newval =3D malloc(sz);
+ 	if (CHECK_FAIL(!newval))
+ 		goto out;
+diff --git a/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c b/to=
+ols/testing/selftests/bpf/prog_tests/sockmap_listen.c
+index 7e21bfab6358..2cf0c7a3fe23 100644
+--- a/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
++++ b/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
+@@ -1413,14 +1413,12 @@ static void test_reuseport_mixed_groups(int famil=
+y, int sotype, int sock_map,
 =20
--		if (bpf_map__def(map)->map_flags & BPF_F_RDONLY_PROG)
-+		if (bpf_map__map_flags(map) & BPF_F_RDONLY_PROG)
- 			mmap_flags =3D "PROT_READ";
- 		else
- 			mmap_flags =3D "PROT_READ | PROT_WRITE";
-@@ -962,7 +962,7 @@ static int do_skeleton(int argc, char **argv)
- 				i, bpf_map__name(map), i, ident);
- 			/* memory-mapped internal maps */
- 			if (bpf_map__is_internal(map) &&
--			    (bpf_map__def(map)->map_flags & BPF_F_MMAPABLE)) {
-+			    (bpf_map__map_flags(map) & BPF_F_MMAPABLE)) {
- 				printf("\ts->maps[%zu].mmaped =3D (void **)&obj->%s;\n",
- 				       i, ident);
- 			}
-diff --git a/tools/bpf/bpftool/struct_ops.c b/tools/bpf/bpftool/struct_op=
-s.c
-index 2f693b082bdb..e08a6ff2866c 100644
---- a/tools/bpf/bpftool/struct_ops.c
-+++ b/tools/bpf/bpftool/struct_ops.c
-@@ -480,7 +480,6 @@ static int do_unregister(int argc, char **argv)
- static int do_register(int argc, char **argv)
+ static void test_ops_cleanup(const struct bpf_map *map)
  {
- 	LIBBPF_OPTS(bpf_object_open_opts, open_opts);
 -	const struct bpf_map_def *def;
- 	struct bpf_map_info info =3D {};
- 	__u32 info_len =3D sizeof(info);
- 	int nr_errs =3D 0, nr_maps =3D 0;
-@@ -510,8 +509,7 @@ static int do_register(int argc, char **argv)
+ 	int err, mapfd;
+ 	u32 key;
+=20
+-	def =3D bpf_map__def(map);
+ 	mapfd =3D bpf_map__fd(map);
+=20
+-	for (key =3D 0; key < def->max_entries; key++) {
++	for (key =3D 0; key < bpf_map__max_entries(map); key++) {
+ 		err =3D bpf_map_delete_elem(mapfd, &key);
+ 		if (err && errno !=3D EINVAL && errno !=3D ENOENT)
+ 			FAIL_ERRNO("map_delete: expected EINVAL/ENOENT");
+@@ -1443,13 +1441,13 @@ static const char *family_str(sa_family_t family)
+=20
+ static const char *map_type_str(const struct bpf_map *map)
+ {
+-	const struct bpf_map_def *def;
++	int type;
+=20
+-	def =3D bpf_map__def(map);
+-	if (IS_ERR(def))
++	if (!map)
+ 		return "invalid";
++	type =3D bpf_map__type(map);
+=20
+-	switch (def->type) {
++	switch (type) {
+ 	case BPF_MAP_TYPE_SOCKMAP:
+ 		return "sockmap";
+ 	case BPF_MAP_TYPE_SOCKHASH:
+diff --git a/tools/testing/selftests/bpf/prog_tests/tailcalls.c b/tools/t=
+esting/selftests/bpf/prog_tests/tailcalls.c
+index 5dc0f425bd11..796f231582f8 100644
+--- a/tools/testing/selftests/bpf/prog_tests/tailcalls.c
++++ b/tools/testing/selftests/bpf/prog_tests/tailcalls.c
+@@ -37,7 +37,7 @@ static void test_tailcall_1(void)
+ 	if (CHECK_FAIL(map_fd < 0))
+ 		goto out;
+=20
+-	for (i =3D 0; i < bpf_map__def(prog_array)->max_entries; i++) {
++	for (i =3D 0; i < bpf_map__max_entries(prog_array); i++) {
+ 		snprintf(prog_name, sizeof(prog_name), "classifier_%d", i);
+=20
+ 		prog =3D bpf_object__find_program_by_name(obj, prog_name);
+@@ -53,7 +53,7 @@ static void test_tailcall_1(void)
+ 			goto out;
  	}
 =20
- 	bpf_object__for_each_map(map, obj) {
--		def =3D bpf_map__def(map);
--		if (def->type !=3D BPF_MAP_TYPE_STRUCT_OPS)
-+		if (bpf_map__type(map) !=3D BPF_MAP_TYPE_STRUCT_OPS)
- 			continue;
+-	for (i =3D 0; i < bpf_map__def(prog_array)->max_entries; i++) {
++	for (i =3D 0; i < bpf_map__max_entries(prog_array); i++) {
+ 		err =3D bpf_prog_test_run(main_fd, 1, buff, sizeof(buff), 0,
+ 					&duration, &retval, NULL);
+ 		CHECK(err || retval !=3D i, "tailcall",
+@@ -69,7 +69,7 @@ static void test_tailcall_1(void)
+ 	CHECK(err || retval !=3D 3, "tailcall", "err %d errno %d retval %d\n",
+ 	      err, errno, retval);
 =20
- 		link =3D bpf_map__attach_struct_ops(map);
+-	for (i =3D 0; i < bpf_map__def(prog_array)->max_entries; i++) {
++	for (i =3D 0; i < bpf_map__max_entries(prog_array); i++) {
+ 		snprintf(prog_name, sizeof(prog_name), "classifier_%d", i);
+=20
+ 		prog =3D bpf_object__find_program_by_name(obj, prog_name);
+@@ -90,8 +90,8 @@ static void test_tailcall_1(void)
+ 	CHECK(err || retval !=3D 0, "tailcall", "err %d errno %d retval %d\n",
+ 	      err, errno, retval);
+=20
+-	for (i =3D 0; i < bpf_map__def(prog_array)->max_entries; i++) {
+-		j =3D bpf_map__def(prog_array)->max_entries - 1 - i;
++	for (i =3D 0; i < bpf_map__max_entries(prog_array); i++) {
++		j =3D bpf_map__max_entries(prog_array) - 1 - i;
+ 		snprintf(prog_name, sizeof(prog_name), "classifier_%d", j);
+=20
+ 		prog =3D bpf_object__find_program_by_name(obj, prog_name);
+@@ -107,8 +107,8 @@ static void test_tailcall_1(void)
+ 			goto out;
+ 	}
+=20
+-	for (i =3D 0; i < bpf_map__def(prog_array)->max_entries; i++) {
+-		j =3D bpf_map__def(prog_array)->max_entries - 1 - i;
++	for (i =3D 0; i < bpf_map__max_entries(prog_array); i++) {
++		j =3D bpf_map__max_entries(prog_array) - 1 - i;
+=20
+ 		err =3D bpf_prog_test_run(main_fd, 1, buff, sizeof(buff), 0,
+ 					&duration, &retval, NULL);
+@@ -125,7 +125,7 @@ static void test_tailcall_1(void)
+ 	CHECK(err || retval !=3D 3, "tailcall", "err %d errno %d retval %d\n",
+ 	      err, errno, retval);
+=20
+-	for (i =3D 0; i < bpf_map__def(prog_array)->max_entries; i++) {
++	for (i =3D 0; i < bpf_map__max_entries(prog_array); i++) {
+ 		err =3D bpf_map_delete_elem(map_fd, &i);
+ 		if (CHECK_FAIL(err >=3D 0 || errno !=3D ENOENT))
+ 			goto out;
+@@ -175,7 +175,7 @@ static void test_tailcall_2(void)
+ 	if (CHECK_FAIL(map_fd < 0))
+ 		goto out;
+=20
+-	for (i =3D 0; i < bpf_map__def(prog_array)->max_entries; i++) {
++	for (i =3D 0; i < bpf_map__max_entries(prog_array); i++) {
+ 		snprintf(prog_name, sizeof(prog_name), "classifier_%d", i);
+=20
+ 		prog =3D bpf_object__find_program_by_name(obj, prog_name);
+@@ -353,7 +353,7 @@ static void test_tailcall_4(void)
+ 	if (CHECK_FAIL(map_fd < 0))
+ 		return;
+=20
+-	for (i =3D 0; i < bpf_map__def(prog_array)->max_entries; i++) {
++	for (i =3D 0; i < bpf_map__max_entries(prog_array); i++) {
+ 		snprintf(prog_name, sizeof(prog_name), "classifier_%d", i);
+=20
+ 		prog =3D bpf_object__find_program_by_name(obj, prog_name);
+@@ -369,7 +369,7 @@ static void test_tailcall_4(void)
+ 			goto out;
+ 	}
+=20
+-	for (i =3D 0; i < bpf_map__def(prog_array)->max_entries; i++) {
++	for (i =3D 0; i < bpf_map__max_entries(prog_array); i++) {
+ 		err =3D bpf_map_update_elem(data_fd, &zero, &i, BPF_ANY);
+ 		if (CHECK_FAIL(err))
+ 			goto out;
+@@ -380,7 +380,7 @@ static void test_tailcall_4(void)
+ 		      "err %d errno %d retval %d\n", err, errno, retval);
+ 	}
+=20
+-	for (i =3D 0; i < bpf_map__def(prog_array)->max_entries; i++) {
++	for (i =3D 0; i < bpf_map__max_entries(prog_array); i++) {
+ 		err =3D bpf_map_update_elem(data_fd, &zero, &i, BPF_ANY);
+ 		if (CHECK_FAIL(err))
+ 			goto out;
+@@ -441,7 +441,7 @@ static void test_tailcall_5(void)
+ 	if (CHECK_FAIL(map_fd < 0))
+ 		return;
+=20
+-	for (i =3D 0; i < bpf_map__def(prog_array)->max_entries; i++) {
++	for (i =3D 0; i < bpf_map__max_entries(prog_array); i++) {
+ 		snprintf(prog_name, sizeof(prog_name), "classifier_%d", i);
+=20
+ 		prog =3D bpf_object__find_program_by_name(obj, prog_name);
+@@ -457,7 +457,7 @@ static void test_tailcall_5(void)
+ 			goto out;
+ 	}
+=20
+-	for (i =3D 0; i < bpf_map__def(prog_array)->max_entries; i++) {
++	for (i =3D 0; i < bpf_map__max_entries(prog_array); i++) {
+ 		err =3D bpf_map_update_elem(data_fd, &zero, &key[i], BPF_ANY);
+ 		if (CHECK_FAIL(err))
+ 			goto out;
+@@ -468,7 +468,7 @@ static void test_tailcall_5(void)
+ 		      "err %d errno %d retval %d\n", err, errno, retval);
+ 	}
+=20
+-	for (i =3D 0; i < bpf_map__def(prog_array)->max_entries; i++) {
++	for (i =3D 0; i < bpf_map__max_entries(prog_array); i++) {
+ 		err =3D bpf_map_update_elem(data_fd, &zero, &key[i], BPF_ANY);
+ 		if (CHECK_FAIL(err))
+ 			goto out;
+@@ -520,7 +520,7 @@ static void test_tailcall_bpf2bpf_1(void)
+ 		goto out;
+=20
+ 	/* nop -> jmp */
+-	for (i =3D 0; i < bpf_map__def(prog_array)->max_entries; i++) {
++	for (i =3D 0; i < bpf_map__max_entries(prog_array); i++) {
+ 		snprintf(prog_name, sizeof(prog_name), "classifier_%d", i);
+=20
+ 		prog =3D bpf_object__find_program_by_name(obj, prog_name);
+@@ -681,7 +681,7 @@ static void test_tailcall_bpf2bpf_3(void)
+ 	if (CHECK_FAIL(map_fd < 0))
+ 		goto out;
+=20
+-	for (i =3D 0; i < bpf_map__def(prog_array)->max_entries; i++) {
++	for (i =3D 0; i < bpf_map__max_entries(prog_array); i++) {
+ 		snprintf(prog_name, sizeof(prog_name), "classifier_%d", i);
+=20
+ 		prog =3D bpf_object__find_program_by_name(obj, prog_name);
+@@ -778,7 +778,7 @@ static void test_tailcall_bpf2bpf_4(bool noise)
+ 	if (CHECK_FAIL(map_fd < 0))
+ 		goto out;
+=20
+-	for (i =3D 0; i < bpf_map__def(prog_array)->max_entries; i++) {
++	for (i =3D 0; i < bpf_map__max_entries(prog_array); i++) {
+ 		snprintf(prog_name, sizeof(prog_name), "classifier_%d", i);
+=20
+ 		prog =3D bpf_object__find_program_by_name(obj, prog_name);
 --=20
 2.30.2
 
