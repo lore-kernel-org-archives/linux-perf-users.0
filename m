@@ -2,133 +2,116 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B1FC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Jan 2022 21:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B26E8C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Jan 2022 22:20:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244185AbiAFVY3 (ORCPT
+        id S245002AbiAFWUf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Jan 2022 16:24:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38902 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244183AbiAFVY2 (ORCPT
+        Thu, 6 Jan 2022 17:20:35 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:26075 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S244435AbiAFWUf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Jan 2022 16:24:28 -0500
-Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A101C061245;
-        Thu,  6 Jan 2022 13:24:28 -0800 (PST)
-Received: by mail-il1-x136.google.com with SMTP id c4so3099210iln.7;
-        Thu, 06 Jan 2022 13:24:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AHNjHhJNA6K9i0SnEMUnzbbgZ5bVUcNEQvH0wqh3K9E=;
-        b=e5WVPOaNdGE6/i0mx3dlUWUo/207G0Ivnb5NWYR2PIU5Ows0HORFH/jl5qkL6d0KoL
-         dY+RMCBQ2nZcn+tAA2duvDwOYfWx4JeipuZ8fvDYDIk7DP7ScEST/ZVzKrZTdh4XBaaw
-         XjwNOxmOfpzhrcMlR0PKLt1MdoflVPd+EL3jvQpsFpnCnCoDAfqyKGXNDSYY5GA4LQNE
-         czC92f6VNEv5e5AWtSWWVmiIQTN2o4B2Q78GN4FWZIme9Pnc3y0rWkskKmwk344a92Oo
-         P4BJ13jA7yFqad91oT2wfOeD6Bx+1EA3iL8CxoaOT2felW8/034nDHCfB1dPRTkRUY7/
-         cqBw==
+        Thu, 6 Jan 2022 17:20:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1641507634;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=GyovoCuLjjHHt9QM/ZJ1ih4ScrXqH+W+bjbDOcUozq8=;
+        b=Spd0XgOPY7I6nM8++0CAOU/jTrKWRRCYthP3KJ/1DEvPRaEJjVkeo9B8DHB9gMW9WLZMCl
+        2011LgNm1LTw4Sq0JzIOdVHZfgULEN32U1kbYsjKi2f2tDqU3Aj1K71AulDWR/qTxQMuXe
+        w7fyahvE5QZOvVySHv1AwyQ0mH89teo=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-201-ElsucRPNOYmgbNXOcpoAcg-1; Thu, 06 Jan 2022 17:20:33 -0500
+X-MC-Unique: ElsucRPNOYmgbNXOcpoAcg-1
+Received: by mail-wm1-f71.google.com with SMTP id l20-20020a05600c1d1400b003458e02cea0so3600088wms.7
+        for <linux-perf-users@vger.kernel.org>; Thu, 06 Jan 2022 14:20:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AHNjHhJNA6K9i0SnEMUnzbbgZ5bVUcNEQvH0wqh3K9E=;
-        b=jWik8gWoz+3hxRzzKI+fELd+DeiDpIR2d6oE4xM9u5vdhC56oOYp59eAsHig4f1QwR
-         JuFe7EJwvVIO8alwxhmzihV/oOHJ2iHCs77akfhPVy6cN/R6Dn6SFW8pa4AV9lA0T+Lp
-         siYZDcTt5kXwfcom0ZS2xpUd64Rrdf6vOWVYozJTeVUw7ZxaRZS12OOkEM4OlheOASun
-         IQzcIi7V5dzoOgSKJ7WgQhioBoF1Uxwmlp55rk6cjV68xUOp3XmsysftJRTGmKdLxLHw
-         raJMB10dlbVMI/fGJOb1SHbNc8w5ipuFdO7YmexGesyV1wYXQCE8sUgUdXhyolOnjU1D
-         yeIQ==
-X-Gm-Message-State: AOAM5322PuBZts6AE4nufdJV/Srd0AK/5Ik24GlTOVXNcW15HjBgzge8
-        r/utTFraSuAHkFuEx57Jwm4NOqnxaOpnXaA2hfo=
-X-Google-Smtp-Source: ABdhPJwahFu67nQkVi/3aEoJVgFaQTkWv49uJOEbaY2Fs9hE6iK+/VL67lRQ20zz9Iu8DtxU+48ZU1bPQREXF5VunWc=
-X-Received: by 2002:a05:6e02:b4c:: with SMTP id f12mr27101949ilu.252.1641504267973;
- Thu, 06 Jan 2022 13:24:27 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GyovoCuLjjHHt9QM/ZJ1ih4ScrXqH+W+bjbDOcUozq8=;
+        b=2naN5Ti7rFhCLI4UUWGbCxge1La7aqH/6TWuEqBUUPdFULlUpWhLHQY1HU5A0gJ/12
+         a4/71s1RIIFQ8zRzbxeeonwT7qE1JFelpy2xymp9g9prbKogXAOQogi0CMczOtx9+Bf5
+         UZTacmZESs6TTCkzYkZkjfU7mEop4ygYMqLAWXSym5VKjFNzY0MYxJiVE3D8xIWhkZTP
+         oo05373MBAkHKDQsL0DjIjny3QscwZKxnSifCfnzIk3zB19RaOka8ilIaWQneifdpk8d
+         ErZAgROlVgghbFPUJDYaBFBqyaYn0bteWTcS7zmWY2u8LCZlmfh7yIV9g/tpWkhAJY/2
+         d5kQ==
+X-Gm-Message-State: AOAM533k3Q5PM3zaFFpN0GgJsAlD9SzeABPqdqvidxFchpOedqlKJlMT
+        v6iIdtzVFYTAMCbFLrJDb4GySCNtQdLs++1M+e+jEKakY07A8HpSQlthlxLJdi81FCHExphCw7C
+        7ORx6Nqc7SbXU1ks8EkV4Bw+5yD/PUw==
+X-Received: by 2002:a7b:c7d0:: with SMTP id z16mr8769269wmk.76.1641507632106;
+        Thu, 06 Jan 2022 14:20:32 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxXYxtoAPX07hgPRDdhYyGPJM8/IYHeoCGK/503A3m4aTKkHkgY4kBBl4cGOPR9eroZ8W0fPg==
+X-Received: by 2002:a7b:c7d0:: with SMTP id z16mr8769251wmk.76.1641507631889;
+        Thu, 06 Jan 2022 14:20:31 -0800 (PST)
+Received: from krava.redhat.com ([83.240.63.12])
+        by smtp.gmail.com with ESMTPSA id n12sm3668066wrf.29.2022.01.06.14.20.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Jan 2022 14:20:31 -0800 (PST)
+From:   Jiri Olsa <jolsa@redhat.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Christy Lee <christyc.y.lee@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf trace: Move SIGCHLD handler init to trace__run
+Date:   Thu,  6 Jan 2022 23:20:30 +0100
+Message-Id: <20220106222030.227499-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.33.1
 MIME-Version: 1.0
-References: <20220106200032.3067127-1-christylee@fb.com> <20220106200032.3067127-2-christylee@fb.com>
-In-Reply-To: <20220106200032.3067127-2-christylee@fb.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 6 Jan 2022 13:24:16 -0800
-Message-ID: <CAEf4Bzad6-Pf51Gez2hA4orvuR90YyB_eqYzVLG1H229jkn8uw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 1/2] perf: stop using deprecated
- bpf_prog_load() API
-To:     Christy Lee <christylee@fb.com>
-Cc:     Andrii Nakryiko <andrii@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Christy Lee <christyc.y.lee@gmail.com>,
-        bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>,
-        Wang Nan <wangnan0@huawei.com>,
-        Wang ShaoBo <bobo.shaobowang@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jan 6, 2022 at 12:03 PM Christy Lee <christylee@fb.com> wrote:
->
-> bpf_prog_load() API is deprecated, remove perf's usage of the deprecated
-> function.
->
-> Signed-off-by: Christy Lee <christylee@fb.com>
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> ---
->  tools/perf/tests/bpf.c | 14 ++++----------
->  1 file changed, 4 insertions(+), 10 deletions(-)
->
-> diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
-> index 573490530194..57b9591f7cbb 100644
-> --- a/tools/perf/tests/bpf.c
-> +++ b/tools/perf/tests/bpf.c
-> @@ -281,8 +281,8 @@ static int __test__bpf(int idx)
->
->  static int check_env(void)
->  {
-> +       LIBBPF_OPTS(bpf_prog_load_opts, opts);
->         int err;
-> -       unsigned int kver_int;
->         char license[] = "GPL";
->
->         struct bpf_insn insns[] = {
-> @@ -290,19 +290,13 @@ static int check_env(void)
->                 BPF_EXIT_INSN(),
->         };
->
-> -       err = fetch_kernel_version(&kver_int, NULL, 0);
-> +       err = fetch_kernel_version(&opts.kern_version, NULL, 0);
->         if (err) {
->                 pr_debug("Unable to get kernel version\n");
->                 return err;
->         }
-> -
-> -/* temporarily disable libbpf deprecation warnings */
-> -#pragma GCC diagnostic push
-> -#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-> -       err = bpf_load_program(BPF_PROG_TYPE_KPROBE, insns,
-> -                              ARRAY_SIZE(insns),
-> -                              license, kver_int, NULL, 0);
-> -#pragma GCC diagnostic pop
-> +       err = bpf_prog_load(BPF_PROG_TYPE_KPROBE, NULL, license, insns,
-> +                           ARRAY_SIZE(insns), &opts);
+When running perf trace with bpf object like:
+  # perf trace -e openat,/.../tools/perf/examples/bpf/hello.c
 
-Christy, you should probably define __weak bpf_prog_load
-implementation that will re-route to bpf_load_program? See how it was
-done for other APIs (e.g., btf__load_from_kernel_by_id).
+the event parsing eventually calls llvm__get_kbuild_opts function
+that runs script and that ends up with SIGCHLD delivered to perf
+trace handler, which assumes the workload process is done and quits
+perf trace.
 
-Arnaldo, more generally, what would be the plan for libbpf 1.0 at
-which point those deprecated APIs (e.g., bpf_load_program) are going
-to be removed completely? Do you have some control over the minimal
-libbpf version for cases when you'd like to use libbpf as a shared
-library?
+Moving the SIGCHLD handler setup directly to trace__run, where the
+event is parsed and object already compiled.
 
+Cc: Christy Lee <christyc.y.lee@gmail.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ tools/perf/builtin-trace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->         if (err < 0) {
->                 pr_err("Missing basic BPF support, skip this test: %s\n",
->                        strerror(errno));
-> --
-> 2.30.2
->
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 94d62a92f1a1..4282ef9ec354 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -3925,6 +3925,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 	bool draining = false;
+ 
+ 	trace->live = true;
++	signal(SIGCHLD, sig_handler);
+ 
+ 	if (!trace->raw_augmented_syscalls) {
+ 		if (trace->trace_syscalls && trace__add_syscall_newtp(trace))
+@@ -4876,7 +4877,6 @@ int cmd_trace(int argc, const char **argv)
+ 
+ 	signal(SIGSEGV, sighandler_dump_stack);
+ 	signal(SIGFPE, sighandler_dump_stack);
+-	signal(SIGCHLD, sig_handler);
+ 	signal(SIGINT, sig_handler);
+ 
+ 	trace.evlist = evlist__new();
+-- 
+2.33.1
+
