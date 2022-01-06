@@ -2,84 +2,100 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B62C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Jan 2022 18:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E20C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Jan 2022 19:29:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242686AbiAFSYq (ORCPT
+        id S243313AbiAFT3C (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Jan 2022 13:24:46 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4363 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240698AbiAFSYp (ORCPT
+        Thu, 6 Jan 2022 14:29:02 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:57696 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243311AbiAFT3C (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Jan 2022 13:24:45 -0500
-Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JVF4h2LFQz67bjw;
-        Fri,  7 Jan 2022 02:19:48 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Thu, 6 Jan 2022 19:24:43 +0100
-Received: from [10.47.27.56] (10.47.27.56) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Thu, 6 Jan
- 2022 18:24:41 +0000
-Subject: Re: [RFC PATCH 1/1] perf arm64: Implement --topdown with metrics
-To:     Andrew Kilroy <andrew.kilroy@arm.com>,
-        Ian Rogers <irogers@google.com>,
-        Andi Kleen <ak@linux.intel.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <acme@kernel.org>, Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
+        Thu, 6 Jan 2022 14:29:02 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CA23D61D04;
+        Thu,  6 Jan 2022 19:29:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15BFCC36AE3;
+        Thu,  6 Jan 2022 19:29:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1641497341;
+        bh=4dACT1YiyrLoTMnDe9Pfe4GUDI9p9TWgn8eh3hZZYt8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pPz0uTv0mj4fW/scrxYWxmBCiD52nudsZ9w31/nNUcexDZ8LBghe0if4NZFFDNm6t
+         hCFKLRHwnkiVmje3RL/PsgxhY7zPLoUGL7EavmjwXWXdKtZ7kj3DEDO93o6pP9uRIk
+         dlSkzP/kTqoywKBb1+InBbo6EdZBmvCuFg7YmZddu5l9d2yUhrPELFmW+9EGB8ffyf
+         1zZ2b6rvmSG+kFenMVTOZvRXSdQkxFilCNjzfb5iXMegafyjjdiCO0pp+YCPTQDhEI
+         VvTxlIWq5RcG1icSxdFVGqlyt5hFP5WqUTqqwctqvxARA50modgJnNO0eyRIydZ6cX
+         NAF/WtD5uMdng==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 2131040B92; Thu,  6 Jan 2022 16:28:58 -0300 (-03)
+Date:   Thu, 6 Jan 2022 16:28:58 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Jiri Slaby <jirislaby@kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <4c375d34-bf20-496d-22fc-aed8597126e2@huawei.com>
- <20211214184240.24215-1-andrew.kilroy@arm.com>
- <20211214184240.24215-2-andrew.kilroy@arm.com>
- <CAP-5=fXJeH0ZvcHPa20N5KfLwnYSw29rpK3OrnvE0o3u-vGTLA@mail.gmail.com>
- <b1640897-10d7-c11e-4a7a-d17633916c8e@huawei.com>
- <d91a1b98-2c2b-a961-543f-d540b3c7a146@arm.com>
- <0a14914c-063d-f9ae-be49-ae9cc6aa7ff1@huawei.com>
- <3e8c7fb6-97aa-f84e-e594-b6eb2cb674e4@arm.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <4fefb1bc-49b2-bc5b-23cd-cd8fabe8c588@huawei.com>
-Date:   Thu, 6 Jan 2022 18:24:26 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+        torvalds@linux-foundation.org, eranian@google.com
+Subject: Re: [PATCH] perf build: Lower the priority of tools/lib includes
+Message-ID: <YddC+lzAO1Urj0TF@kernel.org>
+References: <20220106072627.476524-1-irogers@google.com>
 MIME-Version: 1.0
-In-Reply-To: <3e8c7fb6-97aa-f84e-e594-b6eb2cb674e4@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.47.27.56]
-X-ClientProxiedBy: lhreml736-chm.china.huawei.com (10.201.108.87) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220106072627.476524-1-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 06/01/2022 16:33, Andrew Kilroy wrote:
+Em Wed, Jan 05, 2022 at 11:26:27PM -0800, Ian Rogers escreveu:
+> tools/lib has a 1.1.0 copy of libtraceevent. If a newer system
+> version is installed then its headers will go in /usr/include. As -I has
+> priority over system headers the 1.1.0 version gets used in preference
+> to the system one, which isn't what is wanted. To make the behavior
+> match expectations use -idirafter so that any system headers have priority
+> over the tools/lib version.
 > 
-> Andi requested that the json metrics be disabled on x86 in
-> 
-> 
-> https://lore.kernel.org/linux-perf-users/12e0deef-08db-445f-4958-bcd5c3e10367@linux.intel.com/#t 
-> 
-> 
-> If we do that, do you still think the --topdown=<arg>  modification is 
-> needed? 
+> Fixes: 08efcb4a638d ("libtraceevent: Increase libtraceevent logging when verbose")
 
-Probably not. I assumed that the metricgroup solution could work for x86 
-also, so now no need for this option.
+Hi,
 
-> I guess it would have to report an error if someone requests 
-> --topdown=json-metrics on x86.
+	You forgot to add your Signed-off-by:, I'm adding it as you
+usually provide it, ok?
+
+- Arnaldo
+
+> ---
+>  tools/perf/Makefile.config | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 96ad944ca6a8..0627286380fa 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -346,7 +346,7 @@ endif
+>  
+>  INC_FLAGS += -I$(src-perf)/util
+>  INC_FLAGS += -I$(src-perf)
+> -INC_FLAGS += -I$(srctree)/tools/lib/
+> +INC_FLAGS += -idirafter$(srctree)/tools/lib/
+>  
+>  CORE_CFLAGS += -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE
+>  
+> -- 
+> 2.34.1.448.ga2b2bfdf31-goog
 
-Thanks,
-John
+-- 
+
+- Arnaldo
