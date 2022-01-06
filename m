@@ -2,182 +2,133 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 384F1C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Jan 2022 20:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B1FC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Jan 2022 21:24:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243853AbiAFUeN (ORCPT
+        id S244185AbiAFVY3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Jan 2022 15:34:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55856 "EHLO
+        Thu, 6 Jan 2022 16:24:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243810AbiAFUeN (ORCPT
+        with ESMTP id S244183AbiAFVY2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Jan 2022 15:34:13 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA893C061245;
-        Thu,  6 Jan 2022 12:34:12 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A7402B823F6;
-        Thu,  6 Jan 2022 20:34:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DB9AC36AE5;
-        Thu,  6 Jan 2022 20:34:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641501250;
-        bh=4wGBE9mrFvNDIODFoW8NjbIzKgcrJgzvtmSYFts9dtY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qTeS5TwtFbKtDqhox8GYq8van3xCGC4ovwzr9fPk8znyoeuh8HUcRy+sXC5yf3D7D
-         0H+XDXTQGf4EooH0dIxXYqg4KjLCyAkJXerBJ8MNeDzEhm5EqISWtBXYrUjcWw4P1k
-         njbpByBxUUN50qjfurm/pRYD0bqbLEp/YHJnQhpnIkt5LaSt8qM2IdQ9ESA4UpVekB
-         HljzyV2+0xcEBP6d2KRX9h/8I2ILUFoVw+rqySKizA6uME/XbKLPi0AlvnO2vldT1c
-         zyM7LCa7iK47LV8XSiwlwi6I4L6vC9jyk+iE/dJXAEPu7qKxdhtvcHDFrqAIPaxqoH
-         LKP3R9blq853g==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3959440B92; Thu,  6 Jan 2022 17:34:08 -0300 (-03)
-Date:   Thu, 6 Jan 2022 17:34:08 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Krister Johansen <kjlx@templeofstupid.com>
-Cc:     Riccardo Mancini <rickyman7@gmail.com>,
-        Ian Rogers <irogers@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 01/20] perf nsinfo: fix refcounting
-Message-ID: <YddSQB8Sztuf053g@kernel.org>
-References: <cover.1626343282.git.rickyman7@gmail.com>
- <55223bc8821b34ccb01f92ef1401c02b6a32e61f.1626343282.git.rickyman7@gmail.com>
- <YPCGONcQx5SxEKdY@kernel.org>
- <YPCKeDvyLOQzKTln@kernel.org>
- <20220105061942.GA20464@templeofstupid.com>
- <YddQv1O057Mw5Whv@kernel.org>
+        Thu, 6 Jan 2022 16:24:28 -0500
+Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A101C061245;
+        Thu,  6 Jan 2022 13:24:28 -0800 (PST)
+Received: by mail-il1-x136.google.com with SMTP id c4so3099210iln.7;
+        Thu, 06 Jan 2022 13:24:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AHNjHhJNA6K9i0SnEMUnzbbgZ5bVUcNEQvH0wqh3K9E=;
+        b=e5WVPOaNdGE6/i0mx3dlUWUo/207G0Ivnb5NWYR2PIU5Ows0HORFH/jl5qkL6d0KoL
+         dY+RMCBQ2nZcn+tAA2duvDwOYfWx4JeipuZ8fvDYDIk7DP7ScEST/ZVzKrZTdh4XBaaw
+         XjwNOxmOfpzhrcMlR0PKLt1MdoflVPd+EL3jvQpsFpnCnCoDAfqyKGXNDSYY5GA4LQNE
+         czC92f6VNEv5e5AWtSWWVmiIQTN2o4B2Q78GN4FWZIme9Pnc3y0rWkskKmwk344a92Oo
+         P4BJ13jA7yFqad91oT2wfOeD6Bx+1EA3iL8CxoaOT2felW8/034nDHCfB1dPRTkRUY7/
+         cqBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AHNjHhJNA6K9i0SnEMUnzbbgZ5bVUcNEQvH0wqh3K9E=;
+        b=jWik8gWoz+3hxRzzKI+fELd+DeiDpIR2d6oE4xM9u5vdhC56oOYp59eAsHig4f1QwR
+         JuFe7EJwvVIO8alwxhmzihV/oOHJ2iHCs77akfhPVy6cN/R6Dn6SFW8pa4AV9lA0T+Lp
+         siYZDcTt5kXwfcom0ZS2xpUd64Rrdf6vOWVYozJTeVUw7ZxaRZS12OOkEM4OlheOASun
+         IQzcIi7V5dzoOgSKJ7WgQhioBoF1Uxwmlp55rk6cjV68xUOp3XmsysftJRTGmKdLxLHw
+         raJMB10dlbVMI/fGJOb1SHbNc8w5ipuFdO7YmexGesyV1wYXQCE8sUgUdXhyolOnjU1D
+         yeIQ==
+X-Gm-Message-State: AOAM5322PuBZts6AE4nufdJV/Srd0AK/5Ik24GlTOVXNcW15HjBgzge8
+        r/utTFraSuAHkFuEx57Jwm4NOqnxaOpnXaA2hfo=
+X-Google-Smtp-Source: ABdhPJwahFu67nQkVi/3aEoJVgFaQTkWv49uJOEbaY2Fs9hE6iK+/VL67lRQ20zz9Iu8DtxU+48ZU1bPQREXF5VunWc=
+X-Received: by 2002:a05:6e02:b4c:: with SMTP id f12mr27101949ilu.252.1641504267973;
+ Thu, 06 Jan 2022 13:24:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YddQv1O057Mw5Whv@kernel.org>
-X-Url:  http://acmel.wordpress.com
+References: <20220106200032.3067127-1-christylee@fb.com> <20220106200032.3067127-2-christylee@fb.com>
+In-Reply-To: <20220106200032.3067127-2-christylee@fb.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 6 Jan 2022 13:24:16 -0800
+Message-ID: <CAEf4Bzad6-Pf51Gez2hA4orvuR90YyB_eqYzVLG1H229jkn8uw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 1/2] perf: stop using deprecated
+ bpf_prog_load() API
+To:     Christy Lee <christylee@fb.com>
+Cc:     Andrii Nakryiko <andrii@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Christy Lee <christyc.y.lee@gmail.com>,
+        bpf <bpf@vger.kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>,
+        Wang Nan <wangnan0@huawei.com>,
+        Wang ShaoBo <bobo.shaobowang@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Jan 06, 2022 at 05:27:43PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Tue, Jan 04, 2022 at 10:19:42PM -0800, Krister Johansen escreveu:
-> > On Thu, Jul 15, 2021 at 04:20:24PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > Em Thu, Jul 15, 2021 at 04:02:16PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > > Em Thu, Jul 15, 2021 at 06:07:06PM +0200, Riccardo Mancini escreveu:
-> > > > > ASan reports a memory leak of nsinfo during the execution of the perf
-> > > > > test "31: Lookup mmap thread".
-> > > > > The leak is caused by a refcounted variable being replaced without
-> > > > > dropping the refcount.
-> > > 
-> > > > > This patch makes sure that the refcnt of nsinfo is decreased whenever
-> > > > > a refcounted variable is replaced with a new value.
-> > > 
-> > > > So, there are multiple fixes in just one patch, I'll split it into
-> > > > three, no need to resend.
-> > > 
-> > > > I'll try and check if finding Fixes: for the three is easy, that way
-> > > > stable@vger.kernel.org will figure out which of the supported releases
-> > > > need each of them.
-> > > 
-> > > The second is at the end of this message, and looking at it I think
-> > > there is a problem with where this nsinfo reference is stored, it should
-> > > be in the 'struct map', that is per-thread, not in the 'struct dso',
-> > > that may be shared by multiple 'struct map's in different cgroups, so we
-> > > can't set dso->nsinfo in map__new(), right? Kristen?
-> > 
-> > Apologies for the long delayed reply, and for the hassle that this has
-> > caused.
-> > 
-> > You're right, Arnaldo, that namespace mapping could differ on a per
-> > thread basis.  If the dso objects are intended to be read by multiple
-> > threads with different views of the target process's namespaces.  With
-> > containers, though, there might be many different versions of the same
-> > object with the same filename, and the only ways we can disambiguate are
-> > through the build-ids or by ensuring that the dso refers to a single
-> > pid and mount namespace.  I may have erred in assuming that all of
-> > perf's threads would be able to access the target namespace via the same
-> > identifiers.  Is that what's going on here?
-> 
-> yeah, I think using build-ids, when available is the way to go, and
-> since we can almost take it for granted (haven't checked) that it will
-> be present, as I think gcc/clang adds them by default, seems the way to
-> go.
-> 
-> That or somehow have the DSO list to be perf namespace.
+On Thu, Jan 6, 2022 at 12:03 PM Christy Lee <christylee@fb.com> wrote:
+>
+> bpf_prog_load() API is deprecated, remove perf's usage of the deprecated
+> function.
+>
+> Signed-off-by: Christy Lee <christylee@fb.com>
+> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> ---
+>  tools/perf/tests/bpf.c | 14 ++++----------
+>  1 file changed, 4 insertions(+), 10 deletions(-)
+>
+> diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
+> index 573490530194..57b9591f7cbb 100644
+> --- a/tools/perf/tests/bpf.c
+> +++ b/tools/perf/tests/bpf.c
+> @@ -281,8 +281,8 @@ static int __test__bpf(int idx)
+>
+>  static int check_env(void)
+>  {
+> +       LIBBPF_OPTS(bpf_prog_load_opts, opts);
+>         int err;
+> -       unsigned int kver_int;
+>         char license[] = "GPL";
+>
+>         struct bpf_insn insns[] = {
+> @@ -290,19 +290,13 @@ static int check_env(void)
+>                 BPF_EXIT_INSN(),
+>         };
+>
+> -       err = fetch_kernel_version(&kver_int, NULL, 0);
+> +       err = fetch_kernel_version(&opts.kern_version, NULL, 0);
+>         if (err) {
+>                 pr_debug("Unable to get kernel version\n");
+>                 return err;
+>         }
+> -
+> -/* temporarily disable libbpf deprecation warnings */
+> -#pragma GCC diagnostic push
+> -#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+> -       err = bpf_load_program(BPF_PROG_TYPE_KPROBE, insns,
+> -                              ARRAY_SIZE(insns),
+> -                              license, kver_int, NULL, 0);
+> -#pragma GCC diagnostic pop
+> +       err = bpf_prog_load(BPF_PROG_TYPE_KPROBE, NULL, license, insns,
+> +                           ARRAY_SIZE(insns), &opts);
 
-To be by namespace, sorry.
+Christy, you should probably define __weak bpf_prog_load
+implementation that will re-route to bpf_load_program? See how it was
+done for other APIs (e.g., btf__load_from_kernel_by_id).
 
-But having it by build-id seems the more sensible way to go, so that we
-can avoid having multiple instances of the same DSO in multiple
-namespaces, which should be common.
+Arnaldo, more generally, what would be the plan for libbpf 1.0 at
+which point those deprecated APIs (e.g., bpf_load_program) are going
+to be removed completely? Do you have some control over the minimal
+libbpf version for cases when you'd like to use libbpf as a shared
+library?
 
-I.e. continue to have a perf 'struct machine' DSO list instead of moving
-to having the namespace hierarchy represented under 'struct machine'
-since we have a way to uniquify DSOs, the build id.
 
-One way or the other, nsinfo shouldn't be stored in DSOs, its a map
-property, which in turn is a thread property.
-
-I.e. please consider thinking about moving it to 'struct map', would you
-try it, please?
-
-- Arnaldo
- 
-> - Arnaldo
->  
-> > -K
-> > 
-> > 
-> > > commit 280f3933661f9ca9563ed04ce82313fdbcbb8f75
-> > > Author: Riccardo Mancini <rickyman7@gmail.com>
-> > > Date:   Thu Jul 15 18:07:06 2021 +0200
-> > > 
-> > >     perf map: Fix dso->nsinfo refcounting
-> > >     
-> > >     ASan reports a memory leak of nsinfo during the execution of
-> > >     
-> > >       # perf test "31: Lookup mmap thread"
-> > >     
-> > >     The leak is caused by a refcounted variable being replaced without
-> > >     dropping the refcount.
-> > >     
-> > >     This patch makes sure that the refcnt of nsinfo is decreased whenever a
-> > >     refcounted variable is replaced with a new value.
-> > >     
-> > >     Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
-> > >     Fixes: bf2e710b3cb8445c ("perf maps: Lookup maps in both intitial mountns and inner mountns.")
-> > >     Cc: Ian Rogers <irogers@google.com>
-> > >     Cc: Jiri Olsa <jolsa@redhat.com>
-> > >     Cc: Krister Johansen <kjlx@templeofstupid.com>
-> > >     Cc: Mark Rutland <mark.rutland@arm.com>
-> > >     Cc: Namhyung Kim <namhyung@kernel.org>
-> > >     Cc: Peter Zijlstra <peterz@infradead.org>
-> > >     Link: http://lore.kernel.org/lkml/55223bc8821b34ccb01f92ef1401c02b6a32e61f.1626343282.git.rickyman7@gmail.com
-> > >     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > 
-> > > diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-> > > index 8af693d9678cefe0..72e7f3616157ead4 100644
-> > > --- a/tools/perf/util/map.c
-> > > +++ b/tools/perf/util/map.c
-> > > @@ -192,6 +192,8 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
-> > >  			if (!(prot & PROT_EXEC))
-> > >  				dso__set_loaded(dso);
-> > >  		}
-> > > +
-> > > +		nsinfo__put(dso->nsinfo);
-> > >  		dso->nsinfo = nsi;
-> > >  
-> > >  		if (build_id__is_defined(bid))
-> > > 
-> 
-> -- 
-> 
-> - Arnaldo
-
--- 
-
-- Arnaldo
+>         if (err < 0) {
+>                 pr_err("Missing basic BPF support, skip this test: %s\n",
+>                        strerror(errno));
+> --
+> 2.30.2
+>
