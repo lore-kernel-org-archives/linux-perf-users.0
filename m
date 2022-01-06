@@ -2,204 +2,218 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7777C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Jan 2022 01:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50723C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Jan 2022 07:02:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344462AbiAFB4u (ORCPT
+        id S235372AbiAFHCH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Jan 2022 20:56:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58182 "EHLO
+        Thu, 6 Jan 2022 02:02:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344457AbiAFB4s (ORCPT
+        with ESMTP id S234429AbiAFHCG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Jan 2022 20:56:48 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74785C061245;
-        Wed,  5 Jan 2022 17:56:48 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9F4E161A24;
-        Thu,  6 Jan 2022 01:56:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E938C36AE3;
-        Thu,  6 Jan 2022 01:56:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641434207;
-        bh=wAZAhYwocZjEHT8DxarYT4lHarDdUv1uzk//oJPIUvI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=m1rj2vEu8/hsfnBoQjbtM0SnF2g0fGTIlAaEbz13Vc1Nf5EdcUpLRo7gvr14vMcF3
-         Ev7KtNFJlfD9wg0eY/cB5dEyas//OBdnrTpmlltasrHGGwjaB3U9YQacYyr5cjDJlj
-         QnckNKZy1vpny6CTZfNwY0Oc2Jsr++wpjIsXBipeAwK3llUNsJ3uf3t2ftorv08PGx
-         4q1lCQYj+13t8ac+J2FGfRfv5w9SG6NnabYmNL1AEr9C3niyHMLjiaORS6wt7p3aFA
-         3yiVrZMu0KYKjw7hi3Tvg2cPKeJY8dslXvKidHDo9M94G7OFXHODUdWVbIgZYm/Y2p
-         K/EJ4kb3y/kqA==
-Date:   Thu, 6 Jan 2022 10:56:39 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     chenzechuan <chenzechuan1@huawei.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        <peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
-        <namhyung@kernel.org>, <Jianlin.Lv@arm.com>,
-        <ravi.bangoria@linux.ibm.com>, <yao.jin@linux.intel.com>,
-        <yangjihong1@huawei.com>, <mpe@ellerman.id.au>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <qiuxi1@huawei.com>, <wangbing6@huawei.com>
-Subject: Re: [PATCH] powerpc/perf: fix ppc64 perf probe add events failed
-Message-Id: <20220106105639.cd19b55545fad02140b9da07@kernel.org>
-In-Reply-To: <8ad8db22-e9af-7e0a-2e39-da99a4a0539a@huawei.com>
-References: <20211228111338.218602-1-chenzechuan1@huawei.com>
-        <YdG9CSk9ayoVmBhz@kernel.org>
-        <8ad8db22-e9af-7e0a-2e39-da99a4a0539a@huawei.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thu, 6 Jan 2022 02:02:06 -0500
+Received: from mail-io1-xd2e.google.com (mail-io1-xd2e.google.com [IPv6:2607:f8b0:4864:20::d2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67BDBC061245
+        for <linux-perf-users@vger.kernel.org>; Wed,  5 Jan 2022 23:02:06 -0800 (PST)
+Received: by mail-io1-xd2e.google.com with SMTP id y18so2013148iob.8
+        for <linux-perf-users@vger.kernel.org>; Wed, 05 Jan 2022 23:02:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PvsDlgxcfQ/R1kwgYEBZAicIwglz/cP+ScMeIdW/5hM=;
+        b=p1teQc3orRQ3/WEdaMOFmwX6AvtV4IoXGWWDd9+JLchubbEEb9Qaks136IT0PbI+v9
+         HrFj0babR3z5+eOsT1h+eUEeFhKc/lh9k0sDEP6wJhYppk9/GK3+dZQ83RSHtMe30sia
+         IzO3H/v2hOUGpl1r6+pf+vWpCj0saLvVallxn22KF1u2g1B361ogklLf+11g46Nt9WGs
+         EsfHEKXeMiflrJZFxfXLQ/dvMQ12RK3SJ5RuwCITzYfqwDOM17rr3scGRzQTaNPcsa8i
+         Ds0ljjshxvvmSWz7HnSdp6f3alXUavzQNBIN9QtRSZtwjrhUZ/nQFToc19o2Od/lXDgH
+         0rKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PvsDlgxcfQ/R1kwgYEBZAicIwglz/cP+ScMeIdW/5hM=;
+        b=GPPYQ5ME+rJ3f/A2wJx2cShwd6O2fkdO3vqnhnvGduMMPFeomRmRZGve5ffl9LRBa3
+         8ZtlSIRogDHo6UkA8xiHvDZdW+ERpKy+7EvFwcSKVjP3Pa9prb0g+p5rUZM60Ia3bEGU
+         vYId0vnRgQ0X5J/JYjtQWbV7n6j1jZWf9gMNd2Bzr8f13/hiXCXfEllVyBjfUdMNE2x7
+         7RHJ+G9r4pbkWRIo5iSMSOEOq5d6PP6xn0Nx/kVtktMoUZZWlJ0MWSKdgt2k9SEwQ3Fc
+         kgAIz8TIbFQ84znTdCCkQ22XycLiMzoKB/LLrKqUN7yUkEEm8NHgBJ0B/tCc3OCFIaSj
+         eQDg==
+X-Gm-Message-State: AOAM5329DTR5KVZneqtGRsyRz85deiCSUDMrLYUi0mBeQjdrljpSPPjt
+        FJMh+jUdCchrdaIBgJuFZyo6H1Ffk/rm3FQGsjz4gQ==
+X-Google-Smtp-Source: ABdhPJyaBWybR/0lru64WXfgIRiL6d8fVWv/wUbrers4AuukbshclvvreoyzcSBQcLIMNTPNm9rL0yP9sxPBfml9owc=
+X-Received: by 2002:a05:6602:1484:: with SMTP id a4mr27107590iow.35.1641452524766;
+ Wed, 05 Jan 2022 23:02:04 -0800 (PST)
+MIME-Version: 1.0
+References: <20210923001024.550263-1-irogers@google.com> <20210923001024.550263-4-irogers@google.com>
+ <bc2b0786-8965-1bcd-2316-9d9bb37b9c31@kernel.org> <c19ca2a2-54c9-88b1-b705-5a2cd4dd9580@kernel.org>
+ <YdMTIl7jn25XrUn8@kernel.org> <44a258b0-048d-9e32-1583-ae52aaee0a1a@kernel.org>
+In-Reply-To: <44a258b0-048d-9e32-1583-ae52aaee0a1a@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 5 Jan 2022 23:01:52 -0800
+Message-ID: <CAP-5=fWhvTCNR9Orjw4vvrrV_GV27V4rRTnym9qWaNtMdOJpjw@mail.gmail.com>
+Subject: Re: [was: libtraceevent: Increase libtraceevent logging when verbose]
+To:     Jiri Slaby <jirislaby@kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        eranian@google.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, 5 Jan 2022 10:56:46 +0800
-chenzechuan <chenzechuan1@huawei.com> wrote:
+On Mon, Jan 3, 2022 at 10:17 PM Jiri Slaby <jirislaby@kernel.org> wrote:
+>
+> On 03. 01. 22, 16:15, Arnaldo Carvalho de Melo wrote:
+> > Tried reproducing here on fedora 34 but it is at 1.1.1:
+>
+> FWIW, it's openSUSE Tumbleweed:
+> $ rpm -q libtraceevent1
+> libtraceevent1-1.3.0-1.3.x86_64
 
-> 
-> 在 2022/1/2 22:56, Arnaldo Carvalho de Melo 写道:
-> > Em Tue, Dec 28, 2021 at 07:13:38PM +0800, Zechuan Chen escreveu:
-> >> Because of commit bf794bf52a80 ("powerpc/kprobes: Fix kallsyms lookup
-> >> across powerpc ABIv1 and ABIv2"), in ppc64 ABIv1, our perf command
-> >> eliminates the need to use the prefix "." at the symbol name. But when
-> >> the command "perf probe -a schedule" is executed on ppc64 ABIv1, it
-> >> obtains two symbol address information through /proc/kallsyms, for example:
-> >>
-> >> cat /proc/kallsyms | grep -w schedule
-> >> c000000000657020 T .schedule
-> >> c000000000d4fdb8 D schedule
-> >>
-> >> The symbol "D schedule" is not a function symbol, and perf will print:
-> >> "p:probe/schedule _text+13958584"Failed to write event: Invalid argument
-> >>
-> >> Therefore, when searching symbols from map and adding probe point for
-> >> them, a symbol type check is added. If the type of symbol is not a
-> >> function, skip it.
-> >>
-> >> Fixes: bf794bf52a80 ("powerpc/kprobes: Fix kallsyms lookup across powerpc ABIv1 and ABIv2")
-> >>
-> >> Signed-off-by: Zechuan Chen <chenzechuan1@huawei.com>
-> >> ---
-> >>   tools/perf/util/probe-event.c | 3 +++
-> >>   1 file changed, 3 insertions(+)
-> >>
-> >> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-> >> index b2a02c9ab8ea..a834918a0a0d 100644
-> >> --- a/tools/perf/util/probe-event.c
-> >> +++ b/tools/perf/util/probe-event.c
-> >> @@ -3083,6 +3083,9 @@ static int find_probe_trace_events_from_map(struct perf_probe_event *pev,
-> >>   	for (j = 0; j < num_matched_functions; j++) {
-> >>   		sym = syms[j];
-> >>   
-> >> +		if (sym->type != STT_FUNC)
-> >> +			continue;
-> >> +
-> > Humm, shouldn't this be handled by find_probe_functions(), i.e. it
-> > shoudn't return data symbols, right? Otherwise other places using this
-> > function may malfunction as well?
-> >
-> > Naveen? Masami?
-> >
-> > - Arnaldo
-> 
-> Re：Thanks for your review. You are right.
->      1. Only function symbols should be returned here, not function descriptors.
->         I've moved the modification into function "find_probe_functions()",
->         and the new patch is added at the end of this email. I've re-tested it on my environment.
->         Please review it again, thanks.
-> 
->      2. Function find_probe_functions only use in "perf probe".
->         Malfunction exist for all export functions, another example:
-> 
->      cat /proc/kallsyms | grep -w sys_fork
->      c000000000058100 T .sys_fork
->      c000000000d485e0 D sys_fork
-> 
->      perf probe -a sys_fork -v
->      No kprobe blacklist support, ignored
->      Looking at the vmlinux_path (8 entries long)
->      symsrc__init: cannot get elf header.
->      Could not open debuginfo. Try to use symbols.
->      Looking at the vmlinux_path (8 entries long)
->      symsrc__init: cannot get elf header.
->      Using /proc/kcore for kernel data
->      Using /proc/kallsyms for symbols
->      Opening /sys/kernel/tracing//kprobe_events write=1
->      Opening /sys/kernel/tracing//README write=0
->      Writing event: p:probe/sys_fork _text+360704
->      Writing event: p:probe/sys_fork _text+13927904
->      Failed to write event: Invalid argument
->        Error: Failed to add events. Reason: Invalid argument (Code: -22)
-> 
-> >>   		/* There can be duplicated symbols in the map */
-> >>   		for (i = 0; i < j; i++)
-> >>   			if (sym->start == syms[i]->start) {
-> >> -- 
-> >> 2.12.3
-> > .
-> 
->  From 8d8f5de99d16e6aa8179ecbc33c0692fc887e2af Mon Sep 17 00:00:00 2001
-> From: Zechuan Chen <chenzechuan1@huawei.com>
-> Date: Mon, 27 Dec 2021 09:55:11 +0800
-> Subject: [PATCH] powerpc/perf: fix ppc64 perf probe add events failed
-> 
-> Because of commit bf794bf52a80 ("powerpc/kprobes: Fix kallsyms lookup
-> across powerpc ABIv1 and ABIv2"), in ppc64 ABIv1, our perf command
-> eliminates the need to use the prefix "." at the symbol name. But when
-> the command "perf probe -a schedule" is executed on ppc64 ABIv1, it
-> obtains two symbol address information through /proc/kallsyms, for example:
-> 
-> cat /proc/kallsyms | grep -w schedule
-> c000000000657020 T .schedule
-> c000000000d4fdb8 D schedule
-> 
-> The symbol "D schedule" is not a function symbol, and perf will print:
-> "p:probe/schedule _text+13958584"Failed to write event: Invalid argument
-> 
-> Therefore, when searching symbols from map and adding probe point for
-> them, a symbol type check is added. If the type of symbol is not a
-> function, skip it.
+I was able to reproduce in an opensuse tumbleweed container.
 
-OK, this looks good to me. I forgot to check the sym->type :(
+$ pkg-config --modversion libtraceevent
+1.3.0
 
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+$ make -C tools/perf O=/tmp/perf V=1 LIBTRACEEVENT_DYNAMIC=1
+...
+util/debug.c:245:34: error: 'TEP_LOG_DEBUG' undeclared (first use in
+this function)
+  245 |                 tep_set_loglevel(TEP_LOG_DEBUG);
+      |                                  ^~~~~~~~~~~~~
+util/debug.c:247:34: error: 'TEP_LOG_ALL' undeclared (first use in
+this function)
+  247 |                 tep_set_loglevel(TEP_LOG_ALL);
+      |                                  ^~~~~~~~~~~
 
-Thank you!
+When I look at libtraceevent tagged as 1.3.0 I see TEP_LOG_ALL and
+TEP_LOG_DEBUG:
+https://git.kernel.org/pub/scm/libs/libtrace/libtraceevent.git/tree/src/event-parse.h?h=libtraceevent-1.3.0#n760
 
-> 
-> Fixes: bf794bf52a80 ("powerpc/kprobes: Fix kallsyms lookup across 
-> powerpc ABIv1 and ABIv2")
-> 
-> Signed-off-by: Zechuan Chen <chenzechuan1@huawei.com>
-> ---
->   tools/perf/util/probe-event.c | 3 +++
->   1 file changed, 3 insertions(+)
-> 
-> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-> index b2a02c9ab8ea..4bd6f438d73c 100644
-> --- a/tools/perf/util/probe-event.c
-> +++ b/tools/perf/util/probe-event.c
-> @@ -2959,6 +2959,9 @@ static int find_probe_functions(struct map *map, 
-> char *name,
->                  cut_version = false;
-> 
->          map__for_each_symbol(map, sym, tmp) {
-> +               if (sym->type != STT_FUNC)
-> +                       continue;
-> +
->                  norm = arch__normalize_symbol_name(sym->name);
->                  if (!norm)
->                          continue;
-> --
-> 2.12.3
-> 
+and checking opensuse's event-parse.h I see the values there. This
+makes it look like we're using the kernel libtraceevent header file
+(version 1.1.0) rather than the system one.
 
+The command line is:
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+gcc -Wp,-MD,/tmp/perf/util/.debug.o.d -Wp,-MT,/tmp/perf/util/debug.o
+-Wbad-function-cast -Wdeclaration-after-statement -Wformat-security
+-Wformat-y2k -Winit-self -Wmissing-declarations -Wmissing-prototypes
+-Wno-system-headers -Wold-style-definition -Wpacked -Wredundant-decls
+-Wstrict-prototypes -Wswitch-default -Wswitch-enum -Wundef
+-Wwrite-strings -Wformat -Wno-type-limits -Wstrict-aliasing=3 -Wshadow
+-DHAVE_SYSCALL_TABLE_SUPPORT -DHAVE_ARCH_X86_64_SUPPORT
+-I/tmp/perf/arch/x86/include/generated -DHAVE_PERF_REGS_SUPPORT
+-DHAVE_ARCH_REGS_QUERY_REGISTER_OFFSET -Werror -O6
+-fno-omit-frame-pointer -ggdb3 -funwind-tables -Wall -Wextra
+-std=gnu99 -fstack-protector-all -D_FORTIFY_SOURCE=2
+-D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE
+-I/kernel-src/tools/lib/perf/include
+-I/kernel-src/tools/perf/util/include
+-I/kernel-src/tools/perf/arch/x86/include -I/kernel-src/tools/include/
+-I/kernel-src/tools/arch/x86/include/uapi
+-I/kernel-src/tools/include/uapi -I/kernel-src/tools/arch/x86/include/
+-I/kernel-src/tools/arch/x86/ -I/tmp/perf//util -I/tmp/perf/
+-I/kernel-src/tools/perf/util -I/kernel-src/tools/perf
+-I/kernel-src/tools/lib/ -DHAVE_PTHREAD_ATTR_SETAFFINITY_NP
+-DHAVE_PTHREAD_BARRIER -DHAVE_EVENTFD_SUPPORT
+-DHAVE_GET_CURRENT_DIR_NAME -DHAVE_GETTID -DHAVE_FILE_HANDLE
+-DHAVE_GLIBC_SUPPORT -DHAVE_AIO_SUPPORT -DHAVE_SCHED_GETCPU_SUPPORT
+-DHAVE_SETNS_SUPPORT -DHAVE_LIBELF_SUPPORT
+-DHAVE_ELF_GETPHDRNUM_SUPPORT -DHAVE_GELF_GETNOTE_SUPPORT
+-DHAVE_ELF_GETSHDRSTRNDX_SUPPORT -DHAVE_LIBBPF_SUPPORT -DHAVE_JITDUMP
+-DHAVE_LIBPERL_SUPPORT -DHAVE_TIMERFD_SUPPORT -DNO_LIBPYTHON
+-DNO_DEMANGLE -DHAVE_ZLIB_SUPPORT -DHAVE_BACKTRACE_SUPPORT
+-DHAVE_KVM_STAT_SUPPORT -DHAVE_AUXTRACE_SUPPORT
+-DLIBTRACEEVENT_VERSION=65790 -I/tmp/perf/ -D"BUILD_STR(s)=#s" -c -o
+/tmp/perf/util/debug.o util/debug.c
+
+The #include is:
+#include <traceevent/event-parse.h>
+
+The system header is at:
+/usr/include/traceevent/event-parse.h
+The kernel one is at /kernel-src/tools/lib/traceevent/event-parse.h.
+Adding a #error to that confirms it is indeed being picked up.
+
+Checking with:
+https://gcc.gnu.org/onlinedocs/gcc/Directory-Options.html
+it is true from case 3 that -I:
+3. Directories specified with -I options are scanned in left-to-right order.
+has priority over system:
+4. Directories specified with -isystem options are scanned in
+left-to-right order.
+5. Standard system directories are scanned.
+
+Which means we need to lower the priority of
+/kernel-src/tools/lib/traceevent or raise the priority of
+/usr/include/traceevent/. I thought I might be able to hack this with
+EXTRA_CFLAGS="-I/usr/include"
+but it still fails even though the -I is by my reading on the left of tools/lib:
+
+gcc -Wp,-MD,/tmp/perf/util/.debug.o.d -Wp,-MT,/tmp/perf/util/debug.o
+-I/usr/include -Wbad-function-cast -Wdeclaration-after-statement
+-Wformat-security -Wformat-y2k -Winit-self -Wmissing-declarations
+-Wmissing-prototypes -Wno-system-headers -Wold-style-definition
+-Wpacked -Wredundant-decls -Wstrict-prototypes -Wswitch-default
+-Wswitch-enum -Wundef -Wwrite-strings -Wformat -Wno-type-limits
+-Wstrict-aliasing=3 -Wshadow -DHAVE_SYSCALL_TABLE_SUPPORT
+-DHAVE_ARCH_X86_64_SUPPORT -I/tmp/perf/arch/x86/include/generated
+-DHAVE_PERF_REGS_SUPPORT -DHAVE_ARCH_REGS_QUERY_REGISTER_OFFSET
+-Werror -O6 -fno-omit-frame-pointer -ggdb3 -funwind-tables -Wall
+-Wextra -std=gnu99 -fstack-protector-all -D_FORTIFY_SOURCE=2
+-D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE
+-I/kernel-src/tools/lib/perf/include
+-I/kernel-src/tools/perf/util/include
+-I/kernel-src/tools/perf/arch/x86/include -I/kernel-src/tools/include/
+-I/kernel-src/tools/arch/x86/include/uapi
+-I/kernel-src/tools/include/uapi -I/kernel-src/tools/arch/x86/include/
+-I/kernel-src/tools/arch/x86/ -I/tmp/perf//util -I/tmp/perf/
+-I/kernel-src/tools/perf/util -I/kernel-src/tools/perf
+-I/kernel-src/tools/lib/ -DHAVE_PTHREAD_ATTR_SETAFFINITY_NP
+-DHAVE_PTHREAD_BARRIER -DHAVE_EVENTFD_SUPPORT
+-DHAVE_GET_CURRENT_DIR_NAME -DHAVE_GETTID -DHAVE_FILE_HANDLE
+-DHAVE_GLIBC_SUPPORT -DHAVE_AIO_SUPPORT -DHAVE_SCHED_GETCPU_SUPPORT
+-DHAVE_SETNS_SUPPORT -DHAVE_LIBELF_SUPPORT
+-DHAVE_ELF_GETPHDRNUM_SUPPORT -DHAVE_GELF_GETNOTE_SUPPORT
+-DHAVE_ELF_GETSHDRSTRNDX_SUPPORT -DHAVE_LIBBPF_SUPPORT -DHAVE_JITDUMP
+-DHAVE_LIBPERL_SUPPORT -DHAVE_TIMERFD_SUPPORT -DNO_LIBPYTHON
+-DNO_DEMANGLE -DHAVE_ZLIB_SUPPORT -DHAVE_BACKTRACE_SUPPORT
+-DHAVE_KVM_STAT_SUPPORT -DHAVE_AUXTRACE_SUPPORT
+-DLIBTRACEEVENT_VERSION=65790 -I/tmp/perf/ -D"BUILD_STR(s)=#s" -c -o
+/tmp/perf/util/debug.o util/debug.c
+
+Probably some sysroot related magic. Anyway, doing this 1 line fix
+solves it for me:
+-----
+$ git diff
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 96ad944ca6a8..0627286380fa 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -346,7 +346,7 @@ endif
+
+ INC_FLAGS += -I$(src-perf)/util
+ INC_FLAGS += -I$(src-perf)
+-INC_FLAGS += -I$(srctree)/tools/lib/
++INC_FLAGS += -idirafter$(srctree)/tools/lib/
+
+ CORE_CFLAGS += -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE
+ -----
+
+I'll send out a patch.
+
+Sorry for the trouble. Thanks,
+Ian
