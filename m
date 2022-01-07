@@ -2,178 +2,155 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE79EC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri,  7 Jan 2022 10:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FC0C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri,  7 Jan 2022 14:28:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346693AbiAGKXJ (ORCPT
+        id S239195AbiAGO2C (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 7 Jan 2022 05:23:09 -0500
-Received: from mail-vk1-f180.google.com ([209.85.221.180]:46788 "EHLO
-        mail-vk1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346698AbiAGKXF (ORCPT
+        Fri, 7 Jan 2022 09:28:02 -0500
+Received: from foss.arm.com ([217.140.110.172]:41138 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1347615AbiAGO2B (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 7 Jan 2022 05:23:05 -0500
-Received: by mail-vk1-f180.google.com with SMTP id u198so3358685vkb.13;
-        Fri, 07 Jan 2022 02:23:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2loKrwHVliQMs6xQhMn/Ju+9qiYS7pDhv6uhEt7pMzI=;
-        b=UdUsDh83cEHx73kiTiDUzH6XwUtIV/SIDZPpmYlUv0mib9+6tCwPoJ0fnHyaF6kI7R
-         x0AGQ5cwgV7ndo2U1PDhH3F3MgW9TcIU/WJXOcGiqUjjjEY2dYSENXawCjKzQVh1VNyC
-         BG9X28WBHGPzh4FSwKyTIz7hGmDJC2jchZ4H7CcL0J9tAEwh6eKQOme2JEyf0u4Gc6dk
-         +p08U9qY8ZnphFUi5rHSPNVN3wxmcqEYZqvE4iG2xWU8m0GCQRkE7PgsSUarE9vuF/E8
-         I0Xit2o036MY4kzRjU1YYHrpRPhiROaugA6SscNrQ+CjhgdjMKIeJsD+MBRbZ0ABjWhU
-         5EVg==
-X-Gm-Message-State: AOAM533ixUZBp76c71FhQOHUqgIpYCDIFsj9aKY33xVNRBl7KPZadUjy
-        W7Qk2UnjQHSnQFicqZO7PKYfOEYzUhJSJQ==
-X-Google-Smtp-Source: ABdhPJzAdmvNgNF++G12pziwGz7t0YTRLIvFhr1DGoiLGurGa3osvRk+NwIAoPckZ1zkHm+ze67TVA==
-X-Received: by 2002:a1f:f8c4:: with SMTP id w187mr23117316vkh.41.1641550984204;
-        Fri, 07 Jan 2022 02:23:04 -0800 (PST)
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
-        by smtp.gmail.com with ESMTPSA id c14sm3194147vsl.22.2022.01.07.02.23.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Jan 2022 02:23:02 -0800 (PST)
-Received: by mail-ua1-f46.google.com with SMTP id v12so9304295uar.7;
-        Fri, 07 Jan 2022 02:23:02 -0800 (PST)
-X-Received: by 2002:a67:2e09:: with SMTP id u9mr19039539vsu.77.1641550981835;
- Fri, 07 Jan 2022 02:23:01 -0800 (PST)
-MIME-Version: 1.0
-References: <20211208201124.310740-1-robh@kernel.org> <20211208201124.310740-4-robh@kernel.org>
- <CAMuHMdVcDxR9sGzc5pcnORiotonERBgc6dsXZXMd6wTvLGA9iw@mail.gmail.com> <20220104135658.GC1827@willie-the-truck>
-In-Reply-To: <20220104135658.GC1827@willie-the-truck>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 7 Jan 2022 11:22:50 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUq9rAZT5B3xUGWAhHnyg2ta_Vx8KNDWms6vbqGmrarRg@mail.gmail.com>
-Message-ID: <CAMuHMdUq9rAZT5B3xUGWAhHnyg2ta_Vx8KNDWms6vbqGmrarRg@mail.gmail.com>
-Subject: Re: [PATCH v13 3/5] arm64: perf: Add userspace counter access disable switch
-To:     Will Deacon <will@kernel.org>
-Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        Fri, 7 Jan 2022 09:28:01 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 486BA13A1;
+        Fri,  7 Jan 2022 06:28:01 -0800 (PST)
+Received: from [10.57.38.163] (unknown [10.57.38.163])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C2B943F774;
+        Fri,  7 Jan 2022 06:27:58 -0800 (PST)
+Subject: Re: [PATCH v1] perf synthetic-events: Return error if procfs isn't
+ mounted for PID namespaces
+To:     Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+References: <20211224124014.2492751-1-leo.yan@linaro.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-perf-users@vger.kernel.org,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>, Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   James Clark <james.clark@arm.com>
+Message-ID: <e5f242c4-fe64-e214-4b28-c99af684751a@arm.com>
+Date:   Fri, 7 Jan 2022 14:27:57 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
+MIME-Version: 1.0
+In-Reply-To: <20211224124014.2492751-1-leo.yan@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Will,
 
-On Tue, Jan 4, 2022 at 2:57 PM Will Deacon <will@kernel.org> wrote:
-> On Tue, Dec 28, 2021 at 12:07:02PM +0100, Geert Uytterhoeven wrote:
-> > On Wed, Dec 8, 2021 at 9:19 PM Rob Herring <robh@kernel.org> wrote:
-> > > Like x86, some users may want to disable userspace PMU counter
-> > > altogether. Add a sysctl 'perf_user_access' file to control userspace
-> > > counter access. The default is '0' which is disabled. Writing '1'
-> > > enables access.
-> > >
-> > > Note that x86 supports globally enabling user access by writing '2' to
-> > > /sys/bus/event_source/devices/cpu/rdpmc. As there's not existing
-> > > userspace support to worry about, this shouldn't be necessary for Arm.
-> > > It could be added later if the need arises.
-> >
-> > Thanks for your patch, which is now commit e2012600810c9ded ("arm64:
-> > perf: Add userspace counter access disable switch") in arm64/for-next/core.
-> >
-> > This is causing two issues on Renesas Salvator-XS with R-Car H3.
-> > One during kernel boot:
-> >
-> >      hw perfevents: enabled with armv8_cortex_a53 PMU driver, 7
-> > counters available
-> >     +sysctl duplicate entry: /kernel//perf_user_access
-> >     +CPU: 0 PID: 1 Comm: swapper/0 Not tainted
-> > 5.16.0-rc3-arm64-renesas-00003-ge2012600810c #1420
-> >     +Hardware name: Renesas Salvator-X 2nd version board based on r8a77951 (DT)
-> >     +Call trace:
-> >     + dump_backtrace+0x0/0x190
-> >     + show_stack+0x14/0x20
-> >     + dump_stack_lvl+0x88/0xb0
-> >     + dump_stack+0x14/0x2c
-> >     + __register_sysctl_table+0x384/0x818
-> >     + register_sysctl+0x20/0x28
-> >     + armv8_pmu_init.constprop.0+0x118/0x150
-> >     + armv8_a57_pmu_init+0x1c/0x28
-> >     + arm_pmu_device_probe+0x1b4/0x558
-> >     + armv8_pmu_device_probe+0x18/0x20
-> >     + platform_probe+0x64/0xd0
-> >     + really_probe+0xb4/0x2f8
-> >     + __driver_probe_device+0x74/0xd8
-> >     + driver_probe_device+0x3c/0xe0
-> >     + __driver_attach+0x80/0x110
-> >     + bus_for_each_dev+0x6c/0xc0
-> >     + driver_attach+0x20/0x28
-> >     + bus_add_driver+0x138/0x1e0
-> >     + driver_register+0x60/0x110
-> >     + __platform_driver_register+0x24/0x30
-> >     + armv8_pmu_driver_init+0x18/0x20
-> >     + do_one_initcall+0x15c/0x31c
-> >     + kernel_init_freeable+0x2f0/0x354
-> >     + kernel_init+0x20/0x120
-> >     + ret_from_fork+0x10/0x20
-> >      hw perfevents: enabled with armv8_cortex_a57 PMU driver, 7
-> > counters available
-> >
-> > Presumably the same entry is added twice, once for the A53 PMU,
-> > and a second time for the A57 PMU?
->
-> Looks like it, and perhaps that's also what is confusing systemd?
-> Rob -- how come you didn't see this during your testing?
->
-> Anywho, please can you try the untested diff below?
 
-Thank you, this fixes the issue.
+On 24/12/2021 12:40, Leo Yan wrote:
+> For perf recording, it retrieves process info by iterating nodes in proc
+> fs.  If we run perf in a non-root PID namespace with command:
+> 
+>   # unshare --fork --pid perf record -e cycles -a -- test_program
+> 
+> ... in this case, unshare command creates a child PID namespace and
+> launches perf tool in it, but the issue is the proc fs is not mounted
+> for the non-root PID namespace, this leads to the perf tool gathering
+> process info from its parent PID namespace.
+> 
 
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+I had some concerns that this would prevent use of perf in docker, but docker
+does mount /proc so it is still working. And you've added a warning about how
+to fix the unshare command so I think this is ok.
 
-> --- a/arch/arm64/kernel/perf_event.c
-> +++ b/arch/arm64/kernel/perf_event.c
-> @@ -1214,6 +1214,14 @@ static struct ctl_table armv8_pmu_sysctl_table[] = {
->         { }
->  };
->
-> +static void armv8_pmu_register_sysctl_table(void)
-> +{
-> +       static u32 tbl_registered = 0;
+Reviewed-by: James Clark <james.clark@arm.com>
+
+> We can use below command to observe the process nodes under proc fs:
+> 
+>   # unshare --pid --fork ls /proc
+> 1    137   1968  2128  3    342  48  62   78	     crypto	  kcore        net	      uptime
+> 10   138   2	 2142  30   35	 49  63   8	     devices	  keys	       pagetypeinfo   version
+> 11   139   20	 2143  304  36	 50  64   82	     device-tree  key-users    partitions     vmallocinfo
+> 12   14    2011  22    305  37	 51  65   83	     diskstats	  kmsg	       self	      vmstat
+> 128  140   2038  23    307  39	 52  656  84	     driver	  kpagecgroup  slabinfo       zoneinfo
+> 129  15    2074  24    309  4	 53  67   9	     execdomains  kpagecount   softirqs
+> 13   16    2094  241   31   40	 54  68   asound     fb		  kpageflags   stat
+> 130  164   2096  242   310  41	 55  69   buddyinfo  filesystems  loadavg      swaps
+> 131  17    2098  25    317  42	 56  70   bus	     fs		  locks        sys
+> 132  175   21	 26    32   43	 57  71   cgroups    interrupts   meminfo      sysrq-trigger
+> 133  179   2102  263   329  44	 58  75   cmdline    iomem	  misc	       sysvipc
+> 134  1875  2103  27    330  45	 59  76   config.gz  ioports	  modules      thread-self
+> 135  19    2117  29    333  46	 6   77   consoles   irq	  mounts       timer_list
+> 136  1941  2121  298   34   47	 60  773  cpuinfo    kallsyms	  mtd	       tty
+> 
+> So it shows many existed tasks, since unshared command has not mounted
+> the proc fs for the new created PID namespace, it still accesses the
+> proc fs of the root PID namespace.  This leads to two prominent issues:
+> 
+> - Firstly, PID values are mismatched between thread info and samples.
+>   The gathered thread info are coming from the proc fs of the root PID
+>   namespace, but samples record its PID from the child PID namespace.
+> 
+> - The second issue is profiled program 'test_program' returns its forked
+>   PID number from the child PID namespace, perf tool wrongly uses this
+>   PID number to retrieve the process info via the proc fs of the root
+>   PID namespace.
+> 
+> To avoid issues, we need to mount proc fs for the child PID namespace
+> with the option '--mount-proc' when use unshare command:
+> 
+>   # unshare --fork --pid --mount-proc perf record -e cycles -a -- test_program
+> 
+> Conversely, when the proc fs of the root PID namespace is used by child
+> namespace, perf tool can detect the multiple PID levels and
+> nsinfo__is_in_root_namespace() returns false, this patch reports error
+> for this case:
+> 
+>   # unshare --fork --pid perf record -e cycles -a -- test_program
+>   Couldn't synthesize bpf events.
+>   Perf runs in non-root PID namespace but it tries to gather process info from its parent PID namespace.
+>   Please mount the proc file system properly, e.g. add the option '--mount-proc' for unshare command.
+> 
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> ---
+>  tools/perf/util/synthetic-events.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+> index 198982109f0f..cf7800347f77 100644
+> --- a/tools/perf/util/synthetic-events.c
+> +++ b/tools/perf/util/synthetic-events.c
+> @@ -1784,6 +1784,25 @@ int __machine__synthesize_threads(struct machine *machine, struct perf_tool *too
+>  				  perf_event__handler_t process, bool needs_mmap,
+>  				  bool data_mmap, unsigned int nr_threads_synthesize)
+>  {
+> +	/*
+> +	 * When perf runs in non-root PID namespace, and the namespace's proc FS
+> +	 * is not mounted, nsinfo__is_in_root_namespace() returns false.
+> +	 * In this case, the proc FS is coming for the parent namespace, thus
+> +	 * perf tool will wrongly gather process info from its parent PID
+> +	 * namespace.
+> +	 *
+> +	 * To avoid the confusion that the perf tool runs in a child PID
+> +	 * namespace but it synthesizes thread info from its parent PID
+> +	 * namespace, returns failure with warning.
+> +	 */
+> +	if (!nsinfo__is_in_root_namespace()) {
+> +		pr_err("Perf runs in non-root PID namespace but it tries to ");
+> +		pr_err("gather process info from its parent PID namespace.\n");
+> +		pr_err("Please mount the proc file system properly, e.g. ");
+> +		pr_err("add the option '--mount-proc' for unshare command.\n");
+> +		return -EPERM;
+> +	}
 > +
-> +       if (!cmpxchg_relaxed(&tbl_registered, 0, 1))
-> +               register_sysctl("kernel", armv8_pmu_sysctl_table);
-> +}
-> +
->  static int armv8_pmu_init(struct arm_pmu *cpu_pmu, char *name,
->                           int (*map_event)(struct perf_event *event),
->                           const struct attribute_group *events,
-> @@ -1248,8 +1256,7 @@ static int armv8_pmu_init(struct arm_pmu *cpu_pmu, char *name,
->         cpu_pmu->attr_groups[ARMPMU_ATTR_GROUP_CAPS] = caps ?
->                         caps : &armv8_pmuv3_caps_attr_group;
->
-> -       register_sysctl("kernel", armv8_pmu_sysctl_table);
-> -
-> +       armv8_pmu_register_sysctl_table();
->         return 0;
->  }
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>  	if (target__has_task(target))
+>  		return perf_event__synthesize_thread_map(tool, threads, process, machine,
+>  							 needs_mmap, data_mmap);
+> 
