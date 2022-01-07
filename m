@@ -2,103 +2,109 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98684C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri,  7 Jan 2022 18:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC266C433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri,  7 Jan 2022 18:58:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240879AbiAGSVN (ORCPT
+        id S233081AbiAGS6D (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 7 Jan 2022 13:21:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40608 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240599AbiAGSVM (ORCPT
+        Fri, 7 Jan 2022 13:58:03 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:37792 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233274AbiAGS5e (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 7 Jan 2022 13:21:12 -0500
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06456C061574;
-        Fri,  7 Jan 2022 10:21:12 -0800 (PST)
-Received: by mail-wm1-x331.google.com with SMTP id a83-20020a1c9856000000b00344731e044bso3390427wme.1;
-        Fri, 07 Jan 2022 10:21:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dwa9uE6ZhRvKn/5ifefhl4Wng1mfi5OItnJ1XlTD2Ao=;
-        b=iuQW6XDdKDpsQz3v4ckCVSdX/H1O3bBGYf+/ZhZwRAhM0sBKM4roGkN2F5xhfP6BUq
-         8yzYG7w3UY7dffHH6qHkN6TNskcYnYDn07ng5yFvCDMqIm6yjRn1NYcA2NrsCnxWVeBt
-         LDNN0goSylsoTE6Nt2/4mSwIrOGwmGFFNHpjPjk0v7JT+WDNMMCjKGrtUvhlV3+XBU/o
-         2Ew2RrqdsZBuZs4xlJE1XKCmcz58YwuO6VSZ4UKZ283PsofZe2lnkJe6NoIxJMOkd8gx
-         K80onguNe+gp2dDS5e8DNYhmSjNg7VEDWcwi4sBm2QXNIvI5tYZSG1vKGuo/rnsfHVYz
-         0dag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dwa9uE6ZhRvKn/5ifefhl4Wng1mfi5OItnJ1XlTD2Ao=;
-        b=eLQhOuvMMTEeDw1SbKw/nmng8RGEWMDOdaEV44y3Pz1LaP3ea4a1AS1XCk/B4L8SSp
-         rL/63Hozmu6Pv4/fP15UlZQJ0Xh4f2AFWL9VsXCJWF5W1mbQbmYslvTO7BCC+d9TMwTX
-         VhIV61CpSjWqcCYKwoTP+7/M2itpr59YFuKpvbEuLtM6i1NZyuYgddkurwI2UOcmagbL
-         7fC51+RjYopGm2MGt1Ic28Qti6TjdOiG8672tmozkIYWPdu0HUsO51jeExkjqgE4FBJK
-         L0gO0Hno6MvPughhZXEaM3isa6eNdED04K2vA4oKVPFTz3LoPF6dMQRuF3hlsGB9bTZa
-         7kAg==
-X-Gm-Message-State: AOAM532kJyeU3SiqRRqm9dq+7V72fZgzelE3/Otzm3VKMBzwckJ1sNGY
-        +XrRBAe+99NR9GIfpW+B6f7BtZyEzRRuPw==
-X-Google-Smtp-Source: ABdhPJxSqwF8Sp8XP2GqtjyRbE5SLGcO0yfmEeSq2XD1jE6RZa+OZVGcPfZ5qHlhCinCaL13Ra4ZSA==
-X-Received: by 2002:a7b:c745:: with SMTP id w5mr11729176wmk.167.1641579670587;
-        Fri, 07 Jan 2022 10:21:10 -0800 (PST)
-Received: from localhost.localdomain ([217.113.240.86])
-        by smtp.gmail.com with ESMTPSA id c12sm5402612wrr.7.2022.01.07.10.21.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jan 2022 10:21:10 -0800 (PST)
-From:   =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
-To:     peterz@infradead.org
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, irogers@google.com, ak@linux.intel.com,
-        john.garry@huawei.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
-Subject: [PATCH v3] perf util: Fix use after free in metric__new
-Date:   Fri,  7 Jan 2022 19:21:06 +0100
-Message-Id: <20220107182106.138418-1-jose.exposito89@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 7 Jan 2022 13:57:34 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CDB2EB826D7;
+        Fri,  7 Jan 2022 18:57:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50D1AC36AE0;
+        Fri,  7 Jan 2022 18:57:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1641581851;
+        bh=FyNWGzfcKGqhD6HtVa6E88uU1lNTBW4ZjhctypUoluc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=X3UaqwTkRQ4QWF0wTORaXJiwx4GaU2drKZdq0p20JD+53V3UkfxiPJ5KQJpOJ9FAs
+         NEFSfkLbGxAPFQMXoZvjuaPaEGxchG74+rq5IH3PvIVO6r5XQYsmt847tODk4SQkt0
+         jEecbKaEwTLuo4CH2NqApD0e52Nf64QVNy4GZ8bqCu38QiYWMq9h0dUZHT0owEROOO
+         Wyc2FmFWpnnVOLfoQ9nUF1JbqU4bqQjTD8o9juhy4EI3H2ti3PteIPFix9RCGo4W+t
+         0TvkUHHG7+UaPT75yOkuTh1psB8M4VeQHz7zl3YtlGQ5d+PrXWsTZT6oQaCp4HYKxH
+         iIzYrFD/A8QUg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 1D54740B92; Fri,  7 Jan 2022 15:57:28 -0300 (-03)
+Date:   Fri, 7 Jan 2022 15:57:28 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Christy Lee <christyc.y.lee@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf trace: Move SIGCHLD handler init to trace__run
+Message-ID: <YdiNGGNPG3DpTEUe@kernel.org>
+References: <20220106222030.227499-1-jolsa@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220106222030.227499-1-jolsa@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Fix a use after free on the error branch accessing the "metric" struct.
+Em Thu, Jan 06, 2022 at 11:20:30PM +0100, Jiri Olsa escreveu:
+> When running perf trace with bpf object like:
+>   # perf trace -e openat,/.../tools/perf/examples/bpf/hello.c
+> 
+> the event parsing eventually calls llvm__get_kbuild_opts function
+> that runs script and that ends up with SIGCHLD delivered to perf
+> trace handler, which assumes the workload process is done and quits
+> perf trace.
+> 
+> Moving the SIGCHLD handler setup directly to trace__run, where the
+> event is parsed and object already compiled.
 
-Fixes: b85a4d61d302 (perf metric: Allow modifiers on metrics)
-Addresses-Coverity-ID: 1494000
-Acked-by: Ian Rogers <irogers@google.com>
-Reviewed-by: John Garry <john.garry@huawei.com>
-Signed-off-by: José Expósito <jose.exposito89@gmail.com>
 
----
+Thanks, reproduced the problem without the patch, applied, tested again,
+works.
 
-v2: Add Fixes and Acked-by tags (thanks to Ian Rogers)
-v3: Add Reviewed-by tag (thanks to John Garry)
-    Improve patch description
----
- tools/perf/util/metricgroup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+- Arnaldo
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index fffe02aae3ed..4d2fed3aefd1 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -209,8 +209,8 @@ static struct metric *metric__new(const struct pmu_event *pe,
- 	m->metric_name = pe->metric_name;
- 	m->modifier = modifier ? strdup(modifier) : NULL;
- 	if (modifier && !m->modifier) {
--		free(m);
- 		expr__ctx_free(m->pctx);
-+		free(m);
- 		return NULL;
- 	}
- 	m->metric_expr = pe->metric_expr;
+ 
+> Cc: Christy Lee <christyc.y.lee@gmail.com>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/perf/builtin-trace.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index 94d62a92f1a1..4282ef9ec354 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -3925,6 +3925,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+>  	bool draining = false;
+>  
+>  	trace->live = true;
+> +	signal(SIGCHLD, sig_handler);
+>  
+>  	if (!trace->raw_augmented_syscalls) {
+>  		if (trace->trace_syscalls && trace__add_syscall_newtp(trace))
+> @@ -4876,7 +4877,6 @@ int cmd_trace(int argc, const char **argv)
+>  
+>  	signal(SIGSEGV, sighandler_dump_stack);
+>  	signal(SIGFPE, sighandler_dump_stack);
+> -	signal(SIGCHLD, sig_handler);
+>  	signal(SIGINT, sig_handler);
+>  
+>  	trace.evlist = evlist__new();
+> -- 
+> 2.33.1
+
 -- 
-2.25.1
 
+- Arnaldo
