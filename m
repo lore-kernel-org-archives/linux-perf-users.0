@@ -2,117 +2,103 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B2AC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri,  7 Jan 2022 15:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98684C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri,  7 Jan 2022 18:21:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232477AbiAGPKt (ORCPT
+        id S240879AbiAGSVN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 7 Jan 2022 10:10:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:41660 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232227AbiAGPKt (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 7 Jan 2022 10:10:49 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA68E13D5;
-        Fri,  7 Jan 2022 07:10:48 -0800 (PST)
-Received: from [10.57.38.163] (unknown [10.57.38.163])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E86033F66F;
-        Fri,  7 Jan 2022 07:10:46 -0800 (PST)
-Subject: Re: [PATCH 2/3] coresight: Fail to open with return stacks if they
- are unavailable
-From:   James Clark <james.clark@arm.com>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        coresight@lists.linaro.org
-Cc:     Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-References: <20211208160907.749482-1-james.clark@arm.com>
- <20211208160907.749482-2-james.clark@arm.com>
- <b52ef2f3-9e30-59a6-2aea-e46c93915868@arm.com>
- <b61ef2e3-e573-4867-af5d-fd5fabece4b1@arm.com>
-Message-ID: <70b562dc-adcd-da34-3811-ff872bc7cab8@arm.com>
-Date:   Fri, 7 Jan 2022 15:10:45 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Fri, 7 Jan 2022 13:21:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40608 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240599AbiAGSVM (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 7 Jan 2022 13:21:12 -0500
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06456C061574;
+        Fri,  7 Jan 2022 10:21:12 -0800 (PST)
+Received: by mail-wm1-x331.google.com with SMTP id a83-20020a1c9856000000b00344731e044bso3390427wme.1;
+        Fri, 07 Jan 2022 10:21:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dwa9uE6ZhRvKn/5ifefhl4Wng1mfi5OItnJ1XlTD2Ao=;
+        b=iuQW6XDdKDpsQz3v4ckCVSdX/H1O3bBGYf+/ZhZwRAhM0sBKM4roGkN2F5xhfP6BUq
+         8yzYG7w3UY7dffHH6qHkN6TNskcYnYDn07ng5yFvCDMqIm6yjRn1NYcA2NrsCnxWVeBt
+         LDNN0goSylsoTE6Nt2/4mSwIrOGwmGFFNHpjPjk0v7JT+WDNMMCjKGrtUvhlV3+XBU/o
+         2Ew2RrqdsZBuZs4xlJE1XKCmcz58YwuO6VSZ4UKZ283PsofZe2lnkJe6NoIxJMOkd8gx
+         K80onguNe+gp2dDS5e8DNYhmSjNg7VEDWcwi4sBm2QXNIvI5tYZSG1vKGuo/rnsfHVYz
+         0dag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dwa9uE6ZhRvKn/5ifefhl4Wng1mfi5OItnJ1XlTD2Ao=;
+        b=eLQhOuvMMTEeDw1SbKw/nmng8RGEWMDOdaEV44y3Pz1LaP3ea4a1AS1XCk/B4L8SSp
+         rL/63Hozmu6Pv4/fP15UlZQJ0Xh4f2AFWL9VsXCJWF5W1mbQbmYslvTO7BCC+d9TMwTX
+         VhIV61CpSjWqcCYKwoTP+7/M2itpr59YFuKpvbEuLtM6i1NZyuYgddkurwI2UOcmagbL
+         7fC51+RjYopGm2MGt1Ic28Qti6TjdOiG8672tmozkIYWPdu0HUsO51jeExkjqgE4FBJK
+         L0gO0Hno6MvPughhZXEaM3isa6eNdED04K2vA4oKVPFTz3LoPF6dMQRuF3hlsGB9bTZa
+         7kAg==
+X-Gm-Message-State: AOAM532kJyeU3SiqRRqm9dq+7V72fZgzelE3/Otzm3VKMBzwckJ1sNGY
+        +XrRBAe+99NR9GIfpW+B6f7BtZyEzRRuPw==
+X-Google-Smtp-Source: ABdhPJxSqwF8Sp8XP2GqtjyRbE5SLGcO0yfmEeSq2XD1jE6RZa+OZVGcPfZ5qHlhCinCaL13Ra4ZSA==
+X-Received: by 2002:a7b:c745:: with SMTP id w5mr11729176wmk.167.1641579670587;
+        Fri, 07 Jan 2022 10:21:10 -0800 (PST)
+Received: from localhost.localdomain ([217.113.240.86])
+        by smtp.gmail.com with ESMTPSA id c12sm5402612wrr.7.2022.01.07.10.21.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jan 2022 10:21:10 -0800 (PST)
+From:   =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
+To:     peterz@infradead.org
+Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, irogers@google.com, ak@linux.intel.com,
+        john.garry@huawei.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
+Subject: [PATCH v3] perf util: Fix use after free in metric__new
+Date:   Fri,  7 Jan 2022 19:21:06 +0100
+Message-Id: <20220107182106.138418-1-jose.exposito89@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <b61ef2e3-e573-4867-af5d-fd5fabece4b1@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Fix a use after free on the error branch accessing the "metric" struct.
 
+Fixes: b85a4d61d302 (perf metric: Allow modifiers on metrics)
+Addresses-Coverity-ID: 1494000
+Acked-by: Ian Rogers <irogers@google.com>
+Reviewed-by: John Garry <john.garry@huawei.com>
+Signed-off-by: José Expósito <jose.exposito89@gmail.com>
 
-On 09/12/2021 11:13, James Clark wrote:
-> 
-> 
-> On 09/12/2021 11:00, Suzuki K Poulose wrote:
->> On 08/12/2021 16:09, James Clark wrote:
->>> Maintain consistency with the other options by failing to open when they
->>> aren't supported. For example ETM_OPT_TS, ETM_OPT_CTXTID2 and the newly
->>> added ETM_OPT_BRANCH_BROADCAST all return with -EINVAL if they are
->>> requested but not supported by hardware.
->>>
->>> The consequence of not doing this is that the user may not be
->>> aware that they are not enabling the feature as it is silently disabled.
->>>
->>> Signed-off-by: James Clark <james.clark@arm.com>
->>> ---
->>>   drivers/hwtracing/coresight/coresight-etm4x-core.c | 13 +++++++++----
->>>   1 file changed, 9 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
->>> index d2bafb50c66a..0a9bb943a5e5 100644
->>> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
->>> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
->>> @@ -674,10 +674,15 @@ static int etm4_parse_event_config(struct coresight_device *csdev,
->>>       }
->>>         /* return stack - enable if selected and supported */
->>> -    if ((attr->config & BIT(ETM_OPT_RETSTK)) && drvdata->retstack)
->>> -        /* bit[12], Return stack enable bit */
->>> -        config->cfg |= BIT(12);
->>> -
->>> +    if (attr->config & BIT(ETM_OPT_RETSTK)) {
->>> +        if (!drvdata->retstack) {
->>> +            ret = -EINVAL;
->>> +            goto out;
->>> +        } else {
->>> +            /* bit[12], Return stack enable bit */
->>> +            config->cfg |= BIT(12);
->>> +        }
->>
->> nit: While at this, please could you change the hard coded value
->> to ETM4_CFG_BIT_RETSTK ?
->>
-> I started changing them all because I had trouble searching for bits by name but then
-> I thought it would snowball into a bigger change so I undid it.
-> 
-> I think I'll just go and do it now if it's an issue here.
+---
 
-Hi Suzuki,
+v2: Add Fixes and Acked-by tags (thanks to Ian Rogers)
+v3: Add Reviewed-by tag (thanks to John Garry)
+    Improve patch description
+---
+ tools/perf/util/metricgroup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I started on this and I think the only worthwhile change is to make them all consistent
-with sysreg.h. As in have xxx_SHIFT and xxx_MASK style definitions like:
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index fffe02aae3ed..4d2fed3aefd1 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -209,8 +209,8 @@ static struct metric *metric__new(const struct pmu_event *pe,
+ 	m->metric_name = pe->metric_name;
+ 	m->modifier = modifier ? strdup(modifier) : NULL;
+ 	if (modifier && !m->modifier) {
+-		free(m);
+ 		expr__ctx_free(m->pctx);
++		free(m);
+ 		return NULL;
+ 	}
+ 	m->metric_expr = pe->metric_expr;
+-- 
+2.25.1
 
-  #define TRCCONFIGR_INSTP0_SHIFT		1
-  #define TRCCONFIGR_INSTPO_MASK		GENMASK(1,0)
-
-This has been done for SPE and some of the new ETM stuff. If that sounds right to you
-I will go and do it as a followup patch to this one. It is quite a bit change so I can
-see maybe we don't want to do it? (Personally I would vote to do it)
-
-James
-
-> 
->> Otherwise, looks good to me
->>
->> Suzuki
