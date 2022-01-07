@@ -2,338 +2,272 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2765DC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Jan 2022 22:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A4AC433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  7 Jan 2022 03:23:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245194AbiAFWmC (ORCPT
+        id S1345823AbiAGDXJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Jan 2022 17:42:02 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:49718 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S245175AbiAFWmC (ORCPT
+        Thu, 6 Jan 2022 22:23:09 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:30732 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1345061AbiAGDXI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Jan 2022 17:42:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1641508921;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=i7c3gCHFjF1/hjWb8ol0IIBYFjuDmmDx/cAonfkPLx0=;
-        b=EbWLUB/mLrEsW+58YnirzWQf2UO4mTP3Q68JwpoVX6wKC4fBQe2Nh0+FpGIIk8CbzDYOhM
-        eMz5gLl+9iLSHcSyEtqehOAsoJYPkqfCKBZ5+Wm838RxmrByf2qTDsHPxlKo2ehLTeaPLQ
-        6lKySgUNk0f8YViMmbYM9u8+Sxn2X7Q=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-623-0ccbSzywOH2lMPqwzXcCgA-1; Thu, 06 Jan 2022 17:41:59 -0500
-X-MC-Unique: 0ccbSzywOH2lMPqwzXcCgA-1
-Received: by mail-ed1-f72.google.com with SMTP id t1-20020a056402524100b003f8500f6e35so3076081edd.8
-        for <linux-perf-users@vger.kernel.org>; Thu, 06 Jan 2022 14:41:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=i7c3gCHFjF1/hjWb8ol0IIBYFjuDmmDx/cAonfkPLx0=;
-        b=GYLY0ifuSt4v2ZaV4pOZGOBntLCuKdMlhfDMG4U8j5sVP+lqQuSaztlgJZYOHSmmd0
-         CZPYW/WOffI8Vow6PEK1WWphuWfKQCZtHZfv+kkkDEGbcDZCrpFWCYE8j+70d/qzUtpM
-         edFhqjM+XIIMxuByCiq7izjrQNqs3A0NCUY3alYMUQRXyOx0fb8k27cE1HSWh2S8gU2P
-         7I/pUTv/4cMohbUBv4NZKTW/2UdkNQQwlOH7MGWKkrxSqIwJFIwzALwHL57fycoqEWck
-         ie7q6aviAN7pl2pu2k+T+cRzn6ABOuHi22SCK3WVntn8A/WEjb2BKW76j957Wh/FtFpD
-         qkvQ==
-X-Gm-Message-State: AOAM533JcSmtpttQ2+VMmkUFEJtqRBisIqzZ8CjagebgXK2BkWdpSV6B
-        RHwKzBuoXg1PqLdRSx5gpd4r1nPyhNkEm4Ud9SnndBJV4mW32xGYE+2TspAxlEenB55jp8JG4k1
-        saVXRcGnBEC6wzTun7z3pLDVponsdrg==
-X-Received: by 2002:aa7:d795:: with SMTP id s21mr27673619edq.30.1641508918231;
-        Thu, 06 Jan 2022 14:41:58 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxiLK7YOOBNAQIko0ns1hH6+4DHE3BsyjD0prS9iTYXULLL1lsqH24wdIkU/p6aPnY19qrlLg==
-X-Received: by 2002:aa7:d795:: with SMTP id s21mr27673603edq.30.1641508917958;
-        Thu, 06 Jan 2022 14:41:57 -0800 (PST)
-Received: from krava ([83.240.63.12])
-        by smtp.gmail.com with ESMTPSA id m6sm1292283edc.36.2022.01.06.14.41.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jan 2022 14:41:57 -0800 (PST)
-Date:   Thu, 6 Jan 2022 23:41:55 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Christy Lee <christyc.y.lee@gmail.com>
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Christy Lee <christylee@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>,
-        He Kuang <hekuang@huawei.com>, Wang Nan <wangnan0@huawei.com>,
-        Wang ShaoBo <bobo.shaobowang@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: Re: [PATCH bpf-next 2/2] perf: stop using deprecated
+        Thu, 6 Jan 2022 22:23:08 -0500
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 2070vD8W026381;
+        Thu, 6 Jan 2022 19:22:03 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=MCB2ossapKhAH+OihxKa+E4Kw6Eck+qzTH51iKPAxAE=;
+ b=CQX6cYaShrRuSoknZTdViGUt5fvu0WzfoDOd7phAZ/x5/Rp0ZrzzcSA8m5qtq/MwWPqp
+ 1PU57PsNLdE9VHeglgx/L7lHWJ//C77vvmGDWMDPT8eBuVmlqNOfH1f1ayL8wkTONrrk
+ KaBYiNgolYFemX6EGjG/IoB3zfdISzc/koE= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3de4wpu5dx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 06 Jan 2022 19:22:02 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Thu, 6 Jan 2022 19:22:01 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cs8FeDwuhtpTc9fvZNOGA6KYCoMxLMBrGOAieAX7Vc7kdVp17R5oqOaYiyl4m2DJ2gFTa2PIu0QfGcn8HUvutdeG687Ik6LLKDFpwsM3fV6aDcZIs6cO7wgfOvxnwenNTfGx30PRzxpsyrxkn6DE2X7bMHIAAm2sLTinSpr9SiZi6h5cFxQlyCwn0LIyixoRdEy16+Lgi4lb4Vs05wTLXMpF7juad/ims2JNSPdRwE6V39HR2O9427v2ANjRSQPiQG5Q35RT1IbnLXPSkGkEn+ZqztRPFCFfiRGbCmhjf/C8zoD+egX27wPj4tO2GWoJhHvH9QXQsMA3y9Qk2cffhw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MCB2ossapKhAH+OihxKa+E4Kw6Eck+qzTH51iKPAxAE=;
+ b=KYaJiccDHtxfT4P03z8yICI2VX4/sOR6mgkPcqrBZNX/mlJd/tCzS7TjtPYNqJstgLCq5ndClnChjb6BpPlBbDOqJknhAeb8mUZLqgtQRoNT7c/nrayyO6Xn2lA8Ny5IMvH4hb4oaePPa7h/StbmZ176/G9DsWMle8y2yr5U0qLTRMuy2mAM4iGuLmWxSenMbUzE4kdxHREci68N/1p97D1kHEh30fBrRr1WgHkNF3vhUXpWugWtUAmmUvKmqD88c7bOyrnvtJ6Xs4737DV3hB4Qh3rZHNIaHeOF0bFJBU0pPtP/lI+B5SZ9wKCGLl8c7sBXVJ2fUgd8RGhBcphlBQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+Received: from SN6PR1501MB2064.namprd15.prod.outlook.com (2603:10b6:805:d::27)
+ by SA1PR15MB4708.namprd15.prod.outlook.com (2603:10b6:806:19f::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4867.9; Fri, 7 Jan
+ 2022 03:21:59 +0000
+Received: from SN6PR1501MB2064.namprd15.prod.outlook.com
+ ([fe80::ede3:677f:b85c:ac29]) by SN6PR1501MB2064.namprd15.prod.outlook.com
+ ([fe80::ede3:677f:b85c:ac29%4]) with mapi id 15.20.4867.011; Fri, 7 Jan 2022
+ 03:21:59 +0000
+Message-ID: <7597b807-9869-64d2-b4b8-2ca720ac797d@fb.com>
+Date:   Thu, 6 Jan 2022 19:21:51 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.4.1
+Subject: Re: [PATCH bpf-next v2 2/2] perf: stop using deprecated
  bpf__object_next() API
-Message-ID: <YddwMzk94Pfw+Dq9@krava>
-References: <20211216222108.110518-1-christylee@fb.com>
- <20211216222108.110518-3-christylee@fb.com>
- <YcGO271nDvfMeSlK@krava>
- <CAEf4BzZpNvEtfsVHUJGfwi_1xM+7-ohBPKPrRo--X=fYkYLrsw@mail.gmail.com>
- <YcMr1LeP6zUBdCiK@krava>
- <CAEf4Bzb2HWiuJmeb6WxE2Dift5qQOLBE=j1ZqfpVMjuWV3+EDg@mail.gmail.com>
- <CAPqJDZouQHpUXv4dEGKKe=UjwkZu3=GMQ2M9g2zLYOV6a=gZbw@mail.gmail.com>
- <YdRccTaunl9Fo63X@krava>
- <YdWhz1qaRncxNC/6@krava>
- <CAPqJDZpZrrg4UBz19H-HyEMk7rzn+PCe=qpYDR0uHvD3nPr4yw@mail.gmail.com>
+Content-Language: en-US
+To:     Christy Lee <christylee@fb.com>, <andrii@kernel.org>,
+        <acme@kernel.org>, <jolsa@redhat.com>
+CC:     <christyc.y.lee@gmail.com>, <bpf@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>, <kernel-team@fb.com>,
+        <wangnan0@huawei.com>, <bobo.shaobowang@huawei.com>,
+        <yuehaibing@huawei.com>
+References: <20220106200032.3067127-1-christylee@fb.com>
+ <20220106200032.3067127-3-christylee@fb.com>
+From:   Yonghong Song <yhs@fb.com>
+In-Reply-To: <20220106200032.3067127-3-christylee@fb.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CO2PR04CA0100.namprd04.prod.outlook.com
+ (2603:10b6:104:6::26) To SN6PR1501MB2064.namprd15.prod.outlook.com
+ (2603:10b6:805:d::27)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPqJDZpZrrg4UBz19H-HyEMk7rzn+PCe=qpYDR0uHvD3nPr4yw@mail.gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 339be9fb-9993-44e1-bae9-08d9d18cdda7
+X-MS-TrafficTypeDiagnostic: SA1PR15MB4708:EE_
+X-Microsoft-Antispam-PRVS: <SA1PR15MB4708D9FDEABC62D94F9CEA6BD34D9@SA1PR15MB4708.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Hy4z51evztq9F6ZbmG6/N6mWPD8FrKBWOdRW8Kn97eQRYi66GFS2X4ipAz3adxKpgFUa2UOf79WGjAoG29S0pINf9Dd2tmgqIFSxsBV4gwfVSp97fuv/9MRIl+R12llKT18xf6U7ArCJLRfPWJAc5lUIjIg+DBWEBNLvGJ5DftnHkWIP5HV4ZSSn8RUrK9yYpzWeXc/f+J6TcU5FBNsbk0RSZXWezbt4Gat5ziX71muTiTBkmcf+51Uvq32al/+QN+FGPfrjiAGIsMKgzIwrDLfGJMC9OXypJd1z8qxQdH6f+Cn/9hNBlq9Za35D8RjjyX8gUp2Wj7ALK2ToH30QB74GC7IC7t9sTVPCprB5pElRlYLD/eyR/fegEdkbmQlz6WaDEgmwPlGfHc9UoSZF1zZIECEzMR4GotuG9tqCCZuYRYkWdqDkO35bn7usVKnn0uBHCMpYMKIofqlblhMBuEH4ryxTcXUpgmT/BO1Z/B1G6ZHHluC90g1/44dCbyCtS+ELTiLUPcu667EPounMiZtAVC2X14MstGAlFXr77oUMH6sYZT9LHj4+dJRTFswmAPvjacsQ02DD4UiHt10+tOEWoCUgR2HTD9HrjGMOUyUZ3BX/njbhIXsb5LA7WhQewaqOtR8KjFMyHrvWU/BeBrey5DaJOWMMf7mhNwWAOHQ+E1L2WYxP9nmqJ7p07Fn3O9zzLoFwSrrS2hl6jnd0nQaQfoCz8SSRDpcLECJ0TSNmxYgCWh1R5xOS0EbhW5PkSx8+ftdvwKb2y4z0MbvnOg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR1501MB2064.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(316002)(8936002)(38100700002)(6506007)(6512007)(8676002)(53546011)(66476007)(2616005)(66556008)(186003)(4326008)(5660300002)(6486002)(508600001)(2906002)(86362001)(31696002)(31686004)(66946007)(6666004)(52116002)(36756003)(101420200003)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UVNpMFdGUm1KVUlSNGdpUEcvQVY2aEp6cTNnbEd0Y2MzdmFxT2R5d0pNdEFZ?=
+ =?utf-8?B?WDBPV1NBMVJqUktoOFlPZmdGTlBOclJEOHRra2pZa0JySklRRkMzcG1XVGxl?=
+ =?utf-8?B?V0lOZUkxMlN4SU1KSGdKTWFCcE12aGVBSFdicWpXQXJ0aVJKa0ZHdXAydnBm?=
+ =?utf-8?B?ZzgrYTZoc3hLR2hyOUdsUDYzWktWNjg5QVZ5Q1ZzdVNPSmk4aGVGc2VPanMx?=
+ =?utf-8?B?THVCdFAwVkJoQkNYR1c3Wm0vYUcrZUxESzJuaHpEWUVEUkZoYlV6SVlpQ2d1?=
+ =?utf-8?B?RjZaeWphSk9xc0ZZV3ZIWU5iZlljeW04aUJYd1k4N0pBd0hqVnErc1o0REZW?=
+ =?utf-8?B?OVVFYXZJOVlhcGRFOEVnMFp5R29QRnNTZzJNWEhpczNmWU1maURzbTA1QkFl?=
+ =?utf-8?B?NTAwRkpaU1RhWVhOek1NMXVUUlJKN3JydUtXTU9SWUNJckJFMEVQTVk1L1Qz?=
+ =?utf-8?B?MjJFb0xUQ3VaWFpoT0x6N2VWVU93blMzRGk5Ujlqc3VIc3pVeWlPc3hiUzAv?=
+ =?utf-8?B?b1FXK3YvVFpacERLV3V6K2M3U2Qvd0ZGdmh2V2I0U1duQndDa1RKdm02M2hQ?=
+ =?utf-8?B?UlNHbkE2TFFnVUNrT2xlR0JxbEdxSEptdGlFbnVUdEVvcEtheVY0dzhhQVl6?=
+ =?utf-8?B?WHZLbnh0SDlpdVBNelNROFB6QUdCTXBmMk1rSFRmZkRMMm41cGl0WVlFNzc0?=
+ =?utf-8?B?akdValRNL0VrVFJNTFhqK2hDeFNDRW56QXF0WE5LTnkyWGtGOFRiNDhWK1JW?=
+ =?utf-8?B?MTU3ZW03SzA1M0tIYTZGRFhaMHIzVm1WbU5ZVDFmWkdSUVRjbm5VZE9ETWFv?=
+ =?utf-8?B?SUFwNnRNOVZScEcySkpzQ3V6UWo1ZFh6NzM4UytIck8rVHczU2hmZTdUYVNF?=
+ =?utf-8?B?WHp2T2RyNGVlSmY2VnhQOXRMR0h6K1hSRmVnTzN0Q2NPSjh1WTJ5R0FSL2dC?=
+ =?utf-8?B?UDUyNnRTVmw5VTFFTEhHaUUzYkJiM1pjTXBmT0dHbWtUdE1GQ0VIK0V2ZjVH?=
+ =?utf-8?B?aFZQaGJSejdpalVFNmVKSTRrWDNCSUs1Sm0xaDRhbkwrOGM1RzJIdmxET0Rt?=
+ =?utf-8?B?QW1wcHZkeVZ6TG90ZUFaTFlNbCtlZWxUeHR4cFF4dEFrbzRrYUkzbVkxS3NL?=
+ =?utf-8?B?Y3ZNazFFTm10cnN2YlA4R2VhQ0dYZWRRSk9TeUJyVGh6eG4xSExnSnJSRk93?=
+ =?utf-8?B?MDRSbEk5YTBYR1hFRzYxYmN2NEFRQURwRGpVNHRWR1YxYy91bjAvWnJDNk1Y?=
+ =?utf-8?B?b2puRGNXVnVXOGI4WW9OUmc2cWVTR3Z0YlhWUHl1K2IySGhleEtRL0tiOFFG?=
+ =?utf-8?B?SzJ5NHlDTERsK0luU0dCRUN4RzhkMmxuaW1RdHhmUDBIaGpNa0tBM0RFbGJ4?=
+ =?utf-8?B?b1hWenJGSmhYV2hXOGx4dzlaT2dWeGJYWWFsUlZpbk5rOUYwVjdUOEYyaXFh?=
+ =?utf-8?B?ZEozUGprdHZIWmY2VE5XRzVqdzBBWXMwVlI1Um5zaGZGbzJEK0xqNUNTa2pr?=
+ =?utf-8?B?Z2FuYnVLelVSdGZkeVJjZUt1bkFoWnRjNlBCTFI1ZzM3T1BhWjJoblZkTHVj?=
+ =?utf-8?B?OWYzaVBvRDFTT2ljV21EeGNROVlaVEI0eDZNbWVQZ2Z1OHpiekpUN0JVTXpz?=
+ =?utf-8?B?ZUZON1VuYWxGU2dKVWVQZFZlWFV1aVhlMlF2aXphVTMydExKUnlMMGxGenBV?=
+ =?utf-8?B?OTdhTy9yOUloQnl3YlY5UTcwbC95U2FOMVVoVVlLazdUNWRBb200d1luZmhP?=
+ =?utf-8?B?Yi9EZ1k2Q1ZvcnJmVU1kQVlWcVJCVHBlaEFHUzRnbmJVbXpBbzhGcnNlVEFH?=
+ =?utf-8?B?ZU9WQytHWVF3bHNzVWU4TnBHNDcycHRoNkpBZjl0QmdQdW8yYVNLdk9LdzdW?=
+ =?utf-8?B?QmpJSWhaSnE4QzAvaHNIaGgvbW1SU3ZNWmxmcnlXZUw3aGtTWGx3K0MzbWpO?=
+ =?utf-8?B?aTExRW1TbkY1MEw4ZnlMNlZjdXhLN2FRbUNBd2lmZTJNdFhzdVd1L2JxOVN5?=
+ =?utf-8?B?elIwYkFPSkpjTURySldPQXpXMUNlTzRsWVNGTWUrdVk5NDN5Qko5bzR6NWE5?=
+ =?utf-8?B?Sk15ZlhmMDQyalIwYmdoYmtoL2VtNGRXLzVQZTBtR0FHLzZRNndyamNRZ2Vz?=
+ =?utf-8?Q?V3hKYgB+6YhTY4FpVd+TJdCRG?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 339be9fb-9993-44e1-bae9-08d9d18cdda7
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR1501MB2064.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2022 03:21:59.5738
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: guVrwkkD816Gy5YOIEElGNslqY9CEod+AvFG9QqXi/bertW3LrDk2jhV2Qy2lFxz
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR15MB4708
+X-OriginatorOrg: fb.com
+X-Proofpoint-ORIG-GUID: QW0A7s9N7XfX6lI3Ahroere2VHTbI1B5
+X-Proofpoint-GUID: QW0A7s9N7XfX6lI3Ahroere2VHTbI1B5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
+ definitions=2022-01-07_01,2022-01-06_01,2021-12-02_01
+X-Proofpoint-Spam-Details: rule=fb_outbound_notspam policy=fb_outbound score=0 adultscore=0 mlxscore=0
+ impostorscore=0 bulkscore=0 lowpriorityscore=0 mlxlogscore=999
+ phishscore=0 suspectscore=0 spamscore=0 malwarescore=0 priorityscore=1501
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2201070020
+X-FB-Internal: deliver
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jan 06, 2022 at 09:54:38AM -0800, Christy Lee wrote:
-> Thank you so much, I was able to reproduce the original tests after applying
-> the bug fix. I will submit a new patch set with the more detailed comments.
 
-great
 
+On 1/6/22 12:00 PM, Christy Lee wrote:
+> Previously libbpf maintained a list of bpf_objects, and bpf_objects
+> can be added to the list via bpf__object__next() API. Libbpf has
+> deprecated the ability to keep track of object list inside libbpf,
+> so we need to hoist the tracking logic to perf.
 > 
-> The only deprecated functions that need to be removed after this would be
-> bpf_program__set_prep() (how perf sets the bpf prologue) and
-> bpf_program__nth_fd() (how perf leverages multi instance bpf). They look a
-> little more involved and I'm not sure how to approach those. Jiri, would you
-> mind taking a look at those please?
-
-yep, I plan to check on that
-
-thanks,
-jirka
-
+> Committer note:
 > 
-> Christy
+> This is tested by following the committer's note in the original commit
+> "aa3abf30bb28addcf593578d37447d42e3f65fc3".
 > 
-> On Wed, Jan 5, 2022 at 5:49 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> >
-> > On Tue, Jan 04, 2022 at 03:40:49PM +0100, Jiri Olsa wrote:
-> > > On Wed, Dec 29, 2021 at 11:01:35AM -0800, Christy Lee wrote:
-> > >
-> > > SNIP
-> > >
-> > > > > >
-> > > > > > I don't use it, I just know it's there.. that's why I asked ;-)
-> > > > > >
-> > > > > > it's possible to specify bpf program on the perf command line
-> > > > > > to be attached to event, like:
-> > > > > >
-> > > > > >       # cat tools/perf/examples/bpf/hello.c
-> > > > > >       #include <stdio.h>
-> > > > > >
-> > > > > >       int syscall_enter(openat)(void *args)
-> > > > > >       {
-> > > > > >               puts("Hello, world\n");
-> > > > > >               return 0;
-> > > > > >       }
-> > > > > >
-> > > > > >       license(GPL);
-> > > > > >       #
-> > > > > >       # perf trace -e openat,tools/perf/examples/bpf/hello.c cat /etc/passwd > /dev/null
-> > > > > >          0.016 (         ): __bpf_stdout__:Hello, world
-> > > > > >          0.018 ( 0.010 ms): cat/9079 openat(dfd: CWD, filename: /etc/ld.so.cache, flags: CLOEXEC) = 3
-> > > > > >          0.057 (         ): __bpf_stdout__:Hello, world
-> > > > > >          0.059 ( 0.011 ms): cat/9079 openat(dfd: CWD, filename: /lib64/libc.so.6, flags: CLOEXEC) = 3
-> > > > > >          0.417 (         ): __bpf_stdout__:Hello, world
-> > > > > >          0.419 ( 0.009 ms): cat/9079 openat(dfd: CWD, filename: /etc/passwd) = 3
-> > > > > >       #
-> > > > > >
-> > > > > > I took that example from commit message
-> > > > [...]
-> > > >
-> > > > I found the original commit aa3abf30bb28addcf593578d37447d42e3f65fc3
-> > > > that included a test case, but I'm having trouble reproducing it due to syntax
-> > > > error. I am running this on bpf-next master without my patches.
-> > > >
-> > > > I ran 'perf test -v LLVM' and used it's output to generate a script for
-> > > > compiling the perf test object:
-> > > >
-> > > > --------------------------------------------------
-> > > > $ cat ~/bin/hello-ebpf
-> > > > INPUT_FILE=/tmp/test.c
-> > > > OUTPUT_FILE=/tmp/test.o
-> > > >
-> > > > export KBUILD_DIR=/lib/modules/5.12.0-0_fbk2_3390_g7ecb4ac46d7f/build
-> > > > export NR_CPUS=56
-> > > > export LINUX_VERSION_CODE=0x50c00
-> > > > export CLANG_EXEC=/data/users/christylee/devtools/llvm/latest/bin/clang
-> > > > export CLANG_OPTIONS=-xc
-> > > > export KERNEL_INC_OPTIONS="-nostdinc -isystem
-> > > > /data/users/christylee/devtools/gcc/10.3.0/lib/gcc/x86_64-pc-linux-gnu/10.3.0/include
-> > > > -I./arch/\
-> > > > x86/include -I./arch/x86/include/generated  -I./include
-> > > > -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi
-> > > > -I./include/uapi -I./in\
-> > > > clude/generated/uapi -include ./include/linux/compiler-version.h
-> > > > -include ./include/linux/kconfig.h"
-> > > > export PERF_BPF_INC_OPTIONS=-I/home/christylee/lib/perf/include/bpf
-> > > > export WORKING_DIR=/lib/modules/5.12.0-0_fbk2_3390_g7ecb4ac46d7f/build
-> > > > export CLANG_SOURCE=-
-> > > >
-> > > > rm -f $OUTPUT_FILE
-> > > > cat $INPUT_FILE |
-> > > > /data/users/christylee/devtools/llvm/latest/bin/clang -D__KERNEL__
-> > > > -D__NR_CPUS__=56 -DLINUX_VERSION_CODE=0x50c00 -xc  -I/ho\
-> > > > me/christylee/lib/perf/include/bpf  -nostdinc -isystem
-> > > > /data/users/christylee/devtools/gcc/10.3.0/lib/gcc/x86_64-pc-linux-gnu/10.3.0/include
-> > > > \
-> > > > -I./arch/x86/include -I./arch/x86/include/generated  -I./include
-> > > > -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi
-> > > > -I./include/ua\
-> > > > pi -I./include/generated/uapi -include
-> > > > ./include/linux/compiler-version.h -include ./include/linux/kconfig.h
-> > > > -Wno-unused-value -Wno-pointer-\
-> > > > sign -working-directory
-> > > > /lib/modules/5.12.0-0_fbk2_3390_g7ecb4ac46d7f/build -c - -target bpf
-> > > > -O2 -o $OUTPUT_FILE
-> > > > --------------------------------------------------
-> > > >
-> > > > I then wrote and compiled a script that ask to get asks to put a probe
-> > > > at a function that
-> > > > does not exists in the kernel, it errors out as expected:
-> > > >
-> > > > $ cat /tmp/test.c
-> > > > __attribute__((section("fork=does_not_exist"), used)) int fork(void *ctx) {
-> > > >     return 0;
-> > > > }
-> > > >
-> > > > char _license[] __attribute__((section("license"), used)) = "GPL";
-> > > > int _version __attribute__((section("version"), used)) = 0x40100;
-> > > > $ cd ~/bin && ./hello-ebpf
-> > > > $ perf record --event /tmp/test.o sleep 1
-> > > > Using perf wrapper that supports hot-text. Try perf.real if you
-> > > > encounter any issues.
-> > > > Probe point 'does_not_exist' not found.
-> > > > event syntax error: '/tmp/test.o'
-> > > >                      \___ You need to check probing points in BPF file
-> > > >
-> > > > (add -v to see detail)
-> > > > Run 'perf list' for a list of valid events
-> > > >
-> > > >  Usage: perf record [<options>] [<command>]
-> > > >     or: perf record [<options>] -- <command> [<options>]
-> > > >
-> > > >     -e, --event <event>   event selector. use 'perf list' to list
-> > > > available events
-> > > >
-> > > > ---------------------------------------------------
-> > > >
-> > > > Next I changed the attribute to something that exists in the kernel.
-> > > > As expected, it errors out
-> > > > with permission problem:
-> > > > $ cat /tmp/test.c
-> > > > __attribute__((section("fork=fork_init"), used)) int fork(void *ctx) {
-> > > >     return 0;
-> > > > }
-> > > > char _license[] __attribute__((section("license"), used)) = "GPL";
-> > > > int _version __attribute__((section("version"), used)) = 0x40100;
-> > > > $ grep fork_init /proc/kallsyms
-> > > > ffffffff8146e250 T xfs_ifork_init_cow
-> > > > ffffffff83980481 T fork_init
-> > > > $ cd ~/bin && ./hello-ebpf
-> > > > $ perf record --event /tmp/test.o sleep 1
-> > > > Using perf wrapper that supports hot-text. Try perf.real if you
-> > > > encounter any issues.
-> > > > Failed to open kprobe_events: Permission denied
-> > > > event syntax error: '/tmp/test.o'
-> > > >                      \___ You need to be root
-> > > >
-> > > > (add -v to see detail)
-> > > > Run 'perf list' for a list of valid events
-> > > >
-> > > >  Usage: perf record [<options>] [<command>]
-> > > >     or: perf record [<options>] -- <command> [<options>]
-> > > >
-> > > >     -e, --event <event>   event selector. use 'perf list' to list
-> > > > available events
-> > > >
-> > > > ---------------------------------------------------
-> > > >
-> > > > So I reran as root, but this time I get an invalid syntax error:
-> > > >
-> > > > # perf record --event /tmp/test.o -v sleep 1
-> > > > Using perf wrapper that supports hot-text. Try perf.real if you
-> > > > encounter any issues.
-> > > > Failed to write event: Invalid argument
-> > > > event syntax error: '/tmp/test.o'
-> > > >                      \___ Invalid argument
-> > > >
-> > > > (add -v to see detail)
-> > > > Run 'perf list' for a list of valid events
-> > > >
-> > > >  Usage: perf record [<options>] [<command>]
-> > > >     or: perf record [<options>] -- <command> [<options>]
-> > > >
-> > > >     -e, --event <event>   event selector. use 'perf list' to list
-> > > > available events
-> > > > ---------------------------------------------------
-> > > >
-> > > > Is there a different way to attach a custom event probe point?
-> > > >
-> > >
-> > > nice, good question ;-)
-> > >
-> > > looks like there are no volunteers from original authors,
-> > > I'll check on that
-> >
-> > there's small bug in perf trace that makes it to die early,
-> > (fix below) but other than that it works.. I'll send full
-> > patch later
-> >
-> > you need to specify full path for bpf object, not like in the
-> > example I pasted above.. I recall fixing that in code because
-> > it clashed with pmu syntax
-> >
-> > so on fedora 35 I can run following with the change below:
-> >
-> >         # ./perf trace -e openat,/home/jolsa/linux-qemu/tools/perf/examples/bpf/hello.c
-> >         /home/jolsa/linux-qemu/tools/perf/examples/bpf/hello.c:5:2: warning: variable length array folded to constant array as an extension [-Wgnu-folding-constant]
-> >                 puts("Hello, world\n");
-> >                 ^
-> >         /home/jolsa/lib/perf/include/bpf/stdio.h:14:10: note: expanded from macro 'puts'
-> >                    char __from[__len] = from; \
-> >                         ^
-> >         1 warning generated.
-> >              0.000 (         ): systemd-resolv/1142 __bpf_stdout__(Hello, world)
-> >              0.016 ( 0.031 ms): systemd-resolv/1142 openat(dfd: CWD, filename: 0x6b1c4a70, flags: RDONLY|CLOEXEC)         = -1 ENOENT (No such file or directory)
-> >              0.070 (         ): systemd-resolv/1142 __bpf_stdout__(Hello, world)
-> >              0.074 ( 0.011 ms): systemd-resolv/1142 openat(dfd: CWD, filename: 0x6b1c4a70, flags: RDONLY|CLOEXEC)         = -1 ENOENT (No such file or directory)
-> >              0.097 (         ): systemd-resolv/1142 __bpf_stdout__(Hello, world)
-> >              0.101 ( 0.010 ms): systemd-resolv/1142 openat(dfd: CWD, filename: 0x6b1c4a70, flags: RDONLY|CLOEXEC)         = -1 ENOENT (No such file or directory)
-> >              0.123 (         ): systemd-resolv/1142 __bpf_stdout__(Hello, world)
-> >              0.127 ( 0.010 ms): systemd-resolv/1142 openat(dfd: CWD, filename: 0x6b1c4a70, flags: RDONLY|CLOEXEC)         = -1 ENOENT (No such file or directory)
-> >              0.148 (         ): systemd-resolv/1142 __bpf_stdout__(Hello, world)
-> >              0.152 ( 0.010 ms): systemd-resolv/1142 openat(dfd: CWD, filename: 0x6b1c4a70, flags: RDONLY|CLOEXEC)         = -1 ENOENT (No such file or directory)
-> >              0.219 (         ): systemd-resolv/1142 __bpf_stdout__(Hello, world)
-> >         ...
-> >
-> >
-> > jirka
-> >
-> >
-> > ---
-> > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> > index 97121fb45842..df9fc00b4cd6 100644
-> > --- a/tools/perf/builtin-trace.c
-> > +++ b/tools/perf/builtin-trace.c
-> > @@ -3936,6 +3936,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
-> >         bool draining = false;
-> >
-> >         trace->live = true;
-> > +       signal(SIGCHLD, sig_handler);
-> >
-> >         if (!trace->raw_augmented_syscalls) {
-> >                 if (trace->trace_syscalls && trace__add_syscall_newtp(trace))
-> > @@ -4884,7 +4885,6 @@ int cmd_trace(int argc, const char **argv)
-> >
-> >         signal(SIGSEGV, sighandler_dump_stack);
-> >         signal(SIGFPE, sighandler_dump_stack);
-> > -       signal(SIGCHLD, sig_handler);
-> >         signal(SIGINT, sig_handler);
-> >
-> >         trace.evlist = evlist__new();
-> >
+> I ran 'perf test -v LLVM' and used it's output to generate a script for
+> compiling the perf test object:
 > 
+> --------------------------------------------------
+> $ cat ~/bin/hello-ebpf
+> INPUT_FILE=/tmp/test.c
+> OUTPUT_FILE=/tmp/test.o
+> 
+> export KBUILD_DIR=/lib/modules/5.12.0-0_fbk2_3390_g7ecb4ac46d7f/build
+> export NR_CPUS=56
+> export LINUX_VERSION_CODE=0x50c00
+> export CLANG_EXEC=/data/users/christylee/devtools/llvm/latest/bin/clang
+> export CLANG_OPTIONS=-xc
+> export KERNEL_INC_OPTIONS="KERNEL_INC_OPTIONS= -nostdinc \
+> -isystem /usr/lib/gcc/x86_64-redhat-linux/8/include -I./arch/x86/include \
+> -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi \
+> -I./arch/x86/include/generated/uapi -I./include/uapi \
+> -I./include/generated/uapi -include ./include/linux/compiler-version.h \
+> -include ./include/linux/kconfig.h"
+> export PERF_BPF_INC_OPTIONS=-I/usr/lib/perf/include/bpf
+> export WORKING_DIR=/lib/modules/5.12.0-0_fbk2_3390_g7ecb4ac46d7f/build
+> export CLANG_SOURCE=-
+> 
+> rm -f $OUTPUT_FILE
+> cat $INPUT_FILE | /data/users/christylee/devtools/llvm/latest/bin/clang \
+> -D__KERNEL__ -D__NR_CPUS__=56 -DLINUX_VERSION_CODE=0x50c00 -xc  \
+> -I/usr/lib/perf/include/bpf -nostdinc \
+> -isystem /usr/lib/gcc/x86_64-redhat-linux/8/include -I./arch/x86/include \
+> -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi \
+> -I./arch/x86/include/generated/uapi -I./include/uapi \
+> -I./include/generated/uapi -include ./include/linux/compiler-version.h \
+> -include ./include/linux/kconfig.h -Wno-unused-value -Wno-pointer-sign \
+> -working-directory /lib/modules/5.12.0-0_fbk2_3390_g7ecb4ac46d7f/build \
+> -c - -target bpf -O2 -o $OUTPUT_FILE
+> --------------------------------------------------
+> 
+> I then wrote and compiled a script that ask to get asks to put a probe
+> at a function that
+> does not exists in the kernel, it errors out as expected:
+> 
+> $ cat /tmp/test.c
+> __attribute__((section("probe_point=not_exist"), used))
+> int probe_point(void *ctx) {
+>      return 0;
+> }
+> char _license[] __attribute__((section("license"), used)) = "GPL";
+> int _version __attribute__((section("version"), used)) = 0x40100;
+> 
+> $ cd ~/bin && ./hello-ebpf
+> $ ./perf record --event /tmp/test.o sleep 1
+> 
+> Using perf wrapper that supports hot-text. Try perf.real if you
+> encounter any issues.
 
+The above doesn't exist in upstream perf. It would be good to just 
+demonstrate with upstream built perf. Otherwise, people will confuse
+what 'perf' we are talking about here.
+
+The same for another 'perf record' below.
+
+> Probe point 'not_exist' not found.
+> event syntax error: '/tmp/test.o'
+>                       \___ You need to check probing points in BPF file
+> 
+> (add -v to see detail)
+> Run 'perf list' for a list of valid events
+> 
+>   Usage: perf record [<options>] [<command>]
+>      or: perf record [<options>] -- <command> [<options>]
+> 
+>      -e, --event <event>   event selector. use 'perf list' to list
+> available events
+> 
+> ---------------------------------------------------
+> 
+> Next I changed the attribute to something that exists in the kernel.
+> As expected, it errors out
+> with permission problem:
+> $ cat /tmp/test.c
+> __attribute__((section("probe_point=kernel_execve"), used))
+> int probe_point(void *ctx) {
+>      return 0;
+> }
+> char _license[] __attribute__((section("license"), used)) = "GPL";
+> int _version __attribute__((section("version"), used)) = 0x40100;
+> 
+> $ grep kernel_execve /proc/kallsyms
+> ffffffff812dc210 T kernel_execve
+> 
+> $ cd ~/bin && ./hello-ebpf
+> $ ./perf record --event /tmp/test.o sleep 1
+> 
+> Using perf wrapper that supports hot-text. Try perf.real if you
+> encounter any issues.
+
+here.
+
+> Failed to open kprobe_events: Permission denied
+> event syntax error: '/tmp/test.o'
+>                       \___ You need to be root
+> 
+> (add -v to see detail)
+> Run 'perf list' for a list of valid events
+> 
+>   Usage: perf record [<options>] [<command>]
+>      or: perf record [<options>] -- <command> [<options>]
+> 
+>      -e, --event <event>   event selector. use 'perf list' to list
+> available events
+> 
+[...]
