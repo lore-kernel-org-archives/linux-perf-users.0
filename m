@@ -2,162 +2,115 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA33C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun,  9 Jan 2022 23:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4ADC433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun,  9 Jan 2022 23:54:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232548AbiAIXpB (ORCPT
+        id S234315AbiAIXyp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 9 Jan 2022 18:45:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60038 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232177AbiAIXpB (ORCPT
+        Sun, 9 Jan 2022 18:54:45 -0500
+Received: from maynard.decadent.org.uk ([95.217.213.242]:55168 "EHLO
+        maynard.decadent.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234835AbiAIXyo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 9 Jan 2022 18:45:01 -0500
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE22CC06173F;
-        Sun,  9 Jan 2022 15:45:00 -0800 (PST)
-Received: by mail-ed1-x52e.google.com with SMTP id w16so46725200edc.11;
-        Sun, 09 Jan 2022 15:45:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KMVKzWzTDkR0qm3suHIJabcOLRjs4Osz10LuFhuiBqQ=;
-        b=qF2H6YQCKG5mK6HEF6v1TEfhR5giSM4UdtU5JQ+Wai88ek6ir4iysxX/o10d/v/PCa
-         z0QWciGSY0zbmWfbrt74Pao6mVGeNPNXvQZQo+lmY5+68Ss8liZ6S07P3zlyf6V/i8WB
-         +B8GMfLUlRr9H777q1RwWXtA+/uWvNrtyGK96FeiOGdov1Kh9FW61FqMdOhaAQ6ka4am
-         Axyq4xec0qBcjUPVUlmwdqZv+TiQbZWrVlFZzyGTEPbJl3IeCOVlnqJKA/LuFRpHm8wX
-         9oYOtS1A5luxTphAqWZ4b175Kkr+ohBQ+xoztyg1HmeY8AKseWZvgn49TCa7e97rfLko
-         dDDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KMVKzWzTDkR0qm3suHIJabcOLRjs4Osz10LuFhuiBqQ=;
-        b=HYhljqUpLDiSwG9ukmI+oZCSMxBgsgs0LS4WMLl7rsKcKKUwZhUI8WTPEfD8fsdk/Q
-         SVp4INl2R88rd2hiWoK5Y07cXLVooBkGxorJO14C8ogsCYFEksq0ju7FP2MeRs358pyE
-         9HliYbjrLu2gOoNInjF4BqbR2mtFCjnShhJVjAXGfKNYTwXWFvPziiGPUPjpGhO//BYh
-         dBCrXNPLQWNuEFAlvyPuAc+olSOAalyEr3QZJkFG6RiSXc6eaXySG3OjYRkqhMoelPwz
-         aZuSVIeinC9v1olfgEVY2zIhOKYuO05vGfVcvU/a1357wkLwwv2bGCdjrOXJ4yzygQ8N
-         sxRw==
-X-Gm-Message-State: AOAM532OBIuG1YeaXPa2zBGe6mzSxmuJjg4KcL1U10vIt1+dBmioZOmB
-        JhWMn/F41z/geRjVGrc+tZy8hVKdxWq3CQ==
-X-Google-Smtp-Source: ABdhPJzOTbCQjm+GkHz+iDH9OwEiyI+CzOOSB6eqLvqd8dIFttdcgGTi873z0pS3ZB48GBdoRGdTXw==
-X-Received: by 2002:a17:906:d554:: with SMTP id cr20mr55865493ejc.356.1641771898951;
-        Sun, 09 Jan 2022 15:44:58 -0800 (PST)
-Received: from localhost.localdomain (host-79-18-211-221.retail.telecomitalia.it. [79.18.211.221])
-        by smtp.gmail.com with ESMTPSA id kx21sm1783493ejc.155.2022.01.09.15.44.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Jan 2022 15:44:58 -0800 (PST)
-From:   Dario Petrillo <dario.pk1@gmail.com>
-To:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Dario Petrillo <dario.pk1@gmail.com>
-Subject: [PATCH] perf tui: avoid crash when annotating recursive functions
-Date:   Mon, 10 Jan 2022 00:44:41 +0100
-Message-Id: <20220109234441.325106-1-dario.pk1@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Sun, 9 Jan 2022 18:54:44 -0500
+X-Greylist: delayed 772 seconds by postgrey-1.27 at vger.kernel.org; Sun, 09 Jan 2022 18:54:44 EST
+Received: from 168.7-181-91.adsl-dyn.isp.belgacom.be ([91.181.7.168] helo=deadeye)
+        by maynard with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1n6i1I-0004bV-5g; Mon, 10 Jan 2022 00:54:40 +0100
+Received: from ben by deadeye with local (Exim 4.95)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1n6i1H-001kAx-Jd;
+        Mon, 10 Jan 2022 00:54:39 +0100
+Message-ID: <f59da80e6b4d053246fec4ef263ae4ca7aa1277f.camel@decadent.org.uk>
+Subject: Re: Getting the latest and greatest Linux perf features on every
+ Debian kernel
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Ian Rogers <irogers@google.com>, debian-kernel@lists.debian.org,
+        waldi@debian.org
+Cc:     linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Date:   Mon, 10 Jan 2022 00:54:31 +0100
+In-Reply-To: <CAP-5=fUczsXmo4xk2Yi=H6zUhmpixFaz9An=ixKotx=z0GOp0w@mail.gmail.com>
+References: <CAP-5=fW7La9ZNv8Z6LHRRNXne4+dWK6dR1ye2P=zETFELtK=fg@mail.gmail.com>
+         <YY58idSor+lJ84KF@kernel.org>
+         <CAP-5=fUczsXmo4xk2Yi=H6zUhmpixFaz9An=ixKotx=z0GOp0w@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-SDK+hqj1bfisnpMJ++hp"
+User-Agent: Evolution 3.42.2-1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 91.181.7.168
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on maynard); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-In perf report, entering a recursive function from inside of itself
-(either directly of indirectly through some other function) results in
-calling symbol__annotate2 multiple times, and freeing the whole disassembly
-when exiting from the innermost instance. The first issue causes the
-function's disassembly to be duplicated, and the latter a heap
-use-after-free (and crash) when trying to access the disassembly again.
 
-I reproduced the bug on perf 5.11.22 (Ubuntu 20.04.3 LTS) and 5.16.rc8
-with the following testcase (compile with gcc recursive.c -o recursive).
-To reproduce:
-- perf record ./recursive
-- perf report
-- enter fibonacci and annotate it
-- move the cursor on one of the "callq fibonacci" instructions and press enter
-  - at this point there will be two copies of the function in the disassembly
-- go back by pressing q, and perf will crash
+--=-SDK+hqj1bfisnpMJ++hp
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-#include <stdio.h>
+On Sun, 2021-11-21 at 18:18 -0800, Ian Rogers wrote:
+> Hi,
+>=20
+> I'd love to package Linux perf as per Arnaldo's prepared tarball for
+> Debian. If I could get help on the Debian side it would be great! The
+> actions that are needed are:
+>=20
+> 1) package Arnaldo's tarball for Debian, presumably the build in the
+> sources for linux-perf-5.10 will be a good starting point. The package
+> will be linux-perf and replace the current metapackage of the same
+> name.
 
-int fibonacci(int n)
-{
-    if(n <= 2) return 1;
-    return fibonacci(n-1) + fibonacci(n-2);
-}
+I don't think this buys us anything over building from the kernel tree
+(i.e. the linux source package), but will wait to see what Arnaldo
+says.
 
-int main()
-{
-    printf("%d\n", fibonacci(40));
-}
+> 2) create an updated linux-base that removes /usr/bin/perf
+>=20
+> 3) upload the updated linux-base and linux-perf packages for
+> maintainer approval to https://mentors.debian.net/
 
-This patch addresses the issue by annotating a function and freeing the
-associated memory on exit only if no annotation is already present,
-so that a recursive function is only annotated on entry.
+linux-base is maintained by the kernel team on salsa.debian.org, where
+you can send merge requests.  If linux-perf is to be a separate source
+package, I think it should be maintained in the same way.
 
-Signed-off-by: Dario Petrillo <dario.pk1@gmail.com>
+> 4) some how get the previous Debian linux-perf-[45].* packages removed
+[...]
 
----
- tools/perf/ui/browsers/annotate.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+They will be removed from the Debian archive through a periodic
+cleanup.
 
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index e81c2493efdf..44ba900828f6 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -966,6 +966,7 @@ int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
- 		.opts = opts,
- 	};
- 	int ret = -1, err;
-+	int not_annotated = list_empty(&notes->src->source);
- 
- 	if (sym == NULL)
- 		return -1;
-@@ -973,13 +974,15 @@ int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
- 	if (ms->map->dso->annotate_warned)
- 		return -1;
- 
--	err = symbol__annotate2(ms, evsel, opts, &browser.arch);
--	if (err) {
--		char msg[BUFSIZ];
--		ms->map->dso->annotate_warned = true;
--		symbol__strerror_disassemble(ms, err, msg, sizeof(msg));
--		ui__error("Couldn't annotate %s:\n%s", sym->name, msg);
--		goto out_free_offsets;
-+	if (not_annotated) {
-+		err = symbol__annotate2(ms, evsel, opts, &browser.arch);
-+		if (err) {
-+			char msg[BUFSIZ];
-+			ms->map->dso->annotate_warned = true;
-+			symbol__strerror_disassemble(ms, err, msg, sizeof(msg));
-+			ui__error("Couldn't annotate %s:\n%s", sym->name, msg);
-+			goto out_free_offsets;
-+		}
- 	}
- 
- 	ui_helpline__push("Press ESC to exit");
-@@ -994,9 +997,11 @@ int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
- 
- 	ret = annotate_browser__run(&browser, evsel, hbt);
- 
--	annotated_source__purge(notes->src);
-+	if(not_annotated)
-+		annotated_source__purge(notes->src);
- 
- out_free_offsets:
--	zfree(&notes->offsets);
-+	if(not_annotated)
-+		zfree(&notes->offsets);
- 	return ret;
- }
--- 
-2.25.1
+Ben.
 
+--=20
+Ben Hutchings
+I say we take off; nuke the site from orbit.
+It's the only way to be sure.
+
+--=-SDK+hqj1bfisnpMJ++hp
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAmHbdbcACgkQ57/I7JWG
+EQmZNA//RS7bzn2FrEDAB6aRzWSzFnpZdNRuAs4jEe7GH45rX3M7e17m+Pmnx07i
+F9J2bP0C457FkNff5Rf1EAzeThot+vvxy1JXzMowNa7BXYVUTOPK4Wdh+2q54ezf
+ksj8jLVXu5M8iUwK3kMKihhL9rbOUTFErCVE/pI0ll+zFre7/5pHp+GCz4ErfLms
+z6tipuc+r92gHW+b5B7K5knc7AdP28HlHBotWELv5RlZ/L4kl3O9cwVMdy8ZQG7t
++olwjhzm7PgD2JR4xGVtXCDKzjpWRfcSpfOleopswfQ5aXXb/d3bxe6YCbjWYRBC
+LhQsCtOAYMkMFSca1RimeUUddKoLjbNPoGJQ039seAJTiuErFsrsC1yQlj6K1xD6
+x7or6WuBjaZC7ylc0oSq9dCBaA8Nh6tSp/lNStmzGfp/boV/clThagccW3fyqiak
+Wgvd0fJM9sGE653LALaA+QOQOLOTu0jpj3aR3Z3aD0Vrw+kf1iLP4j+u4K4EXFyl
+9Ovc4dL8ZxZyXSUTUpBfII7nDxKblkGxF4LefYC2b+27RjW4HerGnA3ZLPlAtwA6
+TwXib6JAGXqxnHALSriK1UlPhpZWdCZG0bNVm+UEy1ZUEF9kZLPsavwkGFOhWy9N
+Gtk6aIGASBTudDbvo8pyJQyqJEJh3njtBuEHKfWt5hQWtjNjobA=
+=4jvu
+-----END PGP SIGNATURE-----
+
+--=-SDK+hqj1bfisnpMJ++hp--
