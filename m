@@ -2,44 +2,42 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4ADC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun,  9 Jan 2022 23:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5846C433F5
+	for <linux-perf-users@archiver.kernel.org>; Sun,  9 Jan 2022 23:55:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234315AbiAIXyp (ORCPT
+        id S234835AbiAIXz0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 9 Jan 2022 18:54:45 -0500
-Received: from maynard.decadent.org.uk ([95.217.213.242]:55168 "EHLO
+        Sun, 9 Jan 2022 18:55:26 -0500
+Received: from maynard.decadent.org.uk ([95.217.213.242]:55174 "EHLO
         maynard.decadent.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234835AbiAIXyo (ORCPT
+        with ESMTP id S237493AbiAIXzO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 9 Jan 2022 18:54:44 -0500
-X-Greylist: delayed 772 seconds by postgrey-1.27 at vger.kernel.org; Sun, 09 Jan 2022 18:54:44 EST
+        Sun, 9 Jan 2022 18:55:14 -0500
 Received: from 168.7-181-91.adsl-dyn.isp.belgacom.be ([91.181.7.168] helo=deadeye)
         by maynard with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1n6i1I-0004bV-5g; Mon, 10 Jan 2022 00:54:40 +0100
+        id 1n6hor-0004Ws-Bu; Mon, 10 Jan 2022 00:41:49 +0100
 Received: from ben by deadeye with local (Exim 4.95)
         (envelope-from <ben@decadent.org.uk>)
-        id 1n6i1H-001kAx-Jd;
-        Mon, 10 Jan 2022 00:54:39 +0100
-Message-ID: <f59da80e6b4d053246fec4ef263ae4ca7aa1277f.camel@decadent.org.uk>
+        id 1n6hoq-001k6c-OH;
+        Mon, 10 Jan 2022 00:41:48 +0100
+Message-ID: <d7b0f5401be0512421c7d02ec38475d1b04f64d2.camel@decadent.org.uk>
 Subject: Re: Getting the latest and greatest Linux perf features on every
  Debian kernel
 From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Ian Rogers <irogers@google.com>, debian-kernel@lists.debian.org,
-        waldi@debian.org
-Cc:     linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>
+Cc:     debian-kernel@lists.debian.org,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 10 Jan 2022 00:54:31 +0100
-In-Reply-To: <CAP-5=fUczsXmo4xk2Yi=H6zUhmpixFaz9An=ixKotx=z0GOp0w@mail.gmail.com>
+Date:   Mon, 10 Jan 2022 00:41:44 +0100
+In-Reply-To: <YY58idSor+lJ84KF@kernel.org>
 References: <CAP-5=fW7La9ZNv8Z6LHRRNXne4+dWK6dR1ye2P=zETFELtK=fg@mail.gmail.com>
          <YY58idSor+lJ84KF@kernel.org>
-         <CAP-5=fUczsXmo4xk2Yi=H6zUhmpixFaz9An=ixKotx=z0GOp0w@mail.gmail.com>
 Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-SDK+hqj1bfisnpMJ++hp"
+        protocol="application/pgp-signature"; boundary="=-kF8dBBefsfM7srs3BpJ6"
 User-Agent: Evolution 3.42.2-1 
 MIME-Version: 1.0
 X-SA-Exim-Connect-IP: 91.181.7.168
@@ -50,40 +48,90 @@ List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
---=-SDK+hqj1bfisnpMJ++hp
+--=-kF8dBBefsfM7srs3BpJ6
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, 2021-11-21 at 18:18 -0800, Ian Rogers wrote:
-> Hi,
+On Fri, 2021-11-12 at 11:39 -0300, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Nov 11, 2021 at 10:34:33PM -0800, Ian Rogers escreveu:
+> > Hi,
+> =20
+> > Debian currently tries to match the Linux perf tool to the version of
+> > the kernel that it is being run upon. Reaching out to Ben Hutchings,
+> > he explained to me that this was done back in 2010 due to kernel and
+> > Linux perf incompatibilities. This was likely the case, but it was a
+> > bug in the Linux perf tool that should have been fixed.
+
+My understanding at the time was that the perf developers weren't
+trying to provide backward compatibility.  If I hadn't though that, I
+wouldn't have bothered with the wrapper and would have forwarded any
+bug reports we got about compatibility breaks.
+
+> > It is the goal
+> > of the tool to be backward compatible. A problem with matching the
+> > tool to the kernel version is that users miss out on new features and
+> > fixes (this topic came up in a recent interview of the maintainer
+> > Arnaldo Carvalho de Melo [1]).
+> =20
+> > Ben Hutchings informs me that making it so that Debian ships the
+> > latest Linux perf tool requires updates both to the linux-base and
+> > linux source packages. The Linux perf tool also has many other often
+> > optional dependencies, like libunwind, libbpf, libpfm4, libtraceevent,
+> > etc. In general, having the dependency will unlock more features.
+> > Linux tools has its own copies of libbpf and libtraceevent, and so
+> > these may pose some versioning issues.
+
+The libraries themselves are statically linked, so there's no conflict
+there, but the libtraceevent plugins have the potential to conflict.
+
+> We can use LIBBPF_DYNAMIC=3D1 to use the distro libbpf-dev package, which
+> currently is going thru some growing pains as libbpf is 0.x, with
+> several APIs being deprecated, others renamed, and that has been a
+> source of friction, but should be past us with v1.0. Till then the perf
+> codebase is being adjusted to allow it to be seamlessly built with the
+> in-kernel version and with whatever libbpf-devel the distro has.
+> =20
+> > I think it'd be great to get Debian shipping the latest version of
+> > Linux perf for its users. Hopefully we can agree to change how Debian
+> > packages perf currently and then work out the best way to package and
+> > keep it up-to-date. I look forward to everyone's help and input.
 >=20
-> I'd love to package Linux perf as per Arnaldo's prepared tarball for
-> Debian. If I could get help on the Debian side it would be great! The
-> actions that are needed are:
+> I also keep the tarballs available at:
 >=20
-> 1) package Arnaldo's tarball for Debian, presumably the build in the
-> sources for linux-perf-5.10 will be a good starting point. The package
-> will be linux-perf and replace the current metapackage of the same
-> name.
-
-I don't think this buys us anything over building from the kernel tree
-(i.e. the linux source package), but will wait to see what Arnaldo
-says.
-
-> 2) create an updated linux-base that removes /usr/bin/perf
+> https://mirrors.edge.kernel.org/pub/linux/kernel/tools/perf/
 >=20
-> 3) upload the updated linux-base and linux-perf packages for
-> maintainer approval to https://mentors.debian.net/
-
-linux-base is maintained by the kernel team on salsa.debian.org, where
-you can send merge requests.  If linux-perf is to be a separate source
-package, I think it should be maintained in the same way.
-
-> 4) some how get the previous Debian linux-perf-[45].* packages removed
+> Where there are instructions on how to build this detached tarball.
+>=20
+> I regularly build perf on lots of distros, including:
+>=20
+>   debian:9                      : Ok   gcc (Debian 6.3.0-18+deb9u1) 6.3.0=
+ 20170516 , clang version 3.8.1-24 (tags/RELEASE_381/final)
+>   debian:10                     : Ok   gcc (Debian 8.3.0-6) 8.3.0 , clang=
+ version 7.0.1-8+deb10u2 (tags/RELEASE_701/final)
+>   debian:11                     : Ok   gcc (Debian 10.2.1-6) 10.2.1 20210=
+110 , Debian clang version 11.0.1-2
+>   debian:experimental           : Ok   gcc (Debian 11.2.0-10) 11.2.0 , De=
+bian clang version 11.1.0-4
+>   debian:experimental-x-arm64   : Ok   aarch64-linux-gnu-gcc (Debian 11.2=
+.0-9) 11.2.0
+>   debian:experimental-x-mips    : Ok   mips-linux-gnu-gcc (Debian 10.2.1-=
+6) 10.2.1 20210110
+>   debian:experimental-x-mips64  : Ok   mips64-linux-gnuabi64-gcc (Debian =
+10.2.1-6) 10.2.1 20210110
+>   debian:experimental-x-mipsel  : Ok   mipsel-linux-gnu-gcc (Debian 11.2.=
+0-9) 11.2.0
 [...]
 
-They will be removed from the Debian archive through a periodic
-cleanup.
+I'm glad to hear that.
+
+But whether perf tools can be built in different environments is
+orthogonal to the current questions for Debian's packaging, which are:
+
+- Do they run correctly on older kernel version?  (I think you're
+  claiming they do.)
+- Is there a reason to prefer building from those separate tarballs,
+  rather than from kernel releases?  (I don't think there is.)
+
 
 Ben.
 
@@ -92,25 +140,25 @@ Ben Hutchings
 I say we take off; nuke the site from orbit.
 It's the only way to be sure.
 
---=-SDK+hqj1bfisnpMJ++hp
+--=-kF8dBBefsfM7srs3BpJ6
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAmHbdbcACgkQ57/I7JWG
-EQmZNA//RS7bzn2FrEDAB6aRzWSzFnpZdNRuAs4jEe7GH45rX3M7e17m+Pmnx07i
-F9J2bP0C457FkNff5Rf1EAzeThot+vvxy1JXzMowNa7BXYVUTOPK4Wdh+2q54ezf
-ksj8jLVXu5M8iUwK3kMKihhL9rbOUTFErCVE/pI0ll+zFre7/5pHp+GCz4ErfLms
-z6tipuc+r92gHW+b5B7K5knc7AdP28HlHBotWELv5RlZ/L4kl3O9cwVMdy8ZQG7t
-+olwjhzm7PgD2JR4xGVtXCDKzjpWRfcSpfOleopswfQ5aXXb/d3bxe6YCbjWYRBC
-LhQsCtOAYMkMFSca1RimeUUddKoLjbNPoGJQ039seAJTiuErFsrsC1yQlj6K1xD6
-x7or6WuBjaZC7ylc0oSq9dCBaA8Nh6tSp/lNStmzGfp/boV/clThagccW3fyqiak
-Wgvd0fJM9sGE653LALaA+QOQOLOTu0jpj3aR3Z3aD0Vrw+kf1iLP4j+u4K4EXFyl
-9Ovc4dL8ZxZyXSUTUpBfII7nDxKblkGxF4LefYC2b+27RjW4HerGnA3ZLPlAtwA6
-TwXib6JAGXqxnHALSriK1UlPhpZWdCZG0bNVm+UEy1ZUEF9kZLPsavwkGFOhWy9N
-Gtk6aIGASBTudDbvo8pyJQyqJEJh3njtBuEHKfWt5hQWtjNjobA=
-=4jvu
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAmHbcrgACgkQ57/I7JWG
+EQnyORAA0mhKLczj5q2czzvd2uxk1FIBG20XkKvOxr0YtkI9DmL86CpWi3y4R7cI
+uetbE+GeqpbQK/UpHuw1nGMibeFtni4jQSOKBSSHktJXe607SHC0Q0CSD17p+Et/
+j1RZAzN6E4F4M7E/UkQ7rHsUBGLHzb/I2oVtNMgXa/AHSOduCRwUjI8qrgUknIX5
+FpOZt4tWs7yJSRD0kCBbILX4+tYzKp1TrcwRdlwB3UWChbfPXELnlmI/aURgIKvZ
+bFXBsibjCGwxKNih6aEpoRMxFgDlTbzk/jVF+EAX9cdXOJIAD8mvJJmYeGxCv+1p
+jdZJ0R1Z9BfDdhmUvgDOJxMWy9wBo5MBd6Co0aBB7B0/2d/zY8Z0LYeZqKnSxYKQ
+sRv6afbUBYI22OvTOY6lFqpR4ZCVjAAXyNxotDl835Z40Xpxce36kybzQYx9yqsA
+xV4ZSbiGnP+u7H4a9WK8dsmrVkQk406WXC9n3DRkPSc5zvcey0yRhNhH/UDGqsbL
+MnmYGQ1lLB0+CRm5kLmKO3mU21y+TaDRPFM0gE8gJPI6DCs6RCUEMKT3Atf/lG0W
+rhDDib5XbTrF66HLfLWelxjrpD23mB8lSSZJy6m2p4L8h/RVHeytsFgIdCyc1joq
+PaQuitDyWADRVpQCGPJDbuDVtSd3JlM9tRiwQpHagS/2U/A2ZVQ=
+=H5Uo
 -----END PGP SIGNATURE-----
 
---=-SDK+hqj1bfisnpMJ++hp--
+--=-kF8dBBefsfM7srs3BpJ6--
