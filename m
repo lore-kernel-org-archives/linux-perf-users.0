@@ -2,78 +2,162 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A8AC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun,  9 Jan 2022 19:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA33C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun,  9 Jan 2022 23:45:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236728AbiAIT0A (ORCPT
+        id S232548AbiAIXpB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 9 Jan 2022 14:26:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60198 "EHLO
+        Sun, 9 Jan 2022 18:45:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236725AbiAIT0A (ORCPT
+        with ESMTP id S232177AbiAIXpB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 9 Jan 2022 14:26:00 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3DF6C06173F;
-        Sun,  9 Jan 2022 11:25:59 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AF9E2B80E00;
-        Sun,  9 Jan 2022 19:25:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 810ECC36AEF;
-        Sun,  9 Jan 2022 19:25:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641756357;
-        bh=F9yd/aVVTkpn4dmi9+LssN/d4HmEa2NqclhIZVV87Xg=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=Ixvb6sD2ujikNmqRaqsMXVdhYHexJCJSLcuXGCBTT0azyRAA8RDpnk4h/XMAQeZjs
-         huhUsVjXD//YKIPcaLMzBKtxM2L9QcU7uu6wKGxdfH3IuW7i50Tcqd20enVhdedppy
-         CMBoA5483RVUvbYT4OznWLVdI5VzdN7uc9/e9pfSJJwe73+1MU6DcuO/xeh5x6foI2
-         PnN/0X3Hnws+WSwasCc1/Z9ytkcVthWzH8Nir51MjeKGSk2aXJ4YtUBgBqpJW0C/MI
-         WTtQUo8iXZY/ZL8MPVbxORgNNo4x5PQ3XwqTJiLtcSWXRG9BPJN1K8Cb6F0aCXQBld
-         WLbmT+Rek0BXw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 6D727F7940E;
-        Sun,  9 Jan 2022 19:25:57 +0000 (UTC)
-Subject: Re: [GIT PULL] perf tools fixes for v5.16: 6th batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20220109153446.160593-1-acme@kernel.org>
-References: <20220109153446.160593-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220109153446.160593-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.16-2022-01-09
-X-PR-Tracked-Commit-Id: dc9f2dd5de04d2bbcccbabdf5df9715c2ddcf25f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9a12a5aa17741fe1d4204dc07abd4d6bd07d9b39
-Message-Id: <164175635744.32020.979679807911671253.pr-tracker-bot@kernel.org>
-Date:   Sun, 09 Jan 2022 19:25:57 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Sun, 9 Jan 2022 18:45:01 -0500
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE22CC06173F;
+        Sun,  9 Jan 2022 15:45:00 -0800 (PST)
+Received: by mail-ed1-x52e.google.com with SMTP id w16so46725200edc.11;
+        Sun, 09 Jan 2022 15:45:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KMVKzWzTDkR0qm3suHIJabcOLRjs4Osz10LuFhuiBqQ=;
+        b=qF2H6YQCKG5mK6HEF6v1TEfhR5giSM4UdtU5JQ+Wai88ek6ir4iysxX/o10d/v/PCa
+         z0QWciGSY0zbmWfbrt74Pao6mVGeNPNXvQZQo+lmY5+68Ss8liZ6S07P3zlyf6V/i8WB
+         +B8GMfLUlRr9H777q1RwWXtA+/uWvNrtyGK96FeiOGdov1Kh9FW61FqMdOhaAQ6ka4am
+         Axyq4xec0qBcjUPVUlmwdqZv+TiQbZWrVlFZzyGTEPbJl3IeCOVlnqJKA/LuFRpHm8wX
+         9oYOtS1A5luxTphAqWZ4b175Kkr+ohBQ+xoztyg1HmeY8AKseWZvgn49TCa7e97rfLko
+         dDDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KMVKzWzTDkR0qm3suHIJabcOLRjs4Osz10LuFhuiBqQ=;
+        b=HYhljqUpLDiSwG9ukmI+oZCSMxBgsgs0LS4WMLl7rsKcKKUwZhUI8WTPEfD8fsdk/Q
+         SVp4INl2R88rd2hiWoK5Y07cXLVooBkGxorJO14C8ogsCYFEksq0ju7FP2MeRs358pyE
+         9HliYbjrLu2gOoNInjF4BqbR2mtFCjnShhJVjAXGfKNYTwXWFvPziiGPUPjpGhO//BYh
+         dBCrXNPLQWNuEFAlvyPuAc+olSOAalyEr3QZJkFG6RiSXc6eaXySG3OjYRkqhMoelPwz
+         aZuSVIeinC9v1olfgEVY2zIhOKYuO05vGfVcvU/a1357wkLwwv2bGCdjrOXJ4yzygQ8N
+         sxRw==
+X-Gm-Message-State: AOAM532OBIuG1YeaXPa2zBGe6mzSxmuJjg4KcL1U10vIt1+dBmioZOmB
+        JhWMn/F41z/geRjVGrc+tZy8hVKdxWq3CQ==
+X-Google-Smtp-Source: ABdhPJzOTbCQjm+GkHz+iDH9OwEiyI+CzOOSB6eqLvqd8dIFttdcgGTi873z0pS3ZB48GBdoRGdTXw==
+X-Received: by 2002:a17:906:d554:: with SMTP id cr20mr55865493ejc.356.1641771898951;
+        Sun, 09 Jan 2022 15:44:58 -0800 (PST)
+Received: from localhost.localdomain (host-79-18-211-221.retail.telecomitalia.it. [79.18.211.221])
+        by smtp.gmail.com with ESMTPSA id kx21sm1783493ejc.155.2022.01.09.15.44.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Jan 2022 15:44:58 -0800 (PST)
+From:   Dario Petrillo <dario.pk1@gmail.com>
+To:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        Dario Petrillo <dario.pk1@gmail.com>
+Subject: [PATCH] perf tui: avoid crash when annotating recursive functions
+Date:   Mon, 10 Jan 2022 00:44:41 +0100
+Message-Id: <20220109234441.325106-1-dario.pk1@gmail.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Sun,  9 Jan 2022 12:34:46 -0300:
+In perf report, entering a recursive function from inside of itself
+(either directly of indirectly through some other function) results in
+calling symbol__annotate2 multiple times, and freeing the whole disassembly
+when exiting from the innermost instance. The first issue causes the
+function's disassembly to be duplicated, and the latter a heap
+use-after-free (and crash) when trying to access the disassembly again.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.16-2022-01-09
+I reproduced the bug on perf 5.11.22 (Ubuntu 20.04.3 LTS) and 5.16.rc8
+with the following testcase (compile with gcc recursive.c -o recursive).
+To reproduce:
+- perf record ./recursive
+- perf report
+- enter fibonacci and annotate it
+- move the cursor on one of the "callq fibonacci" instructions and press enter
+  - at this point there will be two copies of the function in the disassembly
+- go back by pressing q, and perf will crash
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9a12a5aa17741fe1d4204dc07abd4d6bd07d9b39
+#include <stdio.h>
 
-Thank you!
+int fibonacci(int n)
+{
+    if(n <= 2) return 1;
+    return fibonacci(n-1) + fibonacci(n-2);
+}
 
+int main()
+{
+    printf("%d\n", fibonacci(40));
+}
+
+This patch addresses the issue by annotating a function and freeing the
+associated memory on exit only if no annotation is already present,
+so that a recursive function is only annotated on entry.
+
+Signed-off-by: Dario Petrillo <dario.pk1@gmail.com>
+
+---
+ tools/perf/ui/browsers/annotate.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
+
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index e81c2493efdf..44ba900828f6 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -966,6 +966,7 @@ int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
+ 		.opts = opts,
+ 	};
+ 	int ret = -1, err;
++	int not_annotated = list_empty(&notes->src->source);
+ 
+ 	if (sym == NULL)
+ 		return -1;
+@@ -973,13 +974,15 @@ int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
+ 	if (ms->map->dso->annotate_warned)
+ 		return -1;
+ 
+-	err = symbol__annotate2(ms, evsel, opts, &browser.arch);
+-	if (err) {
+-		char msg[BUFSIZ];
+-		ms->map->dso->annotate_warned = true;
+-		symbol__strerror_disassemble(ms, err, msg, sizeof(msg));
+-		ui__error("Couldn't annotate %s:\n%s", sym->name, msg);
+-		goto out_free_offsets;
++	if (not_annotated) {
++		err = symbol__annotate2(ms, evsel, opts, &browser.arch);
++		if (err) {
++			char msg[BUFSIZ];
++			ms->map->dso->annotate_warned = true;
++			symbol__strerror_disassemble(ms, err, msg, sizeof(msg));
++			ui__error("Couldn't annotate %s:\n%s", sym->name, msg);
++			goto out_free_offsets;
++		}
+ 	}
+ 
+ 	ui_helpline__push("Press ESC to exit");
+@@ -994,9 +997,11 @@ int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
+ 
+ 	ret = annotate_browser__run(&browser, evsel, hbt);
+ 
+-	annotated_source__purge(notes->src);
++	if(not_annotated)
++		annotated_source__purge(notes->src);
+ 
+ out_free_offsets:
+-	zfree(&notes->offsets);
++	if(not_annotated)
++		zfree(&notes->offsets);
+ 	return ret;
+ }
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.25.1
+
