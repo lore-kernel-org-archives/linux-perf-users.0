@@ -2,166 +2,78 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB718C4332F
-	for <linux-perf-users@archiver.kernel.org>; Sun,  9 Jan 2022 18:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A8AC433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun,  9 Jan 2022 19:26:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236508AbiAISaz (ORCPT
+        id S236728AbiAIT0A (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 9 Jan 2022 13:30:55 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:40361 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236506AbiAISav (ORCPT
+        Sun, 9 Jan 2022 14:26:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60198 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236725AbiAIT0A (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 9 Jan 2022 13:30:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1641753050;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=AYvOwjwqFrDqfGP5yZ04n7pfG3rcdHLdCFAeOhb9uKU=;
-        b=TxedaNfUg4zpuGBxnuRVDp87bu2s/GIMFNZf4fRCiWZendYTgCmHKbEYiwiNTETX3n675U
-        tr6gp1LZ/UOVuRMcO7xBBE7bYMbTAaH7otavlnW7gtlOtlvGCrc8Sz4rsKwoaNo3ROeiXL
-        qPxJ61Gat4DoBHxKg2A0ljJQukz5B7U=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-77-HXvkpORlP5K4NeqMW3-QSA-1; Sun, 09 Jan 2022 13:30:50 -0500
-X-MC-Unique: HXvkpORlP5K4NeqMW3-QSA-1
-Received: by mail-ed1-f71.google.com with SMTP id g2-20020a056402424200b003f8ee03207eso8491561edb.7
-        for <linux-perf-users@vger.kernel.org>; Sun, 09 Jan 2022 10:30:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=AYvOwjwqFrDqfGP5yZ04n7pfG3rcdHLdCFAeOhb9uKU=;
-        b=3gTAe3fZQxZX7MxThQk3kDqpM47QOYetxehO8YLfVWv8RmVotfREIrlExkRbgDXMRt
-         oI37VLn32CoV/cgo62riNnkIwhxpRjgTHGcAstYJsvPwfSVUTRjRwcbVYNkPpGn1ZGm5
-         rY/yl3qAqu8/tQO0Hu4db0Jxm/QRRgAkRQcpudIvZbhNwDJzhWxWZYFjvj5RJd5H0WJ8
-         ggv0b5FwGAia5Zc8MGaxyD6h0XH7SnLhhDEd3sHD7e5m+AtDle3hlUrWbEs/WZ9nErET
-         UxyYgkkYvtX4HKdaBi69TCVUicpCqPardQrZZM7pmwy94mHDRKapwwuZq13FAXhmjiHM
-         Vgyg==
-X-Gm-Message-State: AOAM530XiK6zr26TVwdP6Jewl/q/qCDjjpWofsM5IjTt5/8YEAtgROd0
-        rizMog+SyAaDQ6M3wjj3mNq59Q98idfIs9P8eGERSJ1CVTWIbG2J/t7HLSM5yV+jFTYlyNFuDLP
-        fPCf/y+gwVghcUudEZ6L1bfo7WL6bGA==
-X-Received: by 2002:a17:907:97c7:: with SMTP id js7mr54984083ejc.84.1641753048055;
-        Sun, 09 Jan 2022 10:30:48 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyV85a35OqUpicNWJWT5Lo2uyafytuFeApaXBkbpEfniiZMeOk+K5aqzwQAeklDfmJPYVfVRA==
-X-Received: by 2002:a17:907:97c7:: with SMTP id js7mr54984064ejc.84.1641753047877;
-        Sun, 09 Jan 2022 10:30:47 -0800 (PST)
-Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
-        by smtp.gmail.com with ESMTPSA id o25sm2376412edr.20.2022.01.09.10.30.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Jan 2022 10:30:47 -0800 (PST)
-Date:   Sun, 9 Jan 2022 19:30:45 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Andi Kleen <ak@linux.intel.com>,
+        Sun, 9 Jan 2022 14:26:00 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3DF6C06173F;
+        Sun,  9 Jan 2022 11:25:59 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id AF9E2B80E00;
+        Sun,  9 Jan 2022 19:25:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 810ECC36AEF;
+        Sun,  9 Jan 2022 19:25:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1641756357;
+        bh=F9yd/aVVTkpn4dmi9+LssN/d4HmEa2NqclhIZVV87Xg=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=Ixvb6sD2ujikNmqRaqsMXVdhYHexJCJSLcuXGCBTT0azyRAA8RDpnk4h/XMAQeZjs
+         huhUsVjXD//YKIPcaLMzBKtxM2L9QcU7uu6wKGxdfH3IuW7i50Tcqd20enVhdedppy
+         CMBoA5483RVUvbYT4OznWLVdI5VzdN7uc9/e9pfSJJwe73+1MU6DcuO/xeh5x6foI2
+         PnN/0X3Hnws+WSwasCc1/Z9ytkcVthWzH8Nir51MjeKGSk2aXJ4YtUBgBqpJW0C/MI
+         WTtQUo8iXZY/ZL8MPVbxORgNNo4x5PQ3XwqTJiLtcSWXRG9BPJN1K8Cb6F0aCXQBld
+         WLbmT+Rek0BXw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 6D727F7940E;
+        Sun,  9 Jan 2022 19:25:57 +0000 (UTC)
+Subject: Re: [GIT PULL] perf tools fixes for v5.16: 6th batch
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20220109153446.160593-1-acme@kernel.org>
+References: <20220109153446.160593-1-acme@kernel.org>
+X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20220109153446.160593-1-acme@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.16-2022-01-09
+X-PR-Tracked-Commit-Id: dc9f2dd5de04d2bbcccbabdf5df9715c2ddcf25f
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 9a12a5aa17741fe1d4204dc07abd4d6bd07d9b39
+Message-Id: <164175635744.32020.979679807911671253.pr-tracker-bot@kernel.org>
+Date:   Sun, 09 Jan 2022 19:25:57 +0000
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vineet Singh <vineet.singh@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org, zhengjun.xing@intel.com,
-        eranian@google.com
-Subject: Re: [PATCH v4 26/48] perf evsel: Derive CPUs and threads in
- alloc_counts
-Message-ID: <Ydsp1d58t/gp/GHd@krava>
-References: <20220105061351.120843-1-irogers@google.com>
- <20220105061351.120843-27-irogers@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220105061351.120843-27-irogers@google.com>
+        Jiri Slaby <jirislaby@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jan 04, 2022 at 10:13:29PM -0800, Ian Rogers wrote:
+The pull request you sent on Sun,  9 Jan 2022 12:34:46 -0300:
 
-SNIP
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.16-2022-01-09
 
-> diff --git a/tools/perf/util/counts.h b/tools/perf/util/counts.h
-> index 7ff36bf6d644..3e275e9c60d1 100644
-> --- a/tools/perf/util/counts.h
-> +++ b/tools/perf/util/counts.h
-> @@ -40,7 +40,7 @@ void perf_counts__delete(struct perf_counts *counts);
->  void perf_counts__reset(struct perf_counts *counts);
->  
->  void evsel__reset_counts(struct evsel *evsel);
-> -int evsel__alloc_counts(struct evsel *evsel, int ncpus, int nthreads);
-> +int evsel__alloc_counts(struct evsel *evsel);
->  void evsel__free_counts(struct evsel *evsel);
->  
->  #endif /* __PERF_COUNTS_H */
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 656c30b988ce..6c9af21776e6 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -1578,7 +1578,7 @@ int __evsel__read_on_cpu(struct evsel *evsel, int cpu, int thread, bool scale)
->  	if (FD(evsel, cpu, thread) < 0)
->  		return -EINVAL;
->  
-> -	if (evsel->counts == NULL && evsel__alloc_counts(evsel, cpu + 1, thread + 1) < 0)
-> +	if (evsel->counts == NULL && evsel__alloc_counts(evsel) < 0)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/9a12a5aa17741fe1d4204dc07abd4d6bd07d9b39
 
-ugh, nice.. good that it's used only from test code ;-)
+Thank you!
 
-btw I noticed evsel__read_on_cpu_scaled is not used at all
-
-jirka
-
->  		return -ENOMEM;
->  
->  	if (readn(FD(evsel, cpu, thread), &count, nv * sizeof(u64)) <= 0)
-> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> index c69b221f5e3e..995cb5003133 100644
-> --- a/tools/perf/util/stat.c
-> +++ b/tools/perf/util/stat.c
-> @@ -152,11 +152,13 @@ static void evsel__free_stat_priv(struct evsel *evsel)
->  	zfree(&evsel->stats);
->  }
->  
-> -static int evsel__alloc_prev_raw_counts(struct evsel *evsel, int ncpus, int nthreads)
-> +static int evsel__alloc_prev_raw_counts(struct evsel *evsel)
->  {
-> +	int cpu_map_nr = evsel__nr_cpus(evsel);
-> +	int nthreads = perf_thread_map__nr(evsel->core.threads);
->  	struct perf_counts *counts;
->  
-> -	counts = perf_counts__new(ncpus, nthreads);
-> +	counts = perf_counts__new(cpu_map_nr, nthreads);
->  	if (counts)
->  		evsel->prev_raw_counts = counts;
->  
-> @@ -177,12 +179,9 @@ static void evsel__reset_prev_raw_counts(struct evsel *evsel)
->  
->  static int evsel__alloc_stats(struct evsel *evsel, bool alloc_raw)
->  {
-> -	int ncpus = evsel__nr_cpus(evsel);
-> -	int nthreads = perf_thread_map__nr(evsel->core.threads);
-> -
->  	if (evsel__alloc_stat_priv(evsel) < 0 ||
-> -	    evsel__alloc_counts(evsel, ncpus, nthreads) < 0 ||
-> -	    (alloc_raw && evsel__alloc_prev_raw_counts(evsel, ncpus, nthreads) < 0))
-> +	    evsel__alloc_counts(evsel) < 0 ||
-> +	    (alloc_raw && evsel__alloc_prev_raw_counts(evsel) < 0))
->  		return -ENOMEM;
->  
->  	return 0;
-> -- 
-> 2.34.1.448.ga2b2bfdf31-goog
-> 
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
