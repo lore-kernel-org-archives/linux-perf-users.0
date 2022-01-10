@@ -2,167 +2,118 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E028C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Jan 2022 05:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CCE5C433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Jan 2022 10:49:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233592AbiAJFuC (ORCPT
+        id S244212AbiAJKtE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Jan 2022 00:50:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55292 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233549AbiAJFuB (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Jan 2022 00:50:01 -0500
-Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70961C06173F
-        for <linux-perf-users@vger.kernel.org>; Sun,  9 Jan 2022 21:50:01 -0800 (PST)
-Received: by mail-io1-xd34.google.com with SMTP id u8so16109837iol.5
-        for <linux-perf-users@vger.kernel.org>; Sun, 09 Jan 2022 21:50:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ALvm4nc74eB2Wd9VAb2s3UJ9R4m/+S/oxilpPbRkW3A=;
-        b=UrVsrwQso0IJkVO6QF2YQtW9l/A725oNGGJf+YZ/359fCEopGJ9XwrL1CWRtZNAX4v
-         MwF0Xd2DBUEH9EbSo1XKsyMm8McJL8SeQ02ajzi1HxW+0KOlPkrAAr0bTdcaeAtdmoJz
-         aBDV5TU8gK/tCTMmzcBu1MXhyNvRGA18grlWPGPUifNoxBP4kOWuGPycAXj8FD72+uYr
-         8rXfbC7m1EL8+Aw4ZpLZJodpVn/4rQpZHQxEiMrYmKveM9cexzEWW12in1QnvHlEUYwk
-         A6Fwxvie9bfqoP9g4cnbL5M4kMavDnk80S7DYn/Ukf2vFa3SCE7FZMqCwooNfQs/tD+x
-         LAuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ALvm4nc74eB2Wd9VAb2s3UJ9R4m/+S/oxilpPbRkW3A=;
-        b=xHBD+9YRTcrZX4FEq+KM6PMvAfCRkUVfGiNh21r8yHIIwn/rvcqj2SV+i77hiPrWOu
-         o4vSw+pqbHACdYIipaHPgPFj7lP0M6+aEhzTE0NIJXkivMtFQ/rGlynKZX8l9QDncpEE
-         Qnjlehhu2Y/E00LUtIFwvRv7vq+eBewwr9enNLaxe9/JjzSnPJraJylj1FP+tbDHtR92
-         9sn/nVw0up127N9HNh7nXDcLffqYr216ZZobCJr184BKghJgVH4pE8v2tba9LCA+vIL2
-         tXzMSf9/4VBTdRjsJ9/ZVQsFGE8n7+qrGT//SUfJqcw2U95fV7Y0N7hB5WDBbrgGJoNh
-         TRmw==
-X-Gm-Message-State: AOAM532TNN+NLyJKLbBAyjMaYRY0jKt7AUPbvCLHqf0ygEknLrwVD908
-        QJPoURYKpfBTEiCuScP24JwiXk5Gwq3n8lB8JdiDGw==
-X-Google-Smtp-Source: ABdhPJxOtknTyji3ATIF1Q9X5pyoX9JjwnRiihSAmLOCzQLNETeSKhBU3GP9sUJllE6Gs+j+DrTgUhjvnM+2DhvNGms=
-X-Received: by 2002:a05:6602:2b8b:: with SMTP id r11mr14683655iov.97.1641793800714;
- Sun, 09 Jan 2022 21:50:00 -0800 (PST)
-MIME-Version: 1.0
-References: <20220105061351.120843-1-irogers@google.com> <20220105061351.120843-27-irogers@google.com>
- <Ydsp1d58t/gp/GHd@krava>
-In-Reply-To: <Ydsp1d58t/gp/GHd@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Sun, 9 Jan 2022 21:49:48 -0800
-Message-ID: <CAP-5=fU77-qjcooX5B7qmimUoyNp-nXKNtnGQE9F6TH8Qsx+4A@mail.gmail.com>
-Subject: Re: [PATCH v4 26/48] perf evsel: Derive CPUs and threads in alloc_counts
+        Mon, 10 Jan 2022 05:49:04 -0500
+Received: from foss.arm.com ([217.140.110.172]:59872 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S244202AbiAJKtB (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 10 Jan 2022 05:49:01 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 49BF0ED1;
+        Mon, 10 Jan 2022 02:49:01 -0800 (PST)
+Received: from [10.57.36.94] (unknown [10.57.36.94])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 79F963F5A1;
+        Mon, 10 Jan 2022 02:48:59 -0800 (PST)
+Subject: Re: [PATCH v5 6/6] perf arm64: inject missing frames if perf-record
+ used "--call-graph=fp"
 To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, Alexandre Truong <alexandre.truong@arm.com>,
         John Garry <john.garry@huawei.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vineet Singh <vineet.singh@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org, zhengjun.xing@intel.com,
-        eranian@google.com
-Content-Type: text/plain; charset="UTF-8"
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <20211217154521.80603-1-german.gomez@arm.com>
+ <20211217154521.80603-7-german.gomez@arm.com> <YcGfQr43ChIgtacC@krava>
+From:   German Gomez <german.gomez@arm.com>
+Message-ID: <866deed3-9f01-7b68-9b01-9c9f02fbdfac@arm.com>
+Date:   Mon, 10 Jan 2022 10:48:57 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
+MIME-Version: 1.0
+In-Reply-To: <YcGfQr43ChIgtacC@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Jan 9, 2022 at 10:30 AM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Tue, Jan 04, 2022 at 10:13:29PM -0800, Ian Rogers wrote:
+Hi Jiri,
+
+On 21/12/2021 09:32, Jiri Olsa wrote:
+> On Fri, Dec 17, 2021 at 03:45:20PM +0000, German Gomez wrote:
 >
 > SNIP
 >
-> > diff --git a/tools/perf/util/counts.h b/tools/perf/util/counts.h
-> > index 7ff36bf6d644..3e275e9c60d1 100644
-> > --- a/tools/perf/util/counts.h
-> > +++ b/tools/perf/util/counts.h
-> > @@ -40,7 +40,7 @@ void perf_counts__delete(struct perf_counts *counts);
-> >  void perf_counts__reset(struct perf_counts *counts);
-> >
-> >  void evsel__reset_counts(struct evsel *evsel);
-> > -int evsel__alloc_counts(struct evsel *evsel, int ncpus, int nthreads);
-> > +int evsel__alloc_counts(struct evsel *evsel);
-> >  void evsel__free_counts(struct evsel *evsel);
-> >
-> >  #endif /* __PERF_COUNTS_H */
-> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > index 656c30b988ce..6c9af21776e6 100644
-> > --- a/tools/perf/util/evsel.c
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -1578,7 +1578,7 @@ int __evsel__read_on_cpu(struct evsel *evsel, int cpu, int thread, bool scale)
-> >       if (FD(evsel, cpu, thread) < 0)
-> >               return -EINVAL;
-> >
-> > -     if (evsel->counts == NULL && evsel__alloc_counts(evsel, cpu + 1, thread + 1) < 0)
-> > +     if (evsel->counts == NULL && evsel__alloc_counts(evsel) < 0)
->
-> ugh, nice.. good that it's used only from test code ;-)
->
-> btw I noticed evsel__read_on_cpu_scaled is not used at all
+>> +}
+>> +
+>> +u64 get_leaf_frame_caller_aarch64(struct perf_sample *sample, struct thread *thread, int usr_idx)
+>> +{
+>> +	int ret;
+>> +	struct entries entries = {};
+>> +	struct regs_dump old_regs = sample->user_regs;
+>> +
+>> +	if (!get_leaf_frame_caller_enabled(sample))
+>> +		return 0;
+>> +
+>> +	/*
+>> +	 * If PC and SP are not recorded, get the value of PC from the stack
+>> +	 * and set its mask. SP is not used when doing the unwinding but it
+>> +	 * still needs to be set to prevent failures.
+>> +	 */
+>> +
+>> +	if (!(sample->user_regs.mask & SMPL_REG_MASK(PERF_REG_ARM64_PC))) {
+>> +		sample->user_regs.cache_mask |= SMPL_REG_MASK(PERF_REG_ARM64_PC);
+>> +		sample->user_regs.cache_regs[PERF_REG_ARM64_PC] = sample->callchain->ips[usr_idx+1];
+>> +	}
+>> +
+>> +	if (!(sample->user_regs.mask & SMPL_REG_MASK(PERF_REG_ARM64_SP))) {
+>> +		sample->user_regs.cache_mask |= SMPL_REG_MASK(PERF_REG_ARM64_SP);
+>> +		sample->user_regs.cache_regs[PERF_REG_ARM64_SP] = 0;
+>> +	}
+>> +
+>> +	ret = unwind__get_entries(add_entry, &entries, thread, sample, 2);
+> just curious, did you try this with both unwinders libunwind/libdw?
 
-I'd noticed that too, but wanted to stay away from making the patch
-set larger.  You end up removing the argument to
-__evsel__read_on_cpu, etc. Definitely worth cleaning up, but maybe we
-can do it later.
+Yes I did,
 
-Thanks,
-Ian
+This is the program I was using:
 
-> jirka
+  int a = 0;
+
+  void leaf() {
+    for (int i = 0; i < 10000000; i++)
+      a *= a;
+  }
+
+  void parent() {
+    leaf();
+  }
+
+  int main() {
+    parent();
+  }
+
+  ... compiled with "gcc -O0 -fno-omit-frame-pointer -fno-inline program.c"
+
 >
-> >               return -ENOMEM;
-> >
-> >       if (readn(FD(evsel, cpu, thread), &count, nv * sizeof(u64)) <= 0)
-> > diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> > index c69b221f5e3e..995cb5003133 100644
-> > --- a/tools/perf/util/stat.c
-> > +++ b/tools/perf/util/stat.c
-> > @@ -152,11 +152,13 @@ static void evsel__free_stat_priv(struct evsel *evsel)
-> >       zfree(&evsel->stats);
-> >  }
-> >
-> > -static int evsel__alloc_prev_raw_counts(struct evsel *evsel, int ncpus, int nthreads)
-> > +static int evsel__alloc_prev_raw_counts(struct evsel *evsel)
-> >  {
-> > +     int cpu_map_nr = evsel__nr_cpus(evsel);
-> > +     int nthreads = perf_thread_map__nr(evsel->core.threads);
-> >       struct perf_counts *counts;
-> >
-> > -     counts = perf_counts__new(ncpus, nthreads);
-> > +     counts = perf_counts__new(cpu_map_nr, nthreads);
-> >       if (counts)
-> >               evsel->prev_raw_counts = counts;
-> >
-> > @@ -177,12 +179,9 @@ static void evsel__reset_prev_raw_counts(struct evsel *evsel)
-> >
-> >  static int evsel__alloc_stats(struct evsel *evsel, bool alloc_raw)
-> >  {
-> > -     int ncpus = evsel__nr_cpus(evsel);
-> > -     int nthreads = perf_thread_map__nr(evsel->core.threads);
-> > -
-> >       if (evsel__alloc_stat_priv(evsel) < 0 ||
-> > -         evsel__alloc_counts(evsel, ncpus, nthreads) < 0 ||
-> > -         (alloc_raw && evsel__alloc_prev_raw_counts(evsel, ncpus, nthreads) < 0))
-> > +         evsel__alloc_counts(evsel) < 0 ||
-> > +         (alloc_raw && evsel__alloc_prev_raw_counts(evsel) < 0))
-> >               return -ENOMEM;
-> >
-> >       return 0;
-> > --
-> > 2.34.1.448.ga2b2bfdf31-goog
-> >
+> any chance you could add arm specific test for this?
+
+I don't see a reason not to. I'll make a note for a separate patch.
+
 >
+> otherwise it looks good to me
+>
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
+
+Thanks for the review,
+German
