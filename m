@@ -2,57 +2,57 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EB5C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Jan 2022 05:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E028C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Jan 2022 05:50:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238827AbiAJFpe (ORCPT
+        id S233592AbiAJFuC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Jan 2022 00:45:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54320 "EHLO
+        Mon, 10 Jan 2022 00:50:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238824AbiAJFpd (ORCPT
+        with ESMTP id S233549AbiAJFuB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Jan 2022 00:45:33 -0500
-Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79BA7C061748
-        for <linux-perf-users@vger.kernel.org>; Sun,  9 Jan 2022 21:45:33 -0800 (PST)
-Received: by mail-il1-x132.google.com with SMTP id 2so6238179ilj.4
-        for <linux-perf-users@vger.kernel.org>; Sun, 09 Jan 2022 21:45:33 -0800 (PST)
+        Mon, 10 Jan 2022 00:50:01 -0500
+Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70961C06173F
+        for <linux-perf-users@vger.kernel.org>; Sun,  9 Jan 2022 21:50:01 -0800 (PST)
+Received: by mail-io1-xd34.google.com with SMTP id u8so16109837iol.5
+        for <linux-perf-users@vger.kernel.org>; Sun, 09 Jan 2022 21:50:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=I2Rp9THzxzMq/ttRbcNPqtEt7HusqSb4QCZKzlGP+9A=;
-        b=juiqSHTVJOaVRhq5m+ZrXvTTrRVYb0CHU0nTSgQ5EbBBT6MbUr4A4GuiOClsTB/gdQ
-         t34ORL1fAqvpdOtpu9hdVHt5yRe8CL0QMc/SFFsE2WrOtSRobmC2J0uS+w/+EJP4ySoU
-         D7q84Pbg8+Ehz6bPkf5vsRmN6j9mys6WAR8oDkxPkN1u6Q15e0hWQsnld0wus+p/hqlo
-         Jf5jSTlEyS6kVAY37Pa9zi8xDocpNnjuR+F1IVvqvhVE2pwFA8Xo3vXQvv2vXMNqEmuv
-         K0b+L5hwH7MUOJre3i47A81eMI6K61WfeclIM8FYc824gFN3ez3zrBVu8ZIr4YBAySTw
-         iOeA==
+        bh=ALvm4nc74eB2Wd9VAb2s3UJ9R4m/+S/oxilpPbRkW3A=;
+        b=UrVsrwQso0IJkVO6QF2YQtW9l/A725oNGGJf+YZ/359fCEopGJ9XwrL1CWRtZNAX4v
+         MwF0Xd2DBUEH9EbSo1XKsyMm8McJL8SeQ02ajzi1HxW+0KOlPkrAAr0bTdcaeAtdmoJz
+         aBDV5TU8gK/tCTMmzcBu1MXhyNvRGA18grlWPGPUifNoxBP4kOWuGPycAXj8FD72+uYr
+         8rXfbC7m1EL8+Aw4ZpLZJodpVn/4rQpZHQxEiMrYmKveM9cexzEWW12in1QnvHlEUYwk
+         A6Fwxvie9bfqoP9g4cnbL5M4kMavDnk80S7DYn/Ukf2vFa3SCE7FZMqCwooNfQs/tD+x
+         LAuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=I2Rp9THzxzMq/ttRbcNPqtEt7HusqSb4QCZKzlGP+9A=;
-        b=kzDTXOrhmwoPJ0ugPjNplOdraWVgUyyhy6QaP70wZVXo2z2BSwl/oJopf70d6lV0Eu
-         cHnIAgqYxgpHlvSuM1KC2PZGYUpfUlwOejXYm7VvVPPmRDSHrjt8LPh/1xshYaJl9bIr
-         x9cNhL6H6n87eA9YWsvPd7cai0LKKx9H7k5ZJdKv9eKiGX+p6CNS7tAg7peg+7dT2oNf
-         H3Lbgl3llIi2vbU6zAD+VuZXGGXVRWk3Nf/AOqQDAhWCbxw9qCv/kQxNa1lCgPHy8Srj
-         L0ouA5EnWP8iXQ0EOYORw9wTYjS81kOaxka3c2alLpVYpM3M8VKZ44AzML/r/IVwSFOr
-         MGeA==
-X-Gm-Message-State: AOAM532KdzNrv0N2laZP2CWdndulMhHV6enQEiL5SJH84dQyspZ3jWbT
-        Ze54ytZq+vUer5vbR7fPpvxQ5L7EJ0hMNG82aUWf6Q==
-X-Google-Smtp-Source: ABdhPJxyWGUAtz2QGisVN7rf6M/TgAXD97oRuJ2SmHNnR7fpvWKGhupRiQN2k/CqPMiyRGdiVhxTK3dqHhAXr2Cyq74=
-X-Received: by 2002:a92:da07:: with SMTP id z7mr5541162ilm.2.1641793532644;
- Sun, 09 Jan 2022 21:45:32 -0800 (PST)
+        bh=ALvm4nc74eB2Wd9VAb2s3UJ9R4m/+S/oxilpPbRkW3A=;
+        b=xHBD+9YRTcrZX4FEq+KM6PMvAfCRkUVfGiNh21r8yHIIwn/rvcqj2SV+i77hiPrWOu
+         o4vSw+pqbHACdYIipaHPgPFj7lP0M6+aEhzTE0NIJXkivMtFQ/rGlynKZX8l9QDncpEE
+         Qnjlehhu2Y/E00LUtIFwvRv7vq+eBewwr9enNLaxe9/JjzSnPJraJylj1FP+tbDHtR92
+         9sn/nVw0up127N9HNh7nXDcLffqYr216ZZobCJr184BKghJgVH4pE8v2tba9LCA+vIL2
+         tXzMSf9/4VBTdRjsJ9/ZVQsFGE8n7+qrGT//SUfJqcw2U95fV7Y0N7hB5WDBbrgGJoNh
+         TRmw==
+X-Gm-Message-State: AOAM532TNN+NLyJKLbBAyjMaYRY0jKt7AUPbvCLHqf0ygEknLrwVD908
+        QJPoURYKpfBTEiCuScP24JwiXk5Gwq3n8lB8JdiDGw==
+X-Google-Smtp-Source: ABdhPJxOtknTyji3ATIF1Q9X5pyoX9JjwnRiihSAmLOCzQLNETeSKhBU3GP9sUJllE6Gs+j+DrTgUhjvnM+2DhvNGms=
+X-Received: by 2002:a05:6602:2b8b:: with SMTP id r11mr14683655iov.97.1641793800714;
+ Sun, 09 Jan 2022 21:50:00 -0800 (PST)
 MIME-Version: 1.0
-References: <20220105061351.120843-1-irogers@google.com> <20220105061351.120843-49-irogers@google.com>
- <Ydspzl2aWpufl/yR@krava>
-In-Reply-To: <Ydspzl2aWpufl/yR@krava>
+References: <20220105061351.120843-1-irogers@google.com> <20220105061351.120843-27-irogers@google.com>
+ <Ydsp1d58t/gp/GHd@krava>
+In-Reply-To: <Ydsp1d58t/gp/GHd@krava>
 From:   Ian Rogers <irogers@google.com>
-Date:   Sun, 9 Jan 2022 21:45:19 -0800
-Message-ID: <CAP-5=fUQsd21cxFiXBi2pCh9rakMReiNWxbrKn+1CesCamrtdg@mail.gmail.com>
-Subject: Re: [PATCH v4 48/48] perf cpumap: Give CPUs their own type.
+Date:   Sun, 9 Jan 2022 21:49:48 -0800
+Message-ID: <CAP-5=fU77-qjcooX5B7qmimUoyNp-nXKNtnGQE9F6TH8Qsx+4A@mail.gmail.com>
+Subject: Re: [PATCH v4 26/48] perf evsel: Derive CPUs and threads in alloc_counts
 To:     Jiri Olsa <jolsa@redhat.com>
 Cc:     Andi Kleen <ak@linux.intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -82,53 +82,87 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On Sun, Jan 9, 2022 at 10:30 AM Jiri Olsa <jolsa@redhat.com> wrote:
 >
-> On Tue, Jan 04, 2022 at 10:13:51PM -0800, Ian Rogers wrote:
-> > A common problem is confusing CPU map indices with the CPU, by wrapping
-> > the CPU with a struct then this is avoided. This approach is similar to
-> > atomic_t.
-> >
-> > Suggested-by: John Garry <john.garry@huawei.com>
-> > Signed-off-by: Ian Rogers <irogers@google.com>
+> On Tue, Jan 04, 2022 at 10:13:29PM -0800, Ian Rogers wrote:
 >
 > SNIP
 >
-> >  tools/perf/util/stat.h                        |   2 +-
-> >  tools/perf/util/svghelper.c                   |   6 +-
-> >  tools/perf/util/synthetic-events.c            |  12 +-
-> >  tools/perf/util/synthetic-events.h            |   3 +-
-> >  tools/perf/util/util.h                        |   5 +-
-> >  59 files changed, 408 insertions(+), 347 deletions(-)
->
-> that's massive ;-) did it find any mis-use of the index/value?
-
-It did. The fixes precede this patch so that we can have the fixes
-without the large rename.
-
-> how about the same for threads?
-
-Agreed, but the patch set was already big enough.
-
-> > diff --git a/tools/lib/perf/include/internal/cpumap.h b/tools/lib/perf/include/internal/cpumap.h
-> > index 71a31ed738c9..581f9ffb4237 100644
-> > --- a/tools/lib/perf/include/internal/cpumap.h
-> > +++ b/tools/lib/perf/include/internal/cpumap.h
-> > @@ -4,6 +4,11 @@
+> > diff --git a/tools/perf/util/counts.h b/tools/perf/util/counts.h
+> > index 7ff36bf6d644..3e275e9c60d1 100644
+> > --- a/tools/perf/util/counts.h
+> > +++ b/tools/perf/util/counts.h
+> > @@ -40,7 +40,7 @@ void perf_counts__delete(struct perf_counts *counts);
+> >  void perf_counts__reset(struct perf_counts *counts);
 > >
-> >  #include <linux/refcount.h>
+> >  void evsel__reset_counts(struct evsel *evsel);
+> > -int evsel__alloc_counts(struct evsel *evsel, int ncpus, int nthreads);
+> > +int evsel__alloc_counts(struct evsel *evsel);
+> >  void evsel__free_counts(struct evsel *evsel);
 > >
-> > +/** A wrapper around a CPU to avoid confusion with the perf_cpu_map's map's indices. */
-> > +struct perf_cpu {
-> > +     int cpu;
-> > +};
+> >  #endif /* __PERF_COUNTS_H */
+> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > index 656c30b988ce..6c9af21776e6 100644
+> > --- a/tools/perf/util/evsel.c
+> > +++ b/tools/perf/util/evsel.c
+> > @@ -1578,7 +1578,7 @@ int __evsel__read_on_cpu(struct evsel *evsel, int cpu, int thread, bool scale)
+> >       if (FD(evsel, cpu, thread) < 0)
+> >               return -EINVAL;
+> >
+> > -     if (evsel->counts == NULL && evsel__alloc_counts(evsel, cpu + 1, thread + 1) < 0)
+> > +     if (evsel->counts == NULL && evsel__alloc_counts(evsel) < 0)
 >
-> should we use 'int val' or 'int v' instead, so we don't have cpu.cpu ?
+> ugh, nice.. good that it's used only from test code ;-)
+>
+> btw I noticed evsel__read_on_cpu_scaled is not used at all
 
-I can rename it if you have a preference.
+I'd noticed that too, but wanted to stay away from making the patch
+set larger.  You end up removing the argument to
+__evsel__read_on_cpu, etc. Definitely worth cleaning up, but maybe we
+can do it later.
 
 Thanks,
 Ian
 
 > jirka
 >
-> SNIP
+> >               return -ENOMEM;
+> >
+> >       if (readn(FD(evsel, cpu, thread), &count, nv * sizeof(u64)) <= 0)
+> > diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+> > index c69b221f5e3e..995cb5003133 100644
+> > --- a/tools/perf/util/stat.c
+> > +++ b/tools/perf/util/stat.c
+> > @@ -152,11 +152,13 @@ static void evsel__free_stat_priv(struct evsel *evsel)
+> >       zfree(&evsel->stats);
+> >  }
+> >
+> > -static int evsel__alloc_prev_raw_counts(struct evsel *evsel, int ncpus, int nthreads)
+> > +static int evsel__alloc_prev_raw_counts(struct evsel *evsel)
+> >  {
+> > +     int cpu_map_nr = evsel__nr_cpus(evsel);
+> > +     int nthreads = perf_thread_map__nr(evsel->core.threads);
+> >       struct perf_counts *counts;
+> >
+> > -     counts = perf_counts__new(ncpus, nthreads);
+> > +     counts = perf_counts__new(cpu_map_nr, nthreads);
+> >       if (counts)
+> >               evsel->prev_raw_counts = counts;
+> >
+> > @@ -177,12 +179,9 @@ static void evsel__reset_prev_raw_counts(struct evsel *evsel)
+> >
+> >  static int evsel__alloc_stats(struct evsel *evsel, bool alloc_raw)
+> >  {
+> > -     int ncpus = evsel__nr_cpus(evsel);
+> > -     int nthreads = perf_thread_map__nr(evsel->core.threads);
+> > -
+> >       if (evsel__alloc_stat_priv(evsel) < 0 ||
+> > -         evsel__alloc_counts(evsel, ncpus, nthreads) < 0 ||
+> > -         (alloc_raw && evsel__alloc_prev_raw_counts(evsel, ncpus, nthreads) < 0))
+> > +         evsel__alloc_counts(evsel) < 0 ||
+> > +         (alloc_raw && evsel__alloc_prev_raw_counts(evsel) < 0))
+> >               return -ENOMEM;
+> >
+> >       return 0;
+> > --
+> > 2.34.1.448.ga2b2bfdf31-goog
+> >
 >
