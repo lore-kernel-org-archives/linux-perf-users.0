@@ -2,109 +2,84 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BAB3C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Jan 2022 01:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C35FC433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Jan 2022 02:10:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233122AbiAJBaG (ORCPT
+        id S238176AbiAJCKO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 9 Jan 2022 20:30:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230083AbiAJBaG (ORCPT
+        Sun, 9 Jan 2022 21:10:14 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:40834 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238174AbiAJCKN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 9 Jan 2022 20:30:06 -0500
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BE82C06173F;
-        Sun,  9 Jan 2022 17:30:06 -0800 (PST)
-Received: by mail-pj1-x102a.google.com with SMTP id b1-20020a17090a990100b001b14bd47532so14323191pjp.0;
-        Sun, 09 Jan 2022 17:30:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8ahpX94c8GUmfMJh8inkb4fyYhi5rbgrtZUmtlm080A=;
-        b=AMdHRjEu3M3oKR3yjUIESyRG3UvvqvBAJ7DvqBXZDISAN0v+P/+JTHBh6oNPYoqDGt
-         HQ+eFIS19fCTk6gQiCa7FrVjv6UwrVyVF5tv1Esab7KoIDf2GE7feL7vHTmIzrnKpzGZ
-         +E786/7Y3PCTejwLnubmdfyeYc6+LhdRFAfDJf4dO7nQMIF1EbDlOjcgVOKpTbNcjz3z
-         JM1W7awIiV3V4SCE16ibbmQHilc+RozkLTUGS2BXe1xIujiCHYsR82q2TA4XjBKzMo8z
-         eEdYhiWSVV9kbtg4BpTwvPB56mifFozQ/LAgXMk/07gAZNn6JgYePMw8Sf4h+UK2eXyT
-         oU2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8ahpX94c8GUmfMJh8inkb4fyYhi5rbgrtZUmtlm080A=;
-        b=YeV6N56Sk0Xld1yzT7B7AEVLXSGKYpOmBTsx0rVCOuzIpyJmiRlVjsqXPzmJ60m0LC
-         NzURoMgz3YupPtGVo3vwPV80kDZTrwGxsjV2aoRNVH7i6E3//T2Himq4K6LeurunTmEc
-         GsGQe7I3HZlWelG2FQ2zDcLNDQlqcCyHYBRQkI88Oufl2+bSJhpXUzWiv0ZUFiL3BZXM
-         TuIrm+1vXywxb0nBfPDyoyhTaLOVxHZyS6shP3i6ceZ58zaN3TKaUihrH2yZ9zJW19kK
-         1Ta651gNDxIOpbGgo7/Ax/oLjkR9CHt9cGddW1y9EiP0fDWNm4JalTyY5H56SQdQK/jv
-         8afQ==
-X-Gm-Message-State: AOAM533OKnjCc1wccVkYsuRUmPjIu2rlbWIY/5BxzRPSwzLTqKBoyZ+w
-        RthkvIGGuNwflIH1O70Lnq4=
-X-Google-Smtp-Source: ABdhPJy3Mlq1d/NTsid1Ukt/xM9HSX6ibBd7vEZvSdfVDq5PEaWwUiBkPsNGpy4IFQZevQSeNoshZQ==
-X-Received: by 2002:a17:90b:1c86:: with SMTP id oo6mr27430393pjb.165.1641778204509;
-        Sun, 09 Jan 2022 17:30:04 -0800 (PST)
-Received: from localhost.localdomain ([193.203.214.57])
-        by smtp.gmail.com with ESMTPSA id n26sm3731057pgb.91.2022.01.09.17.30.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Jan 2022 17:30:04 -0800 (PST)
-From:   cgel.zte@gmail.com
-X-Google-Original-From: chi.minghao@zte.com.cn
-To:     peterz@infradead.org
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, rth@twiddle.net, ink@jurassic.park.msu.ru,
-        mattst88@gmail.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-        Minghao Chi <chi.minghao@zte.com.cn>,
-        Zeal Robot <zealci@zte.com.cn>, CGEL ZTE <cgel.zte@gmail.com>
-Subject: [PATCH] arch/alpha/kernel: remove redundant err variable
-Date:   Mon, 10 Jan 2022 01:29:54 +0000
-Message-Id: <20220110012954.644059-1-chi.minghao@zte.com.cn>
-X-Mailer: git-send-email 2.25.1
+        Sun, 9 Jan 2022 21:10:13 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id C2EB6CE1258;
+        Mon, 10 Jan 2022 02:10:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BC263C36AEF;
+        Mon, 10 Jan 2022 02:10:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1641780609;
+        bh=zBuFSL/tlo/kGDtU6AYsmMls/4da+oq+NcCGlkXPWA4=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=RT1NqQVS/+HvtX8b7/SBreG6kau5GsyJcqNtcTWbwuzTVFM+1hLixNGjD4EgcjT8E
+         S47ev99CdOs0dK9Iurp772Ghp1oqg0vAiNxd2c3Tirl6DxWm1iZsBt5GoFDZ3fQsVF
+         kf9LLV04RNRfRnKhDH1j9jHclIuFSMQpsy4Ko0O3upyeC8TPVK3GBAAlmn11eQjlPO
+         9NrAnGiFvWgWqzOWC/O5UVQpYNrKOmWrMCTKE8abHdaXH6ZVxrG3C3bVgam309HC8i
+         WyujNVcUwMQ/l1Do/t7fDaId8iW0D6+bWr6Hm4TwpoHN35E9AI6WsoNErdvKUmEcbz
+         gyxklbj902FBQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9C270F6078A;
+        Mon, 10 Jan 2022 02:10:09 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH bpf-next v2 0/5] libbpf 1.0: deprecate bpf_map__def() API
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <164178060963.18256.8098134045355307256.git-patchwork-notify@kernel.org>
+Date:   Mon, 10 Jan 2022 02:10:09 +0000
+References: <20220108004218.355761-1-christylee@fb.com>
+In-Reply-To: <20220108004218.355761-1-christylee@fb.com>
+To:     Christy Lee <christylee@fb.com>
+Cc:     andrii@kernel.org, acme@kernel.org, christyc.y.lee@gmail.com,
+        bpf@vger.kernel.org, kernel-team@fb.com,
+        linux-perf-users@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Minghao Chi <chi.minghao@zte.com.cn>
+Hello:
 
-Return value from __hw_perf_event_init() directly instead
-of taking this in another redundant variable.
+This series was applied to bpf/bpf-next.git (master)
+by Andrii Nakryiko <andrii@kernel.org>:
 
-Reported-by: Zeal Robot <zealci@zte.com.cn>
-Signed-off-by: Minghao Chi <chi.minghao@zte.com.cn>
-Signed-off-by: CGEL ZTE <cgel.zte@gmail.com>
----
- arch/alpha/kernel/perf_event.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+On Fri, 7 Jan 2022 16:42:13 -0800 you wrote:
+> bpf_map__def() is rarely used and non-extensible. bpf_map_def fields
+> can be accessed with appropriate map getters and setters instead.
+> Deprecate bpf_map__def() API and replace use cases with getters and
+> setters.
+> 
+> Changelog:
+> 
+> [...]
 
-diff --git a/arch/alpha/kernel/perf_event.c b/arch/alpha/kernel/perf_event.c
-index efcf7321701b..ccdb508c1516 100644
---- a/arch/alpha/kernel/perf_event.c
-+++ b/arch/alpha/kernel/perf_event.c
-@@ -689,8 +689,6 @@ static int __hw_perf_event_init(struct perf_event *event)
-  */
- static int alpha_pmu_event_init(struct perf_event *event)
- {
--	int err;
--
- 	/* does not support taken branch sampling */
- 	if (has_branch_stack(event))
- 		return -EOPNOTSUPP;
-@@ -709,9 +707,7 @@ static int alpha_pmu_event_init(struct perf_event *event)
- 		return -ENODEV;
- 
- 	/* Do the real initialisation work. */
--	err = __hw_perf_event_init(event);
--
--	return err;
-+	return __hw_perf_event_init(event);
- }
- 
- /*
+Here is the summary with links:
+  - [bpf-next,v2,1/5] samples/bpf: stop using bpf_map__def() API
+    https://git.kernel.org/bpf/bpf-next/c/fcaf77640892
+  - [bpf-next,v2,2/5] bpftool: stop using bpf_map__def() API
+    https://git.kernel.org/bpf/bpf-next/c/567df3b14606
+  - [bpf-next,v2,3/5] perf: stop using bpf_map__def() API
+    https://git.kernel.org/bpf/bpf-next/c/ad60db9aabb1
+  - [bpf-next,v2,4/5] selftests/bpf: stop using bpf_map__def() API
+    https://git.kernel.org/bpf/bpf-next/c/f8b287530aef
+  - [bpf-next,v2,5/5] libbpf: deprecate bpf_map__def() API
+    https://git.kernel.org/bpf/bpf-next/c/b95533311a0f
+
+You are awesome, thank you!
 -- 
-2.25.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
