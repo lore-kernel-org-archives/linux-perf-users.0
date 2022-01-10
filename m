@@ -2,37 +2,40 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AF1C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Jan 2022 21:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BECC433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Jan 2022 21:23:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343713AbiAJVDK (ORCPT
+        id S241342AbiAJVXO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Jan 2022 16:03:10 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:51258 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239741AbiAJVDJ (ORCPT
+        Mon, 10 Jan 2022 16:23:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46228 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241601AbiAJVXN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Jan 2022 16:03:09 -0500
+        Mon, 10 Jan 2022 16:23:13 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89A99C06173F;
+        Mon, 10 Jan 2022 13:23:13 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4894EB8107D;
-        Mon, 10 Jan 2022 21:03:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A986CC36AE9;
-        Mon, 10 Jan 2022 21:03:06 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1B89061411;
+        Mon, 10 Jan 2022 21:23:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3265AC36AE3;
+        Mon, 10 Jan 2022 21:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641848587;
-        bh=AD4dVJVe8at8uwWCEmd7hOg8NubblSQq5w4iLskvH+c=;
+        s=k20201202; t=1641849792;
+        bh=T9STf5hUbuB72JEkabZ1MTPiweQMf+1BwcjOmv6V1bc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ObFdKKf75tSif71up58WTM5O5EMAlL9lhky2+vLsvZkCa4tF2GmKL6tnyLqmcJyE0
-         S3H+ZsmwP34mfVuGtMhg8TM8X41/nQbRREeMIU2ZGa6M0u/5PTLc5oWmrlQ+Plbz37
-         iw8Efj2XyfTY0n4Ne/aQSWkWd0Omz9nJRoaCjyalRkoHdjxQ15DO54wTxARnXpQ5CY
-         RqwyN4HUJWnyMyvVoux/BMYO32tSgDkY82Hi++k2m2eFVOekoSQ2NccaQ34Z95aKEb
-         ROqP8ZeInrbGSAhRqQU4BKU92H+0o6h0WCFvM1zNtC175KOiygQGnPk6hM8DX35pxn
-         QLKehabnWGPWQ==
+        b=HoL751Cw9VmnYLk760NDJxU3pkRbkUHgUXybd56l0VVq/KLDM5r4QI+hBZoMmftuC
+         noQLxy8wRCeeUceikQkLHA35zCX1PrBS7tZhYcyksF4I/jRPusWkReN3+5ljiiQOjn
+         eSiNr4zm9t4skSBpYGpm5fSYDVgFcA9LF8n3PX6MkvoXolPZPuioPhrBI65i4YJJJa
+         3bfhMWthqt6AK43hyM00issEvIPfCuXWQRjzZqbIyK82BwQmlTHg1K4Dz8FmBVoGDQ
+         VDSCt8OLUdE6krLryBTSjmV5gxFE6Pe3e807cjN7M26ZN0Pte4Kpm213H0b9HHzImR
+         6Ld68IJQ8xaSQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id BBFE340714; Mon, 10 Jan 2022 18:03:04 -0300 (-03)
-Date:   Mon, 10 Jan 2022 18:03:04 -0300
+        id 7BE9240714; Mon, 10 Jan 2022 18:23:09 -0300 (-03)
+Date:   Mon, 10 Jan 2022 18:23:09 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
@@ -57,226 +60,96 @@ Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         eranian@google.com
 Subject: Re: [PATCH v3 06/48] perf cpumap: Switch cpu_map__build_map to cpu
  function
-Message-ID: <YdyfCN1/JWJtJHTO@kernel.org>
+Message-ID: <Ydyjvcma/wMTPwbn@kernel.org>
 References: <20211230072030.302559-1-irogers@google.com>
  <20211230072030.302559-8-irogers@google.com>
  <YdybPJKjqx6zb28/@kernel.org>
+ <YdyfCN1/JWJtJHTO@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <YdybPJKjqx6zb28/@kernel.org>
+In-Reply-To: <YdyfCN1/JWJtJHTO@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Jan 10, 2022 at 05:46:52PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Wed, Dec 29, 2021 at 11:19:48PM -0800, Ian Rogers escreveu:
-> > Avoid error prone cpu_map + idx variant. Remove now unused functions.
+Em Mon, Jan 10, 2022 at 06:03:04PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Mon, Jan 10, 2022 at 05:46:52PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > Em Wed, Dec 29, 2021 at 11:19:48PM -0800, Ian Rogers escreveu:
+> > > Avoid error prone cpu_map + idx variant. Remove now unused functions.
+> > 
+> > At this point we need to remove the now unused perf_env__get_cpu(), and
+> > then deal with the fallout in the following patches that needlessly
+> > modify this unused function.
+> > 
+> > Doing that now.
 > 
-> At this point we need to remove the now unused perf_env__get_cpu(), and
-> then deal with the fallout in the following patches that needlessly
-> modify this unused function.
+> Done, force pushed to tmp.perf/perf_cpu, now it is going again thru the
+> build containers, a better start now:
 > 
-> Doing that now.
+> [perfbuilder@five ~]$ export BUILD_TARBALL=http://192.168.100.2/perf/perf-5.16.0.tar.xz
+> [perfbuilder@five ~]$ time dm
+>    1    95.61 almalinux:8                   : Ok   gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-4) , clang version 12.0.1 (Red Hat 12.0.1-4.module_el8.5.0+1025+93159d6c)
+>    2    56.18 alpine:3.4                    : Ok   gcc (Alpine 5.3.0) 5.3.0 , clang version 3.8.0 (tags/RELEASE_380/final)
+>    3: alpine:3.5
+> 
 
-Done, force pushed to tmp.perf/perf_cpu, now it is going again thru the
-build containers, a better start now:
+So far so good:
 
 [perfbuilder@five ~]$ export BUILD_TARBALL=http://192.168.100.2/perf/perf-5.16.0.tar.xz
 [perfbuilder@five ~]$ time dm
    1    95.61 almalinux:8                   : Ok   gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-4) , clang version 12.0.1 (Red Hat 12.0.1-4.module_el8.5.0+1025+93159d6c)
    2    56.18 alpine:3.4                    : Ok   gcc (Alpine 5.3.0) 5.3.0 , clang version 3.8.0 (tags/RELEASE_380/final)
-   3: alpine:3.5
+   3    54.98 alpine:3.5                    : Ok   gcc (Alpine 6.2.1) 6.2.1 20160822 , clang version 3.8.1 (tags/RELEASE_381/final)
+   4    57.69 alpine:3.6                    : Ok   gcc (Alpine 6.3.0) 6.3.0 , clang version 4.0.0 (tags/RELEASE_400/final)
+   5    63.62 alpine:3.7                    : Ok   gcc (Alpine 6.4.0) 6.4.0 , Alpine clang version 5.0.0 (tags/RELEASE_500/final) (based on LLVM 5.0.0)
+   6    64.52 alpine:3.8                    : Ok   gcc (Alpine 6.4.0) 6.4.0 , Alpine clang version 5.0.1 (tags/RELEASE_501/final) (based on LLVM 5.0.1)
+   7    66.54 alpine:3.9                    : Ok   gcc (Alpine 8.3.0) 8.3.0 , Alpine clang version 5.0.1 (tags/RELEASE_502/final) (based on LLVM 5.0.1)
+   8    91.91 alpine:3.10                   : Ok   gcc (Alpine 8.3.0) 8.3.0 , Alpine clang version 8.0.0 (tags/RELEASE_800/final) (based on LLVM 8.0.0)
+   9   104.93 alpine:3.11                   : Ok   gcc (Alpine 9.3.0) 9.3.0 , Alpine clang version 9.0.0 (https://git.alpinelinux.org/aports f7f0d2c2b8bcd6a5843401a9a702029556492689) (based on LLVM 9.0.0)
+  10   107.97 alpine:3.12                   : Ok   gcc (Alpine 9.3.0) 9.3.0 , Alpine clang version 10.0.0 (https://gitlab.alpinelinux.org/alpine/aports.git 7445adce501f8473efdb93b17b5eaf2f1445ed4c)
+  11   115.98 alpine:3.13                   : Ok   gcc (Alpine 10.2.1_pre1) 10.2.1 20201203 , Alpine clang version 10.0.1
+  12   101.73 alpine:3.14                   : Ok   gcc (Alpine 10.3.1_git20210424) 10.3.1 20210424 , Alpine clang version 11.1.0
+  13   103.35 alpine:3.15                   : Ok   gcc (Alpine 10.3.1_git20211027) 10.3.1 20211027 , Alpine clang version 12.0.1
+  14   104.43 alpine:edge                   : Ok   gcc (Alpine 11.2.1_git20211128) 11.2.1 20211128 , Alpine clang version 12.0.1
+  15    51.06 alt:p8                        : Ok   x86_64-alt-linux-gcc (GCC) 5.3.1 20151207 (ALT p8 5.3.1-alt3.M80P.1) , clang version 3.8.0 (tags/RELEASE_380/final)
 
+Building with:
 
-- Arnaldo
- 
-> ⬢[acme@toolbox perf]$ git diff
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index 6b985abaa2d22c58..40cb3518f27e2309 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -1477,22 +1477,6 @@ static void perf_stat__exit_aggr_mode(void)
->         stat_config.cpus_aggr_map = NULL;
->  }
-> 
-> -static inline int perf_env__get_cpu(void *data, struct perf_cpu_map *map, int idx)
-> -{
-> -       struct perf_env *env = data;
-> -       int cpu;
-> -
-> -       if (idx > map->nr)
-> -               return -1;
-> -
-> -       cpu = map->map[idx];
-> -
-> -       if (cpu >= env->nr_cpus_avail)
-> -               return -1;
-> -
-> -       return cpu;
-> -}
-> -
->  static struct aggr_cpu_id perf_env__get_socket_aggr_by_cpu(int cpu, void *data)
->  {
->         struct perf_env *env = data;
->  
-> > Reviewed-by: James Clark <james.clark@arm.com>
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/builtin-stat.c | 28 ++++------------------------
-> >  tools/perf/util/cpumap.c  | 12 ++++++------
-> >  tools/perf/util/cpumap.h  |  2 +-
-> >  3 files changed, 11 insertions(+), 31 deletions(-)
-> > 
-> > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> > index 9791ae9b1a53..6b985abaa2d2 100644
-> > --- a/tools/perf/builtin-stat.c
-> > +++ b/tools/perf/builtin-stat.c
-> > @@ -1504,11 +1504,6 @@ static struct aggr_cpu_id perf_env__get_socket_aggr_by_cpu(int cpu, void *data)
-> >  	return id;
-> >  }
-> >  
-> > -static struct aggr_cpu_id perf_env__get_socket(struct perf_cpu_map *map, int idx, void *data)
-> > -{
-> > -	return perf_env__get_socket_aggr_by_cpu(perf_env__get_cpu(data, map, idx), data);
-> > -}
-> > -
-> >  static struct aggr_cpu_id perf_env__get_die_aggr_by_cpu(int cpu, void *data)
-> >  {
-> >  	struct perf_env *env = data;
-> > @@ -1527,11 +1522,6 @@ static struct aggr_cpu_id perf_env__get_die_aggr_by_cpu(int cpu, void *data)
-> >  	return id;
-> >  }
-> >  
-> > -static struct aggr_cpu_id perf_env__get_die(struct perf_cpu_map *map, int idx, void *data)
-> > -{
-> > -	return perf_env__get_die_aggr_by_cpu(perf_env__get_cpu(data, map, idx), data);
-> > -}
-> > -
-> >  static struct aggr_cpu_id perf_env__get_core_aggr_by_cpu(int cpu, void *data)
-> >  {
-> >  	struct perf_env *env = data;
-> > @@ -1551,11 +1541,6 @@ static struct aggr_cpu_id perf_env__get_core_aggr_by_cpu(int cpu, void *data)
-> >  	return id;
-> >  }
-> >  
-> > -static struct aggr_cpu_id perf_env__get_core(struct perf_cpu_map *map, int idx, void *data)
-> > -{
-> > -	return perf_env__get_core_aggr_by_cpu(perf_env__get_cpu(data, map, idx), data);
-> > -}
-> > -
-> >  static struct aggr_cpu_id perf_env__get_node_aggr_by_cpu(int cpu, void *data)
-> >  {
-> >  	struct aggr_cpu_id id = cpu_map__empty_aggr_cpu_id();
-> > @@ -1564,33 +1549,28 @@ static struct aggr_cpu_id perf_env__get_node_aggr_by_cpu(int cpu, void *data)
-> >  	return id;
-> >  }
-> >  
-> > -static struct aggr_cpu_id perf_env__get_node(struct perf_cpu_map *map, int idx, void *data)
-> > -{
-> > -	return perf_env__get_node_aggr_by_cpu(perf_env__get_cpu(data, map, idx), data);
-> > -}
-> > -
-> >  static int perf_env__build_socket_map(struct perf_env *env, struct perf_cpu_map *cpus,
-> >  				      struct cpu_aggr_map **sockp)
-> >  {
-> > -	return cpu_map__build_map(cpus, sockp, perf_env__get_socket, env);
-> > +	return cpu_map__build_map(cpus, sockp, perf_env__get_socket_aggr_by_cpu, env);
-> >  }
-> >  
-> >  static int perf_env__build_die_map(struct perf_env *env, struct perf_cpu_map *cpus,
-> >  				   struct cpu_aggr_map **diep)
-> >  {
-> > -	return cpu_map__build_map(cpus, diep, perf_env__get_die, env);
-> > +	return cpu_map__build_map(cpus, diep, perf_env__get_die_aggr_by_cpu, env);
-> >  }
-> >  
-> >  static int perf_env__build_core_map(struct perf_env *env, struct perf_cpu_map *cpus,
-> >  				    struct cpu_aggr_map **corep)
-> >  {
-> > -	return cpu_map__build_map(cpus, corep, perf_env__get_core, env);
-> > +	return cpu_map__build_map(cpus, corep, perf_env__get_core_aggr_by_cpu, env);
-> >  }
-> >  
-> >  static int perf_env__build_node_map(struct perf_env *env, struct perf_cpu_map *cpus,
-> >  				    struct cpu_aggr_map **nodep)
-> >  {
-> > -	return cpu_map__build_map(cpus, nodep, perf_env__get_node, env);
-> > +	return cpu_map__build_map(cpus, nodep, perf_env__get_node_aggr_by_cpu, env);
-> >  }
-> >  
-> >  static struct aggr_cpu_id perf_stat__get_socket_file(struct perf_stat_config *config __maybe_unused,
-> > diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-> > index 49fba2c53822..feaf34b25efc 100644
-> > --- a/tools/perf/util/cpumap.c
-> > +++ b/tools/perf/util/cpumap.c
-> > @@ -163,7 +163,7 @@ static int cmp_aggr_cpu_id(const void *a_pointer, const void *b_pointer)
-> >  }
-> >  
-> >  int cpu_map__build_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **res,
-> > -		       struct aggr_cpu_id (*f)(struct perf_cpu_map *map, int cpu, void *data),
-> > +		       struct aggr_cpu_id (*f)(int cpu, void *data),
-> >  		       void *data)
-> >  {
-> >  	int nr = cpus->nr;
-> > @@ -178,7 +178,7 @@ int cpu_map__build_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **res,
-> >  	c->nr = 0;
-> >  
-> >  	for (cpu = 0; cpu < nr; cpu++) {
-> > -		s1 = f(cpus, cpu, data);
-> > +		s1 = f(cpu, data);
-> >  		for (s2 = 0; s2 < c->nr; s2++) {
-> >  			if (cpu_map__compare_aggr_cpu_id(s1, c->map[s2]))
-> >  				break;
-> > @@ -290,22 +290,22 @@ struct aggr_cpu_id cpu_map__get_node(struct perf_cpu_map *map, int idx, void *da
-> >  
-> >  int cpu_map__build_socket_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **sockp)
-> >  {
-> > -	return cpu_map__build_map(cpus, sockp, cpu_map__get_socket, NULL);
-> > +	return cpu_map__build_map(cpus, sockp, cpu_map__get_socket_aggr_by_cpu, NULL);
-> >  }
-> >  
-> >  int cpu_map__build_die_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **diep)
-> >  {
-> > -	return cpu_map__build_map(cpus, diep, cpu_map__get_die, NULL);
-> > +	return cpu_map__build_map(cpus, diep, cpu_map__get_die_aggr_by_cpu, NULL);
-> >  }
-> >  
-> >  int cpu_map__build_core_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **corep)
-> >  {
-> > -	return cpu_map__build_map(cpus, corep, cpu_map__get_core, NULL);
-> > +	return cpu_map__build_map(cpus, corep, cpu_map__get_core_aggr_by_cpu, NULL);
-> >  }
-> >  
-> >  int cpu_map__build_node_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **numap)
-> >  {
-> > -	return cpu_map__build_map(cpus, numap, cpu_map__get_node, NULL);
-> > +	return cpu_map__build_map(cpus, numap, cpu_map__get_node_aggr_by_cpu, NULL);
-> >  }
-> >  
-> >  /* setup simple routines to easily access node numbers given a cpu number */
-> > diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
-> > index c62d67704425..9648816c4255 100644
-> > --- a/tools/perf/util/cpumap.h
-> > +++ b/tools/perf/util/cpumap.h
-> > @@ -63,7 +63,7 @@ int cpu__max_present_cpu(void);
-> >  int cpu__get_node(int cpu);
-> >  
-> >  int cpu_map__build_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **res,
-> > -		       struct aggr_cpu_id (*f)(struct perf_cpu_map *map, int cpu, void *data),
-> > +		       struct aggr_cpu_id (*f)(int cpu, void *data),
-> >  		       void *data);
-> >  
-> >  int cpu_map__cpu(struct perf_cpu_map *cpus, int idx);
-> > -- 
-> > 2.34.1.448.ga2b2bfdf31-goog
-> 
-> -- 
-> 
-> - Arnaldo
+build_perf_gcc() {
+	set -o xtrace
+	make $EXTRA_MAKE_ARGS ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE EXTRA_CFLAGS="$EXTRA_CFLAGS" -C tools/perf O=/tmp/build/perf || exit 1
+	rm -rf /tmp/build/perf ; mkdir /tmp/build/perf
+	make $EXTRA_MAKE_ARGS ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE EXTRA_CFLAGS="$EXTRA_CFLAGS" NO_LIBELF=1 -C tools/perf O=/tmp/build/perf || exit 1
+	rm -rf /tmp/build/perf ; mkdir /tmp/build/perf
+	make $EXTRA_MAKE_ARGS ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE EXTRA_CFLAGS="$EXTRA_CFLAGS" NO_LIBBPF=1 -C tools/perf O=/tmp/build/perf || exit 1
+	if [ -d /usr/include/traceevent/ ] ; then
+		make $EXTRA_MAKE_ARGS ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE EXTRA_CFLAGS="$EXTRA_CFLAGS" LIBTRACEEVENT_DYNAMIC=1 -C tools/perf O=/tmp/build/perf || exit 1
+	fi
+	set +o xtrace
+}
 
--- 
+build_perf_clang() {
+	set -o xtrace
 
-- Arnaldo
+	if [ ! $NO_BUILD_BPF_SKEL ] ; then
+		rm -rf /tmp/build/perf ; mkdir /tmp/build/perf
+		make $EXTRA_MAKE_ARGS ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE EXTRA_CFLAGS="$EXTRA_CFLAGS" BUILD_BPF_SKEL=1 -C tools/perf O=/tmp/build/perf || exit 1
+	fi
+
+	rm -rf /tmp/build/perf ; mkdir /tmp/build/perf
+	make $EXTRA_MAKE_ARGS ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE EXTRA_CFLAGS="$EXTRA_CFLAGS" -C tools/perf O=/tmp/build/perf CC=clang || exit 1
+	rm -rf /tmp/build/perf ; mkdir /tmp/build/perf
+	make $EXTRA_MAKE_ARGS ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE EXTRA_CFLAGS="$EXTRA_CFLAGS" NO_LIBELF=1 -C tools/perf O=/tmp/build/perf CC=clang || exit 1
+	rm -rf /tmp/build/perf ; mkdir /tmp/build/perf
+	make $EXTRA_MAKE_ARGS ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE EXTRA_CFLAGS="$EXTRA_CFLAGS" NO_LIBBPF=1 -C tools/perf O=/tmp/build/perf CC=clang || exit 1
+	rm -rf /tmp/build/perf ; mkdir /tmp/build/perf
+	make $EXTRA_MAKE_ARGS ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE EXTRA_CFLAGS="$EXTRA_CFLAGS" LIBCLANGLLVM=1 -C tools/perf O=/tmp/build/perf CC=clang || exit 1
+	rm -rf /tmp/build/perf ; mkdir /tmp/build/perf
+	make $EXTRA_MAKE_ARGS ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE EXTRA_CFLAGS="$EXTRA_CFLAGS" LIBCLANGLLVM=1 -C tools/perf O=/tmp/build/perf || exit 1
+	if [ -d /usr/include/traceevent/ ] ; then
+		make $EXTRA_MAKE_ARGS ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE EXTRA_CFLAGS="$EXTRA_CFLAGS" LIBTRACEEVENT_DYNAMIC=1 -C tools/perf O=/tmp/build/perf || exit 1
+	fi
+	set +o xtrace
+}
