@@ -2,153 +2,95 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5724C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jan 2022 18:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B791C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jan 2022 18:46:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346267AbiAKSqJ (ORCPT
+        id S1346389AbiAKSqz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Jan 2022 13:46:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32902 "EHLO
+        Tue, 11 Jan 2022 13:46:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346263AbiAKSqI (ORCPT
+        with ESMTP id S1345929AbiAKSqy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Jan 2022 13:46:08 -0500
-Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9BB5C06173F
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jan 2022 10:46:07 -0800 (PST)
-Received: by mail-yb1-xb30.google.com with SMTP id d7so17068572ybo.5
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jan 2022 10:46:07 -0800 (PST)
+        Tue, 11 Jan 2022 13:46:54 -0500
+Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AB23C06173F
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jan 2022 10:46:54 -0800 (PST)
+Received: by mail-io1-xd35.google.com with SMTP id 19so141939ioz.4
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jan 2022 10:46:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
+        d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=sM8wuZyLOamyQ+NaAWxgxygW9jRKD3OsUdPukmMlL1U=;
-        b=OpLYe3hGobUDsobWW/zx65mRZbZ+bnV73uNhO5xjHnaneVs0YX2ZC/o290orDokc0u
-         WNiWHsAC9xKw+VU2KOnbLTcKHOqsdO5P1aE1IXFuxwY4ZDxpzzL/jn+Lw37Pt6HUlJdW
-         LTMdizaDElo92GlzxfbX8joJBw9EPa9Fmw2r0=
+        bh=2hbXHVCLNGmYtpg85HRQj1tStndWpfHPlukM67GllcY=;
+        b=PT7z42l9TocW0rBRoMNHny1aXx9qnV4VC/bduNOMV1uM84VQGJVqnX5lcR9VagMYAw
+         I0E2UyKIur6ocvM9WyuX0gxyhAhZRNlzWPACPY/+8wrxLGmThPCcZ03zBy0xT1YAg2Z5
+         veYdBeqwntFzyIKqsHUOqeIl/wB16tM9Q4RDcfJJWqrRj3mnKqdPM1Q+fSThdO9l3pDZ
+         CzTrfuHtm3A1TqePhus9QVI/k/CrVJJA/fuzYZLA5zol/6587EnlJChEMD/vBmxAvqoa
+         TTI1dip4H9cQqXGKzj1fDb6omPu4ph2vjoKBblTFXtOgPU+8B7OotpsniRSBVUn855ax
+         ttXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=sM8wuZyLOamyQ+NaAWxgxygW9jRKD3OsUdPukmMlL1U=;
-        b=bLF4B0prHVKZjzUihUO3pXZJyBb8VBfDsn8im1z6oGup77uVTy3rjkJiJ+TYMeKhVd
-         UtHdWMIPBX8v/WABmGlENnQy9xEqcy5KISeijvwE19Y8ALzS+YmFv/7CxfySxlkxSy+W
-         sOCyvzmqxq2ehaAl9RR0mPPwQKnRc9CohQGXYEGp4rZOxP1Wa4XBhsLQGwVymIaHhvoy
-         Zyenttdm2z8+CzYDt3VfHjB2X51dvYwvx3AvqQ9ip1JuPAl32MXqVuOYZrMcLJ4NFkFk
-         B549wVxAJc8L25kuzz2pi6ELpnZGQsTg++tcnrrGPiG9YYngrF16oQNjBHiZvB6/O+Qw
-         TSxw==
-X-Gm-Message-State: AOAM531E9lHRLuzsorTV+pXh1L1vAk9LsY2vpPsJ64pJZM7l2r4l3IDd
-        TgzN36yJzR+kOiUzuMzmpgdjaNAdC1rrq8t9gad5
-X-Google-Smtp-Source: ABdhPJx0Y8SQdmOLymALspxxE440M5sdcmWqHQIm5ZCLL7vr2lFtY9Dk3p4WLCtnG5DHhsKNkV8pIQcewm2Nq+Si/qc=
-X-Received: by 2002:a25:d14c:: with SMTP id i73mr832991ybg.713.1641926766802;
- Tue, 11 Jan 2022 10:46:06 -0800 (PST)
+        bh=2hbXHVCLNGmYtpg85HRQj1tStndWpfHPlukM67GllcY=;
+        b=cFNxyQsqRGASFLxEqr2emDrShJHRgCG91jUzKlO1dHbXcljz2cKYLaITROhAYyVx0p
+         8PxVKU/g4ltbIk1wz41ckpXGC7DDHnffZFGVIuPRz9tYPRPeXrGH+BR2YuVY/aVhaGl1
+         aSlqSgKbL7gKK+tIdLbtMwaE66LvcDV/JTF1EiUkePDNxmOhIOEQIog61XctdGy9ciT1
+         z/B+PTlATTHvcNvdgizEjYihlYh3ILGv1Xoj5RXnAmYxk14mmCsjnLtJImWmirIFBYSI
+         5PMQ1uPmADpP0fduYFK2j8uMk+07ZFfXouiSIlZWMGeUaOei2CxF/E99QQMB72qx1g8E
+         bEWQ==
+X-Gm-Message-State: AOAM533bP1TZkCSHNRIcQTd3nwjsVohVG1AqhECNPaqbkzhaKfX4rrgF
+        MrIJYOQCDW6QpgCgEfegjg9wQPQrSIwP5qmPrYZzPQ==
+X-Google-Smtp-Source: ABdhPJyzFsWOVvDV15+T62OelOrluGd6cLRTECTNoFDVCLTUjNK3SFCT5CQrIA0zAG3J2JESN9VGPl3PW2msrBTB2xw=
+X-Received: by 2002:a5d:944a:: with SMTP id x10mr2890515ior.18.1641926813572;
+ Tue, 11 Jan 2022 10:46:53 -0800 (PST)
 MIME-Version: 1.0
-References: <20220111142054.18733-1-nikita.shubin@maquefel.me> <B6E7919C-9414-4CC1-BB86-7D358085CECD@jrtc27.com>
-In-Reply-To: <B6E7919C-9414-4CC1-BB86-7D358085CECD@jrtc27.com>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Tue, 11 Jan 2022 10:45:56 -0800
-Message-ID: <CAOnJCUJ6JNY9eWrPhGi3XK3omDwXhM37oimsZoqxbOP_f7vUog@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/1] perf tools: Add 'm' event modifier for counting
-To:     Jessica Clarke <jrtc27@jrtc27.com>
-Cc:     Nikita Shubin <nikita.shubin@maquefel.me>,
-        Atish Patra <atishp@rivosinc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        linux <linux@yadro.com>, Nikita Shubin <n.shubin@yadro.com>,
+References: <20220105061351.120843-1-irogers@google.com> <20220105061351.120843-6-irogers@google.com>
+ <64d64526-7d3e-0c31-f43e-f03810f72ac2@huawei.com>
+In-Reply-To: <64d64526-7d3e-0c31-f43e-f03810f72ac2@huawei.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 11 Jan 2022 10:46:41 -0800
+Message-ID: <CAP-5=fW2JzePV=rQG=Ww1Omub0_r2gi38FUVyaG+a3L=44R9XA@mail.gmail.com>
+Subject: Re: [PATCH v4 05/48] perf stat: Switch to cpu version of cpu_map__get
+To:     John Garry <john.garry@huawei.com>
+Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>,
-        John Garry <john.garry@huawei.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Song Liu <song@kernel.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vineet Singh <vineet.singh@intel.com>,
+        James Clark <james.clark@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, zhengjun.xing@intel.com,
+        eranian@google.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jan 11, 2022 at 6:29 AM Jessica Clarke <jrtc27@jrtc27.com> wrote:
+On Mon, Jan 10, 2022 at 11:04 AM John Garry <john.garry@huawei.com> wrote:
 >
-> On 11 Jan 2022, at 14:20, Nikita Shubin <nikita.shubin@maquefel.me> wrote:
-> >
-> > From: Nikita Shubin <n.shubin@yadro.com>
-> >
-> > This patch is a proposal to add Machine Mode modifier that is currently
-> > available only for RISC-V for perf tool.
-> >
-> > We don't currently have a level that is lower than kernel, so i don't
-> > see we can reuse something existing for this purpose.
-> >
-
-Thanks for a quick turnaround with a working patch!!
-
-However, the use case can be applied to other arch as well. It would
-be good to classify this
-as excluding "firmware" events instead of machine mode which is a
-RISC-V terminology.
-Ofcourse, the current documentation should indicate that this option
-is only useful
-for RISC-V right now.
-
-I would like to understand if this idea is appealing to the broader community.
-
-> > The exclude_machine bit seems harmless to as no one will proccess it apart
-> > of riscv.
+> On 05/01/2022 06:13, Ian Rogers wrote:
+> > Avoid bugs where the wrong index is passed with the cpu_map.
 >
-> Armv8 has equivalent bits in PMEVTYPER<n>_EL0 and PMCCFILTR_EL0 for
-> EL-based filtering, which includes filtering EL3.
->
-> Jess
->
-> > Patch depends on Atish Patra PMU series:
-> > https://lwn.net/Articles/879905/
-> > + some modifications to pass execlude event to SBI PMU extension
-> >
-> > Tested with qemu.
-> >
-> > Nikita Shubin (1):
-> >  perf tools: Add 'm' event modifier for counting machine
-> >
-> > include/uapi/linux/perf_event.h        |  3 ++-
-> > tools/include/uapi/linux/perf_event.h  |  3 ++-
-> > tools/perf/Documentation/perf-list.txt |  1 +
-> > tools/perf/tests/parse-events.c        | 18 ++++++++++++++++++
-> > tools/perf/util/evsel.c                |  4 +++-
-> > tools/perf/util/parse-events.c         | 18 +++++++++++++-----
-> > tools/perf/util/parse-events.l         |  2 +-
-> > 7 files changed, 40 insertions(+), 9 deletions(-)
-> >
-> > --
-> > 2.31.1
-> >
-> >
-> > _______________________________________________
-> > linux-riscv mailing list
-> > linux-riscv@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-riscv
->
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> nit: Don't you mean possible bugs?
 
+You are right. I'll watch myself doing this in the future.
 
+Thanks,
+Ian
 
--- 
-Regards,
-Atish
+> >
+> > Reviewed-by: James Clark <james.clark@arm.com>
+> > Signed-off-by: Ian Rogers <irogers@google.com>
