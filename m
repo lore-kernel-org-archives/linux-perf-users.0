@@ -2,114 +2,88 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B890C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jan 2022 18:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F30BC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jan 2022 18:52:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345619AbiAKSuO (ORCPT
+        id S1350200AbiAKSwq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Jan 2022 13:50:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33966 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243152AbiAKSuO (ORCPT
+        Tue, 11 Jan 2022 13:52:46 -0500
+Received: from mga17.intel.com ([192.55.52.151]:20707 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1350196AbiAKSwp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Jan 2022 13:50:14 -0500
-Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0043C06173F;
-        Tue, 11 Jan 2022 10:50:13 -0800 (PST)
-Received: by mail-qk1-x735.google.com with SMTP id h16so5116225qkp.3;
-        Tue, 11 Jan 2022 10:50:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:user-agent:in-reply-to:references
-         :message-id:mime-version:content-transfer-encoding;
-        bh=sn1JhLv3sDVH++En/Gju5fSNPX0ZThDoZa5taxT8mwI=;
-        b=aFDLA7ZikNOdyM5etGJRLIGzNBvGGz0Avjc4eXknutMEBm4Fd1GQS5wRhmo8lvPHbv
-         hClCKpCq2nic1AYYQ3/mD6iwCnAdd4ikIh3QGfh6Rw2mR8t92wo9TDdb9mIUjCNtE+20
-         3yyWgJZqP+eHOCrzcRFXE1oa+CGmmY+vrVzykgOJXxbxURVVw1lmxHqrc0SJ26Q8EXXn
-         6E/C4DhhvlXsP76zCr5VFV4LM9S6gf5j4baHILCn+jLddCtVmfYuYoYLn/tmzIzK9ApM
-         ViAmTp3wtUZZVPQW2iRFPgt5n7q9iImNlo0mVY/X5YT6/JMNVASWFWT950WE3wjf4UPV
-         Q4QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:user-agent:in-reply-to
-         :references:message-id:mime-version:content-transfer-encoding;
-        bh=sn1JhLv3sDVH++En/Gju5fSNPX0ZThDoZa5taxT8mwI=;
-        b=dNdx7TbVz3LLoU9EYVHH3Ms91rUJmtQTVvEHyEceemL9DI3ousjPOqMJfOYODRArS3
-         Myu6w4Is8LOhEISPf5iGuB4ovVqfELfUegJrL1xi4CNhSoz5s+dsGQUhfWzy2VB/Eqy6
-         J+ul7ZHcC8nvbH9N4pniGZNHuhKXFu/fRLXkArXvBiXPo3yCGrpEZ1+fBBlSSsZjYRhk
-         IT68JLLAXugwBZvcAKU8MG2lmh3VapLs6+IUmaXnDe/AtvF9pI3VZL9nQGXqtOt3I7Ex
-         ardO1DbBO6uATcCXLZlxjY+BL2IJG34kkFFCRpliN0ohDJSgL3p35ysO196r2imfz3qW
-         QhRQ==
-X-Gm-Message-State: AOAM533tphFSBcd3MkHO+EHA2x/vG8wtqSnIvjq2ZU8D60ju37yUbbPN
-        pr+wCLbFQZ8TsKtNMjU0pXI=
-X-Google-Smtp-Source: ABdhPJxPRkUsnWDgCU4mYdWe9q2fhtXRVpsE2D+P2U2u+w6agRumNP9dRPTAlJ/9ihuJb/p1QWb3Jg==
-X-Received: by 2002:a05:620a:2699:: with SMTP id c25mr3955731qkp.473.1641927013032;
-        Tue, 11 Jan 2022 10:50:13 -0800 (PST)
-Received: from [127.0.0.1] ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id q7sm7045559qkl.72.2022.01.11.10.50.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Jan 2022 10:50:12 -0800 (PST)
-Date:   Tue, 11 Jan 2022 15:50:07 -0300
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-To:     Ian Rogers <irogers@google.com>, John Garry <john.garry@huawei.com>
-CC:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
+        Tue, 11 Jan 2022 13:52:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1641927165; x=1673463165;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Sua0LrwqqZdGAfIsKVCvbngimpLDy6yy/a/Faw9JSso=;
+  b=U5+5cHThWF1WnuACgO++UtvT/QOUXtOShJcumMySq8LkURpxXjyZLXw/
+   D4TjY2VLpopg91KKhD9c8rPk9b33mkXhbtXfZmI+P5/Z9ajSLft1NSpbC
+   /4W2si5LwSf0EhtdY2LYCu1rkqhh5kWhO9EAWaPlXd1LQDtfYLG3+zbb+
+   XmzFCsGUToj1reu1oTvqVfgT/OH6rJmgmt80GPvoTVGp2USA3BC5vkMSK
+   DIE2bY0+Kdcp6/Q6CIrVRGy7ti9dJDhVGS7/msYBl7yrDzQZNaxRUe8AB
+   r3MFiHvZP22xiWQBkE7X7xxmOHlrjRA+2djzEeSfpeE8GGj4R/pAgBm81
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10224"; a="224256273"
+X-IronPort-AV: E=Sophos;i="5.88,279,1635231600"; 
+   d="scan'208";a="224256273"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2022 10:52:45 -0800
+X-IronPort-AV: E=Sophos;i="5.88,279,1635231600"; 
+   d="scan'208";a="528400339"
+Received: from akleen-mobl1.amr.corp.intel.com (HELO [10.209.36.204]) ([10.209.36.204])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2022 10:52:44 -0800
+Message-ID: <4b655bf8-ce56-ffe6-78b6-1f949b8df11f@linux.intel.com>
+Date:   Tue, 11 Jan 2022 10:52:35 -0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.1
+Subject: Re: [RFC PATCH 1/1] perf tools: Add 'm' event modifier for counting
+ machine
+Content-Language: en-US
+To:     Nikita Shubin <nikita.shubin@maquefel.me>
+Cc:     Atish Patra <atishp@rivosinc.com>, linux-riscv@lists.infradead.org,
+        linux@yadro.com, Nikita Shubin <n.shubin@yadro.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vineet Singh <vineet.singh@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org, zhengjun.xing@intel.com,
-        eranian@google.com
-Subject: Re: [PATCH v4 05/48] perf stat: Switch to cpu version of cpu_map__get
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAP-5=fW2JzePV=rQG=Ww1Omub0_r2gi38FUVyaG+a3L=44R9XA@mail.gmail.com>
-References: <20220105061351.120843-1-irogers@google.com> <20220105061351.120843-6-irogers@google.com> <64d64526-7d3e-0c31-f43e-f03810f72ac2@huawei.com> <CAP-5=fW2JzePV=rQG=Ww1Omub0_r2gi38FUVyaG+a3L=44R9XA@mail.gmail.com>
-Message-ID: <F6E1C874-F64D-4563-915B-F6420F987264@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        John Garry <john.garry@huawei.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Song Liu <song@kernel.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20220111142054.18733-1-nikita.shubin@maquefel.me>
+ <20220111142054.18733-2-nikita.shubin@maquefel.me>
+From:   Andi Kleen <ak@linux.intel.com>
+In-Reply-To: <20220111142054.18733-2-nikita.shubin@maquefel.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
+>   
+>    u - user-space counting
+>    k - kernel counting
+> + m - machine counting
 
-On January 11, 2022 3:46:41 PM GMT-03:00, Ian Rogers <irogers@google=2Ecom=
-> wrote:
->On Mon, Jan 10, 2022 at 11:04 AM John Garry <john=2Egarry@huawei=2Ecom> w=
-rote:
->>
->> On 05/01/2022 06:13, Ian Rogers wrote:
->> > Avoid bugs where the wrong index is passed with the cpu_map=2E
->>
->> nit: Don't you mean possible bugs?
->
->You are right=2E I'll watch myself doing this in the future=2E
 
-I'll update the comment,
+You really need to explain what "machine counting" actually is, as well 
+that is likely irrelevant for most CPUs.
 
-I'm still testing it and giving more time for review, including to the adj=
-ustments I made=2E=2E
+I also didn't see that anywhere in the commit logs.
 
-- Arnaldo
+-Andi
 
->
->Thanks,
->Ian
->
->> >
->> > Reviewed-by: James Clark <james=2Eclark@arm=2Ecom>
->> > Signed-off-by: Ian Rogers <irogers@google=2Ecom>
