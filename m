@@ -2,109 +2,230 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8673CC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jan 2022 15:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2911FC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jan 2022 15:12:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245667AbiAKPIv (ORCPT
+        id S231876AbiAKPMH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Jan 2022 10:08:51 -0500
-Received: from foss.arm.com ([217.140.110.172]:47904 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241575AbiAKPIu (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Jan 2022 10:08:50 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0EDF2ED1;
-        Tue, 11 Jan 2022 07:08:50 -0800 (PST)
-Received: from e124483.arm.com (unknown [10.57.36.170])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2B7C23F774;
-        Tue, 11 Jan 2022 07:08:47 -0800 (PST)
-From:   Andrew Kilroy <andrew.kilroy@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, john.garry@huawei.com, irogers@google.com,
-        ak@linux.intel.com
-Cc:     Andrew Kilroy <andrew.kilroy@arm.com>,
+        Tue, 11 Jan 2022 10:12:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38366 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231534AbiAKPMH (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 11 Jan 2022 10:12:07 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A045C06173F;
+        Tue, 11 Jan 2022 07:12:07 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AB392615F7;
+        Tue, 11 Jan 2022 15:12:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD21AC36AE3;
+        Tue, 11 Jan 2022 15:12:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1641913926;
+        bh=I5Qc8vbwvVy/aqgno0y7bTdjb1/0xZxYIZ9CJ8/dEkE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jm3cHJ2IYC8yoVpreoW55qBNFJM3U6rRNS3SXF3hqh9uBdae+TKd24UeBAssffL7j
+         iQWsg8QGaxy2DQlwhD7qxgitqp2YGZeo+pCDqn6C2GV2Vy51K7S2PigUZVcE8AtiYu
+         UProDwtygPX/u27z7Ub5TVu74+6HgOg/A7uBSiruPgfy5ewU/hmq5DjdSlMWdhJkBh
+         zuKy/+USNq3R4moFRADNs1z0Sm8zNSgMIc32RW8tT24/vYr1CMn68E4e3+td1xCLGG
+         S7CGBEzvbu53Sly6UBQQqPWmpqtHXpSQSZsrezLk+BpRFdVggWiz78soofbrURaFy1
+         PCVuKOXgy1oYw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id BA16140714; Tue, 11 Jan 2022 12:12:02 -0300 (-03)
+Date:   Tue, 11 Jan 2022 12:12:02 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: [RFC PATCH v2 5/5] perf stat: Ensure only topdown kernel events used on x86
-Date:   Tue, 11 Jan 2022 15:07:49 +0000
-Message-Id: <20220111150749.13365-6-andrew.kilroy@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220111150749.13365-1-andrew.kilroy@arm.com>
-References: <4fefb1bc-49b2-bc5b-23cd-cd8fabe8c588@huawei.com>
- <20220111150749.13365-1-andrew.kilroy@arm.com>
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vineet Singh <vineet.singh@intel.com>,
+        James Clark <james.clark@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, zhengjun.xing@intel.com,
+        eranian@google.com
+Subject: Re: [PATCH v3 06/48] perf cpumap: Switch cpu_map__build_map to cpu
+ function
+Message-ID: <Yd2eQiPIvEf0c42x@kernel.org>
+References: <20211230072030.302559-1-irogers@google.com>
+ <20211230072030.302559-8-irogers@google.com>
+ <YdybPJKjqx6zb28/@kernel.org>
+ <YdyfCN1/JWJtJHTO@kernel.org>
+ <Ydyjvcma/wMTPwbn@kernel.org>
+ <Ydymdm/PoB0hQVUT@kernel.org>
+ <CAP-5=fVAa3JVbdzNZg0LrVfw__9U9Q8PkHcro+TJiFVyvTho+A@mail.gmail.com>
+ <YdzSKOWJRC0dRnSn@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YdzSKOWJRC0dRnSn@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Based on advice here:
+Em Mon, Jan 10, 2022 at 09:41:12PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Mon, Jan 10, 2022 at 02:29:58PM -0800, Ian Rogers escreveu:
+> > On Mon, Jan 10, 2022 at 1:34 PM Arnaldo Carvalho de Melo
+> > <acme@kernel.org> wrote:
+> > >
+> > > Em Mon, Jan 10, 2022 at 06:23:09PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > > > Em Mon, Jan 10, 2022 at 06:03:04PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > > > > Em Mon, Jan 10, 2022 at 05:46:52PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > > > > > At this point we need to remove the now unused perf_env__get_cpu(), and
+> > > > > > then deal with the fallout in the following patches that needlessly
+> > > > > > modify this unused function.
+> > > > > >
+> > > > > > Doing that now.
+> > > > >
+> > > > > Done, force pushed to tmp.perf/perf_cpu, now it is going again thru the
+> > > > > build containers, a better start now:
+> > >
+> > > > So far so good:
+> > >
+> > > perf test ok, just that one that is failing, but before this series as
+> > > well:
+> > >
+> > >  89: perf all metricgroups test                                      : FAILED!
+> > 
+> > Could you add the verbose output? I suspect it is fixed by this:
+> > https://lore.kernel.org/lkml/20211223183948.3423989-1-irogers@google.com/
+> 
+> I'll try it.
+> 
+> BTW, here are the final tests, problems with arm 32 and 64-bit, I'll go thru
+> them tomorrow, to fix in the cset the problem appears, so that we keep it
+> bisectable, else you can get what I have in tmp.perf/perf_cpu, fix it and
+> tomorrow I'll retest.
+> 
+>   27    85.67 debian:11                     : Ok   gcc (Debian 10.2.1-6) 10.2.1 20210110 , Debian clang version 11.0.1-2
+>   28    98.65 debian:experimental           : Ok   gcc (Debian 11.2.0-13) 11.2.0 , Debian clang version 13.0.0-9+b2
+>   29     8.69 debian:experimental-x-arm64   : FAIL gcc version 11.2.0 (Debian 11.2.0-9)
+>     arch/arm64/util/pmu.c: In function 'pmu_events_map__find':
+>     arch/arm64/util/pmu.c:18:35: error: invalid operands to binary != (have 'int' and 'struct perf_cpu')
+>        18 |                 if (pmu->cpus->nr != cpu__max_cpu())
+>           |                     ~~~~~~~~~~~~~ ^~ ~~~~~~~~~~~~~~
+>           |                              |       |
+>           |                              int     struct perf_cpu
+>     make[5]: *** [/git/perf-5.16.0/tools/build/Makefile.build:139: util] Error 2
+>     make[4]: *** [/git/perf-5.16.0/tools/build/Makefile.build:139: arm64] Error 2
+>     make[3]: *** [/git/perf-5.16.0/tools/build/Makefile.build:139: arch] Error 2
+>   30    19.15 debian:experimental-x-mips    : Ok   mips-linux-gnu-gcc (Debian 10.2.1-6) 10.2.1 20210110
 
-  https://lore.kernel.org/linux-perf-users/12e0deef-08db-445f-4958-bcd5c3e10367@linux.intel.com/#t
+Fixed with the patch below squashed into 48/48 where the problem
+was introduced.
 
-Only use the existing kernel events topdown mechanism on x86, not the
-json metrics approach.  Disabling the json metrics because of concerns
-that due to SMT it's not straightforward to express the various formulas
-as json for certain x86 cpus.
+tmp.perf/perf_cpu updated.
 
-Signed-off-by: Andrew Kilroy <andrew.kilroy@arm.com>
----
- tools/perf/builtin-stat.c | 22 +++++++++++++---------
- tools/perf/util/topdown.c |  6 +++---
- 2 files changed, 16 insertions(+), 12 deletions(-)
+[perfbuilder@five ~]$ dm debian:experimental-x-arm64 ubuntu:16.04-x-arm ubuntu:16.04-x-arm64 ubuntu:18.04-x-arm  ubuntu:18.04-x-arm64
+   1    26.08 debian:experimental-x-arm64   : Ok   aarch64-linux-gnu-gcc (Debian 11.2.0-9) 11.2.0
+   2    21.68 ubuntu:16.04-x-arm            : Ok   arm-linux-gnueabihf-gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
+   3    21.53 ubuntu:16.04-x-arm64          : Ok   aarch64-linux-gnu-gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
+   4    61.22 ubuntu:18.04-x-arm            : Ok   arm-linux-gnueabihf-gcc (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04) 7.5.0
+   5   108.41 ubuntu:18.04-x-arm64          : Ok   aarch64-linux-gnu-gcc (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04) 7.5.0
+BUILD_TARBALL_HEAD=5610e6f0b9e64a02dfc906c9db9d18fd198200d9
+ 6 238.918
+[perfbuilder@five ~]$
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 2f579d29f9f5..eee58fbf1986 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1814,16 +1814,20 @@ enum topdown_mechanism {
+diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+index 129c0272d65b8596..2e8b2c4365a0003f 100644
+--- a/tools/perf/arch/arm/util/cs-etm.c
++++ b/tools/perf/arch/arm/util/cs-etm.c
+@@ -203,9 +203,11 @@ static int cs_etm_set_option(struct auxtrace_record *itr,
+ 	struct perf_cpu_map *online_cpus = perf_cpu_map__new(NULL);
  
- static enum topdown_mechanism choose_topdown_mechanism(void)
- {
--	int kernel_events_supported = topdown_kernel_events_supported();
--
--	if (kernel_events_supported > 0) {
--		pr_debug("topdown kernel events are supported\n");
--		return TOPDOWN_KERNEL_EVENTS;
--	} else if (kernel_events_supported == 0) {
--		pr_debug("topdown kernel events are unsupported\n");
--		return TOPDOWN_JSON_METRICS;
-+	if (topdown_can_use_json_metrics()) {
-+		int kernel_events_supported = topdown_kernel_events_supported();
+ 	/* Set option of each CPU we have */
+-	for (i = 0; i < cpu__max_cpu(); i++) {
+-		if (!perf_cpu_map__has(event_cpus, i) ||
+-		    !perf_cpu_map__has(online_cpus, i))
++	for (i = 0; i < cpu__max_cpu().cpu; i++) {
++		struct perf_cpu cpu = { .cpu = i, };
 +
-+		if (kernel_events_supported > 0) {
-+			pr_debug("topdown kernel events are supported\n");
-+			return TOPDOWN_KERNEL_EVENTS;
-+		} else if (kernel_events_supported == 0) {
-+			pr_debug("topdown kernel events are unsupported\n");
-+			return TOPDOWN_JSON_METRICS;
-+		} else {
-+			return TOPDOWN_DETECTION_ERROR;
-+		}
++		if (!perf_cpu_map__has(event_cpus, cpu) ||
++		    !perf_cpu_map__has(online_cpus, cpu))
+ 			continue;
+ 
+ 		if (option & BIT(ETM_OPT_CTXTID)) {
+@@ -522,9 +524,11 @@ cs_etm_info_priv_size(struct auxtrace_record *itr __maybe_unused,
+ 
+ 	/* cpu map is not empty, we have specific CPUs to work with */
+ 	if (!perf_cpu_map__empty(event_cpus)) {
+-		for (i = 0; i < cpu__max_cpu(); i++) {
+-			if (!perf_cpu_map__has(event_cpus, i) ||
+-			    !perf_cpu_map__has(online_cpus, i))
++		for (i = 0; i < cpu__max_cpu().cpu; i++) {
++			struct perf_cpu cpu = { .cpu = i, };
++
++			if (!perf_cpu_map__has(event_cpus, cpu) ||
++			    !perf_cpu_map__has(online_cpus, cpu))
+ 				continue;
+ 
+ 			if (cs_etm_is_ete(itr, i))
+@@ -536,8 +540,10 @@ cs_etm_info_priv_size(struct auxtrace_record *itr __maybe_unused,
+ 		}
  	} else {
--		return TOPDOWN_DETECTION_ERROR;
-+		return TOPDOWN_KERNEL_EVENTS;
- 	}
- }
+ 		/* get configuration for all CPUs in the system */
+-		for (i = 0; i < cpu__max_cpu(); i++) {
+-			if (!perf_cpu_map__has(online_cpus, i))
++		for (i = 0; i < cpu__max_cpu().cpu; i++) {
++			struct perf_cpu cpu = { .cpu = i, };
++
++			if (!perf_cpu_map__has(online_cpus, cpu))
+ 				continue;
  
-diff --git a/tools/perf/util/topdown.c b/tools/perf/util/topdown.c
-index a542dddd97f3..36f6c29009fb 100644
---- a/tools/perf/util/topdown.c
-+++ b/tools/perf/util/topdown.c
-@@ -59,10 +59,10 @@ __weak bool arch_topdown_sample_read(struct evsel *leader __maybe_unused)
+ 			if (cs_etm_is_ete(itr, i))
+@@ -722,8 +728,10 @@ static int cs_etm_info_fill(struct auxtrace_record *itr,
+ 	} else {
+ 		/* Make sure all specified CPUs are online */
+ 		for (i = 0; i < perf_cpu_map__nr(event_cpus); i++) {
+-			if (perf_cpu_map__has(event_cpus, i) &&
+-			    !perf_cpu_map__has(online_cpus, i))
++			struct perf_cpu cpu = { .cpu = i, };
++
++			if (perf_cpu_map__has(event_cpus, cpu) &&
++			    !perf_cpu_map__has(online_cpus, cpu))
+ 				return -EINVAL;
+ 		}
  
- bool topdown_can_use_json_metrics(void)
- {
--#if defined(__aarch64__)
--	return true;
--#else
-+#if defined(__i386__) || defined(__x86_64__)
- 	return false;
-+#else
-+	return true;
- #endif
- }
+@@ -743,9 +751,12 @@ static int cs_etm_info_fill(struct auxtrace_record *itr,
  
--- 
-2.17.1
-
+ 	offset = CS_ETM_SNAPSHOT + 1;
+ 
+-	for (i = 0; i < cpu__max_cpu() && offset < priv_size; i++)
+-		if (perf_cpu_map__has(cpu_map, i))
++	for (i = 0; i < cpu__max_cpu().cpu && offset < priv_size; i++) {
++		struct perf_cpu cpu = { .cpu = i, };
++
++		if (perf_cpu_map__has(cpu_map, cpu))
+ 			cs_etm_get_metadata(i, &offset, itr, info);
++	}
+ 
+ 	perf_cpu_map__put(online_cpus);
+ 
+diff --git a/tools/perf/arch/arm64/util/pmu.c b/tools/perf/arch/arm64/util/pmu.c
+index d3a18f9c85f6a731..79124bba713e5f0d 100644
+--- a/tools/perf/arch/arm64/util/pmu.c
++++ b/tools/perf/arch/arm64/util/pmu.c
+@@ -15,7 +15,7 @@ const struct pmu_events_map *pmu_events_map__find(void)
+ 		 * The cpumap should cover all CPUs. Otherwise, some CPUs may
+ 		 * not support some events or have different event IDs.
+ 		 */
+-		if (pmu->cpus->nr != cpu__max_cpu())
++		if (pmu->cpus->nr != cpu__max_cpu().cpu)
+ 			return NULL;
+ 
+ 		return perf_pmu__find_map(pmu);
