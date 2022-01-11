@@ -2,230 +2,153 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2911FC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jan 2022 15:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5724C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jan 2022 18:46:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231876AbiAKPMH (ORCPT
+        id S1346267AbiAKSqJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Jan 2022 10:12:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38366 "EHLO
+        Tue, 11 Jan 2022 13:46:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231534AbiAKPMH (ORCPT
+        with ESMTP id S1346263AbiAKSqI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Jan 2022 10:12:07 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A045C06173F;
-        Tue, 11 Jan 2022 07:12:07 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AB392615F7;
-        Tue, 11 Jan 2022 15:12:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD21AC36AE3;
-        Tue, 11 Jan 2022 15:12:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641913926;
-        bh=I5Qc8vbwvVy/aqgno0y7bTdjb1/0xZxYIZ9CJ8/dEkE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jm3cHJ2IYC8yoVpreoW55qBNFJM3U6rRNS3SXF3hqh9uBdae+TKd24UeBAssffL7j
-         iQWsg8QGaxy2DQlwhD7qxgitqp2YGZeo+pCDqn6C2GV2Vy51K7S2PigUZVcE8AtiYu
-         UProDwtygPX/u27z7Ub5TVu74+6HgOg/A7uBSiruPgfy5ewU/hmq5DjdSlMWdhJkBh
-         zuKy/+USNq3R4moFRADNs1z0Sm8zNSgMIc32RW8tT24/vYr1CMn68E4e3+td1xCLGG
-         S7CGBEzvbu53Sly6UBQQqPWmpqtHXpSQSZsrezLk+BpRFdVggWiz78soofbrURaFy1
-         PCVuKOXgy1oYw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id BA16140714; Tue, 11 Jan 2022 12:12:02 -0300 (-03)
-Date:   Tue, 11 Jan 2022 12:12:02 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
+        Tue, 11 Jan 2022 13:46:08 -0500
+Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9BB5C06173F
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jan 2022 10:46:07 -0800 (PST)
+Received: by mail-yb1-xb30.google.com with SMTP id d7so17068572ybo.5
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jan 2022 10:46:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=atishpatra.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sM8wuZyLOamyQ+NaAWxgxygW9jRKD3OsUdPukmMlL1U=;
+        b=OpLYe3hGobUDsobWW/zx65mRZbZ+bnV73uNhO5xjHnaneVs0YX2ZC/o290orDokc0u
+         WNiWHsAC9xKw+VU2KOnbLTcKHOqsdO5P1aE1IXFuxwY4ZDxpzzL/jn+Lw37Pt6HUlJdW
+         LTMdizaDElo92GlzxfbX8joJBw9EPa9Fmw2r0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sM8wuZyLOamyQ+NaAWxgxygW9jRKD3OsUdPukmMlL1U=;
+        b=bLF4B0prHVKZjzUihUO3pXZJyBb8VBfDsn8im1z6oGup77uVTy3rjkJiJ+TYMeKhVd
+         UtHdWMIPBX8v/WABmGlENnQy9xEqcy5KISeijvwE19Y8ALzS+YmFv/7CxfySxlkxSy+W
+         sOCyvzmqxq2ehaAl9RR0mPPwQKnRc9CohQGXYEGp4rZOxP1Wa4XBhsLQGwVymIaHhvoy
+         Zyenttdm2z8+CzYDt3VfHjB2X51dvYwvx3AvqQ9ip1JuPAl32MXqVuOYZrMcLJ4NFkFk
+         B549wVxAJc8L25kuzz2pi6ELpnZGQsTg++tcnrrGPiG9YYngrF16oQNjBHiZvB6/O+Qw
+         TSxw==
+X-Gm-Message-State: AOAM531E9lHRLuzsorTV+pXh1L1vAk9LsY2vpPsJ64pJZM7l2r4l3IDd
+        TgzN36yJzR+kOiUzuMzmpgdjaNAdC1rrq8t9gad5
+X-Google-Smtp-Source: ABdhPJx0Y8SQdmOLymALspxxE440M5sdcmWqHQIm5ZCLL7vr2lFtY9Dk3p4WLCtnG5DHhsKNkV8pIQcewm2Nq+Si/qc=
+X-Received: by 2002:a25:d14c:: with SMTP id i73mr832991ybg.713.1641926766802;
+ Tue, 11 Jan 2022 10:46:06 -0800 (PST)
+MIME-Version: 1.0
+References: <20220111142054.18733-1-nikita.shubin@maquefel.me> <B6E7919C-9414-4CC1-BB86-7D358085CECD@jrtc27.com>
+In-Reply-To: <B6E7919C-9414-4CC1-BB86-7D358085CECD@jrtc27.com>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Tue, 11 Jan 2022 10:45:56 -0800
+Message-ID: <CAOnJCUJ6JNY9eWrPhGi3XK3omDwXhM37oimsZoqxbOP_f7vUog@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/1] perf tools: Add 'm' event modifier for counting
+To:     Jessica Clarke <jrtc27@jrtc27.com>
+Cc:     Nikita Shubin <nikita.shubin@maquefel.me>,
+        Atish Patra <atishp@rivosinc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        linux <linux@yadro.com>, Nikita Shubin <n.shubin@yadro.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vineet Singh <vineet.singh@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org, zhengjun.xing@intel.com,
-        eranian@google.com
-Subject: Re: [PATCH v3 06/48] perf cpumap: Switch cpu_map__build_map to cpu
- function
-Message-ID: <Yd2eQiPIvEf0c42x@kernel.org>
-References: <20211230072030.302559-1-irogers@google.com>
- <20211230072030.302559-8-irogers@google.com>
- <YdybPJKjqx6zb28/@kernel.org>
- <YdyfCN1/JWJtJHTO@kernel.org>
- <Ydyjvcma/wMTPwbn@kernel.org>
- <Ydymdm/PoB0hQVUT@kernel.org>
- <CAP-5=fVAa3JVbdzNZg0LrVfw__9U9Q8PkHcro+TJiFVyvTho+A@mail.gmail.com>
- <YdzSKOWJRC0dRnSn@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YdzSKOWJRC0dRnSn@kernel.org>
-X-Url:  http://acmel.wordpress.com
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>,
+        John Garry <john.garry@huawei.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Song Liu <song@kernel.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Jan 10, 2022 at 09:41:12PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Mon, Jan 10, 2022 at 02:29:58PM -0800, Ian Rogers escreveu:
-> > On Mon, Jan 10, 2022 at 1:34 PM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > >
-> > > Em Mon, Jan 10, 2022 at 06:23:09PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > > Em Mon, Jan 10, 2022 at 06:03:04PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > > > Em Mon, Jan 10, 2022 at 05:46:52PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > > > > At this point we need to remove the now unused perf_env__get_cpu(), and
-> > > > > > then deal with the fallout in the following patches that needlessly
-> > > > > > modify this unused function.
-> > > > > >
-> > > > > > Doing that now.
-> > > > >
-> > > > > Done, force pushed to tmp.perf/perf_cpu, now it is going again thru the
-> > > > > build containers, a better start now:
-> > >
-> > > > So far so good:
-> > >
-> > > perf test ok, just that one that is failing, but before this series as
-> > > well:
-> > >
-> > >  89: perf all metricgroups test                                      : FAILED!
-> > 
-> > Could you add the verbose output? I suspect it is fixed by this:
-> > https://lore.kernel.org/lkml/20211223183948.3423989-1-irogers@google.com/
-> 
-> I'll try it.
-> 
-> BTW, here are the final tests, problems with arm 32 and 64-bit, I'll go thru
-> them tomorrow, to fix in the cset the problem appears, so that we keep it
-> bisectable, else you can get what I have in tmp.perf/perf_cpu, fix it and
-> tomorrow I'll retest.
-> 
->   27    85.67 debian:11                     : Ok   gcc (Debian 10.2.1-6) 10.2.1 20210110 , Debian clang version 11.0.1-2
->   28    98.65 debian:experimental           : Ok   gcc (Debian 11.2.0-13) 11.2.0 , Debian clang version 13.0.0-9+b2
->   29     8.69 debian:experimental-x-arm64   : FAIL gcc version 11.2.0 (Debian 11.2.0-9)
->     arch/arm64/util/pmu.c: In function 'pmu_events_map__find':
->     arch/arm64/util/pmu.c:18:35: error: invalid operands to binary != (have 'int' and 'struct perf_cpu')
->        18 |                 if (pmu->cpus->nr != cpu__max_cpu())
->           |                     ~~~~~~~~~~~~~ ^~ ~~~~~~~~~~~~~~
->           |                              |       |
->           |                              int     struct perf_cpu
->     make[5]: *** [/git/perf-5.16.0/tools/build/Makefile.build:139: util] Error 2
->     make[4]: *** [/git/perf-5.16.0/tools/build/Makefile.build:139: arm64] Error 2
->     make[3]: *** [/git/perf-5.16.0/tools/build/Makefile.build:139: arch] Error 2
->   30    19.15 debian:experimental-x-mips    : Ok   mips-linux-gnu-gcc (Debian 10.2.1-6) 10.2.1 20210110
+On Tue, Jan 11, 2022 at 6:29 AM Jessica Clarke <jrtc27@jrtc27.com> wrote:
+>
+> On 11 Jan 2022, at 14:20, Nikita Shubin <nikita.shubin@maquefel.me> wrote:
+> >
+> > From: Nikita Shubin <n.shubin@yadro.com>
+> >
+> > This patch is a proposal to add Machine Mode modifier that is currently
+> > available only for RISC-V for perf tool.
+> >
+> > We don't currently have a level that is lower than kernel, so i don't
+> > see we can reuse something existing for this purpose.
+> >
 
-Fixed with the patch below squashed into 48/48 where the problem
-was introduced.
+Thanks for a quick turnaround with a working patch!!
 
-tmp.perf/perf_cpu updated.
+However, the use case can be applied to other arch as well. It would
+be good to classify this
+as excluding "firmware" events instead of machine mode which is a
+RISC-V terminology.
+Ofcourse, the current documentation should indicate that this option
+is only useful
+for RISC-V right now.
 
-[perfbuilder@five ~]$ dm debian:experimental-x-arm64 ubuntu:16.04-x-arm ubuntu:16.04-x-arm64 ubuntu:18.04-x-arm  ubuntu:18.04-x-arm64
-   1    26.08 debian:experimental-x-arm64   : Ok   aarch64-linux-gnu-gcc (Debian 11.2.0-9) 11.2.0
-   2    21.68 ubuntu:16.04-x-arm            : Ok   arm-linux-gnueabihf-gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
-   3    21.53 ubuntu:16.04-x-arm64          : Ok   aarch64-linux-gnu-gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
-   4    61.22 ubuntu:18.04-x-arm            : Ok   arm-linux-gnueabihf-gcc (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04) 7.5.0
-   5   108.41 ubuntu:18.04-x-arm64          : Ok   aarch64-linux-gnu-gcc (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04) 7.5.0
-BUILD_TARBALL_HEAD=5610e6f0b9e64a02dfc906c9db9d18fd198200d9
- 6 238.918
-[perfbuilder@five ~]$
+I would like to understand if this idea is appealing to the broader community.
 
-diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-index 129c0272d65b8596..2e8b2c4365a0003f 100644
---- a/tools/perf/arch/arm/util/cs-etm.c
-+++ b/tools/perf/arch/arm/util/cs-etm.c
-@@ -203,9 +203,11 @@ static int cs_etm_set_option(struct auxtrace_record *itr,
- 	struct perf_cpu_map *online_cpus = perf_cpu_map__new(NULL);
- 
- 	/* Set option of each CPU we have */
--	for (i = 0; i < cpu__max_cpu(); i++) {
--		if (!perf_cpu_map__has(event_cpus, i) ||
--		    !perf_cpu_map__has(online_cpus, i))
-+	for (i = 0; i < cpu__max_cpu().cpu; i++) {
-+		struct perf_cpu cpu = { .cpu = i, };
-+
-+		if (!perf_cpu_map__has(event_cpus, cpu) ||
-+		    !perf_cpu_map__has(online_cpus, cpu))
- 			continue;
- 
- 		if (option & BIT(ETM_OPT_CTXTID)) {
-@@ -522,9 +524,11 @@ cs_etm_info_priv_size(struct auxtrace_record *itr __maybe_unused,
- 
- 	/* cpu map is not empty, we have specific CPUs to work with */
- 	if (!perf_cpu_map__empty(event_cpus)) {
--		for (i = 0; i < cpu__max_cpu(); i++) {
--			if (!perf_cpu_map__has(event_cpus, i) ||
--			    !perf_cpu_map__has(online_cpus, i))
-+		for (i = 0; i < cpu__max_cpu().cpu; i++) {
-+			struct perf_cpu cpu = { .cpu = i, };
-+
-+			if (!perf_cpu_map__has(event_cpus, cpu) ||
-+			    !perf_cpu_map__has(online_cpus, cpu))
- 				continue;
- 
- 			if (cs_etm_is_ete(itr, i))
-@@ -536,8 +540,10 @@ cs_etm_info_priv_size(struct auxtrace_record *itr __maybe_unused,
- 		}
- 	} else {
- 		/* get configuration for all CPUs in the system */
--		for (i = 0; i < cpu__max_cpu(); i++) {
--			if (!perf_cpu_map__has(online_cpus, i))
-+		for (i = 0; i < cpu__max_cpu().cpu; i++) {
-+			struct perf_cpu cpu = { .cpu = i, };
-+
-+			if (!perf_cpu_map__has(online_cpus, cpu))
- 				continue;
- 
- 			if (cs_etm_is_ete(itr, i))
-@@ -722,8 +728,10 @@ static int cs_etm_info_fill(struct auxtrace_record *itr,
- 	} else {
- 		/* Make sure all specified CPUs are online */
- 		for (i = 0; i < perf_cpu_map__nr(event_cpus); i++) {
--			if (perf_cpu_map__has(event_cpus, i) &&
--			    !perf_cpu_map__has(online_cpus, i))
-+			struct perf_cpu cpu = { .cpu = i, };
-+
-+			if (perf_cpu_map__has(event_cpus, cpu) &&
-+			    !perf_cpu_map__has(online_cpus, cpu))
- 				return -EINVAL;
- 		}
- 
-@@ -743,9 +751,12 @@ static int cs_etm_info_fill(struct auxtrace_record *itr,
- 
- 	offset = CS_ETM_SNAPSHOT + 1;
- 
--	for (i = 0; i < cpu__max_cpu() && offset < priv_size; i++)
--		if (perf_cpu_map__has(cpu_map, i))
-+	for (i = 0; i < cpu__max_cpu().cpu && offset < priv_size; i++) {
-+		struct perf_cpu cpu = { .cpu = i, };
-+
-+		if (perf_cpu_map__has(cpu_map, cpu))
- 			cs_etm_get_metadata(i, &offset, itr, info);
-+	}
- 
- 	perf_cpu_map__put(online_cpus);
- 
-diff --git a/tools/perf/arch/arm64/util/pmu.c b/tools/perf/arch/arm64/util/pmu.c
-index d3a18f9c85f6a731..79124bba713e5f0d 100644
---- a/tools/perf/arch/arm64/util/pmu.c
-+++ b/tools/perf/arch/arm64/util/pmu.c
-@@ -15,7 +15,7 @@ const struct pmu_events_map *pmu_events_map__find(void)
- 		 * The cpumap should cover all CPUs. Otherwise, some CPUs may
- 		 * not support some events or have different event IDs.
- 		 */
--		if (pmu->cpus->nr != cpu__max_cpu())
-+		if (pmu->cpus->nr != cpu__max_cpu().cpu)
- 			return NULL;
- 
- 		return perf_pmu__find_map(pmu);
+> > The exclude_machine bit seems harmless to as no one will proccess it apart
+> > of riscv.
+>
+> Armv8 has equivalent bits in PMEVTYPER<n>_EL0 and PMCCFILTR_EL0 for
+> EL-based filtering, which includes filtering EL3.
+>
+> Jess
+>
+> > Patch depends on Atish Patra PMU series:
+> > https://lwn.net/Articles/879905/
+> > + some modifications to pass execlude event to SBI PMU extension
+> >
+> > Tested with qemu.
+> >
+> > Nikita Shubin (1):
+> >  perf tools: Add 'm' event modifier for counting machine
+> >
+> > include/uapi/linux/perf_event.h        |  3 ++-
+> > tools/include/uapi/linux/perf_event.h  |  3 ++-
+> > tools/perf/Documentation/perf-list.txt |  1 +
+> > tools/perf/tests/parse-events.c        | 18 ++++++++++++++++++
+> > tools/perf/util/evsel.c                |  4 +++-
+> > tools/perf/util/parse-events.c         | 18 +++++++++++++-----
+> > tools/perf/util/parse-events.l         |  2 +-
+> > 7 files changed, 40 insertions(+), 9 deletions(-)
+> >
+> > --
+> > 2.31.1
+> >
+> >
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
+>
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
+
+
+
+-- 
+Regards,
+Atish
