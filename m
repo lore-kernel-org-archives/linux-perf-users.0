@@ -2,83 +2,130 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D985C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jan 2022 17:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07137C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jan 2022 17:45:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355622AbiALRd0 (ORCPT
+        id S1343952AbiALRpL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Jan 2022 12:33:26 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4407 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242291AbiALRdW (ORCPT
+        Wed, 12 Jan 2022 12:45:11 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:41488 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1355904AbiALRpK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Jan 2022 12:33:22 -0500
-Received: from fraeml706-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JYvh71ndJz67P77;
-        Thu, 13 Jan 2022 01:29:43 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml706-chm.china.huawei.com (10.206.15.55) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.20; Wed, 12 Jan 2022 18:33:19 +0100
-Received: from [10.47.88.157] (10.47.88.157) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Wed, 12 Jan
- 2022 17:33:18 +0000
-Subject: Re: [PATCH v3 1/2] perf test: Workload test of metric and
- metricgroups
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>
-CC:     Peter Zijlstra <peterz@infradead.org>,
+        Wed, 12 Jan 2022 12:45:10 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CEB9161923;
+        Wed, 12 Jan 2022 17:45:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19120C36AEA;
+        Wed, 12 Jan 2022 17:45:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1642009509;
+        bh=x9hEP+2tT9P+EVZeVkf/TCyxC2sORkhR0Mg0yn52QUM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DhVyE6yaY5M98cQi/+xugcjPe1VQkiaSmA20sy3KYY08jRWMRox0/3YFdPC7XHkJ1
+         mC865em+hOGIDOK3j1iuEnBrIQK7YTwHCZx3zRgQyBSSC8LGqXQrEx52wSdxNimcrE
+         0xhP9ccYKCyjUSMX2R71PSxusrPKre6L4M5Q/mhZjlNzngHBYo0vp3qtB/OrjIphhQ
+         H0SkTp0K+nbEoMM+BhUARYO4+6RVjBcmKYIxh3Yba5/beRq81CwSQfnO8LmAqScIRi
+         qbJv191NWR+Ry4SNLHVnaTnnfiVUG8c0AGtDaV9J6cofVTBdYN2OnRRpOn37ep9Bfb
+         2uBHR6tG0Di7A==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 14C6740714; Wed, 12 Jan 2022 14:45:07 -0300 (-03)
+Date:   Wed, 12 Jan 2022 14:45:07 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <eranian@google.com>
-References: <20210917184240.2181186-1-irogers@google.com>
- <YU4iVcVc6uYAWft4@kernel.org>
- <158a1451-9d69-d67d-3fad-9e947112f9e6@huawei.com>
- <BD3A5CA5-B566-4FD9-9409-0329CC322060@gmail.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <e7b20497-e2bb-0c63-3cea-b6f541e2361f@huawei.com>
-Date:   Wed, 12 Jan 2022 17:32:56 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        eranian@google.com
+Subject: Re: [RFC PATCH] perf pmu-events: Don't lower case MetricExpr
+Message-ID: <Yd8To1ASO73135LK@kernel.org>
+References: <20211126071305.3733878-1-irogers@google.com>
+ <CAP-5=fU2kEq3T8UCpX0tAmwcGhZ+1h92uRPbzyuLDNpeCD7ffQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <BD3A5CA5-B566-4FD9-9409-0329CC322060@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.88.157]
-X-ClientProxiedBy: lhreml714-chm.china.huawei.com (10.201.108.65) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fU2kEq3T8UCpX0tAmwcGhZ+1h92uRPbzyuLDNpeCD7ffQ@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 12/01/2022 13:34, Arnaldo Carvalho de Melo wrote:
->>>> v3. Fix test condition (thanks to Paul A. Clarke<pc@us.ibm.com>). Add a
->>>>       fallback case of a larger workload so that we don't ignore "<not
->>>>       counted>".
->>>> v2. Switched the workload to something faster.
->> Hi Ian,
->>
->> I just noticed that this test fails on my broadwell machine.
->>
->> I am using acme perf/core @ 09dd3c22daaf
-> Hi,
+Em Wed, Jan 12, 2022 at 09:22:51AM -0800, Ian Rogers escreveu:
+> On Thu, Nov 25, 2021 at 11:13 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > This patch changes MetricExpr to be written out in the same case. This
+> > enables events in metrics to use modifiers like 'G' which currently
+> > yield parse errors when made lower case. To keep tests passing the
+> > literal #smt_on is compared in a non-case sensitive way - #SMT_on is
+> > present in at least SkylakeX metrics.
 > 
-> Can you try with tmp.perf/perf_cpu instead?
+> Ping.
+
+I tried applying 20211124001231.3277836-1-irogers@google.com on top of
+your perf_cpu series, it failed, will check.
+
+BTW, I got the two other patches in that series:
+
+⬢[acme@toolbox perf]$ git log --oneline -2
+6dd8646939a770e4 (HEAD -> perf/core) perf tools: Probe non-deprecated sysfs path 1st
+0ce05781f4905fcf perf tools: Fix SMT fallback with large core counts
+⬢[acme@toolbox perf]$
+
+- Arnaldo
+ 
+> Thanks,
+> Ian
 > 
-> There's a patch there that maybe fixes this.
+> > This patch is on top of:
+> > https://lore.kernel.org/lkml/20211124001231.3277836-1-irogers@google.com/
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/pmu-events/jevents.c | 2 --
+> >  tools/perf/util/expr.c          | 2 +-
+> >  2 files changed, 1 insertion(+), 3 deletions(-)
+> >
+> > diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+> > index 2e7c4153875b..1a57c3f81dd4 100644
+> > --- a/tools/perf/pmu-events/jevents.c
+> > +++ b/tools/perf/pmu-events/jevents.c
+> > @@ -672,8 +672,6 @@ static int json_events(const char *fn,
+> >                                 addfield(map, &je.metric_constraint, "", "", val);
+> >                         } else if (json_streq(map, field, "MetricExpr")) {
+> >                                 addfield(map, &je.metric_expr, "", "", val);
+> > -                               for (s = je.metric_expr; *s; s++)
+> > -                                       *s = tolower(*s);
+> >                         } else if (json_streq(map, field, "ArchStdEvent")) {
+> >                                 addfield(map, &arch_std, "", "", val);
+> >                                 for (s = arch_std; *s; s++)
+> > diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+> > index cdbab4f959fe..5cd6b9ff2489 100644
+> > --- a/tools/perf/util/expr.c
+> > +++ b/tools/perf/util/expr.c
+> > @@ -397,7 +397,7 @@ double expr__get_literal(const char *literal)
+> >         static struct cpu_topology *topology;
+> >         double result = NAN;
+> >
+> > -       if (!strcmp("#smt_on", literal)) {
+> > +       if (!strcasecmp("#smt_on", literal)) {
+> >                 result =  smt_on() > 0 ? 1.0 : 0.0;
+> >                 goto out;
+> >         }
+> > --
+> > 2.34.0.rc2.393.gf8c9666880-goog
+> >
 
-Yeah, that (metricgroups) test passes on that branch. I assume it's the 
-test script -a change...
+-- 
 
-Cheers,
-john
+- Arnaldo
