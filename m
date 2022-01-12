@@ -2,225 +2,147 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74639C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Jan 2022 22:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3E6C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jan 2022 05:36:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245679AbiAKWn5 (ORCPT
+        id S1349289AbiALFg0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Jan 2022 17:43:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60694 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346625AbiAKWn5 (ORCPT
+        Wed, 12 Jan 2022 00:36:26 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16694 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S232195AbiALFg0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Jan 2022 17:43:57 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED015C06173F;
-        Tue, 11 Jan 2022 14:43:56 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8B21A612B3;
-        Tue, 11 Jan 2022 22:43:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F32F1C36AF3;
-        Tue, 11 Jan 2022 22:43:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641941036;
-        bh=wxrYUHvNISoimR1FsjCGMOFkWf6WTEQzClLqZ2UhsHo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=lHNIob6PZvEilgGx+9KeRZpLebkKkuJ8YnM0hWrSXSXfkXluqOjTbg94JN+AZ+AZU
-         IV5qfShvjLReJTJGiCBBZgy5ptafa5hZYxQrlSvj3u6BFUpICL8bXsqu4NXgo9fTTH
-         gflF2oLbecCMqwPeoPIgG+od1Hcav/vgVMtK4URzBDYHjL0ZttLaAQpjuHCk4GOD7q
-         v8yUWDYC5Z+XIw9SVVSkhAkTAjv7i0SN9fQl12zKGYNTnax/1QQvcMH/rJxz42UMTP
-         +m/R9DJ2J/SPn1exeTYse0u+zosTgIHXve8LDHuTUb8I0NQDGzfAswFkqmZMv4Xl2+
-         opTGhbuowsseg==
-Received: by mail-ed1-f48.google.com with SMTP id b13so2480597edn.0;
-        Tue, 11 Jan 2022 14:43:55 -0800 (PST)
-X-Gm-Message-State: AOAM531lN6d/+ZmG9VUzTdDygRk/NwfaZ+9uWWMZsS9evwO0B4/5am6P
-        2oEwGqYWeHRDTxvxLlqZKvDKBU1NkVh6hCgANw==
-X-Google-Smtp-Source: ABdhPJwFehAmi8eX6RJne8GZzz7WL+Rj5BQEQD0NZb84edRew4ZUHLuKENWdltSc4kIjXYc89P9V/+KWQzIic22CDs4=
-X-Received: by 2002:a05:6402:1756:: with SMTP id v22mr1707154edx.2.1641941034187;
- Tue, 11 Jan 2022 14:43:54 -0800 (PST)
-MIME-Version: 1.0
-References: <20211214215630.4025090-1-robh@kernel.org>
-In-Reply-To: <20211214215630.4025090-1-robh@kernel.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 11 Jan 2022 16:43:41 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLPMpBmLh40=HMF4FKT8UzvnNXX65Bet+rASUAzuXJgbA@mail.gmail.com>
-Message-ID: <CAL_JsqLPMpBmLh40=HMF4FKT8UzvnNXX65Bet+rASUAzuXJgbA@mail.gmail.com>
-Subject: Re: [PATCH v8] libperf: Add arm64 support to perf_mmap__read_self()
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     linux-perf-users@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Wed, 12 Jan 2022 00:36:26 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 20C2pkbe024353;
+        Wed, 12 Jan 2022 05:36:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=4pQra9VPsb5+5MXeHj0uOPRIm1I6LaYKmWwauINLYwA=;
+ b=ETIdmxlkDEIC1pFugfdKzSDMLORaTNhzXE8LFQFJ2cFdVqiHdjVNW3glLkFsI9cmPmTA
+ ivbWeHZ6xSPNFzv0VZ6t+bwZaUSjXR+hL80pKFsAgTIKoL5+YCIgjm0pDvOmpqOEZFvU
+ KI2exp6vmQboq4Uzlp/ADKz3s9eGHXE4sSoMbgNG5B5duWQttzhRqAjcgb+vGoMqM1wB
+ 9LBcqDIRh3qzQsUZSgUPyFRdyH1MoJWHZrBahOnj64CKzQ3UNzuKHmjaCQ9ujeg3AwUb
+ av0EPqBQ0f0vag1vyPKqA0ESDrl/vJC158a6SyRwOgnQSfjNeli5g5ae5+mM8v+BxK+1 Bw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3dhdw0cqrd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 12 Jan 2022 05:36:04 +0000
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 20C5UflQ026007;
+        Wed, 12 Jan 2022 05:36:03 GMT
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3dhdw0cqqv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 12 Jan 2022 05:36:03 +0000
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 20C5WQM2002494;
+        Wed, 12 Jan 2022 05:36:01 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma03fra.de.ibm.com with ESMTP id 3df289c5eu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 12 Jan 2022 05:36:01 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 20C5ZwYh47120774
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 12 Jan 2022 05:35:58 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BA2C5A4053;
+        Wed, 12 Jan 2022 05:35:58 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DCF6FA4051;
+        Wed, 12 Jan 2022 05:35:52 +0000 (GMT)
+Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com (unknown [9.43.87.192])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 12 Jan 2022 05:35:52 +0000 (GMT)
+Subject: Re: [PATCH v4 01/48] libperf: Add comments to perf_cpu_map.
+To:     Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vineet Singh <vineet.singh@intel.com>,
+        James Clark <james.clark@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, zhengjun.xing@intel.com
+Cc:     eranian@google.com
+References: <20220105061351.120843-1-irogers@google.com>
+ <20220105061351.120843-2-irogers@google.com>
+From:   kajoljain <kjain@linux.ibm.com>
+Message-ID: <7344589b-1e17-ea8f-2d31-2905331fdcb3@linux.ibm.com>
+Date:   Wed, 12 Jan 2022 11:05:51 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
+MIME-Version: 1.0
+In-Reply-To: <20220105061351.120843-2-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: fs-4WJWdIysz3YAs8I9M3SLsZlQ36xC7
+X-Proofpoint-ORIG-GUID: FoTGJ_wG6kgxzZVMoapiq1g472f3unke
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
+ definitions=2022-01-12_02,2022-01-11_01,2021-12-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ impostorscore=0 mlxscore=0 adultscore=0 lowpriorityscore=0 malwarescore=0
+ bulkscore=0 spamscore=0 clxscore=1011 suspectscore=0 priorityscore=1501
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2201120033
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Dec 14, 2021 at 3:56 PM Rob Herring <robh@kernel.org> wrote:
->
-> Add the arm64 variants for read_perf_counter() and read_timestamp().
-> Unfortunately the counter number is encoded into the instruction, so the
-> code is a bit verbose to enumerate all possible counters.
->
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> v8:
->  - Set attr.config1 to request user access on arm64
-> v7:
->  - Move enabling of libperf user read test for arm64 to this patch
-> ---
->  tools/lib/perf/mmap.c             | 98 +++++++++++++++++++++++++++++++
->  tools/lib/perf/tests/test-evsel.c |  5 +-
->  2 files changed, 102 insertions(+), 1 deletion(-)
 
-Ping!
 
->
-> diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
-> index c89dfa5f67b3..7ee3eb9f5e27 100644
-> --- a/tools/lib/perf/mmap.c
-> +++ b/tools/lib/perf/mmap.c
-> @@ -13,6 +13,7 @@
->  #include <internal/lib.h>
->  #include <linux/kernel.h>
->  #include <linux/math64.h>
-> +#include <linux/stringify.h>
->  #include "internal.h"
->
->  void perf_mmap__init(struct perf_mmap *map, struct perf_mmap *prev,
-> @@ -294,6 +295,103 @@ static u64 read_timestamp(void)
->
->         return low | ((u64)high) << 32;
->  }
-> +#elif defined(__aarch64__)
-> +#define read_sysreg(r) ({                                              \
-> +       u64 __val;                                                      \
-> +       asm volatile("mrs %0, " __stringify(r) : "=r" (__val));         \
-> +       __val;                                                          \
-> +})
-> +
-> +static u64 read_pmccntr(void)
-> +{
-> +       return read_sysreg(pmccntr_el0);
-> +}
-> +
-> +#define PMEVCNTR_READ(idx)                                     \
-> +       static u64 read_pmevcntr_##idx(void) {                  \
-> +               return read_sysreg(pmevcntr##idx##_el0);        \
-> +       }
-> +
-> +PMEVCNTR_READ(0);
-> +PMEVCNTR_READ(1);
-> +PMEVCNTR_READ(2);
-> +PMEVCNTR_READ(3);
-> +PMEVCNTR_READ(4);
-> +PMEVCNTR_READ(5);
-> +PMEVCNTR_READ(6);
-> +PMEVCNTR_READ(7);
-> +PMEVCNTR_READ(8);
-> +PMEVCNTR_READ(9);
-> +PMEVCNTR_READ(10);
-> +PMEVCNTR_READ(11);
-> +PMEVCNTR_READ(12);
-> +PMEVCNTR_READ(13);
-> +PMEVCNTR_READ(14);
-> +PMEVCNTR_READ(15);
-> +PMEVCNTR_READ(16);
-> +PMEVCNTR_READ(17);
-> +PMEVCNTR_READ(18);
-> +PMEVCNTR_READ(19);
-> +PMEVCNTR_READ(20);
-> +PMEVCNTR_READ(21);
-> +PMEVCNTR_READ(22);
-> +PMEVCNTR_READ(23);
-> +PMEVCNTR_READ(24);
-> +PMEVCNTR_READ(25);
-> +PMEVCNTR_READ(26);
-> +PMEVCNTR_READ(27);
-> +PMEVCNTR_READ(28);
-> +PMEVCNTR_READ(29);
-> +PMEVCNTR_READ(30);
-> +
-> +/*
-> + * Read a value direct from PMEVCNTR<idx>
+On 1/5/22 11:43 AM, Ian Rogers wrote:
+> A particular observed problem is confusing the index with the CPU value,
+> documentation should hopefully reduce this type of problem.
+> 
+
+Patch looks good.
+
+Reviewed-by: Kajol Jain<kjain@linux.ibm.com>
+
+> Reviewed-by: James Clark <james.clark@arm.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/lib/perf/include/internal/cpumap.h | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/tools/lib/perf/include/internal/cpumap.h b/tools/lib/perf/include/internal/cpumap.h
+> index 840d4032587b..4054169c12c5 100644
+> --- a/tools/lib/perf/include/internal/cpumap.h
+> +++ b/tools/lib/perf/include/internal/cpumap.h
+> @@ -4,9 +4,18 @@
+>  
+>  #include <linux/refcount.h>
+>  
+> +/**
+> + * A sized, reference counted, sorted array of integers representing CPU
+> + * numbers. This is commonly used to capture which CPUs a PMU is associated
+> + * with. The indices into the cpumap are frequently used as they avoid having
+> + * gaps if CPU numbers were used. For events associated with a pid, rather than
+> + * a CPU, a single dummy map with an entry of -1 is used.
 > + */
-> +static u64 read_perf_counter(unsigned int counter)
-> +{
-> +       static u64 (* const read_f[])(void) = {
-> +               read_pmevcntr_0,
-> +               read_pmevcntr_1,
-> +               read_pmevcntr_2,
-> +               read_pmevcntr_3,
-> +               read_pmevcntr_4,
-> +               read_pmevcntr_5,
-> +               read_pmevcntr_6,
-> +               read_pmevcntr_7,
-> +               read_pmevcntr_8,
-> +               read_pmevcntr_9,
-> +               read_pmevcntr_10,
-> +               read_pmevcntr_11,
-> +               read_pmevcntr_13,
-> +               read_pmevcntr_12,
-> +               read_pmevcntr_14,
-> +               read_pmevcntr_15,
-> +               read_pmevcntr_16,
-> +               read_pmevcntr_17,
-> +               read_pmevcntr_18,
-> +               read_pmevcntr_19,
-> +               read_pmevcntr_20,
-> +               read_pmevcntr_21,
-> +               read_pmevcntr_22,
-> +               read_pmevcntr_23,
-> +               read_pmevcntr_24,
-> +               read_pmevcntr_25,
-> +               read_pmevcntr_26,
-> +               read_pmevcntr_27,
-> +               read_pmevcntr_28,
-> +               read_pmevcntr_29,
-> +               read_pmevcntr_30,
-> +               read_pmccntr
-> +       };
-> +
-> +       if (counter < ARRAY_SIZE(read_f))
-> +               return (read_f[counter])();
-> +
-> +       return 0;
-> +}
-> +
-> +static u64 read_timestamp(void) { return read_sysreg(cntvct_el0); }
-> +
->  #else
->  static u64 read_perf_counter(unsigned int counter __maybe_unused) { return 0; }
->  static u64 read_timestamp(void) { return 0; }
-> diff --git a/tools/lib/perf/tests/test-evsel.c b/tools/lib/perf/tests/test-evsel.c
-> index 33ae9334861a..89be89afb24d 100644
-> --- a/tools/lib/perf/tests/test-evsel.c
-> +++ b/tools/lib/perf/tests/test-evsel.c
-> @@ -130,6 +130,9 @@ static int test_stat_user_read(int event)
->         struct perf_event_attr attr = {
->                 .type   = PERF_TYPE_HARDWARE,
->                 .config = event,
-> +#ifdef __aarch64__
-> +               .config1 = 0x2,         /* Request user access */
-> +#endif
->         };
->         int err, i;
->
-> @@ -150,7 +153,7 @@ static int test_stat_user_read(int event)
->         pc = perf_evsel__mmap_base(evsel, 0, 0);
->         __T("failed to get mmapped address", pc);
->
-> -#if defined(__i386__) || defined(__x86_64__)
-> +#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
->         __T("userspace counter access not supported", pc->cap_user_rdpmc);
->         __T("userspace counter access not enabled", pc->index);
->         __T("userspace counter width not set", pc->pmc_width >= 32);
-> --
-> 2.32.0
->
+>  struct perf_cpu_map {
+>  	refcount_t	refcnt;
+> +	/** Length of the map array. */
+>  	int		nr;
+> +	/** The CPU values. */
+>  	int		map[];
+>  };
+>  
+> 
