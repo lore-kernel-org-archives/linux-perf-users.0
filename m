@@ -2,37 +2,40 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07137C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jan 2022 17:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A77C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jan 2022 17:50:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343952AbiALRpL (ORCPT
+        id S1343959AbiALRuI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Jan 2022 12:45:11 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:41488 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355904AbiALRpK (ORCPT
+        Wed, 12 Jan 2022 12:50:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37686 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1344044AbiALRuH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Jan 2022 12:45:10 -0500
+        Wed, 12 Jan 2022 12:50:07 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22F80C06173F;
+        Wed, 12 Jan 2022 09:50:06 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CEB9161923;
-        Wed, 12 Jan 2022 17:45:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19120C36AEA;
-        Wed, 12 Jan 2022 17:45:09 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0A2FCB82025;
+        Wed, 12 Jan 2022 17:50:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 978DAC36AEA;
+        Wed, 12 Jan 2022 17:50:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642009509;
-        bh=x9hEP+2tT9P+EVZeVkf/TCyxC2sORkhR0Mg0yn52QUM=;
+        s=k20201202; t=1642009803;
+        bh=Z0Rl1UoN9N17xgQ6MEb+B6+A/2Qrjg74rAJxXxT4OT8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DhVyE6yaY5M98cQi/+xugcjPe1VQkiaSmA20sy3KYY08jRWMRox0/3YFdPC7XHkJ1
-         mC865em+hOGIDOK3j1iuEnBrIQK7YTwHCZx3zRgQyBSSC8LGqXQrEx52wSdxNimcrE
-         0xhP9ccYKCyjUSMX2R71PSxusrPKre6L4M5Q/mhZjlNzngHBYo0vp3qtB/OrjIphhQ
-         H0SkTp0K+nbEoMM+BhUARYO4+6RVjBcmKYIxh3Yba5/beRq81CwSQfnO8LmAqScIRi
-         qbJv191NWR+Ry4SNLHVnaTnnfiVUG8c0AGtDaV9J6cofVTBdYN2OnRRpOn37ep9Bfb
-         2uBHR6tG0Di7A==
+        b=P0XleWHkyMR/4cxnd/lE5N9yckMOtMzpOYqJLwTwS5ZecdNl1fYAanfjJIAP9frdI
+         KmZznXmtAvdBXPmvXfHu2S7U6RhvYnbrNAnWhDXBAcx32N+S5oY48TR3ateaHQ3p6E
+         H7UJ++2s/fAL+HpTOr83A3y8tQLxjTG4TjRHbjHgPyZwuIsQP1JaFZbEBcD6VKz44z
+         4RSXRUWPJZiY/qW6/+OfZNtGHi7/t7Pg757R+sHvLuU5sdMVqFfsI3Iqr/zRrmkjk/
+         5tuhyKhB3aDx2s9pFxnqUJpqv9BStl2tquE+FqWTlMC4AMx1NhERdcOJxbShP7jA8q
+         sVfkYinUCXqhQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 14C6740714; Wed, 12 Jan 2022 14:45:07 -0300 (-03)
-Date:   Wed, 12 Jan 2022 14:45:07 -0300
+        id DDADB40714; Wed, 12 Jan 2022 14:50:01 -0300 (-03)
+Date:   Wed, 12 Jan 2022 14:50:01 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
@@ -48,84 +51,104 @@ Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         eranian@google.com
 Subject: Re: [RFC PATCH] perf pmu-events: Don't lower case MetricExpr
-Message-ID: <Yd8To1ASO73135LK@kernel.org>
+Message-ID: <Yd8UySEClsWdzKF5@kernel.org>
 References: <20211126071305.3733878-1-irogers@google.com>
  <CAP-5=fU2kEq3T8UCpX0tAmwcGhZ+1h92uRPbzyuLDNpeCD7ffQ@mail.gmail.com>
+ <Yd8To1ASO73135LK@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fU2kEq3T8UCpX0tAmwcGhZ+1h92uRPbzyuLDNpeCD7ffQ@mail.gmail.com>
+In-Reply-To: <Yd8To1ASO73135LK@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Jan 12, 2022 at 09:22:51AM -0800, Ian Rogers escreveu:
-> On Thu, Nov 25, 2021 at 11:13 PM Ian Rogers <irogers@google.com> wrote:
-> >
-> > This patch changes MetricExpr to be written out in the same case. This
-> > enables events in metrics to use modifiers like 'G' which currently
-> > yield parse errors when made lower case. To keep tests passing the
-> > literal #smt_on is compared in a non-case sensitive way - #SMT_on is
-> > present in at least SkylakeX metrics.
+Em Wed, Jan 12, 2022 at 02:45:07PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Wed, Jan 12, 2022 at 09:22:51AM -0800, Ian Rogers escreveu:
+> > On Thu, Nov 25, 2021 at 11:13 PM Ian Rogers <irogers@google.com> wrote:
+> > >
+> > > This patch changes MetricExpr to be written out in the same case. This
+> > > enables events in metrics to use modifiers like 'G' which currently
+> > > yield parse errors when made lower case. To keep tests passing the
+> > > literal #smt_on is compared in a non-case sensitive way - #SMT_on is
+> > > present in at least SkylakeX metrics.
+> > 
+> > Ping.
 > 
-> Ping.
+> I tried applying 20211124001231.3277836-1-irogers@google.com on top of
+> your perf_cpu series, it failed, will check.
+> 
+> BTW, I got the two other patches in that series:
+> 
+> ⬢[acme@toolbox perf]$ git log --oneline -2
+> 6dd8646939a770e4 (HEAD -> perf/core) perf tools: Probe non-deprecated sysfs path 1st
+> 0ce05781f4905fcf perf tools: Fix SMT fallback with large core counts
+> ⬢[acme@toolbox perf]$
 
-I tried applying 20211124001231.3277836-1-irogers@google.com on top of
-your perf_cpu series, it failed, will check.
+It was due to that cpu__max_present_cpu().cpu;
 
-BTW, I got the two other patches in that series:
-
-⬢[acme@toolbox perf]$ git log --oneline -2
-6dd8646939a770e4 (HEAD -> perf/core) perf tools: Probe non-deprecated sysfs path 1st
-0ce05781f4905fcf perf tools: Fix SMT fallback with large core counts
-⬢[acme@toolbox perf]$
+Fixed, applied.
 
 - Arnaldo
+
+diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+index e808738493e219fd..c94fb9bef919f5cb 100644
+--- a/tools/perf/util/expr.c
++++ b/tools/perf/util/expr.c
+@@ -405,12 +405,17 @@ double expr_id_data__source_count(const struct expr_id_data *data)
+ double expr__get_literal(const char *literal)
+ {
+ 	static struct cpu_topology *topology;
++	double result = NAN;
  
-> Thanks,
-> Ian
-> 
-> > This patch is on top of:
-> > https://lore.kernel.org/lkml/20211124001231.3277836-1-irogers@google.com/
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/pmu-events/jevents.c | 2 --
-> >  tools/perf/util/expr.c          | 2 +-
-> >  2 files changed, 1 insertion(+), 3 deletions(-)
-> >
-> > diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-> > index 2e7c4153875b..1a57c3f81dd4 100644
-> > --- a/tools/perf/pmu-events/jevents.c
-> > +++ b/tools/perf/pmu-events/jevents.c
-> > @@ -672,8 +672,6 @@ static int json_events(const char *fn,
-> >                                 addfield(map, &je.metric_constraint, "", "", val);
-> >                         } else if (json_streq(map, field, "MetricExpr")) {
-> >                                 addfield(map, &je.metric_expr, "", "", val);
-> > -                               for (s = je.metric_expr; *s; s++)
-> > -                                       *s = tolower(*s);
-> >                         } else if (json_streq(map, field, "ArchStdEvent")) {
-> >                                 addfield(map, &arch_std, "", "", val);
-> >                                 for (s = arch_std; *s; s++)
-> > diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-> > index cdbab4f959fe..5cd6b9ff2489 100644
-> > --- a/tools/perf/util/expr.c
-> > +++ b/tools/perf/util/expr.c
-> > @@ -397,7 +397,7 @@ double expr__get_literal(const char *literal)
-> >         static struct cpu_topology *topology;
-> >         double result = NAN;
-> >
-> > -       if (!strcmp("#smt_on", literal)) {
-> > +       if (!strcasecmp("#smt_on", literal)) {
-> >                 result =  smt_on() > 0 ? 1.0 : 0.0;
-> >                 goto out;
-> >         }
-> > --
-> > 2.34.0.rc2.393.gf8c9666880-goog
-> >
-
--- 
-
-- Arnaldo
+-	if (!strcmp("#smt_on", literal))
+-		return smt_on() > 0 ? 1.0 : 0.0;
++	if (!strcmp("#smt_on", literal)) {
++		result = smt_on() > 0 ? 1.0 : 0.0;
++		goto out;
++	}
+ 
+-	if (!strcmp("#num_cpus", literal))
+-		return cpu__max_present_cpu().cpu;
++	if (!strcmp("#num_cpus", literal)) {
++		result = cpu__max_present_cpu().cpu;
++		goto out;
++	}
+ 
+ 	/*
+ 	 * Assume that topology strings are consistent, such as CPUs "0-1"
+@@ -422,16 +427,24 @@ double expr__get_literal(const char *literal)
+ 		topology = cpu_topology__new();
+ 		if (!topology) {
+ 			pr_err("Error creating CPU topology");
+-			return NAN;
++			goto out;
+ 		}
+ 	}
+-	if (!strcmp("#num_packages", literal))
+-		return topology->package_cpus_lists;
+-	if (!strcmp("#num_dies", literal))
+-		return topology->die_cpus_lists;
+-	if (!strcmp("#num_cores", literal))
+-		return topology->core_cpus_lists;
++	if (!strcmp("#num_packages", literal)) {
++		result = topology->package_cpus_lists;
++		goto out;
++	}
++	if (!strcmp("#num_dies", literal)) {
++		result = topology->die_cpus_lists;
++		goto out;
++	}
++	if (!strcmp("#num_cores", literal)) {
++		result = topology->core_cpus_lists;
++		goto out;
++	}
+ 
+ 	pr_err("Unrecognized literal '%s'", literal);
+-	return NAN;
++out:
++	pr_debug2("literal: %s = %f\n", literal, result);
++	return result;
+ }
