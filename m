@@ -2,101 +2,115 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0050C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jan 2022 08:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1ACC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jan 2022 09:46:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351315AbiALIBS (ORCPT
+        id S1352175AbiALJqn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Jan 2022 03:01:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237577AbiALIBR (ORCPT
+        Wed, 12 Jan 2022 04:46:43 -0500
+Received: from foss.arm.com ([217.140.110.172]:57464 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1349532AbiALJqn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Jan 2022 03:01:17 -0500
-Received: from mail-qv1-xf33.google.com (mail-qv1-xf33.google.com [IPv6:2607:f8b0:4864:20::f33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AD05C06173F;
-        Wed, 12 Jan 2022 00:01:17 -0800 (PST)
-Received: by mail-qv1-xf33.google.com with SMTP id l13so570019qvz.10;
-        Wed, 12 Jan 2022 00:01:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xSKd7XgfSfcgFDjRKFApj8oc4nFN+qAZkCxPvybSL+8=;
-        b=V9OjQLkfoBsangbrsXdK7kyQwCXR8utG3+vX0hMvzyZ/07ziwfWsTCRHre9fe2daUi
-         jyYMUnN3QDqjw8auj91W66wMnvmnzWTCqL+ok15skMBZ/LiiUSUQ6ikE4+E5Pe2vYB1n
-         RYNh4n+RZGJBIGHOMqwUEZdz/wI0c4zHlD6W2RI5KDIhb/PPt/wn2bxSw/35UvXEkT+X
-         aphhH7HZxk33JxGpNTuoql/coDTe2a3Cck9WhgLVsXbULGgTwzEBXymlHSANEsUBMB0t
-         GxKv2vAshMjULdSK+i4n5Zwh68BBOv3EPCB8c/wI3xXcmL+IOxcr5VuJfClwmFiKkggu
-         /tnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xSKd7XgfSfcgFDjRKFApj8oc4nFN+qAZkCxPvybSL+8=;
-        b=z4Y32y7Ud8CSp0pUhjxOJ3L3ZSf7y2JZ4y9w8MSlfllxZI10NJVbaIdie6H8H+Subg
-         wyXfoQbtd9mvpLC+2P3/uCdyPlsSxKifHhs0wS+YhCQ/mL4LzbmVnfaKSNIjEIvCuO1C
-         vAG7j11otWB500w1x4cjsaM3K6sXxOetFMgbH5pX8fGyLGbgY8agVFqKkQqVB+qkZgu1
-         MRFwOywAAMFBkp7eDJ2wxM5I/lnBoYpNPiezfs/LbKIe5ErECzlyTMz1jXDj+wZ1VQVZ
-         Afzogz9YMLuPv8YyR/P++I9lg0HZZvMYPeGg8hVZag84UTwLUhi6rnFBxsdAsf23nk/X
-         VPmA==
-X-Gm-Message-State: AOAM532pkKVUxfngohnOrl1fPT9KoOWgODlc8tq5Al80HVE9fZqd/++a
-        XRSilNLYLxjporTuBk6P1ys=
-X-Google-Smtp-Source: ABdhPJx9joBxWwiwxF+/GDnJoo0WjC17LNN/3jkLjz/UhcORu498jTeqn3jzxUl7JMo+PT19L8qvgQ==
-X-Received: by 2002:a05:6214:19e1:: with SMTP id q1mr7001729qvc.115.1641974476590;
-        Wed, 12 Jan 2022 00:01:16 -0800 (PST)
-Received: from localhost.localdomain ([193.203.214.57])
-        by smtp.gmail.com with ESMTPSA id m4sm9207420qtw.27.2022.01.12.00.01.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jan 2022 00:01:15 -0800 (PST)
-From:   cgel.zte@gmail.com
-X-Google-Original-From: chi.minghao@zte.com.cn
-To:     mingo@redhat.com
-Cc:     acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Minghao Chi <chi.minghao@zte.com.cn>,
-        Zeal Robot <zealci@zte.com.cn>, CGEL ZTE <cgel.zte@gmail.com>
-Subject: [PATCH] tools/perf: remove redundant err variable
-Date:   Wed, 12 Jan 2022 08:01:09 +0000
-Message-Id: <20220112080109.666800-1-chi.minghao@zte.com.cn>
-X-Mailer: git-send-email 2.25.1
+        Wed, 12 Jan 2022 04:46:43 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E69E3D6E;
+        Wed, 12 Jan 2022 01:46:42 -0800 (PST)
+Received: from [10.57.85.171] (unknown [10.57.85.171])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C1D373F5A1;
+        Wed, 12 Jan 2022 01:46:40 -0800 (PST)
+Message-ID: <f6e2378a-11be-0886-6105-86ad9ccbc992@arm.com>
+Date:   Wed, 12 Jan 2022 09:46:38 +0000
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.4.1
+Subject: Re: [PATCH 2/3] coresight: Fail to open with return stacks if they
+ are unavailable
+To:     James Clark <james.clark@arm.com>, coresight@lists.linaro.org
+Cc:     Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+References: <20211208160907.749482-1-james.clark@arm.com>
+ <20211208160907.749482-2-james.clark@arm.com>
+ <b52ef2f3-9e30-59a6-2aea-e46c93915868@arm.com>
+ <b61ef2e3-e573-4867-af5d-fd5fabece4b1@arm.com>
+ <70b562dc-adcd-da34-3811-ff872bc7cab8@arm.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <70b562dc-adcd-da34-3811-ff872bc7cab8@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Minghao Chi <chi.minghao@zte.com.cn>
+On 07/01/2022 15:10, James Clark wrote:
+> 
+> 
+> On 09/12/2021 11:13, James Clark wrote:
+>>
+>>
+>> On 09/12/2021 11:00, Suzuki K Poulose wrote:
+>>> On 08/12/2021 16:09, James Clark wrote:
+>>>> Maintain consistency with the other options by failing to open when they
+>>>> aren't supported. For example ETM_OPT_TS, ETM_OPT_CTXTID2 and the newly
+>>>> added ETM_OPT_BRANCH_BROADCAST all return with -EINVAL if they are
+>>>> requested but not supported by hardware.
+>>>>
+>>>> The consequence of not doing this is that the user may not be
+>>>> aware that they are not enabling the feature as it is silently disabled.
+>>>>
+>>>> Signed-off-by: James Clark <james.clark@arm.com>
+>>>> ---
+>>>>    drivers/hwtracing/coresight/coresight-etm4x-core.c | 13 +++++++++----
+>>>>    1 file changed, 9 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+>>>> index d2bafb50c66a..0a9bb943a5e5 100644
+>>>> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
+>>>> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+>>>> @@ -674,10 +674,15 @@ static int etm4_parse_event_config(struct coresight_device *csdev,
+>>>>        }
+>>>>          /* return stack - enable if selected and supported */
+>>>> -    if ((attr->config & BIT(ETM_OPT_RETSTK)) && drvdata->retstack)
+>>>> -        /* bit[12], Return stack enable bit */
+>>>> -        config->cfg |= BIT(12);
+>>>> -
+>>>> +    if (attr->config & BIT(ETM_OPT_RETSTK)) {
+>>>> +        if (!drvdata->retstack) {
+>>>> +            ret = -EINVAL;
+>>>> +            goto out;
+>>>> +        } else {
+>>>> +            /* bit[12], Return stack enable bit */
+>>>> +            config->cfg |= BIT(12);
+>>>> +        }
+>>>
+>>> nit: While at this, please could you change the hard coded value
+>>> to ETM4_CFG_BIT_RETSTK ?
+>>>
+>> I started changing them all because I had trouble searching for bits by name but then
+>> I thought it would snowball into a bigger change so I undid it.
+>>
+>> I think I'll just go and do it now if it's an issue here.
+> 
+> Hi Suzuki,
+> 
+> I started on this and I think the only worthwhile change is to make them all consistent
+> with sysreg.h. As in have xxx_SHIFT and xxx_MASK style definitions like:
+> 
+>    #define TRCCONFIGR_INSTP0_SHIFT		1
+>    #define TRCCONFIGR_INSTPO_MASK		GENMASK(1,0)
+> 
+> This has been done for SPE and some of the new ETM stuff. If that sounds right to you
+> I will go and do it as a followup patch to this one. It is quite a bit change so I can
+> see maybe we don't want to do it? (Personally I would vote to do it)
 
-Return value from perf_event__process_tracing_data() directly instead
-of taking this in another redundant variable.
+Yes, please go ahead with that. Thanks for taking it up !
 
-Reported-by: Zeal Robot <zealci@zte.com.cn>
-Signed-off-by: Minghao Chi <chi.minghao@zte.com.cn>
-Signed-off-by: CGEL ZTE <cgel.zte@gmail.com>
----
- tools/perf/builtin-inject.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 409b721666cb..fbf43a454cba 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -535,12 +535,9 @@ static int perf_event__repipe_exit(struct perf_tool *tool,
- static int perf_event__repipe_tracing_data(struct perf_session *session,
- 					   union perf_event *event)
- {
--	int err;
--
- 	perf_event__repipe_synth(session->tool, event);
--	err = perf_event__process_tracing_data(session, event);
- 
--	return err;
-+	return perf_event__process_tracing_data(session, event);
- }
- 
- static int dso__read_build_id(struct dso *dso)
--- 
-2.25.1
-
+Suzuki
