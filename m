@@ -2,147 +2,131 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3E6C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jan 2022 05:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C28C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jan 2022 06:49:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349289AbiALFg0 (ORCPT
+        id S237421AbiALGt4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Jan 2022 00:36:26 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16694 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S232195AbiALFg0 (ORCPT
+        Wed, 12 Jan 2022 01:49:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55564 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237061AbiALGt4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Jan 2022 00:36:26 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 20C2pkbe024353;
-        Wed, 12 Jan 2022 05:36:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=4pQra9VPsb5+5MXeHj0uOPRIm1I6LaYKmWwauINLYwA=;
- b=ETIdmxlkDEIC1pFugfdKzSDMLORaTNhzXE8LFQFJ2cFdVqiHdjVNW3glLkFsI9cmPmTA
- ivbWeHZ6xSPNFzv0VZ6t+bwZaUSjXR+hL80pKFsAgTIKoL5+YCIgjm0pDvOmpqOEZFvU
- KI2exp6vmQboq4Uzlp/ADKz3s9eGHXE4sSoMbgNG5B5duWQttzhRqAjcgb+vGoMqM1wB
- 9LBcqDIRh3qzQsUZSgUPyFRdyH1MoJWHZrBahOnj64CKzQ3UNzuKHmjaCQ9ujeg3AwUb
- av0EPqBQ0f0vag1vyPKqA0ESDrl/vJC158a6SyRwOgnQSfjNeli5g5ae5+mM8v+BxK+1 Bw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3dhdw0cqrd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 12 Jan 2022 05:36:04 +0000
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 20C5UflQ026007;
-        Wed, 12 Jan 2022 05:36:03 GMT
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3dhdw0cqqv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 12 Jan 2022 05:36:03 +0000
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 20C5WQM2002494;
-        Wed, 12 Jan 2022 05:36:01 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma03fra.de.ibm.com with ESMTP id 3df289c5eu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 12 Jan 2022 05:36:01 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 20C5ZwYh47120774
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Jan 2022 05:35:58 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BA2C5A4053;
-        Wed, 12 Jan 2022 05:35:58 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DCF6FA4051;
-        Wed, 12 Jan 2022 05:35:52 +0000 (GMT)
-Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com (unknown [9.43.87.192])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 12 Jan 2022 05:35:52 +0000 (GMT)
-Subject: Re: [PATCH v4 01/48] libperf: Add comments to perf_cpu_map.
-To:     Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
+        Wed, 12 Jan 2022 01:49:56 -0500
+Received: from forward501j.mail.yandex.net (forward501j.mail.yandex.net [IPv6:2a02:6b8:0:801:2::111])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4A09C06173F;
+        Tue, 11 Jan 2022 22:49:55 -0800 (PST)
+Received: from sas1-df7c155f48c6.qloud-c.yandex.net (sas1-df7c155f48c6.qloud-c.yandex.net [IPv6:2a02:6b8:c08:e119:0:640:df7c:155f])
+        by forward501j.mail.yandex.net (Yandex) with ESMTP id DD562623BBF;
+        Wed, 12 Jan 2022 09:49:50 +0300 (MSK)
+Received: from sas1-1f4a002bb12a.qloud-c.yandex.net (sas1-1f4a002bb12a.qloud-c.yandex.net [2a02:6b8:c14:3908:0:640:1f4a:2b])
+        by sas1-df7c155f48c6.qloud-c.yandex.net (mxback/Yandex) with ESMTP id 9tpYaeyDtY-nnfm0EEP;
+        Wed, 12 Jan 2022 09:49:50 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1641970190;
+        bh=LrY/XSIFvSNDS6egDU78GYzQ11qgsupzEbcN4Qn848A=;
+        h=In-Reply-To:Subject:To:From:References:Date:Message-ID:Cc;
+        b=dM/tw3jDK4MgFn+LCSfi91j+gng3SfKA77IO3ZpGl6opowJ6ZnuEB4gUXOtUhRO98
+         LFDR6Sco76MuUbAwVeta3aTrJPksgfOLUylIQqxgWOhRIgjTTK3yl084nn8qOt+GWQ
+         cJnPgZXWf9TtU1I1XaQ93kG3mveybUY6LF4HBBNI=
+Authentication-Results: sas1-df7c155f48c6.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
+Received: by sas1-1f4a002bb12a.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id dfV5spHKxz-nlP0OnIl;
+        Wed, 12 Jan 2022 09:49:47 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+X-Yandex-Fwd: 2
+Date:   Wed, 12 Jan 2022 09:49:45 +0300
+From:   Nikita Shubin <nikita.shubin@maquefel.me>
+To:     Jessica Clarke <jrtc27@jrtc27.com>
+Cc:     Atish Patra <atishp@rivosinc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        linux <linux@yadro.com>, Nikita Shubin <n.shubin@yadro.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vineet Singh <vineet.singh@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org, zhengjun.xing@intel.com
-Cc:     eranian@google.com
-References: <20220105061351.120843-1-irogers@google.com>
- <20220105061351.120843-2-irogers@google.com>
-From:   kajoljain <kjain@linux.ibm.com>
-Message-ID: <7344589b-1e17-ea8f-2d31-2905331fdcb3@linux.ibm.com>
-Date:   Wed, 12 Jan 2022 11:05:51 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>,
+        John Garry <john.garry@huawei.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Song Liu <song@kernel.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/1] perf tools: Add 'm' event modifier for counting
+Message-ID: <20220112094945.49362e4f@redslave.neermore.group>
+In-Reply-To: <B6E7919C-9414-4CC1-BB86-7D358085CECD@jrtc27.com>
+References: <20220111142054.18733-1-nikita.shubin@maquefel.me>
+        <B6E7919C-9414-4CC1-BB86-7D358085CECD@jrtc27.com>
+X-Mailer: Claws Mail 3.17.7 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20220105061351.120843-2-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: fs-4WJWdIysz3YAs8I9M3SLsZlQ36xC7
-X-Proofpoint-ORIG-GUID: FoTGJ_wG6kgxzZVMoapiq1g472f3unke
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2022-01-12_02,2022-01-11_01,2021-12-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- impostorscore=0 mlxscore=0 adultscore=0 lowpriorityscore=0 malwarescore=0
- bulkscore=0 spamscore=0 clxscore=1011 suspectscore=0 priorityscore=1501
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2110150000 definitions=main-2201120033
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Tue, 11 Jan 2022 14:29:15 +0000
+Jessica Clarke <jrtc27@jrtc27.com> wrote:
 
+Hello Jessica!
 
-On 1/5/22 11:43 AM, Ian Rogers wrote:
-> A particular observed problem is confusing the index with the CPU value,
-> documentation should hopefully reduce this type of problem.
+> On 11 Jan 2022, at 14:20, Nikita Shubin <nikita.shubin@maquefel.me>
+> wrote:
+> > 
+> > From: Nikita Shubin <n.shubin@yadro.com>
+> > 
+> > This patch is a proposal to add Machine Mode modifier that is
+> > currently available only for RISC-V for perf tool.
+> > 
+> > We don't currently have a level that is lower than kernel, so i
+> > don't see we can reuse something existing for this purpose.
+> > 
+> > The exclude_machine bit seems harmless to as no one will proccess
+> > it apart of riscv.  
+> 
+> Armv8 has equivalent bits in PMEVTYPER<n>_EL0 and PMCCFILTR_EL0 for
+> EL-based filtering, which includes filtering EL3.
 > 
 
-Patch looks good.
+Thank your for your tip, i ll study it and see if this is a good way to
+go.
 
-Reviewed-by: Kajol Jain<kjain@linux.ibm.com>
+> Jess
+> 
+> > Patch depends on Atish Patra PMU series:
+> > https://lwn.net/Articles/879905/
+> > + some modifications to pass execlude event to SBI PMU extension
+> > 
+> > Tested with qemu.
+> > 
+> > Nikita Shubin (1):
+> >  perf tools: Add 'm' event modifier for counting machine
+> > 
+> > include/uapi/linux/perf_event.h        |  3 ++-
+> > tools/include/uapi/linux/perf_event.h  |  3 ++-
+> > tools/perf/Documentation/perf-list.txt |  1 +
+> > tools/perf/tests/parse-events.c        | 18 ++++++++++++++++++
+> > tools/perf/util/evsel.c                |  4 +++-
+> > tools/perf/util/parse-events.c         | 18 +++++++++++++-----
+> > tools/perf/util/parse-events.l         |  2 +-
+> > 7 files changed, 40 insertions(+), 9 deletions(-)
+> > 
+> > -- 
+> > 2.31.1
+> > 
+> > 
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv  
+> 
 
-> Reviewed-by: James Clark <james.clark@arm.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/lib/perf/include/internal/cpumap.h | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/tools/lib/perf/include/internal/cpumap.h b/tools/lib/perf/include/internal/cpumap.h
-> index 840d4032587b..4054169c12c5 100644
-> --- a/tools/lib/perf/include/internal/cpumap.h
-> +++ b/tools/lib/perf/include/internal/cpumap.h
-> @@ -4,9 +4,18 @@
->  
->  #include <linux/refcount.h>
->  
-> +/**
-> + * A sized, reference counted, sorted array of integers representing CPU
-> + * numbers. This is commonly used to capture which CPUs a PMU is associated
-> + * with. The indices into the cpumap are frequently used as they avoid having
-> + * gaps if CPU numbers were used. For events associated with a pid, rather than
-> + * a CPU, a single dummy map with an entry of -1 is used.
-> + */
->  struct perf_cpu_map {
->  	refcount_t	refcnt;
-> +	/** Length of the map array. */
->  	int		nr;
-> +	/** The CPU values. */
->  	int		map[];
->  };
->  
-> 
