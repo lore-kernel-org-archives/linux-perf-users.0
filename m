@@ -2,115 +2,124 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1ACC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jan 2022 09:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1373FC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jan 2022 12:25:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352175AbiALJqn (ORCPT
+        id S1347292AbiALMY5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Jan 2022 04:46:43 -0500
-Received: from foss.arm.com ([217.140.110.172]:57464 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1349532AbiALJqn (ORCPT
+        Wed, 12 Jan 2022 07:24:57 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4404 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238177AbiALMYy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Jan 2022 04:46:43 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E69E3D6E;
-        Wed, 12 Jan 2022 01:46:42 -0800 (PST)
-Received: from [10.57.85.171] (unknown [10.57.85.171])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C1D373F5A1;
-        Wed, 12 Jan 2022 01:46:40 -0800 (PST)
-Message-ID: <f6e2378a-11be-0886-6105-86ad9ccbc992@arm.com>
-Date:   Wed, 12 Jan 2022 09:46:38 +0000
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.4.1
-Subject: Re: [PATCH 2/3] coresight: Fail to open with return stacks if they
- are unavailable
-To:     James Clark <james.clark@arm.com>, coresight@lists.linaro.org
-Cc:     Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
+        Wed, 12 Jan 2022 07:24:54 -0500
+Received: from fraeml741-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JYms641BNz67wql;
+        Wed, 12 Jan 2022 20:22:02 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml741-chm.china.huawei.com (10.206.15.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Wed, 12 Jan 2022 13:24:50 +0100
+Received: from [10.47.88.157] (10.47.88.157) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Wed, 12 Jan
+ 2022 12:24:50 +0000
+Subject: Re: [PATCH v3 1/2] perf test: Workload test of metric and
+ metricgroups
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-References: <20211208160907.749482-1-james.clark@arm.com>
- <20211208160907.749482-2-james.clark@arm.com>
- <b52ef2f3-9e30-59a6-2aea-e46c93915868@arm.com>
- <b61ef2e3-e573-4867-af5d-fd5fabece4b1@arm.com>
- <70b562dc-adcd-da34-3811-ff872bc7cab8@arm.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <70b562dc-adcd-da34-3811-ff872bc7cab8@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        "Namhyung Kim" <namhyung@kernel.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <eranian@google.com>
+References: <20210917184240.2181186-1-irogers@google.com>
+ <YU4iVcVc6uYAWft4@kernel.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <158a1451-9d69-d67d-3fad-9e947112f9e6@huawei.com>
+Date:   Wed, 12 Jan 2022 12:24:29 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
+MIME-Version: 1.0
+In-Reply-To: <YU4iVcVc6uYAWft4@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.88.157]
+X-ClientProxiedBy: lhreml714-chm.china.huawei.com (10.201.108.65) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 07/01/2022 15:10, James Clark wrote:
-> 
-> 
-> On 09/12/2021 11:13, James Clark wrote:
+On 24/09/2021 20:09, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Sep 17, 2021 at 11:42:39AM -0700, Ian Rogers escreveu:
+>> Test every metric and metricgroup with 'true' as a workload. For
+>> metrics, check that we see the metric printed or get unsupported. If the
+>> 'true' workload executes too quickly retry with 'perf bench internals
+>> synthesize'.
 >>
->>
->> On 09/12/2021 11:00, Suzuki K Poulose wrote:
->>> On 08/12/2021 16:09, James Clark wrote:
->>>> Maintain consistency with the other options by failing to open when they
->>>> aren't supported. For example ETM_OPT_TS, ETM_OPT_CTXTID2 and the newly
->>>> added ETM_OPT_BRANCH_BROADCAST all return with -EINVAL if they are
->>>> requested but not supported by hardware.
->>>>
->>>> The consequence of not doing this is that the user may not be
->>>> aware that they are not enabling the feature as it is silently disabled.
->>>>
->>>> Signed-off-by: James Clark <james.clark@arm.com>
->>>> ---
->>>>    drivers/hwtracing/coresight/coresight-etm4x-core.c | 13 +++++++++----
->>>>    1 file changed, 9 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
->>>> index d2bafb50c66a..0a9bb943a5e5 100644
->>>> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
->>>> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
->>>> @@ -674,10 +674,15 @@ static int etm4_parse_event_config(struct coresight_device *csdev,
->>>>        }
->>>>          /* return stack - enable if selected and supported */
->>>> -    if ((attr->config & BIT(ETM_OPT_RETSTK)) && drvdata->retstack)
->>>> -        /* bit[12], Return stack enable bit */
->>>> -        config->cfg |= BIT(12);
->>>> -
->>>> +    if (attr->config & BIT(ETM_OPT_RETSTK)) {
->>>> +        if (!drvdata->retstack) {
->>>> +            ret = -EINVAL;
->>>> +            goto out;
->>>> +        } else {
->>>> +            /* bit[12], Return stack enable bit */
->>>> +            config->cfg |= BIT(12);
->>>> +        }
->>>
->>> nit: While at this, please could you change the hard coded value
->>> to ETM4_CFG_BIT_RETSTK ?
->>>
->> I started changing them all because I had trouble searching for bits by name but then
->> I thought it would snowball into a bigger change so I undid it.
->>
->> I think I'll just go and do it now if it's an issue here.
-> 
-> Hi Suzuki,
-> 
-> I started on this and I think the only worthwhile change is to make them all consistent
-> with sysreg.h. As in have xxx_SHIFT and xxx_MASK style definitions like:
-> 
->    #define TRCCONFIGR_INSTP0_SHIFT		1
->    #define TRCCONFIGR_INSTPO_MASK		GENMASK(1,0)
-> 
-> This has been done for SPE and some of the new ETM stuff. If that sounds right to you
-> I will go and do it as a followup patch to this one. It is quite a bit change so I can
-> see maybe we don't want to do it? (Personally I would vote to do it)
+>> v3. Fix test condition (thanks to Paul A. Clarke<pc@us.ibm.com>). Add a
+>>      fallback case of a larger workload so that we don't ignore "<not
+>>      counted>".
+>> v2. Switched the workload to something faster.
 
-Yes, please go ahead with that. Thanks for taking it up !
+Hi Ian,
 
-Suzuki
+I just noticed that this test fails on my broadwell machine.
+
+I am using acme perf/core @ 09dd3c22daaf
+
+metricgroup Memory_Bw fails, and it seems because of the "true" argument 
+to "perf stat" (or any argument, like sleep 1):
+
+john@localhost:~/kernel-dev9/tools/perf> sudo ./perf stat -M Memory_BW
+^C
+  Performance counter stats for 'system wide':
+
+              2,184      arb/event=0x84,umask=0x1/ #     0.26 
+DRAM_BW_Use
+          2,954,938      arb/event=0x81,umask=0x1/ 
+
+        736,368,852 ns   duration_time 
+
+         58,202,980      l1d_pend_miss.pending_cycles #     2.34 MLP 
+                  (80.11%)
+        136,293,194      l1d_pend_miss.pending 
+               (19.89%)
+        736,368,852 ns   duration_time 
+
+          1,065,656      longest_lat_cache.miss    #     0.09 
+L3_Cache_Fill_BW         (39.71%)
+        736,368,852 ns   duration_time 
+
+          5,365,477      l2_lines_in.all           #     0.47 
+L2_Cache_Fill_BW         (59.80%)
+        736,368,852 ns   duration_time 
+
+          3,557,362      l1d.replacement           #     0.31 
+L1D_Cache_Fill_BW        (79.90%)
+        736,368,852 ns   duration_time 
+
+
+        0.736368852 seconds time elapsed
+
+
+john@localhost:~/kernel-dev9/tools/perf> sudo ./perf stat -M Memory_BW true
+Error:
+The sys_perf_event_open() syscall returned with 22 (Invalid argument) 
+for event (arb/event=0x84,umask=0x1/).
+/bin/dmesg | grep -i perf may provide additional information.
+
+john@localhost:~/kernel-dev9/tools/perf>
+
+Anyone any idea on this before I start digging?
+
+Thanks,
+John
