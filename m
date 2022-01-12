@@ -2,160 +2,122 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E75C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jan 2022 13:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C01BCC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Jan 2022 17:23:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240944AbiALNe5 (ORCPT
+        id S1343710AbiALRXF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Jan 2022 08:34:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34518 "EHLO
+        Wed, 12 Jan 2022 12:23:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240715AbiALNe5 (ORCPT
+        with ESMTP id S240797AbiALRXE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Jan 2022 08:34:57 -0500
-Received: from mail-qv1-xf29.google.com (mail-qv1-xf29.google.com [IPv6:2607:f8b0:4864:20::f29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 195C5C06173F;
-        Wed, 12 Jan 2022 05:34:57 -0800 (PST)
-Received: by mail-qv1-xf29.google.com with SMTP id a8so2925117qvx.2;
-        Wed, 12 Jan 2022 05:34:57 -0800 (PST)
+        Wed, 12 Jan 2022 12:23:04 -0500
+Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5166EC061748
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jan 2022 09:23:04 -0800 (PST)
+Received: by mail-io1-xd2d.google.com with SMTP id 19so4666410ioz.4
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jan 2022 09:23:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:user-agent:in-reply-to:references
-         :message-id:mime-version:content-transfer-encoding;
-        bh=NFDSAYWWEghRl249PD7UteTcbSMKGi0YcLFLy79Axow=;
-        b=p7BRPXKkP1fBOaFgkVehg1eJ0KX49x2xCmJQ/QQzF3OcUb3UTAs266QUsqncZ2D3rA
-         i7Q4cR2WvrUMa7ZTDydcIJnX16NprRykRscIfg5PCestLZLGQ0w0ACW30Z7A04DkZy2q
-         B3y8bEPARillo4b4sP75cqwieZw+nEM6XITeAn96F3D1DdBMegYHguA1w0wTYnAgBcAf
-         nD67kpuL+s2R+zOHHgQ+j/aWxXE84DOk7af3VvAYX4Mnntd8GUyK6Jxbt0jzI4hKJYdc
-         MIi4VZF4ApnmI0FTzwtTlmHseGE1wzTRD/092gMROxjP353viyk1XpDPcpqKTkCyO7oO
-         uJ2g==
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=J/kXP8SqQiSR4LFSJtIEJPK0TG8hRH/GcTd8e3fRbjs=;
+        b=aqjAJjD5sEzzsSormxWUDg+xxR/nVVrhCqo5Bwox0k6u8BHFr4gzNOnQyR4SbJEBlU
+         xbVJGwuA4ZHNpMYQ1WZ22wAcLzZDoZTJnkRmAvqm6wEUniRPJjt4W1rvQin9zDna6Uf7
+         09FXzkX2W4SCyzfv2dWOvGG4pmAqH7MB5Q4D8XjRvA80FAzdaEuEQDSBySp5Qus87V1z
+         ivrJoRfkSDTTv/BPJcG2OnAHxzFIUDpmnttdoVyJvvz46vkcHeojzwXKMgQ21urLLBd/
+         Q5sgGLJz9jGF+4rkz+TF7KilSYEw26kZFoLRTVoZskHBZSEYLn/fTaRA+GRcYZ0H6V63
+         k92g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:user-agent:in-reply-to
-         :references:message-id:mime-version:content-transfer-encoding;
-        bh=NFDSAYWWEghRl249PD7UteTcbSMKGi0YcLFLy79Axow=;
-        b=FruH/k4GV1LvDxA6zfZ3J/WfEGljvGE5sesbx4tlP7IPMNzZ9mqyDffE/DVrLLEPt4
-         84LJmbQbsLPD/1bh655nRwaP1WK/2ZnJCw2Byxo3bl5pAXsj/ymnPj8JX3DqiO6O3BiH
-         xv2WWcanKS4XeoZKNxcwhAVygTyUQssPvHxaZorGBtkRYLegJXMGxAhAcS2g60gxawkh
-         vlXgCcaLR3VuqqeqdiDQJ7+rqjQSPkcYTAe0JhReSNapAgVxIad26CuMQSOVrmvBqXTB
-         8Megq7gJOhVLvNhLO37GcM6rQvPCoUinyhw+XrUgITS4agb1B0MX14FLbBEDx7llL59D
-         tzYQ==
-X-Gm-Message-State: AOAM531phiHC9O7tnSkTSX3KX7T3GYkBudyeSz887eblI2X3iLVymjug
-        23TmKOk/7wsmB6PxA5exl0eeXx4rcUE=
-X-Google-Smtp-Source: ABdhPJzOaQ2XRHQILa9r/cjG3JRd8PNhh9UpaMgoEkNLkFkOcc7cA71wKuxOdButm8XZbTZZP8VKjA==
-X-Received: by 2002:a05:6214:2344:: with SMTP id hu4mr7934600qvb.55.1641994496223;
-        Wed, 12 Jan 2022 05:34:56 -0800 (PST)
-Received: from [127.0.0.1] ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id h20sm8403640qka.126.2022.01.12.05.34.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jan 2022 05:34:55 -0800 (PST)
-Date:   Wed, 12 Jan 2022 10:34:50 -0300
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-To:     John Garry <john.garry@huawei.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J/kXP8SqQiSR4LFSJtIEJPK0TG8hRH/GcTd8e3fRbjs=;
+        b=fFo1fxSSRcofxgpyk1bkvXC2vbWsBMXygDtXugDNBlvKWt3qLIy53rP6DSony4X//2
+         4SjJudrXowpWsCZalyW0DisILDjKsrlowIwv8YRrdpJfh9yerE7uNHwNdMBf9h1m1ctS
+         MFzu1SM9MhTLlRa+XEH5A2an77OZzaqOpdg19bzTjbGgLn8cg4MhS1XXvTzt3CJTt2jb
+         t5NlRHeHxH/fHaFHYh6floETLkGFRDR2H0fIR1qHzZEKyYMz6NZTABMnPDmMENSaPKg4
+         QTYwJ+iMDfXHzeVXAxpjhGmJfnPM3zMW7elcmDkW0xRQXh9eDVqubI6GHrCcAJozY9C+
+         fLAw==
+X-Gm-Message-State: AOAM532OON1moUps2q0RW9ud/jVScdLgbsMYDHrZ7kEZfGzIXtO2OMeB
+        lQbc92pI00UOGZWoCAc+/Wr62Pytb8qFG4uPFe/Hvg==
+X-Google-Smtp-Source: ABdhPJw/NzKKgLkxmtrIipbWj99LyLr319P/VDc5fsuulsUImAm9BAUPdJp4oK6zjqvwsi9z2dk8Kvgekj5hYBQguKE=
+X-Received: by 2002:a02:22c9:: with SMTP id o192mr352411jao.287.1642008183379;
+ Wed, 12 Jan 2022 09:23:03 -0800 (PST)
+MIME-Version: 1.0
+References: <20211126071305.3733878-1-irogers@google.com>
+In-Reply-To: <20211126071305.3733878-1-irogers@google.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 12 Jan 2022 09:22:51 -0800
+Message-ID: <CAP-5=fU2kEq3T8UCpX0tAmwcGhZ+1h92uRPbzyuLDNpeCD7ffQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] perf pmu-events: Don't lower case MetricExpr
+To:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>
-CC:     Peter Zijlstra <peterz@infradead.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        eranian@google.com
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v3_1/2=5D_perf_test=3A_Workl?= =?US-ASCII?Q?oad_test_of_metric_and_metricgroups?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <158a1451-9d69-d67d-3fad-9e947112f9e6@huawei.com>
-References: <20210917184240.2181186-1-irogers@google.com> <YU4iVcVc6uYAWft4@kernel.org> <158a1451-9d69-d67d-3fad-9e947112f9e6@huawei.com>
-Message-ID: <BD3A5CA5-B566-4FD9-9409-0329CC322060@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     eranian@google.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Thu, Nov 25, 2021 at 11:13 PM Ian Rogers <irogers@google.com> wrote:
+>
+> This patch changes MetricExpr to be written out in the same case. This
+> enables events in metrics to use modifiers like 'G' which currently
+> yield parse errors when made lower case. To keep tests passing the
+> literal #smt_on is compared in a non-case sensitive way - #SMT_on is
+> present in at least SkylakeX metrics.
 
+Ping.
 
-On January 12, 2022 9:24:29 AM GMT-03:00, John Garry <john=2Egarry@huawei=
-=2Ecom> wrote:
->On 24/09/2021 20:09, Arnaldo Carvalho de Melo wrote:
->> Em Fri, Sep 17, 2021 at 11:42:39AM -0700, Ian Rogers escreveu:
->>> Test every metric and metricgroup with 'true' as a workload=2E For
->>> metrics, check that we see the metric printed or get unsupported=2E If=
- the
->>> 'true' workload executes too quickly retry with 'perf bench internals
->>> synthesize'=2E
->>>
->>> v3=2E Fix test condition (thanks to Paul A=2E Clarke<pc@us=2Eibm=2Ecom=
->)=2E Add a
->>>      fallback case of a larger workload so that we don't ignore "<not
->>>      counted>"=2E
->>> v2=2E Switched the workload to something faster=2E
->
->Hi Ian,
->
->I just noticed that this test fails on my broadwell machine=2E
->
->I am using acme perf/core @ 09dd3c22daaf
+Thanks,
+Ian
 
-Hi,
-
-Can you try with tmp=2Eperf/perf_cpu instead?
-
-There's a patch there that maybe fixes this=2E
-
-- Arnaldo
+> This patch is on top of:
+> https://lore.kernel.org/lkml/20211124001231.3277836-1-irogers@google.com/
 >
->metricgroup Memory_Bw fails, and it seems because of the "true" argument=
-=20
->to "perf stat" (or any argument, like sleep 1):
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/pmu-events/jevents.c | 2 --
+>  tools/perf/util/expr.c          | 2 +-
+>  2 files changed, 1 insertion(+), 3 deletions(-)
 >
->john@localhost:~/kernel-dev9/tools/perf> sudo =2E/perf stat -M Memory_BW
->^C
->  Performance counter stats for 'system wide':
+> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+> index 2e7c4153875b..1a57c3f81dd4 100644
+> --- a/tools/perf/pmu-events/jevents.c
+> +++ b/tools/perf/pmu-events/jevents.c
+> @@ -672,8 +672,6 @@ static int json_events(const char *fn,
+>                                 addfield(map, &je.metric_constraint, "", "", val);
+>                         } else if (json_streq(map, field, "MetricExpr")) {
+>                                 addfield(map, &je.metric_expr, "", "", val);
+> -                               for (s = je.metric_expr; *s; s++)
+> -                                       *s = tolower(*s);
+>                         } else if (json_streq(map, field, "ArchStdEvent")) {
+>                                 addfield(map, &arch_std, "", "", val);
+>                                 for (s = arch_std; *s; s++)
+> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+> index cdbab4f959fe..5cd6b9ff2489 100644
+> --- a/tools/perf/util/expr.c
+> +++ b/tools/perf/util/expr.c
+> @@ -397,7 +397,7 @@ double expr__get_literal(const char *literal)
+>         static struct cpu_topology *topology;
+>         double result = NAN;
 >
->              2,184      arb/event=3D0x84,umask=3D0x1/ #     0=2E26=20
->DRAM_BW_Use
->          2,954,938      arb/event=3D0x81,umask=3D0x1/=20
+> -       if (!strcmp("#smt_on", literal)) {
+> +       if (!strcasecmp("#smt_on", literal)) {
+>                 result =  smt_on() > 0 ? 1.0 : 0.0;
+>                 goto out;
+>         }
+> --
+> 2.34.0.rc2.393.gf8c9666880-goog
 >
->        736,368,852 ns   duration_time=20
->
->         58,202,980      l1d_pend_miss=2Epending_cycles #     2=2E34 MLP=
-=20
->                  (80=2E11%)
->        136,293,194      l1d_pend_miss=2Epending=20
->               (19=2E89%)
->        736,368,852 ns   duration_time=20
->
->          1,065,656      longest_lat_cache=2Emiss    #     0=2E09=20
->L3_Cache_Fill_BW         (39=2E71%)
->        736,368,852 ns   duration_time=20
->
->          5,365,477      l2_lines_in=2Eall           #     0=2E47=20
->L2_Cache_Fill_BW         (59=2E80%)
->        736,368,852 ns   duration_time=20
->
->          3,557,362      l1d=2Ereplacement           #     0=2E31=20
->L1D_Cache_Fill_BW        (79=2E90%)
->        736,368,852 ns   duration_time=20
->
->
->        0=2E736368852 seconds time elapsed
->
->
->john@localhost:~/kernel-dev9/tools/perf> sudo =2E/perf stat -M Memory_BW =
-true
->Error:
->The sys_perf_event_open() syscall returned with 22 (Invalid argument)=20
->for event (arb/event=3D0x84,umask=3D0x1/)=2E
->/bin/dmesg | grep -i perf may provide additional information=2E
->
->john@localhost:~/kernel-dev9/tools/perf>
->
->Anyone any idea on this before I start digging?
->
->Thanks,
->John
