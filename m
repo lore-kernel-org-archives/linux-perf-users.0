@@ -2,125 +2,103 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4CFC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Jan 2022 09:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF0EC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Jan 2022 09:11:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233727AbiAMJJl (ORCPT
+        id S233750AbiAMJLG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 13 Jan 2022 04:09:41 -0500
-Received: from foss.arm.com ([217.140.110.172]:41304 "EHLO foss.arm.com"
+        Thu, 13 Jan 2022 04:11:06 -0500
+Received: from foss.arm.com ([217.140.110.172]:41348 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233722AbiAMJJk (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 13 Jan 2022 04:09:40 -0500
+        id S230181AbiAMJLF (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 13 Jan 2022 04:11:05 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 679C36D;
-        Thu, 13 Jan 2022 01:09:40 -0800 (PST)
-Received: from [10.57.35.134] (unknown [10.57.35.134])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 79B2F3F766;
-        Thu, 13 Jan 2022 01:09:38 -0800 (PST)
-Subject: Re: [PATCH 3/3] perf cs-etm: Update deduction of TRCCONFIGR register
- for branch broadcast
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     mathieu.poirier@linaro.org, coresight@lists.linaro.org,
-        suzuki.poulose@arm.com, Mike Leach <mike.leach@linaro.org>,
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E53FC6D;
+        Thu, 13 Jan 2022 01:11:04 -0800 (PST)
+Received: from e121896.arm.com (unknown [10.57.35.134])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 367ED3F766;
+        Thu, 13 Jan 2022 01:11:02 -0800 (PST)
+From:   James Clark <james.clark@arm.com>
+To:     suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
+        coresight@lists.linaro.org, leo.yan@linaro.com,
+        mike.leach@linaro.org
+Cc:     James Clark <james.clark@arm.com>, Leo Yan <leo.yan@linaro.org>,
         John Garry <john.garry@huawei.com>,
         Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-References: <20211208160907.749482-1-james.clark@arm.com>
- <20211208160907.749482-3-james.clark@arm.com>
- <20211210024137.GB622826@leoy-ThinkPad-X240s>
-From:   James Clark <james.clark@arm.com>
-Message-ID: <cfc92a41-7371-f5a7-db01-354c87027223@arm.com>
-Date:   Thu, 13 Jan 2022 09:09:37 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: [PATCH v2 0/6] coresight: Add config flag to enable branch broadcast
+Date:   Thu, 13 Jan 2022 09:10:49 +0000
+Message-Id: <20220113091056.1297982-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <20211210024137.GB622826@leoy-ThinkPad-X240s>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+This allows enabling branch broadcast for Perf hosted sessions (the option
+is currently only available for the sysfs interface). Hopefully this could
+be useful for testing the decode in perf, for example does a determinisitic
+run with branch broadcast enabled look the same as with it disabled? It
+could also be used for scenarios like OpenJ9's support for JIT code:
 
+  java -Xjit:perfTool hello.java
 
-On 10/12/2021 02:41, Leo Yan wrote:
-> On Wed, Dec 08, 2021 at 04:09:07PM +0000, James Clark wrote:
->> Now that a config flag for branch broadcast has been added, take it into
->> account when trying to deduce what the driver would have programmed the
->> TRCCONFIGR register to.
->>
->> Signed-off-by: James Clark <james.clark@arm.com>
->> ---
->>  tools/include/linux/coresight-pmu.h | 2 ++
->>  tools/perf/arch/arm/util/cs-etm.c   | 3 +++
->>  2 files changed, 5 insertions(+)
->>
->> diff --git a/tools/include/linux/coresight-pmu.h b/tools/include/linux/coresight-pmu.h
->> index 4ac5c081af93..6c2fd6cc5a98 100644
->> --- a/tools/include/linux/coresight-pmu.h
->> +++ b/tools/include/linux/coresight-pmu.h
->> @@ -18,6 +18,7 @@
->>   * ETMv3.5/PTM doesn't define ETMCR config bits with prefix "ETM3_" and
->>   * directly use below macros as config bits.
->>   */
->> +#define ETM_OPT_BRANCH_BROADCAST 8
-> 
-> I checked ETMv3 architecture spec (ARM IHI 0014Q), its bit 8 is "branch
-> output" for all branch address outputting.  I am not sure if it is the
-> same thing between ETMv3's "branch output" and ETMv4's "branch
-> broadcasting", but it makes sense for me to use bit 8 as an unified
-> config bit to control these two options for ETMv3 and ETMv4
-> respectively.
-> 
-> Just note, I understand this patch set is to enable branch broadcasting
-> for entire memory region rather than using any comparators (see
-> TRCBBCTLR) to limit branch broadcasting ranges.  This is fine for me and
-> we could enable ranges later.
-> 
-> Reviewed-by: Leo Yan <leo.yan@linaro.org>
+Currently this is not working and you get the usual errors of a missing
+DSO, but branch broadcast would have to be enabled anyway before working
+through this next issue:
 
-Hi Leo,
+  CS ETM Trace: Debug data not found for address 0xffff7b94b058 in /tmp/perf-29360.map
 
-Thanks for the review, I've posted v2, but I only put your reviewed by tag
-on this commit because I wasn't sure if you meant for the full set. Please
-take another look
+Address range support in Perf for branch broadcast has also not been added
+here, but could be added later.
 
-Thanks
-James
+The documentation has been refactored slightly to allow updates to be made
+that link the Perf format arguments with the existing documentation.
 
-> 
->>  #define ETM_OPT_CYCACC		12
->>  #define ETM_OPT_CTXTID		14
->>  #define ETM_OPT_CTXTID2		15
->> @@ -25,6 +26,7 @@
->>  #define ETM_OPT_RETSTK		29
->>  
->>  /* ETMv4 CONFIGR programming bits for the ETM OPTs */
->> +#define ETM4_CFG_BIT_BB         3
->>  #define ETM4_CFG_BIT_CYCACC	4
->>  #define ETM4_CFG_BIT_CTXTID	6
->>  #define ETM4_CFG_BIT_VMID	7
->> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
->> index 293a23bf8be3..c7ef4e9b4a3a 100644
->> --- a/tools/perf/arch/arm/util/cs-etm.c
->> +++ b/tools/perf/arch/arm/util/cs-etm.c
->> @@ -527,6 +527,9 @@ static u64 cs_etmv4_get_config(struct auxtrace_record *itr)
->>  	if (config_opts & BIT(ETM_OPT_CTXTID2))
->>  		config |= BIT(ETM4_CFG_BIT_VMID) |
->>  			  BIT(ETM4_CFG_BIT_VMID_OPT);
->> +	if (config_opts & BIT(ETM_OPT_BRANCH_BROADCAST))
->> +		config |= BIT(ETM4_CFG_BIT_BB);
->> +
->>  	return config;
->>  }
->>  
->> -- 
->> 2.28.0
->>
+For Suzuki's comment, I will do it as a separate change that converts all
+the other hard coded values to a more consistent sysreg.h style:
+
+  nit: While at this, please could you change the hard coded value
+  to ETM4_CFG_BIT_RETSTK ? 
+
+Changes since v1:
+
+  * Added Leo's reviewed by on patch 3
+  * Fix bracket styling
+  * Add documentation
+
+Applies on top of coresight/next efa56eddf5d5c. But this docs fix is also
+required to get the links to work:
+  https://marc.info/?l=linux-doc&m=164139331923986&w=2
+
+Also available at: https://gitlab.arm.com/linux-arm/linux-jc/-/tree/james-branch-broadcast-v2
+
+James Clark (6):
+  coresight: Add config flag to enable branch broadcast
+  coresight: Fail to open with return stacks if they are unavailable
+  perf cs-etm: Update deduction of TRCCONFIGR register for branch
+    broadcast
+  Documentation: coresight: Turn numbered subsections into real
+    subsections
+  Documentation: coresight: Link config options to existing
+    documentation
+  Documentation: coresight: Expand branch broadcast documentation
+
+ .../coresight/coresight-etm4x-reference.rst   | 14 ++++-
+ Documentation/trace/coresight/coresight.rst   | 56 +++++++++++++++++--
+ .../hwtracing/coresight/coresight-etm-perf.c  |  2 +
+ .../coresight/coresight-etm4x-core.c          | 23 ++++++--
+ include/linux/coresight-pmu.h                 |  2 +
+ tools/include/linux/coresight-pmu.h           |  2 +
+ tools/perf/arch/arm/util/cs-etm.c             |  3 +
+ 7 files changed, 92 insertions(+), 10 deletions(-)
+
+-- 
+2.28.0
+
