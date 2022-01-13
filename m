@@ -2,190 +2,139 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5501AC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Jan 2022 14:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E40AC433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Jan 2022 15:14:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235652AbiAMOZD (ORCPT
+        id S229838AbiAMPO2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 13 Jan 2022 09:25:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35022 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235649AbiAMOZD (ORCPT
+        Thu, 13 Jan 2022 10:14:28 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:22721 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236007AbiAMPO0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 13 Jan 2022 09:25:03 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0080AC06173F;
-        Thu, 13 Jan 2022 06:25:02 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9494761CF4;
-        Thu, 13 Jan 2022 14:25:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEAC3C36AEC;
-        Thu, 13 Jan 2022 14:25:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642083902;
-        bh=R7O26QARYFC2+NZtQgSc/PXXXQY3dDAFIVKM0Qllbvg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=OkG66TkKqRTqNszT97b/LmZRUewvv11KTyGZZuhqqGnotd6VTVh4ZVyTaFJcQokZX
-         XsY7HZxMKo5jDNSfCN67JOVuV3p06w86JLymXybeSazQwh9TP2PnLGA032BPo6dqzS
-         EDJORS731uJP9iywevllvSawuzfQWCux1eH/XDzCOIjH2/4H2pFg35jCNlNoYC0631
-         IVKke7WhJSvjs3EwfqjG3LbyuglkPamVFrthRquN2jEcfXxD5U/x1JVQYvNcgNSv+P
-         oS9dJt6TuGBD8qgX5hZlbqYdjJdRy4FwPdgsM+apemR91Hk2o4CoWMg2wHdeH2KwvX
-         QUunxcqGDVfZQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 1C97140C99; Thu, 13 Jan 2022 11:25:00 -0300 (-03)
-Date:   Thu, 13 Jan 2022 11:25:00 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Huang Rui <ray.huang@amd.com>
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/1 FYI] tools arch x86: Sync the msr-index.h copy with the
- kernel sources
-Message-ID: <YeA2PAvHV+uHRhLj@kernel.org>
+        Thu, 13 Jan 2022 10:14:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1642086866;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=IGfZ+k9OlisB57+oKH6A/Isnu1LREBlh8q7tlJpACSI=;
+        b=MyWalfF8ujCy51t3w+ZbmMdUrn4gmQjrJWVUtOm049E2VGA1i5O3jZvE099xfwVIjtni02
+        JppdN5ri+BXirqcLYaFCLjAoB7wW8ng7Q8lGRt+sh0KhOiYzvjBUKh8kB2C/fylzuzBKcV
+        cU/CaPCiksouuTPMs/WT7iZOLfhspZw=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-98-MboGXnCTPs2jKk1z123oaw-1; Thu, 13 Jan 2022 10:14:24 -0500
+X-MC-Unique: MboGXnCTPs2jKk1z123oaw-1
+Received: by mail-ed1-f71.google.com with SMTP id x11-20020aa7d38b000000b004004e4fc8fdso3102938edq.6
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Jan 2022 07:14:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=IGfZ+k9OlisB57+oKH6A/Isnu1LREBlh8q7tlJpACSI=;
+        b=6muXcq+dkjtB4hC0IWWYYZ8Rklkmfl5DwA+Kk1IH+Om3VCMVA4AAM9oz/zBTtaY6Er
+         aLMyAgiMYYzLzRXoyr2Qg9RFaQKrUGTCKvKF6kB7hrNOu07ppl4faodO26NYcHl2/0+Q
+         fBX8d0kdSzyvqD1a5/bMfe3KtxaGYIId5AbpR8OH1fstXbmjKLJBJVpyXKKz4vpnAO0I
+         1TrS0HInsHPayXFD9WPu87jE4iIPXOWT3cY5gUW5x0h3PI6SKcjAqWRin37kurdTSRyc
+         bq6xTrFf76knMGTsEn7Mg6VH6u/DuRSS35YNUwXPYBiCNBqJPsOIC33z6MI7P/jL2XOR
+         wHzA==
+X-Gm-Message-State: AOAM532QC9W8HrKeIsJzlzJMk84NjXnSkwKMcA9Ecmu4MFA9kanOZ/wj
+        9XqAz8RdP9cA272CVMQIhoO4kUWILUVeoVk/1UM6lmfjSkV2m8DV4dIPTzHlqkAQqRCcfuPFR4k
+        nL42RuDpEtXbxp8FfXnFGRPiQ4vQ0bg==
+X-Received: by 2002:a17:907:6e89:: with SMTP id sh9mr3824646ejc.309.1642086863653;
+        Thu, 13 Jan 2022 07:14:23 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJy/9fBsHG4wzp1we/GYs7B2zesdH+1HyynvDDcjcSEl1M9sJTphrEahZInb2uVrGrZgG4bdfA==
+X-Received: by 2002:a17:907:6e89:: with SMTP id sh9mr3824628ejc.309.1642086863435;
+        Thu, 13 Jan 2022 07:14:23 -0800 (PST)
+Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
+        by smtp.gmail.com with ESMTPSA id p25sm1261010edw.75.2022.01.13.07.14.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Jan 2022 07:14:23 -0800 (PST)
+Date:   Thu, 13 Jan 2022 16:14:21 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Andrii Nakryiko <andrii@kernel.org>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Christy Lee <christylee@fb.com>,
+        Christy Lee <christyc.y.lee@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>,
+        He Kuang <hekuang@huawei.com>, Wang Nan <wangnan0@huawei.com>,
+        Wang ShaoBo <bobo.shaobowang@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: Re: [PATCH bpf-next 2/2] perf: stop using deprecated
+ bpf__object_next() API
+Message-ID: <YeBBzbfjOgE/wfjK@krava>
+References: <20211216222108.110518-1-christylee@fb.com>
+ <20211216222108.110518-3-christylee@fb.com>
+ <YcGO271nDvfMeSlK@krava>
+ <CAEf4BzZpNvEtfsVHUJGfwi_1xM+7-ohBPKPrRo--X=fYkYLrsw@mail.gmail.com>
+ <YcMr1LeP6zUBdCiK@krava>
+ <CAEf4Bzb2HWiuJmeb6WxE2Dift5qQOLBE=j1ZqfpVMjuWV3+EDg@mail.gmail.com>
+ <CAPqJDZouQHpUXv4dEGKKe=UjwkZu3=GMQ2M9g2zLYOV6a=gZbw@mail.gmail.com>
+ <YdRccTaunl9Fo63X@krava>
+ <YdWhz1qaRncxNC/6@krava>
+ <CAPqJDZpZrrg4UBz19H-HyEMk7rzn+PCe=qpYDR0uHvD3nPr4yw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <CAPqJDZpZrrg4UBz19H-HyEMk7rzn+PCe=qpYDR0uHvD3nPr4yw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-To pick up the changes in:
+On Thu, Jan 06, 2022 at 09:54:38AM -0800, Christy Lee wrote:
+> Thank you so much, I was able to reproduce the original tests after applying
+> the bug fix. I will submit a new patch set with the more detailed comments.
+> 
+> The only deprecated functions that need to be removed after this would be
+> bpf_program__set_prep() (how perf sets the bpf prologue) and
+> bpf_program__nth_fd() (how perf leverages multi instance bpf). They look a
+> little more involved and I'm not sure how to approach those. Jiri, would you
+> mind taking a look at those please?
 
-  89aa94b4a218339b ("x86/msr: Add AMD CPPC MSR definitions")
+hi,
+I checked and here's the way perf uses this interface:
 
-Addressing these tools/perf build warnings:
+  - when bpf object/sources is specified on perf command line
+    we use bpf_object__open to load it
 
-    diff -u tools/arch/x86/include/asm/msr-index.h arch/x86/include/asm/msr-index.h
-    Warning: Kernel ABI header at 'tools/arch/x86/include/asm/msr-index.h' differs from latest version at 'arch/x86/include/asm/msr-index.h'
+  - user can define parameters in the section name for each bpf program
+    like:
 
-That makes the beautification scripts to pick some new entries:
+      SEC("lock_page=__lock_page page->flags")
+      int lock_page(struct pt_regs *ctx, int err, unsigned long flags)
+      {
+             return 1;
+      }
 
-  $ tools/perf/trace/beauty/tracepoints/x86_msr.sh > before
-  $ cp arch/x86/include/asm/msr-index.h tools/arch/x86/include/asm/msr-index.h
-  $ tools/perf/trace/beauty/tracepoints/x86_msr.sh > after
-  $ diff -u before after
-  --- before	2022-01-13 10:59:51.743416890 -0300
-  +++ after	2022-01-13 11:00:00.776644178 -0300
-  @@ -303,6 +303,11 @@
- 	  [0xc0010299 - x86_AMD_V_KVM_MSRs_offset] = "AMD_RAPL_POWER_UNIT",
- 	  [0xc001029a - x86_AMD_V_KVM_MSRs_offset] = "AMD_CORE_ENERGY_STATUS",
- 	  [0xc001029b - x86_AMD_V_KVM_MSRs_offset] = "AMD_PKG_ENERGY_STATUS",
-  +       [0xc00102b0 - x86_AMD_V_KVM_MSRs_offset] = "AMD_CPPC_CAP1",
-  +       [0xc00102b1 - x86_AMD_V_KVM_MSRs_offset] = "AMD_CPPC_ENABLE",
-  +       [0xc00102b2 - x86_AMD_V_KVM_MSRs_offset] = "AMD_CPPC_CAP2",
-  +       [0xc00102b3 - x86_AMD_V_KVM_MSRs_offset] = "AMD_CPPC_REQ",
-  +       [0xc00102b4 - x86_AMD_V_KVM_MSRs_offset] = "AMD_CPPC_STATUS",
- 	  [0xc00102f0 - x86_AMD_V_KVM_MSRs_offset] = "AMD_PPIN_CTL",
- 	  [0xc00102f1 - x86_AMD_V_KVM_MSRs_offset] = "AMD_PPIN",
-   };
-  $
+    which tells perf to 'prepare' some extra bpf code for the program,
+    like to put value of 'page->flags' into 'flags' argument above
 
-And this gets rebuilt:
+  - perf generates extra prologue code to retrieve this data and does
+    that before the program is loaded by using bpf_program__set_prep
+    callback
 
-  CC       /tmp/build/perf/trace/beauty/tracepoints/x86_msr.o
-  INSTALL  trace_plugins
-  LD       /tmp/build/perf/trace/beauty/tracepoints/perf-in.o
-  LD       /tmp/build/perf/trace/beauty/perf-in.o
-  LD       /tmp/build/perf/perf-in.o
-  LINK     /tmp/build/perf/perf
+  - now the reason why we use bpf_program__set_prep for that, is because
+    it allows to create multiple instances for one bpf program
 
-Now one can trace systemwide asking to see backtraces to where those
-MSRs are being read/written with:
+  - we need multiple instances for single program, because probe can
+    result in multiple attach addresses (like for inlined functions)
+    with possible different ways of getting the arguments we need
+    to load
 
-  # perf trace -e msr:*_msr/max-stack=32/ --filter="msr>=AMD_CPPC_CAP1 && msr<="
-  Failed to set filter "(msr>=0xc00102b0 && msr<=) && (common_pid != 2612094 && common_pid != 3841)" on event msr:read_msr with 22 (Invalid argument)
-  # ^C
+I guess you want to get rid of that whole 'struct instances' related
+stuff, is that right?
 
-If we use -v (verbose mode) we can see what it does behind the scenes:
+perf would need to load all the needed instances for program manually
+and somehow bypass/workaround bpf_object__load.. is there a way to
+manually add extra programs to bpf_object?
 
-  # perf trace -v -e msr:*_msr/max-stack=32/ --filter="msr>=AMD_CPPC_CAP1 && msr<=AMD_CPPC_STATUS"
-  <SNIP>
-  New filter for msr:read_msr: (msr>=0xc00102b0 && msr<=0xc00102b4) && (common_pid != 2612102 && common_pid != 3841)
-  New filter for msr:write_msr: (msr>=0xc00102b0 && msr<=0xc00102b4) && (common_pid != 2612102 && common_pid != 3841)
-  <SNIP>
-  ^C[root@five ~]#
+thoughts? ;-)
 
-Example with a frequent msr:
-
-  # perf trace -v -e msr:*_msr/max-stack=32/ --filter="msr==IA32_SPEC_CTRL" --max-events 2
-  Using CPUID AuthenticAMD-25-21-0
-  0x48
-  New filter for msr:read_msr: (msr==0x48) && (common_pid != 2612129 && common_pid != 3841)
-  0x48
-  New filter for msr:write_msr: (msr==0x48) && (common_pid != 2612129 && common_pid != 3841)
-  mmap size 528384B
-  Looking at the vmlinux_path (8 entries long)
-  symsrc__init: build id mismatch for vmlinux.
-  Using /proc/kcore for kernel data
-  Using /proc/kallsyms for symbols
-       0.000 Timer/2525383 msr:write_msr(msr: IA32_SPEC_CTRL, val: 6)
-                                         do_trace_write_msr ([kernel.kallsyms])
-                                         do_trace_write_msr ([kernel.kallsyms])
-                                         __switch_to_xtra ([kernel.kallsyms])
-                                         __switch_to ([kernel.kallsyms])
-                                         __schedule ([kernel.kallsyms])
-                                         schedule ([kernel.kallsyms])
-                                         futex_wait_queue_me ([kernel.kallsyms])
-                                         futex_wait ([kernel.kallsyms])
-                                         do_futex ([kernel.kallsyms])
-                                         __x64_sys_futex ([kernel.kallsyms])
-                                         do_syscall_64 ([kernel.kallsyms])
-                                         entry_SYSCALL_64_after_hwframe ([kernel.kallsyms])
-                                         __futex_abstimed_wait_common64 (/usr/lib64/libpthread-2.33.so)
-       0.030 :0/0 msr:write_msr(msr: IA32_SPEC_CTRL, val: 2)
-                                         do_trace_write_msr ([kernel.kallsyms])
-                                         do_trace_write_msr ([kernel.kallsyms])
-                                         __switch_to_xtra ([kernel.kallsyms])
-                                         __switch_to ([kernel.kallsyms])
-                                         __schedule ([kernel.kallsyms])
-                                         schedule_idle ([kernel.kallsyms])
-                                         do_idle ([kernel.kallsyms])
-                                         cpu_startup_entry ([kernel.kallsyms])
-                                         secondary_startup_64_no_verify ([kernel.kallsyms])
-  #
-
-Cc: Huang Rui <ray.huang@amd.com>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/arch/x86/include/asm/msr-index.h | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
-index 01e2650b958591e0..3faf0f97edb1bcd3 100644
---- a/tools/arch/x86/include/asm/msr-index.h
-+++ b/tools/arch/x86/include/asm/msr-index.h
-@@ -486,6 +486,23 @@
- 
- #define MSR_AMD64_VIRT_SPEC_CTRL	0xc001011f
- 
-+/* AMD Collaborative Processor Performance Control MSRs */
-+#define MSR_AMD_CPPC_CAP1		0xc00102b0
-+#define MSR_AMD_CPPC_ENABLE		0xc00102b1
-+#define MSR_AMD_CPPC_CAP2		0xc00102b2
-+#define MSR_AMD_CPPC_REQ		0xc00102b3
-+#define MSR_AMD_CPPC_STATUS		0xc00102b4
-+
-+#define AMD_CPPC_LOWEST_PERF(x)		(((x) >> 0) & 0xff)
-+#define AMD_CPPC_LOWNONLIN_PERF(x)	(((x) >> 8) & 0xff)
-+#define AMD_CPPC_NOMINAL_PERF(x)	(((x) >> 16) & 0xff)
-+#define AMD_CPPC_HIGHEST_PERF(x)	(((x) >> 24) & 0xff)
-+
-+#define AMD_CPPC_MAX_PERF(x)		(((x) & 0xff) << 0)
-+#define AMD_CPPC_MIN_PERF(x)		(((x) & 0xff) << 8)
-+#define AMD_CPPC_DES_PERF(x)		(((x) & 0xff) << 16)
-+#define AMD_CPPC_ENERGY_PERF_PREF(x)	(((x) & 0xff) << 24)
-+
- /* Fam 17h MSRs */
- #define MSR_F17H_IRPERF			0xc00000e9
- 
--- 
-2.31.1
-
+thanks,
+jirka
 
