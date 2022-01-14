@@ -2,82 +2,95 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49326C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Jan 2022 14:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48ED1C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Jan 2022 14:46:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237236AbiANOfR (ORCPT
+        id S241931AbiANOqA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Jan 2022 09:35:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51144 "EHLO
+        Fri, 14 Jan 2022 09:46:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233926AbiANOfR (ORCPT
+        with ESMTP id S241943AbiANOp5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Jan 2022 09:35:17 -0500
+        Fri, 14 Jan 2022 09:45:57 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32392C061574;
-        Fri, 14 Jan 2022 06:35:17 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68BC6C06173F;
+        Fri, 14 Jan 2022 06:45:57 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E8B7CB8260E;
-        Fri, 14 Jan 2022 14:35:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7581EC36AEA;
-        Fri, 14 Jan 2022 14:35:14 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 27866B82600;
+        Fri, 14 Jan 2022 14:45:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2F07C36AE5;
+        Fri, 14 Jan 2022 14:45:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642170914;
-        bh=YJEetWShtnXEKH5zrhRuUCd8fnRphyJauxsmsUp8wQc=;
+        s=k20201202; t=1642171554;
+        bh=TQNaw/3dPJwNIlobkXQRC06IR5ojhEFC4skgtBahSXs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=baWd8BFOA+M11mGJXSEjyNHoFPTnVyTYq04IxCCEp/s8K9sjF4rM3Wwkq1MwRhLmN
-         F/X5ONZwXXsMjvZvOuHBga7LU8W6KnBa+Nza4IbqQXLIqmUPUeFTefqBFLP4z9nTgn
-         aZOcTjctg0MhJuujqA4fEePdaO9/pddouZUNAsH/xnvybEL5P8BdjX6jsX7zxuCpG0
-         5oLJF6tAzv/MCPdQnaCNtDAO24IbYMeCiwtKCsxyhn8q+Yc4htGCK5E3Vl7Yo1FoOR
-         PTvQGP300KkA7mDqMg3Q5Q/vur62roVNvng39oBXSoxzIv6kVxVzsDeDCFxPTDUkeS
-         VUBWH6e642B4w==
+        b=j+u88xKtaAMdmEYr9nnWJ/S7a6ttO+OXKtFGZf4ZjcllMltrBfDe6pL/OHUqcZIZY
+         CRG80k63MbASxiqlrL6Khg174wOXdPbjR2jVXAYnFjCCTETYw8AAvDlDhqnYvdfphc
+         tN7TjUOdx1VS33yq7QHk9lqcRkE4FuLHlHLrOM+M+YvZbd2Ldfa2ZU6jP+P+fYK8wN
+         zW3eI6TxlzdSwAY/JCuMcOzRsZ9PHMKGIZH+FcbuBlVUB6m6EgCawRW4IOhD+nqcPa
+         3T3pmIM9uo9vK7cQAmJGn0GPzFFjquSX+STlUS8iDFydCW9Rd/v2RmRCkeUn+UdM2Y
+         eCnapuNfDWgIg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B629A40714; Fri, 14 Jan 2022 11:35:12 -0300 (-03)
-Date:   Fri, 14 Jan 2022 11:35:12 -0300
+        id CFDD440714; Fri, 14 Jan 2022 11:45:52 -0300 (-03)
+Date:   Fri, 14 Jan 2022 11:45:52 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Huang Rui <ray.huang@amd.com>
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH 1/1 FYI] tools arch x86: Sync the msr-index.h copy with
- the kernel sources
-Message-ID: <YeGKIAQ+INznx116@kernel.org>
-References: <YeA2PAvHV+uHRhLj@kernel.org>
- <9d546cfa-93e0-5b53-9100-5e9b091fac1b@intel.com>
- <YeDAowKCU777NXSa@amd.com>
+To:     =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>,
+        Ian Rogers <irogers@google.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, ak@linux.intel.com, john.garry@huawei.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf util: Fix use after free in metric__new
+Message-ID: <YeGMoG2pv2+7nQFj@kernel.org>
+References: <20211208171113.22089-1-jose.exposito89@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <YeDAowKCU777NXSa@amd.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211208171113.22089-1-jose.exposito89@gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Jan 14, 2022 at 08:15:31AM +0800, Huang Rui escreveu:
-> On Fri, Jan 14, 2022 at 03:14:32AM +0800, Rafael J. Wysocki wrote:
-> > On 1/13/2022 3:25 PM, Arnaldo Carvalho de Melo wrote:
-> > > To pick up the changes in:
-> > >
-> > >    89aa94b4a218339b ("x86/msr: Add AMD CPPC MSR definitions")
-<SNIP>
-> > > Cc: Huang Rui <ray.huang@amd.com>
-> > > Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > 
-> > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > 
-> 
-> Thanks!
-> 
-> Acked-by: Huang Rui <ray.huang@amd.com>
+Em Wed, Dec 08, 2021 at 06:11:13PM +0100, José Expósito escreveu:
+> Addresses-Coverity-ID: 1494000
+> Signed-off-by: José Expósito <jose.exposito89@gmail.com>
 
-Thanks, added both Acked-by tags to the patch.
+Sorry, overlooked this one, now processing.
+
+You forgot to add:
+
+Fixes: b85a4d61d3022608 ("perf metric: Allow modifiers on metrics")
+
+Ian, I'm taking this one, obvious fix.
+
+- Arnaldo
+
+> ---
+>  tools/perf/util/metricgroup.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> index fffe02aae3ed..4d2fed3aefd1 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -209,8 +209,8 @@ static struct metric *metric__new(const struct pmu_event *pe,
+>  	m->metric_name = pe->metric_name;
+>  	m->modifier = modifier ? strdup(modifier) : NULL;
+>  	if (modifier && !m->modifier) {
+> -		free(m);
+>  		expr__ctx_free(m->pctx);
+> +		free(m);
+>  		return NULL;
+>  	}
+>  	m->metric_expr = pe->metric_expr;
+> -- 
+> 2.25.1
+
+-- 
 
 - Arnaldo
