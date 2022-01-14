@@ -2,159 +2,139 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E19B3C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Jan 2022 14:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA6EC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Jan 2022 14:51:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242054AbiANOub (ORCPT
+        id S237636AbiANOvo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Jan 2022 09:50:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55398 "EHLO
+        Fri, 14 Jan 2022 09:51:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242325AbiANOt6 (ORCPT
+        with ESMTP id S237563AbiANOvo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Jan 2022 09:49:58 -0500
+        Fri, 14 Jan 2022 09:51:44 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF7C5C061574;
-        Fri, 14 Jan 2022 06:49:57 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC83DC061574;
+        Fri, 14 Jan 2022 06:51:43 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B1EFFB825F5;
-        Fri, 14 Jan 2022 14:49:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 501D6C36AEB;
-        Fri, 14 Jan 2022 14:49:55 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A650EB8262B;
+        Fri, 14 Jan 2022 14:51:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C758C36AE5;
+        Fri, 14 Jan 2022 14:51:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642171795;
-        bh=EHKChMUESb8pHu8+09xHBjEYyEfYUPm1CdXsqo8QKtk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=lqUXifM+i6Y4uaO/C1PHlkeYPkPcfbe3FwxChvXQxnIVvDHZoWxguZBuWAtavVNRi
-         Oknug3aWxC5ekTFlaYFK5ZnThsWZM7IbvKkmw+/ROMoMPFjtbeU0bpTHfB9XvZhtkk
-         7pkt/D13V75rorYdyirzCeWDoHCHsIjSMy8O7981x0qBMBjaf2vMmT4Jpq9TsaZtuk
-         9FovCIbYDguekIgr2KNqcFUyTvrNyX1hP/Tq75YNdjOTHQzbQYj7OfpMUXyb4MTBdr
-         yx8dm+9pg/4aVBiH5MM+KRvQQNTbQYtgxd+4S5KrjV0FPyT8cE2P4OJMkkQ3MW9T9L
-         lbKnXJK2Z09wA==
-Received: by mail-wm1-f48.google.com with SMTP id c66so6332659wma.5;
-        Fri, 14 Jan 2022 06:49:55 -0800 (PST)
-X-Gm-Message-State: AOAM530fefafE9RN1Mu6503ZYJ/7r7olaFtmPxh2PCEC4EisrOHowY7X
-        p35swTWt5pijW5/1b4sijEoD4hYnU8u8r5LE9A==
-X-Google-Smtp-Source: ABdhPJwLLBZbVkRVccrMz8RDa54o8jm3GCauhk8o4f7l1N1wOO5BdzGlrav+Kdf4B1oUd/95C8CG0dIym0Xu63n8gPo=
-X-Received: by 2002:a17:906:d184:: with SMTP id c4mr7432413ejz.20.1642171793672;
- Fri, 14 Jan 2022 06:49:53 -0800 (PST)
-MIME-Version: 1.0
-References: <20211214215630.4025090-1-robh@kernel.org> <CAP-5=fWkFhHZhPQ1WUTwJjMijBOJS6GMwG1UAo0GBsuS2G6Q8g@mail.gmail.com>
-In-Reply-To: <CAP-5=fWkFhHZhPQ1WUTwJjMijBOJS6GMwG1UAo0GBsuS2G6Q8g@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 14 Jan 2022 08:49:41 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKZoiK+k98bHR6iKn7BWTod+i0H3BKCoYEh2cL1Cgry3g@mail.gmail.com>
-Message-ID: <CAL_JsqKZoiK+k98bHR6iKn7BWTod+i0H3BKCoYEh2cL1Cgry3g@mail.gmail.com>
-Subject: Re: [PATCH v8] libperf: Add arm64 support to perf_mmap__read_self()
+        s=k20201202; t=1642171901;
+        bh=yaOizYp7PqICnKbARXVt6Mn6FZ+YHOUAoV2+IK4tmiw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CQuyq2XeyO/ZVqqJ03lbcrYTW49tCagXH8m5AOyKHsEuwIt8xWcTnM9/Ai9OzlYPX
+         bwRngRNMxKIEIOof2lpqsWdXoOj0pOD9qujfiWx3xlxDQXFNX67IegUzuCGVIZe6dr
+         1PYgjk+7Jx4jmTie63tel8L4G9FDADGCmCOnp3koxVslgMSBB4NME2VOoraDpoZ0VB
+         vLW8YQzYe4+cgJgIBeZMV+YXzGptqbbkHkWyzrJZLW4pwu1/vNSr/W+Dr4b8ZPa2OG
+         dKCjsswx2/sM3qnKuJ2LUFG6aqmXkz+TrPeW9mUyipMG2qbTojT3k1CfY05+A1fBJY
+         zn9ddk0iGUCRQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id CC62840714; Fri, 14 Jan 2022 11:51:38 -0300 (-03)
+Date:   Fri, 14 Jan 2022 11:51:38 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com
+Subject: Re: [PATCH] tools/perf: Fix perf test 7 Simple expression parser on
+ s390
+Message-ID: <YeGN+mT1yjJ60php@kernel.org>
+References: <20211124090343.9436-1-tmricht@linux.ibm.com>
+ <CAP-5=fXdOQUNDTXvt7GHRvu_7jyTPp_53f8_5DzDCXWCpWLtEQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fXdOQUNDTXvt7GHRvu_7jyTPp_53f8_5DzDCXWCpWLtEQ@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jan 14, 2022 at 8:19 AM Ian Rogers <irogers@google.com> wrote:
->
-> On Tue, Dec 14, 2021, 1:56 PM Rob Herring <robh@kernel.org> wrote:
->>
->> Add the arm64 variants for read_perf_counter() and read_timestamp().
->> Unfortunately the counter number is encoded into the instruction, so the
->> code is a bit verbose to enumerate all possible counters.
->>
->> Signed-off-by: Rob Herring <robh@kernel.org>
->> ---
->> v8:
->>  - Set attr.config1 to request user access on arm64
->> v7:
->>  - Move enabling of libperf user read test for arm64 to this patch
->> ---
->>  tools/lib/perf/mmap.c             | 98 +++++++++++++++++++++++++++++++
->>  tools/lib/perf/tests/test-evsel.c |  5 +-
->>  2 files changed, 102 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
->> index c89dfa5f67b3..7ee3eb9f5e27 100644
->> --- a/tools/lib/perf/mmap.c
->> +++ b/tools/lib/perf/mmap.c
->> @@ -13,6 +13,7 @@
->>  #include <internal/lib.h>
->>  #include <linux/kernel.h>
->>  #include <linux/math64.h>
->> +#include <linux/stringify.h>
->>  #include "internal.h"
->>
->>  void perf_mmap__init(struct perf_mmap *map, struct perf_mmap *prev,
->> @@ -294,6 +295,103 @@ static u64 read_timestamp(void)
->>
->>         return low | ((u64)high) << 32;
->>  }
->> +#elif defined(__aarch64__)
->> +#define read_sysreg(r) ({                                              \
->> +       u64 __val;                                                      \
->> +       asm volatile("mrs %0, " __stringify(r) : "=r" (__val));         \
->> +       __val;                                                          \
->> +})
->> +
->> +static u64 read_pmccntr(void)
->> +{
->> +       return read_sysreg(pmccntr_el0);
->> +}
->> +
->> +#define PMEVCNTR_READ(idx)                                     \
->> +       static u64 read_pmevcntr_##idx(void) {                  \
->> +               return read_sysreg(pmevcntr##idx##_el0);        \
->> +       }
->> +
->> +PMEVCNTR_READ(0);
->> +PMEVCNTR_READ(1);
->> +PMEVCNTR_READ(2);
->> +PMEVCNTR_READ(3);
->> +PMEVCNTR_READ(4);
->> +PMEVCNTR_READ(5);
->> +PMEVCNTR_READ(6);
->> +PMEVCNTR_READ(7);
->> +PMEVCNTR_READ(8);
->> +PMEVCNTR_READ(9);
->> +PMEVCNTR_READ(10);
->> +PMEVCNTR_READ(11);
->> +PMEVCNTR_READ(12);
->> +PMEVCNTR_READ(13);
->> +PMEVCNTR_READ(14);
->> +PMEVCNTR_READ(15);
->> +PMEVCNTR_READ(16);
->> +PMEVCNTR_READ(17);
->> +PMEVCNTR_READ(18);
->> +PMEVCNTR_READ(19);
->> +PMEVCNTR_READ(20);
->> +PMEVCNTR_READ(21);
->> +PMEVCNTR_READ(22);
->> +PMEVCNTR_READ(23);
->> +PMEVCNTR_READ(24);
->> +PMEVCNTR_READ(25);
->> +PMEVCNTR_READ(26);
->> +PMEVCNTR_READ(27);
->> +PMEVCNTR_READ(28);
->> +PMEVCNTR_READ(29);
->> +PMEVCNTR_READ(30);
->
->
-> Nit: It looks strange that 31 is not here, ie 31 counters rather than 32.
+Em Wed, Nov 24, 2021 at 07:41:40AM -0800, Ian Rogers escreveu:
+> On Wed, Nov 24, 2021 at 1:04 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
+> >
+> > Commit fdf1e29b6118 ("perf expr: Add metric literals for topology.")
+> > fails on s390:
+> >  # ./perf test -Fv 7
+> >    ...
+> >  # FAILED tests/expr.c:173 #num_dies >= #num_packages
+> >    ---- end ----
+> >    Simple expression parser: FAILED!
+> >  #
+> >
+> > Investigating this issue leads to these functions:
+> >  build_cpu_topology()
+> >    +--> has_die_topology(void)
+> >         {
+> >            struct utsname uts;
+> >
+> >            if (uname(&uts) < 0)
+> >                   return false;
+> >            if (strncmp(uts.machine, "x86_64", 6))
+> >                   return false;
+> >            ....
+> >         }
+> >
+> > which always returns false on s390. The caller build_cpu_topology()
+> > checks has_die_topology() return value. On false the
+> > the struct cpu_topology::die_cpu_list is not contructed and has zero
+> > entries. This leads to the failing comparison: #num_dies >= #num_packages.
+> > s390 of course has a positive number of packages.
+> >
+> > Fix this by adding s390 architecture to support CPU die list.
 
-From the Arm ARM:
-D13.4.8
-PMEVCNTR<n>_EL0, Performance Monitors Event Count Registers, n = 0 - 30
+Thanks, applied.
 
-The 32nd counter is the cycle counter which is special and accessed in
-a different register.
+- Arnaldo
 
-Rob
+
+> > Output after:
+> >  # ./perf test -Fv 7
+> >   7: Simple expression parser                                        :
+> >   --- start ---
+> >   division by zero
+> >   syntax error
+> >   ---- end ----
+> >   Simple expression parser: Ok
+> >  #
+> > Cc: Ian Rogers <irogers@google.com>
+> > Fixes: fdf1e29b6118 ("perf expr: Add metric literals for topology.")
+> >
+> > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> 
+> Thanks!
+> Ian
+> 
+> > ---
+> >  tools/perf/util/cputopo.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/util/cputopo.c b/tools/perf/util/cputopo.c
+> > index 51b429c86f98..aad7a9e6e31b 100644
+> > --- a/tools/perf/util/cputopo.c
+> > +++ b/tools/perf/util/cputopo.c
+> > @@ -165,7 +165,8 @@ static bool has_die_topology(void)
+> >         if (uname(&uts) < 0)
+> >                 return false;
+> >
+> > -       if (strncmp(uts.machine, "x86_64", 6))
+> > +       if (strncmp(uts.machine, "x86_64", 6) &&
+> > +           strncmp(uts.machine, "s390x", 5))
+> >                 return false;
+> >
+> >         scnprintf(filename, MAXPATHLEN, DIE_CPUS_FMT,
+> > --
+> > 2.31.1
+> >
+
+-- 
+
+- Arnaldo
