@@ -2,139 +2,96 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA6EC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Jan 2022 14:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BB4C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Jan 2022 15:00:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237636AbiANOvo (ORCPT
+        id S242086AbiANPA3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Jan 2022 09:51:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55806 "EHLO
+        Fri, 14 Jan 2022 10:00:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237563AbiANOvo (ORCPT
+        with ESMTP id S242122AbiANPA3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Jan 2022 09:51:44 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC83DC061574;
-        Fri, 14 Jan 2022 06:51:43 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A650EB8262B;
-        Fri, 14 Jan 2022 14:51:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C758C36AE5;
-        Fri, 14 Jan 2022 14:51:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642171901;
-        bh=yaOizYp7PqICnKbARXVt6Mn6FZ+YHOUAoV2+IK4tmiw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CQuyq2XeyO/ZVqqJ03lbcrYTW49tCagXH8m5AOyKHsEuwIt8xWcTnM9/Ai9OzlYPX
-         bwRngRNMxKIEIOof2lpqsWdXoOj0pOD9qujfiWx3xlxDQXFNX67IegUzuCGVIZe6dr
-         1PYgjk+7Jx4jmTie63tel8L4G9FDADGCmCOnp3koxVslgMSBB4NME2VOoraDpoZ0VB
-         vLW8YQzYe4+cgJgIBeZMV+YXzGptqbbkHkWyzrJZLW4pwu1/vNSr/W+Dr4b8ZPa2OG
-         dKCjsswx2/sM3qnKuJ2LUFG6aqmXkz+TrPeW9mUyipMG2qbTojT3k1CfY05+A1fBJY
-         zn9ddk0iGUCRQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CC62840714; Fri, 14 Jan 2022 11:51:38 -0300 (-03)
-Date:   Fri, 14 Jan 2022 11:51:38 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com
-Subject: Re: [PATCH] tools/perf: Fix perf test 7 Simple expression parser on
- s390
-Message-ID: <YeGN+mT1yjJ60php@kernel.org>
-References: <20211124090343.9436-1-tmricht@linux.ibm.com>
- <CAP-5=fXdOQUNDTXvt7GHRvu_7jyTPp_53f8_5DzDCXWCpWLtEQ@mail.gmail.com>
+        Fri, 14 Jan 2022 10:00:29 -0500
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57170C06161C;
+        Fri, 14 Jan 2022 07:00:28 -0800 (PST)
+Received: by mail-wr1-x42f.google.com with SMTP id e9so16116962wra.2;
+        Fri, 14 Jan 2022 07:00:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=TUU+DMa7U3mjpjYCA+HNoEJPTDawZ7oiEXnBDzYpIQ4=;
+        b=b3RFYe7/XHj7ObWRTcs3pjWGVbt3+gM9uVFlpJwpzMW0C1ctPeenn/MyAmsVBBVeGA
+         +ZUjO6vS9nMnXPnDhPujXoztWypjxq3mEdok+zvImur9ei+1Gd+r3fMNjFIISkAKmlYq
+         WfUjrFvYg2WNfdntHbJX12n4r2KNbxqb4cgFd7tXZEoMquIOODyMka1jMJhq8KauEbTz
+         yt1EKqNaRpw5gUP62/JYim5D3Q9iEDG4Z82GIzv2rGkzy8929+uq2gDnh1bglacPvz4/
+         hL/sJhUkVNQx2NiVn0JP8uCfA0nvVR/TJHX236I+6+t9a5hPKUHqOiRYT/aNfvBQR79J
+         WlPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=TUU+DMa7U3mjpjYCA+HNoEJPTDawZ7oiEXnBDzYpIQ4=;
+        b=y5pJKGPkEPavbLlxFvMqzBVzsl731v1510OJGTJwTJ57YpZ0038tRZhoaKAYffBaGs
+         142dOa3JND96T3akLog9pQQcruyUOany/N76QlylLeFkH7i+fobpNfBQUvmDQPJY3Owy
+         vwHVmPm8qJjYY0EJ6j2oTqZWLuUnPrL/Vj/ztkh0m8AdVxXQL4JlDK30acOD+BVtg48i
+         YdGZhOfZ4isnicy+9XzAcLBaypHw9Js8RywTlinn3Gpk6Fp86iw2QeQQo3Jm6qqkDpWb
+         HrImXOLKAy3YebQ9DDYSu1exGIW7b9GNbjSBqdPMmms5u5tf5aen7qpzr6u1KmGPHxgw
+         tejA==
+X-Gm-Message-State: AOAM531xTZsFEdn/MOz3btR+xmLQ5hiMP+WadDtRigG22ESpWTC3o1+L
+        uP40q20ZtN5U7LtrCr2qPNC4Ti43iatTEA==
+X-Google-Smtp-Source: ABdhPJzKSJQ53YkPS8o4b5mIenTlKqDuobOxTGikalxpM3OfJ7vwhurUzG3DIlk2axwuQNEnX3OQ5Q==
+X-Received: by 2002:a5d:5590:: with SMTP id i16mr7911949wrv.34.1642172426900;
+        Fri, 14 Jan 2022 07:00:26 -0800 (PST)
+Received: from elementary ([94.73.33.246])
+        by smtp.gmail.com with ESMTPSA id c22sm11516936wmr.27.2022.01.14.07.00.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Jan 2022 07:00:26 -0800 (PST)
+Date:   Fri, 14 Jan 2022 16:00:24 +0100
+From:   =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
+To:     John Garry <john.garry@huawei.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>, peterz@infradead.org,
+        mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, ak@linux.intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf util: Fix use after free in metric__new
+Message-ID: <20220114150024.GA5646@elementary>
+References: <20211208171113.22089-1-jose.exposito89@gmail.com>
+ <CAP-5=fUAR9uSAQGkukqafkoX+jz1fE8f-ziU5WeG59XT53jMWw@mail.gmail.com>
+ <YeGNDskRtgpIFmzU@kernel.org>
+ <44b8de2c-b976-a396-2363-61a014d7e71f@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fXdOQUNDTXvt7GHRvu_7jyTPp_53f8_5DzDCXWCpWLtEQ@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <44b8de2c-b976-a396-2363-61a014d7e71f@huawei.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Nov 24, 2021 at 07:41:40AM -0800, Ian Rogers escreveu:
-> On Wed, Nov 24, 2021 at 1:04 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
-> >
-> > Commit fdf1e29b6118 ("perf expr: Add metric literals for topology.")
-> > fails on s390:
-> >  # ./perf test -Fv 7
-> >    ...
-> >  # FAILED tests/expr.c:173 #num_dies >= #num_packages
-> >    ---- end ----
-> >    Simple expression parser: FAILED!
-> >  #
-> >
-> > Investigating this issue leads to these functions:
-> >  build_cpu_topology()
-> >    +--> has_die_topology(void)
-> >         {
-> >            struct utsname uts;
-> >
-> >            if (uname(&uts) < 0)
-> >                   return false;
-> >            if (strncmp(uts.machine, "x86_64", 6))
-> >                   return false;
-> >            ....
-> >         }
-> >
-> > which always returns false on s390. The caller build_cpu_topology()
-> > checks has_die_topology() return value. On false the
-> > the struct cpu_topology::die_cpu_list is not contructed and has zero
-> > entries. This leads to the failing comparison: #num_dies >= #num_packages.
-> > s390 of course has a positive number of packages.
-> >
-> > Fix this by adding s390 architecture to support CPU die list.
-
-Thanks, applied.
-
-- Arnaldo
-
-
-> > Output after:
-> >  # ./perf test -Fv 7
-> >   7: Simple expression parser                                        :
-> >   --- start ---
-> >   division by zero
-> >   syntax error
-> >   ---- end ----
-> >   Simple expression parser: Ok
-> >  #
-> > Cc: Ian Rogers <irogers@google.com>
-> > Fixes: fdf1e29b6118 ("perf expr: Add metric literals for topology.")
-> >
-> > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+On Fri, Jan 14, 2022 at 02:48:35PM +0000, John Garry wrote:
+> On 14/01/2022 14:47, Arnaldo Carvalho de Melo wrote:
+> > > > Addresses-Coverity-ID: 1494000
+> > > > Signed-off-by: José Expósito<jose.exposito89@gmail.com>
+> > > Acked-by: Ian Rogers <irogers@google,com>
+> > > 
+> > > This can only happen in the ENOMEM case, but it is a good fix.
+> > > 
+> > > Fixes: b85a4d61d302 (perf metric: Allow modifiers on metrics)
+> > Sorry, I missed this one_as well_, sigh...
+> > 
+> > - Arnaldo
 > 
-> Reviewed-by: Ian Rogers <irogers@google.com>
 > 
-> Thanks!
-> Ian
+> Isn't there a v3 out there? Not sure if you noticed...
 > 
-> > ---
-> >  tools/perf/util/cputopo.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/util/cputopo.c b/tools/perf/util/cputopo.c
-> > index 51b429c86f98..aad7a9e6e31b 100644
-> > --- a/tools/perf/util/cputopo.c
-> > +++ b/tools/perf/util/cputopo.c
-> > @@ -165,7 +165,8 @@ static bool has_die_topology(void)
-> >         if (uname(&uts) < 0)
-> >                 return false;
-> >
-> > -       if (strncmp(uts.machine, "x86_64", 6))
-> > +       if (strncmp(uts.machine, "x86_64", 6) &&
-> > +           strncmp(uts.machine, "s390x", 5))
-> >                 return false;
-> >
-> >         scnprintf(filename, MAXPATHLEN, DIE_CPUS_FMT,
-> > --
-> > 2.31.1
-> >
+> Cheers
 
--- 
+Yes, here is v3 including the Fixes, Acked-by and Reviewed-by tags:
 
-- Arnaldo
+https://lore.kernel.org/linux-perf-users/20220107182106.138418-1-jose.exposito89@gmail.com/
