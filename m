@@ -2,159 +2,110 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F341EC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Jan 2022 21:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F57C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Jan 2022 21:21:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229572AbiANVA6 (ORCPT
+        id S229757AbiANVVW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Jan 2022 16:00:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56204 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229515AbiANVA5 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Jan 2022 16:00:57 -0500
-Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50792C061574;
-        Fri, 14 Jan 2022 13:00:57 -0800 (PST)
-Received: by mail-il1-x12a.google.com with SMTP id i14so9364015ila.11;
-        Fri, 14 Jan 2022 13:00:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S/3XZOyIgDP11RoDvk9GWnXC8L5uLhKIajiH8VUBzOo=;
-        b=X8Ojmz8Gs8Y1ev7ywHRDPYIEusIcZGYXYqedV5pLiulCBb+Kk45BSZkrOJufxmeFfp
-         eX/Y7q/Z6c+IDtJykf7P/+oFOlsE94KCDwKpxdDNkT4+aCd8Y+lrugn7NRINlCKLXa5d
-         m1QdNMw9PMc8yX3Dg09TuvGTk1trKLOWAa818UW945AvQ9IpiQ9w/9X36BuwF3dAiv9j
-         +O58ddyWz+7jjQad/xh7nRlNhDpdI5+sit7fBuUs0uwUJ/uSCHykihZgi42vADzbl+Ee
-         SgVtdqlLN4t19075JS8dKUxrRXJPIZzbIsDKfKmsk0fMpjkNVNeOJEnfLPjruMwwyCOv
-         DvaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S/3XZOyIgDP11RoDvk9GWnXC8L5uLhKIajiH8VUBzOo=;
-        b=cTOYWHNF+sp3ESbtR4YcqgZTGZAg3VNqc9OyyglzF3Tk5mEBlaPXF72g2/o3pHvTZg
-         7gjUCgfgG3bwOQBxOi/gB3NQVBq1n+YO0fNvqiQDzFAz2S2Uh1vk9VpWziRwNFPoFRNk
-         ZViJL3m+yA9V7u1/0q8hH9hzEAiWsRF/mVu9u+TiNk8cwadH9WB/Aj93Nd20oQ9HKFco
-         /dj2kdhdyM7hU1F5eEzXhTxzboX1Pfo+rDzP591+Busm8RdUmT4FvgmLcRq2VjgTcohV
-         A66wOaObpulQvb2tudTZAbMBGZJcu9nvrJfyIhgiW+w5Ttq/Yu/Dbi2HVLveqDU+87HT
-         ahRw==
-X-Gm-Message-State: AOAM531apo0b6hOGYBLMbVljb2fC/8AxO5CDrY0fsRIIfK8aMoIaGs+k
-        j2bXJbIJylHIiJx9MMKR5LJYtNvQUACXWllWk/lB3MyOl3c=
-X-Google-Smtp-Source: ABdhPJxB3tJlKWBbbJ6m7MVMyTBXUprEY+7ohw2BCRFcuAuj+a82nPy0eqzmlbdI8NV6kTBKur5P4tcd49iLauiofCs=
-X-Received: by 2002:a05:6e02:1749:: with SMTP id y9mr5373560ill.252.1642194056573;
- Fri, 14 Jan 2022 13:00:56 -0800 (PST)
+        Fri, 14 Jan 2022 16:21:22 -0500
+Received: from foss.arm.com ([217.140.110.172]:38020 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229741AbiANVVW (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 14 Jan 2022 16:21:22 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8035C6D;
+        Fri, 14 Jan 2022 13:21:21 -0800 (PST)
+Received: from ip-10-252-15-108.eu-west-1.compute.internal (unknown [10.252.15.108])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A20393F774;
+        Fri, 14 Jan 2022 13:21:18 -0800 (PST)
+From:   German Gomez <german.gomez@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     German Gomez <german.gomez@arm.com>,
+        Chase Conklin <chase.conklin@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>, Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Stephane Eranian <eranian@google.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH] perf record/arm-spe: Override attr->sample_period for non-libpfm4 events
+Date:   Fri, 14 Jan 2022 21:21:02 +0000
+Message-Id: <20220114212102.179209-1-german.gomez@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20211216222108.110518-1-christylee@fb.com> <20211216222108.110518-3-christylee@fb.com>
- <YcGO271nDvfMeSlK@krava> <CAEf4BzZpNvEtfsVHUJGfwi_1xM+7-ohBPKPrRo--X=fYkYLrsw@mail.gmail.com>
- <YcMr1LeP6zUBdCiK@krava> <CAEf4Bzb2HWiuJmeb6WxE2Dift5qQOLBE=j1ZqfpVMjuWV3+EDg@mail.gmail.com>
- <CAPqJDZouQHpUXv4dEGKKe=UjwkZu3=GMQ2M9g2zLYOV6a=gZbw@mail.gmail.com>
- <YdRccTaunl9Fo63X@krava> <YdWhz1qaRncxNC/6@krava> <CAPqJDZpZrrg4UBz19H-HyEMk7rzn+PCe=qpYDR0uHvD3nPr4yw@mail.gmail.com>
- <YeBBzbfjOgE/wfjK@krava>
-In-Reply-To: <YeBBzbfjOgE/wfjK@krava>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 14 Jan 2022 13:00:45 -0800
-Message-ID: <CAEf4BzatQ-y=kvTYvLj0rdtPTWuhNtep6gfWPj-aru7psfD9AQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 2/2] perf: stop using deprecated
- bpf__object_next() API
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Andrii Nakryiko <andrii@kernel.org>,
-        Christy Lee <christylee@fb.com>,
-        Christy Lee <christyc.y.lee@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>,
-        He Kuang <hekuang@huawei.com>, Wang Nan <wangnan0@huawei.com>,
-        Wang ShaoBo <bobo.shaobowang@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jan 13, 2022 at 7:14 AM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Thu, Jan 06, 2022 at 09:54:38AM -0800, Christy Lee wrote:
-> > Thank you so much, I was able to reproduce the original tests after applying
-> > the bug fix. I will submit a new patch set with the more detailed comments.
-> >
-> > The only deprecated functions that need to be removed after this would be
-> > bpf_program__set_prep() (how perf sets the bpf prologue) and
-> > bpf_program__nth_fd() (how perf leverages multi instance bpf). They look a
-> > little more involved and I'm not sure how to approach those. Jiri, would you
-> > mind taking a look at those please?
->
-> hi,
-> I checked and here's the way perf uses this interface:
->
->   - when bpf object/sources is specified on perf command line
->     we use bpf_object__open to load it
->
->   - user can define parameters in the section name for each bpf program
->     like:
->
->       SEC("lock_page=__lock_page page->flags")
->       int lock_page(struct pt_regs *ctx, int err, unsigned long flags)
->       {
->              return 1;
->       }
->
->     which tells perf to 'prepare' some extra bpf code for the program,
->     like to put value of 'page->flags' into 'flags' argument above
->
->   - perf generates extra prologue code to retrieve this data and does
->     that before the program is loaded by using bpf_program__set_prep
->     callback
->
->   - now the reason why we use bpf_program__set_prep for that, is because
->     it allows to create multiple instances for one bpf program
->
->   - we need multiple instances for single program, because probe can
->     result in multiple attach addresses (like for inlined functions)
->     with possible different ways of getting the arguments we need
->     to load
->
-> I guess you want to get rid of that whole 'struct instances' related
-> stuff, is that right?
->
-> perf would need to load all the needed instances for program manually
-> and somehow bypass/workaround bpf_object__load.. is there a way to
-> manually add extra programs to bpf_object?
->
-> thoughts? ;-)
+A previous commit preventing attr->sample_period values from being
+overridden in pfm events changed a related behaviour in arm_spe.
 
-Sigh..
+Before this patch:
+perf record -c 10000 -e arm_spe_0// -- sleep 1
 
-1. SEC("lock_page=__lock_page page->flags") will break in libbpf 1.0.
-I'm going to add a way to provide a custom callback to handle such BPF
-program sections by your custom code, but... Who's using this? Is
-anyone using this? How is this used and for what? Would it be possible
-to just kill this feature?
+Would not yield an SPE event with period=10000, because the arm-spe code
+initializes sample_period to a non-0 value, so the "-c 10000" is ignored.
 
-2. For creating multiple instances. I've added bpf_program__insns()
-API to fetch exact bytecode as it is sent by libbpf to kernel. If you
-fetch those instructions *after* the program is loaded, all the map
-FDs and other stuff will be correct and resolved. At that point you
-can use that to create as many copies as you want to with low-level
-bpf_prog_load() API. You'll need to keep track of those FDs of clones,
-but you'll have your multiple instances.
+This patch restores the previous behaviour for non-libpfm4 events.
 
-3. Do you really support attaching to inlined functions *and* also
-fetching their input arguments? How does that even work, given that
-the compiler can spread and reorder inlined function code as it sees
-fit?...
+Reported-by: Chase Conklin <chase.conklin@arm.com>
+Fixes: ae5dcc8abe31 (“perf record: Prevent override of attr->sample_period for libpfm4 events”)
+Signed-off-by: German Gomez <german.gomez@arm.com>
+---
+ tools/perf/util/evsel.c | 25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
 
-But really, why does that feature exist at all? Why BPF program can't
-fetch whatever it needs to fetch explicitly, like the rest of BPF
-applications in the world do? Too much custom magic :( Especially with
-the BPF_KPROBE() macro this is so trivial to do...
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index a59fb2ecb84e..86ab038f020f 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1065,6 +1065,17 @@ void __weak arch_evsel__fixup_new_cycles(struct perf_event_attr *attr __maybe_un
+ {
+ }
+ 
++static void evsel__set_default_freq_period(struct record_opts *opts,
++					   struct perf_event_attr *attr)
++{
++	if (opts->freq) {
++		attr->freq = 1;
++		attr->sample_freq = opts->freq;
++	} else {
++		attr->sample_period = opts->default_interval;
++	}
++}
++
+ /*
+  * The enable_on_exec/disabled value strategy:
+  *
+@@ -1131,14 +1142,12 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+ 	 * We default some events to have a default interval. But keep
+ 	 * it a weak assumption overridable by the user.
+ 	 */
+-	if (!attr->sample_period) {
+-		if (opts->freq) {
+-			attr->freq		= 1;
+-			attr->sample_freq	= opts->freq;
+-		} else {
+-			attr->sample_period = opts->default_interval;
+-		}
+-	}
++	if ((evsel->is_libpfm_event && !attr->sample_period) ||
++	    (!evsel->is_libpfm_event && (!attr->sample_period ||
++					 opts->user_freq != UINT_MAX ||
++					 opts->user_interval != ULLONG_MAX)))
++		evsel__set_default_freq_period(opts, attr);
++
+ 	/*
+ 	 * If attr->freq was set (here or earlier), ask for period
+ 	 * to be sampled.
+-- 
+2.25.1
 
-Can we kill this feature altogether, maybe? Pretty please? Such a
-burden for everyone...
-
->
-> thanks,
-> jirka
->
