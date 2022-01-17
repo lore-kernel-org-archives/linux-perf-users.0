@@ -2,111 +2,73 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 570F0C433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Jan 2022 15:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B7F5C433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Jan 2022 16:09:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240540AbiAQPjk (ORCPT
+        id S240822AbiAQQJ5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Jan 2022 10:39:40 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4423 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237314AbiAQPjk (ORCPT
+        Mon, 17 Jan 2022 11:09:57 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:51308 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240806AbiAQQJs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Jan 2022 10:39:40 -0500
-Received: from fraeml714-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JcwwL58s3z6F98b;
-        Mon, 17 Jan 2022 23:35:46 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Mon, 17 Jan 2022 16:39:38 +0100
-Received: from [10.47.92.236] (10.47.92.236) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.21; Mon, 17 Jan
- 2022 15:39:37 +0000
-Subject: Re: [PATCH] perf test: Test 73 Sig_trap fails on s390
-To:     Marco Elver <elver@google.com>,
-        Thomas Richter <tmricht@linux.ibm.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <acme@kernel.org>, <svens@linux.ibm.com>, <gor@linux.ibm.com>,
-        <sumanthk@linux.ibm.com>, <hca@linux.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20211216151454.752066-1-tmricht@linux.ibm.com>
- <CANpmjNNMWtjcKa961SjEvRbbPXyw5M5SkrXbb3tnyL3_XyniCw@mail.gmail.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <90efb5a9-612a-919e-cf2f-c528692d61e2@huawei.com>
-Date:   Mon, 17 Jan 2022 15:39:10 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        Mon, 17 Jan 2022 11:09:48 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3B7216111A;
+        Mon, 17 Jan 2022 16:09:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA1E3C36AE3;
+        Mon, 17 Jan 2022 16:09:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1642435787;
+        bh=JxpNXSlQMmHd0k4NTwu6UknzIMZN4MLp9hQbzYlBdkQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=pn4SHXuktfY32p4Tip/BGRjm0C6WTtja6PqSPJRFqKzbwdNvz1D6ht/Iuf7T6P+n6
+         qs4URseAxH6/lXkO8Q0bgm+p6VPa4Pq4+imeCyXuipsLzggvAu85s/Gc+ZRzf1hKV0
+         eRtNXUQA/5s0fwceHNxJgGS1msjwSUsbDQ/0ghtlMgJKNK+73i6cjB3+Ds3PTKrDNr
+         Eu7DcSOMx/s2p/1eQja5VRVhsOEkpgvEorDhIXcl5rQUYvU0Y+WhU8RPqNom77qEXl
+         nDb9nns/Z1/RIaJR7prUwQH3/O+ei8+OOt81ZR9ubNw+wAwLiEMgwnQ48y97/1ruiH
+         grrKkhr8FFqjg==
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Andi Kleen <andi@firstfloor.org>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: [PATCH 0/4] perf tools: Remove needless affinity setup/cleanup for pid targets
+Date:   Mon, 17 Jan 2022 13:09:27 -0300
+Message-Id: <20220117160931.1191712-1-acme@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-In-Reply-To: <CANpmjNNMWtjcKa961SjEvRbbPXyw5M5SkrXbb3tnyL3_XyniCw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.92.236]
-X-ClientProxiedBy: lhreml703-chm.china.huawei.com (10.201.108.52) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 16/12/2021 15:48, Marco Elver wrote:
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-+
+Hi,
 
-> On Thu, 16 Dec 2021 at 16:15, Thomas Richter<tmricht@linux.ibm.com>  wrote:
->> In Linux next kernel
->> Commit 5504f67944484 ("perf test sigtrap: Add basic stress test for sigtrap handling")
->> introduced the new test which uses breakpoint events.
->> These events are not supported on s390 and PowerPC and always fail:
->>
->>   # perf test -F 73
->>   73: Sigtrap                                                         : FAILED!
->>   #
->>
->> Fix it the same way as in the breakpoint tests in file
->> tests/bp_account.c where these type of tests are skipped on
->> s390 and PowerPC platforms.
->>
->> With this patch skip this test on both platforms.
->>
->> Output after:
->>   # ./perf test -F 73
->>   73: Sigtrap
->>
->> Fixes: 5504f67944484 ("perf test sigtrap: Add basic stress test for sigtrap handling")
->>
->> Cc: Marco Elver<elver@google.com>
->> Signed-off-by: Thomas Richter<tmricht@linux.ibm.com>
-> Acked-by: Marco Elver<elver@google.com>
-> 
-> Thanks, and sorry for missing this case!
-> 
+	Continuing with the removal of needless affinity setup/cleanup
+for pid targets, please ack.
 
-I am finding that this test hangs on my arm64 machine:
+- Arnaldo
 
-john@debian:~/kernel-dev2/tools/perf$ sudo ./perf test -vvv 73
-  73: Sigtrap:
---- start ---
-test child forked, pid 45193
+Arnaldo Carvalho de Melo (4):
+  perf affinity: Allow passing a NULL arg to affinity__cleanup()
+  perf stat: No need to setup affinities when starting a workload
+  perf evlist: No need to setup affinities when enabling events for pid
+    targets
+  perf evlist: No need to setup affinities when disabling events for pid
+    targets
 
-And fails on my x86 broadwell machine:
+ tools/perf/builtin-stat.c  | 17 ++++++++++-------
+ tools/perf/util/affinity.c |  8 +++++++-
+ tools/perf/util/evlist.c   | 28 ++++++++++++++++++----------
+ 3 files changed, 35 insertions(+), 18 deletions(-)
 
-john@localhost:~/kernel-dev2/tools/perf> sudo ./perf test -v 73
-73: Sigtrap                                                         :
---- start ---
-test child forked, pid 22255
-FAILED sys_perf_event_open(): Argument list too long
-test child finished with -1
----- end ----
-Sigtrap: FAILED!
-john@localhost:~/kernel-dev2/tools/perf>
+-- 
+2.34.1
 
-Are there more architectures+platforms for which we need to skip this test?
-
-Thanks,
-John
