@@ -2,71 +2,81 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F06D2C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Jan 2022 18:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B00AC433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Jan 2022 21:33:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242066AbiAQSEi (ORCPT
+        id S243268AbiAQVdP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Jan 2022 13:04:38 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4424 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238147AbiAQSEh (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Jan 2022 13:04:37 -0500
-Received: from fraeml703-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Jd07W2FqNz681RY;
-        Tue, 18 Jan 2022 02:00:39 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml703-chm.china.huawei.com (10.206.15.52) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.21; Mon, 17 Jan 2022 19:04:30 +0100
-Received: from [10.47.92.236] (10.47.92.236) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.21; Mon, 17 Jan
- 2022 18:04:30 +0000
-Subject: Re: [PATCH] perf metric: Fix metric_leader
-To:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mon, 17 Jan 2022 16:33:15 -0500
+Received: from foss.arm.com ([217.140.110.172]:37478 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S243263AbiAQVdP (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 17 Jan 2022 16:33:15 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27D21ED1;
+        Mon, 17 Jan 2022 13:33:14 -0800 (PST)
+Received: from [192.168.0.5] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8A1873F774;
+        Mon, 17 Jan 2022 13:33:11 -0800 (PST)
+Subject: Re: [PATCH] perf record/arm-spe: Override attr->sample_period for
+ non-libpfm4 events
+To:     Ian Rogers <irogers@google.com>
+Cc:     James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Chase Conklin <chase.conklin@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <eranian@google.com>
-References: <20220115062852.1959424-1-irogers@google.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <660a0c4f-cecd-df97-3fea-3d75d45fa02b@huawei.com>
-Date:   Mon, 17 Jan 2022 18:04:01 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        Namhyung Kim <namhyung@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Stephane Eranian <eranian@google.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, "acme@kernel.org" <acme@kernel.org>
+References: <20220114212102.179209-1-german.gomez@arm.com>
+ <c2b960eb-a25e-7ce7-ee4b-2be557d8a213@arm.com>
+ <35a4f70f-d7ef-6e3c-dc79-aa09d87f0271@arm.com>
+ <CAP-5=fUHT29Z8Y5pMdTWK4mLKAXrNTtC5RBpet6UsAy4TLDfDw@mail.gmail.com>
+From:   German Gomez <german.gomez@arm.com>
+Message-ID: <10cc73f1-53fd-9c5a-7fe2-8cd3786fbe37@arm.com>
+Date:   Mon, 17 Jan 2022 21:32:55 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-In-Reply-To: <20220115062852.1959424-1-irogers@google.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+In-Reply-To: <CAP-5=fUHT29Z8Y5pMdTWK4mLKAXrNTtC5RBpet6UsAy4TLDfDw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.92.236]
-X-ClientProxiedBy: lhreml703-chm.china.huawei.com (10.201.108.52) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 15/01/2022 06:28, Ian Rogers wrote:
-> Multiple events may have a metric_leader to aggregate into. This happens
-> for uncore events where, for example, uncore_imc is expanded into
-> uncore_imc_0, uncore_imc_1, etc. Such events all have the same metric_id
-> and should aggregate into the first event. The change introducing
-> metric_ids had a bug where the metric_id was compared to itself,
-> creating an always true condition. Correct this by comparing the
-> event in the metric_evlist and the metric_leader.
-> 
-> Fixes: ec5c5b3d2c21 ("perf metric: Encode and use metric-id as qualifier")
-> Signed-off-by: Ian Rogers<irogers@google.com>
-> ---
+Hi Ian,
 
-Looks ok and I quickly tested it:
-Reviewed-by: John Garry <john.garry@huawei.com>
+On 17/01/2022 16:28, Ian Rogers wrote:
+> [...]
+> Thanks for fixing this, I can add an acked-by for the v2 patch. Could
+> we add a test for this to avoid future regressions? There are similar
+> tests for frequency like:
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/tests/attr/test-record-freq
+> based on the attr.py test:
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/tests/attr.py
+> The test specifies a base type of event attribute and then what is
+> modified by the test. It takes a little to get your head around but
+> having a test for this would be a welcome addition.
+
+I agree I should have included a test for this fix. I'll look into this for the v2.
+
+Other events such as "-p 10000 -e cycles//" worked fine. Only the ones with aux area tracing (arm_spe, cs_etm, intel_pt) were ignoring the global config flags.
+
+Thank you for the pointers, and the review,
+German
+
+>
+> Thanks!
+> Ian
+>
+>> Thanks for the review,
+>> German
