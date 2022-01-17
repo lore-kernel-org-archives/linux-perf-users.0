@@ -2,208 +2,111 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5D0C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Jan 2022 15:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 570F0C433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Jan 2022 15:39:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240422AbiAQPPx (ORCPT
+        id S240540AbiAQPjk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Jan 2022 10:15:53 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4421 "EHLO
+        Mon, 17 Jan 2022 10:39:40 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4423 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240398AbiAQPPo (ORCPT
+        with ESMTP id S237314AbiAQPjk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Jan 2022 10:15:44 -0500
-Received: from fraeml703-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JcwPh0kmhz67fK4;
-        Mon, 17 Jan 2022 23:12:40 +0800 (CST)
+        Mon, 17 Jan 2022 10:39:40 -0500
+Received: from fraeml714-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JcwwL58s3z6F98b;
+        Mon, 17 Jan 2022 23:35:46 +0800 (CST)
 Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml703-chm.china.huawei.com (10.206.15.52) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.21; Mon, 17 Jan 2022 16:15:42 +0100
-Received: from localhost.localdomain (10.69.192.58) by
- lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
+ fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Mon, 17 Jan 2022 15:15:38 +0000
+ 15.1.2308.21; Mon, 17 Jan 2022 16:39:38 +0100
+Received: from [10.47.92.236] (10.47.92.236) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.21; Mon, 17 Jan
+ 2022 15:39:37 +0000
+Subject: Re: [PATCH] perf test: Test 73 Sig_trap fails on s390
+To:     Marco Elver <elver@google.com>,
+        Thomas Richter <tmricht@linux.ibm.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <acme@kernel.org>, <svens@linux.ibm.com>, <gor@linux.ibm.com>,
+        <sumanthk@linux.ibm.com>, <hca@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20211216151454.752066-1-tmricht@linux.ibm.com>
+ <CANpmjNNMWtjcKa961SjEvRbbPXyw5M5SkrXbb3tnyL3_XyniCw@mail.gmail.com>
 From:   John Garry <john.garry@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>, <irogers@google.com>,
-        <kjain@linux.ibm.com>
-CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>, <liuqi115@huawei.com>,
-        <zhangshaokun@hisilicon.com>, John Garry <john.garry@huawei.com>
-Subject: [PATCH 3/3] perf test: Add parse-events test for aliases with hyphens
-Date:   Mon, 17 Jan 2022 23:10:15 +0800
-Message-ID: <1642432215-234089-4-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1642432215-234089-1-git-send-email-john.garry@huawei.com>
-References: <1642432215-234089-1-git-send-email-john.garry@huawei.com>
+Message-ID: <90efb5a9-612a-919e-cf2f-c528692d61e2@huawei.com>
+Date:   Mon, 17 Jan 2022 15:39:10 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+In-Reply-To: <CANpmjNNMWtjcKa961SjEvRbbPXyw5M5SkrXbb3tnyL3_XyniCw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.92.236]
+X-ClientProxiedBy: lhreml703-chm.china.huawei.com (10.201.108.52) To
  lhreml724-chm.china.huawei.com (10.201.108.75)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add a test which allows us to test parsing an event alias with hyphens.
+On 16/12/2021 15:48, Marco Elver wrote:
 
-Since these events typically do not exist on most host systems, add the
-alias to the fake pmu.
++
 
-Function perf_pmu__test_parse_init() has terms added to match known test
-aliases.
+> On Thu, 16 Dec 2021 at 16:15, Thomas Richter<tmricht@linux.ibm.com>  wrote:
+>> In Linux next kernel
+>> Commit 5504f67944484 ("perf test sigtrap: Add basic stress test for sigtrap handling")
+>> introduced the new test which uses breakpoint events.
+>> These events are not supported on s390 and PowerPC and always fail:
+>>
+>>   # perf test -F 73
+>>   73: Sigtrap                                                         : FAILED!
+>>   #
+>>
+>> Fix it the same way as in the breakpoint tests in file
+>> tests/bp_account.c where these type of tests are skipped on
+>> s390 and PowerPC platforms.
+>>
+>> With this patch skip this test on both platforms.
+>>
+>> Output after:
+>>   # ./perf test -F 73
+>>   73: Sigtrap
+>>
+>> Fixes: 5504f67944484 ("perf test sigtrap: Add basic stress test for sigtrap handling")
+>>
+>> Cc: Marco Elver<elver@google.com>
+>> Signed-off-by: Thomas Richter<tmricht@linux.ibm.com>
+> Acked-by: Marco Elver<elver@google.com>
+> 
+> Thanks, and sorry for missing this case!
+> 
 
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- tools/perf/tests/parse-events.c | 49 +++++++++++++++++++++++++++++++++
- tools/perf/util/parse-events.c  | 42 ++++++++++++++++++++++------
- 2 files changed, 82 insertions(+), 9 deletions(-)
+I am finding that this test hangs on my arm64 machine:
 
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index a508f1dbcb2a..e71efadb24f5 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -2069,6 +2069,31 @@ static int test_event(struct evlist_test *e)
- 	return ret;
- }
- 
-+static int test_event_fake_pmu(const char *str)
-+{
-+	struct parse_events_error err;
-+	struct evlist *evlist;
-+	int ret;
-+
-+	evlist = evlist__new();
-+	if (!evlist)
-+		return -ENOMEM;
-+
-+	parse_events_error__init(&err);
-+	perf_pmu__test_parse_init();
-+	ret = __parse_events(evlist, str, &err, &perf_pmu__fake);
-+	if (ret) {
-+		pr_debug("failed to parse event '%s', err %d, str '%s'\n",
-+			 str, ret, err.str);
-+		parse_events_error__print(&err, str);
-+	}
-+
-+	parse_events_error__exit(&err);
-+	evlist__delete(evlist);
-+
-+	return ret;
-+}
-+
- static int test_events(struct evlist_test *events, unsigned cnt)
- {
- 	int ret1, ret2 = 0;
-@@ -2276,6 +2301,26 @@ static int test_pmu_events_alias(char *event, char *alias)
- 	return test_event(&e);
- }
- 
-+static int test_pmu_events_alias2(void)
-+{
-+	static const char events[][30] = {
-+			"event-hyphen",
-+			"event-two-hyph",
-+	};
-+	unsigned long i;
-+	int ret = 0;
-+
-+	for (i = 0; i < ARRAY_SIZE(events); i++) {
-+		ret = test_event_fake_pmu(&events[i][0]);
-+		if (ret) {
-+			pr_err("check_parse_fake %s failed\n", &events[i][0]);
-+			break;
-+		}
-+	}
-+
-+	return ret;
-+}
-+
- static int test__parse_events(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
- {
- 	int ret1, ret2 = 0;
-@@ -2313,6 +2358,10 @@ do {							\
- 			return ret;
- 	}
- 
-+	ret1 = test_pmu_events_alias2();
-+	if (!ret2)
-+		ret2 = ret1;
-+
- 	ret1 = test_terms(test__terms, ARRAY_SIZE(test__terms));
- 	if (!ret2)
- 		ret2 = ret1;
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 879f606e07e6..9739b05b999e 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1697,6 +1697,15 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 			}
- 		}
- 	}
-+
-+	if (parse_state->fake_pmu) {
-+		if (!parse_events_add_pmu(parse_state, list, str, head,
-+					  true, true)) {
-+			pr_debug("%s -> %s/%s/\n", str, "fake_pmu", str);
-+			ok++;
-+		}
-+	}
-+
- out_err:
- 	if (ok)
- 		*listp = list;
-@@ -2168,23 +2177,38 @@ static void perf_pmu__parse_init(void)
-  */
- int perf_pmu__test_parse_init(void)
- {
--	struct perf_pmu_event_symbol *list;
-+	struct perf_pmu_event_symbol *list, *tmp, symbols[] = {
-+		{(char *)"read", PMU_EVENT_SYMBOL},
-+		{(char *)"event", PMU_EVENT_SYMBOL_PREFIX},
-+		{(char *)"two", PMU_EVENT_SYMBOL_SUFFIX},
-+		{(char *)"hyphen", PMU_EVENT_SYMBOL_SUFFIX},
-+		{(char *)"hyph", PMU_EVENT_SYMBOL_SUFFIX2},
-+	};
-+	unsigned long i, j;
- 
--	list = malloc(sizeof(*list) * 1);
-+	tmp = list = malloc(sizeof(*list) * ARRAY_SIZE(symbols));
- 	if (!list)
- 		return -ENOMEM;
- 
--	list->type   = PMU_EVENT_SYMBOL;
--	list->symbol = strdup("read");
--
--	if (!list->symbol) {
--		free(list);
--		return -ENOMEM;
-+	for (i = 0; i < ARRAY_SIZE(symbols); i++, tmp++) {
-+		tmp->type = symbols[i].type;
-+		tmp->symbol = strdup(symbols[i].symbol);
-+		if (!list->symbol)
-+			goto err_free;
- 	}
- 
- 	perf_pmu_events_list = list;
--	perf_pmu_events_list_num = 1;
-+	perf_pmu_events_list_num = ARRAY_SIZE(symbols);
-+
-+	qsort(perf_pmu_events_list, ARRAY_SIZE(symbols),
-+	      sizeof(struct perf_pmu_event_symbol), comp_pmu);
- 	return 0;
-+
-+err_free:
-+	for (j = 0, tmp = list; j < i; j++, tmp++)
-+		free(tmp->symbol);
-+	free(list);
-+	return -ENOMEM;
- }
- 
- enum perf_pmu_event_symbol_type
--- 
-2.26.2
+john@debian:~/kernel-dev2/tools/perf$ sudo ./perf test -vvv 73
+  73: Sigtrap:
+--- start ---
+test child forked, pid 45193
 
+And fails on my x86 broadwell machine:
+
+john@localhost:~/kernel-dev2/tools/perf> sudo ./perf test -v 73
+73: Sigtrap                                                         :
+--- start ---
+test child forked, pid 22255
+FAILED sys_perf_event_open(): Argument list too long
+test child finished with -1
+---- end ----
+Sigtrap: FAILED!
+john@localhost:~/kernel-dev2/tools/perf>
+
+Are there more architectures+platforms for which we need to skip this test?
+
+Thanks,
+John
