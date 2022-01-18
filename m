@@ -2,118 +2,112 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C35C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Jan 2022 14:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E3BC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Jan 2022 15:13:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241337AbiAROoG (ORCPT
+        id S1344742AbiARPNv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 18 Jan 2022 09:44:06 -0500
-Received: from foss.arm.com ([217.140.110.172]:58502 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231658AbiAROoC (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Jan 2022 09:44:02 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB5B41FB;
-        Tue, 18 Jan 2022 06:44:01 -0800 (PST)
-Received: from ip-10-252-15-108.eu-west-1.compute.internal (unknown [10.252.15.108])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0F27E3F766;
-        Tue, 18 Jan 2022 06:43:58 -0800 (PST)
-From:   German Gomez <german.gomez@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc:     German Gomez <german.gomez@arm.com>,
-        Chase Conklin <chase.conklin@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Tue, 18 Jan 2022 10:13:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38918 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1344738AbiARPNv (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 18 Jan 2022 10:13:51 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E88F3C061574;
+        Tue, 18 Jan 2022 07:13:50 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6D08061256;
+        Tue, 18 Jan 2022 15:13:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACE2EC00446;
+        Tue, 18 Jan 2022 15:13:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1642518828;
+        bh=2V5QD/NGrPrH05TztNOm6bMGndJtrFUXsz8eLtOrqwk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=NDQP8ZdKzCNdXbBfTies5lCXfeIUCBmTz1vJ1IW8As/gSAKhVR3JvYRmpESbtlJkx
+         dI98Bk9+yeDqv5x52FNY8BWO33rC2qLvroiBCQ06Gcwe9gzUflr2FEN3qxk2BISaKW
+         BWmhnSyxztFHnshtCmXGEDNJ568g8K5QkJV7tPBcgdekKbqc7fvs2aJwqhKsyGubET
+         dXN/kRoQ4j7cpOoGGBCmruR0XHniLbOzING7Z1jvR0KIBEYaKqunOLvb2qgZ9bhnHP
+         iyQC1wixSmF0nQrXcjav9vRu2QLAfwMuwEriEycbVbEqKd5rttW5lp2FQG884ll10v
+         DyGl8ANAbDNtg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 8EC4040714; Tue, 18 Jan 2022 12:13:46 -0300 (-03)
+Date:   Tue, 18 Jan 2022 12:13:46 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>, Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Stephane Eranian <eranian@google.com>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH v2] perf record/arm-spe: Override attr->sample_period for non-libpfm4 events
-Date:   Tue, 18 Jan 2022 14:40:54 +0000
-Message-Id: <20220118144054.2541-1-german.gomez@arm.com>
-X-Mailer: git-send-email 2.25.1
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/1] perf machine: Use path__join() to compose a path instead
+ of snprintf(dir, '/', filename)
+Message-ID: <YebZKjwgfdOz0lAs@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-A previous patch preventing "attr->sample_period" values from being
-overridden in pfm events changed a related behaviour in arm-spe.
+Its more intention revealing, and if we're interested in the odd cases
+where this may end up truncating we can do debug checks at one
+centralized place.
 
-Before said patch:
-perf record -c 10000 -e arm_spe_0// -- sleep 1
+Motivation, of all the container builds, fedora rawhide started
+complaining of:
 
-Would yield an SPE event with period=10000. After the patch, the period
-in "-c 10000" was being ignored because the arm-spe code initializes
-sample_period to a non-zero value.
+  util/machine.c: In function ‘machine__create_modules’:
+  util/machine.c:1419:50: error: ‘%s’ directive output may be truncated writing up to 255 bytes into a region of size between 0 and 4095 [-Werror=format-truncation=]
+   1419 |                 snprintf(path, sizeof(path), "%s/%s", dir_name, dent->d_name);
+        |                                                  ^~
+  In file included from /usr/include/stdio.h:894,
+                   from util/branch.h:9,
+                   from util/callchain.h:8,
+                   from util/machine.c:7:
+  In function ‘snprintf’,
+      inlined from ‘maps__set_modules_path_dir’ at util/machine.c:1419:3,
+      inlined from ‘machine__set_modules_path’ at util/machine.c:1473:9,
+      inlined from ‘machine__create_modules’ at util/machine.c:1519:7:
+  /usr/include/bits/stdio2.h:71:10: note: ‘__builtin___snprintf_chk’ output between 2 and 4352 bytes into a destination of size 4096
 
-This patch restores the previous behaviour for non-libpfm4 events.
+There are other places where we should use path__join(), but lets get rid of
+this one first.
 
-Reported-by: Chase Conklin <chase.conklin@arm.com>
-Fixes: ae5dcc8abe31 (“perf record: Prevent override of attr->sample_period for libpfm4 events”)
-Signed-off-by: German Gomez <german.gomez@arm.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
-As suggested by Arnaldo, this v2 doesn't include a test in order to not
-block this fix for longer than necessary. So the test can be sent as a
-separate submission later.
+ tools/perf/util/machine.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Changes since v1.
- - Update commit message (James Clark)
----
- tools/perf/util/evsel.c | 25 +++++++++++++++++--------
- 1 file changed, 17 insertions(+), 8 deletions(-)
-
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index a59fb2ecb84e..86ab038f020f 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1065,6 +1065,17 @@ void __weak arch_evsel__fixup_new_cycles(struct perf_event_attr *attr __maybe_un
- {
- }
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 3901440aeff92652..f70ba56912d4f9f8 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -16,6 +16,7 @@
+ #include "map_symbol.h"
+ #include "branch.h"
+ #include "mem-events.h"
++#include "path.h"
+ #include "srcline.h"
+ #include "symbol.h"
+ #include "sort.h"
+@@ -1416,7 +1417,7 @@ static int maps__set_modules_path_dir(struct maps *maps, const char *dir_name, i
+ 		struct stat st;
  
-+static void evsel__set_default_freq_period(struct record_opts *opts,
-+					   struct perf_event_attr *attr)
-+{
-+	if (opts->freq) {
-+		attr->freq = 1;
-+		attr->sample_freq = opts->freq;
-+	} else {
-+		attr->sample_period = opts->default_interval;
-+	}
-+}
-+
- /*
-  * The enable_on_exec/disabled value strategy:
-  *
-@@ -1131,14 +1142,12 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
- 	 * We default some events to have a default interval. But keep
- 	 * it a weak assumption overridable by the user.
- 	 */
--	if (!attr->sample_period) {
--		if (opts->freq) {
--			attr->freq		= 1;
--			attr->sample_freq	= opts->freq;
--		} else {
--			attr->sample_period = opts->default_interval;
--		}
--	}
-+	if ((evsel->is_libpfm_event && !attr->sample_period) ||
-+	    (!evsel->is_libpfm_event && (!attr->sample_period ||
-+					 opts->user_freq != UINT_MAX ||
-+					 opts->user_interval != ULLONG_MAX)))
-+		evsel__set_default_freq_period(opts, attr);
-+
- 	/*
- 	 * If attr->freq was set (here or earlier), ask for period
- 	 * to be sampled.
+ 		/*sshfs might return bad dent->d_type, so we have to stat*/
+-		snprintf(path, sizeof(path), "%s/%s", dir_name, dent->d_name);
++		path__join(path, sizeof(path), dir_name, dent->d_name);
+ 		if (stat(path, &st))
+ 			continue;
+ 
 -- 
-2.25.1
+2.34.1
 
