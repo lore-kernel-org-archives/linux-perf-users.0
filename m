@@ -2,116 +2,118 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1578FC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Jan 2022 12:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C35C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Jan 2022 14:44:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236833AbiARMnx (ORCPT
+        id S241337AbiAROoG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 18 Jan 2022 07:43:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236802AbiARMnw (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Jan 2022 07:43:52 -0500
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC7FAC06161C
-        for <linux-perf-users@vger.kernel.org>; Tue, 18 Jan 2022 04:43:51 -0800 (PST)
-Received: by mail-ed1-x536.google.com with SMTP id f21so21764676eds.11
-        for <linux-perf-users@vger.kernel.org>; Tue, 18 Jan 2022 04:43:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=rTGN2etA9k5qiSP7ZrVqfOL8gvgrJ9M1T4KKkJp0QWM=;
-        b=GgxT31tFLd4a+OUKWDBAd70k8Yeeis6kDp5b2gHUS0rGPxK22UFqKkvQHm0U5/YGny
-         WAI5UQZMbjfqyfhFAt3GUf5SW/PEDJsiYw9N45rxF6tP6Nh4J+6RNR/2alpDopSkfSN5
-         RcCdPiKochKA+ids16pdZwSQcj+xwNyCSwtpYaGzUTt7zdlLTEcvMm+itvOKBadIBs1C
-         SN3Gf7iQ9Hcld3vlEWzY64gJGltq3voMpToPLBCArLOUrq4cgEzzjVDZvnFrgRvmwASO
-         fY40TU7it9R2XzyyGOKm4uZft57FbbxvdnfMULLZTfa4jjfoJoBfeGtJAbQtw1czcSDM
-         PsdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rTGN2etA9k5qiSP7ZrVqfOL8gvgrJ9M1T4KKkJp0QWM=;
-        b=B1FK1vbL9UsQEohb/z+TZVMCZhetHPBpZnIlRTXO2IEZvl94qQtzWPuoYPEo2RVD3S
-         2o6aU58J51VttenFhZleqcQTgVCLlCZxDCVuiz69mPQ4nuQZJXl3SLvK0jRoIQynHt74
-         F1BUI/wq2RyPZRurLiP23LggfonXwo4u8ECpzDTuW+N196xhPP7KP3h3F6PEFK0yq96E
-         g2AwzqtBTGl7M9Y4OY3U1AscMn8KvOLytZXrzEmgqq0+du9Er9ITMLmBRrZZPikTmP4t
-         nG1bTH8chhqVmcGfOK+tJpth2DQMx36oqTeKCDaIt3qSMZXbAWZm4NnfUNX6BzkNllyr
-         b5SA==
-X-Gm-Message-State: AOAM530EYGdxJNMCfFMiheJoZ/JLX1bfeamXgkNg6tCljrLvRlWs0ZoH
-        6w9uZU9ho4cbdL4gyaqOJf8Lww==
-X-Google-Smtp-Source: ABdhPJz18wxKnoCux8+DSsMS7vloPGlf4s5356a/BEFnwnKL4xDDaTm/Qma52lDPuXb9GXYfzIVi+w==
-X-Received: by 2002:a17:906:9b87:: with SMTP id dd7mr19839112ejc.178.1642509830140;
-        Tue, 18 Jan 2022 04:43:50 -0800 (PST)
-Received: from leoy-ThinkPad-X240s ([104.245.96.239])
-        by smtp.gmail.com with ESMTPSA id r27sm2379066ejc.42.2022.01.18.04.43.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jan 2022 04:43:49 -0800 (PST)
-Date:   Tue, 18 Jan 2022 20:43:43 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Marco Elver <elver@google.com>
-Cc:     John Garry <john.garry@huawei.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, svens@linux.ibm.com, gor@linux.ibm.com,
-        sumanthk@linux.ibm.com, hca@linux.ibm.com,
-        Will Deacon <will@kernel.org>,
+        Tue, 18 Jan 2022 09:44:06 -0500
+Received: from foss.arm.com ([217.140.110.172]:58502 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231658AbiAROoC (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 18 Jan 2022 09:44:02 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB5B41FB;
+        Tue, 18 Jan 2022 06:44:01 -0800 (PST)
+Received: from ip-10-252-15-108.eu-west-1.compute.internal (unknown [10.252.15.108])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0F27E3F766;
+        Tue, 18 Jan 2022 06:43:58 -0800 (PST)
+From:   German Gomez <german.gomez@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     German Gomez <german.gomez@arm.com>,
+        Chase Conklin <chase.conklin@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] perf test: Test 73 Sig_trap fails on s390
-Message-ID: <20220118124343.GC98966@leoy-ThinkPad-X240s>
-References: <20211216151454.752066-1-tmricht@linux.ibm.com>
- <CANpmjNNMWtjcKa961SjEvRbbPXyw5M5SkrXbb3tnyL3_XyniCw@mail.gmail.com>
- <90efb5a9-612a-919e-cf2f-c528692d61e2@huawei.com>
- <20220118091827.GA98966@leoy-ThinkPad-X240s>
- <CANpmjNMPoU+1b1fKFuYDYwisW2YfjQHxGt5hgLp1tioG7C2jmg@mail.gmail.com>
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>, Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Stephane Eranian <eranian@google.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH v2] perf record/arm-spe: Override attr->sample_period for non-libpfm4 events
+Date:   Tue, 18 Jan 2022 14:40:54 +0000
+Message-Id: <20220118144054.2541-1-german.gomez@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNMPoU+1b1fKFuYDYwisW2YfjQHxGt5hgLp1tioG7C2jmg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jan 18, 2022 at 12:40:04PM +0100, Marco Elver wrote:
+A previous patch preventing "attr->sample_period" values from being
+overridden in pfm events changed a related behaviour in arm-spe.
 
-[...]
+Before said patch:
+perf record -c 10000 -e arm_spe_0// -- sleep 1
 
-> > Both Arm and Arm64 platforms cannot support signal handler with
-> > breakpoint, please see the details in [1].  So I think we need
-> > something like below:
-> >
-> > static int test__sigtrap(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
-> > {
-> >         ...
-> >
-> >         if (!BP_SIGNAL_IS_SUPPORTED) {
-> >                 pr_debug("Test not supported on this architecture");
-> >                 return TEST_SKIP;
-> >         }
-> >
-> >         ...
-> > }
-> >
-> > Since we have defined BP_SIGNAL_IS_SUPPORTED, I think we can reuse it at
-> > here.
-> >
-> > [1] https://lore.kernel.org/lkml/157169993406.29376.12473771029179755767.tip-bot2@tip-bot2/
-> 
-> Does this limitation also exist for address watchpoints? The sigtrap
-> test does not make use of instruction breakpoints, but instead just
-> sets up a watchpoint on access to a data address.
+Would yield an SPE event with period=10000. After the patch, the period
+in "-c 10000" was being ignored because the arm-spe code initializes
+sample_period to a non-zero value.
 
-Yes, after reading the code, the flow for either instrution breakpoint
-or watchpoint both use the single step [1], thus the signal handler will
-take the single step execution and lead to the infinite loop.
+This patch restores the previous behaviour for non-libpfm4 events.
 
-I am not the best person to answer this question; @Will, could you
-confirm for this?  Thanks!
+Reported-by: Chase Conklin <chase.conklin@arm.com>
+Fixes: ae5dcc8abe31 (“perf record: Prevent override of attr->sample_period for libpfm4 events”)
+Signed-off-by: German Gomez <german.gomez@arm.com>
+---
+As suggested by Arnaldo, this v2 doesn't include a test in order to not
+block this fix for longer than necessary. So the test can be sent as a
+separate submission later.
 
-Leo
+Changes since v1.
+ - Update commit message (James Clark)
+---
+ tools/perf/util/evsel.c | 25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/kernel/hw_breakpoint.c
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index a59fb2ecb84e..86ab038f020f 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1065,6 +1065,17 @@ void __weak arch_evsel__fixup_new_cycles(struct perf_event_attr *attr __maybe_un
+ {
+ }
+ 
++static void evsel__set_default_freq_period(struct record_opts *opts,
++					   struct perf_event_attr *attr)
++{
++	if (opts->freq) {
++		attr->freq = 1;
++		attr->sample_freq = opts->freq;
++	} else {
++		attr->sample_period = opts->default_interval;
++	}
++}
++
+ /*
+  * The enable_on_exec/disabled value strategy:
+  *
+@@ -1131,14 +1142,12 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+ 	 * We default some events to have a default interval. But keep
+ 	 * it a weak assumption overridable by the user.
+ 	 */
+-	if (!attr->sample_period) {
+-		if (opts->freq) {
+-			attr->freq		= 1;
+-			attr->sample_freq	= opts->freq;
+-		} else {
+-			attr->sample_period = opts->default_interval;
+-		}
+-	}
++	if ((evsel->is_libpfm_event && !attr->sample_period) ||
++	    (!evsel->is_libpfm_event && (!attr->sample_period ||
++					 opts->user_freq != UINT_MAX ||
++					 opts->user_interval != ULLONG_MAX)))
++		evsel__set_default_freq_period(opts, attr);
++
+ 	/*
+ 	 * If attr->freq was set (here or earlier), ask for period
+ 	 * to be sampled.
+-- 
+2.25.1
+
