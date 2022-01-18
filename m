@@ -2,140 +2,115 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE9DC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Jan 2022 11:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9FCEC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Jan 2022 12:32:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240389AbiARLkR (ORCPT
+        id S230172AbiARMcf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 18 Jan 2022 06:40:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45876 "EHLO
+        Tue, 18 Jan 2022 07:32:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239489AbiARLkQ (ORCPT
+        with ESMTP id S229604AbiARMce (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Jan 2022 06:40:16 -0500
-Received: from mail-ot1-x335.google.com (mail-ot1-x335.google.com [IPv6:2607:f8b0:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65E16C06161C
-        for <linux-perf-users@vger.kernel.org>; Tue, 18 Jan 2022 03:40:16 -0800 (PST)
-Received: by mail-ot1-x335.google.com with SMTP id c3-20020a9d6c83000000b00590b9c8819aso23736944otr.6
-        for <linux-perf-users@vger.kernel.org>; Tue, 18 Jan 2022 03:40:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DYGWZCJtnfIL0hu+yeMxYhxnO6RLRB9uj48XOeWHa+E=;
-        b=Q5fKoiAyjwUL1QxZfAc9NP29WkhOZF1YyACXXj9RueWaHi1dGO1SDcRVPhWHOX+uB4
-         Zzl98rgrLBmOmiDUIegtvVXAzoj0kSvJRAxElWdxHFsjPKHkRvqGiIr36L0h5TLs8iGG
-         G79LUMDyEQRi16YMC2sKEFHp7PtaYkJP1UgQHZWdEjmx8SmT9X0Qem4bqV8TarcKleu+
-         3O4IO9IZ5Mz8BFqCfanItjYI8K8LGOVgs08yAqtCaDjRA1sgv0N5Cwd328OOH4YS+vOa
-         9SjM4TPlpY+yljiyqoDppUXKc8ef0TJvhdySV0z2XXRRhhNNpJblm1GJ7xInxOCDvqE5
-         OHNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DYGWZCJtnfIL0hu+yeMxYhxnO6RLRB9uj48XOeWHa+E=;
-        b=mPJhCYUbtyiufmd6G86FrrCdWoCFdYBAY2aIBZUHOPEfem9yRnz698tAB0Sg4gRp8L
-         sk2VDI/zX9RZa6CxvgXHWvuoGeD1+6XAv2xF6jvt9wWzJfooYLyk/uifjQLAXiG+PBdi
-         7vAApSreexeVa6Kk+WvM+lnn/CwaRezQw5LET2zT/NPSdjvejwRjPrDVckXSZy7HIAXL
-         10t8TXxxAR6xL/GhQbrh1J9V1xfj7faH4WDdlFzjbJwz0AJK5rxIsMWD8iOtyDxmTEs9
-         tubkCRhLL6sCYHaW20zxYZhymrA+F3OE6QoMZ2MiOKuAJ17RDlfBdzfEHixCEF9Pfgbd
-         0UHw==
-X-Gm-Message-State: AOAM530v+ZYTQ8WLpKKWHOilXawUQKUFjBwIXT9k/aL8dXuTTSiIdlYy
-        +pZQKzy+zdahvCzbT98VIz2ZbsMQ9o8rRl6aj7ugog==
-X-Google-Smtp-Source: ABdhPJw0SRdiEUCu/e6KV+EnYwSn5ooQpcjSojjZx+2jX9yTxj9BW1Q4L3w0ENbYRu/QYUSM6YmcN9ng4iuOb8zbBl4=
-X-Received: by 2002:a9d:58c7:: with SMTP id s7mr5124688oth.246.1642506015453;
- Tue, 18 Jan 2022 03:40:15 -0800 (PST)
-MIME-Version: 1.0
-References: <20211216151454.752066-1-tmricht@linux.ibm.com>
- <CANpmjNNMWtjcKa961SjEvRbbPXyw5M5SkrXbb3tnyL3_XyniCw@mail.gmail.com>
- <90efb5a9-612a-919e-cf2f-c528692d61e2@huawei.com> <20220118091827.GA98966@leoy-ThinkPad-X240s>
-In-Reply-To: <20220118091827.GA98966@leoy-ThinkPad-X240s>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 18 Jan 2022 12:40:04 +0100
-Message-ID: <CANpmjNMPoU+1b1fKFuYDYwisW2YfjQHxGt5hgLp1tioG7C2jmg@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Test 73 Sig_trap fails on s390
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     John Garry <john.garry@huawei.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
+        Tue, 18 Jan 2022 07:32:34 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47FABC061574;
+        Tue, 18 Jan 2022 04:32:34 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D929061380;
+        Tue, 18 Jan 2022 12:32:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 254E8C00446;
+        Tue, 18 Jan 2022 12:32:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1642509153;
+        bh=F9Vu7ZI1/HnPH5QGZNUeqh85iKDiHrkRW8l6raKQS+M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WmrASj3abHpIKN7ju1MqlFtWwY+yzZqkpVOdWr9pT+nikc5uQwHJvmtPWBEot56md
+         8uvZW3fsAR01ws0X7LKtkgykQPuSBRUmSBVW4m6f7KaT0lwPDeBthRSs8PzjAhT7GA
+         R+0zSy1emkBLdDXSNtPlX4fzkCZ1zu1fVl2CGXHX86Il4GXhXQ0r6B1BFTwrtUyedw
+         JPLgOvn+LpML56YCXJMB+yUpqjTqQilfATvLW6sTKW5h5kjDZRw7ymla0/98zQKfIt
+         2qMA6YcSN2HomakS+9yo1mldhDfarQsr817bsuoRUg99WsnmP7vcvQl29uy82WyFss
+         9Ig7+VjIMb9vA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 86E8440714; Tue, 18 Jan 2022 09:32:30 -0300 (-03)
+Date:   Tue, 18 Jan 2022 09:32:30 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     German Gomez <german.gomez@arm.com>
+Cc:     Ian Rogers <irogers@google.com>, James Clark <james.clark@arm.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, svens@linux.ibm.com, gor@linux.ibm.com,
-        sumanthk@linux.ibm.com, hca@linux.ibm.com,
-        Will Deacon <will@kernel.org>,
+        Chase Conklin <chase.conklin@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Stephane Eranian <eranian@google.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH] perf record/arm-spe: Override attr->sample_period for
+ non-libpfm4 events
+Message-ID: <YeazXmnjkET7h5LW@kernel.org>
+References: <20220114212102.179209-1-german.gomez@arm.com>
+ <c2b960eb-a25e-7ce7-ee4b-2be557d8a213@arm.com>
+ <35a4f70f-d7ef-6e3c-dc79-aa09d87f0271@arm.com>
+ <CAP-5=fUHT29Z8Y5pMdTWK4mLKAXrNTtC5RBpet6UsAy4TLDfDw@mail.gmail.com>
+ <10cc73f1-53fd-9c5a-7fe2-8cd3786fbe37@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <10cc73f1-53fd-9c5a-7fe2-8cd3786fbe37@arm.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, 18 Jan 2022 at 10:18, Leo Yan <leo.yan@linaro.org> wrote:
->
-> On Mon, Jan 17, 2022 at 03:39:10PM +0000, John Garry wrote:
-> > On 16/12/2021 15:48, Marco Elver wrote:
-> >
-> > +
-> >
-> > > On Thu, 16 Dec 2021 at 16:15, Thomas Richter<tmricht@linux.ibm.com>  wrote:
-> > > > In Linux next kernel
-> > > > Commit 5504f67944484 ("perf test sigtrap: Add basic stress test for sigtrap handling")
-> > > > introduced the new test which uses breakpoint events.
-> > > > These events are not supported on s390 and PowerPC and always fail:
-> > > >
-> > > >   # perf test -F 73
-> > > >   73: Sigtrap                                                         : FAILED!
-> > > >   #
-> > > >
-> > > > Fix it the same way as in the breakpoint tests in file
-> > > > tests/bp_account.c where these type of tests are skipped on
-> > > > s390 and PowerPC platforms.
-> > > >
-> > > > With this patch skip this test on both platforms.
-> > > >
-> > > > Output after:
-> > > >   # ./perf test -F 73
-> > > >   73: Sigtrap
-> > > >
-> > > > Fixes: 5504f67944484 ("perf test sigtrap: Add basic stress test for sigtrap handling")
-> > > >
-> > > > Cc: Marco Elver<elver@google.com>
-> > > > Signed-off-by: Thomas Richter<tmricht@linux.ibm.com>
-> > > Acked-by: Marco Elver<elver@google.com>
-> > >
-> > > Thanks, and sorry for missing this case!
-> > >
-> >
-> > I am finding that this test hangs on my arm64 machine:
-> >
-> > john@debian:~/kernel-dev2/tools/perf$ sudo ./perf test -vvv 73
-> >  73: Sigtrap:
-> > --- start ---
-> > test child forked, pid 45193
->
-> Both Arm and Arm64 platforms cannot support signal handler with
-> breakpoint, please see the details in [1].  So I think we need
-> something like below:
->
-> static int test__sigtrap(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
-> {
->         ...
->
->         if (!BP_SIGNAL_IS_SUPPORTED) {
->                 pr_debug("Test not supported on this architecture");
->                 return TEST_SKIP;
->         }
->
->         ...
-> }
->
-> Since we have defined BP_SIGNAL_IS_SUPPORTED, I think we can reuse it at
-> here.
->
-> [1] https://lore.kernel.org/lkml/157169993406.29376.12473771029179755767.tip-bot2@tip-bot2/
+Em Mon, Jan 17, 2022 at 09:32:55PM +0000, German Gomez escreveu:
+> Hi Ian,
+> 
+> On 17/01/2022 16:28, Ian Rogers wrote:
+> > [...]
+> > Thanks for fixing this, I can add an acked-by for the v2 patch. Could
+> > we add a test for this to avoid future regressions? There are similar
+> > tests for frequency like:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/tests/attr/test-record-freq
+> > based on the attr.py test:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/tests/attr.py
+> > The test specifies a base type of event attribute and then what is
+> > modified by the test. It takes a little to get your head around but
+> > having a test for this would be a welcome addition.
+> 
+> I agree I should have included a test for this fix. I'll look into this for the v2.
 
-Does this limitation also exist for address watchpoints? The sigtrap
-test does not make use of instruction breakpoints, but instead just
-sets up a watchpoint on access to a data address.
+A test is always good to have, we need more, yeah.
 
-Thanks,
--- Marco
+But since this is a fix and what is needed for v2 is just to improve the
+wording, please don't let the test to prevent you from sending the
+updated fix.
+
+Then you can go on and work on the test.
+
+I say this because the merge window may close before the test gets ready
+and its better for us to have fixes merged as soon as possible so that
+we have more time to figure out if it has unintended consequences as it
+gets in place for longer.
+ 
+> Other events such as "-p 10000 -e cycles//" worked fine. Only the ones with aux area tracing (arm_spe, cs_etm, intel_pt) were ignoring the global config flags.
+> 
+> Thank you for the pointers, and the review,
+> German
+> 
+> >
+> > Thanks!
+> > Ian
+> >
+> >> Thanks for the review,
+> >> German
+
+-- 
+
+- Arnaldo
