@@ -2,1007 +2,159 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABC7C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Jan 2022 23:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B3EC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Jan 2022 13:37:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350199AbiARXFz (ORCPT
+        id S233348AbiASNhq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 18 Jan 2022 18:05:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350198AbiARXFy (ORCPT
+        Wed, 19 Jan 2022 08:37:46 -0500
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:15656 "EHLO
+        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230422AbiASNhp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Jan 2022 18:05:54 -0500
-Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8FE4C06161C;
-        Tue, 18 Jan 2022 15:05:54 -0800 (PST)
-Received: by mail-io1-xd34.google.com with SMTP id v6so583973iom.6;
-        Tue, 18 Jan 2022 15:05:54 -0800 (PST)
+        Wed, 19 Jan 2022 08:37:45 -0500
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 20J9QLED012909;
+        Wed, 19 Jan 2022 13:37:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : content-type : mime-version; s=corp-2021-07-09;
+ bh=UbPfO+QloSM+95WuVlKkIDL17TqMy6AIuk3CR2nNoaI=;
+ b=aO7+yyvys3JjAJbpX+tWHIIIERR/Ka0YSfh8mRjsTAL6/WOA1baqKMYpNxop/nPi05Rc
+ Pba3kiiSkiap8wcTEXmQsC/RY6Ws1bYLsvWGw59N9bNq+OISHA0PBK2PjsaggIn1IJWb
+ Ymw/+H0q5izxtmfrRwzMmZlgsPgU8g5qXRVbkict3i8qI7JkwyQcDuTm0ZZAgjweVKXf
+ aTZmjWfSsOMShiFSv6YsRKxECDrNRepQL2Wz+L9zEnCa/AscTfOxe5OH7o4QUUvyl7gE
+ QEIOGUx6SLyRBzXc4Nw4n2KZw1UYbGCvK17eFJ2b/BMO9SKv+CnD8Oaa9S6sdT9GebtM eA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3dnc4q55q7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jan 2022 13:37:42 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 20JDb7XL041321;
+        Wed, 19 Jan 2022 13:37:42 GMT
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2106.outbound.protection.outlook.com [104.47.70.106])
+        by aserp3020.oracle.com with ESMTP id 3dkp35w2jm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jan 2022 13:37:41 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KzgzB5IHNEe9nKU5C4D3ObzeWeDT2RDJLQtXMnjVHqVv7UCsn+dBpv1ErOvDZxk9D4q3WG43gspUbFqYrIU3+gEHGvXlHMZfM0Yu0N9CChWMT9bxF1Bfd2jDjqBf12ajGOPqrbyCr+1BxgriHYx1wekeqjo32ratZLjHgKUJ8CD+5f5nPWCJbzDiJnKQuJH6a6w9UoXl5Ua6xwQxOgtTKEMnbigEQcsN8DWa2BUoX7Atv06T4MmSJUCHBxdRZbf6bZl0YzS1Dre/hksHZeMZG2v9I17U+So2EiRaEyz8s1o0DoA9fOSwfy8o+7goxQsjhIshW1Kmsu5gKLwxuD4+1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UbPfO+QloSM+95WuVlKkIDL17TqMy6AIuk3CR2nNoaI=;
+ b=L2CsXWWe4aRH59IGLtINjKwMUvoLSxGzGm/CPCSOES4K6loiNQ9Qt84TGiWsNiKTVUE9cp8BgSdNtjbii8Xju8GZm71hswK4ZvWxlblS6Ry/WKb6hGJnpdT147SyHff+UX36qCFj+elix5yi8znl1IexKm+1vCylvtxkmrYY67F5huKzxLzh79T6EOzAIQe2p9VWnTVsolNdrMVFntsm30AcU+JPJCqy+SCa854YOUmK8LRyJrPSa+jWDjVrxyEaz/eAda5BnRmyjWffIX6mfTX4VbvqnSgwdUc3s4+TOzcGWatVub1u5fJIk52W98DYRbTyqDX4ESmTC6vQLKs0OQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w5i0RTrroDYTbi9TZR3heCgAPrpAReLdB9RtYfPfhKI=;
-        b=S1EyFocXxECEFNu7pxQHsLcK52mHCXDEYAfV2AX8+1DQy33HiAh5pRtF9dO4mjA//m
-         bVQStzOVF5zqlQUVhnFBFBdwekW7PFt/Biq7KQhNut2TyueTeuXiu/uvN/aHuY9QLcQG
-         DPsEg0YyFxqUgNyKpbwouPyghvJJAy2ofyj49QGRi+0ovcZgZ1C/3tQN2Jai3M5nIoyd
-         om4bf88PMo6fO+E0dra6JrUUT0QXAiS4QWUpRyeofsJGYqcVM5L7QNRgPrwetkul23WL
-         a/QSn1irJWHGDIadnPV1EuNSYk1ATw7sbyIAnHtUzFnIRkMvp27WJZd030YYMqkO63uw
-         V81A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w5i0RTrroDYTbi9TZR3heCgAPrpAReLdB9RtYfPfhKI=;
-        b=0MdwkHQ2WFfEC7JfgFGCnAeg8UAOwmefpGuX2hzBCCagr3tQ3trQRpfd4ndgYRSkdO
-         /GYiYbzDezHPQIW7pUOTvcL3Bq9a/sZvjfC0hi8pLJZISXVk+nT8RhBPwmQti1AjfP0v
-         HW5AKt1DEJddxH8sV8jZn/xNvDQGd0H0ecEdvujKHwhB6l4GraT3vFcogDZdYKTU1lbX
-         egHpHFtelpdlxWMrVloNk0M3KbqMOoZWuypJZiPHSXJ0HbGRQS9pwdYkVP1yHBO1KO7z
-         /h8xCMbLbvBRhe3ESA2I43EZ1jYV+BEvF37btcu1cHthAduibtrWhm/oWSED6l+m9I2q
-         v58w==
-X-Gm-Message-State: AOAM532YMzs/39tIcelmBejH9fZn1uZgnx2Wn0h/maMmwT0m3XCATTXJ
-        TjvqVshA31PKolRqXxlXCyE+JbRHPBPBrLRrUPg=
-X-Google-Smtp-Source: ABdhPJwzgDIGyrLj2jByop37eVS5Oufe4SfLIqv1KWQfYg/eMUPzLA4L9MOvZRV0CzRcfTP+UDI21/znp+Eh0UlZxO0=
-X-Received: by 2002:a02:8648:: with SMTP id e66mr12352670jai.145.1642547152967;
- Tue, 18 Jan 2022 15:05:52 -0800 (PST)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UbPfO+QloSM+95WuVlKkIDL17TqMy6AIuk3CR2nNoaI=;
+ b=mA2PvlM6m8yQfokTkpWkdZZ9lbyDTgDZzxPPPouT/5HMfePxn/5g5bkAwBlKE7kLst8aMQ9apGRIA0iANO0/SzNwWRoZqfuhqqAZMARn5e4FwfLGMjufjXKENkFWM9c1ZX8x+Qv6oZg82LM8sKhAt4/DKnLdfMEjaL3G7gOM30M=
+Received: from MWHPR1001MB2365.namprd10.prod.outlook.com
+ (2603:10b6:301:2d::28) by BN6PR1001MB2308.namprd10.prod.outlook.com
+ (2603:10b6:405:2b::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4888.10; Wed, 19 Jan
+ 2022 13:37:40 +0000
+Received: from MWHPR1001MB2365.namprd10.prod.outlook.com
+ ([fe80::c13b:5812:a403:6d96]) by MWHPR1001MB2365.namprd10.prod.outlook.com
+ ([fe80::c13b:5812:a403:6d96%6]) with mapi id 15.20.4909.008; Wed, 19 Jan 2022
+ 13:37:39 +0000
+Date:   Wed, 19 Jan 2022 16:37:29 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     bigeasy@linutronix.de
+Cc:     linux-perf-users@vger.kernel.org
+Subject: [bug report] irq_work: Allow irq_work_sync() to sleep if irq_work()
+ no IRQ support.
+Message-ID: <20220119133729.GA14183@kili>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: ZR0P278CA0132.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:40::11) To MWHPR1001MB2365.namprd10.prod.outlook.com
+ (2603:10b6:301:2d::28)
 MIME-Version: 1.0
-References: <YcGO271nDvfMeSlK@krava> <CAEf4BzZpNvEtfsVHUJGfwi_1xM+7-ohBPKPrRo--X=fYkYLrsw@mail.gmail.com>
- <YcMr1LeP6zUBdCiK@krava> <CAEf4Bzb2HWiuJmeb6WxE2Dift5qQOLBE=j1ZqfpVMjuWV3+EDg@mail.gmail.com>
- <CAPqJDZouQHpUXv4dEGKKe=UjwkZu3=GMQ2M9g2zLYOV6a=gZbw@mail.gmail.com>
- <YdRccTaunl9Fo63X@krava> <YdWhz1qaRncxNC/6@krava> <CAPqJDZpZrrg4UBz19H-HyEMk7rzn+PCe=qpYDR0uHvD3nPr4yw@mail.gmail.com>
- <YeBBzbfjOgE/wfjK@krava> <CAEf4BzatQ-y=kvTYvLj0rdtPTWuhNtep6gfWPj-aru7psfD9AQ@mail.gmail.com>
- <YeU2J91BQI8ig1TV@krava>
-In-Reply-To: <YeU2J91BQI8ig1TV@krava>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 18 Jan 2022 15:05:41 -0800
-Message-ID: <CAEf4Bzasu3xW7=D1CLfXARmGdyrnWGuepLyW+4HgJK2Q7Kervg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 2/2] perf: stop using deprecated
- bpf__object_next() API
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Christy Lee <christylee@fb.com>,
-        Christy Lee <christyc.y.lee@gmail.com>,
-        bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>,
-        He Kuang <hekuang@huawei.com>, Wang Nan <wangnan0@huawei.com>,
-        Wang ShaoBo <bobo.shaobowang@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5d2333e4-7bd8-4574-fde8-08d9db50dcb9
+X-MS-TrafficTypeDiagnostic: BN6PR1001MB2308:EE_
+X-Microsoft-Antispam-PRVS: <BN6PR1001MB2308F139F267C341D07BDF2A8E599@BN6PR1001MB2308.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: bde9M0sdWN44hN3MmGbi9bnbBtW1qzyGAFWEuYWBcsip7gKPRKnxLxZdJr77nKAuD9HWINkRJPJkVXA64g7bO3puLEtaJengfauQValJkdKAq6o7vC0TyIaS7cSkIKQm3ypX/eEk0wVniPuNTsZvfM4Z8VvB0mh46EAc1PxFGeT1YajtFinQVmatLgvGpIZi/bIE2NalyQHgMrpcAgu06nQVldylN+GEgW2DkhKWXRQl07BoQL6JRoKDluu0p6s/C6nTtgrtmyCcIuztIo84lty2xb4++TRypasxOr40kvcHx4z//0tGWw9mb2mLTBeMOQjgybvW2+aW0llUkLOmV/1GXbuuwWB7wABK2XhzaANRtQSAhkrHneOKILLPrZJ9Qsta45h+26LxkII+BdF/hn38IRx29w7dV7HcnKYnr0922sghVn/tVGtGBUcOcoFJDSJyJidfkDa/9Knh2TTsMFTCQNh6W5lKdCh0SvGWPdnt/gtPzIitSYYtwG0dxb80QFeGWUVLf46Ur4eTu1t2Z59YFH5fI/U4HleQmTq+9ktalQSuM/O0p8EM2fmH07KvwKzyIsANopI1ckPOFbPnPgPtA235MXMwrGWFb99VCT+dYoxS+ddY6Egcjq5Jznj9cbUHy4R5P80R66XZX7scU7Cfvms5PjTMjyjd+cFEu9YDPQ1320wu/351rPZnpq9N5M1ofycC130EEw95sKqJ3g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2365.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(366004)(38350700002)(44832011)(6916009)(86362001)(38100700002)(83380400001)(316002)(8936002)(6666004)(66556008)(33656002)(508600001)(4744005)(2906002)(33716001)(1076003)(8676002)(66946007)(186003)(4326008)(66476007)(6512007)(52116002)(26005)(9686003)(5660300002)(6486002)(6506007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?8B6KX081OQlSNVmeERNuR9gouVSE0YUCqVnpTcfEAOS1fGAEzrjQw/BStmT5?=
+ =?us-ascii?Q?4QVITzP26aOcFoEuV7m+4dTnCmw/gMrv45t0kMSiu2K02iCqRo46zzEOFfTF?=
+ =?us-ascii?Q?ieiEI2U4g2iGpfnC3eYoBTkMvEyrd4w+gtlZwQVIXd0CJWMrPE9Q45kpUDHL?=
+ =?us-ascii?Q?nvoZ3gXYp7e9dtc9O9FaJ6Uyt89i8LzO2aE3HkTYFdprTMOhwELkll/M+tnR?=
+ =?us-ascii?Q?LaeHSkCkE77ksr/KjP2BVpy+nqeBtqYYv94HXBIoqDWr5RhRMwg/n5TqyHC8?=
+ =?us-ascii?Q?+hHw+LvYV2rOH1avyauXnELK5ToQpO6LXFABFGFp1JyylETxEGoLGINnl3QD?=
+ =?us-ascii?Q?2fUnu8CdziBQqKXjPVGFTZ3Phq1qi0AVEMFixodtBkPShHsHseawmKfHavDO?=
+ =?us-ascii?Q?X5I8NpSmFejLEKDUitZAx53/tiyRH7VFnZMxyQwb+Iig+5I0vk+7p7b9j1rQ?=
+ =?us-ascii?Q?KTtBT2DMT2T9nIfmRvKh+vk0HIhhV4c9dNhy9QcqPuLjBL1/Nuhe5wI4SBQ8?=
+ =?us-ascii?Q?7CKnGi+wc/Sd1cBakzZOpJ0bw/JGAtGzA2FEpRHeVogQPfXTSr5XBZskMpXM?=
+ =?us-ascii?Q?XTfhM1tLjIQNi5BGcG+ZuFQzUPzTiAFKrDDV0Kz55CkCegC5l7G2HM4j0ZAH?=
+ =?us-ascii?Q?nZk+sUE3ZIhvb1R8HZ6vtMfZogWWhtkDN5hgMSwUtRI6a7hL8gW/f/VWSDC4?=
+ =?us-ascii?Q?9xWe56Cc4BYGBXMpc/YppRXL6Y38XxaKLTSwAi7m6v3WOkBrlIX1j2JpUNan?=
+ =?us-ascii?Q?LqCKgAhk4pNLdAtZcPHuSm6L0EbSkB6BVPJg0CeTyCgdH1bKsRL8FlfsYPiL?=
+ =?us-ascii?Q?D0Vc3+OrP+OHPU2vX91EAuZgvngpaMXW0F7BCLJS+h3uRXGl//5hnvwJ4XSX?=
+ =?us-ascii?Q?4i6mCm9X4n7EdKPCdU9f62xFEYwZJ4R2Qk0k/60xzaK7q0glbVqafoKQhi20?=
+ =?us-ascii?Q?GN+Cl2YpDSwt0SGJUCFGsVRNgPJckPkUqHVC1F+lgbrI3yLYkVXjnqUxMNUm?=
+ =?us-ascii?Q?8SoSiknbDqaSqXTcZWZ2emeuFmFD58tyYGSIf6E1q2iRCCRKApCo1W/MChLf?=
+ =?us-ascii?Q?Z4F+ghVKtNMoyTmMbFu3UfCj8Nr0A3C0CADCp7bL0PZ1PkxDypmi59KEgAbh?=
+ =?us-ascii?Q?RcXwIqI+1qp8xUMjNdRxN1eIKzKktX0puf9/pGE+oi5Pc1QtiKdDA5jKXHJK?=
+ =?us-ascii?Q?IGNtbfjdfQHNm85nuMZ/uyt5bnhP+ZeoOgxRS5GvO1KuAoKXAgKU6BeM52uv?=
+ =?us-ascii?Q?bl65vPh1lE/13+Yfm2W9vEu2XQwndLmy9P2Mo/5C9YglhkgltoqpU+5TWiN5?=
+ =?us-ascii?Q?jio6XpEIrZtKXRVhzdBIYPJmqEoHODrxYqvtWKwwXFgTEl6CAufzRin6M5pi?=
+ =?us-ascii?Q?u9YRV2/re4EqVlpTAwMFKbl2rvccu2yWfe3gzvY3WMUmwRYmxO2cPZGrHc4j?=
+ =?us-ascii?Q?Thmolrt8QM4iDpszCQPAMLJUoUO3vNt6GIeEeUbLiefUDoMHqOGdE1RQnEJD?=
+ =?us-ascii?Q?FUiEpdaz8xIJhKFmr+uWW03ZtA+L+GiIvBsg+nO92JUKEp2IUmtf3uelCTfq?=
+ =?us-ascii?Q?hnlb6pZejBIxFR4IaFjlGOVuspeZLdvRWn+i6cNeQDvGhm7dAw1Ne/jOvxXT?=
+ =?us-ascii?Q?Rj/ALnDK5vB8BH8QPkcOotmEvCR515ztm2k4UU/0dXXTrVkCDNY+ZeL6X58f?=
+ =?us-ascii?Q?4QeoHCEuD1zJeztIEnOULLbJe/0=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5d2333e4-7bd8-4574-fde8-08d9db50dcb9
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1001MB2365.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2022 13:37:39.8397
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wMOxkcB5e0Xy4lLuAKgRpmhFwXDxMGNGYk2VJd1pECZoDZgz9MAHaoh0a5MbPpGg1fgaP1DqgfVgVNd3N1nQpY4Nnh4wljeCMb1h0d8aOXY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1001MB2308
+X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10231 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0
+ mlxlogscore=999 adultscore=0 suspectscore=0 malwarescore=0 mlxscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2201190078
+X-Proofpoint-GUID: cTpPJQy30j_6NMKINwTp9oiSK7BFHgou
+X-Proofpoint-ORIG-GUID: cTpPJQy30j_6NMKINwTp9oiSK7BFHgou
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jan 17, 2022 at 1:26 AM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Fri, Jan 14, 2022 at 01:00:45PM -0800, Andrii Nakryiko wrote:
-> > On Thu, Jan 13, 2022 at 7:14 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> > >
-> > > On Thu, Jan 06, 2022 at 09:54:38AM -0800, Christy Lee wrote:
-> > > > Thank you so much, I was able to reproduce the original tests after applying
-> > > > the bug fix. I will submit a new patch set with the more detailed comments.
-> > > >
-> > > > The only deprecated functions that need to be removed after this would be
-> > > > bpf_program__set_prep() (how perf sets the bpf prologue) and
-> > > > bpf_program__nth_fd() (how perf leverages multi instance bpf). They look a
-> > > > little more involved and I'm not sure how to approach those. Jiri, would you
-> > > > mind taking a look at those please?
-> > >
-> > > hi,
-> > > I checked and here's the way perf uses this interface:
-> > >
-> > >   - when bpf object/sources is specified on perf command line
-> > >     we use bpf_object__open to load it
-> > >
-> > >   - user can define parameters in the section name for each bpf program
-> > >     like:
-> > >
-> > >       SEC("lock_page=__lock_page page->flags")
-> > >       int lock_page(struct pt_regs *ctx, int err, unsigned long flags)
-> > >       {
-> > >              return 1;
-> > >       }
-> > >
-> > >     which tells perf to 'prepare' some extra bpf code for the program,
-> > >     like to put value of 'page->flags' into 'flags' argument above
-> > >
-> > >   - perf generates extra prologue code to retrieve this data and does
-> > >     that before the program is loaded by using bpf_program__set_prep
-> > >     callback
-> > >
-> > >   - now the reason why we use bpf_program__set_prep for that, is because
-> > >     it allows to create multiple instances for one bpf program
-> > >
-> > >   - we need multiple instances for single program, because probe can
-> > >     result in multiple attach addresses (like for inlined functions)
-> > >     with possible different ways of getting the arguments we need
-> > >     to load
-> > >
-> > > I guess you want to get rid of that whole 'struct instances' related
-> > > stuff, is that right?
-> > >
-> > > perf would need to load all the needed instances for program manually
-> > > and somehow bypass/workaround bpf_object__load.. is there a way to
-> > > manually add extra programs to bpf_object?
-> > >
-> > > thoughts? ;-)
-> >
-> > Sigh..
-> >
-> > 1. SEC("lock_page=__lock_page page->flags") will break in libbpf 1.0.
-> > I'm going to add a way to provide a custom callback to handle such BPF
-> > program sections by your custom code, but... Who's using this? Is
-> > anyone using this? How is this used and for what? Would it be possible
-> > to just kill this feature?
->
-> good question ;-) IMO it was added in the early ebpf times, when nobody
-> knew what will become the preferred way of doing things
->
-> we don't know if there are any users of this, but:
->
-> I had to go through the code to find out how to use it and it was broken
-> in perf trace for some time while nobody complained ;-) also I don't think
-> this is advertised anywhere in the doc
->
-> Arnaldo,
-> thoughts on removing this? ;-) I tried with the quick patch below, and
+Hello Sebastian Andrzej Siewior,
 
-The fact that it was broken and no one complained and amount of
-removed lines (not even talking about deprecated libbpf APIs) makes me
-heavily +1'ing this! :) Thanks for performing code archeology!
+The patch 810979682ccc: "irq_work: Allow irq_work_sync() to sleep if
+irq_work() no IRQ support." from Oct 6, 2021, leads to the following
+Smatch static checker warning:
 
-> the standard perf trace ebpf support won't be affected by this
->
-> the patch is removing the support for generating the ebpf program prologue
-> which includes the usage of libbpf's instances APIs
->
-> we could also remove the special section config parsing, which is used
-> by prologue generation code
->
-> jirka
->
->
-> ---
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 96ad944ca6a8..d9ff537d999e 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -556,17 +556,6 @@ ifndef NO_LIBELF
->        endif
->      endif
->
-> -    ifndef NO_DWARF
-> -      ifdef PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET
-> -        CFLAGS += -DHAVE_BPF_PROLOGUE
-> -        $(call detected,CONFIG_BPF_PROLOGUE)
-> -      else
-> -        msg := $(warning BPF prologue is not supported by architecture $(SRCARCH), missing regs_query_register_offset());
-> -      endif
-> -    else
-> -      msg := $(warning DWARF support is off, BPF prologue is disabled);
-> -    endif
-> -
->    endif # NO_LIBBPF
->  endif # NO_LIBELF
->
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 6ac2160913ea..a04c02aed4c7 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -2685,20 +2685,6 @@ int cmd_record(int argc, const char **argv)
->         set_nobuild('\0', "clang-path", true);
->         set_nobuild('\0', "clang-opt", true);
->  # undef set_nobuild
-> -#endif
-> -
-> -#ifndef HAVE_BPF_PROLOGUE
-> -# if !defined (HAVE_DWARF_SUPPORT)
-> -#  define REASON  "NO_DWARF=1"
-> -# elif !defined (HAVE_LIBBPF_SUPPORT)
-> -#  define REASON  "NO_LIBBPF=1"
-> -# else
-> -#  define REASON  "this architecture doesn't support BPF prologue"
-> -# endif
-> -# define set_nobuild(s, l, c) set_option_nobuild(record_options, s, l, REASON, c)
-> -       set_nobuild('\0', "vmlinux", true);
-> -# undef set_nobuild
-> -# undef REASON
->  #endif
->
->         rec->opts.affinity = PERF_AFFINITY_SYS;
-> diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-> index 22662fc85cc9..0e3f24dfee2c 100644
-> --- a/tools/perf/util/bpf-loader.c
-> +++ b/tools/perf/util/bpf-loader.c
-> @@ -40,10 +40,6 @@ struct bpf_prog_priv {
->         char *sys_name;
->         char *evt_name;
->         struct perf_probe_event pev;
-> -       bool need_prologue;
-> -       struct bpf_insn *insns_buf;
-> -       int nr_types;
-> -       int *type_mapping;
->  };
->
->  static bool libbpf_initialized;
-> @@ -125,8 +121,6 @@ clear_prog_priv(struct bpf_program *prog __maybe_unused,
->         struct bpf_prog_priv *priv = _priv;
->
->         cleanup_perf_probe_events(&priv->pev, 1);
-> -       zfree(&priv->insns_buf);
-> -       zfree(&priv->type_mapping);
->         zfree(&priv->sys_name);
->         zfree(&priv->evt_name);
->         free(priv);
-> @@ -409,220 +403,6 @@ static int bpf__prepare_probe(void)
->         return err;
->  }
->
-> -static int
-> -preproc_gen_prologue(struct bpf_program *prog, int n,
-> -                    struct bpf_insn *orig_insns, int orig_insns_cnt,
-> -                    struct bpf_prog_prep_result *res)
-> -{
-> -       struct bpf_prog_priv *priv = bpf_program__priv(prog);
-> -       struct probe_trace_event *tev;
-> -       struct perf_probe_event *pev;
-> -       struct bpf_insn *buf;
-> -       size_t prologue_cnt = 0;
-> -       int i, err;
-> -
-> -       if (IS_ERR_OR_NULL(priv) || priv->is_tp)
-> -               goto errout;
-> -
-> -       pev = &priv->pev;
-> -
-> -       if (n < 0 || n >= priv->nr_types)
-> -               goto errout;
-> -
-> -       /* Find a tev belongs to that type */
-> -       for (i = 0; i < pev->ntevs; i++) {
-> -               if (priv->type_mapping[i] == n)
-> -                       break;
-> -       }
-> -
-> -       if (i >= pev->ntevs) {
-> -               pr_debug("Internal error: prologue type %d not found\n", n);
-> -               return -BPF_LOADER_ERRNO__PROLOGUE;
-> -       }
-> -
-> -       tev = &pev->tevs[i];
-> -
-> -       buf = priv->insns_buf;
-> -       err = bpf__gen_prologue(tev->args, tev->nargs,
-> -                               buf, &prologue_cnt,
-> -                               BPF_MAXINSNS - orig_insns_cnt);
-> -       if (err) {
-> -               const char *title;
-> -
-> -               title = bpf_program__section_name(prog);
-> -               pr_debug("Failed to generate prologue for program %s\n",
-> -                        title);
-> -               return err;
-> -       }
-> -
-> -       memcpy(&buf[prologue_cnt], orig_insns,
-> -              sizeof(struct bpf_insn) * orig_insns_cnt);
-> -
-> -       res->new_insn_ptr = buf;
-> -       res->new_insn_cnt = prologue_cnt + orig_insns_cnt;
-> -       res->pfd = NULL;
-> -       return 0;
-> -
-> -errout:
-> -       pr_debug("Internal error in preproc_gen_prologue\n");
-> -       return -BPF_LOADER_ERRNO__PROLOGUE;
-> -}
-> -
-> -/*
-> - * compare_tev_args is reflexive, transitive and antisymmetric.
-> - * I can proof it but this margin is too narrow to contain.
-> - */
-> -static int compare_tev_args(const void *ptev1, const void *ptev2)
-> -{
-> -       int i, ret;
-> -       const struct probe_trace_event *tev1 =
-> -               *(const struct probe_trace_event **)ptev1;
-> -       const struct probe_trace_event *tev2 =
-> -               *(const struct probe_trace_event **)ptev2;
-> -
-> -       ret = tev2->nargs - tev1->nargs;
-> -       if (ret)
-> -               return ret;
-> -
-> -       for (i = 0; i < tev1->nargs; i++) {
-> -               struct probe_trace_arg *arg1, *arg2;
-> -               struct probe_trace_arg_ref *ref1, *ref2;
-> -
-> -               arg1 = &tev1->args[i];
-> -               arg2 = &tev2->args[i];
-> -
-> -               ret = strcmp(arg1->value, arg2->value);
-> -               if (ret)
-> -                       return ret;
-> -
-> -               ref1 = arg1->ref;
-> -               ref2 = arg2->ref;
-> -
-> -               while (ref1 && ref2) {
-> -                       ret = ref2->offset - ref1->offset;
-> -                       if (ret)
-> -                               return ret;
-> -
-> -                       ref1 = ref1->next;
-> -                       ref2 = ref2->next;
-> -               }
-> -
-> -               if (ref1 || ref2)
-> -                       return ref2 ? 1 : -1;
-> -       }
-> -
-> -       return 0;
-> -}
-> -
-> -/*
-> - * Assign a type number to each tevs in a pev.
-> - * mapping is an array with same slots as tevs in that pev.
-> - * nr_types will be set to number of types.
-> - */
-> -static int map_prologue(struct perf_probe_event *pev, int *mapping,
-> -                       int *nr_types)
-> -{
-> -       int i, type = 0;
-> -       struct probe_trace_event **ptevs;
-> -
-> -       size_t array_sz = sizeof(*ptevs) * pev->ntevs;
-> -
-> -       ptevs = malloc(array_sz);
-> -       if (!ptevs) {
-> -               pr_debug("Not enough memory: alloc ptevs failed\n");
-> -               return -ENOMEM;
-> -       }
-> -
-> -       pr_debug("In map_prologue, ntevs=%d\n", pev->ntevs);
-> -       for (i = 0; i < pev->ntevs; i++)
-> -               ptevs[i] = &pev->tevs[i];
-> -
-> -       qsort(ptevs, pev->ntevs, sizeof(*ptevs),
-> -             compare_tev_args);
-> -
-> -       for (i = 0; i < pev->ntevs; i++) {
-> -               int n;
-> -
-> -               n = ptevs[i] - pev->tevs;
-> -               if (i == 0) {
-> -                       mapping[n] = type;
-> -                       pr_debug("mapping[%d]=%d\n", n, type);
-> -                       continue;
-> -               }
-> -
-> -               if (compare_tev_args(ptevs + i, ptevs + i - 1) == 0)
-> -                       mapping[n] = type;
-> -               else
-> -                       mapping[n] = ++type;
-> -
-> -               pr_debug("mapping[%d]=%d\n", n, mapping[n]);
-> -       }
-> -       free(ptevs);
-> -       *nr_types = type + 1;
-> -
-> -       return 0;
-> -}
-> -
-> -static int hook_load_preprocessor(struct bpf_program *prog)
-> -{
-> -       struct bpf_prog_priv *priv = bpf_program__priv(prog);
-> -       struct perf_probe_event *pev;
-> -       bool need_prologue = false;
-> -       int err, i;
-> -
-> -       if (IS_ERR_OR_NULL(priv)) {
-> -               pr_debug("Internal error when hook preprocessor\n");
-> -               return -BPF_LOADER_ERRNO__INTERNAL;
-> -       }
-> -
-> -       if (priv->is_tp) {
-> -               priv->need_prologue = false;
-> -               return 0;
-> -       }
-> -
-> -       pev = &priv->pev;
-> -       for (i = 0; i < pev->ntevs; i++) {
-> -               struct probe_trace_event *tev = &pev->tevs[i];
-> -
-> -               if (tev->nargs > 0) {
-> -                       need_prologue = true;
-> -                       break;
-> -               }
-> -       }
-> -
-> -       /*
-> -        * Since all tevs don't have argument, we don't need generate
-> -        * prologue.
-> -        */
-> -       if (!need_prologue) {
-> -               priv->need_prologue = false;
-> -               return 0;
-> -       }
-> -
-> -       priv->need_prologue = true;
-> -       priv->insns_buf = malloc(sizeof(struct bpf_insn) * BPF_MAXINSNS);
-> -       if (!priv->insns_buf) {
-> -               pr_debug("Not enough memory: alloc insns_buf failed\n");
-> -               return -ENOMEM;
-> -       }
-> -
-> -       priv->type_mapping = malloc(sizeof(int) * pev->ntevs);
-> -       if (!priv->type_mapping) {
-> -               pr_debug("Not enough memory: alloc type_mapping failed\n");
-> -               return -ENOMEM;
-> -       }
-> -       memset(priv->type_mapping, -1,
-> -              sizeof(int) * pev->ntevs);
-> -
-> -       err = map_prologue(pev, priv->type_mapping, &priv->nr_types);
-> -       if (err)
-> -               return err;
-> -
-> -       err = bpf_program__set_prep(prog, priv->nr_types,
-> -                                   preproc_gen_prologue);
-> -       return err;
-> -}
-> -
->  int bpf__probe(struct bpf_object *obj)
->  {
->         int err = 0;
-> @@ -669,18 +449,6 @@ int bpf__probe(struct bpf_object *obj)
->                         pr_debug("bpf_probe: failed to apply perf probe events\n");
->                         goto out;
->                 }
-> -
-> -               /*
-> -                * After probing, let's consider prologue, which
-> -                * adds program fetcher to BPF programs.
-> -                *
-> -                * hook_load_preprocessor() hooks pre-processor
-> -                * to bpf_program, let it generate prologue
-> -                * dynamically during loading.
-> -                */
-> -               err = hook_load_preprocessor(prog);
-> -               if (err)
-> -                       goto out;
->         }
->  out:
->         return err < 0 ? err : 0;
-> @@ -773,14 +541,7 @@ int bpf__foreach_event(struct bpf_object *obj,
->                 for (i = 0; i < pev->ntevs; i++) {
->                         tev = &pev->tevs[i];
->
-> -                       if (priv->need_prologue) {
-> -                               int type = priv->type_mapping[i];
-> -
-> -                               fd = bpf_program__nth_fd(prog, type);
-> -                       } else {
-> -                               fd = bpf_program__fd(prog);
-> -                       }
-> -
-> +                       fd = bpf_program__fd(prog);
->                         if (fd < 0) {
->                                 pr_debug("bpf: failed to get file descriptor\n");
->                                 return fd;
-> diff --git a/tools/perf/util/bpf-prologue.c b/tools/perf/util/bpf-prologue.c
-> deleted file mode 100644
-> index 9887ae09242d..000000000000
-> --- a/tools/perf/util/bpf-prologue.c
-> +++ /dev/null
-> @@ -1,508 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> -/*
-> - * bpf-prologue.c
-> - *
-> - * Copyright (C) 2015 He Kuang <hekuang@huawei.com>
-> - * Copyright (C) 2015 Wang Nan <wangnan0@huawei.com>
-> - * Copyright (C) 2015 Huawei Inc.
-> - */
-> -
-> -#include <bpf/libbpf.h>
-> -#include "debug.h"
-> -#include "bpf-loader.h"
-> -#include "bpf-prologue.h"
-> -#include "probe-finder.h"
-> -#include <errno.h>
-> -#include <stdlib.h>
-> -#include <dwarf-regs.h>
-> -#include <linux/filter.h>
-> -
-> -#define BPF_REG_SIZE           8
-> -
-> -#define JMP_TO_ERROR_CODE      -1
-> -#define JMP_TO_SUCCESS_CODE    -2
-> -#define JMP_TO_USER_CODE       -3
-> -
-> -struct bpf_insn_pos {
-> -       struct bpf_insn *begin;
-> -       struct bpf_insn *end;
-> -       struct bpf_insn *pos;
-> -};
-> -
-> -static inline int
-> -pos_get_cnt(struct bpf_insn_pos *pos)
-> -{
-> -       return pos->pos - pos->begin;
-> -}
-> -
-> -static int
-> -append_insn(struct bpf_insn new_insn, struct bpf_insn_pos *pos)
-> -{
-> -       if (!pos->pos)
-> -               return -BPF_LOADER_ERRNO__PROLOGUE2BIG;
-> -
-> -       if (pos->pos + 1 >= pos->end) {
-> -               pr_err("bpf prologue: prologue too long\n");
-> -               pos->pos = NULL;
-> -               return -BPF_LOADER_ERRNO__PROLOGUE2BIG;
-> -       }
-> -
-> -       *(pos->pos)++ = new_insn;
-> -       return 0;
-> -}
-> -
-> -static int
-> -check_pos(struct bpf_insn_pos *pos)
-> -{
-> -       if (!pos->pos || pos->pos >= pos->end)
-> -               return -BPF_LOADER_ERRNO__PROLOGUE2BIG;
-> -       return 0;
-> -}
-> -
-> -/*
-> - * Convert type string (u8/u16/u32/u64/s8/s16/s32/s64 ..., see
-> - * Documentation/trace/kprobetrace.rst) to size field of BPF_LDX_MEM
-> - * instruction (BPF_{B,H,W,DW}).
-> - */
-> -static int
-> -argtype_to_ldx_size(const char *type)
-> -{
-> -       int arg_size = type ? atoi(&type[1]) : 64;
-> -
-> -       switch (arg_size) {
-> -       case 8:
-> -               return BPF_B;
-> -       case 16:
-> -               return BPF_H;
-> -       case 32:
-> -               return BPF_W;
-> -       case 64:
-> -       default:
-> -               return BPF_DW;
-> -       }
-> -}
-> -
-> -static const char *
-> -insn_sz_to_str(int insn_sz)
-> -{
-> -       switch (insn_sz) {
-> -       case BPF_B:
-> -               return "BPF_B";
-> -       case BPF_H:
-> -               return "BPF_H";
-> -       case BPF_W:
-> -               return "BPF_W";
-> -       case BPF_DW:
-> -               return "BPF_DW";
-> -       default:
-> -               return "UNKNOWN";
-> -       }
-> -}
-> -
-> -/* Give it a shorter name */
-> -#define ins(i, p) append_insn((i), (p))
-> -
-> -/*
-> - * Give a register name (in 'reg'), generate instruction to
-> - * load register into an eBPF register rd:
-> - *   'ldd target_reg, offset(ctx_reg)', where:
-> - * ctx_reg is pre initialized to pointer of 'struct pt_regs'.
-> - */
-> -static int
-> -gen_ldx_reg_from_ctx(struct bpf_insn_pos *pos, int ctx_reg,
-> -                    const char *reg, int target_reg)
-> -{
-> -       int offset = regs_query_register_offset(reg);
-> -
-> -       if (offset < 0) {
-> -               pr_err("bpf: prologue: failed to get register %s\n",
-> -                      reg);
-> -               return offset;
-> -       }
-> -       ins(BPF_LDX_MEM(BPF_DW, target_reg, ctx_reg, offset), pos);
-> -
-> -       return check_pos(pos);
-> -}
-> -
-> -/*
-> - * Generate a BPF_FUNC_probe_read function call.
-> - *
-> - * src_base_addr_reg is a register holding base address,
-> - * dst_addr_reg is a register holding dest address (on stack),
-> - * result is:
-> - *
-> - *  *[dst_addr_reg] = *([src_base_addr_reg] + offset)
-> - *
-> - * Arguments of BPF_FUNC_probe_read:
-> - *     ARG1: ptr to stack (dest)
-> - *     ARG2: size (8)
-> - *     ARG3: unsafe ptr (src)
-> - */
-> -static int
-> -gen_read_mem(struct bpf_insn_pos *pos,
-> -            int src_base_addr_reg,
-> -            int dst_addr_reg,
-> -            long offset,
-> -            int probeid)
-> -{
-> -       /* mov arg3, src_base_addr_reg */
-> -       if (src_base_addr_reg != BPF_REG_ARG3)
-> -               ins(BPF_MOV64_REG(BPF_REG_ARG3, src_base_addr_reg), pos);
-> -       /* add arg3, #offset */
-> -       if (offset)
-> -               ins(BPF_ALU64_IMM(BPF_ADD, BPF_REG_ARG3, offset), pos);
-> -
-> -       /* mov arg2, #reg_size */
-> -       ins(BPF_ALU64_IMM(BPF_MOV, BPF_REG_ARG2, BPF_REG_SIZE), pos);
-> -
-> -       /* mov arg1, dst_addr_reg */
-> -       if (dst_addr_reg != BPF_REG_ARG1)
-> -               ins(BPF_MOV64_REG(BPF_REG_ARG1, dst_addr_reg), pos);
-> -
-> -       /* Call probe_read  */
-> -       ins(BPF_EMIT_CALL(probeid), pos);
-> -       /*
-> -        * Error processing: if read fail, goto error code,
-> -        * will be relocated. Target should be the start of
-> -        * error processing code.
-> -        */
-> -       ins(BPF_JMP_IMM(BPF_JNE, BPF_REG_0, 0, JMP_TO_ERROR_CODE),
-> -           pos);
-> -
-> -       return check_pos(pos);
-> -}
-> -
-> -/*
-> - * Each arg should be bare register. Fetch and save them into argument
-> - * registers (r3 - r5).
-> - *
-> - * BPF_REG_1 should have been initialized with pointer to
-> - * 'struct pt_regs'.
-> - */
-> -static int
-> -gen_prologue_fastpath(struct bpf_insn_pos *pos,
-> -                     struct probe_trace_arg *args, int nargs)
-> -{
-> -       int i, err = 0;
-> -
-> -       for (i = 0; i < nargs; i++) {
-> -               err = gen_ldx_reg_from_ctx(pos, BPF_REG_1, args[i].value,
-> -                                          BPF_PROLOGUE_START_ARG_REG + i);
-> -               if (err)
-> -                       goto errout;
-> -       }
-> -
-> -       return check_pos(pos);
-> -errout:
-> -       return err;
-> -}
-> -
-> -/*
-> - * Slow path:
-> - *   At least one argument has the form of 'offset($rx)'.
-> - *
-> - * Following code first stores them into stack, then loads all of then
-> - * to r2 - r5.
-> - * Before final loading, the final result should be:
-> - *
-> - * low address
-> - * BPF_REG_FP - 24  ARG3
-> - * BPF_REG_FP - 16  ARG2
-> - * BPF_REG_FP - 8   ARG1
-> - * BPF_REG_FP
-> - * high address
-> - *
-> - * For each argument (described as: offn(...off2(off1(reg)))),
-> - * generates following code:
-> - *
-> - *  r7 <- fp
-> - *  r7 <- r7 - stack_offset  // Ideal code should initialize r7 using
-> - *                           // fp before generating args. However,
-> - *                           // eBPF won't regard r7 as stack pointer
-> - *                           // if it is generated by minus 8 from
-> - *                           // another stack pointer except fp.
-> - *                           // This is why we have to set r7
-> - *                           // to fp for each variable.
-> - *  r3 <- value of 'reg'-> generated using gen_ldx_reg_from_ctx()
-> - *  (r7) <- r3       // skip following instructions for bare reg
-> - *  r3 <- r3 + off1  . // skip if off1 == 0
-> - *  r2 <- 8           \
-> - *  r1 <- r7           |-> generated by gen_read_mem()
-> - *  call probe_read    /
-> - *  jnei r0, 0, err  ./
-> - *  r3 <- (r7)
-> - *  r3 <- r3 + off2  . // skip if off2 == 0
-> - *  r2 <- 8           \  // r2 may be broken by probe_read, so set again
-> - *  r1 <- r7           |-> generated by gen_read_mem()
-> - *  call probe_read    /
-> - *  jnei r0, 0, err  ./
-> - *  ...
-> - */
-> -static int
-> -gen_prologue_slowpath(struct bpf_insn_pos *pos,
-> -                     struct probe_trace_arg *args, int nargs)
-> -{
-> -       int err, i, probeid;
-> -
-> -       for (i = 0; i < nargs; i++) {
-> -               struct probe_trace_arg *arg = &args[i];
-> -               const char *reg = arg->value;
-> -               struct probe_trace_arg_ref *ref = NULL;
-> -               int stack_offset = (i + 1) * -8;
-> -
-> -               pr_debug("prologue: fetch arg %d, base reg is %s\n",
-> -                        i, reg);
-> -
-> -               /* value of base register is stored into ARG3 */
-> -               err = gen_ldx_reg_from_ctx(pos, BPF_REG_CTX, reg,
-> -                                          BPF_REG_ARG3);
-> -               if (err) {
-> -                       pr_err("prologue: failed to get offset of register %s\n",
-> -                              reg);
-> -                       goto errout;
-> -               }
-> -
-> -               /* Make r7 the stack pointer. */
-> -               ins(BPF_MOV64_REG(BPF_REG_7, BPF_REG_FP), pos);
-> -               /* r7 += -8 */
-> -               ins(BPF_ALU64_IMM(BPF_ADD, BPF_REG_7, stack_offset), pos);
-> -               /*
-> -                * Store r3 (base register) onto stack
-> -                * Ensure fp[offset] is set.
-> -                * fp is the only valid base register when storing
-> -                * into stack. We are not allowed to use r7 as base
-> -                * register here.
-> -                */
-> -               ins(BPF_STX_MEM(BPF_DW, BPF_REG_FP, BPF_REG_ARG3,
-> -                               stack_offset), pos);
-> -
-> -               ref = arg->ref;
-> -               probeid = BPF_FUNC_probe_read_kernel;
-> -               while (ref) {
-> -                       pr_debug("prologue: arg %d: offset %ld\n",
-> -                                i, ref->offset);
-> -
-> -                       if (ref->user_access)
-> -                               probeid = BPF_FUNC_probe_read_user;
-> -
-> -                       err = gen_read_mem(pos, BPF_REG_3, BPF_REG_7,
-> -                                          ref->offset, probeid);
-> -                       if (err) {
-> -                               pr_err("prologue: failed to generate probe_read function call\n");
-> -                               goto errout;
-> -                       }
-> -
-> -                       ref = ref->next;
-> -                       /*
-> -                        * Load previous result into ARG3. Use
-> -                        * BPF_REG_FP instead of r7 because verifier
-> -                        * allows FP based addressing only.
-> -                        */
-> -                       if (ref)
-> -                               ins(BPF_LDX_MEM(BPF_DW, BPF_REG_ARG3,
-> -                                               BPF_REG_FP, stack_offset), pos);
-> -               }
-> -       }
-> -
-> -       /* Final pass: read to registers */
-> -       for (i = 0; i < nargs; i++) {
-> -               int insn_sz = (args[i].ref) ? argtype_to_ldx_size(args[i].type) : BPF_DW;
-> -
-> -               pr_debug("prologue: load arg %d, insn_sz is %s\n",
-> -                        i, insn_sz_to_str(insn_sz));
-> -               ins(BPF_LDX_MEM(insn_sz, BPF_PROLOGUE_START_ARG_REG + i,
-> -                               BPF_REG_FP, -BPF_REG_SIZE * (i + 1)), pos);
-> -       }
-> -
-> -       ins(BPF_JMP_IMM(BPF_JA, BPF_REG_0, 0, JMP_TO_SUCCESS_CODE), pos);
-> -
-> -       return check_pos(pos);
-> -errout:
-> -       return err;
-> -}
-> -
-> -static int
-> -prologue_relocate(struct bpf_insn_pos *pos, struct bpf_insn *error_code,
-> -                 struct bpf_insn *success_code, struct bpf_insn *user_code)
-> -{
-> -       struct bpf_insn *insn;
-> -
-> -       if (check_pos(pos))
-> -               return -BPF_LOADER_ERRNO__PROLOGUE2BIG;
-> -
-> -       for (insn = pos->begin; insn < pos->pos; insn++) {
-> -               struct bpf_insn *target;
-> -               u8 class = BPF_CLASS(insn->code);
-> -               u8 opcode;
-> -
-> -               if (class != BPF_JMP)
-> -                       continue;
-> -               opcode = BPF_OP(insn->code);
-> -               if (opcode == BPF_CALL)
-> -                       continue;
-> -
-> -               switch (insn->off) {
-> -               case JMP_TO_ERROR_CODE:
-> -                       target = error_code;
-> -                       break;
-> -               case JMP_TO_SUCCESS_CODE:
-> -                       target = success_code;
-> -                       break;
-> -               case JMP_TO_USER_CODE:
-> -                       target = user_code;
-> -                       break;
-> -               default:
-> -                       pr_err("bpf prologue: internal error: relocation failed\n");
-> -                       return -BPF_LOADER_ERRNO__PROLOGUE;
-> -               }
-> -
-> -               insn->off = target - (insn + 1);
-> -       }
-> -       return 0;
-> -}
-> -
-> -int bpf__gen_prologue(struct probe_trace_arg *args, int nargs,
-> -                     struct bpf_insn *new_prog, size_t *new_cnt,
-> -                     size_t cnt_space)
-> -{
-> -       struct bpf_insn *success_code = NULL;
-> -       struct bpf_insn *error_code = NULL;
-> -       struct bpf_insn *user_code = NULL;
-> -       struct bpf_insn_pos pos;
-> -       bool fastpath = true;
-> -       int err = 0, i;
-> -
-> -       if (!new_prog || !new_cnt)
-> -               return -EINVAL;
-> -
-> -       if (cnt_space > BPF_MAXINSNS)
-> -               cnt_space = BPF_MAXINSNS;
-> -
-> -       pos.begin = new_prog;
-> -       pos.end = new_prog + cnt_space;
-> -       pos.pos = new_prog;
-> -
-> -       if (!nargs) {
-> -               ins(BPF_ALU64_IMM(BPF_MOV, BPF_PROLOGUE_FETCH_RESULT_REG, 0),
-> -                   &pos);
-> -
-> -               if (check_pos(&pos))
-> -                       goto errout;
-> -
-> -               *new_cnt = pos_get_cnt(&pos);
-> -               return 0;
-> -       }
-> -
-> -       if (nargs > BPF_PROLOGUE_MAX_ARGS) {
-> -               pr_warning("bpf: prologue: %d arguments are dropped\n",
-> -                          nargs - BPF_PROLOGUE_MAX_ARGS);
-> -               nargs = BPF_PROLOGUE_MAX_ARGS;
-> -       }
-> -
-> -       /* First pass: validation */
-> -       for (i = 0; i < nargs; i++) {
-> -               struct probe_trace_arg_ref *ref = args[i].ref;
-> -
-> -               if (args[i].value[0] == '@') {
-> -                       /* TODO: fetch global variable */
-> -                       pr_err("bpf: prologue: global %s%+ld not support\n",
-> -                               args[i].value, ref ? ref->offset : 0);
-> -                       return -ENOTSUP;
-> -               }
-> -
-> -               while (ref) {
-> -                       /* fastpath is true if all args has ref == NULL */
-> -                       fastpath = false;
-> -
-> -                       /*
-> -                        * Instruction encodes immediate value using
-> -                        * s32, ref->offset is long. On systems which
-> -                        * can't fill long in s32, refuse to process if
-> -                        * ref->offset too large (or small).
-> -                        */
-> -#ifdef __LP64__
-> -#define OFFSET_MAX     ((1LL << 31) - 1)
-> -#define OFFSET_MIN     ((1LL << 31) * -1)
-> -                       if (ref->offset > OFFSET_MAX ||
-> -                                       ref->offset < OFFSET_MIN) {
-> -                               pr_err("bpf: prologue: offset out of bound: %ld\n",
-> -                                      ref->offset);
-> -                               return -BPF_LOADER_ERRNO__PROLOGUEOOB;
-> -                       }
-> -#endif
-> -                       ref = ref->next;
-> -               }
-> -       }
-> -       pr_debug("prologue: pass validation\n");
-> -
-> -       if (fastpath) {
-> -               /* If all variables are registers... */
-> -               pr_debug("prologue: fast path\n");
-> -               err = gen_prologue_fastpath(&pos, args, nargs);
-> -               if (err)
-> -                       goto errout;
-> -       } else {
-> -               pr_debug("prologue: slow path\n");
-> -
-> -               /* Initialization: move ctx to a callee saved register. */
-> -               ins(BPF_MOV64_REG(BPF_REG_CTX, BPF_REG_ARG1), &pos);
-> -
-> -               err = gen_prologue_slowpath(&pos, args, nargs);
-> -               if (err)
-> -                       goto errout;
-> -               /*
-> -                * start of ERROR_CODE (only slow pass needs error code)
-> -                *   mov r2 <- 1  // r2 is error number
-> -                *   mov r3 <- 0  // r3, r4... should be touched or
-> -                *                // verifier would complain
-> -                *   mov r4 <- 0
-> -                *   ...
-> -                *   goto usercode
-> -                */
-> -               error_code = pos.pos;
-> -               ins(BPF_ALU64_IMM(BPF_MOV, BPF_PROLOGUE_FETCH_RESULT_REG, 1),
-> -                   &pos);
-> -
-> -               for (i = 0; i < nargs; i++)
-> -                       ins(BPF_ALU64_IMM(BPF_MOV,
-> -                                         BPF_PROLOGUE_START_ARG_REG + i,
-> -                                         0),
-> -                           &pos);
-> -               ins(BPF_JMP_IMM(BPF_JA, BPF_REG_0, 0, JMP_TO_USER_CODE),
-> -                               &pos);
-> -       }
-> -
-> -       /*
-> -        * start of SUCCESS_CODE:
-> -        *   mov r2 <- 0
-> -        *   goto usercode  // skip
-> -        */
-> -       success_code = pos.pos;
-> -       ins(BPF_ALU64_IMM(BPF_MOV, BPF_PROLOGUE_FETCH_RESULT_REG, 0), &pos);
-> -
-> -       /*
-> -        * start of USER_CODE:
-> -        *   Restore ctx to r1
-> -        */
-> -       user_code = pos.pos;
-> -       if (!fastpath) {
-> -               /*
-> -                * Only slow path needs restoring of ctx. In fast path,
-> -                * register are loaded directly from r1.
-> -                */
-> -               ins(BPF_MOV64_REG(BPF_REG_ARG1, BPF_REG_CTX), &pos);
-> -               err = prologue_relocate(&pos, error_code, success_code,
-> -                                       user_code);
-> -               if (err)
-> -                       goto errout;
-> -       }
-> -
-> -       err = check_pos(&pos);
-> -       if (err)
-> -               goto errout;
-> -
-> -       *new_cnt = pos_get_cnt(&pos);
-> -       return 0;
-> -errout:
-> -       return err;
-> -}
->
+	kernel/events/core.c:4955 _free_event()
+	warn: sleeping in atomic context
+
+There are two potential call trees where preemption is disabled.
+
+perf_remove_from_context() <- disables preempt
+__perf_event_exit_context() <- disables preempt
+-> __perf_remove_from_context()
+   -> perf_group_detach()
+      -> perf_put_aux_event()
+         -> put_event()
+            -> _free_event()
+
+_free_event() calls irq_work_sync() which can now sleep.
+
+regards,
+dan carpenter
+
