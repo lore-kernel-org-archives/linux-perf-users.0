@@ -2,96 +2,115 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B327CC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Jan 2022 16:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4601CC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Jan 2022 22:58:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347070AbiATQWc (ORCPT
+        id S1378127AbiATW6l (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 20 Jan 2022 11:22:32 -0500
-Received: from foss.arm.com ([217.140.110.172]:43870 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235587AbiATQWb (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 20 Jan 2022 11:22:31 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 42D7011B3;
-        Thu, 20 Jan 2022 08:22:31 -0800 (PST)
-Received: from [10.57.67.151] (unknown [10.57.67.151])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E36D13F73D;
-        Thu, 20 Jan 2022 08:22:28 -0800 (PST)
-Subject: Re: [RFC PATCH v2 0/5] topdown with metrics
-To:     John Garry <john.garry@huawei.com>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, irogers@google.com, ak@linux.intel.com
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-References: <4fefb1bc-49b2-bc5b-23cd-cd8fabe8c588@huawei.com>
- <20220111150749.13365-1-andrew.kilroy@arm.com>
- <7cd7bd11-4900-81c4-de84-6e5fc63ec87c@huawei.com>
-From:   Al Grant <al.grant@foss.arm.com>
-Message-ID: <b82a3b6a-ec02-09ff-8630-e7647491470c@foss.arm.com>
-Date:   Thu, 20 Jan 2022 16:22:37 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.0.1
+        Thu, 20 Jan 2022 17:58:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34836 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233856AbiATW6l (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 20 Jan 2022 17:58:41 -0500
+Received: from mail-il1-x131.google.com (mail-il1-x131.google.com [IPv6:2607:f8b0:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B86BC061574;
+        Thu, 20 Jan 2022 14:58:41 -0800 (PST)
+Received: by mail-il1-x131.google.com with SMTP id u5so6254876ilq.9;
+        Thu, 20 Jan 2022 14:58:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d2R1r7lbzHjwFkrPG1ysQPgQWbz3uiy9tgPY3MmK5Ws=;
+        b=MRYVqzTGoAkxyUzB9Famjb5NrAotUS3LSEUky6Avw5Zxc44adDnkUPXBhc3sXEvfzO
+         RHTcrdZETpds5YGXIOVpTFHDteM4AreN4EboLLVWnFZIVQcVcmF6yzJ7umt29nHVknpp
+         sQbbr0tEvVQeMS0GPmQlBoT3jYQ/qQPxhFhnY7IYjdO71Sp+xumQR9zQznr1QbyZQCto
+         FBX0ZuFAn/uXp2ram/y3TSVF0PaY5Pz7WXb+qTMpS5YHsC4liPr6SXGrMufjAfD8hFNd
+         5T2mxPrzg4JPXBBOIE/eK0UOhBfbDWjdx7OHm+aLCLVIAT6WFClmGqndjuJBUdf7YNON
+         1dww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d2R1r7lbzHjwFkrPG1ysQPgQWbz3uiy9tgPY3MmK5Ws=;
+        b=3ynj77eVKpqskJOsCFPOCW/I9NzH7qne7u+svY+bNYXykZumEKCfkJDXBoOokDvv3w
+         hB+3Cy6icK6KQuC19h2AhxSeYhRchCwlXErWjD12Zt8nZuYLr36ZdPHlPpMwVHwdq96j
+         v7MsfImLVJD+qHLiHCu0+xATnFblmJz3FR2VdFHeKkeNbuCNQ+OcXUeNYG4tQf1j/Rt5
+         g0uhyZrOBhmF6Y2aJmww0K5g2VqovxUwtCkhZNjZAbPLBuGAjVtbBI5elxzRa4JXPMoO
+         xwQKWOyih7a49pbnP07PgqBxx5P8bF1S8eNs5dwG5bz0L+W06EzzsdsdEJoH3rGZt06T
+         ecvA==
+X-Gm-Message-State: AOAM5309fMANdKtQ5bxAuvqyaLdjYNQYpdBCK9aWeXup7TNEyyFeB19E
+        PZM4QXODzwxmvAyg1XuVWi/Ur9t8Yy2gidJgUeA=
+X-Google-Smtp-Source: ABdhPJxv12+U9/t2si5uTSEBaw22wdMZ1AdqMkYylA+CD0UnrloTfwIMhIBx6zDqc1WejgvulfR9LsJrEUpxnEryZpw=
+X-Received: by 2002:a05:6e02:178d:: with SMTP id y13mr618198ilu.71.1642719520642;
+ Thu, 20 Jan 2022 14:58:40 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <7cd7bd11-4900-81c4-de84-6e5fc63ec87c@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20220119230636.1752684-1-christylee@fb.com>
+In-Reply-To: <20220119230636.1752684-1-christylee@fb.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 20 Jan 2022 14:58:29 -0800
+Message-ID: <CAEf4BzbODQmEH+wuFsEPFdtRoZ1Y-vDJKAKkBLsUDBLoQOmrvg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v4 0/2] perf: stop using deprecated bpf APIs
+To:     Christy Lee <christylee@fb.com>
+Cc:     Andrii Nakryiko <andrii@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Christy Lee <christyc.y.lee@gmail.com>,
+        bpf <bpf@vger.kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>,
+        Wang Nan <wangnan0@huawei.com>,
+        Wang ShaoBo <bobo.shaobowang@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 20/01/2022 09:26, John Garry wrote:
-> On 11/01/2022 15:07, Andrew Kilroy wrote:
->> This patch series adds the ability for the --topdown option to use
->> metrics (defined in json files in the pmu-events directory) to describe
->> how to calculate and determine the output columns for topdown level 1.
->>
->> For this to work, a number of metrics have to be defined for the
->> relevant processor with the MetricGroup name "TopDownL1".  perf will
->> arrange for the events defined in each metric to be collected, and each
->> metric will be displayed in the output, as if
->>
->>    perf stat -M 'TopDownL1' --metric-only -- exampleapp
->>
->> had been used.
->>
->> Topdown was already implemented where certain kernel events are defined.
->> If these kernel events are defined, the new json metrics behaviour is
->> not used.  The json metrics approach is only used if the kernel events
->> are absent.
->>
->> The last patch in the series disables the json metrics behaviour on x86.
->> This is because of concerns that due to SMT it's not straightforward to
->> express the various formulas as json for certain x86 cpus.  See
-> 
-> I suppose this solution is ok.
-> 
-> A concern is that today we only have 1x arm64 platform which actually supports this in mainline.
-> 
-> Do you have any more which you plan to support?
-> 
-> I think that it's the frontend bound and fetch_bubble event which doesn't have a standard arm solution.
-> 
-> Note that I do have a series for perf tool which can read arm cpu pmu sysfs events folder to find events which are implemented (I don't think all required events are mandated) and match that against the common arch events JSON, so that we don't need a JSON definition file for each core implementation from all implementators - this would improve scalability.However a concern is that some events - like inst_spec - have imp def meaning, so may not be good to always use by default for all cores metrics.
+On Wed, Jan 19, 2022 at 3:09 PM Christy Lee <christylee@fb.com> wrote:
+>
+> libbpf's bpf_load_program() and bpf__object_next() APIs are deprecated.
+> remove perf's usage of these deprecated functions. After this patch
+> set, the only remaining libbpf deprecated APIs in perf would be
+> bpf_program__set_prep() and bpf_program__nth_fd().
+>
 
-Sadly the sysfs list isn't complete, it only includes the events
-discoverable from the PMCEIDx registers, and they only cover the
-ranges 0x0000-0x003f and 0x4000-0x403f. Although that covers most
-events used in standard metrics, it doesn't cover all. Most CPUs
-have many more events besides these, and there are now architected
-(common) events in the 0x8000 range.
+Arnaldo, do you want to take this through perf tree or should we apply
+this to bpf-next? If the latter, can you give your ack as well?
+Thanks!
 
-There's a lot to be said for having the kernel expose the complete
-list to userspace via sysfs. It would save each userspace tool
-needing its own set of vendor-supplied information. But to get
-that complete list, the kernel would need the same vendor
-information the userspace tools are using now.
-
-(And your concern about the metrics varying even when the same
-events are present, is quite valid.)
-
-Al
+> Changelog:
+> ----------
+> v3 -> v4:
+> * Fixed commit title
+> * Added weak definition for deprecated function
+>
+> v2 -> v3:
+> https://lore.kernel.org/all/20220106200032.3067127-1-christylee@fb.com/
+>
+> Patch 2/2:
+> Fixed commit message to use upstream perf
+>
+> v1 -> v2:
+> https://lore.kernel.org/all/20211216222108.110518-1-christylee@fb.com/
+>
+> Patch 1/2:
+> Added missing commit message
+>
+> Patch 2/2:
+> Added more details to commit message and added steps to reproduce
+> original test case.
+>
+> Christy Lee (2):
+>   perf: stop using deprecated bpf_load_program() API
+>   perf: stop using deprecated bpf_object__next() API
+>
+>  tools/perf/tests/bpf.c       | 14 ++-----
+>  tools/perf/util/bpf-event.c  | 16 ++++++++
+>  tools/perf/util/bpf-loader.c | 72 +++++++++++++++++++++++++++---------
+>  tools/perf/util/bpf-loader.h |  1 +
+>  4 files changed, 75 insertions(+), 28 deletions(-)
+>
+> --
+> 2.30.2
