@@ -2,96 +2,177 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4C2C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Jan 2022 09:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CE9C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Jan 2022 14:31:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359275AbiATJ0l (ORCPT
+        id S1347522AbiATObH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 20 Jan 2022 04:26:41 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4433 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359226AbiATJ0l (ORCPT
+        Thu, 20 Jan 2022 09:31:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60730 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1345897AbiATObH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 20 Jan 2022 04:26:41 -0500
-Received: from fraeml704-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JfcWM42WHz682sD;
-        Thu, 20 Jan 2022 17:23:27 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml704-chm.china.huawei.com (10.206.15.53) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.21; Thu, 20 Jan 2022 10:26:37 +0100
-Received: from [10.47.81.141] (10.47.81.141) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Thu, 20 Jan
- 2022 09:26:37 +0000
-Subject: Re: [RFC PATCH v2 0/5] topdown with metrics
-To:     Andrew Kilroy <andrew.kilroy@arm.com>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <acme@kernel.org>, <irogers@google.com>, <ak@linux.intel.com>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        "Namhyung Kim" <namhyung@kernel.org>
-References: <4fefb1bc-49b2-bc5b-23cd-cd8fabe8c588@huawei.com>
- <20220111150749.13365-1-andrew.kilroy@arm.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <7cd7bd11-4900-81c4-de84-6e5fc63ec87c@huawei.com>
-Date:   Thu, 20 Jan 2022 09:26:12 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        Thu, 20 Jan 2022 09:31:07 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9E60C061574;
+        Thu, 20 Jan 2022 06:31:06 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8412C61781;
+        Thu, 20 Jan 2022 14:31:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 967F1C340E5;
+        Thu, 20 Jan 2022 14:31:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1642689064;
+        bh=NShk8RaJDMXxjgVwj9BZLOszW8jcivZ7vAl+s4zqy2M=;
+        h=Date:From:To:Cc:Subject:From;
+        b=uaI6ZB/bBbm1jH1gtP5MVuSGxXrH/JfmJRN1zv2Qm/pCxmJjQIiFn2tm09aBTRLM+
+         fCU3BQBk5ro4UZKNOtM2b0S3+LZ3BuWmbVQ1x1AwFTdsenJtYyeztEr6CGa9oPNmV8
+         CpKYgSdsA3gFPs5a4zXDqfjEO/8srsVhAwTozJ/O50gNzP14bGf2dtHg6M3pZb0NWo
+         Ew/Zyx46T/Vp0ivgx+CJrsqeSsXAPFDr23EVvfcMAY3PO9fJ98zxkVqQLS7b8vv0q4
+         TIdFk3G7dpRrhy0jAbLhzGcmLExy0hUSTRbS+JQESC4i2ikqoEyiQrQ9i1qHjA0QqS
+         QZgrg4PzEn/3Q==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 60C6040714; Thu, 20 Jan 2022 11:31:01 -0300 (-03)
+Date:   Thu, 20 Jan 2022 11:31:01 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/1 FYI] tools headers UAPI: Sync files changed by new
+ set_mempolicy_home_node syscall
+Message-ID: <YelyJcmhLKY/LlBR@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20220111150749.13365-1-andrew.kilroy@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.81.141]
-X-ClientProxiedBy: lhreml712-chm.china.huawei.com (10.201.108.63) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 11/01/2022 15:07, Andrew Kilroy wrote:
-> This patch series adds the ability for the --topdown option to use
-> metrics (defined in json files in the pmu-events directory) to describe
-> how to calculate and determine the output columns for topdown level 1.
-> 
-> For this to work, a number of metrics have to be defined for the
-> relevant processor with the MetricGroup name "TopDownL1".  perf will
-> arrange for the events defined in each metric to be collected, and each
-> metric will be displayed in the output, as if
-> 
->    perf stat -M 'TopDownL1' --metric-only -- exampleapp
-> 
-> had been used.
-> 
-> Topdown was already implemented where certain kernel events are defined.
-> If these kernel events are defined, the new json metrics behaviour is
-> not used.  The json metrics approach is only used if the kernel events
-> are absent.
-> 
-> The last patch in the series disables the json metrics behaviour on x86.
-> This is because of concerns that due to SMT it's not straightforward to
-> express the various formulas as json for certain x86 cpus.  See
+To pick the changes in these csets:
 
-I suppose this solution is ok.
+  21b084fdf2a49ca1 ("mm/mempolicy: wire up syscall set_mempolicy_home_node")
 
-A concern is that today we only have 1x arm64 platform which actually 
-supports this in mainline.
+That add support for this new syscall in tools such as 'perf trace'.
 
-Do you have any more which you plan to support?
+For instance, this is now possible:
 
-I think that it's the frontend bound and fetch_bubble event which 
-doesn't have a standard arm solution.
+  [root@five ~]# perf trace -e set_mempolicy_home_node
+  ^C[root@five ~]#
+  [root@five ~]# perf trace -v -e set_mempolicy_home_node
+  Using CPUID AuthenticAMD-25-21-0
+  event qualifier tracepoint filter: (common_pid != 253729 && common_pid != 3585) && (id == 450)
+  mmap size 528384B
+  ^C[root@five ~]
+  [root@five ~]# perf trace -v -e set*  --max-events 5
+  Using CPUID AuthenticAMD-25-21-0
+  event qualifier tracepoint filter: (common_pid != 253734 && common_pid != 3585) && (id == 38 || id == 54 || id == 105 || id == 106 || id == 109 || id == 112 || id == 113 || id == 114 || id == 116 || id == 117 || id == 119 || id == 122 || id == 123 || id == 141 || id == 160 || id == 164 || id == 170 || id == 171 || id == 188 || id == 205 || id == 218 || id == 238 || id == 273 || id == 308 || id == 450)
+  mmap size 528384B
+       0.000 ( 0.008 ms): bash/253735 setpgid(pid: 253735 (bash), pgid: 253735 (bash))      = 0
+    6849.011 ( 0.008 ms): bash/16046 setpgid(pid: 253736 (bash), pgid: 253736 (bash))       = 0
+    6849.080 ( 0.005 ms): bash/253736 setpgid(pid: 253736 (bash), pgid: 253736 (bash))      = 0
+    7437.718 ( 0.009 ms): gnome-shell/253737 set_robust_list(head: 0x7f34b527e920, len: 24) = 0
+   13445.986 ( 0.010 ms): bash/16046 setpgid(pid: 253738 (bash), pgid: 253738 (bash))       = 0
+  [root@five ~]#
 
-Note that I do have a series for perf tool which can read arm cpu pmu 
-sysfs events folder to find events which are implemented (I don't think 
-all required events are mandated) and match that against the common arch 
-events JSON, so that we don't need a JSON definition file for each core 
-implementation from all implementators - this would improve scalability. 
-However a concern is that some events - like inst_spec - have imp def 
-meaning, so may not be good to always use by default for all cores metrics.
+That is the filter expression attached to the raw_syscalls:sys_{enter,exit}
+tracepoints.
 
-Thanks,
-John
+  $ find tools/perf/arch/ -name "syscall*tbl" | xargs grep -w set_mempolicy_home_node
+  tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl:450	common	set_mempolicy_home_node		sys_set_mempolicy_home_node
+  tools/perf/arch/powerpc/entry/syscalls/syscall.tbl:450 	nospu	set_mempolicy_home_node		sys_set_mempolicy_home_node
+  tools/perf/arch/s390/entry/syscalls/syscall.tbl:450  common	set_mempolicy_home_node	sys_set_mempolicy_home_node	sys_set_mempolicy_home_node
+  tools/perf/arch/x86/entry/syscalls/syscall_64.tbl:450	common	set_mempolicy_home_node	sys_set_mempolicy_home_node
+  $
+
+  $ grep -w set_mempolicy_home_node /tmp/build/perf/arch/x86/include/generated/asm/syscalls_64.c
+	[450] = "set_mempolicy_home_node",
+  $
+
+This addresses these perf build warnings:
+
+  Warning: Kernel ABI header at 'tools/include/uapi/asm-generic/unistd.h' differs from latest version at 'include/uapi/asm-generic/unistd.h'
+  diff -u tools/include/uapi/asm-generic/unistd.h include/uapi/asm-generic/unistd.h
+  Warning: Kernel ABI header at 'tools/perf/arch/x86/entry/syscalls/syscall_64.tbl' differs from latest version at 'arch/x86/entry/syscalls/syscall_64.tbl'
+  diff -u tools/perf/arch/x86/entry/syscalls/syscall_64.tbl arch/x86/entry/syscalls/syscall_64.tbl
+  Warning: Kernel ABI header at 'tools/perf/arch/powerpc/entry/syscalls/syscall.tbl' differs from latest version at 'arch/powerpc/kernel/syscalls/syscall.tbl'
+  diff -u tools/perf/arch/powerpc/entry/syscalls/syscall.tbl arch/powerpc/kernel/syscalls/syscall.tbl
+  Warning: Kernel ABI header at 'tools/perf/arch/s390/entry/syscalls/syscall.tbl' differs from latest version at 'arch/s390/kernel/syscalls/syscall.tbl'
+  diff -u tools/perf/arch/s390/entry/syscalls/syscall.tbl arch/s390/kernel/syscalls/syscall.tbl
+  Warning: Kernel ABI header at 'tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl' differs from latest version at 'arch/mips/kernel/syscalls/syscall_n64.tbl'
+  diff -u tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl arch/mips/kernel/syscalls/syscall_n64.tbl
+
+Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/include/uapi/asm-generic/unistd.h             | 5 ++++-
+ tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl | 1 +
+ tools/perf/arch/powerpc/entry/syscalls/syscall.tbl  | 1 +
+ tools/perf/arch/s390/entry/syscalls/syscall.tbl     | 1 +
+ tools/perf/arch/x86/entry/syscalls/syscall_64.tbl   | 1 +
+ 5 files changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/tools/include/uapi/asm-generic/unistd.h b/tools/include/uapi/asm-generic/unistd.h
+index 4557a8b6086f4ffe..1c48b0ae3ba30229 100644
+--- a/tools/include/uapi/asm-generic/unistd.h
++++ b/tools/include/uapi/asm-generic/unistd.h
+@@ -883,8 +883,11 @@ __SYSCALL(__NR_process_mrelease, sys_process_mrelease)
+ #define __NR_futex_waitv 449
+ __SYSCALL(__NR_futex_waitv, sys_futex_waitv)
+ 
++#define __NR_set_mempolicy_home_node 450
++__SYSCALL(__NR_set_mempolicy_home_node, sys_set_mempolicy_home_node)
++
+ #undef __NR_syscalls
+-#define __NR_syscalls 450
++#define __NR_syscalls 451
+ 
+ /*
+  * 32 bit systems traditionally used different
+diff --git a/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl b/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
+index e2c481fcede6bd11..3f1886ad9d8060b4 100644
+--- a/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
++++ b/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
+@@ -364,3 +364,4 @@
+ # 447 reserved for memfd_secret
+ 448	n64	process_mrelease		sys_process_mrelease
+ 449	n64	futex_waitv			sys_futex_waitv
++450	common	set_mempolicy_home_node		sys_set_mempolicy_home_node
+diff --git a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
+index 15109af9d0754d5f..2600b4237292c78c 100644
+--- a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
++++ b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
+@@ -529,3 +529,4 @@
+ # 447 reserved for memfd_secret
+ 448	common	process_mrelease		sys_process_mrelease
+ 449	common  futex_waitv                     sys_futex_waitv
++450 	nospu	set_mempolicy_home_node		sys_set_mempolicy_home_node
+diff --git a/tools/perf/arch/s390/entry/syscalls/syscall.tbl b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
+index ed9c5c2eafad700c..799147658dee20dd 100644
+--- a/tools/perf/arch/s390/entry/syscalls/syscall.tbl
++++ b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
+@@ -452,3 +452,4 @@
+ # 447 reserved for memfd_secret
+ 448  common	process_mrelease	sys_process_mrelease		sys_process_mrelease
+ 449  common	futex_waitv		sys_futex_waitv			sys_futex_waitv
++450  common	set_mempolicy_home_node	sys_set_mempolicy_home_node	sys_set_mempolicy_home_node
+diff --git a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
+index fe8f8dd157b4d49c..c84d12608cd2de9e 100644
+--- a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
+@@ -371,6 +371,7 @@
+ 447	common	memfd_secret		sys_memfd_secret
+ 448	common	process_mrelease	sys_process_mrelease
+ 449	common	futex_waitv		sys_futex_waitv
++450	common	set_mempolicy_home_node	sys_set_mempolicy_home_node
+ 
+ #
+ # Due to a historical design error, certain syscalls are numbered differently
+-- 
+2.34.1
+
