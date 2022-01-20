@@ -2,145 +2,96 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC5AC4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Jan 2022 01:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4C2C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Jan 2022 09:26:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345428AbiATBB4 (ORCPT
+        id S1359275AbiATJ0l (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Jan 2022 20:01:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240710AbiATBB4 (ORCPT
+        Thu, 20 Jan 2022 04:26:41 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4433 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1359226AbiATJ0l (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Jan 2022 20:01:56 -0500
-Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF6E5C061574;
-        Wed, 19 Jan 2022 17:01:55 -0800 (PST)
-Received: by mail-il1-x134.google.com with SMTP id x15so3762204ilc.5;
-        Wed, 19 Jan 2022 17:01:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tgFIDNZGxcD+cxOGJIv6yrYTTSso13PAlw1HHHnn78o=;
-        b=jap48ZBRTMOGXP19WpQPTprNul1uSVpvGY+0g3T9ZMRGJYsZ9dIYniW49ajcQZoOR+
-         DMZ+9KyiGxOv02NnlMgu8QF3m5JGBP89++6aTLhPESAT36oAeUTCe8svLjk/XDeVXvww
-         7befEqatdwxVbEm24jZlKFt6rhPkUiw1RubMlGjjo61Ly2a0GMsbmHWICZsnorBM+Hte
-         VKtXUeg+qoTh0PlW9q4bPa0vhl0/Byc9EovSK8XbJnfxVxL1uR1pNVyjT/IYyNPnKyok
-         Cpj3Vds2+rbJ4ZymDr4vNVsCDXBbVddiFHqEVY7MHDEiZ3hT9F3PqEnVqRr7TzDMF2+T
-         NtPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tgFIDNZGxcD+cxOGJIv6yrYTTSso13PAlw1HHHnn78o=;
-        b=MTCRniNa+4tz55lX0CPDODbESVWFuhJjalktBt+qNeSgk96N8djNsExWRb9pJ3ftF5
-         n16SUU/sO0k/ohuZ/6i+e9fd5hhw31wjJLfnfi0iBWUPrzOsdSMBZ4pkCls7R6/Yt07U
-         Wv0kWCf2DGXHqcpWxrrGj/f9wP3CADPR7ziruv3Ecx7ImEzGhJz/4Pd718zxqhfYDcmC
-         koZ1Di1qd10loGJb3okiP5jVaJKjD/1LtGsjf728Nr2vZqhbtbhBvJnQzElyLaRKCeSB
-         NiIFjKkcQlT3gwi3sA0TsexRvOJM+NpK7oGMYyc//omCUjuHtV70Bvg49H/Ox080+iEp
-         YwOQ==
-X-Gm-Message-State: AOAM531wOWqDZCr1rlTuS3f2JYX9w+tiyOm5LQ8cF+1ikg/lNMdBOPfm
-        fXMrlZy+F9Kx+ISVfIyj6OEbnyfFrm0907R3A+k=
-X-Google-Smtp-Source: ABdhPJyVHI6GVNxFtry1caSOHafz0BUg+Wuj0oTa+JHvekWWPEB62P/I64tJTZ1rB9TjBcRsRdmtoHM3Cq50Mdt60VA=
-X-Received: by 2002:a05:6e02:1c01:: with SMTP id l1mr2461686ilh.239.1642640515183;
- Wed, 19 Jan 2022 17:01:55 -0800 (PST)
-MIME-Version: 1.0
-References: <20220119230636.1752684-1-christylee@fb.com> <20220119230636.1752684-2-christylee@fb.com>
- <C02B00A0-5760-44CE-B727-90CF601A8437@fb.com> <CAEf4BzaoqsxOvYsPjC4RX-mL+HsgEP=GsnS5fKm0UZsYvY=Sjw@mail.gmail.com>
- <D753C41C-A70A-4316-8201-9F8369D1E627@fb.com>
-In-Reply-To: <D753C41C-A70A-4316-8201-9F8369D1E627@fb.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 19 Jan 2022 17:01:43 -0800
-Message-ID: <CAEf4Bzbz231HjbgyVs-P=_tUj4XKAe9oOkxh5zpAa81bFe_cgQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 1/2] perf: stop using deprecated
- bpf_load_program() API
-To:     Song Liu <songliubraving@fb.com>
-Cc:     "Christy Lee-Eusman (PL&R)" <christylee@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Thu, 20 Jan 2022 04:26:41 -0500
+Received: from fraeml704-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JfcWM42WHz682sD;
+        Thu, 20 Jan 2022 17:23:27 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml704-chm.china.huawei.com (10.206.15.53) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.21; Thu, 20 Jan 2022 10:26:37 +0100
+Received: from [10.47.81.141] (10.47.81.141) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Thu, 20 Jan
+ 2022 09:26:37 +0000
+Subject: Re: [RFC PATCH v2 0/5] topdown with metrics
+To:     Andrew Kilroy <andrew.kilroy@arm.com>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <acme@kernel.org>, <irogers@google.com>, <ak@linux.intel.com>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        "christyc.y.lee@gmail.com" <christyc.y.lee@gmail.com>,
-        bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "wangnan0@huawei.com" <wangnan0@huawei.com>,
-        "bobo.shaobowang@huawei.com" <bobo.shaobowang@huawei.com>,
-        "yuehaibing@huawei.com" <yuehaibing@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+        "Namhyung Kim" <namhyung@kernel.org>
+References: <4fefb1bc-49b2-bc5b-23cd-cd8fabe8c588@huawei.com>
+ <20220111150749.13365-1-andrew.kilroy@arm.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <7cd7bd11-4900-81c4-de84-6e5fc63ec87c@huawei.com>
+Date:   Thu, 20 Jan 2022 09:26:12 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
+MIME-Version: 1.0
+In-Reply-To: <20220111150749.13365-1-andrew.kilroy@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.81.141]
+X-ClientProxiedBy: lhreml712-chm.china.huawei.com (10.201.108.63) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jan 19, 2022 at 3:35 PM Song Liu <songliubraving@fb.com> wrote:
->
->
->
-> > On Jan 19, 2022, at 3:26 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Wed, Jan 19, 2022 at 3:20 PM Song Liu <songliubraving@fb.com> wrote:
-> >>
-> >>
-> >>
-> >>> On Jan 19, 2022, at 3:06 PM, Christy Lee <christylee@fb.com> wrote:
-> >>>
-> >>> bpf_load_program() API is deprecated, remove perf's usage of the
-> >>> deprecated function. Add a __weak function declaration for libbpf
-> >>> version compatibility.
-> >>>
-> >>> Signed-off-by: Christy Lee <christylee@fb.com>
-> >>> Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> >>
-> >> Acked-by: Song Liu <songliubraving@fb.com>
-> >>
-> >> With one minor comment below.
-> >>
-> >>> ---
-> >>> tools/perf/tests/bpf.c      | 14 ++++----------
-> >>> tools/perf/util/bpf-event.c | 16 ++++++++++++++++
-> >>> 2 files changed, 20 insertions(+), 10 deletions(-)
-> >>>
-> >>> diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
-> >>> index 573490530194..57b9591f7cbb 100644
-> >>> --- a/tools/perf/tests/bpf.c
-> >>> +++ b/tools/perf/tests/bpf.c
-> >>> @@ -281,8 +281,8 @@ static int __test__bpf(int idx)
-> >>>
-> >>> static int check_env(void)
-> >>> {
-> >>> +     LIBBPF_OPTS(bpf_prog_load_opts, opts);
-> >>
-> >> This changes seems unnecessary.
-> >>
-> >>>      int err;
-> >>> -     unsigned int kver_int;
-> >>>      char license[] = "GPL";
-> >>>
-> >>>      struct bpf_insn insns[] = {
-> >>> @@ -290,19 +290,13 @@ static int check_env(void)
-> >>>              BPF_EXIT_INSN(),
-> >>>      };
-> >>>
-> >>> -     err = fetch_kernel_version(&kver_int, NULL, 0);
-> >>> +     err = fetch_kernel_version(&opts.kern_version, NULL, 0);
-> >
-> > Opts are used here. Libbpf is now performing the same kern_version
-> > extraction logic, so we might not need fetch_kernel_version() now, but
-> > I'd still keep it to avoid unnecessary regressions.
->
-> Yeah, I noticed opts is used. But we only use opts.kern_version
-> here, which is an u32. Will this be a problem if we compile perf
-> against an older libbpf? (if we ever do that).
+On 11/01/2022 15:07, Andrew Kilroy wrote:
+> This patch series adds the ability for the --topdown option to use
+> metrics (defined in json files in the pmu-events directory) to describe
+> how to calculate and determine the output columns for topdown level 1.
+> 
+> For this to work, a number of metrics have to be defined for the
+> relevant processor with the MetricGroup name "TopDownL1".  perf will
+> arrange for the events defined in each metric to be collected, and each
+> metric will be displayed in the output, as if
+> 
+>    perf stat -M 'TopDownL1' --metric-only -- exampleapp
+> 
+> had been used.
+> 
+> Topdown was already implemented where certain kernel events are defined.
+> If these kernel events are defined, the new json metrics behaviour is
+> not used.  The json metrics approach is only used if the kernel events
+> are absent.
+> 
+> The last patch in the series disables the json metrics behaviour on x86.
+> This is because of concerns that due to SMT it's not straightforward to
+> express the various formulas as json for certain x86 cpus.  See
 
-Oh, because struct bpf_prog_load_opts might not be defined? Yes, but
-there will also be a problem if linking against libbpf older than v0.6
-anyways (due to the bpf_prog_load() macro overload shenanigans), so I
-think libbpf 0.6 is the minimum version for perf, essentially.
+I suppose this solution is ok.
 
->
-> Thanks,
-> Song
->
->
->
->
+A concern is that today we only have 1x arm64 platform which actually 
+supports this in mainline.
+
+Do you have any more which you plan to support?
+
+I think that it's the frontend bound and fetch_bubble event which 
+doesn't have a standard arm solution.
+
+Note that I do have a series for perf tool which can read arm cpu pmu 
+sysfs events folder to find events which are implemented (I don't think 
+all required events are mandated) and match that against the common arch 
+events JSON, so that we don't need a JSON definition file for each core 
+implementation from all implementators - this would improve scalability. 
+However a concern is that some events - like inst_spec - have imp def 
+meaning, so may not be good to always use by default for all cores metrics.
+
+Thanks,
+John
