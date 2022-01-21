@@ -2,115 +2,91 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4601CC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Jan 2022 22:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 574CBC433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Jan 2022 06:55:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378127AbiATW6l (ORCPT
+        id S1378791AbiAUGzC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 20 Jan 2022 17:58:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34836 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233856AbiATW6l (ORCPT
+        Fri, 21 Jan 2022 01:55:02 -0500
+Received: from szxga01-in.huawei.com ([45.249.212.187]:35854 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1378777AbiAUGzB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 20 Jan 2022 17:58:41 -0500
-Received: from mail-il1-x131.google.com (mail-il1-x131.google.com [IPv6:2607:f8b0:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B86BC061574;
-        Thu, 20 Jan 2022 14:58:41 -0800 (PST)
-Received: by mail-il1-x131.google.com with SMTP id u5so6254876ilq.9;
-        Thu, 20 Jan 2022 14:58:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d2R1r7lbzHjwFkrPG1ysQPgQWbz3uiy9tgPY3MmK5Ws=;
-        b=MRYVqzTGoAkxyUzB9Famjb5NrAotUS3LSEUky6Avw5Zxc44adDnkUPXBhc3sXEvfzO
-         RHTcrdZETpds5YGXIOVpTFHDteM4AreN4EboLLVWnFZIVQcVcmF6yzJ7umt29nHVknpp
-         sQbbr0tEvVQeMS0GPmQlBoT3jYQ/qQPxhFhnY7IYjdO71Sp+xumQR9zQznr1QbyZQCto
-         FBX0ZuFAn/uXp2ram/y3TSVF0PaY5Pz7WXb+qTMpS5YHsC4liPr6SXGrMufjAfD8hFNd
-         5T2mxPrzg4JPXBBOIE/eK0UOhBfbDWjdx7OHm+aLCLVIAT6WFClmGqndjuJBUdf7YNON
-         1dww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d2R1r7lbzHjwFkrPG1ysQPgQWbz3uiy9tgPY3MmK5Ws=;
-        b=3ynj77eVKpqskJOsCFPOCW/I9NzH7qne7u+svY+bNYXykZumEKCfkJDXBoOokDvv3w
-         hB+3Cy6icK6KQuC19h2AhxSeYhRchCwlXErWjD12Zt8nZuYLr36ZdPHlPpMwVHwdq96j
-         v7MsfImLVJD+qHLiHCu0+xATnFblmJz3FR2VdFHeKkeNbuCNQ+OcXUeNYG4tQf1j/Rt5
-         g0uhyZrOBhmF6Y2aJmww0K5g2VqovxUwtCkhZNjZAbPLBuGAjVtbBI5elxzRa4JXPMoO
-         xwQKWOyih7a49pbnP07PgqBxx5P8bF1S8eNs5dwG5bz0L+W06EzzsdsdEJoH3rGZt06T
-         ecvA==
-X-Gm-Message-State: AOAM5309fMANdKtQ5bxAuvqyaLdjYNQYpdBCK9aWeXup7TNEyyFeB19E
-        PZM4QXODzwxmvAyg1XuVWi/Ur9t8Yy2gidJgUeA=
-X-Google-Smtp-Source: ABdhPJxv12+U9/t2si5uTSEBaw22wdMZ1AdqMkYylA+CD0UnrloTfwIMhIBx6zDqc1WejgvulfR9LsJrEUpxnEryZpw=
-X-Received: by 2002:a05:6e02:178d:: with SMTP id y13mr618198ilu.71.1642719520642;
- Thu, 20 Jan 2022 14:58:40 -0800 (PST)
-MIME-Version: 1.0
-References: <20220119230636.1752684-1-christylee@fb.com>
-In-Reply-To: <20220119230636.1752684-1-christylee@fb.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 20 Jan 2022 14:58:29 -0800
-Message-ID: <CAEf4BzbODQmEH+wuFsEPFdtRoZ1Y-vDJKAKkBLsUDBLoQOmrvg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 0/2] perf: stop using deprecated bpf APIs
-To:     Christy Lee <christylee@fb.com>
-Cc:     Andrii Nakryiko <andrii@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Fri, 21 Jan 2022 01:55:01 -0500
+Received: from canpemm500002.china.huawei.com (unknown [172.30.72.55])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Jg98j2gp3zccgv;
+        Fri, 21 Jan 2022 14:54:13 +0800 (CST)
+Received: from localhost.localdomain (10.175.103.91) by
+ canpemm500002.china.huawei.com (7.192.104.244) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Fri, 21 Jan 2022 14:54:58 +0800
+From:   Wei Li <liwei391@huawei.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Christy Lee <christyc.y.lee@gmail.com>,
-        bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>,
-        Wang Nan <wangnan0@huawei.com>,
-        Wang ShaoBo <bobo.shaobowang@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+        Namhyung Kim <namhyung@kernel.org>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <guohanjun@huawei.com>, <jinyao5@huawei.com>
+Subject: [PATCH] perf script: Fix printing 'phys_addr' failure issue
+Date:   Fri, 21 Jan 2022 14:59:54 +0800
+Message-ID: <20220121065954.2121900-1-liwei391@huawei.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.103.91]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ canpemm500002.china.huawei.com (7.192.104.244)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jan 19, 2022 at 3:09 PM Christy Lee <christylee@fb.com> wrote:
->
-> libbpf's bpf_load_program() and bpf__object_next() APIs are deprecated.
-> remove perf's usage of these deprecated functions. After this patch
-> set, the only remaining libbpf deprecated APIs in perf would be
-> bpf_program__set_prep() and bpf_program__nth_fd().
->
+From: Yao Jin <jinyao5@huawei.com>
 
-Arnaldo, do you want to take this through perf tree or should we apply
-this to bpf-next? If the latter, can you give your ack as well?
-Thanks!
+Perf script was failed to print the phys_addr for SPE profiling.
+One 'dummy' event is added by SPE profiling but it doesn't have PHYS_ADDR
+attribute set, perf script then exits with error.
 
-> Changelog:
-> ----------
-> v3 -> v4:
-> * Fixed commit title
-> * Added weak definition for deprecated function
->
-> v2 -> v3:
-> https://lore.kernel.org/all/20220106200032.3067127-1-christylee@fb.com/
->
-> Patch 2/2:
-> Fixed commit message to use upstream perf
->
-> v1 -> v2:
-> https://lore.kernel.org/all/20211216222108.110518-1-christylee@fb.com/
->
-> Patch 1/2:
-> Added missing commit message
->
-> Patch 2/2:
-> Added more details to commit message and added steps to reproduce
-> original test case.
->
-> Christy Lee (2):
->   perf: stop using deprecated bpf_load_program() API
->   perf: stop using deprecated bpf_object__next() API
->
->  tools/perf/tests/bpf.c       | 14 ++-----
->  tools/perf/util/bpf-event.c  | 16 ++++++++
->  tools/perf/util/bpf-loader.c | 72 +++++++++++++++++++++++++++---------
->  tools/perf/util/bpf-loader.h |  1 +
->  4 files changed, 75 insertions(+), 28 deletions(-)
->
-> --
-> 2.30.2
+Now referring to 'addr', use evsel__do_check_stype() to check the type.
+
+Before:
+
+  # perf record -e arm_spe_0/branch_filter=0,ts_enable=1,pa_enable=1,load_filter=1,jitter=0,\
+		store_filter=0,min_latency=0,event_filter=2/ -p 4064384 -- sleep 3
+  # perf script -F pid,tid,addr,phys_addr
+  Samples for 'dummy:u' event do not have PHYS_ADDR attribute set. Cannot print 'phys_addr' field.
+
+After:
+
+  # perf record -e arm_spe_0/branch_filter=0,ts_enable=1,pa_enable=1,load_filter=1,jitter=0,\
+		store_filter=0,min_latency=0,event_filter=2/ -p 4064384 -- sleep 3
+  # perf script -F pid,tid,addr,phys_addr
+  4064384/4064384 ffff802f921be0d0      2f921be0d0
+  4064384/4064384 ffff802f921be0d0      2f921be0d0
+
+Signed-off-by: Yao Jin <jinyao5@huawei.com>
+Signed-off-by: Wei Li <liwei391@huawei.com>
+---
+ tools/perf/builtin-script.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index ecd4f99a6c14..abae8184e171 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -515,7 +515,7 @@ static int evsel__check_attr(struct evsel *evsel, struct perf_session *session)
+ 		return -EINVAL;
+ 
+ 	if (PRINT_FIELD(PHYS_ADDR) &&
+-	    evsel__check_stype(evsel, PERF_SAMPLE_PHYS_ADDR, "PHYS_ADDR", PERF_OUTPUT_PHYS_ADDR))
++	    evsel__do_check_stype(evsel, PERF_SAMPLE_PHYS_ADDR, "PHYS_ADDR", PERF_OUTPUT_PHYS_ADDR, allow_user_set))
+ 		return -EINVAL;
+ 
+ 	if (PRINT_FIELD(DATA_PAGE_SIZE) &&
+-- 
+2.25.1
+
