@@ -2,57 +2,56 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72411C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Jan 2022 12:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E676C433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Jan 2022 12:43:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380407AbiAUMmr (ORCPT
+        id S1350560AbiAUMno (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 21 Jan 2022 07:42:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48080 "EHLO
+        Fri, 21 Jan 2022 07:43:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350442AbiAUMmq (ORCPT
+        with ESMTP id S1380453AbiAUMnk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 21 Jan 2022 07:42:46 -0500
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E1C5C061574
-        for <linux-perf-users@vger.kernel.org>; Fri, 21 Jan 2022 04:42:46 -0800 (PST)
-Received: by mail-wm1-x32c.google.com with SMTP id az27-20020a05600c601b00b0034d2956eb04so22076273wmb.5
-        for <linux-perf-users@vger.kernel.org>; Fri, 21 Jan 2022 04:42:46 -0800 (PST)
+        Fri, 21 Jan 2022 07:43:40 -0500
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92BE8C061401
+        for <linux-perf-users@vger.kernel.org>; Fri, 21 Jan 2022 04:43:39 -0800 (PST)
+Received: by mail-wm1-x32d.google.com with SMTP id l35-20020a05600c1d2300b0034d477271c1so22092313wms.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 21 Jan 2022 04:43:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=FbauWvjEFr0VEys9tznLWPTDHaU2uug5P4EDNWbJ8+E=;
-        b=uoPJ8mn9Kan1V+k3BDZDa7RTh/3CLdpRfMvVa7WsJ/gKSaS8pvkj5NERpKxKYq5GPz
-         3mx5xTgJyma8/Ei4cpOGwy6BbvmD9lRqGLiyNJiBT8Kqxbjr26bM8058UvKMiFlNhQLA
-         UlEM4cLyLjyIxUzHjwt5IM37pvGKvDt2SQw8m2Twh6MuwGQhhI5CPDdhyBRj8gEEkQeh
-         7FGYa11oLjNOK19Yso7Ha8I9sK4eoaK9Qvuz2RBuDXW9wDhe2L6xgZSzO+gFDNXgA0ru
-         /Yu7Ft9nMIkwk7QKYbKt9BMZBtLLQ4266yGPeTvUjAihNy5Vt9TjYDfCNcYmCjMaL4QX
-         HNGA==
+        bh=EWlGEwUNQNsFOBQfyTw758QJnOz/Mz+YQnkVX090/Ec=;
+        b=MYFGLp4W4jpqtR3IIydSN+Z/d3lEDhCaOqSjM3NTv5GVVALIHbQQcGos5LllHPGS++
+         SbTqDkZxIXtaKEtj4Fm8z3dd5evfJhdVVyXYkkEDJp86hhy85w5IMQoZomC/60GG8cWX
+         WB7iVNQQ6rDfGUik3QLdVB5C7LF309H1wyzN/09BUQpO9Q8nRzNah6JN9/wtEw+QLvfB
+         6tpicTDlg3TcZzgDKPR3C+PcxAf9kYvPTj9Ls7jVfbeaSepo+5G0SGq4VxO4NkykJiqJ
+         WTXzZqk4Xrgop16zr5lNKB5VhosktgruYMjt6a6RNBmXX33+FkmO2HA0xuES72wbP4vl
+         9mHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FbauWvjEFr0VEys9tznLWPTDHaU2uug5P4EDNWbJ8+E=;
-        b=XdvZO1ygo2hi4wJ7Ey6dS/+UFsEBJwQhu/BK2aKHF30QnzfqMAkyNXUDAoThA+YZ8u
-         qeueu/QukfHBkhWudJdDI8JXTwvwcLJ7FZ7g9drl91IjGditp7XBmxFNnNm4ouKTIJwf
-         Xtks7/I9mwE6a29OpH28GJc0f7QO6Q2ldE5YFI8kR8PxdNyAieDPpQ/yOdhSJBVmVsjN
-         64Cc/PDCVhCUmWEIL2ulK7FfNt5ydrWJhesrfGSXy9TmAqWq8W0aCFYQVaEYyOvOS97I
-         AcbmyRKxk4qFCXawPfql8dHU/Zevis7A9CZKfCdiAcZL3whX75quyz4gWZsTBfR6A3IH
-         J4Bg==
-X-Gm-Message-State: AOAM530vZOvvRk6essgcthpfoi0i9Bq7QNoEXM3+XVW9qFlgggx6k71c
-        5iU1IGfKn2Zk76pQCDVf/E9BNqIJFZ2ZBMGmag6TCg==
-X-Google-Smtp-Source: ABdhPJzLeZ7R7NMebRJM4vVfNZ690JvgI0zhKpWeLaP9Flzk3MULTYtYTkX5Voxns4JCqEDfY804I3cDD+Zgel9ktWE=
-X-Received: by 2002:a05:6000:1c1e:: with SMTP id ba30mr3898662wrb.699.1642768964790;
- Fri, 21 Jan 2022 04:42:44 -0800 (PST)
+        bh=EWlGEwUNQNsFOBQfyTw758QJnOz/Mz+YQnkVX090/Ec=;
+        b=JwzzNRrJg1P7Ymlsw8dklkpivl7rUurppJl8Hyks3xvsQzywjK0zOxfe4Y+UUD/R7N
+         k/csce72pWrztnTDx1ZbZx+/GfBU6rgd0fP4Xt0miC16e+l280mbkdKj0HP1GXQD02FH
+         dHUPRwLoYj4NUEB/IFMspIQocwSBff1ddBUZNpXuTvi5e5cILYzkt7NO0ksqI7pTtB19
+         2mOU/rOWUCclKV5zfMewXiy8kuIo7gLjzESOA/BhkK08Yahd3oE+aXg4JB2Zh2H5ZE4L
+         nm6cNWmiG9PsfQXQqkw7PE2hZYSeFdcshU9akXwnAK8AoXjT2yhev7Ws1MOHVy7MlI7K
+         HSKg==
+X-Gm-Message-State: AOAM531VqhUrfTjxgQBkFi6353/Wysy+gcMkpsY9hBMk0Qmrcbj25td/
+        tydMVBOsjMQLDpJn7eIxKvnMLhff50sM6kvGi3RGsg==
+X-Google-Smtp-Source: ABdhPJxVIUEv+Gh1C/eqHdYDUCSzfEdK6zAnokctV5VtHG6hK9uye4hFh/zXYkdfWtjlEqWpF56HAeb28htkXndj+h0=
+X-Received: by 2002:adf:df84:: with SMTP id z4mr3696038wrl.519.1642769018129;
+ Fri, 21 Jan 2022 04:43:38 -0800 (PST)
 MIME-Version: 1.0
-References: <20220113091056.1297982-1-james.clark@arm.com> <20220113091056.1297982-3-james.clark@arm.com>
-In-Reply-To: <20220113091056.1297982-3-james.clark@arm.com>
+References: <20220113091056.1297982-1-james.clark@arm.com> <20220113091056.1297982-2-james.clark@arm.com>
+In-Reply-To: <20220113091056.1297982-2-james.clark@arm.com>
 From:   Mike Leach <mike.leach@linaro.org>
-Date:   Fri, 21 Jan 2022 12:42:34 +0000
-Message-ID: <CAJ9a7ViuON11QZRhejcmCM3KOkWx-i0NZw_Kh-2m1Ps0bop2xw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/6] coresight: Fail to open with return stacks if they
- are unavailable
+Date:   Fri, 21 Jan 2022 12:43:27 +0000
+Message-ID: <CAJ9a7VhYEzXFbSDvvUsH-D9T_1bTVUJW6P_TJj_W8_C1T-2vVw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] coresight: Add config flag to enable branch broadcast
 To:     James Clark <James.Clark@arm.com>
 Cc:     suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
         coresight@lists.linaro.org, leo.yan@linaro.com,
@@ -70,51 +69,91 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Reviewed-by: Mike Leach <mike.leach@linaro.org>
-
 On Thu, 13 Jan 2022 at 09:11, James Clark <james.clark@arm.com> wrote:
 >
-> Maintain consistency with the other options by failing to open when they
-> aren't supported. For example ETM_OPT_TS, ETM_OPT_CTXTID2 and the newly
-> added ETM_OPT_BRANCH_BROADCAST all return with -EINVAL if they are
-> requested but not supported by hardware.
+> When enabled, all taken branch addresses are output, even if the branch
+> was because of a direct branch instruction. This enables reconstruction
+> of the program flow without having access to the memory image of the
+> code being executed.
 >
-> The consequence of not doing this is that the user may not be
-> aware that they are not enabling the feature as it is silently disabled.
+> Use bit 8 for the config option which would be the correct bit for
+> programming ETMv3. Although branch broadcast can't be enabled on ETMv3
+> because it's not in the define ETM3X_SUPPORTED_OPTIONS, using the
+> correct bit might help prevent future collisions or allow it to be
+> enabled if needed.
 >
 > Signed-off-by: James Clark <james.clark@arm.com>
 > ---
->  drivers/hwtracing/coresight/coresight-etm4x-core.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
+>  drivers/hwtracing/coresight/coresight-etm-perf.c   |  2 ++
+>  drivers/hwtracing/coresight/coresight-etm4x-core.c | 10 ++++++++++
+>  include/linux/coresight-pmu.h                      |  2 ++
+>  3 files changed, 14 insertions(+)
+>
+> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> index c039b6ae206f..43bbd5dc3d3b 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> @@ -52,6 +52,7 @@ static DEFINE_PER_CPU(struct coresight_device *, csdev_src);
+>   * The PMU formats were orignally for ETMv3.5/PTM's ETMCR 'config';
+>   * now take them as general formats and apply on all ETMs.
+>   */
+> +PMU_FORMAT_ATTR(branch_broadcast, "config:"__stringify(ETM_OPT_BRANCH_BROADCAST));
+>  PMU_FORMAT_ATTR(cycacc,                "config:" __stringify(ETM_OPT_CYCACC));
+>  /* contextid1 enables tracing CONTEXTIDR_EL1 for ETMv4 */
+>  PMU_FORMAT_ATTR(contextid1,    "config:" __stringify(ETM_OPT_CTXTID));
+> @@ -97,6 +98,7 @@ static struct attribute *etm_config_formats_attr[] = {
+>         &format_attr_sinkid.attr,
+>         &format_attr_preset.attr,
+>         &format_attr_configid.attr,
+> +       &format_attr_branch_broadcast.attr,
+>         NULL,
+>  };
 >
 > diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> index 04669ecc0efa..a93c1a5fe045 100644
+> index bf18128cf5de..04669ecc0efa 100644
 > --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
 > +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> @@ -674,10 +674,15 @@ static int etm4_parse_event_config(struct coresight_device *csdev,
+> @@ -692,6 +692,16 @@ static int etm4_parse_event_config(struct coresight_device *csdev,
+>                 ret = cscfg_csdev_enable_active_config(csdev, cfg_hash, preset);
 >         }
 >
->         /* return stack - enable if selected and supported */
-> -       if ((attr->config & BIT(ETM_OPT_RETSTK)) && drvdata->retstack)
-> -               /* bit[12], Return stack enable bit */
-> -               config->cfg |= BIT(12);
-> -
-> +       if (attr->config & BIT(ETM_OPT_RETSTK)) {
-> +               if (!drvdata->retstack) {
+> +       /* branch broadcast - enable if selected and supported */
+> +       if (attr->config & BIT(ETM_OPT_BRANCH_BROADCAST)) {
+> +               if (!drvdata->trcbb) {
 > +                       ret = -EINVAL;
 > +                       goto out;
 > +               } else {
-> +                       /* bit[12], Return stack enable bit */
-> +                       config->cfg |= BIT(12);
+> +                       config->cfg |= BIT(ETM4_CFG_BIT_BB);
 > +               }
 > +       }
->         /*
->          * Set any selected configuration and preset.
->          *
+> +
+>  out:
+>         return ret;
+>  }
+> diff --git a/include/linux/coresight-pmu.h b/include/linux/coresight-pmu.h
+> index 4ac5c081af93..6c2fd6cc5a98 100644
+> --- a/include/linux/coresight-pmu.h
+> +++ b/include/linux/coresight-pmu.h
+> @@ -18,6 +18,7 @@
+>   * ETMv3.5/PTM doesn't define ETMCR config bits with prefix "ETM3_" and
+>   * directly use below macros as config bits.
+>   */
+> +#define ETM_OPT_BRANCH_BROADCAST 8
+>  #define ETM_OPT_CYCACC         12
+>  #define ETM_OPT_CTXTID         14
+>  #define ETM_OPT_CTXTID2                15
+> @@ -25,6 +26,7 @@
+>  #define ETM_OPT_RETSTK         29
+>
+>  /* ETMv4 CONFIGR programming bits for the ETM OPTs */
+> +#define ETM4_CFG_BIT_BB         3
+>  #define ETM4_CFG_BIT_CYCACC    4
+>  #define ETM4_CFG_BIT_CTXTID    6
+>  #define ETM4_CFG_BIT_VMID      7
 > --
 > 2.28.0
 >
-
+Reviewed-by: Mike Leach <mike.leach@linaro.org>
 
 -- 
 Mike Leach
