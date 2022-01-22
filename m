@@ -2,638 +2,147 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF85C433F5
-	for <linux-perf-users@archiver.kernel.org>; Sat, 22 Jan 2022 04:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2752DC433F5
+	for <linux-perf-users@archiver.kernel.org>; Sat, 22 Jan 2022 07:26:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233023AbiAVE62 (ORCPT
+        id S232160AbiAVH0t (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 21 Jan 2022 23:58:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40938 "EHLO
+        Sat, 22 Jan 2022 02:26:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233051AbiAVE61 (ORCPT
+        with ESMTP id S229586AbiAVH0t (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 21 Jan 2022 23:58:27 -0500
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1363FC06173D
-        for <linux-perf-users@vger.kernel.org>; Fri, 21 Jan 2022 20:58:27 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id n198-20020a2540cf000000b00614c2ee23b7so6402824yba.9
-        for <linux-perf-users@vger.kernel.org>; Fri, 21 Jan 2022 20:58:27 -0800 (PST)
+        Sat, 22 Jan 2022 02:26:49 -0500
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A85DC06173B
+        for <linux-perf-users@vger.kernel.org>; Fri, 21 Jan 2022 23:26:48 -0800 (PST)
+Received: by mail-pf1-x42a.google.com with SMTP id n32so1812485pfv.11
+        for <linux-perf-users@vger.kernel.org>; Fri, 21 Jan 2022 23:26:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=0TMY5o/dyQ5SuId4r0p3cjinmuagpPVpu9HxaMjlyFs=;
-        b=DeAR0A/54ZEJ8e8t1zmQtC9KB02vVfLnz5iOu0J7GS85FCzaMxZfBZiMXsdb43cy8T
-         uO4SydO4tsqYzItIiZn0LdKoJSm7n485pDJUlZPZMJqLZFYg/LuORMxjecV3YR76BNu3
-         eXxHUD9plFiCe2cFU2q0NPBI7LTQ7SefNqW2MYgajASwphiJpaWBesGorpN5mg1x316k
-         4oHlp+TJ+Fj4+ZCdhgEXHksDM5jGaLVAyJWnGurp2PZBGEi7JZmnhcrdL4X1rpqK8Zde
-         rKlO12bO+5mPui7gCX3nJde9HxCuf+7cnufrF6/5Kuu05vVBGkTEIDVrvtkIt/B/HkoW
-         /Q9Q==
+        d=kylehuey.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2+Hv7nAmqViSixp8vVAFUuKJDivxF+KK0jrhpTa6c7s=;
+        b=AaWlQXmwnIn0izQMh7HbIzWqQn9YU3IXrx/8d+P8wFclpuLDUP3IdeE0kja+rMmxMW
+         tdc/np4CoY+1v5XT44xDYpDj1nWAj847k6yxmIvtNiVw+YJGWwhwvXeV09IywTB0YRKI
+         6qTuaL7qKgPVWltthxHySCGP/A39cI5ABBcm2zNBZbC6dr6oLmu+/n6T+kNIonuaoDLC
+         ReajfP/irsSqSpvgd7FKhrZmfQqZcOalgUWmcBjoXvQi9cJ+iUtwysTi5mqU4V3BstbS
+         xeqoq1OLu8cC6BrgKEG4esonnAwFZ5qtAblPAa+k2jo6ZDWwPD+w++yPx50MN4Fgk3nM
+         bWQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=0TMY5o/dyQ5SuId4r0p3cjinmuagpPVpu9HxaMjlyFs=;
-        b=u7AI6zw2RQLaIBMEyIJO1WV+BxwdZXze+oZQGyE8tfPaXxyqgXIe4cocMDrGE5+VC5
-         oVLIsolI47sjRNypWNNuWF27TFH3Mx/qZYOsOvAdXV/LEgJ+3ZsV+1ZC4jVY9bU/DGac
-         1k6eG4YjbKynksa+rQ8P9qUIPGIWDV0HQaUJd1WJLUJPBsLyU/kHJAJEWOV0dMAyR6Hg
-         aBLvyiXlBUMcF/FmaApzZQCfZ49BOB06nJ3NdhXzkH8pApEVLWE9q48vGUD0mz2u1aUf
-         eeg0+bXmMnLwTzCXXgqYYGoYlxVkuo64tNYgiqrAxvKP6yi4c4I4OWC2y5/iN939u6aH
-         K/Xg==
-X-Gm-Message-State: AOAM530hn+sBvN+4vdFx23PPhToPCRao0QSApVyoNlvsAmuhvy+0L9IR
-        0geDiU+mz6uu8RQFkgAkuUGd/SeZyMZp
-X-Google-Smtp-Source: ABdhPJzzXjXtpsFzpd5/4L/6+5gc8B+/RoD+lBkRRnRsman8Nk9iCzfcB3Oj7OgqpYPv5w93UgVuOt357CEZ
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:6125:f911:aa9a:59ee])
- (user=irogers job=sendgmr) by 2002:a81:23d4:0:b0:2ca:287c:6c3b with SMTP id
- 00721157ae682-2ca287c6e87mr07b3.224.1642827505562; Fri, 21 Jan 2022 20:58:25
- -0800 (PST)
-Date:   Fri, 21 Jan 2022 20:58:11 -0800
-In-Reply-To: <20220122045811.3402706-1-irogers@google.com>
-Message-Id: <20220122045811.3402706-4-irogers@google.com>
-Mime-Version: 1.0
-References: <20220122045811.3402706-1-irogers@google.com>
-X-Mailer: git-send-email 2.35.0.rc0.227.g00780c9af4-goog
-Subject: [PATCH 3/3] perf cpumap: Add reference count checking
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2+Hv7nAmqViSixp8vVAFUuKJDivxF+KK0jrhpTa6c7s=;
+        b=tsW95i+Ju51hQeG4kNj0QMAC8qSc8kv6Ru1EdEd6nMw2fxkFJEOlMdrEcaZZ5HjOa8
+         bO0c2oK/2rhlAuufQZgqerh3d7gCIuCTnaaIvcfZaZti1KiZniVgMAwc7bh0T/ajwkVa
+         Fp3/41nQzYFlix5IGm3UNFWqW9qBx+lc1c1pAx+hYQktW1tFLzcLnWWrvG7qJsCK9INC
+         pHOFTxtNxqS2x+/gGCBHUhKs+HvSLt1gE7SDTo1xrRHnnC7Tj2VMlKgGZmXN81VLzm+G
+         PzCQTcgpQIzbKV9SZbIqMuMZQaMxcT8f1A6vsLclljPgoP+BExJDa5Xh1aWohXgNGT0y
+         dL8A==
+X-Gm-Message-State: AOAM531O/OlWo/8geXq3pNdAbHMBjwMA3rLTXqPjRT7JABA5dVuVfAbO
+        9Ht5W8P2/ta98nSA5VUyDFzj0w==
+X-Google-Smtp-Source: ABdhPJxzIqqKPFECARlzx5DZ2EH8C2YoWJnDwNBqg6RbLNn8ZCs+7KlelNxxUL4AyLvDIVDpvZsDRA==
+X-Received: by 2002:a63:2362:: with SMTP id u34mr5336495pgm.441.1642836407936;
+        Fri, 21 Jan 2022 23:26:47 -0800 (PST)
+Received: from minbar.home.kylehuey.com (c-71-198-251-229.hsd1.ca.comcast.net. [71.198.251.229])
+        by smtp.gmail.com with ESMTPSA id b12sm9348994pfv.148.2022.01.21.23.26.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Jan 2022 23:26:47 -0800 (PST)
+From:   Kyle Huey <me@kylehuey.com>
+X-Google-Original-From: Kyle Huey <khuey@kylehuey.com>
+To:     linux-kernel@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>
+Cc:     linux-perf-users@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        x86@kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
+        Borislav Petkov <bp@alien8.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        "=?UTF-8?q?Andr=C3=A9=20Almeida?=" <andrealmeid@collabora.com>,
-        James Clark <james.clark@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
-        Song Liu <song@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Miaoqian Lin <linmq006@gmail.com>,
-        Stephen Brennan <stephen.s.brennan@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        German Gomez <german.gomez@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Eric Dumazet <edumazet@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>
-Cc:     eranian@google.com, Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Robert O'Callahan <rocallahan@gmail.com>,
+        Keno Fischer <keno@juliacomputing.com>
+Subject: [PATCH] x86/perf: Default freeze_on_smi on for Comet Lake and later.
+Date:   Fri, 21 Jan 2022 23:26:44 -0800
+Message-Id: <20220122072644.92292-1-khuey@kylehuey.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Enabled when REFCNT_CHECKING is defined. The change adds a memory
-allocated pointer that is interposed between the reference counted
-cpu map at a get and freed by a put. The pointer replaces the original
-perf_cpu_map struct, so use of the perf_cpu_map via APIs remains
-unchanged. Any use of the cpu map without the API requires two versions,
-typically handled via an UNWRAP macro.
+Beginning in Comet Lake, Intel extended the concept of privilege rings to
+SMM.[0] A side effect of this is that events caused by execution of code
+in SMM are now visible to performance counters with IA32_PERFEVTSELx.USR
+set.
 
-This change is intended to catch:
- - use after put: using a cpumap after you have put it will cause a
-   segv.
- - unbalanced puts: two puts for a get will result in a double free
-   that can be captured and reported by tools like address sanitizer,
-   including with the associated stack traces of allocation and frees.
- - missing puts: if a put is missing then the get turns into a memory
-   leak that can be reported by leak sanitizer, including the stack
-   trace at the point the get occurs.
+rr[1] depends on exact counts of performance events for the user space
+tracee, so this change in behavior is fatal for us. It is, however, easily
+corrected by setting IA32_DEBUGCTL.FREEZE_WHILE_SMM to 1 (visible in sysfs
+as /sys/devices/cpu/freeze_on_smi). While we can and will tell our users to
+set freeze_on_smi manually when appropriate, because observing events in
+SMM is rarely useful to anyone, we propose to change the default value of
+this switch.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+In this patch I have assumed that all non-Atom Intel microarchitectures
+starting with Comet Lake behave like this but it would be good for someone
+at Intel to verify that.
+
+[0] See the Intel white paper "Trustworthy SMM on the Intel vPro Platform"
+at https://bugzilla.kernel.org/attachment.cgi?id=300300, particularly the
+end of page 5.
+
+[1] https://rr-project.org/
+
+Signed-off-by: Kyle Huey <khuey@kylehuey.com>
 ---
- tools/lib/perf/cpumap.c                  | 120 ++++++++++++++++-------
- tools/lib/perf/include/internal/cpumap.h |  14 ++-
- tools/perf/tests/cpumap.c                |  20 ++--
- tools/perf/util/cpumap.c                 |  42 ++++----
- tools/perf/util/pmu.c                    |  24 +++--
- 5 files changed, 146 insertions(+), 74 deletions(-)
+ arch/x86/events/intel/core.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-index ee66760f1e63..d401d133f84b 100644
---- a/tools/lib/perf/cpumap.c
-+++ b/tools/lib/perf/cpumap.c
-@@ -10,10 +10,16 @@
- #include <ctype.h>
- #include <limits.h>
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index fd9f908debe5..9604e19c8761 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -6094,6 +6094,11 @@ __init int intel_pmu_init(void)
+ 			x86_pmu.commit_scheduling = intel_tfa_commit_scheduling;
+ 		}
  
--static struct perf_cpu_map *perf_cpu_map__alloc(int nr_cpus)
-+#ifndef REFCNT_CHECKING
-+#define UNWRAP_MAP(x) x
-+#else
-+#define UNWRAP_MAP(x) x->orig
-+#endif
-+
-+#ifndef REFCNT_CHECKING
-+struct perf_cpu_map *perf_cpu_map__alloc(int nr_cpus)
- {
- 	struct perf_cpu_map *cpus = malloc(sizeof(*cpus) + sizeof(struct perf_cpu) * nr_cpus);
--
- 	if (cpus != NULL) {
- 		cpus->nr = nr_cpus;
- 		refcount_set(&cpus->refcnt, 1);
-@@ -21,13 +27,31 @@ static struct perf_cpu_map *perf_cpu_map__alloc(int nr_cpus)
- 	}
- 	return cpus;
- }
-+#else
-+struct perf_cpu_map *perf_cpu_map__alloc(int nr_cpus)
-+{
-+	struct perf_cpu_map *wrapped_cpus = NULL;
-+	struct original_perf_cpu_map *cpus =
-+		malloc(sizeof(*cpus) + sizeof(struct perf_cpu) * nr_cpus);
-+	if (cpus != NULL) {
-+		cpus->nr = nr_cpus;
-+		refcount_set(&cpus->refcnt, 1);
-+		wrapped_cpus = malloc(sizeof(*wrapped_cpus));
-+		if (wrapped_cpus != NULL)
-+			wrapped_cpus->orig = cpus;
-+		else
-+			free(cpus);
-+	}
-+	return wrapped_cpus;
-+}
-+#endif
- 
- struct perf_cpu_map *perf_cpu_map__dummy_new(void)
- {
- 	struct perf_cpu_map *cpus = perf_cpu_map__alloc(1);
- 
- 	if (cpus)
--		cpus->map[0].cpu = -1;
-+		UNWRAP_MAP(cpus)->map[0].cpu = -1;
- 
- 	return cpus;
- }
-@@ -35,23 +59,45 @@ struct perf_cpu_map *perf_cpu_map__dummy_new(void)
- static void cpu_map__delete(struct perf_cpu_map *map)
- {
- 	if (map) {
--		WARN_ONCE(refcount_read(&map->refcnt) != 0,
-+		WARN_ONCE(refcount_read(&UNWRAP_MAP(map)->refcnt) != 0,
- 			  "cpu_map refcnt unbalanced\n");
-+#ifdef REFCNT_CHECKING
-+		free(map->orig);
-+		map->orig = NULL;
-+#endif
- 		free(map);
- 	}
- }
- 
- struct perf_cpu_map *perf_cpu_map__get(struct perf_cpu_map *map)
- {
--	if (map)
--		refcount_inc(&map->refcnt);
-+	if (map) {
-+#ifdef REFCNT_CHECKING
-+		struct perf_cpu_map *new_wrapper;
-+#endif
-+		refcount_inc(&UNWRAP_MAP(map)->refcnt);
-+#ifdef REFCNT_CHECKING
-+		new_wrapper = malloc(sizeof(*new_wrapper));
-+		new_wrapper->orig = map->orig;
-+		map = new_wrapper;
-+#endif
-+	}
- 	return map;
- }
- 
- void perf_cpu_map__put(struct perf_cpu_map *map)
- {
--	if (map && refcount_dec_and_test(&map->refcnt))
--		cpu_map__delete(map);
-+	if (map) {
-+		if (refcount_dec_and_test(&UNWRAP_MAP(map)->refcnt))
-+			cpu_map__delete(map);
-+		else {
-+#ifdef REFCNT_CHECKING
-+			/* Free the wrapper object but the reference counted object remains. */
-+			map->orig = NULL;
-+			free(map);
-+#endif
++		if (boot_cpu_data.x86_model == INTEL_FAM6_COMETLAKE_L ||
++		    boot_cpu_data.x86_model == INTEL_FAM6_COMETLAKE) {
++			x86_pmu.attr_freeze_on_smi = 1;
 +		}
-+	}
- }
- 
- static struct perf_cpu_map *cpu_map__default_new(void)
-@@ -68,7 +114,7 @@ static struct perf_cpu_map *cpu_map__default_new(void)
- 		int i;
- 
- 		for (i = 0; i < nr_cpus; ++i)
--			cpus->map[i].cpu = i;
-+			UNWRAP_MAP(cpus)->map[i].cpu = i;
- 	}
- 
- 	return cpus;
-@@ -94,15 +140,16 @@ static struct perf_cpu_map *cpu_map__trim_new(int nr_cpus, const struct perf_cpu
- 	int i, j;
- 
- 	if (cpus != NULL) {
--		memcpy(cpus->map, tmp_cpus, payload_size);
--		qsort(cpus->map, nr_cpus, sizeof(struct perf_cpu), cmp_cpu);
-+		memcpy(UNWRAP_MAP(cpus)->map, tmp_cpus, payload_size);
-+		qsort(UNWRAP_MAP(cpus)->map, nr_cpus, sizeof(struct perf_cpu), cmp_cpu);
- 		/* Remove dups */
- 		j = 0;
- 		for (i = 0; i < nr_cpus; i++) {
--			if (i == 0 || cpus->map[i].cpu != cpus->map[i - 1].cpu)
--				cpus->map[j++].cpu = cpus->map[i].cpu;
-+			if (i == 0 ||
-+			    UNWRAP_MAP(cpus)->map[i].cpu != UNWRAP_MAP(cpus)->map[i - 1].cpu)
-+				UNWRAP_MAP(cpus)->map[j++].cpu = UNWRAP_MAP(cpus)->map[i].cpu;
- 		}
--		cpus->nr = j;
-+		UNWRAP_MAP(cpus)->nr = j;
- 		assert(j <= nr_cpus);
- 	}
- 	return cpus;
-@@ -263,20 +310,20 @@ struct perf_cpu perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx)
- 		.cpu = -1
- 	};
- 
--	if (cpus && idx < cpus->nr)
--		return cpus->map[idx];
-+	if (cpus && idx < UNWRAP_MAP(cpus)->nr)
-+		return UNWRAP_MAP(cpus)->map[idx];
- 
- 	return result;
- }
- 
- int perf_cpu_map__nr(const struct perf_cpu_map *cpus)
- {
--	return cpus ? cpus->nr : 1;
-+	return cpus ? UNWRAP_MAP(cpus)->nr : 1;
- }
- 
- bool perf_cpu_map__empty(const struct perf_cpu_map *map)
- {
--	return map ? map->map[0].cpu == -1 : true;
-+	return map ? UNWRAP_MAP(map)->map[0].cpu == -1 : true;
- }
- 
- int perf_cpu_map__idx(const struct perf_cpu_map *cpus, struct perf_cpu cpu)
-@@ -287,10 +334,10 @@ int perf_cpu_map__idx(const struct perf_cpu_map *cpus, struct perf_cpu cpu)
- 		return -1;
- 
- 	low = 0;
--	high = cpus->nr;
-+	high = UNWRAP_MAP(cpus)->nr;
- 	while (low < high) {
- 		int idx = (low + high) / 2;
--		struct perf_cpu cpu_at_idx = cpus->map[idx];
-+		struct perf_cpu cpu_at_idx = UNWRAP_MAP(cpus)->map[idx];
- 
- 		if (cpu_at_idx.cpu == cpu.cpu)
- 			return idx;
-@@ -316,7 +363,7 @@ struct perf_cpu perf_cpu_map__max(struct perf_cpu_map *map)
- 	};
- 
- 	// cpu_map__trim_new() qsort()s it, cpu_map__default_new() sorts it as well.
--	return map->nr > 0 ? map->map[map->nr - 1] : result;
-+	return UNWRAP_MAP(map)->nr > 0 ? UNWRAP_MAP(map)->map[UNWRAP_MAP(map)->nr - 1] : result;
- }
- 
- /*
-@@ -337,37 +384,36 @@ struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
- 
- 	if (!orig && !other)
- 		return NULL;
--	if (!orig) {
--		perf_cpu_map__get(other);
--		return other;
--	}
-+	if (!orig)
-+		return perf_cpu_map__get(other);
- 	if (!other)
- 		return orig;
--	if (orig->nr == other->nr &&
--	    !memcmp(orig->map, other->map, orig->nr * sizeof(struct perf_cpu)))
-+	if (UNWRAP_MAP(orig)->nr == UNWRAP_MAP(other)->nr &&
-+	    !memcmp(UNWRAP_MAP(orig)->map, UNWRAP_MAP(other)->map,
-+		    UNWRAP_MAP(orig)->nr * sizeof(struct perf_cpu)))
- 		return orig;
- 
--	tmp_len = orig->nr + other->nr;
-+	tmp_len = UNWRAP_MAP(orig)->nr + UNWRAP_MAP(other)->nr;
- 	tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
- 	if (!tmp_cpus)
- 		return NULL;
- 
- 	/* Standard merge algorithm from wikipedia */
- 	i = j = k = 0;
--	while (i < orig->nr && j < other->nr) {
--		if (orig->map[i].cpu <= other->map[j].cpu) {
--			if (orig->map[i].cpu == other->map[j].cpu)
-+	while (i < UNWRAP_MAP(orig)->nr && j < UNWRAP_MAP(other)->nr) {
-+		if (UNWRAP_MAP(orig)->map[i].cpu <= UNWRAP_MAP(other)->map[j].cpu) {
-+			if (UNWRAP_MAP(orig)->map[i].cpu == UNWRAP_MAP(other)->map[j].cpu)
- 				j++;
--			tmp_cpus[k++] = orig->map[i++];
-+			tmp_cpus[k++] = UNWRAP_MAP(orig)->map[i++];
- 		} else
--			tmp_cpus[k++] = other->map[j++];
-+			tmp_cpus[k++] = UNWRAP_MAP(other)->map[j++];
- 	}
- 
--	while (i < orig->nr)
--		tmp_cpus[k++] = orig->map[i++];
-+	while (i < UNWRAP_MAP(orig)->nr)
-+		tmp_cpus[k++] = UNWRAP_MAP(orig)->map[i++];
- 
--	while (j < other->nr)
--		tmp_cpus[k++] = other->map[j++];
-+	while (j < UNWRAP_MAP(other)->nr)
-+		tmp_cpus[k++] = UNWRAP_MAP(other)->map[j++];
- 	assert(k <= tmp_len);
- 
- 	merged = cpu_map__trim_new(k, tmp_cpus);
-diff --git a/tools/lib/perf/include/internal/cpumap.h b/tools/lib/perf/include/internal/cpumap.h
-index 581f9ffb4237..64ad56d167a0 100644
---- a/tools/lib/perf/include/internal/cpumap.h
-+++ b/tools/lib/perf/include/internal/cpumap.h
-@@ -16,7 +16,12 @@ struct perf_cpu {
-  * gaps if CPU numbers were used. For events associated with a pid, rather than
-  * a CPU, a single dummy map with an entry of -1 is used.
-  */
--struct perf_cpu_map {
-+#ifndef REFCNT_CHECKING
-+struct perf_cpu_map
-+#else
-+struct original_perf_cpu_map
-+#endif
-+{
- 	refcount_t	refcnt;
- 	/** Length of the map array. */
- 	int		nr;
-@@ -24,10 +29,17 @@ struct perf_cpu_map {
- 	struct perf_cpu	map[];
- };
- 
-+#ifdef REFCNT_CHECKING
-+struct perf_cpu_map {
-+	struct original_perf_cpu_map *orig;
-+};
-+#endif
 +
- #ifndef MAX_NR_CPUS
- #define MAX_NR_CPUS	2048
- #endif
+ 		pr_cont("Skylake events, ");
+ 		name = "skylake";
+ 		break;
+@@ -6135,6 +6140,7 @@ __init int intel_pmu_init(void)
+ 		x86_pmu.num_topdown_events = 4;
+ 		x86_pmu.update_topdown_event = icl_update_topdown_event;
+ 		x86_pmu.set_topdown_event_period = icl_set_topdown_event_period;
++		x86_pmu.attr_freeze_on_smi = 1;
+ 		pr_cont("Icelake events, ");
+ 		name = "icelake";
+ 		break;
+@@ -6172,6 +6178,7 @@ __init int intel_pmu_init(void)
+ 		x86_pmu.num_topdown_events = 8;
+ 		x86_pmu.update_topdown_event = icl_update_topdown_event;
+ 		x86_pmu.set_topdown_event_period = icl_set_topdown_event_period;
++		x86_pmu.attr_freeze_on_smi = 1;
+ 		pr_cont("Sapphire Rapids events, ");
+ 		name = "sapphire_rapids";
+ 		break;
+@@ -6217,6 +6224,7 @@ __init int intel_pmu_init(void)
+ 		 * x86_pmu.rtm_abort_event.
+ 		 */
+ 		x86_pmu.rtm_abort_event = X86_CONFIG(.event=0xc9, .umask=0x04);
++		x86_pmu.attr_freeze_on_smi = 1;
  
-+struct perf_cpu_map *perf_cpu_map__alloc(int nr_cpus);
- int perf_cpu_map__idx(const struct perf_cpu_map *cpus, struct perf_cpu cpu);
- 
- #endif /* __LIBPERF_INTERNAL_CPUMAP_H */
-diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
-index 84e87e31f119..65d9546aec6e 100644
---- a/tools/perf/tests/cpumap.c
-+++ b/tools/perf/tests/cpumap.c
-@@ -11,6 +11,12 @@
- 
- struct machine;
- 
-+#ifndef REFCNT_CHECKING
-+#define UNWRAP_CPUMAP(x) x
-+#else
-+#define UNWRAP_CPUMAP(x) x->orig
-+#endif
-+
- static int process_event_mask(struct perf_tool *tool __maybe_unused,
- 			 union perf_event *event,
- 			 struct perf_sample *sample __maybe_unused,
-@@ -35,10 +41,10 @@ static int process_event_mask(struct perf_tool *tool __maybe_unused,
- 	}
- 
- 	map = cpu_map__new_data(data);
--	TEST_ASSERT_VAL("wrong nr",  map->nr == 20);
-+	TEST_ASSERT_VAL("wrong nr",  perf_cpu_map__nr(map) == 20);
- 
- 	for (i = 0; i < 20; i++) {
--		TEST_ASSERT_VAL("wrong cpu", map->map[i].cpu == i);
-+		TEST_ASSERT_VAL("wrong cpu", perf_cpu_map__cpu(map, i).cpu == i);
- 	}
- 
- 	perf_cpu_map__put(map);
-@@ -66,10 +72,10 @@ static int process_event_cpus(struct perf_tool *tool __maybe_unused,
- 	TEST_ASSERT_VAL("wrong cpu",  cpus->cpu[1] == 256);
- 
- 	map = cpu_map__new_data(data);
--	TEST_ASSERT_VAL("wrong nr",  map->nr == 2);
--	TEST_ASSERT_VAL("wrong cpu", map->map[0].cpu == 1);
--	TEST_ASSERT_VAL("wrong cpu", map->map[1].cpu == 256);
--	TEST_ASSERT_VAL("wrong refcnt", refcount_read(&map->refcnt) == 1);
-+	TEST_ASSERT_VAL("wrong nr",  perf_cpu_map__nr(map) == 2);
-+	TEST_ASSERT_VAL("wrong cpu", perf_cpu_map__cpu(map, 0).cpu == 1);
-+	TEST_ASSERT_VAL("wrong cpu", perf_cpu_map__cpu(map, 1).cpu == 256);
-+	TEST_ASSERT_VAL("wrong refcnt", refcount_read(&UNWRAP_CPUMAP(map)->refcnt) == 1);
- 	perf_cpu_map__put(map);
- 	return 0;
- }
-@@ -130,7 +136,7 @@ static int test__cpu_map_merge(struct test_suite *test __maybe_unused, int subte
- 	struct perf_cpu_map *c = perf_cpu_map__merge(a, b);
- 	char buf[100];
- 
--	TEST_ASSERT_VAL("failed to merge map: bad nr", c->nr == 5);
-+	TEST_ASSERT_VAL("failed to merge map: bad nr", perf_cpu_map__nr(c) == 5);
- 	cpu_map__snprint(c, buf, sizeof(buf));
- 	TEST_ASSERT_VAL("failed to merge map: bad result", !strcmp(buf, "1-2,4-5,7"));
- 	perf_cpu_map__put(b);
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index 12b2243222b0..e9976ca238fc 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -22,6 +22,12 @@ static int max_node_num;
-  */
- static int *cpunode_map;
- 
-+#ifndef REFCNT_CHECKING
-+#define UNWRAP_MAP(x) x
-+#else
-+#define UNWRAP_MAP(x) x->orig
-+#endif
-+
- static struct perf_cpu_map *cpu_map__from_entries(struct cpu_map_entries *cpus)
- {
- 	struct perf_cpu_map *map;
-@@ -37,9 +43,9 @@ static struct perf_cpu_map *cpu_map__from_entries(struct cpu_map_entries *cpus)
- 			 * otherwise it would become 65535.
- 			 */
- 			if (cpus->cpu[i] == (u16) -1)
--				map->map[i].cpu = -1;
-+				UNWRAP_MAP(map)->map[i].cpu = -1;
- 			else
--				map->map[i].cpu = (int) cpus->cpu[i];
-+				UNWRAP_MAP(map)->map[i].cpu = (int) cpus->cpu[i];
- 		}
- 	}
- 
-@@ -58,7 +64,7 @@ static struct perf_cpu_map *cpu_map__from_mask(struct perf_record_record_cpu_map
- 		int cpu, i = 0;
- 
- 		for_each_set_bit(cpu, mask->mask, nbits)
--			map->map[i++].cpu = cpu;
-+			UNWRAP_MAP(map)->map[i++].cpu = cpu;
- 	}
- 	return map;
- 
-@@ -84,16 +90,13 @@ size_t cpu_map__fprintf(struct perf_cpu_map *map, FILE *fp)
- 
- struct perf_cpu_map *perf_cpu_map__empty_new(int nr)
- {
--	struct perf_cpu_map *cpus = malloc(sizeof(*cpus) + sizeof(int) * nr);
-+	struct perf_cpu_map *cpus = perf_cpu_map__alloc(nr);
- 
- 	if (cpus != NULL) {
- 		int i;
- 
--		cpus->nr = nr;
- 		for (i = 0; i < nr; i++)
--			cpus->map[i].cpu = -1;
--
--		refcount_set(&cpus->refcnt, 1);
-+			UNWRAP_MAP(cpus)->map[i].cpu = -1;
- 	}
- 
- 	return cpus;
-@@ -163,7 +166,7 @@ struct cpu_aggr_map *cpu_aggr_map__new(const struct perf_cpu_map *cpus,
- {
- 	int idx;
- 	struct perf_cpu cpu;
--	struct cpu_aggr_map *c = cpu_aggr_map__empty_new(cpus->nr);
-+	struct cpu_aggr_map *c = cpu_aggr_map__empty_new(perf_cpu_map__nr(cpus));
- 
- 	if (!c)
- 		return NULL;
-@@ -187,7 +190,7 @@ struct cpu_aggr_map *cpu_aggr_map__new(const struct perf_cpu_map *cpus,
- 		}
- 	}
- 	/* Trim. */
--	if (c->nr != cpus->nr) {
-+	if (c->nr != perf_cpu_map__nr(cpus)) {
- 		struct cpu_aggr_map *trimmed_c =
- 			realloc(c,
- 				sizeof(struct cpu_aggr_map) + sizeof(struct aggr_cpu_id) * c->nr);
-@@ -494,31 +497,32 @@ size_t cpu_map__snprint(struct perf_cpu_map *map, char *buf, size_t size)
- 
- #define COMMA first ? "" : ","
- 
--	for (i = 0; i < map->nr + 1; i++) {
-+	for (i = 0; i < perf_cpu_map__nr(map) + 1; i++) {
- 		struct perf_cpu cpu = { .cpu = INT_MAX };
--		bool last = i == map->nr;
-+		bool last = i == perf_cpu_map__nr(map);
- 
- 		if (!last)
--			cpu = map->map[i];
-+			cpu = perf_cpu_map__cpu(map, i);
- 
- 		if (start == -1) {
- 			start = i;
- 			if (last) {
- 				ret += snprintf(buf + ret, size - ret,
- 						"%s%d", COMMA,
--						map->map[i].cpu);
-+						perf_cpu_map__cpu(map, i).cpu);
- 			}
--		} else if (((i - start) != (cpu.cpu - map->map[start].cpu)) || last) {
-+		} else if (((i - start) != (cpu.cpu - perf_cpu_map__cpu(map, start).cpu)) || last) {
- 			int end = i - 1;
- 
- 			if (start == end) {
- 				ret += snprintf(buf + ret, size - ret,
- 						"%s%d", COMMA,
--						map->map[start].cpu);
-+						perf_cpu_map__cpu(map, start).cpu);
- 			} else {
- 				ret += snprintf(buf + ret, size - ret,
- 						"%s%d-%d", COMMA,
--						map->map[start].cpu, map->map[end].cpu);
-+						perf_cpu_map__cpu(map, start).cpu,
-+						perf_cpu_map__cpu(map, end).cpu);
- 			}
- 			first = false;
- 			start = i;
-@@ -545,7 +549,7 @@ size_t cpu_map__snprint_mask(struct perf_cpu_map *map, char *buf, size_t size)
- 	int i, cpu;
- 	char *ptr = buf;
- 	unsigned char *bitmap;
--	struct perf_cpu last_cpu = perf_cpu_map__cpu(map, map->nr - 1);
-+	struct perf_cpu last_cpu = perf_cpu_map__cpu(map, perf_cpu_map__nr(map) - 1);
- 
- 	if (buf == NULL)
- 		return 0;
-@@ -556,7 +560,7 @@ size_t cpu_map__snprint_mask(struct perf_cpu_map *map, char *buf, size_t size)
- 		return 0;
- 	}
- 
--	for (i = 0; i < map->nr; i++) {
-+	for (i = 0; i < perf_cpu_map__nr(map); i++) {
- 		cpu = perf_cpu_map__cpu(map, i).cpu;
- 		bitmap[cpu / 8] |= 1 << (cpu % 8);
- 	}
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 8dfbba15aeb8..1649321fe86f 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1992,13 +1992,20 @@ int perf_pmu__match(char *pattern, char *name, char *tok)
- 	return 0;
- }
- 
-+#ifndef REFCNT_CHECKING
-+#define UNWRAP_CPUMAP(x) x
-+#else
-+#define UNWRAP_CPUMAP(x) x->orig
-+#endif
-+
- int perf_pmu__cpus_match(struct perf_pmu *pmu, struct perf_cpu_map *cpus,
- 			 struct perf_cpu_map **mcpus_ptr,
- 			 struct perf_cpu_map **ucpus_ptr)
- {
- 	struct perf_cpu_map *pmu_cpus = pmu->cpus;
- 	struct perf_cpu_map *matched_cpus, *unmatched_cpus;
--	int matched_nr = 0, unmatched_nr = 0;
-+	struct perf_cpu cpu;
-+	int i, matched_nr = 0, unmatched_nr = 0;
- 
- 	matched_cpus = perf_cpu_map__default_new();
- 	if (!matched_cpus)
-@@ -2010,18 +2017,15 @@ int perf_pmu__cpus_match(struct perf_pmu *pmu, struct perf_cpu_map *cpus,
- 		return -1;
- 	}
- 
--	for (int i = 0; i < cpus->nr; i++) {
--		int cpu;
--
--		cpu = perf_cpu_map__idx(pmu_cpus, cpus->map[i]);
--		if (cpu == -1)
--			unmatched_cpus->map[unmatched_nr++] = cpus->map[i];
-+	perf_cpu_map__for_each_cpu(cpu, i, cpus) {
-+		if (!perf_cpu_map__has(pmu_cpus, cpu))
-+			UNWRAP_CPUMAP(unmatched_cpus)->map[unmatched_nr++] = cpu;
- 		else
--			matched_cpus->map[matched_nr++] = cpus->map[i];
-+			UNWRAP_CPUMAP(matched_cpus)->map[matched_nr++] = cpu;
- 	}
- 
--	unmatched_cpus->nr = unmatched_nr;
--	matched_cpus->nr = matched_nr;
-+	UNWRAP_CPUMAP(unmatched_cpus)->nr = unmatched_nr;
-+	UNWRAP_CPUMAP(matched_cpus)->nr = matched_nr;
- 	*mcpus_ptr = matched_cpus;
- 	*ucpus_ptr = unmatched_cpus;
- 	return 0;
+ 		td_attr = adl_hybrid_events_attrs;
+ 		mem_attr = adl_hybrid_mem_attrs;
 -- 
-2.35.0.rc0.227.g00780c9af4-goog
+2.34.1
 
