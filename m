@@ -2,58 +2,115 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F4EC433F5
-	for <linux-perf-users@archiver.kernel.org>; Sat, 22 Jan 2022 10:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BC7C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat, 22 Jan 2022 20:03:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232541AbiAVKS7 (ORCPT
+        id S229833AbiAVUDz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 22 Jan 2022 05:18:59 -0500
-Received: from mout02.posteo.de ([185.67.36.66]:45051 "EHLO mout02.posteo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230212AbiAVKS7 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 22 Jan 2022 05:18:59 -0500
-Received: from submission (posteo.de [89.146.220.130]) 
-        by mout02.posteo.de (Postfix) with ESMTPS id BAC86240101
-        for <linux-perf-users@vger.kernel.org>; Sat, 22 Jan 2022 11:18:57 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-        t=1642846737; bh=e+72hSmdYOo6RbSzyQceh1NFpEMaGK10Z76+LR1K/IQ=;
-        h=Date:From:To:Subject:From;
-        b=E5/ZT81WL5OhFbxjDmfs7XWhjyXDXjX8PCPTXuv8Ui1sSBAwkXwczYdmu5sFwObDl
-         V95kkQes3fRmuUKyDuZ4v9CP3t7isdTwbp9cAsFI1rS46uIGgLyIvSXszf2rvNSMd8
-         lXxtTXg2PHFEaI2UzPbf029s1/XiHsktyNMoFBIKPr2w2m58PxywHuepVXJXTuDDez
-         COUopgL/OsESrBEWe+0lClnC4JA888nol7xBJKJnP9YSA4O/8X1lC5/wLwmz8lU+hP
-         Xz9gieFahzCd6cGtlGxrT+IMU/5MRVculrT1kmT9TCnDZ/2RwUXMG1o1qxBUaQtvQm
-         0LUdie4GdXmug==
-Received: from customer (localhost [127.0.0.1])
-        by submission (posteo.de) with ESMTPSA id 4JgsfT1lCvz9rxL
-        for <linux-perf-users@vger.kernel.org>; Sat, 22 Jan 2022 11:18:57 +0100 (CET)
-Date:   Sat, 22 Jan 2022 10:19:58 +0000
-From:   xaizek <xaizek@posteo.net>
-To:     linux-perf-users@vger.kernel.org
-Subject: [bug report] --tui should not be silently ignored
-Message-ID: <YevaTkzdXmFKdGpc@zx-spectrum.none>
+        Sat, 22 Jan 2022 15:03:55 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:36450 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229517AbiAVUDz (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Sat, 22 Jan 2022 15:03:55 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E19F460F29;
+        Sat, 22 Jan 2022 20:03:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D155C004E1;
+        Sat, 22 Jan 2022 20:03:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1642881834;
+        bh=fjOsrwY0cn2fZwaIpSAeX0R0zjESA6WtjQgNix+iJ2w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CWlXUA5ZPWfvGpzbMadjXCA9cPLW/M6Uqy/6P7Xx+T+vOzWfiUpPpL8ZB9l7UB5gq
+         AZtt6y6LwdqiuA950lh9vrqG/NqFDxT5fd85XXejaNu6Dve1ULyJSbxjuB7BHdEB8J
+         MMn/RVPI9/PC2DQVBH/NMYs+bGqYxsdPOJ2BFP3rUjz675ezNVxiU+DZN+LEUvfht5
+         gEq+zk2QmkweqMPY7eoWNDVyiaq0h7cci2IGAUwx5WBnDibvlMvugcbrLY3mTfhzUV
+         Oq84M87/R5605l/udovEaSywg5CHp6hHKk21CH2XWV0HfoyrGRFgxAzzGExXXF5z5A
+         pynkkSGmYU94A==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id C52D540C99; Sat, 22 Jan 2022 17:01:50 -0300 (-03)
+Date:   Sat, 22 Jan 2022 17:01:50 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Christy Lee <christylee@fb.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Christy Lee <christyc.y.lee@gmail.com>,
+        bpf <bpf@vger.kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>,
+        Wang Nan <wangnan0@huawei.com>,
+        Wang ShaoBo <bobo.shaobowang@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: Re: [PATCH bpf-next v4 0/2] perf: stop using deprecated bpf APIs
+Message-ID: <YexirjnVa7KpvrP9@kernel.org>
+References: <20220119230636.1752684-1-christylee@fb.com>
+ <CAEf4BzbODQmEH+wuFsEPFdtRoZ1Y-vDJKAKkBLsUDBLoQOmrvg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <CAEf4BzbODQmEH+wuFsEPFdtRoZ1Y-vDJKAKkBLsUDBLoQOmrvg@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+Em Thu, Jan 20, 2022 at 02:58:29PM -0800, Andrii Nakryiko escreveu:
+> On Wed, Jan 19, 2022 at 3:09 PM Christy Lee <christylee@fb.com> wrote:
+> >
+> > libbpf's bpf_load_program() and bpf__object_next() APIs are deprecated.
+> > remove perf's usage of these deprecated functions. After this patch
+> > set, the only remaining libbpf deprecated APIs in perf would be
+> > bpf_program__set_prep() and bpf_program__nth_fd().
+> >
+> 
+> Arnaldo, do you want to take this through perf tree or should we apply
+> this to bpf-next? If the latter, can you give your ack as well?
+> Thanks!
 
-(Mind that I'm not subscribed to the list.)
+I'd love to be able to test it with the containers, after I push the
+current batch to Linus.
 
-If slang isn't available during compilation time, there is a warning at
-build time.  However, users won't see it and will scratch their heads
-when `--tui` has no effect as I did 5 years ago and just found out that
-it still behaves the same (yes, I didn't report it then).
+- Arnaldo
+ 
+> > Changelog:
+> > ----------
+> > v3 -> v4:
+> > * Fixed commit title
+> > * Added weak definition for deprecated function
+> >
+> > v2 -> v3:
+> > https://lore.kernel.org/all/20220106200032.3067127-1-christylee@fb.com/
+> >
+> > Patch 2/2:
+> > Fixed commit message to use upstream perf
+> >
+> > v1 -> v2:
+> > https://lore.kernel.org/all/20211216222108.110518-1-christylee@fb.com/
+> >
+> > Patch 1/2:
+> > Added missing commit message
+> >
+> > Patch 2/2:
+> > Added more details to commit message and added steps to reproduce
+> > original test case.
+> >
+> > Christy Lee (2):
+> >   perf: stop using deprecated bpf_load_program() API
+> >   perf: stop using deprecated bpf_object__next() API
+> >
+> >  tools/perf/tests/bpf.c       | 14 ++-----
+> >  tools/perf/util/bpf-event.c  | 16 ++++++++
+> >  tools/perf/util/bpf-loader.c | 72 +++++++++++++++++++++++++++---------
+> >  tools/perf/util/bpf-loader.h |  1 +
+> >  4 files changed, 75 insertions(+), 28 deletions(-)
+> >
+> > --
+> > 2.30.2
 
-Please print a warning that `--tui` is being ignored if perf was
-compiled without slang or even make it an error (e.g., don't define the
-option), but don't silently ignore the option.  I had to use strace and
-then grep sources to understand why TUI doesn't work.  Documentation might
-also need an update to mention that availability of `--tui` depends on
-whether slang was found during build.
+-- 
 
-Regards,
-xaizek
+- Arnaldo
