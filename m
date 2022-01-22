@@ -2,50 +2,51 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F92BC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat, 22 Jan 2022 04:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 079DBC433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat, 22 Jan 2022 04:58:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232829AbiAVEzN (ORCPT
+        id S232900AbiAVE6T (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 21 Jan 2022 23:55:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40222 "EHLO
+        Fri, 21 Jan 2022 23:58:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232820AbiAVEzN (ORCPT
+        with ESMTP id S232442AbiAVE6S (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 21 Jan 2022 23:55:13 -0500
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB060C06173D
-        for <linux-perf-users@vger.kernel.org>; Fri, 21 Jan 2022 20:55:12 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id b61-20020a25a243000000b006126ea65191so23155391ybi.19
-        for <linux-perf-users@vger.kernel.org>; Fri, 21 Jan 2022 20:55:12 -0800 (PST)
+        Fri, 21 Jan 2022 23:58:18 -0500
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89C4AC06173B
+        for <linux-perf-users@vger.kernel.org>; Fri, 21 Jan 2022 20:58:18 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id 2-20020a251302000000b006118f867dadso23383277ybt.12
+        for <linux-perf-users@vger.kernel.org>; Fri, 21 Jan 2022 20:58:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:message-id:mime-version:subject:from:to:cc;
         bh=JB4PMbLFwwTJE1pVsJg0aZE8Jxxgb6zDQEa9JYUrP8w=;
-        b=QdoL+/w2wB2VRbS9xsPBU7IU655u00UMdL4qehmQ8CPEQZ1xeD6I1EfHf3LvwPMTen
-         9R3XnEZVW2Ww1Ix7fqKzmaGrW8v8hLPzP44jbsAUpa40nVwn37G6CRueV+6I59hVlPdB
-         wyYvvpfp397YAD3SaSwGyd9CiepnptqiCV3cXhG+6eYYdxxtK2C97TSuQELnrTGjwnH6
-         hb1D9sZM4NdifP19zlAlDy010E3IYGZIPn6gLELNPEoMquAfWhps60yOJOlWuADLkMi+
-         2Cd+GdDtPrZmXV50c4TV7NT4KbyMTjizcAKsTjTmOpkg+lhHR412wmhD/t0b+Gjxwpk+
-         lD0A==
+        b=LEK+9Zv5eOLB9d9pyP4W8eQgSUUnsA9OkP28FB9cxcwnyhyvpQQFytWhIjkntVaJ39
+         WpmhKzkFqLx+Us1khMx20SHDCSmYdzwQaKsWy3fM2VueBqxbxa3zAfjSmSC5tm29m0Rk
+         r6zkSjyn3m41UZqS5Ua2Un8hSeod4oXUtzp3cVZQsD8zI/+R3HOTOw7OTlWE3TZwe3b0
+         sr0IqUAt+o0UL4GghPrLOhoxnPOqLlvDpZ4Hi4BMDyA5XhTIPTf1RfJ/KeG7GfRfNonx
+         cRJR4oJ9CU9zb0gxI7FuOMEozh5G358bd7M3ZKFoN9OqFTgNjKXgQ/eTvZgGMxow3DiB
+         v+AA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
         bh=JB4PMbLFwwTJE1pVsJg0aZE8Jxxgb6zDQEa9JYUrP8w=;
-        b=CANvtF9DUKeL0oPq3z8rK5aTL9/BucJZHdQwDmSEdzbDh1pmzTNZU4C27JLCpMuXUg
-         SGJDPtCCyTckqqMkORmtgYZC6IVnKSDVK1FjJT+gcXJQQPXIbulwRm61cjs7jtHGiEEg
-         CvIviqW2Pe4OiCtO0Rdqv2bvbl1buN1NgHAfoG7lMJxI8sQwegKzsLjMcS2i5IpVH2CJ
-         quAXUmUI3CC4G7PJ+JFz6enPqx1NNwBqZR5oLnr07ztXyCnCcSOjeQh8VY5vWOfXEEJk
-         /84d4etJNieX0ffLvDl41Yac4Y87XAtaVpqLuoEvcfZBiqQbREv8lAUHeJuUeFdFVmJT
-         wqiA==
-X-Gm-Message-State: AOAM532vkFyRqKNUw1g1MNjUvuelmnRXyLFklXvASkP0xcu6iUVsp+HT
-        b47rf5f6DlJu04AZqI7tOBYXH+3k9gHm
-X-Google-Smtp-Source: ABdhPJyhjsRO+VVtmrtrqB/uA4l1uoOpAoirMYlNLpV+IiOZIhjygTVnrlYogATli598kcqiWN0q6dr7YouM
+        b=Cg7yc5VBD95IS4swXgBMmZ0qv1Wyc7m8fIjci1eehh8nWrIp4LvT5fKp9/aRXw7Nte
+         KvJ5rm+/nPuZKSIvkmE+cqhCO9nL+v5mZuA/euXbf3SOKD4udWc3pWED+dJ6XnAhZNsq
+         z0UxHx7jW++JlT9MpkDh32XvJuWuqkWPQJnn4mJ0mMMOJLWxHBbaVN6fvxo5M3HEaKx4
+         PqgY1BX93p6k+f3ki85IR65rnhKRXvQeEz8kPvRaYZ+Xg4kZnb7BFDOoSWvNssvH5eGy
+         +UPOf751ET1CV3/1M5xI0W6JVcSQ70YX1bXL7ZEQZ6fH+5eW0xNZn0kGbcirAOrUYwTf
+         8VGA==
+X-Gm-Message-State: AOAM532i5NHj9sdhYw26roG1HiuIwOfOnvrHcMs5dM95xfK8XUWWwIII
+        JHFSAlhk7SadVnYxXOlFQidvNLZNGtFw
+X-Google-Smtp-Source: ABdhPJxQyhjotp5S/jVWYuSFIkid83dTb+1hQ9M2JVpaSzEKwFVQR37ula1iyGNARV3+l2nKSW1HXSkxEcP+
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:6125:f911:aa9a:59ee])
- (user=irogers job=sendgmr) by 2002:a25:33c2:: with SMTP id
- z185mr9924298ybz.455.1642827310825; Fri, 21 Jan 2022 20:55:10 -0800 (PST)
-Date:   Fri, 21 Jan 2022 20:55:04 -0800
-Message-Id: <20220122045507.3401968-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a81:6bc2:0:b0:2ca:3398:7d1b with SMTP id
+ 00721157ae682-2ca33987e3amr17b3.59.1642827497427; Fri, 21 Jan 2022 20:58:17
+ -0800 (PST)
+Date:   Fri, 21 Jan 2022 20:58:08 -0800
+Message-Id: <20220122045811.3402706-1-irogers@google.com>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.35.0.rc0.227.g00780c9af4-goog
 Subject: [PATCH 0/3] Reference count checker and cpu map related fixes
@@ -82,7 +83,9 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Kajol Jain <kjain@linux.ibm.com>,
         Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
         German Gomez <german.gomez@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Eric Dumazet <edumazet@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>
 Cc:     eranian@google.com, Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
