@@ -2,286 +2,112 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C05C2C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun, 23 Jan 2022 17:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4656C433F5
+	for <linux-perf-users@archiver.kernel.org>; Sun, 23 Jan 2022 18:40:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229610AbiAWRGP (ORCPT
+        id S239604AbiAWSkL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 23 Jan 2022 12:06:15 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:29529 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S239088AbiAWRGP (ORCPT
+        Sun, 23 Jan 2022 13:40:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53422 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239588AbiAWSkF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 23 Jan 2022 12:06:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1642957574;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=r/ok9f9jETsucgdW3Lf+0CFLf6etHVPhmpEoG/Uqmto=;
-        b=L0/gfempT0JQwV7vZ9gxNp28Hw8bcRlmfi3Z8wUGQezxqlKg1yATLuHiHhXxH4CQL1sSes
-        7qVJHpljqHi2E5zV5PBpWEMeRtlq34Ls9XRPTB9N1A7ujXqwudcsKG7WK+majZgwGaMJCq
-        3TAxE6XEmUKqvw1IU23YLZF8XBaDuZ8=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-612-_x1yy9xTOD-x1aGsw8iwAg-1; Sun, 23 Jan 2022 12:06:12 -0500
-X-MC-Unique: _x1yy9xTOD-x1aGsw8iwAg-1
-Received: by mail-ed1-f69.google.com with SMTP id w3-20020a50c443000000b0040696821132so4538851edf.22
-        for <linux-perf-users@vger.kernel.org>; Sun, 23 Jan 2022 09:06:12 -0800 (PST)
+        Sun, 23 Jan 2022 13:40:05 -0500
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 441E5C061401;
+        Sun, 23 Jan 2022 10:40:05 -0800 (PST)
+Received: by mail-pf1-x42f.google.com with SMTP id n32so4678122pfv.11;
+        Sun, 23 Jan 2022 10:40:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=CMyb+uatsmk9qk9XVLHK9qLtTawikXiv3prI/J8nsYM=;
+        b=FEb+34HTho0mKP3DvocyY5vmMMIY0jI+I0rv7W6aUWsRjGVGKae9x0632mvuE0VukX
+         zea1g8JwnWdhuggaBW8Y/WdgbU1N97zxV/0lc6CVl6kbSLEu1CjejIFbnLW9WV32C1kU
+         FEkKIt5A0hJfgPODT6AEm0bK2BqHK75ha9fyOYv/j+Ck8z034STtFPkqMtYK4YAyK09y
+         B5tPcb3PlT/dgTM3UlBOIsFXEQ9fL4+wKUAhRQZHjGkf7umylX7mr7nvGMt8Cfb0SjUH
+         m+xIEdg2rox44nz7G2yru3pMJuVJZnJeffn9C9FJnbibfqOZnCaDstrg3EG1S4ajlJf2
+         y5TQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=r/ok9f9jETsucgdW3Lf+0CFLf6etHVPhmpEoG/Uqmto=;
-        b=q6SE89ltlchuC6xiNeDRHwlIqGPb1LmhpqGoQCKksltM+YyDyUGqs34iKNUxzUhdX4
-         jwGQx78iQe8zL4sA0wzau0P2ONGeX4vDvD/7BrkDSAHm4fGt7WzQbogzhB+1OWWEedHy
-         3CW9DhIY4HrnnVm6L8uAevQ7a83WKQIZOMywYQQ949IvuB5WImtw+fgxvuS4ZrGkMtpu
-         lc5eH/1I5pPjpZzKqJ1woOyfsqfhPph+aGk3tospnvCk3ST+VWQL6fwslFkZC/ZSI5Bd
-         DfLy6sQU9KdUQEkDPSBVO+1VAGXRjG1fBvzGEkhp8QwTE49PGP8MJi8ZZLs9+oKUu7xE
-         Hi8w==
-X-Gm-Message-State: AOAM531ObXKR6rMrQebB8sIayqIxvpDtgMekO1QW4BY8nb6g7LvCdvOj
-        7glGruDyw/eX2PQY/QRZiMJMzmnIlsNbhWEQixDVr1Rs2LH5JjlYGNJSsZjmb04lhPue6jzSKYZ
-        WAAsi2wTmBJSmQheZoxE1HNHJ7JDl4Q==
-X-Received: by 2002:a05:6402:1395:: with SMTP id b21mr12392001edv.299.1642957571677;
-        Sun, 23 Jan 2022 09:06:11 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyBmipCGxZHfOlIW+Hrh0alIVK2sHqvlltom/jaSs+Xl7pcUpkmKtaq/NUc2xMIJyheAUMNRA==
-X-Received: by 2002:a05:6402:1395:: with SMTP id b21mr12391992edv.299.1642957571484;
-        Sun, 23 Jan 2022 09:06:11 -0800 (PST)
-Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
-        by smtp.gmail.com with ESMTPSA id da21sm4800441edb.65.2022.01.23.09.06.10
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=CMyb+uatsmk9qk9XVLHK9qLtTawikXiv3prI/J8nsYM=;
+        b=ufjsuJ4ls1F6hi8WyIyfzbjo8FtAyp+LJyBCSnXuj41DDsc9bfdY1v2PCCi6n238zc
+         /NOeyVc2TEeATQCpeB+m13D+XyONmKkfBEW8ck+7Z3/Kfo8vt3xti39Kj6JwZ77OxtPA
+         wZp7DsEWCEo6gvwF0i/XizAFhzs0oZaHPcklZ+M0pko6sazUHGCFSeClNSzVoz9E1BIZ
+         8jev3mMlZ1hPG8eBZneDMBiozxzSLsYyoR6Lsri7GOTiLB1scG5Nzs1fmgMpqiWNEnxc
+         np/DmN6Jxk9MY1EYqZTTKiGtuG6InA80pr3col9Mb7b64i+i7DAM4w7FROgdeU+H5Myc
+         H7nQ==
+X-Gm-Message-State: AOAM530Mxt3ikBG+imDDgBQyMGxyRG2yGnfmd+HivjwHsgOLBjSXgCMn
+        +HgJHMz+GbuMEAAbF0TGBEE=
+X-Google-Smtp-Source: ABdhPJwf5QI0SPNdOnucozcNruZiu59ZtsANYNvXFoEq6uEFbg5cEgIjFW+kxBeTM2iWtFnYw5haWw==
+X-Received: by 2002:a63:6f87:: with SMTP id k129mr9529438pgc.248.1642963204752;
+        Sun, 23 Jan 2022 10:40:04 -0800 (PST)
+Received: from localhost (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id a1sm9996929pgg.18.2022.01.23.10.40.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Jan 2022 09:06:10 -0800 (PST)
-Date:   Sun, 23 Jan 2022 18:06:08 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Christy Lee <christylee@fb.com>
-Cc:     andrii@kernel.org, acme@kernel.org, christyc.y.lee@gmail.com,
-        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        kernel-team@fb.com, wangnan0@huawei.com,
-        bobo.shaobowang@huawei.com, yuehaibing@huawei.com
-Subject: Re: [PATCH bpf-next v4 2/2] perf: stop using deprecated
- bpf_object__next() API
-Message-ID: <Ye2LAEiXaBoj2n8Z@krava>
-References: <20220119230636.1752684-1-christylee@fb.com>
- <20220119230636.1752684-3-christylee@fb.com>
+        Sun, 23 Jan 2022 10:40:04 -0800 (PST)
+From:   Yury Norov <yury.norov@gmail.com>
+To:     Yury Norov <yury.norov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        David Laight <David.Laight@aculab.com>,
+        Joe Perches <joe@perches.com>, Dennis Zhou <dennis@kernel.org>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Alexey Klimov <aklimov@redhat.com>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nick Hu <nickhu@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH 05/54] nds32: perf: replace bitmap_weight with bitmap_empty where appropriate
+Date:   Sun, 23 Jan 2022 10:38:36 -0800
+Message-Id: <20220123183925.1052919-6-yury.norov@gmail.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20220123183925.1052919-1-yury.norov@gmail.com>
+References: <20220123183925.1052919-1-yury.norov@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220119230636.1752684-3-christylee@fb.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jan 19, 2022 at 03:06:36PM -0800, Christy Lee wrote:
+nds32_pmu_enable calls bitmap_weight() to check if any bit of a given
+bitmap is set. It's better to use bitmap_empty() in that case because
+bitmap_empty() stops traversing the bitmap as soon as it finds first
+set bit, while bitmap_weight() counts all bits unconditionally.
 
-SNIP
-
-> ---
->  tools/perf/util/bpf-loader.c | 72 +++++++++++++++++++++++++++---------
->  tools/perf/util/bpf-loader.h |  1 +
->  2 files changed, 55 insertions(+), 18 deletions(-)
-> 
-> diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-> index 4631cac3957f..b1822f8af2bb 100644
-> --- a/tools/perf/util/bpf-loader.c
-> +++ b/tools/perf/util/bpf-loader.c
-> @@ -29,9 +29,6 @@
->  
->  #include <internal/xyarray.h>
->  
-> -/* temporarily disable libbpf deprecation warnings */
-> -#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-> -
->  static int libbpf_perf_print(enum libbpf_print_level level __attribute__((unused)),
->  			      const char *fmt, va_list args)
->  {
-> @@ -49,6 +46,36 @@ struct bpf_prog_priv {
->  	int *type_mapping;
->  };
->  
-> +struct bpf_perf_object {
-> +	struct bpf_object *obj;
-> +	struct list_head list;
-> +};
-> +
-> +static LIST_HEAD(bpf_objects_list);
-
-hum.. I still can't see any code adding/removing bpf_perf_object
-objects to this list, and that's why the code is failing to remove
-probes
-
-because there are no objects to iterate on, so added probes stay
-configured and screw following tests
-
-you need something like below to add and del objects from
-bpf_objects_list list
-
-it also simplifies for_each macros to work just over perf_obj,
-because I wasn't patient enough to make it work with the extra
-bpf_object ;-) I don't mind if you fix that, but this way looks
-simpler to me
-
-tests are working for me with this fix, please feel free to
-squash it into your change
-
-thanks,
-jirka
-
-
+Signed-off-by: Yury Norov <yury.norov@gmail.com>
 ---
-diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
-index 57b9591f7cbb..d09d25707f1e 100644
---- a/tools/perf/tests/bpf.c
-+++ b/tools/perf/tests/bpf.c
-@@ -210,6 +210,11 @@ prepare_bpf(void *obj_buf, size_t obj_buf_sz, const char *name)
- 		pr_debug("Compile BPF program failed.\n");
- 		return NULL;
- 	}
-+
-+	if (bpf_perf_object__add(obj)) {
-+		bpf_object__close(obj);
-+		return NULL;
-+	}
- 	return obj;
- }
- 
-diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-index 89e584ac267c..a7a8ad32c847 100644
---- a/tools/perf/util/bpf-loader.c
-+++ b/tools/perf/util/bpf-loader.c
-@@ -70,11 +70,11 @@ struct bpf_perf_object *bpf_perf_object__next(struct bpf_perf_object *prev)
- 	return next;
- }
- 
--#define bpf_perf_object__for_each(perf_obj, tmp, obj)                          \
--	for ((perf_obj) = bpf_perf_object__next(NULL),                         \
--	    (tmp) = bpf_perf_object__next(perf_obj), (obj) = NULL;             \
--	     (perf_obj) != NULL; (perf_obj) = (tmp),                           \
--	    (tmp) = bpf_perf_object__next(tmp), (obj) = (perf_obj)->obj)
-+#define bpf_perf_object__for_each(perf_obj, tmp)         \
-+	for ((perf_obj) = bpf_perf_object__next(NULL),   \
-+	     (tmp) = bpf_perf_object__next(perf_obj);    \
-+	     (perf_obj) != NULL; (perf_obj) = (tmp),     \
-+	    (tmp) = bpf_perf_object__next(tmp) )
- 
- static bool libbpf_initialized;
- 
-@@ -97,6 +97,24 @@ bpf__prepare_load_buffer(void *obj_buf, size_t obj_buf_sz, const char *name)
- 	return obj;
- }
- 
-+int bpf_perf_object__add(struct bpf_object *obj)
-+{
-+	struct bpf_perf_object *perf_obj = zalloc(sizeof(*perf_obj));
-+
-+	if (perf_obj) {
-+		perf_obj->obj = obj;
-+		list_add_tail(&perf_obj->list, &bpf_objects_list);
-+	}
-+	return perf_obj ? 0 : -ENOMEM;
-+}
-+
-+static void bpf_perf_object__close(struct bpf_perf_object *perf_obj)
-+{
-+	list_del(&perf_obj->list);
-+	bpf_object__close(perf_obj->obj);
-+	free(perf_obj);
-+}
-+
- struct bpf_object *bpf__prepare_load(const char *filename, bool source)
+ arch/nds32/kernel/perf_event_cpu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/nds32/kernel/perf_event_cpu.c b/arch/nds32/kernel/perf_event_cpu.c
+index a78a879e7ef1..ea44e9ecb5c7 100644
+--- a/arch/nds32/kernel/perf_event_cpu.c
++++ b/arch/nds32/kernel/perf_event_cpu.c
+@@ -695,7 +695,7 @@ static void nds32_pmu_enable(struct pmu *pmu)
  {
- 	struct bpf_object *obj;
-@@ -135,17 +153,20 @@ struct bpf_object *bpf__prepare_load(const char *filename, bool source)
- 		return obj;
- 	}
+ 	struct nds32_pmu *nds32_pmu = to_nds32_pmu(pmu);
+ 	struct pmu_hw_events *hw_events = nds32_pmu->get_hw_events();
+-	int enabled = bitmap_weight(hw_events->used_mask,
++	bool enabled = !bitmap_empty(hw_events->used_mask,
+ 				    nds32_pmu->num_events);
  
-+	if (bpf_perf_object__add(obj)) {
-+		bpf_object__close(obj);
-+		return ERR_PTR(-BPF_LOADER_ERRNO__COMPILE);
-+	}
- 	return obj;
- }
- 
- void bpf__clear(void)
- {
- 	struct bpf_perf_object *perf_obj, *tmp;
--	struct bpf_object *obj;
- 
--	bpf_perf_object__for_each(perf_obj, tmp, obj) {
--		bpf__unprobe(obj);
--		bpf_object__close(obj);
-+	bpf_perf_object__for_each(perf_obj, tmp) {
-+		bpf__unprobe(perf_obj->obj);
-+		bpf_perf_object__close(perf_obj);
- 	}
- }
- 
-@@ -1538,11 +1559,10 @@ apply_obj_config_object(struct bpf_object *obj)
- int bpf__apply_obj_config(void)
- {
- 	struct bpf_perf_object *perf_obj, *tmp;
--	struct bpf_object *obj;
- 	int err;
- 
--	bpf_perf_object__for_each(perf_obj, tmp, obj) {
--		err = apply_obj_config_object(obj);
-+	bpf_perf_object__for_each(perf_obj, tmp) {
-+		err = apply_obj_config_object(perf_obj->obj);
- 		if (err)
- 			return err;
- 	}
-@@ -1550,25 +1570,24 @@ int bpf__apply_obj_config(void)
- 	return 0;
- }
- 
--#define bpf__perf_for_each_map(perf_obj, tmp, obj, map)                        \
--	bpf_perf_object__for_each(perf_obj, tmp, obj)                          \
--		bpf_object__for_each_map(map, obj)
-+#define bpf__perf_for_each_map(perf_obj, tmp, map)                   \
-+	bpf_perf_object__for_each(perf_obj, tmp)                     \
-+		bpf_object__for_each_map(map, perf_obj->obj)
- 
--#define bpf__perf_for_each_map_named(perf_obj, tmp, obj, map, name)            \
--	bpf__perf_for_each_map(perf_obj, tmp, obj, map)                        \
-+#define bpf__perf_for_each_map_named(perf_obj, tmp, map, name)            \
-+	bpf__perf_for_each_map(perf_obj, tmp, map)                        \
- 		if (bpf_map__name(map) && (strcmp(name, bpf_map__name(map)) == 0))
- 
- struct evsel *bpf__setup_output_event(struct evlist *evlist, const char *name)
- {
- 	struct bpf_map_priv *tmpl_priv = NULL;
- 	struct bpf_perf_object *perf_obj, *tmp;
--	struct bpf_object *obj;
- 	struct evsel *evsel = NULL;
- 	struct bpf_map *map;
- 	int err;
- 	bool need_init = false;
- 
--	bpf__perf_for_each_map_named(perf_obj, tmp, obj, map, name) {
-+	bpf__perf_for_each_map_named(perf_obj, tmp, map, name) {
- 		struct bpf_map_priv *priv = bpf_map__priv(map);
- 
- 		if (IS_ERR(priv))
-@@ -1604,7 +1623,7 @@ struct evsel *bpf__setup_output_event(struct evlist *evlist, const char *name)
- 		evsel = evlist__last(evlist);
- 	}
- 
--	bpf__perf_for_each_map_named(perf_obj, tmp, obj, map, name) {
-+	bpf__perf_for_each_map_named(perf_obj, tmp, map, name) {
- 		struct bpf_map_priv *priv = bpf_map__priv(map);
- 
- 		if (IS_ERR(priv))
-diff --git a/tools/perf/util/bpf-loader.h b/tools/perf/util/bpf-loader.h
-index 95262b7e936f..78c7d3662910 100644
---- a/tools/perf/util/bpf-loader.h
-+++ b/tools/perf/util/bpf-loader.h
-@@ -83,6 +83,8 @@ int bpf__strerror_config_obj(struct bpf_object *obj,
- int bpf__apply_obj_config(void);
- int bpf__strerror_apply_obj_config(int err, char *buf, size_t size);
- 
-+int bpf_perf_object__add(struct bpf_object *obj);
-+
- int bpf__setup_stdout(struct evlist *evlist);
- struct evsel *bpf__setup_output_event(struct evlist *evlist, const char *name);
- int bpf__strerror_setup_output_event(struct evlist *evlist, int err, char *buf, size_t size);
+ 	if (enabled)
+-- 
+2.30.2
 
