@@ -2,130 +2,198 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE635C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun, 23 Jan 2022 18:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2155DC433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun, 23 Jan 2022 19:18:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229647AbiAWSpx (ORCPT
+        id S239619AbiAWTSz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 23 Jan 2022 13:45:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54998 "EHLO
+        Sun, 23 Jan 2022 14:18:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229810AbiAWSpw (ORCPT
+        with ESMTP id S239569AbiAWTSz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 23 Jan 2022 13:45:52 -0500
-Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2EEEC06173B
-        for <linux-perf-users@vger.kernel.org>; Sun, 23 Jan 2022 10:45:52 -0800 (PST)
-Received: by mail-io1-xd29.google.com with SMTP id e79so16947650iof.13
-        for <linux-perf-users@vger.kernel.org>; Sun, 23 Jan 2022 10:45:52 -0800 (PST)
+        Sun, 23 Jan 2022 14:18:55 -0500
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76138C06173D
+        for <linux-perf-users@vger.kernel.org>; Sun, 23 Jan 2022 11:18:54 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id n198-20020a2540cf000000b00614c2ee23b7so13635357yba.9
+        for <linux-perf-users@vger.kernel.org>; Sun, 23 Jan 2022 11:18:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NVezGFnrv75sEcjGEC4/4fkIz/BvlE578Fz7+Ws5ols=;
-        b=INx3xHmit+6lRVim//JcN8Eaag5n2aRFeI/hBohCnvW3rt14qcuShwEBxnVbidEjCJ
-         geOdUn90/2U4m9uciixLyypK6FlU7ZCYQYmOWzmmSxX3EE2fL8MzWlQv+OfkSuVAmG/X
-         oNs4uBo3UHriHuz8SiUNqzqg8Hm3AhBJGsuDKEoLVd/REsHK7H0sRWqIOunbsq5eDXgF
-         iY5SJFCZYo0Sj1FTkokc82y66paFwVzqKLLZ12fcTtKeecCNm6jGVG3YKAkU7YojHjjY
-         QAaFOB5EHTaK4hky+yUocw9Y2W+Iv72p+c9+Qtv+avrnqvdaLOHYwz/6S1SeUBzJncgM
-         PVsw==
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=P/7gZvy2o2L6f4h71xYi4mBHo31wqAY/4B1y57WLH3o=;
+        b=HEebOQbIk+xbsbGW+rLpNby3a4cXiZ1P/ijiIEZB5iDXJ/cNOAM4ZtKOt/i+KKbJ+f
+         aa6gOqyHOrqYvWowU/oXQ/v69R2EW+hGVIS4kVABi4tnD0xEOsKPNBWVuJ+MtDDVcduU
+         PuZLLpyYiQMMk3VPSmWZA69VOhY8rT17B51g3gNpmaoIYfzMi7yywbwWyexdhNoYy8lR
+         3AeGrjv5LNqEA7WTqR3BvCE7CiP174QV70C2E0UL6tfrqi4U2oP0SrcvPSz5szdKXW5R
+         T2sUZhf8OnJwQzUZFZk9YZGpWJmQbSkLW3DyNV6nF9CK3ru4E8ZT12U5GSYt2XOF6BJC
+         npYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NVezGFnrv75sEcjGEC4/4fkIz/BvlE578Fz7+Ws5ols=;
-        b=5mYq2rWED/DQrYwlacJ051LvSRJcO9m6XECR2uoeSyYdIAeBvt3gfNREY5yTpHb6TU
-         +YMuhqNwqu7kmlgJ2RVXWnk592vrYs7oUgxH/GDc0zgZ6SAoWCakQRRVa2o0oiE7U/hs
-         xDXqOrz5hlfsAIXUd6VoawXcn8gfgZk/WFe52xH7OP2/X9nL3aR5wg43v06id0q3uTyR
-         Xor1Y+ui6je/OnekgXHMwSuUTbhn6lpzFCiIhHV3xUBkN+5vWgOV2cMQTRTgpzYNaGGC
-         ffDWli54OVvH52aD/sbY4bOEOa9MK67wJc4/m5/DYrNmL7+H+fqhMrRcr9Ugxy5r8itT
-         XHUg==
-X-Gm-Message-State: AOAM533iO4iDK9u3fhjpQ682kTnr8Zlg3Z+U87W0WsRO/IpAcp7YWljf
-        bIckuxIxd6ebqHk9eiJ3Xi1q7A+jW1wb8a+KlGkCjR4+wmI=
-X-Google-Smtp-Source: ABdhPJxl0FQl4VdqyjtwwsWqIZoCTfHPXDja23vYMxJNZUE0k5+ze3/9RCliByHGMva3MuebDvtO/jJgwDwIM9RZhfw=
-X-Received: by 2002:a05:6602:2b8b:: with SMTP id r11mr6427624iov.97.1642963551847;
- Sun, 23 Jan 2022 10:45:51 -0800 (PST)
-MIME-Version: 1.0
-References: <87o85ftc3p.fsf@smart-cactus.org> <CAADnVQ++57u30cdooEqXSDVGEgKTy70TChg8+2h8mihHbwdpOg@mail.gmail.com>
-In-Reply-To: <CAADnVQ++57u30cdooEqXSDVGEgKTy70TChg8+2h8mihHbwdpOg@mail.gmail.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=P/7gZvy2o2L6f4h71xYi4mBHo31wqAY/4B1y57WLH3o=;
+        b=YgdLCj/dPxbUBIx4piXtWGfq+NFRKBU0kguzbcONoG5pi5+NfXH73b/lLvuk6jpKTb
+         HVF2z38v0k1SVLlBgHo1lhW5G/FOrahkH8ow6MMQcGmj+jrtej5B7u+/wIamEPFU3XUX
+         XCtfrXPo8/dnGFqkGDdJIj9USgr0MwHTQS8uleJHm+ZhTqla3Lwk1U+3g0DBnzAXhJSg
+         4CPh7IWFX1TsWGTsXiMu9q+Hjfl0AQx07MS2tTjotE1roCxZv2XObX0Wyt5TRN9Oq3i3
+         p66YG6RmF4iOPWANDXQ3EBkX4+MdQGq/MtSCTqiQ1MBBJSm7MabKV7MD2x+FtJNi+T6Y
+         SuAQ==
+X-Gm-Message-State: AOAM531wuP1VBXKPfEq4mpNItju8Ch7mDSNlOPYZ4GU8MuvpDl+Umd6v
+        9ynwOK2pLOr/7EKNi0EzH8AVdH5BusND
+X-Google-Smtp-Source: ABdhPJwI1iRlHJNG3lEv38NvX2E9aZ/UxtKvOOynEgqs0TfiJh3KpVYpOstq2FAsvCW9xJ7H2cRtBQVdcjlm
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:1d5e:35c2:7748:3a52])
+ (user=irogers job=sendgmr) by 2002:a81:1544:0:b0:2ca:287c:6cd6 with SMTP id
+ 00721157ae682-2ca287c6f50mr47b3.379.1642965533245; Sun, 23 Jan 2022 11:18:53
+ -0800 (PST)
+Date:   Sun, 23 Jan 2022 11:18:48 -0800
+Message-Id: <20220123191849.3655855-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.35.0.rc0.227.g00780c9af4-goog
+Subject: [PATCH 1/2] perf tui: Only support --tui with slang
 From:   Ian Rogers <irogers@google.com>
-Date:   Sun, 23 Jan 2022 10:45:40 -0800
-Message-ID: <CAP-5=fVSSGa3dyg64GYN=-PDmj1aUa8pR0U71FMoZ6U_6Mu0+w@mail.gmail.com>
-Subject: Re: Sampling of non-C-like stacks with eBPF and perf_events?
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Ben Gamari <ben@smart-cactus.org>, bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>, xaizek <xaizek@posteo.net>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Alexei and Ben,
+Make the --tui command line flags dependent HAVE_SLANG_SUPPORT. This was
+reported as confusing in:
+https://lore.kernel.org/linux-perf-users/YevaTkzdXmFKdGpc@zx-spectrum.none/
 
-This sounds awesome! Somewhat off-topic, I wonder if we could include
-the pyperf and ghc support in regular perf? I think there is an
-assumption that these languages are a minority concern, but I think
-everyone would benefit from being packaged with perf, being kept in
-sync with how the APIs evolve, code reuse, etc.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/builtin-annotate.c | 10 +++++++++-
+ tools/perf/builtin-report.c   | 10 +++++++++-
+ tools/perf/builtin-top.c      |  4 ++++
+ tools/perf/util/top.h         |  5 ++++-
+ 4 files changed, 26 insertions(+), 3 deletions(-)
 
-Thanks,
-Ian
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index 490bb9b8cf17..5e038d9bab05 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -46,7 +46,11 @@ struct perf_annotate {
+ 	struct perf_tool tool;
+ 	struct perf_session *session;
+ 	struct annotation_options opts;
+-	bool	   use_tui, use_stdio, use_stdio2, use_gtk;
++#ifdef HAVE_SLANG_SUPPORT
++	bool	   use_tui;
++#endif
++	bool	   use_stdio, use_stdio2;
++	bool	   use_gtk;
+ 	bool	   skip_missing;
+ 	bool	   has_br_stack;
+ 	bool	   group_set;
+@@ -503,7 +507,9 @@ int cmd_annotate(int argc, const char **argv)
+ 	OPT_BOOLEAN('D', "dump-raw-trace", &dump_trace,
+ 		    "dump raw trace in ASCII"),
+ 	OPT_BOOLEAN(0, "gtk", &annotate.use_gtk, "Use the GTK interface"),
++#ifdef HAVE_SLANG_SUPPORT
+ 	OPT_BOOLEAN(0, "tui", &annotate.use_tui, "Use the TUI interface"),
++#endif
+ 	OPT_BOOLEAN(0, "stdio", &annotate.use_stdio, "Use the stdio interface"),
+ 	OPT_BOOLEAN(0, "stdio2", &annotate.use_stdio2, "Use the stdio interface"),
+ 	OPT_BOOLEAN(0, "ignore-vmlinux", &symbol_conf.ignore_vmlinux,
+@@ -624,8 +630,10 @@ int cmd_annotate(int argc, const char **argv)
+ 
+ 	if (annotate.use_stdio || annotate.use_stdio2)
+ 		use_browser = 0;
++#ifdef HAVE_SLANG_SUPPORT
+ 	else if (annotate.use_tui)
+ 		use_browser = 1;
++#endif
+ 	else if (annotate.use_gtk)
+ 		use_browser = 2;
+ 
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 1dd92d8c9279..1ad75c7ba074 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -71,7 +71,11 @@ struct report {
+ 	struct perf_tool	tool;
+ 	struct perf_session	*session;
+ 	struct evswitch		evswitch;
+-	bool			use_tui, use_gtk, use_stdio;
++#ifdef HAVE_SLANG_SUPPORT
++	bool			use_tui;
++#endif
++	bool			use_gtk;
++	bool			use_stdio;
+ 	bool			show_full_info;
+ 	bool			show_threads;
+ 	bool			inverted_callchain;
+@@ -1206,7 +1210,9 @@ int cmd_report(int argc, const char **argv)
+ 		    "Show per-thread event counters"),
+ 	OPT_STRING(0, "pretty", &report.pretty_printing_style, "key",
+ 		   "pretty printing style key: normal raw"),
++#ifdef HAVE_SLANG_SUPPORT
+ 	OPT_BOOLEAN(0, "tui", &report.use_tui, "Use the TUI interface"),
++#endif
+ 	OPT_BOOLEAN(0, "gtk", &report.use_gtk, "Use the GTK2 interface"),
+ 	OPT_BOOLEAN(0, "stdio", &report.use_stdio,
+ 		    "Use the stdio interface"),
+@@ -1492,8 +1498,10 @@ int cmd_report(int argc, const char **argv)
+ 
+ 	if (report.use_stdio)
+ 		use_browser = 0;
++#ifdef HAVE_SLANG_SUPPORT
+ 	else if (report.use_tui)
+ 		use_browser = 1;
++#endif
+ 	else if (report.use_gtk)
+ 		use_browser = 2;
+ 
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 1fc390f136dd..e1a134a0a377 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1486,7 +1486,9 @@ int cmd_top(int argc, const char **argv)
+ 		    "display this many functions"),
+ 	OPT_BOOLEAN('U', "hide_user_symbols", &top.hide_user_symbols,
+ 		    "hide user symbols"),
++#ifdef HAVE_SLANG_SUPPORT
+ 	OPT_BOOLEAN(0, "tui", &top.use_tui, "Use the TUI interface"),
++#endif
+ 	OPT_BOOLEAN(0, "stdio", &top.use_stdio, "Use the stdio interface"),
+ 	OPT_INCR('v', "verbose", &verbose,
+ 		    "be more verbose (show counter open errors, etc)"),
+@@ -1667,8 +1669,10 @@ int cmd_top(int argc, const char **argv)
+ 
+ 	if (top.use_stdio)
+ 		use_browser = 0;
++#ifdef HAVE_SLANG_SUPPORT
+ 	else if (top.use_tui)
+ 		use_browser = 1;
++#endif
+ 
+ 	setup_browser(false);
+ 
+diff --git a/tools/perf/util/top.h b/tools/perf/util/top.h
+index ff8391208ecd..1c2c0a838430 100644
+--- a/tools/perf/util/top.h
++++ b/tools/perf/util/top.h
+@@ -33,7 +33,10 @@ struct perf_top {
+ 	int		   print_entries, count_filter, delay_secs;
+ 	int		   max_stack;
+ 	bool		   hide_kernel_symbols, hide_user_symbols, zero;
+-	bool		   use_tui, use_stdio;
++#ifdef HAVE_SLANG_SUPPORT
++	bool		   use_tui;
++#endif
++	bool		   use_stdio;
+ 	bool		   vmlinux_warned;
+ 	bool		   dump_symtab;
+ 	bool		   stitch_lbr;
+-- 
+2.35.0.rc0.227.g00780c9af4-goog
 
-On Fri, Jan 21, 2022 at 4:05 PM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Fri, Dec 17, 2021 at 1:53 PM Ben Gamari <ben@smart-cactus.org> wrote:
-> >
-> > Hi all,
-> >
-> > I have recently been exploring the possibility of using a
-> > BPF_PROG_TYPE_PERF_EVENT program to implement stack sampling for
-> > languages which do not use the platform's %sp for their stack pointer
-> > (in my case, GHC/Haskell [1], which on x86-64 uses %rbp for its stack
-> > pointer). Specifically, the idea is to use a sampling perf_events
-> > session with an eBPF overflow handler which locates the
-> > currently-running thread's stack and records it in the sample ringbuffer
-> > (see [2] for my current attempt). At this point I only care about
-> > user-space samples.
-> >
-> > However, I quickly ran up against the fact that perf_event's stack
-> > sampling logic (namely perf_output_sample_ustack) is called from an IRQ
-> > context. This appears to preclude use of a sleepable BPF program, which
-> > would be necessary to use bpf_copy_from_user. Indeed, the fact that the
-> > usual stack sampling logic uses copy_from_user_inatomic rather than
-> > copy_from_user suggests that this isn't a safe context for sleeping.
-> >
-> > So, I'm at this point a bit unclear on how to proceed. I can see a few
-> > possible directions forward, although none are particularly enticing:
-> >
-> > * Add a bpf_copy_from_user_atomic helper, which can be called from a
-> >   non-sleepable context like a perf_events overflow handler. This would
-> >   take the same set_fs() and pagefault_disable() precautions as
-> >   perf_output_sample_ustack to ensure that the access is safe and aborts
-> >   on fault.
-> >
-> > * Introduce a new BPF program type,
-> >   BPF_PROG_TYPE_PERF_EVENT_STACK_LOCATOR, which can be invoked by
-> >   perf_output_sample_ustack to locate the stack to be sampled.
-> >
-> > Do either of these ideas sound upstreamable? Perhaps there are other
-> > ideas on how to attack this general problem? I do not believe Haskell is
-> > alone in its struggle with the current inflexibility of stack sampling;
-> > the JVM introduced framepointer support specifically to allow callgraph
-> > sampling; however, dedicating a register and code to this seems like an
-> > unfortunate compromise, especially on x86-64 where registers are already
-> > fairly precious.
-> >
-> > Any thoughts or suggestions would be greatly appreciated.
->
-> Hi Ben,
->
-> if you're sampling the stack trace of the current process
-> there is no need for copy_from_user and sleepable.
-> The memory with the stack trace unlikely was paged out.
-> So normal bpf_probe_read_user() will work fine.
->
-> This approach was used to implement 'pyperf'.
-> It walks python stack traces:
-> https://github.com/iovisor/bcc/tree/master/examples/cpp/pyperf
-> What you're trying to do for haskel sounds very similar.
