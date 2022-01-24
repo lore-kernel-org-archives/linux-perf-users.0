@@ -2,47 +2,41 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B009DC433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Jan 2022 17:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B39B2C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Jan 2022 18:02:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244613AbiAXRYo (ORCPT
+        id S235642AbiAXSCz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 24 Jan 2022 12:24:44 -0500
-Received: from foss.arm.com ([217.140.110.172]:41704 "EHLO foss.arm.com"
+        Mon, 24 Jan 2022 13:02:55 -0500
+Received: from foss.arm.com ([217.140.110.172]:42958 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244496AbiAXRYa (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 24 Jan 2022 12:24:30 -0500
+        id S235628AbiAXSCy (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 24 Jan 2022 13:02:54 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D08F4D6E;
-        Mon, 24 Jan 2022 09:24:29 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 231BAD6E;
+        Mon, 24 Jan 2022 10:02:54 -0800 (PST)
 Received: from [10.57.39.131] (unknown [10.57.39.131])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 47DF13F766;
-        Mon, 24 Jan 2022 09:24:27 -0800 (PST)
-Subject: Re: [PATCH] perf arm-spe: Use SPE data source for neoverse cores
-To:     Ali Saidi <alisaidi@amazon.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, Leo Yan <leo.yan@linaro.org>
-Cc:     benh@kernel.crashing.org, Peter Zijlstra <peterz@infradead.org>,
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7EFFA3F766;
+        Mon, 24 Jan 2022 10:02:52 -0800 (PST)
+Subject: Re: [RFC V1 08/11] arm64/perf: Enable branch stack sampling
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        German Gomez <german.gomez@arm.com>,
-        Andrew Kilroy <andrew.kilroy@arm.com>
-References: <20220121182456.13538-1-alisaidi@amazon.com>
+        linux-perf-users@vger.kernel.org
+References: <1642998653-21377-1-git-send-email-anshuman.khandual@arm.com>
+ <1642998653-21377-9-git-send-email-anshuman.khandual@arm.com>
 From:   James Clark <james.clark@arm.com>
-Message-ID: <0ba26f30-6978-36ad-f7d0-7b8465648e54@arm.com>
-Date:   Mon, 24 Jan 2022 17:24:25 +0000
+Message-ID: <741d159d-fce4-377e-8817-f8a6462f3a71@arm.com>
+Date:   Mon, 24 Jan 2022 18:02:51 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.14.0
 MIME-Version: 1.0
-In-Reply-To: <20220121182456.13538-1-alisaidi@amazon.com>
+In-Reply-To: <1642998653-21377-9-git-send-email-anshuman.khandual@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -52,100 +46,71 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 21/01/2022 18:24, Ali Saidi wrote:
-> When synthesizing data from SPE, augment the type with source information
-> for Arm Neoverse cores. The field is IMPLDEF but the Neoverse cores all use
-> the same encoding. I can't find encoding information for any other SPE
-> implementations to unify their choices with Arm's thus that is left for future
-> work.
+On 24/01/2022 04:30, Anshuman Khandual wrote:
+> Now that all the required pieces are already in place, just enable the perf
+> branch stack sampling support on arm64 platform, by removing the gate which
+> blocks it in armpmu_event_init().
 > 
-> This changes enables the expected behavior of perf c2c on a system with SPE where
-> lines that are shared among multiple cores show up in perf c2c output. 
-> 
-> Signed-off-by: Ali Saidi <alisaidi@amazon.com> 
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 > ---
->  .../util/arm-spe-decoder/arm-spe-decoder.c    |  1 +
->  .../util/arm-spe-decoder/arm-spe-decoder.h    | 12 +++++
->  tools/perf/util/arm-spe.c                     | 48 ++++++++++++++-----
->  3 files changed, 49 insertions(+), 12 deletions(-)
+>  drivers/perf/arm_pmu.c | 25 ++++++++++++++++++++++---
+>  1 file changed, 22 insertions(+), 3 deletions(-)
 > 
-[...]
-> +static u64 arm_spe__synth_data_source(const struct arm_spe_record *record, u64 midr)
->  {
->  	union perf_mem_data_src	data_src = { 0 };
-> +	bool is_neoverse = is_midr_in_range(midr, neoverse_spe);
+> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+> index 0800c8858ed8..2117bf5d3232 100644
+> --- a/drivers/perf/arm_pmu.c
+> +++ b/drivers/perf/arm_pmu.c
+> @@ -537,9 +537,28 @@ static int armpmu_event_init(struct perf_event *event)
+>  		!cpumask_test_cpu(event->cpu, &armpmu->supported_cpus))
+>  		return -ENOENT;
 >  
->  	if (record->op == ARM_SPE_LD)
->  		data_src.mem_op = PERF_MEM_OP_LOAD;
-> @@ -409,19 +418,30 @@ static u64 arm_spe__synth_data_source(const struct arm_spe_record *record)
->  		data_src.mem_op = PERF_MEM_OP_STORE;
->  
->  	if (record->type & (ARM_SPE_LLC_ACCESS | ARM_SPE_LLC_MISS)) {
-> -		data_src.mem_lvl = PERF_MEM_LVL_L3;
-> +		if (is_neoverse && record->source == ARM_SPE_NV_DRAM) {
-> +			data_src.mem_lvl = PERF_MEM_LVL_LOC_RAM | PERF_MEM_LVL_HIT;
-> +		} else if (is_neoverse && record->source == ARM_SPE_NV_PEER_CLSTR) {
-> +			data_src.mem_snoop = PERF_MEM_SNOOP_HITM;
-
-I'm not following how LLC_ACCESS | LLC_MISS ends up as HITM in this case (ARM_SPE_NV_PEER_CLSTR)?
-I thought there was no way to determine a HITM from SPE. Wouldn't one of the other values
-like PERF_MEM_SNOOP_MISS be more accurate?
-
-> +			data_src.mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
-
-This one also adds PERF_MEM_LVL_HIT even though the check of "if (record->type & ARM_SPE_LLC_MISS)"
-hasn't happened yet. Maybe some comments would make it a bit clearer, but at the moment it's
-not obvious how the result is derived because there are some things that don't add up like
-ARM_SPE_LLC_MISS == PERF_MEM_LVL_HIT.
-
-> +		} else {
-> +			data_src.mem_lvl = PERF_MEM_LVL_L3;>  
-> -		if (record->type & ARM_SPE_LLC_MISS)
-> -			data_src.mem_lvl |= PERF_MEM_LVL_MISS;
-> -		else
-> -			data_src.mem_lvl |= PERF_MEM_LVL_HIT;
-> +			if (record->type & ARM_SPE_LLC_MISS)
-> +				data_src.mem_lvl |= PERF_MEM_LVL_MISS;
-> +			else
-> +				data_src.mem_lvl |= PERF_MEM_LVL_HIT;
+> -	/* does not support taken branch sampling */
+> -	if (has_branch_stack(event))
+> -		return -EOPNOTSUPP;
+> +	if (has_branch_stack(event)) {
+> +		/*
+> +		 * BRBE support is absent. Select CONFIG_ARM_BRBE_PMU
+> +		 * in the config, before branch stack sampling events
+> +		 * can be requested.
+> +		 */
+> +		if (!IS_ENABLED(CONFIG_ARM_BRBE_PMU)) {
+> +			pr_warn_once("BRBE is disabled, select CONFIG_ARM_BRBE_PMU\n");
+> +			return -EOPNOTSUPP;
 > +		}
->  	} else if (record->type & (ARM_SPE_L1D_ACCESS | ARM_SPE_L1D_MISS)) {
-> -		data_src.mem_lvl = PERF_MEM_LVL_L1;
-> +		if (is_neoverse && record->source == ARM_SPE_NV_L2) {
-> +			data_src.mem_lvl = PERF_MEM_LVL_L2 | PERF_MEM_LVL_HIT;
-> +		} else {
-> +			data_src.mem_lvl = PERF_MEM_LVL_L1;
->  
-> -		if (record->type & ARM_SPE_L1D_MISS)
-> -			data_src.mem_lvl |= PERF_MEM_LVL_MISS;
-> -		else
-> -			data_src.mem_lvl |= PERF_MEM_LVL_HIT;
-> +			if (record->type & ARM_SPE_L1D_MISS)
-> +				data_src.mem_lvl |= PERF_MEM_LVL_MISS;
-> +			else
-> +				data_src.mem_lvl |= PERF_MEM_LVL_HIT;
-> +		}
->  	}
->  
->  	if (record->type & ARM_SPE_REMOTE_ACCESS)
-> @@ -446,7 +466,7 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
->  	u64 data_src;
->  	int err;
->  
-> -	data_src = arm_spe__synth_data_source(record);
-> +	data_src = arm_spe__synth_data_source(record, spe->midr);
->  
->  	if (spe->sample_flc) {
->  		if (record->type & ARM_SPE_L1D_MISS) {
-> @@ -796,6 +816,10 @@ static int arm_spe_process_event(struct perf_session *session,
->  	u64 timestamp;
->  	struct arm_spe *spe = container_of(session->auxtrace,
->  			struct arm_spe, auxtrace);
-> +	const char *cpuid = perf_env__cpuid(session->evlist->env);
-> +	u64 midr = strtol(cpuid, NULL, 16);
 > +
-> +	spe->midr = midr;
+> +		/*
+> +		 * Branch stack sampling event can not be supported in
+> +		 * case either the required driver itself is absent or
+> +		 * BRBE buffer, is not supported. Besides checking for
+> +		 * the callback prevents a crash in case it's absent.
+> +		 */
+> +		if (!armpmu->brbe_supported || !armpmu->brbe_supported(event)) {
+> +			pr_warn_once("BRBE is not supported\n");
+> +			return -EOPNOTSUPP;
+
+brbe_supported() returns false for one permission case, rather than a "not supported" case
+so EOPNOTSUPP is the wrong thing to return here for this case otherwise it makes perf
+print confusing error messages. 
+
+The brbe_supported() function needs to be split into two, one that handles support and one
+that handles permissions and different errors need to be reported. Here is the permission
+bit from that function:
+
+  +	if (event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_KERNEL) {
+  +		if (!perfmon_capable()) {
+  +			pr_warn_once("does not have permission for kernel branch filter\n");
+  +			return false;
+  +		}
+  +	}
+
+> +		}
+> +	}
 >  
->  	if (dump_trace)
->  		return 0;
+>  	if (armpmu->map_event(event) == -ENOENT)
+>  		return -ENOENT;
 > 
