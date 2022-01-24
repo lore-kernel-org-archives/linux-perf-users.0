@@ -2,105 +2,139 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34597C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Jan 2022 22:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E62C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Jan 2022 22:07:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347348AbiAXWHB (ORCPT
+        id S1353323AbiAXWHF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 24 Jan 2022 17:07:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55290 "EHLO
+        Mon, 24 Jan 2022 17:07:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1456554AbiAXVjb (ORCPT
+        with ESMTP id S1457507AbiAXVlp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 24 Jan 2022 16:39:31 -0500
-Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F411C0417C9;
-        Mon, 24 Jan 2022 12:24:50 -0800 (PST)
-Received: by mail-il1-x12a.google.com with SMTP id d3so14924662ilr.10;
-        Mon, 24 Jan 2022 12:24:50 -0800 (PST)
+        Mon, 24 Jan 2022 16:41:45 -0500
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE1B8C07E32E;
+        Mon, 24 Jan 2022 12:29:14 -0800 (PST)
+Received: by mail-ej1-x62b.google.com with SMTP id s5so24675107ejx.2;
+        Mon, 24 Jan 2022 12:29:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+0DfIzUd/ezfmUaeDHpKS419P3nuSSa30w/qAOCXOUo=;
-        b=FINA02oqdgI49V5pDTUNWp+f1wRBRXRjVYOQ4OGUxbr21BpM1VHGaanpGCZwetjP+K
-         PLd70jyw3UFem1YDA/KU1hve/lZ4TdAaSr4TDJQq65UuonAOIYxnCjyOb15VDuF1bQ/E
-         +Evo6GezZ/zmy4CpH0NNmFux4g2wVAKmOVkB+Y3sBdWVV4dQps93YsbLI9PCxLCELsLT
-         FcbO/A4voCYcpCNgWSydfAHLsRkrlLFwK3RMr54Fl1R2yOPU8t6Ps7HX/Qlnr4rADGEl
-         4m6bUszvCkeV6wWl4DsxOqRgUeg0JhqfAbOb2bQcTsRci3hap3oM7Zj/pDpL/8gZhQA/
-         ITvA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9I3YHstC6+idIYnPGdM7ftHMXhOmWb2w8X2hO2PCQA4=;
+        b=aebn4RQTSizEoCO5tYOY0wfuCNx5Gr5k+YJCuBu86z1ZV0Pk6uqjr2k8aT33tbFO/t
+         gPMROzf+a5Q3W0YKigShLsod3A5qMAeV7Cj9BnLNvuTsottjauQ5i4r/kmkQ2KNVpGEW
+         AE9w/LCS0VM2JcnSr9LkZVITT3YktXAHX8rJJefKLteOtnUyurApAMaEW/FG8bWJb7E0
+         MEfiPPuAvjEYaaq0xXeM40LoKiC/6QzDnq0Dg33XoL5XOg2pc7QuNtGsEo67DmmswKv/
+         G2ykziTn7+oG/I+KNA+AunoT8Sil2CxeR60ucfjaYRyxt9E+z94EqPEMOI2KqXDNFHNg
+         YX/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+0DfIzUd/ezfmUaeDHpKS419P3nuSSa30w/qAOCXOUo=;
-        b=i7CBM2C5T8MgPHEilcAurnKT/7j5jg5e12CTyQBeBJxzTpN4PqAf7NXbMDR2q/Bl+n
-         ZfJXfGYabfz8kO4B4jJnTZjR/wLR+mYysn9qiHYHDZLn6qujnEniKV1TcAcdPg0XsKME
-         ONg2ItFI5or7gqT72UtIEn38Vn0Ax8EnZELzxSENilLcfd2W1NDNK8z9WUUncS6E75Ep
-         5WYiYaz9+AimFMTiadRFPVlx8bUEVHbNh3aP1Mv2nrYfDFfExAoY4mxM9G9t9j6UsUqe
-         z0zJ5qWu5bTajmZ/iDcCeKgbGWY9N9LG703uLaJBJsKbrlblLM16zLIFLB3rRxNOjw5G
-         q39Q==
-X-Gm-Message-State: AOAM531OoMSe7ivf5DAtX8D6Zp/N4Q4SzbamTYmFU4VbPQZvdrSKj1Ah
-        b7h6RA+pv2d4HZa9ku7hUJlx4E9FZNyr0xJXTJRYNXhN
-X-Google-Smtp-Source: ABdhPJzKYkrknHARLlIq31qbbDDkJ2kCRKf3f1tlHB/njnslRMNqdRKMx94tzWj0V6cFsqH3e3wf8G3XdQhSJV23ACg=
-X-Received: by 2002:a05:6e02:1748:: with SMTP id y8mr9622914ill.305.1643055889771;
- Mon, 24 Jan 2022 12:24:49 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9I3YHstC6+idIYnPGdM7ftHMXhOmWb2w8X2hO2PCQA4=;
+        b=taG5oesfw6SB73YgNe261E9EytAJSb6Za9umbbOirIXOzCNVk2qWDS+hh2yXwda4FT
+         /RDFb8jLNij0InZx0VeT01xWJ9xb362elPPRPOxJZQ7Sf3cgBVM0QDWdNe3+1WK5DAMR
+         cPRo5qm0jfq2mnNj5p86k8WQRV2BPsSITD9zLsjhrJK5BI3Vugfj2tiZ9uGpSw2EpYn0
+         pZwQRXlrWCDog3qUbYLj91DhlPkzTTyRUswiZ08LC/tTHWGE3soI2Jkt115ohMIYohm5
+         FMq/To1AOAq5vlv++9EKMviJew0xdCZLk3HdrkPama731isHIzoVMb4KnGJWOzn8huKV
+         XRXg==
+X-Gm-Message-State: AOAM533poaXbpV024+R4R9K7s43Xm8Y2gJVNAMlLyDkaZNl0FyEgyTqO
+        rhlI6in0u3WE1FcJo6bwQXg=
+X-Google-Smtp-Source: ABdhPJwa5kh9iwPNoKVMC1LR954fiigN9v+L/woUMk894ZYA/f8Ie+QDxOQ99l+LpLpETRV/zOU20Q==
+X-Received: by 2002:a17:906:6a17:: with SMTP id qw23mr3177512ejc.620.1643056153260;
+        Mon, 24 Jan 2022 12:29:13 -0800 (PST)
+Received: from hamza-OptiPlex-7040 ([39.48.137.139])
+        by smtp.gmail.com with ESMTPSA id w25sm7066709edv.68.2022.01.24.12.29.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jan 2022 12:29:12 -0800 (PST)
+Date:   Tue, 25 Jan 2022 01:29:07 +0500
+From:   Ameer Hamza <amhamza.mgc@gmail.com>
+To:     James Clark <james.clark@arm.com>
+Cc:     German Gomez <german.gomez@arm.com>, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, rickyman7@gmail.com,
+        alexey.v.bayduraev@linux.intel.com, adrian.hunter@intel.com,
+        leo.yan@linaro.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org
+Subject: Re: [PATCH] perf session: check for null pointer before derefernce
+Message-ID: <20220124202907.GA5741@hamza-OptiPlex-7040>
+References: <20220124150001.93145-1-amhamza.mgc@gmail.com>
+ <7c068167-e8bb-74f3-97d9-dd0c5858ee19@arm.com>
 MIME-Version: 1.0
-References: <20220123221932.537060-1-jolsa@kernel.org>
-In-Reply-To: <20220123221932.537060-1-jolsa@kernel.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 24 Jan 2022 12:24:38 -0800
-Message-ID: <CAEf4BzZj7awfwi-JoAB=aahxVF8p6FKhgu4OKpyY_pjePy75ig@mail.gmail.com>
-Subject: Re: [PATCH 1/3] perf/bpf: Remove prologue generation
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Ian Rogers <irogers@google.com>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Christy Lee <christylee@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7c068167-e8bb-74f3-97d9-dd0c5858ee19@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Jan 23, 2022 at 2:19 PM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> Removing code for ebpf program prologue generation.
->
-> The prologue code was used to get data for extra arguments specified
-> in program section name, like:
->
->   SEC("lock_page=__lock_page page->flags")
->   int lock_page(struct pt_regs *ctx, int err, unsigned long flags)
->   {
->          return 1;
->   }
->
-> This code is using deprecated libbpf API and blocks its removal.
->
-> This feature was not documented and broken for some time without
-> anyone complaining, also original authors are not responding,
-> so I'm removing it.
->
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/perf/Makefile.config     |  11 -
->  tools/perf/builtin-record.c    |  14 -
->  tools/perf/util/bpf-loader.c   | 242 +---------------
->  tools/perf/util/bpf-prologue.c | 508 ---------------------------------
->  tools/perf/util/bpf-prologue.h |  37 ---
->  5 files changed, 1 insertion(+), 811 deletions(-)
+On Mon, Jan 24, 2022 at 03:30:17PM +0000, James Clark wrote:
+> 
+> 
+> On 24/01/2022 15:00, Ameer Hamza wrote:
+> > Move null pointer check before dereferncing the variable
+> > 
+> > Addresses-Coverity: 1497622 ("Derereference before null check")
+> > 
+> > Signed-off-by: Ameer Hamza <amhamza.mgc@gmail.com>
+> > ---
+> >  tools/perf/util/session.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> > index f19348dddd55..e1014ab62c10 100644
+> > --- a/tools/perf/util/session.c
+> > +++ b/tools/perf/util/session.c
+> > @@ -1503,11 +1503,11 @@ static int machines__deliver_event(struct machines *machines,
+> >  			++evlist->stats.nr_unknown_id;
+> >  			return 0;
+> >  		}
+> > -		dump_sample(evsel, event, sample, perf_env__arch(machine->env));
+> >  		if (machine == NULL) {
+> >  			++evlist->stats.nr_unprocessable_samples;
+> >  			return 0;
+> >  		}
+> > +		dump_sample(evsel, event, sample, perf_env__arch(machine->env));
+> >  		return evlist__deliver_sample(evlist, tool, event, sample, evsel, machine);
+> >  	case PERF_RECORD_MMAP:
+> >  		return tool->mmap(tool, event, sample, machine);
+> > 
+> 
+> Hi Ameer,
+> 
+> This mistake was made recently, but I don't think your change is the desired behavior.
+> 
+> It should be possible to dump stuff if machine is null. null or an empty string
+> should be passed to dump_sample(). It looks like some of the printfs still attempt to
+> show something in this case, although I didn't check them all.
 
-Love the stats! Thanks for taking this on!
+Hi James,
 
->  delete mode 100644 tools/perf/util/bpf-prologue.c
->  delete mode 100644 tools/perf/util/bpf-prologue.h
->
+Thank you for your response. I understand your point.
 
-[...]
+Do you think following changes would be ok?
+
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index f19348dddd55..210eeee3dd70 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1503,11 +1503,12 @@ static int machines__deliver_event(struct machines *machines,
+                        ++evlist->stats.nr_unknown_id;
+                        return 0;
+                }
+-               dump_sample(evsel, event, sample, perf_env__arch(machine->env));
+                if (machine == NULL) {
+                        ++evlist->stats.nr_unprocessable_samples;
++                       dump_sample(evsel, event, sample, perf_env__arch(NULL));
+                        return 0;
+                }
++               dump_sample(evsel, event, sample, perf_env__arch(machine->env));
+                return evlist__deliver_sample(evlist, tool, event, sample, evsel, machine);
+        case PERF_RECORD_MMAP:
+                return tool->mmap(tool, event, sample, machine);
+
+Thanks,
+Hamza
