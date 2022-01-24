@@ -2,268 +2,93 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 651D7C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun, 23 Jan 2022 22:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC20C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Jan 2022 04:31:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240333AbiAWWTw (ORCPT
+        id S241402AbiAXEb3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 23 Jan 2022 17:19:52 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:35849 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234697AbiAWWTw (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 23 Jan 2022 17:19:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1642976391;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rpD4RE3uS/46Az++QExWH/f6Mdi5HuK6/iaxYRMQJHA=;
-        b=WW+UTISxtucLvX685IFShu8FNYPpWcQkWR1OqpvapZKzKrj8VaLEUeTSbTfhiKSOQndKyD
-        8lpxxOAkZHBP49w9Gvu2BsAka18LXDPdK4KYDVjEwFMCM0keS5x74IXPhCtLTgohevZxGE
-        I8WOCcF0RroUrAGxyUO0CGQCoU0wIOk=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-173-oOjwEgSwOnq-YWDi3l8gkg-1; Sun, 23 Jan 2022 17:19:50 -0500
-X-MC-Unique: oOjwEgSwOnq-YWDi3l8gkg-1
-Received: by mail-ed1-f72.google.com with SMTP id i22-20020a50fd16000000b00405039f2c59so7818925eds.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 23 Jan 2022 14:19:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rpD4RE3uS/46Az++QExWH/f6Mdi5HuK6/iaxYRMQJHA=;
-        b=U8DrRyBwJArtQsVy7z77Pcdw04l8J3YHCZB33YQhXz9HkuWkxiMRC8SRHnwq3P8TL2
-         jmcaXXdxklKzjTSha+ECp+hfaS2v0PqGVdYiOSvyW5AIaiJUUFBSnnBwDFaPbvCe7Xh7
-         mO7gBsNYm0WlxBdi/hMfpybMhO3j2niHFoWukZiI20llxlkF3zIY3d8F6j4w9bQGmh7x
-         Bp+U8zpWrPkrpw5rI1O6zKGkU0wQULYWydOTLO1SubnggRQ3/wppcMpNWMnsh0q7PG1F
-         EYGgRnMooaJyX6JW4kXzm5eWdkDyYBlz86GgCH3Wx39WZem3KaMOQ177i7qwAK4gTxSG
-         QiXQ==
-X-Gm-Message-State: AOAM530/U3As2hPeGSFUjCjuZKpg/Vg/gDmjL/2AnyiK07mZoJE+IQoX
-        76aEhN2WULFF+BH5FgdbpE0FeiyZXOOHEDzpBCt9kpjJc8BLDCzkVUsWNrx/bzX2LYEYiFfiOew
-        gyCDHemR6C/XPfslhq+Cyeec2r97yFQ==
-X-Received: by 2002:aa7:dc15:: with SMTP id b21mr12996507edu.237.1642976389399;
-        Sun, 23 Jan 2022 14:19:49 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwI802xOVZpySC1BV+0Pbb0Zp6jskKyQ40L/Z8mYLOOALNihv/wPD6GaoryEw9cZjEl0N/0ng==
-X-Received: by 2002:aa7:dc15:: with SMTP id b21mr12996493edu.237.1642976389205;
-        Sun, 23 Jan 2022 14:19:49 -0800 (PST)
-Received: from krava.redhat.com ([83.240.63.12])
-        by smtp.gmail.com with ESMTPSA id f19sm867305edu.22.2022.01.23.14.19.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Jan 2022 14:19:48 -0800 (PST)
-From:   Jiri Olsa <jolsa@redhat.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@kernel.org>,
+        Sun, 23 Jan 2022 23:31:29 -0500
+Received: from foss.arm.com ([217.140.110.172]:47110 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S241400AbiAXEb3 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Sun, 23 Jan 2022 23:31:29 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5B720ED1;
+        Sun, 23 Jan 2022 20:31:28 -0800 (PST)
+Received: from p8cg001049571a15.arm.com (unknown [10.119.34.209])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 15E983F73B;
+        Sun, 23 Jan 2022 20:31:19 -0800 (PST)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, Christy Lee <christylee@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org
-Subject: [PATCH 3/3] perf tests: Remove bpf prologue generation test
-Date:   Sun, 23 Jan 2022 23:19:32 +0100
-Message-Id: <20220123221932.537060-3-jolsa@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220123221932.537060-1-jolsa@kernel.org>
-References: <20220123221932.537060-1-jolsa@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: [RFC V1 00/11] arm64/perf: Enable branch stack sampling
+Date:   Mon, 24 Jan 2022 10:00:42 +0530
+Message-Id: <1642998653-21377-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Removing bpf prologue generation test, because its
-support was removed in previous patches.
+This series enables perf branch stack sampling support on arm64 platform
+via a new arch feature called Branch Record Buffer Extension (BRBE). All
+relevant register definitions could be accessed here.
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/perf/tests/Build  |  9 +-------
- tools/perf/tests/bpf.c  | 51 -----------------------------------------
- tools/perf/tests/llvm.c | 19 ---------------
- tools/perf/tests/llvm.h |  2 --
- 4 files changed, 1 insertion(+), 80 deletions(-)
+https://developer.arm.com/documentation/ddi0601/2021-12/AArch64-Registers
 
-diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-index af2b37ef7c70..10a5287dbc94 100644
---- a/tools/perf/tests/Build
-+++ b/tools/perf/tests/Build
-@@ -36,7 +36,7 @@ perf-y += sample-parsing.o
- perf-y += parse-no-sample-id-all.o
- perf-y += kmod-path.o
- perf-y += thread-map.o
--perf-y += llvm.o llvm-src-base.o llvm-src-kbuild.o llvm-src-prologue.o llvm-src-relocation.o
-+perf-y += llvm.o llvm-src-base.o llvm-src-kbuild.o llvm-src-relocation.o
- perf-y += bpf.o
- perf-y += topology.o
- perf-y += mem.o
-@@ -81,13 +81,6 @@ $(OUTPUT)tests/llvm-src-kbuild.c: tests/bpf-script-test-kbuild.c tests/Build
- 	$(Q)sed -e 's/"/\\"/g' -e 's/\(.*\)/"\1\\n"/g' $< >> $@
- 	$(Q)echo ';' >> $@
- 
--$(OUTPUT)tests/llvm-src-prologue.c: tests/bpf-script-test-prologue.c tests/Build
--	$(call rule_mkdir)
--	$(Q)echo '#include <tests/llvm.h>' > $@
--	$(Q)echo 'const char test_llvm__bpf_test_prologue_prog[] =' >> $@
--	$(Q)sed -e 's/"/\\"/g' -e 's/\(.*\)/"\1\\n"/g' $< >> $@
--	$(Q)echo ';' >> $@
--
- $(OUTPUT)tests/llvm-src-relocation.c: tests/bpf-script-test-relocation.c tests/Build
- 	$(call rule_mkdir)
- 	$(Q)echo '#include <tests/llvm.h>' > $@
-diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
-index 573490530194..c7ade2debbbf 100644
---- a/tools/perf/tests/bpf.c
-+++ b/tools/perf/tests/bpf.c
-@@ -37,29 +37,6 @@ static int epoll_pwait_loop(void)
- 	return 0;
- }
- 
--#ifdef HAVE_BPF_PROLOGUE
--
--static int llseek_loop(void)
--{
--	int fds[2], i;
--
--	fds[0] = open("/dev/null", O_RDONLY);
--	fds[1] = open("/dev/null", O_RDWR);
--
--	if (fds[0] < 0 || fds[1] < 0)
--		return -1;
--
--	for (i = 0; i < NR_ITERS; i++) {
--		lseek(fds[i % 2], i, (i / 2) % 2 ? SEEK_CUR : SEEK_SET);
--		lseek(fds[(i + 1) % 2], i, (i / 2) % 2 ? SEEK_CUR : SEEK_SET);
--	}
--	close(fds[0]);
--	close(fds[1]);
--	return 0;
--}
--
--#endif
--
- static struct {
- 	enum test_llvm__testcase prog_id;
- 	const char *name;
-@@ -86,16 +63,6 @@ static struct {
- 		.expect_result	  = (NR_ITERS + 1) / 2,
- 		.pin		  = true,
- 	},
--#ifdef HAVE_BPF_PROLOGUE
--	{
--		.prog_id	  = LLVM_TESTCASE_BPF_PROLOGUE,
--		.name		  = "[bpf_prologue_test]",
--		.msg_compile_fail = "fix kbuild first",
--		.msg_load_fail	  = "check your vmlinux setting?",
--		.target_func	  = &llseek_loop,
--		.expect_result	  = (NR_ITERS + 1) / 4,
--	},
--#endif
- };
- 
- static int do_test(struct bpf_object *obj, int (*func)(void),
-@@ -355,31 +322,13 @@ static int test__bpf_pinning(struct test_suite *test __maybe_unused,
- #endif
- }
- 
--static int test__bpf_prologue_test(struct test_suite *test __maybe_unused,
--				   int subtest __maybe_unused)
--{
--#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_BPF_PROLOGUE)
--	return test__bpf(2);
--#else
--	pr_debug("Skip BPF test because BPF support is not compiled\n");
--	return TEST_SKIP;
--#endif
--}
--
--
- static struct test_case bpf_tests[] = {
- #ifdef HAVE_LIBBPF_SUPPORT
- 	TEST_CASE("Basic BPF filtering", basic_bpf_test),
- 	TEST_CASE("BPF pinning", bpf_pinning),
--#ifdef HAVE_BPF_PROLOGUE
--	TEST_CASE("BPF prologue generation", bpf_prologue_test),
--#else
--	TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test, "not compiled in"),
--#endif
- #else
- 	TEST_CASE_REASON("Basic BPF filtering", basic_bpf_test, "not compiled in"),
- 	TEST_CASE_REASON("BPF pinning", bpf_pinning, "not compiled in"),
--	TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test, "not compiled in"),
- #endif
- 	{ .name = NULL, }
- };
-diff --git a/tools/perf/tests/llvm.c b/tools/perf/tests/llvm.c
-index 8ac0a3a457ef..b57f24185dda 100644
---- a/tools/perf/tests/llvm.c
-+++ b/tools/perf/tests/llvm.c
-@@ -33,10 +33,6 @@ static struct {
- 		.source = test_llvm__bpf_test_kbuild_prog,
- 		.desc = "kbuild searching",
- 	},
--	[LLVM_TESTCASE_BPF_PROLOGUE] = {
--		.source = test_llvm__bpf_test_prologue_prog,
--		.desc = "Compile source for BPF prologue generation",
--	},
- 	[LLVM_TESTCASE_BPF_RELOCATION] = {
- 		.source = test_llvm__bpf_test_relocation,
- 		.desc = "Compile source for BPF relocation",
-@@ -172,17 +168,6 @@ static int test__llvm__bpf_test_kbuild_prog(struct test_suite *test __maybe_unus
- #endif
- }
- 
--static int test__llvm__bpf_test_prologue_prog(struct test_suite *test __maybe_unused,
--					      int subtest __maybe_unused)
--{
--#ifdef HAVE_LIBBPF_SUPPORT
--	return test__llvm(LLVM_TESTCASE_BPF_PROLOGUE);
--#else
--	pr_debug("Skip LLVM test because BPF support is not compiled\n");
--	return TEST_SKIP;
--#endif
--}
--
- static int test__llvm__bpf_test_relocation(struct test_suite *test __maybe_unused,
- 					   int subtest __maybe_unused)
- {
-@@ -199,14 +184,10 @@ static struct test_case llvm_tests[] = {
- #ifdef HAVE_LIBBPF_SUPPORT
- 	TEST_CASE("Basic BPF llvm compile", llvm__bpf_base_prog),
- 	TEST_CASE("kbuild searching", llvm__bpf_test_kbuild_prog),
--	TEST_CASE("Compile source for BPF prologue generation",
--		  llvm__bpf_test_prologue_prog),
- 	TEST_CASE("Compile source for BPF relocation", llvm__bpf_test_relocation),
- #else
- 	TEST_CASE_REASON("Basic BPF llvm compile", llvm__bpf_base_prog, "not compiled in"),
- 	TEST_CASE_REASON("kbuild searching", llvm__bpf_test_kbuild_prog, "not compiled in"),
--	TEST_CASE_REASON("Compile source for BPF prologue generation",
--			llvm__bpf_test_prologue_prog, "not compiled in"),
- 	TEST_CASE_REASON("Compile source for BPF relocation",
- 			llvm__bpf_test_relocation, "not compiled in"),
- #endif
-diff --git a/tools/perf/tests/llvm.h b/tools/perf/tests/llvm.h
-index f68b0d9b8ae2..8e1c4352b1cc 100644
---- a/tools/perf/tests/llvm.h
-+++ b/tools/perf/tests/llvm.h
-@@ -11,13 +11,11 @@ extern "C" {
- 
- extern const char test_llvm__bpf_base_prog[];
- extern const char test_llvm__bpf_test_kbuild_prog[];
--extern const char test_llvm__bpf_test_prologue_prog[];
- extern const char test_llvm__bpf_test_relocation[];
- 
- enum test_llvm__testcase {
- 	LLVM_TESTCASE_BASE,
- 	LLVM_TESTCASE_KBUILD,
--	LLVM_TESTCASE_BPF_PROLOGUE,
- 	LLVM_TESTCASE_BPF_RELOCATION,
- 	__LLVM_TESTCASE_MAX,
- };
+The last two patches extend the perf ABI to accommodate additional branch
+information that can be captured in BRBE. This series applies on v5.17-rc1.
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Anshuman Khandual (11):
+  perf: Consolidate branch sample filter helpers
+  arm64/perf: Add register definitions for BRBE
+  arm64/perf: Update struct arm_pmu for BRBE
+  arm64/perf: Update struct pmu_hw_events for BRBE
+  arm64/perf: Detect support for BRBE
+  arm64/perf: Drive BRBE from perf event states
+  arm64/perf: Add BRBE driver
+  arm64/perf: Enable branch stack sampling
+  perf: Add more generic branch types
+  perf: Expand perf_branch_entry.type
+  perf: Capture branch privilege information
+
+ arch/arm64/include/asm/sysreg.h          | 216 ++++++++++++
+ arch/arm64/kernel/perf_event.c           |  48 +++
+ arch/x86/events/intel/lbr.c              |   4 +-
+ drivers/perf/Kconfig                     |  11 +
+ drivers/perf/Makefile                    |   1 +
+ drivers/perf/arm_pmu.c                   |  65 +++-
+ drivers/perf/arm_pmu_brbe.c              | 432 +++++++++++++++++++++++
+ drivers/perf/arm_pmu_brbe.h              | 259 ++++++++++++++
+ drivers/perf/arm_pmu_platform.c          |  34 ++
+ include/linux/perf/arm_pmu.h             |  49 +++
+ include/linux/perf_event.h               |  24 ++
+ include/uapi/linux/perf_event.h          |  26 +-
+ kernel/events/core.c                     |   9 +-
+ tools/include/uapi/linux/perf_event.h    |  26 +-
+ tools/perf/Documentation/perf-record.txt |   1 +
+ tools/perf/util/branch.c                 |  13 +-
+ tools/perf/util/parse-branch-options.c   |   1 +
+ 17 files changed, 1202 insertions(+), 17 deletions(-)
+ create mode 100644 drivers/perf/arm_pmu_brbe.c
+ create mode 100644 drivers/perf/arm_pmu_brbe.h
+
 -- 
-2.34.1
+2.25.1
 
