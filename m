@@ -2,243 +2,110 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 302EEC433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Jan 2022 04:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66930C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Jan 2022 09:19:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235275AbiAXEdF (ORCPT
+        id S231271AbiAXJTo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 23 Jan 2022 23:33:05 -0500
-Received: from foss.arm.com ([217.140.110.172]:47326 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230230AbiAXEdF (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 23 Jan 2022 23:33:05 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6859711B3;
-        Sun, 23 Jan 2022 20:33:04 -0800 (PST)
-Received: from p8cg001049571a15.arm.com (unknown [10.119.34.209])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 168A93F73B;
-        Sun, 23 Jan 2022 20:32:55 -0800 (PST)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: [RFC V1 11/11] perf: Capture branch privilege information
-Date:   Mon, 24 Jan 2022 10:00:53 +0530
-Message-Id: <1642998653-21377-12-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1642998653-21377-1-git-send-email-anshuman.khandual@arm.com>
-References: <1642998653-21377-1-git-send-email-anshuman.khandual@arm.com>
+        Mon, 24 Jan 2022 04:19:44 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4444 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232155AbiAXJTc (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 24 Jan 2022 04:19:32 -0500
+Received: from fraeml743-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Jj4854kSmz686qc;
+        Mon, 24 Jan 2022 17:15:17 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml743-chm.china.huawei.com (10.206.15.224) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Mon, 24 Jan 2022 10:19:30 +0100
+Received: from [10.47.89.21] (10.47.89.21) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.21; Mon, 24 Jan
+ 2022 09:19:29 +0000
+Subject: Test 73 Sig_trap fails on arm64 (was Re: [PATCH] perf test: Test 73
+ Sig_trap fails on s390)
+To:     Leo Yan <leo.yan@linaro.org>, Marco Elver <elver@google.com>,
+        Will Deacon <will@kernel.org>
+CC:     Thomas Richter <tmricht@linux.ibm.com>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <acme@kernel.org>, <svens@linux.ibm.com>, <gor@linux.ibm.com>,
+        <sumanthk@linux.ibm.com>, <hca@linux.ibm.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20211216151454.752066-1-tmricht@linux.ibm.com>
+ <CANpmjNNMWtjcKa961SjEvRbbPXyw5M5SkrXbb3tnyL3_XyniCw@mail.gmail.com>
+ <90efb5a9-612a-919e-cf2f-c528692d61e2@huawei.com>
+ <20220118091827.GA98966@leoy-ThinkPad-X240s>
+ <CANpmjNMPoU+1b1fKFuYDYwisW2YfjQHxGt5hgLp1tioG7C2jmg@mail.gmail.com>
+ <20220118124343.GC98966@leoy-ThinkPad-X240s>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <bfa0af18-04ac-857d-d3d8-ad9290f912c8@huawei.com>
+Date:   Mon, 24 Jan 2022 09:19:00 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
+MIME-Version: 1.0
+In-Reply-To: <20220118124343.GC98966@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.89.21]
+X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Platforms like arm64 could capture privilege level information for all the
-branch records. Hence this adds a new element in the struct branch_entry to
-record the privilege level information, which could be requested through a
-new event.attr.branch_sample_type flag PERF_SAMPLE_BRANCH_PRIV_SAVE. While
-here, update the BRBE driver as required.
+On 18/01/2022 12:43, Leo Yan wrote:
 
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- drivers/perf/arm_pmu_brbe.c              | 28 ++++++++++++++++++++++++
- include/linux/perf_event.h               |  5 +++++
- include/uapi/linux/perf_event.h          | 13 ++++++++++-
- tools/include/uapi/linux/perf_event.h    | 13 ++++++++++-
- tools/perf/Documentation/perf-record.txt |  1 +
- tools/perf/util/parse-branch-options.c   |  1 +
- 6 files changed, 59 insertions(+), 2 deletions(-)
+Hi Will,
 
-diff --git a/drivers/perf/arm_pmu_brbe.c b/drivers/perf/arm_pmu_brbe.c
-index 7cd1208c6c58..d4cbea74c148 100644
---- a/drivers/perf/arm_pmu_brbe.c
-+++ b/drivers/perf/arm_pmu_brbe.c
-@@ -270,6 +270,25 @@ static int brbe_fetch_perf_type(u64 brbinf)
- 	}
- }
- 
-+static int brbe_fetch_perf_priv(u64 brbinf)
-+{
-+	int brbe_el = brbe_fetch_el(brbinf);
-+
-+	switch (brbe_el) {
-+	case BRBINF_EL_EL0:
-+		return PERF_BR_USER;
-+	case BRBINF_EL_EL1:
-+		return PERF_BR_KERNEL;
-+	case BRBINF_EL_EL2:
-+		if (is_kernel_in_hyp_mode())
-+			return PERF_BR_KERNEL;
-+		return PERF_BR_HV;
-+	default:
-+		pr_warn("unknown branch privilege captured\n");
-+		return -1;
-+	}
-+}
-+
- static void capture_brbe_flags(struct pmu_hw_events *cpuc, struct perf_event *event,
- 			       u64 brbinf, int idx)
- {
-@@ -302,6 +321,15 @@ static void capture_brbe_flags(struct pmu_hw_events *cpuc, struct perf_event *ev
- 			cpuc->brbe_entries[idx].in_tx = brbinf & BRBINF_TX;
- 		}
- 	}
-+
-+	if (branch_sample_priv(event)) {
-+		/*
-+		 * All these information (i.e branch privilege level) are not
-+		 * available for source only branch records.
-+		 */
-+		if (type != BRBINF_VALID_SOURCE)
-+			cpuc->brbe_entries[idx].priv = brbe_fetch_perf_priv(brbinf);
-+	}
- }
- 
- /*
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 916ce5102b33..8021b6a30d86 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1688,4 +1688,9 @@ static inline bool branch_sample_hw_index(const struct perf_event *event)
- {
- 	return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_HW_INDEX;
- }
-+
-+static inline bool branch_sample_priv(const struct perf_event *event)
-+{
-+	return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_PRIV_SAVE;
-+}
- #endif /* _LINUX_PERF_EVENT_H */
-diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-index 361fdc6b87a0..4d77710f7a4e 100644
---- a/include/uapi/linux/perf_event.h
-+++ b/include/uapi/linux/perf_event.h
-@@ -204,6 +204,8 @@ enum perf_branch_sample_type_shift {
- 
- 	PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT	= 17, /* save low level index of raw branch records */
- 
-+	PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT	= 18, /* save privillege mode */
-+
- 	PERF_SAMPLE_BRANCH_MAX_SHIFT		/* non-ABI */
- };
- 
-@@ -233,6 +235,8 @@ enum perf_branch_sample_type {
- 
- 	PERF_SAMPLE_BRANCH_HW_INDEX	= 1U << PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT,
- 
-+	PERF_SAMPLE_BRANCH_PRIV_SAVE	= 1U << PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT,
-+
- 	PERF_SAMPLE_BRANCH_MAX		= 1U << PERF_SAMPLE_BRANCH_MAX_SHIFT,
- };
- 
-@@ -265,6 +269,12 @@ enum {
- 	PERF_BR_MAX,
- };
- 
-+enum {
-+	PERF_BR_USER	= 0,
-+	PERF_BR_KERNEL	= 1,
-+	PERF_BR_HV	= 2,
-+};
-+
- #define PERF_SAMPLE_BRANCH_PLM_ALL \
- 	(PERF_SAMPLE_BRANCH_USER|\
- 	 PERF_SAMPLE_BRANCH_KERNEL|\
-@@ -1377,7 +1387,8 @@ struct perf_branch_entry {
- 		abort:1,    /* transaction abort */
- 		cycles:16,  /* cycle count to last branch */
- 		type:6,     /* branch type */
--		reserved:38;
-+		priv:2,     /* privilege level */
-+		reserved:36;
- };
- 
- union perf_sample_weight {
-diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index 9a82b8aaed93..a2208400b0b9 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -204,6 +204,8 @@ enum perf_branch_sample_type_shift {
- 
- 	PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT	= 17, /* save low level index of raw branch records */
- 
-+	PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT	= 18, /* save privillege mode */
-+
- 	PERF_SAMPLE_BRANCH_MAX_SHIFT		/* non-ABI */
- };
- 
-@@ -233,6 +235,8 @@ enum perf_branch_sample_type {
- 
- 	PERF_SAMPLE_BRANCH_HW_INDEX	= 1U << PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT,
- 
-+	PERF_SAMPLE_BRANCH_PRIV_SAVE	= 1U << PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT,
-+
- 	PERF_SAMPLE_BRANCH_MAX		= 1U << PERF_SAMPLE_BRANCH_MAX_SHIFT,
- };
- 
-@@ -265,6 +269,12 @@ enum {
- 	PERF_BR_MAX,
- };
- 
-+enum {
-+	PERF_BR_USER    = 0,
-+	PERF_BR_KERNEL  = 1,
-+	PERF_BR_HV      = 2,
-+};
-+
- #define PERF_SAMPLE_BRANCH_PLM_ALL \
- 	(PERF_SAMPLE_BRANCH_USER|\
- 	 PERF_SAMPLE_BRANCH_KERNEL|\
-@@ -1377,7 +1387,8 @@ struct perf_branch_entry {
- 		abort:1,    /* transaction abort */
- 		cycles:16,  /* cycle count to last branch */
- 		type:6,     /* branch type */
--		reserved:38;
-+		priv:2,     /* privilege level */
-+		reserved:36;
- };
- 
- union perf_sample_weight {
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 9ccc75935bc5..3e33686977a1 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -387,6 +387,7 @@ following filters are defined:
- 	- abort_tx: only when the target is a hardware transaction abort
- 	- cond: conditional branches
- 	- save_type: save branch type during sampling in case binary is not available later
-+	- priv: save privilege state during sampling in case binary is not available later
- 
- +
- The option requires at least one branch type among any, any_call, any_ret, ind_call, cond.
-diff --git a/tools/perf/util/parse-branch-options.c b/tools/perf/util/parse-branch-options.c
-index bb4aa88c50a8..00588b9db474 100644
---- a/tools/perf/util/parse-branch-options.c
-+++ b/tools/perf/util/parse-branch-options.c
-@@ -32,6 +32,7 @@ static const struct branch_mode branch_modes[] = {
- 	BRANCH_OPT("call", PERF_SAMPLE_BRANCH_CALL),
- 	BRANCH_OPT("save_type", PERF_SAMPLE_BRANCH_TYPE_SAVE),
- 	BRANCH_OPT("stack", PERF_SAMPLE_BRANCH_CALL_STACK),
-+	BRANCH_OPT("priv", PERF_SAMPLE_BRANCH_PRIV_SAVE),
- 	BRANCH_END
- };
- 
--- 
-2.25.1
+Can you kindly check below the question from Leo on this issue?
+
+You were cc'ed earlier in this thread so should be able to find more 
+context, if needed.
+
+Cheers,
+John
+
+> On Tue, Jan 18, 2022 at 12:40:04PM +0100, Marco Elver wrote:
+> 
+> [...]
+> 
+>>> Both Arm and Arm64 platforms cannot support signal handler with
+>>> breakpoint, please see the details in [1].  So I think we need
+>>> something like below:
+>>>
+>>> static int test__sigtrap(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
+>>> {
+>>>          ...
+>>>
+>>>          if (!BP_SIGNAL_IS_SUPPORTED) {
+>>>                  pr_debug("Test not supported on this architecture");
+>>>                  return TEST_SKIP;
+>>>          }
+>>>
+>>>          ...
+>>> }
+>>>
+>>> Since we have defined BP_SIGNAL_IS_SUPPORTED, I think we can reuse it at
+>>> here.
+>>>
+>>> [1]https://lore.kernel.org/lkml/157169993406.29376.12473771029179755767.tip-bot2@tip-bot2/
+>> Does this limitation also exist for address watchpoints? The sigtrap
+>> test does not make use of instruction breakpoints, but instead just
+>> sets up a watchpoint on access to a data address.
+> Yes, after reading the code, the flow for either instrution breakpoint
+> or watchpoint both use the single step [1], thus the signal handler will
+> take the single step execution and lead to the infinite loop.
+> 
+> I am not the best person to answer this question; @Will, could you
+> confirm for this?  Thanks!
+> 
+> Leo
+> 
+> [1]https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/kernel/hw_breakpoint.c
 
