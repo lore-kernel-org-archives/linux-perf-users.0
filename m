@@ -2,148 +2,97 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A2FC433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Jan 2022 14:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37962C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Jan 2022 15:00:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232089AbiAXO6X (ORCPT
+        id S238641AbiAXPAW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 24 Jan 2022 09:58:23 -0500
-Received: from foss.arm.com ([217.140.110.172]:36858 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231260AbiAXO6X (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 24 Jan 2022 09:58:23 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CAFC86D;
-        Mon, 24 Jan 2022 06:58:21 -0800 (PST)
-Received: from [10.57.39.131] (unknown [10.57.39.131])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2DDD73F7D8;
-        Mon, 24 Jan 2022 06:58:20 -0800 (PST)
-Subject: Re: [RFC PATCH 1/1] perf/core: Wake up parent event if inherited
- event has no ring buffer
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
-        leo.yan@linaro.com, Suzuki.Poulose@arm.com,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        linux-kernel@vger.kernel.org
-References: <20211206113840.130802-1-james.clark@arm.com>
- <20211206113840.130802-2-james.clark@arm.com>
- <Ye6SR0yxTrkNUQF6@hirez.programming.kicks-ass.net>
-From:   James Clark <james.clark@arm.com>
-Message-ID: <a4b64cff-f3f1-e6ad-38e9-b65a113ce561@arm.com>
-Date:   Mon, 24 Jan 2022 14:58:18 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Mon, 24 Jan 2022 10:00:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44182 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234477AbiAXPAW (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 24 Jan 2022 10:00:22 -0500
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84EA9C06173B;
+        Mon, 24 Jan 2022 07:00:21 -0800 (PST)
+Received: by mail-ed1-x52d.google.com with SMTP id p12so57104383edq.9;
+        Mon, 24 Jan 2022 07:00:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eYnF8znj0gEjEIArTu9FBL6O8f6KN3bAysMIge/IReo=;
+        b=JpgtuiUNaG0hXQx0hQsDK6Jd6kmlgrUA0jhjwb1LbSQsEvfgn/M4a4HJ9SXTUFdbnc
+         TPrJ4y7tKxvx+PRRHRAC7GqhXo8jRLSbPLOXCwWkTJOhjbY9MY1E4Z+sfVgow71tPmgH
+         UDaGncOD8Z/HWeWhDCNNi+T/sPxE7v3hSk7BPhIQEnsnIP8Ph6z4l4ifmkWwnPA4vE7Z
+         aMhnBFE6rYOFbBXGrtDFlgoshh3ABGTUGQ2vZwdht/zqhIWTCUEskhNgYFxHdLQKwpnA
+         OqRPx4O6ug7xUwRb/7E+F73QxIa2tj1bWPa087W8B6Nc1aaxbhnhfWhOGf3cCYHVt6EN
+         O3ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eYnF8znj0gEjEIArTu9FBL6O8f6KN3bAysMIge/IReo=;
+        b=uKcPLuRYVJzjtOD/QxRS0HRt+UFx4uy8DVhRlbvNsyNCG2UpndsCTNtia1AwErf1Er
+         BOx/49p+UzwU0MR3GzV0+nQuZC9wEu4vDCcWugtvQz1F3Q3CQ3TwGLuuqeSDdIkAwgck
+         AQXDXPRZ4S+HSmRKyCIGLfQ6u+zngAqg4E8JSgdfL2QU8GCmSeJvWSucxKItmuYrQW7g
+         xwW2QsbGByvqabBnxV5kdnml/otL5P/IxW397UhHf7msgCyyYg/+eK3JTlSE0PHNPaPW
+         Uk/sIIOg0a8FOR5/dMcqck2dM20bQ+JbRXCsIryRmUWg2GHRQA99qQSK/dpqxBuTv1sR
+         6cJg==
+X-Gm-Message-State: AOAM532P22RsylG24MuJ4d9LXNDQ+Md5FqgDc+wp/EL/WSw16cSM2sRz
+        3/QcviNhDsypXB8ITYfzH5Q43xiFo+Bj+53b
+X-Google-Smtp-Source: ABdhPJydRvRWrFg0PLwwsxxd3YipOYY15nwCfbvxzG+N5HCI3gqT0eB47/xEtRJ/wkRCIxXgPOTrwg==
+X-Received: by 2002:aa7:c6d8:: with SMTP id b24mr16436377eds.72.1643036420009;
+        Mon, 24 Jan 2022 07:00:20 -0800 (PST)
+Received: from localhost.localdomain ([39.48.153.72])
+        by smtp.gmail.com with ESMTPSA id f26sm6626637eds.69.2022.01.24.07.00.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jan 2022 07:00:19 -0800 (PST)
+From:   Ameer Hamza <amhamza.mgc@gmail.com>
+To:     mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        rickyman7@gmail.com, alexey.v.bayduraev@linux.intel.com,
+        adrian.hunter@intel.com, leo.yan@linaro.org, german.gomez@arm.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        amhamza.mgc@gmail.com
+Subject: [PATCH] perf session: check for null pointer before derefernce
+Date:   Mon, 24 Jan 2022 20:00:01 +0500
+Message-Id: <20220124150001.93145-1-amhamza.mgc@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <Ye6SR0yxTrkNUQF6@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Move null pointer check before dereferncing the variable
 
+Addresses-Coverity: 1497622 ("Derereference before null check")
 
-On 24/01/2022 11:49, Peter Zijlstra wrote:
-> On Mon, Dec 06, 2021 at 11:38:40AM +0000, James Clark wrote:
->> When using per-process mode and event inheritance is set to true, forked
->> processes will create a new perf events via inherit_event() ->
->> perf_event_alloc(). But these events will not have ring buffers assigned
->> to them. Any call to wakeup will be dropped if it's called on an event
->> with no ring buffer assigned because that's the object that holds the
->> wakeup list.
->>
->> If the child event is disabled due to a call to perf_aux_output_begin()
->> or perf_aux_output_end(), the wakeup is dropped leaving userspace
->> hanging forever on the poll.
->>
->> Normally the event is explicitly re-enabled by userspace after it wakes
->> up to read the aux data, but in this case it does not get woken up so
->> the event remains disabled.
->>
->> This can be reproduced when using Arm SPE and 'stress' which forks once
->> before running the workload. By looking at the list of aux buffers read,
->> it's apparent that they stop after the fork:
->>
->>   perf record -e arm_spe// -vvv -- stress -c 1
->>
->> With this patch applied they continue to be printed. This behaviour
->> doesn't happen when using systemwide or per-cpu mode.
->>
->> Reported-by: Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>
->> Signed-off-by: James Clark <james.clark@arm.com>
->> ---
-> 
-> Would this be the better patch?
+Signed-off-by: Ameer Hamza <amhamza.mgc@gmail.com>
+---
+ tools/perf/util/session.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yes I tested this and it also works. There is one other suspicious access
-of ->rb followed by if(rb) here in perf_poll(), but maybe it works out ok?
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index f19348dddd55..e1014ab62c10 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1503,11 +1503,11 @@ static int machines__deliver_event(struct machines *machines,
+ 			++evlist->stats.nr_unknown_id;
+ 			return 0;
+ 		}
+-		dump_sample(evsel, event, sample, perf_env__arch(machine->env));
+ 		if (machine == NULL) {
+ 			++evlist->stats.nr_unprocessable_samples;
+ 			return 0;
+ 		}
++		dump_sample(evsel, event, sample, perf_env__arch(machine->env));
+ 		return evlist__deliver_sample(evlist, tool, event, sample, evsel, machine);
+ 	case PERF_RECORD_MMAP:
+ 		return tool->mmap(tool, event, sample, machine);
+-- 
+2.25.1
 
-	mutex_lock(&event->mmap_mutex);
-	rb = event->rb;
-	if (rb)
-		events = atomic_xchg(&rb->poll, 0);
-
-We also have a Perf self test that covers this failure for Arm SPE now, I'm not
-sure if I should post that separately or with your new version of this fix?
-
-Thanks
-James
- 
-> 
-> 
-> ---
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 479c9e672ec4..b1c1928c0e7c 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -5985,6 +5985,8 @@ static void ring_buffer_attach(struct perf_event *event,
->  	struct perf_buffer *old_rb = NULL;
->  	unsigned long flags;
->  
-> +	WARN_ON_ONCE(event->parent);
-> +
->  	if (event->rb) {
->  		/*
->  		 * Should be impossible, we set this when removing
-> @@ -6042,6 +6044,9 @@ static void ring_buffer_wakeup(struct perf_event *event)
->  {
->  	struct perf_buffer *rb;
->  
-> +	if (event->parent)
-> +		event = event->parent;
-> +
->  	rcu_read_lock();
->  	rb = rcu_dereference(event->rb);
->  	if (rb) {
-> @@ -6055,6 +6060,9 @@ struct perf_buffer *ring_buffer_get(struct perf_event *event)
->  {
->  	struct perf_buffer *rb;
->  
-> +	if (event->parent)
-> +		event = event->parent;
-> +
->  	rcu_read_lock();
->  	rb = rcu_dereference(event->rb);
->  	if (rb) {
-> @@ -6763,7 +6771,7 @@ static unsigned long perf_prepare_sample_aux(struct perf_event *event,
->  	if (WARN_ON_ONCE(READ_ONCE(sampler->oncpu) != smp_processor_id()))
->  		goto out;
->  
-> -	rb = ring_buffer_get(sampler->parent ? sampler->parent : sampler);
-> +	rb = ring_buffer_get(sampler);
->  	if (!rb)
->  		goto out;
->  
-> @@ -6829,7 +6837,7 @@ static void perf_aux_sample_output(struct perf_event *event,
->  	if (WARN_ON_ONCE(!sampler || !data->aux_size))
->  		return;
->  
-> -	rb = ring_buffer_get(sampler->parent ? sampler->parent : sampler);
-> +	rb = ring_buffer_get(sampler);
->  	if (!rb)
->  		return;
->  
-> 
