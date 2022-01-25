@@ -2,87 +2,90 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50236C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jan 2022 19:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4208C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jan 2022 19:35:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229629AbiAYTNI (ORCPT
+        id S230117AbiAYTfE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Jan 2022 14:13:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46986 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229606AbiAYTNH (ORCPT
+        Tue, 25 Jan 2022 14:35:04 -0500
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:42674 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230191AbiAYTeU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Jan 2022 14:13:07 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FCC2C06173B;
-        Tue, 25 Jan 2022 11:13:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Zn9OdX6SCDnc0a4wA7ukdq4TtllhJ5C7oxCbnabS+XQ=; b=J/KCFhpGNX4sNyM277ABmhi8Hy
-        Fi3zuqPhUBkZJ/KU+5Gw+g3bRVewGjJ38vNw6llArBt5rsz9wKFmcWafnpxC8/vmErxXwnqp0xYwH
-        54S1Js5dgFwRmsQrtowdpFVzTSTEtgbihFq9Kw/WZeCIrfyN/xhcJTk6RX5h7eINcd1runRLXFY7D
-        oJD9wcsZ8vIRzBO6JElLBPGr4sXEL7oULummUlc6kgFAXm/Rzkf+AA+ORFs1o8wGrHfn9UK9/WJPZ
-        OttFM/ZB4OUrAmkclZ/uaj4BNahfakC13qeynjYggqZO+JxaDBZDDJ9fTyPF1qYjr06e+DVDxOF7o
-        esxPxyjQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nCRFU-003HEF-4M; Tue, 25 Jan 2022 19:13:00 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BE278300099;
-        Tue, 25 Jan 2022 20:12:58 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7AC342B370DB8; Tue, 25 Jan 2022 20:12:58 +0100 (CET)
-Date:   Tue, 25 Jan 2022 20:12:58 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
-        leo.yan@linaro.com, Suzuki.Poulose@arm.com,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/1] perf/core: Wake up parent event if inherited
- event has no ring buffer
-Message-ID: <YfBLusfOk9fpIqqI@hirez.programming.kicks-ass.net>
-References: <20211206113840.130802-1-james.clark@arm.com>
- <20211206113840.130802-2-james.clark@arm.com>
- <Ye6SR0yxTrkNUQF6@hirez.programming.kicks-ass.net>
- <a4b64cff-f3f1-e6ad-38e9-b65a113ce561@arm.com>
+        Tue, 25 Jan 2022 14:34:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1643139260; x=1674675260;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=eai/aZmBQfgBxad8NOkpwEmtOizddqtvtIYAogy/SMk=;
+  b=H7KOkFqIez8Knp9uGnu4KBtABIW8+hNNmdlln/J5Be1duQTxSOFe35vo
+   cTMDmO+r7DxvRMt4PkkE2fDgErimJF6dUjLf9/oRnM9En+fkVHyPGNa2d
+   9to1MHQ4svVP+lFSYxrjEoJD9ThDy2wFDTPWB/H2SBZsKwAUqMUiuTyUi
+   8=;
+X-IronPort-AV: E=Sophos;i="5.88,315,1635206400"; 
+   d="scan'208";a="172099002"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-pdx-2c-d9fba5dd.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-33001.sea14.amazon.com with ESMTP; 25 Jan 2022 19:34:15 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
+        by email-inbound-relay-pdx-2c-d9fba5dd.us-west-2.amazon.com (Postfix) with ESMTPS id 78FE341A6B;
+        Tue, 25 Jan 2022 19:34:14 +0000 (UTC)
+Received: from EX13D02UWC002.ant.amazon.com (10.43.162.6) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.28; Tue, 25 Jan 2022 19:34:14 +0000
+Received: from EX13MTAUEB002.ant.amazon.com (10.43.60.12) by
+ EX13D02UWC002.ant.amazon.com (10.43.162.6) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.28; Tue, 25 Jan 2022 19:34:13 +0000
+Received: from dev-dsk-alisaidi-i31e-9f3421fe.us-east-1.amazon.com
+ (10.200.138.153) by mail-relay.amazon.com (10.43.60.234) with Microsoft SMTP
+ Server id 15.0.1497.28 via Frontend Transport; Tue, 25 Jan 2022 19:34:13
+ +0000
+Received: by dev-dsk-alisaidi-i31e-9f3421fe.us-east-1.amazon.com (Postfix, from userid 5131138)
+        id 4807121E70; Tue, 25 Jan 2022 19:34:12 +0000 (UTC)
+From:   Ali Saidi <alisaidi@amazon.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <alisaidi@amazon.com>, <benh@kernel.crashing.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        "Will Deacon" <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        "Leo Yan" <leo.yan@linaro.org>, James Clark <james.clark@arm.com>,
+        German Gomez <german.gomez@arm.com>,
+        Andrew Kilroy <andrew.kilroy@arm.com>
+Subject: [PATCH 0/2] Allow perf scripts to process SPE raw data
+Date:   Tue, 25 Jan 2022 19:20:08 +0000
+Message-ID: <20220125192016.20538-1-alisaidi@amazon.com>
+X-Mailer: git-send-email 2.24.4.AMZN
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a4b64cff-f3f1-e6ad-38e9-b65a113ce561@arm.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jan 24, 2022 at 02:58:18PM +0000, James Clark wrote:
+These two changes first expose the arm_spe_record as raw data to the 
+synthesized perf sample and second decode more of the operation and event
+types that aren't used for existing perf tools into the arm_spe_record. 
 
-> > Would this be the better patch?
-> 
-> Yes I tested this and it also works.
+This allows perf scripts to process the decoded SPE records instead of
+parsing the raw-trace back into some type of structure.
 
-Excellent!
+Ali Saidi (2):
+  perf arm-spe: Add arm_spe_record to synthesized sample as raw_data
+  perf arm-spe: Parse more SPE fields
 
-> There is one other suspicious access
-> of ->rb followed by if(rb) here in perf_poll(), but maybe it works out ok?
-> 
-> 	mutex_lock(&event->mmap_mutex);
-> 	rb = event->rb;
-> 	if (rb)
-> 		events = atomic_xchg(&rb->poll, 0);
-> 
+ .../util/arm-spe-decoder/arm-spe-decoder.c    | 23 +++++++++++++++++++
+ .../util/arm-spe-decoder/arm-spe-decoder.h    |  9 ++++++++
+ tools/perf/util/arm-spe.c                     |  6 +++++
+ 3 files changed, 38 insertions(+)
 
-That case must be good since it is the event from a file. Those cannot
-be clones.
+-- 
+2.24.4.AMZN
 
-> We also have a Perf self test that covers this failure for Arm SPE now, I'm not
-> sure if I should post that separately or with your new version of this fix?
-
-They'd be routed through separate trees anyway, Arnaldo takes the
-userspace stuff.
