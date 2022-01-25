@@ -2,136 +2,105 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B56B8C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jan 2022 10:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9073C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jan 2022 12:16:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348681AbiAYKtY (ORCPT
+        id S1381992AbiAYMQZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Jan 2022 05:49:24 -0500
-Received: from foss.arm.com ([217.140.110.172]:34102 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1355114AbiAYKou (ORCPT
+        Tue, 25 Jan 2022 07:16:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1354562AbiAYMMP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Jan 2022 05:44:50 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 792DB1FB;
-        Tue, 25 Jan 2022 02:44:44 -0800 (PST)
-Received: from ip-10-252-15-108.eu-west-1.compute.internal (unknown [10.252.15.108])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9E0813F7D8;
-        Tue, 25 Jan 2022 02:44:41 -0800 (PST)
-From:   German Gomez <german.gomez@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc:     irogers@google.com, German Gomez <german.gomez@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexandre Truong <alexandre.truong@arm.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH] perf test: update arm64 perf_event_attr tests for --call-graph
-Date:   Tue, 25 Jan 2022 10:44:34 +0000
-Message-Id: <20220125104435.2737-1-german.gomez@arm.com>
+        Tue, 25 Jan 2022 07:12:15 -0500
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C85F9C061744;
+        Tue, 25 Jan 2022 04:11:57 -0800 (PST)
+Received: by mail-ej1-x633.google.com with SMTP id jx6so30423912ejb.0;
+        Tue, 25 Jan 2022 04:11:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=sKnKru+rLN7ZmClVqR3FLwKLuS+kqBx+yEtQ0RgrvIA=;
+        b=VPa/38D/iK8xrFFQOve/ExPTwb19OvH5pPB6z5zWJZAIB6pB6SaGw2TSgaCRaEU6zv
+         dEqDeApRwCvHWRMT3k2BbiLO1A+2UvBa+HaC7E4pEFTg5KAa0wpcs6U7u7kX6m5NZ+Hw
+         Aw7S8YmfTH7/Kol1uaooN3y6Lxgoyu37pdsZ1bABwt2Nm77yolvsfddTL1lxHB2qD8F3
+         1nKUaWyWpkhPATIxKkvOmzo3FVqlwxWKQgo5A84x4RuaePjGCiZQH0lTi8BWg93ghdnE
+         B1zUq3UWRv0ggvRi1YMsXlpzkTAu+OnQpDhXRAxD5GjeCZR8gJphsJzE5lR64vTFbKEa
+         jm8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=sKnKru+rLN7ZmClVqR3FLwKLuS+kqBx+yEtQ0RgrvIA=;
+        b=QoNcKY3QmdYLUrfeoeu+NB5QOEe9Ub5I3dKTyE+z+O8HzYXjsD82g8BO49z0JsTBQg
+         zzO42UeuG9nemyLoYfDopaQVGCCqb8SNx+FZ1xmY4opbqnzmk+ylThXCTMxSHiw0xVqq
+         T6YGydUYm9xWHMr+QrCd/CzxizozCQQMul+W85+1nDliIxG/4asdzKNlcf23lay1ZFbA
+         c3YXlb8NYRGJFkv4nC4/NsJSnZfRHwVbx6eOLmnf9kn87Ep2BMT1C/636NNotFDwp4Hp
+         zt/eS/kJ8mwd5F7RBUx3UjcV7PlCM+WSE+tspr8TYQqFsYzJ3yXS8XJMR5/wK/OiV1l7
+         T4UQ==
+X-Gm-Message-State: AOAM533im1YO4seiuEjBLjqpkdk6a8fZIEGJvIl5wBewW9TXeg2MrMOX
+        GEa9jwowDf7/bCxCS0yywaPEfYE58EtqwQ==
+X-Google-Smtp-Source: ABdhPJwIKrUuoxJSLy8gQcb9j6ZO/rW71Z0XB/m9qkB9e/u2qYE377DjXFlkbEwQhA2bGtQkrOqFsg==
+X-Received: by 2002:a17:906:f19a:: with SMTP id gs26mr15841159ejb.106.1643112716207;
+        Tue, 25 Jan 2022 04:11:56 -0800 (PST)
+Received: from localhost.localdomain ([39.48.168.136])
+        by smtp.gmail.com with ESMTPSA id qf6sm6107334ejc.49.2022.01.25.04.11.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jan 2022 04:11:55 -0800 (PST)
+From:   Ameer Hamza <amhamza.mgc@gmail.com>
+To:     mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        rickyman7@gmail.com, alexey.v.bayduraev@linux.intel.com,
+        adrian.hunter@intel.com, leo.yan@linaro.org, german.gomez@arm.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        amhamza.mgc@gmail.com, James Clark <james.clark@arm.com>
+Subject: [PATCH v2] perf session: check for null pointer before derefernce
+Date:   Tue, 25 Jan 2022 17:11:41 +0500
+Message-Id: <20220125121141.18347-1-amhamza.mgc@gmail.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <8983b963-2139-ecb3-3a31-b5e225db389c@arm.com>
+References: <8983b963-2139-ecb3-3a31-b5e225db389c@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The struct perf_event_attr is initialised differently in Arm64 when
-recording in call-graph fp mode, so update the relevant tests, and add
-two extra arm64-only tests.
+Move null pointer check before dereferncing the variable
 
-Fixes: 7248e308a575 ("perf tools: Record ARM64 LR register automatically")
-Signed-off-by: German Gomez <german.gomez@arm.com>
+Addresses-Coverity: 1497622 ("Derereference before null check")
+
+Reviewed-by: James Clark <james.clark@arm.com>
+
+Signed-off-by: Ameer Hamza <amhamza.mgc@gmail.com>
+
 ---
- tools/perf/tests/attr/README                            | 2 ++
- tools/perf/tests/attr/test-record-graph-default         | 2 ++
- tools/perf/tests/attr/test-record-graph-default-aarch64 | 9 +++++++++
- tools/perf/tests/attr/test-record-graph-fp              | 2 ++
- tools/perf/tests/attr/test-record-graph-fp-aarch64      | 9 +++++++++
- 5 files changed, 24 insertions(+)
- create mode 100644 tools/perf/tests/attr/test-record-graph-default-aarch64
- create mode 100644 tools/perf/tests/attr/test-record-graph-fp-aarch64
+v1 -> v2: It should be possible to dump stuff if machine is NULL.
+---
+ tools/perf/util/session.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/attr/README b/tools/perf/tests/attr/README
-index a36f49fb4dbe..1116fc6bf2ac 100644
---- a/tools/perf/tests/attr/README
-+++ b/tools/perf/tests/attr/README
-@@ -45,8 +45,10 @@ Following tests are defined (with perf commands):
-   perf record -d kill                           (test-record-data)
-   perf record -F 100 kill                       (test-record-freq)
-   perf record -g kill                           (test-record-graph-default)
-+  perf record -g kill                           (test-record-graph-default-aarch64)
-   perf record --call-graph dwarf kill		(test-record-graph-dwarf)
-   perf record --call-graph fp kill              (test-record-graph-fp)
-+  perf record --call-graph fp kill              (test-record-graph-fp-aarch64)
-   perf record --group -e cycles,instructions kill (test-record-group)
-   perf record -e '{cycles,instructions}' kill   (test-record-group1)
-   perf record -e '{cycles/period=1/,instructions/period=2/}:S' kill (test-record-group2)
-diff --git a/tools/perf/tests/attr/test-record-graph-default b/tools/perf/tests/attr/test-record-graph-default
-index 5d8234d50845..f0a18b4ea4f5 100644
---- a/tools/perf/tests/attr/test-record-graph-default
-+++ b/tools/perf/tests/attr/test-record-graph-default
-@@ -2,6 +2,8 @@
- command = record
- args    = --no-bpf-event -g kill >/dev/null 2>&1
- ret     = 1
-+# arm64 enables registers in the default mode (fp)
-+arch    = !aarch64
- 
- [event:base-record]
- sample_type=295
-diff --git a/tools/perf/tests/attr/test-record-graph-default-aarch64 b/tools/perf/tests/attr/test-record-graph-default-aarch64
-new file mode 100644
-index 000000000000..e98d62efb6f7
---- /dev/null
-+++ b/tools/perf/tests/attr/test-record-graph-default-aarch64
-@@ -0,0 +1,9 @@
-+[config]
-+command = record
-+args    = --no-bpf-event -g kill >/dev/null 2>&1
-+ret     = 1
-+arch    = aarch64
-+
-+[event:base-record]
-+sample_type=4391
-+sample_regs_user=1073741824
-diff --git a/tools/perf/tests/attr/test-record-graph-fp b/tools/perf/tests/attr/test-record-graph-fp
-index 5630521c0b0f..a6e60e839205 100644
---- a/tools/perf/tests/attr/test-record-graph-fp
-+++ b/tools/perf/tests/attr/test-record-graph-fp
-@@ -2,6 +2,8 @@
- command = record
- args    = --no-bpf-event --call-graph fp kill >/dev/null 2>&1
- ret     = 1
-+# arm64 enables registers in fp mode
-+arch    = !aarch64
- 
- [event:base-record]
- sample_type=295
-diff --git a/tools/perf/tests/attr/test-record-graph-fp-aarch64 b/tools/perf/tests/attr/test-record-graph-fp-aarch64
-new file mode 100644
-index 000000000000..cbeea9971285
---- /dev/null
-+++ b/tools/perf/tests/attr/test-record-graph-fp-aarch64
-@@ -0,0 +1,9 @@
-+[config]
-+command = record
-+args    = --no-bpf-event --call-graph fp kill >/dev/null 2>&1
-+ret     = 1
-+arch    = aarch64
-+
-+[event:base-record]
-+sample_type=4391
-+sample_regs_user=1073741824
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index f19348dddd55..210eeee3dd70 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1503,11 +1503,12 @@ static int machines__deliver_event(struct machines *machines,
+ 			++evlist->stats.nr_unknown_id;
+ 			return 0;
+ 		}
+-		dump_sample(evsel, event, sample, perf_env__arch(machine->env));
+ 		if (machine == NULL) {
+ 			++evlist->stats.nr_unprocessable_samples;
++			dump_sample(evsel, event, sample, perf_env__arch(NULL));
+ 			return 0;
+ 		}
++		dump_sample(evsel, event, sample, perf_env__arch(machine->env));
+ 		return evlist__deliver_sample(evlist, tool, event, sample, evsel, machine);
+ 	case PERF_RECORD_MMAP:
+ 		return tool->mmap(tool, event, sample, machine);
 -- 
 2.25.1
 
