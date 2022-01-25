@@ -2,133 +2,113 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3D4C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jan 2022 04:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9DAC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jan 2022 05:24:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1389438AbiAYEQb (ORCPT
+        id S1442010AbiAYFYR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 24 Jan 2022 23:16:31 -0500
-Received: from szxga01-in.huawei.com ([45.249.212.187]:35862 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S248059AbiAYD4Q (ORCPT
+        Tue, 25 Jan 2022 00:24:17 -0500
+Received: from foss.arm.com ([217.140.110.172]:43848 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1391262AbiAYFE0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 24 Jan 2022 22:56:16 -0500
-Received: from canpemm500010.china.huawei.com (unknown [172.30.72.56])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4JjY0V70sgzcck5;
-        Tue, 25 Jan 2022 11:55:22 +0800 (CST)
-Received: from huawei.com (10.67.189.167) by canpemm500010.china.huawei.com
- (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Tue, 25 Jan
- 2022 11:56:11 +0800
-From:   Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>, <james.clark@arm.com>,
-        <leo.yan@linaro.org>, <qiuxi1@huawei.com>, <wangbing6@huawei.com>,
-        <nixiaoming@huawei.com>, <xiaojiangfeng@huawei.com>
-CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] [PING] perf dso: Avoid copying redundant kallsyms in th buildid_dir
-Date:   Tue, 25 Jan 2022 11:56:01 +0800
-Message-ID: <1643082961-8535-1-git-send-email-xiaojiangfeng@huawei.com>
-X-Mailer: git-send-email 1.8.5.6
+        Tue, 25 Jan 2022 00:04:26 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5A0441FB;
+        Mon, 24 Jan 2022 21:04:22 -0800 (PST)
+Received: from [10.163.42.113] (unknown [10.163.42.113])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0AC593F7D8;
+        Mon, 24 Jan 2022 21:04:17 -0800 (PST)
+Subject: Re: [RFC V1 02/11] arm64/perf: Add register definitions for BRBE
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org
+References: <1642998653-21377-1-git-send-email-anshuman.khandual@arm.com>
+ <1642998653-21377-3-git-send-email-anshuman.khandual@arm.com>
+ <877dap8c0o.wl-maz@kernel.org>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <165b3f65-c92e-75e3-9485-548e1c862ec4@arm.com>
+Date:   Tue, 25 Jan 2022 10:34:22 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.189.167]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- canpemm500010.china.huawei.com (7.192.105.118)
-X-CFilter-Loop: Reflected
+In-Reply-To: <877dap8c0o.wl-maz@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The issue is occurs in following step:
-(1)copy the kernel module (such as test.ko) to /root directory
-(2)load the kernel module (such as insmod test.ko)
-(3)run perf-record as: perf record sleep 1
-Then /proc/kallsyms will be copied not only to
-/root/.debug/[kernel.kallsyms]/<buildid>/kallsyms,
-but also be copied to
-/root/.debug/[test]/<buildid>/kallsyms(this is redundant).
 
-Say a kallsyms file content takes 5MB memory,
-100 out-of-tree kernel modules will take 500MB,
-which is not bearable on embedded environment.
 
-__cmd_record():
-  __perf_session__new():
-    perf_session__create_kernel_maps():
-      machine__create_kernel_maps():
-        machine__create_modules():
-          machine__set_modules_path(): perf will only search for kernel
-                                      modules in "/lib/modules/`uname -r`/"
-                                      /root/test.ko is not in scope.
-            maps__set_modules_path_dir():
-              maps__set_module_path():
-                dso__set_long_name(): the dso->long_name of test.ko has
-                                      not changed, it is still [test].
+On 1/24/22 7:35 PM, Marc Zyngier wrote:
+> On Mon, 24 Jan 2022 04:30:44 +0000,
+> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+>>
+>> This adds BRBE related register definitions and various other related field
+>> macros there in. These will be used subsequently in a BRBE driver which is
+>> being added later on.
+>>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Marc Zyngier <maz@kernel.org>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>  arch/arm64/include/asm/sysreg.h | 216 ++++++++++++++++++++++++++++++++
+>>  1 file changed, 216 insertions(+)
+>>
+>> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+>> index 898bee0004ae..d8fd7e806a47 100644
+>> --- a/arch/arm64/include/asm/sysreg.h
+>> +++ b/arch/arm64/include/asm/sysreg.h
+>> @@ -141,6 +141,218 @@
+>>  #define SYS_DBGDTRTX_EL0		sys_reg(2, 3, 0, 5, 0)
+>>  #define SYS_DBGVCR32_EL2		sys_reg(2, 4, 0, 7, 0)
+>>  
+>> +/*
+>> + * BRBINF<N>_EL1 Encoding: [2, 1, 8, CRm, op2]
+>> + *
+>> + * derived as <CRm> = c{N<3:0>} <op2> = (N<4>x4 + 0)
+>> + */
+>> +#define SYS_BRBINF0_EL1			sys_reg(2, 1, 8, 0, 0)
+>> +#define SYS_BRBINF1_EL1			sys_reg(2, 1, 8, 1, 0)
+>> +#define SYS_BRBINF2_EL1			sys_reg(2, 1, 8, 2, 0)
+>> +#define SYS_BRBINF3_EL1			sys_reg(2, 1, 8, 3, 0)
+>> +#define SYS_BRBINF4_EL1			sys_reg(2, 1, 8, 4, 0)
+>> +#define SYS_BRBINF5_EL1			sys_reg(2, 1, 8, 5, 0)
+>> +#define SYS_BRBINF6_EL1			sys_reg(2, 1, 8, 6, 0)
+>> +#define SYS_BRBINF7_EL1			sys_reg(2, 1, 8, 7, 0)
+>> +#define SYS_BRBINF8_EL1			sys_reg(2, 1, 8, 8, 0)
+>> +#define SYS_BRBINF9_EL1			sys_reg(2, 1, 8, 9, 0)
+> 
+> [snip]
+> 
+> Since the architecture gives you the formula to build these, why do
+> you enumerate each and every register encoding? I'd rather see
+> something like:
+> 
+> #define __SYS_BRBINFO(n) sys_reg(2, 1, 8, ((n) & 0xf), (((n) & 0x10)) >> 2)
+> #define SYS_BRBINF0_EL1	__SYS_BRBINFO(0)
+> [...]
+> 
+> and something similar for all the new registers that come in packs of
+> 32... We already have similar things for AMU, PMU, GIC and co.
 
-record__finish_output():
-  perf_session__write_header():
-    [...]
-      dso__cache_build_id():
-        bool is_kallsyms = dso__is_kallsyms(dso);
-          dso__is_kallsyms(): return dso->kernel&&dso->long_name[0] != '/';
-                              [test] will be wrongly judged as kallsyms,
-                              and then the value of is_kallsyms is true.
-        build_id_cache__add_b(, is_kallsyms,):
-          build_id_cache__add_s(, is_kallsyms,):
-            build_id_cache__add(, is_kallsyms,):
-              if (is_kallsyms)
-                copyfile("/proc/kallsyms", filename): /proc/kallsyms will
-                be copied to /root/.debug/[test]/<buildid>/kallsyms.
+Sure, above method seems like a better idea indeed. I will create these
+constructs for BRBINF, BRBSRC and BRBTGT based registers set.
 
-Why can this modification can avoid the redundancy of kallsyms:
-  if (dso->kernel == DSO_SPACE__KERNEL) there are only two possibilities,
-  one is dso__is_kallsyms, and the other is dso__is_kmod. After
-  modification, [test] is no longer incorrectly judged as kallsyms.
-Why can dso__is_kmod judge correctly?
-  __cmd_record():
-    __perf_session__new():
-      perf_session__create_kernel_maps():
-        machine__create_kernel_maps():
-          machine__create_modules():
-            modules__parse(): for each line in /proc/modules,
-                              not just in "/lib/modules/`uname -r`/".
-              machine__create_module():
-                machine__addnew_module_map():
-                  machine__findnew_module_dso():
-                    dso__set_module_info(): assign dso->symtab_type to
-                    DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE and so on.
-
-Reported-by: Lexi Shao <shaolexi@huawei.com>
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
----
- tools/perf/util/dso.h | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index 011da39..57a6ab5 100644
---- a/tools/perf/util/dso.h
-+++ b/tools/perf/util/dso.h
-@@ -380,9 +380,17 @@ static inline bool dso__is_kcore(struct dso *dso)
- 	       dso->binary_type == DSO_BINARY_TYPE__GUEST_KCORE;
- }
- 
-+static inline bool dso__is_kmod(struct dso *dso)
-+{
-+	return dso->symtab_type == DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE ||
-+		dso->symtab_type == DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP ||
-+		dso->symtab_type == DSO_BINARY_TYPE__GUEST_KMODULE ||
-+		dso->symtab_type == DSO_BINARY_TYPE__GUEST_KMODULE_COMP;
-+}
-+
- static inline bool dso__is_kallsyms(struct dso *dso)
- {
--	return dso->kernel && dso->long_name[0] != '/';
-+	return dso->kernel && !dso__is_kmod(dso);
- }
- 
- void dso__free_a2l(struct dso *dso);
--- 
-1.8.5.6
-
+> 
+> Thanks,
+> 
+> 	M.
+> 
+> 
