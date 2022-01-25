@@ -2,77 +2,45 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C45C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jan 2022 14:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1579BC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jan 2022 15:41:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1387859AbiAYOFx (ORCPT
+        id S1350548AbiAYPle (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Jan 2022 09:05:53 -0500
-Received: from mga17.intel.com ([192.55.52.151]:12204 "EHLO mga17.intel.com"
+        Tue, 25 Jan 2022 10:41:34 -0500
+Received: from foss.arm.com ([217.140.110.172]:51224 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1387856AbiAYODn (ORCPT
+        id S1354426AbiAYPj3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Jan 2022 09:03:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643119423; x=1674655423;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=tFnuLuY9oElKJDCq2VE/qinMRbQq/Wj5fuO0jaXmt2g=;
-  b=GqH8McwTltsCz6wF7REFuaq1IUelQXr+5v9RZel+1fBBPFzORO+Snbih
-   ojXuuU4yqhqsMEPcaxH6cvTs5ZRKrVjcSNSsY6RXrK9z9q1vERZVELXVX
-   94R4WYX864BLWsD6BmyY98EYcG6n/sWwHTHXkz73xGRVPj983Y9Wv6pUu
-   d6jaYwwufFBj5A8WUgb13ZwXe0dlEQpDDhXnZMc8MQFB9oqb09rw03uua
-   cxCl/87Qw1fXuWuQ/Nt9RhupDrVSJ2VEWvX4T5G2+IvguQCRU1GX0ZprR
-   ql+ltYVP16NJ9x8uc5fUIlCZAGKC5b/S6IL4202KN0K6oUOGo12JP//qU
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10237"; a="226972497"
-X-IronPort-AV: E=Sophos;i="5.88,315,1635231600"; 
-   d="scan'208";a="226972497"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2022 05:57:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,315,1635231600"; 
-   d="scan'208";a="597129564"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP; 25 Jan 2022 05:57:12 -0800
-Received: from [10.209.56.163] (bdobabaa-mobl.amr.corp.intel.com [10.209.56.163])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 58D86580808;
-        Tue, 25 Jan 2022 05:57:10 -0800 (PST)
-Message-ID: <7ef1bf66-4184-7f5b-c0bd-351ec743d4e9@linux.intel.com>
-Date:   Tue, 25 Jan 2022 08:57:09 -0500
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH] x86/perf: Default freeze_on_smi on for Comet Lake and
- later.
-Content-Language: en-US
-To:     Kyle Huey <me@kylehuey.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Tue, 25 Jan 2022 10:39:29 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B3CCBD6E;
+        Tue, 25 Jan 2022 07:39:27 -0800 (PST)
+Received: from [10.32.33.50] (e121896.warwick.arm.com [10.32.33.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3A5683F793;
+        Tue, 25 Jan 2022 07:39:26 -0800 (PST)
+Subject: Re: [RFC V1 11/11] perf: Capture branch privilege information
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Robert O'Callahan <rocallahan@gmail.com>,
-        Keno Fischer <keno@juliacomputing.com>,
-        Andi Kleen <ak@linux.intel.com>
-References: <20220122072644.92292-1-khuey@kylehuey.com>
- <Ye6Z31keWVPrsNWU@hirez.programming.kicks-ass.net>
- <3c35dc76-c187-8d3f-7fc9-75de32e7cbf6@linux.intel.com>
- <CAP045ArbX7cYKyv0H4X2SxUJWycB1VoLZWLME=_RXttBFBfP3A@mail.gmail.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP045ArbX7cYKyv0H4X2SxUJWycB1VoLZWLME=_RXttBFBfP3A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+References: <1642998653-21377-1-git-send-email-anshuman.khandual@arm.com>
+ <1642998653-21377-12-git-send-email-anshuman.khandual@arm.com>
+From:   James Clark <james.clark@arm.com>
+Message-ID: <82d586d3-358b-724b-0eac-7fb5c6e03efb@arm.com>
+Date:   Tue, 25 Jan 2022 15:39:24 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
+MIME-Version: 1.0
+In-Reply-To: <1642998653-21377-12-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
@@ -80,74 +48,173 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 1/24/2022 9:59 PM, Kyle Huey wrote:
-> On Mon, Jan 24, 2022 at 8:01 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>
->>
->>
->> On 1/24/2022 7:21 AM, Peter Zijlstra wrote:
->>> On Fri, Jan 21, 2022 at 11:26:44PM -0800, Kyle Huey wrote:
->>>> Beginning in Comet Lake, Intel extended the concept of privilege rings to
->>>> SMM.[0] A side effect of this is that events caused by execution of code
->>>> in SMM are now visible to performance counters with IA32_PERFEVTSELx.USR
->>>> set.
->>>>
->>>> rr[1] depends on exact counts of performance events for the user space
->>>> tracee, so this change in behavior is fatal for us. It is, however, easily
->>>> corrected by setting IA32_DEBUGCTL.FREEZE_WHILE_SMM to 1 (visible in sysfs
->>>> as /sys/devices/cpu/freeze_on_smi). While we can and will tell our users to
->>>> set freeze_on_smi manually when appropriate, because observing events in
->>>> SMM is rarely useful to anyone, we propose to change the default value of
->>>> this switch.
->>
->> + Andi
->>
->>   From we heard many times from sophisticated customers, they really hate
->> blind spots. They want to see everything. That's why we set
->> freeze_on_smi to 0 as default. I think the patch breaks the principle.
+On 24/01/2022 04:30, Anshuman Khandual wrote:
+> Platforms like arm64 could capture privilege level information for all the
+> branch records. Hence this adds a new element in the struct branch_entry to
+> record the privilege level information, which could be requested through a
+> new event.attr.branch_sample_type flag PERF_SAMPLE_BRANCH_PRIV_SAVE. While
+> here, update the BRBE driver as required.
 > 
-> The default kernel settings for perf events prioritize preventing
-> information leaks to less privileged code. perf_event_paranoid
-> defaults to 2, preventing unprivileged users from observing kernel
-> space. If "sophisticated customers" want to see everything they have
-> already needed privileges (or an explicit opt-in through decreasing
-> perf_event_paranoid) for some time.
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-perf-users@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>  drivers/perf/arm_pmu_brbe.c              | 28 ++++++++++++++++++++++++
+>  include/linux/perf_event.h               |  5 +++++
+>  include/uapi/linux/perf_event.h          | 13 ++++++++++-
+>  tools/include/uapi/linux/perf_event.h    | 13 ++++++++++-
+>  tools/perf/Documentation/perf-record.txt |  1 +
+>  tools/perf/util/parse-branch-options.c   |  1 +
+>  6 files changed, 59 insertions(+), 2 deletions(-)
 > 
-> The current situation on Comet Lake+ where an unprivileged user
-> *cannot* observe kernel code due to security concerns but
-> simultaneously *must* observe SMM code seems rather absurd.
->
+[...]
+> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> index 361fdc6b87a0..4d77710f7a4e 100644
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -204,6 +204,8 @@ enum perf_branch_sample_type_shift {
+>  
+>  	PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT	= 17, /* save low level index of raw branch records */
+>  
+> +	PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT	= 18, /* save privillege mode */
 
-I see. I was thought the unprivileged user can observe the SMM code on 
-the previous platforms. The CML+ change only makes part of the SMM code 
-CPL0. Seems I'm wrong. The change looks like changing the previous CPL0 
-code to CPL3 code. If so, yes, I think we should prevent the information 
-leaks for the unprivileged user.
+privillege -> privilege
 
->> I don't think there is a way to notify all the users that the default
->> kernel value will be changed. (Yes, the end user can always check the
->> /sys/devices/cpu/freeze_on_smi to get the latest value. But in practice,
->> no one checks it unless some errors found.) I think it may bring
->> troubles to the users if they rely on the counts in SMM.
+> +
+>  	PERF_SAMPLE_BRANCH_MAX_SHIFT		/* non-ABI */
+>  };
+>  
+> @@ -233,6 +235,8 @@ enum perf_branch_sample_type {
+>  
+>  	PERF_SAMPLE_BRANCH_HW_INDEX	= 1U << PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT,
+>  
+> +	PERF_SAMPLE_BRANCH_PRIV_SAVE	= 1U << PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT,
+> +
+
+Can you also add the new entry to the perf verbose printer otherwise it looks like
+it's not being set on branch_sample_type
+(as in when using ./perf record -j any_call,u,priv -vvv):
+
+	static void __p_branch_sample_type(char *buf, size_t size, u64 value)
+	{
+	#define bit_name(n) { PERF_SAMPLE_BRANCH_##n, #n }
+		struct bit_names bits[] = {
+			bit_name(USER), bit_name(KERNEL), bit_name(HV), bit_name(ANY),
+			bit_name(ANY_CALL), bit_name(ANY_RETURN), bit_name(IND_CALL),
+			bit_name(ABORT_TX), bit_name(IN_TX), bit_name(NO_TX),
+			bit_name(COND), bit_name(CALL_STACK), bit_name(IND_JUMP),
+			bit_name(CALL), bit_name(NO_FLAGS), bit_name(NO_CYCLES),
+			bit_name(HW_INDEX),
+			{ .name = NULL, }
+		};
+	#undef bit_name
+		__p_bits(buf, size, value, bits);
+	}
+
+PERF_SAMPLE_BRANCH_TYPE_SAVE_SHIFT is also missing so it probably makes sense to add it
+at the same time as that was expanded for BRBE.
+
+>  	PERF_SAMPLE_BRANCH_MAX		= 1U << PERF_SAMPLE_BRANCH_MAX_SHIFT,
+>  };
+>  
+> @@ -265,6 +269,12 @@ enum {
+>  	PERF_BR_MAX,
+>  };
+>  
+> +enum {
+> +	PERF_BR_USER	= 0,
+> +	PERF_BR_KERNEL	= 1,
+> +	PERF_BR_HV	= 2,
+> +};
+> +
+>  #define PERF_SAMPLE_BRANCH_PLM_ALL \
+>  	(PERF_SAMPLE_BRANCH_USER|\
+>  	 PERF_SAMPLE_BRANCH_KERNEL|\
+> @@ -1377,7 +1387,8 @@ struct perf_branch_entry {
+>  		abort:1,    /* transaction abort */
+>  		cycles:16,  /* cycle count to last branch */
+>  		type:6,     /* branch type */
+> -		reserved:38;
+> +		priv:2,     /* privilege level */
+> +		reserved:36;
+>  };
+>  
+>  union perf_sample_weight {
+> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+> index 9a82b8aaed93..a2208400b0b9 100644
+> --- a/tools/include/uapi/linux/perf_event.h
+> +++ b/tools/include/uapi/linux/perf_event.h
+> @@ -204,6 +204,8 @@ enum perf_branch_sample_type_shift {
+>  
+>  	PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT	= 17, /* save low level index of raw branch records */
+>  
+> +	PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT	= 18, /* save privillege mode */
+> +
+>  	PERF_SAMPLE_BRANCH_MAX_SHIFT		/* non-ABI */
+>  };
+>  
+> @@ -233,6 +235,8 @@ enum perf_branch_sample_type {
+>  
+>  	PERF_SAMPLE_BRANCH_HW_INDEX	= 1U << PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT,
+>  
+> +	PERF_SAMPLE_BRANCH_PRIV_SAVE	= 1U << PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT,
+> +
+>  	PERF_SAMPLE_BRANCH_MAX		= 1U << PERF_SAMPLE_BRANCH_MAX_SHIFT,
+>  };
+>  
+> @@ -265,6 +269,12 @@ enum {
+>  	PERF_BR_MAX,
+>  };
+>  
+> +enum {
+> +	PERF_BR_USER    = 0,
+> +	PERF_BR_KERNEL  = 1,
+> +	PERF_BR_HV      = 2,
+> +};
+> +
+>  #define PERF_SAMPLE_BRANCH_PLM_ALL \
+>  	(PERF_SAMPLE_BRANCH_USER|\
+>  	 PERF_SAMPLE_BRANCH_KERNEL|\
+> @@ -1377,7 +1387,8 @@ struct perf_branch_entry {
+>  		abort:1,    /* transaction abort */
+>  		cycles:16,  /* cycle count to last branch */
+>  		type:6,     /* branch type */
+> -		reserved:38;
+> +		priv:2,     /* privilege level */
+> +		reserved:36;
+>  };
+>  
+>  union perf_sample_weight {
+> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+> index 9ccc75935bc5..3e33686977a1 100644
+> --- a/tools/perf/Documentation/perf-record.txt
+> +++ b/tools/perf/Documentation/perf-record.txt
+> @@ -387,6 +387,7 @@ following filters are defined:
+>  	- abort_tx: only when the target is a hardware transaction abort
+>  	- cond: conditional branches
+>  	- save_type: save branch type during sampling in case binary is not available later
+> +	- priv: save privilege state during sampling in case binary is not available later
+>  
+>  +
+>  The option requires at least one branch type among any, any_call, any_ret, ind_call, cond.
+> diff --git a/tools/perf/util/parse-branch-options.c b/tools/perf/util/parse-branch-options.c
+> index bb4aa88c50a8..00588b9db474 100644
+> --- a/tools/perf/util/parse-branch-options.c
+> +++ b/tools/perf/util/parse-branch-options.c
+> @@ -32,6 +32,7 @@ static const struct branch_mode branch_modes[] = {
+>  	BRANCH_OPT("call", PERF_SAMPLE_BRANCH_CALL),
+>  	BRANCH_OPT("save_type", PERF_SAMPLE_BRANCH_TYPE_SAVE),
+>  	BRANCH_OPT("stack", PERF_SAMPLE_BRANCH_CALL_STACK),
+> +	BRANCH_OPT("priv", PERF_SAMPLE_BRANCH_PRIV_SAVE),
+>  	BRANCH_END
+>  };
+>  
 > 
-> Unfortunately the new hardware has already changed the behavior
-> without notifying users, no matter what we do here.
-> 
->> The patch only changes the default values for some platforms, not all
->> platforms. The default value is not consistent among platforms anymore.
->> It can bring confusion.
-> 
-> I don't personally object to changing freeze_on_smi for all platforms
-> :) I was merely trying to limit the changes.
-
-
-Changing it to all platforms seems a too big hammer. I agree we should 
-limit it to the impacted platforms.
-
-I've contacted the author of the white paper. I was told that the change 
-is for the client vPro platforms. They are not sure whether it impacts 
-Server platform or Atom platforms. I'm still working on it. I will let 
-you and Peter know once I get more information.
-
-Thanks,
-Kan
