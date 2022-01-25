@@ -2,122 +2,136 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D000C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jan 2022 09:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B56B8C4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jan 2022 10:49:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351674AbiAYJjW (ORCPT
+        id S1348681AbiAYKtY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Jan 2022 04:39:22 -0500
-Received: from foss.arm.com ([217.140.110.172]:58436 "EHLO foss.arm.com"
+        Tue, 25 Jan 2022 05:49:24 -0500
+Received: from foss.arm.com ([217.140.110.172]:34102 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1456108AbiAYJfy (ORCPT
+        id S1355114AbiAYKou (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Jan 2022 04:35:54 -0500
+        Tue, 25 Jan 2022 05:44:50 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35552D6E;
-        Tue, 25 Jan 2022 01:35:53 -0800 (PST)
-Received: from [10.57.40.103] (unknown [10.57.40.103])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 347053F793;
-        Tue, 25 Jan 2022 01:35:51 -0800 (PST)
-Subject: Re: [PATCH] perf session: check for null pointer before derefernce
-To:     Ameer Hamza <amhamza.mgc@gmail.com>
-Cc:     German Gomez <german.gomez@arm.com>, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, rickyman7@gmail.com,
-        alexey.v.bayduraev@linux.intel.com, adrian.hunter@intel.com,
-        leo.yan@linaro.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org
-References: <20220124150001.93145-1-amhamza.mgc@gmail.com>
- <7c068167-e8bb-74f3-97d9-dd0c5858ee19@arm.com>
- <20220124202907.GA5741@hamza-OptiPlex-7040>
-From:   James Clark <james.clark@arm.com>
-Message-ID: <8983b963-2139-ecb3-3a31-b5e225db389c@arm.com>
-Date:   Tue, 25 Jan 2022 09:35:49 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 792DB1FB;
+        Tue, 25 Jan 2022 02:44:44 -0800 (PST)
+Received: from ip-10-252-15-108.eu-west-1.compute.internal (unknown [10.252.15.108])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9E0813F7D8;
+        Tue, 25 Jan 2022 02:44:41 -0800 (PST)
+From:   German Gomez <german.gomez@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     irogers@google.com, German Gomez <german.gomez@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexandre Truong <alexandre.truong@arm.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH] perf test: update arm64 perf_event_attr tests for --call-graph
+Date:   Tue, 25 Jan 2022 10:44:34 +0000
+Message-Id: <20220125104435.2737-1-german.gomez@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20220124202907.GA5741@hamza-OptiPlex-7040>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+The struct perf_event_attr is initialised differently in Arm64 when
+recording in call-graph fp mode, so update the relevant tests, and add
+two extra arm64-only tests.
 
+Fixes: 7248e308a575 ("perf tools: Record ARM64 LR register automatically")
+Signed-off-by: German Gomez <german.gomez@arm.com>
+---
+ tools/perf/tests/attr/README                            | 2 ++
+ tools/perf/tests/attr/test-record-graph-default         | 2 ++
+ tools/perf/tests/attr/test-record-graph-default-aarch64 | 9 +++++++++
+ tools/perf/tests/attr/test-record-graph-fp              | 2 ++
+ tools/perf/tests/attr/test-record-graph-fp-aarch64      | 9 +++++++++
+ 5 files changed, 24 insertions(+)
+ create mode 100644 tools/perf/tests/attr/test-record-graph-default-aarch64
+ create mode 100644 tools/perf/tests/attr/test-record-graph-fp-aarch64
 
-On 24/01/2022 20:29, Ameer Hamza wrote:
-> On Mon, Jan 24, 2022 at 03:30:17PM +0000, James Clark wrote:
->>
->>
->> On 24/01/2022 15:00, Ameer Hamza wrote:
->>> Move null pointer check before dereferncing the variable
->>>
->>> Addresses-Coverity: 1497622 ("Derereference before null check")
->>>
->>> Signed-off-by: Ameer Hamza <amhamza.mgc@gmail.com>
->>> ---
->>>  tools/perf/util/session.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
->>> index f19348dddd55..e1014ab62c10 100644
->>> --- a/tools/perf/util/session.c
->>> +++ b/tools/perf/util/session.c
->>> @@ -1503,11 +1503,11 @@ static int machines__deliver_event(struct machines *machines,
->>>  			++evlist->stats.nr_unknown_id;
->>>  			return 0;
->>>  		}
->>> -		dump_sample(evsel, event, sample, perf_env__arch(machine->env));
->>>  		if (machine == NULL) {
->>>  			++evlist->stats.nr_unprocessable_samples;
->>>  			return 0;
->>>  		}
->>> +		dump_sample(evsel, event, sample, perf_env__arch(machine->env));
->>>  		return evlist__deliver_sample(evlist, tool, event, sample, evsel, machine);
->>>  	case PERF_RECORD_MMAP:
->>>  		return tool->mmap(tool, event, sample, machine);
->>>
->>
->> Hi Ameer,
->>
->> This mistake was made recently, but I don't think your change is the desired behavior.
->>
->> It should be possible to dump stuff if machine is null. null or an empty string
->> should be passed to dump_sample(). It looks like some of the printfs still attempt to
->> show something in this case, although I didn't check them all.
-> 
-> Hi James,
-> 
-> Thank you for your response. I understand your point.
-> 
-> Do you think following changes would be ok?
+diff --git a/tools/perf/tests/attr/README b/tools/perf/tests/attr/README
+index a36f49fb4dbe..1116fc6bf2ac 100644
+--- a/tools/perf/tests/attr/README
++++ b/tools/perf/tests/attr/README
+@@ -45,8 +45,10 @@ Following tests are defined (with perf commands):
+   perf record -d kill                           (test-record-data)
+   perf record -F 100 kill                       (test-record-freq)
+   perf record -g kill                           (test-record-graph-default)
++  perf record -g kill                           (test-record-graph-default-aarch64)
+   perf record --call-graph dwarf kill		(test-record-graph-dwarf)
+   perf record --call-graph fp kill              (test-record-graph-fp)
++  perf record --call-graph fp kill              (test-record-graph-fp-aarch64)
+   perf record --group -e cycles,instructions kill (test-record-group)
+   perf record -e '{cycles,instructions}' kill   (test-record-group1)
+   perf record -e '{cycles/period=1/,instructions/period=2/}:S' kill (test-record-group2)
+diff --git a/tools/perf/tests/attr/test-record-graph-default b/tools/perf/tests/attr/test-record-graph-default
+index 5d8234d50845..f0a18b4ea4f5 100644
+--- a/tools/perf/tests/attr/test-record-graph-default
++++ b/tools/perf/tests/attr/test-record-graph-default
+@@ -2,6 +2,8 @@
+ command = record
+ args    = --no-bpf-event -g kill >/dev/null 2>&1
+ ret     = 1
++# arm64 enables registers in the default mode (fp)
++arch    = !aarch64
+ 
+ [event:base-record]
+ sample_type=295
+diff --git a/tools/perf/tests/attr/test-record-graph-default-aarch64 b/tools/perf/tests/attr/test-record-graph-default-aarch64
+new file mode 100644
+index 000000000000..e98d62efb6f7
+--- /dev/null
++++ b/tools/perf/tests/attr/test-record-graph-default-aarch64
+@@ -0,0 +1,9 @@
++[config]
++command = record
++args    = --no-bpf-event -g kill >/dev/null 2>&1
++ret     = 1
++arch    = aarch64
++
++[event:base-record]
++sample_type=4391
++sample_regs_user=1073741824
+diff --git a/tools/perf/tests/attr/test-record-graph-fp b/tools/perf/tests/attr/test-record-graph-fp
+index 5630521c0b0f..a6e60e839205 100644
+--- a/tools/perf/tests/attr/test-record-graph-fp
++++ b/tools/perf/tests/attr/test-record-graph-fp
+@@ -2,6 +2,8 @@
+ command = record
+ args    = --no-bpf-event --call-graph fp kill >/dev/null 2>&1
+ ret     = 1
++# arm64 enables registers in fp mode
++arch    = !aarch64
+ 
+ [event:base-record]
+ sample_type=295
+diff --git a/tools/perf/tests/attr/test-record-graph-fp-aarch64 b/tools/perf/tests/attr/test-record-graph-fp-aarch64
+new file mode 100644
+index 000000000000..cbeea9971285
+--- /dev/null
++++ b/tools/perf/tests/attr/test-record-graph-fp-aarch64
+@@ -0,0 +1,9 @@
++[config]
++command = record
++args    = --no-bpf-event --call-graph fp kill >/dev/null 2>&1
++ret     = 1
++arch    = aarch64
++
++[event:base-record]
++sample_type=4391
++sample_regs_user=1073741824
+-- 
+2.25.1
 
-Yep looks good. With that change:
-
-Reviewed-by: James Clark <james.clark@arm.com>
-
-> 
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index f19348dddd55..210eeee3dd70 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -1503,11 +1503,12 @@ static int machines__deliver_event(struct machines *machines,
->                         ++evlist->stats.nr_unknown_id;
->                         return 0;
->                 }
-> -               dump_sample(evsel, event, sample, perf_env__arch(machine->env));
->                 if (machine == NULL) {
->                         ++evlist->stats.nr_unprocessable_samples;
-> +                       dump_sample(evsel, event, sample, perf_env__arch(NULL));
->                         return 0;
->                 }
-> +               dump_sample(evsel, event, sample, perf_env__arch(machine->env));
->                 return evlist__deliver_sample(evlist, tool, event, sample, evsel, machine);
->         case PERF_RECORD_MMAP:
->                 return tool->mmap(tool, event, sample, machine);
-> 
-> Thanks,
-> Hamza
-> 
