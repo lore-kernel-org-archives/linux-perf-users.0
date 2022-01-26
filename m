@@ -2,82 +2,95 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E60AC2BA4C
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Jan 2022 16:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83698C28CF5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Jan 2022 16:48:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240129AbiAZQPe (ORCPT
+        id S243231AbiAZQsD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 Jan 2022 11:15:34 -0500
-Received: from foss.arm.com ([217.140.110.172]:50522 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239849AbiAZQPd (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 Jan 2022 11:15:33 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 58051D6E;
-        Wed, 26 Jan 2022 08:15:33 -0800 (PST)
-Received: from [10.32.33.50] (e121896.warwick.arm.com [10.32.33.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CD2923F766;
-        Wed, 26 Jan 2022 08:15:31 -0800 (PST)
-Subject: Re: [RFC PATCH 1/1] perf/core: Wake up parent event if inherited
- event has no ring buffer
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
-        leo.yan@linaro.com, Suzuki.Poulose@arm.com,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        linux-kernel@vger.kernel.org
-References: <20211206113840.130802-1-james.clark@arm.com>
- <20211206113840.130802-2-james.clark@arm.com>
- <Ye6SR0yxTrkNUQF6@hirez.programming.kicks-ass.net>
- <a4b64cff-f3f1-e6ad-38e9-b65a113ce561@arm.com>
- <YfBLusfOk9fpIqqI@hirez.programming.kicks-ass.net>
-From:   James Clark <james.clark@arm.com>
-Message-ID: <b0de5ea6-4100-15ed-bbf8-8578a0fa5b6d@arm.com>
-Date:   Wed, 26 Jan 2022 16:15:30 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Wed, 26 Jan 2022 11:48:03 -0500
+Received: from mail-oi1-f173.google.com ([209.85.167.173]:43697 "EHLO
+        mail-oi1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236507AbiAZQsD (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 26 Jan 2022 11:48:03 -0500
+Received: by mail-oi1-f173.google.com with SMTP id p203so641643oih.10;
+        Wed, 26 Jan 2022 08:48:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6gFP0lcd6ItARzuIKDJccK9kwYCNQdLqC4kjVDvDJS0=;
+        b=sVNtAZg9zlFSA5nMgRtq2l/9B4bIGaXrz48yrHRlO42dNpQHyRzxGGyeVcru7hcl73
+         u9ik48jmW2CCqRnlqfaaDNV+uRxXg5kXL/LbmlwCAPBp30vtdHJWA9wmee5KFPgZn5iy
+         Eetk0+eIyrXgNKzkgQ2eaxxjZeVh0jxZVjSOsTYtAjEsxXBrIfLWSbEQ7iXQqb93v1r5
+         j6MDRsVkjf6YTArB8rDeYsCmoOq885hxJpdmZlelHHSyYCHicEvcYbZXxTZH5AIsGgiL
+         uZ3SNS7ve1em/PuCHCNwO9ZTC+JzkX6vBr4u5nD+VAcv7OFX47YD4v+1nKsRACwouPxi
+         6l3A==
+X-Gm-Message-State: AOAM533ZMZxTCGoZL2VvP9U4jVsSiF8MMZ4dnfukRK/rRxmbvBtDDDCJ
+        ncWVOC0h6UCcFseNQxFyfw==
+X-Google-Smtp-Source: ABdhPJwFhyVnuVxL5/czwcl+I12DBt+i8ghW7V5R5zYYXI2C1rc9EfwwMLM20QqzVavhwvZz03q/Ng==
+X-Received: by 2002:a05:6808:f88:: with SMTP id o8mr4510928oiw.29.1643215682768;
+        Wed, 26 Jan 2022 08:48:02 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id z17sm5037867otk.62.2022.01.26.08.47.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jan 2022 08:48:00 -0800 (PST)
+Received: (nullmailer pid 952293 invoked by uid 1000);
+        Wed, 26 Jan 2022 16:47:59 -0000
+Date:   Wed, 26 Jan 2022 10:47:59 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [RFC V1 10/11] perf: Expand perf_branch_entry.type
+Message-ID: <YfF7P9flt8D2+Kfr@robh.at.kernel.org>
+References: <1642998653-21377-1-git-send-email-anshuman.khandual@arm.com>
+ <1642998653-21377-11-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <YfBLusfOk9fpIqqI@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1642998653-21377-11-git-send-email-anshuman.khandual@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Mon, Jan 24, 2022 at 10:00:52AM +0530, Anshuman Khandual wrote:
+> Current perf_branch_entry.type is a 4 bits field just enough to accommodate
+> 16 generic branch types. This is insufficient to accommodate platforms like
+> arm64 which has much more branch types. Lets just expands this field into a
+> 6 bits one, which can now hold 64 generic branch types. This also adds more
+> generic branch types and updates the BRBE driver as required.
+> 
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-perf-users@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>  drivers/perf/arm_pmu_brbe.c           |  7 ++++++-
 
+This patch should come before the BRBE support so that it can be applied
+sooner rather than later. If another field is added to the end before 
+expanding this field, then you will be stuck with assembling bits from 2 
+fields.
 
-On 25/01/2022 19:12, Peter Zijlstra wrote:
-> On Mon, Jan 24, 2022 at 02:58:18PM +0000, James Clark wrote:
-> 
->>> Would this be the better patch?
->>
->> Yes I tested this and it also works.
-> 
-> Excellent!
-> 
->> There is one other suspicious access
->> of ->rb followed by if(rb) here in perf_poll(), but maybe it works out ok?
->>
->> 	mutex_lock(&event->mmap_mutex);
->> 	rb = event->rb;
->> 	if (rb)
->> 		events = atomic_xchg(&rb->poll, 0);
->>
-> 
-> That case must be good since it is the event from a file. Those cannot
-> be clones.
-> 
->> We also have a Perf self test that covers this failure for Arm SPE now, I'm not
->> sure if I should post that separately or with your new version of this fix?
-> 
-> They'd be routed through separate trees anyway, Arnaldo takes the
-> userspace stuff.
-> 
-
-Ok we will post that one separately then. What are the next steps for this one?
-Will you just put your version directly in your tree, or should I resubmit it with a
-new commit message?
-
-
+>  include/uapi/linux/perf_event.h       | 10 ++++++++--
+>  tools/include/uapi/linux/perf_event.h | 10 ++++++++--
+>  tools/perf/util/branch.c              |  8 +++++++-
+>  4 files changed, 29 insertions(+), 6 deletions(-)
