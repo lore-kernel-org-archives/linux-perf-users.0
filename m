@@ -2,263 +2,109 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F19A2C28CF5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Jan 2022 17:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C07A3C28CF5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Jan 2022 19:08:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243697AbiAZR1Y (ORCPT
+        id S232432AbiAZTIW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 Jan 2022 12:27:24 -0500
-Received: from foss.arm.com ([217.140.110.172]:55128 "EHLO foss.arm.com"
+        Wed, 26 Jan 2022 14:08:22 -0500
+Received: from foss.arm.com ([217.140.110.172]:32800 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237164AbiAZR1X (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 Jan 2022 12:27:23 -0500
+        id S231167AbiAZTIV (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 26 Jan 2022 14:08:21 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0DB1D6E;
-        Wed, 26 Jan 2022 09:27:22 -0800 (PST)
-Received: from [10.32.33.50] (e121896.warwick.arm.com [10.32.33.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2119B3F7D8;
-        Wed, 26 Jan 2022 09:27:21 -0800 (PST)
-Subject: Re: [RFC V1 11/11] perf: Capture branch privilege information
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Rob Herring <rob.herring@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <1642998653-21377-1-git-send-email-anshuman.khandual@arm.com>
- <1642998653-21377-12-git-send-email-anshuman.khandual@arm.com>
-From:   James Clark <james.clark@arm.com>
-Message-ID: <b85da904-50cb-b7e3-1429-6f5ef244567b@arm.com>
-Date:   Wed, 26 Jan 2022 17:27:19 +0000
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DFB21FB;
+        Wed, 26 Jan 2022 11:08:21 -0800 (PST)
+Received: from [10.57.88.59] (unknown [10.57.88.59])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0D87C3F7D8;
+        Wed, 26 Jan 2022 11:08:17 -0800 (PST)
+Subject: Re: [PATCH 1/2] perf arm-spe: Add arm_spe_record to synthesized
+To:     Ali Saidi <alisaidi@amazon.com>
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        andrew.kilroy@arm.com, benh@kernel.crashing.org,
+        james.clark@arm.com, john.garry@huawei.com, jolsa@redhat.com,
+        leo.yan@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        mark.rutland@arm.com, mathieu.poirier@linaro.org, mingo@redhat.com,
+        namhyung@kernel.org, peterz@infradead.org, will@kernel.org
+References: <5ca990a5-eedd-0edb-26d3-b5e16c36ac34@arm.com>
+ <20220126155820.21929-1-alisaidi@amazon.com>
+From:   German Gomez <german.gomez@arm.com>
+Message-ID: <c4a96839-1b4b-ac4d-38aa-26c1f4c8645a@arm.com>
+Date:   Wed, 26 Jan 2022 19:07:51 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.14.0
 MIME-Version: 1.0
-In-Reply-To: <1642998653-21377-12-git-send-email-anshuman.khandual@arm.com>
+In-Reply-To: <20220126155820.21929-1-alisaidi@amazon.com>
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
+On 26/01/2022 15:58, Ali Saidi wrote:
+> Hi German,
+>> Hi Ali,
+>>
+>> On 25/01/2022 19:20, Ali Saidi wrote:
+>>> [...]
+>>>
+>>> +	sample.raw_size = sizeof(*record);
+>>> +	sample.raw_data = record;
+>> Have you tried this with perf-inject? I think it would need the PERF_SAMPLE_RAW bit in the sample_type,
+> Yes I've tried the following and it worked as expected with the original
+> perf.data or the perf.data.jitted after perf-inject. 
+>
+> perf record -e arm_spe_0/jitter=1/ -k 1 java ...
+> perf  inject -f --jit -i perf.data -o perf.data.jitted
 
-On 24/01/2022 04:30, Anshuman Khandual wrote:
-> Platforms like arm64 could capture privilege level information for all the
-> branch records. Hence this adds a new element in the struct branch_entry to
-> record the privilege level information, which could be requested through a
-> new event.attr.branch_sample_type flag PERF_SAMPLE_BRANCH_PRIV_SAVE. While
-> here, update the BRBE driver as required.
-> 
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->  drivers/perf/arm_pmu_brbe.c              | 28 ++++++++++++++++++++++++
->  include/linux/perf_event.h               |  5 +++++
->  include/uapi/linux/perf_event.h          | 13 ++++++++++-
->  tools/include/uapi/linux/perf_event.h    | 13 ++++++++++-
->  tools/perf/Documentation/perf-record.txt |  1 +
->  tools/perf/util/parse-branch-options.c   |  1 +
->  6 files changed, 59 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/perf/arm_pmu_brbe.c b/drivers/perf/arm_pmu_brbe.c
-> index 7cd1208c6c58..d4cbea74c148 100644
-> --- a/drivers/perf/arm_pmu_brbe.c
-> +++ b/drivers/perf/arm_pmu_brbe.c
-> @@ -270,6 +270,25 @@ static int brbe_fetch_perf_type(u64 brbinf)
->  	}
->  }
->  
-> +static int brbe_fetch_perf_priv(u64 brbinf)
-> +{
-> +	int brbe_el = brbe_fetch_el(brbinf);
-> +
-> +	switch (brbe_el) {
-> +	case BRBINF_EL_EL0:
-> +		return PERF_BR_USER;
-> +	case BRBINF_EL_EL1:
-> +		return PERF_BR_KERNEL;
-> +	case BRBINF_EL_EL2:
-> +		if (is_kernel_in_hyp_mode())
-> +			return PERF_BR_KERNEL;
-> +		return PERF_BR_HV;
-> +	default:
-> +		pr_warn("unknown branch privilege captured\n");
-> +		return -1;
-> +	}
-> +}
-> +
->  static void capture_brbe_flags(struct pmu_hw_events *cpuc, struct perf_event *event,
->  			       u64 brbinf, int idx)
->  {
-> @@ -302,6 +321,15 @@ static void capture_brbe_flags(struct pmu_hw_events *cpuc, struct perf_event *ev
->  			cpuc->brbe_entries[idx].in_tx = brbinf & BRBINF_TX;
->  		}
->  	}
-> +
-> +	if (branch_sample_priv(event)) {
-> +		/*
-> +		 * All these information (i.e branch privilege level) are not
-> +		 * available for source only branch records.
-> +		 */
-> +		if (type != BRBINF_VALID_SOURCE)
-> +			cpuc->brbe_entries[idx].priv = brbe_fetch_perf_priv(brbinf);
-> +	}
->  }
->  
->  /*
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index 916ce5102b33..8021b6a30d86 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -1688,4 +1688,9 @@ static inline bool branch_sample_hw_index(const struct perf_event *event)
->  {
->  	return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_HW_INDEX;
->  }
-> +
-> +static inline bool branch_sample_priv(const struct perf_event *event)
-> +{
-> +	return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_PRIV_SAVE;
-> +}
->  #endif /* _LINUX_PERF_EVENT_H */
-> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-> index 361fdc6b87a0..4d77710f7a4e 100644
-> --- a/include/uapi/linux/perf_event.h
-> +++ b/include/uapi/linux/perf_event.h
-> @@ -204,6 +204,8 @@ enum perf_branch_sample_type_shift {
->  
->  	PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT	= 17, /* save low level index of raw branch records */
->  
-> +	PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT	= 18, /* save privillege mode */
-> +
->  	PERF_SAMPLE_BRANCH_MAX_SHIFT		/* non-ABI */
->  };
->  
-> @@ -233,6 +235,8 @@ enum perf_branch_sample_type {
->  
->  	PERF_SAMPLE_BRANCH_HW_INDEX	= 1U << PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT,
->  
-> +	PERF_SAMPLE_BRANCH_PRIV_SAVE	= 1U << PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT,
-> +
->  	PERF_SAMPLE_BRANCH_MAX		= 1U << PERF_SAMPLE_BRANCH_MAX_SHIFT,
->  };
->  
-> @@ -265,6 +269,12 @@ enum {
->  	PERF_BR_MAX,
->  };
->  
-> +enum {
-> +	PERF_BR_USER	= 0,
-> +	PERF_BR_KERNEL	= 1,
-> +	PERF_BR_HV	= 2,
-> +};
-> +
+This is not injecting the synthesized samples. I think it is still    
+processing from the aux trace. Try adding "--itrace=i1i --strip" to the
+inject command to remove the AUXTRACE events. Judging by the raw
+samples, the data is missing:
 
-Can we have 0 as "UNKNOWN". It's going to be difficult to parse files when privilege information
-isn't saved and get accurate results without that. For example if it's not set then presumably
-the field would be 0 (PERF_BR_USER), but that doesn't mean the samples are user in that case.
+11 20005239445831 0x3510 [0x94]: PERF_RECORD_SAMPLE(IP, 0x1): 47670/47670: 0xffffab6e02d1b320 period: 1 addr: 0
 
-I know you might be able to go backwards and look at what arguments were passed to the kernel but
-it's not guaranteed that the kernel honored the request anyway. There are also other platforms
-to think about etc.
+. ... raw event: size 64 bytes
+.  0000:  09 00 00 00 01 00 40 00 f3 10 9b 3b 00 00 00 00  ......@....;....
+.  0010:  98 c5 e3 02 6e ab ff ff 36 ba 00 00 36 ba 00 00  ....n...6...6...
+.  0020:  35 da 30 d5 31 12 00 00 0b 00 00 00 00 00 00 00  5.0.1...........
+.  0030:  01 00 00 00 00 00 00 00 82 01 00 88 00 00 00 00  ................
 
-If you look at the branch type definitions above they start at 0 (PERF_BR_UNKNOWN) which I think
-works out quite nicely in the userspace code.
+vs when adding PERF_SAMPLE_RAW to attr.sample_type:      
 
->  #define PERF_SAMPLE_BRANCH_PLM_ALL \
->  	(PERF_SAMPLE_BRANCH_USER|\
->  	 PERF_SAMPLE_BRANCH_KERNEL|\
-> @@ -1377,7 +1387,8 @@ struct perf_branch_entry {
->  		abort:1,    /* transaction abort */
->  		cycles:16,  /* cycle count to last branch */
->  		type:6,     /* branch type */
-> -		reserved:38;
-> +		priv:2,     /* privilege level */> +		reserved:36;
->  };
->  
->  union perf_sample_weight {
-> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-> index 9a82b8aaed93..a2208400b0b9 100644
-> --- a/tools/include/uapi/linux/perf_event.h
-> +++ b/tools/include/uapi/linux/perf_event.h
-> @@ -204,6 +204,8 @@ enum perf_branch_sample_type_shift {
->  
->  	PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT	= 17, /* save low level index of raw branch records */
->  
-> +	PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT	= 18, /* save privillege mode */
-> +
->  	PERF_SAMPLE_BRANCH_MAX_SHIFT		/* non-ABI */
->  };
->  
-> @@ -233,6 +235,8 @@ enum perf_branch_sample_type {
->  
->  	PERF_SAMPLE_BRANCH_HW_INDEX	= 1U << PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT,
->  
-> +	PERF_SAMPLE_BRANCH_PRIV_SAVE	= 1U << PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT,
-> +
->  	PERF_SAMPLE_BRANCH_MAX		= 1U << PERF_SAMPLE_BRANCH_MAX_SHIFT,
->  };
->  
-> @@ -265,6 +269,12 @@ enum {
->  	PERF_BR_MAX,
->  };
->  
-> +enum {
-> +	PERF_BR_USER    = 0,
-> +	PERF_BR_KERNEL  = 1,
-> +	PERF_BR_HV      = 2,
-> +};
-> +
->  #define PERF_SAMPLE_BRANCH_PLM_ALL \
->  	(PERF_SAMPLE_BRANCH_USER|\
->  	 PERF_SAMPLE_BRANCH_KERNEL|\
-> @@ -1377,7 +1387,8 @@ struct perf_branch_entry {
->  		abort:1,    /* transaction abort */
->  		cycles:16,  /* cycle count to last branch */
->  		type:6,     /* branch type */
-> -		reserved:38;
-> +		priv:2,     /* privilege level */
-> +		reserved:36;
->  };
->  
->  union perf_sample_weight {
-> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-> index 9ccc75935bc5..3e33686977a1 100644
-> --- a/tools/perf/Documentation/perf-record.txt
-> +++ b/tools/perf/Documentation/perf-record.txt
-> @@ -387,6 +387,7 @@ following filters are defined:
->  	- abort_tx: only when the target is a hardware transaction abort
->  	- cond: conditional branches
->  	- save_type: save branch type during sampling in case binary is not available later
-> +	- priv: save privilege state during sampling in case binary is not available later
->  
->  +
->  The option requires at least one branch type among any, any_call, any_ret, ind_call, cond.
-> diff --git a/tools/perf/util/parse-branch-options.c b/tools/perf/util/parse-branch-options.c
-> index bb4aa88c50a8..00588b9db474 100644
-> --- a/tools/perf/util/parse-branch-options.c
-> +++ b/tools/perf/util/parse-branch-options.c
-> @@ -32,6 +32,7 @@ static const struct branch_mode branch_modes[] = {
->  	BRANCH_OPT("call", PERF_SAMPLE_BRANCH_CALL),
->  	BRANCH_OPT("save_type", PERF_SAMPLE_BRANCH_TYPE_SAVE),
->  	BRANCH_OPT("stack", PERF_SAMPLE_BRANCH_CALL_STACK),
-> +	BRANCH_OPT("priv", PERF_SAMPLE_BRANCH_PRIV_SAVE),
->  	BRANCH_END
->  };
->  
-> 
+. ... raw event: size 148 bytes
+.  0000:  09 00 00 00 01 00 94 00 f3 10 9b 3b 00 00 00 00  ...........;....
+.  0010:  98 c5 e3 02 6e ab ff ff 36 ba 00 00 36 ba 00 00  ....n...6...6...
+[...]
+.  0080:  00 00 00 00 2a 00 00 00 00 00 00 00 82 01 00 88  ....*...........
+.  0090:  00 00 00 00
+
+> perf script -i perf.data -s t1.py --itrace=i1i
+>
+>> Although I quickly looked over the perf inject code and it looks like it's expecting some type of padding:
+>>
+>> [...]
+>>
+>> I'm seeing some comments in utils/event.h related to this on the intel events.
+> Yes i noticed this too,but looking at how the raw data is added to the same
+> other places like intel-pt.c:1703 the perf_synth__raw*() functions are used to
+> strip away the 4 bytes bytes before the data is added to the sample. The other
+> places i can find the padding used is in builtin-script.c but given we have the
+> --dump-raw-trace option it's not clear to me that it's needed to wrap the
+> arm_spe_event in another struct with padding like perf_synth_intel_ptwrite?
+
+I think the intel use case makes sense because the layout of the data
+is fixed and documented. If we modify the struct arm_spe_record later it
+may not be obvious how to match it to the raw data of an older perf.data
+file. And we're generating bigger files with redundant information.
+
+Thanks,
+German
+
+>
+> Thanks,
+> Ali
+>
