@@ -2,109 +2,152 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C07A3C28CF5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Jan 2022 19:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF93C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Jan 2022 23:48:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232432AbiAZTIW (ORCPT
+        id S229729AbiAZXsB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 Jan 2022 14:08:22 -0500
-Received: from foss.arm.com ([217.140.110.172]:32800 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231167AbiAZTIV (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 Jan 2022 14:08:21 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DFB21FB;
-        Wed, 26 Jan 2022 11:08:21 -0800 (PST)
-Received: from [10.57.88.59] (unknown [10.57.88.59])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0D87C3F7D8;
-        Wed, 26 Jan 2022 11:08:17 -0800 (PST)
-Subject: Re: [PATCH 1/2] perf arm-spe: Add arm_spe_record to synthesized
-To:     Ali Saidi <alisaidi@amazon.com>
-Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
-        andrew.kilroy@arm.com, benh@kernel.crashing.org,
-        james.clark@arm.com, john.garry@huawei.com, jolsa@redhat.com,
-        leo.yan@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        mark.rutland@arm.com, mathieu.poirier@linaro.org, mingo@redhat.com,
-        namhyung@kernel.org, peterz@infradead.org, will@kernel.org
-References: <5ca990a5-eedd-0edb-26d3-b5e16c36ac34@arm.com>
- <20220126155820.21929-1-alisaidi@amazon.com>
-From:   German Gomez <german.gomez@arm.com>
-Message-ID: <c4a96839-1b4b-ac4d-38aa-26c1f4c8645a@arm.com>
-Date:   Wed, 26 Jan 2022 19:07:51 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Wed, 26 Jan 2022 18:48:01 -0500
+Received: from mail-lj1-f179.google.com ([209.85.208.179]:46621 "EHLO
+        mail-lj1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229451AbiAZXsB (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 26 Jan 2022 18:48:01 -0500
+Received: by mail-lj1-f179.google.com with SMTP id c7so1269509ljr.13;
+        Wed, 26 Jan 2022 15:48:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A+Sex3BBAgghx3dainDFroJl2/jGVhJ6WloIeHSgRI8=;
+        b=WEUFPn/4nROPJXyMvCY/9yR95srgcSo6tTFDvIrC52Eo6FHvNGp7em3tg7Q6ZDrH1A
+         nSNpyW4nrcuRiuhYfpKqTwkTy3+cYpGKgxD7NjWoolaw4DcvVuMvn5qCm6ZqBFlEbm9O
+         umliS1Wjy3TKoj9LCf2asZcQ/VhhvdjbyImbejUgBtkNQEtD6UOUTekiWbpjq6kNs/Pa
+         /0cRqWXFR8QFKWOBl+mh/NUjvqJ1TczXlmuDGPNUP3VEokb7rbbeoKaiB9pnwXN7dzkw
+         vqAg7yqWEIjiHV8ey2bOT5TBWhxFz1YXl1PvaLYeqUl3ME5PLsCd25Mo4Edc2buYj24I
+         C9Pw==
+X-Gm-Message-State: AOAM531GRL034LhG9Wj0nc0TWt6ZFV5yvoz2R1BguMFYxw63L4knp2b9
+        IcRtiBmEfSWyR5gmpSJb4ez6X6DbSAbihImXc0M=
+X-Google-Smtp-Source: ABdhPJxDR1dAZ3mHcHkrKPv4uJ4qaBJfYG91eu96AkEl7JDmy3DXCNPk0lDuyZx3OB3V/OqFfVDC6ziO69pWyjku2Gs=
+X-Received: by 2002:a2e:7219:: with SMTP id n25mr1007121ljc.204.1643240879367;
+ Wed, 26 Jan 2022 15:47:59 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20220126155820.21929-1-alisaidi@amazon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20220126151921.2519-1-changbin.du@gmail.com>
+In-Reply-To: <20220126151921.2519-1-changbin.du@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 26 Jan 2022 15:47:48 -0800
+Message-ID: <CAM9d7cipbsg46=UNY8-h-e9RAsqeJRcL=mi_RXbtQwQUbwPehQ@mail.gmail.com>
+Subject: Re: [PATCH] perf/ftrace: system_wide collection is not effective by default
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hello,
 
-On 26/01/2022 15:58, Ali Saidi wrote:
-> Hi German,
->> Hi Ali,
->>
->> On 25/01/2022 19:20, Ali Saidi wrote:
->>> [...]
->>>
->>> +	sample.raw_size = sizeof(*record);
->>> +	sample.raw_data = record;
->> Have you tried this with perf-inject? I think it would need the PERF_SAMPLE_RAW bit in the sample_type,
-> Yes I've tried the following and it worked as expected with the original
-> perf.data or the perf.data.jitted after perf-inject. 
+On Wed, Jan 26, 2022 at 7:19 AM Changbin Du <changbin.du@gmail.com> wrote:
 >
-> perf record -e arm_spe_0/jitter=1/ -k 1 java ...
-> perf  inject -f --jit -i perf.data -o perf.data.jitted
+> The ftrace.target.system_wide must be set before invoking
+> evlist__create_maps(), otherwise it has no effect.
 
-This is not injecting the synthesized samples. I think it is still    
-processing from the aux trace. Try adding "--itrace=i1i --strip" to the
-inject command to remove the AUXTRACE events. Judging by the raw
-samples, the data is missing:
+Oh, right.  Thanks for pointing that out.
 
-11 20005239445831 0x3510 [0x94]: PERF_RECORD_SAMPLE(IP, 0x1): 47670/47670: 0xffffab6e02d1b320 period: 1 addr: 0
-
-. ... raw event: size 64 bytes
-.  0000:  09 00 00 00 01 00 40 00 f3 10 9b 3b 00 00 00 00  ......@....;....
-.  0010:  98 c5 e3 02 6e ab ff ff 36 ba 00 00 36 ba 00 00  ....n...6...6...
-.  0020:  35 da 30 d5 31 12 00 00 0b 00 00 00 00 00 00 00  5.0.1...........
-.  0030:  01 00 00 00 00 00 00 00 82 01 00 88 00 00 00 00  ................
-
-vs when adding PERF_SAMPLE_RAW to attr.sample_type:      
-
-. ... raw event: size 148 bytes
-.  0000:  09 00 00 00 01 00 94 00 f3 10 9b 3b 00 00 00 00  ...........;....
-.  0010:  98 c5 e3 02 6e ab ff ff 36 ba 00 00 36 ba 00 00  ....n...6...6...
-[...]
-.  0080:  00 00 00 00 2a 00 00 00 00 00 00 00 82 01 00 88  ....*...........
-.  0090:  00 00 00 00
-
-> perf script -i perf.data -s t1.py --itrace=i1i
 >
->> Although I quickly looked over the perf inject code and it looks like it's expecting some type of padding:
->>
->> [...]
->>
->> I'm seeing some comments in utils/event.h related to this on the intel events.
-> Yes i noticed this too,but looking at how the raw data is added to the same
-> other places like intel-pt.c:1703 the perf_synth__raw*() functions are used to
-> strip away the 4 bytes bytes before the data is added to the sample. The other
-> places i can find the padding used is in builtin-script.c but given we have the
-> --dump-raw-trace option it's not clear to me that it's needed to wrap the
-> arm_spe_event in another struct with padding like perf_synth_intel_ptwrite?
+> Fixes: 53be50282269 ("perf ftrace: Add 'latency' subcommand")
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> ---
+>  tools/perf/builtin-ftrace.c | 45 ++++++++++++++++++++-----------------
+>  1 file changed, 24 insertions(+), 21 deletions(-)
+>
+> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> index dec24dc0e767..26bff29ad277 100644
+> --- a/tools/perf/builtin-ftrace.c
+> +++ b/tools/perf/builtin-ftrace.c
+> @@ -1115,6 +1115,7 @@ enum perf_ftrace_subcommand {
+>  int cmd_ftrace(int argc, const char **argv)
+>  {
+>         int ret;
+> +       int (*cmd_func)(struct perf_ftrace *) = NULL;
+>         struct perf_ftrace ftrace = {
+>                 .tracer = DEFAULT_TRACER,
+>                 .target = { .uid = UINT_MAX, },
+> @@ -1221,6 +1222,28 @@ int cmd_ftrace(int argc, const char **argv)
+>                 goto out_delete_filters;
+>         }
+>
+> +       switch (subcmd) {
+> +       case PERF_FTRACE_TRACE:
+> +               if (!argc && target__none(&ftrace.target))
+> +                       ftrace.target.system_wide = true;
 
-I think the intel use case makes sense because the layout of the data
-is fixed and documented. If we modify the struct arm_spe_record later it
-may not be obvious how to match it to the raw data of an older perf.data
-file. And we're generating bigger files with redundant information.
+We can move only this part after parse_options().
+
+> +               cmd_func = __cmd_ftrace;
+> +               break;
+> +       case PERF_FTRACE_LATENCY:
+> +               if (list_empty(&ftrace.filters)) {
+> +                       pr_err("Should provide a function to measure\n");
+> +                       parse_options_usage(ftrace_usage, options, "T", 1);
+> +                       ret = -EINVAL;
+> +                       goto out_delete_evlist;
+
+Otherwise, it should go to the out_delete_filters.
+
+> +               }
+> +               cmd_func = __cmd_latency;
+> +               break;
+> +       case PERF_FTRACE_NONE:
+> +       default:
+> +               pr_err("Invalid subcommand\n");
+> +               ret = -EINVAL;
+> +               goto out_delete_evlist;
+
+Ditto.
 
 Thanks,
-German
+Namhyung
 
+
+> +       }
+> +
+>         ret = target__validate(&ftrace.target);
+>         if (ret) {
+>                 char errbuf[512];
+> @@ -1248,27 +1271,7 @@ int cmd_ftrace(int argc, const char **argv)
+>                         goto out_delete_evlist;
+>         }
 >
-> Thanks,
-> Ali
+> -       switch (subcmd) {
+> -       case PERF_FTRACE_TRACE:
+> -               if (!argc && target__none(&ftrace.target))
+> -                       ftrace.target.system_wide = true;
+> -               ret = __cmd_ftrace(&ftrace);
+> -               break;
+> -       case PERF_FTRACE_LATENCY:
+> -               if (list_empty(&ftrace.filters)) {
+> -                       pr_err("Should provide a function to measure\n");
+> -                       parse_options_usage(ftrace_usage, options, "T", 1);
+> -                       ret = -EINVAL;
+> -                       goto out_delete_evlist;
+> -               }
+> -               ret = __cmd_latency(&ftrace);
+> -               break;
+> -       case PERF_FTRACE_NONE:
+> -       default:
+> -               pr_err("Invalid subcommand\n");
+> -               ret = -EINVAL;
+> -               break;
+> -       }
+> +       ret = cmd_func(&ftrace);
+>
+>  out_delete_evlist:
+>         evlist__delete(ftrace.evlist);
+> --
+> 2.32.0
 >
