@@ -2,135 +2,263 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A633C28CF5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Jan 2022 17:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F19A2C28CF5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Jan 2022 17:27:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231270AbiAZRTC (ORCPT
+        id S243697AbiAZR1Y (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 Jan 2022 12:19:02 -0500
-Received: from mail-oo1-f51.google.com ([209.85.161.51]:39718 "EHLO
-        mail-oo1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231168AbiAZRTC (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 Jan 2022 12:19:02 -0500
-Received: by mail-oo1-f51.google.com with SMTP id c7-20020a4ad207000000b002e7ab4185d2so68946oos.6;
-        Wed, 26 Jan 2022 09:19:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6Mpzlir6SdqG4dmvTdqzzIWhZy40hzNNvzFlysAcgEo=;
-        b=cTZa7OBRRbnpcBPHyGqLWCNhGLldOA3yZVWhYdv1uT70PIH1YgO6ZZLnnxmXmtXaX7
-         N6RAznD+Hk+qjSvyWy++PdCAswnC+Pg1kZufbr9/WRlHYwG3eK4WFBmrq7cdgO7Abqkh
-         N8GKNcQzyKRUsRqzuqd6k/pG6ToGhEk3rBsFDEvP9lZv4Aqi67vaIvNZ7Ns/n6FzIkaY
-         TlrHHdCFo9cySRWyIcA44ZYrW96/vc47s4vC5v2zu/OyFelBVg8IdRNGAkMZewMIn2ug
-         EP9MFhaKNzimrGZ0O8agc5ZZ6dkP06GVgwqljvYfSeH+4oJunp/W+zIG0o1YK6X5hbH6
-         7GPQ==
-X-Gm-Message-State: AOAM533Gg15FDBy6bdTjdjAJ4g3vOuU/2XvoRwV0QoYj5finXbiZRPWY
-        mRQphFmHuvMViVwGh+9oAp7L+n4eug==
-X-Google-Smtp-Source: ABdhPJyG2I4hTLw+49PdCXukWfcyYMXxvipT317bX9TkHxSH1ngsOdYI+seGe7/TEKrCnlLtNRkF6w==
-X-Received: by 2002:a4a:9866:: with SMTP id z35mr6372ooi.61.1643217541497;
-        Wed, 26 Jan 2022 09:19:01 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id p26sm5677731oth.14.2022.01.26.09.19.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jan 2022 09:19:00 -0800 (PST)
-Received: (nullmailer pid 994404 invoked by uid 1000);
-        Wed, 26 Jan 2022 17:18:59 -0000
-Date:   Wed, 26 Jan 2022 11:18:59 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        Wed, 26 Jan 2022 12:27:24 -0500
+Received: from foss.arm.com ([217.140.110.172]:55128 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237164AbiAZR1X (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 26 Jan 2022 12:27:23 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0DB1D6E;
+        Wed, 26 Jan 2022 09:27:22 -0800 (PST)
+Received: from [10.32.33.50] (e121896.warwick.arm.com [10.32.33.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2119B3F7D8;
+        Wed, 26 Jan 2022 09:27:21 -0800 (PST)
+Subject: Re: [RFC V1 11/11] perf: Capture branch privilege information
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [RFC V1 05/11] arm64/perf: Detect support for BRBE
-Message-ID: <YfGCgwlk6wHS/OYe@robh.at.kernel.org>
+        linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Rob Herring <rob.herring@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
 References: <1642998653-21377-1-git-send-email-anshuman.khandual@arm.com>
- <1642998653-21377-6-git-send-email-anshuman.khandual@arm.com>
+ <1642998653-21377-12-git-send-email-anshuman.khandual@arm.com>
+From:   James Clark <james.clark@arm.com>
+Message-ID: <b85da904-50cb-b7e3-1429-6f5ef244567b@arm.com>
+Date:   Wed, 26 Jan 2022 17:27:19 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1642998653-21377-6-git-send-email-anshuman.khandual@arm.com>
+In-Reply-To: <1642998653-21377-12-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jan 24, 2022 at 10:00:47AM +0530, Anshuman Khandual wrote:
-> CPU specific BRBE entries, cycle count, format support gets detected during
-> PMU init. This information gets saved in per-cpu struct pmu_hw_events which
-> later helps in operating BRBE during a perf event context.
 
-Another NOP commit. The subject says 'arm64' and that we detect BRBE 
-support. This patch neither touches arm64 code nor detects anything.
 
+On 24/01/2022 04:30, Anshuman Khandual wrote:
+> Platforms like arm64 could capture privilege level information for all the
+> branch records. Hence this adds a new element in the struct branch_entry to
+> record the privilege level information, which could be requested through a
+> new event.attr.branch_sample_type flag PERF_SAMPLE_BRANCH_PRIV_SAVE. While
+> here, update the BRBE driver as required.
 > 
 > Cc: Will Deacon <will@kernel.org>
 > Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
 > Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-perf-users@vger.kernel.org
 > Cc: linux-kernel@vger.kernel.org
 > Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 > ---
->  drivers/perf/arm_pmu_platform.c | 34 +++++++++++++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
+>  drivers/perf/arm_pmu_brbe.c              | 28 ++++++++++++++++++++++++
+>  include/linux/perf_event.h               |  5 +++++
+>  include/uapi/linux/perf_event.h          | 13 ++++++++++-
+>  tools/include/uapi/linux/perf_event.h    | 13 ++++++++++-
+>  tools/perf/Documentation/perf-record.txt |  1 +
+>  tools/perf/util/parse-branch-options.c   |  1 +
+>  6 files changed, 59 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/perf/arm_pmu_platform.c b/drivers/perf/arm_pmu_platform.c
-> index 513de1f54e2d..800e4a6e8bc3 100644
-> --- a/drivers/perf/arm_pmu_platform.c
-> +++ b/drivers/perf/arm_pmu_platform.c
-> @@ -172,6 +172,36 @@ static int armpmu_request_irqs(struct arm_pmu *armpmu)
->  	return err;
+> diff --git a/drivers/perf/arm_pmu_brbe.c b/drivers/perf/arm_pmu_brbe.c
+> index 7cd1208c6c58..d4cbea74c148 100644
+> --- a/drivers/perf/arm_pmu_brbe.c
+> +++ b/drivers/perf/arm_pmu_brbe.c
+> @@ -270,6 +270,25 @@ static int brbe_fetch_perf_type(u64 brbinf)
+>  	}
 >  }
 >  
-> +static void arm_brbe_probe_cpu(void *info)
+> +static int brbe_fetch_perf_priv(u64 brbinf)
 > +{
-> +	struct pmu_hw_events *hw_events;
-> +	struct arm_pmu *armpmu = info;
+> +	int brbe_el = brbe_fetch_el(brbinf);
 > +
-> +	/*
-> +	 * Return from here, if BRBE driver has not been
-> +	 * implemented for this PMU. This helps prevent
-> +	 * kernel crash later when brbe_probe() will be
-> +	 * called on the PMU.
-> +	 */
-> +	if (!armpmu->brbe_probe)
-> +		return;
-> +
-> +	hw_events = per_cpu_ptr(armpmu->hw_events, smp_processor_id());
-> +	armpmu->brbe_probe(hw_events);
-> +}
-> +
-> +static int armpmu_request_brbe(struct arm_pmu *armpmu)
-> +{
-> +	int cpu, err = 0;
-> +
-> +	for_each_cpu(cpu, &armpmu->supported_cpus) {
-> +		err = smp_call_function_single(cpu, arm_brbe_probe_cpu, armpmu, 1);
-> +		if (err)
-> +			return err;
+> +	switch (brbe_el) {
+> +	case BRBINF_EL_EL0:
+> +		return PERF_BR_USER;
+> +	case BRBINF_EL_EL1:
+> +		return PERF_BR_KERNEL;
+> +	case BRBINF_EL_EL2:
+> +		if (is_kernel_in_hyp_mode())
+> +			return PERF_BR_KERNEL;
+> +		return PERF_BR_HV;
+> +	default:
+> +		pr_warn("unknown branch privilege captured\n");
+> +		return -1;
 > +	}
-> +	return err;
 > +}
 > +
->  static void armpmu_free_irqs(struct arm_pmu *armpmu)
+>  static void capture_brbe_flags(struct pmu_hw_events *cpuc, struct perf_event *event,
+>  			       u64 brbinf, int idx)
 >  {
->  	int cpu;
-> @@ -229,6 +259,10 @@ int arm_pmu_device_probe(struct platform_device *pdev,
->  	if (ret)
->  		goto out_free_irqs;
->  
-> +	ret = armpmu_request_brbe(pmu);
-> +	if (ret)
-> +		goto out_free_irqs;
+> @@ -302,6 +321,15 @@ static void capture_brbe_flags(struct pmu_hw_events *cpuc, struct perf_event *ev
+>  			cpuc->brbe_entries[idx].in_tx = brbinf & BRBINF_TX;
+>  		}
+>  	}
 > +
->  	ret = armpmu_register(pmu);
->  	if (ret) {
->  		dev_err(dev, "failed to register PMU devices!\n");
-> -- 
-> 2.25.1
-> 
+> +	if (branch_sample_priv(event)) {
+> +		/*
+> +		 * All these information (i.e branch privilege level) are not
+> +		 * available for source only branch records.
+> +		 */
+> +		if (type != BRBINF_VALID_SOURCE)
+> +			cpuc->brbe_entries[idx].priv = brbe_fetch_perf_priv(brbinf);
+> +	}
+>  }
+>  
+>  /*
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 916ce5102b33..8021b6a30d86 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -1688,4 +1688,9 @@ static inline bool branch_sample_hw_index(const struct perf_event *event)
+>  {
+>  	return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_HW_INDEX;
+>  }
+> +
+> +static inline bool branch_sample_priv(const struct perf_event *event)
+> +{
+> +	return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_PRIV_SAVE;
+> +}
+>  #endif /* _LINUX_PERF_EVENT_H */
+> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> index 361fdc6b87a0..4d77710f7a4e 100644
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -204,6 +204,8 @@ enum perf_branch_sample_type_shift {
+>  
+>  	PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT	= 17, /* save low level index of raw branch records */
+>  
+> +	PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT	= 18, /* save privillege mode */
+> +
+>  	PERF_SAMPLE_BRANCH_MAX_SHIFT		/* non-ABI */
+>  };
+>  
+> @@ -233,6 +235,8 @@ enum perf_branch_sample_type {
+>  
+>  	PERF_SAMPLE_BRANCH_HW_INDEX	= 1U << PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT,
+>  
+> +	PERF_SAMPLE_BRANCH_PRIV_SAVE	= 1U << PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT,
+> +
+>  	PERF_SAMPLE_BRANCH_MAX		= 1U << PERF_SAMPLE_BRANCH_MAX_SHIFT,
+>  };
+>  
+> @@ -265,6 +269,12 @@ enum {
+>  	PERF_BR_MAX,
+>  };
+>  
+> +enum {
+> +	PERF_BR_USER	= 0,
+> +	PERF_BR_KERNEL	= 1,
+> +	PERF_BR_HV	= 2,
+> +};
+> +
+
+Can we have 0 as "UNKNOWN". It's going to be difficult to parse files when privilege information
+isn't saved and get accurate results without that. For example if it's not set then presumably
+the field would be 0 (PERF_BR_USER), but that doesn't mean the samples are user in that case.
+
+I know you might be able to go backwards and look at what arguments were passed to the kernel but
+it's not guaranteed that the kernel honored the request anyway. There are also other platforms
+to think about etc.
+
+If you look at the branch type definitions above they start at 0 (PERF_BR_UNKNOWN) which I think
+works out quite nicely in the userspace code.
+
+>  #define PERF_SAMPLE_BRANCH_PLM_ALL \
+>  	(PERF_SAMPLE_BRANCH_USER|\
+>  	 PERF_SAMPLE_BRANCH_KERNEL|\
+> @@ -1377,7 +1387,8 @@ struct perf_branch_entry {
+>  		abort:1,    /* transaction abort */
+>  		cycles:16,  /* cycle count to last branch */
+>  		type:6,     /* branch type */
+> -		reserved:38;
+> +		priv:2,     /* privilege level */> +		reserved:36;
+>  };
+>  
+>  union perf_sample_weight {
+> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+> index 9a82b8aaed93..a2208400b0b9 100644
+> --- a/tools/include/uapi/linux/perf_event.h
+> +++ b/tools/include/uapi/linux/perf_event.h
+> @@ -204,6 +204,8 @@ enum perf_branch_sample_type_shift {
+>  
+>  	PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT	= 17, /* save low level index of raw branch records */
+>  
+> +	PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT	= 18, /* save privillege mode */
+> +
+>  	PERF_SAMPLE_BRANCH_MAX_SHIFT		/* non-ABI */
+>  };
+>  
+> @@ -233,6 +235,8 @@ enum perf_branch_sample_type {
+>  
+>  	PERF_SAMPLE_BRANCH_HW_INDEX	= 1U << PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT,
+>  
+> +	PERF_SAMPLE_BRANCH_PRIV_SAVE	= 1U << PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT,
+> +
+>  	PERF_SAMPLE_BRANCH_MAX		= 1U << PERF_SAMPLE_BRANCH_MAX_SHIFT,
+>  };
+>  
+> @@ -265,6 +269,12 @@ enum {
+>  	PERF_BR_MAX,
+>  };
+>  
+> +enum {
+> +	PERF_BR_USER    = 0,
+> +	PERF_BR_KERNEL  = 1,
+> +	PERF_BR_HV      = 2,
+> +};
+> +
+>  #define PERF_SAMPLE_BRANCH_PLM_ALL \
+>  	(PERF_SAMPLE_BRANCH_USER|\
+>  	 PERF_SAMPLE_BRANCH_KERNEL|\
+> @@ -1377,7 +1387,8 @@ struct perf_branch_entry {
+>  		abort:1,    /* transaction abort */
+>  		cycles:16,  /* cycle count to last branch */
+>  		type:6,     /* branch type */
+> -		reserved:38;
+> +		priv:2,     /* privilege level */
+> +		reserved:36;
+>  };
+>  
+>  union perf_sample_weight {
+> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+> index 9ccc75935bc5..3e33686977a1 100644
+> --- a/tools/perf/Documentation/perf-record.txt
+> +++ b/tools/perf/Documentation/perf-record.txt
+> @@ -387,6 +387,7 @@ following filters are defined:
+>  	- abort_tx: only when the target is a hardware transaction abort
+>  	- cond: conditional branches
+>  	- save_type: save branch type during sampling in case binary is not available later
+> +	- priv: save privilege state during sampling in case binary is not available later
+>  
+>  +
+>  The option requires at least one branch type among any, any_call, any_ret, ind_call, cond.
+> diff --git a/tools/perf/util/parse-branch-options.c b/tools/perf/util/parse-branch-options.c
+> index bb4aa88c50a8..00588b9db474 100644
+> --- a/tools/perf/util/parse-branch-options.c
+> +++ b/tools/perf/util/parse-branch-options.c
+> @@ -32,6 +32,7 @@ static const struct branch_mode branch_modes[] = {
+>  	BRANCH_OPT("call", PERF_SAMPLE_BRANCH_CALL),
+>  	BRANCH_OPT("save_type", PERF_SAMPLE_BRANCH_TYPE_SAVE),
+>  	BRANCH_OPT("stack", PERF_SAMPLE_BRANCH_CALL_STACK),
+> +	BRANCH_OPT("priv", PERF_SAMPLE_BRANCH_PRIV_SAVE),
+>  	BRANCH_END
+>  };
+>  
 > 
