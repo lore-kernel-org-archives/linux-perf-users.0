@@ -2,70 +2,121 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAC5C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Jan 2022 21:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9926AC28CF5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Jan 2022 11:00:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233151AbiAYVcy (ORCPT
+        id S240392AbiAZLAA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Jan 2022 16:32:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51144 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233148AbiAYVcx (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Jan 2022 16:32:53 -0500
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F1EFC06173B;
-        Tue, 25 Jan 2022 13:32:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=klGnJioOcgDKO/TJKK9IN06R18s20W+7JvkgdEv4Aw4=; b=qIoYpP71UhPHE0K6vzujD18XKY
-        7SZzWx6zDIvvHkm9p/b7r9nm8aBtuGldnLOZQLopnx1bdHrmVGn91GDbOFj4oHwrClngRjCrW5A3T
-        Cg/ea39ydmIASfDUj2/J22tIlEPgnRQN5a97KLRX4iXLuLVgoA9FAvxAnF+eNg78cys2yI1POMgiB
-        2nEzh91MCuMOwMcjMNktKbkKUM/81yNMZit+OPVr1YCm/rx3TlcbqvMUdm/g+6NOs2MPl9cszqqrx
-        NSXHC9aJE72mOsenqa1alw3Zx3F0XCuhDfHRA/DLp5NDcXI7Am1nsHFN+CEZB8lwHXR4fTxS91R4g
-        hbYjyhwA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nCTQX-003Zaf-Pi; Tue, 25 Jan 2022 21:32:33 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AAB4F3002FC;
-        Tue, 25 Jan 2022 22:32:31 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 928D620172667; Tue, 25 Jan 2022 22:32:31 +0100 (CET)
-Date:   Tue, 25 Jan 2022 22:32:31 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Colin Ian King <colin.i.king@gmail.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Wed, 26 Jan 2022 06:00:00 -0500
+Received: from foss.arm.com ([217.140.110.172]:59794 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S240388AbiAZLAA (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 26 Jan 2022 06:00:00 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1447C113E;
+        Wed, 26 Jan 2022 03:00:00 -0800 (PST)
+Received: from e127744.arm.com (unknown [10.57.88.59])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DE67D3F766;
+        Wed, 26 Jan 2022 02:59:57 -0800 (PST)
+From:   German Gomez <german.gomez@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     German Gomez <german.gomez@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        linux-perf-users@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] perf/x86/rapl: replace 0 with NULL to initialize
- pointers
-Message-ID: <YfBsb/3fR7v7tnr4@hirez.programming.kicks-ass.net>
-References: <20220125201403.670011-1-colin.i.king@gmail.com>
+        Namhyung Kim <namhyung@kernel.org>
+Subject: [PATCH] perf tools: apply correct label to user/kernel symbols in branch mode
+Date:   Wed, 26 Jan 2022 10:59:26 +0000
+Message-Id: <20220126105927.3411216-1-german.gomez@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220125201403.670011-1-colin.i.king@gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jan 25, 2022 at 08:14:03PM +0000, Colin Ian King wrote:
-> Pointers should be initialized with NULL rather than zero. Fix these.
+In branch mode, the branch symbols were being displayed with incorrect
+cpumode labels. So fix this.
 
-Why ? This isn't C++, heck, this isn't even C, this is the kernel, we
-hard rely on NULL being 0.
+For example, before:
+  # perf record -b -a -- sleep 1
+  # perf report -b
+
+  Overhead  Command  Source Shared Object  Source Symbol               Target Symbol
+     0.08%  swapper  [kernel.kallsyms]     [k] rcu_idle_enter          [k] cpuidle_enter_state
+ ==> 0.08%  cmd0     [kernel.kallsyms]     [.] psi_group_change        [.] psi_group_change
+     0.08%  cmd1     [kernel.kallsyms]     [k] psi_group_change        [k] psi_group_change
+
+After:
+  # perf report -b
+
+  Overhead  Command  Source Shared Object  Source Symbol               Target Symbol
+     0.08%  swapper  [kernel.kallsyms]     [k] rcu_idle_enter          [k] cpuidle_enter_state
+     0.08%  cmd0     [kernel.kallsyms]     [k] psi_group_change        [k] pei_group_change
+     0.08%  cmd1     [kernel.kallsyms]     [k] psi_group_change        [k] psi_group_change
+
+Signed-off-by: German Gomez <german.gomez@arm.com>
+---
+ tools/perf/util/machine.c    | 2 ++
+ tools/perf/util/map_symbol.h | 1 +
+ tools/perf/util/sort.c       | 4 ++--
+ 3 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 3901440ae..ef564a5cf 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -2072,6 +2072,7 @@ static void ip__resolve_ams(struct thread *thread,
+ 
+ 	ams->addr = ip;
+ 	ams->al_addr = al.addr;
++	ams->al_level = al.level;
+ 	ams->ms.maps = al.maps;
+ 	ams->ms.sym = al.sym;
+ 	ams->ms.map = al.map;
+@@ -2091,6 +2092,7 @@ static void ip__resolve_data(struct thread *thread,
+ 
+ 	ams->addr = addr;
+ 	ams->al_addr = al.addr;
++	ams->al_level = al.level;
+ 	ams->ms.maps = al.maps;
+ 	ams->ms.sym = al.sym;
+ 	ams->ms.map = al.map;
+diff --git a/tools/perf/util/map_symbol.h b/tools/perf/util/map_symbol.h
+index 7d22ade08..e08817b0c 100644
+--- a/tools/perf/util/map_symbol.h
++++ b/tools/perf/util/map_symbol.h
+@@ -18,6 +18,7 @@ struct addr_map_symbol {
+ 	struct map_symbol ms;
+ 	u64	      addr;
+ 	u64	      al_addr;
++	char	      al_level;
+ 	u64	      phys_addr;
+ 	u64	      data_page_size;
+ };
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index cfba8c337..2da081ef5 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -915,7 +915,7 @@ static int hist_entry__sym_from_snprintf(struct hist_entry *he, char *bf,
+ 		struct addr_map_symbol *from = &he->branch_info->from;
+ 
+ 		return _hist_entry__sym_snprintf(&from->ms, from->al_addr,
+-						 he->level, bf, size, width);
++						 from->al_level, bf, size, width);
+ 	}
+ 
+ 	return repsep_snprintf(bf, size, "%-*.*s", width, width, "N/A");
+@@ -928,7 +928,7 @@ static int hist_entry__sym_to_snprintf(struct hist_entry *he, char *bf,
+ 		struct addr_map_symbol *to = &he->branch_info->to;
+ 
+ 		return _hist_entry__sym_snprintf(&to->ms, to->al_addr,
+-						 he->level, bf, size, width);
++						 to->al_level, bf, size, width);
+ 	}
+ 
+ 	return repsep_snprintf(bf, size, "%-*.*s", width, width, "N/A");
+-- 
+2.25.1
+
