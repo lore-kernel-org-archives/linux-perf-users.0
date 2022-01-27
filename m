@@ -2,159 +2,176 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE96FC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Jan 2022 14:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23EADC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Jan 2022 17:58:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237811AbiA0Ob7 (ORCPT
+        id S239055AbiA0R6F (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 Jan 2022 09:31:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50074 "EHLO
+        Thu, 27 Jan 2022 12:58:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237777AbiA0Ob6 (ORCPT
+        with ESMTP id S244919AbiA0R43 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 Jan 2022 09:31:58 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B84AC061714;
-        Thu, 27 Jan 2022 06:31:58 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D570061CF5;
-        Thu, 27 Jan 2022 14:31:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45F33C340EB;
-        Thu, 27 Jan 2022 14:31:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643293917;
-        bh=KG0sJJ6svB6Q4dVDStVvr5ZY/p0y/TT6kssCsLP37kI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=L9qelgPQCtgC73eHNwlqcEoqCbhQnXfe/D0+BCtb40l0j8YTDJwnoSXAXF6HQeTj2
-         WioVAU1eU+H0qHjTIh4AYDDnsiXVsKyVZjacvPHVK3qyZEvbiMsdoOvXJOmoP879lQ
-         7nH9Zg2HTrmp0sgjdODKZqYuTNKczKttl6j9Lc3ppx50MY5DwNQ7/AyHrxQxOAv/E2
-         /2kz2qfAHu5sGoIygfyo1kKpowLCpbEtrAeet/+XJVoRAARBbpWuvKzoegPFvDSnci
-         57S+/n0DzPo+EFon1Z5XmgHGdsX9LX+mnTDHklCAZCN/HiS7sZe4ejvzgQBkWy1Nf9
-         vh9eJcnRs15Mg==
-Received: by mail-qt1-f180.google.com with SMTP id g12so2555891qto.13;
-        Thu, 27 Jan 2022 06:31:57 -0800 (PST)
-X-Gm-Message-State: AOAM530U7O8SidNO6vVzUrvIwCcTK5LYVf2KiS9nxx8wUgdV2EN7fUZJ
-        +s5Z86knXX3dARBR9/Dv0ipCUNbwdTSdg1Mzwg==
-X-Google-Smtp-Source: ABdhPJxyglgGrDLep5DRhLAJE92a8tCwOyGYP4E/18NDmZa7waQhMxyT8SHlKlk1KnISG642ASa68rEQsuM/hU4/RUE=
-X-Received: by 2002:ac8:3d41:: with SMTP id u1mr2887893qtf.478.1643293916325;
- Thu, 27 Jan 2022 06:31:56 -0800 (PST)
+        Thu, 27 Jan 2022 12:56:29 -0500
+Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC68BC061772
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jan 2022 09:56:28 -0800 (PST)
+Received: by mail-io1-xd32.google.com with SMTP id r144so4520709iod.9
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jan 2022 09:56:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=BnZirIaFMs61o4oao+IDcL/GtzR06EdyOxzgDoKdv2g=;
+        b=sZs38fJ7qK8v60Gw+bSw6qNi3kAVhAw+kC0A1EuMI0tflchr30QXcK5P97EECnIZtB
+         HUctj8RJD7z4aVC/gEr+AXQRxRnjpBAFWXejvUbr+CspjsRQNgE4G0k3Nbz59V5lKfmG
+         4dWjHFu5kqN21hp0gXQaDI97v3AEV8zc4QL/kHuqJE32LBmJhHcNBcKDdBgzLyRt8Et1
+         XRQ064157o6bmp0H0HucuAS/REdnkN81tGHg+86qyTd+DeZq0WsHBLHUnyWCEvg7xHla
+         wA2W1lmN1kIHmeDELLCSagQYhyGc9fskvNDnBAm5JP5XUNNLoXDh8GkqNowoT+gR7LHL
+         NaUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=BnZirIaFMs61o4oao+IDcL/GtzR06EdyOxzgDoKdv2g=;
+        b=Dsg5a9XkTx6zejfdumvpD2EISKrMpl1uksxJIJiczBCpz8YCDO5pKnI+Whcz7TJguq
+         JlXZeEL0TWWaBufgbXfcfQHxp//QgonPOwltit1qyEhcIFkaaTBSIoXeNm9z2FNl6xoD
+         NrIQPgTirFHOYF9/DooKThvpvinl2CAHiFeWUOBixoihFOiJpm0aLMcE8jGQQlBEytdi
+         OqWkyty0Eu3cK8+YMa8PXAulGKrbv/T8RYT22J6OIM/laJWabjrWY46yC8BxFHx6Htf3
+         Csgt4YIijdfkJflg9UaM3+qr0o9VnrgbZ2CPEHBTlz8Hs6S9dRbINXTxMDHuDT+SsH37
+         xn4w==
+X-Gm-Message-State: AOAM531E/BAlkHgZEw62in9OnGN+paXr9Y3qIfNn4Q4ZKhSqSfl4c1Bg
+        QJvo6FEgejuyP2kpmpCNmoFVjbcZaJj6kbeRpPdqKBu2tzo6Ug==
+X-Google-Smtp-Source: ABdhPJwoDkHke72+dkHHQIR1z4PvsQ6Bd3vL39eLxnXC3R0ndAfIGePWnW3jwkkvKvgOGheFFiEMuabu4YvOcKKoVM0=
+X-Received: by 2002:a02:2422:: with SMTP id f34mr2407567jaa.237.1643306187767;
+ Thu, 27 Jan 2022 09:56:27 -0800 (PST)
 MIME-Version: 1.0
-References: <1642998653-21377-1-git-send-email-anshuman.khandual@arm.com>
- <1642998653-21377-7-git-send-email-anshuman.khandual@arm.com>
- <YfF/zBS3kL/+eC1k@robh.at.kernel.org> <9e56509a-2772-a333-ccc3-ad49a2028616@arm.com>
-In-Reply-To: <9e56509a-2772-a333-ccc3-ad49a2028616@arm.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 27 Jan 2022 08:31:45 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJXQqV3P=T8GXxDY2wReeYnLcBqge139fUUXLtcQJe=6w@mail.gmail.com>
-Message-ID: <CAL_JsqJXQqV3P=T8GXxDY2wReeYnLcBqge139fUUXLtcQJe=6w@mail.gmail.com>
-Subject: Re: [RFC V1 06/11] arm64/perf: Drive BRBE from perf event states
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
+References: <802c5ec0-dc3b-bab9-20f5-59be612a46f8@gmail.com>
+In-Reply-To: <802c5ec0-dc3b-bab9-20f5-59be612a46f8@gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 27 Jan 2022 09:56:16 -0800
+Message-ID: <CAP-5=fVYqS74t_UJ_dQaQE8FHWNYSHuYqVaWb-BfhewMCCbFaA@mail.gmail.com>
+Subject: Fwd: Google Summer of Code 2022 - Project ideas page for the Linux
+ Foundation online
+To:     linux-perf-users <linux-perf-users@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jan 27, 2022 at 6:20 AM Anshuman Khandual
-<anshuman.khandual@arm.com> wrote:
->
->
-> On 1/26/22 10:37 PM, Rob Herring wrote:
-> > On Mon, Jan 24, 2022 at 10:00:48AM +0530, Anshuman Khandual wrote:
-> >> Branch stack sampling rides along the normal perf event and all the branch
-> >> records get captured during the PMU interrupt. This just changes perf event
-> >> handling on the arm64 platform to accommodate required BRBE operations that
-> >> will enable branch stack sampling support.
-> >>
-> >> Cc: Peter Zijlstra <peterz@infradead.org>
-> >> Cc: Ingo Molnar <mingo@redhat.com>
-> >> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> >> Cc: Mark Rutland <mark.rutland@arm.com>
-> >> Cc: Will Deacon <will@kernel.org>
-> >> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> >> Cc: linux-perf-users@vger.kernel.org
-> >> Cc: linux-kernel@vger.kernel.org
-> >> Cc: linux-arm-kernel@lists.infradead.org
-> >> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> >> ---
-> >>  arch/arm64/kernel/perf_event.c |  6 +++++
-> >>  drivers/perf/arm_pmu.c         | 40 ++++++++++++++++++++++++++++++++++
-> >>  2 files changed, 46 insertions(+)
-> >>
-> >> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-> >> index f6a47036b0b4..11c82c8f2eec 100644
-> >> --- a/arch/arm64/kernel/perf_event.c
-> >> +++ b/arch/arm64/kernel/perf_event.c
-> >> @@ -864,6 +864,12 @@ static irqreturn_t armv8pmu_handle_irq(struct arm_pmu *cpu_pmu)
-> >>              if (!armpmu_event_set_period(event))
-> >>                      continue;
-> >>
-> >> +            if (has_branch_stack(event)) {
-> >> +                    cpu_pmu->brbe_read(cpuc, event);
-> >
-> > Is has_branch_stack() guaranteed to be false on arm32? If not, this will
-> > be a NULL function ptr.
->
-> armpmu_event_init() blocks a perf event from being created with branch
-> stack sampling request without CONFIG_ARM_BRBE_PMU option being enabled
-> first, which has dependency on CONFIG_ARM64. So has_branch_stack() is
-> guaranteed to be false on arm32.
+TL;DR please consider being a GSoC mentor and contributing project ideas.
 
-Then the stub functions in patch 3 are also not needed. The fact that
-you create dummy functions makes it look like you can't have NULL
-function ptrs, but you don't. This is what I mean about the structure
-of the series being hard to review.
+Hi,
 
-> static int armpmu_event_init(struct perf_event *event)
-> {
->         ....
->         if (has_branch_stack(event)) {
->                 /*
->                  * BRBE support is absent. Select CONFIG_ARM_BRBE_PMU
->                  * in the config, before branch stack sampling events
->                  * can be requested.
->                  */
->                 if (!IS_ENABLED(CONFIG_ARM_BRBE_PMU)) {
->                         pr_warn_once("BRBE is disabled, select CONFIG_ARM_BRBE_PMU\n");
->                         return -EOPNOTSUPP;
->                 }
->
->
-> config ARM_BRBE_PMU
->         tristate "Enable support for Branch Record Buffer Extension (BRBE)"
->         depends on ARM64 && ARM_PMU
->         default y
->         help
->           Enable perf support for Branch Record Buffer Extension (BRBE) which
->           records all branches taken in an execution path. This supports some
->           branch types and privilege based filtering. It captured additional
->           relevant information such as cycle count, misprediction and branch
->           type, branch privilege level etc.
->
-> >
-> > To add to my other comments, this patch is where I would add
-> > brbe_read(), etc. to arm_pmu.
->
-> Because all new arm_pmu helpers get added and get used in the perf driver
-> in the same patch, although the actual helper implementation would still
-> come by bit later via the driver. This also uses updates to pmu_hw_events
-> struct as well, then that patch needs to be folded here as well.
->
-> There is no problem as such, kind of bit subjective. I just feel inclined
-> to keep the independent infrastructure changes separate making it easy to
-> review while also creating a flow.
+Last year Riccardo Mancini made great contributions to the perf code
+base [1]! Riccardo's mentors were Arnaldo, Namhyung and myself, with 1
+hour weekly meetings and patches that needed review. The project was
+administered by the Linux Foundation. I consider Riccardo's work last
+year really useful and a great contribution, so I'm keen that the
+Linux perf tool/subsystem can participate in the Google Summer of Code
+again this year.
 
-Everything about kernel development is subjective until it's a
-requirement by the maintainer. I'm not here, so it's just advice.
+This year Google Summer of Code has changed, operating within the
+Linux Foundation means following how their administrators want to run
+things. Notable improvements/changes are [2]:
+ - Contributors, not only students: From now on it is not required any
+more to be a university/college student to code for GSoC. Anyone 18
+years old and older can do.
+ - Two project sizes: 16 GSoCs with ~350-hour projects, then one with
+~175-hour projects, some tasks fit better into one size others into
+the other, no one-size-fits-all. Now we can have both. The
+organizations can select from these two sizes for each project idea
+they offer.
+ - Coding period flexibility: Before, there was a fixed time period of
+~3 months in which the projects had to be done, also with fixed dates
+for the 2 or 3 evaluations. From 2022 on the period can be extended to
+22 weeks on agreement between mentor and contributor, should there be
+some interruptions like exams, trips, sickness, different dates of
+mid-year break, =E2=80=A6 This gives more people the chance to be able to
+participate.
 
-Rob
+To make sure we get great applicants we need great projects and
+mentors. We need to refresh the project page that was copied over from
+last year:
+https://wiki.linuxfoundation.org/gsoc/2022-gsoc-perf
+There are often things that come up on the mailing list that could be
+projects. For example, better programming language support [3],
+reference count sanity checking [4] and new features like function
+latency histograms [5] where BPF has opened up new possibilities.
+There may also be areas of tech debt that you'd like to see cleaned
+up.
+
+Please consider volunteering to be a mentor or just suggesting your
+ideas. For convenience probably the easiest way to do that is by
+replying to this e-mail on the linux-perf-users mailing list.
+
+Thanks!
+Ian
+
+[1] https://lore.kernel.org/linux-perf-users/3c4f8dd64d07373d876990ceb16e46=
+9b4029363f.camel@gmail.com/
+[2] https://wiki.linuxfoundation.org/gsoc/google-summer-code-2022
+[3] https://lore.kernel.org/linux-perf-users/87o85ftc3p.fsf@smart-cactus.or=
+g/
+[4] https://lore.kernel.org/linux-perf-users/20220125204602.4137477-1-iroge=
+rs@google.com/
+[5] https://lore.kernel.org/all/20211129231830.1117781-1-namhyung@kernel.or=
+g/
+
+---------- Forwarded message ---------
+From: Till Kamppeter <till.kamppeter@gmail.com>
+Date: Wed, Jan 26, 2022 at 11:08 AM
+Subject: Google Summer of Code 2022 - Project ideas page for the Linux
+Foundation online
+
+Hi,
+
+the Linux Foundation will apply again as mentoring organization in this
+year's Google Summer of Code.
+
+Note that GSoC 2022 will be different again, code contributors do not
+need to be students, choice between 3-month=C2=B4s full-time or half-time
+projects, more flexibility of when coding takes place.
+
+On February 7, 2022 the application period for mentoring organizations
+for the Google Summer of Code 2022 will start.
+
+To be successful, we need a rich project idea list so that we will get
+selected by Google.
+
+I have set up a page for project ideas for the Linux Foundation's
+participation in the Google Summer of Code 2022:
+
+https://wiki.linuxfoundation.org/gsoc/google-summer-code-2022
+
+Please add your ideas to the sub-page of your work group. Also remove
+project ideas which are already done in one of the previous years or not
+needed any more and make sure that all contact info is up-to-date and
+all links are working.
+
+Make sure to not talk about "students", but about "contributors"
+instead. I have, at least partially, taken care of this when I have
+copied your sub-group pages from last year.
+
+Also make sure to remove the "**Still needs to get updated!!**" phrase
+after having updated your project ideas.
+
+If you have problems mail me with your project ideas and other editing
+wishes.
+
+The ideas list is in the Linux Foundation Wiki. If you want to edit and
+did not have the edit rights already from previous years, please tell me
+and I give you edit rights. I need your Linux Foundation user name for
+that and the e-mail address associated with this account for this.
+
+Please also take into account that the deadline for our application as
+mentoring organization is Feb 21 and after that Google will evaluate the
+applications. So have your ideas (at least most of them, ideas can be
+posted up to the student application deadline) in by then to raise our
+chances to get accepted.
+
+Please also tell us if you do not want to participate any more with your
+workgroup, so that we can remove your sub-page.
+
+    Till
