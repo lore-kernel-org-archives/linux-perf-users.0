@@ -2,114 +2,143 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3484C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Jan 2022 19:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F76BC433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Jan 2022 20:26:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231310AbiA0TN5 (ORCPT
+        id S234507AbiA0U0l (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 Jan 2022 14:13:57 -0500
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:48856 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231180AbiA0TN4 (ORCPT
+        Thu, 27 Jan 2022 15:26:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49192 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230386AbiA0U0k (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 Jan 2022 14:13:56 -0500
+        Thu, 27 Jan 2022 15:26:40 -0500
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4D09C06173B
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jan 2022 12:26:39 -0800 (PST)
+Received: by mail-ed1-x536.google.com with SMTP id w14so5251232edd.10
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jan 2022 12:26:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1643310837; x=1674846837;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=mV9Rntd10MU7cdeZ3c0E0Qx20jU1t4bULsvd73nv/E4=;
-  b=LCYx+3t92J6b7hnH/lTshzY5eqNdm9wA6BE27Jp0DpbnM5x0H/so5/eT
-   r9F5pF00jicVnHTgAQOeTCyqjrfNYbLNCIFVeHEcndUS19+sovc1MPVXO
-   Znoru1jL5m1PQPZiPEiqcmM1g/33CkamiU7SaznbEP9/zea3NLo8gItKy
-   c=;
-X-IronPort-AV: E=Sophos;i="5.88,321,1635206400"; 
-   d="scan'208";a="173626860"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-iad-1d-10222bbc.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-6001.iad6.amazon.com with ESMTP; 27 Jan 2022 19:13:56 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan3.iad.amazon.com [10.40.163.38])
-        by email-inbound-relay-iad-1d-10222bbc.us-east-1.amazon.com (Postfix) with ESMTPS id 9B8DA1A0067;
-        Thu, 27 Jan 2022 19:13:51 +0000 (UTC)
-Received: from EX13D02UWB002.ant.amazon.com (10.43.161.160) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1497.28; Thu, 27 Jan 2022 19:13:50 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
- EX13D02UWB002.ant.amazon.com (10.43.161.160) with Microsoft SMTP Server (TLS)
- id 15.0.1497.28; Thu, 27 Jan 2022 19:13:50 +0000
-Received: from dev-dsk-alisaidi-i31e-9f3421fe.us-east-1.amazon.com
- (10.200.138.153) by mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP
- Server id 15.0.1497.28 via Frontend Transport; Thu, 27 Jan 2022 19:13:50
- +0000
-Received: by dev-dsk-alisaidi-i31e-9f3421fe.us-east-1.amazon.com (Postfix, from userid 5131138)
-        id 72BD921BE9; Thu, 27 Jan 2022 19:13:49 +0000 (UTC)
-From:   Ali Saidi <alisaidi@amazon.com>
-To:     <german.gomez@arm.com>
-CC:     <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
-        <alisaidi@amazon.com>, <andrew.kilroy@arm.com>,
-        <benh@kernel.crashing.org>, <james.clark@arm.com>,
-        <john.garry@huawei.com>, <jolsa@redhat.com>, <leo.yan@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <mark.rutland@arm.com>, <mathieu.poirier@linaro.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <will@kernel.org>
-Subject: Re: [PATCH 1/2] perf arm-spe: Add arm_spe_record to synthesized
-Date:   Thu, 27 Jan 2022 19:13:45 +0000
-Message-ID: <20220127191345.18173-1-alisaidi@amazon.com>
-X-Mailer: git-send-email 2.24.4.AMZN
-In-Reply-To: <c4a96839-1b4b-ac4d-38aa-26c1f4c8645a@arm.com>
-References: <c4a96839-1b4b-ac4d-38aa-26c1f4c8645a@arm.com>
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Fi1CjDDx2TurE9KIT9xNPFydS/AJyEq38oGV2uaA61U=;
+        b=zrJPnyAi4QGp6MxlP38emBrpS5F5jPUi1PK1fZWvpwb0xusZzOev1cXwqXD93Ah303
+         Ys26qGM+xFSapbAYx+F93tj/Kg5JrfOi1eaHxcUZPXT2gfuzK3Trv25cghbnsmpduaIp
+         rJEr880xWNlS5IhFzKydfG6n3habeIUecE+dPbH9yYuzu6pIVi66TjU8gPS0Fk/b1YOV
+         z/FwOdNYLUobxS5GHQc1FFk9W41zhXeECZD3ZxDA/9Qi+v+sppG50iWj+WkIXkNCiyK3
+         kq8QpsI70OhvFhB0uMMS2pDWpgN+VgzO7VyqMjXjE2SeWZ3kCOXqSuUUv/zkJHcqesvt
+         6KhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Fi1CjDDx2TurE9KIT9xNPFydS/AJyEq38oGV2uaA61U=;
+        b=OCNQfycZdDNTDbksvGU1vgFOvbuG5r5sbw0wTZxcve8EbWg+YK3pTpz6wP34wv87OG
+         NNtaHqnKOGMGRngiJCmE/YxRtia7iy/HkKBZPRlRt9Wb6jW09PcaDAjEUUc4rqcgUO5R
+         o81JNm8W2SW6VFB8fVjWRow6GgIJy+zTT9tp8DIdscYJx4ONCwpAItVend6h+R2cIMwI
+         UGKnfTtMc2V/mionYJIqX8bitpV5veuiAEbwBR0DwN01ywPBVJW50g+ACmtbUXkiTQf2
+         6LYuJl+g1rIaYGzrCetPpxP6tc+nNXPCVywZuewaTLcv8UQ4YmV0DGLIbGfjhfpzEpXl
+         5Djw==
+X-Gm-Message-State: AOAM531WngtJDfRJlEJOyQyaXxZGfNSmWKlsLiBXMfVSP/jREtyJ0W38
+        R+TlxAStoZHpuMGYs7p/sSv0zc4RWMikCArdziOzlA==
+X-Google-Smtp-Source: ABdhPJznXPKKye7FSdr+lVY9GNZVYl4Rl6/0Ojgh5L4rDb57d3KmHVB5vjBqJr6BFTPH1QZ7Ji/9E0+4jr95RWzgttk=
+X-Received: by 2002:a05:6402:1703:: with SMTP id y3mr5072637edu.239.1643315198479;
+ Thu, 27 Jan 2022 12:26:38 -0800 (PST)
 MIME-Version: 1.0
+References: <20220113091056.1297982-1-james.clark@arm.com>
+In-Reply-To: <20220113091056.1297982-1-james.clark@arm.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Thu, 27 Jan 2022 13:26:26 -0700
+Message-ID: <CANLsYkx4u_+hPNNdmN23g58RprqkcUfhoPeZhu578DKU0qJ_hg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] coresight: Add config flag to enable branch broadcast
+To:     James Clark <james.clark@arm.com>
+Cc:     Suzuki.Poulose@arm.com, coresight@lists.linaro.org,
+        leo.yan@linaro.com, mike.leach@linaro.org,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi James,
 
-On 26/01/2022 19:07, German Gomez wrote:
-[...]
->>> Have you tried this with perf-inject? I think it would need the PERF_SAMPLE_RAW bit in the sample_type,
->> Yes I've tried the following and it worked as expected with the original
->> perf.data or the perf.data.jitted after perf-inject. 
->>
->> perf record -e arm_spe_0/jitter=1/ -k 1 java ...
->> perf  inject -f --jit -i perf.data -o perf.data.jitted
->
->This is not injecting the synthesized samples. I think it is still    
->processing from the aux trace. Try adding "--itrace=i1i --strip" to the
->inject command to remove the AUXTRACE events. Judging by the raw
->samples, the data is missing:
->
-> [...]
-
-Yep, you're correct here. If I use the command above the raw samples are lost.
-
->>> Although I quickly looked over the perf inject code and it looks like it's expecting some type of padding:
->>>
->>> [...]
->>>
->>> I'm seeing some comments in utils/event.h related to this on the intel events.
->> Yes i noticed this too,but looking at how the raw data is added to the same
->> other places like intel-pt.c:1703 the perf_synth__raw*() functions are used to
->> strip away the 4 bytes bytes before the data is added to the sample. The other
->> places i can find the padding used is in builtin-script.c but given we have the
->> --dump-raw-trace option it's not clear to me that it's needed to wrap the
->> arm_spe_event in another struct with padding like perf_synth_intel_ptwrite?
->
->I think the intel use case makes sense because the layout of the data
->is fixed and documented. If we modify the struct arm_spe_record later it
->may not be obvious how to match it to the raw data of an older perf.data
->file. And we're generating bigger files with redundant information.
-
-Not injecting the samples into the perf trace, but having a way to support
-custom scripts parsing the data would be really useful and much faster than
-trying to parse back the --dump-raw-trace output into something useful. The
-other way to go would be to put a header that describes the version of the spe
-struct at the head of it to address any future changes, but I'm not familiar
-with a workflow that would benefit from the added complexity. 
+I am seriously back-logged in my patch reviews and as such will not be
+able to get to your work in the usual 14 days.  At this time and if
+everything goes well, I should be able to start reviewing this
+patchset during the week of February 7th.
 
 Thanks,
-Ali
+Mathieu
 
-
+On Thu, 13 Jan 2022 at 02:11, James Clark <james.clark@arm.com> wrote:
+>
+> This allows enabling branch broadcast for Perf hosted sessions (the option
+> is currently only available for the sysfs interface). Hopefully this could
+> be useful for testing the decode in perf, for example does a determinisitic
+> run with branch broadcast enabled look the same as with it disabled? It
+> could also be used for scenarios like OpenJ9's support for JIT code:
+>
+>   java -Xjit:perfTool hello.java
+>
+> Currently this is not working and you get the usual errors of a missing
+> DSO, but branch broadcast would have to be enabled anyway before working
+> through this next issue:
+>
+>   CS ETM Trace: Debug data not found for address 0xffff7b94b058 in /tmp/perf-29360.map
+>
+> Address range support in Perf for branch broadcast has also not been added
+> here, but could be added later.
+>
+> The documentation has been refactored slightly to allow updates to be made
+> that link the Perf format arguments with the existing documentation.
+>
+> For Suzuki's comment, I will do it as a separate change that converts all
+> the other hard coded values to a more consistent sysreg.h style:
+>
+>   nit: While at this, please could you change the hard coded value
+>   to ETM4_CFG_BIT_RETSTK ?
+>
+> Changes since v1:
+>
+>   * Added Leo's reviewed by on patch 3
+>   * Fix bracket styling
+>   * Add documentation
+>
+> Applies on top of coresight/next efa56eddf5d5c. But this docs fix is also
+> required to get the links to work:
+>   https://marc.info/?l=linux-doc&m=164139331923986&w=2
+>
+> Also available at: https://gitlab.arm.com/linux-arm/linux-jc/-/tree/james-branch-broadcast-v2
+>
+> James Clark (6):
+>   coresight: Add config flag to enable branch broadcast
+>   coresight: Fail to open with return stacks if they are unavailable
+>   perf cs-etm: Update deduction of TRCCONFIGR register for branch
+>     broadcast
+>   Documentation: coresight: Turn numbered subsections into real
+>     subsections
+>   Documentation: coresight: Link config options to existing
+>     documentation
+>   Documentation: coresight: Expand branch broadcast documentation
+>
+>  .../coresight/coresight-etm4x-reference.rst   | 14 ++++-
+>  Documentation/trace/coresight/coresight.rst   | 56 +++++++++++++++++--
+>  .../hwtracing/coresight/coresight-etm-perf.c  |  2 +
+>  .../coresight/coresight-etm4x-core.c          | 23 ++++++--
+>  include/linux/coresight-pmu.h                 |  2 +
+>  tools/include/linux/coresight-pmu.h           |  2 +
+>  tools/perf/arch/arm/util/cs-etm.c             |  3 +
+>  7 files changed, 92 insertions(+), 10 deletions(-)
+>
+> --
+> 2.28.0
+>
