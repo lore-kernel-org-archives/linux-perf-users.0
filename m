@@ -2,113 +2,99 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F584C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Jan 2022 11:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7725AC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Jan 2022 11:43:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240364AbiA0Lbn (ORCPT
+        id S240737AbiA0LnV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 Jan 2022 06:31:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229691AbiA0Lbn (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 Jan 2022 06:31:43 -0500
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F230BC061714;
-        Thu, 27 Jan 2022 03:31:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=B9zmfILtAtminki6w4+yjCQ5l4pbQADmPtKrAzTYH0w=; b=Twp1gVOJUcDy3nTRbzUSTOJtyl
-        cj/wRD6XfneVeqBqoBdUFbF1rA2NzHL6nhAzXZ7JBjeP0KV3i6Z+C68ngWr7JJXvTNsY2CKuEB60U
-        kRgLJ9TYHqJQKSzOwqnKDqHAXbAqUVOM25T+/HuE2ORpkthl6hjPIa37Arqu9M4FS6Tm5c+4Rp+i2
-        iNc04hVgmrVg1nz6ENmcATFcC56qzXG7HK8vrF54OztD1YCxYbpyRQw6omjNzeKKwWPxjjw71kaUv
-        vtS4sK2vs5UoSvQigZZynnhcfzC5Z50ePxR4isLVwIiRJxkQGdaTAYZmSfUxLSl7DJF0KSbn87xJu
-        uxn9PERA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nD2zp-0049P9-EN; Thu, 27 Jan 2022 11:31:21 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EF83D300268;
-        Thu, 27 Jan 2022 12:31:18 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D512A201C21AE; Thu, 27 Jan 2022 12:31:18 +0100 (CET)
-Date:   Thu, 27 Jan 2022 12:31:18 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andrew Cooper <Andrew.Cooper3@citrix.com>
-Cc:     Kyle Huey <me@kylehuey.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Robert O'Callahan <rocallahan@gmail.com>,
-        Keno Fischer <keno@juliacomputing.com>
-Subject: Re: [PATCH] x86/perf: Default freeze_on_smi on for Comet Lake and
- later.
-Message-ID: <YfKChjX61OW4CkYm@hirez.programming.kicks-ass.net>
-References: <20220122072644.92292-1-khuey@kylehuey.com>
- <878929bb-39e7-f1b1-a6a2-f6057517058f@citrix.com>
+        Thu, 27 Jan 2022 06:43:21 -0500
+Received: from foss.arm.com ([217.140.110.172]:56436 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S240724AbiA0LnR (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 27 Jan 2022 06:43:17 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 00A7F1FB;
+        Thu, 27 Jan 2022 03:43:17 -0800 (PST)
+Received: from [10.57.39.22] (unknown [10.57.39.22])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E2A303F7D8;
+        Thu, 27 Jan 2022 03:43:14 -0800 (PST)
+Message-ID: <1fa70669-146c-7ec6-cee9-4f59751eb334@arm.com>
+Date:   Thu, 27 Jan 2022 11:42:27 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [RFC PATCH v2 0/5] topdown with metrics
+Content-Language: en-US
+To:     John Garry <john.garry@huawei.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org,
+        irogers@google.com, ak@linux.intel.com
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+References: <4fefb1bc-49b2-bc5b-23cd-cd8fabe8c588@huawei.com>
+ <20220111150749.13365-1-andrew.kilroy@arm.com>
+ <7cd7bd11-4900-81c4-de84-6e5fc63ec87c@huawei.com>
+From:   Andrew Kilroy <andrew.kilroy@arm.com>
+In-Reply-To: <7cd7bd11-4900-81c4-de84-6e5fc63ec87c@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <878929bb-39e7-f1b1-a6a2-f6057517058f@citrix.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jan 27, 2022 at 02:22:23AM +0000, Andrew Cooper wrote:
 
-> Frankly, it is an error that FREEZE_WHILE_SMM is under the kernels
-> control, and not SMM's control.  After all, it's SMM handling all the
-> UEFI secrets/etc.
+
+On 20/01/2022 09:26, John Garry wrote:
+> On 11/01/2022 15:07, Andrew Kilroy wrote:
+>> This patch series adds the ability for the --topdown option to use
+>> metrics (defined in json files in the pmu-events directory) to describe
+>> how to calculate and determine the output columns for topdown level 1.
+>>
+>> For this to work, a number of metrics have to be defined for the
+>> relevant processor with the MetricGroup name "TopDownL1".Â  perf will
+>> arrange for the events defined in each metric to be collected, and each
+>> metric will be displayed in the output, as if
+>>
+>> Â Â  perf stat -M 'TopDownL1' --metric-only -- exampleapp
+>>
+>> had been used.
+>>
+>> Topdown was already implemented where certain kernel events are defined.
+>> If these kernel events are defined, the new json metrics behaviour is
+>> not used.Â  The json metrics approach is only used if the kernel events
+>> are absent.
+>>
+>> The last patch in the series disables the json metrics behaviour on x86.
+>> This is because of concerns that due to SMT it's not straightforward to
+>> express the various formulas as json for certain x86 cpus.Â  See
 > 
-> Linux ought to set FREEZE_WHILE_SMM unilaterally, because most kernel
-> profiling probably won't want interference from SMM.  Root can always
-> disable FREEZE_WHILE_SMM if profiling is really wanted.
+> I suppose this solution is ok.
 > 
-> I'm not sure if anything can be done on pre-FREEZE_WHILE_SMM CPUs.  Nor
-> AMD CPUs which are also gaining CPL3 SMM logic, and don't appear to have
-> any equivalent functionality.
 
-Which suggests something like this?
+Thanks, would you mind giving it a Reviewed-By?
 
----
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index c91434056c29..5874fa088630 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -4703,6 +4703,19 @@ static __initconst const struct x86_pmu intel_pmu = {
- 	.lbr_read		= intel_pmu_lbr_read_64,
- 	.lbr_save		= intel_pmu_lbr_save,
- 	.lbr_restore		= intel_pmu_lbr_restore,
-+
-+	/*
-+	 * SMM has access to all 4 rings and while traditionally SMM code only
-+	 * ran in CPL0, newer firmware is starting to make use of CPL3 in SMM.
-+	 *
-+	 * Since the EVENTSEL.{USR,OS} CPL filtering makes no distinction
-+	 * between SMM or not, this results in what should be pure userspace
-+	 * counters including SMM data.
-+	 *
-+	 * This is a clear privilege issue, therefore globally disable
-+	 * counting SMM by default.
-+	 */
-+	.attr_freeze_on_smi	= 1,
- };
- 
- static __init void intel_clovertown_quirk(void)
+> A concern is that today we only have 1x arm64 platform which actually 
+> supports this in mainline.
+> 
+> Do you have any more which you plan to support?
+> 
+
+The Neoverse cores, mainly.
+
+> I think that it's the frontend bound and fetch_bubble event which 
+> doesn't have a standard arm solution.
+> 
+> Note that I do have a series for perf tool which can read arm cpu pmu 
+> sysfs events folder to find events which are implemented (I don't think 
+> all required events are mandated) and match that against the common arch 
+> events JSON, so that we don't need a JSON definition file for each core 
+> implementation from all implementators - this would improve scalability. 
+> However a concern is that some events - like inst_spec - have imp def 
+> meaning, so may not be good to always use by default for all cores metrics.
+> 
+> Thanks,
+> John
+
+Thanks,
+Andrew
