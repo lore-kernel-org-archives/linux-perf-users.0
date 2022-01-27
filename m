@@ -2,149 +2,113 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 991E1C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Jan 2022 11:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F584C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Jan 2022 11:31:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235516AbiA0LLf (ORCPT
+        id S240364AbiA0Lbn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 Jan 2022 06:11:35 -0500
-Received: from foss.arm.com ([217.140.110.172]:54800 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229484AbiA0LLe (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 Jan 2022 06:11:34 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 48EDA1FB;
-        Thu, 27 Jan 2022 03:11:34 -0800 (PST)
-Received: from [10.57.39.22] (unknown [10.57.39.22])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9526B3F7D8;
-        Thu, 27 Jan 2022 03:11:31 -0800 (PST)
-Message-ID: <1ec258b8-c6dd-aa0f-8583-2d7667314be9@arm.com>
-Date:   Thu, 27 Jan 2022 11:11:13 +0000
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-From:   Andrew Kilroy <andrew.kilroy@arm.com>
-Subject: Re: [RFC PATCH 1/1] perf arm64: Implement --topdown with metrics
-To:     Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Ian Rogers <irogers@google.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Thu, 27 Jan 2022 06:31:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35818 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229691AbiA0Lbn (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 27 Jan 2022 06:31:43 -0500
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F230BC061714;
+        Thu, 27 Jan 2022 03:31:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=B9zmfILtAtminki6w4+yjCQ5l4pbQADmPtKrAzTYH0w=; b=Twp1gVOJUcDy3nTRbzUSTOJtyl
+        cj/wRD6XfneVeqBqoBdUFbF1rA2NzHL6nhAzXZ7JBjeP0KV3i6Z+C68ngWr7JJXvTNsY2CKuEB60U
+        kRgLJ9TYHqJQKSzOwqnKDqHAXbAqUVOM25T+/HuE2ORpkthl6hjPIa37Arqu9M4FS6Tm5c+4Rp+i2
+        iNc04hVgmrVg1nz6ENmcATFcC56qzXG7HK8vrF54OztD1YCxYbpyRQw6omjNzeKKwWPxjjw71kaUv
+        vtS4sK2vs5UoSvQigZZynnhcfzC5Z50ePxR4isLVwIiRJxkQGdaTAYZmSfUxLSl7DJF0KSbn87xJu
+        uxn9PERA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nD2zp-0049P9-EN; Thu, 27 Jan 2022 11:31:21 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EF83D300268;
+        Thu, 27 Jan 2022 12:31:18 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D512A201C21AE; Thu, 27 Jan 2022 12:31:18 +0100 (CET)
+Date:   Thu, 27 Jan 2022 12:31:18 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andrew Cooper <Andrew.Cooper3@citrix.com>
+Cc:     Kyle Huey <me@kylehuey.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <4c375d34-bf20-496d-22fc-aed8597126e2@huawei.com>
- <20211214184240.24215-1-andrew.kilroy@arm.com>
- <20211214184240.24215-2-andrew.kilroy@arm.com>
- <CAP-5=fXJeH0ZvcHPa20N5KfLwnYSw29rpK3OrnvE0o3u-vGTLA@mail.gmail.com>
- <b1640897-10d7-c11e-4a7a-d17633916c8e@huawei.com>
- <5a2e29c1-2c7e-1b55-9192-62060309aeca@arm.com>
- <12e0deef-08db-445f-4958-bcd5c3e10367@linux.intel.com>
-Content-Language: en-US
-In-Reply-To: <12e0deef-08db-445f-4958-bcd5c3e10367@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Robert O'Callahan <rocallahan@gmail.com>,
+        Keno Fischer <keno@juliacomputing.com>
+Subject: Re: [PATCH] x86/perf: Default freeze_on_smi on for Comet Lake and
+ later.
+Message-ID: <YfKChjX61OW4CkYm@hirez.programming.kicks-ass.net>
+References: <20220122072644.92292-1-khuey@kylehuey.com>
+ <878929bb-39e7-f1b1-a6a2-f6057517058f@citrix.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <878929bb-39e7-f1b1-a6a2-f6057517058f@citrix.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Andi,
+On Thu, Jan 27, 2022 at 02:22:23AM +0000, Andrew Cooper wrote:
 
+> Frankly, it is an error that FREEZE_WHILE_SMM is under the kernels
+> control, and not SMM's control.� After all, it's SMM handling all the
+> UEFI secrets/etc.
+> 
+> Linux ought to set FREEZE_WHILE_SMM unilaterally, because most kernel
+> profiling probably won't want interference from SMM.� Root can always
+> disable FREEZE_WHILE_SMM if profiling is really wanted.
+> 
+> I'm not sure if anything can be done on pre-FREEZE_WHILE_SMM CPUs.� Nor
+> AMD CPUs which are also gaining CPL3 SMM logic, and don't appear to have
+> any equivalent functionality.
 
-On 21/12/2021 14:03, Andi Kleen wrote:
-> 
-> On 12/20/2021 9:21 AM, Andrew Kilroy wrote:
->>
->> On 15/12/2021 10:52, John Garry wrote:
->>> Hi Andrew,
->>>
->>>>>   const struct pmu_event *metricgroup__find_metric(const char *metric,
->>>>>                                                   const struct 
->>>>> pmu_events_map *map);
->>>>>   int metricgroup__parse_groups_test(struct evlist *evlist,
->>>>> diff --git a/tools/perf/util/topdown.c b/tools/perf/util/topdown.c
->>>>> index 1081b20f9891..57c0c5f2c6bd 100644
->>>>> --- a/tools/perf/util/topdown.c
->>>>> +++ b/tools/perf/util/topdown.c
->>>>> @@ -56,3 +56,9 @@ __weak bool arch_topdown_sample_read(struct evsel 
->>>>> *leader __maybe_unused)
->>>>>   {
->>>>>          return false;
->>>>>   }
->>>>> +
->>>>> +__weak bool arch_topdown_use_json_metrics(void)
->>>>> +{
->>>
->>> AFAICS, only x86 supports topdown today and that is because they have 
->>> special kernel topdown events exposed for the kernel CPU PMU driver. 
->>> So other architectures - not only arm - would need rely on 
->>> metricgroups for topdown support. So let's make this generic for all 
->>> archs.
->>>
->>>> I like this extension! I've ranted in the past about weak symbols
->>>> breaking with archives due to lazy loading [1]. In this case
->>>> tools/perf/arch/arm64/util/topdown.c has no other symbols within it
->>>> and so the weak symbol has an extra chance of being linked
->>>> incorrectly. We could add a new command line of --topdown-json to
->>>> avoid this, but there seems little difference in doing this over just
->>>> doing '-M TopDownL1'.
->>>
->>>
->>>> Is it possible to use the json metric approach
->>>> for when the CPU version fails?
->>>
->>> I think that's a good idea.
->>>
->>
->>
->> While looking into using the json metrics approach as a fallback to 
->> the original, I noticed  there are two json metricgroups 'TopdownL1' 
->> and 'TopDownL1' (note the case difference) on x86. Not sure if the 
->> case difference is intentional.
->>
->> On skylake, 'TopdownL1' contains the four json metrics Retiring, 
->> Bad_Speculation, Frontend_Bound, and Backend_Bound.  'TopDownL1' has 
->> 'SLOTS', 'CoreIPC', 'CoreIPC_SMT', 'Instructions'.  I think its a 
->> similar situation on other x86 chips.
-> 
-> 
-> There's also SMT metrics.
-> 
-> 
-> We don't want to include CoreIPC etc. by default because it would cause 
-> multiplexing in common situations.
-> 
->>
->> The search for those metrics by metricgroup name is case insensitive, 
->> so it's picking up all 8 metrics when using the lookup string 
->> 'TopDownL1'.  So the extra 'SLOTS', 'CoreIPC', 'CoreIPC_SMT', 
->> 'Instructions' metrics would be printed as well.
->>
->> Not sure what the significance of the case difference might be.
->>
->> Should we use a different string than 'TopDownL1' as the metric group 
->> name to search for?
-> 
-> 
-> We should probably fix the case (or just make the match case insensitive)
-> 
-> Can we just keep x86 at using the kernel metrics? On Skylake and earlier 
-> it needs different formulas and other options depending whether SMT is 
-> on or off, so it's not straight forward to express it as json directly.
-> 
+Which suggests something like this?
 
-I posted a v2 of these patches which keeps x86 only using the kernel 
-metrics.
-
+---
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index c91434056c29..5874fa088630 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4703,6 +4703,19 @@ static __initconst const struct x86_pmu intel_pmu = {
+ 	.lbr_read		= intel_pmu_lbr_read_64,
+ 	.lbr_save		= intel_pmu_lbr_save,
+ 	.lbr_restore		= intel_pmu_lbr_restore,
++
++	/*
++	 * SMM has access to all 4 rings and while traditionally SMM code only
++	 * ran in CPL0, newer firmware is starting to make use of CPL3 in SMM.
++	 *
++	 * Since the EVENTSEL.{USR,OS} CPL filtering makes no distinction
++	 * between SMM or not, this results in what should be pure userspace
++	 * counters including SMM data.
++	 *
++	 * This is a clear privilege issue, therefore globally disable
++	 * counting SMM by default.
++	 */
++	.attr_freeze_on_smi	= 1,
+ };
  
-https://lore.kernel.org/linux-perf-users/20220111150749.13365-1-andrew.kilroy@arm.com/
-
-Would be good to get your feedback,
-
-Thanks
-Andrew
-
+ static __init void intel_clovertown_quirk(void)
