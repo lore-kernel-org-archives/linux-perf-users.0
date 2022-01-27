@@ -2,152 +2,159 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08EEEC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Jan 2022 13:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE96FC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Jan 2022 14:31:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236800AbiA0NUV (ORCPT
+        id S237811AbiA0Ob7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 Jan 2022 08:20:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33138 "EHLO
+        Thu, 27 Jan 2022 09:31:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230132AbiA0NUU (ORCPT
+        with ESMTP id S237777AbiA0Ob6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 Jan 2022 08:20:20 -0500
-Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46371C061714;
-        Thu, 27 Jan 2022 05:20:20 -0800 (PST)
-Received: by mail-qt1-x835.google.com with SMTP id r14so2416062qtt.5;
-        Thu, 27 Jan 2022 05:20:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oGHnyxqhToYcWzP+FxpnOsUxGeusoaZ89ztzpJzW4gk=;
-        b=JNaXTi6oJAV+zPErJ+0NvjVsdgZ+6XDP6rCTO9rjEnCMsV/g4v89jPD/QVO/TvGoyu
-         XF5WCTa91U61BX18AEwDx3/mUZ56p/KQ9LGq+CoSVQ7hYcBZrAT/TL65B6c8BEIKYFYF
-         5lBI2rMjzyLyV41Q23YH2KUoW3Ty8Pj/iY0AKIucWz2OkU7aD6bv5aKNIM19XhmIBeOW
-         dgghIByuBPaPgZ+In+r3SsBA+ZCt63lhr272S0Aq7/c+6MFWuEiuCLOevAcCnkgslLni
-         W2qYA/poqS8x9JSx8uZXG1tSESNKGaPzxY8bARnWr6W2bfc0twtrBDIY9hpbHQEweZkv
-         xKWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oGHnyxqhToYcWzP+FxpnOsUxGeusoaZ89ztzpJzW4gk=;
-        b=X1e9HCRUj323g2a1eqdtdcUMdjHH9ruxiBwl2s+FDs3V4YEOnp0ymVWquZfKaUPX2L
-         D82PLAH3N10vhA+PSZZJV3gZLr4jQwsXz2hhB66nF8sHcZzS1pFgShIBObPmuxNJaQi6
-         8Qw6q2VXrqd6T06cjxPlwLazKX3PaJB/svOIyRWM81T5kbHsiA9zDBee48cgVBLvyVQG
-         4lMEzmyzQ5RsyiYijm282ZzaBjjsNzd3utwwkyRWDTv8olfjRD4IhrXQgiZwiOhy//o4
-         g2jREfhXyG05+NLUaPrZw9DZNCDwMqvPQef6p800mz2eECVIn+qxnoUPSSqcTf7F0Hyz
-         gDvg==
-X-Gm-Message-State: AOAM533ONF0+XCPxZivZLWA46npDxvxFhu/05uBuzLO7rNWZplMIkA9t
-        OH1d2IHxhMNpbZFhHvmhVXMPd4K+68TXSK4K
-X-Google-Smtp-Source: ABdhPJzQu5lxBFfzJlNuVQXt27nxAMR4IznudwK58tbYpXxGLORmpIoRwdukYQfC+7z601lyvgMYPQ==
-X-Received: by 2002:a05:622a:342:: with SMTP id r2mr2563637qtw.473.1643289619411;
-        Thu, 27 Jan 2022 05:20:19 -0800 (PST)
-Received: from WRT-WX9.. ([207.246.89.135])
-        by smtp.gmail.com with ESMTPSA id r7sm1271599qtw.25.2022.01.27.05.20.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jan 2022 05:20:18 -0800 (PST)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v2] perf/ftrace: system_wide collection is not effective by default
-Date:   Thu, 27 Jan 2022 21:20:10 +0800
-Message-Id: <20220127132010.4836-1-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.32.0
+        Thu, 27 Jan 2022 09:31:58 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B84AC061714;
+        Thu, 27 Jan 2022 06:31:58 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D570061CF5;
+        Thu, 27 Jan 2022 14:31:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45F33C340EB;
+        Thu, 27 Jan 2022 14:31:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643293917;
+        bh=KG0sJJ6svB6Q4dVDStVvr5ZY/p0y/TT6kssCsLP37kI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=L9qelgPQCtgC73eHNwlqcEoqCbhQnXfe/D0+BCtb40l0j8YTDJwnoSXAXF6HQeTj2
+         WioVAU1eU+H0qHjTIh4AYDDnsiXVsKyVZjacvPHVK3qyZEvbiMsdoOvXJOmoP879lQ
+         7nH9Zg2HTrmp0sgjdODKZqYuTNKczKttl6j9Lc3ppx50MY5DwNQ7/AyHrxQxOAv/E2
+         /2kz2qfAHu5sGoIygfyo1kKpowLCpbEtrAeet/+XJVoRAARBbpWuvKzoegPFvDSnci
+         57S+/n0DzPo+EFon1Z5XmgHGdsX9LX+mnTDHklCAZCN/HiS7sZe4ejvzgQBkWy1Nf9
+         vh9eJcnRs15Mg==
+Received: by mail-qt1-f180.google.com with SMTP id g12so2555891qto.13;
+        Thu, 27 Jan 2022 06:31:57 -0800 (PST)
+X-Gm-Message-State: AOAM530U7O8SidNO6vVzUrvIwCcTK5LYVf2KiS9nxx8wUgdV2EN7fUZJ
+        +s5Z86knXX3dARBR9/Dv0ipCUNbwdTSdg1Mzwg==
+X-Google-Smtp-Source: ABdhPJxyglgGrDLep5DRhLAJE92a8tCwOyGYP4E/18NDmZa7waQhMxyT8SHlKlk1KnISG642ASa68rEQsuM/hU4/RUE=
+X-Received: by 2002:ac8:3d41:: with SMTP id u1mr2887893qtf.478.1643293916325;
+ Thu, 27 Jan 2022 06:31:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1642998653-21377-1-git-send-email-anshuman.khandual@arm.com>
+ <1642998653-21377-7-git-send-email-anshuman.khandual@arm.com>
+ <YfF/zBS3kL/+eC1k@robh.at.kernel.org> <9e56509a-2772-a333-ccc3-ad49a2028616@arm.com>
+In-Reply-To: <9e56509a-2772-a333-ccc3-ad49a2028616@arm.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 27 Jan 2022 08:31:45 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJXQqV3P=T8GXxDY2wReeYnLcBqge139fUUXLtcQJe=6w@mail.gmail.com>
+Message-ID: <CAL_JsqJXQqV3P=T8GXxDY2wReeYnLcBqge139fUUXLtcQJe=6w@mail.gmail.com>
+Subject: Re: [RFC V1 06/11] arm64/perf: Drive BRBE from perf event states
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The ftrace.target.system_wide must be set before invoking
-evlist__create_maps(), otherwise it has no effect.
+On Thu, Jan 27, 2022 at 6:20 AM Anshuman Khandual
+<anshuman.khandual@arm.com> wrote:
+>
+>
+> On 1/26/22 10:37 PM, Rob Herring wrote:
+> > On Mon, Jan 24, 2022 at 10:00:48AM +0530, Anshuman Khandual wrote:
+> >> Branch stack sampling rides along the normal perf event and all the branch
+> >> records get captured during the PMU interrupt. This just changes perf event
+> >> handling on the arm64 platform to accommodate required BRBE operations that
+> >> will enable branch stack sampling support.
+> >>
+> >> Cc: Peter Zijlstra <peterz@infradead.org>
+> >> Cc: Ingo Molnar <mingo@redhat.com>
+> >> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> >> Cc: Mark Rutland <mark.rutland@arm.com>
+> >> Cc: Will Deacon <will@kernel.org>
+> >> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> >> Cc: linux-perf-users@vger.kernel.org
+> >> Cc: linux-kernel@vger.kernel.org
+> >> Cc: linux-arm-kernel@lists.infradead.org
+> >> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> >> ---
+> >>  arch/arm64/kernel/perf_event.c |  6 +++++
+> >>  drivers/perf/arm_pmu.c         | 40 ++++++++++++++++++++++++++++++++++
+> >>  2 files changed, 46 insertions(+)
+> >>
+> >> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
+> >> index f6a47036b0b4..11c82c8f2eec 100644
+> >> --- a/arch/arm64/kernel/perf_event.c
+> >> +++ b/arch/arm64/kernel/perf_event.c
+> >> @@ -864,6 +864,12 @@ static irqreturn_t armv8pmu_handle_irq(struct arm_pmu *cpu_pmu)
+> >>              if (!armpmu_event_set_period(event))
+> >>                      continue;
+> >>
+> >> +            if (has_branch_stack(event)) {
+> >> +                    cpu_pmu->brbe_read(cpuc, event);
+> >
+> > Is has_branch_stack() guaranteed to be false on arm32? If not, this will
+> > be a NULL function ptr.
+>
+> armpmu_event_init() blocks a perf event from being created with branch
+> stack sampling request without CONFIG_ARM_BRBE_PMU option being enabled
+> first, which has dependency on CONFIG_ARM64. So has_branch_stack() is
+> guaranteed to be false on arm32.
 
-Fixes: 53be50282269 ("perf ftrace: Add 'latency' subcommand")
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Then the stub functions in patch 3 are also not needed. The fact that
+you create dummy functions makes it look like you can't have NULL
+function ptrs, but you don't. This is what I mean about the structure
+of the series being hard to review.
 
----
-v2: fix error handling.
----
- tools/perf/builtin-ftrace.c | 45 ++++++++++++++++++++-----------------
- 1 file changed, 24 insertions(+), 21 deletions(-)
+> static int armpmu_event_init(struct perf_event *event)
+> {
+>         ....
+>         if (has_branch_stack(event)) {
+>                 /*
+>                  * BRBE support is absent. Select CONFIG_ARM_BRBE_PMU
+>                  * in the config, before branch stack sampling events
+>                  * can be requested.
+>                  */
+>                 if (!IS_ENABLED(CONFIG_ARM_BRBE_PMU)) {
+>                         pr_warn_once("BRBE is disabled, select CONFIG_ARM_BRBE_PMU\n");
+>                         return -EOPNOTSUPP;
+>                 }
+>
+>
+> config ARM_BRBE_PMU
+>         tristate "Enable support for Branch Record Buffer Extension (BRBE)"
+>         depends on ARM64 && ARM_PMU
+>         default y
+>         help
+>           Enable perf support for Branch Record Buffer Extension (BRBE) which
+>           records all branches taken in an execution path. This supports some
+>           branch types and privilege based filtering. It captured additional
+>           relevant information such as cycle count, misprediction and branch
+>           type, branch privilege level etc.
+>
+> >
+> > To add to my other comments, this patch is where I would add
+> > brbe_read(), etc. to arm_pmu.
+>
+> Because all new arm_pmu helpers get added and get used in the perf driver
+> in the same patch, although the actual helper implementation would still
+> come by bit later via the driver. This also uses updates to pmu_hw_events
+> struct as well, then that patch needs to be folded here as well.
+>
+> There is no problem as such, kind of bit subjective. I just feel inclined
+> to keep the independent infrastructure changes separate making it easy to
+> review while also creating a flow.
 
-diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index dec24dc0e767..a8785dec5ca6 100644
---- a/tools/perf/builtin-ftrace.c
-+++ b/tools/perf/builtin-ftrace.c
-@@ -1115,6 +1115,7 @@ enum perf_ftrace_subcommand {
- int cmd_ftrace(int argc, const char **argv)
- {
- 	int ret;
-+	int (*cmd_func)(struct perf_ftrace *) = NULL;
- 	struct perf_ftrace ftrace = {
- 		.tracer = DEFAULT_TRACER,
- 		.target = { .uid = UINT_MAX, },
-@@ -1221,6 +1222,28 @@ int cmd_ftrace(int argc, const char **argv)
- 		goto out_delete_filters;
- 	}
- 
-+	switch (subcmd) {
-+	case PERF_FTRACE_TRACE:
-+		if (!argc && target__none(&ftrace.target))
-+			ftrace.target.system_wide = true;
-+		cmd_func = __cmd_ftrace;
-+		break;
-+	case PERF_FTRACE_LATENCY:
-+		if (list_empty(&ftrace.filters)) {
-+			pr_err("Should provide a function to measure\n");
-+			parse_options_usage(ftrace_usage, options, "T", 1);
-+			ret = -EINVAL;
-+			goto out_delete_filters;
-+		}
-+		cmd_func = __cmd_latency;
-+		break;
-+	case PERF_FTRACE_NONE:
-+	default:
-+		pr_err("Invalid subcommand\n");
-+		ret = -EINVAL;
-+		goto out_delete_filters;
-+	}
-+
- 	ret = target__validate(&ftrace.target);
- 	if (ret) {
- 		char errbuf[512];
-@@ -1248,27 +1271,7 @@ int cmd_ftrace(int argc, const char **argv)
- 			goto out_delete_evlist;
- 	}
- 
--	switch (subcmd) {
--	case PERF_FTRACE_TRACE:
--		if (!argc && target__none(&ftrace.target))
--			ftrace.target.system_wide = true;
--		ret = __cmd_ftrace(&ftrace);
--		break;
--	case PERF_FTRACE_LATENCY:
--		if (list_empty(&ftrace.filters)) {
--			pr_err("Should provide a function to measure\n");
--			parse_options_usage(ftrace_usage, options, "T", 1);
--			ret = -EINVAL;
--			goto out_delete_evlist;
--		}
--		ret = __cmd_latency(&ftrace);
--		break;
--	case PERF_FTRACE_NONE:
--	default:
--		pr_err("Invalid subcommand\n");
--		ret = -EINVAL;
--		break;
--	}
-+	ret = cmd_func(&ftrace);
- 
- out_delete_evlist:
- 	evlist__delete(ftrace.evlist);
--- 
-2.32.0
+Everything about kernel development is subjective until it's a
+requirement by the maintainer. I'm not here, so it's just advice.
 
+Rob
