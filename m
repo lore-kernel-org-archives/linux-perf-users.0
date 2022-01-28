@@ -2,57 +2,74 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF31C433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jan 2022 11:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2ADC433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jan 2022 13:44:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234859AbiA1L0a (ORCPT
+        id S242586AbiA1Nos (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Jan 2022 06:26:30 -0500
-Received: from foss.arm.com ([217.140.110.172]:37828 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234386AbiA1L0a (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Jan 2022 06:26:30 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 94601113E;
-        Fri, 28 Jan 2022 03:26:29 -0800 (PST)
-Received: from [10.57.86.86] (unknown [10.57.86.86])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 138D73F766;
-        Fri, 28 Jan 2022 03:26:26 -0800 (PST)
-Message-ID: <e84cf689-10a5-c63f-b574-9da682da034e@arm.com>
-Date:   Fri, 28 Jan 2022 11:26:25 +0000
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.5.1
-Subject: Re: [PATCH v2 4/6] Documentation: coresight: Turn numbered
- subsections into real subsections
-To:     James Clark <james.clark@arm.com>, mathieu.poirier@linaro.org,
-        coresight@lists.linaro.org, leo.yan@linaro.com,
-        mike.leach@linaro.org
-Cc:     Leo Yan <leo.yan@linaro.org>, John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Fri, 28 Jan 2022 08:44:48 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4545 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242206AbiA1Nor (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 28 Jan 2022 08:44:47 -0500
+Received: from fraeml735-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Jldr412C6z67Z9J;
+        Fri, 28 Jan 2022 21:40:20 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml735-chm.china.huawei.com (10.206.15.216) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Fri, 28 Jan 2022 14:44:45 +0100
+Received: from [10.47.26.192] (10.47.26.192) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Fri, 28 Jan
+ 2022 13:44:44 +0000
+Subject: Re: [RFC PATCH v2 1/5] perf stat: Implement --topdown with metrics
+To:     Andrew Kilroy <andrew.kilroy@arm.com>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <acme@kernel.org>, <irogers@google.com>, <ak@linux.intel.com>
+CC:     Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20220113091056.1297982-1-james.clark@arm.com>
- <20220113091056.1297982-5-james.clark@arm.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20220113091056.1297982-5-james.clark@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        "Namhyung Kim" <namhyung@kernel.org>
+References: <4fefb1bc-49b2-bc5b-23cd-cd8fabe8c588@huawei.com>
+ <20220111150749.13365-1-andrew.kilroy@arm.com>
+ <20220111150749.13365-2-andrew.kilroy@arm.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <70433fdc-831e-8afa-68c3-6d75a4f8c75a@huawei.com>
+Date:   Fri, 28 Jan 2022 13:44:08 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
+MIME-Version: 1.0
+In-Reply-To: <20220111150749.13365-2-andrew.kilroy@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.26.192]
+X-ClientProxiedBy: lhreml713-chm.china.huawei.com (10.201.108.64) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 13/01/2022 09:10, James Clark wrote:
-> This is to allow them to be referenced in a later commit. There was
-> also a mistake where sysFS was introduced as section 2, but numbered
-> as section 1. And vice versa for 'Using perf framework'. This can't
-> happen with unnumbered sections.
-> 
-> Signed-off-by: James Clark <james.clark@arm.com>
+On 11/01/2022 15:07, Andrew Kilroy wrote:
+>   }
+> +
+> +bool topdown_can_use_json_metrics(void)
 
-Looks good to me
+nit: maybe topdown_can_use_metricgroups() could be better
+
+> +{
+> +#if defined(__aarch64__)
+> +	return true;
+> +#else
+> +	return false;
+> +#endif
+
+it might be worth just having !x86, just that is prob too much forward 
+looking
+
+> +}
+> +
 
