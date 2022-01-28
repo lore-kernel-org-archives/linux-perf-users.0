@@ -2,159 +2,202 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D54DC433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jan 2022 05:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A848EC433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jan 2022 06:25:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346207AbiA1Foe (ORCPT
+        id S1346444AbiA1GZN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Jan 2022 00:44:34 -0500
-Received: from foss.arm.com ([217.140.110.172]:49560 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233798AbiA1Fob (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Jan 2022 00:44:31 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 25BED12FC;
-        Thu, 27 Jan 2022 21:44:31 -0800 (PST)
-Received: from p8cg001049571a15.arm.com (unknown [10.163.44.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7BE3D3F766;
-        Thu, 27 Jan 2022 21:44:25 -0800 (PST)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     robh@kernel.org, Anshuman Khandual <anshuman.khandual@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Fri, 28 Jan 2022 01:25:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43198 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1346451AbiA1GZM (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 28 Jan 2022 01:25:12 -0500
+Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2A04C06173B
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jan 2022 22:25:12 -0800 (PST)
+Received: by mail-il1-x136.google.com with SMTP id s1so4564111ilj.7
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jan 2022 22:25:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ioX5kk3sWh56bJEPWUdFpYPz8fw0aCA2n/24TeU+OSY=;
+        b=DcclhvcH9slBX27nMJsYCkSK9cLOnuPv4HRZuib0o9hVmuMNVGIzDoiczsSQ8VFYPE
+         svvSySicRb0BiJOBVYeLV1Ins06BzzqKHc6Pwg+L5oFV2an9NyexJXWi5FJ+3tQxn77Q
+         gakw+O/53ZKq/LhbsLkca4TvPqywSGffho6xD31OksHO69E/Zz++g2Cz5A3nlQC8sWIN
+         tJKYtaeTQODRO0QaitU9oEhXKC7S7iFJIXtHgewf9PLq+lBP0oXHn8IP0Wi0OjI/7g6H
+         wxwqv4ToOcQQ1UqO3ZGMPMWZm5sr+WTG4VFJaEX3OFbmnooQD2plVouBI4ScfsKOmuFn
+         D0Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ioX5kk3sWh56bJEPWUdFpYPz8fw0aCA2n/24TeU+OSY=;
+        b=T6VOow3u15wQ0a0O7UJlLTe1kBXNxPCVIt5m5Kn7Js1VqkUv5V1/dlwyI2AxsUaUeD
+         +PvObjPVDh2WAjr2v4C29NEvrX/JXHdMKvGgAHa8xmAfOizXOccWroH8ZC6aUuMO4oai
+         o9Y/Fw/EnZ3iSuj/MV7xFE8luctR7Gqr9rzua5CBBvl9jICmJLp84Idk2s3B3a8Qc/rF
+         cVvPCxwcgL88C/wsqu8NrLH9EIPVzCtRBuDPDHh+jYGC9QwPNd12+JOq7hPIdwoZf1Zh
+         lOXHc/DAoE9qnso3uUr9bL8ibtjkEldVPr0sOLnpMGBterqWaNPhOqaAJSrLfC51qCud
+         AomQ==
+X-Gm-Message-State: AOAM531P4DqGVmim08uo2V+nAmqzM2HpseODkA/OiaAzc7g0sYfdIlNL
+        1IkvGl0+EPU6D2fZAEQlm6WDzKstZWuLkL+0crGqHg==
+X-Google-Smtp-Source: ABdhPJw8xJtMdMXLpq5DNJh0qHQnEwUlREutuMllw/zjqf3plgXpZY3RK/5z+FWQU/NwE5f50hf7bHaEt/Ldv33+DuM=
+X-Received: by 2002:a05:6e02:188a:: with SMTP id o10mr4893492ilu.89.1643351110790;
+ Thu, 27 Jan 2022 22:25:10 -0800 (PST)
+MIME-Version: 1.0
+References: <20220125204602.4137477-1-irogers@google.com> <CAP-5=fXyJeX3b3egcAOfPndmYhakrsdKu7HttnHEH2DKP-6Vxw@mail.gmail.com>
+ <20220128142348.17d51894dbdb35c9a9449567@kernel.org>
+In-Reply-To: <20220128142348.17d51894dbdb35c9a9449567@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 27 Jan 2022 22:24:59 -0800
+Message-ID: <CAP-5=fXHudKqO4+0rbO9X3Ny+Cq7+KsHbKf4P8P24SjF0S232Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] Reference count checker and related fixes
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 2/2] perf: Expand perf_branch_entry.type
-Date:   Fri, 28 Jan 2022 11:14:13 +0530
-Message-Id: <1643348653-24367-3-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1643348653-24367-1-git-send-email-anshuman.khandual@arm.com>
-References: <1643348653-24367-1-git-send-email-anshuman.khandual@arm.com>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@collabora.com>,
+        James Clark <james.clark@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
+        Song Liu <song@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Miaoqian Lin <linmq006@gmail.com>,
+        Stephen Brennan <stephen.s.brennan@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        German Gomez <german.gomez@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Eric Dumazet <edumazet@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        masami.hiramatsu.pt@hitachi.com, eranian@google.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Current perf_branch_entry.type is a 4 bits field just enough to accommodate
-16 generic branch types. This is insufficient to accommodate platforms like
-arm64 which has much more branch types. Lets just expands this field into a
-6 bits one, which can now hold 64 generic branch types. This also adds more
-generic branch types.
+On Thu, Jan 27, 2022 at 9:24 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+>
+> On Thu, 27 Jan 2022 13:33:23 -0800
+> Ian Rogers <irogers@google.com> wrote:
+>
+> > On Tue, Jan 25, 2022 at 12:46 PM Ian Rogers <irogers@google.com> wrote:
+> > >
+> > > This v2 patch set has the main reference count patch for cpu map from
+> > > the first set and then adds reference count checking to nsinfo. The
+> > > reference count checking on nsinfo helped diagnose a data race bug
+> > > which is fixed in the independent patches 2 and 3.
+> > >
+> > > The perf tool has a class of memory problems where reference counts
+> > > are used incorrectly. Memory/address sanitizers and valgrind don't
+> > > provide useful ways to debug these problems, you see a memory leak
+> > > where the only pertinent information is the original allocation
+> > > site. What would be more useful is knowing where a get fails to have a
+> > > corresponding put, where there are double puts, etc.
+> > >
+> > > This work was motivated by the roll-back of:
+> > > https://lore.kernel.org/linux-perf-users/20211118193714.2293728-1-irogers@google.com/
+> > > where fixing a missed put resulted in a use-after-free in a different
+> > > context. There was a sense in fixing the issue that a game of
+> > > wac-a-mole had been embarked upon in adding missed gets and puts.
+> > >
+> > > The basic approach of the change is to add a level of indirection at
+> > > the get and put calls. Get allocates a level of indirection that, if
+> > > no corresponding put is called, becomes a memory leak (and associated
+> > > stack trace) that leak sanitizer can report. Similarly if two puts are
+> > > called for the same get, then a double free can be detected by address
+> > > sanitizer. This can also detect the use after put, which should also
+> > > yield a segv without a sanitizer.
+> > >
+> > > Adding reference count checking to cpu map was done as a proof of
+> > > concept, it yielded little other than a location where the use of get
+> > > could be cleaner by using its result. Reference count checking on
+> > > nsinfo identified a double free of the indirection layer and the
+> > > related threads, thereby identifying a data race as discussed here:
+> > > https://lore.kernel.org/linux-perf-users/CAP-5=fWZH20L4kv-BwVtGLwR=Em3AOOT+Q4QGivvQuYn5AsPRg@mail.gmail.com/
+> > > Accordingly the dso->lock was extended and use to cover the race.
+> > >
+> > > An alternative that was considered was ref_tracker:
+> > >  https://lwn.net/Articles/877603/
+> > > ref_tracker requires use of a reference counted struct to also use a
+> > > cookie/tracker. The cookie is combined with data in a ref_tracker_dir
+> > > to spot double puts. When an object is finished with leaks can be
+> > > detected, as with this approach when leak analysis happens. This
+> > > approach was preferred as it doesn't introduce cookies, spots use
+> > > after put and appears moderately more neutral to the API. Weaknesses
+> > > of the implemented approcah are not being able to do adhoc leak
+> > > detection and a preference for adding an accessor API to structs. I
+> > > believe there are other issues and welcome suggestions.
+> >
+> > And so we've been here before (Dec 2015 to be exact). Namhyung pointed me to:
+> > https://lore.kernel.org/all/20151209021047.10245.8918.stgit@localhost.localdomain/
+> > by Masami Hiramatsu. In this work he adds a leak sanitizer style
+> > reference count checker that will describe locations of puts and gets
+> > for diagnosis. Firstly that's an awesome achievement! This work is
+> > different in that it isn't trying to invent a leak sanitizer, it is
+> > just using the existing one. By adding a level of indirection this
+> > work can catch use after put and pairs gets with puts to make lifetime
+> > analysis more automatic. An advantage of Masami's work is that it
+> > doesn't change data-structures and after the initial patch-set is
+> > somewhat transparent. Overall I prefer the approach in these patches,
+> > future patches can look to clean up the API as Masami has.
+>
+> Thanks for referring my series :-D The series aimed to solve the refcount
+> usage issue in the perf which lead the object leaks. At that moment,
+> I found that there were 2 patterns, refcount start from 0 and start from 1.
+> That made me confused what I should do for using a object.
+> But the perf uses linux/refcount.h now, I hope such issue has already gone.
+> (but the object leakage seems not fixed fully yet, as you found.)
+>
+> BTW, I think the introducing UNWRAP_* macro may put a burden on future
+> development. If it is inevitable, we should consider it as carefully as
+> possible. Or, it may cause another issue (it is easily missed that the new
+> patch does not use UNWRAP_* for object reference, because it is natual.)
+>
+> So I agree with you that you to clean up the API. :-)
+> I think we can make yet another refcount.h for user space debugging and
+> replace it with the linux/refcount.h.
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- include/uapi/linux/perf_event.h       | 10 ++++++++--
- tools/include/uapi/linux/perf_event.h | 10 ++++++++--
- tools/perf/util/branch.c              |  8 +++++++-
- tools/perf/util/branch.h              |  4 ++--
- 4 files changed, 25 insertions(+), 7 deletions(-)
+Thanks Masami,
 
-diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-index b91d0f575d0c..361fdc6b87a0 100644
---- a/include/uapi/linux/perf_event.h
-+++ b/include/uapi/linux/perf_event.h
-@@ -256,6 +256,12 @@ enum {
- 	PERF_BR_FIQ		= 13,	/* fiq */
- 	PERF_BR_DEBUG_HALT	= 14,	/* debug halt */
- 	PERF_BR_DEBUG_EXIT	= 15,	/* debug exit */
-+	PERF_BR_DEBUG_INST	= 16,	/* instruciton debug */
-+	PERF_BR_DEBUG_DATA	= 17,	/* data debug */
-+	PERF_BR_FAULT_ALGN	= 18,	/* alignment fault */
-+	PERF_BR_FAULT_DATA	= 19,	/* data fault */
-+	PERF_BR_FAULT_INST	= 20,	/* instruction fault */
-+	PERF_BR_SERROR		= 21,	/* system error */
- 	PERF_BR_MAX,
- };
- 
-@@ -1370,8 +1376,8 @@ struct perf_branch_entry {
- 		in_tx:1,    /* in transaction */
- 		abort:1,    /* transaction abort */
- 		cycles:16,  /* cycle count to last branch */
--		type:4,     /* branch type */
--		reserved:40;
-+		type:6,     /* branch type */
-+		reserved:38;
- };
- 
- union perf_sample_weight {
-diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index 1882054e8684..9a82b8aaed93 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -256,6 +256,12 @@ enum {
- 	PERF_BR_FIQ		= 13,	/* fiq */
- 	PERF_BR_DEBUG_HALT	= 14,	/* debug halt */
- 	PERF_BR_DEBUG_EXIT	= 15,	/* debug exit */
-+	PERF_BR_DEBUG_INST	= 16,	/* instruciton debug */
-+	PERF_BR_DEBUG_DATA	= 17,	/* data debug */
-+	PERF_BR_FAULT_ALGN	= 18,	/* alignment fault */
-+	PERF_BR_FAULT_DATA	= 19,	/* data fault */
-+	PERF_BR_FAULT_INST	= 20,	/* instruction fault */
-+	PERF_BR_SERROR		= 21,	/* system error */
- 	PERF_BR_MAX,
- };
- 
-@@ -1370,8 +1376,8 @@ struct perf_branch_entry {
- 		in_tx:1,    /* in transaction */
- 		abort:1,    /* transaction abort */
- 		cycles:16,  /* cycle count to last branch */
--		type:4,     /* branch type */
--		reserved:40;
-+		type:6,     /* branch type */
-+		reserved:38;
- };
- 
- union perf_sample_weight {
-diff --git a/tools/perf/util/branch.c b/tools/perf/util/branch.c
-index 74e5e67b1779..1e216ea2e2a8 100644
---- a/tools/perf/util/branch.c
-+++ b/tools/perf/util/branch.c
-@@ -54,7 +54,13 @@ const char *branch_type_name(int type)
- 		"IRQ",
- 		"FIQ",
- 		"DEBUG_HALT",
--		"DEBUG_EXIT"
-+		"DEBUG_EXIT",
-+		"DEBUG_INST",
-+		"DEBUG_DATA",
-+		"FAULT_ALGN",
-+		"FAULT_DATA",
-+		"FAULT_INST",
-+		"SERROR"
- 	};
- 
- 	if (type >= 0 && type < PERF_BR_MAX)
-diff --git a/tools/perf/util/branch.h b/tools/perf/util/branch.h
-index 17b2ccc61094..875d99abdc36 100644
---- a/tools/perf/util/branch.h
-+++ b/tools/perf/util/branch.h
-@@ -23,8 +23,8 @@ struct branch_flags {
- 			u64 in_tx:1;
- 			u64 abort:1;
- 			u64 cycles:16;
--			u64 type:4;
--			u64 reserved:40;
-+			u64 type:6;
-+			u64 reserved:38;
- 		};
- 	};
- };
--- 
-2.25.1
+Agreed on the UNWRAP_ macros, hence wanting to hide them behind
+accessors. Making accessors could be automated with macros, for
+example, have a list of variables, have a macro declare the struct
+using the list, another macro can use the list to declare accessors. I
+didn't find adding the UNWRAP_ macros in this change particularly
+burdensome as any use of the wrapping pointer as the original type
+caused a compile time error telling you what and where to fix. The
+macro is extra stuff in the way of using just the raw object, but
+that's fairly typical in C++ with shared_ptr, scoped_lock, etc. The
+question is, is it worth it to make sure use of the reference counted
+object is correct and misuse is easier to diagnose? I think it is near
+as least offensive as possible while providing the best information -
+hence being able to solve the dso->nsinfo put data race, that has been
+a problem to solve up to this point. I'm open to better suggestions
+though :-)
 
+Thanks again,
+Ian
+
+> Thank you,
+>
+> --
+> Masami Hiramatsu <mhiramat@kernel.org>
