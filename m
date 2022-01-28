@@ -2,202 +2,147 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A848EC433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jan 2022 06:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9CAC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jan 2022 11:19:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346444AbiA1GZN (ORCPT
+        id S1348134AbiA1LTj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Jan 2022 01:25:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43198 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346451AbiA1GZM (ORCPT
+        Fri, 28 Jan 2022 06:19:39 -0500
+Received: from foss.arm.com ([217.140.110.172]:37426 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1348131AbiA1LTg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Jan 2022 01:25:12 -0500
-Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2A04C06173B
-        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jan 2022 22:25:12 -0800 (PST)
-Received: by mail-il1-x136.google.com with SMTP id s1so4564111ilj.7
-        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jan 2022 22:25:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ioX5kk3sWh56bJEPWUdFpYPz8fw0aCA2n/24TeU+OSY=;
-        b=DcclhvcH9slBX27nMJsYCkSK9cLOnuPv4HRZuib0o9hVmuMNVGIzDoiczsSQ8VFYPE
-         svvSySicRb0BiJOBVYeLV1Ins06BzzqKHc6Pwg+L5oFV2an9NyexJXWi5FJ+3tQxn77Q
-         gakw+O/53ZKq/LhbsLkca4TvPqywSGffho6xD31OksHO69E/Zz++g2Cz5A3nlQC8sWIN
-         tJKYtaeTQODRO0QaitU9oEhXKC7S7iFJIXtHgewf9PLq+lBP0oXHn8IP0Wi0OjI/7g6H
-         wxwqv4ToOcQQ1UqO3ZGMPMWZm5sr+WTG4VFJaEX3OFbmnooQD2plVouBI4ScfsKOmuFn
-         D0Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ioX5kk3sWh56bJEPWUdFpYPz8fw0aCA2n/24TeU+OSY=;
-        b=T6VOow3u15wQ0a0O7UJlLTe1kBXNxPCVIt5m5Kn7Js1VqkUv5V1/dlwyI2AxsUaUeD
-         +PvObjPVDh2WAjr2v4C29NEvrX/JXHdMKvGgAHa8xmAfOizXOccWroH8ZC6aUuMO4oai
-         o9Y/Fw/EnZ3iSuj/MV7xFE8luctR7Gqr9rzua5CBBvl9jICmJLp84Idk2s3B3a8Qc/rF
-         cVvPCxwcgL88C/wsqu8NrLH9EIPVzCtRBuDPDHh+jYGC9QwPNd12+JOq7hPIdwoZf1Zh
-         lOXHc/DAoE9qnso3uUr9bL8ibtjkEldVPr0sOLnpMGBterqWaNPhOqaAJSrLfC51qCud
-         AomQ==
-X-Gm-Message-State: AOAM531P4DqGVmim08uo2V+nAmqzM2HpseODkA/OiaAzc7g0sYfdIlNL
-        1IkvGl0+EPU6D2fZAEQlm6WDzKstZWuLkL+0crGqHg==
-X-Google-Smtp-Source: ABdhPJw8xJtMdMXLpq5DNJh0qHQnEwUlREutuMllw/zjqf3plgXpZY3RK/5z+FWQU/NwE5f50hf7bHaEt/Ldv33+DuM=
-X-Received: by 2002:a05:6e02:188a:: with SMTP id o10mr4893492ilu.89.1643351110790;
- Thu, 27 Jan 2022 22:25:10 -0800 (PST)
+        Fri, 28 Jan 2022 06:19:36 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD95B113E;
+        Fri, 28 Jan 2022 03:19:32 -0800 (PST)
+Received: from [10.57.86.86] (unknown [10.57.86.86])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E7163F766;
+        Fri, 28 Jan 2022 03:19:30 -0800 (PST)
+Message-ID: <b3545a88-4743-db95-4676-b0b193cbea78@arm.com>
+Date:   Fri, 28 Jan 2022 11:19:28 +0000
 MIME-Version: 1.0
-References: <20220125204602.4137477-1-irogers@google.com> <CAP-5=fXyJeX3b3egcAOfPndmYhakrsdKu7HttnHEH2DKP-6Vxw@mail.gmail.com>
- <20220128142348.17d51894dbdb35c9a9449567@kernel.org>
-In-Reply-To: <20220128142348.17d51894dbdb35c9a9449567@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 27 Jan 2022 22:24:59 -0800
-Message-ID: <CAP-5=fXHudKqO4+0rbO9X3Ny+Cq7+KsHbKf4P8P24SjF0S232Q@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] Reference count checker and related fixes
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.5.1
+Subject: Re: [PATCH v2 1/6] coresight: Add config flag to enable branch
+ broadcast
+To:     James Clark <james.clark@arm.com>, mathieu.poirier@linaro.org,
+        coresight@lists.linaro.org, leo.yan@linaro.com,
+        mike.leach@linaro.org
+Cc:     Leo Yan <leo.yan@linaro.org>, John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@collabora.com>,
-        James Clark <james.clark@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
-        Song Liu <song@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Miaoqian Lin <linmq006@gmail.com>,
-        Stephen Brennan <stephen.s.brennan@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        German Gomez <german.gomez@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Eric Dumazet <edumazet@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        masami.hiramatsu.pt@hitachi.com, eranian@google.com
-Content-Type: text/plain; charset="UTF-8"
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20220113091056.1297982-1-james.clark@arm.com>
+ <20220113091056.1297982-2-james.clark@arm.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20220113091056.1297982-2-james.clark@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jan 27, 2022 at 9:24 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
->
-> On Thu, 27 Jan 2022 13:33:23 -0800
-> Ian Rogers <irogers@google.com> wrote:
->
-> > On Tue, Jan 25, 2022 at 12:46 PM Ian Rogers <irogers@google.com> wrote:
-> > >
-> > > This v2 patch set has the main reference count patch for cpu map from
-> > > the first set and then adds reference count checking to nsinfo. The
-> > > reference count checking on nsinfo helped diagnose a data race bug
-> > > which is fixed in the independent patches 2 and 3.
-> > >
-> > > The perf tool has a class of memory problems where reference counts
-> > > are used incorrectly. Memory/address sanitizers and valgrind don't
-> > > provide useful ways to debug these problems, you see a memory leak
-> > > where the only pertinent information is the original allocation
-> > > site. What would be more useful is knowing where a get fails to have a
-> > > corresponding put, where there are double puts, etc.
-> > >
-> > > This work was motivated by the roll-back of:
-> > > https://lore.kernel.org/linux-perf-users/20211118193714.2293728-1-irogers@google.com/
-> > > where fixing a missed put resulted in a use-after-free in a different
-> > > context. There was a sense in fixing the issue that a game of
-> > > wac-a-mole had been embarked upon in adding missed gets and puts.
-> > >
-> > > The basic approach of the change is to add a level of indirection at
-> > > the get and put calls. Get allocates a level of indirection that, if
-> > > no corresponding put is called, becomes a memory leak (and associated
-> > > stack trace) that leak sanitizer can report. Similarly if two puts are
-> > > called for the same get, then a double free can be detected by address
-> > > sanitizer. This can also detect the use after put, which should also
-> > > yield a segv without a sanitizer.
-> > >
-> > > Adding reference count checking to cpu map was done as a proof of
-> > > concept, it yielded little other than a location where the use of get
-> > > could be cleaner by using its result. Reference count checking on
-> > > nsinfo identified a double free of the indirection layer and the
-> > > related threads, thereby identifying a data race as discussed here:
-> > > https://lore.kernel.org/linux-perf-users/CAP-5=fWZH20L4kv-BwVtGLwR=Em3AOOT+Q4QGivvQuYn5AsPRg@mail.gmail.com/
-> > > Accordingly the dso->lock was extended and use to cover the race.
-> > >
-> > > An alternative that was considered was ref_tracker:
-> > >  https://lwn.net/Articles/877603/
-> > > ref_tracker requires use of a reference counted struct to also use a
-> > > cookie/tracker. The cookie is combined with data in a ref_tracker_dir
-> > > to spot double puts. When an object is finished with leaks can be
-> > > detected, as with this approach when leak analysis happens. This
-> > > approach was preferred as it doesn't introduce cookies, spots use
-> > > after put and appears moderately more neutral to the API. Weaknesses
-> > > of the implemented approcah are not being able to do adhoc leak
-> > > detection and a preference for adding an accessor API to structs. I
-> > > believe there are other issues and welcome suggestions.
-> >
-> > And so we've been here before (Dec 2015 to be exact). Namhyung pointed me to:
-> > https://lore.kernel.org/all/20151209021047.10245.8918.stgit@localhost.localdomain/
-> > by Masami Hiramatsu. In this work he adds a leak sanitizer style
-> > reference count checker that will describe locations of puts and gets
-> > for diagnosis. Firstly that's an awesome achievement! This work is
-> > different in that it isn't trying to invent a leak sanitizer, it is
-> > just using the existing one. By adding a level of indirection this
-> > work can catch use after put and pairs gets with puts to make lifetime
-> > analysis more automatic. An advantage of Masami's work is that it
-> > doesn't change data-structures and after the initial patch-set is
-> > somewhat transparent. Overall I prefer the approach in these patches,
-> > future patches can look to clean up the API as Masami has.
->
-> Thanks for referring my series :-D The series aimed to solve the refcount
-> usage issue in the perf which lead the object leaks. At that moment,
-> I found that there were 2 patterns, refcount start from 0 and start from 1.
-> That made me confused what I should do for using a object.
-> But the perf uses linux/refcount.h now, I hope such issue has already gone.
-> (but the object leakage seems not fixed fully yet, as you found.)
->
-> BTW, I think the introducing UNWRAP_* macro may put a burden on future
-> development. If it is inevitable, we should consider it as carefully as
-> possible. Or, it may cause another issue (it is easily missed that the new
-> patch does not use UNWRAP_* for object reference, because it is natual.)
->
-> So I agree with you that you to clean up the API. :-)
-> I think we can make yet another refcount.h for user space debugging and
-> replace it with the linux/refcount.h.
+On 13/01/2022 09:10, James Clark wrote:
+> When enabled, all taken branch addresses are output, even if the branch
+> was because of a direct branch instruction. This enables reconstruction
+> of the program flow without having access to the memory image of the
+> code being executed.
+> 
+> Use bit 8 for the config option which would be the correct bit for
+> programming ETMv3. Although branch broadcast can't be enabled on ETMv3
+> because it's not in the define ETM3X_SUPPORTED_OPTIONS, using the
+> correct bit might help prevent future collisions or allow it to be
+> enabled if needed.
+> 
+> Signed-off-by: James Clark <james.clark@arm.com>
+> ---
+>   drivers/hwtracing/coresight/coresight-etm-perf.c   |  2 ++
+>   drivers/hwtracing/coresight/coresight-etm4x-core.c | 10 ++++++++++
+>   include/linux/coresight-pmu.h                      |  2 ++
+>   3 files changed, 14 insertions(+)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> index c039b6ae206f..43bbd5dc3d3b 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> @@ -52,6 +52,7 @@ static DEFINE_PER_CPU(struct coresight_device *, csdev_src);
+>    * The PMU formats were orignally for ETMv3.5/PTM's ETMCR 'config';
+>    * now take them as general formats and apply on all ETMs.
+>    */
+> +PMU_FORMAT_ATTR(branch_broadcast, "config:"__stringify(ETM_OPT_BRANCH_BROADCAST));
+>   PMU_FORMAT_ATTR(cycacc,		"config:" __stringify(ETM_OPT_CYCACC));
+>   /* contextid1 enables tracing CONTEXTIDR_EL1 for ETMv4 */
+>   PMU_FORMAT_ATTR(contextid1,	"config:" __stringify(ETM_OPT_CTXTID));
+> @@ -97,6 +98,7 @@ static struct attribute *etm_config_formats_attr[] = {
+>   	&format_attr_sinkid.attr,
+>   	&format_attr_preset.attr,
+>   	&format_attr_configid.attr,
+> +	&format_attr_branch_broadcast.attr,
 
-Thanks Masami,
+Does it make sense to hide the option if the bb is not supported ? I 
+guess it will be tricky as we don't track the common feature set. So,
+that said...
 
-Agreed on the UNWRAP_ macros, hence wanting to hide them behind
-accessors. Making accessors could be automated with macros, for
-example, have a list of variables, have a macro declare the struct
-using the list, another macro can use the list to declare accessors. I
-didn't find adding the UNWRAP_ macros in this change particularly
-burdensome as any use of the wrapping pointer as the original type
-caused a compile time error telling you what and where to fix. The
-macro is extra stuff in the way of using just the raw object, but
-that's fairly typical in C++ with shared_ptr, scoped_lock, etc. The
-question is, is it worth it to make sure use of the reference counted
-object is correct and misuse is easier to diagnose? I think it is near
-as least offensive as possible while providing the best information -
-hence being able to solve the dso->nsinfo put data race, that has been
-a problem to solve up to this point. I'm open to better suggestions
-though :-)
+>   	NULL,
+>   };
+>   
+> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> index bf18128cf5de..04669ecc0efa 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> @@ -692,6 +692,16 @@ static int etm4_parse_event_config(struct coresight_device *csdev,
+>   		ret = cscfg_csdev_enable_active_config(csdev, cfg_hash, preset);
+>   	}
+>   
+> +	/* branch broadcast - enable if selected and supported */
+> +	if (attr->config & BIT(ETM_OPT_BRANCH_BROADCAST)) {
+> +		if (!drvdata->trcbb) {
+> +			ret = -EINVAL;
 
-Thanks again,
-Ian
+Should we fail here ? We could simply ignore this and generate the trace 
+normally. This would work on a big.LITTLE system with one set missing 
+the branch broadcast, while the others support.
 
-> Thank you,
->
-> --
-> Masami Hiramatsu <mhiramat@kernel.org>
+Mike,
+
+Does this affect the trace decoding ? As such the OpenCSD should be able
+to decode the packets as they appear in the stream. Correct ?
+
+Suzuki
+
+
+> +			goto out;
+> +		} else {
+> +			config->cfg |= BIT(ETM4_CFG_BIT_BB);
+> +		}
+> +	}
+> +
+>   out:
+>   	return ret;
+>   }
+> diff --git a/include/linux/coresight-pmu.h b/include/linux/coresight-pmu.h
+> index 4ac5c081af93..6c2fd6cc5a98 100644
+> --- a/include/linux/coresight-pmu.h
+> +++ b/include/linux/coresight-pmu.h
+> @@ -18,6 +18,7 @@
+>    * ETMv3.5/PTM doesn't define ETMCR config bits with prefix "ETM3_" and
+>    * directly use below macros as config bits.
+>    */
+> +#define ETM_OPT_BRANCH_BROADCAST 8
+>   #define ETM_OPT_CYCACC		12
+>   #define ETM_OPT_CTXTID		14
+>   #define ETM_OPT_CTXTID2		15
+> @@ -25,6 +26,7 @@
+>   #define ETM_OPT_RETSTK		29
+>   
+>   /* ETMv4 CONFIGR programming bits for the ETM OPTs */
+> +#define ETM4_CFG_BIT_BB         3
+>   #define ETM4_CFG_BIT_CYCACC	4
+>   #define ETM4_CFG_BIT_CTXTID	6
+>   #define ETM4_CFG_BIT_VMID	7
+
