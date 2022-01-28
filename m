@@ -2,30 +2,29 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9CAC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jan 2022 11:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4434C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jan 2022 11:24:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348134AbiA1LTj (ORCPT
+        id S231406AbiA1LY0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Jan 2022 06:19:39 -0500
-Received: from foss.arm.com ([217.140.110.172]:37426 "EHLO foss.arm.com"
+        Fri, 28 Jan 2022 06:24:26 -0500
+Received: from foss.arm.com ([217.140.110.172]:37672 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1348131AbiA1LTg (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Jan 2022 06:19:36 -0500
+        id S231689AbiA1LYS (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 28 Jan 2022 06:24:18 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD95B113E;
-        Fri, 28 Jan 2022 03:19:32 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5332C113E;
+        Fri, 28 Jan 2022 03:24:18 -0800 (PST)
 Received: from [10.57.86.86] (unknown [10.57.86.86])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E7163F766;
-        Fri, 28 Jan 2022 03:19:30 -0800 (PST)
-Message-ID: <b3545a88-4743-db95-4676-b0b193cbea78@arm.com>
-Date:   Fri, 28 Jan 2022 11:19:28 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C28993F766;
+        Fri, 28 Jan 2022 03:24:15 -0800 (PST)
+Message-ID: <50e5ff63-ae00-f04b-fc5b-f294742cb13a@arm.com>
+Date:   Fri, 28 Jan 2022 11:24:14 +0000
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
  Gecko/20100101 Thunderbird/91.5.1
-Subject: Re: [PATCH v2 1/6] coresight: Add config flag to enable branch
- broadcast
+Subject: Re: [PATCH v2 2/6] coresight: Fail to open with return stacks if they
+ are unavailable
 To:     James Clark <james.clark@arm.com>, mathieu.poirier@linaro.org,
         coresight@lists.linaro.org, leo.yan@linaro.com,
         mike.leach@linaro.org
@@ -38,111 +37,73 @@ Cc:     Leo Yan <leo.yan@linaro.org>, John Garry <john.garry@huawei.com>,
         linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 References: <20220113091056.1297982-1-james.clark@arm.com>
- <20220113091056.1297982-2-james.clark@arm.com>
+ <20220113091056.1297982-3-james.clark@arm.com>
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20220113091056.1297982-2-james.clark@arm.com>
+In-Reply-To: <20220113091056.1297982-3-james.clark@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi James
+
 On 13/01/2022 09:10, James Clark wrote:
-> When enabled, all taken branch addresses are output, even if the branch
-> was because of a direct branch instruction. This enables reconstruction
-> of the program flow without having access to the memory image of the
-> code being executed.
-> 
-> Use bit 8 for the config option which would be the correct bit for
-> programming ETMv3. Although branch broadcast can't be enabled on ETMv3
-> because it's not in the define ETM3X_SUPPORTED_OPTIONS, using the
-> correct bit might help prevent future collisions or allow it to be
-> enabled if needed.
-> 
-> Signed-off-by: James Clark <james.clark@arm.com>
-> ---
->   drivers/hwtracing/coresight/coresight-etm-perf.c   |  2 ++
->   drivers/hwtracing/coresight/coresight-etm4x-core.c | 10 ++++++++++
->   include/linux/coresight-pmu.h                      |  2 ++
->   3 files changed, 14 insertions(+)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> index c039b6ae206f..43bbd5dc3d3b 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> @@ -52,6 +52,7 @@ static DEFINE_PER_CPU(struct coresight_device *, csdev_src);
->    * The PMU formats were orignally for ETMv3.5/PTM's ETMCR 'config';
->    * now take them as general formats and apply on all ETMs.
->    */
-> +PMU_FORMAT_ATTR(branch_broadcast, "config:"__stringify(ETM_OPT_BRANCH_BROADCAST));
->   PMU_FORMAT_ATTR(cycacc,		"config:" __stringify(ETM_OPT_CYCACC));
->   /* contextid1 enables tracing CONTEXTIDR_EL1 for ETMv4 */
->   PMU_FORMAT_ATTR(contextid1,	"config:" __stringify(ETM_OPT_CTXTID));
-> @@ -97,6 +98,7 @@ static struct attribute *etm_config_formats_attr[] = {
->   	&format_attr_sinkid.attr,
->   	&format_attr_preset.attr,
->   	&format_attr_configid.attr,
-> +	&format_attr_branch_broadcast.attr,
+> Maintain consistency with the other options by failing to open when they
+> aren't supported. For example ETM_OPT_TS, ETM_OPT_CTXTID2 and the newly
+> added ETM_OPT_BRANCH_BROADCAST all return with -EINVAL if they are
+> requested but not supported by hardware.
 
-Does it make sense to hide the option if the bb is not supported ? I 
-guess it will be tricky as we don't track the common feature set. So,
-that said...
+Looking at this again (with similar comment to the Branch Broadcast),
+won't it disable using retstack on all CPUs, even when some of them
+support it ?
 
->   	NULL,
->   };
->   
-> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> index bf18128cf5de..04669ecc0efa 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> @@ -692,6 +692,16 @@ static int etm4_parse_event_config(struct coresight_device *csdev,
->   		ret = cscfg_csdev_enable_active_config(csdev, cfg_hash, preset);
->   	}
->   
-> +	/* branch broadcast - enable if selected and supported */
-> +	if (attr->config & BIT(ETM_OPT_BRANCH_BROADCAST)) {
-> +		if (!drvdata->trcbb) {
-> +			ret = -EINVAL;
+i.e., CPU0 - supports retstack, CPU1 - doesn't
 
-Should we fail here ? We could simply ignore this and generate the trace 
-normally. This would work on a big.LITTLE system with one set missing 
-the branch broadcast, while the others support.
+A perf run with retstack will fail, as CPU1 doesn't support it (even
+though we advertise it, unconditionally).
 
-Mike,
+So, if we ignore the failure, this would still allow CPU0 to use
+the feature and as long as the OpenCSD is able to decode the trace
+we should ignore the failure ?
 
-Does this affect the trace decoding ? As such the OpenCSD should be able
-to decode the packets as they appear in the stream. Correct ?
+I think we may also need to tune the etm4x_enable_hw() to skip
+updating the TRCCONFIGR with features not supported by the ETM
 
 Suzuki
 
 
+> 
+> The consequence of not doing this is that the user may not be
+> aware that they are not enabling the feature as it is silently disabled.
+> 
+> Signed-off-by: James Clark <james.clark@arm.com>
+> ---
+>   drivers/hwtracing/coresight/coresight-etm4x-core.c | 13 +++++++++----
+>   1 file changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> index 04669ecc0efa..a93c1a5fe045 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> @@ -674,10 +674,15 @@ static int etm4_parse_event_config(struct coresight_device *csdev,
+>   	}
+>   
+>   	/* return stack - enable if selected and supported */
+> -	if ((attr->config & BIT(ETM_OPT_RETSTK)) && drvdata->retstack)
+> -		/* bit[12], Return stack enable bit */
+> -		config->cfg |= BIT(12);
+> -
+> +	if (attr->config & BIT(ETM_OPT_RETSTK)) {
+> +		if (!drvdata->retstack) {
+> +			ret = -EINVAL;
 > +			goto out;
 > +		} else {
-> +			config->cfg |= BIT(ETM4_CFG_BIT_BB);
+> +			/* bit[12], Return stack enable bit */
+> +			config->cfg |= BIT(12);
 > +		}
 > +	}
-> +
->   out:
->   	return ret;
->   }
-> diff --git a/include/linux/coresight-pmu.h b/include/linux/coresight-pmu.h
-> index 4ac5c081af93..6c2fd6cc5a98 100644
-> --- a/include/linux/coresight-pmu.h
-> +++ b/include/linux/coresight-pmu.h
-> @@ -18,6 +18,7 @@
->    * ETMv3.5/PTM doesn't define ETMCR config bits with prefix "ETM3_" and
->    * directly use below macros as config bits.
->    */
-> +#define ETM_OPT_BRANCH_BROADCAST 8
->   #define ETM_OPT_CYCACC		12
->   #define ETM_OPT_CTXTID		14
->   #define ETM_OPT_CTXTID2		15
-> @@ -25,6 +26,7 @@
->   #define ETM_OPT_RETSTK		29
->   
->   /* ETMv4 CONFIGR programming bits for the ETM OPTs */
-> +#define ETM4_CFG_BIT_BB         3
->   #define ETM4_CFG_BIT_CYCACC	4
->   #define ETM4_CFG_BIT_CTXTID	6
->   #define ETM4_CFG_BIT_VMID	7
+>   	/*
+>   	 * Set any selected configuration and preset.
+>   	 *
 
