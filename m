@@ -2,153 +2,118 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E9CC433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jan 2022 17:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A936BC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Jan 2022 18:01:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343870AbiA1RWs (ORCPT
+        id S1343993AbiA1SBi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Jan 2022 12:22:48 -0500
-Received: from foss.arm.com ([217.140.110.172]:55398 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1344068AbiA1RVA (ORCPT
+        Fri, 28 Jan 2022 13:01:38 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4554 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240207AbiA1SBh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Jan 2022 12:21:00 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C20AE113E;
-        Fri, 28 Jan 2022 09:20:59 -0800 (PST)
-Received: from [10.57.86.104] (unknown [10.57.86.104])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 916063F793;
-        Fri, 28 Jan 2022 09:20:54 -0800 (PST)
-Subject: Re: [PATCH 2/2] perf arm-spe: Parse more SPE fields and store source
-To:     Ali Saidi <alisaidi@amazon.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     benh@kernel.crashing.org, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Fri, 28 Jan 2022 13:01:37 -0500
+Received: from fraeml701-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Jlld10xyxz67WZ5;
+        Sat, 29 Jan 2022 02:01:09 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml701-chm.china.huawei.com (10.206.15.50) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.21; Fri, 28 Jan 2022 19:01:35 +0100
+Received: from [10.47.26.192] (10.47.26.192) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Fri, 28 Jan
+ 2022 18:01:34 +0000
+Subject: Re: [RFC PATCH 1/1] perf arm64: Implement --topdown with metrics
+To:     Andrew Kilroy <andrew.kilroy@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "Andi Kleen" <ak@linux.intel.com>
+CC:     Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        James Clark <james.clark@arm.com>,
-        Andrew Kilroy <andrew.kilroy@arm.com>
-References: <20220125192016.20538-1-alisaidi@amazon.com>
- <20220125192016.20538-3-alisaidi@amazon.com>
-From:   German Gomez <german.gomez@arm.com>
-Message-ID: <b1b3697d-4a0a-d041-5cbd-e08fec9e658c@arm.com>
-Date:   Fri, 28 Jan 2022 17:20:23 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        "Namhyung Kim" <namhyung@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Zhangshaokun <zhangshaokun@hisilicon.com>
+References: <4c375d34-bf20-496d-22fc-aed8597126e2@huawei.com>
+ <20211214184240.24215-1-andrew.kilroy@arm.com>
+ <20211214184240.24215-2-andrew.kilroy@arm.com>
+ <48437bee-9c39-38ba-e990-ba9a6a5378b4@huawei.com>
+ <6ba550d1-61bc-e229-2a64-331cfa59c388@arm.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <2bd5593e-615f-2ad1-ce03-cb452c7cd370@huawei.com>
+Date:   Fri, 28 Jan 2022 18:00:57 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-In-Reply-To: <20220125192016.20538-3-alisaidi@amazon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <6ba550d1-61bc-e229-2a64-331cfa59c388@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.47.26.192]
+X-ClientProxiedBy: lhreml713-chm.china.huawei.com (10.201.108.64) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ali,
+On 05/01/2022 16:58, Andrew Kilroy wrote:
+>>
+> 
 
-On 25/01/2022 19:20, Ali Saidi wrote:
-> Decode more SPE events and op types to allow for processing by perf
-> scripts. For example looking for branches which may indicate candidates
-> for conversion to a CSEL, store exclusives that are candidates for
-> conversion to LSE atomics and record the source information for memory
-> ops.
->
-> Signed-off-by: Ali Saidi <alisaidi@amazon.com>
-> ---
->  .../util/arm-spe-decoder/arm-spe-decoder.c     | 18 ++++++++++++++++++
->  .../util/arm-spe-decoder/arm-spe-decoder.h     |  8 ++++++++
->  2 files changed, 26 insertions(+)
->
-> diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-> index 5e390a1a79ab..177bac0f7128 100644
-> --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-> @@ -191,6 +191,20 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
->  					decoder->record.op = ARM_SPE_ST;
->  				else
->  					decoder->record.op = ARM_SPE_LD;
-> +				if (SPE_OP_PKT_IS_LDST_ATOMIC(payload)) {
-> +					if (payload & SPE_OP_PKT_AT)
-> +						decoder->record.op |= ARM_SPE_LDST_ATOMIC;
+Sorry for very slow response..
 
-In "utils/arm-spe.c" we check "if (record->op == ARM_SPE_LD)" so this
-ORing could break some of the generated samples.
+> The --topdown kernel event colouring is dictated by a large if-else 
+> statement in stat-shadow.c:perf_stat__print_shadow_stats.
+> 
+> There are branches depending on what is returned by 
+> perf_stat_evsel__is() for example
+> 
+>      } else if (perf_stat_evsel__is(evsel, TOPDOWN_FETCH_BUBBLES)) {
+>          double fe_bound = td_fe_bound(cpu, st, &rsd);
+> 
+>          if (fe_bound > 0.2)
+>              color = PERF_COLOR_RED;
+>          print_metric(config, ctxp, color, "%8.1f%%", "frontend bound",
+>                  fe_bound * 100.);
+>      } else if (perf_stat_evsel__is(evsel, TOPDOWN_SLOTS_RETIRED)) {
+> 
+> 
+> 
+> Because the patches are enabling metrics (equivalent of the -M 
+> 'somemetricname' option), the perf_stat__print_shadow_stats function 
+> always makes calls to generic_metric(), where colours are never picked.
+> 
+> Seeing thresholds like:
+> 
+>    retiring > 0.7
+>    fe_bound > 0.2
+>    be_bound > 0.2
+>    bad_spec > 0.1
+> 
+> 
+> I'm not sure about adding the colouring really.  Are these thresholds 
+> x86 specific?
 
-> +					if (payload & SPE_OP_PKT_EXCL)
-> +						decoder->record.op |= ARM_SPE_LDST_EXCL;
-> +					if (payload & SPE_OP_PKT_AR)
-> +						decoder->record.op |= ARM_SPE_LDST_ACQREL;
-> +				}
-> +			} else if (idx == SPE_OP_PKT_HDR_CLASS_BR_ERET) {
-> +				decoder->record.op = ARM_SPE_BR;
-> +				if (payload & SPE_OP_PKT_COND)
-> +					decoder->record.op |= ARM_SPE_BR_COND;
-> +				if (SPE_OP_PKT_IS_INDIRECT_BRANCH(payload))
-> +					decoder->record.op |= ARM_SPE_BR_IND;
->  			}
->  			break;
->  		case ARM_SPE_EVENTS:
-> @@ -218,8 +232,12 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
->  			if (payload & BIT(EV_MISPRED))
->  				decoder->record.type |= ARM_SPE_BRANCH_MISS;
->  
-> +			if (payload & BIT(EV_NOT_TAKEN))
-> +				decoder->record.type |= ARM_SPE_BR_NOT_TAKEN;
-> +
->  			break;
->  		case ARM_SPE_DATA_SOURCE:
-> +			decoder->record.source = payload;
->  			break;
->  		case ARM_SPE_BAD:
->  			break;
-> diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-> index 69b31084d6be..113e427afe99 100644
-> --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-> @@ -22,11 +22,18 @@ enum arm_spe_sample_type {
->  	ARM_SPE_TLB_MISS	= 1 << 5,
->  	ARM_SPE_BRANCH_MISS	= 1 << 6,
->  	ARM_SPE_REMOTE_ACCESS	= 1 << 7,
-> +	ARM_SPE_BR_NOT_TAKEN	= 1 << 8,
+There is info on topdown for vtune here:
 
-Can you rename it to ARM_SPE_BRANCH_NOT_TAKEN for consistency?
+https://www.intel.com/content/www/us/en/develop/documentation/vtune-cookbook/top/methodologies/top-down-microarchitecture-analysis-method.html
 
->  };
->  
->  enum arm_spe_op_type {
->  	ARM_SPE_LD		= 1 << 0,
->  	ARM_SPE_ST		= 1 << 1,
-> +	ARM_SPE_LDST_EXCL	= 1 << 2,
-> +	ARM_SPE_LDST_ATOMIC	= 1 << 3,
-> +	ARM_SPE_LDST_ACQREL	= 1 << 4,
-> +	ARM_SPE_BR		= 1 << 5,
-> +	ARM_SPE_BR_COND		= 1 << 6,
-> +	ARM_SPE_BR_IND		= 1 << 7,
+The threshold info described there seems somewhat consistent with perf 
+tool topdown thresholds and that is based on general guidelines for 
+certain compute categories.
 
-I'm not sure if we should keep everything in one enum/bitmask. I'm also
-looking at adding more of the data from the packets to the record, and
-considering refactoring the record structure. I'll share here when I
-have something.
+Andi did mention "specification" here:
+https://lore.kernel.org/lkml/CABPqkBRftsHEAEwgCn3i3=mfk9fjh5r4MycdjHKRka5voTj9JA@mail.gmail.com/
+
+But I don't know it, apart from a paper:
+file:///home/john/Downloads/TopDown-Yasin-ISPASS14.pdf
 
 Thanks,
-German
-
->  };
->  
->  struct arm_spe_record {
-> @@ -40,6 +47,7 @@ struct arm_spe_record {
->  	u64 virt_addr;
->  	u64 phys_addr;
->  	u64 context_id;
-> +	u16 source;
->  };
->  
->  struct arm_spe_insn;
+John
