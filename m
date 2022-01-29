@@ -2,57 +2,57 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2723C433F5
-	for <linux-perf-users@archiver.kernel.org>; Sat, 29 Jan 2022 08:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38587C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat, 29 Jan 2022 08:15:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241955AbiA2IJh (ORCPT
+        id S1345186AbiA2IPE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 29 Jan 2022 03:09:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54240 "EHLO
+        Sat, 29 Jan 2022 03:15:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345083AbiA2IJg (ORCPT
+        with ESMTP id S1352523AbiA2INq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 29 Jan 2022 03:09:36 -0500
+        Sat, 29 Jan 2022 03:13:46 -0500
 Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10810C061714
-        for <linux-perf-users@vger.kernel.org>; Sat, 29 Jan 2022 00:09:36 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id a88-20020a25a1e1000000b00615c588ab22so17066572ybi.3
-        for <linux-perf-users@vger.kernel.org>; Sat, 29 Jan 2022 00:09:36 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9BC3C061772
+        for <linux-perf-users@vger.kernel.org>; Sat, 29 Jan 2022 00:10:29 -0800 (PST)
+Received: by mail-yb1-xb49.google.com with SMTP id y4-20020a5b0f44000000b00611862e546dso17141702ybr.7
+        for <linux-perf-users@vger.kernel.org>; Sat, 29 Jan 2022 00:10:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=JgzRDYZ09mD6GL49munQxJ26uuUVwTiB4udKKpCpR3o=;
-        b=H83FfJagQJJtT4rrvSmB4HlSdar7/YKMnfABwZPxciBaUk+dWy5rjGGOIFckCumQEf
-         bk/wlRDWDf+q202t6Mwhi2eOhobQET/f+4ejlHcJO39s/7KXxWSCT3kEkcSr6NTnY9pI
-         ijhv4j3tJ/uTak55L6uE7NaiqyZyxwkNjACJF0hLk+4vg4XsvsgMbzVevw4Cg1pr8Jmz
-         SyYdn6cBnOPsz8MCFsIxsfi+xfaB0ZLQpiVTKe3wrF3SaRTm7gOCt3Hxld83YLrn30Ya
-         dzPx2rKBkhI+zD2ApKyoRV4PlutDA8Pi+VT/DpPXj2vS6F2cNSDivXK0FAGW2ifUWsvM
-         lQpg==
+         :cc:content-transfer-encoding;
+        bh=0RLJwgtlxb6hYJOzXBar8tx8RZlMOV+YY9YvPsJ8NHs=;
+        b=UYgbEbG5FTpPiAu8yx4am26k6zgQIQy4AljtnRw67n4R/KVzQuR3zYZJvi2Jug+Noa
+         Pky4h7hViD2aj7aLLrqfNjD144nAGlem5zc7ey/tSVEebl7AH0XdsXr9FAP8gbjQQFiv
+         KnZfmVK8nidcAm8kqir0AOqY/1/2QOEECgZaCWH6NVobreHsjEz+RzOI5kvC0qzGScON
+         QT8Pj9/jBN6GTOsfZdgSj+HlPrMaCTq0Ta6N+ekYS+UllLTpXKRO1IuR9TiFeY+sfUpY
+         B6TvmQ7Ziic40YywfO1Um6NJhzPfSpciMiBJy6XcoXK18F/Ssj7+rSgsA+N+ArELQJvn
+         O9oA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=JgzRDYZ09mD6GL49munQxJ26uuUVwTiB4udKKpCpR3o=;
-        b=boC4/EY2LBi9S0FZnRsKYeFwwual4SdwZX9cGmjQWuarMkZVoJfXhNsfFZECpgsEdY
-         XffjiB9xg6PD7zwrqmnRwY3d2ff8AOlukvTl6ESvvmiggouAYq91EalVJGY38yDyY9Cm
-         OayoY8I2Zt0GOrNJQQGNYqkYFMhhGYxaTybPTdP6Xavm+6rCeTpHHXvIzb3CRqO+IowX
-         65aS2T0VodFRkufHcNQvsNhdnZOrjE7tYEJiM6S1UU4SYhrsboEnX96FRVGHg0ILRO60
-         kxtSvpzoGmKAmibMHfrgADROcXe25ekaTH5wQVuQPfuPkw1KC5Stn0f9KdbifkQ94ReC
-         AXeg==
-X-Gm-Message-State: AOAM530llL0nXQj+pnbPTu2i9ZXIUVoLVZc2nN+XBlTkPqHS4EEa+1NK
-        jCT3YH8awUHshTNQibegJmaYk2Q0cMVL
-X-Google-Smtp-Source: ABdhPJxsW6dNuokl2KWD0dMJ+XNNALQYr0Ad1R9k4dzLyQSqKv4xyIqUQ8s4dl3FRdvCaRvFWmT4gO5mRG4K
+         :references:subject:from:to:cc:content-transfer-encoding;
+        bh=0RLJwgtlxb6hYJOzXBar8tx8RZlMOV+YY9YvPsJ8NHs=;
+        b=JovemLwkVHKrKAgw2+iNVFPdwUCAe+dtVizTjatfq1EcYedQcc+2ggEnsX4NTts4Xc
+         t/QuBnQQFHHCQpXBl3IWHCS01lR0ywrZY+WZ67s9GfXrlIW49cpi3qthlZ89HK7LIrFp
+         rT9haOoKzbazdCgexPPbV4lVBqnhd7+kR5snhYw7/wdbwe7EZm5RX8qcOQPFwND9d5Mb
+         fVpwvgwWwDjj45gkszliAaUnzpH33dDwSDnNBY559mqvOx9MDnw2cyZm39aO1VqGEnDm
+         PVKsgFNdv05q+QHY2P97MF46enwZii40ZtLhWnlDdRhTH2FH4D6F9xfO3EnRDh6AtCr1
+         dxTw==
+X-Gm-Message-State: AOAM531/XkNCKB5c4SZ0mmgTducdv40EteNOS6gGB+tLqabnUzyn/+3+
+        Da9e/IBEmalMI2T4JpsJULYvKAXNdIxm
+X-Google-Smtp-Source: ABdhPJz1kyyLkX6WnFT4JIgaWO8h8iPT0scn1O8FBqGZIYMRso0mwdgRkN6X0HnFucdan/NgcbgwKptoWYNY
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:e8ae:7315:2a3d:98f2])
- (user=irogers job=sendgmr) by 2002:a05:6902:1505:: with SMTP id
- q5mr18992415ybu.608.1643443775269; Sat, 29 Jan 2022 00:09:35 -0800 (PST)
-Date:   Sat, 29 Jan 2022 00:09:04 -0800
+ (user=irogers job=sendgmr) by 2002:a25:402:: with SMTP id 2mr17247216ybe.498.1643443829181;
+ Sat, 29 Jan 2022 00:10:29 -0800 (PST)
+Date:   Sat, 29 Jan 2022 00:09:26 -0800
 In-Reply-To: <20220129080929.837293-1-irogers@google.com>
-Message-Id: <20220129080929.837293-2-irogers@google.com>
+Message-Id: <20220129080929.837293-24-irogers@google.com>
 Mime-Version: 1.0
 References: <20220129080929.837293-1-irogers@google.com>
 X-Mailer: git-send-email 2.35.0.rc2.247.g8bbb082509-goog
-Subject: [PATCH 01/26] perf test: Allow skip for all metrics test
+Subject: [PATCH 23/26] perf vendor events: Update Tigerlake
 From:   Ian Rogers <irogers@google.com>
 To:     Kan Liang <kan.liang@linux.intel.com>,
         Zhengjun Xing <zhengjun.xing@linux.intel.com>,
@@ -72,50 +72,427 @@ To:     Kan Liang <kan.liang@linux.intel.com>,
 Cc:     Stephane Eranian <eranian@google.com>,
         Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Some Intel TMA metrics compute a ratio that may divide by 0, which
-causes the metric not to print. This happens for metrics with FP_ARITH
-events. If we see these events in the result and would otherwise fail,
-then switch to a skip.
-Also, don't early exit when processing metrics.
+Events are updated to version 1.06:
+    https://download.01.org/perfmon/TGL
+Json files generated by the latest code at:
+    https://github.com/intel/event-converter-for-linux-perf
+
+Tested:
+Not tested on a Tigerlake, on a SkylakeX:
+...
+  9: Parse perf pmu format                                           : Ok
+ 10: PMU events                                                      :
+ 10.1: PMU event table sanity                                        : Ok
+ 10.2: PMU event map aliases                                         : Ok
+ 10.3: Parsing of PMU event table metrics                            : Ok
+ 10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
+...
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/stat_all_metrics.sh | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ .../pmu-events/arch/x86/tigerlake/cache.json  | 44 +++++++++++++++++--
+ .../arch/x86/tigerlake/floating-point.json    | 11 ++++-
+ .../arch/x86/tigerlake/frontend.json          | 17 ++++++-
+ .../arch/x86/tigerlake/pipeline.json          | 37 +++++++++++++++-
+ 4 files changed, 100 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/tests/shell/stat_all_metrics.sh
-index 7f4ba3cad632..e7c59e5a7a98 100755
---- a/tools/perf/tests/shell/stat_all_metrics.sh
-+++ b/tools/perf/tests/shell/stat_all_metrics.sh
-@@ -4,6 +4,7 @@
- 
- set -e
- 
-+err=0
- for m in $(perf list --raw-dump metrics); do
-   echo "Testing $m"
-   result=$(perf stat -M "$m" true 2>&1)
-@@ -14,9 +15,14 @@ for m in $(perf list --raw-dump metrics); do
-     if [[ ! "$result" =~ "$m" ]]; then
-       echo "Metric '$m' not printed in:"
-       echo "$result"
--      exit 1
-+      if [[ "$result" =~ "FP_ARITH" && "$err" != "1" ]]; then
-+        echo "Skip, not fail, for FP issues"
-+        err=2
-+      else
-+        err=1
-+      fi
-     fi
-   fi
- done
- 
--exit 0
-+exit "$err"
--- 
+diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/cache.json b/tools/pe=
+rf/pmu-events/arch/x86/tigerlake/cache.json
+index 8d767b8932b0..543a3298f86f 100644
+--- a/tools/perf/pmu-events/arch/x86/tigerlake/cache.json
++++ b/tools/perf/pmu-events/arch/x86/tigerlake/cache.json
+@@ -145,6 +145,17 @@
+         "SampleAfterValue": "200003",
+         "UMask": "0x24"
+     },
++    {
++        "BriefDescription": "Demand Data Read requests that hit L2 cache",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x24",
++        "EventName": "L2_RQSTS.DEMAND_DATA_RD_HIT",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Counts the number of demand Data Read reques=
+ts initiated by load instructions that hit L2 cache.",
++        "SampleAfterValue": "200003",
++        "UMask": "0xc1"
++    },
+     {
+         "BriefDescription": "All requests that miss L2 cache",
+         "CollectPEBSRecord": "2",
+@@ -185,7 +196,7 @@
+         "EventCode": "0x24",
+         "EventName": "L2_RQSTS.SWPF_HIT",
+         "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Counts Software prefetch requests that hit t=
+he L2 cache. This event accounts for PREFETCHNTA and PREFETCHT0/1/2 instruc=
+tions.",
++        "PublicDescription": "Counts Software prefetch requests that hit t=
+he L2 cache. Accounts for PREFETCHNTA and PREFETCHT0/1/2 instructions when =
+FB is not full.",
+         "SampleAfterValue": "200003",
+         "UMask": "0xc8"
+     },
+@@ -196,7 +207,7 @@
+         "EventCode": "0x24",
+         "EventName": "L2_RQSTS.SWPF_MISS",
+         "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Counts Software prefetch requests that miss =
+the L2 cache. This event accounts for PREFETCHNTA and PREFETCHT0/1/2 instru=
+ctions.",
++        "PublicDescription": "Counts Software prefetch requests that miss =
+the L2 cache. Accounts for PREFETCHNTA and PREFETCHT0/1/2 instructions when=
+ FB is not full.",
+         "SampleAfterValue": "200003",
+         "UMask": "0x28"
+     },
+@@ -222,6 +233,17 @@
+         "SampleAfterValue": "2000003",
+         "UMask": "0x2"
+     },
++    {
++        "BriefDescription": "Core-originated cacheable requests that misse=
+d L3  (Except hardware prefetches to the L3)",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x2e",
++        "EventName": "LONGEST_LAT_CACHE.MISS",
++        "PEBScounters": "0,1,2,3,4,5,6,7",
++        "PublicDescription": "Counts core-originated cacheable requests th=
+at miss the L3 cache (Longest Latency cache). Requests include data and cod=
+e reads, Reads-for-Ownership (RFOs), speculative accesses and hardware pref=
+etches to the L1 and L2.  It does not include hardware prefetches to the L3=
+, and may not count other types of requests to the L3.",
++        "SampleAfterValue": "100003",
++        "UMask": "0x41"
++    },
+     {
+         "BriefDescription": "All retired load instructions.",
+         "CollectPEBSRecord": "2",
+@@ -249,6 +271,20 @@
+         "SampleAfterValue": "1000003",
+         "UMask": "0x82"
+     },
++    {
++        "BriefDescription": "All retired memory instructions.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_INST_RETIRED.ANY",
++        "L1_Hit_Indication": "1",
++        "PEBS": "1",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Counts all retired memory instructions - loa=
+ds and stores.",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x83"
++    },
+     {
+         "BriefDescription": "Retired load instructions with locked access.=
+",
+         "CollectPEBSRecord": "2",
+@@ -298,7 +334,7 @@
+         "EventName": "MEM_INST_RETIRED.STLB_MISS_LOADS",
+         "PEBS": "1",
+         "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Counts retired load instructions that true m=
+iss the STLB.",
++        "PublicDescription": "Number of retired load instructions that (st=
+art a) miss in the 2nd-level TLB (STLB).",
+         "SampleAfterValue": "100003",
+         "UMask": "0x11"
+     },
+@@ -312,7 +348,7 @@
+         "L1_Hit_Indication": "1",
+         "PEBS": "1",
+         "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Counts retired store instructions that true =
+miss the STLB.",
++        "PublicDescription": "Number of retired store instructions that (s=
+tart a) miss in the 2nd-level TLB (STLB).",
+         "SampleAfterValue": "100003",
+         "UMask": "0x12"
+     },
+diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/floating-point.json b=
+/tools/perf/pmu-events/arch/x86/tigerlake/floating-point.json
+index 402f01851313..de8eb2b34a3a 100644
+--- a/tools/perf/pmu-events/arch/x86/tigerlake/floating-point.json
++++ b/tools/perf/pmu-events/arch/x86/tigerlake/floating-point.json
+@@ -17,6 +17,7 @@
+         "EventCode": "0xc7",
+         "EventName": "FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE",
+         "PEBScounters": "0,1,2,3,4,5,6,7",
++        "PublicDescription": "Number of SSE/AVX computational 128-bit pack=
+ed double precision floating-point instructions retired; some instructions =
+will count twice as noted below.  Each count represents 2 computation opera=
+tions, one for each element.  Applies to SSE* and AVX* packed double precis=
+ion floating-point instructions: ADD SUB HADD HSUB SUBADD MUL DIV MIN MAX S=
+QRT DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as the=
+y perform 2 calculations per element. The DAZ and FTZ flags in the MXCSR re=
+gister need to be set when using these events.",
+         "SampleAfterValue": "100003",
+         "UMask": "0x4"
+     },
+@@ -27,7 +28,7 @@
+         "EventCode": "0xc7",
+         "EventName": "FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE",
+         "PEBScounters": "0,1,2,3,4,5,6,7",
+-        "PublicDescription": "Counts number of SSE/AVX computational 128-b=
+it packed single precision floating-point instructions retired; some instru=
+ctions will count twice as noted below.  Each count represents 4 computatio=
+n operations, one for each element.  Applies to SSE* and AVX* packed single=
+ precision floating-point instructions: ADD SUB HADD HSUB SUBADD MUL DIV MI=
+N MAX SQRT RSQRT RCP DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions c=
+ount twice as they perform 2 calculations per element.",
++        "PublicDescription": "Number of SSE/AVX computational 128-bit pack=
+ed single precision floating-point instructions retired; some instructions =
+will count twice as noted below.  Each count represents 4 computation opera=
+tions, one for each element.  Applies to SSE* and AVX* packed single precis=
+ion floating-point instructions: ADD SUB HADD HSUB SUBADD MUL DIV MIN MAX S=
+QRT RSQRT RCP DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count tw=
+ice as they perform 2 calculations per element. The DAZ and FTZ flags in th=
+e MXCSR register need to be set when using these events.",
+         "SampleAfterValue": "100003",
+         "UMask": "0x8"
+     },
+@@ -38,6 +39,7 @@
+         "EventCode": "0xc7",
+         "EventName": "FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE",
+         "PEBScounters": "0,1,2,3,4,5,6,7",
++        "PublicDescription": "Number of SSE/AVX computational 256-bit pack=
+ed double precision floating-point instructions retired; some instructions =
+will count twice as noted below.  Each count represents 4 computation opera=
+tions, one for each element.  Applies to SSE* and AVX* packed double precis=
+ion floating-point instructions: ADD SUB HADD HSUB SUBADD MUL DIV MIN MAX S=
+QRT FM(N)ADD/SUB.  FM(N)ADD/SUB instructions count twice as they perform 2 =
+calculations per element. The DAZ and FTZ flags in the MXCSR register need =
+to be set when using these events.",
+         "SampleAfterValue": "100003",
+         "UMask": "0x10"
+     },
+@@ -48,6 +50,7 @@
+         "EventCode": "0xc7",
+         "EventName": "FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE",
+         "PEBScounters": "0,1,2,3,4,5,6,7",
++        "PublicDescription": "Number of SSE/AVX computational 256-bit pack=
+ed single precision floating-point instructions retired; some instructions =
+will count twice as noted below.  Each count represents 8 computation opera=
+tions, one for each element.  Applies to SSE* and AVX* packed single precis=
+ion floating-point instructions: ADD SUB HADD HSUB SUBADD MUL DIV MIN MAX S=
+QRT RSQRT RCP DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count tw=
+ice as they perform 2 calculations per element. The DAZ and FTZ flags in th=
+e MXCSR register need to be set when using these events.",
+         "SampleAfterValue": "100003",
+         "UMask": "0x20"
+     },
+@@ -58,16 +61,18 @@
+         "EventCode": "0xc7",
+         "EventName": "FP_ARITH_INST_RETIRED.512B_PACKED_DOUBLE",
+         "PEBScounters": "0,1,2,3,4,5,6,7",
++        "PublicDescription": "Number of SSE/AVX computational 512-bit pack=
+ed double precision floating-point instructions retired; some instructions =
+will count twice as noted below.  Each count represents 8 computation opera=
+tions, one for each element.  Applies to SSE* and AVX* packed double precis=
+ion floating-point instructions: ADD SUB MUL DIV MIN MAX SQRT RSQRT14 RCP14=
+ FM(N)ADD/SUB. FM(N)ADD/SUB instructions count twice as they perform 2 calc=
+ulations per element. The DAZ and FTZ flags in the MXCSR register need to b=
+e set when using these events.",
+         "SampleAfterValue": "100003",
+         "UMask": "0x40"
+     },
+     {
+-        "BriefDescription": "Counts number of SSE/AVX computational 512-bi=
+t packed double precision floating-point instructions retired; some instruc=
+tions will count twice as noted below.  Each count represents 16 computatio=
+n operations, one for each element.  Applies to SSE* and AVX* packed double=
+ precision floating-point instructions: ADD SUB MUL DIV MIN MAX SQRT RSQRT1=
+4 RCP14 FM(N)ADD/SUB. FM(N)ADD/SUB instructions count twice as they perform=
+ 2 calculations per element.",
++        "BriefDescription": "Counts number of SSE/AVX computational 512-bi=
+t packed single precision floating-point instructions retired; some instruc=
+tions will count twice as noted below.  Each count represents 16 computatio=
+n operations, one for each element.  Applies to SSE* and AVX* packed single=
+ precision floating-point instructions: ADD SUB MUL DIV MIN MAX SQRT RSQRT1=
+4 RCP14 FM(N)ADD/SUB. FM(N)ADD/SUB instructions count twice as they perform=
+ 2 calculations per element.",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc7",
+         "EventName": "FP_ARITH_INST_RETIRED.512B_PACKED_SINGLE",
+         "PEBScounters": "0,1,2,3,4,5,6,7",
++        "PublicDescription": "Number of SSE/AVX computational 512-bit pack=
+ed single precision floating-point instructions retired; some instructions =
+will count twice as noted below.  Each count represents 16 computation oper=
+ations, one for each element.  Applies to SSE* and AVX* packed single preci=
+sion floating-point instructions: ADD SUB MUL DIV MIN MAX SQRT RSQRT14 RCP1=
+4 FM(N)ADD/SUB. FM(N)ADD/SUB instructions count twice as they perform 2 cal=
+culations per element. The DAZ and FTZ flags in the MXCSR register need to =
+be set when using these events.",
+         "SampleAfterValue": "100003",
+         "UMask": "0x80"
+     },
+@@ -78,6 +83,7 @@
+         "EventCode": "0xc7",
+         "EventName": "FP_ARITH_INST_RETIRED.SCALAR_DOUBLE",
+         "PEBScounters": "0,1,2,3,4,5,6,7",
++        "PublicDescription": "Number of SSE/AVX computational scalar doubl=
+e precision floating-point instructions retired; some instructions will cou=
+nt twice as noted below.  Each count represents 1 computational operation. =
+Applies to SSE* and AVX* scalar double precision floating-point instruction=
+s: ADD SUB MUL DIV MIN MAX SQRT FM(N)ADD/SUB.  FM(N)ADD/SUB instructions co=
+unt twice as they perform 2 calculations per element. The DAZ and FTZ flags=
+ in the MXCSR register need to be set when using these events.",
+         "SampleAfterValue": "100003",
+         "UMask": "0x1"
+     },
+@@ -88,6 +94,7 @@
+         "EventCode": "0xc7",
+         "EventName": "FP_ARITH_INST_RETIRED.SCALAR_SINGLE",
+         "PEBScounters": "0,1,2,3,4,5,6,7",
++        "PublicDescription": "Number of SSE/AVX computational scalar singl=
+e precision floating-point instructions retired; some instructions will cou=
+nt twice as noted below.  Each count represents 1 computational operation. =
+Applies to SSE* and AVX* scalar single precision floating-point instruction=
+s: ADD SUB MUL DIV MIN MAX SQRT RSQRT RCP FM(N)ADD/SUB.  FM(N)ADD/SUB instr=
+uctions count twice as they perform 2 calculations per element. The DAZ and=
+ FTZ flags in the MXCSR register need to be set when using these events.",
+         "SampleAfterValue": "100003",
+         "UMask": "0x2"
+     }
+diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/frontend.json b/tools=
+/perf/pmu-events/arch/x86/tigerlake/frontend.json
+index 24c736ac8f8e..2eaa33cc574e 100644
+--- a/tools/perf/pmu-events/arch/x86/tigerlake/frontend.json
++++ b/tools/perf/pmu-events/arch/x86/tigerlake/frontend.json
+@@ -39,12 +39,27 @@
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc6",
++        "EventName": "FRONTEND_RETIRED.ANY_DSB_MISS",
++        "MSRIndex": "0x3F7",
++        "MSRValue": "0x1",
++        "PEBS": "1",
++        "PEBScounters": "0,1,2,3,4,5,6,7",
++        "PublicDescription": "Counts retired Instructions that experienced=
+ DSB (Decode stream buffer i.e. the decoded instruction-cache) miss.",
++        "SampleAfterValue": "100007",
++        "TakenAlone": "1",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Retired Instructions who experienced a critic=
+al DSB miss.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc6",
+         "EventName": "FRONTEND_RETIRED.DSB_MISS",
+         "MSRIndex": "0x3F7",
+         "MSRValue": "0x11",
+         "PEBS": "1",
+         "PEBScounters": "0,1,2,3,4,5,6,7",
+-        "PublicDescription": "Counts retired Instructions that experienced=
+ DSB (Decode stream buffer i.e. the decoded instruction-cache) miss.",
++        "PublicDescription": "Number of retired Instructions that experien=
+ced a critical DSB (Decode stream buffer i.e. the decoded instruction-cache=
+) miss. Critical means stalls were exposed to the back-end as a result of t=
+he DSB miss.",
+         "SampleAfterValue": "100007",
+         "TakenAlone": "1",
+         "UMask": "0x1"
+diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json b/tools=
+/perf/pmu-events/arch/x86/tigerlake/pipeline.json
+index d0d8a09bc470..4dc3a16e3da4 100644
+--- a/tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json
+@@ -71,14 +71,14 @@
+         "UMask": "0x40"
+     },
+     {
+-        "BriefDescription": "All indirect branch instructions retired (exc=
+luding RETs. TSX aborts are considered indirect branch).",
++        "BriefDescription": "Indirect near branch instructions retired (ex=
+cluding returns)",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc4",
+         "EventName": "BR_INST_RETIRED.INDIRECT",
+         "PEBS": "1",
+         "PEBScounters": "0,1,2,3,4,5,6,7",
+-        "PublicDescription": "Counts all indirect branch instructions reti=
+red (excluding RETs. TSX aborts is considered indirect branch).",
++        "PublicDescription": "Counts near indirect branch instructions ret=
+ired excluding returns. TSX abort is an indirect branch.",
+         "SampleAfterValue": "100003",
+         "UMask": "0x80"
+     },
+@@ -442,6 +442,17 @@
+         "SampleAfterValue": "500009",
+         "UMask": "0x1"
+     },
++    {
++        "BriefDescription": "Instruction decoders utilized in a cycle",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x55",
++        "EventName": "INST_DECODED.DECODERS",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Number of decoders utilized in a cycle when =
+the MITE (legacy decode pipeline) fetches instructions.",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x1"
++    },
+     {
+         "BriefDescription": "Number of instructions retired. Fixed Counter=
+ - architectural event",
+         "CollectPEBSRecord": "2",
+@@ -464,6 +475,17 @@
+         "PublicDescription": "Counts the number of X86 instructions retire=
+d - an Architectural PerfMon event. Counting continues during hardware inte=
+rrupts, traps, and inside interrupt handlers. Notes: INST_RETIRED.ANY is co=
+unted by a designated fixed counter freeing up programmable counters to cou=
+nt other events. INST_RETIRED.ANY_P is counted by a programmable counter.",
+         "SampleAfterValue": "2000003"
+     },
++    {
++        "BriefDescription": "Number of all retired NOP instructions.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc0",
++        "EventName": "INST_RETIRED.NOP",
++        "PEBS": "1",
++        "PEBScounters": "0,1,2,3,4,5,6,7",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x2"
++    },
+     {
+         "BriefDescription": "Precise instruction retired event with a redu=
+ced effect of PEBS shadow in IP distribution",
+         "CollectPEBSRecord": "2",
+@@ -689,6 +711,17 @@
+         "SampleAfterValue": "100003",
+         "UMask": "0x1"
+     },
++    {
++        "BriefDescription": "Number of uops decoded out of instructions ex=
+clusively fetched by decoder 0",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x56",
++        "EventName": "UOPS_DECODED.DEC0",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Uops exclusively fetched by decoder 0",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x1"
++    },
+     {
+         "BriefDescription": "Number of uops executed on port 0",
+         "CollectPEBSRecord": "2",
+--=20
 2.35.0.rc2.247.g8bbb082509-goog
 
