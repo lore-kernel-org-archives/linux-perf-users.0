@@ -2,129 +2,394 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E648C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jan 2022 13:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E30C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jan 2022 13:56:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244797AbiAaNx4 (ORCPT
+        id S1347390AbiAaN4w (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 31 Jan 2022 08:53:56 -0500
-Received: from mga17.intel.com ([192.55.52.151]:7957 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232774AbiAaNx4 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 31 Jan 2022 08:53:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643637236; x=1675173236;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=AEaiGMVj7unyqE7VbRmUuqcbF86FB7Qs3mepDVHeyeU=;
-  b=h0P2hU0knm3eJLXavKEaJHC+qsjFw518ImSKH3XXc1GSOov6bJ4O4Ur5
-   wPyWxcfSluoff5sAmKo55dA+g8X5VRjoa7cJb1L/KcOp2dXbOuZTNausR
-   ChZwEx3jtQ57E6yQINP5wY/YOjLYPImlWKGBgMwSbTqQWy8IwYw3sHURV
-   aASJdQs7A7qB04ZIa0sxxEid08e2xYfw16moLz4BCyYs7LH2dujx6BoxB
-   uvHP5GgNdHuwWAg51qltZXJJhPzLvChkTQjbvWrsu+5pFg0RnZG/RqrP5
-   FsQIN1KTUaGLameQtwMilyHLTyEXmk/qejbxuGKM94uLEWE31T1Xo7j5C
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10243"; a="228124509"
-X-IronPort-AV: E=Sophos;i="5.88,331,1635231600"; 
-   d="scan'208";a="228124509"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 05:53:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,331,1635231600"; 
-   d="scan'208";a="619385285"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 31 Jan 2022 05:53:55 -0800
-Received: from [10.209.18.139] (kliang2-MOBL.ccr.corp.intel.com [10.209.18.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 31 Jan 2022 08:56:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57652 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S245129AbiAaN4v (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 31 Jan 2022 08:56:51 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD35DC061714;
+        Mon, 31 Jan 2022 05:56:51 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id A3D1C5809EB;
-        Mon, 31 Jan 2022 05:53:53 -0800 (PST)
-Message-ID: <c574f164-e1f4-0166-492d-b5feaf219f54@linux.intel.com>
-Date:   Mon, 31 Jan 2022 08:53:52 -0500
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH 03/26] perf vendor events: Update metrics for Broadwell DE
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3C410612B3;
+        Mon, 31 Jan 2022 13:56:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5667AC340E8;
+        Mon, 31 Jan 2022 13:56:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643637410;
+        bh=2b/uilqGnHLKGfzLjtkJYNisyoMbioR85TUGkUvSSLA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JZ8DEGcg2ctcBKklScgi5GafF7bALd9/4F1s+BMfnipaeBuWnjQLltqocfZl/T52B
+         rcgQtJ/9LMkvvLr6XKPQv5/YHDbcGzm7cHdc+Bh/tZ1fPDBX7y+xzxUZwewgi+ewd8
+         C+QQ0QKhZGPJ4M08OYnS2yV1wLZzZd9/3TUshy/mlCOmR1p4MhIA259YR4d5YTs+gw
+         hT8G6o+sMCsgUGiYpV5s6Q6/0A1E6MvkgvDbk2ZbikpL8sl7wYUxvKiXwghT85/oA8
+         AVMFRj354Jv1nzmiBbB4NyWgbg38YfE8be+S4soMPwOTgWnWIGdI81Q3ZD/J2FHXbq
+         EHV7hmN8u6hnA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id CB17940466; Mon, 31 Jan 2022 10:56:47 -0300 (-03)
+Date:   Mon, 31 Jan 2022 10:56:47 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Andi Kleen <ak@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@collabora.com>,
         James Clark <james.clark@arm.com>,
         John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>
-References: <20220129080929.837293-1-irogers@google.com>
- <20220129080929.837293-4-irogers@google.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20220129080929.837293-4-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
+        Song Liu <song@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Miaoqian Lin <linmq006@gmail.com>,
+        Stephen Brennan <stephen.s.brennan@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        German Gomez <german.gomez@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Eric Dumazet <edumazet@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        masami.hiramatsu.pt@hitachi.com, eranian@google.com
+Subject: Re: [PATCH v2 0/4] Reference count checker and related fixes
+Message-ID: <YffqnynWcc5oFkI5@kernel.org>
+References: <20220125204602.4137477-1-irogers@google.com>
+ <CAP-5=fXyJeX3b3egcAOfPndmYhakrsdKu7HttnHEH2DKP-6Vxw@mail.gmail.com>
+ <20220128142348.17d51894dbdb35c9a9449567@kernel.org>
+ <CAP-5=fXHudKqO4+0rbO9X3Ny+Cq7+KsHbKf4P8P24SjF0S232Q@mail.gmail.com>
+ <20220129003450.77116209763f7e06d285e654@kernel.org>
+ <CAP-5=fVoP9MAVsj7SdrxRjkr1Jt=XZ7Vf_FAooXA7B2OrC=XMA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fVoP9MAVsj7SdrxRjkr1Jt=XZ7Vf_FAooXA7B2OrC=XMA@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 1/29/2022 3:09 AM, Ian Rogers wrote:
-> Based on TMA_metrics-full.csv version 4.3 at 01.org:
->      https://download.01.org/perfmon/
-> Events are still at version 7:
->      https://download.01.org/perfmon/BDW-DE
-> Json files generated by:
->      https://github.com/intel/event-converter-for-linux-perf
+Em Fri, Jan 28, 2022 at 10:26:20AM -0800, Ian Rogers escreveu:
+> On Fri, Jan 28, 2022 at 7:35 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> >
+> > On Thu, 27 Jan 2022 22:24:59 -0800
+> > Ian Rogers <irogers@google.com> wrote:
+> >
+> > > On Thu, Jan 27, 2022 at 9:24 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > > >
+> > > > On Thu, 27 Jan 2022 13:33:23 -0800
+> > > > Ian Rogers <irogers@google.com> wrote:
+> > > >
+> > > > > On Tue, Jan 25, 2022 at 12:46 PM Ian Rogers <irogers@google.com> wrote:
+> > > > > >
+> > > > > > This v2 patch set has the main reference count patch for cpu map from
+> > > > > > the first set and then adds reference count checking to nsinfo. The
+> > > > > > reference count checking on nsinfo helped diagnose a data race bug
+> > > > > > which is fixed in the independent patches 2 and 3.
+> > > > > >
+> > > > > > The perf tool has a class of memory problems where reference counts
+> > > > > > are used incorrectly. Memory/address sanitizers and valgrind don't
+> > > > > > provide useful ways to debug these problems, you see a memory leak
+> > > > > > where the only pertinent information is the original allocation
+> > > > > > site. What would be more useful is knowing where a get fails to have a
+> > > > > > corresponding put, where there are double puts, etc.
+> > > > > >
+> > > > > > This work was motivated by the roll-back of:
+> > > > > > https://lore.kernel.org/linux-perf-users/20211118193714.2293728-1-irogers@google.com/
+> > > > > > where fixing a missed put resulted in a use-after-free in a different
+> > > > > > context. There was a sense in fixing the issue that a game of
+> > > > > > wac-a-mole had been embarked upon in adding missed gets and puts.
+> > > > > >
+> > > > > > The basic approach of the change is to add a level of indirection at
+> > > > > > the get and put calls. Get allocates a level of indirection that, if
+> > > > > > no corresponding put is called, becomes a memory leak (and associated
+> > > > > > stack trace) that leak sanitizer can report. Similarly if two puts are
+> > > > > > called for the same get, then a double free can be detected by address
+> > > > > > sanitizer. This can also detect the use after put, which should also
+> > > > > > yield a segv without a sanitizer.
+> > > > > >
+> > > > > > Adding reference count checking to cpu map was done as a proof of
+> > > > > > concept, it yielded little other than a location where the use of get
+> > > > > > could be cleaner by using its result. Reference count checking on
+> > > > > > nsinfo identified a double free of the indirection layer and the
+> > > > > > related threads, thereby identifying a data race as discussed here:
+> > > > > > https://lore.kernel.org/linux-perf-users/CAP-5=fWZH20L4kv-BwVtGLwR=Em3AOOT+Q4QGivvQuYn5AsPRg@mail.gmail.com/
+> > > > > > Accordingly the dso->lock was extended and use to cover the race.
+> > > > > >
+> > > > > > An alternative that was considered was ref_tracker:
+> > > > > >  https://lwn.net/Articles/877603/
+> > > > > > ref_tracker requires use of a reference counted struct to also use a
+> > > > > > cookie/tracker. The cookie is combined with data in a ref_tracker_dir
+> > > > > > to spot double puts. When an object is finished with leaks can be
+> > > > > > detected, as with this approach when leak analysis happens. This
+> > > > > > approach was preferred as it doesn't introduce cookies, spots use
+> > > > > > after put and appears moderately more neutral to the API. Weaknesses
+> > > > > > of the implemented approcah are not being able to do adhoc leak
+> > > > > > detection and a preference for adding an accessor API to structs. I
+> > > > > > believe there are other issues and welcome suggestions.
+> > > > >
+> > > > > And so we've been here before (Dec 2015 to be exact). Namhyung pointed me to:
+> > > > > https://lore.kernel.org/all/20151209021047.10245.8918.stgit@localhost.localdomain/
+> > > > > by Masami Hiramatsu. In this work he adds a leak sanitizer style
+> > > > > reference count checker that will describe locations of puts and gets
+> > > > > for diagnosis. Firstly that's an awesome achievement! This work is
+> > > > > different in that it isn't trying to invent a leak sanitizer, it is
+> > > > > just using the existing one. By adding a level of indirection this
+> > > > > work can catch use after put and pairs gets with puts to make lifetime
+> > > > > analysis more automatic. An advantage of Masami's work is that it
+> > > > > doesn't change data-structures and after the initial patch-set is
+> > > > > somewhat transparent. Overall I prefer the approach in these patches,
+> > > > > future patches can look to clean up the API as Masami has.
+> > > >
+> > > > Thanks for referring my series :-D The series aimed to solve the refcount
+> > > > usage issue in the perf which lead the object leaks. At that moment,
+> > > > I found that there were 2 patterns, refcount start from 0 and start from 1.
+> > > > That made me confused what I should do for using a object.
+> > > > But the perf uses linux/refcount.h now, I hope such issue has already gone.
+> > > > (but the object leakage seems not fixed fully yet, as you found.)
+> > > >
+> > > > BTW, I think the introducing UNWRAP_* macro may put a burden on future
+> > > > development. If it is inevitable, we should consider it as carefully as
+> > > > possible. Or, it may cause another issue (it is easily missed that the new
+> > > > patch does not use UNWRAP_* for object reference, because it is natual.)
+> > > >
+> > > > So I agree with you that you to clean up the API. :-)
+> > > > I think we can make yet another refcount.h for user space debugging and
+> > > > replace it with the linux/refcount.h.
+> > >
+> > > Thanks Masami,
+> > >
+> > > Agreed on the UNWRAP_ macros, hence wanting to hide them behind
+> > > accessors. Making accessors could be automated with macros, for
+> > > example, have a list of variables, have a macro declare the struct
+> > > using the list, another macro can use the list to declare accessors. I
+> > > didn't find adding the UNWRAP_ macros in this change particularly
+> > > burdensome as any use of the wrapping pointer as the original type
+> > > caused a compile time error telling you what and where to fix. The
+> > > macro is extra stuff in the way of using just the raw object, but
+> > > that's fairly typical in C++ with shared_ptr, scoped_lock, etc.
+> >
+> > Hi Ian,
+> >
+> > Hmm, but such a macro is not usual for C which perf is written in.
+> > If I understand correctly, you might want to use memory leak
+> > analyzer to detect refcount leak, and that analyzer will show
+> > what data structure is leaked.
 > 
-> This adds TopdownL1_SMT metrics to bdwde-metrics.json as
-> generated by the extract-tmam.py script.
+> Firstly, thanks for the conversation - this is really useful to
+> improve the code!
 > 
-> Tested:
-> ...
->    6: Parse event definition strings                                  : Ok
->    7: Simple expression parser                                        : Ok
-> ...
->    9: Parse perf pmu format                                           : Ok
->   10: PMU events                                                      :
->   10.1: PMU event table sanity                                        : Ok
->   10.2: PMU event map aliases                                         : Ok
->   10.3: Parsing of PMU event table metrics                            : Skip (some metrics failed)
->   10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
-> ...
->   68: Parse and process metrics                                       : Ok
-> ...
->   88: perf stat metrics (shadow stat) test                            : Ok
->   89: perf all metricgroups test                                      : FAILED!
->   90: perf all metrics test                                           : FAILED!
->   91: perf all PMU test                                               : Ok
-> ...
-> The failures/skips relate to:
-> event syntax error: '{arb/event=0x84,umask=0x1,metric-id=arb!3event!20x84!0umask!20x1!3/,arb/even..'
->                       \___ Cannot find PMU `arb'. Missing kernel support?
+> I think in an ideal world we'd somehow educate things like address
+> sanitizer of reference counted data structures and they would do a
+> better job of tracking gets and puts. The problem is pairing gets and
+> puts. In C++ you use RAII types so that the destructor ensures a put -
+> this can be complex when using data types like lists where you want to
+> move or swap things onto the list, to keep the single pointer
+> property. In the C code in Linux we use gotos, similarly to how defer
+> is used in Go. Anyway, the ref_tracker that Eric Dumazet added solved
+> the get/put pairing problem by adding a cookie that is passed around.
+> The problem with that is that then the cookie becomes part of the API.
+> To avoid that the approach here is just to change the original data
+> type and add in a layer of indirection, that layer has become the
+> cookie. A benefit of this approach is that once the cookie/indirection
+> is freed, use of it becomes an obvious failure - we leverage address
+> sanitizer for use after free.
 > 
+> > If so, maybe you can do the same thing by introducing a dummy
+> > list node for each data structure which you want to debug.
+> >
+> > struct perf_cpu_map__refdebug {
+> >         struct perf_cpu_map__refdebug *orig;
+> > };
+> >
+> > And expand refcount_t as.
+> >
+> > typedef struct refcount_struct {
+> >         atomic_t refs;
+> > #ifdef REFCNT_CHECKING
+> >         void *orig;
+> > #endif
+> > } refcount_t;
+> >
+> > And change the get/put as below
+> >
+> > struct perf_cpu_map *perf_cpu_map__get(struct perf_cpu_map *map)
+> > {
+> >         if (map) {
+> > #ifdef REFCNT_CHECKING
+> >                 struct perf_cpu_map__refdebug *new_node;
+> > #endif
+> >                 refcount_inc(&map->refcnt);
+> > #ifdef REFCNT_CHECKING
+> >                 new_node = malloc(sizeof(*new_node));
+> >                 new_node->orig = map->refcnt->orig;
+> >                 map->refcnt->orig = new_node;
+> > #endif
+> >         }
+> >         return map;
+> > }
+> >
+> > void perf_cpu_map__put(struct perf_cpu_map *map)
+> > {
+> >         if (map) {
+> >                 if (refcount_dec_and_test(&map->refcnt))
+> >                         cpu_map__delete(map);
+> >                 else {
+> > #ifdef REFCNT_CHECKING
+> >                         struct perf_cpu_map__refdebug *node = map->refcnt->orig;
+> >
+> >                         map->refcnt->orig = node->orig;
+> >                         free(node);
+> > #endif
+> >                 }
+> >         }
+> > }
+> >
+> > This need a bit complex get/put, but no need to change other parts.
+> 
+> Adding a list like this gives an ability to say something like of the
+> current reference count of 3 what indirection objects exist. This
+> could be useful for diagnosis but you probably want to pair it with a
+> stack trace, and the approach here is punting that problem to the
+> address/leak sanitizer. I'm also concerned that there should be a lock
+> around the list. I think pursuing this ends up with something like
+> ref_tracker.
+> 
+> If we're using indirection, as in my proposal, then adding a common
+> indirection struct is problematic as anything declared to be a "struct
+> cpumap" now needs to be either the indirection or the original type -
+> hence using macros to hide that in the code. If we embed the
+> information into the refcount_t then we end up with something like
+> ref_tracker, API problems and losing use-after-put checking. Outside
+> of the macros, I think there is a simplicity to the approach I've put
+> forward.
+> 
+> > > The
+> > > question is, is it worth it to make sure use of the reference counted
+> > > object is correct and misuse is easier to diagnose?
+> >
+> > You mean the stackdump for every get/put as I did? That's a good
+> > question. Let's think what may happen.
+> >
+> > For example, if funcA() expects its caller funcB() will put the object
+> > but actually funcB() doesn't, or the funcC() which is the another
+> > caller of funcA()) doesn't expect the funcA() gets the object.
+> >
+> > funcA() {
+> >         get(obj);
+> >         return obj;
+> > }
+> >
+> > funcB() {
+> >         obj = funcA();
+> >         ...
+> >         // wrong! it should do put(obj);
+> > }
+> >
+> > funcC() {
+> >         obj = funcA();
+> >         get(obj);               // this is wrong get().
+> >         ...
+> >         put(obj);
+> > }
+> >
+> > If we just list the non-released object, both logs seems same because
+> > funcB()'s get/put pair will be skipped. If the analyzer shows the
+> > stacktrace when the object was got, maybe we can notice the difference
+> > of funcB() and funcC() path, but this is the simplest case. funcA()
+> > can be called from funcB/C via several different functions.
+> > But perhaps I'm too worried.
+> 
+> So in the logs we should see for funcB:
+> 
+> Memory leak of ... at:
+> malloc...
+> get...
+> funcA
+> funcB
+> ...
+> 
+> as the put on the indirection object was missed and this is now a leak
+> of the indirection object. For funcC we should see:
+> 
+> Memory leak of ... at:
+> malloc..
+> get..
+> funcA
+> funcC
+> 
+> So from the stack traces we can see that there is an unpaired get
+> happening in funcA called from either funcB and funcC, which means we
+> need to a put there. In the funcC case we can see the put was missed
+> from a call to funcA, rather than a get it made.
+> 
+> As the code in perf is complex, multi-threaded and sometimes
+> unintentionally racy a get may happen on 1 thread, the object is
+> placed in a global, the object is put by another thread and also
+> accessed by a 3rd thread. This is what was happening in the
+> dso->nsinfo case. The bug there is that there was a double put
+> happening by the third thread because of a race. Leak sanitizer treats
+> memory visible from a global as not a leak, this can mean to get the
+> most information on leaks in perf we need to aggressively
+> free/delete/deconstruct when terminating so that leaks become visible.
+> This feels to me like good hygiene, but it could also be argued to be
+> a tax.
 
-ARB is an uncore unit for client platforms. Broadwell DE should be a 
-server platform. It looks like an issue of TMA_metrics-full.csv.
-I will check and see whether we can fix the TMA file.
+We can have it perfect, i.e. freeing everything but then leaving that
+disabled in !DEBUG builds so that the exit time is kept fast.
+ 
+> Anyway, I think I'm still at the same point I was when I posted these
+> changes. That an indirection object is the simplest, smallest,
+> cleanest way to get the most information. I think making the rest of
+> the reference counted data structures have this feature would be
+> great, so I'd like to merge the 4 patches here and work to add more. I
+> think we can also build on that foundation for extra debug
+> information.
+> 
+> Thanks,
+> Ian
+> 
+> > Thank you,
+> >
+> > > I think it is near
+> > > as least offensive as possible while providing the best information -
+> > > hence being able to solve the dso->nsinfo put data race, that has been
+> > > a problem to solve up to this point. I'm open to better suggestions
+> > > though :-)
+> > >
+> > > Thanks again,
+> > > Ian
+> > >
+> > > > Thank you,
+> > > >
+> > > > --
+> > > > Masami Hiramatsu <mhiramat@kernel.org>
+> >
+> >
+> > --
+> > Masami Hiramatsu <mhiramat@kernel.org>
 
-Thanks,
-Kan
+-- 
 
-> Signed-off-by: Ian Rogers<irogers@google.com>
-> ---
->   .../arch/x86/broadwellde/bdwde-metrics.json   |  401 +++-
->   .../arch/x86/broadwellde/cache.json           | 1122 +++++-----
->   .../arch/x86/broadwellde/floating-point.json  |  222 +-
->   .../arch/x86/broadwellde/frontend.json        |  335 +--
->   .../arch/x86/broadwellde/memory.json          |  608 +++---
->   .../arch/x86/broadwellde/other.json           |   28 +-
->   .../arch/x86/broadwellde/pipeline.json        | 1892 ++++++++---------
->   .../arch/x86/broadwellde/virtual-memory.json  |  394 ++--
->   8 files changed, 2646 insertions(+), 2356 deletions(-)
+- Arnaldo
