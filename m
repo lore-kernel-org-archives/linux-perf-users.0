@@ -2,337 +2,142 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DFBC433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jan 2022 14:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D38CC433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Jan 2022 14:28:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378795AbiAaOLH (ORCPT
+        id S235995AbiAaO2R (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 31 Jan 2022 09:11:07 -0500
-Received: from mga05.intel.com ([192.55.52.43]:36461 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1376596AbiAaOLE (ORCPT
+        Mon, 31 Jan 2022 09:28:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36540 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235914AbiAaO2R (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 31 Jan 2022 09:11:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643638264; x=1675174264;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=qof1yPKkJFL4VCdvfPFKGAGP2jlUCyArK3EAglR9HwU=;
-  b=b6q+3aJjNWa6FqC6ChABkFVDpAF8lTbuJKCogMqUWNwr2qEWdhYgs5ML
-   y+B742HpTI2WzkbmBZ7cd2f3X2xXfBh7Vmd1RFh9H/OBpt62Adh+NHBTw
-   kwHSyVxu6rFmzP8cq7RvWQbH9gDKlfjqiK+gSvoXQ6AZvjofzEtCh6In1
-   ChDwn22XQ9wvrQJvwvRMWDAvbqopgoU72ezpwhEgR5wz+kvi7ak1j1Af6
-   38oW0W1IUP6KPXb8a8zI0r2OKWFQ6W5ZaIHuyliLn+EfhN9qext9mxkL1
-   XsVe5a+ovdeXICbvnKzkVdhOHURRKWNFXzjNKapHo0AWJaNTvo0EVgipD
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10243"; a="333822815"
-X-IronPort-AV: E=Sophos;i="5.88,331,1635231600"; 
-   d="scan'208";a="333822815"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 06:04:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,331,1635231600"; 
-   d="scan'208";a="481756936"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 31 Jan 2022 06:04:12 -0800
-Received: from [10.209.18.139] (kliang2-MOBL.ccr.corp.intel.com [10.209.18.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 31 Jan 2022 09:28:17 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 220A5C06173D;
+        Mon, 31 Jan 2022 06:28:17 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 3FC255809EB;
-        Mon, 31 Jan 2022 06:04:11 -0800 (PST)
-Message-ID: <db618ec1-40d1-139b-1d84-71fb9220c84a@linux.intel.com>
-Date:   Mon, 31 Jan 2022 09:04:10 -0500
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH 00/26] Update Intel events and metrics
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        by ams.source.kernel.org (Postfix) with ESMTPS id 145FAB82A59;
+        Mon, 31 Jan 2022 14:28:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFA86C340EE;
+        Mon, 31 Jan 2022 14:28:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643639293;
+        bh=kfrJnOWubtdfm2g34bwjILcCqrYytFdSVBRfPr7yUeo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=E2McGu4C0bL0QtV9F/Jot/YKHUVSwMZCClcHCeHDl56FGPaJhby6eSBTZSV4sFn+0
+         OHfN/IxiZFZWzVSBRT8Pf1hYg+9edwSkQ7oK7dcxMyVmDU6ZPRANeWCk235SBW37cx
+         iyjsehsNJJiAxKHEx55YlCc3qxZzSKg5xIZ7PnxAeCH9ZzYD+l5VAeARbwead3+2ky
+         xIogem6BkN3rrl1YitxCimj/9Us15H7zFD65oq0sCJVo+CITzYbYXKcakX8fPkgapo
+         ltTcpNP/GYUe2UUleJvicESPeQmtj32MZzu8XcpMaNjHiH09d5HTn+ppxUuWB4pGX5
+         fezXWEGYUs5xA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 1B13A40466; Mon, 31 Jan 2022 11:28:11 -0300 (-03)
+Date:   Mon, 31 Jan 2022 11:28:11 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Andi Kleen <ak@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@collabora.com>,
         James Clark <james.clark@arm.com>,
         John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>
-References: <20220129080929.837293-1-irogers@google.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20220129080929.837293-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
+        Song Liu <song@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Miaoqian Lin <linmq006@gmail.com>,
+        Stephen Brennan <stephen.s.brennan@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        German Gomez <german.gomez@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Eric Dumazet <edumazet@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        masami.hiramatsu.pt@hitachi.com, eranian@google.com
+Subject: Re: [PATCH v2 0/4] Reference count checker and related fixes
+Message-ID: <Yffx+2uarK5Y15TF@kernel.org>
+References: <20220125204602.4137477-1-irogers@google.com>
+ <CAP-5=fXyJeX3b3egcAOfPndmYhakrsdKu7HttnHEH2DKP-6Vxw@mail.gmail.com>
+ <20220128142348.17d51894dbdb35c9a9449567@kernel.org>
+ <CAP-5=fXHudKqO4+0rbO9X3Ny+Cq7+KsHbKf4P8P24SjF0S232Q@mail.gmail.com>
+ <20220129003450.77116209763f7e06d285e654@kernel.org>
+ <CAP-5=fVoP9MAVsj7SdrxRjkr1Jt=XZ7Vf_FAooXA7B2OrC=XMA@mail.gmail.com>
+ <YfRLEel7/nxWSgIP@kernel.org>
+ <20220130170418.40d812169bcae1323f8b20bf@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220130170418.40d812169bcae1323f8b20bf@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
+Em Sun, Jan 30, 2022 at 05:04:18PM +0900, Masami Hiramatsu escreveu:
+> On Fri, 28 Jan 2022 16:59:13 -0300 Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > I went back to that discussion and saw this part where I brainstormed
+> > about doing all this in unmodified binaries:
 
-On 1/29/2022 3:09 AM, Ian Rogers wrote:
-> Fetch and update Intel events and metrics using the script at:
-> https://github.com/intel/event-converter-for-linux-perf/pull/10
-> Generated events and metrics were added 1-by-1 and tested as much as
-> possible. Sometimes event data is the same but the files were
-> regenerated so the script improvements or a stable ordering would
-> occur. A particular improvement is to reintroduce TMA/Topdown metrics
-> generated from the full version of the spreadsheet.
->
+> > https://lore.kernel.org/all/20151209134138.GB15864@kernel.org/
 
-I highly appreciate the patch series.
+> > Even Alexei chimed in and replied to that thinking it was doable:
 
-Except the patch for Broadwell DE ("[PATCH 03/26] perf vendor events: 
-Update metrics for Broadwell DE"), the rest of the patches look good.
+> > https://lore.kernel.org/all/20151210033139.GA10056@ast-mbp.thefacebook.com/#t
 
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+> > And nowadays we have much better BPF infrastructure, much faster probes,
+> > etc.
 
-Thanks,
-Kan
+> Yeah I think now we (will) have faster user-event[1] too. :)
 
-> Ian Rogers (26):
->    perf test: Allow skip for all metrics test
->    perf vendor events: Update metrics for SkyLake Server
->    perf vendor events: Update metrics for Broadwell DE
->    perf vendor events: Update metrics for CascadelakeX
->    perf vendor events: Update metrics for HaswellX
->    perf vendor events: Update metrics for Ivybridge
->    perf vendor events: Update for Westmere EP-DP
->    perf vendor events: Update metrics for IcelakeX
->    perf vendor events: Update for Bonnell
->    perf vendor events: Update metrics for Broadwell
->    perf vendor events: Update metrics for BroadwellX
->    perf vendor events: Update for Goldmont
->    perf vendor events: Update for GoldmontPlus
->    perf vendor events: Update metrics for Haswell
->    perf vendor events: Update metrics for Icelake
->    perf vendor events: Update metrics for Ivytown
->    perf vendor events: Update metrics for Jaketown
->    perf vendor events: Update Knights Landing
->    perf vendor events: Update Nehalem EP
->    perf vendor events: Update metrics for Skylake
->    perf vendor events: Update Sandybridge
->    perf vendor events: Update Silvermont
->    perf vendor events: Update Tigerlake
->    perf vendor events: Update Westmere EP-SP
->    perf vendor events: Update Westmere EX
->    perf vendor events: Update TremontX
-> 
->   .../pmu-events/arch/x86/bonnell/cache.json    |  748 +--
->   .../arch/x86/bonnell/floating-point.json      |  274 +-
->   .../pmu-events/arch/x86/bonnell/frontend.json |   96 +-
->   .../pmu-events/arch/x86/bonnell/memory.json   |  152 +-
->   .../pmu-events/arch/x86/bonnell/other.json    |  452 +-
->   .../pmu-events/arch/x86/bonnell/pipeline.json |  402 +-
->   .../arch/x86/bonnell/virtual-memory.json      |  126 +-
->   .../arch/x86/broadwell/bdw-metrics.json       |  353 +-
->   .../pmu-events/arch/x86/broadwell/cache.json  | 4713 +++++++++--------
->   .../arch/x86/broadwell/floating-point.json    |  235 +-
->   .../arch/x86/broadwell/frontend.json          |  361 +-
->   .../pmu-events/arch/x86/broadwell/memory.json | 4312 +++++++--------
->   .../pmu-events/arch/x86/broadwell/other.json  |   42 +-
->   .../arch/x86/broadwell/pipeline.json          | 1903 ++++---
->   .../arch/x86/broadwell/virtual-memory.json    |  412 +-
->   .../arch/x86/broadwellde/bdwde-metrics.json   |  401 +-
->   .../arch/x86/broadwellde/cache.json           | 1122 ++--
->   .../arch/x86/broadwellde/floating-point.json  |  222 +-
->   .../arch/x86/broadwellde/frontend.json        |  335 +-
->   .../arch/x86/broadwellde/memory.json          |  608 +--
->   .../arch/x86/broadwellde/other.json           |   28 +-
->   .../arch/x86/broadwellde/pipeline.json        | 1892 ++++---
->   .../arch/x86/broadwellde/virtual-memory.json  |  394 +-
->   .../arch/x86/broadwellx/bdx-metrics.json      |  351 +-
->   .../pmu-events/arch/x86/broadwellx/cache.json | 1300 ++---
->   .../arch/x86/broadwellx/floating-point.json   |  224 +-
->   .../arch/x86/broadwellx/frontend.json         |  335 +-
->   .../arch/x86/broadwellx/memory.json           |  974 ++--
->   .../pmu-events/arch/x86/broadwellx/other.json |   28 +-
->   .../arch/x86/broadwellx/pipeline.json         | 1891 ++++---
->   .../arch/x86/broadwellx/virtual-memory.json   |  394 +-
->   .../arch/x86/cascadelakex/cache.json          |  967 ++--
->   .../arch/x86/cascadelakex/clx-metrics.json    |  469 +-
->   .../arch/x86/cascadelakex/floating-point.json |   50 +-
->   .../arch/x86/cascadelakex/frontend.json       |   18 +-
->   .../arch/x86/cascadelakex/memory.json         | 1008 ++--
->   .../arch/x86/cascadelakex/other.json          |  952 ++--
->   .../arch/x86/cascadelakex/pipeline.json       |   11 +
->   .../arch/x86/cascadelakex/uncore-other.json   |   23 +
->   .../pmu-events/arch/x86/goldmont/cache.json   | 1466 +++--
->   .../arch/x86/goldmont/floating-point.json     |   33 +
->   .../arch/x86/goldmont/frontend.json           |   78 +-
->   .../pmu-events/arch/x86/goldmont/memory.json  |   38 +-
->   .../pmu-events/arch/x86/goldmont/other.json   |   92 +-
->   .../arch/x86/goldmont/pipeline.json           |  538 +-
->   .../arch/x86/goldmont/virtual-memory.json     |   94 +-
->   .../arch/x86/goldmontplus/cache.json          | 1730 +++---
->   .../arch/x86/goldmontplus/floating-point.json |   38 +
->   .../arch/x86/goldmontplus/frontend.json       |   88 +-
->   .../arch/x86/goldmontplus/memory.json         |   44 +-
->   .../arch/x86/goldmontplus/other.json          |  106 +-
->   .../arch/x86/goldmontplus/pipeline.json       |  616 +--
->   .../arch/x86/goldmontplus/virtual-memory.json |  214 +-
->   .../pmu-events/arch/x86/haswell/cache.json    | 1446 +++--
->   .../arch/x86/haswell/floating-point.json      |  129 +-
->   .../pmu-events/arch/x86/haswell/frontend.json |  362 +-
->   .../arch/x86/haswell/hsw-metrics.json         |  265 +-
->   .../pmu-events/arch/x86/haswell/memory.json   | 1004 ++--
->   .../pmu-events/arch/x86/haswell/other.json    |   40 +-
->   .../pmu-events/arch/x86/haswell/pipeline.json | 1796 +++----
->   .../arch/x86/haswell/uncore-cache.json        |  252 +
->   .../arch/x86/haswell/uncore-other.json        |   69 +
->   .../pmu-events/arch/x86/haswell/uncore.json   |  374 --
->   .../arch/x86/haswell/virtual-memory.json      |  552 +-
->   .../pmu-events/arch/x86/haswellx/cache.json   | 1434 ++---
->   .../arch/x86/haswellx/floating-point.json     |  116 +-
->   .../arch/x86/haswellx/frontend.json           |  336 +-
->   .../arch/x86/haswellx/hsx-metrics.json        |  263 +-
->   .../pmu-events/arch/x86/haswellx/memory.json  | 1070 ++--
->   .../pmu-events/arch/x86/haswellx/other.json   |   28 +-
->   .../arch/x86/haswellx/pipeline.json           | 1763 +++---
->   .../arch/x86/haswellx/virtual-memory.json     |  512 +-
->   .../pmu-events/arch/x86/icelake/cache.json    |  658 +--
->   .../arch/x86/icelake/floating-point.json      |   69 +-
->   .../pmu-events/arch/x86/icelake/frontend.json |  449 +-
->   .../arch/x86/icelake/icl-metrics.json         |  338 +-
->   .../pmu-events/arch/x86/icelake/memory.json   |  591 ++-
->   .../pmu-events/arch/x86/icelake/other.json    |  630 +--
->   .../pmu-events/arch/x86/icelake/pipeline.json | 1081 ++--
->   .../arch/x86/icelake/virtual-memory.json      |  178 +-
->   .../pmu-events/arch/x86/icelakex/cache.json   |  851 +--
->   .../arch/x86/icelakex/floating-point.json     |   51 +-
->   .../arch/x86/icelakex/frontend.json           |  501 +-
->   .../arch/x86/icelakex/icx-metrics.json        |  304 +-
->   .../pmu-events/arch/x86/icelakex/memory.json  |  601 ++-
->   .../pmu-events/arch/x86/icelakex/other.json   |  794 ++-
->   .../arch/x86/icelakex/pipeline.json           | 1112 ++--
->   .../arch/x86/icelakex/uncore-other.json       |   61 +-
->   .../arch/x86/icelakex/virtual-memory.json     |  150 +-
->   .../pmu-events/arch/x86/ivybridge/cache.json  | 1446 ++---
->   .../arch/x86/ivybridge/floating-point.json    |  212 +-
->   .../arch/x86/ivybridge/frontend.json          |  386 +-
->   .../arch/x86/ivybridge/ivb-metrics.json       |  287 +-
->   .../pmu-events/arch/x86/ivybridge/memory.json |  290 +-
->   .../pmu-events/arch/x86/ivybridge/other.json  |   42 +-
->   .../arch/x86/ivybridge/pipeline.json          | 1769 +++----
->   .../arch/x86/ivybridge/uncore-cache.json      |  252 +
->   .../arch/x86/ivybridge/uncore-other.json      |   91 +
->   .../pmu-events/arch/x86/ivybridge/uncore.json |  314 --
->   .../arch/x86/ivybridge/virtual-memory.json    |  208 +-
->   .../pmu-events/arch/x86/ivytown/cache.json    | 1594 +++---
->   .../arch/x86/ivytown/floating-point.json      |  212 +-
->   .../pmu-events/arch/x86/ivytown/frontend.json |  386 +-
->   .../arch/x86/ivytown/ivt-metrics.json         |  277 +-
->   .../pmu-events/arch/x86/ivytown/memory.json   |  562 +-
->   .../pmu-events/arch/x86/ivytown/other.json    |   42 +-
->   .../pmu-events/arch/x86/ivytown/pipeline.json | 1769 +++----
->   .../arch/x86/ivytown/virtual-memory.json      |  232 +-
->   .../pmu-events/arch/x86/jaketown/cache.json   | 1582 +++---
->   .../arch/x86/jaketown/floating-point.json     |  160 +-
->   .../arch/x86/jaketown/frontend.json           |  363 +-
->   .../arch/x86/jaketown/jkt-metrics.json        |  140 +-
->   .../pmu-events/arch/x86/jaketown/memory.json  |  478 +-
->   .../pmu-events/arch/x86/jaketown/other.json   |   58 +-
->   .../arch/x86/jaketown/pipeline.json           | 1556 +++---
->   .../arch/x86/jaketown/virtual-memory.json     |  178 +-
->   .../arch/x86/knightslanding/cache.json        | 2602 +++++----
->   .../x86/knightslanding/floating-point.json    |   29 +
->   .../arch/x86/knightslanding/frontend.json     |   48 +-
->   .../arch/x86/knightslanding/memory.json       | 1226 ++---
->   .../arch/x86/knightslanding/pipeline.json     |  465 +-
->   .../x86/knightslanding/virtual-memory.json    |   68 +-
->   .../pmu-events/arch/x86/nehalemep/cache.json  | 3062 +++++------
->   .../arch/x86/nehalemep/floating-point.json    |  180 +-
->   .../arch/x86/nehalemep/frontend.json          |   18 +-
->   .../pmu-events/arch/x86/nehalemep/memory.json |  670 +--
->   .../pmu-events/arch/x86/nehalemep/other.json  |  156 +-
->   .../arch/x86/nehalemep/pipeline.json          |  764 +--
->   .../arch/x86/nehalemep/virtual-memory.json    |   90 +-
->   .../arch/x86/sandybridge/cache.json           | 2298 ++++----
->   .../arch/x86/sandybridge/floating-point.json  |  172 +-
->   .../arch/x86/sandybridge/frontend.json        |  365 +-
->   .../arch/x86/sandybridge/memory.json          |  520 +-
->   .../arch/x86/sandybridge/other.json           |   66 +-
->   .../arch/x86/sandybridge/pipeline.json        | 1634 +++---
->   .../arch/x86/sandybridge/snb-metrics.json     |  150 +-
->   .../arch/x86/sandybridge/uncore-cache.json    |  252 +
->   .../arch/x86/sandybridge/uncore-other.json    |   91 +
->   .../arch/x86/sandybridge/uncore.json          |  314 --
->   .../arch/x86/sandybridge/virtual-memory.json  |  160 +-
->   .../pmu-events/arch/x86/silvermont/cache.json |  940 ++--
->   .../arch/x86/silvermont/floating-point.json   |   11 +
->   .../arch/x86/silvermont/frontend.json         |   75 +-
->   .../arch/x86/silvermont/memory.json           |    8 +-
->   .../pmu-events/arch/x86/silvermont/other.json |   20 +-
->   .../arch/x86/silvermont/pipeline.json         |  422 +-
->   .../arch/x86/silvermont/virtual-memory.json   |   76 +-
->   .../pmu-events/arch/x86/skylake/cache.json    | 2611 ++++-----
->   .../arch/x86/skylake/floating-point.json      |   48 +-
->   .../pmu-events/arch/x86/skylake/frontend.json |  578 +-
->   .../pmu-events/arch/x86/skylake/memory.json   | 1566 +++---
->   .../pmu-events/arch/x86/skylake/other.json    |   46 +-
->   .../pmu-events/arch/x86/skylake/pipeline.json | 1083 ++--
->   .../arch/x86/skylake/skl-metrics.json         |  497 +-
->   .../arch/x86/skylake/virtual-memory.json      |  274 +-
->   .../pmu-events/arch/x86/skylakex/cache.json   |  111 +-
->   .../arch/x86/skylakex/floating-point.json     |   24 +-
->   .../arch/x86/skylakex/frontend.json           |   18 +-
->   .../pmu-events/arch/x86/skylakex/memory.json  |   96 +-
->   .../arch/x86/skylakex/pipeline.json           |   11 +
->   .../arch/x86/skylakex/skx-metrics.json        |  461 +-
->   .../arch/x86/skylakex/uncore-other.json       |   23 +
->   .../pmu-events/arch/x86/tigerlake/cache.json  |   44 +-
->   .../arch/x86/tigerlake/floating-point.json    |   11 +-
->   .../arch/x86/tigerlake/frontend.json          |   17 +-
->   .../arch/x86/tigerlake/pipeline.json          |   37 +-
->   .../pmu-events/arch/x86/tremontx/cache.json   |  282 +-
->   .../arch/x86/tremontx/floating-point.json     |   24 +
->   .../arch/x86/tremontx/frontend.json           |   97 +-
->   .../pmu-events/arch/x86/tremontx/memory.json  |  449 +-
->   .../pmu-events/arch/x86/tremontx/other.json   | 1786 ++++++-
->   .../arch/x86/tremontx/pipeline.json           |  341 +-
->   .../arch/x86/tremontx/uncore-memory.json      |  156 +-
->   .../arch/x86/tremontx/uncore-other.json       | 2045 ++++++-
->   .../arch/x86/tremontx/virtual-memory.json     |  320 +-
->   .../arch/x86/westmereep-dp/cache.json         | 2734 +++++-----
->   .../x86/westmereep-dp/floating-point.json     |  180 +-
->   .../arch/x86/westmereep-dp/frontend.json      |   18 +-
->   .../arch/x86/westmereep-dp/memory.json        |  686 +--
->   .../arch/x86/westmereep-dp/other.json         |  238 +-
->   .../arch/x86/westmereep-dp/pipeline.json      |  780 +--
->   .../x86/westmereep-dp/virtual-memory.json     |  138 +-
->   .../arch/x86/westmereep-sp/cache.json         | 3142 +++++------
->   .../x86/westmereep-sp/floating-point.json     |  180 +-
->   .../arch/x86/westmereep-sp/frontend.json      |   18 +-
->   .../arch/x86/westmereep-sp/memory.json        |  670 +--
->   .../arch/x86/westmereep-sp/other.json         |  238 +-
->   .../arch/x86/westmereep-sp/pipeline.json      |  780 +--
->   .../x86/westmereep-sp/virtual-memory.json     |  120 +-
->   .../pmu-events/arch/x86/westmereex/cache.json | 3142 +++++------
->   .../arch/x86/westmereex/floating-point.json   |  180 +-
->   .../arch/x86/westmereex/frontend.json         |   18 +-
->   .../arch/x86/westmereex/memory.json           |  676 +--
->   .../pmu-events/arch/x86/westmereex/other.json |  238 +-
->   .../arch/x86/westmereex/pipeline.json         |  784 ++-
->   .../arch/x86/westmereex/virtual-memory.json   |  138 +-
->   tools/perf/tests/shell/stat_all_metrics.sh    |   10 +-
->   197 files changed, 61330 insertions(+), 52655 deletions(-)
->   create mode 100644 tools/perf/pmu-events/arch/x86/goldmont/floating-point.json
->   create mode 100644 tools/perf/pmu-events/arch/x86/goldmontplus/floating-point.json
->   create mode 100644 tools/perf/pmu-events/arch/x86/haswell/uncore-cache.json
->   create mode 100644 tools/perf/pmu-events/arch/x86/haswell/uncore-other.json
->   delete mode 100644 tools/perf/pmu-events/arch/x86/haswell/uncore.json
->   create mode 100644 tools/perf/pmu-events/arch/x86/ivybridge/uncore-cache.json
->   create mode 100644 tools/perf/pmu-events/arch/x86/ivybridge/uncore-other.json
->   delete mode 100644 tools/perf/pmu-events/arch/x86/ivybridge/uncore.json
->   create mode 100644 tools/perf/pmu-events/arch/x86/knightslanding/floating-point.json
->   create mode 100644 tools/perf/pmu-events/arch/x86/sandybridge/uncore-cache.json
->   create mode 100644 tools/perf/pmu-events/arch/x86/sandybridge/uncore-other.json
->   delete mode 100644 tools/perf/pmu-events/arch/x86/sandybridge/uncore.json
->   create mode 100644 tools/perf/pmu-events/arch/x86/silvermont/floating-point.json
->   create mode 100644 tools/perf/pmu-events/arch/x86/tremontx/floating-point.json
-> 
+> [1] https://lore.kernel.org/all/20220118204326.2169-1-beaub@linux.microsoft.com/T/#u
+
+> So instead of allocating an indirect object on get(), we also can define
+> an event and send it to the kernel, and run a BPF to analyze it.
+> Note that this will *NOT* be able to detect the "use-after-put" unless
+> we automatically trace the all object field access ;-)
+
+Humm, reading https://blog.janestreet.com/magic-trace/:
+
+"I spent a bunch of time looking for a better solution and eventually I
+found a really satisfying one in the perf_event_open docs. It turns out
+that perf_event_open can use hardware breakpoints and notify you when a
+memory address is executed or accessed."
+
+I.e. after the last put we could automagically add a:
+
+  mem:<addr>[/len][:access]                          [Hardware breakpoint]
+
+But there are only HBP_NUM hardware breakpoints (4 on x86)... So some
+sort of scheduling would be needed, or after last put add it then, leave
+it there for some time, then stop tracking it, reusing it for some other
+object, etc. We would be able to catch some of the problems sometimes.
+
+For things that do use-after-free straight away we would get some of
+these and fix it, making this tunable (the time to track a object after
+it is last put) should be possible.
+
+> Hm, apart from this topic, isn't it good to introduce user-space trace
+> event( macro)s in perf tools? :-)
+
+Yeah, this seems to be an interesting case for that.
+
+- Arnaldo
