@@ -2,498 +2,153 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C196BC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Feb 2022 02:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D38B0C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Feb 2022 05:37:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232725AbiBACBF (ORCPT
+        id S230367AbiBAFhv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 31 Jan 2022 21:01:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54780 "EHLO
+        Tue, 1 Feb 2022 00:37:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232321AbiBACAT (ORCPT
+        with ESMTP id S229612AbiBAFhu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 31 Jan 2022 21:00:19 -0500
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98276C0613E4
-        for <linux-perf-users@vger.kernel.org>; Mon, 31 Jan 2022 18:00:12 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id q197-20020a25d9ce000000b0061a3b6ac07dso446493ybg.22
-        for <linux-perf-users@vger.kernel.org>; Mon, 31 Jan 2022 18:00:12 -0800 (PST)
+        Tue, 1 Feb 2022 00:37:50 -0500
+Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE41AC061714;
+        Mon, 31 Jan 2022 21:37:50 -0800 (PST)
+Received: by mail-io1-xd31.google.com with SMTP id y84so19926169iof.0;
+        Mon, 31 Jan 2022 21:37:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc:content-transfer-encoding;
-        bh=Kk4Zm5h/y0Yg3iILYAuGpcM5yA/WzW0Erq4NQKy/rfM=;
-        b=LzDhk6W+cjeeH4p2Pvc08iVUhcS7+1/L9HWTD9su29q5FQus33PSJM4OAuaYhGTGS/
-         1RSWkzAymalvAkwbl3bWxfHO0YXVeEZRgqUJpxbIAUQOe8qIidZ6ghmW2b5bjhU2NaeK
-         zcmxFkL2lJGwal3RhxnZUbI4ySGeVI5DsJ/1e4Wv1y3XZZaOeG8SbTx4kzHh2K5USozt
-         XSwkQ9krONbY+dIEKfVH9/5KbpmTfmqutO8/MXvQ4Ep1skwx01PE6eqSagsh+oSiBXfu
-         wUxBb7LQlq0xWfk4ABt3DCMsLiCDLdAWtmiaMIU/Mps/PfXZGKh28Rya1MjK5u9J9EPq
-         df8w==
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HaH4YYFQUGYgJm+BChmNqccqpH4G/GlGC8W4GeH5Y7s=;
+        b=ek90t6PLRiryoISkxPbRM2CkM1aeFIDR54hPh8p2tPqh3IRwwA5RFr21jNosMYPbRA
+         MEQThNMibttROc5jLYq10u7/MxJ13RELBMj4mL13BFFBWUUN9nLUAWV2XZoTaiedlFXV
+         vIqZWpR/bwqH2+aWTpjx/GMDmf6g1sx3MRO1KCEZjpsZExj/GaPlHw5iT+z4Cx+IxpHC
+         OQYG6sy4mGCh+Ok9M6XD5zmtvhNQNFKjS9QSzAOSqazoVWNJFfeWJDLReT9n/hguNGTM
+         thum/I0sEzmXKEGXIHGXPL2XXXXuq+gvl/AQE5cqbJGc3Xw5c/pVtkA7IYnMeegLXtip
+         VLbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc:content-transfer-encoding;
-        bh=Kk4Zm5h/y0Yg3iILYAuGpcM5yA/WzW0Erq4NQKy/rfM=;
-        b=yWxebzmgC6ZnX8suc87DymgcEO9KXATarpoec0+NV2F2wBoObqRzxGJf0U2cbpTwtd
-         NEgnthW1Ws/b5zafJM7PEhrdxjtmiwIXzrtkHMp/9zwDTzhx3oi92p68elDsUcJvM8MU
-         IVmNxi31E0FJcqP42JpveVk+Ah7ng6bg/B2caWJodUoBX/Y+m6RiJ0vH7gwxoz+BF8xy
-         PlPhsuvATUvbLpfurcE5jGUg6beQ6GEPniPn4YeaN9EUdgV3A7UoGbKxJQMs3m171yKy
-         dlr3hYOnELuaM3/UJjhQvnk6Jm75d3Gvoaboxcl7LDPLQ9MexQpnkVno5p/fKXs/h3T9
-         TMAg==
-X-Gm-Message-State: AOAM533HwNSxFR83m4oM5JQL0cIRRY/CMGWVts3k86QT0HkzY8sOBmAn
-        LqrLKcsYaavOIn+pju8FB4pOdYE/sG0S
-X-Google-Smtp-Source: ABdhPJxaJZrnSw9mGTPVrOnVf2LTKL09b+8VwoZS2m97pTnHf4vWgdUj/1stZtsvPxclaPP0z8fG0bLszCFh
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:b14e:bc64:b7f6:5d4b])
- (user=irogers job=sendgmr) by 2002:a81:8348:: with SMTP id
- t69mr1684ywf.477.1643680810795; Mon, 31 Jan 2022 18:00:10 -0800 (PST)
-Date:   Mon, 31 Jan 2022 17:58:55 -0800
-In-Reply-To: <20220201015858.1226914-1-irogers@google.com>
-Message-Id: <20220201015858.1226914-24-irogers@google.com>
-Mime-Version: 1.0
-References: <20220201015858.1226914-1-irogers@google.com>
-X-Mailer: git-send-email 2.35.0.rc2.247.g8bbb082509-goog
-Subject: [PATCH v2 23/26] perf vendor events: Update Tigerlake
-From:   Ian Rogers <irogers@google.com>
-To:     Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HaH4YYFQUGYgJm+BChmNqccqpH4G/GlGC8W4GeH5Y7s=;
+        b=Qs4z1xx/TUwrjM4Qmd1BUiqAdDgmn7mQ3saiESsdgbyUuxLoKfaqkcS26oRer1jUOm
+         7/r0VIkXccYnH0N1O5uMSwdkvEy7AWQwp62GC40yi0h5Ny/7e7+EmIasbYe3Lp5Zd53C
+         fV8NtTXETno9Wm1NQXvfbxiOpGE4QxEGr9qOYsX+PV1rNS7ligtOMHDYxoI0s4POx76d
+         6XudpWoU71VctS7IdiNGo7KEGXr7pRdwnPF6KCATOLGirSXVQKPUs7LGoCTl4/mCEcel
+         0Gh6xeE5iJL7cMwvm7VVdtbHqUQ9btPkpAScpqts8w0m5xQqRB80MYnj9RoUjJ34hXpH
+         O7MQ==
+X-Gm-Message-State: AOAM5318+PmmwJmoBc/zwUN+FySJTEo/qvJzx+gCiLTJWxQOws/vNRO9
+        Po7QC4QMRzS50XriQsn+r2RXZlC/PtkBrz9rHHY=
+X-Google-Smtp-Source: ABdhPJzwM6mUguBtwoWwo4q/nFsH4dB5BMq1zKQG9sN0wLToTQqNN6r6wPd4Nr4rL4eQfyyeQPi5tD0EN5Ti+LQuN+U=
+X-Received: by 2002:a05:6638:1028:: with SMTP id n8mr12605683jan.318.1643693870129;
+ Mon, 31 Jan 2022 21:37:50 -0800 (PST)
+MIME-Version: 1.0
+References: <20211209235857.423773-1-alistair.francis@opensource.wdc.com> <YbNX3mRT0A9/N2il@kernel.org>
+In-Reply-To: <YbNX3mRT0A9/N2il@kernel.org>
+From:   Alistair Francis <alistair23@gmail.com>
+Date:   Tue, 1 Feb 2022 15:37:23 +1000
+Message-ID: <CAKmqyKNMJCHHMo01aCiyJRx926jYXz+sPgVwwZ7Kr1x0w81R2Q@mail.gmail.com>
+Subject: Re: [PATCH v5 1/6] perf bench futex: Add support for 32-bit systems
+ with 64-bit time_t
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Alistair Francis <alistair.francis@opensource.wdc.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Darren Hart <dvhart@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
         Namhyung Kim <namhyung@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+        Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alistair Francis <alistair.francis@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Events are updated to version 1.06:
-    https://download.01.org/perfmon/TGL
-Json files generated by the latest code at:
-    https://github.com/intel/event-converter-for-linux-perf
+On Fri, Dec 10, 2021 at 11:36 PM Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
+>
+> Em Fri, Dec 10, 2021 at 09:58:52AM +1000, Alistair Francis escreveu:
+> > From: Alistair Francis <alistair.francis@wdc.com>
+> >
+> > Some 32-bit architectures (such are 32-bit RISC-V) only have a 64-bit
+> > time_t and as such don't have the SYS_futex syscall. This patch will
+> > allow us to use the SYS_futex_time64 syscall on those platforms.
+> >
+> > This also converts the futex calls to be y2038 safe (when built for a
+> > 5.1+ kernel).
+> >
+> > This is a revert of commit ba4026b09d83acf56c040b6933eac7916c27e728
+> > "Revert "perf bench futex: Add support for 32-bit systems with 64-bit time_t"".
+> >
+> > The original commit was reverted as including linux/time_types.h would
+> > fail to compile on older kernels. This commit doesn't include
+> > linux/time_types.h to avoid this issue.
+>
+>   10     9.99 alpine:3.12                   : FAIL gcc version 9.3.0 (Alpine 9.3.0)
+>     In file included from bench/futex-hash.c:29:
+>     bench/futex.h:37:2: error: unknown type name '__kernel_old_time_t'
+>        37 |  __kernel_old_time_t tv_sec;  /* seconds */
+>           |  ^~~~~~~~~~~~~~~~~~~
+>     In file included from bench/futex-wake.c:25:
+>     bench/futex.h:37:2: error: unknown type name '__kernel_old_time_t'
+>        37 |  __kernel_old_time_t tv_sec;  /* seconds */
+>           |  ^~~~~~~~~~~~~~~~~~~
+>     make[3]: *** [/git/perf-5.16.0-rc4/tools/build/Makefile.build:139: bench] Error 2
+>   11   114.27 alpine:3.13                   : Ok   gcc (Alpine 10.2.1_pre1) 10.2.1 20201203 , Alpine clang version 10.0.1
+>   12   100.12 alpine:3.14                   : Ok   gcc (Alpine 10.3.1_git20210424) 10.3.1 20210424 , Alpine clang version 11.1.0
+>   13   101.06 alpine:3.15                   : Ok   gcc (Alpine 10.3.1_git20211027) 10.3.1 20211027 , Alpine clang version 12.0.1
+>   14   101.96 alpine:edge                   : Ok   gcc (Alpine 11.2.1_git20211128) 11.2.1 20211128 , Alpine clang version 12.0.1
+>   15     6.98 alt:p8                        : FAIL gcc version 5.3.1 20151207 (ALT p8 5.3.1-alt3.M80P.1) (GCC)
+>     In file included from bench/futex-hash.c:29:0:
+>     bench/futex.h:37:2: error: unknown type name '__kernel_old_time_t'
+>       __kernel_old_time_t tv_sec;  /* seconds */
+>       ^
+>     In file included from bench/futex-wake.c:25:0:
+>     bench/futex.h:37:2: error: unknown type name '__kernel_old_time_t'
+>       __kernel_old_time_t tv_sec;  /* seconds */
+>       ^
+>     In file included from bench/futex-wake-parallel.c:31:0:
+>     bench/futex.h:37:2: error: unknown type name '__kernel_old_time_t'
+>       __kernel_old_time_t tv_sec;  /* seconds */
+>       ^
+>     make[3]: *** [bench] Error 2
+>   16    73.65 alt:p9                        : Ok   x86_64-alt-linux-gcc (GCC) 8.4.1 20200305 (ALT p9 8.4.1-alt0.p9.1) , clang version 10.0.0
+>   17    72.34 alt:sisyphus                  : Ok   x86_64-alt-linux-gcc (GCC) 11.2.1 20210911 (ALT Sisyphus 11.2.1-alt1) , ALT Linux Team clang version 12.0.1
+>   18     7.58 amazonlinux:1                 : FAIL gcc version 7.2.1 20170915 (Red Hat 7.2.1-2) (GCC)
+>     In file included from bench/futex-hash.c:29:0:
+>     bench/futex.h:37:2: error: unknown type name '__kernel_old_time_t'
+>       __kernel_old_time_t tv_sec;  /* seconds */
+>       ^~~~~~~~~~~~~~~~~~~
+>     In file included from bench/futex-wake.c:25:0:
+>     bench/futex.h:37:2: error: unknown type name '__kernel_old_time_t'
+>       __kernel_old_time_t tv_sec;  /* seconds */
+>       ^~~~~~~~~~~~~~~~~~~
+>     make[3]: *** [bench] Error 2
+>   19     8.28 amazonlinux:2                 : FAIL gcc version 7.3.1 20180712 (Red Hat 7.3.1-13) (GCC)
+>     In file included from bench/futex-hash.c:29:0:
+>     bench/futex.h:37:2: error: unknown type name '__kernel_old_time_t'
+>       __kernel_old_time_t tv_sec;  /* seconds */
+>       ^~~~~~~~~~~~~~~~~~~
+>     make[3]: *** [bench] Error 2
+>   20    79.16 centos:8                      : Ok   gcc (GCC) 8.4.1 20200928 (Red Hat 8.4.1-1) , clang version 11.0.1 (Red Hat 11.0.1-1.module_el8.4.0+966+2995ef20)
 
-Tested:
-Not tested on a Tigerlake, on a SkylakeX:
-...
-  9: Parse perf pmu format                                           : Ok
- 10: PMU events                                                      :
- 10.1: PMU event table sanity                                        : Ok
- 10.2: PMU event map aliases                                         : Ok
- 10.3: Parsing of PMU event table metrics                            : Ok
- 10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
-...
+Is there a way I can reproduce this failure?
 
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- .../pmu-events/arch/x86/tigerlake/cache.json  | 44 +++++++++++++++++--
- .../arch/x86/tigerlake/floating-point.json    | 11 ++++-
- .../arch/x86/tigerlake/frontend.json          | 17 ++++++-
- .../arch/x86/tigerlake/pipeline.json          | 37 +++++++++++++++-
- 4 files changed, 100 insertions(+), 9 deletions(-)
+Alistair
 
-diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/cache.json b/tools/pe=
-rf/pmu-events/arch/x86/tigerlake/cache.json
-index 8d767b8932b0..543a3298f86f 100644
---- a/tools/perf/pmu-events/arch/x86/tigerlake/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/tigerlake/cache.json
-@@ -145,6 +145,17 @@
-         "SampleAfterValue": "200003",
-         "UMask": "0x24"
-     },
-+    {
-+        "BriefDescription": "Demand Data Read requests that hit L2 cache",
-+        "CollectPEBSRecord": "2",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x24",
-+        "EventName": "L2_RQSTS.DEMAND_DATA_RD_HIT",
-+        "PEBScounters": "0,1,2,3",
-+        "PublicDescription": "Counts the number of demand Data Read reques=
-ts initiated by load instructions that hit L2 cache.",
-+        "SampleAfterValue": "200003",
-+        "UMask": "0xc1"
-+    },
-     {
-         "BriefDescription": "All requests that miss L2 cache",
-         "CollectPEBSRecord": "2",
-@@ -185,7 +196,7 @@
-         "EventCode": "0x24",
-         "EventName": "L2_RQSTS.SWPF_HIT",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Counts Software prefetch requests that hit t=
-he L2 cache. This event accounts for PREFETCHNTA and PREFETCHT0/1/2 instruc=
-tions.",
-+        "PublicDescription": "Counts Software prefetch requests that hit t=
-he L2 cache. Accounts for PREFETCHNTA and PREFETCHT0/1/2 instructions when =
-FB is not full.",
-         "SampleAfterValue": "200003",
-         "UMask": "0xc8"
-     },
-@@ -196,7 +207,7 @@
-         "EventCode": "0x24",
-         "EventName": "L2_RQSTS.SWPF_MISS",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Counts Software prefetch requests that miss =
-the L2 cache. This event accounts for PREFETCHNTA and PREFETCHT0/1/2 instru=
-ctions.",
-+        "PublicDescription": "Counts Software prefetch requests that miss =
-the L2 cache. Accounts for PREFETCHNTA and PREFETCHT0/1/2 instructions when=
- FB is not full.",
-         "SampleAfterValue": "200003",
-         "UMask": "0x28"
-     },
-@@ -222,6 +233,17 @@
-         "SampleAfterValue": "2000003",
-         "UMask": "0x2"
-     },
-+    {
-+        "BriefDescription": "Core-originated cacheable requests that misse=
-d L3  (Except hardware prefetches to the L3)",
-+        "CollectPEBSRecord": "2",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0x2e",
-+        "EventName": "LONGEST_LAT_CACHE.MISS",
-+        "PEBScounters": "0,1,2,3,4,5,6,7",
-+        "PublicDescription": "Counts core-originated cacheable requests th=
-at miss the L3 cache (Longest Latency cache). Requests include data and cod=
-e reads, Reads-for-Ownership (RFOs), speculative accesses and hardware pref=
-etches to the L1 and L2.  It does not include hardware prefetches to the L3=
-, and may not count other types of requests to the L3.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x41"
-+    },
-     {
-         "BriefDescription": "All retired load instructions.",
-         "CollectPEBSRecord": "2",
-@@ -249,6 +271,20 @@
-         "SampleAfterValue": "1000003",
-         "UMask": "0x82"
-     },
-+    {
-+        "BriefDescription": "All retired memory instructions.",
-+        "CollectPEBSRecord": "2",
-+        "Counter": "0,1,2,3",
-+        "Data_LA": "1",
-+        "EventCode": "0xd0",
-+        "EventName": "MEM_INST_RETIRED.ANY",
-+        "L1_Hit_Indication": "1",
-+        "PEBS": "1",
-+        "PEBScounters": "0,1,2,3",
-+        "PublicDescription": "Counts all retired memory instructions - loa=
-ds and stores.",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x83"
-+    },
-     {
-         "BriefDescription": "Retired load instructions with locked access.=
-",
-         "CollectPEBSRecord": "2",
-@@ -298,7 +334,7 @@
-         "EventName": "MEM_INST_RETIRED.STLB_MISS_LOADS",
-         "PEBS": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Counts retired load instructions that true m=
-iss the STLB.",
-+        "PublicDescription": "Number of retired load instructions that (st=
-art a) miss in the 2nd-level TLB (STLB).",
-         "SampleAfterValue": "100003",
-         "UMask": "0x11"
-     },
-@@ -312,7 +348,7 @@
-         "L1_Hit_Indication": "1",
-         "PEBS": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Counts retired store instructions that true =
-miss the STLB.",
-+        "PublicDescription": "Number of retired store instructions that (s=
-tart a) miss in the 2nd-level TLB (STLB).",
-         "SampleAfterValue": "100003",
-         "UMask": "0x12"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/floating-point.json b=
-/tools/perf/pmu-events/arch/x86/tigerlake/floating-point.json
-index 402f01851313..de8eb2b34a3a 100644
---- a/tools/perf/pmu-events/arch/x86/tigerlake/floating-point.json
-+++ b/tools/perf/pmu-events/arch/x86/tigerlake/floating-point.json
-@@ -17,6 +17,7 @@
-         "EventCode": "0xc7",
-         "EventName": "FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE",
-         "PEBScounters": "0,1,2,3,4,5,6,7",
-+        "PublicDescription": "Number of SSE/AVX computational 128-bit pack=
-ed double precision floating-point instructions retired; some instructions =
-will count twice as noted below.  Each count represents 2 computation opera=
-tions, one for each element.  Applies to SSE* and AVX* packed double precis=
-ion floating-point instructions: ADD SUB HADD HSUB SUBADD MUL DIV MIN MAX S=
-QRT DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as the=
-y perform 2 calculations per element. The DAZ and FTZ flags in the MXCSR re=
-gister need to be set when using these events.",
-         "SampleAfterValue": "100003",
-         "UMask": "0x4"
-     },
-@@ -27,7 +28,7 @@
-         "EventCode": "0xc7",
-         "EventName": "FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE",
-         "PEBScounters": "0,1,2,3,4,5,6,7",
--        "PublicDescription": "Counts number of SSE/AVX computational 128-b=
-it packed single precision floating-point instructions retired; some instru=
-ctions will count twice as noted below.  Each count represents 4 computatio=
-n operations, one for each element.  Applies to SSE* and AVX* packed single=
- precision floating-point instructions: ADD SUB HADD HSUB SUBADD MUL DIV MI=
-N MAX SQRT RSQRT RCP DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions c=
-ount twice as they perform 2 calculations per element.",
-+        "PublicDescription": "Number of SSE/AVX computational 128-bit pack=
-ed single precision floating-point instructions retired; some instructions =
-will count twice as noted below.  Each count represents 4 computation opera=
-tions, one for each element.  Applies to SSE* and AVX* packed single precis=
-ion floating-point instructions: ADD SUB HADD HSUB SUBADD MUL DIV MIN MAX S=
-QRT RSQRT RCP DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count tw=
-ice as they perform 2 calculations per element. The DAZ and FTZ flags in th=
-e MXCSR register need to be set when using these events.",
-         "SampleAfterValue": "100003",
-         "UMask": "0x8"
-     },
-@@ -38,6 +39,7 @@
-         "EventCode": "0xc7",
-         "EventName": "FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE",
-         "PEBScounters": "0,1,2,3,4,5,6,7",
-+        "PublicDescription": "Number of SSE/AVX computational 256-bit pack=
-ed double precision floating-point instructions retired; some instructions =
-will count twice as noted below.  Each count represents 4 computation opera=
-tions, one for each element.  Applies to SSE* and AVX* packed double precis=
-ion floating-point instructions: ADD SUB HADD HSUB SUBADD MUL DIV MIN MAX S=
-QRT FM(N)ADD/SUB.  FM(N)ADD/SUB instructions count twice as they perform 2 =
-calculations per element. The DAZ and FTZ flags in the MXCSR register need =
-to be set when using these events.",
-         "SampleAfterValue": "100003",
-         "UMask": "0x10"
-     },
-@@ -48,6 +50,7 @@
-         "EventCode": "0xc7",
-         "EventName": "FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE",
-         "PEBScounters": "0,1,2,3,4,5,6,7",
-+        "PublicDescription": "Number of SSE/AVX computational 256-bit pack=
-ed single precision floating-point instructions retired; some instructions =
-will count twice as noted below.  Each count represents 8 computation opera=
-tions, one for each element.  Applies to SSE* and AVX* packed single precis=
-ion floating-point instructions: ADD SUB HADD HSUB SUBADD MUL DIV MIN MAX S=
-QRT RSQRT RCP DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count tw=
-ice as they perform 2 calculations per element. The DAZ and FTZ flags in th=
-e MXCSR register need to be set when using these events.",
-         "SampleAfterValue": "100003",
-         "UMask": "0x20"
-     },
-@@ -58,16 +61,18 @@
-         "EventCode": "0xc7",
-         "EventName": "FP_ARITH_INST_RETIRED.512B_PACKED_DOUBLE",
-         "PEBScounters": "0,1,2,3,4,5,6,7",
-+        "PublicDescription": "Number of SSE/AVX computational 512-bit pack=
-ed double precision floating-point instructions retired; some instructions =
-will count twice as noted below.  Each count represents 8 computation opera=
-tions, one for each element.  Applies to SSE* and AVX* packed double precis=
-ion floating-point instructions: ADD SUB MUL DIV MIN MAX SQRT RSQRT14 RCP14=
- FM(N)ADD/SUB. FM(N)ADD/SUB instructions count twice as they perform 2 calc=
-ulations per element. The DAZ and FTZ flags in the MXCSR register need to b=
-e set when using these events.",
-         "SampleAfterValue": "100003",
-         "UMask": "0x40"
-     },
-     {
--        "BriefDescription": "Counts number of SSE/AVX computational 512-bi=
-t packed double precision floating-point instructions retired; some instruc=
-tions will count twice as noted below.  Each count represents 16 computatio=
-n operations, one for each element.  Applies to SSE* and AVX* packed double=
- precision floating-point instructions: ADD SUB MUL DIV MIN MAX SQRT RSQRT1=
-4 RCP14 FM(N)ADD/SUB. FM(N)ADD/SUB instructions count twice as they perform=
- 2 calculations per element.",
-+        "BriefDescription": "Counts number of SSE/AVX computational 512-bi=
-t packed single precision floating-point instructions retired; some instruc=
-tions will count twice as noted below.  Each count represents 16 computatio=
-n operations, one for each element.  Applies to SSE* and AVX* packed single=
- precision floating-point instructions: ADD SUB MUL DIV MIN MAX SQRT RSQRT1=
-4 RCP14 FM(N)ADD/SUB. FM(N)ADD/SUB instructions count twice as they perform=
- 2 calculations per element.",
-         "CollectPEBSRecord": "2",
-         "Counter": "0,1,2,3,4,5,6,7",
-         "EventCode": "0xc7",
-         "EventName": "FP_ARITH_INST_RETIRED.512B_PACKED_SINGLE",
-         "PEBScounters": "0,1,2,3,4,5,6,7",
-+        "PublicDescription": "Number of SSE/AVX computational 512-bit pack=
-ed single precision floating-point instructions retired; some instructions =
-will count twice as noted below.  Each count represents 16 computation oper=
-ations, one for each element.  Applies to SSE* and AVX* packed single preci=
-sion floating-point instructions: ADD SUB MUL DIV MIN MAX SQRT RSQRT14 RCP1=
-4 FM(N)ADD/SUB. FM(N)ADD/SUB instructions count twice as they perform 2 cal=
-culations per element. The DAZ and FTZ flags in the MXCSR register need to =
-be set when using these events.",
-         "SampleAfterValue": "100003",
-         "UMask": "0x80"
-     },
-@@ -78,6 +83,7 @@
-         "EventCode": "0xc7",
-         "EventName": "FP_ARITH_INST_RETIRED.SCALAR_DOUBLE",
-         "PEBScounters": "0,1,2,3,4,5,6,7",
-+        "PublicDescription": "Number of SSE/AVX computational scalar doubl=
-e precision floating-point instructions retired; some instructions will cou=
-nt twice as noted below.  Each count represents 1 computational operation. =
-Applies to SSE* and AVX* scalar double precision floating-point instruction=
-s: ADD SUB MUL DIV MIN MAX SQRT FM(N)ADD/SUB.  FM(N)ADD/SUB instructions co=
-unt twice as they perform 2 calculations per element. The DAZ and FTZ flags=
- in the MXCSR register need to be set when using these events.",
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-@@ -88,6 +94,7 @@
-         "EventCode": "0xc7",
-         "EventName": "FP_ARITH_INST_RETIRED.SCALAR_SINGLE",
-         "PEBScounters": "0,1,2,3,4,5,6,7",
-+        "PublicDescription": "Number of SSE/AVX computational scalar singl=
-e precision floating-point instructions retired; some instructions will cou=
-nt twice as noted below.  Each count represents 1 computational operation. =
-Applies to SSE* and AVX* scalar single precision floating-point instruction=
-s: ADD SUB MUL DIV MIN MAX SQRT RSQRT RCP FM(N)ADD/SUB.  FM(N)ADD/SUB instr=
-uctions count twice as they perform 2 calculations per element. The DAZ and=
- FTZ flags in the MXCSR register need to be set when using these events.",
-         "SampleAfterValue": "100003",
-         "UMask": "0x2"
-     }
-diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/frontend.json b/tools=
-/perf/pmu-events/arch/x86/tigerlake/frontend.json
-index 24c736ac8f8e..2eaa33cc574e 100644
---- a/tools/perf/pmu-events/arch/x86/tigerlake/frontend.json
-+++ b/tools/perf/pmu-events/arch/x86/tigerlake/frontend.json
-@@ -39,12 +39,27 @@
-         "CollectPEBSRecord": "2",
-         "Counter": "0,1,2,3,4,5,6,7",
-         "EventCode": "0xc6",
-+        "EventName": "FRONTEND_RETIRED.ANY_DSB_MISS",
-+        "MSRIndex": "0x3F7",
-+        "MSRValue": "0x1",
-+        "PEBS": "1",
-+        "PEBScounters": "0,1,2,3,4,5,6,7",
-+        "PublicDescription": "Counts retired Instructions that experienced=
- DSB (Decode stream buffer i.e. the decoded instruction-cache) miss.",
-+        "SampleAfterValue": "100007",
-+        "TakenAlone": "1",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Retired Instructions who experienced a critic=
-al DSB miss.",
-+        "CollectPEBSRecord": "2",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc6",
-         "EventName": "FRONTEND_RETIRED.DSB_MISS",
-         "MSRIndex": "0x3F7",
-         "MSRValue": "0x11",
-         "PEBS": "1",
-         "PEBScounters": "0,1,2,3,4,5,6,7",
--        "PublicDescription": "Counts retired Instructions that experienced=
- DSB (Decode stream buffer i.e. the decoded instruction-cache) miss.",
-+        "PublicDescription": "Number of retired Instructions that experien=
-ced a critical DSB (Decode stream buffer i.e. the decoded instruction-cache=
-) miss. Critical means stalls were exposed to the back-end as a result of t=
-he DSB miss.",
-         "SampleAfterValue": "100007",
-         "TakenAlone": "1",
-         "UMask": "0x1"
-diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json b/tools=
-/perf/pmu-events/arch/x86/tigerlake/pipeline.json
-index d0d8a09bc470..4dc3a16e3da4 100644
---- a/tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json
-@@ -71,14 +71,14 @@
-         "UMask": "0x40"
-     },
-     {
--        "BriefDescription": "All indirect branch instructions retired (exc=
-luding RETs. TSX aborts are considered indirect branch).",
-+        "BriefDescription": "Indirect near branch instructions retired (ex=
-cluding returns)",
-         "CollectPEBSRecord": "2",
-         "Counter": "0,1,2,3,4,5,6,7",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.INDIRECT",
-         "PEBS": "1",
-         "PEBScounters": "0,1,2,3,4,5,6,7",
--        "PublicDescription": "Counts all indirect branch instructions reti=
-red (excluding RETs. TSX aborts is considered indirect branch).",
-+        "PublicDescription": "Counts near indirect branch instructions ret=
-ired excluding returns. TSX abort is an indirect branch.",
-         "SampleAfterValue": "100003",
-         "UMask": "0x80"
-     },
-@@ -442,6 +442,17 @@
-         "SampleAfterValue": "500009",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Instruction decoders utilized in a cycle",
-+        "CollectPEBSRecord": "2",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x55",
-+        "EventName": "INST_DECODED.DECODERS",
-+        "PEBScounters": "0,1,2,3",
-+        "PublicDescription": "Number of decoders utilized in a cycle when =
-the MITE (legacy decode pipeline) fetches instructions.",
-+        "SampleAfterValue": "2000003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Number of instructions retired. Fixed Counter=
- - architectural event",
-         "CollectPEBSRecord": "2",
-@@ -464,6 +475,17 @@
-         "PublicDescription": "Counts the number of X86 instructions retire=
-d - an Architectural PerfMon event. Counting continues during hardware inte=
-rrupts, traps, and inside interrupt handlers. Notes: INST_RETIRED.ANY is co=
-unted by a designated fixed counter freeing up programmable counters to cou=
-nt other events. INST_RETIRED.ANY_P is counted by a programmable counter.",
-         "SampleAfterValue": "2000003"
-     },
-+    {
-+        "BriefDescription": "Number of all retired NOP instructions.",
-+        "CollectPEBSRecord": "2",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc0",
-+        "EventName": "INST_RETIRED.NOP",
-+        "PEBS": "1",
-+        "PEBScounters": "0,1,2,3,4,5,6,7",
-+        "SampleAfterValue": "2000003",
-+        "UMask": "0x2"
-+    },
-     {
-         "BriefDescription": "Precise instruction retired event with a redu=
-ced effect of PEBS shadow in IP distribution",
-         "CollectPEBSRecord": "2",
-@@ -689,6 +711,17 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Number of uops decoded out of instructions ex=
-clusively fetched by decoder 0",
-+        "CollectPEBSRecord": "2",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x56",
-+        "EventName": "UOPS_DECODED.DEC0",
-+        "PEBScounters": "0,1,2,3",
-+        "PublicDescription": "Uops exclusively fetched by decoder 0",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Number of uops executed on port 0",
-         "CollectPEBSRecord": "2",
---=20
-2.35.0.rc2.247.g8bbb082509-goog
-
+>
+>
+> Still building on the other containers.
+>
+> - Arnaldo
