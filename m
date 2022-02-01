@@ -2,113 +2,77 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF270C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Feb 2022 10:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A445AC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Feb 2022 11:07:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236731AbiBAKjE (ORCPT
+        id S237093AbiBALHc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 1 Feb 2022 05:39:04 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4589 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236659AbiBAKjE (ORCPT
+        Tue, 1 Feb 2022 06:07:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35446 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236958AbiBALHc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Feb 2022 05:39:04 -0500
-Received: from fraeml741-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Jp1Wh0vNsz67fYK;
-        Tue,  1 Feb 2022 18:34:24 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml741-chm.china.huawei.com (10.206.15.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Tue, 1 Feb 2022 11:39:01 +0100
-Received: from [10.202.227.179] (10.202.227.179) by
- lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Tue, 1 Feb 2022 10:38:59 +0000
-From:   John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH v2 01/26] perf test: Allow skip for all metrics test
-To:     Ian Rogers <irogers@google.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+        Tue, 1 Feb 2022 06:07:32 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BC4DC061714;
+        Tue,  1 Feb 2022 03:07:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=uLsDcxgkLM505bQLLfPdUrEH+ZZAWYgX9Yuu49ayqz0=; b=bGv32kesZbIyjhfnFra05FTj66
+        aM5/UxXvuhlDWIf74twvb2SOrlyURwhda/InqRpU8CBPfiK+lL5GlZjSZ935X4IZTVHozGWSeRt1e
+        M6e1GZb7Z86AATzXTaJQo93SWTFggI1dgmHqCa16K0mTmq3GqrvxiQPixwXuZIMQnDTH4rF960EqR
+        NA+imUPqf97+SDWIZzf7BSQsDZawaO6QN80dkVCSt9HWoVQ3siXpBeM+xywbD/NJSG8WXQVIkmt4q
+        c7vHzSv1WpW3Pcf+KS2y975B2rTGje73lVlPNEamPGSJMtrGfj7eCDnCRjxMEt8QL1dlzYSfF1B4X
+        nkXI8BPA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nEr0L-00C2ht-Gs; Tue, 01 Feb 2022 11:07:21 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CA91398623E; Tue,  1 Feb 2022 12:07:20 +0100 (CET)
+Date:   Tue, 1 Feb 2022 12:07:20 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Marco Elver <elver@google.com>, Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-CC:     Stephane Eranian <eranian@google.com>
-References: <20220201015858.1226914-1-irogers@google.com>
- <20220201015858.1226914-2-irogers@google.com>
-Message-ID: <566a72ee-b46f-4ee2-93dd-9a12723f969f@huawei.com>
-Date:   Tue, 1 Feb 2022 10:39:02 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        linux-perf-users@vger.kernel.org, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] perf: Copy perf_event_attr::sig_data on modification
+Message-ID: <20220201110720.GU20638@worktop.programming.kicks-ass.net>
+References: <20220131103407.1971678-1-elver@google.com>
+ <CACT4Y+Zcg9Jf9p+RHWwKNDoCpfH-SBTzPpuQBBryyeopMONmEw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20220201015858.1226914-2-irogers@google.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.179]
-X-ClientProxiedBy: lhreml754-chm.china.huawei.com (10.201.108.204) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+Zcg9Jf9p+RHWwKNDoCpfH-SBTzPpuQBBryyeopMONmEw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 01/02/2022 01:58, Ian Rogers wrote:
-
-nit: the subject is a bit ambiguous, as it implies skipping all the 
-tests, when we just may skip some now
-
-> Some Intel TMA metrics compute a ratio that may divide by 0, which
-> causes the metric not to print. This happens for metrics with FP_ARITH
-> events. If we see these events in the result and would otherwise fail,
-> then switch to a skip.
-> Also, don't early exit when processing metrics.
+On Tue, Feb 01, 2022 at 08:32:45AM +0100, Dmitry Vyukov wrote:
+> On Mon, 31 Jan 2022 at 11:34, Marco Elver <elver@google.com> wrote:
+> >
+> > The intent has always been that perf_event_attr::sig_data should also be
+> > modifiable along with PERF_EVENT_IOC_MODIFY_ATTRIBUTES, because it is
+> > observable by user space if SIGTRAP on events is requested.
+> >
+> > Currently only PERF_TYPE_BREAKPOINT is modifiable, and explicitly copies
+> > relevant breakpoint-related attributes in hw_breakpoint_copy_attr().
+> > This misses copying perf_event_attr::sig_data.
+> >
+> > Since sig_data is not specific to PERF_TYPE_BREAKPOINT, introduce a
+> > helper to copy generic event-type-independent attributes on
+> > modification.
+> >
+> > Fixes: 97ba62b27867 ("perf: Add support for SIGTRAP on perf events")
+> > Reported-by: Dmitry Vyukov <dvyukov@google.com>
+> > Signed-off-by: Marco Elver <elver@google.com>
 > 
-> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
 
-Reviewed-by: John Garry <john.garry@huawei.com>
-
-> ---
->   tools/perf/tests/shell/stat_all_metrics.sh | 10 ++++++++--
->   1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/tests/shell/stat_all_metrics.sh
-> index 7f4ba3cad632..e7c59e5a7a98 100755
-> --- a/tools/perf/tests/shell/stat_all_metrics.sh
-> +++ b/tools/perf/tests/shell/stat_all_metrics.sh
-> @@ -4,6 +4,7 @@
->   
->   set -e
->   
-> +err=0
->   for m in $(perf list --raw-dump metrics); do
->     echo "Testing $m"
->     result=$(perf stat -M "$m" true 2>&1)
-> @@ -14,9 +15,14 @@ for m in $(perf list --raw-dump metrics); do
->       if [[ ! "$result" =~ "$m" ]]; then
->         echo "Metric '$m' not printed in:"
->         echo "$result"
-> -      exit 1
-> +      if [[ "$result" =~ "FP_ARITH" && "$err" != "1" ]]; then
-> +        echo "Skip, not fail, for FP issues"
-> +        err=2
-> +      else
-> +        err=1
-> +      fi
->       fi
->     fi
->   done
->   
-> -exit 0
-> +exit "$err"
-> 
-
+Thanks guys! Queued for perf/urgent
