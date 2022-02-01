@@ -2,108 +2,150 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51821C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Feb 2022 07:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16614C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Feb 2022 10:04:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234971AbiBAHdy (ORCPT
+        id S236274AbiBAKEM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 1 Feb 2022 02:33:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43626 "EHLO
+        Tue, 1 Feb 2022 05:04:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234965AbiBAHdx (ORCPT
+        with ESMTP id S236271AbiBAKEM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Feb 2022 02:33:53 -0500
-Received: from mail-oi1-x22f.google.com (mail-oi1-x22f.google.com [IPv6:2607:f8b0:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7646C06173B
-        for <linux-perf-users@vger.kernel.org>; Mon, 31 Jan 2022 23:33:53 -0800 (PST)
-Received: by mail-oi1-x22f.google.com with SMTP id e81so31660185oia.6
-        for <linux-perf-users@vger.kernel.org>; Mon, 31 Jan 2022 23:33:53 -0800 (PST)
+        Tue, 1 Feb 2022 05:04:12 -0500
+Received: from mail-oi1-x22e.google.com (mail-oi1-x22e.google.com [IPv6:2607:f8b0:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F758C06173B
+        for <linux-perf-users@vger.kernel.org>; Tue,  1 Feb 2022 02:04:12 -0800 (PST)
+Received: by mail-oi1-x22e.google.com with SMTP id y23so32134507oia.13
+        for <linux-perf-users@vger.kernel.org>; Tue, 01 Feb 2022 02:04:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Q58ni/O56sdIgVA2i/gi3EPNdebcIe5HTTwsxm8hE9U=;
-        b=aNQ2P6FIK7qh1TBQx3yook2GasqAkK5HA0q9rzfkulQwcJ0Loet8pK3G8g5k+i4C7y
-         8WVy2kPKomerLQTL8fMny2eQ3c1H3HTbpThMh6bBzJPBgkjNUfTYmF36HtL/YF+KaObi
-         ChOfNnBi4BCydLt3oCLL15z8t290p2OG0OAZ9n3Tj8rhl2T392/Vd6Q93/j3OTKAEndC
-         kqnrrNQpfpJcxKs4UVTX7J+Y1lDLRbV2xwM1U6Dylw1UoTeozwkzNeLA6/rpg44rOcfX
-         5R/1nRsW6UqDLTE3VgWCV6TSjvvEebqpWq8BV1x8RuE6IYKwXhPaMzrzJGJC9Y0Tm16S
-         X8zQ==
+        bh=ImE3jvqtwAV+LD3LBZrBAooPJ/AXfRcf5iFSgOr0w6o=;
+        b=WtlpDy3xnPS4Ow6+vQ4dBxrn6Vz3PPESADC0fgiQsxxozS48nxXZGUrTLaoT1rGuW0
+         f1AA+qmsaA6J3V47p3Ap2I32/7f/Ij1JGb1OV0o20eYeA//GenP6FIGbFwNtFGdtpxsE
+         DVk7qaMSLatybP6lNOubpT29dRe7zM41Z18Y0SGVIV5GnOiuymNfInEZkSFfh4lqk7Tk
+         S1hq///EMoqDNPmR21bsqRR5p/pNLmhJmKYOMdBg+lqSsFv8gK0pqOSJJJrEeIRWsapZ
+         qbb+y6tnVCaDnFD97p3YOIsTWOYTsPcS5nZEoUTjDHbpyZcH1SjG4VM9OJHjy3Jr3lE3
+         q0kA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Q58ni/O56sdIgVA2i/gi3EPNdebcIe5HTTwsxm8hE9U=;
-        b=d0PlkUCba4WTrG9pL8HvhESttXaI/U+ZQ8JyNJwWCuguyxWSR8dcY58UdLK+mcpZuN
-         qlamPZeScF0+yqM9T8mfErlTgpjF7i56HghSivK2Ax8exdspUN4NUmrUdGWbTVYZj+T9
-         eM2wr+l6o/tY/rRFzcZiCL5M2vtBrpw1cbwGWDI1BKIjP6kZhhKzYDZFhWMeVrO9R8Sa
-         H6uHDYBL7NMVNaJViINbeta+/0wnHBQEck1zSnVZmDMZdzUw2THJ0B14k5WabTCaThFi
-         PE6WH66Scj5O3b8dTV7iKaUl8AhNa22+JF2U2aaq2fBfU6R1t5/1AVSKnUleI5l1aBge
-         HZ2A==
-X-Gm-Message-State: AOAM530fPL8OKT4C6t6zWyj5PYmqiyVM7lRMDzJfwuisY1bl8RXXkVY+
-        zbPnwJHyFM2ybwq9zVtmInNV8OIWigNlVrLle9u9bw==
-X-Google-Smtp-Source: ABdhPJwXknCX3IRL3sJw39e0iYu+qNPsnt/Cl9auQ1lgpSkVXndmGSooMFHfYDkHvg+AYqr85hYOgezVEwYY08h4TWs=
-X-Received: by 2002:a05:6808:1641:: with SMTP id az1mr440454oib.278.1643700833121;
- Mon, 31 Jan 2022 23:33:53 -0800 (PST)
+        bh=ImE3jvqtwAV+LD3LBZrBAooPJ/AXfRcf5iFSgOr0w6o=;
+        b=1q7FXZ6IYjw/zCsT8bgKW3e/jV7ceb/F//utsh6MsF0EpPXvmsYU8go987Jo/e9H2v
+         t3b47W8M51rIySgJEyi2dcnagtgiPTKH1+TZr1uFP3n/6qNytk8NijpqhCW6c995Z9rc
+         L8S/xf4/qidVSXHO3TiyjZHzMLUrlPqz/tJIyIjqmqmrs58G1V6nM7tGyF3WihF6bDl1
+         UgRGXihc76OJmnP4E74SUSCqiKowMu7WQWnwHHcjd5wwJoj9htxrQcV/IoD88SFzpgBH
+         VRWAFfQp3AOk9p9ZSWS6Bm0CcL1h8ntSQ+WUVUqKhKeyaenkXn8xwaudWux+HgtnU7NU
+         Ef2w==
+X-Gm-Message-State: AOAM533RsEflebwez2Pu1HjKLN2W4w4D2lP1ogMqO7KHz/o5TOEYSDPp
+        yZKsQRf7zc5V+ALGc9wLCYEyc6ToJqsjTq3N1lJjjQ==
+X-Google-Smtp-Source: ABdhPJw5zMzYhl7/GpfkUsz0+xaN8Oq2G9kzMaTDdieWF+Ulwd9qnLTG2T47AyHbQ67Tglw2fH6iOhP1w6+O8DpSego=
+X-Received: by 2002:a05:6808:b10:: with SMTP id s16mr637994oij.307.1643709851162;
+ Tue, 01 Feb 2022 02:04:11 -0800 (PST)
 MIME-Version: 1.0
-References: <20220131103407.1971678-1-elver@google.com> <20220131103407.1971678-3-elver@google.com>
-In-Reply-To: <20220131103407.1971678-3-elver@google.com>
+References: <bfa0af18-04ac-857d-d3d8-ad9290f912c8@huawei.com> <20220131175526.1777801-1-dvyukov@google.com>
+In-Reply-To: <20220131175526.1777801-1-dvyukov@google.com>
 From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 1 Feb 2022 08:33:42 +0100
-Message-ID: <CACT4Y+YfHGxCKOE179LzXkpeRqfEU8OO5zTh-BhLL7NxbNPGGg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] perf: uapi: Document perf_event_attr::sig_data
- truncation on 32 bit architectures
-To:     Marco Elver <elver@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org
+Date:   Tue, 1 Feb 2022 11:03:59 +0100
+Message-ID: <CACT4Y+YVyJcqbR5j2fsSQ+C5hy78X+aobrUHaZKghFf0_NMv=A@mail.gmail.com>
+Subject: Re: Test 73 Sig_trap fails on arm64
+To:     john.garry@huawei.com, will@kernel.org
+Cc:     acme@kernel.org, elver@google.com, gor@linux.ibm.com,
+        hca@linux.ibm.com, leo.yan@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        sumanthk@linux.ibm.com, svens@linux.ibm.com, tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, 31 Jan 2022 at 11:34, Marco Elver <elver@google.com> wrote:
+On Mon, 31 Jan 2022 at 18:55, Dmitry Vyukov <dvyukov@google.com> wrote:
 >
-> Due to the alignment requirements of siginfo_t, as described in
-> 3ddb3fd8cdb0 ("signal, perf: Fix siginfo_t by avoiding u64 on 32-bit
-> architectures"), siginfo_t::si_perf_data is limited to an unsigned long.
+> > On 18/01/2022 12:43, Leo Yan wrote:
+> >
+> > Hi Will,
+> >
+> > Can you kindly check below the question from Leo on this issue?
+> >
+> > You were cc'ed earlier in this thread so should be able to find more
+> > context, if needed.
 >
-> However, perf_event_attr::sig_data is an u64, to avoid having to deal
-> with compat conversions. Due to being an u64, it may not immediately be
-> clear to users that sig_data is truncated on 32 bit architectures.
+> Hi Will, John,
 >
-> Add a comment to explicitly point this out, and hopefully help some
-> users save time by not having to deduce themselves what's happening.
+> I wonder if PSTATE.D flag can be used to resolve this
+> (similar to x86's use of EFLAGS.RF)?
+> I naively tried to do:
 >
-> Reported-by: Dmitry Vyukov <dvyukov@google.com>
-> Signed-off-by: Marco Elver <elver@google.com>
+> void OnSigtrap(int sig, siginfo_t* info, void* uctx) {
+>   auto& mctx = static_cast<ucontext_t*>(uctx)->uc_mcontext;
+>   mctx.pstate |= PSR_D_BIT;
+> }
+>
+> But then I got a SIGSEGV from kernel.
+> But I wasn't able to track yet what part of the kernel did
+> not like setting of D bit.
 
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+I did a naive attempt of moving enabling of single-stepping from
+watchpoint_handler() to rt_sigreturn(), so that we step over the
+intended trapping instruction rather than first instruction of the
+signal handler:
+https://github.com/dvyukov/linux/commit/dfd6903d9c6538e3ad792c1df6ffbcce2072b12b
+(the patch is just a prototype, wrong in lots of ways)
+
+This almost worked:
+ - we correctly did not enable single-stepping for the signal handler
+ - rt_sigreturn correctly detected this case and enabled
+single-stepping after restoring the original pr_regs
+
+However, after re_sigreturn I got a call to single_step_handler() with
+pt_regs pointing to the first instruction of the signal handler again.
+I can't explain this, I am not sure how/where the signal handler PC
+got into the picture again... we should have got single_step_handler()
+with pt_regs pointing to the original trapping instruction (the next
+instruction to be precise).
 
 
-> ---
->  include/uapi/linux/perf_event.h | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-> index 1b65042ab1db..82858b697c05 100644
-> --- a/include/uapi/linux/perf_event.h
-> +++ b/include/uapi/linux/perf_event.h
-> @@ -465,6 +465,8 @@ struct perf_event_attr {
->         /*
->          * User provided data if sigtrap=1, passed back to user via
->          * siginfo_t::si_perf_data, e.g. to permit user to identify the event.
-> +        * Note, siginfo_t::si_perf_data is long-sized, and sig_data will be
-> +        * truncated accordingly on 32 bit architectures.
->          */
->         __u64   sig_data;
->  };
-> --
-> 2.35.0.rc2.247.g8bbb082509-goog
->
+
+
+
+> > > On Tue, Jan 18, 2022 at 12:40:04PM +0100, Marco Elver wrote:
+> > >
+> > > [...]
+> > >
+> > >>> Both Arm and Arm64 platforms cannot support signal handler with
+> > >>> breakpoint, please see the details in [1].  So I think we need
+> > >>> something like below:
+> > >>>
+> > >>> static int test__sigtrap(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
+> > >>> {
+> > >>>          ...
+> > >>>
+> > >>>          if (!BP_SIGNAL_IS_SUPPORTED) {
+> > >>>                  pr_debug("Test not supported on this architecture");
+> > >>>                  return TEST_SKIP;
+> > >>>          }
+> > >>>
+> > >>>          ...
+> > >>> }
+> > >>>
+> > >>> Since we have defined BP_SIGNAL_IS_SUPPORTED, I think we can reuse it at
+> > >>> here.
+> > >>>
+> > >>> [1]https://lore.kernel.org/lkml/157169993406.29376.12473771029179755767.tip-bot2@tip-bot2/
+> > >> Does this limitation also exist for address watchpoints? The sigtrap
+> > >> test does not make use of instruction breakpoints, but instead just
+> > >> sets up a watchpoint on access to a data address.
+> > > Yes, after reading the code, the flow for either instrution breakpoint
+> > > or watchpoint both use the single step [1], thus the signal handler will
+> > > take the single step execution and lead to the infinite loop.
+> > >
+> > > I am not the best person to answer this question; @Will, could you
+> > > confirm for this?  Thanks!
+> > >
+> > > Leo
+> > >
+> > > [1]https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/kernel/hw_breakpoint.c
