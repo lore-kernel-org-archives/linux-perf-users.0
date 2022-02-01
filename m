@@ -2,56 +2,56 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC66C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Feb 2022 07:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC9AC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Feb 2022 07:33:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234922AbiBAHc6 (ORCPT
+        id S234008AbiBAHdj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 1 Feb 2022 02:32:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43382 "EHLO
+        Tue, 1 Feb 2022 02:33:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234891AbiBAHc5 (ORCPT
+        with ESMTP id S234967AbiBAHdg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Feb 2022 02:32:57 -0500
-Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C28DFC06173B
-        for <linux-perf-users@vger.kernel.org>; Mon, 31 Jan 2022 23:32:57 -0800 (PST)
-Received: by mail-ot1-x32a.google.com with SMTP id b17-20020a9d4791000000b005a17fc2dfc1so15416374otf.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 31 Jan 2022 23:32:57 -0800 (PST)
+        Tue, 1 Feb 2022 02:33:36 -0500
+Received: from mail-oi1-x235.google.com (mail-oi1-x235.google.com [IPv6:2607:f8b0:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81311C06173D
+        for <linux-perf-users@vger.kernel.org>; Mon, 31 Jan 2022 23:33:36 -0800 (PST)
+Received: by mail-oi1-x235.google.com with SMTP id x193so31785628oix.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 31 Jan 2022 23:33:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=IJSDBj0HvFrkS4TLKuPLvlZS13YusH/7w8kLNZ4wxGA=;
-        b=LJlQ0q/uL3MKzgZ4tIKPUGf5ZdjHG3YbTGagkGQxErLE4GBrP3pwtVAXcfI5DOb35r
-         f00BWzfnnUUT5iYd+03lUSTl8kRq88RhbO3jYBPd3Zl0Rn+QqgfJEX+CJ19AacVQfGr4
-         N6v3W/E44lcWKD5oUwsRX7FY7jU2eSQJYPKuqSOpOkb6FF7wfgRi2y/IExRaHHs5vxPx
-         AMVhxMzRPnQm+APmaNOSn18Hz/In7wZXJNkgJovDhIHBLZKI0AprlnlqXWHeZQuHl8fr
-         h3yLsL1/c2RO1yrytOTE/VRejXuJW4wqW3kzfgcVVfYHwesKQc56G3gjThWJIu9DPj9r
-         +GBw==
+        bh=I8UdammtyVx5EZAt87tg0T0RNHOojMP8yJWvr7M56iQ=;
+        b=haoGVsVQAzGG2SPFci3XpfbSPiur+S28MMUzpS69ADK382iF+H+IUehv+dLvTBxrrq
+         H/D2k9krPqqnf2rJC+99Kf8glCUGOMSUMbAH/I2E2RzHiDs8Y4fEASgximwWzi11P5pg
+         vB7TF/tVgQN6wPnbDMVk+EtxU5I7F3OXE6VVvPzGukA/hUaAaToUM3bHabj3+lweVQyh
+         SOEKKWKCrxAsELqwIIcmtGNO8kA8BoBuaXg8VVCTA4JlPhVnbcJBtJ16nuJUWU6yQFCh
+         LBJYPpClY6swn7+iIZoyH2WEY1VdI7kjpkf+vGdlvT9nhKs3feD0i1Pr2YNoj+mMA5bN
+         dscg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=IJSDBj0HvFrkS4TLKuPLvlZS13YusH/7w8kLNZ4wxGA=;
-        b=UJ3m3cWaGXaBUT45BmTp8Z6MN8KLH+5milSors6SvjN/QnCT3xG/L3Jcl0I6UmySRJ
-         cU8jdnxCTRZu3+QtIuqG3ATvUwIhC7qZAeALj2dGNmD8COEzYJvTPnUSuNdBve9aXRkr
-         Cux+v56LU20JUYyUuDA3gpHJECuv1ISkPZjsuxQoNwGpSpC4Lw5ZKQBsosgDTk7BHGg4
-         QxlxQl7SXjB9CS2cndyQhdDNfsRr2lpFQu18HxakQeQnWspHMhv0cnRsbrI1yLDlFZFp
-         alBOPkvvmZ7Yz9LP/JuI7b8gEigaE7r03Vk6MsEDz9KHdoBSAwDwvMba2Uqt6qxAGono
-         a7Nw==
-X-Gm-Message-State: AOAM530XxXiEjLpXpYJf4MqyC5aU4Ck3qztse1mqAddizZ9LCbqvHmDO
-        e+fJBXhrbQB/BruUYO83V77wfHdD3dnQUxxFHmHMBQ==
-X-Google-Smtp-Source: ABdhPJyT9m4eJrn2NJRLqyik1zmslChCJeZLrGkukJT+0lnFfwqo/WvDQUXQ8MvtVpST6dcT6SNask0BDMM/CbbmysQ=
-X-Received: by 2002:a9d:356:: with SMTP id 80mr13762561otv.335.1643700776891;
- Mon, 31 Jan 2022 23:32:56 -0800 (PST)
+        bh=I8UdammtyVx5EZAt87tg0T0RNHOojMP8yJWvr7M56iQ=;
+        b=ZzxaxqFoX0sQRNLv++z7ldYe0U3QbWMkxAUuwuUUB9E8YFaiYrthFA8A4FRtPs9QgP
+         ej6QI/pXeLUaZCTetDJz7SXTcHtjR0Xqm6Fx/AKVVVDkOIhkxUiTPrzGduNV5uasPEin
+         yYmD/AsUCjLEaEJGNOhF5CcaXNiCpb/dOfwFvAFlFIaT7GtwGupJIs+4ERpS50CpsKGE
+         G+hi7B+A/zYTOfvrDZ07PdqaNWKGkSMkKDNjnSsIybKQYGwpoFtNKMlhWuERaoN7vkt4
+         43/5r/MY3azTXlNJcpkU7eZmV9hIc3OwY47owwgWwXrhiMQzZhpiPLVx0kbgPSnvLjNa
+         QSnA==
+X-Gm-Message-State: AOAM532xCmfiQc1Vc6Xu1Nis8D6J65xz8Txi96oaKU0EiXrU4TehaPsx
+        Q9gqbKLqPq1uuERX1bE4+ALxmXyOhHg8D6t3d8kxXg==
+X-Google-Smtp-Source: ABdhPJy26D1ewz7OBehQImCy7Emi3FxJ0U1d3ccorWuiWoINBgO9zfb3ky9sHHioPq168bjuzVh+9mr6pljjfAkoCls=
+X-Received: by 2002:a05:6808:1188:: with SMTP id j8mr395888oil.195.1643700815629;
+ Mon, 31 Jan 2022 23:33:35 -0800 (PST)
 MIME-Version: 1.0
-References: <20220131103407.1971678-1-elver@google.com>
-In-Reply-To: <20220131103407.1971678-1-elver@google.com>
+References: <20220131103407.1971678-1-elver@google.com> <20220131103407.1971678-2-elver@google.com>
+In-Reply-To: <20220131103407.1971678-2-elver@google.com>
 From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 1 Feb 2022 08:32:45 +0100
-Message-ID: <CACT4Y+Zcg9Jf9p+RHWwKNDoCpfH-SBTzPpuQBBryyeopMONmEw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] perf: Copy perf_event_attr::sig_data on modification
+Date:   Tue, 1 Feb 2022 08:33:24 +0100
+Message-ID: <CACT4Y+b3cpG_L+UO=vvRtPdBh7Np5U4AA5_WuK7s7FUazuBvwQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] selftests/perf_events: Test modification of perf_event_attr::sig_data
 To:     Marco Elver <elver@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>,
@@ -69,68 +69,89 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On Mon, 31 Jan 2022 at 11:34, Marco Elver <elver@google.com> wrote:
 >
-> The intent has always been that perf_event_attr::sig_data should also be
-> modifiable along with PERF_EVENT_IOC_MODIFY_ATTRIBUTES, because it is
-> observable by user space if SIGTRAP on events is requested.
+> Test that PERF_EVENT_IOC_MODIFY_ATTRIBUTES correctly modifies
+> perf_event_attr::sig_data as well.
 >
-> Currently only PERF_TYPE_BREAKPOINT is modifiable, and explicitly copies
-> relevant breakpoint-related attributes in hw_breakpoint_copy_attr().
-> This misses copying perf_event_attr::sig_data.
->
-> Since sig_data is not specific to PERF_TYPE_BREAKPOINT, introduce a
-> helper to copy generic event-type-independent attributes on
-> modification.
->
-> Fixes: 97ba62b27867 ("perf: Add support for SIGTRAP on perf events")
-> Reported-by: Dmitry Vyukov <dvyukov@google.com>
 > Signed-off-by: Marco Elver <elver@google.com>
 
 Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
 
-Thanks for the quick fix.
 
 > ---
->  kernel/events/core.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+>  .../selftests/perf_events/sigtrap_threads.c     | 17 +++++++++--------
+>  1 file changed, 9 insertions(+), 8 deletions(-)
 >
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index fc18664f49b0..db0d85a85f1b 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -3197,6 +3197,15 @@ static int perf_event_modify_breakpoint(struct perf_event *bp,
->         return err;
+> diff --git a/tools/testing/selftests/perf_events/sigtrap_threads.c b/tools/testing/selftests/perf_events/sigtrap_threads.c
+> index 8e83cf91513a..6d849dc2bee0 100644
+> --- a/tools/testing/selftests/perf_events/sigtrap_threads.c
+> +++ b/tools/testing/selftests/perf_events/sigtrap_threads.c
+> @@ -44,9 +44,10 @@ static struct {
+>  } ctx;
+>
+>  /* Unique value to check si_perf_data is correctly set from perf_event_attr::sig_data. */
+> -#define TEST_SIG_DATA(addr) (~(unsigned long)(addr))
+> +#define TEST_SIG_DATA(addr, id) (~(unsigned long)(addr) + id)
+>
+> -static struct perf_event_attr make_event_attr(bool enabled, volatile void *addr)
+> +static struct perf_event_attr make_event_attr(bool enabled, volatile void *addr,
+> +                                             unsigned long id)
+>  {
+>         struct perf_event_attr attr = {
+>                 .type           = PERF_TYPE_BREAKPOINT,
+> @@ -60,7 +61,7 @@ static struct perf_event_attr make_event_attr(bool enabled, volatile void *addr)
+>                 .inherit_thread = 1, /* ... but only cloned with CLONE_THREAD. */
+>                 .remove_on_exec = 1, /* Required by sigtrap. */
+>                 .sigtrap        = 1, /* Request synchronous SIGTRAP on event. */
+> -               .sig_data       = TEST_SIG_DATA(addr),
+> +               .sig_data       = TEST_SIG_DATA(addr, id),
+>         };
+>         return attr;
+>  }
+> @@ -110,7 +111,7 @@ FIXTURE(sigtrap_threads)
+>
+>  FIXTURE_SETUP(sigtrap_threads)
+>  {
+> -       struct perf_event_attr attr = make_event_attr(false, &ctx.iterate_on);
+> +       struct perf_event_attr attr = make_event_attr(false, &ctx.iterate_on, 0);
+>         struct sigaction action = {};
+>         int i;
+>
+> @@ -165,7 +166,7 @@ TEST_F(sigtrap_threads, enable_event)
+>         EXPECT_EQ(ctx.tids_want_signal, 0);
+>         EXPECT_EQ(ctx.first_siginfo.si_addr, &ctx.iterate_on);
+>         EXPECT_EQ(ctx.first_siginfo.si_perf_type, PERF_TYPE_BREAKPOINT);
+> -       EXPECT_EQ(ctx.first_siginfo.si_perf_data, TEST_SIG_DATA(&ctx.iterate_on));
+> +       EXPECT_EQ(ctx.first_siginfo.si_perf_data, TEST_SIG_DATA(&ctx.iterate_on, 0));
+>
+>         /* Check enabled for parent. */
+>         ctx.iterate_on = 0;
+> @@ -175,7 +176,7 @@ TEST_F(sigtrap_threads, enable_event)
+>  /* Test that modification propagates to all inherited events. */
+>  TEST_F(sigtrap_threads, modify_and_enable_event)
+>  {
+> -       struct perf_event_attr new_attr = make_event_attr(true, &ctx.iterate_on);
+> +       struct perf_event_attr new_attr = make_event_attr(true, &ctx.iterate_on, 42);
+>
+>         EXPECT_EQ(ioctl(self->fd, PERF_EVENT_IOC_MODIFY_ATTRIBUTES, &new_attr), 0);
+>         run_test_threads(_metadata, self);
+> @@ -184,7 +185,7 @@ TEST_F(sigtrap_threads, modify_and_enable_event)
+>         EXPECT_EQ(ctx.tids_want_signal, 0);
+>         EXPECT_EQ(ctx.first_siginfo.si_addr, &ctx.iterate_on);
+>         EXPECT_EQ(ctx.first_siginfo.si_perf_type, PERF_TYPE_BREAKPOINT);
+> -       EXPECT_EQ(ctx.first_siginfo.si_perf_data, TEST_SIG_DATA(&ctx.iterate_on));
+> +       EXPECT_EQ(ctx.first_siginfo.si_perf_data, TEST_SIG_DATA(&ctx.iterate_on, 42));
+>
+>         /* Check enabled for parent. */
+>         ctx.iterate_on = 0;
+> @@ -204,7 +205,7 @@ TEST_F(sigtrap_threads, signal_stress)
+>         EXPECT_EQ(ctx.tids_want_signal, 0);
+>         EXPECT_EQ(ctx.first_siginfo.si_addr, &ctx.iterate_on);
+>         EXPECT_EQ(ctx.first_siginfo.si_perf_type, PERF_TYPE_BREAKPOINT);
+> -       EXPECT_EQ(ctx.first_siginfo.si_perf_data, TEST_SIG_DATA(&ctx.iterate_on));
+> +       EXPECT_EQ(ctx.first_siginfo.si_perf_data, TEST_SIG_DATA(&ctx.iterate_on, 0));
 >  }
 >
-> +/*
-> + * Copy event-type-independent attributes that may be modified.
-> + */
-> +static void perf_event_modify_copy_attr(struct perf_event_attr *to,
-> +                                       const struct perf_event_attr *from)
-> +{
-> +       to->sig_data = from->sig_data;
-> +}
-> +
->  static int perf_event_modify_attr(struct perf_event *event,
->                                   struct perf_event_attr *attr)
->  {
-> @@ -3219,10 +3228,17 @@ static int perf_event_modify_attr(struct perf_event *event,
->         WARN_ON_ONCE(event->ctx->parent_ctx);
->
->         mutex_lock(&event->child_mutex);
-> +       /*
-> +        * Event-type-independent attributes must be copied before event-type
-> +        * modification, which will validate that final attributes match the
-> +        * source attributes after all relevant attributes have been copied.
-> +        */
-> +       perf_event_modify_copy_attr(&event->attr, attr);
->         err = func(event, attr);
->         if (err)
->                 goto out;
->         list_for_each_entry(child, &event->child_list, child_list) {
-> +               perf_event_modify_copy_attr(&child->attr, attr);
->                 err = func(child, attr);
->                 if (err)
->                         goto out;
+>  TEST_HARNESS_MAIN
 > --
 > 2.35.0.rc2.247.g8bbb082509-goog
 >
