@@ -2,175 +2,184 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6CAC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Feb 2022 06:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B49CBC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Feb 2022 08:23:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244860AbiBBGws (ORCPT
+        id S244886AbiBBIXs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Feb 2022 01:52:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50866 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244789AbiBBGwj (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Feb 2022 01:52:39 -0500
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on20605.outbound.protection.outlook.com [IPv6:2a01:111:f400:7eae::605])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2937C061749;
-        Tue,  1 Feb 2022 22:03:14 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=D5hm/cSdXxAH52vUiR0YCQrsmuxkjWioywEo/SAvi2/TDqgXJu/nW0cN0vBNPrKIHg0mAs1VfgMFEQ4PP5hgdObFQcZVS0kOI5d5yyDIZDVQaQFqwSrpqr0AWr941PPlBwWrEZMP82rjeTOomwn0+8wk1doT03n0emmvn3Aju2e12A44DIOoRBjvMufTsdPRYwSlr/K0jSLRzYebVYzM6tl/6kCsn/NQcmjIehlrZ5y8x1Um28iUIz5fWg8CxbNSkNjEQirXUnxVt50f/NFC6LG2pGPijAp9heiDFWKi9jCNIUxVmZ+uJ30QyKNtjB+TKXbw1Vh/N7Zhyh9TJmah7w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=s9NiZj2YCPKX4wzccuYgLL47N3iNBGD1VEVtjHQLN2E=;
- b=oKbdhnltItaB6Eh0nmInOwDADSndi25bpi04QvDplcsS4t8x5Q5OokTnRZWTOdzSw9pswUrmba3sMRTZzFZT+H2wgTqHpQNvPPWQo3Vj7J2fWIuHQqbHwxh6CDsE6jm9ALVC7LEqjBVz2sT0Wh3TgvfHFJc1M+AL3HrqddmFPNgfJUvXLNoKDmsQrP/wvcUEAnGsA8ZVvij983gxLm8d5dSYTH56NX923NImTlk5iWAdBbNefx2ii/0yELtdVcrXLoTerxb6wnsrkzrYzaQ92SNUYUCfJ7kPauHhf5TnY8RMyi/tfiMIuNl/QY44ZQ/2jYqgisauVBuTMpnCOR9gXw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=s9NiZj2YCPKX4wzccuYgLL47N3iNBGD1VEVtjHQLN2E=;
- b=QvFt/cxRL0nKTF5QJWIYQEhiC+kUMTJKVuDoeM6Xbcy9GocKRAcxc4Rl7ZxA4WXnJ+s9awGuhtLFyprm2L+JldD09+aTahas9nyoI+MDTRklReWrA6FVGQ8L/uYIZWoM3X0Gr7OnEm+LvXCQAJNbZFsNJWQMXJjDclJ/EcT1PDs=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN2PR12MB3053.namprd12.prod.outlook.com (20.178.241.216) by
- BY5PR12MB3956.namprd12.prod.outlook.com (10.255.138.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4930.15; Wed, 2 Feb 2022 06:03:10 +0000
-Received: from MN2PR12MB3053.namprd12.prod.outlook.com
- ([fe80::10c4:c928:bb18:44bc]) by MN2PR12MB3053.namprd12.prod.outlook.com
- ([fe80::10c4:c928:bb18:44bc%5]) with mapi id 15.20.4951.012; Wed, 2 Feb 2022
- 06:03:10 +0000
-Message-ID: <4662f1dd-d7dc-ea19-82dc-f81e8f3dcf1a@amd.com>
-Date:   Wed, 2 Feb 2022 11:32:47 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.1
-Subject: Re: [PATCH] perf/amd: Implement errata #1292 workaround for F19h
- M00-0Fh
-Content-Language: en-US
-To:     Stephane Eranian <eranian@google.com>
-Cc:     like.xu.linux@gmail.com, jmattson@google.com,
-        santosh.shukla@amd.com, pbonzini@redhat.com, seanjc@google.com,
-        wanpengli@tencent.com, vkuznets@redhat.com, joro@8bytes.org,
-        peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, tglx@linutronix.de,
-        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-        kvm@vger.kernel.org, x86@kernel.org,
-        linux-perf-users@vger.kernel.org, ananth.narayan@amd.com,
-        kim.phillips@amd.com, Ravi Bangoria <ravi.bangoria@amd.com>
-References: <20220117055703.52020-1-likexu@tencent.com>
- <20220202042838.6532-1-ravi.bangoria@amd.com>
- <CABPqkBQOSc=bwLdieBAX-sJ0Z+KwaxE=4PGXuuyzWyyZKf2ODg@mail.gmail.com>
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <CABPqkBQOSc=bwLdieBAX-sJ0Z+KwaxE=4PGXuuyzWyyZKf2ODg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BM1PR0101CA0025.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:1a::11) To MN2PR12MB3053.namprd12.prod.outlook.com
- (2603:10b6:208:c7::24)
+        Wed, 2 Feb 2022 03:23:48 -0500
+Received: from mga04.intel.com ([192.55.52.120]:19622 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232819AbiBBIXs (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 2 Feb 2022 03:23:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643790228; x=1675326228;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=wdy7MoOCFGG4FgfFGa+kkUzBPB0aW3lGeiiXICIgLq4=;
+  b=VXTl7aHO+dr6VL71w3cLzWTM90cyTp1Ytzxiv15icrdmlPnUxBwP0Qn5
+   FtJF64rIG9hLTQx11yaEc+9iijjadyDgMaWkE4fM1LZX4Yynz6MGoO0rz
+   sobCTGCikBmdgjo9U3ZJr6DCrv5jMQuOKJOBgjn+Vq5yPFrlBKV+r013N
+   UYYFiVXikb0kevgaOEUlELRlJcT3WD3lqzGlVdYOXIVY3zlc6i7U0PNBw
+   LgrsDF0LGHbYFN17iAlpMJt/Dfz2FYWUXdReA5iBJ57LEqMvTuNLHyMHX
+   hy5D7iTq0Q3K3QoO0gAHxndsRBegyFN2dnq4aM+odh6hF401kIQVotQvl
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10245"; a="246701362"
+X-IronPort-AV: E=Sophos;i="5.88,336,1635231600"; 
+   d="scan'208";a="246701362"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 00:23:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,336,1635231600"; 
+   d="scan'208";a="538159615"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.92]) ([10.237.72.92])
+  by orsmga008.jf.intel.com with ESMTP; 02 Feb 2022 00:23:42 -0800
+Subject: Re: [PATCH] perf/x86/intel/pt: Fix crash with stop filters in
+ single-range mode
+To:     Tristan Hume <tristan@thume.ca>
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mingo@kernel.org
+References: <20220127220806.73664-1-tristan@thume.ca>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <015e9e04-444f-959d-c003-3d8a9535e738@intel.com>
+Date:   Wed, 2 Feb 2022 10:23:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.14.0
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 19070653-1288-43b9-19ef-08d9e611b03d
-X-MS-TrafficTypeDiagnostic: BY5PR12MB3956:EE_
-X-Microsoft-Antispam-PRVS: <BY5PR12MB39568CA90860779CB282826AE0279@BY5PR12MB3956.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9kJwpxRNCuajctBjKIcW1+wt/A8LY81S76SeEerEWcr+50k5gvXQwqxEQcHPlHfHd5WxOfbASzA51xa8Dk2MVA1ckSIrwEpBPvMRFDrC64uJ2A73M3q8j2JeHhfBtZ/cotQy2PTDv4ifqcQvR5b4v8kvta+DCUUhOHf/G9a0xX+TT3QMGTfT1vkiVAb5lTzlsVyxtMN1UGFR2Kv6FONJ1WX9N0x55DGR4aSrjeWtZdGJ3LjO2F2xyEgHVKS94vS1+GcDzQbpwPLckBcg6Ld7+jJ9NMDIHYAUUYEXHBVE2niC+1YeP8ikAf+nRh01//w6ZqN0Ww4ogNqrCepjp+SVrfdhES44A3ubVSzx4rVCf6+nGipRy2TuBGFTRG2uIlAikEmJIrp3+XJJlOYONQA2nnkYrOPLpqOIiU6d/bAta2omTIsvYoxlytusgZo/EWjtqEoRquxgpUXRd4rqRAz01eoKdiYjcZ6d4tLw4Xj7KA16KAY6adAda6QrJ2gBdPGGS1Ns2PS/wOo6UpjWJZFIE4yGG5dKieXeclv0ib1mkJmRg3FXTtJPNoDBDt1hN9ozW1Yp0KxhscztZDIw780FpAf1HG3ZPuXtt5IjRK3MSfc24sBKS6Ibi5VHQPkRVnRO6Dum37QHnEQCMZRFjcPl7f8zdZZS1LIsbAWoT7Kro1Jkb5PDZpOWsV+mCv7ERzQHLRiZmvC3TbndzcJnVMbSxhLkeXMi1+TMSEa8Fy2C/ik=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3053.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(38100700002)(44832011)(5660300002)(6512007)(6666004)(316002)(7416002)(2906002)(53546011)(6506007)(26005)(8676002)(6486002)(508600001)(36756003)(4326008)(8936002)(6916009)(2616005)(186003)(66946007)(66476007)(66556008)(86362001)(31696002)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Rnpva3FTQmV5S3hRaXZEMTc3V3I4N1B1clBDWEduUDlUOGgreS9UWCtyc0Nu?=
- =?utf-8?B?WGM3SlF6ZXFTcklPRUd4ODUyaVJ2SzNuRW5naVh1SHZzVnpBWjdpcHZpMXoz?=
- =?utf-8?B?Tk9tWVJUbUtCOGd3ZkVDMHhpNzZVN0J0ZnRObjk5WXFTNFhJWU5WREIzb0pm?=
- =?utf-8?B?cEtYTGs1ZDVGeGRicDVJbk5qdk9IWStTeDloL1NXTmtlM2oyTWh4ejdCd1g3?=
- =?utf-8?B?RXBVMUN5ZnJXNEdsUnlFaTErVEFSV0F2UlpKSzQ1TktKVnRrNFJSSUdCamVJ?=
- =?utf-8?B?b1hyYXFiNitsSW9FMjJ4Zkg0Z25NQ29aMXRnL1NHOEpYMW1RTllEdGg0S0h5?=
- =?utf-8?B?THlQWVk0ZEoybHRpRDZFYzgyOGxwaStEa0pVRzNKcVBIUGQxeUw1Vmt0MnVt?=
- =?utf-8?B?RnlIc21wNWFSTEQvU256dGVYNlVJKzZkU3hFWXFTUUJXeXVHQ1lHU0ZXSGdU?=
- =?utf-8?B?YldESHFXbTY0SWhlQllTWk5Qc0tVRVpBcjNNRjZ1QW13RnBuTjNOQWFTbmt3?=
- =?utf-8?B?Z3h4S1M0cC9tQXpxSnNlN09DUGI1K1k0ZHpJb3M2anBlRndza3FBclRrejVJ?=
- =?utf-8?B?ZUJIZTlLSkRBSGlGTUlVb3NjN29zQmhXK1JVWUREakthVW8wYjVPa3czem5Q?=
- =?utf-8?B?UmdJV3Y2TE8zSEJ3MnFPMnBBMjZhVG1Ta3lRSE00ZCs5OUx3VVN5dEl6Rmc3?=
- =?utf-8?B?VGEyMDlFa3N3WHdKMDlScDZOQ3VOSEx1WnFFZlFVbTIrSmZuazFrY2tGOHFL?=
- =?utf-8?B?WHlhdEwzUU9iZXBYcWZJVlBqQVZIb2h1V0IyZTB3RlNsd2EweExtRDdmcDh3?=
- =?utf-8?B?QTNJNlhBR0lwRUpyNHNlVU9hV0J3aDFPRVVuaXZhNTZEUTlTd0RtR1BrdVpM?=
- =?utf-8?B?RzNERTdRN0tYMnowT2xNN3NOYUlFcnM2Mzl1Y0p5S2JGR1JWb2VGMGxuRHg1?=
- =?utf-8?B?T1NkMzRPSXoreHdiOEJML21UejJZMnlQL2FCSG1EMkQ1azBuRmJZOWc0QmVl?=
- =?utf-8?B?c1RJTklnRkZRSnVPQU9PcHcyM2NyaGd0UVYrY1YzNHRJL1hLSXRLanh0SUpv?=
- =?utf-8?B?QWozS0lLam1NVmhPY0VVdnVpTWhWVGRxeThBRVNvRlhvYlZ4aWlqTmhEMWV0?=
- =?utf-8?B?QWhzaWx1cVBmMjdqc3kwcDZFS0R4WGJSMzd1VEN6TE9vWGdBbThlaFZIUWF4?=
- =?utf-8?B?b09GVVNmb2paKzdwQUtIdWl6SUU4S1ZmWSs2cC9neE9jd05QN2x6NTEraHlQ?=
- =?utf-8?B?c1ZMRnZaNTVHUVJvVUtlVDVQZmpZbVVCYXZZNDFCNHhxUm1BSmxscWJCdmQ3?=
- =?utf-8?B?a2o0Y01JM0JrcjZ2cjk4b1ZmN1h2Qy9BYjFVb0Zwb3ZWWnlPV3dBd0NhWUVZ?=
- =?utf-8?B?azI2UGIrTVhFb092QnRQS3VRKzZtU1h0ajZRMmR6clJPL3dPQTFrbjhucFJi?=
- =?utf-8?B?Z1pMTlMyNWpGMklHUnExaDI1S3VIZ2dhYmpKT3pDZzBZa2dQZkYvcTIzdy9Q?=
- =?utf-8?B?Tm1oM2huNEVYa0tpMmxXcDhRZmQ1VGUwRzZHdnBTZ0I0dG5uNHoyalhhU2Jr?=
- =?utf-8?B?V1J2VkxHUzFGN1B0eXdOMnpOT0F5Y2tuMzhrVFZmeXArN0pLL1NMSVdkSTVH?=
- =?utf-8?B?U0xyMGR6MGdoUm1KNlBzMTkwbzBxMDZ4TzNodElDTU1GYng3N1BYalZVcmlS?=
- =?utf-8?B?L2Z4VXVTNmRFY0NBMFROUVYra083dHpQbUxyMWNLL1VEUWx1WndacVljY0lk?=
- =?utf-8?B?bm9GSG1BZGIyQk8vU3JXaFJQRit5bi9QMy9iUEVoNWc0bjVFaVp6TzNVTy9l?=
- =?utf-8?B?UFNPdWs4QTJURStIRTNQSm41T24zZWtBZE9RTUw4V2J0bkNqQ09zK0tqakhP?=
- =?utf-8?B?cVJlZlJmOVlpdVFTUVlSNFlmdytrRnJnRTRaWkkvdDNORmo5cmFzMGhUWE5B?=
- =?utf-8?B?RUIwQWJvQnpsTG5LajlhYnJIdTNFd2E5eTIvRmhkckEweGg1VDVVYU5KSmNL?=
- =?utf-8?B?Y2VGamM2d0gvcnpPeWlMYy9uQitUQnNtNCtJa1NwU1IxRWdoUXRNU3NYNHBy?=
- =?utf-8?B?a2JOU1pqb0pHLzdwMVBVSHpxQjNvcmI4MFJvOC8zc3N5TDlLd0N6ZGprVDh6?=
- =?utf-8?B?d0RIVnY3ZTJGOXdOaHptYjNDQ29Fc2U1MXlwTFN3Y2tBc1ZTYlBmayt4SFVM?=
- =?utf-8?Q?btYmsckLRx32P7QMqjNHnxE=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19070653-1288-43b9-19ef-08d9e611b03d
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3053.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2022 06:03:10.0106
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Nr64zJ73m6XXxuqnjbWDuWpc2qxsCvTn3JpAvyAEOJH7ap1g3GGr6+P5EwqetzcMxHKczWfN7aqELZjBgXe8Eg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB3956
+In-Reply-To: <20220127220806.73664-1-tristan@thume.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Stephane,
+On 28/01/2022 00:08, Tristan Hume wrote:
+> Add a check for !buf->single before calling pt_buffer_region_size in a
+> place where a missing check can cause a kernel crash.
+> 
+> Fixes a bug introduced by 670638477aede0d7a355ced04b569214aa3feacd,
+> which added a support for PT single-range output mode. Since that commit
+> if a PT stop filter range is hit while tracing, the kernel will crash
+> because of a null pointer dereference in pt_handle_status due to calling
+> pt_buffer_region_size without a ToPA configured.
+> 
+> The commit which introduced single-range mode guarded almost all uses of
+> the ToPA buffer variables with checks of the buf->single variable, but
+> missed the case where tracing was stopped by the PT hardware, which
+> happens when execution hits a configured stop filter.
 
-On 02-Feb-22 10:57 AM, Stephane Eranian wrote:
-> On Tue, Feb 1, 2022 at 8:29 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
->>
->> Perf counter may overcount for a list of Retire Based Events. Implement
->> workaround for Zen3 Family 19 Model 00-0F processors as suggested in
->> Revision Guide[1]:
->>
->>   To count the non-FP affected PMC events correctly:
->>     o Use Core::X86::Msr::PERF_CTL2 to count the events, and
->>     o Program Core::X86::Msr::PERF_CTL2[43] to 1b, and
->>     o Program Core::X86::Msr::PERF_CTL2[20] to 0b.
->>
->> Above workaround suggests to clear PERF_CTL2[20], but that will disable
->> sampling mode. Given the fact that, there is already a skew between
->> actual counter overflow vs PMI hit, we are anyway not getting accurate
->> count for sampling events. Also, using PMC2 with both bit43 and bit20
->> set can result in additional issues. Hence Linux implementation of
->> workaround uses non-PMC2 counter for sampling events.
->>
-> Something is missing from your description here. If you are not
-> clearing bit[20] and
-> not setting bit[43], then how does running on CTL2 by itself improve
-> the count. Is that
-> enough to make the counter count correctly?
+Please add to the commit message:
 
-Yes. For counting retire based events, we need PMC2[43] set and
-PMC2[20] clear so that it will not overcount.
+Example:
+
+ # perf record -S -e intel_pt// --filter tracestop __schedule sleep 1
+
+[ 6148.371226] BUG: unable to handle page fault for address: fffffffffffff028
+[ 6148.371236] #PF: supervisor read access in kernel mode
+[ 6148.371240] #PF: error_code(0x0000) - not-present page
+[ 6148.371244] PGD 6410067 P4D 6410067 PUD 6412067 PMD 0 
+[ 6148.371253] Oops: 0000 [#1] PREEMPT SMP PTI
+[ 6148.371258] CPU: 0 PID: 7279 Comm: perf Not tainted 5.16.0+ #24
+[ 6148.371264] Hardware name: Intel(R) Client Systems NUC8i7BEH/NUC8BEB, BIOS BECFL357.86A.0089.2021.0621.1343 06/21/2021
+[ 6148.371268] RIP: 0010:pt_handle_status+0x94/0x270
+[ 6148.371278] Code: 26 01 00 00 8b 4b 28 4c 8b 43 20 48 8b 73 30 48 89 ca 49 8d b8 28 f0 ff ff 48 8d 0c cf 83 fa ff 75 08 49 63 50 20 48 8d 0c d7 <0f> b7 09 ba 01 00 00 00 66 c1 e9 06 83 e1 0f 83 c1 0c d3 e2 48 63
+[ 6148.371283] RSP: 0018:ffffc9000308fad0 EFLAGS: 00010013
+[ 6148.371288] RAX: 0000000000000002 RBX: ffff8881d62ed500 RCX: fffffffffffff028
+[ 6148.371292] RDX: 0000000000000000 RSI: 0000000000000510 RDI: fffffffffffff028
+[ 6148.371296] RBP: ffffc9000308fae8 R08: 0000000000000000 R09: 0000000000000000
+[ 6148.371299] R10: 0000000000000000 R11: 0000000000000000 R12: 0000051000000002
+[ 6148.371302] R13: ffff88846dc1e020 R14: 0000000000000004 R15: ffff88846dc36208
+[ 6148.371306] FS:  00007f1f8630b3c0(0000) GS:ffff88846dc00000(0000) knlGS:0000000000000000
+[ 6148.371311] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 6148.371315] CR2: fffffffffffff028 CR3: 0000000124ea6001 CR4: 00000000003706f0
+[ 6148.371318] Call Trace:
+[ 6148.371321]  <TASK>
+[ 6148.371325]  pt_event_stop+0x8a/0xd0
+[ 6148.371333]  pt_event_del+0x13/0x20
+[ 6148.371338]  event_sched_out.isra.0+0x7a/0x1c0
+[ 6148.371345]  group_sched_out.part.0+0x43/0x90
+[ 6148.371350]  __perf_event_disable+0x105/0x1f0
+[ 6148.371355]  event_function+0xab/0xf0
+[ 6148.371362]  ? perf_duration_warn+0x30/0x30
+[ 6148.371369]  remote_function+0x51/0x60
+[ 6148.371375]  generic_exec_single+0x66/0xa0
+[ 6148.371381]  smp_call_function_single+0xb9/0x170
+[ 6148.371386]  ? perf_duration_warn+0x30/0x30
+[ 6148.371393]  ? preempt_count_add+0x74/0xc0
+[ 6148.371399]  event_function_call+0x114/0x120
+[ 6148.371405]  ? group_sched_out.part.0+0x90/0x90
+[ 6148.371409]  ? cpu_clock_event_read+0x30/0x30
+[ 6148.371415]  _perf_event_disable+0x48/0x60
+[ 6148.371421]  ? event_function_call+0x120/0x120
+[ 6148.371427]  perf_event_for_each_child+0x3f/0x90
+[ 6148.371432]  ? event_function_call+0x120/0x120
+[ 6148.371438]  _perf_ioctl+0x20c/0x910
+[ 6148.371443]  ? force_compatible_cpus_allowed_ptr+0x1d0/0x1d0
+[ 6148.371451]  ? affine_move_task+0x419/0x610
+[ 6148.371459]  ? __this_cpu_preempt_check+0x13/0x20
+[ 6148.371468]  ? xfd_validate_state+0x23/0x80
+[ 6148.371475]  perf_ioctl+0x48/0x70
+[ 6148.371481]  __x64_sys_ioctl+0x91/0xc0
+[ 6148.371490]  do_syscall_64+0x43/0xc0
+[ 6148.371495]  entry_SYSCALL_64_after_hwframe+0x44/0xae
+[ 6148.371504] RIP: 0033:0x7f1f86d8050b
+[ 6148.371509] Code: 0f 1e fa 48 8b 05 85 39 0d 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 55 39 0d 00 f7 d8 64 89 01 48
+[ 6148.371513] RSP: 002b:00007fffd59a86c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+[ 6148.371519] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f1f86d8050b
+[ 6148.371522] RDX: 0000000000000000 RSI: 0000000000002401 RDI: 0000000000000005
+[ 6148.371525] RBP: 00007fffd59a8700 R08: 0000000000000000 R09: 00007f1f86e54cc0
+[ 6148.371528] R10: 0000562bd7bad010 R11: 0000000000000246 R12: 0000000000000000
+[ 6148.371531] R13: 0000562bd7bc8f20 R14: 0000562bd7bb1e10 R15: 0000562bd7bc8f20
+[ 6148.371537]  </TASK>
+[ 6148.371539] Modules linked in:
+[ 6148.371544] CR2: fffffffffffff028
+[ 6148.371547] ---[ end trace 542919a16ee8853b ]---
 
 > 
-> For sampling events, your patch makes CTL2 not available. That seems
-> to contradict the
-> workaround. Are you doing this to free CTL2 for counting mode events
-> instead? If you are
-> not using CTL2, then you are not correcting the count. Are you saying
-> this is okay in sampling mode
-> because of the skid, anyway?
+> Tested that hitting a stop filter while PT recording successfully
+> records a trace with this patch but crashes without this patch.
+> 
+> Signed-off-by: Tristan Hume <tristan@thume.ca>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-Correct. The constraint I am placing is to count retire events on
-PMC2 and sample retire events on other counters.
+Fixes: 670638477aede0 ("perf/x86/intel/pt: Opportunistically use single range output mode")
+Cc: stable@vger.kernel.org
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Thanks,
-Ravi
+> ---
+>  arch/x86/events/intel/pt.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+> index 7f406c14715f..2d33bba9a144 100644
+> --- a/arch/x86/events/intel/pt.c
+> +++ b/arch/x86/events/intel/pt.c
+> @@ -897,8 +897,9 @@ static void pt_handle_status(struct pt *pt)
+>  		 * means we are already losing data; need to let the decoder
+>  		 * know.
+>  		 */
+> -		if (!intel_pt_validate_hw_cap(PT_CAP_topa_multiple_entries) ||
+> -		    buf->output_off == pt_buffer_region_size(buf)) {
+> +		if (!buf->single &&
+> +		    (!intel_pt_validate_hw_cap(PT_CAP_topa_multiple_entries) ||
+> +		     buf->output_off == pt_buffer_region_size(buf))) {
+>  			perf_aux_output_flag(&pt->handle,
+>  			                     PERF_AUX_FLAG_TRUNCATED);
+>  			advance++;
+> 
+
