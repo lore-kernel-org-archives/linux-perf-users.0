@@ -2,416 +2,114 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD77C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Feb 2022 00:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F304BC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Feb 2022 01:01:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243414AbiBBANB (ORCPT
+        id S243591AbiBBBBv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 1 Feb 2022 19:13:01 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:57886 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243373AbiBBAM5 (ORCPT
+        Tue, 1 Feb 2022 20:01:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58612 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229994AbiBBBBu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Feb 2022 19:12:57 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 29A5A61520;
-        Wed,  2 Feb 2022 00:12:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AFA9C340EB;
-        Wed,  2 Feb 2022 00:12:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643760776;
-        bh=eK7RrEe6x5KYHO+ICUNYViwytxw03TGumLdm6KZYGjk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RQWao8PXF3DWRd9376XfQouWvnxMfhoFfNUgR8PzyoXHuQBP+6Lc7sbgx5uF8nJH2
-         6Q65WoojIyBrG0+qRlTGJkELndggI5MRs87h4wxOoZzldYuF1eszfjyBt15tnWiwfS
-         6FAUCtHvS3sHAJ0zd0yMdKJIHxuncmYDF93KE+pHVUiuEY2UcoW7iw7rLkuej5CfSi
-         HO8GTMa7dLvonOQYMfD0VwBijn8uRPL8zItBwRdbixHj2YurS9Ut2dNkaFoc9Xpn7l
-         N6y4qQd5i7qywcG5yGa2ZDfC3GMyIPy5WfCKZbCCuTOJCCrCga4Z51JL7UGYto1ByE
-         gGB26eEgMLtpA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 90D8E40466; Tue,  1 Feb 2022 21:12:54 -0300 (-03)
-Date:   Tue, 1 Feb 2022 21:12:54 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     German Gomez <german.gomez@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH] perf symbols: Remove demangle-rust files as superfluous
-Message-ID: <YfnMhsF2/z0FUaWz@kernel.org>
-References: <20220201185054.1041917-1-german.gomez@arm.com>
+        Tue, 1 Feb 2022 20:01:50 -0500
+Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6531C061714;
+        Tue,  1 Feb 2022 17:01:50 -0800 (PST)
+Received: by mail-io1-xd2c.google.com with SMTP id r144so23483508iod.9;
+        Tue, 01 Feb 2022 17:01:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CmP0qq6/ekGkKvGdCo8XfDqIYTpqdkVRVTouUqww8QI=;
+        b=b/Km9mNoWX8njHOWVWF7fZHUDevfwYi72UZvSkekAqn9CC2nAjbdB5fkmGeOcRMn71
+         zM9q+PKqHvS+NAI2yYOSnC4rGHbkTp6xAFPWcvBR4EhFaEzab8u/+x/mCyLBcmyTg6CL
+         IAvZl6G1eACTZmfkhfnueRTodaEMYRZOAda4xBBQyJII/Sg/e2xeQc3LsTROuBzGpOxP
+         kD3nxWZvmf7C6BC/Oi7Y7x2CLZv/MjlWWJ9QPCS3MNz3oVoLTFRJWk4iGM2tyr4dYdsr
+         pHOpd4XkFbbVEVu4kLgPnKslMA9WrKGY2KB/Whk79fEcIOaknXcfHXY9vSzaj39Tkwm8
+         EoKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CmP0qq6/ekGkKvGdCo8XfDqIYTpqdkVRVTouUqww8QI=;
+        b=tnPdvd86kU7Ho/5GRvbjl7efP9Ijs3IFeqcSNIjyfE68bRIrWmGiEv+CIiOdGlsC+c
+         irXV3kqRGTlDeMFukL9cWdzuGASkDXlUaz/Xvm8eva4TuA6qxLJP502UnEOfQY3vNMOz
+         LGQ6B1PnsvOu+WI0yvl7tL5XlWoTCuwHMgJ59g/HiZ9UfzrV238QamMoF3Zih+8RRrem
+         LrR30wFOiBCAwdU1ux0IVSX75bsRMgxkCJr3N3sIGLxZvsM5wfiSNui2u2j3ZLmnaU3R
+         m6flDusdDHqSzbTpXcBQRprM5cqWDlptpn/2ENF8fJYP+yErnLmg/4iRIC5rUtCeyK7x
+         gePg==
+X-Gm-Message-State: AOAM531OVwFsRE8ZRURKGBG49H44iyrtGJyGxJkh0dgx7idwZ9n3k0e5
+        wdM1eABvSADgCD84N7sAMRNJTWdrBQRlaUVl0+I=
+X-Google-Smtp-Source: ABdhPJxKbhDeIkE3mRwXAteUh1zQzA58w8qn25C1Gsc07DPCltjoxAOsOOoCdZzmPPRc3L9u9sowSGv1Bb7KXABoqFI=
+X-Received: by 2002:a02:7417:: with SMTP id o23mr15124921jac.145.1643763710194;
+ Tue, 01 Feb 2022 17:01:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220201185054.1041917-1-german.gomez@arm.com>
-X-Url:  http://acmel.wordpress.com
+References: <20220123221932.537060-1-jolsa@kernel.org> <CAEf4BzZj7awfwi-JoAB=aahxVF8p6FKhgu4OKpyY_pjePy75ig@mail.gmail.com>
+In-Reply-To: <CAEf4BzZj7awfwi-JoAB=aahxVF8p6FKhgu4OKpyY_pjePy75ig@mail.gmail.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 1 Feb 2022 17:01:38 -0800
+Message-ID: <CAEf4BzZrggU7Ym7bucvjG7K+AmtxhD8UGCMPqXdpL3stUhpOEg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] perf/bpf: Remove prologue generation
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Christy Lee <christylee@fb.com>,
+        Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Feb 01, 2022 at 06:50:53PM +0000, German Gomez escreveu:
-> Demangling of Rust legacy symbols has been working through libbfd for
-> some time now, making these files no longer needed, so remove them.
+On Mon, Jan 24, 2022 at 12:24 PM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+>
+> On Sun, Jan 23, 2022 at 2:19 PM Jiri Olsa <jolsa@redhat.com> wrote:
+> >
+> > Removing code for ebpf program prologue generation.
+> >
+> > The prologue code was used to get data for extra arguments specified
+> > in program section name, like:
+> >
+> >   SEC("lock_page=__lock_page page->flags")
+> >   int lock_page(struct pt_regs *ctx, int err, unsigned long flags)
+> >   {
+> >          return 1;
+> >   }
+> >
+> > This code is using deprecated libbpf API and blocks its removal.
+> >
+> > This feature was not documented and broken for some time without
+> > anyone complaining, also original authors are not responding,
+> > so I'm removing it.
+> >
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  tools/perf/Makefile.config     |  11 -
+> >  tools/perf/builtin-record.c    |  14 -
+> >  tools/perf/util/bpf-loader.c   | 242 +---------------
+> >  tools/perf/util/bpf-prologue.c | 508 ---------------------------------
+> >  tools/perf/util/bpf-prologue.h |  37 ---
+> >  5 files changed, 1 insertion(+), 811 deletions(-)
+>
+> Love the stats! Thanks for taking this on!
+>
 
-Can this be made dependent of the versions of the components that
-provide this feature?
+Hi,
 
-- Arnaldo
- 
-> Signed-off-by: German Gomez <german.gomez@arm.com>
-> ---
-> Before and after the commit:
-> 
-> $ perf record rustc
-> $ perf report
-> 
-> 2.98%  rustc    rustc                                [.] <std::collections::hash::map::DefaultHasher as core::hash::Hasher>::write
-> 2.77%  rustc    rustc                                [.] std::collections::hash::map::HashMap<K,V,S>::entry
-> 2.09%  rustc    rustc                                [.] <<toml::value::Value as serde::de::Deserialize>::deserialize::ValueVisitor as serde::de::Visitor>::visit_map
-> 2.05%  rustc    rustc                                [.] <toml::de::MapVisitor as serde::de::MapAccess>::next_key_seed
-> 1.52%  rustc    rustc                                [.] std::collections::hash::map::HashMap<K,V,S>::get
-> 0.59%  rustc    rustc                                [.] <toml::de::MapVisitor as serde::de::MapAccess>::next_value_seed
-> ---
->  tools/perf/util/Build           |   1 -
->  tools/perf/util/demangle-rust.c | 269 --------------------------------
->  tools/perf/util/demangle-rust.h |   8 -
->  tools/perf/util/symbol-elf.c    |   7 -
->  4 files changed, 285 deletions(-)
->  delete mode 100644 tools/perf/util/demangle-rust.c
->  delete mode 100644 tools/perf/util/demangle-rust.h
-> 
-> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> index 2a403cefc..e59788ef6 100644
-> --- a/tools/perf/util/Build
-> +++ b/tools/perf/util/Build
-> @@ -193,7 +193,6 @@ perf-$(CONFIG_LIBCAP) += cap.o
->  
->  perf-y += demangle-ocaml.o
->  perf-y += demangle-java.o
-> -perf-y += demangle-rust.o
->  
->  ifdef CONFIG_JITDUMP
->  perf-$(CONFIG_LIBELF) += jitdump.o
-> diff --git a/tools/perf/util/demangle-rust.c b/tools/perf/util/demangle-rust.c
-> deleted file mode 100644
-> index a659fc69f..000000000
-> --- a/tools/perf/util/demangle-rust.c
-> +++ /dev/null
-> @@ -1,269 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> -#include <string.h>
-> -#include "debug.h"
-> -
-> -#include "demangle-rust.h"
-> -
-> -/*
-> - * Mangled Rust symbols look like this:
-> - *
-> - *     _$LT$std..sys..fd..FileDesc$u20$as$u20$core..ops..Drop$GT$::drop::hc68340e1baa4987a
-> - *
-> - * The original symbol is:
-> - *
-> - *     <std::sys::fd::FileDesc as core::ops::Drop>::drop
-> - *
-> - * The last component of the path is a 64-bit hash in lowercase hex, prefixed
-> - * with "h". Rust does not have a global namespace between crates, an illusion
-> - * which Rust maintains by using the hash to distinguish things that would
-> - * otherwise have the same symbol.
-> - *
-> - * Any path component not starting with a XID_Start character is prefixed with
-> - * "_".
-> - *
-> - * The following escape sequences are used:
-> - *
-> - *     ","  =>  $C$
-> - *     "@"  =>  $SP$
-> - *     "*"  =>  $BP$
-> - *     "&"  =>  $RF$
-> - *     "<"  =>  $LT$
-> - *     ">"  =>  $GT$
-> - *     "("  =>  $LP$
-> - *     ")"  =>  $RP$
-> - *     " "  =>  $u20$
-> - *     "'"  =>  $u27$
-> - *     "["  =>  $u5b$
-> - *     "]"  =>  $u5d$
-> - *     "~"  =>  $u7e$
-> - *
-> - * A double ".." means "::" and a single "." means "-".
-> - *
-> - * The only characters allowed in the mangled symbol are a-zA-Z0-9 and _.:$
-> - */
-> -
-> -static const char *hash_prefix = "::h";
-> -static const size_t hash_prefix_len = 3;
-> -static const size_t hash_len = 16;
-> -
-> -static bool is_prefixed_hash(const char *start);
-> -static bool looks_like_rust(const char *sym, size_t len);
-> -static bool unescape(const char **in, char **out, const char *seq, char value);
-> -
-> -/*
-> - * INPUT:
-> - *     sym: symbol that has been through BFD-demangling
-> - *
-> - * This function looks for the following indicators:
-> - *
-> - *  1. The hash must consist of "h" followed by 16 lowercase hex digits.
-> - *
-> - *  2. As a sanity check, the hash must use between 5 and 15 of the 16 possible
-> - *     hex digits. This is true of 99.9998% of hashes so once in your life you
-> - *     may see a false negative. The point is to notice path components that
-> - *     could be Rust hashes but are probably not, like "haaaaaaaaaaaaaaaa". In
-> - *     this case a false positive (non-Rust symbol has an important path
-> - *     component removed because it looks like a Rust hash) is worse than a
-> - *     false negative (the rare Rust symbol is not demangled) so this sets the
-> - *     balance in favor of false negatives.
-> - *
-> - *  3. There must be no characters other than a-zA-Z0-9 and _.:$
-> - *
-> - *  4. There must be no unrecognized $-sign sequences.
-> - *
-> - *  5. There must be no sequence of three or more dots in a row ("...").
-> - */
-> -bool
-> -rust_is_mangled(const char *sym)
-> -{
-> -	size_t len, len_without_hash;
-> -
-> -	if (!sym)
-> -		return false;
-> -
-> -	len = strlen(sym);
-> -	if (len <= hash_prefix_len + hash_len)
-> -		/* Not long enough to contain "::h" + hash + something else */
-> -		return false;
-> -
-> -	len_without_hash = len - (hash_prefix_len + hash_len);
-> -	if (!is_prefixed_hash(sym + len_without_hash))
-> -		return false;
-> -
-> -	return looks_like_rust(sym, len_without_hash);
-> -}
-> -
-> -/*
-> - * A hash is the prefix "::h" followed by 16 lowercase hex digits. The hex
-> - * digits must comprise between 5 and 15 (inclusive) distinct digits.
-> - */
-> -static bool is_prefixed_hash(const char *str)
-> -{
-> -	const char *end;
-> -	bool seen[16];
-> -	size_t i;
-> -	int count;
-> -
-> -	if (strncmp(str, hash_prefix, hash_prefix_len))
-> -		return false;
-> -	str += hash_prefix_len;
-> -
-> -	memset(seen, false, sizeof(seen));
-> -	for (end = str + hash_len; str < end; str++)
-> -		if (*str >= '0' && *str <= '9')
-> -			seen[*str - '0'] = true;
-> -		else if (*str >= 'a' && *str <= 'f')
-> -			seen[*str - 'a' + 10] = true;
-> -		else
-> -			return false;
-> -
-> -	/* Count how many distinct digits seen */
-> -	count = 0;
-> -	for (i = 0; i < 16; i++)
-> -		if (seen[i])
-> -			count++;
-> -
-> -	return count >= 5 && count <= 15;
-> -}
-> -
-> -static bool looks_like_rust(const char *str, size_t len)
-> -{
-> -	const char *end = str + len;
-> -
-> -	while (str < end)
-> -		switch (*str) {
-> -		case '$':
-> -			if (!strncmp(str, "$C$", 3))
-> -				str += 3;
-> -			else if (!strncmp(str, "$SP$", 4)
-> -					|| !strncmp(str, "$BP$", 4)
-> -					|| !strncmp(str, "$RF$", 4)
-> -					|| !strncmp(str, "$LT$", 4)
-> -					|| !strncmp(str, "$GT$", 4)
-> -					|| !strncmp(str, "$LP$", 4)
-> -					|| !strncmp(str, "$RP$", 4))
-> -				str += 4;
-> -			else if (!strncmp(str, "$u20$", 5)
-> -					|| !strncmp(str, "$u27$", 5)
-> -					|| !strncmp(str, "$u5b$", 5)
-> -					|| !strncmp(str, "$u5d$", 5)
-> -					|| !strncmp(str, "$u7e$", 5))
-> -				str += 5;
-> -			else
-> -				return false;
-> -			break;
-> -		case '.':
-> -			/* Do not allow three or more consecutive dots */
-> -			if (!strncmp(str, "...", 3))
-> -				return false;
-> -			/* Fall through */
-> -		case 'a' ... 'z':
-> -		case 'A' ... 'Z':
-> -		case '0' ... '9':
-> -		case '_':
-> -		case ':':
-> -			str++;
-> -			break;
-> -		default:
-> -			return false;
-> -		}
-> -
-> -	return true;
-> -}
-> -
-> -/*
-> - * INPUT:
-> - *     sym: symbol for which rust_is_mangled(sym) returns true
-> - *
-> - * The input is demangled in-place because the mangled name is always longer
-> - * than the demangled one.
-> - */
-> -void
-> -rust_demangle_sym(char *sym)
-> -{
-> -	const char *in;
-> -	char *out;
-> -	const char *end;
-> -
-> -	if (!sym)
-> -		return;
-> -
-> -	in = sym;
-> -	out = sym;
-> -	end = sym + strlen(sym) - (hash_prefix_len + hash_len);
-> -
-> -	while (in < end)
-> -		switch (*in) {
-> -		case '$':
-> -			if (!(unescape(&in, &out, "$C$", ',')
-> -					|| unescape(&in, &out, "$SP$", '@')
-> -					|| unescape(&in, &out, "$BP$", '*')
-> -					|| unescape(&in, &out, "$RF$", '&')
-> -					|| unescape(&in, &out, "$LT$", '<')
-> -					|| unescape(&in, &out, "$GT$", '>')
-> -					|| unescape(&in, &out, "$LP$", '(')
-> -					|| unescape(&in, &out, "$RP$", ')')
-> -					|| unescape(&in, &out, "$u20$", ' ')
-> -					|| unescape(&in, &out, "$u27$", '\'')
-> -					|| unescape(&in, &out, "$u5b$", '[')
-> -					|| unescape(&in, &out, "$u5d$", ']')
-> -					|| unescape(&in, &out, "$u7e$", '~'))) {
-> -				pr_err("demangle-rust: unexpected escape sequence");
-> -				goto done;
-> -			}
-> -			break;
-> -		case '_':
-> -			/*
-> -			 * If this is the start of a path component and the next
-> -			 * character is an escape sequence, ignore the
-> -			 * underscore. The mangler inserts an underscore to make
-> -			 * sure the path component begins with a XID_Start
-> -			 * character.
-> -			 */
-> -			if ((in == sym || in[-1] == ':') && in[1] == '$')
-> -				in++;
-> -			else
-> -				*out++ = *in++;
-> -			break;
-> -		case '.':
-> -			if (in[1] == '.') {
-> -				/* ".." becomes "::" */
-> -				*out++ = ':';
-> -				*out++ = ':';
-> -				in += 2;
-> -			} else {
-> -				/* "." becomes "-" */
-> -				*out++ = '-';
-> -				in++;
-> -			}
-> -			break;
-> -		case 'a' ... 'z':
-> -		case 'A' ... 'Z':
-> -		case '0' ... '9':
-> -		case ':':
-> -			*out++ = *in++;
-> -			break;
-> -		default:
-> -			pr_err("demangle-rust: unexpected character '%c' in symbol\n",
-> -				*in);
-> -			goto done;
-> -		}
-> -
-> -done:
-> -	*out = '\0';
-> -}
-> -
-> -static bool unescape(const char **in, char **out, const char *seq, char value)
-> -{
-> -	size_t len = strlen(seq);
-> -
-> -	if (strncmp(*in, seq, len))
-> -		return false;
-> -
-> -	**out = value;
-> -
-> -	*in += len;
-> -	*out += 1;
-> -
-> -	return true;
-> -}
-> diff --git a/tools/perf/util/demangle-rust.h b/tools/perf/util/demangle-rust.h
-> deleted file mode 100644
-> index 2fca618b1..000000000
-> --- a/tools/perf/util/demangle-rust.h
-> +++ /dev/null
-> @@ -1,8 +0,0 @@
-> -/* SPDX-License-Identifier: GPL-2.0 */
-> -#ifndef __PERF_DEMANGLE_RUST
-> -#define __PERF_DEMANGLE_RUST 1
-> -
-> -bool rust_is_mangled(const char *str);
-> -void rust_demangle_sym(char *str);
-> -
-> -#endif /* __PERF_DEMANGLE_RUST */
-> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> index 31cd59a2b..3ed0bef81 100644
-> --- a/tools/perf/util/symbol-elf.c
-> +++ b/tools/perf/util/symbol-elf.c
-> @@ -14,7 +14,6 @@
->  #include "symsrc.h"
->  #include "demangle-ocaml.h"
->  #include "demangle-java.h"
-> -#include "demangle-rust.h"
->  #include "machine.h"
->  #include "vdso.h"
->  #include "debug.h"
-> @@ -258,12 +257,6 @@ static char *demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
->  			demangled = java_demangle_sym(elf_name, JAVA_DEMANGLE_NORET);
->  		}
->  	}
-> -	else if (rust_is_mangled(demangled))
-> -		/*
-> -		    * Input to Rust demangling is the BFD-demangled
-> -		    * name which it Rust-demangles in place.
-> -		    */
-> -		rust_demangle_sym(demangled);
->  
->  	return demangled;
->  }
-> -- 
-> 2.25.1
+Was this ever applied? If not, are there any blockers? I assume this
+will go through the perf tree, right?
 
--- 
-
-- Arnaldo
+> >  delete mode 100644 tools/perf/util/bpf-prologue.c
+> >  delete mode 100644 tools/perf/util/bpf-prologue.h
+> >
+>
+> [...]
