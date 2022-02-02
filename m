@@ -2,187 +2,82 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98493C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Feb 2022 11:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 946A8C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Feb 2022 14:37:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344036AbiBBL6K (ORCPT
+        id S230244AbiBBOha (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Feb 2022 06:58:10 -0500
-Received: from foss.arm.com ([217.140.110.172]:54042 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232566AbiBBL6J (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Feb 2022 06:58:09 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 50FF71FB;
-        Wed,  2 Feb 2022 03:58:09 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.87.240])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 75BD93F718;
-        Wed,  2 Feb 2022 03:58:07 -0800 (PST)
-Date:   Wed, 2 Feb 2022 11:58:04 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, robh@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH 1/2] perf: Add more generic branch types
-Message-ID: <YfpxzKa7JSlimA1i@FVFF77S0Q05N>
-References: <1643348653-24367-1-git-send-email-anshuman.khandual@arm.com>
- <1643348653-24367-2-git-send-email-anshuman.khandual@arm.com>
+        Wed, 2 Feb 2022 09:37:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43710 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229610AbiBBOha (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 2 Feb 2022 09:37:30 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DE49C061714;
+        Wed,  2 Feb 2022 06:37:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=XU4E30VmAk4JZVSbcf6+v7UwHyq1GOzwWQ8ET0wddjk=; b=jcYMyMP7jGlMD5UcB8w29vteKo
+        axDDmdgkITjEQUEKPjfRbwb+cLh4JUC8O7fsvZkbGaUFuQ97GqRzqy6xlZdXiII80Y1tR1cgbhZXO
+        +qxT1vpIeS4D8wivMA0u0wAqs407UfA5bXisB/WCPZT8cvXtCsaRgm/9ZtoIPUTOk2Bt9Gv8BRVpw
+        hh0nlTeEanfep0nRmiXPBzi+vse3rM/4XwU+hB/K6PfYpX42wHN2C11WDHzde7/2ZPxtyx2l2Zbdu
+        rY6JKUz7GW6oNMtaqT7XZngshohL41+xTZOsS8dgiuH7Z+1nRF4foFxST2/8mW/edEUpZL2RxeKID
+        yRqUtEAA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nFGkm-00Enmt-Py; Wed, 02 Feb 2022 14:37:01 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E8040984C61; Wed,  2 Feb 2022 15:36:57 +0100 (CET)
+Date:   Wed, 2 Feb 2022 15:36:57 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     like.xu.linux@gmail.com, jmattson@google.com, eranian@google.com,
+        santosh.shukla@amd.com, pbonzini@redhat.com, seanjc@google.com,
+        wanpengli@tencent.com, vkuznets@redhat.com, joro@8bytes.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
+        hpa@zytor.com, kvm@vger.kernel.org, x86@kernel.org,
+        linux-perf-users@vger.kernel.org, ananth.narayan@amd.com,
+        kim.phillips@amd.com
+Subject: Re: [PATCH v2] perf/amd: Implement erratum #1292 workaround for F19h
+ M00-0Fh
+Message-ID: <20220202143657.GA20638@worktop.programming.kicks-ass.net>
+References: <2e96421f-44b5-c8b7-82f7-5a9a9040104b@amd.com>
+ <20220202105158.7072-1-ravi.bangoria@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1643348653-24367-2-git-send-email-anshuman.khandual@arm.com>
+In-Reply-To: <20220202105158.7072-1-ravi.bangoria@amd.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Anshuman,
+On Wed, Feb 02, 2022 at 04:21:58PM +0530, Ravi Bangoria wrote:
+> +/* Overcounting of Retire Based Events Erratum */
+> +static struct event_constraint retire_event_constraints[] __read_mostly = {
+> +	EVENT_CONSTRAINT(0xC0, 0x4, AMD64_EVENTSEL_EVENT),
+> +	EVENT_CONSTRAINT(0xC1, 0x4, AMD64_EVENTSEL_EVENT),
+> +	EVENT_CONSTRAINT(0xC2, 0x4, AMD64_EVENTSEL_EVENT),
+> +	EVENT_CONSTRAINT(0xC3, 0x4, AMD64_EVENTSEL_EVENT),
+> +	EVENT_CONSTRAINT(0xC4, 0x4, AMD64_EVENTSEL_EVENT),
+> +	EVENT_CONSTRAINT(0xC5, 0x4, AMD64_EVENTSEL_EVENT),
+> +	EVENT_CONSTRAINT(0xC8, 0x4, AMD64_EVENTSEL_EVENT),
+> +	EVENT_CONSTRAINT(0xC9, 0x4, AMD64_EVENTSEL_EVENT),
+> +	EVENT_CONSTRAINT(0xCA, 0x4, AMD64_EVENTSEL_EVENT),
+> +	EVENT_CONSTRAINT(0xCC, 0x4, AMD64_EVENTSEL_EVENT),
+> +	EVENT_CONSTRAINT(0xD1, 0x4, AMD64_EVENTSEL_EVENT),
+> +	EVENT_CONSTRAINT(0x1000000C7, 0x4, AMD64_EVENTSEL_EVENT),
+> +	EVENT_CONSTRAINT(0x1000000D0, 0x4, AMD64_EVENTSEL_EVENT),
 
-On Fri, Jan 28, 2022 at 11:14:12AM +0530, Anshuman Khandual wrote:
-> This expands generic branch type classification by adding some more entries
-> , that can still be represented with the existing 4 bit 'type' field. While
-> here this also updates the x86 implementation with these new branch types.
+Can't this be encoded nicer? Something like:
 
-It looks like there's some whitespace damage here.
+	EVENT_CONSTRAINT(0xC0, 0x4, AMD64_EVENTSEL_EVENT & ~0xF).
 
-From a quick scan of the below, I think the "exception return" and "IRQ
-exception" types are somewhat generic, and could be added now (aside from any
-bikeshedding over names), but:
+To match all of 0xCn ?
 
-* For IRQ vs FIQ, we might just want to have a top-level "asynchronous
-  exception" type, and then further divide that with a separate field. That way
-  it's easier to extend in future if new exceptions are added.
 
-* I don't think the debug state entry/exits make sense as generic branch types,
-  since those are somewhat specific to the ARM architecutre, and it might make
-  sense to define generic PERF_BR_ARCH* definitions instead.
-
-* Given the next patch extends the field, and therei are potential ABI problems
-  with that, we might need to reserve a value for ABI extensibility purposes,
-  and I suspect we need to do that *first*. More comments on the subsequent
-  patch.
- 
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->  arch/x86/events/intel/lbr.c           | 4 ++--
->  include/uapi/linux/perf_event.h       | 5 +++++
->  tools/include/uapi/linux/perf_event.h | 5 +++++
->  tools/perf/util/branch.c              | 7 ++++++-
->  4 files changed, 18 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-> index 8043213b75a5..9f86fac8c6a5 100644
-> --- a/arch/x86/events/intel/lbr.c
-> +++ b/arch/x86/events/intel/lbr.c
-> @@ -1336,10 +1336,10 @@ static int branch_map[X86_BR_TYPE_MAP_MAX] = {
->  	PERF_BR_SYSCALL,	/* X86_BR_SYSCALL */
->  	PERF_BR_SYSRET,		/* X86_BR_SYSRET */
->  	PERF_BR_UNKNOWN,	/* X86_BR_INT */
-> -	PERF_BR_UNKNOWN,	/* X86_BR_IRET */
-> +	PERF_BR_EXPT_RET,	/* X86_BR_IRET */
->  	PERF_BR_COND,		/* X86_BR_JCC */
->  	PERF_BR_UNCOND,		/* X86_BR_JMP */
-> -	PERF_BR_UNKNOWN,	/* X86_BR_IRQ */
-> +	PERF_BR_IRQ,		/* X86_BR_IRQ */
->  	PERF_BR_IND_CALL,	/* X86_BR_IND_CALL */
->  	PERF_BR_UNKNOWN,	/* X86_BR_ABORT */
->  	PERF_BR_UNKNOWN,	/* X86_BR_IN_TX */
-
-This presumably changes the values reported to userspace, so the commit message
-should mention that and explain why that is not a problem.
-
-> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-> index 1b65042ab1db..b91d0f575d0c 100644
-> --- a/include/uapi/linux/perf_event.h
-> +++ b/include/uapi/linux/perf_event.h
-> @@ -251,6 +251,11 @@ enum {
->  	PERF_BR_SYSRET		= 8,	/* syscall return */
->  	PERF_BR_COND_CALL	= 9,	/* conditional function call */
->  	PERF_BR_COND_RET	= 10,	/* conditional function return */
-> +	PERF_BR_EXPT_RET	= 11,	/* exception return */
-
-We don't use 'EXPT' anywhere else, so it might be better to just use 'ERET'.
-IIUC that's the naming the x86 FRED stuff is going to use anyhow.
-
-> +	PERF_BR_IRQ		= 12,	/* irq */
-
-This looks somewhat generic, so adding it now makes sense to me, but ...
-
-> +	PERF_BR_FIQ		= 13,	/* fiq */
-
-... this is arguably just a idfferent class of interrupt from the PoV of Linux,
-and the naming is ARM-specific, so I don't think this makes sense to add *now*.
-As above, maybe it would be better to have a generic "aynchronous exception" or
-"interrupt" type, and a separate field to distinguish specific types of those.
-
-> +	PERF_BR_DEBUG_HALT	= 14,	/* debug halt */
-> +	PERF_BR_DEBUG_EXIT	= 15,	/* debug exit */
-
-For the benefit of those not familiar with the ARM architecture, "debug halt"
-and "debug exit" usually refer to "debug state", which is what an external
-(e.g. JTAG) debugger uses rather than the usual self-hosted debug stuff that
-Linux uses.
-
-Given that, I'm not sure these are very generic, and I suspect it would be
-better to have more generic PERF_BR_ARCH_* entries for things like this.
-
-Thanks,
-Mark.
-
->  	PERF_BR_MAX,
->  };
->  
-> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-> index 4cd39aaccbe7..1882054e8684 100644
-> --- a/tools/include/uapi/linux/perf_event.h
-> +++ b/tools/include/uapi/linux/perf_event.h
-> @@ -251,6 +251,11 @@ enum {
->  	PERF_BR_SYSRET		= 8,	/* syscall return */
->  	PERF_BR_COND_CALL	= 9,	/* conditional function call */
->  	PERF_BR_COND_RET	= 10,	/* conditional function return */
-> +	PERF_BR_EXPT_RET	= 11,	/* exception return */
-> +	PERF_BR_IRQ		= 12,	/* irq */
-> +	PERF_BR_FIQ		= 13,	/* fiq */
-> +	PERF_BR_DEBUG_HALT	= 14,	/* debug halt */
-> +	PERF_BR_DEBUG_EXIT	= 15,	/* debug exit */
->  	PERF_BR_MAX,
->  };
->  
-> diff --git a/tools/perf/util/branch.c b/tools/perf/util/branch.c
-> index 2285b1eb3128..74e5e67b1779 100644
-> --- a/tools/perf/util/branch.c
-> +++ b/tools/perf/util/branch.c
-> @@ -49,7 +49,12 @@ const char *branch_type_name(int type)
->  		"SYSCALL",
->  		"SYSRET",
->  		"COND_CALL",
-> -		"COND_RET"
-> +		"COND_RET",
-> +		"EXPT_RET",
-> +		"IRQ",
-> +		"FIQ",
-> +		"DEBUG_HALT",
-> +		"DEBUG_EXIT"
->  	};
->  
->  	if (type >= 0 && type < PERF_BR_MAX)
-> -- 
-> 2.25.1
-> 
+> +	EVENT_CONSTRAINT_END
+> +};
