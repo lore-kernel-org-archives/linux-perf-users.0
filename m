@@ -2,133 +2,214 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F94C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Feb 2022 19:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE26DC433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Feb 2022 20:25:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347010AbiBBTvY (ORCPT
+        id S1347078AbiBBUZd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Feb 2022 14:51:24 -0500
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:43959 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347009AbiBBTvY (ORCPT
+        Wed, 2 Feb 2022 15:25:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39520 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230264AbiBBUZc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Feb 2022 14:51:24 -0500
+        Wed, 2 Feb 2022 15:25:32 -0500
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CA82C061714
+        for <linux-perf-users@vger.kernel.org>; Wed,  2 Feb 2022 12:25:32 -0800 (PST)
+Received: by mail-wr1-x42f.google.com with SMTP id a13so721430wrh.9
+        for <linux-perf-users@vger.kernel.org>; Wed, 02 Feb 2022 12:25:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1643831484; x=1675367484;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=x2nmNDZD6IkVp0jOwhomnRl1oPO0h2jwPZA823Tx2Ow=;
-  b=l+MvRb6Ve0Mtfr2SXyOc+MPpaUaTW2xw5aS25haXUMWtp7J7Dv3q2XDY
-   0hDbl246dAjClAvO0X2wVUduiI5u6G0zrW/ShVyOHoVxd07J6xxdcjjc3
-   KOQ2Jn4hpHkLVpbIktT8KvkbK/xNvK+47+4IkjtvVKq1ZndCs0hnm5bli
-   A=;
-X-IronPort-AV: E=Sophos;i="5.88,337,1635206400"; 
-   d="scan'208";a="191792094"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-pdx-2a-11a39b7d.us-west-2.amazon.com) ([10.25.36.214])
-  by smtp-border-fw-9102.sea19.amazon.com with ESMTP; 02 Feb 2022 19:51:23 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
-        by email-inbound-relay-pdx-2a-11a39b7d.us-west-2.amazon.com (Postfix) with ESMTPS id D249241A9C;
-        Wed,  2 Feb 2022 19:51:18 +0000 (UTC)
-Received: from EX13D02UWB002.ant.amazon.com (10.43.161.160) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1497.28; Wed, 2 Feb 2022 19:51:18 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13D02UWB002.ant.amazon.com (10.43.161.160) with Microsoft SMTP Server (TLS)
- id 15.0.1497.28; Wed, 2 Feb 2022 19:51:17 +0000
-Received: from dev-dsk-alisaidi-i31e-9f3421fe.us-east-1.amazon.com
- (10.200.138.153) by mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP
- Server id 15.0.1497.28 via Frontend Transport; Wed, 2 Feb 2022 19:51:17 +0000
-Received: by dev-dsk-alisaidi-i31e-9f3421fe.us-east-1.amazon.com (Postfix, from userid 5131138)
-        id 369B521BD7; Wed,  2 Feb 2022 19:51:17 +0000 (UTC)
-From:   Ali Saidi <alisaidi@amazon.com>
-To:     <leo.yan@linaro.org>
-CC:     <Al.Grant@arm.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <alisaidi@amazon.com>,
-        <andrew.kilroy@arm.com>, <benh@kernel.crashing.org>,
-        <german.gomez@arm.com>, <james.clark@arm.com>,
-        <john.garry@huawei.com>, <jolsa@redhat.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <mark.rutland@arm.com>, <mathieu.poirier@linaro.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <will@kernel.org>
-Subject: Re: [PATCH] perf arm-spe: Use SPE data source for neoverse cores
-Date:   Wed, 2 Feb 2022 19:51:15 +0000
-Message-ID: <20220202195115.12924-1-alisaidi@amazon.com>
-X-Mailer: git-send-email 2.24.4.AMZN
-In-Reply-To: <20220202150104.GB1939745@leoy-ThinkPad-X240s>
-References: <20220202150104.GB1939745@leoy-ThinkPad-X240s>
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TXeP2Asa6VI1ijTa5MWMcKtJdHOeMnzXpwkKO33H770=;
+        b=koWvksRitFj2vGJ5d7RelHWGlX6Y0rANFHa7Dg1AAvxz1rjhFn76MZz/Kca0zbvzTU
+         WYNLJiTClaxCCNcUJcjWIq/4bYofYfdrKQY6Ln+jvpNnQJWOD+ZWddQZqxRuAYrVeSak
+         W1uE0cBi9yS7FARYn1mdEhD4R9WfPSs2iWxv89QXYh0MUVaSDVi7wYaDO8GeJZWC6VLU
+         4RTUIV5JD8jSM7Txnv0uklwZB/vu84o2lEgAI6ekPsxFZnLVs2lKs+lq5GOczafiUzNk
+         x30XeW07wUgX/N4SJqCV02O6MqJ82N1xKd77ZQlT/4LHPHKTA4cOud0G2vB4G3D/c1/C
+         JBaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TXeP2Asa6VI1ijTa5MWMcKtJdHOeMnzXpwkKO33H770=;
+        b=mNGCt3FqQyZidJp9TFqhjxwI/imQiZzx/jTsoPMsNteUytFh1LfFCsRDcW2F44WgW6
+         9fjTWGmDqJO1Cs7CJG9xku3tK6AlYXz05AKkjiSlW3IlueqvhZ0SzYFZMQlF74TwdscT
+         bhbBCsVTJhUfdJ6BZvjboGFz1EUsDx180TOH9xhPUL7PJpthQfgdwmrbiEmGJxP8W6cI
+         N/eoRt4eAfbDqgapGiBHWYZx5P68ln4tKWuvQdF2gCGx+bnoHsxbxmlnzEEaJD4PXi9A
+         2d8RYMF2MbfiWMCbHoCqORSO4qdr1pMHO0WR1Zvhu2horzyjGV+yqKA3pYy4eg7+bU92
+         XVlw==
+X-Gm-Message-State: AOAM531/5w3UfH85impUDihnswSk5fL2vELDi0a36mSmioYS/G8+x33A
+        fBcoPAVl8N6O8qw/+DMBp0lDv2sXFnDROC2mTlbAeg==
+X-Google-Smtp-Source: ABdhPJyXr8CUHRxVbt5x0P8wajOLbHpUjLXq8yp3MW+H/JZlVC9MMHYaeCn4VpdhIAdBedzD/IpE6KguYHg90sGMonw=
+X-Received: by 2002:a5d:46c1:: with SMTP id g1mr18766986wrs.111.1643833531033;
+ Wed, 02 Feb 2022 12:25:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <20220113091056.1297982-1-james.clark@arm.com> <20220113091056.1297982-2-james.clark@arm.com>
+ <b3545a88-4743-db95-4676-b0b193cbea78@arm.com>
+In-Reply-To: <b3545a88-4743-db95-4676-b0b193cbea78@arm.com>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Wed, 2 Feb 2022 20:25:20 +0000
+Message-ID: <CAJ9a7Vi584BcY49TaRn5CJT=wcpafMf-3cA0R+sZ54p6iUKmeQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] coresight: Add config flag to enable branch broadcast
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     James Clark <James.Clark@arm.com>, mathieu.poirier@linaro.org,
+        coresight@lists.linaro.org, leo.yan@linaro.com,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Leo,
+Hi James, Suzuki
 
->Hi Ali, James,
+On Fri, 28 Jan 2022 at 11:19, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
 >
-> [...]
->> 
->> I'd really like someone familiar with perf c2c output to also end up getting
->> similar output when running on an Arm system with SPE. There are obviously large
->> micro-architectural differences that have been abstracted away by the data_src
->> abstraction but fundamentally my understanding of x86 HITM is that the line
->> was found in the snoop filter of the LLC as being owned by another core and
->> therefore the request needs to go to another core to get the line.  I'm not
->> 100% sure if on x86 it's really guaranteed to be dirty or not and it's not
->> always going to be dirty in a Neoverse system, but since the SPE source
->> indicates it was sourced from another core it is a core-2-core transfer of a
->> line which is currently owned by another cpu core and that is the interesting
->> data point that would be used to drive optimization and elimination of frequent
->> core-2-core transfers (true or false sharing).
+> On 13/01/2022 09:10, James Clark wrote:
+> > When enabled, all taken branch addresses are output, even if the branch
+> > was because of a direct branch instruction. This enables reconstruction
+> > of the program flow without having access to the memory image of the
+> > code being executed.
+> >
+> > Use bit 8 for the config option which would be the correct bit for
+> > programming ETMv3. Although branch broadcast can't be enabled on ETMv3
+> > because it's not in the define ETM3X_SUPPORTED_OPTIONS, using the
+> > correct bit might help prevent future collisions or allow it to be
+> > enabled if needed.
+> >
+> > Signed-off-by: James Clark <james.clark@arm.com>
+> > ---
+> >   drivers/hwtracing/coresight/coresight-etm-perf.c   |  2 ++
+> >   drivers/hwtracing/coresight/coresight-etm4x-core.c | 10 ++++++++++
+> >   include/linux/coresight-pmu.h                      |  2 ++
+> >   3 files changed, 14 insertions(+)
+> >
+> > diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> > index c039b6ae206f..43bbd5dc3d3b 100644
+> > --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
+> > +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> > @@ -52,6 +52,7 @@ static DEFINE_PER_CPU(struct coresight_device *, csdev_src);
+> >    * The PMU formats were orignally for ETMv3.5/PTM's ETMCR 'config';
+> >    * now take them as general formats and apply on all ETMs.
+> >    */
+> > +PMU_FORMAT_ATTR(branch_broadcast, "config:"__stringify(ETM_OPT_BRANCH_BROADCAST));
+> >   PMU_FORMAT_ATTR(cycacc,             "config:" __stringify(ETM_OPT_CYCACC));
+> >   /* contextid1 enables tracing CONTEXTIDR_EL1 for ETMv4 */
+> >   PMU_FORMAT_ATTR(contextid1, "config:" __stringify(ETM_OPT_CTXTID));
+> > @@ -97,6 +98,7 @@ static struct attribute *etm_config_formats_attr[] = {
+> >       &format_attr_sinkid.attr,
+> >       &format_attr_preset.attr,
+> >       &format_attr_configid.attr,
+> > +     &format_attr_branch_broadcast.attr,
 >
->Though I don't know the implementation for the hardware conherency
->protocols, here I have the same understanding with Ali.
+> Does it make sense to hide the option if the bb is not supported ? I
+> guess it will be tricky as we don't track the common feature set. So,
+> that said...
 >
->For x86 arch, it uses HITM to indicate the cache line is "modified"
->state; on Arm64 Neoverse platforms, there have two data source values
->can tell us if the cache line is "modified" state:
->ARM_SPE_NV_PEER_CLSTR and ARM_SPE_NV_PEER_CORE.  The snooping can
->happen either within the cluster or cross clusters.
-
-Yes, although it depends on the system topology if there are clusters.
-
->> >> +			data_src.mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
->> >
->> >This one also adds PERF_MEM_LVL_HIT even though the check of "if (record->type & ARM_SPE_LLC_MISS)"
->> >hasn't happened yet. Maybe some comments would make it a bit clearer, but at the moment it's
->> >not obvious how the result is derived because there are some things that don't add up like
->> >ARM_SPE_LLC_MISS == PERF_MEM_LVL_HIT.
->> 
->> Assuming the above is correct, my reading of the existing code that creates the
->> c2c output is that when an access is marked as an LLC hit, that doesn't
->> necessarily mean that the data was present in the LLC. I don't see how it could
->> given that LLC_HIT + HITM means the line was dirty in another CPUs cache, and so
->> LLC_HIT + HITM seems to mean that it was a hit in the LLC snoop filter and
->> required a different core to provide the line. This and the above certainly
->> deserve a comment as to why the miss is being attributed in this way if it's
->> otherwise acceptable.
+> >       NULL,
+> >   };
+> >
+> > diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> > index bf18128cf5de..04669ecc0efa 100644
+> > --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> > +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> > @@ -692,6 +692,16 @@ static int etm4_parse_event_config(struct coresight_device *csdev,
+> >               ret = cscfg_csdev_enable_active_config(csdev, cfg_hash, preset);
+> >       }
+> >
+> > +     /* branch broadcast - enable if selected and supported */
+> > +     if (attr->config & BIT(ETM_OPT_BRANCH_BROADCAST)) {
+> > +             if (!drvdata->trcbb) {
+> > +                     ret = -EINVAL;
 >
->As James pointed out, this might introduce confusion.  I am wanderding
->if we can extract two functions for synthesizing the data source, one is
->for Neoverse platform and another is for generic purpose (which
->without data source packets), below code is to demonstrate the basic
->idea.
+> Should we fail here ? We could simply ignore this and generate the trace
+> normally. This would work on a big.LITTLE system with one set missing
+> the branch broadcast, while the others support.
+>
+> Mike,
+>
+> Does this affect the trace decoding ? As such the OpenCSD should be able
+> to decode the packets as they appear in the stream. Correct ?
+>
 
-The code below is cleaner, and I'm happy to rework the patches in this way, but
-I think the question still remains about unifying behavior of the tool. If we
-mark something with a data source of ARM_SPE_NV_PEER_CORE as at L1 hit + HITM
-certainly c2c won't show the correct thing today, but i think it also hides the
-intent. The line in question missed the L1, L2, and got to the LLC where we did
-find a record that it was in another cores cache (L1 or L2). Looking at the way
-that c2c works today, it seems like marking this as a hit in the LLC snoop
-filter is the best way to unify behaviors among architectures?
+Depends on what you mean by affect the trace decoding!
+From the simplest perspective - no - there is no issue as the packets
+will be decode as seen. THE decoder does not know that BB exists - nor
+if it is enabled.
 
-I'll send you a perf.data file OOB.
+However, the reason that a user may engage BB is that the code is in
+some way self modifying - so that following the code static image and
+calculating addresses will result in a different path taken.
 
-Thanks,
-Ali
+e.g. imagine an opcode:-
 
+B <address0>
+
+Without BB, this will trace as a single E atom, the decoder will
+calculate address0 from the opcode in the static image and continue
+from there as the next trace address.
+
+Now look at the case where this is changed on the fly to
+
+B <address1>
+
+With BB, This will trace to
+E
+TGT_ADDR<address1>
+
+The decoder will initially  extract address0 from the static image,
+but the immediately following target address packet will alter the
+next address traced to address1
+This is why we have BB.
+
+ So if the user has a reason to engage BB - we should really fail if
+it is not present - as the outcome of the trace can be affected.
+
+> Suzuki
+>
+>
+> > +                     goto out;
+> > +             } else {
+> > +                     config->cfg |= BIT(ETM4_CFG_BIT_BB);
+> > +             }
+> > +     }
+> > +
+> >   out:
+> >       return ret;
+> >   }
+> > diff --git a/include/linux/coresight-pmu.h b/include/linux/coresight-pmu.h
+> > index 4ac5c081af93..6c2fd6cc5a98 100644
+> > --- a/include/linux/coresight-pmu.h
+> > +++ b/include/linux/coresight-pmu.h
+> > @@ -18,6 +18,7 @@
+> >    * ETMv3.5/PTM doesn't define ETMCR config bits with prefix "ETM3_" and
+> >    * directly use below macros as config bits.
+> >    */
+> > +#define ETM_OPT_BRANCH_BROADCAST 8
+> >   #define ETM_OPT_CYCACC              12
+> >   #define ETM_OPT_CTXTID              14
+> >   #define ETM_OPT_CTXTID2             15
+> > @@ -25,6 +26,7 @@
+> >   #define ETM_OPT_RETSTK              29
+> >
+> >   /* ETMv4 CONFIGR programming bits for the ETM OPTs */
+> > +#define ETM4_CFG_BIT_BB         3
+> >   #define ETM4_CFG_BIT_CYCACC 4
+> >   #define ETM4_CFG_BIT_CTXTID 6
+> >   #define ETM4_CFG_BIT_VMID   7
+>
+
+
+-- 
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
