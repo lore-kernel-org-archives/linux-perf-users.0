@@ -2,76 +2,245 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8484AC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Feb 2022 14:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9049C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Feb 2022 15:01:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234586AbiBBOzm (ORCPT
+        id S239979AbiBBPBR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Feb 2022 09:55:42 -0500
-Received: from foss.arm.com ([217.140.110.172]:36040 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1345307AbiBBOzi (ORCPT
+        Wed, 2 Feb 2022 10:01:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49534 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230503AbiBBPBQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Feb 2022 09:55:38 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 61C10113E;
-        Wed,  2 Feb 2022 06:55:38 -0800 (PST)
-Received: from [10.57.89.83] (unknown [10.57.89.83])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 126DF3F73B;
-        Wed,  2 Feb 2022 06:55:36 -0800 (PST)
-Subject: Re: [PATCH] perf symbols: Remove demangle-rust files as superfluous
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-References: <20220201185054.1041917-1-german.gomez@arm.com>
- <YfnMhsF2/z0FUaWz@kernel.org>
-From:   German Gomez <german.gomez@arm.com>
-Message-ID: <ebf26948-c9ae-409b-31c1-3e2a1b06604b@arm.com>
-Date:   Wed, 2 Feb 2022 14:55:04 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Wed, 2 Feb 2022 10:01:16 -0500
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52108C061714
+        for <linux-perf-users@vger.kernel.org>; Wed,  2 Feb 2022 07:01:16 -0800 (PST)
+Received: by mail-ej1-x635.google.com with SMTP id h7so66571835ejf.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 02 Feb 2022 07:01:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=72XrrB6mERO4zu0ZC1jmLIhTMYt78GipteY6hfr9pG4=;
+        b=AcTWIcBBhx8gRbxncQ3mRNyZmmSPkHELQlhxH82XH8IxDl3kToxU26EEONtp3Ya8a9
+         jbDUEC3csfKL7XCYnVOSyX0OKFAOKGJkvNqpy30IyOmo9GEZ5hKd+tx9Ie/RvS6Debx6
+         Jwn3u0v78MYZL+votLlkHC3kIow3tWss6R6LdRujEa8XD2YRm8V99sOZmtYNS4fpKHde
+         5+1hFBuT2B34KfcsA44ZFEztO2uVqGLhCf7lZuu1JHcDR8BYl/a48LTp496+nzGqy7jS
+         1wjg64cKVLR6pbXPWjHYgVSPOi8+GUAAikEEBq+YuvwOj/myaDz74xj9QMe7DxbeHkRA
+         9pzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=72XrrB6mERO4zu0ZC1jmLIhTMYt78GipteY6hfr9pG4=;
+        b=3IRjqU1YpmZ/fDrS3UsrEc1Fcd1fxkZp0XXRctLeNWxIFH1yxv55VJ7RcSdN+nA/Do
+         o2UriQRm1xSrQ20y2YBeVrdD7KQB9FKb9h4bcupXQwQRBoEzvYvhrF86cpN9+lAAA2AC
+         +ts79pyKT50XB79GSAg+ZJbll2ajKa8PAHxoPjPKIbeIDSv1tW7CB5iDY43enVUY6e0B
+         30KBtM9dWznd7GZprkfSf7BDiIQNlEbBAbK7jnpx0ZzMrDWWANXUTfK/HZ0iehJ1M1r9
+         w6ahg/MxVMtyxH41Wqg88wQroyrLdCcEc/yfxQ5MlX/aYxZqhi6ATrpgFisYvybbkyKc
+         oYOQ==
+X-Gm-Message-State: AOAM533YEM4CHO/vlS+bCbL46t9jR0XVcUw5CkGfJqv/Cua/XBd0lzb+
+        qZN7At3c3QQx7CqY0drUhUYEfg==
+X-Google-Smtp-Source: ABdhPJzoPqmJJteVzaKRVWakld1hcla+iRKTAImn4FR4XmIWo7Q4L6tW8K+d8m845PsImm/1+dY3Cw==
+X-Received: by 2002:a17:907:a421:: with SMTP id sg33mr26212543ejc.108.1643814074640;
+        Wed, 02 Feb 2022 07:01:14 -0800 (PST)
+Received: from leoy-ThinkPad-X240s ([104.245.96.65])
+        by smtp.gmail.com with ESMTPSA id j25sm8706420edp.10.2022.02.02.07.01.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Feb 2022 07:01:13 -0800 (PST)
+Date:   Wed, 2 Feb 2022 23:01:04 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Ali Saidi <alisaidi@amazon.com>, Al Grant <Al.Grant@arm.com>
+Cc:     james.clark@arm.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
+        benh@kernel.crashing.org, german.gomez@arm.com,
+        john.garry@huawei.com, jolsa@redhat.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
+        peterz@infradead.org, will@kernel.org
+Subject: Re: [PATCH] perf arm-spe: Use SPE data source for neoverse cores
+Message-ID: <20220202150104.GB1939745@leoy-ThinkPad-X240s>
+References: <0ba26f30-6978-36ad-f7d0-7b8465648e54@arm.com>
+ <20220124225333.19864-1-alisaidi@amazon.com>
 MIME-Version: 1.0
-In-Reply-To: <YfnMhsF2/z0FUaWz@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220124225333.19864-1-alisaidi@amazon.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi Ali, James,
 
-On 02/02/2022 00:12, Arnaldo Carvalho de Melo wrote:
-> Em Tue, Feb 01, 2022 at 06:50:53PM +0000, German Gomez escreveu:
->> Demangling of Rust legacy symbols has been working through libbfd for
->> some time now, making these files no longer needed, so remove them.
-> Can this be made dependent of the versions of the components that
-> provide this feature?
+[ + Al ]
 
-Hi Arnaldo,
+On Mon, Jan 24, 2022 at 10:53:33PM +0000, Ali Saidi wrote:
 
-I have decided to drop this patch.
+[...]
 
-It turns out that even shipped versions of libbfd and libiberty don't demangle some of the symbols completely
+> >> +static u64 arm_spe__synth_data_source(const struct arm_spe_record *record, u64 midr)
+> >>  {
+> >>  	union perf_mem_data_src	data_src = { 0 };
+> >> +	bool is_neoverse = is_midr_in_range(midr, neoverse_spe);
+> >>  
+> >>  	if (record->op == ARM_SPE_LD)
+> >>  		data_src.mem_op = PERF_MEM_OP_LOAD;
+> >> @@ -409,19 +418,30 @@ static u64 arm_spe__synth_data_source(const struct arm_spe_record *record)
+> >>  		data_src.mem_op = PERF_MEM_OP_STORE;
+> >>  
+> >>  	if (record->type & (ARM_SPE_LLC_ACCESS | ARM_SPE_LLC_MISS)) {
+> >> -		data_src.mem_lvl = PERF_MEM_LVL_L3;
+> >> +		if (is_neoverse && record->source == ARM_SPE_NV_DRAM) {
+> >> +			data_src.mem_lvl = PERF_MEM_LVL_LOC_RAM | PERF_MEM_LVL_HIT;
+> >> +		} else if (is_neoverse && record->source == ARM_SPE_NV_PEER_CLSTR) {
+> >> +			data_src.mem_snoop = PERF_MEM_SNOOP_HITM;
+> >
+> >I'm not following how LLC_ACCESS | LLC_MISS ends up as HITM in this case (ARM_SPE_NV_PEER_CLSTR)?
+> >I thought there was no way to determine a HITM from SPE. Wouldn't one of the other values
+> >like PERF_MEM_SNOOP_MISS be more accurate?
+> 
+> Thanks for taking a look James.
+> 
+> I'd really like someone familiar with perf c2c output to also end up getting
+> similar output when running on an Arm system with SPE. There are obviously large
+> micro-architectural differences that have been abstracted away by the data_src
+> abstraction but fundamentally my understanding of x86 HITM is that the line
+> was found in the snoop filter of the LLC as being owned by another core and
+> therefore the request needs to go to another core to get the line.  I'm not
+> 100% sure if on x86 it's really guaranteed to be dirty or not and it's not
+> always going to be dirty in a Neoverse system, but since the SPE source
+> indicates it was sourced from another core it is a core-2-core transfer of a
+> line which is currently owned by another cpu core and that is the interesting
+> data point that would be used to drive optimization and elimination of frequent
+> core-2-core transfers (true or false sharing).
 
-For example:
-(doesn't strip away the hash at the end) _ZN10rs_tracing8internal11TRACE_STATE17h41dcd282cd61069dE.0                 ==> rs_tracing::internal::TRACE_STATE::h41dcd282cd61069d
-(doesn't demangle full symbol)           _ZN41_$LT$bool$u20$as$u20$core..fmt..Debug$GT$3fmt17h10f4b7b0094c3a75E.2262 ==> _$LT$bool$u20$as$u20$core..fmt..Debug$GT$::fmt::h10f4b7b0094c3a75
+Though I don't know the implementation for the hardware conherency
+protocols, here I have the same understanding with Ali.
 
-These are cleaned up afterwards by perf's demangler.
+For x86 arch, it uses HITM to indicate the cache line is "modified"
+state; on Arm64 Neoverse platforms, there have two data source values
+can tell us if the cache line is "modified" state:
+ARM_SPE_NV_PEER_CLSTR and ARM_SPE_NV_PEER_CORE.  The snooping can
+happen either within the cluster or cross clusters.
 
-Apologies for not catching this earlier.
+> >> +			data_src.mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
+> >
+> >This one also adds PERF_MEM_LVL_HIT even though the check of "if (record->type & ARM_SPE_LLC_MISS)"
+> >hasn't happened yet. Maybe some comments would make it a bit clearer, but at the moment it's
+> >not obvious how the result is derived because there are some things that don't add up like
+> >ARM_SPE_LLC_MISS == PERF_MEM_LVL_HIT.
+> 
+> Assuming the above is correct, my reading of the existing code that creates the
+> c2c output is that when an access is marked as an LLC hit, that doesn't
+> necessarily mean that the data was present in the LLC. I don't see how it could
+> given that LLC_HIT + HITM means the line was dirty in another CPUs cache, and so
+> LLC_HIT + HITM seems to mean that it was a hit in the LLC snoop filter and
+> required a different core to provide the line. This and the above certainly
+> deserve a comment as to why the miss is being attributed in this way if it's
+> otherwise acceptable.
+
+As James pointed out, this might introduce confusion.  I am wanderding
+if we can extract two functions for synthesizing the data source, one is
+for Neoverse platform and another is for generic purpose (which
+without data source packets), below code is to demonstrate the basic
+idea.
+
+Please note, I don't verify this code piece since I have no Neoverse
+platform.  Do you mind to share a perf data file which contains data
+source packets so I can study more details for its format?
+
+static void arm_spe__synth_data_source_neoverse(const struct arm_spe_record *record,
+                                                union perf_mem_data_src *data_src)
+{
+        switch (record->source) {
+        case ARM_SPE_NV_L1D:
+                data_src->mem_lvl = PERF_MEM_LVL_L1 | PERF_MEM_LVL_HIT;
+                break;
+        case ARM_SPE_NV_L2:
+                data_src->mem_lvl = PERF_MEM_LVL_L2 | PERF_MEM_LVL_HIT;
+                break;
+        case ARM_SPE_NV_PEER_CORE:
+                data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
+                data_src->mem_lvl = PERF_MEM_LVL_L1 | PERF_MEM_LVL_HIT;
+                break;
+        case ARM_SPE_NV_LCL_CLSTR:
+                /* To be decided */
+                break;
+        /* System cache is L3 cache */
+        case ARM_SPE_NV_SYS_CACHE:
+                data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
+                break;
+        /* Snooping between L2 caches crossing two clusters */
+        case ARM_SPE_NV_PEER_CLSTR:
+                data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
+                data_src->mem_lvl = PERF_MEM_LVL_L2 | PERF_MEM_LVL_HIT;
+                break;
+        case ARM_SPE_NV_REMOTE:
+                data_src->mem_lvl = PERF_MEM_LVL_REM_CCE1 | PERF_MEM_LVL_HIT;
+                break;
+        case ARM_SPE_NV_DRAM:
+                data_src->mem_lvl = PERF_MEM_LVL_LOC_RAM | PERF_MEM_LVL_HIT;
+                break;
+        default:
+                break;
+        }
+
+        return;
+}
+
+static void arm_spe__synth_data_source_generic(const struct arm_spe_record *record,
+                                               union perf_mem_data_src *data_src)
+{
+       if (record->type & (ARM_SPE_LLC_ACCESS | ARM_SPE_LLC_MISS)) {
+               data_src->mem_lvl = PERF_MEM_LVL_L3;
+
+               if (record->type & ARM_SPE_LLC_MISS)
+                       data_src->mem_lvl |= PERF_MEM_LVL_MISS;
+               else
+                       data_src->mem_lvl |= PERF_MEM_LVL_HIT;
+       } else if (record->type & (ARM_SPE_L1D_ACCESS | ARM_SPE_L1D_MISS)) {
+               data_src->mem_lvl = PERF_MEM_LVL_L1;
+
+               if (record->type & ARM_SPE_L1D_MISS)
+                       data_src->mem_lvl |= PERF_MEM_LVL_MISS;
+               else
+                       data_src->mem_lvl |= PERF_MEM_LVL_HIT;
+       }
+
+       if (record->type & ARM_SPE_REMOTE_ACCESS)
+               data_src->mem_lvl |= PERF_MEM_LVL_REM_CCE1;
+
+       return;
+}
+
+static u64 arm_spe__synth_data_source(const struct arm_spe_record *record, u64 midr)
+{
+        union perf_mem_data_src data_src = { 0 };
+        bool is_neoverse = is_midr_in_range(midr, neoverse_spe);
+
+        if (record->op == ARM_SPE_LD)
+                data_src.mem_op = PERF_MEM_OP_LOAD;
+        else
+                data_src.mem_op = PERF_MEM_OP_STORE;
+
+        if (is_neoverse)
+                arm_spe__synth_data_source_neoverse(record, &data_src);
+        else
+                arm_spe__synth_data_source_generic(record, &data_src);
+
+        if (record->type & (ARM_SPE_TLB_ACCESS | ARM_SPE_TLB_MISS)) {
+                data_src.mem_dtlb = PERF_MEM_TLB_WK;
+
+                if (record->type & ARM_SPE_TLB_MISS)
+                        data_src.mem_dtlb |= PERF_MEM_TLB_MISS;
+                else
+                        data_src.mem_dtlb |= PERF_MEM_TLB_HIT;
+        }
+
+        return data_src.val;
+}
 
 Thanks,
-German
-
----
-Tested with packages:
-libbfd via binutils-dev(v2.34-6ubuntu1.3) on ubuntu 20.04
-libiberty via libiberty-dev(v20200409-1) on ubuntu 20.04
->
-> - Arnaldo
->  
->> [...]
+Leo
