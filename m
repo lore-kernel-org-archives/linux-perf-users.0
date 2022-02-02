@@ -2,112 +2,78 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8488C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Feb 2022 10:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9798FC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Feb 2022 10:33:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234704AbiBBKIs (ORCPT
+        id S232196AbiBBKda (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Feb 2022 05:08:48 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:37764 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229650AbiBBKIs (ORCPT
+        Wed, 2 Feb 2022 05:33:30 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4616 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229507AbiBBKd3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Feb 2022 05:08:48 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 32A21B8306A;
-        Wed,  2 Feb 2022 10:08:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA298C004E1;
-        Wed,  2 Feb 2022 10:08:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643796526;
-        bh=IIDVZd6xhg6IbKtZ7hn0mo9CpKwGO0GZzXu6zIWWUuc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gXyTvIbeQus088m8DJUWfdrOTMtXiau/N40xSfaraPhhbzauYgkC30Ne383DsiAaI
-         Zt7WEywKQrPxDAY3C2U9miaKco+9rQ3ANN6gsUkxJWCNlP6PWwlo0BdtLfSLGNvwjY
-         ud0Y5njlfGiOYk8HnNN4cwOu5EVf1KHAmM3XkYCvSVzkHXacSsWYVQJfJcGlA4YUUm
-         vysLI7zvZn2d2kAGY6BUFJJoKLeymJcMF27n3UIsBymrRu8hWTw9wV1aABQ/eDUqwc
-         RkG59IPjpWmDj2U7qUA4yGptkANS5z++URAqdc5IFpavY+X226xnSiq8IAOUSdJSwC
-         u5Md2OlKe69mg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id ECA8A40466; Wed,  2 Feb 2022 07:08:42 -0300 (-03)
-Date:   Wed, 2 Feb 2022 07:08:42 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Ian Rogers <irogers@google.com>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Christy Lee <christylee@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>
-Subject: Re: [PATCH 1/3] perf/bpf: Remove prologue generation
-Message-ID: <YfpYKri5i+Go9DlU@kernel.org>
-References: <20220123221932.537060-1-jolsa@kernel.org>
- <CAEf4BzZj7awfwi-JoAB=aahxVF8p6FKhgu4OKpyY_pjePy75ig@mail.gmail.com>
- <CAEf4BzZrggU7Ym7bucvjG7K+AmtxhD8UGCMPqXdpL3stUhpOEg@mail.gmail.com>
+        Wed, 2 Feb 2022 05:33:29 -0500
+Received: from fraeml739-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JpdRV45Q6z67y8Y;
+        Wed,  2 Feb 2022 18:32:54 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml739-chm.china.huawei.com (10.206.15.220) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Wed, 2 Feb 2022 11:33:27 +0100
+Received: from [10.47.27.42] (10.47.27.42) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Wed, 2 Feb
+ 2022 10:33:20 +0000
+Message-ID: <ecbca50c-775b-e460-a6dd-488069c3f390@huawei.com>
+Date:   Wed, 2 Feb 2022 10:33:13 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzZrggU7Ym7bucvjG7K+AmtxhD8UGCMPqXdpL3stUhpOEg@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: [PATCH v9] libperf: Add arm64 support to perf_mmap__read_self()
+To:     Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+CC:     Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20220201214056.702854-1-robh@kernel.org>
+From:   John Garry <john.garry@huawei.com>
+In-Reply-To: <20220201214056.702854-1-robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.27.42]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Feb 01, 2022 at 05:01:38PM -0800, Andrii Nakryiko escreveu:
-> On Mon, Jan 24, 2022 at 12:24 PM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Sun, Jan 23, 2022 at 2:19 PM Jiri Olsa <jolsa@redhat.com> wrote:
-> > >
-> > > Removing code for ebpf program prologue generation.
-> > >
-> > > The prologue code was used to get data for extra arguments specified
-> > > in program section name, like:
-> > >
-> > >   SEC("lock_page=__lock_page page->flags")
-> > >   int lock_page(struct pt_regs *ctx, int err, unsigned long flags)
-> > >   {
-> > >          return 1;
-> > >   }
-> > >
-> > > This code is using deprecated libbpf API and blocks its removal.
-> > >
-> > > This feature was not documented and broken for some time without
-> > > anyone complaining, also original authors are not responding,
-> > > so I'm removing it.
-> > >
-> > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > > ---
-> > >  tools/perf/Makefile.config     |  11 -
-> > >  tools/perf/builtin-record.c    |  14 -
-> > >  tools/perf/util/bpf-loader.c   | 242 +---------------
-> > >  tools/perf/util/bpf-prologue.c | 508 ---------------------------------
-> > >  tools/perf/util/bpf-prologue.h |  37 ---
-> > >  5 files changed, 1 insertion(+), 811 deletions(-)
-> >
-> > Love the stats! Thanks for taking this on!
-> >
+On 01/02/2022 21:40, Rob Herring wrote:
+> Add the arm64 variants for read_perf_counter() and read_timestamp().
+> Unfortunately the counter number is encoded into the instruction, so the
+> code is a bit verbose to enumerate all possible counters.
 > 
-> Hi,
-> 
-> Was this ever applied? If not, are there any blockers? I assume this
-> will go through the perf tree, right?
+> Tested-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-I'll go thru it today.
+Ha, I was just looking at this same topic yesterday from an old patchset 
+[0] and wasn't aware of this separate change.
+
+Tested-by: John Garry <john.garry@huawei.com>
+
+[0] https://lore.kernel.org/all/20210311000837.3630499-1-robh@kernel.org/
+
+BTW, Documentation/arm64/perf.rst has a reference to a file which does 
+not seem to exit:
+
+.. _tools/perf/arch/arm64/tests/user-events.c:
  
-> > >  delete mode 100644 tools/perf/util/bpf-prologue.c
-> > >  delete mode 100644 tools/perf/util/bpf-prologue.h
-> > >
-> >
-> > [...]
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/arch/arm64/tests/user-events.c
 
--- 
-
-- Arnaldo
+Thanks,
+john
