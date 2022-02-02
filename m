@@ -2,114 +2,228 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F304BC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Feb 2022 01:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A58C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Feb 2022 04:29:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243591AbiBBBBv (ORCPT
+        id S237484AbiBBE30 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 1 Feb 2022 20:01:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58612 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229994AbiBBBBu (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Feb 2022 20:01:50 -0500
-Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6531C061714;
-        Tue,  1 Feb 2022 17:01:50 -0800 (PST)
-Received: by mail-io1-xd2c.google.com with SMTP id r144so23483508iod.9;
-        Tue, 01 Feb 2022 17:01:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CmP0qq6/ekGkKvGdCo8XfDqIYTpqdkVRVTouUqww8QI=;
-        b=b/Km9mNoWX8njHOWVWF7fZHUDevfwYi72UZvSkekAqn9CC2nAjbdB5fkmGeOcRMn71
-         zM9q+PKqHvS+NAI2yYOSnC4rGHbkTp6xAFPWcvBR4EhFaEzab8u/+x/mCyLBcmyTg6CL
-         IAvZl6G1eACTZmfkhfnueRTodaEMYRZOAda4xBBQyJII/Sg/e2xeQc3LsTROuBzGpOxP
-         kD3nxWZvmf7C6BC/Oi7Y7x2CLZv/MjlWWJ9QPCS3MNz3oVoLTFRJWk4iGM2tyr4dYdsr
-         pHOpd4XkFbbVEVu4kLgPnKslMA9WrKGY2KB/Whk79fEcIOaknXcfHXY9vSzaj39Tkwm8
-         EoKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CmP0qq6/ekGkKvGdCo8XfDqIYTpqdkVRVTouUqww8QI=;
-        b=tnPdvd86kU7Ho/5GRvbjl7efP9Ijs3IFeqcSNIjyfE68bRIrWmGiEv+CIiOdGlsC+c
-         irXV3kqRGTlDeMFukL9cWdzuGASkDXlUaz/Xvm8eva4TuA6qxLJP502UnEOfQY3vNMOz
-         LGQ6B1PnsvOu+WI0yvl7tL5XlWoTCuwHMgJ59g/HiZ9UfzrV238QamMoF3Zih+8RRrem
-         LrR30wFOiBCAwdU1ux0IVSX75bsRMgxkCJr3N3sIGLxZvsM5wfiSNui2u2j3ZLmnaU3R
-         m6flDusdDHqSzbTpXcBQRprM5cqWDlptpn/2ENF8fJYP+yErnLmg/4iRIC5rUtCeyK7x
-         gePg==
-X-Gm-Message-State: AOAM531OVwFsRE8ZRURKGBG49H44iyrtGJyGxJkh0dgx7idwZ9n3k0e5
-        wdM1eABvSADgCD84N7sAMRNJTWdrBQRlaUVl0+I=
-X-Google-Smtp-Source: ABdhPJxKbhDeIkE3mRwXAteUh1zQzA58w8qn25C1Gsc07DPCltjoxAOsOOoCdZzmPPRc3L9u9sowSGv1Bb7KXABoqFI=
-X-Received: by 2002:a02:7417:: with SMTP id o23mr15124921jac.145.1643763710194;
- Tue, 01 Feb 2022 17:01:50 -0800 (PST)
+        Tue, 1 Feb 2022 23:29:26 -0500
+Received: from mail-sn1anam02on2063.outbound.protection.outlook.com ([40.107.96.63]:20481
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232908AbiBBE30 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 1 Feb 2022 23:29:26 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ktb2Y5TMHx7Gufc9HPdkV3lIUZCPYAxRYbaImJ/QfdJSxMSRuFccW3bMJAnRLu47y/5aYD83tR0o9aAqB0kO9+5WNLJJy7Dl5aF7Lftb988oNE74nlNWLJb2h6CGRQWxda9ysX3n6VZ+7Uwl9gcoi7s5QhcbeIYCYuLYpysgDDmx3dshQopEkhpGpcylPgbh6Xu9N3BUSew0JjnhvPzJkPFsk7xr32o/ArG8qjE0nH3fIT0GWTg9Bv2Kwi2wTWLxjFJdvaS8T3gFt2vcpqpE0ErEw9wwjObEp9Wc6Z6G+/hXIHGeUwCNiYxgFlmxq+pFmJz/npjkFxAFUc89aFyOvw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vqgMcUfhDrCwffj0CjUnqhMl1CtCUvkbCfnkbEx/aNM=;
+ b=cZzcyTZ1tUM9jz2EIfxAUhVWIkER205E4W3GpYJjWuxT9wDtvXN5juEMbmkbQ2D7RBgjUGVRGxL8BRGdACFKmOiMTLbyJ00Jraerc4ZGERjIARDV0Ut5d7YmMl085G1gs/5Kq3/Z4zu3Eu4M3HFt/iPJ3/YQJxG12ItDE45T4k/PoG09aAeJpSNOIy1DNziVtd68gAB7Dwh5lpZSEPFEemgQAoAZlzkAXTUUM/ivNgllluVdFrKqcFnchWT6+iQAyDi4CQL/cAdtTcYQUOSj0mcYWKXutRvgLkZ8uIVE/VGAWsx7eW4iQ3UOEXEfmclurFfIly3Yect5J5ThXfVWnw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=gmail.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vqgMcUfhDrCwffj0CjUnqhMl1CtCUvkbCfnkbEx/aNM=;
+ b=QBMnqKiCKETaTYU88kFZ5x57yBEJ/jOOTWDUCkH0xkGy4qOWF5NXq5o5PJAEPYIoGsXCHfYYtfVLngTm+K046VmhiFjJxa92K4fImlw+CxUzMCYNOj80etynQ64WOAzcLX+yE2T6KK6bKusEfN7YpsP7uqySh3i56Mk2nAb1lEk=
+Received: from BN6PR20CA0067.namprd20.prod.outlook.com (2603:10b6:404:151::29)
+ by MN2PR12MB4439.namprd12.prod.outlook.com (2603:10b6:208:262::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.11; Wed, 2 Feb
+ 2022 04:29:23 +0000
+Received: from BN8NAM11FT014.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:404:151:cafe::d4) by BN6PR20CA0067.outlook.office365.com
+ (2603:10b6:404:151::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.12 via Frontend
+ Transport; Wed, 2 Feb 2022 04:29:23 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT014.mail.protection.outlook.com (10.13.177.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4951.12 via Frontend Transport; Wed, 2 Feb 2022 04:29:23 +0000
+Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.18; Tue, 1 Feb
+ 2022 22:29:12 -0600
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+To:     <like.xu.linux@gmail.com>, <jmattson@google.com>
+CC:     <ravi.bangoria@amd.com>, <santosh.shukla@amd.com>,
+        <pbonzini@redhat.com>, <eranian@google.com>, <seanjc@google.com>,
+        <wanpengli@tencent.com>, <vkuznets@redhat.com>, <joro@8bytes.org>,
+        <peterz@infradead.org>, <mingo@redhat.com>,
+        <alexander.shishkin@linux.intel.com>, <tglx@linutronix.de>,
+        <bp@alien8.de>, <dave.hansen@linux.intel.com>, <hpa@zytor.com>,
+        <kvm@vger.kernel.org>, <x86@kernel.org>,
+        <linux-perf-users@vger.kernel.org>, <ananth.narayan@amd.com>,
+        <kim.phillips@amd.com>
+Subject: [PATCH] perf/amd: Implement errata #1292 workaround for F19h M00-0Fh
+Date:   Wed, 2 Feb 2022 09:58:38 +0530
+Message-ID: <20220202042838.6532-1-ravi.bangoria@amd.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220117055703.52020-1-likexu@tencent.com>
+References: <20220117055703.52020-1-likexu@tencent.com>
 MIME-Version: 1.0
-References: <20220123221932.537060-1-jolsa@kernel.org> <CAEf4BzZj7awfwi-JoAB=aahxVF8p6FKhgu4OKpyY_pjePy75ig@mail.gmail.com>
-In-Reply-To: <CAEf4BzZj7awfwi-JoAB=aahxVF8p6FKhgu4OKpyY_pjePy75ig@mail.gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 1 Feb 2022 17:01:38 -0800
-Message-ID: <CAEf4BzZrggU7Ym7bucvjG7K+AmtxhD8UGCMPqXdpL3stUhpOEg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] perf/bpf: Remove prologue generation
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Ian Rogers <irogers@google.com>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Christy Lee <christylee@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e6734e2e-5f6a-4b09-c768-08d9e60496e6
+X-MS-TrafficTypeDiagnostic: MN2PR12MB4439:EE_
+X-Microsoft-Antispam-PRVS: <MN2PR12MB4439EA80ABD110686DE85410E0279@MN2PR12MB4439.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: N8oAxAfe1IeuTQYiy2Ge/3qhgtY3hcCKK5keFCs3+qxU/VX0i2TwUDiOd1BFIDehrtivUdfApkWnsob1ob+JkTfsGkN+5hbVEQOJuK8eSReaT3L6O0OiHTWa+XBI6MaawJAXGHT7m/+1fHfQPjELT+/ceMt6C9VZsiiz0w9WNm2uPNs/cd6LcOEkj5MgpycFYiuRvUb7ndUQuM9i18M2uipKVZgp5m2u1sNT96hxpzrISM6EKYFvEv/LHSZjA4lK41WfMuQSTQmoaMcGO0p6XDzfONWugm9uGvbhGdGBzyqdHVU3yUMyege+nxjYYCwZ0ci8e6HdvzoS1vGY1KU8tkQ1IA32kUW/8FnaUadosRX3x0suAIQ5TCs3uwQQdTo2ZXdGCyd3pbTDd1dv6lu/wmsTKGlbF5tGpJ2a6VB98MNFhbHRgF/Mk/mcwI/ia+r9ceHQybfV4v6LmcMbcpVNmeYwlsPqNZmC12i/HMEPUjZ0pmzemjuJCaDcQUwPooOr6+lFnI/1R13V22x+HxaO3fDn+KZ7abueOlANGwz08bhxDOeQB6O0aYYfXP0/ttnGMq1PoiAbmTxXPF1tQTdplcK8NOkA3WFRTA4YMKF0XZnwJJH3H+W188FXHC3OsO+fMscXhdHJdYgp0ioVBrqKJB9qwW/uogCk56loyMX/ytcyGgMrffjrn1dIuUHNICBA4bcNMueGChiQzFj8ZkQ089+pRlw8zYuWBCuBTes9yfxFFkrj/arnI8r1QKrI1etMyPoEPsPURvXSEV3DlMFRgbRl26yWCuETcH5EA1VNdihimjZCYEZk8oIBUty1nPgC95DkechzbZnstvpPRD2+8g==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(40470700004)(46966006)(5660300002)(83380400001)(2906002)(44832011)(36756003)(36860700001)(508600001)(54906003)(110136005)(47076005)(7416002)(8676002)(81166007)(86362001)(4326008)(186003)(336012)(26005)(16526019)(356005)(8936002)(1076003)(82310400004)(316002)(426003)(2616005)(40460700003)(70586007)(966005)(6666004)(7696005)(70206006)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2022 04:29:23.4975
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e6734e2e-5f6a-4b09-c768-08d9e60496e6
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT014.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4439
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jan 24, 2022 at 12:24 PM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Sun, Jan 23, 2022 at 2:19 PM Jiri Olsa <jolsa@redhat.com> wrote:
-> >
-> > Removing code for ebpf program prologue generation.
-> >
-> > The prologue code was used to get data for extra arguments specified
-> > in program section name, like:
-> >
-> >   SEC("lock_page=__lock_page page->flags")
-> >   int lock_page(struct pt_regs *ctx, int err, unsigned long flags)
-> >   {
-> >          return 1;
-> >   }
-> >
-> > This code is using deprecated libbpf API and blocks its removal.
-> >
-> > This feature was not documented and broken for some time without
-> > anyone complaining, also original authors are not responding,
-> > so I'm removing it.
-> >
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  tools/perf/Makefile.config     |  11 -
-> >  tools/perf/builtin-record.c    |  14 -
-> >  tools/perf/util/bpf-loader.c   | 242 +---------------
-> >  tools/perf/util/bpf-prologue.c | 508 ---------------------------------
-> >  tools/perf/util/bpf-prologue.h |  37 ---
-> >  5 files changed, 1 insertion(+), 811 deletions(-)
->
-> Love the stats! Thanks for taking this on!
->
+Perf counter may overcount for a list of Retire Based Events. Implement
+workaround for Zen3 Family 19 Model 00-0F processors as suggested in
+Revision Guide[1]:
 
-Hi,
+  To count the non-FP affected PMC events correctly:
+    o Use Core::X86::Msr::PERF_CTL2 to count the events, and
+    o Program Core::X86::Msr::PERF_CTL2[43] to 1b, and
+    o Program Core::X86::Msr::PERF_CTL2[20] to 0b.
 
-Was this ever applied? If not, are there any blockers? I assume this
-will go through the perf tree, right?
+Above workaround suggests to clear PERF_CTL2[20], but that will disable
+sampling mode. Given the fact that, there is already a skew between
+actual counter overflow vs PMI hit, we are anyway not getting accurate
+count for sampling events. Also, using PMC2 with both bit43 and bit20
+set can result in additional issues. Hence Linux implementation of
+workaround uses non-PMC2 counter for sampling events.
 
-> >  delete mode 100644 tools/perf/util/bpf-prologue.c
-> >  delete mode 100644 tools/perf/util/bpf-prologue.h
-> >
->
-> [...]
+Although the issue exists on all previous Zen revisions, the workaround
+is different and thus not included in this patch.
+
+This patch needs Like's patch[2] to make it work on kvm guest.
+
+[1] https://bugzilla.kernel.org/attachment.cgi?id=298241
+[2] https://lore.kernel.org/lkml/20220117055703.52020-1-likexu@tencent.com
+
+Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+---
+ arch/x86/events/amd/core.c | 75 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 74 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index 9687a8aef01c..e2f172e75ce8 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -874,8 +874,78 @@ amd_get_event_constraints_f15h(struct cpu_hw_events *cpuc, int idx,
+ 	}
+ }
+ 
++/* Errata 1292: Overcounting of Retire Based Events */
++static struct event_constraint retire_event_count_constraints[] __read_mostly = {
++	EVENT_CONSTRAINT(0xC0, 0x4, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0xC1, 0x4, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0xC2, 0x4, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0xC3, 0x4, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0xC4, 0x4, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0xC5, 0x4, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0xC8, 0x4, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0xC9, 0x4, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0xCA, 0x4, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0xCC, 0x4, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0xD1, 0x4, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0x1000000C7, 0x4, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0x1000000D0, 0x4, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT_END
++};
++
++#define SAMPLE_IDX_MASK	(((1ULL << AMD64_NUM_COUNTERS_CORE) - 1) & ~0x4ULL)
++
++static struct event_constraint retire_event_sample_constraints[] __read_mostly = {
++	EVENT_CONSTRAINT(0xC0, SAMPLE_IDX_MASK, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0xC0, SAMPLE_IDX_MASK, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0xC1, SAMPLE_IDX_MASK, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0xC2, SAMPLE_IDX_MASK, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0xC3, SAMPLE_IDX_MASK, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0xC4, SAMPLE_IDX_MASK, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0xC5, SAMPLE_IDX_MASK, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0xC8, SAMPLE_IDX_MASK, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0xC9, SAMPLE_IDX_MASK, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0xCA, SAMPLE_IDX_MASK, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0xCC, SAMPLE_IDX_MASK, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0xD1, SAMPLE_IDX_MASK, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0x1000000C7, SAMPLE_IDX_MASK, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0x1000000D0, SAMPLE_IDX_MASK, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT_END
++};
++
+ static struct event_constraint pair_constraint;
+ 
++/*
++ * Although 'Overcounting of Retire Based Events' errata exists
++ * for older generation cpus, workaround to set bit 43 works only
++ * for Family 19h Model 00-0Fh as per the Revision Guide.
++ */
++static struct event_constraint *
++amd_get_event_constraints_f19h_m00_0fh(struct cpu_hw_events *cpuc, int idx,
++				       struct perf_event *event)
++{
++	struct event_constraint *c;
++
++	if (amd_is_pair_event_code(&event->hw))
++		return &pair_constraint;
++
++	if (is_sampling_event(event)) {
++		for_each_event_constraint(c, retire_event_sample_constraints) {
++			if (constraint_match(c, event->hw.config))
++				return c;
++		}
++	} else {
++		for_each_event_constraint(c, retire_event_count_constraints) {
++			if (constraint_match(c, event->hw.config)) {
++				event->hw.config |= (1ULL << 43);
++				event->hw.config &= ~(1ULL << 20);
++				return c;
++			}
++		}
++	}
++
++	return &unconstrained;
++}
++
+ static struct event_constraint *
+ amd_get_event_constraints_f17h(struct cpu_hw_events *cpuc, int idx,
+ 			       struct perf_event *event)
+@@ -983,7 +1053,10 @@ static int __init amd_core_pmu_init(void)
+ 				    x86_pmu.num_counters / 2, 0,
+ 				    PERF_X86_EVENT_PAIR);
+ 
+-		x86_pmu.get_event_constraints = amd_get_event_constraints_f17h;
++		if (boot_cpu_data.x86 == 0x19 && boot_cpu_data.x86_model <= 0xf)
++			x86_pmu.get_event_constraints = amd_get_event_constraints_f19h_m00_0fh;
++		else
++			x86_pmu.get_event_constraints = amd_get_event_constraints_f17h;
+ 		x86_pmu.put_event_constraints = amd_put_event_constraints_f17h;
+ 		x86_pmu.perf_ctr_pair_en = AMD_MERGE_EVENT_ENABLE;
+ 		x86_pmu.flags |= PMU_FL_PAIR;
+-- 
+2.27.0
+
