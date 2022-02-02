@@ -2,232 +2,415 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F24E3C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Feb 2022 23:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD77C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Feb 2022 00:13:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243033AbiBAX76 (ORCPT
+        id S243414AbiBBANB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 1 Feb 2022 18:59:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44562 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241096AbiBAX76 (ORCPT
+        Tue, 1 Feb 2022 19:13:01 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:57886 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243373AbiBBAM5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Feb 2022 18:59:58 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B389C061714;
-        Tue,  1 Feb 2022 15:59:57 -0800 (PST)
+        Tue, 1 Feb 2022 19:12:57 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id C67AFCE1B02;
-        Tue,  1 Feb 2022 23:59:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4431C340EB;
-        Tue,  1 Feb 2022 23:59:52 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 29A5A61520;
+        Wed,  2 Feb 2022 00:12:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AFA9C340EB;
+        Wed,  2 Feb 2022 00:12:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643759993;
-        bh=ue4RtWGJnXTWHompasZC27/ozql0kDk4bjSgN5qaTjE=;
+        s=k20201202; t=1643760776;
+        bh=eK7RrEe6x5KYHO+ICUNYViwytxw03TGumLdm6KZYGjk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oDQKynrmPyfh5V9b7E+gahUB9j/vndh5hi99TRCu7Tj10XzdTJ3gR+vGnS2oJSk3C
-         L34DupgdhO9dk17MCq/D04t6fkbTxvYOd9PaxZvJ9M3d/fzIkTbNpSypq4HNT/0d/6
-         iRo+jPAeHXKJMOgjVi58ogsPfvUimIl6rPcJZ/T1iFIjjHlQlzLnQCbyz0oPtZN13G
-         Iex987vb9od5e70gDHXA7Ziz/qMjXcJPZ5JtdHd3fk/zhxyOlQ6O6bRp8WQzqR1MJ1
-         d+6t49hMJFo5q4crKbZCG24NdacfVlqNHiRuIBkLNpkDxqWdVumpa31INZoIq9tslT
-         FggJsC7TaAqVw==
+        b=RQWao8PXF3DWRd9376XfQouWvnxMfhoFfNUgR8PzyoXHuQBP+6Lc7sbgx5uF8nJH2
+         6Q65WoojIyBrG0+qRlTGJkELndggI5MRs87h4wxOoZzldYuF1eszfjyBt15tnWiwfS
+         6FAUCtHvS3sHAJ0zd0yMdKJIHxuncmYDF93KE+pHVUiuEY2UcoW7iw7rLkuej5CfSi
+         HO8GTMa7dLvonOQYMfD0VwBijn8uRPL8zItBwRdbixHj2YurS9Ut2dNkaFoc9Xpn7l
+         N6y4qQd5i7qywcG5yGa2ZDfC3GMyIPy5WfCKZbCCuTOJCCrCga4Z51JL7UGYto1ByE
+         gGB26eEgMLtpA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 18FF440466; Tue,  1 Feb 2022 20:59:51 -0300 (-03)
-Date:   Tue, 1 Feb 2022 20:59:51 -0300
+        id 90D8E40466; Tue,  1 Feb 2022 21:12:54 -0300 (-03)
+Date:   Tue, 1 Feb 2022 21:12:54 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+To:     German Gomez <german.gomez@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9] libperf: Add arm64 support to perf_mmap__read_self()
-Message-ID: <YfnJd7nMhbsIlghV@kernel.org>
-References: <20220201214056.702854-1-robh@kernel.org>
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH] perf symbols: Remove demangle-rust files as superfluous
+Message-ID: <YfnMhsF2/z0FUaWz@kernel.org>
+References: <20220201185054.1041917-1-german.gomez@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220201214056.702854-1-robh@kernel.org>
+In-Reply-To: <20220201185054.1041917-1-german.gomez@arm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Feb 01, 2022 at 03:40:56PM -0600, Rob Herring escreveu:
-> Add the arm64 variants for read_perf_counter() and read_timestamp().
-> Unfortunately the counter number is encoded into the instruction, so the
-> code is a bit verbose to enumerate all possible counters.
-> 
-> Tested-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
+Em Tue, Feb 01, 2022 at 06:50:53PM +0000, German Gomez escreveu:
+> Demangling of Rust legacy symbols has been working through libbfd for
+> some time now, making these files no longer needed, so remove them.
 
-Looks sane, will give some time to Jiri to react.
+Can this be made dependent of the versions of the components that
+provide this feature?
 
 - Arnaldo
-
+ 
+> Signed-off-by: German Gomez <german.gomez@arm.com>
 > ---
-> Arm64 kernel support landed in 5.17, but the corresponding libperf 
-> support didn't get picked up.
+> Before and after the commit:
 > 
-> v9:
->  - Rebase on v5.17-rc
->  - Add Tested-by
-> v8:
->  - Set attr.config1 to request user access on arm64
-> v7:
->  - Move enabling of libperf user read test for arm64 to this patch
+> $ perf record rustc
+> $ perf report
+> 
+> 2.98%  rustc    rustc                                [.] <std::collections::hash::map::DefaultHasher as core::hash::Hasher>::write
+> 2.77%  rustc    rustc                                [.] std::collections::hash::map::HashMap<K,V,S>::entry
+> 2.09%  rustc    rustc                                [.] <<toml::value::Value as serde::de::Deserialize>::deserialize::ValueVisitor as serde::de::Visitor>::visit_map
+> 2.05%  rustc    rustc                                [.] <toml::de::MapVisitor as serde::de::MapAccess>::next_key_seed
+> 1.52%  rustc    rustc                                [.] std::collections::hash::map::HashMap<K,V,S>::get
+> 0.59%  rustc    rustc                                [.] <toml::de::MapVisitor as serde::de::MapAccess>::next_value_seed
 > ---
->  tools/lib/perf/mmap.c             | 98 +++++++++++++++++++++++++++++++
->  tools/lib/perf/tests/test-evsel.c |  5 +-
->  2 files changed, 102 insertions(+), 1 deletion(-)
+>  tools/perf/util/Build           |   1 -
+>  tools/perf/util/demangle-rust.c | 269 --------------------------------
+>  tools/perf/util/demangle-rust.h |   8 -
+>  tools/perf/util/symbol-elf.c    |   7 -
+>  4 files changed, 285 deletions(-)
+>  delete mode 100644 tools/perf/util/demangle-rust.c
+>  delete mode 100644 tools/perf/util/demangle-rust.h
 > 
-> diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
-> index f7ee07cb5818..0d1634cedf44 100644
-> --- a/tools/lib/perf/mmap.c
-> +++ b/tools/lib/perf/mmap.c
-> @@ -13,6 +13,7 @@
->  #include <internal/lib.h>
->  #include <linux/kernel.h>
->  #include <linux/math64.h>
-> +#include <linux/stringify.h>
->  #include "internal.h"
+> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> index 2a403cefc..e59788ef6 100644
+> --- a/tools/perf/util/Build
+> +++ b/tools/perf/util/Build
+> @@ -193,7 +193,6 @@ perf-$(CONFIG_LIBCAP) += cap.o
 >  
->  void perf_mmap__init(struct perf_mmap *map, struct perf_mmap *prev,
-> @@ -294,6 +295,103 @@ static u64 read_timestamp(void)
+>  perf-y += demangle-ocaml.o
+>  perf-y += demangle-java.o
+> -perf-y += demangle-rust.o
 >  
->  	return low | ((u64)high) << 32;
+>  ifdef CONFIG_JITDUMP
+>  perf-$(CONFIG_LIBELF) += jitdump.o
+> diff --git a/tools/perf/util/demangle-rust.c b/tools/perf/util/demangle-rust.c
+> deleted file mode 100644
+> index a659fc69f..000000000
+> --- a/tools/perf/util/demangle-rust.c
+> +++ /dev/null
+> @@ -1,269 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> -#include <string.h>
+> -#include "debug.h"
+> -
+> -#include "demangle-rust.h"
+> -
+> -/*
+> - * Mangled Rust symbols look like this:
+> - *
+> - *     _$LT$std..sys..fd..FileDesc$u20$as$u20$core..ops..Drop$GT$::drop::hc68340e1baa4987a
+> - *
+> - * The original symbol is:
+> - *
+> - *     <std::sys::fd::FileDesc as core::ops::Drop>::drop
+> - *
+> - * The last component of the path is a 64-bit hash in lowercase hex, prefixed
+> - * with "h". Rust does not have a global namespace between crates, an illusion
+> - * which Rust maintains by using the hash to distinguish things that would
+> - * otherwise have the same symbol.
+> - *
+> - * Any path component not starting with a XID_Start character is prefixed with
+> - * "_".
+> - *
+> - * The following escape sequences are used:
+> - *
+> - *     ","  =>  $C$
+> - *     "@"  =>  $SP$
+> - *     "*"  =>  $BP$
+> - *     "&"  =>  $RF$
+> - *     "<"  =>  $LT$
+> - *     ">"  =>  $GT$
+> - *     "("  =>  $LP$
+> - *     ")"  =>  $RP$
+> - *     " "  =>  $u20$
+> - *     "'"  =>  $u27$
+> - *     "["  =>  $u5b$
+> - *     "]"  =>  $u5d$
+> - *     "~"  =>  $u7e$
+> - *
+> - * A double ".." means "::" and a single "." means "-".
+> - *
+> - * The only characters allowed in the mangled symbol are a-zA-Z0-9 and _.:$
+> - */
+> -
+> -static const char *hash_prefix = "::h";
+> -static const size_t hash_prefix_len = 3;
+> -static const size_t hash_len = 16;
+> -
+> -static bool is_prefixed_hash(const char *start);
+> -static bool looks_like_rust(const char *sym, size_t len);
+> -static bool unescape(const char **in, char **out, const char *seq, char value);
+> -
+> -/*
+> - * INPUT:
+> - *     sym: symbol that has been through BFD-demangling
+> - *
+> - * This function looks for the following indicators:
+> - *
+> - *  1. The hash must consist of "h" followed by 16 lowercase hex digits.
+> - *
+> - *  2. As a sanity check, the hash must use between 5 and 15 of the 16 possible
+> - *     hex digits. This is true of 99.9998% of hashes so once in your life you
+> - *     may see a false negative. The point is to notice path components that
+> - *     could be Rust hashes but are probably not, like "haaaaaaaaaaaaaaaa". In
+> - *     this case a false positive (non-Rust symbol has an important path
+> - *     component removed because it looks like a Rust hash) is worse than a
+> - *     false negative (the rare Rust symbol is not demangled) so this sets the
+> - *     balance in favor of false negatives.
+> - *
+> - *  3. There must be no characters other than a-zA-Z0-9 and _.:$
+> - *
+> - *  4. There must be no unrecognized $-sign sequences.
+> - *
+> - *  5. There must be no sequence of three or more dots in a row ("...").
+> - */
+> -bool
+> -rust_is_mangled(const char *sym)
+> -{
+> -	size_t len, len_without_hash;
+> -
+> -	if (!sym)
+> -		return false;
+> -
+> -	len = strlen(sym);
+> -	if (len <= hash_prefix_len + hash_len)
+> -		/* Not long enough to contain "::h" + hash + something else */
+> -		return false;
+> -
+> -	len_without_hash = len - (hash_prefix_len + hash_len);
+> -	if (!is_prefixed_hash(sym + len_without_hash))
+> -		return false;
+> -
+> -	return looks_like_rust(sym, len_without_hash);
+> -}
+> -
+> -/*
+> - * A hash is the prefix "::h" followed by 16 lowercase hex digits. The hex
+> - * digits must comprise between 5 and 15 (inclusive) distinct digits.
+> - */
+> -static bool is_prefixed_hash(const char *str)
+> -{
+> -	const char *end;
+> -	bool seen[16];
+> -	size_t i;
+> -	int count;
+> -
+> -	if (strncmp(str, hash_prefix, hash_prefix_len))
+> -		return false;
+> -	str += hash_prefix_len;
+> -
+> -	memset(seen, false, sizeof(seen));
+> -	for (end = str + hash_len; str < end; str++)
+> -		if (*str >= '0' && *str <= '9')
+> -			seen[*str - '0'] = true;
+> -		else if (*str >= 'a' && *str <= 'f')
+> -			seen[*str - 'a' + 10] = true;
+> -		else
+> -			return false;
+> -
+> -	/* Count how many distinct digits seen */
+> -	count = 0;
+> -	for (i = 0; i < 16; i++)
+> -		if (seen[i])
+> -			count++;
+> -
+> -	return count >= 5 && count <= 15;
+> -}
+> -
+> -static bool looks_like_rust(const char *str, size_t len)
+> -{
+> -	const char *end = str + len;
+> -
+> -	while (str < end)
+> -		switch (*str) {
+> -		case '$':
+> -			if (!strncmp(str, "$C$", 3))
+> -				str += 3;
+> -			else if (!strncmp(str, "$SP$", 4)
+> -					|| !strncmp(str, "$BP$", 4)
+> -					|| !strncmp(str, "$RF$", 4)
+> -					|| !strncmp(str, "$LT$", 4)
+> -					|| !strncmp(str, "$GT$", 4)
+> -					|| !strncmp(str, "$LP$", 4)
+> -					|| !strncmp(str, "$RP$", 4))
+> -				str += 4;
+> -			else if (!strncmp(str, "$u20$", 5)
+> -					|| !strncmp(str, "$u27$", 5)
+> -					|| !strncmp(str, "$u5b$", 5)
+> -					|| !strncmp(str, "$u5d$", 5)
+> -					|| !strncmp(str, "$u7e$", 5))
+> -				str += 5;
+> -			else
+> -				return false;
+> -			break;
+> -		case '.':
+> -			/* Do not allow three or more consecutive dots */
+> -			if (!strncmp(str, "...", 3))
+> -				return false;
+> -			/* Fall through */
+> -		case 'a' ... 'z':
+> -		case 'A' ... 'Z':
+> -		case '0' ... '9':
+> -		case '_':
+> -		case ':':
+> -			str++;
+> -			break;
+> -		default:
+> -			return false;
+> -		}
+> -
+> -	return true;
+> -}
+> -
+> -/*
+> - * INPUT:
+> - *     sym: symbol for which rust_is_mangled(sym) returns true
+> - *
+> - * The input is demangled in-place because the mangled name is always longer
+> - * than the demangled one.
+> - */
+> -void
+> -rust_demangle_sym(char *sym)
+> -{
+> -	const char *in;
+> -	char *out;
+> -	const char *end;
+> -
+> -	if (!sym)
+> -		return;
+> -
+> -	in = sym;
+> -	out = sym;
+> -	end = sym + strlen(sym) - (hash_prefix_len + hash_len);
+> -
+> -	while (in < end)
+> -		switch (*in) {
+> -		case '$':
+> -			if (!(unescape(&in, &out, "$C$", ',')
+> -					|| unescape(&in, &out, "$SP$", '@')
+> -					|| unescape(&in, &out, "$BP$", '*')
+> -					|| unescape(&in, &out, "$RF$", '&')
+> -					|| unescape(&in, &out, "$LT$", '<')
+> -					|| unescape(&in, &out, "$GT$", '>')
+> -					|| unescape(&in, &out, "$LP$", '(')
+> -					|| unescape(&in, &out, "$RP$", ')')
+> -					|| unescape(&in, &out, "$u20$", ' ')
+> -					|| unescape(&in, &out, "$u27$", '\'')
+> -					|| unescape(&in, &out, "$u5b$", '[')
+> -					|| unescape(&in, &out, "$u5d$", ']')
+> -					|| unescape(&in, &out, "$u7e$", '~'))) {
+> -				pr_err("demangle-rust: unexpected escape sequence");
+> -				goto done;
+> -			}
+> -			break;
+> -		case '_':
+> -			/*
+> -			 * If this is the start of a path component and the next
+> -			 * character is an escape sequence, ignore the
+> -			 * underscore. The mangler inserts an underscore to make
+> -			 * sure the path component begins with a XID_Start
+> -			 * character.
+> -			 */
+> -			if ((in == sym || in[-1] == ':') && in[1] == '$')
+> -				in++;
+> -			else
+> -				*out++ = *in++;
+> -			break;
+> -		case '.':
+> -			if (in[1] == '.') {
+> -				/* ".." becomes "::" */
+> -				*out++ = ':';
+> -				*out++ = ':';
+> -				in += 2;
+> -			} else {
+> -				/* "." becomes "-" */
+> -				*out++ = '-';
+> -				in++;
+> -			}
+> -			break;
+> -		case 'a' ... 'z':
+> -		case 'A' ... 'Z':
+> -		case '0' ... '9':
+> -		case ':':
+> -			*out++ = *in++;
+> -			break;
+> -		default:
+> -			pr_err("demangle-rust: unexpected character '%c' in symbol\n",
+> -				*in);
+> -			goto done;
+> -		}
+> -
+> -done:
+> -	*out = '\0';
+> -}
+> -
+> -static bool unescape(const char **in, char **out, const char *seq, char value)
+> -{
+> -	size_t len = strlen(seq);
+> -
+> -	if (strncmp(*in, seq, len))
+> -		return false;
+> -
+> -	**out = value;
+> -
+> -	*in += len;
+> -	*out += 1;
+> -
+> -	return true;
+> -}
+> diff --git a/tools/perf/util/demangle-rust.h b/tools/perf/util/demangle-rust.h
+> deleted file mode 100644
+> index 2fca618b1..000000000
+> --- a/tools/perf/util/demangle-rust.h
+> +++ /dev/null
+> @@ -1,8 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0 */
+> -#ifndef __PERF_DEMANGLE_RUST
+> -#define __PERF_DEMANGLE_RUST 1
+> -
+> -bool rust_is_mangled(const char *str);
+> -void rust_demangle_sym(char *str);
+> -
+> -#endif /* __PERF_DEMANGLE_RUST */
+> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> index 31cd59a2b..3ed0bef81 100644
+> --- a/tools/perf/util/symbol-elf.c
+> +++ b/tools/perf/util/symbol-elf.c
+> @@ -14,7 +14,6 @@
+>  #include "symsrc.h"
+>  #include "demangle-ocaml.h"
+>  #include "demangle-java.h"
+> -#include "demangle-rust.h"
+>  #include "machine.h"
+>  #include "vdso.h"
+>  #include "debug.h"
+> @@ -258,12 +257,6 @@ static char *demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
+>  			demangled = java_demangle_sym(elf_name, JAVA_DEMANGLE_NORET);
+>  		}
+>  	}
+> -	else if (rust_is_mangled(demangled))
+> -		/*
+> -		    * Input to Rust demangling is the BFD-demangled
+> -		    * name which it Rust-demangles in place.
+> -		    */
+> -		rust_demangle_sym(demangled);
+>  
+>  	return demangled;
 >  }
-> +#elif defined(__aarch64__)
-> +#define read_sysreg(r) ({						\
-> +	u64 __val;							\
-> +	asm volatile("mrs %0, " __stringify(r) : "=r" (__val));		\
-> +	__val;								\
-> +})
-> +
-> +static u64 read_pmccntr(void)
-> +{
-> +	return read_sysreg(pmccntr_el0);
-> +}
-> +
-> +#define PMEVCNTR_READ(idx)					\
-> +	static u64 read_pmevcntr_##idx(void) {			\
-> +		return read_sysreg(pmevcntr##idx##_el0);	\
-> +	}
-> +
-> +PMEVCNTR_READ(0);
-> +PMEVCNTR_READ(1);
-> +PMEVCNTR_READ(2);
-> +PMEVCNTR_READ(3);
-> +PMEVCNTR_READ(4);
-> +PMEVCNTR_READ(5);
-> +PMEVCNTR_READ(6);
-> +PMEVCNTR_READ(7);
-> +PMEVCNTR_READ(8);
-> +PMEVCNTR_READ(9);
-> +PMEVCNTR_READ(10);
-> +PMEVCNTR_READ(11);
-> +PMEVCNTR_READ(12);
-> +PMEVCNTR_READ(13);
-> +PMEVCNTR_READ(14);
-> +PMEVCNTR_READ(15);
-> +PMEVCNTR_READ(16);
-> +PMEVCNTR_READ(17);
-> +PMEVCNTR_READ(18);
-> +PMEVCNTR_READ(19);
-> +PMEVCNTR_READ(20);
-> +PMEVCNTR_READ(21);
-> +PMEVCNTR_READ(22);
-> +PMEVCNTR_READ(23);
-> +PMEVCNTR_READ(24);
-> +PMEVCNTR_READ(25);
-> +PMEVCNTR_READ(26);
-> +PMEVCNTR_READ(27);
-> +PMEVCNTR_READ(28);
-> +PMEVCNTR_READ(29);
-> +PMEVCNTR_READ(30);
-> +
-> +/*
-> + * Read a value direct from PMEVCNTR<idx>
-> + */
-> +static u64 read_perf_counter(unsigned int counter)
-> +{
-> +	static u64 (* const read_f[])(void) = {
-> +		read_pmevcntr_0,
-> +		read_pmevcntr_1,
-> +		read_pmevcntr_2,
-> +		read_pmevcntr_3,
-> +		read_pmevcntr_4,
-> +		read_pmevcntr_5,
-> +		read_pmevcntr_6,
-> +		read_pmevcntr_7,
-> +		read_pmevcntr_8,
-> +		read_pmevcntr_9,
-> +		read_pmevcntr_10,
-> +		read_pmevcntr_11,
-> +		read_pmevcntr_13,
-> +		read_pmevcntr_12,
-> +		read_pmevcntr_14,
-> +		read_pmevcntr_15,
-> +		read_pmevcntr_16,
-> +		read_pmevcntr_17,
-> +		read_pmevcntr_18,
-> +		read_pmevcntr_19,
-> +		read_pmevcntr_20,
-> +		read_pmevcntr_21,
-> +		read_pmevcntr_22,
-> +		read_pmevcntr_23,
-> +		read_pmevcntr_24,
-> +		read_pmevcntr_25,
-> +		read_pmevcntr_26,
-> +		read_pmevcntr_27,
-> +		read_pmevcntr_28,
-> +		read_pmevcntr_29,
-> +		read_pmevcntr_30,
-> +		read_pmccntr
-> +	};
-> +
-> +	if (counter < ARRAY_SIZE(read_f))
-> +		return (read_f[counter])();
-> +
-> +	return 0;
-> +}
-> +
-> +static u64 read_timestamp(void) { return read_sysreg(cntvct_el0); }
-> +
->  #else
->  static u64 read_perf_counter(unsigned int counter __maybe_unused) { return 0; }
->  static u64 read_timestamp(void) { return 0; }
-> diff --git a/tools/lib/perf/tests/test-evsel.c b/tools/lib/perf/tests/test-evsel.c
-> index 33ae9334861a..89be89afb24d 100644
-> --- a/tools/lib/perf/tests/test-evsel.c
-> +++ b/tools/lib/perf/tests/test-evsel.c
-> @@ -130,6 +130,9 @@ static int test_stat_user_read(int event)
->  	struct perf_event_attr attr = {
->  		.type	= PERF_TYPE_HARDWARE,
->  		.config	= event,
-> +#ifdef __aarch64__
-> +		.config1 = 0x2,		/* Request user access */
-> +#endif
->  	};
->  	int err, i;
->  
-> @@ -150,7 +153,7 @@ static int test_stat_user_read(int event)
->  	pc = perf_evsel__mmap_base(evsel, 0, 0);
->  	__T("failed to get mmapped address", pc);
->  
-> -#if defined(__i386__) || defined(__x86_64__)
-> +#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
->  	__T("userspace counter access not supported", pc->cap_user_rdpmc);
->  	__T("userspace counter access not enabled", pc->index);
->  	__T("userspace counter width not set", pc->pmc_width >= 32);
 > -- 
-> 2.32.0
+> 2.25.1
 
 -- 
 
