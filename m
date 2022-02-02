@@ -2,111 +2,294 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE76C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Feb 2022 16:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D5DC433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Feb 2022 17:00:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242653AbiBBQzv (ORCPT
+        id S233616AbiBBRAZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Feb 2022 11:55:51 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:48903 "EHLO
+        Wed, 2 Feb 2022 12:00:25 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:53824 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231706AbiBBQzu (ORCPT
+        by vger.kernel.org with ESMTP id S230295AbiBBRAY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Feb 2022 11:55:50 -0500
+        Wed, 2 Feb 2022 12:00:24 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1643820949;
+        s=mimecast20190719; t=1643821224;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=egv0e1QXLdMDJLzDlEfd+9hjoDteiVw0Tc45PLBPnRk=;
-        b=Ra3qjMx7W3ZbG2y4gbElmfdvStd5Ymy/uXLEwHoB2zZMH+VMNi/oKwEpyWp8UDeXglbRnt
-        d0HZO03ePd1is+kcRxr7bGggTF4UwQ9uwKrz5uIhP0Jp2HmYOeaGRtRuv637ZVIkHuaUJp
-        j7+KxZDC1+XGdxImDS58MlfjeUY/wrA=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=I6RwFSZT05qzCJcW4r0ewmQek1g1YFuQ0vQAboQA1k0=;
+        b=BXP7fTd2qED/omVcDKnrdRTFyadX2v/1nRQ3F7TpSRLFieVn7prTPi9TZHEgWgdWCioBJ0
+        GKpqxHZrGQir4lMIGlBT398CD0QNCFTaCsRfQEsN+20tRJ0sBImzxlD/SIVCawQnH1rKm0
+        PeX567guH1ap28eyX8mw1PLm0flF01o=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-101-HTIcYSU5NvCDjvSPvFMRUg-1; Wed, 02 Feb 2022 11:55:48 -0500
-X-MC-Unique: HTIcYSU5NvCDjvSPvFMRUg-1
-Received: by mail-wm1-f71.google.com with SMTP id v190-20020a1cacc7000000b0034657bb6a66so4658680wme.6
-        for <linux-perf-users@vger.kernel.org>; Wed, 02 Feb 2022 08:55:48 -0800 (PST)
+ us-mta-281-G0ZVIPUYNV2CCXadAjW9aw-1; Wed, 02 Feb 2022 12:00:23 -0500
+X-MC-Unique: G0ZVIPUYNV2CCXadAjW9aw-1
+Received: by mail-ed1-f70.google.com with SMTP id o25-20020a056402039900b0040631c2a67dso10628075edv.19
+        for <linux-perf-users@vger.kernel.org>; Wed, 02 Feb 2022 09:00:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=egv0e1QXLdMDJLzDlEfd+9hjoDteiVw0Tc45PLBPnRk=;
-        b=OYMFiDbsexX4oElwFSCwA3uaXZJVqCB4LyI0vb+77dBBSidY2h5dXEismx5Oes7Blf
-         ko/8KJLbsIKTuGkcnpOTpVvx5MJvLWKJHgry2Te5NYem4nYI30xo5/7RehUh75u9LYVs
-         5VpFSiSXkLIjFd03NADbApN8+TQ74QwyMBknlwvWuVw+0NPjlOkIXxl3Tcyz5hL8sk/b
-         BNIrPoQkFer8YudAdqLiyk0jk6XUWY3uCWmEZ/sRk4tUJItOFkb/dzn2I5aUFm97mnJU
-         WTUiSZPW9BKe9QSN9rqLex761UTmDgFMeXoqWkKcKouuwp6+h3HRQLVMC46bAMBLslXG
-         l1qg==
-X-Gm-Message-State: AOAM5324GgR/mzk+JKf0vbGWGDks2NavQvX+6rUynvq2DB9KUy5ekKjU
-        u0dFeW5NuNy1itcwpwVhtd92zmEvLADuM1maGxq93VQrIlorP5G+WOu18e5aFdQLJT0IQxr+FT3
-        om6z5RerEyQUqTrucOv0cao2fn7enLg==
-X-Received: by 2002:a1c:7918:: with SMTP id l24mr6820144wme.91.1643820947605;
-        Wed, 02 Feb 2022 08:55:47 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzQXlXZtcqdt29L6NXh+2CEo4waI2F0RmzscSS7g2ToiBc7dCyJBZZRaKKDnsqyRi7YXDtCLA==
-X-Received: by 2002:a1c:7918:: with SMTP id l24mr6820128wme.91.1643820947458;
-        Wed, 02 Feb 2022 08:55:47 -0800 (PST)
+        bh=I6RwFSZT05qzCJcW4r0ewmQek1g1YFuQ0vQAboQA1k0=;
+        b=eBcXzuoCMJYOT6WIGrA1bQgXaLYavNvKEshd/aTD4DF/nhegBSHsimOg/4vtEc8xsS
+         2ILLK0kHyq/lDzgW7L5WehVrmKdsQgWXvSwefpoIVeaq6lVCGfH3+ULNIVQuAkF4vGT3
+         Wdqy1LHzfVrxjgEC59K1oZT/Kr6J9+xYAEslBwiaYykLom3iGL9B2GMxxZXUMHYh2c1e
+         pF/n+j8IqRuKtSIuUNTYh1a4ISXJRWaZq2RtXXxS6LJBgI4+JwtnHKnDCRfIob958LMI
+         wSyfwAGGbnIC1MJxlXE37AZ3USEXzvzqq1FxqFm7dn0gJOeSfQeeibnSGjxXhx+gyxki
+         wpqg==
+X-Gm-Message-State: AOAM532mUAVQrBW1VqjhApYTz529OiaYHIduSbMQb7b+cTVb/PCtucZ2
+        UcD29FETYmOxmdy2fI9hPC8mq31VpGcJTFSf9WnGsLGobCfRjGNONaFRo4f0wDVfor1D+sTm4Rs
+        k/MXYrK3dpGHOjnxenqEceZK+w7dUsQ==
+X-Received: by 2002:a17:906:9756:: with SMTP id o22mr17666069ejy.448.1643821221700;
+        Wed, 02 Feb 2022 09:00:21 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxt2K79nagGae2RyUI317cqDvLS9xeLNwgy7fUFJHAIV2pmOoO8OSRHWMDSIt1a0ATJQVOdSQ==
+X-Received: by 2002:a17:906:9756:: with SMTP id o22mr17666037ejy.448.1643821221293;
+        Wed, 02 Feb 2022 09:00:21 -0800 (PST)
 Received: from krava (nat-pool-brq-u.redhat.com. [213.175.37.12])
-        by smtp.gmail.com with ESMTPSA id m187sm5109446wme.25.2022.02.02.08.55.46
+        by smtp.gmail.com with ESMTPSA id ch27sm17127285edb.74.2022.02.02.09.00.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Feb 2022 08:55:47 -0800 (PST)
-Date:   Wed, 2 Feb 2022 17:55:45 +0100
+        Wed, 02 Feb 2022 09:00:20 -0800 (PST)
+Date:   Wed, 2 Feb 2022 18:00:19 +0100
 From:   Jiri Olsa <jolsa@redhat.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, james.clark@arm.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf: tools: Add missing branch_sample_type
-Message-ID: <Yfq3kTb7E1cELF0L@krava>
-References: <1643799443-15109-1-git-send-email-anshuman.khandual@arm.com>
+To:     Christy Lee <christylee@fb.com>
+Cc:     andrii@kernel.org, acme@kernel.org, christyc.y.lee@gmail.com,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        kernel-team@fb.com, wangnan0@huawei.com,
+        bobo.shaobowang@huawei.com, yuehaibing@huawei.com
+Subject: Re: [PATCH bpf-next v4 2/2] perf: stop using deprecated
+ bpf_object__next() API
+Message-ID: <Yfq4o0Op4eYvFKIp@krava>
+References: <20220119230636.1752684-1-christylee@fb.com>
+ <20220119230636.1752684-3-christylee@fb.com>
+ <Ye2LAEiXaBoj2n8Z@krava>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1643799443-15109-1-git-send-email-anshuman.khandual@arm.com>
+In-Reply-To: <Ye2LAEiXaBoj2n8Z@krava>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Feb 02, 2022 at 04:27:23PM +0530, Anshuman Khandual wrote:
-> This updates branch sample type with missing PERF_SAMPLE_BRANCH_TYPE_SAVE.
-> 
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Suggested-by: James Clark <james.clark@arm.com>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+hi,
+just checking, do you plan to send new version for this?
 
 thanks,
 jirka
 
+On Sun, Jan 23, 2022 at 06:06:08PM +0100, Jiri Olsa wrote:
+> On Wed, Jan 19, 2022 at 03:06:36PM -0800, Christy Lee wrote:
+> 
+> SNIP
+> 
+> > ---
+> >  tools/perf/util/bpf-loader.c | 72 +++++++++++++++++++++++++++---------
+> >  tools/perf/util/bpf-loader.h |  1 +
+> >  2 files changed, 55 insertions(+), 18 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
+> > index 4631cac3957f..b1822f8af2bb 100644
+> > --- a/tools/perf/util/bpf-loader.c
+> > +++ b/tools/perf/util/bpf-loader.c
+> > @@ -29,9 +29,6 @@
+> >  
+> >  #include <internal/xyarray.h>
+> >  
+> > -/* temporarily disable libbpf deprecation warnings */
+> > -#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+> > -
+> >  static int libbpf_perf_print(enum libbpf_print_level level __attribute__((unused)),
+> >  			      const char *fmt, va_list args)
+> >  {
+> > @@ -49,6 +46,36 @@ struct bpf_prog_priv {
+> >  	int *type_mapping;
+> >  };
+> >  
+> > +struct bpf_perf_object {
+> > +	struct bpf_object *obj;
+> > +	struct list_head list;
+> > +};
+> > +
+> > +static LIST_HEAD(bpf_objects_list);
+> 
+> hum.. I still can't see any code adding/removing bpf_perf_object
+> objects to this list, and that's why the code is failing to remove
+> probes
+> 
+> because there are no objects to iterate on, so added probes stay
+> configured and screw following tests
+> 
+> you need something like below to add and del objects from
+> bpf_objects_list list
+> 
+> it also simplifies for_each macros to work just over perf_obj,
+> because I wasn't patient enough to make it work with the extra
+> bpf_object ;-) I don't mind if you fix that, but this way looks
+> simpler to me
+> 
+> tests are working for me with this fix, please feel free to
+> squash it into your change
+> 
+> thanks,
+> jirka
+> 
+> 
 > ---
->  tools/perf/util/perf_event_attr_fprintf.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
-> index 47b7531f51da..98af3fa4ea35 100644
-> --- a/tools/perf/util/perf_event_attr_fprintf.c
-> +++ b/tools/perf/util/perf_event_attr_fprintf.c
-> @@ -52,7 +52,7 @@ static void __p_branch_sample_type(char *buf, size_t size, u64 value)
->  		bit_name(ABORT_TX), bit_name(IN_TX), bit_name(NO_TX),
->  		bit_name(COND), bit_name(CALL_STACK), bit_name(IND_JUMP),
->  		bit_name(CALL), bit_name(NO_FLAGS), bit_name(NO_CYCLES),
-> -		bit_name(HW_INDEX),
-> +		bit_name(TYPE_SAVE), bit_name(HW_INDEX),
->  		{ .name = NULL, }
->  	};
->  #undef bit_name
-> -- 
-> 2.20.1
-> 
+> diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
+> index 57b9591f7cbb..d09d25707f1e 100644
+> --- a/tools/perf/tests/bpf.c
+> +++ b/tools/perf/tests/bpf.c
+> @@ -210,6 +210,11 @@ prepare_bpf(void *obj_buf, size_t obj_buf_sz, const char *name)
+>  		pr_debug("Compile BPF program failed.\n");
+>  		return NULL;
+>  	}
+> +
+> +	if (bpf_perf_object__add(obj)) {
+> +		bpf_object__close(obj);
+> +		return NULL;
+> +	}
+>  	return obj;
+>  }
+>  
+> diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
+> index 89e584ac267c..a7a8ad32c847 100644
+> --- a/tools/perf/util/bpf-loader.c
+> +++ b/tools/perf/util/bpf-loader.c
+> @@ -70,11 +70,11 @@ struct bpf_perf_object *bpf_perf_object__next(struct bpf_perf_object *prev)
+>  	return next;
+>  }
+>  
+> -#define bpf_perf_object__for_each(perf_obj, tmp, obj)                          \
+> -	for ((perf_obj) = bpf_perf_object__next(NULL),                         \
+> -	    (tmp) = bpf_perf_object__next(perf_obj), (obj) = NULL;             \
+> -	     (perf_obj) != NULL; (perf_obj) = (tmp),                           \
+> -	    (tmp) = bpf_perf_object__next(tmp), (obj) = (perf_obj)->obj)
+> +#define bpf_perf_object__for_each(perf_obj, tmp)         \
+> +	for ((perf_obj) = bpf_perf_object__next(NULL),   \
+> +	     (tmp) = bpf_perf_object__next(perf_obj);    \
+> +	     (perf_obj) != NULL; (perf_obj) = (tmp),     \
+> +	    (tmp) = bpf_perf_object__next(tmp) )
+>  
+>  static bool libbpf_initialized;
+>  
+> @@ -97,6 +97,24 @@ bpf__prepare_load_buffer(void *obj_buf, size_t obj_buf_sz, const char *name)
+>  	return obj;
+>  }
+>  
+> +int bpf_perf_object__add(struct bpf_object *obj)
+> +{
+> +	struct bpf_perf_object *perf_obj = zalloc(sizeof(*perf_obj));
+> +
+> +	if (perf_obj) {
+> +		perf_obj->obj = obj;
+> +		list_add_tail(&perf_obj->list, &bpf_objects_list);
+> +	}
+> +	return perf_obj ? 0 : -ENOMEM;
+> +}
+> +
+> +static void bpf_perf_object__close(struct bpf_perf_object *perf_obj)
+> +{
+> +	list_del(&perf_obj->list);
+> +	bpf_object__close(perf_obj->obj);
+> +	free(perf_obj);
+> +}
+> +
+>  struct bpf_object *bpf__prepare_load(const char *filename, bool source)
+>  {
+>  	struct bpf_object *obj;
+> @@ -135,17 +153,20 @@ struct bpf_object *bpf__prepare_load(const char *filename, bool source)
+>  		return obj;
+>  	}
+>  
+> +	if (bpf_perf_object__add(obj)) {
+> +		bpf_object__close(obj);
+> +		return ERR_PTR(-BPF_LOADER_ERRNO__COMPILE);
+> +	}
+>  	return obj;
+>  }
+>  
+>  void bpf__clear(void)
+>  {
+>  	struct bpf_perf_object *perf_obj, *tmp;
+> -	struct bpf_object *obj;
+>  
+> -	bpf_perf_object__for_each(perf_obj, tmp, obj) {
+> -		bpf__unprobe(obj);
+> -		bpf_object__close(obj);
+> +	bpf_perf_object__for_each(perf_obj, tmp) {
+> +		bpf__unprobe(perf_obj->obj);
+> +		bpf_perf_object__close(perf_obj);
+>  	}
+>  }
+>  
+> @@ -1538,11 +1559,10 @@ apply_obj_config_object(struct bpf_object *obj)
+>  int bpf__apply_obj_config(void)
+>  {
+>  	struct bpf_perf_object *perf_obj, *tmp;
+> -	struct bpf_object *obj;
+>  	int err;
+>  
+> -	bpf_perf_object__for_each(perf_obj, tmp, obj) {
+> -		err = apply_obj_config_object(obj);
+> +	bpf_perf_object__for_each(perf_obj, tmp) {
+> +		err = apply_obj_config_object(perf_obj->obj);
+>  		if (err)
+>  			return err;
+>  	}
+> @@ -1550,25 +1570,24 @@ int bpf__apply_obj_config(void)
+>  	return 0;
+>  }
+>  
+> -#define bpf__perf_for_each_map(perf_obj, tmp, obj, map)                        \
+> -	bpf_perf_object__for_each(perf_obj, tmp, obj)                          \
+> -		bpf_object__for_each_map(map, obj)
+> +#define bpf__perf_for_each_map(perf_obj, tmp, map)                   \
+> +	bpf_perf_object__for_each(perf_obj, tmp)                     \
+> +		bpf_object__for_each_map(map, perf_obj->obj)
+>  
+> -#define bpf__perf_for_each_map_named(perf_obj, tmp, obj, map, name)            \
+> -	bpf__perf_for_each_map(perf_obj, tmp, obj, map)                        \
+> +#define bpf__perf_for_each_map_named(perf_obj, tmp, map, name)            \
+> +	bpf__perf_for_each_map(perf_obj, tmp, map)                        \
+>  		if (bpf_map__name(map) && (strcmp(name, bpf_map__name(map)) == 0))
+>  
+>  struct evsel *bpf__setup_output_event(struct evlist *evlist, const char *name)
+>  {
+>  	struct bpf_map_priv *tmpl_priv = NULL;
+>  	struct bpf_perf_object *perf_obj, *tmp;
+> -	struct bpf_object *obj;
+>  	struct evsel *evsel = NULL;
+>  	struct bpf_map *map;
+>  	int err;
+>  	bool need_init = false;
+>  
+> -	bpf__perf_for_each_map_named(perf_obj, tmp, obj, map, name) {
+> +	bpf__perf_for_each_map_named(perf_obj, tmp, map, name) {
+>  		struct bpf_map_priv *priv = bpf_map__priv(map);
+>  
+>  		if (IS_ERR(priv))
+> @@ -1604,7 +1623,7 @@ struct evsel *bpf__setup_output_event(struct evlist *evlist, const char *name)
+>  		evsel = evlist__last(evlist);
+>  	}
+>  
+> -	bpf__perf_for_each_map_named(perf_obj, tmp, obj, map, name) {
+> +	bpf__perf_for_each_map_named(perf_obj, tmp, map, name) {
+>  		struct bpf_map_priv *priv = bpf_map__priv(map);
+>  
+>  		if (IS_ERR(priv))
+> diff --git a/tools/perf/util/bpf-loader.h b/tools/perf/util/bpf-loader.h
+> index 95262b7e936f..78c7d3662910 100644
+> --- a/tools/perf/util/bpf-loader.h
+> +++ b/tools/perf/util/bpf-loader.h
+> @@ -83,6 +83,8 @@ int bpf__strerror_config_obj(struct bpf_object *obj,
+>  int bpf__apply_obj_config(void);
+>  int bpf__strerror_apply_obj_config(int err, char *buf, size_t size);
+>  
+> +int bpf_perf_object__add(struct bpf_object *obj);
+> +
+>  int bpf__setup_stdout(struct evlist *evlist);
+>  struct evsel *bpf__setup_output_event(struct evlist *evlist, const char *name);
+>  int bpf__strerror_setup_output_event(struct evlist *evlist, int err, char *buf, size_t size);
 
