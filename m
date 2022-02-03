@@ -2,119 +2,182 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A76C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Feb 2022 07:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24827C43217
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Feb 2022 09:19:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237628AbiBCH6T (ORCPT
+        id S230259AbiBCJTs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Feb 2022 02:58:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53756 "EHLO
+        Thu, 3 Feb 2022 04:19:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229746AbiBCH6R (ORCPT
+        with ESMTP id S233472AbiBCJTo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Feb 2022 02:58:17 -0500
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2974C061714
-        for <linux-perf-users@vger.kernel.org>; Wed,  2 Feb 2022 23:58:16 -0800 (PST)
-Received: by mail-yb1-xb2e.google.com with SMTP id 23so6368641ybf.7
-        for <linux-perf-users@vger.kernel.org>; Wed, 02 Feb 2022 23:58:16 -0800 (PST)
+        Thu, 3 Feb 2022 04:19:44 -0500
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96804C06173B
+        for <linux-perf-users@vger.kernel.org>; Thu,  3 Feb 2022 01:19:43 -0800 (PST)
+Received: by mail-ej1-x634.google.com with SMTP id o12so6525761eju.13
+        for <linux-perf-users@vger.kernel.org>; Thu, 03 Feb 2022 01:19:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=G8te9fm9uBsrUaVWugKAeTKH1DeJ7u2Cxa+zpUpsAWk=;
-        b=RLc26mKlJKGqZaYbJsxgavP6u0h8bb7n9zOgi5x58ejo4XgMD9YC4BXyaVfQAdQNnq
-         5QWxjDPw3yasqw1Jodx+qeAAcLoq26zWwgn21daH+X9CqH/nXsCTVyd0Xcmy5ffujHUn
-         HIGuAqzCjc5OVJ9cMp3dwzTK9f/+QjEX1TWZzzqvhZgXoeztVAM0+6k9x2PWc7va8rTR
-         GcJxbDQszD6uMX1/GF3RCs1tjHUgDXGDZKKmEQkHFZth85kOgEY/XUQiri8DqA1jn9Ux
-         UXBJPTSw2uS3LfDzUvSUp605Ldtqn3beQ0aYBlibra4/a0GeRL3bb25537zoOwQJSnYf
-         11Hw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ppSliz/48Zmw4jvP58cJGwmlmvNTKslgB1AxTE1s7Cs=;
+        b=yDZxxvlEb0ist7uCOAMfxZ8zBwbMOGcbpOgj8b/4feHNydC1vqbRggQ+sifQHYkIEO
+         lZAVeUQgGsmyRelO17d6Q1pgWJW9uyIALX18kY2wqoTnWCNCN8vtG8deY4zdoFHc/q65
+         +/HYAzQI5kdg4XB78mvBCug/FU3zZyURFNpvBgmUSaZ6hCwmxCt9toAIfMxN9jlzzUIw
+         X85K6xMe9zrxssfxOnM3thO66oBWntNjpt+yfCU2nVcW1yFnpHn9LBilaFrjt8vjMjKH
+         MstQWmM2BHdGiAf09M82+GtJH6PSLvgUM20ghjifoZPCTHmiXOLv/3TIaNsXkQjSHZV6
+         kozQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G8te9fm9uBsrUaVWugKAeTKH1DeJ7u2Cxa+zpUpsAWk=;
-        b=puiAfNYl6Lk8D5IGToJXJuqNqJjzdxfkFLqng6HKtcPob/5D6RepS1xLTHynmJg6aH
-         LFKexjxrmNzv8s53XhndLjSOrI+cZE3Wd2q+Q/wC8B+2LW6yUueVdJkN4eVF101Bv3hE
-         JXhIxU/RkZibIr0XkVR8l0QuuGnNYyV+CeAk0galK8vdC8wxV5yfNyQwqNLYQeb+Us2z
-         WVtH1qJJ6ytHBW8DLgakeM8QfuUorK1ap6F40/AU8GdmksG3PxhMs1OKsaiOPblgBh05
-         cLAP67RkgMwN6nIn2OWT3r2lD3aPRGNIxGk1EG7tKkwsOO9uhA7ZsIoEuCuewxOHCsvw
-         4Ndw==
-X-Gm-Message-State: AOAM531/ukk1uxxBdEIw/rMLJchYkZOOXpHIPVGhDAXWfbrPFHDJ8hBu
-        5ZX29LyKfJQyfVa/aBXAsPVlclQLzWkV0vHPvjjDSg==
-X-Google-Smtp-Source: ABdhPJwnTVuAbGhU4ghxbR17XGHR6LbAuYdyp2GDmnyM2pBL5JGzJZEJ32zBjc8CW4T6ZpuExgEmCpmR9NwjTi9RMMQ=
-X-Received: by 2002:a0d:d6c5:: with SMTP id y188mr3267883ywd.188.1643875095965;
- Wed, 02 Feb 2022 23:58:15 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ppSliz/48Zmw4jvP58cJGwmlmvNTKslgB1AxTE1s7Cs=;
+        b=3JfAAFSuPjVGGZEQ+DdAUmOlGSXa1BIM4G2BfoofBq0tm8UMHJWkSKr3CJ7brUOW3C
+         zTgTMVQWV3ecoXz0ddUr8G2Dd6QukfLDiRW4oVMd8uVNffw/RSECySGfF4d5sTg+e73I
+         cS5Gi2veXZWZonQLLkyhao0tVynSx0WQvdl2BAOSConTyn6Q7p+x3Hy2LLEWv8R3g39S
+         F5/xVE+hWLZrfY0efSg31Dgr8wh51+02pgC7EPXi7YvlP9OAFWDN64J9zmmV3oXAbYfn
+         TEoPnw3uaAFJ1yPibOWIXiO9xFRfjam91vuvhsY2CAvXAMfNuobSwVzST4JwYT2+tXv/
+         x1bQ==
+X-Gm-Message-State: AOAM532tcp4eb/DFSnjv1nHAKW/tw3mSUraY+SWA6jKmr/9dMd6kdrmo
+        7Mz2g9xH+BeH50yNKmC9hfk2jQ==
+X-Google-Smtp-Source: ABdhPJwtJzSsiHJACaszbaku1AcK1Cg+QS1icIP4jCgJP3DHPz7c5582+pqlvIx0BT6tz6QsSGngLg==
+X-Received: by 2002:a17:907:7e8c:: with SMTP id qb12mr28214053ejc.539.1643879981935;
+        Thu, 03 Feb 2022 01:19:41 -0800 (PST)
+Received: from leoy-ThinkPad-X240s ([104.245.96.65])
+        by smtp.gmail.com with ESMTPSA id w27sm16805321ejb.90.2022.02.03.01.19.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Feb 2022 01:19:41 -0800 (PST)
+Date:   Thu, 3 Feb 2022 17:19:34 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Ali Saidi <alisaidi@amazon.com>
+Cc:     Al.Grant@arm.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
+        benh@kernel.crashing.org, german.gomez@arm.com,
+        james.clark@arm.com, john.garry@huawei.com, jolsa@redhat.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
+        peterz@infradead.org, will@kernel.org
+Subject: Re: [PATCH] perf arm-spe: Use SPE data source for neoverse cores
+Message-ID: <20220203091934.GA2013381@leoy-ThinkPad-X240s>
+References: <20220202150104.GB1939745@leoy-ThinkPad-X240s>
+ <20220202195115.12924-1-alisaidi@amazon.com>
 MIME-Version: 1.0
-References: <20220203010746.610494-1-irogers@google.com> <ac97246f-0dbe-6118-dab6-dbc562e3c82c@linux.intel.com>
-In-Reply-To: <ac97246f-0dbe-6118-dab6-dbc562e3c82c@linux.intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 2 Feb 2022 23:58:02 -0800
-Message-ID: <CAP-5=fVxFy36wZKu+M199qic1VYWo_Z9GQ+jBAp6ZkBHTHv4Ww@mail.gmail.com>
-Subject: Re: [PATCH] perf metrics: Add literal for system TSC frequency
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     vineet.singh@intel.com, perry.taylor@intel.com,
-        caleb.biggers@intel.com, asaf.yaffe@intel.com,
-        kshipra.bopardikar@intel.com,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        James Clark <james.clark@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220202195115.12924-1-alisaidi@amazon.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Feb 2, 2022 at 7:59 PM Andi Kleen <ak@linux.intel.com> wrote:
->
->
-> On 2/2/2022 5:07 PM, Ian Rogers wrote:
-> > Such a literal is useful to calculate things like the average frequency
-> > [1]. The TSC frequency isn't exposed by sysfs although some experimental
-> > drivers look to add it [2]. This change computes the value using the
-> > frequency in /proc/cpuinfo which is accruate at least on Intel
-> > processors.
->
-> FWIW the information in /proc/cpuinfo is going away.
->
-> You should really use CPUID for this, which has a new leaf for this.
-> Unfortunately there
->
-> were a few systems were it was inaccurate, but I suppose you could still
-> prefer /proc/cpuinfo
->
-> Also your method will not work when the metrics are used through perf
-> stat report or perf script
->
-> and run on another system. For the perf script case there is support for
-> putting the TSC into
->
-> perf.data (that is needed for PT), but the header is not dumped by
-> default unfortunately.
->
-> So likely you would need some new mechanism for that.
+On Wed, Feb 02, 2022 at 07:51:15PM +0000, Ali Saidi wrote:
 
-Thanks Andi,
+[...]
 
-yep metrics with perf stat record are broken on a number of fronts and
-this will be another that will need a fix. It looks like the cpuid
-approach won't work pre-Skylake so sysfs could act as a fallback, but
-I don't have an ETA on when that will be available. We could have
-additional warnings when reading /proc/cpuinfo fails. Wdyt?
+> >> >> +			data_src.mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
+> >> >
+> >> >This one also adds PERF_MEM_LVL_HIT even though the check of "if (record->type & ARM_SPE_LLC_MISS)"
+> >> >hasn't happened yet. Maybe some comments would make it a bit clearer, but at the moment it's
+> >> >not obvious how the result is derived because there are some things that don't add up like
+> >> >ARM_SPE_LLC_MISS == PERF_MEM_LVL_HIT.
+> >> 
+> >> Assuming the above is correct, my reading of the existing code that creates the
+> >> c2c output is that when an access is marked as an LLC hit, that doesn't
+> >> necessarily mean that the data was present in the LLC. I don't see how it could
+> >> given that LLC_HIT + HITM means the line was dirty in another CPUs cache, and so
+> >> LLC_HIT + HITM seems to mean that it was a hit in the LLC snoop filter and
+> >> required a different core to provide the line. This and the above certainly
+> >> deserve a comment as to why the miss is being attributed in this way if it's
+> >> otherwise acceptable.
+> >
+> >As James pointed out, this might introduce confusion.  I am wanderding
+> >if we can extract two functions for synthesizing the data source, one is
+> >for Neoverse platform and another is for generic purpose (which
+> >without data source packets), below code is to demonstrate the basic
+> >idea.
+> 
+> The code below is cleaner, and I'm happy to rework the patches in this way, but
+> I think the question still remains about unifying behavior of the tool. If we
+> mark something with a data source of ARM_SPE_NV_PEER_CORE as at L1 hit + HITM
+> certainly c2c won't show the correct thing today, but i think it also hides the
+> intent. The line in question missed the L1, L2, and got to the LLC where we did
+> find a record that it was in another cores cache (L1 or L2). Looking at the way
+> that c2c works today, it seems like marking this as a hit in the LLC snoop
+> filter is the best way to unify behaviors among architectures?
+
+Thanks a lot for pointing out this.  I looked into the code and
+compared the memory trace data from x86, I found the HITM tag is always
+sticking to LLC from x86's memory events.  This would be the main reason
+why current code in perf is only support HITM for LLC.
+
+I don't think it's a good way to always mark LLC snoop, even it's a
+snooping operation in L1 or L2 cache on Arm64 platforms; this would
+introduce confusion for users when using Arm SPE for profiling.
+
+Alternatively, we can support HITM tag for L1/L2 cache levels in perf,
+this can allow us to match memory topology on Arm64 arch, and it should
+not introduce any regression on x86 arch.
+
+Could you confirm if below code can fix the issue or not?
+
+From 56e70a9ca974ad062788cfccd2ae9ddafa13d3ae Mon Sep 17 00:00:00 2001
+From: Leo Yan <leo.yan@linaro.org>
+Date: Thu, 3 Feb 2022 16:53:34 +0800
+Subject: [PATCH] perf mem: Support HITM statistics for L1/L2 caches
+
+Current code only support HITM statistics for last level cache (LLC) and
+remote node's cache.  This works for x86 architecture since the HITM tag
+is associated with LLC but not with L1/L2 cache.
+
+On Arm64 architectures, due to the different memory hierarchy and
+topology, the snooping can happen on L1 or L2 cache line, and thus it's
+possible that coherency protocol fetches data from peer core or
+cluster's L1/L2 cache.  For this reason, HITM tag is not necessarily
+bound to LLC anymore.
+
+For a general solution, this patch extends to set HITM tag for L1 and L2
+cache, thus this can allow perf c2c tool to work properly for Arm64
+architecture.  On the other hand, since x86 architecture doesn't set
+HITM tag for L1/L2 cache, thus this patch should not introduce any
+functionality change for x86 platforms.
+
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ tools/perf/util/mem-events.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+index ed0ab838bcc5..7a0ab3d26843 100644
+--- a/tools/perf/util/mem-events.c
++++ b/tools/perf/util/mem-events.c
+@@ -527,8 +527,18 @@ do {				\
+ 			if (lvl & P(LVL, UNC)) stats->ld_uncache++;
+ 			if (lvl & P(LVL, IO))  stats->ld_io++;
+ 			if (lvl & P(LVL, LFB)) stats->ld_fbhit++;
+-			if (lvl & P(LVL, L1 )) stats->ld_l1hit++;
+-			if (lvl & P(LVL, L2 )) stats->ld_l2hit++;
++			if (lvl & P(LVL, L1 )) {
++				if (snoop & P(SNOOP, HITM))
++					HITM_INC(lcl_hitm);
++				else
++					stats->ld_l1hit++;
++			}
++			if (lvl & P(LVL, L2 )) {
++				if (snoop & P(SNOOP, HITM))
++					HITM_INC(lcl_hitm);
++				else
++					stats->ld_l2hit++;
++			}
+ 			if (lvl & P(LVL, L3 )) {
+ 				if (snoop & P(SNOOP, HITM))
+ 					HITM_INC(lcl_hitm);
+
+> I'll send you a perf.data file OOB.
+
+Very appreciate!  I will look into it and will let you know
+if I have any new finding.
 
 Thanks,
-Ian
-
-> -Andi
->
+Leo
