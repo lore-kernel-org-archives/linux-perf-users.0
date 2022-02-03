@@ -2,214 +2,153 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE26DC433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Feb 2022 20:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67CAAC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Feb 2022 01:08:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347078AbiBBUZd (ORCPT
+        id S1348765AbiBCBH7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Feb 2022 15:25:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39520 "EHLO
+        Wed, 2 Feb 2022 20:07:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230264AbiBBUZc (ORCPT
+        with ESMTP id S1348762AbiBCBH6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Feb 2022 15:25:32 -0500
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CA82C061714
-        for <linux-perf-users@vger.kernel.org>; Wed,  2 Feb 2022 12:25:32 -0800 (PST)
-Received: by mail-wr1-x42f.google.com with SMTP id a13so721430wrh.9
-        for <linux-perf-users@vger.kernel.org>; Wed, 02 Feb 2022 12:25:32 -0800 (PST)
+        Wed, 2 Feb 2022 20:07:58 -0500
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42DCCC061714
+        for <linux-perf-users@vger.kernel.org>; Wed,  2 Feb 2022 17:07:58 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id n198-20020a2540cf000000b00614c2ee23b7so2760694yba.9
+        for <linux-perf-users@vger.kernel.org>; Wed, 02 Feb 2022 17:07:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TXeP2Asa6VI1ijTa5MWMcKtJdHOeMnzXpwkKO33H770=;
-        b=koWvksRitFj2vGJ5d7RelHWGlX6Y0rANFHa7Dg1AAvxz1rjhFn76MZz/Kca0zbvzTU
-         WYNLJiTClaxCCNcUJcjWIq/4bYofYfdrKQY6Ln+jvpNnQJWOD+ZWddQZqxRuAYrVeSak
-         W1uE0cBi9yS7FARYn1mdEhD4R9WfPSs2iWxv89QXYh0MUVaSDVi7wYaDO8GeJZWC6VLU
-         4RTUIV5JD8jSM7Txnv0uklwZB/vu84o2lEgAI6ekPsxFZnLVs2lKs+lq5GOczafiUzNk
-         x30XeW07wUgX/N4SJqCV02O6MqJ82N1xKd77ZQlT/4LHPHKTA4cOud0G2vB4G3D/c1/C
-         JBaQ==
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=WTSM/Ey8czEzcwGcL51YHkWEcToZ/GKdI9Mm0emyAmc=;
+        b=V2vKILSsWMvJ2qw/+k4HIkIrxtEnW+re9aBErBDOdPH+M9Z1/P+/XTVyfbnk+QAlvs
+         gPXT5qlGN8V91uIwlJgQIKvrrq6RZwrIMbVodE2Fw4AukWtaqQUXGxa9/PJtn9Sa/sO+
+         O6VYchWGl1lBrFEYKfC4zXTi0jkI2o6DUQiiTNVz0Q0MM1c4oaKKNcv2u4dArGaS3QDx
+         M+WL0R4iDd6YdDV6GeucvB5jETdQ03sMcdfX1JxD4O/kKzFJ5DgHkmmQgSQNKToeF8Gf
+         b54ce+2HjwPokDuylzA4/xO4N3UHJBT9jll1PxPihnDfiChcwmnXlxHvc5hWsA020rTw
+         +4Ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TXeP2Asa6VI1ijTa5MWMcKtJdHOeMnzXpwkKO33H770=;
-        b=mNGCt3FqQyZidJp9TFqhjxwI/imQiZzx/jTsoPMsNteUytFh1LfFCsRDcW2F44WgW6
-         9fjTWGmDqJO1Cs7CJG9xku3tK6AlYXz05AKkjiSlW3IlueqvhZ0SzYFZMQlF74TwdscT
-         bhbBCsVTJhUfdJ6BZvjboGFz1EUsDx180TOH9xhPUL7PJpthQfgdwmrbiEmGJxP8W6cI
-         N/eoRt4eAfbDqgapGiBHWYZx5P68ln4tKWuvQdF2gCGx+bnoHsxbxmlnzEEaJD4PXi9A
-         2d8RYMF2MbfiWMCbHoCqORSO4qdr1pMHO0WR1Zvhu2horzyjGV+yqKA3pYy4eg7+bU92
-         XVlw==
-X-Gm-Message-State: AOAM531/5w3UfH85impUDihnswSk5fL2vELDi0a36mSmioYS/G8+x33A
-        fBcoPAVl8N6O8qw/+DMBp0lDv2sXFnDROC2mTlbAeg==
-X-Google-Smtp-Source: ABdhPJyXr8CUHRxVbt5x0P8wajOLbHpUjLXq8yp3MW+H/JZlVC9MMHYaeCn4VpdhIAdBedzD/IpE6KguYHg90sGMonw=
-X-Received: by 2002:a5d:46c1:: with SMTP id g1mr18766986wrs.111.1643833531033;
- Wed, 02 Feb 2022 12:25:31 -0800 (PST)
-MIME-Version: 1.0
-References: <20220113091056.1297982-1-james.clark@arm.com> <20220113091056.1297982-2-james.clark@arm.com>
- <b3545a88-4743-db95-4676-b0b193cbea78@arm.com>
-In-Reply-To: <b3545a88-4743-db95-4676-b0b193cbea78@arm.com>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Wed, 2 Feb 2022 20:25:20 +0000
-Message-ID: <CAJ9a7Vi584BcY49TaRn5CJT=wcpafMf-3cA0R+sZ54p6iUKmeQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] coresight: Add config flag to enable branch broadcast
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     James Clark <James.Clark@arm.com>, mathieu.poirier@linaro.org,
-        coresight@lists.linaro.org, leo.yan@linaro.com,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=WTSM/Ey8czEzcwGcL51YHkWEcToZ/GKdI9Mm0emyAmc=;
+        b=D7hUku47lUBFIfOGP+Ax+0PXnZRxQqHHt7UvSeCnwJ1ef3nv/r+WrLMf1w0Gy07RAQ
+         KoWChIRDxiv2hiw6d0p4ls3zLpY/3VtpM5BR1/Xerij82+S4CUTkRoVzqudI96JVKXmv
+         rsTgadkrE4NbJTTjttV2kl3+MCrUugLfmM5HIx4c6zy2Ghmil0gxrNipv/E92hImWe3V
+         uRUaBH8xNVV20fDIgzxYNJ6PoYe6j1VF7HT92sSZxAJTnOHyDvj5v62L9AcctrGjdlsB
+         3CJVjLuRw31b+2MCG2F1lozPt1vIelprjoH3WlNY3eDZ9nrdW3cqszogXPq1lwE8fH5A
+         gTVQ==
+X-Gm-Message-State: AOAM532myu6nJ1OLoSJBwrHQc4o2iwLtXco/8JLMqXYbyKO2dCvLrrhf
+        APFgiBLn3ItbRBRMS56pLyyf3q+DDSKj
+X-Google-Smtp-Source: ABdhPJxksByH6JrfNz5aNFppOFUEclCDmfrNryMqeH5lKtX5axXHHiWG5QnrHZMjzBMj+CZMLiVaQ9cbnoGr
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:adf2:a985:b1bf:dcb8])
+ (user=irogers job=sendgmr) by 2002:a81:18c2:: with SMTP id
+ 185mr2720805ywy.150.1643850477407; Wed, 02 Feb 2022 17:07:57 -0800 (PST)
+Date:   Wed,  2 Feb 2022 17:07:46 -0800
+Message-Id: <20220203010746.610494-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.35.0.rc2.247.g8bbb082509-goog
+Subject: [PATCH] perf metrics: Add literal for system TSC frequency
+From:   Ian Rogers <irogers@google.com>
+To:     vineet.singh@intel.com, perry.taylor@intel.com,
+        caleb.biggers@intel.com, asaf.yaffe@intel.com,
+        kshipra.bopardikar@intel.com,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        John Garry <john.garry@huawei.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi James, Suzuki
+Such a literal is useful to calculate things like the average frequency
+[1]. The TSC frequency isn't exposed by sysfs although some experimental
+drivers look to add it [2]. This change computes the value using the
+frequency in /proc/cpuinfo which is accruate at least on Intel
+processors.
 
-On Fri, 28 Jan 2022 at 11:19, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
->
-> On 13/01/2022 09:10, James Clark wrote:
-> > When enabled, all taken branch addresses are output, even if the branch
-> > was because of a direct branch instruction. This enables reconstruction
-> > of the program flow without having access to the memory image of the
-> > code being executed.
-> >
-> > Use bit 8 for the config option which would be the correct bit for
-> > programming ETMv3. Although branch broadcast can't be enabled on ETMv3
-> > because it's not in the define ETM3X_SUPPORTED_OPTIONS, using the
-> > correct bit might help prevent future collisions or allow it to be
-> > enabled if needed.
-> >
-> > Signed-off-by: James Clark <james.clark@arm.com>
-> > ---
-> >   drivers/hwtracing/coresight/coresight-etm-perf.c   |  2 ++
-> >   drivers/hwtracing/coresight/coresight-etm4x-core.c | 10 ++++++++++
-> >   include/linux/coresight-pmu.h                      |  2 ++
-> >   3 files changed, 14 insertions(+)
-> >
-> > diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> > index c039b6ae206f..43bbd5dc3d3b 100644
-> > --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-> > +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> > @@ -52,6 +52,7 @@ static DEFINE_PER_CPU(struct coresight_device *, csdev_src);
-> >    * The PMU formats were orignally for ETMv3.5/PTM's ETMCR 'config';
-> >    * now take them as general formats and apply on all ETMs.
-> >    */
-> > +PMU_FORMAT_ATTR(branch_broadcast, "config:"__stringify(ETM_OPT_BRANCH_BROADCAST));
-> >   PMU_FORMAT_ATTR(cycacc,             "config:" __stringify(ETM_OPT_CYCACC));
-> >   /* contextid1 enables tracing CONTEXTIDR_EL1 for ETMv4 */
-> >   PMU_FORMAT_ATTR(contextid1, "config:" __stringify(ETM_OPT_CTXTID));
-> > @@ -97,6 +98,7 @@ static struct attribute *etm_config_formats_attr[] = {
-> >       &format_attr_sinkid.attr,
-> >       &format_attr_preset.attr,
-> >       &format_attr_configid.attr,
-> > +     &format_attr_branch_broadcast.attr,
->
-> Does it make sense to hide the option if the bb is not supported ? I
-> guess it will be tricky as we don't track the common feature set. So,
-> that said...
->
-> >       NULL,
-> >   };
-> >
-> > diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> > index bf18128cf5de..04669ecc0efa 100644
-> > --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> > +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> > @@ -692,6 +692,16 @@ static int etm4_parse_event_config(struct coresight_device *csdev,
-> >               ret = cscfg_csdev_enable_active_config(csdev, cfg_hash, preset);
-> >       }
-> >
-> > +     /* branch broadcast - enable if selected and supported */
-> > +     if (attr->config & BIT(ETM_OPT_BRANCH_BROADCAST)) {
-> > +             if (!drvdata->trcbb) {
-> > +                     ret = -EINVAL;
->
-> Should we fail here ? We could simply ignore this and generate the trace
-> normally. This would work on a big.LITTLE system with one set missing
-> the branch broadcast, while the others support.
->
-> Mike,
->
-> Does this affect the trace decoding ? As such the OpenCSD should be able
-> to decode the packets as they appear in the stream. Correct ?
->
+[1] https://github.com/intel/perfmon-metrics/blob/5ad9ef7056f31075e8178b9f1fb732af183b2c8d/SKX/metrics/perf/skx_metric_perf.json#L11
+[2] https://github.com/trailofbits/tsc_freq_khz
 
-Depends on what you mean by affect the trace decoding!
-From the simplest perspective - no - there is no issue as the packets
-will be decode as seen. THE decoder does not know that BB exists - nor
-if it is enabled.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/expr.c | 42 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-However, the reason that a user may engage BB is that the code is in
-some way self modifying - so that following the code static image and
-calculating addresses will result in a different path taken.
-
-e.g. imagine an opcode:-
-
-B <address0>
-
-Without BB, this will trace as a single E atom, the decoder will
-calculate address0 from the opcode in the static image and continue
-from there as the next trace address.
-
-Now look at the case where this is changed on the fly to
-
-B <address1>
-
-With BB, This will trace to
-E
-TGT_ADDR<address1>
-
-The decoder will initially  extract address0 from the static image,
-but the immediately following target address packet will alter the
-next address traced to address1
-This is why we have BB.
-
- So if the user has a reason to engage BB - we should really fail if
-it is not present - as the outcome of the trace can be affected.
-
-> Suzuki
->
->
-> > +                     goto out;
-> > +             } else {
-> > +                     config->cfg |= BIT(ETM4_CFG_BIT_BB);
-> > +             }
-> > +     }
-> > +
-> >   out:
-> >       return ret;
-> >   }
-> > diff --git a/include/linux/coresight-pmu.h b/include/linux/coresight-pmu.h
-> > index 4ac5c081af93..6c2fd6cc5a98 100644
-> > --- a/include/linux/coresight-pmu.h
-> > +++ b/include/linux/coresight-pmu.h
-> > @@ -18,6 +18,7 @@
-> >    * ETMv3.5/PTM doesn't define ETMCR config bits with prefix "ETM3_" and
-> >    * directly use below macros as config bits.
-> >    */
-> > +#define ETM_OPT_BRANCH_BROADCAST 8
-> >   #define ETM_OPT_CYCACC              12
-> >   #define ETM_OPT_CTXTID              14
-> >   #define ETM_OPT_CTXTID2             15
-> > @@ -25,6 +26,7 @@
-> >   #define ETM_OPT_RETSTK              29
-> >
-> >   /* ETMv4 CONFIGR programming bits for the ETM OPTs */
-> > +#define ETM4_CFG_BIT_BB         3
-> >   #define ETM4_CFG_BIT_CYCACC 4
-> >   #define ETM4_CFG_BIT_CTXTID 6
-> >   #define ETM4_CFG_BIT_VMID   7
->
-
-
+diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+index 675f318ce7c1..7ad01ed57025 100644
+--- a/tools/perf/util/expr.c
++++ b/tools/perf/util/expr.c
+@@ -402,6 +402,43 @@ double expr_id_data__source_count(const struct expr_id_data *data)
+ 	return data->val.source_count;
+ }
+ 
++/*
++ * Derive the TSC frequency in Hz from the /proc/cpuinfo, for example:
++ * ...
++ * model name      : Intel(R) Xeon(R) Gold 6154 CPU @ 3.00GHz
++ * ...
++ * will return 3000000000.
++ */
++static double system_tsc_freq(void)
++{
++	double result = NAN;
++	FILE *cpuinfo;
++	char *line = NULL;
++	size_t len = 0;
++
++	cpuinfo = fopen("/proc/cpuinfo", "r");
++	if (!cpuinfo)
++		return NAN;
++
++	while (getline(&line, &len, cpuinfo) > 0) {
++		if (!strncmp(line, "model name", 10)) {
++			char *pos = line + 11;
++
++			while (*pos != '@')
++				pos++;
++			if (sscanf(pos, " %lfGHz", &result) == 1) {
++				result *= 1000000000;
++				goto out;
++			}
++		}
++	}
++
++out:
++	free(line);
++	fclose(cpuinfo);
++	return result;
++}
++
+ double expr__get_literal(const char *literal)
+ {
+ 	static struct cpu_topology *topology;
+@@ -417,6 +454,11 @@ double expr__get_literal(const char *literal)
+ 		goto out;
+ 	}
+ 
++	if (!strcasecmp("#system_tsc_freq", literal)) {
++		result = system_tsc_freq();
++		goto out;
++	}
++
+ 	/*
+ 	 * Assume that topology strings are consistent, such as CPUs "0-1"
+ 	 * wouldn't be listed as "0,1", and so after deduplication the number of
 -- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+2.35.0.rc2.247.g8bbb082509-goog
+
