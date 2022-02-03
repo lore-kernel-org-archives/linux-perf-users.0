@@ -2,48 +2,47 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DF1C4167B
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Feb 2022 20:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C8FC433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Feb 2022 20:37:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355215AbiBCUfG (ORCPT
+        id S1355154AbiBCUhH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Feb 2022 15:35:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58102 "EHLO
+        Thu, 3 Feb 2022 15:37:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354215AbiBCUdo (ORCPT
+        with ESMTP id S1355189AbiBCUfF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Feb 2022 15:33:44 -0500
+        Thu, 3 Feb 2022 15:35:05 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 688ECC0617B1;
-        Thu,  3 Feb 2022 12:33:13 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8556C0613EB;
+        Thu,  3 Feb 2022 12:34:10 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0950961AD2;
-        Thu,  3 Feb 2022 20:33:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F269C340F0;
-        Thu,  3 Feb 2022 20:33:11 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 45C5E61B16;
+        Thu,  3 Feb 2022 20:34:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2E7FC340F6;
+        Thu,  3 Feb 2022 20:34:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643920392;
-        bh=mJFAQ4XWlIEWfk9/Ehgip/K6Kmf/6NuP5AUZM7Gisx8=;
+        s=k20201202; t=1643920449;
+        bh=B2Ld9P6XUc/9jqCyq3qkXZC9eh0RbzRB5eVXvlWyzvE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qhqD+p5ugt1IbZQJPRmqpVeahHQC2ddaIkT+Xqq6/oDjOktrQ7FIC4EF9Tj6VIpRH
-         3MeMXn/f0LjZ4rIgvMmjNs94ZFfSWYpKJkGx+5UKO6OmoB22nGD1ckaAiiWLk9h4qO
-         AfpNJ0PbuAQRgnmzTM/k2iUQ+dERidr0XIqZtoaQDiUAOBvTf0jTsClWEimvGvdROF
-         F7qgJtwnibi/VJ6jqlnaAKJ2RyO42J3doCnq1FuZU0szy/4RSSjbwJR4PD2R5NEzmJ
-         iFTsE7zc0Xx9dhEOGaKDhtZSPL2eX8M7Kmh7mjIgqhypjzgBfITsMpl6eWk0wKCcvC
-         8d/TF2eW4u9Tw==
+        b=Eze73nqrt2pJwpu0BmlPJF/HqdhwlyT/g9tWNvOn7kr8F4O8xZgaydVflwPIASbF6
+         cv/HHivqhs6sDTYf+ItQ9G2BacZaU3Z/U7VkW5lU4S8pgqZjHgjmvKPmfr5XTqcX1K
+         yIQXmlQlGiCd/fwtUgZyH4v1H9y8GTJNKGZ3t+5zW6Gb37l/ksrUHQqjwoDEEvTYc5
+         lSof1nnPzHqSVD62mxRPAmJhqtlMBjWbqgcmtxW6MXhzJ/wNsLZk2sdmBD11Xygvl9
+         QE3pzHZEbj9K1Ze/3cN5vy7HrnZ/mqJpnmF5NaS+43UKULyCBHZaLodsi/p2H+xQo4
+         U7mwTwQIIGncg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andi Kleen <ak@linux.intel.com>,
+Cc:     James Clark <james.clark@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>, mingo@redhat.com,
-        acme@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 16/41] x86/perf: Avoid warning for Arch LBR without XSAVE
-Date:   Thu,  3 Feb 2022 15:32:20 -0500
-Message-Id: <20220203203245.3007-16-sashal@kernel.org>
+        acme@kernel.org, linux-perf-users@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 37/41] perf: Always wake the parent event
+Date:   Thu,  3 Feb 2022 15:32:41 -0500
+Message-Id: <20220203203245.3007-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220203203245.3007-1-sashal@kernel.org>
 References: <20220203203245.3007-1-sashal@kernel.org>
@@ -55,35 +54,93 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: James Clark <james.clark@arm.com>
 
-[ Upstream commit 8c16dc047b5dd8f7b3bf4584fa75733ea0dde7dc ]
+[ Upstream commit 961c39121759ad09a89598ec4ccdd34ae0468a19 ]
 
-Some hypervisors support Arch LBR, but without the LBR XSAVE support.
-The current Arch LBR init code prints a warning when the xsave size (0) is
-unexpected. Avoid printing the warning for the "no LBR XSAVE" case.
+When using per-process mode and event inheritance is set to true,
+forked processes will create a new perf events via inherit_event() ->
+perf_event_alloc(). But these events will not have ring buffers
+assigned to them. Any call to wakeup will be dropped if it's called on
+an event with no ring buffer assigned because that's the object that
+holds the wakeup list.
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
+If the child event is disabled due to a call to
+perf_aux_output_begin() or perf_aux_output_end(), the wakeup is
+dropped leaving userspace hanging forever on the poll.
+
+Normally the event is explicitly re-enabled by userspace after it
+wakes up to read the aux data, but in this case it does not get woken
+up so the event remains disabled.
+
+This can be reproduced when using Arm SPE and 'stress' which forks once
+before running the workload. By looking at the list of aux buffers read,
+it's apparent that they stop after the fork:
+
+  perf record -e arm_spe// -vvv -- stress -c 1
+
+With this patch applied they continue to be printed. This behaviour
+doesn't happen when using systemwide or per-cpu mode.
+
+Reported-by: Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>
+Signed-off-by: James Clark <james.clark@arm.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20211215204029.150686-1-ak@linux.intel.com
+Link: https://lkml.kernel.org/r/20211206113840.130802-2-james.clark@arm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/lbr.c | 3 +++
- 1 file changed, 3 insertions(+)
+ kernel/events/core.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index 9e6d6eaeb4cb6..f455dd93f9219 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -1734,6 +1734,9 @@ static bool is_arch_lbr_xsave_available(void)
- 	 * Check the LBR state with the corresponding software structure.
- 	 * Disable LBR XSAVES support if the size doesn't match.
- 	 */
-+	if (xfeature_size(XFEATURE_LBR) == 0)
-+		return false;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 0fe6a65bbd58f..d3eed25daeb4c 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -5934,6 +5934,8 @@ static void ring_buffer_attach(struct perf_event *event,
+ 	struct perf_buffer *old_rb = NULL;
+ 	unsigned long flags;
+ 
++	WARN_ON_ONCE(event->parent);
 +
- 	if (WARN_ON(xfeature_size(XFEATURE_LBR) != get_lbr_state_size()))
- 		return false;
+ 	if (event->rb) {
+ 		/*
+ 		 * Should be impossible, we set this when removing
+@@ -5991,6 +5993,9 @@ static void ring_buffer_wakeup(struct perf_event *event)
+ {
+ 	struct perf_buffer *rb;
+ 
++	if (event->parent)
++		event = event->parent;
++
+ 	rcu_read_lock();
+ 	rb = rcu_dereference(event->rb);
+ 	if (rb) {
+@@ -6004,6 +6009,9 @@ struct perf_buffer *ring_buffer_get(struct perf_event *event)
+ {
+ 	struct perf_buffer *rb;
+ 
++	if (event->parent)
++		event = event->parent;
++
+ 	rcu_read_lock();
+ 	rb = rcu_dereference(event->rb);
+ 	if (rb) {
+@@ -6703,7 +6711,7 @@ static unsigned long perf_prepare_sample_aux(struct perf_event *event,
+ 	if (WARN_ON_ONCE(READ_ONCE(sampler->oncpu) != smp_processor_id()))
+ 		goto out;
+ 
+-	rb = ring_buffer_get(sampler->parent ? sampler->parent : sampler);
++	rb = ring_buffer_get(sampler);
+ 	if (!rb)
+ 		goto out;
+ 
+@@ -6769,7 +6777,7 @@ static void perf_aux_sample_output(struct perf_event *event,
+ 	if (WARN_ON_ONCE(!sampler || !data->aux_size))
+ 		return;
+ 
+-	rb = ring_buffer_get(sampler->parent ? sampler->parent : sampler);
++	rb = ring_buffer_get(sampler);
+ 	if (!rb)
+ 		return;
  
 -- 
 2.34.1
