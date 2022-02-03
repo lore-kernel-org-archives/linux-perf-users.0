@@ -2,182 +2,187 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24827C43217
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Feb 2022 09:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D73C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Feb 2022 09:59:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230259AbiBCJTs (ORCPT
+        id S1349958AbiBCJ7d (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Feb 2022 04:19:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43598 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233472AbiBCJTo (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Feb 2022 04:19:44 -0500
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96804C06173B
-        for <linux-perf-users@vger.kernel.org>; Thu,  3 Feb 2022 01:19:43 -0800 (PST)
-Received: by mail-ej1-x634.google.com with SMTP id o12so6525761eju.13
-        for <linux-perf-users@vger.kernel.org>; Thu, 03 Feb 2022 01:19:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ppSliz/48Zmw4jvP58cJGwmlmvNTKslgB1AxTE1s7Cs=;
-        b=yDZxxvlEb0ist7uCOAMfxZ8zBwbMOGcbpOgj8b/4feHNydC1vqbRggQ+sifQHYkIEO
-         lZAVeUQgGsmyRelO17d6Q1pgWJW9uyIALX18kY2wqoTnWCNCN8vtG8deY4zdoFHc/q65
-         +/HYAzQI5kdg4XB78mvBCug/FU3zZyURFNpvBgmUSaZ6hCwmxCt9toAIfMxN9jlzzUIw
-         X85K6xMe9zrxssfxOnM3thO66oBWntNjpt+yfCU2nVcW1yFnpHn9LBilaFrjt8vjMjKH
-         MstQWmM2BHdGiAf09M82+GtJH6PSLvgUM20ghjifoZPCTHmiXOLv/3TIaNsXkQjSHZV6
-         kozQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ppSliz/48Zmw4jvP58cJGwmlmvNTKslgB1AxTE1s7Cs=;
-        b=3JfAAFSuPjVGGZEQ+DdAUmOlGSXa1BIM4G2BfoofBq0tm8UMHJWkSKr3CJ7brUOW3C
-         zTgTMVQWV3ecoXz0ddUr8G2Dd6QukfLDiRW4oVMd8uVNffw/RSECySGfF4d5sTg+e73I
-         cS5Gi2veXZWZonQLLkyhao0tVynSx0WQvdl2BAOSConTyn6Q7p+x3Hy2LLEWv8R3g39S
-         F5/xVE+hWLZrfY0efSg31Dgr8wh51+02pgC7EPXi7YvlP9OAFWDN64J9zmmV3oXAbYfn
-         TEoPnw3uaAFJ1yPibOWIXiO9xFRfjam91vuvhsY2CAvXAMfNuobSwVzST4JwYT2+tXv/
-         x1bQ==
-X-Gm-Message-State: AOAM532tcp4eb/DFSnjv1nHAKW/tw3mSUraY+SWA6jKmr/9dMd6kdrmo
-        7Mz2g9xH+BeH50yNKmC9hfk2jQ==
-X-Google-Smtp-Source: ABdhPJwtJzSsiHJACaszbaku1AcK1Cg+QS1icIP4jCgJP3DHPz7c5582+pqlvIx0BT6tz6QsSGngLg==
-X-Received: by 2002:a17:907:7e8c:: with SMTP id qb12mr28214053ejc.539.1643879981935;
-        Thu, 03 Feb 2022 01:19:41 -0800 (PST)
-Received: from leoy-ThinkPad-X240s ([104.245.96.65])
-        by smtp.gmail.com with ESMTPSA id w27sm16805321ejb.90.2022.02.03.01.19.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Feb 2022 01:19:41 -0800 (PST)
-Date:   Thu, 3 Feb 2022 17:19:34 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Ali Saidi <alisaidi@amazon.com>
-Cc:     Al.Grant@arm.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
-        benh@kernel.crashing.org, german.gomez@arm.com,
-        james.clark@arm.com, john.garry@huawei.com, jolsa@redhat.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
-        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, will@kernel.org
-Subject: Re: [PATCH] perf arm-spe: Use SPE data source for neoverse cores
-Message-ID: <20220203091934.GA2013381@leoy-ThinkPad-X240s>
-References: <20220202150104.GB1939745@leoy-ThinkPad-X240s>
- <20220202195115.12924-1-alisaidi@amazon.com>
+        Thu, 3 Feb 2022 04:59:33 -0500
+Received: from mail-dm6nam11on2065.outbound.protection.outlook.com ([40.107.223.65]:31457
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232318AbiBCJ7c (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 3 Feb 2022 04:59:32 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G1SM1Hh12Yw2eJmhQxOhZSn93hQ8LOQHxZUzr6PXrBi6Qxu2pgphtvceKqCUgXwBJ+TdyQwpj/yI+BekSzII7UVXf+LeEUoa0NhpC3Q0hn0nhe31r/cEEWmNVdflqoiMRTy3HW2vkKwS5EW5aPaPcUuJd8zlB4+VbSZuOgEYJFg5wWtpHe4Og+JYBNYDbqew5rHrz05RK/CMD1By+e7IC6P/hpWewB3Xot0M9dQmD2O8AdXlyro61FFkLkCzs9v3ncZ81o9eXpgIEhfDRCyfb2cGXHZrdHh9XGwDOKyTfvILHBFBKNIasA2mefm7Zng8dy9fM3zXcntXAhU0FUUz5Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cVd06XhffNDw6tJ7UMq3Vhz885g4m2On++XRUBb7l3Q=;
+ b=RW2CLnhPMlipiz7B3+ZPgijtjc/7XN6FpgZhoOfVtn8JQcXN/VUqpAr3xASoGAHuve9nCyKGR24voHTZ5u5Q8qvsCmI1zpeAjnYjs6K9KRBYkpddM6wggGS24XS+f8Gh5NCnP0OcKBv8btkmnlfQngHdMsNAZ2qPzGLJHrYI7w3c9KYnPLKNVK0aFaETy9mI9FqvNftCUqQbJcGIV7wscLoPVbOHBiQrT9fhrHVjF//HYgltyfOWDTgfZQcdwNRK5EUSP11kn9lyw/cbZeNAOWLX7c3br5ZW1IQPi5l5R+MougmaTLaGSim3PO83DXR2fhwtGXrOCe5NGY/qKfC3cw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=gmail.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cVd06XhffNDw6tJ7UMq3Vhz885g4m2On++XRUBb7l3Q=;
+ b=X8RZmLpr0N1WttbeMPXxNhhSxecG8qXnEKtQGOlw3B3i7U0q1WaYSN7r74kqw1kR9DTM4HRUfNRbVuZut053JnFb7ffkq7WszpM5PZawiCFrRWnvdWEpiSwiIZi4TALv/E46oLn3xLDkzfIacWO770AOJmyZAg8j10i5u6EahKM=
+Received: from DM6PR03CA0032.namprd03.prod.outlook.com (2603:10b6:5:40::45) by
+ BYAPR12MB3494.namprd12.prod.outlook.com (2603:10b6:a03:ad::28) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4930.20; Thu, 3 Feb 2022 09:59:30 +0000
+Received: from DM6NAM11FT058.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:40:cafe::a4) by DM6PR03CA0032.outlook.office365.com
+ (2603:10b6:5:40::45) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.12 via Frontend
+ Transport; Thu, 3 Feb 2022 09:59:30 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT058.mail.protection.outlook.com (10.13.172.216) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4951.12 via Frontend Transport; Thu, 3 Feb 2022 09:59:29 +0000
+Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.18; Thu, 3 Feb
+ 2022 03:59:19 -0600
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+To:     <like.xu.linux@gmail.com>, <jmattson@google.com>,
+        <eranian@google.com>, <peterz@infradead.org>
+CC:     <ravi.bangoria@amd.com>, <santosh.shukla@amd.com>,
+        <pbonzini@redhat.com>, <seanjc@google.com>,
+        <wanpengli@tencent.com>, <vkuznets@redhat.com>, <joro@8bytes.org>,
+        <mingo@redhat.com>, <alexander.shishkin@linux.intel.com>,
+        <tglx@linutronix.de>, <bp@alien8.de>,
+        <dave.hansen@linux.intel.com>, <hpa@zytor.com>,
+        <kvm@vger.kernel.org>, <x86@kernel.org>,
+        <linux-perf-users@vger.kernel.org>, <ananth.narayan@amd.com>,
+        <kim.phillips@amd.com>
+Subject: [PATCH v3] perf/amd: Implement erratum #1292 workaround for F19h M00-0Fh
+Date:   Thu, 3 Feb 2022 15:28:41 +0530
+Message-ID: <20220203095841.7937-1-ravi.bangoria@amd.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <fe53507b-9732-b47e-32e0-647a9bfc8a80@amd.com>
+References: <fe53507b-9732-b47e-32e0-647a9bfc8a80@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220202195115.12924-1-alisaidi@amazon.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: af234eb3-5950-40a0-f7b1-08d9e6fbdee6
+X-MS-TrafficTypeDiagnostic: BYAPR12MB3494:EE_
+X-Microsoft-Antispam-PRVS: <BYAPR12MB3494A1CEFD73DC2D1BC52460E0289@BYAPR12MB3494.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: BSxVfb/pUfyFO2Ul4pjlholCII/Wj7PQzjQRRtrY1/VB81ESB9ac0aDDvNuTT0wNTc55eYo2EonNHMRjaXcQyTvSPuyrDeMWGP6ZUz35JmMy7j7/j39Xbr/vUpSdBXWb/PHfYXByqvpdJ4LMMPn+2gUIxoLCDgvP+nNlTH1rDinPYtmD6nIHB5R0zoiGR1QsLsJeNpIG5w0InMGL8f/F0iZD5R2isakcli8b2bSDlZA9Pa0OmhkfN8/ps3XyplA9aGm4kMDV+R3780cQibO/CGARYstFez8GBafG8dfE4EPOby0d+Uo3fAJYXK813QWLX60cFerlpvI4vqZpj5SlvilPE0Z1D7A5xKAhzUnFYXmDeIrrphYwL63j1hIvXx18wgSH59zGIXcnxiHrlyb3bzUpuQCmhZi151+K0YyRQdpfXO68an7OueD3k1Rx5316bWGpRHAGKr9vjN2tQ6UAckU05ukHhdMKBzc9VN227RIJ1mKTu93Y1vxdyQoAax1neFFzupd4YJL/ji4ywhcgkDD8CdEk2TO7yJ3JdCP48rqJEJE2LGSIhVqi8lIHqSP7fYGBJFrS+I3wpNoIynpW4UcUqHfcN6wD4jB32MBNDA/LIpz1s5CgIKDvYEgKjX3lnZUUSXE5C73YxUJBlVjW+iEiXg79E3yu/TMYIz+xfjRhyuAgJnk4DwsahR4Qus5nnMLwJi5rUhCGL7v95gzBLNvIst1jlmFUWKAedTen7yz96vnq+JKx25umtcriPDM6U0uCxbo1peNXD5QXamKEK9WmxVwzxVic2rkBNmr/f9vVMe7MxgXNSHb8uNVQRq6o2qDYRa/HZzDby2rCpMF7ig==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(46966006)(40470700004)(36840700001)(7416002)(36860700001)(110136005)(26005)(8936002)(8676002)(2616005)(70586007)(426003)(16526019)(336012)(508600001)(356005)(6666004)(1076003)(2906002)(966005)(81166007)(7696005)(186003)(86362001)(70206006)(82310400004)(54906003)(36756003)(44832011)(4326008)(47076005)(40460700003)(316002)(5660300002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2022 09:59:29.9556
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: af234eb3-5950-40a0-f7b1-08d9e6fbdee6
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT058.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3494
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Feb 02, 2022 at 07:51:15PM +0000, Ali Saidi wrote:
+Perf counter may overcount for a list of Retire Based Events. Implement
+workaround for Zen3 Family 19 Model 00-0F processors as suggested in
+Revision Guide[1]:
 
-[...]
+  To count the non-FP affected PMC events correctly:
+    o Use Core::X86::Msr::PERF_CTL2 to count the events, and
+    o Program Core::X86::Msr::PERF_CTL2[43] to 1b, and
+    o Program Core::X86::Msr::PERF_CTL2[20] to 0b.
 
-> >> >> +			data_src.mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
-> >> >
-> >> >This one also adds PERF_MEM_LVL_HIT even though the check of "if (record->type & ARM_SPE_LLC_MISS)"
-> >> >hasn't happened yet. Maybe some comments would make it a bit clearer, but at the moment it's
-> >> >not obvious how the result is derived because there are some things that don't add up like
-> >> >ARM_SPE_LLC_MISS == PERF_MEM_LVL_HIT.
-> >> 
-> >> Assuming the above is correct, my reading of the existing code that creates the
-> >> c2c output is that when an access is marked as an LLC hit, that doesn't
-> >> necessarily mean that the data was present in the LLC. I don't see how it could
-> >> given that LLC_HIT + HITM means the line was dirty in another CPUs cache, and so
-> >> LLC_HIT + HITM seems to mean that it was a hit in the LLC snoop filter and
-> >> required a different core to provide the line. This and the above certainly
-> >> deserve a comment as to why the miss is being attributed in this way if it's
-> >> otherwise acceptable.
-> >
-> >As James pointed out, this might introduce confusion.  I am wanderding
-> >if we can extract two functions for synthesizing the data source, one is
-> >for Neoverse platform and another is for generic purpose (which
-> >without data source packets), below code is to demonstrate the basic
-> >idea.
-> 
-> The code below is cleaner, and I'm happy to rework the patches in this way, but
-> I think the question still remains about unifying behavior of the tool. If we
-> mark something with a data source of ARM_SPE_NV_PEER_CORE as at L1 hit + HITM
-> certainly c2c won't show the correct thing today, but i think it also hides the
-> intent. The line in question missed the L1, L2, and got to the LLC where we did
-> find a record that it was in another cores cache (L1 or L2). Looking at the way
-> that c2c works today, it seems like marking this as a hit in the LLC snoop
-> filter is the best way to unify behaviors among architectures?
+Note that the specified workaround applies only to counting events and
+not to sampling events. Thus sampling event will continue functioning
+as is.
 
-Thanks a lot for pointing out this.  I looked into the code and
-compared the memory trace data from x86, I found the HITM tag is always
-sticking to LLC from x86's memory events.  This would be the main reason
-why current code in perf is only support HITM for LLC.
+Although the issue exists on all previous Zen revisions, the workaround
+is different and thus not included in this patch.
 
-I don't think it's a good way to always mark LLC snoop, even it's a
-snooping operation in L1 or L2 cache on Arm64 platforms; this would
-introduce confusion for users when using Arm SPE for profiling.
+This patch needs Like's patch[2] to make it work on kvm guest.
 
-Alternatively, we can support HITM tag for L1/L2 cache levels in perf,
-this can allow us to match memory topology on Arm64 arch, and it should
-not introduce any regression on x86 arch.
+[1] https://bugzilla.kernel.org/attachment.cgi?id=298241
+[2] https://lore.kernel.org/lkml/20220117055703.52020-1-likexu@tencent.com
 
-Could you confirm if below code can fix the issue or not?
-
-From 56e70a9ca974ad062788cfccd2ae9ddafa13d3ae Mon Sep 17 00:00:00 2001
-From: Leo Yan <leo.yan@linaro.org>
-Date: Thu, 3 Feb 2022 16:53:34 +0800
-Subject: [PATCH] perf mem: Support HITM statistics for L1/L2 caches
-
-Current code only support HITM statistics for last level cache (LLC) and
-remote node's cache.  This works for x86 architecture since the HITM tag
-is associated with LLC but not with L1/L2 cache.
-
-On Arm64 architectures, due to the different memory hierarchy and
-topology, the snooping can happen on L1 or L2 cache line, and thus it's
-possible that coherency protocol fetches data from peer core or
-cluster's L1/L2 cache.  For this reason, HITM tag is not necessarily
-bound to LLC anymore.
-
-For a general solution, this patch extends to set HITM tag for L1 and L2
-cache, thus this can allow perf c2c tool to work properly for Arm64
-architecture.  On the other hand, since x86 architecture doesn't set
-HITM tag for L1/L2 cache, thus this patch should not introduce any
-functionality change for x86 platforms.
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
 ---
- tools/perf/util/mem-events.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+v2: https://lore.kernel.org/r/20220202105158.7072-1-ravi.bangoria@amd.com
+v2->v3:
+  - Use EVENT_CONSTRAINT_RANGE() for continuous event codes.
 
-diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-index ed0ab838bcc5..7a0ab3d26843 100644
---- a/tools/perf/util/mem-events.c
-+++ b/tools/perf/util/mem-events.c
-@@ -527,8 +527,18 @@ do {				\
- 			if (lvl & P(LVL, UNC)) stats->ld_uncache++;
- 			if (lvl & P(LVL, IO))  stats->ld_io++;
- 			if (lvl & P(LVL, LFB)) stats->ld_fbhit++;
--			if (lvl & P(LVL, L1 )) stats->ld_l1hit++;
--			if (lvl & P(LVL, L2 )) stats->ld_l2hit++;
-+			if (lvl & P(LVL, L1 )) {
-+				if (snoop & P(SNOOP, HITM))
-+					HITM_INC(lcl_hitm);
-+				else
-+					stats->ld_l1hit++;
+ arch/x86/events/amd/core.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index 9687a8aef01c..124ec15851bc 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -874,6 +874,17 @@ amd_get_event_constraints_f15h(struct cpu_hw_events *cpuc, int idx,
+ 	}
+ }
+ 
++/* Overcounting of Retire Based Events Erratum */
++static struct event_constraint retire_event_constraints[] __read_mostly = {
++	EVENT_CONSTRAINT_RANGE(0xC0, 0xC5, 0x4, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT_RANGE(0xC8, 0xCA, 0x4, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0xCC, 0x4, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0xD1, 0x4, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0x1000000C7, 0x4, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT(0x1000000D0, 0x4, AMD64_EVENTSEL_EVENT),
++	EVENT_CONSTRAINT_END
++};
++
+ static struct event_constraint pair_constraint;
+ 
+ static struct event_constraint *
+@@ -881,10 +892,30 @@ amd_get_event_constraints_f17h(struct cpu_hw_events *cpuc, int idx,
+ 			       struct perf_event *event)
+ {
+ 	struct hw_perf_event *hwc = &event->hw;
++	struct event_constraint *c;
+ 
+ 	if (amd_is_pair_event_code(hwc))
+ 		return &pair_constraint;
+ 
++	/*
++	 * Although 'Overcounting of Retire Based Events' erratum exists
++	 * for older generation cpus, workaround to set bit 43 works only
++	 * for Family 19h Model 00-0Fh as per the Revision Guide.
++	 */
++	if (boot_cpu_data.x86 == 0x19 && boot_cpu_data.x86_model <= 0xf) {
++		if (is_sampling_event(event))
++			goto out;
++
++		for_each_event_constraint(c, retire_event_constraints) {
++			if (constraint_match(c, event->hw.config)) {
++				event->hw.config |= (1ULL << 43);
++				event->hw.config &= ~(1ULL << 20);
++				return c;
 +			}
-+			if (lvl & P(LVL, L2 )) {
-+				if (snoop & P(SNOOP, HITM))
-+					HITM_INC(lcl_hitm);
-+				else
-+					stats->ld_l2hit++;
-+			}
- 			if (lvl & P(LVL, L3 )) {
- 				if (snoop & P(SNOOP, HITM))
- 					HITM_INC(lcl_hitm);
++		}
++	}
++
++out:
+ 	return &unconstrained;
+ }
+ 
+-- 
+2.27.0
 
-> I'll send you a perf.data file OOB.
-
-Very appreciate!  I will look into it and will let you know
-if I have any new finding.
-
-Thanks,
-Leo
