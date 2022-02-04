@@ -2,188 +2,145 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7333C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Feb 2022 12:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A35BDC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Feb 2022 13:01:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238992AbiBDMs6 (ORCPT
+        id S244756AbiBDNBT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Feb 2022 07:48:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52020 "EHLO
+        Fri, 4 Feb 2022 08:01:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230130AbiBDMs6 (ORCPT
+        with ESMTP id S231296AbiBDNBS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Feb 2022 07:48:58 -0500
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED220C061714
-        for <linux-perf-users@vger.kernel.org>; Fri,  4 Feb 2022 04:48:57 -0800 (PST)
-Received: by mail-ej1-x636.google.com with SMTP id o12so19044379eju.13
-        for <linux-perf-users@vger.kernel.org>; Fri, 04 Feb 2022 04:48:57 -0800 (PST)
+        Fri, 4 Feb 2022 08:01:18 -0500
+Received: from mail-oi1-x22a.google.com (mail-oi1-x22a.google.com [IPv6:2607:f8b0:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 801C7C06173D
+        for <linux-perf-users@vger.kernel.org>; Fri,  4 Feb 2022 05:01:18 -0800 (PST)
+Received: by mail-oi1-x22a.google.com with SMTP id m10so8414353oie.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 04 Feb 2022 05:01:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=dMbK6PFHCTOCK9mt0fnaMEkzzRyS6SXE4dGkLe4pvUM=;
-        b=nOB4Eu357V8K/lqn3Hsb1oT2GzEMsrvzv5Ui7vVmyKvAULS1NddD+Do7vmB5CgdCMV
-         5caShPwclx8MMVX0dBX7YGNb4RnitEi7pXYkKP38NmOH97S7x5+y6jOdtusRsLNEKVjk
-         YgTj+Or2zWQRCvUlOIp2Xr5ddnFLAUOgqGIYqaggx5MUWi78wvv8qpRVWOUfxmcitFEc
-         SyQtZkXlPGXZ7t9ul+y3/FJO6O22uHuaVWS+xRyI/XzlDfo7T6c0QFkbEO/oPJjLShPO
-         OWdN0esp0U41UZ/3R48ndCNixcfRTr11trqQp6vRQBkDzpbvUSah4kOPvKVD4L80njE8
-         8y9Q==
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zxrOWR/gZztW7YQEW1JYcvX+yxiEfvcBy6vYQPVdyHo=;
+        b=T7MokBOygJuqC8MwMYoe7IQIR/ylS0JIrnND8YvA1v6psTjrzb5TXKnKBvCCr12ZxH
+         Ht8YuvVf0/Ll5yIL0SoniGRNgKyF1+zsWNky/YG+aj1/OvBH4YqkYLptsHJ3gyjBMd/T
+         b2KcYQF1AohONEFWoh0WDJFVbw+OC5iuMCHylGVYsVuOZPU1B3PdOtK7a7LBLVwxAtvQ
+         ngUUrZUFf7/THPaQ1ZOHLF4GE3g3u04CH1bRkAMmXnaJXoQosglH0uYYZGxdfEOeZ9AR
+         gAKryNuiFR7SBqT5gofy2OQQKB0gbGA/A8gNZwLMV1ckf1hhy54BT4sS5+vuMsVfUBAl
+         ZQRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dMbK6PFHCTOCK9mt0fnaMEkzzRyS6SXE4dGkLe4pvUM=;
-        b=sJdoZ6he6Bk1/oVfzW/WAm+fMJgA8EFS0WLPM+XuK9ntaJMpEZEMxkWanZT/eB0n29
-         lswv+aleUOo9ZCzK5sPxTIAm61RpAj4Y1RG8Ba4tZJUQWagmLjcsSPq48nWu6R+oYF75
-         NjO/KTKu6cODrwA7dbLp0NoQ1xi7RbI9Yjn4pZFGvAXfq0w7sekhJCLSwA8Q/GEY/fCQ
-         Hv8gK/VkWuixXEws3U8RnhXjkkakiz7HaS6xCJr6MyeXBgrJT1gqw2/OQWD880gSSkRr
-         fK0MtIRvYBJlhJx9EB7jxlKDhjnwz4vQPUqIESiGvUja4s5gtg5z/LnkD3p0OuoJNWZH
-         vKEA==
-X-Gm-Message-State: AOAM533nYze87G5YkqG2BSVmqy+IypWDxWQfcAIRJAyhC0+097sBnPTI
-        EY0+4XFvjltFlDQt7FsRItUrUw==
-X-Google-Smtp-Source: ABdhPJwDtC/+n1kgdpkHNW2ep2zkeoO32rN04wiaRVA42pTGiGrc5qI7qSvnFRwOTFYdiv6Ax5EDRQ==
-X-Received: by 2002:a17:907:a412:: with SMTP id sg18mr2410122ejc.68.1643978935936;
-        Fri, 04 Feb 2022 04:48:55 -0800 (PST)
-Received: from leoy-ThinkPad-X240s ([104.245.96.65])
-        by smtp.gmail.com with ESMTPSA id c22sm802631eds.72.2022.02.04.04.48.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Feb 2022 04:48:55 -0800 (PST)
-Date:   Fri, 4 Feb 2022 20:48:49 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>, Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf synthetic-events: Return error if procfs isn't
- mounted for PID namespaces
-Message-ID: <20220204124849.GB2040169@leoy-ThinkPad-X240s>
-References: <20211224124014.2492751-1-leo.yan@linaro.org>
- <e5f242c4-fe64-e214-4b28-c99af684751a@arm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zxrOWR/gZztW7YQEW1JYcvX+yxiEfvcBy6vYQPVdyHo=;
+        b=RT07Vwr4cwHVng40HXujvZepXgxyibnJXY36544XCR5/RtzsCp8bk62TfsxBjbYO3T
+         5x8SWHu4bf1pdgsNx8dHmZDWWRio8fmhTr49UaVnn+FsRoEfXr4bwlyU5BEIjDtZcAYo
+         oWfWqoncRnlTrAYtTBR89bkjM5Fbx+herzAsh2nLholKMPZOr+nkHLOrI1R7ULRAqXvp
+         eTvuijgaAxmb4SU7n0Xn4xzThqGG79o22m8l5zAbsk2aRLLfhUykTzqtnlIDRZziZ+P0
+         SnLJKz/J6u9dzHHdXP+l0grqeBFzsvSctBdoTcIRzhzEvIs1nlneUIqh4UNziJAgBm5W
+         r2iA==
+X-Gm-Message-State: AOAM533Ahi6yMDn27WtxEBITmhIQydd14O7red9S8qknaox1WLQCJizO
+        jaZMA/FSNQOvjKjcHvPE+RVroNpIMbMxJHuhtMNHHg==
+X-Google-Smtp-Source: ABdhPJzUI4MfqfBJjOeHn/jcFyfAqgoyixENV9Tfbs33cptyQeLioq/gssUH7JENaz+cVN5AzO7wM+j/ESGve7by9uY=
+X-Received: by 2002:a05:6808:1292:: with SMTP id a18mr1214335oiw.314.1643979675976;
+ Fri, 04 Feb 2022 05:01:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e5f242c4-fe64-e214-4b28-c99af684751a@arm.com>
+References: <2e96421f-44b5-c8b7-82f7-5a9a9040104b@amd.com> <20220202105158.7072-1-ravi.bangoria@amd.com>
+ <CALMp9eQHfAgcW-J1YY=01ki4m_YVBBEz6D1T662p2BUp05ZcPQ@mail.gmail.com>
+ <3c97e081-ae46-d92d-fe8f-58642d6b773e@amd.com> <CALMp9eS72bhP=hGJRzTwGxG9XrijEnGKnJ-pqtHxYG-5Shs+2g@mail.gmail.com>
+ <9b890769-e769-83ed-c953-d25930b067ba@amd.com>
+In-Reply-To: <9b890769-e769-83ed-c953-d25930b067ba@amd.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Fri, 4 Feb 2022 05:01:05 -0800
+Message-ID: <CALMp9eQ9K+CXHVZ1zSyw78n-agM2+NQ1xJ4niO-YxSkQCLcK-A@mail.gmail.com>
+Subject: Re: [PATCH v2] perf/amd: Implement erratum #1292 workaround for F19h M00-0Fh
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     like.xu.linux@gmail.com, eranian@google.com,
+        santosh.shukla@amd.com, pbonzini@redhat.com, seanjc@google.com,
+        wanpengli@tencent.com, vkuznets@redhat.com, joro@8bytes.org,
+        peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, tglx@linutronix.de,
+        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+        kvm@vger.kernel.org, x86@kernel.org,
+        linux-perf-users@vger.kernel.org, ananth.narayan@amd.com,
+        kim.phillips@amd.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jan 07, 2022 at 02:27:57PM +0000, James Clark wrote:
-> On 24/12/2021 12:40, Leo Yan wrote:
-> > For perf recording, it retrieves process info by iterating nodes in proc
-> > fs.  If we run perf in a non-root PID namespace with command:
-> > 
-> >   # unshare --fork --pid perf record -e cycles -a -- test_program
-> > 
-> > ... in this case, unshare command creates a child PID namespace and
-> > launches perf tool in it, but the issue is the proc fs is not mounted
-> > for the non-root PID namespace, this leads to the perf tool gathering
-> > process info from its parent PID namespace.
-> > 
-> 
-> I had some concerns that this would prevent use of perf in docker, but docker
-> does mount /proc so it is still working. And you've added a warning about how
-> to fix the unshare command so I think this is ok.
-> 
-> Reviewed-by: James Clark <james.clark@arm.com>
+On Fri, Feb 4, 2022 at 1:33 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
+>
+>
+>
+> On 03-Feb-22 11:25 PM, Jim Mattson wrote:
+> > On Wed, Feb 2, 2022 at 9:18 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
+> >>
+> >> Hi Jim,
+> >>
+> >> On 03-Feb-22 9:39 AM, Jim Mattson wrote:
+> >>> On Wed, Feb 2, 2022 at 2:52 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
+> >>>>
+> >>>> Perf counter may overcount for a list of Retire Based Events. Implement
+> >>>> workaround for Zen3 Family 19 Model 00-0F processors as suggested in
+> >>>> Revision Guide[1]:
+> >>>>
+> >>>>   To count the non-FP affected PMC events correctly:
+> >>>>     o Use Core::X86::Msr::PERF_CTL2 to count the events, and
+> >>>>     o Program Core::X86::Msr::PERF_CTL2[43] to 1b, and
+> >>>>     o Program Core::X86::Msr::PERF_CTL2[20] to 0b.
+> >>>>
+> >>>> Note that the specified workaround applies only to counting events and
+> >>>> not to sampling events. Thus sampling event will continue functioning
+> >>>> as is.
+> >>>>
+> >>>> Although the issue exists on all previous Zen revisions, the workaround
+> >>>> is different and thus not included in this patch.
+> >>>>
+> >>>> This patch needs Like's patch[2] to make it work on kvm guest.
+> >>>
+> >>> IIUC, this patch along with Like's patch actually breaks PMU
+> >>> virtualization for a kvm guest.
+> >>>
+> >>> Suppose I have some code which counts event 0xC2 [Retired Branch
+> >>> Instructions] on PMC0 and event 0xC4 [Retired Taken Branch
+> >>> Instructions] on PMC1. I then divide PMC1 by PMC0 to see what
+> >>> percentage of my branch instructions are taken. On hardware that
+> >>> suffers from erratum 1292, both counters may overcount, but if the
+> >>> inaccuracy is small, then my final result may still be fairly close to
+> >>> reality.
+> >>>
+> >>> With these patches, if I run that same code in a kvm guest, it looks
+> >>> like one of those events will be counted on PMC2 and the other won't
+> >>> be counted at all. So, when I calculate the percentage of branch
+> >>> instructions taken, I either get 0 or infinity.
+> >>
+> >> Events get multiplexed internally. See below quick test I ran inside
+> >> guest. My host is running with my+Like's patch and guest is running
+> >> with only my patch.
+> >
+> > Your guest may be multiplexing the counters. The guest I posited does not.
+>
+> It would be helpful if you can provide an example.
 
-Thanks a lot for review, James.
+Perf on any current Linux distro (i.e. without your fix).
 
-Arnaldo, Jiri, could you take a look for this patch?  Thanks!
+> > I hope that you are not saying that kvm's *thread-pinned* perf events
+> > are not being multiplexed at the host level, because that completely
+> > breaks PMU virtualization.
+>
+> IIUC, multiplexing happens inside the guest.
 
-Leo
+I'm not sure that multiplexing is the answer. Extrapolation may
+introduce greater imprecision than the erratum.
 
-> > We can use below command to observe the process nodes under proc fs:
-> > 
-> >   # unshare --pid --fork ls /proc
-> > 1    137   1968  2128  3    342  48  62   78	     crypto	  kcore        net	      uptime
-> > 10   138   2	 2142  30   35	 49  63   8	     devices	  keys	       pagetypeinfo   version
-> > 11   139   20	 2143  304  36	 50  64   82	     device-tree  key-users    partitions     vmallocinfo
-> > 12   14    2011  22    305  37	 51  65   83	     diskstats	  kmsg	       self	      vmstat
-> > 128  140   2038  23    307  39	 52  656  84	     driver	  kpagecgroup  slabinfo       zoneinfo
-> > 129  15    2074  24    309  4	 53  67   9	     execdomains  kpagecount   softirqs
-> > 13   16    2094  241   31   40	 54  68   asound     fb		  kpageflags   stat
-> > 130  164   2096  242   310  41	 55  69   buddyinfo  filesystems  loadavg      swaps
-> > 131  17    2098  25    317  42	 56  70   bus	     fs		  locks        sys
-> > 132  175   21	 26    32   43	 57  71   cgroups    interrupts   meminfo      sysrq-trigger
-> > 133  179   2102  263   329  44	 58  75   cmdline    iomem	  misc	       sysvipc
-> > 134  1875  2103  27    330  45	 59  76   config.gz  ioports	  modules      thread-self
-> > 135  19    2117  29    333  46	 6   77   consoles   irq	  mounts       timer_list
-> > 136  1941  2121  298   34   47	 60  773  cpuinfo    kallsyms	  mtd	       tty
-> > 
-> > So it shows many existed tasks, since unshared command has not mounted
-> > the proc fs for the new created PID namespace, it still accesses the
-> > proc fs of the root PID namespace.  This leads to two prominent issues:
-> > 
-> > - Firstly, PID values are mismatched between thread info and samples.
-> >   The gathered thread info are coming from the proc fs of the root PID
-> >   namespace, but samples record its PID from the child PID namespace.
-> > 
-> > - The second issue is profiled program 'test_program' returns its forked
-> >   PID number from the child PID namespace, perf tool wrongly uses this
-> >   PID number to retrieve the process info via the proc fs of the root
-> >   PID namespace.
-> > 
-> > To avoid issues, we need to mount proc fs for the child PID namespace
-> > with the option '--mount-proc' when use unshare command:
-> > 
-> >   # unshare --fork --pid --mount-proc perf record -e cycles -a -- test_program
-> > 
-> > Conversely, when the proc fs of the root PID namespace is used by child
-> > namespace, perf tool can detect the multiple PID levels and
-> > nsinfo__is_in_root_namespace() returns false, this patch reports error
-> > for this case:
-> > 
-> >   # unshare --fork --pid perf record -e cycles -a -- test_program
-> >   Couldn't synthesize bpf events.
-> >   Perf runs in non-root PID namespace but it tries to gather process info from its parent PID namespace.
-> >   Please mount the proc file system properly, e.g. add the option '--mount-proc' for unshare command.
-> > 
-> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> > ---
-> >  tools/perf/util/synthetic-events.c | 19 +++++++++++++++++++
-> >  1 file changed, 19 insertions(+)
-> > 
-> > diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-> > index 198982109f0f..cf7800347f77 100644
-> > --- a/tools/perf/util/synthetic-events.c
-> > +++ b/tools/perf/util/synthetic-events.c
-> > @@ -1784,6 +1784,25 @@ int __machine__synthesize_threads(struct machine *machine, struct perf_tool *too
-> >  				  perf_event__handler_t process, bool needs_mmap,
-> >  				  bool data_mmap, unsigned int nr_threads_synthesize)
-> >  {
-> > +	/*
-> > +	 * When perf runs in non-root PID namespace, and the namespace's proc FS
-> > +	 * is not mounted, nsinfo__is_in_root_namespace() returns false.
-> > +	 * In this case, the proc FS is coming for the parent namespace, thus
-> > +	 * perf tool will wrongly gather process info from its parent PID
-> > +	 * namespace.
-> > +	 *
-> > +	 * To avoid the confusion that the perf tool runs in a child PID
-> > +	 * namespace but it synthesizes thread info from its parent PID
-> > +	 * namespace, returns failure with warning.
-> > +	 */
-> > +	if (!nsinfo__is_in_root_namespace()) {
-> > +		pr_err("Perf runs in non-root PID namespace but it tries to ");
-> > +		pr_err("gather process info from its parent PID namespace.\n");
-> > +		pr_err("Please mount the proc file system properly, e.g. ");
-> > +		pr_err("add the option '--mount-proc' for unshare command.\n");
-> > +		return -EPERM;
-> > +	}
-> > +
-> >  	if (target__has_task(target))
-> >  		return perf_event__synthesize_thread_map(tool, threads, process, machine,
-> >  							 needs_mmap, data_mmap);
-> > 
+If you count something like "instructions retired" three ways:
+1) Unfixed counter
+2) PMC2 with the fix
+3) Multiplexed on PMC2 with the fix
+
+Is (3) always more accurate than (1)?
+
+> Thanks,
+> Ravi
