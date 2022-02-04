@@ -2,146 +2,256 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A63ECC433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Feb 2022 20:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95FAFC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Feb 2022 04:55:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354231AbiBCUkU (ORCPT
+        id S1356993AbiBDEzf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Feb 2022 15:40:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59374 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355513AbiBCUh4 (ORCPT
+        Thu, 3 Feb 2022 23:55:35 -0500
+Received: from foss.arm.com ([217.140.110.172]:42588 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1356987AbiBDEzd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Feb 2022 15:37:56 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0EB2C06135F;
-        Thu,  3 Feb 2022 12:35:42 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4BFBAB83556;
-        Thu,  3 Feb 2022 20:35:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A062C340EF;
-        Thu,  3 Feb 2022 20:35:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643920541;
-        bh=uTL2Nay/8GWAMmVvKaKX/FlLlSAitr1eesRfZ0/hxmI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tiDIRVaG8JoiYLx6CR0ZnXeAV0JNCrWIP3Sx8TYhR7e6MoEpIPqf0kfCJv9Ciq0zC
-         wtIMB98RFGNk1A56DyWre915trzbK/RUXlVynUMn3u9hBP1s0Rbf+R/FG/pI572qu6
-         il6RRrNhigsHNPDosf6lY9uE5R8E1RtUb+AqHQ3KnphUr+Wu2yLfdfDZ5Y5WbxDE3L
-         7CDdRZ8JLCWR7LughFYaQe/purpP9T7LPhGeITyukVbBv+F8tmip88LI4ymLzREgpS
-         FyqF3wkhZ65poRM9I5ly5X6hAI0EVg+04xaAuaoDpMTuprnSNHpmIJsY0ryHm7h3yL
-         8EyP1qqqI7/Vw==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Clark <james.clark@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Thu, 3 Feb 2022 23:55:33 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4A9521435;
+        Thu,  3 Feb 2022 20:55:33 -0800 (PST)
+Received: from [10.163.45.195] (unknown [10.163.45.195])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C7C613F774;
+        Thu,  3 Feb 2022 20:55:28 -0800 (PST)
+Subject: Re: [PATCH 2/2] perf: Expand perf_branch_entry.type
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, robh@kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>, mingo@redhat.com,
-        acme@kernel.org, linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 23/25] perf: Always wake the parent event
-Date:   Thu,  3 Feb 2022 15:34:44 -0500
-Message-Id: <20220203203447.3570-23-sashal@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220203203447.3570-1-sashal@kernel.org>
-References: <20220203203447.3570-1-sashal@kernel.org>
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Will Deacon <will@kernel.org>
+References: <1643348653-24367-1-git-send-email-anshuman.khandual@arm.com>
+ <1643348653-24367-3-git-send-email-anshuman.khandual@arm.com>
+ <Yfpxv9+TP9rP72wL@FVFF77S0Q05N>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <6168f881-92a4-54f8-929a-c2f40a36c112@arm.com>
+Date:   Fri, 4 Feb 2022 10:25:24 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <Yfpxv9+TP9rP72wL@FVFF77S0Q05N>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: James Clark <james.clark@arm.com>
 
-[ Upstream commit 961c39121759ad09a89598ec4ccdd34ae0468a19 ]
 
-When using per-process mode and event inheritance is set to true,
-forked processes will create a new perf events via inherit_event() ->
-perf_event_alloc(). But these events will not have ring buffers
-assigned to them. Any call to wakeup will be dropped if it's called on
-an event with no ring buffer assigned because that's the object that
-holds the wakeup list.
+On 2/2/22 5:27 PM, Mark Rutland wrote:
+> On Fri, Jan 28, 2022 at 11:14:13AM +0530, Anshuman Khandual wrote:
+>> Current perf_branch_entry.type is a 4 bits field just enough to accommodate
+>> 16 generic branch types. This is insufficient to accommodate platforms like
+>> arm64 which has much more branch types.
+> 
+> It would be good to mention BRBE specifically here, along with specific values
+> and a rought intro, e.g.
+> 
+> | The Arm Branch Record Buffer Extension (BRBE) distinguishes $N types of
+> | branch/exception/return: <rough summary here>. There's not enough space to
+> | describe these all in perf_branch_entry.type, as this is a 4-bit field.
+> 
+> That way reviewers (and anyone looking at the patch in future) have a lot more
+> rationale to work with. A rough summary of the distinct branch types would be
+> *really* helpful.
 
-If the child event is disabled due to a call to
-perf_aux_output_begin() or perf_aux_output_end(), the wakeup is
-dropped leaving userspace hanging forever on the poll.
+Sure, will add a summary describing the need for an ABI extension as suggested.
 
-Normally the event is explicitly re-enabled by userspace after it
-wakes up to read the aux data, but in this case it does not get woken
-up so the event remains disabled.
+> 
+>> Lets just expands this field into a 6 bits one, which can now hold 64 generic
+>> branch types.
+> 
+> Is it safe (ABI-wise) to extend a bit-field like this? Does that break any
+> combination of old/new userspace and old/new kernel? I'm not sure how bit
+> fields are managed w.r.t. endianness, but normally extending a field would
+> break BE, so this seems suspicious.
 
-This can be reproduced when using Arm SPE and 'stress' which forks once
-before running the workload. By looking at the list of aux buffers read,
-it's apparent that they stop after the fork:
+Probably. I guess we would need some more inputs/suggestions from others
+regarding any potential issues and possible workarounds.
 
-  perf record -e arm_spe// -vvv -- stress -c 1
+> 
+> I suspect we might need to allocate a *separate* field for new values, and
+> possibly reserve a value in the existing field to say "go look at the new
+> field".
 
-With this patch applied they continue to be printed. This behaviour
-doesn't happen when using systemwide or per-cpu mode.
+In that case there might be another level of indirection.
 
-Reported-by: Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>
-Signed-off-by: James Clark <james.clark@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20211206113840.130802-2-james.clark@arm.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/events/core.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> Do you have any rationale for 64 values specifically? e.g. is that mostly for
+> future extensibility? How many will we need for Arm's BRBE?
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index e2d774cc470ee..071a5bfe7c678 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -5830,6 +5830,8 @@ static void ring_buffer_attach(struct perf_event *event,
- 	struct perf_buffer *old_rb = NULL;
- 	unsigned long flags;
- 
-+	WARN_ON_ONCE(event->parent);
-+
- 	if (event->rb) {
- 		/*
- 		 * Should be impossible, we set this when removing
-@@ -5887,6 +5889,9 @@ static void ring_buffer_wakeup(struct perf_event *event)
- {
- 	struct perf_buffer *rb;
- 
-+	if (event->parent)
-+		event = event->parent;
-+
- 	rcu_read_lock();
- 	rb = rcu_dereference(event->rb);
- 	if (rb) {
-@@ -5900,6 +5905,9 @@ struct perf_buffer *ring_buffer_get(struct perf_event *event)
- {
- 	struct perf_buffer *rb;
- 
-+	if (event->parent)
-+		event = event->parent;
-+
- 	rcu_read_lock();
- 	rb = rcu_dereference(event->rb);
- 	if (rb) {
-@@ -6572,7 +6580,7 @@ static unsigned long perf_prepare_sample_aux(struct perf_event *event,
- 	if (WARN_ON_ONCE(READ_ONCE(sampler->oncpu) != smp_processor_id()))
- 		goto out;
- 
--	rb = ring_buffer_get(sampler->parent ? sampler->parent : sampler);
-+	rb = ring_buffer_get(sampler);
- 	if (!rb)
- 		goto out;
- 
-@@ -6638,7 +6646,7 @@ static void perf_aux_sample_output(struct perf_event *event,
- 	if (WARN_ON_ONCE(!sampler || !data->aux_size))
- 		return;
- 
--	rb = ring_buffer_get(sampler->parent ? sampler->parent : sampler);
-+	rb = ring_buffer_get(sampler);
- 	if (!rb)
- 		return;
- 
--- 
-2.34.1
+Yeah that is mostly for future extensibility. BRBE's current requirement
+will be well within 32 types itself. 19 to be specific.
 
+> 
+> Do those types fall into a hierarchy, that we could split across separate
+> fields?
+I will take a look and get back on this. But as mentioned before it will
+cause additional level of indirection for a look up.
+
+> 
+>> This also adds more generic branch types.
+> 
+> This feels like ti should be in a separate/subsequent patch. If nothing else
+> that aids bisectability if changing the size of the field breaks anything.
+
+Makes sense, will split them.
+
+> 
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Cc: Ingo Molnar <mingo@redhat.com>
+>> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+>> Cc: Jiri Olsa <jolsa@redhat.com>
+>> Cc: Namhyung Kim <namhyung@kernel.org>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-perf-users@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>  include/uapi/linux/perf_event.h       | 10 ++++++++--
+>>  tools/include/uapi/linux/perf_event.h | 10 ++++++++--
+>>  tools/perf/util/branch.c              |  8 +++++++-
+>>  tools/perf/util/branch.h              |  4 ++--
+>>  4 files changed, 25 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+>> index b91d0f575d0c..361fdc6b87a0 100644
+>> --- a/include/uapi/linux/perf_event.h
+>> +++ b/include/uapi/linux/perf_event.h
+>> @@ -256,6 +256,12 @@ enum {
+>>  	PERF_BR_FIQ		= 13,	/* fiq */
+>>  	PERF_BR_DEBUG_HALT	= 14,	/* debug halt */
+>>  	PERF_BR_DEBUG_EXIT	= 15,	/* debug exit */
+>> +	PERF_BR_DEBUG_INST	= 16,	/* instruciton debug */
+>> +	PERF_BR_DEBUG_DATA	= 17,	/* data debug */
+> 
+> This is really unclear. What is "instruction debug" vs "data debug" ?
+> 
+> Are there meant for breakpoint/watchpoint exceptions? HW breakpoints vs BRK
+> instructions?
+
+Unfortunately the spec does not expand much in detail but will try
+and find some more clarity.
+
+> 
+>> +	PERF_BR_FAULT_ALGN	= 18,	/* alignment fault */
+>> +	PERF_BR_FAULT_DATA	= 19,	/* data fault */
+>> +	PERF_BR_FAULT_INST	= 20,	/* instruction fault */
+> 
+> There are many other potential faults a CPU could take; are these specifically
+> what Arm's BRBE provides?
+
+Right, these are what BRBE captures for now.
+
+> 
+>> +	PERF_BR_SERROR		= 21,	/* system error */
+> 
+> This is really arm-specific; IIUC the closest thing on x86 is an MCE.
+
+But ('unhandled' ?) system error can be a generic control flow change.
+
+> 
+>>  	PERF_BR_MAX,
+>>  };
+>>  
+>> @@ -1370,8 +1376,8 @@ struct perf_branch_entry {
+>>  		in_tx:1,    /* in transaction */
+>>  		abort:1,    /* transaction abort */
+>>  		cycles:16,  /* cycle count to last branch */
+>> -		type:4,     /* branch type */
+>> -		reserved:40;
+>> +		type:6,     /* branch type */
+> 
+> As above, is this a safe-change ABI-wise?
+
+If the bit fields here cannot be expanded without breaking ABI, then
+there is a fundamental problem. Only remaining option will be to add
+new fields (with new width value) which could accommodate these new
+required branch types.
+
+> 
+> Thanks,
+> Mark.
+> 
+>> +		reserved:38;
+>>  };
+>>  
+>>  union perf_sample_weight {
+>> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+>> index 1882054e8684..9a82b8aaed93 100644
+>> --- a/tools/include/uapi/linux/perf_event.h
+>> +++ b/tools/include/uapi/linux/perf_event.h
+>> @@ -256,6 +256,12 @@ enum {
+>>  	PERF_BR_FIQ		= 13,	/* fiq */
+>>  	PERF_BR_DEBUG_HALT	= 14,	/* debug halt */
+>>  	PERF_BR_DEBUG_EXIT	= 15,	/* debug exit */
+>> +	PERF_BR_DEBUG_INST	= 16,	/* instruciton debug */
+>> +	PERF_BR_DEBUG_DATA	= 17,	/* data debug */
+>> +	PERF_BR_FAULT_ALGN	= 18,	/* alignment fault */
+>> +	PERF_BR_FAULT_DATA	= 19,	/* data fault */
+>> +	PERF_BR_FAULT_INST	= 20,	/* instruction fault */
+>> +	PERF_BR_SERROR		= 21,	/* system error */
+>>  	PERF_BR_MAX,
+>>  };
+>>  
+>> @@ -1370,8 +1376,8 @@ struct perf_branch_entry {
+>>  		in_tx:1,    /* in transaction */
+>>  		abort:1,    /* transaction abort */
+>>  		cycles:16,  /* cycle count to last branch */
+>> -		type:4,     /* branch type */
+>> -		reserved:40;
+>> +		type:6,     /* branch type */
+>> +		reserved:38;
+>>  };
+>>  
+>>  union perf_sample_weight {
+>> diff --git a/tools/perf/util/branch.c b/tools/perf/util/branch.c
+>> index 74e5e67b1779..1e216ea2e2a8 100644
+>> --- a/tools/perf/util/branch.c
+>> +++ b/tools/perf/util/branch.c
+>> @@ -54,7 +54,13 @@ const char *branch_type_name(int type)
+>>  		"IRQ",
+>>  		"FIQ",
+>>  		"DEBUG_HALT",
+>> -		"DEBUG_EXIT"
+>> +		"DEBUG_EXIT",
+>> +		"DEBUG_INST",
+>> +		"DEBUG_DATA",
+>> +		"FAULT_ALGN",
+>> +		"FAULT_DATA",
+>> +		"FAULT_INST",
+>> +		"SERROR"
+>>  	};
+>>  
+>>  	if (type >= 0 && type < PERF_BR_MAX)
+>> diff --git a/tools/perf/util/branch.h b/tools/perf/util/branch.h
+>> index 17b2ccc61094..875d99abdc36 100644
+>> --- a/tools/perf/util/branch.h
+>> +++ b/tools/perf/util/branch.h
+>> @@ -23,8 +23,8 @@ struct branch_flags {
+>>  			u64 in_tx:1;
+>>  			u64 abort:1;
+>>  			u64 cycles:16;
+>> -			u64 type:4;
+>> -			u64 reserved:40;
+>> +			u64 type:6;
+>> +			u64 reserved:38;
+>>  		};
+>>  	};
+>>  };
+>> -- 
+>> 2.25.1
