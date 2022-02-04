@@ -2,191 +2,188 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DC3C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Feb 2022 09:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7333C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Feb 2022 12:48:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232490AbiBDJdE (ORCPT
+        id S238992AbiBDMs6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Feb 2022 04:33:04 -0500
-Received: from mail-dm3nam07on2062.outbound.protection.outlook.com ([40.107.95.62]:63072
-        "EHLO NAM02-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S232946AbiBDJdC (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Feb 2022 04:33:02 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KtLvN9VfXV8zjS9sIQYTUH/Bk0+d4Wifnc4BUxHQztAx+wrw5lRVZN4+axRRGZS7GM+7rhpiT8k8VfJqy0KnrRuJkr55N5xIMG4yk66FPdaudtUHzYxKUAe1gsEThuj+RI6TpjvpaDMlW16pKqGNwJ9XOSvgqrt7DMxjHPh/0PORzi8DFYoRmB1p+PAtM13baua/fJJKtDtCc0eGYT4U4sTzBLnVZdQRZfKWvDQ9p4PCwPNX/zgaicS4/kkOfG1cSYCXKifCebczqCbH9HHO7hOZg7cRcZ94tUVWGyqHvewsmpyxbQqomQecA8MZ8T4AIATvL8IlVsY+itqy95ZTeA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BOUZOa2eFaaPyv0ecWpgD207rU7vIrJDxFXKU22eO8E=;
- b=DC2fM5hiJBtkFNWEqASKiLF64pqCexRwIkaPsBuX92AZVK8Rr9Q79QZ3SFbCPrnYdm747p5y+Ess/jD1OtFBcEYUp01Nqhyw0leEjjKf5Nsag9YP1NUeo3+QraSjXsHUFbqeb/X4U+ENlNL9+DwjoUw0dFICnJMPolxbzS6MHmFr0YmDlvl0TKmZklPY6AtPsFYt8TMwk/x/7S0n4eW25vuEjZ+JvYaQXtFNyYM931RUzkhjcjQSL0NgQDNGO4Fv2yKEsgOSYfNz7NbvMV86x7YlcEWXMlY7H+uThRgrvdlX9g8HcNA0BD51cjsuuDsYV4Uh7Jt6i8sMUBLxYXa+KA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BOUZOa2eFaaPyv0ecWpgD207rU7vIrJDxFXKU22eO8E=;
- b=pv19NvMiPtMbLjlB/lvWZrUWZQGJp9soOkgCrJrWXX0XxG/Mj6VlNYegONHqxP5rONKmJgpxhu1H/Aox/KiaqsiXIXMMSJakjzl4BX6baHEnMzZU4Setvc75xG9cqv6sGLKguCDe+otdhOIDCsSUqIu5wZTuBLUHJBfOxgCEZYo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN2PR12MB3053.namprd12.prod.outlook.com (2603:10b6:208:c7::24)
- by BYAPR12MB3607.namprd12.prod.outlook.com (2603:10b6:a03:dd::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.12; Fri, 4 Feb
- 2022 09:33:00 +0000
-Received: from MN2PR12MB3053.namprd12.prod.outlook.com
- ([fe80::10c4:c928:bb18:44bc]) by MN2PR12MB3053.namprd12.prod.outlook.com
- ([fe80::10c4:c928:bb18:44bc%5]) with mapi id 15.20.4951.012; Fri, 4 Feb 2022
- 09:33:00 +0000
-Message-ID: <9b890769-e769-83ed-c953-d25930b067ba@amd.com>
-Date:   Fri, 4 Feb 2022 15:02:36 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.1
-Subject: Re: [PATCH v2] perf/amd: Implement erratum #1292 workaround for F19h
- M00-0Fh
-Content-Language: en-US
-To:     Jim Mattson <jmattson@google.com>
-Cc:     like.xu.linux@gmail.com, eranian@google.com,
-        santosh.shukla@amd.com, pbonzini@redhat.com, seanjc@google.com,
-        wanpengli@tencent.com, vkuznets@redhat.com, joro@8bytes.org,
-        peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, tglx@linutronix.de,
-        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-        kvm@vger.kernel.org, x86@kernel.org,
-        linux-perf-users@vger.kernel.org, ananth.narayan@amd.com,
-        kim.phillips@amd.com, Ravi Bangoria <ravi.bangoria@amd.com>
-References: <2e96421f-44b5-c8b7-82f7-5a9a9040104b@amd.com>
- <20220202105158.7072-1-ravi.bangoria@amd.com>
- <CALMp9eQHfAgcW-J1YY=01ki4m_YVBBEz6D1T662p2BUp05ZcPQ@mail.gmail.com>
- <3c97e081-ae46-d92d-fe8f-58642d6b773e@amd.com>
- <CALMp9eS72bhP=hGJRzTwGxG9XrijEnGKnJ-pqtHxYG-5Shs+2g@mail.gmail.com>
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <CALMp9eS72bhP=hGJRzTwGxG9XrijEnGKnJ-pqtHxYG-5Shs+2g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BMXPR01CA0086.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:54::26) To MN2PR12MB3053.namprd12.prod.outlook.com
- (2603:10b6:208:c7::24)
+        Fri, 4 Feb 2022 07:48:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52020 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230130AbiBDMs6 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 4 Feb 2022 07:48:58 -0500
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED220C061714
+        for <linux-perf-users@vger.kernel.org>; Fri,  4 Feb 2022 04:48:57 -0800 (PST)
+Received: by mail-ej1-x636.google.com with SMTP id o12so19044379eju.13
+        for <linux-perf-users@vger.kernel.org>; Fri, 04 Feb 2022 04:48:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=dMbK6PFHCTOCK9mt0fnaMEkzzRyS6SXE4dGkLe4pvUM=;
+        b=nOB4Eu357V8K/lqn3Hsb1oT2GzEMsrvzv5Ui7vVmyKvAULS1NddD+Do7vmB5CgdCMV
+         5caShPwclx8MMVX0dBX7YGNb4RnitEi7pXYkKP38NmOH97S7x5+y6jOdtusRsLNEKVjk
+         YgTj+Or2zWQRCvUlOIp2Xr5ddnFLAUOgqGIYqaggx5MUWi78wvv8qpRVWOUfxmcitFEc
+         SyQtZkXlPGXZ7t9ul+y3/FJO6O22uHuaVWS+xRyI/XzlDfo7T6c0QFkbEO/oPJjLShPO
+         OWdN0esp0U41UZ/3R48ndCNixcfRTr11trqQp6vRQBkDzpbvUSah4kOPvKVD4L80njE8
+         8y9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=dMbK6PFHCTOCK9mt0fnaMEkzzRyS6SXE4dGkLe4pvUM=;
+        b=sJdoZ6he6Bk1/oVfzW/WAm+fMJgA8EFS0WLPM+XuK9ntaJMpEZEMxkWanZT/eB0n29
+         lswv+aleUOo9ZCzK5sPxTIAm61RpAj4Y1RG8Ba4tZJUQWagmLjcsSPq48nWu6R+oYF75
+         NjO/KTKu6cODrwA7dbLp0NoQ1xi7RbI9Yjn4pZFGvAXfq0w7sekhJCLSwA8Q/GEY/fCQ
+         Hv8gK/VkWuixXEws3U8RnhXjkkakiz7HaS6xCJr6MyeXBgrJT1gqw2/OQWD880gSSkRr
+         fK0MtIRvYBJlhJx9EB7jxlKDhjnwz4vQPUqIESiGvUja4s5gtg5z/LnkD3p0OuoJNWZH
+         vKEA==
+X-Gm-Message-State: AOAM533nYze87G5YkqG2BSVmqy+IypWDxWQfcAIRJAyhC0+097sBnPTI
+        EY0+4XFvjltFlDQt7FsRItUrUw==
+X-Google-Smtp-Source: ABdhPJwDtC/+n1kgdpkHNW2ep2zkeoO32rN04wiaRVA42pTGiGrc5qI7qSvnFRwOTFYdiv6Ax5EDRQ==
+X-Received: by 2002:a17:907:a412:: with SMTP id sg18mr2410122ejc.68.1643978935936;
+        Fri, 04 Feb 2022 04:48:55 -0800 (PST)
+Received: from leoy-ThinkPad-X240s ([104.245.96.65])
+        by smtp.gmail.com with ESMTPSA id c22sm802631eds.72.2022.02.04.04.48.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Feb 2022 04:48:55 -0800 (PST)
+Date:   Fri, 4 Feb 2022 20:48:49 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>, Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf synthetic-events: Return error if procfs isn't
+ mounted for PID namespaces
+Message-ID: <20220204124849.GB2040169@leoy-ThinkPad-X240s>
+References: <20211224124014.2492751-1-leo.yan@linaro.org>
+ <e5f242c4-fe64-e214-4b28-c99af684751a@arm.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: eaedae07-d86a-4acd-3b98-08d9e7c155b7
-X-MS-TrafficTypeDiagnostic: BYAPR12MB3607:EE_
-X-Microsoft-Antispam-PRVS: <BYAPR12MB3607F21982FF09619A5D7DF7E0299@BYAPR12MB3607.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yrizKaUoTLb0T+YxuRnhooY74daA4kVZYGm6bZSjJJmr0GDnZqnDbYGvtANg0ZK0BKqXH2j0qKYF3FS/dbK7f6yQXOYK74wGMI4FivBbyHdHd4Ub+1xWoXKQTfnxNMO4ABGy/VbaS0w2+E8bPHikFceZAiap8atFzl9onbwfbokDhn/hDZM0UEYiIJboGqdngHt+F4Epu1GbEse7qOyMpsdn3vsmIAzybNqEOwvJJ2C2rCNGkiqbJHVEqhBKFVjjDIh+PwcuxnrFPq6qkcB4OTeEl99ayqwaM4l1RpyPaU2xelCLPeDCWu39ik5kV8Sogw4VPp3opBSOETpw4zAgJwuo3vj86WVEOITMdHNYFFMRxYOPWY6Wktw5Cf6++qZYVt01i8RoDb2o36d8vBEA7ymppMz/fIusi3ldAX+8LTElDsUaCIc1kJ7eaxTWuUQVz149Q10wzSTAif6REpbqFJ5UjnwQ3lTiEEeGH/DEIdUqCeTFMDnFJvuR1mESIzHr2k5w3eH5DsL5RhodDVbtrNb+uhOe7LaK9vWrNx1mL0lr02fyfROL4Gm/tuuI7rGm4cbhvog7eXtJsQjpKY4BQ0PNyyWq2mdZYAQuL+ZkHK2PAjoDiFgIW2jnw2Lx8pIkUrmKsYZBnY5pC5hKLkawXP2O1zNKwzgh07936/limKW366u8boVQwosZXMmVn9UvRMQhyCeGh+G09Vq3TNjp6M00+L1W5jjr888amgxZj1A=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3053.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(86362001)(2616005)(31686004)(83380400001)(26005)(316002)(66476007)(6916009)(66556008)(6506007)(6512007)(6666004)(31696002)(8676002)(4326008)(2906002)(186003)(7416002)(508600001)(8936002)(53546011)(66946007)(36756003)(6486002)(38100700002)(44832011)(5660300002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dDFSVGFCOEgzL0I4U25Ia21mMlo4dW9lQlpRM3RqZlV0K3I0cUY5endDMCtJ?=
- =?utf-8?B?QUJwVlM4WktVSkJBbk1IOWFDcEVwV3p3ZGw2WVF0Kytoa2xQTVBYY0duYkpM?=
- =?utf-8?B?Y0EvdGV1UkQ2SXhQQ20rZXAxQndZSFJvNVFaWndnUS9BT0trRXhWaHhlNnBS?=
- =?utf-8?B?TXY5QTFIZTIwbnFuOGk2b0RXMXVoV3VqTjlKN1pZVis1QzlNVVJ6azhVVkQw?=
- =?utf-8?B?dDRRRzd6QkNVMGtERk1mbm1pWklVSGtGdGRZUDFaVXZ3UXkwRFFZcXpqOXpr?=
- =?utf-8?B?UkwxU0tLSDlDaEtyaTRuNEo5VXFpM3EvT2xEL1BXVTMrTjFFekIrMElDbjZY?=
- =?utf-8?B?KzRHY0ZrMzVKdmhRR0FxQzRzNGRmcTdLOExBem1sWFRGbERNVE0wcnllVEdK?=
- =?utf-8?B?YjE1UEFoWjJTejl0VVAyVGpCOHNid2l0RnlQcTRlbG1taWN4WmVpNGVmd01J?=
- =?utf-8?B?OXNQZ3JIQVZ4NXlFMEc2TGx2ajdyOVFnMEJFZVBhMmxQTzN3aFU5SkRUcGhD?=
- =?utf-8?B?ZnhRbFJRaGkzMk9CWjVJQnJMd3N4SG1neExTN3NBWnhNU1l6U3VIck82czBr?=
- =?utf-8?B?cnY3M2grbGJ0N05aN1B2OG1uSER4dHB0Mk43ckdRRnNrcWR2OURMalQ3ODJy?=
- =?utf-8?B?aEs1V1BXOTA5R2dxbGlzb3RtK3dNd0gwMTFKSXoxQkswYWVCL3ozNUs5UklT?=
- =?utf-8?B?MlIxMWUzZE5OM2Z4YVkwSGRzNDNDZ05VS09nc1JQZHpBRHRoclA1UG1YQVlX?=
- =?utf-8?B?cjdVdDJ4SGlqTG5Ja3RGWHVsQ01HTmluQS81TlBsdG1GQWpVQmFxNWZ4VXgz?=
- =?utf-8?B?RE1DaytaTHFaMnUzNzB5UTZjRUIwSVcvMXIxMm9ybk90Y0FXTlliREt5RW9F?=
- =?utf-8?B?TkpRaFF1b05rZEVZUkg5NzNRZ1V4Wk96RWJ2TzZkWEhVd2ljY21Pc1hsbndT?=
- =?utf-8?B?dCt3Q2pIVFEvbGlqcXA4ZXFhNkxTSnRVcFJDM016Tm5DMDViV0tWTEhTZTJ1?=
- =?utf-8?B?cy9qVEVvVGN1TkhtdlhTVGlzMGJUeUhJOGJwbFg3UURtTHJiMjhQV2dCekR0?=
- =?utf-8?B?TWs5ajQyZFY3V0FVSHQxOFM4djhqU3NpdDRzV1JpZFJnZGdVNmNBYnFFUHZL?=
- =?utf-8?B?WTRQbDRHWHV6aVJEa2V5TzA1NUloZTJJSkdXRjRkcXcxRjF1S1d1dTlkQVNE?=
- =?utf-8?B?TG5RNTFGelFiZ1RxR0lsMUZHc1kwdU8vTmd4QUdLaDEvT1IwZEFwUUdocnpQ?=
- =?utf-8?B?ZEh6SWVDSG5vUDB4M1ovWUFOeGFZZHNUbTdySVdkTERSZ2NYZ0dnaVNwUW5P?=
- =?utf-8?B?dmVvWTZrMHpVMkp3b09nUnAwL1Y0SHF4YmtseHRLVG9nRmRKM3ZEU1B6LzVQ?=
- =?utf-8?B?cDhMbEdYZmdraldLRGp2UU5sVHdha2ZUREJVUWtaMFJMQjlwVGJJTlBSRWVN?=
- =?utf-8?B?NjZDUlY4ZjZkRUdmdVZuVmo4SU1SOVMxc013Vjk3SEJPcHdqdWNLZy9GTHo3?=
- =?utf-8?B?dDhra0ljamE2SGR2Vm5SSWk4ZkRmcjdlbWJwSjlEMkdHejdTVW9TL0oyTk12?=
- =?utf-8?B?MkhtZXVLek8wM1RmdXc5REh5cW1LL0oyZVFiZEtjcjcrdzhTZnhoU2tUWHVq?=
- =?utf-8?B?R01zUmZpQ3M5QVYvb2RjV1l4ZEswM2V0OHlvWUEvaFA1OE9WMjQrdnA2TlZV?=
- =?utf-8?B?WFIwNm9TM0Y1OFpTYmZtMkl4bGh3YjlGWS9UYThzaW5VRjVCeUVqclZNdkUr?=
- =?utf-8?B?ekhxMnhvVmxmc0VBZVpMYVRJMjFTSjhQaUx3OUlBNVAvU0dNcDN1YmY5WHlL?=
- =?utf-8?B?VkJaOG9aMHlqb3doY1U1WmYweG45bWNMdFBqS0NXaDhjdzh6RDdneWZsS29V?=
- =?utf-8?B?YkRCb3R2SEduVUZpUTNaZlcvNWQrNDRBaVB4RzBNU0lPR3pwODBDb0FtSk9Z?=
- =?utf-8?B?WHQ2ZlAxQlNqR3BwNDltVjhTVUJKTzljVXRNdXAwR2FRbmJSM21OY00yUWlz?=
- =?utf-8?B?OE5XNE9BYUJ2ZkROdlUxcGdBNFlsdnNpblNVWUFISzZrUi9vVHJGcEl4MWZw?=
- =?utf-8?B?Ti9MQ2hNZkVlMEV1bmwvT3krMGJzQUV5UzhUS2RNVHdiY01YVCtlaHBUdVUr?=
- =?utf-8?B?RDFHTi90TEJ2R2NuY1c3aVp0bjVrTXdiSUJUZU1zcCthRS9wNDlNS1UyWFI2?=
- =?utf-8?Q?vgnH1aGFtOKm+7PZUyQQKg8=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eaedae07-d86a-4acd-3b98-08d9e7c155b7
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3053.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Feb 2022 09:33:00.5224
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dYwdIrcM9B2wCU4EH5EaWTdZKEVhJ9eoED1OmF8N2IxVb489kpxp6U7jyNDkgyaJBpevMj7CMZGWKan5JRH7EQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3607
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e5f242c4-fe64-e214-4b28-c99af684751a@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 03-Feb-22 11:25 PM, Jim Mattson wrote:
-> On Wed, Feb 2, 2022 at 9:18 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
->>
->> Hi Jim,
->>
->> On 03-Feb-22 9:39 AM, Jim Mattson wrote:
->>> On Wed, Feb 2, 2022 at 2:52 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
->>>>
->>>> Perf counter may overcount for a list of Retire Based Events. Implement
->>>> workaround for Zen3 Family 19 Model 00-0F processors as suggested in
->>>> Revision Guide[1]:
->>>>
->>>>   To count the non-FP affected PMC events correctly:
->>>>     o Use Core::X86::Msr::PERF_CTL2 to count the events, and
->>>>     o Program Core::X86::Msr::PERF_CTL2[43] to 1b, and
->>>>     o Program Core::X86::Msr::PERF_CTL2[20] to 0b.
->>>>
->>>> Note that the specified workaround applies only to counting events and
->>>> not to sampling events. Thus sampling event will continue functioning
->>>> as is.
->>>>
->>>> Although the issue exists on all previous Zen revisions, the workaround
->>>> is different and thus not included in this patch.
->>>>
->>>> This patch needs Like's patch[2] to make it work on kvm guest.
->>>
->>> IIUC, this patch along with Like's patch actually breaks PMU
->>> virtualization for a kvm guest.
->>>
->>> Suppose I have some code which counts event 0xC2 [Retired Branch
->>> Instructions] on PMC0 and event 0xC4 [Retired Taken Branch
->>> Instructions] on PMC1. I then divide PMC1 by PMC0 to see what
->>> percentage of my branch instructions are taken. On hardware that
->>> suffers from erratum 1292, both counters may overcount, but if the
->>> inaccuracy is small, then my final result may still be fairly close to
->>> reality.
->>>
->>> With these patches, if I run that same code in a kvm guest, it looks
->>> like one of those events will be counted on PMC2 and the other won't
->>> be counted at all. So, when I calculate the percentage of branch
->>> instructions taken, I either get 0 or infinity.
->>
->> Events get multiplexed internally. See below quick test I ran inside
->> guest. My host is running with my+Like's patch and guest is running
->> with only my patch.
+On Fri, Jan 07, 2022 at 02:27:57PM +0000, James Clark wrote:
+> On 24/12/2021 12:40, Leo Yan wrote:
+> > For perf recording, it retrieves process info by iterating nodes in proc
+> > fs.  If we run perf in a non-root PID namespace with command:
+> > 
+> >   # unshare --fork --pid perf record -e cycles -a -- test_program
+> > 
+> > ... in this case, unshare command creates a child PID namespace and
+> > launches perf tool in it, but the issue is the proc fs is not mounted
+> > for the non-root PID namespace, this leads to the perf tool gathering
+> > process info from its parent PID namespace.
+> > 
 > 
-> Your guest may be multiplexing the counters. The guest I posited does not.
+> I had some concerns that this would prevent use of perf in docker, but docker
+> does mount /proc so it is still working. And you've added a warning about how
+> to fix the unshare command so I think this is ok.
+> 
+> Reviewed-by: James Clark <james.clark@arm.com>
 
-It would be helpful if you can provide an example.
+Thanks a lot for review, James.
 
-> I hope that you are not saying that kvm's *thread-pinned* perf events
-> are not being multiplexed at the host level, because that completely
-> breaks PMU virtualization.
+Arnaldo, Jiri, could you take a look for this patch?  Thanks!
 
-IIUC, multiplexing happens inside the guest.
+Leo
 
-Thanks,
-Ravi
+> > We can use below command to observe the process nodes under proc fs:
+> > 
+> >   # unshare --pid --fork ls /proc
+> > 1    137   1968  2128  3    342  48  62   78	     crypto	  kcore        net	      uptime
+> > 10   138   2	 2142  30   35	 49  63   8	     devices	  keys	       pagetypeinfo   version
+> > 11   139   20	 2143  304  36	 50  64   82	     device-tree  key-users    partitions     vmallocinfo
+> > 12   14    2011  22    305  37	 51  65   83	     diskstats	  kmsg	       self	      vmstat
+> > 128  140   2038  23    307  39	 52  656  84	     driver	  kpagecgroup  slabinfo       zoneinfo
+> > 129  15    2074  24    309  4	 53  67   9	     execdomains  kpagecount   softirqs
+> > 13   16    2094  241   31   40	 54  68   asound     fb		  kpageflags   stat
+> > 130  164   2096  242   310  41	 55  69   buddyinfo  filesystems  loadavg      swaps
+> > 131  17    2098  25    317  42	 56  70   bus	     fs		  locks        sys
+> > 132  175   21	 26    32   43	 57  71   cgroups    interrupts   meminfo      sysrq-trigger
+> > 133  179   2102  263   329  44	 58  75   cmdline    iomem	  misc	       sysvipc
+> > 134  1875  2103  27    330  45	 59  76   config.gz  ioports	  modules      thread-self
+> > 135  19    2117  29    333  46	 6   77   consoles   irq	  mounts       timer_list
+> > 136  1941  2121  298   34   47	 60  773  cpuinfo    kallsyms	  mtd	       tty
+> > 
+> > So it shows many existed tasks, since unshared command has not mounted
+> > the proc fs for the new created PID namespace, it still accesses the
+> > proc fs of the root PID namespace.  This leads to two prominent issues:
+> > 
+> > - Firstly, PID values are mismatched between thread info and samples.
+> >   The gathered thread info are coming from the proc fs of the root PID
+> >   namespace, but samples record its PID from the child PID namespace.
+> > 
+> > - The second issue is profiled program 'test_program' returns its forked
+> >   PID number from the child PID namespace, perf tool wrongly uses this
+> >   PID number to retrieve the process info via the proc fs of the root
+> >   PID namespace.
+> > 
+> > To avoid issues, we need to mount proc fs for the child PID namespace
+> > with the option '--mount-proc' when use unshare command:
+> > 
+> >   # unshare --fork --pid --mount-proc perf record -e cycles -a -- test_program
+> > 
+> > Conversely, when the proc fs of the root PID namespace is used by child
+> > namespace, perf tool can detect the multiple PID levels and
+> > nsinfo__is_in_root_namespace() returns false, this patch reports error
+> > for this case:
+> > 
+> >   # unshare --fork --pid perf record -e cycles -a -- test_program
+> >   Couldn't synthesize bpf events.
+> >   Perf runs in non-root PID namespace but it tries to gather process info from its parent PID namespace.
+> >   Please mount the proc file system properly, e.g. add the option '--mount-proc' for unshare command.
+> > 
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > ---
+> >  tools/perf/util/synthetic-events.c | 19 +++++++++++++++++++
+> >  1 file changed, 19 insertions(+)
+> > 
+> > diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+> > index 198982109f0f..cf7800347f77 100644
+> > --- a/tools/perf/util/synthetic-events.c
+> > +++ b/tools/perf/util/synthetic-events.c
+> > @@ -1784,6 +1784,25 @@ int __machine__synthesize_threads(struct machine *machine, struct perf_tool *too
+> >  				  perf_event__handler_t process, bool needs_mmap,
+> >  				  bool data_mmap, unsigned int nr_threads_synthesize)
+> >  {
+> > +	/*
+> > +	 * When perf runs in non-root PID namespace, and the namespace's proc FS
+> > +	 * is not mounted, nsinfo__is_in_root_namespace() returns false.
+> > +	 * In this case, the proc FS is coming for the parent namespace, thus
+> > +	 * perf tool will wrongly gather process info from its parent PID
+> > +	 * namespace.
+> > +	 *
+> > +	 * To avoid the confusion that the perf tool runs in a child PID
+> > +	 * namespace but it synthesizes thread info from its parent PID
+> > +	 * namespace, returns failure with warning.
+> > +	 */
+> > +	if (!nsinfo__is_in_root_namespace()) {
+> > +		pr_err("Perf runs in non-root PID namespace but it tries to ");
+> > +		pr_err("gather process info from its parent PID namespace.\n");
+> > +		pr_err("Please mount the proc file system properly, e.g. ");
+> > +		pr_err("add the option '--mount-proc' for unshare command.\n");
+> > +		return -EPERM;
+> > +	}
+> > +
+> >  	if (target__has_task(target))
+> >  		return perf_event__synthesize_thread_map(tool, threads, process, machine,
+> >  							 needs_mmap, data_mmap);
+> > 
