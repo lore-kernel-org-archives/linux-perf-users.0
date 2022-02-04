@@ -2,282 +2,269 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B5CC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Feb 2022 14:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4801C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Feb 2022 16:02:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355230AbiBDO5t (ORCPT
+        id S231664AbiBDQCP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Feb 2022 09:57:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53674 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231511AbiBDO5t (ORCPT
+        Fri, 4 Feb 2022 11:02:15 -0500
+Received: from foss.arm.com ([217.140.110.172]:53824 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1376340AbiBDQCP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Feb 2022 09:57:49 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5F69C061714;
-        Fri,  4 Feb 2022 06:57:48 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4B1C461357;
-        Fri,  4 Feb 2022 14:57:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24ADBC340E9;
-        Fri,  4 Feb 2022 14:57:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643986667;
-        bh=73kyMla1rARD0eouCsRmwt+XNkfQp2gCtf6K21kLxRU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=d3o+jZkCEx+EGHIgqj8zJtf/ominRCuBCnfTnii69KIYijpUajRPwx90Wr2ynm3Aj
-         YA/xLYwUlMdNPMsjEGW66zZAujqmPOYWEMvNAmH3yejDjIBQH3mb+dftZqDMCcjvnh
-         rgBCMXoVn/WAQUSN7dKZIwG2LSK22aFAsdBzYLjevWQZaOAKMtAUU0ifqEZzeuJD51
-         +KTpnN0aqwJ0kMVVb3Ha1c/vnJQ+JUmgKTVqpbNBguM2rHn1ZBwparW3/D4lugoATi
-         8yt5p803VgQF+MC1DmJvo8xzrfrDg5AwVRnedOEXXBLNdwCK34AGtb30GtDo7xDhKG
-         FO1n05Q4AStWA==
-Date:   Fri, 4 Feb 2022 23:57:37 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Fri, 4 Feb 2022 11:02:15 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7C85B1396;
+        Fri,  4 Feb 2022 08:02:14 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.89.15])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 872153F718;
+        Fri,  4 Feb 2022 08:02:12 -0800 (PST)
+Date:   Fri, 4 Feb 2022 16:02:04 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, robh@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        =?UTF-8?B?QW5kcsOp?= Almeida <andrealmeid@collabora.com>,
-        James Clark <james.clark@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
-        Song Liu <song@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Miaoqian Lin <linmq006@gmail.com>,
-        Stephen Brennan <stephen.s.brennan@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        German Gomez <german.gomez@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Eric Dumazet <edumazet@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        masami.hiramatsu.pt@hitachi.com, eranian@google.com
-Subject: Re: [PATCH v2 0/4] Reference count checker and related fixes
-Message-Id: <20220204235737.657675e6e468c367c13fc1b2@kernel.org>
-In-Reply-To: <CAP-5=fVeQ4rzgpD3PS5-147xOp=wp+8U-rkLRqreJ616Vy89rA@mail.gmail.com>
-References: <20220125204602.4137477-1-irogers@google.com>
-        <CAP-5=fXyJeX3b3egcAOfPndmYhakrsdKu7HttnHEH2DKP-6Vxw@mail.gmail.com>
-        <20220128142348.17d51894dbdb35c9a9449567@kernel.org>
-        <CAP-5=fXHudKqO4+0rbO9X3Ny+Cq7+KsHbKf4P8P24SjF0S232Q@mail.gmail.com>
-        <20220129003450.77116209763f7e06d285e654@kernel.org>
-        <CAP-5=fVoP9MAVsj7SdrxRjkr1Jt=XZ7Vf_FAooXA7B2OrC=XMA@mail.gmail.com>
-        <20220130165455.422f26c869bd3579c2d305a7@kernel.org>
-        <CAP-5=fVeQ4rzgpD3PS5-147xOp=wp+8U-rkLRqreJ616Vy89rA@mail.gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH 2/2] perf: Expand perf_branch_entry.type
+Message-ID: <Yf1N/EWjlQ/bEA0D@FVFF77S0Q05N>
+References: <1643348653-24367-1-git-send-email-anshuman.khandual@arm.com>
+ <1643348653-24367-3-git-send-email-anshuman.khandual@arm.com>
+ <Yfpxv9+TP9rP72wL@FVFF77S0Q05N>
+ <6168f881-92a4-54f8-929a-c2f40a36c112@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6168f881-92a4-54f8-929a-c2f40a36c112@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, 30 Jan 2022 09:40:21 -0800
-Ian Rogers <irogers@google.com> wrote:
-
-> > > > Hi Ian,
-> > > >
-> > > > Hmm, but such a macro is not usual for C which perf is written in.
-> > > > If I understand correctly, you might want to use memory leak
-> > > > analyzer to detect refcount leak, and that analyzer will show
-> > > > what data structure is leaked.
-> > >
-> > > Firstly, thanks for the conversation - this is really useful to
-> > > improve the code!
-> >
-> > Hi Ian,
-> >
-> > You're welcome! This conversation also useful to me to understand
-> > the issue deeper :-)
-> >
-> > > I think in an ideal world we'd somehow educate things like address
-> > > sanitizer of reference counted data structures and they would do a
-> > > better job of tracking gets and puts. The problem is pairing gets and
-> > > puts.
-> >
-> > Agreed. From my experience, pairing gets and puts are hard without
-> > reviewing the source code, since the refcounter is not only used in a
-> > single function, but it is for keeping the object not released until
-> > some long process is finished.
-> >
-> > For example, if the correct pair is like below, funcA-funcD, funcB-funcC,
-> > funcA (get)
-> > funcB (get)
-> > funcC (put)
-> > funcD (put)
-> >
-> > But depending on the execution timing, funcC/funcD can be swapped.
-> > funcA (get)
-> > funcB (get)
-> > funcD (put)
-> > funcC (put)
-> >
-> > And if there is a bug, funcX may get the object by mistake.
-> > funcA (get)
-> > funcX (get)
-> > funcB (get)
-> > funcD (put)
-> > funcC (put)
-> >
-> > Or, funcC() might miss to put.
-> > funcA (get)
-> > funcB (get)
-> > funcD (put)
-> >
-> > In any case, just tracking the get/put, it is hard to know which pair
-> > is not right. I saw these patterns when I debugged it. :(
+On Fri, Feb 04, 2022 at 10:25:24AM +0530, Anshuman Khandual wrote:
+> On 2/2/22 5:27 PM, Mark Rutland wrote:
+> > On Fri, Jan 28, 2022 at 11:14:13AM +0530, Anshuman Khandual wrote:
+> >> @@ -1370,8 +1376,8 @@ struct perf_branch_entry {
+> >>  		in_tx:1,    /* in transaction */
+> >>  		abort:1,    /* transaction abort */
+> >>  		cycles:16,  /* cycle count to last branch */
+> >> -		type:4,     /* branch type */
+> >> -		reserved:40;
+> >> +		type:6,     /* branch type */
+> > 
+> > As above, is this a safe-change ABI-wise?
 > 
-> Yep, I've found this issue too :-) The get is being used for the
-> side-effect of incrementing a reference count rather than for
-> returning the value. This happened in cpumap merge and was easy to fix
-> there.
-> 
-> This problem is possible in general, but I think if it were common we
-> are doomed. I don't think this pattern is common though. In general a
-> reference count is owned by something, the scope of a function or the
-> lifetime of a list. If puts were adhoc then it would mean that one
-> occurring in a function could be doing it for the side effect of
-> freeing on a list. I don't think the code aims to do that. Making the
-> code clean with pairing gets and puts is an issue, like with the
-> cpumap merge change.
+> If the bit fields here cannot be expanded without breaking ABI, then
+> there is a fundamental problem. Only remaining option will be to add
+> new fields (with new width value) which could accommodate these new
+> required branch types.
 
-Hi Ian,
-Sorry for waiting.
+Unfortunately, I think expanding this does break ABI, and is a fundamental
+problem, as:
 
-I got the pairing of get/put is not so hard if we use your
-programing pattern. The problem was the posession of the object.
-As you proposed, if we force users to use the returning "token"
-instead of object pointer itself as below;
+(a) Any new values in the expanded field will be truncated when read by old
+    userspace, and so those may be mis-reported. Maybe we're not too worried
+    about this case.
 
-funcA(obj) {
-  token = get(obj);
-  get_obj(token)->...
-  put(token);
-}
+(b) Depending on how the field is placed, existing values might get stored
+    differently. This could break any mismatched combination of
+    {old,new}-kernel and {old,new}-userspace.
 
-Then it is clear who leaks the token.
+    In practice, I think this means that this is broken for BE, and happens to
+    work for LE, but I don't know how bitfields are defined for each
+    architecture, so there could be other brokenness.
 
- funcA (get-> token1)
- funcX (get-> token3)
- funcB (get-> token2)
- funcD (put-> token2)
- funcC (put-> token1)
+Consider the test case below:
 
-In this case token3 is not freed, thus the funcX's pair is lost.
-Or,
+--------
+#include <stdbool.h>
 
- funcA (get-> token1)
- funcB (get-> token2)
- funcD (put-> token2)
-
-In this case funcA's pair is lost.
-
-And if the user access object with the token which already put,
-it can be detected.
-
-
-> 
-> > > In C++ you use RAII types so that the destructor ensures a put -
-> > > this can be complex when using data types like lists where you want to
-> > > move or swap things onto the list, to keep the single pointer
-> > > property. In the C code in Linux we use gotos, similarly to how defer
-> > > is used in Go. Anyway, the ref_tracker that Eric Dumazet added solved
-> > > the get/put pairing problem by adding a cookie that is passed around.
-> >
-> > Cool! I will check the ref_tracker :)
-> >
-> > > The problem with that is that then the cookie becomes part of the API.
-> >
-> > What the cookie is? some pairing function address??
-> 
-> As I understand it, a token to identify a get.
-
-Yeah, I slightly missed that your API will force caller to use the
-returning token instead of object.
-So, what about using token always, instead of wrapping the object
-pointer only when debugging?
-
-I felt uncomfortable about changing the data structure name according
-to the debug macro. Instead, it is better way for me if get() always
-returns a token of the object and users need to convert the
-token to the object. For example;
-
-struct perf_cpu_map {
-...
+struct bfv1 {
+        unsigned long   a:20,
+                        b:20,
+                        c:4,
+                        d:20;
 };
 
-#ifdef REFCNT_CHECKING
-typedef struct {struct perf_cpu_map *orig;} perf_cpu_map_token_t;
-#else
-typedef unsigned long perf_cpu_map_token_t;	/* actually this is "struct perf_cpu_map *" */
-#endif
+struct bfv2 {
+        unsigned long   a:20,
+                        b:20,
+                        c:6,
+                        d:18;
+};
 
-perf_cpu_map_token_t perf_cpu_map__get(struct perf_cpu_map *map);
-void perf_cpu_map__put(struct perf_cpu_map_token_t tok);
+union bf {
+        struct bfv1 v1;
+        struct bfv2 v2;
+};
 
-This explicitly forces users to convert the token to the object
-when using it. Of course if a user uses the object pointer ("map" here)
-directly, the token is not used. But we can check such wrong usage by
-compilation.
+bool bfv1_w_r(unsigned char v)
+{
+        unsigned char v_old = v & ((1UL << 4) - 1);
+        unsigned char v_new;
+        union bf bf = { 0 };
 
-[...]
-> > So my question is that we need to pay the cost to use UNWRAP_ macro
-> > on all those object just for finding the "use-after-put" case.
-> > Usually the case that "use-after-put" causes actual problem is very
-> > limited, or it can be "use-after-free".
-> 
-> So the dso->nsinfo case was a use after put once we added in the
-> missing put - it could also be thought of as a double put/free. In
-> general use-after-put is going to show where a strict get-then-put
-> isn't being followed, if we make sure of that property then the
-> reference counting will be accurate.
+        bf.v1.c = v_old;
+        v_new = bf.v1.c;
 
-The double free/put will be detected different way. But indeed the
-use-after-put can be overlooked (I think there actually be the
-case, it should be "use-after-free" but it depends on the timing.)
+        return v_old == v_new;
+}
 
-> 
-> A case that came up previously was maps__find:
-> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/map.c#n974
-> this code retuns a map but without doing a get on it, even though a
-> map is reference counted:
-> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/map.h#n46
-> If we change that code to return a get of the map then we add overhead
-> for simple cases of checking a map is present - you can infer you have
-> a reference count on the map if you have it on the maps. The
-> indirection allows the code to remain as-is, while being able to catch
-> misuse.
+bool bfv2_w_r(unsigned char v)
+{
+        unsigned char v_old = v & ((1UL << 6) - 1);
+        unsigned char v_new;
+        union bf bf = { 0 };
 
-I don't think using the UNWRAP_* macro is "remain as-is" ;) but I agree
-with you that can catch the misuse.
+        bf.v2.c = v_old;
+        v_new = bf.v2.c;
 
-IMHO, I rather like using the explicit token. I don't like to see
-"UNWRAP_map(map)->field", but "GET_map(token)->field" is good for me.
-This is because the "map" should be a pointer of data structure (so
-its field can be accessed without any wrapper), but token is just a
-value (so this implies that it must be converted always). 
-In other words, "map->field" looks natural for reviewing, but
-"token->field" looks obviously strange.
+        return v_old == v_new;
+}
 
-Thank you,
+bool bfv1_w_bfv2_r(unsigned char v)
+{
+        unsigned char v_old = v & ((1UL << 4) - 1);
+        unsigned char v_new;
+        union bf bf = { 0 };
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+        bf.v1.c = v_old;
+        v_new = bf.v2.c;
+
+        return v_old == v_new;
+}
+--------
+
+When compiled for little-endian AArch64, GCC thinks all old values will be
+interpreted the same, and optimizes all the round-trip tests to return true:
+
+| [mark@gravadlaks:~]% aarch64-linux-gnu-gcc -c bitfield-test.c -O2 -mlittle-endian
+| [mark@gravadlaks:~]% aarch64-linux-gnu-objdump -d bitfield-test.o
+|
+| bitfield-test.o:     file format elf64-littleaarch64
+|
+|
+| Disassembly of section .text:
+|
+| 0000000000000000 <bfv1_w_r>:
+|    0:   52800020        mov     w0, #0x1                        // #1
+|    4:   d65f03c0        ret
+|
+| 0000000000000008 <bfv2_w_r>:
+|    8:   52800020        mov     w0, #0x1                        // #1
+|    c:   d65f03c0        ret
+|
+| 0000000000000010 <bfv1_w_bfv2_r>:
+|   10:   52800020        mov     w0, #0x1                        // #1
+|   14:   d65f03c0        ret
+
+But when compiled for big-endian AArch64, it doesn't believe that at all:
+
+| [mark@gravadlaks:~]% aarch64-linux-gnu-gcc -c bitfield-test.c -O2 -mbig-endian
+| [mark@gravadlaks:~]% aarch64-linux-gnu-objdump -d bitfield-test.o
+|
+| bitfield-test.o:     file format elf64-bigaarch64
+|
+|
+| Disassembly of section .text:
+|
+| 0000000000000000 <bfv1_w_r>:
+|    0:   52800020        mov     w0, #0x1                        // #1
+|    4:   d65f03c0        ret
+|
+| 0000000000000008 <bfv2_w_r>:
+|    8:   52800020        mov     w0, #0x1                        // #1
+|    c:   d65f03c0        ret
+|
+| 0000000000000010 <bfv1_w_bfv2_r>:
+|   10:   12001c00        and     w0, w0, #0xff
+|   14:   12000c01        and     w1, w0, #0xf
+|   18:   531e0c00        ubfiz   w0, w0, #2, #4
+|   1c:   6b01001f        cmp     w0, w1
+|   20:   1a9f17e0        cset    w0, eq  // eq = none
+|   24:   d65f03c0        ret
+
+If we add the following:
+
+| void write_bfv1_c(union bf *bf, unsigned char v)
+| {
+|         bf->v1.c = v;
+| }
+| 
+| void write_bfv2_c(union bf *bf, unsigned char v)
+| {
+|         bf->v2.c = v;
+| }
+| 
+| unsigned char read_bfv1_c(union bf *bf)
+| {
+|         return bf->v1.c;
+| }
+| 
+| unsigned char read_bfv2_c(union bf *bf)
+| {
+|         return bf->v2.c;
+| }
+
+For LE we get:
+
+| 0000000000000018 <write_bfv1_c>:
+|   18:   39401402        ldrb    w2, [x0, #5]
+|   1c:   33000c22        bfxil   w2, w1, #0, #4
+|   20:   39001402        strb    w2, [x0, #5]
+|   24:   d65f03c0        ret
+| 
+| 0000000000000028 <write_bfv2_c>:
+|   28:   39401402        ldrb    w2, [x0, #5]
+|   2c:   33001422        bfxil   w2, w1, #0, #6
+|   30:   39001402        strb    w2, [x0, #5]
+|   34:   d65f03c0        ret
+| 
+| 0000000000000038 <read_bfv1_c>:
+|   38:   39401400        ldrb    w0, [x0, #5]
+|   3c:   92400c00        and     x0, x0, #0xf
+|   40:   d65f03c0        ret
+|   44:   d503201f        nop
+| 
+| 0000000000000048 <read_bfv2_c>:
+|   48:   39401400        ldrb    w0, [x0, #5]
+|   4c:   92401400        and     x0, x0, #0x3f
+|   50:   d65f03c0        ret
+
+... where the low bits of the field stay in the same place, so for all existing
+values this happens to work.
+
+For BE we get:
+
+| 0000000000000028 <write_bfv1_c>:
+|   28:   39401402        ldrb    w2, [x0, #5]
+|   2c:   331c0c22        bfi     w2, w1, #4, #4
+|   30:   39001402        strb    w2, [x0, #5]
+|   34:   d65f03c0        ret
+| 
+| 0000000000000038 <write_bfv2_c>:
+|   38:   39401402        ldrb    w2, [x0, #5]
+|   3c:   331e1422        bfi     w2, w1, #2, #6
+|   40:   39001402        strb    w2, [x0, #5]
+|   44:   d65f03c0        ret
+| 
+| 0000000000000048 <read_bfv1_c>:
+|   48:   39401400        ldrb    w0, [x0, #5]
+|   4c:   53041c00        ubfx    w0, w0, #4, #4
+|   50:   d65f03c0        ret
+|   54:   d503201f        nop
+| 
+| 0000000000000058 <read_bfv2_c>:
+|   58:   39401400        ldrb    w0, [x0, #5]
+|   5c:   53021c00        ubfx    w0, w0, #2, #6
+|   60:   d65f03c0        ret
+
+... where the low bits of the field have moved, and so this is broken even for
+existing values!
+
+Thanks,
+Mark.
