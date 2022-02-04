@@ -2,24 +2,24 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95FAFC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Feb 2022 04:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A37F1C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Feb 2022 04:57:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356993AbiBDEzf (ORCPT
+        id S1356995AbiBDE5C (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Feb 2022 23:55:35 -0500
-Received: from foss.arm.com ([217.140.110.172]:42588 "EHLO foss.arm.com"
+        Thu, 3 Feb 2022 23:57:02 -0500
+Received: from foss.arm.com ([217.140.110.172]:42680 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1356987AbiBDEzd (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Feb 2022 23:55:33 -0500
+        id S235508AbiBDE5C (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 3 Feb 2022 23:57:02 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4A9521435;
-        Thu,  3 Feb 2022 20:55:33 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 203EE1435;
+        Thu,  3 Feb 2022 20:57:02 -0800 (PST)
 Received: from [10.163.45.195] (unknown [10.163.45.195])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C7C613F774;
-        Thu,  3 Feb 2022 20:55:28 -0800 (PST)
-Subject: Re: [PATCH 2/2] perf: Expand perf_branch_entry.type
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B5BA53F774;
+        Thu,  3 Feb 2022 20:56:57 -0800 (PST)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [PATCH 1/2] perf: Add more generic branch types
 To:     Mark Rutland <mark.rutland@arm.com>
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, robh@kernel.org,
@@ -31,15 +31,14 @@ Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Namhyung Kim <namhyung@kernel.org>,
         Will Deacon <will@kernel.org>
 References: <1643348653-24367-1-git-send-email-anshuman.khandual@arm.com>
- <1643348653-24367-3-git-send-email-anshuman.khandual@arm.com>
- <Yfpxv9+TP9rP72wL@FVFF77S0Q05N>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <6168f881-92a4-54f8-929a-c2f40a36c112@arm.com>
-Date:   Fri, 4 Feb 2022 10:25:24 +0530
+ <1643348653-24367-2-git-send-email-anshuman.khandual@arm.com>
+ <YfpxzKa7JSlimA1i@FVFF77S0Q05N>
+Message-ID: <aee1d90d-7778-2f1c-9484-584fa3c57159@arm.com>
+Date:   Fri, 4 Feb 2022 10:26:54 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <Yfpxv9+TP9rP72wL@FVFF77S0Q05N>
+In-Reply-To: <YfpxzKa7JSlimA1i@FVFF77S0Q05N>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -48,67 +47,55 @@ List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
+On 2/2/22 5:28 PM, Mark Rutland wrote:
+> Hi Anshuman,
+> 
+> On Fri, Jan 28, 2022 at 11:14:12AM +0530, Anshuman Khandual wrote:
+>> This expands generic branch type classification by adding some more entries
+>> , that can still be represented with the existing 4 bit 'type' field. While
 
-On 2/2/22 5:27 PM, Mark Rutland wrote:
-> On Fri, Jan 28, 2022 at 11:14:13AM +0530, Anshuman Khandual wrote:
->> Current perf_branch_entry.type is a 4 bits field just enough to accommodate
->> 16 generic branch types. This is insufficient to accommodate platforms like
->> arm64 which has much more branch types.
+    ^
+>> here this also updates the x86 implementation with these new branch types.
 > 
-> It would be good to mention BRBE specifically here, along with specific values
-> and a rought intro, e.g.
-> 
-> | The Arm Branch Record Buffer Extension (BRBE) distinguishes $N types of
-> | branch/exception/return: <rough summary here>. There's not enough space to
-> | describe these all in perf_branch_entry.type, as this is a 4-bit field.
-> 
-> That way reviewers (and anyone looking at the patch in future) have a lot more
-> rationale to work with. A rough summary of the distinct branch types would be
-> *really* helpful.
+> It looks like there's some whitespace damage here.
 
-Sure, will add a summary describing the need for an ABI extension as suggested.
+Are you referring the above ? I will have a look.
 
 > 
->> Lets just expands this field into a 6 bits one, which can now hold 64 generic
->> branch types.
+>>From a quick scan of the below, I think the "exception return" and "IRQ
+> exception" types are somewhat generic, and could be added now (aside from any
+> bikeshedding over names), but:
 > 
-> Is it safe (ABI-wise) to extend a bit-field like this? Does that break any
-> combination of old/new userspace and old/new kernel? I'm not sure how bit
-> fields are managed w.r.t. endianness, but normally extending a field would
-> break BE, so this seems suspicious.
+> * For IRQ vs FIQ, we might just want to have a top-level "asynchronous
+>   exception" type, and then further divide that with a separate field. That way
+>   it's easier to extend in future if new exceptions are added.
 
-Probably. I guess we would need some more inputs/suggestions from others
-regarding any potential issues and possible workarounds.
-
-> 
-> I suspect we might need to allocate a *separate* field for new values, and
-> possibly reserve a value in the existing field to say "go look at the new
-> field".
-
-In that case there might be another level of indirection.
+Okay. But that might lead to a hierarchical bit fields design where as the
+current one is just linear.
 
 > 
-> Do you have any rationale for 64 values specifically? e.g. is that mostly for
-> future extensibility? How many will we need for Arm's BRBE?
+> * I don't think the debug state entry/exits make sense as generic branch types,
 
-Yeah that is mostly for future extensibility. BRBE's current requirement
-will be well within 32 types itself. 19 to be specific.
+From BRBE perspective, a branch is any control flow change including exception
+level change, debug enter, debug exit etc. If exception and its return can be
+classified as 'branches' why not debug state change ? Are there no similar
+debug states transition on other platforms ?
 
-> 
-> Do those types fall into a hierarchy, that we could split across separate
-> fields?
-I will take a look and get back on this. But as mentioned before it will
-cause additional level of indirection for a look up.
+>   since those are somewhat specific to the ARM architecutre, and it might make
+>   sense to define generic PERF_BR_ARCH* definitions instead.
 
-> 
->> This also adds more generic branch types.
-> 
-> This feels like ti should be in a separate/subsequent patch. If nothing else
-> that aids bisectability if changing the size of the field breaks anything.
-
-Makes sense, will split them.
+Makes sense but corresponding bit field layout change in branch_sample_type
+will remain a challenge.
 
 > 
+> * Given the next patch extends the field, and therei are potential ABI problems
+>   with that, we might need to reserve a value for ABI extensibility purposes,
+>   and I suspect we need to do that *first*. More comments on the subsequent
+>   patch.
+
+Sure, understood.
+
+>  
 >> Cc: Peter Zijlstra <peterz@infradead.org>
 >> Cc: Ingo Molnar <mingo@redhat.com>
 >> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -122,136 +109,120 @@ Makes sense, will split them.
 >> Cc: linux-kernel@vger.kernel.org
 >> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 >> ---
->>  include/uapi/linux/perf_event.h       | 10 ++++++++--
->>  tools/include/uapi/linux/perf_event.h | 10 ++++++++--
->>  tools/perf/util/branch.c              |  8 +++++++-
->>  tools/perf/util/branch.h              |  4 ++--
->>  4 files changed, 25 insertions(+), 7 deletions(-)
+>>  arch/x86/events/intel/lbr.c           | 4 ++--
+>>  include/uapi/linux/perf_event.h       | 5 +++++
+>>  tools/include/uapi/linux/perf_event.h | 5 +++++
+>>  tools/perf/util/branch.c              | 7 ++++++-
+>>  4 files changed, 18 insertions(+), 3 deletions(-)
 >>
+>> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+>> index 8043213b75a5..9f86fac8c6a5 100644
+>> --- a/arch/x86/events/intel/lbr.c
+>> +++ b/arch/x86/events/intel/lbr.c
+>> @@ -1336,10 +1336,10 @@ static int branch_map[X86_BR_TYPE_MAP_MAX] = {
+>>  	PERF_BR_SYSCALL,	/* X86_BR_SYSCALL */
+>>  	PERF_BR_SYSRET,		/* X86_BR_SYSRET */
+>>  	PERF_BR_UNKNOWN,	/* X86_BR_INT */
+>> -	PERF_BR_UNKNOWN,	/* X86_BR_IRET */
+>> +	PERF_BR_EXPT_RET,	/* X86_BR_IRET */
+>>  	PERF_BR_COND,		/* X86_BR_JCC */
+>>  	PERF_BR_UNCOND,		/* X86_BR_JMP */
+>> -	PERF_BR_UNKNOWN,	/* X86_BR_IRQ */
+>> +	PERF_BR_IRQ,		/* X86_BR_IRQ */
+>>  	PERF_BR_IND_CALL,	/* X86_BR_IND_CALL */
+>>  	PERF_BR_UNKNOWN,	/* X86_BR_ABORT */
+>>  	PERF_BR_UNKNOWN,	/* X86_BR_IN_TX */
+> 
+> This presumably changes the values reported to userspace, so the commit message
+> should mention that and explain why that is not a problem.
+
+Okay.
+
+> 
 >> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
->> index b91d0f575d0c..361fdc6b87a0 100644
+>> index 1b65042ab1db..b91d0f575d0c 100644
 >> --- a/include/uapi/linux/perf_event.h
 >> +++ b/include/uapi/linux/perf_event.h
->> @@ -256,6 +256,12 @@ enum {
->>  	PERF_BR_FIQ		= 13,	/* fiq */
->>  	PERF_BR_DEBUG_HALT	= 14,	/* debug halt */
->>  	PERF_BR_DEBUG_EXIT	= 15,	/* debug exit */
->> +	PERF_BR_DEBUG_INST	= 16,	/* instruciton debug */
->> +	PERF_BR_DEBUG_DATA	= 17,	/* data debug */
+>> @@ -251,6 +251,11 @@ enum {
+>>  	PERF_BR_SYSRET		= 8,	/* syscall return */
+>>  	PERF_BR_COND_CALL	= 9,	/* conditional function call */
+>>  	PERF_BR_COND_RET	= 10,	/* conditional function return */
+>> +	PERF_BR_EXPT_RET	= 11,	/* exception return */
 > 
-> This is really unclear. What is "instruction debug" vs "data debug" ?
-> 
-> Are there meant for breakpoint/watchpoint exceptions? HW breakpoints vs BRK
-> instructions?
+> We don't use 'EXPT' anywhere else, so it might be better to just use 'ERET'.
+> IIUC that's the naming the x86 FRED stuff is going to use anyhow.
 
-Unfortunately the spec does not expand much in detail but will try
-and find some more clarity.
+Sure, will change.
 
 > 
->> +	PERF_BR_FAULT_ALGN	= 18,	/* alignment fault */
->> +	PERF_BR_FAULT_DATA	= 19,	/* data fault */
->> +	PERF_BR_FAULT_INST	= 20,	/* instruction fault */
+>> +	PERF_BR_IRQ		= 12,	/* irq */
 > 
-> There are many other potential faults a CPU could take; are these specifically
-> what Arm's BRBE provides?
-
-Right, these are what BRBE captures for now.
-
+> This looks somewhat generic, so adding it now makes sense to me, but ...
 > 
->> +	PERF_BR_SERROR		= 21,	/* system error */
+>> +	PERF_BR_FIQ		= 13,	/* fiq */
 > 
-> This is really arm-specific; IIUC the closest thing on x86 is an MCE.
+> ... this is arguably just a idfferent class of interrupt from the PoV of Linux,
+> and the naming is ARM-specific, so I don't think this makes sense to add *now*.
 
-But ('unhandled' ?) system error can be a generic control flow change.
+I assume 'now' --> without ABI extension.
 
+> As above, maybe it would be better to have a generic "aynchronous exception" or
+> "interrupt" type, and a separate field to distinguish specific types of those.
 > 
->>  	PERF_BR_MAX,
->>  };
->>  
->> @@ -1370,8 +1376,8 @@ struct perf_branch_entry {
->>  		in_tx:1,    /* in transaction */
->>  		abort:1,    /* transaction abort */
->>  		cycles:16,  /* cycle count to last branch */
->> -		type:4,     /* branch type */
->> -		reserved:40;
->> +		type:6,     /* branch type */
+>> +	PERF_BR_DEBUG_HALT	= 14,	/* debug halt */
+>> +	PERF_BR_DEBUG_EXIT	= 15,	/* debug exit */
 > 
-> As above, is this a safe-change ABI-wise?
+> For the benefit of those not familiar with the ARM architecture, "debug halt"
+> and "debug exit" usually refer to "debug state", which is what an external
+> (e.g. JTAG) debugger uses rather than the usual self-hosted debug stuff that
+> Linux uses.
+> 
+> Given that, I'm not sure these are very generic, and I suspect it would be
+> better to have more generic PERF_BR_ARCH_* entries for things like this.
 
-If the bit fields here cannot be expanded without breaking ABI, then
-there is a fundamental problem. Only remaining option will be to add
-new fields (with new width value) which could accommodate these new
-required branch types.
+Sure, will try and come up with something similar.
 
 > 
 > Thanks,
 > Mark.
 > 
->> +		reserved:38;
->>  };
->>  
->>  union perf_sample_weight {
->> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
->> index 1882054e8684..9a82b8aaed93 100644
->> --- a/tools/include/uapi/linux/perf_event.h
->> +++ b/tools/include/uapi/linux/perf_event.h
->> @@ -256,6 +256,12 @@ enum {
->>  	PERF_BR_FIQ		= 13,	/* fiq */
->>  	PERF_BR_DEBUG_HALT	= 14,	/* debug halt */
->>  	PERF_BR_DEBUG_EXIT	= 15,	/* debug exit */
->> +	PERF_BR_DEBUG_INST	= 16,	/* instruciton debug */
->> +	PERF_BR_DEBUG_DATA	= 17,	/* data debug */
->> +	PERF_BR_FAULT_ALGN	= 18,	/* alignment fault */
->> +	PERF_BR_FAULT_DATA	= 19,	/* data fault */
->> +	PERF_BR_FAULT_INST	= 20,	/* instruction fault */
->> +	PERF_BR_SERROR		= 21,	/* system error */
 >>  	PERF_BR_MAX,
 >>  };
 >>  
->> @@ -1370,8 +1376,8 @@ struct perf_branch_entry {
->>  		in_tx:1,    /* in transaction */
->>  		abort:1,    /* transaction abort */
->>  		cycles:16,  /* cycle count to last branch */
->> -		type:4,     /* branch type */
->> -		reserved:40;
->> +		type:6,     /* branch type */
->> +		reserved:38;
+>> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+>> index 4cd39aaccbe7..1882054e8684 100644
+>> --- a/tools/include/uapi/linux/perf_event.h
+>> +++ b/tools/include/uapi/linux/perf_event.h
+>> @@ -251,6 +251,11 @@ enum {
+>>  	PERF_BR_SYSRET		= 8,	/* syscall return */
+>>  	PERF_BR_COND_CALL	= 9,	/* conditional function call */
+>>  	PERF_BR_COND_RET	= 10,	/* conditional function return */
+>> +	PERF_BR_EXPT_RET	= 11,	/* exception return */
+>> +	PERF_BR_IRQ		= 12,	/* irq */
+>> +	PERF_BR_FIQ		= 13,	/* fiq */
+>> +	PERF_BR_DEBUG_HALT	= 14,	/* debug halt */
+>> +	PERF_BR_DEBUG_EXIT	= 15,	/* debug exit */
+>>  	PERF_BR_MAX,
 >>  };
 >>  
->>  union perf_sample_weight {
 >> diff --git a/tools/perf/util/branch.c b/tools/perf/util/branch.c
->> index 74e5e67b1779..1e216ea2e2a8 100644
+>> index 2285b1eb3128..74e5e67b1779 100644
 >> --- a/tools/perf/util/branch.c
 >> +++ b/tools/perf/util/branch.c
->> @@ -54,7 +54,13 @@ const char *branch_type_name(int type)
->>  		"IRQ",
->>  		"FIQ",
->>  		"DEBUG_HALT",
->> -		"DEBUG_EXIT"
->> +		"DEBUG_EXIT",
->> +		"DEBUG_INST",
->> +		"DEBUG_DATA",
->> +		"FAULT_ALGN",
->> +		"FAULT_DATA",
->> +		"FAULT_INST",
->> +		"SERROR"
+>> @@ -49,7 +49,12 @@ const char *branch_type_name(int type)
+>>  		"SYSCALL",
+>>  		"SYSRET",
+>>  		"COND_CALL",
+>> -		"COND_RET"
+>> +		"COND_RET",
+>> +		"EXPT_RET",
+>> +		"IRQ",
+>> +		"FIQ",
+>> +		"DEBUG_HALT",
+>> +		"DEBUG_EXIT"
 >>  	};
 >>  
 >>  	if (type >= 0 && type < PERF_BR_MAX)
->> diff --git a/tools/perf/util/branch.h b/tools/perf/util/branch.h
->> index 17b2ccc61094..875d99abdc36 100644
->> --- a/tools/perf/util/branch.h
->> +++ b/tools/perf/util/branch.h
->> @@ -23,8 +23,8 @@ struct branch_flags {
->>  			u64 in_tx:1;
->>  			u64 abort:1;
->>  			u64 cycles:16;
->> -			u64 type:4;
->> -			u64 reserved:40;
->> +			u64 type:6;
->> +			u64 reserved:38;
->>  		};
->>  	};
->>  };
 >> -- 
 >> 2.25.1
+>>
