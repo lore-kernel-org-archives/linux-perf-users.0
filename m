@@ -2,91 +2,90 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2354C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat,  5 Feb 2022 01:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A91C7C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat,  5 Feb 2022 02:18:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378916AbiBEBs1 (ORCPT
+        id S1357703AbiBECST (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Feb 2022 20:48:27 -0500
-Received: from mga11.intel.com ([192.55.52.93]:35553 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1378908AbiBEBs0 (ORCPT
+        Fri, 4 Feb 2022 21:18:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39336 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1357342AbiBECSS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Feb 2022 20:48:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644025706; x=1675561706;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=bMWYoHZpNgt/lj0gljpMlLFpM3tBiMSU1GkncoSRyo4=;
-  b=jmoycHIQ0jscCWxR+oQNK4PgNbQARqFm9lrxzt8SJxXmpMSoXs/EFoVB
-   +1kAMHwJPMIiz/wDKETIjFdj3Q6IwRSPO3qXqatGxVZcjpNinJaHjiEAE
-   UyaTgkENox4VJvLzzgE43XFMMrT0esysivwQgcsbh0qmWpszKjRrFsA9C
-   Q44sJYN0klrmeIPLNHDGb6cu7HzpDI5cWdo53ibt/ERZ50jaBUkWMLmZk
-   dNHho5rWgWE7ydTkqy9zuX2oanG2spx+pexd8U3U0epHrtCyv/ISaf6UR
-   6AQ/XgWBb0zk7EIbXincfQ5bd0NxKC7NtdaB3L/4Og4AHjzBJyPKsAML6
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10248"; a="246062863"
-X-IronPort-AV: E=Sophos;i="5.88,344,1635231600"; 
-   d="scan'208";a="246062863"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2022 17:48:26 -0800
-X-IronPort-AV: E=Sophos;i="5.88,344,1635231600"; 
-   d="scan'208";a="539380710"
-Received: from akleen-mobl1.amr.corp.intel.com (HELO [10.209.19.144]) ([10.209.19.144])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2022 17:48:25 -0800
-Message-ID: <e3bf95b1-bb9a-91be-1816-59c96c4e2024@linux.intel.com>
-Date:   Fri, 4 Feb 2022 17:48:20 -0800
+        Fri, 4 Feb 2022 21:18:18 -0500
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AE02C061347
+        for <linux-perf-users@vger.kernel.org>; Fri,  4 Feb 2022 18:18:16 -0800 (PST)
+Received: by mail-pg1-x52a.google.com with SMTP id 77so3655831pgc.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 04 Feb 2022 18:18:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4AAS8fIWh/l0yT84s2N0OwpkJuu2uO5DCn5UAAepPhI=;
+        b=VHRXLlIcWZnN2D1y9h1C+Vq4zRVvUl4BtfdOD6iegKziQLHIMCBOZ4Rgq5+NovJ7Um
+         9IVwLk3bR262kkdTxl2NJjZnO6pfTBpOL9yDinpotL1dk2cfRCVHIZTIjW8AIqmeEIoh
+         FOoSxR7Sj5IxSy1jSz8oSfIMfnva396UzSAA3AhobE0j1YqEUUlE/g5DPK5seMK+0YL1
+         oUv/C9c6kMRD/ILQULmtNL+YJgHIUImDRl41zqhUe82YB4ch5QKkEzm/ICCC26Bnhtjo
+         ec9FMrrpwpqdSG0phj9fr2c/Ljdb87g/hTID1QcTizNVBNnPdaSeExFYvtslnuNwsUYe
+         5wXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4AAS8fIWh/l0yT84s2N0OwpkJuu2uO5DCn5UAAepPhI=;
+        b=Fm+GYfmjhUY9taSarz1R4Je1CyBUq/4norusuboWdGj8dgN6ulFEOPORDGFwcZQwcv
+         GXm2TX1zLsuMPzgGlh5wfkrqsKfJHTPPOd8IpFgEsbb0YDhXAIm2fnSzBgrN9L1CHhjc
+         rhndkMHYGY+/91UKH/e7+EAe7MM5K8PjraYthX8HWGCl4JMI8BF7Fa8haHOM42zryDpb
+         2/g/7vJjdg+Sy5ZXXp8H0VDfbX0tbUVVc1TQ/JcxQdqV0H2YgjR6caGOUUKT1nA6dhwo
+         NfTpHfWPwfKwVkkloacpozwO9ojqtDGFHhNwpDTRNP2NjUkh/t8LgWQ/3z99/NksoXj2
+         AQQg==
+X-Gm-Message-State: AOAM533UYzOaIOKzPD6O5tVP+GNGT6+Z7Nkd7+TXQ2HSH2bR6MWCqJo1
+        hFTj1c9z0kUhMoqeAKJcmkvQUQ==
+X-Google-Smtp-Source: ABdhPJyZI3AfMW4t77AbseKGIcD64WMJHKUx1HR9M/YEqj/rMfqaYAYSLrt0WVjVosStWhUjTwn0hw==
+X-Received: by 2002:a63:87c3:: with SMTP id i186mr1483051pge.311.1644027495282;
+        Fri, 04 Feb 2022 18:18:15 -0800 (PST)
+Received: from leoy-ThinkPad-X240s ([134.195.101.46])
+        by smtp.gmail.com with ESMTPSA id m38sm2530918pgl.64.2022.02.04.18.18.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Feb 2022 18:18:14 -0800 (PST)
+Date:   Sat, 5 Feb 2022 10:18:07 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Ali Saidi <alisaidi@amazon.com>
+Cc:     Al.Grant@arm.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
+        benh@kernel.crashing.org, german.gomez@arm.com,
+        james.clark@arm.com, john.garry@huawei.com, jolsa@redhat.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
+        peterz@infradead.org, will@kernel.org
+Subject: Re: [PATCH] perf arm-spe: Use SPE data source for neoverse cores
+Message-ID: <20220205021807.GA2052922@leoy-ThinkPad-X240s>
+References: <20220203091934.GA2013381@leoy-ThinkPad-X240s>
+ <20220205000719.19986-1-alisaidi@amazon.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.1
-Subject: Re: [PATCH] perf stat: Fix display of grouped aliased events.
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>, vineet.singh@intel.com,
-        perry.taylor@intel.com, caleb.biggers@intel.com,
-        asaf.yaffe@intel.com, kshipra.bopardikar@intel.com,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        James Clark <james.clark@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>
-References: <20220205010941.1065469-1-irogers@google.com>
-From:   Andi Kleen <ak@linux.intel.com>
-In-Reply-To: <20220205010941.1065469-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220205000719.19986-1-alisaidi@amazon.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi Ali,
 
-On 2/4/2022 5:09 PM, Ian Rogers wrote:
-> An event may have a number of uncore aliases that when added to
-> the evlist are consecutive. If there are multiple uncore events
-> in a group then parse_events__set_leader_for_uncore_aliase will
-> reorder the evlist so that events on the same PMU are
-> adjacent. collect_all_aliases assumes that aliases are in blocks
-> so that only the first counter is printed and all others are
-> marked merged. The reordering for groups breaks the assumption
-> and so all counts are printed. This change removes the assumption
-> from collect_all_aliases that the events are in blocks and
-> instead processes the entire evlist.
+On Sat, Feb 05, 2022 at 12:07:19AM +0000, Ali Saidi wrote:
 
-Looks good to me.
+[...]
 
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
+> >Alternatively, we can support HITM tag for L1/L2 cache levels in perf,
+> >this can allow us to match memory topology on Arm64 arch, and it should
+> >not introduce any regression on x86 arch.
+> >
+> >Could you confirm if below code can fix the issue or not?
+> 
+> Yes, that should do it. Want me to repsin this with the changes we discussed?
 
+Yes, please go ahead and thanks a lot for your effort.
 
--Andi
-
-
+Leo
