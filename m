@@ -2,330 +2,184 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A91C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Feb 2022 19:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A5F5C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat,  5 Feb 2022 00:00:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231810AbiBDTMG (ORCPT
+        id S231710AbiBEAA3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Feb 2022 14:12:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56242 "EHLO
+        Fri, 4 Feb 2022 19:00:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231772AbiBDTME (ORCPT
+        with ESMTP id S1378611AbiBEAAS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Feb 2022 14:12:04 -0500
+        Fri, 4 Feb 2022 19:00:18 -0500
 Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12A0CC061401
-        for <linux-perf-users@vger.kernel.org>; Fri,  4 Feb 2022 11:12:04 -0800 (PST)
-Received: by mail-yb1-xb2e.google.com with SMTP id c19so21610505ybf.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 04 Feb 2022 11:12:04 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0237DDF8BD87
+        for <linux-perf-users@vger.kernel.org>; Fri,  4 Feb 2022 16:00:18 -0800 (PST)
+Received: by mail-yb1-xb2e.google.com with SMTP id m6so23165311ybc.9
+        for <linux-perf-users@vger.kernel.org>; Fri, 04 Feb 2022 16:00:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x98h64db2ELAPGv96rTHy/1rl/LAy3sjtNluEyLkuy0=;
-        b=S6CbmnDtyGvxAbdLIkz+o3X8nKazAuXX5+bInc22I4VofSQyLxHHjABGqoMaMMbOvz
-         3+Lj+FDB5EttoBSiLYyqrjks+oDwaxjeTLTANfHomP50bTAzABoFm43BR127SH44uPyS
-         0vWQTSP1B9UVnwhNcu/nyX7OtyAYWtfKshDTn+PZWtiGtL726k1YE2tTjq6d4bnC+cql
-         wNFZYZ6YRRXRyFQ7TGm41iGjH4DiyO9Jhmg1W95WqwO8pn72CEMzITMhkw4kJvCp2CX9
-         +Nra/IEptCh3ZfOiBkfJM/OWGY0Un4qgLMscfszVot6GKeorFmOlZYUICw4mhVvnOZRd
-         qiHQ==
+         :content-transfer-encoding;
+        bh=fajrXbA8oBUip2Cl5D2abOhYOIGlO4AlvNzT7UdfDXk=;
+        b=RoBzObdOTTexQ15+9P0ldzjSdMPYBbCqrW8UhJUHaNVSQixSBbU35sODVhItGZBA5T
+         yJELQctyf611MXXe5EhzKGGkWxJSZ0jHLgR0KZWNlChg1GD4Ne1YfH/c7wxdx8m6ksUM
+         4sJh7SSIBt69UmpdZRIg4xyKtR4HM7sCVmsFqBG5uwV46C7UDQodzoELBMPpITICfhOF
+         DjtuiY+8OM6yiS9hjEzrxhk3uzlh8H1RS3PUPvDmgylofpnlF04ycpEB1C0bSH55JQYf
+         7LcOKzLpgu3D/fUXRHdTIAbHNfYFIjq4n3wV8UjqF1CYxrLApADBs3ENkOLP9V7XZ7E9
+         /k4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x98h64db2ELAPGv96rTHy/1rl/LAy3sjtNluEyLkuy0=;
-        b=ECEvlQLDLF/POMl+DXfGahooYJsE1iyf01lXmyKhVzTix85bHCWistx/dG0bXFnJkF
-         mWjks4sm5qul6o1G+nggbR6RZx8DXNhv/ITt0mnOozaaoyXA2Ga99yF6CP0QUibAGT7x
-         c/O6FHzpgOy5CaIeSEsNCie8I7Y1Xb9SduStpE55t6Si5M8EZK85wklCiC8JRUkncnOb
-         QCNGcmBd9Su3eyuLigGBymr7RgXoEGWgaT3u9IXhZ2ULj9BZ9vY8JKXmcM/CKWBUGWoa
-         SBxwQXYtlgO7K/1srUIDT5miQZCeLWGF84YNXUfOCKmnA/hv27aVrP0ZYpmNe/w5MDHi
-         GTSA==
-X-Gm-Message-State: AOAM532g2UGNV5+fHIjpG7Utwzl5l4q99+iqjtoLer/hmt2jE3hOdC0t
-        Vzw5bS6wwZ1S98hGr/OlmMv5uxxAzPyvwJvQnuDn6w==
-X-Google-Smtp-Source: ABdhPJxcRf9ofKT71a/Vcnpdf59GkI4n/e2ACOOaYtWXWZwKLKH1Ypgg5CqfQ7iGjyi01spsPW1SENZLPBaIy7JQsFM=
-X-Received: by 2002:a25:d6d6:: with SMTP id n205mr628503ybg.375.1644001922899;
- Fri, 04 Feb 2022 11:12:02 -0800 (PST)
+         :message-id:subject:to:content-transfer-encoding;
+        bh=fajrXbA8oBUip2Cl5D2abOhYOIGlO4AlvNzT7UdfDXk=;
+        b=yamhsDRSw/9K6gV2yZXxMbIHwkMdZmT3wVaGDfxThX+YdYynGVJaNCgeWl7Asnva8L
+         wNHvuBQAZPIyv1Gmd17qHE36SwrVI2V2dX5e+1OxYIITEEiyCvFth71EPngZNjTvnlmG
+         HpZ6sOW1s7ypPvPul+aNAq1g+jHSMIBXto2yEI0zWEI/bJ0l6jJBdqczHgSu1EKF1cTf
+         YEpdLZTB9jlNZsgPt2tD48PcAZH7p5/iN0AhGBHlj1J9jF9Tqx9+IIIJ9k2Sp7p8ejN7
+         131aWBxZ+WWJfCKZY6xmC6UcnO9sRLOceyiJ5Qa8yCOLstfXdrvbmBeJFpvLaH6qjG+W
+         vpgQ==
+X-Gm-Message-State: AOAM530qQJ3tzvhdk84iPt86fuaeGallOm/MPBnG9yO19TnWbNhxZsUh
+        JKDES5sH7duM2WBSj2PwCdNPakILa3MnXL8JPd1YcziS4PQ=
+X-Google-Smtp-Source: ABdhPJx/kpEs40PPshfJF4bG7qo+g9Y5wB463TEA9sfzMWcU5X2lH8i4RGYlNmcaI2rmLICY/91DJDTvoqZYUQCzrEo=
+X-Received: by 2002:a5b:b84:: with SMTP id l4mr1597448ybq.665.1644019216717;
+ Fri, 04 Feb 2022 16:00:16 -0800 (PST)
 MIME-Version: 1.0
-References: <20220125204602.4137477-1-irogers@google.com> <CAP-5=fXyJeX3b3egcAOfPndmYhakrsdKu7HttnHEH2DKP-6Vxw@mail.gmail.com>
- <20220128142348.17d51894dbdb35c9a9449567@kernel.org> <CAP-5=fXHudKqO4+0rbO9X3Ny+Cq7+KsHbKf4P8P24SjF0S232Q@mail.gmail.com>
- <20220129003450.77116209763f7e06d285e654@kernel.org> <CAP-5=fVoP9MAVsj7SdrxRjkr1Jt=XZ7Vf_FAooXA7B2OrC=XMA@mail.gmail.com>
- <20220130165455.422f26c869bd3579c2d305a7@kernel.org> <CAP-5=fVeQ4rzgpD3PS5-147xOp=wp+8U-rkLRqreJ616Vy89rA@mail.gmail.com>
- <20220204235737.657675e6e468c367c13fc1b2@kernel.org>
-In-Reply-To: <20220204235737.657675e6e468c367c13fc1b2@kernel.org>
+References: <802c5ec0-dc3b-bab9-20f5-59be612a46f8@gmail.com> <CAP-5=fVYqS74t_UJ_dQaQE8FHWNYSHuYqVaWb-BfhewMCCbFaA@mail.gmail.com>
+In-Reply-To: <CAP-5=fVYqS74t_UJ_dQaQE8FHWNYSHuYqVaWb-BfhewMCCbFaA@mail.gmail.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 4 Feb 2022 11:11:48 -0800
-Message-ID: <CAP-5=fWyv_v+OT49ePBa9AttQdiOPEnridTWjsLQZ1yOwv1k2w@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] Reference count checker and related fixes
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@collabora.com>,
-        James Clark <james.clark@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
-        Song Liu <song@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Miaoqian Lin <linmq006@gmail.com>,
-        Stephen Brennan <stephen.s.brennan@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        German Gomez <german.gomez@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Eric Dumazet <edumazet@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        masami.hiramatsu.pt@hitachi.com, eranian@google.com
+Date:   Fri, 4 Feb 2022 16:00:00 -0800
+Message-ID: <CAP-5=fWAbBBHhqqZ5u5B8GiCb=7V6oACZnecQF3zOWMnV5YCDw@mail.gmail.com>
+Subject: Re: Google Summer of Code 2022 - Project ideas page for the Linux
+ Foundation online
+To:     linux-perf-users <linux-perf-users@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Feb 4, 2022 at 6:57 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
->
-> On Sun, 30 Jan 2022 09:40:21 -0800
-> Ian Rogers <irogers@google.com> wrote:
->
-> > > > > Hi Ian,
-> > > > >
-> > > > > Hmm, but such a macro is not usual for C which perf is written in.
-> > > > > If I understand correctly, you might want to use memory leak
-> > > > > analyzer to detect refcount leak, and that analyzer will show
-> > > > > what data structure is leaked.
-> > > >
-> > > > Firstly, thanks for the conversation - this is really useful to
-> > > > improve the code!
-> > >
-> > > Hi Ian,
-> > >
-> > > You're welcome! This conversation also useful to me to understand
-> > > the issue deeper :-)
-> > >
-> > > > I think in an ideal world we'd somehow educate things like address
-> > > > sanitizer of reference counted data structures and they would do a
-> > > > better job of tracking gets and puts. The problem is pairing gets and
-> > > > puts.
-> > >
-> > > Agreed. From my experience, pairing gets and puts are hard without
-> > > reviewing the source code, since the refcounter is not only used in a
-> > > single function, but it is for keeping the object not released until
-> > > some long process is finished.
-> > >
-> > > For example, if the correct pair is like below, funcA-funcD, funcB-funcC,
-> > > funcA (get)
-> > > funcB (get)
-> > > funcC (put)
-> > > funcD (put)
-> > >
-> > > But depending on the execution timing, funcC/funcD can be swapped.
-> > > funcA (get)
-> > > funcB (get)
-> > > funcD (put)
-> > > funcC (put)
-> > >
-> > > And if there is a bug, funcX may get the object by mistake.
-> > > funcA (get)
-> > > funcX (get)
-> > > funcB (get)
-> > > funcD (put)
-> > > funcC (put)
-> > >
-> > > Or, funcC() might miss to put.
-> > > funcA (get)
-> > > funcB (get)
-> > > funcD (put)
-> > >
-> > > In any case, just tracking the get/put, it is hard to know which pair
-> > > is not right. I saw these patterns when I debugged it. :(
-> >
-> > Yep, I've found this issue too :-) The get is being used for the
-> > side-effect of incrementing a reference count rather than for
-> > returning the value. This happened in cpumap merge and was easy to fix
-> > there.
-> >
-> > This problem is possible in general, but I think if it were common we
-> > are doomed. I don't think this pattern is common though. In general a
-> > reference count is owned by something, the scope of a function or the
-> > lifetime of a list. If puts were adhoc then it would mean that one
-> > occurring in a function could be doing it for the side effect of
-> > freeing on a list. I don't think the code aims to do that. Making the
-> > code clean with pairing gets and puts is an issue, like with the
-> > cpumap merge change.
->
-> Hi Ian,
-> Sorry for waiting.
->
-> I got the pairing of get/put is not so hard if we use your
-> programing pattern. The problem was the posession of the object.
-> As you proposed, if we force users to use the returning "token"
-> instead of object pointer itself as below;
->
-> funcA(obj) {
->   token = get(obj);
->   get_obj(token)->...
->   put(token);
-> }
->
-> Then it is clear who leaks the token.
->
->  funcA (get-> token1)
->  funcX (get-> token3)
->  funcB (get-> token2)
->  funcD (put-> token2)
->  funcC (put-> token1)
->
-> In this case token3 is not freed, thus the funcX's pair is lost.
-> Or,
->
->  funcA (get-> token1)
->  funcB (get-> token2)
->  funcD (put-> token2)
->
-> In this case funcA's pair is lost.
->
-> And if the user access object with the token which already put,
-> it can be detected.
->
->
-> >
-> > > > In C++ you use RAII types so that the destructor ensures a put -
-> > > > this can be complex when using data types like lists where you want to
-> > > > move or swap things onto the list, to keep the single pointer
-> > > > property. In the C code in Linux we use gotos, similarly to how defer
-> > > > is used in Go. Anyway, the ref_tracker that Eric Dumazet added solved
-> > > > the get/put pairing problem by adding a cookie that is passed around.
-> > >
-> > > Cool! I will check the ref_tracker :)
-> > >
-> > > > The problem with that is that then the cookie becomes part of the API.
-> > >
-> > > What the cookie is? some pairing function address??
-> >
-> > As I understand it, a token to identify a get.
->
-> Yeah, I slightly missed that your API will force caller to use the
-> returning token instead of object.
-> So, what about using token always, instead of wrapping the object
-> pointer only when debugging?
->
-> I felt uncomfortable about changing the data structure name according
-> to the debug macro. Instead, it is better way for me if get() always
-> returns a token of the object and users need to convert the
-> token to the object. For example;
->
-> struct perf_cpu_map {
-> ...
-> };
->
-> #ifdef REFCNT_CHECKING
-> typedef struct {struct perf_cpu_map *orig;} perf_cpu_map_token_t;
-> #else
-> typedef unsigned long perf_cpu_map_token_t;     /* actually this is "struct perf_cpu_map *" */
-> #endif
->
-> perf_cpu_map_token_t perf_cpu_map__get(struct perf_cpu_map *map);
-> void perf_cpu_map__put(struct perf_cpu_map_token_t tok);
->
-> This explicitly forces users to convert the token to the object
-> when using it. Of course if a user uses the object pointer ("map" here)
-> directly, the token is not used. But we can check such wrong usage by
-> compilation.
->
-> [...]
-> > > So my question is that we need to pay the cost to use UNWRAP_ macro
-> > > on all those object just for finding the "use-after-put" case.
-> > > Usually the case that "use-after-put" causes actual problem is very
-> > > limited, or it can be "use-after-free".
-> >
-> > So the dso->nsinfo case was a use after put once we added in the
-> > missing put - it could also be thought of as a double put/free. In
-> > general use-after-put is going to show where a strict get-then-put
-> > isn't being followed, if we make sure of that property then the
-> > reference counting will be accurate.
->
-> The double free/put will be detected different way. But indeed the
-> use-after-put can be overlooked (I think there actually be the
-> case, it should be "use-after-free" but it depends on the timing.)
->
-> >
-> > A case that came up previously was maps__find:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/map.c#n974
-> > this code retuns a map but without doing a get on it, even though a
-> > map is reference counted:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/map.h#n46
-> > If we change that code to return a get of the map then we add overhead
-> > for simple cases of checking a map is present - you can infer you have
-> > a reference count on the map if you have it on the maps. The
-
-> > indirection allows the code to remain as-is, while being able to catch
-> > misuse.
->
-> I don't think using the UNWRAP_* macro is "remain as-is" ;) but I agree
-> with you that can catch the misuse.
->
-> IMHO, I rather like using the explicit token. I don't like to see
-> "UNWRAP_map(map)->field", but "GET_map(token)->field" is good for me.
-> This is because the "map" should be a pointer of data structure (so
-> its field can be accessed without any wrapper), but token is just a
-> value (so this implies that it must be converted always).
-> In other words, "map->field" looks natural for reviewing, but
-> "token->field" looks obviously strange.
-
-Thanks Masami, this is all very constructive. I think with the naming
-we can get there. I'm a little uncomfortable paying a cost for the
-token when not debugging, but that is more of a nit as I doubt the
-performance overhead really matters. I am planning a v3 patch set to
-use macros, break out more stuff that can be merged regardless, etc.
-
-I've also started to take a look at the maps and map structs. maps is
-an easy struct to add the check to, no more difficult than cpumap and
-nsinfo. So that's pretty good, we've been able to have good leak
-detection on 3 structs catching missing puts, uses after puts, etc.
-The problem I'm having is with struct map as not only is it reference
-counted, it is a node in a red-black tree or a list:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/map.h?h=perf/core#n20
-
-For nsinfo we add a layer of indirection between the dso and the
-nsinfo objects. There is a single pointer, the indirection lives
-there, life is easy. For a red-black tree node there are references
-from the children and the parent, none of which in the current code
-impact the refcnt field. I can in the 'find' code add a layer of
-wrapping, but this is a layer of wrapping that doesn't correspond to
-an actual get and means things aren't working as intended. My feeling
-here is that the 'struct map' needs a refactor. The redblack tree and
-list code should be their own structs - struct map_rbnode and
-map_listnode or some such. When those structs point to the reference
-counted data then they add a reference count of 1 and have the
-indirection layer associated with that reference count. The separation
-is easier for humans and machines to understand. Where this fails is
-if the current code wants to look from the map to a rbtree neighbor or
-list node neighbor, which may not be a problem.
-
-Overall it could be that the 'struct map' code was just in need of a
-refactor or it could point to this approach adding yet more overhead.
-I'm going to push on it as even if this just turns into a fork, I can
-catch bugs that are real.
+A reminder that on Monday (February 7) the application period for
+mentoring organizations for the Google Summer of Code 2022 will start.
+Please volunteer to mentor or suggest projects.
 
 Thanks,
 Ian
-
-> Thank you,
+On Thu, Jan 27, 2022 at 9:56 AM Ian Rogers <irogers@google.com> wrote:
 >
-> --
-> Masami Hiramatsu <mhiramat@kernel.org>
+> TL;DR please consider being a GSoC mentor and contributing project ideas.
+>
+> Hi,
+>
+> Last year Riccardo Mancini made great contributions to the perf code
+> base [1]! Riccardo's mentors were Arnaldo, Namhyung and myself, with 1
+> hour weekly meetings and patches that needed review. The project was
+> administered by the Linux Foundation. I consider Riccardo's work last
+> year really useful and a great contribution, so I'm keen that the
+> Linux perf tool/subsystem can participate in the Google Summer of Code
+> again this year.
+>
+> This year Google Summer of Code has changed, operating within the
+> Linux Foundation means following how their administrators want to run
+> things. Notable improvements/changes are [2]:
+>  - Contributors, not only students: From now on it is not required any
+> more to be a university/college student to code for GSoC. Anyone 18
+> years old and older can do.
+>  - Two project sizes: 16 GSoCs with ~350-hour projects, then one with
+> ~175-hour projects, some tasks fit better into one size others into
+> the other, no one-size-fits-all. Now we can have both. The
+> organizations can select from these two sizes for each project idea
+> they offer.
+>  - Coding period flexibility: Before, there was a fixed time period of
+> ~3 months in which the projects had to be done, also with fixed dates
+> for the 2 or 3 evaluations. From 2022 on the period can be extended to
+> 22 weeks on agreement between mentor and contributor, should there be
+> some interruptions like exams, trips, sickness, different dates of
+> mid-year break, =E2=80=A6 This gives more people the chance to be able to
+> participate.
+>
+> To make sure we get great applicants we need great projects and
+> mentors. We need to refresh the project page that was copied over from
+> last year:
+> https://wiki.linuxfoundation.org/gsoc/2022-gsoc-perf
+> There are often things that come up on the mailing list that could be
+> projects. For example, better programming language support [3],
+> reference count sanity checking [4] and new features like function
+> latency histograms [5] where BPF has opened up new possibilities.
+> There may also be areas of tech debt that you'd like to see cleaned
+> up.
+>
+> Please consider volunteering to be a mentor or just suggesting your
+> ideas. For convenience probably the easiest way to do that is by
+> replying to this e-mail on the linux-perf-users mailing list.
+>
+> Thanks!
+> Ian
+>
+> [1] https://lore.kernel.org/linux-perf-users/3c4f8dd64d07373d876990ceb16e=
+469b4029363f.camel@gmail.com/
+> [2] https://wiki.linuxfoundation.org/gsoc/google-summer-code-2022
+> [3] https://lore.kernel.org/linux-perf-users/87o85ftc3p.fsf@smart-cactus.=
+org/
+> [4] https://lore.kernel.org/linux-perf-users/20220125204602.4137477-1-iro=
+gers@google.com/
+> [5] https://lore.kernel.org/all/20211129231830.1117781-1-namhyung@kernel.=
+org/
+>
+> ---------- Forwarded message ---------
+> From: Till Kamppeter <till.kamppeter@gmail.com>
+> Date: Wed, Jan 26, 2022 at 11:08 AM
+> Subject: Google Summer of Code 2022 - Project ideas page for the Linux
+> Foundation online
+>
+> Hi,
+>
+> the Linux Foundation will apply again as mentoring organization in this
+> year's Google Summer of Code.
+>
+> Note that GSoC 2022 will be different again, code contributors do not
+> need to be students, choice between 3-month=C2=B4s full-time or half-time
+> projects, more flexibility of when coding takes place.
+>
+> On February 7, 2022 the application period for mentoring organizations
+> for the Google Summer of Code 2022 will start.
+>
+> To be successful, we need a rich project idea list so that we will get
+> selected by Google.
+>
+> I have set up a page for project ideas for the Linux Foundation's
+> participation in the Google Summer of Code 2022:
+>
+> https://wiki.linuxfoundation.org/gsoc/google-summer-code-2022
+>
+> Please add your ideas to the sub-page of your work group. Also remove
+> project ideas which are already done in one of the previous years or not
+> needed any more and make sure that all contact info is up-to-date and
+> all links are working.
+>
+> Make sure to not talk about "students", but about "contributors"
+> instead. I have, at least partially, taken care of this when I have
+> copied your sub-group pages from last year.
+>
+> Also make sure to remove the "**Still needs to get updated!!**" phrase
+> after having updated your project ideas.
+>
+> If you have problems mail me with your project ideas and other editing
+> wishes.
+>
+> The ideas list is in the Linux Foundation Wiki. If you want to edit and
+> did not have the edit rights already from previous years, please tell me
+> and I give you edit rights. I need your Linux Foundation user name for
+> that and the e-mail address associated with this account for this.
+>
+> Please also take into account that the deadline for our application as
+> mentoring organization is Feb 21 and after that Google will evaluate the
+> applications. So have your ideas (at least most of them, ideas can be
+> posted up to the student application deadline) in by then to raise our
+> chances to get accepted.
+>
+> Please also tell us if you do not want to participate any more with your
+> workgroup, so that we can remove your sub-page.
+>
+>     Till
