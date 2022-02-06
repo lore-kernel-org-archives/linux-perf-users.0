@@ -2,215 +2,105 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 545C3C433F5
-	for <linux-perf-users@archiver.kernel.org>; Sat,  5 Feb 2022 08:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C013C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun,  6 Feb 2022 11:36:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358133AbiBEIKY (ORCPT
+        id S234405AbiBFLgr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 5 Feb 2022 03:10:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37538 "EHLO
+        Sun, 6 Feb 2022 06:36:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242564AbiBEIKX (ORCPT
+        with ESMTP id S231858AbiBFLgr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 5 Feb 2022 03:10:23 -0500
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5AB7C061353
-        for <linux-perf-users@vger.kernel.org>; Sat,  5 Feb 2022 00:10:21 -0800 (PST)
-Received: by mail-pl1-x62c.google.com with SMTP id y17so7080624plg.7
-        for <linux-perf-users@vger.kernel.org>; Sat, 05 Feb 2022 00:10:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mRwDG3dHdSCt9JBk2JbCS8GWF1RzkAIy/xnl8iR8W7Y=;
-        b=Efq/YfxkqG5CBZkRIDisd5gefe9br7yxLyzgSlJN58z1Z1XQqxfejULxQmW8IMxsK6
-         pbUElT+8PCYsg8YA/RUK6wr+//t3jug9t+qemcQ5s5H06POYAojLHHsWPMPCAQ7L4XFZ
-         M80w3rSQrn1K0SQBHRJdaEV/7J0Ps+vnOlZ/zk6uarHFQXTDi0zNN99DAZJuOwHkAofb
-         35vVxceWkkJxUCysdnD88PUHrKqu5TdxmfL4iy+ZMTgQHFNE4zlMPmsrmK44dyRJCU/0
-         zK8JAJ5CzTqIgFiLlHyG5eKoi4YgIFtaxoh37za2slQitkcVCkmGhPDYMNielJbbCtha
-         RHJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mRwDG3dHdSCt9JBk2JbCS8GWF1RzkAIy/xnl8iR8W7Y=;
-        b=dEs94NEbJSMS/OqhQrJmkXCmjuY7z2AdGOJ4fIZ+CBzttqHne+EZuik2Y3hs9zrHcP
-         YsaJy8EAjeY5SK/Sqkj8YM9d0Maixz5Q2wf9EEL+L2uUc01ZBi6Oi1R/sAk9vTDdw5z5
-         A6JUqqDbkhjEcBCAemcvZr+YQ2/QFFcC+bF7RwoOmkeMANROet+v6DKYdO4VCr9jXUYS
-         ILXw1IqpxWfMJ3n3RR2yQ5lxTd14Es85xnN3kYTFs+zXEaXL8Fyh4FTR0D+F+N+8pOwS
-         /c9LhWhiZ5GwV9AzPLdhUJBoW6inGqaWXuPVcrg0qZYpmg2qhYqaC5TQhXsX6FfETYUV
-         MgTw==
-X-Gm-Message-State: AOAM531AxNcZRtvOZRulyCAVRX1G38HqZdCLr9fl7OrgRsHHkAuULwE9
-        gf6Al+tI0k0sfQzLAKaLDbjsAg==
-X-Google-Smtp-Source: ABdhPJyzVREfDn/ZPdBiHrLF3VHliNAMRn8haobaKdARf0TzcgZ2O8oD1Q04EkQAa1rtwqfOjRdutw==
-X-Received: by 2002:a17:902:8483:: with SMTP id c3mr7095691plo.19.1644048620689;
-        Sat, 05 Feb 2022 00:10:20 -0800 (PST)
-Received: from leoy-ThinkPad-X240s ([134.195.101.46])
-        by smtp.gmail.com with ESMTPSA id k16sm5118928pfu.140.2022.02.05.00.10.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Feb 2022 00:10:19 -0800 (PST)
-Date:   Sat, 5 Feb 2022 16:10:13 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     German Gomez <german.gomez@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH] perf test: Add perf_event_attr tests for the arm_spe
- event
-Message-ID: <20220205081013.GA391033@leoy-ThinkPad-X240s>
-References: <20220126160710.32983-1-german.gomez@arm.com>
+        Sun, 6 Feb 2022 06:36:47 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78B98C06173B
+        for <linux-perf-users@vger.kernel.org>; Sun,  6 Feb 2022 03:36:46 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 281F4B80CF3;
+        Sun,  6 Feb 2022 11:36:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF723C340E9;
+        Sun,  6 Feb 2022 11:36:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1644147402;
+        bh=9H1aLnXFwQuN26Qhe9WeLQmHk0RPxQNas6gi/cJ4cvE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WFNwq7g/MC3JcrRVKkHTHc3M7QV27EshenrMOIK4i4n5hbszRyFhQIAGIKKgqlCfR
+         6dDXqzN2gHZ9KcjqqcWgywKC3JqKBBqzcUOYKP84A8aNPOL9SWULHb6wdTq1nBPfxo
+         vAiEFzqiLsGnFkIe1u21d6CpYFgHM29DWVLNHKt86a9M4y52M4n32dPbckLiZNA7XG
+         AJ4nfBKjpOACxmYdgV/C5VD+ecsLdoAW+3tiACuCMuln6xmIQnWY+Vu2xH0/Zh/iCH
+         7Q8Tu3pNJ+h0w1NTzIGy5ThVr8YlC7Z8I6M+FEC8ti+qRty2ZfFxQfefYTeFzZ5Plg
+         4ZB5OX/uwmbKQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 18DB8404A6; Sun,  6 Feb 2022 08:36:40 -0300 (-03)
+Date:   Sun, 6 Feb 2022 08:36:40 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-arm-kernel@lists.infradead.org, james.clark@arm.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf: tools: Add missing branch_sample_type
+Message-ID: <Yf+yyDF+PZaBtfzt@kernel.org>
+References: <1643799443-15109-1-git-send-email-anshuman.khandual@arm.com>
+ <Yfq3kTb7E1cELF0L@krava>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220126160710.32983-1-german.gomez@arm.com>
+In-Reply-To: <Yfq3kTb7E1cELF0L@krava>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi German,
-
-On Wed, Jan 26, 2022 at 04:07:09PM +0000, German Gomez wrote:
-> Adds a couple of perf_event_attr tests for the fix introduced in [1].
-> The tests check that the correct sample_period value is set in the
-> struct perf_event_attr of the arm_spe events.
+Em Wed, Feb 02, 2022 at 05:55:45PM +0100, Jiri Olsa escreveu:
+> On Wed, Feb 02, 2022 at 04:27:23PM +0530, Anshuman Khandual wrote:
+> > This updates branch sample type with missing PERF_SAMPLE_BRANCH_TYPE_SAVE.
+> > 
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: linux-perf-users@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Suggested-by: James Clark <james.clark@arm.com>
+> > Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 > 
-> [1]: https://lore.kernel.org/all/20220118144054.2541-1-german.gomez@arm.com/
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
+
+Thanks, applied.
+
+- Arnaldo
+
+ 
+> thanks,
+> jirka
 > 
-> Signed-off-by: German Gomez <german.gomez@arm.com>
+> > ---
+> >  tools/perf/util/perf_event_attr_fprintf.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
+> > index 47b7531f51da..98af3fa4ea35 100644
+> > --- a/tools/perf/util/perf_event_attr_fprintf.c
+> > +++ b/tools/perf/util/perf_event_attr_fprintf.c
+> > @@ -52,7 +52,7 @@ static void __p_branch_sample_type(char *buf, size_t size, u64 value)
+> >  		bit_name(ABORT_TX), bit_name(IN_TX), bit_name(NO_TX),
+> >  		bit_name(COND), bit_name(CALL_STACK), bit_name(IND_JUMP),
+> >  		bit_name(CALL), bit_name(NO_FLAGS), bit_name(NO_CYCLES),
+> > -		bit_name(HW_INDEX),
+> > +		bit_name(TYPE_SAVE), bit_name(HW_INDEX),
+> >  		{ .name = NULL, }
+> >  	};
+> >  #undef bit_name
+> > -- 
+> > 2.20.1
+> > 
 
-I tested this patch with two commands:
+-- 
 
-# PERF_TEST_ATTR=/tmp /usr/bin/python2 ./tests/attr.py -d ./tests/attr/ \
-        -p ./perf -vvvvv -t test-record-spe-period
-# PERF_TEST_ATTR=/tmp /usr/bin/python2 ./tests/attr.py -d ./tests/attr/ \
-        -p ./perf -vvvvv -t test-record-spe-period-term
-
-Both testing can pass on Hisilicon D06 board.
-
-One question: I'm a bit concern this case will fail on some Arm64
-platforms which doesn't contain Arm SPE modules.  E.g. below commands
-will always fail on Arm64 platforms if SPE module is absent.  So I am
-wandering if we can add extra checking ARM SPE event is existed or not?
-
-  # ./perf test list
-   17: Setup struct perf_event_attr
-  # ./perf test 17
-
-Thanks,
-Leo
-
-> ---
->  tools/perf/tests/attr/README                  |  2 +
->  tools/perf/tests/attr/base-record-spe         | 40 +++++++++++++++++++
->  tools/perf/tests/attr/test-record-spe-period  | 12 ++++++
->  .../tests/attr/test-record-spe-period-term    | 12 ++++++
->  4 files changed, 66 insertions(+)
->  create mode 100644 tools/perf/tests/attr/base-record-spe
->  create mode 100644 tools/perf/tests/attr/test-record-spe-period
->  create mode 100644 tools/perf/tests/attr/test-record-spe-period-term
-> 
-> diff --git a/tools/perf/tests/attr/README b/tools/perf/tests/attr/README
-> index 1116fc6bf2ac..454505d343fa 100644
-> --- a/tools/perf/tests/attr/README
-> +++ b/tools/perf/tests/attr/README
-> @@ -58,6 +58,8 @@ Following tests are defined (with perf commands):
->    perf record -c 100 -P kill                    (test-record-period)
->    perf record -c 1 --pfm-events=cycles:period=2 (test-record-pfm-period)
->    perf record -R kill                           (test-record-raw)
-> +  perf record -c 2 -e arm_spe_0// -- kill       (test-record-spe-period)
-> +  perf record -e arm_spe_0/period=3/ -- kill    (test-record-spe-period-term)
->    perf stat -e cycles kill                      (test-stat-basic)
->    perf stat kill                                (test-stat-default)
->    perf stat -d kill                             (test-stat-detailed-1)
-> diff --git a/tools/perf/tests/attr/base-record-spe b/tools/perf/tests/attr/base-record-spe
-> new file mode 100644
-> index 000000000000..08fa96b59240
-> --- /dev/null
-> +++ b/tools/perf/tests/attr/base-record-spe
-> @@ -0,0 +1,40 @@
-> +[event]
-> +fd=*
-> +group_fd=-1
-> +flags=*
-> +cpu=*
-> +type=*
-> +size=*
-> +config=*
-> +sample_period=*
-> +sample_type=*
-> +read_format=*
-> +disabled=*
-> +inherit=*
-> +pinned=*
-> +exclusive=*
-> +exclude_user=*
-> +exclude_kernel=*
-> +exclude_hv=*
-> +exclude_idle=*
-> +mmap=*
-> +comm=*
-> +freq=*
-> +inherit_stat=*
-> +enable_on_exec=*
-> +task=*
-> +watermark=*
-> +precise_ip=*
-> +mmap_data=*
-> +sample_id_all=*
-> +exclude_host=*
-> +exclude_guest=*
-> +exclude_callchain_kernel=*
-> +exclude_callchain_user=*
-> +wakeup_events=*
-> +bp_type=*
-> +config1=*
-> +config2=*
-> +branch_sample_type=*
-> +sample_regs_user=*
-> +sample_stack_user=*
-> diff --git a/tools/perf/tests/attr/test-record-spe-period b/tools/perf/tests/attr/test-record-spe-period
-> new file mode 100644
-> index 000000000000..75f8c9cd8e3f
-> --- /dev/null
-> +++ b/tools/perf/tests/attr/test-record-spe-period
-> @@ -0,0 +1,12 @@
-> +[config]
-> +command = record
-> +args    = --no-bpf-event -c 2 -e arm_spe_0// -- kill >/dev/null 2>&1
-> +ret     = 1
-> +arch    = aarch64
-> +
-> +[event-10:base-record-spe]
-> +sample_period=2
-> +freq=0
-> +
-> +# dummy event
-> +[event-1:base-record-spe]
-> diff --git a/tools/perf/tests/attr/test-record-spe-period-term b/tools/perf/tests/attr/test-record-spe-period-term
-> new file mode 100644
-> index 000000000000..8f60a4fec657
-> --- /dev/null
-> +++ b/tools/perf/tests/attr/test-record-spe-period-term
-> @@ -0,0 +1,12 @@
-> +[config]
-> +command = record
-> +args    = --no-bpf-event -e arm_spe_0/period=3/ -- kill >/dev/null 2>&1
-> +ret     = 1
-> +arch    = aarch64
-> +
-> +[event-10:base-record-spe]
-> +sample_period=3
-> +freq=0
-> +
-> +# dummy event
-> +[event-1:base-record-spe]
-> -- 
-> 2.25.1
-> 
+- Arnaldo
