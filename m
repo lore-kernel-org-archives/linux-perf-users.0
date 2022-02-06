@@ -2,148 +2,82 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0ECC43217
-	for <linux-perf-users@archiver.kernel.org>; Sun,  6 Feb 2022 11:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A202FC433F5
+	for <linux-perf-users@archiver.kernel.org>; Sun,  6 Feb 2022 11:52:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234447AbiBFLwz (ORCPT
+        id S234580AbiBFLw4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 6 Feb 2022 06:52:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37630 "EHLO
+        Sun, 6 Feb 2022 06:52:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234592AbiBFLld (ORCPT
+        with ESMTP id S235088AbiBFLvK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 6 Feb 2022 06:41:33 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70AF2C06173B;
-        Sun,  6 Feb 2022 03:41:32 -0800 (PST)
+        Sun, 6 Feb 2022 06:51:10 -0500
+X-Greylist: delayed 116 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 06 Feb 2022 03:51:08 PST
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9F72C06173B;
+        Sun,  6 Feb 2022 03:51:08 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0703760F6A;
-        Sun,  6 Feb 2022 11:41:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B856C340E9;
-        Sun,  6 Feb 2022 11:41:31 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6C4EB60B3B;
+        Sun,  6 Feb 2022 11:51:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8A4BC340E9;
+        Sun,  6 Feb 2022 11:51:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644147691;
-        bh=FSobEMJAK/NwOtYWPruGcvTq24jw7zYFBv6+hsMP0eI=;
+        s=k20201202; t=1644148267;
+        bh=LgbUOAbjGglJ4FW76fzaOyzGTdrip6nwKqyf2FbyCtg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LxCfANQ8XIuBZsh2jOoR+dU53Px+UhlQLmk9ig3nL1U2FYTtackbUCe4gMoYWarex
-         R1hfoLhgYFoGssT5Zs60s7Si9FfGZxgaSdtbHTSnrdxFzZ1fWrEjZWB8DuOdp0DBH0
-         8AyMotMC0wmS6ZauG5HqlEPQnpiPP+GqLNFwf3ZkZUn8lwJSSYya4fgk1OS1zvdNMV
-         SsiJ3pUQfdrCX4BV6v/h7zLgaKyXNLV8d9wDiRU/2FCkpWKx5FhTS0mMuoyi2J+3ZX
-         EyGX8wVENcuBxGKKgmTPSXzfDwLn82QP3mnBAJoW4cnygBtsfkd1XFLmcO1Sh7SvDU
-         GOfBF4g3xskvg==
+        b=rClSM6SmtDb6zi3aDr6KM3B/BZ2zmCL3pdOecSVGja0/OIuL1tK0Sw/Thc4XZKzuU
+         cRn9GMAmQqv8zy1BiWeFzJolqZ9dI6zfSma7KMee4O3Y8ceVjg5hTzS5OmfPjQ95xr
+         kuAWu/P+bEU/Y/EOSl+72OtKp4dKaLCgab6Fm6ArXFCNtpwCuvA9GKRKs3ev+4dTFf
+         B3O74q7l0J0vBEQvnxE7LKCB5SCnlzIF5ZrW5oO6oa0bcWKBOX0UUhPvJOep2WAsHL
+         zYfgHB6unpUmCoSqAU97DcBCcaEJNI+MMXb8UMei9UJoJNGECEM3FSA+jZmfDjK5h6
+         sgJ2pYI+LguAA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E9872404A6; Sun,  6 Feb 2022 08:41:28 -0300 (-03)
-Date:   Sun, 6 Feb 2022 08:41:28 -0300
+        id E7CD4404A6; Sun,  6 Feb 2022 08:51:05 -0300 (-03)
+Date:   Sun, 6 Feb 2022 08:51:05 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     James Clark <james.clark@arm.com>
-Cc:     Ameer Hamza <amhamza.mgc@gmail.com>,
-        German Gomez <german.gomez@arm.com>, peterz@infradead.org,
-        mingo@redhat.com, rickyman7@gmail.com,
-        alexey.v.bayduraev@linux.intel.com, adrian.hunter@intel.com,
-        leo.yan@linaro.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org
-Subject: Re: [PATCH] perf session: check for null pointer before derefernce
-Message-ID: <Yf+z6LmCsyymABcN@kernel.org>
-References: <20220124150001.93145-1-amhamza.mgc@gmail.com>
- <7c068167-e8bb-74f3-97d9-dd0c5858ee19@arm.com>
- <20220124202907.GA5741@hamza-OptiPlex-7040>
- <8983b963-2139-ecb3-3a31-b5e225db389c@arm.com>
+Cc:     German Gomez <german.gomez@arm.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH] perf tools: apply correct label to user/kernel symbols
+ in branch mode
+Message-ID: <Yf+2KfqJUdcYlSD3@kernel.org>
+References: <20220126105927.3411216-1-german.gomez@arm.com>
+ <7474e11b-6bd5-515d-0ebf-883d0656a359@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8983b963-2139-ecb3-3a31-b5e225db389c@arm.com>
+In-Reply-To: <7474e11b-6bd5-515d-0ebf-883d0656a359@arm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Jan 25, 2022 at 09:35:49AM +0000, James Clark escreveu:
-> 
-> 
-> On 24/01/2022 20:29, Ameer Hamza wrote:
-> > On Mon, Jan 24, 2022 at 03:30:17PM +0000, James Clark wrote:
-> >>
-> >>
-> >> On 24/01/2022 15:00, Ameer Hamza wrote:
-> >>> Move null pointer check before dereferncing the variable
-> >>>
-> >>> Addresses-Coverity: 1497622 ("Derereference before null check")
-> >>>
-> >>> Signed-off-by: Ameer Hamza <amhamza.mgc@gmail.com>
-> >>> ---
-> >>>  tools/perf/util/session.c | 2 +-
-> >>>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> >>> index f19348dddd55..e1014ab62c10 100644
-> >>> --- a/tools/perf/util/session.c
-> >>> +++ b/tools/perf/util/session.c
-> >>> @@ -1503,11 +1503,11 @@ static int machines__deliver_event(struct machines *machines,
-> >>>  			++evlist->stats.nr_unknown_id;
-> >>>  			return 0;
-> >>>  		}
-> >>> -		dump_sample(evsel, event, sample, perf_env__arch(machine->env));
-> >>>  		if (machine == NULL) {
-> >>>  			++evlist->stats.nr_unprocessable_samples;
-> >>>  			return 0;
-> >>>  		}
-> >>> +		dump_sample(evsel, event, sample, perf_env__arch(machine->env));
-> >>>  		return evlist__deliver_sample(evlist, tool, event, sample, evsel, machine);
-> >>>  	case PERF_RECORD_MMAP:
-> >>>  		return tool->mmap(tool, event, sample, machine);
-> >>>
-> >>
-> >> Hi Ameer,
-> >>
-> >> This mistake was made recently, but I don't think your change is the desired behavior.
-> >>
-> >> It should be possible to dump stuff if machine is null. null or an empty string
-> >> should be passed to dump_sample(). It looks like some of the printfs still attempt to
-> >> show something in this case, although I didn't check them all.
+Em Wed, Jan 26, 2022 at 11:27:16AM +0000, James Clark escreveu:
+> On 26/01/2022 10:59, German Gomez wrote:
+> > @@ -928,7 +928,7 @@ static int hist_entry__sym_to_snprintf(struct hist_entry *he, char *bf,
+> >  		struct addr_map_symbol *to = &he->branch_info->to;
+> >  
+> >  		return _hist_entry__sym_snprintf(&to->ms, to->al_addr,
+> > -						 he->level, bf, size, width);
+> > +						 to->al_level, bf, size, width);
+> >  	}
+> >  
+> >  	return repsep_snprintf(bf, size, "%-*.*s", width, width, "N/A");
 > > 
-> > Hi James,
-> > 
-> > Thank you for your response. I understand your point.
-> > 
-> > Do you think following changes would be ok?
 > 
-> Yep looks good. With that change:
+> Looks good to me, I didn't see any other usages where it could be broken.
 > 
 > Reviewed-by: James Clark <james.clark@arm.com>
+
 
 Thanks, applied.
 
 - Arnaldo
 
- 
-> > 
-> > diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> > index f19348dddd55..210eeee3dd70 100644
-> > --- a/tools/perf/util/session.c
-> > +++ b/tools/perf/util/session.c
-> > @@ -1503,11 +1503,12 @@ static int machines__deliver_event(struct machines *machines,
-> >                         ++evlist->stats.nr_unknown_id;
-> >                         return 0;
-> >                 }
-> > -               dump_sample(evsel, event, sample, perf_env__arch(machine->env));
-> >                 if (machine == NULL) {
-> >                         ++evlist->stats.nr_unprocessable_samples;
-> > +                       dump_sample(evsel, event, sample, perf_env__arch(NULL));
-> >                         return 0;
-> >                 }
-> > +               dump_sample(evsel, event, sample, perf_env__arch(machine->env));
-> >                 return evlist__deliver_sample(evlist, tool, event, sample, evsel, machine);
-> >         case PERF_RECORD_MMAP:
-> >                 return tool->mmap(tool, event, sample, machine);
-> > 
-> > Thanks,
-> > Hamza
-> > 
-
--- 
-
-- Arnaldo
