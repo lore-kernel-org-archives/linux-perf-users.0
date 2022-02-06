@@ -2,82 +2,104 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A202FC433F5
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2028C43219
 	for <linux-perf-users@archiver.kernel.org>; Sun,  6 Feb 2022 11:52:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234580AbiBFLw4 (ORCPT
+        id S234498AbiBFLw4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Sun, 6 Feb 2022 06:52:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39918 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235088AbiBFLvK (ORCPT
+        with ESMTP id S232442AbiBFLtN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 6 Feb 2022 06:51:10 -0500
-X-Greylist: delayed 116 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 06 Feb 2022 03:51:08 PST
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9F72C06173B;
-        Sun,  6 Feb 2022 03:51:08 -0800 (PST)
+        Sun, 6 Feb 2022 06:49:13 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF3D0C06173B;
+        Sun,  6 Feb 2022 03:49:12 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6C4EB60B3B;
-        Sun,  6 Feb 2022 11:51:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8A4BC340E9;
-        Sun,  6 Feb 2022 11:51:07 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CFF4760F6C;
+        Sun,  6 Feb 2022 11:49:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EE0EC340E9;
+        Sun,  6 Feb 2022 11:49:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644148267;
-        bh=LgbUOAbjGglJ4FW76fzaOyzGTdrip6nwKqyf2FbyCtg=;
+        s=k20201202; t=1644148151;
+        bh=GE5zisvutsw9w2qD1E89YL/IvhBKC7xdtqeCkuIuvTE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rClSM6SmtDb6zi3aDr6KM3B/BZ2zmCL3pdOecSVGja0/OIuL1tK0Sw/Thc4XZKzuU
-         cRn9GMAmQqv8zy1BiWeFzJolqZ9dI6zfSma7KMee4O3Y8ceVjg5hTzS5OmfPjQ95xr
-         kuAWu/P+bEU/Y/EOSl+72OtKp4dKaLCgab6Fm6ArXFCNtpwCuvA9GKRKs3ev+4dTFf
-         B3O74q7l0J0vBEQvnxE7LKCB5SCnlzIF5ZrW5oO6oa0bcWKBOX0UUhPvJOep2WAsHL
-         zYfgHB6unpUmCoSqAU97DcBCcaEJNI+MMXb8UMei9UJoJNGECEM3FSA+jZmfDjK5h6
-         sgJ2pYI+LguAA==
+        b=TKM2BN93Bml0pC3w73cDNXtO3IOG5s4eQfMMUFJRY97h1mB5KS5W0EofRYF8YVbgp
+         x17EF9MxHJPsBLzd+MRnUj5KW3b49q91J7waIXOb6VzZaNixG8h64Q5CoPfcnGmY/S
+         JfKYFL+PgdClqvjbVPhZHWiFpMRvPT1BNDqjv/rNEKllmM3bu2tv6x3jUu0DYWnjEZ
+         ZqV5bCKiut8zMuXEG4uRlr9ZJS4hXplrvrgLe4Zx/zd6C2+L688bL/pX5bhLUx3CFf
+         tIpmSZYUibwtXHz8FnUQkVpDMlfUsbGXOOzAVcOHj5Zn6oFyoyz3gKWRz5AogeUu7S
+         3YKjS+P7lRc1Q==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E7CD4404A6; Sun,  6 Feb 2022 08:51:05 -0300 (-03)
-Date:   Sun, 6 Feb 2022 08:51:05 -0300
+        id 734BC404A6; Sun,  6 Feb 2022 08:49:09 -0300 (-03)
+Date:   Sun, 6 Feb 2022 08:49:09 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     German Gomez <german.gomez@arm.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Masanari Iida <standby24x7@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH] perf tools: apply correct label to user/kernel symbols
- in branch mode
-Message-ID: <Yf+2KfqJUdcYlSD3@kernel.org>
-References: <20220126105927.3411216-1-german.gomez@arm.com>
- <7474e11b-6bd5-515d-0ebf-883d0656a359@arm.com>
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+Subject: Re: [PATCH] perf bpf: Fix a typo in bpf_counter_cgroup.c
+Message-ID: <Yf+1tRRYT9W8qgqO@kernel.org>
+References: <20211225005558.503935-1-standby24x7@gmail.com>
+ <CAM9d7cj0dQvoio-T0yNZzo+AGGDxCFtRWuDxBunFEkipWtDxZA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7474e11b-6bd5-515d-0ebf-883d0656a359@arm.com>
+In-Reply-To: <CAM9d7cj0dQvoio-T0yNZzo+AGGDxCFtRWuDxBunFEkipWtDxZA@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Jan 26, 2022 at 11:27:16AM +0000, James Clark escreveu:
-> On 26/01/2022 10:59, German Gomez wrote:
-> > @@ -928,7 +928,7 @@ static int hist_entry__sym_to_snprintf(struct hist_entry *he, char *bf,
-> >  		struct addr_map_symbol *to = &he->branch_info->to;
-> >  
-> >  		return _hist_entry__sym_snprintf(&to->ms, to->al_addr,
-> > -						 he->level, bf, size, width);
-> > +						 to->al_level, bf, size, width);
-> >  	}
-> >  
-> >  	return repsep_snprintf(bf, size, "%-*.*s", width, width, "N/A");
-> > 
+Em Tue, Dec 28, 2021 at 10:25:08AM -0800, Namhyung Kim escreveu:
+> Hello,
 > 
-> Looks good to me, I didn't see any other usages where it could be broken.
+> On Fri, Dec 24, 2021 at 4:57 PM Masanari Iida <standby24x7@gmail.com> wrote:
+> >
+> > This patch fixes a spelling typo in error message.
+> >
+> > Signed-off-by: Masanari Iida <standby24x7@gmail.com>
 > 
-> Reviewed-by: James Clark <james.clark@arm.com>
-
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> 
+> Thanks,
+> Namhyung
 
 Thanks, applied.
 
 - Arnaldo
 
+ 
+> 
+> > ---
+> >  tools/perf/util/bpf_counter_cgroup.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/util/bpf_counter_cgroup.c b/tools/perf/util/bpf_counter_cgroup.c
+> > index cbc6c2bca488..fea5f2ca03f6 100644
+> > --- a/tools/perf/util/bpf_counter_cgroup.c
+> > +++ b/tools/perf/util/bpf_counter_cgroup.c
+> > @@ -266,7 +266,7 @@ static int bperf_cgrp__read(struct evsel *evsel)
+> >                 idx = evsel->core.idx;
+> >                 err = bpf_map_lookup_elem(reading_map_fd, &idx, values);
+> >                 if (err) {
+> > -                       pr_err("bpf map lookup falied: idx=%u, event=%s, cgrp=%s\n",
+> > +                       pr_err("bpf map lookup failed: idx=%u, event=%s, cgrp=%s\n",
+> >                                idx, evsel__name(evsel), evsel->cgrp->name);
+> >                         goto out;
+> >                 }
+> > --
+> > 2.25.0
+> >
+
+-- 
+
+- Arnaldo
