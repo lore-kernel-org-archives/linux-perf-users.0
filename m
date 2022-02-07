@@ -2,112 +2,104 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF60C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Feb 2022 06:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C0DC433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Feb 2022 06:09:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233543AbiBGGEl (ORCPT
+        id S236735AbiBGGHD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 7 Feb 2022 01:04:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33226 "EHLO
+        Mon, 7 Feb 2022 01:07:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242507AbiBGDb0 (ORCPT
+        with ESMTP id S240857AbiBGEXQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 6 Feb 2022 22:31:26 -0500
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2990AC061A73
-        for <linux-perf-users@vger.kernel.org>; Sun,  6 Feb 2022 19:31:25 -0800 (PST)
-Received: by mail-pj1-x102d.google.com with SMTP id p22-20020a17090adf9600b001b8783b2647so5851399pjv.5
-        for <linux-perf-users@vger.kernel.org>; Sun, 06 Feb 2022 19:31:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=X8O4SjgVdS5SunuH2EEc/jocTlfs6Jf+CUub2i63z1U=;
-        b=lBs6XhEfsFsuOE3WNWg2BT0Jyc2nmdOyinZtvlBztKfWbOxzqL8X9E3b4SyNqE0Tvm
-         jtIo8mDN01tpjq7oVr7OCKI1prUml3i98glWaL1pwAsEET0rel4CVJhAgSE+XwJw8hjx
-         x5w8KybVk7IvQS1Z7b/cLBfPDhYgZ5StGnn3m1aBVzqgmQ06lCtKhLKCdpeO8eU9T5Gv
-         iaK9w/QlIrzCL6ppjKhSVDdER8rGF64is0tdXnp8DynI23a+NnLLnKX6+QJH245IaFbj
-         Mj7SrGtmd3PZEnLzVDMO5o1qEijES+UIiHT1HpvHqDbzy2+4YmObrJzK7zLcXjBM9LCg
-         DHxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=X8O4SjgVdS5SunuH2EEc/jocTlfs6Jf+CUub2i63z1U=;
-        b=FaS/8q1UPtpRovmLx1lVXNaLexcRDastUZaQIcc0YlM0pi9jUVjx+aOvLiuMvQMw+P
-         IO85RebYv5C8hMBknsVpJy43XyJJnTmYCtr3ZZKCvgrV1frMEKhQn40XovlOByzMva9o
-         v/dP88nNTcJECJi/gwoml2yO+3c7MabNxXvF5ECMAAQUMOmxo/my9WJivJqCl7RnDhwL
-         KKmuS7shEsrNOLvFl994C+MKCqy9PQyaaIBOUO+ZvxSKXFW0RZth+LY1D8DKEe1AGVaI
-         aapaD3k+Ipidgn7EuaR4y12LOgBwnaHalJlhjXlZ6s3HDPVe1AcgrO5jJoi+N9F79NKo
-         roFw==
-X-Gm-Message-State: AOAM533o2i44HtkV0vSmY5WEGa3sL8WwPmVC8JZTfYEwATAyj+KpWD/9
-        FenhRjGuG7hJB7tNY03X23MKcw==
-X-Google-Smtp-Source: ABdhPJwEQXNbmG3jgYfTVG3BtqUk2B62Q1FY7AdDYz8KoNic3DRlZsUpTPdBTY+Eja0b4x7JYBdkxA==
-X-Received: by 2002:a17:902:8204:: with SMTP id x4mr14619566pln.18.1644204684551;
-        Sun, 06 Feb 2022 19:31:24 -0800 (PST)
-Received: from leoy-ThinkPad-X240s ([134.195.101.46])
-        by smtp.gmail.com with ESMTPSA id lb3sm20635240pjb.47.2022.02.06.19.31.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Feb 2022 19:31:24 -0800 (PST)
-Date:   Mon, 7 Feb 2022 11:31:17 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     James Clark <james.clark@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>, Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf synthetic-events: Return error if procfs isn't
- mounted for PID namespaces
-Message-ID: <20220207033117.GA1240868@leoy-ThinkPad-X240s>
-References: <20211224124014.2492751-1-leo.yan@linaro.org>
- <e5f242c4-fe64-e214-4b28-c99af684751a@arm.com>
- <20220204124849.GB2040169@leoy-ThinkPad-X240s>
- <Yf+1HQ9+7TPmSSr7@kernel.org>
+        Sun, 6 Feb 2022 23:23:16 -0500
+X-Greylist: delayed 1181 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 06 Feb 2022 20:23:14 PST
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47C29C061A73;
+        Sun,  6 Feb 2022 20:23:14 -0800 (PST)
+Received: from dggeme754-chm.china.huawei.com (unknown [172.30.72.55])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4JsXT60sCSz1FCvB;
+        Mon,  7 Feb 2022 11:59:22 +0800 (CST)
+Received: from huawei.com (10.175.104.170) by dggeme754-chm.china.huawei.com
+ (10.3.19.100) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.21; Mon, 7
+ Feb 2022 12:03:31 +0800
+From:   Zhipeng Xie <xiezhipeng1@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <namhyung@kernel.org>
+CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <xiezhipeng1@huawei.com>
+Subject: [PATCH] Fix perf_mmap fail when CONFIG_PERF_USE_VMALLOC enabled
+Date:   Mon, 7 Feb 2022 12:02:59 -0500
+Message-ID: <20220207170259.2566-1-xiezhipeng1@huawei.com>
+X-Mailer: git-send-email 2.18.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yf+1HQ9+7TPmSSr7@kernel.org>
+Content-Type: text/plain
+X-Originating-IP: [10.175.104.170]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggeme754-chm.china.huawei.com (10.3.19.100)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Feb 06, 2022 at 08:46:37AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Feb 04, 2022 at 08:48:49PM +0800, Leo Yan escreveu:
-> > On Fri, Jan 07, 2022 at 02:27:57PM +0000, James Clark wrote:
-> > > On 24/12/2021 12:40, Leo Yan wrote:
-> > > > For perf recording, it retrieves process info by iterating nodes in proc
-> > > > fs.  If we run perf in a non-root PID namespace with command:
-> > > > 
-> > > >   # unshare --fork --pid perf record -e cycles -a -- test_program
-> > > > 
-> > > > ... in this case, unshare command creates a child PID namespace and
-> > > > launches perf tool in it, but the issue is the proc fs is not mounted
-> > > > for the non-root PID namespace, this leads to the perf tool gathering
-> > > > process info from its parent PID namespace.
-> > > > 
-> > > 
-> > > I had some concerns that this would prevent use of perf in docker, but docker
-> > > does mount /proc so it is still working. And you've added a warning about how
-> > > to fix the unshare command so I think this is ok.
-> > > 
-> > > Reviewed-by: James Clark <james.clark@arm.com>
-> > 
-> > Thanks a lot for review, James.
-> > 
-> > Arnaldo, Jiri, could you take a look for this patch?  Thanks!
-> 
-> Looks sane, there was discussion, a detailed set of steps to reproduce
-> the problem was provided, thanks, applied.
+when CONFIG_PERF_USE_VMALLOC is enabled, rb->nr_pages is always
+equal to 1 in rb_alloc, causing perf_mmap return -EINVAL when mmap.
+Fix this problem using data_page_nr.
 
-Thank you, Arnaldo!
+Signed-off-by: Zhipeng Xie <xiezhipeng1@huawei.com>
+---
+ kernel/events/core.c        | 2 +-
+ kernel/events/internal.h    | 5 +++++
+ kernel/events/ring_buffer.c | 5 -----
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 57c7197838db..370292effd32 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6352,7 +6352,7 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
+ again:
+ 	mutex_lock(&event->mmap_mutex);
+ 	if (event->rb) {
+-		if (event->rb->nr_pages != nr_pages) {
++		if (data_page_nr(event->rb) != nr_pages) {
+ 			ret = -EINVAL;
+ 			goto unlock;
+ 		}
+diff --git a/kernel/events/internal.h b/kernel/events/internal.h
+index 082832738c8f..5816c0719dbf 100644
+--- a/kernel/events/internal.h
++++ b/kernel/events/internal.h
+@@ -116,6 +116,11 @@ static inline int page_order(struct perf_buffer *rb)
+ }
+ #endif
+ 
++static int data_page_nr(struct perf_buffer *rb)
++{
++	return rb->nr_pages << page_order(rb);
++}
++
+ static inline unsigned long perf_data_size(struct perf_buffer *rb)
+ {
+ 	return rb->nr_pages << (PAGE_SHIFT + page_order(rb));
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index 52868716ec35..fb35b926024c 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -859,11 +859,6 @@ void rb_free(struct perf_buffer *rb)
+ }
+ 
+ #else
+-static int data_page_nr(struct perf_buffer *rb)
+-{
+-	return rb->nr_pages << page_order(rb);
+-}
+-
+ static struct page *
+ __perf_mmap_to_page(struct perf_buffer *rb, unsigned long pgoff)
+ {
+-- 
+2.18.1
+
