@@ -2,88 +2,112 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5B3C433FE
-	for <linux-perf-users@archiver.kernel.org>; Sun,  6 Feb 2022 18:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF60C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Feb 2022 06:07:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346238AbiBFSij (ORCPT
+        id S233543AbiBGGEl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 6 Feb 2022 13:38:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54306 "EHLO
+        Mon, 7 Feb 2022 01:04:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346610AbiBFSii (ORCPT
+        with ESMTP id S242507AbiBGDb0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 6 Feb 2022 13:38:38 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8FD1C0401C3;
-        Sun,  6 Feb 2022 10:38:36 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 801F4B80CF1;
-        Sun,  6 Feb 2022 18:38:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0A97FC340E9;
-        Sun,  6 Feb 2022 18:38:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644172715;
-        bh=7FEeWQsmF4eM1/ZeBEypA5mNtZ0WwaA05qOggnRJY4I=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=t+R4ENPGh8QubVUyyes5RRaUmF4YNQTiCFUeldfUm/NCyU3mvY0QMu9LCuQxUumhH
-         fP/kERqu47LdftUS8KEI/CabveqpE5kfP4fieI3m4XQ6zTwpa/K9MLY0G80wYaHnjw
-         3fu9tmSzfdHZ4otxS6cBP/DcYNo5JH2nko/BjUHWPVjK2cDKkF8jHBDqiU9ObFn2ZO
-         dLs7NKrxe+ffGGRXpz9klDDRZ0VuGiz4QY6YGtXVuxqBpkM+4zj8v7U3QRYg0HMMsf
-         mNMyNyNoIGSFOGtSdQ+Ps3+yLtpsx7PlYGKmaN0367Ox7bNmZAgZtgZ98Zx/DtysB1
-         xuyW4tRfqEIzg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E86C6E6BBD2;
-        Sun,  6 Feb 2022 18:38:34 +0000 (UTC)
-Subject: Re: [GIT PULL] perf tools fixes for v5.17: 1st batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20220206141927.14216-1-acme@kernel.org>
-References: <20220206141927.14216-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220206141927.14216-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.17-2022-02-06
-X-PR-Tracked-Commit-Id: fceb62124d8fe1f6fb4b64e8f11c095dca8e7ea7
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 18118a4298fd7b0d686ef61be6f2622a77f51b96
-Message-Id: <164417271493.9246.3475345199392500331.pr-tracker-bot@kernel.org>
-Date:   Sun, 06 Feb 2022 18:38:34 +0000
+        Sun, 6 Feb 2022 22:31:26 -0500
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2990AC061A73
+        for <linux-perf-users@vger.kernel.org>; Sun,  6 Feb 2022 19:31:25 -0800 (PST)
+Received: by mail-pj1-x102d.google.com with SMTP id p22-20020a17090adf9600b001b8783b2647so5851399pjv.5
+        for <linux-perf-users@vger.kernel.org>; Sun, 06 Feb 2022 19:31:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=X8O4SjgVdS5SunuH2EEc/jocTlfs6Jf+CUub2i63z1U=;
+        b=lBs6XhEfsFsuOE3WNWg2BT0Jyc2nmdOyinZtvlBztKfWbOxzqL8X9E3b4SyNqE0Tvm
+         jtIo8mDN01tpjq7oVr7OCKI1prUml3i98glWaL1pwAsEET0rel4CVJhAgSE+XwJw8hjx
+         x5w8KybVk7IvQS1Z7b/cLBfPDhYgZ5StGnn3m1aBVzqgmQ06lCtKhLKCdpeO8eU9T5Gv
+         iaK9w/QlIrzCL6ppjKhSVDdER8rGF64is0tdXnp8DynI23a+NnLLnKX6+QJH245IaFbj
+         Mj7SrGtmd3PZEnLzVDMO5o1qEijES+UIiHT1HpvHqDbzy2+4YmObrJzK7zLcXjBM9LCg
+         DHxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=X8O4SjgVdS5SunuH2EEc/jocTlfs6Jf+CUub2i63z1U=;
+        b=FaS/8q1UPtpRovmLx1lVXNaLexcRDastUZaQIcc0YlM0pi9jUVjx+aOvLiuMvQMw+P
+         IO85RebYv5C8hMBknsVpJy43XyJJnTmYCtr3ZZKCvgrV1frMEKhQn40XovlOByzMva9o
+         v/dP88nNTcJECJi/gwoml2yO+3c7MabNxXvF5ECMAAQUMOmxo/my9WJivJqCl7RnDhwL
+         KKmuS7shEsrNOLvFl994C+MKCqy9PQyaaIBOUO+ZvxSKXFW0RZth+LY1D8DKEe1AGVaI
+         aapaD3k+Ipidgn7EuaR4y12LOgBwnaHalJlhjXlZ6s3HDPVe1AcgrO5jJoi+N9F79NKo
+         roFw==
+X-Gm-Message-State: AOAM533o2i44HtkV0vSmY5WEGa3sL8WwPmVC8JZTfYEwATAyj+KpWD/9
+        FenhRjGuG7hJB7tNY03X23MKcw==
+X-Google-Smtp-Source: ABdhPJwEQXNbmG3jgYfTVG3BtqUk2B62Q1FY7AdDYz8KoNic3DRlZsUpTPdBTY+Eja0b4x7JYBdkxA==
+X-Received: by 2002:a17:902:8204:: with SMTP id x4mr14619566pln.18.1644204684551;
+        Sun, 06 Feb 2022 19:31:24 -0800 (PST)
+Received: from leoy-ThinkPad-X240s ([134.195.101.46])
+        by smtp.gmail.com with ESMTPSA id lb3sm20635240pjb.47.2022.02.06.19.31.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Feb 2022 19:31:24 -0800 (PST)
+Date:   Mon, 7 Feb 2022 11:31:17 +0800
+From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
+Cc:     James Clark <james.clark@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ameer Hamza <amhamza.mgc@gmail.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Changbin Du <changbin.du@gmail.com>,
-        German Gomez <german.gomez@arm.com>,
-        Ian Rogers <irogers@google.com>,
-        James Clark <james.clark@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Masanari Iida <standby24x7@gmail.com>,
-        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
-        Rob Herring <robh@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>, Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf synthetic-events: Return error if procfs isn't
+ mounted for PID namespaces
+Message-ID: <20220207033117.GA1240868@leoy-ThinkPad-X240s>
+References: <20211224124014.2492751-1-leo.yan@linaro.org>
+ <e5f242c4-fe64-e214-4b28-c99af684751a@arm.com>
+ <20220204124849.GB2040169@leoy-ThinkPad-X240s>
+ <Yf+1HQ9+7TPmSSr7@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Yf+1HQ9+7TPmSSr7@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Sun,  6 Feb 2022 11:19:27 -0300:
+On Sun, Feb 06, 2022 at 08:46:37AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Feb 04, 2022 at 08:48:49PM +0800, Leo Yan escreveu:
+> > On Fri, Jan 07, 2022 at 02:27:57PM +0000, James Clark wrote:
+> > > On 24/12/2021 12:40, Leo Yan wrote:
+> > > > For perf recording, it retrieves process info by iterating nodes in proc
+> > > > fs.  If we run perf in a non-root PID namespace with command:
+> > > > 
+> > > >   # unshare --fork --pid perf record -e cycles -a -- test_program
+> > > > 
+> > > > ... in this case, unshare command creates a child PID namespace and
+> > > > launches perf tool in it, but the issue is the proc fs is not mounted
+> > > > for the non-root PID namespace, this leads to the perf tool gathering
+> > > > process info from its parent PID namespace.
+> > > > 
+> > > 
+> > > I had some concerns that this would prevent use of perf in docker, but docker
+> > > does mount /proc so it is still working. And you've added a warning about how
+> > > to fix the unshare command so I think this is ok.
+> > > 
+> > > Reviewed-by: James Clark <james.clark@arm.com>
+> > 
+> > Thanks a lot for review, James.
+> > 
+> > Arnaldo, Jiri, could you take a look for this patch?  Thanks!
+> 
+> Looks sane, there was discussion, a detailed set of steps to reproduce
+> the problem was provided, thanks, applied.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.17-2022-02-06
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/18118a4298fd7b0d686ef61be6f2622a77f51b96
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Thank you, Arnaldo!
