@@ -2,144 +2,97 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59225C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Feb 2022 14:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F33CC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Feb 2022 15:59:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238012AbiBHOHh (ORCPT
+        id S1382513AbiBHP71 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Feb 2022 09:07:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53966 "EHLO
+        Tue, 8 Feb 2022 10:59:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377838AbiBHOHh (ORCPT
+        with ESMTP id S1381811AbiBHP7X (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Feb 2022 09:07:37 -0500
-Received: from mail-qk1-x72c.google.com (mail-qk1-x72c.google.com [IPv6:2607:f8b0:4864:20::72c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABEF9C03FED5;
-        Tue,  8 Feb 2022 06:07:35 -0800 (PST)
-Received: by mail-qk1-x72c.google.com with SMTP id b35so13729960qkp.6;
-        Tue, 08 Feb 2022 06:07:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7NOld3X9Ifjr+IPHR43nts/BXMdtDVpsAlMMQRyrsDY=;
-        b=QcGYEKuqQGGZldI77/0tJtoWU8mlZUJzo8IjOV9MhrvRf1zJpdpOw6qIGelvBvQuLf
-         jgKvTDBFFqVFp3mKdyX+VBfhEFl1BgyneS/BlXmQMCe0pZUfLt4uzG32pAnIxdA/MMAt
-         JQ0aiaLhsnL2cOwyM7sWHJ8NEbxeM8WQSoNxah/unmKRAHCQGCV8AhjqlMMdlHnYxiyT
-         5X+O/4wGgiGvyQBZEPUChqZJoHyzKmrWrt/sE6BHk6EEiOWp/ZB+4E9XCGOFJXGVJ9NK
-         7W070dnmwolWS7hFdSNqBM/9UYfj1TQm9ddFRdO2KLibq2eWT2qcFlmpApaD3Ujq3nDq
-         Xtlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7NOld3X9Ifjr+IPHR43nts/BXMdtDVpsAlMMQRyrsDY=;
-        b=1fMFrpwY72b8copm6sg4Gngaf+2QT8sWOTEJJyw4JlwJ8QHbllRtt98LKja/b4VfVT
-         EMCiVyta7HTxpgvNeukzhQ6VT4uTOcIL/GcMLPUbYS8d5JgypCMzabE9MkEhAIB78fy5
-         qVf+EiGG4mLZhlzqXWk9voqE6sqdNwjOTDrj7ZUv0lesb/jJPRK/lYjms1ZfGU3s2G3q
-         kP+ztnk5iqZ1nG8/CRzFZou+KV+iuV+3O5E+s6sbIO5FA0UFOaXDZDCZcvpIXuW7hQuN
-         YyJU9Q6QdK9/aQFoUAg0YVeMM0adPbv9JetGQ6Oas20D39sxUqmeO9RfbwyK5hMhy2B2
-         wvpQ==
-X-Gm-Message-State: AOAM5305Le/wpFLCK56OnkjlZcUrllFpZvxOntui9PziESt2/B2BXSN6
-        yvnEJLUvStqJ5F/NebxG27Q=
-X-Google-Smtp-Source: ABdhPJw+6b/6xAHHkddYJemTBAsDlR7kfo/s9kNa3jYcZfwIFk7Uf541MbQctesR3DzZJqqvrg77+g==
-X-Received: by 2002:a37:acd:: with SMTP id 196mr2606726qkk.89.1644329254403;
-        Tue, 08 Feb 2022 06:07:34 -0800 (PST)
-Received: from WRT-WX9.. ([207.246.89.135])
-        by smtp.gmail.com with ESMTPSA id x18sm7688593qtw.93.2022.02.08.06.07.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Feb 2022 06:07:34 -0800 (PST)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
+        Tue, 8 Feb 2022 10:59:23 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 62362C061576;
+        Tue,  8 Feb 2022 07:59:22 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2862C1FB;
+        Tue,  8 Feb 2022 07:59:22 -0800 (PST)
+Received: from [10.57.36.220] (unknown [10.57.36.220])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8899D3F70D;
+        Tue,  8 Feb 2022 07:59:20 -0800 (PST)
+Message-ID: <2d52edc4-c6e6-b641-b291-d1726cc20b30@arm.com>
+Date:   Tue, 8 Feb 2022 15:58:55 +0000
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: [RFC PATCH v2 0/5] topdown with metrics
+Content-Language: en-US
+From:   Andrew Kilroy <andrew.kilroy@arm.com>
+To:     John Garry <john.garry@huawei.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org,
+        irogers@google.com, ak@linux.intel.com
 Cc:     Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH] perf trace: Avoid early exit due SIGCHLD from non-workload processes
-Date:   Tue,  8 Feb 2022 22:07:25 +0800
-Message-Id: <20220208140725.3947-1-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.32.0
-MIME-Version: 1.0
+        Namhyung Kim <namhyung@kernel.org>
+References: <4fefb1bc-49b2-bc5b-23cd-cd8fabe8c588@huawei.com>
+ <20220111150749.13365-1-andrew.kilroy@arm.com>
+ <7cd7bd11-4900-81c4-de84-6e5fc63ec87c@huawei.com>
+ <1fa70669-146c-7ec6-cee9-4f59751eb334@arm.com>
+In-Reply-To: <1fa70669-146c-7ec6-cee9-4f59751eb334@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The function trace__symbols_init() runs "perf-read-vdso32" and that ends up
-with a SIGCHLD delivered to 'perf'. And this SIGCHLD make perf exit early.
 
-'perf trace' should exit only if the SIGCHLD is from our workload process.
-So let's use sigaction() instead of signal() to match such condition.
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
----
- tools/perf/builtin-trace.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+On 27/01/2022 11:42, Andrew Kilroy wrote:
+> 
+> 
+> On 20/01/2022 09:26, John Garry wrote:
+>> On 11/01/2022 15:07, Andrew Kilroy wrote:
+>>> This patch series adds the ability for the --topdown option to use
+>>> metrics (defined in json files in the pmu-events directory) to describe
+>>> how to calculate and determine the output columns for topdown level 1.
+>>>
+>>> For this to work, a number of metrics have to be defined for the
+>>> relevant processor with the MetricGroup name "TopDownL1".  perf will
+>>> arrange for the events defined in each metric to be collected, and each
+>>> metric will be displayed in the output, as if
+>>>
+>>>    perf stat -M 'TopDownL1' --metric-only -- exampleapp
+>>>
+>>> had been used.
+>>>
+>>> Topdown was already implemented where certain kernel events are defined.
+>>> If these kernel events are defined, the new json metrics behaviour is
+>>> not used.  The json metrics approach is only used if the kernel events
+>>> are absent.
+>>>
+>>> The last patch in the series disables the json metrics behaviour on x86.
+>>> This is because of concerns that due to SMT it's not straightforward to
+>>> express the various formulas as json for certain x86 cpus.  See
+>>
+>> I suppose this solution is ok.
+>>
+> 
+> Thanks, would you mind giving it a Reviewed-By?
+> 
+>> A concern is that today we only have 1x arm64 platform which actually 
+>> supports this in mainline.
+>>
+>> Do you have any more which you plan to support?
+>>
+> 
+> The Neoverse cores, mainly.
+> 
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 32844d8a0ea5..d03556c14b0a 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -1536,13 +1536,20 @@ static size_t trace__fprintf_tstamp(struct trace *trace, u64 tstamp, FILE *fp)
- 	return fprintf(fp, "         ? ");
- }
- 
-+static pid_t workload_pid = -1;
- static bool done = false;
- static bool interrupted = false;
- 
--static void sig_handler(int sig)
-+static void sighandler_interrupt(int sig __maybe_unused)
- {
--	done = true;
--	interrupted = sig == SIGINT;
-+	done = interrupted = true;
-+}
-+
-+static void sighandler_chld(int sig __maybe_unused, siginfo_t *info,
-+			    void *context __maybe_unused)
-+{
-+	if (info->si_pid == workload_pid)
-+		done = true;
- }
- 
- static size_t trace__fprintf_comm_tid(struct trace *trace, struct thread *thread, FILE *fp)
-@@ -3938,7 +3945,6 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 	bool draining = false;
- 
- 	trace->live = true;
--	signal(SIGCHLD, sig_handler);
- 
- 	if (!trace->raw_augmented_syscalls) {
- 		if (trace->trace_syscalls && trace__add_syscall_newtp(trace))
-@@ -4018,6 +4024,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 			fprintf(trace->output, "Couldn't run the workload!\n");
- 			goto out_delete_evlist;
- 		}
-+		workload_pid = evlist->workload.pid;
- 	}
- 
- 	err = evlist__open(evlist);
-@@ -4887,10 +4894,14 @@ int cmd_trace(int argc, const char **argv)
- 	const char * const trace_subcommands[] = { "record", NULL };
- 	int err = -1;
- 	char bf[BUFSIZ];
-+	struct sigaction sigchld_act = { 0 };
- 
- 	signal(SIGSEGV, sighandler_dump_stack);
- 	signal(SIGFPE, sighandler_dump_stack);
--	signal(SIGINT, sig_handler);
-+	signal(SIGINT, sighandler_interrupt);
-+	sigchld_act.sa_flags = SA_SIGINFO;
-+	sigchld_act.sa_sigaction = sighandler_chld;
-+	sigaction(SIGCHLD, &sigchld_act, NULL);
- 
- 	trace.evlist = evlist__new();
- 	trace.sctbl = syscalltbl__new();
--- 
-2.25.1
+Thanks for the feedback on this RFC, I think we'll resubmit these 
+patches at a later time, when we've got a json metrics file or two.
 
+Thanks,
+Andrew
