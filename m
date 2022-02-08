@@ -2,97 +2,76 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F33CC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Feb 2022 15:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EEFC35276
+	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Feb 2022 22:26:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382513AbiBHP71 (ORCPT
+        id S1387069AbiBHW0s (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Feb 2022 10:59:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38830 "EHLO
+        Tue, 8 Feb 2022 17:26:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1381811AbiBHP7X (ORCPT
+        with ESMTP id S1387244AbiBHWLZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Feb 2022 10:59:23 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 62362C061576;
-        Tue,  8 Feb 2022 07:59:22 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2862C1FB;
-        Tue,  8 Feb 2022 07:59:22 -0800 (PST)
-Received: from [10.57.36.220] (unknown [10.57.36.220])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8899D3F70D;
-        Tue,  8 Feb 2022 07:59:20 -0800 (PST)
-Message-ID: <2d52edc4-c6e6-b641-b291-d1726cc20b30@arm.com>
-Date:   Tue, 8 Feb 2022 15:58:55 +0000
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.1
-Subject: Re: [RFC PATCH v2 0/5] topdown with metrics
-Content-Language: en-US
-From:   Andrew Kilroy <andrew.kilroy@arm.com>
-To:     John Garry <john.garry@huawei.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org,
-        irogers@google.com, ak@linux.intel.com
-Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Tue, 8 Feb 2022 17:11:25 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29E54C0612B8;
+        Tue,  8 Feb 2022 14:11:24 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E5831B81AFA;
+        Tue,  8 Feb 2022 22:11:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33ECEC004E1;
+        Tue,  8 Feb 2022 22:11:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1644358281;
+        bh=PjxTNsP9bD1JDK5Yw86+t2N+2x7ro0uvm/lVgqLSSjM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=B2rqGFysMw+kjL94kZTf4z4W3FIWk/nbVwdfz/gqNF6+x70aBH0zUsLVj0OZx4Rqx
+         +2q7NId8Er5wnZnUcKWJi8YgXZSu1lrQq4adfazaT9fJjwRYdKn1XVVXX1xZB/2hu8
+         GVbciMkPCQCVG2oZ5GpcrQJb8MKpZgtLNxJbv1y4jsvzeV0c4BatMtXsQCz0RF+Y9Y
+         N4CSayv2xo+/CsYqCnhOze7sbjKtWpFtYlkZmGYw0iErEVfRiBvqyzRqMGbNIop6WP
+         iTfGISf1g2GRrdztJlHya/iLccs+Z1s5wK2steN8G7VgiZWdmGn29ZiDq5kC6zI+29
+         8IDhMyjcfh2/g==
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-References: <4fefb1bc-49b2-bc5b-23cd-cd8fabe8c588@huawei.com>
- <20220111150749.13365-1-andrew.kilroy@arm.com>
- <7cd7bd11-4900-81c4-de84-6e5fc63ec87c@huawei.com>
- <1fa70669-146c-7ec6-cee9-4f59751eb334@arm.com>
-In-Reply-To: <1fa70669-146c-7ec6-cee9-4f59751eb334@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: Update Jiri's email address
+Date:   Tue,  8 Feb 2022 23:11:17 +0100
+Message-Id: <20220208221117.710405-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Using my kernel.org email.
 
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 27/01/2022 11:42, Andrew Kilroy wrote:
-> 
-> 
-> On 20/01/2022 09:26, John Garry wrote:
->> On 11/01/2022 15:07, Andrew Kilroy wrote:
->>> This patch series adds the ability for the --topdown option to use
->>> metrics (defined in json files in the pmu-events directory) to describe
->>> how to calculate and determine the output columns for topdown level 1.
->>>
->>> For this to work, a number of metrics have to be defined for the
->>> relevant processor with the MetricGroup name "TopDownL1".  perf will
->>> arrange for the events defined in each metric to be collected, and each
->>> metric will be displayed in the output, as if
->>>
->>>    perf stat -M 'TopDownL1' --metric-only -- exampleapp
->>>
->>> had been used.
->>>
->>> Topdown was already implemented where certain kernel events are defined.
->>> If these kernel events are defined, the new json metrics behaviour is
->>> not used.  The json metrics approach is only used if the kernel events
->>> are absent.
->>>
->>> The last patch in the series disables the json metrics behaviour on x86.
->>> This is because of concerns that due to SMT it's not straightforward to
->>> express the various formulas as json for certain x86 cpus.  See
->>
->> I suppose this solution is ok.
->>
-> 
-> Thanks, would you mind giving it a Reviewed-By?
-> 
->> A concern is that today we only have 1x arm64 platform which actually 
->> supports this in mainline.
->>
->> Do you have any more which you plan to support?
->>
-> 
-> The Neoverse cores, mainly.
-> 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ea3e6c914384..d4248b02515b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15123,7 +15123,7 @@ M:	Ingo Molnar <mingo@redhat.com>
+ M:	Arnaldo Carvalho de Melo <acme@kernel.org>
+ R:	Mark Rutland <mark.rutland@arm.com>
+ R:	Alexander Shishkin <alexander.shishkin@linux.intel.com>
+-R:	Jiri Olsa <jolsa@redhat.com>
++R:	Jiri Olsa <jolsa@kernel.org>
+ R:	Namhyung Kim <namhyung@kernel.org>
+ L:	linux-perf-users@vger.kernel.org
+ L:	linux-kernel@vger.kernel.org
+-- 
+2.34.1
 
-Thanks for the feedback on this RFC, I think we'll resubmit these 
-patches at a later time, when we've got a json metrics file or two.
-
-Thanks,
-Andrew
