@@ -2,168 +2,342 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 891E8C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Feb 2022 11:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C6BC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Feb 2022 11:32:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376507AbiBHLcf (ORCPT
+        id S1376548AbiBHLck (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Feb 2022 06:32:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40852 "EHLO
+        Tue, 8 Feb 2022 06:32:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355791AbiBHLWz (ORCPT
+        with ESMTP id S1349560AbiBHLH2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Feb 2022 06:22:55 -0500
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD21AC03FEC0
-        for <linux-perf-users@vger.kernel.org>; Tue,  8 Feb 2022 03:22:54 -0800 (PST)
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 218Abxcj026745;
-        Tue, 8 Feb 2022 11:22:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : content-type : mime-version; s=corp-2021-07-09;
- bh=Ku+9YHpN4tD/uIB9mAGTwxq/jxfSKWCrTNqUDzDjeVc=;
- b=wTH3hlfNVK/e0KSCwhs0C9bH1niDZIjI+XJz30WmrcWwcSLoybLXmNBnfDbAUPmccKtR
- iNiuFXiyM7SJnGBiH8FCqsq9MYQRMRxqIta9aJho1yJDGsVtc3dDUN3qCZOj7jSfZhuZ
- Us2FdEJDdK5oUcCAuYQLNWI2K8aEA/JPN7UJ3t+tg8StvoJNlNbu6dIKx+SFQtRnH6ht
- 7beS+zydlsdCvVS4Xapj9xxBRu2XOM0bWk5qbByR7Pp3dTvRYiISZozUzrG+WBZ6svCD
- ALwEExrRCpin3ozTp//AzULyr26laghZadAOWBl3+iwI/6TE74+QPocEOCrtTvfgROo7 fg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3e3h28h10p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 08 Feb 2022 11:22:53 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 218BLX1X163615;
-        Tue, 8 Feb 2022 11:22:52 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2105.outbound.protection.outlook.com [104.47.55.105])
-        by aserp3020.oracle.com with ESMTP id 3e1h25xtg2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 08 Feb 2022 11:22:51 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=h5pE/WCEkrmS4jTU1UhteLtQAjfY0jw44q6yQAELVt7LMETel6MaM8kjfifi6jX/PF5iaw0yK7rDC41pY39svR5Ympb0XZ/kigUbfgIygnO1w1S+Ru1dtM1XIaXPs86A8B/6mVqKenCDg7GBNPPuwQRMBBRVcjfA5M35iyTpi9UKtGj11dMWFOk4sCyHmbbnswjeDxVPKFi53VKfo7B2/ROUE597oK6PKfe5sK3p9mjcPhwj6a9dFoq8nlLYyeHI1cz1mccbjH2wkXwRsrqmDW3IWl1w6vAG+vau352/bmEc3YMBCAlnn6kqSGpkcZ+EgimiT14oI+HsBuZ7nF2UHA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ku+9YHpN4tD/uIB9mAGTwxq/jxfSKWCrTNqUDzDjeVc=;
- b=nRKPwSxZ8WCjP97qPJBwyPThKKLI8NmOnVdy0+WtS4P8wkPPz6GW5tt6UPLzq/fHOyJZeXVZP7wRIowuTousC99Jur/N5UeltvYDpVgKOOsnwKEboKVdYTGTZR99uv5+sYXRfXGtGpUp7aLiTr35d6NKKBP5SK26VeiiucOnAyq1eaZWKYtiK1yMPkMnug2Jar/49IbZ1BlbWLZ+V1a8Lr0xwqWONYQ9qG/Yg5XKUpGsNrZroygCFgDYp7NFlEe54zGIrWTFpPZIyYOr7olBAIJt0piFcNm9RuZp1c3cTmoZCD6LR7IRpc3xMn69th/NKqRdqEZkTTv3ZnqjtcBOQQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ku+9YHpN4tD/uIB9mAGTwxq/jxfSKWCrTNqUDzDjeVc=;
- b=htpGMnQ9qNFUCUjAO/L3XB2fHLk+FbquSCgwpuXRR0YiXJn5XmqYWNQFS4LOSFYNpwAJaFg/z6Djqo9eGge91+nR6dKRQw8Hm4N6d62Mc8OnRLiccZ1/8rHyWPBuPwcn0CHjT81bHnPnwN+qPiPk8fXSHjfGSw32fpDzWmTrFGY=
-Received: from MWHPR1001MB2365.namprd10.prod.outlook.com
- (2603:10b6:301:2d::28) by CY4PR10MB1318.namprd10.prod.outlook.com
- (2603:10b6:903:29::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.12; Tue, 8 Feb
- 2022 11:22:50 +0000
-Received: from MWHPR1001MB2365.namprd10.prod.outlook.com
- ([fe80::e5a5:8f49:7ec4:b7b8]) by MWHPR1001MB2365.namprd10.prod.outlook.com
- ([fe80::e5a5:8f49:7ec4:b7b8%5]) with mapi id 15.20.4951.018; Tue, 8 Feb 2022
- 11:22:49 +0000
-Date:   Tue, 8 Feb 2022 14:22:39 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     kim.phillips@amd.com
-Cc:     linux-perf-users@vger.kernel.org
-Subject: [bug report] perf env: Add perf_env__cpuid,
- perf_env__{nr_}pmu_mappings
-Message-ID: <20220208112239.GA18799@kili>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: AM3PR05CA0098.eurprd05.prod.outlook.com
- (2603:10a6:207:1::24) To MWHPR1001MB2365.namprd10.prod.outlook.com
- (2603:10b6:301:2d::28)
+        Tue, 8 Feb 2022 06:07:28 -0500
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 093D5C03FEC0;
+        Tue,  8 Feb 2022 03:07:26 -0800 (PST)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.57])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4JtKqh3kXGz1FCrv;
+        Tue,  8 Feb 2022 19:03:12 +0800 (CST)
+Received: from [10.67.102.169] (10.67.102.169) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Tue, 8 Feb 2022 19:07:23 +0800
+CC:     <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <lorenzo.pieralisi@arm.com>,
+        <will@kernel.org>, <mark.rutland@arm.com>,
+        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
+        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
+        <daniel.thompson@linaro.org>, <joro@8bytes.org>,
+        <john.garry@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
+        <robin.murphy@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <acme@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>, <prime.zeng@huawei.com>,
+        <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
+        <linuxarm@huawei.com>, <song.bao.hua@hisilicon.com>
+Subject: Re: [PATCH v3 1/8] hwtracing: Add trace function support for
+ HiSilicon PCIe Tune and Trace device
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Yicong Yang <yangyicong@hisilicon.com>
+References: <20220124131118.17887-1-yangyicong@hisilicon.com>
+ <20220124131118.17887-2-yangyicong@hisilicon.com>
+ <20220207114223.00001d2a@Huawei.com>
+From:   Yicong Yang <yangyicong@huawei.com>
+Message-ID: <5a095797-0e07-572f-700a-9c29fd5d4a1f@huawei.com>
+Date:   Tue, 8 Feb 2022 19:07:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 85df8014-43e2-41f1-654c-08d9eaf556f9
-X-MS-TrafficTypeDiagnostic: CY4PR10MB1318:EE_
-X-Microsoft-Antispam-PRVS: <CY4PR10MB131886CB372F86BFB06D7CE38E2D9@CY4PR10MB1318.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: tzkNaNLGOoUTEGoS3AgLF5KO3UY5Pvy24w8GiK/uO5i9j40RcCRuyo9Pl6Nw/4De4ry6ZJNJ7WIr5f+9ixEOHdqKw1u7+DqipbiEOdoOUksugIE1S22cfB8zi7sNQQ1rzRGMojgw/3ULZgsdvio1Gfqsf3bftdLzNQFbH73TcPZu33M4Btk36gVteYspHkTIhPYjrbWoS0wzKKMGedgAhqDYhWgDu9x19Pvs9KUcSq6pBB1O0WVlV1JuzOj7aYmrvfZvdh8H2ue5l9p50LrwIaGzd8vcfFZ1Bg9JkGKpwe2S1zFqOHMuLiId45c+TgV9dwflSCgO3UTgqrHgvGoivd7jOUd1IU6Lv/MEA9ZArxk7fjrCHNILIAgzu7tQiOx1ECWnRgEeJ8mzEOGAMEc64O5UTBVsYB/f5vm9w2KNBdPDc4mVA676F+WKxrKAG3VUsGZ/6CMzoQXsEJrYDdpBpk6yRr1+7kxOqmyE2xe0BZ0kyPBtYTjuNlad/c55433NtDS9itd9KEANPuwv7lqN6o0CkyB1aJrVgkfZHtZARTrPEwPdIZlz90eoPCFrHnyB0j4adM5RRNXAVTbYXp0zk1MYeku2ot9FypP1CuPkhmoPHq1U0Et8XS8CY4L0zO/Pf7DowAGBz8XPQlUALN64CqijssiE7s8GQUTdJjpnTcVeXem8E6F4blonl+5j+JB+QRjhN0FOfdqLVKT4PT1Ndw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2365.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(7916004)(366004)(1076003)(8676002)(66476007)(66946007)(66556008)(6666004)(6512007)(6506007)(186003)(4326008)(6486002)(33656002)(33716001)(86362001)(9686003)(38100700002)(8936002)(6916009)(316002)(4744005)(52116002)(508600001)(2906002)(5660300002)(44832011)(83380400001)(101420200003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ZJVQPGKq37MH7KltPSSyZiA3xFRgvUcTe19rSet5DzbMAqZoINRpLWnAwd3w?=
- =?us-ascii?Q?cSTid+KMmemLgf/dw0cRzCjt1TvnkKTRfJ5Id0tCMwQAzlRb7OG+o/M+O3kv?=
- =?us-ascii?Q?/xzfGgqTOyhAwFcoKRipPoDmAXcWmLkkyq/v5b7ukar4C+0WFnxL1qtANw1X?=
- =?us-ascii?Q?VCu3izIiVFK20M2Rsh1tVhdeyMdQsMBQUQ5Yn6BCW9Lq7YNXzEGJSViSEicM?=
- =?us-ascii?Q?/D7GxTztulKNbv2SgT53Pqahavae0HLz9ye5mKd93zcwA2kpx8AHANKlB1mG?=
- =?us-ascii?Q?9dL7Tc5kcFBNEwZgyXC9jWukFx+TSyH4TtLOQIITWVss0lSyNCfS/6mCf6ce?=
- =?us-ascii?Q?oIds79LlS5NJl4PHhTIGMVJWYwxjODCFdttF3NwSTZIK0pZDGKZQ9GV7MvY9?=
- =?us-ascii?Q?esxUFuwww3IjbQU1+vulikjJ1PujGVUqPg7apaM0T5bfM0G6IMOeao8dd87i?=
- =?us-ascii?Q?3QHKArmsbbC47Bmgmn5wnDOCTZQSRBWRqDUAK9gsozGXD+jxvSiMKRJafMr6?=
- =?us-ascii?Q?4fppBJVRZArX7PerGa8beAqw1FFk90hoCPDHZ4gCEhNAgFFWoJFxWfiugT2J?=
- =?us-ascii?Q?pgmlN+fhCriUhgkAwzc0kqbpIMN4wqheffQkK4+lDVvnQd2KeID4sB3/v96N?=
- =?us-ascii?Q?KrvHfJUzYXrMMlNJxtXgtqZUvePFOgXmbEnnPCVWxrbBL6itfxTeQkF57jvb?=
- =?us-ascii?Q?bwNzTPNPt7XYirQlSXlK+UGBfCZ2nqxs0f7CIdmUn5cbdQCauXzu1tuFxuvr?=
- =?us-ascii?Q?qLcIgluyNrZbggWavaEUuepPMIu8mRdETPj7BEg6+8PyZ2hotruoPz6wzBKH?=
- =?us-ascii?Q?KnUCAby4rfBEY3XX7MTibS7o33j90k6mSLBbB7SoVjqj0Jsm/5XQiZpEstgw?=
- =?us-ascii?Q?OH2fUpR4TEMcvFVHcr8b1EZc7DvOh+4+SYlSlaAG6NCSh8J85x/wbSPeZEMk?=
- =?us-ascii?Q?VzKihsH4KVK+2lA24xkXCJnNMAiatze2GNFasDjxw861F9WxHatLO7kO77I3?=
- =?us-ascii?Q?N5/oLuMdqI29yEYLbm/RRCwuMoQwxP4V4fMUfZHMa9/0P3DKIqtgEa7Wdp+f?=
- =?us-ascii?Q?Y2ml3jXwSPOqD/Q1iUSzEadOiJ+rj9YEg8y8tqlu72EaAGAbC5qhlsTk4TbU?=
- =?us-ascii?Q?TVrogAB30tVrzPKIV+cmCV9+Oje3woEvZRTq0udYtL8Hd/FHcQhgGJqPKZcL?=
- =?us-ascii?Q?wK55KvmlL7DX7UIF9kfOdCK2cwp19/TgikIZ+jdL10wkJQPz7VbyZjOKuYaY?=
- =?us-ascii?Q?6ejUkyZKVCyl3Wn3tZxEqV0MO9GYLVrKXZz+v2GR1gUe+ttMLRs0g+rBPrWq?=
- =?us-ascii?Q?bXvyxw1ZCGOhkbeZMRFtba0vUUTRbZIQQLWoUv5c8JnHHk2+v17fItQvKJYe?=
- =?us-ascii?Q?Zk0cf//CeyISG2JwhIQUZaNexAqjfh09LRUw9petn+sDb+8wlEfxE7GWf6Ij?=
- =?us-ascii?Q?LLFdos6qdKaybgttqZn6tSHpO4PfcJ8+lxgbkIaDOUt/oH92Hsha3EjmKeDj?=
- =?us-ascii?Q?v/fglEDiQYA2/JN/Yl9M9ktFVAISF046uDHprreZmFBau8256bNg/xWnN/+N?=
- =?us-ascii?Q?dqCRyExygGfnoTHuBNJi70qQt6lyYSqk7UJh/eZfQB1QT7QUQ4CLp36B0Taw?=
- =?us-ascii?Q?YS74Jjced7J6+/Abavm7FDGSn41zavFJrVbAmjwW/RFdV7EEsYLD5cxaX7zD?=
- =?us-ascii?Q?8a1utczcumQZLDIyP/lEiFK1nlIVEQ5L47n6S3NIT1YOyVOn?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 85df8014-43e2-41f1-654c-08d9eaf556f9
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1001MB2365.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2022 11:22:49.9051
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nH5nd1uLo59LU7tF8nRnHbnAZtBDTX8heMwvkPwQavbvm9HBjsC+Q4sAUVhD3ru39vGPsEuqb/uzfRZ3lvsiuT2D9Y29A7M5noD8fE1AN7k=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR10MB1318
-X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10251 signatures=673430
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 bulkscore=0
- phishscore=0 malwarescore=0 mlxlogscore=872 adultscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2201110000
- definitions=main-2202080068
-X-Proofpoint-ORIG-GUID: eMya-IntI17j2JbhUEEgVxKhTmbvYxHK
-X-Proofpoint-GUID: eMya-IntI17j2JbhUEEgVxKhTmbvYxHK
+In-Reply-To: <20220207114223.00001d2a@Huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.102.169]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello Kim Phillips,
+On 2022/2/7 19:42, Jonathan Cameron wrote:
+> On Mon, 24 Jan 2022 21:11:11 +0800
+> Yicong Yang <yangyicong@hisilicon.com> wrote:
+> 
+>> HiSilicon PCIe tune and trace device(PTT) is a PCIe Root Complex
+>> integrated Endpoint(RCiEP) device, providing the capability
+>> to dynamically monitor and tune the PCIe traffic, and trace
+>> the TLP headers.
+>>
+>> Add the driver for the device to enable the trace function.
+>> This patch adds basic function of trace, including the device's
+>> probe and initialization, functions for trace buffer allocation
+>> and trace enable/disable, register an interrupt handler to
+>> simply response to the DMA events. The user interface of trace
+>> will be added in the following patch.
+>>
+>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> Hi Yicong,
+> 
+> I've not been following all the earlier discussion on this driver closely
+> so I may well raise something that has already been addressed. If so
+> just ignore the comment.
 
-This is a semi-automatic email about new static checker warnings.
+Thanks for the comments. It's ok for me to clarify it :).
+Part replies inline and I need to do some test on the others.
 
-The patch 9fe8895a27a8: "perf env: Add perf_env__cpuid,
-perf_env__{nr_}pmu_mappings" from Aug 17, 2021, leads to the
-following Smatch complaint:
+> 
+> Thanks,
+> 
+> Jonathan
+> 
+>> ---
+>>  drivers/Makefile                 |   1 +
+>>  drivers/hwtracing/Kconfig        |   2 +
+>>  drivers/hwtracing/ptt/Kconfig    |  11 +
+>>  drivers/hwtracing/ptt/Makefile   |   2 +
+>>  drivers/hwtracing/ptt/hisi_ptt.c | 398 +++++++++++++++++++++++++++++++
+>>  drivers/hwtracing/ptt/hisi_ptt.h | 159 ++++++++++++
+>>  6 files changed, 573 insertions(+)
+>>  create mode 100644 drivers/hwtracing/ptt/Kconfig
+>>  create mode 100644 drivers/hwtracing/ptt/Makefile
+>>  create mode 100644 drivers/hwtracing/ptt/hisi_ptt.c
+>>  create mode 100644 drivers/hwtracing/ptt/hisi_ptt.h
+>>
+[...]
+>> +
+>> +static int hisi_ptt_alloc_trace_buf(struct hisi_ptt *hisi_ptt)
+>> +{
+>> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+>> +	struct device *dev = &hisi_ptt->pdev->dev;
+>> +	struct hisi_ptt_dma_buffer *buffer;
+>> +	int i, ret;
+>> +
+>> +	hisi_ptt->trace_ctrl.buf_index = 0;
+>> +
+>> +	/* Make sure the trace buffer is empty before allocating */
+> 
+> This comment is misleading as it suggests it not being empty is
+> a bad thing but the code handles it as an acceptable path.
+> Perhaps:
+> 	/*
+> 	 * If the trace buffer has already been allocated, zero the
+> 	 * memory.
+> 	 */
+> 
 
-    ./tools/perf/util/env.c:476 perf_env__nr_pmu_mappings()
-    error: we previously assumed 'env' could be null (see line 470)
+will make it less misleading. thanks.
 
-./tools/perf/util/env.c
-   469	
-   470		if (!env || !env->nr_pmu_mappings) { /* Assume local operation */
-                     ^^^
-Checks for NULL
+>> +	if (!list_empty(&ctrl->trace_buf)) {
+>> +		list_for_each_entry(buffer, &ctrl->trace_buf, list)
+>> +			memset(buffer->addr, 0, buffer->size);
+>> +		return 0;
+>> +	}
+>> +
+>> +	for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; ++i) {
+>> +		buffer = kzalloc(sizeof(*buffer), GFP_KERNEL);
+>> +		if (!buffer) {
+>> +			ret = -ENOMEM;
+>> +			goto err;
+>> +		}
+>> +
+>> +		buffer->addr = dma_alloc_coherent(dev, ctrl->buffer_size,
+>> +						  &buffer->dma, GFP_KERNEL);
+>> +		if (!buffer->addr) {
+>> +			kfree(buffer);
+>> +			ret = -ENOMEM;
+>> +			goto err;
+>> +		}
+>> +
+>> +		memset(buffer->addr, 0, buffer->size);
+> See:
+> https://lore.kernel.org/lkml/20190108130701.14161-4-hch@lst.de/
+> dma_alloc_coherent() always zeros the memory for us hence there
+> is no longer a dma_kzalloc_coherent()
+> 
 
-   471			status = perf_env__read_pmu_mappings(env);
-   472			if (status)
-   473				return 0;
-   474		}
-   475	
-   476		return env->nr_pmu_mappings;
-                       ^^^^
-Unchecked dereference
+thanks for the information. Then the memset here is redundant and will drop it.
 
-   477	}
+>> +
+>> +		buffer->index = i;
+> 
+> Carrying an index inside a list which corresponds directly
+> to the position in the list is not particularly nice.
+> Why can't we compute this index on the fly where the list
+> is walked?  Or am I misunderstanding and the order of the buffers
+> is changed in a later patch?
+> 
 
-regards,
-dan carpenter
+The index is fixed once allocated and I stored it to avoid later
+computing. But seems it's highly recommended to compute these sort
+of things on the fly when necessary. John recommends the same things
+on some other places so I think I can get these addressed.
+
+> As a side note, is a list actually appropriate when we always
+> have 4 of these buffers?  Feels like an array of buffer
+> structures might be cheaper.
+> 
+>> +		buffer->size = ctrl->buffer_size;
+>> +		list_add_tail(&buffer->list, &ctrl->trace_buf);
+>> +	}
+>> +
+>> +	return 0;
+>> +err:
+>> +	hisi_ptt_free_trace_buf(hisi_ptt);
+>> +	return ret;
+>> +}
+>> +
+>> +static void hisi_ptt_trace_end(struct hisi_ptt *hisi_ptt)
+>> +{
+>> +	writel(0, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>> +	hisi_ptt->trace_ctrl.status = HISI_PTT_TRACE_STATUS_OFF;
+>> +}
+>> +
+>> +static int hisi_ptt_trace_start(struct hisi_ptt *hisi_ptt)
+>> +{
+>> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+>> +	struct hisi_ptt_dma_buffer *cur;
+>> +	u32 val;
+>> +
+>> +	/* Check device idle before start trace */
+>> +	if (hisi_ptt_wait_trace_hw_idle(hisi_ptt)) {
+>> +		pci_err(hisi_ptt->pdev, "Failed to start trace, the device is still busy.\n");
+>> +		return -EBUSY;
+>> +	}
+>> +
+>> +	/* Reset the DMA before start tracing */
+>> +	val = readl(hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>> +	val |= HISI_PTT_TRACE_CTRL_RST;
+>> +	writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>> +
+>> +	/*
+>> +	 * We'll be in the perf context where preemption is disabled,
+>> +	 * so use busy loop here.
+>> +	 */
+>> +	mdelay(HISI_PTT_RESET_WAIT_MS);
+> 
+> Busy look for 1 second?  Ouch.  If we can reduce this in any way
+> that would be great or if there is a means to do it before
+> we disable preemption.
+> 
+
+It's inherited from the previous version that was using msleep() and it's
+somehow unacceptable in an atomic context I think. The reset here is
+going to reset the write pointer of the hardware DMA so we can check the
+whether the pointer before dereset it. I confirmed with our hardware
+teams that it can be reduced to 10us. So I'll poll the write pointer register
+for about 10us before continue here.
+
+thanks for catching this!
+
+>> +
+>> +	val = readl(hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>> +	val &= ~HISI_PTT_TRACE_CTRL_RST;
+>> +	writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>> +
+>> +	/* Clear the interrupt status */
+>> +	writel(HISI_PTT_TRACE_INT_STAT_MASK, hisi_ptt->iobase + HISI_PTT_TRACE_INT_STAT);
+>> +	writel(0, hisi_ptt->iobase + HISI_PTT_TRACE_INT_MASK);
+>> +
+>> +	/* Configure the trace DMA buffer */
+>> +	list_for_each_entry(cur, &ctrl->trace_buf, list) {
+> 
+> I comment on the use of cur->index above.  Here it would be easy to compute
+> the index as we go for example assuming we never end up with holes
+> in the list.
+> 
+
+ok.
+
+>> +		writel(lower_32_bits(cur->dma),
+>> +		       hisi_ptt->iobase + HISI_PTT_TRACE_ADDR_BASE_LO_0 +
+>> +		       cur->index * HISI_PTT_TRACE_ADDR_STRIDE);
+>> +		writel(upper_32_bits(cur->dma),
+>> +		       hisi_ptt->iobase + HISI_PTT_TRACE_ADDR_BASE_HI_0 +
+>> +		       cur->index * HISI_PTT_TRACE_ADDR_STRIDE);
+>> +	}
+>> +	writel(ctrl->buffer_size, hisi_ptt->iobase + HISI_PTT_TRACE_ADDR_SIZE);
+>> +
+>> +	/* Set the trace control register */
+>> +	val = FIELD_PREP(HISI_PTT_TRACE_CTRL_TYPE_SEL, ctrl->type);
+>> +	val |= FIELD_PREP(HISI_PTT_TRACE_CTRL_RXTX_SEL, ctrl->direction);
+>> +	val |= FIELD_PREP(HISI_PTT_TRACE_CTRL_DATA_FORMAT, ctrl->format);
+>> +	val |= FIELD_PREP(HISI_PTT_TRACE_CTRL_TARGET_SEL, hisi_ptt->trace_ctrl.filter);
+>> +	if (!hisi_ptt->trace_ctrl.is_port)
+>> +		val |= HISI_PTT_TRACE_CTRL_FILTER_MODE;
+>> +
+>> +	/* Start the Trace */
+>> +	val |= HISI_PTT_TRACE_CTRL_EN;
+>> +	writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>> +
+>> +	ctrl->status = HISI_PTT_TRACE_STATUS_ON;
+>> +
+>> +	return 0;
+>> +}
+>> +
+> 
+> ...
+> 
+>> +
+>> +static void hisi_ptt_init_ctrls(struct hisi_ptt *hisi_ptt)
+>> +{
+>> +	struct pci_dev *pdev = hisi_ptt->pdev;
+>> +	struct pci_bus *bus;
+>> +	u32 reg;
+>> +
+>> +	INIT_LIST_HEAD(&hisi_ptt->port_filters);
+>> +	INIT_LIST_HEAD(&hisi_ptt->req_filters);
+>> +
+>> +	/*
+>> +	 * The device range register provides the information about the
+>> +	 * root ports which the RCiEP can control and trace. The RCiEP
+>> +	 * and the root ports it support are on the same PCIe core, with
+>> +	 * same domain number but maybe different bus number. The device
+>> +	 * range register will tell us which root ports we can support,
+>> +	 * Bit[31:16] indicates the upper BDF numbers of the root port,
+>> +	 * while Bit[15:0] indicates the lower.
+>> +	 */
+>> +	reg = readl(hisi_ptt->iobase + HISI_PTT_DEVICE_RANGE);
+>> +	hisi_ptt->upper = reg >> 16;
+>> +	hisi_ptt->lower = reg & 0xffff;
+> Trivial:
+> Perhaps worthing define HISI_PTT_DEVICE_RANGE_UPPER_MASK etc adn using
+> FIELD_GET?
+> 
+
+sure.
+
+>> +
+>> +	reg = readl(hisi_ptt->iobase + HISI_PTT_LOCATION);
+>> +	hisi_ptt->core_id = FIELD_GET(HISI_PTT_CORE_ID, reg);
+>> +	hisi_ptt->sicl_id = FIELD_GET(HISI_PTT_SICL_ID, reg);
+>> +
+>> +	bus = pci_find_bus(pci_domain_nr(pdev->bus), PCI_BUS_NUM(hisi_ptt->upper));
+>> +	if (bus)
+>> +		pci_walk_bus(bus, hisi_ptt_init_filters, hisi_ptt);
+>> +
+>> +	/* Initialize trace controls */
+>> +	INIT_LIST_HEAD(&hisi_ptt->trace_ctrl.trace_buf);
+>> +	hisi_ptt->trace_ctrl.buffer_size = HISI_PTT_TRACE_BUF_SIZE;
+>> +	hisi_ptt->trace_ctrl.default_cpu = cpumask_first(cpumask_of_node(dev_to_node(&pdev->dev)));
+>> +}
+>> +
+[...]
+>> +
+>> +#define HISI_PCIE_CORE_PORT_ID(devfn)	(PCI_FUNC(devfn) << 1)
+>> +
+>> +enum hisi_ptt_trace_status {
+>> +	HISI_PTT_TRACE_STATUS_OFF = 0,
+>> +	HISI_PTT_TRACE_STATUS_ON,
+>> +};
+> 
+> Why not just use a boolean given we only have off and on states?
+> 
+
+An enum may make the code more readable I think.
+
+Thanks,
+Yicong
+
