@@ -2,28 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E83FEC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Feb 2022 20:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A71C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Feb 2022 21:08:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232243AbiBIUzj (ORCPT
+        id S232858AbiBIVIP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Feb 2022 15:55:39 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:40174 "EHLO
+        Wed, 9 Feb 2022 16:08:15 -0500
+Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:33416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229708AbiBIUzj (ORCPT
+        with ESMTP id S232842AbiBIVIO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Feb 2022 15:55:39 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 33C1DC043181;
-        Wed,  9 Feb 2022 12:55:40 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D6903ED1;
-        Wed,  9 Feb 2022 12:55:39 -0800 (PST)
-Received: from [192.168.0.5] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4C50B3F73B;
-        Wed,  9 Feb 2022 12:55:38 -0800 (PST)
+        Wed, 9 Feb 2022 16:08:14 -0500
+Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E3AFC03C1B8;
+        Wed,  9 Feb 2022 13:08:16 -0800 (PST)
+Received: by mail-il1-x132.google.com with SMTP id e8so2770283ilm.13;
+        Wed, 09 Feb 2022 13:08:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VsilYW3DDh1toEVnhvN/0AB1n2KJSIEgQPDPpYS3ogg=;
+        b=lTCxyXVlpMZ7ZhnHlr0IFLmVb5WhXpMalHcioq+FeyOlAMckPjGFTC1N9qKM+0tJeQ
+         32xDRJmJn7C5ngTBYjkBu8ftFMiW8Jw7c3Xsbu/QtV8XG5pYYNdqTE5nl+KqN0QL/8pO
+         e602NNbmMWqt8hrx6QN2kpl+T4Nxun0BDnG28QRongQ/QyKL85nOQ6JhHB99N9pu81t5
+         vn4jeiRC4jJcX3/IcdKIHvKYS/ws+oug+cT5YiVk9GYasw3I5OsTeemgLi7nObhhipmG
+         AERACopq8wGlgJevfITcbiBtBg+qh4G70NATunGDSCdqrhcEecvYgJyaPxQLH5vw3tg6
+         1jUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VsilYW3DDh1toEVnhvN/0AB1n2KJSIEgQPDPpYS3ogg=;
+        b=lSv2DG3+KmIMjhGdnLbo0E+voxH4LrnZx7+2GURuz/zywuIdkpFHR2FvPyyKxFH6qJ
+         PAc36qROoAKmsOCqywxUBiuUhp7ewh4Rkpq2ba1cnpe/0hHgFulSv+dqcNK3dH8EXIJ3
+         0iOf9yHasSWvnd9xU8V0FPRk41S4xBJP4toPD2WS/v7pF/DNxlT/B20PQEOwZytfwODJ
+         eujk94lngGcu4jqSd/UQcwwwSScgiriZet99dai+E5uroS02p5J+vlsazFgxl/WYiy3o
+         oZiwrgFOo6lYK4M4aK6MPSBF+q0eL5nlRSUF/w+07iKYSEDnP33U7A4N4N0b31kw2X2e
+         mElQ==
+X-Gm-Message-State: AOAM532ovB7LzJ06XeCbt7YoSJc8b1ZClOhWTK9wJJO/vE6t9YhZcgW/
+        0V4QyUFcLPkil/Ap4jC5a9AYbz+LudqAZOFEAVc=
+X-Google-Smtp-Source: ABdhPJwJrGQcC++AJxv7m7KPpMf0I6w86y2CQ/5IPmwRw3aecp3EqZ/n1Wd6sld664BgP/YVhBpLla98iuTmQWAaq9o=
+X-Received: by 2002:a05:6e02:1ba2:: with SMTP id n2mr2240764ili.5.1644440895628;
+ Wed, 09 Feb 2022 13:08:15 -0800 (PST)
+MIME-Version: 1.0
+References: <20220201185054.1041917-1-german.gomez@arm.com>
+ <CANiq72nb_M3PJLG=mFfQVgAd4fbkL=OhGKS_uQHNf8Jbef3hag@mail.gmail.com> <4632061c-ec87-c4d2-3387-fcfdccf1da6e@arm.com>
+In-Reply-To: <4632061c-ec87-c4d2-3387-fcfdccf1da6e@arm.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Wed, 9 Feb 2022 22:08:04 +0100
+Message-ID: <CANiq72muQyY_TkXdZEo=Ca3j16A8qATpOTSCB1WcOJZeeStPgg@mail.gmail.com>
 Subject: Re: [PATCH] perf symbols: Remove demangle-rust files as superfluous
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+To:     German Gomez <german.gomez@arm.com>
 Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
         linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -31,39 +61,18 @@ Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>
-References: <20220201185054.1041917-1-german.gomez@arm.com>
- <CANiq72nb_M3PJLG=mFfQVgAd4fbkL=OhGKS_uQHNf8Jbef3hag@mail.gmail.com>
-From:   German Gomez <german.gomez@arm.com>
-Message-ID: <4632061c-ec87-c4d2-3387-fcfdccf1da6e@arm.com>
-Date:   Wed, 9 Feb 2022 20:54:13 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
-MIME-Version: 1.0
-In-Reply-To: <CANiq72nb_M3PJLG=mFfQVgAd4fbkL=OhGKS_uQHNf8Jbef3hag@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-On 09/02/2022 18:41, Miguel Ojeda wrote:
-> On Fri, Feb 4, 2022 at 6:46 AM German Gomez <german.gomez@arm.com> wrote:
->> Demangling of Rust legacy symbols has been working through libbfd for
->> some time now, making these files no longer needed, so remove them.
-> What about:
+On Wed, Feb 9, 2022 at 9:55 PM German Gomez <german.gomez@arm.com> wrote:
 >
->     Link: https://github.com/rust-lang/rust/issues/60705
->     Suggested-by: Eduard-Mihai Burtescu <eddyb@lyken.rs>
+> Yes, I should've added these tags from the start. Sorry Eduard-Mihai.
 
-Yes, I should've added these tags from the start. Sorry Eduard-Mihai.
+No worries. Also my apologies: I noticed you dropped the patch looking
+at the archive after sending this, but I haven't got the other emails
+in the thread (yet?).
 
-Thanks,
-German
-
->
-> Maybe also reference commit cae15db74999 ("perf symbols: Add Rust demangling").
->
-> Cheers,
-> Miguel
+Cheers,
+Miguel
