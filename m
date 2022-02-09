@@ -2,89 +2,87 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DA2C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Feb 2022 12:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E9DC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Feb 2022 12:51:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233639AbiBIMuT (ORCPT
+        id S233677AbiBIMvk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Feb 2022 07:50:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53602 "EHLO
+        Wed, 9 Feb 2022 07:51:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231577AbiBIMuS (ORCPT
+        with ESMTP id S233675AbiBIMvi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Feb 2022 07:50:18 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8F25C0613CA;
-        Wed,  9 Feb 2022 04:50:21 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 236B061909;
-        Wed,  9 Feb 2022 12:50:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6710AC340E7;
-        Wed,  9 Feb 2022 12:50:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644411020;
-        bh=e0spYyopUTJEcbTeOrH8NAGq+fUdLvm5AdAAhdd09Sk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ag1NfRBP844izHjhn428z33WAj1ZxvxL6Ae2imjd+A91Dg0+CxXTNYNXewjyhhFBk
-         maHPqR/zr9ICAGBXzT1w/sHwtzShS/EO2DNcqZkzVhXh/JxUJ1PySv4C+M9TMcwjYW
-         +dDiDMk9C0Np/114sA6EeUT0Vfagx7hS3D0YIzaz6LTb1aliarFs/DdsZGrRpd+dSo
-         vMHssD/9ECBel+zg8cEnCeEPjmLn5T4o+pAg0FJSVSBTjSMbY0sPg7gDSm1AgE5Cv5
-         JJ9zmMCHohdmoIpIMBy06lCxrtaL6py7mg8WYCUE5W5arTn+b1QjoZuL/psVJI9KH6
-         55i4NV02j1EMw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 1DDF7400FE; Wed,  9 Feb 2022 09:50:17 -0300 (-03)
-Date:   Wed, 9 Feb 2022 09:50:17 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: Update Jiri's email address
-Message-ID: <YgO4iYUj2SXAtkGG@kernel.org>
-References: <20220208221117.710405-1-jolsa@kernel.org>
+        Wed, 9 Feb 2022 07:51:38 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EBC6C0613CA;
+        Wed,  9 Feb 2022 04:51:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=6dGm9Hg6raG07iV8obt7rI9CiZz2G/HOBnlwgFwLPno=; b=u05ARwxDEZedFXXIfxb+xx2gIx
+        aOW537iU6kT29p6x0QQtrZW+oBws1oDA0tEGk1MLheGGTyjyHNiZB2woY7WlqUmRePNm49xfjVcJh
+        LsW55+G6YDxO3NyFV06Wu+4Y2VsPSoJczhJD9rlixHM3x4BPhjtMxuoxR3pcRwLl83wjdoqrb20Wn
+        4Zbb63XOVLW0vaJrYjExO1f5jb8uHqKRYlobiIVZM+9Tn+rEo7oNw8JoobVUtUSPXYbvAOtyeE/rv
+        iOy6ppotQfC+svMZ8qaGkZnDmrU3MoKDHrlltHorLaCnrb8/cudyUc/bU7nKh444Kk+6j53erKIHg
+        DrYZVg7g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nHmRE-007hqr-T2; Wed, 09 Feb 2022 12:51:13 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DC3BA30023F;
+        Wed,  9 Feb 2022 13:51:10 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8F808265018D6; Wed,  9 Feb 2022 13:51:10 +0100 (CET)
+Date:   Wed, 9 Feb 2022 13:51:10 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     like.xu.linux@gmail.com, jmattson@google.com, eranian@google.com,
+        santosh.shukla@amd.com, pbonzini@redhat.com, seanjc@google.com,
+        wanpengli@tencent.com, vkuznets@redhat.com, joro@8bytes.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
+        hpa@zytor.com, kvm@vger.kernel.org, x86@kernel.org,
+        linux-perf-users@vger.kernel.org, ananth.narayan@amd.com,
+        kim.phillips@amd.com
+Subject: Re: [PATCH v3] perf/amd: Implement erratum #1292 workaround for F19h
+ M00-0Fh
+Message-ID: <YgO4vn2w5kT43HGh@hirez.programming.kicks-ass.net>
+References: <fe53507b-9732-b47e-32e0-647a9bfc8a80@amd.com>
+ <20220203095841.7937-1-ravi.bangoria@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220208221117.710405-1-jolsa@kernel.org>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20220203095841.7937-1-ravi.bangoria@amd.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Feb 08, 2022 at 11:11:17PM +0100, Jiri Olsa escreveu:
-> Using my kernel.org email.
-
-Thanks, applied!
-
-- Arnaldo
- 
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Thu, Feb 03, 2022 at 03:28:41PM +0530, Ravi Bangoria wrote:
+> Perf counter may overcount for a list of Retire Based Events. Implement
+> workaround for Zen3 Family 19 Model 00-0F processors as suggested in
+> Revision Guide[1]:
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ea3e6c914384..d4248b02515b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15123,7 +15123,7 @@ M:	Ingo Molnar <mingo@redhat.com>
->  M:	Arnaldo Carvalho de Melo <acme@kernel.org>
->  R:	Mark Rutland <mark.rutland@arm.com>
->  R:	Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> -R:	Jiri Olsa <jolsa@redhat.com>
-> +R:	Jiri Olsa <jolsa@kernel.org>
->  R:	Namhyung Kim <namhyung@kernel.org>
->  L:	linux-perf-users@vger.kernel.org
->  L:	linux-kernel@vger.kernel.org
-> -- 
-> 2.34.1
+>   To count the non-FP affected PMC events correctly:
+>     o Use Core::X86::Msr::PERF_CTL2 to count the events, and
+>     o Program Core::X86::Msr::PERF_CTL2[43] to 1b, and
+>     o Program Core::X86::Msr::PERF_CTL2[20] to 0b.
+> 
+> Note that the specified workaround applies only to counting events and
+> not to sampling events. Thus sampling event will continue functioning
+> as is.
+> 
+> Although the issue exists on all previous Zen revisions, the workaround
+> is different and thus not included in this patch.
+> 
+> This patch needs Like's patch[2] to make it work on kvm guest.
+> 
+> [1] https://bugzilla.kernel.org/attachment.cgi?id=298241
+> [2] https://lore.kernel.org/lkml/20220117055703.52020-1-likexu@tencent.com
+> 
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
 
--- 
-
-- Arnaldo
+Thanks!
