@@ -2,77 +2,216 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A71C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Feb 2022 21:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1118BC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Feb 2022 21:41:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232858AbiBIVIP (ORCPT
+        id S233557AbiBIVlK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Feb 2022 16:08:15 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:33416 "EHLO
+        Wed, 9 Feb 2022 16:41:10 -0500
+Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:51256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232842AbiBIVIO (ORCPT
+        with ESMTP id S233568AbiBIVlI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Feb 2022 16:08:14 -0500
-Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E3AFC03C1B8;
-        Wed,  9 Feb 2022 13:08:16 -0800 (PST)
-Received: by mail-il1-x132.google.com with SMTP id e8so2770283ilm.13;
-        Wed, 09 Feb 2022 13:08:16 -0800 (PST)
+        Wed, 9 Feb 2022 16:41:08 -0500
+Received: from mail-ot1-x331.google.com (mail-ot1-x331.google.com [IPv6:2607:f8b0:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9F48DD94E5E
+        for <linux-perf-users@vger.kernel.org>; Wed,  9 Feb 2022 13:41:05 -0800 (PST)
+Received: by mail-ot1-x331.google.com with SMTP id x52-20020a05683040b400b0059ea92202daso2467092ott.7
+        for <linux-perf-users@vger.kernel.org>; Wed, 09 Feb 2022 13:41:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=VsilYW3DDh1toEVnhvN/0AB1n2KJSIEgQPDPpYS3ogg=;
-        b=lTCxyXVlpMZ7ZhnHlr0IFLmVb5WhXpMalHcioq+FeyOlAMckPjGFTC1N9qKM+0tJeQ
-         32xDRJmJn7C5ngTBYjkBu8ftFMiW8Jw7c3Xsbu/QtV8XG5pYYNdqTE5nl+KqN0QL/8pO
-         e602NNbmMWqt8hrx6QN2kpl+T4Nxun0BDnG28QRongQ/QyKL85nOQ6JhHB99N9pu81t5
-         vn4jeiRC4jJcX3/IcdKIHvKYS/ws+oug+cT5YiVk9GYasw3I5OsTeemgLi7nObhhipmG
-         AERACopq8wGlgJevfITcbiBtBg+qh4G70NATunGDSCdqrhcEecvYgJyaPxQLH5vw3tg6
-         1jUg==
+        bh=aHgHlx+I4QHtl3iX+6OuSr5CkYEtvnBUXLfXjTOaODE=;
+        b=aFLE3Sjwg9KjXg+ImFrILwTfJ8PL3XrJ4Z9i/cP4F+YFLmiLfYSp+6ZJegH1P6cHcz
+         vYJNw0Vna35dmxSydTmDg8r/FChAUI1cCoWELakZrbcmMgsUgqFr5YZPCM9B0L9L7602
+         Lybx5sq5KuYHnnFWdEiLbLuFNRS6N+xIoS72LpbXPx6Du4VTm4Sc5EteVlcRhG1y3y9Q
+         69ar3KOkGOpKpG7FBF60e3xliDh5xpVrjEgPUwh5LqlAhlH4l6rNUkjT1ESkaFgF8QeC
+         PyyDQFReN4T3EuAhZQpWljlNiUOLINnmcmNzQFm8V1K/wyknMkykuqJk7GyfN1Bm+mf6
+         zpqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=VsilYW3DDh1toEVnhvN/0AB1n2KJSIEgQPDPpYS3ogg=;
-        b=lSv2DG3+KmIMjhGdnLbo0E+voxH4LrnZx7+2GURuz/zywuIdkpFHR2FvPyyKxFH6qJ
-         PAc36qROoAKmsOCqywxUBiuUhp7ewh4Rkpq2ba1cnpe/0hHgFulSv+dqcNK3dH8EXIJ3
-         0iOf9yHasSWvnd9xU8V0FPRk41S4xBJP4toPD2WS/v7pF/DNxlT/B20PQEOwZytfwODJ
-         eujk94lngGcu4jqSd/UQcwwwSScgiriZet99dai+E5uroS02p5J+vlsazFgxl/WYiy3o
-         oZiwrgFOo6lYK4M4aK6MPSBF+q0eL5nlRSUF/w+07iKYSEDnP33U7A4N4N0b31kw2X2e
-         mElQ==
-X-Gm-Message-State: AOAM532ovB7LzJ06XeCbt7YoSJc8b1ZClOhWTK9wJJO/vE6t9YhZcgW/
-        0V4QyUFcLPkil/Ap4jC5a9AYbz+LudqAZOFEAVc=
-X-Google-Smtp-Source: ABdhPJwJrGQcC++AJxv7m7KPpMf0I6w86y2CQ/5IPmwRw3aecp3EqZ/n1Wd6sld664BgP/YVhBpLla98iuTmQWAaq9o=
-X-Received: by 2002:a05:6e02:1ba2:: with SMTP id n2mr2240764ili.5.1644440895628;
- Wed, 09 Feb 2022 13:08:15 -0800 (PST)
+        bh=aHgHlx+I4QHtl3iX+6OuSr5CkYEtvnBUXLfXjTOaODE=;
+        b=jwJbwD5//Ud8fVxQpv8MS0c181ECo1Zl8RjCTXZm7gzIDOz+bv1SVFP/Xjw78DwuAs
+         tNI80lCHQYjDCCLGNaTNxUTZbczSEqEgQS3dI5UrvmwlUBl3E/fQTgrMNmg747ZJ5t7A
+         YhNMXJqpO1tn4rjh8M1xEogvArLyw4HPIl2YH7PsJFWKYjwDRatar7SMa5SL3f+sgcyf
+         YMBnYUTt5I4CkvjItIpVGwZH/k/JB0ldd2SkyxOp0F+GrCCNcXT93TI2hya6m/Q2jGz+
+         GTZZz8GUS137TwI5gPMwKhnIZUTcv/nIQd/3plu/KfOUDVIb332U6IPMR8TFfHZy1Y29
+         bdeg==
+X-Gm-Message-State: AOAM532ZxLgOoevbIOMhEkJoAjrbiKzvpdhykUCeCmZ+VhplEndKSrWo
+        +D5EmKC58FlilsUAgeXs8Jlk8ciVL4Z5XrdjLgCp7g==
+X-Google-Smtp-Source: ABdhPJyhcF730ksvNR2DpRX8vO6wF3Lmwu+B55F3OSAatSrYKYz+vfnugJ21Spp70ny8Akdj/QYtOH3Zu0KRER4fzz8=
+X-Received: by 2002:a9d:4e03:: with SMTP id p3mr1825652otf.299.1644442864980;
+ Wed, 09 Feb 2022 13:41:04 -0800 (PST)
 MIME-Version: 1.0
-References: <20220201185054.1041917-1-german.gomez@arm.com>
- <CANiq72nb_M3PJLG=mFfQVgAd4fbkL=OhGKS_uQHNf8Jbef3hag@mail.gmail.com> <4632061c-ec87-c4d2-3387-fcfdccf1da6e@arm.com>
-In-Reply-To: <4632061c-ec87-c4d2-3387-fcfdccf1da6e@arm.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Wed, 9 Feb 2022 22:08:04 +0100
-Message-ID: <CANiq72muQyY_TkXdZEo=Ca3j16A8qATpOTSCB1WcOJZeeStPgg@mail.gmail.com>
-Subject: Re: [PATCH] perf symbols: Remove demangle-rust files as superfluous
-To:     German Gomez <german.gomez@arm.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
+References: <2e96421f-44b5-c8b7-82f7-5a9a9040104b@amd.com> <20220202105158.7072-1-ravi.bangoria@amd.com>
+ <CALMp9eQHfAgcW-J1YY=01ki4m_YVBBEz6D1T662p2BUp05ZcPQ@mail.gmail.com>
+ <3c97e081-ae46-d92d-fe8f-58642d6b773e@amd.com> <CALMp9eS72bhP=hGJRzTwGxG9XrijEnGKnJ-pqtHxYG-5Shs+2g@mail.gmail.com>
+ <9b890769-e769-83ed-c953-d25930b067ba@amd.com> <CALMp9eQ9K+CXHVZ1zSyw78n-agM2+NQ1xJ4niO-YxSkQCLcK-A@mail.gmail.com>
+ <e58ca80c-b54c-48b3-fb0b-3e9497c877b7@gmail.com>
+In-Reply-To: <e58ca80c-b54c-48b3-fb0b-3e9497c877b7@gmail.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Wed, 9 Feb 2022 13:40:53 -0800
+Message-ID: <CALMp9eRuBwj9Sg60jg2ucWd-XoAcE_kXP5ULFgpkSHg88sOJZQ@mail.gmail.com>
+Subject: Re: [PATCH v2] perf/amd: Implement erratum #1292 workaround for F19h M00-0Fh
+To:     Like Xu <like.xu.linux@gmail.com>
+Cc:     Ravi Bangoria <ravi.bangoria@amd.com>, eranian@google.com,
+        santosh.shukla@amd.com, pbonzini@redhat.com, seanjc@google.com,
+        wanpengli@tencent.com, vkuznets@redhat.com, joro@8bytes.org,
+        peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, tglx@linutronix.de,
+        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+        kvm@vger.kernel.org, x86@kernel.org,
+        linux-perf-users@vger.kernel.org, ananth.narayan@amd.com,
+        kim.phillips@amd.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Feb 9, 2022 at 9:55 PM German Gomez <german.gomez@arm.com> wrote:
+On Wed, Feb 9, 2022 at 2:19 AM Like Xu <like.xu.linux@gmail.com> wrote:
 >
-> Yes, I should've added these tags from the start. Sorry Eduard-Mihai.
+> On 4/2/2022 9:01 pm, Jim Mattson wrote:
+> > On Fri, Feb 4, 2022 at 1:33 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
+> >>
+> >>
+> >>
+> >> On 03-Feb-22 11:25 PM, Jim Mattson wrote:
+> >>> On Wed, Feb 2, 2022 at 9:18 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
+> >>>>
+> >>>> Hi Jim,
+> >>>>
+> >>>> On 03-Feb-22 9:39 AM, Jim Mattson wrote:
+> >>>>> On Wed, Feb 2, 2022 at 2:52 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
+> >>>>>>
+> >>>>>> Perf counter may overcount for a list of Retire Based Events. Implement
+> >>>>>> workaround for Zen3 Family 19 Model 00-0F processors as suggested in
+> >>>>>> Revision Guide[1]:
+> >>>>>>
+> >>>>>>    To count the non-FP affected PMC events correctly:
+> >>>>>>      o Use Core::X86::Msr::PERF_CTL2 to count the events, and
+> >>>>>>      o Program Core::X86::Msr::PERF_CTL2[43] to 1b, and
+> >>>>>>      o Program Core::X86::Msr::PERF_CTL2[20] to 0b.
+> >>>>>>
+> >>>>>> Note that the specified workaround applies only to counting events and
+> >>>>>> not to sampling events. Thus sampling event will continue functioning
+> >>>>>> as is.
+> >>>>>>
+> >>>>>> Although the issue exists on all previous Zen revisions, the workaround
+> >>>>>> is different and thus not included in this patch.
+> >>>>>>
+> >>>>>> This patch needs Like's patch[2] to make it work on kvm guest.
+> >>>>>
+> >>>>> IIUC, this patch along with Like's patch actually breaks PMU
+> >>>>> virtualization for a kvm guest.
+> >>>>>
+> >>>>> Suppose I have some code which counts event 0xC2 [Retired Branch
+> >>>>> Instructions] on PMC0 and event 0xC4 [Retired Taken Branch
+> >>>>> Instructions] on PMC1. I then divide PMC1 by PMC0 to see what
+> >>>>> percentage of my branch instructions are taken. On hardware that
+> >>>>> suffers from erratum 1292, both counters may overcount, but if the
+> >>>>> inaccuracy is small, then my final result may still be fairly close to
+> >>>>> reality.
+> >>>>>
+> >>>>> With these patches, if I run that same code in a kvm guest, it looks
+> >>>>> like one of those events will be counted on PMC2 and the other won't
+> >>>>> be counted at all. So, when I calculate the percentage of branch
+> >>>>> instructions taken, I either get 0 or infinity.
+> >>>>
+> >>>> Events get multiplexed internally. See below quick test I ran inside
+> >>>> guest. My host is running with my+Like's patch and guest is running
+> >>>> with only my patch.
+> >>>
+> >>> Your guest may be multiplexing the counters. The guest I posited does not.
+> >>
+> >> It would be helpful if you can provide an example.
+> >
+> > Perf on any current Linux distro (i.e. without your fix).
+>
+> The patch for errata #1292 (like most hw issues or vulnerabilities) should be
+> applied to both the host and guest.
 
-No worries. Also my apologies: I noticed you dropped the patch looking
-at the archive after sending this, but I haven't got the other emails
-in the thread (yet?).
+As I'm sure you are aware, guests are often not patched. For example,
+we have a lot of Debian-9 guests running on Milan, despite the fact
+that it has to be booted with "nopcid" due to a bug introduced on
+4.9-stable. We submitted the fix and notified Debian about a year ago,
+but they have not seen fit to cut a new kernel. Do you think they will
+cut a new kernel for this patch?
 
-Cheers,
-Miguel
+> For non-patched guests on a patched host, the KVM-created perf_events
+> will be true for is_sampling_event() due to get_sample_period().
+>
+> I think we (KVM) have a congenital defect in distinguishing whether guest
+> counters are used in counting mode or sampling mode, which is just
+> a different use of pure software.
+
+I have no idea what you are saying. However, when kvm sees a guest
+counter used in sampling mode, it will just request a PERF_TYPE_RAW
+perf event with the INT bit set in 'config.' If it sees a guest
+counter used in counting mode, it will either request a PERF_TYPE_RAW
+perf event or a PERF_TYPE_HARDWARE perf event, depending on whether or
+not it finds the requested event in amd_event_mapping[].
+
+> >
+> >>> I hope that you are not saying that kvm's *thread-pinned* perf events
+> >>> are not being multiplexed at the host level, because that completely
+> >>> breaks PMU virtualization.
+> >>
+> >> IIUC, multiplexing happens inside the guest.
+> >
+> > I'm not sure that multiplexing is the answer. Extrapolation may
+> > introduce greater imprecision than the erratum.
+>
+> If you run the same test on the patched host, the PMC2 will be
+> used in a multiplexing way. This is no different.
+>
+> >
+> > If you count something like "instructions retired" three ways:
+> > 1) Unfixed counter
+> > 2) PMC2 with the fix
+> > 3) Multiplexed on PMC2 with the fix
+> >
+> > Is (3) always more accurate than (1)?
+
+Since Ravi has gone dark, I will answer my own question.
+
+For better reproducibility, I simplified his program to:
+
+int main() { return 0;}
+
+On an unpatched Milan host, I get instructions retired between 21911
+and 21915. I get branch instructions retired between 5565 and 5566. It
+does not matter if I count them separately or at the same time.
+
+After applying v3 of Ravi's patch, if I try to count these events at
+the same time, I get 36869 instructions retired and 4962 branch
+instructions on the first run. On subsequent runs, perf refuses to
+count both at the same time. I get branch instructions retired between
+5565 and 5567, but no instructions retired. Instead, perf tells me:
+
+Some events weren't counted. Try disabling the NMI watchdog:
+echo 0 > /proc/sys/kernel/nmi_watchdog
+perf stat ...
+echo 1 > /proc/sys/kernel/nmi_watchdog
+
+If I just count one thing at a time (on the patched kernel), I get
+between 21911 and 21916 instructions retired, and I get between 5565
+and 5566 branch instructions retired.
+
+I don't know under what circumstances the unfixed counters overcount
+or by how much. However, for this simple test case, the fixed PMC2
+yields the same results as any unfixed counter. Ravi's patch, however
+makes counting two of these events simultaneously either (a)
+impossible, or (b) highly inaccurate (from 10% under to 68% over).
+
+> The loss of accuracy is due to a reduction in the number of trustworthy counters,
+> not to these two workaround patches. Any multiplexing (whatever on the host or
+> the guest) will result in a loss of accuracy. Right ?
+
+Yes, that's my point. Fixing one inaccuracy by using a mechanism that
+introduces another inaccuracy only makes sense if the inaccuracy you
+are fixing is worse than the inaccuracy you are introducing. That does
+not appear to be the case here, but I am not privy to all of the
+details of this erratum.
