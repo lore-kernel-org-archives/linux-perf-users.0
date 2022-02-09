@@ -2,159 +2,132 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E27E7C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Feb 2022 15:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B5AC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Feb 2022 15:10:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230299AbiBIPBf (ORCPT
+        id S233554AbiBIPKT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Feb 2022 10:01:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48582 "EHLO
+        Wed, 9 Feb 2022 10:10:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235398AbiBIPBf (ORCPT
+        with ESMTP id S229820AbiBIPKS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Feb 2022 10:01:35 -0500
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21A36C05CB82;
-        Wed,  9 Feb 2022 07:01:38 -0800 (PST)
-Received: by mail-ed1-x534.google.com with SMTP id co28so5736401edb.1;
-        Wed, 09 Feb 2022 07:01:38 -0800 (PST)
+        Wed, 9 Feb 2022 10:10:18 -0500
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB902C06157B
+        for <linux-perf-users@vger.kernel.org>; Wed,  9 Feb 2022 07:10:21 -0800 (PST)
+Received: by mail-wm1-x336.google.com with SMTP id bg21-20020a05600c3c9500b0035283e7a012so1861236wmb.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 09 Feb 2022 07:10:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=59r6R8CamhNOPJf3ecn98Vx3RC5ol7vbLhaSn6mMvIo=;
-        b=pDois4WM2LuDFwB6uV9Teb2Kp/HL9tcYymFG1NtByoNhF1AsQVwIw9j1rpCJx0qnhd
-         E/I14wGx5viSrfhS/qVQbf4T4PiJY3TR1XMxgbfCUcNQBWLOqMIEiCVA+1pJu5d2AZCd
-         Mz1f2fmrcyfB5wqDJmsdTBN6voCGrhsLcB2o0+i8l+Rlj+AtcYxRNrZMU8lBeIdkmDt9
-         q3RHuVwna+u89qpLbMlS4ItLIOjldB1NkFOdJlIRMh6e43uJS61zSFgE9HwFDQbt92c8
-         PoFHmTJFj9P2LRJ1RPbODqPWcQrUr8G0DMWc2R0c5fUIElzFBztk/GqXLenIRFYXnzud
-         MZGg==
+        bh=lbuxU+q6IvlaNAUhRygjhk70VPxWftteQE/uuzTpFno=;
+        b=EGDybcFLZacQNuwUNyk/q2Rr2t4VILMI+m22W5mJhKDDUmHOTTFZOHU9XrauzV0mvA
+         7XWRi/tCaqFxUaJQLrZNevh1iYZ5ImsQvtjUc3VTY2QM/4s6GVDegQcUAgCeQZTWQugO
+         1zI+2/J6BcOmMi5f1DSwTux7B8mwv3v4s+whl43glsbwsCgkefYP29+vFQ8+X1CrQ2lx
+         lHDITasuxDfy8A+wa+u8eyh02Wh/RKm+POXyF22a4AH8SZr4H6BZv0OZ1k8+3cf6fAcE
+         fBCgz0ItC24hBMhGjydUU+VzuP4KSS4BBiit6U9C5FXxxiK4QESlTRAvabfxOOYzQHGj
+         Z9UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=59r6R8CamhNOPJf3ecn98Vx3RC5ol7vbLhaSn6mMvIo=;
-        b=3KKx+fHwTnGQtJOlKifp7Y9suqpmFQyuIZ70wzzEwFBG4208OZTCzF2feNXx/lz7wR
-         /GN60sAwmNDZfGcfEHUWnc9rVUgeyKNSM13uwTCGwjRoVCSurqR5Wz13futrdjQFfmAq
-         xLAvNV/teIzHFx/xG9YPEJY0FJwVQjTuUR1cNRACNc6KC92dBCY7GFw8kCEym3lWhC99
-         Ga2x7s5k0BSek0z3Ickx0lfsmjPtum9IgkGWQp1tr2XQvvj03YHmEdqFYVW5eMyxueqX
-         vpnLApJf0/AcPFWrxfrrBFNTo8ZA3/uA2B5PFXyQW72xiSKHYqAFjW+3xZvUkXaadOAM
-         3yqw==
-X-Gm-Message-State: AOAM533iNWSMBKjJQtrNpp5BmGxaeI3aG74cdlxmhtUrLk1WUAd5lJD+
-        thMZE9JhFdgKAgZk2Fqaf4Y=
-X-Google-Smtp-Source: ABdhPJwXAxrfPJb44M4LeeNM483CiJ585siYPRo0OVr63jw5Iuz0JGdpxelD3ErnrC2t6yDfzUCDPg==
-X-Received: by 2002:aa7:d84e:: with SMTP id f14mr2884470eds.46.1644418896457;
-        Wed, 09 Feb 2022 07:01:36 -0800 (PST)
+        bh=lbuxU+q6IvlaNAUhRygjhk70VPxWftteQE/uuzTpFno=;
+        b=jmJziW782qxIJLGNrIls0p5NFJ+uZwtlNsFmcHxJRGU/Obj5Q8p5+T9QW8QZmFZ4+Z
+         AgSKI2ilV0x1uSpKXQny4Ff+SEeHIMojixpPwWWCb8xARWn2qtAW5nexWiIr+I2nVi5O
+         v+D5hAw1LFeieMiBaB/Hg3Foe+fde7cpEQ8xPsdFz2pHehz+tSJus3PR6zFuPcOFfirX
+         kwhYzqpF0O42RiF9i1uthNwKnBHEQJAQpQ+RYKF+pXIMvrmaLJuF44yWcyI0xMuCnaAm
+         DHkg4I0ylnQXULMr7fRSPODaFgyHzXJrHSgwQn7RWutCxm1Cxo4gOD4EO9MJSDLLA+Er
+         xYHg==
+X-Gm-Message-State: AOAM533xg122Ou47OsISwWomn07xgZychwAwddgDreJjumlncNJlkB8c
+        k2flig/R02d0yaJlXlftDKM=
+X-Google-Smtp-Source: ABdhPJxcOBysSaELekuC/vi15nOoN1KE4eEwu+HeF3wFxB2HBYlX9DtbbfJddm/QGkitxeg9SbVFlg==
+X-Received: by 2002:a05:600c:644:: with SMTP id p4mr2940617wmm.34.1644419419720;
+        Wed, 09 Feb 2022 07:10:19 -0800 (PST)
 Received: from krava ([2a00:102a:5010:3235:47fb:6193:ef68:761d])
-        by smtp.gmail.com with ESMTPSA id gu2sm6024567ejb.221.2022.02.09.07.01.35
+        by smtp.gmail.com with ESMTPSA id n14sm16398700wri.80.2022.02.09.07.10.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Feb 2022 07:01:36 -0800 (PST)
-Date:   Wed, 9 Feb 2022 16:01:33 +0100
+        Wed, 09 Feb 2022 07:10:19 -0800 (PST)
+Date:   Wed, 9 Feb 2022 16:09:46 +0100
 From:   Jiri Olsa <olsajiri@gmail.com>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf trace: Avoid early exit due SIGCHLD from
- non-workload processes
-Message-ID: <YgPXTe7LlTfh+z4S@krava>
-References: <20220208140725.3947-1-changbin.du@gmail.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     kim.phillips@amd.com, linux-perf-users@vger.kernel.org
+Subject: Re: [bug report] perf env: Add perf_env__cpuid,
+ perf_env__{nr_}pmu_mappings
+Message-ID: <YgPZOiExIZzgw/PH@krava>
+References: <20220208112239.GA18799@kili>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220208140725.3947-1-changbin.du@gmail.com>
+In-Reply-To: <20220208112239.GA18799@kili>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Feb 08, 2022 at 10:07:25PM +0800, Changbin Du wrote:
-> The function trace__symbols_init() runs "perf-read-vdso32" and that ends up
-> with a SIGCHLD delivered to 'perf'. And this SIGCHLD make perf exit early.
+On Tue, Feb 08, 2022 at 02:22:39PM +0300, Dan Carpenter wrote:
+> Hello Kim Phillips,
 > 
-> 'perf trace' should exit only if the SIGCHLD is from our workload process.
-> So let's use sigaction() instead of signal() to match such condition.
+> This is a semi-automatic email about new static checker warnings.
 > 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> The patch 9fe8895a27a8: "perf env: Add perf_env__cpuid,
+> perf_env__{nr_}pmu_mappings" from Aug 17, 2021, leads to the
+> following Smatch complaint:
+> 
+>     ./tools/perf/util/env.c:476 perf_env__nr_pmu_mappings()
+>     error: we previously assumed 'env' could be null (see line 470)
+> 
+> ./tools/perf/util/env.c
+>    469	
+>    470		if (!env || !env->nr_pmu_mappings) { /* Assume local operation */
+>                      ^^^
+> Checks for NULL
+> 
+>    471			status = perf_env__read_pmu_mappings(env);
+>    472			if (status)
+>    473				return 0;
+>    474		}
+>    475	
+>    476		return env->nr_pmu_mappings;
+>                        ^^^^
+> Unchecked dereference
+> 
+>    477	}
+> 
+> regards,
+> dan carpenter
 
-good idea, I tested with the reproducer for:
-  f06a82f9d31a perf trace: Avoid early exit due to running SIGCHLD handler before it makes sense to
+I think we need to bail out for !env
 
-and it's working properly
-
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-
-thanks,
 jirka
 
-> ---
->  tools/perf/builtin-trace.c | 21 ++++++++++++++++-----
->  1 file changed, 16 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 32844d8a0ea5..d03556c14b0a 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -1536,13 +1536,20 @@ static size_t trace__fprintf_tstamp(struct trace *trace, u64 tstamp, FILE *fp)
->  	return fprintf(fp, "         ? ");
->  }
->  
-> +static pid_t workload_pid = -1;
->  static bool done = false;
->  static bool interrupted = false;
->  
-> -static void sig_handler(int sig)
-> +static void sighandler_interrupt(int sig __maybe_unused)
->  {
-> -	done = true;
-> -	interrupted = sig == SIGINT;
-> +	done = interrupted = true;
-> +}
-> +
-> +static void sighandler_chld(int sig __maybe_unused, siginfo_t *info,
-> +			    void *context __maybe_unused)
-> +{
-> +	if (info->si_pid == workload_pid)
-> +		done = true;
->  }
->  
->  static size_t trace__fprintf_comm_tid(struct trace *trace, struct thread *thread, FILE *fp)
-> @@ -3938,7 +3945,6 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
->  	bool draining = false;
->  
->  	trace->live = true;
-> -	signal(SIGCHLD, sig_handler);
->  
->  	if (!trace->raw_augmented_syscalls) {
->  		if (trace->trace_syscalls && trace__add_syscall_newtp(trace))
-> @@ -4018,6 +4024,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
->  			fprintf(trace->output, "Couldn't run the workload!\n");
->  			goto out_delete_evlist;
->  		}
-> +		workload_pid = evlist->workload.pid;
->  	}
->  
->  	err = evlist__open(evlist);
-> @@ -4887,10 +4894,14 @@ int cmd_trace(int argc, const char **argv)
->  	const char * const trace_subcommands[] = { "record", NULL };
->  	int err = -1;
->  	char bf[BUFSIZ];
-> +	struct sigaction sigchld_act = { 0 };
->  
->  	signal(SIGSEGV, sighandler_dump_stack);
->  	signal(SIGFPE, sighandler_dump_stack);
-> -	signal(SIGINT, sig_handler);
-> +	signal(SIGINT, sighandler_interrupt);
-> +	sigchld_act.sa_flags = SA_SIGINFO;
-> +	sigchld_act.sa_sigaction = sighandler_chld;
-> +	sigaction(SIGCHLD, &sigchld_act, NULL);
->  
->  	trace.evlist = evlist__new();
->  	trace.sctbl = syscalltbl__new();
-> -- 
-> 2.25.1
-> 
+
+---
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index 579e44c59914..bc30d8cd2790 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -467,7 +467,10 @@ int perf_env__nr_pmu_mappings(struct perf_env *env)
+ {
+ 	int status;
+ 
+-	if (!env || !env->nr_pmu_mappings) { /* Assume local operation */
++	if (!env)
++		return 0;
++
++	if (!env->nr_pmu_mappings) { /* Assume local operation */
+ 		status = perf_env__read_pmu_mappings(env);
+ 		if (status)
+ 			return 0;
+@@ -480,7 +483,10 @@ const char *perf_env__pmu_mappings(struct perf_env *env)
+ {
+ 	int status;
+ 
+-	if (!env || !env->pmu_mappings) { /* Assume local operation */
++	if (!env)
++		return NULL;
++
++	if (!env->pmu_mappings) { /* Assume local operation */
+ 		status = perf_env__read_pmu_mappings(env);
+ 		if (status)
+ 			return NULL;
