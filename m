@@ -2,87 +2,159 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E9DC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Feb 2022 12:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E27E7C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Feb 2022 15:01:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233677AbiBIMvk (ORCPT
+        id S230299AbiBIPBf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Feb 2022 07:51:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55202 "EHLO
+        Wed, 9 Feb 2022 10:01:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233675AbiBIMvi (ORCPT
+        with ESMTP id S235398AbiBIPBf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Feb 2022 07:51:38 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EBC6C0613CA;
-        Wed,  9 Feb 2022 04:51:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=6dGm9Hg6raG07iV8obt7rI9CiZz2G/HOBnlwgFwLPno=; b=u05ARwxDEZedFXXIfxb+xx2gIx
-        aOW537iU6kT29p6x0QQtrZW+oBws1oDA0tEGk1MLheGGTyjyHNiZB2woY7WlqUmRePNm49xfjVcJh
-        LsW55+G6YDxO3NyFV06Wu+4Y2VsPSoJczhJD9rlixHM3x4BPhjtMxuoxR3pcRwLl83wjdoqrb20Wn
-        4Zbb63XOVLW0vaJrYjExO1f5jb8uHqKRYlobiIVZM+9Tn+rEo7oNw8JoobVUtUSPXYbvAOtyeE/rv
-        iOy6ppotQfC+svMZ8qaGkZnDmrU3MoKDHrlltHorLaCnrb8/cudyUc/bU7nKh444Kk+6j53erKIHg
-        DrYZVg7g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nHmRE-007hqr-T2; Wed, 09 Feb 2022 12:51:13 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DC3BA30023F;
-        Wed,  9 Feb 2022 13:51:10 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8F808265018D6; Wed,  9 Feb 2022 13:51:10 +0100 (CET)
-Date:   Wed, 9 Feb 2022 13:51:10 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     like.xu.linux@gmail.com, jmattson@google.com, eranian@google.com,
-        santosh.shukla@amd.com, pbonzini@redhat.com, seanjc@google.com,
-        wanpengli@tencent.com, vkuznets@redhat.com, joro@8bytes.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
-        hpa@zytor.com, kvm@vger.kernel.org, x86@kernel.org,
-        linux-perf-users@vger.kernel.org, ananth.narayan@amd.com,
-        kim.phillips@amd.com
-Subject: Re: [PATCH v3] perf/amd: Implement erratum #1292 workaround for F19h
- M00-0Fh
-Message-ID: <YgO4vn2w5kT43HGh@hirez.programming.kicks-ass.net>
-References: <fe53507b-9732-b47e-32e0-647a9bfc8a80@amd.com>
- <20220203095841.7937-1-ravi.bangoria@amd.com>
+        Wed, 9 Feb 2022 10:01:35 -0500
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21A36C05CB82;
+        Wed,  9 Feb 2022 07:01:38 -0800 (PST)
+Received: by mail-ed1-x534.google.com with SMTP id co28so5736401edb.1;
+        Wed, 09 Feb 2022 07:01:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=59r6R8CamhNOPJf3ecn98Vx3RC5ol7vbLhaSn6mMvIo=;
+        b=pDois4WM2LuDFwB6uV9Teb2Kp/HL9tcYymFG1NtByoNhF1AsQVwIw9j1rpCJx0qnhd
+         E/I14wGx5viSrfhS/qVQbf4T4PiJY3TR1XMxgbfCUcNQBWLOqMIEiCVA+1pJu5d2AZCd
+         Mz1f2fmrcyfB5wqDJmsdTBN6voCGrhsLcB2o0+i8l+Rlj+AtcYxRNrZMU8lBeIdkmDt9
+         q3RHuVwna+u89qpLbMlS4ItLIOjldB1NkFOdJlIRMh6e43uJS61zSFgE9HwFDQbt92c8
+         PoFHmTJFj9P2LRJ1RPbODqPWcQrUr8G0DMWc2R0c5fUIElzFBztk/GqXLenIRFYXnzud
+         MZGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=59r6R8CamhNOPJf3ecn98Vx3RC5ol7vbLhaSn6mMvIo=;
+        b=3KKx+fHwTnGQtJOlKifp7Y9suqpmFQyuIZ70wzzEwFBG4208OZTCzF2feNXx/lz7wR
+         /GN60sAwmNDZfGcfEHUWnc9rVUgeyKNSM13uwTCGwjRoVCSurqR5Wz13futrdjQFfmAq
+         xLAvNV/teIzHFx/xG9YPEJY0FJwVQjTuUR1cNRACNc6KC92dBCY7GFw8kCEym3lWhC99
+         Ga2x7s5k0BSek0z3Ickx0lfsmjPtum9IgkGWQp1tr2XQvvj03YHmEdqFYVW5eMyxueqX
+         vpnLApJf0/AcPFWrxfrrBFNTo8ZA3/uA2B5PFXyQW72xiSKHYqAFjW+3xZvUkXaadOAM
+         3yqw==
+X-Gm-Message-State: AOAM533iNWSMBKjJQtrNpp5BmGxaeI3aG74cdlxmhtUrLk1WUAd5lJD+
+        thMZE9JhFdgKAgZk2Fqaf4Y=
+X-Google-Smtp-Source: ABdhPJwXAxrfPJb44M4LeeNM483CiJ585siYPRo0OVr63jw5Iuz0JGdpxelD3ErnrC2t6yDfzUCDPg==
+X-Received: by 2002:aa7:d84e:: with SMTP id f14mr2884470eds.46.1644418896457;
+        Wed, 09 Feb 2022 07:01:36 -0800 (PST)
+Received: from krava ([2a00:102a:5010:3235:47fb:6193:ef68:761d])
+        by smtp.gmail.com with ESMTPSA id gu2sm6024567ejb.221.2022.02.09.07.01.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Feb 2022 07:01:36 -0800 (PST)
+Date:   Wed, 9 Feb 2022 16:01:33 +0100
+From:   Jiri Olsa <olsajiri@gmail.com>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf trace: Avoid early exit due SIGCHLD from
+ non-workload processes
+Message-ID: <YgPXTe7LlTfh+z4S@krava>
+References: <20220208140725.3947-1-changbin.du@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220203095841.7937-1-ravi.bangoria@amd.com>
+In-Reply-To: <20220208140725.3947-1-changbin.du@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Feb 03, 2022 at 03:28:41PM +0530, Ravi Bangoria wrote:
-> Perf counter may overcount for a list of Retire Based Events. Implement
-> workaround for Zen3 Family 19 Model 00-0F processors as suggested in
-> Revision Guide[1]:
+On Tue, Feb 08, 2022 at 10:07:25PM +0800, Changbin Du wrote:
+> The function trace__symbols_init() runs "perf-read-vdso32" and that ends up
+> with a SIGCHLD delivered to 'perf'. And this SIGCHLD make perf exit early.
 > 
->   To count the non-FP affected PMC events correctly:
->     o Use Core::X86::Msr::PERF_CTL2 to count the events, and
->     o Program Core::X86::Msr::PERF_CTL2[43] to 1b, and
->     o Program Core::X86::Msr::PERF_CTL2[20] to 0b.
+> 'perf trace' should exit only if the SIGCHLD is from our workload process.
+> So let's use sigaction() instead of signal() to match such condition.
 > 
-> Note that the specified workaround applies only to counting events and
-> not to sampling events. Thus sampling event will continue functioning
-> as is.
-> 
-> Although the issue exists on all previous Zen revisions, the workaround
-> is different and thus not included in this patch.
-> 
-> This patch needs Like's patch[2] to make it work on kvm guest.
-> 
-> [1] https://bugzilla.kernel.org/attachment.cgi?id=298241
-> [2] https://lore.kernel.org/lkml/20220117055703.52020-1-likexu@tencent.com
-> 
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
 
-Thanks!
+good idea, I tested with the reproducer for:
+  f06a82f9d31a perf trace: Avoid early exit due to running SIGCHLD handler before it makes sense to
+
+and it's working properly
+
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+
+thanks,
+jirka
+
+> ---
+>  tools/perf/builtin-trace.c | 21 ++++++++++++++++-----
+>  1 file changed, 16 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index 32844d8a0ea5..d03556c14b0a 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -1536,13 +1536,20 @@ static size_t trace__fprintf_tstamp(struct trace *trace, u64 tstamp, FILE *fp)
+>  	return fprintf(fp, "         ? ");
+>  }
+>  
+> +static pid_t workload_pid = -1;
+>  static bool done = false;
+>  static bool interrupted = false;
+>  
+> -static void sig_handler(int sig)
+> +static void sighandler_interrupt(int sig __maybe_unused)
+>  {
+> -	done = true;
+> -	interrupted = sig == SIGINT;
+> +	done = interrupted = true;
+> +}
+> +
+> +static void sighandler_chld(int sig __maybe_unused, siginfo_t *info,
+> +			    void *context __maybe_unused)
+> +{
+> +	if (info->si_pid == workload_pid)
+> +		done = true;
+>  }
+>  
+>  static size_t trace__fprintf_comm_tid(struct trace *trace, struct thread *thread, FILE *fp)
+> @@ -3938,7 +3945,6 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+>  	bool draining = false;
+>  
+>  	trace->live = true;
+> -	signal(SIGCHLD, sig_handler);
+>  
+>  	if (!trace->raw_augmented_syscalls) {
+>  		if (trace->trace_syscalls && trace__add_syscall_newtp(trace))
+> @@ -4018,6 +4024,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+>  			fprintf(trace->output, "Couldn't run the workload!\n");
+>  			goto out_delete_evlist;
+>  		}
+> +		workload_pid = evlist->workload.pid;
+>  	}
+>  
+>  	err = evlist__open(evlist);
+> @@ -4887,10 +4894,14 @@ int cmd_trace(int argc, const char **argv)
+>  	const char * const trace_subcommands[] = { "record", NULL };
+>  	int err = -1;
+>  	char bf[BUFSIZ];
+> +	struct sigaction sigchld_act = { 0 };
+>  
+>  	signal(SIGSEGV, sighandler_dump_stack);
+>  	signal(SIGFPE, sighandler_dump_stack);
+> -	signal(SIGINT, sig_handler);
+> +	signal(SIGINT, sighandler_interrupt);
+> +	sigchld_act.sa_flags = SA_SIGINFO;
+> +	sigchld_act.sa_sigaction = sighandler_chld;
+> +	sigaction(SIGCHLD, &sigchld_act, NULL);
+>  
+>  	trace.evlist = evlist__new();
+>  	trace.sctbl = syscalltbl__new();
+> -- 
+> 2.25.1
+> 
