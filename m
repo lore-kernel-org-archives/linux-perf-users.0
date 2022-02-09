@@ -2,76 +2,120 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EEFC35276
-	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Feb 2022 22:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F21CC43217
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Feb 2022 02:41:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1387069AbiBHW0s (ORCPT
+        id S235745AbiBIClb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Feb 2022 17:26:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50648 "EHLO
+        Tue, 8 Feb 2022 21:41:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1387244AbiBHWLZ (ORCPT
+        with ESMTP id S231611AbiBIByv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Feb 2022 17:11:25 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29E54C0612B8;
-        Tue,  8 Feb 2022 14:11:24 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E5831B81AFA;
-        Tue,  8 Feb 2022 22:11:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33ECEC004E1;
-        Tue,  8 Feb 2022 22:11:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644358281;
-        bh=PjxTNsP9bD1JDK5Yw86+t2N+2x7ro0uvm/lVgqLSSjM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=B2rqGFysMw+kjL94kZTf4z4W3FIWk/nbVwdfz/gqNF6+x70aBH0zUsLVj0OZx4Rqx
-         +2q7NId8Er5wnZnUcKWJi8YgXZSu1lrQq4adfazaT9fJjwRYdKn1XVVXX1xZB/2hu8
-         GVbciMkPCQCVG2oZ5GpcrQJb8MKpZgtLNxJbv1y4jsvzeV0c4BatMtXsQCz0RF+Y9Y
-         N4CSayv2xo+/CsYqCnhOze7sbjKtWpFtYlkZmGYw0iErEVfRiBvqyzRqMGbNIop6WP
-         iTfGISf1g2GRrdztJlHya/iLccs+Z1s5wK2steN8G7VgiZWdmGn29ZiDq5kC6zI+29
-         8IDhMyjcfh2/g==
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: Update Jiri's email address
-Date:   Tue,  8 Feb 2022 23:11:17 +0100
-Message-Id: <20220208221117.710405-1-jolsa@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        Tue, 8 Feb 2022 20:54:51 -0500
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2C02C06157B;
+        Tue,  8 Feb 2022 17:54:49 -0800 (PST)
+Received: from dggeme754-chm.china.huawei.com (unknown [172.30.72.57])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4JtjWb2qZczZfNF;
+        Wed,  9 Feb 2022 09:50:35 +0800 (CST)
+Received: from huawei.com (10.175.104.170) by dggeme754-chm.china.huawei.com
+ (10.3.19.100) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.21; Wed, 9
+ Feb 2022 09:54:46 +0800
+From:   Zhipeng Xie <xiezhipeng1@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <namhyung@kernel.org>
+CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <xiezhipeng1@huawei.com>, <xiexiuqi@huawei.com>,
+        <fanwentao@huawei.com>
+Subject: [PATCH v2] perf/core: Fix perf_mmap fail when CONFIG_PERF_USE_VMALLOC enabled
+Date:   Wed, 9 Feb 2022 09:54:17 -0500
+Message-ID: <20220209145417.6495-1-xiezhipeng1@huawei.com>
+X-Mailer: git-send-email 2.18.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.104.170]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggeme754-chm.china.huawei.com (10.3.19.100)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Using my kernel.org email.
+This problem can be reproduced with CONFIG_PERF_USE_VMALLOC enabled on both
+x86_64 and aarch64 arch when using sysdig -B(using ebpf)[1].
+sysdig -B works fine after rebuilding the kernel with CONFIG_PERF_USE_VMALLOC
+disabled.
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+I tracked it down to the if condition event->rb->nr_pages != nr_pages in
+perf_mmap is true when CONFIG_PERF_USE_VMALLOC is enabled where
+event->rb->nr_pages = 1 and nr_pages = 2048 resulting perf_mmap to return
+-EINVAL.This is because when CONFIG_PERF_USE_VMALLOC is enabled, rb->nr_pages
+is always equal to 1.
+
+Arch with CONFIG_PERF_USE_VMALLOC enabled by default:
+	arc/arm/csky/mips/sh/sparc/xtensa
+Arch with CONFIG_PERF_USE_VMALLOC disabled by default:
+	x86_64/aarch64/...
+
+Fix this problem by using data_page_nr.
+
+[1] https://github.com/draios/sysdig
+
+Signed-off-by: Zhipeng Xie <xiezhipeng1@huawei.com>
 ---
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/events/core.c        | 2 +-
+ kernel/events/internal.h    | 5 +++++
+ kernel/events/ring_buffer.c | 5 -----
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ea3e6c914384..d4248b02515b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15123,7 +15123,7 @@ M:	Ingo Molnar <mingo@redhat.com>
- M:	Arnaldo Carvalho de Melo <acme@kernel.org>
- R:	Mark Rutland <mark.rutland@arm.com>
- R:	Alexander Shishkin <alexander.shishkin@linux.intel.com>
--R:	Jiri Olsa <jolsa@redhat.com>
-+R:	Jiri Olsa <jolsa@kernel.org>
- R:	Namhyung Kim <namhyung@kernel.org>
- L:	linux-perf-users@vger.kernel.org
- L:	linux-kernel@vger.kernel.org
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 57c7197838db..370292effd32 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6352,7 +6352,7 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
+ again:
+ 	mutex_lock(&event->mmap_mutex);
+ 	if (event->rb) {
+-		if (event->rb->nr_pages != nr_pages) {
++		if (data_page_nr(event->rb) != nr_pages) {
+ 			ret = -EINVAL;
+ 			goto unlock;
+ 		}
+diff --git a/kernel/events/internal.h b/kernel/events/internal.h
+index 082832738c8f..5816c0719dbf 100644
+--- a/kernel/events/internal.h
++++ b/kernel/events/internal.h
+@@ -116,6 +116,11 @@ static inline int page_order(struct perf_buffer *rb)
+ }
+ #endif
+ 
++static int data_page_nr(struct perf_buffer *rb)
++{
++	return rb->nr_pages << page_order(rb);
++}
++
+ static inline unsigned long perf_data_size(struct perf_buffer *rb)
+ {
+ 	return rb->nr_pages << (PAGE_SHIFT + page_order(rb));
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index 52868716ec35..fb35b926024c 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -859,11 +859,6 @@ void rb_free(struct perf_buffer *rb)
+ }
+ 
+ #else
+-static int data_page_nr(struct perf_buffer *rb)
+-{
+-	return rb->nr_pages << page_order(rb);
+-}
+-
+ static struct page *
+ __perf_mmap_to_page(struct perf_buffer *rb, unsigned long pgoff)
+ {
 -- 
-2.34.1
+2.18.1
 
