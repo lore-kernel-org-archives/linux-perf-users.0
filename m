@@ -2,80 +2,181 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23995C4167E
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Feb 2022 18:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F686C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Feb 2022 18:56:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240291AbiBISlq (ORCPT
+        id S241383AbiBIS4u (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Feb 2022 13:41:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33174 "EHLO
+        Wed, 9 Feb 2022 13:56:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239051AbiBISla (ORCPT
+        with ESMTP id S242003AbiBIS40 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Feb 2022 13:41:30 -0500
-Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 834F3C05CB88;
-        Wed,  9 Feb 2022 10:41:33 -0800 (PST)
-Received: by mail-il1-x130.google.com with SMTP id n5so2463521ilk.12;
-        Wed, 09 Feb 2022 10:41:33 -0800 (PST)
+        Wed, 9 Feb 2022 13:56:26 -0500
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 885B0C0F86BB;
+        Wed,  9 Feb 2022 10:53:59 -0800 (PST)
+Received: by mail-wr1-x42a.google.com with SMTP id m14so5610460wrg.12;
+        Wed, 09 Feb 2022 10:53:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CdVKbWl+swvS6/xo2ZLmEHRuVncfYpgRkMyp8UCeKHk=;
-        b=f4nWzz4RsobozTfJhmxl3WPmpmP/DDnSSeklXu1s3tP9mG0Z9w7srOhO5bS5v/JlHJ
-         7aH+RIIe3I4eyhTj2P1BbgqxIsjc2GSkgiw2k2ifQ4MQDlAmPWGTIX1ZvD9XkDDaDStU
-         SbEdvEAkiFXYEFZHlQsBYbaboGA3BTFwzZjG5HHEejcIXJwHSvt31IzdCi/o1fv4KDEi
-         Jp3y+RXSCMyhbjoN0HWW1fYUcUqZfVEn7lotrwUJeDgq+RQwZO7MwC0f3OwUmf/ypYk9
-         jhVmYfW+H8bLSOYQ5otTt93Im1zRkQsVqALx95C6kfWpyU7auEeunKSR04gKcAKGL7pn
-         USRg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=BtzTMOT0+sBk3EssdjdzQc5R4rPNCZUOoytEFOC01Bo=;
+        b=lYii6uB+B/88ZFyjNrobl6cN/ft299eJffsi0gG6SeXZZpYJaw4iLhgcnsl8IIejOH
+         EwhN1Tw3+t7A8pBdmhCrlyCEOTVAGj07GIDC4l7x/vXo272i9cNSyomZxy31Wplg0HiM
+         TLcga2CRXHsOankzSdZB9RIjU6Bx1WJhVdDbVH0esFMh1OmmhluFFw6FQ0qvZ6ngLlUk
+         /b6JXi9VytfYXJK7F/VQkj8qzaohiI+6Dmjuclxsxn3MSMF2GAEbc9I3d9nb9NB35XQJ
+         f0cjIvZEcsvceOD7vEuFyr2AQEpF+P+wgfcSUrxaWJC3uDwWkgSueDBV9BaWh3WEKyVZ
+         xv0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CdVKbWl+swvS6/xo2ZLmEHRuVncfYpgRkMyp8UCeKHk=;
-        b=q92Rqh8rZKBsq6tNgrCo9MpZsVbXfoIB0rizd6d2d47OeIyYaEOkYakBp7i6vKMBp0
-         rLJWZvOYvogErKqlWNhwy4jH1NfjMBTLoQf8qHZ7MTwI33A4uBO08cIYIvQBaKwuOBfp
-         VYoLK48Bl26q0ByLlelWyv+WjGpRycochVUi/5qy49hcKGmtleYbOUxTnUOR1WdZWqUD
-         xRJN4NYonSXlhHZeWufr/cAUcjcEfLXFNd94fZDv19s9GEwoSmDDRhr84d7Fx50n00xy
-         cqgosaangj9zyRjSZIqopbpHQx73mBHHA29HiellwytHKMpc9c7+LF3UNuQknEuPznBZ
-         wIUg==
-X-Gm-Message-State: AOAM531bjfzMfJHIIiSI2cne7mN8dKGI+Fs2F+gxQW0o+0sxeoT9i043
-        2Rkf2an0ahijHGzNBrUrLn358z+oRsE7iQWR3T8=
-X-Google-Smtp-Source: ABdhPJzRDCy5Ev+nQWg511F1jl0oxvqccsAWt9ueb866KNUtfNrwdURFYH1NNfvH5NEvzbzgY2rpe0DxLMkWHy9aBr0=
-X-Received: by 2002:a05:6e02:1a64:: with SMTP id w4mr1782146ilv.151.1644432092937;
- Wed, 09 Feb 2022 10:41:32 -0800 (PST)
-MIME-Version: 1.0
-References: <20220201185054.1041917-1-german.gomez@arm.com>
-In-Reply-To: <20220201185054.1041917-1-german.gomez@arm.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Wed, 9 Feb 2022 19:41:22 +0100
-Message-ID: <CANiq72nb_M3PJLG=mFfQVgAd4fbkL=OhGKS_uQHNf8Jbef3hag@mail.gmail.com>
-Subject: Re: [PATCH] perf symbols: Remove demangle-rust files as superfluous
-To:     German Gomez <german.gomez@arm.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=BtzTMOT0+sBk3EssdjdzQc5R4rPNCZUOoytEFOC01Bo=;
+        b=giXOCv0zFmebvAFSUIMzdEnEYSEeI2ns9KMwNsFIu34dAT94mQYOupU5X3NzuMLTon
+         VaiLzP+WzMZy9kQRHce+zPD4xESo2eU70JWKomljjJpzNc9QdY+3jWjnZBGDLJe/qoNV
+         zP03iQtGR+eD9HskKOqo75PtoFVK8zlTRKK0P1PDm/CZbVQbUhzs4+miIWb7+CWMde9k
+         V8gwO7e1cM1fp0JOIrjcE+77Elryi5reQuJ41Ca+ADGCapF0MXnWDK3cZuGwMxZ/GxMA
+         5saQQyQu/vHwfnY89FDnKmx3orDPjQIWSjlvndcfPpAVpb6yalM1ISdjvhF+XIcmFKy9
+         kR6g==
+X-Gm-Message-State: AOAM5319XiZKfMBmjSJZl8F/YoSt+nlIWZ9AtSnw9fYq6wiHj81ySEx1
+        EETWl7/Zc1KHUsBfH6M+JYM=
+X-Google-Smtp-Source: ABdhPJyvzElixnNpo9JgrPbLDI6oOJkOUXiGOrsXo+AxQQafg/58wV6viJZEP+J8E091ctAinTkLsw==
+X-Received: by 2002:adf:ea8f:: with SMTP id s15mr3118273wrm.547.1644432837862;
+        Wed, 09 Feb 2022 10:53:57 -0800 (PST)
+Received: from krava ([83.240.63.12])
+        by smtp.gmail.com with ESMTPSA id t14sm5799523wmq.43.2022.02.09.10.53.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Feb 2022 10:53:57 -0800 (PST)
+Date:   Wed, 9 Feb 2022 19:53:55 +0100
+From:   Jiri Olsa <olsajiri@gmail.com>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf trace: Avoid early exit due SIGCHLD from
+ non-workload processes
+Message-ID: <YgQNw2F14IimhiCl@krava>
+References: <20220208140725.3947-1-changbin.du@gmail.com>
+ <YgPXTe7LlTfh+z4S@krava>
+ <YgPir+Um+a2ZQ2gz@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YgPir+Um+a2ZQ2gz@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Feb 4, 2022 at 6:46 AM German Gomez <german.gomez@arm.com> wrote:
->
-> Demangling of Rust legacy symbols has been working through libbfd for
-> some time now, making these files no longer needed, so remove them.
+On Wed, Feb 09, 2022 at 12:50:07PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Wed, Feb 09, 2022 at 04:01:33PM +0100, Jiri Olsa escreveu:
+> > On Tue, Feb 08, 2022 at 10:07:25PM +0800, Changbin Du wrote:
+> > > The function trace__symbols_init() runs "perf-read-vdso32" and that ends up
+> > > with a SIGCHLD delivered to 'perf'. And this SIGCHLD make perf exit early.
+> > > 
+> > > 'perf trace' should exit only if the SIGCHLD is from our workload process.
+> > > So let's use sigaction() instead of signal() to match such condition.
+> > > 
+> > > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> > 
+> > good idea, I tested with the reproducer for:
+> >   f06a82f9d31a perf trace: Avoid early exit due to running SIGCHLD handler before it makes sense to
+> > 
+> > and it's working properly
+> > 
+> > Acked-by: Jiri Olsa <jolsa@kernel.org>
+> 
+> So can I replace this with the stronger:
+> 
+> Tested-by: Jiri Olsa <jolsa@kernel.org>
 
-What about:
+I did not see the case described in the changelog,
+just checked the other one was fine..
 
-    Link: https://github.com/rust-lang/rust/issues/60705
-    Suggested-by: Eduard-Mihai Burtescu <eddyb@lyken.rs>
+jirka
 
-Maybe also reference commit cae15db74999 ("perf symbols: Add Rust demangling").
-
-Cheers,
-Miguel
+> 
+> ?
+> 
+> - Arnaldo
+>  
+> > thanks,
+> > jirka
+> > 
+> > > ---
+> > >  tools/perf/builtin-trace.c | 21 ++++++++++++++++-----
+> > >  1 file changed, 16 insertions(+), 5 deletions(-)
+> > > 
+> > > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> > > index 32844d8a0ea5..d03556c14b0a 100644
+> > > --- a/tools/perf/builtin-trace.c
+> > > +++ b/tools/perf/builtin-trace.c
+> > > @@ -1536,13 +1536,20 @@ static size_t trace__fprintf_tstamp(struct trace *trace, u64 tstamp, FILE *fp)
+> > >  	return fprintf(fp, "         ? ");
+> > >  }
+> > >  
+> > > +static pid_t workload_pid = -1;
+> > >  static bool done = false;
+> > >  static bool interrupted = false;
+> > >  
+> > > -static void sig_handler(int sig)
+> > > +static void sighandler_interrupt(int sig __maybe_unused)
+> > >  {
+> > > -	done = true;
+> > > -	interrupted = sig == SIGINT;
+> > > +	done = interrupted = true;
+> > > +}
+> > > +
+> > > +static void sighandler_chld(int sig __maybe_unused, siginfo_t *info,
+> > > +			    void *context __maybe_unused)
+> > > +{
+> > > +	if (info->si_pid == workload_pid)
+> > > +		done = true;
+> > >  }
+> > >  
+> > >  static size_t trace__fprintf_comm_tid(struct trace *trace, struct thread *thread, FILE *fp)
+> > > @@ -3938,7 +3945,6 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+> > >  	bool draining = false;
+> > >  
+> > >  	trace->live = true;
+> > > -	signal(SIGCHLD, sig_handler);
+> > >  
+> > >  	if (!trace->raw_augmented_syscalls) {
+> > >  		if (trace->trace_syscalls && trace__add_syscall_newtp(trace))
+> > > @@ -4018,6 +4024,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+> > >  			fprintf(trace->output, "Couldn't run the workload!\n");
+> > >  			goto out_delete_evlist;
+> > >  		}
+> > > +		workload_pid = evlist->workload.pid;
+> > >  	}
+> > >  
+> > >  	err = evlist__open(evlist);
+> > > @@ -4887,10 +4894,14 @@ int cmd_trace(int argc, const char **argv)
+> > >  	const char * const trace_subcommands[] = { "record", NULL };
+> > >  	int err = -1;
+> > >  	char bf[BUFSIZ];
+> > > +	struct sigaction sigchld_act = { 0 };
+> > >  
+> > >  	signal(SIGSEGV, sighandler_dump_stack);
+> > >  	signal(SIGFPE, sighandler_dump_stack);
+> > > -	signal(SIGINT, sig_handler);
+> > > +	signal(SIGINT, sighandler_interrupt);
+> > > +	sigchld_act.sa_flags = SA_SIGINFO;
+> > > +	sigchld_act.sa_sigaction = sighandler_chld;
+> > > +	sigaction(SIGCHLD, &sigchld_act, NULL);
+> > >  
+> > >  	trace.evlist = evlist__new();
+> > >  	trace.sctbl = syscalltbl__new();
+> > > -- 
+> > > 2.25.1
+> > > 
+> 
+> -- 
+> 
+> - Arnaldo
