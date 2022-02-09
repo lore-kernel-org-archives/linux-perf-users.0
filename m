@@ -2,160 +2,158 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CDEAC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Feb 2022 15:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D344CC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Feb 2022 16:11:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231215AbiBIPuZ (ORCPT
+        id S231793AbiBIQLd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Feb 2022 10:50:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60650 "EHLO
+        Wed, 9 Feb 2022 11:11:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231163AbiBIPuY (ORCPT
+        with ESMTP id S236646AbiBIQLc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Feb 2022 10:50:24 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4AF7C0613C9;
-        Wed,  9 Feb 2022 07:50:27 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 53D61B8219F;
-        Wed,  9 Feb 2022 15:50:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A99BCC340E7;
-        Wed,  9 Feb 2022 15:50:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644421825;
-        bh=wMNYrDXg2eHpDbxlrXn7r2hj+pvWdMuwOJy/MY0tMDg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rOHL3v3Wkf6gp7AH52BgCfkRMhI06e+OP9ytlZElSwIuKi78ecjK/3PI7Z/lBDVt8
-         xDeYXB3o5O8374P3RNUY79qg/vKyqpyk3G7MAKP29F1aJOpNn74XCq0f3t7coJOp+3
-         qsoa+8f8JmBJIWa1ow3lBfse+BFBgwnDZJKLyU45hruLaYpwgQqib7S8T0R2jGvOiw
-         gerlI0J4bEq7j/7VYMmTb23EP6NvsoqVpd2dnk19MMsxjCbPPRUCVcsawnbk9s3ZeW
-         HodtwIviFB93fiU4Ru6f4Atm1bmU0pem/EOxLE4oPBJbBpumYNNZphYxdsG2cf2Yl5
-         XR6nhjF0OPFpw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B910E400FE; Wed,  9 Feb 2022 12:50:07 -0300 (-03)
-Date:   Wed, 9 Feb 2022 12:50:07 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf trace: Avoid early exit due SIGCHLD from
- non-workload processes
-Message-ID: <YgPir+Um+a2ZQ2gz@kernel.org>
-References: <20220208140725.3947-1-changbin.du@gmail.com>
- <YgPXTe7LlTfh+z4S@krava>
+        Wed, 9 Feb 2022 11:11:32 -0500
+Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88A79C0612BE;
+        Wed,  9 Feb 2022 08:11:35 -0800 (PST)
+Received: by mail-il1-x12a.google.com with SMTP id z18so2119337iln.2;
+        Wed, 09 Feb 2022 08:11:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YGPgmm0zpFysmniVk6vE8gWmAEuLsVxAfMCvjfUO8FA=;
+        b=W0oHNPu8aTwFsmLNc2jqUvB6rdV1IvIiYA0AB0NTcZy2169EnG7EADDd1Jim8+jyXu
+         wBAjpt7UjNfseFZ/7VXS4iRSfYHbqZznInXXp/av8940CZE3TNNEJDfF21ddZIlocoIL
+         MOSGq6d1rtB94NKMYTuKUUtOYLCShfbqZ6Qz3MTg1pKgiBr74egicc+haLpY8XU/0qO9
+         bLRFFrpG79boWiPBJoYBU30RCBv2G/0HHreheYq92zCUrGSmgesjHxpDLRahKUWc3cpw
+         QBX8DspekawPWyK1xcCvEp/PBkBBfnZgr+/WcdCyM5zCrWBKFGniOHX9jgZtkEkhsQFh
+         Q7Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YGPgmm0zpFysmniVk6vE8gWmAEuLsVxAfMCvjfUO8FA=;
+        b=amJG1nFgk5D+0i/esVNafV95W60aSCEkUwhfmPdj6/px2/+oK6h3xGlXtgnH2TKinH
+         6kGgz2BesasGf0ZzvGkjR1ozkpa5lh01PWJS/msaPZaU/TdpTJzGPk2phdCZVlRzb8s1
+         aJPSLh21jzX2paXYYKpsZf4LghJvH1ZAPQxHCo3DURpYVfyGi8tbAglBbU/W6U+oLayU
+         v33JPNKyUQf8rRdq9wzkApESRpd1VzjYFKCtgJMnfqCGBDXZw2bUC5X1/Cd0IFLdQqrj
+         vkbIR9peryFjY14nkpJ6VuUTFWVPpehq/GVOWelJwFzZzfE0ivs8ITVqy6NUTMbC7IKN
+         kcNw==
+X-Gm-Message-State: AOAM531C9SSUTBfBX6BJtMNI8m8Kre7LmKBjvOUKGzgwURQvyz1be7PC
+        UNnELcS95FkXr9WNlvBZxGb2Zg/Tx28haPQMUoQ=
+X-Google-Smtp-Source: ABdhPJxeiPAjeq/BjbjSbtUnzje1yjwtWKjDm0wgyLGxbpelssmuAU90aiAd20fkA7mdI+IgP2MQBBmh2q97ULqzg8E=
+X-Received: by 2002:a05:6e02:2163:: with SMTP id s3mr1370054ilv.252.1644423094933;
+ Wed, 09 Feb 2022 08:11:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YgPXTe7LlTfh+z4S@krava>
-X-Url:  http://acmel.wordpress.com
+References: <20220119230636.1752684-1-christylee@fb.com> <20220119230636.1752684-3-christylee@fb.com>
+ <Ye2LAEiXaBoj2n8Z@krava> <Yfq4o0Op4eYvFKIp@krava> <CAPqJDZpR0n2_VAPQNnpLoyAt_zO5b6XvSs0cO8X=kb3azOqg5w@mail.gmail.com>
+In-Reply-To: <CAPqJDZpR0n2_VAPQNnpLoyAt_zO5b6XvSs0cO8X=kb3azOqg5w@mail.gmail.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 9 Feb 2022 08:11:23 -0800
+Message-ID: <CAEf4BzbwcRJoa8ba5wm7C4=THK9resg9a9aWgaQOcL71ofMxeA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v4 2/2] perf: stop using deprecated
+ bpf_object__next() API
+To:     Christy Lee <christyc.y.lee@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Christy Lee <christylee@fb.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>,
+        Wang Nan <wangnan0@huawei.com>,
+        Wang ShaoBo <bobo.shaobowang@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Feb 09, 2022 at 04:01:33PM +0100, Jiri Olsa escreveu:
-> On Tue, Feb 08, 2022 at 10:07:25PM +0800, Changbin Du wrote:
-> > The function trace__symbols_init() runs "perf-read-vdso32" and that ends up
-> > with a SIGCHLD delivered to 'perf'. And this SIGCHLD make perf exit early.
-> > 
-> > 'perf trace' should exit only if the SIGCHLD is from our workload process.
-> > So let's use sigaction() instead of signal() to match such condition.
-> > 
-> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> 
-> good idea, I tested with the reproducer for:
->   f06a82f9d31a perf trace: Avoid early exit due to running SIGCHLD handler before it makes sense to
-> 
-> and it's working properly
-> 
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
+On Wed, Feb 2, 2022 at 9:24 AM Christy Lee <christyc.y.lee@gmail.com> wrote:
+>
+> Sorry, some other priorities came up. If it's urgent, please feel free
+> to commandeer this commit. Otherwise, I can get to it this weekend.
+>
+> Christy
 
-So can I replace this with the stronger:
+Hey Christy,
 
-Tested-by: Jiri Olsa <jolsa@kernel.org>
+Do you still plan to send follow up patches or should I pick this up?
 
-?
+>
+> On Wed, Feb 2, 2022 at 9:00 AM Jiri Olsa <jolsa@redhat.com> wrote:
+> >
+> > hi,
+> > just checking, do you plan to send new version for this?
+> >
+> > thanks,
+> > jirka
+> >
+> > On Sun, Jan 23, 2022 at 06:06:08PM +0100, Jiri Olsa wrote:
+> > > On Wed, Jan 19, 2022 at 03:06:36PM -0800, Christy Lee wrote:
+> > >
+> > > SNIP
+> > >
+> > > > ---
+> > > >  tools/perf/util/bpf-loader.c | 72 +++++++++++++++++++++++++++---------
+> > > >  tools/perf/util/bpf-loader.h |  1 +
+> > > >  2 files changed, 55 insertions(+), 18 deletions(-)
+> > > >
+> > > > diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
+> > > > index 4631cac3957f..b1822f8af2bb 100644
+> > > > --- a/tools/perf/util/bpf-loader.c
+> > > > +++ b/tools/perf/util/bpf-loader.c
+> > > > @@ -29,9 +29,6 @@
+> > > >
+> > > >  #include <internal/xyarray.h>
+> > > >
+> > > > -/* temporarily disable libbpf deprecation warnings */
+> > > > -#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+> > > > -
+> > > >  static int libbpf_perf_print(enum libbpf_print_level level __attribute__((unused)),
+> > > >                           const char *fmt, va_list args)
+> > > >  {
+> > > > @@ -49,6 +46,36 @@ struct bpf_prog_priv {
+> > > >     int *type_mapping;
+> > > >  };
+> > > >
+> > > > +struct bpf_perf_object {
+> > > > +   struct bpf_object *obj;
+> > > > +   struct list_head list;
+> > > > +};
+> > > > +
+> > > > +static LIST_HEAD(bpf_objects_list);
+> > >
+> > > hum.. I still can't see any code adding/removing bpf_perf_object
+> > > objects to this list, and that's why the code is failing to remove
+> > > probes
+> > >
+> > > because there are no objects to iterate on, so added probes stay
+> > > configured and screw following tests
+> > >
+> > > you need something like below to add and del objects from
+> > > bpf_objects_list list
+> > >
+> > > it also simplifies for_each macros to work just over perf_obj,
+> > > because I wasn't patient enough to make it work with the extra
+> > > bpf_object ;-) I don't mind if you fix that, but this way looks
+> > > simpler to me
+> > >
+> > > tests are working for me with this fix, please feel free to
+> > > squash it into your change
+> > >
+> > > thanks,
+> > > jirka
+> > >
+> > >
+> > > ---
+> > > diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
+> > > index 57b9591f7cbb..d09d25707f1e 100644
+> > > --- a/tools/perf/tests/bpf.c
+> > > +++ b/tools/perf/tests/bpf.c
+> > > @@ -210,6 +210,11 @@ prepare_bpf(void *obj_buf, size_t obj_buf_sz, const char *name)
+> > >               pr_debug("Compile BPF program failed.\n");
+> > >               return NULL;
+> > >       }
 
-- Arnaldo
- 
-> thanks,
-> jirka
-> 
-> > ---
-> >  tools/perf/builtin-trace.c | 21 ++++++++++++++++-----
-> >  1 file changed, 16 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> > index 32844d8a0ea5..d03556c14b0a 100644
-> > --- a/tools/perf/builtin-trace.c
-> > +++ b/tools/perf/builtin-trace.c
-> > @@ -1536,13 +1536,20 @@ static size_t trace__fprintf_tstamp(struct trace *trace, u64 tstamp, FILE *fp)
-> >  	return fprintf(fp, "         ? ");
-> >  }
-> >  
-> > +static pid_t workload_pid = -1;
-> >  static bool done = false;
-> >  static bool interrupted = false;
-> >  
-> > -static void sig_handler(int sig)
-> > +static void sighandler_interrupt(int sig __maybe_unused)
-> >  {
-> > -	done = true;
-> > -	interrupted = sig == SIGINT;
-> > +	done = interrupted = true;
-> > +}
-> > +
-> > +static void sighandler_chld(int sig __maybe_unused, siginfo_t *info,
-> > +			    void *context __maybe_unused)
-> > +{
-> > +	if (info->si_pid == workload_pid)
-> > +		done = true;
-> >  }
-> >  
-> >  static size_t trace__fprintf_comm_tid(struct trace *trace, struct thread *thread, FILE *fp)
-> > @@ -3938,7 +3945,6 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
-> >  	bool draining = false;
-> >  
-> >  	trace->live = true;
-> > -	signal(SIGCHLD, sig_handler);
-> >  
-> >  	if (!trace->raw_augmented_syscalls) {
-> >  		if (trace->trace_syscalls && trace__add_syscall_newtp(trace))
-> > @@ -4018,6 +4024,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
-> >  			fprintf(trace->output, "Couldn't run the workload!\n");
-> >  			goto out_delete_evlist;
-> >  		}
-> > +		workload_pid = evlist->workload.pid;
-> >  	}
-> >  
-> >  	err = evlist__open(evlist);
-> > @@ -4887,10 +4894,14 @@ int cmd_trace(int argc, const char **argv)
-> >  	const char * const trace_subcommands[] = { "record", NULL };
-> >  	int err = -1;
-> >  	char bf[BUFSIZ];
-> > +	struct sigaction sigchld_act = { 0 };
-> >  
-> >  	signal(SIGSEGV, sighandler_dump_stack);
-> >  	signal(SIGFPE, sighandler_dump_stack);
-> > -	signal(SIGINT, sig_handler);
-> > +	signal(SIGINT, sighandler_interrupt);
-> > +	sigchld_act.sa_flags = SA_SIGINFO;
-> > +	sigchld_act.sa_sigaction = sighandler_chld;
-> > +	sigaction(SIGCHLD, &sigchld_act, NULL);
-> >  
-> >  	trace.evlist = evlist__new();
-> >  	trace.sctbl = syscalltbl__new();
-> > -- 
-> > 2.25.1
-> > 
-
--- 
-
-- Arnaldo
+[...]
