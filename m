@@ -2,184 +2,89 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A7BC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Feb 2022 10:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DA2C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Feb 2022 12:50:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229464AbiBIK0L (ORCPT
+        id S233639AbiBIMuT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Feb 2022 05:26:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34200 "EHLO
+        Wed, 9 Feb 2022 07:50:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229535AbiBIK0K (ORCPT
+        with ESMTP id S231577AbiBIMuS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Feb 2022 05:26:10 -0500
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EE3EE091ED2;
-        Wed,  9 Feb 2022 02:18:59 -0800 (PST)
-Received: by mail-pf1-x430.google.com with SMTP id 9so554649pfx.12;
-        Wed, 09 Feb 2022 02:18:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:organization:in-reply-to
-         :content-transfer-encoding;
-        bh=T1Hj+tSM9t+g8VeOB7lokNQ899yMgNewNvSOg9nMbik=;
-        b=i5jSnodjNDPdvY+9fXQPC6S+YwkOqrneed3MWyePypm5iXeKekItraCbANxEeUv1lW
-         GWUzsD+hBVVOOxmxXBrmWQy72qaMxDhMQbIP/eMJ4i2cmC5hGx82CTS+nMG6lJ0D6Nw8
-         xjjpAxaIfaKSY5bWaXDwye7SkJJ0sfFu2QYNgl6zEJr0Py8gPjfBTKhJl7PlZg+yRaIk
-         w/s215n5PrwRInR4PDtBMAFa3HEM0FoAn6cQ4U8RnB0LudCylCDohxF5yEhpix15OXC/
-         5ksJVneYhG1lxHi02SoYq/Rfnyj3vW98jkxVeIWg6ufFujZwl8KMHmmC8KWk6s6KXLCM
-         9PTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:organization:in-reply-to
-         :content-transfer-encoding;
-        bh=T1Hj+tSM9t+g8VeOB7lokNQ899yMgNewNvSOg9nMbik=;
-        b=IQ55P3WfCRSPw9NpiZ1Y97OegmTJi7IypA9zvrKbUwMSF0pBF8fH9o7Vs9G9sLRha0
-         eGxjrvCDzD+1dYRalvLIgC7A9X7U2sULJnq6MtuEjRwRvxxX1YVJ3nz9qwF6bHbrunde
-         S+srg4UR/QgvmSjbQALd9y07/v2IE/jbi6wQspv8DslxHVQyePnxajGQFOijjsmTikJi
-         SlJUd/Vwm08rWjMAdFkaD885HLaBxC5TTD1PVto01cr1c3Qvxoeh6UUMvBtDfim370QR
-         CwBwsBoq+LDBTtY44HCs3LYSonipeYSMhGB1CjbpZ2YdSEyht1Vhq9Qu+/suyfmc/3mq
-         hySQ==
-X-Gm-Message-State: AOAM531IlZpFgMQC1YLdxseiRaciq+QlsWFE58KaKbRfAlGWK5K69or+
-        Lp+rb9KVcxLgK4i2y8i3weY=
-X-Google-Smtp-Source: ABdhPJyxJuVMgoBUcN0nOvAFED4KoL/Lm4G5W2DRDA9avA4NWlt4GblW8pUs0QdLxFWVUSx28/jd3w==
-X-Received: by 2002:aa7:9404:: with SMTP id x4mr1637147pfo.37.1644401938196;
-        Wed, 09 Feb 2022 02:18:58 -0800 (PST)
-Received: from [192.168.255.10] ([103.7.29.32])
-        by smtp.gmail.com with ESMTPSA id g20sm19995520pfj.196.2022.02.09.02.18.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Feb 2022 02:18:57 -0800 (PST)
-Message-ID: <e58ca80c-b54c-48b3-fb0b-3e9497c877b7@gmail.com>
-Date:   Wed, 9 Feb 2022 18:18:45 +0800
+        Wed, 9 Feb 2022 07:50:18 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8F25C0613CA;
+        Wed,  9 Feb 2022 04:50:21 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 236B061909;
+        Wed,  9 Feb 2022 12:50:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6710AC340E7;
+        Wed,  9 Feb 2022 12:50:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1644411020;
+        bh=e0spYyopUTJEcbTeOrH8NAGq+fUdLvm5AdAAhdd09Sk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ag1NfRBP844izHjhn428z33WAj1ZxvxL6Ae2imjd+A91Dg0+CxXTNYNXewjyhhFBk
+         maHPqR/zr9ICAGBXzT1w/sHwtzShS/EO2DNcqZkzVhXh/JxUJ1PySv4C+M9TMcwjYW
+         +dDiDMk9C0Np/114sA6EeUT0Vfagx7hS3D0YIzaz6LTb1aliarFs/DdsZGrRpd+dSo
+         vMHssD/9ECBel+zg8cEnCeEPjmLn5T4o+pAg0FJSVSBTjSMbY0sPg7gDSm1AgE5Cv5
+         JJ9zmMCHohdmoIpIMBy06lCxrtaL6py7mg8WYCUE5W5arTn+b1QjoZuL/psVJI9KH6
+         55i4NV02j1EMw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 1DDF7400FE; Wed,  9 Feb 2022 09:50:17 -0300 (-03)
+Date:   Wed, 9 Feb 2022 09:50:17 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: Update Jiri's email address
+Message-ID: <YgO4iYUj2SXAtkGG@kernel.org>
+References: <20220208221117.710405-1-jolsa@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.5.0
-Subject: Re: [PATCH v2] perf/amd: Implement erratum #1292 workaround for F19h
- M00-0Fh
-Content-Language: en-US
-To:     Jim Mattson <jmattson@google.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     eranian@google.com, santosh.shukla@amd.com, pbonzini@redhat.com,
-        seanjc@google.com, wanpengli@tencent.com, vkuznets@redhat.com,
-        joro@8bytes.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, tglx@linutronix.de,
-        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-        kvm@vger.kernel.org, x86@kernel.org,
-        linux-perf-users@vger.kernel.org, ananth.narayan@amd.com,
-        kim.phillips@amd.com
-References: <2e96421f-44b5-c8b7-82f7-5a9a9040104b@amd.com>
- <20220202105158.7072-1-ravi.bangoria@amd.com>
- <CALMp9eQHfAgcW-J1YY=01ki4m_YVBBEz6D1T662p2BUp05ZcPQ@mail.gmail.com>
- <3c97e081-ae46-d92d-fe8f-58642d6b773e@amd.com>
- <CALMp9eS72bhP=hGJRzTwGxG9XrijEnGKnJ-pqtHxYG-5Shs+2g@mail.gmail.com>
- <9b890769-e769-83ed-c953-d25930b067ba@amd.com>
- <CALMp9eQ9K+CXHVZ1zSyw78n-agM2+NQ1xJ4niO-YxSkQCLcK-A@mail.gmail.com>
-From:   Like Xu <like.xu.linux@gmail.com>
-Organization: Tencent
-In-Reply-To: <CALMp9eQ9K+CXHVZ1zSyw78n-agM2+NQ1xJ4niO-YxSkQCLcK-A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220208221117.710405-1-jolsa@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 4/2/2022 9:01 pm, Jim Mattson wrote:
-> On Fri, Feb 4, 2022 at 1:33 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
->>
->>
->>
->> On 03-Feb-22 11:25 PM, Jim Mattson wrote:
->>> On Wed, Feb 2, 2022 at 9:18 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
->>>>
->>>> Hi Jim,
->>>>
->>>> On 03-Feb-22 9:39 AM, Jim Mattson wrote:
->>>>> On Wed, Feb 2, 2022 at 2:52 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
->>>>>>
->>>>>> Perf counter may overcount for a list of Retire Based Events. Implement
->>>>>> workaround for Zen3 Family 19 Model 00-0F processors as suggested in
->>>>>> Revision Guide[1]:
->>>>>>
->>>>>>    To count the non-FP affected PMC events correctly:
->>>>>>      o Use Core::X86::Msr::PERF_CTL2 to count the events, and
->>>>>>      o Program Core::X86::Msr::PERF_CTL2[43] to 1b, and
->>>>>>      o Program Core::X86::Msr::PERF_CTL2[20] to 0b.
->>>>>>
->>>>>> Note that the specified workaround applies only to counting events and
->>>>>> not to sampling events. Thus sampling event will continue functioning
->>>>>> as is.
->>>>>>
->>>>>> Although the issue exists on all previous Zen revisions, the workaround
->>>>>> is different and thus not included in this patch.
->>>>>>
->>>>>> This patch needs Like's patch[2] to make it work on kvm guest.
->>>>>
->>>>> IIUC, this patch along with Like's patch actually breaks PMU
->>>>> virtualization for a kvm guest.
->>>>>
->>>>> Suppose I have some code which counts event 0xC2 [Retired Branch
->>>>> Instructions] on PMC0 and event 0xC4 [Retired Taken Branch
->>>>> Instructions] on PMC1. I then divide PMC1 by PMC0 to see what
->>>>> percentage of my branch instructions are taken. On hardware that
->>>>> suffers from erratum 1292, both counters may overcount, but if the
->>>>> inaccuracy is small, then my final result may still be fairly close to
->>>>> reality.
->>>>>
->>>>> With these patches, if I run that same code in a kvm guest, it looks
->>>>> like one of those events will be counted on PMC2 and the other won't
->>>>> be counted at all. So, when I calculate the percentage of branch
->>>>> instructions taken, I either get 0 or infinity.
->>>>
->>>> Events get multiplexed internally. See below quick test I ran inside
->>>> guest. My host is running with my+Like's patch and guest is running
->>>> with only my patch.
->>>
->>> Your guest may be multiplexing the counters. The guest I posited does not.
->>
->> It would be helpful if you can provide an example.
+Em Tue, Feb 08, 2022 at 11:11:17PM +0100, Jiri Olsa escreveu:
+> Using my kernel.org email.
+
+Thanks, applied!
+
+- Arnaldo
+ 
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Perf on any current Linux distro (i.e. without your fix).
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ea3e6c914384..d4248b02515b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15123,7 +15123,7 @@ M:	Ingo Molnar <mingo@redhat.com>
+>  M:	Arnaldo Carvalho de Melo <acme@kernel.org>
+>  R:	Mark Rutland <mark.rutland@arm.com>
+>  R:	Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> -R:	Jiri Olsa <jolsa@redhat.com>
+> +R:	Jiri Olsa <jolsa@kernel.org>
+>  R:	Namhyung Kim <namhyung@kernel.org>
+>  L:	linux-perf-users@vger.kernel.org
+>  L:	linux-kernel@vger.kernel.org
+> -- 
+> 2.34.1
 
-The patch for errata #1292 (like most hw issues or vulnerabilities) should be
-applied to both the host and guest.
+-- 
 
-For non-patched guests on a patched host, the KVM-created perf_events
-will be true for is_sampling_event() due to get_sample_period().
-
-I think we (KVM) have a congenital defect in distinguishing whether guest
-counters are used in counting mode or sampling mode, which is just
-a different use of pure software.
-
-> 
->>> I hope that you are not saying that kvm's *thread-pinned* perf events
->>> are not being multiplexed at the host level, because that completely
->>> breaks PMU virtualization.
->>
->> IIUC, multiplexing happens inside the guest.
-> 
-> I'm not sure that multiplexing is the answer. Extrapolation may
-> introduce greater imprecision than the erratum.
-
-If you run the same test on the patched host, the PMC2 will be
-used in a multiplexing way. This is no different.
-
-> 
-> If you count something like "instructions retired" three ways:
-> 1) Unfixed counter
-> 2) PMC2 with the fix
-> 3) Multiplexed on PMC2 with the fix
-> 
-> Is (3) always more accurate than (1)?
-
-The loss of accuracy is due to a reduction in the number of trustworthy counters,
-not to these two workaround patches. Any multiplexing (whatever on the host or
-the guest) will result in a loss of accuracy. Right ?
-
-I'm not sure if we should provide a sysfs knob for (1), is there a precedent for 
-this ?
-
-> 
->> Thanks,
->> Ravi
+- Arnaldo
