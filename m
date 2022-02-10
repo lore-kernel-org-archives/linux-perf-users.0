@@ -2,201 +2,144 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8DCC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Feb 2022 08:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FE8C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Feb 2022 10:09:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237945AbiBJIw2 (ORCPT
+        id S239428AbiBJKJ3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Feb 2022 03:52:28 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:49774 "EHLO
+        Thu, 10 Feb 2022 05:09:29 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:34284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236738AbiBJIw2 (ORCPT
+        with ESMTP id S239415AbiBJKJ2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Feb 2022 03:52:28 -0500
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C1ABC2A;
-        Thu, 10 Feb 2022 00:52:29 -0800 (PST)
-Received: by mail-wr1-x434.google.com with SMTP id q7so8139683wrc.13;
-        Thu, 10 Feb 2022 00:52:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/u3kTCTXAUlICGSNYbAWHqQvCCJLwNc1nISblF5DusI=;
-        b=aH8Em/b4Z5PKPPXvyKGK0jM31ldxtfnQgj0TFX/o059vwj7zRuknKrNk9wsBxSGZ2z
-         ceSiTwFdoWYjeAmV5TQWyQPAC3lZjwDsvd+hBLPr3yUSaBG4CkoAohAzqbqppwAJpIdX
-         sCdcnemFGT6YAtNWplTo3Gfsg2f32Bv221qbe6JGT0VCj0KTqaqrpmYleVpMYu6lfb9f
-         tQx6Od/ugg3YcMUVCQvRUOly6ZAAO0S/b95yuq4ByC3gvuWRRvQvouzREc2mWQeptJ8U
-         sPH6Mto5Sjcep2ndfcGoGOM2RL0cE6zKfHr3r3vUjKZ5GZiEpsoMgsc0ZCmQPQTxplLa
-         Xu0g==
+        Thu, 10 Feb 2022 05:09:28 -0500
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62F00FD5
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Feb 2022 02:09:29 -0800 (PST)
+Received: by mail-io1-f72.google.com with SMTP id g16-20020a05660203d000b005f7b3b0642eso3718925iov.16
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Feb 2022 02:09:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/u3kTCTXAUlICGSNYbAWHqQvCCJLwNc1nISblF5DusI=;
-        b=xIYkWmJWoAfawZ8MHYLv5PegFYx9Pjf/D7xdJXqs3jtQRbCv5B6XmdHzbxH3FgS8tB
-         Ce3eepPsi+LSAbXrcwgFgpxwvinnbdZKBp0RwHm4kSQicZrE0YuRb3AMREoDac1TvC12
-         2CbedeKG+whLocgb5RCDJkgCE6KsskO4Wa5IGlM3HCLTcGppww7yolc3QMG8baEUS4qZ
-         PzGXwIZSuzkgwQniJeUog+jzsc2w0VnCyFHYJscKkpaFU5i09jIrE01ihDYn2zga3t8O
-         yrGFwKM0qlQVHsYwHcngIaMrxEMYNN1E0dh6ag5kckUkd05oWWRlewkoqLkiBPRlYPQz
-         t83Q==
-X-Gm-Message-State: AOAM531B6EaBk88Vgv0u+eEXpV1S89a/If7y5FyTGGmxtElatZ/ofTGt
-        tG/ZHat6poQE02GhisWWaFg=
-X-Google-Smtp-Source: ABdhPJxY7SDfatLjxXJSeqHiZarkXhnTWabuPGCJV1jX4QZTGhs2au01uPWxYexF+yIUJ8rQKcpJlQ==
-X-Received: by 2002:a5d:5264:: with SMTP id l4mr5372844wrc.483.1644483147898;
-        Thu, 10 Feb 2022 00:52:27 -0800 (PST)
-Received: from oberon.com ([83.222.187.186])
-        by smtp.gmail.com with ESMTPSA id n29sm856773wms.8.2022.02.10.00.52.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Feb 2022 00:52:27 -0800 (PST)
-From:   "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
-To:     acme@kernel.org, jolsa@redhat.com
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] libperf: Add API for allocating new thread map
-Date:   Thu, 10 Feb 2022 10:52:25 +0200
-Message-Id: <20220210085225.551891-1-tz.stoyanov@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=H26uhXqNf/HlXPlFIZtr8pmKxHk/dt5G+KNL6a6flEY=;
+        b=lE7ApzrmIZXHzgWD5a7x+LF2BgrjwcBC+YJyfCxciRscnTZL4mxYVdH1YP0LHebhMQ
+         8m/CjyFIBxNaYDjsn9UT5bbWCCA1kglfrojMza3uOm7iMImU2/8YwNNrTz5HDlaGs1sp
+         pV8+/eo6XCVqfD1u18kl3e/r8lS+00i+vBkqYtuCv+t3cuJ+vx9lJPndrn61tJT6RNaX
+         gGcXPv3qH8tr7dj7HvOm1up+0baDq8l7ZMctauMvhk3UIjefgFbroC6uvrHukWos8qId
+         ONCMe2TZYmSTrjVwvGLPZkUgVrtcwVouwQ3AdijMCjdDYYNmlpBZVedP1TPXEmcqs67f
+         NSMA==
+X-Gm-Message-State: AOAM531TNtIS0sBLJ5BrNvTCE+rFZ11Qsse0zfHEx1FDT49Rg0e96jWR
+        jVRI2I6Iep/eH08y1saHL/8LjAIALOByU/T5FOYVPWnPePwU
+X-Google-Smtp-Source: ABdhPJwI8syl2er5tsXbTrN7FkI8sR4wbX6x0AppvYliZ9wZDmvIk4PegggX7v+PvzrQoenNXd+c/WeOJWXZLZGN23TwQcpJ0BYc
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6602:2e91:: with SMTP id m17mr3446789iow.96.1644487768576;
+ Thu, 10 Feb 2022 02:09:28 -0800 (PST)
+Date:   Thu, 10 Feb 2022 02:09:28 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000489d6105d7a7255e@google.com>
+Subject: [syzbot] KCSAN: data-race in perf_event_update_userpage /
+ perf_event_update_userpage (5)
+From:   syzbot <syzbot+df838a721c117d596976@syzkaller.appspotmail.com>
+To:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, john.fastabend@gmail.com, jolsa@redhat.com,
+        kafai@fb.com, kpsingh@kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        mingo@redhat.com, namhyung@kernel.org, netdev@vger.kernel.org,
+        peterz@infradead.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The existing API perf_thread_map__new_dummy() allocates new thread map
-for one thread. I couldn't find a way to reallocate the map with more
-threads, or to allocate a new map for more than one thread. Having
-multiple threads in a thread map is essential for some use cases.
-That's why a new API is proposed, which allocates a new thread map
-for given number of threads:
- perf_thread_map__new()
+Hello,
 
-Signed-off-by: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
+syzbot found the following issue on:
+
+HEAD commit:    dcb85f85fa6f gcc-plugins/stackleak: Use noinstr in favor o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14f2e20c700000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a83209f215159f48
+dashboard link: https://syzkaller.appspot.com/bug?extid=df838a721c117d596976
+compiler:       Debian clang version 11.0.1-2, GNU ld (GNU Binutils for Debian) 2.35.2
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+df838a721c117d596976@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KCSAN: data-race in perf_event_update_userpage / perf_event_update_userpage
+
+write to 0xffff88812430e020 of 8 bytes by task 11328 on cpu 1:
+ perf_event_update_userpage+0x328/0x3b0 kernel/events/core.c:5941
+ cpu_clock_event_add+0x11d/0x130 kernel/events/core.c:10780
+ event_sched_in+0x781/0xe60 kernel/events/core.c:2601
+ group_sched_in kernel/events/core.c:2637 [inline]
+ merge_sched_in kernel/events/core.c:3802 [inline]
+ visit_groups_merge+0x943/0x1a50 kernel/events/core.c:3746
+ ctx_flexible_sched_in kernel/events/core.c:3844 [inline]
+ ctx_sched_in+0x221/0x240 kernel/events/core.c:3892
+ perf_event_sched_in kernel/events/core.c:2741 [inline]
+ perf_event_context_sched_in kernel/events/core.c:3943 [inline]
+ __perf_event_task_sched_in+0x37c/0x8d0 kernel/events/core.c:3986
+ perf_event_task_sched_in include/linux/perf_event.h:1213 [inline]
+ finish_task_switch+0x1ef/0x280 kernel/sched/core.c:4861
+ context_switch kernel/sched/core.c:4989 [inline]
+ __schedule+0x43a/0x690 kernel/sched/core.c:6295
+ preempt_schedule_common kernel/sched/core.c:6461 [inline]
+ __cond_resched+0x3f/0x90 kernel/sched/core.c:8174
+ might_resched include/linux/kernel.h:110 [inline]
+ might_alloc include/linux/sched/mm.h:256 [inline]
+ slab_pre_alloc_hook mm/slab.h:705 [inline]
+ slab_alloc mm/slab.c:3298 [inline]
+ kmem_cache_alloc+0x45/0x320 mm/slab.c:3499
+ kmem_cache_zalloc include/linux/slab.h:705 [inline]
+ __proc_create+0x3cf/0x6a0 fs/proc/generic.c:426
+ _proc_mkdir+0x5c/0xf0 fs/proc/generic.c:487
+ proc_net_mkdir include/linux/proc_fs.h:226 [inline]
+ nfs_fs_proc_net_init+0x79/0x140 fs/nfs/client.c:1329
+ nfs_net_init+0x19/0x20 fs/nfs/inode.c:2346
+ ops_init+0x1e7/0x230 net/core/net_namespace.c:140
+ setup_net+0x29b/0x7e0 net/core/net_namespace.c:330
+ copy_net_ns+0x2a9/0x450 net/core/net_namespace.c:474
+ create_new_namespaces+0x231/0x560 kernel/nsproxy.c:110
+ copy_namespaces+0x116/0x160 kernel/nsproxy.c:178
+ copy_process+0x1428/0x2f30 kernel/fork.c:2167
+ kernel_clone+0x15c/0x6a0 kernel/fork.c:2555
+ __do_sys_clone kernel/fork.c:2672 [inline]
+ __se_sys_clone kernel/fork.c:2656 [inline]
+ __x64_sys_clone+0xc6/0xf0 kernel/fork.c:2656
+ do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+ do_syscall_64+0x44/0xd0 arch/x86/entry/common.c:80
+ entry_SYSCALL_64_after_hwframe+0x44/0xae
+
+write to 0xffff88812430e020 of 8 bytes by task 11341 on cpu 0:
+ perf_event_update_userpage+0x328/0x3b0 kernel/events/core.c:5941
+ perf_mmap+0xcd6/0xe50 kernel/events/core.c:6419
+ call_mmap include/linux/fs.h:2079 [inline]
+ mmap_region+0xb04/0x10b0 mm/mmap.c:1793
+ do_mmap+0x781/0xc20 mm/mmap.c:1582
+ vm_mmap_pgoff+0x117/0x1f0 mm/util.c:519
+ ksys_mmap_pgoff+0x265/0x320 mm/mmap.c:1630
+ do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+ do_syscall_64+0x44/0xd0 arch/x86/entry/common.c:80
+ entry_SYSCALL_64_after_hwframe+0x44/0xae
+
+value changed: 0x0000000000000000 -> 0x000000000135f629
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 0 PID: 11341 Comm: syz-executor.4 Not tainted 5.17.0-rc2-syzkaller-00167-gdcb85f85fa6f-dirty #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+==================================================================
+
+
 ---
- tools/lib/perf/Documentation/libperf.txt |  1 +
- tools/lib/perf/include/perf/threadmap.h  |  1 +
- tools/lib/perf/libperf.map               |  1 +
- tools/lib/perf/tests/test-threadmap.c    | 27 ++++++++++++++++++++++++
- tools/lib/perf/threadmap.c               | 15 +++++++++----
- 5 files changed, 41 insertions(+), 4 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
-index 32c5051c24eb..9cbd41c29bff 100644
---- a/tools/lib/perf/Documentation/libperf.txt
-+++ b/tools/lib/perf/Documentation/libperf.txt
-@@ -62,6 +62,7 @@ SYNOPSIS
-   struct perf_thread_map;
- 
-   struct perf_thread_map *perf_thread_map__new_dummy(void);
-+  struct perf_thread_map *perf_thread_map__new(int nr);
- 
-   void perf_thread_map__set_pid(struct perf_thread_map *map, int thread, pid_t pid);
-   char *perf_thread_map__comm(struct perf_thread_map *map, int thread);
-diff --git a/tools/lib/perf/include/perf/threadmap.h b/tools/lib/perf/include/perf/threadmap.h
-index a7c50de8d010..47d433416040 100644
---- a/tools/lib/perf/include/perf/threadmap.h
-+++ b/tools/lib/perf/include/perf/threadmap.h
-@@ -8,6 +8,7 @@
- struct perf_thread_map;
- 
- LIBPERF_API struct perf_thread_map *perf_thread_map__new_dummy(void);
-+LIBPERF_API struct perf_thread_map *perf_thread_map__new(int nr);
- 
- LIBPERF_API void perf_thread_map__set_pid(struct perf_thread_map *map, int thread, pid_t pid);
- LIBPERF_API char *perf_thread_map__comm(struct perf_thread_map *map, int thread);
-diff --git a/tools/lib/perf/libperf.map b/tools/lib/perf/libperf.map
-index 93696affda2e..240a2f087b70 100644
---- a/tools/lib/perf/libperf.map
-+++ b/tools/lib/perf/libperf.map
-@@ -11,6 +11,7 @@ LIBPERF_0.0.1 {
- 		perf_cpu_map__empty;
- 		perf_cpu_map__max;
- 		perf_cpu_map__has;
-+		perf_thread_map__new;
- 		perf_thread_map__new_dummy;
- 		perf_thread_map__set_pid;
- 		perf_thread_map__comm;
-diff --git a/tools/lib/perf/tests/test-threadmap.c b/tools/lib/perf/tests/test-threadmap.c
-index 5e2a0291e94c..3388bf36dfc0 100644
---- a/tools/lib/perf/tests/test-threadmap.c
-+++ b/tools/lib/perf/tests/test-threadmap.c
-@@ -11,9 +11,12 @@ static int libperf_print(enum libperf_print_level level,
- 	return vfprintf(stderr, fmt, ap);
- }
- 
-+#define THREADS_NR	5
-+
- int test_threadmap(int argc, char **argv)
- {
- 	struct perf_thread_map *threads;
-+	int i;
- 
- 	__T_START;
- 
-@@ -27,6 +30,30 @@ int test_threadmap(int argc, char **argv)
- 	perf_thread_map__put(threads);
- 	perf_thread_map__put(threads);
- 
-+	threads = perf_thread_map__new(THREADS_NR);
-+	if (!threads)
-+		tests_failed++;
-+
-+	if (perf_thread_map__nr(threads) != THREADS_NR)
-+		tests_failed++;
-+
-+	for (i = 0; i < THREADS_NR; i++) {
-+		if (perf_thread_map__pid(threads, i) != -1)
-+			tests_failed++;
-+	}
-+
-+	for (i = 1; i < THREADS_NR; i++)
-+		perf_thread_map__set_pid(threads, i, i * 100);
-+
-+	if (perf_thread_map__pid(threads, 0) != -1)
-+		tests_failed++;
-+
-+	for (i = 1; i < THREADS_NR; i++) {
-+		if (perf_thread_map__pid(threads, i) != i * 100)
-+			tests_failed++;
-+	}
-+	perf_thread_map__put(threads);
-+
- 	__T_END;
- 	return tests_failed == 0 ? 0 : -1;
- }
-diff --git a/tools/lib/perf/threadmap.c b/tools/lib/perf/threadmap.c
-index e92c368b0a6c..843fe1070cc9 100644
---- a/tools/lib/perf/threadmap.c
-+++ b/tools/lib/perf/threadmap.c
-@@ -42,18 +42,25 @@ char *perf_thread_map__comm(struct perf_thread_map *map, int thread)
- 	return map->map[thread].comm;
- }
- 
--struct perf_thread_map *perf_thread_map__new_dummy(void)
-+struct perf_thread_map *perf_thread_map__new(int nr)
- {
--	struct perf_thread_map *threads = thread_map__alloc(1);
-+	struct perf_thread_map *threads = thread_map__alloc(nr);
-+	int i;
- 
- 	if (threads != NULL) {
--		perf_thread_map__set_pid(threads, 0, -1);
--		threads->nr = 1;
-+		for (i = 0; i < nr; i++)
-+			perf_thread_map__set_pid(threads, i, -1);
-+		threads->nr = nr;
- 		refcount_set(&threads->refcnt, 1);
- 	}
- 	return threads;
- }
- 
-+struct perf_thread_map *perf_thread_map__new_dummy(void)
-+{
-+	return perf_thread_map__new(1);
-+}
-+
- static void perf_thread_map__delete(struct perf_thread_map *threads)
- {
- 	if (threads) {
--- 
-2.34.1
-
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
