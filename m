@@ -2,53 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA2DBC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Feb 2022 23:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC985C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Feb 2022 23:20:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345250AbiBJXFH (ORCPT
+        id S1345589AbiBJXUk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Feb 2022 18:05:07 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:56536 "EHLO
+        Thu, 10 Feb 2022 18:20:40 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:37670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239716AbiBJXFG (ORCPT
+        with ESMTP id S1345587AbiBJXUi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Feb 2022 18:05:06 -0500
-Received: from mail-qv1-xf30.google.com (mail-qv1-xf30.google.com [IPv6:2607:f8b0:4864:20::f30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 348011125;
-        Thu, 10 Feb 2022 15:05:06 -0800 (PST)
-Received: by mail-qv1-xf30.google.com with SMTP id d7so6703065qvk.2;
-        Thu, 10 Feb 2022 15:05:06 -0800 (PST)
+        Thu, 10 Feb 2022 18:20:38 -0500
+Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0B9B5F57;
+        Thu, 10 Feb 2022 15:20:35 -0800 (PST)
+Received: by mail-qk1-x733.google.com with SMTP id 200so6608218qki.2;
+        Thu, 10 Feb 2022 15:20:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=KXOSpbk+RXW+DBP53WQyWN4jwpILDSDDpj6Jr1j/OXk=;
-        b=HI2mnNYtTkfI3G65nubNt3EonUdah48+r1Un+jjkwIm5WTUeKo1DSh7mwr1RNCRMgE
-         bziELpIikolO6+XLfN0wr0paDV5evv5uQUe7vVM82nIsTufGcwsTZAklK8FgskeB/Gxs
-         YgPcjoQxWhmMSZW92o3z3PKTdUgV6SSsVrFSHaVYahPoIiJ9jt9mz1ETwAec6RlUOezB
-         PjTKHGc7yT7dL7Jk6cnosjN72yiOPlOXg2Z3zFIPWOIuIsIPzL/GRn8T29YfLAMDtaM7
-         hpgWjT8yH+viYHDWG/BFQtM59cR+p85vdEojzwXcypdnEpm5UXp9OFxTycC6GnmsV3Js
-         azPw==
+        bh=OI8hrqvEfZeAPpQf8rC+vBfmKoqD6QuGtPPDNoK9uS4=;
+        b=EQfXcPTDBcYmVj4+j4y/o25JVZVDwsWDx+EHUAOF3zMYUn3kQLX/MQfzHc/YKh7FN+
+         wm3IVR3uXroLe/72PTmQlUcmmno8zHVeYAM0auen7rv+y/jThDNnkafJjcgmONPKaZx5
+         gDKoXCQtUHorfeynZcINw3BfDvjNFg1UfPdLYBp9UNxk8+r/ONDMKXrWVWxHFGs4MioI
+         4Qo6KmzZXo6xLcPq6A2malt5UGXvTQ0/AN4hdbapLw/4UqjI/nUuIbUbfUEXo9K8538z
+         v9P/ZZOoEfZt7peFCpLO9LS5MNJS7WxJgbU0lBrAZ25AQUta31Bg+sR9XeKHm/qqs1wE
+         GMsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KXOSpbk+RXW+DBP53WQyWN4jwpILDSDDpj6Jr1j/OXk=;
-        b=cpe/XXTxD2SxUfGsQWxJA8l+XqAtYwphlmDqQrnEzsF0sTWggfSPfJfXrpiUH8kv6f
-         22xiSVeASTR2fDs0j+ykJxhF9RXBC7FQmnwLwRKgYpXoDMooeuFWaMB3XpYm1Q/U1Dzy
-         ts2N+dLKzW6GxUqrVh+rYcWah2cVArCdpvKYY6Z3J0lYs7aQ59ycw1mlz1TiTiTrljZo
-         PnrVcou+fBSuGr28eLWRJPHGYbe6IWjQ+usY1dA51WV54CqDGTA0yuCyOdkci4eL8QWY
-         fezdQGC3KV/vSj3rldAV5X3i0sEi2FRnI5Yjhkb/D6JnMyQnvIGIpQ9Kc8cOyqZG9+Xs
-         JoXQ==
-X-Gm-Message-State: AOAM530zVrV0Ggq3KvwDh9FtTZ7RwVcuLPvUnizqLlAgad22dkt1xvdB
-        7Mi0O/TVA+BYgsWRHeLlbIc=
-X-Google-Smtp-Source: ABdhPJyoK1UXHarwQjdmthhpKPhuaMIGYQTI8x7ciOZ5He2zfHWTRwLo34b0L8nU6akmLcRZSIYSow==
-X-Received: by 2002:a05:6214:194d:: with SMTP id q13mr6709929qvk.8.1644534305337;
-        Thu, 10 Feb 2022 15:05:05 -0800 (PST)
+        bh=OI8hrqvEfZeAPpQf8rC+vBfmKoqD6QuGtPPDNoK9uS4=;
+        b=UCYQSb3Pzs2xa8qitu7UTbrUwQ72zJbSk+i29PfseM5LzrMK5pODUFPc5fT9ERWToW
+         7n+l6fe7qgjUuvyopYxxioJGZUtP/KmGGt1/V/yHS0euf0agDasPsuEYvLdjTlGKLA/G
+         MszWX06Yk8G3YRjWSbckyKxh9r59szR28HtpqcTB9v7T6gkaCc2fNkBegr3g6fsvp/QH
+         /cEIdxT+ub8P/1iPeLrvYtSjfZoe6+S2tJ8s34nTip0CepDri9Bq7MyUfkCFghgqf50E
+         0254QeweafMDsuHT1ouRr6GcbyGlr4bktF1ZukHzcpUmcofYVn4Fh+EM8tieIVhZKUrh
+         mSuQ==
+X-Gm-Message-State: AOAM532jO7txafanMGY7sBYAGKS69YBNbzmYdQ65tzUOWafDfO/FZXXB
+        NNg6A3cAs3qIgCotqJ/nG+M=
+X-Google-Smtp-Source: ABdhPJyfmC4ftc0tGVwbWyGGCrs8QXCUCRrbYeGrdw/pzG5Dj57MnQrgDJcGdetfGIydZXZ3xW6zSg==
+X-Received: by 2002:a05:620a:4043:: with SMTP id i3mr5211591qko.14.1644535235068;
+        Thu, 10 Feb 2022 15:20:35 -0800 (PST)
 Received: from localhost ([12.28.44.171])
-        by smtp.gmail.com with ESMTPSA id w10sm12438294qtj.73.2022.02.10.15.05.04
+        by smtp.gmail.com with ESMTPSA id v12sm10661466qkl.74.2022.02.10.15.20.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Feb 2022 15:05:04 -0800 (PST)
+        Thu, 10 Feb 2022 15:20:34 -0800 (PST)
 From:   Yury Norov <yury.norov@gmail.com>
 To:     Yury Norov <yury.norov@gmail.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -69,13 +69,10 @@ To:     Yury Norov <yury.norov@gmail.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Nick Hu <nickhu@andestech.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
         linux-perf-users@vger.kernel.org
-Subject: [PATCH 06/49] nds32: perf: replace bitmap_weight with bitmap_empty where appropriate
-Date:   Thu, 10 Feb 2022 14:48:50 -0800
-Message-Id: <20220210224933.379149-7-yury.norov@gmail.com>
+Subject: [PATCH 13/49] perf tools: replace bitmap_weight with bitmap_empty where appropriate
+Date:   Thu, 10 Feb 2022 14:48:57 -0800
+Message-Id: <20220210224933.379149-14-yury.norov@gmail.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220210224933.379149-1-yury.norov@gmail.com>
 References: <20220210224933.379149-1-yury.norov@gmail.com>
@@ -85,29 +82,38 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-nds32_pmu_enable calls bitmap_weight() to check if any bit of a given
-bitmap is set. It's better to use bitmap_empty() in that case because
-bitmap_empty() stops traversing the bitmap as soon as it finds first
-set bit, while bitmap_weight() counts all bits unconditionally.
+Some code in builtin-c2c.c calls bitmap_weight() to check if any bit of
+a given bitmap is set. It's better to use bitmap_empty() in that case
+because bitmap_empty() stops traversing the bitmap as soon as it finds
+first set bit, while bitmap_weight() counts all bits unconditionally.
 
 Signed-off-by: Yury Norov <yury.norov@gmail.com>
 ---
- arch/nds32/kernel/perf_event_cpu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/builtin-c2c.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/nds32/kernel/perf_event_cpu.c b/arch/nds32/kernel/perf_event_cpu.c
-index a78a879e7ef1..ea44e9ecb5c7 100644
---- a/arch/nds32/kernel/perf_event_cpu.c
-+++ b/arch/nds32/kernel/perf_event_cpu.c
-@@ -695,7 +695,7 @@ static void nds32_pmu_enable(struct pmu *pmu)
- {
- 	struct nds32_pmu *nds32_pmu = to_nds32_pmu(pmu);
- 	struct pmu_hw_events *hw_events = nds32_pmu->get_hw_events();
--	int enabled = bitmap_weight(hw_events->used_mask,
-+	bool enabled = !bitmap_empty(hw_events->used_mask,
- 				    nds32_pmu->num_events);
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index 77dd4afacca4..14f787c67140 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -1080,7 +1080,7 @@ node_entry(struct perf_hpp_fmt *fmt __maybe_unused, struct perf_hpp *hpp,
+ 		bitmap_zero(set, c2c.cpus_cnt);
+ 		bitmap_and(set, c2c_he->cpuset, c2c.nodes[node], c2c.cpus_cnt);
  
- 	if (enabled)
+-		if (!bitmap_weight(set, c2c.cpus_cnt)) {
++		if (bitmap_empty(set, c2c.cpus_cnt)) {
+ 			if (c2c.node_info == 1) {
+ 				ret = scnprintf(hpp->buf, hpp->size, "%21s", " ");
+ 				advance_hpp(hpp, ret);
+@@ -1944,7 +1944,7 @@ static int set_nodestr(struct c2c_hist_entry *c2c_he)
+ 	if (c2c_he->nodestr)
+ 		return 0;
+ 
+-	if (bitmap_weight(c2c_he->nodeset, c2c.nodes_cnt)) {
++	if (!bitmap_empty(c2c_he->nodeset, c2c.nodes_cnt)) {
+ 		len = bitmap_scnprintf(c2c_he->nodeset, c2c.nodes_cnt,
+ 				      buf, sizeof(buf));
+ 	} else {
 -- 
 2.32.0
 
