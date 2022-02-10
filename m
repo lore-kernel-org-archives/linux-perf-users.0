@@ -2,216 +2,166 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1118BC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Feb 2022 21:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A2BFC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Feb 2022 04:05:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233557AbiBIVlK (ORCPT
+        id S232999AbiBJEFg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Feb 2022 16:41:10 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:51256 "EHLO
+        Wed, 9 Feb 2022 23:05:36 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:40758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233568AbiBIVlI (ORCPT
+        with ESMTP id S232261AbiBJEFg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Feb 2022 16:41:08 -0500
-Received: from mail-ot1-x331.google.com (mail-ot1-x331.google.com [IPv6:2607:f8b0:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9F48DD94E5E
-        for <linux-perf-users@vger.kernel.org>; Wed,  9 Feb 2022 13:41:05 -0800 (PST)
-Received: by mail-ot1-x331.google.com with SMTP id x52-20020a05683040b400b0059ea92202daso2467092ott.7
-        for <linux-perf-users@vger.kernel.org>; Wed, 09 Feb 2022 13:41:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aHgHlx+I4QHtl3iX+6OuSr5CkYEtvnBUXLfXjTOaODE=;
-        b=aFLE3Sjwg9KjXg+ImFrILwTfJ8PL3XrJ4Z9i/cP4F+YFLmiLfYSp+6ZJegH1P6cHcz
-         vYJNw0Vna35dmxSydTmDg8r/FChAUI1cCoWELakZrbcmMgsUgqFr5YZPCM9B0L9L7602
-         Lybx5sq5KuYHnnFWdEiLbLuFNRS6N+xIoS72LpbXPx6Du4VTm4Sc5EteVlcRhG1y3y9Q
-         69ar3KOkGOpKpG7FBF60e3xliDh5xpVrjEgPUwh5LqlAhlH4l6rNUkjT1ESkaFgF8QeC
-         PyyDQFReN4T3EuAhZQpWljlNiUOLINnmcmNzQFm8V1K/wyknMkykuqJk7GyfN1Bm+mf6
-         zpqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aHgHlx+I4QHtl3iX+6OuSr5CkYEtvnBUXLfXjTOaODE=;
-        b=jwJbwD5//Ud8fVxQpv8MS0c181ECo1Zl8RjCTXZm7gzIDOz+bv1SVFP/Xjw78DwuAs
-         tNI80lCHQYjDCCLGNaTNxUTZbczSEqEgQS3dI5UrvmwlUBl3E/fQTgrMNmg747ZJ5t7A
-         YhNMXJqpO1tn4rjh8M1xEogvArLyw4HPIl2YH7PsJFWKYjwDRatar7SMa5SL3f+sgcyf
-         YMBnYUTt5I4CkvjItIpVGwZH/k/JB0ldd2SkyxOp0F+GrCCNcXT93TI2hya6m/Q2jGz+
-         GTZZz8GUS137TwI5gPMwKhnIZUTcv/nIQd/3plu/KfOUDVIb332U6IPMR8TFfHZy1Y29
-         bdeg==
-X-Gm-Message-State: AOAM532ZxLgOoevbIOMhEkJoAjrbiKzvpdhykUCeCmZ+VhplEndKSrWo
-        +D5EmKC58FlilsUAgeXs8Jlk8ciVL4Z5XrdjLgCp7g==
-X-Google-Smtp-Source: ABdhPJyhcF730ksvNR2DpRX8vO6wF3Lmwu+B55F3OSAatSrYKYz+vfnugJ21Spp70ny8Akdj/QYtOH3Zu0KRER4fzz8=
-X-Received: by 2002:a9d:4e03:: with SMTP id p3mr1825652otf.299.1644442864980;
- Wed, 09 Feb 2022 13:41:04 -0800 (PST)
-MIME-Version: 1.0
-References: <2e96421f-44b5-c8b7-82f7-5a9a9040104b@amd.com> <20220202105158.7072-1-ravi.bangoria@amd.com>
- <CALMp9eQHfAgcW-J1YY=01ki4m_YVBBEz6D1T662p2BUp05ZcPQ@mail.gmail.com>
- <3c97e081-ae46-d92d-fe8f-58642d6b773e@amd.com> <CALMp9eS72bhP=hGJRzTwGxG9XrijEnGKnJ-pqtHxYG-5Shs+2g@mail.gmail.com>
- <9b890769-e769-83ed-c953-d25930b067ba@amd.com> <CALMp9eQ9K+CXHVZ1zSyw78n-agM2+NQ1xJ4niO-YxSkQCLcK-A@mail.gmail.com>
- <e58ca80c-b54c-48b3-fb0b-3e9497c877b7@gmail.com>
-In-Reply-To: <e58ca80c-b54c-48b3-fb0b-3e9497c877b7@gmail.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Wed, 9 Feb 2022 13:40:53 -0800
-Message-ID: <CALMp9eRuBwj9Sg60jg2ucWd-XoAcE_kXP5ULFgpkSHg88sOJZQ@mail.gmail.com>
-Subject: Re: [PATCH v2] perf/amd: Implement erratum #1292 workaround for F19h M00-0Fh
-To:     Like Xu <like.xu.linux@gmail.com>
-Cc:     Ravi Bangoria <ravi.bangoria@amd.com>, eranian@google.com,
+        Wed, 9 Feb 2022 23:05:36 -0500
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2073.outbound.protection.outlook.com [40.107.237.73])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B81C124587;
+        Wed,  9 Feb 2022 20:05:37 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RBBf2y7eCPOVTgLPhFZD03rPsP9qLpUoOxVRvfBx6FplxD8487Asb+bNWQD5gVqFu9DRShDrCNlgqfp7/kHkMktUrfD/IxgDvpUGPPc4RxsYXhLk0SuXLLfgNEeye9j0HRwTpfy+GHDqLiHVriCuM9Gq3Fa18vKngwox1vcoE4fJO2jYLgElYy9ELwcLM+M78XMclDY6G0DvSrXpd3TvJ0RZeFRez4P78BYbRgwlmtj0miQGHXixuivCA2euxE24+7c7wc6sPO9DE9DSsxIsou6G6Wf5dQV0de9Sy4G/frgfIwjgkkchRcsJB+oBGGhCQRteX0S/CHOAZ6XKKUda6A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GPEbk0GEyGFK2OnX2YBloU7KJeBJZeL4uV68PeVQzXs=;
+ b=lbVs5TXnvjqzh3BFGN/F78yCXEoszNwdbnpPcYS7s1Ud6FTwc2Sy8N/RGCHWZQ1pNIx5SMgzZ6bI2Jc9jVDsZxqzPwFJAt6GYcGyHv/JdXM/j6Bhib6/yaNlAF1wVUKygSjw6Fagwn0kwy5rNXj6+2X2yBQA10ddknCST3qWOodTaxcbJ8tAguRRCr/C7aVB8gi7hDT0USWpitOnq5Vh0/bkdZP7EcMTBCWt9eIdxPpZv+dBPG4n5Y9KKqIHIlsV5/XWz5ay/Bx0a/O+/5lO5Ftia5TeFXdTFHewCS8sI+9kbNgePuJ5i0WUzfiQkkh29dy8KRql2G9blcmUGvQo6A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GPEbk0GEyGFK2OnX2YBloU7KJeBJZeL4uV68PeVQzXs=;
+ b=Aiahy36VbP5JV+AClPTDTCCoY1ZDqS+20nVMMk0F8CvSYBDjEq8l6/qmLV11hE3uDi3YoDZkm1jXA6PYZkRPqEH2IMcWxnvAZsybOWKUUc30l7EPdCD0kh0NKqH9FPHI/pV+T+znDoXMEc6xC8Fdrz8PSzXHfA5Jm3IBboK0SQg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN2PR12MB3053.namprd12.prod.outlook.com (2603:10b6:208:c7::24)
+ by BYAPR12MB3174.namprd12.prod.outlook.com (2603:10b6:a03:133::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.18; Thu, 10 Feb
+ 2022 04:05:34 +0000
+Received: from MN2PR12MB3053.namprd12.prod.outlook.com
+ ([fe80::9117:ca88:805a:6d5b]) by MN2PR12MB3053.namprd12.prod.outlook.com
+ ([fe80::9117:ca88:805a:6d5b%4]) with mapi id 15.20.4975.012; Thu, 10 Feb 2022
+ 04:05:33 +0000
+Message-ID: <b775ab2d-c293-d8f0-a436-1ec19c6315d8@amd.com>
+Date:   Thu, 10 Feb 2022 09:35:14 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.1
+Subject: Re: [PATCH v3] perf/amd: Implement erratum #1292 workaround for F19h
+ M00-0Fh
+Content-Language: en-US
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     like.xu.linux@gmail.com, jmattson@google.com, eranian@google.com,
         santosh.shukla@amd.com, pbonzini@redhat.com, seanjc@google.com,
         wanpengli@tencent.com, vkuznets@redhat.com, joro@8bytes.org,
-        peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, tglx@linutronix.de,
-        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-        kvm@vger.kernel.org, x86@kernel.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
+        hpa@zytor.com, kvm@vger.kernel.org, x86@kernel.org,
         linux-perf-users@vger.kernel.org, ananth.narayan@amd.com,
-        kim.phillips@amd.com
-Content-Type: text/plain; charset="UTF-8"
+        kim.phillips@amd.com, Ravi Bangoria <ravi.bangoria@amd.com>
+References: <fe53507b-9732-b47e-32e0-647a9bfc8a80@amd.com>
+ <20220203095841.7937-1-ravi.bangoria@amd.com>
+ <YgO4vn2w5kT43HGh@hirez.programming.kicks-ass.net>
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <YgO4vn2w5kT43HGh@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BMXPR01CA0079.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:54::19) To MN2PR12MB3053.namprd12.prod.outlook.com
+ (2603:10b6:208:c7::24)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 385bd1a9-22d0-4257-bd93-08d9ec4a9580
+X-MS-TrafficTypeDiagnostic: BYAPR12MB3174:EE_
+X-Microsoft-Antispam-PRVS: <BYAPR12MB3174F8A593588C1C94DD7D16E02F9@BYAPR12MB3174.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ragsX5YE8VIb06DY7+adPAAC2IESNQLUhhA5ed2HtgDjJkfKIrlO8RiVKbPHMAc4E7uRymdfAnvWEz0SJeSbQgy5T0NEVZwOa+oEvvbwmVEcR5OXDhqsSrDooKANlbAFcc4gRU1mSPi0adGraP20EzvBOdtzs8m4u8q+GalzV+/jAgbEhB7dHy+cfhJcvR616tPwwK8ty6b7NpRrnHuyEVAyHL/xHfuK4sLrepV/nt6Z3qs/ZkFOjAbEISyHO3PmiTaEgIbXagdy0OfuXuh2g8AMWXlZDIFk6P+G4x9gWtbvl2noh0kq+Zj7NGSqh5xkvUqW9HXBCKNKQjYia1tenYCMFrEQeKrrvGw3dgt/TNpnOFQNqJ6bEhUcgDb0d8dgTYShKnKRdRAI2kh2EwxhyGijG4w6i9ShooGQrlbuJEfqrK2LtUmzEAh2xp5WuJNO4TQGpB3708khsdumYSPaM4tshrLu7HxVYJnOHzwDKDDMDDBUzoLXs/1ySNjFSzHHjAPiY76IGlZ58k19Y/JONHKNoMKPK0plrCsznyKImNvMGjupKMVb7VNQ+5ZzACYo1VeCLNhWMXNGLuC2imiuzvQmksR5zg/t1Hs7z9WZEK6lKtqEBV2erhFtOAQ1KYFKOGlfVO1SZ1HhKaFdvzjXuEIGKlmxTiNjURFHgZ1/aE3ArGaE2JbExijRi8dYtS2DHczZZF6Yr2aaB73ncSx17x5rTgH628OjNTfwkuYOnt63KycJreMSF+0dlK5kFEC/ZvqDCqM1j7vDFKaCDY9VwqZxQUDqbD4CWnd0mcMSKfi+tbCdV0tbVfwCgr2U9mj3AcVT0+uUSgf050z8YorL2ohDuVe3Y0YltCno8WbpiXw=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3053.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(316002)(4326008)(2616005)(66946007)(38100700002)(53546011)(6666004)(6506007)(2906002)(66556008)(66476007)(6916009)(508600001)(31696002)(6512007)(8676002)(36756003)(6486002)(8936002)(26005)(5660300002)(44832011)(31686004)(966005)(86362001)(7416002)(186003)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cks3S0pjRk8yc3NHTTdnYVFTaWIrWjZRVDJnOUZZYWFvckR5am5oZ2xmbXBE?=
+ =?utf-8?B?eHgvcTJKdnNlQjFaN2M2bFJENDNHdmdXdzhNSVljakRDSDlqc3FmcG9CNWZX?=
+ =?utf-8?B?amVrUzJJUUdFMXJqR0ZrR1dzaGlmclRScG5mVkVlOVAyYUcwN1BiY0tjbU9R?=
+ =?utf-8?B?MkxjQkZwZDBtU3R6S1hFdVpQMG5qVHpBbHN1TUdwYTB6UGdFS1RXL1F3a2t2?=
+ =?utf-8?B?Zmc2SVdxdHNUaFhQMUdjbktIcERtYjVIbVR3TGN6L0Nla0NLU0tUdGEzaTdP?=
+ =?utf-8?B?OUc2MmxFbVZKNzZjYjR2UmQzZTI3OGtBbngyL3B1N3hkMVdpbXAwWHMrSmZh?=
+ =?utf-8?B?R1RsQjkrMEFVcXNwSzhLMklHZjRoQ0xWb2NBbU1MbEZ0R2J2cUkza080TElY?=
+ =?utf-8?B?ZktiK1MyMTF2d1U5cDdMVkpZckxvVG1jamU3bTJYZXpsMUF5eGJ6MDVhd0dZ?=
+ =?utf-8?B?SXFtMFRwN2x2VjRtdVQrNFAvUXJZellWT00vazl3dmdKeXFVUVp5NzJSMWRD?=
+ =?utf-8?B?bEJZcmxzR2NWVXY2NlcyaS9YUk9mUitnOXhwd20wT2Yxd002TFRmd0duNVNK?=
+ =?utf-8?B?eWhEQURDMnpiMlR2T0dNaHRZTW9JQlpNMVArR25NT0padW9IYkd1Q2NLdGxs?=
+ =?utf-8?B?WTgwenRESGh3MFNnNGpjT3pHSVhJNTdjZFRzaU9GMnM0S1AzamJMaUZ2aHNj?=
+ =?utf-8?B?NWFocnYrbjhsa2RTbklKT1FIYVU3amJWTWNEOWtzN1pUT3dsRVBEOThzNk16?=
+ =?utf-8?B?VmhFenZLOThSczVKbllQMDdKSmVFLy9YUzBCUFZSZzR0VWpwOXdqYzNPQWt2?=
+ =?utf-8?B?Q1EyRzFLc3RJMndWMzEyeDMzZk1MRWJRREphRXNsNUhoSGR3Y2dCaEZVV2xP?=
+ =?utf-8?B?aXpuelIxTzhTUmV2NXdqNEhyaTFiWHFvNVZGVDVXMFNKMDlEN3pYV25TbWJm?=
+ =?utf-8?B?RGl0M1R6eW9uckVZK0RSRkhuVG41OXNMVGowZ2Q5Mzd5YnZYSjFONUp4SnIv?=
+ =?utf-8?B?QUVBMGxRTENja1E0b2tmZ29qWjN0b1oxK1BzSG0xQUxMaFpJdjlINUxKcnJL?=
+ =?utf-8?B?Z01PVmdXL3JpUi9UNFRJdFV3MjBVY0ZyZ0dyWVUzbU5jOVJpVDNJMjE0bFVQ?=
+ =?utf-8?B?Tk5IU1dZSlpJVDNrdHpvdUcwMFpXcUhOaWpCeEt0UHpWY1h2aXhPZ1I2d2VE?=
+ =?utf-8?B?S01DSUY0SEJneEIweEs4eGtQVnhsR3FibGhDY1Z1NVVWekJwT0RldkNjUDJ0?=
+ =?utf-8?B?a0pobTBlY3FzbHE4SDJuenhsNnNrSVE1eWRGT0pBekwyT3huR05YQ2Z4WGZG?=
+ =?utf-8?B?eUp0MTRib1krTWNFUEJTZmFFVE16MGl0OVN5Wk1sWWFDN0xLRjJRYTRBR1I1?=
+ =?utf-8?B?RTVFMlEyZytTVURxaVUwTVMvYWcyTWFtRFUzNnpvRmRhS2k1VVFQbG5FY2dV?=
+ =?utf-8?B?UlNqaFB4U1F3VXNWem0zN1JkUzZVRGFJZTgwU2lVWEh5bnhFUlFQVEs3blV0?=
+ =?utf-8?B?a0pFdGxURWFkaEtzUWJiOUtXY1NVdDdiQjFDSG5BVmRLVEV0S0pNQzVnU0Yw?=
+ =?utf-8?B?NFg0WFdYekRzdkdPaHVrWWlhTEFjMDBSMEdDb3NjczZOQzN1N0Y0RGNYT3Zz?=
+ =?utf-8?B?eDdldTMwNmdydW1rTkE0TTE4RVF5K2lMVmZBWmlsOFd0Q281RllaTEhyUFZn?=
+ =?utf-8?B?NmFKL1d6RUZ3c2pBbk84d0lySGZRRkFEbm9tZFBjQUlvSzJGVEx0M1lNWUxr?=
+ =?utf-8?B?KzBVRUhYbVRmT2NVa3EyaitKUE80S1NNN1psRUpQL1EzZHNVYXNtbEF0VzRO?=
+ =?utf-8?B?cjhQK3FVREZvOHpWTUsxdW41bE54MGhESWN3anZycjRlVURBc2gvOFBvVWx6?=
+ =?utf-8?B?Q2dVRlFHQTd6aG5NbWVsYlk0YjJsSWJRZEhmaHhML0RsVVB5cHZXcnhpOXRQ?=
+ =?utf-8?B?MEtlRDZUNG1oakZiWUFoNU43Z1ZEOEQzS2svOWxjejF4S3d3KzM1UkR6VGJl?=
+ =?utf-8?B?cEVnV1JBck5ORUtEOVhxeUI2ditFSE5SeS9kekhFN2JNenVjVlRYc0VldDdo?=
+ =?utf-8?B?Sk9lQzFEOWtrQVdWN1RwUkpYdVV0a1hOeDQvQzdHQXA3UzIrRWppeHprbDJI?=
+ =?utf-8?B?dlozMEVVdUNRK2dCdndTdXUzOGxpK3JmNXNPQzdwNGpaUU1DTkJtNWZLMXNt?=
+ =?utf-8?Q?GzVwIzaRSYRef7MCIn+jNKs=3D?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 385bd1a9-22d0-4257-bd93-08d9ec4a9580
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3053.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2022 04:05:33.5237
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kaYblSdF16dDpWhD4q42Acxy8vu7hQgeTLoqLO+TjlWB75jBIuxObnaXNoknoverhTyC+UIicdV+oT6wDrZAnw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3174
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Feb 9, 2022 at 2:19 AM Like Xu <like.xu.linux@gmail.com> wrote:
->
-> On 4/2/2022 9:01 pm, Jim Mattson wrote:
-> > On Fri, Feb 4, 2022 at 1:33 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
-> >>
-> >>
-> >>
-> >> On 03-Feb-22 11:25 PM, Jim Mattson wrote:
-> >>> On Wed, Feb 2, 2022 at 9:18 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
-> >>>>
-> >>>> Hi Jim,
-> >>>>
-> >>>> On 03-Feb-22 9:39 AM, Jim Mattson wrote:
-> >>>>> On Wed, Feb 2, 2022 at 2:52 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
-> >>>>>>
-> >>>>>> Perf counter may overcount for a list of Retire Based Events. Implement
-> >>>>>> workaround for Zen3 Family 19 Model 00-0F processors as suggested in
-> >>>>>> Revision Guide[1]:
-> >>>>>>
-> >>>>>>    To count the non-FP affected PMC events correctly:
-> >>>>>>      o Use Core::X86::Msr::PERF_CTL2 to count the events, and
-> >>>>>>      o Program Core::X86::Msr::PERF_CTL2[43] to 1b, and
-> >>>>>>      o Program Core::X86::Msr::PERF_CTL2[20] to 0b.
-> >>>>>>
-> >>>>>> Note that the specified workaround applies only to counting events and
-> >>>>>> not to sampling events. Thus sampling event will continue functioning
-> >>>>>> as is.
-> >>>>>>
-> >>>>>> Although the issue exists on all previous Zen revisions, the workaround
-> >>>>>> is different and thus not included in this patch.
-> >>>>>>
-> >>>>>> This patch needs Like's patch[2] to make it work on kvm guest.
-> >>>>>
-> >>>>> IIUC, this patch along with Like's patch actually breaks PMU
-> >>>>> virtualization for a kvm guest.
-> >>>>>
-> >>>>> Suppose I have some code which counts event 0xC2 [Retired Branch
-> >>>>> Instructions] on PMC0 and event 0xC4 [Retired Taken Branch
-> >>>>> Instructions] on PMC1. I then divide PMC1 by PMC0 to see what
-> >>>>> percentage of my branch instructions are taken. On hardware that
-> >>>>> suffers from erratum 1292, both counters may overcount, but if the
-> >>>>> inaccuracy is small, then my final result may still be fairly close to
-> >>>>> reality.
-> >>>>>
-> >>>>> With these patches, if I run that same code in a kvm guest, it looks
-> >>>>> like one of those events will be counted on PMC2 and the other won't
-> >>>>> be counted at all. So, when I calculate the percentage of branch
-> >>>>> instructions taken, I either get 0 or infinity.
-> >>>>
-> >>>> Events get multiplexed internally. See below quick test I ran inside
-> >>>> guest. My host is running with my+Like's patch and guest is running
-> >>>> with only my patch.
-> >>>
-> >>> Your guest may be multiplexing the counters. The guest I posited does not.
-> >>
-> >> It would be helpful if you can provide an example.
-> >
-> > Perf on any current Linux distro (i.e. without your fix).
->
-> The patch for errata #1292 (like most hw issues or vulnerabilities) should be
-> applied to both the host and guest.
 
-As I'm sure you are aware, guests are often not patched. For example,
-we have a lot of Debian-9 guests running on Milan, despite the fact
-that it has to be booted with "nopcid" due to a bug introduced on
-4.9-stable. We submitted the fix and notified Debian about a year ago,
-but they have not seen fit to cut a new kernel. Do you think they will
-cut a new kernel for this patch?
 
-> For non-patched guests on a patched host, the KVM-created perf_events
-> will be true for is_sampling_event() due to get_sample_period().
->
-> I think we (KVM) have a congenital defect in distinguishing whether guest
-> counters are used in counting mode or sampling mode, which is just
-> a different use of pure software.
+On 09-Feb-22 6:21 PM, Peter Zijlstra wrote:
+> On Thu, Feb 03, 2022 at 03:28:41PM +0530, Ravi Bangoria wrote:
+>> Perf counter may overcount for a list of Retire Based Events. Implement
+>> workaround for Zen3 Family 19 Model 00-0F processors as suggested in
+>> Revision Guide[1]:
+>>
+>>   To count the non-FP affected PMC events correctly:
+>>     o Use Core::X86::Msr::PERF_CTL2 to count the events, and
+>>     o Program Core::X86::Msr::PERF_CTL2[43] to 1b, and
+>>     o Program Core::X86::Msr::PERF_CTL2[20] to 0b.
+>>
+>> Note that the specified workaround applies only to counting events and
+>> not to sampling events. Thus sampling event will continue functioning
+>> as is.
+>>
+>> Although the issue exists on all previous Zen revisions, the workaround
+>> is different and thus not included in this patch.
+>>
+>> This patch needs Like's patch[2] to make it work on kvm guest.
+>>
+>> [1] https://bugzilla.kernel.org/attachment.cgi?id=298241
+>> [2] https://lore.kernel.org/lkml/20220117055703.52020-1-likexu@tencent.com
+>>
+>> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> 
+> Thanks!
 
-I have no idea what you are saying. However, when kvm sees a guest
-counter used in sampling mode, it will just request a PERF_TYPE_RAW
-perf event with the INT bit set in 'config.' If it sees a guest
-counter used in counting mode, it will either request a PERF_TYPE_RAW
-perf event or a PERF_TYPE_HARDWARE perf event, depending on whether or
-not it finds the requested event in amd_event_mapping[].
+Peter, On subsequent tests, I found that this 'fix' is still not
+optimal. Please drop this patch from your queue for now. Really
+sorry for the noise.
 
-> >
-> >>> I hope that you are not saying that kvm's *thread-pinned* perf events
-> >>> are not being multiplexed at the host level, because that completely
-> >>> breaks PMU virtualization.
-> >>
-> >> IIUC, multiplexing happens inside the guest.
-> >
-> > I'm not sure that multiplexing is the answer. Extrapolation may
-> > introduce greater imprecision than the erratum.
->
-> If you run the same test on the patched host, the PMC2 will be
-> used in a multiplexing way. This is no different.
->
-> >
-> > If you count something like "instructions retired" three ways:
-> > 1) Unfixed counter
-> > 2) PMC2 with the fix
-> > 3) Multiplexed on PMC2 with the fix
-> >
-> > Is (3) always more accurate than (1)?
-
-Since Ravi has gone dark, I will answer my own question.
-
-For better reproducibility, I simplified his program to:
-
-int main() { return 0;}
-
-On an unpatched Milan host, I get instructions retired between 21911
-and 21915. I get branch instructions retired between 5565 and 5566. It
-does not matter if I count them separately or at the same time.
-
-After applying v3 of Ravi's patch, if I try to count these events at
-the same time, I get 36869 instructions retired and 4962 branch
-instructions on the first run. On subsequent runs, perf refuses to
-count both at the same time. I get branch instructions retired between
-5565 and 5567, but no instructions retired. Instead, perf tells me:
-
-Some events weren't counted. Try disabling the NMI watchdog:
-echo 0 > /proc/sys/kernel/nmi_watchdog
-perf stat ...
-echo 1 > /proc/sys/kernel/nmi_watchdog
-
-If I just count one thing at a time (on the patched kernel), I get
-between 21911 and 21916 instructions retired, and I get between 5565
-and 5566 branch instructions retired.
-
-I don't know under what circumstances the unfixed counters overcount
-or by how much. However, for this simple test case, the fixed PMC2
-yields the same results as any unfixed counter. Ravi's patch, however
-makes counting two of these events simultaneously either (a)
-impossible, or (b) highly inaccurate (from 10% under to 68% over).
-
-> The loss of accuracy is due to a reduction in the number of trustworthy counters,
-> not to these two workaround patches. Any multiplexing (whatever on the host or
-> the guest) will result in a loss of accuracy. Right ?
-
-Yes, that's my point. Fixing one inaccuracy by using a mechanism that
-introduces another inaccuracy only makes sense if the inaccuracy you
-are fixing is worse than the inaccuracy you are introducing. That does
-not appear to be the case here, but I am not privy to all of the
-details of this erratum.
+Thanks,
+Ravi
