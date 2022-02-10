@@ -2,252 +2,161 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F134C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Feb 2022 04:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80376C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Feb 2022 07:52:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229643AbiBJElH (ORCPT
+        id S236659AbiBJHw0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Feb 2022 23:41:07 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:60260 "EHLO
+        Thu, 10 Feb 2022 02:52:26 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:40242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229489AbiBJElG (ORCPT
+        with ESMTP id S236615AbiBJHwZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Feb 2022 23:41:06 -0500
-Received: from out30-45.freemail.mail.aliyun.com (out30-45.freemail.mail.aliyun.com [115.124.30.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5397313E;
-        Wed,  9 Feb 2022 20:41:05 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R871e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0V42e1.5_1644467991;
-Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0V42e1.5_1644467991)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 10 Feb 2022 12:41:02 +0800
-From:   Wen Yang <simon.wy@alibaba-inc.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Wen Yang <simon.wy@alibaba-inc.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] perf/x86: improve the event scheduling to avoid unnecessary pmu_stop/start
-Date:   Thu, 10 Feb 2022 12:39:30 +0800
-Message-Id: <20220210043930.34311-1-simon.wy@alibaba-inc.com>
-X-Mailer: git-send-email 2.23.0
+        Thu, 10 Feb 2022 02:52:25 -0500
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 504261080;
+        Wed,  9 Feb 2022 23:52:26 -0800 (PST)
+Received: by mail-ej1-x635.google.com with SMTP id y22so1279341eju.9;
+        Wed, 09 Feb 2022 23:52:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=kPf2sZmm3KzS9i74yQ9nkr8+GPeqJ7r3m+kQq3HmOzM=;
+        b=XUoSYYCnEOFr+/Eug0X0hNZJjYQC+snDUu6tyY1n/y/OzxugZsf8PGqYKmsLe7YqGi
+         JxZeeVuwRBrKW/Xa2FMK3iAVWMMg0T8nI+M9YGxWPtxRD3iOxzwllVTEycK1eeC3nzTR
+         6ksU0bo5Swwag963W2sQh9GoiL1Mp+JH0H72tLBTNGYymIhQfbuYhXvRSCWJObJ+Imzx
+         o1KocaeFL3N3b+azqkO7/6GxXw3dhzh61zgofml13dZwx4TRgbMZVDshQBMMoP77xwuN
+         mMCSDxV0HYxXEVKBH4zysgdazdfvCcAEMzBixLsHxZ+6KioCpCkKatZNUpCpKfGQMeFj
+         ySew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kPf2sZmm3KzS9i74yQ9nkr8+GPeqJ7r3m+kQq3HmOzM=;
+        b=QMYa1fJbTWraKVstEEPrVXt8O3yBX+2/XG9i0OiheiXfXV0Sx68ed7ayS1chc0w2f1
+         C7M2dzAfAY5hITLYvshRkKQI83nlcMkJnxOcRfVTkieEkjHdLZ2bbLZ9Wt2paAHK3PLO
+         35ODmA1UbvJirxWZlgDg6sHL9FpiT7pbOrkk/LNaXldw5n1LD8s1q/cYjwYgGRTbzHm2
+         J/VznA8LyUx5gIHQKVje2MS4KUw9HDimJZrDuDIiU/6qfPgfQhxd3V7EphYCS0Yw8/kD
+         wOvlwkGuNLX8jAd5EwAIYe2xIIr1rPWq/NP8e13HuCGsdt1sT5V7HVy5ojTl2gWd5bzC
+         i/uw==
+X-Gm-Message-State: AOAM533aQ1PGEEFiJ8egSGE7w614guYOZ+blWfw9n5QjR7WPG643HzvH
+        a7fcUfyP4TARzkX/1qtp/F4=
+X-Google-Smtp-Source: ABdhPJxRyZvTb2CR1V0Na9h2ZlpeJGwvvgCnWRXnDt5rhHTs+WPe6+Jf8ykOYYxj1JK4HxAuBnKGdQ==
+X-Received: by 2002:a17:907:961c:: with SMTP id gb28mr5471521ejc.725.1644479544760;
+        Wed, 09 Feb 2022 23:52:24 -0800 (PST)
+Received: from krava ([2a00:102a:5010:3235:47fb:6193:ef68:761d])
+        by smtp.gmail.com with ESMTPSA id i9sm7847130eda.35.2022.02.09.23.52.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Feb 2022 23:52:24 -0800 (PST)
+Date:   Thu, 10 Feb 2022 08:52:20 +0100
+From:   Jiri Olsa <olsajiri@gmail.com>
+To:     Eelco Chaudron <echaudro@redhat.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf scripting python: expose symbol offset and source
+ information
+Message-ID: <YgTENKDfI/2+DZhJ@krava>
+References: <164389947295.382219.17025049915445689710.stgit@wsfd-netdev64.ntdv.lab.eng.bos.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <164389947295.382219.17025049915445689710.stgit@wsfd-netdev64.ntdv.lab.eng.bos.redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This issue has been there for a long time, we could reproduce it as follows:
+On Thu, Feb 03, 2022 at 09:44:33AM -0500, Eelco Chaudron wrote:
+> This change adds the symbol offset to the data exported for each
+> call-chain entry. This can not be calculated from the script and
+> only the ip value, and no related mmap information.
+> 
+> In addition, also export the source file and line information, if
+> available, to avoid an external lookup if this information is needed.
 
-1, run a script that periodically collects perf data, eg:
-while true
-do
-    perf stat -e cache-misses,cache-misses,cache-misses -C 1 sleep 2
-    perf stat -e cache-misses -C 1 sleep 2
-    sleep 1
-done
+could you please update Documentation/perf-script-python.txt with that?
 
-2, run another one to capture the IPC, eg:
-perf stat -e cycles:D,instructions:D  -C 1 -I 1000
+any example script under scripts/python would be great
 
-Then we could observe that the counter used by cycles:D changes frequently:
-crash> struct  cpu_hw_events.n_events,assign,event_list,events  ffff88bf7f44f420
-  n_events = 3
-  assign = {33, 1, 32, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-  event_list = {0xffff88bf77b85000, 0xffff88b72db82000, 0xffff88b72db85800, 0xffff88ff6cfcb000, 0xffff88ff609f1800, 0xffff88ff609f1800, 0xffff88ff5f46a800, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}
-  events = {0x0, 0xffff88b72db82000, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0xffff88b72db85800, 0xffff88bf77b85000, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}
+thanks,
+jirka
 
-crash> struct  cpu_hw_events.n_events,assign,event_list,events  ffff88bf7f44f420
-  n_events = 6
-  assign = {33, 3, 32, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-  event_list = {0xffff88bf77b85000, 0xffff88b72db82000, 0xffff88b72db85800, 0xffff88bf46c34000, 0xffff88bf46c35000, 0xffff88bf46c30000, 0xffff88ff5f46a800, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}
-  events = {0xffff88bf46c34000, 0xffff88bf46c35000, 0xffff88bf46c30000, 0xffff88b72db82000, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0xffff88b72db85800, 0xffff88bf77b85000, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}
+> 
+> Signed-off-by: Eelco Chaudron <echaudro@redhat.com>
+> ---
+>  .../util/scripting-engines/trace-event-python.c    |   42 ++++++++++++++------
+>  1 file changed, 30 insertions(+), 12 deletions(-)
+> 
+> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+> index e752e1f4a5f0..0f392b4ff663 100644
+> --- a/tools/perf/util/scripting-engines/trace-event-python.c
+> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
+> @@ -392,6 +392,18 @@ static const char *get_dsoname(struct map *map)
+>  	return dsoname;
+>  }
+>  
+> +static unsigned long get_offset(struct symbol *sym, struct addr_location *al)
+> +{
+> +	unsigned long offset;
+> +
+> +	if (al->addr < sym->end)
+> +		offset = al->addr - sym->start;
+> +	else
+> +		offset = al->addr - al->map->start - sym->start;
+> +
+> +	return offset;
+> +}
+> +
+>  static PyObject *python_process_callchain(struct perf_sample *sample,
+>  					 struct evsel *evsel,
+>  					 struct addr_location *al)
+> @@ -443,6 +455,24 @@ static PyObject *python_process_callchain(struct perf_sample *sample,
+>  					_PyUnicode_FromStringAndSize(node->ms.sym->name,
+>  							node->ms.sym->namelen));
+>  			pydict_set_item_string_decref(pyelem, "sym", pysym);
+> +
+> +			if (node->ms.map) {
+> +				struct map *map = node->ms.map;
+> +				struct addr_location node_al;
+> +				unsigned long offset;
+> +
+> +				node_al.addr = map->map_ip(map, node->ip);
+> +				node_al.map  = map;
+> +				offset = get_offset(node->ms.sym, &node_al);
+> +
+> +				pydict_set_item_string_decref(
+> +					pyelem, "sym_off",
+> +					PyLong_FromUnsignedLongLong(offset));
+> +			}
+> +			if (node->srcline && strcmp(":0", node->srcline))
+> +				pydict_set_item_string_decref(
+> +					pyelem, "sym_srcline",
+> +					_PyUnicode_FromString(node->srcline));
 
-The reason is that NMI watchdog permanently consumes one FP,
-so cycles can only use one GP, and its hweight is 5,
-but the hweight of other events (cache misses) is 4,
-so the counter used by cycles will be frequently taken away,
-resulting in unnecessary pmu_stop/start.
+nit missing { } for multiline if code
 
-Signed-off-by: Wen Yang <simon.wy@alibaba-inc.com>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- arch/x86/events/core.c         | 40 +++++++++++++++++++++++++++++++---------
- arch/x86/events/intel/uncore.c |  2 +-
- arch/x86/events/perf_event.h   |  3 ++-
- 3 files changed, 34 insertions(+), 11 deletions(-)
-
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index e686c5e..1a47e31 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -796,6 +796,8 @@ struct perf_sched {
- 	int			max_events;
- 	int			max_gp;
- 	int			saved_states;
-+	u64			cnt_mask;
-+	u64			evt_mask;
- 	struct event_constraint	**constraints;
- 	struct sched_state	state;
- 	struct sched_state	saved[SCHED_STATES_MAX];
-@@ -805,7 +807,7 @@ struct perf_sched {
-  * Initialize iterator that runs through all events and counters.
-  */
- static void perf_sched_init(struct perf_sched *sched, struct event_constraint **constraints,
--			    int num, int wmin, int wmax, int gpmax)
-+			    int num, int wmin, int wmax, int gpmax, u64 cnt_mask, u64 evt_mask)
- {
- 	int idx;
- 
-@@ -814,6 +816,8 @@ static void perf_sched_init(struct perf_sched *sched, struct event_constraint **
- 	sched->max_weight	= wmax;
- 	sched->max_gp		= gpmax;
- 	sched->constraints	= constraints;
-+	sched->cnt_mask	= cnt_mask;
-+	sched->evt_mask	= evt_mask;
- 
- 	for (idx = 0; idx < num; idx++) {
- 		if (constraints[idx]->weight == wmin)
-@@ -822,7 +826,10 @@ static void perf_sched_init(struct perf_sched *sched, struct event_constraint **
- 
- 	sched->state.event	= idx;		/* start with min weight */
- 	sched->state.weight	= wmin;
--	sched->state.unassigned	= num;
-+	sched->state.unassigned	= num - hweight_long(evt_mask);
-+
-+	while (sched->evt_mask & BIT_ULL(sched->state.event))
-+		sched->state.event++;
- }
- 
- static void perf_sched_save_state(struct perf_sched *sched)
-@@ -874,6 +881,9 @@ static bool __perf_sched_find_counter(struct perf_sched *sched)
- 		for_each_set_bit_from(idx, c->idxmsk, X86_PMC_IDX_MAX) {
- 			u64 mask = BIT_ULL(idx);
- 
-+			if (sched->cnt_mask & mask)
-+				continue;
-+
- 			if (sched->state.used & mask)
- 				continue;
- 
-@@ -890,6 +900,9 @@ static bool __perf_sched_find_counter(struct perf_sched *sched)
- 		if (c->flags & PERF_X86_EVENT_PAIR)
- 			mask |= mask << 1;
- 
-+		if (sched->cnt_mask & mask)
-+			continue;
-+
- 		if (sched->state.used & mask)
- 			continue;
- 
-@@ -934,7 +947,10 @@ static bool perf_sched_next_event(struct perf_sched *sched)
- 
- 	do {
- 		/* next event */
--		sched->state.event++;
-+		do {
-+			sched->state.event++;
-+		} while (sched->evt_mask & BIT_ULL(sched->state.event));
-+
- 		if (sched->state.event >= sched->max_events) {
- 			/* next weight */
- 			sched->state.event = 0;
-@@ -954,11 +970,11 @@ static bool perf_sched_next_event(struct perf_sched *sched)
-  * Assign a counter for each event.
-  */
- int perf_assign_events(struct event_constraint **constraints, int n,
--			int wmin, int wmax, int gpmax, int *assign)
-+			int wmin, int wmax, int gpmax, u64 cnt_mask, u64 evt_mask, int *assign)
- {
- 	struct perf_sched sched;
- 
--	perf_sched_init(&sched, constraints, n, wmin, wmax, gpmax);
-+	perf_sched_init(&sched, constraints, n, wmin, wmax, gpmax, cnt_mask, evt_mask);
- 
- 	do {
- 		if (!perf_sched_find_counter(&sched))
-@@ -978,7 +994,8 @@ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
- 	struct perf_event *e;
- 	int n0, i, wmin, wmax, unsched = 0;
- 	struct hw_perf_event *hwc;
--	u64 used_mask = 0;
-+	u64 cnt_mask = 0;
-+	u64 evt_mask = 0;
- 
- 	/*
- 	 * Compute the number of events already present; see x86_pmu_add(),
-@@ -1038,10 +1055,11 @@ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
- 			mask |= mask << 1;
- 
- 		/* not already used */
--		if (used_mask & mask)
-+		if (cnt_mask & mask)
- 			break;
- 
--		used_mask |= mask;
-+		cnt_mask |= mask;
-+		evt_mask |= BIT_ULL(i);
- 
- 		if (assign)
- 			assign[i] = hwc->idx;
-@@ -1075,7 +1093,11 @@ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
- 		}
- 
- 		unsched = perf_assign_events(cpuc->event_constraint, n, wmin,
--					     wmax, gpmax, assign);
-+					     wmax, gpmax, cnt_mask, evt_mask, assign);
-+		if (unsched) {
-+			unsched = perf_assign_events(cpuc->event_constraint, n, wmin,
-+					wmax, gpmax, 0, 0, assign);
-+		}
- 	}
- 
- 	/*
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index e497da9..8afff7a 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -480,7 +480,7 @@ static int uncore_assign_events(struct intel_uncore_box *box, int assign[], int
- 	/* slow path */
- 	if (i != n)
- 		ret = perf_assign_events(box->event_constraint, n,
--					 wmin, wmax, n, assign);
-+					 wmin, wmax, n, 0, 0, assign);
- 
- 	if (!assign || ret) {
- 		for (i = 0; i < n; i++)
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 150261d..2ae1e98 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -1131,7 +1131,8 @@ static inline void __x86_pmu_enable_event(struct hw_perf_event *hwc,
- void x86_pmu_enable_all(int added);
- 
- int perf_assign_events(struct event_constraint **constraints, int n,
--			int wmin, int wmax, int gpmax, int *assign);
-+			int wmin, int wmax, int gpmax, u64 cnt_mask, u64 evt_mask,
-+			int *assign);
- int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign);
- 
- void x86_pmu_stop(struct perf_event *event, int flags);
--- 
-1.8.3.1
-
+>  		}
+>  
+>  		if (node->ms.map) {
+> @@ -520,18 +550,6 @@ static PyObject *python_process_brstack(struct perf_sample *sample,
+>  	return pylist;
+>  }
+>  
+> -static unsigned long get_offset(struct symbol *sym, struct addr_location *al)
+> -{
+> -	unsigned long offset;
+> -
+> -	if (al->addr < sym->end)
+> -		offset = al->addr - sym->start;
+> -	else
+> -		offset = al->addr - al->map->start - sym->start;
+> -
+> -	return offset;
+> -}
+> -
+>  static int get_symoff(struct symbol *sym, struct addr_location *al,
+>  		      bool print_off, char *bf, int size)
+>  {
+> 
