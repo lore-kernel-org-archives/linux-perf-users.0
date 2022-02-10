@@ -2,144 +2,279 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FE8C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Feb 2022 10:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3383C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Feb 2022 13:57:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239428AbiBJKJ3 (ORCPT
+        id S242507AbiBJN5L (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Feb 2022 05:09:29 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:34284 "EHLO
+        Thu, 10 Feb 2022 08:57:11 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:53140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239415AbiBJKJ2 (ORCPT
+        with ESMTP id S239698AbiBJN5K (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Feb 2022 05:09:28 -0500
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62F00FD5
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Feb 2022 02:09:29 -0800 (PST)
-Received: by mail-io1-f72.google.com with SMTP id g16-20020a05660203d000b005f7b3b0642eso3718925iov.16
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Feb 2022 02:09:29 -0800 (PST)
+        Thu, 10 Feb 2022 08:57:10 -0500
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 901D8BF5;
+        Thu, 10 Feb 2022 05:57:11 -0800 (PST)
+Received: by mail-pf1-x42d.google.com with SMTP id r19so10364282pfh.6;
+        Thu, 10 Feb 2022 05:57:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:organization:in-reply-to
+         :content-transfer-encoding;
+        bh=1hgSmDYgxujSJUiUOVkYVmp81RiJTwQhhgI2GMQNrx0=;
+        b=qEQuj6F+aZmhqg3RX3H44VgCUrX9EDwGTQJtiJjITBjTErJsgxsVCCdUWMlXE637vm
+         VEyqVZxy3mAz/rWPke+8nFlMP0tP4+zywVA5SRb0wahb7gou6Q9v2HjV97AWyAVHgy69
+         5nzPEOkGHGI1IZKjAO48a3RNu+pk+pUR/88mohJ3tRYzclWYNUhIdl1qKkdcPPfYI8gh
+         LYPn7k+qzQvvHEMzabjnpjfHxZcC/nDEy/Bmxjm5XMtqs05/qevSIHNGQOkPo3b817AQ
+         UF4Uu9cx0Wj54VLKIfVPGjIcTwl5RGgO+klDjy70G3B9oxRT/0vPxRAtSQqQRfJbM9AJ
+         N3Uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=H26uhXqNf/HlXPlFIZtr8pmKxHk/dt5G+KNL6a6flEY=;
-        b=lE7ApzrmIZXHzgWD5a7x+LF2BgrjwcBC+YJyfCxciRscnTZL4mxYVdH1YP0LHebhMQ
-         8m/CjyFIBxNaYDjsn9UT5bbWCCA1kglfrojMza3uOm7iMImU2/8YwNNrTz5HDlaGs1sp
-         pV8+/eo6XCVqfD1u18kl3e/r8lS+00i+vBkqYtuCv+t3cuJ+vx9lJPndrn61tJT6RNaX
-         gGcXPv3qH8tr7dj7HvOm1up+0baDq8l7ZMctauMvhk3UIjefgFbroC6uvrHukWos8qId
-         ONCMe2TZYmSTrjVwvGLPZkUgVrtcwVouwQ3AdijMCjdDYYNmlpBZVedP1TPXEmcqs67f
-         NSMA==
-X-Gm-Message-State: AOAM531TNtIS0sBLJ5BrNvTCE+rFZ11Qsse0zfHEx1FDT49Rg0e96jWR
-        jVRI2I6Iep/eH08y1saHL/8LjAIALOByU/T5FOYVPWnPePwU
-X-Google-Smtp-Source: ABdhPJwI8syl2er5tsXbTrN7FkI8sR4wbX6x0AppvYliZ9wZDmvIk4PegggX7v+PvzrQoenNXd+c/WeOJWXZLZGN23TwQcpJ0BYc
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:organization:in-reply-to
+         :content-transfer-encoding;
+        bh=1hgSmDYgxujSJUiUOVkYVmp81RiJTwQhhgI2GMQNrx0=;
+        b=cYqHhZ/OAx9uGG3vCm6lA0ci2QtTAsq2ZxUApCe4Js1+5l4fCMd464ML47Ai6DljyN
+         nlPdcTsEsuyzDRye3wq4x3t6nWb01SQXXJEeSvRb/wEHQSGSYm5JQWfdUx4aAGr6q41N
+         7wfefF2HT5lpBnFDkpyKyqbYeSt01UK8Ytpq4WdIvfXK8Q/74BYZIqYdnaLekjAm7Lpl
+         AA7Yko27Lhef4CCJ5naBAwntcSTja/XMViqIDOMh14gGmQIEGwLCP6VlEgKLQlb+n54F
+         pkkdql31w52IgWjUEmZmjTi92sC172cZdfqAKQBOEkju9GhY/CvVd+p5hVwIgyH7ZM0N
+         wOhA==
+X-Gm-Message-State: AOAM533RCiCeVMyTozwwvXaNy+/wS+EQ5ilC0JqwqsyOowe4XSefQHp1
+        oimseFuhlZhOzYgjruLACdc=
+X-Google-Smtp-Source: ABdhPJzVaW6mWrx/caKqe4n6w6xAlnoOfOe+/bx2n4+B2NxeBR/V4Ew1zD0xuhlksQtgINsM2Yvt/w==
+X-Received: by 2002:a63:5a01:: with SMTP id o1mr6300336pgb.306.1644501431010;
+        Thu, 10 Feb 2022 05:57:11 -0800 (PST)
+Received: from [192.168.255.10] ([103.7.29.32])
+        by smtp.gmail.com with ESMTPSA id s1sm2435190pjr.56.2022.02.10.05.57.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Feb 2022 05:57:10 -0800 (PST)
+Message-ID: <c7b418f5-7014-d322-ea47-2d4ee9c2748c@gmail.com>
+Date:   Thu, 10 Feb 2022 21:56:56 +0800
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2e91:: with SMTP id m17mr3446789iow.96.1644487768576;
- Thu, 10 Feb 2022 02:09:28 -0800 (PST)
-Date:   Thu, 10 Feb 2022 02:09:28 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000489d6105d7a7255e@google.com>
-Subject: [syzbot] KCSAN: data-race in perf_event_update_userpage /
- perf_event_update_userpage (5)
-From:   syzbot <syzbot+df838a721c117d596976@syzkaller.appspotmail.com>
-To:     acme@kernel.org, alexander.shishkin@linux.intel.com,
-        andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, john.fastabend@gmail.com, jolsa@redhat.com,
-        kafai@fb.com, kpsingh@kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
-        mingo@redhat.com, namhyung@kernel.org, netdev@vger.kernel.org,
-        peterz@infradead.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.6.0
+Subject: Re: [PATCH v2] perf/amd: Implement erratum #1292 workaround for F19h
+ M00-0Fh
+Content-Language: en-US
+To:     Ravi Bangoria <ravi.bangoria@amd.com>,
+        Jim Mattson <jmattson@google.com>
+Cc:     eranian@google.com, santosh.shukla@amd.com, pbonzini@redhat.com,
+        seanjc@google.com, wanpengli@tencent.com, vkuznets@redhat.com,
+        joro@8bytes.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, tglx@linutronix.de,
+        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+        kvm@vger.kernel.org, x86@kernel.org,
+        linux-perf-users@vger.kernel.org, ananth.narayan@amd.com,
+        kim.phillips@amd.com
+References: <2e96421f-44b5-c8b7-82f7-5a9a9040104b@amd.com>
+ <20220202105158.7072-1-ravi.bangoria@amd.com>
+ <CALMp9eQHfAgcW-J1YY=01ki4m_YVBBEz6D1T662p2BUp05ZcPQ@mail.gmail.com>
+ <3c97e081-ae46-d92d-fe8f-58642d6b773e@amd.com>
+ <CALMp9eS72bhP=hGJRzTwGxG9XrijEnGKnJ-pqtHxYG-5Shs+2g@mail.gmail.com>
+ <9b890769-e769-83ed-c953-d25930b067ba@amd.com>
+ <CALMp9eQ9K+CXHVZ1zSyw78n-agM2+NQ1xJ4niO-YxSkQCLcK-A@mail.gmail.com>
+ <e58ca80c-b54c-48b3-fb0b-3e9497c877b7@gmail.com>
+ <CALMp9eRuBwj9Sg60jg2ucWd-XoAcE_kXP5ULFgpkSHg88sOJZQ@mail.gmail.com>
+ <fc5fd517-7ad6-10e1-2582-ef1335dc82b2@amd.com>
+From:   Like Xu <like.xu.linux@gmail.com>
+Organization: Tencent
+In-Reply-To: <fc5fd517-7ad6-10e1-2582-ef1335dc82b2@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+On 10/2/2022 12:06 pm, Ravi Bangoria wrote:
+> Hi Jim,
+> 
+> On 10-Feb-22 3:10 AM, Jim Mattson wrote:
+>> On Wed, Feb 9, 2022 at 2:19 AM Like Xu <like.xu.linux@gmail.com> wrote:
+>>>
+>>> On 4/2/2022 9:01 pm, Jim Mattson wrote:
+>>>> On Fri, Feb 4, 2022 at 1:33 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
+>>>>>
+>>>>>
+>>>>>
+>>>>> On 03-Feb-22 11:25 PM, Jim Mattson wrote:
+>>>>>> On Wed, Feb 2, 2022 at 9:18 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
+>>>>>>>
+>>>>>>> Hi Jim,
+>>>>>>>
+>>>>>>> On 03-Feb-22 9:39 AM, Jim Mattson wrote:
+>>>>>>>> On Wed, Feb 2, 2022 at 2:52 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
+>>>>>>>>>
+>>>>>>>>> Perf counter may overcount for a list of Retire Based Events. Implement
+>>>>>>>>> workaround for Zen3 Family 19 Model 00-0F processors as suggested in
+>>>>>>>>> Revision Guide[1]:
+>>>>>>>>>
+>>>>>>>>>     To count the non-FP affected PMC events correctly:
+>>>>>>>>>       o Use Core::X86::Msr::PERF_CTL2 to count the events, and
+>>>>>>>>>       o Program Core::X86::Msr::PERF_CTL2[43] to 1b, and
+>>>>>>>>>       o Program Core::X86::Msr::PERF_CTL2[20] to 0b.
+>>>>>>>>>
+>>>>>>>>> Note that the specified workaround applies only to counting events and
+>>>>>>>>> not to sampling events. Thus sampling event will continue functioning
+>>>>>>>>> as is.
+>>>>>>>>>
+>>>>>>>>> Although the issue exists on all previous Zen revisions, the workaround
+>>>>>>>>> is different and thus not included in this patch.
+>>>>>>>>>
+>>>>>>>>> This patch needs Like's patch[2] to make it work on kvm guest.
+>>>>>>>>
+>>>>>>>> IIUC, this patch along with Like's patch actually breaks PMU
+>>>>>>>> virtualization for a kvm guest.
+>>>>>>>>
+>>>>>>>> Suppose I have some code which counts event 0xC2 [Retired Branch
+>>>>>>>> Instructions] on PMC0 and event 0xC4 [Retired Taken Branch
+>>>>>>>> Instructions] on PMC1. I then divide PMC1 by PMC0 to see what
+>>>>>>>> percentage of my branch instructions are taken. On hardware that
+>>>>>>>> suffers from erratum 1292, both counters may overcount, but if the
+>>>>>>>> inaccuracy is small, then my final result may still be fairly close to
+>>>>>>>> reality.
+>>>>>>>>
+>>>>>>>> With these patches, if I run that same code in a kvm guest, it looks
+>>>>>>>> like one of those events will be counted on PMC2 and the other won't
+>>>>>>>> be counted at all. So, when I calculate the percentage of branch
+>>>>>>>> instructions taken, I either get 0 or infinity.
+>>>>>>>
+>>>>>>> Events get multiplexed internally. See below quick test I ran inside
+>>>>>>> guest. My host is running with my+Like's patch and guest is running
+>>>>>>> with only my patch.
+>>>>>>
+>>>>>> Your guest may be multiplexing the counters. The guest I posited does not.
+>>>>>
+>>>>> It would be helpful if you can provide an example.
+>>>>
+>>>> Perf on any current Linux distro (i.e. without your fix).
+>>>
+>>> The patch for errata #1292 (like most hw issues or vulnerabilities) should be
+>>> applied to both the host and guest.
+>>
+>> As I'm sure you are aware, guests are often not patched. For example,
 
-syzbot found the following issue on:
+It's true. What a real world.
 
-HEAD commit:    dcb85f85fa6f gcc-plugins/stackleak: Use noinstr in favor o..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14f2e20c700000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a83209f215159f48
-dashboard link: https://syzkaller.appspot.com/bug?extid=df838a721c117d596976
-compiler:       Debian clang version 11.0.1-2, GNU ld (GNU Binutils for Debian) 2.35.2
+>> we have a lot of Debian-9 guests running on Milan, despite the fact
+>> that it has to be booted with "nopcid" due to a bug introduced on
+>> 4.9-stable. We submitted the fix and notified Debian about a year ago,
+>> but they have not seen fit to cut a new kernel. Do you think they will
+>> cut a new kernel for this patch?
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Indeed, thanks for your user stories.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+df838a721c117d596976@syzkaller.appspotmail.com
+>>
+>>> For non-patched guests on a patched host, the KVM-created perf_events
+>>> will be true for is_sampling_event() due to get_sample_period().
+>>>
+>>> I think we (KVM) have a congenital defect in distinguishing whether guest
+>>> counters are used in counting mode or sampling mode, which is just
+>>> a different use of pure software.
+>>
+>> I have no idea what you are saying. However, when kvm sees a guest
+>> counter used in sampling mode, it will just request a PERF_TYPE_RAW
+>> perf event with the INT bit set in 'config.' If it sees a guest
 
-==================================================================
-BUG: KCSAN: data-race in perf_event_update_userpage / perf_event_update_userpage
+The counters work very simply: increments until it overflows.
 
-write to 0xffff88812430e020 of 8 bytes by task 11328 on cpu 1:
- perf_event_update_userpage+0x328/0x3b0 kernel/events/core.c:5941
- cpu_clock_event_add+0x11d/0x130 kernel/events/core.c:10780
- event_sched_in+0x781/0xe60 kernel/events/core.c:2601
- group_sched_in kernel/events/core.c:2637 [inline]
- merge_sched_in kernel/events/core.c:3802 [inline]
- visit_groups_merge+0x943/0x1a50 kernel/events/core.c:3746
- ctx_flexible_sched_in kernel/events/core.c:3844 [inline]
- ctx_sched_in+0x221/0x240 kernel/events/core.c:3892
- perf_event_sched_in kernel/events/core.c:2741 [inline]
- perf_event_context_sched_in kernel/events/core.c:3943 [inline]
- __perf_event_task_sched_in+0x37c/0x8d0 kernel/events/core.c:3986
- perf_event_task_sched_in include/linux/perf_event.h:1213 [inline]
- finish_task_switch+0x1ef/0x280 kernel/sched/core.c:4861
- context_switch kernel/sched/core.c:4989 [inline]
- __schedule+0x43a/0x690 kernel/sched/core.c:6295
- preempt_schedule_common kernel/sched/core.c:6461 [inline]
- __cond_resched+0x3f/0x90 kernel/sched/core.c:8174
- might_resched include/linux/kernel.h:110 [inline]
- might_alloc include/linux/sched/mm.h:256 [inline]
- slab_pre_alloc_hook mm/slab.h:705 [inline]
- slab_alloc mm/slab.c:3298 [inline]
- kmem_cache_alloc+0x45/0x320 mm/slab.c:3499
- kmem_cache_zalloc include/linux/slab.h:705 [inline]
- __proc_create+0x3cf/0x6a0 fs/proc/generic.c:426
- _proc_mkdir+0x5c/0xf0 fs/proc/generic.c:487
- proc_net_mkdir include/linux/proc_fs.h:226 [inline]
- nfs_fs_proc_net_init+0x79/0x140 fs/nfs/client.c:1329
- nfs_net_init+0x19/0x20 fs/nfs/inode.c:2346
- ops_init+0x1e7/0x230 net/core/net_namespace.c:140
- setup_net+0x29b/0x7e0 net/core/net_namespace.c:330
- copy_net_ns+0x2a9/0x450 net/core/net_namespace.c:474
- create_new_namespaces+0x231/0x560 kernel/nsproxy.c:110
- copy_namespaces+0x116/0x160 kernel/nsproxy.c:178
- copy_process+0x1428/0x2f30 kernel/fork.c:2167
- kernel_clone+0x15c/0x6a0 kernel/fork.c:2555
- __do_sys_clone kernel/fork.c:2672 [inline]
- __se_sys_clone kernel/fork.c:2656 [inline]
- __x64_sys_clone+0xc6/0xf0 kernel/fork.c:2656
- do_syscall_x64 arch/x86/entry/common.c:50 [inline]
- do_syscall_64+0x44/0xd0 arch/x86/entry/common.c:80
- entry_SYSCALL_64_after_hwframe+0x44/0xae
+The use of INT bit is not related to counting or sampling mode.
+A pmu driver can set the INT bit, but set a very small ctr value and not
+expect it to overflow, and it can be used for counting mode as well, right?
 
-write to 0xffff88812430e020 of 8 bytes by task 11341 on cpu 0:
- perf_event_update_userpage+0x328/0x3b0 kernel/events/core.c:5941
- perf_mmap+0xcd6/0xe50 kernel/events/core.c:6419
- call_mmap include/linux/fs.h:2079 [inline]
- mmap_region+0xb04/0x10b0 mm/mmap.c:1793
- do_mmap+0x781/0xc20 mm/mmap.c:1582
- vm_mmap_pgoff+0x117/0x1f0 mm/util.c:519
- ksys_mmap_pgoff+0x265/0x320 mm/mmap.c:1630
- do_syscall_x64 arch/x86/entry/common.c:50 [inline]
- do_syscall_64+0x44/0xd0 arch/x86/entry/common.c:80
- entry_SYSCALL_64_after_hwframe+0x44/0xae
+We don't know under what circumstances the overcount will occur, maybe
+it's related to the INT bit and maybe bot, but absolutely it's nothing to do with
+the software check is_sampling_event().
 
-value changed: 0x0000000000000000 -> 0x000000000135f629
+>> counter used in counting mode, it will either request a PERF_TYPE_RAW
+>> perf event or a PERF_TYPE_HARDWARE perf event, depending on whether or
+>> not it finds the requested event in amd_event_mapping[].
+>>
+>>>>
+>>>>>> I hope that you are not saying that kvm's *thread-pinned* perf events
+>>>>>> are not being multiplexed at the host level, because that completely
+>>>>>> breaks PMU virtualization.
+>>>>>
+>>>>> IIUC, multiplexing happens inside the guest.
+>>>>
+>>>> I'm not sure that multiplexing is the answer. Extrapolation may
+>>>> introduce greater imprecision than the erratum.
+>>>
+>>> If you run the same test on the patched host, the PMC2 will be
+>>> used in a multiplexing way. This is no different.
+>>>
+>>>>
+>>>> If you count something like "instructions retired" three ways:
+>>>> 1) Unfixed counter
+>>>> 2) PMC2 with the fix
+>>>> 3) Multiplexed on PMC2 with the fix
+>>>>
+>>>> Is (3) always more accurate than (1)?
+>>
+>> Since Ravi has gone dark, I will answer my own question.
+> 
+> Sorry about the delay. I was discussing this internally with hw folks.
+> 
+>>
+>> For better reproducibility, I simplified his program to:
+>>
+>> int main() { return 0;}
+>>
+>> On an unpatched Milan host, I get instructions retired between 21911
+>> and 21915. I get branch instructions retired between 5565 and 5566. It
+>> does not matter if I count them separately or at the same time.
+>>
+>> After applying v3 of Ravi's patch, if I try to count these events at
+>> the same time, I get 36869 instructions retired and 4962 branch
+>> instructions on the first run. On subsequent runs, perf refuses to
+>> count both at the same time. I get branch instructions retired between
+>> 5565 and 5567, but no instructions retired. Instead, perf tells me:
+>>
+>> Some events weren't counted. Try disabling the NMI watchdog:
+>> echo 0 > /proc/sys/kernel/nmi_watchdog
+>> perf stat ...
+>> echo 1 > /proc/sys/kernel/nmi_watchdog
+>>
+>> If I just count one thing at a time (on the patched kernel), I get
+>> between 21911 and 21916 instructions retired, and I get between 5565
+>> and 5566 branch instructions retired.
+>>
+>> I don't know under what circumstances the unfixed counters overcount
+>> or by how much. However, for this simple test case, the fixed PMC2
+>> yields the same results as any unfixed counter. Ravi's patch, however
+>> makes counting two of these events simultaneously either (a)
+>> impossible, or (b) highly inaccurate (from 10% under to 68% over).
+> 
+> In further discussions with our hardware team, I am given to understand
+> that the conditions under which the overcounting can happen, is quite
+> rare. In my tests, I've found that the patched vs. unpatched cases are
+> not significantly different to warrant the restriction introduced by
 
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 PID: 11341 Comm: syz-executor.4 Not tainted 5.17.0-rc2-syzkaller-00167-gdcb85f85fa6f-dirty #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-==================================================================
+That's cute and thank you both.
 
+I hope we can come to this conclusion before the code is committed.
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+But the kvm's patch may have made those PMU driver developers who read the
+erratum #1292 a little happier, wouldn't it ?
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> this fix. I have requested Peter to hold off pushing this fix.
+> 
+>>
+>>> The loss of accuracy is due to a reduction in the number of trustworthy counters,
+>>> not to these two workaround patches. Any multiplexing (whatever on the host or
+>>> the guest) will result in a loss of accuracy. Right ?
+>>
+>> Yes, that's my point. Fixing one inaccuracy by using a mechanism that
+>> introduces another inaccuracy only makes sense if the inaccuracy you
+>> are fixing is worse than the inaccuracy you are introducing. That does
+
+Couldn't agree more, and in response to similar issues,
+we may adopt a quantitative-first strategy in the future.
+
+>> not appear to be the case here, but I am not privy to all of the
+>> details of this erratum.
+> 
+> Thanks,
+> Ravi
