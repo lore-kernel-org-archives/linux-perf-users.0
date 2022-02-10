@@ -2,279 +2,236 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3383C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Feb 2022 13:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCCD4C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Feb 2022 19:18:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242507AbiBJN5L (ORCPT
+        id S1343874AbiBJTSV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Feb 2022 08:57:11 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:53140 "EHLO
+        Thu, 10 Feb 2022 14:18:21 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:53098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239698AbiBJN5K (ORCPT
+        with ESMTP id S1343959AbiBJTSR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Feb 2022 08:57:10 -0500
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 901D8BF5;
-        Thu, 10 Feb 2022 05:57:11 -0800 (PST)
-Received: by mail-pf1-x42d.google.com with SMTP id r19so10364282pfh.6;
-        Thu, 10 Feb 2022 05:57:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:organization:in-reply-to
-         :content-transfer-encoding;
-        bh=1hgSmDYgxujSJUiUOVkYVmp81RiJTwQhhgI2GMQNrx0=;
-        b=qEQuj6F+aZmhqg3RX3H44VgCUrX9EDwGTQJtiJjITBjTErJsgxsVCCdUWMlXE637vm
-         VEyqVZxy3mAz/rWPke+8nFlMP0tP4+zywVA5SRb0wahb7gou6Q9v2HjV97AWyAVHgy69
-         5nzPEOkGHGI1IZKjAO48a3RNu+pk+pUR/88mohJ3tRYzclWYNUhIdl1qKkdcPPfYI8gh
-         LYPn7k+qzQvvHEMzabjnpjfHxZcC/nDEy/Bmxjm5XMtqs05/qevSIHNGQOkPo3b817AQ
-         UF4Uu9cx0Wj54VLKIfVPGjIcTwl5RGgO+klDjy70G3B9oxRT/0vPxRAtSQqQRfJbM9AJ
-         N3Uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:organization:in-reply-to
-         :content-transfer-encoding;
-        bh=1hgSmDYgxujSJUiUOVkYVmp81RiJTwQhhgI2GMQNrx0=;
-        b=cYqHhZ/OAx9uGG3vCm6lA0ci2QtTAsq2ZxUApCe4Js1+5l4fCMd464ML47Ai6DljyN
-         nlPdcTsEsuyzDRye3wq4x3t6nWb01SQXXJEeSvRb/wEHQSGSYm5JQWfdUx4aAGr6q41N
-         7wfefF2HT5lpBnFDkpyKyqbYeSt01UK8Ytpq4WdIvfXK8Q/74BYZIqYdnaLekjAm7Lpl
-         AA7Yko27Lhef4CCJ5naBAwntcSTja/XMViqIDOMh14gGmQIEGwLCP6VlEgKLQlb+n54F
-         pkkdql31w52IgWjUEmZmjTi92sC172cZdfqAKQBOEkju9GhY/CvVd+p5hVwIgyH7ZM0N
-         wOhA==
-X-Gm-Message-State: AOAM533RCiCeVMyTozwwvXaNy+/wS+EQ5ilC0JqwqsyOowe4XSefQHp1
-        oimseFuhlZhOzYgjruLACdc=
-X-Google-Smtp-Source: ABdhPJzVaW6mWrx/caKqe4n6w6xAlnoOfOe+/bx2n4+B2NxeBR/V4Ew1zD0xuhlksQtgINsM2Yvt/w==
-X-Received: by 2002:a63:5a01:: with SMTP id o1mr6300336pgb.306.1644501431010;
-        Thu, 10 Feb 2022 05:57:11 -0800 (PST)
-Received: from [192.168.255.10] ([103.7.29.32])
-        by smtp.gmail.com with ESMTPSA id s1sm2435190pjr.56.2022.02.10.05.57.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Feb 2022 05:57:10 -0800 (PST)
-Message-ID: <c7b418f5-7014-d322-ea47-2d4ee9c2748c@gmail.com>
-Date:   Thu, 10 Feb 2022 21:56:56 +0800
+        Thu, 10 Feb 2022 14:18:17 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14CAF2CB;
+        Thu, 10 Feb 2022 11:18:17 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B7E2CB8272D;
+        Thu, 10 Feb 2022 19:18:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF032C004E1;
+        Thu, 10 Feb 2022 19:18:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1644520694;
+        bh=Fiwgta/9vq2UAQAkLikI+jDg3v2cUKzChDQXHTvQMtw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NHjqkB8oZBNwQp5axgTZgS5EmVaqI4IIPqWMRc87/kW5sDgd9fIXBdsXEHmTuc5pT
+         N7u1NMtAeI2zPErNYSu0PVogmJdkmUq+U8j7kMshhixxfYGofeqaaTfAeEvaCLMo/n
+         0hqUp1Tbe6adk/bB2JEymN/StdU3DfYe+jbGqYZSnFllrhFzSK79aYBUl/uD7J4frw
+         QVm7IEhHnbiUTDPc/ijJ1Zfw9YP35VK5EC2+2NVdX6ubBbgYw0c4nQcielVM90UKJO
+         lzaa8ia/CZmva2A4CseNIKMfjBquRqYUMX9u4yRtQjTz23/jMFjmb34x/s7Je6xMzS
+         995Y2KkvCfnSA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 46FAC400FE; Thu, 10 Feb 2022 16:18:10 -0300 (-03)
+Date:   Thu, 10 Feb 2022 16:18:10 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, Christy Lee <christylee@fb.com>,
+        Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org
+Subject: Re: [PATCH 1/3] perf/bpf: Remove prologue generation
+Message-ID: <YgVk8t6COJhDJyzj@kernel.org>
+References: <20220123221932.537060-1-jolsa@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.6.0
-Subject: Re: [PATCH v2] perf/amd: Implement erratum #1292 workaround for F19h
- M00-0Fh
-Content-Language: en-US
-To:     Ravi Bangoria <ravi.bangoria@amd.com>,
-        Jim Mattson <jmattson@google.com>
-Cc:     eranian@google.com, santosh.shukla@amd.com, pbonzini@redhat.com,
-        seanjc@google.com, wanpengli@tencent.com, vkuznets@redhat.com,
-        joro@8bytes.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, tglx@linutronix.de,
-        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-        kvm@vger.kernel.org, x86@kernel.org,
-        linux-perf-users@vger.kernel.org, ananth.narayan@amd.com,
-        kim.phillips@amd.com
-References: <2e96421f-44b5-c8b7-82f7-5a9a9040104b@amd.com>
- <20220202105158.7072-1-ravi.bangoria@amd.com>
- <CALMp9eQHfAgcW-J1YY=01ki4m_YVBBEz6D1T662p2BUp05ZcPQ@mail.gmail.com>
- <3c97e081-ae46-d92d-fe8f-58642d6b773e@amd.com>
- <CALMp9eS72bhP=hGJRzTwGxG9XrijEnGKnJ-pqtHxYG-5Shs+2g@mail.gmail.com>
- <9b890769-e769-83ed-c953-d25930b067ba@amd.com>
- <CALMp9eQ9K+CXHVZ1zSyw78n-agM2+NQ1xJ4niO-YxSkQCLcK-A@mail.gmail.com>
- <e58ca80c-b54c-48b3-fb0b-3e9497c877b7@gmail.com>
- <CALMp9eRuBwj9Sg60jg2ucWd-XoAcE_kXP5ULFgpkSHg88sOJZQ@mail.gmail.com>
- <fc5fd517-7ad6-10e1-2582-ef1335dc82b2@amd.com>
-From:   Like Xu <like.xu.linux@gmail.com>
-Organization: Tencent
-In-Reply-To: <fc5fd517-7ad6-10e1-2582-ef1335dc82b2@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220123221932.537060-1-jolsa@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 10/2/2022 12:06 pm, Ravi Bangoria wrote:
-> Hi Jim,
+Em Sun, Jan 23, 2022 at 11:19:30PM +0100, Jiri Olsa escreveu:
+> Removing code for ebpf program prologue generation.
 > 
-> On 10-Feb-22 3:10 AM, Jim Mattson wrote:
->> On Wed, Feb 9, 2022 at 2:19 AM Like Xu <like.xu.linux@gmail.com> wrote:
->>>
->>> On 4/2/2022 9:01 pm, Jim Mattson wrote:
->>>> On Fri, Feb 4, 2022 at 1:33 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
->>>>>
->>>>>
->>>>>
->>>>> On 03-Feb-22 11:25 PM, Jim Mattson wrote:
->>>>>> On Wed, Feb 2, 2022 at 9:18 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
->>>>>>>
->>>>>>> Hi Jim,
->>>>>>>
->>>>>>> On 03-Feb-22 9:39 AM, Jim Mattson wrote:
->>>>>>>> On Wed, Feb 2, 2022 at 2:52 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
->>>>>>>>>
->>>>>>>>> Perf counter may overcount for a list of Retire Based Events. Implement
->>>>>>>>> workaround for Zen3 Family 19 Model 00-0F processors as suggested in
->>>>>>>>> Revision Guide[1]:
->>>>>>>>>
->>>>>>>>>     To count the non-FP affected PMC events correctly:
->>>>>>>>>       o Use Core::X86::Msr::PERF_CTL2 to count the events, and
->>>>>>>>>       o Program Core::X86::Msr::PERF_CTL2[43] to 1b, and
->>>>>>>>>       o Program Core::X86::Msr::PERF_CTL2[20] to 0b.
->>>>>>>>>
->>>>>>>>> Note that the specified workaround applies only to counting events and
->>>>>>>>> not to sampling events. Thus sampling event will continue functioning
->>>>>>>>> as is.
->>>>>>>>>
->>>>>>>>> Although the issue exists on all previous Zen revisions, the workaround
->>>>>>>>> is different and thus not included in this patch.
->>>>>>>>>
->>>>>>>>> This patch needs Like's patch[2] to make it work on kvm guest.
->>>>>>>>
->>>>>>>> IIUC, this patch along with Like's patch actually breaks PMU
->>>>>>>> virtualization for a kvm guest.
->>>>>>>>
->>>>>>>> Suppose I have some code which counts event 0xC2 [Retired Branch
->>>>>>>> Instructions] on PMC0 and event 0xC4 [Retired Taken Branch
->>>>>>>> Instructions] on PMC1. I then divide PMC1 by PMC0 to see what
->>>>>>>> percentage of my branch instructions are taken. On hardware that
->>>>>>>> suffers from erratum 1292, both counters may overcount, but if the
->>>>>>>> inaccuracy is small, then my final result may still be fairly close to
->>>>>>>> reality.
->>>>>>>>
->>>>>>>> With these patches, if I run that same code in a kvm guest, it looks
->>>>>>>> like one of those events will be counted on PMC2 and the other won't
->>>>>>>> be counted at all. So, when I calculate the percentage of branch
->>>>>>>> instructions taken, I either get 0 or infinity.
->>>>>>>
->>>>>>> Events get multiplexed internally. See below quick test I ran inside
->>>>>>> guest. My host is running with my+Like's patch and guest is running
->>>>>>> with only my patch.
->>>>>>
->>>>>> Your guest may be multiplexing the counters. The guest I posited does not.
->>>>>
->>>>> It would be helpful if you can provide an example.
->>>>
->>>> Perf on any current Linux distro (i.e. without your fix).
->>>
->>> The patch for errata #1292 (like most hw issues or vulnerabilities) should be
->>> applied to both the host and guest.
->>
->> As I'm sure you are aware, guests are often not patched. For example,
-
-It's true. What a real world.
-
->> we have a lot of Debian-9 guests running on Milan, despite the fact
->> that it has to be booted with "nopcid" due to a bug introduced on
->> 4.9-stable. We submitted the fix and notified Debian about a year ago,
->> but they have not seen fit to cut a new kernel. Do you think they will
->> cut a new kernel for this patch?
-
-Indeed, thanks for your user stories.
-
->>
->>> For non-patched guests on a patched host, the KVM-created perf_events
->>> will be true for is_sampling_event() due to get_sample_period().
->>>
->>> I think we (KVM) have a congenital defect in distinguishing whether guest
->>> counters are used in counting mode or sampling mode, which is just
->>> a different use of pure software.
->>
->> I have no idea what you are saying. However, when kvm sees a guest
->> counter used in sampling mode, it will just request a PERF_TYPE_RAW
->> perf event with the INT bit set in 'config.' If it sees a guest
-
-The counters work very simply: increments until it overflows.
-
-The use of INT bit is not related to counting or sampling mode.
-A pmu driver can set the INT bit, but set a very small ctr value and not
-expect it to overflow, and it can be used for counting mode as well, right?
-
-We don't know under what circumstances the overcount will occur, maybe
-it's related to the INT bit and maybe bot, but absolutely it's nothing to do with
-the software check is_sampling_event().
-
->> counter used in counting mode, it will either request a PERF_TYPE_RAW
->> perf event or a PERF_TYPE_HARDWARE perf event, depending on whether or
->> not it finds the requested event in amd_event_mapping[].
->>
->>>>
->>>>>> I hope that you are not saying that kvm's *thread-pinned* perf events
->>>>>> are not being multiplexed at the host level, because that completely
->>>>>> breaks PMU virtualization.
->>>>>
->>>>> IIUC, multiplexing happens inside the guest.
->>>>
->>>> I'm not sure that multiplexing is the answer. Extrapolation may
->>>> introduce greater imprecision than the erratum.
->>>
->>> If you run the same test on the patched host, the PMC2 will be
->>> used in a multiplexing way. This is no different.
->>>
->>>>
->>>> If you count something like "instructions retired" three ways:
->>>> 1) Unfixed counter
->>>> 2) PMC2 with the fix
->>>> 3) Multiplexed on PMC2 with the fix
->>>>
->>>> Is (3) always more accurate than (1)?
->>
->> Since Ravi has gone dark, I will answer my own question.
+> The prologue code was used to get data for extra arguments specified
+> in program section name, like:
 > 
-> Sorry about the delay. I was discussing this internally with hw folks.
+>   SEC("lock_page=__lock_page page->flags")
+>   int lock_page(struct pt_regs *ctx, int err, unsigned long flags)
+>   {
+>          return 1;
+>   }
 > 
->>
->> For better reproducibility, I simplified his program to:
->>
->> int main() { return 0;}
->>
->> On an unpatched Milan host, I get instructions retired between 21911
->> and 21915. I get branch instructions retired between 5565 and 5566. It
->> does not matter if I count them separately or at the same time.
->>
->> After applying v3 of Ravi's patch, if I try to count these events at
->> the same time, I get 36869 instructions retired and 4962 branch
->> instructions on the first run. On subsequent runs, perf refuses to
->> count both at the same time. I get branch instructions retired between
->> 5565 and 5567, but no instructions retired. Instead, perf tells me:
->>
->> Some events weren't counted. Try disabling the NMI watchdog:
->> echo 0 > /proc/sys/kernel/nmi_watchdog
->> perf stat ...
->> echo 1 > /proc/sys/kernel/nmi_watchdog
->>
->> If I just count one thing at a time (on the patched kernel), I get
->> between 21911 and 21916 instructions retired, and I get between 5565
->> and 5566 branch instructions retired.
->>
->> I don't know under what circumstances the unfixed counters overcount
->> or by how much. However, for this simple test case, the fixed PMC2
->> yields the same results as any unfixed counter. Ravi's patch, however
->> makes counting two of these events simultaneously either (a)
->> impossible, or (b) highly inaccurate (from 10% under to 68% over).
+> This code is using deprecated libbpf API and blocks its removal.
 > 
-> In further discussions with our hardware team, I am given to understand
-> that the conditions under which the overcounting can happen, is quite
-> rare. In my tests, I've found that the patched vs. unpatched cases are
-> not significantly different to warrant the restriction introduced by
+> This feature was not documented and broken for some time without
+> anyone complaining, also original authors are not responding,
+> so I'm removing it.
 
-That's cute and thank you both.
+So, the example below breaks, how hard would be to move the deprecated
+APIs to perf like was done in some other cases?
 
-I hope we can come to this conclusion before the code is committed.
+- Arnaldo
 
-But the kvm's patch may have made those PMU driver developers who read the
-erratum #1292 a little happier, wouldn't it ?
+Before:
 
-> this fix. I have requested Peter to hold off pushing this fix.
-> 
->>
->>> The loss of accuracy is due to a reduction in the number of trustworthy counters,
->>> not to these two workaround patches. Any multiplexing (whatever on the host or
->>> the guest) will result in a loss of accuracy. Right ?
->>
->> Yes, that's my point. Fixing one inaccuracy by using a mechanism that
->> introduces another inaccuracy only makes sense if the inaccuracy you
->> are fixing is worse than the inaccuracy you are introducing. That does
+[root@quaco perf]# cat tools/perf/examples/bpf/5sec.c 
+// SPDX-License-Identifier: GPL-2.0
+/*
+    Description:
 
-Couldn't agree more, and in response to similar issues,
-we may adopt a quantitative-first strategy in the future.
+    . Disable strace like syscall tracing (--no-syscalls), or try tracing
+      just some (-e *sleep).
 
->> not appear to be the case here, but I am not privy to all of the
->> details of this erratum.
-> 
-> Thanks,
-> Ravi
+    . Attach a filter function to a kernel function, returning when it should
+      be considered, i.e. appear on the output.
+
+    . Run it system wide, so that any sleep of >= 5 seconds and < than 6
+      seconds gets caught.
+
+    . Ask for callgraphs using DWARF info, so that userspace can be unwound
+
+    . While this is running, run something like "sleep 5s".
+
+    . If we decide to add tv_nsec as well, then it becomes:
+
+      int probe(hrtimer_nanosleep, rqtp->tv_sec rqtp->tv_nsec)(void *ctx, int err, long sec, long nsec)
+
+      I.e. add where it comes from (rqtp->tv_nsec) and where it will be
+      accessible in the function body (nsec)
+
+    # perf trace --no-syscalls -e tools/perf/examples/bpf/5sec.c/call-graph=dwarf/
+         0.000 perf_bpf_probe:func:(ffffffff9811b5f0) tv_sec=5
+                                           hrtimer_nanosleep ([kernel.kallsyms])
+                                           __x64_sys_nanosleep ([kernel.kallsyms])
+                                           do_syscall_64 ([kernel.kallsyms])
+                                           entry_SYSCALL_64 ([kernel.kallsyms])
+                                           __GI___nanosleep (/usr/lib64/libc-2.26.so)
+                                           rpl_nanosleep (/usr/bin/sleep)
+                                           xnanosleep (/usr/bin/sleep)
+                                           main (/usr/bin/sleep)
+                                           __libc_start_main (/usr/lib64/libc-2.26.so)
+                                           _start (/usr/bin/sleep)
+    ^C#
+
+   Copyright (C) 2018 Red Hat, Inc., Arnaldo Carvalho de Melo <acme@redhat.com>
+*/
+
+#include <bpf.h>
+
+#define NSEC_PER_SEC	1000000000L
+
+int probe(hrtimer_nanosleep, rqtp)(void *ctx, int err, long long sec)
+{
+	return sec / NSEC_PER_SEC == 5ULL;
+}
+
+license(GPL);
+[root@quaco perf]# perf trace -e tools/perf/examples/bpf/5sec.c  sleep 5s
+     0.000 perf_bpf_probe:hrtimer_nanosleep(__probe_ip: -1994947936, rqtp: 5000000000)
+[root@quaco perf]#
+
+After:
+
+[root@quaco perf]# perf trace -e tools/perf/examples/bpf/5sec.c  sleep 5s
+event syntax error: 'tools/perf/examples/bpf/5sec.c'
+                     \___ Permission denied
+
+(add -v to see detail)
+Run 'perf list' for a list of valid events
+
+ Usage: perf trace [<options>] [<command>]
+    or: perf trace [<options>] -- <command> [<options>]
+    or: perf trace record [<options>] [<command>]
+    or: perf trace record [<options>] -- <command> [<options>]
+
+    -e, --event <event>   event/syscall selector. use 'perf list' to list available events
+[root@quaco perf]# perf trace -v -e tools/perf/examples/bpf/5sec.c  sleep 5s
+bpf: builtin compilation failed: -95, try external compiler
+Kernel build dir is set to /lib/modules/5.15.18-200.fc35.x86_64/build
+set env: KBUILD_DIR=/lib/modules/5.15.18-200.fc35.x86_64/build
+unset env: KBUILD_OPTS
+include option is set to -nostdinc -isystem /usr/lib/gcc/x86_64-redhat-linux/11/include -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h 
+set env: NR_CPUS=8
+set env: LINUX_VERSION_CODE=0x50f12
+set env: CLANG_EXEC=/usr/lib64/ccache/clang
+set env: CLANG_OPTIONS=-g
+set env: KERNEL_INC_OPTIONS=-nostdinc -isystem /usr/lib/gcc/x86_64-redhat-linux/11/include -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h 
+set env: PERF_BPF_INC_OPTIONS=-I/home/acme/lib/perf/include/bpf
+set env: WORKING_DIR=/lib/modules/5.15.18-200.fc35.x86_64/build
+set env: CLANG_SOURCE=/home/acme/git/perf/tools/perf/examples/bpf/5sec.c
+llvm compiling command template: $CLANG_EXEC -D__KERNEL__ -D__NR_CPUS__=$NR_CPUS -DLINUX_VERSION_CODE=$LINUX_VERSION_CODE $CLANG_OPTIONS $PERF_BPF_INC_OPTIONS $KERNEL_INC_OPTIONS -Wno-unused-value -Wno-pointer-sign -working-directory $WORKING_DIR -c "$CLANG_SOURCE" -target bpf $CLANG_EMIT_LLVM -O2 -o - $LLVM_OPTIONS_PIPE
+llvm compiling command : /usr/lib64/ccache/clang -D__KERNEL__ -D__NR_CPUS__=8 -DLINUX_VERSION_CODE=0x50f12 -g -I/home/acme/lib/perf/include/bpf -nostdinc -isystem /usr/lib/gcc/x86_64-redhat-linux/11/include -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h  -Wno-unused-value -Wno-pointer-sign -working-directory /lib/modules/5.15.18-200.fc35.x86_64/build -c /home/acme/git/perf/tools/perf/examples/bpf/5sec.c -target bpf  -O2 -o - 
+libbpf: loading object 'tools/perf/examples/bpf/5sec.c' from buffer
+libbpf: elf: section(3) hrtimer_nanosleep=hrtimer_nanosleep rqtp, size 64, link 0, flags 6, type=1
+libbpf: sec 'hrtimer_nanosleep=hrtimer_nanosleep rqtp': found program 'hrtimer_nanosleep' at insn offset 0 (0 bytes), code size 8 insns (64 bytes)
+libbpf: elf: section(4) license, size 4, link 0, flags 3, type=1
+libbpf: license of tools/perf/examples/bpf/5sec.c is GPL
+libbpf: elf: section(5) version, size 4, link 0, flags 3, type=1
+libbpf: kernel version of tools/perf/examples/bpf/5sec.c is 50f12
+libbpf: elf: section(11) .BTF, size 558, link 0, flags 0, type=1
+libbpf: elf: section(13) .BTF.ext, size 112, link 0, flags 0, type=1
+libbpf: elf: section(20) .symtab, size 288, link 1, flags 0, type=2
+libbpf: looking for externs among 12 symbols...
+libbpf: collected 0 externs total
+libbpf: prog 'hrtimer_nanosleep': unrecognized ELF section name 'hrtimer_nanosleep=hrtimer_nanosleep rqtp'
+LLVM: dumping tools/perf/examples/bpf/5sec.o
+bpf: config program 'hrtimer_nanosleep=hrtimer_nanosleep rqtp'
+symbol:hrtimer_nanosleep file:(null) line:0 offset:0 return:0 lazy:(null)
+parsing arg: rqtp into rqtp
+bpf: config 'hrtimer_nanosleep=hrtimer_nanosleep rqtp' is ok
+Looking at the vmlinux_path (8 entries long)
+Using /usr/lib/debug/lib/modules/5.15.18-200.fc35.x86_64/vmlinux for symbols
+Open Debuginfo file: /usr/lib/debug/.build-id/a5/6896963dc51b426302a1f1147842fb8f288ef2.debug
+Try to find probe point from debuginfo.
+Opening /sys/kernel/tracing//README write=0
+Matched function: hrtimer_nanosleep [1af0959]
+Probe point found: hrtimer_nanosleep+0
+Searching 'rqtp' variable in context.
+Converting variable rqtp into trace event.
+rqtp type is long long int.
+Found 1 probe_trace_events.
+Opening /sys/kernel/tracing//kprobe_events write=1
+Writing event: p:perf_bpf_probe/hrtimer_nanosleep _text+1540768 rqtp=%di:s64
+libbpf: prog 'hrtimer_nanosleep': BPF program load failed: Permission denied
+libbpf: prog 'hrtimer_nanosleep': -- BEGIN PROG LOAD LOG --
+arg#0 reference type('UNKNOWN ') size cannot be determined: -22
+; int probe(hrtimer_nanosleep, rqtp)(void *ctx, int err, long long sec)
+0: (18) r1 = 0xfffffffed5fa0e00
+; return sec / NSEC_PER_SEC == 5ULL;
+2: (0f) r3 += r1
+R3 !read_ok
+processed 2 insns (limit 1000000) max_states_per_insn 0 total_states 0 peak_states 0 mark_read 0
+-- END PROG LOAD LOG --
+libbpf: failed to load program 'hrtimer_nanosleep'
+libbpf: failed to load object 'tools/perf/examples/bpf/5sec.c'
+bpf: load objects failed: err=-13: (Permission denied)
+event syntax error: 'tools/perf/examples/bpf/5sec.c'
+                     \___ Permission denied
+
+(add -v to see detail)
+Run 'perf list' for a list of valid events
+
+ Usage: perf trace [<options>] [<command>]
+    or: perf trace [<options>] -- <command> [<options>]
+    or: perf trace record [<options>] [<command>]
+    or: perf trace record [<options>] -- <command> [<options>]
+
+    -e, --event <event>   event/syscall selector. use 'perf list' to list available events
+Opening /sys/kernel/tracing//kprobe_events write=1
+Opening /sys/kernel/tracing//uprobe_events write=1
+Parsing probe_events: p:perf_bpf_probe/hrtimer_nanosleep _text+1540768 rqtp=%di:s64
+Group:perf_bpf_probe Event:hrtimer_nanosleep probe:p
+Writing event: -:perf_bpf_probe/hrtimer_nanosleep
+[root@quaco perf]# 
+
+
