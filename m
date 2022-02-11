@@ -2,95 +2,85 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DACD1C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Feb 2022 11:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BEACC433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Feb 2022 15:20:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244831AbiBKLhB (ORCPT
+        id S1351338AbiBKPUk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 11 Feb 2022 06:37:01 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:51102 "EHLO
+        Fri, 11 Feb 2022 10:20:40 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:44102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240820AbiBKLhB (ORCPT
+        with ESMTP id S243391AbiBKPUj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 11 Feb 2022 06:37:01 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D106E9B;
-        Fri, 11 Feb 2022 03:36:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=75NWpP1F3muQ7eU77nN0HqewB2XELKQjhwajLBBcmi4=; b=PSN+UiFDV4kXfaO/wz7emyjBKj
-        k23Ik9QPVvS3SLNFogCYSikiE7DGGSJHir26m6VUCwHZfVbG4JYkv+wdDf4HhBJ2mGt/PbF4DceIo
-        gxAAIsuysAEz+lx8/wv8UO+1fW3FAJA03zGAm2WtR4Wg53ioRsCcbGYnWbloETzZr7H0QWnwp/xlq
-        6YeHeMC4s55AlC32NStEhjdxlulhtn5NcSPiRVGG2tOOpoR0xDu6DYsNdyV8Z/tHT8Mx95o9IjHCA
-        r5V9bmOCDdcfZqL8u5lb8vfG7uR3qLB+EODQrfE7h0DdQEW/viB9+HXxhGl1WIOdkKnx+pLJhL2Eu
-        q+DZThWA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nIUEG-00AMT3-DH; Fri, 11 Feb 2022 11:36:44 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 66C149853C7; Fri, 11 Feb 2022 12:36:43 +0100 (CET)
-Date:   Fri, 11 Feb 2022 12:36:43 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Wen Yang <simon.wy@alibaba-inc.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Fri, 11 Feb 2022 10:20:39 -0500
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44F01CE0
+        for <linux-perf-users@vger.kernel.org>; Fri, 11 Feb 2022 07:20:38 -0800 (PST)
+Received: by mail-ed1-x52f.google.com with SMTP id eg42so16951578edb.7
+        for <linux-perf-users@vger.kernel.org>; Fri, 11 Feb 2022 07:20:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=A+pYq3gAvDRIBXzI8fOr1NWPq9Ez2hj6zeRc/MxGX5U=;
+        b=XmIhBe0BW8s4Ne/ySLnWsQWfdi8M/ADrEQJrnY9xyXzT/oeRrWbnAaaPbsZsd/Thon
+         ApfBEUIWpk/fY9kPrV0o6nd6jPQLWWBw5Kb5l53H/Ue7VgF97ZNjLGIObcxM8mdRlH97
+         wGJD4a9OGsNDKB7gVIjnbWaGxtBmyq5EvSVmighL+7lYdWSu/0unIakZ+57yS2ZcwfD7
+         kKRbwxmymXMhHSr9ppVsNcYIuudAD74mlMib6g0ZsTWNBoDOYCEPU5m5hlzFfOLeZvW8
+         4m965OzMozN2Uk8O9QpZQ3AyuQPrtCFir0JktrAdzv1JLXdowNN1TR1nVn7criYg/kPL
+         TOfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=A+pYq3gAvDRIBXzI8fOr1NWPq9Ez2hj6zeRc/MxGX5U=;
+        b=H8ifzIlszvP5L4PKy5vLE3qGxFOiz9WloIaEd40jRAwPvRvZV8Y/4nauylqTu9YCK+
+         +NZM3zNq8hEBqHrCnEroUA+lpioUJYo+POQPsSRtaUL0HyHGh+Ftx3KZm3S4L/MgCCbr
+         1rpzDKLYYopNk4P747yzl+lqo01ND6YpBdLZeMnS1k7b3raxFXCzuQW0oxDlt9ysd53o
+         p5Zr3EOMFneWh+MvLmqteJjRDlKZkx7f5NxYn3a+H+CJls8HfV/Z0mwZJemoSQPF51ha
+         Vu9M/B4Bt/MVU9bhyMpoin59/LT7U3RuoElhv0DyogKTAMJIJYz19PMpCJP0+6F8Uysp
+         p1+g==
+X-Gm-Message-State: AOAM531EKJg5wDSkOv03hc7zKx4IFVk7B2KUOI6zyT9FsfIPJ4ndSxgb
+        lYDk6NIbQWCXVuWkHy3BcXQlAw==
+X-Google-Smtp-Source: ABdhPJwszJf8Sr9G+6mqytFUQlGUOUee0R8RNKRV/mCvOx3IsJhsrx0miYsUPgVbSRRKz/HPV1lxVg==
+X-Received: by 2002:a05:6402:2284:: with SMTP id cw4mr2458951edb.436.1644592836609;
+        Fri, 11 Feb 2022 07:20:36 -0800 (PST)
+Received: from leoy-ThinkPad-X240s ([104.245.96.223])
+        by smtp.gmail.com with ESMTPSA id z8sm7909941ejc.151.2022.02.11.07.20.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Feb 2022 07:20:35 -0800 (PST)
+Date:   Fri, 11 Feb 2022 23:20:26 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     acme@kernel.org, linux-perf-users@vger.kernel.org,
+        mathieu.poirier@linaro.org, coresight@lists.linaro.org,
+        Mike Leach <mike.leach@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] perf/x86: improve the event scheduling to avoid
- unnecessary pmu_stop/start
-Message-ID: <20220211113643.GT23216@worktop.programming.kicks-ass.net>
-References: <20220210043930.34311-1-simon.wy@alibaba-inc.com>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] perf: cs-etm: No-op refactor of synth opt usage
+Message-ID: <20220211152026.GC475776@leoy-ThinkPad-X240s>
+References: <20220210200620.1227232-1-james.clark@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220210043930.34311-1-simon.wy@alibaba-inc.com>
+In-Reply-To: <20220210200620.1227232-1-james.clark@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Feb 10, 2022 at 12:39:30PM +0800, Wen Yang wrote:
-> This issue has been there for a long time, we could reproduce it as follows:
+On Thu, Feb 10, 2022 at 08:06:19PM +0000, James Clark wrote:
+> sample_branches and sample_instructions are already saved in the
+> synth_opts struct. Other usages like synth_opts.last_branch don't save
+> a value, so make this more consistent by always going through synth_opts
+> and not saving duplicate values.
 > 
-> 1, run a script that periodically collects perf data, eg:
-> while true
-> do
->     perf stat -e cache-misses,cache-misses,cache-misses -C 1 sleep 2
->     perf stat -e cache-misses -C 1 sleep 2
->     sleep 1
-> done
-> 
-> 2, run another one to capture the IPC, eg:
-> perf stat -e cycles:D,instructions:D  -C 1 -I 1000
-> 
-> Then we could observe that the counter used by cycles:D changes frequently:
-> crash> struct  cpu_hw_events.n_events,assign,event_list,events  ffff88bf7f44f420
->   n_events = 3
->   assign = {33, 1, 32, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
->   event_list = {0xffff88bf77b85000, 0xffff88b72db82000, 0xffff88b72db85800, 0xffff88ff6cfcb000, 0xffff88ff609f1800, 0xffff88ff609f1800, 0xffff88ff5f46a800, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}
->   events = {0x0, 0xffff88b72db82000, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0xffff88b72db85800, 0xffff88bf77b85000, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}
-> 
-> crash> struct  cpu_hw_events.n_events,assign,event_list,events  ffff88bf7f44f420
->   n_events = 6
->   assign = {33, 3, 32, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
->   event_list = {0xffff88bf77b85000, 0xffff88b72db82000, 0xffff88b72db85800, 0xffff88bf46c34000, 0xffff88bf46c35000, 0xffff88bf46c30000, 0xffff88ff5f46a800, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}
->   events = {0xffff88bf46c34000, 0xffff88bf46c35000, 0xffff88bf46c30000, 0xffff88b72db82000, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0xffff88b72db85800, 0xffff88bf77b85000, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}
+> Signed-off-by: James Clark <james.clark@arm.com>
 
-The above is unreadable; consider rewriting it in something other than a
-raw data dump.
+The patch looks good to me:
 
-> The reason is that NMI watchdog permanently consumes one FP,
-> so cycles can only use one GP, and its hweight is 5,
-> but the hweight of other events (cache misses) is 4,
-> so the counter used by cycles will be frequently taken away,
-> resulting in unnecessary pmu_stop/start.
-
-And the solution..... ? Or should I try and reverse engineer from the
-proposed patch? If I do, how do I know it is what you intended?
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
