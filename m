@@ -2,206 +2,231 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 447DAC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Feb 2022 00:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F930C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Feb 2022 05:29:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346422AbiBKAh5 (ORCPT
+        id S234156AbiBKF3G (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Feb 2022 19:37:57 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:33738 "EHLO
+        Fri, 11 Feb 2022 00:29:06 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:55460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242949AbiBKAh4 (ORCPT
+        with ESMTP id S232414AbiBKF3F (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Feb 2022 19:37:56 -0500
-Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BFF15F7C;
-        Thu, 10 Feb 2022 16:37:56 -0800 (PST)
-Received: by mail-io1-xd35.google.com with SMTP id s18so9531390ioa.12;
-        Thu, 10 Feb 2022 16:37:56 -0800 (PST)
+        Fri, 11 Feb 2022 00:29:05 -0500
+Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74902BE4;
+        Thu, 10 Feb 2022 21:29:03 -0800 (PST)
+Received: by mail-io1-xd34.google.com with SMTP id i62so10164409ioa.1;
+        Thu, 10 Feb 2022 21:29:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=YsSFVcBAVgAnh1p0qtI8V/Jpa4hlZLllbwLcaFPQgA0=;
-        b=cW/5wKGiWXoUhwkDkZDHsCqrs3nultWGlDM8mzcIOR/k2uTAprKe5yszATQTNPCSCJ
-         1m7THR5JF2seGAiygdS0fr24QyEZT0sgAQ9wB5PCP4TWpuejgB2a01Q0MvyEJuc1shdA
-         8CJ4yWoIsRObMajqGrLb7XTjEVviIfaKIgFnmab7Rbb4qJmhUzcNdYqczakRU0Ci90pn
-         HqP+vbPkC+SeNc5JD+FFLVP2GkIQ8WDQIRlDpIQzZo52mMn00OCewffUksZ8Aol+2Bi+
-         OejfdElRAWRhWleKV+UcqqDm0Zc49ACLla4SRERHQMkPyydvud7vDMi/NBzJxhFT+wlg
-         2qjg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wspqp+Fr6xDR7TXbQEJQmmj2bQSHivdVpB11NsXyUBc=;
+        b=DdiBAVxqttz29zTCqwsCY/CWzfYjmRJwIwrwYfKsaV+U43fD7PXX3AwsnzmO1+DOTm
+         lqpQS2Y919HjTMykwQHhjlX8z77gIWry3IttBYHAClSC+3j8A2RxujvyXQslrHLBpUw7
+         RadM9hwr5/bAHs8qEimNAAJSrkKfMF7XilohtL2NOyXUJIRIHzIPJBczSaw8/xp0hagj
+         id0h5TX/7X2G0sRqqpI7N+Lit7Z3Y19i6Xio1FviCrnDg1ayZMETlkuFAiB6EGfTaeOR
+         YpKaHL73iB/KBFkmJQlj4p2O1QjwjzK1xcv6LMvQh6QrAy4z8ecoT9+ZfmvAvs0i5Y9X
+         LMTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YsSFVcBAVgAnh1p0qtI8V/Jpa4hlZLllbwLcaFPQgA0=;
-        b=2ZjnqgCD3j0TMjvn6h8UpEim5/VZECiOdeXMUy5SO7D+BRAeklrVmpMSxZxaEF6WOa
-         UhbsHMa301YRH9W2lgs2Gkb/VSTP5ft5zwnnIoAJIVOj4Km4B0eXCPpJRTGSSt02g1eD
-         CL0DpRETnK3Td4zHyxCAhLsJDrGSeze5aFjNb5WuLgnAvGlnA1noShbVW21zXPJSP5YX
-         wK/Qwhq01XmsdGwP9+Lnd1b2ugUUdE7bS7Dh/ZAl/RyD7sEyVMeZY8V9Tahpu5Y/DGXt
-         m4Z+/JD8f6F6l/SAwhPp9FI71RYBu62NXBvJ0MMd8CVSlT19mTE/8CC/hBLrfJS5N5Z1
-         yQ0w==
-X-Gm-Message-State: AOAM530SkE1r4qzasOEXBvdAJEN5FVpyC9ke9Lh5dttACyK2KfTuwrXj
-        +2hDICgxkWTDz3BTZQoBUqg=
-X-Google-Smtp-Source: ABdhPJw313nFWHa7NqEf6BSTSrIQf9t0LekjW6QyePAevB7Ed9CZMq3DGQ+dll3RTz0cTf9zJfAbpA==
-X-Received: by 2002:a6b:d80c:: with SMTP id y12mr4955845iob.31.1644539875809;
-        Thu, 10 Feb 2022 16:37:55 -0800 (PST)
-Received: from localhost ([12.28.44.171])
-        by smtp.gmail.com with ESMTPSA id w11sm11664522ill.46.2022.02.10.16.37.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Feb 2022 16:37:55 -0800 (PST)
-From:   Yury Norov <yury.norov@gmail.com>
-To:     Yury Norov <yury.norov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Laight <David.Laight@aculab.com>,
-        Joe Perches <joe@perches.com>, Dennis Zhou <dennis@kernel.org>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Alexey Klimov <aklimov@redhat.com>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Ian Rogers <irogers@google.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH 48/49] tools: bitmap: sync bitmap_weight
-Date:   Thu, 10 Feb 2022 14:49:32 -0800
-Message-Id: <20220210224933.379149-49-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220210224933.379149-1-yury.norov@gmail.com>
-References: <20220210224933.379149-1-yury.norov@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wspqp+Fr6xDR7TXbQEJQmmj2bQSHivdVpB11NsXyUBc=;
+        b=WixscNa/0Rsggy/biOBOx0VoKr7xzYxyUnqrAZ3GWEXHT1KzJwbzlgP6HZLwtpT5ce
+         H19uoLOYhnEAiWGHPynWvqTErUkYm4xobmxsO6g75ad8AlIwRQrUIUmUdo+R0LkY+cRQ
+         LKOQcrcbERNvKmAP8YTcRjlg/1hLVe//H6XT6UhZXMNEIcU5LI/hz15awcBzprDW40k/
+         YiMgG/mlLJLYECUTFBwdoCUTukd+ogRSkXR+AYlsQFuM+WU3XPg5ImgTQBnQ/96p24cd
+         0z3C1JuZ+aNVX6iWeb4CI+s+3UArTZT9gU45KKnGe2LgIs2GtDnFnJ6S4EwTw+RsEIeA
+         oTog==
+X-Gm-Message-State: AOAM532itQKd/kZLbVaOzyrTV5WhJa4Mu5cnWhvU1QQYhGXgm8w8XmbI
+        ALOCyrInYnzjWKMlMj+66sABM+3CV3qvSki/x3qD2gXU7gA=
+X-Google-Smtp-Source: ABdhPJwqzc3U28y0eVuAguX95yjEI0nGk1gszptEH9tJwLleDEMwYbgB9h7K+WZZVLLskKMEVTBn10anXev3yY7l758=
+X-Received: by 2002:a6b:760c:: with SMTP id g12mr48703iom.27.1644557342617;
+ Thu, 10 Feb 2022 21:29:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220123221932.537060-1-jolsa@kernel.org> <YgVk8t6COJhDJyzj@kernel.org>
+ <YgWEEHFV4U0jhrX8@krava>
+In-Reply-To: <YgWEEHFV4U0jhrX8@krava>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 10 Feb 2022 21:28:51 -0800
+Message-ID: <CAEf4Bza9a5_U2U9ZK_su4VGSA91EMNouipk=PFudGqkN_iGsPg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] perf/bpf: Remove prologue generation
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Christy Lee <christylee@fb.com>,
+        Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Pull bitmap_weight_{cmp,eq,gt,ge,lt,le} from mother kernel and
-use where applicable.
+On Thu, Feb 10, 2022 at 1:31 PM Jiri Olsa <olsajiri@gmail.com> wrote:
+>
+> On Thu, Feb 10, 2022 at 04:18:10PM -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Sun, Jan 23, 2022 at 11:19:30PM +0100, Jiri Olsa escreveu:
+> > > Removing code for ebpf program prologue generation.
+> > >
+> > > The prologue code was used to get data for extra arguments specified
+> > > in program section name, like:
+> > >
+> > >   SEC("lock_page=__lock_page page->flags")
+> > >   int lock_page(struct pt_regs *ctx, int err, unsigned long flags)
+> > >   {
+> > >          return 1;
+> > >   }
+> > >
+> > > This code is using deprecated libbpf API and blocks its removal.
+> > >
+> > > This feature was not documented and broken for some time without
+> > > anyone complaining, also original authors are not responding,
+> > > so I'm removing it.
+> >
+> > So, the example below breaks, how hard would be to move the deprecated
+> > APIs to perf like was done in some other cases?
+> >
 
-Signed-off-by: Yury Norov <yury.norov@gmail.com>
----
- tools/include/linux/bitmap.h | 44 ++++++++++++++++++++++++++++++++++++
- tools/lib/bitmap.c           | 20 ++++++++++++++++
- tools/perf/util/pmu.c        |  2 +-
- 3 files changed, 65 insertions(+), 1 deletion(-)
+Just copy/pasting libbpf code won't work. But there are three parts:
 
-diff --git a/tools/include/linux/bitmap.h b/tools/include/linux/bitmap.h
-index ea97804d04d4..29bf54996a84 100644
---- a/tools/include/linux/bitmap.h
-+++ b/tools/include/linux/bitmap.h
-@@ -12,6 +12,8 @@
- 	unsigned long name[BITS_TO_LONGS(bits)]
- 
- int __bitmap_weight(const unsigned long *bitmap, int bits);
-+int __bitmap_weight_cmp(const unsigned long *bitmap, unsigned int bits,
-+			 unsigned int num);
- void __bitmap_or(unsigned long *dst, const unsigned long *bitmap1,
- 		 const unsigned long *bitmap2, int bits);
- int __bitmap_and(unsigned long *dst, const unsigned long *bitmap1,
-@@ -68,6 +70,48 @@ static inline int bitmap_weight(const unsigned long *src, unsigned int nbits)
- 	return __bitmap_weight(src, nbits);
- }
- 
-+static __always_inline
-+int bitmap_weight_cmp(const unsigned long *src, unsigned int nbits, int num)
-+{
-+	if ((unsigned int)num > nbits)
-+		return -num;
-+
-+	if (small_const_nbits(nbits))
-+		return hweight_long(*src & BITMAP_LAST_WORD_MASK(nbits)) - num;
-+
-+	return __bitmap_weight_cmp(src, nbits, num);
-+}
-+
-+static __always_inline
-+bool bitmap_weight_eq(const unsigned long *src, unsigned int nbits, int num)
-+{
-+	return bitmap_weight_cmp(src, nbits, num) == 0;
-+}
-+
-+static __always_inline
-+bool bitmap_weight_gt(const unsigned long *src, unsigned int nbits, int num)
-+{
-+	return bitmap_weight_cmp(src, nbits, num) > 0;
-+}
-+
-+static __always_inline
-+bool bitmap_weight_ge(const unsigned long *src, unsigned int nbits, int num)
-+{
-+	return bitmap_weight_cmp(src, nbits, num - 1) > 0;
-+}
-+
-+static __always_inline
-+bool bitmap_weight_lt(const unsigned long *src, unsigned int nbits, int num)
-+{
-+	return bitmap_weight_cmp(src, nbits, num - 1) <= 0;
-+}
-+
-+static __always_inline
-+bool bitmap_weight_le(const unsigned long *src, unsigned int nbits, int num)
-+{
-+	return bitmap_weight_cmp(src, nbits, num) <= 0;
-+}
-+
- static inline void bitmap_or(unsigned long *dst, const unsigned long *src1,
- 			     const unsigned long *src2, unsigned int nbits)
- {
-diff --git a/tools/lib/bitmap.c b/tools/lib/bitmap.c
-index db466ef7be9d..06e58fee8523 100644
---- a/tools/lib/bitmap.c
-+++ b/tools/lib/bitmap.c
-@@ -18,6 +18,26 @@ int __bitmap_weight(const unsigned long *bitmap, int bits)
- 	return w;
- }
- 
-+int __bitmap_weight_cmp(const unsigned long *bitmap, unsigned int bits, int num)
-+{
-+	unsigned int k, w, lim = bits / BITS_PER_LONG;
-+
-+	for (k = 0, w = 0; k < lim; k++) {
-+		if (w + bits - k * BITS_PER_LONG < num)
-+			goto out;
-+
-+		w += hweight_long(bitmap[k]);
-+
-+		if (w > num)
-+			goto out;
-+	}
-+
-+	if (bits % BITS_PER_LONG)
-+		w += hweight_long(bitmap[k] & BITMAP_LAST_WORD_MASK(bits));
-+out:
-+	return w - num;
-+}
-+
- void __bitmap_or(unsigned long *dst, const unsigned long *bitmap1,
- 		 const unsigned long *bitmap2, int bits)
- {
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 8dfbba15aeb8..2c26cdd7f9b0 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1314,7 +1314,7 @@ static int pmu_config_term(const char *pmu_name,
- 	 */
- 	if (term->type_val == PARSE_EVENTS__TERM_TYPE_NUM) {
- 		if (term->no_value &&
--		    bitmap_weight(format->bits, PERF_PMU_FORMAT_BITS) > 1) {
-+		    bitmap_weight_gt(format->bits, PERF_PMU_FORMAT_BITS, 1)) {
- 			if (err) {
- 				parse_events_error__handle(err, term->err_val,
- 					   strdup("no value assigned for term"),
--- 
-2.32.0
+1. bpf_(program|map|object)__set_priv(). There is no equivalent API,
+but perf can maintain this private data by building hashmap where the
+key is bpf_object/bpf_map/bpf_program pointer itself. Annoying but
+very straightforward to replace.
 
+2. For prologue generation, bpf_program__set_prep() doesn't have a
+direct equivalent. But program cloning and adjustment of the code can
+be achieved through bpf_program__insns()/bpf_program__insn_cnt() API
+to load one "prototype" program, gets its underlying insns and clone
+programs as necessary. After that, bpf_prog_load() would be used to
+load those cloned programs into kernel.
+
+3. Those *very* custom SEC() definitions will be possible for perf to
+handle once [0] lands (I'll send new revision tomorrow, probably).
+You'll be able to register your own "fallback" handler with
+libbpf_register_prog_handler(NULL, ...).
+
+  [0] https://patchwork.kernel.org/project/netdevbpf/list/?series=611491&state=*
+
+Sorry, it's not a straightforward copy/paste, but I hope this helps a bit.
+
+> > - Arnaldo
+> >
+> > Before:
+> >
+> > [root@quaco perf]# cat tools/perf/examples/bpf/5sec.c
+> > // SPDX-License-Identifier: GPL-2.0
+> > /*
+> >     Description:
+> >
+> >     . Disable strace like syscall tracing (--no-syscalls), or try tracing
+> >       just some (-e *sleep).
+> >
+> >     . Attach a filter function to a kernel function, returning when it should
+> >       be considered, i.e. appear on the output.
+> >
+> >     . Run it system wide, so that any sleep of >= 5 seconds and < than 6
+> >       seconds gets caught.
+> >
+> >     . Ask for callgraphs using DWARF info, so that userspace can be unwound
+> >
+> >     . While this is running, run something like "sleep 5s".
+> >
+> >     . If we decide to add tv_nsec as well, then it becomes:
+> >
+> >       int probe(hrtimer_nanosleep, rqtp->tv_sec rqtp->tv_nsec)(void *ctx, int err, long sec, long nsec)
+> >
+> >       I.e. add where it comes from (rqtp->tv_nsec) and where it will be
+> >       accessible in the function body (nsec)
+> >
+> >     # perf trace --no-syscalls -e tools/perf/examples/bpf/5sec.c/call-graph=dwarf/
+> >          0.000 perf_bpf_probe:func:(ffffffff9811b5f0) tv_sec=5
+> >                                            hrtimer_nanosleep ([kernel.kallsyms])
+> >                                            __x64_sys_nanosleep ([kernel.kallsyms])
+> >                                            do_syscall_64 ([kernel.kallsyms])
+> >                                            entry_SYSCALL_64 ([kernel.kallsyms])
+> >                                            __GI___nanosleep (/usr/lib64/libc-2.26.so)
+> >                                            rpl_nanosleep (/usr/bin/sleep)
+> >                                            xnanosleep (/usr/bin/sleep)
+> >                                            main (/usr/bin/sleep)
+> >                                            __libc_start_main (/usr/lib64/libc-2.26.so)
+> >                                            _start (/usr/bin/sleep)
+> >     ^C#
+> >
+> >    Copyright (C) 2018 Red Hat, Inc., Arnaldo Carvalho de Melo <acme@redhat.com>
+> > */
+> >
+> > #include <bpf.h>
+> >
+> > #define NSEC_PER_SEC  1000000000L
+> >
+> > int probe(hrtimer_nanosleep, rqtp)(void *ctx, int err, long long sec)
+> > {
+> >       return sec / NSEC_PER_SEC == 5ULL;
+> > }
+>
+> that sucks ;-) I'll check if we can re-implement as we discussed earlier,
+> however below is workaround how to do it without the prologue support
+>
+> jirka
+>
+>
+> ---
+> diff --git a/tools/perf/examples/bpf/5sec.c b/tools/perf/examples/bpf/5sec.c
+> index e6b6181c6dc6..734d39debdb8 100644
+> --- a/tools/perf/examples/bpf/5sec.c
+> +++ b/tools/perf/examples/bpf/5sec.c
+> @@ -43,9 +43,17 @@
+>
+>  #define NSEC_PER_SEC   1000000000L
+>
+> -int probe(hrtimer_nanosleep, rqtp)(void *ctx, int err, long long sec)
+> +struct pt_regs {
+> +        long di;
+> +};
+> +
+> +SEC("function=hrtimer_nanosleep")
+> +int krava(struct pt_regs *ctx)
+>  {
+> -       return sec / NSEC_PER_SEC == 5ULL;
+> +       unsigned long arg;
+> +
+> +       probe_read_kernel(&arg, sizeof(arg), __builtin_preserve_access_index(&ctx->di));
+> +       return arg / NSEC_PER_SEC == 5ULL;
+>  }
+>
+>  license(GPL);
+> diff --git a/tools/perf/include/bpf/bpf.h b/tools/perf/include/bpf/bpf.h
+> index b422aeef5339..b7d6d2fc8342 100644
+> --- a/tools/perf/include/bpf/bpf.h
+> +++ b/tools/perf/include/bpf/bpf.h
+> @@ -64,6 +64,7 @@ int _version SEC("version") = LINUX_VERSION_CODE;
+>
+>  static int (*probe_read)(void *dst, int size, const void *unsafe_addr) = (void *)BPF_FUNC_probe_read;
+>  static int (*probe_read_str)(void *dst, int size, const void *unsafe_addr) = (void *)BPF_FUNC_probe_read_str;
+> +static long (*probe_read_kernel)(void *dst, __u32 size, const void *unsafe_ptr) = (void *) BPF_FUNC_probe_read_kernel;
+>
+>  static int (*perf_event_output)(void *, struct bpf_map *, int, void *, unsigned long) = (void *)BPF_FUNC_perf_event_output;
+>
+> diff --git a/tools/perf/util/llvm-utils.c b/tools/perf/util/llvm-utils.c
+> index 96c8ef60f4f8..9274a3373847 100644
+> --- a/tools/perf/util/llvm-utils.c
+> +++ b/tools/perf/util/llvm-utils.c
+> @@ -25,7 +25,7 @@
+>                 "$CLANG_OPTIONS $PERF_BPF_INC_OPTIONS $KERNEL_INC_OPTIONS " \
+>                 "-Wno-unused-value -Wno-pointer-sign "          \
+>                 "-working-directory $WORKING_DIR "              \
+> -               "-c \"$CLANG_SOURCE\" -target bpf $CLANG_EMIT_LLVM -O2 -o - $LLVM_OPTIONS_PIPE"
+> +               "-g -c \"$CLANG_SOURCE\" -target bpf $CLANG_EMIT_LLVM -O2 -o - $LLVM_OPTIONS_PIPE"
+>
+>  struct llvm_param llvm_param = {
+>         .clang_path = "clang",
