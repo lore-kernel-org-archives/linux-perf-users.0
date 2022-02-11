@@ -2,54 +2,54 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BEACC433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Feb 2022 15:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98376C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Feb 2022 16:05:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351338AbiBKPUk (ORCPT
+        id S1350109AbiBKQF1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 11 Feb 2022 10:20:40 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:44102 "EHLO
+        Fri, 11 Feb 2022 11:05:27 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:37524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243391AbiBKPUj (ORCPT
+        with ESMTP id S1350152AbiBKQF0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 11 Feb 2022 10:20:39 -0500
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44F01CE0
-        for <linux-perf-users@vger.kernel.org>; Fri, 11 Feb 2022 07:20:38 -0800 (PST)
-Received: by mail-ed1-x52f.google.com with SMTP id eg42so16951578edb.7
-        for <linux-perf-users@vger.kernel.org>; Fri, 11 Feb 2022 07:20:38 -0800 (PST)
+        Fri, 11 Feb 2022 11:05:26 -0500
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2E10D83
+        for <linux-perf-users@vger.kernel.org>; Fri, 11 Feb 2022 08:05:24 -0800 (PST)
+Received: by mail-ej1-x629.google.com with SMTP id fy20so23755639ejc.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 11 Feb 2022 08:05:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=A+pYq3gAvDRIBXzI8fOr1NWPq9Ez2hj6zeRc/MxGX5U=;
-        b=XmIhBe0BW8s4Ne/ySLnWsQWfdi8M/ADrEQJrnY9xyXzT/oeRrWbnAaaPbsZsd/Thon
-         ApfBEUIWpk/fY9kPrV0o6nd6jPQLWWBw5Kb5l53H/Ue7VgF97ZNjLGIObcxM8mdRlH97
-         wGJD4a9OGsNDKB7gVIjnbWaGxtBmyq5EvSVmighL+7lYdWSu/0unIakZ+57yS2ZcwfD7
-         kKRbwxmymXMhHSr9ppVsNcYIuudAD74mlMib6g0ZsTWNBoDOYCEPU5m5hlzFfOLeZvW8
-         4m965OzMozN2Uk8O9QpZQ3AyuQPrtCFir0JktrAdzv1JLXdowNN1TR1nVn7criYg/kPL
-         TOfg==
+        bh=csB5DuqtfIDJ9EKSK8fiwWzQpRbB0qD6Vp/GW/qS/YQ=;
+        b=grEYtNAoCYLkvBJEJgtJxnsTjxHc/cgpoV/QsJ19fyD5CPUsYizKM6gFegxVCO//Mm
+         D8jAgZaBtnMbVMY7/IWuYayVDI/OH/cpqxeyW2R8ibZpnkkkzEY+zsBlgU1tLjRd8EDb
+         hZlL83Q1UxrbIZHykr0xKJbiqE0qz38TTXFw6xoFzInhDy8Qe3vMx+4nSBQXPhE4oBgl
+         I1hbu0VXWqMnD4IqElhASijRmdRvHCB/ZuhESFpEUu7EYyW6F+cdnY2Axi4+ElKljMSt
+         zEWM6e9mBfNF/9Om96x819gasq0kLF7VNBubi3YnqQI8X+tqzsT9skc1OTJn8lYhWjTR
+         gRgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=A+pYq3gAvDRIBXzI8fOr1NWPq9Ez2hj6zeRc/MxGX5U=;
-        b=H8ifzIlszvP5L4PKy5vLE3qGxFOiz9WloIaEd40jRAwPvRvZV8Y/4nauylqTu9YCK+
-         +NZM3zNq8hEBqHrCnEroUA+lpioUJYo+POQPsSRtaUL0HyHGh+Ftx3KZm3S4L/MgCCbr
-         1rpzDKLYYopNk4P747yzl+lqo01ND6YpBdLZeMnS1k7b3raxFXCzuQW0oxDlt9ysd53o
-         p5Zr3EOMFneWh+MvLmqteJjRDlKZkx7f5NxYn3a+H+CJls8HfV/Z0mwZJemoSQPF51ha
-         Vu9M/B4Bt/MVU9bhyMpoin59/LT7U3RuoElhv0DyogKTAMJIJYz19PMpCJP0+6F8Uysp
-         p1+g==
-X-Gm-Message-State: AOAM531EKJg5wDSkOv03hc7zKx4IFVk7B2KUOI6zyT9FsfIPJ4ndSxgb
-        lYDk6NIbQWCXVuWkHy3BcXQlAw==
-X-Google-Smtp-Source: ABdhPJwszJf8Sr9G+6mqytFUQlGUOUee0R8RNKRV/mCvOx3IsJhsrx0miYsUPgVbSRRKz/HPV1lxVg==
-X-Received: by 2002:a05:6402:2284:: with SMTP id cw4mr2458951edb.436.1644592836609;
-        Fri, 11 Feb 2022 07:20:36 -0800 (PST)
+        bh=csB5DuqtfIDJ9EKSK8fiwWzQpRbB0qD6Vp/GW/qS/YQ=;
+        b=FJxOIm24H8WZGuqbR+V4vGV8ABhINrFWuhYEElhlVxqsKdq1OMly2GuDi6dijkvZzH
+         tvrAdKm1skIgz2jOfIyIFG+R/kLyBAsgiYTmn/7ccrx4Q/fzFcfGOEWRcr00DEWWugPM
+         8HZWH/AvB5WE+4e5AZNUpbXl+MvBBEDD03+JUMwssy/cg4Y4iK2BfaFFQHGFdLbgf//j
+         X5FmfUaWfBVj8h135n1XS8eJlZMOWPLl3n6iam9uenMoCFN88IdgzFbqFEtMdnnlZoDQ
+         OnjG1YkgViByNAXoeKpKHTAR9pqlan0BVworKkwy6bIVcMcW2bQdNCLUmW1rZXXVfcmv
+         sBRQ==
+X-Gm-Message-State: AOAM530qz+/2H/angzF27bFowvmGRR69c6h4PJPGlfscxWFlHF3GFOwi
+        ZKpd/VNPomN7X7PzNxE475dYYg==
+X-Google-Smtp-Source: ABdhPJw5QT9Y+IdfGntvtWKYXBrXdelCVroLEMdDbamYIFpp+AWguR/K4n0J65D0Y0UuY+gJH2msDg==
+X-Received: by 2002:a17:906:58cc:: with SMTP id e12mr2008984ejs.162.1644595523236;
+        Fri, 11 Feb 2022 08:05:23 -0800 (PST)
 Received: from leoy-ThinkPad-X240s ([104.245.96.223])
-        by smtp.gmail.com with ESMTPSA id z8sm7909941ejc.151.2022.02.11.07.20.32
+        by smtp.gmail.com with ESMTPSA id p19sm8062729ejc.42.2022.02.11.08.05.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Feb 2022 07:20:35 -0800 (PST)
-Date:   Fri, 11 Feb 2022 23:20:26 +0800
+        Fri, 11 Feb 2022 08:05:22 -0800 (PST)
+Date:   Sat, 12 Feb 2022 00:05:16 +0800
 From:   Leo Yan <leo.yan@linaro.org>
 To:     James Clark <james.clark@arm.com>
 Cc:     acme@kernel.org, linux-perf-users@vger.kernel.org,
@@ -62,25 +62,64 @@ Cc:     acme@kernel.org, linux-perf-users@vger.kernel.org,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] perf: cs-etm: No-op refactor of synth opt usage
-Message-ID: <20220211152026.GC475776@leoy-ThinkPad-X240s>
+Subject: Re: [PATCH 2/2] perf: cs-etm: Fix corrupt inject files when only
+ last branch option is enabled
+Message-ID: <20220211160516.GD475776@leoy-ThinkPad-X240s>
 References: <20220210200620.1227232-1-james.clark@arm.com>
+ <20220210200620.1227232-2-james.clark@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220210200620.1227232-1-james.clark@arm.com>
+In-Reply-To: <20220210200620.1227232-2-james.clark@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Feb 10, 2022 at 08:06:19PM +0000, James Clark wrote:
-> sample_branches and sample_instructions are already saved in the
-> synth_opts struct. Other usages like synth_opts.last_branch don't save
-> a value, so make this more consistent by always going through synth_opts
-> and not saving duplicate values.
+On Thu, Feb 10, 2022 at 08:06:20PM +0000, James Clark wrote:
+> Perf inject with Coresight data generates files that cannot be opened
+> when only the last branch option is specified:
+> 
+>   perf inject -i perf.data --itrace=l -o inject.data
+>   perf script -i inject.data
+>   0x33faa8 [0x8]: failed to process type: 9 [Bad address]
+> 
+> This is because cs_etm__synth_instruction_sample() is called even when
+> the sample type for instructions hasn't been setup. Last branch records
+> are attached to instruction samples so it doesn't make sense to generate
+> them when --itrace=i isn't specified anyway.
+> 
+> This change disables all calls of cs_etm__synth_instruction_sample()
+> unless --itrace=i is specified, resulting in a file with no samples if
+> only --itrace=l is provided, rather than a bad file.
 > 
 > Signed-off-by: James Clark <james.clark@arm.com>
 
-The patch looks good to me:
-
 Reviewed-by: Leo Yan <leo.yan@linaro.org>
+
+> ---
+>  tools/perf/util/cs-etm.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 796a065a500e..8b95fb3c4d7b 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -1553,6 +1553,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
+>  		goto swap_packet;
+>  
+>  	if (etmq->etm->synth_opts.last_branch &&
+> +	    etmq->etm->synth_opts.instructions &&
+>  	    tidq->prev_packet->sample_type == CS_ETM_RANGE) {
+>  		u64 addr;
+>  
+> @@ -1610,6 +1611,7 @@ static int cs_etm__end_block(struct cs_etm_queue *etmq,
+>  	 * the trace.
+>  	 */
+>  	if (etmq->etm->synth_opts.last_branch &&
+> +	    etmq->etm->synth_opts.instructions &&
+>  	    tidq->prev_packet->sample_type == CS_ETM_RANGE) {
+>  		u64 addr;
+>  
+> -- 
+> 2.28.0
+> 
