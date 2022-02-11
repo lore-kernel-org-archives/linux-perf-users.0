@@ -2,124 +2,86 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98376C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Feb 2022 16:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3316CC433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Feb 2022 16:32:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350109AbiBKQF1 (ORCPT
+        id S1351545AbiBKQcc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 11 Feb 2022 11:05:27 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:37524 "EHLO
+        Fri, 11 Feb 2022 11:32:32 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:35636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350152AbiBKQF0 (ORCPT
+        with ESMTP id S1348529AbiBKQc3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 11 Feb 2022 11:05:26 -0500
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2E10D83
-        for <linux-perf-users@vger.kernel.org>; Fri, 11 Feb 2022 08:05:24 -0800 (PST)
-Received: by mail-ej1-x629.google.com with SMTP id fy20so23755639ejc.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 11 Feb 2022 08:05:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=csB5DuqtfIDJ9EKSK8fiwWzQpRbB0qD6Vp/GW/qS/YQ=;
-        b=grEYtNAoCYLkvBJEJgtJxnsTjxHc/cgpoV/QsJ19fyD5CPUsYizKM6gFegxVCO//Mm
-         D8jAgZaBtnMbVMY7/IWuYayVDI/OH/cpqxeyW2R8ibZpnkkkzEY+zsBlgU1tLjRd8EDb
-         hZlL83Q1UxrbIZHykr0xKJbiqE0qz38TTXFw6xoFzInhDy8Qe3vMx+4nSBQXPhE4oBgl
-         I1hbu0VXWqMnD4IqElhASijRmdRvHCB/ZuhESFpEUu7EYyW6F+cdnY2Axi4+ElKljMSt
-         zEWM6e9mBfNF/9Om96x819gasq0kLF7VNBubi3YnqQI8X+tqzsT9skc1OTJn8lYhWjTR
-         gRgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=csB5DuqtfIDJ9EKSK8fiwWzQpRbB0qD6Vp/GW/qS/YQ=;
-        b=FJxOIm24H8WZGuqbR+V4vGV8ABhINrFWuhYEElhlVxqsKdq1OMly2GuDi6dijkvZzH
-         tvrAdKm1skIgz2jOfIyIFG+R/kLyBAsgiYTmn/7ccrx4Q/fzFcfGOEWRcr00DEWWugPM
-         8HZWH/AvB5WE+4e5AZNUpbXl+MvBBEDD03+JUMwssy/cg4Y4iK2BfaFFQHGFdLbgf//j
-         X5FmfUaWfBVj8h135n1XS8eJlZMOWPLl3n6iam9uenMoCFN88IdgzFbqFEtMdnnlZoDQ
-         OnjG1YkgViByNAXoeKpKHTAR9pqlan0BVworKkwy6bIVcMcW2bQdNCLUmW1rZXXVfcmv
-         sBRQ==
-X-Gm-Message-State: AOAM530qz+/2H/angzF27bFowvmGRR69c6h4PJPGlfscxWFlHF3GFOwi
-        ZKpd/VNPomN7X7PzNxE475dYYg==
-X-Google-Smtp-Source: ABdhPJw5QT9Y+IdfGntvtWKYXBrXdelCVroLEMdDbamYIFpp+AWguR/K4n0J65D0Y0UuY+gJH2msDg==
-X-Received: by 2002:a17:906:58cc:: with SMTP id e12mr2008984ejs.162.1644595523236;
-        Fri, 11 Feb 2022 08:05:23 -0800 (PST)
-Received: from leoy-ThinkPad-X240s ([104.245.96.223])
-        by smtp.gmail.com with ESMTPSA id p19sm8062729ejc.42.2022.02.11.08.05.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Feb 2022 08:05:22 -0800 (PST)
-Date:   Sat, 12 Feb 2022 00:05:16 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     acme@kernel.org, linux-perf-users@vger.kernel.org,
-        mathieu.poirier@linaro.org, coresight@lists.linaro.org,
-        Mike Leach <mike.leach@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] perf: cs-etm: Fix corrupt inject files when only
- last branch option is enabled
-Message-ID: <20220211160516.GD475776@leoy-ThinkPad-X240s>
-References: <20220210200620.1227232-1-james.clark@arm.com>
- <20220210200620.1227232-2-james.clark@arm.com>
+        Fri, 11 Feb 2022 11:32:29 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 95EA9CC9;
+        Fri, 11 Feb 2022 08:32:28 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D01B106F;
+        Fri, 11 Feb 2022 08:32:28 -0800 (PST)
+Received: from [10.57.14.209] (unknown [10.57.14.209])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C9C0A3F70D;
+        Fri, 11 Feb 2022 08:32:24 -0800 (PST)
+Subject: Re: [PATCH 2/2] perf arm-spe: Parse more SPE fields and store source
+To:     Ali Saidi <alisaidi@amazon.com>, leo.yan@linaro.org
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        andrew.kilroy@arm.com, benh@kernel.crashing.org,
+        james.clark@arm.com, john.garry@huawei.com, jolsa@redhat.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
+        peterz@infradead.org, will@kernel.org
+References: <b1b3697d-4a0a-d041-5cbd-e08fec9e658c@arm.com>
+ <20220128210245.4628-1-alisaidi@amazon.com>
+From:   German Gomez <german.gomez@arm.com>
+Message-ID: <7eca7a1d-a5a2-2aab-b3cf-5d83cb8ccf4f@arm.com>
+Date:   Fri, 11 Feb 2022 16:31:40 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220210200620.1227232-2-james.clark@arm.com>
+In-Reply-To: <20220128210245.4628-1-alisaidi@amazon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Feb 10, 2022 at 08:06:20PM +0000, James Clark wrote:
-> Perf inject with Coresight data generates files that cannot be opened
-> when only the last branch option is specified:
-> 
->   perf inject -i perf.data --itrace=l -o inject.data
->   perf script -i inject.data
->   0x33faa8 [0x8]: failed to process type: 9 [Bad address]
-> 
-> This is because cs_etm__synth_instruction_sample() is called even when
-> the sample type for instructions hasn't been setup. Last branch records
-> are attached to instruction samples so it doesn't make sense to generate
-> them when --itrace=i isn't specified anyway.
-> 
-> This change disables all calls of cs_etm__synth_instruction_sample()
-> unless --itrace=i is specified, resulting in a file with no samples if
-> only --itrace=l is provided, rather than a bad file.
-> 
-> Signed-off-by: James Clark <james.clark@arm.com>
+Hi Ali,
 
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
+On 28/01/2022 21:02, Ali Saidi wrote:
+> Hi German,
+>
+> On 28/01/2022 19:20, German Gomez wrote:
+>> Hi Ali,
+>>
+>> [...]
+>>>  };
+>>>  
+>>>  enum arm_spe_op_type {
+>>>  	ARM_SPE_LD		= 1 << 0,
+>>>  	ARM_SPE_ST		= 1 << 1,
+>>> +	ARM_SPE_LDST_EXCL	= 1 << 2,
+>>> +	ARM_SPE_LDST_ATOMIC	= 1 << 3,
+>>> +	ARM_SPE_LDST_ACQREL	= 1 << 4,
 
-> ---
->  tools/perf/util/cs-etm.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index 796a065a500e..8b95fb3c4d7b 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -1553,6 +1553,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
->  		goto swap_packet;
->  
->  	if (etmq->etm->synth_opts.last_branch &&
-> +	    etmq->etm->synth_opts.instructions &&
->  	    tidq->prev_packet->sample_type == CS_ETM_RANGE) {
->  		u64 addr;
->  
-> @@ -1610,6 +1611,7 @@ static int cs_etm__end_block(struct cs_etm_queue *etmq,
->  	 * the trace.
->  	 */
->  	if (etmq->etm->synth_opts.last_branch &&
-> +	    etmq->etm->synth_opts.instructions &&
->  	    tidq->prev_packet->sample_type == CS_ETM_RANGE) {
->  		u64 addr;
->  
-> -- 
-> 2.28.0
-> 
+Wondering if we can store this in perf_sample->flags. The values are
+defined in "util/event.h" (PERF_IP_*). Maybe we can extend it to allow
+doing "sample->flags = PERF_LDST_FLAG_LD | PERF_LDST_FLAG_ATOMIC" and
+such.
+
+@Leo do you think that could work?
+
+>>> +	ARM_SPE_BR		= 1 << 5,
+>>> +	ARM_SPE_BR_COND		= 1 << 6,
+>>> +	ARM_SPE_BR_IND		= 1 << 7,
+
+Seems like we can store BR_COND in the existing "branch-miss" event
+(--itrace=b) with:
+
+  sample->flags = PERF_IP_FLAG_BRANCH;
+  sample->flags |= PERF_IP_FLAG_CONDITIONAL;
+and/or
+  sample->flags |= PERF_IP_FLAG_INDIRECT;
+
+PERF_IP_FLAG_INDIRECT doesn't exist yet but we can probably add it.
