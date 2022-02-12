@@ -2,252 +2,220 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74AAEC433F5
-	for <linux-perf-users@archiver.kernel.org>; Sat, 12 Feb 2022 10:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1805C433F5
+	for <linux-perf-users@archiver.kernel.org>; Sat, 12 Feb 2022 11:30:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233741AbiBLKoK (ORCPT
+        id S231907AbiBLLap (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 12 Feb 2022 05:44:10 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:43282 "EHLO
+        Sat, 12 Feb 2022 06:30:45 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:43648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233644AbiBLKoG (ORCPT
+        with ESMTP id S230111AbiBLLao (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 12 Feb 2022 05:44:06 -0500
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65CB62655A;
-        Sat, 12 Feb 2022 02:44:01 -0800 (PST)
-X-UUID: fd11c4b7ae1743a8acdedb2145122f3e-20220212
-X-UUID: fd11c4b7ae1743a8acdedb2145122f3e-20220212
-Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
-        (envelope-from <lecopzer.chen@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 492079112; Sat, 12 Feb 2022 18:43:56 +0800
-Received: from mtkcas10.mediatek.inc (172.21.101.39) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Sat, 12 Feb 2022 18:43:54 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas10.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Sat, 12 Feb 2022 18:43:54 +0800
-From:   Lecopzer Chen <lecopzer.chen@mediatek.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Sat, 12 Feb 2022 06:30:44 -0500
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AB5F26AF7;
+        Sat, 12 Feb 2022 03:30:41 -0800 (PST)
+Received: by mail-ed1-x530.google.com with SMTP id b13so20209282edn.0;
+        Sat, 12 Feb 2022 03:30:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jv0WkmIUjrG0tZLaVODfh5nXkUsmipBvXV3pTw4nVB4=;
+        b=flKURlaklL4NiuZTeoLBvt76QwlB9aUz+yVSmZVdD+ujOuGBev2+8jiYhcg4Qxxv8X
+         IhPLBNq43kCL8RH1LIds83VioghMFPaaRJ/MW9coKEj4zChgrV1FvNKNZjOi1tXFIeD/
+         gYP1hQneiXzyBIVI0evC57kstrM3czOu6eKTleaur99LTZF2bkvmJ7zFuV9Rb8FDItQK
+         3gb2PEvDlZ2p1U4js227dEtN8EzG5sWqCFCnse4QR45xCejpfC7thmzDjrtz9pRzec9G
+         fY4WCSF/8yMvYUXatkE30oGatZkQ1vz1fpU3eLDLR1NMO8B4k30oVQf2Vh2SUi36XnXz
+         cljQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jv0WkmIUjrG0tZLaVODfh5nXkUsmipBvXV3pTw4nVB4=;
+        b=BZphEo8pJ1lG2q7OH49jtmH+ANd1QgsJ6Xz/omx7fcdjqmtr2ZV29JeMae2x6f4Ca1
+         eBOuwJiwmKwgS9LIzL7DDzdgxl83Hby37unTywEdY0sCiUONC+aCtIk8zwCL03v1Z3Ll
+         qgrLBzuPQNyE09K2/H/Thptf4BP16PBfglPOF/ZGG951i9FzkEd7pZI1NZp+QKi5pPWt
+         99o2pWrwZ9sWxVY8xfjOOXhHleQytFpt+i5w2PgLX/ai90CATVGW7ROMv6L9t46hFsb6
+         Qd1FWLKbCo4f9bLG8QnfMNyXIK2GMCW4l5cDTmQKQjrPPRQKg/b7Ww8yo2v+jXQTn3Lw
+         maeg==
+X-Gm-Message-State: AOAM530a6uWvC7bi5TQFKoEVbRSQbxEL9t4XQ7Zc0p1dv3tauPN3ZnQ8
+        sOUccteO/trKgrNDhYEkpgw=
+X-Google-Smtp-Source: ABdhPJznHyQt9g/DcKeFUCs3n8YJ/YRlv6aOnl4GQ/sq9iWdPX9RtG4L7QYgO0K/y8pFU8zyXQIP6g==
+X-Received: by 2002:a05:6402:3514:: with SMTP id b20mr6262194edd.65.1644665439686;
+        Sat, 12 Feb 2022 03:30:39 -0800 (PST)
+Received: from krava ([83.240.63.12])
+        by smtp.gmail.com with ESMTPSA id q7sm5608620ejj.8.2022.02.12.03.30.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Feb 2022 03:30:39 -0800 (PST)
+Date:   Sat, 12 Feb 2022 12:30:35 +0100
+From:   Jiri Olsa <olsajiri@gmail.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>, <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Julien Thierry <jthierry@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@collabora.com>,
+        James Clark <james.clark@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Wang Qing <wangqing@vivo.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Xiaoming Ni <nixiaoming@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>, <sparclinux@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <sumit.garg@linaro.org>,
-        <kernelfans@gmail.com>, <lecopzer.chen@mediatek.com>,
-        <yj.chiang@mediatek.com>
-Subject: [PATCH 5/5] arm64: Enable perf events based hard lockup detector
-Date:   Sat, 12 Feb 2022 18:43:49 +0800
-Message-ID: <20220212104349.14266-6-lecopzer.chen@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20220212104349.14266-1-lecopzer.chen@mediatek.com>
-References: <20220212104349.14266-1-lecopzer.chen@mediatek.com>
+        Jin Yao <yao.jin@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
+        Song Liu <song@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Miaoqian Lin <linmq006@gmail.com>,
+        Stephen Brennan <stephen.s.brennan@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        German Gomez <german.gomez@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Eric Dumazet <edumazet@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Hao Luo <haoluo@google.com>, eranian@google.com
+Subject: Re: [PATCH v3 04/22] perf dso: Hold lock when accessing nsinfo
+Message-ID: <YgeaW4K5XY/66afx@krava>
+References: <20220211103415.2737789-1-irogers@google.com>
+ <20220211103415.2737789-5-irogers@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220211103415.2737789-5-irogers@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Sumit Garg <sumit.garg@linaro.org>
+On Fri, Feb 11, 2022 at 02:33:57AM -0800, Ian Rogers wrote:
+> There may be threads racing to update dso->nsinfo:
+> https://lore.kernel.org/linux-perf-users/CAP-5=fWZH20L4kv-BwVtGLwR=Em3AOOT+Q4QGivvQuYn5AsPRg@mail.gmail.com/
+> Holding the dso->lock avoids use-after-free, memory leaks and other
+> such bugs. Apply the fix in:
+> https://lore.kernel.org/linux-perf-users/20211118193714.2293728-1-irogers@google.com/
+> of there being a missing nsinfo__put now that the accesses are data race
+> free.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/builtin-inject.c   | 4 ++++
+>  tools/perf/util/dso.c         | 5 ++++-
+>  tools/perf/util/map.c         | 3 +++
+>  tools/perf/util/probe-event.c | 2 ++
+>  tools/perf/util/symbol.c      | 2 +-
+>  5 files changed, 14 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> index fbf43a454cba..bede332bf0e2 100644
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
+> @@ -363,8 +363,10 @@ static struct dso *findnew_dso(int pid, int tid, const char *filename,
+>  	}
+>  
+>  	if (dso) {
+> +		BUG_ON(pthread_mutex_lock(&dso->lock) != 0);
+>  		nsinfo__put(dso->nsinfo);
+>  		dso->nsinfo = nsi;
+> +		pthread_mutex_unlock(&dso->lock);
+>  	} else
+>  		nsinfo__put(nsi);
+>  
+> @@ -547,7 +549,9 @@ static int dso__read_build_id(struct dso *dso)
+>  	if (dso->has_build_id)
+>  		return 0;
+>  
+> +	BUG_ON(pthread_mutex_lock(&dso->lock) != 0);
+>  	nsinfo__mountns_enter(dso->nsinfo, &nsc);
+> +	pthread_mutex_unlock(&dso->lock);
 
-from: Pingfan Liu <kernelfans@gmail.com>
+so this separates nsinfo__mountns_enter and nsinfo__put,
+should we care also about nsinfo__mountns_exit?
 
-With the recent feature added to enable perf events to use pseudo NMIs
-as interrupts on platforms which support GICv3 or later, its now been
-possible to enable hard lockup detector (or NMI watchdog) on arm64
-platforms. So enable corresponding support.
+jirka
 
-One thing to note here is that normally lockup detector is initialized
-just after the early initcalls but PMU on arm64 comes up much later as
-device_initcall(). To cope with that, overriding watchdog_nmi_probe() to
-let the watchdog framework know PMU not ready, and inform the framework
-to re-initialize lockup detection once PMU has been initialized.
-
-[1]: http://lore.kernel.org/linux-arm-kernel/1610712101-14929-1-git-send-email-sumit.garg@linaro.org
-
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-(Pingfan: adapt it to watchdog_hld async model based on [1])
-Co-developed-by: Pingfan Liu <kernelfans@gmail.com>
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-Co-developed-by: Lecopzer Chen <lecopzer.chen@mediatek.com>
-Signed-off-by: Lecopzer Chen <lecopzer.chen@mediatek.com>
----
- arch/arm64/Kconfig               |  2 ++
- arch/arm64/kernel/Makefile       |  1 +
- arch/arm64/kernel/perf_event.c   | 11 ++++++++--
- arch/arm64/kernel/watchdog_hld.c | 36 ++++++++++++++++++++++++++++++++
- drivers/perf/arm_pmu.c           |  5 +++++
- include/linux/nmi.h              |  9 ++++++++
- include/linux/perf/arm_pmu.h     |  2 ++
- 7 files changed, 64 insertions(+), 2 deletions(-)
- create mode 100644 arch/arm64/kernel/watchdog_hld.c
-
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 09b885cc4db5..df6fed8327ba 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -190,6 +190,8 @@ config ARM64
- 	select HAVE_NMI
- 	select HAVE_PATA_PLATFORM
- 	select HAVE_PERF_EVENTS
-+	select HAVE_PERF_EVENTS_NMI if ARM64_PSEUDO_NMI
-+	select HAVE_HARDLOCKUP_DETECTOR_PERF if PERF_EVENTS && HAVE_PERF_EVENTS_NMI
- 	select HAVE_PERF_REGS
- 	select HAVE_PERF_USER_STACK_DUMP
- 	select HAVE_REGS_AND_STACK_ACCESS_API
-diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index 88b3e2a21408..3e62a8877ed7 100644
---- a/arch/arm64/kernel/Makefile
-+++ b/arch/arm64/kernel/Makefile
-@@ -46,6 +46,7 @@ obj-$(CONFIG_MODULES)			+= module.o
- obj-$(CONFIG_ARM64_MODULE_PLTS)		+= module-plts.o
- obj-$(CONFIG_PERF_EVENTS)		+= perf_regs.o perf_callchain.o
- obj-$(CONFIG_HW_PERF_EVENTS)		+= perf_event.o
-+obj-$(CONFIG_HARDLOCKUP_DETECTOR_PERF)	+= watchdog_hld.o
- obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
- obj-$(CONFIG_CPU_PM)			+= sleep.o suspend.o
- obj-$(CONFIG_CPU_IDLE)			+= cpuidle.o
-diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-index cab678ed6618..73db9f2588d5 100644
---- a/arch/arm64/kernel/perf_event.c
-+++ b/arch/arm64/kernel/perf_event.c
-@@ -23,6 +23,7 @@
- #include <linux/platform_device.h>
- #include <linux/sched_clock.h>
- #include <linux/smp.h>
-+#include <linux/nmi.h>
- 
- /* ARMv8 Cortex-A53 specific event types. */
- #define ARMV8_A53_PERFCTR_PREF_LINEFILL				0xC2
-@@ -1380,10 +1381,16 @@ static struct platform_driver armv8_pmu_driver = {
- 
- static int __init armv8_pmu_driver_init(void)
- {
-+	int ret;
-+
- 	if (acpi_disabled)
--		return platform_driver_register(&armv8_pmu_driver);
-+		ret = platform_driver_register(&armv8_pmu_driver);
- 	else
--		return arm_pmu_acpi_probe(armv8_pmuv3_pmu_init);
-+		ret = arm_pmu_acpi_probe(armv8_pmuv3_pmu_init);
-+
-+	detector_delay_init_state = DELAY_INIT_READY;
-+	wake_up(&hld_detector_wait);
-+	return ret;
- }
- device_initcall(armv8_pmu_driver_init)
- 
-diff --git a/arch/arm64/kernel/watchdog_hld.c b/arch/arm64/kernel/watchdog_hld.c
-new file mode 100644
-index 000000000000..85536906a186
---- /dev/null
-+++ b/arch/arm64/kernel/watchdog_hld.c
-@@ -0,0 +1,36 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/nmi.h>
-+#include <linux/cpufreq.h>
-+#include <linux/perf/arm_pmu.h>
-+
-+/*
-+ * Safe maximum CPU frequency in case a particular platform doesn't implement
-+ * cpufreq driver. Although, architecture doesn't put any restrictions on
-+ * maximum frequency but 5 GHz seems to be safe maximum given the available
-+ * Arm CPUs in the market which are clocked much less than 5 GHz. On the other
-+ * hand, we can't make it much higher as it would lead to a large hard-lockup
-+ * detection timeout on parts which are running slower (eg. 1GHz on
-+ * Developerbox) and doesn't possess a cpufreq driver.
-+ */
-+#define SAFE_MAX_CPU_FREQ	5000000000UL // 5 GHz
-+u64 hw_nmi_get_sample_period(int watchdog_thresh)
-+{
-+	unsigned int cpu = smp_processor_id();
-+	unsigned long max_cpu_freq;
-+
-+	max_cpu_freq = cpufreq_get_hw_max_freq(cpu) * 1000UL;
-+	if (!max_cpu_freq)
-+		max_cpu_freq = SAFE_MAX_CPU_FREQ;
-+
-+	return (u64)max_cpu_freq * watchdog_thresh;
-+}
-+
-+int __init watchdog_nmi_probe(void)
-+{
-+	if (detector_delay_init_state != DELAY_INIT_READY)
-+		return -EBUSY;
-+	else if (!arm_pmu_irq_is_nmi())
-+		return -ENODEV;
-+
-+	return hardlockup_detector_perf_init();
-+}
-diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-index 295cc7952d0e..e77f4897fca2 100644
---- a/drivers/perf/arm_pmu.c
-+++ b/drivers/perf/arm_pmu.c
-@@ -697,6 +697,11 @@ static int armpmu_get_cpu_irq(struct arm_pmu *pmu, int cpu)
- 	return per_cpu(hw_events->irq, cpu);
- }
- 
-+bool arm_pmu_irq_is_nmi(void)
-+{
-+	return has_nmi;
-+}
-+
- /*
-  * PMU hardware loses all context when a CPU goes offline.
-  * When a CPU is hotplugged back in, since some hardware registers are
-diff --git a/include/linux/nmi.h b/include/linux/nmi.h
-index b7bcd63c36b4..9def85c00bd8 100644
---- a/include/linux/nmi.h
-+++ b/include/linux/nmi.h
-@@ -118,6 +118,15 @@ static inline int hardlockup_detector_perf_init(void) { return 0; }
- 
- void watchdog_nmi_stop(void);
- void watchdog_nmi_start(void);
-+
-+enum hld_detector_state {
-+	DELAY_INIT_NOP,
-+	DELAY_INIT_WAIT,
-+	DELAY_INIT_READY
-+};
-+
-+extern enum hld_detector_state detector_delay_init_state;
-+extern struct wait_queue_head hld_detector_wait;
- int watchdog_nmi_probe(void);
- void watchdog_nmi_enable(unsigned int cpu);
- void watchdog_nmi_disable(unsigned int cpu);
-diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
-index 2512e2f9cd4e..9325d01adc3e 100644
---- a/include/linux/perf/arm_pmu.h
-+++ b/include/linux/perf/arm_pmu.h
-@@ -169,6 +169,8 @@ void kvm_host_pmu_init(struct arm_pmu *pmu);
- #define kvm_host_pmu_init(x)	do { } while(0)
- #endif
- 
-+bool arm_pmu_irq_is_nmi(void);
-+
- /* Internal functions only for core arm_pmu code */
- struct arm_pmu *armpmu_alloc(void);
- struct arm_pmu *armpmu_alloc_atomic(void);
--- 
-2.25.1
-
+>  	if (filename__read_build_id(dso->long_name, &dso->bid) > 0)
+>  		dso->has_build_id = true;
+>  	nsinfo__mountns_exit(&nsc);
+> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+> index 6beccffeef7b..b2f570adba35 100644
+> --- a/tools/perf/util/dso.c
+> +++ b/tools/perf/util/dso.c
+> @@ -548,8 +548,11 @@ static int open_dso(struct dso *dso, struct machine *machine)
+>  	int fd;
+>  	struct nscookie nsc;
+>  
+> -	if (dso->binary_type != DSO_BINARY_TYPE__BUILD_ID_CACHE)
+> +	if (dso->binary_type != DSO_BINARY_TYPE__BUILD_ID_CACHE) {
+> +		BUG_ON(pthread_mutex_lock(&dso->lock) != 0);
+>  		nsinfo__mountns_enter(dso->nsinfo, &nsc);
+> +		pthread_mutex_unlock(&dso->lock);
+> +	}
+>  	fd = __open_dso(dso, machine);
+>  	if (dso->binary_type != DSO_BINARY_TYPE__BUILD_ID_CACHE)
+>  		nsinfo__mountns_exit(&nsc);
+> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+> index 8af693d9678c..ae99b52502d5 100644
+> --- a/tools/perf/util/map.c
+> +++ b/tools/perf/util/map.c
+> @@ -192,7 +192,10 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
+>  			if (!(prot & PROT_EXEC))
+>  				dso__set_loaded(dso);
+>  		}
+> +		BUG_ON(pthread_mutex_lock(&dso->lock) != 0);
+> +		nsinfo__put(dso->nsinfo);
+>  		dso->nsinfo = nsi;
+> +		pthread_mutex_unlock(&dso->lock);
+>  
+>  		if (build_id__is_defined(bid))
+>  			dso__set_build_id(dso, bid);
+> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+> index a834918a0a0d..7444e689ece7 100644
+> --- a/tools/perf/util/probe-event.c
+> +++ b/tools/perf/util/probe-event.c
+> @@ -180,8 +180,10 @@ struct map *get_target_map(const char *target, struct nsinfo *nsi, bool user)
+>  
+>  		map = dso__new_map(target);
+>  		if (map && map->dso) {
+> +			BUG_ON(pthread_mutex_lock(&map->dso->lock) != 0);
+>  			nsinfo__put(map->dso->nsinfo);
+>  			map->dso->nsinfo = nsinfo__get(nsi);
+> +			pthread_mutex_unlock(&map->dso->lock);
+>  		}
+>  		return map;
+>  	} else {
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index 43f47532696f..a504346feb05 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+> @@ -1774,6 +1774,7 @@ int dso__load(struct dso *dso, struct map *map)
+>  	char newmapname[PATH_MAX];
+>  	const char *map_path = dso->long_name;
+>  
+> +	BUG_ON(pthread_mutex_lock(&dso->lock) != 0);
+>  	perfmap = strncmp(dso->name, "/tmp/perf-", 10) == 0;
+>  	if (perfmap) {
+>  		if (dso->nsinfo && (dso__find_perf_map(newmapname,
+> @@ -1783,7 +1784,6 @@ int dso__load(struct dso *dso, struct map *map)
+>  	}
+>  
+>  	nsinfo__mountns_enter(dso->nsinfo, &nsc);
+> -	BUG_ON(pthread_mutex_lock(&dso->lock) != 0);
+>  
+>  	/* check again under the dso->lock */
+>  	if (dso__loaded(dso)) {
+> -- 
+> 2.35.1.265.g69c8d7142f-goog
+> 
