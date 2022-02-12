@@ -2,201 +2,248 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E257C433FE
-	for <linux-perf-users@archiver.kernel.org>; Sat, 12 Feb 2022 13:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC64EC433F5
+	for <linux-perf-users@archiver.kernel.org>; Sat, 12 Feb 2022 15:48:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235243AbiBLNFQ (ORCPT
+        id S236420AbiBLPsq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 12 Feb 2022 08:05:16 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:55224 "EHLO
+        Sat, 12 Feb 2022 10:48:46 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:53344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235157AbiBLNFQ (ORCPT
+        with ESMTP id S236418AbiBLPsp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 12 Feb 2022 08:05:16 -0500
+        Sat, 12 Feb 2022 10:48:45 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2887526AD9;
-        Sat, 12 Feb 2022 05:05:13 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86C1B212;
+        Sat, 12 Feb 2022 07:48:41 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BB87660E95;
-        Sat, 12 Feb 2022 13:05:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 447EDC340EB;
-        Sat, 12 Feb 2022 13:05:07 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 23DF760B3A;
+        Sat, 12 Feb 2022 15:48:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41FD6C340E7;
+        Sat, 12 Feb 2022 15:48:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644671112;
-        bh=yiz4DbQ/9AlF3A85iP89O9KMYTiZPJew/nsawP2NfBQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hjgQqZcTVs54Odi7AbrrQ61E0tsUMGzcvI9iA9Gfj1wgYbGtDuu40qzG44M33l6SV
-         kDi+/m48YYmrISM29v1qsKWDqOP/lfvaeWTQK8tDZDuFy6+UfBQ3mW0u93ngzaRd54
-         O7jBU1Fbc0Acxa6GspCq6AR/YIitL2b2/quJyL3nWg+mwZFxfDUSuuU1UcwpvePFjx
-         YaKT4XW/l9cK5ytmFeWNhuSdiWU2FPoDOASMQ/efz5eAyE5lmK4qlU5bSc7F95V7Ib
-         7Y/MOYDW6+QniE8ubRnNJMCsLXMT4+pFtSz3BEQ7hkl93HSbeA15NeBl5Ef+YoCOUt
-         c36T/9jBfi6Bg==
-From:   Miguel Ojeda <ojeda@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Alex Gaynor <alex.gaynor@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@google.com>,
-        Gary Guo <gary@garyguo.net>, Boqun Feng <boqun.feng@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        s=k20201202; t=1644680920;
+        bh=sHucLdS9llTT7mQGMwgL7LyvrTQpGgnSuaf9PJ2pqtk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OAt1vBoVJaMX7yvdYOYVPUcqzK6ncJM3qA/JcVlWQAZoFryfj3kIoaOelU3cCW3Bt
+         kltb0KSnhkxrGlMy7dhUM/qKAy/wGi0SSPB+qOqoQBqy2nDyI66Y5zkcbJHBFBSC4B
+         k5eF4N++mFrcSFZ5FZdQDIY+tPlxVYItdDYtiEZ40yI2+zj7Qy4rO2pzVwv93nSasL
+         92oTf6qWG0a9MFH3QeTN63uIBMx/3UhL6hpAxoKuqkQvS0vmhTGQ3uUhpROj2XjNMK
+         2GjUi2OWolfS8L1fyNO2TpRXXx5m6ptzxBLUpqSpBEVY8GiaDt/MKSGTr7tFN/AiuR
+         C41BKorbZpK7g==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 6E826400FE; Sat, 12 Feb 2022 12:48:37 -0300 (-03)
+Date:   Sat, 12 Feb 2022 12:48:37 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        live-patching@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: [PATCH v4 02/20] kallsyms: increase maximum kernel symbol length to 512
-Date:   Sat, 12 Feb 2022 14:03:28 +0100
-Message-Id: <20220212130410.6901-3-ojeda@kernel.org>
-In-Reply-To: <20220212130410.6901-1-ojeda@kernel.org>
-References: <20220212130410.6901-1-ojeda@kernel.org>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@collabora.com>,
+        James Clark <james.clark@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
+        Song Liu <song@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Miaoqian Lin <linmq006@gmail.com>,
+        Stephen Brennan <stephen.s.brennan@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        German Gomez <german.gomez@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Eric Dumazet <edumazet@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Hao Luo <haoluo@google.com>, eranian@google.com
+Subject: Re: [PATCH v3 03/22] perf dso: Make lock error check and add BUG_ONs
+Message-ID: <YgfW1SOXN++UZRKj@kernel.org>
+References: <20220211103415.2737789-1-irogers@google.com>
+ <20220211103415.2737789-4-irogers@google.com>
+ <YgaZSk8h6rQ6MgLy@kernel.org>
+ <CAP-5=fWZTmbQpmoXRKt9HdMU-E_B2uo5b4BHOW6RC6w5VkQ0AQ@mail.gmail.com>
+ <Yga3JNhTfSBR3btI@kernel.org>
+ <CAP-5=fVb=1prv6kkUzJRiPNSsudBhU1+YLBqnBrWiut3XQLJqg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fVb=1prv6kkUzJRiPNSsudBhU1+YLBqnBrWiut3XQLJqg@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Rust symbols can become quite long due to namespacing introduced
-by modules, types, traits, generics, etc. For instance,
-the following code:
+Em Fri, Feb 11, 2022 at 11:35:05AM -0800, Ian Rogers escreveu:
+> On Fri, Feb 11, 2022 at 11:21 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > Em Fri, Feb 11, 2022 at 09:43:19AM -0800, Ian Rogers escreveu:
+> > > On Fri, Feb 11, 2022 at 9:13 AM Arnaldo Carvalho de Melo
+> > > <acme@kernel.org> wrote:
+> > > >
+> > > > Em Fri, Feb 11, 2022 at 02:33:56AM -0800, Ian Rogers escreveu:
+> > > > > Make the pthread mutex on dso use the error check type. This allows
+> > > > > deadlock checking via the return type. Assert the returned value from
+> > > > > mutex lock is always 0.
+> > > >
+> > > > I think this is too blunt/pervasive source code wise, perhaps we should
+> > > > wrap this like its done with rwsem in tools/perf/util/rwsem.h to get
+> > > > away from pthreads primitives and make the source code look more like
+> > > > a kernel one and then, taking advantage of the so far ideologic
+> > > > needless indirection, add this BUG_ON if we build with "DEBUG=1" or
+> > > > something, wdyt?
+> > >
+> >
+> > > My concern with semaphores is that they are a concurrency primitive
+> >
+> > I'm not suggesting we switch over to semaphores, just to use the same
+> > technique of wrapping pthread_mutex_t with some other API that then
+> > allows us to add these BUG_ON() calls without polluting the source code
+> > in many places.
+> 
+> Sounds simple enough and would ensure consistency too. I can add it to
+> the front of this set of changes. A different approach would be to
+> take what's here and then refactor and cleanup as a follow on patch
+> set. I'd prefer that as the size of this set of changes is already
+> larger than I like - albeit that most of it is just introducing the
 
-    pub mod my_module {
-        pub struct MyType;
-        pub struct MyGenericType<T>(T);
+So, the first 4 patches in this series were already merged, as they are
+just prep work that don't add clutter, having those in the front of the
+patchkit helps picking up the low hanging fruit.
 
-        pub trait MyTrait {
-            fn my_method() -> u32;
-        }
+I usually try to pick even if it comes later, to make progress, I'll
+recheck the rest of the patchkit to see what more I can pick to reduce
+its size.
 
-        impl MyTrait for MyGenericType<MyType> {
-            fn my_method() -> u32 {
-                42
-            }
-        }
-    }
+- Arnaldo
 
-generates a symbol of length 96 when using the upcoming v0 mangling scheme:
+> use of functions to access struct variables. Perhaps I just remove the
+> BUG_ON and pthread changes here, we work to get this landed and in a
+> separate set of patches clean up the pthread mutex code to have better
+> bug checking.
+> 
+> Thanks,
+> Ian
+> 
+> > - Arnaldo
+> >
+> > > that has more flexibility and power than a mutex. I like a mutex as it
+> > > is quite obvious what is going on and that is good from a tooling
+> > > point of view. A deadlock with two mutexes is easy to understand. On a
+> > > semaphore, were we using it like a condition variable? There's more to
+> > > figure out. I also like the idea of compiling the perf command with
+> > > emscripten, we could then generate say perf annotate output in your
+> > > web browser. Emscripten has implementations of standard posix
+> > > libraries including pthreads, but we may need to have two approaches
+> > > in the perf code if we want to compile with emscripten and use
+> > > semaphores when targeting linux.
+> > >
+> > > Where this change comes from is that I worried that extending the
+> > > locked regions to cover the race that'd been found would then expose
+> > > the kind of recursive deadlock that pthread mutexes all too willingly
+> > > allow. With this code we at least see the bug and don't just hang. I
+> > > don't think we need the change to the mutexes for this change, but we
+> > > do need to extend the regions to fix the data race.
+> > >
+> > > Let me know how you prefer it and I can roll it into a v4 version.
+> > >
+> > > Thanks,
+> > > Ian
+> > >
+> > > > - Arnaldo
+> > > >
+> > > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > > > ---
+> > > > >  tools/perf/util/dso.c    | 12 +++++++++---
+> > > > >  tools/perf/util/symbol.c |  2 +-
+> > > > >  2 files changed, 10 insertions(+), 4 deletions(-)
+> > > > >
+> > > > > diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+> > > > > index 9cc8a1772b4b..6beccffeef7b 100644
+> > > > > --- a/tools/perf/util/dso.c
+> > > > > +++ b/tools/perf/util/dso.c
+> > > > > @@ -784,7 +784,7 @@ dso_cache__free(struct dso *dso)
+> > > > >       struct rb_root *root = &dso->data.cache;
+> > > > >       struct rb_node *next = rb_first(root);
+> > > > >
+> > > > > -     pthread_mutex_lock(&dso->lock);
+> > > > > +     BUG_ON(pthread_mutex_lock(&dso->lock) != 0);
+> > > > >       while (next) {
+> > > > >               struct dso_cache *cache;
+> > > > >
+> > > > > @@ -830,7 +830,7 @@ dso_cache__insert(struct dso *dso, struct dso_cache *new)
+> > > > >       struct dso_cache *cache;
+> > > > >       u64 offset = new->offset;
+> > > > >
+> > > > > -     pthread_mutex_lock(&dso->lock);
+> > > > > +     BUG_ON(pthread_mutex_lock(&dso->lock) != 0);
+> > > > >       while (*p != NULL) {
+> > > > >               u64 end;
+> > > > >
+> > > > > @@ -1259,6 +1259,8 @@ struct dso *dso__new_id(const char *name, struct dso_id *id)
+> > > > >       struct dso *dso = calloc(1, sizeof(*dso) + strlen(name) + 1);
+> > > > >
+> > > > >       if (dso != NULL) {
+> > > > > +             pthread_mutexattr_t lock_attr;
+> > > > > +
+> > > > >               strcpy(dso->name, name);
+> > > > >               if (id)
+> > > > >                       dso->id = *id;
+> > > > > @@ -1286,8 +1288,12 @@ struct dso *dso__new_id(const char *name, struct dso_id *id)
+> > > > >               dso->root = NULL;
+> > > > >               INIT_LIST_HEAD(&dso->node);
+> > > > >               INIT_LIST_HEAD(&dso->data.open_entry);
+> > > > > -             pthread_mutex_init(&dso->lock, NULL);
+> > > > > +             pthread_mutexattr_init(&lock_attr);
+> > > > > +             pthread_mutexattr_settype(&lock_attr, PTHREAD_MUTEX_ERRORCHECK);
+> > > > > +             pthread_mutex_init(&dso->lock, &lock_attr);
+> > > > > +             pthread_mutexattr_destroy(&lock_attr);
+> > > > >               refcount_set(&dso->refcnt, 1);
+> > > > > +
+> > > > >       }
+> > > > >
+> > > > >       return dso;
+> > > > > diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> > > > > index b2ed3140a1fa..43f47532696f 100644
+> > > > > --- a/tools/perf/util/symbol.c
+> > > > > +++ b/tools/perf/util/symbol.c
+> > > > > @@ -1783,7 +1783,7 @@ int dso__load(struct dso *dso, struct map *map)
+> > > > >       }
+> > > > >
+> > > > >       nsinfo__mountns_enter(dso->nsinfo, &nsc);
+> > > > > -     pthread_mutex_lock(&dso->lock);
+> > > > > +     BUG_ON(pthread_mutex_lock(&dso->lock) != 0);
+> > > > >
+> > > > >       /* check again under the dso->lock */
+> > > > >       if (dso__loaded(dso)) {
+> > > > > --
+> > > > > 2.35.1.265.g69c8d7142f-goog
+> > > >
+> > > > --
+> > > >
+> > > > - Arnaldo
+> >
+> > --
+> >
+> > - Arnaldo
 
-    _RNvXNtCshGpAVYOtgW1_7example9my_moduleINtB2_13MyGenericTypeNtB2_6MyTypeENtB2_7MyTrait9my_method
-
-At the moment, Rust symbols may reach up to 300 in length.
-Setting 512 as the maximum seems like a reasonable choice to
-keep some headroom.
-
-Co-developed-by: Alex Gaynor <alex.gaynor@gmail.com>
-Signed-off-by: Alex Gaynor <alex.gaynor@gmail.com>
-Co-developed-by: Wedson Almeida Filho <wedsonaf@google.com>
-Signed-off-by: Wedson Almeida Filho <wedsonaf@google.com>
-Co-developed-by: Gary Guo <gary@garyguo.net>
-Signed-off-by: Gary Guo <gary@garyguo.net>
-Co-developed-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
----
- include/linux/kallsyms.h            | 2 +-
- kernel/livepatch/core.c             | 4 ++--
- scripts/kallsyms.c                  | 2 +-
- tools/include/linux/kallsyms.h      | 2 +-
- tools/lib/perf/include/perf/event.h | 2 +-
- tools/lib/symbol/kallsyms.h         | 2 +-
- 6 files changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/include/linux/kallsyms.h b/include/linux/kallsyms.h
-index 4176c7eca7b5..5fb17dd4b6fa 100644
---- a/include/linux/kallsyms.h
-+++ b/include/linux/kallsyms.h
-@@ -15,7 +15,7 @@
- 
- #include <asm/sections.h>
- 
--#define KSYM_NAME_LEN 128
-+#define KSYM_NAME_LEN 512
- #define KSYM_SYMBOL_LEN (sizeof("%s+%#lx/%#lx [%s %s]") + \
- 			(KSYM_NAME_LEN - 1) + \
- 			2*(BITS_PER_LONG*3/10) + (MODULE_NAME_LEN - 1) + \
-diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-index 585494ec464f..01bfab7fe7c0 100644
---- a/kernel/livepatch/core.c
-+++ b/kernel/livepatch/core.c
-@@ -213,7 +213,7 @@ static int klp_resolve_symbols(Elf64_Shdr *sechdrs, const char *strtab,
- 	 * we use the smallest/strictest upper bound possible (56, based on
- 	 * the current definition of MODULE_NAME_LEN) to prevent overflows.
- 	 */
--	BUILD_BUG_ON(MODULE_NAME_LEN < 56 || KSYM_NAME_LEN != 128);
-+	BUILD_BUG_ON(MODULE_NAME_LEN < 56 || KSYM_NAME_LEN != 512);
- 
- 	relas = (Elf_Rela *) relasec->sh_addr;
- 	/* For each rela in this klp relocation section */
-@@ -227,7 +227,7 @@ static int klp_resolve_symbols(Elf64_Shdr *sechdrs, const char *strtab,
- 
- 		/* Format: .klp.sym.sym_objname.sym_name,sympos */
- 		cnt = sscanf(strtab + sym->st_name,
--			     ".klp.sym.%55[^.].%127[^,],%lu",
-+			     ".klp.sym.%55[^.].%511[^,],%lu",
- 			     sym_objname, sym_name, &sympos);
- 		if (cnt != 3) {
- 			pr_err("symbol %s has an incorrectly formatted name\n",
-diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
-index 79b11bb7f07d..72ba0fe4e43b 100644
---- a/scripts/kallsyms.c
-+++ b/scripts/kallsyms.c
-@@ -27,7 +27,7 @@
- 
- #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
- 
--#define KSYM_NAME_LEN		128
-+#define KSYM_NAME_LEN		512
- 
- struct sym_entry {
- 	unsigned long long addr;
-diff --git a/tools/include/linux/kallsyms.h b/tools/include/linux/kallsyms.h
-index efb6c3f5f2a9..5a37ccbec54f 100644
---- a/tools/include/linux/kallsyms.h
-+++ b/tools/include/linux/kallsyms.h
-@@ -6,7 +6,7 @@
- #include <stdio.h>
- #include <unistd.h>
- 
--#define KSYM_NAME_LEN 128
-+#define KSYM_NAME_LEN 512
- 
- struct module;
- 
-diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
-index 75ee385fb078..acc4fa065ec7 100644
---- a/tools/lib/perf/include/perf/event.h
-+++ b/tools/lib/perf/include/perf/event.h
-@@ -95,7 +95,7 @@ struct perf_record_throttle {
- };
- 
- #ifndef KSYM_NAME_LEN
--#define KSYM_NAME_LEN 256
-+#define KSYM_NAME_LEN 512
- #endif
- 
- struct perf_record_ksymbol {
-diff --git a/tools/lib/symbol/kallsyms.h b/tools/lib/symbol/kallsyms.h
-index 72ab9870454b..542f9b059c3b 100644
---- a/tools/lib/symbol/kallsyms.h
-+++ b/tools/lib/symbol/kallsyms.h
-@@ -7,7 +7,7 @@
- #include <linux/types.h>
- 
- #ifndef KSYM_NAME_LEN
--#define KSYM_NAME_LEN 256
-+#define KSYM_NAME_LEN 512
- #endif
- 
- static inline u8 kallsyms2elf_binding(char type)
 -- 
-2.35.1
 
+- Arnaldo
