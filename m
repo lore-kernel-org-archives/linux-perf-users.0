@@ -2,136 +2,104 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C25C4332F
-	for <linux-perf-users@archiver.kernel.org>; Sat, 12 Feb 2022 15:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DBBC4332F
+	for <linux-perf-users@archiver.kernel.org>; Sat, 12 Feb 2022 18:18:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236559AbiBLPvu convert rfc822-to-8bit (ORCPT
+        id S229535AbiBLSSY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 12 Feb 2022 10:51:50 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:56106 "EHLO
+        Sat, 12 Feb 2022 13:18:24 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:42312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236563AbiBLPvt (ORCPT
+        with ESMTP id S229533AbiBLSSX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 12 Feb 2022 10:51:49 -0500
-Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4366520E
-        for <linux-perf-users@vger.kernel.org>; Sat, 12 Feb 2022 07:51:43 -0800 (PST)
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 21CAqohm024883
-        for <linux-perf-users@vger.kernel.org>; Sat, 12 Feb 2022 07:51:42 -0800
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3e6bh20u44-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Sat, 12 Feb 2022 07:51:42 -0800
-Received: from twshared45270.41.prn1.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::7) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Sat, 12 Feb 2022 07:51:41 -0800
-Received: by devbig019.vll3.facebook.com (Postfix, from userid 137359)
-        id 79BBA10C38C3E; Sat, 12 Feb 2022 07:51:29 -0800 (PST)
-From:   Andrii Nakryiko <andrii@kernel.org>
-To:     <acme@kernel.org>, <linux-perf-users@vger.kernel.org>
-CC:     <bpf@vger.kernel.org>, <christylee@fb.com>, <jolsa@redhat.com>,
-        Andrii Nakryiko <andrii@kernel.org>
-Subject: [PATCH v6 perf/core 1/2] perf: Stop using deprecated bpf_load_program() API
-Date:   Sat, 12 Feb 2022 07:51:24 -0800
-Message-ID: <20220212155125.3406232-2-andrii@kernel.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220212155125.3406232-1-andrii@kernel.org>
+        Sat, 12 Feb 2022 13:18:23 -0500
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29CAA5E772;
+        Sat, 12 Feb 2022 10:18:20 -0800 (PST)
+Received: by mail-ed1-x52b.google.com with SMTP id u18so21081049edt.6;
+        Sat, 12 Feb 2022 10:18:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=JU3dYDsQt6ZfloLKvcqqzWf7Qg3OYXA02oSzVnFJQtA=;
+        b=jlaEawZM/8wCVsPixXzsOJAeRJrTdHFlLRrdBJ/VV2CIiLDlBoxVeGEAGsJjKuhWVl
+         9zI4SAuBRYLo4hvxINq0Ikp3mpKRc6vwEFQHBM/baLLYYqEmi+SoPJxH9mzffVDt9ADM
+         Y6HSYn7t+3unlaBB2fBBM4fk5zbAEQyee8waWOGkjhEy04ssI+2uvfaiQ8ZmcdxRUU0v
+         Cd+qHZJhqlQNMXIn/PQCfWwrioNFgvJh3T3OXznQ5MuyGeRH+mmEbGma2KVaNBgQeb6I
+         SqcJcgR1dyW3WE9X+nnwy5yOM0NfgJLt7OyS37ooYSIOG4SbN/iRQ652gF07BsPxEUqI
+         yJVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JU3dYDsQt6ZfloLKvcqqzWf7Qg3OYXA02oSzVnFJQtA=;
+        b=BIpnEN20fuBcuO2v2b3aronNEMa2HAjexGRnh+mGNryFwh7nDbTtwEKbFaJ0ZwkKzv
+         ISAir3Ju85hm290kX3uLQpVpglJS3OxW/LCaqgfqHJY7ZjxxPTUkJfGjeJFZipNDxlZ8
+         e8nTe3YY6zMfQF5djZe1xiUOZ5UBB4wSKZdTbKcBwZZAypJHBrth3XKigj7H5hsMQIjZ
+         oaGiYWzFuaueB5NZDEsNiCVaQmPYgNwdbJ7EMxT1sQ4cxe02yLVnVfIjDQjcmMjIcRmt
+         NZP0iIx7FfJxZPZejmWpjzB6t4N+arRUBEVu11kD9TSIkJMhEM95TH61U2aueC0KPljf
+         m1dw==
+X-Gm-Message-State: AOAM5306W+kgWTWe/p623UzMAvOi6BjAwpYTbMDOeKNN8HKgUQ+0PmgZ
+        e+uN15xfSHyert7DNCOhb94=
+X-Google-Smtp-Source: ABdhPJz/KFZY5X+ueRe4knsqsTeGc5wXv1bCKUwn+tAKZzBUZTLEVtUVnN4KebKya39yjUS4zYfM8g==
+X-Received: by 2002:a05:6402:1e91:: with SMTP id f17mr7696835edf.407.1644689898279;
+        Sat, 12 Feb 2022 10:18:18 -0800 (PST)
+Received: from krava ([83.240.63.12])
+        by smtp.gmail.com with ESMTPSA id cz12sm7594044edb.30.2022.02.12.10.18.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Feb 2022 10:18:18 -0800 (PST)
+Date:   Sat, 12 Feb 2022 19:18:16 +0100
+From:   Jiri Olsa <olsajiri@gmail.com>
+To:     Andrii Nakryiko <andrii@kernel.org>
+Cc:     acme@kernel.org, linux-perf-users@vger.kernel.org,
+        bpf@vger.kernel.org, christylee@fb.com, jolsa@redhat.com
+Subject: Re: [PATCH v6 perf/core 0/2] perf: stop using deprecated bpf APIs
+Message-ID: <Ygf56M45VuWfippn@krava>
 References: <20220212155125.3406232-1-andrii@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-GUID: DP-NMGyLVyji5BFkFaFtpFTn3Dr8uGjA
-X-Proofpoint-ORIG-GUID: DP-NMGyLVyji5BFkFaFtpFTn3Dr8uGjA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2022-02-12_06,2022-02-11_01,2021-12-02_01
-X-Proofpoint-Spam-Details: rule=fb_outbound_notspam policy=fb_outbound score=0 impostorscore=0
- malwarescore=0 mlxscore=0 lowpriorityscore=0 clxscore=1015 mlxlogscore=999
- priorityscore=1501 suspectscore=0 adultscore=0 spamscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2201110000 definitions=main-2202120097
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220212155125.3406232-1-andrii@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Christy Lee <christylee@fb.com>
+On Sat, Feb 12, 2022 at 07:51:23AM -0800, Andrii Nakryiko wrote:
+> libbpf's bpf_prog_load() and bpf__object_next() APIs are deprecated.
+> remove perf's usage of these deprecated functions. After this patch
+> set, the only remaining libbpf deprecated APIs in perf would be
+> bpf_program__set_prep() and bpf_program__nth_fd().
+> 
+> v5 -> v6:
+>   - rebase onto perf/core tree (Arnaldo);
 
-bpf_load_program() API is deprecated, remove perf's usage of the
-deprecated function. Add a __weak function declaration for libbpf
-version compatibility.
+looks good, tests are passing for me
 
-Signed-off-by: Christy Lee <christylee@fb.com>
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
----
- tools/perf/tests/bpf.c      | 14 ++++----------
- tools/perf/util/bpf-event.c | 13 +++++++++++++
- 2 files changed, 17 insertions(+), 10 deletions(-)
+jirka
 
-diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
-index 573490530194..57b9591f7cbb 100644
---- a/tools/perf/tests/bpf.c
-+++ b/tools/perf/tests/bpf.c
-@@ -281,8 +281,8 @@ static int __test__bpf(int idx)
- 
- static int check_env(void)
- {
-+	LIBBPF_OPTS(bpf_prog_load_opts, opts);
- 	int err;
--	unsigned int kver_int;
- 	char license[] = "GPL";
- 
- 	struct bpf_insn insns[] = {
-@@ -290,19 +290,13 @@ static int check_env(void)
- 		BPF_EXIT_INSN(),
- 	};
- 
--	err = fetch_kernel_version(&kver_int, NULL, 0);
-+	err = fetch_kernel_version(&opts.kern_version, NULL, 0);
- 	if (err) {
- 		pr_debug("Unable to get kernel version\n");
- 		return err;
- 	}
--
--/* temporarily disable libbpf deprecation warnings */
--#pragma GCC diagnostic push
--#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
--	err = bpf_load_program(BPF_PROG_TYPE_KPROBE, insns,
--			       ARRAY_SIZE(insns),
--			       license, kver_int, NULL, 0);
--#pragma GCC diagnostic pop
-+	err = bpf_prog_load(BPF_PROG_TYPE_KPROBE, NULL, license, insns,
-+			    ARRAY_SIZE(insns), &opts);
- 	if (err < 0) {
- 		pr_err("Missing basic BPF support, skip this test: %s\n",
- 		       strerror(errno));
-diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-index a517eaa51eb3..bd1bc3c86cac 100644
---- a/tools/perf/util/bpf-event.c
-+++ b/tools/perf/util/bpf-event.c
-@@ -33,6 +33,19 @@ struct btf * __weak btf__load_from_kernel_by_id(__u32 id)
-        return err ? ERR_PTR(err) : btf;
- }
- 
-+int __weak bpf_prog_load(enum bpf_prog_type prog_type,
-+			 const char *prog_name __maybe_unused,
-+			 const char *license,
-+			 const struct bpf_insn *insns, size_t insn_cnt,
-+			 const struct bpf_prog_load_opts *opts)
-+{
-+#pragma GCC diagnostic push
-+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-+	return bpf_load_program(prog_type, insns, insn_cnt, license,
-+				opts->kern_version, opts->log_buf, opts->log_size);
-+#pragma GCC diagnostic pop
-+}
-+
- struct bpf_program * __weak
- bpf_object__next_program(const struct bpf_object *obj, struct bpf_program *prev)
- {
--- 
-2.30.2
-
+> v4 -> v5:
+>   - add bpf_perf_object__add() and use it where appropriate (Jiri);
+>   - use __maybe_unused in first patch;
+> v3 -> v4:
+>   - Fixed commit title
+>   - Added weak definition for deprecated function
+> v2 -> v3:
+>   - Fixed commit message to use upstream perf
+> v1 -> v2:
+>   - Added missing commit message
+>   - Added more details to commit message and added steps to reproduce
+>     original test case.
+> 
+> Christy Lee (2):
+>   perf: Stop using deprecated bpf_load_program() API
+>   perf: Stop using deprecated bpf_object__next() API
+> 
+>  tools/perf/tests/bpf.c       | 14 ++----
+>  tools/perf/util/bpf-event.c  | 13 +++++
+>  tools/perf/util/bpf-loader.c | 98 +++++++++++++++++++++++++++++-------
+>  3 files changed, 96 insertions(+), 29 deletions(-)
+> 
+> -- 
+> 2.30.2
+> 
