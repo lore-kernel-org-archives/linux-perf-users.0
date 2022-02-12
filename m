@@ -2,237 +2,181 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA6AC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Feb 2022 19:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 205C2C433F5
+	for <linux-perf-users@archiver.kernel.org>; Sat, 12 Feb 2022 04:19:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352889AbiBKTfV (ORCPT
+        id S231376AbiBLETn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 11 Feb 2022 14:35:21 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50764 "EHLO
+        Fri, 11 Feb 2022 23:19:43 -0500
+Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:48240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352904AbiBKTfU (ORCPT
+        with ESMTP id S229541AbiBLETm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 11 Feb 2022 14:35:20 -0500
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6C3CD43
-        for <linux-perf-users@vger.kernel.org>; Fri, 11 Feb 2022 11:35:18 -0800 (PST)
-Received: by mail-yb1-xb2e.google.com with SMTP id v186so28035054ybg.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 11 Feb 2022 11:35:18 -0800 (PST)
+        Fri, 11 Feb 2022 23:19:42 -0500
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3543322B1C
+        for <linux-perf-users@vger.kernel.org>; Fri, 11 Feb 2022 20:19:37 -0800 (PST)
+Received: by mail-ej1-x632.google.com with SMTP id d10so26550072eje.10
+        for <linux-perf-users@vger.kernel.org>; Fri, 11 Feb 2022 20:19:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TPp6AoNDxBkfRCJSXj0qQyodttHS7zPVJ6Ce2h9Sr5U=;
-        b=Qfvb7JOp+pwaBeEHLoBDGlG2iOb8GR8VEq0aONvJ4y5KQtA3rqFGfCXFYGfoKTyMOe
-         tVvlKI4HbnxSn6bKMUPKL1/4JQL/cFr/MATcZJPvpz1qfqBoBphdHDwjWCQ+gobtHDso
-         zkWip9egACspNUy0G6XMLSAuVVKWiO81fhGQbmA+JwXvAbFdRSfS3Quv8co7mXGJsE58
-         fFsbm3/J3JjFJ16GgRjuHEJXe3Stm7ga1xpGxDoVxDixtEDEh0kow5/3JfDVeNyGrD0i
-         sRwJOVHxui8WU88xlx22RxRlTBEpfMUgRs9YIpUeyGxhb8j0pVe04N5/7MYL/GFN6A0E
-         +4pg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=p7X05HIHlgua5QT03cwmvP2qXsowDMd5jVQ2Nq7kxys=;
+        b=Wpijvd421OFBuVYF431Fmi7Ze13lqR9HCjLI+tGr6Que+4+k5eetxRxPIK8MUAgyQk
+         Q2BXg6TGtESf3m5lBpDEqfcpxCdCa1KT94JGG+JlieZVx+6nU5crjs2blpzWSXK7xn0I
+         JFqIhoKBO/d6gU7Lln9zNEzZqZ883++rtE7hTMJjU5Jfsq2fPivNKrlyOZ6stAgGa8MX
+         yn+IqnZoX7PngInCmcd8I+NC24Rwg5zV5EKrRr0LNINqkfphnGH2qqIy7gcHjSkYhUtg
+         UcTUCZ8Ft4rNvjK4nuFCPuR9Pesb4hc8mKDsYEvN+78t/435oULr9rZ4ara0Hmq1/qJ/
+         1sfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TPp6AoNDxBkfRCJSXj0qQyodttHS7zPVJ6Ce2h9Sr5U=;
-        b=vYz8fZBQc1PEQl7a50nje5IeMphbFZAT5klYwzW7N2GiYj7Yl2U0/aOP5KI2spJWYX
-         nim7eGw0FiGYgOF5TY6ubKdXFIQB8mf0PRXLXFDXME0Snq2QlyJKA9Zug30YZPMTcA9V
-         jAmPaOUoIFYMAA2UpaZaO3W+dWgq192E1vGzC1OHU75PnWSwHPRi5ba2zLEbZugguEkP
-         SpW5cuf2VqFsN6pX6SOPoigdaSrQNf4iEWfoNV54lqbOSZwE6E42iCPLyJtLfZ/YNXqq
-         vCoHpYdbvDqOlHixDqdjbltH3vvgyvXrKLkHsvTxfBe9SmHrjrGlCNvLHLlF1poDnuZz
-         1Ftw==
-X-Gm-Message-State: AOAM532R+FFae2zO5j8m5Hp9DLsLSqC0hq5Nz1WkJgh6qU4ZOLIito0J
-        8PvcA7pS4vOE7T8gtoGkepzlqM177YalRkRMRI0+Lg==
-X-Google-Smtp-Source: ABdhPJwNlALJbQ//piIdwmrWVEz0xwTOfNaKu+nly2Z1rkmZiv8cuZOUvv5dPWK2opDkixd6/xqweVo1GZRAfI07i9c=
-X-Received: by 2002:a25:d7d0:: with SMTP id o199mr2840524ybg.34.1644608117621;
- Fri, 11 Feb 2022 11:35:17 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=p7X05HIHlgua5QT03cwmvP2qXsowDMd5jVQ2Nq7kxys=;
+        b=tA+svHnEqh5tUb2pIBjeKuzRL6ABCMmE4Ls+iFaCXFpZTkHuNrGiQBfBrGur+W8svv
+         SpTVlor+Hqnu/cCd5XHPo6DfjEpk9pZkMGYjVJ4A4Vv8ltVq3qrKji7z8TU6dK2z4/Nd
+         rgct/9uIcFzLngb8+G/Auw9PPQJKmb9aILKxSBlkmMKm/ON/qZp77ICCxPzK41n/F+7d
+         O1MJUSC8Hhra1hKih3MLQcWHfg4t5Jeck6DEsWNAyGCEV5s+xgfHadF0e4s6GNcokZ9P
+         6Jfu2ioQPsS5J8sjRw7x48Rj5QbqK1ixNlnPtCB6ifEt+6kl0JhBdPE945RXcaqEHFL0
+         FUmA==
+X-Gm-Message-State: AOAM5311LJL+4Q5Bez2z/3q/zphQ3JNki9pAR4FiXlK1Xsrvj7pobTbK
+        Pd2X7hHpMW5UtyNke/hwtNOP2g==
+X-Google-Smtp-Source: ABdhPJyMYSrRWUtGrCZyMqVLTyz2rtvX46h43uMrcgvkEOKz+ARG+74NeG39H938HbzX63ZBtYJI+g==
+X-Received: by 2002:a17:907:868d:: with SMTP id qa13mr3740651ejc.508.1644639574621;
+        Fri, 11 Feb 2022 20:19:34 -0800 (PST)
+Received: from leoy-ThinkPad-X240s ([104.245.96.223])
+        by smtp.gmail.com with ESMTPSA id eg11sm10340818edb.17.2022.02.11.20.19.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Feb 2022 20:19:33 -0800 (PST)
+Date:   Sat, 12 Feb 2022 12:19:27 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     German Gomez <german.gomez@arm.com>
+Cc:     Ali Saidi <alisaidi@amazon.com>, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
+        benh@kernel.crashing.org, james.clark@arm.com,
+        john.garry@huawei.com, jolsa@redhat.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
+        peterz@infradead.org, will@kernel.org
+Subject: Re: [PATCH 2/2] perf arm-spe: Parse more SPE fields and store source
+Message-ID: <20220212041927.GA763461@leoy-ThinkPad-X240s>
+References: <b1b3697d-4a0a-d041-5cbd-e08fec9e658c@arm.com>
+ <20220128210245.4628-1-alisaidi@amazon.com>
+ <7eca7a1d-a5a2-2aab-b3cf-5d83cb8ccf4f@arm.com>
 MIME-Version: 1.0
-References: <20220211103415.2737789-1-irogers@google.com> <20220211103415.2737789-4-irogers@google.com>
- <YgaZSk8h6rQ6MgLy@kernel.org> <CAP-5=fWZTmbQpmoXRKt9HdMU-E_B2uo5b4BHOW6RC6w5VkQ0AQ@mail.gmail.com>
- <Yga3JNhTfSBR3btI@kernel.org>
-In-Reply-To: <Yga3JNhTfSBR3btI@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 11 Feb 2022 11:35:05 -0800
-Message-ID: <CAP-5=fVb=1prv6kkUzJRiPNSsudBhU1+YLBqnBrWiut3XQLJqg@mail.gmail.com>
-Subject: Re: [PATCH v3 03/22] perf dso: Make lock error check and add BUG_ONs
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@collabora.com>,
-        James Clark <james.clark@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
-        Song Liu <song@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Miaoqian Lin <linmq006@gmail.com>,
-        Stephen Brennan <stephen.s.brennan@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        German Gomez <german.gomez@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Eric Dumazet <edumazet@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Hao Luo <haoluo@google.com>, eranian@google.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7eca7a1d-a5a2-2aab-b3cf-5d83cb8ccf4f@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Feb 11, 2022 at 11:21 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Fri, Feb 11, 2022 at 09:43:19AM -0800, Ian Rogers escreveu:
-> > On Fri, Feb 11, 2022 at 9:13 AM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > >
-> > > Em Fri, Feb 11, 2022 at 02:33:56AM -0800, Ian Rogers escreveu:
-> > > > Make the pthread mutex on dso use the error check type. This allows
-> > > > deadlock checking via the return type. Assert the returned value from
-> > > > mutex lock is always 0.
-> > >
-> > > I think this is too blunt/pervasive source code wise, perhaps we should
-> > > wrap this like its done with rwsem in tools/perf/util/rwsem.h to get
-> > > away from pthreads primitives and make the source code look more like
-> > > a kernel one and then, taking advantage of the so far ideologic
-> > > needless indirection, add this BUG_ON if we build with "DEBUG=1" or
-> > > something, wdyt?
-> >
->
-> > My concern with semaphores is that they are a concurrency primitive
->
-> I'm not suggesting we switch over to semaphores, just to use the same
-> technique of wrapping pthread_mutex_t with some other API that then
-> allows us to add these BUG_ON() calls without polluting the source code
-> in many places.
+Hi German, Ali,
 
-Sounds simple enough and would ensure consistency too. I can add it to
-the front of this set of changes. A different approach would be to
-take what's here and then refactor and cleanup as a follow on patch
-set. I'd prefer that as the size of this set of changes is already
-larger than I like - albeit that most of it is just introducing the
-use of functions to access struct variables. Perhaps I just remove the
-BUG_ON and pthread changes here, we work to get this landed and in a
-separate set of patches clean up the pthread mutex code to have better
-bug checking.
+On Fri, Feb 11, 2022 at 04:31:40PM +0000, German Gomez wrote:
+> Hi Ali,
+> 
+> On 28/01/2022 21:02, Ali Saidi wrote:
+> > Hi German,
+> >
+> > On 28/01/2022 19:20, German Gomez wrote:
+> >> Hi Ali,
+> >>
+> >> [...]
+> >>>  };
+> >>>  
+> >>>  enum arm_spe_op_type {
+> >>>  	ARM_SPE_LD		= 1 << 0,
+> >>>  	ARM_SPE_ST		= 1 << 1,
+> >>> +	ARM_SPE_LDST_EXCL	= 1 << 2,
+> >>> +	ARM_SPE_LDST_ATOMIC	= 1 << 3,
+> >>> +	ARM_SPE_LDST_ACQREL	= 1 << 4,
+> 
+> Wondering if we can store this in perf_sample->flags. The values are
+> defined in "util/event.h" (PERF_IP_*). Maybe we can extend it to allow
+> doing "sample->flags = PERF_LDST_FLAG_LD | PERF_LDST_FLAG_ATOMIC" and
+> such.
+> 
+> @Leo do you think that could work?
+
+Let's step back a bit and divide the decoding flow into two parts:
+backend and frontend.
+
+For the backend part, we decode the SPE hardware trace data and
+generate the SPE record in the file
+util/arm-spe-decoder/arm-spe-decoder.c.  As we want to support
+complete operation types, we can extend arm_spe_op_type as below:
+
+enum arm_spe_op_type {
+        /* First level operation type */
+	ARM_SPE_OP_OTHER        = 1 << 0,
+	ARM_SPE_OP_LDST		= 1 << 1,
+	ARM_SPE_OP_BRANCH_ERET  = 1 << 2,
+
+        /* Second level operation type for OTHER */
+        ARM_SPE_OP_SVE_OTHER    = 1 << 16,
+        ARM_SPE_OP_SVE_FP       = 1 << 17,
+        ARM_SPE_OP_SVE_PRED     = 1 << 18,
+
+        /* Second level operation type for LDST */
+        ARM_SPE_OP_LD           = 1 << 16,
+        ARM_SPE_OP_ST           = 1 << 17,
+        ARM_SPE_OP_ATOMIC       = 1 << 18,
+        ARM_SPE_OP_EXCL         = 1 << 19,
+        ARM_SPE_OP_AR           = 1 << 20,
+        ARM_SPE_OP_SIMD_FP      = 1 << 21,
+        ARM_SPE_OP_GP_REG       = 1 << 22,
+        ARM_SPE_OP_UNSPEC_REG   = 1 << 23,
+        ARM_SPE_OP_NV_SYSREG    = 1 << 24,
+        ARM_SPE_OP_SVE_PRED     = 1 << 25,
+        ARM_SPE_OP_SVE_SG       = 1 << 26,
+
+        /* Second level operation type for BRANCH_ERET */
+        ARM_SPE_OP_BR_COND      = 1 << 16,
+        ARM_SPE_OP_BR_INDIRECT  = 1 << 17,
+};
+
+IIUC, Ali suggested to directly reuse packet format to express
+operation type and don't need to redefine the operation types like
+above structure arm_spe_op_type.  I personally bias to convert the raw
+packet format to more readable format, a benefit is this would give
+us more readable code.
+
+For the frontend, we need to convert Arm SPE record to samples.
+We can explore two fields: sample::flags and sample::data_src, for
+load/store related operations, I perfer we can fill more complete
+info in field sample::data_src and extend the definitions for
+perf_mem_data_src; for branch operations, we can fill sample::flags.
+
+So I am just wandering if we can set the field
+sample::data_src::mem_lock for atomic operations, like:
+
+    data_src.mem_op   = PERF_MEM_OP_LOAD;
+    data_src.mem_lock = PERF_MEM_LOCK_ATOMIC;
+
+The field "mem_lock" is only two bits, we can consider to extend the
+structure with an extra filed "mem_lock_ext" if it cannot meet our
+requirement.
+
+> >>> +	ARM_SPE_BR		= 1 << 5,
+> >>> +	ARM_SPE_BR_COND		= 1 << 6,
+> >>> +	ARM_SPE_BR_IND		= 1 << 7,
+> 
+> Seems like we can store BR_COND in the existing "branch-miss" event
+> (--itrace=b) with:
+> 
+>   sample->flags = PERF_IP_FLAG_BRANCH;
+>   sample->flags |= PERF_IP_FLAG_CONDITIONAL;
+> and/or
+>   sample->flags |= PERF_IP_FLAG_INDIRECT;
+> 
+> PERF_IP_FLAG_INDIRECT doesn't exist yet but we can probably add it.
+
+Yes, for branch samples, this makes sense for me.
 
 Thanks,
-Ian
-
-> - Arnaldo
->
-> > that has more flexibility and power than a mutex. I like a mutex as it
-> > is quite obvious what is going on and that is good from a tooling
-> > point of view. A deadlock with two mutexes is easy to understand. On a
-> > semaphore, were we using it like a condition variable? There's more to
-> > figure out. I also like the idea of compiling the perf command with
-> > emscripten, we could then generate say perf annotate output in your
-> > web browser. Emscripten has implementations of standard posix
-> > libraries including pthreads, but we may need to have two approaches
-> > in the perf code if we want to compile with emscripten and use
-> > semaphores when targeting linux.
-> >
-> > Where this change comes from is that I worried that extending the
-> > locked regions to cover the race that'd been found would then expose
-> > the kind of recursive deadlock that pthread mutexes all too willingly
-> > allow. With this code we at least see the bug and don't just hang. I
-> > don't think we need the change to the mutexes for this change, but we
-> > do need to extend the regions to fix the data race.
-> >
-> > Let me know how you prefer it and I can roll it into a v4 version.
-> >
-> > Thanks,
-> > Ian
-> >
-> > > - Arnaldo
-> > >
-> > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > ---
-> > > >  tools/perf/util/dso.c    | 12 +++++++++---
-> > > >  tools/perf/util/symbol.c |  2 +-
-> > > >  2 files changed, 10 insertions(+), 4 deletions(-)
-> > > >
-> > > > diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> > > > index 9cc8a1772b4b..6beccffeef7b 100644
-> > > > --- a/tools/perf/util/dso.c
-> > > > +++ b/tools/perf/util/dso.c
-> > > > @@ -784,7 +784,7 @@ dso_cache__free(struct dso *dso)
-> > > >       struct rb_root *root = &dso->data.cache;
-> > > >       struct rb_node *next = rb_first(root);
-> > > >
-> > > > -     pthread_mutex_lock(&dso->lock);
-> > > > +     BUG_ON(pthread_mutex_lock(&dso->lock) != 0);
-> > > >       while (next) {
-> > > >               struct dso_cache *cache;
-> > > >
-> > > > @@ -830,7 +830,7 @@ dso_cache__insert(struct dso *dso, struct dso_cache *new)
-> > > >       struct dso_cache *cache;
-> > > >       u64 offset = new->offset;
-> > > >
-> > > > -     pthread_mutex_lock(&dso->lock);
-> > > > +     BUG_ON(pthread_mutex_lock(&dso->lock) != 0);
-> > > >       while (*p != NULL) {
-> > > >               u64 end;
-> > > >
-> > > > @@ -1259,6 +1259,8 @@ struct dso *dso__new_id(const char *name, struct dso_id *id)
-> > > >       struct dso *dso = calloc(1, sizeof(*dso) + strlen(name) + 1);
-> > > >
-> > > >       if (dso != NULL) {
-> > > > +             pthread_mutexattr_t lock_attr;
-> > > > +
-> > > >               strcpy(dso->name, name);
-> > > >               if (id)
-> > > >                       dso->id = *id;
-> > > > @@ -1286,8 +1288,12 @@ struct dso *dso__new_id(const char *name, struct dso_id *id)
-> > > >               dso->root = NULL;
-> > > >               INIT_LIST_HEAD(&dso->node);
-> > > >               INIT_LIST_HEAD(&dso->data.open_entry);
-> > > > -             pthread_mutex_init(&dso->lock, NULL);
-> > > > +             pthread_mutexattr_init(&lock_attr);
-> > > > +             pthread_mutexattr_settype(&lock_attr, PTHREAD_MUTEX_ERRORCHECK);
-> > > > +             pthread_mutex_init(&dso->lock, &lock_attr);
-> > > > +             pthread_mutexattr_destroy(&lock_attr);
-> > > >               refcount_set(&dso->refcnt, 1);
-> > > > +
-> > > >       }
-> > > >
-> > > >       return dso;
-> > > > diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> > > > index b2ed3140a1fa..43f47532696f 100644
-> > > > --- a/tools/perf/util/symbol.c
-> > > > +++ b/tools/perf/util/symbol.c
-> > > > @@ -1783,7 +1783,7 @@ int dso__load(struct dso *dso, struct map *map)
-> > > >       }
-> > > >
-> > > >       nsinfo__mountns_enter(dso->nsinfo, &nsc);
-> > > > -     pthread_mutex_lock(&dso->lock);
-> > > > +     BUG_ON(pthread_mutex_lock(&dso->lock) != 0);
-> > > >
-> > > >       /* check again under the dso->lock */
-> > > >       if (dso__loaded(dso)) {
-> > > > --
-> > > > 2.35.1.265.g69c8d7142f-goog
-> > >
-> > > --
-> > >
-> > > - Arnaldo
->
-> --
->
-> - Arnaldo
+Leo
