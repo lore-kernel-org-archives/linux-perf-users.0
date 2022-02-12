@@ -2,181 +2,163 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 205C2C433F5
-	for <linux-perf-users@archiver.kernel.org>; Sat, 12 Feb 2022 04:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85011C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat, 12 Feb 2022 07:31:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231376AbiBLETn (ORCPT
+        id S232361AbiBLHbf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 11 Feb 2022 23:19:43 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:48240 "EHLO
+        Sat, 12 Feb 2022 02:31:35 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229541AbiBLETm (ORCPT
+        with ESMTP id S231893AbiBLHbe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 11 Feb 2022 23:19:42 -0500
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3543322B1C
-        for <linux-perf-users@vger.kernel.org>; Fri, 11 Feb 2022 20:19:37 -0800 (PST)
-Received: by mail-ej1-x632.google.com with SMTP id d10so26550072eje.10
-        for <linux-perf-users@vger.kernel.org>; Fri, 11 Feb 2022 20:19:37 -0800 (PST)
+        Sat, 12 Feb 2022 02:31:34 -0500
+Received: from mail-io1-xd2a.google.com (mail-io1-xd2a.google.com [IPv6:2607:f8b0:4864:20::d2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEA3426AD6;
+        Fri, 11 Feb 2022 23:31:31 -0800 (PST)
+Received: by mail-io1-xd2a.google.com with SMTP id r144so14015028iod.9;
+        Fri, 11 Feb 2022 23:31:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=p7X05HIHlgua5QT03cwmvP2qXsowDMd5jVQ2Nq7kxys=;
-        b=Wpijvd421OFBuVYF431Fmi7Ze13lqR9HCjLI+tGr6Que+4+k5eetxRxPIK8MUAgyQk
-         Q2BXg6TGtESf3m5lBpDEqfcpxCdCa1KT94JGG+JlieZVx+6nU5crjs2blpzWSXK7xn0I
-         JFqIhoKBO/d6gU7Lln9zNEzZqZ883++rtE7hTMJjU5Jfsq2fPivNKrlyOZ6stAgGa8MX
-         yn+IqnZoX7PngInCmcd8I+NC24Rwg5zV5EKrRr0LNINqkfphnGH2qqIy7gcHjSkYhUtg
-         UcTUCZ8Ft4rNvjK4nuFCPuR9Pesb4hc8mKDsYEvN+78t/435oULr9rZ4ara0Hmq1/qJ/
-         1sfQ==
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0BgoEgiy7hfn/RGAXkV+qeUxKZZ6P1obCegXSdFIv/4=;
+        b=WMt3ORljz+QF3Hy4u9lGY97K1KNiRshLPgCD3vyDh3KhPOtGeOi2kzmvp3eleBKgpE
+         Ihl450CNgsRT1z/CLFCh00rrLVMsLlGF/2uGGbXMkmuEYMvatOl4XTGIIfX4RzP2PgyV
+         bP2+fAqxTrdZ446vVZkiL5j/5P53oOsJIUdLMNEWW6HiR3pQ2AVoSelPfoJfaN9XyoEg
+         NoHU1UVAldf5M0zaVMaLnDwQoNHPbwFssl5A5VGunV8f8agZsYESqZ/3Q3LrC76NwgmJ
+         T2dvmLddLsd6f+WCv52abMNFT7tHvsq7iNAAXnBBeMFLK1ijPI9pR0FIxj9W9lKmLkvJ
+         3I5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=p7X05HIHlgua5QT03cwmvP2qXsowDMd5jVQ2Nq7kxys=;
-        b=tA+svHnEqh5tUb2pIBjeKuzRL6ABCMmE4Ls+iFaCXFpZTkHuNrGiQBfBrGur+W8svv
-         SpTVlor+Hqnu/cCd5XHPo6DfjEpk9pZkMGYjVJ4A4Vv8ltVq3qrKji7z8TU6dK2z4/Nd
-         rgct/9uIcFzLngb8+G/Auw9PPQJKmb9aILKxSBlkmMKm/ON/qZp77ICCxPzK41n/F+7d
-         O1MJUSC8Hhra1hKih3MLQcWHfg4t5Jeck6DEsWNAyGCEV5s+xgfHadF0e4s6GNcokZ9P
-         6Jfu2ioQPsS5J8sjRw7x48Rj5QbqK1ixNlnPtCB6ifEt+6kl0JhBdPE945RXcaqEHFL0
-         FUmA==
-X-Gm-Message-State: AOAM5311LJL+4Q5Bez2z/3q/zphQ3JNki9pAR4FiXlK1Xsrvj7pobTbK
-        Pd2X7hHpMW5UtyNke/hwtNOP2g==
-X-Google-Smtp-Source: ABdhPJyMYSrRWUtGrCZyMqVLTyz2rtvX46h43uMrcgvkEOKz+ARG+74NeG39H938HbzX63ZBtYJI+g==
-X-Received: by 2002:a17:907:868d:: with SMTP id qa13mr3740651ejc.508.1644639574621;
-        Fri, 11 Feb 2022 20:19:34 -0800 (PST)
-Received: from leoy-ThinkPad-X240s ([104.245.96.223])
-        by smtp.gmail.com with ESMTPSA id eg11sm10340818edb.17.2022.02.11.20.19.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Feb 2022 20:19:33 -0800 (PST)
-Date:   Sat, 12 Feb 2022 12:19:27 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     German Gomez <german.gomez@arm.com>
-Cc:     Ali Saidi <alisaidi@amazon.com>, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
-        benh@kernel.crashing.org, james.clark@arm.com,
-        john.garry@huawei.com, jolsa@redhat.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
-        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, will@kernel.org
-Subject: Re: [PATCH 2/2] perf arm-spe: Parse more SPE fields and store source
-Message-ID: <20220212041927.GA763461@leoy-ThinkPad-X240s>
-References: <b1b3697d-4a0a-d041-5cbd-e08fec9e658c@arm.com>
- <20220128210245.4628-1-alisaidi@amazon.com>
- <7eca7a1d-a5a2-2aab-b3cf-5d83cb8ccf4f@arm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0BgoEgiy7hfn/RGAXkV+qeUxKZZ6P1obCegXSdFIv/4=;
+        b=GLCxxFfDQ/BYzILBFmBfyHH727ePHEDcAynsFwA4QFZyoKxbFZ+tDKUiKEl0Yluk7i
+         0lMM11j5ilO/Bct7mUZHPc5Sclfc7//q4p6qXxYl0G6j35UCpNZMgbvEKNOAMN0lzsJE
+         xlLMFJq14tDc6YD72ZDBSC8RserEf/TvkydaumbHSzmko7ACb6Z2pxkL+Vn8AcyQ3yLF
+         mfgNgx5gMyFQtOHeIMMamEfsTWXgQzKfsPXDif49T6uLV7VEuaKibAicvfbQeAjBYLvR
+         4OnZ2nR0mL6L3d5lsoEwlyBH0bwrzc0Z9iG0AWY/P+DM563/oVYwj1AhTrwRX4Imufzz
+         P9rw==
+X-Gm-Message-State: AOAM533DpKcDSwZAWm5l8ftC1SdJdDS8oUSxpMPrZCNLV9iAKOR6uTpi
+        GNmU6WP3UTTZILEFHcOF+cXCMesqDvb06xC41/U=
+X-Google-Smtp-Source: ABdhPJwAaIKrIaL881w2B5pfltMgAXbH/NLypoMQ7X7zSxEvAFlUwF9tB/KLLXofE1wyXQQVXyMJqDpkUYVhdnxrFpI=
+X-Received: by 2002:a02:7417:: with SMTP id o23mr2951818jac.145.1644651091141;
+ Fri, 11 Feb 2022 23:31:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7eca7a1d-a5a2-2aab-b3cf-5d83cb8ccf4f@arm.com>
+References: <20220119230636.1752684-1-christylee@fb.com> <20220119230636.1752684-3-christylee@fb.com>
+ <Ye2LAEiXaBoj2n8Z@krava>
+In-Reply-To: <Ye2LAEiXaBoj2n8Z@krava>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 11 Feb 2022 23:31:20 -0800
+Message-ID: <CAEf4BzaDN7H45cHny6upY+0HNLmsA9oQdTrx3yA3WD=fjWJ4fw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v4 2/2] perf: stop using deprecated
+ bpf_object__next() API
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Christy Lee <christylee@fb.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Christy Lee <christyc.y.lee@gmail.com>,
+        bpf <bpf@vger.kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>,
+        Wang Nan <wangnan0@huawei.com>,
+        Wang ShaoBo <bobo.shaobowang@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi German, Ali,
-
-On Fri, Feb 11, 2022 at 04:31:40PM +0000, German Gomez wrote:
-> Hi Ali,
-> 
-> On 28/01/2022 21:02, Ali Saidi wrote:
-> > Hi German,
+On Sun, Jan 23, 2022 at 9:06 AM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Wed, Jan 19, 2022 at 03:06:36PM -0800, Christy Lee wrote:
+>
+> SNIP
+>
+> > ---
+> >  tools/perf/util/bpf-loader.c | 72 +++++++++++++++++++++++++++---------
+> >  tools/perf/util/bpf-loader.h |  1 +
+> >  2 files changed, 55 insertions(+), 18 deletions(-)
 > >
-> > On 28/01/2022 19:20, German Gomez wrote:
-> >> Hi Ali,
-> >>
-> >> [...]
-> >>>  };
-> >>>  
-> >>>  enum arm_spe_op_type {
-> >>>  	ARM_SPE_LD		= 1 << 0,
-> >>>  	ARM_SPE_ST		= 1 << 1,
-> >>> +	ARM_SPE_LDST_EXCL	= 1 << 2,
-> >>> +	ARM_SPE_LDST_ATOMIC	= 1 << 3,
-> >>> +	ARM_SPE_LDST_ACQREL	= 1 << 4,
-> 
-> Wondering if we can store this in perf_sample->flags. The values are
-> defined in "util/event.h" (PERF_IP_*). Maybe we can extend it to allow
-> doing "sample->flags = PERF_LDST_FLAG_LD | PERF_LDST_FLAG_ATOMIC" and
-> such.
-> 
-> @Leo do you think that could work?
+> > diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
+> > index 4631cac3957f..b1822f8af2bb 100644
+> > --- a/tools/perf/util/bpf-loader.c
+> > +++ b/tools/perf/util/bpf-loader.c
+> > @@ -29,9 +29,6 @@
+> >
+> >  #include <internal/xyarray.h>
+> >
+> > -/* temporarily disable libbpf deprecation warnings */
+> > -#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+> > -
+> >  static int libbpf_perf_print(enum libbpf_print_level level __attribute__((unused)),
+> >                             const char *fmt, va_list args)
+> >  {
+> > @@ -49,6 +46,36 @@ struct bpf_prog_priv {
+> >       int *type_mapping;
+> >  };
+> >
+> > +struct bpf_perf_object {
+> > +     struct bpf_object *obj;
+> > +     struct list_head list;
+> > +};
+> > +
+> > +static LIST_HEAD(bpf_objects_list);
+>
+> hum.. I still can't see any code adding/removing bpf_perf_object
+> objects to this list, and that's why the code is failing to remove
+> probes
+>
+> because there are no objects to iterate on, so added probes stay
+> configured and screw following tests
+>
+> you need something like below to add and del objects from
+> bpf_objects_list list
+>
+> it also simplifies for_each macros to work just over perf_obj,
+> because I wasn't patient enough to make it work with the extra
+> bpf_object ;-) I don't mind if you fix that, but this way looks
+> simpler to me
 
-Let's step back a bit and divide the decoding flow into two parts:
-backend and frontend.
+yep, I agree
 
-For the backend part, we decode the SPE hardware trace data and
-generate the SPE record in the file
-util/arm-spe-decoder/arm-spe-decoder.c.  As we want to support
-complete operation types, we can extend arm_spe_op_type as below:
+>
+> tests are working for me with this fix, please feel free to
+> squash it into your change
+>
 
-enum arm_spe_op_type {
-        /* First level operation type */
-	ARM_SPE_OP_OTHER        = 1 << 0,
-	ARM_SPE_OP_LDST		= 1 << 1,
-	ARM_SPE_OP_BRANCH_ERET  = 1 << 2,
+I've just sent v5, I would really appreciate it if you could give the
+changes another testing round. Thanks a lot, Jiri!
 
-        /* Second level operation type for OTHER */
-        ARM_SPE_OP_SVE_OTHER    = 1 << 16,
-        ARM_SPE_OP_SVE_FP       = 1 << 17,
-        ARM_SPE_OP_SVE_PRED     = 1 << 18,
+> thanks,
+> jirka
+>
+>
+> ---
+> diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
+> index 57b9591f7cbb..d09d25707f1e 100644
+> --- a/tools/perf/tests/bpf.c
+> +++ b/tools/perf/tests/bpf.c
+> @@ -210,6 +210,11 @@ prepare_bpf(void *obj_buf, size_t obj_buf_sz, const char *name)
+>                 pr_debug("Compile BPF program failed.\n");
+>                 return NULL;
+>         }
+> +
+> +       if (bpf_perf_object__add(obj)) {
+> +               bpf_object__close(obj);
+> +               return NULL;
+> +       }
 
-        /* Second level operation type for LDST */
-        ARM_SPE_OP_LD           = 1 << 16,
-        ARM_SPE_OP_ST           = 1 << 17,
-        ARM_SPE_OP_ATOMIC       = 1 << 18,
-        ARM_SPE_OP_EXCL         = 1 << 19,
-        ARM_SPE_OP_AR           = 1 << 20,
-        ARM_SPE_OP_SIMD_FP      = 1 << 21,
-        ARM_SPE_OP_GP_REG       = 1 << 22,
-        ARM_SPE_OP_UNSPEC_REG   = 1 << 23,
-        ARM_SPE_OP_NV_SYSREG    = 1 << 24,
-        ARM_SPE_OP_SVE_PRED     = 1 << 25,
-        ARM_SPE_OP_SVE_SG       = 1 << 26,
+I actually moved this into bpf__prepare_load_buffer(), it felt better
+to contain this logic within it. It follows what you did for
+bpf__prepare_load() and allowed to keep bpf_perf_object__add() static.
 
-        /* Second level operation type for BRANCH_ERET */
-        ARM_SPE_OP_BR_COND      = 1 << 16,
-        ARM_SPE_OP_BR_INDIRECT  = 1 << 17,
-};
+In the end I got a patch which doesn't expose any new function outside
+of bpf-loader.c, which I think is the best solution.
 
-IIUC, Ali suggested to directly reuse packet format to express
-operation type and don't need to redefine the operation types like
-above structure arm_spe_op_type.  I personally bias to convert the raw
-packet format to more readable format, a benefit is this would give
-us more readable code.
+>         return obj;
+>  }
+>
 
-For the frontend, we need to convert Arm SPE record to samples.
-We can explore two fields: sample::flags and sample::data_src, for
-load/store related operations, I perfer we can fill more complete
-info in field sample::data_src and extend the definitions for
-perf_mem_data_src; for branch operations, we can fill sample::flags.
-
-So I am just wandering if we can set the field
-sample::data_src::mem_lock for atomic operations, like:
-
-    data_src.mem_op   = PERF_MEM_OP_LOAD;
-    data_src.mem_lock = PERF_MEM_LOCK_ATOMIC;
-
-The field "mem_lock" is only two bits, we can consider to extend the
-structure with an extra filed "mem_lock_ext" if it cannot meet our
-requirement.
-
-> >>> +	ARM_SPE_BR		= 1 << 5,
-> >>> +	ARM_SPE_BR_COND		= 1 << 6,
-> >>> +	ARM_SPE_BR_IND		= 1 << 7,
-> 
-> Seems like we can store BR_COND in the existing "branch-miss" event
-> (--itrace=b) with:
-> 
->   sample->flags = PERF_IP_FLAG_BRANCH;
->   sample->flags |= PERF_IP_FLAG_CONDITIONAL;
-> and/or
->   sample->flags |= PERF_IP_FLAG_INDIRECT;
-> 
-> PERF_IP_FLAG_INDIRECT doesn't exist yet but we can probably add it.
-
-Yes, for branch samples, this makes sense for me.
-
-Thanks,
-Leo
+[...]
