@@ -2,293 +2,107 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D520C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat, 12 Feb 2022 20:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D08C433FE
+	for <linux-perf-users@archiver.kernel.org>; Sun, 13 Feb 2022 01:47:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231929AbiBLU72 (ORCPT
+        id S232838AbiBMBrl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 12 Feb 2022 15:59:28 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:33622 "EHLO
+        Sat, 12 Feb 2022 20:47:41 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:45470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231909AbiBLU71 (ORCPT
+        with ESMTP id S230179AbiBMBrl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 12 Feb 2022 15:59:27 -0500
-Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B61A606EF
-        for <linux-perf-users@vger.kernel.org>; Sat, 12 Feb 2022 12:59:22 -0800 (PST)
-Received: by mail-yb1-xb2b.google.com with SMTP id v186so35127724ybg.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 12 Feb 2022 12:59:22 -0800 (PST)
+        Sat, 12 Feb 2022 20:47:41 -0500
+Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3232360067;
+        Sat, 12 Feb 2022 17:47:37 -0800 (PST)
+Received: by mail-il1-x129.google.com with SMTP id n5so9807579ilk.12;
+        Sat, 12 Feb 2022 17:47:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
+        d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=uswgctx5BHjXjxCNmjqTaAo5iKWDS6htPuNcLsAJp3s=;
-        b=LJN0o1M94FDCyr4eUnkebPdb+wD/M2rTw5tkBR+w/o7V+GTWxtoqGbW5P/vGautIj4
-         uR3a6EGP5tbRT8ZJz5njQODDhyaIohhToN4BEClA0eCzQHn6ngBI8BzuvXA79dfGXzQe
-         mcxw+dfvE65z0BD4vIMxhApx/IJKh8SJk6pBn63SNZnTvonfRd1jXtIuofuqNRuzyasx
-         RQhAx27eaMkb1ctmrYNE4XvsZBSPOwfBiXAvqYVdYrLhdvBbVF/DvkjuiGuHNnKr7Plp
-         Es80rbFoHFU7Xa0/tI+rAku+KDjZfVRH4ueaV7HTVuQjtjvny0ugVF2qU5qNN8+p8noD
-         PgzA==
+        bh=XcUWEf3ZhSye+IepyjW5pUNCJztEYnaHtpPfhkyEwp8=;
+        b=qqMFL8K00cU1nsd6oRgsvD3HBRptzkkTCktRWPBGTppaKZIZBRwvYgQiBAB2r0hbEQ
+         s0axjnXTY4aXvA+LXKt/8UgDKvGoyYTYr4MlonBk68kXZvBwhtL8zHeQj36gDoivaVD/
+         I60bDlw4pWCJhRbEEf4zwjAFSGjnGfVouPgtbQ9Jfh5tL5DegsFSk3Dcg49P/EfZiCN2
+         GDHr/bi7ihhswf/sj+2JeocWmp4dI6/Iyf5r3gHp6SET6KwZXA0CWqSgBCQGjUdMtFrX
+         i34Fu4Z4vUNaTx0UubG+tTKnxLYs5DwTaFO1jaFhV09J7pZGBIVwwSF9RwvoeofO9fwZ
+         HPBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=uswgctx5BHjXjxCNmjqTaAo5iKWDS6htPuNcLsAJp3s=;
-        b=SLqFq0E/DN3YPcHVzLPEMN3bPu0mStMOhh7GSqwygz1eJNR71XznsytjhzDXaRJebm
-         cGi8rSxe4itGgJxbjCvIJFFHWfbTSgaLagRRUcP6CoKvjdBcFOUINimdrcSh+IkCkyfp
-         vIkx4LLRblnjqi+fpugEx3U4y22jwSev/nTimWp+RwUuUvQD8N790MkvtIexTqEcpxZK
-         yKwERZoh/rKbOUMY4LVNeQDH8mhXAdRtqDHU/i+68ZW1kpM/TlZ3oDFfwKW3DmRQNujz
-         cKOSEBbB89l0bf8Fn6c6mqZPFZ4hW+VKhREtm42qIfTCaqEIGeYAS71vXHv1jUhU5zF8
-         1YDw==
-X-Gm-Message-State: AOAM533cRGv73AS6TbEvIDozJXSBK6DLUJ3Lg9w3nrH50bXsaAwvFzKq
-        TVKNr7EMI7EMM/igDQ8MkSaLAoguN//yCZ9Plb289A==
-X-Google-Smtp-Source: ABdhPJy1myC07C6+D/+iZCjDGtruKNs4ZXhHA7ReL9pn+/N5no8yUP7/Y0gKottbPbfaePhH0l3a/MG46E/fVyo+f3M=
-X-Received: by 2002:a81:c442:: with SMTP id s2mr7749709ywj.454.1644699561725;
- Sat, 12 Feb 2022 12:59:21 -0800 (PST)
+        bh=XcUWEf3ZhSye+IepyjW5pUNCJztEYnaHtpPfhkyEwp8=;
+        b=hGFi4YZ8p/nGvAHrG2V5KqMfKRANtvBDYNxGBE7BDY+opKD3LeSjiiL9m7yWgeBDin
+         QcpGbxlxXRe5XZez2Hn62xToX2WRFqBhKbz53d6/tVqsDQUYGhU73SUOMSv7k9dnNU1G
+         4ivwcImBPdo5hlVjskcr52/z2jLLfJiF8+gVWAtCvVXWQpB6JlKdJbU9FLRxLpJiG5TQ
+         29bwrR1t+e3S7U+tx89IIzOkthJeuCdMXdh/C92qBb8z2iWwz/lZmRcf1OnHqDWfwmXp
+         7J3YUN3vVC6h2quhQrGmEXb1W6+BKzrHqQcKOrPiOpT9rkuD4w0UNM3+6XDaAiM0qjyO
+         j7XQ==
+X-Gm-Message-State: AOAM531Tc3Gy8qjS/8J4ni4V+2LGp7GkwViiq/iJHjoOMZY0LpNZMO6m
+        Fzeis957YTOXBA/YQr6BsGOso0Rrh56KuwcxyWA=
+X-Google-Smtp-Source: ABdhPJxrZ2+g1wyHgUPE+Lqk0NHnHECdUUUoD09e7FwHZdZL4DKM4pRGjb/dH4SrAX9X/k5z9rUPAOVP+tfkqFa+e1U=
+X-Received: by 2002:a05:6e02:190e:: with SMTP id w14mr4343381ilu.71.1644716856565;
+ Sat, 12 Feb 2022 17:47:36 -0800 (PST)
 MIME-Version: 1.0
-References: <20220211103415.2737789-1-irogers@google.com> <20220211103415.2737789-4-irogers@google.com>
- <YgaZSk8h6rQ6MgLy@kernel.org> <CAP-5=fWZTmbQpmoXRKt9HdMU-E_B2uo5b4BHOW6RC6w5VkQ0AQ@mail.gmail.com>
- <Yga3JNhTfSBR3btI@kernel.org> <CAP-5=fVb=1prv6kkUzJRiPNSsudBhU1+YLBqnBrWiut3XQLJqg@mail.gmail.com>
- <YgfW1SOXN++UZRKj@kernel.org> <YgfXJehuPAaRgkGy@kernel.org>
-In-Reply-To: <YgfXJehuPAaRgkGy@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Sat, 12 Feb 2022 12:59:09 -0800
-Message-ID: <CAP-5=fXayWj-6uBsheVLcxnvCkgPdr2yHp4Qvt2JftzL0OKaPA@mail.gmail.com>
-Subject: Re: [PATCH v3 03/22] perf dso: Make lock error check and add BUG_ONs
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@collabora.com>,
-        James Clark <james.clark@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
-        Song Liu <song@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Miaoqian Lin <linmq006@gmail.com>,
-        Stephen Brennan <stephen.s.brennan@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        German Gomez <german.gomez@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Eric Dumazet <edumazet@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Hao Luo <haoluo@google.com>, eranian@google.com
+References: <20220212155125.3406232-1-andrii@kernel.org> <Ygf56M45VuWfippn@krava>
+In-Reply-To: <Ygf56M45VuWfippn@krava>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Sat, 12 Feb 2022 17:47:25 -0800
+Message-ID: <CAEf4Bzav96MoZh08s7UZfnLQPTRbF+UvuWA75r0GPkYTRGdsYg@mail.gmail.com>
+Subject: Re: [PATCH v6 perf/core 0/2] perf: stop using deprecated bpf APIs
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     Andrii Nakryiko <andrii@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Christy Lee <christylee@fb.com>,
+        Jiri Olsa <jolsa@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Feb 12, 2022 at 7:50 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Sat, Feb 12, 2022 at 10:18 AM Jiri Olsa <olsajiri@gmail.com> wrote:
 >
-> Em Sat, Feb 12, 2022 at 12:48:37PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Fri, Feb 11, 2022 at 11:35:05AM -0800, Ian Rogers escreveu:
-> > > On Fri, Feb 11, 2022 at 11:21 AM Arnaldo Carvalho de Melo
-> > > <acme@kernel.org> wrote:
-> > > >
-> > > > Em Fri, Feb 11, 2022 at 09:43:19AM -0800, Ian Rogers escreveu:
-> > > > > On Fri, Feb 11, 2022 at 9:13 AM Arnaldo Carvalho de Melo
-> > > > > <acme@kernel.org> wrote:
-> > > > > >
-> > > > > > Em Fri, Feb 11, 2022 at 02:33:56AM -0800, Ian Rogers escreveu:
-> > > > > > > Make the pthread mutex on dso use the error check type. This allows
-> > > > > > > deadlock checking via the return type. Assert the returned value from
-> > > > > > > mutex lock is always 0.
-> > > > > >
-> > > > > > I think this is too blunt/pervasive source code wise, perhaps we should
-> > > > > > wrap this like its done with rwsem in tools/perf/util/rwsem.h to get
-> > > > > > away from pthreads primitives and make the source code look more like
-> > > > > > a kernel one and then, taking advantage of the so far ideologic
-> > > > > > needless indirection, add this BUG_ON if we build with "DEBUG=1" or
-> > > > > > something, wdyt?
-> > > > >
-> > > >
-> > > > > My concern with semaphores is that they are a concurrency primitive
-> > > >
-> > > > I'm not suggesting we switch over to semaphores, just to use the same
-> > > > technique of wrapping pthread_mutex_t with some other API that then
-> > > > allows us to add these BUG_ON() calls without polluting the source code
-> > > > in many places.
-> > >
-> > > Sounds simple enough and would ensure consistency too. I can add it to
-> > > the front of this set of changes. A different approach would be to
-> > > take what's here and then refactor and cleanup as a follow on patch
-> > > set. I'd prefer that as the size of this set of changes is already
-> > > larger than I like - albeit that most of it is just introducing the
+> On Sat, Feb 12, 2022 at 07:51:23AM -0800, Andrii Nakryiko wrote:
+> > libbpf's bpf_prog_load() and bpf__object_next() APIs are deprecated.
+> > remove perf's usage of these deprecated functions. After this patch
+> > set, the only remaining libbpf deprecated APIs in perf would be
+> > bpf_program__set_prep() and bpf_program__nth_fd().
 > >
-> > So, the first 4 patches in this series were already merged, as they are
-> > just prep work that don't add clutter, having those in the front of the
-> > patchkit helps picking up the low hanging fruit.
+> > v5 -> v6:
+> >   - rebase onto perf/core tree (Arnaldo);
 >
-> Forgot to mention, I merged, tested and alreay published it in
-> perf/core, i.e. no more rebases for that lot, that is how it will get
-> into 5.18.
+> looks good, tests are passing for me
+
+great, thanks for checking!
+
 >
-> Alexei's threaded record patchkit is there as well, BTW, so should help
-> reducing the possibility of clashes with your (and others) work.
-
-Thanks Arnaldo,
-
-I'm working off-of your perf/core branch and pushing things there will
-mean they disappear from the v4 patch set when I rebase. For v4 I
-have, separating out the pthread BUG_ONs, the map__map_ip changes (do
-the obvious fix in its own patch so that we can easily blame it, keep
-the code looking sane) and I'll try to make sure I'm addressing all
-feedback on the changes.
-
-I've been really happy to be getting feedback, the feedback is coming
-fast so it is easy for me to take action upon it. I feel bad this
-change is so large and quite a lot to look through. This does mean it
-is more than just a toy. The approach solves the same problem that
-would motivate the use of Rust and C++ for perf. That's not to say we
-should never do those things, but any transition will be helped by
-having the best C code base we can get together. If one day we're
-running perf top in less than 1GB of RAM with stability, then the
-churn here will have been worthwhile.
-
-Thanks,
-Ian
-
-> - Arnaldo
+> jirka
 >
-> > I usually try to pick even if it comes later, to make progress, I'll
-> > recheck the rest of the patchkit to see what more I can pick to reduce
-> > its size.
+> > v4 -> v5:
+> >   - add bpf_perf_object__add() and use it where appropriate (Jiri);
+> >   - use __maybe_unused in first patch;
+> > v3 -> v4:
+> >   - Fixed commit title
+> >   - Added weak definition for deprecated function
+> > v2 -> v3:
+> >   - Fixed commit message to use upstream perf
+> > v1 -> v2:
+> >   - Added missing commit message
+> >   - Added more details to commit message and added steps to reproduce
+> >     original test case.
 > >
-> > - Arnaldo
+> > Christy Lee (2):
+> >   perf: Stop using deprecated bpf_load_program() API
+> >   perf: Stop using deprecated bpf_object__next() API
 > >
-> > > use of functions to access struct variables. Perhaps I just remove the
-> > > BUG_ON and pthread changes here, we work to get this landed and in a
-> > > separate set of patches clean up the pthread mutex code to have better
-> > > bug checking.
-> > >
-> > > Thanks,
-> > > Ian
-> > >
-> > > > - Arnaldo
-> > > >
-> > > > > that has more flexibility and power than a mutex. I like a mutex as it
-> > > > > is quite obvious what is going on and that is good from a tooling
-> > > > > point of view. A deadlock with two mutexes is easy to understand. On a
-> > > > > semaphore, were we using it like a condition variable? There's more to
-> > > > > figure out. I also like the idea of compiling the perf command with
-> > > > > emscripten, we could then generate say perf annotate output in your
-> > > > > web browser. Emscripten has implementations of standard posix
-> > > > > libraries including pthreads, but we may need to have two approaches
-> > > > > in the perf code if we want to compile with emscripten and use
-> > > > > semaphores when targeting linux.
-> > > > >
-> > > > > Where this change comes from is that I worried that extending the
-> > > > > locked regions to cover the race that'd been found would then expose
-> > > > > the kind of recursive deadlock that pthread mutexes all too willingly
-> > > > > allow. With this code we at least see the bug and don't just hang. I
-> > > > > don't think we need the change to the mutexes for this change, but we
-> > > > > do need to extend the regions to fix the data race.
-> > > > >
-> > > > > Let me know how you prefer it and I can roll it into a v4 version.
-> > > > >
-> > > > > Thanks,
-> > > > > Ian
-> > > > >
-> > > > > > - Arnaldo
-> > > > > >
-> > > > > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > > > > ---
-> > > > > > >  tools/perf/util/dso.c    | 12 +++++++++---
-> > > > > > >  tools/perf/util/symbol.c |  2 +-
-> > > > > > >  2 files changed, 10 insertions(+), 4 deletions(-)
-> > > > > > >
-> > > > > > > diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> > > > > > > index 9cc8a1772b4b..6beccffeef7b 100644
-> > > > > > > --- a/tools/perf/util/dso.c
-> > > > > > > +++ b/tools/perf/util/dso.c
-> > > > > > > @@ -784,7 +784,7 @@ dso_cache__free(struct dso *dso)
-> > > > > > >       struct rb_root *root = &dso->data.cache;
-> > > > > > >       struct rb_node *next = rb_first(root);
-> > > > > > >
-> > > > > > > -     pthread_mutex_lock(&dso->lock);
-> > > > > > > +     BUG_ON(pthread_mutex_lock(&dso->lock) != 0);
-> > > > > > >       while (next) {
-> > > > > > >               struct dso_cache *cache;
-> > > > > > >
-> > > > > > > @@ -830,7 +830,7 @@ dso_cache__insert(struct dso *dso, struct dso_cache *new)
-> > > > > > >       struct dso_cache *cache;
-> > > > > > >       u64 offset = new->offset;
-> > > > > > >
-> > > > > > > -     pthread_mutex_lock(&dso->lock);
-> > > > > > > +     BUG_ON(pthread_mutex_lock(&dso->lock) != 0);
-> > > > > > >       while (*p != NULL) {
-> > > > > > >               u64 end;
-> > > > > > >
-> > > > > > > @@ -1259,6 +1259,8 @@ struct dso *dso__new_id(const char *name, struct dso_id *id)
-> > > > > > >       struct dso *dso = calloc(1, sizeof(*dso) + strlen(name) + 1);
-> > > > > > >
-> > > > > > >       if (dso != NULL) {
-> > > > > > > +             pthread_mutexattr_t lock_attr;
-> > > > > > > +
-> > > > > > >               strcpy(dso->name, name);
-> > > > > > >               if (id)
-> > > > > > >                       dso->id = *id;
-> > > > > > > @@ -1286,8 +1288,12 @@ struct dso *dso__new_id(const char *name, struct dso_id *id)
-> > > > > > >               dso->root = NULL;
-> > > > > > >               INIT_LIST_HEAD(&dso->node);
-> > > > > > >               INIT_LIST_HEAD(&dso->data.open_entry);
-> > > > > > > -             pthread_mutex_init(&dso->lock, NULL);
-> > > > > > > +             pthread_mutexattr_init(&lock_attr);
-> > > > > > > +             pthread_mutexattr_settype(&lock_attr, PTHREAD_MUTEX_ERRORCHECK);
-> > > > > > > +             pthread_mutex_init(&dso->lock, &lock_attr);
-> > > > > > > +             pthread_mutexattr_destroy(&lock_attr);
-> > > > > > >               refcount_set(&dso->refcnt, 1);
-> > > > > > > +
-> > > > > > >       }
-> > > > > > >
-> > > > > > >       return dso;
-> > > > > > > diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> > > > > > > index b2ed3140a1fa..43f47532696f 100644
-> > > > > > > --- a/tools/perf/util/symbol.c
-> > > > > > > +++ b/tools/perf/util/symbol.c
-> > > > > > > @@ -1783,7 +1783,7 @@ int dso__load(struct dso *dso, struct map *map)
-> > > > > > >       }
-> > > > > > >
-> > > > > > >       nsinfo__mountns_enter(dso->nsinfo, &nsc);
-> > > > > > > -     pthread_mutex_lock(&dso->lock);
-> > > > > > > +     BUG_ON(pthread_mutex_lock(&dso->lock) != 0);
-> > > > > > >
-> > > > > > >       /* check again under the dso->lock */
-> > > > > > >       if (dso__loaded(dso)) {
-> > > > > > > --
-> > > > > > > 2.35.1.265.g69c8d7142f-goog
-> > > > > >
-> > > > > > --
-> > > > > >
-> > > > > > - Arnaldo
-> > > >
-> > > > --
-> > > >
-> > > > - Arnaldo
+> >  tools/perf/tests/bpf.c       | 14 ++----
+> >  tools/perf/util/bpf-event.c  | 13 +++++
+> >  tools/perf/util/bpf-loader.c | 98 +++++++++++++++++++++++++++++-------
+> >  3 files changed, 96 insertions(+), 29 deletions(-)
 > >
 > > --
+> > 2.30.2
 > >
-> > - Arnaldo
->
-> --
->
-> - Arnaldo
