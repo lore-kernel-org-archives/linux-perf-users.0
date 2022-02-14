@@ -2,115 +2,72 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B51C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Feb 2022 12:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F40C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Feb 2022 16:55:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353718AbiBNMzb (ORCPT
+        id S1356797AbiBNQzK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Feb 2022 07:55:31 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:46424 "EHLO
+        Mon, 14 Feb 2022 11:55:10 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:35576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353712AbiBNMzb (ORCPT
+        with ESMTP id S1356760AbiBNQzD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Feb 2022 07:55:31 -0500
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEEC49FF5;
-        Mon, 14 Feb 2022 04:55:23 -0800 (PST)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Jy414298PzccxJ;
-        Mon, 14 Feb 2022 20:54:16 +0800 (CST)
-Received: from [10.67.102.169] (10.67.102.169) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Mon, 14 Feb 2022 20:55:20 +0800
-CC:     <prime.zeng@huawei.com>, <liuqi115@huawei.com>,
-        <zhangshaokun@hisilicon.com>, <linuxarm@huawei.com>,
-        <song.bao.hua@hisilicon.com>
-Subject: Re: [PATCH v3 8/8] iommu/arm-smmu-v3: Make default domain type of
- HiSilicon PTT device to identity
-To:     Yicong Yang <yangyicong@hisilicon.com>,
-        <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <lorenzo.pieralisi@arm.com>,
-        <will@kernel.org>, <mark.rutland@arm.com>,
-        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
-        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
-        <jonathan.cameron@huawei.com>, <daniel.thompson@linaro.org>,
-        <joro@8bytes.org>, <john.garry@huawei.com>,
-        <shameerali.kolothum.thodi@huawei.com>, <robin.murphy@arm.com>,
-        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>
-References: <20220124131118.17887-1-yangyicong@hisilicon.com>
- <20220124131118.17887-9-yangyicong@hisilicon.com>
-From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <e58888c1-5448-77c7-7f6c-f5db999a888f@huawei.com>
-Date:   Mon, 14 Feb 2022 20:55:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        Mon, 14 Feb 2022 11:55:03 -0500
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 884C665164
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Feb 2022 08:54:55 -0800 (PST)
+Received: by mail-pf1-x430.google.com with SMTP id e17so10721175pfv.5
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Feb 2022 08:54:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=xep8r8FwQNGDUtT6MCNkLvujmr+CgnGH/3gJNw8UNm4=;
+        b=W+rtIp0yg6rctoHuUv1y959WovbZOxLomGIDFiThDZZvBevWps1zd4NNGj85uzpUN/
+         9Xu7zbdJPtJ+YCPCRbYyxBh/bcv/Is/Mm751xSV4LAWpzAgnMqvi2d0cxulcUb/yJDku
+         VHtBf6lfAIgNAUCkZs0OWeok9PjX2ButslQENiuKHYZ1kwQt1dbqejcOWnag8O/+PEyN
+         pubhz4u+KYN2EUQIHCKMiBfKjvOTZacxiD3UTVZSra+59MAC+T1wm6Lt4kbZSsA5XU6l
+         sC23soKp2mczWZtmPDelCmlrfuFmjREfNCwcgUKOvrG8Smw5oWRrTef+XEq1lYmNHySQ
+         YQ7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=xep8r8FwQNGDUtT6MCNkLvujmr+CgnGH/3gJNw8UNm4=;
+        b=G17MDPIGH0GL5lWoLGpwwFG9ayMfnnh3GbmhDd7rV+rGjB2e/5pU9m+nC9Oo72aXJ5
+         r0u04/+f817rFQ7/sUfLzi+dDPaZwkkWhFozk/7w6WgmTNOESF/mz48p1OPhqkZ95ckI
+         9E+elkA3zyMphAQS3ygPJo4Wn+keZ26nAiGnrBpH8vcDlumHXYHK/rq68EhCEWlHccRk
+         62UPEG9VvhYRqsmbiOiBjJtTPkE5/qz7s9DSSWoEIPdR93TmJOdRAlXGdeNH0N5aGYj3
+         mwNQfH++0eglM4x6lGjwLyQMhR8CaBnUZecAlh00PRAK7+WoppT6UVYfvic1X9OAwy/R
+         ZbxQ==
+X-Gm-Message-State: AOAM530Qlgkn21eozzmW+iBsh4XXTgSu9kdvL11ayPIIVkpZt1q+Wqll
+        8Xym0qjWiD8KklKf8sWoi/FmmJDJQnIgR9EtkqZ0BNI9GnE=
+X-Google-Smtp-Source: ABdhPJx+dCUlStqQhuQFDVYboOsIXFEFVTTzGJM4DSj5GZ15wmYM+yKgh1C/mDpxi8N5PQFN47vVgYYlNO33slpU1OU=
+X-Received: by 2002:a62:1c8c:: with SMTP id c134mr445143pfc.62.1644857694913;
+ Mon, 14 Feb 2022 08:54:54 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20220124131118.17887-9-yangyicong@hisilicon.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
+From:   Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
+Date:   Mon, 14 Feb 2022 18:54:38 +0200
+Message-ID: <CAPpZLN6+BPu=Y_iCXBV_Uqg_mcY2LEBtg+_7r+oJqWkG8pNSGA@mail.gmail.com>
+Subject: libperf: CPU map question
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Robin,
+Hello,
+I'm trying to use libperf as an interface to perf from an application,
+but I face some difficulties.  I cannot understand how perf_cpu_map_
+APIs should be used. My use case is:
+ I want to iterate over the CPUs from the map. I'm using
+perf_evsel__cpus() API to get the map and perf_cpu_map__for_each_cpu()
+macros to iterate over the map. However, using that logic I get a
+struct perf_cpu for each CPU from the map. That structure seems to be
+private and I cannot access the actual .cpu id. Am I missing something
+?
+Will be glad for any help and clarification.
 
-Is this quirk ok with the SMMU v3 driver? Just want to confirm that I'm on the
-right way to dealing with the issue of our device.
-
-Thanks.
-
-On 2022/1/24 21:11, Yicong Yang wrote:
-> The DMA of HiSilicon PTT device can only work with identical
-> mapping. So add a quirk for the device to force the domain
-> passthrough.
-> 
-> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-> ---
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> index 6dc6d8b6b368..6f67a2b1dd27 100644
-> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> @@ -2838,6 +2838,21 @@ static int arm_smmu_dev_disable_feature(struct device *dev,
->  	}
->  }
->  
-> +#define IS_HISI_PTT_DEVICE(pdev)	((pdev)->vendor == PCI_VENDOR_ID_HUAWEI && \
-> +					 (pdev)->device == 0xa12e)
-> +
-> +static int arm_smmu_def_domain_type(struct device *dev)
-> +{
-> +	if (dev_is_pci(dev)) {
-> +		struct pci_dev *pdev = to_pci_dev(dev);
-> +
-> +		if (IS_HISI_PTT_DEVICE(pdev))
-> +			return IOMMU_DOMAIN_IDENTITY;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static struct iommu_ops arm_smmu_ops = {
->  	.capable		= arm_smmu_capable,
->  	.domain_alloc		= arm_smmu_domain_alloc,
-> @@ -2863,6 +2878,7 @@ static struct iommu_ops arm_smmu_ops = {
->  	.sva_unbind		= arm_smmu_sva_unbind,
->  	.sva_get_pasid		= arm_smmu_sva_get_pasid,
->  	.page_response		= arm_smmu_page_response,
-> +	.def_domain_type	= arm_smmu_def_domain_type,
->  	.pgsize_bitmap		= -1UL, /* Restricted during device attach */
->  	.owner			= THIS_MODULE,
->  };
-> 
+Thanks!
+-- 
+Tzvetomir (Ceco) Stoyanov
+VMware Open Source Technology Center
