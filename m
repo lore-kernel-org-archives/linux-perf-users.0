@@ -2,56 +2,71 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88907C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Feb 2022 20:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAE5C433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Feb 2022 21:23:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229530AbiBNU5B (ORCPT
+        id S231213AbiBNVXc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Feb 2022 15:57:01 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:42764 "EHLO
+        Mon, 14 Feb 2022 16:23:32 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbiBNU4y (ORCPT
+        with ESMTP id S231180AbiBNVXB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Feb 2022 15:56:54 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2919010783E
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Feb 2022 12:56:32 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2D0546117B
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Feb 2022 19:51:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C2E6C340E9;
-        Mon, 14 Feb 2022 19:51:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644868303;
-        bh=ZRGpjhDee77zeXixyyI14bo9gbHLwZJvAU0JEbzzZpA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=APkoQm3XKjiRzvP9WOj3+oB8PFggb3P3gQx/6FSl6WYolw27nskZCm9EcU9OBkRWd
-         qWdiTekvQBPVY3LX44tXuZ5uOgQenyITkoKc3108mhQjxcsy88wSnNW+9EV+6mRYgw
-         SRTWGSvVpX0ALdmHbWtdglhQL3KFVce9liW5LmzzY8qGkgA7rzyAISWNcOrQbU3xC4
-         r2glMT+G7jaU6y8JFjOkSfpB9slyyHB5/Xc+my4CrVJiQKKV410X0twxmpCV2OZBFh
-         zdXtM0ERZcxwrtkcw8G9WvC+tg9oiN06gtcB+i3oDJK++j7v1BnNhGml3qLsOS+a5o
-         pCMQahAk+cbdA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3EC1C400FE; Mon, 14 Feb 2022 16:51:41 -0300 (-03)
-Date:   Mon, 14 Feb 2022 16:51:41 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org
+        Mon, 14 Feb 2022 16:23:01 -0500
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 532E81342E7
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Feb 2022 13:22:45 -0800 (PST)
+Received: by mail-ed1-x52b.google.com with SMTP id t21so764229edd.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Feb 2022 13:22:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=XB8nX4qqeYPSQCXZaBRzgOjasSxQu6pww/aZUYeNEnI=;
+        b=qXehU1OMoh1YJQFkMMA9oZEdZsz3o7KBjve159mRbf/KZ+pq8N8DQ0F+BSQRfdBi/a
+         xbvKZtS8ofpo0GpL9qpDM1PUXHWZ4HLedBw92mXMGZEcxzS+zZAINmRsnsQ7AwYn0Xff
+         +jgQqNkKIqQ6UDM4F+j42H8F6cXuXvaNA8GH7wev1XLPWcOmH3ikNtDg5jHNwGtDZUin
+         12j3QwTQS3AIlj5La5dXJvvxTglUAGGsZrT3gsld5VrMzegoXsTlKNec/A4akoj1vBEq
+         8IfElal99c+HAEbqVXPZdToM8ciN8aNXRwkDY4hYuTft6Kl4YOM0kE4eLXltNScwUTCz
+         vPDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XB8nX4qqeYPSQCXZaBRzgOjasSxQu6pww/aZUYeNEnI=;
+        b=FSYa0IsOY7BOI9xnZNdR174L/5XvkiCfa4yTNWTEuvCR1rXEa+bEmZaf8c6Zq5SIYF
+         Qthj6JyzkYo2tT7gAVbqbug6mFT4WsQ3Td60lPMsh93IClUOTxwmhVAu4CNIXN8rWwsf
+         ZIR5+xGlv1MAdWpMZZTi6RCSU9WRHRwlcY7CGx3bki7rRkBPo1waIWy7REGvP2RO/XZY
+         TlyJtuquj0W+40AT+ONjjkNefK1/fSymdEJLlAKfmIBF5oeyg7yZ53AWWHU1KqV6qGCE
+         I2TLOfK82au5dbTbReOE6SSP6cZAJtbLEJ/SeOAS/NK3TDxiuiju0q0HZRuIYoA1KStB
+         d2AQ==
+X-Gm-Message-State: AOAM531Kbs0uN8MzVTDycWTmDAlH9xDaJdgFYmGT8sfw6fMGqOyJf6WF
+        2bxSeSLXafIcz/AERxfHxqIApjZPpOnf6Q==
+X-Google-Smtp-Source: ABdhPJzm+t1m/9jYRAfRpnScd8Vbuj+e2AZ+M7VMDlY1v+myFLFZw+y/REjxrzik+kFknGzEdi47RQ==
+X-Received: by 2002:a50:fb19:: with SMTP id d25mr810968edq.12.1644873763828;
+        Mon, 14 Feb 2022 13:22:43 -0800 (PST)
+Received: from krava ([83.240.63.12])
+        by smtp.gmail.com with ESMTPSA id q12sm15694522edv.99.2022.02.14.13.22.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Feb 2022 13:22:43 -0800 (PST)
+Date:   Mon, 14 Feb 2022 22:22:41 +0100
+From:   Jiri Olsa <olsajiri@gmail.com>
+To:     Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+        Ian Rogers <irogers@google.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org
 Subject: Re: libperf: CPU map question
-Message-ID: <Ygqyze02nC5eaEBt@kernel.org>
+Message-ID: <YgrIId0p9KoE9zPI@krava>
 References: <CAPpZLN6+BPu=Y_iCXBV_Uqg_mcY2LEBtg+_7r+oJqWkG8pNSGA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <CAPpZLN6+BPu=Y_iCXBV_Uqg_mcY2LEBtg+_7r+oJqWkG8pNSGA@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Feb 14, 2022 at 06:54:38PM +0200, Tzvetomir Stoyanov escreveu:
+On Mon, Feb 14, 2022 at 06:54:38PM +0200, Tzvetomir Stoyanov wrote:
 > Hello,
 > I'm trying to use libperf as an interface to perf from an application,
 > but I face some difficulties.  I cannot understand how perf_cpu_map_
@@ -64,6 +79,49 @@ Em Mon, Feb 14, 2022 at 06:54:38PM +0200, Tzvetomir Stoyanov escreveu:
 > ?
 > Will be glad for any help and clarification.
 
-Jiri, can you help?
+yea it's a bug ;-) there was a change recently that wrapped cpu
+in struct perf_cpu to distinguish it from cpu indexes
 
-- Arnaldo
+  6d18804b963b perf cpumap: Give CPUs their own type
+
+not sure there's workaround for that.. but I think change below should fix it
+
+Ian, would this be ok? we need to add some test for this
+
+jirka
+
+
+---
+diff --git a/tools/lib/perf/include/internal/cpumap.h b/tools/lib/perf/include/internal/cpumap.h
+index 581f9ffb4237..1973a18c096b 100644
+--- a/tools/lib/perf/include/internal/cpumap.h
++++ b/tools/lib/perf/include/internal/cpumap.h
+@@ -3,11 +3,7 @@
+ #define __LIBPERF_INTERNAL_CPUMAP_H
+ 
+ #include <linux/refcount.h>
+-
+-/** A wrapper around a CPU to avoid confusion with the perf_cpu_map's map's indices. */
+-struct perf_cpu {
+-	int cpu;
+-};
++#include <perf/cpumap.h>
+ 
+ /**
+  * A sized, reference counted, sorted array of integers representing CPU
+diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
+index 15b8faafd615..4a2edbdb5e2b 100644
+--- a/tools/lib/perf/include/perf/cpumap.h
++++ b/tools/lib/perf/include/perf/cpumap.h
+@@ -7,6 +7,11 @@
+ #include <stdio.h>
+ #include <stdbool.h>
+ 
++/** A wrapper around a CPU to avoid confusion with the perf_cpu_map's map's indices. */
++struct perf_cpu {
++	int cpu;
++};
++
+ LIBPERF_API struct perf_cpu_map *perf_cpu_map__dummy_new(void);
+ LIBPERF_API struct perf_cpu_map *perf_cpu_map__default_new(void);
+ LIBPERF_API struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list);
