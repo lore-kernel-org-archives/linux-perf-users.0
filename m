@@ -2,72 +2,110 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F40C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Feb 2022 16:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1B9C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Feb 2022 19:02:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356797AbiBNQzK (ORCPT
+        id S229510AbiBNTCb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Feb 2022 11:55:10 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:35576 "EHLO
+        Mon, 14 Feb 2022 14:02:31 -0500
+Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:40686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356760AbiBNQzD (ORCPT
+        with ESMTP id S229991AbiBNTCZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Feb 2022 11:55:03 -0500
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 884C665164
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Feb 2022 08:54:55 -0800 (PST)
-Received: by mail-pf1-x430.google.com with SMTP id e17so10721175pfv.5
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Feb 2022 08:54:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=xep8r8FwQNGDUtT6MCNkLvujmr+CgnGH/3gJNw8UNm4=;
-        b=W+rtIp0yg6rctoHuUv1y959WovbZOxLomGIDFiThDZZvBevWps1zd4NNGj85uzpUN/
-         9Xu7zbdJPtJ+YCPCRbYyxBh/bcv/Is/Mm751xSV4LAWpzAgnMqvi2d0cxulcUb/yJDku
-         VHtBf6lfAIgNAUCkZs0OWeok9PjX2ButslQENiuKHYZ1kwQt1dbqejcOWnag8O/+PEyN
-         pubhz4u+KYN2EUQIHCKMiBfKjvOTZacxiD3UTVZSra+59MAC+T1wm6Lt4kbZSsA5XU6l
-         sC23soKp2mczWZtmPDelCmlrfuFmjREfNCwcgUKOvrG8Smw5oWRrTef+XEq1lYmNHySQ
-         YQ7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=xep8r8FwQNGDUtT6MCNkLvujmr+CgnGH/3gJNw8UNm4=;
-        b=G17MDPIGH0GL5lWoLGpwwFG9ayMfnnh3GbmhDd7rV+rGjB2e/5pU9m+nC9Oo72aXJ5
-         r0u04/+f817rFQ7/sUfLzi+dDPaZwkkWhFozk/7w6WgmTNOESF/mz48p1OPhqkZ95ckI
-         9E+elkA3zyMphAQS3ygPJo4Wn+keZ26nAiGnrBpH8vcDlumHXYHK/rq68EhCEWlHccRk
-         62UPEG9VvhYRqsmbiOiBjJtTPkE5/qz7s9DSSWoEIPdR93TmJOdRAlXGdeNH0N5aGYj3
-         mwNQfH++0eglM4x6lGjwLyQMhR8CaBnUZecAlh00PRAK7+WoppT6UVYfvic1X9OAwy/R
-         ZbxQ==
-X-Gm-Message-State: AOAM530Qlgkn21eozzmW+iBsh4XXTgSu9kdvL11ayPIIVkpZt1q+Wqll
-        8Xym0qjWiD8KklKf8sWoi/FmmJDJQnIgR9EtkqZ0BNI9GnE=
-X-Google-Smtp-Source: ABdhPJx+dCUlStqQhuQFDVYboOsIXFEFVTTzGJM4DSj5GZ15wmYM+yKgh1C/mDpxi8N5PQFN47vVgYYlNO33slpU1OU=
-X-Received: by 2002:a62:1c8c:: with SMTP id c134mr445143pfc.62.1644857694913;
- Mon, 14 Feb 2022 08:54:54 -0800 (PST)
+        Mon, 14 Feb 2022 14:02:25 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9F81E0AC3;
+        Mon, 14 Feb 2022 11:02:09 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A22DB6100E;
+        Mon, 14 Feb 2022 18:58:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C89C5C340EB;
+        Mon, 14 Feb 2022 18:58:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1644865111;
+        bh=VukAa+dZeTjvFUjn9roKAh250Gj/iOALvuK2MqtR2yM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OJreXoF9oRYe1h5H0mpwNLQjOWgriyAjB5CVerjXtooSDmps/Zi7FB3jTOIQd1gQA
+         Ip1nWGzhvTBZnDvy2Z8YY/UJATwqzE6A0v/TqmUnsm+VzfDlllFVaeSAGGaIULTu0a
+         1HbiO5sZ3zZ93L7HKDMKr+GYmz4H/bH0Pm+sZnCx6yGpY2gw+iXn6iGXh+sBXqtWp9
+         p74tT7/v2hAmxrgHcCFqPCVPEfIrrTneMlQmTXswmBIDMOCyRMIcs9NS394bVxIZ3G
+         kLbIKRa34uj7RpkeBU305qjPaksZjMm06S7VsGK5ir8EaG50o7Q1IZAVEnsjCB1hpf
+         eZ28YYdUXsWPw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 4592D400FE; Mon, 14 Feb 2022 15:58:28 -0300 (-03)
+Date:   Mon, 14 Feb 2022 15:58:28 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Jiri Olsa <olsajiri@gmail.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Christy Lee <christylee@fb.com>,
+        Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH v6 perf/core 0/2] perf: stop using deprecated bpf APIs
+Message-ID: <YgqmVOhBzkb3EyYh@kernel.org>
+References: <20220212155125.3406232-1-andrii@kernel.org>
+ <Ygf56M45VuWfippn@krava>
+ <CAEf4Bzav96MoZh08s7UZfnLQPTRbF+UvuWA75r0GPkYTRGdsYg@mail.gmail.com>
 MIME-Version: 1.0
-From:   Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
-Date:   Mon, 14 Feb 2022 18:54:38 +0200
-Message-ID: <CAPpZLN6+BPu=Y_iCXBV_Uqg_mcY2LEBtg+_7r+oJqWkG8pNSGA@mail.gmail.com>
-Subject: libperf: CPU map question
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4Bzav96MoZh08s7UZfnLQPTRbF+UvuWA75r0GPkYTRGdsYg@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
-I'm trying to use libperf as an interface to perf from an application,
-but I face some difficulties.  I cannot understand how perf_cpu_map_
-APIs should be used. My use case is:
- I want to iterate over the CPUs from the map. I'm using
-perf_evsel__cpus() API to get the map and perf_cpu_map__for_each_cpu()
-macros to iterate over the map. However, using that logic I get a
-struct perf_cpu for each CPU from the map. That structure seems to be
-private and I cannot access the actual .cpu id. Am I missing something
-?
-Will be glad for any help and clarification.
+Em Sat, Feb 12, 2022 at 05:47:25PM -0800, Andrii Nakryiko escreveu:
+> On Sat, Feb 12, 2022 at 10:18 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+> >
+> > On Sat, Feb 12, 2022 at 07:51:23AM -0800, Andrii Nakryiko wrote:
+> > > libbpf's bpf_prog_load() and bpf__object_next() APIs are deprecated.
+> > > remove perf's usage of these deprecated functions. After this patch
+> > > set, the only remaining libbpf deprecated APIs in perf would be
+> > > bpf_program__set_prep() and bpf_program__nth_fd().
+> > >
+> > > v5 -> v6:
+> > >   - rebase onto perf/core tree (Arnaldo);
+> >
+> > looks good, tests are passing for me
+> 
+> great, thanks for checking!
 
-Thanks!
+All tests passed, patches merged and pushed out to perf/core, thanks!
+
+- Arnaldo
+ 
+> >
+> > jirka
+> >
+> > > v4 -> v5:
+> > >   - add bpf_perf_object__add() and use it where appropriate (Jiri);
+> > >   - use __maybe_unused in first patch;
+> > > v3 -> v4:
+> > >   - Fixed commit title
+> > >   - Added weak definition for deprecated function
+> > > v2 -> v3:
+> > >   - Fixed commit message to use upstream perf
+> > > v1 -> v2:
+> > >   - Added missing commit message
+> > >   - Added more details to commit message and added steps to reproduce
+> > >     original test case.
+> > >
+> > > Christy Lee (2):
+> > >   perf: Stop using deprecated bpf_load_program() API
+> > >   perf: Stop using deprecated bpf_object__next() API
+> > >
+> > >  tools/perf/tests/bpf.c       | 14 ++----
+> > >  tools/perf/util/bpf-event.c  | 13 +++++
+> > >  tools/perf/util/bpf-loader.c | 98 +++++++++++++++++++++++++++++-------
+> > >  3 files changed, 96 insertions(+), 29 deletions(-)
+> > >
+> > > --
+> > > 2.30.2
+> > >
+
 -- 
-Tzvetomir (Ceco) Stoyanov
-VMware Open Source Technology Center
+
+- Arnaldo
