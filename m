@@ -2,157 +2,201 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CBAC433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Feb 2022 14:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9933AC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Feb 2022 14:29:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233879AbiBOO3s (ORCPT
+        id S238608AbiBOO3y (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Feb 2022 09:29:48 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:49450 "EHLO
+        Tue, 15 Feb 2022 09:29:54 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:49684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232774AbiBOO3r (ORCPT
+        with ESMTP id S232774AbiBOO3v (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Feb 2022 09:29:47 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 36EC9E1B4D;
-        Tue, 15 Feb 2022 06:29:36 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 78DC11396;
-        Tue, 15 Feb 2022 06:29:36 -0800 (PST)
-Received: from [10.57.70.89] (unknown [10.57.70.89])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 327793F718;
-        Tue, 15 Feb 2022 06:29:32 -0800 (PST)
-Message-ID: <161e5005-ea12-fde4-0e31-ec871d2fe591@arm.com>
-Date:   Tue, 15 Feb 2022 14:29:27 +0000
+        Tue, 15 Feb 2022 09:29:51 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8163E44AE;
+        Tue, 15 Feb 2022 06:29:40 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6E7AE61784;
+        Tue, 15 Feb 2022 14:29:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CB6CC340EB;
+        Tue, 15 Feb 2022 14:29:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1644935379;
+        bh=D5fzY5EQd1IDj4tgL8zZWtp6cbHxxDxIKh0qVmUriFI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bkRRkXJsd+pyznC9u7T32BjNdl3z2oPnKMI+XHrUw2G52N0WVMXeUMkJVKRMfsY9p
+         9k48yTrCoXzgxCyhl6G8ecacl8S2dM1sspkZAfNJPcqPqnFadc53e5jnGLcIN3kOPW
+         2N782DXztlbKs0n5qbzux5H56FjMD93PbiYczKuq226C80ShYkecOyUOT09hOtELWg
+         lQPKYyDdG+IPjlr2O95EGnwArKE4TJUrn0np9xMHMXnI8+4KUnSSsWOPQ0Z1f7TU0z
+         FF3IbLxdiBHlShNxO+qc97xRmnRWwRD8lq/keLOcQ1pebyr3OGgpHRf7jTRXtsp6HP
+         AZ7xOX/ypNb3w==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id E0333400FE; Tue, 15 Feb 2022 11:29:37 -0300 (-03)
+Date:   Tue, 15 Feb 2022 11:29:37 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     xaizek <xaizek@posteo.net>
+Cc:     Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] perf tui: Only support --tui with slang
+Message-ID: <Ygu40djM1MqAfkcF@kernel.org>
+References: <20220123191849.3655855-1-irogers@google.com>
+ <Ye3NTTt7CctUFRmk@zx-spectrum.none>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
- Thunderbird/91.6.0
-Subject: Re: [PATCH v3 8/8] iommu/arm-smmu-v3: Make default domain type of
- HiSilicon PTT device to identity
-Content-Language: en-GB
-To:     Will Deacon <will@kernel.org>
-Cc:     Yicong Yang <yangyicong@huawei.com>, mark.rutland@arm.com,
-        prime.zeng@huawei.com, alexander.shishkin@linux.intel.com,
-        linux-pci@vger.kernel.org, linuxarm@huawei.com,
-        Yicong Yang <yangyicong@hisilicon.com>,
-        daniel.thompson@linaro.org, peterz@infradead.org, mingo@redhat.com,
-        helgaas@kernel.org, liuqi115@huawei.com, mike.leach@linaro.org,
-        suzuki.poulose@arm.com, coresight@lists.linaro.org,
-        acme@kernel.org, zhangshaokun@hisilicon.com,
-        linux-arm-kernel@lists.infradead.org, mathieu.poirier@linaro.org,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, iommu@lists.linux-foundation.org,
-        leo.yan@linaro.org
-References: <20220124131118.17887-1-yangyicong@hisilicon.com>
- <20220124131118.17887-9-yangyicong@hisilicon.com>
- <e58888c1-5448-77c7-7f6c-f5db999a888f@huawei.com>
- <20220215130044.GA7154@willie-the-truck>
- <9018a1d9-4d42-3a99-dbc6-c55139abcb1e@arm.com>
- <20220215134232.GA7592@willie-the-truck>
-From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <20220215134232.GA7592@willie-the-truck>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Ye3NTTt7CctUFRmk@zx-spectrum.none>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2022-02-15 13:42, Will Deacon wrote:
-> On Tue, Feb 15, 2022 at 01:30:26PM +0000, Robin Murphy wrote:
->> On 2022-02-15 13:00, Will Deacon wrote:
->>> On Mon, Feb 14, 2022 at 08:55:20PM +0800, Yicong Yang wrote:
->>>> On 2022/1/24 21:11, Yicong Yang wrote:
->>>>> The DMA of HiSilicon PTT device can only work with identical
->>>>> mapping. So add a quirk for the device to force the domain
->>>>> passthrough.
->>>>>
->>>>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
->>>>> ---
->>>>>    drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 16 ++++++++++++++++
->>>>>    1 file changed, 16 insertions(+)
->>>>>
->>>>> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
->>>>> index 6dc6d8b6b368..6f67a2b1dd27 100644
->>>>> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
->>>>> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
->>>>> @@ -2838,6 +2838,21 @@ static int arm_smmu_dev_disable_feature(struct device *dev,
->>>>>    	}
->>>>>    }
->>>>> +#define IS_HISI_PTT_DEVICE(pdev)	((pdev)->vendor == PCI_VENDOR_ID_HUAWEI && \
->>>>> +					 (pdev)->device == 0xa12e)
->>>>> +
->>>>> +static int arm_smmu_def_domain_type(struct device *dev)
->>>>> +{
->>>>> +	if (dev_is_pci(dev)) {
->>>>> +		struct pci_dev *pdev = to_pci_dev(dev);
->>>>> +
->>>>> +		if (IS_HISI_PTT_DEVICE(pdev))
->>>>> +			return IOMMU_DOMAIN_IDENTITY;
->>>>> +	}
->>>>> +
->>>>> +	return 0;
->>>>> +}
->>>>> +
->>>>>    static struct iommu_ops arm_smmu_ops = {
->>>>>    	.capable		= arm_smmu_capable,
->>>>>    	.domain_alloc		= arm_smmu_domain_alloc,
->>>>> @@ -2863,6 +2878,7 @@ static struct iommu_ops arm_smmu_ops = {
->>>>>    	.sva_unbind		= arm_smmu_sva_unbind,
->>>>>    	.sva_get_pasid		= arm_smmu_sva_get_pasid,
->>>>>    	.page_response		= arm_smmu_page_response,
->>>>> +	.def_domain_type	= arm_smmu_def_domain_type,
->>>>>    	.pgsize_bitmap		= -1UL, /* Restricted during device attach */
->>>>>    	.owner			= THIS_MODULE,
->>>>>    };
->>>>>
->>>>
->>>> Is this quirk ok with the SMMU v3 driver? Just want to confirm that I'm on the
->>>> right way to dealing with the issue of our device.
->>>
->>> I don't think the quirk should be in the SMMUv3 driver. Assumedly, you would
->>> have the exact same problem if you stuck the PTT device behind a different
->>> type of IOMMU, and so the quirk should be handled by a higher level of the
->>> stack.
->>
->> Conceptually, yes, but I'm inclined to be pragmatic here. Default domain
->> quirks could only move out as far as the other end of the call from
->> iommu_get_def_domain_type() - it's not like we could rely on some flag in a
->> driver which may not even be loaded yet, let alone matched to the device.
->> And even then there's an equal and opposite argument for why the core code
->> should have to maintain a list of platform-specific quirks rather than code
->> specific to the relevant platforms. The fact is that a HiSilicon RCiEP is
->> not going to end up behind anything other than a HiSilicon IOMMU, and if
->> those ever stop being SMMUv3 *and* such a quirk still exists we can worry
->> about it then.
+Em Sun, Jan 23, 2022 at 09:49:01PM +0000, xaizek escreveu:
+> Thank you, Ian.  The patch works as expected on 5.15.12 (--gtk patch
+> didn't apply on this revision).
+
+Thanks, applied and added a Reported-by + Tested-by: xaizek.
+
+- Arnaldo
+ 
+> Regards,
+> xaizek
 > 
-> Perhaps, but you know that by adding this hook it's only a matter of time
-> before we get random compatible string matches in there, so I'd rather keep
-> the flood gates closed as long as we can.
-> 
-> Given that this is a PCI device, why can't we have a PCI quirk for devices
-> which require an identity mapping and then handle that in the IOMMU core?
+> On Sun, Jan 23, 2022 at 11:18:48AM -0800, Ian Rogers wrote:
+> > Make the --tui command line flags dependent HAVE_SLANG_SUPPORT. This was
+> > reported as confusing in:
+> > https://lore.kernel.org/linux-perf-users/YevaTkzdXmFKdGpc@zx-spectrum.none/
+> > 
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/builtin-annotate.c | 10 +++++++++-
+> >  tools/perf/builtin-report.c   | 10 +++++++++-
+> >  tools/perf/builtin-top.c      |  4 ++++
+> >  tools/perf/util/top.h         |  5 ++++-
+> >  4 files changed, 26 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+> > index 490bb9b8cf17..5e038d9bab05 100644
+> > --- a/tools/perf/builtin-annotate.c
+> > +++ b/tools/perf/builtin-annotate.c
+> > @@ -46,7 +46,11 @@ struct perf_annotate {
+> >  	struct perf_tool tool;
+> >  	struct perf_session *session;
+> >  	struct annotation_options opts;
+> > -	bool	   use_tui, use_stdio, use_stdio2, use_gtk;
+> > +#ifdef HAVE_SLANG_SUPPORT
+> > +	bool	   use_tui;
+> > +#endif
+> > +	bool	   use_stdio, use_stdio2;
+> > +	bool	   use_gtk;
+> >  	bool	   skip_missing;
+> >  	bool	   has_br_stack;
+> >  	bool	   group_set;
+> > @@ -503,7 +507,9 @@ int cmd_annotate(int argc, const char **argv)
+> >  	OPT_BOOLEAN('D', "dump-raw-trace", &dump_trace,
+> >  		    "dump raw trace in ASCII"),
+> >  	OPT_BOOLEAN(0, "gtk", &annotate.use_gtk, "Use the GTK interface"),
+> > +#ifdef HAVE_SLANG_SUPPORT
+> >  	OPT_BOOLEAN(0, "tui", &annotate.use_tui, "Use the TUI interface"),
+> > +#endif
+> >  	OPT_BOOLEAN(0, "stdio", &annotate.use_stdio, "Use the stdio interface"),
+> >  	OPT_BOOLEAN(0, "stdio2", &annotate.use_stdio2, "Use the stdio interface"),
+> >  	OPT_BOOLEAN(0, "ignore-vmlinux", &symbol_conf.ignore_vmlinux,
+> > @@ -624,8 +630,10 @@ int cmd_annotate(int argc, const char **argv)
+> >  
+> >  	if (annotate.use_stdio || annotate.use_stdio2)
+> >  		use_browser = 0;
+> > +#ifdef HAVE_SLANG_SUPPORT
+> >  	else if (annotate.use_tui)
+> >  		use_browser = 1;
+> > +#endif
+> >  	else if (annotate.use_gtk)
+> >  		use_browser = 2;
+> >  
+> > diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> > index 1dd92d8c9279..1ad75c7ba074 100644
+> > --- a/tools/perf/builtin-report.c
+> > +++ b/tools/perf/builtin-report.c
+> > @@ -71,7 +71,11 @@ struct report {
+> >  	struct perf_tool	tool;
+> >  	struct perf_session	*session;
+> >  	struct evswitch		evswitch;
+> > -	bool			use_tui, use_gtk, use_stdio;
+> > +#ifdef HAVE_SLANG_SUPPORT
+> > +	bool			use_tui;
+> > +#endif
+> > +	bool			use_gtk;
+> > +	bool			use_stdio;
+> >  	bool			show_full_info;
+> >  	bool			show_threads;
+> >  	bool			inverted_callchain;
+> > @@ -1206,7 +1210,9 @@ int cmd_report(int argc, const char **argv)
+> >  		    "Show per-thread event counters"),
+> >  	OPT_STRING(0, "pretty", &report.pretty_printing_style, "key",
+> >  		   "pretty printing style key: normal raw"),
+> > +#ifdef HAVE_SLANG_SUPPORT
+> >  	OPT_BOOLEAN(0, "tui", &report.use_tui, "Use the TUI interface"),
+> > +#endif
+> >  	OPT_BOOLEAN(0, "gtk", &report.use_gtk, "Use the GTK2 interface"),
+> >  	OPT_BOOLEAN(0, "stdio", &report.use_stdio,
+> >  		    "Use the stdio interface"),
+> > @@ -1492,8 +1498,10 @@ int cmd_report(int argc, const char **argv)
+> >  
+> >  	if (report.use_stdio)
+> >  		use_browser = 0;
+> > +#ifdef HAVE_SLANG_SUPPORT
+> >  	else if (report.use_tui)
+> >  		use_browser = 1;
+> > +#endif
+> >  	else if (report.use_gtk)
+> >  		use_browser = 2;
+> >  
+> > diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> > index 1fc390f136dd..e1a134a0a377 100644
+> > --- a/tools/perf/builtin-top.c
+> > +++ b/tools/perf/builtin-top.c
+> > @@ -1486,7 +1486,9 @@ int cmd_top(int argc, const char **argv)
+> >  		    "display this many functions"),
+> >  	OPT_BOOLEAN('U', "hide_user_symbols", &top.hide_user_symbols,
+> >  		    "hide user symbols"),
+> > +#ifdef HAVE_SLANG_SUPPORT
+> >  	OPT_BOOLEAN(0, "tui", &top.use_tui, "Use the TUI interface"),
+> > +#endif
+> >  	OPT_BOOLEAN(0, "stdio", &top.use_stdio, "Use the stdio interface"),
+> >  	OPT_INCR('v', "verbose", &verbose,
+> >  		    "be more verbose (show counter open errors, etc)"),
+> > @@ -1667,8 +1669,10 @@ int cmd_top(int argc, const char **argv)
+> >  
+> >  	if (top.use_stdio)
+> >  		use_browser = 0;
+> > +#ifdef HAVE_SLANG_SUPPORT
+> >  	else if (top.use_tui)
+> >  		use_browser = 1;
+> > +#endif
+> >  
+> >  	setup_browser(false);
+> >  
+> > diff --git a/tools/perf/util/top.h b/tools/perf/util/top.h
+> > index ff8391208ecd..1c2c0a838430 100644
+> > --- a/tools/perf/util/top.h
+> > +++ b/tools/perf/util/top.h
+> > @@ -33,7 +33,10 @@ struct perf_top {
+> >  	int		   print_entries, count_filter, delay_secs;
+> >  	int		   max_stack;
+> >  	bool		   hide_kernel_symbols, hide_user_symbols, zero;
+> > -	bool		   use_tui, use_stdio;
+> > +#ifdef HAVE_SLANG_SUPPORT
+> > +	bool		   use_tui;
+> > +#endif
+> > +	bool		   use_stdio;
+> >  	bool		   vmlinux_warned;
+> >  	bool		   dump_symtab;
+> >  	bool		   stitch_lbr;
+> > -- 
+> > 2.35.0.rc0.227.g00780c9af4-goog
 
-Oh, don't think I *like* having quirks in the driver, it just seems like 
-the least-worst choice from a bad bunch. All of the default domain 
-quirks so far (including this one) exist for integrated devices and/or 
-dodgy firmware setups such that they are platform-specific, so there is 
-no technical reason for trying to split *some* of them off into a 
-generic mechanism when the driver-based platform-specific mechanism 
-still needs to exist anyway (some of them do depend on driver state as 
-well).
+-- 
 
-Feel free to test the waters with a patch punting 
-qcom_smmu_def_domain_type() to core code, but I think you'll struggle to 
-find a reason to give in the commit message other than "I don't like it".
-
->> Ugly as it is, this is the status quo. I don't recall anyone ever arguing
->> that the equivalent quirks for Intel integrated graphics should be made
->> generic ;)
-> 
-> I don't know anything about Intel integrated graphics. Have they solved this
-> problem in a better way, or could they equally make use of a generic quirk?
-
-See intel-iommu's device_def_domain_type() implementation. The shape of 
-it may seem quite familiar...
-
-Robin.
+- Arnaldo
