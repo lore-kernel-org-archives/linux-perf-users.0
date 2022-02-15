@@ -2,149 +2,152 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FA3C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Feb 2022 15:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 533A7C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Feb 2022 15:42:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239009AbiBOPKw (ORCPT
+        id S240239AbiBOPmv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Feb 2022 10:10:52 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50720 "EHLO
+        Tue, 15 Feb 2022 10:42:51 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:38274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233786AbiBOPKv (ORCPT
+        with ESMTP id S236426AbiBOPmj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Feb 2022 10:10:51 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 260672B1A5;
-        Tue, 15 Feb 2022 07:10:41 -0800 (PST)
+        Tue, 15 Feb 2022 10:42:39 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1398D2040;
+        Tue, 15 Feb 2022 07:37:36 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B78F261536;
-        Tue, 15 Feb 2022 15:10:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A85EC340EB;
-        Tue, 15 Feb 2022 15:10:40 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 55582B8185B;
+        Tue, 15 Feb 2022 15:37:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 819DCC340EB;
+        Tue, 15 Feb 2022 15:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644937840;
-        bh=oFRbH9tdC6XlEEMR87cxogIXe8G78/ZTVwjpK2Nec6M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k5gtaQXleoGgX43yKTRxDkHYGYZZHDVJDR4UNg5XQMxB7FrSgmZy1Ffypb1lg9dgK
-         Z9ECV87p/1RzLlV8dtuOuvOpRaWL/2xVimXc3TG2c9hHT1vHTZ5Jbu4XFw5H6RPLnW
-         moTwxTbW6O3J63mawwaF9sbuFMyhgn2dC6J6o3U6Y8Tp4JiW1hZJ0qLqGVVUCRF59i
-         f23pYq27FeHqlrcy8uJPQ33BXs7/b2bPd4hlQDJ3KHLybO2P/wTkKAcLrjd3fGTtzB
-         XwkINh8y8xQzUtuOFoeOadAuj4BUTdEqaoEAIz/6cGMpaPMMrgNnrQDiBsBeugbUNi
-         E13aUlozfmcPw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B5BC4400FE; Tue, 15 Feb 2022 12:10:37 -0300 (-03)
-Date:   Tue, 15 Feb 2022 12:10:37 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        s=k20201202; t=1644939439;
+        bh=TeR5xH8P329XvkDZu4avsJVXyHq0d1jVWjx4RDc8sRU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=jKcWbNt2FCs2NwwDNK6LW15Wk25UyUzIcQ9KMmoXKZZqLb584v4MfMK2Q4fJi7HJf
+         46yy4lLCFelEmNYvEWfF3VUwriqJWZKRiNxjRN+ZoXwf9ixSDrK6aJixUORoKKoxn6
+         LFGC/EFtTkXOipiVqAIeYmPs9qltXZuSowspm9xp/GM0EKidVG6jtVZi2cv8DqpTtY
+         toY+Bob2PJZaVbl5afUM2LBoszCM9svukYXnBhpiXadk/u08eGluriFYeie5d1SvnS
+         eYiQYfW0hYBmZ1AgKLt3YbWkajvTwN5h/e2+mw2b6qyoY9XOqR+1/aDquBIj1nqVkU
+         YHj2EzIFFCj2A==
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        eranian@google.com
-Subject: Re: [PATCH v3] perf test: Make metric testing more robust.
-Message-ID: <YgvCbTBzVjBBP9/y@kernel.org>
-References: <20211223185622.3435128-1-irogers@google.com>
- <e078ac0f-6165-9670-926f-d1f2c536ea9e@huawei.com>
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH] libperf: Fix perf_cpu_map__for_each_cpu macro
+Date:   Tue, 15 Feb 2022 16:37:13 +0100
+Message-Id: <20220215153713.31395-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e078ac0f-6165-9670-926f-d1f2c536ea9e@huawei.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Dec 24, 2021 at 08:49:35AM +0000, John Garry escreveu:
-> On 23/12/2021 18:56, Ian Rogers wrote:
-> > When testing metric expressions we fake counter values from 1 going
-> > upward. For some metrics this can yield negative values that are clipped
-> > to zero, and then cause divide by zero failures. Such clipping is
-> > questionable but may be a result of tools automatically generating
-> > metrics. A workaround for this case is to try a second time with counter
-> > values going in the opposite direction.
-> > 
-> > This case was seen in a metric like:
-> >    event1 / max(event2 - event3, 0)
-> > But it may also happen in more sensible metrics like:
-> >    event1 / (event2 + event3 - 1 - event4)
-> > 
-> > v2. Rebase and more detail in commit message.
-> > v3. Is a rebase.
-> 
-> Incorrect location for this info
-> 
-> > 
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> 
-> Reviewed-by: John Garry <john.garry@huawei.com>
+Tzvetomir Stoyanov reported an issue with using macro
+perf_cpu_map__for_each_cpu using private perf_cpu object.
 
-Found thru the cracks, applying.
+The issue is caused by recent change that wrapped cpu in struct
+perf_cpu to distinguish it from cpu indexes. We need to make
+struct perf_cpu public.
 
-- Arnaldo
+Adding simple test for using perf_cpu_map__for_each_cpu
+macro.
+
+Fixes: 6d18804b963b ("perf cpumap: Give CPUs their own type")
+Reported-by: Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ tools/lib/perf/include/internal/cpumap.h |  6 +-----
+ tools/lib/perf/include/perf/cpumap.h     |  5 +++++
+ tools/lib/perf/libperf.map               |  1 +
+ tools/lib/perf/tests/test-cpumap.c       | 11 +++++++++++
+ 4 files changed, 18 insertions(+), 5 deletions(-)
+
+diff --git a/tools/lib/perf/include/internal/cpumap.h b/tools/lib/perf/include/internal/cpumap.h
+index 581f9ffb4237..1973a18c096b 100644
+--- a/tools/lib/perf/include/internal/cpumap.h
++++ b/tools/lib/perf/include/internal/cpumap.h
+@@ -3,11 +3,7 @@
+ #define __LIBPERF_INTERNAL_CPUMAP_H
  
-> > ---
-> >   tools/perf/tests/pmu-events.c | 32 ++++++++++++++++++++++++++------
-> >   1 file changed, 26 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-> > index df1c9a3cc05b..b2ddf928d32a 100644
-> > --- a/tools/perf/tests/pmu-events.c
-> > +++ b/tools/perf/tests/pmu-events.c
-> > @@ -962,8 +962,18 @@ static int test__parsing(struct test_suite *test __maybe_unused,
-> >   			}
-> >   			if (expr__parse(&result, ctx, pe->metric_expr)) {
-> > -				expr_failure("Parse failed", map, pe);
-> > -				ret++;
-> > +				/*
-> > +				 * Parsing failed, make numbers go from large to
-> > +				 * small which can resolve divide by zero
-> 
-> can or may?
-> 
-> > +				 * issues.
-> > +				 */
-> > +				k = 1024;
-> > +				hashmap__for_each_entry(ctx->ids, cur, bkt)
-> > +					expr__add_id_val(ctx, strdup(cur->key), k--);
-> > +				if (expr__parse(&result, ctx, pe->metric_expr)) {
-> > +					expr_failure("Parse failed", map, pe);
-> > +					ret++;
-> > +				}
-> >   			}
-> >   		}
-> >   	}
-> > @@ -1022,10 +1032,20 @@ static int metric_parse_fake(const char *str)
-> >   		}
-> >   	}
-> > -	if (expr__parse(&result, ctx, str))
-> > -		pr_err("expr__parse failed\n");
-> > -	else
-> > -		ret = 0;
-> > +	ret = 0;
-> > +	if (expr__parse(&result, ctx, str)) {
-> > +		/*
-> > +		 * Parsing failed, make numbers go from large to small which can
-> > +		 * resolve divide by zero issues.
-> > +		 */
-> > +		i = 1024;
-> > +		hashmap__for_each_entry(ctx->ids, cur, bkt)
-> > +			expr__add_id_val(ctx, strdup(cur->key), i--);
-> > +		if (expr__parse(&result, ctx, str)) {
-> > +			pr_err("expr__parse failed\n");
-> > +			ret = -1;
-> > +		}
-> > +	}
-> >   out:
-> >   	expr__ctx_free(ctx);
-> > 
-
+ #include <linux/refcount.h>
+-
+-/** A wrapper around a CPU to avoid confusion with the perf_cpu_map's map's indices. */
+-struct perf_cpu {
+-	int cpu;
+-};
++#include <perf/cpumap.h>
+ 
+ /**
+  * A sized, reference counted, sorted array of integers representing CPU
+diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
+index 15b8faafd615..4a2edbdb5e2b 100644
+--- a/tools/lib/perf/include/perf/cpumap.h
++++ b/tools/lib/perf/include/perf/cpumap.h
+@@ -7,6 +7,11 @@
+ #include <stdio.h>
+ #include <stdbool.h>
+ 
++/** A wrapper around a CPU to avoid confusion with the perf_cpu_map's map's indices. */
++struct perf_cpu {
++	int cpu;
++};
++
+ LIBPERF_API struct perf_cpu_map *perf_cpu_map__dummy_new(void);
+ LIBPERF_API struct perf_cpu_map *perf_cpu_map__default_new(void);
+ LIBPERF_API struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list);
+diff --git a/tools/lib/perf/libperf.map b/tools/lib/perf/libperf.map
+index 93696affda2e..6fa0d651576b 100644
+--- a/tools/lib/perf/libperf.map
++++ b/tools/lib/perf/libperf.map
+@@ -2,6 +2,7 @@ LIBPERF_0.0.1 {
+ 	global:
+ 		libperf_init;
+ 		perf_cpu_map__dummy_new;
++		perf_cpu_map__default_new;
+ 		perf_cpu_map__get;
+ 		perf_cpu_map__put;
+ 		perf_cpu_map__new;
+diff --git a/tools/lib/perf/tests/test-cpumap.c b/tools/lib/perf/tests/test-cpumap.c
+index d39378eaf897..87b0510a556f 100644
+--- a/tools/lib/perf/tests/test-cpumap.c
++++ b/tools/lib/perf/tests/test-cpumap.c
+@@ -14,6 +14,8 @@ static int libperf_print(enum libperf_print_level level,
+ int test_cpumap(int argc, char **argv)
+ {
+ 	struct perf_cpu_map *cpus;
++	struct perf_cpu cpu;
++	int idx;
+ 
+ 	__T_START;
+ 
+@@ -27,6 +29,15 @@ int test_cpumap(int argc, char **argv)
+ 	perf_cpu_map__put(cpus);
+ 	perf_cpu_map__put(cpus);
+ 
++	cpus = perf_cpu_map__default_new();
++	if (!cpus)
++		return -1;
++
++	perf_cpu_map__for_each_cpu(cpu, idx, cpus)
++		__T("wrong cpu number", cpu.cpu != -1);
++
++	perf_cpu_map__put(cpus);
++
+ 	__T_END;
+ 	return tests_failed == 0 ? 0 : -1;
+ }
 -- 
+2.35.1
 
-- Arnaldo
