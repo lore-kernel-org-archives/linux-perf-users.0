@@ -2,129 +2,175 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A920C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Feb 2022 22:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D95BC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Feb 2022 01:23:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231781AbiBNWSf (ORCPT
+        id S229617AbiBOBXe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Feb 2022 17:18:35 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:35686 "EHLO
+        Mon, 14 Feb 2022 20:23:34 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbiBNWSf (ORCPT
+        with ESMTP id S229494AbiBOBXd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Feb 2022 17:18:35 -0500
-Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7994813FAE6
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Feb 2022 14:18:26 -0800 (PST)
-Received: by mail-yb1-xb2a.google.com with SMTP id 124so22342189ybn.11
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Feb 2022 14:18:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ClXABgC0XWLNKY1J8ZiwwxDjdnPc1Xxiwc8rtd4SZjg=;
-        b=BNKrURhk9Oi9U06kpXCeuv8gARHKNT331GodV/9vaVTTy7d50VmNe9Se4YBgSc7B12
-         38z1/bk36x9Nx38O0i3Z3mCUec+axtWC0NBbwiLZ/A3LJzFgufwGLFnQ0GtJyzig2yeK
-         aRwqQAQbZ/36ssMYJPxPn/10s+VvZn8aBkcfNi5ydzmQhcThgVpWzJuzu8EkoQLCtfYS
-         oCU4tXTsIr3ToNxK1P1FoAjpARjWfEAs88IdooGYqPgyDhnGZ9lHNPB1seFnljK8NOol
-         9IcKTLqdSDO2cI/f6f7nbyV5moRNPeZPNZrHqFJ3YZRa+BqkBvlYWvLSoIjybjL6UXKn
-         0h2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ClXABgC0XWLNKY1J8ZiwwxDjdnPc1Xxiwc8rtd4SZjg=;
-        b=gliaBIYKf3hAxRnWuHuXqFmxWEE8boV92DtG7VhzU2gDhgR/mB0zXXI9AeImUh/ZPN
-         mBiAnx2kZuAN0wkaBlBgvTZaNzCNTLm0KJ58OCzgxH70eaf6UVwvFQdRYV6Gn14yfPth
-         h1cT/fN9nOmUhdlUKjzLR34O+VnRV4M1ZwOrBSZLs2b04brcQ5wCMzL8CiNJ5Z/VCh9v
-         5tT59byJdhzKMB2f+KVw+TJjMG7hRAMUqPiJkfLQOznmlse+HsWqQA2HDzvdF5+PHAQ0
-         BRxmhBTI57qlGPxG5gFX8UmLe36/hmkN5vvZmKtbq4rK/d/plqXcFwOxUYyZ0ouaMBQ9
-         Ka+Q==
-X-Gm-Message-State: AOAM533v1gt9fCtL3kFto+IfnwlWbXJdqQAuRGGA0cT0AiYlYZHfItrp
-        ZsnA3d30nJmjMmjhKQiwoP9k4blb0XgbD5YIq80hlw==
-X-Google-Smtp-Source: ABdhPJzSjscOjEkn8P+9yXYLiPTxaGOPHAVo0dYyZBj8Mwjuwz9unV/rzlgibV8WvPTI5fSxRwg8Zc5DdpBPmhy0PSo=
-X-Received: by 2002:a81:334d:: with SMTP id z74mr955906ywz.194.1644877105368;
- Mon, 14 Feb 2022 14:18:25 -0800 (PST)
+        Mon, 14 Feb 2022 20:23:33 -0500
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58049CC529;
+        Mon, 14 Feb 2022 17:23:24 -0800 (PST)
+Received: from kwepemi100004.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4JyNXP6pc7zZffQ;
+        Tue, 15 Feb 2022 09:19:01 +0800 (CST)
+Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
+ kwepemi100004.china.huawei.com (7.221.188.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Tue, 15 Feb 2022 09:23:21 +0800
+Received: from [10.67.101.67] (10.67.101.67) by kwepemm600003.china.huawei.com
+ (7.193.23.202) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Tue, 15 Feb
+ 2022 09:23:21 +0800
+Subject: Re: [PATCH 2/2] perf jevents: Add support for HiSilicon CPA PMU
+ aliasing
+To:     Qi Liu <liuqi115@huawei.com>, <will@kernel.org>,
+        <mark.rutland@arm.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <zhangshaokun@hisilicon.com>,
+        Linuxarm <linuxarm@huawei.com>, <mingo@redhat.com>,
+        <acme@kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <peterz@infradead.org>
+References: <20220214114228.40859-1-liuqi115@huawei.com>
+ <20220214114228.40859-3-liuqi115@huawei.com>
+From:   "liuqi (BA)" <liuqi115@huawei.com>
+Message-ID: <e8360562-4e09-c2ed-9584-054a0b3d01bf@huawei.com>
+Date:   Tue, 15 Feb 2022 09:23:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <CAPpZLN6+BPu=Y_iCXBV_Uqg_mcY2LEBtg+_7r+oJqWkG8pNSGA@mail.gmail.com>
- <YgrIId0p9KoE9zPI@krava>
-In-Reply-To: <YgrIId0p9KoE9zPI@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 14 Feb 2022 14:18:13 -0800
-Message-ID: <CAP-5=fXNfvttL6VungRvqHX8dqD5tmUHwrVbs+n=4j2KhV5Usw@mail.gmail.com>
-Subject: Re: libperf: CPU map question
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20220214114228.40859-3-liuqi115@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.101.67]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Feb 14, 2022 at 1:22 PM Jiri Olsa <olsajiri@gmail.com> wrote:
->
-> On Mon, Feb 14, 2022 at 06:54:38PM +0200, Tzvetomir Stoyanov wrote:
-> > Hello,
-> > I'm trying to use libperf as an interface to perf from an application,
-> > but I face some difficulties.  I cannot understand how perf_cpu_map_
-> > APIs should be used. My use case is:
-> >  I want to iterate over the CPUs from the map. I'm using
-> > perf_evsel__cpus() API to get the map and perf_cpu_map__for_each_cpu()
-> > macros to iterate over the map. However, using that logic I get a
-> > struct perf_cpu for each CPU from the map. That structure seems to be
-> > private and I cannot access the actual .cpu id. Am I missing something
-> > ?
-> > Will be glad for any help and clarification.
->
-> yea it's a bug ;-) there was a change recently that wrapped cpu
-> in struct perf_cpu to distinguish it from cpu indexes
->
->   6d18804b963b perf cpumap: Give CPUs their own type
->
-> not sure there's workaround for that.. but I think change below should fix it
->
-> Ian, would this be ok? we need to add some test for this
 
-This looks good to me, thanks! Agreed on the test.
 
-Thanks,
-Ian
++CC perf tool list and maintainers.
 
-> jirka
->
->
+Qi
+
+On 2022/2/14 19:42, Qi Liu wrote:
+> Add support for HiSilicon CPA PMU aliasing.
+> 
+> The kernel driver is in drivers/perf/hisilicon/hisi_uncore_cpa_pmu.c
+> 
+> Signed-off-by: Qi Liu <liuqi115@huawei.com>
 > ---
-> diff --git a/tools/lib/perf/include/internal/cpumap.h b/tools/lib/perf/include/internal/cpumap.h
-> index 581f9ffb4237..1973a18c096b 100644
-> --- a/tools/lib/perf/include/internal/cpumap.h
-> +++ b/tools/lib/perf/include/internal/cpumap.h
-> @@ -3,11 +3,7 @@
->  #define __LIBPERF_INTERNAL_CPUMAP_H
->
->  #include <linux/refcount.h>
-> -
-> -/** A wrapper around a CPU to avoid confusion with the perf_cpu_map's map's indices. */
-> -struct perf_cpu {
-> -       int cpu;
-> -};
-> +#include <perf/cpumap.h>
->
->  /**
->   * A sized, reference counted, sorted array of integers representing CPU
-> diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
-> index 15b8faafd615..4a2edbdb5e2b 100644
-> --- a/tools/lib/perf/include/perf/cpumap.h
-> +++ b/tools/lib/perf/include/perf/cpumap.h
-> @@ -7,6 +7,11 @@
->  #include <stdio.h>
->  #include <stdbool.h>
->
-> +/** A wrapper around a CPU to avoid confusion with the perf_cpu_map's map's indices. */
-> +struct perf_cpu {
-> +       int cpu;
-> +};
-> +
->  LIBPERF_API struct perf_cpu_map *perf_cpu_map__dummy_new(void);
->  LIBPERF_API struct perf_cpu_map *perf_cpu_map__default_new(void);
->  LIBPERF_API struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list);
+>   .../arm64/hisilicon/hip09/sys/uncore-cpa.json | 81 +++++++++++++++++++
+>   tools/perf/pmu-events/jevents.c               |  1 +
+>   2 files changed, 82 insertions(+)
+>   create mode 100644 tools/perf/pmu-events/arch/arm64/hisilicon/hip09/sys/uncore-cpa.json
+> 
+> diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip09/sys/uncore-cpa.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip09/sys/uncore-cpa.json
+> new file mode 100644
+> index 000000000000..35c90da7f54b
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/arm64/hisilicon/hip09/sys/uncore-cpa.json
+> @@ -0,0 +1,81 @@
+> +[
+> +	{
+> +		"ConfigCode": "0x00",
+> +		"EventName": "cpa_cycles",
+> +		"BriefDescription": "count of CPA cycles",
+> +		"Compat": "0x00000030",
+> +		"Unit": "hisi_sicl,cpa"
+> +	},
+> +	{
+> +		"ConfigCode": "0x61",
+> +		"EventName": "p1_wr_dat",
+> +		"BriefDescription": "Number of write ops transmitted by the P1 port",
+> +		"Compat": "0x00000030",
+> +		"Unit": "hisi_sicl,cpa"
+> +	},
+> +	{
+> +		"ConfigCode": "0x62",
+> +		"EventName": "p1_rd_dat",
+> +		"BriefDescription": "Number of read ops transmitted by the P1 port",
+> +		"Compat": "0x00000030",
+> +		"Unit": "hisi_sicl,cpa"
+> +	},
+> +	{
+> +		"ConfigCode": "0x3",
+> +		"EventName": "p1_rd_dat_64b",
+> +		"BriefDescription": "Number of read ops transmitted by the P1 port which size is 64 bytes",
+> +		"Compat": "0x00000030",
+> +		"Unit": "hisi_sicl,cpa"
+> +	},
+> +	{
+> +		"ConfigCode": "0x4",
+> +		"EventName": "p1_rd_dat_32b",
+> +		"BriefDescription": "Number of read ops transmitted by the P1 port which size is 32 bytes",
+> +		"Compat": "0x00000030",
+> +		"Unit": "hisi_sicl,cpa"
+> +	},
+> +	{
+> +		"ConfigCode": "0xE1",
+> +		"EventName": "p0_wr_dat",
+> +		"BriefDescription": "Number of write ops transmitted by the P0 port",
+> +		"Compat": "0x00000030",
+> +		"Unit": "hisi_sicl,cpa"
+> +	},
+> +	{
+> +		"ConfigCode": "0xE2",
+> +		"EventName": "p0_rd_dat",
+> +		"BriefDescription": "Number of read ops transmitted by the P0 port",
+> +		"Compat": "0x00000030",
+> +		"Unit": "hisi_sicl,cpa"
+> +	},
+> +	{
+> +		"ConfigCode": "0x83",
+> +		"EventName": "p0_rd_dat_64b",
+> +		"BriefDescription": "Number of read ops transmitted by the P0 port which size is 64 bytes",
+> +		"Compat": "0x00000030",
+> +		"Unit": "hisi_sicl,cpa"
+> +	},
+> +	{
+> +		"ConfigCode": "0x84",
+> +		"EventName": "p0_rd_dat_32b",
+> +		"BriefDescription": "Number of read ops transmitted by the P0 port which size is 32 bytes",
+> +		"Compat": "0x00000030",
+> +		"Unit": "hisi_sicl,cpa"
+> +	},
+> +	{
+> +		"MetricExpr": "(p1_wr_dat * 64 + p1_rd_dat_64b * 64 + p1_rd_dat_32b * 32) / cpa_cycles",
+> +		"BriefDescription": "Average bandwidth of CPA Port 1",
+> +		"MetricGroup": "CPA",
+> +		"MetricName": "p1_avg_bw",
+> +		"Compat": "0x00000030",
+> +		"Unit": "hisi_sicl,cpa"
+> +	},
+> +	{
+> +		"MetricExpr": "(p0_wr_dat * 64 + p0_rd_dat_64b * 64 + p0_rd_dat_32b * 32) / cpa_cycles",
+> +		"BriefDescription": "Average bandwidth of CPA Port 0",
+> +		"MetricGroup": "CPA",
+> +		"MetricName": "p0_avg_bw",
+> +		"Compat": "0x00000030",
+> +		"Unit": "hisi_sicl,cpa"
+> +	}
+> +]
+> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+> index 1a57c3f81dd4..159d9eab6e79 100644
+> --- a/tools/perf/pmu-events/jevents.c
+> +++ b/tools/perf/pmu-events/jevents.c
+> @@ -277,6 +277,7 @@ static struct map {
+>   	{ "CPU-M-CF", "cpum_cf" },
+>   	{ "CPU-M-SF", "cpum_sf" },
+>   	{ "UPI LL", "uncore_upi" },
+> +	{ "hisi_sicl,cpa", "hisi_sicl,cpa"},
+>   	{ "hisi_sccl,ddrc", "hisi_sccl,ddrc" },
+>   	{ "hisi_sccl,hha", "hisi_sccl,hha" },
+>   	{ "hisi_sccl,l3c", "hisi_sccl,l3c" },
+> 
