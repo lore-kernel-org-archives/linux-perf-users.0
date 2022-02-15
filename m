@@ -2,214 +2,123 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36AE3C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Feb 2022 12:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46622C43217
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Feb 2022 13:01:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236906AbiBOMSp (ORCPT
+        id S235339AbiBONBH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Feb 2022 07:18:45 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:57436 "EHLO
+        Tue, 15 Feb 2022 08:01:07 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:53478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234884AbiBOMSp (ORCPT
+        with ESMTP id S234093AbiBONBG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Feb 2022 07:18:45 -0500
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4564B1074E1;
-        Tue, 15 Feb 2022 04:18:35 -0800 (PST)
-Received: by mail-ed1-x52a.google.com with SMTP id b14so7221804ede.9;
-        Tue, 15 Feb 2022 04:18:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Xq2jvVOWw99k+EzkKpclX9QGXWedMY9k22KEFFs6jsk=;
-        b=c4ogmbcUG2iJFi+BDJCrq3bsPGWN6kY2PqKCyWXKpXRw/ljmZX+gqjc1VS+Qyozx3e
-         ylQdqk+DR3Ip2dVdtZDg65D4aXbdHPFpZj61SNXF7Bu+qBmbY2DDbjzkOaz5tWyPLpKY
-         vgvCodUPdzt7FKu9TZw/k7V5yqilo2FV4GmdFPFzF7heJ1Z7/yMMXxRxfJhQvBFophI3
-         YSMOB/UvHGcXMmhqPXiRGbfIqyCyp8ZO7E02Fx6uzRL9lGuvyy7DngxEmKn/1SubJwcw
-         Czw1FStP2/72HiHL34rz5jJnLqJ82XS2bwZG52NU/l64fBfmlUrB2uCVDaQoQAdjaOco
-         8AOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Xq2jvVOWw99k+EzkKpclX9QGXWedMY9k22KEFFs6jsk=;
-        b=V6I/bSQ7BoibtoF/vOs3pA3rVv8zFPZBzne1JEW5xHyvoHIOcq3MMqg9bFlOpsli+Q
-         msWOQUr+k6Hu9hrf7hLOPldP86zfzD37M5NsTbzbUKitAx4BcRIusfjHEaY2LM1Vb9rI
-         9GWF8S/+kI4Y2yvbQR686zOvaEuUQZt33ZKI/d/dVaTPqya0XXQ/ThYoRC7yKl8T2Exb
-         iyvjBr7OcjmHkn8P0egQSeUBGCLmQItfgG5nPImiXeRTmtF23q6smoS7Y+Atu7zVn2YK
-         NP/3RMYJIi9zdJS7zfX1twUVCFYCzXqP7D+gUbp2km5T7DcD+joGchYg9lSbRf4LYpEh
-         vhHg==
-X-Gm-Message-State: AOAM531FLe9K+ijNhsgxnB0V6AsvDmYMUxY9TidivHtxmrfjVEyGEOyo
-        9CjEmrChX4rowzJ9vFw5Y8w=
-X-Google-Smtp-Source: ABdhPJwKSrrktnTwJ3otHZVNysl6dxBiSOZopsbOfrJ11xv7Xg7cY0F1WEZoJzVjWAvS/30VOC4nUQ==
-X-Received: by 2002:aa7:d858:: with SMTP id f24mr3694596eds.156.1644927513671;
-        Tue, 15 Feb 2022 04:18:33 -0800 (PST)
-Received: from krava ([83.240.63.12])
-        by smtp.gmail.com with ESMTPSA id v8sm4138713edc.30.2022.02.15.04.18.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Feb 2022 04:18:33 -0800 (PST)
-Date:   Tue, 15 Feb 2022 13:18:31 +0100
-From:   Jiri Olsa <olsajiri@gmail.com>
-To:     "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
-Cc:     acme@kernel.org, jolsa@redhat.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] libperf: Add API for allocating new thread map
-Message-ID: <YguaF9kmFyoZ1ZhC@krava>
-References: <20220210085225.551891-1-tz.stoyanov@gmail.com>
+        Tue, 15 Feb 2022 08:01:06 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E48277F6ED;
+        Tue, 15 Feb 2022 05:00:56 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9B72DB819A9;
+        Tue, 15 Feb 2022 13:00:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4D88C340EB;
+        Tue, 15 Feb 2022 13:00:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1644930054;
+        bh=rBQWeVT+EjzsgM3r1Lc4uCaVLYnzGjhTjj/msDXK3JQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Krj7P+C91g6qOvjxvKB81mvkRoyrAHTF2oSPNlKRcBJo6UzBrK7m9Qlspp+bE8L60
+         XCQxx4QeOVrwnNgvEJ86FjQZg7CL9v5KzzXIYET+suGKDkot+JLR+jgRJgrDF8PHXb
+         y8zl/wECo6oZ0t040D0GT8hit88BtxAcseq6Nt54m60DPgh6P+Wc7CDmPmCCQirWT6
+         /bhPJTdJme5BWgevr8q2KdY9PycccGncoMNM4ZarxRXa6gIzXof5emg7hWNjzMo6+z
+         8OapdOtjag5MQHSESLH0Mvw9rq7Q9xmSOPi/qCAVtsiX7TXBH/kk03l0SaDjMWwS86
+         AStehWQJl8CIg==
+Date:   Tue, 15 Feb 2022 13:00:44 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Yicong Yang <yangyicong@huawei.com>
+Cc:     Yicong Yang <yangyicong@hisilicon.com>, gregkh@linuxfoundation.org,
+        helgaas@kernel.org, alexander.shishkin@linux.intel.com,
+        lorenzo.pieralisi@arm.com, mark.rutland@arm.com,
+        mathieu.poirier@linaro.org, suzuki.poulose@arm.com,
+        mike.leach@linaro.org, leo.yan@linaro.org,
+        jonathan.cameron@huawei.com, daniel.thompson@linaro.org,
+        joro@8bytes.org, john.garry@huawei.com,
+        shameerali.kolothum.thodi@huawei.com, robin.murphy@arm.com,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        coresight@lists.linaro.org, linux-pci@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, iommu@lists.linux-foundation.org,
+        prime.zeng@huawei.com, liuqi115@huawei.com,
+        zhangshaokun@hisilicon.com, linuxarm@huawei.com,
+        song.bao.hua@hisilicon.com
+Subject: Re: [PATCH v3 8/8] iommu/arm-smmu-v3: Make default domain type of
+ HiSilicon PTT device to identity
+Message-ID: <20220215130044.GA7154@willie-the-truck>
+References: <20220124131118.17887-1-yangyicong@hisilicon.com>
+ <20220124131118.17887-9-yangyicong@hisilicon.com>
+ <e58888c1-5448-77c7-7f6c-f5db999a888f@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220210085225.551891-1-tz.stoyanov@gmail.com>
+In-Reply-To: <e58888c1-5448-77c7-7f6c-f5db999a888f@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Feb 10, 2022 at 10:52:25AM +0200, Tzvetomir Stoyanov (VMware) wrote:
-> The existing API perf_thread_map__new_dummy() allocates new thread map
-> for one thread. I couldn't find a way to reallocate the map with more
-> threads, or to allocate a new map for more than one thread. Having
-> multiple threads in a thread map is essential for some use cases.
-> That's why a new API is proposed, which allocates a new thread map
-> for given number of threads:
->  perf_thread_map__new()
+On Mon, Feb 14, 2022 at 08:55:20PM +0800, Yicong Yang wrote:
+> On 2022/1/24 21:11, Yicong Yang wrote:
+> > The DMA of HiSilicon PTT device can only work with identical
+> > mapping. So add a quirk for the device to force the domain
+> > passthrough.
+> > 
+> > Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> > ---
+> >  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> > 
+> > diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> > index 6dc6d8b6b368..6f67a2b1dd27 100644
+> > --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> > +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> > @@ -2838,6 +2838,21 @@ static int arm_smmu_dev_disable_feature(struct device *dev,
+> >  	}
+> >  }
+> >  
+> > +#define IS_HISI_PTT_DEVICE(pdev)	((pdev)->vendor == PCI_VENDOR_ID_HUAWEI && \
+> > +					 (pdev)->device == 0xa12e)
+> > +
+> > +static int arm_smmu_def_domain_type(struct device *dev)
+> > +{
+> > +	if (dev_is_pci(dev)) {
+> > +		struct pci_dev *pdev = to_pci_dev(dev);
+> > +
+> > +		if (IS_HISI_PTT_DEVICE(pdev))
+> > +			return IOMMU_DOMAIN_IDENTITY;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static struct iommu_ops arm_smmu_ops = {
+> >  	.capable		= arm_smmu_capable,
+> >  	.domain_alloc		= arm_smmu_domain_alloc,
+> > @@ -2863,6 +2878,7 @@ static struct iommu_ops arm_smmu_ops = {
+> >  	.sva_unbind		= arm_smmu_sva_unbind,
+> >  	.sva_get_pasid		= arm_smmu_sva_get_pasid,
+> >  	.page_response		= arm_smmu_page_response,
+> > +	.def_domain_type	= arm_smmu_def_domain_type,
+> >  	.pgsize_bitmap		= -1UL, /* Restricted during device attach */
+> >  	.owner			= THIS_MODULE,
+> >  };
+> > 
+>
+> Is this quirk ok with the SMMU v3 driver? Just want to confirm that I'm on the
+> right way to dealing with the issue of our device.
 
-I'm ok with that, just wondering if we should call it 'perf_thread_map__new_nr'
-because we already have perf_cpu_map__new(const char *cpu_list) so
-it might be better to keep perf_cpu_map and perf_thread_map in sync
+I don't think the quirk should be in the SMMUv3 driver. Assumedly, you would
+have the exact same problem if you stuck the PTT device behind a different
+type of IOMMU, and so the quirk should be handled by a higher level of the
+stack.
 
-Arnaldo, thoughts on this?
-
-jirka
-
-> 
-> Signed-off-by: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
-> ---
->  tools/lib/perf/Documentation/libperf.txt |  1 +
->  tools/lib/perf/include/perf/threadmap.h  |  1 +
->  tools/lib/perf/libperf.map               |  1 +
->  tools/lib/perf/tests/test-threadmap.c    | 27 ++++++++++++++++++++++++
->  tools/lib/perf/threadmap.c               | 15 +++++++++----
->  5 files changed, 41 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
-> index 32c5051c24eb..9cbd41c29bff 100644
-> --- a/tools/lib/perf/Documentation/libperf.txt
-> +++ b/tools/lib/perf/Documentation/libperf.txt
-> @@ -62,6 +62,7 @@ SYNOPSIS
->    struct perf_thread_map;
->  
->    struct perf_thread_map *perf_thread_map__new_dummy(void);
-> +  struct perf_thread_map *perf_thread_map__new(int nr);
->  
->    void perf_thread_map__set_pid(struct perf_thread_map *map, int thread, pid_t pid);
->    char *perf_thread_map__comm(struct perf_thread_map *map, int thread);
-> diff --git a/tools/lib/perf/include/perf/threadmap.h b/tools/lib/perf/include/perf/threadmap.h
-> index a7c50de8d010..47d433416040 100644
-> --- a/tools/lib/perf/include/perf/threadmap.h
-> +++ b/tools/lib/perf/include/perf/threadmap.h
-> @@ -8,6 +8,7 @@
->  struct perf_thread_map;
->  
->  LIBPERF_API struct perf_thread_map *perf_thread_map__new_dummy(void);
-> +LIBPERF_API struct perf_thread_map *perf_thread_map__new(int nr);
->  
->  LIBPERF_API void perf_thread_map__set_pid(struct perf_thread_map *map, int thread, pid_t pid);
->  LIBPERF_API char *perf_thread_map__comm(struct perf_thread_map *map, int thread);
-> diff --git a/tools/lib/perf/libperf.map b/tools/lib/perf/libperf.map
-> index 93696affda2e..240a2f087b70 100644
-> --- a/tools/lib/perf/libperf.map
-> +++ b/tools/lib/perf/libperf.map
-> @@ -11,6 +11,7 @@ LIBPERF_0.0.1 {
->  		perf_cpu_map__empty;
->  		perf_cpu_map__max;
->  		perf_cpu_map__has;
-> +		perf_thread_map__new;
->  		perf_thread_map__new_dummy;
->  		perf_thread_map__set_pid;
->  		perf_thread_map__comm;
-> diff --git a/tools/lib/perf/tests/test-threadmap.c b/tools/lib/perf/tests/test-threadmap.c
-> index 5e2a0291e94c..3388bf36dfc0 100644
-> --- a/tools/lib/perf/tests/test-threadmap.c
-> +++ b/tools/lib/perf/tests/test-threadmap.c
-> @@ -11,9 +11,12 @@ static int libperf_print(enum libperf_print_level level,
->  	return vfprintf(stderr, fmt, ap);
->  }
->  
-> +#define THREADS_NR	5
-> +
->  int test_threadmap(int argc, char **argv)
->  {
->  	struct perf_thread_map *threads;
-> +	int i;
->  
->  	__T_START;
->  
-> @@ -27,6 +30,30 @@ int test_threadmap(int argc, char **argv)
->  	perf_thread_map__put(threads);
->  	perf_thread_map__put(threads);
->  
-> +	threads = perf_thread_map__new(THREADS_NR);
-> +	if (!threads)
-> +		tests_failed++;
-> +
-> +	if (perf_thread_map__nr(threads) != THREADS_NR)
-> +		tests_failed++;
-> +
-> +	for (i = 0; i < THREADS_NR; i++) {
-> +		if (perf_thread_map__pid(threads, i) != -1)
-> +			tests_failed++;
-> +	}
-> +
-> +	for (i = 1; i < THREADS_NR; i++)
-> +		perf_thread_map__set_pid(threads, i, i * 100);
-> +
-> +	if (perf_thread_map__pid(threads, 0) != -1)
-> +		tests_failed++;
-> +
-> +	for (i = 1; i < THREADS_NR; i++) {
-> +		if (perf_thread_map__pid(threads, i) != i * 100)
-> +			tests_failed++;
-> +	}
-> +	perf_thread_map__put(threads);
-> +
->  	__T_END;
->  	return tests_failed == 0 ? 0 : -1;
->  }
-> diff --git a/tools/lib/perf/threadmap.c b/tools/lib/perf/threadmap.c
-> index e92c368b0a6c..843fe1070cc9 100644
-> --- a/tools/lib/perf/threadmap.c
-> +++ b/tools/lib/perf/threadmap.c
-> @@ -42,18 +42,25 @@ char *perf_thread_map__comm(struct perf_thread_map *map, int thread)
->  	return map->map[thread].comm;
->  }
->  
-> -struct perf_thread_map *perf_thread_map__new_dummy(void)
-> +struct perf_thread_map *perf_thread_map__new(int nr)
->  {
-> -	struct perf_thread_map *threads = thread_map__alloc(1);
-> +	struct perf_thread_map *threads = thread_map__alloc(nr);
-> +	int i;
->  
->  	if (threads != NULL) {
-> -		perf_thread_map__set_pid(threads, 0, -1);
-> -		threads->nr = 1;
-> +		for (i = 0; i < nr; i++)
-> +			perf_thread_map__set_pid(threads, i, -1);
-> +		threads->nr = nr;
->  		refcount_set(&threads->refcnt, 1);
->  	}
->  	return threads;
->  }
->  
-> +struct perf_thread_map *perf_thread_map__new_dummy(void)
-> +{
-> +	return perf_thread_map__new(1);
-> +}
-> +
->  static void perf_thread_map__delete(struct perf_thread_map *threads)
->  {
->  	if (threads) {
-> -- 
-> 2.34.1
-> 
+Will
