@@ -2,122 +2,214 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4D4C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Feb 2022 11:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36AE3C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Feb 2022 12:18:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237004AbiBOLQ3 (ORCPT
+        id S236906AbiBOMSp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Feb 2022 06:16:29 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:38032 "EHLO
+        Tue, 15 Feb 2022 07:18:45 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:57436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233054AbiBOLQ2 (ORCPT
+        with ESMTP id S234884AbiBOMSp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Feb 2022 06:16:28 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06EAC108184;
-        Tue, 15 Feb 2022 03:16:18 -0800 (PST)
-Received: from fraeml734-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Jydn63pb7z6873Q;
-        Tue, 15 Feb 2022 19:15:54 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml734-chm.china.huawei.com (10.206.15.215) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Tue, 15 Feb 2022 12:16:16 +0100
-Received: from [10.47.81.62] (10.47.81.62) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.21; Tue, 15 Feb
- 2022 11:16:14 +0000
-Message-ID: <06412caf-42e4-5c4b-c9b3-9691075405bd@huawei.com>
-Date:   Tue, 15 Feb 2022 11:16:16 +0000
+        Tue, 15 Feb 2022 07:18:45 -0500
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4564B1074E1;
+        Tue, 15 Feb 2022 04:18:35 -0800 (PST)
+Received: by mail-ed1-x52a.google.com with SMTP id b14so7221804ede.9;
+        Tue, 15 Feb 2022 04:18:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Xq2jvVOWw99k+EzkKpclX9QGXWedMY9k22KEFFs6jsk=;
+        b=c4ogmbcUG2iJFi+BDJCrq3bsPGWN6kY2PqKCyWXKpXRw/ljmZX+gqjc1VS+Qyozx3e
+         ylQdqk+DR3Ip2dVdtZDg65D4aXbdHPFpZj61SNXF7Bu+qBmbY2DDbjzkOaz5tWyPLpKY
+         vgvCodUPdzt7FKu9TZw/k7V5yqilo2FV4GmdFPFzF7heJ1Z7/yMMXxRxfJhQvBFophI3
+         YSMOB/UvHGcXMmhqPXiRGbfIqyCyp8ZO7E02Fx6uzRL9lGuvyy7DngxEmKn/1SubJwcw
+         Czw1FStP2/72HiHL34rz5jJnLqJ82XS2bwZG52NU/l64fBfmlUrB2uCVDaQoQAdjaOco
+         8AOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Xq2jvVOWw99k+EzkKpclX9QGXWedMY9k22KEFFs6jsk=;
+        b=V6I/bSQ7BoibtoF/vOs3pA3rVv8zFPZBzne1JEW5xHyvoHIOcq3MMqg9bFlOpsli+Q
+         msWOQUr+k6Hu9hrf7hLOPldP86zfzD37M5NsTbzbUKitAx4BcRIusfjHEaY2LM1Vb9rI
+         9GWF8S/+kI4Y2yvbQR686zOvaEuUQZt33ZKI/d/dVaTPqya0XXQ/ThYoRC7yKl8T2Exb
+         iyvjBr7OcjmHkn8P0egQSeUBGCLmQItfgG5nPImiXeRTmtF23q6smoS7Y+Atu7zVn2YK
+         NP/3RMYJIi9zdJS7zfX1twUVCFYCzXqP7D+gUbp2km5T7DcD+joGchYg9lSbRf4LYpEh
+         vhHg==
+X-Gm-Message-State: AOAM531FLe9K+ijNhsgxnB0V6AsvDmYMUxY9TidivHtxmrfjVEyGEOyo
+        9CjEmrChX4rowzJ9vFw5Y8w=
+X-Google-Smtp-Source: ABdhPJwKSrrktnTwJ3otHZVNysl6dxBiSOZopsbOfrJ11xv7Xg7cY0F1WEZoJzVjWAvS/30VOC4nUQ==
+X-Received: by 2002:aa7:d858:: with SMTP id f24mr3694596eds.156.1644927513671;
+        Tue, 15 Feb 2022 04:18:33 -0800 (PST)
+Received: from krava ([83.240.63.12])
+        by smtp.gmail.com with ESMTPSA id v8sm4138713edc.30.2022.02.15.04.18.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Feb 2022 04:18:33 -0800 (PST)
+Date:   Tue, 15 Feb 2022 13:18:31 +0100
+From:   Jiri Olsa <olsajiri@gmail.com>
+To:     "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
+Cc:     acme@kernel.org, jolsa@redhat.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] libperf: Add API for allocating new thread map
+Message-ID: <YguaF9kmFyoZ1ZhC@krava>
+References: <20220210085225.551891-1-tz.stoyanov@gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.1
-Subject: Re: Test 73 Sig_trap fails on arm64 (was Re: [PATCH] perf test: Test
- 73 Sig_trap fails on s390)
-From:   John Garry <john.garry@huawei.com>
-To:     Leo Yan <leo.yan@linaro.org>, Marco Elver <elver@google.com>,
-        Will Deacon <will@kernel.org>
-CC:     Thomas Richter <tmricht@linux.ibm.com>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <acme@kernel.org>, <svens@linux.ibm.com>, <gor@linux.ibm.com>,
-        <sumanthk@linux.ibm.com>, <hca@linux.ibm.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>, <dvyukov@google.com>
-References: <20211216151454.752066-1-tmricht@linux.ibm.com>
- <CANpmjNNMWtjcKa961SjEvRbbPXyw5M5SkrXbb3tnyL3_XyniCw@mail.gmail.com>
- <90efb5a9-612a-919e-cf2f-c528692d61e2@huawei.com>
- <20220118091827.GA98966@leoy-ThinkPad-X240s>
- <CANpmjNMPoU+1b1fKFuYDYwisW2YfjQHxGt5hgLp1tioG7C2jmg@mail.gmail.com>
- <20220118124343.GC98966@leoy-ThinkPad-X240s>
- <bfa0af18-04ac-857d-d3d8-ad9290f912c8@huawei.com>
-In-Reply-To: <bfa0af18-04ac-857d-d3d8-ad9290f912c8@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.47.81.62]
-X-ClientProxiedBy: lhreml703-chm.china.huawei.com (10.201.108.52) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220210085225.551891-1-tz.stoyanov@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 24/01/2022 09:19, John Garry wrote:
+On Thu, Feb 10, 2022 at 10:52:25AM +0200, Tzvetomir Stoyanov (VMware) wrote:
+> The existing API perf_thread_map__new_dummy() allocates new thread map
+> for one thread. I couldn't find a way to reallocate the map with more
+> threads, or to allocate a new map for more than one thread. Having
+> multiple threads in a thread map is essential for some use cases.
+> That's why a new API is proposed, which allocates a new thread map
+> for given number of threads:
+>  perf_thread_map__new()
 
-Hi Will,
+I'm ok with that, just wondering if we should call it 'perf_thread_map__new_nr'
+because we already have perf_cpu_map__new(const char *cpu_list) so
+it might be better to keep perf_cpu_map and perf_thread_map in sync
 
-Have you had a chance to check this or the mail from Dmitry?
+Arnaldo, thoughts on this?
 
-https://lore.kernel.org/linux-perf-users/CACT4Y+YVyJcqbR5j2fsSQ+C5hy78X+aobrUHaZKghFf0_NMv=A@mail.gmail.com/
-
-If we can't make progress then we just need to skip the test on arm64 
-for now.
-
-Thanks,
-John
+jirka
 
 > 
->> On Tue, Jan 18, 2022 at 12:40:04PM +0100, Marco Elver wrote:
->>
->> [...]
->>
->>>> Both Arm and Arm64 platforms cannot support signal handler with
->>>> breakpoint, please see the details in [1].  So I think we need
->>>> something like below:
->>>>
->>>> static int test__sigtrap(struct test_suite *test __maybe_unused, int 
->>>> subtest __maybe_unused)
->>>> {
->>>>          ...
->>>>
->>>>          if (!BP_SIGNAL_IS_SUPPORTED) {
->>>>                  pr_debug("Test not supported on this architecture");
->>>>                  return TEST_SKIP;
->>>>          }
->>>>
->>>>          ...
->>>> }
->>>>
->>>> Since we have defined BP_SIGNAL_IS_SUPPORTED, I think we can reuse 
->>>> it at
->>>> here.
->>>>
->>>> [1]https://lore.kernel.org/lkml/157169993406.29376.12473771029179755767.tip-bot2@tip-bot2/ 
->>>>
->>> Does this limitation also exist for address watchpoints? The sigtrap
->>> test does not make use of instruction breakpoints, but instead just
->>> sets up a watchpoint on access to a data address.
->> Yes, after reading the code, the flow for either instrution breakpoint
->> or watchpoint both use the single step [1], thus the signal handler will
->> take the single step execution and lead to the infinite loop.
->>
->> I am not the best person to answer this question; @Will, could you
->> confirm for this?  Thanks!
->>
->> Leo
->>
->> [1]https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/kernel/hw_breakpoint.c 
->>
+> Signed-off-by: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
+> ---
+>  tools/lib/perf/Documentation/libperf.txt |  1 +
+>  tools/lib/perf/include/perf/threadmap.h  |  1 +
+>  tools/lib/perf/libperf.map               |  1 +
+>  tools/lib/perf/tests/test-threadmap.c    | 27 ++++++++++++++++++++++++
+>  tools/lib/perf/threadmap.c               | 15 +++++++++----
+>  5 files changed, 41 insertions(+), 4 deletions(-)
 > 
-> .
-
+> diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
+> index 32c5051c24eb..9cbd41c29bff 100644
+> --- a/tools/lib/perf/Documentation/libperf.txt
+> +++ b/tools/lib/perf/Documentation/libperf.txt
+> @@ -62,6 +62,7 @@ SYNOPSIS
+>    struct perf_thread_map;
+>  
+>    struct perf_thread_map *perf_thread_map__new_dummy(void);
+> +  struct perf_thread_map *perf_thread_map__new(int nr);
+>  
+>    void perf_thread_map__set_pid(struct perf_thread_map *map, int thread, pid_t pid);
+>    char *perf_thread_map__comm(struct perf_thread_map *map, int thread);
+> diff --git a/tools/lib/perf/include/perf/threadmap.h b/tools/lib/perf/include/perf/threadmap.h
+> index a7c50de8d010..47d433416040 100644
+> --- a/tools/lib/perf/include/perf/threadmap.h
+> +++ b/tools/lib/perf/include/perf/threadmap.h
+> @@ -8,6 +8,7 @@
+>  struct perf_thread_map;
+>  
+>  LIBPERF_API struct perf_thread_map *perf_thread_map__new_dummy(void);
+> +LIBPERF_API struct perf_thread_map *perf_thread_map__new(int nr);
+>  
+>  LIBPERF_API void perf_thread_map__set_pid(struct perf_thread_map *map, int thread, pid_t pid);
+>  LIBPERF_API char *perf_thread_map__comm(struct perf_thread_map *map, int thread);
+> diff --git a/tools/lib/perf/libperf.map b/tools/lib/perf/libperf.map
+> index 93696affda2e..240a2f087b70 100644
+> --- a/tools/lib/perf/libperf.map
+> +++ b/tools/lib/perf/libperf.map
+> @@ -11,6 +11,7 @@ LIBPERF_0.0.1 {
+>  		perf_cpu_map__empty;
+>  		perf_cpu_map__max;
+>  		perf_cpu_map__has;
+> +		perf_thread_map__new;
+>  		perf_thread_map__new_dummy;
+>  		perf_thread_map__set_pid;
+>  		perf_thread_map__comm;
+> diff --git a/tools/lib/perf/tests/test-threadmap.c b/tools/lib/perf/tests/test-threadmap.c
+> index 5e2a0291e94c..3388bf36dfc0 100644
+> --- a/tools/lib/perf/tests/test-threadmap.c
+> +++ b/tools/lib/perf/tests/test-threadmap.c
+> @@ -11,9 +11,12 @@ static int libperf_print(enum libperf_print_level level,
+>  	return vfprintf(stderr, fmt, ap);
+>  }
+>  
+> +#define THREADS_NR	5
+> +
+>  int test_threadmap(int argc, char **argv)
+>  {
+>  	struct perf_thread_map *threads;
+> +	int i;
+>  
+>  	__T_START;
+>  
+> @@ -27,6 +30,30 @@ int test_threadmap(int argc, char **argv)
+>  	perf_thread_map__put(threads);
+>  	perf_thread_map__put(threads);
+>  
+> +	threads = perf_thread_map__new(THREADS_NR);
+> +	if (!threads)
+> +		tests_failed++;
+> +
+> +	if (perf_thread_map__nr(threads) != THREADS_NR)
+> +		tests_failed++;
+> +
+> +	for (i = 0; i < THREADS_NR; i++) {
+> +		if (perf_thread_map__pid(threads, i) != -1)
+> +			tests_failed++;
+> +	}
+> +
+> +	for (i = 1; i < THREADS_NR; i++)
+> +		perf_thread_map__set_pid(threads, i, i * 100);
+> +
+> +	if (perf_thread_map__pid(threads, 0) != -1)
+> +		tests_failed++;
+> +
+> +	for (i = 1; i < THREADS_NR; i++) {
+> +		if (perf_thread_map__pid(threads, i) != i * 100)
+> +			tests_failed++;
+> +	}
+> +	perf_thread_map__put(threads);
+> +
+>  	__T_END;
+>  	return tests_failed == 0 ? 0 : -1;
+>  }
+> diff --git a/tools/lib/perf/threadmap.c b/tools/lib/perf/threadmap.c
+> index e92c368b0a6c..843fe1070cc9 100644
+> --- a/tools/lib/perf/threadmap.c
+> +++ b/tools/lib/perf/threadmap.c
+> @@ -42,18 +42,25 @@ char *perf_thread_map__comm(struct perf_thread_map *map, int thread)
+>  	return map->map[thread].comm;
+>  }
+>  
+> -struct perf_thread_map *perf_thread_map__new_dummy(void)
+> +struct perf_thread_map *perf_thread_map__new(int nr)
+>  {
+> -	struct perf_thread_map *threads = thread_map__alloc(1);
+> +	struct perf_thread_map *threads = thread_map__alloc(nr);
+> +	int i;
+>  
+>  	if (threads != NULL) {
+> -		perf_thread_map__set_pid(threads, 0, -1);
+> -		threads->nr = 1;
+> +		for (i = 0; i < nr; i++)
+> +			perf_thread_map__set_pid(threads, i, -1);
+> +		threads->nr = nr;
+>  		refcount_set(&threads->refcnt, 1);
+>  	}
+>  	return threads;
+>  }
+>  
+> +struct perf_thread_map *perf_thread_map__new_dummy(void)
+> +{
+> +	return perf_thread_map__new(1);
+> +}
+> +
+>  static void perf_thread_map__delete(struct perf_thread_map *threads)
+>  {
+>  	if (threads) {
+> -- 
+> 2.34.1
+> 
