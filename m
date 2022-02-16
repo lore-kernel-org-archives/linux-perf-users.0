@@ -2,98 +2,249 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7043CC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Feb 2022 13:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B964C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Feb 2022 13:54:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234008AbiBPNj5 (ORCPT
+        id S233959AbiBPNya (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Feb 2022 08:39:57 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:44812 "EHLO
+        Wed, 16 Feb 2022 08:54:30 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:34226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229850AbiBPNj4 (ORCPT
+        with ESMTP id S229742AbiBPNya (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Feb 2022 08:39:56 -0500
+        Wed, 16 Feb 2022 08:54:30 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 380C82AB53F;
-        Wed, 16 Feb 2022 05:39:44 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3ED11E8BEF;
+        Wed, 16 Feb 2022 05:54:17 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D0D82617C5;
-        Wed, 16 Feb 2022 13:39:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22F37C004E1;
-        Wed, 16 Feb 2022 13:39:43 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4D3C361842;
+        Wed, 16 Feb 2022 13:54:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6039CC004E1;
+        Wed, 16 Feb 2022 13:54:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645018783;
-        bh=fZOgObgmg56ZT81wOV/Cmg29xsNwt6wScoUupkYUFKM=;
+        s=k20201202; t=1645019656;
+        bh=5LiTn6S1BtQcKTOgrNN+zF552+0LYUwUIv2x9y/AqUs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=L2xORViD3f7Lvsd9z6F42fZWrXWpJ0ruxfaptxIeD4trXCGvefnIK6GvLJ1m3LhK2
-         IeX86mrq9t2tQqgNNXPv5Pz43u0my9zZzdtE1tew6+MPwLXM5RCPuKpdmex6ImhDOX
-         fYR0X/XZZLfQZDWXlY4OADzbuJ4z0+1JWhSLBSsZRe7h4gQbGSwsWVv11jyuPo7S77
-         tYBPp4xfTLq0kVCH7ueBCZgiLhZgBb+VqNNbuvfI86zWwyTw3aud5YXQ0OUZKasclS
-         kKxejozS7lb1T5DfSULXkKByJ7WzNyoMpI3xD6AMDUzDZx0Jd7I+cXE1tbQcWinXhs
-         db4GcfBbBJcGA==
+        b=e0oICphKag0wyoyhALIw8XeWx6i+LFa5qFFG9nExd7SgahhHhWGtQyCcZIyhgzsOn
+         DlWr4miMUdixkvvDuA9AHdhZD06Uc8/E+Q47GUVsUIYSsivMOFrjhGAoAF5yz6JZ2h
+         41u/KZVytB2Yo+6u7K+HKhdb3HrbsICvReCz69q/8gDAfPSbIoCPkNVeb/YEKJzh0D
+         6DuM8eFo2iwNCcZIPA7JSt8UaFgyxzHcR4FeCz02Wob2egM8F5agAIYdnOG47J5oz4
+         lS0Zp6nOlzU4rzU/axPSQRx/aGAm3UgcBjMwB/Na4IxWPYBcqOuMr9lPwhtEGOPBX0
+         b7coHIYqg1KlA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 94D03400FE; Wed, 16 Feb 2022 10:39:41 -0300 (-03)
-Date:   Wed, 16 Feb 2022 10:39:41 -0300
+        id BBCDE400FE; Wed, 16 Feb 2022 10:54:13 -0300 (-03)
+Date:   Wed, 16 Feb 2022 10:54:13 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     tangmeng <tangmeng@uniontech.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] perf tools: Remove redundant ret variable
-Message-ID: <Ygz+nQksMpsorTC8@kernel.org>
-References: <20220216030425.27779-1-tangmeng@uniontech.com>
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] libperf: Add API for allocating new thread map
+Message-ID: <Yg0CBc4gEQDX4/WD@kernel.org>
+References: <20220210085225.551891-1-tz.stoyanov@gmail.com>
+ <YguaF9kmFyoZ1ZhC@krava>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220216030425.27779-1-tangmeng@uniontech.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <YguaF9kmFyoZ1ZhC@krava>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Feb 16, 2022 at 11:04:24AM +0800, tangmeng escreveu:
-> Return value from hist_entry_iter__add() directly instead
-> of taking this in another redundant variable.
+Em Tue, Feb 15, 2022 at 01:18:31PM +0100, Jiri Olsa escreveu:
+> On Thu, Feb 10, 2022 at 10:52:25AM +0200, Tzvetomir Stoyanov (VMware) wrote:
+> > The existing API perf_thread_map__new_dummy() allocates new thread map
+> > for one thread. I couldn't find a way to reallocate the map with more
+> > threads, or to allocate a new map for more than one thread. Having
+> > multiple threads in a thread map is essential for some use cases.
+> > That's why a new API is proposed, which allocates a new thread map
+> > for given number of threads:
+> >  perf_thread_map__new()
+> 
+> I'm ok with that, just wondering if we should call it 'perf_thread_map__new_nr'
+> because we already have perf_cpu_map__new(const char *cpu_list) so
+> it might be better to keep perf_cpu_map and perf_thread_map in sync
+ 
+> Arnaldo, thoughts on this?
 
-Thanks, applied.
+Agreed on trying to have similar semantics for the default, main
+constructor, so we probably need perf_thread_map__new(const char *thread_list).
+
+In tools/perf/util/thread_map.c, from where tools/lib/threadmap.c came
+from we have many alternative constructors:
+
+⬢[acme@toolbox perf]$ grep 'struct perf_thread_map \*thread_map__new' tools/perf/util/thread_map.c
+struct perf_thread_map *thread_map__new_by_pid(pid_t pid)
+struct perf_thread_map *thread_map__new_by_tid(pid_t tid)
+struct perf_thread_map *thread_map__new_all_cpus(void)
+struct perf_thread_map *thread_map__new_by_uid(uid_t uid)
+struct perf_thread_map *thread_map__new(pid_t pid, pid_t tid, uid_t uid)
+static struct perf_thread_map *thread_map__new_by_pid_str(const char *pid_str)
+struct perf_thread_map *thread_map__new_by_tid_str(const char *tid_str)
+struct perf_thread_map *thread_map__new_str(const char *pid, const char *tid,
+struct perf_thread_map *thread_map__new_event(struct perf_record_thread_map *event)
+⬢[acme@toolbox perf]$
+
+The one you want is almost:
+
+	thread_map__new_by_tid_str(const char *tid_str)
+
+but perhaps it would be better to have:
+
+struct perf_thread_map *thread_map__new_array(int nr_threads, pid_t *array);
+
+But yeah, if your logic needs to first allocate space for the thread_map
+and then populate it, make it so that array == NULL is supported for
+that case, then thread_map__new_array() will not touch it and set
+everything to -1, to be populated later using perf_thread_map__set_pid().
+
+With that thread_map__new_by_tid_str() could be reimplemented as a
+wrapper around thread_map__new_array(). :-)
+
+While we're on this, shouldn't we rename 'thread' in
+tools/lib/perf/include/perf/threadmap.h and threadmap.c to be 'idx' to
+avoid confusion?
 
 - Arnaldo
-
  
-> Signed-off-by: tangmeng <tangmeng@uniontech.com>
-> ---
->  tools/perf/builtin-annotate.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+> jirka
 > 
-> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-> index 490bb9b8cf17..e347b8ef088f 100644
-> --- a/tools/perf/builtin-annotate.c
-> +++ b/tools/perf/builtin-annotate.c
-> @@ -190,7 +190,6 @@ static int process_branch_callback(struct evsel *evsel,
->  	};
->  
->  	struct addr_location a;
-> -	int ret;
->  
->  	if (machine__resolve(machine, &a, sample) < 0)
->  		return -1;
-> @@ -203,8 +202,7 @@ static int process_branch_callback(struct evsel *evsel,
->  
->  	hist__account_cycles(sample->branch_stack, al, sample, false, NULL);
->  
-> -	ret = hist_entry_iter__add(&iter, &a, PERF_MAX_STACK_DEPTH, ann);
-> -	return ret;
-> +	return hist_entry_iter__add(&iter, &a, PERF_MAX_STACK_DEPTH, ann);
->  }
->  
->  static bool has_annotation(struct perf_annotate *ann)
-> -- 
-> 2.20.1
-> 
-> 
+> > 
+> > Signed-off-by: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
+> > ---
+> >  tools/lib/perf/Documentation/libperf.txt |  1 +
+> >  tools/lib/perf/include/perf/threadmap.h  |  1 +
+> >  tools/lib/perf/libperf.map               |  1 +
+> >  tools/lib/perf/tests/test-threadmap.c    | 27 ++++++++++++++++++++++++
+> >  tools/lib/perf/threadmap.c               | 15 +++++++++----
+> >  5 files changed, 41 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
+> > index 32c5051c24eb..9cbd41c29bff 100644
+> > --- a/tools/lib/perf/Documentation/libperf.txt
+> > +++ b/tools/lib/perf/Documentation/libperf.txt
+> > @@ -62,6 +62,7 @@ SYNOPSIS
+> >    struct perf_thread_map;
+> >  
+> >    struct perf_thread_map *perf_thread_map__new_dummy(void);
+> > +  struct perf_thread_map *perf_thread_map__new(int nr);
+> >  
+> >    void perf_thread_map__set_pid(struct perf_thread_map *map, int thread, pid_t pid);
+> >    char *perf_thread_map__comm(struct perf_thread_map *map, int thread);
+> > diff --git a/tools/lib/perf/include/perf/threadmap.h b/tools/lib/perf/include/perf/threadmap.h
+> > index a7c50de8d010..47d433416040 100644
+> > --- a/tools/lib/perf/include/perf/threadmap.h
+> > +++ b/tools/lib/perf/include/perf/threadmap.h
+> > @@ -8,6 +8,7 @@
+> >  struct perf_thread_map;
+> >  
+> >  LIBPERF_API struct perf_thread_map *perf_thread_map__new_dummy(void);
+> > +LIBPERF_API struct perf_thread_map *perf_thread_map__new(int nr);
+> >  
+> >  LIBPERF_API void perf_thread_map__set_pid(struct perf_thread_map *map, int thread, pid_t pid);
+> >  LIBPERF_API char *perf_thread_map__comm(struct perf_thread_map *map, int thread);
+> > diff --git a/tools/lib/perf/libperf.map b/tools/lib/perf/libperf.map
+> > index 93696affda2e..240a2f087b70 100644
+> > --- a/tools/lib/perf/libperf.map
+> > +++ b/tools/lib/perf/libperf.map
+> > @@ -11,6 +11,7 @@ LIBPERF_0.0.1 {
+> >  		perf_cpu_map__empty;
+> >  		perf_cpu_map__max;
+> >  		perf_cpu_map__has;
+> > +		perf_thread_map__new;
+> >  		perf_thread_map__new_dummy;
+> >  		perf_thread_map__set_pid;
+> >  		perf_thread_map__comm;
+> > diff --git a/tools/lib/perf/tests/test-threadmap.c b/tools/lib/perf/tests/test-threadmap.c
+> > index 5e2a0291e94c..3388bf36dfc0 100644
+> > --- a/tools/lib/perf/tests/test-threadmap.c
+> > +++ b/tools/lib/perf/tests/test-threadmap.c
+> > @@ -11,9 +11,12 @@ static int libperf_print(enum libperf_print_level level,
+> >  	return vfprintf(stderr, fmt, ap);
+> >  }
+> >  
+> > +#define THREADS_NR	5
+> > +
+> >  int test_threadmap(int argc, char **argv)
+> >  {
+> >  	struct perf_thread_map *threads;
+> > +	int i;
+> >  
+> >  	__T_START;
+> >  
+> > @@ -27,6 +30,30 @@ int test_threadmap(int argc, char **argv)
+> >  	perf_thread_map__put(threads);
+> >  	perf_thread_map__put(threads);
+> >  
+> > +	threads = perf_thread_map__new(THREADS_NR);
+> > +	if (!threads)
+> > +		tests_failed++;
+> > +
+> > +	if (perf_thread_map__nr(threads) != THREADS_NR)
+> > +		tests_failed++;
+> > +
+> > +	for (i = 0; i < THREADS_NR; i++) {
+> > +		if (perf_thread_map__pid(threads, i) != -1)
+> > +			tests_failed++;
+> > +	}
+> > +
+> > +	for (i = 1; i < THREADS_NR; i++)
+> > +		perf_thread_map__set_pid(threads, i, i * 100);
+> > +
+> > +	if (perf_thread_map__pid(threads, 0) != -1)
+> > +		tests_failed++;
+> > +
+> > +	for (i = 1; i < THREADS_NR; i++) {
+> > +		if (perf_thread_map__pid(threads, i) != i * 100)
+> > +			tests_failed++;
+> > +	}
+> > +	perf_thread_map__put(threads);
+> > +
+> >  	__T_END;
+> >  	return tests_failed == 0 ? 0 : -1;
+> >  }
+> > diff --git a/tools/lib/perf/threadmap.c b/tools/lib/perf/threadmap.c
+> > index e92c368b0a6c..843fe1070cc9 100644
+> > --- a/tools/lib/perf/threadmap.c
+> > +++ b/tools/lib/perf/threadmap.c
+> > @@ -42,18 +42,25 @@ char *perf_thread_map__comm(struct perf_thread_map *map, int thread)
+> >  	return map->map[thread].comm;
+> >  }
+> >  
+> > -struct perf_thread_map *perf_thread_map__new_dummy(void)
+> > +struct perf_thread_map *perf_thread_map__new(int nr)
+> >  {
+> > -	struct perf_thread_map *threads = thread_map__alloc(1);
+> > +	struct perf_thread_map *threads = thread_map__alloc(nr);
+> > +	int i;
+> >  
+> >  	if (threads != NULL) {
+> > -		perf_thread_map__set_pid(threads, 0, -1);
+> > -		threads->nr = 1;
+> > +		for (i = 0; i < nr; i++)
+> > +			perf_thread_map__set_pid(threads, i, -1);
+> > +		threads->nr = nr;
+> >  		refcount_set(&threads->refcnt, 1);
+> >  	}
+> >  	return threads;
+> >  }
+> >  
+> > +struct perf_thread_map *perf_thread_map__new_dummy(void)
+> > +{
+> > +	return perf_thread_map__new(1);
+> > +}
+> > +
+> >  static void perf_thread_map__delete(struct perf_thread_map *threads)
+> >  {
+> >  	if (threads) {
+> > -- 
+> > 2.34.1
+> > 
 
 -- 
 
