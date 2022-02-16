@@ -2,88 +2,133 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F646C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Feb 2022 03:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B06CC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Feb 2022 03:55:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344005AbiBPDHC (ORCPT
+        id S245065AbiBPDzQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Feb 2022 22:07:02 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:56682 "EHLO
+        Tue, 15 Feb 2022 22:55:16 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344002AbiBPDHB (ORCPT
+        with ESMTP id S245098AbiBPDzP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Feb 2022 22:07:01 -0500
-Received: from qq.com (smtpbg480.qq.com [59.36.132.97])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 682FE2B267
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Feb 2022 19:06:50 -0800 (PST)
-X-QQ-mid: bizesmtp90t1644980693tylaq75g
-Received: from localhost.localdomain (unknown [58.240.82.166])
-        by bizesmtp.qq.com (ESMTP) with 
-        id ; Wed, 16 Feb 2022 11:04:41 +0800 (CST)
-X-QQ-SSF: 01400000002000B0E000B00A0000000
-X-QQ-FEAT: G+mSt178IQqtrmaXXYz7lyJ3KPDNlaIiWGgP5TqNWATsAk5FNjA6Hpx8ZL6bA
-        ZxDb1yzWaOxKOFBHgb8MJGjuZXSvhgysm10z5X+aHlHK4bXs+sK08W2IBG1mN1GFPo60TTX
-        PjFiyDgNr0Q54GGlU9Yp22YFB+z4TA81L4Wt6iav0ITlcyMRs+JYs2f3HunMvRvlXWr9tyD
-        +mtDfFrtxD9UKdXq4mO2bOwmV4dlxUHJai+QqFppNKRC0S9zwY5uq4DPGq0qC/fwoExFE80
-        JIMmVM2DNz2ZzG+wq51B8QKitjs1ikMtp0KU5g/jn/JrOAsNQ8UuQbn+9sX1IBXmGtjd7R+
-        U6nIGiN1ncPIg/0kM25gNH1zpK8lg==
-X-QQ-GoodBg: 2
-From:   tangmeng <tangmeng@uniontech.com>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tangmeng <tangmeng@uniontech.com>
-Subject: [PATCH 2/2] perf tools: Remove redundant err variable
-Date:   Wed, 16 Feb 2022 11:04:25 +0800
-Message-Id: <20220216030425.27779-2-tangmeng@uniontech.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20220216030425.27779-1-tangmeng@uniontech.com>
-References: <20220216030425.27779-1-tangmeng@uniontech.com>
+        Tue, 15 Feb 2022 22:55:15 -0500
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86565EB142;
+        Tue, 15 Feb 2022 19:55:02 -0800 (PST)
+Received: from dggeme754-chm.china.huawei.com (unknown [172.30.72.54])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Jz3t54pJWz8wjL;
+        Wed, 16 Feb 2022 11:51:41 +0800 (CST)
+Received: from huawei.com (10.175.104.170) by dggeme754-chm.china.huawei.com
+ (10.3.19.100) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.21; Wed, 16
+ Feb 2022 11:54:59 +0800
+From:   Zhipeng Xie <xiezhipeng1@huawei.com>
+To:     <peterz@infradead.org>
+CC:     <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
+        <fanwentao@huawei.com>, <jolsa@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <mark.rutland@arm.com>, <mingo@redhat.com>, <namhyung@kernel.org>,
+        <xiezhipeng1@huawei.com>, <xiexiuqi@huawei.com>
+Subject: PING: [PATCH v2] perf/core: Fix perf_mmap fail when CONFIG_PERF_USE_VMALLOC enabled
+Date:   Wed, 16 Feb 2022 11:54:27 -0500
+Message-ID: <20220216165427.18270-1-xiezhipeng1@huawei.com>
+X-Mailer: git-send-email 2.18.1
+In-Reply-To: <20220209145417.6495-1-xiezhipeng1@huawei.com>
+References: <20220209145417.6495-1-xiezhipeng1@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:uniontech.com:qybgforeign:qybgforeign6
-X-QQ-Bgrelay: 1
+Content-Type: text/plain
+X-Originating-IP: [10.175.104.170]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggeme754-chm.china.huawei.com (10.3.19.100)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The variable err in the perf_event__process_sample is only used
-in the only one judgment statement, it is not used in other places.
+Hi, Peter
 
-So, use the return value from hist_entry_iter__add() directly
-instead of taking this in another redundant variable.
+Could you please review the V2 version?
 
-Signed-off-by: tangmeng <tangmeng@uniontech.com>
----
- tools/perf/builtin-top.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+On Wed, February 9, 2022 10:54 PM, Zhipeng Xie wrote:
+> This problem can be reproduced with CONFIG_PERF_USE_VMALLOC enabled
+> on both
+> x86_64 and aarch64 arch when using sysdig -B(using ebpf)[1].
+> sysdig -B works fine after rebuilding the kernel with
+> CONFIG_PERF_USE_VMALLOC
+> disabled.
+> 
+> I tracked it down to the if condition event->rb->nr_pages != nr_pages in
+> perf_mmap is true when CONFIG_PERF_USE_VMALLOC is enabled where
+> event->rb->nr_pages = 1 and nr_pages = 2048 resulting perf_mmap to return
+> -EINVAL.This is because when CONFIG_PERF_USE_VMALLOC is enabled,
+> rb->nr_pages
+> is always equal to 1.
+> 
+> Arch with CONFIG_PERF_USE_VMALLOC enabled by default:
+>	arc/arm/csky/mips/sh/sparc/xtensa
+> Arch with CONFIG_PERF_USE_VMALLOC disabled by default:
+>	x86_64/aarch64/...
+> 
+> Fix this problem by using data_page_nr.
+> 
+> [1] https://github.com/draios/sysdig
+> 
+> Signed-off-by: Zhipeng Xie <xiezhipeng1@huawei.com>
+> ---
+>  kernel/events/core.c        | 2 +-
+>  kernel/events/internal.h    | 5 +++++
+>  kernel/events/ring_buffer.c | 5 -----
+>  3 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 57c7197838db..370292effd32 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -6352,7 +6352,7 @@ static int perf_mmap(struct file *file, struct
+> vm_area_struct *vma)
+>  again:
+>	mutex_lock(&event->mmap_mutex);
+>	if (event->rb) {
+> -		if (event->rb->nr_pages != nr_pages) {
+> +		if (data_page_nr(event->rb) != nr_pages) {
+>			ret = -EINVAL;
+>			goto unlock;
+>		}
+> diff --git a/kernel/events/internal.h b/kernel/events/internal.h
+> index 082832738c8f..5816c0719dbf 100644
+> --- a/kernel/events/internal.h
+> +++ b/kernel/events/internal.h
+> @@ -116,6 +116,11 @@ static inline int page_order(struct perf_buffer *rb)
+>  }
+>  #endif
+> 
+> +static int data_page_nr(struct perf_buffer *rb)
+> +{
+> +	return rb->nr_pages << page_order(rb);
+> +}
+> +
+>  static inline unsigned long perf_data_size(struct perf_buffer *rb)
+>  {
+>	return rb->nr_pages << (PAGE_SHIFT + page_order(rb));
+> diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+> index 52868716ec35..fb35b926024c 100644
+> --- a/kernel/events/ring_buffer.c
+> +++ b/kernel/events/ring_buffer.c
+> @@ -859,11 +859,6 @@ void rb_free(struct perf_buffer *rb)
+>  }
+> 
+>  #else
+> -static int data_page_nr(struct perf_buffer *rb)
+> -{
+> -	return rb->nr_pages << page_order(rb);
+> -}
+> -
+>  static struct page *
+>  __perf_mmap_to_page(struct perf_buffer *rb, unsigned long pgoff)
+>  {
+> --
+> 2.18.1
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 1fc390f136dd..3c8c60b7f6f0 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -746,7 +746,6 @@ static void perf_event__process_sample(struct perf_tool *tool,
- {
- 	struct perf_top *top = container_of(tool, struct perf_top, tool);
- 	struct addr_location al;
--	int err;
- 
- 	if (!machine && perf_guest) {
- 		static struct intlist *seen;
-@@ -839,8 +838,7 @@ static void perf_event__process_sample(struct perf_tool *tool,
- 
- 		pthread_mutex_lock(&hists->lock);
- 
--		err = hist_entry_iter__add(&iter, &al, top->max_stack, top);
--		if (err < 0)
-+		if (hist_entry_iter__add(&iter, &al, top->max_stack, top) < 0)
- 			pr_err("Problem incrementing symbol period, skipping event\n");
- 
- 		pthread_mutex_unlock(&hists->lock);
--- 
-2.20.1
-
-
-
+Best Regards,
+Zhipeng Xie
