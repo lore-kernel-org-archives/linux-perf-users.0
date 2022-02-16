@@ -2,118 +2,179 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1054C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Feb 2022 13:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36ED2C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Feb 2022 13:21:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233715AbiBPNN2 (ORCPT
+        id S230059AbiBPNVR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Feb 2022 08:13:28 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:47526 "EHLO
+        Wed, 16 Feb 2022 08:21:17 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:35448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233688AbiBPNN2 (ORCPT
+        with ESMTP id S231818AbiBPNTc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Feb 2022 08:13:28 -0500
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7ED126A2D3
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Feb 2022 05:13:14 -0800 (PST)
-Received: by mail-ed1-x52a.google.com with SMTP id f17so3876725edd.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Feb 2022 05:13:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=C2p4IUdETvsJDn4La4k2PCI07l5Bxa5zsybCeAbirFE=;
-        b=cgTmNT+lR7bIEtc+0RAP+11VPLYqnh/5AYxJB7yMRpBjQ4E7jT1GDIbYfOvueK0OGj
-         ezlXhWvCIyOfOIoK9wPgSJW5Qvz/Tq6u5h2BHhHxA3/M9FjYgCtvpraidt0TcJvapxBP
-         PSGEHjx8CPFzhxjV/xFtu0YKK3FRIyafADQKj33KP8ehSq3QyLbQ80nv3lfGkGZy9f/e
-         8kQ7cTK1XsTlQXalf/x5+5L17ozGIHBzyLvlGsemDJy2T8DzllilABCyKj6Q53kFjDb3
-         RQSuQSmRXKPAT2IGMBr2NO6prlzGpfdzqmcWk3/hpqV03GHQ07FnrM1zwgr+L9AvVUxb
-         x2+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=C2p4IUdETvsJDn4La4k2PCI07l5Bxa5zsybCeAbirFE=;
-        b=HrMvu/JGmZbHOwQ0Sz0wmmzBMjfgJwAp1y7+JRnC4yjLSn1/Rbz6aMKUquKffMooPO
-         iqwA9UEl+OS0W8pLx7bYqBR3Np/be4XNh3xJElEtfdg+mmlBOJFd/dfbLdrPku0t/3hc
-         GNr7/ZWwmeJx1JyKRvqWnQa2lmv2elp40fcunpfZkULoUaEEMqKpYWW1j22ImpvdBpBl
-         cbcVdpAqhnDd0ucouyMSPUJq+GESBjlhb1IQtwfU3xf2DC/hQnnOJFRikHDc+j7aKc62
-         NPEH8CidRvprv9SqeeOTvRji01/82UBzXEx1FNhQy5RFYTEdIf6WUypkiiG2fe04la+1
-         Jehg==
-X-Gm-Message-State: AOAM5338KXVOAvw/WiqGM8V020W2ErRNLghvSyUP4kozOCWKqx/Q6rxo
-        iY8f2UkfXMXiYVHq7SET4bNnsQ==
-X-Google-Smtp-Source: ABdhPJytGpaXpnUA2XqnoVWtsq4DkTHuirdUMy5k13A5Kf2GGU7VKMXxrZ1WP9LXlvA/21mEfeqgSA==
-X-Received: by 2002:a05:6402:742:b0:410:a427:3634 with SMTP id p2-20020a056402074200b00410a4273634mr2941621edy.304.1645017193316;
-        Wed, 16 Feb 2022 05:13:13 -0800 (PST)
-Received: from leoy-ThinkPad-X240s ([104.245.96.223])
-        by smtp.gmail.com with ESMTPSA id h5sm4817787ejo.124.2022.02.16.05.13.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Feb 2022 05:13:12 -0800 (PST)
-Date:   Wed, 16 Feb 2022 21:13:06 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>,
-        Marco Elver <elver@google.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, svens@linux.ibm.com, gor@linux.ibm.com,
-        sumanthk@linux.ibm.com, hca@linux.ibm.com,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: Test 73 Sig_trap fails on arm64 (was Re: [PATCH] perf test: Test
- 73 Sig_trap fails on s390)
-Message-ID: <20220216131306.GA56419@leoy-ThinkPad-X240s>
-References: <CANpmjNNMWtjcKa961SjEvRbbPXyw5M5SkrXbb3tnyL3_XyniCw@mail.gmail.com>
- <90efb5a9-612a-919e-cf2f-c528692d61e2@huawei.com>
- <20220118091827.GA98966@leoy-ThinkPad-X240s>
- <CANpmjNMPoU+1b1fKFuYDYwisW2YfjQHxGt5hgLp1tioG7C2jmg@mail.gmail.com>
- <20220118124343.GC98966@leoy-ThinkPad-X240s>
- <bfa0af18-04ac-857d-d3d8-ad9290f912c8@huawei.com>
- <06412caf-42e4-5c4b-c9b3-9691075405bd@huawei.com>
- <20220215143459.GB7592@willie-the-truck>
- <8c582e45-0954-a2ea-764a-4dd78a464988@huawei.com>
- <CACT4Y+Z8pKXw=8nwVtdo2W=hu_rBk1ws-Q=7-tBkLGTcD85NaA@mail.gmail.com>
+        Wed, 16 Feb 2022 08:19:32 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2BD5C29B9C2;
+        Wed, 16 Feb 2022 05:18:45 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 87532106F;
+        Wed, 16 Feb 2022 05:18:45 -0800 (PST)
+Received: from [10.1.31.148] (e127744.cambridge.arm.com [10.1.31.148])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 017123F66F;
+        Wed, 16 Feb 2022 05:18:41 -0800 (PST)
+Subject: Re: [PATCH] perf test: update arm64 perf_event_attr tests for
+ --call-graph
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexandre Truong <alexandre.truong@arm.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org, irogers@google.com
+References: <20220125104435.2737-1-german.gomez@arm.com>
+From:   German Gomez <german.gomez@arm.com>
+Message-ID: <622a42bd-69da-0df4-bbf3-7d21de77c73b@arm.com>
+Date:   Wed, 16 Feb 2022 13:17:56 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+Z8pKXw=8nwVtdo2W=hu_rBk1ws-Q=7-tBkLGTcD85NaA@mail.gmail.com>
+In-Reply-To: <20220125104435.2737-1-german.gomez@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Feb 16, 2022 at 12:54:16PM +0100, Dmitry Vyukov wrote:
-> On Wed, 16 Feb 2022 at 12:47, John Garry <john.garry@huawei.com> wrote:
+Hi,
+
+Friendly ping on this perf-test fix for arm64
+
+I will include some quick test notes:
+Before:
+
+$ ./perf test 17 -v
+17: Setup struct perf_event_attr
+[...]
+running './tests/attr/test-record-graph-default'
+expected sample_type=295, got 4391
+expected sample_regs_user=0, got 1073741824
+FAILED './tests/attr/test-record-graph-default' - match failure
+test child finished with -1
+---- end ----
+
+After:
 
 [...]
-
-> > > Signals make this messy, as the step logic will step_into_  the signal
-> > > handler -- we have to do this, otherwise we would miss break/watchpoints
-> > > triggered by the signal handler if we had disabled them for the step.
-> > > However, it means that when we return back from the signal handler we will
-> > > run back into the break/watchpoint which we initially stepped over. When
-> > > perf uses SIGTRAP to notify userspace that we hit a break/watchpoint,
-> > > then we'll get stuck because we'll step into the handler every time.
-> > >
-> > > Hopefully that clears things up a bit. Ideally, the kernel wouldn't
-> > > pretend to handle this stepping at all for arm64 as it adds a bunch of
-> > > complexity, overhead to our context-switch and I don't think the current
-> > > behaviour is particularly useful.
-> > >
-> >
-> > Right, so what I am hearing altogether is that for now we should just
-> > skip this test.
-> >
-> > And since the kernel does not seem to advertise this capability we need
-> > to disable for specific architectures.
-> 
-> It does and fwiw I am just trying to use it. Things work only on x86 so far.
-
-So here we have agreement to disable the cases for Arm64/Arm.
-
-John, since you put much efforts to follow up the issue, I'd like to
-leave decision to you if you want to proceed for patches?  Otherwise,
-I will send patches to disable cases in perf.
+running './tests/attr/test-record-graph-default-aarch64'
+test limitation 'aarch64'
+running './tests/attr/test-record-graph-fp-aarch64'
+test limitation 'aarch64'
+running './tests/attr/test-record-graph-default'
+test limitation '!aarch64'
+excluded architecture list ['aarch64']
+skipped [aarch64] './tests/attr/test-record-graph-default'
+running './tests/attr/test-record-graph-fp'
+test limitation '!aarch64'
+excluded architecture list ['aarch64']
+skipped [aarch64] './tests/attr/test-record-graph-fp'
+[...]
 
 Thanks,
-Leo
+German
+
+On 25/01/2022 10:44, German Gomez wrote:
+> The struct perf_event_attr is initialised differently in Arm64 when
+> recording in call-graph fp mode, so update the relevant tests, and add
+> two extra arm64-only tests.
+>
+> Fixes: 7248e308a575 ("perf tools: Record ARM64 LR register automatically")
+> Signed-off-by: German Gomez <german.gomez@arm.com>
+> ---
+>  tools/perf/tests/attr/README                            | 2 ++
+>  tools/perf/tests/attr/test-record-graph-default         | 2 ++
+>  tools/perf/tests/attr/test-record-graph-default-aarch64 | 9 +++++++++
+>  tools/perf/tests/attr/test-record-graph-fp              | 2 ++
+>  tools/perf/tests/attr/test-record-graph-fp-aarch64      | 9 +++++++++
+>  5 files changed, 24 insertions(+)
+>  create mode 100644 tools/perf/tests/attr/test-record-graph-default-aarch64
+>  create mode 100644 tools/perf/tests/attr/test-record-graph-fp-aarch64
+>
+> diff --git a/tools/perf/tests/attr/README b/tools/perf/tests/attr/README
+> index a36f49fb4dbe..1116fc6bf2ac 100644
+> --- a/tools/perf/tests/attr/README
+> +++ b/tools/perf/tests/attr/README
+> @@ -45,8 +45,10 @@ Following tests are defined (with perf commands):
+>    perf record -d kill                           (test-record-data)
+>    perf record -F 100 kill                       (test-record-freq)
+>    perf record -g kill                           (test-record-graph-default)
+> +  perf record -g kill                           (test-record-graph-default-aarch64)
+>    perf record --call-graph dwarf kill		(test-record-graph-dwarf)
+>    perf record --call-graph fp kill              (test-record-graph-fp)
+> +  perf record --call-graph fp kill              (test-record-graph-fp-aarch64)
+>    perf record --group -e cycles,instructions kill (test-record-group)
+>    perf record -e '{cycles,instructions}' kill   (test-record-group1)
+>    perf record -e '{cycles/period=1/,instructions/period=2/}:S' kill (test-record-group2)
+> diff --git a/tools/perf/tests/attr/test-record-graph-default b/tools/perf/tests/attr/test-record-graph-default
+> index 5d8234d50845..f0a18b4ea4f5 100644
+> --- a/tools/perf/tests/attr/test-record-graph-default
+> +++ b/tools/perf/tests/attr/test-record-graph-default
+> @@ -2,6 +2,8 @@
+>  command = record
+>  args    = --no-bpf-event -g kill >/dev/null 2>&1
+>  ret     = 1
+> +# arm64 enables registers in the default mode (fp)
+> +arch    = !aarch64
+>  
+>  [event:base-record]
+>  sample_type=295
+> diff --git a/tools/perf/tests/attr/test-record-graph-default-aarch64 b/tools/perf/tests/attr/test-record-graph-default-aarch64
+> new file mode 100644
+> index 000000000000..e98d62efb6f7
+> --- /dev/null
+> +++ b/tools/perf/tests/attr/test-record-graph-default-aarch64
+> @@ -0,0 +1,9 @@
+> +[config]
+> +command = record
+> +args    = --no-bpf-event -g kill >/dev/null 2>&1
+> +ret     = 1
+> +arch    = aarch64
+> +
+> +[event:base-record]
+> +sample_type=4391
+> +sample_regs_user=1073741824
+> diff --git a/tools/perf/tests/attr/test-record-graph-fp b/tools/perf/tests/attr/test-record-graph-fp
+> index 5630521c0b0f..a6e60e839205 100644
+> --- a/tools/perf/tests/attr/test-record-graph-fp
+> +++ b/tools/perf/tests/attr/test-record-graph-fp
+> @@ -2,6 +2,8 @@
+>  command = record
+>  args    = --no-bpf-event --call-graph fp kill >/dev/null 2>&1
+>  ret     = 1
+> +# arm64 enables registers in fp mode
+> +arch    = !aarch64
+>  
+>  [event:base-record]
+>  sample_type=295
+> diff --git a/tools/perf/tests/attr/test-record-graph-fp-aarch64 b/tools/perf/tests/attr/test-record-graph-fp-aarch64
+> new file mode 100644
+> index 000000000000..cbeea9971285
+> --- /dev/null
+> +++ b/tools/perf/tests/attr/test-record-graph-fp-aarch64
+> @@ -0,0 +1,9 @@
+> +[config]
+> +command = record
+> +args    = --no-bpf-event --call-graph fp kill >/dev/null 2>&1
+> +ret     = 1
+> +arch    = aarch64
+> +
+> +[event:base-record]
+> +sample_type=4391
+> +sample_regs_user=1073741824
