@@ -2,291 +2,278 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B42C8C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Feb 2022 22:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BD1C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Feb 2022 02:45:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235901AbiBPWIS (ORCPT
+        id S230462AbiBQCqJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Feb 2022 17:08:18 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50124 "EHLO
+        Wed, 16 Feb 2022 21:46:09 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:47328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231375AbiBPWIR (ORCPT
+        with ESMTP id S229478AbiBQCqH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Feb 2022 17:08:17 -0500
-Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB9BE1FFC8A
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Feb 2022 14:08:03 -0800 (PST)
-Received: by mail-yb1-xb2c.google.com with SMTP id p19so9094058ybc.6
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Feb 2022 14:08:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=isOeCA/lltI/NtMrPVVj1ziTbz6DfftTb3dxLCJueHE=;
-        b=QFTt19Njzzlzy63R6XOWaK+BOF0FOWChqmc/M9e78fPs+omtOYOPssJtA1M1UeMQep
-         fM834StWNdigyWFGhvr0R2wQNODg9ecyoiUDm8MUJEonBw5zQLeq7xpWhpCZJdTQ8A9l
-         VoJoVbkTk1m7114F/QncmxAnD6e3rNlyXAl/IH59X71wOmKhYj1OfY/j1f8feFgS4rHc
-         M5mwG4eFrBr2bsz+BymtZg9vzGToVbefxS9UvQ3A2hn60/xDPSgI5f6fzEKvmABSEe4N
-         /hKHGR5ap0mie91vUbyVDpvUtLtFxXMP1mJX7lkNdcbVtRKPlTcOJMz0Os4boLNISOmL
-         nKeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=isOeCA/lltI/NtMrPVVj1ziTbz6DfftTb3dxLCJueHE=;
-        b=VZXvtd15pMoJqucPXwZQ+nWiCWn/R411fumkyZSOxYdvb8eqGjD6YaiZTJwJXZtNX4
-         KyDg0L9FhRPmyxmKefiBO/p7o1UTzet9QBTYR2AyMwcCF72/omKH4bevB0iUpH6HB76Q
-         FlSH4S+sp1t/Qge4zT9D7S/j8ss0dexbcXRE7QrIFydXCrPFEMfSORdqoAE8THSlNusa
-         KF5WrzT8fKfs4oAZ7gG4ugTkxhua2rRb320JmVQaBrOC7Vf9gTIh02ZIAWaY8/0WZwgj
-         joLz0o8UA5xacCiZYuFj4+NW1nFSHgu+/3lCwjf3wXDgoYctQsp9YYDREUv7BMJIWqVl
-         Hj/w==
-X-Gm-Message-State: AOAM531TBpPJQVzxRczvoqri/4pDn55jaQvu5Xu8hX5nT5dN/J5KGKRJ
-        KgKLb5kL7ZAAgFjvs3fMYk4uvTMK18T2ret5KHxhJw==
-X-Google-Smtp-Source: ABdhPJyYdk7xvOTu1IxnQ2DqJolSl8njTLOssKQ66A00X+WQV5jwJYz8Z70jBI4ZXbtdLyB7B0F/ENZZ1C8sD+Kcl04=
-X-Received: by 2002:a25:c794:0:b0:61d:7913:cefb with SMTP id
- w142-20020a25c794000000b0061d7913cefbmr3911838ybe.375.1645049282776; Wed, 16
- Feb 2022 14:08:02 -0800 (PST)
-MIME-Version: 1.0
-References: <20220211103415.2737789-1-irogers@google.com> <20220211103415.2737789-13-irogers@google.com>
- <Yg0FXbzNVpsIpS45@kernel.org> <CAP-5=fWkF+J30ixh1iDVGhBBASTgLY9nWbd9ibguRYeyLvpsew@mail.gmail.com>
- <Yg1ar4/RCCWwQmJ0@kernel.org>
-In-Reply-To: <Yg1ar4/RCCWwQmJ0@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 16 Feb 2022 14:07:49 -0800
-Message-ID: <CAP-5=fXOXkxvPHAYz3xv23FTtJ8gtZ5b7AoGevQVK8k=yKRzFw@mail.gmail.com>
-Subject: Re: [PATCH v3 12/22] perf maps: Remove rb_node from struct map
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Wed, 16 Feb 2022 21:46:07 -0500
+Received: from out30-54.freemail.mail.aliyun.com (out30-54.freemail.mail.aliyun.com [115.124.30.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 074222A795F;
+        Wed, 16 Feb 2022 18:45:51 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0V4fbH8I_1645065942;
+Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0V4fbH8I_1645065942)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 17 Feb 2022 10:45:48 +0800
+From:   Wen Yang <simon.wy@alibaba-inc.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Wen Yang <simon.wy@alibaba-inc.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@collabora.com>,
-        James Clark <james.clark@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
-        Song Liu <song@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Miaoqian Lin <linmq006@gmail.com>,
-        Stephen Brennan <stephen.s.brennan@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        German Gomez <german.gomez@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Eric Dumazet <edumazet@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Hao Luo <haoluo@google.com>, eranian@google.com
-Content-Type: text/plain; charset="UTF-8"
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        Wen Yang <wenyang@linux.alibaba.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH] perf/x86: improve the event scheduling to avoid unnecessary pmu_stop/start
+Date:   Thu, 17 Feb 2022 10:45:40 +0800
+Message-Id: <20220217024540.33657-1-simon.wy@alibaba-inc.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Feb 16, 2022 at 12:12 PM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Wed, Feb 16, 2022 at 09:36:20AM -0800, Ian Rogers escreveu:
-> > On Wed, Feb 16, 2022 at 6:08 AM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > >
-> > > Em Fri, Feb 11, 2022 at 02:34:05AM -0800, Ian Rogers escreveu:
-> > > > struct map is reference counted, having it also be a node in an
-> > > > red-black tree complicates the reference counting.
-> > >
-> > > In what way?
-> > >
-> > > If I have some refcounted data structure and I want to add it to some
-> > > container (an rb_tree, a list, etc) all I have to do is to grab a
-> > > refcount when adding and dropping it after removing it from the list.
-> > >
-> > > IOW, in other words it is refcounted so that we can add it to a
-> > > red-black tree, amongst other uses.
-> >
-> > Thanks Arnaldo. So I'm not disputing that you can make reference
-> > counted collections. With reference counting every reference should
-> > have a count associated with it. So when symbol.c is using the list, a
-> > node may be referenced from a prev and a next pointer, so being in the
-> > list requires a reference count of 2. When you find something in the
->
-> Humm, just one reference is needed for being in a list, removing from
-> the list needs locking the access to the list, removing the object,
-> unlocking the list and then dropping the access for the then out of the
-> list refcounted object, no?
+This issue has been there for a long time, we could reproduce it as follows:
 
-Just one reference count is needed but if we were looking to automate
-reference counting then we'd associate one reference count with every
-pointer to the object. So with the invasive doubly linked list that we
-know as list, there are two pointers to a node and so the reference
-count should really be two. Using just 1 as the reference count is
-really an optimization.
+1, run a script that periodically collects perf data, eg:
+while true
+do
+    perf stat -e cache-misses,cache-misses,cache-misses -C 1 sleep 2
+    perf stat -e cache-misses -C 1 sleep 2
+    sleep 1
+done
 
-> > list which reference count is that associated with? It doesn't matter
-> > normally as you'd increment the reference count again and return that.
-> > In the perf code find doesn't increment a reference count so I want to
->
-> I'd say point that out and fix the bug, if you will return an object
-> from a list that is refcounted, grab the refcount before dropping the
-> list lock and then return it, knowing the lookup user will have a
-> refcount that will keep that object alive.
+2, run another one to capture the IPC, eg:
+perf stat -e cycles:D,instructions:D  -C 1 -I 1000
 
-I agree, but in doing that you need to make every user do a put and
-the problem snow balls.
+Then we could observe that the counter used by cycles:D changes frequently:
+crash> struct  cpu_hw_events.n_events,assign,event_list,events  ffff88bf7f44f420
+  n_events = 3
+  assign = {33, 1, 32, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+  event_list = {0xffff88bf77b85000, 0xffff88b72db82000, 0xffff88b72db85800, 0xffff88ff6cfcb000, 0xffff88ff609f1800, 0xffff88ff609f1800, 0xffff88ff5f46a800, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}
+  events = {0x0, 0xffff88b72db82000, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0xffff88b72db85800, 0xffff88bf77b85000, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}
 
-> > return the "get" that belongs to the list. That's "get" singular,
-> > hence wanting to add in the pointer indirection that incurs cost. To
-> > make insertion and deletion work properly on list with a reference
-> > count means reworking list.h.
-> >
-> > The rbtree is the same problem only more-so, as you need pointers for
-> > parent, left and right child.
-> >
-> > > > Switch to having a map_rb_node which is a red-block tree node but
-> > > > points at the reference counted struct map. This reference is
-> > > > responsible for a single reference count.
-> > >
-> > > This makes every insertion incur in an allocation that has to be
-> > > checked, etc, when we know that maps will live in rb_trees, so having
-> > > the node structure allocated at the same time as the map is
-> > > advantageous.
->
-> perf tries to mimic kernel code, but multithreading didn't come at the
-> very beginning, so, yeah, there are bugs and inconsistencies, which we
-> should fix.
->
-> This discussion is how to do it, attempts like Masami's years ago
-> uncovered problems that got fixed, your current attempt is also
-> uncovering bugs and those are getting fixed, which is super cool.
+crash> struct  cpu_hw_events.n_events,assign,event_list,events  ffff88bf7f44f420
+  n_events = 6
+  assign = {33, 3, 32, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+  event_list = {0xffff88bf77b85000, 0xffff88b72db82000, 0xffff88b72db85800, 0xffff88bf46c34000, 0xffff88bf46c35000, 0xffff88bf46c30000, 0xffff88ff5f46a800, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}
+  events = {0xffff88bf46c34000, 0xffff88bf46c35000, 0xffff88bf46c30000, 0xffff88b72db82000, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0xffff88b72db85800, 0xffff88bf77b85000, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}
 
-Thanks. The approach I'm doing is dumb, it is a poor man's smart
-pointer by way of memory allocations and sanitizers. My hope from the
-beginning was that this is something lightweight enough that we can
-get it merged given that sanitizers alone weren't going to save us.
+The reason is that the NMI watchdog permanently consumes one FP
+(*cycles*). Therefore, when the above shell script obtains *cycles*
+again, only one GP can be used, and its weight is 5.
+But other events (like *cache-misses*) have a weight of 4,
+so the counter used by *cycles* will often be taken away, as in
+the raw data above:
+[1]
+  n_events = 3
+  assign = {33, 1, 32, ...}
+-->
+  n_events = 6
+  assign = {33, 3, 32, 0, 1, 2, ...}
 
-> > So this pattern is common in other languages, the default kernel style
-> > is what at Google gets called invasive - you put the storage for list
-> > nodes, reference counts, etc. into the referenced object itself. This
-> > lowers the overhead within the struct, and I don't disagree it adds a
-> > cost to insertion, unless maps are shared which isn't a use-case we
-> > have at the moment. So this change is backing out an optimization, but
-> > frankly fixing this properly is a much bigger overhaul than this
-> > already big overhaul and I don't think losing the optimization is
-> > really costing that much performance - a memory allocation costs in
-> > the region of 40 cycles with an optimized implementation like
-> > tcmalloc. We also don't use the invasive style for maps_by_name, it is
-> > just a sorted array.
-> >
-> > A side note, I see a lot of overhead in symbol allocation and part of
-> > that is the size of the two invasive rbtree nodes (2 * 3 * 8 bytes =
-> > 48bytes). Were the symbols just referenced by a sorted array, like
-> > maps_by_name, insertion and sorting would still be O(n*log(n)) but
-> > we'd reduce the memory usage to a third. rbtree is a cool data
-> > structure, but I think we could be over using it.
->
-> Right, numbers talk, so it would be really nice to use, humm, perf to
-> measure these changes, to help assess the impact and sometimes accept
-> things at first "ugly" versus performance improvements.
+So it will cause unnecessary pmu_stop/start.
 
-Sure. Do you have a benchmark in mind? For cpumap, nsinfo and maps
-there is no overhead when the checking isn't enabled. For map, the
-refactoring of the list and rbtree add an indirection and a memory
-allocation.
+The current event scheduling algorithm is more than 10 years old:
+https://lwn.net/Articles/357631/
 
-> > > We don't have to check if adding a data structure to a rbtree works, as
-> > > all that is needed is already preallocated.
-> >
-> > The issue here is that a find, or similar, wants to pass around
-> > something that is owned by a list or an rbtree. We can have the idea
-> > of ownership by adding a token/cookie and passing that around
-> > everywhere, it gets problematic then to spot use after put and I think
-> > that approach is overall more invasive to the APIs than what is in
-> > these changes.
->
-> > A better solution can be to keep the rbtree being invasive and at all
-> > the find and similar routines, make sure a getted version is returned
-> > - so the code outside of maps is never working with the rbtree's
-> > reference counted version. The problem with this is that it is an
-> > overhaul to all the uses of map. The reference count checker would
-> > find misuse but again it'd be a far large patch series than what is
-> > here - that is trying to fix the code base as it is.
->
-> I've been trailing on the discussion with Masami, so what you want is to
-> somehow match a get with a put by passing a token returned by a get to
-> the put?
+We wish it could be optimized a bit.
+In this patch, the fields cnt_mask and evt_mask are added to indicate
+currently used counters and events so that the used ones can be skipped
+in __perf_sched_find_counter and perf_sched_next_event functions to avoid
+unnecessary pmu_stop/start.
 
-Yes, and that's the approach in ref tracker too:
-https://lwn.net/Articles/877603/
+[1]:
+32: INTEL_PMC_IDX_FIXED_INSTRUCTIONS
+33: INTEL_PMC_IDX_FIXED_CPU_CYCLES
+34: INTEL_PMC_IDX_FIXED_REF_CYCLES
+0,1,2,3: GP
 
-> Wrt patch queue size, we can try to reduce it to series of at most 10
-> patches, that do leg work, rinse, repeat, I recently saw a discussion on
-> netdev, with Jakub Kicinski asking for patchsets to be limited to under
-> 10 patches for this exact same reason.
->
-> I usually try to cherry pick as much as possible from a series, while it
-> being discussed, so that the patch submitter don't have to suffer too
-> much with keeping a long series building.
->
-> I'm now willing and able to process things faster, that should help too,
-> I hope.
+Signed-off-by: Wen Yang <simon.wy@alibaba-inc.com>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org
+Cc: Wen Yang <wenyang@linux.alibaba.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ arch/x86/events/core.c         | 40 +++++++++++++++++++++++++++++++---------
+ arch/x86/events/intel/uncore.c |  2 +-
+ arch/x86/events/perf_event.h   |  3 ++-
+ 3 files changed, 34 insertions(+), 11 deletions(-)
 
-It does, thanks! The small patch set size causes me a lot of work as I
-have to go and move things into constituent parts. For example:
-https://lore.kernel.org/linux-perf-users/YgaeAAKkdVBNbErT@kernel.org/
-I guess I should have done it from the outset.
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index e686c5e..1a47e31 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -796,6 +796,8 @@ struct perf_sched {
+ 	int			max_events;
+ 	int			max_gp;
+ 	int			saved_states;
++	u64			cnt_mask;
++	u64			evt_mask;
+ 	struct event_constraint	**constraints;
+ 	struct sched_state	state;
+ 	struct sched_state	saved[SCHED_STATES_MAX];
+@@ -805,7 +807,7 @@ struct perf_sched {
+  * Initialize iterator that runs through all events and counters.
+  */
+ static void perf_sched_init(struct perf_sched *sched, struct event_constraint **constraints,
+-			    int num, int wmin, int wmax, int gpmax)
++			    int num, int wmin, int wmax, int gpmax, u64 cnt_mask, u64 evt_mask)
+ {
+ 	int idx;
+ 
+@@ -814,6 +816,8 @@ static void perf_sched_init(struct perf_sched *sched, struct event_constraint **
+ 	sched->max_weight	= wmax;
+ 	sched->max_gp		= gpmax;
+ 	sched->constraints	= constraints;
++	sched->cnt_mask	= cnt_mask;
++	sched->evt_mask	= evt_mask;
+ 
+ 	for (idx = 0; idx < num; idx++) {
+ 		if (constraints[idx]->weight == wmin)
+@@ -822,7 +826,10 @@ static void perf_sched_init(struct perf_sched *sched, struct event_constraint **
+ 
+ 	sched->state.event	= idx;		/* start with min weight */
+ 	sched->state.weight	= wmin;
+-	sched->state.unassigned	= num;
++	sched->state.unassigned	= num - hweight_long(evt_mask);
++
++	while (sched->evt_mask & BIT_ULL(sched->state.event))
++		sched->state.event++;
+ }
+ 
+ static void perf_sched_save_state(struct perf_sched *sched)
+@@ -874,6 +881,9 @@ static bool __perf_sched_find_counter(struct perf_sched *sched)
+ 		for_each_set_bit_from(idx, c->idxmsk, X86_PMC_IDX_MAX) {
+ 			u64 mask = BIT_ULL(idx);
+ 
++			if (sched->cnt_mask & mask)
++				continue;
++
+ 			if (sched->state.used & mask)
+ 				continue;
+ 
+@@ -890,6 +900,9 @@ static bool __perf_sched_find_counter(struct perf_sched *sched)
+ 		if (c->flags & PERF_X86_EVENT_PAIR)
+ 			mask |= mask << 1;
+ 
++		if (sched->cnt_mask & mask)
++			continue;
++
+ 		if (sched->state.used & mask)
+ 			continue;
+ 
+@@ -934,7 +947,10 @@ static bool perf_sched_next_event(struct perf_sched *sched)
+ 
+ 	do {
+ 		/* next event */
+-		sched->state.event++;
++		do {
++			sched->state.event++;
++		} while (sched->evt_mask & BIT_ULL(sched->state.event));
++
+ 		if (sched->state.event >= sched->max_events) {
+ 			/* next weight */
+ 			sched->state.event = 0;
+@@ -954,11 +970,11 @@ static bool perf_sched_next_event(struct perf_sched *sched)
+  * Assign a counter for each event.
+  */
+ int perf_assign_events(struct event_constraint **constraints, int n,
+-			int wmin, int wmax, int gpmax, int *assign)
++			int wmin, int wmax, int gpmax, u64 cnt_mask, u64 evt_mask, int *assign)
+ {
+ 	struct perf_sched sched;
+ 
+-	perf_sched_init(&sched, constraints, n, wmin, wmax, gpmax);
++	perf_sched_init(&sched, constraints, n, wmin, wmax, gpmax, cnt_mask, evt_mask);
+ 
+ 	do {
+ 		if (!perf_sched_find_counter(&sched))
+@@ -978,7 +994,8 @@ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
+ 	struct perf_event *e;
+ 	int n0, i, wmin, wmax, unsched = 0;
+ 	struct hw_perf_event *hwc;
+-	u64 used_mask = 0;
++	u64 cnt_mask = 0;
++	u64 evt_mask = 0;
+ 
+ 	/*
+ 	 * Compute the number of events already present; see x86_pmu_add(),
+@@ -1038,10 +1055,11 @@ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
+ 			mask |= mask << 1;
+ 
+ 		/* not already used */
+-		if (used_mask & mask)
++		if (cnt_mask & mask)
+ 			break;
+ 
+-		used_mask |= mask;
++		cnt_mask |= mask;
++		evt_mask |= BIT_ULL(i);
+ 
+ 		if (assign)
+ 			assign[i] = hwc->idx;
+@@ -1075,7 +1093,11 @@ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
+ 		}
+ 
+ 		unsched = perf_assign_events(cpuc->event_constraint, n, wmin,
+-					     wmax, gpmax, assign);
++					     wmax, gpmax, cnt_mask, evt_mask, assign);
++		if (unsched) {
++			unsched = perf_assign_events(cpuc->event_constraint, n, wmin,
++					wmax, gpmax, 0, 0, assign);
++		}
+ 	}
+ 
+ 	/*
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index e497da9..8afff7a 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -480,7 +480,7 @@ static int uncore_assign_events(struct intel_uncore_box *box, int assign[], int
+ 	/* slow path */
+ 	if (i != n)
+ 		ret = perf_assign_events(box->event_constraint, n,
+-					 wmin, wmax, n, assign);
++					 wmin, wmax, n, 0, 0, assign);
+ 
+ 	if (!assign || ret) {
+ 		for (i = 0; i < n; i++)
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index 150261d..2ae1e98 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -1131,7 +1131,8 @@ static inline void __x86_pmu_enable_event(struct hw_perf_event *hwc,
+ void x86_pmu_enable_all(int added);
+ 
+ int perf_assign_events(struct event_constraint **constraints, int n,
+-			int wmin, int wmax, int gpmax, int *assign);
++			int wmin, int wmax, int gpmax, u64 cnt_mask, u64 evt_mask,
++			int *assign);
+ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign);
+ 
+ void x86_pmu_stop(struct perf_event *event, int flags);
+-- 
+1.8.3.1
 
-> > I think the having our cake and eating solution (best performance +
-> > checking) is that approach, but we need to get to a point where
-> > checking is working. So if we focus on (1) checking and fixing those
-> > bugs (the changes here), then (2) change the APIs so that everything
-> > is getted and fix the leaks that introduces, then (3) go back to being
-> > invasive I think we get to that solution. I like step (2) from a
-> > cleanliness point-of-view, I'm fine with (3) I'm just not sure anybody
-> > would notice the performance difference.
->
-> I'll continue looking at what you guys did to try to get up to speed and
-> contribute more to this effort, please bear with me a bit more.
->
-> - Arnaldo
-
-Np, tbh I didn't have some big agenda with this work. I was thinking
-through how I could solve the problem of:
-https://lore.kernel.org/linux-perf-users/20211118193714.2293728-1-irogers@google.com/
-Dmitry Vyukov suggested Eric Dumazet's ref tracker work but in looking
-at ref tracker I was concerned about needing a pair of values for
-every reference counted thing. It would add a lot to the API. The ref
-tracker work allocates a token/cookie for a get and that's where the
-idea of allocating an indirection comes from. It has worked remarkably
-well in combination with address and leak sanitizer, fixing the nsinfo
-issue which actually turned out to be a data race. There weren't any
-known issues with cpumap and maps, but it is good to have the
-reference count checking confirming this. map is a rats nest and I
-purposefully went after it as the worst case of what we could look to
-fix with the approach. I expected it to cause controversy, in
-particular the rbtree and list refactors - but heck, I'd throw away 1%
-performance for something like perf top not consuming gigabytes of RAM
-(not that I have any privilege to throw away performance :-) ).
-
-Anyway, I keep pushing along with the tidy up to the patches as a
-background job. I hope I can get v4 out this week.
-
-Another issue nagging at me from the pre-5.16 reverts is:
-https://lore.kernel.org/lkml/CAP-5=fX4-kmkm+qn9m22O_4A2_8j=uAm=vcXh9x2RqqDKEdnBg@mail.gmail.com/
-This requires a lot of Makefile cleanup. It'd be great if someone
-could take a look. There's also Debian builds being in a mess, I guess
-it is good to be busy.
-
-Thanks,
-Ian
