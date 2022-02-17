@@ -2,104 +2,85 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F076C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Feb 2022 17:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9EBC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Feb 2022 18:41:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243820AbiBQRlM (ORCPT
+        id S244459AbiBQSmF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 17 Feb 2022 12:41:12 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:45778 "EHLO
+        Thu, 17 Feb 2022 13:42:05 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:39588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243814AbiBQRlM (ORCPT
+        with ESMTP id S244500AbiBQSmF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 17 Feb 2022 12:41:12 -0500
-Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81FDC2B3ACE
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Feb 2022 09:40:57 -0800 (PST)
-Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-2d07ae0b1c5so40119747b3.5
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Feb 2022 09:40:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xG7+45oqf2NS1ULMFZPBvVQbomZLDhmCLViBMWlu/5k=;
-        b=hz0dRrKJ7PWqiodgggDAx7ROzkgUjtT6NmpVRxtVC0QGo4NeVEVB+VN8NLY0fNtCgt
-         wzyYrGNpB+1/XQkvDm99hmXwydVFpwj/3e50GVor5HYxdiuqYMAtLXy35cJtPAE5O4hU
-         ZlPQUm7v+e3K0QcJ+Zqzw+ojAU4xWZCsCwEttSE2Jejij1E/NqBgXXNugSl0kuEBo4Xc
-         A+N2nZgn8yz4JqWgL4BIma/aSVex/ZKBdtImt9SNh9RlanaM7KXKElEDZK2z8mddp48V
-         NjkVYIzvKFZGoR31t2+/F23ouE/xGT4rHAewpWqe4VAJ8gg7QMB8SA9AHAkEPjuUrTuQ
-         1V4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xG7+45oqf2NS1ULMFZPBvVQbomZLDhmCLViBMWlu/5k=;
-        b=ToWs3/TQLX/SjcXJdguS5bRliztKJn8YMtl4hVTGKCzDKMh3h/0Su5sOUwJ/Gh7krm
-         BSWm8N+coNWgliHYjRncBcBTt75bKXDg9Oa6h7PPuPbLGQevjIvZf8X3JXGxJyQF3E4Y
-         eZEXPyi4vogK4UxzMXPfJ5yi6D8CXMXAQXOS4WzfYCzb5bweE5BBjHZrLxPulofyhEfT
-         pepYpH081A2TIO3h+qdZq2vc4KmePn037ux3tOiCgkgjkxQhGBM8tOnARD3qRSOOnrv/
-         F/VfUjnlduDuDthzIERDb9xf2vvn1uihLcbxc76/nmZ6x/tQlDa4LtLf/s27jMC+VOPf
-         r1RA==
-X-Gm-Message-State: AOAM531l7OK+n8cpqOn6/DbEWhHN/VrDWfijqxbkdYlGC/kNq5mXcHJc
-        oECT7EOGWdsxQTSV1pOeHEtHQTg41Xd/oD0uHc+quQ==
-X-Google-Smtp-Source: ABdhPJwwvBrGab+ahjvONXUZlOncszsPm0JyUwad3a8Qevmv31Bpy7OktCb6OFGKSZ+G4L3pvPjfzXQpuycf9DGgoNI=
-X-Received: by 2002:a0d:ee41:0:b0:2d2:f0aa:d3ba with SMTP id
- x62-20020a0dee41000000b002d2f0aad3bamr3808690ywe.512.1645119656516; Thu, 17
- Feb 2022 09:40:56 -0800 (PST)
-MIME-Version: 1.0
-References: <1645114959-119064-1-git-send-email-john.garry@huawei.com>
- <CANpmjNOO6yxF+xXoatR==uvSaEwsWyZ=n7ExEM_=OJaDYBCeSw@mail.gmail.com> <f7782f09-7f12-b957-a1b2-d0673ec1304c@huawei.com>
-In-Reply-To: <f7782f09-7f12-b957-a1b2-d0673ec1304c@huawei.com>
-From:   Marco Elver <elver@google.com>
-Date:   Thu, 17 Feb 2022 18:40:45 +0100
-Message-ID: <CANpmjNOO-fsU7PP_PqeT53_N=xmNruiT3mvE0e1y=EtKJUfFGg@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Skip Sigtrap test for arm+aarch64
-To:     John Garry <john.garry@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, jolsa@kernel.org, namhyung@kernel.org,
-        leo.yan@linaro.org, dvyukov@google.com, will@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux@armlinux.org.uk,
-        irogers@google.com, Thomas Richter <tmricht@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 17 Feb 2022 13:42:05 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A747EDFE1;
+        Thu, 17 Feb 2022 10:41:48 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 88D6E61B83;
+        Thu, 17 Feb 2022 18:41:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E4A13C340E8;
+        Thu, 17 Feb 2022 18:41:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645123307;
+        bh=zPXGLyQABZXQ8tHOqgxvjFHnUe5zxCmVg5uIV2tzmVM=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=HLJpFpQFqC44p+gOkjYhj3CBXxxohepzPgSWp4Dh9fKM5rbV+SKmJHMXWHOsvzyUw
+         1lKghm/NYETvdDs6y9EPJmp3FtXK9c89WFlLFjk6BJpEB1J0VDtsD0iQ7zbSxm6FYW
+         s2PtyxkNYhXfvbJwjkkjWGI9vpDLUNB0mrSJ4vgohgf+roTbhpu5h3dWPIWczQp66Y
+         QjhghOqn3jDgKc3QtBxVryjBxU/VmFVAbKzCJhtaykxkqv5T9vXbZVDhxDQwBvwrac
+         uFIH1PXtF2gamA/8O3Qquleo3DQV0bQwS7af+m4s/54neXAYAwUFlU6mC5ILHpSZ+w
+         Q47lQt80quklA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D1EB6E6D447;
+        Thu, 17 Feb 2022 18:41:47 +0000 (UTC)
+Subject: Re: [GIT PULL] perf tools fixes for v5.17: 2nd batch
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20220217153627.308659-1-acme@kernel.org>
+References: <20220217153627.308659-1-acme@kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20220217153627.308659-1-acme@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.17-2022-02-17
+X-PR-Tracked-Commit-Id: 31ded1535e3182778a1d0e5c32711f55da3bc512
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 2dd3a8a139082679b7a73fc32596aa667b0841d1
+Message-Id: <164512330784.3768.5230087658793621678.pr-tracker-bot@kernel.org>
+Date:   Thu, 17 Feb 2022 18:41:47 +0000
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Changbin Du <changbin.du@gmail.com>,
+        German Gomez <german.gomez@arm.com>,
+        James Clark <james.clark@arm.com>,
+        "Justin M . Forbes" <jforbes@fedoraproject.org>,
+        Kees Kook <keescook@chromium.org>,
+        Rob Herring <robh@kernel.org>,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+        =?UTF-8?q?Valdis=20Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, 17 Feb 2022 at 18:34, John Garry <john.garry@huawei.com> wrote:
-[...]
-> >> -#if defined(__powerpc__) || defined(__s390x__)
-> >> +#if defined(__powerpc__) || defined(__s390x__) || \
-> >> +       defined(__arm__) || defined(__aarch64__)
-> >>   #define BP_ACCOUNT_IS_SUPPORTED 0
-> >>   #else
-> >>   #define BP_ACCOUNT_IS_SUPPORTED 1
-> >
-> > This is now equivalent to BP_SIGNAL_IS_SUPPORTED
-> > tools/perf/tests/tests.h -- and different from the original
-> > BP_ACCOUNT_IS_SUPPORTED (and makes me wonder why
-> > BP_SIGNAL_IS_SUPPORTED wasn't just used from the beginning). Perhaps
-> > just use BP_SIGNAL_IS_SUPPORTED.
-> >
->
-> We currently have BP_ACCOUNT_IS_SUPPORTED defined now in 2x locations:
->
-> tests/sigtrap.c
-> tests/bp_account.c
->
-> bp_account works for arm64, and we don't want to skip that test. So, as
-> long as the macro meaning is appropriate, we can reuse
-> BP_SIGNAL_IS_SUPPORTED for sigtrap.c
+The pull request you sent on Thu, 17 Feb 2022 12:36:27 -0300:
 
-BP_ACCOUNT seems to say something about the "breakpoint accounting /
-measuring" test. BP_SIGNAL is about the tests that want to use
-breakpoints to generate signals.
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.17-2022-02-17
 
-So it's very much appropriate to use BP_SIGNAL here if, as we have
-discovered regardless how they're generated in response to
-breakpoints, are broken on arm/arm64. On the day arm/arm64 decides to
-fix signals, I'm assuming all tests being skipped with
-BP_SIGNAL_IS_SUPPORTED can be re-enabled (or so we hope).
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/2dd3a8a139082679b7a73fc32596aa667b0841d1
 
-Thanks,
--- Marco
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
