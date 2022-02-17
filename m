@@ -2,278 +2,81 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BD1C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Feb 2022 02:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3702EC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Feb 2022 09:53:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230462AbiBQCqJ (ORCPT
+        id S238876AbiBQJxm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Feb 2022 21:46:09 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:47328 "EHLO
+        Thu, 17 Feb 2022 04:53:42 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:49550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229478AbiBQCqH (ORCPT
+        with ESMTP id S238882AbiBQJxm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Feb 2022 21:46:07 -0500
-Received: from out30-54.freemail.mail.aliyun.com (out30-54.freemail.mail.aliyun.com [115.124.30.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 074222A795F;
-        Wed, 16 Feb 2022 18:45:51 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0V4fbH8I_1645065942;
-Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0V4fbH8I_1645065942)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 17 Feb 2022 10:45:48 +0800
-From:   Wen Yang <simon.wy@alibaba-inc.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Wen Yang <simon.wy@alibaba-inc.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        Wen Yang <wenyang@linux.alibaba.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] perf/x86: improve the event scheduling to avoid unnecessary pmu_stop/start
-Date:   Thu, 17 Feb 2022 10:45:40 +0800
-Message-Id: <20220217024540.33657-1-simon.wy@alibaba-inc.com>
-X-Mailer: git-send-email 2.23.0
+        Thu, 17 Feb 2022 04:53:42 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0106BB1A8E;
+        Thu, 17 Feb 2022 01:53:27 -0800 (PST)
+Received: from fraeml735-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JzqrT6W4rz6F8c6;
+        Thu, 17 Feb 2022 17:52:57 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml735-chm.china.huawei.com (10.206.15.216) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Thu, 17 Feb 2022 10:53:25 +0100
+Received: from [10.47.81.42] (10.47.81.42) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Thu, 17 Feb
+ 2022 09:53:24 +0000
+Message-ID: <be4afed9-9739-26cb-b1d5-0529e0f74221@huawei.com>
+Date:   Thu, 17 Feb 2022 09:53:23 +0000
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: Test 73 Sig_trap fails on arm64 (was Re: [PATCH] perf test: Test
+ 73 Sig_trap fails on s390)
+To:     Leo Yan <leo.yan@linaro.org>, Dmitry Vyukov <dvyukov@google.com>
+CC:     Will Deacon <will@kernel.org>, Marco Elver <elver@google.com>,
+        "Thomas Richter" <tmricht@linux.ibm.com>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <acme@kernel.org>, <svens@linux.ibm.com>, <gor@linux.ibm.com>,
+        <sumanthk@linux.ibm.com>, <hca@linux.ibm.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <CANpmjNNMWtjcKa961SjEvRbbPXyw5M5SkrXbb3tnyL3_XyniCw@mail.gmail.com>
+ <90efb5a9-612a-919e-cf2f-c528692d61e2@huawei.com>
+ <20220118091827.GA98966@leoy-ThinkPad-X240s>
+ <CANpmjNMPoU+1b1fKFuYDYwisW2YfjQHxGt5hgLp1tioG7C2jmg@mail.gmail.com>
+ <20220118124343.GC98966@leoy-ThinkPad-X240s>
+ <bfa0af18-04ac-857d-d3d8-ad9290f912c8@huawei.com>
+ <06412caf-42e4-5c4b-c9b3-9691075405bd@huawei.com>
+ <20220215143459.GB7592@willie-the-truck>
+ <8c582e45-0954-a2ea-764a-4dd78a464988@huawei.com>
+ <CACT4Y+Z8pKXw=8nwVtdo2W=hu_rBk1ws-Q=7-tBkLGTcD85NaA@mail.gmail.com>
+ <20220216131306.GA56419@leoy-ThinkPad-X240s>
+From:   John Garry <john.garry@huawei.com>
+In-Reply-To: <20220216131306.GA56419@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.81.42]
+X-ClientProxiedBy: lhreml754-chm.china.huawei.com (10.201.108.204) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This issue has been there for a long time, we could reproduce it as follows:
+On 16/02/2022 13:13, Leo Yan wrote:
+>> It does and fwiw I am just trying to use it. Things work only on x86 so far.
+> So here we have agreement to disable the cases for Arm64/Arm.
+> 
+> John, since you put much efforts to follow up the issue, I'd like to
+> leave decision to you if you want to proceed for patches?  Otherwise,
+> I will send patches to disable cases in perf.
 
-1, run a script that periodically collects perf data, eg:
-while true
-do
-    perf stat -e cache-misses,cache-misses,cache-misses -C 1 sleep 2
-    perf stat -e cache-misses -C 1 sleep 2
-    sleep 1
-done
+Hi Leo,
 
-2, run another one to capture the IPC, eg:
-perf stat -e cycles:D,instructions:D  -C 1 -I 1000
+I'll send later today.
 
-Then we could observe that the counter used by cycles:D changes frequently:
-crash> struct  cpu_hw_events.n_events,assign,event_list,events  ffff88bf7f44f420
-  n_events = 3
-  assign = {33, 1, 32, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-  event_list = {0xffff88bf77b85000, 0xffff88b72db82000, 0xffff88b72db85800, 0xffff88ff6cfcb000, 0xffff88ff609f1800, 0xffff88ff609f1800, 0xffff88ff5f46a800, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}
-  events = {0x0, 0xffff88b72db82000, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0xffff88b72db85800, 0xffff88bf77b85000, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}
-
-crash> struct  cpu_hw_events.n_events,assign,event_list,events  ffff88bf7f44f420
-  n_events = 6
-  assign = {33, 3, 32, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-  event_list = {0xffff88bf77b85000, 0xffff88b72db82000, 0xffff88b72db85800, 0xffff88bf46c34000, 0xffff88bf46c35000, 0xffff88bf46c30000, 0xffff88ff5f46a800, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}
-  events = {0xffff88bf46c34000, 0xffff88bf46c35000, 0xffff88bf46c30000, 0xffff88b72db82000, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0xffff88b72db85800, 0xffff88bf77b85000, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}
-
-The reason is that the NMI watchdog permanently consumes one FP
-(*cycles*). Therefore, when the above shell script obtains *cycles*
-again, only one GP can be used, and its weight is 5.
-But other events (like *cache-misses*) have a weight of 4,
-so the counter used by *cycles* will often be taken away, as in
-the raw data above:
-[1]
-  n_events = 3
-  assign = {33, 1, 32, ...}
--->
-  n_events = 6
-  assign = {33, 3, 32, 0, 1, 2, ...}
-
-So it will cause unnecessary pmu_stop/start.
-
-The current event scheduling algorithm is more than 10 years old:
-https://lwn.net/Articles/357631/
-
-We wish it could be optimized a bit.
-In this patch, the fields cnt_mask and evt_mask are added to indicate
-currently used counters and events so that the used ones can be skipped
-in __perf_sched_find_counter and perf_sched_next_event functions to avoid
-unnecessary pmu_stop/start.
-
-[1]:
-32: INTEL_PMC_IDX_FIXED_INSTRUCTIONS
-33: INTEL_PMC_IDX_FIXED_CPU_CYCLES
-34: INTEL_PMC_IDX_FIXED_REF_CYCLES
-0,1,2,3: GP
-
-Signed-off-by: Wen Yang <simon.wy@alibaba-inc.com>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org
-Cc: Wen Yang <wenyang@linux.alibaba.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- arch/x86/events/core.c         | 40 +++++++++++++++++++++++++++++++---------
- arch/x86/events/intel/uncore.c |  2 +-
- arch/x86/events/perf_event.h   |  3 ++-
- 3 files changed, 34 insertions(+), 11 deletions(-)
-
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index e686c5e..1a47e31 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -796,6 +796,8 @@ struct perf_sched {
- 	int			max_events;
- 	int			max_gp;
- 	int			saved_states;
-+	u64			cnt_mask;
-+	u64			evt_mask;
- 	struct event_constraint	**constraints;
- 	struct sched_state	state;
- 	struct sched_state	saved[SCHED_STATES_MAX];
-@@ -805,7 +807,7 @@ struct perf_sched {
-  * Initialize iterator that runs through all events and counters.
-  */
- static void perf_sched_init(struct perf_sched *sched, struct event_constraint **constraints,
--			    int num, int wmin, int wmax, int gpmax)
-+			    int num, int wmin, int wmax, int gpmax, u64 cnt_mask, u64 evt_mask)
- {
- 	int idx;
- 
-@@ -814,6 +816,8 @@ static void perf_sched_init(struct perf_sched *sched, struct event_constraint **
- 	sched->max_weight	= wmax;
- 	sched->max_gp		= gpmax;
- 	sched->constraints	= constraints;
-+	sched->cnt_mask	= cnt_mask;
-+	sched->evt_mask	= evt_mask;
- 
- 	for (idx = 0; idx < num; idx++) {
- 		if (constraints[idx]->weight == wmin)
-@@ -822,7 +826,10 @@ static void perf_sched_init(struct perf_sched *sched, struct event_constraint **
- 
- 	sched->state.event	= idx;		/* start with min weight */
- 	sched->state.weight	= wmin;
--	sched->state.unassigned	= num;
-+	sched->state.unassigned	= num - hweight_long(evt_mask);
-+
-+	while (sched->evt_mask & BIT_ULL(sched->state.event))
-+		sched->state.event++;
- }
- 
- static void perf_sched_save_state(struct perf_sched *sched)
-@@ -874,6 +881,9 @@ static bool __perf_sched_find_counter(struct perf_sched *sched)
- 		for_each_set_bit_from(idx, c->idxmsk, X86_PMC_IDX_MAX) {
- 			u64 mask = BIT_ULL(idx);
- 
-+			if (sched->cnt_mask & mask)
-+				continue;
-+
- 			if (sched->state.used & mask)
- 				continue;
- 
-@@ -890,6 +900,9 @@ static bool __perf_sched_find_counter(struct perf_sched *sched)
- 		if (c->flags & PERF_X86_EVENT_PAIR)
- 			mask |= mask << 1;
- 
-+		if (sched->cnt_mask & mask)
-+			continue;
-+
- 		if (sched->state.used & mask)
- 			continue;
- 
-@@ -934,7 +947,10 @@ static bool perf_sched_next_event(struct perf_sched *sched)
- 
- 	do {
- 		/* next event */
--		sched->state.event++;
-+		do {
-+			sched->state.event++;
-+		} while (sched->evt_mask & BIT_ULL(sched->state.event));
-+
- 		if (sched->state.event >= sched->max_events) {
- 			/* next weight */
- 			sched->state.event = 0;
-@@ -954,11 +970,11 @@ static bool perf_sched_next_event(struct perf_sched *sched)
-  * Assign a counter for each event.
-  */
- int perf_assign_events(struct event_constraint **constraints, int n,
--			int wmin, int wmax, int gpmax, int *assign)
-+			int wmin, int wmax, int gpmax, u64 cnt_mask, u64 evt_mask, int *assign)
- {
- 	struct perf_sched sched;
- 
--	perf_sched_init(&sched, constraints, n, wmin, wmax, gpmax);
-+	perf_sched_init(&sched, constraints, n, wmin, wmax, gpmax, cnt_mask, evt_mask);
- 
- 	do {
- 		if (!perf_sched_find_counter(&sched))
-@@ -978,7 +994,8 @@ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
- 	struct perf_event *e;
- 	int n0, i, wmin, wmax, unsched = 0;
- 	struct hw_perf_event *hwc;
--	u64 used_mask = 0;
-+	u64 cnt_mask = 0;
-+	u64 evt_mask = 0;
- 
- 	/*
- 	 * Compute the number of events already present; see x86_pmu_add(),
-@@ -1038,10 +1055,11 @@ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
- 			mask |= mask << 1;
- 
- 		/* not already used */
--		if (used_mask & mask)
-+		if (cnt_mask & mask)
- 			break;
- 
--		used_mask |= mask;
-+		cnt_mask |= mask;
-+		evt_mask |= BIT_ULL(i);
- 
- 		if (assign)
- 			assign[i] = hwc->idx;
-@@ -1075,7 +1093,11 @@ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
- 		}
- 
- 		unsched = perf_assign_events(cpuc->event_constraint, n, wmin,
--					     wmax, gpmax, assign);
-+					     wmax, gpmax, cnt_mask, evt_mask, assign);
-+		if (unsched) {
-+			unsched = perf_assign_events(cpuc->event_constraint, n, wmin,
-+					wmax, gpmax, 0, 0, assign);
-+		}
- 	}
- 
- 	/*
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index e497da9..8afff7a 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -480,7 +480,7 @@ static int uncore_assign_events(struct intel_uncore_box *box, int assign[], int
- 	/* slow path */
- 	if (i != n)
- 		ret = perf_assign_events(box->event_constraint, n,
--					 wmin, wmax, n, assign);
-+					 wmin, wmax, n, 0, 0, assign);
- 
- 	if (!assign || ret) {
- 		for (i = 0; i < n; i++)
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 150261d..2ae1e98 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -1131,7 +1131,8 @@ static inline void __x86_pmu_enable_event(struct hw_perf_event *hwc,
- void x86_pmu_enable_all(int added);
- 
- int perf_assign_events(struct event_constraint **constraints, int n,
--			int wmin, int wmax, int gpmax, int *assign);
-+			int wmin, int wmax, int gpmax, u64 cnt_mask, u64 evt_mask,
-+			int *assign);
- int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign);
- 
- void x86_pmu_stop(struct perf_event *event, int flags);
--- 
-1.8.3.1
-
+Thanks,
+John
