@@ -2,85 +2,111 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9EBC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Feb 2022 18:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D533C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Feb 2022 21:47:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244459AbiBQSmF (ORCPT
+        id S237514AbiBQVro (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 17 Feb 2022 13:42:05 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:39588 "EHLO
+        Thu, 17 Feb 2022 16:47:44 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:34970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244500AbiBQSmF (ORCPT
+        with ESMTP id S232099AbiBQVrn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 17 Feb 2022 13:42:05 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A747EDFE1;
-        Thu, 17 Feb 2022 10:41:48 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 88D6E61B83;
-        Thu, 17 Feb 2022 18:41:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E4A13C340E8;
-        Thu, 17 Feb 2022 18:41:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645123307;
-        bh=zPXGLyQABZXQ8tHOqgxvjFHnUe5zxCmVg5uIV2tzmVM=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=HLJpFpQFqC44p+gOkjYhj3CBXxxohepzPgSWp4Dh9fKM5rbV+SKmJHMXWHOsvzyUw
-         1lKghm/NYETvdDs6y9EPJmp3FtXK9c89WFlLFjk6BJpEB1J0VDtsD0iQ7zbSxm6FYW
-         s2PtyxkNYhXfvbJwjkkjWGI9vpDLUNB0mrSJ4vgohgf+roTbhpu5h3dWPIWczQp66Y
-         QjhghOqn3jDgKc3QtBxVryjBxU/VmFVAbKzCJhtaykxkqv5T9vXbZVDhxDQwBvwrac
-         uFIH1PXtF2gamA/8O3Qquleo3DQV0bQwS7af+m4s/54neXAYAwUFlU6mC5ILHpSZ+w
-         Q47lQt80quklA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D1EB6E6D447;
-        Thu, 17 Feb 2022 18:41:47 +0000 (UTC)
-Subject: Re: [GIT PULL] perf tools fixes for v5.17: 2nd batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20220217153627.308659-1-acme@kernel.org>
-References: <20220217153627.308659-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220217153627.308659-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.17-2022-02-17
-X-PR-Tracked-Commit-Id: 31ded1535e3182778a1d0e5c32711f55da3bc512
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2dd3a8a139082679b7a73fc32596aa667b0841d1
-Message-Id: <164512330784.3768.5230087658793621678.pr-tracker-bot@kernel.org>
-Date:   Thu, 17 Feb 2022 18:41:47 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Thu, 17 Feb 2022 16:47:43 -0500
+Received: from mail-io1-xd2e.google.com (mail-io1-xd2e.google.com [IPv6:2607:f8b0:4864:20::d2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9054C102423;
+        Thu, 17 Feb 2022 13:47:28 -0800 (PST)
+Received: by mail-io1-xd2e.google.com with SMTP id c23so624849ioi.4;
+        Thu, 17 Feb 2022 13:47:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YYu50T47m2X15x/aJyA+exabFEHDtWyNBqkWcs49TkU=;
+        b=ev4QrgJP8rMw+DRyRssNZyhsWtgCHd0RnHRTdh98a+lZvx7PZSRjSZOGd/SYWZoA3j
+         9k2wVHuezrkp7wr2A9zgdwYFDfN+uK9Vj08D4PrvbAyztMfHFwc1rL0PB7xvPanEoyxe
+         t4D7GYrWNS4z8PoKUlj5nqK2QvoMOAKWfEAo1DL7hyIoPbmvQiPN3d/Gapm7GIQfYYug
+         ote3EnGwgPhWWV1/sc/LmwJ0vWq8RwB5/4D5oen9vKWSwnIPHyvSMliw0WGn1OJZF0Oa
+         H+BTaYlcVq68fmxJ1R+UXZh6gP75/RaO1G6USm6FbycX8L4skjZnXWXuJ5vXnLf1bYqX
+         GwnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YYu50T47m2X15x/aJyA+exabFEHDtWyNBqkWcs49TkU=;
+        b=jjRxObVztPxG2x+oA9kImdSY/qZ5fa4X+ravrUm2LNXMyVJ6GHSC42lHBWGJoojXND
+         nsRnEqllqvQ016+ma1RzZMsQyYBM1+CPxxDCVNhq4C+MCr+UjaKqVr8LomTS+qXbhDdF
+         oXkFo4bV/Lss+M0JYytTqytMtAeEKwlE0U8i84dO0eaRa9j5CgLETEklT7VtylhcS40Z
+         M42l8ANGpFUNufrPe5Xl2zAuyTPhwTKcdw4FI7WPVqiVdD6RT86NODvj/H7JqcH2t5FJ
+         Um5YHBXGqY6Fe5ooOk1Kmj49LXovYUgXtJBvACCVFBGrX6kGyxEtiXudefOZ5VcQp62j
+         WJ2w==
+X-Gm-Message-State: AOAM531ogTTmGyiKT/1WNTVonzZgVkzVpCJVd3rkNIkfIAccDUQ91SQz
+        LNbXEk0mzAxcoXwBKc84VbM0x+2iy1DuJD/Z6BQ=
+X-Google-Smtp-Source: ABdhPJzd+vhvEi+KPD/izA7Sc2KQlgP5/XgADNTkal1UP6wv3bPi1YaAgCjZOyPAYgF8PEVAkWJVDzzK65N+Bh1feSs=
+X-Received: by 2002:a05:6638:22c3:b0:30a:2226:e601 with SMTP id
+ j3-20020a05663822c300b0030a2226e601mr3291883jat.237.1645134448000; Thu, 17
+ Feb 2022 13:47:28 -0800 (PST)
+MIME-Version: 1.0
+References: <20220217131916.50615-1-jolsa@kernel.org> <20220217131916.50615-2-jolsa@kernel.org>
+In-Reply-To: <20220217131916.50615-2-jolsa@kernel.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 17 Feb 2022 13:47:16 -0800
+Message-ID: <CAEf4BzboYd4y53KjKwNMCqE6oV9ms0zbtKCGweEGtjZvCe1f0w@mail.gmail.com>
+Subject: Re: [PATCH 1/3] perf tools: Remove bpf_program__set_priv/bpf_program__priv
+ usage
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
         Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Changbin Du <changbin.du@gmail.com>,
-        German Gomez <german.gomez@arm.com>,
-        James Clark <james.clark@arm.com>,
-        "Justin M . Forbes" <jforbes@fedoraproject.org>,
-        Kees Kook <keescook@chromium.org>,
-        Rob Herring <robh@kernel.org>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
-        =?UTF-8?q?Valdis=20Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Thu, 17 Feb 2022 12:36:27 -0300:
+On Thu, Feb 17, 2022 at 5:19 AM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> Both bpf_program__set_priv/bpf_program__priv are deprecated
+> and will be eventually removed.
+>
+> Using hashmap to replace that functionality.
+>
+> Suggested-by: Andrii Nakryiko <andrii@kernel.org>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/perf/util/bpf-loader.c | 91 +++++++++++++++++++++++++++++-------
+>  1 file changed, 75 insertions(+), 16 deletions(-)
+>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.17-2022-02-17
+[...]
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2dd3a8a139082679b7a73fc32596aa667b0841d1
+> +
+> +static int program_set_priv(struct bpf_program *prog, void *priv)
+> +{
+> +       void *old_priv;
+> +
+> +       if (!bpf_program_hash) {
+> +               bpf_program_hash = hashmap__new(ptr_hash, ptr_equal, NULL);
+> +               if (!bpf_program_hash)
 
-Thank you!
+should use IS_ERR here
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+> +                       return -ENOMEM;
+> +       }
+> +
+> +       old_priv = program_priv(prog);
+> +       if (old_priv) {
+> +               clear_prog_priv(prog, old_priv);
+> +               return hashmap__set(bpf_program_hash, prog, priv, NULL, NULL);
+> +       }
+> +       return hashmap__add(bpf_program_hash, prog, priv);
+>  }
+
+[...]
