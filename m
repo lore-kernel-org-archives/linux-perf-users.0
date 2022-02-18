@@ -2,144 +2,107 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8F3C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Feb 2022 09:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61045C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Feb 2022 09:39:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231990AbiBRJCU (ORCPT
+        id S233635AbiBRJjS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 18 Feb 2022 04:02:20 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:56934 "EHLO
+        Fri, 18 Feb 2022 04:39:18 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:39268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233040AbiBRJCS (ORCPT
+        with ESMTP id S232545AbiBRJjR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 18 Feb 2022 04:02:18 -0500
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF529546AE;
-        Fri, 18 Feb 2022 01:02:01 -0800 (PST)
-Received: by mail-wr1-x42b.google.com with SMTP id v12so13393331wrv.2;
-        Fri, 18 Feb 2022 01:02:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Zt/INQArzFP2YspYBVAWXDYYTQUHjLodpxi7D41llRw=;
-        b=ksmSLR/lTnudWA58lc+ENSY99WBfEIJ9m4SWkf1/iGjZZY6xnpmH6KF71FJIZQ3tkA
-         oP0gbzPmxBK7JTlyEJr33FYiAXANcxtJd10i9dL17Ze4uFSKLzWohJZlIu0yDbe/nZBU
-         3EC4u8JSjVSmxG7LftBTCBrvckukNdqzD5t13pVOV3J//eGRl0eBk+z5upYYmhIJjSwP
-         iRVIaT0Bj5rVvP57puhsBgmdMUOMSDF1GB/y55HZhRyRGRLybeic3uuahp5X1dqMzPgj
-         C5UO4hUBk1YoE1R1+BC0KRXqNp0Ae7/biaLUmOObX9szSauvKWcZ3Pi4xacae7dMHWKT
-         RkLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Zt/INQArzFP2YspYBVAWXDYYTQUHjLodpxi7D41llRw=;
-        b=CJKi6WpSZ8RK1EI0rvYs6NXJPreJr/rXaJtoykc2NV2eCiVNZEpcQ8kgMgGVFGhpuj
-         uReGnc/ZegBfygIie8c4dDxaE8rvCA60oD5jAK2OOSxAvmwMD2C6svuTJrfMHtuGkQP0
-         bdzylm5eYBplgCwmQ3jjwAy3M+5uu9ZaW52TECYZHWhSeq5fBDlai9/IavVN2df9ZHIe
-         GcGvIi4N++MR2OFcc7hE2S0RAs/JFnpHeM8FmIcudXeDhPJxGS6FptnrWDFIq9OLaJZt
-         HsgbvfMcwGnPYXTWQBAKn5H/0vi0JB02HzvCn0beOuK4SGMLXWHLimHUsHcvb8g6OEBX
-         is8w==
-X-Gm-Message-State: AOAM531NwEbL6filCA1BZjYUsnXpwDgcgzKs0ei8Nw/MBduPwchsK9bw
-        jewt4EHZWVqJzWJwIBuh4z2xcWw89ySF1g==
-X-Google-Smtp-Source: ABdhPJwkyUQ5mu+CrJtI9sHBM7jNa9N5pnN9USLm7H+Q2cbcFnP9N3h2/J5TST6pDpQb15qSzark1A==
-X-Received: by 2002:a5d:6c68:0:b0:1e8:9827:b978 with SMTP id r8-20020a5d6c68000000b001e89827b978mr4909654wrz.633.1645174920533;
-        Fri, 18 Feb 2022 01:02:00 -0800 (PST)
-Received: from krava ([2a00:102a:5012:d617:c924:e6ed:1707:a063])
-        by smtp.gmail.com with ESMTPSA id s7sm11525680wro.104.2022.02.18.01.01.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Feb 2022 01:02:00 -0800 (PST)
-Date:   Fri, 18 Feb 2022 10:01:56 +0100
-From:   Jiri Olsa <olsajiri@gmail.com>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Andrii Nakryiko <andrii@kernel.org>
-Subject: Re: [PATCHv2 0/3] perf/bpf: Replace deprecated code
-Message-ID: <Yg9ghL33UYyh3es4@krava>
-References: <20220217131916.50615-1-jolsa@kernel.org>
- <CAEf4BzY+_3vjtN3dJjU4deVR131=Dz-9adYQ+mntVqgAOfh4RA@mail.gmail.com>
+        Fri, 18 Feb 2022 04:39:17 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6FA21FA74;
+        Fri, 18 Feb 2022 01:39:00 -0800 (PST)
+Received: from fraeml705-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4K0RTH49hlz67b2s;
+        Fri, 18 Feb 2022 17:38:27 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.21; Fri, 18 Feb 2022 10:38:58 +0100
+Received: from localhost.localdomain (10.69.192.58) by
+ lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Fri, 18 Feb 2022 09:38:54 +0000
+From:   John Garry <john.garry@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <jolsa@kernel.org>, <namhyung@kernel.org>,
+        <elver@google.com>, <leo.yan@linaro.org>, <dvyukov@google.com>,
+        <will@kernel.org>
+CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux@armlinux.org.uk>,
+        <tmricht@linux.ibm.com>, <irogers@google.com>,
+        John Garry <john.garry@huawei.com>
+Subject: [PATCH v2] perf test: Skip Sigtrap test for arm+aarch64
+Date:   Fri, 18 Feb 2022 17:33:33 +0800
+Message-ID: <1645176813-202756-1-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzY+_3vjtN3dJjU4deVR131=Dz-9adYQ+mntVqgAOfh4RA@mail.gmail.com>
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Feb 17, 2022 at 01:55:13PM -0800, Andrii Nakryiko wrote:
-> On Thu, Feb 17, 2022 at 5:19 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> >
-> > hi,
-> > the original patchset [1] removed the whole perf functionality
-> > with the hope nobody's using that. But it turned out there's
-> > actually bpf script using prologue functionality, so there
-> > might be users of this.
-> >
-> > This patchset gets rid of and adds workaround (and keeps the
-> > current functionality) for following deprecated libbpf
-> > functions/struct:
-> >
-> >   bpf_program__set_priv
-> >   bpf_program__priv
-> >   bpf_map__set_priv
-> >   bpf_map__priv
-> >   bpf_program__set_prep
-> >   bpf_program__nth_fd
-> >   struct bpf_prog_prep_result
-> >
-> > Basically it implements workarounds suggested by Andrii in [2].
-> >
-> > I tested with script from examples/bpf that are working for me:
-> >
-> >   examples/bpf/hello.c
-> >   examples/bpf/5sec.c
-> >
-> > The rest seem to fail for various reasons even without this
-> > change..  they seem unmaintained for some time now, but I might
-> > have wrong setup.
-> >
-> > Also available in here:
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
-> >   perf/depre
-> >
-> > thanks,
-> > jirka
-> >
-> >
-> > [1] https://lore.kernel.org/linux-perf-users/YgoPxhE3OEEmZqla@krava/T/#t
-> > [2] https://lore.kernel.org/linux-perf-users/YgoPxhE3OEEmZqla@krava/T/#md3ccab9fe70a4583e94603b1a562e369bd67b17d
-> > ---
-> > Jiri Olsa (3):
-> >       perf tools: Remove bpf_program__set_priv/bpf_program__priv usage
-> >       perf tools: Remove bpf_map__set_priv/bpf_map__priv usage
-> >       perf tools: Rework prologue generation code
-> >
-> 
-> It's great that you are deprecating these, thanks a lot for that! I
-> suggest to also doing libbpf_set_strict_mode(LIBBPF_STRICT_ALL) to
+Skip the Sigtrap test for arm + arm64, same as was done for s390 in
+commit a840974e96fd ("perf test: Test 73 Sig_trap fails on s390"). For
+this, reuse BP_SIGNAL_IS_SUPPORTED - meaning that the arch can use BP to
+generate signals - instead of BP_ACCOUNT_IS_SUPPORTED, which is
+appropriate.
 
-will check
+As described by Will at [0], in the test we get stuck in a loop of handling
+the HW breakpoint exception and never making progress. GDB handles this
+by stepping over the faulting instruction, but with perf the kernel is
+expected to handle the step (which it doesn't for arm).
 
-> check that libbpf 1.0 won't break anything. For example, you'll need
-> to use a custom SEC() handler to handle those quirky sections that
-> perf allows. This patch set has landed in bpf-next, so you should be
-> good to go.
+Dmitry made an attempt to get this work, also mentioned in the same thread
+as [0], which was appreciated. But the best thing to do is skip the test
+for now.
 
-ah ok it already got merged.. I'll add it in new version
+[0] https://lore.kernel.org/linux-perf-users/20220118124343.GC98966@leoy-ThinkPad-X240s/T/#m13b06c39d2a5100d340f009435df6f4d8ee57b5a
 
-thanks,
-jirka
+Fixes: Fixes: 5504f67944484 ("perf test sigtrap: Add basic stress test for sigtrap handling")
+Signed-off-by: John Garry <john.garry@huawei.com>
 
-> 
-> 
-> >  tools/perf/util/bpf-loader.c | 267 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------------
-> >  1 file changed, 230 insertions(+), 37 deletions(-)
+diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
+index 1f147fe6595f..e32ece90e164 100644
+--- a/tools/perf/tests/sigtrap.c
++++ b/tools/perf/tests/sigtrap.c
+@@ -22,19 +22,6 @@
+ #include "tests.h"
+ #include "../perf-sys.h"
+ 
+-/*
+- * PowerPC and S390 do not support creation of instruction breakpoints using the
+- * perf_event interface.
+- *
+- * Just disable the test for these architectures until these issues are
+- * resolved.
+- */
+-#if defined(__powerpc__) || defined(__s390x__)
+-#define BP_ACCOUNT_IS_SUPPORTED 0
+-#else
+-#define BP_ACCOUNT_IS_SUPPORTED 1
+-#endif
+-
+ #define NUM_THREADS 5
+ 
+ static struct {
+@@ -135,7 +122,7 @@ static int test__sigtrap(struct test_suite *test __maybe_unused, int subtest __m
+ 	char sbuf[STRERR_BUFSIZE];
+ 	int i, fd, ret = TEST_FAIL;
+ 
+-	if (!BP_ACCOUNT_IS_SUPPORTED) {
++	if (!BP_SIGNAL_IS_SUPPORTED) {
+ 		pr_debug("Test not supported on this architecture");
+ 		return TEST_SKIP;
+ 	}
+-- 
+2.26.2
+
