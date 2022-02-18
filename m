@@ -2,128 +2,122 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D95CCC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Feb 2022 21:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F162C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Feb 2022 01:33:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343737AbiBQVzk (ORCPT
+        id S231249AbiBRBdp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 17 Feb 2022 16:55:40 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:58206 "EHLO
+        Thu, 17 Feb 2022 20:33:45 -0500
+Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:33054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242080AbiBQVzk (ORCPT
+        with ESMTP id S231156AbiBRBdo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 17 Feb 2022 16:55:40 -0500
-Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 518C21680A4;
-        Thu, 17 Feb 2022 13:55:25 -0800 (PST)
-Received: by mail-io1-xd33.google.com with SMTP id q8so5411092iod.2;
-        Thu, 17 Feb 2022 13:55:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jzGHEeXu8qLa160V5UZX2UopdW7xy02LCvRanuKe4aA=;
-        b=Su1vjtXg2FKoyFSL416m7D0PGEXJQemZAFUvAm2KSIh4CjFOEYsdtdDYLVrwqNf+FO
-         mMdkBAvlPio3IM7jN86ukcAQCfxgv/nrG5MQDO8qU7jbj5wAqD+VgTTPKU2hXZ2oMizz
-         8sMzM8GRQMHNlvClufoIyp7IcbIYowFFVxWNTbUEAvsPO0WU8zAfrecnL7wNIjA3qTBo
-         rrMn/PWeUpeifbP9PKToLXnPqqXy1goqx7jYY2fvlSE5Dwuz8s4tsiqF2M3mQxCOTD3u
-         lwAk3t8zB2aJqAqQVlKHnlYIb/a7+eA0jCh7kQ0Dzec6uGs/pwarPTx1UJcBKO2JraVw
-         0lAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jzGHEeXu8qLa160V5UZX2UopdW7xy02LCvRanuKe4aA=;
-        b=31oySHvg9PztjCe8f9/4MZedCv6J96WAKalhJ29NujW2dwLEfhHsFRJWlsBrQuI7gk
-         mWVR1goD01FnQF1VnD+bMUz2WaDp3Fjt0gADmHQWlNmE1O9a/aKthAbk/1XUGOyagwZ8
-         IJPTwaPPLgsVAQhw6rcSWEqKJEWU8DFMm6EujVbrC+3oWgutZEi6msupYik+/P+z+E9g
-         hXY996dVwAbZxwlqqADppntf3KSsSNVlyU5hHdR3he13IaUYdNf5jsI5ROGi9SKo2DHZ
-         jjUMoIiK7CtLD5kFagLkJtntnQMkOapTXyrepSKv4a5EW+SB/5dXsFYBER8B/aqO/zMl
-         5fBw==
-X-Gm-Message-State: AOAM532IaPfRPhMdMz3fzXRZnd/VcrkwcvU5zeWcBZL9x+c74IzfxuIf
-        cw2ShEr+85iqNGVEZp0CId5C3CnvFdyuGvbAKpU=
-X-Google-Smtp-Source: ABdhPJw7wiutofbKqAgsHlE9hG5ZQ/cLRNXVIQDjG9ngh81dBu0Y1TaMM4hTVZ9x4c/KCdVDdLYplTTogMOwSV1SfVA=
-X-Received: by 2002:a05:6638:2656:b0:30d:23ec:fcbf with SMTP id
- n22-20020a056638265600b0030d23ecfcbfmr3439041jat.103.1645134924694; Thu, 17
- Feb 2022 13:55:24 -0800 (PST)
+        Thu, 17 Feb 2022 20:33:44 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B63861B2799;
+        Thu, 17 Feb 2022 17:33:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1645148009; x=1676684009;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=68iC9cnz+ae05R1FGoesD5y/UbMcqAkHpnWUd6+k1Sc=;
+  b=i8bZya4fC7QqS0Q3v9ZsXM9QyMpcd82z4nidTqgc3Ml9jE15DsSuaPjy
+   518ThgpjNEBIb6Pi31gCVTkpu5SobGZeNE6TB5VRp6LSASKzFkhko080I
+   MhTR+KOeYKT+49lyZoTU0QZ3w1yVdBT8Gie5uQNVhjv+XX+DURXJ7auUM
+   gMTRplpG+MmE81goCYlyM+jcFjYzNkW1EJ+oY78Fxl0KBUnL2mos15849
+   GfChBTVzFEXXRTQmwidw0S/ICuOa2jieFVT5nRUN4d6vof+T18IEH4DgX
+   n7GUpWK9GK2vtTpJjQ8Jm2c9Bgx5+QnKXnwnV3BJnwenT8vpRn21bEiHv
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10261"; a="231662947"
+X-IronPort-AV: E=Sophos;i="5.88,377,1635231600"; 
+   d="scan'208";a="231662947"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2022 17:33:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,377,1635231600"; 
+   d="scan'208";a="503791413"
+Received: from zxingrtx.sh.intel.com ([10.239.159.110])
+  by orsmga002.jf.intel.com with ESMTP; 17 Feb 2022 17:33:26 -0800
+From:   zhengjun.xing@linux.intel.com
+To:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@intel.com, jolsa@redhat.com
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, ak@linux.intel.com,
+        kan.liang@linux.intel.com, zhengjun.xing@linux.intel.com
+Subject: [PATCH] perf tools: fix failed to use cpu list for uncore events
+Date:   Fri, 18 Feb 2022 17:31:27 +0800
+Message-Id: <20220218093127.1844241-1-zhengjun.xing@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20220217131916.50615-1-jolsa@kernel.org>
-In-Reply-To: <20220217131916.50615-1-jolsa@kernel.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 17 Feb 2022 13:55:13 -0800
-Message-ID: <CAEf4BzY+_3vjtN3dJjU4deVR131=Dz-9adYQ+mntVqgAOfh4RA@mail.gmail.com>
-Subject: Re: [PATCHv2 0/3] perf/bpf: Replace deprecated code
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Andrii Nakryiko <andrii@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Feb 17, 2022 at 5:19 AM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> hi,
-> the original patchset [1] removed the whole perf functionality
-> with the hope nobody's using that. But it turned out there's
-> actually bpf script using prologue functionality, so there
-> might be users of this.
->
-> This patchset gets rid of and adds workaround (and keeps the
-> current functionality) for following deprecated libbpf
-> functions/struct:
->
->   bpf_program__set_priv
->   bpf_program__priv
->   bpf_map__set_priv
->   bpf_map__priv
->   bpf_program__set_prep
->   bpf_program__nth_fd
->   struct bpf_prog_prep_result
->
-> Basically it implements workarounds suggested by Andrii in [2].
->
-> I tested with script from examples/bpf that are working for me:
->
->   examples/bpf/hello.c
->   examples/bpf/5sec.c
->
-> The rest seem to fail for various reasons even without this
-> change..  they seem unmaintained for some time now, but I might
-> have wrong setup.
->
-> Also available in here:
->   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
->   perf/depre
->
-> thanks,
-> jirka
->
->
-> [1] https://lore.kernel.org/linux-perf-users/YgoPxhE3OEEmZqla@krava/T/#t
-> [2] https://lore.kernel.org/linux-perf-users/YgoPxhE3OEEmZqla@krava/T/#md3ccab9fe70a4583e94603b1a562e369bd67b17d
-> ---
-> Jiri Olsa (3):
->       perf tools: Remove bpf_program__set_priv/bpf_program__priv usage
->       perf tools: Remove bpf_map__set_priv/bpf_map__priv usage
->       perf tools: Rework prologue generation code
->
+From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
 
-It's great that you are deprecating these, thanks a lot for that! I
-suggest to also doing libbpf_set_strict_mode(LIBBPF_STRICT_ALL) to
-check that libbpf 1.0 won't break anything. For example, you'll need
-to use a custom SEC() handler to handle those quirky sections that
-perf allows. This patch set has landed in bpf-next, so you should be
-good to go.
+The 'perf record' and 'perf stat' commands have supported the option
+'-C/--cpus' to count or collect only on the list of CPUs provided.
+commit 1d3351e631fc ("perf tools: Enable on a list of CPUs for hybrid")
+add it to be supported for hybrid. For hybrid support, it checks the
+cpu list are available on hybrid PMU. But when we test only uncore
+events(or events not in cpu_core and cpu_atom), there is a bug:
 
+Before:
+ # perf stat -C0  -e uncore_clock/clockticks/ sleep 1
+   failed to use cpu list 0
 
->  tools/perf/util/bpf-loader.c | 267 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------------
->  1 file changed, 230 insertions(+), 37 deletions(-)
+In this case, for uncore event, its pmu_name is not cpu_core or cpu_atom,
+so in evlist__fix_hybrid_cpus, perf_pmu__find_hybrid_pmu should return
+NULL,both events_nr and unmatched_count should be 0 ,then the cpu list
+check function evlist__fix_hybrid_cpus return -1 and the error "failed
+to use cpu list 0" will happen. Bypass "events_nr=0" case then the issue
+is fixed.
+
+After:
+ # perf stat -C0  -e uncore_clock/clockticks/ sleep 1
+
+ Performance counter stats for 'CPU(s) 0':
+
+       195,476,873      uncore_clock/clockticks/
+
+       1.004518677 seconds time elapsed
+
+When testing with at least one core event and uncore events, it has no
+issue.
+
+ # perf stat -C0  -e cpu_core/cpu-cycles/,uncore_clock/clockticks/ sleep 1
+
+ Performance counter stats for 'CPU(s) 0':
+
+         5,993,774      cpu_core/cpu-cycles/
+       301,025,912      uncore_clock/clockticks/
+
+       1.003964934 seconds time elapsed
+
+Fixes: 1d3351e631fc ("perf tools: Enable on a list of CPUs for hybrid")
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+---
+ tools/perf/util/evlist-hybrid.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/evlist-hybrid.c b/tools/perf/util/evlist-hybrid.c
+index 7f234215147d..57f02beef023 100644
+--- a/tools/perf/util/evlist-hybrid.c
++++ b/tools/perf/util/evlist-hybrid.c
+@@ -154,8 +154,8 @@ int evlist__fix_hybrid_cpus(struct evlist *evlist, const char *cpu_list)
+ 		perf_cpu_map__put(matched_cpus);
+ 		perf_cpu_map__put(unmatched_cpus);
+ 	}
+-
+-	ret = (unmatched_count == events_nr) ? -1 : 0;
++	if (events_nr)
++		ret = (unmatched_count == events_nr) ? -1 : 0;
+ out:
+ 	perf_cpu_map__put(cpus);
+ 	return ret;
+-- 
+2.25.1
+
