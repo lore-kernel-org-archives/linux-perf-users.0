@@ -2,104 +2,81 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B27C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Feb 2022 12:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70283C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Feb 2022 13:01:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233195AbiBRM7S (ORCPT
+        id S235573AbiBRNBq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 18 Feb 2022 07:59:18 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50142 "EHLO
+        Fri, 18 Feb 2022 08:01:46 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:55818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232441AbiBRM7R (ORCPT
+        with ESMTP id S235576AbiBRNBj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 18 Feb 2022 07:59:17 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FEB6DE2F5;
-        Fri, 18 Feb 2022 04:59:01 -0800 (PST)
+        Fri, 18 Feb 2022 08:01:39 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC3982B4614;
+        Fri, 18 Feb 2022 05:01:22 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 05B3EB8261A;
-        Fri, 18 Feb 2022 12:59:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A14CDC340E9;
-        Fri, 18 Feb 2022 12:58:58 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7550D60FF6;
+        Fri, 18 Feb 2022 13:01:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB52BC340EC;
+        Fri, 18 Feb 2022 13:01:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645189138;
-        bh=jPGzG7uRElyCvzBuI1vVzDz2ITCvtuBTtR2EITAfhaE=;
+        s=k20201202; t=1645189281;
+        bh=4FwYxBWrEupe0hGtGoQssphvx94RtmIN5fix0AGiO2g=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JWaVqk8Vs0nzGiNjcgSI37+76hDIHGdtO7JsBaGQAN1KhZqG1QiZQtpjINHDHNW6x
-         wo3/Pan1v71YFwMBANQGGewmyF/FQawhamtjN9B8pRWlOBehb43ZhxIH0yegbaV9Dr
-         Bc2azqdLq12Hs7XtaNAd/TwPgmMy+m3GWn8DBJqh7hbMZYvxb7T9KPJGLz+NDeYJcY
-         jJzUUU8wLKPVlTOT7CnsiySsa9lhvfMrtMaRAIHNeG76UB4QWSw6bgbriU4adDKSly
-         AhUUZeGp9QWifMBCHEpALh/yegvrx3nFzlrkMVUKJi0PoPIJarLozZZ4lL1Ph0axBA
-         maIFo+r2/L0Gg==
+        b=RLs58+ZO/yhkcYn0Go79HTlZ5S9Fjc5irYIbEoVcCKEDyzGoklWSBTLd5qbMOkAET
+         DZtVivQi3X1PKBBs6KGmpMbA+joxSzhJWlBZUN9HujrjnWaIcykYXQNww+97BOectN
+         Wh2gN0OnQs8K9bLigaFuwEen1rGY1KRwtpRZamDMHtMAMe8+iG37lTT0VKSqXbz+sK
+         /N5PXe7uvm1yoA9ym3luwTgOP8cPd7duyvkaHQcMJdUG4Mnkp8B17I9zpHl99aYxaV
+         GbdnVBJnWIYCSWV2SMb40urh8fn5mXmUyAqG1M2CE+N9DU/u1l5WaMImvXQb+EEwQR
+         j6SczgA/INB/Q==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 180E0400FE; Fri, 18 Feb 2022 09:58:57 -0300 (-03)
-Date:   Fri, 18 Feb 2022 09:58:57 -0300
+        id 9533B400FE; Fri, 18 Feb 2022 10:01:19 -0300 (-03)
+Date:   Fri, 18 Feb 2022 10:01:19 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     cgel.zte@gmail.com
-Cc:     mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, adrian.hunter@intel.com,
-        atrajeev@linux.vnet.ibm.com, ak@linux.intel.com,
-        kan.liang@linux.intel.com, deng.changcheng@zte.com.cn,
-        german.gomez@arm.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Zeal Robot <zealci@zte.com.cn>
-Subject: Re: [PATCH] perf tools: Replace zero-length array with
- flexible-array member
-Message-ID: <Yg+YEfv5vvT3RIxy@kernel.org>
-References: <20220218031352.1906077-1-deng.changcheng@zte.com.cn>
+To:     zhengjun.xing@linux.intel.com
+Cc:     peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@intel.com, jolsa@redhat.com,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, ak@linux.intel.com,
+        kan.liang@linux.intel.com
+Subject: Re: [PATCH] perf tools: fix failed to use cpu list for uncore events
+Message-ID: <Yg+Yn16Xyzqc2kRr@kernel.org>
+References: <20220218093127.1844241-1-zhengjun.xing@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220218031352.1906077-1-deng.changcheng@zte.com.cn>
+In-Reply-To: <20220218093127.1844241-1-zhengjun.xing@linux.intel.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Feb 18, 2022 at 03:13:52AM +0000, cgel.zte@gmail.com escreveu:
-> From: Changcheng Deng <deng.changcheng@zte.com.cn>
+Em Fri, Feb 18, 2022 at 05:31:27PM +0800, zhengjun.xing@linux.intel.com escreveu:
+> From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
 > 
-> There is a regular need in the kernel to provide a way to declare having
-> a dynamically sized set of trailing elements in a structure. Kernel code
-> should always use "flexible array members" for these cases. The older
-> style of one-element or zero-length arrays should no longer be used.
-> Reference:
-> https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
+> The 'perf record' and 'perf stat' commands have supported the option
+> '-C/--cpus' to count or collect only on the list of CPUs provided.
+> commit 1d3351e631fc ("perf tools: Enable on a list of CPUs for hybrid")
+> add it to be supported for hybrid. For hybrid support, it checks the
+> cpu list are available on hybrid PMU. But when we test only uncore
+> events(or events not in cpu_core and cpu_atom), there is a bug:
 > 
-> Reported-by: Zeal Robot <zealci@zte.com.cn>
-> Signed-off-by: Changcheng Deng <deng.changcheng@zte.com.cn>
+> Before:
+>  # perf stat -C0  -e uncore_clock/clockticks/ sleep 1
+>    failed to use cpu list 0
+> 
+> In this case, for uncore event, its pmu_name is not cpu_core or cpu_atom,
+> so in evlist__fix_hybrid_cpus, perf_pmu__find_hybrid_pmu should return
+> NULL,both events_nr and unmatched_count should be 0 ,then the cpu list
+> check function evlist__fix_hybrid_cpus return -1 and the error "failed
+> to use cpu list 0" will happen. Bypass "events_nr=0" case then the issue
+> is fixed.
 
-You can't do that as this will break the build as explained in that
-patch e-mail thread.
-
-Adrian provided an alternative patch that I have to process.
-
-Thanks for the patch anyway,
+Thanks, applied.
 
 - Arnaldo
 
-> ---
->  tools/perf/util/event.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-> index cdd72e05fd28..320cbcd5b902 100644
-> --- a/tools/perf/util/event.h
-> +++ b/tools/perf/util/event.h
-> @@ -308,7 +308,7 @@ struct perf_synth_intel_evt {
->  		};
->  		u32	cfe;
->  	};
-> -	struct perf_synth_intel_evd evd[0];
-> +	struct perf_synth_intel_evd evd[];
->  };
->  
->  struct perf_synth_intel_iflag_chg {
-> -- 
-> 2.25.1
-
--- 
-
-- Arnaldo
