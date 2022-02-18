@@ -2,148 +2,220 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB33C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Feb 2022 17:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA807C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Feb 2022 19:55:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238291AbiBRRzT (ORCPT
+        id S238853AbiBRTz7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 18 Feb 2022 12:55:19 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50678 "EHLO
+        Fri, 18 Feb 2022 14:55:59 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:37750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234278AbiBRRzT (ORCPT
+        with ESMTP id S235479AbiBRTzp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 18 Feb 2022 12:55:19 -0500
-Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D5F843EDC;
-        Fri, 18 Feb 2022 09:55:02 -0800 (PST)
-Received: from pps.filterd (m0134423.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 21IFhPYG007416;
-        Fri, 18 Feb 2022 17:54:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pps0720;
- bh=BDCWoVxZhWp+yRyjutXwaRP+sENqxLUBzem2qgF/z9M=;
- b=VWBscN6jMC2Mn2Xikuyg7QOIxwnp2oXBj167aCrF4dmTAlid1IvYzBscJjRDDT/T6kjv
- BRWPoBXr5rzoXyfgzgvp4myAbc+BU9d+tU7F9B1DjNgm+g9g/wRXdbIxOGdgwuIXCm09
- HcrqCNto5mt0KDSLGYli+PugpAyq9VNeyyDy6nyRGg8tdBVowgprLLhsAxhMlZzmZIi5
- 2tw3y1Xzp/MB5ghvMWVMqTMizimNw/lh9/kmtVWewH95NmcjEkmVtAH8Q8D28h9xXBZs
- 5g8Dxqa1sp8SpHlmM8roNJiP32U9VUYxi2vuqZHaaySjAPT0xGOQUcNeBvnikc5LZ9yZ qQ== 
-Received: from g4t3426.houston.hpe.com (g4t3426.houston.hpe.com [15.241.140.75])
-        by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3eaafdu5ws-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 18 Feb 2022 17:54:21 +0000
-Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
-        by g4t3426.houston.hpe.com (Postfix) with ESMTP id 00A3454;
-        Fri, 18 Feb 2022 17:54:20 +0000 (UTC)
-Received: from dog.eag.rdlabs.hpecorp.net (dog.eag.rdlabs.hpecorp.net [128.162.243.181])
-        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id 7BB7848;
-        Fri, 18 Feb 2022 17:54:19 +0000 (UTC)
-Received: by dog.eag.rdlabs.hpecorp.net (Postfix, from userid 200934)
-        id F0C03302F479A; Fri, 18 Feb 2022 11:54:18 -0600 (CST)
-From:   Steve Wahl <steve.wahl@hpe.com>
-To:     Steve Wahl <steve.wahl@hpe.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Liang, Kan" <kan.liang@intel.com>
-Subject: [PATCH] perf/x86/intel/uncore: Make uncore_discovery clean for 64 bit addresses
-Date:   Fri, 18 Feb 2022 11:54:18 -0600
-Message-Id: <20220218175418.421268-1-steve.wahl@hpe.com>
-X-Mailer: git-send-email 2.26.2
+        Fri, 18 Feb 2022 14:55:45 -0500
+Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F07C129E;
+        Fri, 18 Feb 2022 11:55:27 -0800 (PST)
+Received: by mail-il1-x12f.google.com with SMTP id h11so5468680ilq.9;
+        Fri, 18 Feb 2022 11:55:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5uMqrw8+6VchXMRp0bzbPkGR2Iy1g3pLICkvKHQUn5s=;
+        b=Gz+N6F0GuBqFa6mOtU/cqd9YC7sTYPS/YXaUQIwHTo3WhD9LCaPiA2X2CrplBDWlzX
+         d2ie1fQsmGyLhelJ7fLx3PLzYB8+fYH6BazFK1Eoz+uR1nvpZZ07lVUQS9AEq2v7cT6Q
+         sw4KvXulNbKRo4b/FMm7HRUDlf4Mj2ABfjHbt5vmXbVg48xaGBOgJbrEwTHMxJluJBeP
+         KXYzVJU+CNLflQgHSnu8uf0+H570io3eu9QgiCnTk+gxHlxeAe7pD8n0A/Dj40h1zr+l
+         aecSnsUsCE6HoSyLb4pmFFPzzdv4N0SwzsaLeZ/44JItbt03+uC1GiuyAC8Ojurn8/Z1
+         L6rQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5uMqrw8+6VchXMRp0bzbPkGR2Iy1g3pLICkvKHQUn5s=;
+        b=EU+ANyg24Vpcen35b4Z5uBQd5KOuG/DbVRxdnitYjm8h7otRjX4e3gRIO4Ga/TRJmS
+         UPh0N3uzQ8OUUdnO1ucBl6kkRPztLtJmqGQ7W0pxuwhoaffkfRZSAM0wwKd89143/jsa
+         5Gudz/OvrifqMnGaq7ifDNYB5wpTWp6ZcYlQusti3To0GNM4E68D9Jj/5gYeXTawHoLn
+         8NV57aG+d1y/bfNk+YG0Gxp8byMdwAc/QqaYRXSGR6Ygy6dvazRDyx8yYNoIq+qNVYiL
+         zN7CrWT4uYi8Fft50lOKg0rWa2GaKKhz1k6bZfTSDTLoubb+E7RSjAgWtZjsEyKLsp6p
+         0mEQ==
+X-Gm-Message-State: AOAM532WM6sWb6IwaSi+ZRjZTTO6lwME4trzQbv6SpNAZBTUoKKaexfW
+        eJn0E2mvDiHNA9vgE467Jh8EESynHs0U3HlGvFQ6zwjxYYs=
+X-Google-Smtp-Source: ABdhPJwMElGK0zoFWXExXzv66lkDUPkUajOfC5brsjaVY+7cETRxZt3fHRYc7wYWrqv/3bY+JQmsfOL4rp9yZ/BTJrw=
+X-Received: by 2002:a92:d208:0:b0:2c1:1a3c:7b01 with SMTP id
+ y8-20020a92d208000000b002c11a3c7b01mr6454880ily.71.1645214127400; Fri, 18 Feb
+ 2022 11:55:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: 2UpB5lcVBq5cN9LvENogUWC_9oqLFg1F
-X-Proofpoint-ORIG-GUID: 2UpB5lcVBq5cN9LvENogUWC_9oqLFg1F
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2022-02-18_07,2022-02-18_01,2021-12-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 phishscore=0 mlxlogscore=999 spamscore=0 adultscore=0
- priorityscore=1501 malwarescore=0 impostorscore=0 mlxscore=0 bulkscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2201110000 definitions=main-2202180111
+References: <20220217131916.50615-1-jolsa@kernel.org> <20220217131916.50615-4-jolsa@kernel.org>
+ <CAEf4BzYP7=JuyuY=xZe71urpxat4ba-JnqeSTcHF=CYmsQbofQ@mail.gmail.com> <Yg9geQ0LJjhnrc7j@krava>
+In-Reply-To: <Yg9geQ0LJjhnrc7j@krava>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 18 Feb 2022 11:55:16 -0800
+Message-ID: <CAEf4BzZaFWhWf73JbfO7gLi82Nn4ma-qmaZBPij=giNzzoSCTQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] perf tools: Rework prologue generation code
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Support 64-bit BAR size for discovery, and do not truncate return from
-generic_uncore_mmio_box_ctl() to 32 bits.
+On Fri, Feb 18, 2022 at 1:01 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+>
+> On Thu, Feb 17, 2022 at 01:53:16PM -0800, Andrii Nakryiko wrote:
+> > On Thu, Feb 17, 2022 at 5:19 AM Jiri Olsa <jolsa@kernel.org> wrote:
+> > >
+> > > Some functions we use now for bpf prologue generation are
+> > > going to be deprecated, so reworking the current code not
+> > > to use them.
+> > >
+> > > We need to replace following functions/struct:
+> > >    bpf_program__set_prep
+> > >    bpf_program__nth_fd
+> > >    struct bpf_prog_prep_result
+> > >
+> > > Current code uses bpf_program__set_prep to hook perf callback
+> > > before the program is loaded and provide new instructions with
+> > > the prologue.
+> > >
+> > > We workaround this by using objects's 'unloaded' programs instructions
+> > > for that specific program and load new ebpf programs with prologue
+> > > using separate bpf_prog_load calls.
+> > >
+> > > We keep new ebpf program instances descriptors in bpf programs
+> > > private struct.
+> > >
+> > > Suggested-by: Andrii Nakryiko <andrii@kernel.org>
+> > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > > ---
+> > >  tools/perf/util/bpf-loader.c | 122 +++++++++++++++++++++++++++++------
+> > >  1 file changed, 104 insertions(+), 18 deletions(-)
+> > >
+> >
+> > [...]
+> >
+> > >  errout:
+> > > @@ -696,7 +718,7 @@ static int hook_load_preprocessor(struct bpf_program *prog)
+> > >         struct bpf_prog_priv *priv = program_priv(prog);
+> > >         struct perf_probe_event *pev;
+> > >         bool need_prologue = false;
+> > > -       int err, i;
+> > > +       int i;
+> > >
+> > >         if (IS_ERR_OR_NULL(priv)) {
+> > >                 pr_debug("Internal error when hook preprocessor\n");
+> > > @@ -727,6 +749,12 @@ static int hook_load_preprocessor(struct bpf_program *prog)
+> > >                 return 0;
+> > >         }
+> > >
+> > > +       /*
+> > > +        * Do not load programs that need prologue, because we need
+> > > +        * to add prologue first, check bpf_object__load_prologue.
+> > > +        */
+> > > +       bpf_program__set_autoload(prog, false);
+> >
+> > if you set autoload to false, program instructions might be invalid in
+> > the end. Libbpf doesn't apply some (all?) relocations to such
+> > programs, doesn't resolve CO-RE, etc, etc. You have to let
+> > "prototypal" BPF program to be loaded before you can grab final
+> > instructions. It's not great, but in your case it should work, right?
+>
+> hum, do we care? it should all be done when the 'new' program with
+> the prologue is loaded, right?
 
-Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
----
- arch/x86/events/intel/uncore_discovery.c | 16 +++++++++++-----
- arch/x86/events/intel/uncore_discovery.h |  2 --
- 2 files changed, 11 insertions(+), 7 deletions(-)
+yeah, you should care. If there is any BPF map involved, it is
+properly resolved to correct FD (which is put into ldimm64 instruction
+in BPF program code) during the load. If program is not autoloaded,
+this is skipped. Same for any global variable or subprog call (if it's
+not always inlined). So you very much should care for any non-trivial
+program.
 
-diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
-index 3049c646fa20..141a540e7403 100644
---- a/arch/x86/events/intel/uncore_discovery.c
-+++ b/arch/x86/events/intel/uncore_discovery.c
-@@ -210,15 +210,21 @@ static int parse_discovery_table(struct pci_dev *dev, int die,
- 	void __iomem *io_addr;
- 	resource_size_t addr;
- 	unsigned long size;
--	u32 val;
-+	u32 val, val2;
- 	int i;
- 
- 	pci_read_config_dword(dev, bar_offset, &val);
- 
--	if (val & UNCORE_DISCOVERY_MASK)
-+	if (val & ~PCI_BASE_ADDRESS_MEM_MASK & ~PCI_BASE_ADDRESS_MEM_TYPE_64)
- 		return -EINVAL;
- 
--	addr = (resource_size_t)(val & ~UNCORE_DISCOVERY_MASK);
-+	addr = (resource_size_t)(val & PCI_BASE_ADDRESS_MEM_MASK);
-+#ifdef CONFIG_PHYS_ADDR_T_64BIT
-+	if ((val & PCI_BASE_ADDRESS_MEM_TYPE_MASK) == PCI_BASE_ADDRESS_MEM_TYPE_64) {
-+		pci_read_config_dword(dev, bar_offset + 4, &val2);
-+		addr |= ((resource_size_t)val2) << 32;
-+	}
-+#endif
- 	size = UNCORE_DISCOVERY_GLOBAL_MAP_SIZE;
- 	io_addr = ioremap(addr, size);
- 	if (!io_addr)
-@@ -444,7 +450,7 @@ static struct intel_uncore_ops generic_uncore_pci_ops = {
- 
- #define UNCORE_GENERIC_MMIO_SIZE		0x4000
- 
--static unsigned int generic_uncore_mmio_box_ctl(struct intel_uncore_box *box)
-+static u64 generic_uncore_mmio_box_ctl(struct intel_uncore_box *box)
- {
- 	struct intel_uncore_type *type = box->pmu->type;
- 
-@@ -456,7 +462,7 @@ static unsigned int generic_uncore_mmio_box_ctl(struct intel_uncore_box *box)
- 
- void intel_generic_uncore_mmio_init_box(struct intel_uncore_box *box)
- {
--	unsigned int box_ctl = generic_uncore_mmio_box_ctl(box);
-+	u64 box_ctl = generic_uncore_mmio_box_ctl(box);
- 	struct intel_uncore_type *type = box->pmu->type;
- 	resource_size_t addr;
- 
-diff --git a/arch/x86/events/intel/uncore_discovery.h b/arch/x86/events/intel/uncore_discovery.h
-index 6d735611c281..22d40e7afbf1 100644
---- a/arch/x86/events/intel/uncore_discovery.h
-+++ b/arch/x86/events/intel/uncore_discovery.h
-@@ -18,8 +18,6 @@
- #define UNCORE_DISCOVERY_BIR_BASE		0x10
- /* Discovery table BAR step */
- #define UNCORE_DISCOVERY_BIR_STEP		0x4
--/* Mask of the discovery table offset */
--#define UNCORE_DISCOVERY_MASK			0xf
- /* Global discovery table size */
- #define UNCORE_DISCOVERY_GLOBAL_MAP_SIZE	0x20
- 
--- 
-2.26.2
+>
+> I switched it off because the verifier failed to load the program
+> without the prologue.. because in the original program there's no
+> code to grab the arguments that the rest of the code depends on,
+> so the verifier sees invalid access
 
+Do you have an example of C code and corresponding BPF instructions
+before/after prologue generation? Just curious to see in details how
+this is done.
+
+>
+> >
+> > > +
+> > >         priv->need_prologue = true;
+> > >         priv->insns_buf = malloc(sizeof(struct bpf_insn) * BPF_MAXINSNS);
+> > >         if (!priv->insns_buf) {
+> > > @@ -734,6 +762,13 @@ static int hook_load_preprocessor(struct bpf_program *prog)
+> > >                 return -ENOMEM;
+> > >         }
+> > >
+> >
+> > [...]
+> >
+> > > +               /*
+> > > +                * For each program that needs prologue we do following:
+> > > +                *
+> > > +                * - take its current instructions and use them
+> > > +                *   to generate the new code with prologue
+> > > +                *
+> > > +                * - load new instructions with bpf_prog_load
+> > > +                *   and keep the fd in proglogue_fds
+> > > +                *
+> > > +                * - new fd will be used bpf__foreach_event
+> > > +                *   to connect this program with perf evsel
+> > > +                */
+> > > +               orig_insns = bpf_program__insns(prog);
+> > > +               orig_insns_cnt = bpf_program__insn_cnt(prog);
+> > > +
+> > > +               pev = &priv->pev;
+> > > +               for (i = 0; i < pev->ntevs; i++) {
+> > > +                       err = preproc_gen_prologue(prog, i, orig_insns,
+> > > +                                                  orig_insns_cnt, &res);
+> > > +                       if (err)
+> > > +                               return err;
+> > > +
+> > > +                       fd = bpf_prog_load(bpf_program__get_type(prog),
+> >
+> > nit: bpf_program__type() is preferred (we are deprecating/discouraging
+> > "get_" prefixed getters in libbpf 1.0)
+>
+> ok, will change
+
+It's been added in v0.7, yeah.
+
+>
+> >
+> > > +                                          bpf_program__name(prog), "GPL",
+> >
+> > would it make sense to give each clone a distinct name?
+>
+> AFAICS the original code uses same prog name for instances,
+> so I'd rather keep it that way
+>
+
+sure, np
+
+> thanks,
+> jirka
+>
+> >
+> > > +                                          res.new_insn_ptr,
+> > > +                                          res.new_insn_cnt, NULL);
+> > > +                       if (fd < 0) {
+> > > +                               char bf[128];
+> > > +
+> >
+> > [...]
