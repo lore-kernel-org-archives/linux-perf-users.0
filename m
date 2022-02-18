@@ -2,194 +2,148 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD892C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Feb 2022 14:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB33C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Feb 2022 17:55:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232114AbiBROXM (ORCPT
+        id S238291AbiBRRzT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 18 Feb 2022 09:23:12 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:44944 "EHLO
+        Fri, 18 Feb 2022 12:55:19 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235993AbiBROXM (ORCPT
+        with ESMTP id S234278AbiBRRzT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 18 Feb 2022 09:23:12 -0500
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96D402459E;
-        Fri, 18 Feb 2022 06:22:52 -0800 (PST)
-Received: by mail-wr1-x432.google.com with SMTP id p9so14840995wra.12;
-        Fri, 18 Feb 2022 06:22:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=VnAIJ0UvovmuuRgmc/P0eoCaMTkjs2w9LqScQtLxo3g=;
-        b=Px6loXhQkxStejGmXJpI+5UAeQ9EfLtKQPkqYEikfuKSw1EzIkaz0YZ1Dibes4Mpii
-         EotzNG5rl+jqnQMR5J3kkeTAer9ndjct5npAKK1EIHVpbiaL5I9TC7/je4AWTMtdHfhd
-         /SnwAdLdGvNUPHpmjVZCTfpmn+9lrX8FcvQHM4mGQU8io+4JLu8OK0y6kmPWbv/AWHUU
-         clFjFg69ChGs8iyMPFAbHCD+9Hkgk9lHkbWBxWC+3dxpUtppgVAIoV7f9yH3USdw9VlQ
-         ZKk12XpwJhjI7BRzYaP3nxatFuazHwavRq/AI78Md3qELUZhC1gI0G5yfW0WVif5KkLZ
-         09Tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VnAIJ0UvovmuuRgmc/P0eoCaMTkjs2w9LqScQtLxo3g=;
-        b=n6YxPgCMigLQHXvB1+RZa3aDOb7Bdt5qJtphlM3+9qtC3fnfVzvPtXzcMUaiRCtPxy
-         2sUGpA4tMzyD6WhDcLi+w547KKqVVmUBlh+lqEkPQDbmUycBnA4tGtXJhXUcuNHQNf1d
-         64iIdzJimIHvsQC+DSq6JqZL8E9Df15MNC/Z9Gu0GWNNLk0VQqNhosPsmFPFhzx5lCb0
-         7HeQ1gduxX5S8LEBJKxkZec8OQxehxCl579QclvYjknICfEtmvzXkxvsBgxu/D9oC0MV
-         HrYqvgi1UHlz8omtGtibhoxS0dKB9qcB0IDyNwczReWKjGtdXWZe5ZvrDzP0UttRvBWn
-         Atvg==
-X-Gm-Message-State: AOAM530g4ylGxnINcELUdD805e1mzJRTBsy3kf5Z6uUl2ZOXbBTvTrzB
-        YhW2iT/Y6fxW4Mtz0JZm0cw=
-X-Google-Smtp-Source: ABdhPJxQ+renDcxdLPuwzaYOA43bndL6cMVEwsRjfRPhlbJ8m+sJbAToPEOAIVPa3JoxRtrBlq/JGQ==
-X-Received: by 2002:adf:9106:0:b0:1e3:c02a:f4af with SMTP id j6-20020adf9106000000b001e3c02af4afmr6353398wrj.150.1645194171020;
-        Fri, 18 Feb 2022 06:22:51 -0800 (PST)
-Received: from krava ([83.240.63.12])
-        by smtp.gmail.com with ESMTPSA id b18sm34031223wrx.92.2022.02.18.06.22.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Feb 2022 06:22:50 -0800 (PST)
-Date:   Fri, 18 Feb 2022 15:22:48 +0100
-From:   Jiri Olsa <olsajiri@gmail.com>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Fri, 18 Feb 2022 12:55:19 -0500
+Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D5F843EDC;
+        Fri, 18 Feb 2022 09:55:02 -0800 (PST)
+Received: from pps.filterd (m0134423.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 21IFhPYG007416;
+        Fri, 18 Feb 2022 17:54:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pps0720;
+ bh=BDCWoVxZhWp+yRyjutXwaRP+sENqxLUBzem2qgF/z9M=;
+ b=VWBscN6jMC2Mn2Xikuyg7QOIxwnp2oXBj167aCrF4dmTAlid1IvYzBscJjRDDT/T6kjv
+ BRWPoBXr5rzoXyfgzgvp4myAbc+BU9d+tU7F9B1DjNgm+g9g/wRXdbIxOGdgwuIXCm09
+ HcrqCNto5mt0KDSLGYli+PugpAyq9VNeyyDy6nyRGg8tdBVowgprLLhsAxhMlZzmZIi5
+ 2tw3y1Xzp/MB5ghvMWVMqTMizimNw/lh9/kmtVWewH95NmcjEkmVtAH8Q8D28h9xXBZs
+ 5g8Dxqa1sp8SpHlmM8roNJiP32U9VUYxi2vuqZHaaySjAPT0xGOQUcNeBvnikc5LZ9yZ qQ== 
+Received: from g4t3426.houston.hpe.com (g4t3426.houston.hpe.com [15.241.140.75])
+        by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3eaafdu5ws-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 18 Feb 2022 17:54:21 +0000
+Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
+        by g4t3426.houston.hpe.com (Postfix) with ESMTP id 00A3454;
+        Fri, 18 Feb 2022 17:54:20 +0000 (UTC)
+Received: from dog.eag.rdlabs.hpecorp.net (dog.eag.rdlabs.hpecorp.net [128.162.243.181])
+        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id 7BB7848;
+        Fri, 18 Feb 2022 17:54:19 +0000 (UTC)
+Received: by dog.eag.rdlabs.hpecorp.net (Postfix, from userid 200934)
+        id F0C03302F479A; Fri, 18 Feb 2022 11:54:18 -0600 (CST)
+From:   Steve Wahl <steve.wahl@hpe.com>
+To:     Steve Wahl <steve.wahl@hpe.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>
-Subject: Re: [PATCH 3/3] perf tools: Rework prologue generation code
-Message-ID: <Yg+ruDjO0kq2a3O/@krava>
-References: <20220217131916.50615-1-jolsa@kernel.org>
- <20220217131916.50615-4-jolsa@kernel.org>
- <CAEf4BzYP7=JuyuY=xZe71urpxat4ba-JnqeSTcHF=CYmsQbofQ@mail.gmail.com>
- <Yg9geQ0LJjhnrc7j@krava>
- <Yg+ZHUm4raVBwnQP@krava>
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Liang, Kan" <kan.liang@intel.com>
+Subject: [PATCH] perf/x86/intel/uncore: Make uncore_discovery clean for 64 bit addresses
+Date:   Fri, 18 Feb 2022 11:54:18 -0600
+Message-Id: <20220218175418.421268-1-steve.wahl@hpe.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yg+ZHUm4raVBwnQP@krava>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: 2UpB5lcVBq5cN9LvENogUWC_9oqLFg1F
+X-Proofpoint-ORIG-GUID: 2UpB5lcVBq5cN9LvENogUWC_9oqLFg1F
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.62.513
+ definitions=2022-02-18_07,2022-02-18_01,2021-12-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 phishscore=0 mlxlogscore=999 spamscore=0 adultscore=0
+ priorityscore=1501 malwarescore=0 impostorscore=0 mlxscore=0 bulkscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2201110000 definitions=main-2202180111
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Feb 18, 2022 at 02:03:28PM +0100, Jiri Olsa wrote:
-> On Fri, Feb 18, 2022 at 10:01:45AM +0100, Jiri Olsa wrote:
-> > On Thu, Feb 17, 2022 at 01:53:16PM -0800, Andrii Nakryiko wrote:
-> > > On Thu, Feb 17, 2022 at 5:19 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> > > >
-> > > > Some functions we use now for bpf prologue generation are
-> > > > going to be deprecated, so reworking the current code not
-> > > > to use them.
-> > > >
-> > > > We need to replace following functions/struct:
-> > > >    bpf_program__set_prep
-> > > >    bpf_program__nth_fd
-> > > >    struct bpf_prog_prep_result
-> > > >
-> > > > Current code uses bpf_program__set_prep to hook perf callback
-> > > > before the program is loaded and provide new instructions with
-> > > > the prologue.
-> > > >
-> > > > We workaround this by using objects's 'unloaded' programs instructions
-> > > > for that specific program and load new ebpf programs with prologue
-> > > > using separate bpf_prog_load calls.
-> > > >
-> > > > We keep new ebpf program instances descriptors in bpf programs
-> > > > private struct.
-> > > >
-> > > > Suggested-by: Andrii Nakryiko <andrii@kernel.org>
-> > > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > > > ---
-> > > >  tools/perf/util/bpf-loader.c | 122 +++++++++++++++++++++++++++++------
-> > > >  1 file changed, 104 insertions(+), 18 deletions(-)
-> > > >
-> > > 
-> > > [...]
-> > > 
-> > > >  errout:
-> > > > @@ -696,7 +718,7 @@ static int hook_load_preprocessor(struct bpf_program *prog)
-> > > >         struct bpf_prog_priv *priv = program_priv(prog);
-> > > >         struct perf_probe_event *pev;
-> > > >         bool need_prologue = false;
-> > > > -       int err, i;
-> > > > +       int i;
-> > > >
-> > > >         if (IS_ERR_OR_NULL(priv)) {
-> > > >                 pr_debug("Internal error when hook preprocessor\n");
-> > > > @@ -727,6 +749,12 @@ static int hook_load_preprocessor(struct bpf_program *prog)
-> > > >                 return 0;
-> > > >         }
-> > > >
-> > > > +       /*
-> > > > +        * Do not load programs that need prologue, because we need
-> > > > +        * to add prologue first, check bpf_object__load_prologue.
-> > > > +        */
-> > > > +       bpf_program__set_autoload(prog, false);
-> > > 
-> > > if you set autoload to false, program instructions might be invalid in
-> > > the end. Libbpf doesn't apply some (all?) relocations to such
-> > > programs, doesn't resolve CO-RE, etc, etc. You have to let
-> > > "prototypal" BPF program to be loaded before you can grab final
-> > > instructions. It's not great, but in your case it should work, right?
-> > 
-> > hum, do we care? it should all be done when the 'new' program with
-> > the prologue is loaded, right?
-> > 
-> > I switched it off because the verifier failed to load the program
-> > without the prologue.. because in the originaal program there's no
-> > code to grab the arguments that the rest of the code depends on,
-> > so the verifier sees invalid access
-> > 
-> > > 
-> > > > +
-> > > >         priv->need_prologue = true;
-> > > >         priv->insns_buf = malloc(sizeof(struct bpf_insn) * BPF_MAXINSNS);
-> > > >         if (!priv->insns_buf) {
-> > > > @@ -734,6 +762,13 @@ static int hook_load_preprocessor(struct bpf_program *prog)
-> > > >                 return -ENOMEM;
-> > > >         }
-> > > >
-> > > 
-> > > [...]
-> > > 
-> > > > +               /*
-> > > > +                * For each program that needs prologue we do following:
-> > > > +                *
-> > > > +                * - take its current instructions and use them
-> > > > +                *   to generate the new code with prologue
-> > > > +                *
-> > > > +                * - load new instructions with bpf_prog_load
-> > > > +                *   and keep the fd in proglogue_fds
-> > > > +                *
-> > > > +                * - new fd will be used bpf__foreach_event
-> > > > +                *   to connect this program with perf evsel
-> > > > +                */
-> > > > +               orig_insns = bpf_program__insns(prog);
-> > > > +               orig_insns_cnt = bpf_program__insn_cnt(prog);
-> > > > +
-> > > > +               pev = &priv->pev;
-> > > > +               for (i = 0; i < pev->ntevs; i++) {
-> > > > +                       err = preproc_gen_prologue(prog, i, orig_insns,
-> > > > +                                                  orig_insns_cnt, &res);
-> > > > +                       if (err)
-> > > > +                               return err;
-> > > > +
-> > > > +                       fd = bpf_prog_load(bpf_program__get_type(prog),
-> > > 
-> > > nit: bpf_program__type() is preferred (we are deprecating/discouraging
-> > > "get_" prefixed getters in libbpf 1.0)
-> > 
-> > ok, will change
-> 
-> hum, I can't see bpf_program__type.. what do I miss?
+Support 64-bit BAR size for discovery, and do not truncate return from
+generic_uncore_mmio_box_ctl() to 32 bits.
 
-nah I was on top of perf/core.. I see it now ;-)
+Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
+---
+ arch/x86/events/intel/uncore_discovery.c | 16 +++++++++++-----
+ arch/x86/events/intel/uncore_discovery.h |  2 --
+ 2 files changed, 11 insertions(+), 7 deletions(-)
 
-jirka
+diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
+index 3049c646fa20..141a540e7403 100644
+--- a/arch/x86/events/intel/uncore_discovery.c
++++ b/arch/x86/events/intel/uncore_discovery.c
+@@ -210,15 +210,21 @@ static int parse_discovery_table(struct pci_dev *dev, int die,
+ 	void __iomem *io_addr;
+ 	resource_size_t addr;
+ 	unsigned long size;
+-	u32 val;
++	u32 val, val2;
+ 	int i;
+ 
+ 	pci_read_config_dword(dev, bar_offset, &val);
+ 
+-	if (val & UNCORE_DISCOVERY_MASK)
++	if (val & ~PCI_BASE_ADDRESS_MEM_MASK & ~PCI_BASE_ADDRESS_MEM_TYPE_64)
+ 		return -EINVAL;
+ 
+-	addr = (resource_size_t)(val & ~UNCORE_DISCOVERY_MASK);
++	addr = (resource_size_t)(val & PCI_BASE_ADDRESS_MEM_MASK);
++#ifdef CONFIG_PHYS_ADDR_T_64BIT
++	if ((val & PCI_BASE_ADDRESS_MEM_TYPE_MASK) == PCI_BASE_ADDRESS_MEM_TYPE_64) {
++		pci_read_config_dword(dev, bar_offset + 4, &val2);
++		addr |= ((resource_size_t)val2) << 32;
++	}
++#endif
+ 	size = UNCORE_DISCOVERY_GLOBAL_MAP_SIZE;
+ 	io_addr = ioremap(addr, size);
+ 	if (!io_addr)
+@@ -444,7 +450,7 @@ static struct intel_uncore_ops generic_uncore_pci_ops = {
+ 
+ #define UNCORE_GENERIC_MMIO_SIZE		0x4000
+ 
+-static unsigned int generic_uncore_mmio_box_ctl(struct intel_uncore_box *box)
++static u64 generic_uncore_mmio_box_ctl(struct intel_uncore_box *box)
+ {
+ 	struct intel_uncore_type *type = box->pmu->type;
+ 
+@@ -456,7 +462,7 @@ static unsigned int generic_uncore_mmio_box_ctl(struct intel_uncore_box *box)
+ 
+ void intel_generic_uncore_mmio_init_box(struct intel_uncore_box *box)
+ {
+-	unsigned int box_ctl = generic_uncore_mmio_box_ctl(box);
++	u64 box_ctl = generic_uncore_mmio_box_ctl(box);
+ 	struct intel_uncore_type *type = box->pmu->type;
+ 	resource_size_t addr;
+ 
+diff --git a/arch/x86/events/intel/uncore_discovery.h b/arch/x86/events/intel/uncore_discovery.h
+index 6d735611c281..22d40e7afbf1 100644
+--- a/arch/x86/events/intel/uncore_discovery.h
++++ b/arch/x86/events/intel/uncore_discovery.h
+@@ -18,8 +18,6 @@
+ #define UNCORE_DISCOVERY_BIR_BASE		0x10
+ /* Discovery table BAR step */
+ #define UNCORE_DISCOVERY_BIR_STEP		0x4
+-/* Mask of the discovery table offset */
+-#define UNCORE_DISCOVERY_MASK			0xf
+ /* Global discovery table size */
+ #define UNCORE_DISCOVERY_GLOBAL_MAP_SIZE	0x20
+ 
+-- 
+2.26.2
+
