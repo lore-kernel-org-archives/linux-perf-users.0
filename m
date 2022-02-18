@@ -2,101 +2,124 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF47C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Feb 2022 03:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3CB2C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Feb 2022 09:01:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231842AbiBRDOS (ORCPT
+        id S231462AbiBRJBu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 17 Feb 2022 22:14:18 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:51580 "EHLO
+        Fri, 18 Feb 2022 04:01:50 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:55182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231843AbiBRDOR (ORCPT
+        with ESMTP id S232957AbiBRJBs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 17 Feb 2022 22:14:17 -0500
-Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F17A9387AC;
-        Thu, 17 Feb 2022 19:14:01 -0800 (PST)
-Received: by mail-qk1-x731.google.com with SMTP id j78so2039825qke.2;
-        Thu, 17 Feb 2022 19:14:01 -0800 (PST)
+        Fri, 18 Feb 2022 04:01:48 -0500
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1914C50476;
+        Fri, 18 Feb 2022 01:01:31 -0800 (PST)
+Received: by mail-wr1-x431.google.com with SMTP id u1so13322861wrg.11;
+        Fri, 18 Feb 2022 01:01:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RMGDUJYEnf9KDdTw5F3ZbgchLlVWOkkRHiagdTu86+c=;
-        b=Udux+Ig0KkVmJRPjdOHpRBqKmRlc+4POrEZ9fr2FJoniv6YPK+tz05ONlp+F2DffCx
-         S96TcGrQLQBl0i+v/QfLLcGGcgq3ZJH9fBG40qNmntlyr9XwQMWnexc6tafHt1J+SQuN
-         YyLLNrWb6G6ivcBXGwzKTkESJtN3uEjfY+2BewS7BzIP23MM92d3a8JJzPAXNLJCmqYc
-         CVWJAEb4FROjYhPACFkzhwsUzvSLYkJCIARRRo07QBL8yhzoo8IH1EcpvKc6ziYZvRx1
-         7EH6NQ5GFirS2GTFhW14tLoIhmXG2hxA316k9xaP2CZQmwkF8a2G2HxzcMjuHnoHpbUq
-         Xtbw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ZYxZ73c+F4J6jMvbnzlZ5/TEHyIV+XiIyxVP9fH3B1M=;
+        b=iPVKlwSPbFttDZnZ5Es+EotVr6BSKpP0TrQChOGASg6H20kOJzZuVDooyplF9ShgAZ
+         IOSt5vS+zz6z2AvBGmQDpQomb3RkFLmAQCmFmgihBLjNbVMxKBbhMGPlAILWL60Z4shD
+         7h3Lhi86Y2KukyWmn1/Xe2xecHKYglxNfTCD6YNrv87CbfyhhtcDI1KD5XsspbXxEGb+
+         a18K9lVokQMyqKHURj9pZSZOZQUInuQvc1Zi7LBFmwl0YJUUBdE6SAAFHgSApRUpvBpS
+         n0QhuM9KNTkmIcRGRDhKD8Nqejq2gh/m6K4WaCKsrxq+msSti+c2qvk17n7exbjLn8QB
+         ODfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RMGDUJYEnf9KDdTw5F3ZbgchLlVWOkkRHiagdTu86+c=;
-        b=NYEStUwCehtHBm/wNyTE2rqMApSmbeIFZuet+UQGgeQza3b7Wdb7fZrjST6nM0yIEW
-         +wdbuSMXqwgWTY3x6UMRZWm4Qw7JHsdWy1r5xWY0/f7H72eMpfdVYhgPlXqBFd5tbdMl
-         kzoIOEUgwDXHslZSrb/h8l2F2DekUNmDSZ4Pz/6woUoYCb0YIya3fMsRBado6BPkSDl2
-         9F/A3I9blDKESEwbz7TK/iU/sMsbt8DIJpbUnBwus78ZHMPwZ7lvt4qylUMuI9UlF0WB
-         1WctSF6n5aVmigt6/k7UGMQIa5V/9zhMX7rQGJjmpm+YN7ygY5HXazovA9w/bxrZJCZ+
-         gFWQ==
-X-Gm-Message-State: AOAM5326mUopLLqf5U6NktqxZXzR2dwPTb58Z5ART6aPXQc5GCtv3OE3
-        QB5dhUFPEpJNBEhr2Li8EQjlvgEvkAc=
-X-Google-Smtp-Source: ABdhPJwj+30ca7Sn+dNlBPpWX9PMVTZK6EWBNHcq000s6/7Tp7rL9Sc0ItX7cjImNE680ql8A/umOA==
-X-Received: by 2002:a37:a493:0:b0:46b:1df6:a85b with SMTP id n141-20020a37a493000000b0046b1df6a85bmr3459971qke.469.1645154041166;
-        Thu, 17 Feb 2022 19:14:01 -0800 (PST)
-Received: from localhost.localdomain ([193.203.214.57])
-        by smtp.gmail.com with ESMTPSA id m22sm21781730qkn.35.2022.02.17.19.13.56
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZYxZ73c+F4J6jMvbnzlZ5/TEHyIV+XiIyxVP9fH3B1M=;
+        b=PWbM+r2wo8VqfvxLvaXfoQEzyEGy0LGqFCUHTK4/pFI7i/4e73Cp6K+V4vka05gRXI
+         nRJ+O5PNRoHgYnOvgh+weyORCyPrre/PXlXBt8eTqN69/elyoskyNPzuRuDv5BKiZXcb
+         Cpw/UF3WDH92T4N6m+8EUX4z4XLsmxDp0FBZ7Z1Yt1NBDRiyXLzJZiTZ3FBQbsglb4II
+         RmSsS+c5q0AgJsYAFRBYS/Qz24OQisDSfpDLp5qxV88wwRz27N4OuPWgpEedt0zC18FA
+         WNLsm9WX+U4gOz4Q1CdJYy8YaJ8qdnsZ5AxqjYF+IPz7+UGDZLMN6JZTxXBER4q0yLbP
+         xGKw==
+X-Gm-Message-State: AOAM533+CUJgQ9d+b8P1UIqMnFhS2ML7J8SeTr1ZYzjx0cgI6w+uwb2e
+        B6sF8xhIW1sZ14P5PfujbmQ=
+X-Google-Smtp-Source: ABdhPJzp9gaKEXAgzSOr/AqWCnj3GEq7kh3LRumz7b1qp29hfaGqB/mZ8t2sLgChGS5UTHKj0bGMIQ==
+X-Received: by 2002:a5d:6b8b:0:b0:1e5:2d46:d150 with SMTP id n11-20020a5d6b8b000000b001e52d46d150mr5314811wrx.380.1645174889506;
+        Fri, 18 Feb 2022 01:01:29 -0800 (PST)
+Received: from krava ([2a00:102a:5012:d617:c924:e6ed:1707:a063])
+        by smtp.gmail.com with ESMTPSA id r10sm1172969wrv.28.2022.02.18.01.01.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Feb 2022 19:14:00 -0800 (PST)
-From:   cgel.zte@gmail.com
-X-Google-Original-From: deng.changcheng@zte.com.cn
-To:     mingo@redhat.com
-Cc:     acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, adrian.hunter@intel.com,
-        atrajeev@linux.vnet.ibm.com, ak@linux.intel.com,
-        kan.liang@linux.intel.com, deng.changcheng@zte.com.cn,
-        german.gomez@arm.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Zeal Robot <zealci@zte.com.cn>
-Subject: [PATCH] perf tools: Replace zero-length array with flexible-array member
-Date:   Fri, 18 Feb 2022 03:13:52 +0000
-Message-Id: <20220218031352.1906077-1-deng.changcheng@zte.com.cn>
-X-Mailer: git-send-email 2.25.1
+        Fri, 18 Feb 2022 01:01:29 -0800 (PST)
+Date:   Fri, 18 Feb 2022 10:01:25 +0100
+From:   Jiri Olsa <olsajiri@gmail.com>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>
+Subject: Re: [PATCH 1/3] perf tools: Remove
+ bpf_program__set_priv/bpf_program__priv usage
+Message-ID: <Yg9gZa0hxfFcOk57@krava>
+References: <20220217131916.50615-1-jolsa@kernel.org>
+ <20220217131916.50615-2-jolsa@kernel.org>
+ <CAEf4BzboYd4y53KjKwNMCqE6oV9ms0zbtKCGweEGtjZvCe1f0w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzboYd4y53KjKwNMCqE6oV9ms0zbtKCGweEGtjZvCe1f0w@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Changcheng Deng <deng.changcheng@zte.com.cn>
+On Thu, Feb 17, 2022 at 01:47:16PM -0800, Andrii Nakryiko wrote:
+> On Thu, Feb 17, 2022 at 5:19 AM Jiri Olsa <jolsa@kernel.org> wrote:
+> >
+> > Both bpf_program__set_priv/bpf_program__priv are deprecated
+> > and will be eventually removed.
+> >
+> > Using hashmap to replace that functionality.
+> >
+> > Suggested-by: Andrii Nakryiko <andrii@kernel.org>
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  tools/perf/util/bpf-loader.c | 91 +++++++++++++++++++++++++++++-------
+> >  1 file changed, 75 insertions(+), 16 deletions(-)
+> >
+> 
+> [...]
+> 
+> > +
+> > +static int program_set_priv(struct bpf_program *prog, void *priv)
+> > +{
+> > +       void *old_priv;
+> > +
+> > +       if (!bpf_program_hash) {
+> > +               bpf_program_hash = hashmap__new(ptr_hash, ptr_equal, NULL);
+> > +               if (!bpf_program_hash)
+> 
+> should use IS_ERR here
 
-There is a regular need in the kernel to provide a way to declare having
-a dynamically sized set of trailing elements in a structure. Kernel code
-should always use "flexible array members" for these cases. The older
-style of one-element or zero-length arrays should no longer be used.
-Reference:
-https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
+ah right, thanks
 
-Reported-by: Zeal Robot <zealci@zte.com.cn>
-Signed-off-by: Changcheng Deng <deng.changcheng@zte.com.cn>
----
- tools/perf/util/event.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+jirka
 
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index cdd72e05fd28..320cbcd5b902 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -308,7 +308,7 @@ struct perf_synth_intel_evt {
- 		};
- 		u32	cfe;
- 	};
--	struct perf_synth_intel_evd evd[0];
-+	struct perf_synth_intel_evd evd[];
- };
- 
- struct perf_synth_intel_iflag_chg {
--- 
-2.25.1
-
+> 
+> > +                       return -ENOMEM;
+> > +       }
+> > +
+> > +       old_priv = program_priv(prog);
+> > +       if (old_priv) {
+> > +               clear_prog_priv(prog, old_priv);
+> > +               return hashmap__set(bpf_program_hash, prog, priv, NULL, NULL);
+> > +       }
+> > +       return hashmap__add(bpf_program_hash, prog, priv);
+> >  }
+> 
+> [...]
