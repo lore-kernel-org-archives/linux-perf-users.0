@@ -2,220 +2,111 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA807C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Feb 2022 19:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6118C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun, 20 Feb 2022 11:40:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238853AbiBRTz7 (ORCPT
+        id S239171AbiBTLkV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 18 Feb 2022 14:55:59 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:37750 "EHLO
+        Sun, 20 Feb 2022 06:40:21 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:43680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235479AbiBRTzp (ORCPT
+        with ESMTP id S237173AbiBTLkU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 18 Feb 2022 14:55:45 -0500
-Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F07C129E;
-        Fri, 18 Feb 2022 11:55:27 -0800 (PST)
-Received: by mail-il1-x12f.google.com with SMTP id h11so5468680ilq.9;
-        Fri, 18 Feb 2022 11:55:27 -0800 (PST)
+        Sun, 20 Feb 2022 06:40:20 -0500
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5127D33A30;
+        Sun, 20 Feb 2022 03:40:00 -0800 (PST)
+Received: by mail-wr1-x433.google.com with SMTP id o24so22234755wro.3;
+        Sun, 20 Feb 2022 03:40:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5uMqrw8+6VchXMRp0bzbPkGR2Iy1g3pLICkvKHQUn5s=;
-        b=Gz+N6F0GuBqFa6mOtU/cqd9YC7sTYPS/YXaUQIwHTo3WhD9LCaPiA2X2CrplBDWlzX
-         d2ie1fQsmGyLhelJ7fLx3PLzYB8+fYH6BazFK1Eoz+uR1nvpZZ07lVUQS9AEq2v7cT6Q
-         sw4KvXulNbKRo4b/FMm7HRUDlf4Mj2ABfjHbt5vmXbVg48xaGBOgJbrEwTHMxJluJBeP
-         KXYzVJU+CNLflQgHSnu8uf0+H570io3eu9QgiCnTk+gxHlxeAe7pD8n0A/Dj40h1zr+l
-         aecSnsUsCE6HoSyLb4pmFFPzzdv4N0SwzsaLeZ/44JItbt03+uC1GiuyAC8Ojurn8/Z1
-         L6rQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RaEs/jN71hZeYll+tur9U96Q+2NTXlCVlLMiaYYUO5s=;
+        b=MAqdQ6GhQ5ZjaCPXJmxowMvhLL6QITmXxHGes/K5j6RVUA6gnvvR9eUr8Md2zpP2/B
+         +ulUv4TM9MyVDIbw/wfYkG0GS7ZNj86jxcwIO63BpGO/vwd66I7ONnGeRbqH59Phd2Dx
+         dddXSwr5qmYN6s2zx/V+2CMVDa+Ctway3nsWEyWT50LK0+yeBA5SGSqnari7G8jcfzhr
+         s3DA4l/gjj+30vCfDd22yC0m6VlSR4q9oHdIVI4zVrA0muDiNSAdlfYf3N4YU6GoBzk3
+         xdilTeQUygq95V17kLYPWkt+awNe8tMnUzC9UYwKhz81wUTyzoa6xag5qEywyfcqvUpb
+         uMZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5uMqrw8+6VchXMRp0bzbPkGR2Iy1g3pLICkvKHQUn5s=;
-        b=EU+ANyg24Vpcen35b4Z5uBQd5KOuG/DbVRxdnitYjm8h7otRjX4e3gRIO4Ga/TRJmS
-         UPh0N3uzQ8OUUdnO1ucBl6kkRPztLtJmqGQ7W0pxuwhoaffkfRZSAM0wwKd89143/jsa
-         5Gudz/OvrifqMnGaq7ifDNYB5wpTWp6ZcYlQusti3To0GNM4E68D9Jj/5gYeXTawHoLn
-         8NV57aG+d1y/bfNk+YG0Gxp8byMdwAc/QqaYRXSGR6Ygy6dvazRDyx8yYNoIq+qNVYiL
-         zN7CrWT4uYi8Fft50lOKg0rWa2GaKKhz1k6bZfTSDTLoubb+E7RSjAgWtZjsEyKLsp6p
-         0mEQ==
-X-Gm-Message-State: AOAM532WM6sWb6IwaSi+ZRjZTTO6lwME4trzQbv6SpNAZBTUoKKaexfW
-        eJn0E2mvDiHNA9vgE467Jh8EESynHs0U3HlGvFQ6zwjxYYs=
-X-Google-Smtp-Source: ABdhPJwMElGK0zoFWXExXzv66lkDUPkUajOfC5brsjaVY+7cETRxZt3fHRYc7wYWrqv/3bY+JQmsfOL4rp9yZ/BTJrw=
-X-Received: by 2002:a92:d208:0:b0:2c1:1a3c:7b01 with SMTP id
- y8-20020a92d208000000b002c11a3c7b01mr6454880ily.71.1645214127400; Fri, 18 Feb
- 2022 11:55:27 -0800 (PST)
-MIME-Version: 1.0
-References: <20220217131916.50615-1-jolsa@kernel.org> <20220217131916.50615-4-jolsa@kernel.org>
- <CAEf4BzYP7=JuyuY=xZe71urpxat4ba-JnqeSTcHF=CYmsQbofQ@mail.gmail.com> <Yg9geQ0LJjhnrc7j@krava>
-In-Reply-To: <Yg9geQ0LJjhnrc7j@krava>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 18 Feb 2022 11:55:16 -0800
-Message-ID: <CAEf4BzZaFWhWf73JbfO7gLi82Nn4ma-qmaZBPij=giNzzoSCTQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] perf tools: Rework prologue generation code
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RaEs/jN71hZeYll+tur9U96Q+2NTXlCVlLMiaYYUO5s=;
+        b=ae0SPzQqwEHW1CTgJdyW6Sy7trZfdLSAsnPlCJ75PgsKR1dQSyiofaNJ2EMfRJGFki
+         VrLe0o8yUbHEaaJYaq3hLc9iRcMHaF182g1NXW83v1CckNjgYcXuUhI9tCwQGel/c/Xc
+         OBayfmyFMviquTk2b9isl9xcIK5oczCyf0KQJd0dwSvzPa/tNE8GbgQFi0SPotn5kcVf
+         Lh0yWFf5QOXTWciANKqUq9ML17OsyRONvuCXMW4qud5Bf3vs3avZhBqBk68lut4hXD8l
+         QwxT1GWJBdC0NY87sDO0GkbWCYyzGTkruVbqgLcK+hCMoBqWkcvdU2B4XFShRvATFOOk
+         17OA==
+X-Gm-Message-State: AOAM533YdrsjyAamAHy4PODVBINZJd56OjvNIGHQ2bC7o7y5LNYSQ484
+        Fl4n8Pehe2q5o8tNL5xJ0Ow=
+X-Google-Smtp-Source: ABdhPJwnLKujPPig2pre5dfFjnty70YOd2VPGaKifekwphhI0DwyZJd2VkaxNaOOR/OCbmh20al6VA==
+X-Received: by 2002:adf:8296:0:b0:1e3:24d8:ce8b with SMTP id 22-20020adf8296000000b001e324d8ce8bmr12349614wrc.544.1645357198740;
+        Sun, 20 Feb 2022 03:39:58 -0800 (PST)
+Received: from nil-pc.. ([102.41.165.254])
+        by smtp.gmail.com with ESMTPSA id o35-20020a05600c512300b0037df3512e9dsm4810757wms.3.2022.02.20.03.39.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 20 Feb 2022 03:39:58 -0800 (PST)
+From:   Mahmoud Abumandour <ma.mandourr@gmail.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mahmoud Mandour <ma.mandourr@gmail.com>
+Subject: [PATCH] perf data: don't mention --to-ctf if it's not supported
+Date:   Sun, 20 Feb 2022 13:39:52 +0200
+Message-Id: <20220220113952.138280-1-ma.mandourr@gmail.com>
+X-Mailer: git-send-email 2.30.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Feb 18, 2022 at 1:01 AM Jiri Olsa <olsajiri@gmail.com> wrote:
->
-> On Thu, Feb 17, 2022 at 01:53:16PM -0800, Andrii Nakryiko wrote:
-> > On Thu, Feb 17, 2022 at 5:19 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> > >
-> > > Some functions we use now for bpf prologue generation are
-> > > going to be deprecated, so reworking the current code not
-> > > to use them.
-> > >
-> > > We need to replace following functions/struct:
-> > >    bpf_program__set_prep
-> > >    bpf_program__nth_fd
-> > >    struct bpf_prog_prep_result
-> > >
-> > > Current code uses bpf_program__set_prep to hook perf callback
-> > > before the program is loaded and provide new instructions with
-> > > the prologue.
-> > >
-> > > We workaround this by using objects's 'unloaded' programs instructions
-> > > for that specific program and load new ebpf programs with prologue
-> > > using separate bpf_prog_load calls.
-> > >
-> > > We keep new ebpf program instances descriptors in bpf programs
-> > > private struct.
-> > >
-> > > Suggested-by: Andrii Nakryiko <andrii@kernel.org>
-> > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > > ---
-> > >  tools/perf/util/bpf-loader.c | 122 +++++++++++++++++++++++++++++------
-> > >  1 file changed, 104 insertions(+), 18 deletions(-)
-> > >
-> >
-> > [...]
-> >
-> > >  errout:
-> > > @@ -696,7 +718,7 @@ static int hook_load_preprocessor(struct bpf_program *prog)
-> > >         struct bpf_prog_priv *priv = program_priv(prog);
-> > >         struct perf_probe_event *pev;
-> > >         bool need_prologue = false;
-> > > -       int err, i;
-> > > +       int i;
-> > >
-> > >         if (IS_ERR_OR_NULL(priv)) {
-> > >                 pr_debug("Internal error when hook preprocessor\n");
-> > > @@ -727,6 +749,12 @@ static int hook_load_preprocessor(struct bpf_program *prog)
-> > >                 return 0;
-> > >         }
-> > >
-> > > +       /*
-> > > +        * Do not load programs that need prologue, because we need
-> > > +        * to add prologue first, check bpf_object__load_prologue.
-> > > +        */
-> > > +       bpf_program__set_autoload(prog, false);
-> >
-> > if you set autoload to false, program instructions might be invalid in
-> > the end. Libbpf doesn't apply some (all?) relocations to such
-> > programs, doesn't resolve CO-RE, etc, etc. You have to let
-> > "prototypal" BPF program to be loaded before you can grab final
-> > instructions. It's not great, but in your case it should work, right?
->
-> hum, do we care? it should all be done when the 'new' program with
-> the prologue is loaded, right?
+From: Mahmoud Mandour <ma.mandourr@gmail.com>
 
-yeah, you should care. If there is any BPF map involved, it is
-properly resolved to correct FD (which is put into ldimm64 instruction
-in BPF program code) during the load. If program is not autoloaded,
-this is skipped. Same for any global variable or subprog call (if it's
-not always inlined). So you very much should care for any non-trivial
-program.
+The option `--to-ctf` is only available when perf has libbabeltrace
+support. Hence, on error, we shouldn't state that user must include
+`--to-ctf` unless it's supported.
 
->
-> I switched it off because the verifier failed to load the program
-> without the prologue.. because in the original program there's no
-> code to grab the arguments that the rest of the code depends on,
-> so the verifier sees invalid access
+The only user-visible change for this commit is that when `perf` is not
+configured to support libbabeltrace, the user is only prompted to
+provide the `--to-json` option instead of bothe `--to-json` and
+`--to-ctf`.
 
-Do you have an example of C code and corresponding BPF instructions
-before/after prologue generation? Just curious to see in details how
-this is done.
+Signed-off-by: Mahmoud Mandour <ma.mandourr@gmail.com>
+---
+ tools/perf/builtin-data.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
->
-> >
-> > > +
-> > >         priv->need_prologue = true;
-> > >         priv->insns_buf = malloc(sizeof(struct bpf_insn) * BPF_MAXINSNS);
-> > >         if (!priv->insns_buf) {
-> > > @@ -734,6 +762,13 @@ static int hook_load_preprocessor(struct bpf_program *prog)
-> > >                 return -ENOMEM;
-> > >         }
-> > >
-> >
-> > [...]
-> >
-> > > +               /*
-> > > +                * For each program that needs prologue we do following:
-> > > +                *
-> > > +                * - take its current instructions and use them
-> > > +                *   to generate the new code with prologue
-> > > +                *
-> > > +                * - load new instructions with bpf_prog_load
-> > > +                *   and keep the fd in proglogue_fds
-> > > +                *
-> > > +                * - new fd will be used bpf__foreach_event
-> > > +                *   to connect this program with perf evsel
-> > > +                */
-> > > +               orig_insns = bpf_program__insns(prog);
-> > > +               orig_insns_cnt = bpf_program__insn_cnt(prog);
-> > > +
-> > > +               pev = &priv->pev;
-> > > +               for (i = 0; i < pev->ntevs; i++) {
-> > > +                       err = preproc_gen_prologue(prog, i, orig_insns,
-> > > +                                                  orig_insns_cnt, &res);
-> > > +                       if (err)
-> > > +                               return err;
-> > > +
-> > > +                       fd = bpf_prog_load(bpf_program__get_type(prog),
-> >
-> > nit: bpf_program__type() is preferred (we are deprecating/discouraging
-> > "get_" prefixed getters in libbpf 1.0)
->
-> ok, will change
+diff --git a/tools/perf/builtin-data.c b/tools/perf/builtin-data.c
+index b7f9dc85a407..c22d82d2a73c 100644
+--- a/tools/perf/builtin-data.c
++++ b/tools/perf/builtin-data.c
+@@ -62,10 +62,17 @@ static int cmd_data_convert(int argc, const char **argv)
+ 		pr_err("You cannot specify both --to-ctf and --to-json.\n");
+ 		return -1;
+ 	}
++#ifdef HAVE_LIBBABELTRACE_SUPPORT
+ 	if (!to_json && !to_ctf) {
+ 		pr_err("You must specify one of --to-ctf or --to-json.\n");
+ 		return -1;
+ 	}
++#else
++	if (!to_json) {
++		pr_err("You must specify --to-json.\n");
++	return -1;
++}
++#endif
+ 
+ 	if (to_json)
+ 		return bt_convert__perf2json(input_name, to_json, &opts);
+-- 
+2.30.2
 
-It's been added in v0.7, yeah.
-
->
-> >
-> > > +                                          bpf_program__name(prog), "GPL",
-> >
-> > would it make sense to give each clone a distinct name?
->
-> AFAICS the original code uses same prog name for instances,
-> so I'd rather keep it that way
->
-
-sure, np
-
-> thanks,
-> jirka
->
-> >
-> > > +                                          res.new_insn_ptr,
-> > > +                                          res.new_insn_cnt, NULL);
-> > > +                       if (fd < 0) {
-> > > +                               char bf[128];
-> > > +
-> >
-> > [...]
