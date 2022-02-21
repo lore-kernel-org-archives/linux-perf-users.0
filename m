@@ -2,120 +2,106 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 642E9C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Feb 2022 21:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D501C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Feb 2022 22:36:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234284AbiBUVPB (ORCPT
+        id S232605AbiBUWge (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 21 Feb 2022 16:15:01 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:40636 "EHLO
+        Mon, 21 Feb 2022 17:36:34 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:40692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233387AbiBUVO7 (ORCPT
+        with ESMTP id S230287AbiBUWge (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 21 Feb 2022 16:14:59 -0500
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0471623BE3;
-        Mon, 21 Feb 2022 13:14:36 -0800 (PST)
-Received: by mail-ej1-x629.google.com with SMTP id gb39so36468577ejc.1;
-        Mon, 21 Feb 2022 13:14:35 -0800 (PST)
+        Mon, 21 Feb 2022 17:36:34 -0500
+Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B98F712A9E;
+        Mon, 21 Feb 2022 14:36:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=g7mw0l92vfH8JBkO22iszRnQuSIydwt1+m601yxyXUo=;
-        b=U0Rvz4sRnYPkspaxX+xkhxMaUeeqwGKwqR147NeaOJxt7xyy3lBf/KwWAh1LImA1jx
-         3Hkkt1SFZTf1jy6Orwda5tmTIgAFulqVSz0AwcU4IB+19sKODFCMLQfc1Fjw9b9zaEfY
-         GiK0TcGM7v8+cqvjXZmoVNyOwZW4LWYbL54+2aNxN8x4PFDxSXydVDRrqycn+wuawXAS
-         mtgyIEPRtRh+9/orLEsAVIO1BjgRjCl0YuvMJkcNfJwaCf8pNV/NHY/sctZKKXGlOKbt
-         q2PMdlPlUKWMNbLvCOfcwTxLe51uCeIs+dEHQ6u03nnvMBMgNxOG80tiUePDMddak1So
-         u/IQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=g7mw0l92vfH8JBkO22iszRnQuSIydwt1+m601yxyXUo=;
-        b=DX//7zxVMc672bIZCtlduUNpMInaO45adzRUHC0pXVONpmoWI5xJE0r7NPVvmoBslT
-         qsucK1jFHnofWGQtxH3oYcCATq54SyBqEhmkF1cTCJpzzhC6UhFnkl1ISYO13fVJ4BdI
-         YAQCDlAe1hxOed5uPudhsyOeW8eFGgRA++2FjFg5OhnpP5UjKwtzToaFzOwc/6OGz6ms
-         8pxcTGZKWx3Gh4D+k3gWttz82/uedkIHReCiQtpRC8AS15JUw+EMg/Dy32kNTPAcGEa4
-         tbjRvFENcNnoBwLNfp4yOlZ9hpAZP4mcTUCanicq0HOgFRXoo4jpjZa28JGuS79Olv4c
-         GhHA==
-X-Gm-Message-State: AOAM533dj8PZ1CbvDPKajYDtZ/dipA4hat4EQdt+SLaWQeNe1KXs1tNs
-        5ftG4kR3y3uO7KrjVsrIMac=
-X-Google-Smtp-Source: ABdhPJz9AeDiOmv4PDMn7D8rSrzZSPOjNsNe23d6gXNlFYzG5sa1vngsWH684VdFS94pqNoQnEy9ow==
-X-Received: by 2002:a17:906:d7aa:b0:6cf:1fb3:2986 with SMTP id pk10-20020a170906d7aa00b006cf1fb32986mr17406202ejb.594.1645478074401;
-        Mon, 21 Feb 2022 13:14:34 -0800 (PST)
-Received: from krava ([2a00:102a:500a:4c07:3c4e:83d8:8cd9:974f])
-        by smtp.gmail.com with ESMTPSA id qf12sm5473295ejc.54.2022.02.21.13.14.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Feb 2022 13:14:34 -0800 (PST)
-Date:   Mon, 21 Feb 2022 22:14:31 +0100
-From:   Jiri Olsa <olsajiri@gmail.com>
-To:     Mahmoud Abumandour <ma.mandourr@gmail.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1645482971; x=1677018971;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=k0dyxPOLVR5U+xrHOAfkTufymjKXrO3oXF6kdc2fxWo=;
+  b=MMe9o6LVxq2265BCyfjRU4ER/vH/sSs42jSszL2FIoz4o+lG8Nymz208
+   5UKUIZZIdBQh0y7rxRAufBG6MyAHQYE/Ftfd6Dlz51uV+gi4wiQbWCgr5
+   EroH1jdfFzYSHuHoFhK1XnHGELbc/aWPUrfPu86S79ChHBE4MohA4BgL/
+   Y=;
+X-IronPort-AV: E=Sophos;i="5.88,386,1635206400"; 
+   d="scan'208";a="64956749"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-iad-1e-b69ea591.us-east-1.amazon.com) ([10.25.36.214])
+  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP; 21 Feb 2022 22:36:08 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan2.iad.amazon.com [10.40.163.34])
+        by email-inbound-relay-iad-1e-b69ea591.us-east-1.amazon.com (Postfix) with ESMTPS id 00C4CC0A6C;
+        Mon, 21 Feb 2022 22:36:02 +0000 (UTC)
+Received: from EX13D02UWC002.ant.amazon.com (10.43.162.6) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.28; Mon, 21 Feb 2022 22:35:56 +0000
+Received: from EX13MTAUEE002.ant.amazon.com (10.43.62.24) by
+ EX13D02UWC002.ant.amazon.com (10.43.162.6) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.28; Mon, 21 Feb 2022 22:35:56 +0000
+Received: from dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com
+ (172.19.181.128) by mail-relay.amazon.com (10.43.62.224) with Microsoft SMTP
+ Server id 15.0.1497.28 via Frontend Transport; Mon, 21 Feb 2022 22:35:55
+ +0000
+Received: by dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com (Postfix, from userid 5131138)
+        id C73CC1796; Mon, 21 Feb 2022 22:35:55 +0000 (UTC)
+From:   Ali Saidi <alisaidi@amazon.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <german.gomez@arm.com>,
+        <leo.yan@linaro.org>
+CC:     <alisaidi@amazon.com>, <benh@kernel.crashing.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf data: don't mention --to-ctf if it's not supported
-Message-ID: <YhQAt+iSkc2VcvEP@krava>
-References: <20220220113952.138280-1-ma.mandourr@gmail.com>
+        John Garry <john.garry@huawei.com>,
+        "Will Deacon" <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        "James Clark" <james.clark@arm.com>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Li Huafei <lihuafei1@huawei.com>
+Subject: [PATCH v2 0/2] perf: arm-spe: Decode SPE source and use for perf c2c
+Date:   Mon, 21 Feb 2022 22:28:44 +0000
+Message-ID: <20220221222853.953-1-alisaidi@amazon.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220220113952.138280-1-ma.mandourr@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Feb 20, 2022 at 01:39:52PM +0200, Mahmoud Abumandour wrote:
-> From: Mahmoud Mandour <ma.mandourr@gmail.com>
-> 
-> The option `--to-ctf` is only available when perf has libbabeltrace
-> support. Hence, on error, we shouldn't state that user must include
-> `--to-ctf` unless it's supported.
-> 
-> The only user-visible change for this commit is that when `perf` is not
-> configured to support libbabeltrace, the user is only prompted to
-> provide the `--to-json` option instead of bothe `--to-json` and
-> `--to-ctf`.
-> 
-> Signed-off-by: Mahmoud Mandour <ma.mandourr@gmail.com>
+When synthesizing data from SPE, augment the type with source information
+for Arm Neoverse cores so we can detect situtions like cache line contention
+and transfers on Arm platforms. 
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+This changes enables the expected behavior of perf c2c on a system with SPE where
+lines that are shared among multiple cores show up in perf c2c output. 
 
-thanks,
-jirka
+These changes switch to use mem_lvl_num to encode the level information instead
+of mem_lvl which is being deprecated, but I haven't found other users of
+mem_lvl_num. 
 
-> ---
->  tools/perf/builtin-data.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/tools/perf/builtin-data.c b/tools/perf/builtin-data.c
-> index b7f9dc85a407..c22d82d2a73c 100644
-> --- a/tools/perf/builtin-data.c
-> +++ b/tools/perf/builtin-data.c
-> @@ -62,10 +62,17 @@ static int cmd_data_convert(int argc, const char **argv)
->  		pr_err("You cannot specify both --to-ctf and --to-json.\n");
->  		return -1;
->  	}
-> +#ifdef HAVE_LIBBABELTRACE_SUPPORT
->  	if (!to_json && !to_ctf) {
->  		pr_err("You must specify one of --to-ctf or --to-json.\n");
->  		return -1;
->  	}
-> +#else
-> +	if (!to_json) {
-> +		pr_err("You must specify --to-json.\n");
-> +	return -1;
-> +}
-> +#endif
->  
->  	if (to_json)
->  		return bt_convert__perf2json(input_name, to_json, &opts);
-> -- 
-> 2.30.2
-> 
+Changes in v2:
+  * Split the synht_data_source functions into a generic and neoverse version
+  * Use mem_lvl_num instead of mem_lvl
+  * Modify c2c to support mem_lvl_num + HITM
+
+Ali Saidi (2):
+  perf arm-spe: Use SPE data source for neoverse cores
+  perf mem: Support HITM for when mem_lvl_num is used
+
+ .../util/arm-spe-decoder/arm-spe-decoder.c    |   1 +
+ .../util/arm-spe-decoder/arm-spe-decoder.h    |  12 ++
+ tools/perf/util/arm-spe.c                     | 106 +++++++++++++++---
+ tools/perf/util/mem-events.c                  |  14 ++-
+ 4 files changed, 114 insertions(+), 19 deletions(-)
+
+-- 
+2.32.0
+
