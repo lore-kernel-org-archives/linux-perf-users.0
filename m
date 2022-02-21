@@ -2,237 +2,150 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAB8C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Feb 2022 19:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D676C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Feb 2022 20:04:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233114AbiBUTrT (ORCPT
+        id S233364AbiBUUEc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 21 Feb 2022 14:47:19 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:32884 "EHLO
+        Mon, 21 Feb 2022 15:04:32 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:39850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233121AbiBUTrS (ORCPT
+        with ESMTP id S232083AbiBUUEb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 21 Feb 2022 14:47:18 -0500
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6438522524
-        for <linux-perf-users@vger.kernel.org>; Mon, 21 Feb 2022 11:46:54 -0800 (PST)
-Received: by mail-ej1-x632.google.com with SMTP id hw13so35709739ejc.9
-        for <linux-perf-users@vger.kernel.org>; Mon, 21 Feb 2022 11:46:54 -0800 (PST)
+        Mon, 21 Feb 2022 15:04:31 -0500
+Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B34122BDA
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Feb 2022 12:04:07 -0800 (PST)
+Received: by mail-oi1-x229.google.com with SMTP id z7so9080193oid.4
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Feb 2022 12:04:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=13VBAFfMyJCJxu9bnocr8G3qNz7RlEAtUQ6/J+NRtT4=;
-        b=dHsG4POkhI3HXkf+JgffHZqHNNBZBb/OFGWkgMA/p9dxWN9RUKiLpH8jdKiZiJsZUj
-         0I0bfAd06SwUXBNOTvDEuBEev5WkCuWmGeTPCq5po9bSqij3ehVPazHHJA6raifOp4BS
-         yDDKGlEWsjbGaJFZNA/Qb8c/Jv7djRahkkQRqHBq6n41rkNuTrAUZjQ0xAbJUMD9OOsx
-         /0MEAsMB12aTuf/kkI/xZUFWqNY/nB5VV0qXJ342yiVwik9ELYi6GF82krmSqe06/ENX
-         1JXBvzeu4d1+OmfKk+VIV81czG3EYR8TkJm6TbEWyw+447LQJoimRvV/KGRslSh/mao3
-         qcjw==
+        h=date:from:to:cc:subject:user-agent:in-reply-to:references
+         :message-id:mime-version:content-transfer-encoding;
+        bh=zIdZkkLCxofWEY1mI82HfuSpr1YvWn9JqhY8pyQKFgw=;
+        b=SPL5k0zBXEgx36fh+Q0TTaZE4pFuK4WBt1ZvZA1dEevYBgmO0syUXrv0QOdG0Mkr2Z
+         P0Ymvewe7/IR4NZB5QM75bGEKa/Cah6QKRZQgFPoJAOJGj+NDTQa/T+Rl/jnc2ZIYHW9
+         6w/gWc8wxLn49HYTjZuuGkaSiXLUVX/hicIed7jEUinCWtUYEsxKu5MP8cgxAbLRwZzl
+         uEfnTDyyt2RjVkjPS8rvqpmNzJ6w+yXMW3NFcxUY4pTZZh64Wcx5t1CpH5jKVRqZ9Lf2
+         Vu0LQ8nw7T2bDVY3tfDZcbIM8nu/SbqLNNWPf9zTTu6757UV/A0kxg2Al+qCqT/f+6vM
+         /tCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=13VBAFfMyJCJxu9bnocr8G3qNz7RlEAtUQ6/J+NRtT4=;
-        b=icfPAmEZXKKvEbDctdIH7wCJFfBONy4zGp3+gq53wwDf823AkECVHcGWzhGDuahWFj
-         rOeDp5KRST35/0l6s6fZL6UwAfzuyrT1vt5NGKIuatJCpsIo+6fViSN2nl2ii/VleB+5
-         +ZJxKPIFxmwks0S+7C+zAASEzXyRy1aD/X+92tuEzg40S/Cq/oG+BIl8po+CDYbbN0N4
-         YbbkrTX42tuj5WPUwY2sfqe9H9sqZ1Ccwx8bqpiHNqb2MjT3N1eNB5hGV+6piyF4WCjE
-         nhlEuiOkYMiGFRvHKMYW3TxS5wehioKUbG9u2FjIG6oTm60IHMfvPFisNnsUvJOH/wBT
-         3Iig==
-X-Gm-Message-State: AOAM532SHlxnDp+8yONFfiOma4CxFs9674bH7QFXojoDaUkMwBB6CwrJ
-        YVpGL8KL+IHXPQ/WFjtoWBJJiqEdwzeKxQ==
-X-Google-Smtp-Source: ABdhPJwYGPDifJX4MBCG+8mv1mPo3KKLnpXmDAs81OnQGTtG09RZtGdp7gE3NU33O4bVIvq9HEt9oQ==
-X-Received: by 2002:a17:906:8505:b0:6cf:2767:f447 with SMTP id i5-20020a170906850500b006cf2767f447mr16739423ejx.321.1645472812971;
-        Mon, 21 Feb 2022 11:46:52 -0800 (PST)
-Received: from krava ([2a00:102a:500a:4c07:3c4e:83d8:8cd9:974f])
-        by smtp.gmail.com with ESMTPSA id w4sm9246695edc.73.2022.02.21.11.46.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Feb 2022 11:46:52 -0800 (PST)
-Date:   Mon, 21 Feb 2022 20:46:49 +0100
-From:   Jiri Olsa <olsajiri@gmail.com>
-To:     "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
-Cc:     acme@kernel.org, irogers@google.com,
+        h=x-gm-message-state:date:from:to:cc:subject:user-agent:in-reply-to
+         :references:message-id:mime-version:content-transfer-encoding;
+        bh=zIdZkkLCxofWEY1mI82HfuSpr1YvWn9JqhY8pyQKFgw=;
+        b=TaQRj12hCUpnJM77KCrZFCrX3DxcrJQj7Toaysr89DsPPugal8cx8mQKwISwe330Ef
+         4X1B5vaLckRpSyOlWVROTYqIu5y0xYzSkV8q0lgvC4i8FGT5S7OvTCrJAkktyvBidc++
+         nuzX6RjlcYoQzx8+JnCLvxoFp4gtlNcSEoLH2/jn+VeeKnckz222LLrDtxy9R2bvjObt
+         Dj7OadHsmV7AXcDBsVobBZcElCZXXbwVeWTMTLikhPhWoX2icTZmI4tc+oA1Rbx845As
+         pVfA1gwaEtXUoGDlW0DqDhE+vfGhoJs3M7cFplyb4/ExS0kt0X0MlQmwKVifujUoPG1o
+         iSuA==
+X-Gm-Message-State: AOAM5328EcvFwVE4oHNl4aO0nbUNXUEsRK41SkCeojt3UAn6HkDnvVVs
+        dWeFq0P2kK80Lsm27FQ0+m4=
+X-Google-Smtp-Source: ABdhPJxDuCJwJ16rrUPYihsIt9FzMcje0h9RnOkncMhElGqKRFHj/VeJHg1MXR5ECAPobnJuIxbqkQ==
+X-Received: by 2002:a05:6808:211e:b0:2d5:38f5:6e70 with SMTP id r30-20020a056808211e00b002d538f56e70mr329377oiw.306.1645473846388;
+        Mon, 21 Feb 2022 12:04:06 -0800 (PST)
+Received: from [127.0.0.1] ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id t5sm5945574otp.67.2022.02.21.12.04.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Feb 2022 12:04:05 -0800 (PST)
+Date:   Mon, 21 Feb 2022 17:02:32 -0300
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+To:     Jiri Olsa <olsajiri@gmail.com>,
+        "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
+CC:     acme@kernel.org, irogers@google.com,
         linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2] libperf: Add API for allocating new thread map
-Message-ID: <YhPsKeK0UdjiDN1R@krava>
-References: <20220221102628.43904-1-tz.stoyanov@gmail.com>
+Subject: Re: [PATCH] libperf: Rename arguments of perf_thread_map APIs
+User-Agent: K-9 Mail for Android
+In-Reply-To: <YhPsIJBdsN9AiE0O@krava>
+References: <20220221102612.43879-1-tz.stoyanov@gmail.com> <YhPsIJBdsN9AiE0O@krava>
+Message-ID: <FCD24EF8-737C-4E9B-A1C1-6B992AD6B466@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220221102628.43904-1-tz.stoyanov@gmail.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Feb 21, 2022 at 12:26:28PM +0200, Tzvetomir Stoyanov (VMware) wrote:
-> The existing API perf_thread_map__new_dummy() allocates new thread map
-> for one thread. I couldn't find a way to reallocate the map with more
-> threads, or to allocate a new map for more than one thread. Having
-> multiple threads in a thread map is essential for some use cases.
-> That's why a new API is proposed, which allocates a new thread map
-> for given number of threads:
->  perf_thread_map__new_array()
-> 
-> Signed-off-by: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
-> ---
-> v2 changes:
->  - Changed the new API as Arnaldo suggested - get number of threads in the
->    map and array with initial values (optional).
 
-looks good, would you also find useful in your use case the comm support
-in thread_map? the thread_map__read_comms function? we could move it from
-perf to libperf
 
-thanks,
-jirka
+On February 21, 2022 4:46:40 PM GMT-03:00, Jiri Olsa <olsajiri@gmail=2Ecom=
+> wrote:
+>On Mon, Feb 21, 2022 at 12:26:12PM +0200, Tzvetomir Stoyanov (VMware) wro=
+te:
+>> The "int thread" input arguments of some perf_thead_map APIs are index
+>> of the thread in the thread map=2E In order to avoid confusion and to
+>> make the APIs consistent with perf_cpu_map APIs, those arguments are
+>> renamed to "int idx"=2E
+>>=20
+>> Suggested-by: Arnaldo Carvalho de Melo <arnaldo=2Emelo@gmail=2Ecom>
+>> Signed-off-by: Tzvetomir Stoyanov (VMware) <tz=2Estoyanov@gmail=2Ecom>
+>> ---
+>>  tools/lib/perf/Documentation/libperf=2Etxt |  6 +++---
+>>  tools/lib/perf/include/perf/threadmap=2Eh  |  6 +++---
+>>  tools/lib/perf/threadmap=2Ec               | 12 ++++++------
+>>  3 files changed, 12 insertions(+), 12 deletions(-)
+>>=20
+>> diff --git a/tools/lib/perf/Documentation/libperf=2Etxt b/tools/lib/per=
+f/Documentation/libperf=2Etxt
+>> index 32c5051c24eb=2E=2Ea21f733b95b1 100644
+>> --- a/tools/lib/perf/Documentation/libperf=2Etxt
+>> +++ b/tools/lib/perf/Documentation/libperf=2Etxt
+>> @@ -63,10 +63,10 @@ SYNOPSIS
+>> =20
+>>    struct perf_thread_map *perf_thread_map__new_dummy(void);
+>> =20
+>> -  void perf_thread_map__set_pid(struct perf_thread_map *map, int threa=
+d, pid_t pid);
+>> -  char *perf_thread_map__comm(struct perf_thread_map *map, int thread)=
+;
+>> +  void perf_thread_map__set_pid(struct perf_thread_map *map, int idx, =
+pid_t pid);
+>> +  char *perf_thread_map__comm(struct perf_thread_map *map, int idx);
+>>    int perf_thread_map__nr(struct perf_thread_map *threads);
+>> -  pid_t perf_thread_map__pid(struct perf_thread_map *map, int thread);
+>> +  pid_t perf_thread_map__pid(struct perf_thread_map *map, int idx);
+>> =20
+>>    struct perf_thread_map *perf_thread_map__get(struct perf_thread_map =
+*map);
+>>    void perf_thread_map__put(struct perf_thread_map *map);
+>> diff --git a/tools/lib/perf/include/perf/threadmap=2Eh b/tools/lib/perf=
+/include/perf/threadmap=2Eh
+>> index a7c50de8d010=2E=2E58f7fbdce446 100644
+>> --- a/tools/lib/perf/include/perf/threadmap=2Eh
+>> +++ b/tools/lib/perf/include/perf/threadmap=2Eh
+>> @@ -9,10 +9,10 @@ struct perf_thread_map;
+>> =20
+>>  LIBPERF_API struct perf_thread_map *perf_thread_map__new_dummy(void);
+>> =20
+>> -LIBPERF_API void perf_thread_map__set_pid(struct perf_thread_map *map,=
+ int thread, pid_t pid);
+>> -LIBPERF_API char *perf_thread_map__comm(struct perf_thread_map *map, i=
+nt thread);
+>> +LIBPERF_API void perf_thread_map__set_pid(struct perf_thread_map *map,=
+ int idx, pid_t pid);
+>> +LIBPERF_API char *perf_thread_map__comm(struct perf_thread_map *map, i=
+nt idx);
+>>  LIBPERF_API int perf_thread_map__nr(struct perf_thread_map *threads);
+>> -LIBPERF_API pid_t perf_thread_map__pid(struct perf_thread_map *map, in=
+t thread);
+>> +LIBPERF_API pid_t perf_thread_map__pid(struct perf_thread_map *map, in=
+t idx);
+>
+>does this argument name change break abi?
 
-> 
->  tools/lib/perf/Documentation/libperf.txt |  1 +
->  tools/lib/perf/include/perf/threadmap.h  |  1 +
->  tools/lib/perf/libperf.map               |  1 +
->  tools/lib/perf/tests/test-threadmap.c    | 41 ++++++++++++++++++++++++
->  tools/lib/perf/threadmap.c               | 24 ++++++++++----
->  5 files changed, 61 insertions(+), 7 deletions(-)
-> 
-> diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
-> index a21f733b95b1..a8f1a237931b 100644
-> --- a/tools/lib/perf/Documentation/libperf.txt
-> +++ b/tools/lib/perf/Documentation/libperf.txt
-> @@ -62,6 +62,7 @@ SYNOPSIS
->    struct perf_thread_map;
->  
->    struct perf_thread_map *perf_thread_map__new_dummy(void);
-> +  struct perf_thread_map *perf_thread_map__new_array(int nr_threads, pid_t *array);
->  
->    void perf_thread_map__set_pid(struct perf_thread_map *map, int idx, pid_t pid);
->    char *perf_thread_map__comm(struct perf_thread_map *map, int idx);
-> diff --git a/tools/lib/perf/include/perf/threadmap.h b/tools/lib/perf/include/perf/threadmap.h
-> index 58f7fbdce446..8b40e7777cea 100644
-> --- a/tools/lib/perf/include/perf/threadmap.h
-> +++ b/tools/lib/perf/include/perf/threadmap.h
-> @@ -8,6 +8,7 @@
->  struct perf_thread_map;
->  
->  LIBPERF_API struct perf_thread_map *perf_thread_map__new_dummy(void);
-> +LIBPERF_API struct perf_thread_map *perf_thread_map__new_array(int nr_threads, pid_t *array);
->  
->  LIBPERF_API void perf_thread_map__set_pid(struct perf_thread_map *map, int idx, pid_t pid);
->  LIBPERF_API char *perf_thread_map__comm(struct perf_thread_map *map, int idx);
-> diff --git a/tools/lib/perf/libperf.map b/tools/lib/perf/libperf.map
-> index 6fa0d651576b..190b56ae923a 100644
-> --- a/tools/lib/perf/libperf.map
-> +++ b/tools/lib/perf/libperf.map
-> @@ -12,6 +12,7 @@ LIBPERF_0.0.1 {
->  		perf_cpu_map__empty;
->  		perf_cpu_map__max;
->  		perf_cpu_map__has;
-> +		perf_thread_map__new_array;
->  		perf_thread_map__new_dummy;
->  		perf_thread_map__set_pid;
->  		perf_thread_map__comm;
-> diff --git a/tools/lib/perf/tests/test-threadmap.c b/tools/lib/perf/tests/test-threadmap.c
-> index 5e2a0291e94c..f728ad7002bb 100644
-> --- a/tools/lib/perf/tests/test-threadmap.c
-> +++ b/tools/lib/perf/tests/test-threadmap.c
-> @@ -11,9 +11,43 @@ static int libperf_print(enum libperf_print_level level,
->  	return vfprintf(stderr, fmt, ap);
->  }
->  
-> +static int test_threadmap_array(int nr, pid_t *array)
-> +{
-> +	struct perf_thread_map *threads;
-> +	int i;
-> +
-> +	threads = perf_thread_map__new_array(nr, array);
-> +	__T("Failed to allocate new thread map", threads);
-> +
-> +	__T("Unexpected number of threads", perf_thread_map__nr(threads) == nr);
-> +
-> +	for (i = 0; i < nr; i++) {
-> +		__T("Unexpected initial value of thread",
-> +		    perf_thread_map__pid(threads, i) == (array ? array[i] : -1));
-> +	}
-> +
-> +	for (i = 1; i < nr; i++)
-> +		perf_thread_map__set_pid(threads, i, i * 100);
-> +
-> +	__T("Unexpected value of thread 0",
-> +	    perf_thread_map__pid(threads, 0) == (array ? array[0] : -1));
-> +
-> +	for (i = 1; i < nr; i++) {
-> +		__T("Unexpected thread value",
-> +		    perf_thread_map__pid(threads, i) == i * 100);
-> +	}
-> +
-> +	perf_thread_map__put(threads);
-> +
-> +	return 0;
-> +}
-> +
-> +#define THREADS_NR	10
->  int test_threadmap(int argc, char **argv)
->  {
->  	struct perf_thread_map *threads;
-> +	pid_t thr_array[THREADS_NR];
-> +	int i;
->  
->  	__T_START;
->  
-> @@ -27,6 +61,13 @@ int test_threadmap(int argc, char **argv)
->  	perf_thread_map__put(threads);
->  	perf_thread_map__put(threads);
->  
-> +	test_threadmap_array(THREADS_NR, NULL);
-> +
-> +	for (i = 0; i < THREADS_NR; i++)
-> +		thr_array[i] = i + 100;
-> +
-> +	test_threadmap_array(THREADS_NR, thr_array);
-> +
->  	__T_END;
->  	return tests_failed == 0 ? 0 : -1;
->  }
-> diff --git a/tools/lib/perf/threadmap.c b/tools/lib/perf/threadmap.c
-> index 84fa07c79d00..07968f3ea093 100644
-> --- a/tools/lib/perf/threadmap.c
-> +++ b/tools/lib/perf/threadmap.c
-> @@ -42,18 +42,28 @@ char *perf_thread_map__comm(struct perf_thread_map *map, int idx)
->  	return map->map[idx].comm;
->  }
->  
-> -struct perf_thread_map *perf_thread_map__new_dummy(void)
-> +struct perf_thread_map *perf_thread_map__new_array(int nr_threads, pid_t *array)
->  {
-> -	struct perf_thread_map *threads = thread_map__alloc(1);
-> +	struct perf_thread_map *threads = thread_map__alloc(nr_threads);
-> +	int i;
-> +
-> +	if (!threads)
-> +		return NULL;
-> +
-> +	for (i = 0; i < nr_threads; i++)
-> +		perf_thread_map__set_pid(threads, i, array ? array[i] : -1);
-> +
-> +	threads->nr = nr_threads;
-> +	refcount_set(&threads->refcnt, 1);
->  
-> -	if (threads != NULL) {
-> -		perf_thread_map__set_pid(threads, 0, -1);
-> -		threads->nr = 1;
-> -		refcount_set(&threads->refcnt, 1);
-> -	}
->  	return threads;
->  }
->  
-> +struct perf_thread_map *perf_thread_map__new_dummy(void)
-> +{
-> +	return perf_thread_map__new_array(1, NULL);
-> +}
-> +
->  static void perf_thread_map__delete(struct perf_thread_map *threads)
->  {
->  	if (threads) {
-> -- 
-> 2.34.1
-> 
+I don't think so, this is just a clarification, it's not even a semantic c=
+hange, those are indices from the get go=2E
+
+ > do we care at this point? ;-)
+
+Of course we care, this isn't even a deprecation! 8-)
+
+>not sure if we already started to treat libperf properly in this regard
+
+We better, it's in tools/lib/=2E
+
+- Arnaldo
+>
+>jirka
