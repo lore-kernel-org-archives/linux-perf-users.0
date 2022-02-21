@@ -2,142 +2,148 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75078C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Feb 2022 10:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E177C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Feb 2022 10:57:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354792AbiBUKdI (ORCPT
+        id S1355346AbiBUK52 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 21 Feb 2022 05:33:08 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50734 "EHLO
+        Mon, 21 Feb 2022 05:57:28 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:55708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354809AbiBUKc6 (ORCPT
+        with ESMTP id S1355832AbiBUK4P (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 21 Feb 2022 05:32:58 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9782B6D1AB;
-        Mon, 21 Feb 2022 01:53:15 -0800 (PST)
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 21L8bgMm007312;
-        Mon, 21 Feb 2022 09:52:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=Husi8wtRKofd8szTIt2dJMfs1/XgcfBR5L2eNXWgu18=;
- b=DGZISxB+NeF5OICy1PbldWQxrg38gZDCRSmhAGygHhgQxd1WH1IVbIvakUSTNPefzKJe
- s6XLNE5tfu9NbJIV4Oe6o0AyBXm5cEgKv7yByNIJa8r23ptKUiwS1vOCErVDJTjkSUri
- 0oc4zLE10fd+KdNbQnnCyGxdtqqh3eiWMFkPugJkIofkpGYLrh1KJJLyJsM1ZVDDQilh
- 9Re7U986gj6tnTDZc3CIH3RGDbvpyP9t1DmyZrGjEP+K05D6xgT6D9NYOSIFdhC9YCaa
- kRE0c2vwzwmyt/iCDpPYLNTIeMs1Z8a47gcVU7x4s4UlGSTxeaY/Ryzg70cEH7ikuQY8 4Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3ec73b9xns-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 21 Feb 2022 09:52:43 +0000
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 21L95ijf022196;
-        Mon, 21 Feb 2022 09:52:43 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3ec73b9xn7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 21 Feb 2022 09:52:43 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 21L9gt00005389;
-        Mon, 21 Feb 2022 09:52:41 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma06ams.nl.ibm.com with ESMTP id 3eaqthscn9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 21 Feb 2022 09:52:41 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 21L9g4co51904786
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 21 Feb 2022 09:42:04 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0A18FA4040;
-        Mon, 21 Feb 2022 09:52:39 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3B31EA4057;
-        Mon, 21 Feb 2022 09:52:34 +0000 (GMT)
-Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com (unknown [9.43.47.34])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 21 Feb 2022 09:52:33 +0000 (GMT)
-Subject: Re: [PATCH v2] perf test: Skip Sigtrap test for arm+aarch64
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Leo Yan <leo.yan@linaro.org>
-Cc:     John Garry <john.garry@huawei.com>, peterz@infradead.org,
-        mingo@redhat.com, mark.rutland@arm.com, jolsa@kernel.org,
-        namhyung@kernel.org, elver@google.com, dvyukov@google.com,
-        will@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux@armlinux.org.uk, tmricht@linux.ibm.com, irogers@google.com
-References: <1645176813-202756-1-git-send-email-john.garry@huawei.com>
- <20220218104611.GD56419@leoy-ThinkPad-X240s> <Yg+Xmt27POS2y2LI@kernel.org>
-From:   kajoljain <kjain@linux.ibm.com>
-Message-ID: <447ebda7-eaff-f765-d6ec-66ad0fc957a0@linux.ibm.com>
-Date:   Mon, 21 Feb 2022 15:22:32 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
-In-Reply-To: <Yg+Xmt27POS2y2LI@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: ibLGMgGsf-sQWJrRFeaJVvLEIjmQN1JX
-X-Proofpoint-ORIG-GUID: 928iv4aMq9dObk-QFqjwDZBoNkzfkhiu
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Mon, 21 Feb 2022 05:56:15 -0500
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7531410B8
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Feb 2022 02:26:16 -0800 (PST)
+Received: by mail-ej1-x636.google.com with SMTP id d10so31940280eje.10
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Feb 2022 02:26:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nDxZPOwC4MYDIkKbyf+wAMEFDTvTNWzwfUl48bCWCSg=;
+        b=g0vtYT2qxuZHsAEgg12k8DlU7FxXKSV6pvaZZ6ktDrhj82IyzzJqSfh2H+mCqF/dHL
+         aDwnqRLqkbmOFdf8cA64UNuuhgOGjdH9H8VYIrF0vl4R9qfucHxI1c279+cTYnhd9nqH
+         dSgdG8hQXFIGU4BQ7vFFCaF9pJZQfPau2VdmSZpmbDvgYVqcAHKNRkesmPCn4YMwCsMq
+         H9rWuo2KZ00VfEvxEbcFryGt4AbUiGDwFd6d7ZElouidDKZt6j7ZmNGyX8fBmyZ8di/Q
+         FDK6uHXXVzHCVyr4fhiH0LxbTx92z0cfbxJnPOyt1yBRAk4Kef0UhtlPtuVvQP2LRLGV
+         mxuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nDxZPOwC4MYDIkKbyf+wAMEFDTvTNWzwfUl48bCWCSg=;
+        b=VujgR16vvG3tQ4bz/+U5A3V2QdEz+4jGa/hJcActgMKIU+vnMrdhf6p2N3Bqi752mk
+         Il5vUf8U1WU6w4x9rKKsRW1PxbpiEwp3aE2Hjw130f6Ujr5fI7QM6jUa0Wndruiv/s7j
+         xDV1S+X0V+m0ceY/Dhacn5bm0BzzeiF8lQAPVUBH6WKklhVx6C2OjHwXJ0T1nCcmH7iz
+         TDT3BD2iRdMLRdi9mgnsqxxogYTs59bvr9GOY3r4vA2N5jMTM79FIJhIPkG8KBP1OEpw
+         Mmrb7Z5eNK4zeOkxXxvZffTUVytEthG6BgNy4+mBn7/H6l1f5e+0gZMVc5ihJaTo6x3e
+         +E2w==
+X-Gm-Message-State: AOAM531gInHFsFHoADKbqTCFniRdbS49tcfkHNrAQDwQMJFZg7tBtMZK
+        21g1413JkWSLddfTEI/VN/g1V43ozh0=
+X-Google-Smtp-Source: ABdhPJxojOmvuNNbkVyPCXaidd5dMF+lwseCCJOLwKnIH4YB0Z4NhGJxpU6ZUErLO/CPrP6jADqBjA==
+X-Received: by 2002:a17:906:af79:b0:6ce:61d3:7e9b with SMTP id os25-20020a170906af7900b006ce61d37e9bmr15422622ejb.191.1645439174964;
+        Mon, 21 Feb 2022 02:26:14 -0800 (PST)
+Received: from oberon.zico.biz.zico.biz ([83.222.187.186])
+        by smtp.gmail.com with ESMTPSA id b3sm5004617ejl.67.2022.02.21.02.26.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Feb 2022 02:26:14 -0800 (PST)
+From:   "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
+To:     acme@kernel.org, olsajiri@gmail.com, irogers@google.com
+Cc:     linux-perf-users@vger.kernel.org
+Subject: [PATCH] libperf: Rename arguments of perf_thread_map APIs
+Date:   Mon, 21 Feb 2022 12:26:12 +0200
+Message-Id: <20220221102612.43879-1-tz.stoyanov@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2022-02-21_03,2022-02-18_01,2021-12-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- adultscore=0 suspectscore=0 phishscore=0 mlxscore=0 spamscore=0
- priorityscore=1501 mlxlogscore=999 clxscore=1011 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2201110000 definitions=main-2202210056
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+The "int thread" input arguments of some perf_thead_map APIs are index
+of the thread in the thread map. In order to avoid confusion and to
+make the APIs consistent with perf_cpu_map APIs, those arguments are
+renamed to "int idx".
 
+Suggested-by: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Signed-off-by: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
+---
+ tools/lib/perf/Documentation/libperf.txt |  6 +++---
+ tools/lib/perf/include/perf/threadmap.h  |  6 +++---
+ tools/lib/perf/threadmap.c               | 12 ++++++------
+ 3 files changed, 12 insertions(+), 12 deletions(-)
 
-On 2/18/22 6:26 PM, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Feb 18, 2022 at 06:46:11PM +0800, Leo Yan escreveu:
->> On Fri, Feb 18, 2022 at 05:33:33PM +0800, John Garry wrote:
->>> Skip the Sigtrap test for arm + arm64, same as was done for s390 in
->>> commit a840974e96fd ("perf test: Test 73 Sig_trap fails on s390"). For
->>> this, reuse BP_SIGNAL_IS_SUPPORTED - meaning that the arch can use BP to
->>> generate signals - instead of BP_ACCOUNT_IS_SUPPORTED, which is
->>> appropriate.
->>>
->>> As described by Will at [0], in the test we get stuck in a loop of handling
->>> the HW breakpoint exception and never making progress. GDB handles this
->>> by stepping over the faulting instruction, but with perf the kernel is
->>> expected to handle the step (which it doesn't for arm).
->>>
->>> Dmitry made an attempt to get this work, also mentioned in the same thread
->>> as [0], which was appreciated. But the best thing to do is skip the test
->>> for now.
->>>
->>> [0] https://lore.kernel.org/linux-perf-users/20220118124343.GC98966@leoy-ThinkPad-X240s/T/#m13b06c39d2a5100d340f009435df6f4d8ee57b5a
->>>
->>> Fixes: Fixes: 5504f67944484 ("perf test sigtrap: Add basic stress test for sigtrap handling")
->>> Signed-off-by: John Garry <john.garry@huawei.com>
->>
->> I tested this patch on my Juno board:
->>
->> root@Juno:# ./perf test 73
->>  73: Sigtrap                                                         : Skip
->>
->> Tested-by: Leo Yan <leo.yan@linaro.org>
+diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
+index 32c5051c24eb..a21f733b95b1 100644
+--- a/tools/lib/perf/Documentation/libperf.txt
++++ b/tools/lib/perf/Documentation/libperf.txt
+@@ -63,10 +63,10 @@ SYNOPSIS
+ 
+   struct perf_thread_map *perf_thread_map__new_dummy(void);
+ 
+-  void perf_thread_map__set_pid(struct perf_thread_map *map, int thread, pid_t pid);
+-  char *perf_thread_map__comm(struct perf_thread_map *map, int thread);
++  void perf_thread_map__set_pid(struct perf_thread_map *map, int idx, pid_t pid);
++  char *perf_thread_map__comm(struct perf_thread_map *map, int idx);
+   int perf_thread_map__nr(struct perf_thread_map *threads);
+-  pid_t perf_thread_map__pid(struct perf_thread_map *map, int thread);
++  pid_t perf_thread_map__pid(struct perf_thread_map *map, int idx);
+ 
+   struct perf_thread_map *perf_thread_map__get(struct perf_thread_map *map);
+   void perf_thread_map__put(struct perf_thread_map *map);
+diff --git a/tools/lib/perf/include/perf/threadmap.h b/tools/lib/perf/include/perf/threadmap.h
+index a7c50de8d010..58f7fbdce446 100644
+--- a/tools/lib/perf/include/perf/threadmap.h
++++ b/tools/lib/perf/include/perf/threadmap.h
+@@ -9,10 +9,10 @@ struct perf_thread_map;
+ 
+ LIBPERF_API struct perf_thread_map *perf_thread_map__new_dummy(void);
+ 
+-LIBPERF_API void perf_thread_map__set_pid(struct perf_thread_map *map, int thread, pid_t pid);
+-LIBPERF_API char *perf_thread_map__comm(struct perf_thread_map *map, int thread);
++LIBPERF_API void perf_thread_map__set_pid(struct perf_thread_map *map, int idx, pid_t pid);
++LIBPERF_API char *perf_thread_map__comm(struct perf_thread_map *map, int idx);
+ LIBPERF_API int perf_thread_map__nr(struct perf_thread_map *threads);
+-LIBPERF_API pid_t perf_thread_map__pid(struct perf_thread_map *map, int thread);
++LIBPERF_API pid_t perf_thread_map__pid(struct perf_thread_map *map, int idx);
+ 
+ LIBPERF_API struct perf_thread_map *perf_thread_map__get(struct perf_thread_map *map);
+ LIBPERF_API void perf_thread_map__put(struct perf_thread_map *map);
+diff --git a/tools/lib/perf/threadmap.c b/tools/lib/perf/threadmap.c
+index e92c368b0a6c..84fa07c79d00 100644
+--- a/tools/lib/perf/threadmap.c
++++ b/tools/lib/perf/threadmap.c
+@@ -32,14 +32,14 @@ struct perf_thread_map *perf_thread_map__realloc(struct perf_thread_map *map, in
+ 
+ #define thread_map__alloc(__nr) perf_thread_map__realloc(NULL, __nr)
+ 
+-void perf_thread_map__set_pid(struct perf_thread_map *map, int thread, pid_t pid)
++void perf_thread_map__set_pid(struct perf_thread_map *map, int idx, pid_t pid)
+ {
+-	map->map[thread].pid = pid;
++	map->map[idx].pid = pid;
+ }
+ 
+-char *perf_thread_map__comm(struct perf_thread_map *map, int thread)
++char *perf_thread_map__comm(struct perf_thread_map *map, int idx)
+ {
+-	return map->map[thread].comm;
++	return map->map[idx].comm;
+ }
+ 
+ struct perf_thread_map *perf_thread_map__new_dummy(void)
+@@ -85,7 +85,7 @@ int perf_thread_map__nr(struct perf_thread_map *threads)
+ 	return threads ? threads->nr : 1;
+ }
+ 
+-pid_t perf_thread_map__pid(struct perf_thread_map *map, int thread)
++pid_t perf_thread_map__pid(struct perf_thread_map *map, int idx)
+ {
+-	return map->map[thread].pid;
++	return map->map[idx].pid;
+ }
+-- 
+2.34.1
 
-Sorry for late update.
-
-Patch looks good to me. I tested it on powerpc.
-
-Tested-by: Kajol Jain<kjain@linux.ibm.com>
-
-Thanks,
-Kajol Jain
-> 
-> Thanks, applied.
-> 
-> - Arnaldo
-> 
