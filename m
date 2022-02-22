@@ -2,224 +2,154 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1502EC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Feb 2022 15:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACBBC433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Feb 2022 15:11:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231902AbiBVPF7 (ORCPT
+        id S233165AbiBVPLs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Feb 2022 10:05:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56160 "EHLO
+        Tue, 22 Feb 2022 10:11:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231654AbiBVPF5 (ORCPT
+        with ESMTP id S232597AbiBVPLr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Feb 2022 10:05:57 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A5CAD10E044
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Feb 2022 07:05:31 -0800 (PST)
+        Tue, 22 Feb 2022 10:11:47 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B22E810EC7C
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Feb 2022 07:11:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1645542330;
+        s=mimecast20190719; t=1645542680;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=BMyEEXf8ImD/PSnAQUSmvDiDS2I/otKWXaxekjUtwkM=;
-        b=XJEzM4wC/CRVQGXNn3P8Um//KwhVCp1m7f/H8hcloTD/rMidO6bQ66TWdAcWPfb1XpxOWs
-        uom9hl/xrGnCAltS1WLD0M8XB+yT4EBuPYVhcvZa3ZRguiu/ffK9jDkYwGbMQgsOABVnWQ
-        lSCM2gzNmSbZXeDTeKe46GMbQyhUMFU=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+         content-transfer-encoding:content-transfer-encoding;
+        bh=D2nBod7A/CBKu2+sFN1QjFvotvtMYAinvMX+52oPhA0=;
+        b=SpA1CBL0OdfnomEfFpvW9uaGl0imeqcbyy5vsEYyE2P1QAHdZtaGo6JbK0eQXYyTo6QcXI
+        JiuiG7XY15IaO7FgEfEtm6nvEs4xQPV67vT+4rYWxYw9Wo5EGkNv7GtKruoTv00vtlX2sn
+        GKWJhZZV9XGpz1YKDM5zZqw7XLfPeBk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-629-d4TJJxe_MXmJJ36QMtqjfw-1; Tue, 22 Feb 2022 10:05:29 -0500
-X-MC-Unique: d4TJJxe_MXmJJ36QMtqjfw-1
-Received: by mail-ej1-f69.google.com with SMTP id m4-20020a170906160400b006be3f85906eso5869774ejd.23
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Feb 2022 07:05:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=BMyEEXf8ImD/PSnAQUSmvDiDS2I/otKWXaxekjUtwkM=;
-        b=Kd1/kR9bjXZM9jwhChpGoZqlnObqMoVFmc45gwmEVKaVaZrppR3WQXKTQiGOeaw4/Y
-         VOqEMNunZwNnxL2yHp/Fu7D4m/EG52oUorYnoEJf9heVm/OWJh99KZC1SFTR0d1MF0kQ
-         KeUy0xektZqptZqSu6T85JWMvk824nukQp1Y5lSsimYDsSPB8//YOt8Qy/agliESF/zH
-         Jp1m1ciu7Hb+0va3X1kIRisfwmV8qhM2LVRlY0auIZHGUQ39qmzxye78gTaQdM2Qh0+b
-         IjpWUEYk6jp/6myoC/4vEqJsTAwfCG8rQsFmyRHLcfNzsbFKeCuoaEGGVvfSd0hDroW5
-         yVDg==
-X-Gm-Message-State: AOAM532soqcoAv8GxPhGs3hMLG5LOmWrcwGVGAnuM5qmKz6RdYX4Pu7p
-        Au89Fxyhz8aWdr/EBuTJRUZtt+T0UWYsm7pQ8uJLCtX/EZdHM3vrC21D+s0CZbhbKSgeCkcBgIR
-        dwPOtP3e3ZOVrYM51BB07TE6EThNebA==
-X-Received: by 2002:a17:906:b2c6:b0:6cf:e599:6b81 with SMTP id cf6-20020a170906b2c600b006cfe5996b81mr19181090ejb.578.1645542328139;
-        Tue, 22 Feb 2022 07:05:28 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJy1KJPfCHkAFDmEoSxesHnytFaMWyys7pSySGit2iNIkGs8qHqhLn5Ow49sRO57tzqWjQtkYw==
-X-Received: by 2002:a17:906:b2c6:b0:6cf:e599:6b81 with SMTP id cf6-20020a170906b2c600b006cfe5996b81mr19181055ejb.578.1645542327839;
-        Tue, 22 Feb 2022 07:05:27 -0800 (PST)
-Received: from [10.39.193.15] (5920ab7b.static.cust.trined.nl. [89.32.171.123])
-        by smtp.gmail.com with ESMTPSA id ay16sm3760460ejb.61.2022.02.22.07.05.27
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 22 Feb 2022 07:05:27 -0800 (PST)
+ us-mta-674-8dtTgZi8OwiY4wU_Hj8KFQ-1; Tue, 22 Feb 2022 10:11:18 -0500
+X-MC-Unique: 8dtTgZi8OwiY4wU_Hj8KFQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 61B198145E7;
+        Tue, 22 Feb 2022 15:11:16 +0000 (UTC)
+Received: from wsfd-netdev64.ntdv.lab.eng.bos.redhat.com (wsfd-netdev64.ntdv.lab.eng.bos.redhat.com [10.19.188.127])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6F5C3832AC;
+        Tue, 22 Feb 2022 15:11:15 +0000 (UTC)
 From:   Eelco Chaudron <echaudro@redhat.com>
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf scripting python: expose symbol offset and source information
-Date:   Tue, 22 Feb 2022 16:05:26 +0100
-X-Mailer: MailMate (1.14r5870)
-Message-ID: <3D8DDD29-A919-4E3C-8256-B7F1DC4CFFED@redhat.com>
-In-Reply-To: <YgTENKDfI/2+DZhJ@krava>
-References: <164389947295.382219.17025049915445689710.stgit@wsfd-netdev64.ntdv.lab.eng.bos.redhat.com>
- <YgTENKDfI/2+DZhJ@krava>
+        jolsa@redhat.com, namhyung@kernel.org
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] perf scripting python: expose symbol offset and source information
+Date:   Tue, 22 Feb 2022 10:11:10 -0500
+Message-Id:  <164554263724.752731.14651017093796049736.stgit@wsfd-netdev64.ntdv.lab.eng.bos.redhat.com>
+User-Agent: StGit/0.23
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+This change adds the symbol offset to the data exported for each
+call-chain entry. This can not be calculated from the script and
+only the ip value, and no related mmap information.
 
+In addition, also export the source file and line information, if
+available, to avoid an external lookup if this information is needed.
 
-On 10 Feb 2022, at 8:52, Jiri Olsa wrote:
+Signed-off-by: Eelco Chaudron <echaudro@redhat.com>
+---
+v2:
+ - Fixed small code nit
+ - Included new features in auto generated scripts
 
-> On Thu, Feb 03, 2022 at 09:44:33AM -0500, Eelco Chaudron wrote:
->> This change adds the symbol offset to the data exported for each
->> call-chain entry. This can not be calculated from the script and
->> only the ip value, and no related mmap information.
->>
->> In addition, also export the source file and line information, if
->> available, to avoid an external lookup if this information is needed.
->
-> could you please update Documentation/perf-script-python.txt with that?=
+ .../util/scripting-engines/trace-event-python.c    |   49 +++++++++++++++-----
+ 1 file changed, 36 insertions(+), 13 deletions(-)
 
->
-> any example script under scripts/python would be great
-
-Looks like there is no documentation at all regarding the call chains, on=
-ly the auto-generate script.
-So rather than trying to describe this, I decided to update the auto-gene=
-rated script to include this information as an example.
-
-The current output, if it included a callchain is:
-
-        [ffffffff99e03f0e] syscall_trace_enter
-        [ffffffff99e03f0e] syscall_trace_enter
-        [ffffffff99e043a9] do_syscall_64
-        [ffffffff9a8000ad] entry_SYSCALL_64_after_hwframe
-        [7f5b552280db] __GI_getrusage
-        [17a4d78] getrusage_thread
-        [17a4d78] refresh_rusage
-        [17a4d78] time_poll
-        [178f683] poll_block
-        [16bceb5] udpif_revalidator
-        [177b71c] ovsthread_wrapper
-        [7f5b57a66179] start_thread
-        [7f5b55231dc2] __GI___clone
-
-The new output will be (dependend on the information available):
-
-        [ffffffff99e0392f] syscall_slow_exit_work+0xaf ([kernel.kallsyms]=
-)
-        [ffffffff99e0392f] syscall_slow_exit_work+0xaf ([kernel.kallsyms]=
-)
-        [ffffffff99e043d0] do_syscall_64+0x170 ([kernel.kallsyms])
-        [ffffffff9a8000ad] entry_SYSCALL_64_after_hwframe+0x65 ([kernel.k=
-allsyms])
-        [7f5b55226a41] __GI___poll+0x51 (/usr/lib64/libc-2.28.so)
-        [17a4c50] time_poll+0x190 (/usr/sbin/ovs-vswitchd) timeval.c:326
-        [178f683] poll_block+0x83 (/usr/sbin/ovs-vswitchd) poll-loop.c:36=
-4
-        [16bceb5] udpif_revalidator+0x185 (/usr/sbin/ovs-vswitchd) ofprot=
-o-dpif-upcall.c:1024
-        [177b71c] ovsthread_wrapper+0x5c (/usr/sbin/ovs-vswitchd) ovs-thr=
-ead.c:422
-        [7f5b57a66179] start_thread+0xe9 (/usr/lib64/libpthread-2.28.so)
-        [7f5b55231dc2] __GI___clone+0x42 (/usr/lib64/libc-2.28.so)
-
-I will send out the v2 soon.
-
->>
->> Signed-off-by: Eelco Chaudron <echaudro@redhat.com>
->> ---
->>  .../util/scripting-engines/trace-event-python.c    |   42 +++++++++++=
-+++------
->>  1 file changed, 30 insertions(+), 12 deletions(-)
->>
->> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/=
-tools/perf/util/scripting-engines/trace-event-python.c
->> index e752e1f4a5f0..0f392b4ff663 100644
->> --- a/tools/perf/util/scripting-engines/trace-event-python.c
->> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
->> @@ -392,6 +392,18 @@ static const char *get_dsoname(struct map *map)
->>  	return dsoname;
->>  }
->>
->> +static unsigned long get_offset(struct symbol *sym, struct addr_locat=
-ion *al)
->> +{
->> +	unsigned long offset;
->> +
->> +	if (al->addr < sym->end)
->> +		offset =3D al->addr - sym->start;
->> +	else
->> +		offset =3D al->addr - al->map->start - sym->start;
->> +
->> +	return offset;
->> +}
->> +
->>  static PyObject *python_process_callchain(struct perf_sample *sample,=
-
->>  					 struct evsel *evsel,
->>  					 struct addr_location *al)
->> @@ -443,6 +455,24 @@ static PyObject *python_process_callchain(struct =
-perf_sample *sample,
->>  					_PyUnicode_FromStringAndSize(node->ms.sym->name,
->>  							node->ms.sym->namelen));
->>  			pydict_set_item_string_decref(pyelem, "sym", pysym);
->> +
->> +			if (node->ms.map) {
->> +				struct map *map =3D node->ms.map;
->> +				struct addr_location node_al;
->> +				unsigned long offset;
->> +
->> +				node_al.addr =3D map->map_ip(map, node->ip);
->> +				node_al.map  =3D map;
->> +				offset =3D get_offset(node->ms.sym, &node_al);
->> +
->> +				pydict_set_item_string_decref(
->> +					pyelem, "sym_off",
->> +					PyLong_FromUnsignedLongLong(offset));
->> +			}
->> +			if (node->srcline && strcmp(":0", node->srcline))
->> +				pydict_set_item_string_decref(
->> +					pyelem, "sym_srcline",
->> +					_PyUnicode_FromString(node->srcline));
->
-> nit missing { } for multiline if code
->
-
-Will fix in v2
->>  		}
->>
->>  		if (node->ms.map) {
->> @@ -520,18 +550,6 @@ static PyObject *python_process_brstack(struct pe=
-rf_sample *sample,
->>  	return pylist;
->>  }
->>
->> -static unsigned long get_offset(struct symbol *sym, struct addr_locat=
-ion *al)
->> -{
->> -	unsigned long offset;
->> -
->> -	if (al->addr < sym->end)
->> -		offset =3D al->addr - sym->start;
->> -	else
->> -		offset =3D al->addr - al->map->start - sym->start;
->> -
->> -	return offset;
->> -}
->> -
->>  static int get_symoff(struct symbol *sym, struct addr_location *al,
->>  		      bool print_off, char *bf, int size)
->>  {
->>
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index e752e1f4a5f0..86a9c8614231 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -392,6 +392,18 @@ static const char *get_dsoname(struct map *map)
+ 	return dsoname;
+ }
+ 
++static unsigned long get_offset(struct symbol *sym, struct addr_location *al)
++{
++	unsigned long offset;
++
++	if (al->addr < sym->end)
++		offset = al->addr - sym->start;
++	else
++		offset = al->addr - al->map->start - sym->start;
++
++	return offset;
++}
++
+ static PyObject *python_process_callchain(struct perf_sample *sample,
+ 					 struct evsel *evsel,
+ 					 struct addr_location *al)
+@@ -443,6 +455,25 @@ static PyObject *python_process_callchain(struct perf_sample *sample,
+ 					_PyUnicode_FromStringAndSize(node->ms.sym->name,
+ 							node->ms.sym->namelen));
+ 			pydict_set_item_string_decref(pyelem, "sym", pysym);
++
++			if (node->ms.map) {
++				struct map *map = node->ms.map;
++				struct addr_location node_al;
++				unsigned long offset;
++
++				node_al.addr = map->map_ip(map, node->ip);
++				node_al.map  = map;
++				offset = get_offset(node->ms.sym, &node_al);
++
++				pydict_set_item_string_decref(
++					pyelem, "sym_off",
++					PyLong_FromUnsignedLongLong(offset));
++			}
++			if (node->srcline && strcmp(":0", node->srcline)) {
++				pydict_set_item_string_decref(
++					pyelem, "sym_srcline",
++					_PyUnicode_FromString(node->srcline));
++			}
+ 		}
+ 
+ 		if (node->ms.map) {
+@@ -520,18 +551,6 @@ static PyObject *python_process_brstack(struct perf_sample *sample,
+ 	return pylist;
+ }
+ 
+-static unsigned long get_offset(struct symbol *sym, struct addr_location *al)
+-{
+-	unsigned long offset;
+-
+-	if (al->addr < sym->end)
+-		offset = al->addr - sym->start;
+-	else
+-		offset = al->addr - al->map->start - sym->start;
+-
+-	return offset;
+-}
+-
+ static int get_symoff(struct symbol *sym, struct addr_location *al,
+ 		      bool print_off, char *bf, int size)
+ {
+@@ -2073,7 +2092,11 @@ static int python_generate_script(struct tep_handle *pevent, const char *outfile
+ 
+ 		fprintf(ofp, "\t\tfor node in common_callchain:");
+ 		fprintf(ofp, "\n\t\t\tif 'sym' in node:");
+-		fprintf(ofp, "\n\t\t\t\tprint(\"\\t[%%x] %%s\" %% (node['ip'], node['sym']['name']))");
++		fprintf(ofp, "\n\t\t\t\tprint(\"\t[%%x] %%s%%s%%s%%s\" %% (");
++		fprintf(ofp, "\n\t\t\t\t\tnode['ip'], node['sym']['name'],");
++		fprintf(ofp, "\n\t\t\t\t\t\"+0x{:x}\".format(node['sym_off']) if 'sym_off' in node else \"\",");
++		fprintf(ofp, "\n\t\t\t\t\t\" ({})\".format(node['dso'])  if 'dso' in node else \"\",");
++		fprintf(ofp, "\n\t\t\t\t\t\" \" + node['sym_srcline'] if 'sym_srcline' in node else \"\"))");
+ 		fprintf(ofp, "\n\t\t\telse:");
+ 		fprintf(ofp, "\n\t\t\t\tprint(\"\t[%%x]\" %% (node['ip']))\n\n");
+ 		fprintf(ofp, "\t\tprint()\n\n");
 
