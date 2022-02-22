@@ -2,51 +2,74 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6205AC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Feb 2022 15:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BACCC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Feb 2022 16:11:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232249AbiBVPuC (ORCPT
+        id S233769AbiBVQLw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Feb 2022 10:50:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39444 "EHLO
+        Tue, 22 Feb 2022 11:11:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232248AbiBVPuB (ORCPT
+        with ESMTP id S233675AbiBVQLv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Feb 2022 10:50:01 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9980046B16;
-        Tue, 22 Feb 2022 07:49:35 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 607211042;
-        Tue, 22 Feb 2022 07:49:35 -0800 (PST)
-Received: from [10.57.39.208] (unknown [10.57.39.208])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 878FF3F70D;
-        Tue, 22 Feb 2022 07:49:32 -0800 (PST)
-Message-ID: <8f563870-3410-221d-4464-5c54a0018b55@arm.com>
-Date:   Tue, 22 Feb 2022 15:49:30 +0000
+        Tue, 22 Feb 2022 11:11:51 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D95FA165C1B;
+        Tue, 22 Feb 2022 08:11:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1645546285; x=1677082285;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=xAztCkgXwGQAWMHLroJTEMZem0nISYqo7RPlzIO8arA=;
+  b=JDQ8h5wrel3bviDk+pDa3f9QDFus6Mszbb1NQyZLLcneMSFhHtoUquAt
+   meXarquXCkYQ+6zzwv7tJQy3BruyvSVSl2MroTtPYMvkaul95xjeFUh1c
+   95IR6H6pxPKwdMKevRbNo4HRpFAmcBWP1aYTupa1655ZGCYXtoUpo+bOi
+   mIe9KpmijYiQu4ddrZrvi9eJXfXLMczCsut1JXiVKxKPwvg7D9OFSFzEV
+   m2GJLeDpC2k+gbdly5pAulA7CSbCpYimCsRN0B29Q8UWu1sNbbof4tBY1
+   ch7YvT3n4/7tECAY/Tk4I4NP+sXnO16mUe8VGrc+fvkViOLvE6fZBc3f4
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10266"; a="250567132"
+X-IronPort-AV: E=Sophos;i="5.88,387,1635231600"; 
+   d="scan'208";a="250567132"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2022 08:11:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,387,1635231600"; 
+   d="scan'208";a="776352766"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 22 Feb 2022 08:11:16 -0800
+Received: from [10.209.63.44] (kliang2-MOBL.ccr.corp.intel.com [10.209.63.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id B81F8580BDB;
+        Tue, 22 Feb 2022 08:11:14 -0800 (PST)
+Message-ID: <d38b0f9e-e9b9-e6d2-7da5-7169dedbc404@linux.intel.com>
+Date:   Tue, 22 Feb 2022 11:11:13 -0500
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH 2/2] perf: cs-etm: Fix corrupt inject files when only last
- branch option is enabled
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH] perf/x86/intel/uncore: Make uncore_discovery clean for 64
+ bit addresses
 Content-Language: en-US
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Leo Yan <leo.yan@linaro.org>
-Cc:     linux-perf-users@vger.kernel.org, mathieu.poirier@linaro.org,
-        coresight@lists.linaro.org, Mike Leach <mike.leach@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
+To:     Steve Wahl <steve.wahl@hpe.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20220210200620.1227232-1-james.clark@arm.com>
- <20220210200620.1227232-2-james.clark@arm.com>
- <20220211160516.GD475776@leoy-ThinkPad-X240s> <YgvBpvYzAMCGSECj@kernel.org>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <YgvBpvYzAMCGSECj@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Liang, Kan" <kan.liang@intel.com>
+References: <20220218175418.421268-1-steve.wahl@hpe.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20220218175418.421268-1-steve.wahl@hpe.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
@@ -54,62 +77,81 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 15/02/2022 15:07, Arnaldo Carvalho de Melo wrote:
-> Em Sat, Feb 12, 2022 at 12:05:16AM +0800, Leo Yan escreveu:
->> On Thu, Feb 10, 2022 at 08:06:20PM +0000, James Clark wrote:
->>> Perf inject with Coresight data generates files that cannot be opened
->>> when only the last branch option is specified:
->>>
->>>   perf inject -i perf.data --itrace=l -o inject.data
->>>   perf script -i inject.data
->>>   0x33faa8 [0x8]: failed to process type: 9 [Bad address]
->>>
->>> This is because cs_etm__synth_instruction_sample() is called even when
->>> the sample type for instructions hasn't been setup. Last branch records
->>> are attached to instruction samples so it doesn't make sense to generate
->>> them when --itrace=i isn't specified anyway.
->>>
->>> This change disables all calls of cs_etm__synth_instruction_sample()
->>> unless --itrace=i is specified, resulting in a file with no samples if
->>> only --itrace=l is provided, rather than a bad file.
->>>
->>> Signed-off-by: James Clark <james.clark@arm.com>
->>
->> Reviewed-by: Leo Yan <leo.yan@linaro.org>
+On 2/18/2022 12:54 PM, Steve Wahl wrote:
+> Support 64-bit BAR size for discovery, and do not truncate return from
+> generic_uncore_mmio_box_ctl() to 32 bits.
 > 
-> Thanks, applied.
-> 
-> - Arnaldo
-> 
+> Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
 
-Thanks Leo and Arnaldo!
+Thanks for the patch.
 
->  
->>> ---
->>>  tools/perf/util/cs-etm.c | 2 ++
->>>  1 file changed, 2 insertions(+)
->>>
->>> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
->>> index 796a065a500e..8b95fb3c4d7b 100644
->>> --- a/tools/perf/util/cs-etm.c
->>> +++ b/tools/perf/util/cs-etm.c
->>> @@ -1553,6 +1553,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
->>>  		goto swap_packet;
->>>  
->>>  	if (etmq->etm->synth_opts.last_branch &&
->>> +	    etmq->etm->synth_opts.instructions &&
->>>  	    tidq->prev_packet->sample_type == CS_ETM_RANGE) {
->>>  		u64 addr;
->>>  
->>> @@ -1610,6 +1611,7 @@ static int cs_etm__end_block(struct cs_etm_queue *etmq,
->>>  	 * the trace.
->>>  	 */
->>>  	if (etmq->etm->synth_opts.last_branch &&
->>> +	    etmq->etm->synth_opts.instructions &&
->>>  	    tidq->prev_packet->sample_type == CS_ETM_RANGE) {
->>>  		u64 addr;
->>>  
->>> -- 
->>> 2.28.0
->>>
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+
+
+Thanks,
+Kan
+> ---
+>   arch/x86/events/intel/uncore_discovery.c | 16 +++++++++++-----
+>   arch/x86/events/intel/uncore_discovery.h |  2 --
+>   2 files changed, 11 insertions(+), 7 deletions(-)
 > 
+> diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
+> index 3049c646fa20..141a540e7403 100644
+> --- a/arch/x86/events/intel/uncore_discovery.c
+> +++ b/arch/x86/events/intel/uncore_discovery.c
+> @@ -210,15 +210,21 @@ static int parse_discovery_table(struct pci_dev *dev, int die,
+>   	void __iomem *io_addr;
+>   	resource_size_t addr;
+>   	unsigned long size;
+> -	u32 val;
+> +	u32 val, val2;
+>   	int i;
+>   
+>   	pci_read_config_dword(dev, bar_offset, &val);
+>   
+> -	if (val & UNCORE_DISCOVERY_MASK)
+> +	if (val & ~PCI_BASE_ADDRESS_MEM_MASK & ~PCI_BASE_ADDRESS_MEM_TYPE_64)
+>   		return -EINVAL;
+>   
+> -	addr = (resource_size_t)(val & ~UNCORE_DISCOVERY_MASK);
+> +	addr = (resource_size_t)(val & PCI_BASE_ADDRESS_MEM_MASK);
+> +#ifdef CONFIG_PHYS_ADDR_T_64BIT
+> +	if ((val & PCI_BASE_ADDRESS_MEM_TYPE_MASK) == PCI_BASE_ADDRESS_MEM_TYPE_64) {
+> +		pci_read_config_dword(dev, bar_offset + 4, &val2);
+> +		addr |= ((resource_size_t)val2) << 32;
+> +	}
+> +#endif
+>   	size = UNCORE_DISCOVERY_GLOBAL_MAP_SIZE;
+>   	io_addr = ioremap(addr, size);
+>   	if (!io_addr)
+> @@ -444,7 +450,7 @@ static struct intel_uncore_ops generic_uncore_pci_ops = {
+>   
+>   #define UNCORE_GENERIC_MMIO_SIZE		0x4000
+>   
+> -static unsigned int generic_uncore_mmio_box_ctl(struct intel_uncore_box *box)
+> +static u64 generic_uncore_mmio_box_ctl(struct intel_uncore_box *box)
+>   {
+>   	struct intel_uncore_type *type = box->pmu->type;
+>   
+> @@ -456,7 +462,7 @@ static unsigned int generic_uncore_mmio_box_ctl(struct intel_uncore_box *box)
+>   
+>   void intel_generic_uncore_mmio_init_box(struct intel_uncore_box *box)
+>   {
+> -	unsigned int box_ctl = generic_uncore_mmio_box_ctl(box);
+> +	u64 box_ctl = generic_uncore_mmio_box_ctl(box);
+>   	struct intel_uncore_type *type = box->pmu->type;
+>   	resource_size_t addr;
+>   
+> diff --git a/arch/x86/events/intel/uncore_discovery.h b/arch/x86/events/intel/uncore_discovery.h
+> index 6d735611c281..22d40e7afbf1 100644
+> --- a/arch/x86/events/intel/uncore_discovery.h
+> +++ b/arch/x86/events/intel/uncore_discovery.h
+> @@ -18,8 +18,6 @@
+>   #define UNCORE_DISCOVERY_BIR_BASE		0x10
+>   /* Discovery table BAR step */
+>   #define UNCORE_DISCOVERY_BIR_STEP		0x4
+> -/* Mask of the discovery table offset */
+> -#define UNCORE_DISCOVERY_MASK			0xf
+>   /* Global discovery table size */
+>   #define UNCORE_DISCOVERY_GLOBAL_MAP_SIZE	0x20
+>   
