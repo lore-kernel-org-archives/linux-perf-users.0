@@ -2,154 +2,114 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACBBC433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Feb 2022 15:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6205AC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Feb 2022 15:49:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233165AbiBVPLs (ORCPT
+        id S232249AbiBVPuC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Feb 2022 10:11:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33548 "EHLO
+        Tue, 22 Feb 2022 10:50:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232597AbiBVPLr (ORCPT
+        with ESMTP id S232248AbiBVPuB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Feb 2022 10:11:47 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B22E810EC7C
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Feb 2022 07:11:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1645542680;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=D2nBod7A/CBKu2+sFN1QjFvotvtMYAinvMX+52oPhA0=;
-        b=SpA1CBL0OdfnomEfFpvW9uaGl0imeqcbyy5vsEYyE2P1QAHdZtaGo6JbK0eQXYyTo6QcXI
-        JiuiG7XY15IaO7FgEfEtm6nvEs4xQPV67vT+4rYWxYw9Wo5EGkNv7GtKruoTv00vtlX2sn
-        GKWJhZZV9XGpz1YKDM5zZqw7XLfPeBk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-674-8dtTgZi8OwiY4wU_Hj8KFQ-1; Tue, 22 Feb 2022 10:11:18 -0500
-X-MC-Unique: 8dtTgZi8OwiY4wU_Hj8KFQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 61B198145E7;
-        Tue, 22 Feb 2022 15:11:16 +0000 (UTC)
-Received: from wsfd-netdev64.ntdv.lab.eng.bos.redhat.com (wsfd-netdev64.ntdv.lab.eng.bos.redhat.com [10.19.188.127])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6F5C3832AC;
-        Tue, 22 Feb 2022 15:11:15 +0000 (UTC)
-From:   Eelco Chaudron <echaudro@redhat.com>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] perf scripting python: expose symbol offset and source information
-Date:   Tue, 22 Feb 2022 10:11:10 -0500
-Message-Id:  <164554263724.752731.14651017093796049736.stgit@wsfd-netdev64.ntdv.lab.eng.bos.redhat.com>
-User-Agent: StGit/0.23
+        Tue, 22 Feb 2022 10:50:01 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9980046B16;
+        Tue, 22 Feb 2022 07:49:35 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 607211042;
+        Tue, 22 Feb 2022 07:49:35 -0800 (PST)
+Received: from [10.57.39.208] (unknown [10.57.39.208])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 878FF3F70D;
+        Tue, 22 Feb 2022 07:49:32 -0800 (PST)
+Message-ID: <8f563870-3410-221d-4464-5c54a0018b55@arm.com>
+Date:   Tue, 22 Feb 2022 15:49:30 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH 2/2] perf: cs-etm: Fix corrupt inject files when only last
+ branch option is enabled
+Content-Language: en-US
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Leo Yan <leo.yan@linaro.org>
+Cc:     linux-perf-users@vger.kernel.org, mathieu.poirier@linaro.org,
+        coresight@lists.linaro.org, Mike Leach <mike.leach@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20220210200620.1227232-1-james.clark@arm.com>
+ <20220210200620.1227232-2-james.clark@arm.com>
+ <20220211160516.GD475776@leoy-ThinkPad-X240s> <YgvBpvYzAMCGSECj@kernel.org>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <YgvBpvYzAMCGSECj@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This change adds the symbol offset to the data exported for each
-call-chain entry. This can not be calculated from the script and
-only the ip value, and no related mmap information.
 
-In addition, also export the source file and line information, if
-available, to avoid an external lookup if this information is needed.
 
-Signed-off-by: Eelco Chaudron <echaudro@redhat.com>
----
-v2:
- - Fixed small code nit
- - Included new features in auto generated scripts
+On 15/02/2022 15:07, Arnaldo Carvalho de Melo wrote:
+> Em Sat, Feb 12, 2022 at 12:05:16AM +0800, Leo Yan escreveu:
+>> On Thu, Feb 10, 2022 at 08:06:20PM +0000, James Clark wrote:
+>>> Perf inject with Coresight data generates files that cannot be opened
+>>> when only the last branch option is specified:
+>>>
+>>>   perf inject -i perf.data --itrace=l -o inject.data
+>>>   perf script -i inject.data
+>>>   0x33faa8 [0x8]: failed to process type: 9 [Bad address]
+>>>
+>>> This is because cs_etm__synth_instruction_sample() is called even when
+>>> the sample type for instructions hasn't been setup. Last branch records
+>>> are attached to instruction samples so it doesn't make sense to generate
+>>> them when --itrace=i isn't specified anyway.
+>>>
+>>> This change disables all calls of cs_etm__synth_instruction_sample()
+>>> unless --itrace=i is specified, resulting in a file with no samples if
+>>> only --itrace=l is provided, rather than a bad file.
+>>>
+>>> Signed-off-by: James Clark <james.clark@arm.com>
+>>
+>> Reviewed-by: Leo Yan <leo.yan@linaro.org>
+> 
+> Thanks, applied.
+> 
+> - Arnaldo
+> 
 
- .../util/scripting-engines/trace-event-python.c    |   49 +++++++++++++++-----
- 1 file changed, 36 insertions(+), 13 deletions(-)
+Thanks Leo and Arnaldo!
 
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index e752e1f4a5f0..86a9c8614231 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -392,6 +392,18 @@ static const char *get_dsoname(struct map *map)
- 	return dsoname;
- }
- 
-+static unsigned long get_offset(struct symbol *sym, struct addr_location *al)
-+{
-+	unsigned long offset;
-+
-+	if (al->addr < sym->end)
-+		offset = al->addr - sym->start;
-+	else
-+		offset = al->addr - al->map->start - sym->start;
-+
-+	return offset;
-+}
-+
- static PyObject *python_process_callchain(struct perf_sample *sample,
- 					 struct evsel *evsel,
- 					 struct addr_location *al)
-@@ -443,6 +455,25 @@ static PyObject *python_process_callchain(struct perf_sample *sample,
- 					_PyUnicode_FromStringAndSize(node->ms.sym->name,
- 							node->ms.sym->namelen));
- 			pydict_set_item_string_decref(pyelem, "sym", pysym);
-+
-+			if (node->ms.map) {
-+				struct map *map = node->ms.map;
-+				struct addr_location node_al;
-+				unsigned long offset;
-+
-+				node_al.addr = map->map_ip(map, node->ip);
-+				node_al.map  = map;
-+				offset = get_offset(node->ms.sym, &node_al);
-+
-+				pydict_set_item_string_decref(
-+					pyelem, "sym_off",
-+					PyLong_FromUnsignedLongLong(offset));
-+			}
-+			if (node->srcline && strcmp(":0", node->srcline)) {
-+				pydict_set_item_string_decref(
-+					pyelem, "sym_srcline",
-+					_PyUnicode_FromString(node->srcline));
-+			}
- 		}
- 
- 		if (node->ms.map) {
-@@ -520,18 +551,6 @@ static PyObject *python_process_brstack(struct perf_sample *sample,
- 	return pylist;
- }
- 
--static unsigned long get_offset(struct symbol *sym, struct addr_location *al)
--{
--	unsigned long offset;
--
--	if (al->addr < sym->end)
--		offset = al->addr - sym->start;
--	else
--		offset = al->addr - al->map->start - sym->start;
--
--	return offset;
--}
--
- static int get_symoff(struct symbol *sym, struct addr_location *al,
- 		      bool print_off, char *bf, int size)
- {
-@@ -2073,7 +2092,11 @@ static int python_generate_script(struct tep_handle *pevent, const char *outfile
- 
- 		fprintf(ofp, "\t\tfor node in common_callchain:");
- 		fprintf(ofp, "\n\t\t\tif 'sym' in node:");
--		fprintf(ofp, "\n\t\t\t\tprint(\"\\t[%%x] %%s\" %% (node['ip'], node['sym']['name']))");
-+		fprintf(ofp, "\n\t\t\t\tprint(\"\t[%%x] %%s%%s%%s%%s\" %% (");
-+		fprintf(ofp, "\n\t\t\t\t\tnode['ip'], node['sym']['name'],");
-+		fprintf(ofp, "\n\t\t\t\t\t\"+0x{:x}\".format(node['sym_off']) if 'sym_off' in node else \"\",");
-+		fprintf(ofp, "\n\t\t\t\t\t\" ({})\".format(node['dso'])  if 'dso' in node else \"\",");
-+		fprintf(ofp, "\n\t\t\t\t\t\" \" + node['sym_srcline'] if 'sym_srcline' in node else \"\"))");
- 		fprintf(ofp, "\n\t\t\telse:");
- 		fprintf(ofp, "\n\t\t\t\tprint(\"\t[%%x]\" %% (node['ip']))\n\n");
- 		fprintf(ofp, "\t\tprint()\n\n");
-
+>  
+>>> ---
+>>>  tools/perf/util/cs-etm.c | 2 ++
+>>>  1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+>>> index 796a065a500e..8b95fb3c4d7b 100644
+>>> --- a/tools/perf/util/cs-etm.c
+>>> +++ b/tools/perf/util/cs-etm.c
+>>> @@ -1553,6 +1553,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
+>>>  		goto swap_packet;
+>>>  
+>>>  	if (etmq->etm->synth_opts.last_branch &&
+>>> +	    etmq->etm->synth_opts.instructions &&
+>>>  	    tidq->prev_packet->sample_type == CS_ETM_RANGE) {
+>>>  		u64 addr;
+>>>  
+>>> @@ -1610,6 +1611,7 @@ static int cs_etm__end_block(struct cs_etm_queue *etmq,
+>>>  	 * the trace.
+>>>  	 */
+>>>  	if (etmq->etm->synth_opts.last_branch &&
+>>> +	    etmq->etm->synth_opts.instructions &&
+>>>  	    tidq->prev_packet->sample_type == CS_ETM_RANGE) {
+>>>  		u64 addr;
+>>>  
+>>> -- 
+>>> 2.28.0
+>>>
+> 
