@@ -2,101 +2,96 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80904C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Feb 2022 09:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0746CC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Feb 2022 10:02:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232976AbiBWJJI (ORCPT
+        id S239433AbiBWKDP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Feb 2022 04:09:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55260 "EHLO
+        Wed, 23 Feb 2022 05:03:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231338AbiBWJJH (ORCPT
+        with ESMTP id S236112AbiBWKDO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Feb 2022 04:09:07 -0500
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D67587EDA2
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Feb 2022 01:08:40 -0800 (PST)
-Received: by mail-pj1-x1032.google.com with SMTP id iq13-20020a17090afb4d00b001bc4437df2cso2109444pjb.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Feb 2022 01:08:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Pf0D+oLAVO2Ra+UFhGWf1t+ARZ/6RoovWWgaBQapcOs=;
-        b=FADrBvb4zjfZ0tGqyKmxLz014eKlGXhx8Off6AbSfzliKZuRtMi5zcLu/dJo5BpPDn
-         n+8hYv2MHEnmMZeU2B0nTACMNtZzClRepu3X2zjrACPHOkwSDZuraWkciWqFja8EmOQg
-         tZ2P5rw1BoJi5x1AAlCBo9hdmuvk3WBT37WvvXERlODh0wVGZU25kgeSWVCP4BWBR1qY
-         TKRSBSBMc66OsYziMfT0yPqBZuprAuuzo+aM9E41rRqRgo7UrlDZh0cf/hR22b8wYs78
-         1hvvrvhUTILIHnvZLg/v7QMNcDAFoUNkw3xVHEOFZqK41F++MJbTdi/9LqHN+w13Hxhn
-         El6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Pf0D+oLAVO2Ra+UFhGWf1t+ARZ/6RoovWWgaBQapcOs=;
-        b=FpHEeZJr5t1J+aRRIxCGLYb5lrap1EFyfDNCG/BJU6FaAmp/fgRC8vmy4S0pw67uKv
-         oWBW8+OSI8ELgOiIlxKpd/pnE4MCFZZkXMG8rvITdBbVhCKM50zhewu7kzX7virG6o3g
-         hep7iRCRNkuD8jVb9amSfsEkNcNHL830ceD3CYFXwcGeqDro5Qv+75G1jz94ZMYsdsD0
-         BI+veWPZXtXoS+/nJGag3fSIadu1QN8oVsxzjOOyyLIjiSn6OOg+QNWqwV3lwRbFQfz7
-         ZCugxxvOjI/0j0mbtPGga1RdCBLkCLbXWNnKE1Y5NCfWQsq36sq1wkpqjaXVhoSnwKoh
-         38aQ==
-X-Gm-Message-State: AOAM531TQbPz4W4n2AQmXzZIQO7sH4UKwS3zUtqzmWW/sp0AzDwvKoz4
-        8OvhV+uOR+E+hLmf2L061B0hIbqZK8X3O/j+R1U=
-X-Google-Smtp-Source: ABdhPJzfsWUfruZ4fm8x9+hWccyoZ3Vg/8Xa4q12llBW5yeBIwaHaI87fl/d6W6wZmAxJ2s7mAwpGwePAhVcKAYgYHo=
-X-Received: by 2002:a17:902:ccc1:b0:14f:b686:e6ff with SMTP id
- z1-20020a170902ccc100b0014fb686e6ffmr12847326ple.45.1645607320308; Wed, 23
- Feb 2022 01:08:40 -0800 (PST)
+        Wed, 23 Feb 2022 05:03:14 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB29A8A322;
+        Wed, 23 Feb 2022 02:02:46 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7D82FB81E8F;
+        Wed, 23 Feb 2022 10:02:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B37AC340E7;
+        Wed, 23 Feb 2022 10:02:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645610564;
+        bh=cks2kgUvdKn9yDgezou3U+aY6IvjpnR2cUfofxlMj+s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nRHmOuU36eoGAr9V14rHJUhbunESuk0OXwMyAt4xUf0FKKEmfVlXGX3/aiqaCwz/f
+         ONKt4CtIO2AlG9DhygHFT7O7TldGYkqsaYfXdeQat+huiQrLPsAasCuFdhAPKsYj6q
+         QW2QD4ssaN1ul98IzUEFTsZ4fydKBYN+2uOrVOS/5sfo1PD+n6yM0g6Mdjkb5k3RtK
+         hgB45kMZ/sJ5CUJ6lStizDKbW0n7Pnmzp7SJ2jP2UWVao0S+5c9wQfcPIzucLYseIX
+         ZDbA0Wd+1ORRBRLtNZyeA/tYuh0vm8YmTruqNvQpDKChiqkKxGxXFyASsloLUtyJOH
+         zkmqapedNuJ5w==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id E2C0B400FE; Wed, 23 Feb 2022 07:02:40 -0300 (-03)
+Date:   Wed, 23 Feb 2022 07:02:40 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     German Gomez <german.gomez@arm.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] perf arm-spe: Use advertised caps/min_interval as
+ default sample_period
+Message-ID: <YhYGQO+DPwcWyT8i@kernel.org>
+References: <20220221171042.58460-1-german.gomez@arm.com>
+ <20220223011436.GA414932@leoy-ThinkPad-X240s>
 MIME-Version: 1.0
-References: <20220221102628.43904-1-tz.stoyanov@gmail.com> <YhPsKeK0UdjiDN1R@krava>
- <C62503E3-B72B-4441-8900-1439CB7CAB04@gmail.com> <CAPpZLN7Qmgsm6ptthvsjgcqgMQd1tnuX=ohHBcPAQ4zu4VVkrw@mail.gmail.com>
- <YhV+BOp0A+aqavlc@kernel.org>
-In-Reply-To: <YhV+BOp0A+aqavlc@kernel.org>
-From:   Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
-Date:   Wed, 23 Feb 2022 11:08:24 +0200
-Message-ID: <CAPpZLN7rPxjT2zUNe7jFJh_3vY64hYFEkOP7-Kp0POrRSUQhWw@mail.gmail.com>
-Subject: Re: [PATCH v2] libperf: Add API for allocating new thread map
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Jiri Olsa <olsajiri@gmail.com>, Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220223011436.GA414932@leoy-ThinkPad-X240s>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Feb 23, 2022 at 2:21 AM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
->
-> Em Tue, Feb 22, 2022 at 04:32:05AM +0200, Tzvetomir Stoyanov escreveu:
-> > On Mon, Feb 21, 2022 at 10:21 PM Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
-> > > On February 21, 2022 4:46:49 PM GMT-03:00, Jiri Olsa <olsajiri@gmail.com> wrote:
-> > > >On Mon, Feb 21, 2022 at 12:26:28PM +0200, Tzvetomir Stoyanov (VMware) wrote:
-> > > >looks good, would you also find useful in your use case the comm support
-> > > >in thread_map? the thread_map__read_comms function? we could move it from
-> > > >perf to libperf
->
-> > > IOW: we're happy that you're working on libperf, so feel encouraged
-> > > to move things from tools/perf/util/ to tools/lib/perf/ if you find
-> > > a supporting use case, brownie points if you also add an entry to
-> > > tools/perf/tests/, AKA 'perf test'.
->
-> > Thanks, I see that there is a lot of functionality that could be moved
-> > from perf to libperf and which will be useful for the library users.
-> > We are going to use libperf in trace-cruncher,
-> > https://github.com/vmware/trace-cruncher, as an interface to perf.
->
-> Cool, so as you go on adding functionality to trace cruncher and notice
-> that something that is in tools/perf/util/ that is usable, please submit
-> patches to move things to tools/lib/perf/, adding tests to 'perf test'
-> as you go.
->
-> Thanks a lot!
->
-> - Arnaldo
+Em Wed, Feb 23, 2022 at 09:14:36AM +0800, Leo Yan escreveu:
+> On Mon, Feb 21, 2022 at 05:10:42PM +0000, German Gomez wrote:
+> > When recording SPE traces, the default sample_period is currently being
+> > set to 1 in the perf_event_attr fields, instead of the value advertised
+> > in '/sys/devices/arm_spe_0/caps/min_interval':
+> > 
+> > Before:
+> > 
+> > $ perf record -e arm_spe// -vv -- sleep 1
+> > [...]
+> >   { sample_period, sample_freq }   1
+> > [...]
+> > 
+> > Use the value from the above sysfs location as a more sensible default
+> > (it was already being read, but the value not being used)
+> > 
+> > After:
+> > 
+> > $ perf record -e arm_spe// -vv -- sleep 1
+> > [...]
+> >   { sample_period, sample_freq }   1024
+> > [...]
+> > 
+> > Signed-off-by: German Gomez <german.gomez@arm.com>
+> 
+> The change looks good to me:
+> 
+> Reviewed-by: Leo Yan <leo.yan@linaro.org>
 
-Sure, I'll do it. I have one more question - do you plan to release
-the next version of libperf soon, so we can use this new functionality
-in trace-cruncher ?
+Thanks, applied.
 
--- 
-Tzvetomir (Ceco) Stoyanov
-VMware Open Source Technology Center
+- Arnaldo
+
