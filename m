@@ -2,154 +2,116 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4458C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Feb 2022 19:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9244CC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Feb 2022 00:18:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235215AbiBVTa1 (ORCPT
+        id S231362AbiBWATU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Feb 2022 14:30:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35352 "EHLO
+        Tue, 22 Feb 2022 19:19:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235185AbiBVTa0 (ORCPT
+        with ESMTP id S232818AbiBWATT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Feb 2022 14:30:26 -0500
-Received: from smtp-fw-80007.amazon.com (smtp-fw-80007.amazon.com [99.78.197.218])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B96D4522EF;
-        Tue, 22 Feb 2022 11:30:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1645558200; x=1677094200;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=5kh9q0GW+wnQrt40nuaSNB7naZayQpuxWFvUGfnyRoc=;
-  b=cXQzjesQHmSea9I77WtRTy54zV9thI8zPhTsomU/UwapoaErPKdhvphu
-   8tHNAGfF201H2dQRIASEYN7qPWM//CsmnF4Y3wgJEbNi4EsbC0yqP6TDA
-   VP9J/x5WPXUP25bTz5pSMi/ujbIsRQolP5rwR3ikSUYIy3eESoyaGJCqt
-   8=;
-X-IronPort-AV: E=Sophos;i="5.88,387,1635206400"; 
-   d="scan'208";a="65281020"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-iad-1a-87b71607.us-east-1.amazon.com) ([10.25.36.210])
-  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP; 22 Feb 2022 19:29:55 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan3.iad.amazon.com [10.40.163.38])
-        by email-inbound-relay-iad-1a-87b71607.us-east-1.amazon.com (Postfix) with ESMTPS id E6F0714118C;
-        Tue, 22 Feb 2022 19:29:50 +0000 (UTC)
-Received: from EX13D02UWB002.ant.amazon.com (10.43.161.160) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1497.28; Tue, 22 Feb 2022 19:29:50 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
- EX13D02UWB002.ant.amazon.com (10.43.161.160) with Microsoft SMTP Server (TLS)
- id 15.0.1497.28; Tue, 22 Feb 2022 19:29:49 +0000
-Received: from dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com
- (172.19.181.128) by mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP
- Server id 15.0.1497.28 via Frontend Transport; Tue, 22 Feb 2022 19:29:49
- +0000
-Received: by dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com (Postfix, from userid 5131138)
-        id 6E61F15C9; Tue, 22 Feb 2022 19:29:49 +0000 (UTC)
-From:   Ali Saidi <alisaidi@amazon.com>
-To:     <german.gomez@arm.com>
-CC:     <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
-        <alisaidi@amazon.com>, <andrew.kilroy@arm.com>,
-        <benh@kernel.crashing.org>, <james.clark@arm.com>,
-        <john.garry@huawei.com>, <jolsa@redhat.com>, <leo.yan@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <mark.rutland@arm.com>, <mathieu.poirier@linaro.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <will@kernel.org>
-Subject: Re: [PATCH 2/2] perf arm-spe: Parse more SPE fields and store source
-Date:   Tue, 22 Feb 2022 19:29:43 +0000
-Message-ID: <20220222192943.20137-1-alisaidi@amazon.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <9266bfb6-341c-1d9c-e96f-c9f856a5ffb6@arm.com>
-References: <9266bfb6-341c-1d9c-e96f-c9f856a5ffb6@arm.com>
+        Tue, 22 Feb 2022 19:19:19 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C433B4D610;
+        Tue, 22 Feb 2022 16:18:52 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5F3A761260;
+        Wed, 23 Feb 2022 00:18:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A27BFC340E8;
+        Wed, 23 Feb 2022 00:18:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645575531;
+        bh=NXaPAr7gqysLvEwXoD5p+AxNR61/szVonKZdFsJ2fSI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kLLcYCAgKrzMva/spRnrXevdY72OCm5QGpGVev+QDYQwjDwtoJNamqMiUrIyVn3dL
+         2XkM64hpmar83i+U/m56IOxwIFYl7+RNvnZFLnBdUzt/TZGrGGcVOJwjb8uKXmAAs7
+         eycp1USER8xiKjm9MXW8JAMVNITeXEF7tZi6inWLLxjBfQv2WyQAQW+UvlS2+0h5qL
+         iwEvWRWKMDYQ+ybGN36rN37Aj2EcZo8SAFMhAMBa99vpbn09TQdd/IRn55xDNlgfHd
+         Qk0W6chOY4lYswxm68BZ/149kqC1lGPiEOvms5NUslHajrpKAZeepKK/g23IKZdbHQ
+         eL2l6WpcHHsNw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 87604400FE; Tue, 22 Feb 2022 21:18:49 -0300 (-03)
+Date:   Tue, 22 Feb 2022 21:18:49 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     German Gomez <german.gomez@arm.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH] perf script: Fix error when printing 'weight' field
+Message-ID: <YhV9aXx3VhXUkCcT@kernel.org>
+References: <20220221171707.62960-1-german.gomez@arm.com>
+ <YhPh5pHMGeP8Arx6@krava>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YhPh5pHMGeP8Arx6@krava>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Em Mon, Feb 21, 2022 at 08:46:32PM +0100, Jiri Olsa escreveu:
+> On Mon, Feb 21, 2022 at 05:17:06PM +0000, German Gomez wrote:
+> > In SPE traces the 'weight' field can't be printed in perf-script because
+> > the 'dummy:u' event doesn't have the WEIGHT attribute set.
+> > 
+> > Use evsel__do_check_stype(..) to check this field, as it's done with
+> > other fields such as "phys_addr".
+> > 
+> > Before:
+> > 
+> > $ perf record -e arm_spe_0// -- sleep 1
+> > $ perf script -F event,ip,weight
+> > Samples for 'dummy:u' event do not have WEIGHT attribute set. Cannot print 'weight' field.
+> > 
+> > After:
+> > 
+> > $ perf script -F event,ip,weight
+> >    l1d-access:               12 ffffaf629d4cb320
+> >    tlb-access:               12 ffffaf629d4cb320
+> >        memory:               12 ffffaf629d4cb320
+> > 
+> > Fixes: b0fde9c6e291 ("perf arm-spe: Add SPE total latency as PERF_SAMPLE_WEIGHT")
+> > Signed-off-by: German Gomez <german.gomez@arm.com>
+> 
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-Hi German & Yan,
+Thanks, applied to perf/urgent.
 
-Sorry about the delay in responding.
+- Arnaldo
 
->Hi German, Ali,
->
-[...]
-> >>>  };
->> >>>  
->> >>>  enum arm_spe_op_type {
->> >>>  	ARM_SPE_LD		= 1 << 0,
->> >>>  	ARM_SPE_ST		= 1 << 1,
->> >>> +	ARM_SPE_LDST_EXCL	= 1 << 2,
->> >>> +	ARM_SPE_LDST_ATOMIC	= 1 << 3,
->> >>> +	ARM_SPE_LDST_ACQREL	= 1 << 4,
->> 
->> Wondering if we can store this in perf_sample->flags. The values are
->> defined in "util/event.h" (PERF_IP_*). Maybe we can extend it to allow
->> doing "sample->flags = PERF_LDST_FLAG_LD | PERF_LDST_FLAG_ATOMIC" and
->> such.
->> 
->> @Leo do you think that could work?
->
->Let's step back a bit and divide the decoding flow into two parts:
->backend and frontend.
->
->For the backend part, we decode the SPE hardware trace data and
->generate the SPE record in the file
->util/arm-spe-decoder/arm-spe-decoder.c.  As we want to support
->complete operation types, we can extend arm_spe_op_type as below:
->
->enum arm_spe_op_type {
->        /* First level operation type */
->	ARM_SPE_OP_OTHER        = 1 << 0,
->	ARM_SPE_OP_LDST		= 1 << 1,
-[...]
+ 
+> thanks,
+> jirka
+> 
+> > ---
+> >  tools/perf/builtin-script.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> > index 9e032343f..6ce581067 100644
+> > --- a/tools/perf/builtin-script.c
+> > +++ b/tools/perf/builtin-script.c
+> > @@ -463,7 +463,7 @@ static int evsel__check_attr(struct evsel *evsel, struct perf_session *session)
+> >  		return -EINVAL;
+> >  
+> >  	if (PRINT_FIELD(WEIGHT) &&
+> > -	    evsel__check_stype(evsel, PERF_SAMPLE_WEIGHT_TYPE, "WEIGHT", PERF_OUTPUT_WEIGHT))
+> > +	    evsel__do_check_stype(evsel, PERF_SAMPLE_WEIGHT_TYPE, "WEIGHT", PERF_OUTPUT_WEIGHT, allow_user_set))
+> >  		return -EINVAL;
+> >  
+> >  	if (PRINT_FIELD(SYM) &&
+> > -- 
+> > 2.25.1
+> > 
 
-I'm OK with this approach, but perhaps instead the op type should
-just be the raw traces op-type and op-type-payload? Macros to decode
-this information are already present and extensively used in the text
-decoding of the packet. While it's a little bit harder than just picking
-a bit, the op_type is only used in a single place today outside of
-the existing textual script decoding and what would be this decoding.
-Do we forsee many more uses that would justify having to maintain
-the immediate format vs finding a way to unify arm_spe_pkt_desc_op_type
-to support both the text decoding and this?
+-- 
 
-[...]
->So I am just wandering if we can set the field
->sample::data_src::mem_lock for atomic operations, like:
->
->    data_src.mem_op   = PERF_MEM_OP_LOAD;
->    data_src.mem_lock = PERF_MEM_LOCK_ATOMIC;
->
->The field "mem_lock" is only two bits, we can consider to extend the
->structure with an extra filed "mem_lock_ext" if it cannot meet our
->requirement.
-
-These are for the LOCK instruction on x86. I don't know that we want to
-overload the meaning here. Minimally there is value in differentiating
-exclusives vs atomics.
-
->
->> >>> +	ARM_SPE_BR		= 1 << 5,
->> >>> +	ARM_SPE_BR_COND		= 1 << 6,
->> >>> +	ARM_SPE_BR_IND		= 1 << 7,
->> 
->> Seems like we can store BR_COND in the existing "branch-miss" event
->> (--itrace=b) with:
->> 
->>   sample->flags = PERF_IP_FLAG_BRANCH;
->>   sample->flags |= PERF_IP_FLAG_CONDITIONAL;
->> and/or
->>   sample->flags |= PERF_IP_FLAG_INDIRECT;
->> 
->> PERF_IP_FLAG_INDIRECT doesn't exist yet but we can probably add it.
->
->Yes, for branch samples, this makes sense for me.
-
-makes sense to me too.
-
-Ali
-
+- Arnaldo
