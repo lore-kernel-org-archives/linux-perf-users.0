@@ -2,150 +2,251 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4870BC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Feb 2022 18:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2A3C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Feb 2022 22:30:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242289AbiBWSUz (ORCPT
+        id S231200AbiBWWah (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Feb 2022 13:20:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51406 "EHLO
+        Wed, 23 Feb 2022 17:30:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241030AbiBWSUz (ORCPT
+        with ESMTP id S229436AbiBWWah (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Feb 2022 13:20:55 -0500
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B5ED49FB8
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Feb 2022 10:20:27 -0800 (PST)
-Received: by mail-ed1-x535.google.com with SMTP id g20so3701848edw.6
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Feb 2022 10:20:27 -0800 (PST)
+        Wed, 23 Feb 2022 17:30:37 -0500
+Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9335E40A16;
+        Wed, 23 Feb 2022 14:30:08 -0800 (PST)
+Received: by mail-il1-x134.google.com with SMTP id d7so303508ilf.8;
+        Wed, 23 Feb 2022 14:30:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=SF/2jNVMnUzKLRFa8MFzQjb0SDdtr53IUPg9a0JdGqM=;
-        b=HCHjYLzzFtVC8etIW9DiyRhvXlNXAzjD1wZtrHeoaYThi884QX4NESSBy79rjPBR8H
-         2hb7bJdjkMR3+tkL755lZHpS6I+qQ47WbOP6YVWfKJSPilbJWxnqrTOUlQSw8mBrJbb9
-         Fb6oYnnMrqMLkFCqJy9CxADU8nqDrnHnjrH12FH2T+K2+t+iMpQS7TreAs8mv2bguCgd
-         5d8qrU/vU9HePDdt0dBxDb/jphCe8ICveM3i04u+EIdZFwnh5nXOWvKf4aIbfi8Gg4+2
-         7TWdncdaNf1O3c8nbHlINP2uutQAACmrMhBWkUHZbQv7qxrrL7pOnHGDeNqlRjiCn18J
-         ijDw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OCD5mZDkpwUlyfA20EEEfKsRSer4ZvxexsoTB06hY/A=;
+        b=IreiLBdNn8Oy45HYTiYi2dUZLMAOM4/vGSglBN0jSNWgfa2KiIJ5SmWVmmLY14LTPu
+         /ljwBTfAMRprIEmitySbE3DjJ7GO0Ym6pNZgCO1FAMzA4SCsP855lFASCRAl4y2YxHNF
+         xDl3rPDL0R1qL/C5JHR7m3hdTG28+QD7TKz+HgrsjBoP/BOHhDEVC50IRywWovGZh6dF
+         fGT8h1Skdkj6x52KTXkUm4btGad7BAjcXOFmnFUxKFnWIt6gVb2qQcyyxoTSuV/Vs1/T
+         sr0QLtUEEdz0PgnZlMJE3nMpFa4cu3yFrwAcPb/XYC90ueCgD/vIrzGX+TZg4hlO3q4a
+         dgfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=SF/2jNVMnUzKLRFa8MFzQjb0SDdtr53IUPg9a0JdGqM=;
-        b=tY+at+YhyRxfNevoQ41/pPI7I7n02qXXoFWmttL6IAesf9cemngUuJSyjYx67yK5RH
-         fkDoj5awMHPwCQihGWDiHcA+vWvjVmecdhnhihMjypTO5HGSwlpBnQ6onb9Tw1gnHfGV
-         QNe+8JbiRBmgIZwn24HjIbeJeYzVRQ1FJ13qZnJxVnCNxyywRF4GLuF3sQO47Mu7m2Fe
-         j8dtkW35739BuHNx38HXJNvPRTAGKO7QXQ24DRDodcAjtdkYQaneBEfN1tttCKTrnBJi
-         tSGYeTAqenagWu+FcAl3JfZvd+wYDUeBiibYUhzloK2EcOADhw00LyYRjePd5Qc4T4zN
-         bIfg==
-X-Gm-Message-State: AOAM532A9Z3r2AgAVu+4eVtzr2mjB+OAX8FVMqEVEJPWXNL2QgU5P1tm
-        RNqqRSxo5xn8jhEuoCQfNow=
-X-Google-Smtp-Source: ABdhPJxbrzti+lq21lhWKSXSC2iHGsLZ/oHTQ/bCKVN90OeQBBv0hLPh26hsBzq6JRJTCepK7bzMwg==
-X-Received: by 2002:a05:6402:2801:b0:40f:f179:c3ca with SMTP id h1-20020a056402280100b0040ff179c3camr703278ede.226.1645640425733;
-        Wed, 23 Feb 2022 10:20:25 -0800 (PST)
-Received: from krava (ip-89-102-25-98.net.upcbroadband.cz. [89.102.25.98])
-        by smtp.gmail.com with ESMTPSA id oz23sm158780ejb.174.2022.02.23.10.20.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Feb 2022 10:20:25 -0800 (PST)
-Date:   Wed, 23 Feb 2022 19:20:23 +0100
-From:   Jiri Olsa <olsajiri@gmail.com>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>,
-        irogers@google.com, linux-perf-users@vger.kernel.org,
-        Jiri Olsa <jolsa@kernel.org>
-Subject: Re: [PATCH] libperf: Fix read_size calculations
-Message-ID: <YhZ651X4Fs9KJMa6@krava>
-References: <20220223131349.134897-1-tz.stoyanov@gmail.com>
- <YhY9p9wsYgXtdYnt@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OCD5mZDkpwUlyfA20EEEfKsRSer4ZvxexsoTB06hY/A=;
+        b=R26Rjmyfwt5v3oJcCXFXvDcD0evUiWIoyHLVWNZ0ErdBB3tuQEnl+wBnnNO4c3ef4Z
+         kcPEWYIuE8E0XpiEz9+m26hHYNet1MrpG4axOyixXFg7rEePnR3njsCLSkasWRD7Us4u
+         6wu93bIO/+YUNnG0mQ9/G8YvEd453hOVND7CnoInBrm4W9Ehe4KPn3+ZWIoYwLNVXGik
+         C38Rc4ivN1OSXUVVDtqtnU769UWqq+EYxW6uCJpnECdeWAK7a06lBLtqwm4hDna2fBXx
+         0VWpRvsTIpXfjBur1dgIVf1x2VFurLsJ02vXo7eRlrJlSzaMihhSjELCi6M1JcCoTrCb
+         lKWA==
+X-Gm-Message-State: AOAM530bcD6lt4dLxj4q5p5vgN1y/qFnM+MpG7NM+n5rn5ZQ5P5+1zTR
+        lTFWTZFkueyChx0LuaZIppJrnzOfyEahNGFbrpA=
+X-Google-Smtp-Source: ABdhPJxkrxQdW9RPINy1hLfe+amQK5VHu3FnVHncvhMgrVRBAMv9MOXRITgx8Wdf0TVYEhH0pSZB1zZBsxVpuZfeqXk=
+X-Received: by 2002:a92:6406:0:b0:2bb:f1de:e13e with SMTP id
+ y6-20020a926406000000b002bbf1dee13emr1478385ilb.305.1645655407879; Wed, 23
+ Feb 2022 14:30:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YhY9p9wsYgXtdYnt@kernel.org>
+References: <20220217131916.50615-1-jolsa@kernel.org> <20220217131916.50615-4-jolsa@kernel.org>
+ <CAEf4BzYP7=JuyuY=xZe71urpxat4ba-JnqeSTcHF=CYmsQbofQ@mail.gmail.com>
+ <Yg9geQ0LJjhnrc7j@krava> <CAEf4BzZaFWhWf73JbfO7gLi82Nn4ma-qmaZBPij=giNzzoSCTQ@mail.gmail.com>
+ <YhJF00d9baPtXjzH@krava>
+In-Reply-To: <YhJF00d9baPtXjzH@krava>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 23 Feb 2022 14:29:56 -0800
+Message-ID: <CAEf4BzaiBO3_617kkXZdYJ8hS8YF--ZLgapNbgeeEJ-pY0H88g@mail.gmail.com>
+Subject: Re: [PATCH 3/3] perf tools: Rework prologue generation code
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Feb 23, 2022 at 10:59:03AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Feb 23, 2022 at 03:13:49PM +0200, Tzvetomir Stoyanov (VMware) escreveu:
-> > Reading the counters from perf descriptor fails because of size
-> > mismatch when PERF_FORMAT_GROUP is set. The group count must include the
-> > parent and the count of siblings.
-> 
-> Yeah, it should match the calculation done in the kernel, in
-> __perf_event_read_size(), that has...
-> 
-> static void __perf_event_read_size(struct perf_event *event, int nr_siblings)
-> {
->         int entry = sizeof(u64); /* value */
->         int size = 0;
->         int nr = 1;
-> 
->         if (event->attr.read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
->                 size += sizeof(u64);
-> 
->         if (event->attr.read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
->                 size += sizeof(u64);
-> 
->         if (event->attr.read_format & PERF_FORMAT_ID)
->                 entry += sizeof(u64);
-> 
->         if (event->attr.read_format & PERF_FORMAT_GROUP) {
->                 nr += nr_siblings;
->                 size += sizeof(u64);
+On Sun, Feb 20, 2022 at 5:44 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+>
+> On Fri, Feb 18, 2022 at 11:55:16AM -0800, Andrii Nakryiko wrote:
+> > On Fri, Feb 18, 2022 at 1:01 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+> > >
+> > > On Thu, Feb 17, 2022 at 01:53:16PM -0800, Andrii Nakryiko wrote:
+> > > > On Thu, Feb 17, 2022 at 5:19 AM Jiri Olsa <jolsa@kernel.org> wrote:
+> > > > >
+> > > > > Some functions we use now for bpf prologue generation are
+> > > > > going to be deprecated, so reworking the current code not
+> > > > > to use them.
+> > > > >
+> > > > > We need to replace following functions/struct:
+> > > > >    bpf_program__set_prep
+> > > > >    bpf_program__nth_fd
+> > > > >    struct bpf_prog_prep_result
+> > > > >
+> > > > > Current code uses bpf_program__set_prep to hook perf callback
+> > > > > before the program is loaded and provide new instructions with
+> > > > > the prologue.
+> > > > >
+> > > > > We workaround this by using objects's 'unloaded' programs instructions
+> > > > > for that specific program and load new ebpf programs with prologue
+> > > > > using separate bpf_prog_load calls.
+> > > > >
+> > > > > We keep new ebpf program instances descriptors in bpf programs
+> > > > > private struct.
+> > > > >
+> > > > > Suggested-by: Andrii Nakryiko <andrii@kernel.org>
+> > > > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > > > > ---
+> > > > >  tools/perf/util/bpf-loader.c | 122 +++++++++++++++++++++++++++++------
+> > > > >  1 file changed, 104 insertions(+), 18 deletions(-)
+> > > > >
+> > > >
+> > > > [...]
+> > > >
+> > > > >  errout:
+> > > > > @@ -696,7 +718,7 @@ static int hook_load_preprocessor(struct bpf_program *prog)
+> > > > >         struct bpf_prog_priv *priv = program_priv(prog);
+> > > > >         struct perf_probe_event *pev;
+> > > > >         bool need_prologue = false;
+> > > > > -       int err, i;
+> > > > > +       int i;
+> > > > >
+> > > > >         if (IS_ERR_OR_NULL(priv)) {
+> > > > >                 pr_debug("Internal error when hook preprocessor\n");
+> > > > > @@ -727,6 +749,12 @@ static int hook_load_preprocessor(struct bpf_program *prog)
+> > > > >                 return 0;
+> > > > >         }
+> > > > >
+> > > > > +       /*
+> > > > > +        * Do not load programs that need prologue, because we need
+> > > > > +        * to add prologue first, check bpf_object__load_prologue.
+> > > > > +        */
+> > > > > +       bpf_program__set_autoload(prog, false);
+> > > >
+> > > > if you set autoload to false, program instructions might be invalid in
+> > > > the end. Libbpf doesn't apply some (all?) relocations to such
+> > > > programs, doesn't resolve CO-RE, etc, etc. You have to let
+> > > > "prototypal" BPF program to be loaded before you can grab final
+> > > > instructions. It's not great, but in your case it should work, right?
+> > >
+> > > hum, do we care? it should all be done when the 'new' program with
+> > > the prologue is loaded, right?
+> >
+> > yeah, you should care. If there is any BPF map involved, it is
+> > properly resolved to correct FD (which is put into ldimm64 instruction
+> > in BPF program code) during the load. If program is not autoloaded,
+> > this is skipped. Same for any global variable or subprog call (if it's
+> > not always inlined). So you very much should care for any non-trivial
+> > program.
+>
+> ah too bad.. all that is in the load path, ok
+>
+> >
+> > >
+> > > I switched it off because the verifier failed to load the program
+> > > without the prologue.. because in the original program there's no
+> > > code to grab the arguments that the rest of the code depends on,
+> > > so the verifier sees invalid access
+> >
+> > Do you have an example of C code and corresponding BPF instructions
+> > before/after prologue generation? Just curious to see in details how
+> > this is done.
+>
+> so with following example:
+>
+>         SEC("func=do_sched_setscheduler param->sched_priority@user")
+>         int bpf_func__setscheduler(void *ctx, int err, int param)
+>         {
+>                 char fmt[] = "prio: %ld";
+>                 bpf_trace_printk(fmt, sizeof(fmt), param);
+>                 return 1;
 >         }
-> 
->         size += entry * nr;
->         event->read_size = size;
-> }
-> 
-> So this bug has been with us since forever (well, 2017), so we need:
-> 
-> Fixes: 5c30af92f2b1e9d8 ("libperf: Adopt perf_evsel__read() function from tools/perf")
-> 
-> To fix it in libperf and probably:
-> 
-> Fixes: de63403bfd14ae8d ("perf tools: Add perf_evsel__read_size function")
-> 
-> To get this to stable kernels versions predating the move of this
-> function to libperf.
-> 
-> Jiri?
-> 
-> - Arnaldo
->  
-> > Signed-off-by: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
-> > ---
-> >  tools/lib/perf/evsel.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-> > index 210ea7c06ce8..4597a53c0152 100644
-> > --- a/tools/lib/perf/evsel.c
-> > +++ b/tools/lib/perf/evsel.c
-> > @@ -299,7 +299,7 @@ int perf_evsel__read_size(struct perf_evsel *evsel)
-> >  		entry += sizeof(u64);
-> >  
-> >  	if (read_format & PERF_FORMAT_GROUP) {
-> > -		nr = evsel->nr_members;
-> > +		nr += evsel->nr_members;
+>
+> perf will attach the code to do_sched_setscheduler function,
+> and read 'param->sched_priority' into 'param' argument
+>
+> so the resulting clang object expects 'param' to be in R3
+>
+>         0000000000000000 <bpf_func__setscheduler>:
+>                0:       b7 01 00 00 64 00 00 00 r1 = 100
+>                1:       6b 1a f8 ff 00 00 00 00 *(u16 *)(r10 - 8) = r1
+>                2:       18 01 00 00 70 72 69 6f 00 00 00 00 3a 20 25 6c r1 = 77926701655
+>                4:       7b 1a f0 ff 00 00 00 00 *(u64 *)(r10 - 16) = r1
+>                5:       bf a1 00 00 00 00 00 00 r1 = r10
+>                6:       07 01 00 00 f0 ff ff ff r1 += -16
+>                7:       b7 02 00 00 0a 00 00 00 r2 = 10
+>                8:       85 00 00 00 06 00 00 00 call 6
+>                9:       b7 00 00 00 01 00 00 00 r0 = 1
+>               10:       95 00 00 00 00 00 00 00 exit
+>
+> and R3 is loaded in the prologue code (first 15 instructions)
+> and it also sets 'err' (R2) with the result of the reading:
+>
+>            0: (bf) r6 = r1
+>            1: (79) r3 = *(u64 *)(r6 +96)
+>            2: (bf) r7 = r10
+>            3: (07) r7 += -8
+>            4: (7b) *(u64 *)(r10 -8) = r3
+>            5: (b7) r2 = 8
+>            6: (bf) r1 = r7
+>            7: (85) call bpf_probe_read_user#-60848
+>            8: (55) if r0 != 0x0 goto pc+2
+>            9: (61) r3 = *(u32 *)(r10 -8)
+>           10: (05) goto pc+3
+>           11: (b7) r2 = 1
+>           12: (b7) r3 = 0
+>           13: (05) goto pc+1
+>           14: (b7) r2 = 0
+>           15: (bf) r1 = r6
+>
+>           16: (b7) r1 = 100
+>           17: (6b) *(u16 *)(r10 -8) = r1
+>           18: (18) r1 = 0x6c25203a6f697270
+>           20: (7b) *(u64 *)(r10 -16) = r1
+>           21: (bf) r1 = r10
+>           22: (07) r1 += -16
+>           23: (b7) r2 = 10
+>           24: (85) call bpf_trace_printk#-54848
+>           25: (b7) r0 = 1
+>           26: (95) exit
+>
+>
+> I'm still scratching my head how to workaround this.. we do want maps
+> and all the other updates to the code, but verifier won't let it pass
+> without the prologue code
 
-hum, I'll double check but AFAICS from tests/parse-events.c,
-nr_members already includes both parent (leader) and members,
-which is different from nr_siblings in kernel
+ugh, perf cornered itself into supporting this crazy scheme and now
+there is no good solution. I'm still questioning the value of
+supporting this going forward. Is there an evidence that anyone is
+using this functionality at all? Is it worth it trying to carry it on
+just because we have some example that exercises this feature?
 
-can you please provide more details?
+Anyways, one way to solve this is to add bpf_program__set_insns() that
+could be called from prog_init_fn callback (which I just realized
+hasn't landed yet, I'll send v4 today) to prepend a simple preamble
+like this:
 
-thanks,
-jirka
+r1 = 0;
+r2 = 0;
+r3 = 0;
+f4 = 0;
+r5 = 0; /* how many input arguments we support? */
 
-> >  		size += sizeof(u64);
-> >  	}
-> >  
-> > -- 
-> > 2.34.1
-> 
-> -- 
-> 
-> - Arnaldo
+This will make all input arguments initialized, libbpf will be able to
+adjust all the relocations and stuff. Once this "prototype program" is
+loaded, perf can grab final instructions and replace first X
+instructions with desired preamble.
+
+But... ugliness and horror, yeah :(
+
+
+>
+> jirka
