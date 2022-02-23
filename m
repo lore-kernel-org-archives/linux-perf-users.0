@@ -2,116 +2,84 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9244CC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Feb 2022 00:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90433C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Feb 2022 00:21:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231362AbiBWATU (ORCPT
+        id S232477AbiBWAV5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Feb 2022 19:19:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55308 "EHLO
+        Tue, 22 Feb 2022 19:21:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232818AbiBWATT (ORCPT
+        with ESMTP id S231765AbiBWAV4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Feb 2022 19:19:19 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C433B4D610;
-        Tue, 22 Feb 2022 16:18:52 -0800 (PST)
+        Tue, 22 Feb 2022 19:21:56 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73E374D637
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Feb 2022 16:21:29 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5F3A761260;
-        Wed, 23 Feb 2022 00:18:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A27BFC340E8;
-        Wed, 23 Feb 2022 00:18:51 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 25A80B81D8D
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Feb 2022 00:21:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD5C2C340E8;
+        Wed, 23 Feb 2022 00:21:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645575531;
-        bh=NXaPAr7gqysLvEwXoD5p+AxNR61/szVonKZdFsJ2fSI=;
+        s=k20201202; t=1645575686;
+        bh=lYQv6ByWFDKzFRGzXEouLS4OxAkHn697AkI0PNv1pxM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kLLcYCAgKrzMva/spRnrXevdY72OCm5QGpGVev+QDYQwjDwtoJNamqMiUrIyVn3dL
-         2XkM64hpmar83i+U/m56IOxwIFYl7+RNvnZFLnBdUzt/TZGrGGcVOJwjb8uKXmAAs7
-         eycp1USER8xiKjm9MXW8JAMVNITeXEF7tZi6inWLLxjBfQv2WyQAQW+UvlS2+0h5qL
-         iwEvWRWKMDYQ+ybGN36rN37Aj2EcZo8SAFMhAMBa99vpbn09TQdd/IRn55xDNlgfHd
-         Qk0W6chOY4lYswxm68BZ/149kqC1lGPiEOvms5NUslHajrpKAZeepKK/g23IKZdbHQ
-         eL2l6WpcHHsNw==
+        b=kkOK0DTWab+736rBk4CvrGmQBCWSquKXUGVuokNqEVO8XHVagq7KeXhqXbf1QxAS9
+         yniw+njUV4A3FsERxsYAdeucnuSF/+eWUdA4ky+S2Xigi+C1Rek8tGgcvHCujC5CDA
+         3y0XdFIUo/QKSJ64jx7nVMXi0DrKfkz+V0Cb+9kQkqBKxbv1zlsEBHCYb3EbYOI1Az
+         AuVVKQ90U69wLPht2jrMbF0FTWEWVDUBcZ5PawKTgSzld3OBwmZ7OvR46A5UXe4aL+
+         ZR/x3EujRh/OMFr3KzAoizrzMJCQPt+nTz7x+e2aYoErp3EYh8bkt5Fz8AoE+1lKaI
+         o015kJAoFbFnQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 87604400FE; Tue, 22 Feb 2022 21:18:49 -0300 (-03)
-Date:   Tue, 22 Feb 2022 21:18:49 -0300
+        id 59B32400FE; Tue, 22 Feb 2022 21:21:24 -0300 (-03)
+Date:   Tue, 22 Feb 2022 21:21:24 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     German Gomez <german.gomez@arm.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH] perf script: Fix error when printing 'weight' field
-Message-ID: <YhV9aXx3VhXUkCcT@kernel.org>
-References: <20220221171707.62960-1-german.gomez@arm.com>
- <YhPh5pHMGeP8Arx6@krava>
+To:     Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Jiri Olsa <olsajiri@gmail.com>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2] libperf: Add API for allocating new thread map
+Message-ID: <YhV+BOp0A+aqavlc@kernel.org>
+References: <20220221102628.43904-1-tz.stoyanov@gmail.com>
+ <YhPsKeK0UdjiDN1R@krava>
+ <C62503E3-B72B-4441-8900-1439CB7CAB04@gmail.com>
+ <CAPpZLN7Qmgsm6ptthvsjgcqgMQd1tnuX=ohHBcPAQ4zu4VVkrw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YhPh5pHMGeP8Arx6@krava>
+In-Reply-To: <CAPpZLN7Qmgsm6ptthvsjgcqgMQd1tnuX=ohHBcPAQ4zu4VVkrw@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Feb 21, 2022 at 08:46:32PM +0100, Jiri Olsa escreveu:
-> On Mon, Feb 21, 2022 at 05:17:06PM +0000, German Gomez wrote:
-> > In SPE traces the 'weight' field can't be printed in perf-script because
-> > the 'dummy:u' event doesn't have the WEIGHT attribute set.
-> > 
-> > Use evsel__do_check_stype(..) to check this field, as it's done with
-> > other fields such as "phys_addr".
-> > 
-> > Before:
-> > 
-> > $ perf record -e arm_spe_0// -- sleep 1
-> > $ perf script -F event,ip,weight
-> > Samples for 'dummy:u' event do not have WEIGHT attribute set. Cannot print 'weight' field.
-> > 
-> > After:
-> > 
-> > $ perf script -F event,ip,weight
-> >    l1d-access:               12 ffffaf629d4cb320
-> >    tlb-access:               12 ffffaf629d4cb320
-> >        memory:               12 ffffaf629d4cb320
-> > 
-> > Fixes: b0fde9c6e291 ("perf arm-spe: Add SPE total latency as PERF_SAMPLE_WEIGHT")
-> > Signed-off-by: German Gomez <german.gomez@arm.com>
-> 
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
+Em Tue, Feb 22, 2022 at 04:32:05AM +0200, Tzvetomir Stoyanov escreveu:
+> On Mon, Feb 21, 2022 at 10:21 PM Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
+> > On February 21, 2022 4:46:49 PM GMT-03:00, Jiri Olsa <olsajiri@gmail.com> wrote:
+> > >On Mon, Feb 21, 2022 at 12:26:28PM +0200, Tzvetomir Stoyanov (VMware) wrote:
+> > >looks good, would you also find useful in your use case the comm support
+> > >in thread_map? the thread_map__read_comms function? we could move it from
+> > >perf to libperf
 
-Thanks, applied to perf/urgent.
+> > IOW: we're happy that you're working on libperf, so feel encouraged
+> > to move things from tools/perf/util/ to tools/lib/perf/ if you find
+> > a supporting use case, brownie points if you also add an entry to
+> > tools/perf/tests/, AKA 'perf test'.
 
-- Arnaldo
+> Thanks, I see that there is a lot of functionality that could be moved
+> from perf to libperf and which will be useful for the library users.
+> We are going to use libperf in trace-cruncher,
+> https://github.com/vmware/trace-cruncher, as an interface to perf.
 
- 
-> thanks,
-> jirka
-> 
-> > ---
-> >  tools/perf/builtin-script.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> > index 9e032343f..6ce581067 100644
-> > --- a/tools/perf/builtin-script.c
-> > +++ b/tools/perf/builtin-script.c
-> > @@ -463,7 +463,7 @@ static int evsel__check_attr(struct evsel *evsel, struct perf_session *session)
-> >  		return -EINVAL;
-> >  
-> >  	if (PRINT_FIELD(WEIGHT) &&
-> > -	    evsel__check_stype(evsel, PERF_SAMPLE_WEIGHT_TYPE, "WEIGHT", PERF_OUTPUT_WEIGHT))
-> > +	    evsel__do_check_stype(evsel, PERF_SAMPLE_WEIGHT_TYPE, "WEIGHT", PERF_OUTPUT_WEIGHT, allow_user_set))
-> >  		return -EINVAL;
-> >  
-> >  	if (PRINT_FIELD(SYM) &&
-> > -- 
-> > 2.25.1
-> > 
+Cool, so as you go on adding functionality to trace cruncher and notice
+that something that is in tools/perf/util/ that is usable, please submit
+patches to move things to tools/lib/perf/, adding tests to 'perf test'
+as you go.
 
--- 
+Thanks a lot!
 
 - Arnaldo
