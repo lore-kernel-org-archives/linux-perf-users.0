@@ -2,118 +2,101 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB0CC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Feb 2022 00:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94868C4167B
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Feb 2022 01:14:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233619AbiBWAYR (ORCPT
+        id S236571AbiBWBPK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Feb 2022 19:24:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58094 "EHLO
+        Tue, 22 Feb 2022 20:15:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231765AbiBWAYQ (ORCPT
+        with ESMTP id S235860AbiBWBPK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Feb 2022 19:24:16 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B99D634679;
-        Tue, 22 Feb 2022 16:23:50 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 55324612C3;
-        Wed, 23 Feb 2022 00:23:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8791FC340E8;
-        Wed, 23 Feb 2022 00:23:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645575829;
-        bh=5BdC/hk6mQx2wiONPIjO2S8J7pPFSbEQ9KnQQgIHc1w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ob1Y5bXJWrbpwDY2/YYzbvCgBABo7khCOAMXduz7XeChqJjAimg0UvcDf5fqcff9o
-         6kFj8OfcYmdUrD80sVhKLoMmUyt6xsdkiUscWwFlpyVutpT7uzL98JoW9PgXt/W7FF
-         GafZn7Fg8x/OhH9lodzrd6iz/g9Vzzx3I7IHkeyLBK6aPzKdGfXl7JWlkWH0u3jhC7
-         XDNSx1tB7BtPDRLm0uNkhAauIck1kKHq0M880Oy5dsryPycyTm6x4fMNhWwvrtmd3B
-         j9xgzvj13NL5T9YL8MMzJ+qq8ue8qgMQwmtSc6UZwW4Wy20HUB7CeA30T4kTxdG7Y+
-         RX9jBAGtTqBUA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 8CFA1400FE; Tue, 22 Feb 2022 21:23:47 -0300 (-03)
-Date:   Tue, 22 Feb 2022 21:23:47 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Mahmoud Abumandour <ma.mandourr@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Tue, 22 Feb 2022 20:15:10 -0500
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A24513B01B
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Feb 2022 17:14:43 -0800 (PST)
+Received: by mail-ed1-x536.google.com with SMTP id h15so24199488edv.7
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Feb 2022 17:14:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=DNij7dJZj5zCpqmuUWdIbA82PPs/8sAPmCNMapkES6s=;
+        b=XNspZZ4driA4cb2FKagm4/dWDOnodKxf+OlobbFuUf8VqQkTUrI4L+94mfIP+VU5lS
+         omlhFibWic8kSV97vsaLuQs/u0HoESkoOrDFKA9ipYeYB22OExU6AEswJ1FRgW5r+nYW
+         1n1HgpWnoPj2VblVKVuPMFn6SjEanltt9efvK7zczVo87/IHGED+Y01JDdO63DJfIBTu
+         4paJX+NOPmwk2OXHNradQ5SEVcaDuUZLbIYGpk6lPW0+kGhJtn7SfuwwKAm2Qecgwi4s
+         Zx5W5K0IQkKAVVZGC8uGWEtcLrUzGo7c0l81pl4ZTUxoEbpqZluGwGbcgxH1cGKmgB35
+         E5sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DNij7dJZj5zCpqmuUWdIbA82PPs/8sAPmCNMapkES6s=;
+        b=md16/IR4IKIiu5vjraJAAp/xwPbRkWR7H7cNVDPMKo9T1pZgZ8fByjd/h+I4r2B5X7
+         sYZZwpI+934HEb7KAzJ8hACslwfN4kD+bNd2t+hjMTPyiRlAHUYLvg1niDUuC1TqphVH
+         DhZZmNPI43/D4w3RJD1BBixd/S2qA2EagLjMAk2cgDGx4+BCHo/WBA1oZ8rCzOmQ+86E
+         vXxUVfmNscY8t1cA7jVFW4mvFHHwcp+fA4y4GvJK6p2Y2qbdKzHUGbVP4AmD0OZOecEz
+         k+AEVfNFvQSL4/I7lag5mSj0Kcz5rGFTJsZgHWWtUlRtWJvDKZJIBLNlIUsPMKFoS7e+
+         Gh6A==
+X-Gm-Message-State: AOAM5334iOv0xCJm1p6HVMipV1AG+z0Chr19Ghp/1B+Rl79dbohqEPAu
+        veomVlJ7aG4sSOP1g3eC0fCfOQyue16yplxbHKE=
+X-Google-Smtp-Source: ABdhPJzFf7MKIat98fe1ra0oh3XxS6M4SiPYcL3oOvRcS3tqDQFQR0ugtEpr0i1sUZvufrEyRCc+gA==
+X-Received: by 2002:a05:6402:278f:b0:410:d242:465e with SMTP id b15-20020a056402278f00b00410d242465emr29984419ede.292.1645578882145;
+        Tue, 22 Feb 2022 17:14:42 -0800 (PST)
+Received: from leoy-ThinkPad-X240s ([104.245.96.223])
+        by smtp.gmail.com with ESMTPSA id n25sm10775059eds.89.2022.02.22.17.14.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Feb 2022 17:14:41 -0800 (PST)
+Date:   Wed, 23 Feb 2022 09:14:36 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     German Gomez <german.gomez@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf data: don't mention --to-ctf if it's not supported
-Message-ID: <YhV+kyk7kbuOeY/Q@kernel.org>
-References: <20220220113952.138280-1-ma.mandourr@gmail.com>
- <YhQAt+iSkc2VcvEP@krava>
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] perf arm-spe: Use advertised caps/min_interval as
+ default sample_period
+Message-ID: <20220223011436.GA414932@leoy-ThinkPad-X240s>
+References: <20220221171042.58460-1-german.gomez@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YhQAt+iSkc2VcvEP@krava>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20220221171042.58460-1-german.gomez@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Feb 21, 2022 at 10:14:31PM +0100, Jiri Olsa escreveu:
-> On Sun, Feb 20, 2022 at 01:39:52PM +0200, Mahmoud Abumandour wrote:
-> > From: Mahmoud Mandour <ma.mandourr@gmail.com>
-> > 
-> > The option `--to-ctf` is only available when perf has libbabeltrace
-> > support. Hence, on error, we shouldn't state that user must include
-> > `--to-ctf` unless it's supported.
-> > 
-> > The only user-visible change for this commit is that when `perf` is not
-> > configured to support libbabeltrace, the user is only prompted to
-> > provide the `--to-json` option instead of bothe `--to-json` and
-> > `--to-ctf`.
-> > 
-> > Signed-off-by: Mahmoud Mandour <ma.mandourr@gmail.com>
+On Mon, Feb 21, 2022 at 05:10:42PM +0000, German Gomez wrote:
+> When recording SPE traces, the default sample_period is currently being
+> set to 1 in the perf_event_attr fields, instead of the value advertised
+> in '/sys/devices/arm_spe_0/caps/min_interval':
 > 
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
-
-Thanks, applied.
-
-- Arnaldo
-
- 
-> thanks,
-> jirka
+> Before:
 > 
-> > ---
-> >  tools/perf/builtin-data.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > diff --git a/tools/perf/builtin-data.c b/tools/perf/builtin-data.c
-> > index b7f9dc85a407..c22d82d2a73c 100644
-> > --- a/tools/perf/builtin-data.c
-> > +++ b/tools/perf/builtin-data.c
-> > @@ -62,10 +62,17 @@ static int cmd_data_convert(int argc, const char **argv)
-> >  		pr_err("You cannot specify both --to-ctf and --to-json.\n");
-> >  		return -1;
-> >  	}
-> > +#ifdef HAVE_LIBBABELTRACE_SUPPORT
-> >  	if (!to_json && !to_ctf) {
-> >  		pr_err("You must specify one of --to-ctf or --to-json.\n");
-> >  		return -1;
-> >  	}
-> > +#else
-> > +	if (!to_json) {
-> > +		pr_err("You must specify --to-json.\n");
-> > +	return -1;
-> > +}
-> > +#endif
-> >  
-> >  	if (to_json)
-> >  		return bt_convert__perf2json(input_name, to_json, &opts);
-> > -- 
-> > 2.30.2
-> > 
+> $ perf record -e arm_spe// -vv -- sleep 1
+> [...]
+>   { sample_period, sample_freq }   1
+> [...]
+> 
+> Use the value from the above sysfs location as a more sensible default
+> (it was already being read, but the value not being used)
+> 
+> After:
+> 
+> $ perf record -e arm_spe// -vv -- sleep 1
+> [...]
+>   { sample_period, sample_freq }   1024
+> [...]
+> 
+> Signed-off-by: German Gomez <german.gomez@arm.com>
 
--- 
+The change looks good to me:
 
-- Arnaldo
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
