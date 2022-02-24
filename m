@@ -2,135 +2,358 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4700CC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Feb 2022 07:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C243FC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Feb 2022 08:25:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231492AbiBXHKm (ORCPT
+        id S231327AbiBXIZf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 24 Feb 2022 02:10:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43576 "EHLO
+        Thu, 24 Feb 2022 03:25:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231160AbiBXHKm (ORCPT
+        with ESMTP id S230488AbiBXIZf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 24 Feb 2022 02:10:42 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id ED0C5230E50;
-        Wed, 23 Feb 2022 23:10:12 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 99A7D106F;
-        Wed, 23 Feb 2022 23:10:12 -0800 (PST)
-Received: from [10.163.48.178] (unknown [10.163.48.178])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 38D7F3F70D;
-        Wed, 23 Feb 2022 23:10:08 -0800 (PST)
-Subject: Re: [PATCH 1/2] perf: Add more generic branch types
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     Mark Rutland <mark.rutland@arm.com>
+        Thu, 24 Feb 2022 03:25:35 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8BB026F4F2;
+        Thu, 24 Feb 2022 00:25:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1645691106; x=1677227106;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=AVzMB8qNrLkabkwxyOylx3ABCOyc+sagznTj3fO7YCU=;
+  b=dfQcnL6BsLACYtoqol20RHjb+3zl5nkADBGtbQzNtQWbz8+9g7TYSteZ
+   QUzbHSPkA7kcX8AsKlPgoxtq4EnxcYv8PtLH0Uj5cv+Z1oPYURyB1Zpsj
+   qAn9K2dMpWtNYcoZ6FhulY8cvhGG409BXZmu5DY6WeUs6q4d6wEeRE6sX
+   +8FDMscJU7yc+PwziR5AqDLnjZ1vYVpsVLH/5gm4It55huJ7tZgGEb/MO
+   WI9tPqO7/5JVTG0g3XjyqbH39lKV/hvrMdvacIuQgsan+Ar5VN/QmbJ+r
+   aFbdv57rmD5mcg9uVHqx5mpBVNfDNJ+410pAQZGCCaDFmIZIJ4kom5B5M
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10267"; a="251914125"
+X-IronPort-AV: E=Sophos;i="5.88,393,1635231600"; 
+   d="scan'208";a="251914125"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2022 00:25:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,393,1635231600"; 
+   d="scan'208";a="607344441"
+Received: from zxingrtx.sh.intel.com ([10.239.159.110])
+  by fmsmga004.fm.intel.com with ESMTP; 24 Feb 2022 00:24:59 -0800
+From:   zhengjun.xing@linux.intel.com
+To:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@intel.com, jolsa@redhat.com
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, robh@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Will Deacon <will@kernel.org>
-References: <1643348653-24367-1-git-send-email-anshuman.khandual@arm.com>
- <1643348653-24367-2-git-send-email-anshuman.khandual@arm.com>
- <YfpxzKa7JSlimA1i@FVFF77S0Q05N>
- <e9c4eab7-51b4-6794-0d02-2d325c300e33@arm.com>
-Message-ID: <25a36640-3061-4c98-4da0-ceb039439f42@arm.com>
-Date:   Thu, 24 Feb 2022 12:40:11 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        irogers@google.com, adrian.hunter@intel.com, ak@linux.intel.com,
+        kan.liang@linux.intel.com, zhengjun.xing@linux.intel.com
+Subject: [PATCH v3 2/2] perf vendor events intel: Add uncore event list for Alderlake
+Date:   Fri, 25 Feb 2022 00:23:50 +0800
+Message-Id: <20220224162350.1975130-1-zhengjun.xing@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <e9c4eab7-51b4-6794-0d02-2d325c300e33@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
 
+Add JSON uncore events for Alderlake to perf.
 
-On 2/24/22 11:21 AM, Anshuman Khandual wrote:
-> 
-> 
-> On 2/2/22 5:28 PM, Mark Rutland wrote:
->> Hi Anshuman,
->>
->> On Fri, Jan 28, 2022 at 11:14:12AM +0530, Anshuman Khandual wrote:
->>> This expands generic branch type classification by adding some more entries
->>> , that can still be represented with the existing 4 bit 'type' field. While
->>> here this also updates the x86 implementation with these new branch types.
->> It looks like there's some whitespace damage here.
->>
->> >From a quick scan of the below, I think the "exception return" and "IRQ
->> exception" types are somewhat generic, and could be added now (aside from any
->> bikeshedding over names), but:
-> 
-> Hi Mark,
-> 
-> I have sent a patch adding just PERF_BR_ERET and PERF_BR_IRQ which are generic
-> enough to be included now. The 'type' field still got 3 more places for future
-> use. Hence we should try and include two more branch types, before adding the
+Based on JSON list v1.06:
 
-The two additional generic branch types could be
+https://download.01.org/perfmon/ADL/
 
-- PERF_BR_SERROR (possible arm64 equivalent for x86 MCE)
-- PERF_BR_NO_TX  (only missing TX related branch type in perf_branch_entry)
+Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+Acked-by: Ian Rogers <irogers@google.com>
+---
+Change log:
+ 
+ v3:
+    * No change since v2 
 
-perf_branch_entry.[in_tx | abort] are already available. Also PERF_BR_NO_TX
-could be used right away on x86 platform, via X86_BR_NO_TX.
+ v2:
+    * Add Acked-by tag
 
-> last entry for ABI expansion (e.g PERF_BR_EXTENDED).
+ .../arch/x86/alderlake/uncore-memory.json     | 222 ++++++++++++++++++
+ .../arch/x86/alderlake/uncore-other.json      |  40 ++++
+ 2 files changed, 262 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/x86/alderlake/uncore-memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/alderlake/uncore-other.json
 
-PERF_BR_EXTENDED could help expand into another 4 bits 'new_type' field
-following the existing 4 bits 'type' field. Does this sound feasible ?
+diff --git a/tools/perf/pmu-events/arch/x86/alderlake/uncore-memory.json b/tools/perf/pmu-events/arch/x86/alderlake/uncore-memory.json
+new file mode 100644
+index 000000000000..d82d6f62a6fb
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/x86/alderlake/uncore-memory.json
+@@ -0,0 +1,222 @@
++[
++    {
++        "BriefDescription": "Number of clocks",
++        "Counter": "0,1,2,3,4",
++        "CounterType": "PGMABLE",
++        "EventCode": "0x01",
++        "EventName": "UNC_M_CLOCKTICKS",
++        "PerPkg": "1",
++        "Unit": "iMC"
++    },
++    {
++        "BriefDescription": "Incoming VC0 read request",
++        "Counter": "0,1,2,3,4",
++        "CounterType": "PGMABLE",
++        "EventCode": "0x02",
++        "EventName": "UNC_M_VC0_REQUESTS_RD",
++        "PerPkg": "1",
++        "Unit": "iMC"
++    },
++    {
++        "BriefDescription": "Incoming VC0 write request",
++        "Counter": "0,1,2,3,4",
++        "CounterType": "PGMABLE",
++        "EventCode": "0x03",
++        "EventName": "UNC_M_VC0_REQUESTS_WR",
++        "PerPkg": "1",
++        "Unit": "iMC"
++    },
++    {
++        "BriefDescription": "Incoming VC1 read request",
++        "Counter": "0,1,2,3,4",
++        "CounterType": "PGMABLE",
++        "EventCode": "0x04",
++        "EventName": "UNC_M_VC1_REQUESTS_RD",
++        "PerPkg": "1",
++        "Unit": "iMC"
++    },
++    {
++        "BriefDescription": "Incoming VC1 write request",
++        "Counter": "0,1,2,3,4",
++        "CounterType": "PGMABLE",
++        "EventCode": "0x05",
++        "EventName": "UNC_M_VC1_REQUESTS_WR",
++        "PerPkg": "1",
++        "Unit": "iMC"
++    },
++    {
++        "BriefDescription": "Incoming read prefetch request from IA",
++        "Counter": "0,1,2,3,4",
++        "CounterType": "PGMABLE",
++        "EventCode": "0x0A",
++        "EventName": "UNC_M_PREFETCH_RD",
++        "PerPkg": "1",
++        "Unit": "iMC"
++    },
++    {
++        "BriefDescription": "Any Rank at Hot state",
++        "Counter": "0,1,2,3,4",
++        "CounterType": "PGMABLE",
++        "EventCode": "0x19",
++        "EventName": "UNC_M_DRAM_THERMAL_HOT",
++        "PerPkg": "1",
++        "Unit": "iMC"
++    },
++    {
++        "BriefDescription": "Any Rank at Warm state",
++        "Counter": "0,1,2,3,4",
++        "CounterType": "PGMABLE",
++        "EventCode": "0x1A",
++        "EventName": "UNC_M_DRAM_THERMAL_WARM",
++        "PerPkg": "1",
++        "Unit": "iMC"
++    },
++    {
++        "BriefDescription": "incoming read request page status is Page Hit",
++        "Counter": "0,1,2,3,4",
++        "CounterType": "PGMABLE",
++        "EventCode": "0x1C",
++        "EventName": "UNC_M_DRAM_PAGE_HIT_RD",
++        "PerPkg": "1",
++        "Unit": "iMC"
++    },
++    {
++        "BriefDescription": "incoming read request page status is Page Empty",
++        "Counter": "0,1,2,3,4",
++        "CounterType": "PGMABLE",
++        "EventCode": "0x1D",
++        "EventName": "UNC_M_DRAM_PAGE_EMPTY_RD",
++        "PerPkg": "1",
++        "Unit": "iMC"
++    },
++    {
++        "BriefDescription": "incoming read request page status is Page Miss",
++        "Counter": "0,1,2,3,4",
++        "CounterType": "PGMABLE",
++        "EventCode": "0x1E",
++        "EventName": "UNC_M_DRAM_PAGE_MISS_RD",
++        "PerPkg": "1",
++        "Unit": "iMC"
++    },
++    {
++        "BriefDescription": "incoming write request page status is Page Hit",
++        "Counter": "0,1,2,3,4",
++        "CounterType": "PGMABLE",
++        "EventCode": "0x1F",
++        "EventName": "UNC_M_DRAM_PAGE_HIT_WR",
++        "PerPkg": "1",
++        "Unit": "iMC"
++    },
++    {
++        "BriefDescription": "incoming write request page status is Page Empty",
++        "Counter": "0,1,2,3,4",
++        "CounterType": "PGMABLE",
++        "EventCode": "0x20",
++        "EventName": "UNC_M_DRAM_PAGE_EMPTY_WR",
++        "PerPkg": "1",
++        "Unit": "iMC"
++    },
++    {
++        "BriefDescription": "incoming write request page status is Page Miss",
++        "Counter": "0,1,2,3,4",
++        "CounterType": "PGMABLE",
++        "EventCode": "0x21",
++        "EventName": "UNC_M_DRAM_PAGE_MISS_WR",
++        "PerPkg": "1",
++        "Unit": "iMC"
++    },
++    {
++        "BriefDescription": "Read CAS command sent to DRAM",
++        "Counter": "0,1,2,3,4",
++        "CounterType": "PGMABLE",
++        "EventCode": "0x22",
++        "EventName": "UNC_M_CAS_COUNT_RD",
++        "PerPkg": "1",
++        "Unit": "iMC"
++    },
++    {
++        "BriefDescription": "Write CAS command sent to DRAM",
++        "Counter": "0,1,2,3,4",
++        "CounterType": "PGMABLE",
++        "EventCode": "0x23",
++        "EventName": "UNC_M_CAS_COUNT_WR",
++        "PerPkg": "1",
++        "Unit": "iMC"
++    },
++    {
++        "BriefDescription": "ACT command for a read request sent to DRAM",
++        "Counter": "0,1,2,3,4",
++        "CounterType": "PGMABLE",
++        "EventCode": "0x24",
++        "EventName": "UNC_M_ACT_COUNT_RD",
++        "PerPkg": "1",
++        "Unit": "iMC"
++    },
++    {
++        "BriefDescription": "ACT command for a write request sent to DRAM",
++        "Counter": "0,1,2,3,4",
++        "CounterType": "PGMABLE",
++        "EventCode": "0x25",
++        "EventName": "UNC_M_ACT_COUNT_WR",
++        "PerPkg": "1",
++        "Unit": "iMC"
++    },
++    {
++        "BriefDescription": "ACT command sent to DRAM",
++        "Counter": "0,1,2,3,4",
++        "CounterType": "PGMABLE",
++        "EventCode": "0x26",
++        "EventName": "UNC_M_ACT_COUNT_TOTAL",
++        "PerPkg": "1",
++        "Unit": "iMC"
++    },
++    {
++        "BriefDescription": "PRE command sent to DRAM for a read/write request",
++        "Counter": "0,1,2,3,4",
++        "CounterType": "PGMABLE",
++        "EventCode": "0x27",
++        "EventName": "UNC_M_PRE_COUNT_PAGE_MISS",
++        "PerPkg": "1",
++        "Unit": "iMC"
++    },
++    {
++        "BriefDescription": "PRE command sent to DRAM due to page table idle timer expiration",
++        "Counter": "0,1,2,3,4",
++        "CounterType": "PGMABLE",
++        "EventCode": "0x28",
++        "EventName": "UNC_M_PRE_COUNT_IDLE",
++        "PerPkg": "1",
++        "Unit": "iMC"
++    },
++    {
++        "BriefDescription": "Counts every 64B read  request entering the Memory Controller 0 to DRAM (sum of all channels)",
++        "CounterType": "FREERUN",
++        "EventName": "UNC_MC0_RDCAS_COUNT_FREERUN",
++        "PerPkg": "1",
++        "Unit": "iMC"
++    },
++    {
++        "BriefDescription": "Counts every 64B read request entering the Memory Controller 1 to DRAM (sum of all channels)",
++        "Counter": "3",
++        "CounterType": "FREERUN",
++        "EventName": "UNC_MC1_RDCAS_COUNT_FREERUN",
++        "PerPkg": "1",
++        "Unit": "iMC"
++    },
++    {
++        "BriefDescription": "Counts every 64B write request entering the Memory Controller 0 to DRAM (sum of all channels). Each write request counts as a new request incrementing this counter. However, same cache line write requests (both full and partial) are combined to a single 64 byte data transfer to DRAM",
++        "Counter": "1",
++        "CounterType": "FREERUN",
++        "EventName": "UNC_MC0_WRCAS_COUNT_FREERUN",
++        "PerPkg": "1",
++        "Unit": "iMC"
++    },
++    {
++        "BriefDescription": "Counts every 64B write request entering the Memory Controller 1 to DRAM (sum of all channels). Each write request counts as a new request incrementing this counter. However, same cache line write requests (both full and partial) are combined to a single 64 byte data transfer to DRAM",
++        "Counter": "4",
++        "CounterType": "FREERUN",
++        "EventName": "UNC_MC1_WRCAS_COUNT_FREERUN",
++        "PerPkg": "1",
++        "Unit": "iMC"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/x86/alderlake/uncore-other.json b/tools/perf/pmu-events/arch/x86/alderlake/uncore-other.json
+new file mode 100644
+index 000000000000..50de82c29944
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/x86/alderlake/uncore-other.json
+@@ -0,0 +1,40 @@
++[
++    {
++        "BriefDescription": "This 48-bit fixed counter counts the UCLK cycles",
++        "Counter": "Fixed",
++        "CounterType": "PGMABLE",
++	"EventCode": "0xff",
++        "EventName": "UNC_CLOCK.SOCKET",
++        "PerPkg": "1",
++        "Unit": "CLOCK"
++    },
++    {
++        "BriefDescription": "Counts the number of coherent and in-coherent requests initiated by IA cores, processor graphic units, or LLC",
++        "Counter": "0,1",
++        "CounterType": "PGMABLE",
++        "EventCode": "0x81",
++        "EventName": "UNC_ARB_TRK_REQUESTS.ALL",
++        "PerPkg": "1",
++        "UMask": "0x01",
++        "Unit": "ARB"
++    },
++    {
++        "BriefDescription": "Number of requests allocated in Coherency Tracker",
++        "Counter": "0,1",
++        "CounterType": "PGMABLE",
++        "EventCode": "0x84",
++        "EventName": "UNC_ARB_COH_TRK_REQUESTS.ALL",
++        "PerPkg": "1",
++        "UMask": "0x01",
++        "Unit": "ARB"
++    },
++    {
++        "BriefDescription": "Each cycle counts number of all outgoing valid entries in ReqTrk. Such entry is defined as valid from its allocation in ReqTrk till deallocation. Accounts for Coherent and non-coherent traffic",
++        "CounterType": "PGMABLE",
++        "EventCode": "0x80",
++        "EventName": "UNC_ARB_TRK_OCCUPANCY.ALL",
++        "PerPkg": "1",
++        "UMask": "0x01",
++        "Unit": "ARB"
++    }
++]
+-- 
+2.25.1
 
-enum {
-        PERF_BR_UNKNOWN         = 0,    /* unknown */
-        PERF_BR_COND            = 1,    /* conditional */
-        PERF_BR_UNCOND          = 2,    /* unconditional  */
-        PERF_BR_IND             = 3,    /* indirect */
-        PERF_BR_CALL            = 4,    /* function call */
-        PERF_BR_IND_CALL        = 5,    /* indirect function call */
-        PERF_BR_RET             = 6,    /* function return */
-        PERF_BR_SYSCALL         = 7,    /* syscall */
-        PERF_BR_SYSRET          = 8,    /* syscall return */
-        PERF_BR_COND_CALL       = 9,    /* conditional function call */
-        PERF_BR_COND_RET        = 10,   /* conditional function return */
-        PERF_BR_ERET            = 11,   /* exception return */
-        PERF_BR_IRQ             = 12,   /* irq */
-        PERF_BR_SERROR          = 13,   /* System error */
-        PERF_BR_NO_TX           = 14,   /* No transaction */
-	PERF_BR_EXTEND_ABI	= 15 	/* Extended ABI */
-        PERF_BR_MAX,
-};
-
-enum {
-       PERF_BR_NEW_FAULT_ALGN          = 0,    /* Alignment fault */
-       PERF_BR_NEW_FAULT_DATA          = 1,    /* Data fault */
-       PERF_BR_NEW_FAULT_INST          = 2,    /* Inst fault */
-       PERF_BR_NEW_ARCH_1              = 3,    /* Architecture specific */
-       PERF_BR_NEW_ARCH_2              = 4,    /* Architecture specific */
-       PERF_BR_NEW_ARCH_3              = 5,    /* Architecture specific */
-       PERF_BR_NEW_ARCH_4              = 6,    /* Architecture specific */
-       PERF_BR_NEW_ARCH_5              = 7,    /* Architecture specific */
-       PERF_BR_NEW_MAX,
-};
-
-#ifdef CONFIG_ARM64
-#define PERF_BR_FIQ            PERF_BR_NEW_ARCH_1
-#define PERF_BR_DEBUG_HALT     PERF_BR_NEW_ARCH_2
-#define PERF_BR_DEBUG_EXIT     PERF_BR_NEW_ARCH_3
-#define PERF_BR_DEBUG_INST     PERF_BR_NEW_ARCH_4
-#define PERF_BR_DEBUG_DATA     PERF_BR_NEW_ARCH_5
-#endif
-
-User space perf tool will look into perf_branch_entry.new_type, only
-when (perf_branch_entry.type == PERF_BR_EXTEND_ABI). Older perf tool
-on a newer kernel will be safe via old PERF_BR_MAX, and will ignore
-[PERF_BR_ERET - PERF_BR_EXTEND_ABI] values possibly with an warning.
-
-- Anshuman
