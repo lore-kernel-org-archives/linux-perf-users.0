@@ -2,112 +2,80 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E77C433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Feb 2022 16:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77612C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Feb 2022 17:20:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229986AbiBXQxn (ORCPT
+        id S230462AbiBXRUh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 24 Feb 2022 11:53:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58558 "EHLO
+        Thu, 24 Feb 2022 12:20:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229672AbiBXQxn (ORCPT
+        with ESMTP id S231210AbiBXRUg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 24 Feb 2022 11:53:43 -0500
-Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4180313C251
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Feb 2022 08:53:13 -0800 (PST)
-Received: by mail-yb1-xb29.google.com with SMTP id g6so654696ybe.12
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Feb 2022 08:53:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oYjH0epb4EAp0Ra1CbQhm5083zOxgobdxBaH7fLLKYg=;
-        b=dgs97y9RhSRXAaApuoZVmQPVv6JCjrAu9KRz12WUdWjcFd91uiuF1/0iNpccMYdmcu
-         K4+Hq7fURiB2hjcBr4bkE9AIwHzMnivTE3TYqZmoV1tanAy/jw0eELipKu/ebENRcCgK
-         BBXyLNAyu3rzMybB6MNi5JLY0KzTONjZqxZflfVNn5oycmQpN3R3kn5oi8epl/ZlJBNZ
-         MpsGQCs4oZrAoDhXVQJ4OQV9r6lNEXeB3I/vswL95b7yYnu/ydiKITjXIN9WHkacJyeA
-         9uPFhoXGZF4JnBdi6gaFa57r/uXv7Bjejrq8JQCjQ2t1wxtrG23EXBLm6b6bCKIToTft
-         tFbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oYjH0epb4EAp0Ra1CbQhm5083zOxgobdxBaH7fLLKYg=;
-        b=YgvG5K1LZ77T+LeFIFqI5NUubpthxH3ACvc3oPDz2MTdIm8ZxMgCKEsB5D0sWcVaUZ
-         3do49PlpXnoEbVHYRCDhhnt/69H4bZc5Zc4Yha9aOnLl4N/G57kVyqMo+i7kl9neLfYW
-         c6sYTXKfLxfy3a8wphjsKbVSsI2VySARLWiZ6Sa1T8OXvATX8caQqrfRa8NMjmA82eG1
-         9vIB/Tr0ZC5Gs1ZvLHa4jtSpLzDKZt0WpdjAkhq+rq6sKyxJxUsSYXQeT4Rl211dxfou
-         81nLTz7dBufWCw4SL2UVPcgF405g0x/FH/f0n04kOF1a4Dd49mOflSZjqeAv3HHBaTWa
-         oJFg==
-X-Gm-Message-State: AOAM5324ZYEqmTSq30hesFm9SwLwJCsTEiGFymONwpqAdHCGV59/aT8F
-        +rOAFpalvLDQvQJ5xdhmdWlELfg5bDgHCnQoBX9k/w==
-X-Google-Smtp-Source: ABdhPJyTsvn8tEVAfPSmwz6IzRq2zI8IRly6DlY4nsjIfz75T2tAKPnRncGsWgdJzMyQSo//bwAQG50eObpDmz5XIWA=
-X-Received: by 2002:a05:6902:562:b0:610:f96a:49e4 with SMTP id
- a2-20020a056902056200b00610f96a49e4mr3237374ybt.611.1645721592235; Thu, 24
- Feb 2022 08:53:12 -0800 (PST)
+        Thu, 24 Feb 2022 12:20:36 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 39DC429F41A;
+        Thu, 24 Feb 2022 09:20:06 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D6711106F;
+        Thu, 24 Feb 2022 09:20:05 -0800 (PST)
+Received: from e121896.arm.com (unknown [10.57.37.201])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5B23E3F70D;
+        Thu, 24 Feb 2022 09:20:04 -0800 (PST)
+From:   James Clark <james.clark@arm.com>
+To:     acme@kernel.org, linux-perf-users@vger.kernel.org,
+        coresight@lists.linaro.org
+Cc:     James Clark <james.clark@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/1] perf: Set build-id using build-id header on new mmap records
+Date:   Thu, 24 Feb 2022 17:19:54 +0000
+Message-Id: <20220224171955.862983-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <20220224163711.185308-1-tz.stoyanov@gmail.com>
-In-Reply-To: <20220224163711.185308-1-tz.stoyanov@gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 24 Feb 2022 08:52:59 -0800
-Message-ID: <CAP-5=fVsQ2kGTvCDmovLWR00SDKQz635ftVmLphZcMM82sGKHA@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/3] trace-cruncher: Initial support for perf
-To:     "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
-Cc:     y.karadz@gmail.com, acme@kernel.org, olsajiri@gmail.com,
-        rostedt@goodmis.org, linux-trace-devel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Feb 24, 2022 at 8:37 AM Tzvetomir Stoyanov (VMware)
-<tz.stoyanov@gmail.com> wrote:
->
-> Two major functionalities are introduced by this patch set:
->  - VMA <-> function name resolving, using bfd library.
+Hi,
 
-Just wanted to point out that perf is often not built against libbfd:
-Please build perf against libbfd -
-https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=911815
+We are seeing an issue with doing Coresight decode off target where
+initially the correct dso from ~/.debug is used, but after a new thread
+in the perf.data file is passed with its mmap record, the local version
+of the dso is picked up instead. This happens if the binary exists in the
+same path on both devices, for example /bin/ls.
 
-where long running addr2line is now the best performance solution:
-https://lore.kernel.org/linux-perf-users/20210909112202.1947499-1-tonyg@leastfixedpoint.com/
+Initially when parsing the build-ids in the header, the dso for /bin/ls
+will be created, and the file will correctly point to
+~/.debug/bin/ls/2f15ad836be3339dec0e2e6a3c637e08e48aacbd/elf, but for any
+new threads or mmaps that are also for /bin/ls, they will not have a
+build-id set so they point to /bin/ls on the local machine rather than the
+debug folder.
 
-The comment from the bug:
-perf can link against libbfd if available, but the result is
-undistributable as they are licenced under GPL v2 and v3+
-respectively.
+To fix this I made it possible to look up which existing dsos have
+build id's set that originate from the header and then copy that build-id
+onto the new dso if the name matches. Another way to do it would
+be to stop comparing the mmap id so it matches on filename only, but I
+think we do want to differentiate between different mmaps, even if they
+have the same name, which is how it works in this version.
 
-Thanks,
-Ian
+Applies to perf/core 859f7e4554
 
->  - Support for Linux kernel perf framework, using perf library.
->
-> This is still a work in progress. Depends on this patch, not yet merged:
-> https://lore.kernel.org/linux-perf-users/20220221102628.43904-1-tz.stoyanov@gmail.com/
->
-> Tzvetomir Stoyanov (VMware) (3):
->   trace-cruncher: Logic for resolving address to function name
->   trace-cruncher: Support for perf
->   trace-cruncher: perf example
->
->  examples/perf_sampling.py |  51 +++
->  setup.py                  |   9 +-
->  src/perfpy-utils.c        | 699 ++++++++++++++++++++++++++++++
->  src/perfpy-utils.h        |  41 ++
->  src/perfpy.c              | 141 ++++++
->  src/trace-obj-debug.c     | 873 ++++++++++++++++++++++++++++++++++++++
->  src/trace-obj-debug.h     |  52 +++
->  7 files changed, 1865 insertions(+), 1 deletion(-)
->  create mode 100755 examples/perf_sampling.py
->  create mode 100644 src/perfpy-utils.c
->  create mode 100644 src/perfpy-utils.h
->  create mode 100644 src/perfpy.c
->  create mode 100644 src/trace-obj-debug.c
->  create mode 100644 src/trace-obj-debug.h
->
-> --
-> 2.34.1
->
+Thanks
+James
+
+James Clark (1):
+  perf: Set build-id using build-id header on new mmap records
+
+ tools/perf/util/dso.h    |  1 +
+ tools/perf/util/header.c |  1 +
+ tools/perf/util/map.c    | 16 ++++++++++++++--
+ 3 files changed, 16 insertions(+), 2 deletions(-)
+
+-- 
+2.28.0
+
