@@ -2,137 +2,501 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC3FC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Feb 2022 09:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E90C1C433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Feb 2022 11:13:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230095AbiBXJWG (ORCPT
+        id S233918AbiBXLNa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 24 Feb 2022 04:22:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35012 "EHLO
+        Thu, 24 Feb 2022 06:13:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229740AbiBXJWF (ORCPT
+        with ESMTP id S233962AbiBXLNP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 24 Feb 2022 04:22:05 -0500
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2072.outbound.protection.outlook.com [40.107.93.72])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0470C14001
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Feb 2022 01:21:34 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=N5ZWXFgJ5TnMNBTugVfic2rrVjvc/nnnj7n0ELqbpEIinNMYqk2Ew6xCbiBEPpN1PYqpnS3ZxghQTnlHsXsHPFzqApuzmZIEXKsXt2CZjAPv9j9AkNGdQqFUulBDevncUTa8Vyfn02AGMSIChyMNSrCp9MG/xuiGbj6nhTPpukXVR/z+DfEq2Ai1xpWUNlfiTYuY8WgUPDta+PmWUhqxUuTutRkfU5r/AKJrj1OKk0YR05nlu7ZPKXQrKf1gsmPMqtIVHMe45a6L7fhLZlaA2h0KGzFkDU1OqTG6VKCUsKlg4vc6fgDE24b5zSL3boX++V/FwH0sxIsPwWNriZkW1w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/itpujcN6ne7oImb3B67huq1EDuyJsiDx9BshsRPakQ=;
- b=MQTshwR/7ssPrQ6dDX80CO7QOPDxIFYMywzFRb4BbubSZ+tnl0auoHTqTpK3cOBGKvHaet+wL+2IKggKko1lsBAG+PkmfdlShPzDm8oPyTi01DUZPGIAhP0MTjYLxewIqD7YcrN9ty7LCs0KuCw5n9e91EN9NepuHKckySZ353rAXGg1xSRy4M8zSWkMqkNhGXm4h5obsSvrdXZZi/fN2T5jRthe0/9Bm2mNkgsB4PINT1swDvHtcKGl2POEbyJF5OAR77CMIY/wJmDSLPMUT6tUz8rOgbOu3EmiHXqGwOFc8b1Jh26/QTE876dGM4b+Cif08yEqrQhGpesJ2eKjlw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/itpujcN6ne7oImb3B67huq1EDuyJsiDx9BshsRPakQ=;
- b=Stbid8yTOrtyz3BA8kVIyideCP5pbV5LSz8GENUIRhx0Hyn9tkEWD8Q4ttIQ50lhe0umzsMAhlBnslbxGkgA4aA3ZkTtRVZvhtkZUuwsqIe5SHc6Cb+GbKNa/FkX3yrn80tP/XX0qH06wx+v5ZmJv8ky13hCLv9M7mmLTFQBFuI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN2PR12MB4045.namprd12.prod.outlook.com (2603:10b6:208:1d6::15)
- by DM6PR12MB4547.namprd12.prod.outlook.com (2603:10b6:5:2a9::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5017.22; Thu, 24 Feb
- 2022 09:21:32 +0000
-Received: from MN2PR12MB4045.namprd12.prod.outlook.com
- ([fe80::ac0c:73cd:fd90:9cf7]) by MN2PR12MB4045.namprd12.prod.outlook.com
- ([fe80::ac0c:73cd:fd90:9cf7%8]) with mapi id 15.20.4995.027; Thu, 24 Feb 2022
- 09:21:31 +0000
-Message-ID: <08584f75-b829-1833-deb2-ed202bf1874e@amd.com>
-Date:   Thu, 24 Feb 2022 14:51:20 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: AMD Zen2 l3_misses event
-Content-Language: en-US
-To:     "Mor, Omri" <omrimor2@illinois.edu>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-References: <CDD3A5B9-9B64-44DD-8705-6382913C8A10@illinois.edu>
-From:   Ananth Narayan <ananth.narayan@amd.com>
-In-Reply-To: <CDD3A5B9-9B64-44DD-8705-6382913C8A10@illinois.edu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BM1PR01CA0084.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:1::24) To MN2PR12MB4045.namprd12.prod.outlook.com
- (2603:10b6:208:1d6::15)
+        Thu, 24 Feb 2022 06:13:15 -0500
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AE072905A6;
+        Thu, 24 Feb 2022 03:12:43 -0800 (PST)
+Received: from kwepemi500020.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4K49B06WJHzbbjh;
+        Thu, 24 Feb 2022 19:08:08 +0800 (CST)
+Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
+ kwepemi500020.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.18; Thu, 24 Feb 2022 19:12:41 +0800
+Received: from localhost.localdomain (10.67.164.66) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Thu, 24 Feb 2022 19:12:40 +0800
+From:   Qi Liu <liuqi115@huawei.com>
+To:     <will@kernel.org>, <mark.rutland@arm.com>, <john.garry@huawei.com>,
+        <acme@kernel.org>
+CC:     <linux-perf-users@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
+Subject: [PATCH v2 1/2] drivers/perf: hisi: Add Support for CPA PMU
+Date:   Thu, 24 Feb 2022 19:11:28 +0800
+Message-ID: <20220224111129.41416-2-liuqi115@huawei.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20220224111129.41416-1-liuqi115@huawei.com>
+References: <20220224111129.41416-1-liuqi115@huawei.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0dddfb76-6c3a-4aac-0dfc-08d9f7770b7a
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4547:EE_
-X-Microsoft-Antispam-PRVS: <DM6PR12MB45476639DE8EBE3A7815C375853D9@DM6PR12MB4547.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 8OgIJk8gtPV9LZmElqpFflyh4nwZdX0TnewceVGZrEH6BQABqEvJToujZycPbURoVLeT9aPamm8qN9j8VhJKpDxUBj3Ouz2ej+sP/hbn6X3TftMaH6PkyKoiIO4U+2o8mGjPdrq4pG0U4yVjfDibDVCn+UMbdq23BAR/u0/V0+OFtX3fcnOZm1LXczUwH3zUtFnnsdZuwtVZB/5a4G6AIEJBroBalMD5Pfc0ZxtRM72FZTd4wFAoKZDmmdtLvS0E30HntC6QwY48ZIngv8ycXWjvGU/nysPCK+qTVHzUnsYAjMchClgCn1SWxnJqyKvnPQJx/o6xzlC8D6qB040tJ+tZF79ZLmGv37NlYjUA+VujHSpcLcmMu2nUnRSO5JVv0G3f5JvH7IURo1S7zwmiWA50KzrmMo6QmUnUlH4+crsZHbzkmaXxIl5GfiAv/7VJNA3J9bwxNLVNf9/A++pHKCrBTWVbOVGZbpQE9s0NudlvieaYw+AERN3qfV72/YWnUNwlBl2HbLM7pZxfjERgyNjPBLaXn96rMxCWHPPpET4paDndpWpAfOW1YEXhvM67BhWIzDFfE7eDuA1Jegrh69JXznqMG3noAyzAW6vXX61p2D4/fRKTvrF+ys74aiGmFE5Yp6tT18dhADu1/+uLobWlLdQAfB9fDYU9iVhmAoMOMLksWKw8qyXI9X1y21lXhruTAHk6v+TA3WroZFjtYNIz7Eh/H6UVll3RfGsG+uNSRGScVToVFaPDgLCioJHgqXrn5wqLSZqC6mMIjoQoF7mTddy9VKoC71oFjMEwHqY3Vq0H1xGYNEBxy2cr5OP8
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4045.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(66476007)(966005)(66946007)(6486002)(2906002)(31686004)(8676002)(66556008)(5660300002)(36756003)(8936002)(38100700002)(44832011)(31696002)(6506007)(26005)(6666004)(6512007)(316002)(110136005)(86362001)(508600001)(53546011)(83380400001)(186003)(2616005)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eFNGWlQ0RFJtUUM5Tlh6b3NEVm5kRlRBRWZIMzVEcDlvTmgrdS9YelpQUGdy?=
- =?utf-8?B?NUpLWUNYZGtrcnlJaXNFcm1LV2NrNWpGN2xiVEE4U2J6VjJMMmJ6YkZxeFpT?=
- =?utf-8?B?Uy9sdkpaUXJqb0xkVXZlSU1wYXZQYk1tamdPMXdVTzJsTU42RmhIc3ZpWk1r?=
- =?utf-8?B?UitzL0xyaU5yMnJScDZUVW1kb2YrZy82aDhkNTdidVBvUEtGT0FSeTdYNFp4?=
- =?utf-8?B?d3RHYnNTd2dTaHNCbTBIdTF0T0N2S2Q1Q3hZdTFIMDVrMk1OUUJtenkvQUhR?=
- =?utf-8?B?QzlBMGthdFF4ek9NNXdRZzRwbHpQcXg0MDJRcDRUOXh6SURDMDlPUDlFamQ1?=
- =?utf-8?B?WHBlcGlhT00raWp4MWtuc1Nma2VTK2FNNFVhUnl0Y2FxcEJ3aVE3VFdvdlpj?=
- =?utf-8?B?VXNaNkh5cWNiTUN5RjN1NlpSdnNmdk5OWUJpZW8xSHpLcjgrd0pWRHZvOXlI?=
- =?utf-8?B?M1ZlRW1HNzJLNEtKT1ZMdU41OGlVWFlwUmM4L09mTjNFRyt2ODVLclI4NlZL?=
- =?utf-8?B?TnV3ekgxeFk1Q0RzT1d5ODlyS1FkemwrTDdxVEx5cVJ3dDZwWHFKY1U0em1y?=
- =?utf-8?B?V1dZbGdzQ1JvQ1J4NFZrNGpTTkJNQU5oMEVSN0ZvYy90eFhxUENLL2YwSmp5?=
- =?utf-8?B?Q3RoWkRDNG44ZnJWWk55RE9PRXlDc3FTN2Rpb01IYURpQ1FmTmlHUFg2WWV5?=
- =?utf-8?B?bXc1Nm5Fck81RWwzZ1NmSXJwYlkwSEdDVEl2YzJxOUNiaU5hMDJIOUQwRkph?=
- =?utf-8?B?WTdyN0I4WTl1NmdsSGEwc3RuUVRKbXZZbHF4aFg0M0FXMGJINTJRNkxyOGta?=
- =?utf-8?B?VzBsTGVzeVhwVVZwTzRJdFdPK0RVb08xWlg5OHJ1L2oyc2N5Tkl0VzF6MXh4?=
- =?utf-8?B?ckoyT3hmQW9jWWZWeFh6Z0dhSElwam91T29MQWY5bEdhYmJZc3ZaRDMvNFJ6?=
- =?utf-8?B?V0ZwY0pxb244WDE1Ukc1TGd4QTZta2RJeWpnNWZBU2UxNmlFRnNKS3RSNTdn?=
- =?utf-8?B?T1JmZ2xnV0xuM0VkWkgwS2JqWHBGbS9uNE94ZFV3eTZ5WE1BK0Y3czEvS3By?=
- =?utf-8?B?MzRUQmFzZ3Y0NDdSWDBrZ2Q1ZStsdEtmM2htd0VpL1FheG1UcWhIMmpYZDdT?=
- =?utf-8?B?Mk9pUTFGUGlQWmJhRjdDa2Znb3pyMkROU3BuMldzcGFscW5mOTV5enZmU3Zq?=
- =?utf-8?B?YldZbldGc0hBcng3dDcxdDU2U3VxN005dmM0aUFYMHVPUlN6SElQQm5rZ2tI?=
- =?utf-8?B?MWNnYys4OEF6KzIwU0lxTEQ4M1U3VVIvSmRMNU9zRnFyc2lPY1NuY0Y4c3M5?=
- =?utf-8?B?Z0piK21LaHNZakttRGdFWXFaZW9BeS9xSDg0OG1SWVhhSUlnbTJxeTJteDVJ?=
- =?utf-8?B?RGs4cU5iLzhGNWFaM2ltM1pBaFFaSmRVbENmMWdoMEVMWHg1U0FnQzlyZ0N5?=
- =?utf-8?B?WExZSlg4clM2elpZRHFtcTJvemFrSHpUb1FwTEpUdzg3UE1Tc1g5K25pRnMv?=
- =?utf-8?B?amhyUWVwSU01dnQ2OTlkOXJTb3FYaE9mVEoyd2F0bngwdUw3cm5YaHZSTnM1?=
- =?utf-8?B?U1VIMXgzTEZGN2ExanNxWDRtSDNHa3JlN1dvL3JaTm03WFZLQVNJUGhmY2NQ?=
- =?utf-8?B?Y2JuRFAwRlhwclNoM1h2ZEdYOG9iYTBueUFSdUxTZlprUDA2REpIRTVKdnND?=
- =?utf-8?B?UnJNeWFtOWN4WHN0aU9EWC9rYTRZYVlDaFZhNlkyRzJDdDV2VmJtMThyYjNs?=
- =?utf-8?B?alJFUG9za1BjbVdnTXZQSXpsbSswckMrQ1hQcEtqOEkzK3hLYnp6YjFUdW5C?=
- =?utf-8?B?bkVveWt2d1MvQ1pIUUFoNUxTUzFOL2FjKzFFME5XejJBdlRXZkx0UzhRVGlN?=
- =?utf-8?B?WG1zbDhsdmZSWGRJWk5KcmZaelJPN0RzOUgvNXFHNFdpdUZkRWZKVkVQUWk1?=
- =?utf-8?B?a1FqbEhQbHQzMkd1NGNxam56K3FHMnZobXRWOWNoRnVDV09JRklVRXlmbzFr?=
- =?utf-8?B?R1dQUWVIZWJac3V1YU9qemhvVlpJakFQYlNZd1orY1Fpb21Pc2dpdUQ2NEh5?=
- =?utf-8?B?VTNCeDRaV3VXaUtnR2EwUDV2emNKeGNYbEtkdVBvUktkRUNsNHBkczNvOEdM?=
- =?utf-8?B?RzUzQmE5VnM1MS9MTDg3RG0wR1BHT3lOL3dpaGlSYlYvQWUxdmRCWDFnbXN0?=
- =?utf-8?Q?TySOpFNmys3EtCCkfPVxDWI=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0dddfb76-6c3a-4aac-0dfc-08d9f7770b7a
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4045.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2022 09:21:31.9114
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kZ+TKPIUcZpxNzqA+QOi0OM+nnru+KPbPdbaTStU3+MIQgYjs5nSlLYfAJoKDVC1PJnINBrT8OYKKOsu6dmuVQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4547
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.164.66]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 22-02-2022 05:12 am, Mor, Omri wrote:
-> Hello,
-> 
-> I am profiling some code on AMD Rome (family 17h, model 31h) with an older Linux kernel/perf version, prior to the addition of Zen/Zen2 events, and so have been looking at the event codes and umasks in updated perf code as well as AMD PPR. Comparing the L3-related events in cache.json and those in recommended.json, I’ve noticed some incongruities and want to confirm what are the correct values.
-> The PPR and cache.json indicate that L3 accesses use event=0x01,umask=0x80, while L3 misses use event=0x06,umask=0x01; meanwhile, recommended.json uses event=0x04,umask=0xff for L3 accesses and event=0x04,umask=0x01 for L3 misses. The PPR indicates that 0x04 is "All L3 Cache Requests” and requires 0xff for "All L3 Request Types”, not clarifying the meanings of individual bits—or whether such use case is valid or has any meaning at all. Additionally, cache.json contains the l3_comb_clstr_state.other_l3_miss_typs event, with event=0x06,umask=0xfe; the PPR states that the bits for that event are reserved.
-> Due to all this, I’m struggling to determine which event and umask is correct for counting L3 cache accesses/hits/misses on Zen2, and would appreciate any help in the matter.
+On HiSilicon Hip09 platform, there is a CPA(Coherency Protocol Agent) on
+each SICL (Super I/O Cluster) which implements packet format translation,
+route parsing and traffic statistic.
 
-Please see https://github.com/torvalds/linux/commit/08ed77e414ab234258166f5628d91a7a0e681ff4.
+CPA PMU has separate PMU registers which the driver can program freely and
+interrupt is supported to handle counter overflow. Let's support its driver
+under the framework of HiSilicon uncore PMU driver.
 
-Specifically, please see tools/perf/pmu_events/arch/x86/amdzen2/recommended.json
+Signed-off-by: Qi Liu <liuqi115@huawei.com>
+---
+ drivers/perf/hisilicon/Makefile              |   2 +-
+ drivers/perf/hisilicon/hisi_uncore_cpa_pmu.c | 401 +++++++++++++++++++
+ include/linux/cpuhotplug.h                   |   1 +
+ 3 files changed, 403 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/perf/hisilicon/hisi_uncore_cpa_pmu.c
 
-Hope this helps!
-
-Regards,
-Ananth
+diff --git a/drivers/perf/hisilicon/Makefile b/drivers/perf/hisilicon/Makefile
+index 506ed39e3266..6be83517acaa 100644
+--- a/drivers/perf/hisilicon/Makefile
++++ b/drivers/perf/hisilicon/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ obj-$(CONFIG_HISI_PMU) += hisi_uncore_pmu.o hisi_uncore_l3c_pmu.o \
+ 			  hisi_uncore_hha_pmu.o hisi_uncore_ddrc_pmu.o hisi_uncore_sllc_pmu.o \
+-			  hisi_uncore_pa_pmu.o
++			  hisi_uncore_pa_pmu.o hisi_uncore_cpa_pmu.o
+ 
+ obj-$(CONFIG_HISI_PCIE_PMU) += hisi_pcie_pmu.o
+diff --git a/drivers/perf/hisilicon/hisi_uncore_cpa_pmu.c b/drivers/perf/hisilicon/hisi_uncore_cpa_pmu.c
+new file mode 100644
+index 000000000000..00573719f148
+--- /dev/null
++++ b/drivers/perf/hisilicon/hisi_uncore_cpa_pmu.c
+@@ -0,0 +1,401 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * HiSilicon SoC CPA(Coherency Protocol Agent) uncore Hardware event counters support
++ *
++ * Copyright (C) 2022 HiSilicon Limited
++ * Author: Qi Liu <liuqi115@huawei.com>
++ *
++ * This code is based on the uncore PMUs like arm-cci and arm-ccn.
++ */
++
++#include <linux/acpi.h>
++#include <linux/bug.h>
++#include <linux/cpuhotplug.h>
++#include <linux/interrupt.h>
++#include <linux/irq.h>
++#include <linux/list.h>
++#include <linux/smp.h>
++
++#include "hisi_uncore_pmu.h"
++
++/* CPA register definition */
++#define CPA_PERF_CTRL		0x1c00
++#define CPA_EVENT_CTRL		0x1c04
++#define CPA_INT_MASK		0x1c70
++#define CPA_INT_STATUS		0x1c78
++#define CPA_INT_CLEAR		0x1c7c
++#define CPA_EVENT_TYPE0		0x1c80
++#define CPA_VERSION		0x1cf0
++#define CPA_CNT0_LOWER		0x1d00
++#define CPA_CFG_REG		0x0534
++
++/* CPA operation command */
++#define CPA_PERF_CTRL_EN	BIT_ULL(0)
++#define CPA_EVTYPE_MASK		0xffUL
++#define CPA_PM_CTRL		BIT_ULL(9)
++
++/* CPA has 8-counters */
++#define CPA_NR_COUNTERS		0x8
++#define CPA_COUNTER_BITS	64
++#define CPA_NR_EVENTS		0xff
++#define CPA_REG_OFFSET		0x8
++
++static u32 hisi_cpa_pmu_get_counter_offset(int idx)
++{
++	return (CPA_CNT0_LOWER + idx * CPA_REG_OFFSET);
++}
++
++static u64 hisi_cpa_pmu_read_counter(struct hisi_pmu *cpa_pmu,
++				     struct hw_perf_event *hwc)
++{
++	return readq(cpa_pmu->base + hisi_cpa_pmu_get_counter_offset(hwc->idx));
++}
++
++static void hisi_cpa_pmu_write_counter(struct hisi_pmu *cpa_pmu,
++				       struct hw_perf_event *hwc, u64 val)
++{
++	writeq(val, cpa_pmu->base + hisi_cpa_pmu_get_counter_offset(hwc->idx));
++}
++
++static void hisi_cpa_pmu_write_evtype(struct hisi_pmu *cpa_pmu, int idx, u32 type)
++{
++	u32 reg, reg_idx, shift, val;
++
++	/*
++	 * Select the appropriate event select register(CPA_EVENT_TYPE0/1).
++	 * There are 2 event select registers for the 8 hardware counters.
++	 * Event code is 8-bits and for the former 4 hardware counters,
++	 * CPA_EVENT_TYPE0 is chosen. For the latter 4 hardware counters,
++	 * CPA_EVENT_TYPE1 is chosen.
++	 */
++	reg = CPA_EVENT_TYPE0 + (idx / 4) * 4;
++	reg_idx = idx % 4;
++	shift = CPA_REG_OFFSET * reg_idx;
++
++	/* Write event code to CPA_EVENT_TYPEx Register */
++	val = readl(cpa_pmu->base + reg);
++	val &= ~(CPA_EVTYPE_MASK << shift);
++	val |= type << shift;
++	writel(val, cpa_pmu->base + reg);
++}
++
++static void hisi_cpa_pmu_start_counters(struct hisi_pmu *cpa_pmu)
++{
++	u32 val;
++
++	val = readl(cpa_pmu->base + CPA_PERF_CTRL);
++	val |= CPA_PERF_CTRL_EN;
++	writel(val, cpa_pmu->base + CPA_PERF_CTRL);
++}
++
++static void hisi_cpa_pmu_stop_counters(struct hisi_pmu *cpa_pmu)
++{
++	u32 val;
++
++	val = readl(cpa_pmu->base + CPA_PERF_CTRL);
++	val &= ~(CPA_PERF_CTRL_EN);
++	writel(val, cpa_pmu->base + CPA_PERF_CTRL);
++}
++
++static void hisi_cpa_pmu_disable_pm(struct hisi_pmu *cpa_pmu)
++{
++	u32 val;
++
++	val = readl(cpa_pmu->base + CPA_CFG_REG);
++	val |= CPA_PM_CTRL;
++	writel(val, cpa_pmu->base + CPA_CFG_REG);
++}
++
++static void hisi_cpa_pmu_enable_pm(struct hisi_pmu *cpa_pmu)
++{
++	u32 val;
++
++	val = readl(cpa_pmu->base + CPA_CFG_REG);
++	val &= ~CPA_PM_CTRL;
++	writel(val, cpa_pmu->base + CPA_CFG_REG);
++}
++
++static void hisi_cpa_pmu_enable_counter(struct hisi_pmu *cpa_pmu, struct hw_perf_event *hwc)
++{
++	u32 val;
++
++	/* Enable counter index in CPA_EVENT_CTRL register */
++	val = readl(cpa_pmu->base + CPA_EVENT_CTRL);
++	val |= 1 << hwc->idx;
++	writel(val, cpa_pmu->base + CPA_EVENT_CTRL);
++
++	/* Power management should be disabled before counting. */
++	hisi_cpa_pmu_disable_pm(cpa_pmu);
++}
++
++static void hisi_cpa_pmu_disable_counter(struct hisi_pmu *cpa_pmu, struct hw_perf_event *hwc)
++{
++	u32 val;
++
++	hisi_cpa_pmu_enable_pm(cpa_pmu);
++
++	/* Clear counter index in CPA_EVENT_CTRL register */
++	val = readl(cpa_pmu->base + CPA_EVENT_CTRL);
++	val &= ~(1UL << hwc->idx);
++	writel(val, cpa_pmu->base + CPA_EVENT_CTRL);
++}
++
++static void hisi_cpa_pmu_enable_counter_int(struct hisi_pmu *cpa_pmu, struct hw_perf_event *hwc)
++{
++	u32 val;
++
++	/* Write 0 to enable interrupt */
++	val = readl(cpa_pmu->base + CPA_INT_MASK);
++	val &= ~(1UL << hwc->idx);
++	writel(val, cpa_pmu->base + CPA_INT_MASK);
++}
++
++static void hisi_cpa_pmu_disable_counter_int(struct hisi_pmu *cpa_pmu, struct hw_perf_event *hwc)
++{
++	u32 val;
++
++	/* Write 1 to mask interrupt */
++	val = readl(cpa_pmu->base + CPA_INT_MASK);
++	val |= 1 << hwc->idx;
++	writel(val, cpa_pmu->base + CPA_INT_MASK);
++}
++
++static u32 hisi_cpa_pmu_get_int_status(struct hisi_pmu *cpa_pmu)
++{
++	return readl(cpa_pmu->base + CPA_INT_STATUS);
++}
++
++static void hisi_cpa_pmu_clear_int_status(struct hisi_pmu *cpa_pmu, int idx)
++{
++	writel(1 << idx, cpa_pmu->base + CPA_INT_CLEAR);
++}
++
++static const struct acpi_device_id hisi_cpa_pmu_acpi_match[] = {
++	{ "HISI0281", },
++	{}
++};
++MODULE_DEVICE_TABLE(acpi, hisi_cpa_pmu_acpi_match);
++
++static int hisi_cpa_pmu_init_data(struct platform_device *pdev,
++				  struct hisi_pmu *cpa_pmu)
++{
++	if (device_property_read_u32(&pdev->dev, "hisilicon,scl-id",
++				     &cpa_pmu->sccl_id)) {
++		dev_err(&pdev->dev, "Can not read cpa_pmu sccl-id\n");
++		return -EINVAL;
++	}
++
++	cpa_pmu->ccl_id = -1;
++
++	if (device_property_read_u32(&pdev->dev, "hisilicon,idx-id",
++				     &cpa_pmu->index_id)) {
++		dev_err(&pdev->dev, "Cannot read idx-id\n");
++		return -EINVAL;
++	}
++
++	cpa_pmu->base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(cpa_pmu->base))
++		return PTR_ERR(cpa_pmu->base);
++
++	cpa_pmu->identifier = readl(cpa_pmu->base + CPA_VERSION);
++
++	return 0;
++}
++
++static struct attribute *hisi_cpa_pmu_format_attr[] = {
++	HISI_PMU_FORMAT_ATTR(event, "config:0-15"),
++	NULL
++};
++
++static const struct attribute_group hisi_cpa_pmu_format_group = {
++	.name = "format",
++	.attrs = hisi_cpa_pmu_format_attr,
++};
++
++static struct attribute *hisi_cpa_pmu_events_attr[] = {
++	HISI_PMU_EVENT_ATTR(cpa_cycles,		0x00),
++	HISI_PMU_EVENT_ATTR(cpa_p1_wr_dat,	0x61),
++	HISI_PMU_EVENT_ATTR(cpa_p1_rd_dat,	0x62),
++	HISI_PMU_EVENT_ATTR(cpa_p0_wr_dat,	0xE1),
++	HISI_PMU_EVENT_ATTR(cpa_p0_rd_dat,	0xE2),
++	NULL
++};
++
++static const struct attribute_group hisi_cpa_pmu_events_group = {
++	.name = "events",
++	.attrs = hisi_cpa_pmu_events_attr,
++};
++
++static DEVICE_ATTR(cpumask, 0444, hisi_cpumask_sysfs_show, NULL);
++
++static struct attribute *hisi_cpa_pmu_cpumask_attrs[] = {
++	&dev_attr_cpumask.attr,
++	NULL
++};
++
++static const struct attribute_group hisi_cpa_pmu_cpumask_attr_group = {
++	.attrs = hisi_cpa_pmu_cpumask_attrs,
++};
++
++static struct device_attribute hisi_cpa_pmu_identifier_attr =
++	__ATTR(identifier, 0444, hisi_uncore_pmu_identifier_attr_show, NULL);
++
++static struct attribute *hisi_cpa_pmu_identifier_attrs[] = {
++	&hisi_cpa_pmu_identifier_attr.attr,
++	NULL
++};
++
++static const struct attribute_group hisi_cpa_pmu_identifier_group = {
++	.attrs = hisi_cpa_pmu_identifier_attrs,
++};
++
++static const struct attribute_group *hisi_cpa_pmu_attr_groups[] = {
++	&hisi_cpa_pmu_format_group,
++	&hisi_cpa_pmu_events_group,
++	&hisi_cpa_pmu_cpumask_attr_group,
++	&hisi_cpa_pmu_identifier_group,
++	NULL
++};
++
++static const struct hisi_uncore_ops hisi_uncore_cpa_pmu_ops = {
++	.write_evtype           = hisi_cpa_pmu_write_evtype,
++	.get_event_idx		= hisi_uncore_pmu_get_event_idx,
++	.start_counters		= hisi_cpa_pmu_start_counters,
++	.stop_counters		= hisi_cpa_pmu_stop_counters,
++	.enable_counter		= hisi_cpa_pmu_enable_counter,
++	.disable_counter	= hisi_cpa_pmu_disable_counter,
++	.enable_counter_int	= hisi_cpa_pmu_enable_counter_int,
++	.disable_counter_int	= hisi_cpa_pmu_disable_counter_int,
++	.write_counter		= hisi_cpa_pmu_write_counter,
++	.read_counter		= hisi_cpa_pmu_read_counter,
++	.get_int_status		= hisi_cpa_pmu_get_int_status,
++	.clear_int_status	= hisi_cpa_pmu_clear_int_status,
++};
++
++static int hisi_cpa_pmu_dev_probe(struct platform_device *pdev,
++				  struct hisi_pmu *cpa_pmu)
++{
++	int ret;
++
++	ret = hisi_cpa_pmu_init_data(pdev, cpa_pmu);
++	if (ret)
++		return ret;
++
++	ret = hisi_uncore_pmu_init_irq(cpa_pmu, pdev);
++	if (ret)
++		return ret;
++
++	cpa_pmu->counter_bits = CPA_COUNTER_BITS;
++	cpa_pmu->check_event = CPA_NR_EVENTS;
++	cpa_pmu->pmu_events.attr_groups = hisi_cpa_pmu_attr_groups;
++	cpa_pmu->ops = &hisi_uncore_cpa_pmu_ops;
++	cpa_pmu->num_counters = CPA_NR_COUNTERS;
++	cpa_pmu->dev = &pdev->dev;
++	cpa_pmu->on_cpu = -1;
++
++	return 0;
++}
++
++static int hisi_cpa_pmu_probe(struct platform_device *pdev)
++{
++	struct hisi_pmu *cpa_pmu;
++	char *name;
++	int ret;
++
++	cpa_pmu = devm_kzalloc(&pdev->dev, sizeof(*cpa_pmu), GFP_KERNEL);
++	if (!cpa_pmu)
++		return -ENOMEM;
++
++	ret = hisi_cpa_pmu_dev_probe(pdev, cpa_pmu);
++	if (ret)
++		return ret;
++
++	ret = cpuhp_state_add_instance(CPUHP_AP_PERF_ARM_HISI_CPA_ONLINE,
++				       &cpa_pmu->node);
++	if (ret) {
++		dev_err(&pdev->dev, "Error %d registering hotplug\n", ret);
++		return ret;
++	}
++
++	name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "hisi_sicl%d_cpa%u", cpa_pmu->sccl_id - 1,
++			      cpa_pmu->index_id);
++
++	cpa_pmu->pmu = (struct pmu) {
++		.name		= name,
++		.module		= THIS_MODULE,
++		.task_ctx_nr	= perf_invalid_context,
++		.event_init	= hisi_uncore_pmu_event_init,
++		.pmu_enable	= hisi_uncore_pmu_enable,
++		.pmu_disable	= hisi_uncore_pmu_disable,
++		.add		= hisi_uncore_pmu_add,
++		.del		= hisi_uncore_pmu_del,
++		.start		= hisi_uncore_pmu_start,
++		.stop		= hisi_uncore_pmu_stop,
++		.read		= hisi_uncore_pmu_read,
++		.attr_groups	= cpa_pmu->pmu_events.attr_groups,
++		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
++	};
++
++	ret = perf_pmu_register(&cpa_pmu->pmu, name, -1);
++	if (ret) {
++		dev_err(cpa_pmu->dev, "CPA PMU register failed\n");
++		cpuhp_state_remove_instance_nocalls(
++			CPUHP_AP_PERF_ARM_HISI_CPA_ONLINE, &cpa_pmu->node);
++		return ret;
++	}
++
++	platform_set_drvdata(pdev, cpa_pmu);
++	return ret;
++}
++
++static int hisi_cpa_pmu_remove(struct platform_device *pdev)
++{
++	struct hisi_pmu *cpa_pmu = platform_get_drvdata(pdev);
++
++	perf_pmu_unregister(&cpa_pmu->pmu);
++	cpuhp_state_remove_instance_nocalls(CPUHP_AP_PERF_ARM_HISI_CPA_ONLINE,
++					    &cpa_pmu->node);
++	return 0;
++}
++
++static struct platform_driver hisi_cpa_pmu_driver = {
++	.driver = {
++		.name = "hisi_cpa_pmu",
++		.acpi_match_table = ACPI_PTR(hisi_cpa_pmu_acpi_match),
++		.suppress_bind_attrs = true,
++	},
++	.probe = hisi_cpa_pmu_probe,
++	.remove = hisi_cpa_pmu_remove,
++};
++
++static int __init hisi_cpa_pmu_module_init(void)
++{
++	int ret;
++
++	ret = cpuhp_setup_state_multi(CPUHP_AP_PERF_ARM_HISI_CPA_ONLINE,
++				      "AP_PERF_ARM_HISI_CPA_ONLINE",
++				      hisi_uncore_pmu_online_cpu,
++				      hisi_uncore_pmu_offline_cpu);
++	if (ret) {
++		pr_err("CPA PMU: setup hotplug: %d\n", ret);
++		return ret;
++	}
++
++	ret = platform_driver_register(&hisi_cpa_pmu_driver);
++	if (ret)
++		cpuhp_remove_multi_state(CPUHP_AP_PERF_ARM_HISI_CPA_ONLINE);
++
++	return ret;
++}
++module_init(hisi_cpa_pmu_module_init);
++
++static void __exit hisi_cpa_pmu_module_exit(void)
++{
++	platform_driver_unregister(&hisi_cpa_pmu_driver);
++	cpuhp_remove_multi_state(CPUHP_AP_PERF_ARM_HISI_CPA_ONLINE);
++}
++module_exit(hisi_cpa_pmu_module_exit);
++
++MODULE_DESCRIPTION("HiSilicon SoC CPA uncore PMU driver");
++MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR("Qi Liu <liuqi115@huawei.com>");
+diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+index 411a428ace4d..d55063719904 100644
+--- a/include/linux/cpuhotplug.h
++++ b/include/linux/cpuhotplug.h
+@@ -220,6 +220,7 @@ enum cpuhp_state {
+ 	CPUHP_AP_PERF_S390_SF_ONLINE,
+ 	CPUHP_AP_PERF_ARM_CCI_ONLINE,
+ 	CPUHP_AP_PERF_ARM_CCN_ONLINE,
++	CPUHP_AP_PERF_ARM_HISI_CPA_ONLINE,
+ 	CPUHP_AP_PERF_ARM_HISI_DDRC_ONLINE,
+ 	CPUHP_AP_PERF_ARM_HISI_HHA_ONLINE,
+ 	CPUHP_AP_PERF_ARM_HISI_L3_ONLINE,
+-- 
+2.24.0
 
