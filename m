@@ -2,225 +2,95 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CDA2C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Feb 2022 15:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4364AC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Feb 2022 16:37:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236687AbiBXPxh (ORCPT
+        id S229500AbiBXQhq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 24 Feb 2022 10:53:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38438 "EHLO
+        Thu, 24 Feb 2022 11:37:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236708AbiBXPxg (ORCPT
+        with ESMTP id S229577AbiBXQhq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 24 Feb 2022 10:53:36 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 838CC17C428;
-        Thu, 24 Feb 2022 07:53:05 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1F64661734;
-        Thu, 24 Feb 2022 15:53:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1C30C340E9;
-        Thu, 24 Feb 2022 15:53:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645717984;
-        bh=n55syU/tXlapEzX4NoBEFxyvoVefYeSgGLgTfFUMav8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YOmV7Lo0ztEeqpzwMFaagIJ6aguH2nu6mxkjva0+rxH/8xI3F93BzCbkjZzE6jCJd
-         5eDZ2xnHWaT3lJOvNCMX3VGkQHfvTt68I/u7em4cMd+Uc9KT+PgsCVE+G0fL79qh+D
-         fLcW85uUy7p1YRsQZvZ7mEdMVBdu88IVJRRaWE/MFc6Mmb5iCICaXFtsekRi9xrAld
-         4+CGN2KLIYWzMk8Sg79c+sUWuNYGqGoklbRqNLUhG6EJdz6fzPw6ZWd71+pNQXQ0JK
-         OtXUm+XBMl9R0LX5h7OIflDPadxaqYDmgLC9K9th18wAiv/yTg7jPIDKaSqFOucEfb
-         LajHmig4L4muw==
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Andrii Nakryiko <andrii@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH 2/2] perf tools: Remove bpf_map__set_priv/bpf_map__priv usage
-Date:   Thu, 24 Feb 2022 16:52:38 +0100
-Message-Id: <20220224155238.714682-3-jolsa@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220224155238.714682-1-jolsa@kernel.org>
-References: <20220224155238.714682-1-jolsa@kernel.org>
+        Thu, 24 Feb 2022 11:37:46 -0500
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 141C23389B;
+        Thu, 24 Feb 2022 08:37:15 -0800 (PST)
+Received: by mail-ed1-x534.google.com with SMTP id s1so3615578edd.13;
+        Thu, 24 Feb 2022 08:37:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wWHTaFwTiuGpPOgcIbW3oNXqJeD7YofApiSAOaPy0zU=;
+        b=ocdddwYqms6ThsOt8yUB8Kby2QmhgZS/25CVwCxAAaubvkxplOIwx9k8PtXT5J1uYP
+         ciZEMVmj4HPPjG0Em7HD0jCl6VjEp7p6CNfHgtXtc1SCLwBq4RPv9ppNDTrEbTMwyoLX
+         /Bj/rGkBr4gKovriBygG5SGMMtn/G28Xz0F1A+sZqhVCiUFPaHTkPmkjvlRGD/h9RDDy
+         OQiEAy5Fb/FqIYmZHolQBCYBBOqgSRHCLsSoDvC5nEAFXuV11Iizb9M239ksky01jkG+
+         1YpyQ7qHHNnEXieU0DuURLc7xeErcSVmMMtpp7GCEv89LKwC9ucg7rgACzuvoYHvQ3FH
+         IZLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wWHTaFwTiuGpPOgcIbW3oNXqJeD7YofApiSAOaPy0zU=;
+        b=0hI0OTAs0wnYcD0K3cKFNnEcKxLbmDUiaodSIQYn4P2IVqw+WbYjDWFcic0UUfyOfq
+         pUejD3QjZceG+HbHTdj3XMVsjZwUrrGXUtFa2vSqlJR3u7nKnwgxQt3zeulMl57x0In+
+         GZWk9PvLuOIBhoPEGdqJ7+CYQaYL3zHJ3s2XZcA/BKfu926A9lxrio0NZVCoqaUyCEx7
+         ZfWm0X2wFiQ5PGxAMPpMSX6zUV+rrDVMv4ZQ6VEDCPsveiZu9MdCvXhm7qSKGTFqzW/M
+         SkwHjkdXOVAF74TERlYRycQzJXRuxth4ZzLvT9gWdXo6eGPG6rwN00KrFRhXLAEh8aDC
+         Zhtw==
+X-Gm-Message-State: AOAM531UvGm5lJyizXKF6DqrYY+z4uObIC2CMrZNy5DL8btL74tOm+Ld
+        v9wVNJc8/nsQK4dDh6+HUoM=
+X-Google-Smtp-Source: ABdhPJzKbKSZ3CjUjv9K5g58bekZPGbbtiIunLjij7R02uOwRGwjBdm4DwGOPrmHYxBSwPKkDWdhKw==
+X-Received: by 2002:a50:8d1e:0:b0:413:492b:2c86 with SMTP id s30-20020a508d1e000000b00413492b2c86mr3118807eds.140.1645720634422;
+        Thu, 24 Feb 2022 08:37:14 -0800 (PST)
+Received: from oberon.zico.biz ([83.222.187.186])
+        by smtp.gmail.com with ESMTPSA id o10sm1579690ejj.6.2022.02.24.08.37.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Feb 2022 08:37:13 -0800 (PST)
+From:   "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
+To:     y.karadz@gmail.com, acme@kernel.org, olsajiri@gmail.com,
+        irogers@google.com
+Cc:     rostedt@goodmis.org, linux-trace-devel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: [RFC PATCH 0/3] trace-cruncher: Initial support for perf
+Date:   Thu, 24 Feb 2022 18:37:08 +0200
+Message-Id: <20220224163711.185308-1-tz.stoyanov@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Both bpf_map__set_priv/bpf_map__priv are deprecated
-and will be eventually removed.
+Two major functionalities are introduced by this patch set:
+ - VMA <-> function name resolving, using bfd library.
+ - Support for Linux kernel perf framework, using perf library.
 
-Using hashmap to replace that functionality.
+This is still a work in progress. Depends on this patch, not yet merged:
+https://lore.kernel.org/linux-perf-users/20220221102628.43904-1-tz.stoyanov@gmail.com/
 
-Suggested-by: Andrii Nakryiko <andrii@kernel.org>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/perf/util/bpf-loader.c | 66 ++++++++++++++++++++++++++++++++----
- 1 file changed, 59 insertions(+), 7 deletions(-)
+Tzvetomir Stoyanov (VMware) (3):
+  trace-cruncher: Logic for resolving address to function name
+  trace-cruncher: Support for perf
+  trace-cruncher: perf example
 
-diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-index b9d4278895ec..4f6173756a9d 100644
---- a/tools/perf/util/bpf-loader.c
-+++ b/tools/perf/util/bpf-loader.c
-@@ -27,6 +27,7 @@
- #include "llvm-utils.h"
- #include "c++/clang-c.h"
- #include "hashmap.h"
-+#include "asm/bug.h"
- 
- #include <internal/xyarray.h>
- 
-@@ -57,6 +58,7 @@ struct bpf_perf_object {
- 
- static LIST_HEAD(bpf_objects_list);
- static struct hashmap *bpf_program_hash;
-+static struct hashmap *bpf_map_hash;
- 
- static struct bpf_perf_object *
- bpf_perf_object__next(struct bpf_perf_object *prev)
-@@ -204,6 +206,8 @@ static void bpf_program_hash_free(void)
- 	bpf_program_hash = NULL;
- }
- 
-+static void bpf_map_hash_free(void);
-+
- void bpf__clear(void)
- {
- 	struct bpf_perf_object *perf_obj, *tmp;
-@@ -214,6 +218,7 @@ void bpf__clear(void)
- 	}
- 
- 	bpf_program_hash_free();
-+	bpf_map_hash_free();
- }
- 
- static size_t ptr_hash(const void *__key, void *ctx __maybe_unused)
-@@ -976,7 +981,7 @@ bpf_map_priv__purge(struct bpf_map_priv *priv)
- }
- 
- static void
--bpf_map_priv__clear(struct bpf_map *map __maybe_unused,
-+bpf_map_priv__clear(const struct bpf_map *map __maybe_unused,
- 		    void *_priv)
- {
- 	struct bpf_map_priv *priv = _priv;
-@@ -985,6 +990,53 @@ bpf_map_priv__clear(struct bpf_map *map __maybe_unused,
- 	free(priv);
- }
- 
-+static void *map_priv(const struct bpf_map *map)
-+{
-+	void *priv;
-+
-+	if (IS_ERR_OR_NULL(bpf_map_hash))
-+		return NULL;
-+	if (!hashmap__find(bpf_map_hash, map, &priv))
-+		return NULL;
-+	return priv;
-+}
-+
-+static void bpf_map_hash_free(void)
-+{
-+	struct hashmap_entry *cur;
-+	size_t bkt;
-+
-+	if (IS_ERR_OR_NULL(bpf_map_hash))
-+		return;
-+
-+	hashmap__for_each_entry(bpf_map_hash, cur, bkt)
-+		bpf_map_priv__clear(cur->key, cur->value);
-+
-+	hashmap__free(bpf_map_hash);
-+	bpf_map_hash = NULL;
-+}
-+
-+static int map_set_priv(struct bpf_map *map, void *priv)
-+{
-+	void *old_priv;
-+
-+	if (WARN_ON_ONCE(IS_ERR(bpf_map_hash)))
-+		return PTR_ERR(bpf_program_hash);
-+
-+	if (!bpf_map_hash) {
-+		bpf_map_hash = hashmap__new(ptr_hash, ptr_equal, NULL);
-+		if (IS_ERR(bpf_map_hash))
-+			return PTR_ERR(bpf_map_hash);
-+	}
-+
-+	old_priv = map_priv(map);
-+	if (old_priv) {
-+		bpf_map_priv__clear(map, old_priv);
-+		return hashmap__set(bpf_map_hash, map, priv, NULL, NULL);
-+	}
-+	return hashmap__add(bpf_map_hash, map, priv);
-+}
-+
- static int
- bpf_map_op_setkey(struct bpf_map_op *op, struct parse_events_term *term)
- {
-@@ -1084,7 +1136,7 @@ static int
- bpf_map__add_op(struct bpf_map *map, struct bpf_map_op *op)
- {
- 	const char *map_name = bpf_map__name(map);
--	struct bpf_map_priv *priv = bpf_map__priv(map);
-+	struct bpf_map_priv *priv = map_priv(map);
- 
- 	if (IS_ERR(priv)) {
- 		pr_debug("Failed to get private from map %s\n", map_name);
-@@ -1099,7 +1151,7 @@ bpf_map__add_op(struct bpf_map *map, struct bpf_map_op *op)
- 		}
- 		INIT_LIST_HEAD(&priv->ops_list);
- 
--		if (bpf_map__set_priv(map, priv, bpf_map_priv__clear)) {
-+		if (map_set_priv(map, priv)) {
- 			free(priv);
- 			return -BPF_LOADER_ERRNO__INTERNAL;
- 		}
-@@ -1440,7 +1492,7 @@ bpf_map_config_foreach_key(struct bpf_map *map,
- 	struct bpf_map_op *op;
- 	const struct bpf_map_def *def;
- 	const char *name = bpf_map__name(map);
--	struct bpf_map_priv *priv = bpf_map__priv(map);
-+	struct bpf_map_priv *priv = map_priv(map);
- 
- 	if (IS_ERR(priv)) {
- 		pr_debug("ERROR: failed to get private from map %s\n", name);
-@@ -1660,7 +1712,7 @@ struct evsel *bpf__setup_output_event(struct evlist *evlist, const char *name)
- 	bool need_init = false;
- 
- 	bpf__perf_for_each_map_named(map, perf_obj, tmp, name) {
--		struct bpf_map_priv *priv = bpf_map__priv(map);
-+		struct bpf_map_priv *priv = map_priv(map);
- 
- 		if (IS_ERR(priv))
- 			return ERR_PTR(-BPF_LOADER_ERRNO__INTERNAL);
-@@ -1696,7 +1748,7 @@ struct evsel *bpf__setup_output_event(struct evlist *evlist, const char *name)
- 	}
- 
- 	bpf__perf_for_each_map_named(map, perf_obj, tmp, name) {
--		struct bpf_map_priv *priv = bpf_map__priv(map);
-+		struct bpf_map_priv *priv = map_priv(map);
- 
- 		if (IS_ERR(priv))
- 			return ERR_PTR(-BPF_LOADER_ERRNO__INTERNAL);
-@@ -1708,7 +1760,7 @@ struct evsel *bpf__setup_output_event(struct evlist *evlist, const char *name)
- 			if (!priv)
- 				return ERR_PTR(-ENOMEM);
- 
--			err = bpf_map__set_priv(map, priv, bpf_map_priv__clear);
-+			err = map_set_priv(map, priv);
- 			if (err) {
- 				bpf_map_priv__clear(map, priv);
- 				return ERR_PTR(err);
+ examples/perf_sampling.py |  51 +++
+ setup.py                  |   9 +-
+ src/perfpy-utils.c        | 699 ++++++++++++++++++++++++++++++
+ src/perfpy-utils.h        |  41 ++
+ src/perfpy.c              | 141 ++++++
+ src/trace-obj-debug.c     | 873 ++++++++++++++++++++++++++++++++++++++
+ src/trace-obj-debug.h     |  52 +++
+ 7 files changed, 1865 insertions(+), 1 deletion(-)
+ create mode 100755 examples/perf_sampling.py
+ create mode 100644 src/perfpy-utils.c
+ create mode 100644 src/perfpy-utils.h
+ create mode 100644 src/perfpy.c
+ create mode 100644 src/trace-obj-debug.c
+ create mode 100644 src/trace-obj-debug.h
+
 -- 
-2.35.1
+2.34.1
 
