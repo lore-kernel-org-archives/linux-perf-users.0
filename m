@@ -2,108 +2,92 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D53C8C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Feb 2022 12:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D2BFC433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Feb 2022 15:52:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234658AbiBXM6P (ORCPT
+        id S236691AbiBXPxQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 24 Feb 2022 07:58:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37758 "EHLO
+        Thu, 24 Feb 2022 10:53:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234583AbiBXM6O (ORCPT
+        with ESMTP id S236687AbiBXPxQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 24 Feb 2022 07:58:14 -0500
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C53711323F7;
-        Thu, 24 Feb 2022 04:57:43 -0800 (PST)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4K4CZN0sHcz9t3N;
-        Thu, 24 Feb 2022 20:55:56 +0800 (CST)
-Received: from [10.67.102.169] (10.67.102.169) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Thu, 24 Feb 2022 20:57:40 +0800
-CC:     <prime.zeng@huawei.com>, <liuqi115@huawei.com>,
-        <zhangshaokun@hisilicon.com>, <linuxarm@huawei.com>,
-        <song.bao.hua@hisilicon.com>
-Subject: Re: [PATCH v4 2/8] hwtracing: Add trace function support for
- HiSilicon PCIe Tune and Trace device
-To:     John Garry <john.garry@huawei.com>,
-        Yicong Yang <yangyicong@hisilicon.com>,
-        <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <lorenzo.pieralisi@arm.com>,
-        <will@kernel.org>, <mark.rutland@arm.com>,
-        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
-        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
-        <jonathan.cameron@huawei.com>, <daniel.thompson@linaro.org>,
-        <joro@8bytes.org>, <shameerali.kolothum.thodi@huawei.com>,
-        <robin.murphy@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <acme@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>
-References: <20220221084307.33712-1-yangyicong@hisilicon.com>
- <20220221084307.33712-3-yangyicong@hisilicon.com>
- <c7d8cff4-b84e-1b73-1d54-2e221b90dac1@huawei.com>
- <e78f6e5e-a0c3-4976-4f46-e3369635ee3d@huawei.com>
- <aabd5f0a-1a54-e4da-734c-f940c45d66b4@huawei.com>
-From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <a6fb3c8b-1b44-22e8-a178-ba7254a80662@huawei.com>
-Date:   Thu, 24 Feb 2022 20:57:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        Thu, 24 Feb 2022 10:53:16 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42CAC16DADB;
+        Thu, 24 Feb 2022 07:52:46 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B6C28B826EB;
+        Thu, 24 Feb 2022 15:52:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2AD7C340E9;
+        Thu, 24 Feb 2022 15:52:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645717963;
+        bh=5PIGB+4IM8Fn9hA2P/gMQ/CRlNKBfAwnseV7hJCN9w4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=VFFKlZFLLJ2lSxC1U0v70U0jBFnfX1tnVHRJK9w16q4yqkGGrv7nPL1BRxq5rVc9i
+         jYAfc7mnYQFsN5XJYwpiIrds/bckMQ3kj2tkdxLE1gB4shbbPZe0l+l+cGROS2DxHo
+         GyYiooq23FhrZVdUjwkGKWHSaEDpvEOXEKEcC3Nfm2+UwzLW6lmeiL/RxqEgX34NwK
+         MvtTfPFXmpglBNxD0F7W5201f3hLG8+8pt/duiWGyv9rNs3BzlBgufxWNumJzbigjV
+         DdTs8rzmg1msstKb8z+Q+f7jvWcAizvNSh+8mIvDXv0nVTjBufRXo6Sd7kXJX9WjNx
+         7jrMDRUk2rB+A==
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+        Andrii Nakryiko <andrii@kernel.org>
+Subject: [PATCHv3 0/2] perf/bpf: Replace deprecated code
+Date:   Thu, 24 Feb 2022 16:52:36 +0100
+Message-Id: <20220224155238.714682-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-In-Reply-To: <aabd5f0a-1a54-e4da-734c-f940c45d66b4@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2022/2/24 20:32, John Garry wrote:
-> On 24/02/2022 03:53, Yicong Yang wrote:
->> On 2022/2/22 19:06, John Garry wrote:
->>> On 21/02/2022 08:43, Yicong Yang wrote:
->>>> HiSilicon PCIe tune and trace device(PTT) is a PCIe Root Complex
->>>> integrated Endpoint(RCiEP) device, providing the capability
->>>> to dynamically monitor and tune the PCIe traffic, and trace
->>>> the TLP headers.
->>>>
->>>> Add the driver for the device to enable the trace function.
->>>> This patch adds basic function of trace, including the device's
->>>> probe and initialization, functions for trace buffer allocation
->>>> and trace enable/disable, register an interrupt handler to
->>>> simply response to the DMA events. The user interface of trace
->>>> will be added in the following patch.
->>>>
->>>
->>> Fill commit message lines upto 75 characters
->>
->> Hi John,
->>
->> Thanks for the comments.
->>
->> The commit message is within 75 characters. I checked again and checkpatch
->> didn't warning for this.
-> 
-> I mean to fill the lines up as much as possible, upto 75 char max, if not already done so. I am not sure if you are doing this already, but it looks like you were not.
-> 
-> Checkpatch
-> will
-> no
-> warn
-> about
-> a
-> commit
-> message
-> like
-> this
-> :)
-> 
+hi,
+the original patchset [1] removed the whole perf functionality
+with the hope nobody's using that. But it turned out there's
+actually bpf script using prologue functionality, so there
+might be users of this.
 
-Uh I got it. Thanks for the vivid clarification!
+v3 changes:
+  - sending priv related changes, because they can be already
+    merged, the rest will need more discussion and work
+
+  - this version gets rid of and adds workaround (and keeps the
+    current functionality) for following deprecated libbpf functions:
+
+      bpf_program__set_priv
+      bpf_program__priv
+      bpf_map__set_priv
+      bpf_map__priv
+
+    Basically it implements workarounds suggested by Andrii in [2].
+
+Also available in here:
+  git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+  bpf/depre
+
+thanks,
+jirka
+
+
+[1] https://lore.kernel.org/linux-perf-users/YgoPxhE3OEEmZqla@krava/T/#t
+[2] https://lore.kernel.org/linux-perf-users/YgoPxhE3OEEmZqla@krava/T/#md3ccab9fe70a4583e94603b1a562e369bd67b17d
+---
+Jiri Olsa (2):
+      perf tools: Remove bpf_program__set_priv/bpf_program__priv usage
+      perf tools: Remove bpf_map__set_priv/bpf_map__priv usage
+
+ tools/perf/util/bpf-loader.c | 164 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 141 insertions(+), 23 deletions(-)
