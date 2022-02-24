@@ -2,251 +2,365 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2A3C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Feb 2022 22:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CC6C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Feb 2022 03:53:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231200AbiBWWah (ORCPT
+        id S229631AbiBXDxs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Feb 2022 17:30:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38814 "EHLO
+        Wed, 23 Feb 2022 22:53:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbiBWWah (ORCPT
+        with ESMTP id S229458AbiBXDxs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Feb 2022 17:30:37 -0500
-Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9335E40A16;
-        Wed, 23 Feb 2022 14:30:08 -0800 (PST)
-Received: by mail-il1-x134.google.com with SMTP id d7so303508ilf.8;
-        Wed, 23 Feb 2022 14:30:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OCD5mZDkpwUlyfA20EEEfKsRSer4ZvxexsoTB06hY/A=;
-        b=IreiLBdNn8Oy45HYTiYi2dUZLMAOM4/vGSglBN0jSNWgfa2KiIJ5SmWVmmLY14LTPu
-         /ljwBTfAMRprIEmitySbE3DjJ7GO0Ym6pNZgCO1FAMzA4SCsP855lFASCRAl4y2YxHNF
-         xDl3rPDL0R1qL/C5JHR7m3hdTG28+QD7TKz+HgrsjBoP/BOHhDEVC50IRywWovGZh6dF
-         fGT8h1Skdkj6x52KTXkUm4btGad7BAjcXOFmnFUxKFnWIt6gVb2qQcyyxoTSuV/Vs1/T
-         sr0QLtUEEdz0PgnZlMJE3nMpFa4cu3yFrwAcPb/XYC90ueCgD/vIrzGX+TZg4hlO3q4a
-         dgfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OCD5mZDkpwUlyfA20EEEfKsRSer4ZvxexsoTB06hY/A=;
-        b=R26Rjmyfwt5v3oJcCXFXvDcD0evUiWIoyHLVWNZ0ErdBB3tuQEnl+wBnnNO4c3ef4Z
-         kcPEWYIuE8E0XpiEz9+m26hHYNet1MrpG4axOyixXFg7rEePnR3njsCLSkasWRD7Us4u
-         6wu93bIO/+YUNnG0mQ9/G8YvEd453hOVND7CnoInBrm4W9Ehe4KPn3+ZWIoYwLNVXGik
-         C38Rc4ivN1OSXUVVDtqtnU769UWqq+EYxW6uCJpnECdeWAK7a06lBLtqwm4hDna2fBXx
-         0VWpRvsTIpXfjBur1dgIVf1x2VFurLsJ02vXo7eRlrJlSzaMihhSjELCi6M1JcCoTrCb
-         lKWA==
-X-Gm-Message-State: AOAM530bcD6lt4dLxj4q5p5vgN1y/qFnM+MpG7NM+n5rn5ZQ5P5+1zTR
-        lTFWTZFkueyChx0LuaZIppJrnzOfyEahNGFbrpA=
-X-Google-Smtp-Source: ABdhPJxkrxQdW9RPINy1hLfe+amQK5VHu3FnVHncvhMgrVRBAMv9MOXRITgx8Wdf0TVYEhH0pSZB1zZBsxVpuZfeqXk=
-X-Received: by 2002:a92:6406:0:b0:2bb:f1de:e13e with SMTP id
- y6-20020a926406000000b002bbf1dee13emr1478385ilb.305.1645655407879; Wed, 23
- Feb 2022 14:30:07 -0800 (PST)
+        Wed, 23 Feb 2022 22:53:48 -0500
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 864DC25A305;
+        Wed, 23 Feb 2022 19:53:17 -0800 (PST)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.56])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4K3zQz4h3Jz1FDMW;
+        Thu, 24 Feb 2022 11:48:43 +0800 (CST)
+Received: from [10.67.102.169] (10.67.102.169) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Thu, 24 Feb 2022 11:53:14 +0800
+CC:     <prime.zeng@huawei.com>, <liuqi115@huawei.com>,
+        <zhangshaokun@hisilicon.com>, <linuxarm@huawei.com>,
+        <song.bao.hua@hisilicon.com>
+Subject: Re: [PATCH v4 2/8] hwtracing: Add trace function support for
+ HiSilicon PCIe Tune and Trace device
+To:     John Garry <john.garry@huawei.com>,
+        Yicong Yang <yangyicong@hisilicon.com>,
+        <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <lorenzo.pieralisi@arm.com>,
+        <will@kernel.org>, <mark.rutland@arm.com>,
+        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
+        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
+        <jonathan.cameron@huawei.com>, <daniel.thompson@linaro.org>,
+        <joro@8bytes.org>, <shameerali.kolothum.thodi@huawei.com>,
+        <robin.murphy@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <acme@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>
+References: <20220221084307.33712-1-yangyicong@hisilicon.com>
+ <20220221084307.33712-3-yangyicong@hisilicon.com>
+ <c7d8cff4-b84e-1b73-1d54-2e221b90dac1@huawei.com>
+From:   Yicong Yang <yangyicong@huawei.com>
+Message-ID: <e78f6e5e-a0c3-4976-4f46-e3369635ee3d@huawei.com>
+Date:   Thu, 24 Feb 2022 11:53:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-References: <20220217131916.50615-1-jolsa@kernel.org> <20220217131916.50615-4-jolsa@kernel.org>
- <CAEf4BzYP7=JuyuY=xZe71urpxat4ba-JnqeSTcHF=CYmsQbofQ@mail.gmail.com>
- <Yg9geQ0LJjhnrc7j@krava> <CAEf4BzZaFWhWf73JbfO7gLi82Nn4ma-qmaZBPij=giNzzoSCTQ@mail.gmail.com>
- <YhJF00d9baPtXjzH@krava>
-In-Reply-To: <YhJF00d9baPtXjzH@krava>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 23 Feb 2022 14:29:56 -0800
-Message-ID: <CAEf4BzaiBO3_617kkXZdYJ8hS8YF--ZLgapNbgeeEJ-pY0H88g@mail.gmail.com>
-Subject: Re: [PATCH 3/3] perf tools: Rework prologue generation code
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <c7d8cff4-b84e-1b73-1d54-2e221b90dac1@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.102.169]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Feb 20, 2022 at 5:44 AM Jiri Olsa <olsajiri@gmail.com> wrote:
->
-> On Fri, Feb 18, 2022 at 11:55:16AM -0800, Andrii Nakryiko wrote:
-> > On Fri, Feb 18, 2022 at 1:01 AM Jiri Olsa <olsajiri@gmail.com> wrote:
-> > >
-> > > On Thu, Feb 17, 2022 at 01:53:16PM -0800, Andrii Nakryiko wrote:
-> > > > On Thu, Feb 17, 2022 at 5:19 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> > > > >
-> > > > > Some functions we use now for bpf prologue generation are
-> > > > > going to be deprecated, so reworking the current code not
-> > > > > to use them.
-> > > > >
-> > > > > We need to replace following functions/struct:
-> > > > >    bpf_program__set_prep
-> > > > >    bpf_program__nth_fd
-> > > > >    struct bpf_prog_prep_result
-> > > > >
-> > > > > Current code uses bpf_program__set_prep to hook perf callback
-> > > > > before the program is loaded and provide new instructions with
-> > > > > the prologue.
-> > > > >
-> > > > > We workaround this by using objects's 'unloaded' programs instructions
-> > > > > for that specific program and load new ebpf programs with prologue
-> > > > > using separate bpf_prog_load calls.
-> > > > >
-> > > > > We keep new ebpf program instances descriptors in bpf programs
-> > > > > private struct.
-> > > > >
-> > > > > Suggested-by: Andrii Nakryiko <andrii@kernel.org>
-> > > > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > > > > ---
-> > > > >  tools/perf/util/bpf-loader.c | 122 +++++++++++++++++++++++++++++------
-> > > > >  1 file changed, 104 insertions(+), 18 deletions(-)
-> > > > >
-> > > >
-> > > > [...]
-> > > >
-> > > > >  errout:
-> > > > > @@ -696,7 +718,7 @@ static int hook_load_preprocessor(struct bpf_program *prog)
-> > > > >         struct bpf_prog_priv *priv = program_priv(prog);
-> > > > >         struct perf_probe_event *pev;
-> > > > >         bool need_prologue = false;
-> > > > > -       int err, i;
-> > > > > +       int i;
-> > > > >
-> > > > >         if (IS_ERR_OR_NULL(priv)) {
-> > > > >                 pr_debug("Internal error when hook preprocessor\n");
-> > > > > @@ -727,6 +749,12 @@ static int hook_load_preprocessor(struct bpf_program *prog)
-> > > > >                 return 0;
-> > > > >         }
-> > > > >
-> > > > > +       /*
-> > > > > +        * Do not load programs that need prologue, because we need
-> > > > > +        * to add prologue first, check bpf_object__load_prologue.
-> > > > > +        */
-> > > > > +       bpf_program__set_autoload(prog, false);
-> > > >
-> > > > if you set autoload to false, program instructions might be invalid in
-> > > > the end. Libbpf doesn't apply some (all?) relocations to such
-> > > > programs, doesn't resolve CO-RE, etc, etc. You have to let
-> > > > "prototypal" BPF program to be loaded before you can grab final
-> > > > instructions. It's not great, but in your case it should work, right?
-> > >
-> > > hum, do we care? it should all be done when the 'new' program with
-> > > the prologue is loaded, right?
-> >
-> > yeah, you should care. If there is any BPF map involved, it is
-> > properly resolved to correct FD (which is put into ldimm64 instruction
-> > in BPF program code) during the load. If program is not autoloaded,
-> > this is skipped. Same for any global variable or subprog call (if it's
-> > not always inlined). So you very much should care for any non-trivial
-> > program.
->
-> ah too bad.. all that is in the load path, ok
->
-> >
-> > >
-> > > I switched it off because the verifier failed to load the program
-> > > without the prologue.. because in the original program there's no
-> > > code to grab the arguments that the rest of the code depends on,
-> > > so the verifier sees invalid access
-> >
-> > Do you have an example of C code and corresponding BPF instructions
-> > before/after prologue generation? Just curious to see in details how
-> > this is done.
->
-> so with following example:
->
->         SEC("func=do_sched_setscheduler param->sched_priority@user")
->         int bpf_func__setscheduler(void *ctx, int err, int param)
->         {
->                 char fmt[] = "prio: %ld";
->                 bpf_trace_printk(fmt, sizeof(fmt), param);
->                 return 1;
->         }
->
-> perf will attach the code to do_sched_setscheduler function,
-> and read 'param->sched_priority' into 'param' argument
->
-> so the resulting clang object expects 'param' to be in R3
->
->         0000000000000000 <bpf_func__setscheduler>:
->                0:       b7 01 00 00 64 00 00 00 r1 = 100
->                1:       6b 1a f8 ff 00 00 00 00 *(u16 *)(r10 - 8) = r1
->                2:       18 01 00 00 70 72 69 6f 00 00 00 00 3a 20 25 6c r1 = 77926701655
->                4:       7b 1a f0 ff 00 00 00 00 *(u64 *)(r10 - 16) = r1
->                5:       bf a1 00 00 00 00 00 00 r1 = r10
->                6:       07 01 00 00 f0 ff ff ff r1 += -16
->                7:       b7 02 00 00 0a 00 00 00 r2 = 10
->                8:       85 00 00 00 06 00 00 00 call 6
->                9:       b7 00 00 00 01 00 00 00 r0 = 1
->               10:       95 00 00 00 00 00 00 00 exit
->
-> and R3 is loaded in the prologue code (first 15 instructions)
-> and it also sets 'err' (R2) with the result of the reading:
->
->            0: (bf) r6 = r1
->            1: (79) r3 = *(u64 *)(r6 +96)
->            2: (bf) r7 = r10
->            3: (07) r7 += -8
->            4: (7b) *(u64 *)(r10 -8) = r3
->            5: (b7) r2 = 8
->            6: (bf) r1 = r7
->            7: (85) call bpf_probe_read_user#-60848
->            8: (55) if r0 != 0x0 goto pc+2
->            9: (61) r3 = *(u32 *)(r10 -8)
->           10: (05) goto pc+3
->           11: (b7) r2 = 1
->           12: (b7) r3 = 0
->           13: (05) goto pc+1
->           14: (b7) r2 = 0
->           15: (bf) r1 = r6
->
->           16: (b7) r1 = 100
->           17: (6b) *(u16 *)(r10 -8) = r1
->           18: (18) r1 = 0x6c25203a6f697270
->           20: (7b) *(u64 *)(r10 -16) = r1
->           21: (bf) r1 = r10
->           22: (07) r1 += -16
->           23: (b7) r2 = 10
->           24: (85) call bpf_trace_printk#-54848
->           25: (b7) r0 = 1
->           26: (95) exit
->
->
-> I'm still scratching my head how to workaround this.. we do want maps
-> and all the other updates to the code, but verifier won't let it pass
-> without the prologue code
+On 2022/2/22 19:06, John Garry wrote:
+> On 21/02/2022 08:43, Yicong Yang wrote:
+>> HiSilicon PCIe tune and trace device(PTT) is a PCIe Root Complex
+>> integrated Endpoint(RCiEP) device, providing the capability
+>> to dynamically monitor and tune the PCIe traffic, and trace
+>> the TLP headers.
+>>
+>> Add the driver for the device to enable the trace function.
+>> This patch adds basic function of trace, including the device's
+>> probe and initialization, functions for trace buffer allocation
+>> and trace enable/disable, register an interrupt handler to
+>> simply response to the DMA events. The user interface of trace
+>> will be added in the following patch.
+>>
+> 
+> Fill commit message lines upto 75 characters
 
-ugh, perf cornered itself into supporting this crazy scheme and now
-there is no good solution. I'm still questioning the value of
-supporting this going forward. Is there an evidence that anyone is
-using this functionality at all? Is it worth it trying to carry it on
-just because we have some example that exercises this feature?
+Hi John,
 
-Anyways, one way to solve this is to add bpf_program__set_insns() that
-could be called from prog_init_fn callback (which I just realized
-hasn't landed yet, I'll send v4 today) to prepend a simple preamble
-like this:
+Thanks for the comments.
 
-r1 = 0;
-r2 = 0;
-r3 = 0;
-f4 = 0;
-r5 = 0; /* how many input arguments we support? */
+The commit message is within 75 characters. I checked again and checkpatch
+didn't warning for this.
 
-This will make all input arguments initialized, libbpf will be able to
-adjust all the relocations and stuff. Once this "prototype program" is
-loaded, perf can grab final instructions and replace first X
-instructions with desired preamble.
+> 
+>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+>> ---
+>>   drivers/Makefile                 |   1 +
+>>   drivers/hwtracing/Kconfig        |   2 +
+>>   drivers/hwtracing/ptt/Kconfig    |  11 +
+>>   drivers/hwtracing/ptt/Makefile   |   2 +
+>>   drivers/hwtracing/ptt/hisi_ptt.c | 370 +++++++++++++++++++++++++++++++
+>>   drivers/hwtracing/ptt/hisi_ptt.h | 149 +++++++++++++
+>>   6 files changed, 535 insertions(+)
+>>   create mode 100644 drivers/hwtracing/ptt/Kconfig
+>>   create mode 100644 drivers/hwtracing/ptt/Makefile
+>>   create mode 100644 drivers/hwtracing/ptt/hisi_ptt.c
+>>   create mode 100644 drivers/hwtracing/ptt/hisi_ptt.h
+>>
+>> diff --git a/drivers/Makefile b/drivers/Makefile
+>> index a110338c860c..ab3411e4eba5 100644
+>> --- a/drivers/Makefile
+>> +++ b/drivers/Makefile
+>> @@ -175,6 +175,7 @@ obj-$(CONFIG_USB4)        += thunderbolt/
+>>   obj-$(CONFIG_CORESIGHT)        += hwtracing/coresight/
+>>   obj-y                += hwtracing/intel_th/
+>>   obj-$(CONFIG_STM)        += hwtracing/stm/
+>> +obj-$(CONFIG_HISI_PTT)        += hwtracing/ptt/
+>>   obj-$(CONFIG_ANDROID)        += android/
+>>   obj-$(CONFIG_NVMEM)        += nvmem/
+>>   obj-$(CONFIG_FPGA)        += fpga/
+>> diff --git a/drivers/hwtracing/Kconfig b/drivers/hwtracing/Kconfig
+>> index 13085835a636..911ee977103c 100644
+>> --- a/drivers/hwtracing/Kconfig
+>> +++ b/drivers/hwtracing/Kconfig
+>> @@ -5,4 +5,6 @@ source "drivers/hwtracing/stm/Kconfig"
+>>     source "drivers/hwtracing/intel_th/Kconfig"
+>>   +source "drivers/hwtracing/ptt/Kconfig"
+>> +
+>>   endmenu
+>> diff --git a/drivers/hwtracing/ptt/Kconfig b/drivers/hwtracing/ptt/Kconfig
+>> new file mode 100644
+>> index 000000000000..41fa83921a07
+>> --- /dev/null
+>> +++ b/drivers/hwtracing/ptt/Kconfig
+>> @@ -0,0 +1,11 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only
+>> +config HISI_PTT
+>> +    tristate "HiSilicon PCIe Tune and Trace Device"
+>> +    depends on ARM64 && PCI && HAS_DMA && HAS_IOMEM
+> 
+> why no compile test support?
+> 
 
-But... ugliness and horror, yeah :(
+I'll add compile test on ARM64.
 
+>> +    help
+>> +      HiSilicon PCIe Tune and Trace Device exists as a PCIe RCiEP
+>> +      device, and it provides support for PCIe traffic tuning and
+>> +      tracing TLP headers to the memory.
+>> +
+>> +      This driver can also be built as a module. If so, the module
+>> +      will be called hisi_ptt.
+>> diff --git a/drivers/hwtracing/ptt/Makefile b/drivers/hwtracing/ptt/Makefile
+>> new file mode 100644
+>> index 000000000000..908c09a98161
+>> --- /dev/null
+>> +++ b/drivers/hwtracing/ptt/Makefile
+>> @@ -0,0 +1,2 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +obj-$(CONFIG_HISI_PTT) += hisi_ptt.o
+>> diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
+>> new file mode 100644
+>> index 000000000000..a5b4f09ccd1e
+>> --- /dev/null
+>> +++ b/drivers/hwtracing/ptt/hisi_ptt.c
+>> @@ -0,0 +1,370 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Driver for HiSilicon PCIe tune and trace device
+>> + *
+>> + * Copyright (c) 2022 HiSilicon Technologies Co., Ltd.
+>> + * Author: Yicong Yang <yangyicong@hisilicon.com>
+>> + */
+>> +
+>> +#include <linux/bitfield.h>
+>> +#include <linux/bitops.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/dma-iommu.h>
+>> +#include <linux/dma-mapping.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/io.h>
+>> +#include <linux/iommu.h>
+>> +#include <linux/iopoll.h>
+>> +#include <linux/module.h>
+>> +#include <linux/sysfs.h>
+>> +
+>> +#include "hisi_ptt.h"
+>> +
+>> +static u16 hisi_ptt_get_filter_val(struct pci_dev *pdev)
+>> +{
+>> +    if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT)
+>> +        return BIT(HISI_PCIE_CORE_PORT_ID(PCI_SLOT(pdev->devfn)));
+>> +
+>> +    return PCI_DEVID(pdev->bus->number, pdev->devfn);
+>> +}
+>> +
+>> +static int hisi_ptt_wait_trace_hw_idle(struct hisi_ptt *hisi_ptt)
+>> +{
+>> +    u32 val;
+>> +
+>> +    return readl_poll_timeout_atomic(hisi_ptt->iobase + HISI_PTT_TRACE_STS,
+>> +                     val, val & HISI_PTT_TRACE_IDLE,
+>> +                     HISI_PTT_WAIT_POLL_INTERVAL_US,
+>> +                     HISI_PTT_WAIT_TIMEOUT_US);
+>> +}
+>> +
+>> +static int hisi_ptt_wait_dma_reset_done(struct hisi_ptt *hisi_ptt)
+>> +{
+>> +    u32 val;
+>> +
+>> +    return readl_poll_timeout_atomic(hisi_ptt->iobase + HISI_PTT_TRACE_WR_STS,
+>> +                     val, !val, HISI_PTT_RESET_POLL_INTERVAL_US,
+>> +                     HISI_PTT_RESET_TIMEOUT_US);
+>> +}
+>> +
+>> +static void hisi_ptt_free_trace_buf(struct hisi_ptt *hisi_ptt)
+>> +{
+>> +    struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+>> +    struct device *dev = &hisi_ptt->pdev->dev;
+>> +    int i;
+>> +
+>> +    if (!ctrl->trace_buf)
+>> +        return;
+>> +
+>> +    for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; i++)
+> 
+> it's good practice to use {} for if-else or similar in the loop
+> 
 
->
-> jirka
+ok. will add {}.
+
+>> +        if (ctrl->trace_buf[i].addr)
+>> +            dma_free_coherent(dev, HISI_PTT_TRACE_BUF_SIZE,
+>> +                      ctrl->trace_buf[i].addr,
+>> +                      ctrl->trace_buf[i].dma);
+>> +
+>> +    kfree(ctrl->trace_buf);
+>> +    ctrl->trace_buf = NULL;
+>> +}
+>> +
+>> +static int hisi_ptt_alloc_trace_buf(struct hisi_ptt *hisi_ptt)
+>> +{
+>> +    struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+>> +    struct device *dev = &hisi_ptt->pdev->dev;
+>> +    int i;
+>> +
+>> +    hisi_ptt->trace_ctrl.buf_index = 0;
+>> +
+>> +    /* If the trace buffer has already been allocated, zero it. */
+>> +    if (ctrl->trace_buf) {
+>> +        for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; i++)
+>> +            memset(ctrl->trace_buf[i].addr, 0, HISI_PTT_TRACE_BUF_SIZE);
+>> +        return 0;
+>> +    }
+>> +
+>> +    ctrl->trace_buf = kcalloc(HISI_PTT_TRACE_BUF_CNT, sizeof(struct hisi_ptt_dma_buffer),
+>> +                  GFP_KERNEL);
+>> +    if (!ctrl->trace_buf)
+>> +        return -ENOMEM;
+>> +
+>> +    for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; ++i) {
+>> +        ctrl->trace_buf[i].addr = dma_alloc_coherent(dev, HISI_PTT_TRACE_BUF_SIZE,
+>> +                                 &ctrl->trace_buf[i].dma,
+>> +                                 GFP_KERNEL);
+> 
+> dmam_alloc_coherent() would mean that we can drop the manual frees
+> 
+
+ok. I think you want me to use the devm* APIs consistently in the drivers. So I'll change the
+buffer allocating to use that.
+
+>> +        if (!ctrl->trace_buf[i].addr) {
+>> +            hisi_ptt_free_trace_buf(hisi_ptt);
+>> +            return -ENOMEM;
+>> +        }
+>> +    }
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static void hisi_ptt_trace_end(struct hisi_ptt *hisi_ptt)
+>> +{
+>> +    writel(0, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>> +    hisi_ptt->trace_ctrl.status = HISI_PTT_TRACE_STATUS_OFF;
+>> +}
+>> +
+>> +static int hisi_ptt_trace_start(struct hisi_ptt *hisi_ptt)
+>> +{
+>> +    struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+>> +    u32 val;
+>> +    int i;
+>> +
+>> +    /* Check device idle before start trace */
+>> +    if (hisi_ptt_wait_trace_hw_idle(hisi_ptt)) {
+> 
+> hisi_ptt_wait_trace_hw_idle() is a bit of an odd odd, as I would expect it to return true when idle
+> 
+
+ok. will make it return boolean.
+
+>> +        pci_err(hisi_ptt->pdev, "Failed to start trace, the device is still busy.\n");
+>> +        return -EBUSY;
+>> +    }
+>> +
+>> +    /* Reset the DMA before start tracing */
+>> +    val = readl(hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>> +    val |= HISI_PTT_TRACE_CTRL_RST;
+>> +    writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>> +
+>> +    hisi_ptt_wait_dma_reset_done(hisi_ptt);
+>> +
+>> +    val = readl(hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>> +    val &= ~HISI_PTT_TRACE_CTRL_RST;
+>> +    writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>> +
+>> +    /* Clear the interrupt status */
+>> +    writel(HISI_PTT_TRACE_INT_STAT_MASK, hisi_ptt->iobase + HISI_PTT_TRACE_INT_STAT);
+>> +    writel(0, hisi_ptt->iobase + HISI_PTT_TRACE_INT_MASK);
+>> +
+>> +    /* Configure the trace DMA buffer */
+>> +    for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; i++) {
+>> +        writel(lower_32_bits(ctrl->trace_buf[i].dma),
+>> +               hisi_ptt->iobase + HISI_PTT_TRACE_ADDR_BASE_LO_0 +
+>> +               i * HISI_PTT_TRACE_ADDR_STRIDE);
+>> +        writel(upper_32_bits(ctrl->trace_buf[i].dma),
+>> +               hisi_ptt->iobase + HISI_PTT_TRACE_ADDR_BASE_HI_0 +
+>> +               i * HISI_PTT_TRACE_ADDR_STRIDE);
+>> +    }
+>> +    writel(HISI_PTT_TRACE_BUF_SIZE, hisi_ptt->iobase + HISI_PTT_TRACE_ADDR_SIZE);
+>> +
+>> +    /* Set the trace control register */
+>> +    val = FIELD_PREP(HISI_PTT_TRACE_CTRL_TYPE_SEL, ctrl->type);
+>> +    val |= FIELD_PREP(HISI_PTT_TRACE_CTRL_RXTX_SEL, ctrl->direction);
+>> +    val |= FIELD_PREP(HISI_PTT_TRACE_CTRL_DATA_FORMAT, ctrl->format);
+>> +    val |= FIELD_PREP(HISI_PTT_TRACE_CTRL_TARGET_SEL, hisi_ptt->trace_ctrl.filter);
+>> +    if (!hisi_ptt->trace_ctrl.is_port)
+>> +        val |= HISI_PTT_TRACE_CTRL_FILTER_MODE;
+>> +
+>> +    /* Start the Trace */
+>> +    val |= HISI_PTT_TRACE_CTRL_EN;
+>> +    writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>> +
+>> +    ctrl->status = HISI_PTT_TRACE_STATUS_ON;
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static irqreturn_t hisi_ptt_irq(int irq, void *context)
+> 
+> as I said before (I forget the reply), it's odd to add an empty handler.
+> 
+
+As mentioned in the commit message this patch only adds IRQ handler for simply
+response to the DMA events. Since you find it odd I'll remove the IRQ handler
+from this patch.
+
+Thanks.
+
+>> +{
+>> +    struct hisi_ptt *hisi_ptt = context;
+>> +    u32 status;
+>> +
+>> +    status = readl(hisi_ptt->iobase + HISI_PTT_TRACE_INT_STAT);
+>> +    if (!(status & HISI_PTT_TRACE_INT_STAT_MASK))
+>> +        return IRQ_NONE;
+>> +
+>> +    return IRQ_HANDLED;
+>> +}
+>> +
+> .
