@@ -2,181 +2,79 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D27E7C43217
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Feb 2022 18:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 474F1C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Feb 2022 19:37:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233345AbiBYSf0 (ORCPT
+        id S235606AbiBYTiB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Feb 2022 13:35:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47954 "EHLO
+        Fri, 25 Feb 2022 14:38:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233406AbiBYSf0 (ORCPT
+        with ESMTP id S235538AbiBYTh4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Feb 2022 13:35:26 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 973C71C57D6;
-        Fri, 25 Feb 2022 10:34:53 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3CE1461E7A;
-        Fri, 25 Feb 2022 18:34:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68290C340E7;
-        Fri, 25 Feb 2022 18:34:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645814092;
-        bh=TVmbNKyXM5tr3OV/MfK1q8iiXyx+5ewnxH4+yo4YrAk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sfCYPwMm5KHKsjxYaH46kkEk3v6RbpCiN/dPraqbj1tQmplyraTv4HVn/l3g20Ctu
-         m7J0LFPUl9uo+wy8305wlYbO7KoE1ysubMllgdKiWCXtvKSySdq6sqN39i6KS56FtL
-         38kgrp/e3evOP8vVZsBOiTsg8pZzeuv5aEodknNvEzfvmlbzRgksPT09PeYKQkVJ+q
-         cahevypVsrv4qm6v4rOmZDq31oh6BLePFOQg6PQeBSHFuKujIUS4JdhHpOoPQsNA1p
-         4vs3RsDs1trGHAWEul8prDxvV171oCVVK2NGUGfv63WE3Q81r5iAnKG6XRWkAJoN4X
-         IwM0HITTWEuJA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 5901A403C8; Fri, 25 Feb 2022 15:34:49 -0300 (-03)
-Date:   Fri, 25 Feb 2022 15:34:49 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Qi Liu <liuqi115@huawei.com>
-Cc:     will@kernel.org, mark.rutland@arm.com, john.garry@huawei.com,
-        linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxarm@huawei.com
-Subject: Re: [PATCH v2 2/2] perf jevents: Add support for HiSilicon CPA PMU
- aliasing
-Message-ID: <YhkhSZp+a715Ldzr@kernel.org>
-References: <20220224111129.41416-1-liuqi115@huawei.com>
- <20220224111129.41416-3-liuqi115@huawei.com>
+        Fri, 25 Feb 2022 14:37:56 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A5DD2BDC
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Feb 2022 11:37:20 -0800 (PST)
+Received: from fraeml704-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4K50KN0cBZz67DRW;
+        Sat, 26 Feb 2022 03:32:24 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml704-chm.china.huawei.com (10.206.15.53) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.21; Fri, 25 Feb 2022 20:37:17 +0100
+Received: from [10.47.84.151] (10.47.84.151) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Fri, 25 Feb
+ 2022 19:37:16 +0000
+Message-ID: <922424c8-f668-a600-ebca-ae9d181cf8e2@huawei.com>
+Date:   Fri, 25 Feb 2022 19:37:15 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220224111129.41416-3-liuqi115@huawei.com>
-X-Url:  http://acmel.wordpress.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: [PATCH v2 0/2] perf tool versioning fixes
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <namhyung@kernel.org>
+CC:     <linux-perf-users@vger.kernel.org>, <irogers@google.com>,
+        <olsajiri@gmail.com>, <rric@kernel.org>, <ak@linux.intel.com>
+References: <1645449409-158238-1-git-send-email-john.garry@huawei.com>
+From:   John Garry <john.garry@huawei.com>
+In-Reply-To: <1645449409-158238-1-git-send-email-john.garry@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.84.151]
+X-ClientProxiedBy: lhreml737-chm.china.huawei.com (10.201.108.187) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Feb 24, 2022 at 07:11:29PM +0800, Qi Liu escreveu:
-> Add support for HiSilicon CPA PMU aliasing.
+On 21/02/2022 13:16, John Garry wrote:
+> This series includes a couple of fixes I made from working on a clone of
+> acme.git
 > 
-> The kernel driver is in drivers/perf/hisilicon/hisi_uncore_cpa_pmu.c
 
-Thanks, applied the tools/perf part, the drivers/perf/ should go via the
-kernel maintainer for this area. From what I see its not yet merged.
+Hi Arnaldo,
 
-- Arnaldo
+Can you kindly check this series if you get a chance? If you try from a 
+clone of your own git you may see the issue reported in 2/2.
 
- 
-> Reviewed-by: John Garry <john.garry@huawei.com>
-> Signed-off-by: Qi Liu <liuqi115@huawei.com>
-> ---
->  .../arm64/hisilicon/hip09/sys/uncore-cpa.json | 81 +++++++++++++++++++
->  tools/perf/pmu-events/jevents.c               |  1 +
->  2 files changed, 82 insertions(+)
->  create mode 100644 tools/perf/pmu-events/arch/arm64/hisilicon/hip09/sys/uncore-cpa.json
+Thanks!!
+
+> It is based on perf/urgent @ commit b3d971ec2534.
 > 
-> diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip09/sys/uncore-cpa.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip09/sys/uncore-cpa.json
-> new file mode 100644
-> index 000000000000..7bcddec8a84f
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/arm64/hisilicon/hip09/sys/uncore-cpa.json
-> @@ -0,0 +1,81 @@
-> +[
-> +	{
-> +		"ConfigCode": "0x00",
-> +		"EventName": "cpa_cycles",
-> +		"BriefDescription": "count of CPA cycles",
-> +		"Compat": "0x00000030",
-> +		"Unit": "hisi_sicl,cpa"
-> +	},
-> +	{
-> +		"ConfigCode": "0x61",
-> +		"EventName": "cpa_p1_wr_dat",
-> +		"BriefDescription": "Number of write ops transmitted by the P1 port",
-> +		"Compat": "0x00000030",
-> +		"Unit": "hisi_sicl,cpa"
-> +	},
-> +	{
-> +		"ConfigCode": "0x62",
-> +		"EventName": "cpa_p1_rd_dat",
-> +		"BriefDescription": "Number of read ops transmitted by the P1 port",
-> +		"Compat": "0x00000030",
-> +		"Unit": "hisi_sicl,cpa"
-> +	},
-> +	{
-> +		"ConfigCode": "0x3",
-> +		"EventName": "cpa_p1_rd_dat_64b",
-> +		"BriefDescription": "Number of read ops transmitted by the P1 port which size is 64 bytes",
-> +		"Compat": "0x00000030",
-> +		"Unit": "hisi_sicl,cpa"
-> +	},
-> +	{
-> +		"ConfigCode": "0x4",
-> +		"EventName": "cpa_p1_rd_dat_32b",
-> +		"BriefDescription": "Number of read ops transmitted by the P1 port which size is 32 bytes",
-> +		"Compat": "0x00000030",
-> +		"Unit": "hisi_sicl,cpa"
-> +	},
-> +	{
-> +		"ConfigCode": "0xE1",
-> +		"EventName": "cpa_p0_wr_dat",
-> +		"BriefDescription": "Number of write ops transmitted by the P0 port",
-> +		"Compat": "0x00000030",
-> +		"Unit": "hisi_sicl,cpa"
-> +	},
-> +	{
-> +		"ConfigCode": "0xE2",
-> +		"EventName": "cpa_p0_rd_dat",
-> +		"BriefDescription": "Number of read ops transmitted by the P0 port",
-> +		"Compat": "0x00000030",
-> +		"Unit": "hisi_sicl,cpa"
-> +	},
-> +	{
-> +		"ConfigCode": "0x83",
-> +		"EventName": "cpa_p0_rd_dat_64b",
-> +		"BriefDescription": "Number of read ops transmitted by the P0 port which size is 64 bytes",
-> +		"Compat": "0x00000030",
-> +		"Unit": "hisi_sicl,cpa"
-> +	},
-> +	{
-> +		"ConfigCode": "0x84",
-> +		"EventName": "cpa_p0_rd_dat_32b",
-> +		"BriefDescription": "Number of read ops transmitted by the P0 port which size is 32 bytes",
-> +		"Compat": "0x00000030",
-> +		"Unit": "hisi_sicl,cpa"
-> +	},
-> +	{
-> +		"MetricExpr": "(cpa_p1_wr_dat * 64 + cpa_p1_rd_dat_64b * 64 + cpa_p1_rd_dat_32b * 32) / cpa_cycles",
-> +		"BriefDescription": "Average bandwidth of CPA Port 1",
-> +		"MetricGroup": "CPA",
-> +		"MetricName": "cpa_p1_avg_bw",
-> +		"Compat": "0x00000030",
-> +		"Unit": "hisi_sicl,cpa"
-> +	},
-> +	{
-> +		"MetricExpr": "(cpa_p0_wr_dat * 64 + cpa_p0_rd_dat_64b * 64 + cpa_p0_rd_dat_32b * 32) / cpa_cycles",
-> +		"BriefDescription": "Average bandwidth of CPA Port 0",
-> +		"MetricGroup": "CPA",
-> +		"MetricName": "cpa_p0_avg_bw",
-> +		"Compat": "0x00000030",
-> +		"Unit": "hisi_sicl,cpa"
-> +	}
-> +]
-> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-> index 1a57c3f81dd4..159d9eab6e79 100644
-> --- a/tools/perf/pmu-events/jevents.c
-> +++ b/tools/perf/pmu-events/jevents.c
-> @@ -277,6 +277,7 @@ static struct map {
->  	{ "CPU-M-CF", "cpum_cf" },
->  	{ "CPU-M-SF", "cpum_sf" },
->  	{ "UPI LL", "uncore_upi" },
-> +	{ "hisi_sicl,cpa", "hisi_sicl,cpa"},
->  	{ "hisi_sccl,ddrc", "hisi_sccl,ddrc" },
->  	{ "hisi_sccl,hha", "hisi_sccl,hha" },
->  	{ "hisi_sccl,l3c", "hisi_sccl,l3c" },
-> -- 
-> 2.24.0
+> Differences to v1:
+> - Add patch to fix kernel version tag
+> - Fix perf out-of-tree build
+> 
+> John Garry (2):
+>    perf: Fix dependency for version file creation
+>    perf: Fix version kernel tag
+> 
+>   tools/perf/Makefile.perf         |  4 ++--
+>   tools/perf/util/PERF-VERSION-GEN | 13 ++++---------
+>   2 files changed, 6 insertions(+), 11 deletions(-)
+> 
 
--- 
-
-- Arnaldo
