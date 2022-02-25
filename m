@@ -2,165 +2,131 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3FCC433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Feb 2022 12:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0EAC433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Feb 2022 12:41:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240452AbiBYMP3 (ORCPT
+        id S235472AbiBYMmJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Feb 2022 07:15:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46456 "EHLO
+        Fri, 25 Feb 2022 07:42:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240567AbiBYMP0 (ORCPT
+        with ESMTP id S230513AbiBYMmI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Feb 2022 07:15:26 -0500
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E928D22A281;
-        Fri, 25 Feb 2022 04:14:53 -0800 (PST)
-Received: by mail-ed1-x533.google.com with SMTP id x5so7111472edd.11;
-        Fri, 25 Feb 2022 04:14:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=A2FVJDFG4ibaxj79FQb/YJJI3anhvnerrRSVnXQAfAw=;
-        b=dt/lNJw72+T81FEiDA19lduriUfnxHeIltO1nP7R28UfWgjrDo62JCHLS6Vh6aRk+U
-         EpZwHd933a3Geua4QsuCnNeVbl6Zgf/6Gw/ukBtyXh3GlW3HW1/7DN+7EdTOgTGNoRSq
-         aRqAGDbuXZgxPocxlFmnuaWuFJ7ndrmpxIZQa2ItnGwHTbwohtH0spBZGBs0VI9waHNw
-         xVRF7225Nar4n4ElEdcMpkvcYDtlT//Qt2H9rf2P8lY0eM85HUseKuCKyrttUtiXhREg
-         8tSiKOMRylyt2EafCF820vhePFON2MyE0++vHu9Z2pTGtZ/8nyOtrAeG+khFdiOnC2bT
-         csbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=A2FVJDFG4ibaxj79FQb/YJJI3anhvnerrRSVnXQAfAw=;
-        b=A1vktcSYAs84O0WxpwuSeqAQ7KxNJT0kjyJ5/dQ7JLXeN6+iESwN6qddqzXHJZ+sMi
-         VAceox+ShKTdoEt9Zdzi0qpuE7ewoMmMclr7p37bHG2+FdUJ00EiMkiNT7parYLa5dBy
-         YvLnIeFn1xuUTKGW5JXCJmFNKaB2mgj0S8SiKnd631oeQXJEeA2iwuJDqszMLv1LCcSU
-         wSCKDzn79lw393sV85hpI6vcPquKhL/lK6BFjFm8aKRlvqd1CokJJY79UfjQqmhI6Bru
-         UvmwuGh3E5q2gRWq5ryJILgYqj3x6FW7QAWXmfA1yBQVXob3+O0aSapqOONCktkXnTUV
-         xBjQ==
-X-Gm-Message-State: AOAM5318QirpnEKy6rRxSwaWDpsnUNVkvzFBuMbnZCd/knLGG1Uq2V8R
-        XAm49AgLdRn8eI3wCuw0Iq0=
-X-Google-Smtp-Source: ABdhPJxMYT46AhwHEC2FZp0SSxqfNdIQMflUJ8Wv/R3v3/j7jgnFrrQU5XfuKQaVFvbrh/vOsU8mdQ==
-X-Received: by 2002:aa7:d2da:0:b0:410:b9f1:ff35 with SMTP id k26-20020aa7d2da000000b00410b9f1ff35mr6947663edr.217.1645791292336;
-        Fri, 25 Feb 2022 04:14:52 -0800 (PST)
-Received: from krava ([83.240.63.118])
-        by smtp.gmail.com with ESMTPSA id o8-20020a50d808000000b00412b240e008sm1236389edj.69.2022.02.25.04.14.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Feb 2022 04:14:51 -0800 (PST)
-Date:   Fri, 25 Feb 2022 13:14:49 +0100
-From:   Jiri Olsa <olsajiri@gmail.com>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>
-Subject: Re: [PATCH 3/3] perf tools: Rework prologue generation code
-Message-ID: <YhjIOX5BDYh4SRZB@krava>
-References: <20220217131916.50615-1-jolsa@kernel.org>
- <20220217131916.50615-4-jolsa@kernel.org>
- <CAEf4BzYP7=JuyuY=xZe71urpxat4ba-JnqeSTcHF=CYmsQbofQ@mail.gmail.com>
- <Yg9geQ0LJjhnrc7j@krava>
- <CAEf4BzZaFWhWf73JbfO7gLi82Nn4ma-qmaZBPij=giNzzoSCTQ@mail.gmail.com>
- <YhJF00d9baPtXjzH@krava>
- <CAEf4BzaiBO3_617kkXZdYJ8hS8YF--ZLgapNbgeeEJ-pY0H88g@mail.gmail.com>
+        Fri, 25 Feb 2022 07:42:08 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7E93B634F;
+        Fri, 25 Feb 2022 04:41:34 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 48FBF12FC;
+        Fri, 25 Feb 2022 04:41:34 -0800 (PST)
+Received: from [10.57.71.82] (unknown [10.57.71.82])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 90DCD3F5A1;
+        Fri, 25 Feb 2022 04:41:30 -0800 (PST)
+Subject: Re: [PATCH 2/2] perf arm-spe: Parse more SPE fields and store source
+To:     Ali Saidi <alisaidi@amazon.com>
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        andrew.kilroy@arm.com, benh@kernel.crashing.org,
+        james.clark@arm.com, john.garry@huawei.com, jolsa@redhat.com,
+        leo.yan@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        mark.rutland@arm.com, mathieu.poirier@linaro.org, mingo@redhat.com,
+        namhyung@kernel.org, peterz@infradead.org, will@kernel.org
+References: <9266bfb6-341c-1d9c-e96f-c9f856a5ffb6@arm.com>
+ <20220222192943.20137-1-alisaidi@amazon.com>
+From:   German Gomez <german.gomez@arm.com>
+Message-ID: <46ba455e-277d-6618-f710-e92a2243898d@arm.com>
+Date:   Fri, 25 Feb 2022 12:40:38 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzaiBO3_617kkXZdYJ8hS8YF--ZLgapNbgeeEJ-pY0H88g@mail.gmail.com>
+In-Reply-To: <20220222192943.20137-1-alisaidi@amazon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Feb 23, 2022 at 02:29:56PM -0800, Andrii Nakryiko wrote:
 
-SNIP
+On 22/02/2022 19:29, Ali Saidi wrote:
+> Hi German & Yan,
+>
+> Sorry about the delay in responding.
+>
+>> Hi German, Ali,
+>>
+> [...]
+>>>>>  };
+>>>>>>  
+>>>>>>  enum arm_spe_op_type {
+>>>>>>  	ARM_SPE_LD		= 1 << 0,
+>>>>>>  	ARM_SPE_ST		= 1 << 1,
+>>>>>> +	ARM_SPE_LDST_EXCL	= 1 << 2,
+>>>>>> +	ARM_SPE_LDST_ATOMIC	= 1 << 3,
+>>>>>> +	ARM_SPE_LDST_ACQREL	= 1 << 4,
+>>> Wondering if we can store this in perf_sample->flags. The values are
+>>> defined in "util/event.h" (PERF_IP_*). Maybe we can extend it to allow
+>>> doing "sample->flags = PERF_LDST_FLAG_LD | PERF_LDST_FLAG_ATOMIC" and
+>>> such.
+>>>
+>>> @Leo do you think that could work?
+>> Let's step back a bit and divide the decoding flow into two parts:
+>> backend and frontend.
+>>
+>> For the backend part, we decode the SPE hardware trace data and
+>> generate the SPE record in the file
+>> util/arm-spe-decoder/arm-spe-decoder.c.  As we want to support
+>> complete operation types, we can extend arm_spe_op_type as below:
+>>
+>> enum arm_spe_op_type {
+>>        /* First level operation type */
+>> 	ARM_SPE_OP_OTHER        = 1 << 0,
+>> 	ARM_SPE_OP_LDST		= 1 << 1,
+> [...]
+>
+> I'm OK with this approach, but perhaps instead the op type should
+> just be the raw traces op-type and op-type-payload? Macros to decode
+> this information are already present and extensively used in the text
+> decoding of the packet. While it's a little bit harder than just picking
+> a bit, the op_type is only used in a single place today outside of
+> the existing textual script decoding and what would be this decoding.
+> Do we forsee many more uses that would justify having to maintain
 
-> > and R3 is loaded in the prologue code (first 15 instructions)
-> > and it also sets 'err' (R2) with the result of the reading:
-> >
-> >            0: (bf) r6 = r1
-> >            1: (79) r3 = *(u64 *)(r6 +96)
-> >            2: (bf) r7 = r10
-> >            3: (07) r7 += -8
-> >            4: (7b) *(u64 *)(r10 -8) = r3
-> >            5: (b7) r2 = 8
-> >            6: (bf) r1 = r7
-> >            7: (85) call bpf_probe_read_user#-60848
-> >            8: (55) if r0 != 0x0 goto pc+2
-> >            9: (61) r3 = *(u32 *)(r10 -8)
-> >           10: (05) goto pc+3
-> >           11: (b7) r2 = 1
-> >           12: (b7) r3 = 0
-> >           13: (05) goto pc+1
-> >           14: (b7) r2 = 0
-> >           15: (bf) r1 = r6
-> >
-> >           16: (b7) r1 = 100
-> >           17: (6b) *(u16 *)(r10 -8) = r1
-> >           18: (18) r1 = 0x6c25203a6f697270
-> >           20: (7b) *(u64 *)(r10 -16) = r1
-> >           21: (bf) r1 = r10
-> >           22: (07) r1 += -16
-> >           23: (b7) r2 = 10
-> >           24: (85) call bpf_trace_printk#-54848
-> >           25: (b7) r0 = 1
-> >           26: (95) exit
-> >
-> >
-> > I'm still scratching my head how to workaround this.. we do want maps
-> > and all the other updates to the code, but verifier won't let it pass
-> > without the prologue code
-> 
-> ugh, perf cornered itself into supporting this crazy scheme and now
+I wanted to include some of the sve/simd bits in the perf samples.
 
-well, it just used the interface that was provided at the time
+For that I would be using a few of these flags.
 
-> there is no good solution. I'm still questioning the value of
-> supporting this going forward. Is there an evidence that anyone is
-> using this functionality at all? Is it worth it trying to carry it on
-> just because we have some example that exercises this feature?
-
-yea we discussed this again and I think we can somehow mark this
-feature in perf as deprecated and remove it after some time,
-because even with the workaround below it'll be pita ;-)
-
-or people will come and scream and we will find some other solution
-
-I already sent the rest of the changes (prog/map priv) separately
-and will send some RFC for the deprecation
-
-thanks,
-jirka
-
-> 
-> Anyways, one way to solve this is to add bpf_program__set_insns() that
-> could be called from prog_init_fn callback (which I just realized
-> hasn't landed yet, I'll send v4 today) to prepend a simple preamble
-> like this:
-> 
-> r1 = 0;
-> r2 = 0;
-> r3 = 0;
-> f4 = 0;
-> r5 = 0; /* how many input arguments we support? */
-> 
-> This will make all input arguments initialized, libbpf will be able to
-> adjust all the relocations and stuff. Once this "prototype program" is
-> loaded, perf can grab final instructions and replace first X
-> instructions with desired preamble.
-> 
-> But... ugliness and horror, yeah :(
-> 
-> 
-> >
-> > jirka
+> the immediate format vs finding a way to unify arm_spe_pkt_desc_op_type
+> to support both the text decoding and this?
+>
+> [...]
+>> So I am just wandering if we can set the field
+>> sample::data_src::mem_lock for atomic operations, like:
+>>
+>>    data_src.mem_op   = PERF_MEM_OP_LOAD;
+>>    data_src.mem_lock = PERF_MEM_LOCK_ATOMIC;
+>>
+>> The field "mem_lock" is only two bits, we can consider to extend the
+>> structure with an extra filed "mem_lock_ext" if it cannot meet our
+>> requirement.
+> These are for the LOCK instruction on x86. I don't know that we want to
+> overload the meaning here. Minimally there is value in differentiating
+> exclusives vs atomics.
+>
+>>>>>> +	ARM_SPE_BR		= 1 << 5,
+>>>>>> +	ARM_SPE_BR_COND		= 1 << 6,
+>>>>>> +	ARM_SPE_BR_IND		= 1 << 7,
+>>> Seems like we can store BR_COND in the existing "branch-miss" event
+>>> (--itrace=b) with:
+>>>
+>>> sample->flags = PERF_IP_FLAG_BRANCH;
+>>> sample->flags |= PERF_IP_FLAG_CONDITIONAL;
+>>> and/or
+>>> sample->flags |= PERF_IP_FLAG_INDIRECT;
+>>>
+>>> PERF_IP_FLAG_INDIRECT doesn't exist yet but we can probably add it.
+>> Yes, for branch samples, this makes sense for me.
+> makes sense to me too.
+>
+> Ali
+>
