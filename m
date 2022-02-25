@@ -2,48 +2,49 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FA9C433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Feb 2022 10:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EFFC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Feb 2022 10:36:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239648AbiBYKhA (ORCPT
+        id S239631AbiBYKhB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Feb 2022 05:37:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37088 "EHLO
+        Fri, 25 Feb 2022 05:37:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239634AbiBYKg5 (ORCPT
+        with ESMTP id S239643AbiBYKg7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Feb 2022 05:36:57 -0500
-Received: from esa4.hc1455-7.c3s2.iphmx.com (esa4.hc1455-7.c3s2.iphmx.com [68.232.139.117])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A58424FA02;
-        Fri, 25 Feb 2022 02:36:24 -0800 (PST)
-IronPort-SDR: D6FgPXK2j950xBnExInaXsP24Vu1JkBjTBH2CJ++8R0BUXnD4nCMf1E3RmHVoNef1TVpfJG18I
- aKiHTtoScN2T+QcSypTdk+C6wigS9YUW+9LNYjPuHYgBH1nBWtsQSjVpyR7APaI1ps10tM2AUM
- R9N5v0tfVj6H+EsWbBuNBoATElZXx3hewbPlaP7a80axjZaXTw2QuHZ8NO1YIm2S9cQtn1Wp7A
- CI/Ij5K1CK92qzUuzgNxPiPBO3sR1YyfsAcevQTawTyYg3iesbAf9HZf163+o7r3xkB/JYR52d
- vsH5Hvt6VVQwgVX+FWazQwbI
-X-IronPort-AV: E=McAfee;i="6200,9189,10268"; a="64087260"
+        Fri, 25 Feb 2022 05:36:59 -0500
+X-Greylist: delayed 64 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 25 Feb 2022 02:36:25 PST
+Received: from esa12.hc1455-7.c3s2.iphmx.com (esa12.hc1455-7.c3s2.iphmx.com [139.138.37.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 118C929DD52;
+        Fri, 25 Feb 2022 02:36:25 -0800 (PST)
+IronPort-SDR: DibmdeHjlOFNowuKLV0Dp7lXHcEDpQyJ4NvUNmqDBj1hIi7+CnKKzyNXNOQ+gv/KIdCclwwpjm
+ 53I8KDKzrCvxp2BjCwiuRuIdYTnS6ueTLAy0VB/8rPMvlh6OnypTmbAvssj6umYJqQZnNZYBtE
+ f22pCyFsIWDdMbHBwfPYX/tlZos1Vw0aM5LjMOAgDNtL+g7AffPRH1TMiL9Z6kVyJ64idsEDie
+ opq24uZ7h5D54yPrzxCRPWxHGLtwBfQiJp7BOQ/uAo/0Q2WAoV9eOKwQcxpYuCBevhiVYhUhbW
+ v1Gl6fvHgoogVkBsHuy0pXdA
+X-IronPort-AV: E=McAfee;i="6200,9189,10268"; a="43953260"
 X-IronPort-AV: E=Sophos;i="5.90,136,1643641200"; 
-   d="scan'208";a="64087260"
-Received: from unknown (HELO oym-r3.gw.nic.fujitsu.com) ([210.162.30.91])
-  by esa4.hc1455-7.c3s2.iphmx.com with ESMTP; 25 Feb 2022 19:35:17 +0900
-Received: from oym-m1.gw.nic.fujitsu.com (oym-nat-oym-m1.gw.nic.fujitsu.com [192.168.87.58])
-        by oym-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id DABBCCA245;
-        Fri, 25 Feb 2022 19:35:15 +0900 (JST)
+   d="scan'208";a="43953260"
+Received: from unknown (HELO oym-r1.gw.nic.fujitsu.com) ([210.162.30.89])
+  by esa12.hc1455-7.c3s2.iphmx.com with ESMTP; 25 Feb 2022 19:35:18 +0900
+Received: from oym-m3.gw.nic.fujitsu.com (oym-nat-oym-m3.gw.nic.fujitsu.com [192.168.87.60])
+        by oym-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id D31A1F617A;
+        Fri, 25 Feb 2022 19:35:17 +0900 (JST)
 Received: from yto-om3.fujitsu.com (yto-om3.o.css.fujitsu.com [10.128.89.164])
-        by oym-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id 9A105D9945;
-        Fri, 25 Feb 2022 19:35:14 +0900 (JST)
+        by oym-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id DF49CD95E7;
+        Fri, 25 Feb 2022 19:35:16 +0900 (JST)
 Received: from localhost.localdomain (bakeccha.fct.css.fujitsu.com [10.126.195.136])
-        by yto-om3.fujitsu.com (Postfix) with ESMTP id 7F5BC40124EF7;
-        Fri, 25 Feb 2022 19:35:09 +0900 (JST)
+        by yto-om3.fujitsu.com (Postfix) with ESMTP id C8B9B40124EEE;
+        Fri, 25 Feb 2022 19:35:16 +0900 (JST)
 From:   Shunsuke <nakamura.shun@fujitsu.com>
 To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
         jolsa@redhat.com, namhyung@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Shunsuke Nakamura <nakamura.shun@fujitsu.com>
-Subject: [RFC PATCH 2/7] libperf: Add perf_evsel__set_close_on_exec() function
-Date:   Fri, 25 Feb 2022 19:31:09 +0900
-Message-Id: <20220225103114.144239-3-nakamura.shun@fujitsu.com>
+Subject: [RFC PATCH 4/7] libperf: Add perf_evsel__set_signal() functions
+Date:   Fri, 25 Feb 2022 19:31:11 +0900
+Message-Id: <20220225103114.144239-5-nakamura.shun@fujitsu.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220225103114.144239-1-nakamura.shun@fujitsu.com>
 References: <20220225103114.144239-1-nakamura.shun@fujitsu.com>
@@ -56,176 +57,208 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 From: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
 
-Move evsel::open_flags to perf_evsel::open_flags and add a function to
-set PERF_FLAG_FD_CLOEXEC.
+Add the following functions:
+
+  perf_evsel__set_signal()
+  perf_evsel__set_signal_cpu()
+
+to set the parameters to get the overflow signal.
 
 Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
 ---
- tools/lib/perf/Documentation/libperf.txt |  1 +
- tools/lib/perf/evsel.c                   | 15 ++++++++++++++-
- tools/lib/perf/include/internal/evsel.h  |  2 ++
- tools/lib/perf/include/perf/evsel.h      |  1 +
- tools/lib/perf/libperf.map               |  1 +
- tools/perf/util/evsel.c                  | 16 +++++++++-------
- tools/perf/util/evsel.h                  |  1 -
- 7 files changed, 28 insertions(+), 9 deletions(-)
+ tools/lib/perf/Documentation/libperf.txt |   4 +
+ tools/lib/perf/evsel.c                   | 105 +++++++++++++++++++++++
+ tools/lib/perf/include/perf/evsel.h      |   6 ++
+ tools/lib/perf/libperf.map               |   2 +
+ 4 files changed, 117 insertions(+)
 
 diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
-index 32c5051c24eb..96a451cd34eb 100644
+index 8f523293fb9d..d0aa57c6ca97 100644
 --- a/tools/lib/perf/Documentation/libperf.txt
 +++ b/tools/lib/perf/Documentation/libperf.txt
-@@ -149,6 +149,7 @@ SYNOPSIS
+@@ -151,6 +151,10 @@ SYNOPSIS
+                               int cpu_map_idx);
+   int perf_evsel__period(struct perf_evsel *evsel, int period);
+   int perf_evsel__period_cpu(struct perf_evsel *evsel, int period, int cpu_map_idx);
++  int perf_evsel__set_signal(struct perf_evsel *evsel, int owner_type, unsigned int signal,
++                             struct sigaction *sig);
++  int perf_evsel__set_signal_cpu(struct perf_evsel *evsel, int owner_type, unsigned int signal,
++                                 struct sigaction *sig, int cpu_map_idx);
    struct perf_cpu_map *perf_evsel__cpus(struct perf_evsel *evsel);
    struct perf_thread_map *perf_evsel__threads(struct perf_evsel *evsel);
    struct perf_event_attr *perf_evsel__attr(struct perf_evsel *evsel);
-+  int perf_evsel__set_close_on_exec(struct perf_evsel *evsel);
- --
- 
- *API to handle maps (perf ring buffers):*
 diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-index 210ea7c06ce8..d22b1468a1ad 100644
+index 8348545874e4..991ab04112b1 100644
 --- a/tools/lib/perf/evsel.c
 +++ b/tools/lib/perf/evsel.c
-@@ -26,6 +26,7 @@ void perf_evsel__init(struct perf_evsel *evsel, struct perf_event_attr *attr,
- 	evsel->attr = *attr;
- 	evsel->idx  = idx;
- 	evsel->leader = evsel;
-+	evsel->open_flags = 0;
+@@ -1,4 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
++#ifndef _GNU_SOURCE
++#define _GNU_SOURCE
++#endif
+ #include <errno.h>
+ #include <unistd.h>
+ #include <sys/syscall.h>
+@@ -16,6 +19,9 @@
+ #include <internal/lib.h>
+ #include <linux/string.h>
+ #include <sys/ioctl.h>
++#include <signal.h>
++#include <fcntl.h>
++#include <sys/types.h>
+ #include <sys/mman.h>
+ #include <asm/bug.h>
+ 
+@@ -351,6 +357,28 @@ static int perf_evsel__run_ioctl(struct perf_evsel *evsel,
+ 	return 0;
  }
  
- struct perf_evsel *perf_evsel__new(struct perf_event_attr *attr)
-@@ -158,7 +159,7 @@ int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
- 
- 			fd = sys_perf_event_open(&evsel->attr,
- 						 threads->map[thread].pid,
--						 cpu, group_fd, 0);
-+						 cpu, group_fd, evsel->open_flags);
- 
- 			if (fd < 0)
- 				return -errno;
-@@ -454,3 +455,15 @@ void perf_counts_values__scale(struct perf_counts_values *count,
- 	if (pscaled)
- 		*pscaled = scaled;
- }
++static int perf_evsel__run_fcntl(struct perf_evsel *evsel,
++				 unsigned int cmd, unsigned long arg,
++				 int cpu_map_idx)
++{
++	int thread;
 +
-+int perf_evsel__set_close_on_exec(struct perf_evsel *evsel)
++	for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
++		int err;
++		int *fd = FD(evsel, cpu_map_idx, thread);
++
++		if (!fd || *fd < 0)
++			return -1;
++
++		err = fcntl(*fd, cmd, arg);
++
++		if (err)
++			return err;
++	}
++
++	return 0;
++}
++
+ int perf_evsel__enable_cpu(struct perf_evsel *evsel, int cpu_map_idx)
+ {
+ 	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, 0, cpu_map_idx);
+@@ -437,6 +465,83 @@ int perf_evsel__period(struct perf_evsel *evsel, __u64 period)
+ 	return err;
+ }
+ 
++int perf_evsel__set_signal_cpu(struct perf_evsel *evsel, int owner_type, unsigned int signal,
++			       struct sigaction *sig, int cpu_map_idx)
 +{
 +	int err = 0;
++	struct f_owner_ex owner;
 +
-+	if (evsel)
-+		evsel->open_flags |= PERF_FLAG_FD_CLOEXEC;
-+	else
-+		err = -1;
++	switch (owner_type) {
++	case F_OWNER_PID:
++		owner.pid = getpid();
++		break;
++	case F_OWNER_TID:
++		owner.pid = syscall(SYS_gettid);
++		break;
++	default:
++		return -1;
++	}
++
++	err = perf_evsel__run_fcntl(evsel, F_SETFL, (O_RDWR | O_NONBLOCK | O_ASYNC), cpu_map_idx);
++	if (err)
++		return err;
++
++	err = perf_evsel__run_fcntl(evsel, F_SETSIG, signal, cpu_map_idx);
++	if (err)
++		return err;
++
++	err = perf_evsel__run_fcntl(evsel, F_SETOWN_EX, (unsigned long)&owner, cpu_map_idx);
++	if (err)
++		return err;
++
++	err = sigaction(signal, sig, NULL);
++	if (err)
++		return err;
 +
 +	return err;
 +}
-diff --git a/tools/lib/perf/include/internal/evsel.h b/tools/lib/perf/include/internal/evsel.h
-index cfc9ebd7968e..37a99cf261b3 100644
---- a/tools/lib/perf/include/internal/evsel.h
-+++ b/tools/lib/perf/include/internal/evsel.h
-@@ -51,6 +51,8 @@ struct perf_evsel {
- 	int			 nr_members;
- 	bool			 system_wide;
- 	int			 idx;
 +
-+	unsigned long		 open_flags;
- };
- 
- void perf_evsel__init(struct perf_evsel *evsel, struct perf_event_attr *attr,
++int perf_evsel__set_signal(struct perf_evsel *evsel, int owner_type, unsigned int signal,
++			   struct sigaction *sig)
++{
++	int i;
++	int err = 0;
++	struct f_owner_ex owner;
++
++	switch (owner_type) {
++	case F_OWNER_PID:
++		owner.pid = getpid();
++		break;
++	case F_OWNER_TID:
++		owner.pid = syscall(SYS_gettid);
++		break;
++	default:
++		return -1;
++	}
++
++	owner.type = owner_type;
++
++	for (i = 0; i < xyarray__max_x(evsel->fd) && !err; i++) {
++		err = perf_evsel__run_fcntl(evsel, F_SETFL, (O_RDWR | O_NONBLOCK | O_ASYNC), i);
++		if (err)
++			return err;
++
++		err = perf_evsel__run_fcntl(evsel, F_SETSIG, signal, i);
++		if (err)
++			return err;
++
++		err = perf_evsel__run_fcntl(evsel, F_SETOWN_EX, (unsigned long)&owner, i);
++		if (err)
++			return err;
++	}
++
++	err = sigaction(signal, sig, NULL);
++	if (err)
++		return err;
++
++	return err;
++}
++
+ int perf_evsel__apply_filter(struct perf_evsel *evsel, const char *filter)
+ {
+ 	int err = 0, i;
 diff --git a/tools/lib/perf/include/perf/evsel.h b/tools/lib/perf/include/perf/evsel.h
-index 2a9516b42d15..23b0334a4c57 100644
+index 9ec24a5f5f9f..15768fc91910 100644
 --- a/tools/lib/perf/include/perf/evsel.h
 +++ b/tools/lib/perf/include/perf/evsel.h
-@@ -43,5 +43,6 @@ LIBPERF_API struct perf_thread_map *perf_evsel__threads(struct perf_evsel *evsel
- LIBPERF_API struct perf_event_attr *perf_evsel__attr(struct perf_evsel *evsel);
- LIBPERF_API void perf_counts_values__scale(struct perf_counts_values *count,
- 					   bool scale, __s8 *pscaled);
-+LIBPERF_API int perf_evsel__set_close_on_exec(struct perf_evsel *evsel);
+@@ -5,6 +5,7 @@
+ #include <stdint.h>
+ #include <perf/core.h>
+ #include <stdbool.h>
++#include <signal.h>
+ #include <linux/types.h>
  
- #endif /* __LIBPERF_EVSEL_H */
+ struct perf_evsel;
+@@ -43,6 +44,11 @@ LIBPERF_API int perf_evsel__refresh_cpu(struct perf_evsel *evsel, int refresh,
+ 					int cpu_map_idx);
+ LIBPERF_API int perf_evsel__period(struct perf_evsel *evsel, __u64 period);
+ LIBPERF_API int perf_evsel__period_cpu(struct perf_evsel *evsel, __u64 period, int cpu_map_idx);
++LIBPERF_API int perf_evsel__set_signal(struct perf_evsel *evsel, int owner_type,
++				       unsigned int signal, struct sigaction *sig);
++LIBPERF_API int perf_evsel__set_signal_cpu(struct perf_evsel *evsel, int owner_type,
++					   unsigned int signal, struct sigaction *sig,
++					   int cpu_map_idx);
+ LIBPERF_API struct perf_cpu_map *perf_evsel__cpus(struct perf_evsel *evsel);
+ LIBPERF_API struct perf_thread_map *perf_evsel__threads(struct perf_evsel *evsel);
+ LIBPERF_API struct perf_event_attr *perf_evsel__attr(struct perf_evsel *evsel);
 diff --git a/tools/lib/perf/libperf.map b/tools/lib/perf/libperf.map
-index 93696affda2e..0f8d13f9009b 100644
+index 83ecbce9cfbb..5e04fe2b611c 100644
 --- a/tools/lib/perf/libperf.map
 +++ b/tools/lib/perf/libperf.map
-@@ -52,6 +52,7 @@ LIBPERF_0.0.1 {
- 		perf_mmap__read_done;
- 		perf_mmap__read_event;
- 		perf_counts_values__scale;
-+		perf_evsel__set_close_on_exec;
- 	local:
- 		*;
- };
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 22d3267ce294..52c34552ee76 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1794,9 +1794,9 @@ static int __evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
- 	    perf_evsel__alloc_fd(&evsel->core, perf_cpu_map__nr(cpus), nthreads) < 0)
- 		return -ENOMEM;
- 
--	evsel->open_flags = PERF_FLAG_FD_CLOEXEC;
-+	evsel->core.open_flags = PERF_FLAG_FD_CLOEXEC;
- 	if (evsel->cgrp)
--		evsel->open_flags |= PERF_FLAG_PID_CGROUP;
-+		evsel->core.open_flags |= PERF_FLAG_PID_CGROUP;
- 
- 	return 0;
- }
-@@ -1814,7 +1814,7 @@ static void evsel__disable_missing_features(struct evsel *evsel)
- 		evsel->core.attr.clockid = 0;
- 	}
- 	if (perf_missing_features.cloexec)
--		evsel->open_flags &= ~(unsigned long)PERF_FLAG_FD_CLOEXEC;
-+		evsel->core.open_flags &= ~(unsigned long)PERF_FLAG_FD_CLOEXEC;
- 	if (perf_missing_features.mmap2)
- 		evsel->core.attr.mmap2 = 0;
- 	if (evsel->pmu && evsel->pmu->missing_features.exclude_guest)
-@@ -1902,7 +1902,8 @@ bool evsel__detect_missing_features(struct evsel *evsel)
- 		perf_missing_features.clockid = true;
- 		pr_debug2_peo("switching off use_clockid\n");
- 		return true;
--	} else if (!perf_missing_features.cloexec && (evsel->open_flags & PERF_FLAG_FD_CLOEXEC)) {
-+	} else if (!perf_missing_features.cloexec &&
-+		   (evsel->core.open_flags & PERF_FLAG_FD_CLOEXEC)) {
- 		perf_missing_features.cloexec = true;
- 		pr_debug2_peo("switching off cloexec flag\n");
- 		return true;
-@@ -2029,11 +2030,12 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 			test_attr__ready();
- 
- 			pr_debug2_peo("sys_perf_event_open: pid %d  cpu %d  group_fd %d  flags %#lx",
--				pid, perf_cpu_map__cpu(cpus, idx).cpu, group_fd, evsel->open_flags);
-+				pid, perf_cpu_map__cpu(cpus, idx).cpu, group_fd,
-+				evsel->core.open_flags);
- 
- 			fd = sys_perf_event_open(&evsel->core.attr, pid,
- 						perf_cpu_map__cpu(cpus, idx).cpu,
--						group_fd, evsel->open_flags);
-+						group_fd, evsel->core.open_flags);
- 
- 			FD(evsel, idx, thread) = fd;
- 
-@@ -2050,7 +2052,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 			if (unlikely(test_attr__enabled)) {
- 				test_attr__open(&evsel->core.attr, pid,
- 						perf_cpu_map__cpu(cpus, idx),
--						fd, group_fd, evsel->open_flags);
-+						fd, group_fd, evsel->core.open_flags);
- 			}
- 
- 			pr_debug2_peo(" = %d\n", fd);
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 041b42d33bf5..8a545954eec7 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -152,7 +152,6 @@ struct evsel {
- 		struct bperf_leader_bpf *leader_skel;
- 		struct bperf_follower_bpf *follower_skel;
- 	};
--	unsigned long		open_flags;
- 	int			precise_ip_original;
- 
- 	/* for missing_features */
+@@ -32,6 +32,8 @@ LIBPERF_0.0.1 {
+ 		perf_evsel__refresh_cpu;
+ 		perf_evsel__period;
+ 		perf_evsel__period_cpu;
++		perf_evsel__set_signal;
++		perf_evsel__set_signal_cpu;
+ 		perf_evsel__cpus;
+ 		perf_evsel__threads;
+ 		perf_evsel__attr;
 -- 
 2.31.1
 
