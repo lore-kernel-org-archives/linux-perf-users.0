@@ -2,94 +2,178 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4798C433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Feb 2022 13:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FC7C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Feb 2022 14:32:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232577AbiBYNQX (ORCPT
+        id S241790AbiBYOdH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Feb 2022 08:16:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42798 "EHLO
+        Fri, 25 Feb 2022 09:33:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229974AbiBYNQW (ORCPT
+        with ESMTP id S241786AbiBYOci (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Feb 2022 08:16:22 -0500
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0139181E5A;
-        Fri, 25 Feb 2022 05:15:50 -0800 (PST)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id 482B21F380;
-        Fri, 25 Feb 2022 13:15:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1645794949; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=PmNIIM3gpZH3rKjV9RV8YeTjUMiihTOkooMrV/E9GyM=;
-        b=ZSrW6K79vK/zTZhgRs6T7UlP4hs6EUqsHsiSUV/My/ujlxqJ316FZPZVfSn/2Mnqf4GaUM
-        wT5ysHhyfe82zyDrREof/bqZqIM4PWuXHAYmjrRQqwBy2PFrvNMRePKzBEG2uXwyibPu7R
-        UMh+UPy5ffqL0H6S/rd2bXklgMFI368=
-Received: from suse.cz (unknown [10.100.216.66])
+        Fri, 25 Feb 2022 09:32:38 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A5C716F96F;
+        Fri, 25 Feb 2022 06:32:06 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id A46FFA3B83;
-        Fri, 25 Feb 2022 13:15:48 +0000 (UTC)
-Date:   Fri, 25 Feb 2022 14:15:48 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Lecopzer Chen <lecopzer.chen@mediatek.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
+        by ams.source.kernel.org (Postfix) with ESMTPS id C5F87B831F8;
+        Fri, 25 Feb 2022 14:32:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A86AC340E7;
+        Fri, 25 Feb 2022 14:32:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645799523;
+        bh=R7UNX1EqDtGkiEAz9dtDTaaeHOPhPEl39fh/58YEnQE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bgqJcWqvGAoXF08p/LH3hYFTePdjznND7PCmsKaczhezQ+3/BhmYy/L6t1T3YP+Zh
+         CP639+Wia/zVanM9JURiQcBx12XkW2vlkFuXE05vLd2RyQy9DqdvF7X0Cz/RPR4qT4
+         zbi2lRlOzacRqog1z/0kYCRGeIV0WEUh62DA6oU/HdJcCmL1cd/Np0LYwerbDkOcza
+         c7Wa8DGFFTziPBEguzqM2Wc3MfN+gz3Tc49xqyiRGrTVLkHA31okY0nD4NuaBUjjWv
+         GV4aykR+tloz1ZM4Spw82lY5Q/EVTEJXoHEdEH48Pr4Hw6pom6KqSo9WN+lD8kXqJt
+         qEk2CvhgMWGeA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 2C484403C8; Fri, 25 Feb 2022 11:32:00 -0300 (-03)
+Date:   Fri, 25 Feb 2022 11:32:00 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>, davem@davemloft.net,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Julien Thierry <jthierry@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wang Qing <wangqing@vivo.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Xiaoming Ni <nixiaoming@huawei.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, sumit.garg@linaro.org,
-        kernelfans@gmail.com, yj.chiang@mediatek.com
-Subject: Re: [PATCH 3/5] kernel/watchdog_hld: Ensure CPU-bound context when
- creating hardlockup detector event
-Message-ID: <YhjWhCoZelIhBMyS@alley>
-References: <20220212104349.14266-1-lecopzer.chen@mediatek.com>
- <20220212104349.14266-4-lecopzer.chen@mediatek.com>
+        Ian Rogers <irogers@google.com>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>
+Subject: Re: [PATCH 3/3] perf tools: Rework prologue generation code
+Message-ID: <YhjoYEoF7FJSwKO2@kernel.org>
+References: <20220217131916.50615-1-jolsa@kernel.org>
+ <20220217131916.50615-4-jolsa@kernel.org>
+ <CAEf4BzYP7=JuyuY=xZe71urpxat4ba-JnqeSTcHF=CYmsQbofQ@mail.gmail.com>
+ <Yg9geQ0LJjhnrc7j@krava>
+ <CAEf4BzZaFWhWf73JbfO7gLi82Nn4ma-qmaZBPij=giNzzoSCTQ@mail.gmail.com>
+ <YhJF00d9baPtXjzH@krava>
+ <CAEf4BzaiBO3_617kkXZdYJ8hS8YF--ZLgapNbgeeEJ-pY0H88g@mail.gmail.com>
+ <YhjIOX5BDYh4SRZB@krava>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220212104349.14266-4-lecopzer.chen@mediatek.com>
+In-Reply-To: <YhjIOX5BDYh4SRZB@krava>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat 2022-02-12 18:43:47, Lecopzer Chen wrote:
-> From: Pingfan Liu <kernelfans@gmail.com>
+Em Fri, Feb 25, 2022 at 01:14:49PM +0100, Jiri Olsa escreveu:
+> On Wed, Feb 23, 2022 at 02:29:56PM -0800, Andrii Nakryiko wrote:
 > 
-> from: Pingfan Liu <kernelfans@gmail.com>
+> SNIP
 > 
-> hardlockup_detector_event_create() should create perf_event on the
-> current CPU. Preemption could not get disabled because
-> perf_event_create_kernel_counter() allocates memory. Instead,
-> the CPU locality is achieved by processing the code in a per-CPU
-> bound kthread.
-> 
-> Add a check to prevent mistakes when calling the code in another
-> code path.
-> 
-> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> Co-developed-by: Lecopzer Chen <lecopzer.chen@mediatek.com>
-> Signed-off-by: Lecopzer Chen <lecopzer.chen@mediatek.com>
+> > > and R3 is loaded in the prologue code (first 15 instructions)
+> > > and it also sets 'err' (R2) with the result of the reading:
+> > >
+> > >            0: (bf) r6 = r1
+> > >            1: (79) r3 = *(u64 *)(r6 +96)
+> > >            2: (bf) r7 = r10
+> > >            3: (07) r7 += -8
+> > >            4: (7b) *(u64 *)(r10 -8) = r3
+> > >            5: (b7) r2 = 8
+> > >            6: (bf) r1 = r7
+> > >            7: (85) call bpf_probe_read_user#-60848
+> > >            8: (55) if r0 != 0x0 goto pc+2
+> > >            9: (61) r3 = *(u32 *)(r10 -8)
+> > >           10: (05) goto pc+3
+> > >           11: (b7) r2 = 1
+> > >           12: (b7) r3 = 0
+> > >           13: (05) goto pc+1
+> > >           14: (b7) r2 = 0
+> > >           15: (bf) r1 = r6
+> > >
+> > >           16: (b7) r1 = 100
+> > >           17: (6b) *(u16 *)(r10 -8) = r1
+> > >           18: (18) r1 = 0x6c25203a6f697270
+> > >           20: (7b) *(u64 *)(r10 -16) = r1
+> > >           21: (bf) r1 = r10
+> > >           22: (07) r1 += -16
+> > >           23: (b7) r2 = 10
+> > >           24: (85) call bpf_trace_printk#-54848
+> > >           25: (b7) r0 = 1
+> > >           26: (95) exit
+> > >
+> > >
+> > > I'm still scratching my head how to workaround this.. we do want maps
+> > > and all the other updates to the code, but verifier won't let it pass
+> > > without the prologue code
+> > 
+> > ugh, perf cornered itself into supporting this crazy scheme and now
+ 
+> well, it just used the interface that was provided at the time
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+At the time it was where experimentation was done with tooling for eBPF,
+Wangnan tried to provide a compact way to give access to parameters.
 
-Best Regards,
-Petr
+The problem now is for libbpf to remove something that is used and that
+was documented to some extent in the perf tools examples so there _may_
+be some usage of it, we just can't know.
+
+Its like Linux removing some syscall that is "crazy" and wait for
+somebody to complain of the breakage caused when they update to a new
+version.
+ 
+> > there is no good solution. I'm still questioning the value of
+> > supporting this going forward. Is there an evidence that anyone is
+> > using this functionality at all? Is it worth it trying to carry it on
+> > just because we have some example that exercises this feature?
+ 
+> yea we discussed this again and I think we can somehow mark this
+> feature in perf as deprecated and remove it after some time,
+> because even with the workaround below it'll be pita ;-)
+> 
+> or people will come and scream and we will find some other solution
+
+:-\ if you have some "ugly" way to keep the feature, can't we go with
+it?
+ 
+> I already sent the rest of the changes (prog/map priv) separately
+> and will send some RFC for the deprecation
+
+I'll look at it now.
+
+Thanks for your work on this, Jiri.
+
+- Araldo
+ 
+> thanks,
+> jirka
+> 
+> > 
+> > Anyways, one way to solve this is to add bpf_program__set_insns() that
+> > could be called from prog_init_fn callback (which I just realized
+> > hasn't landed yet, I'll send v4 today) to prepend a simple preamble
+> > like this:
+> > 
+> > r1 = 0;
+> > r2 = 0;
+> > r3 = 0;
+> > f4 = 0;
+> > r5 = 0; /* how many input arguments we support? */
+> > 
+> > This will make all input arguments initialized, libbpf will be able to
+> > adjust all the relocations and stuff. Once this "prototype program" is
+> > loaded, perf can grab final instructions and replace first X
+> > instructions with desired preamble.
+> > 
+> > But... ugliness and horror, yeah :(
+> > 
+> > 
+> > >
+> > > jirka
+
+-- 
+
+- Arnaldo
