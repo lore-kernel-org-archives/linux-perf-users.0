@@ -2,79 +2,82 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 474F1C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Feb 2022 19:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A0F3C433F5
+	for <linux-perf-users@archiver.kernel.org>; Sat, 26 Feb 2022 09:52:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235606AbiBYTiB (ORCPT
+        id S230455AbiBZJxS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Feb 2022 14:38:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60210 "EHLO
+        Sat, 26 Feb 2022 04:53:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235538AbiBYTh4 (ORCPT
+        with ESMTP id S229819AbiBZJxQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Feb 2022 14:37:56 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A5DD2BDC
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Feb 2022 11:37:20 -0800 (PST)
-Received: from fraeml704-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4K50KN0cBZz67DRW;
-        Sat, 26 Feb 2022 03:32:24 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml704-chm.china.huawei.com (10.206.15.53) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.21; Fri, 25 Feb 2022 20:37:17 +0100
-Received: from [10.47.84.151] (10.47.84.151) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Fri, 25 Feb
- 2022 19:37:16 +0000
-Message-ID: <922424c8-f668-a600-ebca-ae9d181cf8e2@huawei.com>
-Date:   Fri, 25 Feb 2022 19:37:15 +0000
+        Sat, 26 Feb 2022 04:53:16 -0500
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C546E1BE94;
+        Sat, 26 Feb 2022 01:52:34 -0800 (PST)
+X-UUID: f0eb3a26f43443c5a941dfb29e7f5b4f-20220226
+X-UUID: f0eb3a26f43443c5a941dfb29e7f5b4f-20220226
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
+        (envelope-from <lecopzer.chen@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 300805053; Sat, 26 Feb 2022 17:52:25 +0800
+Received: from mtkexhb01.mediatek.inc (172.21.101.102) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.792.3;
+ Sat, 26 Feb 2022 17:52:23 +0800
+Received: from mtkcas11.mediatek.inc (172.21.101.40) by mtkexhb01.mediatek.inc
+ (172.21.101.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sat, 26 Feb
+ 2022 17:52:23 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas11.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Sat, 26 Feb 2022 17:52:23 +0800
+From:   Lecopzer Chen <lecopzer.chen@mediatek.com>
+To:     <pmladek@suse.com>
+CC:     <acme@kernel.org>, <akpm@linux-foundation.org>,
+        <alexander.shishkin@linux.intel.com>, <catalin.marinas@arm.com>,
+        <davem@davemloft.net>, <jolsa@redhat.com>, <jthierry@redhat.com>,
+        <keescook@chromium.org>, <kernelfans@gmail.com>,
+        <lecopzer.chen@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-perf-users@vger.kernel.org>, <mark.rutland@arm.com>,
+        <masahiroy@kernel.org>, <matthias.bgg@gmail.com>, <maz@kernel.org>,
+        <mcgrof@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
+        <nixiaoming@huawei.com>, <peterz@infradead.org>,
+        <sparclinux@vger.kernel.org>, <sumit.garg@linaro.org>,
+        <wangqing@vivo.com>, <will@kernel.org>, <yj.chiang@mediatek.com>
+Subject: Re: [PATCH 1/5] kernel/watchdog: remove WATCHDOG_DEFAULT
+Date:   Sat, 26 Feb 2022 17:52:23 +0800
+Message-ID: <20220226095223.15585-1-lecopzer.chen@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <YhjPyCl7Rjh6acQN@alley>
+References: <YhjPyCl7Rjh6acQN@alley>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.1
-Subject: Re: [PATCH v2 0/2] perf tool versioning fixes
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>
-CC:     <linux-perf-users@vger.kernel.org>, <irogers@google.com>,
-        <olsajiri@gmail.com>, <rric@kernel.org>, <ak@linux.intel.com>
-References: <1645449409-158238-1-git-send-email-john.garry@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-In-Reply-To: <1645449409-158238-1-git-send-email-john.garry@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.84.151]
-X-ClientProxiedBy: lhreml737-chm.china.huawei.com (10.201.108.187) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-MTK:  N
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 21/02/2022 13:16, John Garry wrote:
-> This series includes a couple of fixes I made from working on a clone of
-> acme.git
+> On Sat 2022-02-12 18:43:45, Lecopzer Chen wrote:
+> > No reference to WATCHDOG_DEFAULT, remove it.
 > 
+> It would be enough to mention the link to the previous
+> version in the cover letter.
 
-Hi Arnaldo,
+Thanks, I'll tweak the commit message in next version patch.
 
-Can you kindly check this series if you get a chance? If you try from a 
-clone of your own git you may see the issue reported in 2/2.
-
-Thanks!!
-
-> It is based on perf/urgent @ commit b3d971ec2534.
 > 
-> Differences to v1:
-> - Add patch to fix kernel version tag
-> - Fix perf out-of-tree build
+> > this commit reworks from [1].
+> > 
+> > [1] https://lore.kernel.org/lkml/20211014024155.15253-2-kernelfans@gmail.com/
+> > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> > Signed-off-by: Lecopzer Chen <lecopzer.chen@mediatek.com>
 > 
-> John Garry (2):
->    perf: Fix dependency for version file creation
->    perf: Fix version kernel tag
-> 
->   tools/perf/Makefile.perf         |  4 ++--
->   tools/perf/util/PERF-VERSION-GEN | 13 ++++---------
->   2 files changed, 6 insertions(+), 11 deletions(-)
-> 
+> Reviewed-by: Petr Mladek <pmladek@suse.com>
 
+
+BRs,
+Lecopzer
