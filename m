@@ -2,110 +2,100 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A436C433F5
-	for <linux-perf-users@archiver.kernel.org>; Sun, 27 Feb 2022 13:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D20C433F5
+	for <linux-perf-users@archiver.kernel.org>; Sun, 27 Feb 2022 13:55:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229779AbiB0N32 (ORCPT
+        id S229812AbiB0Nzf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 27 Feb 2022 08:29:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58908 "EHLO
+        Sun, 27 Feb 2022 08:55:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230141AbiB0N31 (ORCPT
+        with ESMTP id S229608AbiB0Nzb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 27 Feb 2022 08:29:27 -0500
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 594DB50E2F;
-        Sun, 27 Feb 2022 05:28:51 -0800 (PST)
-Received: by mail-pl1-x644.google.com with SMTP id z2so8564865plg.8;
-        Sun, 27 Feb 2022 05:28:51 -0800 (PST)
+        Sun, 27 Feb 2022 08:55:31 -0500
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 506831BE85
+        for <linux-perf-users@vger.kernel.org>; Sun, 27 Feb 2022 05:54:55 -0800 (PST)
+Received: by mail-pg1-x535.google.com with SMTP id 12so9244113pgd.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 27 Feb 2022 05:54:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YytAN5dKnBXABN9R6VMCMuydpIbYgYlScavYReEx7ew=;
-        b=m5LTy1SWMU7o9xBWDSw5yii9D4bIsK9xxH44qyPuW2hxB/brLo+o2SFKdfq124Ex8u
-         o2RhtUvaf+kInfg0mNINzIHIN7dcNl3ugsWdCBciJuV4onXPSYPuyxuy6rR6pAAhR6Os
-         N2wFzC44FGjqpbOhOkWPeCh9KtI1OdMC6DjHJb8oFmKk04+wuGCAewxO0V3N/ykxBmqO
-         2UkOlWz9lFVQs8PQfw4CysNaqVRcMol9NQXJt3p3oG9ObPj49jTPhxby/POm4MVJec2S
-         /8RL/hxtQO8MAvMYBhxyN8XJ6HmmDET8dhSmVjYcCekRivvTxpPloF5VtYZuM6hYsBfn
-         kQUQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=R5/L3FvnnktNyA34E6kruOzfisqAyzhCs9ooPGmemyU=;
+        b=uuLL8S0E+zI20jKmcmApZ8T7BLy1ekrigcJchDezUrX58/hAEEwRWtQ8ixFg6WwbZF
+         9Vfe4zkxPKtl6nk75f0qx6s/j4iSpeEI1ioAlj894Gh9jhhSfIwSMw/nYiZz5FpK3mK8
+         yDqfKHXZuAV686mDbZNgIlvd2AaCcUgsyuwTbyPHLrRORL5h7yaCtg0M5cf+aon/8Yi2
+         Ho29Y3QLIBQMpe5QW2akghgcYyDEwaubjGYraXpVw+qH+UnYondbitbR0ltIkaAhlDHZ
+         6VwTPUxe15KRvxs+sPtwHLiGLBPLIMLxxe8indN6XxMJ8sYHw8ZA7HKBU57VUGRnQpso
+         0j+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YytAN5dKnBXABN9R6VMCMuydpIbYgYlScavYReEx7ew=;
-        b=JxKa2FoMB2I4TKU+BqTqHF1NUbItwgenI6FOzr1TCD9T5mgSUWddjOz8nQz0vXgvm+
-         o3Mw410HMcRqjDxqpzGbOYxENtiXe4DvmYWfb1BMThoAxYpmewHpsNGCD/08QH9g3gLG
-         Jm1ZYaueHU2Xe32EATLw1G0JWIid7B581d4QMP/J+4JbbGd99up4YTsQDk5nKdrP+fVC
-         5HjL+7SU9cRqPnWRft5L9EdCfsTicPzHYJApSFLA75QEcWzSKH68Sgz/TAx3LOOdcIRk
-         YlOuLeqiyf/T/Lb3UMFS6+a39VYrVNN/LI3S6BlmfF643KnH7lKew5XKxSjnoBEJDmLl
-         W6Ig==
-X-Gm-Message-State: AOAM5338MUImUKaem4n//lm4HP+iig1ANOA+5p1khV1s6yFECe2IOWhW
-        gXm10uFBOnzMKHwjDW/17oM=
-X-Google-Smtp-Source: ABdhPJzqAGdVLaYORwo2L8nu+5XmBGueeIjEI5BAm2IeN4ma+tG+jN7uf9Aoj9Ztd8ug8bHCLkL2CA==
-X-Received: by 2002:a17:902:ce08:b0:14f:85c1:773e with SMTP id k8-20020a170902ce0800b0014f85c1773emr15690425plg.99.1645968530920;
-        Sun, 27 Feb 2022 05:28:50 -0800 (PST)
-Received: from localhost.localdomain ([103.149.162.113])
-        by smtp.gmail.com with ESMTPSA id x3-20020a17090ad68300b001b8bcd47c35sm14532651pju.6.2022.02.27.05.28.46
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=R5/L3FvnnktNyA34E6kruOzfisqAyzhCs9ooPGmemyU=;
+        b=fO6tppWJdW9L4T3tg6tSCkopDmx1qOzTo7LJTJ0loF6ZcnkXSRxKFO4bp1hT9Vjlte
+         NZZn2E5xS9zKtpsf/XLn8dtxb45/2GBjOqdalS+B9mWSR8/BUnmhUV6w8n1Z1FxB4hQp
+         6V8/tXJlMXELU2uCcDB8YgYZET9hmBOx6bWStpTt4ICxsW/AMz6yFmEky4hCrzTxFQI+
+         uOGG32MEm5g7SIypd+nzS3FYX6atkHDKuU2ptJ8oqJHhoHtx4hFlXFu2x0EZdaiR30pT
+         HNLpAkm8ttMBkiFurBSD6AaYd4Q8sIIBxzkxARt0T6i67UcX8BE/YUj+HjauU52izWqb
+         WHCg==
+X-Gm-Message-State: AOAM530HKRF9mlWtXgAkJQRm40qGfLAehUsqLfTWnAQOzmp7j6N23wcL
+        KBO7EMW/4KHXtMqdlBHgGI7CyA==
+X-Google-Smtp-Source: ABdhPJw1trEejf2Gp3RfzHniQF58pqnIWCn0DG0TdWVAUuroABa8H5/f51okcOdZQvFbGHfkKnpNhw==
+X-Received: by 2002:a63:3111:0:b0:373:a1fa:8998 with SMTP id x17-20020a633111000000b00373a1fa8998mr13312669pgx.415.1645970094678;
+        Sun, 27 Feb 2022 05:54:54 -0800 (PST)
+Received: from leoy-ThinkPad-X240s ([204.124.180.219])
+        by smtp.gmail.com with ESMTPSA id v14-20020a056a00148e00b004e1cee6f6b4sm10221833pfu.47.2022.02.27.05.54.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Feb 2022 05:28:50 -0800 (PST)
-From:   Dongli Si <kvmx86@gmail.com>
-X-Google-Original-From: Dongli Si <sidongli1997@gmail.com>
-To:     peterz@infradead.org, joerg.roedel@amd.com
-Cc:     liam.merwick@oracle.com, kim.phillips@amd.com, mingo@redhat.com,
-        acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] perf/x86/amd: Don't touch the Host-only bit inside the guest hypervisor
-Date:   Sun, 27 Feb 2022 21:26:40 +0800
-Message-Id: <20220227132640.3-1-sidongli1997@gmail.com>
-X-Mailer: git-send-email 2.32.0
+        Sun, 27 Feb 2022 05:54:54 -0800 (PST)
+Date:   Sun, 27 Feb 2022 21:54:44 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Ali Saidi <alisaidi@amazon.com>
+Cc:     german.gomez@arm.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
+        benh@kernel.crashing.org, james.clark@arm.com,
+        john.garry@huawei.com, jolsa@redhat.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
+        peterz@infradead.org, will@kernel.org
+Subject: Re: [PATCH 2/2] perf arm-spe: Parse more SPE fields and store source
+Message-ID: <20220227135444.GB107053@leoy-ThinkPad-X240s>
+References: <9266bfb6-341c-1d9c-e96f-c9f856a5ffb6@arm.com>
+ <20220222192943.20137-1-alisaidi@amazon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220222192943.20137-1-alisaidi@amazon.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Dongli Si <sidongli1997@gmail.com>
+On Tue, Feb 22, 2022 at 07:29:43PM +0000, Ali Saidi wrote:
 
-When using nested virtualization and if use "perf record" in an AMD Rome
-and Milan guest hypervisor (L1), dmesg report an error message like this:
+[...]
 
-[ ] unchecked MSR access error: WRMSR to 0xc0010200 (tried to write 0x0000020000510076) at rIP: 0xffffffff81003a50 (x86_pmu_enable_all+0x60/0x100)
+> >So I am just wandering if we can set the field
+> >sample::data_src::mem_lock for atomic operations, like:
+> >
+> >    data_src.mem_op   = PERF_MEM_OP_LOAD;
+> >    data_src.mem_lock = PERF_MEM_LOCK_ATOMIC;
+> >
+> >The field "mem_lock" is only two bits, we can consider to extend the
+> >structure with an extra filed "mem_lock_ext" if it cannot meet our
+> >requirement.
+> 
+> These are for the LOCK instruction on x86. I don't know that we want to
+> overload the meaning here. Minimally there is value in differentiating
+> exclusives vs atomics.
 
-The AMD64_EVENTSEL_HOSTONLY bit is defined and used on the host, while
-the guest hypervisor (L1) performance monitor unit should avoid such use.
+Good point.  Can we consider to add new filed data_src.atomic with
+below types?
 
-Fixes: 1018faa6cf23 ("perf/x86/kvm: Fix Host-Only/Guest-Only counting with SVM disabled")
-Signed-off-by: Dongli Si <sidongli1997@gmail.com>
----
- arch/x86/events/amd/core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+    PERF_MEM_ATOMIC_INST  -> Atomic operations
+    PERF_MEM_ATOMIC_EXCL  -> Load-Exclusive/Store-Exclusive
+    PERF_MEM_ATOMIC_ACQUIRE_RELEASE  ->Load-Acquire/Store-Release
 
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index 9687a8aef01c..3fafd1e46ada 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -8,6 +8,7 @@
- #include <linux/jiffies.h>
- #include <asm/apicdef.h>
- #include <asm/nmi.h>
-+#include <asm/hypervisor.h>
- 
- #include "../perf_event.h"
- 
-@@ -1027,7 +1028,8 @@ void amd_pmu_enable_virt(void)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 
--	cpuc->perf_ctr_virt_mask = 0;
-+	if (hypervisor_is_type(X86_HYPER_NATIVE))
-+		cpuc->perf_ctr_virt_mask = 0;
- 
- 	/* Reload all events */
- 	amd_pmu_disable_all();
--- 
-2.32.0
-
+Thanks,
+Leo
