@@ -2,100 +2,165 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D20C433F5
-	for <linux-perf-users@archiver.kernel.org>; Sun, 27 Feb 2022 13:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F5BC433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun, 27 Feb 2022 22:50:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229812AbiB0Nzf (ORCPT
+        id S232118AbiB0WvU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 27 Feb 2022 08:55:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48154 "EHLO
+        Sun, 27 Feb 2022 17:51:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229608AbiB0Nzb (ORCPT
+        with ESMTP id S231910AbiB0WvT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 27 Feb 2022 08:55:31 -0500
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 506831BE85
-        for <linux-perf-users@vger.kernel.org>; Sun, 27 Feb 2022 05:54:55 -0800 (PST)
-Received: by mail-pg1-x535.google.com with SMTP id 12so9244113pgd.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 27 Feb 2022 05:54:55 -0800 (PST)
+        Sun, 27 Feb 2022 17:51:19 -0500
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2709A5A168;
+        Sun, 27 Feb 2022 14:50:42 -0800 (PST)
+Received: by mail-wm1-x32b.google.com with SMTP id i19so4709640wmq.5;
+        Sun, 27 Feb 2022 14:50:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=R5/L3FvnnktNyA34E6kruOzfisqAyzhCs9ooPGmemyU=;
-        b=uuLL8S0E+zI20jKmcmApZ8T7BLy1ekrigcJchDezUrX58/hAEEwRWtQ8ixFg6WwbZF
-         9Vfe4zkxPKtl6nk75f0qx6s/j4iSpeEI1ioAlj894Gh9jhhSfIwSMw/nYiZz5FpK3mK8
-         yDqfKHXZuAV686mDbZNgIlvd2AaCcUgsyuwTbyPHLrRORL5h7yaCtg0M5cf+aon/8Yi2
-         Ho29Y3QLIBQMpe5QW2akghgcYyDEwaubjGYraXpVw+qH+UnYondbitbR0ltIkaAhlDHZ
-         6VwTPUxe15KRvxs+sPtwHLiGLBPLIMLxxe8indN6XxMJ8sYHw8ZA7HKBU57VUGRnQpso
-         0j+g==
+        bh=YDTIXGCC898E0pouJzNeVPLM6uvpOE0gFyvf7cP99FU=;
+        b=bpBsD0oI7JOnXE8PUPG4htueqQ8IKUtr3xVJN64bWBbT+aJa27AgUoKNjQV8Pt6lEY
+         ol5Ja6poxVO7o3kAoRVgumFrrAgrPymyo5PPSmcCv7P3A1GoeGSxG6R6Utuj7CdHAp5T
+         5tJTK1AX43gKF32Rv9IE32zP9UJoEYMZH+iDdCbsV2Az6f0svYKlE56eAfdsL+om/ikE
+         UhlxJbopIvez6aC0G3yQF3AWfCe5CaGlxcDWoJVO0Bz65yC/8f7zz+EXP1iBYYpFMZQE
+         hgACdemFCFQGkJh6DXJfiAny9EtQqUdItvZgq2SeRNVruPk/g4/PI16bFsP70qlBMC7x
+         Eydw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=R5/L3FvnnktNyA34E6kruOzfisqAyzhCs9ooPGmemyU=;
-        b=fO6tppWJdW9L4T3tg6tSCkopDmx1qOzTo7LJTJ0loF6ZcnkXSRxKFO4bp1hT9Vjlte
-         NZZn2E5xS9zKtpsf/XLn8dtxb45/2GBjOqdalS+B9mWSR8/BUnmhUV6w8n1Z1FxB4hQp
-         6V8/tXJlMXELU2uCcDB8YgYZET9hmBOx6bWStpTt4ICxsW/AMz6yFmEky4hCrzTxFQI+
-         uOGG32MEm5g7SIypd+nzS3FYX6atkHDKuU2ptJ8oqJHhoHtx4hFlXFu2x0EZdaiR30pT
-         HNLpAkm8ttMBkiFurBSD6AaYd4Q8sIIBxzkxARt0T6i67UcX8BE/YUj+HjauU52izWqb
-         WHCg==
-X-Gm-Message-State: AOAM530HKRF9mlWtXgAkJQRm40qGfLAehUsqLfTWnAQOzmp7j6N23wcL
-        KBO7EMW/4KHXtMqdlBHgGI7CyA==
-X-Google-Smtp-Source: ABdhPJw1trEejf2Gp3RfzHniQF58pqnIWCn0DG0TdWVAUuroABa8H5/f51okcOdZQvFbGHfkKnpNhw==
-X-Received: by 2002:a63:3111:0:b0:373:a1fa:8998 with SMTP id x17-20020a633111000000b00373a1fa8998mr13312669pgx.415.1645970094678;
-        Sun, 27 Feb 2022 05:54:54 -0800 (PST)
-Received: from leoy-ThinkPad-X240s ([204.124.180.219])
-        by smtp.gmail.com with ESMTPSA id v14-20020a056a00148e00b004e1cee6f6b4sm10221833pfu.47.2022.02.27.05.54.48
+        bh=YDTIXGCC898E0pouJzNeVPLM6uvpOE0gFyvf7cP99FU=;
+        b=xOyY9QO+1n/P1dAkbK9ZOyrPe2En9SWj5d9jwnNmC0xa8xNJ/ly34rsHXqgSSQ/Amv
+         nlencjEtGxXKU1c+f+jOigml1rfxDXOK6CGAxK47BzhDr8u8iVsAyaPcsUN3p/neuHLa
+         pSo5xQbe3H2N2JOcMKtKViitgAarMJlh5q5+zaEKfEnVJL9SWvpMXd+FkVLmj3ixqrpC
+         Nts+8lX8i/PezVqweXafC4f6GMoaNu+E05WdZb7mCXYJGEueI5C8HSOx7a/mXs++8Cli
+         a4DX48/8UnT0zIZX+ZeVxG8XiboXFQ7QpFjoRA4ZSMfsvfp3a3v9WpkRcLOu7Pv3SZqV
+         kuKg==
+X-Gm-Message-State: AOAM532udrL56YjctN03w83r5meERV38SladwA44G8RbifLzfOOJA56t
+        5hSzxxAxdsJJjeZhR6fBeRo=
+X-Google-Smtp-Source: ABdhPJyULYjuyLUDFVziM+kCX7h7AqzQZ0bdhT2xc+VX+1JFUYXsdeir/8Lcvsy5st20LuJLYQESaw==
+X-Received: by 2002:a1c:a78b:0:b0:380:683a:d01c with SMTP id q133-20020a1ca78b000000b00380683ad01cmr11314660wme.8.1646002240599;
+        Sun, 27 Feb 2022 14:50:40 -0800 (PST)
+Received: from krava ([83.240.63.118])
+        by smtp.gmail.com with ESMTPSA id e18-20020adfdbd2000000b001e4bbbe5b92sm9129652wrj.76.2022.02.27.14.50.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Feb 2022 05:54:54 -0800 (PST)
-Date:   Sun, 27 Feb 2022 21:54:44 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Ali Saidi <alisaidi@amazon.com>
-Cc:     german.gomez@arm.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
-        benh@kernel.crashing.org, james.clark@arm.com,
-        john.garry@huawei.com, jolsa@redhat.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
-        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, will@kernel.org
-Subject: Re: [PATCH 2/2] perf arm-spe: Parse more SPE fields and store source
-Message-ID: <20220227135444.GB107053@leoy-ThinkPad-X240s>
-References: <9266bfb6-341c-1d9c-e96f-c9f856a5ffb6@arm.com>
- <20220222192943.20137-1-alisaidi@amazon.com>
+        Sun, 27 Feb 2022 14:50:40 -0800 (PST)
+Date:   Sun, 27 Feb 2022 23:50:38 +0100
+From:   Jiri Olsa <olsajiri@gmail.com>
+To:     James Clark <james.clark@arm.com>
+Cc:     acme@kernel.org, linux-perf-users@vger.kernel.org,
+        coresight@lists.linaro.org, Denis Nikitin <denik@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] perf: Set build-id using build-id header on new mmap
+ records
+Message-ID: <YhwAPrOP/ky4HLfC@krava>
+References: <20220224171955.862983-1-james.clark@arm.com>
+ <20220224171955.862983-2-james.clark@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220222192943.20137-1-alisaidi@amazon.com>
+In-Reply-To: <20220224171955.862983-2-james.clark@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Feb 22, 2022 at 07:29:43PM +0000, Ali Saidi wrote:
-
-[...]
-
-> >So I am just wandering if we can set the field
-> >sample::data_src::mem_lock for atomic operations, like:
-> >
-> >    data_src.mem_op   = PERF_MEM_OP_LOAD;
-> >    data_src.mem_lock = PERF_MEM_LOCK_ATOMIC;
-> >
-> >The field "mem_lock" is only two bits, we can consider to extend the
-> >structure with an extra filed "mem_lock_ext" if it cannot meet our
-> >requirement.
+On Thu, Feb 24, 2022 at 05:19:55PM +0000, James Clark wrote:
+> MMAP records that occur after the build-id header is parsed do not have
+> their build-id set even if the filename matches an entry from the
+> header. Set the build-id on these dsos as long as the MMAP record
+> doesn't have its own build-id set.
 > 
-> These are for the LOCK instruction on x86. I don't know that we want to
-> overload the meaning here. Minimally there is value in differentiating
-> exclusives vs atomics.
+> This fixes an issue with off target analysis where the local version of
+> a dso is loaded rather than one from ~/.debug via a build-id.
 
-Good point.  Can we consider to add new filed data_src.atomic with
-below types?
+nice catch :)
 
-    PERF_MEM_ATOMIC_INST  -> Atomic operations
-    PERF_MEM_ATOMIC_EXCL  -> Load-Exclusive/Store-Exclusive
-    PERF_MEM_ATOMIC_ACQUIRE_RELEASE  ->Load-Acquire/Store-Release
+> 
+> Reported-by: Denis Nikitin <denik@chromium.org>
+> Signed-off-by: James Clark <james.clark@arm.com>
+> ---
+>  tools/perf/util/dso.h    |  1 +
+>  tools/perf/util/header.c |  1 +
+>  tools/perf/util/map.c    | 16 ++++++++++++++--
+>  3 files changed, 16 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+> index 011da3924fc1..3a9fd4d389b5 100644
+> --- a/tools/perf/util/dso.h
+> +++ b/tools/perf/util/dso.h
+> @@ -167,6 +167,7 @@ struct dso {
+>  	enum dso_load_errno	load_errno;
+>  	u8		 adjust_symbols:1;
+>  	u8		 has_build_id:1;
+> +	u8		 header_build_id:1;
+>  	u8		 has_srcline:1;
+>  	u8		 hit:1;
+>  	u8		 annotate_warned:1;
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index 6da12e522edc..571d73d4f976 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -2200,6 +2200,7 @@ static int __event_process_build_id(struct perf_record_header_build_id *bev,
+>  
+>  		build_id__init(&bid, bev->data, size);
+>  		dso__set_build_id(dso, &bid);
+> +		dso->header_build_id = 1;
+>  
+>  		if (dso_space != DSO_SPACE__USER) {
+>  			struct kmod_path m = { .name = NULL, };
+> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+> index 1803d3887afe..4ae91e491e23 100644
+> --- a/tools/perf/util/map.c
+> +++ b/tools/perf/util/map.c
+> @@ -127,7 +127,7 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
+>  
+>  	if (map != NULL) {
+>  		char newfilename[PATH_MAX];
+> -		struct dso *dso;
+> +		struct dso *dso, *header_bid_dso;
+>  		int anon, no_dso, vdso, android;
+>  
+>  		android = is_android_lib(filename);
+> @@ -185,7 +185,19 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
+>  
+>  		if (build_id__is_defined(bid))
+>  			dso__set_build_id(dso, bid);
+> -
+> +		else {
 
-Thanks,
-Leo
+nit please add { } to the if clause as well
+
+> +			/*
+> +			 * If the mmap event had no build ID, search for an existing dso from the
+> +			 * build ID header by name. Otherwise only the dso loaded at the time of
+> +			 * reading the header will have the build ID set and all future mmaps will
+> +			 * have it missing.
+> +			 */
+> +			header_bid_dso = __dsos__find(&machine->dsos, filename, false);
+
+is this 'perf top' safe? I think dso should be added in the
+same thread, but please check and add comment why we don't
+need locking in here
+
+thanks,
+jirka
+
+> +			if (header_bid_dso && header_bid_dso->header_build_id) {
+> +				dso__set_build_id(dso, &header_bid_dso->bid);
+> +				dso->header_build_id = 1;
+> +			}
+> +		}
+>  		dso__put(dso);
+>  	}
+>  	return map;
+> -- 
+> 2.28.0
+> 
