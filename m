@@ -2,165 +2,472 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F5BC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun, 27 Feb 2022 22:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 901A4C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Feb 2022 09:56:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232118AbiB0WvU (ORCPT
+        id S232796AbiB1J5H (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 27 Feb 2022 17:51:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56866 "EHLO
+        Mon, 28 Feb 2022 04:57:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231910AbiB0WvT (ORCPT
+        with ESMTP id S231304AbiB1J5H (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 27 Feb 2022 17:51:19 -0500
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2709A5A168;
-        Sun, 27 Feb 2022 14:50:42 -0800 (PST)
-Received: by mail-wm1-x32b.google.com with SMTP id i19so4709640wmq.5;
-        Sun, 27 Feb 2022 14:50:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=YDTIXGCC898E0pouJzNeVPLM6uvpOE0gFyvf7cP99FU=;
-        b=bpBsD0oI7JOnXE8PUPG4htueqQ8IKUtr3xVJN64bWBbT+aJa27AgUoKNjQV8Pt6lEY
-         ol5Ja6poxVO7o3kAoRVgumFrrAgrPymyo5PPSmcCv7P3A1GoeGSxG6R6Utuj7CdHAp5T
-         5tJTK1AX43gKF32Rv9IE32zP9UJoEYMZH+iDdCbsV2Az6f0svYKlE56eAfdsL+om/ikE
-         UhlxJbopIvez6aC0G3yQF3AWfCe5CaGlxcDWoJVO0Bz65yC/8f7zz+EXP1iBYYpFMZQE
-         hgACdemFCFQGkJh6DXJfiAny9EtQqUdItvZgq2SeRNVruPk/g4/PI16bFsP70qlBMC7x
-         Eydw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YDTIXGCC898E0pouJzNeVPLM6uvpOE0gFyvf7cP99FU=;
-        b=xOyY9QO+1n/P1dAkbK9ZOyrPe2En9SWj5d9jwnNmC0xa8xNJ/ly34rsHXqgSSQ/Amv
-         nlencjEtGxXKU1c+f+jOigml1rfxDXOK6CGAxK47BzhDr8u8iVsAyaPcsUN3p/neuHLa
-         pSo5xQbe3H2N2JOcMKtKViitgAarMJlh5q5+zaEKfEnVJL9SWvpMXd+FkVLmj3ixqrpC
-         Nts+8lX8i/PezVqweXafC4f6GMoaNu+E05WdZb7mCXYJGEueI5C8HSOx7a/mXs++8Cli
-         a4DX48/8UnT0zIZX+ZeVxG8XiboXFQ7QpFjoRA4ZSMfsvfp3a3v9WpkRcLOu7Pv3SZqV
-         kuKg==
-X-Gm-Message-State: AOAM532udrL56YjctN03w83r5meERV38SladwA44G8RbifLzfOOJA56t
-        5hSzxxAxdsJJjeZhR6fBeRo=
-X-Google-Smtp-Source: ABdhPJyULYjuyLUDFVziM+kCX7h7AqzQZ0bdhT2xc+VX+1JFUYXsdeir/8Lcvsy5st20LuJLYQESaw==
-X-Received: by 2002:a1c:a78b:0:b0:380:683a:d01c with SMTP id q133-20020a1ca78b000000b00380683ad01cmr11314660wme.8.1646002240599;
-        Sun, 27 Feb 2022 14:50:40 -0800 (PST)
-Received: from krava ([83.240.63.118])
-        by smtp.gmail.com with ESMTPSA id e18-20020adfdbd2000000b001e4bbbe5b92sm9129652wrj.76.2022.02.27.14.50.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Feb 2022 14:50:40 -0800 (PST)
-Date:   Sun, 27 Feb 2022 23:50:38 +0100
-From:   Jiri Olsa <olsajiri@gmail.com>
-To:     James Clark <james.clark@arm.com>
-Cc:     acme@kernel.org, linux-perf-users@vger.kernel.org,
-        coresight@lists.linaro.org, Denis Nikitin <denik@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] perf: Set build-id using build-id header on new mmap
- records
-Message-ID: <YhwAPrOP/ky4HLfC@krava>
-References: <20220224171955.862983-1-james.clark@arm.com>
- <20220224171955.862983-2-james.clark@arm.com>
+        Mon, 28 Feb 2022 04:57:07 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18A5B66222;
+        Mon, 28 Feb 2022 01:56:27 -0800 (PST)
+Received: from fraeml702-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4K6bNB57Ffz67nQH;
+        Mon, 28 Feb 2022 17:55:22 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml702-chm.china.huawei.com (10.206.15.51) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.21; Mon, 28 Feb 2022 10:56:24 +0100
+Received: from [10.47.86.223] (10.47.86.223) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.21; Mon, 28 Feb
+ 2022 09:56:23 +0000
+Message-ID: <8cdc2c64-0a89-b807-56f6-2ea67a41a641@huawei.com>
+Date:   Mon, 28 Feb 2022 09:56:23 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220224171955.862983-2-james.clark@arm.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: [PATCH v2 1/2] drivers/perf: hisi: Add Support for CPA PMU
+To:     Qi Liu <liuqi115@huawei.com>, <will@kernel.org>,
+        <mark.rutland@arm.com>, <acme@kernel.org>
+CC:     <linux-perf-users@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
+References: <20220224111129.41416-1-liuqi115@huawei.com>
+ <20220224111129.41416-2-liuqi115@huawei.com>
+From:   John Garry <john.garry@huawei.com>
+In-Reply-To: <20220224111129.41416-2-liuqi115@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.86.223]
+X-ClientProxiedBy: lhreml708-chm.china.huawei.com (10.201.108.57) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Feb 24, 2022 at 05:19:55PM +0000, James Clark wrote:
-> MMAP records that occur after the build-id header is parsed do not have
-> their build-id set even if the filename matches an entry from the
-> header. Set the build-id on these dsos as long as the MMAP record
-> doesn't have its own build-id set.
+On 24/02/2022 11:11, Qi Liu wrote:
+> On HiSilicon Hip09 platform, there is a CPA(Coherency Protocol Agent) on
+> each SICL (Super I/O Cluster) which implements packet format translation,
+> route parsing and traffic statistic.
 > 
-> This fixes an issue with off target analysis where the local version of
-> a dso is loaded rather than one from ~/.debug via a build-id.
+> CPA PMU has separate PMU registers which the driver can program freely
 
-nice catch :)
+I am not sure what you mean by program freely. Most IO mem drivers have 
+registers which we can program.
 
+> and
+> interrupt is supported to handle counter overflow. Let's support its driver
+> under the framework of HiSilicon uncore PMU driver.
 > 
-> Reported-by: Denis Nikitin <denik@chromium.org>
-> Signed-off-by: James Clark <james.clark@arm.com>
+> Signed-off-by: Qi Liu <liuqi115@huawei.com>
 > ---
->  tools/perf/util/dso.h    |  1 +
->  tools/perf/util/header.c |  1 +
->  tools/perf/util/map.c    | 16 ++++++++++++++--
->  3 files changed, 16 insertions(+), 2 deletions(-)
+>   drivers/perf/hisilicon/Makefile              |   2 +-
+>   drivers/perf/hisilicon/hisi_uncore_cpa_pmu.c | 401 +++++++++++++++++++
+>   include/linux/cpuhotplug.h                   |   1 +
+>   3 files changed, 403 insertions(+), 1 deletion(-)
+>   create mode 100644 drivers/perf/hisilicon/hisi_uncore_cpa_pmu.c
 > 
-> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-> index 011da3924fc1..3a9fd4d389b5 100644
-> --- a/tools/perf/util/dso.h
-> +++ b/tools/perf/util/dso.h
-> @@ -167,6 +167,7 @@ struct dso {
->  	enum dso_load_errno	load_errno;
->  	u8		 adjust_symbols:1;
->  	u8		 has_build_id:1;
-> +	u8		 header_build_id:1;
->  	u8		 has_srcline:1;
->  	u8		 hit:1;
->  	u8		 annotate_warned:1;
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index 6da12e522edc..571d73d4f976 100644
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-> @@ -2200,6 +2200,7 @@ static int __event_process_build_id(struct perf_record_header_build_id *bev,
->  
->  		build_id__init(&bid, bev->data, size);
->  		dso__set_build_id(dso, &bid);
-> +		dso->header_build_id = 1;
->  
->  		if (dso_space != DSO_SPACE__USER) {
->  			struct kmod_path m = { .name = NULL, };
-> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-> index 1803d3887afe..4ae91e491e23 100644
-> --- a/tools/perf/util/map.c
-> +++ b/tools/perf/util/map.c
-> @@ -127,7 +127,7 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
->  
->  	if (map != NULL) {
->  		char newfilename[PATH_MAX];
-> -		struct dso *dso;
-> +		struct dso *dso, *header_bid_dso;
->  		int anon, no_dso, vdso, android;
->  
->  		android = is_android_lib(filename);
-> @@ -185,7 +185,19 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
->  
->  		if (build_id__is_defined(bid))
->  			dso__set_build_id(dso, bid);
-> -
-> +		else {
+> diff --git a/drivers/perf/hisilicon/Makefile b/drivers/perf/hisilicon/Makefile
+> index 506ed39e3266..6be83517acaa 100644
+> --- a/drivers/perf/hisilicon/Makefile
+> +++ b/drivers/perf/hisilicon/Makefile
+> @@ -1,6 +1,6 @@
+>   # SPDX-License-Identifier: GPL-2.0-only
+>   obj-$(CONFIG_HISI_PMU) += hisi_uncore_pmu.o hisi_uncore_l3c_pmu.o \
+>   			  hisi_uncore_hha_pmu.o hisi_uncore_ddrc_pmu.o hisi_uncore_sllc_pmu.o \
+> -			  hisi_uncore_pa_pmu.o
+> +			  hisi_uncore_pa_pmu.o hisi_uncore_cpa_pmu.o
+>   
+>   obj-$(CONFIG_HISI_PCIE_PMU) += hisi_pcie_pmu.o
+> diff --git a/drivers/perf/hisilicon/hisi_uncore_cpa_pmu.c b/drivers/perf/hisilicon/hisi_uncore_cpa_pmu.c
+> new file mode 100644
+> index 000000000000..00573719f148
+> --- /dev/null
+> +++ b/drivers/perf/hisilicon/hisi_uncore_cpa_pmu.c
+> @@ -0,0 +1,401 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * HiSilicon SoC CPA(Coherency Protocol Agent) uncore Hardware event counters support
 
-nit please add { } to the if clause as well
+/s/Hardware/hardware/
 
-> +			/*
-> +			 * If the mmap event had no build ID, search for an existing dso from the
-> +			 * build ID header by name. Otherwise only the dso loaded at the time of
-> +			 * reading the header will have the build ID set and all future mmaps will
-> +			 * have it missing.
-> +			 */
-> +			header_bid_dso = __dsos__find(&machine->dsos, filename, false);
+> + *
+> + * Copyright (C) 2022 HiSilicon Limited
+> + * Author: Qi Liu <liuqi115@huawei.com>
+> + *
+> + * This code is based on the uncore PMUs like arm-cci and arm-ccn.
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/bug.h>
+> +#include <linux/cpuhotplug.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/list.h>
+> +#include <linux/smp.h>
+> +
+> +#include "hisi_uncore_pmu.h"
+> +
+> +/* CPA register definition */
+> +#define CPA_PERF_CTRL		0x1c00
+> +#define CPA_EVENT_CTRL		0x1c04
+> +#define CPA_INT_MASK		0x1c70
+> +#define CPA_INT_STATUS		0x1c78
+> +#define CPA_INT_CLEAR		0x1c7c
+> +#define CPA_EVENT_TYPE0		0x1c80
+> +#define CPA_VERSION		0x1cf0
+> +#define CPA_CNT0_LOWER		0x1d00
+> +#define CPA_CFG_REG		0x0534
+> +
+> +/* CPA operation command */
+> +#define CPA_PERF_CTRL_EN	BIT_ULL(0)
+> +#define CPA_EVTYPE_MASK		0xffUL
+> +#define CPA_PM_CTRL		BIT_ULL(9)
+> +
+> +/* CPA has 8-counters */
+> +#define CPA_NR_COUNTERS		0x8
+> +#define CPA_COUNTER_BITS	64
+> +#define CPA_NR_EVENTS		0xff
+> +#define CPA_REG_OFFSET		0x8
+> +
+> +static u32 hisi_cpa_pmu_get_counter_offset(int idx)
+> +{
+> +	return (CPA_CNT0_LOWER + idx * CPA_REG_OFFSET);
+> +}
+> +
+> +static u64 hisi_cpa_pmu_read_counter(struct hisi_pmu *cpa_pmu,
+> +				     struct hw_perf_event *hwc)
+> +{
+> +	return readq(cpa_pmu->base + hisi_cpa_pmu_get_counter_offset(hwc->idx));
+> +}
+> +
+> +static void hisi_cpa_pmu_write_counter(struct hisi_pmu *cpa_pmu,
+> +				       struct hw_perf_event *hwc, u64 val)
+> +{
+> +	writeq(val, cpa_pmu->base + hisi_cpa_pmu_get_counter_offset(hwc->idx));
+> +}
+> +
+> +static void hisi_cpa_pmu_write_evtype(struct hisi_pmu *cpa_pmu, int idx, u32 type)
+> +{
+> +	u32 reg, reg_idx, shift, val;
+> +
+> +	/*
+> +	 * Select the appropriate event select register(CPA_EVENT_TYPE0/1).
+> +	 * There are 2 event select registers for the 8 hardware counters.
+> +	 * Event code is 8-bits and for the former 4 hardware counters,
+> +	 * CPA_EVENT_TYPE0 is chosen. For the latter 4 hardware counters,
+> +	 * CPA_EVENT_TYPE1 is chosen.
+> +	 */
+> +	reg = CPA_EVENT_TYPE0 + (idx / 4) * 4;
+> +	reg_idx = idx % 4;
+> +	shift = CPA_REG_OFFSET * reg_idx;
+> +
+> +	/* Write event code to CPA_EVENT_TYPEx Register */
+> +	val = readl(cpa_pmu->base + reg);
+> +	val &= ~(CPA_EVTYPE_MASK << shift);
+> +	val |= type << shift;
+> +	writel(val, cpa_pmu->base + reg);
+> +}
+> +
+> +static void hisi_cpa_pmu_start_counters(struct hisi_pmu *cpa_pmu)
+> +{
+> +	u32 val;
+> +
+> +	val = readl(cpa_pmu->base + CPA_PERF_CTRL);
+> +	val |= CPA_PERF_CTRL_EN;
+> +	writel(val, cpa_pmu->base + CPA_PERF_CTRL);
+> +}
+> +
+> +static void hisi_cpa_pmu_stop_counters(struct hisi_pmu *cpa_pmu)
+> +{
+> +	u32 val;
+> +
+> +	val = readl(cpa_pmu->base + CPA_PERF_CTRL);
+> +	val &= ~(CPA_PERF_CTRL_EN);
+> +	writel(val, cpa_pmu->base + CPA_PERF_CTRL);
+> +}
+> +
+> +static void hisi_cpa_pmu_disable_pm(struct hisi_pmu *cpa_pmu)
 
-is this 'perf top' safe? I think dso should be added in the
-same thread, but please check and add comment why we don't
-need locking in here
+this seems unique for this new driver - why do we need to disable PM?
 
-thanks,
-jirka
+> +{
+> +	u32 val;
+> +
+> +	val = readl(cpa_pmu->base + CPA_CFG_REG);
+> +	val |= CPA_PM_CTRL;
+> +	writel(val, cpa_pmu->base + CPA_CFG_REG);
+> +}
+> +
+> +static void hisi_cpa_pmu_enable_pm(struct hisi_pmu *cpa_pmu)
+> +{
+> +	u32 val;
+> +
+> +	val = readl(cpa_pmu->base + CPA_CFG_REG);
+> +	val &= ~CPA_PM_CTRL;
 
-> +			if (header_bid_dso && header_bid_dso->header_build_id) {
-> +				dso__set_build_id(dso, &header_bid_dso->bid);
-> +				dso->header_build_id = 1;
-> +			}
-> +		}
->  		dso__put(dso);
->  	}
->  	return map;
-> -- 
-> 2.28.0
-> 
+nit: you use () in hisi_cpa_pmu_stop_counters(), but not here, so please 
+be consistent
+
+> +	writel(val, cpa_pmu->base + CPA_CFG_REG);
+> +}
+> +
+> +static void hisi_cpa_pmu_enable_counter(struct hisi_pmu *cpa_pmu, struct hw_perf_event *hwc)
+> +{
+> +	u32 val;
+> +
+> +	/* Enable counter index in CPA_EVENT_CTRL register */
+> +	val = readl(cpa_pmu->base + CPA_EVENT_CTRL);
+> +	val |= 1 << hwc->idx;
+> +	writel(val, cpa_pmu->base + CPA_EVENT_CTRL);
+> +
+> +	/* Power management should be disabled before counting. */
+> +	hisi_cpa_pmu_disable_pm(cpa_pmu);
+> +}
+> +
+> +static void hisi_cpa_pmu_disable_counter(struct hisi_pmu *cpa_pmu, struct hw_perf_event *hwc)
+> +{
+> +	u32 val;
+> +
+> +	hisi_cpa_pmu_enable_pm(cpa_pmu);
+> +
+> +	/* Clear counter index in CPA_EVENT_CTRL register */
+> +	val = readl(cpa_pmu->base + CPA_EVENT_CTRL);
+> +	val &= ~(1UL << hwc->idx);
+> +	writel(val, cpa_pmu->base + CPA_EVENT_CTRL);
+> +}
+> +
+> +static void hisi_cpa_pmu_enable_counter_int(struct hisi_pmu *cpa_pmu, struct hw_perf_event *hwc)
+> +{
+> +	u32 val;
+> +
+> +	/* Write 0 to enable interrupt */
+> +	val = readl(cpa_pmu->base + CPA_INT_MASK);
+> +	val &= ~(1UL << hwc->idx);
+> +	writel(val, cpa_pmu->base + CPA_INT_MASK);
+> +}
+> +
+> +static void hisi_cpa_pmu_disable_counter_int(struct hisi_pmu *cpa_pmu, struct hw_perf_event *hwc)
+> +{
+> +	u32 val;
+> +
+> +	/* Write 1 to mask interrupt */
+> +	val = readl(cpa_pmu->base + CPA_INT_MASK);
+> +	val |= 1 << hwc->idx;
+> +	writel(val, cpa_pmu->base + CPA_INT_MASK);
+> +}
+> +
+> +static u32 hisi_cpa_pmu_get_int_status(struct hisi_pmu *cpa_pmu)
+> +{
+> +	return readl(cpa_pmu->base + CPA_INT_STATUS);
+> +}
+> +
+> +static void hisi_cpa_pmu_clear_int_status(struct hisi_pmu *cpa_pmu, int idx)
+> +{
+> +	writel(1 << idx, cpa_pmu->base + CPA_INT_CLEAR);
+> +}
+> +
+> +static const struct acpi_device_id hisi_cpa_pmu_acpi_match[] = {
+> +	{ "HISI0281", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(acpi, hisi_cpa_pmu_acpi_match);
+> +
+> +static int hisi_cpa_pmu_init_data(struct platform_device *pdev,
+> +				  struct hisi_pmu *cpa_pmu)
+> +{
+> +	if (device_property_read_u32(&pdev->dev, "hisilicon,scl-id",
+> +				     &cpa_pmu->sccl_id)) {
+> +		dev_err(&pdev->dev, "Can not read cpa_pmu sccl-id\n");
+
+strange that the FW uses "scl-id" but driver uses sccl_id (I am talking 
+about sccl vs scl difference)
+
+> +		return -EINVAL;
+> +	}
+> +
+> +	cpa_pmu->ccl_id = -1;
+> +
+> +	if (device_property_read_u32(&pdev->dev, "hisilicon,idx-id",
+> +				     &cpa_pmu->index_id)) {
+> +		dev_err(&pdev->dev, "Cannot read idx-id\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	cpa_pmu->base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(cpa_pmu->base))
+> +		return PTR_ERR(cpa_pmu->base);
+> +
+> +	cpa_pmu->identifier = readl(cpa_pmu->base + CPA_VERSION);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct attribute *hisi_cpa_pmu_format_attr[] = {
+> +	HISI_PMU_FORMAT_ATTR(event, "config:0-15"),
+> +	NULL
+> +};
+> +
+> +static const struct attribute_group hisi_cpa_pmu_format_group = {
+> +	.name = "format",
+> +	.attrs = hisi_cpa_pmu_format_attr,
+> +};
+> +
+> +static struct attribute *hisi_cpa_pmu_events_attr[] = {
+> +	HISI_PMU_EVENT_ATTR(cpa_cycles,		0x00),
+> +	HISI_PMU_EVENT_ATTR(cpa_p1_wr_dat,	0x61),
+> +	HISI_PMU_EVENT_ATTR(cpa_p1_rd_dat,	0x62),
+> +	HISI_PMU_EVENT_ATTR(cpa_p0_wr_dat,	0xE1),
+> +	HISI_PMU_EVENT_ATTR(cpa_p0_rd_dat,	0xE2),
+
+nit: you were using lower case for hex numbers elsewhere
+
+> +	NULL
+> +};
+> +
+> +static const struct attribute_group hisi_cpa_pmu_events_group = {
+> +	.name = "events",
+> +	.attrs = hisi_cpa_pmu_events_attr,
+> +};
+> +
+> +static DEVICE_ATTR(cpumask, 0444, hisi_cpumask_sysfs_show, NULL);
+> +
+> +static struct attribute *hisi_cpa_pmu_cpumask_attrs[] = {
+> +	&dev_attr_cpumask.attr,
+> +	NULL
+> +};
+> +
+> +static const struct attribute_group hisi_cpa_pmu_cpumask_attr_group = {
+> +	.attrs = hisi_cpa_pmu_cpumask_attrs,
+> +};
+> +
+> +static struct device_attribute hisi_cpa_pmu_identifier_attr =
+> +	__ATTR(identifier, 0444, hisi_uncore_pmu_identifier_attr_show, NULL);
+> +
+> +static struct attribute *hisi_cpa_pmu_identifier_attrs[] = {
+> +	&hisi_cpa_pmu_identifier_attr.attr,
+> +	NULL
+> +};
+> +
+> +static const struct attribute_group hisi_cpa_pmu_identifier_group = {
+> +	.attrs = hisi_cpa_pmu_identifier_attrs,
+> +};
+> +
+> +static const struct attribute_group *hisi_cpa_pmu_attr_groups[] = {
+> +	&hisi_cpa_pmu_format_group,
+> +	&hisi_cpa_pmu_events_group,
+> +	&hisi_cpa_pmu_cpumask_attr_group,
+> +	&hisi_cpa_pmu_identifier_group,
+> +	NULL
+> +};
+> +
+> +static const struct hisi_uncore_ops hisi_uncore_cpa_pmu_ops = {
+> +	.write_evtype           = hisi_cpa_pmu_write_evtype,
+> +	.get_event_idx		= hisi_uncore_pmu_get_event_idx,
+> +	.start_counters		= hisi_cpa_pmu_start_counters,
+> +	.stop_counters		= hisi_cpa_pmu_stop_counters,
+> +	.enable_counter		= hisi_cpa_pmu_enable_counter,
+> +	.disable_counter	= hisi_cpa_pmu_disable_counter,
+> +	.enable_counter_int	= hisi_cpa_pmu_enable_counter_int,
+> +	.disable_counter_int	= hisi_cpa_pmu_disable_counter_int,
+> +	.write_counter		= hisi_cpa_pmu_write_counter,
+> +	.read_counter		= hisi_cpa_pmu_read_counter,
+> +	.get_int_status		= hisi_cpa_pmu_get_int_status,
+> +	.clear_int_status	= hisi_cpa_pmu_clear_int_status,
+> +};
+> +
+> +static int hisi_cpa_pmu_dev_probe(struct platform_device *pdev,
+> +				  struct hisi_pmu *cpa_pmu)
+> +{
+> +	int ret;
+> +
+> +	ret = hisi_cpa_pmu_init_data(pdev, cpa_pmu);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = hisi_uncore_pmu_init_irq(cpa_pmu, pdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	cpa_pmu->counter_bits = CPA_COUNTER_BITS;
+> +	cpa_pmu->check_event = CPA_NR_EVENTS;
+> +	cpa_pmu->pmu_events.attr_groups = hisi_cpa_pmu_attr_groups;
+> +	cpa_pmu->ops = &hisi_uncore_cpa_pmu_ops;
+> +	cpa_pmu->num_counters = CPA_NR_COUNTERS;
+> +	cpa_pmu->dev = &pdev->dev;
+> +	cpa_pmu->on_cpu = -1;
+> +
+> +	return 0;
+> +}
+> +
+> +static int hisi_cpa_pmu_probe(struct platform_device *pdev)
+> +{
+> +	struct hisi_pmu *cpa_pmu;
+> +	char *name;
+> +	int ret;
+> +
+> +	cpa_pmu = devm_kzalloc(&pdev->dev, sizeof(*cpa_pmu), GFP_KERNEL);
+> +	if (!cpa_pmu)
+> +		return -ENOMEM;
+> +
+> +	ret = hisi_cpa_pmu_dev_probe(pdev, cpa_pmu);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = cpuhp_state_add_instance(CPUHP_AP_PERF_ARM_HISI_CPA_ONLINE,
+> +				       &cpa_pmu->node);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Error %d registering hotplug\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "hisi_sicl%d_cpa%u", cpa_pmu->sccl_id - 1,
+
+sorry, but I still don't like this "- 1". From checking the chat on v1, 
+my impression was that you agreed with me on this one.
+
+> +			      cpa_pmu->index_id);
+> +
+> +	cpa_pmu->pmu = (struct pmu) {
+> +		.name		= name,
+> +		.module		= THIS_MODULE,
+> +		.task_ctx_nr	= perf_invalid_context,
+> +		.event_init	= hisi_uncore_pmu_event_init,
+> +		.pmu_enable	= hisi_uncore_pmu_enable,
+> +		.pmu_disable	= hisi_uncore_pmu_disable,
+> +		.add		= hisi_uncore_pmu_add,
+> +		.del		= hisi_uncore_pmu_del,
+> +		.start		= hisi_uncore_pmu_start,
+> +		.stop		= hisi_uncore_pmu_stop,
+> +		.read		= hisi_uncore_pmu_read,
+> +		.attr_groups	= cpa_pmu->pmu_events.attr_groups,
+> +		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
+> +	};
+> +
+> +	ret = perf_pmu_register(&cpa_pmu->pmu, name, -1);
+> +	if (ret) {
+> +		dev_err(cpa_pmu->dev, "CPA PMU register failed\n");
+
+I don't think that you need to mention "CPA PMU", as the driver name is 
+included in dev_err() prints
+
+> +		cpuhp_state_remove_instance_nocalls(
+> +			CPUHP_AP_PERF_ARM_HISI_CPA_ONLINE, &cpa_pmu->node);
+> +		return ret;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, cpa_pmu);
+> +	return ret;
+> +}
+> +
+
+
+Thanks,
+John
