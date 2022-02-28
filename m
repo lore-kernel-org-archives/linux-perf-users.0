@@ -2,48 +2,49 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D46C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Feb 2022 15:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C15C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Feb 2022 15:45:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233382AbiB1PGG (ORCPT
+        id S237638AbiB1PqJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 28 Feb 2022 10:06:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34882 "EHLO
+        Mon, 28 Feb 2022 10:46:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231941AbiB1PGF (ORCPT
+        with ESMTP id S234135AbiB1PqI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 28 Feb 2022 10:06:05 -0500
+        Mon, 28 Feb 2022 10:46:08 -0500
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8B97B76E0B;
-        Mon, 28 Feb 2022 07:05:26 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 64B5879C79;
+        Mon, 28 Feb 2022 07:45:29 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 49749ED1;
-        Mon, 28 Feb 2022 07:05:26 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2630B106F;
+        Mon, 28 Feb 2022 07:45:29 -0800 (PST)
 Received: from [10.57.40.132] (unknown [10.57.40.132])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 317593F73D;
-        Mon, 28 Feb 2022 07:05:23 -0800 (PST)
-Message-ID: <fb98e7fd-bf0f-bc3b-ad2a-2775d2ef321d@arm.com>
-Date:   Mon, 28 Feb 2022 15:05:21 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 77F333F73D;
+        Mon, 28 Feb 2022 07:45:26 -0800 (PST)
+Message-ID: <10aac3a9-6912-6e47-400e-5c7d8ca9dbcd@arm.com>
+Date:   Mon, 28 Feb 2022 15:45:25 +0000
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: [PATCH] perf test: Add perf_event_attr tests for the arm_spe
- event
+Subject: Re: [PATCH] perf: Add irq and exception return branch types
 Content-Language: en-US
-To:     German Gomez <german.gomez@arm.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-References: <20220126160710.32983-1-german.gomez@arm.com>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org
+References: <1645681014-3346-1-git-send-email-anshuman.khandual@arm.com>
 From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20220126160710.32983-1-german.gomez@arm.com>
+In-Reply-To: <1645681014-3346-1-git-send-email-anshuman.khandual@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -52,119 +53,134 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 26/01/2022 16:07, German Gomez wrote:
-> Adds a couple of perf_event_attr tests for the fix introduced in [1].
-> The tests check that the correct sample_period value is set in the
-> struct perf_event_attr of the arm_spe events.
+On 24/02/2022 05:36, Anshuman Khandual wrote:
+> This expands generic branch type classification by adding two more entries
+> there in i.e irq and exception return. Also updates the x86 implementation
+> to process X86_BR_IRET and X86_BR_IRQ records as appropriate. This changes
+> branch types reported to user space on x86 platform but it should not be a
+> problem. The possible scenarios and impacts are enumerated here.
 > 
-> [1]: https://lore.kernel.org/all/20220118144054.2541-1-german.gomez@arm.com/
+> --------------------------------------------------------------------------
+> | kernel | perf tool |                     Impact                        |
+> --------------------------------------------------------------------------
+> |   old  |    old    |  Works as before                                  |
+> --------------------------------------------------------------------------
+> |   old  |    new    |  PERF_BR_UNKNOWN is processed                     |
+> --------------------------------------------------------------------------
+> |   new  |    old    |  PERF_BR_ERET/IRQ are blocked via old PERF_BR_MAX |
+> --------------------------------------------------------------------------
+> |   new  |    new    |  PERF_BR_ERET/IRQ are recognized                  |
+> --------------------------------------------------------------------------
 > 
-> Signed-off-by: German Gomez <german.gomez@arm.com>
+> When PERF_BR_ERET/IRQ are blocked via old PERF_BR_MAX (new kernel with old
+> perf tool) the user space might throw up an warning complaining about some
+> unrecognized branch types being reported, but it is expected. PERF_BR_ERET
+> and PERF_BR_IRQ branch types will be used for BRBE implementation on arm64
+> platform.
+> 
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-perf-users@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+> This applies on v5.17-rc5
+> 
+> These two new branch types expands generic branch type classification but
+> still leaves another three entries in 'type' field for later. Please refer
+> a previous discussion [1] for some further context.
+> 
+> [1] https://lore.kernel.org/all/1643348653-24367-1-git-send-email-anshuman.khandual@arm.com/
+> 
+>  arch/x86/events/intel/lbr.c           | 4 ++--
+>  include/uapi/linux/perf_event.h       | 2 ++
+>  tools/include/uapi/linux/perf_event.h | 2 ++
+>  tools/perf/util/branch.c              | 4 +++-
+>  4 files changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+> index 669c2be14784..fe1742c4ca49 100644
+> --- a/arch/x86/events/intel/lbr.c
+> +++ b/arch/x86/events/intel/lbr.c
+> @@ -1329,10 +1329,10 @@ static int branch_map[X86_BR_TYPE_MAP_MAX] = {
+>  	PERF_BR_SYSCALL,	/* X86_BR_SYSCALL */
+>  	PERF_BR_SYSRET,		/* X86_BR_SYSRET */
+>  	PERF_BR_UNKNOWN,	/* X86_BR_INT */
+> -	PERF_BR_UNKNOWN,	/* X86_BR_IRET */
+> +	PERF_BR_ERET,		/* X86_BR_IRET */
+>  	PERF_BR_COND,		/* X86_BR_JCC */
+>  	PERF_BR_UNCOND,		/* X86_BR_JMP */
+> -	PERF_BR_UNKNOWN,	/* X86_BR_IRQ */
+> +	PERF_BR_IRQ,		/* X86_BR_IRQ */
+Hi Anshuman,
+
+I couldn't verify if these changes to the lbr map matched up to the spec because
+I couldn't find the right section. I suppose there might need to be a comment
+about why BR_ERET == BR_IRET or what those abbreviations are.
+
+I think it could also be possible to leave these entries as unknowns if we don't know
+if they're even being used. It will always be possible to go back and update these
+lbr mappings after you've added the new types.
+
+
+>  	PERF_BR_IND_CALL,	/* X86_BR_IND_CALL */
+>  	PERF_BR_UNKNOWN,	/* X86_BR_ABORT */
+>  	PERF_BR_UNKNOWN,	/* X86_BR_IN_TX */
+> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> index 82858b697c05..d37629dbad72 100644
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -251,6 +251,8 @@ enum {
+>  	PERF_BR_SYSRET		= 8,	/* syscall return */
+>  	PERF_BR_COND_CALL	= 9,	/* conditional function call */
+>  	PERF_BR_COND_RET	= 10,	/* conditional function return */
+> +	PERF_BR_ERET		= 11,	/* exception return */
+> +	PERF_BR_IRQ		= 12,	/* irq */
+>  	PERF_BR_MAX,>  };
+>  
+> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+> index 82858b697c05..d37629dbad72 100644
+> --- a/tools/include/uapi/linux/perf_event.h
+> +++ b/tools/include/uapi/linux/perf_event.h
+> @@ -251,6 +251,8 @@ enum {
+>  	PERF_BR_SYSRET		= 8,	/* syscall return */
+>  	PERF_BR_COND_CALL	= 9,	/* conditional function call */
+>  	PERF_BR_COND_RET	= 10,	/* conditional function return */
+> +	PERF_BR_ERET		= 11,	/* exception return */
+> +	PERF_BR_IRQ		= 12,	/* irq */
+>  	PERF_BR_MAX,
+>  };
+>  
+> diff --git a/tools/perf/util/branch.c b/tools/perf/util/branch.c
+> index 2285b1eb3128..a9a909db8cc7 100644
+> --- a/tools/perf/util/branch.c
+> +++ b/tools/perf/util/branch.c
+> @@ -49,7 +49,9 @@ const char *branch_type_name(int type)
+>  		"SYSCALL",
+>  		"SYSRET",
+>  		"COND_CALL",
+> -		"COND_RET"
+> +		"COND_RET",
+> +		"ERET",
+> +		"IRQ"
+>  	};
+>
+Otherwise the new entries look good to me, so without the lbr changes:
 
 Reviewed-by: James Clark <james.clark@arm.com>
 
-> ---
->  tools/perf/tests/attr/README                  |  2 +
->  tools/perf/tests/attr/base-record-spe         | 40 +++++++++++++++++++
->  tools/perf/tests/attr/test-record-spe-period  | 12 ++++++
->  .../tests/attr/test-record-spe-period-term    | 12 ++++++
->  4 files changed, 66 insertions(+)
->  create mode 100644 tools/perf/tests/attr/base-record-spe
->  create mode 100644 tools/perf/tests/attr/test-record-spe-period
->  create mode 100644 tools/perf/tests/attr/test-record-spe-period-term
-> 
-> diff --git a/tools/perf/tests/attr/README b/tools/perf/tests/attr/README
-> index 1116fc6bf2ac..454505d343fa 100644
-> --- a/tools/perf/tests/attr/README
-> +++ b/tools/perf/tests/attr/README
-> @@ -58,6 +58,8 @@ Following tests are defined (with perf commands):
->    perf record -c 100 -P kill                    (test-record-period)
->    perf record -c 1 --pfm-events=cycles:period=2 (test-record-pfm-period)
->    perf record -R kill                           (test-record-raw)
-> +  perf record -c 2 -e arm_spe_0// -- kill       (test-record-spe-period)
-> +  perf record -e arm_spe_0/period=3/ -- kill    (test-record-spe-period-term)
->    perf stat -e cycles kill                      (test-stat-basic)
->    perf stat kill                                (test-stat-default)
->    perf stat -d kill                             (test-stat-detailed-1)
-> diff --git a/tools/perf/tests/attr/base-record-spe b/tools/perf/tests/attr/base-record-spe
-> new file mode 100644
-> index 000000000000..08fa96b59240
-> --- /dev/null
-> +++ b/tools/perf/tests/attr/base-record-spe
-> @@ -0,0 +1,40 @@
-> +[event]
-> +fd=*
-> +group_fd=-1
-> +flags=*
-> +cpu=*
-> +type=*
-> +size=*
-> +config=*
-> +sample_period=*
-> +sample_type=*
-> +read_format=*
-> +disabled=*
-> +inherit=*
-> +pinned=*
-> +exclusive=*
-> +exclude_user=*
-> +exclude_kernel=*
-> +exclude_hv=*
-> +exclude_idle=*
-> +mmap=*
-> +comm=*
-> +freq=*
-> +inherit_stat=*
-> +enable_on_exec=*
-> +task=*
-> +watermark=*
-> +precise_ip=*
-> +mmap_data=*
-> +sample_id_all=*
-> +exclude_host=*
-> +exclude_guest=*
-> +exclude_callchain_kernel=*
-> +exclude_callchain_user=*
-> +wakeup_events=*
-> +bp_type=*
-> +config1=*
-> +config2=*
-> +branch_sample_type=*
-> +sample_regs_user=*
-> +sample_stack_user=*
-> diff --git a/tools/perf/tests/attr/test-record-spe-period b/tools/perf/tests/attr/test-record-spe-period
-> new file mode 100644
-> index 000000000000..75f8c9cd8e3f
-> --- /dev/null
-> +++ b/tools/perf/tests/attr/test-record-spe-period
-> @@ -0,0 +1,12 @@
-> +[config]
-> +command = record
-> +args    = --no-bpf-event -c 2 -e arm_spe_0// -- kill >/dev/null 2>&1
-> +ret     = 1
-> +arch    = aarch64
-> +
-> +[event-10:base-record-spe]
-> +sample_period=2
-> +freq=0
-> +
-> +# dummy event
-> +[event-1:base-record-spe]
-> diff --git a/tools/perf/tests/attr/test-record-spe-period-term b/tools/perf/tests/attr/test-record-spe-period-term
-> new file mode 100644
-> index 000000000000..8f60a4fec657
-> --- /dev/null
-> +++ b/tools/perf/tests/attr/test-record-spe-period-term
-> @@ -0,0 +1,12 @@
-> +[config]
-> +command = record
-> +args    = --no-bpf-event -e arm_spe_0/period=3/ -- kill >/dev/null 2>&1
-> +ret     = 1
-> +arch    = aarch64
-> +
-> +[event-10:base-record-spe]
-> +sample_period=3
-> +freq=0
-> +
-> +# dummy event
-> +[event-1:base-record-spe]
+If we're keeping the lbr mapping changes, then I will defer to someone else
+to review.
+
+Thanks
+James
+
+>  	if (type >= 0 && type < PERF_BR_MAX)
