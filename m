@@ -2,136 +2,141 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9305AC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Mar 2022 10:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A7DC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Mar 2022 13:34:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231251AbiCAK4J (ORCPT
+        id S235049AbiCANfF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 1 Mar 2022 05:56:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46226 "EHLO
+        Tue, 1 Mar 2022 08:35:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230382AbiCAK4J (ORCPT
+        with ESMTP id S233631AbiCANfE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Mar 2022 05:56:09 -0500
+        Tue, 1 Mar 2022 08:35:04 -0500
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 548C06582F;
-        Tue,  1 Mar 2022 02:55:28 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 876353A198;
+        Tue,  1 Mar 2022 05:34:23 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E8396ED1;
-        Tue,  1 Mar 2022 02:55:27 -0800 (PST)
-Received: from [10.57.71.121] (unknown [10.57.71.121])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9B2333F73D;
-        Tue,  1 Mar 2022 02:55:24 -0800 (PST)
-Subject: Re: [PATCH 2/2] perf arm-spe: Parse more SPE fields and store source
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Ali Saidi <alisaidi@amazon.com>, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
-        benh@kernel.crashing.org, james.clark@arm.com,
-        john.garry@huawei.com, jolsa@redhat.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
-        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, will@kernel.org
-References: <b1b3697d-4a0a-d041-5cbd-e08fec9e658c@arm.com>
- <20220128210245.4628-1-alisaidi@amazon.com>
- <7eca7a1d-a5a2-2aab-b3cf-5d83cb8ccf4f@arm.com>
- <20220212041927.GA763461@leoy-ThinkPad-X240s>
- <9266bfb6-341c-1d9c-e96f-c9f856a5ffb6@arm.com>
- <20220227132019.GA107053@leoy-ThinkPad-X240s>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27B571042;
+        Tue,  1 Mar 2022 05:34:23 -0800 (PST)
+Received: from ip-10-252-15-108.eu-west-1.compute.internal (unknown [10.252.15.108])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 94B393F70D;
+        Tue,  1 Mar 2022 05:34:21 -0800 (PST)
 From:   German Gomez <german.gomez@arm.com>
-Message-ID: <923cb8b4-f854-e7bb-9bb3-e5b871f64d5d@arm.com>
-Date:   Tue, 1 Mar 2022 10:54:33 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     German Gomez <german.gomez@arm.com>, Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: [PATCH] perf test arm64: Test unwinding using fame-pointer (fp) mode
+Date:   Tue,  1 Mar 2022 13:34:13 +0000
+Message-Id: <20220301133414.11766-1-german.gomez@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20220227132019.GA107053@leoy-ThinkPad-X240s>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Leo,
+Add a shell script to check that the call-graphs generated using frame
+pointers (--call-graph fp) are complete and not missing leaf functions:
 
-Thanks for taking the time, and sorry for the late reply
+  | $ perf test 88 -v
+  |  88: Check Arm64 callgraphs are complete in fp mode                  :
+  | --- start ---
+  | test child forked, pid 8734
+  |  + Compiling test program (/tmp/test_program.Cz3yL)...
+  |  + Recording (PID=8749)...
+  |  + Stopping perf-record...
+  | test_program.Cz
+  | 		     728 leaf
+  | 		     753 parent
+  | 		     76c main
+  | test child finished with 0
+  | ---- end ----
+  | Check Arm SPE callgraphs are complete in fp mode: Ok
 
-On 27/02/2022 13:20, Leo Yan wrote:
-> On Mon, Feb 21, 2022 at 08:41:43PM +0000, German Gomez wrote:
->
-> [...]
->
->> Some comments:
->>
->> # ARM_SPE_OP_ATOMIC
->>
->> This might be a hack, but can we not represent it as both LD&SR as the
->> atomic op would combine both?
->>
->> data_src.mem_op = PERF_MEM_OP_LOAD | PERF_MEM_OP_STORE;
-> BTH, I don't understand well for this question, but let me explain a
-> bit:
->
-> We cannot use 'LOAD | STORE' to present the atomic operation.  Please
-> see Armv8 ARM section D10.2.7 Operation Type packet, it would give out
-> more details.  Atomic operation is an extra attribution for a load or
-> store operations, it could be an atomic load or store, or
-> load-acquire/store-release instructions, or
-> load-exclusive/store-exclusive instructions.
+Fixes: b9f6fbb3b2c2 ("perf arm64: Inject missing frames when using 'perf record --call-graph=fp'")
+Suggested-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: German Gomez <german.gomez@arm.com>
+---
+ .../perf/tests/shell/test_arm_callgraph_fp.sh | 65 +++++++++++++++++++
+ 1 file changed, 65 insertions(+)
+ create mode 100755 tools/perf/tests/shell/test_arm_callgraph_fp.sh
 
-I will check, thanks.
+diff --git a/tools/perf/tests/shell/test_arm_callgraph_fp.sh b/tools/perf/tests/shell/test_arm_callgraph_fp.sh
+new file mode 100755
+index 000000000..c4fa9255b
+--- /dev/null
++++ b/tools/perf/tests/shell/test_arm_callgraph_fp.sh
+@@ -0,0 +1,65 @@
++#!/bin/sh
++# Check Arm64 callgraphs are complete in fp mode
++# SPDX-License-Identifier: GPL-2.0
++
++lscpu | grep -q "aarch64" || exit 2
++
++if ! [ -x "$(command -v cc)" ]; then
++	echo "failed: no compiler, install gcc"
++	exit 2
++fi
++
++PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++TEST_PROGRAM_SOURCE=$(mktemp /tmp/test_program.XXXXX.c)
++TEST_PROGRAM=$(mktemp /tmp/test_program.XXXXX)
++
++cleanup_files()
++{
++	rm -f $PERF_DATA
++	rm -f $TEST_PROGRAM_SOURCE
++	rm -f $TEST_PROGRAM
++}
++
++trap cleanup_files exit term int
++
++cat << EOF > $TEST_PROGRAM_SOURCE
++int a = 0;
++void leaf(void) {
++  for (;;)
++    a += a;
++}
++void parent(void) {
++  leaf();
++}
++int main(void) {
++  parent();
++  return 0;
++}
++EOF
++
++echo " + Compiling test program ($TEST_PROGRAM)..."
++CFLAGS="-O0 -fno-inline -fno-omit-frame-pointer"
++cc $CFLAGS $TEST_PROGRAM_SOURCE -o $TEST_PROGRAM || exit 1
++
++# Add a 1 second delay to skip samples that are not in the leaf() function
++perf record -o $PERF_DATA --call-graph fp -e cycles//u -D 1000 -- $TEST_PROGRAM 2> /dev/null &
++PID=$!
++echo " + Recording (PID=$PID)..."
++sleep 2
++echo " + Stopping perf-record..."
++kill $PID
++wait $PID
++
++# example perf-script output:
++#
++# program 
++# 	728 leaf
++# 	753 parent
++# 	76c main
++# ...
++
++perf script -i $PERF_DATA -F comm,ip,sym | head -n4
++perf script -i $PERF_DATA -F comm,ip,sym | head -n4 |
++	awk '{ if ($2 != "") sym[i++] = $2 } END { if (sym[0] != "leaf" ||
++						       sym[1] != "parent" ||
++						       sym[2] != "main") exit 1 }'
+-- 
+2.25.1
 
-My thinking was that atomics perform some load-modify-store operation
-hence why I suggested combining LOAD&STORE flags. But I admit didn't try
-running the instructions myself so I didn't check the actual records.
-
-> [...]
->
->> # ARM_SPE_OP_SVE_SG
->>
->> (I'm sorry if this is too far out of scope of the original patch. Let
->> me know if you would prefer to discuss it on a separate channel)
->>
->> On a separate note, I'm also looking at incorporating some of the SVE
->> bits in the perf samples.
->>
->> For this, do you think it makes sense to have two mem_* categories in
->> perf_mem_data_src:
->>
->> mem_vector (2 bits)
->> - simd
->> - other (SVE in arm64)
-> I think we can define below vector types:
->
-> PERF_MEM_VECTOR_SIMD
-> PERF_MEM_VECTOR_SVE
->
-> The tricky thing is "other"... Based on the description for "Operation
-> Type packet payload (Other)" in the Armv8 Arm, I think we even need to
-> add an extra operation type PERF_MEM_OP_OTHER and assign it to
-> data_src.mem_op field.
->
->> mem_src (1 bit)
->> - sparse (scatter/gather loads/stores in SVE, as well as simd)
-> How about the naming "mem_attr" for new field and define two
-> attributions:
->
-> PERF_MEM_ATTR_SPARSE  -> Gather/Scatter operation
-> PERF_MEM_ATTR_PRED    -> Predicated operation
->
-> Just remind, we cannot only approve within Arm related developers,
-> it's good to seek more wider review from other Arch developers when
-> you send new patch set.
-
-Agree. On second thought, the mention of sve seems very arch-specific
-for this...
-
-Recently the idea of adding arch-specific flags to the branch entries
-was mentioned in [1]. Perhaps we could suggest something similar for
-this. Or leave simd/sve as a perf-tool-only feature for now.
-
-[1] https://lore.kernel.org/all/Ygv4cmO%2Fzb3qO48q@robh.at.kernel.org/
-
->
-> Thanks,
-> Leo
