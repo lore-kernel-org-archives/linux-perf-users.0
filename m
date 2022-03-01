@@ -2,184 +2,187 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B54C3C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Feb 2022 16:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 943E6C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Mar 2022 01:49:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236186AbiB1Q5o (ORCPT
+        id S232025AbiCABuh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 28 Feb 2022 11:57:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43378 "EHLO
+        Mon, 28 Feb 2022 20:50:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233487AbiB1Q5o (ORCPT
+        with ESMTP id S232130AbiCABuc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 28 Feb 2022 11:57:44 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3EFB679C77;
-        Mon, 28 Feb 2022 08:57:04 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DFFD21042;
-        Mon, 28 Feb 2022 08:57:03 -0800 (PST)
-Received: from ip-10-252-15-108.eu-west-1.compute.internal (unknown [10.252.15.108])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5723F3F70D;
-        Mon, 28 Feb 2022 08:57:02 -0800 (PST)
-From:   German Gomez <german.gomez@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc:     james.clark@arm.com, German Gomez <german.gomez@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH] perf test arm-spe: Check if perf-record hangs when recording workload with forks
-Date:   Mon, 28 Feb 2022 16:56:54 +0000
-Message-Id: <20220228165655.3920-1-german.gomez@arm.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 28 Feb 2022 20:50:32 -0500
+Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82BE15B880;
+        Mon, 28 Feb 2022 17:49:44 -0800 (PST)
+Received: by mail-io1-xd29.google.com with SMTP id 195so16988033iou.0;
+        Mon, 28 Feb 2022 17:49:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SKJn0pfzeo+R2i4pyNe0iUGsKGD7jcEKU3AQW9M1M30=;
+        b=h7Q4JZSlzXH3pZP5XmHQZ++eP6ObyZ2SalgJdiLIlOvLtH/6FrJyPEgiC25prxUeLP
+         lFRI6QMPL1+VkIcBAep4Mvv736w7UzzJpucHluc9fnYGDIyjDm/gJBTiUGLXC8ZmJXeJ
+         ujgj3UChxD8h4P/3fIcLE406OrcGIdD9Rabo8cs1AjasAoNv0Ue1C87Wf9HSIgQDhywz
+         bGITmpmbvQ6CDpvetUEprrRyLGPWUAH1B6sLQftSUTCba38J7qcWR1s57CHiitLedLBR
+         N9qLecuKJiX6SgvkuYj7Dn2URjZBxfrGYAGKoNzr3F8ZpiaWmPdH5w0P/TV3byy2Z4Q6
+         zR5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SKJn0pfzeo+R2i4pyNe0iUGsKGD7jcEKU3AQW9M1M30=;
+        b=uR/hPnzuprv5hBP36hACLfCvspto+qzuAettZ7h8Pc6wRvxgF2ojCo8WaYViaSK2wo
+         dh6xQMZwiSsG7WFr56PNqhTCq62p/1jeewyVFUh+BnoFtj7FANKWeKuqJywy/U0AVZGW
+         yC+UanYJrQsgUus5YJT/jya0jZ+bHMFbLPLTcxp54KgYXxknvFFxGZRjF+6VUzH+C96Z
+         p1IOXP8hSvgHNpoEJgjMfuU+OsfjbOcMzZgF06jlVALTlCt1zcT/LHrsHwKMRBv7ZU2F
+         EOJVFkVTNQVpnQr1KZEV16gIFom68A6Z+uhJtyjR7Iq7seHuubmFBTDvgGeWPCPiHj+P
+         1Gvw==
+X-Gm-Message-State: AOAM531uMyXi/wt/wEwm0Omg52b2B9tLkKYT4n7u68MECmxb92+7qKOk
+        9Gf6ZQZcdCpwOanEICP7fRQduSMNXbyJBsWJOio=
+X-Google-Smtp-Source: ABdhPJyU/Ki1eGodgHHAJAa78gROyJmvIGMAyXiIpnNZCAaM1I/fl/hUSIYUB4HwuoVORotDg1GOCWcFW0EjAepd84I=
+X-Received: by 2002:a05:6638:1035:b0:306:e5bd:36da with SMTP id
+ n21-20020a056638103500b00306e5bd36damr19958576jan.145.1646099383423; Mon, 28
+ Feb 2022 17:49:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220224155238.714682-1-jolsa@kernel.org> <20220224155238.714682-3-jolsa@kernel.org>
+In-Reply-To: <20220224155238.714682-3-jolsa@kernel.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 28 Feb 2022 17:49:32 -0800
+Message-ID: <CAEf4BzbqbHDzGJJu8Zp1QPa-bxT_usespzs=rEj2UX0A-k0gPA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] perf tools: Remove bpf_map__set_priv/bpf_map__priv usage
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add shell test to check if perf-record hangs when recording an arm_spe
-event with forks.
+On Thu, Feb 24, 2022 at 7:53 AM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> Both bpf_map__set_priv/bpf_map__priv are deprecated
+> and will be eventually removed.
+>
+> Using hashmap to replace that functionality.
+>
+> Suggested-by: Andrii Nakryiko <andrii@kernel.org>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/perf/util/bpf-loader.c | 66 ++++++++++++++++++++++++++++++++----
+>  1 file changed, 59 insertions(+), 7 deletions(-)
+>
+> diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
+> index b9d4278895ec..4f6173756a9d 100644
+> --- a/tools/perf/util/bpf-loader.c
+> +++ b/tools/perf/util/bpf-loader.c
+> @@ -27,6 +27,7 @@
+>  #include "llvm-utils.h"
+>  #include "c++/clang-c.h"
+>  #include "hashmap.h"
+> +#include "asm/bug.h"
+>
+>  #include <internal/xyarray.h>
+>
+> @@ -57,6 +58,7 @@ struct bpf_perf_object {
+>
+>  static LIST_HEAD(bpf_objects_list);
+>  static struct hashmap *bpf_program_hash;
+> +static struct hashmap *bpf_map_hash;
+>
+>  static struct bpf_perf_object *
+>  bpf_perf_object__next(struct bpf_perf_object *prev)
+> @@ -204,6 +206,8 @@ static void bpf_program_hash_free(void)
+>         bpf_program_hash = NULL;
+>  }
+>
+> +static void bpf_map_hash_free(void);
+> +
+>  void bpf__clear(void)
+>  {
+>         struct bpf_perf_object *perf_obj, *tmp;
+> @@ -214,6 +218,7 @@ void bpf__clear(void)
+>         }
+>
+>         bpf_program_hash_free();
+> +       bpf_map_hash_free();
+>  }
+>
+>  static size_t ptr_hash(const void *__key, void *ctx __maybe_unused)
+> @@ -976,7 +981,7 @@ bpf_map_priv__purge(struct bpf_map_priv *priv)
+>  }
+>
+>  static void
+> -bpf_map_priv__clear(struct bpf_map *map __maybe_unused,
+> +bpf_map_priv__clear(const struct bpf_map *map __maybe_unused,
+>                     void *_priv)
+>  {
+>         struct bpf_map_priv *priv = _priv;
+> @@ -985,6 +990,53 @@ bpf_map_priv__clear(struct bpf_map *map __maybe_unused,
+>         free(priv);
+>  }
+>
+> +static void *map_priv(const struct bpf_map *map)
+> +{
+> +       void *priv;
+> +
+> +       if (IS_ERR_OR_NULL(bpf_map_hash))
+> +               return NULL;
+> +       if (!hashmap__find(bpf_map_hash, map, &priv))
+> +               return NULL;
+> +       return priv;
+> +}
+> +
+> +static void bpf_map_hash_free(void)
+> +{
+> +       struct hashmap_entry *cur;
+> +       size_t bkt;
+> +
+> +       if (IS_ERR_OR_NULL(bpf_map_hash))
+> +               return;
+> +
+> +       hashmap__for_each_entry(bpf_map_hash, cur, bkt)
+> +               bpf_map_priv__clear(cur->key, cur->value);
+> +
+> +       hashmap__free(bpf_map_hash);
+> +       bpf_map_hash = NULL;
+> +}
+> +
+> +static int map_set_priv(struct bpf_map *map, void *priv)
+> +{
+> +       void *old_priv;
+> +
+> +       if (WARN_ON_ONCE(IS_ERR(bpf_map_hash)))
+> +               return PTR_ERR(bpf_program_hash);
+> +
 
-The test FAILS if the Kernel is not patched with Commit 961c391217 ("perf:
-Always wake the parent event").
+you didn't warn for this in the previous patch. I have no preference,
+just pointing out assymetry.
 
-Unpatched Kernel:
+> +       if (!bpf_map_hash) {
+> +               bpf_map_hash = hashmap__new(ptr_hash, ptr_equal, NULL);
+> +               if (IS_ERR(bpf_map_hash))
+> +                       return PTR_ERR(bpf_map_hash);
+> +       }
+> +
+> +       old_priv = map_priv(map);
+> +       if (old_priv) {
+> +               bpf_map_priv__clear(map, old_priv);
+> +               return hashmap__set(bpf_map_hash, map, priv, NULL, NULL);
+> +       }
+> +       return hashmap__add(bpf_map_hash, map, priv);
+> +}
+> +
 
-  $ perf test -v 90
-  90: Check Arm SPE doesn't hang when there are forks
-  --- start ---
-  test child forked, pid 14232
-  Recording workload with fork
-  Log lines = 90 /tmp/__perf_test.stderr.0Nu0U
-  Log lines after 1 second = 90 /tmp/__perf_test.stderr.0Nu0U
-  SPE hang test: FAIL
-  test child finished with -1
-  ---- end ----
-  Check Arm SPE trace data in workload with forks: FAILED!
-
-Patched Kernel:
-
-  $ perf test -v 90
-  90: Check Arm SPE doesn't hang when there are forks
-  --- start ---
-  test child forked, pid 2930
-  Compiling test program...
-  Recording workload...
-  Log lines = 478 /tmp/__perf_test.log.026AI
-  Log lines after 1 second = 557 /tmp/__perf_test.log.026AI
-  SPE hang test: PASS
-  Cleaning up files...
-  test child finished with 0
-  ---- end ----
-  Check Arm SPE trace data in workload with forks: Ok
-
-Signed-off-by: German Gomez <german.gomez@arm.com>
----
- tools/perf/tests/shell/test_arm_spe_fork.sh | 92 +++++++++++++++++++++
- 1 file changed, 92 insertions(+)
- create mode 100755 tools/perf/tests/shell/test_arm_spe_fork.sh
-
-diff --git a/tools/perf/tests/shell/test_arm_spe_fork.sh b/tools/perf/tests/shell/test_arm_spe_fork.sh
-new file mode 100755
-index 000000000..c920d3583
---- /dev/null
-+++ b/tools/perf/tests/shell/test_arm_spe_fork.sh
-@@ -0,0 +1,92 @@
-+#!/bin/sh
-+# Check Arm SPE doesn't hang when there are forks
-+
-+# SPDX-License-Identifier: GPL-2.0
-+# German Gomez <german.gomez@arm.com>, 2022
-+
-+skip_if_no_arm_spe_event() {
-+	perf list | egrep -q 'arm_spe_[0-9]+//' && return 0
-+	return 2
-+}
-+
-+skip_if_no_arm_spe_event || exit 2
-+
-+# skip if there's no compiler
-+if ! [ -x "$(command -v cc)" ]; then
-+	echo "failed: no compiler, install gcc"
-+	exit 2
-+fi
-+
-+TEST_PROGRAM_SOURCE=$(mktemp /tmp/__perf_test.program.XXXXX.c)
-+TEST_PROGRAM=$(mktemp /tmp/__perf_test.program.XXXXX)
-+PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+PERF_RECORD_LOG=$(mktemp /tmp/__perf_test.log.XXXXX)
-+
-+cleanup_files()
-+{
-+	echo "Cleaning up files..."
-+	rm -f ${PERF_RECORD_LOG}
-+	rm -f ${PERF_DATA}
-+	rm -f ${TEST_PROGRAM_SOURCE}
-+	rm -f ${TEST_PROGRAM}
-+}
-+
-+trap cleanup_files exit term int
-+
-+# compile test program
-+cat << EOF > $TEST_PROGRAM_SOURCE
-+#include <math.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <sys/wait.h>
-+
-+int workload() {
-+  while (1)
-+    sqrt(rand());
-+  return 0;
-+}
-+
-+int main() {
-+  switch (fork()) {
-+    case 0:
-+      return workload();
-+    case -1:
-+      return 1;
-+    default:
-+      wait(NULL);
-+  }
-+  return 0;
-+}
-+EOF
-+
-+echo "Compiling test program..."
-+CFLAGS="-lm"
-+cc $TEST_PROGRAM_SOURCE $CFLAGS -o $TEST_PROGRAM || exit 1
-+
-+echo "Recording workload..."
-+perf record -o ${PERF_DATA} -e arm_spe/period=65536/ -vvv -- $TEST_PROGRAM > ${PERF_RECORD_LOG} 2>&1 &
-+PERFPID=$!
-+
-+# Check if perf hangs by checking the perf-record logs.
-+sleep 1
-+log0=$(wc -l $PERF_RECORD_LOG)
-+echo Log lines = $log0
-+sleep 1
-+log1=$(wc -l $PERF_RECORD_LOG)
-+echo Log lines after 1 second = $log1
-+
-+kill $PERFPID
-+wait $PERFPID
-+# test program may leave an orphan process running the workload
-+killall $(basename $TEST_PROGRAM)
-+
-+if [ "$log0" = "$log1" ];
-+then
-+        echo "SPE hang test: FAIL"
-+        exit 1
-+else
-+        echo "SPE hang test: PASS"
-+fi
-+
-+exit 0
--- 
-2.25.1
-
+[...]
