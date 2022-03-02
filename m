@@ -2,140 +2,178 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4FBC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Mar 2022 15:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2835C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Mar 2022 16:20:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235864AbiCBPkr (ORCPT
+        id S239575AbiCBQUs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Mar 2022 10:40:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60338 "EHLO
+        Wed, 2 Mar 2022 11:20:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233923AbiCBPkq (ORCPT
+        with ESMTP id S234388AbiCBQUr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Mar 2022 10:40:46 -0500
+        Wed, 2 Mar 2022 11:20:47 -0500
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 97CC0CB640;
-        Wed,  2 Mar 2022 07:40:02 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5304511149;
+        Wed,  2 Mar 2022 08:20:04 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4857A13D5;
-        Wed,  2 Mar 2022 07:40:02 -0800 (PST)
-Received: from [10.1.26.154] (e127744.cambridge.arm.com [10.1.26.154])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6ACAE3F73D;
-        Wed,  2 Mar 2022 07:39:58 -0800 (PST)
-Subject: Re: [PATCH v2 2/2] perf mem: Support HITM for when mem_lvl_num is
- used
-To:     Ali Saidi <alisaidi@amazon.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, leo.yan@linaro.org
-Cc:     benh@kernel.crashing.org, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C5F1139F;
+        Wed,  2 Mar 2022 08:20:04 -0800 (PST)
+Received: from [10.57.42.101] (unknown [10.57.42.101])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ADC4D3F73D;
+        Wed,  2 Mar 2022 08:20:02 -0800 (PST)
+Message-ID: <3dc14ad9-8ce1-a2e3-3bab-953b79af82be@arm.com>
+Date:   Wed, 2 Mar 2022 16:20:00 +0000
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH 1/1] perf: Set build-id using build-id header on new mmap
+ records
+Content-Language: en-US
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     acme@kernel.org, linux-perf-users@vger.kernel.org,
+        coresight@lists.linaro.org, Denis Nikitin <denik@chromium.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        James Clark <james.clark@arm.com>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Li Huafei <lihuafei1@huawei.com>
-References: <20220221224807.18172-1-alisaidi@amazon.com>
- <20220221224807.18172-2-alisaidi@amazon.com>
-From:   German Gomez <german.gomez@arm.com>
-Message-ID: <d5f9bd40-1f32-9847-33b1-fe7304acf29b@arm.com>
-Date:   Wed, 2 Mar 2022 15:39:04 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
-MIME-Version: 1.0
-In-Reply-To: <20220221224807.18172-2-alisaidi@amazon.com>
-Content-Type: text/plain; charset=utf-8
+        linux-kernel@vger.kernel.org
+References: <20220224171955.862983-1-james.clark@arm.com>
+ <20220224171955.862983-2-james.clark@arm.com> <YhwAPrOP/ky4HLfC@krava>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <YhwAPrOP/ky4HLfC@krava>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
-On 21/02/2022 22:48, Ali Saidi wrote:
-> Current code only support HITM statistics for last level cache (LLC)
-> when mem_lvl encodes the level. On existing Arm64 machines there are as
-> many as four levels cache and this change supports decoding l1, l2, and
-> llc hits from the mem_lvl_num data. Given that the mem_lvl namespace is
-> being deprecated take this opportunity to encode the neoverse data into
-> mem_lvl_num.
 
-Since Neoverse is mentioned in the commit message, I think there should be a comment somewhere in the code as well.
+On 27/02/2022 22:50, Jiri Olsa wrote:
+> On Thu, Feb 24, 2022 at 05:19:55PM +0000, James Clark wrote:
+>> MMAP records that occur after the build-id header is parsed do not have
+>> their build-id set even if the filename matches an entry from the
+>> header. Set the build-id on these dsos as long as the MMAP record
+>> doesn't have its own build-id set.
+>>
+>> This fixes an issue with off target analysis where the local version of
+>> a dso is loaded rather than one from ~/.debug via a build-id.
+> 
+> nice catch :)
+> 
+>>
+>> Reported-by: Denis Nikitin <denik@chromium.org>
+>> Signed-off-by: James Clark <james.clark@arm.com>
+>> ---
+>>  tools/perf/util/dso.h    |  1 +
+>>  tools/perf/util/header.c |  1 +
+>>  tools/perf/util/map.c    | 16 ++++++++++++++--
+>>  3 files changed, 16 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+>> index 011da3924fc1..3a9fd4d389b5 100644
+>> --- a/tools/perf/util/dso.h
+>> +++ b/tools/perf/util/dso.h
+>> @@ -167,6 +167,7 @@ struct dso {
+>>  	enum dso_load_errno	load_errno;
+>>  	u8		 adjust_symbols:1;
+>>  	u8		 has_build_id:1;
+>> +	u8		 header_build_id:1;
+>>  	u8		 has_srcline:1;
+>>  	u8		 hit:1;
+>>  	u8		 annotate_warned:1;
+>> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+>> index 6da12e522edc..571d73d4f976 100644
+>> --- a/tools/perf/util/header.c
+>> +++ b/tools/perf/util/header.c
+>> @@ -2200,6 +2200,7 @@ static int __event_process_build_id(struct perf_record_header_build_id *bev,
+>>  
+>>  		build_id__init(&bid, bev->data, size);
+>>  		dso__set_build_id(dso, &bid);
+>> +		dso->header_build_id = 1;
+>>  
+>>  		if (dso_space != DSO_SPACE__USER) {
+>>  			struct kmod_path m = { .name = NULL, };
+>> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+>> index 1803d3887afe..4ae91e491e23 100644
+>> --- a/tools/perf/util/map.c
+>> +++ b/tools/perf/util/map.c
+>> @@ -127,7 +127,7 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
+>>  
+>>  	if (map != NULL) {
+>>  		char newfilename[PATH_MAX];
+>> -		struct dso *dso;
+>> +		struct dso *dso, *header_bid_dso;
+>>  		int anon, no_dso, vdso, android;
+>>  
+>>  		android = is_android_lib(filename);
+>> @@ -185,7 +185,19 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
+>>  
+>>  		if (build_id__is_defined(bid))
+>>  			dso__set_build_id(dso, bid);
+>> -
+>> +		else {
+> 
+> nit please add { } to the if clause as well
+> 
+>> +			/*
+>> +			 * If the mmap event had no build ID, search for an existing dso from the
+>> +			 * build ID header by name. Otherwise only the dso loaded at the time of
+>> +			 * reading the header will have the build ID set and all future mmaps will
+>> +			 * have it missing.
+>> +			 */
+>> +			header_bid_dso = __dsos__find(&machine->dsos, filename, false);
+> 
+> is this 'perf top' safe? I think dso should be added in the
+> same thread, but please check and add comment why we don't
+> need locking in here
 
->
-> For loads that hit in a the LLC snoop filter and are fullfilled from a
-> higher level cache, it's not usually clear what the true level of the
-> cache the data came from (i.e. a transfer from a core could come from
-> it's L1 or L2). Instead of making an assumption of where the line came
-> from, add support for incrementing HITM if the source is CACHE_ANY.
->
-> Since other architectures don't seem to populate the mem_lvl_num field
-> here there shouldn't be a change in functionality.
->
-> Signed-off-by: Ali Saidi <alisaidi@amazon.com>
-> ---
->  tools/perf/util/mem-events.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
->
-> diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-> index ed0ab838bcc5..6c3fd4aac7ae 100644
-> --- a/tools/perf/util/mem-events.c
-> +++ b/tools/perf/util/mem-events.c
-> @@ -485,6 +485,7 @@ int c2c_decode_stats(struct c2c_stats *stats, struct mem_info *mi)
->  	u64 daddr  = mi->daddr.addr;
->  	u64 op     = data_src->mem_op;
->  	u64 lvl    = data_src->mem_lvl;
-> +	u64 lnum   = data_src->mem_lvl_num;
->  	u64 snoop  = data_src->mem_snoop;
->  	u64 lock   = data_src->mem_lock;
->  	u64 blk    = data_src->mem_blk;
-> @@ -527,16 +528,18 @@ do {				\
->  			if (lvl & P(LVL, UNC)) stats->ld_uncache++;
->  			if (lvl & P(LVL, IO))  stats->ld_io++;
->  			if (lvl & P(LVL, LFB)) stats->ld_fbhit++;
-> -			if (lvl & P(LVL, L1 )) stats->ld_l1hit++;
-> -			if (lvl & P(LVL, L2 )) stats->ld_l2hit++;
-> -			if (lvl & P(LVL, L3 )) {
-> +			if (lvl & P(LVL, L1) || lnum == P(LVLNUM, L1))
-> +				stats->ld_l1hit++;
-> +			if (lvl & P(LVL, L2) || lnum == P(LVLNUM, L2))
-> +				stats->ld_l2hit++;
-> +			if (lvl & P(LVL, L3) || lnum == P(LVLNUM, L4)) {
+Seems like there are multiple synthesize_threads_workers using the same machine->dsos object so
+I think locking is needed.
 
-According to a comment in the previous patch, using L4 is specific to Neoverse, right?
+At first I thought of doing this:
 
-Maybe we need to distinguish the Neoverse case from the generic one here as well
+  diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+  index 4ae91e491e23..b87b81e3d41c 100644
+  --- a/tools/perf/util/map.c
+  +++ b/tools/perf/util/map.c
+  @@ -192,7 +192,9 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
+                           * reading the header will have the build ID set and all future mmaps will
+                           * have it missing.
+                           */
+  +                       down_read(&machine->dsos.lock);
+                          header_bid_dso = __dsos__find(&machine->dsos, filename, false);
+  +                       up_read(&machine->dsos.lock);
+                          if (header_bid_dso && header_bid_dso->header_build_id) {
+                                  dso__set_build_id(dso, &header_bid_dso->bid);
+                                  dso->header_build_id = 1;
 
-if (is_neoverse)
-// treat L4 as llc
-else
-// treat L3 as llc
+But then I was wondering why it doesn't need a write lock all the way from machine__findnew_dso_id() to
+dso__put()? At the moment there are writes to the dso like dso__set_loaded(), dso->nsinfo = nsi and
+dso__set_build_id(), so another thread could find the dso in a partially constructed state.
 
->  				if (snoop & P(SNOOP, HITM))
->  					HITM_INC(lcl_hitm);
->  				else
->  					stats->ld_llchit++;
->  			}
->  
-> -			if (lvl & P(LVL, LOC_RAM)) {
-> +			if (lvl & P(LVL, LOC_RAM) || lnum == P(LVLNUM, RAM)) {
->  				stats->lcl_dram++;
->  				if (snoop & P(SNOOP, HIT))
->  					stats->ld_shared++;
-> @@ -564,6 +567,9 @@ do {				\
->  				HITM_INC(rmt_hitm);
->  		}
->  
-> +		if (lnum == P(LVLNUM, ANY_CACHE) && snoop & P(SNOOP, HITM))
-> +			HITM_INC(lcl_hitm);
-> +
->  		if ((lvl & P(LVL, MISS)))
->  			stats->ld_miss++;
->  
+Not sure if this is an issue currently without my patch, but at least with it they would have to be found
+with header_build_id already set to 1 otherwise it will mess things up.
+
+Extending the write lock outside of machine__findnew_dso_id() is difficult because it already
+releases it before it returns. Does it need to be changed so that machine__findnew_dso_id() takes all the
+arguments needed to construct it inside the lock?
+
+James
+
+> 
+> thanks,
+> jirka
+> 
+>> +			if (header_bid_dso && header_bid_dso->header_build_id) {
+>> +				dso__set_build_id(dso, &header_bid_dso->bid);
+>> +				dso->header_build_id = 1;
+>> +			}
+>> +		}
+>>  		dso__put(dso);
+>>  	}
+>>  	return map;
+>> -- 
+>> 2.28.0
+>>
