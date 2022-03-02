@@ -2,28 +2,28 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE8AC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Mar 2022 12:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4FBC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Mar 2022 15:40:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241113AbiCBMAs (ORCPT
+        id S235864AbiCBPkr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Mar 2022 07:00:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41410 "EHLO
+        Wed, 2 Mar 2022 10:40:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235302AbiCBMAr (ORCPT
+        with ESMTP id S233923AbiCBPkq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Mar 2022 07:00:47 -0500
+        Wed, 2 Mar 2022 10:40:46 -0500
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A63BC33370;
-        Wed,  2 Mar 2022 04:00:03 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 97CC0CB640;
+        Wed,  2 Mar 2022 07:40:02 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 58DDE13D5;
-        Wed,  2 Mar 2022 04:00:03 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4857A13D5;
+        Wed,  2 Mar 2022 07:40:02 -0800 (PST)
 Received: from [10.1.26.154] (e127744.cambridge.arm.com [10.1.26.154])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3A9853F70D;
-        Wed,  2 Mar 2022 03:59:59 -0800 (PST)
-Subject: Re: [PATCH v2 1/2] perf arm-spe: Use SPE data source for neoverse
- cores
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6ACAE3F73D;
+        Wed,  2 Mar 2022 07:39:58 -0800 (PST)
+Subject: Re: [PATCH v2 2/2] perf mem: Support HITM for when mem_lvl_num is
+ used
 To:     Ali Saidi <alisaidi@amazon.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, leo.yan@linaro.org
@@ -43,13 +43,14 @@ Cc:     benh@kernel.crashing.org, Peter Zijlstra <peterz@infradead.org>,
         Kajol Jain <kjain@linux.ibm.com>,
         Li Huafei <lihuafei1@huawei.com>
 References: <20220221224807.18172-1-alisaidi@amazon.com>
+ <20220221224807.18172-2-alisaidi@amazon.com>
 From:   German Gomez <german.gomez@arm.com>
-Message-ID: <2733b4a4-dd73-0b71-5309-e2bf0cc70d4c@arm.com>
-Date:   Wed, 2 Mar 2022 11:59:05 +0000
+Message-ID: <d5f9bd40-1f32-9847-33b1-fe7304acf29b@arm.com>
+Date:   Wed, 2 Mar 2022 15:39:04 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.14.0
 MIME-Version: 1.0
-In-Reply-To: <20220221224807.18172-1-alisaidi@amazon.com>
+In-Reply-To: <20220221224807.18172-2-alisaidi@amazon.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
@@ -57,231 +58,84 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ali,
 
-On 21/02/2022 22:47, Ali Saidi wrote:
-> When synthesizing data from SPE, augment the type with source information
-> for Arm Neoverse cores. The field is IMPLDEF but the Neoverse cores all use
-> the same encoding. I can't find encoding information for any other SPE
-> implementations to unify their choices with Arm's thus that is left for
-> future work.
+On 21/02/2022 22:48, Ali Saidi wrote:
+> Current code only support HITM statistics for last level cache (LLC)
+> when mem_lvl encodes the level. On existing Arm64 machines there are as
+> many as four levels cache and this change supports decoding l1, l2, and
+> llc hits from the mem_lvl_num data. Given that the mem_lvl namespace is
+> being deprecated take this opportunity to encode the neoverse data into
+> mem_lvl_num.
+
+Since Neoverse is mentioned in the commit message, I think there should be a comment somewhere in the code as well.
+
 >
-> This change populates the mem_lvl_num for Neoverse cores instead of the
-> deprecated mem_lvl namespace.
+> For loads that hit in a the LLC snoop filter and are fullfilled from a
+> higher level cache, it's not usually clear what the true level of the
+> cache the data came from (i.e. a transfer from a core could come from
+> it's L1 or L2). Instead of making an assumption of where the line came
+> from, add support for incrementing HITM if the source is CACHE_ANY.
+>
+> Since other architectures don't seem to populate the mem_lvl_num field
+> here there shouldn't be a change in functionality.
 >
 > Signed-off-by: Ali Saidi <alisaidi@amazon.com>
 > ---
->  .../util/arm-spe-decoder/arm-spe-decoder.c    |   1 +
->  .../util/arm-spe-decoder/arm-spe-decoder.h    |  12 ++
->  tools/perf/util/arm-spe.c                     | 106 +++++++++++++++---
->  3 files changed, 104 insertions(+), 15 deletions(-)
+>  tools/perf/util/mem-events.c | 14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
 >
-> diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-> index 5e390a1a79ab..091987dd3966 100644
-> --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-> @@ -220,6 +220,7 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
->  
->  			break;
->  		case ARM_SPE_DATA_SOURCE:
-> +			decoder->record.source = payload;
->  			break;
->  		case ARM_SPE_BAD:
->  			break;
-> diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-> index 69b31084d6be..c81bf90c0996 100644
-> --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-> @@ -29,6 +29,17 @@ enum arm_spe_op_type {
->  	ARM_SPE_ST		= 1 << 1,
->  };
->  
-> +enum arm_spe_neoverse_data_source {
-> +	ARM_SPE_NV_L1D        = 0x0,
-> +	ARM_SPE_NV_L2         = 0x8,
-> +	ARM_SPE_NV_PEER_CORE  = 0x9,
-> +	ARM_SPE_NV_LCL_CLSTR  = 0xa,
-> +	ARM_SPE_NV_SYS_CACHE  = 0xb,
-> +	ARM_SPE_NV_PEER_CLSTR = 0xc,
-> +	ARM_SPE_NV_REMOTE     = 0xd,
-> +	ARM_SPE_NV_DRAM       = 0xe,
-> +};
-> +
->  struct arm_spe_record {
->  	enum arm_spe_sample_type type;
->  	int err;
-> @@ -40,6 +51,7 @@ struct arm_spe_record {
->  	u64 virt_addr;
->  	u64 phys_addr;
->  	u64 context_id;
-> +	u16 source;
->  };
->  
->  struct arm_spe_insn;
-> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-> index d2b64e3f588b..e0243c2fed5f 100644
-> --- a/tools/perf/util/arm-spe.c
-> +++ b/tools/perf/util/arm-spe.c
-> @@ -34,6 +34,7 @@
->  #include "arm-spe-decoder/arm-spe-decoder.h"
->  #include "arm-spe-decoder/arm-spe-pkt-decoder.h"
->  
-> +#include <../../../arch/arm64/include/asm/cputype.h>
->  #define MAX_TIMESTAMP (~0ULL)
->  
->  struct arm_spe {
-> @@ -45,6 +46,7 @@ struct arm_spe {
->  	struct perf_session		*session;
->  	struct machine			*machine;
->  	u32				pmu_type;
-> +	u64				midr;
->  
->  	struct perf_tsc_conversion	tc;
->  
-> @@ -399,33 +401,103 @@ static bool arm_spe__is_memory_event(enum arm_spe_sample_type type)
->  	return false;
->  }
->  
-> -static u64 arm_spe__synth_data_source(const struct arm_spe_record *record)
-> -{
-> -	union perf_mem_data_src	data_src = { 0 };
-> +static const struct midr_range neoverse_spe[] = {
-> +	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N1),
-> +	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N2),
-> +	{},
-> +};
->  
-> -	if (record->op == ARM_SPE_LD)
-> -		data_src.mem_op = PERF_MEM_OP_LOAD;
-> -	else
-> -		data_src.mem_op = PERF_MEM_OP_STORE;
->  
-> +static void arm_spe__synth_data_source_neoverse(const struct arm_spe_record *record,
-> +						union perf_mem_data_src *data_src)
-> +{
-> +	switch (record->source) {
-> +	case ARM_SPE_NV_L1D:
-> +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
+> diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+> index ed0ab838bcc5..6c3fd4aac7ae 100644
+> --- a/tools/perf/util/mem-events.c
+> +++ b/tools/perf/util/mem-events.c
+> @@ -485,6 +485,7 @@ int c2c_decode_stats(struct c2c_stats *stats, struct mem_info *mi)
+>  	u64 daddr  = mi->daddr.addr;
+>  	u64 op     = data_src->mem_op;
+>  	u64 lvl    = data_src->mem_lvl;
+> +	u64 lnum   = data_src->mem_lvl_num;
+>  	u64 snoop  = data_src->mem_snoop;
+>  	u64 lock   = data_src->mem_lock;
+>  	u64 blk    = data_src->mem_blk;
+> @@ -527,16 +528,18 @@ do {				\
+>  			if (lvl & P(LVL, UNC)) stats->ld_uncache++;
+>  			if (lvl & P(LVL, IO))  stats->ld_io++;
+>  			if (lvl & P(LVL, LFB)) stats->ld_fbhit++;
+> -			if (lvl & P(LVL, L1 )) stats->ld_l1hit++;
+> -			if (lvl & P(LVL, L2 )) stats->ld_l2hit++;
+> -			if (lvl & P(LVL, L3 )) {
+> +			if (lvl & P(LVL, L1) || lnum == P(LVLNUM, L1))
+> +				stats->ld_l1hit++;
+> +			if (lvl & P(LVL, L2) || lnum == P(LVLNUM, L2))
+> +				stats->ld_l2hit++;
+> +			if (lvl & P(LVL, L3) || lnum == P(LVLNUM, L4)) {
 
-I understand mem_lvl is deprecated but shouldn't we add the level bits here as well for backwards compat?
+According to a comment in the previous patch, using L4 is specific to Neoverse, right?
 
-> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L1;
-> +		break;
-> +	case ARM_SPE_NV_L2:
-> +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
-> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L2;
-> +		break;
-> +	case ARM_SPE_NV_PEER_CORE:
-> +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
-> +		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
-> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_ANY_CACHE;
-> +		break;
-> +	/*
-> +	 * We don't know if this is L1, L2, or even L3 (for the cases the system
-> +	 * has an L3, but we do know it was a cache-2-cache transfer, so set
-> +	 * SNOOP_HITM
-> +	 */
-> +	case ARM_SPE_NV_LCL_CLSTR:
-> +	case ARM_SPE_NV_PEER_CLSTR:
-> +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
-> +		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
-> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_ANY_CACHE;
-> +		break;
-> +	/*
-> +	 * System cache is assumed to be L4, as cluster cache (if it exists)
-> +	 * would be L3 cache on Neoverse platforms
-> +	 */
-> +	case ARM_SPE_NV_SYS_CACHE:
-> +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
-> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L4;
-> +		break;
-> +	/*
-> +	 * We don't know what level it hit in, except it came from the other
-> +	 * socket
-> +	 */
-> +	case ARM_SPE_NV_REMOTE:
-> +		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
-> +		data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
-> +		break;
-> +	case ARM_SPE_NV_DRAM:
-> +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
-> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_RAM;
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +}
-> +
-> +static void arm_spe__synth_data_source_generic(const struct arm_spe_record *record,
-> +						union perf_mem_data_src *data_src)
-> +{
->  	if (record->type & (ARM_SPE_LLC_ACCESS | ARM_SPE_LLC_MISS)) {
-> -		data_src.mem_lvl = PERF_MEM_LVL_L3;
-> +		data_src->mem_lvl = PERF_MEM_LVL_L3;
->  
->  		if (record->type & ARM_SPE_LLC_MISS)
-> -			data_src.mem_lvl |= PERF_MEM_LVL_MISS;
-> +			data_src->mem_lvl |= PERF_MEM_LVL_MISS;
->  		else
-> -			data_src.mem_lvl |= PERF_MEM_LVL_HIT;
-> +			data_src->mem_lvl |= PERF_MEM_LVL_HIT;
->  	} else if (record->type & (ARM_SPE_L1D_ACCESS | ARM_SPE_L1D_MISS)) {
-> -		data_src.mem_lvl = PERF_MEM_LVL_L1;
-> +		data_src->mem_lvl = PERF_MEM_LVL_L1;
->  
->  		if (record->type & ARM_SPE_L1D_MISS)
-> -			data_src.mem_lvl |= PERF_MEM_LVL_MISS;
-> +			data_src->mem_lvl |= PERF_MEM_LVL_MISS;
->  		else
-> -			data_src.mem_lvl |= PERF_MEM_LVL_HIT;
-> +			data_src->mem_lvl |= PERF_MEM_LVL_HIT;
->  	}
->  
->  	if (record->type & ARM_SPE_REMOTE_ACCESS)
-> -		data_src.mem_lvl |= PERF_MEM_LVL_REM_CCE1;
-> +		data_src->mem_lvl |= PERF_MEM_LVL_REM_CCE1;
-> +}
-> +
-> +static u64 arm_spe__synth_data_source(const struct arm_spe_record *record, u64 midr)
-> +{
-> +	union perf_mem_data_src	data_src = { 0 };
-> +	bool is_neoverse = is_midr_in_range(midr, neoverse_spe);
-> +
-> +	if (record->op & ARM_SPE_LD)
-> +		data_src.mem_op = PERF_MEM_OP_LOAD;
-> +	else
-> +		data_src.mem_op = PERF_MEM_OP_STORE;
-> +
-> +	if (is_neoverse)
-> +		arm_spe__synth_data_source_neoverse(record, &data_src);
-> +	else
-> +		arm_spe__synth_data_source_generic(record, &data_src);
->  
->  	if (record->type & (ARM_SPE_TLB_ACCESS | ARM_SPE_TLB_MISS)) {
->  		data_src.mem_dtlb = PERF_MEM_TLB_WK;
-> @@ -446,7 +518,7 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
->  	u64 data_src;
->  	int err;
->  
-> -	data_src = arm_spe__synth_data_source(record);
-> +	data_src = arm_spe__synth_data_source(record, spe->midr);
->  
->  	if (spe->sample_flc) {
->  		if (record->type & ARM_SPE_L1D_MISS) {
-> @@ -796,6 +868,10 @@ static int arm_spe_process_event(struct perf_session *session,
->  	u64 timestamp;
->  	struct arm_spe *spe = container_of(session->auxtrace,
->  			struct arm_spe, auxtrace);
-> +	const char *cpuid = perf_env__cpuid(session->evlist->env);
-> +	u64 midr = strtol(cpuid, NULL, 16);
-> +
-> +	spe->midr = midr;
+Maybe we need to distinguish the Neoverse case from the generic one here as well
 
-I think this midr setup belongs in the arm_spe_process_auxtrace_info callback instead.
+if (is_neoverse)
+// treat L4 as llc
+else
+// treat L3 as llc
 
-Thanks,
-German
-
+>  				if (snoop & P(SNOOP, HITM))
+>  					HITM_INC(lcl_hitm);
+>  				else
+>  					stats->ld_llchit++;
+>  			}
 >  
->  	if (dump_trace)
->  		return 0;
+> -			if (lvl & P(LVL, LOC_RAM)) {
+> +			if (lvl & P(LVL, LOC_RAM) || lnum == P(LVLNUM, RAM)) {
+>  				stats->lcl_dram++;
+>  				if (snoop & P(SNOOP, HIT))
+>  					stats->ld_shared++;
+> @@ -564,6 +567,9 @@ do {				\
+>  				HITM_INC(rmt_hitm);
+>  		}
+>  
+> +		if (lnum == P(LVLNUM, ANY_CACHE) && snoop & P(SNOOP, HITM))
+> +			HITM_INC(lcl_hitm);
+> +
+>  		if ((lvl & P(LVL, MISS)))
+>  			stats->ld_miss++;
+>  
