@@ -2,518 +2,204 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 244D3C4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Mar 2022 09:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD0F2C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Mar 2022 11:36:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230343AbiCCJDB (ORCPT
+        id S230505AbiCCLhd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Mar 2022 04:03:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57060 "EHLO
+        Thu, 3 Mar 2022 06:37:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231774AbiCCJCz (ORCPT
+        with ESMTP id S232252AbiCCLhc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Mar 2022 04:02:55 -0500
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49277177759;
-        Thu,  3 Mar 2022 01:02:09 -0800 (PST)
-Received: from kwepemi500005.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4K8Q1r484Qzdflf;
-        Thu,  3 Mar 2022 17:00:48 +0800 (CST)
-Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
- kwepemi500005.china.huawei.com (7.221.188.179) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Thu, 3 Mar 2022 17:02:06 +0800
-Received: from [10.67.101.67] (10.67.101.67) by kwepemm600003.china.huawei.com
- (7.193.23.202) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Thu, 3 Mar
- 2022 17:02:05 +0800
-Subject: Re: [PATCH v2 1/2] drivers/perf: hisi: Add Support for CPA PMU
-To:     John Garry <john.garry@huawei.com>, <will@kernel.org>,
-        <mark.rutland@arm.com>, <acme@kernel.org>
-CC:     <linux-perf-users@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
-References: <20220224111129.41416-1-liuqi115@huawei.com>
- <20220224111129.41416-2-liuqi115@huawei.com>
- <8cdc2c64-0a89-b807-56f6-2ea67a41a641@huawei.com>
-From:   "liuqi (BA)" <liuqi115@huawei.com>
-Message-ID: <a051968a-b90d-3707-fb60-f6a446fc79e7@huawei.com>
-Date:   Thu, 3 Mar 2022 17:02:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 3 Mar 2022 06:37:32 -0500
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DD8E68FBA;
+        Thu,  3 Mar 2022 03:36:46 -0800 (PST)
+Received: by mail-ej1-x634.google.com with SMTP id qa43so9935969ejc.12;
+        Thu, 03 Mar 2022 03:36:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=LjHGDTCZOcYLYAe7xmxFomMAUWHczw2l0y9qfi6T96M=;
+        b=VhRuH7UzjjPiVUS7RYLsvKkOeRnjMnmCG4YPRZp5MKztpc0o2XEi5N1S9ZP2rUPckZ
+         Fv077zWiNLNtMFxC/LZF76jGv3bs2ZTEICU1qJS3oXmlELYclXjgOXCZ+ZXUQIFjzqt3
+         FnByicDXosWgbWcoTRDGuEDPnPBNLAy4tpOtaAbL8HN4u5Z0vIrgkcL9u/0zG0JE9Z6U
+         SDj/rGMVjd7bWWZ0wMbXcavdtiErWoJgHmCJWZrDtwW/gKvm6NUUKZJX2Vac4S2vLbOW
+         fRshkVe2+gqgFpc47iihPBJ4TSl08RXko08YOGRa3S/C+xF09FV2TpB9xK8TZphnCAm/
+         +LWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LjHGDTCZOcYLYAe7xmxFomMAUWHczw2l0y9qfi6T96M=;
+        b=Z2Ljr6H9QeT7wvQQ7mVebciIFpaoIc2dpvwJfuKPjvhLAKEEzEd8nhINRq/bU+D9oB
+         mSTZzOzDmip/SfGzeMIM769ppgjcJW9EKekZA8DCCpjm3tQpSMEiEb2e7nwO3/HhScNl
+         LUZD7S+vGaOr6nAaYNEVCgzDb1cwsSJmSUs6/5c9ta2jubMOrSydsid2NiEX9v12TAND
+         xDI1hW5EuCCOjiihq3/NDuVea7DVbwGcF3GTTDMdekVpgHuqM+I2RnGMN7njGRAyP/46
+         dH6Djl9uHCM6FXUAyoSW4bH7rnZVn5QMwy9KWDkrjMVPwD8IWlh8yMECm1xukzMTroHV
+         v6HA==
+X-Gm-Message-State: AOAM533Qc2HsK82RLy/JxlDkYyuWv/9LGPZi/P0uX0MP7u7eN7C53ZpP
+        kjNmmV22d63StVhja+NkwpQ=
+X-Google-Smtp-Source: ABdhPJwEuXnMH1YmBnzdPilbCrAHHv6IX9lUr0Cg55ZXNrUJmJLZhJjBuAt+590D0EEdlBugMI0aMA==
+X-Received: by 2002:a17:906:4752:b0:6ce:61d9:b632 with SMTP id j18-20020a170906475200b006ce61d9b632mr27339254ejs.694.1646307404475;
+        Thu, 03 Mar 2022 03:36:44 -0800 (PST)
+Received: from krava ([193.85.244.190])
+        by smtp.gmail.com with ESMTPSA id a21-20020a170906275500b006d10c07fabesm605492ejd.201.2022.03.03.03.36.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Mar 2022 03:36:44 -0800 (PST)
+Date:   Thu, 3 Mar 2022 12:36:41 +0100
+From:   Jiri Olsa <olsajiri@gmail.com>
+To:     James Clark <james.clark@arm.com>
+Cc:     acme@kernel.org, linux-perf-users@vger.kernel.org,
+        coresight@lists.linaro.org, Denis Nikitin <denik@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] perf: Set build-id using build-id header on new mmap
+ records
+Message-ID: <YiCoSbYHDF8jesxp@krava>
+References: <20220224171955.862983-1-james.clark@arm.com>
+ <20220224171955.862983-2-james.clark@arm.com>
+ <YhwAPrOP/ky4HLfC@krava>
+ <3dc14ad9-8ce1-a2e3-3bab-953b79af82be@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <8cdc2c64-0a89-b807-56f6-2ea67a41a641@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.101.67]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3dc14ad9-8ce1-a2e3-3bab-953b79af82be@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi John,
+On Wed, Mar 02, 2022 at 04:20:00PM +0000, James Clark wrote:
+> 
+> 
+> On 27/02/2022 22:50, Jiri Olsa wrote:
+> > On Thu, Feb 24, 2022 at 05:19:55PM +0000, James Clark wrote:
+> >> MMAP records that occur after the build-id header is parsed do not have
+> >> their build-id set even if the filename matches an entry from the
+> >> header. Set the build-id on these dsos as long as the MMAP record
+> >> doesn't have its own build-id set.
+> >>
+> >> This fixes an issue with off target analysis where the local version of
+> >> a dso is loaded rather than one from ~/.debug via a build-id.
+> > 
+> > nice catch :)
+> > 
+> >>
+> >> Reported-by: Denis Nikitin <denik@chromium.org>
+> >> Signed-off-by: James Clark <james.clark@arm.com>
+> >> ---
+> >>  tools/perf/util/dso.h    |  1 +
+> >>  tools/perf/util/header.c |  1 +
+> >>  tools/perf/util/map.c    | 16 ++++++++++++++--
+> >>  3 files changed, 16 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+> >> index 011da3924fc1..3a9fd4d389b5 100644
+> >> --- a/tools/perf/util/dso.h
+> >> +++ b/tools/perf/util/dso.h
+> >> @@ -167,6 +167,7 @@ struct dso {
+> >>  	enum dso_load_errno	load_errno;
+> >>  	u8		 adjust_symbols:1;
+> >>  	u8		 has_build_id:1;
+> >> +	u8		 header_build_id:1;
+> >>  	u8		 has_srcline:1;
+> >>  	u8		 hit:1;
+> >>  	u8		 annotate_warned:1;
+> >> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> >> index 6da12e522edc..571d73d4f976 100644
+> >> --- a/tools/perf/util/header.c
+> >> +++ b/tools/perf/util/header.c
+> >> @@ -2200,6 +2200,7 @@ static int __event_process_build_id(struct perf_record_header_build_id *bev,
+> >>  
+> >>  		build_id__init(&bid, bev->data, size);
+> >>  		dso__set_build_id(dso, &bid);
+> >> +		dso->header_build_id = 1;
+> >>  
+> >>  		if (dso_space != DSO_SPACE__USER) {
+> >>  			struct kmod_path m = { .name = NULL, };
+> >> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+> >> index 1803d3887afe..4ae91e491e23 100644
+> >> --- a/tools/perf/util/map.c
+> >> +++ b/tools/perf/util/map.c
+> >> @@ -127,7 +127,7 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
+> >>  
+> >>  	if (map != NULL) {
+> >>  		char newfilename[PATH_MAX];
+> >> -		struct dso *dso;
+> >> +		struct dso *dso, *header_bid_dso;
+> >>  		int anon, no_dso, vdso, android;
+> >>  
+> >>  		android = is_android_lib(filename);
+> >> @@ -185,7 +185,19 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
+> >>  
+> >>  		if (build_id__is_defined(bid))
+> >>  			dso__set_build_id(dso, bid);
+> >> -
+> >> +		else {
+> > 
+> > nit please add { } to the if clause as well
+> > 
+> >> +			/*
+> >> +			 * If the mmap event had no build ID, search for an existing dso from the
+> >> +			 * build ID header by name. Otherwise only the dso loaded at the time of
+> >> +			 * reading the header will have the build ID set and all future mmaps will
+> >> +			 * have it missing.
+> >> +			 */
+> >> +			header_bid_dso = __dsos__find(&machine->dsos, filename, false);
+> > 
+> > is this 'perf top' safe? I think dso should be added in the
+> > same thread, but please check and add comment why we don't
+> > need locking in here
+> 
+> Seems like there are multiple synthesize_threads_workers using the same machine->dsos object so
+> I think locking is needed.
+> 
+> At first I thought of doing this:
+> 
+>   diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+>   index 4ae91e491e23..b87b81e3d41c 100644
+>   --- a/tools/perf/util/map.c
+>   +++ b/tools/perf/util/map.c
+>   @@ -192,7 +192,9 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
+>                            * reading the header will have the build ID set and all future mmaps will
+>                            * have it missing.
+>                            */
+>   +                       down_read(&machine->dsos.lock);
+>                           header_bid_dso = __dsos__find(&machine->dsos, filename, false);
+>   +                       up_read(&machine->dsos.lock);
+>                           if (header_bid_dso && header_bid_dso->header_build_id) {
+>                                   dso__set_build_id(dso, &header_bid_dso->bid);
+>                                   dso->header_build_id = 1;
+> 
+> But then I was wondering why it doesn't need a write lock all the way from machine__findnew_dso_id() to
+> dso__put()? At the moment there are writes to the dso like dso__set_loaded(), dso->nsinfo = nsi and
+> dso__set_build_id(), so another thread could find the dso in a partially constructed state.
 
-Thanks for the comments. some replies inline.
+I think that's fine, machine__findnew_dso_id takes the dso ref so
+the real 'release' is when the machine object goes down at dsos__purge
 
-On 2022/2/28 17:56, John Garry wrote:
-> On 24/02/2022 11:11, Qi Liu wrote:
->> On HiSilicon Hip09 platform, there is a CPA(Coherency Protocol Agent) on
->> each SICL (Super I/O Cluster) which implements packet format translation,
->> route parsing and traffic statistic.
->>
->> CPA PMU has separate PMU registers which the driver can program freely
 > 
-> I am not sure what you mean by program freely. Most IO mem drivers have 
-> registers which we can program.
-> 
-I'll drop these ambiguous description, thanks.
+> Not sure if this is an issue currently without my patch, but at least with it they would have to be found
+> with header_build_id already set to 1 otherwise it will mess things up.
 
->> and
->> interrupt is supported to handle counter overflow. Let's support its 
->> driver
->> under the framework of HiSilicon uncore PMU driver.
->>
->> Signed-off-by: Qi Liu <liuqi115@huawei.com>
->> ---
->>   drivers/perf/hisilicon/Makefile              |   2 +-
->>   drivers/perf/hisilicon/hisi_uncore_cpa_pmu.c | 401 +++++++++++++++++++
->>   include/linux/cpuhotplug.h                   |   1 +
->>   3 files changed, 403 insertions(+), 1 deletion(-)
->>   create mode 100644 drivers/perf/hisilicon/hisi_uncore_cpa_pmu.c
->>
->> diff --git a/drivers/perf/hisilicon/Makefile 
->> b/drivers/perf/hisilicon/Makefile
->> index 506ed39e3266..6be83517acaa 100644
->> --- a/drivers/perf/hisilicon/Makefile
->> +++ b/drivers/perf/hisilicon/Makefile
->> @@ -1,6 +1,6 @@
->>   # SPDX-License-Identifier: GPL-2.0-only
->>   obj-$(CONFIG_HISI_PMU) += hisi_uncore_pmu.o hisi_uncore_l3c_pmu.o \
->>                 hisi_uncore_hha_pmu.o hisi_uncore_ddrc_pmu.o 
->> hisi_uncore_sllc_pmu.o \
->> -              hisi_uncore_pa_pmu.o
->> +              hisi_uncore_pa_pmu.o hisi_uncore_cpa_pmu.o
->>   obj-$(CONFIG_HISI_PCIE_PMU) += hisi_pcie_pmu.o
->> diff --git a/drivers/perf/hisilicon/hisi_uncore_cpa_pmu.c 
->> b/drivers/perf/hisilicon/hisi_uncore_cpa_pmu.c
->> new file mode 100644
->> index 000000000000..00573719f148
->> --- /dev/null
->> +++ b/drivers/perf/hisilicon/hisi_uncore_cpa_pmu.c
->> @@ -0,0 +1,401 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * HiSilicon SoC CPA(Coherency Protocol Agent) uncore Hardware event 
->> counters support
-> 
-> /s/Hardware/hardware/
-> 
-ok, will fix this.
->> + *
->> + * Copyright (C) 2022 HiSilicon Limited
->> + * Author: Qi Liu <liuqi115@huawei.com>
->> + *
->> + * This code is based on the uncore PMUs like arm-cci and arm-ccn.
->> + */
->> +
->> +#include <linux/acpi.h>
->> +#include <linux/bug.h>
->> +#include <linux/cpuhotplug.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/irq.h>
->> +#include <linux/list.h>
->> +#include <linux/smp.h>
->> +
->> +#include "hisi_uncore_pmu.h"
->> +
->> +/* CPA register definition */
->> +#define CPA_PERF_CTRL        0x1c00
->> +#define CPA_EVENT_CTRL        0x1c04
->> +#define CPA_INT_MASK        0x1c70
->> +#define CPA_INT_STATUS        0x1c78
->> +#define CPA_INT_CLEAR        0x1c7c
->> +#define CPA_EVENT_TYPE0        0x1c80
->> +#define CPA_VERSION        0x1cf0
->> +#define CPA_CNT0_LOWER        0x1d00
->> +#define CPA_CFG_REG        0x0534
->> +
->> +/* CPA operation command */
->> +#define CPA_PERF_CTRL_EN    BIT_ULL(0)
->> +#define CPA_EVTYPE_MASK        0xffUL
->> +#define CPA_PM_CTRL        BIT_ULL(9)
->> +
->> +/* CPA has 8-counters */
->> +#define CPA_NR_COUNTERS        0x8
->> +#define CPA_COUNTER_BITS    64
->> +#define CPA_NR_EVENTS        0xff
->> +#define CPA_REG_OFFSET        0x8
->> +
->> +static u32 hisi_cpa_pmu_get_counter_offset(int idx)
->> +{
->> +    return (CPA_CNT0_LOWER + idx * CPA_REG_OFFSET);
->> +}
->> +
->> +static u64 hisi_cpa_pmu_read_counter(struct hisi_pmu *cpa_pmu,
->> +                     struct hw_perf_event *hwc)
->> +{
->> +    return readq(cpa_pmu->base + 
->> hisi_cpa_pmu_get_counter_offset(hwc->idx));
->> +}
->> +
->> +static void hisi_cpa_pmu_write_counter(struct hisi_pmu *cpa_pmu,
->> +                       struct hw_perf_event *hwc, u64 val)
->> +{
->> +    writeq(val, cpa_pmu->base + 
->> hisi_cpa_pmu_get_counter_offset(hwc->idx));
->> +}
->> +
->> +static void hisi_cpa_pmu_write_evtype(struct hisi_pmu *cpa_pmu, int 
->> idx, u32 type)
->> +{
->> +    u32 reg, reg_idx, shift, val;
->> +
->> +    /*
->> +     * Select the appropriate event select register(CPA_EVENT_TYPE0/1).
->> +     * There are 2 event select registers for the 8 hardware counters.
->> +     * Event code is 8-bits and for the former 4 hardware counters,
->> +     * CPA_EVENT_TYPE0 is chosen. For the latter 4 hardware counters,
->> +     * CPA_EVENT_TYPE1 is chosen.
->> +     */
->> +    reg = CPA_EVENT_TYPE0 + (idx / 4) * 4;
->> +    reg_idx = idx % 4;
->> +    shift = CPA_REG_OFFSET * reg_idx;
->> +
->> +    /* Write event code to CPA_EVENT_TYPEx Register */
->> +    val = readl(cpa_pmu->base + reg);
->> +    val &= ~(CPA_EVTYPE_MASK << shift);
->> +    val |= type << shift;
->> +    writel(val, cpa_pmu->base + reg);
->> +}
->> +
->> +static void hisi_cpa_pmu_start_counters(struct hisi_pmu *cpa_pmu)
->> +{
->> +    u32 val;
->> +
->> +    val = readl(cpa_pmu->base + CPA_PERF_CTRL);
->> +    val |= CPA_PERF_CTRL_EN;
->> +    writel(val, cpa_pmu->base + CPA_PERF_CTRL);
->> +}
->> +
->> +static void hisi_cpa_pmu_stop_counters(struct hisi_pmu *cpa_pmu)
->> +{
->> +    u32 val;
->> +
->> +    val = readl(cpa_pmu->base + CPA_PERF_CTRL);
->> +    val &= ~(CPA_PERF_CTRL_EN);
->> +    writel(val, cpa_pmu->base + CPA_PERF_CTRL);
->> +}
->> +
->> +static void hisi_cpa_pmu_disable_pm(struct hisi_pmu *cpa_pmu)
-> 
-> this seems unique for this new driver - why do we need to disable PM?
-> 
-CPA PMU doesn't work under power mangement state, so we need to disable 
-PM before using CPA PMU.
+as for the partial changes I think it's also fine, because it happens
+at separate places.. we'd need to investigate specific example to see
+if there's a problem
 
->> +{
->> +    u32 val;
->> +
->> +    val = readl(cpa_pmu->base + CPA_CFG_REG);
->> +    val |= CPA_PM_CTRL;
->> +    writel(val, cpa_pmu->base + CPA_CFG_REG);
->> +}
->> +
->> +static void hisi_cpa_pmu_enable_pm(struct hisi_pmu *cpa_pmu)
->> +{
->> +    u32 val;
->> +
->> +    val = readl(cpa_pmu->base + CPA_CFG_REG);
->> +    val &= ~CPA_PM_CTRL;
 > 
-> nit: you use () in hisi_cpa_pmu_stop_counters(), but not here, so please 
-> be consistent
-> 
+> Extending the write lock outside of machine__findnew_dso_id() is difficult because it already
+> releases it before it returns. Does it need to be changed so that machine__findnew_dso_id() takes all the
+> arguments needed to construct it inside the lock?
 
-got it, I'll pay attention to this. thanks.
->> +    writel(val, cpa_pmu->base + CPA_CFG_REG);
->> +}
->> +
->> +static void hisi_cpa_pmu_enable_counter(struct hisi_pmu *cpa_pmu, 
->> struct hw_perf_event *hwc)
->> +{
->> +    u32 val;
->> +
->> +    /* Enable counter index in CPA_EVENT_CTRL register */
->> +    val = readl(cpa_pmu->base + CPA_EVENT_CTRL);
->> +    val |= 1 << hwc->idx;
->> +    writel(val, cpa_pmu->base + CPA_EVENT_CTRL);
->> +
->> +    /* Power management should be disabled before counting. */
->> +    hisi_cpa_pmu_disable_pm(cpa_pmu);
->> +}
->> +
->> +static void hisi_cpa_pmu_disable_counter(struct hisi_pmu *cpa_pmu, 
->> struct hw_perf_event *hwc)
->> +{
->> +    u32 val;
->> +
->> +    hisi_cpa_pmu_enable_pm(cpa_pmu);
->> +
->> +    /* Clear counter index in CPA_EVENT_CTRL register */
->> +    val = readl(cpa_pmu->base + CPA_EVENT_CTRL);
->> +    val &= ~(1UL << hwc->idx);
->> +    writel(val, cpa_pmu->base + CPA_EVENT_CTRL);
->> +}
->> +
->> +static void hisi_cpa_pmu_enable_counter_int(struct hisi_pmu *cpa_pmu, 
->> struct hw_perf_event *hwc)
->> +{
->> +    u32 val;
->> +
->> +    /* Write 0 to enable interrupt */
->> +    val = readl(cpa_pmu->base + CPA_INT_MASK);
->> +    val &= ~(1UL << hwc->idx);
->> +    writel(val, cpa_pmu->base + CPA_INT_MASK);
->> +}
->> +
->> +static void hisi_cpa_pmu_disable_counter_int(struct hisi_pmu 
->> *cpa_pmu, struct hw_perf_event *hwc)
->> +{
->> +    u32 val;
->> +
->> +    /* Write 1 to mask interrupt */
->> +    val = readl(cpa_pmu->base + CPA_INT_MASK);
->> +    val |= 1 << hwc->idx;
->> +    writel(val, cpa_pmu->base + CPA_INT_MASK);
->> +}
->> +
->> +static u32 hisi_cpa_pmu_get_int_status(struct hisi_pmu *cpa_pmu)
->> +{
->> +    return readl(cpa_pmu->base + CPA_INT_STATUS);
->> +}
->> +
->> +static void hisi_cpa_pmu_clear_int_status(struct hisi_pmu *cpa_pmu, 
->> int idx)
->> +{
->> +    writel(1 << idx, cpa_pmu->base + CPA_INT_CLEAR);
->> +}
->> +
->> +static const struct acpi_device_id hisi_cpa_pmu_acpi_match[] = {
->> +    { "HISI0281", },
->> +    {}
->> +};
->> +MODULE_DEVICE_TABLE(acpi, hisi_cpa_pmu_acpi_match);
->> +
->> +static int hisi_cpa_pmu_init_data(struct platform_device *pdev,
->> +                  struct hisi_pmu *cpa_pmu)
->> +{
->> +    if (device_property_read_u32(&pdev->dev, "hisilicon,scl-id",
->> +                     &cpa_pmu->sccl_id)) {
->> +        dev_err(&pdev->dev, "Can not read cpa_pmu sccl-id\n");
-> 
-> strange that the FW uses "scl-id" but driver uses sccl_id (I am talking 
-> about sccl vs scl difference)
-> 
-yes... these two names means the same thing, maybe could use a cleanup 
-patch to keep them consistent.
+the change above should do it.. as for top threads I don't think
+it actually matters because there's events processing and hists
+processing, and I did not find them clashing in this.. but there's
+some setup session code that touches this, so it's better to be safe
 
->> +        return -EINVAL;
->> +    }
->> +
->> +    cpa_pmu->ccl_id = -1;
->> +
->> +    if (device_property_read_u32(&pdev->dev, "hisilicon,idx-id",
->> +                     &cpa_pmu->index_id)) {
->> +        dev_err(&pdev->dev, "Cannot read idx-id\n");
->> +        return -EINVAL;
->> +    }
->> +
->> +    cpa_pmu->base = devm_platform_ioremap_resource(pdev, 0);
->> +    if (IS_ERR(cpa_pmu->base))
->> +        return PTR_ERR(cpa_pmu->base);
->> +
->> +    cpa_pmu->identifier = readl(cpa_pmu->base + CPA_VERSION);
->> +
->> +    return 0;
->> +}
->> +
->> +static struct attribute *hisi_cpa_pmu_format_attr[] = {
->> +    HISI_PMU_FORMAT_ATTR(event, "config:0-15"),
->> +    NULL
->> +};
->> +
->> +static const struct attribute_group hisi_cpa_pmu_format_group = {
->> +    .name = "format",
->> +    .attrs = hisi_cpa_pmu_format_attr,
->> +};
->> +
->> +static struct attribute *hisi_cpa_pmu_events_attr[] = {
->> +    HISI_PMU_EVENT_ATTR(cpa_cycles,        0x00),
->> +    HISI_PMU_EVENT_ATTR(cpa_p1_wr_dat,    0x61),
->> +    HISI_PMU_EVENT_ATTR(cpa_p1_rd_dat,    0x62),
->> +    HISI_PMU_EVENT_ATTR(cpa_p0_wr_dat,    0xE1),
->> +    HISI_PMU_EVENT_ATTR(cpa_p0_rd_dat,    0xE2),
-> 
-> nit: you were using lower case for hex numbers elsewhere
-> 
->> +    NULL
->> +};
->> +
->> +static const struct attribute_group hisi_cpa_pmu_events_group = {
->> +    .name = "events",
->> +    .attrs = hisi_cpa_pmu_events_attr,
->> +};
->> +
->> +static DEVICE_ATTR(cpumask, 0444, hisi_cpumask_sysfs_show, NULL);
->> +
->> +static struct attribute *hisi_cpa_pmu_cpumask_attrs[] = {
->> +    &dev_attr_cpumask.attr,
->> +    NULL
->> +};
->> +
->> +static const struct attribute_group hisi_cpa_pmu_cpumask_attr_group = {
->> +    .attrs = hisi_cpa_pmu_cpumask_attrs,
->> +};
->> +
->> +static struct device_attribute hisi_cpa_pmu_identifier_attr =
->> +    __ATTR(identifier, 0444, hisi_uncore_pmu_identifier_attr_show, 
->> NULL);
->> +
->> +static struct attribute *hisi_cpa_pmu_identifier_attrs[] = {
->> +    &hisi_cpa_pmu_identifier_attr.attr,
->> +    NULL
->> +};
->> +
->> +static const struct attribute_group hisi_cpa_pmu_identifier_group = {
->> +    .attrs = hisi_cpa_pmu_identifier_attrs,
->> +};
->> +
->> +static const struct attribute_group *hisi_cpa_pmu_attr_groups[] = {
->> +    &hisi_cpa_pmu_format_group,
->> +    &hisi_cpa_pmu_events_group,
->> +    &hisi_cpa_pmu_cpumask_attr_group,
->> +    &hisi_cpa_pmu_identifier_group,
->> +    NULL
->> +};
->> +
->> +static const struct hisi_uncore_ops hisi_uncore_cpa_pmu_ops = {
->> +    .write_evtype           = hisi_cpa_pmu_write_evtype,
->> +    .get_event_idx        = hisi_uncore_pmu_get_event_idx,
->> +    .start_counters        = hisi_cpa_pmu_start_counters,
->> +    .stop_counters        = hisi_cpa_pmu_stop_counters,
->> +    .enable_counter        = hisi_cpa_pmu_enable_counter,
->> +    .disable_counter    = hisi_cpa_pmu_disable_counter,
->> +    .enable_counter_int    = hisi_cpa_pmu_enable_counter_int,
->> +    .disable_counter_int    = hisi_cpa_pmu_disable_counter_int,
->> +    .write_counter        = hisi_cpa_pmu_write_counter,
->> +    .read_counter        = hisi_cpa_pmu_read_counter,
->> +    .get_int_status        = hisi_cpa_pmu_get_int_status,
->> +    .clear_int_status    = hisi_cpa_pmu_clear_int_status,
->> +};
->> +
->> +static int hisi_cpa_pmu_dev_probe(struct platform_device *pdev,
->> +                  struct hisi_pmu *cpa_pmu)
->> +{
->> +    int ret;
->> +
->> +    ret = hisi_cpa_pmu_init_data(pdev, cpa_pmu);
->> +    if (ret)
->> +        return ret;
->> +
->> +    ret = hisi_uncore_pmu_init_irq(cpa_pmu, pdev);
->> +    if (ret)
->> +        return ret;
->> +
->> +    cpa_pmu->counter_bits = CPA_COUNTER_BITS;
->> +    cpa_pmu->check_event = CPA_NR_EVENTS;
->> +    cpa_pmu->pmu_events.attr_groups = hisi_cpa_pmu_attr_groups;
->> +    cpa_pmu->ops = &hisi_uncore_cpa_pmu_ops;
->> +    cpa_pmu->num_counters = CPA_NR_COUNTERS;
->> +    cpa_pmu->dev = &pdev->dev;
->> +    cpa_pmu->on_cpu = -1;
->> +
->> +    return 0;
->> +}
->> +
->> +static int hisi_cpa_pmu_probe(struct platform_device *pdev)
->> +{
->> +    struct hisi_pmu *cpa_pmu;
->> +    char *name;
->> +    int ret;
->> +
->> +    cpa_pmu = devm_kzalloc(&pdev->dev, sizeof(*cpa_pmu), GFP_KERNEL);
->> +    if (!cpa_pmu)
->> +        return -ENOMEM;
->> +
->> +    ret = hisi_cpa_pmu_dev_probe(pdev, cpa_pmu);
->> +    if (ret)
->> +        return ret;
->> +
->> +    ret = cpuhp_state_add_instance(CPUHP_AP_PERF_ARM_HISI_CPA_ONLINE,
->> +                       &cpa_pmu->node);
->> +    if (ret) {
->> +        dev_err(&pdev->dev, "Error %d registering hotplug\n", ret);
->> +        return ret;
->> +    }
->> +
->> +    name = devm_kasprintf(&pdev->dev, GFP_KERNEL, 
->> "hisi_sicl%d_cpa%u", cpa_pmu->sccl_id - 1,
-> 
-> sorry, but I still don't like this "- 1". From checking the chat on v1, 
-> my impression was that you agreed with me on this one.
-> 
-
-sorry, maybe I didn't express it clearly.
-CPA PMU is on IO die, but BIOS give CPA PMU driver the sccl-id of 
-adjacent CPU die (as we need this sccl-id to pass 
-hisi_pmu_cpu_is_associated_pmu() and find the associated cpu).
-so, when naming CPA PMU, we use the sccl-id supported by BIOS to get the 
-sicl-id of IO die which CPA PMU located in, that is: cpa_pmu->sccl_id - 1.
-
->> +                  cpa_pmu->index_id);
->> +
->> +    cpa_pmu->pmu = (struct pmu) {
->> +        .name        = name,
->> +        .module        = THIS_MODULE,
->> +        .task_ctx_nr    = perf_invalid_context,
->> +        .event_init    = hisi_uncore_pmu_event_init,
->> +        .pmu_enable    = hisi_uncore_pmu_enable,
->> +        .pmu_disable    = hisi_uncore_pmu_disable,
->> +        .add        = hisi_uncore_pmu_add,
->> +        .del        = hisi_uncore_pmu_del,
->> +        .start        = hisi_uncore_pmu_start,
->> +        .stop        = hisi_uncore_pmu_stop,
->> +        .read        = hisi_uncore_pmu_read,
->> +        .attr_groups    = cpa_pmu->pmu_events.attr_groups,
->> +        .capabilities    = PERF_PMU_CAP_NO_EXCLUDE,
->> +    };
->> +
->> +    ret = perf_pmu_register(&cpa_pmu->pmu, name, -1);
->> +    if (ret) {
->> +        dev_err(cpa_pmu->dev, "CPA PMU register failed\n");
-> 
-> I don't think that you need to mention "CPA PMU", as the driver name is 
-> included in dev_err() prints
-
-got it, will fix this.
-
-Thanks,
-Qi
-> 
->> +        cpuhp_state_remove_instance_nocalls(
->> +            CPUHP_AP_PERF_ARM_HISI_CPA_ONLINE, &cpa_pmu->node);
->> +        return ret;
->> +    }
->> +
->> +    platform_set_drvdata(pdev, cpa_pmu);
->> +    return ret;
->> +}
->> +
-> 
-> 
-> Thanks,
-> John
-> .
+thanks,
+jirka
