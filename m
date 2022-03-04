@@ -2,190 +2,330 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68248C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Mar 2022 09:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 097B3C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Mar 2022 11:04:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234803AbiCDJMO (ORCPT
+        id S236739AbiCDLEx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Mar 2022 04:12:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49004 "EHLO
+        Fri, 4 Mar 2022 06:04:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233583AbiCDJMO (ORCPT
+        with ESMTP id S234692AbiCDLEw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Mar 2022 04:12:14 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2899E1A39EE;
-        Fri,  4 Mar 2022 01:11:27 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DFCE41424;
-        Fri,  4 Mar 2022 01:11:26 -0800 (PST)
-Received: from [10.57.42.166] (unknown [10.57.42.166])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 789483F73D;
-        Fri,  4 Mar 2022 01:11:25 -0800 (PST)
-Message-ID: <bfe873a2-4dbb-8ad0-5089-61ccf6a10eeb@arm.com>
-Date:   Fri, 4 Mar 2022 09:11:23 +0000
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH 1/1] perf: Set build-id using build-id header on new mmap
- records
-Content-Language: en-US
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     acme@kernel.org, linux-perf-users@vger.kernel.org,
-        coresight@lists.linaro.org, Denis Nikitin <denik@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Fri, 4 Mar 2022 06:04:52 -0500
+Received: from out30-54.freemail.mail.aliyun.com (out30-54.freemail.mail.aliyun.com [115.124.30.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E20F51D0F7;
+        Fri,  4 Mar 2022 03:04:03 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0V6C9c6k_1646391832;
+Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0V6C9c6k_1646391832)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 04 Mar 2022 19:04:00 +0800
+From:   Wen Yang <simon.wy@alibaba-inc.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Wen Yang <simon.wy@alibaba-inc.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        Wen Yang <wenyang@linux.alibaba.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20220224171955.862983-1-james.clark@arm.com>
- <20220224171955.862983-2-james.clark@arm.com> <YhwAPrOP/ky4HLfC@krava>
- <3dc14ad9-8ce1-a2e3-3bab-953b79af82be@arm.com> <YiCoSbYHDF8jesxp@krava>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <YiCoSbYHDF8jesxp@krava>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: [RESEND PATCH 1/2] perf/x86: extract code to assign perf events for both core and uncore
+Date:   Fri,  4 Mar 2022 19:03:50 +0800
+Message-Id: <20220304110351.47731-1-simon.wy@alibaba-inc.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Following two patterns in x86 perf code are used in multiple places where
+similar code is duplicated:
+- fast path, try to reuse previous register
+- slow path, assign a counter for each event
 
+In order to reduce duplicate and prepare for following patch series that
+also uses described patterns, extract the codes to perf_assign_events.
 
-On 03/03/2022 11:36, Jiri Olsa wrote:
-> On Wed, Mar 02, 2022 at 04:20:00PM +0000, James Clark wrote:
->>
->>
->> On 27/02/2022 22:50, Jiri Olsa wrote:
->>> On Thu, Feb 24, 2022 at 05:19:55PM +0000, James Clark wrote:
->>>> MMAP records that occur after the build-id header is parsed do not have
->>>> their build-id set even if the filename matches an entry from the
->>>> header. Set the build-id on these dsos as long as the MMAP record
->>>> doesn't have its own build-id set.
->>>>
->>>> This fixes an issue with off target analysis where the local version of
->>>> a dso is loaded rather than one from ~/.debug via a build-id.
->>>
->>> nice catch :)
->>>
->>>>
->>>> Reported-by: Denis Nikitin <denik@chromium.org>
->>>> Signed-off-by: James Clark <james.clark@arm.com>
->>>> ---
->>>>  tools/perf/util/dso.h    |  1 +
->>>>  tools/perf/util/header.c |  1 +
->>>>  tools/perf/util/map.c    | 16 ++++++++++++++--
->>>>  3 files changed, 16 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
->>>> index 011da3924fc1..3a9fd4d389b5 100644
->>>> --- a/tools/perf/util/dso.h
->>>> +++ b/tools/perf/util/dso.h
->>>> @@ -167,6 +167,7 @@ struct dso {
->>>>  	enum dso_load_errno	load_errno;
->>>>  	u8		 adjust_symbols:1;
->>>>  	u8		 has_build_id:1;
->>>> +	u8		 header_build_id:1;
->>>>  	u8		 has_srcline:1;
->>>>  	u8		 hit:1;
->>>>  	u8		 annotate_warned:1;
->>>> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
->>>> index 6da12e522edc..571d73d4f976 100644
->>>> --- a/tools/perf/util/header.c
->>>> +++ b/tools/perf/util/header.c
->>>> @@ -2200,6 +2200,7 @@ static int __event_process_build_id(struct perf_record_header_build_id *bev,
->>>>  
->>>>  		build_id__init(&bid, bev->data, size);
->>>>  		dso__set_build_id(dso, &bid);
->>>> +		dso->header_build_id = 1;
->>>>  
->>>>  		if (dso_space != DSO_SPACE__USER) {
->>>>  			struct kmod_path m = { .name = NULL, };
->>>> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
->>>> index 1803d3887afe..4ae91e491e23 100644
->>>> --- a/tools/perf/util/map.c
->>>> +++ b/tools/perf/util/map.c
->>>> @@ -127,7 +127,7 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
->>>>  
->>>>  	if (map != NULL) {
->>>>  		char newfilename[PATH_MAX];
->>>> -		struct dso *dso;
->>>> +		struct dso *dso, *header_bid_dso;
->>>>  		int anon, no_dso, vdso, android;
->>>>  
->>>>  		android = is_android_lib(filename);
->>>> @@ -185,7 +185,19 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
->>>>  
->>>>  		if (build_id__is_defined(bid))
->>>>  			dso__set_build_id(dso, bid);
->>>> -
->>>> +		else {
->>>
->>> nit please add { } to the if clause as well
->>>
->>>> +			/*
->>>> +			 * If the mmap event had no build ID, search for an existing dso from the
->>>> +			 * build ID header by name. Otherwise only the dso loaded at the time of
->>>> +			 * reading the header will have the build ID set and all future mmaps will
->>>> +			 * have it missing.
->>>> +			 */
->>>> +			header_bid_dso = __dsos__find(&machine->dsos, filename, false);
->>>
->>> is this 'perf top' safe? I think dso should be added in the
->>> same thread, but please check and add comment why we don't
->>> need locking in here
->>
->> Seems like there are multiple synthesize_threads_workers using the same machine->dsos object so
->> I think locking is needed.
->>
->> At first I thought of doing this:
->>
->>   diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
->>   index 4ae91e491e23..b87b81e3d41c 100644
->>   --- a/tools/perf/util/map.c
->>   +++ b/tools/perf/util/map.c
->>   @@ -192,7 +192,9 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
->>                            * reading the header will have the build ID set and all future mmaps will
->>                            * have it missing.
->>                            */
->>   +                       down_read(&machine->dsos.lock);
->>                           header_bid_dso = __dsos__find(&machine->dsos, filename, false);
->>   +                       up_read(&machine->dsos.lock);
->>                           if (header_bid_dso && header_bid_dso->header_build_id) {
->>                                   dso__set_build_id(dso, &header_bid_dso->bid);
->>                                   dso->header_build_id = 1;
->>
->> But then I was wondering why it doesn't need a write lock all the way from machine__findnew_dso_id() to
->> dso__put()? At the moment there are writes to the dso like dso__set_loaded(), dso->nsinfo = nsi and
->> dso__set_build_id(), so another thread could find the dso in a partially constructed state.
-> 
-> I think that's fine, machine__findnew_dso_id takes the dso ref so
-> the real 'release' is when the machine object goes down at dsos__purge
-> 
->>
->> Not sure if this is an issue currently without my patch, but at least with it they would have to be found
->> with header_build_id already set to 1 otherwise it will mess things up.
-> 
-> as for the partial changes I think it's also fine, because it happens
-> at separate places.. we'd need to investigate specific example to see
-> if there's a problem
-> 
->>
->> Extending the write lock outside of machine__findnew_dso_id() is difficult because it already
->> releases it before it returns. Does it need to be changed so that machine__findnew_dso_id() takes all the
->> arguments needed to construct it inside the lock?
-> 
-> the change above should do it.. as for top threads I don't think
-> it actually matters because there's events processing and hists
-> processing, and I did not find them clashing in this.. but there's
-> some setup session code that touches this, so it's better to be safe
+This commit doesn't change functionality.
 
-Ok yes I think I agree. The header flag isn't important for perf top so having it all
-constructed in place isn't necessary.
+Signed-off-by: Wen Yang <simon.wy@alibaba-inc.com>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org
+Cc: Wen Yang <wenyang@linux.alibaba.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ arch/x86/events/core.c         | 141 ++++++++++++++++++---------------
+ arch/x86/events/intel/uncore.c |  31 +-------
+ arch/x86/events/perf_event.h   |   6 +-
+ 3 files changed, 82 insertions(+), 96 deletions(-)
 
-I've submitted v2 with this change.
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index eef816fc216d..9846d422f06d 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -950,10 +950,7 @@ static bool perf_sched_next_event(struct perf_sched *sched)
+ 	return true;
+ }
+ 
+-/*
+- * Assign a counter for each event.
+- */
+-int perf_assign_events(struct event_constraint **constraints, int n,
++int _perf_assign_events(struct event_constraint **constraints, int n,
+ 			int wmin, int wmax, int gpmax, int *assign)
+ {
+ 	struct perf_sched sched;
+@@ -969,16 +966,66 @@ int perf_assign_events(struct event_constraint **constraints, int n,
+ 
+ 	return sched.state.unassigned;
+ }
++
++/*
++ * Assign a counter for each event.
++ */
++int perf_assign_events(struct perf_event **event_list,
++		struct event_constraint **constraints, int n,
++		int wmin, int wmax, int gpmax, int *assign)
++{
++	struct event_constraint *c;
++	struct hw_perf_event *hwc;
++	u64 used_mask = 0;
++	int unsched = 0;
++	int i;
++
++	/*
++	 * fastpath, try to reuse previous register
++	 */
++	for (i = 0; i < n; i++) {
++		u64 mask;
++
++		hwc = &event_list[i]->hw;
++		c = constraints[i];
++
++		/* never assigned */
++		if (hwc->idx == -1)
++			break;
++
++		/* constraint still honored */
++		if (!test_bit(hwc->idx, c->idxmsk))
++			break;
++
++		mask = BIT_ULL(hwc->idx);
++		if (is_counter_pair(hwc))
++			mask |= mask << 1;
++
++		/* not already used */
++		if (used_mask & mask)
++			break;
++
++		used_mask |= mask;
++
++		if (assign)
++			assign[i] = hwc->idx;
++	}
++
++	/* slow path */
++	if (i != n)
++		unsched = _perf_assign_events(constraints, n,
++				wmin, wmax, gpmax, assign);
++
++	return unsched;
++}
+ EXPORT_SYMBOL_GPL(perf_assign_events);
+ 
+ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
+ {
+ 	int num_counters = hybrid(cpuc->pmu, num_counters);
+-	struct event_constraint *c;
+-	struct perf_event *e;
+ 	int n0, i, wmin, wmax, unsched = 0;
+-	struct hw_perf_event *hwc;
+-	u64 used_mask = 0;
++	struct event_constraint *c;
++	int gpmax = num_counters;
+ 
+ 	/*
+ 	 * Compute the number of events already present; see x86_pmu_add(),
+@@ -1017,66 +1064,30 @@ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
+ 	}
+ 
+ 	/*
+-	 * fastpath, try to reuse previous register
++	 * Do not allow scheduling of more than half the available
++	 * generic counters.
++	 *
++	 * This helps avoid counter starvation of sibling thread by
++	 * ensuring at most half the counters cannot be in exclusive
++	 * mode. There is no designated counters for the limits. Any
++	 * N/2 counters can be used. This helps with events with
++	 * specific counter constraints.
+ 	 */
+-	for (i = 0; i < n; i++) {
+-		u64 mask;
+-
+-		hwc = &cpuc->event_list[i]->hw;
+-		c = cpuc->event_constraint[i];
+-
+-		/* never assigned */
+-		if (hwc->idx == -1)
+-			break;
+-
+-		/* constraint still honored */
+-		if (!test_bit(hwc->idx, c->idxmsk))
+-			break;
+-
+-		mask = BIT_ULL(hwc->idx);
+-		if (is_counter_pair(hwc))
+-			mask |= mask << 1;
+-
+-		/* not already used */
+-		if (used_mask & mask)
+-			break;
++	if (is_ht_workaround_enabled() && !cpuc->is_fake &&
++			READ_ONCE(cpuc->excl_cntrs->exclusive_present))
++		gpmax /= 2;
+ 
+-		used_mask |= mask;
+-
+-		if (assign)
+-			assign[i] = hwc->idx;
++	/*
++	 * Reduce the amount of available counters to allow fitting
++	 * the extra Merge events needed by large increment events.
++	 */
++	if (x86_pmu.flags & PMU_FL_PAIR) {
++		gpmax = num_counters - cpuc->n_pair;
++		WARN_ON(gpmax <= 0);
+ 	}
+ 
+-	/* slow path */
+-	if (i != n) {
+-		int gpmax = num_counters;
+-
+-		/*
+-		 * Do not allow scheduling of more than half the available
+-		 * generic counters.
+-		 *
+-		 * This helps avoid counter starvation of sibling thread by
+-		 * ensuring at most half the counters cannot be in exclusive
+-		 * mode. There is no designated counters for the limits. Any
+-		 * N/2 counters can be used. This helps with events with
+-		 * specific counter constraints.
+-		 */
+-		if (is_ht_workaround_enabled() && !cpuc->is_fake &&
+-		    READ_ONCE(cpuc->excl_cntrs->exclusive_present))
+-			gpmax /= 2;
+-
+-		/*
+-		 * Reduce the amount of available counters to allow fitting
+-		 * the extra Merge events needed by large increment events.
+-		 */
+-		if (x86_pmu.flags & PMU_FL_PAIR) {
+-			gpmax = num_counters - cpuc->n_pair;
+-			WARN_ON(gpmax <= 0);
+-		}
+-
+-		unsched = perf_assign_events(cpuc->event_constraint, n, wmin,
+-					     wmax, gpmax, assign);
+-	}
++	unsched = perf_assign_events(cpuc->event_list, cpuc->event_constraint,
++			n, wmin, wmax, gpmax, assign);
+ 
+ 	/*
+ 	 * In case of success (unsched = 0), mark events as committed,
+@@ -1093,7 +1104,7 @@ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
+ 			static_call_cond(x86_pmu_commit_scheduling)(cpuc, i, assign[i]);
+ 	} else {
+ 		for (i = n0; i < n; i++) {
+-			e = cpuc->event_list[i];
++			struct perf_event *e = cpuc->event_list[i];
+ 
+ 			/*
+ 			 * release events that failed scheduling
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index e497da9bf427..101358ae2814 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -442,12 +442,8 @@ static void uncore_put_event_constraint(struct intel_uncore_box *box,
+ 
+ static int uncore_assign_events(struct intel_uncore_box *box, int assign[], int n)
+ {
+-	unsigned long used_mask[BITS_TO_LONGS(UNCORE_PMC_IDX_MAX)];
+ 	struct event_constraint *c;
+ 	int i, wmin, wmax, ret = 0;
+-	struct hw_perf_event *hwc;
+-
+-	bitmap_zero(used_mask, UNCORE_PMC_IDX_MAX);
+ 
+ 	for (i = 0, wmin = UNCORE_PMC_IDX_MAX, wmax = 0; i < n; i++) {
+ 		c = uncore_get_event_constraint(box, box->event_list[i]);
+@@ -456,31 +452,8 @@ static int uncore_assign_events(struct intel_uncore_box *box, int assign[], int
+ 		wmax = max(wmax, c->weight);
+ 	}
+ 
+-	/* fastpath, try to reuse previous register */
+-	for (i = 0; i < n; i++) {
+-		hwc = &box->event_list[i]->hw;
+-		c = box->event_constraint[i];
+-
+-		/* never assigned */
+-		if (hwc->idx == -1)
+-			break;
+-
+-		/* constraint still honored */
+-		if (!test_bit(hwc->idx, c->idxmsk))
+-			break;
+-
+-		/* not already used */
+-		if (test_bit(hwc->idx, used_mask))
+-			break;
+-
+-		__set_bit(hwc->idx, used_mask);
+-		if (assign)
+-			assign[i] = hwc->idx;
+-	}
+-	/* slow path */
+-	if (i != n)
+-		ret = perf_assign_events(box->event_constraint, n,
+-					 wmin, wmax, n, assign);
++	ret = perf_assign_events(box->event_list,
++			box->event_constraint, n, wmin, wmax, n, assign);
+ 
+ 	if (!assign || ret) {
+ 		for (i = 0; i < n; i++)
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index 150261d929b9..f1acd1ded001 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -1130,8 +1130,10 @@ static inline void __x86_pmu_enable_event(struct hw_perf_event *hwc,
+ 
+ void x86_pmu_enable_all(int added);
+ 
+-int perf_assign_events(struct event_constraint **constraints, int n,
+-			int wmin, int wmax, int gpmax, int *assign);
++int perf_assign_events(struct perf_event **event_list,
++		struct event_constraint **constraints, int n,
++		int wmin, int wmax, int gpmax, int *assign);
++
+ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign);
+ 
+ void x86_pmu_stop(struct perf_event *event, int flags);
+-- 
+2.19.1.6.gb485710b
 
-Thanks for the review.
-
-> 
-> thanks,
-> jirka
