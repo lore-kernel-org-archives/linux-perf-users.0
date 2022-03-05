@@ -2,177 +2,122 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3132C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat,  5 Mar 2022 00:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4ECC433F5
+	for <linux-perf-users@archiver.kernel.org>; Sat,  5 Mar 2022 07:52:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230314AbiCEAwb (ORCPT
+        id S229743AbiCEHxp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Mar 2022 19:52:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52900 "EHLO
+        Sat, 5 Mar 2022 02:53:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230242AbiCEAwa (ORCPT
+        with ESMTP id S229994AbiCEHxo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Mar 2022 19:52:30 -0500
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2057.outbound.protection.outlook.com [40.107.236.57])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 871CE517F0
-        for <linux-perf-users@vger.kernel.org>; Fri,  4 Mar 2022 16:51:41 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P1irhh0Na4faWNDPLTmUtUiuYAS8RwJurMd5hdInXflqHbSX5j0AryjnYjwKDKTxKjhKG+VT1nteROg9ageH4Fr/4pftWmMKzS9WwGDpUpbFdTA56jRhMzf8UTvG9R+3MCIFFVaRZ7/YwH4C0iTmK8wCPxuvrE8bYWC3/7LtYbtLAw5UXBchhGXmbaQ4He8Bgfl8gMjDWqKW95ydH/TKBoWQJiPjYVT3zP7+o4sDmApLkXqw1ctXvxNEJEYgV+8gMmOIXGX33gDKC//X6eCaapNYpn5KoowoAuYY8MD19d0mXpIM8IPUUmCnu8boo0nLnJRyXPH989Mm/ubQaWT+2g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MyTNhO6KZBTcYh+ilDYKjTkUitImk/dnmOmhzyrCKB4=;
- b=XKshFE/Mne9VoIwCbcsjke2/B7U8VgJ18nyIEaJLNDKPRECNEOYbKJfMNeHW5CTO0GOD/AU9GKwp3b6rk1a4/R8CWdVaRMU9kTeunVJ/p10GMWI1CJBrEoJuzictB18unwt0Pat37H86oZsXd4m2qrVPTBIjWke7VJr0N6mDTEkMcAjxqivEWR15g2LYWzApsuwQZHhsrJawQhHrmT8bGgwr2JFp+9G5ckjp8Gh7zwaLusyFPBeFrhhnGXLRfg+xAS8a2jpIMxa0Oi7fg28GoEXINYI1R+Dsx3m0MGy3CM9ZbRM2ls37Z1nlsngr5SWCbsjS3uMZktuiPBu6si5tzA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=ericsson.com; dmarc=pass action=none header.from=ericsson.com;
- dkim=pass header.d=ericsson.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ericsson.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MyTNhO6KZBTcYh+ilDYKjTkUitImk/dnmOmhzyrCKB4=;
- b=VNcWR9iq0vaYxCsEHhFw8dTDdLyvIrAnudNL4j80nPKjINGuJiHyiTQZ6TyKmnIPmTzi7XgrGNKccGd/UHhaFTDgYacAzR5wk4rm9QC07qgqc28CULklI0f4YhFKusmUWUs+xlVvmaaYe30d4OfO1a/YrqEuHnfxsDdJMHouDYQ=
-Received: from DM5PR15MB1739.namprd15.prod.outlook.com (2603:10b6:4:5b::22) by
- MN2PR15MB3037.namprd15.prod.outlook.com (2603:10b6:208:f9::17) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5038.15; Sat, 5 Mar 2022 00:51:39 +0000
-Received: from DM5PR15MB1739.namprd15.prod.outlook.com
- ([fe80::ddea:a32d:ffab:70f8]) by DM5PR15MB1739.namprd15.prod.outlook.com
- ([fe80::ddea:a32d:ffab:70f8%10]) with mapi id 15.20.5017.029; Sat, 5 Mar 2022
- 00:51:39 +0000
-From:   Douglas Graham <douglas.graham@ericsson.com>
-To:     "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-Subject: What exactly does -F <freq> do?
-Thread-Topic: What exactly does -F <freq> do?
-Thread-Index: AdgwKW7BTGI98hwwTTKcL/QVTcLgmA==
-Date:   Sat, 5 Mar 2022 00:51:39 +0000
-Message-ID: <DM5PR15MB17390661547DEAA8C397A540F0069@DM5PR15MB1739.namprd15.prod.outlook.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=ericsson.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0b7c0c72-51e1-48f6-7cb2-08d9fe424f03
-x-ms-traffictypediagnostic: MN2PR15MB3037:EE_
-x-microsoft-antispam-prvs: <MN2PR15MB30372E2D25E05F55FF15B024F0069@MN2PR15MB3037.namprd15.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: qYs98GYqDgxrTTb79LFeFmHaJAiwwB1zoyoUGe595C6uF0lMb1a3dEuAWqkSpuMDhWT5MvbPZ1dWhoNQJQxmYaGOsJysR4GHPjZhwst6/KMdPGWP0+e2jG6u15k6YDjF1Ds3L4XC2xufjx92ibbeITVGhy9XWD9mgZ9XrO/yU1hX4QJnkPRM42VskpUIq7qjKTfNar/WXG8pqw08OAtl0iVk1HlJx8JOi0MTl4fetml4x7NuAYc3x8VFroQukYZUIqw4078ukHxuCfON53juPtOaldK+MVzrmmdnkHoDIcJOwCFGpoMdJaVdjqeqAw5KOKod96VRYGbu8xsYd9QWxukRETXbMFOlmQo+y7DTpN+5fWzfdNOhutYDsaJ3r2ykYTCUDznzI08xUf6HhnHWO4jIH3hz226Quv7wNrcTJrn5md2Vcbkg8A+Vl5xHxIYAj9Eb5EZqXLU63RUccW6a4CODIyhXQ9FZ4ylnQSdwtr9q4fXaHNbBwhYQIOQHmmXCVYweyL3QnwC/nruTvJrDcY9ZFxLWO0j+ySc5jSMbEyVnPUDibAdsQ3/wnVkAX0jV4i11VetG6W2/MCgN5hshm0cY1k0yGkYfIB62F6pr8vKWttXhzdDRw0iqr8Eowpx3df7v4Q6iVciAT3Lul/Z8c8TqJuyx08sf67HHktY3nLppx2s7154Sp2XVMSA207JdY+U2wKNCm4JlLdYmrID5JA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR15MB1739.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(5660300002)(2906002)(186003)(26005)(122000001)(83380400001)(6506007)(52536014)(7696005)(55016003)(9686003)(44832011)(66556008)(66446008)(66476007)(316002)(82960400001)(71200400001)(64756008)(86362001)(508600001)(33656002)(38100700002)(76116006)(8676002)(38070700005)(66946007)(8936002)(6916009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?KKeQ0g/+0nmWV11b1Chub3ZEOgu5wVaaqOZW2zCz7ofOkyAfh3PVofFWLbRO?=
- =?us-ascii?Q?SII7lKnyATyL6+ziZcNs28Em0h+K7AVlrJR2ca0FwvYCzmb9ZWgqx+y+YCch?=
- =?us-ascii?Q?q020e2Yq0dJYJG30hGPJOV53wROQNimLd0iMS/khoDnAQ5K/Za1gT1Pj6Z4R?=
- =?us-ascii?Q?jSTFqjWxMtdCwU3YOJnnNxjFdLsklCwVLBInrllIPfBzuW3TBWD+dLnNvieq?=
- =?us-ascii?Q?XFV2WrTP26gdlrBaqCtmE8vN6xsCaNxOI+/Vj3kMEdQaD2kFDKNIaHYhAhay?=
- =?us-ascii?Q?0ymNhovvl66B5MM/uC9eFAdaNmks+Ma0QPwcqQkDjH2Vr7eeAZzs0pvl3d0W?=
- =?us-ascii?Q?6LEd9DbJyhm1I3LixYwFRajG96R9LOzhlGDrg6hPW7g0BdYiJDLWlAhhfuX2?=
- =?us-ascii?Q?Et9THxwl8wIMmtsVS3M57FgFy1G7a44KiXyxuz54phu8XvTG3UrH+I3xXx4w?=
- =?us-ascii?Q?yHyMKiViSB/XUYu16IxGTGQw0oyiRLeQg1HCNWvpl5OvidX8rw+UHvvUNjWo?=
- =?us-ascii?Q?7fnZpwSRW5XUZGw5LJP+ju4mQBJnSjVoeq2HE2iestquSyN5vS26tlTmqR8L?=
- =?us-ascii?Q?EwjL+fTeZ4ymUZm4BqmQyOHVTcuabIj7fpLDZ0XALqY0o+8c1QfIr/Wo3kt/?=
- =?us-ascii?Q?oqxtQBl+H61r5R3GrQv5Cx+nXfsoSM6WbsN1IhyZ2S3qLOu/y0pxJ83X0sGr?=
- =?us-ascii?Q?NqeWU8Eks1MZufWIhC2pGsM+8u+M3725hRFzjvRZF8xicuV/So14PFQWaz+y?=
- =?us-ascii?Q?IUSLfbG3QEmGyiDWQa1Nt8veQgorZTAIysZmQC1IWfKu5OIpYt8JB4klZNm0?=
- =?us-ascii?Q?M1CYQ3EsLgNfTgf4Vdp9NwDBF238azGeNrUAjNWUMaDeMJrS6AniqIQksraU?=
- =?us-ascii?Q?Ls8eIeQQI9GAv4ffI+Ywpm07pqu24FVXjsglpmCaSuXTBlHvZ4Ot4lr+EWao?=
- =?us-ascii?Q?7rqE/wN0bUGV+eSqGzwH7UcNZd2zrRG+dbbC3lg9w+DPEKYUSauyOYu78zFe?=
- =?us-ascii?Q?eNboJ9aELRlzjCxJB3mQnb45poLZITBqc6HDz/aoE1fJpMibZzBd1B9uRfEK?=
- =?us-ascii?Q?qboGrO6qvqVCa3rNY56QjUzY4Y0GdvWJWGYKyqZlm82ebm6vp2X2rkwU2/nE?=
- =?us-ascii?Q?sv+VSbm3LGGA1ONc5UGMh4uxn5KdkU99Z3EmjgR4JzH6BS8vYUJKZvNUMcGZ?=
- =?us-ascii?Q?LQMEBRiXKTY0+YRve+9klTF6CINwVRdKbsdG9Q81yFEW4m3OTI3I5XfssGC2?=
- =?us-ascii?Q?OkwHPVbcKEzDYqytzR5bzBA4jJR/Zo0jq8WIz4/AXesjgMh+7Rytc+ctlwmD?=
- =?us-ascii?Q?cBO8iEDptFYnnGv8CIln6xXfCZudY5qV6jaWlb6jtidLvNkUj/O7g+Ky7URB?=
- =?us-ascii?Q?BmKgjBTlAY4lHfOvnh/4I7eFiRRDAM/36qfCnfj3NxEQ3v+EsNAVRaC9N0u2?=
- =?us-ascii?Q?fONCCMhsBWceoTayN2C7GM9Pc1qAhDHt9X0nseS5Sola9ceD+V0yr7eYBU11?=
- =?us-ascii?Q?8fgqyjbTv5uf4STyGUOzeuzB/uAQ6Qql8Ok8f58y/N2iv2eteTlqESrZQbO6?=
- =?us-ascii?Q?1MC4DEOuwu9lLtxOndC/03BR36GwLmd+Qi4JHAy9YCB3C75Ka57mxMFvu+sq?=
- =?us-ascii?Q?DH4ftAUjdQ5XMmceXCosALBBa7f4MBIzX+EaZm+vezY6HHLA5oPYtsrhXge0?=
- =?us-ascii?Q?5Z7KJg=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sat, 5 Mar 2022 02:53:44 -0500
+Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABDE46384;
+        Fri,  4 Mar 2022 23:52:54 -0800 (PST)
+Received: by mail-io1-xd36.google.com with SMTP id q8so11939381iod.2;
+        Fri, 04 Mar 2022 23:52:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to:cc;
+        bh=sBBxgRvmPyMbFmesC6PfBojq8OF5jYFT/zSk89dxKRw=;
+        b=oudWkOCQ2E+K7ho3q5/V7UU8wYU6HoriUSt7iD/SfUNVWZGnRf/y4nOWY7nS5gf7hP
+         3SHoGMCl4v78ZbPjlilOJyaQdpcViv+wQFH2hKTQNTar+fx1nSN2avCgyi1zpIdC8b6A
+         4/L6GH1yYDbL+Pt86pL+qcZ8fSmXBxu5flTl/g7QZjmROCZf9JLVHOw3ObCBwV5W8PNc
+         rMmrpUrtXKMT3IYgMJ3ufz+DSogm8jXmK7hPb6ZDCrVhPN1HSq2aJenhT3w8xsVUmMrI
+         W4p+uiszx8DeZKIEm5V+v30I5p3523MTcZwT4+l6ERDZiKqixLb9cd7y+eTlzroCwIxb
+         XsMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=sBBxgRvmPyMbFmesC6PfBojq8OF5jYFT/zSk89dxKRw=;
+        b=oTMjQ+/8z8MLE9BZOVDxra6mhg1LoDMFgO6liMRbm6yBsHG8R/6oEJF+gHkiDGW4x3
+         NMtP8OLwXJRG3YxtIz8dZnO6IwKm0M8ypHmEzd0m7tHdHdnUAOd4yz+Zyl9ZV4zJLkPz
+         7ESyqnOBSJiBqNJynBk+97jg3qalmEaKqMR1sHA3PTNUBMBH1Z2jb6Z30g2gzIOnUzoL
+         zU/CUkBU19xiPVNQBVKjkApE+CIGyEA8IyiVMFYeEhgbQKFG5B4Gg7/SunSXOJ+NwfYf
+         AZr4/W38Orf6JhQu4nIilSbeZeKQw7T3McfMROEbAtwf/pht9RRP9vWuTBi1uVa+4ifk
+         b4Dw==
+X-Gm-Message-State: AOAM531qM9g5v7wKcXiE/PxKbRS/Bn16ENJfG67epza3YYXapjcwFkl8
+        gBP6Y6eNB2Td6X0zOHqUbnDWpB+ZUixOc9jUATs=
+X-Google-Smtp-Source: ABdhPJyYB34OOd6mh85qDvNQEgE+PObHyF08crHwNQYSOKb+/z5KgY2EJiSuFWVNckEQTRxfrDpsVx1Qdb65ea9wiHA=
+X-Received: by 2002:a02:c733:0:b0:2fe:ab40:d2cc with SMTP id
+ h19-20020a02c733000000b002feab40d2ccmr2189466jao.126.1646466774005; Fri, 04
+ Mar 2022 23:52:54 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: ericsson.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR15MB1739.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b7c0c72-51e1-48f6-7cb2-08d9fe424f03
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Mar 2022 00:51:39.3904
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 92e84ceb-fbfd-47ab-be52-080c6b87953f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0uHGrhaJMtFRvzfjMfY0f25Qzn4Fs67zVLlqMSpou1JYHTKwj9ms9o3/qx0ob7AlCa4/b2IYGRk4xc1SErHVdAMQsQyZMqZQheXNuakL7TA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR15MB3037
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Sat, 5 Mar 2022 08:52:18 +0100
+Message-ID: <CA+icZUWHd4VTKNwBtuxt9-fHoiYV+Q7tQ809Cn83k8sbQ_uNHw@mail.gmail.com>
+Subject: [Linux-v5.17-rc6] Building tools/perf with perl v5.34
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hi,
 
-The perf-record man page says this about the -F option:
+I am here on Debian/unstable AMD64 which switched over to perl v5.34
+in February 2022.
 
-  -F, --freq=3D
-           Profile at this frequency.
+Unfortunately, my perf does not build with this (lib)perl version:
 
-And this about the -c option:
+$ ~/bin/perf -vv
+perf version 5.17-rc6
+                dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
+   dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
+                glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
+        syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
+               libbfd: [ on  ]  # HAVE_LIBBFD_SUPPORT
+               libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
+              libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+              libperl: [ OFF ]  # HAVE_LIBPERL_SUPPORT
+            libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
+             libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+            libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
+            libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
+   libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
+                 zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
+                 lzma: [ on  ]  # HAVE_LZMA_SUPPORT
+            get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
+                  bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
+                  aio: [ on  ]  # HAVE_AIO_SUPPORT
+                 zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
+              libpfm4: [ OFF ]  # HAVE_LIBPFM
 
-       -c, --count=3D
-           Event period to sample.
+$ grep libperl ../make-log_perf-python3.10-install_bin.txt
+9:Makefile.config:788: Missing perl devel files. Disabling perl
+scripting support, please install perl-ExtUtils-Embed/libperl-dev
+22:...                       libperl: [ OFF ]
 
-A "perf stat sleep 1" on the system I'm interested in says:
+Checking for these requirements:
 
-           1630370      cycles                    #    1.315 GHz
+# dpkg -l | grep perl | grep 5.34 | awk '/^ii/ {print $1 " " $2 " "
+$3}' | column -t
+ii  libperl-dev:amd64  5.34.0-3
+ii  libperl5.34:amd64  5.34.0-3
+ii  perl               5.34.0-3
+ii  perl-base          5.34.0-3
+ii  perl-modules-5.34  5.34.0-3
 
-As I understand it, the cycles event is used by default, so a 100 Hz sample=
- frequency should give the same results as a 13150000 cycles sample period.
+# dpkg -L perl-modules-5.34 | grep -i ExtUtils | grep -i Embed
+/usr/share/perl/5.34.0/ExtUtils/Embed.pm
 
-And yet the results with "-F 100" are significantly different than those wi=
-th "-c 13150000".  Perf script output shows the same number of cycles on al=
-l samples collected with -c, eg:
+Can you please comment on this?
 
-    tmoSchedulerTx  2281 [003] 32746.853052:   13150000   cycles:        55=
-834b1e5c [unknown] (/opt/foo)
-   richw_commond  1950 [003] 32746.926042:   13150000   cycles:  ffffffc010=
-013504 do_el0_svc+0x44 ([kernel.kallsyms])
-         swapper                  0 [000] 32746.946399:   13150000   cycles=
-:  ffffffc0107d1828 arch_cpu_idle+0x14 ([kernel.kallsyms])
-   richw_commond  1889 [003] 32747.002987:   13150000   cycles:  ffffffc010=
-7dba24 _raw_spin_unlock_irqrestore+0x14 ([kernel.kallsyms])
+Thanks.
 
-whereas the number of cycles bounces around in the perf -F output, eg:
+Regards,
+- Sedat -
 
-  tmoSchedulerTx   2281 [001] 32696.168404:    5904091    cycles:        55=
-834b1988 [unknown] (/opt/foo)
-         startUp            2180 [001] 32696.209523:    6148607    cycles: =
-       7fb235de68 operator delete@plt+0x8 (/usr/lib/foo.so.0.0.0)
-         swapper                 0 [001] 32696.348061:    6416807    cycles=
-:  ffffffc0107dbaa8 _raw_spin_unlock_irq+0x18 ([kernel.kallsyms])
-   richw_commond  1889 [002] 32696.501004:   21730400   cycles:  ffffffc010=
-7dbaa8 _raw_spin_unlock_irq+0x18 ([kernel.kallsyms])
-
-I can understand why perf would have to keep adjusting the number of events=
- between samples if it is targeting an constant average sample frequency bu=
-t using an event that occurs at a variable rate (eg: cache misses), but cyc=
-les *does* occur at a fixed rate. So why does the number of cycles between =
-samples keep changing (often radically) like this?  What exactly is perf ai=
-ming for?
-
-Other statistical profilers (eg: gprof) sample at a fixed frequency, where =
-you can assume that if the sampling frequency is 100Hz, then each sample re=
-presents roughly 10ms.  A function that was sampled 100 times during a test=
- run ran for roughly 1 second during that run.  I think the same can be sai=
-d if perf record is used with the -c option to ensure a constant sampling p=
-eriod.  But I have no idea how to interpret the results of a "perf record -=
-F 100".  It almost looks like it's trying to capture 100 non-idle samples e=
-very second, but if that's what it's doing, I think the result can be wildl=
-y inaccurate.  If it's constantly adjust the sample rate to try to ensure a=
- fixed number of non-idle samples per second, then it will sample more ofte=
-n when the system is lightly loaded, and that will make whatever happened d=
-uring that time look more CPU intensive than it really was, when analyzed t=
-ogether with the samples gathered when the system was busy.
-
-Thanks,
-Doug
-
+[1] https://unix.stackexchange.com/questions/167292/what-is-debian-equivalent-of-rpm-package-perl-extutils-embed
