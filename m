@@ -2,56 +2,61 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 903E8C433F5
-	for <linux-perf-users@archiver.kernel.org>; Sun,  6 Mar 2022 15:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F26F1C433F5
+	for <linux-perf-users@archiver.kernel.org>; Sun,  6 Mar 2022 16:01:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231271AbiCFPnP (ORCPT
+        id S233765AbiCFQBw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 6 Mar 2022 10:43:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41032 "EHLO
+        Sun, 6 Mar 2022 11:01:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230439AbiCFPnO (ORCPT
+        with ESMTP id S230313AbiCFQBv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 6 Mar 2022 10:43:14 -0500
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA19910FEB;
-        Sun,  6 Mar 2022 07:42:21 -0800 (PST)
-Received: by mail-ej1-x62e.google.com with SMTP id hw13so26982346ejc.9;
-        Sun, 06 Mar 2022 07:42:21 -0800 (PST)
+        Sun, 6 Mar 2022 11:01:51 -0500
+Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DB3A68F8A;
+        Sun,  6 Mar 2022 08:00:59 -0800 (PST)
+Received: by mail-il1-x132.google.com with SMTP id h7so1760045ile.1;
+        Sun, 06 Mar 2022 08:00:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=HfO2h5q1473JP2upK1zqZF3m0Phtdwl0dsxMjuAMUAc=;
-        b=TUG2TbXA26Z7N1AdNjzw5HZWtBkBdsXv/EgmeAiKT5NQJn7ma2tI921ze85VnP1szT
-         P4lPetpnIzpdqCyvo9vxUKY8lP0o6/TBIp2/0uRHEUkwix4wtNqmMzZGE96jSJS9lTdC
-         1lhSplGrTY0luO0XkZhO1uaL7EavP+1J4EUYQ4zByDypg7QIJVGpHTQEbo95/fw7HTYA
-         6zGsvuJGYZzyvbJOwQ8FOV3SkMjPP8CzYlKRbrpJifORo7xRzNTLKdS6T5RbhtiaSCiy
-         X02REn2eDUZUzA6OyxfCiZxWz8PjcGL9fJTHe+trTDR5UiMiU0xGwXOLfUdSxfd5Zsyh
-         /u1A==
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=QccD7eNSgfKU2QlS5bqdDnSgDvMBGUtw/Y8Ns4tdASM=;
+        b=a2stWlRcD4yCiqlfh9dOM01Mek1hvp4gGtBEw+AFzjS4dw/aGf6xVjIQRs1RWD37Cn
+         fBCQU0IkwFRXHMLUKnnynW23Iw1sscxxNilH3ca0W9f9qBw+mcE6EnjFyNcF9/gKauhy
+         KQ6dMwi3u7yHRDtBg+3O+O6OqWSAXY2pShdGEAtLEozp8yuLj2DC/Zy4kP08SY6Y4H5x
+         jJpjJhCgXvxeAnTa2S/MD8RRuOf1ayLBcuuaee9i25QEnje+pDuYv2mWxHJ7ubpY8cxp
+         Qb8abP2z3JWK7b8bMaXd8oBjvYv1+1d3531Dt6bOtPwrwpOmKcOCSKTRIZ5NNxklmRMz
+         JyFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HfO2h5q1473JP2upK1zqZF3m0Phtdwl0dsxMjuAMUAc=;
-        b=RWNUDv6JUdKktOO0AmsFpZo5DOTnUsaZ6QDHFfKu8r4fLPyX9ogYIMCvk3/p6O5BDy
-         N32ubBQg+AldM9jq54NUvAnXQ/uPUK3xsT8zBdVk+r79IYtvl3CiC2IMfzbV5bzrOMxR
-         8wL9g3cB4X7JNZb7BkBdv8WraPtEyhh4i5QwdHcqiAjshPnXRN7rkksDi3ERpgKvkAvb
-         Xuous/y4VcmESB6jZuzgIqhRbczDuI1tzVWZVPsOCZv9FeT+9uLApFTYdM501lkaCN2B
-         DTE2w50mmLLAvu1nrr6o4aE8vf49BiF6Git9Okep//JXjngBUa+F70QmUejA/PIr7s+E
-         VxQQ==
-X-Gm-Message-State: AOAM533gHIWBt3SBC1JNGDOxzvooxwUMZzqbMeJFiK4JgwSsjnCiUPp9
-        v/HrAb/JrCLCCC7w3p6ljt4tHaRcyl2poQ==
-X-Google-Smtp-Source: ABdhPJwNCo+8KRwq9nmvmwmLV85jcIttAIb9ng/q1JMqBPiV/Ons8xrtuf3CO1z3ijgUBYyRIdxe1Q==
-X-Received: by 2002:a17:906:9744:b0:6da:9e49:9fe3 with SMTP id o4-20020a170906974400b006da9e499fe3mr6218024ejy.319.1646581340155;
-        Sun, 06 Mar 2022 07:42:20 -0800 (PST)
-Received: from krava ([193.85.244.190])
-        by smtp.gmail.com with ESMTPSA id v2-20020a509d02000000b00412d53177a6sm4941630ede.20.2022.03.06.07.42.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Mar 2022 07:42:19 -0800 (PST)
-Date:   Sun, 6 Mar 2022 16:42:14 +0100
-From:   Jiri Olsa <olsajiri@gmail.com>
-To:     Sedat Dilek <sedat.dilek@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=QccD7eNSgfKU2QlS5bqdDnSgDvMBGUtw/Y8Ns4tdASM=;
+        b=EAjxeYgtUcmoKftdfW/c08oTwFXk/zX0B+tnb/6edpIjegRZTP4tPVAWDwoaZGnO/Y
+         /11n82aJzm62dj5pjOZLx3ZoS51BKbqa/XYJoIiaSpzjD2zsVnleMmcuGfIlD1Mmn+SL
+         VITEGLCgi0fE+l3wvqyNv9Z1NwSDSaSbBXXu34OSnTKZmypZa/32k3Jcj6yJKcJMXmKY
+         /QFPE2fzvONo+ouWFP2zpde6e2xt/Q6BynD8vr2XtEhor2dtUADd/uVfCVWjNvdh1Ncb
+         aaJIDJY0mq+QLVWssIeIwkIlP5vVn5BvtK3tx3klD3eiGU6BWciIgx+OevN8spMh1RDC
+         rxfQ==
+X-Gm-Message-State: AOAM530O5WjUC4fcQ1qHECydq7CZ9h7Ua1mYLmWtVTr+dS+kcFDRhsk5
+        /llALXvg5XmEsqJWbaEb+KsihstFyrMX/OAfEsw=
+X-Google-Smtp-Source: ABdhPJw2O8zA14WfTk20GoYCmEGyTdGhydeLsJ3ih+XfhDC0UktCQKAVmBFbu91+TYAbyd6h87vtoqYvlycNr0GTQa0=
+X-Received: by 2002:a05:6e02:de2:b0:2c6:f14:884a with SMTP id
+ m2-20020a056e020de200b002c60f14884amr7908645ilj.100.1646582458668; Sun, 06
+ Mar 2022 08:00:58 -0800 (PST)
+MIME-Version: 1.0
+References: <CA+icZUWHd4VTKNwBtuxt9-fHoiYV+Q7tQ809Cn83k8sbQ_uNHw@mail.gmail.com>
+ <YiPDaiYffeK4lF+l@krava> <CA+icZUW0XyDHFTYF_j1QECpqP4kmTXqCqX_HfEVvQ4aWZecW5Q@mail.gmail.com>
+ <YiTWVjKwOO/bMNz/@krava>
+In-Reply-To: <YiTWVjKwOO/bMNz/@krava>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Sun, 6 Mar 2022 17:00:22 +0100
+Message-ID: <CA+icZUWBFAWx1DgN-nqUkr7W9W3hjhNRChEaXrfW5unoU_Lqdw@mail.gmail.com>
+Subject: Re: [Linux-v5.17-rc6] Building tools/perf with perl v5.34
+To:     Jiri Olsa <olsajiri@gmail.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -60,138 +65,164 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Linux-v5.17-rc6] Building tools/perf with perl v5.34
-Message-ID: <YiTWVjKwOO/bMNz/@krava>
-References: <CA+icZUWHd4VTKNwBtuxt9-fHoiYV+Q7tQ809Cn83k8sbQ_uNHw@mail.gmail.com>
- <YiPDaiYffeK4lF+l@krava>
- <CA+icZUW0XyDHFTYF_j1QECpqP4kmTXqCqX_HfEVvQ4aWZecW5Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+icZUW0XyDHFTYF_j1QECpqP4kmTXqCqX_HfEVvQ4aWZecW5Q@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Mar 06, 2022 at 03:28:09AM +0100, Sedat Dilek wrote:
-> On Sat, Mar 5, 2022 at 9:09 PM Jiri Olsa <olsajiri@gmail.com> wrote:
+On Sun, Mar 6, 2022 at 4:42 PM Jiri Olsa <olsajiri@gmail.com> wrote:
+>
+> On Sun, Mar 06, 2022 at 03:28:09AM +0100, Sedat Dilek wrote:
+> > On Sat, Mar 5, 2022 at 9:09 PM Jiri Olsa <olsajiri@gmail.com> wrote:
+> > >
+> > > On Sat, Mar 05, 2022 at 08:52:18AM +0100, Sedat Dilek wrote:
+> > > > Hi,
+> > > >
+> > > > I am here on Debian/unstable AMD64 which switched over to perl v5.3=
+4
+> > > > in February 2022.
+> > > >
+> > > > Unfortunately, my perf does not build with this (lib)perl version:
+> > > >
+> > > > $ ~/bin/perf -vv
+> > > > perf version 5.17-rc6
+> > > >                 dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
+> > > >    dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
+> > > >                 glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
+> > > >         syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
+> > > >                libbfd: [ on  ]  # HAVE_LIBBFD_SUPPORT
+> > > >                libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
+> > > >               libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+> > > > numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+> > > >               libperl: [ OFF ]  # HAVE_LIBPERL_SUPPORT
+> > > >             libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
+> > > >              libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+> > > >             libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
+> > > >             libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
+> > > >    libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
+> > > >                  zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
+> > > >                  lzma: [ on  ]  # HAVE_LZMA_SUPPORT
+> > > >             get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
+> > > >                   bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
+> > > >                   aio: [ on  ]  # HAVE_AIO_SUPPORT
+> > > >                  zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
+> > > >               libpfm4: [ OFF ]  # HAVE_LIBPFM
+> > > >
+> > > > $ grep libperl ../make-log_perf-python3.10-install_bin.txt
+> > > > 9:Makefile.config:788: Missing perl devel files. Disabling perl
+> > > > scripting support, please install perl-ExtUtils-Embed/libperl-dev
+> > > > 22:...                       libperl: [ OFF ]
+> > > >
+> > > > Checking for these requirements:
+> > > >
+> > > > # dpkg -l | grep perl | grep 5.34 | awk '/^ii/ {print $1 " " $2 " "
+> > > > $3}' | column -t
+> > > > ii  libperl-dev:amd64  5.34.0-3
+> > > > ii  libperl5.34:amd64  5.34.0-3
+> > > > ii  perl               5.34.0-3
+> > > > ii  perl-base          5.34.0-3
+> > > > ii  perl-modules-5.34  5.34.0-3
+> > > >
+> > > > # dpkg -L perl-modules-5.34 | grep -i ExtUtils | grep -i Embed
+> > > > /usr/share/perl/5.34.0/ExtUtils/Embed.pm
+> > > >
+> > > > Can you please comment on this?
+> > >
+> > > hi,
+> > > is there something in tools/build/feature/test-libperl.make.output ?
+> > >
 > >
-> > On Sat, Mar 05, 2022 at 08:52:18AM +0100, Sedat Dilek wrote:
-> > > Hi,
-> > >
-> > > I am here on Debian/unstable AMD64 which switched over to perl v5.34
-> > > in February 2022.
-> > >
-> > > Unfortunately, my perf does not build with this (lib)perl version:
-> > >
-> > > $ ~/bin/perf -vv
-> > > perf version 5.17-rc6
-> > >                 dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
-> > >    dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
-> > >                 glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
-> > >         syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
-> > >                libbfd: [ on  ]  # HAVE_LIBBFD_SUPPORT
-> > >                libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
-> > >               libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-> > > numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-> > >               libperl: [ OFF ]  # HAVE_LIBPERL_SUPPORT
-> > >             libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
-> > >              libslang: [ on  ]  # HAVE_SLANG_SUPPORT
-> > >             libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
-> > >             libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
-> > >    libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
-> > >                  zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
-> > >                  lzma: [ on  ]  # HAVE_LZMA_SUPPORT
-> > >             get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
-> > >                   bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-> > >                   aio: [ on  ]  # HAVE_AIO_SUPPORT
-> > >                  zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
-> > >               libpfm4: [ OFF ]  # HAVE_LIBPFM
-> > >
-> > > $ grep libperl ../make-log_perf-python3.10-install_bin.txt
-> > > 9:Makefile.config:788: Missing perl devel files. Disabling perl
-> > > scripting support, please install perl-ExtUtils-Embed/libperl-dev
-> > > 22:...                       libperl: [ OFF ]
-> > >
-> > > Checking for these requirements:
-> > >
-> > > # dpkg -l | grep perl | grep 5.34 | awk '/^ii/ {print $1 " " $2 " "
-> > > $3}' | column -t
-> > > ii  libperl-dev:amd64  5.34.0-3
-> > > ii  libperl5.34:amd64  5.34.0-3
-> > > ii  perl               5.34.0-3
-> > > ii  perl-base          5.34.0-3
-> > > ii  perl-modules-5.34  5.34.0-3
-> > >
-> > > # dpkg -L perl-modules-5.34 | grep -i ExtUtils | grep -i Embed
-> > > /usr/share/perl/5.34.0/ExtUtils/Embed.pm
-> > >
-> > > Can you please comment on this?
+> > Hey jirka!
 > >
-> > hi,
-> > is there something in tools/build/feature/test-libperl.make.output ?
+> > Indeed there is such a file.
 > >
-> 
-> Hey jirka!
-> 
-> Indeed there is such a file.
-> 
-> $ LC_ALL=C ll tools/build/feature/test-libperl.make.output
-> -rw-r--r-- 1 dileks dileks 24K Mar  6 03:22
-> tools/build/feature/test-libperl.make.output
-> 
-> Reproducer:
-> 
-> make distclean
-> make -C tools/perf clean
-> 
-> MAKE="make"
-> MAKE_OPTS="HOSTCC=clang-13 HOSTCXX=clang++-13 HOSTLD=ld.lld-13
-> HOSTAR=llvm-ar-13 CC=clang-13 LD=ld.lld-13 AR=llvm-ar-13 NM=llvm-nm-13
-> OBJCOPY=llvm-objcopy-13 OBJDUMP=llvm-objdump-13 OBJSIZE=llvm-size-13
-> READELF=llvm-readelf-13 STRIP=llvm-strip-13 LLVM_IAS=1"
-> 
-> LC_ALL=C $MAKE V=1 $MAKE_OPTS -C tools/perf PYTHON=python3 install-bin
+> > $ LC_ALL=3DC ll tools/build/feature/test-libperl.make.output
+> > -rw-r--r-- 1 dileks dileks 24K Mar  6 03:22
+> > tools/build/feature/test-libperl.make.output
+> >
+> > Reproducer:
+> >
+> > make distclean
+> > make -C tools/perf clean
+> >
+> > MAKE=3D"make"
+> > MAKE_OPTS=3D"HOSTCC=3Dclang-13 HOSTCXX=3Dclang++-13 HOSTLD=3Dld.lld-13
+> > HOSTAR=3Dllvm-ar-13 CC=3Dclang-13 LD=3Dld.lld-13 AR=3Dllvm-ar-13 NM=3Dl=
+lvm-nm-13
+> > OBJCOPY=3Dllvm-objcopy-13 OBJDUMP=3Dllvm-objdump-13 OBJSIZE=3Dllvm-size=
+-13
+> > READELF=3Dllvm-readelf-13 STRIP=3Dllvm-strip-13 LLVM_IAS=3D1"
+> >
+> > LC_ALL=3DC $MAKE V=3D1 $MAKE_OPTS -C tools/perf PYTHON=3Dpython3 instal=
+l-bin
+>
+> yea, looks like we can't compile perl devel includes with clang,
+> we use simple perl test program:
+>
+>         $ cd tools/build/feature/
+>         $ cat test-libperl.c
+>         // SPDX-License-Identifier: GPL-2.0
+>         #include <EXTERN.h>
+>         #include <perl.h>
+>
+>         int main(void)
+>         {
+>                 perl_alloc();
+>
+>                 return 0;
+>         }
+>
+>
+> and if I compile it with:
+>
+>         $ CC=3Dclang make test-libperl.bin
+>         clang  -MD -Wall -Werror -o test-libperl.bin test-libperl.c  > te=
+st-libperl.make.output 2>&1 `perl -MExtUtils::Embed -e ccopts 2>/dev/null` =
+-Wl,--enable-new-dtags -Wl,-z,relro -Wl,--as-needed -Wl,-z,now -specs=3D/us=
+r/lib/rpm/redhat/redhat-hardened-ld -specs=3D/usr/lib/rpm/redhat/redhat-ann=
+obin-cc1  -Wl,-z,relro -Wl,--as-needed -Wl,-z,now -specs=3D/usr/lib/rpm/red=
+hat/redhat-hardened-ld -specs=3D/usr/lib/rpm/redhat/redhat-annobin-cc1  -fs=
+tack-protector-strong -L/usr/local/lib  -L/usr/lib64/perl5/CORE -lperl -lpt=
+hread -lresolv -ldl -lm -lcrypt -lutil -lc
+>         make: *** [Makefile:224: test-libperl.bin] Error 1
+>
+>
+> I'm getting some other lto related error:
+>
+>         $ cat test-libperl.make.output
+>         clang-13: error: optimization flag '-ffat-lto-objects' is not sup=
+ported [-Werror,-Wignored-optimization-argument]
+>
 
-yea, looks like we can't compile perl devel includes with clang,
-we use simple perl test program:
+Hehe.
 
-	$ cd tools/build/feature/
-	$ cat test-libperl.c 
-	// SPDX-License-Identifier: GPL-2.0
-	#include <EXTERN.h>
-	#include <perl.h>
+I was thinking about syncing the flags for both feature test-perl and
+perf/libperl-support.
 
-	int main(void)
-	{
-		perl_alloc();
+tools/build/feature/Makefile
+tools/perf/Makefile.config
 
-		return 0;
-	}
+So, I guess FLAGS_PERL_EMBED differs.
 
+For building perf '-ffat-lto-objects'  is filtered-out...
 
-and if I compile it with:
+$ git grep ffat-lto-objects tools/perf/
+tools/perf/Makefile.config:  PERL_EMBED_CCOPTS :=3D $(filter-out
+-flto=3Dauto -ffat-lto-objects, $(PERL_EMBED_CCOPTS))
 
-	$ CC=clang make test-libperl.bin
-	clang  -MD -Wall -Werror -o test-libperl.bin test-libperl.c  > test-libperl.make.output 2>&1 `perl -MExtUtils::Embed -e ccopts 2>/dev/null` -Wl,--enable-new-dtags -Wl,-z,relro -Wl,--as-needed -Wl,-z,now -specs=/usr/lib/rpm/redhat/redhat-hardened-ld -specs=/usr/lib/rpm/redhat/redhat-annobin-cc1  -Wl,-z,relro -Wl,--as-needed -Wl,-z,now -specs=/usr/lib/rpm/redhat/redhat-hardened-ld -specs=/usr/lib/rpm/redhat/redhat-annobin-cc1  -fstack-protector-strong -L/usr/local/lib  -L/usr/lib64/perl5/CORE -lperl -lpthread -lresolv -ldl -lm -lcrypt -lutil -lc
-	make: *** [Makefile:224: test-libperl.bin] Error 1
+- Sedat -
 
-
-I'm getting some other lto related error:
-
-	$ cat test-libperl.make.output 
-	clang-13: error: optimization flag '-ffat-lto-objects' is not supported [-Werror,-Wignored-optimization-argument]
-
-
-with my clang version:
-
-	$ clang --version
-	clang version 13.0.0 (Fedora 13.0.0-3.fc35)
-	Target: x86_64-redhat-linux-gnu
-	Thread model: posix
-	InstalledDir: /usr/bin
-
-so you need to figure out how to compile the test program
-above first with clang
-
-jirka
+>
+> with my clang version:
+>
+>         $ clang --version
+>         clang version 13.0.0 (Fedora 13.0.0-3.fc35)
+>         Target: x86_64-redhat-linux-gnu
+>         Thread model: posix
+>         InstalledDir: /usr/bin
+>
+> so you need to figure out how to compile the test program
+> above first with clang
+>
+> jirka
