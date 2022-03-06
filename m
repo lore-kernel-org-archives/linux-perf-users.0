@@ -2,217 +2,254 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C51CC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun,  6 Mar 2022 03:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0FCC433F5
+	for <linux-perf-users@archiver.kernel.org>; Sun,  6 Mar 2022 14:36:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232846AbiCFDUm (ORCPT
+        id S232853AbiCFOhj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 5 Mar 2022 22:20:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34106 "EHLO
+        Sun, 6 Mar 2022 09:37:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232902AbiCFDUe (ORCPT
+        with ESMTP id S232237AbiCFOhj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 5 Mar 2022 22:20:34 -0500
-Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 771DE57B35;
-        Sat,  5 Mar 2022 19:19:36 -0800 (PST)
-Received: by mail-io1-xd33.google.com with SMTP id d62so13546775iog.13;
-        Sat, 05 Mar 2022 19:19:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=ZITXdt/8LIdBAYW+kwAAqKHdh3MHm06/0AwdlQzCFG8=;
-        b=WG2JNoQHfNI9CWi3N4XBjW/3oaAJch7P7Ydx/w25iQIGVAsXZbOMQp196RUBNpMdTK
-         o+2YxrO69qrn9L89nt26U2Sgza5adCVZoe7o91cZfnwzxmC8sHQNNidRXZc9ZF4+ng7E
-         SySlcvRjZLlslAfNJ9JH0s5dw7oVY6Gh7S90VeJ32mDJfpoQbsJoGeRvp5fAWSvgAL6L
-         Asoonzd7rRytSEueNQ2BuzH0EbUqn8lEN7feeXxpSm5Gdulgg6ZZqierZbA1cpIsv55N
-         /KLMDRAlw9iE6Adpwq6+yZcbB9LbDN1cB5m01N0NTkJ/8kSkwAKBA6Yt5yZYWI+3sWS2
-         EPaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=ZITXdt/8LIdBAYW+kwAAqKHdh3MHm06/0AwdlQzCFG8=;
-        b=kXCFym8FQWXieHm++sJO+YZc0AE3xbLp34qhia7/5Bg3do5D0DTd8NbJdj2EVICdg7
-         6H0MvY8O0ULtCfKXgASza38Lye2lO60eyp9NAzN+2+4KKRn0dJflYxsOxK2/bSh/q+eC
-         WWWpX2iyBMKzvyWcNqJUD4MSPgDpdRlJvWiD/1YfnOXWPc8shkyZ/CYoFJ3BXs74lxKD
-         0sBtVF3PQSkI/nNIVyD+SjA1k1VwUUJnF75mAS+9csrAql84s859TyiGGLSvhsftFkNs
-         VPVbV0yayrYGMYp70uFh6xsi1jwKISkeVf5S6Ol5e7pckcSQjGK7vuvarIIm1q5N3zJf
-         i5Dg==
-X-Gm-Message-State: AOAM532e9EWiF3CCFpPlkDtl7V5Yp0rOzDJEjaOKifsA67Ki7YS88BD+
-        NLHnBq1QX7zlm5xuBrStuceZ9QDjO71piuJKh1c=
-X-Google-Smtp-Source: ABdhPJxeDSKiJBdLvgonJlBDLZpYT2eMdj9sLybI1U1R9RFgEFtu5ezS8cmN+7EDsuKJZmw0RC0sAdtarCRDOcuOdB4=
-X-Received: by 2002:a05:6602:3ca:b0:63d:dfc8:fa66 with SMTP id
- g10-20020a05660203ca00b0063ddfc8fa66mr5086708iov.128.1646536775596; Sat, 05
- Mar 2022 19:19:35 -0800 (PST)
-MIME-Version: 1.0
-References: <CA+icZUWHd4VTKNwBtuxt9-fHoiYV+Q7tQ809Cn83k8sbQ_uNHw@mail.gmail.com>
- <YiPDaiYffeK4lF+l@krava> <CA+icZUW0XyDHFTYF_j1QECpqP4kmTXqCqX_HfEVvQ4aWZecW5Q@mail.gmail.com>
-In-Reply-To: <CA+icZUW0XyDHFTYF_j1QECpqP4kmTXqCqX_HfEVvQ4aWZecW5Q@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Sun, 6 Mar 2022 04:18:59 +0100
-Message-ID: <CA+icZUUCO+gOPLZumu_rTOJz1_v7gRRYVzzEZ+RZPOZBmkqCQg@mail.gmail.com>
-Subject: Re: [Linux-v5.17-rc6] Building tools/perf with perl v5.34
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Sun, 6 Mar 2022 09:37:39 -0500
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A1DB5A5A5;
+        Sun,  6 Mar 2022 06:36:45 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0V6M8c6l_1646577399;
+Received: from IT-C02W23QPG8WN.local(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0V6M8c6l_1646577399)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sun, 06 Mar 2022 22:36:40 +0800
+Subject: Re: [RESEND PATCH 2/2] perf/x86: improve the event scheduling to
+ avoid unnecessary pmu_stop/start
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Wen Yang <simon.wy@alibaba-inc.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephane Eranian <eranian@google.com>,
+        mark rutland <mark.rutland@arm.com>,
+        jiri olsa <jolsa@redhat.com>,
+        namhyung kim <namhyung@kernel.org>,
+        borislav petkov <bp@alien8.de>, x86@kernel.org,
+        "h. peter anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20220304110351.47731-1-simon.wy@alibaba-inc.com>
+ <20220304110351.47731-2-simon.wy@alibaba-inc.com>
+ <YiIyrFn7upPEouVt@hirez.programming.kicks-ass.net>
+From:   Wen Yang <wenyang@linux.alibaba.com>
+Message-ID: <0c119da1-053b-a2d6-1579-8fb09dbe8e63@linux.alibaba.com>
+Date:   Sun, 6 Mar 2022 22:36:38 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:78.0)
+ Gecko/20100101 Thunderbird/78.14.0
+MIME-Version: 1.0
+In-Reply-To: <YiIyrFn7upPEouVt@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Mar 6, 2022 at 3:28 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
->
-> On Sat, Mar 5, 2022 at 9:09 PM Jiri Olsa <olsajiri@gmail.com> wrote:
-> >
-> > On Sat, Mar 05, 2022 at 08:52:18AM +0100, Sedat Dilek wrote:
-> > > Hi,
-> > >
-> > > I am here on Debian/unstable AMD64 which switched over to perl v5.34
-> > > in February 2022.
-> > >
-> > > Unfortunately, my perf does not build with this (lib)perl version:
-> > >
-> > > $ ~/bin/perf -vv
-> > > perf version 5.17-rc6
-> > >                 dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
-> > >    dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
-> > >                 glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
-> > >         syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
-> > >                libbfd: [ on  ]  # HAVE_LIBBFD_SUPPORT
-> > >                libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
-> > >               libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-> > > numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-> > >               libperl: [ OFF ]  # HAVE_LIBPERL_SUPPORT
-> > >             libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
-> > >              libslang: [ on  ]  # HAVE_SLANG_SUPPORT
-> > >             libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
-> > >             libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
-> > >    libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
-> > >                  zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
-> > >                  lzma: [ on  ]  # HAVE_LZMA_SUPPORT
-> > >             get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
-> > >                   bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-> > >                   aio: [ on  ]  # HAVE_AIO_SUPPORT
-> > >                  zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
-> > >               libpfm4: [ OFF ]  # HAVE_LIBPFM
-> > >
-> > > $ grep libperl ../make-log_perf-python3.10-install_bin.txt
-> > > 9:Makefile.config:788: Missing perl devel files. Disabling perl
-> > > scripting support, please install perl-ExtUtils-Embed/libperl-dev
-> > > 22:...                       libperl: [ OFF ]
-> > >
-> > > Checking for these requirements:
-> > >
-> > > # dpkg -l | grep perl | grep 5.34 | awk '/^ii/ {print $1 " " $2 " "
-> > > $3}' | column -t
-> > > ii  libperl-dev:amd64  5.34.0-3
-> > > ii  libperl5.34:amd64  5.34.0-3
-> > > ii  perl               5.34.0-3
-> > > ii  perl-base          5.34.0-3
-> > > ii  perl-modules-5.34  5.34.0-3
-> > >
-> > > # dpkg -L perl-modules-5.34 | grep -i ExtUtils | grep -i Embed
-> > > /usr/share/perl/5.34.0/ExtUtils/Embed.pm
-> > >
-> > > Can you please comment on this?
-> >
-> > hi,
-> > is there something in tools/build/feature/test-libperl.make.output ?
-> >
->
-> Hey jirka!
->
-> Indeed there is such a file.
->
-> $ LC_ALL=C ll tools/build/feature/test-libperl.make.output
-> -rw-r--r-- 1 dileks dileks 24K Mar  6 03:22
-> tools/build/feature/test-libperl.make.output
->
-> Reproducer:
->
-> make distclean
-> make -C tools/perf clean
->
-> MAKE="make"
-> MAKE_OPTS="HOSTCC=clang-13 HOSTCXX=clang++-13 HOSTLD=ld.lld-13
-> HOSTAR=llvm-ar-13 CC=clang-13 LD=ld.lld-13 AR=llvm-ar-13 NM=llvm-nm-13
-> OBJCOPY=llvm-objcopy-13 OBJDUMP=llvm-objdump-13 OBJSIZE=llvm-size-13
-> READELF=llvm-readelf-13 STRIP=llvm-strip-13 LLVM_IAS=1"
->
-> LC_ALL=C $MAKE V=1 $MAKE_OPTS -C tools/perf PYTHON=python3 install-bin
->
-> - Sedat -
 
-With this diff:
 
-$ git diff
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 1480910c792e..ef9b37c5c652 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -81,7 +81,7 @@ PKG_CONFIG ?= $(CROSS_COMPILE)pkg-config
+在 2022/3/4 下午11:39, Peter Zijlstra 写道:
+> On Fri, Mar 04, 2022 at 07:03:51PM +0800, Wen Yang wrote:
+>> this issue has been there for a long time, we could reproduce it as follows:
+> 
+> What issue? You've not described an issue. So you cannot reference one.
+> 
 
-all: $(FILES)
+OK, thank you for your opinion. Let's explain it.
 
--__BUILD = $(CC) $(CFLAGS) -MD -Wall -Werror -o $@ $(patsubst
-%.bin,%.c,$(@F)) $(LDFLAGS)
-+__BUILD = $(CC) $(CFLAGS) -MD -Wall -Werror
--Wno-compound-token-split-by-macro -o $@ $(patsubst %.bin,%.c,$(@F))
-$(LDFLAGS)
-  BUILD = $(__BUILD) > $(@:.bin=.make.output) 2>&1
 
-__BUILDXX = $(CXX) $(CXXFLAGS) -MD -Wall -Werror -o $@ $(patsubst
-%.bin,%.cpp,$(@F)) $(LDFLAGS)
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 913bf509bd17..c3e5bcf5264a 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -213,7 +213,7 @@ endif
+> This is still completely unreadable gibberish.
+> 
+>> 1, run a script that periodically collects perf data, eg:
+>> while true
+>> do
+>>      perf stat -e cache-misses,cache-misses,cache-misses -c 1 sleep 2
+>>      perf stat -e cache-misses -c 1 sleep 2
+>>      sleep 1
+>> done
+>>
+>> 2, run another one to capture the ipc, eg:
+>> perf stat -e cycles:d,instructions:d  -c 1 -i 1000
+> 
+> <snip line noise>
+> 
+>> the reason is that the nmi watchdog permanently consumes one fp
+>> (*cycles*). therefore, when the above shell script obtains *cycles*
+>> again, only one gp can be used, and its weight is 5.
+>> but other events (like *cache-misses*) have a weight of 4,
+>> so the counter used by *cycles* will often be taken away, as in
+>> the raw data above:
+>> [1]
+>>    n_events = 3
+>>    assign = {33, 1, 32, ...}
+>> -->
+>>    n_events = 6
+>>    assign = {33, 3, 32, 0, 1, 2, ...}
+> 
+> Again unreadable... what do any of those numbers mean?
+> 
 
-# Treat warnings as errors unless directed not to
-ifneq ($(WERROR),0)
--  CORE_CFLAGS += -Werror
-+  CORE_CFLAGS += -Werror -Wno-compound-token-split-by-macro
-  CXXFLAGS += -Werror
-  HOSTCFLAGS += -Werror
-endif
+Scenario: a monitor program will monitor the CPI on a specific CPU in 
+pinned mode for a long time, such as the CPI in the original email:
+     perf stat -e cycles:D,instructions:D  -C 1 -I 1000
 
-I am able to build with libperl support:
+Perf here is just an example. Our monitor program will continuously read 
+the counter values of these perf events (cycles and instructions).
 
-$ ~/bin/perf -vv
-perf version 5.17-rc6
-                dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
-   dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
-                glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
-        syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
-               libbfd: [ on  ]  # HAVE_LIBBFD_SUPPORT
-               libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
-              libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-              libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
-            libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
-             libslang: [ on  ]  # HAVE_SLANG_SUPPORT
-            libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
-            libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
-   libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
-                 zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
-                 lzma: [ on  ]  # HAVE_LZMA_SUPPORT
-            get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
-                  bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-                  aio: [ on  ]  # HAVE_AIO_SUPPORT
-                 zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
-              libpfm4: [ OFF ]  # HAVE_LIBPFM
+However, it is found that CPI data will be abnormal periodically because 
+PMU counter conflicts. For example, scripts in e-mail will cause 
+interference:
+     perf stat -e cache-misses,cache-misses,cache-misses -C 1 sleep 2
+     perf stat -e cache-misses -C 1 sleep 2 
 
-Dunno if I need  "-Werror -Wno-compound-token-split-by-macro" for any
-HOSTCXX/CXX flags.
+   n_events = 3
+   assign = {33, 1, 32, ...}
+-->
+   n_events = 6
+   assign = {33, 3, 32, 0, 1, 2, ...}
 
-- Sedat -
+They are some fields of cpu_hw_events structure.
+int n_events; /* the # of events in the below arrays */
+int assign[X86_PMC_IDX_MAX]; /* event to counter assignment */
+struct perf_event *event_list[X86_PMC_IDX_MAX]; /* in enabled order */
+
+32: intel_pmc_idx_fixed_instructions
+33: intel_pmc_idx_fixed_cpu_cycles
+34: intel_pmc_idx_fixed_ref_cycles
+0,1,2,3: gp
+
+
+n_events = 3
+assign = {33, 1, 32, ...}
+event_list = {0xffff88bf77b85000, 0xffff88b72db82000, 
+0xffff88b72db85800, ...}
+
+—>
+Indicates that there are 3 perf events on CPU 1, which occupy the 
+#fixed_cpu_cycles, #1 and #fixed_instruction counter one by one.
+These 3 perf events are generated by the NMI watchdog and the script A:
+perf stat -e cycles:D,instructions:D  -C 1 -I 1000
+
+
+n_events = 6
+assign = {33, 3, 32, 0, 1, 2, ...}
+event_list = {0xffff88bf77b85000, 0xffff88b72db82000, 
+0xffff88b72db85800, 0xffff88bf46c34000, 0xffff88bf46c35000, 
+0xffff88bf46c30000,  ...}
+
+—>
+Indicates that there are 6 perf events on CPU 1, which occupy the 
+#fixed_cpu_cycles, #3, #fixed_instruction, #0, #1 and #2 counter one by one.
+These 6 perf events are generated by the NMI watchdog and the script A 
+and B:
+perf stat -e cycles:D,instructions:D  -C 1 -I 1000
+perf stat -e cache-misses,cache-misses,cache-misses -C 1 sleep 2
+
+0xffff88bf77b85000:
+The perf event generated by NMI watchdog, which has always occupied 
+#fixed_cpu_cycles
+
+0xffff88b72db82000:
+The perf event generated by the above script A (cycles:D), and the 
+counter it used changes from #1 to #3. We use perf event in pinned mode, 
+and then continuously read its value for a long time, but its PMU 
+counter changes, so the counter value will also jump.
+
+
+0xffff88b72db85800:
+The perf event generated by the above script A (instructions:D), which 
+has always occupied #fixed_instruction.
+
+0xffff88bf46c34000, 0xffff88bf46c35000, 0xffff88bf46c30000:
+Theses perf events are generated by the above script B.
+
+
+>>
+>> so it will cause unnecessary pmu_stop/start and also cause abnormal cpi.
+> 
+> How?!?
+> 
+
+We may refer to the x86_pmu_enable function:
+step1: save events moving to new counters
+step2: reprogram moved events into new counters
+
+especially:
+
+static inline int match_prev_assignment(struct hw_perf_event *hwc,
+                     struct cpu_hw_events *cpuc,
+                     int i)
+{
+     return hwc->idx == cpuc->assign[i] &&
+         hwc->last_cpu == smp_processor_id() &&
+         hwc->last_tag == cpuc->tags[i];
+}
+
+
+
+>> Cloud servers usually continuously monitor the cpi data of some important
+>> services. This issue affects performance and misleads monitoring.
+>>
+>> The current event scheduling algorithm is more than 10 years old:
+>> commit 1da53e023029 ("perf_events, x86: Improve x86 event scheduling")
+> 
+> irrelevant
+> 
+
+commit 1da53e023029 ("perf_events, x86: Improve x86 event scheduling")
+
+This commit is the basis of the perf event scheduling algorithm we 
+currently use.
+The reason why the counter above changed from #1 to #3 can be found from it:
+The algorithm takes into account the list of counter constraints
+for each event. It assigns events to counters from the most
+constrained, i.e., works on only one counter, to the least
+constrained, i.e., works on any counter.
+
+the nmi watchdog permanently consumes one fp (*cycles*).
+  therefore, when the above shell script obtains *cycles:D*
+again, it has to use a GP, and its weight is 5.
+but other events (like *cache-misses*) have a weight of 4,
+so the counter used by *cycles:D* will often be taken away.
+
+In addition, we also found that this problem may affect NMI watchdog in 
+the production cluster.
+The NMI watchdog also uses a fixed counter in fixed mode. Usually, it is 
+The first element of the event_list array, so it usually takes 
+precedence and can get a fixed counter.
+But if the administrator closes the watchdog first and then enables it, 
+it may be at the end of the event_list array, so its expected fixed 
+counter may be occupied by other perf event, and it can only use one GP. 
+In this way, there is a similar issue here: the PMU counter used by the 
+NMI watchdog may be disabled/enabled frequently and unnecessarily.
+
+
+Any advice or guidance on this would be appreciated.
+
+Best wishes,
+Wen
+
+
+>> we wish it could be optimized a bit.
+> 
+> I wish for a unicorn ...
+> 
+>> The fields msk_counters and msk_events are added to indicate currently
+>> used counters and events so that the used ones can be skipped
+>> in __perf_sched_find_counter and perf_sched_next_event functions to avoid
+>> unnecessary pmu_stop/start.
+> 
+> Still not sure what your actual problem is, nor what the actual proposal
+> is.
+> 
+> Why should I attempt to reverse engineer your code without basic
+> understanding of what you're actually trying to achieve?
+> 
+
+
+
