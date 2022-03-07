@@ -2,185 +2,96 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DAAAC433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Mar 2022 17:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C195C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Mar 2022 17:54:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234956AbiCGRvM (ORCPT
+        id S233014AbiCGRy6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 7 Mar 2022 12:51:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53534 "EHLO
+        Mon, 7 Mar 2022 12:54:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233014AbiCGRvM (ORCPT
+        with ESMTP id S244070AbiCGRy6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 7 Mar 2022 12:51:12 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B666225597;
-        Mon,  7 Mar 2022 09:50:16 -0800 (PST)
-Received: from fraeml742-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KC5ZR42sjz6GD3Q;
-        Tue,  8 Mar 2022 01:49:51 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml742-chm.china.huawei.com (10.206.15.223) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Mon, 7 Mar 2022 18:50:14 +0100
-Received: from [10.47.81.176] (10.47.81.176) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Mon, 7 Mar
- 2022 17:50:13 +0000
-Message-ID: <816e5d86-9d7d-5762-d1d7-afcd0ee34af3@huawei.com>
-Date:   Mon, 7 Mar 2022 17:50:10 +0000
+        Mon, 7 Mar 2022 12:54:58 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9B3C70917;
+        Mon,  7 Mar 2022 09:54:03 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 61DA7B81654;
+        Mon,  7 Mar 2022 17:54:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2CEFC340EB;
+        Mon,  7 Mar 2022 17:54:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1646675641;
+        bh=SYv38mIqyJ/kUbZba218Eg6gzm9gAmX2mF5NRxwBAu0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uF3ao08msPIYvAyDOUwnmcq6PJqWBBRJcE4FTCDOAHBSSt4GFTMvgqXbQI34K3TzN
+         /xpRo29FuAEzEzQZc9mU5lBM5PndqpCzr47nWgg4MIS92vlRKvsOzivGM44LlojJFz
+         EzrTzAB4I3+KtqyYmu+vphiGFI4JSv/Jfsshu0hRSrmnT8GLIa54Or/C5p6QNC7eKK
+         rIkIBn10pWLsTTBt3+GT9SbjDEQBGHaTTQkJs5JakGVxwnZwW3TlbyLYgT5DiiKQTf
+         /3jqkQ4hvmP5TAzhxbHXrDzRjD+DwFbc638yywb6FM8QxSAG5Ugpix5lOYCUGbZ0cY
+         Z8EPeFRiaz0xw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 0C746403C8; Mon,  7 Mar 2022 14:53:57 -0300 (-03)
+Date:   Mon, 7 Mar 2022 14:53:56 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     linux-perf-users@vger.kernel.org, anshuman.khandual@arm.com,
+        german.gomez@arm.com, leo.yan@linaro.com,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] Branch stack improvements
+Message-ID: <YiZGtCptGtphNasv@kernel.org>
+References: <20220307171917.2555829-1-james.clark@arm.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-From:   John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH v2 1/2] drivers/perf: hisi: Add Support for CPA PMU
-To:     "liuqi (BA)" <liuqi115@huawei.com>, <will@kernel.org>,
-        <mark.rutland@arm.com>, <acme@kernel.org>
-CC:     <linux-perf-users@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
-References: <20220224111129.41416-1-liuqi115@huawei.com>
- <20220224111129.41416-2-liuqi115@huawei.com>
- <8cdc2c64-0a89-b807-56f6-2ea67a41a641@huawei.com>
- <a051968a-b90d-3707-fb60-f6a446fc79e7@huawei.com>
-In-Reply-To: <a051968a-b90d-3707-fb60-f6a446fc79e7@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.47.81.176]
-X-ClientProxiedBy: lhreml726-chm.china.huawei.com (10.201.108.77) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220307171917.2555829-1-james.clark@arm.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
->>> +
->>> +static void hisi_cpa_pmu_stop_counters(struct hisi_pmu *cpa_pmu)
->>> +{
->>> +    u32 val;
->>> +
->>> +    val = readl(cpa_pmu->base + CPA_PERF_CTRL);
->>> +    val &= ~(CPA_PERF_CTRL_EN);
->>> +    writel(val, cpa_pmu->base + CPA_PERF_CTRL);
->>> +}
->>> +
->>> +static void hisi_cpa_pmu_disable_pm(struct hisi_pmu *cpa_pmu)
->>
->> this seems unique for this new driver - why do we need to disable PM?
->>
-> CPA PMU doesn't work under power mangement state, so we need to disable 
-> PM before using CPA PMU.
-
-OK, so you need to disable something related to PM to use the HW. But 
-why do it when you enable the counter? I mean, can we just do it once 
-when we probe the HW? Why is it even enabled at all?
-
+Em Mon, Mar 07, 2022 at 05:19:13PM +0000, James Clark escreveu:
+> I came across a few generic non-Arm issues when reviewing Anshuman's new
+> support for branch record buffers on Arm [1].
 > 
->>> +{
->>> +    u32 val;
->>> +
->>> +    val = readl(cpa_pmu->base + CPA_CFG_REG);
->>> +    val |= CPA_PM_CTRL;
->>> +    writel(val, cpa_pmu->base + CPA_CFG_REG);
->>> +}
->>> +
->>> +static void hisi_cpa_pmu_enable_pm(struct hisi_pmu *cpa_pmu)
->>> +{
->>> +    u32 val;
->>> +
->>> +    val = readl(cpa_pmu->base + CPA_CFG_REG);
->>> +    val &= ~CPA_PM_CTRL;
->>
->> nit: you use () in hisi_cpa_pmu_stop_counters(), but not here, so 
->> please be consistent
->>
-> ]
-
-...
-
->>> +static int hisi_cpa_pmu_init_data(struct platform_device *pdev,
->>> +                  struct hisi_pmu *cpa_pmu)
->>> +{
->>> +    if (device_property_read_u32(&pdev->dev, "hisilicon,scl-id",
->>> +                     &cpa_pmu->sccl_id)) {
->>> +        dev_err(&pdev->dev, "Can not read cpa_pmu sccl-id\n");
->>
->> strange that the FW uses "scl-id" but driver uses sccl_id (I am 
->> talking about sccl vs scl difference)
->>
-> yes... these two names means the same thing, maybe could use a cleanup 
-> patch to keep them consistent.
+> The first one is a fix to an error message which is misleading if the
+> feature is unavailable and the remaining ones make the branch type field
+> visible in perf report and perf script so that it can be debugged or used
+> by other tools.
 > 
->>> +        return -EINVAL;
->>> +    }
->>> +
->>> +    cpa_pmu->ccl_id = -1;
->>> +
->>> +    if (device_property_read_u32(&pdev->dev, "hisilicon,idx-id",
->>> +                     &cpa_pmu->index_id)) {
->>> +        dev_err(&pdev->dev, "Cannot read idx-id\n");
->>> +        return -EINVAL;
->>> +    }
->>> +
->>> +    cpa_pmu->base = devm_platform_ioremap_resource(pdev, 0);
->>> +    if (IS_ERR(cpa_pmu->base))
->>> +        return PTR_ERR(cpa_pmu->base);
->>> +
->>> +    cpa_pmu->identifier = readl(cpa_pmu->base + CPA_VERSION);
->>> +
->>> +    return 0;
->>> +}
->>> +
+> Applies to perf/core (56dce86819)
 
-...
+Thanks, applied to tmp.perf/core, locally, if someone spots some
+problem, there is some time till I run tests and move it to perf/core.
 
->>> +static int hisi_cpa_pmu_probe(struct platform_device *pdev)
->>> +{
->>> +    struct hisi_pmu *cpa_pmu;
->>> +    char *name;
->>> +    int ret;
->>> +
->>> +    cpa_pmu = devm_kzalloc(&pdev->dev, sizeof(*cpa_pmu), GFP_KERNEL);
->>> +    if (!cpa_pmu)
->>> +        return -ENOMEM;
->>> +
->>> +    ret = hisi_cpa_pmu_dev_probe(pdev, cpa_pmu);
->>> +    if (ret)
->>> +        return ret;
->>> +
->>> +    ret = cpuhp_state_add_instance(CPUHP_AP_PERF_ARM_HISI_CPA_ONLINE,
->>> +                       &cpa_pmu->node);
->>> +    if (ret) {
->>> +        dev_err(&pdev->dev, "Error %d registering hotplug\n", ret);
->>> +        return ret;
->>> +    }
->>> +
->>> +    name = devm_kasprintf(&pdev->dev, GFP_KERNEL, 
->>> "hisi_sicl%d_cpa%u", cpa_pmu->sccl_id - 1,
->>
->> sorry, but I still don't like this "- 1". From checking the chat on 
->> v1, my impression was that you agreed with me on this one.
->>
+- Arnaldo
+ 
+> Thanks
+> James
 > 
-> sorry, maybe I didn't express it clearly.
-> CPA PMU is on IO die,
-
-Then it is quite strange to provide the sccl id and not some sicl id 
-(since it is in the IO die)
-
-  but BIOS give CPA PMU driver the sccl-id of
-> adjacent CPU die (as we need this sccl-id to pass 
-> hisi_pmu_cpu_is_associated_pmu() and find the associated cpu).
-
-
-Is the PMU only ever used by one SCCL? Or can more than one SCCL access? 
-If so, is there a special affinity to one particular SCCL?
-
-> so, when naming CPA PMU, we use the sccl-id supported by BIOS to get the 
-> sicl-id of IO die which CPA PMU located in, that is: cpa_pmu->sccl_id - 1.
+> [1] https://lore.kernel.org/lkml/1642998653-21377-1-git-send-email-anshuman.khandual@arm.com/
 > 
->>> +                  cpa_pmu->index_id);
+> James Clark (4):
+>   perf: Add error message for unsupported branch stack cases
+>   perf: Print branch stack entry type in --dump-raw-trace
+>   perf: Refactor perf script branch stack printing
+>   perf script: Output branch sample type
+> 
+>  tools/perf/builtin-script.c | 28 +++++++++++++---------------
+>  tools/perf/util/evsel.c     |  4 ++++
+>  tools/perf/util/session.c   |  5 +++--
+>  3 files changed, 20 insertions(+), 17 deletions(-)
+> 
+> -- 
+> 2.28.0
 
-Thanks,
-John
+-- 
+
+- Arnaldo
