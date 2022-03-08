@@ -2,85 +2,110 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4178C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Mar 2022 11:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27495C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Mar 2022 11:58:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245751AbiCHLuP (ORCPT
+        id S238011AbiCHL7a (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Mar 2022 06:50:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48712 "EHLO
+        Tue, 8 Mar 2022 06:59:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235291AbiCHLuO (ORCPT
+        with ESMTP id S233849AbiCHL71 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Mar 2022 06:50:14 -0500
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD9FE2CC8A;
-        Tue,  8 Mar 2022 03:49:18 -0800 (PST)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.53])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4KCYQP3GvGz1GBw6;
-        Tue,  8 Mar 2022 19:44:29 +0800 (CST)
-Received: from [10.67.102.169] (10.67.102.169) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Tue, 8 Mar 2022 19:49:16 +0800
-CC:     <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <lorenzo.pieralisi@arm.com>,
-        <will@kernel.org>, <mark.rutland@arm.com>,
-        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
-        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
-        <daniel.thompson@linaro.org>, <joro@8bytes.org>,
-        <john.garry@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
-        <robin.murphy@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <acme@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>, <prime.zeng@huawei.com>,
-        <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
-        <linuxarm@huawei.com>, <song.bao.hua@hisilicon.com>
-Subject: Re: [PATCH v5 8/8] MAINTAINERS: Add maintainer for HiSilicon PTT
- driver
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Yicong Yang <yangyicong@hisilicon.com>
-References: <20220308084930.5142-1-yangyicong@hisilicon.com>
- <20220308084930.5142-9-yangyicong@hisilicon.com>
- <20220308103232.000039cf@Huawei.com>
-From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <cfb0292e-244e-97f5-4a00-9bd5fd27251c@huawei.com>
-Date:   Tue, 8 Mar 2022 19:49:16 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        Tue, 8 Mar 2022 06:59:27 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 905F927CD2;
+        Tue,  8 Mar 2022 03:58:30 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F4FAD6E;
+        Tue,  8 Mar 2022 03:58:30 -0800 (PST)
+Received: from [10.57.40.166] (unknown [10.57.40.166])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EDE8E3FA5D;
+        Tue,  8 Mar 2022 03:58:28 -0800 (PST)
+Message-ID: <a4429c3b-91b2-12f5-f0c6-c8db16d0c9f8@arm.com>
+Date:   Tue, 8 Mar 2022 11:58:27 +0000
 MIME-Version: 1.0
-In-Reply-To: <20220308103232.000039cf@Huawei.com>
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH 2/4] perf: Print branch stack entry type in
+ --dump-raw-trace
+Content-Language: en-US
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, acme@kernel.org,
+        linux-perf-users@vger.kernel.org
+Cc:     german.gomez@arm.com, leo.yan@linaro.com,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <20220307171917.2555829-1-james.clark@arm.com>
+ <20220307171917.2555829-3-james.clark@arm.com>
+ <fb9717bb-735a-88d9-254d-0e7b2f7209f2@arm.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <fb9717bb-735a-88d9-254d-0e7b2f7209f2@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2022/3/8 18:32, Jonathan Cameron wrote:
-> On Tue, 8 Mar 2022 16:49:30 +0800
-> Yicong Yang <yangyicong@hisilicon.com> wrote:
+
+
+On 08/03/2022 04:29, Anshuman Khandual wrote:
 > 
->> Add maintainer for driver and documentation of HiSilicon PTT device.
+> 
+> On 3/7/22 22:49, James Clark wrote:
+>> This can help with debugging issues. It only prints when -j save_type
+>> is used otherwise an empty string is printed.
+> 
+> Specifying events with PERF_SAMPLE_BRANCH_CALL_STACK flag explicitly might
+> be better along with '-j save_type'.
+> 
 >>
->> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-> FWIW
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Before the change:
+>>
+>>   101603801707130 0xa70 [0x630]: PERF_RECORD_SAMPLE(IP, 0x2): 1108/1108: 0xffff9c1df24c period: 10694 addr: 0
+>>   ... branch stack: nr:64
+>>   .....  0: 0000ffff9c26029c -> 0000ffff9c26f340 0 cycles  P   0
+>>   .....  1: 0000ffff9c2601bc -> 0000ffff9c26f340 0 cycles  P   0
+>>
+>> After the change:
+>>
+>>   101603801707130 0xa70 [0x630]: PERF_RECORD_SAMPLE(IP, 0x2): 1108/1108: 0xffff9c1df24c period: 10694 addr: 0
+>>   ... branch stack: nr:64
+>>   .....  0: 0000ffff9c26029c -> 0000ffff9c26f340 0 cycles  P   0 CALL
+>>   .....  1: 0000ffff9c2601bc -> 0000ffff9c26f340 0 cycles  P   0 IND_CALL
+>>
+>> Signed-off-by: James Clark <james.clark@arm.com>
+>> ---
+>>  tools/perf/util/session.c | 5 +++--
+>>  1 file changed, 3 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+>> index f54282d5c648..3b8dfe603e50 100644
+>> --- a/tools/perf/util/session.c
+>> +++ b/tools/perf/util/session.c
+>> @@ -1159,14 +1159,15 @@ static void branch_stack__printf(struct perf_sample *sample, bool callstack)
+>>  		struct branch_entry *e = &entries[i];
+>>  
+>>  		if (!callstack) {
+>> -			printf("..... %2"PRIu64": %016" PRIx64 " -> %016" PRIx64 " %hu cycles %s%s%s%s %x\n",
+>> +			printf("..... %2"PRIu64": %016" PRIx64 " -> %016" PRIx64 " %hu cycles %s%s%s%s %x %s\n",
+>>  				i, e->from, e->to,
+>>  				(unsigned short)e->flags.cycles,
+>>  				e->flags.mispred ? "M" : " ",
+>>  				e->flags.predicted ? "P" : " ",
+>>  				e->flags.abort ? "A" : " ",
+>>  				e->flags.in_tx ? "T" : " ",
+>> -				(unsigned)e->flags.reserved);
+>> +				(unsigned)e->flags.reserved,
+>> +				e->flags.type ? branch_type_name(e->flags.type) : "");
+>>  		} else {
+>>  			printf("..... %2"PRIu64": %016" PRIx64 "\n",
+>>  				i, i > 0 ? e->from : e->to);
 > 
-> I've left the perf tool and iommu patches without tags from me
-> as I don't have the background to do a thorough review.
-> 
-> Thanks,
-> 
-> Jonathan
-> 
+> LGTM but I am wondering whether this might affect existing tools ?
 
-Thanks for the comments and for the help to improve this driver!
+Only humans should be reading the -D output so I don't think so. The format is not very parseable anyway
 
-Regards,
-Yicong
+
