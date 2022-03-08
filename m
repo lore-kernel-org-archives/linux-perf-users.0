@@ -2,198 +2,171 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54731C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Mar 2022 09:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72035C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Mar 2022 10:22:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345328AbiCHJdM (ORCPT
+        id S232265AbiCHKXC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Mar 2022 04:33:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58896 "EHLO
+        Tue, 8 Mar 2022 05:23:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232666AbiCHJdM (ORCPT
+        with ESMTP id S234017AbiCHKXB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Mar 2022 04:33:12 -0500
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4106832ECB;
-        Tue,  8 Mar 2022 01:32:12 -0800 (PST)
-Received: from kwepemi100022.china.huawei.com (unknown [172.30.72.55])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4KCVPV4QP4z9sYS;
-        Tue,  8 Mar 2022 17:28:30 +0800 (CST)
-Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
- kwepemi100022.china.huawei.com (7.221.188.126) with Microsoft SMTP Server
+        Tue, 8 Mar 2022 05:23:01 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C78DA42EFE;
+        Tue,  8 Mar 2022 02:22:02 -0800 (PST)
+Received: from fraeml713-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KCWYY2Tlmz6H6q9;
+        Tue,  8 Mar 2022 18:20:33 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml713-chm.china.huawei.com (10.206.15.32) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.18; Tue, 8 Mar 2022 17:32:10 +0800
-Received: from [10.67.101.67] (10.67.101.67) by kwepemm600003.china.huawei.com
- (7.193.23.202) with Microsoft SMTP Server (version=TLS1_2,
+ 15.1.2308.21; Tue, 8 Mar 2022 11:22:00 +0100
+Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Tue, 8 Mar
- 2022 17:32:10 +0800
-Subject: Re: [PATCH v2 1/2] drivers/perf: hisi: Add Support for CPA PMU
-To:     John Garry <john.garry@huawei.com>, <will@kernel.org>,
-        <mark.rutland@arm.com>, <acme@kernel.org>
-CC:     <linux-perf-users@vger.kernel.org>,
+ 2022 10:21:58 +0000
+Date:   Tue, 8 Mar 2022 10:21:57 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Yicong Yang <yangyicong@hisilicon.com>
+CC:     <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <lorenzo.pieralisi@arm.com>,
+        <will@kernel.org>, <mark.rutland@arm.com>,
+        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
+        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
+        <daniel.thompson@linaro.org>, <joro@8bytes.org>,
+        <john.garry@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
+        <robin.murphy@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <acme@kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
-References: <20220224111129.41416-1-liuqi115@huawei.com>
- <20220224111129.41416-2-liuqi115@huawei.com>
- <8cdc2c64-0a89-b807-56f6-2ea67a41a641@huawei.com>
- <a051968a-b90d-3707-fb60-f6a446fc79e7@huawei.com>
- <816e5d86-9d7d-5762-d1d7-afcd0ee34af3@huawei.com>
-From:   "liuqi (BA)" <liuqi115@huawei.com>
-Message-ID: <9a5db958-2fef-ff5e-c83f-394039e5bd0e@huawei.com>
-Date:   Tue, 8 Mar 2022 17:32:09 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>, <prime.zeng@huawei.com>,
+        <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
+        <linuxarm@huawei.com>, <song.bao.hua@hisilicon.com>
+Subject: Re: [PATCH v5 3/8] hisi_ptt: Register PMU device for PTT trace
+Message-ID: <20220308102157.00003725@Huawei.com>
+In-Reply-To: <20220308084930.5142-4-yangyicong@hisilicon.com>
+References: <20220308084930.5142-1-yangyicong@hisilicon.com>
+        <20220308084930.5142-4-yangyicong@hisilicon.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-In-Reply-To: <816e5d86-9d7d-5762-d1d7-afcd0ee34af3@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.101.67]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemm600003.china.huawei.com (7.193.23.202)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.41]
+X-ClientProxiedBy: lhreml740-chm.china.huawei.com (10.201.108.190) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Tue, 8 Mar 2022 16:49:25 +0800
+Yicong Yang <yangyicong@hisilicon.com> wrote:
 
-Hi John,
-On 2022/3/8 1:50, John Garry wrote:
+> Register PMU device of PTT trace, then users can use trace through perf
+> command. The driver makes use of perf AUX trace and support following
+> events to configure the trace:
 > 
->>>> +
->>>> +static void hisi_cpa_pmu_stop_counters(struct hisi_pmu *cpa_pmu)
->>>> +{
->>>> +    u32 val;
->>>> +
->>>> +    val = readl(cpa_pmu->base + CPA_PERF_CTRL);
->>>> +    val &= ~(CPA_PERF_CTRL_EN);
->>>> +    writel(val, cpa_pmu->base + CPA_PERF_CTRL);
->>>> +}
->>>> +
->>>> +static void hisi_cpa_pmu_disable_pm(struct hisi_pmu *cpa_pmu)
->>>
->>> this seems unique for this new driver - why do we need to disable PM?
->>>
->> CPA PMU doesn't work under power mangement state, so we need to 
->> disable PM before using CPA PMU.
+> - filter: select Root port or Endpoint to trace
+> - type: select the type of traced TLP headers
+> - direction: select the direction of traced TLP headers
+> - format: select the data format of the traced TLP headers
 > 
-> OK, so you need to disable something related to PM to use the HW. But 
-> why do it when you enable the counter? I mean, can we just do it once 
-> when we probe the HW? Why is it even enabled at all?
+> This patch adds the PMU driver part of PTT trace. The perf command support
+> of PTT trace is added in the following patch.
 > 
->>
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 
-PM is enabled by default. yes, we could disable it in probe function and 
-restore in remove function, I'll change this in next version.
+It seems to me that you ended up doing both suggestions for
+how to clean up the remove order when it was meant to be
+a question of picking one or the other.
 
-Thanks,
-Qi
->>>> +{
->>>> +    u32 val;
->>>> +
->>>> +    val = readl(cpa_pmu->base + CPA_CFG_REG);
->>>> +    val |= CPA_PM_CTRL;
->>>> +    writel(val, cpa_pmu->base + CPA_CFG_REG);
->>>> +}
->>>> +
->>>> +static void hisi_cpa_pmu_enable_pm(struct hisi_pmu *cpa_pmu)
->>>> +{
->>>> +    u32 val;
->>>> +
->>>> +    val = readl(cpa_pmu->base + CPA_CFG_REG);
->>>> +    val &= ~CPA_PM_CTRL;
->>>
->>> nit: you use () in hisi_cpa_pmu_stop_counters(), but not here, so 
->>> please be consistent
->>>
->> ]
-> 
-> ...
-> 
->>>> +static int hisi_cpa_pmu_init_data(struct platform_device *pdev,
->>>> +                  struct hisi_pmu *cpa_pmu)
->>>> +{
->>>> +    if (device_property_read_u32(&pdev->dev, "hisilicon,scl-id",
->>>> +                     &cpa_pmu->sccl_id)) {
->>>> +        dev_err(&pdev->dev, "Can not read cpa_pmu sccl-id\n");
->>>
->>> strange that the FW uses "scl-id" but driver uses sccl_id (I am 
->>> talking about sccl vs scl difference)
->>>
->> yes... these two names means the same thing, maybe could use a cleanup 
->> patch to keep them consistent.
->>
->>>> +        return -EINVAL;
->>>> +    }
->>>> +
->>>> +    cpa_pmu->ccl_id = -1;
->>>> +
->>>> +    if (device_property_read_u32(&pdev->dev, "hisilicon,idx-id",
->>>> +                     &cpa_pmu->index_id)) {
->>>> +        dev_err(&pdev->dev, "Cannot read idx-id\n");
->>>> +        return -EINVAL;
->>>> +    }
->>>> +
->>>> +    cpa_pmu->base = devm_platform_ioremap_resource(pdev, 0);
->>>> +    if (IS_ERR(cpa_pmu->base))
->>>> +        return PTR_ERR(cpa_pmu->base);
->>>> +
->>>> +    cpa_pmu->identifier = readl(cpa_pmu->base + CPA_VERSION);
->>>> +
->>>> +    return 0;
->>>> +}
->>>> +
-> 
-> ...
-> 
->>>> +static int hisi_cpa_pmu_probe(struct platform_device *pdev)
->>>> +{
->>>> +    struct hisi_pmu *cpa_pmu;
->>>> +    char *name;
->>>> +    int ret;
->>>> +
->>>> +    cpa_pmu = devm_kzalloc(&pdev->dev, sizeof(*cpa_pmu), GFP_KERNEL);
->>>> +    if (!cpa_pmu)
->>>> +        return -ENOMEM;
->>>> +
->>>> +    ret = hisi_cpa_pmu_dev_probe(pdev, cpa_pmu);
->>>> +    if (ret)
->>>> +        return ret;
->>>> +
->>>> +    ret = cpuhp_state_add_instance(CPUHP_AP_PERF_ARM_HISI_CPA_ONLINE,
->>>> +                       &cpa_pmu->node);
->>>> +    if (ret) {
->>>> +        dev_err(&pdev->dev, "Error %d registering hotplug\n", ret);
->>>> +        return ret;
->>>> +    }
->>>> +
->>>> +    name = devm_kasprintf(&pdev->dev, GFP_KERNEL, 
->>>> "hisi_sicl%d_cpa%u", cpa_pmu->sccl_id - 1,
->>>
->>> sorry, but I still don't like this "- 1". From checking the chat on 
->>> v1, my impression was that you agreed with me on this one.
->>>
->>
->> sorry, maybe I didn't express it clearly.
->> CPA PMU is on IO die,
-> 
-> Then it is quite strange to provide the sccl id and not some sicl id 
-> (since it is in the IO die)
-> 
->   but BIOS give CPA PMU driver the sccl-id of
->> adjacent CPU die (as we need this sccl-id to pass 
->> hisi_pmu_cpu_is_associated_pmu() and find the associated cpu).
-> 
-> 
-> Is the PMU only ever used by one SCCL? Or can more than one SCCL access? 
-> If so, is there a special affinity to one particular SCCL?
-> 
->> so, when naming CPA PMU, we use the sccl-id supported by BIOS to get 
->> the sicl-id of IO die which CPA PMU located in, that is: 
->> cpa_pmu->sccl_id - 1.
->>
->>>> +                  cpa_pmu->index_id);
-> 
-> Thanks,
-> John
-> .
+Otherwise this looks good to me - so with that tidied up
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+> ---
+
+> +
+> +static int hisi_ptt_register_pmu(struct hisi_ptt *hisi_ptt)
+> +{
+> +	u16 core_id, sicl_id;
+> +	char *pmu_name;
+> +	u32 reg;
+> +
+> +	hisi_ptt->hisi_ptt_pmu = (struct pmu) {
+> +		.module		= THIS_MODULE,
+> +		.capabilities	= PERF_PMU_CAP_EXCLUSIVE | PERF_PMU_CAP_ITRACE,
+> +		.task_ctx_nr	= perf_sw_context,
+> +		.attr_groups	= hisi_ptt_pmu_groups,
+> +		.event_init	= hisi_ptt_pmu_event_init,
+> +		.setup_aux	= hisi_ptt_pmu_setup_aux,
+> +		.free_aux	= hisi_ptt_pmu_free_aux,
+> +		.start		= hisi_ptt_pmu_start,
+> +		.stop		= hisi_ptt_pmu_stop,
+> +		.add		= hisi_ptt_pmu_add,
+> +		.del		= hisi_ptt_pmu_del,
+> +	};
+> +
+> +	reg = readl(hisi_ptt->iobase + HISI_PTT_LOCATION);
+> +	core_id = FIELD_GET(HISI_PTT_CORE_ID, reg);
+> +	sicl_id = FIELD_GET(HISI_PTT_SICL_ID, reg);
+> +
+> +	pmu_name = devm_kasprintf(&hisi_ptt->pdev->dev, GFP_KERNEL, "hisi_ptt%u_%u",
+> +				  sicl_id, core_id);
+> +	if (!pmu_name)
+> +		return -ENOMEM;
+> +
+> +	return perf_pmu_register(&hisi_ptt->hisi_ptt_pmu, pmu_name, -1);
+
+As below, you can put back the devm cleanup that you had in v4 now you
+have modified how the filter cleanup is done to also be devm managed.
+
+> +}
+> +
+>  /*
+>   * The DMA of PTT trace can only use direct mapping, due to some
+>   * hardware restriction. Check whether there is an IOMMU or the
+> @@ -303,15 +825,32 @@ static int hisi_ptt_probe(struct pci_dev *pdev,
+>  
+>  	pci_set_master(pdev);
+>  
+> +	ret = hisi_ptt_register_irq(hisi_ptt);
+> +	if (ret)
+> +		return ret;
+> +
+>  	ret = hisi_ptt_init_ctrls(hisi_ptt);
+>  	if (ret) {
+>  		pci_err(pdev, "failed to init controls, ret = %d.\n", ret);
+>  		return ret;
+>  	}
+>  
+> +	ret = hisi_ptt_register_pmu(hisi_ptt);
+> +	if (ret) {
+> +		pci_err(pdev, "failed to register pmu device, ret = %d", ret);
+> +		return ret;
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> +void hisi_ptt_remove(struct pci_dev *pdev)
+> +{
+> +	struct hisi_ptt *hisi_ptt = pci_get_drvdata(pdev);
+> +
+> +	perf_pmu_unregister(&hisi_ptt->hisi_ptt_pmu);
+
+Now you have the filter cleanup occurring using a devm_add_action_or_reset()
+there is no need to have a manual cleanup of this - you can
+use the approach of a devm_add_action_or_reset like you had in v4.
+
+As it is the last call in the probe() order it will be the first one
+called in the device managed cleanup.
+
+> +}
+> +
+
+
