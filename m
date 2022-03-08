@@ -2,124 +2,110 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDCAC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Mar 2022 03:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0A8C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Mar 2022 04:17:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234370AbiCHDVx (ORCPT
+        id S237307AbiCHESF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 7 Mar 2022 22:21:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42020 "EHLO
+        Mon, 7 Mar 2022 23:18:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233800AbiCHDVw (ORCPT
+        with ESMTP id S230368AbiCHESF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 7 Mar 2022 22:21:52 -0500
+        Mon, 7 Mar 2022 23:18:05 -0500
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CB277F4B;
-        Mon,  7 Mar 2022 19:20:56 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6EB153BA54;
+        Mon,  7 Mar 2022 20:17:09 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4AD98D6E;
-        Mon,  7 Mar 2022 19:20:56 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3A11FD6E;
+        Mon,  7 Mar 2022 20:17:09 -0800 (PST)
 Received: from [10.162.17.54] (a077893.blr.arm.com [10.162.17.54])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BC1BA3FA50;
-        Mon,  7 Mar 2022 19:20:52 -0800 (PST)
-Message-ID: <b177daad-55ec-6e7b-7ca6-a97e93477594@arm.com>
-Date:   Tue, 8 Mar 2022 08:50:50 +0530
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 736533FA5D;
+        Mon,  7 Mar 2022 20:17:06 -0800 (PST)
+Message-ID: <9762d42e-d5eb-9ca7-9fdb-89eb85177765@arm.com>
+Date:   Tue, 8 Mar 2022 09:47:04 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: [PATCH] perf: Add irq and exception return branch types
+Subject: Re: [PATCH 1/4] perf: Add error message for unsupported branch stack
+ cases
 Content-Language: en-US
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        James Clark <james.clark@arm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+To:     James Clark <james.clark@arm.com>, acme@kernel.org,
+        linux-perf-users@vger.kernel.org
+Cc:     german.gomez@arm.com, leo.yan@linaro.com,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org
-References: <1645681014-3346-1-git-send-email-anshuman.khandual@arm.com>
- <10aac3a9-6912-6e47-400e-5c7d8ca9dbcd@arm.com> <YiO0IhoAYmdGNWqd@kernel.org>
+        linux-kernel@vger.kernel.org
+References: <20220307171917.2555829-1-james.clark@arm.com>
+ <20220307171917.2555829-2-james.clark@arm.com>
 From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <YiO0IhoAYmdGNWqd@kernel.org>
+In-Reply-To: <20220307171917.2555829-2-james.clark@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi James,
 
+On 3/7/22 22:49, James Clark wrote:
+> EOPNOTSUPP is a possible return value when branch stacks are requested
+> but they aren't enabled in the kernel or hardware. It's also returned if
+> they aren't supported on the specific event type. The currently printed
 
-On 3/6/22 00:34, Arnaldo Carvalho de Melo wrote:
-> Em Mon, Feb 28, 2022 at 03:45:25PM +0000, James Clark escreveu:
->>
->> On 24/02/2022 05:36, Anshuman Khandual wrote:
->>> This expands generic branch type classification by adding two more entries
->>> there in i.e irq and exception return. Also updates the x86 implementation
->>> to process X86_BR_IRET and X86_BR_IRQ records as appropriate. This changes
->>> branch types reported to user space on x86 platform but it should not be a
->>> problem. The possible scenarios and impacts are enumerated here.
->>>
->>> --------------------------------------------------------------------------
->>> | kernel | perf tool |                     Impact                        |
->>> --------------------------------------------------------------------------
->>> |   old  |    old    |  Works as before                                  |
->>> --------------------------------------------------------------------------
->>> |   old  |    new    |  PERF_BR_UNKNOWN is processed                     |
->>> --------------------------------------------------------------------------
->>> |   new  |    old    |  PERF_BR_ERET/IRQ are blocked via old PERF_BR_MAX |
->>> --------------------------------------------------------------------------
->>> |   new  |    new    |  PERF_BR_ERET/IRQ are recognized                  |
->>> --------------------------------------------------------------------------
->>>
->>> When PERF_BR_ERET/IRQ are blocked via old PERF_BR_MAX (new kernel with old
->>> perf tool) the user space might throw up an warning complaining about some
->>> unrecognized branch types being reported, but it is expected. PERF_BR_ERET
->>> and PERF_BR_IRQ branch types will be used for BRBE implementation on arm64
->>> platform.
->>>
->>> Cc: Peter Zijlstra <peterz@infradead.org>
->>> Cc: Ingo Molnar <mingo@redhat.com>
->>> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
->>> Cc: Mark Rutland <mark.rutland@arm.com>
->>> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
->>> Cc: Jiri Olsa <jolsa@redhat.com>
->>> Cc: Namhyung Kim <namhyung@kernel.org>
->>> Cc: Thomas Gleixner <tglx@linutronix.de>
->>> Cc: Will Deacon <will@kernel.org>
->>> Cc: linux-arm-kernel@lists.infradead.org
->>> Cc: linux-perf-users@vger.kernel.org
->>> Cc: linux-kernel@vger.kernel.org
->>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->>> ---
->>> This applies on v5.17-rc5
->>>
->>> These two new branch types expands generic branch type classification but
->>> still leaves another three entries in 'type' field for later. Please refer
->>> a previous discussion [1] for some further context.
->>>
->>> [1] https://lore.kernel.org/all/1643348653-24367-1-git-send-email-anshuman.khandual@arm.com/
->>>
->>>  arch/x86/events/intel/lbr.c           | 4 ++--
->>>  include/uapi/linux/perf_event.h       | 2 ++
-> Please try to avoid lockstep development of kernel and tools/, submit
-> patches to the kernel maintainers for the kernel parts, and to the perf
-> tools maintainer in separate patches.
+specific event type ? Events carrying certain branch sampling/filter flags
+which could not be supported in the kernel on a given platform ?
 
-Sure, will split this patch into two i.e kernel and user space changes. I have
-an updated series which has some more kernel and user space API changes. But I
-am wondering if there should be just a single patch updating user space API for
-all the preceding kernel changes, or there should be one user space API patch
-for each corresponding kernel change ?
+> error message about sampling/overflow-interrupts is not correct in this
+> case.
+> 
+> Add a check for branch stacks before sample_period is checked because
+> sample_period is also set (to the default value) when using branch
+> stacks.
+
+Makes sense.
 
 > 
-> It is important that changes to the API are flagged, for instance via
-> tools/perf/check-headers.sh so that opportunity is given for the various
-> people involved in perf (u/k) development to see what is going on.
+> Before this change (when branch stacks aren't supported):
+> 
+>   perf record -j any
+>   Error:
+>   cycles: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
+> 
+> After this change:
+> 
+>   perf record -j any
+>   Error:
+>   cycles: PMU Hardware or event type doesn't support branch stack sampling.
 
-Will run the diff after the series has been applied to demonstrate all the API
-changes and update that in the cover letter.
+Indeed better in explaining what went wrong.
+
+> 
+> Signed-off-by: James Clark <james.clark@arm.com>
+> ---
+>  tools/perf/util/evsel.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 22d3267ce294..4e10a4ec11c7 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -2909,6 +2909,10 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
+>  	 "No such device - did you specify an out-of-range profile CPU?");
+>  		break;
+>  	case EOPNOTSUPP:
+> +		if (evsel->core.attr.sample_type & PERF_SAMPLE_BRANCH_STACK)
+> +			return scnprintf(msg, size,
+> +	"%s: PMU Hardware or event type doesn't support branch stack sampling.",
+> +					 evsel__name(evsel));
+
+As this is being added right at the beginning for returned EOPNOTSUPP error,
+previous fall through behaviour for all other cases will be preserved.
+
+>  		if (evsel->core.attr.aux_output)
+>  			return scnprintf(msg, size,
+>  	"%s: PMU Hardware doesn't support 'aux_output' feature",
+
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
