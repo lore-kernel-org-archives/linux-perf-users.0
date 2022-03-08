@@ -2,32 +2,32 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E91C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Mar 2022 05:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09917C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Mar 2022 05:22:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235843AbiCHFHH (ORCPT
+        id S236892AbiCHFXN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Mar 2022 00:07:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42548 "EHLO
+        Tue, 8 Mar 2022 00:23:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230105AbiCHFHG (ORCPT
+        with ESMTP id S232026AbiCHFXN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Mar 2022 00:07:06 -0500
+        Tue, 8 Mar 2022 00:23:13 -0500
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4F78D33EA9;
-        Mon,  7 Mar 2022 21:06:09 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BE1653983C;
+        Mon,  7 Mar 2022 21:22:17 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A294D6E;
-        Mon,  7 Mar 2022 21:06:09 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C6A9D6E;
+        Mon,  7 Mar 2022 21:22:17 -0800 (PST)
 Received: from [10.162.17.54] (a077893.blr.arm.com [10.162.17.54])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F43B3FA5D;
-        Mon,  7 Mar 2022 21:06:06 -0800 (PST)
-Message-ID: <98472993-853a-7279-6594-fd173059a4d9@arm.com>
-Date:   Tue, 8 Mar 2022 10:36:04 +0530
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DD1123FA5D;
+        Mon,  7 Mar 2022 21:22:14 -0800 (PST)
+Message-ID: <3b6007ef-1ad8-c495-26aa-7974af8faefa@arm.com>
+Date:   Tue, 8 Mar 2022 10:52:12 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: [PATCH 3/4] perf: Refactor perf script branch stack printing
+Subject: Re: [PATCH 4/4] perf script: Output branch sample type
 Content-Language: en-US
 To:     James Clark <james.clark@arm.com>, acme@kernel.org,
         linux-perf-users@vger.kernel.org
@@ -38,9 +38,9 @@ Cc:     german.gomez@arm.com, leo.yan@linaro.com,
         Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org
 References: <20220307171917.2555829-1-james.clark@arm.com>
- <20220307171917.2555829-4-james.clark@arm.com>
+ <20220307171917.2555829-5-james.clark@arm.com>
 From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20220307171917.2555829-4-james.clark@arm.com>
+In-Reply-To: <20220307171917.2555829-5-james.clark@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -50,75 +50,60 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 On 3/7/22 22:49, James Clark wrote:
-> Remove duplicate code so that future changes to flags are always made to
-> all 3 printing variations.
+> The type info is saved when using '-j save_type'. Output this in perf
+
+Mentioning PERF_SAMPLE_BRANCH_CALL_STACK here as well might be better.
+
+> script so it can be accessed by other tools or for debugging.
+> 
+> It's appended to the end of the list of fields so any existing tools
+> that split on / and access fields via an index are not affected. Also
+> output '-' instead of 'N/A' when the branch type isn't saved because /
+> is used as a field separator.
+
+Did not get it. Why 'N/A' should have been used anyway ?
+
+> 
+> Entries before this change look like this:
+> 
+>   0xaaaadb350838/0xaaaadb3507a4/P/-/-/0
+> 
+> And afterwards like this:
+> 
+>   0xaaaadb350838/0xaaaadb3507a4/P/-/-/0/CALL
+> 
+> or this if no type info is saved:
+> 
+>   0x7fb57586df6b/0x7fb5758731f0/P/-/-/143/-
+
+143 ?
+
 > 
 > Signed-off-by: James Clark <james.clark@arm.com>
 > ---
->  tools/perf/builtin-script.c | 27 ++++++++++++---------------
->  1 file changed, 12 insertions(+), 15 deletions(-)
+>  tools/perf/builtin-script.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
 > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index 9e032343f1c6..fac2e9470926 100644
+> index fac2e9470926..5e4a262a6825 100644
 > --- a/tools/perf/builtin-script.c
 > +++ b/tools/perf/builtin-script.c
-> @@ -857,6 +857,15 @@ mispred_str(struct branch_entry *br)
->  	return br->flags.predicted ? 'P' : 'M';
+> @@ -859,11 +859,12 @@ mispred_str(struct branch_entry *br)
+>  
+>  static int print_bstack_flags(FILE *fp, struct branch_entry *br)
+>  {
+> -	return fprintf(fp, "/%c/%c/%c/%d ",
+> +	return fprintf(fp, "/%c/%c/%c/%d/%s ",
+>  		       mispred_str(br),
+>  		       br->flags.in_tx ? 'X' : '-',
+>  		       br->flags.abort ? 'A' : '-',
+> -		       br->flags.cycles);
+> +		       br->flags.cycles,
+> +		       br->flags.type ? branch_type_name(br->flags.type) : "-");
 >  }
 >  
-> +static int print_bstack_flags(FILE *fp, struct branch_entry *br)
-> +{
-> +	return fprintf(fp, "/%c/%c/%c/%d ",
-> +		       mispred_str(br),
-> +		       br->flags.in_tx ? 'X' : '-',
-> +		       br->flags.abort ? 'A' : '-',
-> +		       br->flags.cycles);
-> +}
-> +
 >  static int perf_sample__fprintf_brstack(struct perf_sample *sample,
->  					struct thread *thread,
->  					struct perf_event_attr *attr, FILE *fp)
-> @@ -895,11 +904,7 @@ static int perf_sample__fprintf_brstack(struct perf_sample *sample,
->  			printed += fprintf(fp, ")");
->  		}
->  
-> -		printed += fprintf(fp, "/%c/%c/%c/%d ",
-> -			mispred_str(entries + i),
-> -			entries[i].flags.in_tx ? 'X' : '-',
-> -			entries[i].flags.abort ? 'A' : '-',
-> -			entries[i].flags.cycles);
-> +		printed += print_bstack_flags(fp, entries + i);
->  	}
->  
->  	return printed;
-> @@ -941,11 +946,7 @@ static int perf_sample__fprintf_brstacksym(struct perf_sample *sample,
->  			printed += map__fprintf_dsoname(alt.map, fp);
->  			printed += fprintf(fp, ")");
->  		}
-> -		printed += fprintf(fp, "/%c/%c/%c/%d ",
-> -			mispred_str(entries + i),
-> -			entries[i].flags.in_tx ? 'X' : '-',
-> -			entries[i].flags.abort ? 'A' : '-',
-> -			entries[i].flags.cycles);
-> +		printed += print_bstack_flags(fp, entries + i);
->  	}
->  
->  	return printed;
-> @@ -991,11 +992,7 @@ static int perf_sample__fprintf_brstackoff(struct perf_sample *sample,
->  			printed += map__fprintf_dsoname(alt.map, fp);
->  			printed += fprintf(fp, ")");
->  		}
-> -		printed += fprintf(fp, "/%c/%c/%c/%d ",
-> -			mispred_str(entries + i),
-> -			entries[i].flags.in_tx ? 'X' : '-',
-> -			entries[i].flags.abort ? 'A' : '-',
-> -			entries[i].flags.cycles);
-> +		printed += print_bstack_flags(fp, entries + i);
->  	}
->  
->  	return printed;
 
 
-LGTM
-
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+LGTM but as mentioned before, I hope this does not affect any existing
+parsing tools.
