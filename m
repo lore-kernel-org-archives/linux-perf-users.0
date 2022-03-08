@@ -2,110 +2,204 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27495C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Mar 2022 11:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D406C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Mar 2022 12:06:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238011AbiCHL7a (ORCPT
+        id S234252AbiCHMHg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Mar 2022 06:59:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60908 "EHLO
+        Tue, 8 Mar 2022 07:07:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233849AbiCHL71 (ORCPT
+        with ESMTP id S230381AbiCHMHf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Mar 2022 06:59:27 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 905F927CD2;
-        Tue,  8 Mar 2022 03:58:30 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F4FAD6E;
-        Tue,  8 Mar 2022 03:58:30 -0800 (PST)
-Received: from [10.57.40.166] (unknown [10.57.40.166])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EDE8E3FA5D;
-        Tue,  8 Mar 2022 03:58:28 -0800 (PST)
-Message-ID: <a4429c3b-91b2-12f5-f0c6-c8db16d0c9f8@arm.com>
-Date:   Tue, 8 Mar 2022 11:58:27 +0000
+        Tue, 8 Mar 2022 07:07:35 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0494028E02;
+        Tue,  8 Mar 2022 04:06:38 -0800 (PST)
+Received: from fraeml715-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KCYtx4Wm1z6801q;
+        Tue,  8 Mar 2022 20:05:45 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml715-chm.china.huawei.com (10.206.15.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Tue, 8 Mar 2022 13:06:10 +0100
+Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Tue, 8 Mar
+ 2022 12:06:08 +0000
+Date:   Tue, 8 Mar 2022 12:06:07 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Yicong Yang <yangyicong@huawei.com>
+CC:     Yicong Yang <yangyicong@hisilicon.com>,
+        <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <lorenzo.pieralisi@arm.com>,
+        <will@kernel.org>, <mark.rutland@arm.com>,
+        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
+        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
+        <daniel.thompson@linaro.org>, <joro@8bytes.org>,
+        <john.garry@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
+        <robin.murphy@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <acme@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>, <prime.zeng@huawei.com>,
+        <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
+        <linuxarm@huawei.com>, <song.bao.hua@hisilicon.com>
+Subject: Re: [PATCH v5 3/8] hisi_ptt: Register PMU device for PTT trace
+Message-ID: <20220308120607.000064e6@Huawei.com>
+In-Reply-To: <d3b555c1-ed7e-f668-7d81-9cc2dbe6ffba@huawei.com>
+References: <20220308084930.5142-1-yangyicong@hisilicon.com>
+        <20220308084930.5142-4-yangyicong@hisilicon.com>
+        <20220308102157.00003725@Huawei.com>
+        <d3b555c1-ed7e-f668-7d81-9cc2dbe6ffba@huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH 2/4] perf: Print branch stack entry type in
- --dump-raw-trace
-Content-Language: en-US
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, acme@kernel.org,
-        linux-perf-users@vger.kernel.org
-Cc:     german.gomez@arm.com, leo.yan@linaro.com,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20220307171917.2555829-1-james.clark@arm.com>
- <20220307171917.2555829-3-james.clark@arm.com>
- <fb9717bb-735a-88d9-254d-0e7b2f7209f2@arm.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <fb9717bb-735a-88d9-254d-0e7b2f7209f2@arm.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.41]
+X-ClientProxiedBy: lhreml740-chm.china.huawei.com (10.201.108.190) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Tue, 8 Mar 2022 19:13:08 +0800
+Yicong Yang <yangyicong@huawei.com> wrote:
 
+> On 2022/3/8 18:21, Jonathan Cameron wrote:
+> > On Tue, 8 Mar 2022 16:49:25 +0800
+> > Yicong Yang <yangyicong@hisilicon.com> wrote:
+> >   
+> >> Register PMU device of PTT trace, then users can use trace through perf
+> >> command. The driver makes use of perf AUX trace and support following
+> >> events to configure the trace:
+> >>
+> >> - filter: select Root port or Endpoint to trace
+> >> - type: select the type of traced TLP headers
+> >> - direction: select the direction of traced TLP headers
+> >> - format: select the data format of the traced TLP headers
+> >>
+> >> This patch adds the PMU driver part of PTT trace. The perf command support
+> >> of PTT trace is added in the following patch.
+> >>
+> >> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>  
+> > 
+> > It seems to me that you ended up doing both suggestions for
+> > how to clean up the remove order when it was meant to be
+> > a question of picking one or the other.
+> > 
+> > Otherwise this looks good to me - so with that tidied up
+> >   
+> 
+> Hi Jonathan,
+> 
+> Thanks for the comments. I'd like to illustrate the reason why I decide to
+> manually unregister the PMU device.
+> 
+> The DMA buffers are devm allocated when necessary. They're only allocated
+> when user is going to use the PTT in the first time after the driver's probe,
+> so when driver removal the buffers are released prior to the PMU device's
+> unregistration. I think there's a race condition.
+> 
+> IIUC, The PMU device(as the user interface) should be unregistered first then
+> we're safe to free the DMA buffers. But unregister the PMU device by devm
+> cannot keep that order.
 
-On 08/03/2022 04:29, Anshuman Khandual wrote:
-> 
-> 
-> On 3/7/22 22:49, James Clark wrote:
->> This can help with debugging issues. It only prints when -j save_type
->> is used otherwise an empty string is printed.
-> 
-> Specifying events with PERF_SAMPLE_BRANCH_CALL_STACK flag explicitly might
-> be better along with '-j save_type'.
-> 
->>
->> Before the change:
->>
->>   101603801707130 0xa70 [0x630]: PERF_RECORD_SAMPLE(IP, 0x2): 1108/1108: 0xffff9c1df24c period: 10694 addr: 0
->>   ... branch stack: nr:64
->>   .....  0: 0000ffff9c26029c -> 0000ffff9c26f340 0 cycles  P   0
->>   .....  1: 0000ffff9c2601bc -> 0000ffff9c26f340 0 cycles  P   0
->>
->> After the change:
->>
->>   101603801707130 0xa70 [0x630]: PERF_RECORD_SAMPLE(IP, 0x2): 1108/1108: 0xffff9c1df24c period: 10694 addr: 0
->>   ... branch stack: nr:64
->>   .....  0: 0000ffff9c26029c -> 0000ffff9c26f340 0 cycles  P   0 CALL
->>   .....  1: 0000ffff9c2601bc -> 0000ffff9c26f340 0 cycles  P   0 IND_CALL
->>
->> Signed-off-by: James Clark <james.clark@arm.com>
->> ---
->>  tools/perf/util/session.c | 5 +++--
->>  1 file changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
->> index f54282d5c648..3b8dfe603e50 100644
->> --- a/tools/perf/util/session.c
->> +++ b/tools/perf/util/session.c
->> @@ -1159,14 +1159,15 @@ static void branch_stack__printf(struct perf_sample *sample, bool callstack)
->>  		struct branch_entry *e = &entries[i];
->>  
->>  		if (!callstack) {
->> -			printf("..... %2"PRIu64": %016" PRIx64 " -> %016" PRIx64 " %hu cycles %s%s%s%s %x\n",
->> +			printf("..... %2"PRIu64": %016" PRIx64 " -> %016" PRIx64 " %hu cycles %s%s%s%s %x %s\n",
->>  				i, e->from, e->to,
->>  				(unsigned short)e->flags.cycles,
->>  				e->flags.mispred ? "M" : " ",
->>  				e->flags.predicted ? "P" : " ",
->>  				e->flags.abort ? "A" : " ",
->>  				e->flags.in_tx ? "T" : " ",
->> -				(unsigned)e->flags.reserved);
->> +				(unsigned)e->flags.reserved,
->> +				e->flags.type ? branch_type_name(e->flags.type) : "");
->>  		} else {
->>  			printf("..... %2"PRIu64": %016" PRIx64 "\n",
->>  				i, i > 0 ? e->from : e->to);
-> 
-> LGTM but I am wondering whether this might affect existing tools ?
+Ok. Please add a comment in the remove() giving this reasoning.
 
-Only humans should be reading the -D output so I don't think so. The format is not very parseable anyway
+Jonathan
 
+> 
+> Thanks,
+> Yicong
+> 
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> >   
+> >> ---  
+> >   
+> >> +
+> >> +static int hisi_ptt_register_pmu(struct hisi_ptt *hisi_ptt)
+> >> +{
+> >> +	u16 core_id, sicl_id;
+> >> +	char *pmu_name;
+> >> +	u32 reg;
+> >> +
+> >> +	hisi_ptt->hisi_ptt_pmu = (struct pmu) {
+> >> +		.module		= THIS_MODULE,
+> >> +		.capabilities	= PERF_PMU_CAP_EXCLUSIVE | PERF_PMU_CAP_ITRACE,
+> >> +		.task_ctx_nr	= perf_sw_context,
+> >> +		.attr_groups	= hisi_ptt_pmu_groups,
+> >> +		.event_init	= hisi_ptt_pmu_event_init,
+> >> +		.setup_aux	= hisi_ptt_pmu_setup_aux,
+> >> +		.free_aux	= hisi_ptt_pmu_free_aux,
+> >> +		.start		= hisi_ptt_pmu_start,
+> >> +		.stop		= hisi_ptt_pmu_stop,
+> >> +		.add		= hisi_ptt_pmu_add,
+> >> +		.del		= hisi_ptt_pmu_del,
+> >> +	};
+> >> +
+> >> +	reg = readl(hisi_ptt->iobase + HISI_PTT_LOCATION);
+> >> +	core_id = FIELD_GET(HISI_PTT_CORE_ID, reg);
+> >> +	sicl_id = FIELD_GET(HISI_PTT_SICL_ID, reg);
+> >> +
+> >> +	pmu_name = devm_kasprintf(&hisi_ptt->pdev->dev, GFP_KERNEL, "hisi_ptt%u_%u",
+> >> +				  sicl_id, core_id);
+> >> +	if (!pmu_name)
+> >> +		return -ENOMEM;
+> >> +
+> >> +	return perf_pmu_register(&hisi_ptt->hisi_ptt_pmu, pmu_name, -1);  
+> > 
+> > As below, you can put back the devm cleanup that you had in v4 now you
+> > have modified how the filter cleanup is done to also be devm managed.
+> >   
+> >> +}
+> >> +
+> >>  /*
+> >>   * The DMA of PTT trace can only use direct mapping, due to some
+> >>   * hardware restriction. Check whether there is an IOMMU or the
+> >> @@ -303,15 +825,32 @@ static int hisi_ptt_probe(struct pci_dev *pdev,
+> >>  
+> >>  	pci_set_master(pdev);
+> >>  
+> >> +	ret = hisi_ptt_register_irq(hisi_ptt);
+> >> +	if (ret)
+> >> +		return ret;
+> >> +
+> >>  	ret = hisi_ptt_init_ctrls(hisi_ptt);
+> >>  	if (ret) {
+> >>  		pci_err(pdev, "failed to init controls, ret = %d.\n", ret);
+> >>  		return ret;
+> >>  	}
+> >>  
+> >> +	ret = hisi_ptt_register_pmu(hisi_ptt);
+> >> +	if (ret) {
+> >> +		pci_err(pdev, "failed to register pmu device, ret = %d", ret);
+> >> +		return ret;
+> >> +	}
+> >> +
+> >>  	return 0;
+> >>  }
+> >>  
+> >> +void hisi_ptt_remove(struct pci_dev *pdev)
+> >> +{
+> >> +	struct hisi_ptt *hisi_ptt = pci_get_drvdata(pdev);
+> >> +
+> >> +	perf_pmu_unregister(&hisi_ptt->hisi_ptt_pmu);  
+> > 
+> > Now you have the filter cleanup occurring using a devm_add_action_or_reset()
+> > there is no need to have a manual cleanup of this - you can
+> > use the approach of a devm_add_action_or_reset like you had in v4.
+> > 
+> > As it is the last call in the probe() order it will be the first one
+> > called in the device managed cleanup.
+> >   
+> >> +}
+> >> +  
+> > 
+> > 
+> > .
+> >   
 
