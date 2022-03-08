@@ -2,291 +2,146 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47490C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Mar 2022 14:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8FEC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Mar 2022 20:50:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347256AbiCHOAz (ORCPT
+        id S1350270AbiCHUvG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Mar 2022 09:00:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47024 "EHLO
+        Tue, 8 Mar 2022 15:51:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239880AbiCHOAy (ORCPT
+        with ESMTP id S1350235AbiCHUvE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Mar 2022 09:00:54 -0500
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5FE94A3CE
-        for <linux-perf-users@vger.kernel.org>; Tue,  8 Mar 2022 05:59:57 -0800 (PST)
-Received: by mail-pl1-x631.google.com with SMTP id q13so987957plk.12
-        for <linux-perf-users@vger.kernel.org>; Tue, 08 Mar 2022 05:59:57 -0800 (PST)
+        Tue, 8 Mar 2022 15:51:04 -0500
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D06E32996
+        for <linux-perf-users@vger.kernel.org>; Tue,  8 Mar 2022 12:50:06 -0800 (PST)
+Received: by mail-wr1-x42c.google.com with SMTP id u1so30390651wrg.11
+        for <linux-perf-users@vger.kernel.org>; Tue, 08 Mar 2022 12:50:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ysQ0I/EueUfyxYIrrIDKfqfhbdL33TZ3WhPawjqUkZ4=;
-        b=3EP48iIE+Hx1RVP6y/ZAg0qyMXVG9vYd+zLMSON/ec8MszlppWiJspyH7BgTHO213E
-         SKa4KSp0LyLMYHXH1IZUiXZHdgWl+ev6CbJ1QeRjQUX83YbVaiItR0yTzIUnz75GBZ3y
-         h+IDIWdS1cuPbUajzoDG0QS3Sk3rLlcKAuiAxf88bllH/TAwSiYcDwPJHPYF0Ti8dh2m
-         VefwkbYMtcTlljYkcHvG6xE6oYl3NzsHSJE61ZyG3px2uLBGuUGwJvDo1+rYUSp3i2q5
-         OvMG2UfJEly3s3Oe2puF6JnCgtpkA33h8wNSMTys4DhKnQqhhc3TIrnvJfZ8d+3SGEc7
-         s2eQ==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=zbxC61+D53doyFQ7PA8Wz9hik1u0auVx2uX6w7PSQB8=;
+        b=iHtryZYXqO9iYD2CshdOD95lHixbFlVCg3fB1qicchNGd1hZIYjO1a3vaykoegZMWt
+         byggGjnQPDSAtJfPhDw+Jo1OoUvnnuGBgllxYQ4UY12oWTA0tjRMBemOmkbtF0Xxpwsf
+         xayKEX2WHLtA6QOuBaUOvZTEvQSyPrWjvChUpkj4/kVCxmUGWiIvZmdZttvwYwH15I/N
+         TkITPsV4EVHXuhhIT1My4zplwID9xaO1TG0uUGSbqV6hCcYGrRn6brMaoLxy+kjkVSv9
+         OK5ZvKj7F0VZPnm0uXZZE7g61531f8mmPVgfEG1Vc0lIYWavONGWBdUH95/jEDpk4dq/
+         iCpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ysQ0I/EueUfyxYIrrIDKfqfhbdL33TZ3WhPawjqUkZ4=;
-        b=P5CJOfHi5xl4R0f52mkm3fQ86+U4EWlhkeD+buBiGiRjYb2ZrfcE8qpQ2xbzn5XlJg
-         5WLrWJiI38IVcIx6/POIKNx3axw9D9UOpTMltH8Tts3AQaEg00j21qcNY3SiHR65zH0O
-         2rc2AlHou7JsIPx7rHlT0yLOb+RHiTfpQZuPsws+z5i8AhSVTaLN1jYAlZjfhUenKAeF
-         hJZGVQIqX4+Nt/82nsmCb91hNIk5ecs/narEVd3BYJuyB4UMQPmiNHhQfAwMFyj59Uiw
-         iNZCk+l1dGtmRaWko1QT4mw6qyIkeQtL8d8xvQmikWjWdyxsZiQSjjplGLSEHPR9fcYe
-         6adg==
-X-Gm-Message-State: AOAM531rijFp5NpblzBzF0lMKV6LOGtEXRu0FUYP2CmOVF/vQsroBxiH
-        xYaq3zaI6aDtFu+amAzT2k5r+2a+STtfCA==
-X-Google-Smtp-Source: ABdhPJwDlg1le8x7719hCEXRfJpFagh+ixCjvOgRBd/mljn0RufhAGAMaVRmSQGIGYM/KfSmboJJlw==
-X-Received: by 2002:a17:90b:1e47:b0:1bf:6d84:ca1d with SMTP id pi7-20020a17090b1e4700b001bf6d84ca1dmr4813655pjb.94.1646747997216;
-        Tue, 08 Mar 2022 05:59:57 -0800 (PST)
-Received: from C02CV1DAMD6P.bytedance.net ([139.177.225.251])
-        by smtp.gmail.com with ESMTPSA id k4-20020a17090a910400b001bd171c7fd4sm3020207pjo.25.2022.03.08.05.59.52
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zbxC61+D53doyFQ7PA8Wz9hik1u0auVx2uX6w7PSQB8=;
+        b=tqA671oYg7ST6L6rQ5QzmluDi5zm0vixoivCtE3stNaBhWNhqZeU6tWiMrrZM5+qOA
+         QpWjoLBD+wUs0XmzPKP+Gupm7PsWgIL56oA/Lk7pVLMWQxKpDTBYMceaO2+6umNT8ll5
+         xEDnozCVY3cvgfHypAVL+LXH/IEikssLBxS0SUDdd1u36PFXXDHnJXbb9ki8NV9jL3/V
+         j95F5J8eYHVFHLjQi2aVEG/nPaZsaYRiq6t43rbNeftDa/ohUS9o0JHL4Qkt0+qq4www
+         1IVfYvJOh1WEuVbysqAgEDANWn0t4+Tv5UJ8/igGuJGCH+NwmKxXA7iTkXt3307gB1wf
+         nL4A==
+X-Gm-Message-State: AOAM533l5PpkCOzhGxOe5Hr1KnHvLbGumFc26FxKfl2nqtKrf6YdG3p2
+        aunfHXEo6106hlD6C5rgIfo08A==
+X-Google-Smtp-Source: ABdhPJx/eazJnDjwJs+zGcscB1Z8JTMKmmP/awems14ZHFh0gwjLLtzawI7cVwx4inupqh25yUsf5g==
+X-Received: by 2002:adf:d1c4:0:b0:203:6d79:f15 with SMTP id b4-20020adfd1c4000000b002036d790f15mr3256113wrd.489.1646772605082;
+        Tue, 08 Mar 2022 12:50:05 -0800 (PST)
+Received: from linaro.org ([2a00:23c5:6809:2201:546d:7d59:1703:bf96])
+        by smtp.gmail.com with ESMTPSA id p26-20020a1c741a000000b00389ab9a53c8sm3245758wmc.36.2022.03.08.12.50.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Mar 2022 05:59:56 -0800 (PST)
-From:   Chengming Zhou <zhouchengming@bytedance.com>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, eranian@google.com
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        songmuchun@bytedance.com,
-        Chengming Zhou <zhouchengming@bytedance.com>
-Subject: [RFC PATCH] perf/core: fix cpuctx cgrp warning
-Date:   Tue,  8 Mar 2022 21:59:48 +0800
-Message-Id: <20220308135948.55336-1-zhouchengming@bytedance.com>
-X-Mailer: git-send-email 2.35.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 08 Mar 2022 12:50:04 -0800 (PST)
+From:   Mike Leach <mike.leach@linaro.org>
+To:     suzuki.poulose@arm.com, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org, linux-perf-users@vger.kernel.org,
+        leo.yan@linaro.org, Mike Leach <mike.leach@linaro.org>
+Subject: [PATCH 00/10] coresight: Add new API to allocate trace source ID values
+Date:   Tue,  8 Mar 2022 20:49:50 +0000
+Message-Id: <20220308205000.27646-1-mike.leach@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-There is a race problem that can trigger WARN_ON_ONCE(cpuctx->cgrp)
-in perf_cgroup_switch().
+The current method for allocating trace source ID values to sources is
+to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 0x10).
+The STM is allocated ID 0x1.
 
-CPU1					CPU2
-(in context_switch)			(attach running task)
-perf_cgroup_sched_out(task, next)
-	if (cgrp1 != cgrp2) True
-					task->cgroups = xxx
-					perf_cgroup_attach()
-perf_cgroup_sched_in(prev, task)
-	if (cgrp1 != cgrp2) False
+This fixed algorithm is used in both the CoreSight driver code, and by
+perf when writing the trace metadata in the AUXTRACE_INFO record.
 
-The commit a8d757ef076f ("perf events: Fix slow and broken cgroup
-context switch code") would save cpuctx switch in/out when the
-perf_cgroup of "prev" and "next" are the same.
+The method needs replacing as currently:-
+1. It is inefficient in using available IDs.
+2. Does not scale to larger systems with many cores and the algorithm
+has no limits so will generate invalid trace IDs for cpu number > 44.
 
-But perf_cgroup of task can change in concurrent with context_switch.
-If cgrp1 == cgrp2 in sched_out(), cpuctx won't do switch out, then
-task perf_cgroup changed cause cgrp1 != cgrp2 in sched_in(), cpuctx
-will do switch in, and trigger WARN_ON_ONCE(cpuctx->cgrp).
+Additionally requirements to allocate additional system IDs on some
+systems have been seen.
 
-The perf_cgroup of "prev" and "next" can be changed at any time, so we
-first have to combine perf_cgroup_sched_in() into perf_cgroup_sched_out(),
-so we can get a consistent value of condition (cgrp1 == cgrp2).
+This patch set  introduces an API that allows the allocation of trace IDs
+in a dynamic manner.
 
-And we introduce a percpu "cpu_perf_cgroups" to track the current used
-perf_cgroup, instead of using the unstable perf_cgroup of "prev", which
-maybe not the cpuctx->cgrp we used to schedule cgroup events on cpu.
+Architecturally reserved IDs are never allocated, and the system is
+limited to allocating only valid IDs.
 
-Fixes: a8d757ef076f ("perf events: Fix slow and broken cgroup context
-switch code")
-Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
----
- kernel/events/core.c | 95 +++++++++++---------------------------------
- 1 file changed, 23 insertions(+), 72 deletions(-)
+Each of the current trace sources ETM3.x, ETM4.x and STM is updated to use
+the new API.
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 6859229497b1..f3bc2841141f 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -826,6 +826,7 @@ perf_cgroup_set_timestamp(struct task_struct *task,
- 	}
- }
- 
-+static DEFINE_PER_CPU(struct perf_cgroup *, cpu_perf_cgroups);
- static DEFINE_PER_CPU(struct list_head, cgrp_cpuctx_list);
- 
- #define PERF_CGROUP_SWOUT	0x1 /* cgroup switch out every event */
-@@ -837,8 +838,9 @@ static DEFINE_PER_CPU(struct list_head, cgrp_cpuctx_list);
-  * mode SWOUT : schedule out everything
-  * mode SWIN : schedule in based on cgroup for next
-  */
--static void perf_cgroup_switch(struct task_struct *task, int mode)
-+static void perf_cgroup_switch(struct task_struct *task)
- {
-+	struct perf_cgroup *cgrp;
- 	struct perf_cpu_context *cpuctx, *tmp;
- 	struct list_head *list;
- 	unsigned long flags;
-@@ -849,6 +851,9 @@ static void perf_cgroup_switch(struct task_struct *task, int mode)
- 	 */
- 	local_irq_save(flags);
- 
-+	cgrp = perf_cgroup_from_task(task, NULL);
-+	__this_cpu_write(cpu_perf_cgroups, cgrp);
-+
- 	list = this_cpu_ptr(&cgrp_cpuctx_list);
- 	list_for_each_entry_safe(cpuctx, tmp, list, cgrp_cpuctx_entry) {
- 		WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
-@@ -856,28 +861,15 @@ static void perf_cgroup_switch(struct task_struct *task, int mode)
- 		perf_ctx_lock(cpuctx, cpuctx->task_ctx);
- 		perf_pmu_disable(cpuctx->ctx.pmu);
- 
--		if (mode & PERF_CGROUP_SWOUT) {
--			cpu_ctx_sched_out(cpuctx, EVENT_ALL);
--			/*
--			 * must not be done before ctxswout due
--			 * to event_filter_match() in event_sched_out()
--			 */
--			cpuctx->cgrp = NULL;
--		}
-+		cpu_ctx_sched_out(cpuctx, EVENT_ALL);
-+		/*
-+		 * must not be done before ctxswout due
-+		 * to event_filter_match() in event_sched_out()
-+		 */
-+		cpuctx->cgrp = cgrp;
-+
-+		cpu_ctx_sched_in(cpuctx, EVENT_ALL, task);
- 
--		if (mode & PERF_CGROUP_SWIN) {
--			WARN_ON_ONCE(cpuctx->cgrp);
--			/*
--			 * set cgrp before ctxsw in to allow
--			 * event_filter_match() to not have to pass
--			 * task around
--			 * we pass the cpuctx->ctx to perf_cgroup_from_task()
--			 * because cgorup events are only per-cpu
--			 */
--			cpuctx->cgrp = perf_cgroup_from_task(task,
--							     &cpuctx->ctx);
--			cpu_ctx_sched_in(cpuctx, EVENT_ALL, task);
--		}
- 		perf_pmu_enable(cpuctx->ctx.pmu);
- 		perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
- 	}
-@@ -885,8 +877,8 @@ static void perf_cgroup_switch(struct task_struct *task, int mode)
- 	local_irq_restore(flags);
- }
- 
--static inline void perf_cgroup_sched_out(struct task_struct *task,
--					 struct task_struct *next)
-+static inline void perf_cgroup_sched_switch(struct task_struct *task,
-+					    struct task_struct *next)
- {
- 	struct perf_cgroup *cgrp1;
- 	struct perf_cgroup *cgrp2 = NULL;
-@@ -897,7 +889,7 @@ static inline void perf_cgroup_sched_out(struct task_struct *task,
- 	 * we do not need to pass the ctx here because we know
- 	 * we are holding the rcu lock
- 	 */
--	cgrp1 = perf_cgroup_from_task(task, NULL);
-+	cgrp1 = __this_cpu_read(cpu_perf_cgroups);
- 	cgrp2 = perf_cgroup_from_task(next, NULL);
- 
- 	/*
-@@ -906,33 +898,7 @@ static inline void perf_cgroup_sched_out(struct task_struct *task,
- 	 * do no touch the cgroup events.
- 	 */
- 	if (cgrp1 != cgrp2)
--		perf_cgroup_switch(task, PERF_CGROUP_SWOUT);
--
--	rcu_read_unlock();
--}
--
--static inline void perf_cgroup_sched_in(struct task_struct *prev,
--					struct task_struct *task)
--{
--	struct perf_cgroup *cgrp1;
--	struct perf_cgroup *cgrp2 = NULL;
--
--	rcu_read_lock();
--	/*
--	 * we come here when we know perf_cgroup_events > 0
--	 * we do not need to pass the ctx here because we know
--	 * we are holding the rcu lock
--	 */
--	cgrp1 = perf_cgroup_from_task(task, NULL);
--	cgrp2 = perf_cgroup_from_task(prev, NULL);
--
--	/*
--	 * only need to schedule in cgroup events if we are changing
--	 * cgroup during ctxsw. Cgroup events were not scheduled
--	 * out of ctxsw out if that was not the case.
--	 */
--	if (cgrp1 != cgrp2)
--		perf_cgroup_switch(task, PERF_CGROUP_SWIN);
-+		perf_cgroup_switch(task);
- 
- 	rcu_read_unlock();
- }
-@@ -1100,13 +1066,8 @@ static inline void update_cgrp_time_from_cpuctx(struct perf_cpu_context *cpuctx,
- {
- }
- 
--static inline void perf_cgroup_sched_out(struct task_struct *task,
--					 struct task_struct *next)
--{
--}
--
--static inline void perf_cgroup_sched_in(struct task_struct *prev,
--					struct task_struct *task)
-+static inline void perf_cgroup_sched_switch(struct task_struct *task,
-+					    struct task_struct *next)
- {
- }
- 
-@@ -1124,7 +1085,7 @@ perf_cgroup_set_timestamp(struct task_struct *task,
- }
- 
- static inline void
--perf_cgroup_switch(struct task_struct *task, struct task_struct *next)
-+perf_cgroup_sched_switch(struct task_struct *task, struct task_struct *next)
- {
- }
- 
-@@ -3668,7 +3629,7 @@ void __perf_event_task_sched_out(struct task_struct *task,
- 	 * cgroup event are system-wide mode only
- 	 */
- 	if (atomic_read(this_cpu_ptr(&perf_cgroup_events)))
--		perf_cgroup_sched_out(task, next);
-+		perf_cgroup_sched_switch(task, next);
- }
- 
- /*
-@@ -3984,16 +3945,6 @@ void __perf_event_task_sched_in(struct task_struct *prev,
- 	struct perf_event_context *ctx;
- 	int ctxn;
- 
--	/*
--	 * If cgroup events exist on this CPU, then we need to check if we have
--	 * to switch in PMU state; cgroup event are system-wide mode only.
--	 *
--	 * Since cgroup events are CPU events, we must schedule these in before
--	 * we schedule in the task events.
--	 */
--	if (atomic_read(this_cpu_ptr(&perf_cgroup_events)))
--		perf_cgroup_sched_in(prev, task);
--
- 	for_each_task_context_nr(ctxn) {
- 		ctx = task->perf_event_ctxp[ctxn];
- 		if (likely(!ctx))
-@@ -13564,7 +13515,7 @@ static int __perf_cgroup_move(void *info)
- {
- 	struct task_struct *task = info;
- 	rcu_read_lock();
--	perf_cgroup_switch(task, PERF_CGROUP_SWOUT | PERF_CGROUP_SWIN);
-+	perf_cgroup_switch(task);
- 	rcu_read_unlock();
- 	return 0;
- }
+perf handling is changed so that the ID associated with the CPU is read
+from sysfs. The ID allocator is notified when perf events start and stop
+so CPU based IDs are kept constant throughout any perf session.
+
+For the ETMx.x devices IDs are allocated on certain events
+a) When using sysfs, an ID will be allocated on hardware enable, and freed
+when the sysfs reset is written.
+b) When using perf, ID is allocated on hardware enable, and freed on
+hardware disable.
+
+For both cases the ID is allocated when sysfs is read to get the current
+trace ID. This ensures that consistent decode metadata can be extracted
+from the system where this read occurs before device enable.
+
+Note: This patchset breaks backward compatibility for perf record.
+Because the method for generating the AUXTRACE_INFO meta data has
+changed, using an older perf record will result in metadata that
+does not match the trace IDs used in the recorded trace data.
+This mismatch will cause subsequent decode to fail. Older versions of
+perf will still be able to decode data generated by the updated system.
+
+
+Applies to coresight/next [b54f53bc11a5]
+Tested on DB410c
+
+Mike Leach (10):
+  coresight: trace-id: Add API to dynamically assign trace ID values
+  coresight: trace-id: Set up source trace ID map for system
+  coresight: stm: Update STM driver to use Trace ID api
+  coresight: etm4x: Use trace ID API to dynamically allocate trace ID
+  coresight: etm3x: Use trace ID API to allocate IDs
+  coresight: perf: traceid: Add perf notifiers for trace ID
+  perf: cs-etm: Update event to read trace ID from sysfs
+  coresight: Remove legacy Trace ID allocation mechanism
+  coresight: etmX.X: stm: Remove unused legacy source trace ID ops
+  coresight: trace-id: Add debug & test macros to trace id allocation
+
+ drivers/hwtracing/coresight/Makefile          |   2 +-
+ drivers/hwtracing/coresight/coresight-core.c  |  64 ++---
+ .../hwtracing/coresight/coresight-etm-perf.c  |  16 +-
+ drivers/hwtracing/coresight/coresight-etm.h   |   3 +-
+ .../coresight/coresight-etm3x-core.c          |  93 ++++---
+ .../coresight/coresight-etm3x-sysfs.c         |  28 +-
+ .../coresight/coresight-etm4x-core.c          |  63 ++++-
+ .../coresight/coresight-etm4x-sysfs.c         |  32 ++-
+ drivers/hwtracing/coresight/coresight-etm4x.h |   3 +
+ drivers/hwtracing/coresight/coresight-priv.h  |   1 +
+ drivers/hwtracing/coresight/coresight-stm.c   |  49 +---
+ .../hwtracing/coresight/coresight-trace-id.c  | 255 ++++++++++++++++++
+ .../hwtracing/coresight/coresight-trace-id.h  |  69 +++++
+ include/linux/coresight-pmu.h                 |  12 -
+ include/linux/coresight.h                     |   3 -
+ tools/perf/arch/arm/util/cs-etm.c             |  12 +-
+ 16 files changed, 530 insertions(+), 175 deletions(-)
+ create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.c
+ create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.h
+
 -- 
-2.20.1
+2.17.1
 
