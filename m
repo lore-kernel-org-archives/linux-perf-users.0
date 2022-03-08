@@ -2,207 +2,291 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF31C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Mar 2022 13:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47490C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Mar 2022 14:00:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346750AbiCHNVd (ORCPT
+        id S1347256AbiCHOAz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Mar 2022 08:21:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42990 "EHLO
+        Tue, 8 Mar 2022 09:00:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233857AbiCHNVd (ORCPT
+        with ESMTP id S239880AbiCHOAy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Mar 2022 08:21:33 -0500
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 845AE4968D;
-        Tue,  8 Mar 2022 05:20:36 -0800 (PST)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4KCbW35fxwzBrbM;
-        Tue,  8 Mar 2022 21:18:39 +0800 (CST)
-Received: from [10.67.102.169] (10.67.102.169) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Tue, 8 Mar 2022 21:20:34 +0800
-CC:     <yangyicong@hisilicon.com>, <gregkh@linuxfoundation.org>,
-        <helgaas@kernel.org>, <alexander.shishkin@linux.intel.com>,
-        <lorenzo.pieralisi@arm.com>, <will@kernel.org>,
-        <mark.rutland@arm.com>, <mathieu.poirier@linaro.org>,
-        <suzuki.poulose@arm.com>, <mike.leach@linaro.org>,
-        <leo.yan@linaro.org>, <daniel.thompson@linaro.org>,
-        <joro@8bytes.org>, <john.garry@huawei.com>,
-        <shameerali.kolothum.thodi@huawei.com>, <robin.murphy@arm.com>,
-        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>, <prime.zeng@huawei.com>,
-        <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
-        <linuxarm@huawei.com>, <song.bao.hua@hisilicon.com>
-Subject: Re: [PATCH v5 3/8] hisi_ptt: Register PMU device for PTT trace
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-References: <20220308084930.5142-1-yangyicong@hisilicon.com>
- <20220308084930.5142-4-yangyicong@hisilicon.com>
- <20220308102157.00003725@Huawei.com>
- <d3b555c1-ed7e-f668-7d81-9cc2dbe6ffba@huawei.com>
- <20220308120607.000064e6@Huawei.com>
-From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <a8476fe5-2802-4788-b877-58a5e4fe898a@huawei.com>
-Date:   Tue, 8 Mar 2022 21:20:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        Tue, 8 Mar 2022 09:00:54 -0500
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5FE94A3CE
+        for <linux-perf-users@vger.kernel.org>; Tue,  8 Mar 2022 05:59:57 -0800 (PST)
+Received: by mail-pl1-x631.google.com with SMTP id q13so987957plk.12
+        for <linux-perf-users@vger.kernel.org>; Tue, 08 Mar 2022 05:59:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ysQ0I/EueUfyxYIrrIDKfqfhbdL33TZ3WhPawjqUkZ4=;
+        b=3EP48iIE+Hx1RVP6y/ZAg0qyMXVG9vYd+zLMSON/ec8MszlppWiJspyH7BgTHO213E
+         SKa4KSp0LyLMYHXH1IZUiXZHdgWl+ev6CbJ1QeRjQUX83YbVaiItR0yTzIUnz75GBZ3y
+         h+IDIWdS1cuPbUajzoDG0QS3Sk3rLlcKAuiAxf88bllH/TAwSiYcDwPJHPYF0Ti8dh2m
+         VefwkbYMtcTlljYkcHvG6xE6oYl3NzsHSJE61ZyG3px2uLBGuUGwJvDo1+rYUSp3i2q5
+         OvMG2UfJEly3s3Oe2puF6JnCgtpkA33h8wNSMTys4DhKnQqhhc3TIrnvJfZ8d+3SGEc7
+         s2eQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ysQ0I/EueUfyxYIrrIDKfqfhbdL33TZ3WhPawjqUkZ4=;
+        b=P5CJOfHi5xl4R0f52mkm3fQ86+U4EWlhkeD+buBiGiRjYb2ZrfcE8qpQ2xbzn5XlJg
+         5WLrWJiI38IVcIx6/POIKNx3axw9D9UOpTMltH8Tts3AQaEg00j21qcNY3SiHR65zH0O
+         2rc2AlHou7JsIPx7rHlT0yLOb+RHiTfpQZuPsws+z5i8AhSVTaLN1jYAlZjfhUenKAeF
+         hJZGVQIqX4+Nt/82nsmCb91hNIk5ecs/narEVd3BYJuyB4UMQPmiNHhQfAwMFyj59Uiw
+         iNZCk+l1dGtmRaWko1QT4mw6qyIkeQtL8d8xvQmikWjWdyxsZiQSjjplGLSEHPR9fcYe
+         6adg==
+X-Gm-Message-State: AOAM531rijFp5NpblzBzF0lMKV6LOGtEXRu0FUYP2CmOVF/vQsroBxiH
+        xYaq3zaI6aDtFu+amAzT2k5r+2a+STtfCA==
+X-Google-Smtp-Source: ABdhPJwDlg1le8x7719hCEXRfJpFagh+ixCjvOgRBd/mljn0RufhAGAMaVRmSQGIGYM/KfSmboJJlw==
+X-Received: by 2002:a17:90b:1e47:b0:1bf:6d84:ca1d with SMTP id pi7-20020a17090b1e4700b001bf6d84ca1dmr4813655pjb.94.1646747997216;
+        Tue, 08 Mar 2022 05:59:57 -0800 (PST)
+Received: from C02CV1DAMD6P.bytedance.net ([139.177.225.251])
+        by smtp.gmail.com with ESMTPSA id k4-20020a17090a910400b001bd171c7fd4sm3020207pjo.25.2022.03.08.05.59.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Mar 2022 05:59:56 -0800 (PST)
+From:   Chengming Zhou <zhouchengming@bytedance.com>
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, eranian@google.com
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        songmuchun@bytedance.com,
+        Chengming Zhou <zhouchengming@bytedance.com>
+Subject: [RFC PATCH] perf/core: fix cpuctx cgrp warning
+Date:   Tue,  8 Mar 2022 21:59:48 +0800
+Message-Id: <20220308135948.55336-1-zhouchengming@bytedance.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-In-Reply-To: <20220308120607.000064e6@Huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2022/3/8 20:06, Jonathan Cameron wrote:
-> On Tue, 8 Mar 2022 19:13:08 +0800
-> Yicong Yang <yangyicong@huawei.com> wrote:
-> 
->> On 2022/3/8 18:21, Jonathan Cameron wrote:
->>> On Tue, 8 Mar 2022 16:49:25 +0800
->>> Yicong Yang <yangyicong@hisilicon.com> wrote:
->>>   
->>>> Register PMU device of PTT trace, then users can use trace through perf
->>>> command. The driver makes use of perf AUX trace and support following
->>>> events to configure the trace:
->>>>
->>>> - filter: select Root port or Endpoint to trace
->>>> - type: select the type of traced TLP headers
->>>> - direction: select the direction of traced TLP headers
->>>> - format: select the data format of the traced TLP headers
->>>>
->>>> This patch adds the PMU driver part of PTT trace. The perf command support
->>>> of PTT trace is added in the following patch.
->>>>
->>>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>  
->>>
->>> It seems to me that you ended up doing both suggestions for
->>> how to clean up the remove order when it was meant to be
->>> a question of picking one or the other.
->>>
->>> Otherwise this looks good to me - so with that tidied up
->>>   
->>
->> Hi Jonathan,
->>
->> Thanks for the comments. I'd like to illustrate the reason why I decide to
->> manually unregister the PMU device.
->>
->> The DMA buffers are devm allocated when necessary. They're only allocated
->> when user is going to use the PTT in the first time after the driver's probe,
->> so when driver removal the buffers are released prior to the PMU device's
->> unregistration. I think there's a race condition.
->>
->> IIUC, The PMU device(as the user interface) should be unregistered first then
->> we're safe to free the DMA buffers. But unregister the PMU device by devm
->> cannot keep that order.
-> 
-> Ok. Please add a comment in the remove() giving this reasoning.
-> 
+There is a race problem that can trigger WARN_ON_ONCE(cpuctx->cgrp)
+in perf_cgroup_switch().
 
-Sure will add a comment for the reason why we need this manual unregistration in remove().
+CPU1					CPU2
+(in context_switch)			(attach running task)
+perf_cgroup_sched_out(task, next)
+	if (cgrp1 != cgrp2) True
+					task->cgroups = xxx
+					perf_cgroup_attach()
+perf_cgroup_sched_in(prev, task)
+	if (cgrp1 != cgrp2) False
 
-> Jonathan
-> 
->>
->> Thanks,
->> Yicong
->>
->>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>>   
->>>> ---  
->>>   
->>>> +
->>>> +static int hisi_ptt_register_pmu(struct hisi_ptt *hisi_ptt)
->>>> +{
->>>> +	u16 core_id, sicl_id;
->>>> +	char *pmu_name;
->>>> +	u32 reg;
->>>> +
->>>> +	hisi_ptt->hisi_ptt_pmu = (struct pmu) {
->>>> +		.module		= THIS_MODULE,
->>>> +		.capabilities	= PERF_PMU_CAP_EXCLUSIVE | PERF_PMU_CAP_ITRACE,
->>>> +		.task_ctx_nr	= perf_sw_context,
->>>> +		.attr_groups	= hisi_ptt_pmu_groups,
->>>> +		.event_init	= hisi_ptt_pmu_event_init,
->>>> +		.setup_aux	= hisi_ptt_pmu_setup_aux,
->>>> +		.free_aux	= hisi_ptt_pmu_free_aux,
->>>> +		.start		= hisi_ptt_pmu_start,
->>>> +		.stop		= hisi_ptt_pmu_stop,
->>>> +		.add		= hisi_ptt_pmu_add,
->>>> +		.del		= hisi_ptt_pmu_del,
->>>> +	};
->>>> +
->>>> +	reg = readl(hisi_ptt->iobase + HISI_PTT_LOCATION);
->>>> +	core_id = FIELD_GET(HISI_PTT_CORE_ID, reg);
->>>> +	sicl_id = FIELD_GET(HISI_PTT_SICL_ID, reg);
->>>> +
->>>> +	pmu_name = devm_kasprintf(&hisi_ptt->pdev->dev, GFP_KERNEL, "hisi_ptt%u_%u",
->>>> +				  sicl_id, core_id);
->>>> +	if (!pmu_name)
->>>> +		return -ENOMEM;
->>>> +
->>>> +	return perf_pmu_register(&hisi_ptt->hisi_ptt_pmu, pmu_name, -1);  
->>>
->>> As below, you can put back the devm cleanup that you had in v4 now you
->>> have modified how the filter cleanup is done to also be devm managed.
->>>   
->>>> +}
->>>> +
->>>>  /*
->>>>   * The DMA of PTT trace can only use direct mapping, due to some
->>>>   * hardware restriction. Check whether there is an IOMMU or the
->>>> @@ -303,15 +825,32 @@ static int hisi_ptt_probe(struct pci_dev *pdev,
->>>>  
->>>>  	pci_set_master(pdev);
->>>>  
->>>> +	ret = hisi_ptt_register_irq(hisi_ptt);
->>>> +	if (ret)
->>>> +		return ret;
->>>> +
->>>>  	ret = hisi_ptt_init_ctrls(hisi_ptt);
->>>>  	if (ret) {
->>>>  		pci_err(pdev, "failed to init controls, ret = %d.\n", ret);
->>>>  		return ret;
->>>>  	}
->>>>  
->>>> +	ret = hisi_ptt_register_pmu(hisi_ptt);
->>>> +	if (ret) {
->>>> +		pci_err(pdev, "failed to register pmu device, ret = %d", ret);
->>>> +		return ret;
->>>> +	}
->>>> +
->>>>  	return 0;
->>>>  }
->>>>  
->>>> +void hisi_ptt_remove(struct pci_dev *pdev)
->>>> +{
->>>> +	struct hisi_ptt *hisi_ptt = pci_get_drvdata(pdev);
->>>> +
->>>> +	perf_pmu_unregister(&hisi_ptt->hisi_ptt_pmu);  
->>>
->>> Now you have the filter cleanup occurring using a devm_add_action_or_reset()
->>> there is no need to have a manual cleanup of this - you can
->>> use the approach of a devm_add_action_or_reset like you had in v4.
->>>
->>> As it is the last call in the probe() order it will be the first one
->>> called in the device managed cleanup.
->>>   
->>>> +}
->>>> +  
->>>
->>>
->>> .
->>>   
-> 
-> .
-> 
+The commit a8d757ef076f ("perf events: Fix slow and broken cgroup
+context switch code") would save cpuctx switch in/out when the
+perf_cgroup of "prev" and "next" are the same.
+
+But perf_cgroup of task can change in concurrent with context_switch.
+If cgrp1 == cgrp2 in sched_out(), cpuctx won't do switch out, then
+task perf_cgroup changed cause cgrp1 != cgrp2 in sched_in(), cpuctx
+will do switch in, and trigger WARN_ON_ONCE(cpuctx->cgrp).
+
+The perf_cgroup of "prev" and "next" can be changed at any time, so we
+first have to combine perf_cgroup_sched_in() into perf_cgroup_sched_out(),
+so we can get a consistent value of condition (cgrp1 == cgrp2).
+
+And we introduce a percpu "cpu_perf_cgroups" to track the current used
+perf_cgroup, instead of using the unstable perf_cgroup of "prev", which
+maybe not the cpuctx->cgrp we used to schedule cgroup events on cpu.
+
+Fixes: a8d757ef076f ("perf events: Fix slow and broken cgroup context
+switch code")
+Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+---
+ kernel/events/core.c | 95 +++++++++++---------------------------------
+ 1 file changed, 23 insertions(+), 72 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 6859229497b1..f3bc2841141f 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -826,6 +826,7 @@ perf_cgroup_set_timestamp(struct task_struct *task,
+ 	}
+ }
+ 
++static DEFINE_PER_CPU(struct perf_cgroup *, cpu_perf_cgroups);
+ static DEFINE_PER_CPU(struct list_head, cgrp_cpuctx_list);
+ 
+ #define PERF_CGROUP_SWOUT	0x1 /* cgroup switch out every event */
+@@ -837,8 +838,9 @@ static DEFINE_PER_CPU(struct list_head, cgrp_cpuctx_list);
+  * mode SWOUT : schedule out everything
+  * mode SWIN : schedule in based on cgroup for next
+  */
+-static void perf_cgroup_switch(struct task_struct *task, int mode)
++static void perf_cgroup_switch(struct task_struct *task)
+ {
++	struct perf_cgroup *cgrp;
+ 	struct perf_cpu_context *cpuctx, *tmp;
+ 	struct list_head *list;
+ 	unsigned long flags;
+@@ -849,6 +851,9 @@ static void perf_cgroup_switch(struct task_struct *task, int mode)
+ 	 */
+ 	local_irq_save(flags);
+ 
++	cgrp = perf_cgroup_from_task(task, NULL);
++	__this_cpu_write(cpu_perf_cgroups, cgrp);
++
+ 	list = this_cpu_ptr(&cgrp_cpuctx_list);
+ 	list_for_each_entry_safe(cpuctx, tmp, list, cgrp_cpuctx_entry) {
+ 		WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
+@@ -856,28 +861,15 @@ static void perf_cgroup_switch(struct task_struct *task, int mode)
+ 		perf_ctx_lock(cpuctx, cpuctx->task_ctx);
+ 		perf_pmu_disable(cpuctx->ctx.pmu);
+ 
+-		if (mode & PERF_CGROUP_SWOUT) {
+-			cpu_ctx_sched_out(cpuctx, EVENT_ALL);
+-			/*
+-			 * must not be done before ctxswout due
+-			 * to event_filter_match() in event_sched_out()
+-			 */
+-			cpuctx->cgrp = NULL;
+-		}
++		cpu_ctx_sched_out(cpuctx, EVENT_ALL);
++		/*
++		 * must not be done before ctxswout due
++		 * to event_filter_match() in event_sched_out()
++		 */
++		cpuctx->cgrp = cgrp;
++
++		cpu_ctx_sched_in(cpuctx, EVENT_ALL, task);
+ 
+-		if (mode & PERF_CGROUP_SWIN) {
+-			WARN_ON_ONCE(cpuctx->cgrp);
+-			/*
+-			 * set cgrp before ctxsw in to allow
+-			 * event_filter_match() to not have to pass
+-			 * task around
+-			 * we pass the cpuctx->ctx to perf_cgroup_from_task()
+-			 * because cgorup events are only per-cpu
+-			 */
+-			cpuctx->cgrp = perf_cgroup_from_task(task,
+-							     &cpuctx->ctx);
+-			cpu_ctx_sched_in(cpuctx, EVENT_ALL, task);
+-		}
+ 		perf_pmu_enable(cpuctx->ctx.pmu);
+ 		perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+ 	}
+@@ -885,8 +877,8 @@ static void perf_cgroup_switch(struct task_struct *task, int mode)
+ 	local_irq_restore(flags);
+ }
+ 
+-static inline void perf_cgroup_sched_out(struct task_struct *task,
+-					 struct task_struct *next)
++static inline void perf_cgroup_sched_switch(struct task_struct *task,
++					    struct task_struct *next)
+ {
+ 	struct perf_cgroup *cgrp1;
+ 	struct perf_cgroup *cgrp2 = NULL;
+@@ -897,7 +889,7 @@ static inline void perf_cgroup_sched_out(struct task_struct *task,
+ 	 * we do not need to pass the ctx here because we know
+ 	 * we are holding the rcu lock
+ 	 */
+-	cgrp1 = perf_cgroup_from_task(task, NULL);
++	cgrp1 = __this_cpu_read(cpu_perf_cgroups);
+ 	cgrp2 = perf_cgroup_from_task(next, NULL);
+ 
+ 	/*
+@@ -906,33 +898,7 @@ static inline void perf_cgroup_sched_out(struct task_struct *task,
+ 	 * do no touch the cgroup events.
+ 	 */
+ 	if (cgrp1 != cgrp2)
+-		perf_cgroup_switch(task, PERF_CGROUP_SWOUT);
+-
+-	rcu_read_unlock();
+-}
+-
+-static inline void perf_cgroup_sched_in(struct task_struct *prev,
+-					struct task_struct *task)
+-{
+-	struct perf_cgroup *cgrp1;
+-	struct perf_cgroup *cgrp2 = NULL;
+-
+-	rcu_read_lock();
+-	/*
+-	 * we come here when we know perf_cgroup_events > 0
+-	 * we do not need to pass the ctx here because we know
+-	 * we are holding the rcu lock
+-	 */
+-	cgrp1 = perf_cgroup_from_task(task, NULL);
+-	cgrp2 = perf_cgroup_from_task(prev, NULL);
+-
+-	/*
+-	 * only need to schedule in cgroup events if we are changing
+-	 * cgroup during ctxsw. Cgroup events were not scheduled
+-	 * out of ctxsw out if that was not the case.
+-	 */
+-	if (cgrp1 != cgrp2)
+-		perf_cgroup_switch(task, PERF_CGROUP_SWIN);
++		perf_cgroup_switch(task);
+ 
+ 	rcu_read_unlock();
+ }
+@@ -1100,13 +1066,8 @@ static inline void update_cgrp_time_from_cpuctx(struct perf_cpu_context *cpuctx,
+ {
+ }
+ 
+-static inline void perf_cgroup_sched_out(struct task_struct *task,
+-					 struct task_struct *next)
+-{
+-}
+-
+-static inline void perf_cgroup_sched_in(struct task_struct *prev,
+-					struct task_struct *task)
++static inline void perf_cgroup_sched_switch(struct task_struct *task,
++					    struct task_struct *next)
+ {
+ }
+ 
+@@ -1124,7 +1085,7 @@ perf_cgroup_set_timestamp(struct task_struct *task,
+ }
+ 
+ static inline void
+-perf_cgroup_switch(struct task_struct *task, struct task_struct *next)
++perf_cgroup_sched_switch(struct task_struct *task, struct task_struct *next)
+ {
+ }
+ 
+@@ -3668,7 +3629,7 @@ void __perf_event_task_sched_out(struct task_struct *task,
+ 	 * cgroup event are system-wide mode only
+ 	 */
+ 	if (atomic_read(this_cpu_ptr(&perf_cgroup_events)))
+-		perf_cgroup_sched_out(task, next);
++		perf_cgroup_sched_switch(task, next);
+ }
+ 
+ /*
+@@ -3984,16 +3945,6 @@ void __perf_event_task_sched_in(struct task_struct *prev,
+ 	struct perf_event_context *ctx;
+ 	int ctxn;
+ 
+-	/*
+-	 * If cgroup events exist on this CPU, then we need to check if we have
+-	 * to switch in PMU state; cgroup event are system-wide mode only.
+-	 *
+-	 * Since cgroup events are CPU events, we must schedule these in before
+-	 * we schedule in the task events.
+-	 */
+-	if (atomic_read(this_cpu_ptr(&perf_cgroup_events)))
+-		perf_cgroup_sched_in(prev, task);
+-
+ 	for_each_task_context_nr(ctxn) {
+ 		ctx = task->perf_event_ctxp[ctxn];
+ 		if (likely(!ctx))
+@@ -13564,7 +13515,7 @@ static int __perf_cgroup_move(void *info)
+ {
+ 	struct task_struct *task = info;
+ 	rcu_read_lock();
+-	perf_cgroup_switch(task, PERF_CGROUP_SWOUT | PERF_CGROUP_SWIN);
++	perf_cgroup_switch(task);
+ 	rcu_read_unlock();
+ 	return 0;
+ }
+-- 
+2.20.1
+
