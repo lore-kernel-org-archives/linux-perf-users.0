@@ -2,33 +2,32 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0250C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Mar 2022 04:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E91C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Mar 2022 05:06:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242316AbiCHEa2 (ORCPT
+        id S235843AbiCHFHH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 7 Mar 2022 23:30:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35840 "EHLO
+        Tue, 8 Mar 2022 00:07:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230368AbiCHEa0 (ORCPT
+        with ESMTP id S230105AbiCHFHG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 7 Mar 2022 23:30:26 -0500
+        Tue, 8 Mar 2022 00:07:06 -0500
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5017E220EA;
-        Mon,  7 Mar 2022 20:29:30 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4F78D33EA9;
+        Mon,  7 Mar 2022 21:06:09 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B641DD6E;
-        Mon,  7 Mar 2022 20:29:29 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A294D6E;
+        Mon,  7 Mar 2022 21:06:09 -0800 (PST)
 Received: from [10.162.17.54] (a077893.blr.arm.com [10.162.17.54])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F04E73FA5D;
-        Mon,  7 Mar 2022 20:29:26 -0800 (PST)
-Message-ID: <fb9717bb-735a-88d9-254d-0e7b2f7209f2@arm.com>
-Date:   Tue, 8 Mar 2022 09:59:24 +0530
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F43B3FA5D;
+        Mon,  7 Mar 2022 21:06:06 -0800 (PST)
+Message-ID: <98472993-853a-7279-6594-fd173059a4d9@arm.com>
+Date:   Tue, 8 Mar 2022 10:36:04 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: [PATCH 2/4] perf: Print branch stack entry type in
- --dump-raw-trace
+Subject: Re: [PATCH 3/4] perf: Refactor perf script branch stack printing
 Content-Language: en-US
 To:     James Clark <james.clark@arm.com>, acme@kernel.org,
         linux-perf-users@vger.kernel.org
@@ -39,9 +38,9 @@ Cc:     german.gomez@arm.com, leo.yan@linaro.com,
         Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org
 References: <20220307171917.2555829-1-james.clark@arm.com>
- <20220307171917.2555829-3-james.clark@arm.com>
+ <20220307171917.2555829-4-james.clark@arm.com>
 From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20220307171917.2555829-3-james.clark@arm.com>
+In-Reply-To: <20220307171917.2555829-4-james.clark@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -51,53 +50,75 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 On 3/7/22 22:49, James Clark wrote:
-> This can help with debugging issues. It only prints when -j save_type
-> is used otherwise an empty string is printed.
-
-Specifying events with PERF_SAMPLE_BRANCH_CALL_STACK flag explicitly might
-be better along with '-j save_type'.
-
-> 
-> Before the change:
-> 
->   101603801707130 0xa70 [0x630]: PERF_RECORD_SAMPLE(IP, 0x2): 1108/1108: 0xffff9c1df24c period: 10694 addr: 0
->   ... branch stack: nr:64
->   .....  0: 0000ffff9c26029c -> 0000ffff9c26f340 0 cycles  P   0
->   .....  1: 0000ffff9c2601bc -> 0000ffff9c26f340 0 cycles  P   0
-> 
-> After the change:
-> 
->   101603801707130 0xa70 [0x630]: PERF_RECORD_SAMPLE(IP, 0x2): 1108/1108: 0xffff9c1df24c period: 10694 addr: 0
->   ... branch stack: nr:64
->   .....  0: 0000ffff9c26029c -> 0000ffff9c26f340 0 cycles  P   0 CALL
->   .....  1: 0000ffff9c2601bc -> 0000ffff9c26f340 0 cycles  P   0 IND_CALL
+> Remove duplicate code so that future changes to flags are always made to
+> all 3 printing variations.
 > 
 > Signed-off-by: James Clark <james.clark@arm.com>
 > ---
->  tools/perf/util/session.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  tools/perf/builtin-script.c | 27 ++++++++++++---------------
+>  1 file changed, 12 insertions(+), 15 deletions(-)
 > 
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index f54282d5c648..3b8dfe603e50 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -1159,14 +1159,15 @@ static void branch_stack__printf(struct perf_sample *sample, bool callstack)
->  		struct branch_entry *e = &entries[i];
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 9e032343f1c6..fac2e9470926 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -857,6 +857,15 @@ mispred_str(struct branch_entry *br)
+>  	return br->flags.predicted ? 'P' : 'M';
+>  }
 >  
->  		if (!callstack) {
-> -			printf("..... %2"PRIu64": %016" PRIx64 " -> %016" PRIx64 " %hu cycles %s%s%s%s %x\n",
-> +			printf("..... %2"PRIu64": %016" PRIx64 " -> %016" PRIx64 " %hu cycles %s%s%s%s %x %s\n",
->  				i, e->from, e->to,
->  				(unsigned short)e->flags.cycles,
->  				e->flags.mispred ? "M" : " ",
->  				e->flags.predicted ? "P" : " ",
->  				e->flags.abort ? "A" : " ",
->  				e->flags.in_tx ? "T" : " ",
-> -				(unsigned)e->flags.reserved);
-> +				(unsigned)e->flags.reserved,
-> +				e->flags.type ? branch_type_name(e->flags.type) : "");
->  		} else {
->  			printf("..... %2"PRIu64": %016" PRIx64 "\n",
->  				i, i > 0 ? e->from : e->to);
+> +static int print_bstack_flags(FILE *fp, struct branch_entry *br)
+> +{
+> +	return fprintf(fp, "/%c/%c/%c/%d ",
+> +		       mispred_str(br),
+> +		       br->flags.in_tx ? 'X' : '-',
+> +		       br->flags.abort ? 'A' : '-',
+> +		       br->flags.cycles);
+> +}
+> +
+>  static int perf_sample__fprintf_brstack(struct perf_sample *sample,
+>  					struct thread *thread,
+>  					struct perf_event_attr *attr, FILE *fp)
+> @@ -895,11 +904,7 @@ static int perf_sample__fprintf_brstack(struct perf_sample *sample,
+>  			printed += fprintf(fp, ")");
+>  		}
+>  
+> -		printed += fprintf(fp, "/%c/%c/%c/%d ",
+> -			mispred_str(entries + i),
+> -			entries[i].flags.in_tx ? 'X' : '-',
+> -			entries[i].flags.abort ? 'A' : '-',
+> -			entries[i].flags.cycles);
+> +		printed += print_bstack_flags(fp, entries + i);
+>  	}
+>  
+>  	return printed;
+> @@ -941,11 +946,7 @@ static int perf_sample__fprintf_brstacksym(struct perf_sample *sample,
+>  			printed += map__fprintf_dsoname(alt.map, fp);
+>  			printed += fprintf(fp, ")");
+>  		}
+> -		printed += fprintf(fp, "/%c/%c/%c/%d ",
+> -			mispred_str(entries + i),
+> -			entries[i].flags.in_tx ? 'X' : '-',
+> -			entries[i].flags.abort ? 'A' : '-',
+> -			entries[i].flags.cycles);
+> +		printed += print_bstack_flags(fp, entries + i);
+>  	}
+>  
+>  	return printed;
+> @@ -991,11 +992,7 @@ static int perf_sample__fprintf_brstackoff(struct perf_sample *sample,
+>  			printed += map__fprintf_dsoname(alt.map, fp);
+>  			printed += fprintf(fp, ")");
+>  		}
+> -		printed += fprintf(fp, "/%c/%c/%c/%d ",
+> -			mispred_str(entries + i),
+> -			entries[i].flags.in_tx ? 'X' : '-',
+> -			entries[i].flags.abort ? 'A' : '-',
+> -			entries[i].flags.cycles);
+> +		printed += print_bstack_flags(fp, entries + i);
+>  	}
+>  
+>  	return printed;
 
-LGTM but I am wondering whether this might affect existing tools ?
+
+LGTM
+
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
