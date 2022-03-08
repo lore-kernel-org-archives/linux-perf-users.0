@@ -2,50 +2,50 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D73C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Mar 2022 12:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4810FC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Mar 2022 12:54:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245045AbiCHMwD (ORCPT
+        id S231143AbiCHMzS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Mar 2022 07:52:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54636 "EHLO
+        Tue, 8 Mar 2022 07:55:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230080AbiCHMwC (ORCPT
+        with ESMTP id S231258AbiCHMzR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Mar 2022 07:52:02 -0500
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1BCD28E37;
-        Tue,  8 Mar 2022 04:51:01 -0800 (PST)
+        Tue, 8 Mar 2022 07:55:17 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4A40473A5;
+        Tue,  8 Mar 2022 04:54:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=RbBhkEsbvTvptnfwlTOsXGndnEtIWgBz6ZagA4q8H14=; b=qpU0luH1xsaBXRv5/arXaQzZT0
-        Cl/+han+6yS0Qy6GTJkO30rwQ7DeH5TW0x2z1PeM/oHUfbvO2U2c9kHip8cvr7NNYPTl0rwxuXavt
-        +6JE4KXwSN3tzxjpWm7GqzJlwUoSbVn6Oya5cWbBVAdtlLy1LEboTXpQCcbVURcQ5IniETgOwqxU7
-        vPo/bqDWY59wgKHtlLL/DExUsUwLSi0Z7p/mzR5GCI0fv/I4Mlscf+2vpuzCy7G4oobKb02HUs7b7
-        5mDlvgjE9My5XDjMEc+AiODpvkOxerEgzAtL2IzykpemzsbH0k760/3RUxO2ojJMUj8LS+2RkZhtY
-        Y9cOwyRw==;
+        bh=9Lp9h5SvUj4oJnNVmwW10MNKyznLkyl6QZ7JvhC2KJM=; b=mHLjbhesuT1YGt2pdddZdDSQes
+        +RIv3T+4cnxzoo/5L/ymQ6iM2w54DIgyKYXnhsAdLE/fjh4dC02OsoMysW6Ziol9z0tdodHLYMiZx
+        e0EPSWv2qL3lKCH5ATDBWA38cJc0Pz96PZqhfW7QjwSrA3LmXb3xLN4416GZMNDmE9P2GPVZD4Lm/
+        qx4zQTruexHwZIopHK+CB7c4n3BTMRs5fECGrQVr1VL7DUb2mScgQnU7A46X+U6uj7h/JTQblvzIm
+        +r9J1xjscX7bCiLkbJtmBEFIHpVsS0GIGkOAMWBxuqGifCLUfpb9eQlFamyGe1O8hXF0d5dPwqhdI
+        1fvTnaRQ==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nRZIK-00GSqL-Vq; Tue, 08 Mar 2022 12:50:29 +0000
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nRZLg-00GAms-5s; Tue, 08 Mar 2022 12:53:56 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5AB10300261;
-        Tue,  8 Mar 2022 13:50:26 +0100 (CET)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D7C07300169;
+        Tue,  8 Mar 2022 13:53:54 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id EDECA203A88DC; Tue,  8 Mar 2022 13:50:25 +0100 (CET)
-Date:   Tue, 8 Mar 2022 13:50:25 +0100
+        id BCDA9203A88DC; Tue,  8 Mar 2022 13:53:54 +0100 (CET)
+Date:   Tue, 8 Mar 2022 13:53:54 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     Wen Yang <wenyang@linux.alibaba.com>
-Cc:     Wen Yang <simon.wy@alibaba-inc.com>,
+Cc:     Stephane Eranian <eranian@google.com>,
+        Wen Yang <simon.wy@alibaba-inc.com>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Stephane Eranian <eranian@google.com>,
         mark rutland <mark.rutland@arm.com>,
         jiri olsa <jolsa@redhat.com>,
         namhyung kim <namhyung@kernel.org>,
@@ -54,128 +54,53 @@ Cc:     Wen Yang <simon.wy@alibaba-inc.com>,
         linux-kernel@vger.kernel.org
 Subject: Re: [RESEND PATCH 2/2] perf/x86: improve the event scheduling to
  avoid unnecessary pmu_stop/start
-Message-ID: <YidREXNn2AtI3V1c@hirez.programming.kicks-ass.net>
+Message-ID: <YidR4iKM/GjWto4Y@hirez.programming.kicks-ass.net>
 References: <20220304110351.47731-1-simon.wy@alibaba-inc.com>
  <20220304110351.47731-2-simon.wy@alibaba-inc.com>
  <YiIyrFn7upPEouVt@hirez.programming.kicks-ass.net>
  <0c119da1-053b-a2d6-1579-8fb09dbe8e63@linux.alibaba.com>
+ <CABPqkBQTkfofi0-92iMRSfgZDHwCxpOD0GmhvAtOruhO=M1gKg@mail.gmail.com>
+ <17f24adb-c1af-8c51-d5a9-63b45a7bdcbd@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0c119da1-053b-a2d6-1579-8fb09dbe8e63@linux.alibaba.com>
+In-Reply-To: <17f24adb-c1af-8c51-d5a9-63b45a7bdcbd@linux.alibaba.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Mar 06, 2022 at 10:36:38PM +0800, Wen Yang wrote:
+On Tue, Mar 08, 2022 at 02:42:10PM +0800, Wen Yang wrote:
 
-> The perf event generated by the above script A (cycles:D), and the counter
-> it used changes from #1 to #3. We use perf event in pinned mode, and then
-> continuously read its value for a long time, but its PMU counter changes
-
-Yes, so what?
-
->, so the counter value will also jump.
-
-I fail to see how the counter value will jump when we reprogram the
-thing. When we stop we update the value, then reprogram on another
-counter and continue. So where does it go sideways?
-
-> 
-> 0xffff88b72db85800:
-> The perf event generated by the above script A (instructions:D), which has
-> always occupied #fixed_instruction.
-> 
-> 0xffff88bf46c34000, 0xffff88bf46c35000, 0xffff88bf46c30000:
-> Theses perf events are generated by the above script B.
+> Perhaps the following code could ensure that the pmu counter value is
+> stable:
 > 
 > 
-> > > 
-> > > so it will cause unnecessary pmu_stop/start and also cause abnormal cpi.
-> > 
-> > How?!?
-> > 
+>     /*
+>      * Careful: an NMI might modify the previous event value.
+>      *
+>      * Our tactic to handle this is to first atomically read and
+>      * exchange a new raw count - then add that new-prev delta
+>      * count to the generic event atomically:
+>      */
+> again:
+>     prev_raw_count = local64_read(&hwc->prev_count);
+>     rdpmcl(hwc->event_base_rdpmc, new_raw_count);
 > 
-> We may refer to the x86_pmu_enable function:
-> step1: save events moving to new counters
-> step2: reprogram moved events into new counters
+>     if (local64_cmpxchg(&hwc->prev_count, prev_raw_count,
+>                     new_raw_count) != prev_raw_count)
+>         goto again;
 > 
-> especially:
 > 
-> static inline int match_prev_assignment(struct hw_perf_event *hwc,
->                     struct cpu_hw_events *cpuc,
->                     int i)
-> {
->     return hwc->idx == cpuc->assign[i] &&
->         hwc->last_cpu == smp_processor_id() &&
->         hwc->last_tag == cpuc->tags[i];
-> }
+> It might be better if we could reduce the calls to goto again.
 
-I'm not seeing an explanation for how a counter value is not preserved.
+This is completely unrelated. And that goto is rather unlikely, unless
+you're doing some truely weird things.
 
-> > > Cloud servers usually continuously monitor the cpi data of some important
-> > > services. This issue affects performance and misleads monitoring.
-> > > 
-> > > The current event scheduling algorithm is more than 10 years old:
-> > > commit 1da53e023029 ("perf_events, x86: Improve x86 event scheduling")
-> > 
-> > irrelevant
-> > 
-> 
-> commit 1da53e023029 ("perf_events, x86: Improve x86 event scheduling")
-> 
-> This commit is the basis of the perf event scheduling algorithm we currently
-> use.
+That case happens when the PMI for a counter lands in the middle of a
+read() for that counter. In that case both will try and fold the
+hardware delta into the software counter. This conflict is fundamentally
+unavoidable and needs to be dealt with. The above guarantees correctness
+in this case.
 
-Well yes. But how is the age of it relevant?
-
-> The reason why the counter above changed from #1 to #3 can be found from it:
-> The algorithm takes into account the list of counter constraints
-> for each event. It assigns events to counters from the most
-> constrained, i.e., works on only one counter, to the least
-> constrained, i.e., works on any counter.
-> 
-> the nmi watchdog permanently consumes one fp (*cycles*).
->  therefore, when the above shell script obtains *cycles:D*
-> again, it has to use a GP, and its weight is 5.
-> but other events (like *cache-misses*) have a weight of 4,
-> so the counter used by *cycles:D* will often be taken away.
-
-So what?
-
-I mean, it is known the algorithm isn't optimal, but at least it's
-bounded. There are event sets that will fail to schedule but could, but
-I don't think you're talking about that.
-
-Event migrating to a different counter is not a problem. This is
-expected and normal. Code *must* be able to deal with it.
-
-> In addition, we also found that this problem may affect NMI watchdog in the
-> production cluster.
-> The NMI watchdog also uses a fixed counter in fixed mode. Usually, it is The
-> first element of the event_list array, so it usually takes precedence and
-> can get a fixed counter.
-> But if the administrator closes the watchdog first and then enables it, it
-> may be at the end of the event_list array, so its expected fixed counter may
-> be occupied by other perf event, and it can only use one GP. In this way,
-> there is a similar issue here: the PMU counter used by the NMI watchdog may
-> be disabled/enabled frequently and unnecessarily.
-
-Again, I'm not seeing a problem. If you create more events than we have
-hardware counters we'll rotate the list and things will get scheduled in
-all sorts of order. This works.
-
-> Any advice or guidance on this would be appreciated.
-
-I'm still not sure what your actual problem is; I suspect you're using
-perf wrong.
-
-Are you using rdpmc and not respecting the scheme described in
-include/uapi/linux/perf_events.h:perf_event_mmap_page ?
-
-Note that if you're using pinned counters you can simplify that scheme
-by ignoring all the timekeeping nonsense. In that case it does become
-significantly simpler/faster.
-
-But you cannot use rdpmc without using the mmap page's self-monitoring
-data.
+It is however extremely unlikely and has *NOTHING* what so ever to do
+with counter scheduling.
