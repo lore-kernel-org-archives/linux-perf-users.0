@@ -2,204 +2,128 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D406C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Mar 2022 12:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B76EFC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Mar 2022 12:09:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234252AbiCHMHg (ORCPT
+        id S1345190AbiCHMKa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Mar 2022 07:07:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40462 "EHLO
+        Tue, 8 Mar 2022 07:10:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230381AbiCHMHf (ORCPT
+        with ESMTP id S234183AbiCHMKa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Mar 2022 07:07:35 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0494028E02;
-        Tue,  8 Mar 2022 04:06:38 -0800 (PST)
-Received: from fraeml715-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KCYtx4Wm1z6801q;
-        Tue,  8 Mar 2022 20:05:45 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml715-chm.china.huawei.com (10.206.15.34) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Tue, 8 Mar 2022 13:06:10 +0100
-Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Tue, 8 Mar
- 2022 12:06:08 +0000
-Date:   Tue, 8 Mar 2022 12:06:07 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Yicong Yang <yangyicong@huawei.com>
-CC:     Yicong Yang <yangyicong@hisilicon.com>,
-        <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <lorenzo.pieralisi@arm.com>,
-        <will@kernel.org>, <mark.rutland@arm.com>,
-        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
-        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
-        <daniel.thompson@linaro.org>, <joro@8bytes.org>,
-        <john.garry@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
-        <robin.murphy@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <acme@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>, <prime.zeng@huawei.com>,
-        <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
-        <linuxarm@huawei.com>, <song.bao.hua@hisilicon.com>
-Subject: Re: [PATCH v5 3/8] hisi_ptt: Register PMU device for PTT trace
-Message-ID: <20220308120607.000064e6@Huawei.com>
-In-Reply-To: <d3b555c1-ed7e-f668-7d81-9cc2dbe6ffba@huawei.com>
-References: <20220308084930.5142-1-yangyicong@hisilicon.com>
-        <20220308084930.5142-4-yangyicong@hisilicon.com>
-        <20220308102157.00003725@Huawei.com>
-        <d3b555c1-ed7e-f668-7d81-9cc2dbe6ffba@huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        Tue, 8 Mar 2022 07:10:30 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1743E340EE;
+        Tue,  8 Mar 2022 04:09:34 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC230139F;
+        Tue,  8 Mar 2022 04:09:33 -0800 (PST)
+Received: from [10.57.40.166] (unknown [10.57.40.166])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7609C3FA5D;
+        Tue,  8 Mar 2022 04:09:32 -0800 (PST)
+Message-ID: <937810c4-a752-18ec-523d-fc4c9f2d75c7@arm.com>
+Date:   Tue, 8 Mar 2022 12:09:31 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH 4/4] perf script: Output branch sample type
+Content-Language: en-US
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, acme@kernel.org,
+        linux-perf-users@vger.kernel.org
+Cc:     german.gomez@arm.com, leo.yan@linaro.com,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <20220307171917.2555829-1-james.clark@arm.com>
+ <20220307171917.2555829-5-james.clark@arm.com>
+ <3b6007ef-1ad8-c495-26aa-7974af8faefa@arm.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <3b6007ef-1ad8-c495-26aa-7974af8faefa@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.41]
-X-ClientProxiedBy: lhreml740-chm.china.huawei.com (10.201.108.190) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, 8 Mar 2022 19:13:08 +0800
-Yicong Yang <yangyicong@huawei.com> wrote:
 
-> On 2022/3/8 18:21, Jonathan Cameron wrote:
-> > On Tue, 8 Mar 2022 16:49:25 +0800
-> > Yicong Yang <yangyicong@hisilicon.com> wrote:
-> >   
-> >> Register PMU device of PTT trace, then users can use trace through perf
-> >> command. The driver makes use of perf AUX trace and support following
-> >> events to configure the trace:
-> >>
-> >> - filter: select Root port or Endpoint to trace
-> >> - type: select the type of traced TLP headers
-> >> - direction: select the direction of traced TLP headers
-> >> - format: select the data format of the traced TLP headers
-> >>
-> >> This patch adds the PMU driver part of PTT trace. The perf command support
-> >> of PTT trace is added in the following patch.
-> >>
-> >> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>  
-> > 
-> > It seems to me that you ended up doing both suggestions for
-> > how to clean up the remove order when it was meant to be
-> > a question of picking one or the other.
-> > 
-> > Otherwise this looks good to me - so with that tidied up
-> >   
-> 
-> Hi Jonathan,
-> 
-> Thanks for the comments. I'd like to illustrate the reason why I decide to
-> manually unregister the PMU device.
-> 
-> The DMA buffers are devm allocated when necessary. They're only allocated
-> when user is going to use the PTT in the first time after the driver's probe,
-> so when driver removal the buffers are released prior to the PMU device's
-> unregistration. I think there's a race condition.
-> 
-> IIUC, The PMU device(as the user interface) should be unregistered first then
-> we're safe to free the DMA buffers. But unregister the PMU device by devm
-> cannot keep that order.
 
-Ok. Please add a comment in the remove() giving this reasoning.
+On 08/03/2022 05:22, Anshuman Khandual wrote:
+> 
+> 
+> On 3/7/22 22:49, James Clark wrote:
+>> The type info is saved when using '-j save_type'. Output this in perf
+> 
+> Mentioning PERF_SAMPLE_BRANCH_CALL_STACK here as well might be better.
+> 
+>> script so it can be accessed by other tools or for debugging.
+>>
+>> It's appended to the end of the list of fields so any existing tools
+>> that split on / and access fields via an index are not affected. Also
+>> output '-' instead of 'N/A' when the branch type isn't saved because /
+>> is used as a field separator.
+> 
+> Did not get it. Why 'N/A' should have been used anyway ?
 
-Jonathan
+N/A would be printed if branch type isn't saved because then branch type == 0.
+N/A is the name that's assigned to the 0 entry of the branch type name list.
 
 > 
-> Thanks,
-> Yicong
+>>
+>> Entries before this change look like this:
+>>
+>>   0xaaaadb350838/0xaaaadb3507a4/P/-/-/0
+>>
+>> And afterwards like this:
+>>
+>>   0xaaaadb350838/0xaaaadb3507a4/P/-/-/0/CALL
+>>
+>> or this if no type info is saved:
+>>
+>>   0x7fb57586df6b/0x7fb5758731f0/P/-/-/143/-
 > 
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> >   
-> >> ---  
-> >   
-> >> +
-> >> +static int hisi_ptt_register_pmu(struct hisi_ptt *hisi_ptt)
-> >> +{
-> >> +	u16 core_id, sicl_id;
-> >> +	char *pmu_name;
-> >> +	u32 reg;
-> >> +
-> >> +	hisi_ptt->hisi_ptt_pmu = (struct pmu) {
-> >> +		.module		= THIS_MODULE,
-> >> +		.capabilities	= PERF_PMU_CAP_EXCLUSIVE | PERF_PMU_CAP_ITRACE,
-> >> +		.task_ctx_nr	= perf_sw_context,
-> >> +		.attr_groups	= hisi_ptt_pmu_groups,
-> >> +		.event_init	= hisi_ptt_pmu_event_init,
-> >> +		.setup_aux	= hisi_ptt_pmu_setup_aux,
-> >> +		.free_aux	= hisi_ptt_pmu_free_aux,
-> >> +		.start		= hisi_ptt_pmu_start,
-> >> +		.stop		= hisi_ptt_pmu_stop,
-> >> +		.add		= hisi_ptt_pmu_add,
-> >> +		.del		= hisi_ptt_pmu_del,
-> >> +	};
-> >> +
-> >> +	reg = readl(hisi_ptt->iobase + HISI_PTT_LOCATION);
-> >> +	core_id = FIELD_GET(HISI_PTT_CORE_ID, reg);
-> >> +	sicl_id = FIELD_GET(HISI_PTT_SICL_ID, reg);
-> >> +
-> >> +	pmu_name = devm_kasprintf(&hisi_ptt->pdev->dev, GFP_KERNEL, "hisi_ptt%u_%u",
-> >> +				  sicl_id, core_id);
-> >> +	if (!pmu_name)
-> >> +		return -ENOMEM;
-> >> +
-> >> +	return perf_pmu_register(&hisi_ptt->hisi_ptt_pmu, pmu_name, -1);  
-> > 
-> > As below, you can put back the devm cleanup that you had in v4 now you
-> > have modified how the filter cleanup is done to also be devm managed.
-> >   
-> >> +}
-> >> +
-> >>  /*
-> >>   * The DMA of PTT trace can only use direct mapping, due to some
-> >>   * hardware restriction. Check whether there is an IOMMU or the
-> >> @@ -303,15 +825,32 @@ static int hisi_ptt_probe(struct pci_dev *pdev,
-> >>  
-> >>  	pci_set_master(pdev);
-> >>  
-> >> +	ret = hisi_ptt_register_irq(hisi_ptt);
-> >> +	if (ret)
-> >> +		return ret;
-> >> +
-> >>  	ret = hisi_ptt_init_ctrls(hisi_ptt);
-> >>  	if (ret) {
-> >>  		pci_err(pdev, "failed to init controls, ret = %d.\n", ret);
-> >>  		return ret;
-> >>  	}
-> >>  
-> >> +	ret = hisi_ptt_register_pmu(hisi_ptt);
-> >> +	if (ret) {
-> >> +		pci_err(pdev, "failed to register pmu device, ret = %d", ret);
-> >> +		return ret;
-> >> +	}
-> >> +
-> >>  	return 0;
-> >>  }
-> >>  
-> >> +void hisi_ptt_remove(struct pci_dev *pdev)
-> >> +{
-> >> +	struct hisi_ptt *hisi_ptt = pci_get_drvdata(pdev);
-> >> +
-> >> +	perf_pmu_unregister(&hisi_ptt->hisi_ptt_pmu);  
-> > 
-> > Now you have the filter cleanup occurring using a devm_add_action_or_reset()
-> > there is no need to have a manual cleanup of this - you can
-> > use the approach of a devm_add_action_or_reset like you had in v4.
-> > 
-> > As it is the last call in the probe() order it will be the first one
-> > called in the device managed cleanup.
-> >   
-> >> +}
-> >> +  
-> > 
-> > 
-> > .
-> >   
+> 143 ?
 
+Just random output from my laptop probably. It's not supposed to match up
+with the previous entries, it's a new run and a new set of output.
+
+> 
+>>
+>> Signed-off-by: James Clark <james.clark@arm.com>
+>> ---
+>>  tools/perf/builtin-script.c | 5 +++--
+>>  1 file changed, 3 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+>> index fac2e9470926..5e4a262a6825 100644
+>> --- a/tools/perf/builtin-script.c
+>> +++ b/tools/perf/builtin-script.c
+>> @@ -859,11 +859,12 @@ mispred_str(struct branch_entry *br)
+>>  
+>>  static int print_bstack_flags(FILE *fp, struct branch_entry *br)
+>>  {
+>> -	return fprintf(fp, "/%c/%c/%c/%d ",
+>> +	return fprintf(fp, "/%c/%c/%c/%d/%s ",
+>>  		       mispred_str(br),
+>>  		       br->flags.in_tx ? 'X' : '-',
+>>  		       br->flags.abort ? 'A' : '-',
+>> -		       br->flags.cycles);
+>> +		       br->flags.cycles,
+>> +		       br->flags.type ? branch_type_name(br->flags.type) : "-");
+>>  }
+>>  
+>>  static int perf_sample__fprintf_brstack(struct perf_sample *sample,
+> 
+> 
+> LGTM but as mentioned before, I hope this does not affect any existing
+> parsing tools.
+
+It's possible for this perf script change. But any parser would have to be splitting on
+/ and spaces and indexing into the result so I can't see how it's possible to make a parser
+that wouldn't handle an entry appended to the end.
+
+I imagine someone could have an assert that checks the number of results after the split on /.
+But if they added that I'm assuming they were thinking of the possibility that extra entries
+could be added so handle it properly.
