@@ -2,26 +2,26 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED171C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Mar 2022 03:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5024FC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Mar 2022 03:37:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231868AbiCIDie (ORCPT
+        id S231867AbiCIDil (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Mar 2022 22:38:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58858 "EHLO
+        Tue, 8 Mar 2022 22:38:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231867AbiCIDid (ORCPT
+        with ESMTP id S231865AbiCIDik (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Mar 2022 22:38:33 -0500
+        Tue, 8 Mar 2022 22:38:40 -0500
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C9B8515C645;
-        Tue,  8 Mar 2022 19:37:35 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5F0CB15DB1F;
+        Tue,  8 Mar 2022 19:37:42 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E2E61650;
-        Tue,  8 Mar 2022 19:37:35 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 141BE1650;
+        Tue,  8 Mar 2022 19:37:42 -0800 (PST)
 Received: from a077893.arm.com (unknown [10.163.52.241])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id EB4903FA4D;
-        Tue,  8 Mar 2022 19:37:29 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 54A333FA4D;
+        Tue,  8 Mar 2022 19:37:36 -0800 (PST)
 From:   Anshuman Khandual <anshuman.khandual@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         peterz@infradead.org, acme@kernel.org
@@ -35,9 +35,9 @@ Cc:     james.clark@arm.com, suzuki.poulose@arm.com,
         Thomas Gleixner <tglx@linutronix.de>,
         Will Deacon <will@kernel.org>,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH V2 5/8] perf/tools: Add irq and exception return branch types
-Date:   Wed,  9 Mar 2022 09:06:39 +0530
-Message-Id: <20220309033642.144769-6-anshuman.khandual@arm.com>
+Subject: [PATCH V2 6/8] perf/tools: Add system error and not in transaction branch types
+Date:   Wed,  9 Mar 2022 09:06:40 +0530
+Message-Id: <20220309033642.144769-7-anshuman.khandual@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220309033642.144769-1-anshuman.khandual@arm.com>
 References: <20220309033642.144769-1-anshuman.khandual@arm.com>
@@ -48,9 +48,9 @@ List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 This updates the perf tool with generic branch type classification with two
-new branch types i.e irq (PERF_BR_IRQ) and exception return (PERF_BR_ERET)
-which got updated earlier in the kernel. This also updates corresponding
-branch type strings in branch_type_name().
+new branch types i.e system error (PERF_BR_SERROR) and not in transaction
+(PERF_BR_NO_TX) which got updated earlier in the kernel. This also updates
+corresponding branch type strings in branch_type_name().
 
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>
@@ -71,30 +71,30 @@ Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
  2 files changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index 82858b697c05..d37629dbad72 100644
+index d37629dbad72..26d8f0b5ac0d 100644
 --- a/tools/include/uapi/linux/perf_event.h
 +++ b/tools/include/uapi/linux/perf_event.h
-@@ -251,6 +251,8 @@ enum {
- 	PERF_BR_SYSRET		= 8,	/* syscall return */
- 	PERF_BR_COND_CALL	= 9,	/* conditional function call */
+@@ -253,6 +253,8 @@ enum {
  	PERF_BR_COND_RET	= 10,	/* conditional function return */
-+	PERF_BR_ERET		= 11,	/* exception return */
-+	PERF_BR_IRQ		= 12,	/* irq */
+ 	PERF_BR_ERET		= 11,	/* exception return */
+ 	PERF_BR_IRQ		= 12,	/* irq */
++	PERF_BR_SERROR		= 13,	/* system error */
++	PERF_BR_NO_TX		= 14,	/* not in transaction */
  	PERF_BR_MAX,
  };
  
 diff --git a/tools/perf/util/branch.c b/tools/perf/util/branch.c
-index 2285b1eb3128..a9a909db8cc7 100644
+index a9a909db8cc7..abc673347bee 100644
 --- a/tools/perf/util/branch.c
 +++ b/tools/perf/util/branch.c
-@@ -49,7 +49,9 @@ const char *branch_type_name(int type)
- 		"SYSCALL",
- 		"SYSRET",
+@@ -51,7 +51,9 @@ const char *branch_type_name(int type)
  		"COND_CALL",
--		"COND_RET"
-+		"COND_RET",
-+		"ERET",
-+		"IRQ"
+ 		"COND_RET",
+ 		"ERET",
+-		"IRQ"
++		"IRQ",
++		"SERROR",
++		"NO_TX"
  	};
  
  	if (type >= 0 && type < PERF_BR_MAX)
