@@ -2,26 +2,26 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5024FC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Mar 2022 03:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 678C2C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Mar 2022 03:37:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231867AbiCIDil (ORCPT
+        id S231865AbiCIDir (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Mar 2022 22:38:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59362 "EHLO
+        Tue, 8 Mar 2022 22:38:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231865AbiCIDik (ORCPT
+        with ESMTP id S231862AbiCIDir (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Mar 2022 22:38:40 -0500
+        Tue, 8 Mar 2022 22:38:47 -0500
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5F0CB15DB1F;
-        Tue,  8 Mar 2022 19:37:42 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6BF4C36B77;
+        Tue,  8 Mar 2022 19:37:48 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 141BE1650;
-        Tue,  8 Mar 2022 19:37:42 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3BF9B1650;
+        Tue,  8 Mar 2022 19:37:48 -0800 (PST)
 Received: from a077893.arm.com (unknown [10.163.52.241])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 54A333FA4D;
-        Tue,  8 Mar 2022 19:37:36 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B645A3FA4D;
+        Tue,  8 Mar 2022 19:37:42 -0800 (PST)
 From:   Anshuman Khandual <anshuman.khandual@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         peterz@infradead.org, acme@kernel.org
@@ -35,9 +35,9 @@ Cc:     james.clark@arm.com, suzuki.poulose@arm.com,
         Thomas Gleixner <tglx@linutronix.de>,
         Will Deacon <will@kernel.org>,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH V2 6/8] perf/tools: Add system error and not in transaction branch types
-Date:   Wed,  9 Mar 2022 09:06:40 +0530
-Message-Id: <20220309033642.144769-7-anshuman.khandual@arm.com>
+Subject: [PATCH V2 7/8] perf/tools: Extend branch type classification
+Date:   Wed,  9 Mar 2022 09:06:41 +0530
+Message-Id: <20220309033642.144769-8-anshuman.khandual@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220309033642.144769-1-anshuman.khandual@arm.com>
 References: <20220309033642.144769-1-anshuman.khandual@arm.com>
@@ -47,10 +47,10 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This updates the perf tool with generic branch type classification with two
-new branch types i.e system error (PERF_BR_SERROR) and not in transaction
-(PERF_BR_NO_TX) which got updated earlier in the kernel. This also updates
-corresponding branch type strings in branch_type_name().
+This updates the perf tool with generic branch type classification with new
+ABI extender place holder i.e PERF_BR_EXTEND_ABI, the new 4 bit branch type
+field i.e perf_branch_entry.new_type, new generic page fault related branch
+types and some arch specific branch types as added earlier in the kernel.
 
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>
@@ -66,35 +66,58 @@ Cc: linux-perf-users@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 ---
- tools/include/uapi/linux/perf_event.h | 2 ++
- tools/perf/util/branch.c              | 4 +++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ tools/include/uapi/linux/perf_event.h | 16 +++++++++++++++-
+ tools/perf/util/branch.c              |  3 ++-
+ 2 files changed, 17 insertions(+), 2 deletions(-)
 
 diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index d37629dbad72..26d8f0b5ac0d 100644
+index 26d8f0b5ac0d..d29280adc3c4 100644
 --- a/tools/include/uapi/linux/perf_event.h
 +++ b/tools/include/uapi/linux/perf_event.h
-@@ -253,6 +253,8 @@ enum {
- 	PERF_BR_COND_RET	= 10,	/* conditional function return */
- 	PERF_BR_ERET		= 11,	/* exception return */
+@@ -255,9 +255,22 @@ enum {
  	PERF_BR_IRQ		= 12,	/* irq */
-+	PERF_BR_SERROR		= 13,	/* system error */
-+	PERF_BR_NO_TX		= 14,	/* not in transaction */
+ 	PERF_BR_SERROR		= 13,	/* system error */
+ 	PERF_BR_NO_TX		= 14,	/* not in transaction */
++	PERF_BR_EXTEND_ABI	= 15,	/* extend ABI */
  	PERF_BR_MAX,
  };
  
++enum {
++	PERF_BR_NEW_FAULT_ALGN		= 0,    /* Alignment fault */
++	PERF_BR_NEW_FAULT_DATA		= 1,    /* Data fault */
++	PERF_BR_NEW_FAULT_INST		= 2,    /* Inst fault */
++	PERF_BR_NEW_ARCH_1		= 3,    /* Architecture specific */
++	PERF_BR_NEW_ARCH_2		= 4,    /* Architecture specific */
++	PERF_BR_NEW_ARCH_3		= 5,    /* Architecture specific */
++	PERF_BR_NEW_ARCH_4		= 6,    /* Architecture specific */
++	PERF_BR_NEW_ARCH_5		= 7,    /* Architecture specific */
++	PERF_BR_NEW_MAX,
++};
++
+ #define PERF_SAMPLE_BRANCH_PLM_ALL \
+ 	(PERF_SAMPLE_BRANCH_USER|\
+ 	 PERF_SAMPLE_BRANCH_KERNEL|\
+@@ -1372,7 +1385,8 @@ struct perf_branch_entry {
+ 		abort:1,    /* transaction abort */
+ 		cycles:16,  /* cycle count to last branch */
+ 		type:4,     /* branch type */
+-		reserved:40;
++		new_type:4, /* additional branch type */
++		reserved:36;
+ };
+ 
+ union perf_sample_weight {
 diff --git a/tools/perf/util/branch.c b/tools/perf/util/branch.c
-index a9a909db8cc7..abc673347bee 100644
+index abc673347bee..4bd52de0527c 100644
 --- a/tools/perf/util/branch.c
 +++ b/tools/perf/util/branch.c
-@@ -51,7 +51,9 @@ const char *branch_type_name(int type)
- 		"COND_CALL",
- 		"COND_RET",
+@@ -53,7 +53,8 @@ const char *branch_type_name(int type)
  		"ERET",
--		"IRQ"
-+		"IRQ",
-+		"SERROR",
-+		"NO_TX"
+ 		"IRQ",
+ 		"SERROR",
+-		"NO_TX"
++		"NO_TX",
++		"EXTEND_ABI"
  	};
  
  	if (type >= 0 && type < PERF_BR_MAX)
