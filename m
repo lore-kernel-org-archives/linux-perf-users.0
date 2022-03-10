@@ -2,127 +2,287 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A776BC4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Mar 2022 19:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34CDC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Mar 2022 03:50:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237966AbiCIToc (ORCPT
+        id S239340AbiCJDvo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Mar 2022 14:44:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39240 "EHLO
+        Wed, 9 Mar 2022 22:51:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237984AbiCITob (ORCPT
+        with ESMTP id S234822AbiCJDvl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Mar 2022 14:44:31 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2F5BE1216A9;
-        Wed,  9 Mar 2022 11:43:32 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E26E11692;
-        Wed,  9 Mar 2022 11:43:31 -0800 (PST)
-Received: from e121896.arm.com (unknown [10.57.41.86])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 694133FA27;
-        Wed,  9 Mar 2022 11:43:30 -0800 (PST)
-From:   James Clark <james.clark@arm.com>
-To:     acme@kernel.org, linux-perf-users@vger.kernel.org
-Cc:     James Clark <james.clark@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Wed, 9 Mar 2022 22:51:41 -0500
+Received: from out30-43.freemail.mail.aliyun.com (out30-43.freemail.mail.aliyun.com [115.124.30.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E5AE12B764;
+        Wed,  9 Mar 2022 19:50:39 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R361e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0V6mcjkH_1646884234;
+Received: from IT-C02W23QPG8WN.local(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0V6mcjkH_1646884234)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 10 Mar 2022 11:50:35 +0800
+Subject: Re: [RESEND PATCH 2/2] perf/x86: improve the event scheduling to
+ avoid unnecessary pmu_stop/start
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>
+Cc:     Wen Yang <simon.wy@alibaba-inc.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephane Eranian <eranian@google.com>,
+        mark rutland <mark.rutland@arm.com>,
+        jiri olsa <jolsa@redhat.com>,
+        namhyung kim <namhyung@kernel.org>,
+        borislav petkov <bp@alien8.de>, x86@kernel.org,
+        "h. peter anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] perf tools: Use Python devtools for version autodetection rather than runtime
-Date:   Wed,  9 Mar 2022 19:43:13 +0000
-Message-Id: <20220309194313.3350126-2-james.clark@arm.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20220309194313.3350126-1-james.clark@arm.com>
-References: <20220309194313.3350126-1-james.clark@arm.com>
+References: <20220304110351.47731-1-simon.wy@alibaba-inc.com>
+ <20220304110351.47731-2-simon.wy@alibaba-inc.com>
+ <YiIyrFn7upPEouVt@hirez.programming.kicks-ass.net>
+ <0c119da1-053b-a2d6-1579-8fb09dbe8e63@linux.alibaba.com>
+ <YidREXNn2AtI3V1c@hirez.programming.kicks-ass.net>
+From:   Wen Yang <wenyang@linux.alibaba.com>
+Message-ID: <271bc186-7ffb-33c8-4934-cda2beb94816@linux.alibaba.com>
+Date:   Thu, 10 Mar 2022 11:50:33 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:78.0)
+ Gecko/20100101 Thunderbird/78.14.0
 MIME-Version: 1.0
+In-Reply-To: <YidREXNn2AtI3V1c@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This fixes the issue where the build will fail if only the Python2
-runtime is installed but the Python3 devtools are installed. Currently
-the workaround is 'make PYTHON=python3'.
 
-Fix it by autodetecting Python based on whether python[x]-config exists
-rather than just python[x] because both are needed for the build. Then
--config is stripped to find the Python runtime.
 
-Testing
-=======
+ÔÚ 2022/3/8 ÏÂÎç8:50, Peter Zijlstra Ð´µÀ:
+> On Sun, Mar 06, 2022 at 10:36:38PM +0800, Wen Yang wrote:
+> 
+>> The perf event generated by the above script A (cycles:D), and the counter
+>> it used changes from #1 to #3. We use perf event in pinned mode, and then
+>> continuously read its value for a long time, but its PMU counter changes
+> 
+> Yes, so what?
+> 
+>> , so the counter value will also jump.
+> 
+> I fail to see how the counter value will jump when we reprogram the
+> thing. When we stop we update the value, then reprogram on another
+> counter and continue. So where does it go sideways?
+> 
+>>
+>> 0xffff88b72db85800:
+>> The perf event generated by the above script A (instructions:D), which has
+>> always occupied #fixed_instruction.
+>>
+>> 0xffff88bf46c34000, 0xffff88bf46c35000, 0xffff88bf46c30000:
+>> Theses perf events are generated by the above script B.
+>>
+>>
+>>>>
+>>>> so it will cause unnecessary pmu_stop/start and also cause abnormal cpi.
+>>>
+>>> How?!?
+>>>
+>>
+>> We may refer to the x86_pmu_enable function:
+>> step1: save events moving to new counters
+>> step2: reprogram moved events into new counters
+>>
+>> especially:
+>>
+>> static inline int match_prev_assignment(struct hw_perf_event *hwc,
+>>                      struct cpu_hw_events *cpuc,
+>>                      int i)
+>> {
+>>      return hwc->idx == cpuc->assign[i] &&
+>>          hwc->last_cpu == smp_processor_id() &&
+>>          hwc->last_tag == cpuc->tags[i];
+>> }
+> 
+> I'm not seeing an explanation for how a counter value is not preserved.
+> 
+>>>> Cloud servers usually continuously monitor the cpi data of some important
+>>>> services. This issue affects performance and misleads monitoring.
+>>>>
+>>>> The current event scheduling algorithm is more than 10 years old:
+>>>> commit 1da53e023029 ("perf_events, x86: Improve x86 event scheduling")
+>>>
+>>> irrelevant
+>>>
+>>
+>> commit 1da53e023029 ("perf_events, x86: Improve x86 event scheduling")
+>>
+>> This commit is the basis of the perf event scheduling algorithm we currently
+>> use.
+> 
+> Well yes. But how is the age of it relevant?
+> 
+>> The reason why the counter above changed from #1 to #3 can be found from it:
+>> The algorithm takes into account the list of counter constraints
+>> for each event. It assigns events to counters from the most
+>> constrained, i.e., works on only one counter, to the least
+>> constrained, i.e., works on any counter.
+>>
+>> the nmi watchdog permanently consumes one fp (*cycles*).
+>>   therefore, when the above shell script obtains *cycles:D*
+>> again, it has to use a GP, and its weight is 5.
+>> but other events (like *cache-misses*) have a weight of 4,
+>> so the counter used by *cycles:D* will often be taken away.
+> 
+> So what?
+> 
+> I mean, it is known the algorithm isn't optimal, but at least it's
+> bounded. There are event sets that will fail to schedule but could, but
+> I don't think you're talking about that.
+> 
+> Event migrating to a different counter is not a problem. This is
+> expected and normal. Code *must* be able to deal with it.
+> 
+>> In addition, we also found that this problem may affect NMI watchdog in the
+>> production cluster.
+>> The NMI watchdog also uses a fixed counter in fixed mode. Usually, it is The
+>> first element of the event_list array, so it usually takes precedence and
+>> can get a fixed counter.
+>> But if the administrator closes the watchdog first and then enables it, it
+>> may be at the end of the event_list array, so its expected fixed counter may
+>> be occupied by other perf event, and it can only use one GP. In this way,
+>> there is a similar issue here: the PMU counter used by the NMI watchdog may
+>> be disabled/enabled frequently and unnecessarily.
+> 
+> Again, I'm not seeing a problem. If you create more events than we have
+> hardware counters we'll rotate the list and things will get scheduled in
+> all sorts of order. This works.
+> 
+>> Any advice or guidance on this would be appreciated.
+> 
+> I'm still not sure what your actual problem is; I suspect you're using
+> perf wrong.
+> 
+> Are you using rdpmc and not respecting the scheme described in
+> include/uapi/linux/perf_events.h:perf_event_mmap_page ?
+> 
+> Note that if you're using pinned counters you can simplify that scheme
+> by ignoring all the timekeeping nonsense. In that case it does become
+> significantly simpler/faster.
+> 
+> But you cannot use rdpmc without using the mmap page's self-monitoring
+> data.
+> 
 
- * Auto detect links with Python3 when the v3 devtools are installed
-   and only Python 2 runtime is installed
- * Auto detect links with Python2 when both devtools are installed
- * Sensible warning is printed if no Python devtools are installed
- * 'make PYTHON=x' still automatically sets PYTHON_CONFIG=x-config
- * 'make PYTHON=x' fails if x-config doesn't exist
- * 'make PYTHON=python3' overrides Python2 devtools
- * 'make PYTHON=python2' overrides Python3 devtools
- * 'make PYTHON_CONFIG=x-config' works
- * 'make PYTHON=x PYTHON_CONFIG=x' works
- * 'make PYTHON=missing' reports an error
- * 'make PYTHON_CONFIG=missing' reports an error
 
-Fixes: 79373082fa9d ("perf python: Autodetect python3 binary")
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/Makefile.config | 39 ++++++++++++++++++++++++++------------
- 1 file changed, 27 insertions(+), 12 deletions(-)
+The current algorithm is outstanding and has been running stably for so 
+many years, and all existing performance work benefits from it.
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 96ad944ca6a8..b3fbb746e7f0 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -239,18 +239,33 @@ ifdef PARSER_DEBUG
- endif
- 
- # Try different combinations to accommodate systems that only have
--# python[2][-config] in weird combinations but always preferring
--# python2 and python2-config as per pep-0394. If python2 or python
--# aren't found, then python3 is used.
--PYTHON_AUTO := python
--PYTHON_AUTO := $(if $(call get-executable,python3),python3,$(PYTHON_AUTO))
--PYTHON_AUTO := $(if $(call get-executable,python),python,$(PYTHON_AUTO))
--PYTHON_AUTO := $(if $(call get-executable,python2),python2,$(PYTHON_AUTO))
--override PYTHON := $(call get-executable-or-default,PYTHON,$(PYTHON_AUTO))
--PYTHON_AUTO_CONFIG := \
--  $(if $(call get-executable,$(PYTHON)-config),$(PYTHON)-config,python-config)
--override PYTHON_CONFIG := \
--  $(call get-executable-or-default,PYTHON_CONFIG,$(PYTHON_AUTO_CONFIG))
-+# python[2][3]-config in weird combinations in the following order of
-+# priority from lowest to highest:
-+#   * python3-config
-+#   * python-config
-+#   * python2-config as per pep-0394.
-+#   * $(PYTHON)-config (If PYTHON is user supplied but PYTHON_CONFIG isn't)
-+#
-+PYTHON_AUTO := python-config
-+PYTHON_AUTO := $(if $(call get-executable,python3-config),python3-config,$(PYTHON_AUTO))
-+PYTHON_AUTO := $(if $(call get-executable,python-config),python-config,$(PYTHON_AUTO))
-+PYTHON_AUTO := $(if $(call get-executable,python2-config),python2-config,$(PYTHON_AUTO))
-+
-+# If PYTHON is defined but PYTHON_CONFIG isn't, then take $(PYTHON)-config as if it was the user
-+# supplied value for PYTHON_CONFIG. Because it's "user supplied", error out if it doesn't exist.
-+ifdef PYTHON
-+  ifndef PYTHON_CONFIG
-+    PYTHON_CONFIG_AUTO := $(call get-executable,$(PYTHON)-config)
-+    PYTHON_CONFIG := $(if $(PYTHON_CONFIG_AUTO),$(PYTHON_CONFIG_AUTO),\
-+                          $(call $(error $(PYTHON)-config not found)))
-+  endif
-+endif
-+
-+# Select either auto detected python and python-config or use user supplied values if they are
-+# defined. get-executable-or-default fails with an error if the first argument is supplied but
-+# doesn't exist.
-+override PYTHON_CONFIG := $(call get-executable-or-default,PYTHON_CONFIG,$(PYTHON_AUTO))
-+override PYTHON := $(call get-executable-or-default,PYTHON,$(subst -config,,$(PYTHON_AUTO)))
- 
- grep-libs  = $(filter -l%,$(1))
- strip-libs  = $(filter-out -l%,$(1))
--- 
-2.28.0
+We're just trying to optimize a little bit.
+
+As you pointed out, some non-compliant rdpmc can cause problems. But you 
+also know that linux is the foundation of cloud servers, and many 
+third-party programs run on it (we don't have any code for it), and we 
+can only observe that the monitoring data will jitter abnormally (the 
+probability of this issue is not high, about dozens of tens of thousands 
+of machines).
+
+We also see that the existing perf code is also trying to avoid frequent 
+changes of the pmu counter, such as:
+
+
+     /*
+      * fastpath, try to reuse previous register
+      */
+     for (i = 0; i < n; i++) {
+         u64 mask;
+
+         hwc = &cpuc->event_list[i]->hw;
+         c = cpuc->event_constraint[i];
+
+         /* never assigned */
+         if (hwc->idx == -1)
+             break;
+
+         /* constraint still honored */
+         if (!test_bit(hwc->idx, c->idxmsk))
+             break;
+
+         mask = BIT_ULL(hwc->idx);
+         if (is_counter_pair(hwc))
+             mask |= mask << 1;
+
+         /* not already used */
+         if (used_mask & mask)
+             break;
+
+         used_mask |= mask;
+
+         if (assign)
+             assign[i] = hwc->idx;
+     }
+
+
+But it only works when the perf events are reduced.
+
+    and nother example (via the PERF_HES_ARCH flag):
+
+          * step1: save events moving to new counters
+          */
+         for (i = 0; i < n_running; i++) {
+...
+             /*
+              * Ensure we don't accidentally enable a stopped
+              * counter simply because we rescheduled.
+              */
+             if (hwc->state & PERF_HES_STOPPED)
+                 hwc->state |= PERF_HES_ARCH;
+
+             x86_pmu_stop(event, PERF_EF_UPDATE);
+         }
+
+         /*
+          * step2: reprogram moved events into new counters
+          */
+         for (i = 0; i < cpuc->n_events; i++) {
+...
+
+             if (hwc->state & PERF_HES_ARCH)
+                 continue;
+
+             x86_pmu_start(event, PERF_EF_RELOAD);
+         }
+
+
+Now we are just follow this idea.
+
+In the scenario of increasing perf events, we also try to reuse the 
+previous PMU counters.
+Finally, if this attempt fails, still fall back to the original 
+algorithm and reassign all PMU counters. eg:
+
+      /* slow path */
+-    if (i != n)
+-        unsched = _perf_assign_events(constraints, n,
+-                wmin, wmax, gpmax, assign);
++    if (i != n) {
++        unsched = _perf_assign_events(constraints, n, wmin, wmax, gpmax,
++                msk_counters, msk_event, assign);
++        if (unsched)
++            unsched = _perf_assign_events(constraints, n, wmin, wmax, 
+gpmax,
++                    0, 0, assign);
++    }
+
+
+We have applied the above optimizations in some small-scale clusters and 
+verified that the abnormal cpi data has indeed disappeared. It might 
+also improve performance a bit.
+
+
+Your guidance has been particularly helpful.
+
+Best wishes,
+Wen
+
+
+
+
 
