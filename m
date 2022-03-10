@@ -2,32 +2,32 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3F1C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Mar 2022 10:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40CA6C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Mar 2022 10:21:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230205AbiCJKRh (ORCPT
+        id S234726AbiCJKWK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Mar 2022 05:17:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58514 "EHLO
+        Thu, 10 Mar 2022 05:22:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241108AbiCJKRd (ORCPT
+        with ESMTP id S232377AbiCJKWJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Mar 2022 05:17:33 -0500
+        Thu, 10 Mar 2022 05:22:09 -0500
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0C03413DE07;
-        Thu, 10 Mar 2022 02:16:31 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7F3A013DE15;
+        Thu, 10 Mar 2022 02:21:08 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5C3BE1650;
-        Thu, 10 Mar 2022 02:16:31 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3ABEB1650;
+        Thu, 10 Mar 2022 02:21:08 -0800 (PST)
 Received: from [10.57.41.41] (unknown [10.57.41.41])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 583BA3FA27;
-        Thu, 10 Mar 2022 02:16:28 -0800 (PST)
-Message-ID: <b88268b2-97c3-4f61-44e9-fa6105d91be9@arm.com>
-Date:   Thu, 10 Mar 2022 10:16:25 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2620A3FA27;
+        Thu, 10 Mar 2022 02:21:04 -0800 (PST)
+Message-ID: <6dc9a4e5-8f74-dfb5-d9f6-60e9d6b65146@arm.com>
+Date:   Thu, 10 Mar 2022 10:21:03 +0000
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: [PATCH V2 7/8] perf/tools: Extend branch type classification
+Subject: Re: [PATCH V2 4/8] perf: Capture branch privilege information
 Content-Language: en-US
 To:     Anshuman Khandual <anshuman.khandual@arm.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
@@ -41,9 +41,9 @@ Cc:     suzuki.poulose@arm.com, Ingo Molnar <mingo@redhat.com>,
         Will Deacon <will@kernel.org>,
         linux-arm-kernel@lists.infradead.org
 References: <20220309033642.144769-1-anshuman.khandual@arm.com>
- <20220309033642.144769-8-anshuman.khandual@arm.com>
+ <20220309033642.144769-5-anshuman.khandual@arm.com>
 From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20220309033642.144769-8-anshuman.khandual@arm.com>
+In-Reply-To: <20220309033642.144769-5-anshuman.khandual@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -53,10 +53,11 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 On 09/03/2022 03:36, Anshuman Khandual wrote:
-> This updates the perf tool with generic branch type classification with new
-> ABI extender place holder i.e PERF_BR_EXTEND_ABI, the new 4 bit branch type
-> field i.e perf_branch_entry.new_type, new generic page fault related branch
-> types and some arch specific branch types as added earlier in the kernel.
+> Platforms like arm64 could capture privilege level information for all the
+> branch records. Hence this adds a new element in the struct branch_entry to
+> record the privilege level information, which could be requested through a
+> new event.attr.branch_sample_type based flag PERF_SAMPLE_BRANCH_PRIV_SAVE.
+> This flag helps user choose whether privilege information is captured.
 > 
 > Cc: Peter Zijlstra <peterz@infradead.org>
 > Cc: Ingo Molnar <mingo@redhat.com>
@@ -72,76 +73,65 @@ On 09/03/2022 03:36, Anshuman Khandual wrote:
 > Cc: linux-kernel@vger.kernel.org
 > Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 > ---
->  tools/include/uapi/linux/perf_event.h | 16 +++++++++++++++-
->  tools/perf/util/branch.c              |  3 ++-
->  2 files changed, 17 insertions(+), 2 deletions(-)
+>  include/uapi/linux/perf_event.h | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
 > 
-> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-> index 26d8f0b5ac0d..d29280adc3c4 100644
-> --- a/tools/include/uapi/linux/perf_event.h
-> +++ b/tools/include/uapi/linux/perf_event.h
-> @@ -255,9 +255,22 @@ enum {
->  	PERF_BR_IRQ		= 12,	/* irq */
->  	PERF_BR_SERROR		= 13,	/* system error */
->  	PERF_BR_NO_TX		= 14,	/* not in transaction */
-> +	PERF_BR_EXTEND_ABI	= 15,	/* extend ABI */
->  	PERF_BR_MAX,
+> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> index d29280adc3c4..0e96e2017f68 100644
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -204,6 +204,8 @@ enum perf_branch_sample_type_shift {
+>  
+>  	PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT	= 17, /* save low level index of raw branch records */
+>  
+> +	PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT	= 18, /* save privillege mode */
+> +
+>  	PERF_SAMPLE_BRANCH_MAX_SHIFT		/* non-ABI */
+>  };
+>  
+> @@ -233,6 +235,8 @@ enum perf_branch_sample_type {
+>  
+>  	PERF_SAMPLE_BRANCH_HW_INDEX	= 1U << PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT,
+>  
+> +	PERF_SAMPLE_BRANCH_PRIV_SAVE	= 1U << PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT,
+> +
+>  	PERF_SAMPLE_BRANCH_MAX		= 1U << PERF_SAMPLE_BRANCH_MAX_SHIFT,
+>  };
+>  
+> @@ -271,6 +275,12 @@ enum {
+>  	PERF_BR_NEW_MAX,
 >  };
 >  
 > +enum {
-> +	PERF_BR_NEW_FAULT_ALGN		= 0,    /* Alignment fault */
-> +	PERF_BR_NEW_FAULT_DATA		= 1,    /* Data fault */
-> +	PERF_BR_NEW_FAULT_INST		= 2,    /* Inst fault */
-> +	PERF_BR_NEW_ARCH_1		= 3,    /* Architecture specific */
-> +	PERF_BR_NEW_ARCH_2		= 4,    /* Architecture specific */
-> +	PERF_BR_NEW_ARCH_3		= 5,    /* Architecture specific */
-> +	PERF_BR_NEW_ARCH_4		= 6,    /* Architecture specific */
-> +	PERF_BR_NEW_ARCH_5		= 7,    /* Architecture specific */
-> +	PERF_BR_NEW_MAX,
+> +	PERF_BR_USER	= 0,
+> +	PERF_BR_KERNEL	= 1,
+> +	PERF_BR_HV	= 2,
 > +};
+
+0 should be "PERF_BR_PRIV_UNKNOWN" so userspace knows if it was not enabled
+otherwise it will look like all samples are PERF_BR_USER when actually
+priv type recording was just disabled.
+
+I think it's not even always possible to go backwards from a sample to
+work out what the event attributes were so this can be interpreted (taking
+all of perf script and every corner case into account).
+
+Starting at 0=UNKNOWN is consistent with the other fields and makes parsing
+it a whole lot easier.
+
+James
+
 > +
 >  #define PERF_SAMPLE_BRANCH_PLM_ALL \
 >  	(PERF_SAMPLE_BRANCH_USER|\
 >  	 PERF_SAMPLE_BRANCH_KERNEL|\
-> @@ -1372,7 +1385,8 @@ struct perf_branch_entry {
->  		abort:1,    /* transaction abort */
+> @@ -1386,7 +1396,8 @@ struct perf_branch_entry {
 >  		cycles:16,  /* cycle count to last branch */
 >  		type:4,     /* branch type */
-> -		reserved:40;
-> +		new_type:4, /* additional branch type */
-> +		reserved:36;
+>  		new_type:4, /* additional branch type */
+> -		reserved:36;
+> +		priv:2,     /* privilege level */
+> +		reserved:34;
 >  };
 >  
 >  union perf_sample_weight {
-> diff --git a/tools/perf/util/branch.c b/tools/perf/util/branch.c
-> index abc673347bee..4bd52de0527c 100644
-> --- a/tools/perf/util/branch.c
-> +++ b/tools/perf/util/branch.c
-> @@ -53,7 +53,8 @@ const char *branch_type_name(int type)
->  		"ERET",
->  		"IRQ",
->  		"SERROR",
-> -		"NO_TX"
-> +		"NO_TX",
-> +		"EXTEND_ABI"
-
-
-Shouldn't we hide this implementation detail from users? They just want to know
-the branch type, they don't want to see the extend_abi stuff.
-
-It should be possible to fix all the perf internals so that it's transparent and
-any code using or printing the branch type has some accessor that works out what
-the final type is rather than having to re-implement that logic everywhere.
-
-So I don't think adding the string "EXTEND_ABI" would be needed because it would
-never be shown.
-
-If we just want to discuss the new extend ABI kernel side changes then I think this
-patch can be dropped and we can do the full perf tool side implementation
-in a more complete way later.
-
-James
-
->  	};
->  
->  	if (type >= 0 && type < PERF_BR_MAX)
