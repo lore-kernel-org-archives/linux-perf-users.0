@@ -2,287 +2,199 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C34CDC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Mar 2022 03:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BEDC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Mar 2022 08:53:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239340AbiCJDvo (ORCPT
+        id S234457AbiCJIyN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Mar 2022 22:51:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60146 "EHLO
+        Thu, 10 Mar 2022 03:54:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234822AbiCJDvl (ORCPT
+        with ESMTP id S231153AbiCJIyM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Mar 2022 22:51:41 -0500
-Received: from out30-43.freemail.mail.aliyun.com (out30-43.freemail.mail.aliyun.com [115.124.30.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E5AE12B764;
-        Wed,  9 Mar 2022 19:50:39 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R361e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0V6mcjkH_1646884234;
-Received: from IT-C02W23QPG8WN.local(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0V6mcjkH_1646884234)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 10 Mar 2022 11:50:35 +0800
-Subject: Re: [RESEND PATCH 2/2] perf/x86: improve the event scheduling to
- avoid unnecessary pmu_stop/start
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>
-Cc:     Wen Yang <simon.wy@alibaba-inc.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephane Eranian <eranian@google.com>,
-        mark rutland <mark.rutland@arm.com>,
-        jiri olsa <jolsa@redhat.com>,
-        namhyung kim <namhyung@kernel.org>,
-        borislav petkov <bp@alien8.de>, x86@kernel.org,
-        "h. peter anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20220304110351.47731-1-simon.wy@alibaba-inc.com>
- <20220304110351.47731-2-simon.wy@alibaba-inc.com>
- <YiIyrFn7upPEouVt@hirez.programming.kicks-ass.net>
- <0c119da1-053b-a2d6-1579-8fb09dbe8e63@linux.alibaba.com>
- <YidREXNn2AtI3V1c@hirez.programming.kicks-ass.net>
-From:   Wen Yang <wenyang@linux.alibaba.com>
-Message-ID: <271bc186-7ffb-33c8-4934-cda2beb94816@linux.alibaba.com>
-Date:   Thu, 10 Mar 2022 11:50:33 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:78.0)
- Gecko/20100101 Thunderbird/78.14.0
+        Thu, 10 Mar 2022 03:54:12 -0500
+Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97B6213702C
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Mar 2022 00:53:11 -0800 (PST)
+Received: by mail-lj1-x230.google.com with SMTP id u3so6793858ljd.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Mar 2022 00:53:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jD3qAmHEHOnZBOlSRoVT4fbyHPWkJJFfAb9rrNATrd8=;
+        b=hmvsaf3fkX8FWufHIYru+XRkYddPr6duj1rIBnMgzWn0yXN7Ntfs+EsS8yOz0B8Q7f
+         9HPzW5V7V6V5/RYCxdsun9Q15Age9QD8fCgjEsdU92/zyV1tKgzf2Uky+tryWQpgTZFb
+         sZOWyJsPjf0yUZbTUJr3bvZn7w/8glNtxCdK0bAouaw4Zx1UYPFCwpuyGUv+N295Vx70
+         O/qAjOzCMChSHyCvnznF/DvNhtOm4/HW2R3pBDko7y/V3d1inPH8XI5UkZjgpW6sxE3n
+         F85KF7G3KEXaGTQ9RK4Ghxx20XOYyFRwoTAebKPlDff+GtVC+DehM0YfJTRByCGc5oXZ
+         RduQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jD3qAmHEHOnZBOlSRoVT4fbyHPWkJJFfAb9rrNATrd8=;
+        b=EOgwERYpdaMiGnXYsuTOxy+VLurM83hcxeExDICCesvK6ilsI1e8nCoxHu0LpuBhF+
+         IBI9T4hoskVeBACwpXH4e3sFgadAVB2gA4uxb73nBtSCJazUnGWwP1UQqLKFJJZzq5fA
+         ug7VL1piftzSILzsKuXebYvX5Px0MTAYnCSBLsrkkOJJBhoifUdae9QgFt+5PPS3t6Rk
+         MIo1sZ94hdm446vzFiYMAq9dCcu9Bn8lF0lwU82UUHJcfkiyAs8lO6QjnMFiLUI15C24
+         wQOfa91TwvfUp5HPNbx/VAF7JwDzS3wGeVXh+RvXfIDjus5Y0Ff6pnnXnAy1HfURxgj4
+         errA==
+X-Gm-Message-State: AOAM530yFWPzj6qdXvB+JoHVd7+q6NlfGqJPvuig/z4LwVDZhfAU8sT0
+        CS7zC/eAv3NABNchFWNIpVp5auS9W5kMBseXyzEm6DwRGFA=
+X-Google-Smtp-Source: ABdhPJwfq4YMtyaCiFkI5YS1rtS5MId7CiqrGT4QVVocDd25aeWPgN8PB/pv30mREFjDy3qHQzDGUtEaUS1LyBGXIGc=
+X-Received: by 2002:a05:651c:1051:b0:247:ea0d:a57c with SMTP id
+ x17-20020a05651c105100b00247ea0da57cmr2246474ljm.204.1646902389582; Thu, 10
+ Mar 2022 00:53:09 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <YidREXNn2AtI3V1c@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <DM5PR15MB17390661547DEAA8C397A540F0069@DM5PR15MB1739.namprd15.prod.outlook.com>
+ <9b4749a8-f3f3-e2e6-b1d3-8b23d946e10a@arm.com> <DM5PR15MB1739AC36558E0ED388735AB6F00A9@DM5PR15MB1739.namprd15.prod.outlook.com>
+ <d34c1b48-e39b-e533-84be-5811f789ee73@arm.com> <DM5PR15MB17393E601961B046B638B923F00A9@DM5PR15MB1739.namprd15.prod.outlook.com>
+In-Reply-To: <DM5PR15MB17393E601961B046B638B923F00A9@DM5PR15MB1739.namprd15.prod.outlook.com>
+From:   Namhyung Kim <namhyung@gmail.com>
+Date:   Thu, 10 Mar 2022 00:52:58 -0800
+Message-ID: <CAM9d7cjSX8DGDGFAG-_19j=nM4SSBuAF252ixRbuMu+DMENzPg@mail.gmail.com>
+Subject: Re: What exactly does -F <freq> do?
+To:     Douglas Graham <douglas.graham@ericsson.com>
+Cc:     James Clark <james.clark@arm.com>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hello,
 
+On Wed, Mar 9, 2022 at 4:56 PM Douglas Graham
+<douglas.graham@ericsson.com> wrote:
+>
+> >> I am already using -a.
+> >
+> >In that case it does change some of my assumptions. But for this part of your message:
+> >
+> >    > A "perf stat sleep 1" on the system I'm interested in says:
+> >
+> >    >            1630370      cycles                    #    1.315 GHz
+> >
+> >    > As I understand it, the cycles event is used by default, so a 100 Hz sample frequency
+> >    > should give the same results as a 13150000 cycles sample period.
+> >
+> > That command is not system wide or per-CPU which is what my assumption was based one
+> > (it's per process mode). So it's not 1.6M cycles in 1 second, it's 1.6M cycles of when
+> > the sleep process was actively launching and running, excluding the 1s of sleep. System
+> > wide would be 'perf stat -a -- sleep 1'
+>
+> It could just be me, but I think perf is in dire need of more comprehensive documentation.
+> Like, for example, how is that 1.315 GHz computed?  That's actually the number I was using
+> to determine the sample period in cycles that should be equivalent to a 100Hz sample
+> frequency but now I'm not sure I know where that number comes from or what it means, and
+> the perf-stat man page is mum on the subject.  The complete output of that command on this
+> quad core arm64 system is:
+>
+> ~# perf stat -- sleep 1
+>
+>  Performance counter stats for 'sleep 1':
+>
+>               1.15 msec task-clock                #    0.001 CPUs utilized
+>                  1      context-switches          #    0.872 K/sec
+>                  0      cpu-migrations            #    0.000 K/sec
+>                 44      page-faults               #    0.038 M/sec
+>            1508958      cycles                    #    1.315 GHz
+>             679359      instructions              #    0.45  insn per cycle
+>              86111      branches                  #   75.059 M/sec
+>              10291      branch-misses             #   11.95% of all branches
+>
+>        1.002371400 seconds time elapsed
+>
+>        0.002567000 seconds user
+>        0.000000000 seconds sys
+>
+> If I divide the number of cycles by the total cpu usage, I get 1508958/0.002567 == 588 MHz,
+> which is pretty far from 1.315 GHz. Where did 1.315 GHz come from?
 
-ÔÚ 2022/3/8 ÏÂÎç8:50, Peter Zijlstra Ð´µÀ:
-> On Sun, Mar 06, 2022 at 10:36:38PM +0800, Wen Yang wrote:
-> 
->> The perf event generated by the above script A (cycles:D), and the counter
->> it used changes from #1 to #3. We use perf event in pinned mode, and then
->> continuously read its value for a long time, but its PMU counter changes
-> 
-> Yes, so what?
-> 
->> , so the counter value will also jump.
-> 
-> I fail to see how the counter value will jump when we reprogram the
-> thing. When we stop we update the value, then reprogram on another
-> counter and continue. So where does it go sideways?
-> 
->>
->> 0xffff88b72db85800:
->> The perf event generated by the above script A (instructions:D), which has
->> always occupied #fixed_instruction.
->>
->> 0xffff88bf46c34000, 0xffff88bf46c35000, 0xffff88bf46c30000:
->> Theses perf events are generated by the above script B.
->>
->>
->>>>
->>>> so it will cause unnecessary pmu_stop/start and also cause abnormal cpi.
->>>
->>> How?!?
->>>
->>
->> We may refer to the x86_pmu_enable function:
->> step1: save events moving to new counters
->> step2: reprogram moved events into new counters
->>
->> especially:
->>
->> static inline int match_prev_assignment(struct hw_perf_event *hwc,
->>                      struct cpu_hw_events *cpuc,
->>                      int i)
->> {
->>      return hwc->idx == cpuc->assign[i] &&
->>          hwc->last_cpu == smp_processor_id() &&
->>          hwc->last_tag == cpuc->tags[i];
->> }
-> 
-> I'm not seeing an explanation for how a counter value is not preserved.
-> 
->>>> Cloud servers usually continuously monitor the cpi data of some important
->>>> services. This issue affects performance and misleads monitoring.
->>>>
->>>> The current event scheduling algorithm is more than 10 years old:
->>>> commit 1da53e023029 ("perf_events, x86: Improve x86 event scheduling")
->>>
->>> irrelevant
->>>
->>
->> commit 1da53e023029 ("perf_events, x86: Improve x86 event scheduling")
->>
->> This commit is the basis of the perf event scheduling algorithm we currently
->> use.
-> 
-> Well yes. But how is the age of it relevant?
-> 
->> The reason why the counter above changed from #1 to #3 can be found from it:
->> The algorithm takes into account the list of counter constraints
->> for each event. It assigns events to counters from the most
->> constrained, i.e., works on only one counter, to the least
->> constrained, i.e., works on any counter.
->>
->> the nmi watchdog permanently consumes one fp (*cycles*).
->>   therefore, when the above shell script obtains *cycles:D*
->> again, it has to use a GP, and its weight is 5.
->> but other events (like *cache-misses*) have a weight of 4,
->> so the counter used by *cycles:D* will often be taken away.
-> 
-> So what?
-> 
-> I mean, it is known the algorithm isn't optimal, but at least it's
-> bounded. There are event sets that will fail to schedule but could, but
-> I don't think you're talking about that.
-> 
-> Event migrating to a different counter is not a problem. This is
-> expected and normal. Code *must* be able to deal with it.
-> 
->> In addition, we also found that this problem may affect NMI watchdog in the
->> production cluster.
->> The NMI watchdog also uses a fixed counter in fixed mode. Usually, it is The
->> first element of the event_list array, so it usually takes precedence and
->> can get a fixed counter.
->> But if the administrator closes the watchdog first and then enables it, it
->> may be at the end of the event_list array, so its expected fixed counter may
->> be occupied by other perf event, and it can only use one GP. In this way,
->> there is a similar issue here: the PMU counter used by the NMI watchdog may
->> be disabled/enabled frequently and unnecessarily.
-> 
-> Again, I'm not seeing a problem. If you create more events than we have
-> hardware counters we'll rotate the list and things will get scheduled in
-> all sorts of order. This works.
-> 
->> Any advice or guidance on this would be appreciated.
-> 
-> I'm still not sure what your actual problem is; I suspect you're using
-> perf wrong.
-> 
-> Are you using rdpmc and not respecting the scheme described in
-> include/uapi/linux/perf_events.h:perf_event_mmap_page ?
-> 
-> Note that if you're using pinned counters you can simplify that scheme
-> by ignoring all the timekeeping nonsense. In that case it does become
-> significantly simpler/faster.
-> 
-> But you cannot use rdpmc without using the mmap page's self-monitoring
-> data.
-> 
+I think it's cycles / task-clock.
 
+>
+> And if I run a CPU intensive program like stress, I get:
+>
+> # perf stat -- stress -c 1 --timeout 1
+> stress-ng: info:  [9166] dispatching hogs: 1 cpu
+> stress-ng: info:  [9166] successful run completed in 1.13s
+>
+>  Performance counter stats for 'stress -c 1 --timeout 1':
+>
+>            1135.88 msec task-clock                #    0.991 CPUs utilized
+>                156      context-switches          #    0.137 K/sec
+>                  0      cpu-migrations            #    0.000 K/sec
+>               1253      page-faults               #    0.001 M/sec
+>         1513809696      cycles                    #    1.333 GHz
+>         1546722405      instructions              #    1.02  insn per cycle
+>          175801202      branches                  #  154.772 M/sec
+>            4725866      branch-misses             #    2.69% of all branches
+>
+>        1.146401500 seconds time elapsed
+>
+>        1.128040000 seconds user
+>        0.009161000 seconds sys
+>
+> You're right that now I do see a lot more cycles, and also, dividing cycles by total CPU
+> usage gives something pretty close to the 1.333 GHz reported in the comment:
+>
+>    1513809696/(1.128040 + 0.009161) = 1.331 GHz.
+>
+> The frequencies reported in these comments are quite close, so I guess they must mean
+> something.  OTOH, they aren't identical, so I don't think they're just being read from some
+> table somewhere. They must be being computed, but how?
 
-The current algorithm is outstanding and has been running stably for so 
-many years, and all existing performance work benefits from it.
+cycles / task-clock = 1513809696 / 1.13588 = 1332719738
 
-We're just trying to optimize a little bit.
+>
+> And just for fun, here's what the same two runs (sleep and stress) look like with the -a option:
+>
+> # perf stat -a -- sleep 1
+>
+>  Performance counter stats for 'system wide':
+>
+>            4005.15 msec cpu-clock                 #    3.995 CPUs utilized
+>               4945      context-switches          #    0.001 M/sec
+>                 15      cpu-migrations            #    0.004 K/sec
+>                  2      page-faults               #    0.000 K/sec
+>           78745230      cycles                    #    0.020 GHz
+>           37676196      instructions              #    0.48  insn per cycle
+>            5155778      branches                  #    1.287 M/sec
+>             749509      branch-misses             #   14.54% of all branches
+>
+>        1.002497310 seconds time elapsed
+>
+> # perf stat -a -- stress -c 1 --timeout 1
+> stress-ng: info:  [9721] dispatching hogs: 1 cpu
+> stress-ng: info:  [9721] successful run completed in 1.14s
+>
+>  Performance counter stats for 'system wide':
+>
+>            4598.27 msec cpu-clock                 #    3.991 CPUs utilized
+>               7125      context-switches          #    0.002 M/sec
+>                 14      cpu-migrations            #    0.003 K/sec
+>               1133      page-faults               #    0.246 K/sec
+>         1633500454      cycles                    #    0.355 GHz
+>         1595921326      instructions              #    0.98  insn per cycle
+>          182601726      branches                  #   39.711 M/sec
+>            5607300      branch-misses             #    3.07% of all branches
+>
+>        1.152046320 seconds time elapsed
+>
+> Now the frequencies displayed in the comments are quite different both from each other, and
+> from those displayed without -a.
 
-As you pointed out, some non-compliant rdpmc can cause problems. But you 
-also know that linux is the foundation of cloud servers, and many 
-third-party programs run on it (we don't have any code for it), and we 
-can only observe that the monitoring data will jitter abnormally (the 
-probability of this issue is not high, about dozens of tens of thousands 
-of machines).
+For system-wide mode, it really depends on how much load
+it has at the moment.
 
-We also see that the existing perf code is also trying to avoid frequent 
-changes of the pmu counter, such as:
+>
+> I still have the feeling that I'm missing some important concept here. I'll keep trying
+> to figure out what it is.
 
+The sampling frequency can be inaccurate if the system is idle
+or system load is fluctuating as it's not walltime based.
 
-     /*
-      * fastpath, try to reuse previous register
-      */
-     for (i = 0; i < n; i++) {
-         u64 mask;
-
-         hwc = &cpuc->event_list[i]->hw;
-         c = cpuc->event_constraint[i];
-
-         /* never assigned */
-         if (hwc->idx == -1)
-             break;
-
-         /* constraint still honored */
-         if (!test_bit(hwc->idx, c->idxmsk))
-             break;
-
-         mask = BIT_ULL(hwc->idx);
-         if (is_counter_pair(hwc))
-             mask |= mask << 1;
-
-         /* not already used */
-         if (used_mask & mask)
-             break;
-
-         used_mask |= mask;
-
-         if (assign)
-             assign[i] = hwc->idx;
-     }
-
-
-But it only works when the perf events are reduced.
-
-    and nother example (via the PERF_HES_ARCH flag):
-
-          * step1: save events moving to new counters
-          */
-         for (i = 0; i < n_running; i++) {
-...
-             /*
-              * Ensure we don't accidentally enable a stopped
-              * counter simply because we rescheduled.
-              */
-             if (hwc->state & PERF_HES_STOPPED)
-                 hwc->state |= PERF_HES_ARCH;
-
-             x86_pmu_stop(event, PERF_EF_UPDATE);
-         }
-
-         /*
-          * step2: reprogram moved events into new counters
-          */
-         for (i = 0; i < cpuc->n_events; i++) {
-...
-
-             if (hwc->state & PERF_HES_ARCH)
-                 continue;
-
-             x86_pmu_start(event, PERF_EF_RELOAD);
-         }
-
-
-Now we are just follow this idea.
-
-In the scenario of increasing perf events, we also try to reuse the 
-previous PMU counters.
-Finally, if this attempt fails, still fall back to the original 
-algorithm and reassign all PMU counters. eg:
-
-      /* slow path */
--    if (i != n)
--        unsched = _perf_assign_events(constraints, n,
--                wmin, wmax, gpmax, assign);
-+    if (i != n) {
-+        unsched = _perf_assign_events(constraints, n, wmin, wmax, gpmax,
-+                msk_counters, msk_event, assign);
-+        if (unsched)
-+            unsched = _perf_assign_events(constraints, n, wmin, wmax, 
-gpmax,
-+                    0, 0, assign);
-+    }
-
-
-We have applied the above optimizations in some small-scale clusters and 
-verified that the abnormal cpi data has indeed disappeared. It might 
-also improve performance a bit.
-
-
-Your guidance has been particularly helpful.
-
-Best wishes,
-Wen
-
-
-
-
-
+Thanks,
+Namhyung
