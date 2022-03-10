@@ -2,261 +2,146 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A24AFC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Mar 2022 18:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB5BC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Mar 2022 18:34:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236238AbiCJSDR convert rfc822-to-8bit (ORCPT
+        id S230273AbiCJSfy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Mar 2022 13:03:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42242 "EHLO
+        Thu, 10 Mar 2022 13:35:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234616AbiCJSDQ (ORCPT
+        with ESMTP id S234815AbiCJSfx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Mar 2022 13:03:16 -0500
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61A681986D0;
-        Thu, 10 Mar 2022 10:02:15 -0800 (PST)
-Received: by mail-lf1-f50.google.com with SMTP id w12so10786195lfr.9;
-        Thu, 10 Mar 2022 10:02:15 -0800 (PST)
+        Thu, 10 Mar 2022 13:35:53 -0500
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7288A19D621;
+        Thu, 10 Mar 2022 10:34:51 -0800 (PST)
+Received: by mail-pl1-x642.google.com with SMTP id m2so5691241pll.0;
+        Thu, 10 Mar 2022 10:34:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fZTabEAQ65sqak7IeRk/QmG52+JEgAGMHd10hUU/HKM=;
+        b=gzVNO3biIrix2FoQLOK5xkz0oczUF6xvtNh+4XdiTSSDWoKkuQsV1bJNPyZRc6W24N
+         Mi9PuQdiXg5oRw3IAHQY9Zzc5twR4Q630OzwPCn5ALyrPeXEXinkmQqMMbN6cx03/cGY
+         feitvHICwO+FnxITf3KSxNRZByyyIWOHVxMCd6KYvzDzJz82270Lla2MpEyxhSWVuror
+         cSxs+2WkYe7AwsQGg5aWYBOygC+i5T9HLApC+u+Q3ICFCtzeVNhhI410Jzk/Kw3c5YfO
+         5dKmy312HoLu2ffHY0jqIu5KiRdRvv2j9443I4O5GNLS+5qvT76RHe/oyl9ze8l0l3EH
+         9N8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Ypo3GEUJC1KtfqbclWSczh3wzzpz31l4v4TAnVFfOKQ=;
-        b=HMPW1UUcpFhMy8isEZ7uPELPlk7y95JUUzmszyj38DUcZwzIcG5uz+gkrP08QJe/pZ
-         JmhcaqFFl7rppPyMLvInGHH5lZGvM1qgbFHVsHl4RbWZ5zR/Ki/rJ5IQevX/XIaw6Y5G
-         wkmbQ3W29O20o23MAWI23WIKUHl+OaK83SFnsS3okv9jVMn4i291npCc/XWkq253SPJ+
-         bSjAsp+NKmTy1OcDGaTKvSdN7qBWGQ8DXZjKv8ex8smYSGCRhKYrxeIoqMmn+z8+QcqD
-         CBS6qcldmTbctmdysVWu80MDjABHWnqBTq/cGLApPiyCqZqcS/0iCHpjd2NaQd/s+tTe
-         YQjg==
-X-Gm-Message-State: AOAM532Ns2SI3nAFC+NoET/q78wUPaSvo4xfBDogT3zpCF2AgO9aItrm
-        L+JRy12wLF0VOB+bU596vzSBNstY/lXOQ4lIUNI=
-X-Google-Smtp-Source: ABdhPJy51eanIMg92+jqiUEtWO4lxZQ1zmy8o8axSpuqYvSemW3E8n7aRNWkH4aVwnoYy70t+XbOHcTavLAu0dbi1G0=
-X-Received: by 2002:a05:6512:b9b:b0:448:3a53:e7d9 with SMTP id
- b27-20020a0565120b9b00b004483a53e7d9mr3449708lfv.586.1646935333289; Thu, 10
- Mar 2022 10:02:13 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fZTabEAQ65sqak7IeRk/QmG52+JEgAGMHd10hUU/HKM=;
+        b=ZXqpsM/GaSIY7GctWU5vV9w7PR0VUaIYX61kaLjRoab85J07Az9NHXJZQd2Y11wnRk
+         Y9lzLeJ3N+NQ9q8OEWhOVbqK+3L/k3tDovMTCEpiwPjRhCvTIxYnENVTYx3sTTjV+2z0
+         RehtJuTE6L9DhEV4+LSCA6wLdubYSToX2nH9D2ebnDjQnFeJO4q7we5QoBoZIyYvDfGp
+         e+UNgtyiMYT1PbxgvCvQTEgQpkCwloMw1YypQN1gDedz7YbRrbappOI6s2YuPeQdyOTm
+         IMPor/W+TnUiihjHcpj2kxxWgCauQ9NWGsbxwx3YMrijDpb9v2w7S84a2vXgmYUq1tKz
+         sIpQ==
+X-Gm-Message-State: AOAM531IY/V+lLBeGpsATqGT48iQXbwpKuKYBbVpqtjVHBff9VShwMF/
+        /NLtfmxYuS0ZTBoOkQvdAZ4=
+X-Google-Smtp-Source: ABdhPJxeRwPmh4o/BYU0MiPTeqwVhPQIxIKwxcuBlPTRcRFErAYkviEyFX1vEiiQJRY1f1MAibMxuw==
+X-Received: by 2002:a17:902:bc47:b0:151:ac43:eae0 with SMTP id t7-20020a170902bc4700b00151ac43eae0mr6579800plz.117.1646937290952;
+        Thu, 10 Mar 2022 10:34:50 -0800 (PST)
+Received: from localhost.localdomain ([103.149.162.114])
+        by smtp.gmail.com with ESMTPSA id k23-20020aa790d7000000b004f6c8b7c13bsm7255155pfk.132.2022.03.10.10.34.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Mar 2022 10:34:50 -0800 (PST)
+From:   Dongli Si <kvmx86@gmail.com>
+X-Google-Original-From: Dongli Si <sidongli1997@gmail.com>
+To:     peterz@infradead.org, joerg.roedel@amd.com
+Cc:     liam.merwick@oracle.com, kim.phillips@amd.com, mingo@kernel.org,
+        acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] perf/x86/amd: Don't touch the Host-only bit inside the guest hypervisor
+Date:   Fri, 11 Mar 2022 02:34:04 +0800
+Message-Id: <20220310183404.1291725-1-sidongli1997@gmail.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-References: <20220308135948.55336-1-zhouchengming@bytedance.com>
- <CAM9d7chsbpmVhhtzBgqD29Agb6xTMpxfwvqUdo6RKx2K1WN-DQ@mail.gmail.com> <e561e36c-cc73-2078-4baa-cb9ab6b6eeac@bytedance.com>
-In-Reply-To: <e561e36c-cc73-2078-4baa-cb9ab6b6eeac@bytedance.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 10 Mar 2022 10:02:02 -0800
-Message-ID: <CAM9d7ciw+Jj1Z2j5qsz8f5YvAk5yh_w3+pZKO6gTAn2AHKQj2g@mail.gmail.com>
-Subject: Re: [Phishing Risk] [External] Re: [RFC PATCH] perf/core: fix cpuctx
- cgrp warning
-To:     Chengming Zhou <zhouchengming@bytedance.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        songmuchun@bytedance.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Mar 10, 2022 at 4:01 AM Chengming Zhou
-<zhouchengming@bytedance.com> wrote:
->
-> Hello,
->
-> On 2022/3/10 5:25 下午, Namhyung Kim wrote:
-> > Hello,
-> >
-> > On Tue, Mar 8, 2022 at 6:00 AM Chengming Zhou
-> > <zhouchengming@bytedance.com> wrote:
-> >>
-> >> There is a race problem that can trigger WARN_ON_ONCE(cpuctx->cgrp)
-> >> in perf_cgroup_switch().
-> >>
-> >> CPU1                                    CPU2
-> >> (in context_switch)                     (attach running task)
-> >> perf_cgroup_sched_out(task, next)
-> >>         if (cgrp1 != cgrp2) True
-> >>                                         task->cgroups = xxx
-> >>                                         perf_cgroup_attach()
-> >> perf_cgroup_sched_in(prev, task)
-> >>         if (cgrp1 != cgrp2) False
-> >
-> > But perf_cgroup_switch will be synchronized as the context switch
-> > disables the interrupt.  And right, it still can see the task->cgroups
-> > is changing in the middle.
-> >
-> >>
-> >> The commit a8d757ef076f ("perf events: Fix slow and broken cgroup
-> >> context switch code") would save cpuctx switch in/out when the
-> >> perf_cgroup of "prev" and "next" are the same.
-> >>
-> >> But perf_cgroup of task can change in concurrent with context_switch.
-> >> If cgrp1 == cgrp2 in sched_out(), cpuctx won't do switch out, then
-> >> task perf_cgroup changed cause cgrp1 != cgrp2 in sched_in(), cpuctx
-> >> will do switch in, and trigger WARN_ON_ONCE(cpuctx->cgrp).
-> >>
-> >> The perf_cgroup of "prev" and "next" can be changed at any time, so we
-> >> first have to combine perf_cgroup_sched_in() into perf_cgroup_sched_out(),
-> >> so we can get a consistent value of condition (cgrp1 == cgrp2).
-> >>
-> >> And we introduce a percpu "cpu_perf_cgroups" to track the current used
-> >> perf_cgroup, instead of using the unstable perf_cgroup of "prev", which
-> >> maybe not the cpuctx->cgrp we used to schedule cgroup events on cpu.
-> >
-> > Is this really needed?  I think the warning comes because the two
-> > cgroups were the same when in sched-out, but they became
-> > different when in sched-in.  So just combining sched-in/out should
-> > be ok, isn't it?
->
-> If we get perf_cgroup from prev->cgroups that can be changed in the
-> context_switch(), make the condition (cgrp1 == cgrp2) is true, then
-> we won't do sched_out/in. So the events of prev's previous cgrp will
-> still be on the CPU.
->
-> Even that CPU would receive IPI from perf_cgroup_attach() after
-> context_switch(), remote_function() will do nothing because prev task
-> is not current running anymore.
+From: Dongli Si <sidongli1997@gmail.com>
 
-Right, so I don't care about changing prev->cgroups.  I can see these
-two scenarios.
+With nested virtualization, when the guest hypervisor runs a nested guest
+and if uses "perf record" in an AMD Milan guest hypervisor, the guest
+hypervisor dmesg will reports the following warning message:
 
-1. (cgrp1 == cgrp2) --> (cgrp1 != cgrp2)
-  This means the next task's cgroup (cgrp2) is the same as the
-  previous and it doesn't need to reschedule events even if the
-  cgrp1 is changed.
+[] unchecked MSR access error: WRMSR to 0xc0010200 (tried to write 0x0000020000510076)
+at rIP: 0xffffffff81003a50 (x86_pmu_enable_all+0x60/0x100)
+[] Call Trace:
+[]  <IRQ>
+[]  ? x86_pmu_enable+0x146/0x300
+[]  __perf_install_in_context+0x150/0x170
 
-2. (cgrp1 != cgrp2) --> (cgrp1 == cgrp2)
-  This will trigger rescheduling anyway, and we are fine.
+The AMD64_EVENTSEL_HOSTONLY bit is defined and used on the host, while
+the guest hypervisor performance monitor unit should avoid such use.
 
->
-> >
-> >>
-> >> Fixes: a8d757ef076f ("perf events: Fix slow and broken cgroup context
-> >> switch code")
-> >> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
-> >> ---
-> >>  kernel/events/core.c | 95 +++++++++++---------------------------------
-> >>  1 file changed, 23 insertions(+), 72 deletions(-)
-> >>
-> >> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> >> index 6859229497b1..f3bc2841141f 100644
-> >> --- a/kernel/events/core.c
-> >> +++ b/kernel/events/core.c
-> >> @@ -826,6 +826,7 @@ perf_cgroup_set_timestamp(struct task_struct *task,
-> >>         }
-> >>  }
-> >>
-> >> +static DEFINE_PER_CPU(struct perf_cgroup *, cpu_perf_cgroups);
-> >>  static DEFINE_PER_CPU(struct list_head, cgrp_cpuctx_list);
-> >>
-> >>  #define PERF_CGROUP_SWOUT      0x1 /* cgroup switch out every event */
-> >> @@ -837,8 +838,9 @@ static DEFINE_PER_CPU(struct list_head, cgrp_cpuctx_list);
-> >>   * mode SWOUT : schedule out everything
-> >>   * mode SWIN : schedule in based on cgroup for next
-> >
-> > You can remove this comment now.
->
-> Ok, will do.
->
-> >
-> >>   */
-> >> -static void perf_cgroup_switch(struct task_struct *task, int mode)
-> >> +static void perf_cgroup_switch(struct task_struct *task)
-> >>  {
-> >> +       struct perf_cgroup *cgrp;
-> >>         struct perf_cpu_context *cpuctx, *tmp;
-> >>         struct list_head *list;
-> >>         unsigned long flags;
-> >> @@ -849,6 +851,9 @@ static void perf_cgroup_switch(struct task_struct *task, int mode)
-> >>          */
-> >>         local_irq_save(flags);
-> >>
-> >> +       cgrp = perf_cgroup_from_task(task, NULL);
-> >> +       __this_cpu_write(cpu_perf_cgroups, cgrp);
-> >> +
-> >>         list = this_cpu_ptr(&cgrp_cpuctx_list);
-> >>         list_for_each_entry_safe(cpuctx, tmp, list, cgrp_cpuctx_entry) {
-> >>                 WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
-> >> @@ -856,28 +861,15 @@ static void perf_cgroup_switch(struct task_struct *task, int mode)
-> >>                 perf_ctx_lock(cpuctx, cpuctx->task_ctx);
-> >>                 perf_pmu_disable(cpuctx->ctx.pmu);
-> >>
-> >> -               if (mode & PERF_CGROUP_SWOUT) {
-> >> -                       cpu_ctx_sched_out(cpuctx, EVENT_ALL);
-> >> -                       /*
-> >> -                        * must not be done before ctxswout due
-> >> -                        * to event_filter_match() in event_sched_out()
-> >
-> > Unrelated, but I don't see the event_filter_match() in
-> > event_sched_out() anymore.  Does it sched-out all
-> > non-cgroup cpu events here?
->
-> Yes, I review the code and don't find event_filter_match(),
-> so cpu_ctx_sched_out() will sched-out all cpu events.
->
-> And I find event_filter_match() won't work here too,
-> because perf_cgroup_match() return matched for any
-> non-cgroup event. Maybe we can add another function
-> like perf_cgroup_match_sched_out() to use when sched-out.
+Fixes: 1018faa6cf23 ("perf/x86/kvm: Fix Host-Only/Guest-Only counting with SVM disabled")
+Signed-off-by: Dongli Si <sidongli1997@gmail.com>
+---
+v2: Add run_as_host function and improve description
+v1: https://lore.kernel.org/all/20220227132640.3-1-sidongli1997@gmail.com/
 
-And for sched-in too.
+ arch/x86/events/amd/core.c        |  4 +++-
+ arch/x86/include/asm/hypervisor.h | 10 ++++++++++
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
-But we should consider multiplexing in the timer as well.
-In that case it cannot know whether it needs to reschedule
-cpu or cgroup events, so it does the job for all events.
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index 9687a8aef01c..14cd079243a4 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -8,6 +8,7 @@
+ #include <linux/jiffies.h>
+ #include <asm/apicdef.h>
+ #include <asm/nmi.h>
++#include <asm/hypervisor.h>
+ 
+ #include "../perf_event.h"
+ 
+@@ -1027,7 +1028,8 @@ void amd_pmu_enable_virt(void)
+ {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 
+-	cpuc->perf_ctr_virt_mask = 0;
++	if (run_as_host())
++		cpuc->perf_ctr_virt_mask = 0;
+ 
+ 	/* Reload all events */
+ 	amd_pmu_disable_all();
+diff --git a/arch/x86/include/asm/hypervisor.h b/arch/x86/include/asm/hypervisor.h
+index e41cbf2ec41d..fcc66c23cc72 100644
+--- a/arch/x86/include/asm/hypervisor.h
++++ b/arch/x86/include/asm/hypervisor.h
+@@ -73,11 +73,21 @@ static inline bool hypervisor_is_type(enum x86_hypervisor_type type)
+ {
+ 	return x86_hyper_type == type;
+ }
++
++static inline bool run_as_host(void)
++{
++	return hypervisor_is_type(X86_HYPER_NATIVE);
++}
+ #else
+ static inline void init_hypervisor_platform(void) { }
+ static inline bool hypervisor_is_type(enum x86_hypervisor_type type)
+ {
+ 	return type == X86_HYPER_NATIVE;
+ }
++
++static inline bool run_as_host(void)
++{
++	return true;
++}
+ #endif /* CONFIG_HYPERVISOR_GUEST */
+ #endif /* _ASM_X86_HYPERVISOR_H */
+-- 
+2.32.0
 
-But I think cgroup + multiplexing is broken already
-because it cannot guarantee it sees the same cgroup
-when the timer interrupt happens.
-
-Thanks,
-Namhyung
-
->
-> >
-> >> -                        */
-> >> -                       cpuctx->cgrp = NULL;
-> >> -               }
-> >> +               cpu_ctx_sched_out(cpuctx, EVENT_ALL);
-> >> +               /*
-> >> +                * must not be done before ctxswout due
-> >> +                * to event_filter_match() in event_sched_out()
-> >> +                */
-> >> +               cpuctx->cgrp = cgrp;
-> >
-> > Maybe we can check cpuctx->cgrp is the same as task's
-> > cgroup before accessing the pmu.  As in the commit message
-> > it can call perf_cgroup_switch() after the context switch so
-> > the cgroup events might be scheduled already.
->
-> Good point, will do.
->
-> Thanks.
->
-> >
-> > Thanks,
-> > Namhyung
-> >
-> >
-> >> +
-> >> +               cpu_ctx_sched_in(cpuctx, EVENT_ALL, task);
-> >>
-> >> -               if (mode & PERF_CGROUP_SWIN) {
-> >> -                       WARN_ON_ONCE(cpuctx->cgrp);
-> >> -                       /*
-> >> -                        * set cgrp before ctxsw in to allow
-> >> -                        * event_filter_match() to not have to pass
-> >> -                        * task around
-> >> -                        * we pass the cpuctx->ctx to perf_cgroup_from_task()
-> >> -                        * because cgorup events are only per-cpu
-> >> -                        */
-> >> -                       cpuctx->cgrp = perf_cgroup_from_task(task,
-> >> -                                                            &cpuctx->ctx);
-> >> -                       cpu_ctx_sched_in(cpuctx, EVENT_ALL, task);
-> >> -               }
-> >>                 perf_pmu_enable(cpuctx->ctx.pmu);
-> >>                 perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
-> >>         }
