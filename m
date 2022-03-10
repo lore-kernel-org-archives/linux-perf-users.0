@@ -2,136 +2,250 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40CA6C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Mar 2022 10:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CBDC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Mar 2022 12:01:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234726AbiCJKWK (ORCPT
+        id S241828AbiCJMCe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Mar 2022 05:22:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35968 "EHLO
+        Thu, 10 Mar 2022 07:02:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232377AbiCJKWJ (ORCPT
+        with ESMTP id S241808AbiCJMCe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Mar 2022 05:22:09 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7F3A013DE15;
-        Thu, 10 Mar 2022 02:21:08 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3ABEB1650;
-        Thu, 10 Mar 2022 02:21:08 -0800 (PST)
-Received: from [10.57.41.41] (unknown [10.57.41.41])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2620A3FA27;
-        Thu, 10 Mar 2022 02:21:04 -0800 (PST)
-Message-ID: <6dc9a4e5-8f74-dfb5-d9f6-60e9d6b65146@arm.com>
-Date:   Thu, 10 Mar 2022 10:21:03 +0000
+        Thu, 10 Mar 2022 07:02:34 -0500
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49D02D049E
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Mar 2022 04:01:33 -0800 (PST)
+Received: by mail-pl1-x62e.google.com with SMTP id h5so3298572plf.7
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Mar 2022 04:01:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=V/aRdxYPIJVnYxbdmjgl/s1XslzjxYjuKKUK+htku64=;
+        b=uu92/9AXOEDS62ojNC1Z+JABP02/V+prBGJibHRtUMGqcUz4ZxGuWteQOQm3boGUu0
+         700xkBLd0W+SqYU/eCAm804OYPgKannSkwpE8CCWFKuJDU/bNMo6WOBSiPZu/7C1tFCe
+         3dpWFwyqfBeym8XBQ6dyGCI7KS6MiQNeLiZa0uKlOcRc3vhPfoJTrL2ygNxd0zmz65DY
+         SwCBe13onloRR3elpubRazLTOS1oxtD6c3yoNzwwU8Y3xib4duqHd5uPbE/hNLcASZOH
+         7z/g1PNr0sBfNIAUH1Fs53zHXpqFfL+e4+V5+10ZHbTcowJnjBpUwyF4y4O4Bk28Bpdw
+         lJ7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=V/aRdxYPIJVnYxbdmjgl/s1XslzjxYjuKKUK+htku64=;
+        b=ihJNS6WCPp5u9CQO7oIaXvQG3hf+pCyHOJoo6xD8+2qc9XuMRIpbVTHi7td4WrT51M
+         aNYE1Xj+ONB8+LcPmUM+RDBJ9b8X4EXt68rHZds7OjUNxlnv4Yhs5bsN52xyTO/tlpjB
+         oZKCv/0+OImaHwKLf0br+2yUJ/gcgyLCvALhdtm3tL+CkxtA5liDHQdqhxlj1ADIl10T
+         oWLQ+DnoXYOZ4JGfk/UvNZEyy5VGrBpeTyYaPz469fsFp3v5+yqUXfwUyxSzPsnvuTcx
+         pxjb+oqFfGmiCMOLmxRNkW7E2UcGe0HyC77waK9dHfc2um7NVN9kYiUqzpTX4Yvp0IaR
+         UrGg==
+X-Gm-Message-State: AOAM531N0lQHkP7iRr7f0Ujw8QF7owhBYjY4+/FfA3lyZEgR0X69l2VV
+        ZH4lXZr7JYiZkxFRJWGEakw/mg==
+X-Google-Smtp-Source: ABdhPJxeH3hPBk9w65Cn+mJGQpVKFR7n8qb3mZnBr/E4qDCERU+7Q+69LzhowUc/pvVYsSpZnXP9tw==
+X-Received: by 2002:a17:902:bc83:b0:149:b26a:b9c8 with SMTP id bb3-20020a170902bc8300b00149b26ab9c8mr4533957plb.143.1646913692691;
+        Thu, 10 Mar 2022 04:01:32 -0800 (PST)
+Received: from [10.4.175.235] ([139.177.225.250])
+        by smtp.gmail.com with ESMTPSA id g20-20020a056a000b9400b004f705514955sm6702812pfj.107.2022.03.10.04.01.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Mar 2022 04:01:32 -0800 (PST)
+Message-ID: <e561e36c-cc73-2078-4baa-cb9ab6b6eeac@bytedance.com>
+Date:   Thu, 10 Mar 2022 20:01:24 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH V2 4/8] perf: Capture branch privilege information
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.6.2
+Subject: Re: [Phishing Risk] [External] Re: [RFC PATCH] perf/core: fix cpuctx
+ cgrp warning
 Content-Language: en-US
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        peterz@infradead.org, acme@kernel.org
-Cc:     suzuki.poulose@arm.com, Ingo Molnar <mingo@redhat.com>,
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <20220309033642.144769-1-anshuman.khandual@arm.com>
- <20220309033642.144769-5-anshuman.khandual@arm.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20220309033642.144769-5-anshuman.khandual@arm.com>
+        Jiri Olsa <jolsa@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        songmuchun@bytedance.com
+References: <20220308135948.55336-1-zhouchengming@bytedance.com>
+ <CAM9d7chsbpmVhhtzBgqD29Agb6xTMpxfwvqUdo6RKx2K1WN-DQ@mail.gmail.com>
+From:   Chengming Zhou <zhouchengming@bytedance.com>
+In-Reply-To: <CAM9d7chsbpmVhhtzBgqD29Agb6xTMpxfwvqUdo6RKx2K1WN-DQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hello,
 
-
-On 09/03/2022 03:36, Anshuman Khandual wrote:
-> Platforms like arm64 could capture privilege level information for all the
-> branch records. Hence this adds a new element in the struct branch_entry to
-> record the privilege level information, which could be requested through a
-> new event.attr.branch_sample_type based flag PERF_SAMPLE_BRANCH_PRIV_SAVE.
-> This flag helps user choose whether privilege information is captured.
+On 2022/3/10 5:25 下午, Namhyung Kim wrote:
+> Hello,
 > 
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->  include/uapi/linux/perf_event.h | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
+> On Tue, Mar 8, 2022 at 6:00 AM Chengming Zhou
+> <zhouchengming@bytedance.com> wrote:
+>>
+>> There is a race problem that can trigger WARN_ON_ONCE(cpuctx->cgrp)
+>> in perf_cgroup_switch().
+>>
+>> CPU1                                    CPU2
+>> (in context_switch)                     (attach running task)
+>> perf_cgroup_sched_out(task, next)
+>>         if (cgrp1 != cgrp2) True
+>>                                         task->cgroups = xxx
+>>                                         perf_cgroup_attach()
+>> perf_cgroup_sched_in(prev, task)
+>>         if (cgrp1 != cgrp2) False
 > 
-> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-> index d29280adc3c4..0e96e2017f68 100644
-> --- a/include/uapi/linux/perf_event.h
-> +++ b/include/uapi/linux/perf_event.h
-> @@ -204,6 +204,8 @@ enum perf_branch_sample_type_shift {
->  
->  	PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT	= 17, /* save low level index of raw branch records */
->  
-> +	PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT	= 18, /* save privillege mode */
-> +
->  	PERF_SAMPLE_BRANCH_MAX_SHIFT		/* non-ABI */
->  };
->  
-> @@ -233,6 +235,8 @@ enum perf_branch_sample_type {
->  
->  	PERF_SAMPLE_BRANCH_HW_INDEX	= 1U << PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT,
->  
-> +	PERF_SAMPLE_BRANCH_PRIV_SAVE	= 1U << PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT,
-> +
->  	PERF_SAMPLE_BRANCH_MAX		= 1U << PERF_SAMPLE_BRANCH_MAX_SHIFT,
->  };
->  
-> @@ -271,6 +275,12 @@ enum {
->  	PERF_BR_NEW_MAX,
->  };
->  
-> +enum {
-> +	PERF_BR_USER	= 0,
-> +	PERF_BR_KERNEL	= 1,
-> +	PERF_BR_HV	= 2,
-> +};
+> But perf_cgroup_switch will be synchronized as the context switch
+> disables the interrupt.  And right, it still can see the task->cgroups
+> is changing in the middle.
+> 
+>>
+>> The commit a8d757ef076f ("perf events: Fix slow and broken cgroup
+>> context switch code") would save cpuctx switch in/out when the
+>> perf_cgroup of "prev" and "next" are the same.
+>>
+>> But perf_cgroup of task can change in concurrent with context_switch.
+>> If cgrp1 == cgrp2 in sched_out(), cpuctx won't do switch out, then
+>> task perf_cgroup changed cause cgrp1 != cgrp2 in sched_in(), cpuctx
+>> will do switch in, and trigger WARN_ON_ONCE(cpuctx->cgrp).
+>>
+>> The perf_cgroup of "prev" and "next" can be changed at any time, so we
+>> first have to combine perf_cgroup_sched_in() into perf_cgroup_sched_out(),
+>> so we can get a consistent value of condition (cgrp1 == cgrp2).
+>>
+>> And we introduce a percpu "cpu_perf_cgroups" to track the current used
+>> perf_cgroup, instead of using the unstable perf_cgroup of "prev", which
+>> maybe not the cpuctx->cgrp we used to schedule cgroup events on cpu.
+> 
+> Is this really needed?  I think the warning comes because the two
+> cgroups were the same when in sched-out, but they became
+> different when in sched-in.  So just combining sched-in/out should
+> be ok, isn't it?
 
-0 should be "PERF_BR_PRIV_UNKNOWN" so userspace knows if it was not enabled
-otherwise it will look like all samples are PERF_BR_USER when actually
-priv type recording was just disabled.
+If we get perf_cgroup from prev->cgroups that can be changed in the
+context_switch(), make the condition (cgrp1 == cgrp2) is true, then
+we won't do sched_out/in. So the events of prev's previous cgrp will
+still be on the CPU.
 
-I think it's not even always possible to go backwards from a sample to
-work out what the event attributes were so this can be interpreted (taking
-all of perf script and every corner case into account).
+Even that CPU would receive IPI from perf_cgroup_attach() after
+context_switch(), remote_function() will do nothing because prev task
+is not current running anymore.
 
-Starting at 0=UNKNOWN is consistent with the other fields and makes parsing
-it a whole lot easier.
+> 
+>>
+>> Fixes: a8d757ef076f ("perf events: Fix slow and broken cgroup context
+>> switch code")
+>> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+>> ---
+>>  kernel/events/core.c | 95 +++++++++++---------------------------------
+>>  1 file changed, 23 insertions(+), 72 deletions(-)
+>>
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index 6859229497b1..f3bc2841141f 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -826,6 +826,7 @@ perf_cgroup_set_timestamp(struct task_struct *task,
+>>         }
+>>  }
+>>
+>> +static DEFINE_PER_CPU(struct perf_cgroup *, cpu_perf_cgroups);
+>>  static DEFINE_PER_CPU(struct list_head, cgrp_cpuctx_list);
+>>
+>>  #define PERF_CGROUP_SWOUT      0x1 /* cgroup switch out every event */
+>> @@ -837,8 +838,9 @@ static DEFINE_PER_CPU(struct list_head, cgrp_cpuctx_list);
+>>   * mode SWOUT : schedule out everything
+>>   * mode SWIN : schedule in based on cgroup for next
+> 
+> You can remove this comment now.
 
-James
+Ok, will do.
 
-> +
->  #define PERF_SAMPLE_BRANCH_PLM_ALL \
->  	(PERF_SAMPLE_BRANCH_USER|\
->  	 PERF_SAMPLE_BRANCH_KERNEL|\
-> @@ -1386,7 +1396,8 @@ struct perf_branch_entry {
->  		cycles:16,  /* cycle count to last branch */
->  		type:4,     /* branch type */
->  		new_type:4, /* additional branch type */
-> -		reserved:36;
-> +		priv:2,     /* privilege level */
-> +		reserved:34;
->  };
->  
->  union perf_sample_weight {
+> 
+>>   */
+>> -static void perf_cgroup_switch(struct task_struct *task, int mode)
+>> +static void perf_cgroup_switch(struct task_struct *task)
+>>  {
+>> +       struct perf_cgroup *cgrp;
+>>         struct perf_cpu_context *cpuctx, *tmp;
+>>         struct list_head *list;
+>>         unsigned long flags;
+>> @@ -849,6 +851,9 @@ static void perf_cgroup_switch(struct task_struct *task, int mode)
+>>          */
+>>         local_irq_save(flags);
+>>
+>> +       cgrp = perf_cgroup_from_task(task, NULL);
+>> +       __this_cpu_write(cpu_perf_cgroups, cgrp);
+>> +
+>>         list = this_cpu_ptr(&cgrp_cpuctx_list);
+>>         list_for_each_entry_safe(cpuctx, tmp, list, cgrp_cpuctx_entry) {
+>>                 WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
+>> @@ -856,28 +861,15 @@ static void perf_cgroup_switch(struct task_struct *task, int mode)
+>>                 perf_ctx_lock(cpuctx, cpuctx->task_ctx);
+>>                 perf_pmu_disable(cpuctx->ctx.pmu);
+>>
+>> -               if (mode & PERF_CGROUP_SWOUT) {
+>> -                       cpu_ctx_sched_out(cpuctx, EVENT_ALL);
+>> -                       /*
+>> -                        * must not be done before ctxswout due
+>> -                        * to event_filter_match() in event_sched_out()
+> 
+> Unrelated, but I don't see the event_filter_match() in
+> event_sched_out() anymore.  Does it sched-out all
+> non-cgroup cpu events here?
+
+Yes, I review the code and don't find event_filter_match(),
+so cpu_ctx_sched_out() will sched-out all cpu events.
+
+And I find event_filter_match() won't work here too,
+because perf_cgroup_match() return matched for any
+non-cgroup event. Maybe we can add another function
+like perf_cgroup_match_sched_out() to use when sched-out.
+
+> 
+>> -                        */
+>> -                       cpuctx->cgrp = NULL;
+>> -               }
+>> +               cpu_ctx_sched_out(cpuctx, EVENT_ALL);
+>> +               /*
+>> +                * must not be done before ctxswout due
+>> +                * to event_filter_match() in event_sched_out()
+>> +                */
+>> +               cpuctx->cgrp = cgrp;
+> 
+> Maybe we can check cpuctx->cgrp is the same as task's
+> cgroup before accessing the pmu.  As in the commit message
+> it can call perf_cgroup_switch() after the context switch so
+> the cgroup events might be scheduled already.
+
+Good point, will do.
+
+Thanks.
+
+> 
+> Thanks,
+> Namhyung
+> 
+> 
+>> +
+>> +               cpu_ctx_sched_in(cpuctx, EVENT_ALL, task);
+>>
+>> -               if (mode & PERF_CGROUP_SWIN) {
+>> -                       WARN_ON_ONCE(cpuctx->cgrp);
+>> -                       /*
+>> -                        * set cgrp before ctxsw in to allow
+>> -                        * event_filter_match() to not have to pass
+>> -                        * task around
+>> -                        * we pass the cpuctx->ctx to perf_cgroup_from_task()
+>> -                        * because cgorup events are only per-cpu
+>> -                        */
+>> -                       cpuctx->cgrp = perf_cgroup_from_task(task,
+>> -                                                            &cpuctx->ctx);
+>> -                       cpu_ctx_sched_in(cpuctx, EVENT_ALL, task);
+>> -               }
+>>                 perf_pmu_enable(cpuctx->ctx.pmu);
+>>                 perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+>>         }
