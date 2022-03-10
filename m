@@ -2,62 +2,57 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BEDC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Mar 2022 08:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4B4C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Mar 2022 09:25:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234457AbiCJIyN (ORCPT
+        id S233142AbiCJJ0y (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Mar 2022 03:54:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53896 "EHLO
+        Thu, 10 Mar 2022 04:26:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231153AbiCJIyM (ORCPT
+        with ESMTP id S240755AbiCJJ0y (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Mar 2022 03:54:12 -0500
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97B6213702C
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Mar 2022 00:53:11 -0800 (PST)
-Received: by mail-lj1-x230.google.com with SMTP id u3so6793858ljd.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Mar 2022 00:53:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jD3qAmHEHOnZBOlSRoVT4fbyHPWkJJFfAb9rrNATrd8=;
-        b=hmvsaf3fkX8FWufHIYru+XRkYddPr6duj1rIBnMgzWn0yXN7Ntfs+EsS8yOz0B8Q7f
-         9HPzW5V7V6V5/RYCxdsun9Q15Age9QD8fCgjEsdU92/zyV1tKgzf2Uky+tryWQpgTZFb
-         sZOWyJsPjf0yUZbTUJr3bvZn7w/8glNtxCdK0bAouaw4Zx1UYPFCwpuyGUv+N295Vx70
-         O/qAjOzCMChSHyCvnznF/DvNhtOm4/HW2R3pBDko7y/V3d1inPH8XI5UkZjgpW6sxE3n
-         F85KF7G3KEXaGTQ9RK4Ghxx20XOYyFRwoTAebKPlDff+GtVC+DehM0YfJTRByCGc5oXZ
-         RduQ==
+        Thu, 10 Mar 2022 04:26:54 -0500
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D005B13982A;
+        Thu, 10 Mar 2022 01:25:53 -0800 (PST)
+Received: by mail-lf1-f45.google.com with SMTP id g17so8366623lfh.2;
+        Thu, 10 Mar 2022 01:25:53 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jD3qAmHEHOnZBOlSRoVT4fbyHPWkJJFfAb9rrNATrd8=;
-        b=EOgwERYpdaMiGnXYsuTOxy+VLurM83hcxeExDICCesvK6ilsI1e8nCoxHu0LpuBhF+
-         IBI9T4hoskVeBACwpXH4e3sFgadAVB2gA4uxb73nBtSCJazUnGWwP1UQqLKFJJZzq5fA
-         ug7VL1piftzSILzsKuXebYvX5Px0MTAYnCSBLsrkkOJJBhoifUdae9QgFt+5PPS3t6Rk
-         MIo1sZ94hdm446vzFiYMAq9dCcu9Bn8lF0lwU82UUHJcfkiyAs8lO6QjnMFiLUI15C24
-         wQOfa91TwvfUp5HPNbx/VAF7JwDzS3wGeVXh+RvXfIDjus5Y0Ff6pnnXnAy1HfURxgj4
-         errA==
-X-Gm-Message-State: AOAM530yFWPzj6qdXvB+JoHVd7+q6NlfGqJPvuig/z4LwVDZhfAU8sT0
-        CS7zC/eAv3NABNchFWNIpVp5auS9W5kMBseXyzEm6DwRGFA=
-X-Google-Smtp-Source: ABdhPJwfq4YMtyaCiFkI5YS1rtS5MId7CiqrGT4QVVocDd25aeWPgN8PB/pv30mREFjDy3qHQzDGUtEaUS1LyBGXIGc=
-X-Received: by 2002:a05:651c:1051:b0:247:ea0d:a57c with SMTP id
- x17-20020a05651c105100b00247ea0da57cmr2246474ljm.204.1646902389582; Thu, 10
- Mar 2022 00:53:09 -0800 (PST)
+        bh=+5V+wTeIo37PwWFwgFplTYn4oIVdAMfrFbOjnidcQjU=;
+        b=FqifI/FvBGLhqHJSeJUeTFoLnDatd9wwyGFfbIzo3luskOrxO4YKKqIktNxMV/hvVJ
+         o+VUSf/ORv8bcwarL/h0Yg6GssnyEWHhEUE4RBzEi5bvKodGqxrB8TbcSVL/D4+Vj/ED
+         7gnB8Q339TzBh2kLQYHoLu0BRFag8/Oy71xszDsiY2JuSZySpyftLKLC1wT95YGeylS3
+         PZJ/kD++ert+iHH4ta2Ic8PHAiP2NRZsLkqkTYgTKANo6WCw9/fIRZCgKYKNWPvcNWwb
+         beVwhEuJ0W0P5cYYrt3JVd9uKNrjPf+CZK1F5NPeEbfDdBs7jhkPiujFbpZpSE3Po1N7
+         0c6w==
+X-Gm-Message-State: AOAM5312T6a2EQLx6n07KnbDg+GYqJy2r6SzARe820hIvRaxjgX8m1dl
+        l1q4QjGMJYKOalis6pBMYBIk/Uv1YTb136RV00c=
+X-Google-Smtp-Source: ABdhPJwqYawyDJX/GT0RTxkOjNsc7y7aK0QiHQNoA/A3hziNoe7KKMG+ml/bRNOc8V1UDxX/8cwsA46+QjtCZIiYde8=
+X-Received: by 2002:a05:6512:ea5:b0:43b:3603:69d9 with SMTP id
+ bi37-20020a0565120ea500b0043b360369d9mr2357274lfb.71.1646904351643; Thu, 10
+ Mar 2022 01:25:51 -0800 (PST)
 MIME-Version: 1.0
-References: <DM5PR15MB17390661547DEAA8C397A540F0069@DM5PR15MB1739.namprd15.prod.outlook.com>
- <9b4749a8-f3f3-e2e6-b1d3-8b23d946e10a@arm.com> <DM5PR15MB1739AC36558E0ED388735AB6F00A9@DM5PR15MB1739.namprd15.prod.outlook.com>
- <d34c1b48-e39b-e533-84be-5811f789ee73@arm.com> <DM5PR15MB17393E601961B046B638B923F00A9@DM5PR15MB1739.namprd15.prod.outlook.com>
-In-Reply-To: <DM5PR15MB17393E601961B046B638B923F00A9@DM5PR15MB1739.namprd15.prod.outlook.com>
-From:   Namhyung Kim <namhyung@gmail.com>
-Date:   Thu, 10 Mar 2022 00:52:58 -0800
-Message-ID: <CAM9d7cjSX8DGDGFAG-_19j=nM4SSBuAF252ixRbuMu+DMENzPg@mail.gmail.com>
-Subject: Re: What exactly does -F <freq> do?
-To:     Douglas Graham <douglas.graham@ericsson.com>
-Cc:     James Clark <james.clark@arm.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+References: <20220308135948.55336-1-zhouchengming@bytedance.com>
+In-Reply-To: <20220308135948.55336-1-zhouchengming@bytedance.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Thu, 10 Mar 2022 01:25:40 -0800
+Message-ID: <CAM9d7chsbpmVhhtzBgqD29Agb6xTMpxfwvqUdo6RKx2K1WN-DQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] perf/core: fix cpuctx cgrp warning
+To:     Chengming Zhou <zhouchengming@bytedance.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        songmuchun@bytedance.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
@@ -65,136 +60,141 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hello,
 
-On Wed, Mar 9, 2022 at 4:56 PM Douglas Graham
-<douglas.graham@ericsson.com> wrote:
+On Tue, Mar 8, 2022 at 6:00 AM Chengming Zhou
+<zhouchengming@bytedance.com> wrote:
 >
-> >> I am already using -a.
-> >
-> >In that case it does change some of my assumptions. But for this part of your message:
-> >
-> >    > A "perf stat sleep 1" on the system I'm interested in says:
-> >
-> >    >            1630370      cycles                    #    1.315 GHz
-> >
-> >    > As I understand it, the cycles event is used by default, so a 100 Hz sample frequency
-> >    > should give the same results as a 13150000 cycles sample period.
-> >
-> > That command is not system wide or per-CPU which is what my assumption was based one
-> > (it's per process mode). So it's not 1.6M cycles in 1 second, it's 1.6M cycles of when
-> > the sleep process was actively launching and running, excluding the 1s of sleep. System
-> > wide would be 'perf stat -a -- sleep 1'
+> There is a race problem that can trigger WARN_ON_ONCE(cpuctx->cgrp)
+> in perf_cgroup_switch().
 >
-> It could just be me, but I think perf is in dire need of more comprehensive documentation.
-> Like, for example, how is that 1.315 GHz computed?  That's actually the number I was using
-> to determine the sample period in cycles that should be equivalent to a 100Hz sample
-> frequency but now I'm not sure I know where that number comes from or what it means, and
-> the perf-stat man page is mum on the subject.  The complete output of that command on this
-> quad core arm64 system is:
->
-> ~# perf stat -- sleep 1
->
->  Performance counter stats for 'sleep 1':
->
->               1.15 msec task-clock                #    0.001 CPUs utilized
->                  1      context-switches          #    0.872 K/sec
->                  0      cpu-migrations            #    0.000 K/sec
->                 44      page-faults               #    0.038 M/sec
->            1508958      cycles                    #    1.315 GHz
->             679359      instructions              #    0.45  insn per cycle
->              86111      branches                  #   75.059 M/sec
->              10291      branch-misses             #   11.95% of all branches
->
->        1.002371400 seconds time elapsed
->
->        0.002567000 seconds user
->        0.000000000 seconds sys
->
-> If I divide the number of cycles by the total cpu usage, I get 1508958/0.002567 == 588 MHz,
-> which is pretty far from 1.315 GHz. Where did 1.315 GHz come from?
+> CPU1                                    CPU2
+> (in context_switch)                     (attach running task)
+> perf_cgroup_sched_out(task, next)
+>         if (cgrp1 != cgrp2) True
+>                                         task->cgroups = xxx
+>                                         perf_cgroup_attach()
+> perf_cgroup_sched_in(prev, task)
+>         if (cgrp1 != cgrp2) False
 
-I think it's cycles / task-clock.
+But perf_cgroup_switch will be synchronized as the context switch
+disables the interrupt.  And right, it still can see the task->cgroups
+is changing in the middle.
 
 >
-> And if I run a CPU intensive program like stress, I get:
+> The commit a8d757ef076f ("perf events: Fix slow and broken cgroup
+> context switch code") would save cpuctx switch in/out when the
+> perf_cgroup of "prev" and "next" are the same.
 >
-> # perf stat -- stress -c 1 --timeout 1
-> stress-ng: info:  [9166] dispatching hogs: 1 cpu
-> stress-ng: info:  [9166] successful run completed in 1.13s
+> But perf_cgroup of task can change in concurrent with context_switch.
+> If cgrp1 == cgrp2 in sched_out(), cpuctx won't do switch out, then
+> task perf_cgroup changed cause cgrp1 != cgrp2 in sched_in(), cpuctx
+> will do switch in, and trigger WARN_ON_ONCE(cpuctx->cgrp).
 >
->  Performance counter stats for 'stress -c 1 --timeout 1':
+> The perf_cgroup of "prev" and "next" can be changed at any time, so we
+> first have to combine perf_cgroup_sched_in() into perf_cgroup_sched_out(),
+> so we can get a consistent value of condition (cgrp1 == cgrp2).
 >
->            1135.88 msec task-clock                #    0.991 CPUs utilized
->                156      context-switches          #    0.137 K/sec
->                  0      cpu-migrations            #    0.000 K/sec
->               1253      page-faults               #    0.001 M/sec
->         1513809696      cycles                    #    1.333 GHz
->         1546722405      instructions              #    1.02  insn per cycle
->          175801202      branches                  #  154.772 M/sec
->            4725866      branch-misses             #    2.69% of all branches
->
->        1.146401500 seconds time elapsed
->
->        1.128040000 seconds user
->        0.009161000 seconds sys
->
-> You're right that now I do see a lot more cycles, and also, dividing cycles by total CPU
-> usage gives something pretty close to the 1.333 GHz reported in the comment:
->
->    1513809696/(1.128040 + 0.009161) = 1.331 GHz.
->
-> The frequencies reported in these comments are quite close, so I guess they must mean
-> something.  OTOH, they aren't identical, so I don't think they're just being read from some
-> table somewhere. They must be being computed, but how?
+> And we introduce a percpu "cpu_perf_cgroups" to track the current used
+> perf_cgroup, instead of using the unstable perf_cgroup of "prev", which
+> maybe not the cpuctx->cgrp we used to schedule cgroup events on cpu.
 
-cycles / task-clock = 1513809696 / 1.13588 = 1332719738
+Is this really needed?  I think the warning comes because the two
+cgroups were the same when in sched-out, but they became
+different when in sched-in.  So just combining sched-in/out should
+be ok, isn't it?
 
 >
-> And just for fun, here's what the same two runs (sleep and stress) look like with the -a option:
+> Fixes: a8d757ef076f ("perf events: Fix slow and broken cgroup context
+> switch code")
+> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+> ---
+>  kernel/events/core.c | 95 +++++++++++---------------------------------
+>  1 file changed, 23 insertions(+), 72 deletions(-)
 >
-> # perf stat -a -- sleep 1
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 6859229497b1..f3bc2841141f 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -826,6 +826,7 @@ perf_cgroup_set_timestamp(struct task_struct *task,
+>         }
+>  }
 >
->  Performance counter stats for 'system wide':
+> +static DEFINE_PER_CPU(struct perf_cgroup *, cpu_perf_cgroups);
+>  static DEFINE_PER_CPU(struct list_head, cgrp_cpuctx_list);
 >
->            4005.15 msec cpu-clock                 #    3.995 CPUs utilized
->               4945      context-switches          #    0.001 M/sec
->                 15      cpu-migrations            #    0.004 K/sec
->                  2      page-faults               #    0.000 K/sec
->           78745230      cycles                    #    0.020 GHz
->           37676196      instructions              #    0.48  insn per cycle
->            5155778      branches                  #    1.287 M/sec
->             749509      branch-misses             #   14.54% of all branches
->
->        1.002497310 seconds time elapsed
->
-> # perf stat -a -- stress -c 1 --timeout 1
-> stress-ng: info:  [9721] dispatching hogs: 1 cpu
-> stress-ng: info:  [9721] successful run completed in 1.14s
->
->  Performance counter stats for 'system wide':
->
->            4598.27 msec cpu-clock                 #    3.991 CPUs utilized
->               7125      context-switches          #    0.002 M/sec
->                 14      cpu-migrations            #    0.003 K/sec
->               1133      page-faults               #    0.246 K/sec
->         1633500454      cycles                    #    0.355 GHz
->         1595921326      instructions              #    0.98  insn per cycle
->          182601726      branches                  #   39.711 M/sec
->            5607300      branch-misses             #    3.07% of all branches
->
->        1.152046320 seconds time elapsed
->
-> Now the frequencies displayed in the comments are quite different both from each other, and
-> from those displayed without -a.
+>  #define PERF_CGROUP_SWOUT      0x1 /* cgroup switch out every event */
+> @@ -837,8 +838,9 @@ static DEFINE_PER_CPU(struct list_head, cgrp_cpuctx_list);
+>   * mode SWOUT : schedule out everything
+>   * mode SWIN : schedule in based on cgroup for next
 
-For system-wide mode, it really depends on how much load
-it has at the moment.
+You can remove this comment now.
 
+>   */
+> -static void perf_cgroup_switch(struct task_struct *task, int mode)
+> +static void perf_cgroup_switch(struct task_struct *task)
+>  {
+> +       struct perf_cgroup *cgrp;
+>         struct perf_cpu_context *cpuctx, *tmp;
+>         struct list_head *list;
+>         unsigned long flags;
+> @@ -849,6 +851,9 @@ static void perf_cgroup_switch(struct task_struct *task, int mode)
+>          */
+>         local_irq_save(flags);
 >
-> I still have the feeling that I'm missing some important concept here. I'll keep trying
-> to figure out what it is.
+> +       cgrp = perf_cgroup_from_task(task, NULL);
+> +       __this_cpu_write(cpu_perf_cgroups, cgrp);
+> +
+>         list = this_cpu_ptr(&cgrp_cpuctx_list);
+>         list_for_each_entry_safe(cpuctx, tmp, list, cgrp_cpuctx_entry) {
+>                 WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
+> @@ -856,28 +861,15 @@ static void perf_cgroup_switch(struct task_struct *task, int mode)
+>                 perf_ctx_lock(cpuctx, cpuctx->task_ctx);
+>                 perf_pmu_disable(cpuctx->ctx.pmu);
+>
+> -               if (mode & PERF_CGROUP_SWOUT) {
+> -                       cpu_ctx_sched_out(cpuctx, EVENT_ALL);
+> -                       /*
+> -                        * must not be done before ctxswout due
+> -                        * to event_filter_match() in event_sched_out()
 
-The sampling frequency can be inaccurate if the system is idle
-or system load is fluctuating as it's not walltime based.
+Unrelated, but I don't see the event_filter_match() in
+event_sched_out() anymore.  Does it sched-out all
+non-cgroup cpu events here?
+
+> -                        */
+> -                       cpuctx->cgrp = NULL;
+> -               }
+> +               cpu_ctx_sched_out(cpuctx, EVENT_ALL);
+> +               /*
+> +                * must not be done before ctxswout due
+> +                * to event_filter_match() in event_sched_out()
+> +                */
+> +               cpuctx->cgrp = cgrp;
+
+Maybe we can check cpuctx->cgrp is the same as task's
+cgroup before accessing the pmu.  As in the commit message
+it can call perf_cgroup_switch() after the context switch so
+the cgroup events might be scheduled already.
 
 Thanks,
 Namhyung
+
+
+> +
+> +               cpu_ctx_sched_in(cpuctx, EVENT_ALL, task);
+>
+> -               if (mode & PERF_CGROUP_SWIN) {
+> -                       WARN_ON_ONCE(cpuctx->cgrp);
+> -                       /*
+> -                        * set cgrp before ctxsw in to allow
+> -                        * event_filter_match() to not have to pass
+> -                        * task around
+> -                        * we pass the cpuctx->ctx to perf_cgroup_from_task()
+> -                        * because cgorup events are only per-cpu
+> -                        */
+> -                       cpuctx->cgrp = perf_cgroup_from_task(task,
+> -                                                            &cpuctx->ctx);
+> -                       cpu_ctx_sched_in(cpuctx, EVENT_ALL, task);
+> -               }
+>                 perf_pmu_enable(cpuctx->ctx.pmu);
+>                 perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+>         }
