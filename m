@@ -2,59 +2,59 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B25BFC433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Mar 2022 15:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A539C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Mar 2022 15:56:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350112AbiCKPzs (ORCPT
+        id S240458AbiCKP5c (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 11 Mar 2022 10:55:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38976 "EHLO
+        Fri, 11 Mar 2022 10:57:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350051AbiCKPzU (ORCPT
+        with ESMTP id S240599AbiCKP5b (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 11 Mar 2022 10:55:20 -0500
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7877315169F
-        for <linux-perf-users@vger.kernel.org>; Fri, 11 Mar 2022 07:53:47 -0800 (PST)
-Received: by mail-wr1-x430.google.com with SMTP id x15so13513017wru.13
-        for <linux-perf-users@vger.kernel.org>; Fri, 11 Mar 2022 07:53:47 -0800 (PST)
+        Fri, 11 Mar 2022 10:57:31 -0500
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90D37149B92
+        for <linux-perf-users@vger.kernel.org>; Fri, 11 Mar 2022 07:56:10 -0800 (PST)
+Received: by mail-wr1-x42b.google.com with SMTP id i8so13589239wrr.8
+        for <linux-perf-users@vger.kernel.org>; Fri, 11 Mar 2022 07:56:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=t/+HHt1c39G7ywBZBGDd9qnAziedqgoDMlKoB6IGpeA=;
-        b=Nmim9p+XStxDNEaAN2FZW4KcwpMbcvvn1QwY/w4Aq1UMFUvc2CXbAeK9pAjDvTZjLr
-         U2Fi3+LTIeGd1AI6eyYr/UdIJN9P4TrMddw/wo0AofryrnTNa8SP0Cu1dHkZIoC0RP8w
-         ctaBGADjWmKJPz5pRxDl8kXK5zOS8CTjKfPtPLAbONBQIv+hSFeuc88KZ49pn8tGn6C/
-         hVGRFNrvVcHqUGeOz6tcHkx69ycpl8HBNhoZYGNrCSIFzz2h3ksKQepD74eH04iNUy9R
-         ewMueU7+0BL+LoxE98tG+eTHhCUCERkNTr5cgzJiJyDXboi/u6bpCTu+u4kAMHzSxITO
-         nCpQ==
+        bh=yBab81rlsXVfIrb1h5ugmlXAnmE0dZk087QNoq8lEw4=;
+        b=usv/7QYbADl2R0gma2J6J5sYrjRw4TDBnKEeY2m5BrJxInoEh23dkuXQowKqQZwUi1
+         fVqYVr9Z//li8WbUkitTqPkn/gaJv6nhYvMmT7qz0ovfQeb4JJCjKxdHkPX4ea44XVl/
+         YqyoH8eyNpliPfG06CzQsl2zZKyOfoe/6lL7NbLo2gaAy0/md4nK3MJXE8mcE0GkO8Z/
+         LyY3KFqx/85OFkBU+Svo/0OIxh8wEOknlbdYWOr94y+CRto3VjCdPgc4oZkzgP31La6C
+         Og/51kAY3M1RIkN9ZoUJv3xB2OWzN6p7tXyAaiAI2damReBHdb6p9lGOCyyBarml2Tal
+         kvcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=t/+HHt1c39G7ywBZBGDd9qnAziedqgoDMlKoB6IGpeA=;
-        b=MD7OhiDTEQ05EPLAvj1RrXngbcjmfmTYNOnZszemVgRJ9wbN6+KAe3DTNBZvozRq9u
-         cnsPMCevAcFlMXoTd/cEO06ZhCo141zWhHyN/DTXjQWVpzof9CW1b3M2n1ZdsRtbQG3Z
-         gVbP0tllkTckAJHy7LEaTM66AAY0kpbnRXvf4LXXCfLmyUpCGYZAfOWWnjvEGFjX3fcf
-         /WpQAuA+QMF2FCqXRCxn/0Gw4PHSzvJz17ELZ99GozK5TwWMm0vNGTLVz9uCh6GjFXhq
-         A1c/pKRcJRyAWpxiHxA9HWORpybv3SBsvYPx/zw2hmvnAXDzXHaW9Qm7TOCIu88OOzeb
-         XRjA==
-X-Gm-Message-State: AOAM5303pCJ6eSmH+My1hO08Mf289/btFYItz2Uzjc2h9luivGkBw0lY
-        dWemvp3DvfG/UkaJQp27k6aVFDyNXb1Y/ttE248cpw==
-X-Google-Smtp-Source: ABdhPJzHdL8dpugKSarloUyddBzEwPBmBD6XrTKj9A429IAY747PSW744PUT05MeeLe5m+lw7jp+8qBYsHYD7XtjO6Y=
-X-Received: by 2002:adf:e108:0:b0:1ef:97ad:5372 with SMTP id
- t8-20020adfe108000000b001ef97ad5372mr7705296wrz.658.1647014025860; Fri, 11
- Mar 2022 07:53:45 -0800 (PST)
+        bh=yBab81rlsXVfIrb1h5ugmlXAnmE0dZk087QNoq8lEw4=;
+        b=21CMSNThag1Nft8rWNgGoZayAra0pAwPmiDKzyXiyMNEOxRzGL4u8ZP0AMV8ptUPFC
+         Qb0B7BRBMgn5FYZfnjJje/i8ftsxIrIhrhTMryleHXi5hyWqP4nG1yG9pPoJYO4pMAPb
+         6AHmoNqlaPslXmzy3ncrHHNUBr9QuwWZqWTF/XUuPs9HeUHLYGt2B7oiIyZGGZPw+JKv
+         JEg/wHOM2+rm4LazlEqsFpdKWt0K4tNH0d7XdwOJenBj1fElHn27vw6r2eM/qzllfety
+         V/z1C0iMU/5RG3AtDWVprVg4/hSX/+RDAiNi2MbLM605Vqbetqj9vp6VwAFtr90Ep839
+         dhmQ==
+X-Gm-Message-State: AOAM531w3KxDelcbkD7xsIlzW4WMGaRUk73zWSoqtYk/XRLH/rgfkrxZ
+        VOC4UQpTYBatFG3WuHUxxmcRFroF5W+4QqS5LNrLKA==
+X-Google-Smtp-Source: ABdhPJyHRl575oJ/E1f/YImGvu+xA6j3CfpVKm2dTU3ZrtKOXYSGHQkH5/l443BVjYhYSzAzYaAurPGVf+bw/uab3is=
+X-Received: by 2002:a5d:4a8f:0:b0:1f0:4af2:4e29 with SMTP id
+ o15-20020a5d4a8f000000b001f04af24e29mr7798876wrq.519.1647014165262; Fri, 11
+ Mar 2022 07:56:05 -0800 (PST)
 MIME-Version: 1.0
-References: <20220113091056.1297982-1-james.clark@arm.com> <20220113091056.1297982-3-james.clark@arm.com>
- <50e5ff63-ae00-f04b-fc5b-f294742cb13a@arm.com> <292386ee-cfa8-d849-57ce-156c76680e12@arm.com>
-In-Reply-To: <292386ee-cfa8-d849-57ce-156c76680e12@arm.com>
+References: <20220113091056.1297982-1-james.clark@arm.com> <20220113091056.1297982-2-james.clark@arm.com>
+ <b3545a88-4743-db95-4676-b0b193cbea78@arm.com> <CAJ9a7Vi584BcY49TaRn5CJT=wcpafMf-3cA0R+sZ54p6iUKmeQ@mail.gmail.com>
+ <7fae6630-fdec-3f95-9eac-3f7a5c789272@arm.com>
+In-Reply-To: <7fae6630-fdec-3f95-9eac-3f7a5c789272@arm.com>
 From:   Mike Leach <mike.leach@linaro.org>
-Date:   Fri, 11 Mar 2022 15:53:41 +0000
-Message-ID: <CAJ9a7VjiYrnQKUBkcQPs-iJomxFUAJ9Wmq0A+JwN4O_bbqhX1A@mail.gmail.com>
-Subject: Re: [PATCH v2 2/6] coresight: Fail to open with return stacks if they
- are unavailable
+Date:   Fri, 11 Mar 2022 15:56:00 +0000
+Message-ID: <CAJ9a7VjTJ4E7=qdPgfTTVjoW01rCzd-f1mFYHjtA3BHk25saMA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] coresight: Add config flag to enable branch broadcast
 To:     James Clark <James.Clark@arm.com>
 Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
         mathieu.poirier@linaro.org, coresight@lists.linaro.org,
@@ -72,156 +72,171 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+Hi James,
 
-
-On Fri, 11 Mar 2022 at 14:52, James Clark <james.clark@arm.com> wrote:
+On Fri, 11 Mar 2022 at 14:58, James Clark <james.clark@arm.com> wrote:
 >
 >
 >
-> On 28/01/2022 11:24, Suzuki K Poulose wrote:
-> > Hi James
+> On 02/02/2022 20:25, Mike Leach wrote:
+> > Hi James, Suzuki
 > >
-> > On 13/01/2022 09:10, James Clark wrote:
-> >> Maintain consistency with the other options by failing to open when they
-> >> aren't supported. For example ETM_OPT_TS, ETM_OPT_CTXTID2 and the newly
-> >> added ETM_OPT_BRANCH_BROADCAST all return with -EINVAL if they are
-> >> requested but not supported by hardware.
+> > On Fri, 28 Jan 2022 at 11:19, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+> >>
+> >> On 13/01/2022 09:10, James Clark wrote:
+> >>> When enabled, all taken branch addresses are output, even if the branch
+> >>> was because of a direct branch instruction. This enables reconstruction
+> >>> of the program flow without having access to the memory image of the
+> >>> code being executed.
+> >>>
+> >>> Use bit 8 for the config option which would be the correct bit for
+> >>> programming ETMv3. Although branch broadcast can't be enabled on ETMv3
+> >>> because it's not in the define ETM3X_SUPPORTED_OPTIONS, using the
+> >>> correct bit might help prevent future collisions or allow it to be
+> >>> enabled if needed.
+> >>>
+> >>> Signed-off-by: James Clark <james.clark@arm.com>
+> >>> ---
+> >>>   drivers/hwtracing/coresight/coresight-etm-perf.c   |  2 ++
+> >>>   drivers/hwtracing/coresight/coresight-etm4x-core.c | 10 ++++++++++
+> >>>   include/linux/coresight-pmu.h                      |  2 ++
+> >>>   3 files changed, 14 insertions(+)
+> >>>
+> >>> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> >>> index c039b6ae206f..43bbd5dc3d3b 100644
+> >>> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
+> >>> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> >>> @@ -52,6 +52,7 @@ static DEFINE_PER_CPU(struct coresight_device *, csdev_src);
+> >>>    * The PMU formats were orignally for ETMv3.5/PTM's ETMCR 'config';
+> >>>    * now take them as general formats and apply on all ETMs.
+> >>>    */
+> >>> +PMU_FORMAT_ATTR(branch_broadcast, "config:"__stringify(ETM_OPT_BRANCH_BROADCAST));
+> >>>   PMU_FORMAT_ATTR(cycacc,             "config:" __stringify(ETM_OPT_CYCACC));
+> >>>   /* contextid1 enables tracing CONTEXTIDR_EL1 for ETMv4 */
+> >>>   PMU_FORMAT_ATTR(contextid1, "config:" __stringify(ETM_OPT_CTXTID));
+> >>> @@ -97,6 +98,7 @@ static struct attribute *etm_config_formats_attr[] = {
+> >>>       &format_attr_sinkid.attr,
+> >>>       &format_attr_preset.attr,
+> >>>       &format_attr_configid.attr,
+> >>> +     &format_attr_branch_broadcast.attr,
+> >>
+> >> Does it make sense to hide the option if the bb is not supported ? I
+> >> guess it will be tricky as we don't track the common feature set. So,
+> >> that said...
+> >>
+> >>>       NULL,
+> >>>   };
+> >>>
+> >>> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> >>> index bf18128cf5de..04669ecc0efa 100644
+> >>> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> >>> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> >>> @@ -692,6 +692,16 @@ static int etm4_parse_event_config(struct coresight_device *csdev,
+> >>>               ret = cscfg_csdev_enable_active_config(csdev, cfg_hash, preset);
+> >>>       }
+> >>>
+> >>> +     /* branch broadcast - enable if selected and supported */
+> >>> +     if (attr->config & BIT(ETM_OPT_BRANCH_BROADCAST)) {
+> >>> +             if (!drvdata->trcbb) {
+> >>> +                     ret = -EINVAL;
+> >>
+> >> Should we fail here ? We could simply ignore this and generate the trace
+> >> normally. This would work on a big.LITTLE system with one set missing
+> >> the branch broadcast, while the others support.
+> >>
+> >> Mike,
+> >>
+> >> Does this affect the trace decoding ? As such the OpenCSD should be able
+> >> to decode the packets as they appear in the stream. Correct ?
+> >>
 > >
-> > Looking at this again (with similar comment to the Branch Broadcast),
-> > won't it disable using retstack on all CPUs, even when some of them
-> > support it ?
+> > Depends on what you mean by affect the trace decoding!
+> > From the simplest perspective - no - there is no issue as the packets
+> > will be decode as seen. THE decoder does not know that BB exists - nor
+> > if it is enabled.
 > >
-> > i.e., CPU0 - supports retstack, CPU1 - doesn't
+> > However, the reason that a user may engage BB is that the code is in
+> > some way self modifying - so that following the code static image and
+> > calculating addresses will result in a different path taken.
 > >
-> > A perf run with retstack will fail, as CPU1 doesn't support it (even
-> > though we advertise it, unconditionally).
+> > e.g. imagine an opcode:-
 > >
-> > So, if we ignore the failure, this would still allow CPU0 to use
-> > the feature and as long as the OpenCSD is able to decode the trace
-> > we should ignore the failure ?
+> > B <address0>
 > >
-> > I think we may also need to tune the etm4x_enable_hw() to skip
-> > updating the TRCCONFIGR with features not supported by the ETM
+> > Without BB, this will trace as a single E atom, the decoder will
+> > calculate address0 from the opcode in the static image and continue
+> > from there as the next trace address.
 > >
+> > Now look at the case where this is changed on the fly to
+> >
+> > B <address1>
+> >
+> > With BB, This will trace to
+> > E
+> > TGT_ADDR<address1>
+> >
+> > The decoder will initially  extract address0 from the static image,
+> > but the immediately following target address packet will alter the
+> > next address traced to address1
+> > This is why we have BB.
+> >
+> >  So if the user has a reason to engage BB - we should really fail if
+> > it is not present - as the outcome of the trace can be affected.
 >
-> Hi Suzuki,
+> Hi Mike,
 >
-> I'm picking up this branch broadcast change again after the haitus.
->
-> For this point, do you think it would be worth distinguishing between "no
-> known CPUs that support the feature" vs "not currently running on a
-> CPU that supports it but there are others that do"?
->
-> Also would we want to distinguish between per-CPU or per-process events?
-> For the former it actually is possible to fail to open because all of
-> the information is known.
->
-> I'm just thinking of the case where someone asks for a load of flags
-> and thinks that they're getting them but get no feedback that they won't.
-> But I understand having some complicated solution like I'm suggesting
-> might be even more surprising to users.
->
-> Maybe the cleanest solution is to ask users to supply a config that
-> can work on anywhere the event could possibly be scheduled. It doesn't
-> really make sense to have retstack on a per-process event on big-little
-> and then getting half of one type of data and half of another. It would
-> make more sense to fail to open in that case and they have the choice of
-> either doing per-CPU events or disabling retstacks altogether.
->
+> Now I'm starting to wonder if it's best to have some kind of non-binary
+> image mode for BB where you'd just get a list of addresses output by
+> perf script and it doesn't attempt to do any lookups.
 
-return stack has no effect on the decoder output whatsoever. The only
-effect is to reduce the amount of traced addresses at the input
-(leaving more space for other trace),
-so it is irrelevant if CPU0 supports it but CPU1 doesn't.
-
-sequence:
-
-BL r0 (return stack is used only on link instructions)
-...
-RET
-
-will output trace:-
-ATOM E (BL r0)
-...
-ADDR_ELEM <ret addr>
-ATOM E (RET)
-
-for no return stack,
-
-ATOM E (BL r0)
-...
-ATOM E (RET)
-
-fior return stack.
-
-In both cases the decoder will push the address after BL r0 onto its
-return stack.
-
-In the first case the decoder will use the supplied address, in the
-second will pop the top of its return stack.
-
-The decode output in both cases will be "branched to r0, ran code,
-returned via link register"
-
-The outcome is identical for the client. So the case for not tracing
-on a core that does not have return stack if specified is weak.
-
-Perhaps a warning will be sufficient?
+Not at all sure what you mean by this
 
 Mike
 
-
-
-> This seems like a similar problem to the issue causing the Coresight self
-> test failure where a certain sink was picked that couldn't be reached and
-> the test failed.
+>  Although I think
+> that would require a change in OpenCSD if it's not aware of the mode?
 >
-> In that case the change we made doesn't quite match up to my suggestion here:
+> I also need to go back to my JVM profiling test and see what's
+> going on again. But I think I understand your points a bit more now.
 >
->  * Per-cpu but an unreachable sink -> fail
->  * Per-process and potentially reachable sink in the future -> pass
->
-> Maybe it would have been better to say that the sink always has to be
-> reachable otherwise is the outcome predicatable?
->
+> Thanks
 > James
 >
-> > Suzuki
 > >
+> >> Suzuki
+> >>
+> >>
+> >>> +                     goto out;
+> >>> +             } else {
+> >>> +                     config->cfg |= BIT(ETM4_CFG_BIT_BB);
+> >>> +             }
+> >>> +     }
+> >>> +
+> >>>   out:
+> >>>       return ret;
+> >>>   }
+> >>> diff --git a/include/linux/coresight-pmu.h b/include/linux/coresight-pmu.h
+> >>> index 4ac5c081af93..6c2fd6cc5a98 100644
+> >>> --- a/include/linux/coresight-pmu.h
+> >>> +++ b/include/linux/coresight-pmu.h
+> >>> @@ -18,6 +18,7 @@
+> >>>    * ETMv3.5/PTM doesn't define ETMCR config bits with prefix "ETM3_" and
+> >>>    * directly use below macros as config bits.
+> >>>    */
+> >>> +#define ETM_OPT_BRANCH_BROADCAST 8
+> >>>   #define ETM_OPT_CYCACC              12
+> >>>   #define ETM_OPT_CTXTID              14
+> >>>   #define ETM_OPT_CTXTID2             15
+> >>> @@ -25,6 +26,7 @@
+> >>>   #define ETM_OPT_RETSTK              29
+> >>>
+> >>>   /* ETMv4 CONFIGR programming bits for the ETM OPTs */
+> >>> +#define ETM4_CFG_BIT_BB         3
+> >>>   #define ETM4_CFG_BIT_CYCACC 4
+> >>>   #define ETM4_CFG_BIT_CTXTID 6
+> >>>   #define ETM4_CFG_BIT_VMID   7
+> >>
 > >
-> >>
-> >> The consequence of not doing this is that the user may not be
-> >> aware that they are not enabling the feature as it is silently disabled.
-> >>
-> >> Signed-off-by: James Clark <james.clark@arm.com>
-> >> ---
-> >>   drivers/hwtracing/coresight/coresight-etm4x-core.c | 13 +++++++++----
-> >>   1 file changed, 9 insertions(+), 4 deletions(-)
-> >>
-> >> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> >> index 04669ecc0efa..a93c1a5fe045 100644
-> >> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> >> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> >> @@ -674,10 +674,15 @@ static int etm4_parse_event_config(struct coresight_device *csdev,
-> >>       }
-> >>         /* return stack - enable if selected and supported */
-> >> -    if ((attr->config & BIT(ETM_OPT_RETSTK)) && drvdata->retstack)
-> >> -        /* bit[12], Return stack enable bit */
-> >> -        config->cfg |= BIT(12);
-> >> -
-> >> +    if (attr->config & BIT(ETM_OPT_RETSTK)) {
-> >> +        if (!drvdata->retstack) {
-> >> +            ret = -EINVAL;
-> >> +            goto out;
-> >> +        } else {
-> >> +            /* bit[12], Return stack enable bit */
-> >> +            config->cfg |= BIT(12);
-> >> +        }
-> >> +    }
-> >>       /*
-> >>        * Set any selected configuration and preset.
-> >>        *
 > >
 
 
