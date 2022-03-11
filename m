@@ -2,246 +2,117 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A539C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Mar 2022 15:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E8EEC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Mar 2022 17:27:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240458AbiCKP5c (ORCPT
+        id S1350761AbiCKR2w (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 11 Mar 2022 10:57:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49930 "EHLO
+        Fri, 11 Mar 2022 12:28:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240599AbiCKP5b (ORCPT
+        with ESMTP id S1344114AbiCKR2v (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 11 Mar 2022 10:57:31 -0500
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90D37149B92
-        for <linux-perf-users@vger.kernel.org>; Fri, 11 Mar 2022 07:56:10 -0800 (PST)
-Received: by mail-wr1-x42b.google.com with SMTP id i8so13589239wrr.8
-        for <linux-perf-users@vger.kernel.org>; Fri, 11 Mar 2022 07:56:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yBab81rlsXVfIrb1h5ugmlXAnmE0dZk087QNoq8lEw4=;
-        b=usv/7QYbADl2R0gma2J6J5sYrjRw4TDBnKEeY2m5BrJxInoEh23dkuXQowKqQZwUi1
-         fVqYVr9Z//li8WbUkitTqPkn/gaJv6nhYvMmT7qz0ovfQeb4JJCjKxdHkPX4ea44XVl/
-         YqyoH8eyNpliPfG06CzQsl2zZKyOfoe/6lL7NbLo2gaAy0/md4nK3MJXE8mcE0GkO8Z/
-         LyY3KFqx/85OFkBU+Svo/0OIxh8wEOknlbdYWOr94y+CRto3VjCdPgc4oZkzgP31La6C
-         Og/51kAY3M1RIkN9ZoUJv3xB2OWzN6p7tXyAaiAI2damReBHdb6p9lGOCyyBarml2Tal
-         kvcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yBab81rlsXVfIrb1h5ugmlXAnmE0dZk087QNoq8lEw4=;
-        b=21CMSNThag1Nft8rWNgGoZayAra0pAwPmiDKzyXiyMNEOxRzGL4u8ZP0AMV8ptUPFC
-         Qb0B7BRBMgn5FYZfnjJje/i8ftsxIrIhrhTMryleHXi5hyWqP4nG1yG9pPoJYO4pMAPb
-         6AHmoNqlaPslXmzy3ncrHHNUBr9QuwWZqWTF/XUuPs9HeUHLYGt2B7oiIyZGGZPw+JKv
-         JEg/wHOM2+rm4LazlEqsFpdKWt0K4tNH0d7XdwOJenBj1fElHn27vw6r2eM/qzllfety
-         V/z1C0iMU/5RG3AtDWVprVg4/hSX/+RDAiNi2MbLM605Vqbetqj9vp6VwAFtr90Ep839
-         dhmQ==
-X-Gm-Message-State: AOAM531w3KxDelcbkD7xsIlzW4WMGaRUk73zWSoqtYk/XRLH/rgfkrxZ
-        VOC4UQpTYBatFG3WuHUxxmcRFroF5W+4QqS5LNrLKA==
-X-Google-Smtp-Source: ABdhPJyHRl575oJ/E1f/YImGvu+xA6j3CfpVKm2dTU3ZrtKOXYSGHQkH5/l443BVjYhYSzAzYaAurPGVf+bw/uab3is=
-X-Received: by 2002:a5d:4a8f:0:b0:1f0:4af2:4e29 with SMTP id
- o15-20020a5d4a8f000000b001f04af24e29mr7798876wrq.519.1647014165262; Fri, 11
- Mar 2022 07:56:05 -0800 (PST)
+        Fri, 11 Mar 2022 12:28:51 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 174BA31DD3;
+        Fri, 11 Mar 2022 09:27:46 -0800 (PST)
+Received: from fraeml712-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KFXsB6JVmz684TK;
+        Sat, 12 Mar 2022 01:26:06 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml712-chm.china.huawei.com (10.206.15.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Fri, 11 Mar 2022 18:27:43 +0100
+Received: from [10.47.87.13] (10.47.87.13) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.21; Fri, 11 Mar
+ 2022 17:27:42 +0000
+Message-ID: <162a116a-4b0f-c58b-6760-86d10ecf543f@huawei.com>
+Date:   Fri, 11 Mar 2022 17:27:41 +0000
 MIME-Version: 1.0
-References: <20220113091056.1297982-1-james.clark@arm.com> <20220113091056.1297982-2-james.clark@arm.com>
- <b3545a88-4743-db95-4676-b0b193cbea78@arm.com> <CAJ9a7Vi584BcY49TaRn5CJT=wcpafMf-3cA0R+sZ54p6iUKmeQ@mail.gmail.com>
- <7fae6630-fdec-3f95-9eac-3f7a5c789272@arm.com>
-In-Reply-To: <7fae6630-fdec-3f95-9eac-3f7a5c789272@arm.com>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Fri, 11 Mar 2022 15:56:00 +0000
-Message-ID: <CAJ9a7VjTJ4E7=qdPgfTTVjoW01rCzd-f1mFYHjtA3BHk25saMA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] coresight: Add config flag to enable branch broadcast
-To:     James Clark <James.Clark@arm.com>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        mathieu.poirier@linaro.org, coresight@lists.linaro.org,
-        leo.yan@linaro.com, Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH v5 1/8] iommu/arm-smmu-v3: Make default domain type of
+ HiSilicon PTT device to identity
+To:     Yicong Yang <yangyicong@hisilicon.com>,
+        <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <lorenzo.pieralisi@arm.com>,
+        <will@kernel.org>, <mark.rutland@arm.com>,
+        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
+        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
+        <jonathan.cameron@huawei.com>, <daniel.thompson@linaro.org>,
+        <joro@8bytes.org>, <shameerali.kolothum.thodi@huawei.com>,
+        <robin.murphy@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <acme@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>
+CC:     <prime.zeng@huawei.com>, <liuqi115@huawei.com>,
+        <zhangshaokun@hisilicon.com>, <linuxarm@huawei.com>,
+        <song.bao.hua@hisilicon.com>
+References: <20220308084930.5142-1-yangyicong@hisilicon.com>
+ <20220308084930.5142-2-yangyicong@hisilicon.com>
+From:   John Garry <john.garry@huawei.com>
+In-Reply-To: <20220308084930.5142-2-yangyicong@hisilicon.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.87.13]
+X-ClientProxiedBy: lhreml707-chm.china.huawei.com (10.201.108.56) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi James,
+On 08/03/2022 08:49, Yicong Yang wrote:
+> The DMA of HiSilicon PTT device can only work with identical mapping.
 
-On Fri, 11 Mar 2022 at 14:58, James Clark <james.clark@arm.com> wrote:
->
->
->
-> On 02/02/2022 20:25, Mike Leach wrote:
-> > Hi James, Suzuki
-> >
-> > On Fri, 28 Jan 2022 at 11:19, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
-> >>
-> >> On 13/01/2022 09:10, James Clark wrote:
-> >>> When enabled, all taken branch addresses are output, even if the branch
-> >>> was because of a direct branch instruction. This enables reconstruction
-> >>> of the program flow without having access to the memory image of the
-> >>> code being executed.
-> >>>
-> >>> Use bit 8 for the config option which would be the correct bit for
-> >>> programming ETMv3. Although branch broadcast can't be enabled on ETMv3
-> >>> because it's not in the define ETM3X_SUPPORTED_OPTIONS, using the
-> >>> correct bit might help prevent future collisions or allow it to be
-> >>> enabled if needed.
-> >>>
-> >>> Signed-off-by: James Clark <james.clark@arm.com>
-> >>> ---
-> >>>   drivers/hwtracing/coresight/coresight-etm-perf.c   |  2 ++
-> >>>   drivers/hwtracing/coresight/coresight-etm4x-core.c | 10 ++++++++++
-> >>>   include/linux/coresight-pmu.h                      |  2 ++
-> >>>   3 files changed, 14 insertions(+)
-> >>>
-> >>> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> >>> index c039b6ae206f..43bbd5dc3d3b 100644
-> >>> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-> >>> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> >>> @@ -52,6 +52,7 @@ static DEFINE_PER_CPU(struct coresight_device *, csdev_src);
-> >>>    * The PMU formats were orignally for ETMv3.5/PTM's ETMCR 'config';
-> >>>    * now take them as general formats and apply on all ETMs.
-> >>>    */
-> >>> +PMU_FORMAT_ATTR(branch_broadcast, "config:"__stringify(ETM_OPT_BRANCH_BROADCAST));
-> >>>   PMU_FORMAT_ATTR(cycacc,             "config:" __stringify(ETM_OPT_CYCACC));
-> >>>   /* contextid1 enables tracing CONTEXTIDR_EL1 for ETMv4 */
-> >>>   PMU_FORMAT_ATTR(contextid1, "config:" __stringify(ETM_OPT_CTXTID));
-> >>> @@ -97,6 +98,7 @@ static struct attribute *etm_config_formats_attr[] = {
-> >>>       &format_attr_sinkid.attr,
-> >>>       &format_attr_preset.attr,
-> >>>       &format_attr_configid.attr,
-> >>> +     &format_attr_branch_broadcast.attr,
-> >>
-> >> Does it make sense to hide the option if the bb is not supported ? I
-> >> guess it will be tricky as we don't track the common feature set. So,
-> >> that said...
-> >>
-> >>>       NULL,
-> >>>   };
-> >>>
-> >>> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> >>> index bf18128cf5de..04669ecc0efa 100644
-> >>> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> >>> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> >>> @@ -692,6 +692,16 @@ static int etm4_parse_event_config(struct coresight_device *csdev,
-> >>>               ret = cscfg_csdev_enable_active_config(csdev, cfg_hash, preset);
-> >>>       }
-> >>>
-> >>> +     /* branch broadcast - enable if selected and supported */
-> >>> +     if (attr->config & BIT(ETM_OPT_BRANCH_BROADCAST)) {
-> >>> +             if (!drvdata->trcbb) {
-> >>> +                     ret = -EINVAL;
-> >>
-> >> Should we fail here ? We could simply ignore this and generate the trace
-> >> normally. This would work on a big.LITTLE system with one set missing
-> >> the branch broadcast, while the others support.
-> >>
-> >> Mike,
-> >>
-> >> Does this affect the trace decoding ? As such the OpenCSD should be able
-> >> to decode the packets as they appear in the stream. Correct ?
-> >>
-> >
-> > Depends on what you mean by affect the trace decoding!
-> > From the simplest perspective - no - there is no issue as the packets
-> > will be decode as seen. THE decoder does not know that BB exists - nor
-> > if it is enabled.
-> >
-> > However, the reason that a user may engage BB is that the code is in
-> > some way self modifying - so that following the code static image and
-> > calculating addresses will result in a different path taken.
-> >
-> > e.g. imagine an opcode:-
-> >
-> > B <address0>
-> >
-> > Without BB, this will trace as a single E atom, the decoder will
-> > calculate address0 from the opcode in the static image and continue
-> > from there as the next trace address.
-> >
-> > Now look at the case where this is changed on the fly to
-> >
-> > B <address1>
-> >
-> > With BB, This will trace to
-> > E
-> > TGT_ADDR<address1>
-> >
-> > The decoder will initially  extract address0 from the static image,
-> > but the immediately following target address packet will alter the
-> > next address traced to address1
-> > This is why we have BB.
-> >
-> >  So if the user has a reason to engage BB - we should really fail if
-> > it is not present - as the outcome of the trace can be affected.
->
-> Hi Mike,
->
-> Now I'm starting to wonder if it's best to have some kind of non-binary
-> image mode for BB where you'd just get a list of addresses output by
-> perf script and it doesn't attempt to do any lookups.
+nit: I'd have "DMA operations of the HiSilicon PTT device can only work 
+properly with identity mappings".
 
-Not at all sure what you mean by this
+> So add a quirk for the device to force the domain passthrough.
 
-Mike
+".. domain as passthrough."
 
->  Although I think
-> that would require a change in OpenCSD if it's not aware of the mode?
->
-> I also need to go back to my JVM profiling test and see what's
-> going on again. But I think I understand your points a bit more now.
->
-> Thanks
-> James
->
-> >
-> >> Suzuki
-> >>
-> >>
-> >>> +                     goto out;
-> >>> +             } else {
-> >>> +                     config->cfg |= BIT(ETM4_CFG_BIT_BB);
-> >>> +             }
-> >>> +     }
-> >>> +
-> >>>   out:
-> >>>       return ret;
-> >>>   }
-> >>> diff --git a/include/linux/coresight-pmu.h b/include/linux/coresight-pmu.h
-> >>> index 4ac5c081af93..6c2fd6cc5a98 100644
-> >>> --- a/include/linux/coresight-pmu.h
-> >>> +++ b/include/linux/coresight-pmu.h
-> >>> @@ -18,6 +18,7 @@
-> >>>    * ETMv3.5/PTM doesn't define ETMCR config bits with prefix "ETM3_" and
-> >>>    * directly use below macros as config bits.
-> >>>    */
-> >>> +#define ETM_OPT_BRANCH_BROADCAST 8
-> >>>   #define ETM_OPT_CYCACC              12
-> >>>   #define ETM_OPT_CTXTID              14
-> >>>   #define ETM_OPT_CTXTID2             15
-> >>> @@ -25,6 +26,7 @@
-> >>>   #define ETM_OPT_RETSTK              29
-> >>>
-> >>>   /* ETMv4 CONFIGR programming bits for the ETM OPTs */
-> >>> +#define ETM4_CFG_BIT_BB         3
-> >>>   #define ETM4_CFG_BIT_CYCACC 4
-> >>>   #define ETM4_CFG_BIT_CTXTID 6
-> >>>   #define ETM4_CFG_BIT_VMID   7
-> >>
-> >
-> >
+> 
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> ---
+>   drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 16 ++++++++++++++++
+>   1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> index 6dc6d8b6b368..6f67a2b1dd27 100644
+> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> @@ -2838,6 +2838,21 @@ static int arm_smmu_dev_disable_feature(struct device *dev,
+>   	}
+>   }
+>   
+> +#define IS_HISI_PTT_DEVICE(pdev)	((pdev)->vendor == PCI_VENDOR_ID_HUAWEI && \
+> +					 (pdev)->device == 0xa12e)
+> +
+> +static int arm_smmu_def_domain_type(struct device *dev)
+> +{
+> +	if (dev_is_pci(dev)) {
+> +		struct pci_dev *pdev = to_pci_dev(dev);
+> +
+> +		if (IS_HISI_PTT_DEVICE(pdev))
+> +			return IOMMU_DOMAIN_IDENTITY;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>   static struct iommu_ops arm_smmu_ops = {
+>   	.capable		= arm_smmu_capable,
+>   	.domain_alloc		= arm_smmu_domain_alloc,
+> @@ -2863,6 +2878,7 @@ static struct iommu_ops arm_smmu_ops = {
+>   	.sva_unbind		= arm_smmu_sva_unbind,
+>   	.sva_get_pasid		= arm_smmu_sva_get_pasid,
+>   	.page_response		= arm_smmu_page_response,
+> +	.def_domain_type	= arm_smmu_def_domain_type,
+>   	.pgsize_bitmap		= -1UL, /* Restricted during device attach */
+>   	.owner			= THIS_MODULE,
+>   };
 
-
-
--- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
