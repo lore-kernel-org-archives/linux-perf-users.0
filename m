@@ -2,146 +2,148 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB5BC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Mar 2022 18:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E83F2C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Mar 2022 03:25:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230273AbiCJSfy (ORCPT
+        id S243806AbiCKD0s (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Mar 2022 13:35:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53934 "EHLO
+        Thu, 10 Mar 2022 22:26:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234815AbiCJSfx (ORCPT
+        with ESMTP id S1345934AbiCKD0p (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Mar 2022 13:35:53 -0500
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7288A19D621;
-        Thu, 10 Mar 2022 10:34:51 -0800 (PST)
-Received: by mail-pl1-x642.google.com with SMTP id m2so5691241pll.0;
-        Thu, 10 Mar 2022 10:34:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fZTabEAQ65sqak7IeRk/QmG52+JEgAGMHd10hUU/HKM=;
-        b=gzVNO3biIrix2FoQLOK5xkz0oczUF6xvtNh+4XdiTSSDWoKkuQsV1bJNPyZRc6W24N
-         Mi9PuQdiXg5oRw3IAHQY9Zzc5twR4Q630OzwPCn5ALyrPeXEXinkmQqMMbN6cx03/cGY
-         feitvHICwO+FnxITf3KSxNRZByyyIWOHVxMCd6KYvzDzJz82270Lla2MpEyxhSWVuror
-         cSxs+2WkYe7AwsQGg5aWYBOygC+i5T9HLApC+u+Q3ICFCtzeVNhhI410Jzk/Kw3c5YfO
-         5dKmy312HoLu2ffHY0jqIu5KiRdRvv2j9443I4O5GNLS+5qvT76RHe/oyl9ze8l0l3EH
-         9N8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fZTabEAQ65sqak7IeRk/QmG52+JEgAGMHd10hUU/HKM=;
-        b=ZXqpsM/GaSIY7GctWU5vV9w7PR0VUaIYX61kaLjRoab85J07Az9NHXJZQd2Y11wnRk
-         Y9lzLeJ3N+NQ9q8OEWhOVbqK+3L/k3tDovMTCEpiwPjRhCvTIxYnENVTYx3sTTjV+2z0
-         RehtJuTE6L9DhEV4+LSCA6wLdubYSToX2nH9D2ebnDjQnFeJO4q7we5QoBoZIyYvDfGp
-         e+UNgtyiMYT1PbxgvCvQTEgQpkCwloMw1YypQN1gDedz7YbRrbappOI6s2YuPeQdyOTm
-         IMPor/W+TnUiihjHcpj2kxxWgCauQ9NWGsbxwx3YMrijDpb9v2w7S84a2vXgmYUq1tKz
-         sIpQ==
-X-Gm-Message-State: AOAM531IY/V+lLBeGpsATqGT48iQXbwpKuKYBbVpqtjVHBff9VShwMF/
-        /NLtfmxYuS0ZTBoOkQvdAZ4=
-X-Google-Smtp-Source: ABdhPJxeRwPmh4o/BYU0MiPTeqwVhPQIxIKwxcuBlPTRcRFErAYkviEyFX1vEiiQJRY1f1MAibMxuw==
-X-Received: by 2002:a17:902:bc47:b0:151:ac43:eae0 with SMTP id t7-20020a170902bc4700b00151ac43eae0mr6579800plz.117.1646937290952;
-        Thu, 10 Mar 2022 10:34:50 -0800 (PST)
-Received: from localhost.localdomain ([103.149.162.114])
-        by smtp.gmail.com with ESMTPSA id k23-20020aa790d7000000b004f6c8b7c13bsm7255155pfk.132.2022.03.10.10.34.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Mar 2022 10:34:50 -0800 (PST)
-From:   Dongli Si <kvmx86@gmail.com>
-X-Google-Original-From: Dongli Si <sidongli1997@gmail.com>
-To:     peterz@infradead.org, joerg.roedel@amd.com
-Cc:     liam.merwick@oracle.com, kim.phillips@amd.com, mingo@kernel.org,
-        acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] perf/x86/amd: Don't touch the Host-only bit inside the guest hypervisor
-Date:   Fri, 11 Mar 2022 02:34:04 +0800
-Message-Id: <20220310183404.1291725-1-sidongli1997@gmail.com>
-X-Mailer: git-send-email 2.32.0
+        Thu, 10 Mar 2022 22:26:45 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AB7BBC5D8F;
+        Thu, 10 Mar 2022 19:25:42 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 205A514BF;
+        Thu, 10 Mar 2022 19:25:42 -0800 (PST)
+Received: from [10.163.34.78] (unknown [10.163.34.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9704D3F7D8;
+        Thu, 10 Mar 2022 19:25:37 -0800 (PST)
+Message-ID: <d69ff24e-ae65-c900-715f-c951e7795a79@arm.com>
+Date:   Fri, 11 Mar 2022 08:55:36 +0530
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH V2 4/8] perf: Capture branch privilege information
+Content-Language: en-US
+To:     James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, peterz@infradead.org,
+        acme@kernel.org
+Cc:     suzuki.poulose@arm.com, Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <20220309033642.144769-1-anshuman.khandual@arm.com>
+ <20220309033642.144769-5-anshuman.khandual@arm.com>
+ <6dc9a4e5-8f74-dfb5-d9f6-60e9d6b65146@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <6dc9a4e5-8f74-dfb5-d9f6-60e9d6b65146@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Dongli Si <sidongli1997@gmail.com>
 
-With nested virtualization, when the guest hypervisor runs a nested guest
-and if uses "perf record" in an AMD Milan guest hypervisor, the guest
-hypervisor dmesg will reports the following warning message:
 
-[] unchecked MSR access error: WRMSR to 0xc0010200 (tried to write 0x0000020000510076)
-at rIP: 0xffffffff81003a50 (x86_pmu_enable_all+0x60/0x100)
-[] Call Trace:
-[]  <IRQ>
-[]  ? x86_pmu_enable+0x146/0x300
-[]  __perf_install_in_context+0x150/0x170
+On 3/10/22 15:51, James Clark wrote:
+> 
+> 
+> On 09/03/2022 03:36, Anshuman Khandual wrote:
+>> Platforms like arm64 could capture privilege level information for all the
+>> branch records. Hence this adds a new element in the struct branch_entry to
+>> record the privilege level information, which could be requested through a
+>> new event.attr.branch_sample_type based flag PERF_SAMPLE_BRANCH_PRIV_SAVE.
+>> This flag helps user choose whether privilege information is captured.
+>>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Cc: Ingo Molnar <mingo@redhat.com>
+>> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+>> Cc: Jiri Olsa <jolsa@redhat.com>
+>> Cc: Namhyung Kim <namhyung@kernel.org>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-perf-users@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>  include/uapi/linux/perf_event.h | 13 ++++++++++++-
+>>  1 file changed, 12 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+>> index d29280adc3c4..0e96e2017f68 100644
+>> --- a/include/uapi/linux/perf_event.h
+>> +++ b/include/uapi/linux/perf_event.h
+>> @@ -204,6 +204,8 @@ enum perf_branch_sample_type_shift {
+>>  
+>>  	PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT	= 17, /* save low level index of raw branch records */
+>>  
+>> +	PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT	= 18, /* save privillege mode */
+>> +
+>>  	PERF_SAMPLE_BRANCH_MAX_SHIFT		/* non-ABI */
+>>  };
+>>  
+>> @@ -233,6 +235,8 @@ enum perf_branch_sample_type {
+>>  
+>>  	PERF_SAMPLE_BRANCH_HW_INDEX	= 1U << PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT,
+>>  
+>> +	PERF_SAMPLE_BRANCH_PRIV_SAVE	= 1U << PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT,
+>> +
+>>  	PERF_SAMPLE_BRANCH_MAX		= 1U << PERF_SAMPLE_BRANCH_MAX_SHIFT,
+>>  };
+>>  
+>> @@ -271,6 +275,12 @@ enum {
+>>  	PERF_BR_NEW_MAX,
+>>  };
+>>  
+>> +enum {
+>> +	PERF_BR_USER	= 0,
+>> +	PERF_BR_KERNEL	= 1,
+>> +	PERF_BR_HV	= 2,
+>> +};
+> 
+> 0 should be "PERF_BR_PRIV_UNKNOWN" so userspace knows if it was not enabled
+> otherwise it will look like all samples are PERF_BR_USER when actually
+> priv type recording was just disabled.
 
-The AMD64_EVENTSEL_HOSTONLY bit is defined and used on the host, while
-the guest hypervisor performance monitor unit should avoid such use.
+Makes sense.
 
-Fixes: 1018faa6cf23 ("perf/x86/kvm: Fix Host-Only/Guest-Only counting with SVM disabled")
-Signed-off-by: Dongli Si <sidongli1997@gmail.com>
----
-v2: Add run_as_host function and improve description
-v1: https://lore.kernel.org/all/20220227132640.3-1-sidongli1997@gmail.com/
+> 
+> I think it's not even always possible to go backwards from a sample to
+> work out what the event attributes were so this can be interpreted (taking
+> all of perf script and every corner case into account).
+> 
+> Starting at 0=UNKNOWN is consistent with the other fields and makes parsing
+> it a whole lot easier.
 
- arch/x86/events/amd/core.c        |  4 +++-
- arch/x86/include/asm/hypervisor.h | 10 ++++++++++
- 2 files changed, 13 insertions(+), 1 deletion(-)
+Fair enough, will start the enum with PERF_BR_PRIV_UNKNOWN and expand the
+field 'perf_branch_entry.priv' to 3 bits instead, in order to accommodate
+any future needs regarding other captured privilege levels.
 
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index 9687a8aef01c..14cd079243a4 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -8,6 +8,7 @@
- #include <linux/jiffies.h>
- #include <asm/apicdef.h>
- #include <asm/nmi.h>
-+#include <asm/hypervisor.h>
- 
- #include "../perf_event.h"
- 
-@@ -1027,7 +1028,8 @@ void amd_pmu_enable_virt(void)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 
--	cpuc->perf_ctr_virt_mask = 0;
-+	if (run_as_host())
-+		cpuc->perf_ctr_virt_mask = 0;
- 
- 	/* Reload all events */
- 	amd_pmu_disable_all();
-diff --git a/arch/x86/include/asm/hypervisor.h b/arch/x86/include/asm/hypervisor.h
-index e41cbf2ec41d..fcc66c23cc72 100644
---- a/arch/x86/include/asm/hypervisor.h
-+++ b/arch/x86/include/asm/hypervisor.h
-@@ -73,11 +73,21 @@ static inline bool hypervisor_is_type(enum x86_hypervisor_type type)
- {
- 	return x86_hyper_type == type;
- }
-+
-+static inline bool run_as_host(void)
-+{
-+	return hypervisor_is_type(X86_HYPER_NATIVE);
-+}
- #else
- static inline void init_hypervisor_platform(void) { }
- static inline bool hypervisor_is_type(enum x86_hypervisor_type type)
- {
- 	return type == X86_HYPER_NATIVE;
- }
-+
-+static inline bool run_as_host(void)
-+{
-+	return true;
-+}
- #endif /* CONFIG_HYPERVISOR_GUEST */
- #endif /* _ASM_X86_HYPERVISOR_H */
--- 
-2.32.0
-
+> 
+> James
+> 
+>> +
+>>  #define PERF_SAMPLE_BRANCH_PLM_ALL \
+>>  	(PERF_SAMPLE_BRANCH_USER|\
+>>  	 PERF_SAMPLE_BRANCH_KERNEL|\
+>> @@ -1386,7 +1396,8 @@ struct perf_branch_entry {
+>>  		cycles:16,  /* cycle count to last branch */
+>>  		type:4,     /* branch type */
+>>  		new_type:4, /* additional branch type */
+>> -		reserved:36;
+>> +		priv:2,     /* privilege level */
+>> +		reserved:34;
+>>  };
+>>  
+>>  union perf_sample_weight {
