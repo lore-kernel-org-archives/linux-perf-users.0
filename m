@@ -2,174 +2,180 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38456C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Mar 2022 08:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F210C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Mar 2022 09:10:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229449AbiCKI3L (ORCPT
+        id S241145AbiCKJLn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 11 Mar 2022 03:29:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43234 "EHLO
+        Fri, 11 Mar 2022 04:11:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229656AbiCKI3J (ORCPT
+        with ESMTP id S235362AbiCKJLn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 11 Mar 2022 03:29:09 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B5D6B6D04
-        for <linux-perf-users@vger.kernel.org>; Fri, 11 Mar 2022 00:28:03 -0800 (PST)
-Received: from fraeml739-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KFJvg4hTYz681Yv;
-        Fri, 11 Mar 2022 16:27:27 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml739-chm.china.huawei.com (10.206.15.220) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Fri, 11 Mar 2022 09:28:00 +0100
-Received: from [10.47.87.13] (10.47.87.13) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.21; Fri, 11 Mar
- 2022 08:27:59 +0000
-Message-ID: <ebde0845-fa4b-0e6c-c9e6-6c8d27377952@huawei.com>
-Date:   Fri, 11 Mar 2022 08:27:58 +0000
+        Fri, 11 Mar 2022 04:11:43 -0500
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0062A1BB70D;
+        Fri, 11 Mar 2022 01:10:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1646989841; x=1678525841;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=9XZd3A5JSwNwuvRtar4ydpQDnQtwJ4sZrgR4lOTdwJM=;
+  b=VnkVWAE8Nh5FEMQ7JIc9cIruW9AfbiwLZCrYV31eb1k1PjcXMEW39oLD
+   AxNDC3N48YrhrIFmmdFA/HvztgOv3v+CTh6q6FgsBY/gGuU+2GjR+PR8D
+   3aEjLHYitMdVSPKP8JUcXN4fm2Kqxa04tUI4Cv1qq6BTnT8e3lxYQK8Om
+   Hloqlezy7IP0GUpADkh1hfY1bqhy18lUhhUrvdjbj96QlYd+hOMcfkX98
+   Ni5Y8AOFdbVQZ8TBwtQ/qk0jAae7AimiGHYiWAZlSsLBSTe9ICy38ZWMh
+   uv2kFepiv3rUbJ0YQMFIRknJOqQvvSngL9ElY5oUjdmLrxv0cJVf8EKDQ
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10282"; a="341963142"
+X-IronPort-AV: E=Sophos;i="5.90,173,1643702400"; 
+   d="scan'208";a="341963142"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2022 01:10:40 -0800
+X-IronPort-AV: E=Sophos;i="5.90,173,1643702400"; 
+   d="scan'208";a="555227879"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.52.194])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2022 01:10:36 -0800
+Message-ID: <586de5fc-858b-2693-1986-5c77e8c0e3d0@intel.com>
+Date:   Fri, 11 Mar 2022 11:10:30 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH v2 2/2] perf: Fix version kernel tag
-To:     Ian Rogers <irogers@google.com>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>,
-        <linux-perf-users@vger.kernel.org>, <olsajiri@gmail.com>,
-        <rric@kernel.org>, <ak@linux.intel.com>
-References: <1645449409-158238-1-git-send-email-john.garry@huawei.com>
- <1645449409-158238-3-git-send-email-john.garry@huawei.com>
- <CAP-5=fXT3VYB2uBXmihuruq==FENLFcFSHMLY0Fk29pRvU-wag@mail.gmail.com>
-From:   John Garry <john.garry@huawei.com>
-In-Reply-To: <CAP-5=fXT3VYB2uBXmihuruq==FENLFcFSHMLY0Fk29pRvU-wag@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.47.87.13]
-X-ClientProxiedBy: lhreml707-chm.china.huawei.com (10.201.108.56) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.5.0
+Subject: Re: [PATCH] perf intel-pt: Synthesize cycle events
+Content-Language: en-US
+To:     "Steinar H. Gunderson" <sesse@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220310093844.982656-1-sesse@google.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20220310093844.982656-1-sesse@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 11/03/2022 02:18, Ian Rogers wrote:
->     Generating the version kernel tag relies on "git describe" command
->     to get
->     the latest Linus kernel tag.
+On 10.3.2022 11.38, Steinar H. Gunderson wrote:
+> There is no good reason why we cannot synthesize "cycle" events
+> from Intel PT just as we can synthesize "instruction" events,
+> in particular when CYC packets are available. This enables using
+> PT to getting much more accurate cycle profiles than regular sampling
+> (record -e cycles) when the work last for very short periods (<10 ms).
+> Thus, add support for this, based off of the existing IPC calculation
+> framework. The new option to --itrace is "y" (for cYcles), as c was
+> taken for calls. Cycle and instruction events can be synthesized
+> together, and are by default.
 > 
->     However, when working from clones of Linus' git we may not have the
->     latest
->     tag. For example, when working on Arnaldo's acme.git, we can have this:
->     $git branch
->     perf/core
->     $head -n 5 ../../Makefile
->     head -n 5 ../../Makefile  | tail -n 4
->     VERSION = 5
->     PATCHLEVEL = 17
->     SUBLEVEL = 0
->     EXTRAVERSION = -rc3
->     $ git describe --abbrev=0 --match "v[0-9].[0-9]*"
->     v4.13-rc5
+> The only real caveat is that CYC packets are only emitted whenever
+> some other packet is, which in practice is when a branch instruction
+> is encountered. Thus, even at no subsampling (e.g. --itrace=y0ns),
+> it is impossible to get more accuracy than a single basic block, and all
+> cycles spent executing that block will get attributed to the branch
+> instruction that ends it. Thus, one cannot know whether the cycles came
+> from e.g. a specific load, a mispredicted branch, or something else.
+> When subsampling (which is the default), the cycle events will get
+> smeared out even more, but will still be useful to attribute cycle
+> counts to functions.
+> 
+> Signed-off-by: Steinar H. Gunderson <sesse@google.com>
+> ---
+>  tools/perf/Documentation/itrace.txt        |  3 +-
+>  tools/perf/Documentation/perf-intel-pt.txt | 33 +++++++-----
+>  tools/perf/util/auxtrace.c                 |  9 +++-
+>  tools/perf/util/auxtrace.h                 |  7 ++-
+>  tools/perf/util/intel-pt.c                 | 59 +++++++++++++++++++---
+>  5 files changed, 88 insertions(+), 23 deletions(-)
 > 
 
-Hi Ian,
+<SNIP>
 
-Thanks for having a look.
+> -static int intel_pt_synth_instruction_sample(struct intel_pt_queue *ptq)
+> +static int intel_pt_synth_instruction_or_cycle_sample(struct intel_pt_queue *ptq)
+>  {
+>  	struct intel_pt *pt = ptq->pt;
+>  	union perf_event *event = ptq->event_buf;
+>  	struct perf_sample sample = { .ip = 0, };
+> +	int err;
+>  
+>  	if (intel_pt_skip_event(pt))
+>  		return 0;
+> @@ -1633,7 +1639,7 @@ static int intel_pt_synth_instruction_sample(struct intel_pt_queue *ptq)
+>  	else
+>  		sample.period = ptq->state->tot_insn_cnt - ptq->last_insn_cnt;
+>  
+> -	if (ptq->sample_ipc)
+> +	if (ptq->sample_ipc || pt->sample_cycles)
 
-> 
-> I'm a little confused by this, isn't the "git branch" showing your local 
-> branch? For me:
-> 
-> $git branch
-> acme
-> $git status
-> On branch acme
-> Your branch is up to date with 'acme/perf/core'.
-> $git describe --abbrev=0 --match "v[0-9].[0-9]*"
-> v5.17-rc4
-> $git remote show acme
-> * remote acme
->    Fetch URL: 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git 
-> <http://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git>
->    Push  URL: 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git 
-> <http://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git>
-> ...
-> $ /tmp/perf/perf --version
-> perf version 5.17.rc4.g56dce868198c
-> 
-> Is your branch tracking acme/master ?
+This is not quite right.  ptq->sample_ipc is set to indicate when the
+cycle count is accurate for the current instruction.  It can be weakened
+by using "Approx IPC" which was introduced for dlfilter-show-cycles.
+Probably that approach should be followed for a "cycles" event also.
 
-I was following acme/perf/core but I don't think that it is so important.
+From perf-intel-pt man page:
 
-The difference is that I am working from a clone of acme/linux.git and 
-so torvalds/linux.git is a remote for me. I assume that you have a clone 
-of torvalds/linux.git
+dlfilter-show-cycles.so
+~~~~~~~~~~~~~~~~~~~~~~~
 
-That means that if my clone of acme git does not pull in the tags from 
-torvalds git then "git describe" gives a wrong result.
+Cycles can be displayed using dlfilter-show-cycles.so in which case the itrace A
+option can be useful to provide higher granularity cycle information:
 
-Please check this experiment:
+	perf script --itrace=A --call-trace --dlfilter dlfilter-show-cycles.so
 
-john@localhost:~> git clone 
-git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git acme_test
-Cloning into 'acme_test'...
-remote: Enumerating objects: 59, done.
-remote: Counting objects: 100% (59/59), done.
-remote: Compressing objects: 100% (3/3), done.
+To see a list of dlfilters:
 
-...
+	perf script -v --list-dlfilters
 
-john@localhost:~> cd acme_test/
+See also linkperf:perf-dlfilters[1]
 
-john@localhost:~/acme_test> git checkout remotes/origin/perf/core -B 
-perf/core
-Updating files: 100% (58299/58299), done.
-Branch 'perf/core' set up to track remote branch 'perf/core' from 'origin'.
-Switched to a new branch 'perf/core'
 
-john@localhost:~/acme_test> git describe --abbrev=0 --match "v[0-9].[0-9]*"
-v4.13-rc5
+>  		sample.cyc_cnt = ptq->ipc_cyc_cnt - ptq->last_in_cyc_cnt;
+>  	if (sample.cyc_cnt) {
+>  		sample.insn_cnt = ptq->ipc_insn_cnt - ptq->last_in_insn_cnt;
+> @@ -1643,8 +1649,30 @@ static int intel_pt_synth_instruction_sample(struct intel_pt_queue *ptq)
+>  
+>  	ptq->last_insn_cnt = ptq->state->tot_insn_cnt;
 
-john@localhost:~/acme_test> head -n 5 Makefile  | tail -n 4
-VERSION = 5
-PATCHLEVEL = 17
-SUBLEVEL = 0
-EXTRAVERSION = -rc4
+There are variables here that are specific to the "instructions" event, so
+mixing "cycles" with "instructions" means duplicating those, however maybe
+it would be better not to allow "y" and "i" options at the same time?
 
-john@localhost:~/acme_test> git remote add torvalds 
-git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+>  
+> -	return intel_pt_deliver_synth_event(pt, event, &sample,
+> -					    pt->instructions_sample_type);
+> +	if (pt->sample_instructions) {
+> +		err = intel_pt_deliver_synth_event(pt, event, &sample,
+> +						   pt->instructions_sample_type);
+> +		if (err)
+> +			return err;
+> +	}
+> +
+> +	/*
+> +	 * NOTE: If not doing sampling (e.g. itrace=y0us), we will in practice
+> +	 * only see cycles being attributed to branches, since CYC packets
+> +	 * only are emitted together with other packets are emitted.
+> +	 * We should perhaps consider spreading it out over everything since
+> +	 * the last CYC packet, ie., since last time sample.cyc_cnt was nonzero.
+> +	 */
+> +	if (pt->sample_cycles && sample.cyc_cnt) {
+> +		sample.id = ptq->pt->cycles_id;
+> +		sample.stream_id = ptq->pt->cycles_id;
 
-john@localhost:~/acme_test> git fetch torvalds
-remote: Enumerating objects: 1516, done.
-remote: Counting objects: 100% (1516/1516), done.
-remote: Compressing objects: 100% (413/413), done.
-remote: Total 1944 (delta 1202), reused 1314 (delta 1098), pack-reused 428
-Receiving objects: 100% (1944/1944), 1.68 MiB | 5.12 MiB/s, done.
-Resolving deltas: 100% (1270/1270), completed with 400 local objects.
- From git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux
-  * [new branch]                master            -> torvalds/master
+A "cycles" sample needs to set the sample period to the number of cycles since the
+last "cycles" sample.
 
-...
-
-  * [new tag]                   v5.17-rc2         -> v5.17-rc2
-  * [new tag]                   v5.17-rc3         -> v5.17-rc3
-  * [new tag]                   v5.17-rc4         -> v5.17-rc4
-  * [new tag]                   v5.17-rc5         -> v5.17-rc5
-  * [new tag]                   v5.17-rc6         -> v5.17-rc6
-
-...
-
-john@localhost:~/acme_test> git describe --abbrev=0 --match "v[0-9].[0-9]*"
-v5.17-rc4
-
-So you can see that "git describe" gives the wrong result (v4.13-rc5) 
-before we pull in torvalds git.
-
-My point is that git tags are unreliable and we should avoid them.
-
-Thanks,
-John
+> +		err = intel_pt_deliver_synth_event(pt, event, &sample,
+> +						   pt->cycles_sample_type);
+> +		if (err)
+> +			return err;
+> +	}
+> +
+> +	return 0;
+>  }
