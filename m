@@ -2,88 +2,174 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A57ACC433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Mar 2022 07:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38456C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Mar 2022 08:28:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244602AbiCKHFT (ORCPT
+        id S229449AbiCKI3L (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 11 Mar 2022 02:05:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52698 "EHLO
+        Fri, 11 Mar 2022 03:29:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347099AbiCKHFO (ORCPT
+        with ESMTP id S229656AbiCKI3J (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 11 Mar 2022 02:05:14 -0500
-X-Greylist: delayed 339 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 10 Mar 2022 23:04:02 PST
-Received: from forward104o.mail.yandex.net (forward104o.mail.yandex.net [37.140.190.179])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57CC4CD300;
-        Thu, 10 Mar 2022 23:04:02 -0800 (PST)
-Received: from iva8-4db386e07e2e.qloud-c.yandex.net (iva8-4db386e07e2e.qloud-c.yandex.net [IPv6:2a02:6b8:c0c:951e:0:640:4db3:86e0])
-        by forward104o.mail.yandex.net (Yandex) with ESMTP id F01DA65D3543;
-        Fri, 11 Mar 2022 09:58:18 +0300 (MSK)
-Received: from iva4-b3ebd202b141.qloud-c.yandex.net (iva4-b3ebd202b141.qloud-c.yandex.net [2a02:6b8:c0c:4e8e:0:640:b3eb:d202])
-        by iva8-4db386e07e2e.qloud-c.yandex.net (mxback/Yandex) with ESMTP id bRRjuwgxmY-wHeaBClW;
-        Fri, 11 Mar 2022 09:58:18 +0300
-X-Yandex-Fwd: 2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1646981898;
-        bh=r8NGPub2yLP8J/GwfOvg8WvFWw+/jFkgoKD0eVjdXgQ=;
-        h=Date:Subject:Cc:To:From:Message-Id;
-        b=SWX5Kq24ysI5oBLPhKYLAQmqUdAo1o/0t8oesx+AztTuQwfhUgWk4QQ30DwHNNvi8
-         Vm5GFni0dqhFkfWfy9cF3oBweSkG/zADmtdlL1sfuIYFFaEttcNjn89wCC7eVK6q8r
-         v/SpZ2iYNSnGRUN30ejtk5+pg5xxYHJhXbYc9iTY=
-Authentication-Results: iva8-4db386e07e2e.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
-Received: by iva4-b3ebd202b141.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id QxfEVveCLI-wGKOa0GN;
-        Fri, 11 Mar 2022 09:58:16 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-From:   Nikita Shubin <nikita.shubin@maquefel.me>
-Cc:     linux@yadro.com, Nikita Shubin <n.shubin@yadro.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, Mao Han <han_mao@c-sky.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH] riscv: Fix fill_callchain return value
-Date:   Fri, 11 Mar 2022 09:58:15 +0300
-Message-Id: <20220311065815.9985-1-nikita.shubin@maquefel.me>
-X-Mailer: git-send-email 2.34.1
+        Fri, 11 Mar 2022 03:29:09 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B5D6B6D04
+        for <linux-perf-users@vger.kernel.org>; Fri, 11 Mar 2022 00:28:03 -0800 (PST)
+Received: from fraeml739-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KFJvg4hTYz681Yv;
+        Fri, 11 Mar 2022 16:27:27 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml739-chm.china.huawei.com (10.206.15.220) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Fri, 11 Mar 2022 09:28:00 +0100
+Received: from [10.47.87.13] (10.47.87.13) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.21; Fri, 11 Mar
+ 2022 08:27:59 +0000
+Message-ID: <ebde0845-fa4b-0e6c-c9e6-6c8d27377952@huawei.com>
+Date:   Fri, 11 Mar 2022 08:27:58 +0000
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH v2 2/2] perf: Fix version kernel tag
+To:     Ian Rogers <irogers@google.com>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <namhyung@kernel.org>,
+        <linux-perf-users@vger.kernel.org>, <olsajiri@gmail.com>,
+        <rric@kernel.org>, <ak@linux.intel.com>
+References: <1645449409-158238-1-git-send-email-john.garry@huawei.com>
+ <1645449409-158238-3-git-send-email-john.garry@huawei.com>
+ <CAP-5=fXT3VYB2uBXmihuruq==FENLFcFSHMLY0Fk29pRvU-wag@mail.gmail.com>
+From:   John Garry <john.garry@huawei.com>
+In-Reply-To: <CAP-5=fXT3VYB2uBXmihuruq==FENLFcFSHMLY0Fk29pRvU-wag@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+X-Originating-IP: [10.47.87.13]
+X-ClientProxiedBy: lhreml707-chm.china.huawei.com (10.201.108.56) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Nikita Shubin <n.shubin@yadro.com>
+On 11/03/2022 02:18, Ian Rogers wrote:
+>     Generating the version kernel tag relies on "git describe" command
+>     to get
+>     the latest Linus kernel tag.
+> 
+>     However, when working from clones of Linus' git we may not have the
+>     latest
+>     tag. For example, when working on Arnaldo's acme.git, we can have this:
+>     $git branch
+>     perf/core
+>     $head -n 5 ../../Makefile
+>     head -n 5 ../../Makefile  | tail -n 4
+>     VERSION = 5
+>     PATCHLEVEL = 17
+>     SUBLEVEL = 0
+>     EXTRAVERSION = -rc3
+>     $ git describe --abbrev=0 --match "v[0-9].[0-9]*"
+>     v4.13-rc5
+> 
 
-perf_callchain_store return 0 on success, -1 otherwise,
-fix fill_callchain to return correct bool value.
+Hi Ian,
 
-Fixes: dbeb90b0c1eb ("riscv: Add perf callchain support")
-Signed-off-by: Nikita Shubin <n.shubin@yadro.com>
----
- arch/riscv/kernel/perf_callchain.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for having a look.
 
-diff --git a/arch/riscv/kernel/perf_callchain.c b/arch/riscv/kernel/perf_callchain.c
-index 1fc075b8f764..7aca6a238173 100644
---- a/arch/riscv/kernel/perf_callchain.c
-+++ b/arch/riscv/kernel/perf_callchain.c
-@@ -68,7 +68,7 @@ void perf_callchain_user(struct perf_callchain_entry_ctx *entry,
- 
- static bool fill_callchain(void *entry, unsigned long pc)
- {
--	return perf_callchain_store(entry, pc);
-+	return perf_callchain_store(entry, pc) == 0;
- }
- 
- void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry,
--- 
-2.34.1
+> 
+> I'm a little confused by this, isn't the "git branch" showing your local 
+> branch? For me:
+> 
+> $git branch
+> acme
+> $git status
+> On branch acme
+> Your branch is up to date with 'acme/perf/core'.
+> $git describe --abbrev=0 --match "v[0-9].[0-9]*"
+> v5.17-rc4
+> $git remote show acme
+> * remote acme
+>    Fetch URL: 
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git 
+> <http://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git>
+>    Push  URL: 
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git 
+> <http://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git>
+> ...
+> $ /tmp/perf/perf --version
+> perf version 5.17.rc4.g56dce868198c
+> 
+> Is your branch tracking acme/master ?
 
+I was following acme/perf/core but I don't think that it is so important.
+
+The difference is that I am working from a clone of acme/linux.git and 
+so torvalds/linux.git is a remote for me. I assume that you have a clone 
+of torvalds/linux.git
+
+That means that if my clone of acme git does not pull in the tags from 
+torvalds git then "git describe" gives a wrong result.
+
+Please check this experiment:
+
+john@localhost:~> git clone 
+git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git acme_test
+Cloning into 'acme_test'...
+remote: Enumerating objects: 59, done.
+remote: Counting objects: 100% (59/59), done.
+remote: Compressing objects: 100% (3/3), done.
+
+...
+
+john@localhost:~> cd acme_test/
+
+john@localhost:~/acme_test> git checkout remotes/origin/perf/core -B 
+perf/core
+Updating files: 100% (58299/58299), done.
+Branch 'perf/core' set up to track remote branch 'perf/core' from 'origin'.
+Switched to a new branch 'perf/core'
+
+john@localhost:~/acme_test> git describe --abbrev=0 --match "v[0-9].[0-9]*"
+v4.13-rc5
+
+john@localhost:~/acme_test> head -n 5 Makefile  | tail -n 4
+VERSION = 5
+PATCHLEVEL = 17
+SUBLEVEL = 0
+EXTRAVERSION = -rc4
+
+john@localhost:~/acme_test> git remote add torvalds 
+git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+
+john@localhost:~/acme_test> git fetch torvalds
+remote: Enumerating objects: 1516, done.
+remote: Counting objects: 100% (1516/1516), done.
+remote: Compressing objects: 100% (413/413), done.
+remote: Total 1944 (delta 1202), reused 1314 (delta 1098), pack-reused 428
+Receiving objects: 100% (1944/1944), 1.68 MiB | 5.12 MiB/s, done.
+Resolving deltas: 100% (1270/1270), completed with 400 local objects.
+ From git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux
+  * [new branch]                master            -> torvalds/master
+
+...
+
+  * [new tag]                   v5.17-rc2         -> v5.17-rc2
+  * [new tag]                   v5.17-rc3         -> v5.17-rc3
+  * [new tag]                   v5.17-rc4         -> v5.17-rc4
+  * [new tag]                   v5.17-rc5         -> v5.17-rc5
+  * [new tag]                   v5.17-rc6         -> v5.17-rc6
+
+...
+
+john@localhost:~/acme_test> git describe --abbrev=0 --match "v[0-9].[0-9]*"
+v5.17-rc4
+
+So you can see that "git describe" gives the wrong result (v4.13-rc5) 
+before we pull in torvalds git.
+
+My point is that git tags are unreliable and we should avoid them.
+
+Thanks,
+John
