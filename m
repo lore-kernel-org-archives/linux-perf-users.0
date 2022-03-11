@@ -2,180 +2,298 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F210C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Mar 2022 09:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AE1C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Mar 2022 12:24:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241145AbiCKJLn (ORCPT
+        id S1348342AbiCKMZW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 11 Mar 2022 04:11:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50156 "EHLO
+        Fri, 11 Mar 2022 07:25:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235362AbiCKJLn (ORCPT
+        with ESMTP id S238228AbiCKMZW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 11 Mar 2022 04:11:43 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0062A1BB70D;
-        Fri, 11 Mar 2022 01:10:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1646989841; x=1678525841;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=9XZd3A5JSwNwuvRtar4ydpQDnQtwJ4sZrgR4lOTdwJM=;
-  b=VnkVWAE8Nh5FEMQ7JIc9cIruW9AfbiwLZCrYV31eb1k1PjcXMEW39oLD
-   AxNDC3N48YrhrIFmmdFA/HvztgOv3v+CTh6q6FgsBY/gGuU+2GjR+PR8D
-   3aEjLHYitMdVSPKP8JUcXN4fm2Kqxa04tUI4Cv1qq6BTnT8e3lxYQK8Om
-   Hloqlezy7IP0GUpADkh1hfY1bqhy18lUhhUrvdjbj96QlYd+hOMcfkX98
-   Ni5Y8AOFdbVQZ8TBwtQ/qk0jAae7AimiGHYiWAZlSsLBSTe9ICy38ZWMh
-   uv2kFepiv3rUbJ0YQMFIRknJOqQvvSngL9ElY5oUjdmLrxv0cJVf8EKDQ
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10282"; a="341963142"
-X-IronPort-AV: E=Sophos;i="5.90,173,1643702400"; 
-   d="scan'208";a="341963142"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2022 01:10:40 -0800
-X-IronPort-AV: E=Sophos;i="5.90,173,1643702400"; 
-   d="scan'208";a="555227879"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.52.194])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2022 01:10:36 -0800
-Message-ID: <586de5fc-858b-2693-1986-5c77e8c0e3d0@intel.com>
-Date:   Fri, 11 Mar 2022 11:10:30 +0200
+        Fri, 11 Mar 2022 07:25:22 -0500
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CBD219BE7B
+        for <linux-perf-users@vger.kernel.org>; Fri, 11 Mar 2022 04:24:18 -0800 (PST)
+Received: by mail-pl1-x631.google.com with SMTP id q13so7523863plk.12
+        for <linux-perf-users@vger.kernel.org>; Fri, 11 Mar 2022 04:24:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=/JMlM3n57ibk4dVakTtw1XGhmsoBfm56lU4ADR22SNE=;
+        b=1v6tXX5f2ccGT3wwCOoLW0LYSQ7SVNPjk5NGv7eQh+Hs/nm9t0AvfcwxrmsIHr1RLS
+         Vr+rG4JmSUf9G/Mo/1NnYEtlPHYQYRK6zM8Wth9xzCegPMn0dRpDOEjUIDBLf6wcIYI1
+         lySZ6lqWlRYG1YrQY3mjlUlwzElFVp8isVzp/Rb5TSHDw7RPLsH6IgGNtPIVjXsI9Vh0
+         nUTTFT7XDJSBW3E9TqleXZZmnrKo3OXuTjjGbkdoakouZq2ZO8ZXuAHFx2I+njvYCptY
+         pKpleVudOVTbyjlNo4GIqMDmN5d/xiid1YuFuXRdZCfA2w9ZZ2IyenujkcXAOehGxud7
+         yn4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=/JMlM3n57ibk4dVakTtw1XGhmsoBfm56lU4ADR22SNE=;
+        b=gMis17IH5abnpIahXkFxxbgrEl98U80tInrnRxy+mEAPq9Bc34tXvezVb6BS9nXoow
+         QnHKEASXjs/ne4f2190zWetx6T8iXKhmSLSMcnHvWapuRR9u05lj0O/qoVjADaactvLa
+         RmqFc7g6sbCOhAJrNSakOhUjIz18/b7qp/Al6DCizIQGy4Kr4bQAnXLCayRlWAQean37
+         070q519vkugGvErfEQ+qFgSI+xdiHDLamMK8gAeYgjrk4oiGh0ABZWYNA1wP/BzBsNhJ
+         QwBdMDlvQDPqKNRCBkF1YDUMvlxxc1VcmTqnCwJOOgdIdST8oLSjv+U45atseeutpAPa
+         CBqQ==
+X-Gm-Message-State: AOAM531zxXwIoAA+kgVysXgEO0wZoMdt4DJeB27hkbyjD8LZ/xb/bvR1
+        AY1dCzvVJmy8LysO58Gz1CegGw==
+X-Google-Smtp-Source: ABdhPJy6ds+S/Fo3OHMkMQ7gL0Sg2yrBMmG66d9TYTPBUSymp8gDzEHZsday2Xp8+p7AuAIcexLjLA==
+X-Received: by 2002:a17:90a:d3d1:b0:1bb:fdc5:182 with SMTP id d17-20020a17090ad3d100b001bbfdc50182mr21898512pjw.206.1647001457447;
+        Fri, 11 Mar 2022 04:24:17 -0800 (PST)
+Received: from ?IPV6:2409:8a28:e6b:7130:ddd:2fc4:6858:5760? ([2409:8a28:e6b:7130:ddd:2fc4:6858:5760])
+        by smtp.gmail.com with ESMTPSA id f6-20020a056a00238600b004e1906b3bb2sm11195156pfc.12.2022.03.11.04.24.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Mar 2022 04:24:17 -0800 (PST)
+Message-ID: <d34b60eb-6ab1-7995-74f7-e864792ec8ff@bytedance.com>
+Date:   Fri, 11 Mar 2022 20:24:07 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.5.0
-Subject: Re: [PATCH] perf intel-pt: Synthesize cycle events
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.6.2
+Subject: Re: [Phishing Risk] Re: [Phishing Risk] [External] Re: [RFC PATCH]
+ perf/core: fix cpuctx cgrp warning
 Content-Language: en-US
-To:     "Steinar H. Gunderson" <sesse@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220310093844.982656-1-sesse@google.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20220310093844.982656-1-sesse@google.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        songmuchun@bytedance.com
+References: <20220308135948.55336-1-zhouchengming@bytedance.com>
+ <CAM9d7chsbpmVhhtzBgqD29Agb6xTMpxfwvqUdo6RKx2K1WN-DQ@mail.gmail.com>
+ <e561e36c-cc73-2078-4baa-cb9ab6b6eeac@bytedance.com>
+ <CAM9d7ciw+Jj1Z2j5qsz8f5YvAk5yh_w3+pZKO6gTAn2AHKQj2g@mail.gmail.com>
+From:   Chengming Zhou <zhouchengming@bytedance.com>
+In-Reply-To: <CAM9d7ciw+Jj1Z2j5qsz8f5YvAk5yh_w3+pZKO6gTAn2AHKQj2g@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 10.3.2022 11.38, Steinar H. Gunderson wrote:
-> There is no good reason why we cannot synthesize "cycle" events
-> from Intel PT just as we can synthesize "instruction" events,
-> in particular when CYC packets are available. This enables using
-> PT to getting much more accurate cycle profiles than regular sampling
-> (record -e cycles) when the work last for very short periods (<10 ms).
-> Thus, add support for this, based off of the existing IPC calculation
-> framework. The new option to --itrace is "y" (for cYcles), as c was
-> taken for calls. Cycle and instruction events can be synthesized
-> together, and are by default.
+On 2022/3/11 2:02 上午, Namhyung Kim wrote:
+> On Thu, Mar 10, 2022 at 4:01 AM Chengming Zhou
+> <zhouchengming@bytedance.com> wrote:
+>>
+>> Hello,
+>>
+>> On 2022/3/10 5:25 下午, Namhyung Kim wrote:
+>>> Hello,
+>>>
+>>> On Tue, Mar 8, 2022 at 6:00 AM Chengming Zhou
+>>> <zhouchengming@bytedance.com> wrote:
+>>>>
+>>>> There is a race problem that can trigger WARN_ON_ONCE(cpuctx->cgrp)
+>>>> in perf_cgroup_switch().
+>>>>
+>>>> CPU1                                    CPU2
+>>>> (in context_switch)                     (attach running task)
+>>>> perf_cgroup_sched_out(task, next)
+>>>>         if (cgrp1 != cgrp2) True
+>>>>                                         task->cgroups = xxx
+>>>>                                         perf_cgroup_attach()
+>>>> perf_cgroup_sched_in(prev, task)
+>>>>         if (cgrp1 != cgrp2) False
+>>>
+>>> But perf_cgroup_switch will be synchronized as the context switch
+>>> disables the interrupt.  And right, it still can see the task->cgroups
+>>> is changing in the middle.
+>>>
+>>>>
+>>>> The commit a8d757ef076f ("perf events: Fix slow and broken cgroup
+>>>> context switch code") would save cpuctx switch in/out when the
+>>>> perf_cgroup of "prev" and "next" are the same.
+>>>>
+>>>> But perf_cgroup of task can change in concurrent with context_switch.
+>>>> If cgrp1 == cgrp2 in sched_out(), cpuctx won't do switch out, then
+>>>> task perf_cgroup changed cause cgrp1 != cgrp2 in sched_in(), cpuctx
+>>>> will do switch in, and trigger WARN_ON_ONCE(cpuctx->cgrp).
+>>>>
+>>>> The perf_cgroup of "prev" and "next" can be changed at any time, so we
+>>>> first have to combine perf_cgroup_sched_in() into perf_cgroup_sched_out(),
+>>>> so we can get a consistent value of condition (cgrp1 == cgrp2).
+>>>>
+>>>> And we introduce a percpu "cpu_perf_cgroups" to track the current used
+>>>> perf_cgroup, instead of using the unstable perf_cgroup of "prev", which
+>>>> maybe not the cpuctx->cgrp we used to schedule cgroup events on cpu.
+>>>
+>>> Is this really needed?  I think the warning comes because the two
+>>> cgroups were the same when in sched-out, but they became
+>>> different when in sched-in.  So just combining sched-in/out should
+>>> be ok, isn't it?
+>>
+>> If we get perf_cgroup from prev->cgroups that can be changed in the
+>> context_switch(), make the condition (cgrp1 == cgrp2) is true, then
+>> we won't do sched_out/in. So the events of prev's previous cgrp will
+>> still be on the CPU.
+>>
+>> Even that CPU would receive IPI from perf_cgroup_attach() after
+>> context_switch(), remote_function() will do nothing because prev task
+>> is not current running anymore.
 > 
-> The only real caveat is that CYC packets are only emitted whenever
-> some other packet is, which in practice is when a branch instruction
-> is encountered. Thus, even at no subsampling (e.g. --itrace=y0ns),
-> it is impossible to get more accuracy than a single basic block, and all
-> cycles spent executing that block will get attributed to the branch
-> instruction that ends it. Thus, one cannot know whether the cycles came
-> from e.g. a specific load, a mispredicted branch, or something else.
-> When subsampling (which is the default), the cycle events will get
-> smeared out even more, but will still be useful to attribute cycle
-> counts to functions.
+> Right, so I don't care about changing prev->cgroups.  I can see these
+> two scenarios.
 > 
-> Signed-off-by: Steinar H. Gunderson <sesse@google.com>
-> ---
->  tools/perf/Documentation/itrace.txt        |  3 +-
->  tools/perf/Documentation/perf-intel-pt.txt | 33 +++++++-----
->  tools/perf/util/auxtrace.c                 |  9 +++-
->  tools/perf/util/auxtrace.h                 |  7 ++-
->  tools/perf/util/intel-pt.c                 | 59 +++++++++++++++++++---
->  5 files changed, 88 insertions(+), 23 deletions(-)
+> 1. (cgrp1 == cgrp2) --> (cgrp1 != cgrp2)
+>   This means the next task's cgroup (cgrp2) is the same as the
+>   previous and it doesn't need to reschedule events even if the
+>   cgrp1 is changed.
 > 
+> 2. (cgrp1 != cgrp2) --> (cgrp1 == cgrp2)
+>   This will trigger rescheduling anyway, and we are fine.
 
-<SNIP>
+Yes, these two scenarios are fine, but only if perf_cgroup_switch()
+see the old condition, instead of the new condition.
 
-> -static int intel_pt_synth_instruction_sample(struct intel_pt_queue *ptq)
-> +static int intel_pt_synth_instruction_or_cycle_sample(struct intel_pt_queue *ptq)
->  {
->  	struct intel_pt *pt = ptq->pt;
->  	union perf_event *event = ptq->event_buf;
->  	struct perf_sample sample = { .ip = 0, };
-> +	int err;
->  
->  	if (intel_pt_skip_event(pt))
->  		return 0;
-> @@ -1633,7 +1639,7 @@ static int intel_pt_synth_instruction_sample(struct intel_pt_queue *ptq)
->  	else
->  		sample.period = ptq->state->tot_insn_cnt - ptq->last_insn_cnt;
->  
-> -	if (ptq->sample_ipc)
-> +	if (ptq->sample_ipc || pt->sample_cycles)
+(cgrp1 != cgrp2) --> (cgrp1 == cgrp2)
 
-This is not quite right.  ptq->sample_ipc is set to indicate when the
-cycle count is accurate for the current instruction.  It can be weakened
-by using "Approx IPC" which was introduced for dlfilter-show-cycles.
-Probably that approach should be followed for a "cycles" event also.
+If perf_cgroup_switch() see the new condition (cgrp1 == cgrp2), then
+it won't sched_out/in, so leave the events of old cgrp1 (maybe cgrp3)
+on the CPU. But we should sched_in events of cgrp2 instead.
 
-From perf-intel-pt man page:
+Maybe I missed something ;-)
 
-dlfilter-show-cycles.so
-~~~~~~~~~~~~~~~~~~~~~~~
+> 
+>>
+>>>
+>>>>
+>>>> Fixes: a8d757ef076f ("perf events: Fix slow and broken cgroup context
+>>>> switch code")
+>>>> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+>>>> ---
+>>>>  kernel/events/core.c | 95 +++++++++++---------------------------------
+>>>>  1 file changed, 23 insertions(+), 72 deletions(-)
+>>>>
+>>>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>>>> index 6859229497b1..f3bc2841141f 100644
+>>>> --- a/kernel/events/core.c
+>>>> +++ b/kernel/events/core.c
+>>>> @@ -826,6 +826,7 @@ perf_cgroup_set_timestamp(struct task_struct *task,
+>>>>         }
+>>>>  }
+>>>>
+>>>> +static DEFINE_PER_CPU(struct perf_cgroup *, cpu_perf_cgroups);
+>>>>  static DEFINE_PER_CPU(struct list_head, cgrp_cpuctx_list);
+>>>>
+>>>>  #define PERF_CGROUP_SWOUT      0x1 /* cgroup switch out every event */
+>>>> @@ -837,8 +838,9 @@ static DEFINE_PER_CPU(struct list_head, cgrp_cpuctx_list);
+>>>>   * mode SWOUT : schedule out everything
+>>>>   * mode SWIN : schedule in based on cgroup for next
+>>>
+>>> You can remove this comment now.
+>>
+>> Ok, will do.
+>>
+>>>
+>>>>   */
+>>>> -static void perf_cgroup_switch(struct task_struct *task, int mode)
+>>>> +static void perf_cgroup_switch(struct task_struct *task)
+>>>>  {
+>>>> +       struct perf_cgroup *cgrp;
+>>>>         struct perf_cpu_context *cpuctx, *tmp;
+>>>>         struct list_head *list;
+>>>>         unsigned long flags;
+>>>> @@ -849,6 +851,9 @@ static void perf_cgroup_switch(struct task_struct *task, int mode)
+>>>>          */
+>>>>         local_irq_save(flags);
+>>>>
+>>>> +       cgrp = perf_cgroup_from_task(task, NULL);
+>>>> +       __this_cpu_write(cpu_perf_cgroups, cgrp);
+>>>> +
+>>>>         list = this_cpu_ptr(&cgrp_cpuctx_list);
+>>>>         list_for_each_entry_safe(cpuctx, tmp, list, cgrp_cpuctx_entry) {
+>>>>                 WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
+>>>> @@ -856,28 +861,15 @@ static void perf_cgroup_switch(struct task_struct *task, int mode)
+>>>>                 perf_ctx_lock(cpuctx, cpuctx->task_ctx);
+>>>>                 perf_pmu_disable(cpuctx->ctx.pmu);
+>>>>
+>>>> -               if (mode & PERF_CGROUP_SWOUT) {
+>>>> -                       cpu_ctx_sched_out(cpuctx, EVENT_ALL);
+>>>> -                       /*
+>>>> -                        * must not be done before ctxswout due
+>>>> -                        * to event_filter_match() in event_sched_out()
+>>>
+>>> Unrelated, but I don't see the event_filter_match() in
+>>> event_sched_out() anymore.  Does it sched-out all
+>>> non-cgroup cpu events here?
+>>
+>> Yes, I review the code and don't find event_filter_match(),
+>> so cpu_ctx_sched_out() will sched-out all cpu events.
+>>
+>> And I find event_filter_match() won't work here too,
+>> because perf_cgroup_match() return matched for any
+>> non-cgroup event. Maybe we can add another function
+>> like perf_cgroup_match_sched_out() to use when sched-out.
+> 
+> And for sched-in too.
+> 
+> But we should consider multiplexing in the timer as well.
+> In that case it cannot know whether it needs to reschedule
+> cpu or cgroup events, so it does the job for all events.> 
+> But I think cgroup + multiplexing is broken already
+> because it cannot guarantee it sees the same cgroup
+> when the timer interrupt happens.
 
-Cycles can be displayed using dlfilter-show-cycles.so in which case the itrace A
-option can be useful to provide higher granularity cycle information:
+Right, I'm still trying to figure these things out.
 
-	perf script --itrace=A --call-trace --dlfilter dlfilter-show-cycles.so
+Thanks.
 
-To see a list of dlfilters:
-
-	perf script -v --list-dlfilters
-
-See also linkperf:perf-dlfilters[1]
-
-
->  		sample.cyc_cnt = ptq->ipc_cyc_cnt - ptq->last_in_cyc_cnt;
->  	if (sample.cyc_cnt) {
->  		sample.insn_cnt = ptq->ipc_insn_cnt - ptq->last_in_insn_cnt;
-> @@ -1643,8 +1649,30 @@ static int intel_pt_synth_instruction_sample(struct intel_pt_queue *ptq)
->  
->  	ptq->last_insn_cnt = ptq->state->tot_insn_cnt;
-
-There are variables here that are specific to the "instructions" event, so
-mixing "cycles" with "instructions" means duplicating those, however maybe
-it would be better not to allow "y" and "i" options at the same time?
-
->  
-> -	return intel_pt_deliver_synth_event(pt, event, &sample,
-> -					    pt->instructions_sample_type);
-> +	if (pt->sample_instructions) {
-> +		err = intel_pt_deliver_synth_event(pt, event, &sample,
-> +						   pt->instructions_sample_type);
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	/*
-> +	 * NOTE: If not doing sampling (e.g. itrace=y0us), we will in practice
-> +	 * only see cycles being attributed to branches, since CYC packets
-> +	 * only are emitted together with other packets are emitted.
-> +	 * We should perhaps consider spreading it out over everything since
-> +	 * the last CYC packet, ie., since last time sample.cyc_cnt was nonzero.
-> +	 */
-> +	if (pt->sample_cycles && sample.cyc_cnt) {
-> +		sample.id = ptq->pt->cycles_id;
-> +		sample.stream_id = ptq->pt->cycles_id;
-
-A "cycles" sample needs to set the sample period to the number of cycles since the
-last "cycles" sample.
-
-> +		err = intel_pt_deliver_synth_event(pt, event, &sample,
-> +						   pt->cycles_sample_type);
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	return 0;
->  }
+> 
+> Thanks,
+> Namhyung
+> 
+>>
+>>>
+>>>> -                        */
+>>>> -                       cpuctx->cgrp = NULL;
+>>>> -               }
+>>>> +               cpu_ctx_sched_out(cpuctx, EVENT_ALL);
+>>>> +               /*
+>>>> +                * must not be done before ctxswout due
+>>>> +                * to event_filter_match() in event_sched_out()
+>>>> +                */
+>>>> +               cpuctx->cgrp = cgrp;
+>>>
+>>> Maybe we can check cpuctx->cgrp is the same as task's
+>>> cgroup before accessing the pmu.  As in the commit message
+>>> it can call perf_cgroup_switch() after the context switch so
+>>> the cgroup events might be scheduled already.
+>>
+>> Good point, will do.
+>>
+>> Thanks.
+>>
+>>>
+>>> Thanks,
+>>> Namhyung
+>>>
+>>>
+>>>> +
+>>>> +               cpu_ctx_sched_in(cpuctx, EVENT_ALL, task);
+>>>>
+>>>> -               if (mode & PERF_CGROUP_SWIN) {
+>>>> -                       WARN_ON_ONCE(cpuctx->cgrp);
+>>>> -                       /*
+>>>> -                        * set cgrp before ctxsw in to allow
+>>>> -                        * event_filter_match() to not have to pass
+>>>> -                        * task around
+>>>> -                        * we pass the cpuctx->ctx to perf_cgroup_from_task()
+>>>> -                        * because cgorup events are only per-cpu
+>>>> -                        */
+>>>> -                       cpuctx->cgrp = perf_cgroup_from_task(task,
+>>>> -                                                            &cpuctx->ctx);
+>>>> -                       cpu_ctx_sched_in(cpuctx, EVENT_ALL, task);
+>>>> -               }
+>>>>                 perf_pmu_enable(cpuctx->ctx.pmu);
+>>>>                 perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+>>>>         }
