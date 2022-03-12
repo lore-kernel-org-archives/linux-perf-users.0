@@ -2,106 +2,97 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D699C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat, 12 Mar 2022 13:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CDDC433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat, 12 Mar 2022 14:01:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229646AbiCLN4I (ORCPT
+        id S232047AbiCLOCq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 12 Mar 2022 08:56:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49570 "EHLO
+        Sat, 12 Mar 2022 09:02:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229494AbiCLN4G (ORCPT
+        with ESMTP id S232035AbiCLOCp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 12 Mar 2022 08:56:06 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F135ECC56;
-        Sat, 12 Mar 2022 05:55:01 -0800 (PST)
+        Sat, 12 Mar 2022 09:02:45 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44BB4207C23;
+        Sat, 12 Mar 2022 06:01:40 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 01AF360C1F;
-        Sat, 12 Mar 2022 13:55:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CCD7C340EB;
-        Sat, 12 Mar 2022 13:55:00 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CCF9160F4D;
+        Sat, 12 Mar 2022 14:01:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 038DEC340EB;
+        Sat, 12 Mar 2022 14:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1647093300;
-        bh=TghPhgKyHcNCjr1VOkt+QHNFrI1ynMBVDbgZcDen3jI=;
+        s=k20201202; t=1647093699;
+        bh=EWppwMs4zXpEN1MUilMlk2HIwVVsI6O1KIb2Pombqes=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PT697Y42+cFRDGafYgs29QGueDdpoLjQUloPnz1x0n5ZaT7G4kp008eAbvdtTk7GN
-         vw4dEOp2ja5cFXghYizRc+xNsHIt+CY4osJ0uL3R8krmW4dl9J1EIPQ6agO+4FDKaf
-         7rjqk8PxOynoOJ1Xwjf46GMWXrTDGAzpuc2t/d1AHGkVDWxVKWhRlg9/h1luTiCkTn
-         vMIy1ZlPcKVKC5gBB/6Ge0PjdSdnDRMAzbCschfoywrNcpIjio/76iY6fS2D6UaEDY
-         +VxWwtn+qg+Z17NUXcwUUkUprye+Tdgs7kdGnd+BkDwj/G6N/NG98f1Ouge4C4Aao+
-         bI1jw+PC9FRyw==
+        b=Tpc6BDfubwAqCRrdsJAor20gfFOxbfaKF61aFOf73iiyBbgeqPFAYQ7vwMXl6Qb2S
+         EvKUrqQ9RIzQZqj1Ovy5rDv8FHRLPoHm7HY2WNZtzbXiD0bH6uOL3tVGvstGcw+gbE
+         AvlTVLmoq4K56Z6CerZnO9IRGAlv86nVH1UKe77L3MJ5FyCgMtTwCKjalCkkrHxG92
+         QRZv83LZUjEel4m23aNuN5J/259Ngm9G5QFjYILNpXiFhltMcI5NXdYEoWYfIjSEup
+         0f2etc9piB2j94FKecuGUhdMDJbkN/25XZNjAm0+9ctB/Oy128giFMA0xSftMx29+9
+         SbGFLGwUadi4w==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E8C48403C8; Sat, 12 Mar 2022 10:54:57 -0300 (-03)
-Date:   Sat, 12 Mar 2022 10:54:57 -0300
+        id E0BC0403C8; Sat, 12 Mar 2022 11:01:36 -0300 (-03)
+Date:   Sat, 12 Mar 2022 11:01:36 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     zhengjun.xing@linux.intel.com
-Cc:     peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@intel.com, jolsa@redhat.com,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, ak@linux.intel.com,
-        kan.liang@linux.intel.com
-Subject: Re: [PATCH] perf parse: Fix event parser error for hybrid systems
-Message-ID: <YiymMXe5Wdj9rJzP@kernel.org>
-References: <20220307151627.30049-1-zhengjun.xing@linux.intel.com>
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org, coresight@lists.linaro.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/1] perf: Set build-id using build-id header on new
+ mmap records
+Message-ID: <YiynwIfRqPZUGf2W@kernel.org>
+References: <20220304090956.2048712-1-james.clark@arm.com>
+ <YiPJN1yaFKILinpE@krava>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220307151627.30049-1-zhengjun.xing@linux.intel.com>
+In-Reply-To: <YiPJN1yaFKILinpE@krava>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Mar 07, 2022 at 11:16:27PM +0800, zhengjun.xing@linux.intel.com escreveu:
-> From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+Em Sat, Mar 05, 2022 at 09:33:59PM +0100, Jiri Olsa escreveu:
+> On Fri, Mar 04, 2022 at 09:09:55AM +0000, James Clark wrote:
+> > Changes since v1:
+> >  * Add read lock around dso find
+> >  * Bracket style fix
+> > 
+> > Hi,
+> > 
+> > We are seeing an issue with doing Coresight decode off target where
+> > initially the correct dso from ~/.debug is used, but after a new thread
+> > in the perf.data file is passed with its mmap record, the local version
+> > of the dso is picked up instead. This happens if the binary exists in the
+> > same path on both devices, for example /bin/ls.
+> > 
+> > Initially when parsing the build-ids in the header, the dso for /bin/ls
+> > will be created, and the file will correctly point to
+> > ~/.debug/bin/ls/2f15ad836be3339dec0e2e6a3c637e08e48aacbd/elf, but for any
+> > new threads or mmaps that are also for /bin/ls, they will not have a
+> > build-id set so they point to /bin/ls on the local machine rather than the
+> > debug folder.
+> > 
+> > To fix this I made it possible to look up which existing dsos have
+> > build id's set that originate from the header and then copy that build-id
+> > onto the new dso if the name matches. Another way to do it would
+> > be to stop comparing the mmap id so it matches on filename only, but I
+> > think we do want to differentiate between different mmaps, even if they
+> > have the same name, which is how it works in this version.
+> > 
+> > Applies to perf/core 56dce8681
+> > 
+> > James Clark (1):
+> >   perf: Set build-id using build-id header on new mmap records
 > 
-> This bug happened on hybrid systems when both cpu_core and cpu_atom
-> have the same event name such as "UOPS_RETIRED.MS" while their event
-> terms are different, then during perf stat, the event for cpu_atom
-> will parse fail and then no output for cpu_atom.
-> 
-> UOPS_RETIRED.MS -> cpu_core/period=0x1e8483,umask=0x4,event=0xc2,frontend=0x8/
-> UOPS_RETIRED.MS -> cpu_atom/period=0x1e8483,umask=0x1,event=0xc2/
-> 
-> It is because event terms in the "head" of parse_events_multi_pmu_add
-> will be changed to event terms for cpu_core after parsing UOPS_RETIRED.MS
-> for cpu_core, then when parsing the same event for cpu_atom, it still
-> uses the event terms for cpu_core, but event terms for cpu_atom are
-> different with cpu_core, the event parses for cpu_atom will fail. This
-> patch fixes it, the event terms should be parsed from the original
-> event.
-> 
-> This patch can work for the hybrid systems that have the same event
-> in more than 2 PMUs. It also can work in non-hybrid systems.
-> 
-> Before:
-> 
->  #perf stat -v  -e  UOPS_RETIRED.MS  -a sleep 1
-> 
-> Using CPUID GenuineIntel-6-97-1
-> UOPS_RETIRED.MS -> cpu_core/period=0x1e8483,umask=0x4,event=0xc2,frontend=0x8/
-> Control descriptor is not initialized
-> UOPS_RETIRED.MS: 2737845 16068518485 16068518485
-> 
->  Performance counter stats for 'system wide':
-> 
->          2,737,845      cpu_core/UOPS_RETIRED.MS/
-> 
->        1.002553850 seconds time elapsed
-> 
-> After:
-> 
->  #perf stat -v  -e  UOPS_RETIRED.MS  -a sleep 1
-> 
-> Using CPUID GenuineIntel-6-97-1
-> UOPS_RETIRED.MS -> cpu_core/period=0x1e8483,umask=0x4,event=0xc2,frontend=0x8/
-> UOPS_RETIRED.MS -> cpu_atom/period=0x1e8483,umask=0x1,event=0xc2/
-> Control descriptor is not initialized
-> UOPS_RETIRED.MS: 1977555 16076950711 16076950711
-> UOPS_RETIRED.MS: 568684 8038694234 8038694234
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
 
 Thanks, applied.
 
