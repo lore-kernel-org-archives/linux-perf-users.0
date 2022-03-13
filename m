@@ -2,210 +2,199 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA9ACC433F5
-	for <linux-perf-users@archiver.kernel.org>; Sun, 13 Mar 2022 17:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07712C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun, 13 Mar 2022 19:07:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235138AbiCMRXp (ORCPT
+        id S235448AbiCMTIc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 13 Mar 2022 13:23:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36682 "EHLO
+        Sun, 13 Mar 2022 15:08:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235126AbiCMRXo (ORCPT
+        with ESMTP id S234705AbiCMTIb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 13 Mar 2022 13:23:44 -0400
-Received: from out199-7.us.a.mail.aliyun.com (out199-7.us.a.mail.aliyun.com [47.90.199.7])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F45454689;
-        Sun, 13 Mar 2022 10:22:35 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R621e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0V711zjU_1647192141;
-Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0V711zjU_1647192141)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 14 Mar 2022 01:22:30 +0800
-From:   Wen Yang <simon.wy@alibaba-inc.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Wen Yang <simon.wy@alibaba-inc.com>,
-        Stephane Eranian <eranian@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        Wen Yang <wenyang@linux.alibaba.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH v2 3/3] perf/x86: reuse scarce pmu counters
-Date:   Mon, 14 Mar 2022 01:21:44 +0800
-Message-Id: <20220313172144.78141-3-simon.wy@alibaba-inc.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20220313172144.78141-1-simon.wy@alibaba-inc.com>
-References: <20220313172144.78141-1-simon.wy@alibaba-inc.com>
+        Sun, 13 Mar 2022 15:08:31 -0400
+Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CBF5652FF;
+        Sun, 13 Mar 2022 12:07:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1647198423; x=1678734423;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=3qnpGEDwzlBqk4oSVj6XhjSrpezFHas77xLMut5hfbw=;
+  b=UfMlsu89OEVit3eW3OQB30iBfBn29f73RvExYnKjKB09S1DKfZU9SUgG
+   YTiQUsM2VL9IGe7g75GePTcvzq85/VnobMQin4p0HZb+2C8/5Lfm/lhCg
+   sPUqG7rSjtqfNTRCt6/ZI4Jwa2f251th4FIZy1G9NJFYdyIAtIOEIlqX0
+   k=;
+X-IronPort-AV: E=Sophos;i="5.90,179,1643673600"; 
+   d="scan'208";a="201917501"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-pdx-2b-718d0906.us-west-2.amazon.com) ([10.25.36.214])
+  by smtp-border-fw-9102.sea19.amazon.com with ESMTP; 13 Mar 2022 19:06:24 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
+        by email-inbound-relay-pdx-2b-718d0906.us-west-2.amazon.com (Postfix) with ESMTPS id 968C63E1840;
+        Sun, 13 Mar 2022 19:06:24 +0000 (UTC)
+Received: from EX13D02UWB001.ant.amazon.com (10.43.161.240) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.28; Sun, 13 Mar 2022 19:06:24 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
+ EX13D02UWB001.ant.amazon.com (10.43.161.240) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.32; Sun, 13 Mar 2022 19:06:23 +0000
+Received: from dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com
+ (172.19.181.128) by mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP
+ Server id 15.0.1497.28 via Frontend Transport; Sun, 13 Mar 2022 19:06:23
+ +0000
+Received: by dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com (Postfix, from userid 5131138)
+        id 5A23C17DB; Sun, 13 Mar 2022 19:06:22 +0000 (UTC)
+From:   Ali Saidi <alisaidi@amazon.com>
+To:     <leo.yan@linaro.org>
+CC:     <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
+        <alisaidi@amazon.com>, <andrew.kilroy@arm.com>,
+        <benh@kernel.crashing.org>, <german.gomez@arm.com>,
+        <james.clark@arm.com>, <john.garry@huawei.com>, <jolsa@redhat.com>,
+        <kjain@linux.ibm.com>, <lihuafei1@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <mark.rutland@arm.com>, <mathieu.poirier@linaro.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <will@kernel.org>, <yao.jin@linux.intel.com>
+Subject: Re: [PATCH v2 1/2] perf arm-spe: Use SPE data source for neoverse cores
+Date:   Sun, 13 Mar 2022 19:06:19 +0000
+Message-ID: <20220313190619.18914-1-alisaidi@amazon.com>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20220313114615.GA143848@leoy-ThinkPad-X240s>
+References: <20220313114615.GA143848@leoy-ThinkPad-X240s>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The nmi watchdog may permanently consume a fixed counter (*cycles*),
-so when other programs collect *cycles* again, they will occupy a GP.
-Here is a slight optimization: save a generic counter for events that
-are non-sampling type and using a fixed counter.
+On Sun, 13 Mar 2022 11:47:58 +0000 Leo Yan wrote:
+> Hi Ali, German,
+> 
+> On Wed, Mar 02, 2022 at 11:59:05AM +0000, German Gomez wrote:
+> > Hi Ali,
+> > 
+> > On 21/02/2022 22:47, Ali Saidi wrote:
+> > > When synthesizing data from SPE, augment the type with source information
+> > > for Arm Neoverse cores. The field is IMPLDEF but the Neoverse cores all use
+> > > the same encoding. I can't find encoding information for any other SPE
+> > > implementations to unify their choices with Arm's thus that is left for
+> > > future work.
+[snip]
+> > >  
+> > > +static void arm_spe__synth_data_source_neoverse(const struct arm_spe_record *record,
+> > > +						union perf_mem_data_src *data_src)
+> > > +{
+> > > +	switch (record->source) {
+> > > +	case ARM_SPE_NV_L1D:
+> > > +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
+> > 
+> > I understand mem_lvl is deprecated but shouldn't we add the level bits here as well for backwards compat?
+> 
+> Thanks for pointing out this.  Yeah, I think German's suggestion is
+> valid, the commit 6ae5fa61d27d ("perf/x86: Fix data source decoding
+> for Skylake") introduces new field 'mem_lvl_num', but it also keeps
+> backwards compatible for the field 'mem_lvl'.
+I thought about that, but then I'm making some assumption about how to fit
+this into the old LVL framework, which is perhaps OK (afaik there are no
+Neoverse systems with more than 3 cache levels). What stopped me was that
+perf_mem__lvl_scnprintf() does the wrong thing when both are set so I
+assumed that setting both was not the right course of action.
 
-Signed-off-by: Wen Yang <simon.wy@alibaba-inc.com>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org
-Cc: Wen Yang <wenyang@linux.alibaba.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- arch/x86/events/core.c | 35 ++++++++++++++++++++++++++---------
- 1 file changed, 26 insertions(+), 9 deletions(-)
+> 
+> > > +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L1;
+> > > +		break;
+> > > +	case ARM_SPE_NV_L2:
+> > > +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
+> > > +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L2;
+> > > +		break;
+> > > +	case ARM_SPE_NV_PEER_CORE:
+> > > +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
+> > > +		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
+> > > +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_ANY_CACHE;
+> 
+> For PEER_CORE data source, we don't know if it's coming from peer
+> core's L1 cache or L2 cache, right?
+We don't.
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index b6ea220..95cfec6 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -799,6 +799,7 @@ struct perf_sched {
- 	u64			msk_counters;
- 	u64			msk_events;
- 	struct event_constraint	**constraints;
-+	struct perf_event	**events;
- 	struct sched_state	state;
- 	struct sched_state	saved[SCHED_STATES_MAX];
- };
-@@ -846,7 +847,8 @@ static int perf_sched_calc_event(struct event_constraint **constraints,
- /*
-  * Initialize iterator that runs through all events and counters.
-  */
--static void perf_sched_init(struct perf_sched *sched, struct event_constraint **constraints,
-+static void perf_sched_init(struct perf_sched *sched,
-+			    struct perf_event **events, struct event_constraint **constraints,
- 			    int num, int wmin, int wmax, int gpmax, u64 mevt, u64 mcnt)
- {
- 	memset(sched, 0, sizeof(*sched));
-@@ -854,6 +856,7 @@ static void perf_sched_init(struct perf_sched *sched, struct event_constraint **
- 	sched->max_weight	= wmax;
- 	sched->max_gp		= gpmax;
- 	sched->constraints	= constraints;
-+	sched->events		= events;
- 	sched->msk_events	= mevt;
- 	sched->msk_counters	= mcnt;
- 
-@@ -896,6 +899,7 @@ static bool perf_sched_restore_state(struct perf_sched *sched)
- static bool __perf_sched_find_counter(struct perf_sched *sched)
- {
- 	struct event_constraint *c;
-+	struct perf_event *e;
- 	int idx;
- 
- 	if (!sched->state.unassigned)
-@@ -905,16 +909,17 @@ static bool __perf_sched_find_counter(struct perf_sched *sched)
- 		return false;
- 
- 	c = sched->constraints[sched->state.event];
-+	e = sched->events[sched->state.event];
- 	/* Prefer fixed purpose counters */
- 	if (c->idxmsk64 & (~0ULL << INTEL_PMC_IDX_FIXED)) {
- 		idx = INTEL_PMC_IDX_FIXED;
- 		for_each_set_bit_from(idx, c->idxmsk, X86_PMC_IDX_MAX) {
- 			u64 mask = BIT_ULL(idx);
- 
--			if (sched->msk_counters & mask)
-+			if ((sched->msk_counters & mask) && is_sampling_event(e))
- 				continue;
- 
--			if (sched->state.used & mask)
-+			if ((sched->state.used & mask) && is_sampling_event(e))
- 				continue;
- 
- 			sched->state.used |= mask;
-@@ -1016,14 +1021,15 @@ static void perf_sched_obtain_used_registers(int *assign, int n, u64 *events, u6
- 	}
- }
- 
--static int __perf_assign_events(struct event_constraint **constraints, int n,
-+static int __perf_assign_events(struct perf_event **events,
-+			struct event_constraint **constraints, int n,
- 			int wmin, int wmax, int gpmax, int *assign)
- {
- 	u64 mevt, mcnt;
- 	struct perf_sched sched;
- 
- 	perf_sched_obtain_used_registers(assign, n, &mevt, &mcnt);
--	perf_sched_init(&sched, constraints, n, wmin, wmax, gpmax, mevt, mcnt);
-+	perf_sched_init(&sched, events, constraints, n, wmin, wmax, gpmax, mevt, mcnt);
- 
- 	do {
- 		if (!perf_sched_find_counter(&sched))
-@@ -1035,6 +1041,13 @@ static int __perf_assign_events(struct event_constraint **constraints, int n,
- 	return sched.state.unassigned;
- }
- 
-+static bool is_pmc_reuseable(struct perf_event *e,
-+		struct event_constraint *c)
-+{
-+	return (c->idxmsk64 & (~0ULL << INTEL_PMC_IDX_FIXED)) &&
-+		(!is_sampling_event(e));
-+}
-+
- /*
-  * Assign a counter for each event.
-  */
-@@ -1043,6 +1056,7 @@ int perf_assign_events(struct perf_event **event_list,
- 		int wmin, int wmax, int gpmax, int *assign)
- {
- 	struct event_constraint *c;
-+	struct perf_event *e;
- 	struct hw_perf_event *hwc;
- 	u64 used_mask = 0;
- 	int unsched = 0;
-@@ -1058,6 +1072,7 @@ int perf_assign_events(struct perf_event **event_list,
- 
- 		hwc = &event_list[i]->hw;
- 		c = constraints[i];
-+		e = event_list[i];
- 
- 		/* never assigned */
- 		if (hwc->idx == -1)
-@@ -1072,8 +1087,10 @@ int perf_assign_events(struct perf_event **event_list,
- 			mask |= mask << 1;
- 
- 		/* not already used */
--		if (used_mask & mask)
--			break;
-+		if (used_mask & mask) {
-+			if (!is_pmc_reuseable(e, c))
-+				break;
-+		}
- 
- 		used_mask |= mask;
- 
-@@ -1083,12 +1100,12 @@ int perf_assign_events(struct perf_event **event_list,
- 
- 	/* slow path */
- 	if (i != n) {
--		unsched = __perf_assign_events(constraints, n,
-+		unsched = __perf_assign_events(event_list, constraints, n,
- 				wmin, wmax, gpmax, assign);
- 
- 		if (unsched) {
- 			memset(assign, -1, n * sizeof(int));
--			unsched = __perf_assign_events(constraints, n,
-+			unsched = __perf_assign_events(event_list, constraints, n,
- 					wmin, wmax, gpmax, assign);
- 		}
- 	}
--- 
-1.8.3.1
+> 
+> If so, do you think if it's possible to retrieve more accurate info
+> from the field "record->type"?
+No, we just don't know and it really doesn't matter. The main reason to
+understand the source is to understand the penalty of data coming from
+the source and that it's coming from a core should be sufficient.
+
+> 
+> > > +		break;
+> > > +	/*
+> > > +	 * We don't know if this is L1, L2, or even L3 (for the cases the system
+> > > +	 * has an L3, but we do know it was a cache-2-cache transfer, so set
+> > > +	 * SNOOP_HITM
+> > > +	 */
+> > > +	case ARM_SPE_NV_LCL_CLSTR:
+> > > +	case ARM_SPE_NV_PEER_CLSTR:
+> > > +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
+> > > +		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
+> > > +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_ANY_CACHE;
+> 
+> Seems to me, we need to add attribution to indicate the difference
+> between ARM_SPE_NV_PEER_CORE and ARM_SPE_NV_LCL_CLSTR.
+I don't think we really do, see my reasoning above. 
+
+> 
+> For ARM_SPE_NV_PEER_CLSTR data source, should we set any "remote"
+> attribution as well?
+
+No, we should leave remote for data coming from another chip/socket
+which is really impactful. 
+
+> 
+> > > +		break;
+> > > +	/*
+> > > +	 * System cache is assumed to be L4, as cluster cache (if it exists)
+> > > +	 * would be L3 cache on Neoverse platforms
+> > > +	 */
+> > > +	case ARM_SPE_NV_SYS_CACHE:
+> > > +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
+> > > +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L4;
+> > > +		break;
+> > > +	/*
+> > > +	 * We don't know what level it hit in, except it came from the other
+> > > +	 * socket
+> > > +	 */
+> > > +	case ARM_SPE_NV_REMOTE:
+> > > +		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
+> > > +		data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
+> > > +		break;
+> 
+> Just curious, is it possible that 'record->source' combines multiple
+> bits?  Like we can get a data source value with:
+> 
+>   ARM_SPE_NV_REMOTE | ARM_SPE_NV_REMOTE
+
+source encodes a single value (not bits that represent flags) on Neoverse
+cores.
+
+[snip]
+> > > @@ -796,6 +868,10 @@ static int arm_spe_process_event(struct perf_session *session,
+> > >  	u64 timestamp;
+> > >  	struct arm_spe *spe = container_of(session->auxtrace,
+> > >  			struct arm_spe, auxtrace);
+> > > +	const char *cpuid = perf_env__cpuid(session->evlist->env);
+> > > +	u64 midr = strtol(cpuid, NULL, 16);
+> > > +
+> > > +	spe->midr = midr;
+> > 
+> > I think this midr setup belongs in the arm_spe_process_auxtrace_info callback instead.
+> 
+> Yeah, arm_spe_process_event() would be invoked for multiple times for
+> processing perf events.  arm_spe_process_auxtrace_info() would be a
+> good place to initialize midr.
+
+Will do.
+
+Thanks,
+Ali
 
