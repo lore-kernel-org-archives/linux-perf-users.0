@@ -2,67 +2,67 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07712C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun, 13 Mar 2022 19:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0F8C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun, 13 Mar 2022 19:19:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235448AbiCMTIc (ORCPT
+        id S234771AbiCMTUr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 13 Mar 2022 15:08:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45672 "EHLO
+        Sun, 13 Mar 2022 15:20:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234705AbiCMTIb (ORCPT
+        with ESMTP id S229518AbiCMTUq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 13 Mar 2022 15:08:31 -0400
-Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CBF5652FF;
-        Sun, 13 Mar 2022 12:07:03 -0700 (PDT)
+        Sun, 13 Mar 2022 15:20:46 -0400
+Received: from smtp-fw-9103.amazon.com (smtp-fw-9103.amazon.com [207.171.188.200])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF7F949915;
+        Sun, 13 Mar 2022 12:19:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1647198423; x=1678734423;
+  t=1647199177; x=1678735177;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=3qnpGEDwzlBqk4oSVj6XhjSrpezFHas77xLMut5hfbw=;
-  b=UfMlsu89OEVit3eW3OQB30iBfBn29f73RvExYnKjKB09S1DKfZU9SUgG
-   YTiQUsM2VL9IGe7g75GePTcvzq85/VnobMQin4p0HZb+2C8/5Lfm/lhCg
-   sPUqG7rSjtqfNTRCt6/ZI4Jwa2f251th4FIZy1G9NJFYdyIAtIOEIlqX0
-   k=;
+  bh=Ve+oXaOgu6qvGAolk5Rb1X8uZUgs41sB9uCGpnnALzQ=;
+  b=jyFmOz+n4JvzeL/caUaghqkWSnrdRQ4Gg16NIT9At6R4PHB07f0jg9yt
+   Zn66/gBj+LhVPuxqd550U7r7XmZYtr5UfVhOM3rsN0pUWieA5b2oZOF1l
+   B/nNTeKswmi093AYa1KnAa+u6N8lq9gjcR2uNgGflsnYiQEDs3ShF8F7o
+   I=;
 X-IronPort-AV: E=Sophos;i="5.90,179,1643673600"; 
-   d="scan'208";a="201917501"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-pdx-2b-718d0906.us-west-2.amazon.com) ([10.25.36.214])
-  by smtp-border-fw-9102.sea19.amazon.com with ESMTP; 13 Mar 2022 19:06:24 +0000
+   d="scan'208";a="999060961"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-pdx-2c-90419278.us-west-2.amazon.com) ([10.25.36.210])
+  by smtp-border-fw-9103.sea19.amazon.com with ESMTP; 13 Mar 2022 19:19:36 +0000
 Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-        by email-inbound-relay-pdx-2b-718d0906.us-west-2.amazon.com (Postfix) with ESMTPS id 968C63E1840;
-        Sun, 13 Mar 2022 19:06:24 +0000 (UTC)
-Received: from EX13D02UWB001.ant.amazon.com (10.43.161.240) by
+        by email-inbound-relay-pdx-2c-90419278.us-west-2.amazon.com (Postfix) with ESMTPS id 54BE041995;
+        Sun, 13 Mar 2022 19:19:36 +0000 (UTC)
+Received: from EX13D02UWB003.ant.amazon.com (10.43.161.48) by
  EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1497.28; Sun, 13 Mar 2022 19:06:24 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13D02UWB001.ant.amazon.com (10.43.161.240) with Microsoft SMTP Server (TLS)
- id 15.0.1497.32; Sun, 13 Mar 2022 19:06:23 +0000
+ id 15.0.1497.28; Sun, 13 Mar 2022 19:19:36 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
+ EX13D02UWB003.ant.amazon.com (10.43.161.48) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.32; Sun, 13 Mar 2022 19:19:35 +0000
 Received: from dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com
- (172.19.181.128) by mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP
- Server id 15.0.1497.28 via Frontend Transport; Sun, 13 Mar 2022 19:06:23
+ (172.19.181.128) by mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP
+ Server id 15.0.1497.28 via Frontend Transport; Sun, 13 Mar 2022 19:19:35
  +0000
 Received: by dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com (Postfix, from userid 5131138)
-        id 5A23C17DB; Sun, 13 Mar 2022 19:06:22 +0000 (UTC)
+        id 867CB76A; Sun, 13 Mar 2022 19:19:34 +0000 (UTC)
 From:   Ali Saidi <alisaidi@amazon.com>
 To:     <leo.yan@linaro.org>
 CC:     <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
         <alisaidi@amazon.com>, <andrew.kilroy@arm.com>,
         <benh@kernel.crashing.org>, <german.gomez@arm.com>,
-        <james.clark@arm.com>, <john.garry@huawei.com>, <jolsa@redhat.com>,
+        <james.clark@arm.com>, <john.garry@huawei.com>, <jolsa@kernel.org>,
         <kjain@linux.ibm.com>, <lihuafei1@huawei.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
         <mark.rutland@arm.com>, <mathieu.poirier@linaro.org>,
         <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
         <will@kernel.org>, <yao.jin@linux.intel.com>
-Subject: Re: [PATCH v2 1/2] perf arm-spe: Use SPE data source for neoverse cores
-Date:   Sun, 13 Mar 2022 19:06:19 +0000
-Message-ID: <20220313190619.18914-1-alisaidi@amazon.com>
+Subject: Re: [PATCH v2 2/2] perf mem: Support HITM for when mem_lvl_num is used
+Date:   Sun, 13 Mar 2022 19:19:33 +0000
+Message-ID: <20220313191933.26621-1-alisaidi@amazon.com>
 X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220313114615.GA143848@leoy-ThinkPad-X240s>
-References: <20220313114615.GA143848@leoy-ThinkPad-X240s>
+In-Reply-To: <20220313124427.GB143848@leoy-ThinkPad-X240s>
+References: <20220313124427.GB143848@leoy-ThinkPad-X240s>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -70,130 +70,88 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, 13 Mar 2022 11:47:58 +0000 Leo Yan wrote:
-> Hi Ali, German,
-> 
-> On Wed, Mar 02, 2022 at 11:59:05AM +0000, German Gomez wrote:
-> > Hi Ali,
+Hi Leo,
+
+On Sun, 13 Mar 2022 12:46:02 +0000, Leo Yan wrote:
+> On Wed, Mar 02, 2022 at 03:39:04PM +0000, German Gomez wrote:
 > > 
-> > On 21/02/2022 22:47, Ali Saidi wrote:
-> > > When synthesizing data from SPE, augment the type with source information
-> > > for Arm Neoverse cores. The field is IMPLDEF but the Neoverse cores all use
-> > > the same encoding. I can't find encoding information for any other SPE
-> > > implementations to unify their choices with Arm's thus that is left for
-> > > future work.
-[snip]
-> > >  
-> > > +static void arm_spe__synth_data_source_neoverse(const struct arm_spe_record *record,
-> > > +						union perf_mem_data_src *data_src)
-> > > +{
-> > > +	switch (record->source) {
-> > > +	case ARM_SPE_NV_L1D:
-> > > +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
+> > On 21/02/2022 22:48, Ali Saidi wrote:
+> > > Current code only support HITM statistics for last level cache (LLC)
+> > > when mem_lvl encodes the level. On existing Arm64 machines there are as
+> > > many as four levels cache and this change supports decoding l1, l2, and
+> > > llc hits from the mem_lvl_num data. Given that the mem_lvl namespace is
+> > > being deprecated take this opportunity to encode the neoverse data into
+> > > mem_lvl_num.
 > > 
-> > I understand mem_lvl is deprecated but shouldn't we add the level bits here as well for backwards compat?
+> > Since Neoverse is mentioned in the commit message, I think there should be a comment somewhere in the code as well.
+> >
 > 
-> Thanks for pointing out this.  Yeah, I think German's suggestion is
-> valid, the commit 6ae5fa61d27d ("perf/x86: Fix data source decoding
-> for Skylake") introduces new field 'mem_lvl_num', but it also keeps
-> backwards compatible for the field 'mem_lvl'.
-I thought about that, but then I'm making some assumption about how to fit
-this into the old LVL framework, which is perhaps OK (afaik there are no
-Neoverse systems with more than 3 cache levels). What stopped me was that
-perf_mem__lvl_scnprintf() does the wrong thing when both are set so I
-assumed that setting both was not the right course of action.
-
+> > > For loads that hit in a the LLC snoop filter and are fullfilled from a
+> > > higher level cache, it's not usually clear what the true level of the
+> > > cache the data came from (i.e. a transfer from a core could come from
+> > > it's L1 or L2). Instead of making an assumption of where the line came
+> > > from, add support for incrementing HITM if the source is CACHE_ANY.
+> > >
+> > > Since other architectures don't seem to populate the mem_lvl_num field
+> > > here there shouldn't be a change in functionality.
+> > >
+> > > Signed-off-by: Ali Saidi <alisaidi@amazon.com>
+> > > ---
+> > >  tools/perf/util/mem-events.c | 14 ++++++++++----
+> > >  1 file changed, 10 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+> > > index ed0ab838bcc5..6c3fd4aac7ae 100644
+> > > --- a/tools/perf/util/mem-events.c
+> > > +++ b/tools/perf/util/mem-events.c
+> > > @@ -485,6 +485,7 @@ int c2c_decode_stats(struct c2c_stats *stats, struct mem_info *mi)
+> > >  	u64 daddr  = mi->daddr.addr;
+> > >  	u64 op     = data_src->mem_op;
+> > >  	u64 lvl    = data_src->mem_lvl;
+> > > +	u64 lnum   = data_src->mem_lvl_num;
+> > >  	u64 snoop  = data_src->mem_snoop;
+> > >  	u64 lock   = data_src->mem_lock;
+> > >  	u64 blk    = data_src->mem_blk;
+> > > @@ -527,16 +528,18 @@ do {				\
+> > >  			if (lvl & P(LVL, UNC)) stats->ld_uncache++;
+> > >  			if (lvl & P(LVL, IO))  stats->ld_io++;
+> > >  			if (lvl & P(LVL, LFB)) stats->ld_fbhit++;
+> > > -			if (lvl & P(LVL, L1 )) stats->ld_l1hit++;
+> > > -			if (lvl & P(LVL, L2 )) stats->ld_l2hit++;
+> > > -			if (lvl & P(LVL, L3 )) {
+> > > +			if (lvl & P(LVL, L1) || lnum == P(LVLNUM, L1))
+> > > +				stats->ld_l1hit++;
+> > > +			if (lvl & P(LVL, L2) || lnum == P(LVLNUM, L2))
+> > > +				stats->ld_l2hit++;
 > 
-> > > +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L1;
-> > > +		break;
-> > > +	case ARM_SPE_NV_L2:
-> > > +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
-> > > +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L2;
-> > > +		break;
-> > > +	case ARM_SPE_NV_PEER_CORE:
-> > > +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
-> > > +		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
-> > > +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_ANY_CACHE;
+> It's good to split into two patches: one patch is to add statistics for
+> field 'mem_lvl_num', the second patch is to handle HITM tags.
 > 
-> For PEER_CORE data source, we don't know if it's coming from peer
-> core's L1 cache or L2 cache, right?
-We don't.
-
+> > > +			if (lvl & P(LVL, L3) || lnum == P(LVLNUM, L4)) {
 > 
-> If so, do you think if it's possible to retrieve more accurate info
-> from the field "record->type"?
-No, we just don't know and it really doesn't matter. The main reason to
-understand the source is to understand the penalty of data coming from
-the source and that it's coming from a core should be sufficient.
-
+> It's a bit weird that we take either PERF_MEM_LVL_L3 or
+> PERF_MEM_LVLNUM_L4 as the last level local cache in the same condition
+> checking.
 > 
-> > > +		break;
-> > > +	/*
-> > > +	 * We don't know if this is L1, L2, or even L3 (for the cases the system
-> > > +	 * has an L3, but we do know it was a cache-2-cache transfer, so set
-> > > +	 * SNOOP_HITM
-> > > +	 */
-> > > +	case ARM_SPE_NV_LCL_CLSTR:
-> > > +	case ARM_SPE_NV_PEER_CLSTR:
-> > > +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
-> > > +		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
-> > > +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_ANY_CACHE;
-> 
-> Seems to me, we need to add attribution to indicate the difference
-> between ARM_SPE_NV_PEER_CORE and ARM_SPE_NV_LCL_CLSTR.
-I don't think we really do, see my reasoning above. 
-
-> 
-> For ARM_SPE_NV_PEER_CLSTR data source, should we set any "remote"
-> attribution as well?
-
-No, we should leave remote for data coming from another chip/socket
-which is really impactful. 
-
-> 
-> > > +		break;
-> > > +	/*
-> > > +	 * System cache is assumed to be L4, as cluster cache (if it exists)
-> > > +	 * would be L3 cache on Neoverse platforms
-> > > +	 */
-> > > +	case ARM_SPE_NV_SYS_CACHE:
-> > > +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
-> > > +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L4;
-> > > +		break;
-> > > +	/*
-> > > +	 * We don't know what level it hit in, except it came from the other
-> > > +	 * socket
-> > > +	 */
-> > > +	case ARM_SPE_NV_REMOTE:
-> > > +		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
-> > > +		data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
-> > > +		break;
-> 
-> Just curious, is it possible that 'record->source' combines multiple
-> bits?  Like we can get a data source value with:
-> 
->   ARM_SPE_NV_REMOTE | ARM_SPE_NV_REMOTE
-
-source encodes a single value (not bits that represent flags) on Neoverse
-cores.
-
-[snip]
-> > > @@ -796,6 +868,10 @@ static int arm_spe_process_event(struct perf_session *session,
-> > >  	u64 timestamp;
-> > >  	struct arm_spe *spe = container_of(session->auxtrace,
-> > >  			struct arm_spe, auxtrace);
-> > > +	const char *cpuid = perf_env__cpuid(session->evlist->env);
-> > > +	u64 midr = strtol(cpuid, NULL, 16);
-> > > +
-> > > +	spe->midr = midr;
+> > According to a comment in the previous patch, using L4 is specific to Neoverse, right?
 > > 
-> > I think this midr setup belongs in the arm_spe_process_auxtrace_info callback instead.
+> > Maybe we need to distinguish the Neoverse case from the generic one here as well
+> > 
+> > if (is_neoverse)
+> > // treat L4 as llc
+> > else
+> > // treat L3 as llc
 > 
-> Yeah, arm_spe_process_event() would be invoked for multiple times for
-> processing perf events.  arm_spe_process_auxtrace_info() would be a
-> good place to initialize midr.
+> I personally think it's not good idea to distinguish platforms in the decoding code.
 
-Will do.
+I agree here. The more we talk about this, the more I'm wondering if we're
+spending too much code solving a problem that doesn't exist. I know of no
+Neoverse systems that actually have 4 cache levels, they all actually have three
+even though it's technically possible to have four.  I have some doubts anyone
+will actually build four levels of cache and perhaps the most prudent path here
+is to assume only three levels (and adjust the previous patch) until someone 
+actually produces a system with four levels instead of a lot of code that is
+never actually exercised?
 
 Thanks,
 Ali
