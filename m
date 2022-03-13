@@ -2,217 +2,332 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0324C433F5
-	for <linux-perf-users@archiver.kernel.org>; Sun, 13 Mar 2022 12:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F7BC433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun, 13 Mar 2022 16:51:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230437AbiCMMpp (ORCPT
+        id S234531AbiCMQwT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 13 Mar 2022 08:45:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54326 "EHLO
+        Sun, 13 Mar 2022 12:52:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbiCMMpo (ORCPT
+        with ESMTP id S234725AbiCMQwT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 13 Mar 2022 08:45:44 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2781333E3A
-        for <linux-perf-users@vger.kernel.org>; Sun, 13 Mar 2022 05:44:36 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id dr20so28227738ejc.6
-        for <linux-perf-users@vger.kernel.org>; Sun, 13 Mar 2022 05:44:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=EJ1tBx1dhbkFDPqhVx95CHpZt6g0rmeL6lGzXpgultw=;
-        b=zFM9BbgWlCI8Z3Ni6/YkVN/Uuvp03ahg6Fs1xdaBLu4raOaXbF64NdAkjc7h0NZUVa
-         QcNR2GSSEiZvjX0PvIwOeAv8dCfWRuTQVcCF9p4zFxfQ/tQGMtTVurdkW0hP4562Kodn
-         NO+C6OaHvmQ70LIqfCjKlmVwpvIyy+bPY5CIzlw5vyRHNPlRrpXq3NtIaDQTfDNt4IqH
-         Zm6fT/RHmi//0HlUI1PL3ZMB8acBKyADsdDCX+FcyQhqQayXN9LhifGsaIsNrDXETKEq
-         9acm9UbFGTnXgHaMhiZDkVfcmo4Nq3R9lNJFBSynDHF8w1CsG0rK/DegKCZqPYOEk2da
-         EDHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=EJ1tBx1dhbkFDPqhVx95CHpZt6g0rmeL6lGzXpgultw=;
-        b=JolS+RoFzChbJC60sKHsWwaW2iZGuWtCf5na/T4WpuTcYb4M99oUSpwnzIhnP2nOaZ
-         0dXnDUvyg6jY1WlpOPzaDC+KckpUFJ4s3SLZ8fA8tYgg8W9j5eweIybX+w/OpdPiTXtj
-         zcj5d1aqrf4EPstEJKzFOGM/hKbJUD5nvsSzDPhcG0urh1T7kRKh/IrV8pUbqOf40ke4
-         qhgjqlHFDp4bs8VuShPYUiiQLxAunBBo+Me6NYQZtMpR2In5RHSRdt8YkWUAAkiKHwkd
-         xq8AQbjwHzw8SU6R0t4AhrFyro6E6Z5z0d9RS5SEKhrmKZafZxLD1+swAwGwHl3VX91z
-         p/bA==
-X-Gm-Message-State: AOAM532ILi7aIdnRqPkDPaIVFfbELcaRwokj+LIbyFuHt0eiGCUU/l7L
-        3H4I697dfX+OZl7pMfE57RiV5Q==
-X-Google-Smtp-Source: ABdhPJwWwEQ/BJrrSXJsPZOH2KWN8TEOzijKIe5tSjyPVPvwusH61MygNa6ACyUHmatt6h24pnliaQ==
-X-Received: by 2002:a17:906:53c7:b0:6ce:6f32:ce53 with SMTP id p7-20020a17090653c700b006ce6f32ce53mr15441881ejo.352.1647175474370;
-        Sun, 13 Mar 2022 05:44:34 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([104.245.96.34])
-        by smtp.gmail.com with ESMTPSA id z3-20020a056402274300b004169771bd91sm6299081edd.39.2022.03.13.05.44.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Mar 2022 05:44:33 -0700 (PDT)
-Date:   Sun, 13 Mar 2022 20:44:27 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     German Gomez <german.gomez@arm.com>
-Cc:     Ali Saidi <alisaidi@amazon.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, benh@kernel.crashing.org,
-        Peter Zijlstra <peterz@infradead.org>,
+        Sun, 13 Mar 2022 12:52:19 -0400
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F02B985A7;
+        Sun, 13 Mar 2022 09:51:08 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R381e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0V70i25e_1647190256;
+Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0V70i25e_1647190256)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 14 Mar 2022 00:51:04 +0800
+From:   Wen Yang <simon.wy@alibaba-inc.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Wen Yang <simon.wy@alibaba-inc.com>,
+        Stephane Eranian <eranian@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        James Clark <james.clark@arm.com>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Li Huafei <lihuafei1@huawei.com>
-Subject: Re: [PATCH v2 2/2] perf mem: Support HITM for when mem_lvl_num is
- used
-Message-ID: <20220313124427.GB143848@leoy-ThinkPad-X240s>
-References: <20220221224807.18172-1-alisaidi@amazon.com>
- <20220221224807.18172-2-alisaidi@amazon.com>
- <d5f9bd40-1f32-9847-33b1-fe7304acf29b@arm.com>
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        Wen Yang <wenyang@linux.alibaba.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/3] perf/x86: extract code to assign perf events for both core and uncore
+Date:   Mon, 14 Mar 2022 00:50:45 +0800
+Message-Id: <20220313165047.77391-1-simon.wy@alibaba-inc.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d5f9bd40-1f32-9847-33b1-fe7304acf29b@arm.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Mar 02, 2022 at 03:39:04PM +0000, German Gomez wrote:
-> 
-> On 21/02/2022 22:48, Ali Saidi wrote:
-> > Current code only support HITM statistics for last level cache (LLC)
-> > when mem_lvl encodes the level. On existing Arm64 machines there are as
-> > many as four levels cache and this change supports decoding l1, l2, and
-> > llc hits from the mem_lvl_num data. Given that the mem_lvl namespace is
-> > being deprecated take this opportunity to encode the neoverse data into
-> > mem_lvl_num.
-> 
-> Since Neoverse is mentioned in the commit message, I think there should be a comment somewhere in the code as well.
->
+Following two patterns in x86 perf code are used in multiple places where
+similar code is duplicated:
+- fast path, try to reuse previous register
+- slow path, assign a counter for each event
 
-> > For loads that hit in a the LLC snoop filter and are fullfilled from a
-> > higher level cache, it's not usually clear what the true level of the
-> > cache the data came from (i.e. a transfer from a core could come from
-> > it's L1 or L2). Instead of making an assumption of where the line came
-> > from, add support for incrementing HITM if the source is CACHE_ANY.
-> >
-> > Since other architectures don't seem to populate the mem_lvl_num field
-> > here there shouldn't be a change in functionality.
-> >
-> > Signed-off-by: Ali Saidi <alisaidi@amazon.com>
-> > ---
-> >  tools/perf/util/mem-events.c | 14 ++++++++++----
-> >  1 file changed, 10 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-> > index ed0ab838bcc5..6c3fd4aac7ae 100644
-> > --- a/tools/perf/util/mem-events.c
-> > +++ b/tools/perf/util/mem-events.c
-> > @@ -485,6 +485,7 @@ int c2c_decode_stats(struct c2c_stats *stats, struct mem_info *mi)
-> >  	u64 daddr  = mi->daddr.addr;
-> >  	u64 op     = data_src->mem_op;
-> >  	u64 lvl    = data_src->mem_lvl;
-> > +	u64 lnum   = data_src->mem_lvl_num;
-> >  	u64 snoop  = data_src->mem_snoop;
-> >  	u64 lock   = data_src->mem_lock;
-> >  	u64 blk    = data_src->mem_blk;
-> > @@ -527,16 +528,18 @@ do {				\
-> >  			if (lvl & P(LVL, UNC)) stats->ld_uncache++;
-> >  			if (lvl & P(LVL, IO))  stats->ld_io++;
-> >  			if (lvl & P(LVL, LFB)) stats->ld_fbhit++;
-> > -			if (lvl & P(LVL, L1 )) stats->ld_l1hit++;
-> > -			if (lvl & P(LVL, L2 )) stats->ld_l2hit++;
-> > -			if (lvl & P(LVL, L3 )) {
-> > +			if (lvl & P(LVL, L1) || lnum == P(LVLNUM, L1))
-> > +				stats->ld_l1hit++;
-> > +			if (lvl & P(LVL, L2) || lnum == P(LVLNUM, L2))
-> > +				stats->ld_l2hit++;
+In order to improve code quality and prepare for following patch series
+that also uses described patterns, extract the codes to perf_assign_events.
 
-It's good to split into two patches: one patch is to add statistics for
-field 'mem_lvl_num', the second patch is to handle HITM tags.
+This commit doesn't change functionality.
 
-> > +			if (lvl & P(LVL, L3) || lnum == P(LVLNUM, L4)) {
+Signed-off-by: Wen Yang <simon.wy@alibaba-inc.com>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org
+Cc: Wen Yang <wenyang@linux.alibaba.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ arch/x86/events/core.c         | 141 ++++++++++++++++++++++-------------------
+ arch/x86/events/intel/uncore.c |  31 +--------
+ arch/x86/events/perf_event.h   |   6 +-
+ 3 files changed, 82 insertions(+), 96 deletions(-)
 
-It's a bit weird that we take either PERF_MEM_LVL_L3 or
-PERF_MEM_LVLNUM_L4 as the last level local cache in the same condition
-checking.
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index e686c5e..b14fb1b 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -950,10 +950,7 @@ static bool perf_sched_next_event(struct perf_sched *sched)
+ 	return true;
+ }
+ 
+-/*
+- * Assign a counter for each event.
+- */
+-int perf_assign_events(struct event_constraint **constraints, int n,
++static int __perf_assign_events(struct event_constraint **constraints, int n,
+ 			int wmin, int wmax, int gpmax, int *assign)
+ {
+ 	struct perf_sched sched;
+@@ -969,16 +966,66 @@ int perf_assign_events(struct event_constraint **constraints, int n,
+ 
+ 	return sched.state.unassigned;
+ }
++
++/*
++ * Assign a counter for each event.
++ */
++int perf_assign_events(struct perf_event **event_list,
++		struct event_constraint **constraints, int n,
++		int wmin, int wmax, int gpmax, int *assign)
++{
++	struct event_constraint *c;
++	struct hw_perf_event *hwc;
++	u64 used_mask = 0;
++	int unsched = 0;
++	int i;
++
++	/*
++	 * fastpath, try to reuse previous register
++	 */
++	for (i = 0; i < n; i++) {
++		u64 mask;
++
++		hwc = &event_list[i]->hw;
++		c = constraints[i];
++
++		/* never assigned */
++		if (hwc->idx == -1)
++			break;
++
++		/* constraint still honored */
++		if (!test_bit(hwc->idx, c->idxmsk))
++			break;
++
++		mask = BIT_ULL(hwc->idx);
++		if (is_counter_pair(hwc))
++			mask |= mask << 1;
++
++		/* not already used */
++		if (used_mask & mask)
++			break;
++
++		used_mask |= mask;
++
++		if (assign)
++			assign[i] = hwc->idx;
++	}
++
++	/* slow path */
++	if (i != n)
++		unsched = __perf_assign_events(constraints, n,
++				wmin, wmax, gpmax, assign);
++
++	return unsched;
++}
+ EXPORT_SYMBOL_GPL(perf_assign_events);
+ 
+ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
+ {
+ 	int num_counters = hybrid(cpuc->pmu, num_counters);
+-	struct event_constraint *c;
+-	struct perf_event *e;
+ 	int n0, i, wmin, wmax, unsched = 0;
+-	struct hw_perf_event *hwc;
+-	u64 used_mask = 0;
++	struct event_constraint *c;
++	int gpmax = num_counters;
+ 
+ 	/*
+ 	 * Compute the number of events already present; see x86_pmu_add(),
+@@ -1017,66 +1064,30 @@ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
+ 	}
+ 
+ 	/*
+-	 * fastpath, try to reuse previous register
++	 * Do not allow scheduling of more than half the available
++	 * generic counters.
++	 *
++	 * This helps avoid counter starvation of sibling thread by
++	 * ensuring at most half the counters cannot be in exclusive
++	 * mode. There is no designated counters for the limits. Any
++	 * N/2 counters can be used. This helps with events with
++	 * specific counter constraints.
+ 	 */
+-	for (i = 0; i < n; i++) {
+-		u64 mask;
+-
+-		hwc = &cpuc->event_list[i]->hw;
+-		c = cpuc->event_constraint[i];
+-
+-		/* never assigned */
+-		if (hwc->idx == -1)
+-			break;
+-
+-		/* constraint still honored */
+-		if (!test_bit(hwc->idx, c->idxmsk))
+-			break;
+-
+-		mask = BIT_ULL(hwc->idx);
+-		if (is_counter_pair(hwc))
+-			mask |= mask << 1;
+-
+-		/* not already used */
+-		if (used_mask & mask)
+-			break;
++	if (is_ht_workaround_enabled() && !cpuc->is_fake &&
++			READ_ONCE(cpuc->excl_cntrs->exclusive_present))
++		gpmax /= 2;
+ 
+-		used_mask |= mask;
+-
+-		if (assign)
+-			assign[i] = hwc->idx;
++	/*
++	 * Reduce the amount of available counters to allow fitting
++	 * the extra Merge events needed by large increment events.
++	 */
++	if (x86_pmu.flags & PMU_FL_PAIR) {
++		gpmax = num_counters - cpuc->n_pair;
++		WARN_ON(gpmax <= 0);
+ 	}
+ 
+-	/* slow path */
+-	if (i != n) {
+-		int gpmax = num_counters;
+-
+-		/*
+-		 * Do not allow scheduling of more than half the available
+-		 * generic counters.
+-		 *
+-		 * This helps avoid counter starvation of sibling thread by
+-		 * ensuring at most half the counters cannot be in exclusive
+-		 * mode. There is no designated counters for the limits. Any
+-		 * N/2 counters can be used. This helps with events with
+-		 * specific counter constraints.
+-		 */
+-		if (is_ht_workaround_enabled() && !cpuc->is_fake &&
+-		    READ_ONCE(cpuc->excl_cntrs->exclusive_present))
+-			gpmax /= 2;
+-
+-		/*
+-		 * Reduce the amount of available counters to allow fitting
+-		 * the extra Merge events needed by large increment events.
+-		 */
+-		if (x86_pmu.flags & PMU_FL_PAIR) {
+-			gpmax = num_counters - cpuc->n_pair;
+-			WARN_ON(gpmax <= 0);
+-		}
+-
+-		unsched = perf_assign_events(cpuc->event_constraint, n, wmin,
+-					     wmax, gpmax, assign);
+-	}
++	unsched = perf_assign_events(cpuc->event_list, cpuc->event_constraint,
++			n, wmin, wmax, gpmax, assign);
+ 
+ 	/*
+ 	 * In case of success (unsched = 0), mark events as committed,
+@@ -1093,7 +1104,7 @@ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
+ 			static_call_cond(x86_pmu_commit_scheduling)(cpuc, i, assign[i]);
+ 	} else {
+ 		for (i = n0; i < n; i++) {
+-			e = cpuc->event_list[i];
++			struct perf_event *e = cpuc->event_list[i];
+ 
+ 			/*
+ 			 * release events that failed scheduling
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index e497da9..101358a 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -442,12 +442,8 @@ static void uncore_put_event_constraint(struct intel_uncore_box *box,
+ 
+ static int uncore_assign_events(struct intel_uncore_box *box, int assign[], int n)
+ {
+-	unsigned long used_mask[BITS_TO_LONGS(UNCORE_PMC_IDX_MAX)];
+ 	struct event_constraint *c;
+ 	int i, wmin, wmax, ret = 0;
+-	struct hw_perf_event *hwc;
+-
+-	bitmap_zero(used_mask, UNCORE_PMC_IDX_MAX);
+ 
+ 	for (i = 0, wmin = UNCORE_PMC_IDX_MAX, wmax = 0; i < n; i++) {
+ 		c = uncore_get_event_constraint(box, box->event_list[i]);
+@@ -456,31 +452,8 @@ static int uncore_assign_events(struct intel_uncore_box *box, int assign[], int
+ 		wmax = max(wmax, c->weight);
+ 	}
+ 
+-	/* fastpath, try to reuse previous register */
+-	for (i = 0; i < n; i++) {
+-		hwc = &box->event_list[i]->hw;
+-		c = box->event_constraint[i];
+-
+-		/* never assigned */
+-		if (hwc->idx == -1)
+-			break;
+-
+-		/* constraint still honored */
+-		if (!test_bit(hwc->idx, c->idxmsk))
+-			break;
+-
+-		/* not already used */
+-		if (test_bit(hwc->idx, used_mask))
+-			break;
+-
+-		__set_bit(hwc->idx, used_mask);
+-		if (assign)
+-			assign[i] = hwc->idx;
+-	}
+-	/* slow path */
+-	if (i != n)
+-		ret = perf_assign_events(box->event_constraint, n,
+-					 wmin, wmax, n, assign);
++	ret = perf_assign_events(box->event_list,
++			box->event_constraint, n, wmin, wmax, n, assign);
+ 
+ 	if (!assign || ret) {
+ 		for (i = 0; i < n; i++)
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index 150261d..f1acd1d 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -1130,8 +1130,10 @@ static inline void __x86_pmu_enable_event(struct hw_perf_event *hwc,
+ 
+ void x86_pmu_enable_all(int added);
+ 
+-int perf_assign_events(struct event_constraint **constraints, int n,
+-			int wmin, int wmax, int gpmax, int *assign);
++int perf_assign_events(struct perf_event **event_list,
++		struct event_constraint **constraints, int n,
++		int wmin, int wmax, int gpmax, int *assign);
++
+ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign);
+ 
+ void x86_pmu_stop(struct perf_event *event, int flags);
+-- 
+1.8.3.1
 
-> According to a comment in the previous patch, using L4 is specific to Neoverse, right?
-> 
-> Maybe we need to distinguish the Neoverse case from the generic one here as well
-> 
-> if (is_neoverse)
-> // treat L4 as llc
-> else
-> // treat L3 as llc
-
-I personally think it's not good idea to distinguish platforms in the decoding code.
-
-To make more more clear statistics, we can firstly increment hit values
-for every level cache respectively;  so we can consider to adde two
-extra statistics items 'stats->ld_l3hit' and 'stats->ld_l4hit'.
-
-        if (lvl & P(LVL, L3) || lnum == P(LVLNUM, L3))
-                stats->ld_l3hit++;
-        if (lnum == P(LVLNUM, L4))
-                stats->ld_l4hit++;
-
-> >  				if (snoop & P(SNOOP, HITM))
-> >  					HITM_INC(lcl_hitm);
-> >  				else
-> >  					stats->ld_llchit++;
-
-For the statistics of 'ld_llchit' and 'lcl_hitm', please see below comment.
-
-> >  			}
-> >  
-> > -			if (lvl & P(LVL, LOC_RAM)) {
-> > +			if (lvl & P(LVL, LOC_RAM) || lnum == P(LVLNUM, RAM)) {
-> >  				stats->lcl_dram++;
-> >  				if (snoop & P(SNOOP, HIT))
-> >  					stats->ld_shared++;
-> > @@ -564,6 +567,9 @@ do {				\
-> >  				HITM_INC(rmt_hitm);
-> >  		}
-> >  
-> > +		if (lnum == P(LVLNUM, ANY_CACHE) && snoop & P(SNOOP, HITM))
-> > +			HITM_INC(lcl_hitm);
-> > +
-
-The condition checking of "lnum == P(LVLNUM, ANY_CACHE)" is a bit
-suspecious and it might be fragile for support multiple archs.
-
-So I am just wandering if it's possible that we add a new field
-'llc_level' in the structure 'mem_info', we can initialize this field
-based on different memory hardware events (e.g. Intel mem event,
-Arm SPE, etc).  During the decoding phase, the local last level cache
-is dynamically set to 'mem_info:: llc_level', we can base on it to
-increment 'ld_llchit' and 'lcl_hitm', the code is like below:
-
-                 if ((lvl & P(LVL, REM_CCE1)) ||
-                     (lvl & P(LVL, REM_CCE2)) ||
-                      mrem) {
-                         if (snoop & P(SNOOP, HIT))
-                                 stats->rmt_hit++;
-                         else if (snoop & P(SNOOP, HITM))
-                                 HITM_INC(rmt_hitm);
-+               } else {
-+                       if ((snoop & P(SNOOP, HIT)) && (lnum == mi->llc_level))
-+                               stats->ld_llchit++;
-+                       else if (snoop & P(SNOOP, HITM))
-+                               HITM_INC(lcl_hitm);
-                 }
-
-Thanks,
-Leo
-
-> >  		if ((lvl & P(LVL, MISS)))
-> >  			stats->ld_miss++;
-> >  
