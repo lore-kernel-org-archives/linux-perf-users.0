@@ -2,66 +2,50 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF36C43217
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Mar 2022 12:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B05C4167B
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Mar 2022 12:47:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231933AbiCNMsy (ORCPT
+        id S232276AbiCNMsz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Mar 2022 08:48:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56410 "EHLO
+        Mon, 14 Mar 2022 08:48:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238520AbiCNMr5 (ORCPT
+        with ESMTP id S237023AbiCNMry (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Mar 2022 08:47:57 -0400
+        Mon, 14 Mar 2022 08:47:54 -0400
+X-Greylist: delayed 1450 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 14 Mar 2022 05:41:42 PDT
 Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBCBD387A8;
-        Mon, 14 Mar 2022 05:41:44 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 539BB387B2
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Mar 2022 05:41:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=inria.fr; s=dc;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=41PUcU9tzULCiIgb8Uibh/5DuRgn44vcqHlit9be1ys=;
-  b=da5ZDADTYjfUb4CkZvv1ifI5i+2sUHWvJw+dkr6l96rFI9+3qCoi3gnv
-   q0ycGdD5ccrm59796HzJuglqTi/Zn7sM07eq2eqJ7FQY8P7GtUxL24J6z
-   5W/zcd3/E6fo/TuVnTzoYm6lik0f+KcMTza69NkDCls6kpW1/h8PdxP5f
-   k=;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ydan4DcFWSqbAVwutC+rrcavDBQ1Llz9s3pxcPtxROk=;
+  b=NVZvyqGzeDgz6fVAat5ruw+l13ThAvGEZes/BTGBhOmDh6Na4lMuZcvY
+   vN7nHEqhzJl1s6x6G4HwpeV1DKXCJEyvct7hxj4hRkL0bEJEsJvugAb/q
+   zDmyxHqHHACtbsYT/jaIfCC4PBNDQG9nGYf6KIhQVGQhiShgqHbeqhDuK
+   o=;
 Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=Julia.Lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
 X-IronPort-AV: E=Sophos;i="5.90,180,1643670000"; 
-   d="scan'208";a="25997332"
+   d="scan'208";a="25997364"
 Received: from i80.paris.inria.fr (HELO i80.paris.inria.fr.) ([128.93.90.48])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2022 12:53:59 +0100
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2022 12:54:00 +0100
 From:   Julia Lawall <Julia.Lawall@inria.fr>
-To:     linux-can@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-sunxi@lists.linux.dev,
-        linux-spi@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-usb@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-staging@lists.linux.dev, platform-driver-x86@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        linux-leds@vger.kernel.org, Shayne Chen <shayne.chen@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-clk@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-rdma@vger.kernel.org,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        linux-s390@vger.kernel.org,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        linux-power@fi.rohmeurope.com, Mark Rutland <mark.rutland@arm.com>,
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     kernel-janitors@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH 00/30] fix typos in comments
-Date:   Mon, 14 Mar 2022 12:53:24 +0100
-Message-Id: <20220314115354.144023-1-Julia.Lawall@inria.fr>
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 30/30] perf/core: fix typos in comments
+Date:   Mon, 14 Mar 2022 12:53:54 +0100
+Message-Id: <20220314115354.144023-31-Julia.Lawall@inria.fr>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20220314115354.144023-1-Julia.Lawall@inria.fr>
+References: <20220314115354.144023-1-Julia.Lawall@inria.fr>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -71,36 +55,23 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 Various spelling mistakes in comments.
 Detected with the help of Coccinelle.
 
----
+Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
 
- drivers/base/devres.c                               |    4 ++--
- drivers/clk/qcom/gcc-sm6125.c                       |    2 +-
- drivers/clk/ti/clkctrl.c                            |    2 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c              |    4 ++--
- drivers/gpu/drm/amd/display/dc/bios/command_table.c |    6 +++---
- drivers/gpu/drm/amd/pm/amdgpu_pm.c                  |    2 +-
- drivers/gpu/drm/bridge/analogix/analogix_dp_core.c  |    4 ++--
- drivers/gpu/drm/sti/sti_gdp.c                       |    2 +-
- drivers/infiniband/hw/qib/qib_iba7220.c             |    4 ++--
- drivers/leds/leds-pca963x.c                         |    2 +-
- drivers/media/i2c/ov5695.c                          |    2 +-
- drivers/mfd/rohm-bd9576.c                           |    2 +-
- drivers/mtd/ubi/block.c                             |    2 +-
- drivers/net/can/usb/ucan.c                          |    4 ++--
- drivers/net/ethernet/packetengines/yellowfin.c      |    2 +-
- drivers/net/wireless/ath/ath6kl/htc_mbox.c          |    2 +-
- drivers/net/wireless/cisco/airo.c                   |    2 +-
- drivers/net/wireless/mediatek/mt76/mt7915/init.c    |    2 +-
- drivers/net/wireless/realtek/rtlwifi/rtl8821ae/dm.c |    6 +++---
- drivers/platform/x86/uv_sysfs.c                     |    2 +-
- drivers/s390/crypto/pkey_api.c                      |    2 +-
- drivers/scsi/aic7xxx/aicasm/aicasm.c                |    2 +-
- drivers/scsi/elx/libefc_sli/sli4.c                  |    2 +-
- drivers/scsi/lpfc/lpfc_mbox.c                       |    2 +-
- drivers/scsi/qla2xxx/qla_gs.c                       |    2 +-
- drivers/spi/spi-sun4i.c                             |    2 +-
- drivers/staging/rtl8723bs/core/rtw_mlme.c           |    2 +-
- drivers/usb/gadget/udc/snps_udc_core.c              |    2 +-
- fs/kernfs/file.c                                    |    2 +-
- kernel/events/core.c                                |    2 +-
- 30 files changed, 39 insertions(+), 39 deletions(-)
+---
+ kernel/events/core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index cfde994ce61c..25fcd4cca0d7 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -872,7 +872,7 @@ static void perf_cgroup_switch(struct task_struct *task, int mode)
+ 			 * event_filter_match() to not have to pass
+ 			 * task around
+ 			 * we pass the cpuctx->ctx to perf_cgroup_from_task()
+-			 * because cgorup events are only per-cpu
++			 * because cgroup events are only per-cpu
+ 			 */
+ 			cpuctx->cgrp = perf_cgroup_from_task(task,
+ 							     &cpuctx->ctx);
+
