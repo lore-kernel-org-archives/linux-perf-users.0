@@ -2,76 +2,115 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B05C4167B
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Mar 2022 12:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0220EC433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Mar 2022 15:15:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232276AbiCNMsz (ORCPT
+        id S242487AbiCNPQ5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Mar 2022 08:48:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53936 "EHLO
+        Mon, 14 Mar 2022 11:16:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237023AbiCNMry (ORCPT
+        with ESMTP id S242486AbiCNPQ5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Mar 2022 08:47:54 -0400
-X-Greylist: delayed 1450 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 14 Mar 2022 05:41:42 PDT
-Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 539BB387B2
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Mar 2022 05:41:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ydan4DcFWSqbAVwutC+rrcavDBQ1Llz9s3pxcPtxROk=;
-  b=NVZvyqGzeDgz6fVAat5ruw+l13ThAvGEZes/BTGBhOmDh6Na4lMuZcvY
-   vN7nHEqhzJl1s6x6G4HwpeV1DKXCJEyvct7hxj4hRkL0bEJEsJvugAb/q
-   zDmyxHqHHACtbsYT/jaIfCC4PBNDQG9nGYf6KIhQVGQhiShgqHbeqhDuK
-   o=;
-Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=Julia.Lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="5.90,180,1643670000"; 
-   d="scan'208";a="25997364"
-Received: from i80.paris.inria.fr (HELO i80.paris.inria.fr.) ([128.93.90.48])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2022 12:54:00 +0100
-From:   Julia Lawall <Julia.Lawall@inria.fr>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     kernel-janitors@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mon, 14 Mar 2022 11:16:57 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AF836339;
+        Mon, 14 Mar 2022 08:15:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1647270947; x=1678806947;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=zJF7Tq907/2GmUuouofC6Cceo1PnrDKm7Qn57CMZ3nU=;
+  b=leP+R9wUgRFLVzYM/crJ6eVqjyv7Dm9/UiHSVRBx/jP6WgrWMYtoKhok
+   euCUUTxVqWOvH9LDihmmXa86HaomQf5OhVVyIN1+olV+dJH8DYMp+G3H5
+   coFZo6FiJYwuRVCH/6CUEhPsKRRz6e67L+u0ok5G67NLsp4nTmnyTiWvX
+   Flo0WodrWZFqdYTqwuZJV8CXHkRK8liDlRsVSnKKYjGCVpZ5qat28DA94
+   VOidIGn5LWa/hH54PinRei3CFLqgkKRhEV0Syw7m8UiTX+awsEuD3e7Q4
+   4lALcGVRV8LxYH8b3MxcAHzCxiXZj4JXC+Fcy6KLhUQEdYLJgXkmTsDw0
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10285"; a="342480556"
+X-IronPort-AV: E=Sophos;i="5.90,181,1643702400"; 
+   d="scan'208";a="342480556"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2022 08:15:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,181,1643702400"; 
+   d="scan'208";a="612917286"
+Received: from lkp-server02.sh.intel.com (HELO 89b41b6ae01c) ([10.239.97.151])
+  by fmsmga004.fm.intel.com with ESMTP; 14 Mar 2022 08:15:43 -0700
+Received: from kbuild by 89b41b6ae01c with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1nTmQA-0009xc-No; Mon, 14 Mar 2022 15:15:42 +0000
+Date:   Mon, 14 Mar 2022 23:15:34 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        peterz@infradead.org, acme@kernel.org
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 30/30] perf/core: fix typos in comments
-Date:   Mon, 14 Mar 2022 12:53:54 +0100
-Message-Id: <20220314115354.144023-31-Julia.Lawall@inria.fr>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20220314115354.144023-1-Julia.Lawall@inria.fr>
-References: <20220314115354.144023-1-Julia.Lawall@inria.fr>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH V3 05/10] perf: Add PERF_BR_NEW_ARCH_[N] map for BRBE on
+ arm64 platform
+Message-ID: <202203142344.tb7inz6j-lkp@intel.com>
+References: <20220314055857.125421-6-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220314055857.125421-6-anshuman.khandual@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Various spelling mistakes in comments.
-Detected with the help of Coccinelle.
+Hi Anshuman,
 
-Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+Thank you for the patch! Yet something to improve:
+
+[auto build test ERROR on linus/master]
+[also build test ERROR on v5.17-rc8]
+[cannot apply to tip/perf/core tip/master linux/master next-20220310]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
+
+url:    https://github.com/0day-ci/linux/commits/Anshuman-Khandual/perf-Expand-perf_branch_entry/20220314-140231
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 09688c0166e76ce2fb85e86b9d99be8b0084cdf9
+config: x86_64-randconfig-a011-20220314 (https://download.01.org/0day-ci/archive/20220314/202203142344.tb7inz6j-lkp@intel.com/config)
+compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project 3e4950d7fa78ac83f33bbf1658e2f49a73719236)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/0day-ci/linux/commit/03ab85fbfe308184a6e9ad9039338f722204f2fd
+        git remote add linux-review https://github.com/0day-ci/linux
+        git fetch --no-tags linux-review Anshuman-Khandual/perf-Expand-perf_branch_entry/20220314-140231
+        git checkout 03ab85fbfe308184a6e9ad9039338f722204f2fd
+        # save the config file to linux build tree
+        mkdir build_dir
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 prepare
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+>> error: include/uapi/linux/perf_event.h: leak CONFIG_ARM64 to user-space
+   make[2]: *** [scripts/Makefile.headersinst:63: usr/include/linux/perf_event.h] Error 1
+   make[2]: Target '__headers' not remade because of errors.
+   make[1]: *** [Makefile:1277: headers] Error 2
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:219: __sub-make] Error 2
+   make: Target 'prepare' not remade because of errors.
 
 ---
- kernel/events/core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index cfde994ce61c..25fcd4cca0d7 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -872,7 +872,7 @@ static void perf_cgroup_switch(struct task_struct *task, int mode)
- 			 * event_filter_match() to not have to pass
- 			 * task around
- 			 * we pass the cpuctx->ctx to perf_cgroup_from_task()
--			 * because cgorup events are only per-cpu
-+			 * because cgroup events are only per-cpu
- 			 */
- 			cpuctx->cgrp = perf_cgroup_from_task(task,
- 							     &cpuctx->ctx);
-
+0-DAY CI Kernel Test Service
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
