@@ -2,134 +2,199 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C99E5C4167E
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Mar 2022 20:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E5DC433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Mar 2022 22:12:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245028AbiCNUbY (ORCPT
+        id S238530AbiCNWNo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Mar 2022 16:31:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38660 "EHLO
+        Mon, 14 Mar 2022 18:13:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239124AbiCNUbX (ORCPT
+        with ESMTP id S237433AbiCNWNn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Mar 2022 16:31:23 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8449739812;
-        Mon, 14 Mar 2022 13:30:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E0BE9611E3;
-        Mon, 14 Mar 2022 20:30:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 395EAC340EE;
-        Mon, 14 Mar 2022 20:30:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1647289811;
-        bh=5slkzW/wYFCAJdfNlCFTBba0nZcr16X7BRShsWGs8e4=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=leggAOjDGLqu5Y16iRzmCapGpn9MgtEwT4CrU4eyl+t2E31oSfK39qKDLg3AehmbU
-         40wH8plobcUAZegoJFqfw9/xkqsBBPmZP9vZVSFOcI/Xp23ZGUf+pgmWTjQguJdafL
-         aR+7p6LxqiE9iThzqyS8jQ9G6EB+4tZZi+yCfGQiapJJIo9jcBYm9fR9I2LX08BkN2
-         bFDWmepy5ZVI6q23q7h6GXJ7SL0Svf5wH1oJCuTgacReCjqPgety1pGCFxOBEiOwa4
-         z9SA1gQwBNf2EwKLfJ+KdExejyFckwalTlOP/U5FXz63cZ94Vo7u6CrKogKN+nyC4B
-         +CVXdED/jOy7Q==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0DC0AE6D3DE;
-        Mon, 14 Mar 2022 20:30:11 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Mon, 14 Mar 2022 18:13:43 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 467A13C72D
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Mar 2022 15:12:33 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id l1-20020a05600c4f0100b00389645443d2so379863wmq.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Mar 2022 15:12:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=deYMzCeSeX0HO53o1GTJ/pdHqEp2rXpmLBf161Wqo6o=;
+        b=MrhR4SSCIC5nD3u4tkwowRe0RBwdxcxmGNVdzqq3C1uEonjECmPAh9mJHPxb3bqHxV
+         lkHzAohBRO9BqFeV4AlGiUjOoVV4Q5yyVQWt7HjtUj4Y9d5WAsYuPbU8PjrhKwHKzAOA
+         xf5bxuhfpet56+RG/e/ROuhMxdbtZ5eBzjOlgWdDz+K4Tp5hJ56xH2sAtY9o9Mo1fcow
+         pcsdQTAfb//tE4q1FrHEN775kUXKzIAlHx2uB70IDM7iQxLn5YXcCdW6TT08LjgDOPqd
+         mPYKRKeKVmHK9dgrYEo4qPZiLETJ7XPvjo+TpumEbSPWOSvyYl+Y352yhMTKCHeoUQYZ
+         5G+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=deYMzCeSeX0HO53o1GTJ/pdHqEp2rXpmLBf161Wqo6o=;
+        b=r1uPAkJ58vsSMbijltO1x65nfMO4J+zKRyjYl4YsI87m8ovL1J62wo2svVOkm0yk9T
+         c+4ZvnAQSN2cLGSOBAdZyysNH+WMI0MpYMkI6EaEq2WRTYNd6DPgOgNDm81PZwzKeuBu
+         VqWmW77WTkOiEyXjpynM3hZ4eCwGl15m5/XJmEbV736tLQ9ae3u1mXxvsIGrjARp/kpN
+         xxx6hv056nmkPOO/4VjIuVd/5TM2DOLT6XTBSEKdVPPQOQSHdflcYBfEBjUXCgrhg8+S
+         vZLLc79vpj0YE+eb+U4wbTCCAVipzX1OpqbW+17fYC1O8l9U9BFfT6Ll3A3dbHsBTT4L
+         /Wcw==
+X-Gm-Message-State: AOAM530+Uzn0xEmVzrQjiPkIVaPg12G1Mfv/e/XHgULQQ5AYspjOzVZ4
+        sdtclN2uJUILZnQynCb0p72EvAUcFui6p0kTYl2f0g==
+X-Google-Smtp-Source: ABdhPJw/OCgVb3K0D1sBSFXF6NI1hMFneRzwCXSBfWrXk2aTag+SsZYih4X5DzqeHFlJRHr+vJCFSjRs5rVEDphKo98=
+X-Received: by 2002:a05:600c:4881:b0:381:1f8f:5299 with SMTP id
+ j1-20020a05600c488100b003811f8f5299mr902674wmp.149.1647295951494; Mon, 14 Mar
+ 2022 15:12:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 00/30] fix typos in comments
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <164728981105.21494.10764025984714254687.git-patchwork-notify@kernel.org>
-Date:   Mon, 14 Mar 2022 20:30:11 +0000
-References: <20220314115354.144023-1-Julia.Lawall@inria.fr>
-In-Reply-To: <20220314115354.144023-1-Julia.Lawall@inria.fr>
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     linux-can@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-sunxi@lists.linux.dev, linux-spi@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-usb@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
-        platform-driver-x86@vger.kernel.org, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, Laurent.pinchart@ideasonboard.com,
-        jonas@kwiboo.se, jernej.skrabec@gmail.com,
-        linux-leds@vger.kernel.org, shayne.chen@mediatek.com,
-        sean.wang@mediatek.com, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-clk@vger.kernel.org, rafael@kernel.org,
-        linux-rdma@vger.kernel.org, borntraeger@linux.ibm.com,
-        svens@linux.ibm.com, linux-s390@vger.kernel.org,
-        matti.vaittinen@fi.rohmeurope.com, linux-power@fi.rohmeurope.com,
+References: <1645449409-158238-1-git-send-email-john.garry@huawei.com>
+ <1645449409-158238-3-git-send-email-john.garry@huawei.com>
+ <CAP-5=fXT3VYB2uBXmihuruq==FENLFcFSHMLY0Fk29pRvU-wag@mail.gmail.com> <ebde0845-fa4b-0e6c-c9e6-6c8d27377952@huawei.com>
+In-Reply-To: <ebde0845-fa4b-0e6c-c9e6-6c8d27377952@huawei.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 14 Mar 2022 15:12:19 -0700
+Message-ID: <CAP-5=fUHbuhFeUPTktithxc=NR5ahhF66jWQ2xOZKA=Azj96NQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] perf: Fix version kernel tag
+To:     John Garry <john.garry@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org
+        jolsa@redhat.com, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, olsajiri@gmail.com,
+        rric@kernel.org, ak@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello:
+On Fri, Mar 11, 2022 at 12:28 AM John Garry <john.garry@huawei.com> wrote:
+>
+> On 11/03/2022 02:18, Ian Rogers wrote:
+> >     Generating the version kernel tag relies on "git describe" command
+> >     to get
+> >     the latest Linus kernel tag.
+> >
+> >     However, when working from clones of Linus' git we may not have the
+> >     latest
+> >     tag. For example, when working on Arnaldo's acme.git, we can have this:
+> >     $git branch
+> >     perf/core
+> >     $head -n 5 ../../Makefile
+> >     head -n 5 ../../Makefile  | tail -n 4
+> >     VERSION = 5
+> >     PATCHLEVEL = 17
+> >     SUBLEVEL = 0
+> >     EXTRAVERSION = -rc3
+> >     $ git describe --abbrev=0 --match "v[0-9].[0-9]*"
+> >     v4.13-rc5
+> >
+>
+> Hi Ian,
+>
+> Thanks for having a look.
+>
+> >
+> > I'm a little confused by this, isn't the "git branch" showing your local
+> > branch? For me:
+> >
+> > $git branch
+> > acme
+> > $git status
+> > On branch acme
+> > Your branch is up to date with 'acme/perf/core'.
+> > $git describe --abbrev=0 --match "v[0-9].[0-9]*"
+> > v5.17-rc4
+> > $git remote show acme
+> > * remote acme
+> >    Fetch URL:
+> > git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
+> > <http://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git>
+> >    Push  URL:
+> > git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
+> > <http://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git>
+> > ...
+> > $ /tmp/perf/perf --version
+> > perf version 5.17.rc4.g56dce868198c
+> >
+> > Is your branch tracking acme/master ?
+>
+> I was following acme/perf/core but I don't think that it is so important.
+>
+> The difference is that I am working from a clone of acme/linux.git and
+> so torvalds/linux.git is a remote for me. I assume that you have a clone
+> of torvalds/linux.git
+>
+> That means that if my clone of acme git does not pull in the tags from
+> torvalds git then "git describe" gives a wrong result.
+>
+> Please check this experiment:
+>
+> john@localhost:~> git clone
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git acme_test
+> Cloning into 'acme_test'...
+> remote: Enumerating objects: 59, done.
+> remote: Counting objects: 100% (59/59), done.
+> remote: Compressing objects: 100% (3/3), done.
+>
+> ...
+>
+> john@localhost:~> cd acme_test/
+>
+> john@localhost:~/acme_test> git checkout remotes/origin/perf/core -B
+> perf/core
+> Updating files: 100% (58299/58299), done.
+> Branch 'perf/core' set up to track remote branch 'perf/core' from 'origin'.
+> Switched to a new branch 'perf/core'
+>
+> john@localhost:~/acme_test> git describe --abbrev=0 --match "v[0-9].[0-9]*"
+> v4.13-rc5
+>
+> john@localhost:~/acme_test> head -n 5 Makefile  | tail -n 4
+> VERSION = 5
+> PATCHLEVEL = 17
+> SUBLEVEL = 0
+> EXTRAVERSION = -rc4
+>
+> john@localhost:~/acme_test> git remote add torvalds
+> git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+>
+> john@localhost:~/acme_test> git fetch torvalds
+> remote: Enumerating objects: 1516, done.
+> remote: Counting objects: 100% (1516/1516), done.
+> remote: Compressing objects: 100% (413/413), done.
+> remote: Total 1944 (delta 1202), reused 1314 (delta 1098), pack-reused 428
+> Receiving objects: 100% (1944/1944), 1.68 MiB | 5.12 MiB/s, done.
+> Resolving deltas: 100% (1270/1270), completed with 400 local objects.
+>  From git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux
+>   * [new branch]                master            -> torvalds/master
+>
+> ...
+>
+>   * [new tag]                   v5.17-rc2         -> v5.17-rc2
+>   * [new tag]                   v5.17-rc3         -> v5.17-rc3
+>   * [new tag]                   v5.17-rc4         -> v5.17-rc4
+>   * [new tag]                   v5.17-rc5         -> v5.17-rc5
+>   * [new tag]                   v5.17-rc6         -> v5.17-rc6
+>
+> ...
+>
+> john@localhost:~/acme_test> git describe --abbrev=0 --match "v[0-9].[0-9]*"
+> v5.17-rc4
+>
+> So you can see that "git describe" gives the wrong result (v4.13-rc5)
+> before we pull in torvalds git.
+>
+> My point is that git tags are unreliable and we should avoid them.
 
-This series was applied to netdev/net-next.git (master)
-by Jakub Kicinski <kuba@kernel.org>:
 
-On Mon, 14 Mar 2022 12:53:24 +0100 you wrote:
-> Various spelling mistakes in comments.
-> Detected with the help of Coccinelle.
-> 
-> ---
-> 
->  drivers/base/devres.c                               |    4 ++--
->  drivers/clk/qcom/gcc-sm6125.c                       |    2 +-
->  drivers/clk/ti/clkctrl.c                            |    2 +-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c              |    4 ++--
->  drivers/gpu/drm/amd/display/dc/bios/command_table.c |    6 +++---
->  drivers/gpu/drm/amd/pm/amdgpu_pm.c                  |    2 +-
->  drivers/gpu/drm/bridge/analogix/analogix_dp_core.c  |    4 ++--
->  drivers/gpu/drm/sti/sti_gdp.c                       |    2 +-
->  drivers/infiniband/hw/qib/qib_iba7220.c             |    4 ++--
->  drivers/leds/leds-pca963x.c                         |    2 +-
->  drivers/media/i2c/ov5695.c                          |    2 +-
->  drivers/mfd/rohm-bd9576.c                           |    2 +-
->  drivers/mtd/ubi/block.c                             |    2 +-
->  drivers/net/can/usb/ucan.c                          |    4 ++--
->  drivers/net/ethernet/packetengines/yellowfin.c      |    2 +-
->  drivers/net/wireless/ath/ath6kl/htc_mbox.c          |    2 +-
->  drivers/net/wireless/cisco/airo.c                   |    2 +-
->  drivers/net/wireless/mediatek/mt76/mt7915/init.c    |    2 +-
->  drivers/net/wireless/realtek/rtlwifi/rtl8821ae/dm.c |    6 +++---
->  drivers/platform/x86/uv_sysfs.c                     |    2 +-
->  drivers/s390/crypto/pkey_api.c                      |    2 +-
->  drivers/scsi/aic7xxx/aicasm/aicasm.c                |    2 +-
->  drivers/scsi/elx/libefc_sli/sli4.c                  |    2 +-
->  drivers/scsi/lpfc/lpfc_mbox.c                       |    2 +-
->  drivers/scsi/qla2xxx/qla_gs.c                       |    2 +-
->  drivers/spi/spi-sun4i.c                             |    2 +-
->  drivers/staging/rtl8723bs/core/rtw_mlme.c           |    2 +-
->  drivers/usb/gadget/udc/snps_udc_core.c              |    2 +-
->  fs/kernfs/file.c                                    |    2 +-
->  kernel/events/core.c                                |    2 +-
->  30 files changed, 39 insertions(+), 39 deletions(-)
+(Plain text resend)
 
-Here is the summary with links:
-  - [03/30] ath6kl: fix typos in comments
-    (no matching commit)
-  - [10/30] mt76: mt7915: fix typos in comments
-    (no matching commit)
-  - [12/30] drivers: net: packetengines: fix typos in comments
-    https://git.kernel.org/netdev/net-next/c/ebc0b8b5374e
-  - [19/30] rtlwifi: rtl8821ae: fix typos in comments
-    (no matching commit)
-  - [20/30] airo: fix typos in comments
-    (no matching commit)
-  - [27/30] can: ucan: fix typos in comments
-    (no matching commit)
+Got it, thanks for the detailed explanation!
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Acked-by: Ian Rogers <irogers@google.com>
 
+Thanks,
+Ian
 
+>
+> Thanks,
+> John
