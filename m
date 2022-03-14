@@ -2,83 +2,105 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBEEC433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Mar 2022 10:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF36C43217
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Mar 2022 12:47:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238742AbiCNK46 (ORCPT
+        id S231933AbiCNMsy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Mar 2022 06:56:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33100 "EHLO
+        Mon, 14 Mar 2022 08:48:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238614AbiCNK4z (ORCPT
+        with ESMTP id S238520AbiCNMr5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Mar 2022 06:56:55 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D02FD43EE9;
-        Mon, 14 Mar 2022 03:55:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=uaaiBGW4jge4EZ1U6h8ArDMiqt/yHKf7XttgFGtE2/M=; b=hoV+/hsARD+41GgJwPvHacyLqV
-        bVpCtL4H1CPrNZz3bd6ZYDLBjpcZRM43Q+B26oUSATlXgsTklsu6EWEvcUs4KnboJ01k8Td2AwuGp
-        CbBQdHbag1H3ZmCQV27TtnY0rfcwjSDD31TGYWtjZfCtW+JJ2NK0eoX/PmrNQTqhowHISFjSbgSPy
-        MwLjHMQjlW+6HsCTpU3ldYWhlszVKCioOP3u4jag11rcMNVf8lIlp0b9yECC33BLaVdkQyy5JqgNc
-        n3wcG3PczcL5tEtzf7ROiXQMROV1hpvJDPHCm7DHOgoMp8p+71zQD8zElL3ZSg8zZ6IJ28EWbztou
-        assNBj4Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nTiM7-000oKu-07; Mon, 14 Mar 2022 10:55:15 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 66297300325;
-        Mon, 14 Mar 2022 11:55:12 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 23FB9284B4209; Mon, 14 Mar 2022 11:55:12 +0100 (CET)
-Date:   Mon, 14 Mar 2022 11:55:12 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Wen Yang <wenyang@linux.alibaba.com>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Wen Yang <simon.wy@alibaba-inc.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mon, 14 Mar 2022 08:47:57 -0400
+Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBCBD387A8;
+        Mon, 14 Mar 2022 05:41:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=41PUcU9tzULCiIgb8Uibh/5DuRgn44vcqHlit9be1ys=;
+  b=da5ZDADTYjfUb4CkZvv1ifI5i+2sUHWvJw+dkr6l96rFI9+3qCoi3gnv
+   q0ycGdD5ccrm59796HzJuglqTi/Zn7sM07eq2eqJ7FQY8P7GtUxL24J6z
+   5W/zcd3/E6fo/TuVnTzoYm6lik0f+KcMTza69NkDCls6kpW1/h8PdxP5f
+   k=;
+Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=Julia.Lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="5.90,180,1643670000"; 
+   d="scan'208";a="25997332"
+Received: from i80.paris.inria.fr (HELO i80.paris.inria.fr.) ([128.93.90.48])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2022 12:53:59 +0100
+From:   Julia Lawall <Julia.Lawall@inria.fr>
+To:     linux-can@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-sunxi@lists.linux.dev,
+        linux-spi@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-usb@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-staging@lists.linux.dev, platform-driver-x86@vger.kernel.org,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        linux-leds@vger.kernel.org, Shayne Chen <shayne.chen@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-clk@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-rdma@vger.kernel.org,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        linux-s390@vger.kernel.org,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        linux-power@fi.rohmeurope.com, Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        mark rutland <mark.rutland@arm.com>,
-        jiri olsa <jolsa@redhat.com>,
-        namhyung kim <namhyung@kernel.org>,
-        borislav petkov <bp@alien8.de>, x86@kernel.org,
-        "h. peter anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH 2/2] perf/x86: improve the event scheduling to
- avoid unnecessary pmu_stop/start
-Message-ID: <Yi8fELo+k9gmkJIa@hirez.programming.kicks-ass.net>
-References: <20220304110351.47731-1-simon.wy@alibaba-inc.com>
- <20220304110351.47731-2-simon.wy@alibaba-inc.com>
- <YiIyrFn7upPEouVt@hirez.programming.kicks-ass.net>
- <0c119da1-053b-a2d6-1579-8fb09dbe8e63@linux.alibaba.com>
- <YidREXNn2AtI3V1c@hirez.programming.kicks-ass.net>
- <271bc186-7ffb-33c8-4934-cda2beb94816@linux.alibaba.com>
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH 00/30] fix typos in comments
+Date:   Mon, 14 Mar 2022 12:53:24 +0100
+Message-Id: <20220314115354.144023-1-Julia.Lawall@inria.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <271bc186-7ffb-33c8-4934-cda2beb94816@linux.alibaba.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Mar 10, 2022 at 11:50:33AM +0800, Wen Yang wrote:
+Various spelling mistakes in comments.
+Detected with the help of Coccinelle.
 
-> As you pointed out, some non-compliant rdpmc can cause problems. But you
-> also know that linux is the foundation of cloud servers, and many
-> third-party programs run on it (we don't have any code for it), and we can
-> only observe that the monitoring data will jitter abnormally (the
-> probability of this issue is not high, about dozens of tens of thousands of
-> machines).
+---
 
-This might be a novel insight, but I *really* don't give a crap about
-any of that. If they're not using it right, they get to keep the pieces.
-
-I'd almost make it reschedule more to force them to fix their stuff.
+ drivers/base/devres.c                               |    4 ++--
+ drivers/clk/qcom/gcc-sm6125.c                       |    2 +-
+ drivers/clk/ti/clkctrl.c                            |    2 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c              |    4 ++--
+ drivers/gpu/drm/amd/display/dc/bios/command_table.c |    6 +++---
+ drivers/gpu/drm/amd/pm/amdgpu_pm.c                  |    2 +-
+ drivers/gpu/drm/bridge/analogix/analogix_dp_core.c  |    4 ++--
+ drivers/gpu/drm/sti/sti_gdp.c                       |    2 +-
+ drivers/infiniband/hw/qib/qib_iba7220.c             |    4 ++--
+ drivers/leds/leds-pca963x.c                         |    2 +-
+ drivers/media/i2c/ov5695.c                          |    2 +-
+ drivers/mfd/rohm-bd9576.c                           |    2 +-
+ drivers/mtd/ubi/block.c                             |    2 +-
+ drivers/net/can/usb/ucan.c                          |    4 ++--
+ drivers/net/ethernet/packetengines/yellowfin.c      |    2 +-
+ drivers/net/wireless/ath/ath6kl/htc_mbox.c          |    2 +-
+ drivers/net/wireless/cisco/airo.c                   |    2 +-
+ drivers/net/wireless/mediatek/mt76/mt7915/init.c    |    2 +-
+ drivers/net/wireless/realtek/rtlwifi/rtl8821ae/dm.c |    6 +++---
+ drivers/platform/x86/uv_sysfs.c                     |    2 +-
+ drivers/s390/crypto/pkey_api.c                      |    2 +-
+ drivers/scsi/aic7xxx/aicasm/aicasm.c                |    2 +-
+ drivers/scsi/elx/libefc_sli/sli4.c                  |    2 +-
+ drivers/scsi/lpfc/lpfc_mbox.c                       |    2 +-
+ drivers/scsi/qla2xxx/qla_gs.c                       |    2 +-
+ drivers/spi/spi-sun4i.c                             |    2 +-
+ drivers/staging/rtl8723bs/core/rtw_mlme.c           |    2 +-
+ drivers/usb/gadget/udc/snps_udc_core.c              |    2 +-
+ fs/kernfs/file.c                                    |    2 +-
+ kernel/events/core.c                                |    2 +-
+ 30 files changed, 39 insertions(+), 39 deletions(-)
