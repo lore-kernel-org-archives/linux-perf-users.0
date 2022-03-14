@@ -2,148 +2,112 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBC0C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Mar 2022 04:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A86C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Mar 2022 04:19:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232298AbiCNEHF (ORCPT
+        id S232887AbiCNEU6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Mar 2022 00:07:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56342 "EHLO
+        Mon, 14 Mar 2022 00:20:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231709AbiCNEHB (ORCPT
+        with ESMTP id S229653AbiCNEU5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Mar 2022 00:07:01 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83E773D4B3
-        for <linux-perf-users@vger.kernel.org>; Sun, 13 Mar 2022 21:05:52 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id gb39so30952530ejc.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 13 Mar 2022 21:05:52 -0700 (PDT)
+        Mon, 14 Mar 2022 00:20:57 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C39A3DDD7;
+        Sun, 13 Mar 2022 21:19:48 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id o26so12684964pgb.8;
+        Sun, 13 Mar 2022 21:19:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=W/dRD6Rx16wawTOdNSffktT1rpicmUquQb1T9PyxOF4=;
-        b=wb4nIzqtukyyCxvHVWoD7tabyArPdBqHSjIjuyto7e7a9YSwN9IPnaJS6LvCPN5bA7
-         uFS76gDRCoKKfZtaSYroVDWEftiENp2/lvZbu1sCL9/cEh2655ipupwGr2Dt+RHb3XHf
-         Sf0ZNda2TL1IDjUb482FzWjmhvTpeXRKAe+8nS5JklYonDdqHClCDoKgk4E+CzqUaTyk
-         gBSomrRcipit4Cgt4sB6LSTKJLHKyZHyHuUUTN4J5YrPP4des0NPftjEmdu/R0U1k6W3
-         a0SdQsc69w3G9fTN3hfxf7TYsZ3RY5FBp5KKhl9rZVVdsyXO6FycJMdWnl5HxB4CpCmZ
-         VbGA==
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=xn6H3mA7b0VSrMKmRJSvK65xNehM2Gh0IqixaKFebDg=;
+        b=bOj22QdvpSwsEmS2IwuPh2Z0UtElEMWMsifcMRfvfdrbNyxY7ur2GS2ItepyzV7xlz
+         Zu3bJG0Bzkyc6kFRubqH1YkHEyuDgV6ud9HleGCJqx9oZgsjx9o5xi9+wjLt4GmZd94G
+         gE787sGC9qa8f6PQgbvhjFYYnlZbMmIS84fAxrIA+xIpLyTfxbm+NcLoZgABi1pAc93K
+         lnLRMFSdB1jmAYtowGDewkHGNQVIp6D/AnwU2aplECPVwtyz/9wB7OaJWT4CMoNFpcZa
+         BPwFyeeuQkCWlqyH0Klb7XCFMxlwAf0TTerpNaULzA/wQfyQ772QC6rrs6oulB0/1z6o
+         Aemg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=W/dRD6Rx16wawTOdNSffktT1rpicmUquQb1T9PyxOF4=;
-        b=l8ByofqrBVD6Klhz1JYSsJ1bAcQmTrlRY/SMkqekElK7CH9LVL6tym+b/Ch96ghT84
-         sPhc4PtKt9YHnBmkm9jxUFarJ+uutMfta5INfMjXfjIoAwWzQJQQwL8kwwf07zSttjNC
-         dsUl3MJ0Ptfb0rmv1YKRgvGDLIwxZxqEbJZLayaGNmav0bzRP73QFQC1goDZeLFovtUB
-         0RKRri4NzH4LLafqli2csW5t0KffIKSJ8Hot6IEnbMqdoADO76TtoqNilTN/xOzLGoq2
-         8fROzzX5VEcHwH1aHjcS7f9oSuDbWx4KMGrenKuN+ATAbhINQqgf7D63vJPj9ynWB58y
-         nGLg==
-X-Gm-Message-State: AOAM533P9SdcssoyL1nulIzhSHqjZuZLRrQKf2J8Ir43KdBux8jRzJCf
-        qcJ8E/gvdIUXIk4XHiORHmsgag==
-X-Google-Smtp-Source: ABdhPJzXaoiudZPg8T4qpbCGaQkpUDn4+26ep+9/b6PevZn1vNxCt7WiyUq5ue2TCGUoaiZlsdEF1g==
-X-Received: by 2002:a17:907:3da4:b0:6da:9ec2:c3ff with SMTP id he36-20020a1709073da400b006da9ec2c3ffmr17082654ejc.90.1647230750924;
-        Sun, 13 Mar 2022 21:05:50 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([104.245.96.34])
-        by smtp.gmail.com with ESMTPSA id kq26-20020a170906abda00b006da87077172sm6328735ejb.29.2022.03.13.21.05.45
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=xn6H3mA7b0VSrMKmRJSvK65xNehM2Gh0IqixaKFebDg=;
+        b=ckhYbu8i7ZaCBubN79lpScjoXmGU0BU65ZpOiu5kXdtj5bosIVMKGRPtdG3sJEZhuc
+         kwU1YpjUwIkWrDkEDwly/TSGSSQSy5oXOlAehCjmYSdGzL/CtmDcWYkqlfDJiChsYd5W
+         nH7GgV7xp3YzfxNNQFMym5CkQn+V7C+mW0B8Hq63boAIFF6/lLPcxXrULfopDYK++bai
+         OxKLYZyllVTj175SQuCRBWb/H7xhxGViiSN0VdRMwnCYvJc2hKE3IQ7UarZlIPSJckDU
+         0v5XwkRw2EDUJqS9wtEEJ/Iw8JrJfCq+VtA3QX1UB2w3C7UBOxaSe0R+vQxgKBcfmjst
+         ew/w==
+X-Gm-Message-State: AOAM5338jDpwJKyY3eRr8gQG6m8Ov8yLQLmitecPxkmSCQ2FGfZhZF1b
+        y7FdXf+NP9PXGMmZRhEgDdyxeiIAb7w62g==
+X-Google-Smtp-Source: ABdhPJzb9O8NS4VJyLozBGT8LcFD6kasrh3c/PtACZK8NROEfnvEa0E0y1h3A2JuacqstTwFXLdhwg==
+X-Received: by 2002:a63:fa0d:0:b0:372:d581:e84 with SMTP id y13-20020a63fa0d000000b00372d5810e84mr18430949pgh.414.1647231587839;
+        Sun, 13 Mar 2022 21:19:47 -0700 (PDT)
+Received: from localhost.localdomain ([103.149.162.115])
+        by smtp.gmail.com with ESMTPSA id a133-20020a621a8b000000b004f6a79008ddsm18361447pfa.45.2022.03.13.21.19.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Mar 2022 21:05:50 -0700 (PDT)
-Date:   Mon, 14 Mar 2022 12:05:42 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Ali Saidi <alisaidi@amazon.com>
-Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
-        andrew.kilroy@arm.com, benh@kernel.crashing.org,
-        german.gomez@arm.com, james.clark@arm.com, john.garry@huawei.com,
-        jolsa@redhat.com, kjain@linux.ibm.com, lihuafei1@huawei.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
-        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, will@kernel.org, yao.jin@linux.intel.com
-Subject: Re: [PATCH v2 1/2] perf arm-spe: Use SPE data source for neoverse
- cores
-Message-ID: <20220314040542.GA163961@leoy-ThinkPad-X240s>
-References: <20220313114615.GA143848@leoy-ThinkPad-X240s>
- <20220313190619.18914-1-alisaidi@amazon.com>
+        Sun, 13 Mar 2022 21:19:47 -0700 (PDT)
+From:   Dongli Si <kvmx86@gmail.com>
+X-Google-Original-From: Dongli Si <sidongli1997@gmail.com>
+To:     liam.merwick@oracle.com
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com, joerg.roedel@amd.com,
+        jolsa@kernel.org, kim.phillips@amd.com, kvmx86@gmail.com,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        mark.rutland@arm.com, mingo@kernel.org, namhyung@kernel.org,
+        peterz@infradead.org, tglx@linutronix.de, x86@kernel.org
+Subject: Re: [PATCH v2] perf/x86/amd: Don't touch the Host-only bit inside the guest hypervisor
+Date:   Mon, 14 Mar 2022 12:19:30 +0800
+Message-Id: <20220314041930.1487087-1-sidongli1997@gmail.com>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <3508496a-59ea-2004-2917-2ffe712cc187@oracle.com>
+References: <3508496a-59ea-2004-2917-2ffe712cc187@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220313190619.18914-1-alisaidi@amazon.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Mar 13, 2022 at 07:06:19PM +0000, Ali Saidi wrote:
-
-[...]
-
-> > > > +static void arm_spe__synth_data_source_neoverse(const struct arm_spe_record *record,
-> > > > +						union perf_mem_data_src *data_src)
-> > > > +{
-> > > > +	switch (record->source) {
-> > > > +	case ARM_SPE_NV_L1D:
-> > > > +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
-> > > 
-> > > I understand mem_lvl is deprecated but shouldn't we add the level bits here as well for backwards compat?
+On 11/03/2022 22:25, Liam Merwick wrote:
+> On 10/03/2022 18:34, Dongli Si wrote:
+> > From: Dongli Si <sidongli1997@gmail.com>
 > > 
-> > Thanks for pointing out this.  Yeah, I think German's suggestion is
-> > valid, the commit 6ae5fa61d27d ("perf/x86: Fix data source decoding
-> > for Skylake") introduces new field 'mem_lvl_num', but it also keeps
-> > backwards compatible for the field 'mem_lvl'.
-> >
-> I thought about that, but then I'm making some assumption about how to fit
-> this into the old LVL framework, which is perhaps OK (afaik there are no
-> Neoverse systems with more than 3 cache levels). What stopped me was that
-> perf_mem__lvl_scnprintf() does the wrong thing when both are set so I
-> assumed that setting both was not the right course of action.
-
-Thanks for pointing out this.  I looked at perf_mem__lvl_scnprintf()
-and it prints both for fields 'mem_lvl' and 'mem_lvl_num'.  Thus I can
-see the output result shows the duplicate info for memory access like
-"L1 or L1 hit", "L3 or L3 hit", etc.  This would be a common issue
-crossing archs.  Do I miss any other issues?
-
-> > > > +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L1;
-> > > > +		break;
-> > > > +	case ARM_SPE_NV_L2:
-> > > > +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
-> > > > +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L2;
-> > > > +		break;
-> > > > +	case ARM_SPE_NV_PEER_CORE:
-> > > > +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
-> > > > +		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
-> > > > +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_ANY_CACHE;
-> > 
-> > For PEER_CORE data source, we don't know if it's coming from peer
-> > core's L1 cache or L2 cache, right?
->
-> We don't.
+> > With nested virtualization, when the guest hypervisor runs a nested guest
+> > and if uses "perf record" in an AMD Milan guest hypervisor, the guest
+> > hypervisor dmesg will reports the following warning message:
 > 
-> > If so, do you think if it's possible to retrieve more accurate info
-> > from the field "record->type"?
->
-> No, we just don't know and it really doesn't matter. The main reason to
-> understand the source is to understand the penalty of data coming from
-> the source and that it's coming from a core should be sufficient.
+> I think it might be clearer with L0/L1/L2 terminology. Maybe something 
+> like the following?
+> 
+> "With nested virtualization on AMD Milan, if "perf record" is run in an
+> L1 hypervisor with an L2 guest, the following warning is emitted in
+> the L1 guest."
+> 
+> 
+> > 
+> > [] unchecked MSR access error: WRMSR to 0xc0010200 (tried to write 0x0000020000510076)
+> > at rIP: 0xffffffff81003a50 (x86_pmu_enable_all+0x60/0x100)
+> > [] Call Trace:
+> > []  <IRQ>
+> > []  ? x86_pmu_enable+0x146/0x300
+> > []  __perf_install_in_context+0x150/0x170
+> > 
+> > The AMD64_EVENTSEL_HOSTONLY bit is defined and used on the host, while
+> > the guest hypervisor performance monitor unit should avoid such use.
+> 
+> "The AMD64_EVENTSEL_HOSTONLY bit is defined and used on the host (L0),
+> while the L1 hypervisor Performance Monitor Unit should avoid such use."
+> 
+> 
+> 
+> > 
+> > Fixes: 1018faa6cf23 ("perf/x86/kvm: Fix Host-Only/Guest-Only counting with SVM disabled")
+> > Signed-off-by: Dongli Si <sidongli1997@gmail.com>
+> 
+> Tested-by: Liam Merwick <liam.merwick@oracle.com>
+> Reviewed-by: Liam Merwick <liam.merwick@oracle.com>
 
-Okay, the question is Neoverse has three different data sources
-"ARM_SPE_NV_PEER_CORE", "ARM_SPE_NV_LCL_CLSTR" and
-"ARM_SPE_NV_PEER_CLSTR", but the patch only uses the same attribution
-for all of them.
-
-To be honest, I don't have precise understanding the definition for
-these three types, seems to me "ARM_SPE_NV_PEER_CORE" means to fetch
-data cache from peer core (like SMT things), "ARM_SPE_NV_LCL_CLSTR"
-means cache conherency within the same cluster with SCU,
-"ARM_SPE_NV_PEER_CLSTR" means the conherency happens with external bus
-(like CCI or CMN).  So I'd like to suggest to consider to extend the
-level definitions so can allow us to express the data source for Arm
-arch precisely.
-
-It's important to understand current cache level definitions which is
-derived from x86 arch and think what's the good way to match and
-extend for Arm memory hierarchy.  I will think a bit more for this,
-and if have any idea will share back.
-
-Thanks,
-Leo
+Hi Liam, I will improve the description based on your suggestion
+and resend the patch, thanks!
