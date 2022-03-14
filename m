@@ -2,83 +2,83 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FDCC433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Mar 2022 10:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBEEC433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Mar 2022 10:55:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237590AbiCNKtt (ORCPT
+        id S238742AbiCNK46 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Mar 2022 06:49:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44428 "EHLO
+        Mon, 14 Mar 2022 06:56:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230147AbiCNKtt (ORCPT
+        with ESMTP id S238614AbiCNK4z (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Mar 2022 06:49:49 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7546B1E3CF;
-        Mon, 14 Mar 2022 03:48:39 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B7E3106F;
-        Mon, 14 Mar 2022 03:48:39 -0700 (PDT)
-Received: from [10.163.33.185] (unknown [10.163.33.185])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 80CDB3F99C;
-        Mon, 14 Mar 2022 03:48:32 -0700 (PDT)
-Message-ID: <29ab721c-10bd-68e7-a1e0-8564e60f7584@arm.com>
-Date:   Mon, 14 Mar 2022 16:18:35 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH V3 05/10] perf: Add PERF_BR_NEW_ARCH_[N] map for BRBE on
- arm64 platform
-Content-Language: en-US
-To:     kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, peterz@infradead.org,
-        acme@kernel.org
-Cc:     kbuild-all@lists.01.org, Suzuki Poulose <suzuki.poulose@arm.com>,
-        James Clark <james.clark@arm.com>,
+        Mon, 14 Mar 2022 06:56:55 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D02FD43EE9;
+        Mon, 14 Mar 2022 03:55:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=uaaiBGW4jge4EZ1U6h8ArDMiqt/yHKf7XttgFGtE2/M=; b=hoV+/hsARD+41GgJwPvHacyLqV
+        bVpCtL4H1CPrNZz3bd6ZYDLBjpcZRM43Q+B26oUSATlXgsTklsu6EWEvcUs4KnboJ01k8Td2AwuGp
+        CbBQdHbag1H3ZmCQV27TtnY0rfcwjSDD31TGYWtjZfCtW+JJ2NK0eoX/PmrNQTqhowHISFjSbgSPy
+        MwLjHMQjlW+6HsCTpU3ldYWhlszVKCioOP3u4jag11rcMNVf8lIlp0b9yECC33BLaVdkQyy5JqgNc
+        n3wcG3PczcL5tEtzf7ROiXQMROV1hpvJDPHCm7DHOgoMp8p+71zQD8zElL3ZSg8zZ6IJ28EWbztou
+        assNBj4Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nTiM7-000oKu-07; Mon, 14 Mar 2022 10:55:15 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 66297300325;
+        Mon, 14 Mar 2022 11:55:12 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 23FB9284B4209; Mon, 14 Mar 2022 11:55:12 +0100 (CET)
+Date:   Mon, 14 Mar 2022 11:55:12 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Wen Yang <wenyang@linux.alibaba.com>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Wen Yang <simon.wy@alibaba-inc.com>,
         Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <20220314055857.125421-6-anshuman.khandual@arm.com>
- <202203141608.b9LFCtgv-lkp@intel.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <202203141608.b9LFCtgv-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        mark rutland <mark.rutland@arm.com>,
+        jiri olsa <jolsa@redhat.com>,
+        namhyung kim <namhyung@kernel.org>,
+        borislav petkov <bp@alien8.de>, x86@kernel.org,
+        "h. peter anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH 2/2] perf/x86: improve the event scheduling to
+ avoid unnecessary pmu_stop/start
+Message-ID: <Yi8fELo+k9gmkJIa@hirez.programming.kicks-ass.net>
+References: <20220304110351.47731-1-simon.wy@alibaba-inc.com>
+ <20220304110351.47731-2-simon.wy@alibaba-inc.com>
+ <YiIyrFn7upPEouVt@hirez.programming.kicks-ass.net>
+ <0c119da1-053b-a2d6-1579-8fb09dbe8e63@linux.alibaba.com>
+ <YidREXNn2AtI3V1c@hirez.programming.kicks-ass.net>
+ <271bc186-7ffb-33c8-4934-cda2beb94816@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <271bc186-7ffb-33c8-4934-cda2beb94816@linux.alibaba.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Thu, Mar 10, 2022 at 11:50:33AM +0800, Wen Yang wrote:
 
+> As you pointed out, some non-compliant rdpmc can cause problems. But you
+> also know that linux is the foundation of cloud servers, and many
+> third-party programs run on it (we don't have any code for it), and we can
+> only observe that the monitoring data will jitter abnormally (the
+> probability of this issue is not high, about dozens of tens of thousands of
+> machines).
 
-On 3/14/22 14:07, kernel test robot wrote:
->>> error: include/uapi/linux/perf_event.h: leak CONFIG_ARM64 to user-space
->    make[2]: *** [scripts/Makefile.headersinst:63: usr/include/linux/perf_event.h] Error 1
->    make[2]: Target '__headers' not remade because of errors.
->    make[1]: *** [Makefile:1277: headers] Error 2
->    make[1]: Target 'prepare' not remade because of errors.
->    make: *** [Makefile:219: __sub-make] Error 2
->    make: Target 'prepare' not remade because of errors.
+This might be a novel insight, but I *really* don't give a crap about
+any of that. If they're not using it right, they get to keep the pieces.
 
-I should have avoided CONFIG_ARM64 in the the header file which gets
-duplicated for tools/include/.. Looking at this once again, platform
-build wrappers are not really required for these arch overrides. These
-arm64 branch types can co-exist with any other platform overrides when
-they get added later on. Just that the branch type nomenclature should
-include the platform name some where. Something like ..
-
-PERF_BR_<ARCH>_<BRANCH_TYPE>
-
-#define PERF_BR_ARM64_FIQ               PERF_BR_NEW_ARCH_1
-#define PERF_BR_ARM64_DEBUG_HALT        PERF_BR_NEW_ARCH_2
-#define PERF_BR_ARM64_DEBUG_EXIT        PERF_BR_NEW_ARCH_3
-#define PERF_BR_ARM64_DEBUG_INST        PERF_BR_NEW_ARCH_4
-#define PERF_BR_ARM64_DEBUG_DATA        PERF_BR_NEW_ARCH_5
-
-Will do this change next time around.
-
-- Anshuman
+I'd almost make it reschedule more to force them to fix their stuff.
