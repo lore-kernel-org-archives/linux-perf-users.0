@@ -2,122 +2,134 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4470C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Mar 2022 18:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C99E5C4167E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Mar 2022 20:30:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233654AbiCNSil (ORCPT
+        id S245028AbiCNUbY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Mar 2022 14:38:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53988 "EHLO
+        Mon, 14 Mar 2022 16:31:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234612AbiCNSik (ORCPT
+        with ESMTP id S239124AbiCNUbX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Mar 2022 14:38:40 -0400
-Received: from smtp-fw-80007.amazon.com (smtp-fw-80007.amazon.com [99.78.197.218])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC74E3EA9E;
-        Mon, 14 Mar 2022 11:37:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1647283051; x=1678819051;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=GNEfO5t/KNUf2cvjnQzdxGPpMnXGCdat3iHHsYtvCuM=;
-  b=XQ/BYTJNS8Age5OM/27aEZrLC/auI4Pa0hF8ZMXhQaxgnZyq3A6Tw9A8
-   rM0ymeGXBPGSmq1GPEJsU0WmhmNtTC8JhHDcSvVwA7k1yBUSBFQnjc6bo
-   PR+RJNxQJabRSkuYLVCqyU6GomLLKteQh4M7jzt3vWfZ+1mE4RLsT5Mad
-   8=;
-X-IronPort-AV: E=Sophos;i="5.90,181,1643673600"; 
-   d="scan'208";a="70825562"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-pdx-2b-0085f2c8.us-west-2.amazon.com) ([10.25.36.210])
-  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP; 14 Mar 2022 18:37:30 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-        by email-inbound-relay-pdx-2b-0085f2c8.us-west-2.amazon.com (Postfix) with ESMTPS id 3289241EAE;
-        Mon, 14 Mar 2022 18:37:23 +0000 (UTC)
-Received: from EX13D02UWC002.ant.amazon.com (10.43.162.6) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1497.28; Mon, 14 Mar 2022 18:37:23 +0000
-Received: from EX13MTAUEE002.ant.amazon.com (10.43.62.24) by
- EX13D02UWC002.ant.amazon.com (10.43.162.6) with Microsoft SMTP Server (TLS)
- id 15.0.1497.32; Mon, 14 Mar 2022 18:37:23 +0000
-Received: from dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com
- (172.19.181.128) by mail-relay.amazon.com (10.43.62.224) with Microsoft SMTP
- Server id 15.0.1497.28 via Frontend Transport; Mon, 14 Mar 2022 18:37:22
- +0000
-Received: by dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com (Postfix, from userid 5131138)
-        id BCEB7176D; Mon, 14 Mar 2022 18:37:22 +0000 (UTC)
-From:   Ali Saidi <alisaidi@amazon.com>
-To:     <german.gomez@arm.com>
-CC:     <Nick.Forrington@arm.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <alisaidi@amazon.com>,
-        <andrew.kilroy@arm.com>, <benh@kernel.crashing.org>,
-        <james.clark@arm.com>, <john.garry@huawei.com>, <jolsa@kernel.org>,
-        <kjain@linux.ibm.com>, <leo.yan@linaro.org>,
-        <lihuafei1@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <mark.rutland@arm.com>, <mathieu.poirier@linaro.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <will@kernel.org>, <yao.jin@linux.intel.com>
-Subject: Re: [PATCH v2 2/2] perf mem: Support HITM for when mem_lvl_num is used
-Date:   Mon, 14 Mar 2022 18:37:21 +0000
-Message-ID: <20220314183721.3198-1-alisaidi@amazon.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <df73fb93-3892-6713-8ebe-bc57a861ec5d@arm.com>
-References: <df73fb93-3892-6713-8ebe-bc57a861ec5d@arm.com>
+        Mon, 14 Mar 2022 16:31:23 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8449739812;
+        Mon, 14 Mar 2022 13:30:12 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E0BE9611E3;
+        Mon, 14 Mar 2022 20:30:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 395EAC340EE;
+        Mon, 14 Mar 2022 20:30:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1647289811;
+        bh=5slkzW/wYFCAJdfNlCFTBba0nZcr16X7BRShsWGs8e4=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=leggAOjDGLqu5Y16iRzmCapGpn9MgtEwT4CrU4eyl+t2E31oSfK39qKDLg3AehmbU
+         40wH8plobcUAZegoJFqfw9/xkqsBBPmZP9vZVSFOcI/Xp23ZGUf+pgmWTjQguJdafL
+         aR+7p6LxqiE9iThzqyS8jQ9G6EB+4tZZi+yCfGQiapJJIo9jcBYm9fR9I2LX08BkN2
+         bFDWmepy5ZVI6q23q7h6GXJ7SL0Svf5wH1oJCuTgacReCjqPgety1pGCFxOBEiOwa4
+         z9SA1gQwBNf2EwKLfJ+KdExejyFckwalTlOP/U5FXz63cZ94Vo7u6CrKogKN+nyC4B
+         +CVXdED/jOy7Q==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0DC0AE6D3DE;
+        Mon, 14 Mar 2022 20:30:11 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Subject: Re: [PATCH 00/30] fix typos in comments
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <164728981105.21494.10764025984714254687.git-patchwork-notify@kernel.org>
+Date:   Mon, 14 Mar 2022 20:30:11 +0000
+References: <20220314115354.144023-1-Julia.Lawall@inria.fr>
+In-Reply-To: <20220314115354.144023-1-Julia.Lawall@inria.fr>
+To:     Julia Lawall <julia.lawall@inria.fr>
+Cc:     linux-can@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-sunxi@lists.linux.dev, linux-spi@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-usb@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
+        platform-driver-x86@vger.kernel.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, Laurent.pinchart@ideasonboard.com,
+        jonas@kwiboo.se, jernej.skrabec@gmail.com,
+        linux-leds@vger.kernel.org, shayne.chen@mediatek.com,
+        sean.wang@mediatek.com, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-clk@vger.kernel.org, rafael@kernel.org,
+        linux-rdma@vger.kernel.org, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, linux-s390@vger.kernel.org,
+        matti.vaittinen@fi.rohmeurope.com, linux-power@fi.rohmeurope.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi German and Leo,
+Hello:
 
-On   Mon, 14 Mar 2022 18:00:13 +0000, German Gomez wrote:
-> Hi Leo, Ali
+This series was applied to netdev/net-next.git (master)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Mon, 14 Mar 2022 12:53:24 +0100 you wrote:
+> Various spelling mistakes in comments.
+> Detected with the help of Coccinelle.
 > 
-> On 14/03/2022 06:33, Leo Yan wrote:
-> > On Sun, Mar 13, 2022 at 07:19:33PM +0000, Ali Saidi wrote:
-> >
-> > [...]
-> >
-> >>>>> +			if (lvl & P(LVL, L3) || lnum == P(LVLNUM, L4)) {
-> >>>> According to a comment in the previous patch, using L4 is specific to Neoverse, right?
-> >>>>
-> >>>> Maybe we need to distinguish the Neoverse case from the generic one here as well
-> >>>>
-> >>>> if (is_neoverse)
-> >>>> // treat L4 as llc
-> >>>> else
-> >>>> // treat L3 as llc
-> >>> I personally think it's not good idea to distinguish platforms in the decoding code.
-> >> I agree here. The more we talk about this, the more I'm wondering if we're
-> >> spending too much code solving a problem that doesn't exist. I know of no
-> >> Neoverse systems that actually have 4 cache levels, they all actually have three
-> >> even though it's technically possible to have four.  I have some doubts anyone
-> >> will actually build four levels of cache and perhaps the most prudent path here
-> >> is to assume only three levels (and adjust the previous patch) until someone 
-> >> actually produces a system with four levels instead of a lot of code that is
-> >> never actually exercised?
-> > I am not right person to say L4 cache is not implemented in Neoverse
-> > platforms; my guess for a "System cache" data source might be L3 or
-> > L4 and it is a implementation dependent.  Maybe German or Arm mates
-> > could confirm for this.
+> ---
 > 
-> I had a look at the TRMs for the N1[1], V1[2] and N2[3] Neoverse cores
-> (specifically the LL_CACHE_RD pmu events). If we were to assign a number
-> to the system cache (assuming all caches are implemented):
-> 
-> *For N1*, if L2 and L3 are implemented, system cache would follow at *L4*
-To date no one has built 4 level though. Everyone has only built three.
+>  drivers/base/devres.c                               |    4 ++--
+>  drivers/clk/qcom/gcc-sm6125.c                       |    2 +-
+>  drivers/clk/ti/clkctrl.c                            |    2 +-
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c              |    4 ++--
+>  drivers/gpu/drm/amd/display/dc/bios/command_table.c |    6 +++---
+>  drivers/gpu/drm/amd/pm/amdgpu_pm.c                  |    2 +-
+>  drivers/gpu/drm/bridge/analogix/analogix_dp_core.c  |    4 ++--
+>  drivers/gpu/drm/sti/sti_gdp.c                       |    2 +-
+>  drivers/infiniband/hw/qib/qib_iba7220.c             |    4 ++--
+>  drivers/leds/leds-pca963x.c                         |    2 +-
+>  drivers/media/i2c/ov5695.c                          |    2 +-
+>  drivers/mfd/rohm-bd9576.c                           |    2 +-
+>  drivers/mtd/ubi/block.c                             |    2 +-
+>  drivers/net/can/usb/ucan.c                          |    4 ++--
+>  drivers/net/ethernet/packetengines/yellowfin.c      |    2 +-
+>  drivers/net/wireless/ath/ath6kl/htc_mbox.c          |    2 +-
+>  drivers/net/wireless/cisco/airo.c                   |    2 +-
+>  drivers/net/wireless/mediatek/mt76/mt7915/init.c    |    2 +-
+>  drivers/net/wireless/realtek/rtlwifi/rtl8821ae/dm.c |    6 +++---
+>  drivers/platform/x86/uv_sysfs.c                     |    2 +-
+>  drivers/s390/crypto/pkey_api.c                      |    2 +-
+>  drivers/scsi/aic7xxx/aicasm/aicasm.c                |    2 +-
+>  drivers/scsi/elx/libefc_sli/sli4.c                  |    2 +-
+>  drivers/scsi/lpfc/lpfc_mbox.c                       |    2 +-
+>  drivers/scsi/qla2xxx/qla_gs.c                       |    2 +-
+>  drivers/spi/spi-sun4i.c                             |    2 +-
+>  drivers/staging/rtl8723bs/core/rtw_mlme.c           |    2 +-
+>  drivers/usb/gadget/udc/snps_udc_core.c              |    2 +-
+>  fs/kernfs/file.c                                    |    2 +-
+>  kernel/events/core.c                                |    2 +-
+>  30 files changed, 39 insertions(+), 39 deletions(-)
 
-> *For V1 and N2*, if L2 is implemented, system cache would follow at *L3*
-> (these don't seem to have the same/similar per-cluster L3 cache from the N1)
+Here is the summary with links:
+  - [03/30] ath6kl: fix typos in comments
+    (no matching commit)
+  - [10/30] mt76: mt7915: fix typos in comments
+    (no matching commit)
+  - [12/30] drivers: net: packetengines: fix typos in comments
+    https://git.kernel.org/netdev/net-next/c/ebc0b8b5374e
+  - [19/30] rtlwifi: rtl8821ae: fix typos in comments
+    (no matching commit)
+  - [20/30] airo: fix typos in comments
+    (no matching commit)
+  - [27/30] can: ucan: fix typos in comments
+    (no matching commit)
 
-And in the future they're not able to build >3. German and Leo if there aren't
-strong objections I think the best path forward is for me to respin these
-assuming only 3 levels and if someone builds 4 in a far-off-future we can always
-change the implementation then. Agreed?
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Thanks,
-Ali
 
