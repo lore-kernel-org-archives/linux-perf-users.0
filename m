@@ -2,199 +2,174 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E5DC433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Mar 2022 22:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F044C4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Mar 2022 04:34:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238530AbiCNWNo (ORCPT
+        id S1344786AbiCOEfP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Mar 2022 18:13:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37234 "EHLO
+        Tue, 15 Mar 2022 00:35:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237433AbiCNWNn (ORCPT
+        with ESMTP id S239466AbiCOEfN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Mar 2022 18:13:43 -0400
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 467A13C72D
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Mar 2022 15:12:33 -0700 (PDT)
-Received: by mail-wm1-x32b.google.com with SMTP id l1-20020a05600c4f0100b00389645443d2so379863wmq.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Mar 2022 15:12:33 -0700 (PDT)
+        Tue, 15 Mar 2022 00:35:13 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F60335844;
+        Mon, 14 Mar 2022 21:33:58 -0700 (PDT)
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 22F38Ntm019883;
+        Tue, 15 Mar 2022 04:33:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : content-type :
+ mime-version; s=corp-2021-07-09;
+ bh=Ldi62J4Ff7yhCr3jQU/wooi75MxMT2ZMHuJhgqU4Ceo=;
+ b=ExlwCuAxR51v6gTbwxWKpWwKn0YpXZPnYEe0OJKf4GcfDTDmUg7yYlTfrlkDrcEJlMTl
+ WSz3TvYwAeFNfrTEuMERPzel8DtN36rSmhGQ3X+vuzwoyq06LTyCHGg0TtuZ7GKn57eK
+ avt2PjSn7BS7stRbDdMxIMfJOl9uRhkaw/9zgNc7OZ/cOmP4xgUhHtfiI3onBQUJ3I1F
+ /XD1HNITRWvFDWCDWG6CDzDZJPIHWSyk/I4coAom4bNJY//REldRvOm6QDr1USW/Y7hy
+ SGfBxUqSxx9bv3j+hmuxu+4v0xJ7aMSnVTnCsFv/h/Kv9d3uIlBujlf9N4ogQUvFzp39 Cw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3et5xwhxfa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Mar 2022 04:33:20 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 22F4Gupg187819;
+        Tue, 15 Mar 2022 04:33:19 GMT
+Received: from nam04-bn8-obe.outbound.protection.outlook.com (mail-bn8nam08lp2043.outbound.protection.outlook.com [104.47.74.43])
+        by userp3020.oracle.com with ESMTP id 3et6578ert-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Mar 2022 04:33:19 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ca7IPDAHjCIqEVa0mHtecY6dG7fqX8TLCztCddmeZG9LGM5KIG4l2h7X6VcAE7ddUrATdH5eN+Vyf1e2p+xW6yKOe7/EmtuvONcv1ZTWxqCPf1QWTi0M8drT2azGiMvE4UBeNYD9s9Ugv32DAlV/Ho3IMcCMn2Gj67T6M5HP1u6FlQhTH6N1qkI7sfmLewFw8xzZ+s0sloEDcQh/ooLp+EAfyJep1JMuDWk5o8q2lK01UaBkpZk8nW94Is4Vd946LS8+BiC9EXPAC1UBB0kWZnc7tHVieetT9z/BylIVbBdOat1Pj3QB547SBjBM22gbo/Rtz7MN82bYOIsk6i+NQw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ldi62J4Ff7yhCr3jQU/wooi75MxMT2ZMHuJhgqU4Ceo=;
+ b=FOJEAA2+CEkH0FYfk+ql5xL1OWCB97StHjWDcScX35mBFFh9SIZmqvjAGJqiK2jqYFkITZMViaY6mk3VBd3QGUqSRc2IrOr1nRnro8m1K5r21UQXABl8O8834b2lbqvimJ2aWieVkYehVdAyQAJHOPgxYfJMDarpTMwp9+GA9tQ+EgWZqSIwO21XSAU1NqhOhCSiRoAip7xeC9zIilE6Nqkmf0g42zvhYj1Kk2ZcDIW8VZi8ThaIazyKJvKmjzgVceCXeabigfl0/HoCx3womodvwmaPpbeXSL3EkEpflS1YnaFfvKK8RKddApA7NN2qZCJowpluAWqBGF4FUF8yZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=deYMzCeSeX0HO53o1GTJ/pdHqEp2rXpmLBf161Wqo6o=;
-        b=MrhR4SSCIC5nD3u4tkwowRe0RBwdxcxmGNVdzqq3C1uEonjECmPAh9mJHPxb3bqHxV
-         lkHzAohBRO9BqFeV4AlGiUjOoVV4Q5yyVQWt7HjtUj4Y9d5WAsYuPbU8PjrhKwHKzAOA
-         xf5bxuhfpet56+RG/e/ROuhMxdbtZ5eBzjOlgWdDz+K4Tp5hJ56xH2sAtY9o9Mo1fcow
-         pcsdQTAfb//tE4q1FrHEN775kUXKzIAlHx2uB70IDM7iQxLn5YXcCdW6TT08LjgDOPqd
-         mPYKRKeKVmHK9dgrYEo4qPZiLETJ7XPvjo+TpumEbSPWOSvyYl+Y352yhMTKCHeoUQYZ
-         5G+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=deYMzCeSeX0HO53o1GTJ/pdHqEp2rXpmLBf161Wqo6o=;
-        b=r1uPAkJ58vsSMbijltO1x65nfMO4J+zKRyjYl4YsI87m8ovL1J62wo2svVOkm0yk9T
-         c+4ZvnAQSN2cLGSOBAdZyysNH+WMI0MpYMkI6EaEq2WRTYNd6DPgOgNDm81PZwzKeuBu
-         VqWmW77WTkOiEyXjpynM3hZ4eCwGl15m5/XJmEbV736tLQ9ae3u1mXxvsIGrjARp/kpN
-         xxx6hv056nmkPOO/4VjIuVd/5TM2DOLT6XTBSEKdVPPQOQSHdflcYBfEBjUXCgrhg8+S
-         vZLLc79vpj0YE+eb+U4wbTCCAVipzX1OpqbW+17fYC1O8l9U9BFfT6Ll3A3dbHsBTT4L
-         /Wcw==
-X-Gm-Message-State: AOAM530+Uzn0xEmVzrQjiPkIVaPg12G1Mfv/e/XHgULQQ5AYspjOzVZ4
-        sdtclN2uJUILZnQynCb0p72EvAUcFui6p0kTYl2f0g==
-X-Google-Smtp-Source: ABdhPJw/OCgVb3K0D1sBSFXF6NI1hMFneRzwCXSBfWrXk2aTag+SsZYih4X5DzqeHFlJRHr+vJCFSjRs5rVEDphKo98=
-X-Received: by 2002:a05:600c:4881:b0:381:1f8f:5299 with SMTP id
- j1-20020a05600c488100b003811f8f5299mr902674wmp.149.1647295951494; Mon, 14 Mar
- 2022 15:12:31 -0700 (PDT)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ldi62J4Ff7yhCr3jQU/wooi75MxMT2ZMHuJhgqU4Ceo=;
+ b=jTriNuVobyaDDyHAKckeANzwO8h1OW/Bc1nlbWLR4utXUprp4ZStNF7qW5IHaRQPNmhqS/AO2elLQwevd/8tuLMXbA4qk9yrAJvgnZ66g5jxP4MbKCNd2bOTbMqSc99Lyt64OQCFtHvYahh/T+CHM7szAGSc2JkxkVrlr3/f3v4=
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
+ by BLAPR10MB5028.namprd10.prod.outlook.com (2603:10b6:208:307::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5061.21; Tue, 15 Mar
+ 2022 04:33:17 +0000
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::48e3:d153:6df4:fbed]) by PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::48e3:d153:6df4:fbed%4]) with mapi id 15.20.5061.029; Tue, 15 Mar 2022
+ 04:33:17 +0000
+To:     Julia Lawall <Julia.Lawall@inria.fr>
+Cc:     linux-can@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-sunxi@lists.linux.dev, linux-spi@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-usb@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
+        platform-driver-x86@vger.kernel.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        linux-leds@vger.kernel.org, Shayne Chen <shayne.chen@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-clk@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-rdma@vger.kernel.org,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        linux-s390@vger.kernel.org,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        linux-power@fi.rohmeurope.com, Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 00/30] fix typos in comments
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq1zglrbztt.fsf@ca-mkp.ca.oracle.com>
+References: <20220314115354.144023-1-Julia.Lawall@inria.fr>
+Date:   Tue, 15 Mar 2022 00:33:14 -0400
+In-Reply-To: <20220314115354.144023-1-Julia.Lawall@inria.fr> (Julia Lawall's
+        message of "Mon, 14 Mar 2022 12:53:24 +0100")
+Content-Type: text/plain
+X-ClientProxiedBy: SA0PR11CA0081.namprd11.prod.outlook.com
+ (2603:10b6:806:d2::26) To PH0PR10MB4759.namprd10.prod.outlook.com
+ (2603:10b6:510:3d::12)
 MIME-Version: 1.0
-References: <1645449409-158238-1-git-send-email-john.garry@huawei.com>
- <1645449409-158238-3-git-send-email-john.garry@huawei.com>
- <CAP-5=fXT3VYB2uBXmihuruq==FENLFcFSHMLY0Fk29pRvU-wag@mail.gmail.com> <ebde0845-fa4b-0e6c-c9e6-6c8d27377952@huawei.com>
-In-Reply-To: <ebde0845-fa4b-0e6c-c9e6-6c8d27377952@huawei.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 14 Mar 2022 15:12:19 -0700
-Message-ID: <CAP-5=fUHbuhFeUPTktithxc=NR5ahhF66jWQ2xOZKA=Azj96NQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] perf: Fix version kernel tag
-To:     John Garry <john.garry@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org, olsajiri@gmail.com,
-        rric@kernel.org, ak@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: fd5f9ca8-fce4-4820-e21a-08da063cecd4
+X-MS-TrafficTypeDiagnostic: BLAPR10MB5028:EE_
+X-Microsoft-Antispam-PRVS: <BLAPR10MB5028127E1E39C6C1DCBF78D48E109@BLAPR10MB5028.namprd10.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: lIr1rn61tLrVbwe/rkp9ZS/r+tAe7lTiShG8NUYZ14vZdHOMPNbaxaGRcBo6E2TCLCl5Na13o3wqDPeNU5FRwDRU66QCiuUTZgEhHPpf5WDGBZyb2J8kZ0hk4d9pTDz/JlhJdAMrIWwZkgUcq1B4T90Ls/Ts723KZuKhEbfxtqlwHPLaEl2eDk7FOIuYE83pynWqfxAnsknZqFXuxBq6BFpnHlIzCLLOwHKGwbLdPwCtxf7fEJUbQeZncJD102rFGdjXSkCAnau1tQV4ENZE/A3GWzT1nAoVmORJQKMXBPqjYvjnz+rJW9ALDhoLZYyWf/8hxCsfXKgkBnKuJ49sUz2lL4nyUeY5Rgc8Hnh6SF4hkrqoSxI23CL0bXLh3YZoosxSrQQftn5kUlMOyC8/oIFsdR/cujF6fMilrpkZ95v0YxFbhTrXrEeEUA9iYEU53vBdq3JXwv3rSmFfWh0hasP2h86ejtOUkBZ+jYO6RVTJaeEX/welJLNeRSdGUuvI5dk6gaP7swmia5UzA/rLJzZigd8JsRFs0876/JE37mmVCiU//WVsNwxVT5Du25b0lzQC6E/91/vLT/n3F0BYtdRsTrU3R6FfGMruE3ZH2QuOWKaU1kwUaQlHcYhLIQ57VHP1dHCEKwBjrziZ9/S0qmqQE1KXN2VDexHqK/EhW9XBW7CdhvsnCZF3r3OB7vUqZo26OiAUJP1b8AWwzlau/A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(2906002)(558084003)(6506007)(36916002)(38100700002)(38350700002)(52116002)(8936002)(7406005)(7416002)(5660300002)(6666004)(6512007)(86362001)(26005)(186003)(316002)(66556008)(66476007)(6916009)(54906003)(66946007)(6486002)(8676002)(4326008)(508600001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?WYqdkY6Mseq/zoJXKJt5QO5ieNGEvzdme7kIJIZDXe8z95T58HJC9392QsdN?=
+ =?us-ascii?Q?ejXkgq0syWYUon9U/8Y7Z6ei02SaQ9oTec3FkWvLm9Dw18fxeFmFumc58Syy?=
+ =?us-ascii?Q?i+qOPQzKSYbqhYn6uyYrwpV7fCBr6TmytjEoNeS+08JJcLBp7qdMVCVzdGSh?=
+ =?us-ascii?Q?W8V0gHrzEj9W8isXO1BqpsVfh6qrlq3EZmsIKaWIMsiL91tV9RNZAXMAT+yB?=
+ =?us-ascii?Q?6Taw4E/WP9T0sL21jSqA8FqKpbv2XK4GHfl2vOv5M8AJI1S2097GZnDccZTW?=
+ =?us-ascii?Q?xg3whI9AjpYpuBRZ46110N/DxZ+JW+cvoifkcoQJS3pjem9X9y5uFUOI1bvh?=
+ =?us-ascii?Q?kTKbyrC19iH5Tak4z3X/yP1bI9jhQrCmBaDbubcSstW0am0sEaO08BmkPWg4?=
+ =?us-ascii?Q?8RrQzCEWsd3QLY+lWtM4OrIJxF6pAunNPS0pZIYWNg8BxoXuFYLR4u+AqFPf?=
+ =?us-ascii?Q?dU55vsPpvNM1E4T2hW1zz90ewEANY1MWfOg0RFwmHqzM+mpuAGZ+uyDfWyJf?=
+ =?us-ascii?Q?3kRLLhXGd87GYUAfdHMlEUheErUcnPMjRgN28yRnVyDgiPsr3ypwEXbGw+a3?=
+ =?us-ascii?Q?Jz4dLJvgxpFfRiDQ+OhECQUNsBgVo6L8ZgL+dnNXY9t6FQPZYfLmQ+cLSJwj?=
+ =?us-ascii?Q?jl4H0zj25gS9S95s1YjusMvTNqhrFf5BMyR/S47DggMcvak17I+gPBZnfpxi?=
+ =?us-ascii?Q?WwDvsiF64/G7PC86zW5pdiu5DQOwFANRRLzs7/G4oaaYx2nOCQX/UxNjNhSU?=
+ =?us-ascii?Q?Y762IVfeGGZHOY22fpJyW3CMpqZuXtaLlFK7j+MOc03uzZEQMEFLpPWabgtq?=
+ =?us-ascii?Q?4v+ztKL/2dDEa/llO815m/9bSPLKlsErQ0iqkkGfNRkqoX0mfjKLnJTjTiU+?=
+ =?us-ascii?Q?ZnuZJ4lu12xFF0Bphn5IGLgGXDhsYwPrIkMYnVD25TSJvKrPjdo9REndkuln?=
+ =?us-ascii?Q?K86h1u4Hr6EcmewHrk36Cs4BB1PiRLJPfq8YKEFdUjb0QRSUu/tT6drOtUty?=
+ =?us-ascii?Q?NCayFuhfgvMSTk/0VYCKwZhcM93MUBRjhAGY3j7KNzE96bIY3gYkba4i8A4r?=
+ =?us-ascii?Q?bY0MvYxsb7Bk5V5FSEacBzhrhRRYt0Ho2TRPIYMiWIeXJZWNFx+p8l1WS34u?=
+ =?us-ascii?Q?xTPgXw2sM9cxd/UG7Kr3CNegrseZXcW3e48pzZA2mh728nyHTuKhT3tNL5v0?=
+ =?us-ascii?Q?skwvOAYmjzjAcuOo7y0UnbeO7FLxCW1oh+KYHLFJK+BiMJ85xLV6z20UbeDn?=
+ =?us-ascii?Q?0EF8tLZymXYjqD1r64o0ovK9j1Ks73SE2OxW0m8YrzMNpD1K7baL3oEidlIX?=
+ =?us-ascii?Q?jKgt1RiGr9TZHqCbGoIEpx/CNRXGrCI6badUa9iGhdSiNwfBhP0FnZYfS+F7?=
+ =?us-ascii?Q?1HmiklAMhxjy05xdm2o7nvQ9cZaCvSWwxCk4qeIQyYtHb2y+ZUdBjjzDbsAt?=
+ =?us-ascii?Q?Eygq6u4UFECMqOQCxaOd+dlooWT5Iu5TgDZ/WtDwJwyJPrqidTO5Cw=3D=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd5f9ca8-fce4-4820-e21a-08da063cecd4
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Mar 2022 04:33:16.9101
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jp1TQ137dJS0aBKzTXtG8DTrjUrlcvwsR3Rv3Hwv4WYgucNthzTxAX2MtM2dphZQ2UWnLHml7Iywf/+efZWBApDZjzpofxxXtMMYd6zKOZU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR10MB5028
+X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10286 signatures=693139
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0
+ malwarescore=0 adultscore=0 bulkscore=0 mlxscore=0 mlxlogscore=792
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2203150026
+X-Proofpoint-GUID: XsDWZTts2S_zEVh5fz9KD5b_DHEyjX5o
+X-Proofpoint-ORIG-GUID: XsDWZTts2S_zEVh5fz9KD5b_DHEyjX5o
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Mar 11, 2022 at 12:28 AM John Garry <john.garry@huawei.com> wrote:
->
-> On 11/03/2022 02:18, Ian Rogers wrote:
-> >     Generating the version kernel tag relies on "git describe" command
-> >     to get
-> >     the latest Linus kernel tag.
-> >
-> >     However, when working from clones of Linus' git we may not have the
-> >     latest
-> >     tag. For example, when working on Arnaldo's acme.git, we can have this:
-> >     $git branch
-> >     perf/core
-> >     $head -n 5 ../../Makefile
-> >     head -n 5 ../../Makefile  | tail -n 4
-> >     VERSION = 5
-> >     PATCHLEVEL = 17
-> >     SUBLEVEL = 0
-> >     EXTRAVERSION = -rc3
-> >     $ git describe --abbrev=0 --match "v[0-9].[0-9]*"
-> >     v4.13-rc5
-> >
->
-> Hi Ian,
->
-> Thanks for having a look.
->
-> >
-> > I'm a little confused by this, isn't the "git branch" showing your local
-> > branch? For me:
-> >
-> > $git branch
-> > acme
-> > $git status
-> > On branch acme
-> > Your branch is up to date with 'acme/perf/core'.
-> > $git describe --abbrev=0 --match "v[0-9].[0-9]*"
-> > v5.17-rc4
-> > $git remote show acme
-> > * remote acme
-> >    Fetch URL:
-> > git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
-> > <http://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git>
-> >    Push  URL:
-> > git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
-> > <http://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git>
-> > ...
-> > $ /tmp/perf/perf --version
-> > perf version 5.17.rc4.g56dce868198c
-> >
-> > Is your branch tracking acme/master ?
->
-> I was following acme/perf/core but I don't think that it is so important.
->
-> The difference is that I am working from a clone of acme/linux.git and
-> so torvalds/linux.git is a remote for me. I assume that you have a clone
-> of torvalds/linux.git
->
-> That means that if my clone of acme git does not pull in the tags from
-> torvalds git then "git describe" gives a wrong result.
->
-> Please check this experiment:
->
-> john@localhost:~> git clone
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git acme_test
-> Cloning into 'acme_test'...
-> remote: Enumerating objects: 59, done.
-> remote: Counting objects: 100% (59/59), done.
-> remote: Compressing objects: 100% (3/3), done.
->
-> ...
->
-> john@localhost:~> cd acme_test/
->
-> john@localhost:~/acme_test> git checkout remotes/origin/perf/core -B
-> perf/core
-> Updating files: 100% (58299/58299), done.
-> Branch 'perf/core' set up to track remote branch 'perf/core' from 'origin'.
-> Switched to a new branch 'perf/core'
->
-> john@localhost:~/acme_test> git describe --abbrev=0 --match "v[0-9].[0-9]*"
-> v4.13-rc5
->
-> john@localhost:~/acme_test> head -n 5 Makefile  | tail -n 4
-> VERSION = 5
-> PATCHLEVEL = 17
-> SUBLEVEL = 0
-> EXTRAVERSION = -rc4
->
-> john@localhost:~/acme_test> git remote add torvalds
-> git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
->
-> john@localhost:~/acme_test> git fetch torvalds
-> remote: Enumerating objects: 1516, done.
-> remote: Counting objects: 100% (1516/1516), done.
-> remote: Compressing objects: 100% (413/413), done.
-> remote: Total 1944 (delta 1202), reused 1314 (delta 1098), pack-reused 428
-> Receiving objects: 100% (1944/1944), 1.68 MiB | 5.12 MiB/s, done.
-> Resolving deltas: 100% (1270/1270), completed with 400 local objects.
->  From git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux
->   * [new branch]                master            -> torvalds/master
->
-> ...
->
->   * [new tag]                   v5.17-rc2         -> v5.17-rc2
->   * [new tag]                   v5.17-rc3         -> v5.17-rc3
->   * [new tag]                   v5.17-rc4         -> v5.17-rc4
->   * [new tag]                   v5.17-rc5         -> v5.17-rc5
->   * [new tag]                   v5.17-rc6         -> v5.17-rc6
->
-> ...
->
-> john@localhost:~/acme_test> git describe --abbrev=0 --match "v[0-9].[0-9]*"
-> v5.17-rc4
->
-> So you can see that "git describe" gives the wrong result (v4.13-rc5)
-> before we pull in torvalds git.
->
-> My point is that git tags are unreliable and we should avoid them.
 
+Julia,
 
-(Plain text resend)
+>  drivers/scsi/aic7xxx/aicasm/aicasm.c                |    2 +-
+>  drivers/scsi/elx/libefc_sli/sli4.c                  |    2 +-
+>  drivers/scsi/lpfc/lpfc_mbox.c                       |    2 +-
+>  drivers/scsi/qla2xxx/qla_gs.c                       |    2 +-
 
-Got it, thanks for the detailed explanation!
+Applied patches 2, 17, 24, and 25 to 5.18/scsi-staging, thanks!
 
-Acked-by: Ian Rogers <irogers@google.com>
-
-Thanks,
-Ian
-
->
-> Thanks,
-> John
+-- 
+Martin K. Petersen	Oracle Linux Engineering
