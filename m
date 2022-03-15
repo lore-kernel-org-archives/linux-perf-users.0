@@ -2,77 +2,157 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5335EC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Mar 2022 11:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B22DFC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Mar 2022 11:32:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347342AbiCOLdH (ORCPT
+        id S1347939AbiCOLdz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Mar 2022 07:33:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59832 "EHLO
+        Tue, 15 Mar 2022 07:33:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347204AbiCOLdG (ORCPT
+        with ESMTP id S1347204AbiCOLdz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Mar 2022 07:33:06 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 887C24F9F9
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Mar 2022 04:31:54 -0700 (PDT)
-Received: from fraeml712-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KHrmr55YNz683nW;
-        Tue, 15 Mar 2022 19:30:20 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml712-chm.china.huawei.com (10.206.15.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 15 Mar 2022 12:31:52 +0100
-Received: from [10.47.84.96] (10.47.84.96) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Tue, 15 Mar
- 2022 11:31:51 +0000
-Message-ID: <2cad1efe-29e0-930f-de85-1911df38dde5@huawei.com>
-Date:   Tue, 15 Mar 2022 11:31:50 +0000
+        Tue, 15 Mar 2022 07:33:55 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 864294F9F9;
+        Tue, 15 Mar 2022 04:32:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1647343962; x=1678879962;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=iM2O36wRdXPMXbBG10OMjmaLO4TCW82GZCSbNWA1tOE=;
+  b=Iv/eRfCAy98uk94VAN2CK4BZJJcGg5jf+BJ0/Xdi+c4RKrbeUOar9B48
+   GmwoefCbEvlO9lvHWGg4zATeadaYqpsZ8qQVdT88VDkOuZ8B45zvI8XUw
+   sihk57euOyggwjbY3A7lG4Xmq6XiDMZ18FHA2L4ab1FPNhYKqVVo+EyOx
+   Ay0aoVGTHzKK5wWijI2ImAqOam4e/glz7N7sgptn1MqmebdlPjgojUXHN
+   y2FOjb+Ema5ccjU9wkyjx+e0jmOx2ApHVZUUl7EjarI6QnKfDGi16Ehce
+   ZkrlDMRfZwHxGvYjrefJM4533yQl5A4oK4mMKBHzkfw62qi8UPizEYq5J
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10286"; a="243726953"
+X-IronPort-AV: E=Sophos;i="5.90,183,1643702400"; 
+   d="scan'208";a="243726953"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2022 04:32:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,183,1643702400"; 
+   d="scan'208";a="556884063"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.92]) ([10.237.72.92])
+  by orsmga008.jf.intel.com with ESMTP; 15 Mar 2022 04:32:39 -0700
+Message-ID: <c50bb87d-9fee-c4f9-a350-8729e503e43a@intel.com>
+Date:   Tue, 15 Mar 2022 13:32:38 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH v2 2/2] perf: Fix version kernel tag
-To:     Ian Rogers <irogers@google.com>, <acme@kernel.org>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
-        <namhyung@kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <olsajiri@gmail.com>, <rric@kernel.org>, <ak@linux.intel.com>
-References: <1645449409-158238-1-git-send-email-john.garry@huawei.com>
- <1645449409-158238-3-git-send-email-john.garry@huawei.com>
- <CAP-5=fXT3VYB2uBXmihuruq==FENLFcFSHMLY0Fk29pRvU-wag@mail.gmail.com>
- <ebde0845-fa4b-0e6c-c9e6-6c8d27377952@huawei.com>
- <CAP-5=fUHbuhFeUPTktithxc=NR5ahhF66jWQ2xOZKA=Azj96NQ@mail.gmail.com>
-From:   John Garry <john.garry@huawei.com>
-In-Reply-To: <CAP-5=fUHbuhFeUPTktithxc=NR5ahhF66jWQ2xOZKA=Azj96NQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.5.0
+Subject: Re: [PATCH] perf intel-pt: Synthesize cycle events
+Content-Language: en-US
+To:     "Steinar H. Gunderson" <sesse@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220310093844.982656-1-sesse@google.com>
+ <586de5fc-858b-2693-1986-5c77e8c0e3d0@intel.com>
+ <YiuKAk7SaXP7B7Ee@google.com>
+ <ba2c49da-22c5-06ea-e953-82211b953ca8@intel.com>
+ <YjBnet2813sEGjZY@google.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <YjBnet2813sEGjZY@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.84.96]
-X-ClientProxiedBy: lhreml735-chm.china.huawei.com (10.201.108.86) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 14/03/2022 22:12, Ian Rogers wrote:
->> john@localhost:~/acme_test> git describe --abbrev=0 --match "v[0-9].[0-9]*"
->> v5.17-rc4
->>
->> So you can see that "git describe" gives the wrong result (v4.13-rc5)
->> before we pull in torvalds git.
->>
->> My point is that git tags are unreliable and we should avoid them.
+On 15/03/2022 12:16, Steinar H. Gunderson wrote:
+> On Mon, Mar 14, 2022 at 06:24:19PM +0200, Adrian Hunter wrote:
+>> Perhaps changing it something like below.  What do you think?
 > 
-> (Plain text resend)
+> I think the structure looks good, but I'm not sure about updating
+> e.g. ptq->last_cy_insn_cnt in both functions? Does that make sense?
+
+It should only be updated in the new intel_pt_synth_cycle_sample().
+intel_pt_synth_instruction_sample() should be unchanged.
+
+Also it would be better to keep the IPC count separate from the
+sample period. i.e. a third new variable ptq->last_cyc_cnt
+which works the same as ptq->last_insn_cnt does for intel_pt_synth_instruction_sample()
+
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index c1f261229932..c7a4b5feea2a 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -211,10 +211,13 @@ struct intel_pt_queue {
+ 	u32 flags;
+ 	u16 insn_len;
+ 	u64 last_insn_cnt;
++	u64 last_cyc_cnt;
+ 	u64 ipc_insn_cnt;
+ 	u64 ipc_cyc_cnt;
+ 	u64 last_in_insn_cnt;
+ 	u64 last_in_cyc_cnt;
++	u64 last_cy_insn_cnt;
++	u64 last_cy_cyc_cnt;
+ 	u64 last_br_insn_cnt;
+ 	u64 last_br_cyc_cnt;
+ 	unsigned int cbr_seen;
+
+Then the new function becomes:
+
+static int intel_pt_synth_cycle_sample(struct intel_pt_queue *ptq)
+{
+	struct intel_pt *pt = ptq->pt;
+	union perf_event *event = ptq->event_buf;
+	struct perf_sample sample = { .ip = 0, };
+	u64 period;
+
+	if (pt->synth_opts.quick)
+		period = 1;
+	else
+		period = ptq->ipc_cyc_cnt - ptq->last_cyc_cnt;
+
+	if (!period || intel_pt_skip_event(pt))
+		return 0;
+
+	intel_pt_prep_sample(pt, ptq, event, &sample);
+
+	sample.id = ptq->pt->cycles_id;
+	sample.stream_id = ptq->pt->cycles_id;
+	sample.period = period;
+
+	if (ptq->sample_ipc)
+		sample.cyc_cnt = ptq->ipc_cyc_cnt - ptq->last_cy_cyc_cnt;
+	if (sample.cyc_cnt) {
+		sample.insn_cnt = ptq->ipc_insn_cnt - ptq->last_cy_insn_cnt;
+		ptq->last_cy_insn_cnt = ptq->ipc_insn_cnt;
+		ptq->last_cy_cyc_cnt = ptq->ipc_cyc_cnt;
+	}
+
+	ptq->last_cyc_cnt = ptq->ipc_cyc_cnt;
+
+	return intel_pt_deliver_synth_event(pt, event, &sample, pt->cycles_sample_type);
+}
+
+
 > 
-> Got it, thanks for the detailed explanation!
-> 
-> Acked-by: Ian Rogers<irogers@google.com>
+> I ran this and found something strange: I've started getting some hits
+> (very small amounts, e.g. 0.14%) on instructions that are not branches.
+> How can that happen?
 
-Great, thanks
+Possibly a PSB packet.
 
-Arnaldo, Can you kindly consider picking up this series?
+If you have an example and recent perf tools you can see the decoder
+log as follows:
 
-Cheers,
-John
+perf script --itrace=y0nsed+o --time <start time>,<end time> -C <cpu>
+
+where you select <start time>, <end time> and <cpu> to limit the
+decoding to that time range and cpu.
+
+
+
