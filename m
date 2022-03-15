@@ -2,157 +2,129 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B22DFC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Mar 2022 11:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7544FC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Mar 2022 13:06:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347939AbiCOLdz (ORCPT
+        id S238022AbiCONIF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Mar 2022 07:33:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60068 "EHLO
+        Tue, 15 Mar 2022 09:08:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347204AbiCOLdz (ORCPT
+        with ESMTP id S1348565AbiCONIB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Mar 2022 07:33:55 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 864294F9F9;
-        Tue, 15 Mar 2022 04:32:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647343962; x=1678879962;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=iM2O36wRdXPMXbBG10OMjmaLO4TCW82GZCSbNWA1tOE=;
-  b=Iv/eRfCAy98uk94VAN2CK4BZJJcGg5jf+BJ0/Xdi+c4RKrbeUOar9B48
-   GmwoefCbEvlO9lvHWGg4zATeadaYqpsZ8qQVdT88VDkOuZ8B45zvI8XUw
-   sihk57euOyggwjbY3A7lG4Xmq6XiDMZ18FHA2L4ab1FPNhYKqVVo+EyOx
-   Ay0aoVGTHzKK5wWijI2ImAqOam4e/glz7N7sgptn1MqmebdlPjgojUXHN
-   y2FOjb+Ema5ccjU9wkyjx+e0jmOx2ApHVZUUl7EjarI6QnKfDGi16Ehce
-   ZkrlDMRfZwHxGvYjrefJM4533yQl5A4oK4mMKBHzkfw62qi8UPizEYq5J
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10286"; a="243726953"
-X-IronPort-AV: E=Sophos;i="5.90,183,1643702400"; 
-   d="scan'208";a="243726953"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2022 04:32:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,183,1643702400"; 
-   d="scan'208";a="556884063"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.92]) ([10.237.72.92])
-  by orsmga008.jf.intel.com with ESMTP; 15 Mar 2022 04:32:39 -0700
-Message-ID: <c50bb87d-9fee-c4f9-a350-8729e503e43a@intel.com>
-Date:   Tue, 15 Mar 2022 13:32:38 +0200
+        Tue, 15 Mar 2022 09:08:01 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9615F50E13;
+        Tue, 15 Mar 2022 06:06:49 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4FD031474;
+        Tue, 15 Mar 2022 06:06:49 -0700 (PDT)
+Received: from [10.57.42.204] (unknown [10.57.42.204])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F2313F66F;
+        Tue, 15 Mar 2022 06:06:46 -0700 (PDT)
+Message-ID: <0df5c352-1f0d-55f8-5d7f-e28ba33d623b@arm.com>
+Date:   Tue, 15 Mar 2022 13:06:42 +0000
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.5.0
-Subject: Re: [PATCH] perf intel-pt: Synthesize cycle events
-Content-Language: en-US
-To:     "Steinar H. Gunderson" <sesse@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.2
+Subject: Re: [PATCH V4 03/10] perf: Extend branch type classification
+Content-Language: en-GB
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, Suzuki Poulose <suzuki.poulose@arm.com>,
+        James Clark <james.clark@arm.com>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220310093844.982656-1-sesse@google.com>
- <586de5fc-858b-2693-1986-5c77e8c0e3d0@intel.com>
- <YiuKAk7SaXP7B7Ee@google.com>
- <ba2c49da-22c5-06ea-e953-82211b953ca8@intel.com>
- <YjBnet2813sEGjZY@google.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <YjBnet2813sEGjZY@google.com>
-Content-Type: text/plain; charset=UTF-8
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <20220315053516.431515-1-anshuman.khandual@arm.com>
+ <20220315053516.431515-4-anshuman.khandual@arm.com>
+ <20220315112232.GF8939@worktop.programming.kicks-ass.net>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <20220315112232.GF8939@worktop.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 15/03/2022 12:16, Steinar H. Gunderson wrote:
-> On Mon, Mar 14, 2022 at 06:24:19PM +0200, Adrian Hunter wrote:
->> Perhaps changing it something like below.  What do you think?
+On 2022-03-15 11:22, Peter Zijlstra wrote:
+> On Tue, Mar 15, 2022 at 11:05:09AM +0530, Anshuman Khandual wrote:
+>> branch_entry.type now has ran out of space to accommodate more branch types
+>> classification. This will prevent perf branch stack implementation on arm64
+>> (via BRBE) to capture all available branch types. Extending this bit field
+>> i.e branch_entry.type [4 bits] is not an option as it will break user space
+>> ABI both for little and big endian perf tools.
+>>
+>> Extend branch classification with a new field branch_entry.new_type via a
+>> new branch type PERF_BR_EXTEND_ABI in branch_entry.type. Perf tools which
+>> could decode PERF_BR_EXTEND_ABI, will then parse branch_entry.new_type as
+>> well.
+>>
+>> branch_entry.new_type is a 4 bit field which can hold upto 16 branch types.
+>> The first three branch types will hold various generic page faults followed
+>> by five architecture specific branch types, which can be overridden by the
+>> platform for specific use cases. These architecture specific branch types
+>> gets overridden on arm64 platform for BRBE implementation.
 > 
-> I think the structure looks good, but I'm not sure about updating
-> e.g. ptq->last_cy_insn_cnt in both functions? Does that make sense?
-
-It should only be updated in the new intel_pt_synth_cycle_sample().
-intel_pt_synth_instruction_sample() should be unchanged.
-
-Also it would be better to keep the IPC count separate from the
-sample period. i.e. a third new variable ptq->last_cyc_cnt
-which works the same as ptq->last_insn_cnt does for intel_pt_synth_instruction_sample()
-
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index c1f261229932..c7a4b5feea2a 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -211,10 +211,13 @@ struct intel_pt_queue {
- 	u32 flags;
- 	u16 insn_len;
- 	u64 last_insn_cnt;
-+	u64 last_cyc_cnt;
- 	u64 ipc_insn_cnt;
- 	u64 ipc_cyc_cnt;
- 	u64 last_in_insn_cnt;
- 	u64 last_in_cyc_cnt;
-+	u64 last_cy_insn_cnt;
-+	u64 last_cy_cyc_cnt;
- 	u64 last_br_insn_cnt;
- 	u64 last_br_cyc_cnt;
- 	unsigned int cbr_seen;
-
-Then the new function becomes:
-
-static int intel_pt_synth_cycle_sample(struct intel_pt_queue *ptq)
-{
-	struct intel_pt *pt = ptq->pt;
-	union perf_event *event = ptq->event_buf;
-	struct perf_sample sample = { .ip = 0, };
-	u64 period;
-
-	if (pt->synth_opts.quick)
-		period = 1;
-	else
-		period = ptq->ipc_cyc_cnt - ptq->last_cyc_cnt;
-
-	if (!period || intel_pt_skip_event(pt))
-		return 0;
-
-	intel_pt_prep_sample(pt, ptq, event, &sample);
-
-	sample.id = ptq->pt->cycles_id;
-	sample.stream_id = ptq->pt->cycles_id;
-	sample.period = period;
-
-	if (ptq->sample_ipc)
-		sample.cyc_cnt = ptq->ipc_cyc_cnt - ptq->last_cy_cyc_cnt;
-	if (sample.cyc_cnt) {
-		sample.insn_cnt = ptq->ipc_insn_cnt - ptq->last_cy_insn_cnt;
-		ptq->last_cy_insn_cnt = ptq->ipc_insn_cnt;
-		ptq->last_cy_cyc_cnt = ptq->ipc_cyc_cnt;
-	}
-
-	ptq->last_cyc_cnt = ptq->ipc_cyc_cnt;
-
-	return intel_pt_deliver_synth_event(pt, event, &sample, pt->cycles_sample_type);
-}
-
-
+>> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+>> index 26d8f0b5ac0d..d29280adc3c4 100644
+>> --- a/include/uapi/linux/perf_event.h
+>> +++ b/include/uapi/linux/perf_event.h
+>> @@ -255,9 +255,22 @@ enum {
+>>   	PERF_BR_IRQ		= 12,	/* irq */
+>>   	PERF_BR_SERROR		= 13,	/* system error */
+>>   	PERF_BR_NO_TX		= 14,	/* not in transaction */
+>> +	PERF_BR_EXTEND_ABI	= 15,	/* extend ABI */
+>>   	PERF_BR_MAX,
+>>   };
 > 
-> I ran this and found something strange: I've started getting some hits
-> (very small amounts, e.g. 0.14%) on instructions that are not branches.
-> How can that happen?
+> 
+>>   #define PERF_SAMPLE_BRANCH_PLM_ALL \
+>>   	(PERF_SAMPLE_BRANCH_USER|\
+>>   	 PERF_SAMPLE_BRANCH_KERNEL|\
+>> @@ -1372,7 +1385,8 @@ struct perf_branch_entry {
+>>   		abort:1,    /* transaction abort */
+>>   		cycles:16,  /* cycle count to last branch */
+>>   		type:4,     /* branch type */
+>> -		reserved:40;
+>> +		new_type:4, /* additional branch type */
+>> +		reserved:36;
+>>   };
+> 
+> Hurmpf... this will effectively give us 5 bits of space for the cost of
+> 8, that seems... unfortunate.
+> 
+> Would something like:
+> 
+> 		type:4,
+> 		ext_type:4,
+> 		reserved:36;
+> 
+> and have all software do:
+> 
+> 	type = pbe->type | (pbe->ext_type << 4);
+> 
+> Then old software will only know about the old types. New software on
+> old kernels will add 4 0's, which is harmless, while new software on new
+> kernels will get 8 bytes of type.
+> 
+> Would that work?
 
-Possibly a PSB packet.
+Depends how bad the effects of aliasing in existing software would be, I 
+guess - e.g. new kernel outputs type 0x23 which software then interprets 
+as 0x3 since it doesn't know about the extended bits. I'm guessing 
+that's more likely "confusing to the user" than "catastrophically 
+fatal", but it might still matter.
 
-If you have an example and recent perf tools you can see the decoder
-log as follows:
+If software had an explicit opt-in to receiving extended types when 
+requesting branch sampling in the first place we could avoid that worry, 
+but then we'd need some additional complexity to sanitise records 
+depending on that option :/
 
-perf script --itrace=y0nsed+o --time <start time>,<end time> -C <cpu>
-
-where you select <start time>, <end time> and <cpu> to limit the
-decoding to that time range and cpu.
-
-
-
+Robin.
