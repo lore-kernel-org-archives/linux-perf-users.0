@@ -2,129 +2,106 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7544FC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Mar 2022 13:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 147DBC43217
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Mar 2022 13:41:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238022AbiCONIF (ORCPT
+        id S1348770AbiCONmS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Mar 2022 09:08:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58466 "EHLO
+        Tue, 15 Mar 2022 09:42:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348565AbiCONIB (ORCPT
+        with ESMTP id S1348757AbiCONmS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Mar 2022 09:08:01 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9615F50E13;
-        Tue, 15 Mar 2022 06:06:49 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4FD031474;
-        Tue, 15 Mar 2022 06:06:49 -0700 (PDT)
-Received: from [10.57.42.204] (unknown [10.57.42.204])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F2313F66F;
-        Tue, 15 Mar 2022 06:06:46 -0700 (PDT)
-Message-ID: <0df5c352-1f0d-55f8-5d7f-e28ba33d623b@arm.com>
-Date:   Tue, 15 Mar 2022 13:06:42 +0000
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
- Thunderbird/91.6.2
-Subject: Re: [PATCH V4 03/10] perf: Extend branch type classification
-Content-Language: en-GB
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, Suzuki Poulose <suzuki.poulose@arm.com>,
-        James Clark <james.clark@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Tue, 15 Mar 2022 09:42:18 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45DA152E66;
+        Tue, 15 Mar 2022 06:41:05 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id AD8FFB81677;
+        Tue, 15 Mar 2022 13:41:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07A13C340E8;
+        Tue, 15 Mar 2022 13:40:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1647351662;
+        bh=gvl9SFrDd+2JfY4XpOU21w5Fgp3RnrxgO3xzRNMW3ig=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=FpIzPAInqwcWVe7lVXyZMo10uysAvQH5/+0FSS06nOQud/sjKtVu2eXUrgVVwDtnS
+         K9saXWWZ1hCdhU07mL3gP1lbyLMM5ncodj0hAGG1sCe8guzPWwUCxCvCMd4UnYk0ij
+         MiKnX5ElR8cklFLsknUpJxfH63KChYC/OCTeoHADKe2d7sJJxnj+KlqJSXMWCfA0RW
+         7IMl8VYJBtsy0LvBdpwYawlVvfm1y/uovTsdBOXZktA8NvrkBJg6F9XHpbVdi97yvv
+         ktn0TMEJDT+qVku5scquwwLC4arp4ujY52Gxd5XtzcUD53EHdZUC9sEswg4SOYFru/
+         p422dM8tR7ngQ==
+From:   Mark Brown <broonie@kernel.org>
+To:     Julia Lawall <Julia.Lawall@inria.fr>, linux-can@vger.kernel.org
+Cc:     netdev@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Shayne Chen <shayne.chen@mediatek.com>,
+        linux-media@vger.kernel.org,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        linux-perf-users@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Sean Wang <sean.wang@mediatek.com>,
+        linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        platform-driver-x86@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        target-devel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-staging@lists.linux.dev, linux-s390@vger.kernel.org,
+        Jonas Karlman <jonas@kwiboo.se>, linux-sunxi@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-power@fi.rohmeurope.com,
+        linux-omap@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-leds@vger.kernel.org, linux-spi@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, linux-clk@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-scsi@vger.kernel.org,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <20220315053516.431515-1-anshuman.khandual@arm.com>
- <20220315053516.431515-4-anshuman.khandual@arm.com>
- <20220315112232.GF8939@worktop.programming.kicks-ass.net>
-From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <20220315112232.GF8939@worktop.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-wireless@vger.kernel.org
+In-Reply-To: <20220314115354.144023-1-Julia.Lawall@inria.fr>
+References: <20220314115354.144023-1-Julia.Lawall@inria.fr>
+Subject: Re: (subset) [PATCH 00/30] fix typos in comments
+Message-Id: <164735165474.3687547.1964402001196947729.b4-ty@kernel.org>
+Date:   Tue, 15 Mar 2022 13:40:54 +0000
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2022-03-15 11:22, Peter Zijlstra wrote:
-> On Tue, Mar 15, 2022 at 11:05:09AM +0530, Anshuman Khandual wrote:
->> branch_entry.type now has ran out of space to accommodate more branch types
->> classification. This will prevent perf branch stack implementation on arm64
->> (via BRBE) to capture all available branch types. Extending this bit field
->> i.e branch_entry.type [4 bits] is not an option as it will break user space
->> ABI both for little and big endian perf tools.
->>
->> Extend branch classification with a new field branch_entry.new_type via a
->> new branch type PERF_BR_EXTEND_ABI in branch_entry.type. Perf tools which
->> could decode PERF_BR_EXTEND_ABI, will then parse branch_entry.new_type as
->> well.
->>
->> branch_entry.new_type is a 4 bit field which can hold upto 16 branch types.
->> The first three branch types will hold various generic page faults followed
->> by five architecture specific branch types, which can be overridden by the
->> platform for specific use cases. These architecture specific branch types
->> gets overridden on arm64 platform for BRBE implementation.
+On Mon, 14 Mar 2022 12:53:24 +0100, Julia Lawall wrote:
+> Various spelling mistakes in comments.
+> Detected with the help of Coccinelle.
 > 
->> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
->> index 26d8f0b5ac0d..d29280adc3c4 100644
->> --- a/include/uapi/linux/perf_event.h
->> +++ b/include/uapi/linux/perf_event.h
->> @@ -255,9 +255,22 @@ enum {
->>   	PERF_BR_IRQ		= 12,	/* irq */
->>   	PERF_BR_SERROR		= 13,	/* system error */
->>   	PERF_BR_NO_TX		= 14,	/* not in transaction */
->> +	PERF_BR_EXTEND_ABI	= 15,	/* extend ABI */
->>   	PERF_BR_MAX,
->>   };
-> 
-> 
->>   #define PERF_SAMPLE_BRANCH_PLM_ALL \
->>   	(PERF_SAMPLE_BRANCH_USER|\
->>   	 PERF_SAMPLE_BRANCH_KERNEL|\
->> @@ -1372,7 +1385,8 @@ struct perf_branch_entry {
->>   		abort:1,    /* transaction abort */
->>   		cycles:16,  /* cycle count to last branch */
->>   		type:4,     /* branch type */
->> -		reserved:40;
->> +		new_type:4, /* additional branch type */
->> +		reserved:36;
->>   };
-> 
-> Hurmpf... this will effectively give us 5 bits of space for the cost of
-> 8, that seems... unfortunate.
-> 
-> Would something like:
-> 
-> 		type:4,
-> 		ext_type:4,
-> 		reserved:36;
-> 
-> and have all software do:
-> 
-> 	type = pbe->type | (pbe->ext_type << 4);
-> 
-> Then old software will only know about the old types. New software on
-> old kernels will add 4 0's, which is harmless, while new software on new
-> kernels will get 8 bytes of type.
-> 
-> Would that work?
 
-Depends how bad the effects of aliasing in existing software would be, I 
-guess - e.g. new kernel outputs type 0x23 which software then interprets 
-as 0x3 since it doesn't know about the extended bits. I'm guessing 
-that's more likely "confusing to the user" than "catastrophically 
-fatal", but it might still matter.
+Applied to
 
-If software had an explicit opt-in to receiving extended types when 
-requesting branch sampling in the first place we could avoid that worry, 
-but then we'd need some additional complexity to sanitise records 
-depending on that option :/
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-Robin.
+Thanks!
+
+[21/30] spi: sun4i: fix typos in comments
+        commit: 2002c13243d595e211c0dad6b8e2e87f906f474b
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
