@@ -2,268 +2,93 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED0FC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Mar 2022 07:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 307A2C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Mar 2022 08:19:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354332AbiCPHu5 (ORCPT
+        id S1352402AbiCPIVE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Mar 2022 03:50:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40108 "EHLO
+        Wed, 16 Mar 2022 04:21:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344701AbiCPHu4 (ORCPT
+        with ESMTP id S245148AbiCPIVD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Mar 2022 03:50:56 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CCFB5D5D3;
-        Wed, 16 Mar 2022 00:49:41 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4KJMk127WrzcbLf;
-        Wed, 16 Mar 2022 15:44:41 +0800 (CST)
-Received: from [10.67.102.169] (10.67.102.169) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Wed, 16 Mar 2022 15:49:38 +0800
-CC:     <prime.zeng@huawei.com>, <liuqi115@huawei.com>,
-        <zhangshaokun@hisilicon.com>, <linuxarm@huawei.com>,
-        <song.bao.hua@hisilicon.com>
-Subject: Re: [PATCH v5 2/8] hwtracing: Add trace function support for
- HiSilicon PCIe Tune and Trace device
-To:     John Garry <john.garry@huawei.com>,
-        Yicong Yang <yangyicong@hisilicon.com>,
-        <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <lorenzo.pieralisi@arm.com>,
-        <will@kernel.org>, <mark.rutland@arm.com>,
-        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
-        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
-        <jonathan.cameron@huawei.com>, <daniel.thompson@linaro.org>,
-        <joro@8bytes.org>, <shameerali.kolothum.thodi@huawei.com>,
-        <robin.murphy@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <acme@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>
-References: <20220308084930.5142-1-yangyicong@hisilicon.com>
- <20220308084930.5142-3-yangyicong@hisilicon.com>
- <2049e270-7cf4-84c5-eb84-5bb1a425e897@huawei.com>
-From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <3f8bff53-e6fb-d4ae-b48f-d9d9ef22f929@huawei.com>
-Date:   Wed, 16 Mar 2022 15:49:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        Wed, 16 Mar 2022 04:21:03 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1FAE63527
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Mar 2022 01:19:49 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id t11so1802741wrm.5
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Mar 2022 01:19:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=eB3Qa08xe5yQrsvIPU/lEi8D81kJpMa1SMOqC0T8EyI=;
+        b=KMgh5POQkPgJPtD8jFWJk5a5SH1QA1cwyg8ql04PZnvTkkU9yfAkqlCYaHSd54Y2XE
+         rti8sLyNq1VbL0MuuSYl/vkm89LJ5DtvjC+kxhbnWEXPXcD7g4JH6Bmic2LL5B7Y7agt
+         6RCrLY2AdJj8OYIKfqFw2Up9M4j/SsahasYIdoouI8wONF5uoB9W/uWNpqRLiLz17BnX
+         eo01QqcerJRs8lY2vWi2LlQ1h8aSDbXiiYvr1CMNRG4ruasA5hnjar+cU4qOc7n/4Rqe
+         KQ+ArjwSBaAkZsZmWgmngAg6TfN7KamEue76wnY4vzfUXnX0QdZ5eK0B2cpcGlLSQixQ
+         qoMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eB3Qa08xe5yQrsvIPU/lEi8D81kJpMa1SMOqC0T8EyI=;
+        b=CeJxKBpzwM8KC0O/4553N7fpNK+FdZyJ1CW+/0WqsuCncMJiqCOmUPRmavxQ52ZX16
+         6+2If87OBC4q1cbFGSbRul31pdeqFSeFHwsXqAXtZlVrsnh+MfEIxJUTunYhRaHC7p8h
+         w/YfBVR67Pe3xEiE6s677Y0UrlcBMnGS95BcCjHNpMS0H12DBgdDZGN7ugqKMXQ6u3hR
+         L8IAKca/W+vDnZgz7iWknUhns8F6QKrVVD7KfCMMneB0HhuLJFLty5Tsxaw4xG1YRKNh
+         qRkzF6If3lsofncyLSIjhNyv2R/OnKfwJ6+rK00qDCz5sSUyF62+w9sGrQxqZdzkYaJy
+         Ax9g==
+X-Gm-Message-State: AOAM530lBb0sRYxkgZcaf5R9SLEYcnMYXFm+viyFi7mqdXZI7Q7aeaCM
+        x0Texwffk5qyk+pbH00Uxd6jhcko4u1Lvw==
+X-Google-Smtp-Source: ABdhPJwrWBZdB7018LH8H2J5v0WSvKptIeZpUnF7AAPZMrxFp93OwZ6yln++zheKXJ8gFgNLU75vKw==
+X-Received: by 2002:a05:6000:1868:b0:203:732e:6a96 with SMTP id d8-20020a056000186800b00203732e6a96mr23454156wri.39.1647418788344;
+        Wed, 16 Mar 2022 01:19:48 -0700 (PDT)
+Received: from google.com (110.121.148.146.bc.googleusercontent.com. [146.148.121.110])
+        by smtp.gmail.com with ESMTPSA id i74-20020adf90d0000000b0020373ba7beesm1616426wri.0.2022.03.16.01.19.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Mar 2022 01:19:47 -0700 (PDT)
+Date:   Wed, 16 Mar 2022 09:19:44 +0100
+From:   "Steinar H. Gunderson" <sesse@google.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf intel-pt: Synthesize cycle events
+Message-ID: <YjGdoGy4Z2UUG9S9@google.com>
+References: <20220310093844.982656-1-sesse@google.com>
+ <586de5fc-858b-2693-1986-5c77e8c0e3d0@intel.com>
+ <YiuKAk7SaXP7B7Ee@google.com>
+ <ba2c49da-22c5-06ea-e953-82211b953ca8@intel.com>
+ <YjBnet2813sEGjZY@google.com>
+ <c50bb87d-9fee-c4f9-a350-8729e503e43a@intel.com>
+ <YjDUO6bbyfGw/u0C@google.com>
+ <52903e58-e74c-5ea0-36b4-277ea3610af4@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <2049e270-7cf4-84c5-eb84-5bb1a425e897@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <52903e58-e74c-5ea0-36b4-277ea3610af4@intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2022/3/12 1:55, John Garry wrote:
->> +
->> +static int hisi_ptt_alloc_trace_buf(struct hisi_ptt *hisi_ptt)
-> 
-> no caller
-> 
->> +{
->> +    struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
->> +    struct device *dev = &hisi_ptt->pdev->dev;
->> +    int i;
->> +
->> +    hisi_ptt->trace_ctrl.buf_index = 0;
->> +
->> +    /* If the trace buffer has already been allocated, zero it. */
->> +    if (ctrl->trace_buf) {
->> +        for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; i++)
->> +            memset(ctrl->trace_buf[i].addr, 0, HISI_PTT_TRACE_BUF_SIZE);
->> +        return 0;
->> +    }
->> +
->> +    ctrl->trace_buf = devm_kcalloc(dev, HISI_PTT_TRACE_BUF_CNT,
->> +                       sizeof(struct hisi_ptt_dma_buffer), GFP_KERNEL);
->> +    if (!ctrl->trace_buf)
->> +        return -ENOMEM;
->> +
->> +    for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; ++i) {
->> +        ctrl->trace_buf[i].addr = dmam_alloc_coherent(dev, HISI_PTT_TRACE_BUF_SIZE,
->> +                                 &ctrl->trace_buf[i].dma,
->> +                                 GFP_KERNEL);
->> +        if (!ctrl->trace_buf[i].addr) {
->> +            hisi_ptt_free_trace_buf(hisi_ptt);
->> +            return -ENOMEM;
->> +        }
->> +    }
->> +
->> +    return 0;
->> +}
->> +
->> +static void hisi_ptt_trace_end(struct hisi_ptt *hisi_ptt)
->> +{
->> +    writel(0, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
->> +    hisi_ptt->trace_ctrl.started = false;
->> +}
->> +
->> +static int hisi_ptt_trace_start(struct hisi_ptt *hisi_ptt)
-> 
-> again this function has no caller, so I assume a warn is generated if we only apply up to this patch (when compiling)
-> 
-> please only add code per-patch which is actually referenced
-> 
+On Tue, Mar 15, 2022 at 10:11:54PM +0200, Adrian Hunter wrote:
+> Sorry, my first suggestion has issues, but the second is better.
 
-it's because I split the trace part into 2 patches as 2/8 provides probe and some basic
-functions (mentioned in the commit message) and 3/8 adds the PMU device which use the function
-in 2/8, assuming that it'll be easier to review..
+I tried your second one, but can't see much difference. The original and
+your patched version still differ by a lot, and I still see various
+non-branch instructions getting very tiny fractions. (PSB packets
+_might_ be it, as there are ~1000 of them in the 165M-cycle trace.)
 
-I think it's suggested to squash patch 2/8 and 3/8, then the comments here is addressed.
+I guess the good news is that the perf report coming out of your version
+looks more likely to me; I have some functions that are around 1% that
+shouldn't intuitively be that much (and, if I write some Perl to sum up
+the cycles from the IPC lines in perf script, are more around 0.1%).
+So perhaps we should stop chasing the difference? I don't know.
 
->> +{
->> +    struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
->> +    u32 val;
->> +    int i;
->> +
->> +    /* Check device idle before start trace */
->> +    if (!hisi_ptt_wait_trace_hw_idle(hisi_ptt)) {
->> +        pci_err(hisi_ptt->pdev, "Failed to start trace, the device is still busy.\n");
-> 
-> Are we already going to have a "device busy" message? I just wonder if we need this at all
-> 
-
-The message is necessary as the caller pmu::start() is void and we cannot pass the failure
-to the user by the return value. So a message is printed here to notify user the error reason.
-
->> +        return -EBUSY;
->> +    }
->> +
->> +    ctrl->started = true;
->> +
-[...]
->> +static int hisi_ptt_init_ctrls(struct hisi_ptt *hisi_ptt)
->> +{
->> +    struct pci_dev *pdev = hisi_ptt->pdev;
->> +    struct pci_bus *bus;
->> +    int ret;
->> +    u32 reg;
->> +
->> +    INIT_LIST_HEAD(&hisi_ptt->port_filters);
->> +    INIT_LIST_HEAD(&hisi_ptt->req_filters);
->> +
->> +    /*
->> +     * The device range register provides the information about the
->> +     * root ports which the RCiEP can control and trace. The RCiEP
->> +     * and the root ports it support are on the same PCIe core, with
->> +     * same domain number but maybe different bus number. The device
->> +     * range register will tell us which root ports we can support,
->> +     * Bit[31:16] indicates the upper BDF numbers of the root port,
->> +     * while Bit[15:0] indicates the lower.
->> +     */
->> +    reg = readl(hisi_ptt->iobase + HISI_PTT_DEVICE_RANGE);
->> +    hisi_ptt->upper = FIELD_GET(HISI_PTT_DEVICE_RANGE_UPPER, reg);
->> +    hisi_ptt->lower = FIELD_GET(HISI_PTT_DEVICE_RANGE_LOWER, reg);
->> +
->> +    /*
->> +     * hisi_ptt_init_filters() only fails when the memory allocation failed.
->> +     * We don't check the failure here as it won't fail after adding the
->> +     * support of dynamically updating the filters in the following patch.
-> 
-> please structure the series such that we don't need to talk about how we will fix it later
-> 
-
-will drop the comment here and handle the error as usual.
-
->> +     */
->> +    bus = pci_find_bus(pci_domain_nr(pdev->bus), PCI_BUS_NUM(hisi_ptt->upper));
->> +    if (bus)
->> +        pci_walk_bus(bus, hisi_ptt_init_filters, hisi_ptt);
->> +
->> +    ret = devm_add_action_or_reset(&pdev->dev, hisi_ptt_release_filters, hisi_ptt);
->> +    if (ret)
->> +        return ret;
->> +
->> +    hisi_ptt->trace_ctrl.default_cpu = cpumask_first(cpumask_of_node(dev_to_node(&pdev->dev)));
->> +
->> +    return 0;
->> +}
->> +
->> +/*
->> + * The DMA of PTT trace can only use direct mapping, due to some
->> + * hardware restriction. Check whether there is an IOMMU or the
->> + * policy of the IOMMU domain is passthrough, otherwise the trace
->> + * cannot work.
->> + *
->> + * The PTT device is supposed to behind the ARM SMMUv3, which
->> + * should have passthrough the device by a quirk.
->> + */
->> +static int hisi_ptt_check_iommu_mapping(struct pci_dev *pdev)
->> +{
->> +    struct iommu_domain *iommu_domain;
->> +
->> +    iommu_domain = iommu_get_domain_for_dev(&pdev->dev);
->> +    if (!iommu_domain || iommu_domain->type == IOMMU_DOMAIN_IDENTITY)
->> +        return 0;
->> +
->> +    return -EOPNOTSUPP;
->> +}
->> +
->> +static int hisi_ptt_probe(struct pci_dev *pdev,
->> +              const struct pci_device_id *id)
->> +{
->> +    struct hisi_ptt *hisi_ptt;
->> +    int ret;
->> +
->> +    ret = hisi_ptt_check_iommu_mapping(pdev);
->> +    if (ret) {
->> +        pci_err(pdev, "cannot work with non-direct DMA mapping.\n");
-> 
-> please no double-negatives like this, so maybe "requires direct DMA mappings"
-> 
-
-will refine the message.
-
->> +        return ret;
->> +    }
->> +
->> +    hisi_ptt = devm_kzalloc(&pdev->dev, sizeof(*hisi_ptt), GFP_KERNEL);
->> +    if (!hisi_ptt)
->> +        return -ENOMEM;
->> +
->> +    mutex_init(&hisi_ptt->mutex);
->> +    hisi_ptt->pdev = pdev;
->> +    pci_set_drvdata(pdev, hisi_ptt);
->> +
->> +    ret = pcim_enable_device(pdev);
->> +    if (ret) {
->> +        pci_err(pdev, "failed to enable device, ret = %d.\n", ret);
-> 
-> nit: no '.' at end of any messages
-> 
-
-will drop '.' for all the messages.
-
->> +        return ret;
->> +    }
->> +
->> +    ret = pcim_iomap_regions(pdev, BIT(2), DRV_NAME);
->> +    if (ret) {
->> +        pci_err(pdev, "failed to remap io memory, ret = %d.\n", ret);
->> +        return ret;
->> +    }
->> +
->> +    hisi_ptt->iobase = pcim_iomap_table(pdev)[2];
->> +
->> +    ret = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(64));
->> +    if (ret) {
->> +        pci_err(pdev, "failed to set 64 bit dma mask, ret = %d.\n", ret);
-> 
-> I do doubt that this message is any use
-> 
-
-I think it's useful as with the message it will be easier to find on which stage the probe fails.
-
-Thanks,
-Yicong
-
-
+/* Steinar */
