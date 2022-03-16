@@ -2,89 +2,119 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC12C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Mar 2022 11:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FD9C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Mar 2022 11:44:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355284AbiCPLVK (ORCPT
+        id S235851AbiCPLqK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Mar 2022 07:21:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34126 "EHLO
+        Wed, 16 Mar 2022 07:46:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348129AbiCPLVJ (ORCPT
+        with ESMTP id S234182AbiCPLqJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Mar 2022 07:21:09 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA2F33BF84;
-        Wed, 16 Mar 2022 04:19:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647429595; x=1678965595;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=WOZPX280h/gDeG6eQLXb35wKGPqTHaoiFvqKuqkEwNg=;
-  b=IlYui+VZshSHfhBilyE1Fa5IfIXrFlPbWcYR9NVc+bO1aLJvHUDfGzNz
-   Qv6Ze3Ej9jrNZy/GRKpzOSYO2z35WcfJcxviXeIsoTDXkdeqr9oD91dg2
-   wx5ViquMl16akcuEUmaouItpssNIXQn2uIo+mti2VxLzxgi1Dpn7ZWd+0
-   YUj9YHRnl/dWfNEJuQM7V55SUdIGpPGWRnmrI2B03+3xjiwVHPiVEBxAC
-   oKdYum+p/ByteXCsET9QXTkcAeYlOP+MTq8wOxKu4cYSVoyDh6s7yKbEG
-   AydpU2AUdAVvTX+iRT1lRt5/h08CJ/CeEJVPvcWAgbXGpdZRsv6iv5zwA
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10286"; a="255383241"
-X-IronPort-AV: E=Sophos;i="5.90,186,1643702400"; 
-   d="scan'208";a="255383241"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2022 04:19:55 -0700
-X-IronPort-AV: E=Sophos;i="5.90,186,1643702400"; 
-   d="scan'208";a="557392932"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.35.28])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2022 04:19:52 -0700
-Message-ID: <ef780335-7dc6-3a23-54a8-b6fc9c8a2ed3@intel.com>
-Date:   Wed, 16 Mar 2022 13:19:46 +0200
+        Wed, 16 Mar 2022 07:46:09 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8EFCE631B;
+        Wed, 16 Mar 2022 04:44:55 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B7101515;
+        Wed, 16 Mar 2022 04:44:55 -0700 (PDT)
+Received: from [10.57.6.128] (unknown [10.57.6.128])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1DF3E3F85F;
+        Wed, 16 Mar 2022 04:44:50 -0700 (PDT)
+Subject: Re: [PATCH v2 2/2] perf mem: Support HITM for when mem_lvl_num is
+ used
+From:   German Gomez <german.gomez@arm.com>
+To:     Ali Saidi <alisaidi@amazon.com>, leo.yan@linaro.org
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        andrew.kilroy@arm.com, benh@kernel.crashing.org,
+        james.clark@arm.com, john.garry@huawei.com, jolsa@kernel.org,
+        kjain@linux.ibm.com, lihuafei1@huawei.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
+        peterz@infradead.org, will@kernel.org, yao.jin@linux.intel.com,
+        Nick.Forrington@arm.com
+References: <df73fb93-3892-6713-8ebe-bc57a861ec5d@arm.com>
+ <20220314183721.3198-1-alisaidi@amazon.com>
+ <172ce478-b539-2aa4-0470-1b96c6b8169b@arm.com>
+Message-ID: <7b3aaa4d-5194-a729-f8ad-d55ada7fa58f@arm.com>
+Date:   Wed, 16 Mar 2022 11:43:52 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.5.0
-Subject: Re: [PATCH] perf intel-pt: Synthesize cycle events
-Content-Language: en-US
-To:     "Steinar H. Gunderson" <sesse@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220310093844.982656-1-sesse@google.com>
- <586de5fc-858b-2693-1986-5c77e8c0e3d0@intel.com>
- <YiuKAk7SaXP7B7Ee@google.com>
- <ba2c49da-22c5-06ea-e953-82211b953ca8@intel.com>
- <YjBnet2813sEGjZY@google.com>
- <c50bb87d-9fee-c4f9-a350-8729e503e43a@intel.com>
- <YjDUO6bbyfGw/u0C@google.com>
- <52903e58-e74c-5ea0-36b4-277ea3610af4@intel.com>
- <YjGdoGy4Z2UUG9S9@google.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <YjGdoGy4Z2UUG9S9@google.com>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <172ce478-b539-2aa4-0470-1b96c6b8169b@arm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 16.3.2022 10.19, Steinar H. Gunderson wrote:
-> On Tue, Mar 15, 2022 at 10:11:54PM +0200, Adrian Hunter wrote:
->> Sorry, my first suggestion has issues, but the second is better.
-> 
-> I tried your second one, but can't see much difference. The original and
-> your patched version still differ by a lot, and I still see various
-> non-branch instructions getting very tiny fractions. (PSB packets
-> _might_ be it, as there are ~1000 of them in the 165M-cycle trace.)
-> 
-> I guess the good news is that the perf report coming out of your version
-> looks more likely to me; I have some functions that are around 1% that
-> shouldn't intuitively be that much (and, if I write some Perl to sum up
-> the cycles from the IPC lines in perf script, are more around 0.1%).
-> So perhaps we should stop chasing the difference? I don't know.
 
-That doesn't sound right.  I will look at it more closely in the next few days.
+On 15/03/2022 18:44, German Gomez wrote:
+> On 14/03/2022 18:37, Ali Saidi wrote:
+>> Hi German and Leo,
+>>
+>> On   Mon, 14 Mar 2022 18:00:13 +0000, German Gomez wrote:
+>>> Hi Leo, Ali
+>>>
+>>> On 14/03/2022 06:33, Leo Yan wrote:
+>>>> On Sun, Mar 13, 2022 at 07:19:33PM +0000, Ali Saidi wrote:
+>>>>
+>>>> [...]
+>>>>
+>>>>>>>> +			if (lvl & P(LVL, L3) || lnum == P(LVLNUM, L4)) {
+>>>>>>> According to a comment in the previous patch, using L4 is specific to Neoverse, right?
+>>>>>>>
+>>>>>>> Maybe we need to distinguish the Neoverse case from the generic one here as well
+>>>>>>>
+>>>>>>> if (is_neoverse)
+>>>>>>> // treat L4 as llc
+>>>>>>> else
+>>>>>>> // treat L3 as llc
+>>>>>> I personally think it's not good idea to distinguish platforms in the decoding code.
+>>>>> I agree here. The more we talk about this, the more I'm wondering if we're
+>>>>> spending too much code solving a problem that doesn't exist. I know of no
+>>>>> Neoverse systems that actually have 4 cache levels, they all actually have three
+>>>>> even though it's technically possible to have four.  I have some doubts anyone
+>>>>> will actually build four levels of cache and perhaps the most prudent path here
+>>>>> is to assume only three levels (and adjust the previous patch) until someone 
+>>>>> actually produces a system with four levels instead of a lot of code that is
+>>>>> never actually exercised?
+>>>> I am not right person to say L4 cache is not implemented in Neoverse
+>>>> platforms; my guess for a "System cache" data source might be L3 or
+>>>> L4 and it is a implementation dependent.  Maybe German or Arm mates
+>>>> could confirm for this.
+>>> I had a look at the TRMs for the N1[1], V1[2] and N2[3] Neoverse cores
+>>> (specifically the LL_CACHE_RD pmu events). If we were to assign a number
+>>> to the system cache (assuming all caches are implemented):
+>>>
+>>> *For N1*, if L2 and L3 are implemented, system cache would follow at *L4*
+>> To date no one has built 4 level though. Everyone has only built three.
+> The N1SDP board advertises 4 levels (we use it regularly for testing perf patches)
+
+That said, it's probably the odd one out.
+
+I'm not against assuming 3 levels. Later if there's is a strong need for L4, indeed we can go back and change it.
+
+Thanks,
+German
+
+>
+> | $ cat /sys/devices/system/cpu/cpu0/cache/index4/{level,shared_cpu_list}
+> | 4
+> | 0-3
+>
+> Would it be a good idea to obtain the system cache level# from sysfs?
+>
+>>> *For V1 and N2*, if L2 is implemented, system cache would follow at *L3*
+>>> (these don't seem to have the same/similar per-cluster L3 cache from the N1)
+>> And in the future they're not able to build >3. German and Leo if there aren't
+>> strong objections I think the best path forward is for me to respin these
+>> assuming only 3 levels and if someone builds 4 in a far-off-future we can always
+>> change the implementation then. Agreed?
+>>
+>> Thanks,
+>> Ali
+>>
