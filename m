@@ -2,162 +2,75 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A398C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Mar 2022 17:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BCAC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Mar 2022 18:30:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357660AbiCPRvI (ORCPT
+        id S1345952AbiCPSbU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Mar 2022 13:51:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46148 "EHLO
+        Wed, 16 Mar 2022 14:31:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349080AbiCPRvH (ORCPT
+        with ESMTP id S230022AbiCPSbU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Mar 2022 13:51:07 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8124B6B09F;
-        Wed, 16 Mar 2022 10:49:52 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 43C2A1476;
-        Wed, 16 Mar 2022 10:49:52 -0700 (PDT)
-Received: from [10.57.6.128] (unknown [10.57.6.128])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8815B3F66F;
-        Wed, 16 Mar 2022 10:49:50 -0700 (PDT)
-Subject: Re: [PATCH v2 1/1] perf test arm64: Test unwinding using fame-pointer
- (fp) mode
-To:     James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org
-Cc:     mark.rutland@arm.com, namhyung@kernel.org, leo.yan@linaro.org,
-        Alexandre.Truong@arm.com, Jiri Olsa <jolsa@kernel.org>
-References: <20220316172015.98000-1-german.gomez@arm.com>
- <592a32d6-b618-951c-9db9-711d022ff85e@arm.com>
-From:   German Gomez <german.gomez@arm.com>
-Message-ID: <b2ff473a-f252-89c9-78b3-bacff2876869@arm.com>
-Date:   Wed, 16 Mar 2022 17:48:50 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Wed, 16 Mar 2022 14:31:20 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEEA35F27D;
+        Wed, 16 Mar 2022 11:30:05 -0700 (PDT)
+Received: from zn.tnic (p200300ea971561ec329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9715:61ec:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5064E1EC0347;
+        Wed, 16 Mar 2022 19:30:00 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1647455400;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=pb3rAmTPQdoOpkczge2tpTU7w0ED0PgJBxCzVuNRtpA=;
+        b=KH0w64BKSFKeoGKejtnc0whoa0n4cjGnZzK0iGH3qQX/XWERAV/4qNfjCIkWVuH8tzFJlN
+        XlPpulIbREG3kPLu6zRaBbo9GLZlhc2FwgwW0N+RTDjq5t1UR0p/MUoF2oZhEih6M8fhkL
+        qJNpKX1b9Jp9kdO8eFaVLJTh5v8OUUY=
+Date:   Wed, 16 Mar 2022 19:29:56 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Dongli Si <kvmx86@gmail.com>
+Cc:     peterz@infradead.org, joerg.roedel@amd.com,
+        liam.merwick@oracle.com, kim.phillips@amd.com, mingo@kernel.org,
+        acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, tglx@linutronix.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] perf/x86/amd: Don't touch the Host-only bit inside
+ the guest hypervisor
+Message-ID: <YjIspMR0lm6+W/Pp@zn.tnic>
+References: <20220314042254.1487836-1-sidongli1997@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <592a32d6-b618-951c-9db9-711d022ff85e@arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20220314042254.1487836-1-sidongli1997@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Mon, Mar 14, 2022 at 12:22:54PM +0800, Dongli Si wrote:
+> diff --git a/arch/x86/include/asm/hypervisor.h b/arch/x86/include/asm/hypervisor.h
+> index e41cbf2ec41d..fcc66c23cc72 100644
+> --- a/arch/x86/include/asm/hypervisor.h
+> +++ b/arch/x86/include/asm/hypervisor.h
+> @@ -73,11 +73,21 @@ static inline bool hypervisor_is_type(enum x86_hypervisor_type type)
+>  {
+>  	return x86_hyper_type == type;
+>  }
+> +
+> +static inline bool run_as_host(void)
+> +{
+> +	return hypervisor_is_type(X86_HYPER_NATIVE);
+> +}
 
-On 16/03/2022 17:30, James Clark wrote:
->
-> On 16/03/2022 17:20, German Gomez wrote:
->> Add a shell script to check that the call-graphs generated using frame
->> pointers (--call-graph fp) are complete and not missing leaf functions:
->>
->>   | $ perf test 88 -v
->>   |  88: Check Arm64 callgraphs are complete in fp mode                  :
->>   | --- start ---
->>   | test child forked, pid 8734
->>   |  + Compiling test program (/tmp/test_program.Cz3yL)...
->>   |  + Recording (PID=8749)...
->>   |  + Stopping perf-record...
->>   | test_program.Cz
->>   |                  728 leaf
->>   |                  753 parent
->>   |                  76c main
->>   | test child finished with 0
->>   | ---- end ----
->>   | Check Arm SPE callgraphs are complete in fp mode: Ok
->>
-> Ran it on N1SDP and it passes, and it fails if b9f6fbb3b2c2 isn't applied.
+What's the point of this "wrapper"?
 
-I forgot to mention in the notes that it's supposed to work with both unwinders:
+-- 
+Regards/Gruss,
+    Boris.
 
-$ make                # for libunwind (default)
-$ make NO_LIBUNWIND=1 # for libdw
-
->
-> Reviewed-by: James Clark <james.clark@arm.com>
->
->> Fixes: b9f6fbb3b2c2 ("perf arm64: Inject missing frames when using 'perf record --call-graph=fp'")
->> Suggested-by: Jiri Olsa <jolsa@kernel.org>
->> Signed-off-by: German Gomez <german.gomez@arm.com>
->> ---
->> Changes since v1: https://lore.kernel.org/all/a6ba0ea8-f070-9f79-f018-f638ff677c7c@arm.com/
->>  - Add explicit '-g' flag to GCC command
->> ---
->>  .../perf/tests/shell/test_arm_callgraph_fp.sh | 68 +++++++++++++++++++
->>  1 file changed, 68 insertions(+)
->>  create mode 100755 tools/perf/tests/shell/test_arm_callgraph_fp.sh
->>
->> diff --git a/tools/perf/tests/shell/test_arm_callgraph_fp.sh b/tools/perf/tests/shell/test_arm_callgraph_fp.sh
->> new file mode 100755
->> index 000000000..ea1b4e6bb
->> --- /dev/null
->> +++ b/tools/perf/tests/shell/test_arm_callgraph_fp.sh
->> @@ -0,0 +1,68 @@
->> +#!/bin/sh
->> +# Check Arm64 callgraphs are complete in fp mode
->> +# SPDX-License-Identifier: GPL-2.0
->> +
->> +lscpu | grep -q "aarch64" || exit 2
->> +
->> +if ! [ -x "$(command -v cc)" ]; then
->> +	echo "failed: no compiler, install gcc"
->> +	exit 2
->> +fi
->> +
->> +PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
->> +TEST_PROGRAM_SOURCE=$(mktemp /tmp/test_program.XXXXX.c)
->> +TEST_PROGRAM=$(mktemp /tmp/test_program.XXXXX)
->> +
->> +cleanup_files()
->> +{
->> +	rm -f $PERF_DATA
->> +	rm -f $TEST_PROGRAM_SOURCE
->> +	rm -f $TEST_PROGRAM
->> +}
->> +
->> +trap cleanup_files exit term int
->> +
->> +cat << EOF > $TEST_PROGRAM_SOURCE
->> +int a = 0;
->> +void leaf(void) {
->> +  for (;;)
->> +    a += a;
->> +}
->> +void parent(void) {
->> +  leaf();
->> +}
->> +int main(void) {
->> +  parent();
->> +  return 0;
->> +}
->> +EOF
->> +
->> +echo " + Compiling test program ($TEST_PROGRAM)..."
->> +
->> +CFLAGS="-g -O0 -fno-inline -fno-omit-frame-pointer"
->> +cc $CFLAGS $TEST_PROGRAM_SOURCE -o $TEST_PROGRAM || exit 1
->> +
->> +# Add a 1 second delay to skip samples that are not in the leaf() function
->> +perf record -o $PERF_DATA --call-graph fp -e cycles//u -D 1000 -- $TEST_PROGRAM 2> /dev/null &
->> +PID=$!
->> +
->> +echo " + Recording (PID=$PID)..."
->> +sleep 2
->> +echo " + Stopping perf-record..."
->> +
->> +kill $PID
->> +wait $PID
->> +
->> +# expected perf-script output:
->> +#
->> +# program 
->> +# 	728 leaf
->> +# 	753 parent
->> +# 	76c main
->> +# ...
->> +
->> +perf script -i $PERF_DATA -F comm,ip,sym | head -n4
->> +perf script -i $PERF_DATA -F comm,ip,sym | head -n4 | \
->> +	awk '{ if ($2 != "") sym[i++] = $2 } END { if (sym[0] != "leaf" ||
->> +						       sym[1] != "parent" ||
->> +						       sym[2] != "main") exit 1 }'
+https://people.kernel.org/tglx/notes-about-netiquette
