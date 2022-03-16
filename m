@@ -2,98 +2,118 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63712C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Mar 2022 20:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9316CC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Mar 2022 06:16:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238856AbiCOUNR (ORCPT
+        id S1353838AbiCPGRM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Mar 2022 16:13:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53592 "EHLO
+        Wed, 16 Mar 2022 02:17:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236582AbiCOUNR (ORCPT
+        with ESMTP id S237256AbiCPGRL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Mar 2022 16:13:17 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 749D65469E;
-        Tue, 15 Mar 2022 13:12:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647375124; x=1678911124;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=P0igHsy0agyY40a+InXlXjEkpY6Jf+LU2yEKK5b9mdI=;
-  b=d3RgezXLuKRrI24gkmG4Hewc2RaGh7c0r0bEIW+CEzKk97kXxS+pGn5J
-   vkyFl82K2rVTTQ/rFXbeqWRCeYskEE09UDpZKSHDh/NtL/cX7fsyF1xS4
-   cE/vF/79BAEOb9sejsa3NxEvKlNnI/JUcfOPpSeBX2ya0IWl6dk3J2gLB
-   bbURiBd1VI7rXjg2NgZ4PjFjujhvFSaFAMRvEWmxNB+kYsmYFm2CIdtT8
-   ZSfGi+BxwU7bH6Ykm9aBfOyf59E/DhiS0xy1h62IZa0cAepYARnRkXWxH
-   KSJmF7DPqaScEsmOh8jzyHu9rt23P0+OdsSy2VVRVpYv3SQkbLi3cK9Ov
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10286"; a="342843389"
-X-IronPort-AV: E=Sophos;i="5.90,184,1643702400"; 
-   d="scan'208";a="342843389"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2022 13:12:04 -0700
-X-IronPort-AV: E=Sophos;i="5.90,184,1643702400"; 
-   d="scan'208";a="557092735"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.35.111])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2022 13:12:00 -0700
-Message-ID: <52903e58-e74c-5ea0-36b4-277ea3610af4@intel.com>
-Date:   Tue, 15 Mar 2022 22:11:54 +0200
+        Wed, 16 Mar 2022 02:17:11 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BB073701C;
+        Tue, 15 Mar 2022 23:15:57 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4KJKds0rrTzcb5F;
+        Wed, 16 Mar 2022 14:10:57 +0800 (CST)
+Received: from [10.67.102.169] (10.67.102.169) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Wed, 16 Mar 2022 14:15:48 +0800
+CC:     <prime.zeng@huawei.com>, <liuqi115@huawei.com>,
+        <zhangshaokun@hisilicon.com>, <linuxarm@huawei.com>,
+        <song.bao.hua@hisilicon.com>
+Subject: Re: [PATCH v5 1/8] iommu/arm-smmu-v3: Make default domain type of
+ HiSilicon PTT device to identity
+To:     John Garry <john.garry@huawei.com>,
+        Yicong Yang <yangyicong@hisilicon.com>,
+        <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <lorenzo.pieralisi@arm.com>,
+        <will@kernel.org>, <mark.rutland@arm.com>,
+        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
+        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
+        <jonathan.cameron@huawei.com>, <daniel.thompson@linaro.org>,
+        <joro@8bytes.org>, <shameerali.kolothum.thodi@huawei.com>,
+        <robin.murphy@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <acme@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>
+References: <20220308084930.5142-1-yangyicong@hisilicon.com>
+ <20220308084930.5142-2-yangyicong@hisilicon.com>
+ <162a116a-4b0f-c58b-6760-86d10ecf543f@huawei.com>
+From:   Yicong Yang <yangyicong@huawei.com>
+Message-ID: <e6d50ab3-5284-7fea-c20e-d72add9b0c82@huawei.com>
+Date:   Wed, 16 Mar 2022 14:15:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.5.0
-Subject: Re: [PATCH] perf intel-pt: Synthesize cycle events
-Content-Language: en-US
-To:     "Steinar H. Gunderson" <sesse@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220310093844.982656-1-sesse@google.com>
- <586de5fc-858b-2693-1986-5c77e8c0e3d0@intel.com>
- <YiuKAk7SaXP7B7Ee@google.com>
- <ba2c49da-22c5-06ea-e953-82211b953ca8@intel.com>
- <YjBnet2813sEGjZY@google.com>
- <c50bb87d-9fee-c4f9-a350-8729e503e43a@intel.com>
- <YjDUO6bbyfGw/u0C@google.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <YjDUO6bbyfGw/u0C@google.com>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <162a116a-4b0f-c58b-6760-86d10ecf543f@huawei.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.102.169]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 15.3.2022 20.00, Steinar H. Gunderson wrote:
-> On Tue, Mar 15, 2022 at 01:32:38PM +0200, Adrian Hunter wrote:
->>> I think the structure looks good, but I'm not sure about updating
->>> e.g. ptq->last_cy_insn_cnt in both functions? Does that make sense?
->> It should only be updated in the new intel_pt_synth_cycle_sample().
->> intel_pt_synth_instruction_sample() should be unchanged.
+On 2022/3/12 1:27, John Garry wrote:
+> On 08/03/2022 08:49, Yicong Yang wrote:
+>> The DMA of HiSilicon PTT device can only work with identical mapping.
 > 
-> Hm, OK. But something definitely changed between my original patch and
-> your change. (The first patch; I didn't try the last one yet.) With my
-> patch, I got (on a specific trace, synthing cycles only with perf report
-> --itrace=y0nse):
+> nit: I'd have "DMA operations of the HiSilicon PTT device can only work properly with identity mappings".
 > 
-> Samples: 4M of event 'cycles:uH', Event count (approx.): 4844309
+>> So add a quirk for the device to force the domain passthrough.
 > 
-> With yours on the same file:
+> ".. domain as passthrough."
 > 
-> Samples: 2M of event 'cycles:uH', Event count (approx.): 77622449
-> 
-> The relative times between functions are also pretty different (although
-> none of them are obviously crazy), so one of them has to be wrong.
-> Is this to be expected, ie., would you expect your change to fix some
-> bad bug on cycle-only synth? For reference, “perf script --itrace=i0ns
-> -F +ipc | grep -c IPC:” (a quick proxy for the number of CYC packets :-) )
-> yields 4836782, so I'm a bit surprised why there are only 2M events
-> being emitted from that.
 
-Sorry, my first suggestion has issues, but the second is better.
+thanks for the comments. will refine the commit as suggested.
+
+>>
+>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+>> ---
+>>   drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 16 ++++++++++++++++
+>>   1 file changed, 16 insertions(+)
+>>
+>> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+>> index 6dc6d8b6b368..6f67a2b1dd27 100644
+>> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+>> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+>> @@ -2838,6 +2838,21 @@ static int arm_smmu_dev_disable_feature(struct device *dev,
+>>       }
+>>   }
+>>   +#define IS_HISI_PTT_DEVICE(pdev)    ((pdev)->vendor == PCI_VENDOR_ID_HUAWEI && \
+>> +                     (pdev)->device == 0xa12e)
+>> +
+>> +static int arm_smmu_def_domain_type(struct device *dev)
+>> +{
+>> +    if (dev_is_pci(dev)) {
+>> +        struct pci_dev *pdev = to_pci_dev(dev);
+>> +
+>> +        if (IS_HISI_PTT_DEVICE(pdev))
+>> +            return IOMMU_DOMAIN_IDENTITY;
+>> +    }
+>> +
+>> +    return 0;
+>> +}
+>> +
+>>   static struct iommu_ops arm_smmu_ops = {
+>>       .capable        = arm_smmu_capable,
+>>       .domain_alloc        = arm_smmu_domain_alloc,
+>> @@ -2863,6 +2878,7 @@ static struct iommu_ops arm_smmu_ops = {
+>>       .sva_unbind        = arm_smmu_sva_unbind,
+>>       .sva_get_pasid        = arm_smmu_sva_get_pasid,
+>>       .page_response        = arm_smmu_page_response,
+>> +    .def_domain_type    = arm_smmu_def_domain_type,
+>>       .pgsize_bitmap        = -1UL, /* Restricted during device attach */
+>>       .owner            = THIS_MODULE,
+>>   };
+> 
+> .
