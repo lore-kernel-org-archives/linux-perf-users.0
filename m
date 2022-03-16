@@ -2,146 +2,128 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A646C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Mar 2022 17:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 625D7C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Mar 2022 17:26:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351932AbiCPRWc (ORCPT
+        id S1350668AbiCPR1Z (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Mar 2022 13:22:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42134 "EHLO
+        Wed, 16 Mar 2022 13:27:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350025AbiCPRWb (ORCPT
+        with ESMTP id S232691AbiCPR1Z (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Mar 2022 13:22:31 -0400
+        Wed, 16 Mar 2022 13:27:25 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 625305AA5C;
-        Wed, 16 Mar 2022 10:21:17 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 11010AE66;
+        Wed, 16 Mar 2022 10:26:11 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0FB0A1476;
-        Wed, 16 Mar 2022 10:21:17 -0700 (PDT)
-Received: from e127744.arm.com (unknown [10.57.6.128])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id ACC7F3F7D7;
-        Wed, 16 Mar 2022 10:21:14 -0700 (PDT)
-From:   German Gomez <german.gomez@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc:     mark.rutland@arm.com, namhyung@kernel.org, leo.yan@linaro.org,
-        james.clark@arm.com, Alexandre.Truong@arm.com,
-        German Gomez <german.gomez@arm.com>,
-        Jiri Olsa <jolsa@kernel.org>
-Subject: [PATCH v2 1/1] perf test arm64: Test unwinding using fame-pointer (fp) mode
-Date:   Wed, 16 Mar 2022 17:20:15 +0000
-Message-Id: <20220316172015.98000-1-german.gomez@arm.com>
-X-Mailer: git-send-email 2.25.1
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA3B31476;
+        Wed, 16 Mar 2022 10:26:10 -0700 (PDT)
+Received: from [10.57.44.7] (unknown [10.57.44.7])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C82FB3F7D7;
+        Wed, 16 Mar 2022 10:26:08 -0700 (PDT)
+Message-ID: <73353bec-6949-dd0b-ff1c-a8143e169602@arm.com>
+Date:   Wed, 16 Mar 2022 17:26:07 +0000
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH V4 04/10] perf: Capture branch privilege information
+Content-Language: en-US
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        peterz@infradead.org, acme@kernel.org
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <20220315053516.431515-1-anshuman.khandual@arm.com>
+ <20220315053516.431515-5-anshuman.khandual@arm.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20220315053516.431515-5-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add a shell script to check that the call-graphs generated using frame
-pointers (--call-graph fp) are complete and not missing leaf functions:
 
-  | $ perf test 88 -v
-  |  88: Check Arm64 callgraphs are complete in fp mode                  :
-  | --- start ---
-  | test child forked, pid 8734
-  |  + Compiling test program (/tmp/test_program.Cz3yL)...
-  |  + Recording (PID=8749)...
-  |  + Stopping perf-record...
-  | test_program.Cz
-  |                  728 leaf
-  |                  753 parent
-  |                  76c main
-  | test child finished with 0
-  | ---- end ----
-  | Check Arm SPE callgraphs are complete in fp mode: Ok
 
-Fixes: b9f6fbb3b2c2 ("perf arm64: Inject missing frames when using 'perf record --call-graph=fp'")
-Suggested-by: Jiri Olsa <jolsa@kernel.org>
-Signed-off-by: German Gomez <german.gomez@arm.com>
----
-Changes since v1: https://lore.kernel.org/all/a6ba0ea8-f070-9f79-f018-f638ff677c7c@arm.com/
- - Add explicit '-g' flag to GCC command
----
- .../perf/tests/shell/test_arm_callgraph_fp.sh | 68 +++++++++++++++++++
- 1 file changed, 68 insertions(+)
- create mode 100755 tools/perf/tests/shell/test_arm_callgraph_fp.sh
+On 15/03/2022 05:35, Anshuman Khandual wrote:
+> Platforms like arm64 could capture privilege level information for all the
+> branch records. Hence this adds a new element in the struct branch_entry to
+> record the privilege level information, which could be requested through a
+> new event.attr.branch_sample_type based flag PERF_SAMPLE_BRANCH_PRIV_SAVE.
+> This flag helps user choose whether privilege information is captured.
+> 
 
-diff --git a/tools/perf/tests/shell/test_arm_callgraph_fp.sh b/tools/perf/tests/shell/test_arm_callgraph_fp.sh
-new file mode 100755
-index 000000000..ea1b4e6bb
---- /dev/null
-+++ b/tools/perf/tests/shell/test_arm_callgraph_fp.sh
-@@ -0,0 +1,68 @@
-+#!/bin/sh
-+# Check Arm64 callgraphs are complete in fp mode
-+# SPDX-License-Identifier: GPL-2.0
-+
-+lscpu | grep -q "aarch64" || exit 2
-+
-+if ! [ -x "$(command -v cc)" ]; then
-+	echo "failed: no compiler, install gcc"
-+	exit 2
-+fi
-+
-+PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+TEST_PROGRAM_SOURCE=$(mktemp /tmp/test_program.XXXXX.c)
-+TEST_PROGRAM=$(mktemp /tmp/test_program.XXXXX)
-+
-+cleanup_files()
-+{
-+	rm -f $PERF_DATA
-+	rm -f $TEST_PROGRAM_SOURCE
-+	rm -f $TEST_PROGRAM
-+}
-+
-+trap cleanup_files exit term int
-+
-+cat << EOF > $TEST_PROGRAM_SOURCE
-+int a = 0;
-+void leaf(void) {
-+  for (;;)
-+    a += a;
-+}
-+void parent(void) {
-+  leaf();
-+}
-+int main(void) {
-+  parent();
-+  return 0;
-+}
-+EOF
-+
-+echo " + Compiling test program ($TEST_PROGRAM)..."
-+
-+CFLAGS="-g -O0 -fno-inline -fno-omit-frame-pointer"
-+cc $CFLAGS $TEST_PROGRAM_SOURCE -o $TEST_PROGRAM || exit 1
-+
-+# Add a 1 second delay to skip samples that are not in the leaf() function
-+perf record -o $PERF_DATA --call-graph fp -e cycles//u -D 1000 -- $TEST_PROGRAM 2> /dev/null &
-+PID=$!
-+
-+echo " + Recording (PID=$PID)..."
-+sleep 2
-+echo " + Stopping perf-record..."
-+
-+kill $PID
-+wait $PID
-+
-+# expected perf-script output:
-+#
-+# program 
-+# 	728 leaf
-+# 	753 parent
-+# 	76c main
-+# ...
-+
-+perf script -i $PERF_DATA -F comm,ip,sym | head -n4
-+perf script -i $PERF_DATA -F comm,ip,sym | head -n4 | \
-+	awk '{ if ($2 != "") sym[i++] = $2 } END { if (sym[0] != "leaf" ||
-+						       sym[1] != "parent" ||
-+						       sym[2] != "main") exit 1 }'
--- 
-2.25.1
+Reviewed-by: James Clark <james.clark@arm.com>
 
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-perf-users@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>  include/uapi/linux/perf_event.h | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> index d29280adc3c4..193dba2ecdc1 100644
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -204,6 +204,8 @@ enum perf_branch_sample_type_shift {
+>  
+>  	PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT	= 17, /* save low level index of raw branch records */
+>  
+> +	PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT	= 18, /* save privilege mode */
+> +
+>  	PERF_SAMPLE_BRANCH_MAX_SHIFT		/* non-ABI */
+>  };
+>  
+> @@ -233,6 +235,8 @@ enum perf_branch_sample_type {
+>  
+>  	PERF_SAMPLE_BRANCH_HW_INDEX	= 1U << PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT,
+>  
+> +	PERF_SAMPLE_BRANCH_PRIV_SAVE	= 1U << PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT,
+> +
+>  	PERF_SAMPLE_BRANCH_MAX		= 1U << PERF_SAMPLE_BRANCH_MAX_SHIFT,
+>  };
+>  
+> @@ -271,6 +275,13 @@ enum {
+>  	PERF_BR_NEW_MAX,
+>  };
+>  
+> +enum {
+> +	PERF_BR_PRIV_UNKNOWN	= 0,
+> +	PERF_BR_PRIV_USER	= 1,
+> +	PERF_BR_PRIV_KERNEL	= 2,
+> +	PERF_BR_PRIV_HV		= 3,
+> +};
+> +
+>  #define PERF_SAMPLE_BRANCH_PLM_ALL \
+>  	(PERF_SAMPLE_BRANCH_USER|\
+>  	 PERF_SAMPLE_BRANCH_KERNEL|\
+> @@ -1386,7 +1397,8 @@ struct perf_branch_entry {
+>  		cycles:16,  /* cycle count to last branch */
+>  		type:4,     /* branch type */
+>  		new_type:4, /* additional branch type */
+> -		reserved:36;
+> +		priv:3,     /* privilege level */
+> +		reserved:33;
+>  };
+>  
+>  union perf_sample_weight {
