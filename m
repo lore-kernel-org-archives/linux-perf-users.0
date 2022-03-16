@@ -2,110 +2,93 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05922C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Mar 2022 12:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDADC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Mar 2022 12:59:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355826AbiCPMnp (ORCPT
+        id S1350597AbiCPNA0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Mar 2022 08:43:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55034 "EHLO
+        Wed, 16 Mar 2022 09:00:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355834AbiCPMnf (ORCPT
+        with ESMTP id S1348633AbiCPNAZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Mar 2022 08:43:35 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECE406661C
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Mar 2022 05:42:17 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id qa43so3836453ejc.12
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Mar 2022 05:42:17 -0700 (PDT)
+        Wed, 16 Mar 2022 09:00:25 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 812302251D
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Mar 2022 05:59:11 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id r10so2882454wrp.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Mar 2022 05:59:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=YrCeMG8+8SJcl5IZrnVgtr+ceay0Mers6Na6OnHdZTw=;
-        b=TQRVGhRWirfiJIhyx1moflTGQ2SHv5VR189C5W4KZyH7DlZ2rW9FEsvGD9FWt9I729
-         6r6oqrS6HdE2ipMubO90ffqAZyb2sIM6NbeEP/2TZ0aLFd6E1eBlGPL5OLz3dqo+tm1N
-         Ou8pFbDCnvi6bRVKAB3+kwxfQbZ+QtMBtnCbCyWzvkEzyhrJqZ5Sh/NKh9f6iaurn9cu
-         0JVtE9A4aoU0LSvn41hPlpWVSMOSRqPrVmXD9su5dheW/lhIxpoWLbsZY+R/NgEkfSqs
-         Jli8rq+I5RMhg7WEUMeEWoLXboU+MU6+7waPqhl5i+MhiJLcgkKo2tz0O6HeRFYohwNK
-         ph7g==
+        bh=jzYXuFw6t1GGQ3e3ytY3BE4kwazLUF9JZA0pvkZu3z4=;
+        b=iQaN/Sbaut6GOISotqqPoNkJFQ+MWqEf1XyixuSqzk0zUegChILr9hjzs4eQAEcGFf
+         5CbZdnbhqzW5BGerIU7MGk1y+KdFteT4OozVaSQLCxXaEeOmOjeR9jdrk6skw6iDuE/M
+         55uSOsAv6jbfabjZ0U8qoS+KtLcxO/ASaH91YcQsEyFPANKaNZiO16GPjBajaO1gDQXo
+         FLH8y76ix2FlS7eAoA2QgLdQYhLJqaZ3jdEKhdZ5bKTQhsQswFwt0dHS4EoFIQ3LqftF
+         x3cYxP5ysX1NdyRaRYKew9ixCkmyjfNbrhDhMPXoL44gIVES779zI9pOcwo6O4NSejw5
+         AxYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=YrCeMG8+8SJcl5IZrnVgtr+ceay0Mers6Na6OnHdZTw=;
-        b=HVVEgrXVdjpZ2/HlPZ1nFkzp6HX8qLcszMtrSlPZ2hkAe7wOQ86lpD/7xCEwADLjNB
-         IBW6FAQL1cvP80ddAaimTQqFmqqoVyCszH9xboA+ouplSn6SUbvgFMyWzX2+5mGZdiQL
-         xx9R4c5myFlzCs3yUNq56gWQEa9JCSenDOEd4VBGGG+eGe49OmgmEorUuUDm3ChvO/NY
-         oDNrpW6qMAJrJ6TquigYv5AAbWdje5f91JT5SYiLrpN/qs0nCrP/DRxi5/DSfmT7toCv
-         7x1sqI99rtL08v1p8/v8YYnxdle7mPvAsiFWbWideV2zH10tyu+w2pb0qqkbd+XPlk0P
-         crcw==
-X-Gm-Message-State: AOAM530M6oiNtBVk4zWDliP0dIUQiyAel6j7t1nSnINpX02e0yQqizsy
-        6MSg0bUTJoXlLvDYc32+MjFXAg==
-X-Google-Smtp-Source: ABdhPJznn6FFCYH1rXZ8XxK4RoArSWMYjykUAYamaJ2woslaFFp5HwYgTC7qyrPkecYF6b5PzCCjNA==
-X-Received: by 2002:a17:906:9c81:b0:6df:78a0:fb37 with SMTP id fj1-20020a1709069c8100b006df78a0fb37mr2989398ejc.703.1647434536233;
-        Wed, 16 Mar 2022 05:42:16 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([104.245.96.34])
-        by smtp.gmail.com with ESMTPSA id y14-20020a056402440e00b00416046b623csm980513eda.2.2022.03.16.05.42.11
+        bh=jzYXuFw6t1GGQ3e3ytY3BE4kwazLUF9JZA0pvkZu3z4=;
+        b=bD7GmzeIkWCL5vZxrYwfBER4m6bNmtXSRWuFaKiWPVTZiQxS0LKQFJB7NDc4nEMJXW
+         16xy6nMX75r4NkIsQSdGnQ3BACXNNJaglBIR+CNfWyfiFp+3mqZb717bMaZ4DfdZmjgT
+         N9w4MG3ThCy9Xb0+8oihad3FV1z7o9+QfXcBNIdKWtFg/Y1RxbyhuMsaN04g9cQzoD3H
+         Kf030DqFfObk+q3FJd2wR2v0OhBf5not13FRMC6YxC3amqQIJPxO1hKWEZZtAPmK4ZiD
+         09wAmlKFf+xXe/lUImUOZ7bIC5TMgq/LiY4m4LFS8DsvWKJHyYviqk2Yu1CQtHSbMA3I
+         IDYQ==
+X-Gm-Message-State: AOAM533p43ZkQOk5Wol2PUvsx9hy9RGJ23MuG9PC9RTkm/PU5ykkRXEJ
+        iiJcDkFRAomwoW+Ae7Ue4lx+yA==
+X-Google-Smtp-Source: ABdhPJy4Hy20R7yN9hagwqQupnDiBP8RLHhFW5oKMad0+kO9NjMwJuHWi2WWa16dNvC0YERmuq+J0Q==
+X-Received: by 2002:a5d:6344:0:b0:1f0:21ee:9705 with SMTP id b4-20020a5d6344000000b001f021ee9705mr23929753wrw.93.1647435549892;
+        Wed, 16 Mar 2022 05:59:09 -0700 (PDT)
+Received: from google.com (110.121.148.146.bc.googleusercontent.com. [146.148.121.110])
+        by smtp.gmail.com with ESMTPSA id v8-20020a1cf708000000b0034d7b5f2da0sm1681873wmh.33.2022.03.16.05.59.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Mar 2022 05:42:15 -0700 (PDT)
-Date:   Wed, 16 Mar 2022 20:42:08 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     German Gomez <german.gomez@arm.com>
-Cc:     Ali Saidi <alisaidi@amazon.com>, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
-        benh@kernel.crashing.org, james.clark@arm.com,
-        john.garry@huawei.com, jolsa@kernel.org, kjain@linux.ibm.com,
-        lihuafei1@huawei.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        mark.rutland@arm.com, mathieu.poirier@linaro.org, mingo@redhat.com,
-        namhyung@kernel.org, peterz@infradead.org, will@kernel.org,
-        yao.jin@linux.intel.com, Nick.Forrington@arm.com
-Subject: Re: [PATCH v2 2/2] perf mem: Support HITM for when mem_lvl_num is
- used
-Message-ID: <20220316124208.GA310478@leoy-ThinkPad-X240s>
-References: <df73fb93-3892-6713-8ebe-bc57a861ec5d@arm.com>
- <20220314183721.3198-1-alisaidi@amazon.com>
- <172ce478-b539-2aa4-0470-1b96c6b8169b@arm.com>
- <7b3aaa4d-5194-a729-f8ad-d55ada7fa58f@arm.com>
+        Wed, 16 Mar 2022 05:59:09 -0700 (PDT)
+Date:   Wed, 16 Mar 2022 13:59:06 +0100
+From:   "Steinar H. Gunderson" <sesse@google.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf intel-pt: Synthesize cycle events
+Message-ID: <YjHfGrZovk3N/H0f@google.com>
+References: <20220310093844.982656-1-sesse@google.com>
+ <586de5fc-858b-2693-1986-5c77e8c0e3d0@intel.com>
+ <YiuKAk7SaXP7B7Ee@google.com>
+ <ba2c49da-22c5-06ea-e953-82211b953ca8@intel.com>
+ <YjBnet2813sEGjZY@google.com>
+ <c50bb87d-9fee-c4f9-a350-8729e503e43a@intel.com>
+ <YjDUO6bbyfGw/u0C@google.com>
+ <52903e58-e74c-5ea0-36b4-277ea3610af4@intel.com>
+ <YjGdoGy4Z2UUG9S9@google.com>
+ <ef780335-7dc6-3a23-54a8-b6fc9c8a2ed3@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7b3aaa4d-5194-a729-f8ad-d55ada7fa58f@arm.com>
+In-Reply-To: <ef780335-7dc6-3a23-54a8-b6fc9c8a2ed3@intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Mar 16, 2022 at 11:43:52AM +0000, German Gomez wrote:
+On Wed, Mar 16, 2022 at 01:19:46PM +0200, Adrian Hunter wrote:
+>> I guess the good news is that the perf report coming out of your version
+>> looks more likely to me; I have some functions that are around 1% that
+>> shouldn't intuitively be that much (and, if I write some Perl to sum up
+>> the cycles from the IPC lines in perf script, are more around 0.1%).
+>> So perhaps we should stop chasing the difference? I don't know.
+> That doesn't sound right.  I will look at it more closely in the next few days.
 
-[...]
+If you need, I can supply the perf.data and binaries, but we're talking
+a couple of gigabytes of data (and I don't know immediately if there's
+an easy way I can package up everything perf.data references) :-)
 
-> >>> I had a look at the TRMs for the N1[1], V1[2] and N2[3] Neoverse cores
-> >>> (specifically the LL_CACHE_RD pmu events). If we were to assign a number
-> >>> to the system cache (assuming all caches are implemented):
-> >>>
-> >>> *For N1*, if L2 and L3 are implemented, system cache would follow at *L4*
-> >> To date no one has built 4 level though. Everyone has only built three.
-> > The N1SDP board advertises 4 levels (we use it regularly for testing perf patches)
-> 
-> That said, it's probably the odd one out.
-> 
-> I'm not against assuming 3 levels. Later if there's is a strong need for L4, indeed we can go back and change it.
-
-Thanks for the info.
-
-For exploring cache hierarchy via sysFS is a good idea, the only one
-concern for me is: can we simply take the system cache as the same
-thing as the highest level cache?  If so, I think another option is to
-define a cache level as "PERF_MEM_LVLNUM_SYSTEM_CACHE" and extend the
-decoding code for support it.
-
-With PERF_MEM_LVLNUM_SYSTEM_CACHE, it can tell users clearly the data
-source from system cache, and users can easily map this info with the
-cache media on the working platform.
-
-In practice, I don't object to use cache level 3 at first step.  At
-least this can meet the requirement at current stage.
-
-Thanks,
-Leo
+/* Steinar */
