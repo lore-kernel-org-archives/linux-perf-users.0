@@ -2,143 +2,110 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 945CDC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Mar 2022 12:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05922C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Mar 2022 12:42:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238872AbiCPMVg (ORCPT
+        id S1355826AbiCPMnp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Mar 2022 08:21:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43332 "EHLO
+        Wed, 16 Mar 2022 08:43:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238166AbiCPMVf (ORCPT
+        with ESMTP id S1355834AbiCPMnf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Mar 2022 08:21:35 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0087460A89;
-        Wed, 16 Mar 2022 05:20:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=e5pNCmyMwLlhDtqajbX8GPeOHBzCF8vz6r7PEhnW3xc=; b=ls7rHnG1dpzhabBoztBYrRisA1
-        54dfeD23UuKfpyARMO6qUgKH0DPk6Ujv/Ww9QeY5RK1v7CfeUgqZSewu3D/7M3zLecxnFV6PHCqI0
-        vvQH2wmAlWB4D2NBic3IQc6i1eDn97UJPhFvmhMWB+mEA1wVyTQTfieLKO7q3Tq7iGqQhX2IUa6bO
-        qE4wZPgNeJBWCNg+HvDuzFY5XjnyPtzt6D7z5MCXP6bPhhZeo8/XxipJ9TK5uze8Kn5NmXvy5GnQg
-        OPm2l/KZWGaEy4M2Er1+PUNseAvndWqw+GJBCxpd3NFQJ8mu/FBSOfhvb7+JdzbsXcrayvbkb3VDy
-        Ztx8Jmyw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nUSdI-001XX3-H2; Wed, 16 Mar 2022 12:20:04 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CB79030003A;
-        Wed, 16 Mar 2022 13:20:01 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7EE59306DC35A; Wed, 16 Mar 2022 13:20:01 +0100 (CET)
-Date:   Wed, 16 Mar 2022 13:20:01 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Wed, 16 Mar 2022 08:43:35 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECE406661C
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Mar 2022 05:42:17 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id qa43so3836453ejc.12
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Mar 2022 05:42:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=YrCeMG8+8SJcl5IZrnVgtr+ceay0Mers6Na6OnHdZTw=;
+        b=TQRVGhRWirfiJIhyx1moflTGQ2SHv5VR189C5W4KZyH7DlZ2rW9FEsvGD9FWt9I729
+         6r6oqrS6HdE2ipMubO90ffqAZyb2sIM6NbeEP/2TZ0aLFd6E1eBlGPL5OLz3dqo+tm1N
+         Ou8pFbDCnvi6bRVKAB3+kwxfQbZ+QtMBtnCbCyWzvkEzyhrJqZ5Sh/NKh9f6iaurn9cu
+         0JVtE9A4aoU0LSvn41hPlpWVSMOSRqPrVmXD9su5dheW/lhIxpoWLbsZY+R/NgEkfSqs
+         Jli8rq+I5RMhg7WEUMeEWoLXboU+MU6+7waPqhl5i+MhiJLcgkKo2tz0O6HeRFYohwNK
+         ph7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YrCeMG8+8SJcl5IZrnVgtr+ceay0Mers6Na6OnHdZTw=;
+        b=HVVEgrXVdjpZ2/HlPZ1nFkzp6HX8qLcszMtrSlPZ2hkAe7wOQ86lpD/7xCEwADLjNB
+         IBW6FAQL1cvP80ddAaimTQqFmqqoVyCszH9xboA+ouplSn6SUbvgFMyWzX2+5mGZdiQL
+         xx9R4c5myFlzCs3yUNq56gWQEa9JCSenDOEd4VBGGG+eGe49OmgmEorUuUDm3ChvO/NY
+         oDNrpW6qMAJrJ6TquigYv5AAbWdje5f91JT5SYiLrpN/qs0nCrP/DRxi5/DSfmT7toCv
+         7x1sqI99rtL08v1p8/v8YYnxdle7mPvAsiFWbWideV2zH10tyu+w2pb0qqkbd+XPlk0P
+         crcw==
+X-Gm-Message-State: AOAM530M6oiNtBVk4zWDliP0dIUQiyAel6j7t1nSnINpX02e0yQqizsy
+        6MSg0bUTJoXlLvDYc32+MjFXAg==
+X-Google-Smtp-Source: ABdhPJznn6FFCYH1rXZ8XxK4RoArSWMYjykUAYamaJ2woslaFFp5HwYgTC7qyrPkecYF6b5PzCCjNA==
+X-Received: by 2002:a17:906:9c81:b0:6df:78a0:fb37 with SMTP id fj1-20020a1709069c8100b006df78a0fb37mr2989398ejc.703.1647434536233;
+        Wed, 16 Mar 2022 05:42:16 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([104.245.96.34])
+        by smtp.gmail.com with ESMTPSA id y14-20020a056402440e00b00416046b623csm980513eda.2.2022.03.16.05.42.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Mar 2022 05:42:15 -0700 (PDT)
+Date:   Wed, 16 Mar 2022 20:42:08 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     German Gomez <german.gomez@arm.com>
+Cc:     Ali Saidi <alisaidi@amazon.com>, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
+        benh@kernel.crashing.org, james.clark@arm.com,
+        john.garry@huawei.com, jolsa@kernel.org, kjain@linux.ibm.com,
+        lihuafei1@huawei.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, Suzuki Poulose <suzuki.poulose@arm.com>,
-        James Clark <james.clark@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH V4 03/10] perf: Extend branch type classification
-Message-ID: <YjHV8dJpEq/M8gHC@hirez.programming.kicks-ass.net>
-References: <20220315053516.431515-1-anshuman.khandual@arm.com>
- <20220315053516.431515-4-anshuman.khandual@arm.com>
- <20220315112232.GF8939@worktop.programming.kicks-ass.net>
- <0df5c352-1f0d-55f8-5d7f-e28ba33d623b@arm.com>
+        mark.rutland@arm.com, mathieu.poirier@linaro.org, mingo@redhat.com,
+        namhyung@kernel.org, peterz@infradead.org, will@kernel.org,
+        yao.jin@linux.intel.com, Nick.Forrington@arm.com
+Subject: Re: [PATCH v2 2/2] perf mem: Support HITM for when mem_lvl_num is
+ used
+Message-ID: <20220316124208.GA310478@leoy-ThinkPad-X240s>
+References: <df73fb93-3892-6713-8ebe-bc57a861ec5d@arm.com>
+ <20220314183721.3198-1-alisaidi@amazon.com>
+ <172ce478-b539-2aa4-0470-1b96c6b8169b@arm.com>
+ <7b3aaa4d-5194-a729-f8ad-d55ada7fa58f@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0df5c352-1f0d-55f8-5d7f-e28ba33d623b@arm.com>
+In-Reply-To: <7b3aaa4d-5194-a729-f8ad-d55ada7fa58f@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Mar 15, 2022 at 01:06:42PM +0000, Robin Murphy wrote:
-> On 2022-03-15 11:22, Peter Zijlstra wrote:
-> > On Tue, Mar 15, 2022 at 11:05:09AM +0530, Anshuman Khandual wrote:
-> > > branch_entry.type now has ran out of space to accommodate more branch types
-> > > classification. This will prevent perf branch stack implementation on arm64
-> > > (via BRBE) to capture all available branch types. Extending this bit field
-> > > i.e branch_entry.type [4 bits] is not an option as it will break user space
-> > > ABI both for little and big endian perf tools.
-> > > 
-> > > Extend branch classification with a new field branch_entry.new_type via a
-> > > new branch type PERF_BR_EXTEND_ABI in branch_entry.type. Perf tools which
-> > > could decode PERF_BR_EXTEND_ABI, will then parse branch_entry.new_type as
-> > > well.
-> > > 
-> > > branch_entry.new_type is a 4 bit field which can hold upto 16 branch types.
-> > > The first three branch types will hold various generic page faults followed
-> > > by five architecture specific branch types, which can be overridden by the
-> > > platform for specific use cases. These architecture specific branch types
-> > > gets overridden on arm64 platform for BRBE implementation.
-> > 
-> > > diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-> > > index 26d8f0b5ac0d..d29280adc3c4 100644
-> > > --- a/include/uapi/linux/perf_event.h
-> > > +++ b/include/uapi/linux/perf_event.h
-> > > @@ -255,9 +255,22 @@ enum {
-> > >   	PERF_BR_IRQ		= 12,	/* irq */
-> > >   	PERF_BR_SERROR		= 13,	/* system error */
-> > >   	PERF_BR_NO_TX		= 14,	/* not in transaction */
-> > > +	PERF_BR_EXTEND_ABI	= 15,	/* extend ABI */
-> > >   	PERF_BR_MAX,
-> > >   };
-> > 
-> > 
-> > >   #define PERF_SAMPLE_BRANCH_PLM_ALL \
-> > >   	(PERF_SAMPLE_BRANCH_USER|\
-> > >   	 PERF_SAMPLE_BRANCH_KERNEL|\
-> > > @@ -1372,7 +1385,8 @@ struct perf_branch_entry {
-> > >   		abort:1,    /* transaction abort */
-> > >   		cycles:16,  /* cycle count to last branch */
-> > >   		type:4,     /* branch type */
-> > > -		reserved:40;
-> > > +		new_type:4, /* additional branch type */
-> > > +		reserved:36;
-> > >   };
-> > 
-> > Hurmpf... this will effectively give us 5 bits of space for the cost of
-> > 8, that seems... unfortunate.
-> > 
-> > Would something like:
-> > 
-> > 		type:4,
-> > 		ext_type:4,
-> > 		reserved:36;
-> > 
-> > and have all software do:
-> > 
-> > 	type = pbe->type | (pbe->ext_type << 4);
-> > 
-> > Then old software will only know about the old types. New software on
-> > old kernels will add 4 0's, which is harmless, while new software on new
-> > kernels will get 8 bytes of type.
-> > 
-> > Would that work?
-> 
-> Depends how bad the effects of aliasing in existing software would be, I
-> guess - e.g. new kernel outputs type 0x23 which software then interprets as
-> 0x3 since it doesn't know about the extended bits. I'm guessing that's more
-> likely "confusing to the user" than "catastrophically fatal", but it might
-> still matter.
-> 
-> If software had an explicit opt-in to receiving extended types when
-> requesting branch sampling in the first place we could avoid that worry, but
-> then we'd need some additional complexity to sanitise records depending on
-> that option :/
+On Wed, Mar 16, 2022 at 11:43:52AM +0000, German Gomez wrote:
 
-Bah.. I see.. One option is PERF_SAMPLE_BRANCH_STACK2, but yes, yuck.
+[...]
+
+> >>> I had a look at the TRMs for the N1[1], V1[2] and N2[3] Neoverse cores
+> >>> (specifically the LL_CACHE_RD pmu events). If we were to assign a number
+> >>> to the system cache (assuming all caches are implemented):
+> >>>
+> >>> *For N1*, if L2 and L3 are implemented, system cache would follow at *L4*
+> >> To date no one has built 4 level though. Everyone has only built three.
+> > The N1SDP board advertises 4 levels (we use it regularly for testing perf patches)
+> 
+> That said, it's probably the odd one out.
+> 
+> I'm not against assuming 3 levels. Later if there's is a strong need for L4, indeed we can go back and change it.
+
+Thanks for the info.
+
+For exploring cache hierarchy via sysFS is a good idea, the only one
+concern for me is: can we simply take the system cache as the same
+thing as the highest level cache?  If so, I think another option is to
+define a cache level as "PERF_MEM_LVLNUM_SYSTEM_CACHE" and extend the
+decoding code for support it.
+
+With PERF_MEM_LVLNUM_SYSTEM_CACHE, it can tell users clearly the data
+source from system cache, and users can easily map this info with the
+cache media on the working platform.
+
+In practice, I don't object to use cache level 3 at first step.  At
+least this can meet the requirement at current stage.
+
+Thanks,
+Leo
