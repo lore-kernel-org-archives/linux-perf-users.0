@@ -2,156 +2,260 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EFEC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Mar 2022 15:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60055C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Mar 2022 17:45:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231524AbiCQPz2 (ORCPT
+        id S237024AbiCQRrB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 17 Mar 2022 11:55:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42582 "EHLO
+        Thu, 17 Mar 2022 13:47:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229549AbiCQPz2 (ORCPT
+        with ESMTP id S236956AbiCQRrB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 17 Mar 2022 11:55:28 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A06D51BE0FC;
-        Thu, 17 Mar 2022 08:54:11 -0700 (PDT)
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 22HF7LmE038086;
-        Thu, 17 Mar 2022 15:54:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=S+lDeG0ajurXSUSr/Pz+jBGyskQ6ZVNdxBLgTQMn2gE=;
- b=Ms41hvsTzuyHKglbfNwCj3lz1rEcmh9QCeTB8rjwZCarqaXYQycPSwftIAR4SghxlY0/
- om8EhOJkjefFIPI2xWOpqzCZEKNv/kjUkeVndDtCBOZr97VQxdYMN9thC7rwSJtqYWoy
- nkzgMTRq3q5VDZYz3cilqO5Z6aPo3jJjAPt/9IV13269yWrVa4E8eFQrOgg0P5/xfN33
- Ek4os0izJwceKHGaIRuP2/2d89rFKpKnYP6M/qMkVQmgjLqnam4Qe3jUQvrN3omcI+EO
- Sb6A59dOCQcMnsyWVzHLOQYS1cCvsL60friGcPfQx5ZMuiFz4NWIVxHUQb2i7ds0OI8s aA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3ev074205m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 17 Mar 2022 15:54:08 +0000
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 22HFjl7J025718;
-        Thu, 17 Mar 2022 15:54:07 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3ev0742052-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 17 Mar 2022 15:54:07 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 22HFWsuV011967;
-        Thu, 17 Mar 2022 15:54:05 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma04ams.nl.ibm.com with ESMTP id 3erk593q3a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 17 Mar 2022 15:54:05 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 22HFs2sZ27656640
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 17 Mar 2022 15:54:02 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3C72A4204D;
-        Thu, 17 Mar 2022 15:54:02 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E3EA942047;
-        Thu, 17 Mar 2022 15:54:01 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 17 Mar 2022 15:54:01 +0000 (GMT)
-From:   Thomas Richter <tmricht@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, namhyung@kernel.org, gor@linux.ibm.com,
-        acme@redhat.com
-Cc:     svens@linux.ibm.com, sumanthk@linux.ibm.com, hca@linux.ibm.com,
-        Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf/stat: Fix perf stat for forked applications
-Date:   Thu, 17 Mar 2022 16:53:46 +0100
-Message-Id: <20220317155346.577384-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.32.0
+        Thu, 17 Mar 2022 13:47:01 -0400
+Received: from mail-vs1-xe2d.google.com (mail-vs1-xe2d.google.com [IPv6:2607:f8b0:4864:20::e2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE27D162183
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Mar 2022 10:45:42 -0700 (PDT)
+Received: by mail-vs1-xe2d.google.com with SMTP id h126so328541vsc.13
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Mar 2022 10:45:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CJC749JOe7I90/lVVKBYlNIBirJ/7ws7bUfBK1kajWI=;
+        b=hGbq++vNY0ATZznXCcjcwbOkcmjRxxpZhmOMfpPm/yRx5FqZI111fTotlpSyn/CdcO
+         7l3ElPlXHH6BwDZo+8mU81mlv2jbKGK7CIxI5lwZdD7AcxOm8p/GkmYSVeDGBvihYGeb
+         Kb0XvywsC/ZchoHy2d++5wnmfNs3wCzH44+n+WFkMo5kDd7mMVBxKckPCEMaozDsGlfM
+         JbDQQNjP5aWWYYzfz1/qTr3SuIQE4tDcJazloYZ2bP/2nPRzquTnR8Q1lU/5EpS0LL+H
+         OVZcmmsOpFy+mU7DFTGEUuPwuA5qnZS2KA+uvQHb0YvCsAaGDS7pC4bwsQh2/U2hUtp3
+         0GSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CJC749JOe7I90/lVVKBYlNIBirJ/7ws7bUfBK1kajWI=;
+        b=X/s58snIdQsICdpGYGTqTqtRpQ856jTyfSxZyfwFdyZ7/0vZMeiKt5uHXKLoO6BphP
+         P95v6mSXsWFJ1KBBJUw33raZKTrFilYFkmA9O1nqOd8CrRlyxUvmH64X+cOLXpmC86xb
+         VLawDB0VpREJItLmEbyomrU3210Ay0oVkv7YH1HaKbwxXcbixJwZo2d2lDx9/v8WPqPb
+         9T+BqvJuWEVXxInFeIIFjpV4UzBTKLYxwOI1iLAQvHX8vmjHXFcM9JcEamDuAF8JwT8q
+         q2kliC/PE4auwH9A/4ohe6eU3EIuAlzGsx8KSC7A2toByJ0T+CpQ7EP8j1q/caSeL1WM
+         78YA==
+X-Gm-Message-State: AOAM5329fjjj3FqCcbRqx38NWBxWaeQw+Zm0cU3H0i25LkuRHypZgXQp
+        f7zSUNFFyXuAJkf9USmsTAEMwbwGJo7jz5Wd6hbHNQ==
+X-Google-Smtp-Source: ABdhPJy4Y4fW3GgejnniiHiQi1beP4dgdMsSUpFZ8WdwH+pwRYjgt6pxjlWkk8Ul9/U9XaWNC/0bmB8JQ3ERCaA3OyA=
+X-Received: by 2002:a67:c09b:0:b0:322:9ac9:4b2e with SMTP id
+ x27-20020a67c09b000000b003229ac94b2emr2643795vsi.11.1647539141809; Thu, 17
+ Mar 2022 10:45:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: PrRuTHxADO7btN5CNCExNzB6RMxe_QQG
-X-Proofpoint-ORIG-GUID: 14acJSIwoUTpjh9_IHFPn2BNeASx9ofa
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.850,Hydra:6.0.425,FMLib:17.11.64.514
- definitions=2022-03-17_06,2022-03-15_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 suspectscore=0 malwarescore=0 mlxscore=0 adultscore=0
- bulkscore=0 impostorscore=0 priorityscore=1501 mlxlogscore=999
- clxscore=1011 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2203170091
+References: <cover.1647498015.git.sandipan.das@amd.com> <7d43b4ba8a7c3c0833495f3fabfcfc6df8db3732.1647498015.git.sandipan.das@amd.com>
+ <YjMjNvrGa7ZK/x3H@hirez.programming.kicks-ass.net>
+In-Reply-To: <YjMjNvrGa7ZK/x3H@hirez.programming.kicks-ass.net>
+From:   Stephane Eranian <eranian@google.com>
+Date:   Thu, 17 Mar 2022 10:45:30 -0700
+Message-ID: <CABPqkBTPkUtkAyh7+_51L83UA=AUjoU_KQqRVKyd7hLhapqHZg@mail.gmail.com>
+Subject: Re: [PATCH 6/7] perf/x86/amd/core: Add PerfMonV2 overflow handling
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Sandipan Das <Sandipan.Das@amd.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, x86@kernel.org, bp@alien8.de,
+        dave.hansen@linux.intel.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        jolsa@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        pbonzini@redhat.com, jmattson@google.com, like.xu.linux@gmail.com,
+        ananth.narayan@amd.com, ravi.bangoria@amd.com,
+        santosh.shukla@amd.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-I have run into the following issue:
+On Thu, Mar 17, 2022 at 5:02 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Thu, Mar 17, 2022 at 11:58:35AM +0530, Sandipan Das wrote:
+>
+> > +static inline u64 amd_pmu_get_global_overflow(void)
+> > +{
+> > +     u64 status;
+> > +
+> > +     /* PerfCntrGlobalStatus is read-only */
+> > +     rdmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS, status);
+> > +
+> > +     return status & amd_pmu_global_cntr_mask;
+> > +}
+> > +
+> > +static inline void amd_pmu_ack_global_overflow(u64 status)
+> > +{
+> > +     /*
+> > +      * PerfCntrGlobalStatus is read-only but an overflow acknowledgment
+> > +      * mechanism exists; writing 1 to a bit in PerfCntrGlobalStatusClr
+> > +      * clears the same bit in PerfCntrGlobalStatus
+> > +      */
+> > +
+> > +     /* Only allow modifications to PerfCntrGlobalStatus.PerfCntrOvfl */
+> > +     status &= amd_pmu_global_cntr_mask;
+> > +     wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR, status);
+> > +}
+> > +
+> > +static bool amd_pmu_legacy_has_overflow(int idx)
+> > +{
+> > +     u64 counter;
+> > +
+> > +     rdmsrl(x86_pmu_event_addr(idx), counter);
+> > +
+> > +     return !(counter & BIT_ULL(x86_pmu.cntval_bits - 1));
+> > +}
+> > +
+> > +static bool amd_pmu_global_has_overflow(int idx)
+> > +{
+> > +     return amd_pmu_get_global_overflow() & BIT_ULL(idx);
+> > +}
+> > +
+> > +DEFINE_STATIC_CALL(amd_pmu_has_overflow, amd_pmu_legacy_has_overflow);
+> > +
+> >  /*
+> >   * When a PMC counter overflows, an NMI is used to process the event and
+> >   * reset the counter. NMI latency can result in the counter being updated
+> > @@ -613,7 +653,6 @@ static inline void amd_pmu_set_global_ctl(u64 ctl)
+> >  static void amd_pmu_wait_on_overflow(int idx)
+> >  {
+> >       unsigned int i;
+> > -     u64 counter;
+> >
+> >       /*
+> >        * Wait for the counter to be reset if it has overflowed. This loop
+> > @@ -621,8 +660,7 @@ static void amd_pmu_wait_on_overflow(int idx)
+> >        * forever...
+> >        */
+> >       for (i = 0; i < OVERFLOW_WAIT_COUNT; i++) {
+> > -             rdmsrl(x86_pmu_event_addr(idx), counter);
+> > -             if (counter & (1ULL << (x86_pmu.cntval_bits - 1)))
+> > +             if (!static_call(amd_pmu_has_overflow)(idx))
+> >                       break;
+> >
+> >               /* Might be in IRQ context, so can't sleep */
+>
+> This scares me... please tell me you fixed that mess.
+>
+> > @@ -718,6 +756,83 @@ static void amd_pmu_enable_event(struct perf_event *event)
+> >       static_call(amd_pmu_enable_event)(event);
+> >  }
+> >
+> > +static int amd_pmu_global_handle_irq(struct pt_regs *regs)
+> > +{
+> > +     struct perf_sample_data data;
+> > +     struct cpu_hw_events *cpuc;
+> > +     struct hw_perf_event *hwc;
+> > +     struct perf_event *event;
+> > +     u64 val, status, mask;
+> > +     int handled = 0, idx;
+> > +
+> > +     status = amd_pmu_get_global_overflow();
+> > +
+> > +     /* Check if any overflows are pending */
+> > +     if (!status)
+> > +             return 0;
+> > +
+> > +     /* Stop counting */
+> > +     amd_pmu_global_disable_all();
+>
+>
+> This seems weird to me, I'd first disable it, then read status. MSR
+> access is expensive, you want to shut down the PMU asap.
+>
+> Also, this is written like PMI would not be the primary NMI source,
+> which seems somewhat unlikely.
+>
+> > +
+> > +     cpuc = this_cpu_ptr(&cpu_hw_events);
+> > +
+> > +     /*
+> > +      * Some chipsets need to unmask the LVTPC in a particular spot
+> > +      * inside the nmi handler.  As a result, the unmasking was
+> > +      * pushed into all the nmi handlers.
+> > +      *
+> > +      * This generic handler doesn't seem to have any issues where
+> > +      * the unmasking occurs so it was left at the top.
+> > +      *
+> > +      * N.B. Taken from x86_pmu_handle_irq()
+> > +      */
+>
+> Please write an AMD specific comment here. Note how 'recent' Intel chips
+> ended up pushing this to the end of the handler. Verify with your
+> hardware team where they want this and write as much of the rationale as
+> you're allowed to share in the comment.
+>
+> > +     apic_write(APIC_LVTPC, APIC_DM_NMI);
+> > +
+> > +     for (idx = 0; idx < x86_pmu.num_counters; idx++) {
+> > +             if (!test_bit(idx, cpuc->active_mask))
+> > +                     continue;
+> > +
+> > +             event = cpuc->events[idx];
+> > +             hwc = &event->hw;
+> > +             val = x86_perf_event_update(event);
+> > +             mask = BIT_ULL(idx);
+> > +
+> > +             if (!(status & mask))
+> > +                     continue;
+> > +
+> > +             /* Event overflow */
+> > +             handled++;
+> > +             perf_sample_data_init(&data, 0, hwc->last_period);
+> > +
+> > +             if (!x86_perf_event_set_period(event))
+> > +                     continue;
+> > +
+> > +             if (perf_event_overflow(event, &data, regs))
+> > +                     x86_pmu_stop(event, 0);
+> > +
+> > +             status &= ~mask;
+> > +     }
+> > +
+> > +     /*
+> > +      * It should never be the case that some overflows are not handled as
+> > +      * the corresponding PMCs are expected to be inactive according to the
+> > +      * active_mask
+> > +      */
+> > +     WARN_ON(status > 0);
+> > +
+> > +     /* Clear overflow bits */
+> > +     amd_pmu_ack_global_overflow(~status);
+> > +
+> > +     inc_irq_stat(apic_perf_irqs);
+> > +
+> > +     /* Resume counting */
+> > +     amd_pmu_global_enable_all(0);
+>
+> I think this is broken vs perf_pmu_{dis,en}able(), note how
+> intel_pmu_handle_irq() saves/restores the enable state.
+>
+> > +
+> > +     return handled;
+> > +}
+> > +
+> > +DEFINE_STATIC_CALL(amd_pmu_handle_irq, x86_pmu_handle_irq);
+> > +
+> >  /*
+> >   * Because of NMI latency, if multiple PMC counters are active or other sources
+> >   * of NMIs are received, the perf NMI handler can handle one or more overflowed
+> > @@ -741,7 +856,7 @@ static int amd_pmu_handle_irq(struct pt_regs *regs)
+> >       int handled;
+> >
+> >       /* Process any counter overflows */
+> > -     handled = x86_pmu_handle_irq(regs);
+> > +     handled = static_call(amd_pmu_handle_irq)(regs);
+> >
+> >       /*
+> >        * If a counter was handled, record a timestamp such that un-handled
+> > @@ -1041,6 +1156,8 @@ static int __init amd_core_pmu_init(void)
+> >               static_call_update(amd_pmu_enable_all, amd_pmu_global_enable_all);
+> >               static_call_update(amd_pmu_disable_all, amd_pmu_global_disable_all);
+> >               static_call_update(amd_pmu_enable_event, amd_pmu_global_enable_event);
+> > +             static_call_update(amd_pmu_has_overflow, amd_pmu_global_has_overflow);
+> > +             static_call_update(amd_pmu_handle_irq, amd_pmu_global_handle_irq);
+> >       }
+>
+> Same, all this static_call() stuff is misguided.
+>
+> Also, if you feel like it, you can create amd_pmu_v2.
 
- # perf stat -a -e new_pmu/INSTRUCTION_7/ --  mytest -c1 7
-
- Performance counter stats for 'system wide':
-
-                 0      new_pmu/INSTRUCTION_7/
-
-       0.000366428 seconds time elapsed
- #
-
-The new PMU for s390 counts the execution of certain CPU instructions.
-The root cause is the extremely small run time of the
-mytest program. It just executes some assembly instructions
-and then exits. In above invocation the instruction is executed
-exactly one time (-c1 option). The PMU is expected to report this one
-time execution by a counter value of one, but fails to do so
-in some cases, not all.
-
-Debugging reveals the invocation of the child process is done
-*before* the counter events are installed and enabled. Tracing
-reveals that sometimes the child process starts and exits before
-the event is installed on all CPUs. The more CPUs the machine has,
-the more often this miscount happens.
-
-Fix this by reversing the start of the work load after the events
-have been installed on the specified CPUs. Now the comment also
-matches the code.
-
-Output after:
- # perf stat -a -e new_pmu/INSTRUCTION_7/ --  mytest -c1 7
-
- Performance counter stats for 'system wide':
-
-                 1      new_pmu/INSTRUCTION_7/
-
-       0.000366428 seconds time elapsed
- #
-
-Now the correct result is reported rock solid all the time regardless
-how many CPUs are online.
-
-Fixes:  acf2892270dc ("perf stat: Use perf_evlist__prepare/start_workload())
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/builtin-stat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 3f98689dd687..60baa3dadc4b 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -955,10 +955,10 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 	 * Enable counters and exec the command:
- 	 */
- 	if (forks) {
--		evlist__start_workload(evsel_list);
- 		err = enable_counters();
- 		if (err)
- 			return -1;
-+		evlist__start_workload(evsel_list);
- 
- 		t0 = rdclock();
- 		clock_gettime(CLOCK_MONOTONIC, &ref_time);
--- 
-2.35.1
-
+Given the number of overrides, that would also make more sense to me.
