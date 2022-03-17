@@ -2,58 +2,54 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A273CC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Mar 2022 18:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C5CC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Mar 2022 22:43:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234045AbiCQSbG (ORCPT
+        id S229903AbiCQWod (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 17 Mar 2022 14:31:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59130 "EHLO
+        Thu, 17 Mar 2022 18:44:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237467AbiCQSbE (ORCPT
+        with ESMTP id S229608AbiCQWoc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 17 Mar 2022 14:31:04 -0400
+        Thu, 17 Mar 2022 18:44:32 -0400
 Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D071E9CBA
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Mar 2022 11:29:47 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id h8-20020a25e208000000b00628c0565607so5114645ybe.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Mar 2022 11:29:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F5C355771
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Mar 2022 15:43:14 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id h8-20020a25e208000000b00628c0565607so5560424ybe.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Mar 2022 15:43:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc:content-transfer-encoding;
-        bh=wQVEsql9KFSlhmmWcTx1opzuixg3YJ5WlocmdM2V+LU=;
-        b=tLNhxJAcV22YEk5k1V/UUZiUWRD3rj9tx5xz7kelNdNcfJP3h0/nJn3BItEJC0v0zi
-         n7cpyEeHQ328VpE8oiIVkEZQm5cIH0JFbORx4FSQ9MRXAb26SYn9uu8p8q5MNnMgLwk4
-         LkmwZYYpFjXJ+UMMBsOm20mwHFGfliXDzEyoGNxjojIrLuv50psuU9vYxUN292JBtRtd
-         wJJJCafxKY8o3ZmlqAw6lnXwdS0GNZpH+5jgTGkXjeciqnYvot1YLwHQToajfhadhdhJ
-         SybLUcR0nIinv9N+Y7BOSiqn2zHGqQGa/zXKP4y28uECaEfdxzaWEc9b7QZd4456ukP6
-         FFsA==
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Quw5pKZWI0gGahzjOjy/Y5sjn3FIERyKvG0tcs0jMps=;
+        b=RC4U9MKxbUpik1R32Ww8fll/kQRSlc2R8uVUmQXKT+y9Kms3VodZZpZIlcoE4qN/3s
+         vwGwOEQ+wAG4RTNaN++I9Y9ulLYLOI97fUnFnVzAlFhx3FlacUQOnqS/xnDsKR+fXchI
+         cVfJvUi8Ln1avhgjpSt+Xrjgp96UuG11Tp/IhwIzIjwqgoIuTFvCYBW31zP5jWb8teHY
+         8VOTRjj8Krsr41fqYg2bQPNLd1dFb9exCXZBqjv/xl47wTZgVitYxsHd2Qqdi+wYZfxF
+         OhmavQ5dhEVB5eBk+iLf+DlrD44IDCzi2rNoMYRbjLS1hAKm7lmUKnSP7TEcICrRn2HB
+         ZrKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc:content-transfer-encoding;
-        bh=wQVEsql9KFSlhmmWcTx1opzuixg3YJ5WlocmdM2V+LU=;
-        b=BMU4nNItE/abKRmHsIRk/3uLvmpGn5txtL8eQnIyeEpgZIbJi/YVVeV9dfz5h3hgjB
-         zc+OZNY/ZJnMlnX71Fc+e1ulDWOMG3/7RtLU8dlrarTse4BKD/HthuDK4eYw6P7YFqAW
-         Y0V5BytRmLxrDOxQ/KXtaE+3Mv/1taW7/WlX1AO0/dYK8Wj6u8DEJtAqY7+TQAFeFXXG
-         aC4da9al4tLEKdmmQHjr4WQShkTOlQT7i5eVTWcuioJRkaN7dd4z1Su9U76jsZIiQgU1
-         m+q7Rd1UMhhikuPH0gzoubNOYxbPuhz2lVgKCMSTXslZdYMr3aZORCdFxvQYlroWpGUi
-         UjVA==
-X-Gm-Message-State: AOAM531e8/nEpA5xXbalx+Y3R+bSmmGtKXjwaRnTqSzmm8t40otN3Rdm
-        wXUB2RzCZq3ugOVEMM9YYZEn93cI51vP
-X-Google-Smtp-Source: ABdhPJz2aS2l3vhMmQnY5No+CljTwVI/LVhB/4k7TVYOquWkVZqgv2t3MizuYkO6Dbr3D9+39RK/uZADx0ab
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Quw5pKZWI0gGahzjOjy/Y5sjn3FIERyKvG0tcs0jMps=;
+        b=24Wl13dPr3HYsgkPqE5mPHSq8mGG9TzBYU3wXkifbOWNUytxSmSGBLnmoqBiZT4KTm
+         zavfXv9xFkeXKHri2b6waDjXJTOM88pzn16vaoEt0J6cHhBmJ0UHvJiiWeZ6PDLsRySp
+         8dGr/0UYpBppCk0+Oif8V/4n6xW2mKc7DnN9hBeoV/0ro6hMqvyMqO3TGbbJgH7w98PC
+         ZYG175VjIF9BJdsdA8MPie5pnc2C/HmVaX14PXsGwMPkx24TrIWWoxr5w5q1G0ncs757
+         LKYrqAlrn9VRvVAvatWIwTp3rXIvxjp6CSoY6lDiL5H2lgSOFWZ/I5XT1T949yiMm0vt
+         TNuw==
+X-Gm-Message-State: AOAM533zskl+GpCSLsJ6xCUFt5X8z1gcrsUctrsJp7eUQYWVmCZi4zrc
+        ieMuCzWD/Kby9mwzCH3Az+AHDnXCtYKs
+X-Google-Smtp-Source: ABdhPJxxoHmYNsNLQpHtSnpG/Uy+E0F4Jk4lzTm63hLihwRDkSNrbNkfgc41BZzTlMlkSpgcqUtnj4fvURI0
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:6811:1685:e3b9:7904])
- (user=irogers job=sendgmr) by 2002:a25:4052:0:b0:628:cdca:afb7 with SMTP id
- n79-20020a254052000000b00628cdcaafb7mr6358043yba.81.1647541786207; Thu, 17
- Mar 2022 11:29:46 -0700 (PDT)
-Date:   Thu, 17 Mar 2022 11:28:57 -0700
-In-Reply-To: <20220317182858.484474-1-irogers@google.com>
-Message-Id: <20220317182858.484474-7-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:5b57:0:b0:633:6b5c:86ad with SMTP id
+ p84-20020a255b57000000b006336b5c86admr7751468ybb.113.1647556993187; Thu, 17
+ Mar 2022 15:43:13 -0700 (PDT)
+Date:   Thu, 17 Mar 2022 15:43:09 -0700
+Message-Id: <20220317224309.543736-1-irogers@google.com>
 Mime-Version: 1.0
-References: <20220317182858.484474-1-irogers@google.com>
 X-Mailer: git-send-email 2.35.1.894.gb6a874cedc-goog
-Subject: [PATCH 7/8] perf vendor events: Update events for Tigerlake
+Subject: [PATCH] perf parse-events: Ignore case in topdown.slots check
 From:   Ian Rogers <irogers@google.com>
 To:     Kan Liang <kan.liang@linux.intel.com>,
         Zhengjun Xing <zhengjun.xing@linux.intel.com>,
@@ -71,422 +67,37 @@ To:     Kan Liang <kan.liang@linux.intel.com>,
         John Garry <john.garry@huawei.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+        Ian Rogers <irogers@google.com>,
+        Caleb Biggers <caleb.biggers@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The change:
-https://github.com/intel/event-converter-for-linux-perf/commit/fc680410402e=
-394eed6a1ebd909c9f649d3ed3ef
-moved certain "other" type of events in to the cache and pipeline topics.
-Update the perf json files for this change.
+An issue with icelakex metrics:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/pmu-events/arch/x86/icelakex/icx-metrics.json?h=perf/core&id=65eab2bc7dab326ee892ec5a4c749470b368b51a#n48
+That causes the slots not to be first.
 
+Fixes: 94dbfd6781a0 ("perf parse-events: Architecture specific leader override")
+Reported-by: Caleb Biggers <caleb.biggers@intel.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../pmu-events/arch/x86/tigerlake/cache.json  |  86 ++++++++++++
- .../pmu-events/arch/x86/tigerlake/other.json  | 129 ------------------
- .../arch/x86/tigerlake/pipeline.json          |  43 ++++++
- 3 files changed, 129 insertions(+), 129 deletions(-)
+ tools/perf/arch/x86/util/evlist.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/cache.json b/tools/pe=
-rf/pmu-events/arch/x86/tigerlake/cache.json
-index 543a3298f86f..0569b2c704ca 100644
---- a/tools/perf/pmu-events/arch/x86/tigerlake/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/tigerlake/cache.json
-@@ -493,6 +493,48 @@
-         "SampleAfterValue": "50021",
-         "UMask": "0x20"
-     },
-+    {
-+        "BriefDescription": "Counts demand data reads that hit a cacheline=
- in the L3 where a snoop hit in another cores caches, data forwarding is re=
-quired as the data is modified.",
-+        "CollectPEBSRecord": "2",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HITM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10003C0001",
-+        "Offcore": "1",
-+        "PEBScounters": "0,1,2,3",
-+        "PublicDescription": "Offcore response can be programmed only with=
- a specific pair of event select and counter MSR, and with specific event c=
-odes and predefine mask bit value in a dedicated MSR to specify attributes =
-of the offcore transaction.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HIT_WITH_FWD"=
-,
-+        "CollectPEBSRecord": "2",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HIT_WITH_FWD",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x8003C0001",
-+        "Offcore": "1",
-+        "PEBScounters": "0,1,2,3",
-+        "PublicDescription": "Offcore response can be programmed only with=
- a specific pair of event select and counter MSR, and with specific event c=
-odes and predefine mask bit value in a dedicated MSR to specify attributes =
-of the offcore transaction.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
-sts and software prefetches for exclusive ownership (PREFETCHW) that hit a =
-cacheline in the L3 where a snoop hit in another cores caches, data forward=
-ing is required as the data is modified.",
-+        "CollectPEBSRecord": "2",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.DEMAND_RFO.L3_HIT.SNOOP_HITM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10003C0002",
-+        "Offcore": "1",
-+        "PEBScounters": "0,1,2,3",
-+        "PublicDescription": "Offcore response can be programmed only with=
- a specific pair of event select and counter MSR, and with specific event c=
-odes and predefine mask bit value in a dedicated MSR to specify attributes =
-of the offcore transaction.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Demand and prefetch data reads",
-         "CollectPEBSRecord": "2",
-@@ -627,5 +669,49 @@
-         "PublicDescription": "Counts the cycles for which the thread is ac=
-tive and the superQ cannot take any more entries.",
-         "SampleAfterValue": "100003",
-         "UMask": "0x4"
-+    },
-+    {
-+        "BriefDescription": "Number of PREFETCHNTA instructions executed."=
-,
-+        "CollectPEBSRecord": "2",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x32",
-+        "EventName": "SW_PREFETCH_ACCESS.NTA",
-+        "PEBScounters": "0,1,2,3",
-+        "PublicDescription": "Counts the number of PREFETCHNTA instruction=
-s executed.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Number of PREFETCHW instructions executed.",
-+        "CollectPEBSRecord": "2",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x32",
-+        "EventName": "SW_PREFETCH_ACCESS.PREFETCHW",
-+        "PEBScounters": "0,1,2,3",
-+        "PublicDescription": "Counts the number of PREFETCHW instructions =
-executed.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x8"
-+    },
-+    {
-+        "BriefDescription": "Number of PREFETCHT0 instructions executed.",
-+        "CollectPEBSRecord": "2",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x32",
-+        "EventName": "SW_PREFETCH_ACCESS.T0",
-+        "PEBScounters": "0,1,2,3",
-+        "PublicDescription": "Counts the number of PREFETCHT0 instructions=
- executed.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x2"
-+    },
-+    {
-+        "BriefDescription": "Number of PREFETCHT1 or PREFETCHT2 instructio=
-ns executed.",
-+        "CollectPEBSRecord": "2",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x32",
-+        "EventName": "SW_PREFETCH_ACCESS.T1_T2",
-+        "PEBScounters": "0,1,2,3",
-+        "PublicDescription": "Counts the number of PREFETCHT1 or PREFETCHT=
-2 instructions executed.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x4"
-     }
- ]
-\ No newline at end of file
-diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/other.json b/tools/pe=
-rf/pmu-events/arch/x86/tigerlake/other.json
-index b1143fe74246..304cd09fe159 100644
---- a/tools/perf/pmu-events/arch/x86/tigerlake/other.json
-+++ b/tools/perf/pmu-events/arch/x86/tigerlake/other.json
-@@ -43,48 +43,6 @@
-         "SampleAfterValue": "200003",
-         "UMask": "0x20"
-     },
--    {
--        "BriefDescription": "Counts demand data reads that hit a cacheline=
- in the L3 where a snoop hit in another cores caches, data forwarding is re=
-quired as the data is modified.",
--        "CollectPEBSRecord": "2",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10003C0001",
--        "Offcore": "1",
--        "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with=
- a specific pair of event select and counter MSR, and with specific event c=
-odes and predefine mask bit value in a dedicated MSR to specify attributes =
-of the offcore transaction.",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HIT_WITH_FWD"=
-,
--        "CollectPEBSRecord": "2",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HIT_WITH_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x8003C0001",
--        "Offcore": "1",
--        "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with=
- a specific pair of event select and counter MSR, and with specific event c=
-odes and predefine mask bit value in a dedicated MSR to specify attributes =
-of the offcore transaction.",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
-sts and software prefetches for exclusive ownership (PREFETCHW) that hit a =
-cacheline in the L3 where a snoop hit in another cores caches, data forward=
-ing is required as the data is modified.",
--        "CollectPEBSRecord": "2",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.DEMAND_RFO.L3_HIT.SNOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10003C0002",
--        "Offcore": "1",
--        "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with=
- a specific pair of event select and counter MSR, and with specific event c=
-odes and predefine mask bit value in a dedicated MSR to specify attributes =
-of the offcore transaction.",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
-     {
-         "BriefDescription": "Counts streaming stores that have any type of=
- response.",
-         "CollectPEBSRecord": "2",
-@@ -98,92 +56,5 @@
-         "PublicDescription": "Offcore response can be programmed only with=
- a specific pair of event select and counter MSR, and with specific event c=
-odes and predefine mask bit value in a dedicated MSR to specify attributes =
-of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Number of PREFETCHNTA instructions executed."=
-,
--        "CollectPEBSRecord": "2",
--        "Counter": "0,1,2,3",
--        "EventCode": "0x32",
--        "EventName": "SW_PREFETCH_ACCESS.NTA",
--        "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Counts the number of PREFETCHNTA instruction=
-s executed.",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Number of PREFETCHW instructions executed.",
--        "CollectPEBSRecord": "2",
--        "Counter": "0,1,2,3",
--        "EventCode": "0x32",
--        "EventName": "SW_PREFETCH_ACCESS.PREFETCHW",
--        "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Counts the number of PREFETCHW instructions =
-executed.",
--        "SampleAfterValue": "100003",
--        "UMask": "0x8"
--    },
--    {
--        "BriefDescription": "Number of PREFETCHT0 instructions executed.",
--        "CollectPEBSRecord": "2",
--        "Counter": "0,1,2,3",
--        "EventCode": "0x32",
--        "EventName": "SW_PREFETCH_ACCESS.T0",
--        "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Counts the number of PREFETCHT0 instructions=
- executed.",
--        "SampleAfterValue": "100003",
--        "UMask": "0x2"
--    },
--    {
--        "BriefDescription": "Number of PREFETCHT1 or PREFETCHT2 instructio=
-ns executed.",
--        "CollectPEBSRecord": "2",
--        "Counter": "0,1,2,3",
--        "EventCode": "0x32",
--        "EventName": "SW_PREFETCH_ACCESS.T1_T2",
--        "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Counts the number of PREFETCHT1 or PREFETCHT=
-2 instructions executed.",
--        "SampleAfterValue": "100003",
--        "UMask": "0x4"
--    },
--    {
--        "BriefDescription": "TMA slots where no uops were being issued due=
- to lack of back-end resources.",
--        "CollectPEBSRecord": "2",
--        "Counter": "0,1,2,3,4,5,6,7",
--        "EventCode": "0xa4",
--        "EventName": "TOPDOWN.BACKEND_BOUND_SLOTS",
--        "PEBScounters": "0,1,2,3,4,5,6,7",
--        "PublicDescription": "Counts the number of Top-down Microarchitect=
-ure Analysis (TMA) method's  slots where no micro-operations were being iss=
-ued from front-end to back-end of the machine due to lack of back-end resou=
-rces.",
--        "SampleAfterValue": "10000003",
--        "UMask": "0x2"
--    },
--    {
--        "BriefDescription": "TMA slots wasted due to incorrect speculation=
- by branch mispredictions",
--        "CollectPEBSRecord": "2",
--        "Counter": "0,1,2,3,4,5,6,7",
--        "EventCode": "0xa4",
--        "EventName": "TOPDOWN.BR_MISPREDICT_SLOTS",
--        "PEBScounters": "0,1,2,3,4,5,6,7",
--        "PublicDescription": "Number of TMA slots that were wasted due to =
-incorrect speculation by branch mispredictions. This event estimates number=
- of operations that were issued but not retired from the specualtive path a=
-s well as the out-of-order engine recovery past a branch misprediction.",
--        "SampleAfterValue": "10000003",
--        "UMask": "0x8"
--    },
--    {
--        "BriefDescription": "TMA slots available for an unhalted logical p=
-rocessor. Fixed counter - architectural event",
--        "CollectPEBSRecord": "2",
--        "Counter": "Fixed counter 3",
--        "EventName": "TOPDOWN.SLOTS",
--        "PEBScounters": "35",
--        "PublicDescription": "Number of available slots for an unhalted lo=
-gical processor. The event increments by machine-width of the narrowest pip=
-eline as employed by the Top-down Microarchitecture Analysis method (TMA). =
-The count is distributed among unhalted logical processors (hyper-threads) =
-who share the same physical core. Software can use this event as the denomi=
-nator for the top-level metrics of the TMA method. This architectural event=
- is counted on a designated fixed counter (Fixed Counter 3).",
--        "SampleAfterValue": "10000003",
--        "UMask": "0x4"
--    },
--    {
--        "BriefDescription": "TMA slots available for an unhalted logical p=
-rocessor. General counter - architectural event",
--        "CollectPEBSRecord": "2",
--        "Counter": "0,1,2,3,4,5,6,7",
--        "EventCode": "0xa4",
--        "EventName": "TOPDOWN.SLOTS_P",
--        "PEBScounters": "0,1,2,3,4,5,6,7",
--        "PublicDescription": "Counts the number of available slots for an =
-unhalted logical processor. The event increments by machine-width of the na=
-rrowest pipeline as employed by the Top-down Microarchitecture Analysis met=
-hod. The count is distributed among unhalted logical processors (hyper-thre=
-ads) who share the same physical core.",
--        "SampleAfterValue": "10000003",
--        "UMask": "0x1"
-     }
- ]
-\ No newline at end of file
-diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json b/tools=
-/perf/pmu-events/arch/x86/tigerlake/pipeline.json
-index 4dc3a16e3da4..d436775c80db 100644
---- a/tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json
-@@ -711,6 +711,49 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "TMA slots where no uops were being issued due=
- to lack of back-end resources.",
-+        "CollectPEBSRecord": "2",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xa4",
-+        "EventName": "TOPDOWN.BACKEND_BOUND_SLOTS",
-+        "PEBScounters": "0,1,2,3,4,5,6,7",
-+        "PublicDescription": "Counts the number of Top-down Microarchitect=
-ure Analysis (TMA) method's  slots where no micro-operations were being iss=
-ued from front-end to back-end of the machine due to lack of back-end resou=
-rces.",
-+        "SampleAfterValue": "10000003",
-+        "UMask": "0x2"
-+    },
-+    {
-+        "BriefDescription": "TMA slots wasted due to incorrect speculation=
- by branch mispredictions",
-+        "CollectPEBSRecord": "2",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xa4",
-+        "EventName": "TOPDOWN.BR_MISPREDICT_SLOTS",
-+        "PEBScounters": "0,1,2,3,4,5,6,7",
-+        "PublicDescription": "Number of TMA slots that were wasted due to =
-incorrect speculation by branch mispredictions. This event estimates number=
- of operations that were issued but not retired from the specualtive path a=
-s well as the out-of-order engine recovery past a branch misprediction.",
-+        "SampleAfterValue": "10000003",
-+        "UMask": "0x8"
-+    },
-+    {
-+        "BriefDescription": "TMA slots available for an unhalted logical p=
-rocessor. Fixed counter - architectural event",
-+        "CollectPEBSRecord": "2",
-+        "Counter": "Fixed counter 3",
-+        "EventName": "TOPDOWN.SLOTS",
-+        "PEBScounters": "35",
-+        "PublicDescription": "Number of available slots for an unhalted lo=
-gical processor. The event increments by machine-width of the narrowest pip=
-eline as employed by the Top-down Microarchitecture Analysis method (TMA). =
-The count is distributed among unhalted logical processors (hyper-threads) =
-who share the same physical core. Software can use this event as the denomi=
-nator for the top-level metrics of the TMA method. This architectural event=
- is counted on a designated fixed counter (Fixed Counter 3).",
-+        "SampleAfterValue": "10000003",
-+        "UMask": "0x4"
-+    },
-+    {
-+        "BriefDescription": "TMA slots available for an unhalted logical p=
-rocessor. General counter - architectural event",
-+        "CollectPEBSRecord": "2",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xa4",
-+        "EventName": "TOPDOWN.SLOTS_P",
-+        "PEBScounters": "0,1,2,3,4,5,6,7",
-+        "PublicDescription": "Counts the number of available slots for an =
-unhalted logical processor. The event increments by machine-width of the na=
-rrowest pipeline as employed by the Top-down Microarchitecture Analysis met=
-hod. The count is distributed among unhalted logical processors (hyper-thre=
-ads) who share the same physical core.",
-+        "SampleAfterValue": "10000003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Number of uops decoded out of instructions ex=
-clusively fetched by decoder 0",
-         "CollectPEBSRecord": "2",
---=20
+diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
+index f924246eff78..8d9b55959256 100644
+--- a/tools/perf/arch/x86/util/evlist.c
++++ b/tools/perf/arch/x86/util/evlist.c
+@@ -29,7 +29,7 @@ struct evsel *arch_evlist__leader(struct list_head *list)
+ 
+ 	__evlist__for_each_entry(list, evsel) {
+ 		if (evsel->pmu_name && !strcmp(evsel->pmu_name, "cpu") &&
+-			evsel->name && strstr(evsel->name, "slots"))
++			evsel->name && strcasestr(evsel->name, "slots"))
+ 			return evsel;
+ 	}
+ 	return first;
+-- 
 2.35.1.894.gb6a874cedc-goog
 
