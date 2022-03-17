@@ -2,137 +2,220 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B199DC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Mar 2022 17:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D21C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Mar 2022 17:55:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229637AbiCQRvC (ORCPT
+        id S237091AbiCQR4U (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 17 Mar 2022 13:51:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38124 "EHLO
+        Thu, 17 Mar 2022 13:56:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236376AbiCQRvC (ORCPT
+        with ESMTP id S232658AbiCQR4T (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 17 Mar 2022 13:51:02 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E21DF166E20
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Mar 2022 10:49:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1647539385;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=eCBBOCUUJoxcZeKDp521zRXl50YJfiPdzqkETe2J4uM=;
-        b=Hl7+36Dqua67h1PYuROzS1fQAlh+vX7nVPyXTSuqeejEFY0Ss/ybrIl4J0qsxXpDIrbC+8
-        yDyvgn+wEWgZOsNFoYDRHKDILcwFyZiwWQ60ww3dvEaKyHZkBmOV6Bp18U3/QkeDTZAs95
-        brVyx87GmNUt9aNcR65oRAcTukLgBZo=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-421-UzQF4e8JMNS7qWMiJh8W-A-1; Thu, 17 Mar 2022 13:49:43 -0400
-X-MC-Unique: UzQF4e8JMNS7qWMiJh8W-A-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2EBAA802C16;
-        Thu, 17 Mar 2022 17:49:43 +0000 (UTC)
-Received: from Diego (unknown [10.39.208.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 83566112C08C;
-        Thu, 17 Mar 2022 17:49:39 +0000 (UTC)
-Date:   Thu, 17 Mar 2022 18:49:35 +0100 (CET)
-From:   Michael Petlan <mpetlan@redhat.com>
-X-X-Sender: Michael@Diego
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        jolsa@kernel.org, atrajeev@linux.vnet.ibm.com, maddy@linux.ibm.com,
-        kjain@linux.ibm.com
-Subject: Re: [PATCH] perf symbols: Fix symbol size calculation condition
-In-Reply-To: <YjNVnA+tToooxUV+@kernel.org>
-Message-ID: <alpine.LRH.2.20.2203171849180.29735@Diego>
-References: <20220317135536.805-1-mpetlan@redhat.com> <YjNVnA+tToooxUV+@kernel.org>
-User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
+        Thu, 17 Mar 2022 13:56:19 -0400
+Received: from out30-43.freemail.mail.aliyun.com (out30-43.freemail.mail.aliyun.com [115.124.30.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 006F017ECFC;
+        Thu, 17 Mar 2022 10:55:01 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0V7Sm1Zs_1647539695;
+Received: from IT-C02W23QPG8WN.local(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0V7Sm1Zs_1647539695)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 18 Mar 2022 01:54:57 +0800
+Subject: Re: [RESEND PATCH 2/2] perf/x86: improve the event scheduling to
+ avoid unnecessary pmu_stop/start
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Wen Yang <simon.wy@alibaba-inc.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        mark rutland <mark.rutland@arm.com>,
+        jiri olsa <jolsa@redhat.com>,
+        namhyung kim <namhyung@kernel.org>,
+        borislav petkov <bp@alien8.de>, x86@kernel.org,
+        "h. peter anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20220304110351.47731-1-simon.wy@alibaba-inc.com>
+ <20220304110351.47731-2-simon.wy@alibaba-inc.com>
+ <YiIyrFn7upPEouVt@hirez.programming.kicks-ass.net>
+ <0c119da1-053b-a2d6-1579-8fb09dbe8e63@linux.alibaba.com>
+ <YidREXNn2AtI3V1c@hirez.programming.kicks-ass.net>
+ <271bc186-7ffb-33c8-4934-cda2beb94816@linux.alibaba.com>
+ <Yi8fELo+k9gmkJIa@hirez.programming.kicks-ass.net>
+From:   Wen Yang <wenyang@linux.alibaba.com>
+Message-ID: <05861b8c-2c7c-ae89-613a-41fcace6a174@linux.alibaba.com>
+Date:   Fri, 18 Mar 2022 01:54:55 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:78.0)
+ Gecko/20100101 Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
+In-Reply-To: <Yi8fELo+k9gmkJIa@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, 17 Mar 2022, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Mar 17, 2022 at 02:55:36PM +0100, Michael Petlan escreveu:
-> > Before this patch, the symbol end address fixup to be called, needed two
-> > conditions being met:
-> > 
-> >   if (prev->end == prev->start && prev->end != curr->start)
-> > 
-> > Where
-> >   "prev->end == prev->start" means that prev is zero-long
-> >                              (and thus needs a fixup)
-> > and
-> >   "prev->end != curr->start" means that fixup hasn't been applied yet
-> > 
-> > However, this logic is incorrect in the following situation:
-> > 
-> > *curr  = {rb_node = {__rb_parent_color = 278218928,
-> >   rb_right = 0x0, rb_left = 0x0},
-> >   start = 0xc000000000062354,
-> >   end = 0xc000000000062354, namelen = 40, type = 2 '\002',
-> >   binding = 0 '\000', idle = 0 '\000', ignore = 0 '\000',
-> >   inlined = 0 '\000', arch_sym = 0 '\000', annotate2 = false,
-> >   name = 0x1159739e "kprobe_optinsn_page\t[__builtin__kprobes]"}
-> > 
-> > *prev = {rb_node = {__rb_parent_color = 278219041,
-> >   rb_right = 0x109548b0, rb_left = 0x109547c0},
-> >   start = 0xc000000000062354,
-> >   end = 0xc000000000062354, namelen = 12, type = 2 '\002',
-> >   binding = 1 '\001', idle = 0 '\000', ignore = 0 '\000',
-> >   inlined = 0 '\000', arch_sym = 0 '\000', annotate2 = false,
-> >   name = 0x1095486e "optinsn_slot"}
-> > 
-> > In this case, prev->start == prev->end == curr->start == curr->end,
-> > thus the condition above thinks that "we need a fixup due to zero
-> > length of prev symbol, but it has been probably done, since the
-> > prev->end == curr->start", which is wrong.
-> > 
-> > After the patch, the execution path proceeds to arch__symbols__fixup_end
-> > function which fixes up the size of prev symbol by adding page_size to
-> > its end offset.
-> 
-> You missed this:
-> 
-> Fixes: 3b01a413c196c910 ("perf symbols: Improve kallsyms symbol end addr calculation")
-> 
-> I'll add it to the patch, ok?
 
-Sure thing. Thanks.
-M
 
+ÔÚ 2022/3/14 ÏÂÎç6:55, Peter Zijlstra Ð´µÀ:
+> On Thu, Mar 10, 2022 at 11:50:33AM +0800, Wen Yang wrote:
 > 
-> - Arnaldo
->  
-> > Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-> > ---
-> >  tools/perf/util/symbol.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> > index fb075aa8f8f2..dea0fc495185 100644
-> > --- a/tools/perf/util/symbol.c
-> > +++ b/tools/perf/util/symbol.c
-> > @@ -231,7 +231,7 @@ void symbols__fixup_end(struct rb_root_cached *symbols)
-> >  		prev = curr;
-> >  		curr = rb_entry(nd, struct symbol, rb_node);
-> >  
-> > -		if (prev->end == prev->start && prev->end != curr->start)
-> > +		if (prev->end == prev->start || prev->end != curr->start)
-> >  			arch__symbols__fixup_end(prev, curr);
-> >  	}
-> >  
-> > -- 
-> > 2.18.4
+>> As you pointed out, some non-compliant rdpmc can cause problems. But you
+>> also know that linux is the foundation of cloud servers, and many
+>> third-party programs run on it (we don't have any code for it), and we can
+>> only observe that the monitoring data will jitter abnormally (the
+>> probability of this issue is not high, about dozens of tens of thousands of
+>> machines).
 > 
-> -- 
+> This might be a novel insight, but I *really* don't give a crap about
+> any of that. If they're not using it right, they get to keep the pieces.
 > 
-> - Arnaldo
+> I'd almost make it reschedule more to force them to fix their stuff.
 > 
-> 
+
+
+Thank you for your guidance.
+
+We also found a case in thousands of servers where the PMU counter is no 
+longer updated due to frequent x86_pmu_stop/x86_pmu_start.
+
+We added logs in the kernel and found that a third-party program would 
+cause the PMU counter to start/stop several times in just a few seconds, 
+as follows:
+
+
+[8993460.537776] XXX x86_pmu_stop line=1388 [cpu1] active_mask=100000001 
+event=ffff880a53411000, state=1, attr.type=0, attr.config=0x0, 
+attr.pinned=1, hw.idx=3, hw.prev_count=0x802a877ef302, 
+hw.period_left=0x7fd578810cfe, event.count=0x14db802a877ecab4, 
+event.prev_count=0x14db802a877ecab4
+[8993460.915873] XXX x86_pmu_start line=1312 [cpu1] 
+active_mask=200000008 event=ffff880a53411000, state=1, attr.type=0, 
+attr.config=0x0, attr.pinned=1, hw.idx=3, 
+hw.prev_count=0xffff802a9cf6a166, hw.period_left=0x7fd563095e9a, 
+event.count=0x14db802a9cf67918, event.prev_count=0x14db802a9cf67918
+[8993461.104643] XXX x86_pmu_stop line=1388 [cpu1] active_mask=100000001 
+event=ffff880a53411000, state=1, attr.type=0, attr.config=0x0, 
+attr.pinned=1, hw.idx=3, hw.prev_count=0xffff802a9cf6a166, 
+hw.period_left=0x7fd563095e9a, event.count=0x14db802a9cf67918, 
+event.prev_count=0x14db802a9cf67918
+[8993461.442508] XXX x86_pmu_start line=1312 [cpu1] 
+active_mask=200000004 event=ffff880a53411000, state=1, attr.type=0, 
+attr.config=0x0, attr.pinned=1, hw.idx=2, 
+hw.prev_count=0xffff802a9cf8492e, hw.period_left=0x7fd56307b6d2, 
+event.count=0x14db802a9cf820e0, event.prev_count=0x14db802a9cf820e0
+[8993461.736927] XXX x86_pmu_stop line=1388 [cpu1] active_mask=100000001 
+event=ffff880a53411000, state=1, attr.type=0, attr.config=0x0, 
+attr.pinned=1, hw.idx=2, hw.prev_count=0xffff802a9cf8492e, 
+hw.period_left=0x7fd56307b6d2, event.count=0x14db802a9cf820e0, 
+event.prev_count=0x14db802a9cf820e0
+[8993461.983135] XXX x86_pmu_start line=1312 [cpu1] 
+active_mask=200000004 event=ffff880a53411000, state=1, attr.type=0, 
+attr.config=0x0, attr.pinned=1, hw.idx=2, 
+hw.prev_count=0xffff802a9cfc29ed, hw.period_left=0x7fd56303d613, 
+event.count=0x14db802a9cfc019f, event.prev_count=0x14db802a9cfc019f
+[8993462.274599] XXX x86_pmu_stop line=1388 [cpu1] active_mask=100000001 
+event=ffff880a53411000, state=1, attr.type=0, attr.config=0x0, 
+attr.pinned=1, hw.idx=2, hw.prev_count=0x802a9d24040e, 
+hw.period_left=0x7fd562dbfbf2, event.count=0x14db802a9d23dbc0, 
+event.prev_count=0x14db802a9d23dbc0
+[8993462.519488] XXX x86_pmu_start line=1312 [cpu1] 
+active_mask=200000004 event=ffff880a53411000, state=1, attr.type=0, 
+attr.config=0x0, attr.pinned=1, hw.idx=2, 
+hw.prev_count=0xffff802ab0bb4719, hw.period_left=0x7fd54f44b8e7, 
+event.count=0x14db802ab0bb1ecb, event.prev_count=0x14db802ab0bb1ecb
+[8993462.726929] XXX x86_pmu_stop line=1388 [cpu1] active_mask=100000003 
+event=ffff880a53411000, state=1, attr.type=0, attr.config=0x0, 
+attr.pinned=1, hw.idx=2, hw.prev_count=0xffff802ab0bb4719, 
+hw.period_left=0x7fd54f44b8e7, event.count=0x14db802ab0bb1ecb, 
+event.prev_count=0x14db802ab0bb1ecb
+[8993463.035674] XXX x86_pmu_start line=1312 [cpu1] 
+active_mask=200000008 event=ffff880a53411000, state=1, attr.type=0, 
+attr.config=0x0, attr.pinned=1, hw.idx=3, 
+hw.prev_count=0xffff802ab0bcd328, hw.period_left=0x7fd54f432cd8, 
+event.count=0x14db802ab0bcaada, event.prev_count=0x14db802ab0bcaada
+
+
+Then, the PMU counter will not be updated£º
+
+[8993463.333622] x86_perf_event_update, event=ffff880a53411000, 
+new_raw_count=802abea31354
+[8993463.359905] x86_perf_event_update [cpu1] active_mask=30000000f 
+event=ffff880a53411000, state=1, attr.config=0x0, attr.pinned=1, 
+hw.idx=3, hw.prev_count=0x802abea31354, hw.period_left=0x7fd5415cecac, 
+event.count=0x14db802abea2eb06,
+[8993463.504783] x86_perf_event_update, event=ffff880a53411000, 
+new_raw_count=802ad8760160
+[8993463.521138] x86_perf_event_update [cpu1] active_mask=30000000f 
+event=ffff880a53411000, state=1, attr.config=0x0, attr.pinned=1, 
+hw.idx=3, hw.prev_count=0x802ad8760160, hw.period_left=0x7fd52789fea0, 
+event.count=0x14db802ad875d912,
+[8993463.638337] x86_perf_event_update, event=ffff880a53411000, 
+new_raw_count=802aecb4747b
+[8993463.654441] x86_perf_event_update [cpu1] active_mask=30000000f 
+event=ffff880a53411000, state=1, attr.config=0x0, attr.pinned=1, 
+hw.idx=3, hw.prev_count=0x802aecb4747b, hw.period_left=0x7fd5134b8b85, 
+event.count=0x14db802aecb44c2d,
+[8993463.837321] x86_perf_event_update, event=ffff880a53411000, 
+new_raw_count=802aecb4747b
+[8993463.861625] x86_perf_event_update [cpu1] active_mask=30000000f 
+event=ffff880a53411000, state=1, attr.config=0x0, attr.pinned=1, 
+hw.idx=3, hw.prev_count=0x802aecb4747b, hw.period_left=0x7fd5134b8b85, 
+event.count=0x14db802aecb44c2d,
+[8993464.012398] x86_perf_event_update, event=ffff880a53411000, 
+new_raw_count=802aecb4747b
+[8993464.012402] x86_perf_event_update [cpu1] active_mask=30000000f 
+event=ffff880a53411000, state=1, attr.config=0x0, attr.pinned=1, 
+hw.idx=3, hw.prev_count=0x802aecb4747b, hw.period_left=0x7fd5134b8b85, 
+event.count=0x14db802aecb44c2d,
+[8993464.013676] x86_perf_event_update, event=ffff880a53411000, 
+new_raw_count=802aecb4747b
+[8993464.013678] x86_perf_event_update [cpu1] active_mask=30000000f 
+event=ffff880a53411000, state=1, attr.config=0x0, attr.pinned=1, 
+hw.idx=3, hw.prev_count=0x802aecb4747b, hw.period_left=0x7fd5134b8b85, 
+event.count=0x14db802aecb44c2d,
+[8993464.016123] x86_perf_event_update, event=ffff880a53411000, 
+new_raw_count=802aecb4747b
+[8993464.016125] x86_perf_event_update [cpu1] active_mask=30000000f 
+event=ffff880a53411000, state=1, attr.config=0x0, attr.pinned=1, 
+hw.idx=3, hw.prev_count=0x802aecb4747b, hw.period_left=0x7fd5134b8b85, 
+event.count=0x14db802aecb44c2d,
+[8993464.016196] x86_perf_event_update, event=ffff880a53411000, 
+new_raw_count=802aecb4747b
+[8993464.016199] x86_perf_event_update [cpu1] active_mask=30000000f 
+event=ffff880a53411000, state=1, attr.config=0x0, attr.pinned=1, 
+hw.idx=3, hw.prev_count=0x802aecb4747b, hw.period_left=0x7fd5134b8b85, 
+event.count=0x14db802aecb44c2d,
+
+......
+
+
+Until 6 seconds later, the counter is stopped/started again£º
+
+
+[8993470.243959] XXX x86_pmu_stop line=1388 [cpu1] active_mask=100000001 
+event=ffff880a53411000, state=1, attr.type=0, attr.config=0x0, 
+attr.pinned=1, hw.idx=3, hw.prev_count=0x802aecb4747b, 
+hw.period_left=0x7fd5134b8b85, event.count=0x14db802aecb44c2d, 
+event.prev_count=0x14db802aecb44c2d
+[8993470.243998] XXX x86_pmu_start line=1305 [cpu1] 
+active_mask=200000000 event=ffff880a53411000, state=1, attr.type=0, 
+attr.config=0x0, attr.pinned=1, hw.idx=3, 
+hw.prev_count=0xffff802aecb4747b, hw.period_left=0x7fd5134b8b85, 
+event.count=0x14db802aecb44c2d, event.prev_count=0x14db802aecb44c2d
+
+[8993470.245285] x86_perf_event_update, event=ffff880a53411000, 
+new_raw_count=802aece1e6f6
+
+...
+
+Such problems can be solved by avoiding unnecessary x86_pmu_{stop|start}.
+
+Please have a look again. Thanks.
+
+--
+Best wishes,
+Wen
+
 
