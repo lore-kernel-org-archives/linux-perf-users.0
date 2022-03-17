@@ -2,140 +2,109 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED05C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Mar 2022 12:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 746B1C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Mar 2022 13:55:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229509AbiCQMVw (ORCPT
+        id S234303AbiCQN5B (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 17 Mar 2022 08:21:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41504 "EHLO
+        Thu, 17 Mar 2022 09:57:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230499AbiCQMVv (ORCPT
+        with ESMTP id S231376AbiCQN5B (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 17 Mar 2022 08:21:51 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B4E41A94A5;
-        Thu, 17 Mar 2022 05:20:34 -0700 (PDT)
-Received: from kwepemi500016.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4KK5h51DdszcZxN;
-        Thu, 17 Mar 2022 20:15:33 +0800 (CST)
-Received: from huawei.com (10.175.104.170) by kwepemi500016.china.huawei.com
- (7.221.188.220) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Thu, 17 Mar
- 2022 20:20:31 +0800
-From:   Zhipeng Xie <xiezhipeng1@huawei.com>
-To:     <peterz@infradead.org>
-CC:     <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
-        <fanwentao@huawei.com>, <jolsa@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <mark.rutland@arm.com>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <xiezhipeng1@huawei.com>, <xiexiuqi@huawei.com>
-Subject: Re: PING: [PATCH v2] perf/core: Fix perf_mmap fail when CONFIG_PERF_USE_VMALLOC enabled
-Date:   Thu, 17 Mar 2022 21:19:41 -0400
-Message-ID: <20220318011941.19116-1-xiezhipeng1@huawei.com>
-X-Mailer: git-send-email 2.18.1
-In-Reply-To: <20220216165427.18270-1-xiezhipeng1@huawei.com>
-References: <20220216165427.18270-1-xiezhipeng1@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.104.170]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemi500016.china.huawei.com (7.221.188.220)
-X-CFilter-Loop: Reflected
+        Thu, 17 Mar 2022 09:57:01 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 08CBD1042B1
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Mar 2022 06:55:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1647525344;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=3qWgFKPuWbwkNXZxQSeQl0sRheg0mQTqRVZcOh+jo7o=;
+        b=HlkCqTj8Sbwj/AFCZKt8cmnYDT56YI7ue494fWqs/FEq6k9SqlOJD8tmxL7MJIEVTLZ3Qf
+        u1Xix47dYBaRjNg+YayLqV2adSjJV1k+2XirjszUTbwYDAYz5Ui6SvUmJB6Z9HEcAa4AW/
+        w/RklRWibuMTs+rdrN3wdNL1vDdddRs=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-482-Y7cZe7tNMCy7UxgEWPzCHQ-1; Thu, 17 Mar 2022 09:55:40 -0400
+X-MC-Unique: Y7cZe7tNMCy7UxgEWPzCHQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 50D341044563;
+        Thu, 17 Mar 2022 13:55:40 +0000 (UTC)
+Received: from Diego.redhat.com (unknown [10.39.208.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 810822011571;
+        Thu, 17 Mar 2022 13:55:38 +0000 (UTC)
+From:   Michael Petlan <mpetlan@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-perf-users@vger.kernel.org, acme@kernel.org,
+        jolsa@kernel.org, atrajeev@linux.vnet.ibm.com, maddy@linux.ibm.com,
+        kjain@linux.ibm.com
+Subject: [PATCH] perf symbols: Fix symbol size calculation condition
+Date:   Thu, 17 Mar 2022 14:55:36 +0100
+Message-Id: <20220317135536.805-1-mpetlan@redhat.com>
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Ping again, sorry for the noise.
+Before this patch, the symbol end address fixup to be called, needed two
+conditions being met:
 
-On Thu, February 17, 2022 12:54 AM, Zhipeng Xie wrote:
-> 
-> Hi, Peter
-> 
-> Could you please review the V2 version?
-> 
-> On Wed, February 9, 2022 10:54 PM, Zhipeng Xie wrote:
-> > This problem can be reproduced with CONFIG_PERF_USE_VMALLOC enabled
-> > on both
-> > x86_64 and aarch64 arch when using sysdig -B(using ebpf)[1].
-> > sysdig -B works fine after rebuilding the kernel with
-> > CONFIG_PERF_USE_VMALLOC
-> > disabled.
-> >
-> > I tracked it down to the if condition event->rb->nr_pages != nr_pages in
-> > perf_mmap is true when CONFIG_PERF_USE_VMALLOC is enabled where
-> > event->rb->nr_pages = 1 and nr_pages = 2048 resulting perf_mmap to return
-> > -EINVAL.This is because when CONFIG_PERF_USE_VMALLOC is enabled,
-> > rb->nr_pages
-> > is always equal to 1.
-> >
-> > Arch with CONFIG_PERF_USE_VMALLOC enabled by default:
-> > arc/arm/csky/mips/sh/sparc/xtensa
-> > Arch with CONFIG_PERF_USE_VMALLOC disabled by default:
-> > x86_64/aarch64/...
-> >
-> > Fix this problem by using data_page_nr.
-> >
-> > [1] https://github.com/draios/sysdig
-> >
-> > Signed-off-by: Zhipeng Xie <xiezhipeng1@huawei.com>
-> > ---
-> >  kernel/events/core.c        | 2 +-
-> >  kernel/events/internal.h    | 5 +++++
-> >  kernel/events/ring_buffer.c | 5 -----
-> >  3 files changed, 6 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index 57c7197838db..370292effd32 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -6352,7 +6352,7 @@ static int perf_mmap(struct file *file, struct
-> > vm_area_struct *vma)
-> >  again:
-> > mutex_lock(&event->mmap_mutex);
-> > if (event->rb) {
-> > -       if (event->rb->nr_pages != nr_pages) {
-> > +       if (data_page_nr(event->rb) != nr_pages) {
-> >         ret = -EINVAL;
-> >         goto unlock;
-> >     }
-> > diff --git a/kernel/events/internal.h b/kernel/events/internal.h
-> > index 082832738c8f..5816c0719dbf 100644
-> > --- a/kernel/events/internal.h
-> > +++ b/kernel/events/internal.h
-> > @@ -116,6 +116,11 @@ static inline int page_order(struct perf_buffer *rb)
-> >  }
-> >  #endif
-> >
-> > +static int data_page_nr(struct perf_buffer *rb)
-> > +{
-> > +   return rb->nr_pages << page_order(rb);
-> > +}
-> > +
-> >  static inline unsigned long perf_data_size(struct perf_buffer *rb)
-> >  {
-> > return rb->nr_pages << (PAGE_SHIFT + page_order(rb));
-> > diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-> > index 52868716ec35..fb35b926024c 100644
-> > --- a/kernel/events/ring_buffer.c
-> > +++ b/kernel/events/ring_buffer.c
-> > @@ -859,11 +859,6 @@ void rb_free(struct perf_buffer *rb)
-> >  }
-> >
-> >  #else
-> > -static int data_page_nr(struct perf_buffer *rb)
-> > -{
-> > -   return rb->nr_pages << page_order(rb);
-> > -}
-> > -
-> >  static struct page *
-> >  __perf_mmap_to_page(struct perf_buffer *rb, unsigned long pgoff)
-> >  {
-> > --
-> > 2.18.1
-> 
-> Best Regards,
-> Zhipeng Xie
+  if (prev->end == prev->start && prev->end != curr->start)
 
-Best Regards,
-Zhipeng Xie
+Where
+  "prev->end == prev->start" means that prev is zero-long
+                             (and thus needs a fixup)
+and
+  "prev->end != curr->start" means that fixup hasn't been applied yet
+
+However, this logic is incorrect in the following situation:
+
+*curr  = {rb_node = {__rb_parent_color = 278218928,
+  rb_right = 0x0, rb_left = 0x0},
+  start = 0xc000000000062354,
+  end = 0xc000000000062354, namelen = 40, type = 2 '\002',
+  binding = 0 '\000', idle = 0 '\000', ignore = 0 '\000',
+  inlined = 0 '\000', arch_sym = 0 '\000', annotate2 = false,
+  name = 0x1159739e "kprobe_optinsn_page\t[__builtin__kprobes]"}
+
+*prev = {rb_node = {__rb_parent_color = 278219041,
+  rb_right = 0x109548b0, rb_left = 0x109547c0},
+  start = 0xc000000000062354,
+  end = 0xc000000000062354, namelen = 12, type = 2 '\002',
+  binding = 1 '\001', idle = 0 '\000', ignore = 0 '\000',
+  inlined = 0 '\000', arch_sym = 0 '\000', annotate2 = false,
+  name = 0x1095486e "optinsn_slot"}
+
+In this case, prev->start == prev->end == curr->start == curr->end,
+thus the condition above thinks that "we need a fixup due to zero
+length of prev symbol, but it has been probably done, since the
+prev->end == curr->start", which is wrong.
+
+After the patch, the execution path proceeds to arch__symbols__fixup_end
+function which fixes up the size of prev symbol by adding page_size to
+its end offset.
+
+Signed-off-by: Michael Petlan <mpetlan@redhat.com>
+---
+ tools/perf/util/symbol.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index fb075aa8f8f2..dea0fc495185 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -231,7 +231,7 @@ void symbols__fixup_end(struct rb_root_cached *symbols)
+ 		prev = curr;
+ 		curr = rb_entry(nd, struct symbol, rb_node);
+ 
+-		if (prev->end == prev->start && prev->end != curr->start)
++		if (prev->end == prev->start || prev->end != curr->start)
+ 			arch__symbols__fixup_end(prev, curr);
+ 	}
+ 
+-- 
+2.18.4
+
