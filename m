@@ -2,125 +2,156 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE695C433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Mar 2022 15:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EFEC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Mar 2022 15:54:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235960AbiCQPiV (ORCPT
+        id S231524AbiCQPz2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 17 Mar 2022 11:38:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59164 "EHLO
+        Thu, 17 Mar 2022 11:55:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235964AbiCQPiU (ORCPT
+        with ESMTP id S229549AbiCQPz2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 17 Mar 2022 11:38:20 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1787320A960;
-        Thu, 17 Mar 2022 08:37:04 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A96D361994;
-        Thu, 17 Mar 2022 15:37:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E77EDC340E9;
-        Thu, 17 Mar 2022 15:37:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1647531423;
-        bh=xhgfUKiVqQtSHtmU2U28r1pERnVBDnXfHHXOPYtszO4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rq7Ms0SURyvlpzuJSRzl1pBUY9hAAgSJ4+8uneJoPbm5IvKuWPIGaXBdhnMB5yC9Q
-         ZZ5WjPzsTYMV0qb5MSD4nDX6NcwexcJpIDaR3mK4rRiXQJwUJg6bp1ITGcAQF9nFPO
-         Eruv2IGgTHcPN/Wx6iaEHkqPk9VmN0id3+HPukkyTPhRVt/A7vyYCGrUR50qE2lo9v
-         Z/2itluZsDw8Fd3HN+ryMpubEhDs7RPYviocNqA3uUkpwv61XSzcZckLURbo087WI1
-         1lFI4R5qQ9X4Z6tUq1IT0yUZvgIzPP12qSuq9vW/C3ojegHTVx3Jg5Dy/POGNaLcKl
-         wLhg3RDWNSmNA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4B3F640407; Thu, 17 Mar 2022 12:37:00 -0300 (-03)
-Date:   Thu, 17 Mar 2022 12:37:00 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Michael Petlan <mpetlan@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        jolsa@kernel.org, atrajeev@linux.vnet.ibm.com, maddy@linux.ibm.com,
-        kjain@linux.ibm.com
-Subject: Re: [PATCH] perf symbols: Fix symbol size calculation condition
-Message-ID: <YjNVnA+tToooxUV+@kernel.org>
-References: <20220317135536.805-1-mpetlan@redhat.com>
+        Thu, 17 Mar 2022 11:55:28 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A06D51BE0FC;
+        Thu, 17 Mar 2022 08:54:11 -0700 (PDT)
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 22HF7LmE038086;
+        Thu, 17 Mar 2022 15:54:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=S+lDeG0ajurXSUSr/Pz+jBGyskQ6ZVNdxBLgTQMn2gE=;
+ b=Ms41hvsTzuyHKglbfNwCj3lz1rEcmh9QCeTB8rjwZCarqaXYQycPSwftIAR4SghxlY0/
+ om8EhOJkjefFIPI2xWOpqzCZEKNv/kjUkeVndDtCBOZr97VQxdYMN9thC7rwSJtqYWoy
+ nkzgMTRq3q5VDZYz3cilqO5Z6aPo3jJjAPt/9IV13269yWrVa4E8eFQrOgg0P5/xfN33
+ Ek4os0izJwceKHGaIRuP2/2d89rFKpKnYP6M/qMkVQmgjLqnam4Qe3jUQvrN3omcI+EO
+ Sb6A59dOCQcMnsyWVzHLOQYS1cCvsL60friGcPfQx5ZMuiFz4NWIVxHUQb2i7ds0OI8s aA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3ev074205m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 17 Mar 2022 15:54:08 +0000
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 22HFjl7J025718;
+        Thu, 17 Mar 2022 15:54:07 GMT
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3ev0742052-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 17 Mar 2022 15:54:07 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 22HFWsuV011967;
+        Thu, 17 Mar 2022 15:54:05 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04ams.nl.ibm.com with ESMTP id 3erk593q3a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 17 Mar 2022 15:54:05 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 22HFs2sZ27656640
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 17 Mar 2022 15:54:02 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3C72A4204D;
+        Thu, 17 Mar 2022 15:54:02 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E3EA942047;
+        Thu, 17 Mar 2022 15:54:01 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 17 Mar 2022 15:54:01 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, namhyung@kernel.org, gor@linux.ibm.com,
+        acme@redhat.com
+Cc:     svens@linux.ibm.com, sumanthk@linux.ibm.com, hca@linux.ibm.com,
+        Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf/stat: Fix perf stat for forked applications
+Date:   Thu, 17 Mar 2022 16:53:46 +0100
+Message-Id: <20220317155346.577384-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220317135536.805-1-mpetlan@redhat.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: PrRuTHxADO7btN5CNCExNzB6RMxe_QQG
+X-Proofpoint-ORIG-GUID: 14acJSIwoUTpjh9_IHFPn2BNeASx9ofa
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.850,Hydra:6.0.425,FMLib:17.11.64.514
+ definitions=2022-03-17_06,2022-03-15_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 suspectscore=0 malwarescore=0 mlxscore=0 adultscore=0
+ bulkscore=0 impostorscore=0 priorityscore=1501 mlxlogscore=999
+ clxscore=1011 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2203170091
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Mar 17, 2022 at 02:55:36PM +0100, Michael Petlan escreveu:
-> Before this patch, the symbol end address fixup to be called, needed two
-> conditions being met:
-> 
->   if (prev->end == prev->start && prev->end != curr->start)
-> 
-> Where
->   "prev->end == prev->start" means that prev is zero-long
->                              (and thus needs a fixup)
-> and
->   "prev->end != curr->start" means that fixup hasn't been applied yet
-> 
-> However, this logic is incorrect in the following situation:
-> 
-> *curr  = {rb_node = {__rb_parent_color = 278218928,
->   rb_right = 0x0, rb_left = 0x0},
->   start = 0xc000000000062354,
->   end = 0xc000000000062354, namelen = 40, type = 2 '\002',
->   binding = 0 '\000', idle = 0 '\000', ignore = 0 '\000',
->   inlined = 0 '\000', arch_sym = 0 '\000', annotate2 = false,
->   name = 0x1159739e "kprobe_optinsn_page\t[__builtin__kprobes]"}
-> 
-> *prev = {rb_node = {__rb_parent_color = 278219041,
->   rb_right = 0x109548b0, rb_left = 0x109547c0},
->   start = 0xc000000000062354,
->   end = 0xc000000000062354, namelen = 12, type = 2 '\002',
->   binding = 1 '\001', idle = 0 '\000', ignore = 0 '\000',
->   inlined = 0 '\000', arch_sym = 0 '\000', annotate2 = false,
->   name = 0x1095486e "optinsn_slot"}
-> 
-> In this case, prev->start == prev->end == curr->start == curr->end,
-> thus the condition above thinks that "we need a fixup due to zero
-> length of prev symbol, but it has been probably done, since the
-> prev->end == curr->start", which is wrong.
-> 
-> After the patch, the execution path proceeds to arch__symbols__fixup_end
-> function which fixes up the size of prev symbol by adding page_size to
-> its end offset.
+I have run into the following issue:
 
-You missed this:
+ # perf stat -a -e new_pmu/INSTRUCTION_7/ --  mytest -c1 7
 
-Fixes: 3b01a413c196c910 ("perf symbols: Improve kallsyms symbol end addr calculation")
+ Performance counter stats for 'system wide':
 
-I'll add it to the patch, ok?
+                 0      new_pmu/INSTRUCTION_7/
 
-- Arnaldo
+       0.000366428 seconds time elapsed
+ #
+
+The new PMU for s390 counts the execution of certain CPU instructions.
+The root cause is the extremely small run time of the
+mytest program. It just executes some assembly instructions
+and then exits. In above invocation the instruction is executed
+exactly one time (-c1 option). The PMU is expected to report this one
+time execution by a counter value of one, but fails to do so
+in some cases, not all.
+
+Debugging reveals the invocation of the child process is done
+*before* the counter events are installed and enabled. Tracing
+reveals that sometimes the child process starts and exits before
+the event is installed on all CPUs. The more CPUs the machine has,
+the more often this miscount happens.
+
+Fix this by reversing the start of the work load after the events
+have been installed on the specified CPUs. Now the comment also
+matches the code.
+
+Output after:
+ # perf stat -a -e new_pmu/INSTRUCTION_7/ --  mytest -c1 7
+
+ Performance counter stats for 'system wide':
+
+                 1      new_pmu/INSTRUCTION_7/
+
+       0.000366428 seconds time elapsed
+ #
+
+Now the correct result is reported rock solid all the time regardless
+how many CPUs are online.
+
+Fixes:  acf2892270dc ("perf stat: Use perf_evlist__prepare/start_workload())
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/builtin-stat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 3f98689dd687..60baa3dadc4b 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -955,10 +955,10 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 	 * Enable counters and exec the command:
+ 	 */
+ 	if (forks) {
+-		evlist__start_workload(evsel_list);
+ 		err = enable_counters();
+ 		if (err)
+ 			return -1;
++		evlist__start_workload(evsel_list);
  
-> Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-> ---
->  tools/perf/util/symbol.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index fb075aa8f8f2..dea0fc495185 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -231,7 +231,7 @@ void symbols__fixup_end(struct rb_root_cached *symbols)
->  		prev = curr;
->  		curr = rb_entry(nd, struct symbol, rb_node);
->  
-> -		if (prev->end == prev->start && prev->end != curr->start)
-> +		if (prev->end == prev->start || prev->end != curr->start)
->  			arch__symbols__fixup_end(prev, curr);
->  	}
->  
-> -- 
-> 2.18.4
-
+ 		t0 = rdclock();
+ 		clock_gettime(CLOCK_MONOTONIC, &ref_time);
 -- 
+2.35.1
 
-- Arnaldo
