@@ -2,77 +2,75 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 294E5C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Mar 2022 03:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E93DCC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Mar 2022 03:10:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244407AbiCQDKz (ORCPT
+        id S1355447AbiCQDL2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Mar 2022 23:10:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35928 "EHLO
+        Wed, 16 Mar 2022 23:11:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346961AbiCQDKz (ORCPT
+        with ESMTP id S1346961AbiCQDL1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Mar 2022 23:10:55 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF0C421257
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Mar 2022 20:09:35 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id r64so2379601wmr.4
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Mar 2022 20:09:35 -0700 (PDT)
+        Wed, 16 Mar 2022 23:11:27 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 254B821257
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Mar 2022 20:10:12 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id d7so5523303wrb.7
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Mar 2022 20:10:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=5LNjOLzXZNfaRuVCiO8zqbvLc/6WuHx1l+39+7jAPR4=;
-        b=LTMntLDiHaWhOMPo6NHb0YbfdOVgi7dGsjruxRQXL8AZ+8qXvBTR+Gu+qifHcpaSkH
-         aYchrmpMlnuPXOiGdjGEIL9+BfcpDZGGDLpR+b0ND4SCaF8NbmDXBv2Jgt1facQf2X57
-         05DMfH8ope5tBo931ZiJtjzIuGnXwaAtVLhvKUZo0zrCmIKq5rvGnOTitLUiCiSynqPr
-         GnkTHnF/6QlhpKvsA1ePcmf32eE/8RTDsCRpg7/HmmAcL9dFIMmZZgomehhNDLqw0MAl
-         wIQkYCljYFs/WcSIr8MFGift1lCK9cd9FJSu1jRFvfGuix2SV28RCpJAHsQ024erLM/W
-         xGGQ==
+        bh=DK6P0vsqvqxWi0Zvgtd3pmUt6OtvktIwMYnSOV1EMeo=;
+        b=bGaZY09cU0XgGRfnDAVp2vOIGStTcryrqsMhU1TyKAgsYNcozH0dDGXzJQkE3P8/V1
+         fqSgsFkHSHaAqaD8VkhjnIeVx3Hnmm8bJNBvq8RHnhPL5kobiViDWhMABBPLyzGjIwsa
+         votXUrc/9/zhJeW+eXmCxVs0NqRhONq4iIDuWTqwxcwyReIXtd6TNxaUqNqdB6r9fhaU
+         Azp6hPioSDEsJgu0bwcANwsBprV4XCwyGaFK0xILbojy+qsn/zKyk1KWGDY3YYRgx4sV
+         276gCshT/PeMu9M3DmUbmobKrjOWsbLTXIH17NHmEk/snwPGckve5TMP+j7MF7qfS+8Q
+         9zkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5LNjOLzXZNfaRuVCiO8zqbvLc/6WuHx1l+39+7jAPR4=;
-        b=Rx/9IqY8/bSUlLnzW3quPKrk4ZJMCtWMjYqUmnjr9G2Iuy+uWRbMD/GpuNsCgataBd
-         /9Ra1WOVK22Nj9MZUtmZXyLJZdHt5Z4649fCwiTKlfYI+OBrCvhm0Yg2Xin8qAOqrU4e
-         6mQNnEQGsZyk4CheJcwVDFPP1FUAtVd3J0yjAqQu/5Jd3r/THl7sGo6OH4NXbT5f5hJc
-         KklzkFD59SXE30U7qRDfaNSHJqxZmrNjll62CVE8GYAVavQoef7RuD9ddkD6mrtG4NgD
-         xmrsIEJr9wYsBSjMH9XZuooWrTjRsEGyKVt20Z8MsfdpH5hOJYtm4H3oICaOOlaLqHhC
-         6ckw==
-X-Gm-Message-State: AOAM532KoZN71aPxCCxF3rA79dq1cAWgSVJ9aBCNhF8Q40cRxUptmmlz
-        +fvRFuKSyDj0tBKaiV1inlbbWZg2IdACpVE4Qy3udw==
-X-Google-Smtp-Source: ABdhPJzUx6RY0JlJgFsNlUUwmZEbo5Ah3jIabHDqEWv45NY/xGsp06njJ4+0GIlXDp+2H5YUhTaCVO3vVOr45JeOjuc=
-X-Received: by 2002:a05:600c:3d07:b0:38b:94f2:5d17 with SMTP id
- bh7-20020a05600c3d0700b0038b94f25d17mr2000148wmb.67.1647486574260; Wed, 16
- Mar 2022 20:09:34 -0700 (PDT)
+        bh=DK6P0vsqvqxWi0Zvgtd3pmUt6OtvktIwMYnSOV1EMeo=;
+        b=zW5sKOdW0lFc1snUG0fMj111g5opqeElitm+czhmszs6jNgqQqJzkNiRCnjT8KOPxZ
+         XWD0aIubI6kwQyMqY+xBGOIIJIxG+HoyTbR5k201WNSuSii4T4YgCQQrRmWBzFzvo8G0
+         rUA96u2O9+6jAuEX41jRdBa7omPZeIUwLeVhoVFOkzhxwm4XcEXls3dI8ZkDS4Qpi04B
+         gBArHDmep7EyTVyCQ25H7+HK1fqww8kfQAJsGekm35CIQGGbqeFDpXy4hvPv7/++W2tH
+         uam2kS6ig1GetE8rfuWwh9yLbWv3PCrYLOvstB8SVBGUageaZFvcppUA+MwOhlil6PbR
+         Ut5Q==
+X-Gm-Message-State: AOAM5328Fev0IwI3qPVk5YDTbK7LkFRGurv3e/xXdPwDZBb0OZGQQdZ/
+        VMNwnZOas5+JXDm/3mHAymkGBNKZbcwt9LvT0U1QOw==
+X-Google-Smtp-Source: ABdhPJwc4MP3hf5ky2/ukJUnLS79rR1XwMXn+/aci0lvkPWmm2yQmgLAbWf5gNVX+WklAX31SZt7g+RxSvS2R0fRPos=
+X-Received: by 2002:a5d:6c68:0:b0:203:691f:b95b with SMTP id
+ r8-20020a5d6c68000000b00203691fb95bmr2127564wrz.375.1647486610606; Wed, 16
+ Mar 2022 20:10:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220314115354.144023-1-Julia.Lawall@inria.fr> <20220314115354.144023-31-Julia.Lawall@inria.fr>
-In-Reply-To: <20220314115354.144023-31-Julia.Lawall@inria.fr>
+References: <20220316232212.52820-1-colin.i.king@gmail.com>
+In-Reply-To: <20220316232212.52820-1-colin.i.king@gmail.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 16 Mar 2022 20:09:22 -0700
-Message-ID: <CAP-5=fV11-Haeh2SGQhtjkzYXotDjg1suaO9mDY-BeTmZxfs=g@mail.gmail.com>
-Subject: Re: [PATCH 30/30] perf/core: fix typos in comments
-To:     Julia Lawall <julia.lawall@inria.fr>
+Date:   Wed, 16 Mar 2022 20:09:58 -0700
+Message-ID: <CAP-5=fXbGWec6RVoEhhR4YnCSBOA5iU--_fOA6_+=375wm3SQA@mail.gmail.com>
+Subject: Re: [PATCH] perf header: Fix spelling mistake "could't" -> "couldn't"
+To:     Colin Ian King <colin.i.king@gmail.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
-        kernel-janitors@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+        linux-perf-users@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Mar 14, 2022 at 5:48 AM Julia Lawall <Julia.Lawall@inria.fr> wrote:
+On Wed, Mar 16, 2022 at 4:22 PM Colin Ian King <colin.i.king@gmail.com> wrote:
 >
-> Various spelling mistakes in comments.
-> Detected with the help of Coccinelle.
+> There is a spelling mistake in a pr_debug2 message. Fix it.
 >
-> Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 
 Acked-by: Ian Rogers <irogers@google.com>
 
@@ -80,20 +78,22 @@ Thanks,
 Ian
 
 > ---
->  kernel/events/core.c |    2 +-
+>  tools/perf/util/header.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index cfde994ce61c..25fcd4cca0d7 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -872,7 +872,7 @@ static void perf_cgroup_switch(struct task_struct *task, int mode)
->                          * event_filter_match() to not have to pass
->                          * task around
->                          * we pass the cpuctx->ctx to perf_cgroup_from_task()
-> -                        * because cgorup events are only per-cpu
-> +                        * because cgroup events are only per-cpu
->                          */
->                         cpuctx->cgrp = perf_cgroup_from_task(task,
->                                                              &cpuctx->ctx);
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index 6da12e522edc..4a44a0740f43 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -1335,7 +1335,7 @@ static int build_mem_topology(struct memory_node *nodes, u64 size, u64 *cntp)
+>
+>         dir = opendir(path);
+>         if (!dir) {
+> -               pr_debug2("%s: could't read %s, does this arch have topology information?\n",
+> +               pr_debug2("%s: couldn't read %s, does this arch have topology information?\n",
+>                           __func__, path);
+>                 return -1;
+>         }
+> --
+> 2.35.1
 >
