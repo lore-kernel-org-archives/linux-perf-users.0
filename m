@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FC4C433EF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64268C433F5
 	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Mar 2022 18:29:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237459AbiCQSbC (ORCPT
+        id S237464AbiCQSbB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 17 Mar 2022 14:31:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58606 "EHLO
+        Thu, 17 Mar 2022 14:31:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237455AbiCQSa5 (ORCPT
+        with ESMTP id S237449AbiCQSay (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 17 Mar 2022 14:30:57 -0400
+        Thu, 17 Mar 2022 14:30:54 -0400
 Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2994E9CB2
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Mar 2022 11:29:38 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id y32-20020a25ad20000000b006339fb8e18cso2435120ybi.9
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Mar 2022 11:29:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A997BE9C87
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Mar 2022 11:29:35 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id b12-20020a056902030c00b0061d720e274aso5056046ybs.20
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Mar 2022 11:29:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc:content-transfer-encoding;
-        bh=EA16R3dKqwcPhViQJ1LcaGRyBbUhpG9MKsQKLXaN+Ks=;
-        b=ezR2Ns/MFQUvFO6DE9cOk629MCt5TRNO6pRxy71A8CKrGtKU2x+WKrX2jp+xrDCBOt
-         FUIlThVOkiMWKsbvCS264jMThzsZUJQAy9DT9djYClh1AM0mu+d1kb0cMTeaIN8Zhkxt
-         47vDC/Ju6LiH3QvKYjhBmc8dWSwdCVq+V6njuqualy9i68tb0Q/2Fx0T0vSojoaY9RhB
-         YxUV/PHgl9GGZf7/TMYtbAyAWhL1OOOJFKPodVSxUdUJ6RtDsBji9RdRpKhWfnnqUtt3
-         TxJ77nQeIVZK2bAGiB2iRic5FhqW2ANp2Ce6cBc4LST5hqm6pkxFN6heBTLUA8GNaSOx
-         3UIw==
+        bh=A+msfJQLO1eO4WSU4Y9hbZfcZ3Rp804XSA/2x5CYE34=;
+        b=jgM0uFKm+WbHhFhCEEnpECHk5lOkx1tzj/g68PRCbyXIRMukAb/r+QE6VmuEeoqYWK
+         coCTBEbVRaxuremnLu5WzO85gI8PW+HTigm97Zg0KHVJum6PMQ2mJlk2tShhotJ/tYRP
+         0bD/l9dOOXTs6G8MKo8Z61sKMThq3SKhK2FkLqNALelIxDLv/nuxNUuf/TbDFCWyv35z
+         XE4Oi/vdbFfEstg5acVHpgbw8P2IUFa2sqgHgp30Z27xMeOlHLKA9PvZE/WEYgvF2btN
+         2li7/YwjihIP42fql7LI+EW5HKpCNH/QL7EJcb/lJ+h7khZCctsCTxkfDBOFwonXrCPk
+         +7ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc:content-transfer-encoding;
-        bh=EA16R3dKqwcPhViQJ1LcaGRyBbUhpG9MKsQKLXaN+Ks=;
-        b=uy9bxJ2y9ZHwuf7bAhHvSEyZVnkVoao26BRqAqvm1a8Sk0e9o8Wt/D72zYF1ZiJQzF
-         soFxC6hrEMrHGrhAp6iFdV5vfLHvG9JK/m4+JnVeWILW/Evk1h+G0jtGFCRlQHn240sm
-         DTqxK2rJxtChZdqPqTPPFPBpvEGh4Cbtz5/GNPyGQwGZVcKRCHn58rFrKuUvk7xexK4P
-         LYC2J0kZMDgUCy+dhnJVzLIoc93Ar/jpYfXXWw5J9hIgZdPl5tVVsXx4NgekfcE1uQqr
-         kE0mFf5kZesoXCELlTdYNfJ75oSpqWvugawuJQ2MmxIUbU3HdfibCMcav9GOoEhkmt9M
-         MRxQ==
-X-Gm-Message-State: AOAM5304qrfMscvjm5Sf5lgP5QLdybuJN1blYFyknXosVgT+W1B5ZjDD
-        LzHMLtDNcfxIWOEDnefirNrItgEJKp5q
-X-Google-Smtp-Source: ABdhPJzScK1GOEcToBf4ZPMX25KY2YkQsYsRgzH+FW+YXnFfhXWRg8QisaYT9lwlTbq3363iLXQUib6oVc5a
+        bh=A+msfJQLO1eO4WSU4Y9hbZfcZ3Rp804XSA/2x5CYE34=;
+        b=Bc+voDz/iAdxOy0CsPUYo/H/K7L5XBrsVvvz4SQqdzYa8XGZNga9EIJpRG/m6Xlh9Q
+         lSwVHsxu3V5IROLbuRPluf1756QD22YXe1j4xPWryb0eMb5HnHnfV0I6q2tZCVDdiBBp
+         LILlbKa1l8xETye6DHRiDrihfeooxoyvUVfEtZeP8yi2Z/9Rus2q3akERI2+vSYfKvC3
+         3hscAMq3WvYjb5EGUiEdhdz6u4m4JNljDn8365E9wAUy2mHnOwrzKNWkVm3JSmJYTbOD
+         TF/avP1o+fmkb3JRUzo+k2t00x7GnOavyioCLtPtuOXiWocWKxXwMR/LNuvZ7icg7jlc
+         lzGQ==
+X-Gm-Message-State: AOAM530V3DIbrkTCkAThlYlfCus7V8BvrX4u7Usfp1JKZ+3gaSMM/DPY
+        7fWLPl3gKdy8XWjNUpRonCuWT2z1gJcK
+X-Google-Smtp-Source: ABdhPJwTpJOTy+tFiaycPFgmmpDPm1QeRssq2BqMn46WzituYf1t6YfXHXwdYX2d/EfzgM5C1xTncA8X7FH6
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:6811:1685:e3b9:7904])
- (user=irogers job=sendgmr) by 2002:a5b:1cf:0:b0:628:ba68:30e4 with SMTP id
- f15-20020a5b01cf000000b00628ba6830e4mr6228265ybp.629.1647541777900; Thu, 17
- Mar 2022 11:29:37 -0700 (PDT)
-Date:   Thu, 17 Mar 2022 11:28:54 -0700
+ (user=irogers job=sendgmr) by 2002:a25:4252:0:b0:633:8580:c8e4 with SMTP id
+ p79-20020a254252000000b006338580c8e4mr6122507yba.640.1647541774861; Thu, 17
+ Mar 2022 11:29:34 -0700 (PDT)
+Date:   Thu, 17 Mar 2022 11:28:53 -0700
 In-Reply-To: <20220317182858.484474-1-irogers@google.com>
-Message-Id: <20220317182858.484474-4-irogers@google.com>
+Message-Id: <20220317182858.484474-3-irogers@google.com>
 Mime-Version: 1.0
 References: <20220317182858.484474-1-irogers@google.com>
 X-Mailer: git-send-email 2.35.1.894.gb6a874cedc-goog
-Subject: [PATCH 4/8] perf vendor events: Update events for IcelakeX
+Subject: [PATCH 3/8] perf vendor events: Update events for Icelake
 From:   Ian Rogers <irogers@google.com>
 To:     Kan Liang <kan.liang@linux.intel.com>,
         Zhengjun Xing <zhengjun.xing@linux.intel.com>,
@@ -78,374 +78,807 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Move from v1.11 to v1.12.
 The change:
 https://github.com/intel/event-converter-for-linux-perf/commit/fc680410402e=
 394eed6a1ebd909c9f649d3ed3ef
-moved certain "other" type of events in to the cache, memory and
-pipeline topics. Update the perf json files for this change.
-
-Tested:
-```
-...
-  6: Parse event definition strings                                  : Ok
-...
- 91: perf all PMU test                                               : Ok
-...
-```
+moved certain "other" type of events in to the cache and pipeline topic.
+Update the perf json files for this change.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../pmu-events/arch/x86/icelakex/cache.json   | 252 +++++++++++++++
- .../pmu-events/arch/x86/icelakex/memory.json  |  26 +-
- .../pmu-events/arch/x86/icelakex/other.json   | 287 ++----------------
- .../arch/x86/icelakex/pipeline.json           |  35 +++
- 4 files changed, 324 insertions(+), 276 deletions(-)
+ .../pmu-events/arch/x86/icelake/cache.json    | 633 +++++++++++++++
+ .../pmu-events/arch/x86/icelake/other.json    | 752 +-----------------
+ .../pmu-events/arch/x86/icelake/pipeline.json |  47 ++
+ 3 files changed, 716 insertions(+), 716 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/icelakex/cache.json b/tools/per=
-f/pmu-events/arch/x86/icelakex/cache.json
-index 104409fd8647..3c4da0371df9 100644
---- a/tools/perf/pmu-events/arch/x86/icelakex/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/icelakex/cache.json
-@@ -657,6 +657,30 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x80"
+diff --git a/tools/perf/pmu-events/arch/x86/icelake/cache.json b/tools/perf=
+/pmu-events/arch/x86/icelake/cache.json
+index 96dcd387c70e..375ce490833c 100644
+--- a/tools/perf/pmu-events/arch/x86/icelake/cache.json
++++ b/tools/perf/pmu-events/arch/x86/icelake/cache.json
+@@ -553,6 +553,591 @@
+         "SampleAfterValue": "50021",
+         "UMask": "0x20"
      },
 +    {
 +        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that hit in the L3 or were snooped from another co=
-re's caches on the same socket.",
+ruction cache prefetches that hit a cacheline in the L3 where a snoop was s=
+ent or not.",
++        "CollectPEBSRecord": "2",
 +        "Counter": "0,1,2,3",
 +        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.DEMAND_CODE_RD.L3_HIT",
++        "EventName": "OCR.DEMAND_CODE_RD.L3_HIT.ANY",
 +        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x3F803C0004",
++        "MSRValue": "0x3FC03C0004",
 +        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
 +        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 +        "SampleAfterValue": "100003",
++        "Speculative": "1",
 +        "UMask": "0x1"
 +    },
 +    {
 +        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that resulted in a snoop hit a modified line in an=
-other core's caches which forwarded the data.",
+ruction cache prefetches that hit a cacheline in the L3 where a snoop hit i=
+n another cores caches, data forwarding is required as the data is modified=
+.",
++        "CollectPEBSRecord": "2",
 +        "Counter": "0,1,2,3",
 +        "EventCode": "0xB7, 0xBB",
 +        "EventName": "OCR.DEMAND_CODE_RD.L3_HIT.SNOOP_HITM",
 +        "MSRIndex": "0x1a6,0x1a7",
 +        "MSRValue": "0x10003C0004",
 +        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
 +        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 +        "SampleAfterValue": "100003",
++        "Speculative": "1",
 +        "UMask": "0x1"
 +    },
-     {
-         "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that hit a modified line in a distant L3 Cache or =
-were snooped from a distant core's L1/L2 caches on this socket when the sys=
-tem is in SNC (sub-NUMA cluster) mode.",
-         "Counter": "0,1,2,3",
-@@ -681,6 +705,54 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
 +    {
-+        "BriefDescription": "Counts demand data reads that hit in the L3 o=
-r were snooped from another core's caches on the same socket.",
++        "BriefDescription": "Counts demand instruction fetches and L1 inst=
+ruction cache prefetches that hit a cacheline in the L3 where a snoop hit i=
+n another core, data forwarding is not required.",
++        "CollectPEBSRecord": "2",
 +        "Counter": "0,1,2,3",
 +        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.DEMAND_DATA_RD.L3_HIT",
++        "EventName": "OCR.DEMAND_CODE_RD.L3_HIT.SNOOP_HIT_NO_FWD",
 +        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x3F803C0001",
++        "MSRValue": "0x4003C0004",
 +        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
 +        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 +        "SampleAfterValue": "100003",
++        "Speculative": "1",
 +        "UMask": "0x1"
 +    },
 +    {
-+        "BriefDescription": "Counts demand data reads that resulted in a s=
-noop hit a modified line in another core's caches which forwarded the data.=
-",
++        "BriefDescription": "Counts demand instruction fetches and L1 inst=
+ruction cache prefetches that hit a cacheline in the L3 where a snoop was s=
+ent but no other cores had the data.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "EventCode": "0xB7, 0xBB",
++        "EventName": "OCR.DEMAND_CODE_RD.L3_HIT.SNOOP_MISS",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x2003C0004",
++        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
++        "SampleAfterValue": "100003",
++        "Speculative": "1",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts demand instruction fetches and L1 inst=
+ruction cache prefetches that hit a cacheline in the L3 where a snoop was n=
+ot needed to satisfy the request.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "EventCode": "0xB7, 0xBB",
++        "EventName": "OCR.DEMAND_CODE_RD.L3_HIT.SNOOP_NOT_NEEDED",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x1003C0004",
++        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
++        "SampleAfterValue": "100003",
++        "Speculative": "1",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts demand instruction fetches and L1 inst=
+ruction cache prefetches that hit a cacheline in the L3 where a snoop was s=
+ent.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "EventCode": "0xB7, 0xBB",
++        "EventName": "OCR.DEMAND_CODE_RD.L3_HIT.SNOOP_SENT",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x1E003C0004",
++        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
++        "SampleAfterValue": "100003",
++        "Speculative": "1",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts demand data reads that hit a cacheline=
+ in the L3 where a snoop was sent or not.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "EventCode": "0xB7, 0xBB",
++        "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.ANY",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x3FC03C0001",
++        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
++        "SampleAfterValue": "100003",
++        "Speculative": "1",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts demand data reads that hit a cacheline=
+ in the L3 where a snoop hit in another cores caches, data forwarding is re=
+quired as the data is modified.",
++        "CollectPEBSRecord": "2",
 +        "Counter": "0,1,2,3",
 +        "EventCode": "0xB7, 0xBB",
 +        "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HITM",
 +        "MSRIndex": "0x1a6,0x1a7",
 +        "MSRValue": "0x10003C0001",
 +        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
 +        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 +        "SampleAfterValue": "100003",
++        "Speculative": "1",
 +        "UMask": "0x1"
 +    },
 +    {
-+        "BriefDescription": "Counts demand data reads that resulted in a s=
-noop that hit in another core, which did not forward the data.",
++        "BriefDescription": "Counts demand data reads that hit a cacheline=
+ in the L3 where a snoop hit in another core, data forwarding is not requir=
+ed.",
++        "CollectPEBSRecord": "2",
 +        "Counter": "0,1,2,3",
 +        "EventCode": "0xB7, 0xBB",
 +        "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HIT_NO_FWD",
 +        "MSRIndex": "0x1a6,0x1a7",
 +        "MSRValue": "0x4003C0001",
 +        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
 +        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 +        "SampleAfterValue": "100003",
++        "Speculative": "1",
 +        "UMask": "0x1"
 +    },
 +    {
-+        "BriefDescription": "Counts demand data reads that resulted in a s=
-noop hit in another core's caches which forwarded the unmodified data to th=
-e requesting core.",
++        "BriefDescription": "Counts demand data reads that hit a cacheline=
+ in the L3 where a snoop was sent but no other cores had the data.",
++        "CollectPEBSRecord": "2",
 +        "Counter": "0,1,2,3",
 +        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HIT_WITH_FWD",
++        "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_MISS",
 +        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x8003C0001",
++        "MSRValue": "0x2003C0001",
 +        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
 +        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 +        "SampleAfterValue": "100003",
++        "Speculative": "1",
 +        "UMask": "0x1"
 +    },
-     {
-         "BriefDescription": "Counts demand data reads that were supplied b=
-y a cache on a remote socket where a snoop hit a modified line in another c=
-ore's caches which forwarded the data.",
-         "Counter": "0,1,2,3",
-@@ -729,6 +801,30 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
 +    {
-+        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
-sts and software prefetches for exclusive ownership (PREFETCHW) that hit in=
- the L3 or were snooped from another core's caches on the same socket.",
++        "BriefDescription": "Counts demand data reads that hit a cacheline=
+ in the L3 where a snoop was not needed to satisfy the request.",
++        "CollectPEBSRecord": "2",
 +        "Counter": "0,1,2,3",
 +        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.DEMAND_RFO.L3_HIT",
++        "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_NOT_NEEDED",
 +        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x3F803C0002",
++        "MSRValue": "0x1003C0001",
 +        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
 +        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 +        "SampleAfterValue": "100003",
++        "Speculative": "1",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts demand data reads that hit a cacheline=
+ in the L3 where a snoop was sent.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "EventCode": "0xB7, 0xBB",
++        "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_SENT",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x1E003C0001",
++        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
++        "SampleAfterValue": "100003",
++        "Speculative": "1",
 +        "UMask": "0x1"
 +    },
 +    {
 +        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
-sts and software prefetches for exclusive ownership (PREFETCHW) that result=
-ed in a snoop hit a modified line in another core's caches which forwarded =
-the data.",
+sts and software prefetches for exclusive ownership (PREFETCHW) that hit a =
+cacheline in the L3 where a snoop was sent or not.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "EventCode": "0xB7, 0xBB",
++        "EventName": "OCR.DEMAND_RFO.L3_HIT.ANY",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x3FC03C0002",
++        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
++        "SampleAfterValue": "100003",
++        "Speculative": "1",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
+sts and software prefetches for exclusive ownership (PREFETCHW) that hit a =
+cacheline in the L3 where a snoop hit in another cores caches, data forward=
+ing is required as the data is modified.",
++        "CollectPEBSRecord": "2",
 +        "Counter": "0,1,2,3",
 +        "EventCode": "0xB7, 0xBB",
 +        "EventName": "OCR.DEMAND_RFO.L3_HIT.SNOOP_HITM",
 +        "MSRIndex": "0x1a6,0x1a7",
 +        "MSRValue": "0x10003C0002",
 +        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
 +        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 +        "SampleAfterValue": "100003",
++        "Speculative": "1",
 +        "UMask": "0x1"
 +    },
-     {
-         "BriefDescription": "Counts demand reads for ownership (RFO) reque=
-sts and software prefetches for exclusive ownership (PREFETCHW) that hit a =
-modified line in a distant L3 Cache or were snooped from a distant core's L=
-1/L2 caches on this socket when the system is in SNC (sub-NUMA cluster) mod=
-e.",
-         "Counter": "0,1,2,3",
-@@ -753,6 +849,102 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
 +    {
-+        "BriefDescription": "Counts L1 data cache prefetch requests and so=
-ftware prefetches (except PREFETCHW) that hit in the L3 or were snooped fro=
-m another core's caches on the same socket.",
++        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
+sts and software prefetches for exclusive ownership (PREFETCHW) that hit a =
+cacheline in the L3 where a snoop hit in another core, data forwarding is n=
+ot required.",
++        "CollectPEBSRecord": "2",
 +        "Counter": "0,1,2,3",
 +        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.HWPF_L1D_AND_SWPF.L3_HIT",
++        "EventName": "OCR.DEMAND_RFO.L3_HIT.SNOOP_HIT_NO_FWD",
 +        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x3F803C0400",
++        "MSRValue": "0x4003C0002",
 +        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
 +        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 +        "SampleAfterValue": "100003",
++        "Speculative": "1",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
+sts and software prefetches for exclusive ownership (PREFETCHW) that hit a =
+cacheline in the L3 where a snoop was sent but no other cores had the data.=
+",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "EventCode": "0xB7, 0xBB",
++        "EventName": "OCR.DEMAND_RFO.L3_HIT.SNOOP_MISS",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x2003C0002",
++        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
++        "SampleAfterValue": "100003",
++        "Speculative": "1",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
+sts and software prefetches for exclusive ownership (PREFETCHW) that hit a =
+cacheline in the L3 where a snoop was not needed to satisfy the request.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "EventCode": "0xB7, 0xBB",
++        "EventName": "OCR.DEMAND_RFO.L3_HIT.SNOOP_NOT_NEEDED",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x1003C0002",
++        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
++        "SampleAfterValue": "100003",
++        "Speculative": "1",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
+sts and software prefetches for exclusive ownership (PREFETCHW) that hit a =
+cacheline in the L3 where a snoop was sent.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "EventCode": "0xB7, 0xBB",
++        "EventName": "OCR.DEMAND_RFO.L3_HIT.SNOOP_SENT",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x1E003C0002",
++        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
++        "SampleAfterValue": "100003",
++        "Speculative": "1",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts L1 data cache prefetch requests and so=
+ftware prefetches (except PREFETCHW) that hit a cacheline in the L3 where a=
+ snoop was sent or not.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "EventCode": "0xB7, 0xBB",
++        "EventName": "OCR.HWPF_L1D_AND_SWPF.L3_HIT.ANY",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x3FC03C0400",
++        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
++        "SampleAfterValue": "100003",
++        "Speculative": "1",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts L1 data cache prefetch requests and so=
+ftware prefetches (except PREFETCHW) that hit a cacheline in the L3 where a=
+ snoop was sent but no other cores had the data.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "EventCode": "0xB7, 0xBB",
++        "EventName": "OCR.HWPF_L1D_AND_SWPF.L3_HIT.SNOOP_MISS",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x2003C0400",
++        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
++        "SampleAfterValue": "100003",
++        "Speculative": "1",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts L1 data cache prefetch requests and so=
+ftware prefetches (except PREFETCHW) that hit a cacheline in the L3 where a=
+ snoop was not needed to satisfy the request.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "EventCode": "0xB7, 0xBB",
++        "EventName": "OCR.HWPF_L1D_AND_SWPF.L3_HIT.SNOOP_NOT_NEEDED",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x1003C0400",
++        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
++        "SampleAfterValue": "100003",
++        "Speculative": "1",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts hardware prefetch data reads (which br=
+ing data to L2)  that hit a cacheline in the L3 where a snoop was sent or n=
+ot.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "EventCode": "0xB7, 0xBB",
++        "EventName": "OCR.HWPF_L2_DATA_RD.L3_HIT.ANY",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x3FC03C0010",
++        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
++        "SampleAfterValue": "100003",
++        "Speculative": "1",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts hardware prefetch data reads (which br=
+ing data to L2)  that hit a cacheline in the L3 where a snoop hit in anothe=
+r cores caches, data forwarding is required as the data is modified.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "EventCode": "0xB7, 0xBB",
++        "EventName": "OCR.HWPF_L2_DATA_RD.L3_HIT.SNOOP_HITM",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x10003C0010",
++        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
++        "SampleAfterValue": "100003",
++        "Speculative": "1",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts hardware prefetch data reads (which br=
+ing data to L2)  that hit a cacheline in the L3 where a snoop hit in anothe=
+r core, data forwarding is not required.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "EventCode": "0xB7, 0xBB",
++        "EventName": "OCR.HWPF_L2_DATA_RD.L3_HIT.SNOOP_HIT_NO_FWD",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x4003C0010",
++        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
++        "SampleAfterValue": "100003",
++        "Speculative": "1",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts hardware prefetch data reads (which br=
+ing data to L2)  that hit a cacheline in the L3 where a snoop was sent but =
+no other cores had the data.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "EventCode": "0xB7, 0xBB",
++        "EventName": "OCR.HWPF_L2_DATA_RD.L3_HIT.SNOOP_MISS",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x2003C0010",
++        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
++        "SampleAfterValue": "100003",
++        "Speculative": "1",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts hardware prefetch data reads (which br=
+ing data to L2)  that hit a cacheline in the L3 where a snoop was not neede=
+d to satisfy the request.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "EventCode": "0xB7, 0xBB",
++        "EventName": "OCR.HWPF_L2_DATA_RD.L3_HIT.SNOOP_NOT_NEEDED",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x1003C0010",
++        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
++        "SampleAfterValue": "100003",
++        "Speculative": "1",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts hardware prefetch data reads (which br=
+ing data to L2)  that hit a cacheline in the L3 where a snoop was sent.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "EventCode": "0xB7, 0xBB",
++        "EventName": "OCR.HWPF_L2_DATA_RD.L3_HIT.SNOOP_SENT",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x1E003C0010",
++        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
++        "SampleAfterValue": "100003",
++        "Speculative": "1",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts hardware prefetch RFOs (which bring da=
+ta to L2) that hit a cacheline in the L3 where a snoop was sent or not.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "EventCode": "0xB7, 0xBB",
++        "EventName": "OCR.HWPF_L2_RFO.L3_HIT.ANY",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x3FC03C0020",
++        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
++        "SampleAfterValue": "100003",
++        "Speculative": "1",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts hardware prefetch RFOs (which bring da=
+ta to L2) that hit a cacheline in the L3 where a snoop hit in another cores=
+ caches, data forwarding is required as the data is modified.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "EventCode": "0xB7, 0xBB",
++        "EventName": "OCR.HWPF_L2_RFO.L3_HIT.SNOOP_HITM",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x10003C0020",
++        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
++        "SampleAfterValue": "100003",
++        "Speculative": "1",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts hardware prefetch RFOs (which bring da=
+ta to L2) that hit a cacheline in the L3 where a snoop hit in another core,=
+ data forwarding is not required.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "EventCode": "0xB7, 0xBB",
++        "EventName": "OCR.HWPF_L2_RFO.L3_HIT.SNOOP_HIT_NO_FWD",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x4003C0020",
++        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
++        "SampleAfterValue": "100003",
++        "Speculative": "1",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts hardware prefetch RFOs (which bring da=
+ta to L2) that hit a cacheline in the L3 where a snoop was sent but no othe=
+r cores had the data.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "EventCode": "0xB7, 0xBB",
++        "EventName": "OCR.HWPF_L2_RFO.L3_HIT.SNOOP_MISS",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x2003C0020",
++        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
++        "SampleAfterValue": "100003",
++        "Speculative": "1",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts hardware prefetch RFOs (which bring da=
+ta to L2) that hit a cacheline in the L3 where a snoop was not needed to sa=
+tisfy the request.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "EventCode": "0xB7, 0xBB",
++        "EventName": "OCR.HWPF_L2_RFO.L3_HIT.SNOOP_NOT_NEEDED",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x1003C0020",
++        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
++        "SampleAfterValue": "100003",
++        "Speculative": "1",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts hardware prefetch RFOs (which bring da=
+ta to L2) that hit a cacheline in the L3 where a snoop was sent.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3",
++        "EventCode": "0xB7, 0xBB",
++        "EventName": "OCR.HWPF_L2_RFO.L3_HIT.SNOOP_SENT",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x1E003C0020",
++        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
++        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
++        "SampleAfterValue": "100003",
++        "Speculative": "1",
 +        "UMask": "0x1"
 +    },
 +    {
 +        "BriefDescription": "Counts hardware prefetches to the L3 only tha=
-t hit in the L3 or were snooped from another core's caches on the same sock=
-et.",
+t hit a cacheline in the L3 where a snoop was sent or not.",
++        "CollectPEBSRecord": "2",
 +        "Counter": "0,1,2,3",
 +        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.HWPF_L3.L3_HIT",
++        "EventName": "OCR.HWPF_L3.L3_HIT.ANY",
 +        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x80082380",
++        "MSRValue": "0x3FC03C2380",
 +        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
 +        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 +        "SampleAfterValue": "100003",
++        "Speculative": "1",
 +        "UMask": "0x1"
 +    },
 +    {
-+        "BriefDescription": "Counts hardware and software prefetches to al=
-l cache levels that hit in the L3 or were snooped from another core's cache=
-s on the same socket.",
++        "BriefDescription": "Counts miscellaneous requests, such as I/O an=
+d un-cacheable accesses that hit a cacheline in the L3 where a snoop hit in=
+ another core, data forwarding is not required.",
++        "CollectPEBSRecord": "2",
 +        "Counter": "0,1,2,3",
 +        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.PREFETCHES.L3_HIT",
++        "EventName": "OCR.OTHER.L3_HIT.SNOOP_HIT_NO_FWD",
 +        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x3F803C27F0",
++        "MSRValue": "0x4003C8000",
 +        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
 +        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 +        "SampleAfterValue": "100003",
++        "Speculative": "1",
 +        "UMask": "0x1"
 +    },
 +    {
-+        "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that hit=
- in the L3 or were snooped from another core's caches on the same socket.",
++        "BriefDescription": "Counts miscellaneous requests, such as I/O an=
+d un-cacheable accesses that hit a cacheline in the L3 where a snoop was se=
+nt but no other cores had the data.",
++        "CollectPEBSRecord": "2",
 +        "Counter": "0,1,2,3",
 +        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.READS_TO_CORE.L3_HIT",
++        "EventName": "OCR.OTHER.L3_HIT.SNOOP_MISS",
 +        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x3F003C0477",
++        "MSRValue": "0x2003C8000",
 +        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
 +        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 +        "SampleAfterValue": "100003",
++        "Speculative": "1",
 +        "UMask": "0x1"
 +    },
 +    {
-+        "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that res=
-ulted in a snoop hit a modified line in another core's caches which forward=
-ed the data.",
++        "BriefDescription": "Counts miscellaneous requests, such as I/O an=
+d un-cacheable accesses that hit a cacheline in the L3 where a snoop was no=
+t needed to satisfy the request.",
++        "CollectPEBSRecord": "2",
 +        "Counter": "0,1,2,3",
 +        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.READS_TO_CORE.L3_HIT.SNOOP_HITM",
++        "EventName": "OCR.OTHER.L3_HIT.SNOOP_NOT_NEEDED",
 +        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10003C0477",
++        "MSRValue": "0x1003C8000",
 +        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
 +        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 +        "SampleAfterValue": "100003",
++        "Speculative": "1",
 +        "UMask": "0x1"
 +    },
 +    {
-+        "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that res=
-ulted in a snoop that hit in another core, which did not forward the data."=
-,
++        "BriefDescription": "Counts miscellaneous requests, such as I/O an=
+d un-cacheable accesses that hit a cacheline in the L3 where a snoop was se=
+nt.",
++        "CollectPEBSRecord": "2",
 +        "Counter": "0,1,2,3",
 +        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.READS_TO_CORE.L3_HIT.SNOOP_HIT_NO_FWD",
++        "EventName": "OCR.OTHER.L3_HIT.SNOOP_SENT",
 +        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x4003C0477",
++        "MSRValue": "0x1E003C8000",
 +        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
 +        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 +        "SampleAfterValue": "100003",
++        "Speculative": "1",
 +        "UMask": "0x1"
 +    },
 +    {
-+        "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that res=
-ulted in a snoop hit in another core's caches which forwarded the unmodifie=
-d data to the requesting core.",
++        "BriefDescription": "Counts streaming stores that hit a cacheline =
+in the L3 where a snoop was sent or not.",
++        "CollectPEBSRecord": "2",
 +        "Counter": "0,1,2,3",
 +        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.READS_TO_CORE.L3_HIT.SNOOP_HIT_WITH_FWD",
++        "EventName": "OCR.STREAMING_WR.L3_HIT.ANY",
 +        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x8003C0477",
++        "MSRValue": "0x3FC03C0800",
 +        "Offcore": "1",
++        "PEBScounters": "0,1,2,3",
 +        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 +        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that wer=
-e supplied by a cache on a remote socket where a snoop was sent and data wa=
-s returned (Modified or Not Modified).",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.READS_TO_CORE.REMOTE_CACHE.SNOOP_FWD",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x1830000477",
-+        "Offcore": "1",
-+        "PublicDescription": "Offcore response can be programmed only with=
- a specific pair of event select and counter MSR, and with specific event c=
-odes and predefine mask bit value in a dedicated MSR to specify attributes =
-of the offcore transaction.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that wer=
-e supplied by a cache on a remote socket where a snoop hit a modified line =
-in another core's caches which forwarded the data.",
-         "Counter": "0,1,2,3",
-@@ -801,6 +993,18 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts streaming stores that hit in the L3 or=
- were snooped from another core's caches on the same socket.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.STREAMING_WR.L3_HIT",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x80080800",
-+        "Offcore": "1",
-+        "PublicDescription": "Offcore response can be programmed only with=
- a specific pair of event select and counter MSR, and with specific event c=
-odes and predefine mask bit value in a dedicated MSR to specify attributes =
-of the offcore transaction.",
-+        "SampleAfterValue": "100003",
++        "Speculative": "1",
 +        "UMask": "0x1"
 +    },
      {
          "BriefDescription": "Demand and prefetch data reads",
          "CollectPEBSRecord": "2",
-@@ -947,5 +1151,53 @@
+@@ -674,5 +1259,53 @@
          "SampleAfterValue": "100003",
          "Speculative": "1",
          "UMask": "0x4"
@@ -506,564 +939,1092 @@ ns executed.",
      }
  ]
 \ No newline at end of file
-diff --git a/tools/perf/pmu-events/arch/x86/icelakex/memory.json b/tools/pe=
-rf/pmu-events/arch/x86/icelakex/memory.json
-index 9ebcd442e6d3..c10a1bbc66b1 100644
---- a/tools/perf/pmu-events/arch/x86/icelakex/memory.json
-+++ b/tools/perf/pmu-events/arch/x86/icelakex/memory.json
-@@ -169,7 +169,7 @@
-         "EventCode": "0xB7, 0xBB",
-         "EventName": "OCR.DEMAND_CODE_RD.L3_MISS_LOCAL",
-         "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x3F8CC00004",
-+        "MSRValue": "0x3F84400004",
-         "Offcore": "1",
-         "PublicDescription": "Offcore response can be programmed only with=
- a specific pair of event select and counter MSR, and with specific event c=
-odes and predefine mask bit value in a dedicated MSR to specify attributes =
-of the offcore transaction.",
-         "SampleAfterValue": "100003",
-@@ -193,7 +193,7 @@
-         "EventCode": "0xB7, 0xBB",
-         "EventName": "OCR.DEMAND_DATA_RD.L3_MISS_LOCAL",
-         "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x3F8CC00001",
-+        "MSRValue": "0x3F84400001",
-         "Offcore": "1",
-         "PublicDescription": "Offcore response can be programmed only with=
- a specific pair of event select and counter MSR, and with specific event c=
-odes and predefine mask bit value in a dedicated MSR to specify attributes =
-of the offcore transaction.",
-         "SampleAfterValue": "100003",
-@@ -217,7 +217,7 @@
-         "EventCode": "0xB7, 0xBB",
-         "EventName": "OCR.DEMAND_RFO.L3_MISS_LOCAL",
-         "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x3F0CC00002",
-+        "MSRValue": "0x3F04400002",
-         "Offcore": "1",
-         "PublicDescription": "Offcore response can be programmed only with=
- a specific pair of event select and counter MSR, and with specific event c=
-odes and predefine mask bit value in a dedicated MSR to specify attributes =
-of the offcore transaction.",
-         "SampleAfterValue": "100003",
-@@ -241,7 +241,7 @@
-         "EventCode": "0xB7, 0xBB",
-         "EventName": "OCR.HWPF_L1D_AND_SWPF.L3_MISS_LOCAL",
-         "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x3F8CC00400",
-+        "MSRValue": "0x3F84400400",
-         "Offcore": "1",
-         "PublicDescription": "Offcore response can be programmed only with=
- a specific pair of event select and counter MSR, and with specific event c=
-odes and predefine mask bit value in a dedicated MSR to specify attributes =
-of the offcore transaction.",
-         "SampleAfterValue": "100003",
-@@ -301,7 +301,7 @@
-         "EventCode": "0xB7, 0xBB",
-         "EventName": "OCR.OTHER.L3_MISS_LOCAL",
-         "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x3F8CC08000",
-+        "MSRValue": "0x3F84408000",
-         "Offcore": "1",
-         "PublicDescription": "Offcore response can be programmed only with=
- a specific pair of event select and counter MSR, and with specific event c=
-odes and predefine mask bit value in a dedicated MSR to specify attributes =
-of the offcore transaction.",
-         "SampleAfterValue": "100003",
-@@ -313,7 +313,7 @@
-         "EventCode": "0xB7, 0xBB",
-         "EventName": "OCR.PREFETCHES.L3_MISS_LOCAL",
-         "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x3F8CC027F0",
-+        "MSRValue": "0x3F844027F0",
-         "Offcore": "1",
-         "PublicDescription": "Offcore response can be programmed only with=
- a specific pair of event select and counter MSR, and with specific event c=
-odes and predefine mask bit value in a dedicated MSR to specify attributes =
-of the offcore transaction.",
-         "SampleAfterValue": "100003",
-@@ -337,7 +337,19 @@
-         "EventCode": "0xB7, 0xBB",
-         "EventName": "OCR.READS_TO_CORE.L3_MISS_LOCAL",
-         "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x3F0CC00477",
-+        "MSRValue": "0x3F04400477",
-+        "Offcore": "1",
-+        "PublicDescription": "Offcore response can be programmed only with=
- a specific pair of event select and counter MSR, and with specific event c=
-odes and predefine mask bit value in a dedicated MSR to specify attributes =
-of the offcore transaction.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that mis=
-sed the L3 Cache and were supplied by the local socket (DRAM or PMM), wheth=
-er or not in Sub NUMA Cluster(SNC) Mode.  In SNC Mode counts PMM or DRAM ac=
-cesses that are controlled by the close or distant SNC Cluster.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.READS_TO_CORE.L3_MISS_LOCAL_SOCKET",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x70CC00477",
-         "Offcore": "1",
-         "PublicDescription": "Offcore response can be programmed only with=
- a specific pair of event select and counter MSR, and with specific event c=
-odes and predefine mask bit value in a dedicated MSR to specify attributes =
-of the offcore transaction.",
-         "SampleAfterValue": "100003",
-diff --git a/tools/perf/pmu-events/arch/x86/icelakex/other.json b/tools/per=
-f/pmu-events/arch/x86/icelakex/other.json
-index 43524f274307..1246b22769da 100644
---- a/tools/perf/pmu-events/arch/x86/icelakex/other.json
-+++ b/tools/perf/pmu-events/arch/x86/icelakex/other.json
-@@ -156,31 +156,7 @@
+diff --git a/tools/perf/pmu-events/arch/x86/icelake/other.json b/tools/perf=
+/pmu-events/arch/x86/icelake/other.json
+index 10e8582774ce..08f6321025e8 100644
+--- a/tools/perf/pmu-events/arch/x86/icelake/other.json
++++ b/tools/perf/pmu-events/arch/x86/icelake/other.json
+@@ -78,418 +78,13 @@
          "UMask": "0x1"
      },
      {
 -        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that hit in the L3 or were snooped from another co=
-re's caches on the same socket.",
+ruction cache prefetches that hit a cacheline in the L3 where a snoop was s=
+ent or not.",
+-        "CollectPEBSRecord": "2",
 -        "Counter": "0,1,2,3",
 -        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.DEMAND_CODE_RD.L3_HIT",
+-        "EventName": "OCR.DEMAND_CODE_RD.L3_HIT.ANY",
 -        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x3F803C0004",
+-        "MSRValue": "0x3FC03C0004",
 -        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
 -        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 -        "SampleAfterValue": "100003",
+-        "Speculative": "1",
 -        "UMask": "0x1"
 -    },
 -    {
 -        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that resulted in a snoop hit a modified line in an=
-other core's caches which forwarded the data.",
+ruction cache prefetches that hit a cacheline in the L3 where a snoop hit i=
+n another cores caches, data forwarding is required as the data is modified=
+.",
+-        "CollectPEBSRecord": "2",
 -        "Counter": "0,1,2,3",
 -        "EventCode": "0xB7, 0xBB",
 -        "EventName": "OCR.DEMAND_CODE_RD.L3_HIT.SNOOP_HITM",
 -        "MSRIndex": "0x1a6,0x1a7",
 -        "MSRValue": "0x10003C0004",
 -        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
 -        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 -        "SampleAfterValue": "100003",
+-        "Speculative": "1",
 -        "UMask": "0x1"
 -    },
 -    {
 -        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that the DRAM attached to this socket supplied the=
- request.",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that were supplied by DRAM attached to this socket=
-, unless in Sub NUMA Cluster(SNC) Mode.  In SNC Mode counts only those DRAM=
- accesses that are controlled by the close SNC Cluster.",
-         "Counter": "0,1,2,3",
-         "EventCode": "0xB7, 0xBB",
-         "EventName": "OCR.DEMAND_CODE_RD.LOCAL_DRAM",
-@@ -228,55 +204,7 @@
-         "UMask": "0x1"
-     },
-     {
--        "BriefDescription": "Counts demand data reads that hit in the L3 o=
-r were snooped from another core's caches on the same socket.",
+ruction cache prefetches that hit a cacheline in the L3 where a snoop hit i=
+n another core, data forwarding is not required.",
+-        "CollectPEBSRecord": "2",
 -        "Counter": "0,1,2,3",
 -        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.DEMAND_DATA_RD.L3_HIT",
+-        "EventName": "OCR.DEMAND_CODE_RD.L3_HIT.SNOOP_HIT_NO_FWD",
 -        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x3F803C0001",
+-        "MSRValue": "0x4003C0004",
 -        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
 -        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 -        "SampleAfterValue": "100003",
+-        "Speculative": "1",
 -        "UMask": "0x1"
 -    },
 -    {
--        "BriefDescription": "Counts demand data reads that resulted in a s=
-noop hit a modified line in another core's caches which forwarded the data.=
-",
+-        "BriefDescription": "Counts demand instruction fetches and L1 inst=
+ruction cache prefetches that hit a cacheline in the L3 where a snoop was s=
+ent but no other cores had the data.",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.DEMAND_CODE_RD.L3_HIT.SNOOP_MISS",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x2003C0004",
+-        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+-        "SampleAfterValue": "100003",
+-        "Speculative": "1",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts demand instruction fetches and L1 inst=
+ruction cache prefetches that hit a cacheline in the L3 where a snoop was n=
+ot needed to satisfy the request.",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.DEMAND_CODE_RD.L3_HIT.SNOOP_NOT_NEEDED",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x1003C0004",
+-        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+-        "SampleAfterValue": "100003",
+-        "Speculative": "1",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts demand instruction fetches and L1 inst=
+ruction cache prefetches that hit a cacheline in the L3 where a snoop was s=
+ent.",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.DEMAND_CODE_RD.L3_HIT.SNOOP_SENT",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x1E003C0004",
+-        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+-        "SampleAfterValue": "100003",
+-        "Speculative": "1",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts demand instruction fetches and L1 inst=
+ruction cache prefetches that DRAM supplied the request.",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.DEMAND_CODE_RD.LOCAL_DRAM",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x184000004",
+-        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+-        "SampleAfterValue": "100003",
+-        "Speculative": "1",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts demand data reads that have any type o=
+f response.",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x10001",
+-        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+-        "SampleAfterValue": "100003",
+-        "Speculative": "1",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts demand data reads that DRAM supplied t=
+he request.",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.DEMAND_DATA_RD.DRAM",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x184000001",
+-        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+-        "SampleAfterValue": "100003",
+-        "Speculative": "1",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts demand data reads that hit a cacheline=
+ in the L3 where a snoop was sent or not.",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.ANY",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x3FC03C0001",
+-        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+-        "SampleAfterValue": "100003",
+-        "Speculative": "1",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts demand data reads that hit a cacheline=
+ in the L3 where a snoop hit in another cores caches, data forwarding is re=
+quired as the data is modified.",
+-        "CollectPEBSRecord": "2",
 -        "Counter": "0,1,2,3",
 -        "EventCode": "0xB7, 0xBB",
 -        "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HITM",
 -        "MSRIndex": "0x1a6,0x1a7",
 -        "MSRValue": "0x10003C0001",
 -        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
 -        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 -        "SampleAfterValue": "100003",
+-        "Speculative": "1",
 -        "UMask": "0x1"
 -    },
 -    {
--        "BriefDescription": "Counts demand data reads that resulted in a s=
-noop that hit in another core, which did not forward the data.",
+-        "BriefDescription": "Counts demand data reads that hit a cacheline=
+ in the L3 where a snoop hit in another core, data forwarding is not requir=
+ed.",
+-        "CollectPEBSRecord": "2",
 -        "Counter": "0,1,2,3",
 -        "EventCode": "0xB7, 0xBB",
 -        "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HIT_NO_FWD",
 -        "MSRIndex": "0x1a6,0x1a7",
 -        "MSRValue": "0x4003C0001",
 -        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
 -        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 -        "SampleAfterValue": "100003",
+-        "Speculative": "1",
 -        "UMask": "0x1"
 -    },
 -    {
--        "BriefDescription": "Counts demand data reads that resulted in a s=
-noop hit in another core's caches which forwarded the unmodified data to th=
-e requesting core.",
+-        "BriefDescription": "Counts demand data reads that hit a cacheline=
+ in the L3 where a snoop was sent but no other cores had the data.",
+-        "CollectPEBSRecord": "2",
 -        "Counter": "0,1,2,3",
 -        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HIT_WITH_FWD",
+-        "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_MISS",
 -        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x8003C0001",
+-        "MSRValue": "0x2003C0001",
 -        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
 -        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 -        "SampleAfterValue": "100003",
+-        "Speculative": "1",
 -        "UMask": "0x1"
 -    },
 -    {
--        "BriefDescription": "Counts demand data reads that the DRAM attach=
-ed to this socket supplied the request.",
-+        "BriefDescription": "Counts demand data reads that were supplied b=
-y DRAM attached to this socket, unless in Sub NUMA Cluster(SNC) Mode.  In S=
-NC Mode counts only those DRAM accesses that are controlled by the close SN=
-C Cluster.",
-         "Counter": "0,1,2,3",
-         "EventCode": "0xB7, 0xBB",
-         "EventName": "OCR.DEMAND_DATA_RD.LOCAL_DRAM",
-@@ -288,7 +216,7 @@
-         "UMask": "0x1"
-     },
-     {
--        "BriefDescription": "Counts demand data reads that were supplied b=
-y PMM attached to this socket.",
-+        "BriefDescription": "Counts demand data reads that were supplied b=
-y PMM attached to this socket, unless in Sub NUMA Cluster(SNC) Mode.  In SN=
-C Mode counts only those PMM accesses that are controlled by the close SNC =
-Cluster.",
-         "Counter": "0,1,2,3",
-         "EventCode": "0xB7, 0xBB",
-         "EventName": "OCR.DEMAND_DATA_RD.LOCAL_PMM",
-@@ -384,31 +312,7 @@
-         "UMask": "0x1"
-     },
-     {
--        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
-sts and software prefetches for exclusive ownership (PREFETCHW) that hit in=
- the L3 or were snooped from another core's caches on the same socket.",
+-        "BriefDescription": "Counts demand data reads that hit a cacheline=
+ in the L3 where a snoop was not needed to satisfy the request.",
+-        "CollectPEBSRecord": "2",
 -        "Counter": "0,1,2,3",
 -        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.DEMAND_RFO.L3_HIT",
+-        "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_NOT_NEEDED",
 -        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x3F803C0002",
+-        "MSRValue": "0x1003C0001",
 -        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
 -        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 -        "SampleAfterValue": "100003",
+-        "Speculative": "1",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts demand data reads that hit a cacheline=
+ in the L3 where a snoop was sent.",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_SENT",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x1E003C0001",
+-        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+-        "SampleAfterValue": "100003",
+-        "Speculative": "1",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts demand data reads that DRAM supplied t=
+he request.",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.DEMAND_DATA_RD.LOCAL_DRAM",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x184000001",
+-        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+-        "SampleAfterValue": "100003",
+-        "Speculative": "1",
 -        "UMask": "0x1"
 -    },
 -    {
 -        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
-sts and software prefetches for exclusive ownership (PREFETCHW) that result=
-ed in a snoop hit a modified line in another core's caches which forwarded =
-the data.",
+sts and software prefetches for exclusive ownership (PREFETCHW) that have a=
+ny type of response.",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x10002",
+-        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+-        "SampleAfterValue": "100003",
+-        "Speculative": "1",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
+sts and software prefetches for exclusive ownership (PREFETCHW) that DRAM s=
+upplied the request.",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.DEMAND_RFO.DRAM",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x184000002",
+-        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+-        "SampleAfterValue": "100003",
+-        "Speculative": "1",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
+sts and software prefetches for exclusive ownership (PREFETCHW) that hit a =
+cacheline in the L3 where a snoop was sent or not.",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.DEMAND_RFO.L3_HIT.ANY",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x3FC03C0002",
+-        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+-        "SampleAfterValue": "100003",
+-        "Speculative": "1",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
+sts and software prefetches for exclusive ownership (PREFETCHW) that hit a =
+cacheline in the L3 where a snoop hit in another cores caches, data forward=
+ing is required as the data is modified.",
+-        "CollectPEBSRecord": "2",
 -        "Counter": "0,1,2,3",
 -        "EventCode": "0xB7, 0xBB",
 -        "EventName": "OCR.DEMAND_RFO.L3_HIT.SNOOP_HITM",
 -        "MSRIndex": "0x1a6,0x1a7",
 -        "MSRValue": "0x10003C0002",
 -        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
 -        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 -        "SampleAfterValue": "100003",
+-        "Speculative": "1",
 -        "UMask": "0x1"
 -    },
 -    {
 -        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
-sts and software prefetches for exclusive ownership (PREFETCHW) that the DR=
-AM attached to this socket supplied the request.",
-+        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
-sts and software prefetches for exclusive ownership (PREFETCHW) that were s=
-upplied by DRAM attached to this socket, unless in Sub NUMA Cluster(SNC) Mo=
-de.  In SNC Mode counts only those DRAM accesses that are controlled by the=
- close SNC Cluster.",
-         "Counter": "0,1,2,3",
-         "EventCode": "0xB7, 0xBB",
-         "EventName": "OCR.DEMAND_RFO.LOCAL_DRAM",
-@@ -420,7 +324,7 @@
-         "UMask": "0x1"
-     },
-     {
--        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
-sts and software prefetches for exclusive ownership (PREFETCHW) that were s=
-upplied by PMM attached to this socket.",
-+        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
-sts and software prefetches for exclusive ownership (PREFETCHW) that were s=
-upplied by PMM attached to this socket, unless in Sub NUMA Cluster(SNC) Mod=
-e.  In SNC Mode counts only those PMM accesses that are controlled by the c=
-lose SNC Cluster.",
-         "Counter": "0,1,2,3",
-         "EventCode": "0xB7, 0xBB",
-         "EventName": "OCR.DEMAND_RFO.LOCAL_PMM",
-@@ -492,19 +396,7 @@
-         "UMask": "0x1"
-     },
-     {
--        "BriefDescription": "Counts L1 data cache prefetch requests and so=
-ftware prefetches (except PREFETCHW) that hit in the L3 or were snooped fro=
-m another core's caches on the same socket.",
+sts and software prefetches for exclusive ownership (PREFETCHW) that hit a =
+cacheline in the L3 where a snoop hit in another core, data forwarding is n=
+ot required.",
+-        "CollectPEBSRecord": "2",
 -        "Counter": "0,1,2,3",
 -        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.HWPF_L1D_AND_SWPF.L3_HIT",
+-        "EventName": "OCR.DEMAND_RFO.L3_HIT.SNOOP_HIT_NO_FWD",
 -        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x3F803C0400",
+-        "MSRValue": "0x4003C0002",
 -        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
 -        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 -        "SampleAfterValue": "100003",
+-        "Speculative": "1",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
+sts and software prefetches for exclusive ownership (PREFETCHW) that hit a =
+cacheline in the L3 where a snoop was sent but no other cores had the data.=
+",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.DEMAND_RFO.L3_HIT.SNOOP_MISS",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x2003C0002",
+-        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+-        "SampleAfterValue": "100003",
+-        "Speculative": "1",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
+sts and software prefetches for exclusive ownership (PREFETCHW) that hit a =
+cacheline in the L3 where a snoop was not needed to satisfy the request.",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.DEMAND_RFO.L3_HIT.SNOOP_NOT_NEEDED",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x1003C0002",
+-        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+-        "SampleAfterValue": "100003",
+-        "Speculative": "1",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
+sts and software prefetches for exclusive ownership (PREFETCHW) that hit a =
+cacheline in the L3 where a snoop was sent.",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.DEMAND_RFO.L3_HIT.SNOOP_SENT",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x1E003C0002",
+-        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+-        "SampleAfterValue": "100003",
+-        "Speculative": "1",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
+sts and software prefetches for exclusive ownership (PREFETCHW) that DRAM s=
+upplied the request.",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.DEMAND_RFO.LOCAL_DRAM",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x184000002",
+-        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+-        "SampleAfterValue": "100003",
+-        "Speculative": "1",
 -        "UMask": "0x1"
 -    },
 -    {
 -        "BriefDescription": "Counts L1 data cache prefetch requests and so=
-ftware prefetches (except PREFETCHW) that the DRAM attached to this socket =
-supplied the request.",
-+        "BriefDescription": "Counts L1 data cache prefetch requests and so=
-ftware prefetches (except PREFETCHW) that were supplied by DRAM attached to=
- this socket, unless in Sub NUMA Cluster(SNC) Mode.  In SNC Mode counts onl=
-y those DRAM accesses that are controlled by the close SNC Cluster.",
+ftware prefetches (except PREFETCHW) that have any type of response.",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.HWPF_L1D_AND_SWPF.ANY_RESPONSE",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x10400",
+-        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+-        "SampleAfterValue": "100003",
+-        "Speculative": "1",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts L1 data cache prefetch requests and so=
+ftware prefetches (except PREFETCHW) that DRAM supplied the request.",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.HWPF_L1D_AND_SWPF.DRAM",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x184000400",
+-        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+-        "SampleAfterValue": "100003",
+-        "Speculative": "1",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts L1 data cache prefetch requests and so=
+ftware prefetches (except PREFETCHW) that hit a cacheline in the L3 where a=
+ snoop was sent or not.",
++        "BriefDescription": "Counts demand instruction fetches and L1 inst=
+ruction cache prefetches that DRAM supplied the request.",
+         "CollectPEBSRecord": "2",
          "Counter": "0,1,2,3",
          "EventCode": "0xB7, 0xBB",
-         "EventName": "OCR.HWPF_L1D_AND_SWPF.LOCAL_DRAM",
-@@ -527,18 +419,6 @@
-         "SampleAfterValue": "100003",
+-        "EventName": "OCR.HWPF_L1D_AND_SWPF.L3_HIT.ANY",
++        "EventName": "OCR.DEMAND_CODE_RD.LOCAL_DRAM",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x3FC03C0400",
++        "MSRValue": "0x184000004",
+         "Offcore": "1",
+         "PEBScounters": "0,1,2,3",
+         "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+@@ -498,13 +93,13 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts L1 data cache prefetch requests and so=
+ftware prefetches (except PREFETCHW) that hit a cacheline in the L3 where a=
+ snoop was sent but no other cores had the data.",
++        "BriefDescription": "Counts demand data reads that have any type o=
+f response.",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.HWPF_L1D_AND_SWPF.L3_HIT.SNOOP_MISS",
++        "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x2003C0400",
++        "MSRValue": "0x10001",
+         "Offcore": "1",
+         "PEBScounters": "0,1,2,3",
+         "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+@@ -513,13 +108,13 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts L1 data cache prefetch requests and so=
+ftware prefetches (except PREFETCHW) that hit a cacheline in the L3 where a=
+ snoop was not needed to satisfy the request.",
++        "BriefDescription": "Counts demand data reads that DRAM supplied t=
+he request.",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.HWPF_L1D_AND_SWPF.L3_HIT.SNOOP_NOT_NEEDED",
++        "EventName": "OCR.DEMAND_DATA_RD.DRAM",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x1003C0400",
++        "MSRValue": "0x184000001",
+         "Offcore": "1",
+         "PEBScounters": "0,1,2,3",
+         "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+@@ -528,13 +123,13 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts L1 data cache prefetch requests and so=
+ftware prefetches (except PREFETCHW) that DRAM supplied the request.",
++        "BriefDescription": "Counts demand data reads that DRAM supplied t=
+he request.",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.HWPF_L1D_AND_SWPF.LOCAL_DRAM",
++        "EventName": "OCR.DEMAND_DATA_RD.LOCAL_DRAM",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x184000400",
++        "MSRValue": "0x184000001",
+         "Offcore": "1",
+         "PEBScounters": "0,1,2,3",
+         "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+@@ -543,13 +138,13 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts hardware prefetch data reads (which br=
+ing data to L2)  that have any type of response.",
++        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
+sts and software prefetches for exclusive ownership (PREFETCHW) that have a=
+ny type of response.",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.HWPF_L2_DATA_RD.ANY_RESPONSE",
++        "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x10010",
++        "MSRValue": "0x10002",
+         "Offcore": "1",
+         "PEBScounters": "0,1,2,3",
+         "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+@@ -558,13 +153,13 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts hardware prefetch data reads (which br=
+ing data to L2)  that DRAM supplied the request.",
++        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
+sts and software prefetches for exclusive ownership (PREFETCHW) that DRAM s=
+upplied the request.",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.HWPF_L2_DATA_RD.DRAM",
++        "EventName": "OCR.DEMAND_RFO.DRAM",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x184000010",
++        "MSRValue": "0x184000002",
+         "Offcore": "1",
+         "PEBScounters": "0,1,2,3",
+         "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+@@ -573,13 +168,13 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts hardware prefetch data reads (which br=
+ing data to L2)  that hit a cacheline in the L3 where a snoop was sent or n=
+ot.",
++        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
+sts and software prefetches for exclusive ownership (PREFETCHW) that DRAM s=
+upplied the request.",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.HWPF_L2_DATA_RD.L3_HIT.ANY",
++        "EventName": "OCR.DEMAND_RFO.LOCAL_DRAM",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x3FC03C0010",
++        "MSRValue": "0x184000002",
+         "Offcore": "1",
+         "PEBScounters": "0,1,2,3",
+         "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+@@ -588,13 +183,13 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts hardware prefetch data reads (which br=
+ing data to L2)  that hit a cacheline in the L3 where a snoop hit in anothe=
+r cores caches, data forwarding is required as the data is modified.",
++        "BriefDescription": "Counts L1 data cache prefetch requests and so=
+ftware prefetches (except PREFETCHW) that have any type of response.",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.HWPF_L2_DATA_RD.L3_HIT.SNOOP_HITM",
++        "EventName": "OCR.HWPF_L1D_AND_SWPF.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x10003C0010",
++        "MSRValue": "0x10400",
+         "Offcore": "1",
+         "PEBScounters": "0,1,2,3",
+         "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+@@ -603,13 +198,13 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts hardware prefetch data reads (which br=
+ing data to L2)  that hit a cacheline in the L3 where a snoop hit in anothe=
+r core, data forwarding is not required.",
++        "BriefDescription": "Counts L1 data cache prefetch requests and so=
+ftware prefetches (except PREFETCHW) that DRAM supplied the request.",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.HWPF_L2_DATA_RD.L3_HIT.SNOOP_HIT_NO_FWD",
++        "EventName": "OCR.HWPF_L1D_AND_SWPF.DRAM",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x4003C0010",
++        "MSRValue": "0x184000400",
+         "Offcore": "1",
+         "PEBScounters": "0,1,2,3",
+         "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+@@ -618,13 +213,13 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts hardware prefetch data reads (which br=
+ing data to L2)  that hit a cacheline in the L3 where a snoop was sent but =
+no other cores had the data.",
++        "BriefDescription": "Counts L1 data cache prefetch requests and so=
+ftware prefetches (except PREFETCHW) that DRAM supplied the request.",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.HWPF_L2_DATA_RD.L3_HIT.SNOOP_MISS",
++        "EventName": "OCR.HWPF_L1D_AND_SWPF.LOCAL_DRAM",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x2003C0010",
++        "MSRValue": "0x184000400",
+         "Offcore": "1",
+         "PEBScounters": "0,1,2,3",
+         "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+@@ -633,13 +228,13 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts hardware prefetch data reads (which br=
+ing data to L2)  that hit a cacheline in the L3 where a snoop was not neede=
+d to satisfy the request.",
++        "BriefDescription": "Counts hardware prefetch data reads (which br=
+ing data to L2)  that have any type of response.",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.HWPF_L2_DATA_RD.L3_HIT.SNOOP_NOT_NEEDED",
++        "EventName": "OCR.HWPF_L2_DATA_RD.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x1003C0010",
++        "MSRValue": "0x10010",
+         "Offcore": "1",
+         "PEBScounters": "0,1,2,3",
+         "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+@@ -648,13 +243,13 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts hardware prefetch data reads (which br=
+ing data to L2)  that hit a cacheline in the L3 where a snoop was sent.",
++        "BriefDescription": "Counts hardware prefetch data reads (which br=
+ing data to L2)  that DRAM supplied the request.",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.HWPF_L2_DATA_RD.L3_HIT.SNOOP_SENT",
++        "EventName": "OCR.HWPF_L2_DATA_RD.DRAM",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x1E003C0010",
++        "MSRValue": "0x184000010",
+         "Offcore": "1",
+         "PEBScounters": "0,1,2,3",
+         "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+@@ -707,96 +302,6 @@
+         "Speculative": "1",
+         "UMask": "0x1"
+     },
+-    {
+-        "BriefDescription": "Counts hardware prefetch RFOs (which bring da=
+ta to L2) that hit a cacheline in the L3 where a snoop was sent or not.",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.HWPF_L2_RFO.L3_HIT.ANY",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x3FC03C0020",
+-        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+-        "SampleAfterValue": "100003",
+-        "Speculative": "1",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts hardware prefetch RFOs (which bring da=
+ta to L2) that hit a cacheline in the L3 where a snoop hit in another cores=
+ caches, data forwarding is required as the data is modified.",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.HWPF_L2_RFO.L3_HIT.SNOOP_HITM",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x10003C0020",
+-        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+-        "SampleAfterValue": "100003",
+-        "Speculative": "1",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts hardware prefetch RFOs (which bring da=
+ta to L2) that hit a cacheline in the L3 where a snoop hit in another core,=
+ data forwarding is not required.",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.HWPF_L2_RFO.L3_HIT.SNOOP_HIT_NO_FWD",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x4003C0020",
+-        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+-        "SampleAfterValue": "100003",
+-        "Speculative": "1",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts hardware prefetch RFOs (which bring da=
+ta to L2) that hit a cacheline in the L3 where a snoop was sent but no othe=
+r cores had the data.",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.HWPF_L2_RFO.L3_HIT.SNOOP_MISS",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x2003C0020",
+-        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+-        "SampleAfterValue": "100003",
+-        "Speculative": "1",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts hardware prefetch RFOs (which bring da=
+ta to L2) that hit a cacheline in the L3 where a snoop was not needed to sa=
+tisfy the request.",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.HWPF_L2_RFO.L3_HIT.SNOOP_NOT_NEEDED",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x1003C0020",
+-        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+-        "SampleAfterValue": "100003",
+-        "Speculative": "1",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts hardware prefetch RFOs (which bring da=
+ta to L2) that hit a cacheline in the L3 where a snoop was sent.",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.HWPF_L2_RFO.L3_HIT.SNOOP_SENT",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x1E003C0020",
+-        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+-        "SampleAfterValue": "100003",
+-        "Speculative": "1",
+-        "UMask": "0x1"
+-    },
+     {
+         "BriefDescription": "Counts hardware prefetch RFOs (which bring da=
+ta to L2) that DRAM supplied the request.",
+         "CollectPEBSRecord": "2",
+@@ -812,21 +317,6 @@
+         "Speculative": "1",
          "UMask": "0x1"
      },
 -    {
 -        "BriefDescription": "Counts hardware prefetches to the L3 only tha=
-t hit in the L3 or were snooped from another core's caches on the same sock=
-et.",
+t hit a cacheline in the L3 where a snoop was sent or not.",
+-        "CollectPEBSRecord": "2",
 -        "Counter": "0,1,2,3",
 -        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.HWPF_L3.L3_HIT",
+-        "EventName": "OCR.HWPF_L3.L3_HIT.ANY",
 -        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x80082380",
+-        "MSRValue": "0x3FC03C2380",
 -        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
 -        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 -        "SampleAfterValue": "100003",
+-        "Speculative": "1",
 -        "UMask": "0x1"
 -    },
      {
-         "BriefDescription": "Counts hardware prefetches to the L3 only tha=
-t were not supplied by the local socket's L1, L2, or L3 caches and the cach=
-eline was homed in a remote socket.",
-         "Counter": "0,1,2,3",
-@@ -575,18 +455,6 @@
-         "SampleAfterValue": "100003",
+         "BriefDescription": "Counts miscellaneous requests, such as I/O an=
+d un-cacheable accesses that have any type of response.",
+         "CollectPEBSRecord": "2",
+@@ -857,66 +347,6 @@
+         "Speculative": "1",
          "UMask": "0x1"
      },
 -    {
--        "BriefDescription": "Counts hardware and software prefetches to al=
-l cache levels that hit in the L3 or were snooped from another core's cache=
-s on the same socket.",
+-        "BriefDescription": "Counts miscellaneous requests, such as I/O an=
+d un-cacheable accesses that hit a cacheline in the L3 where a snoop hit in=
+ another core, data forwarding is not required.",
+-        "CollectPEBSRecord": "2",
 -        "Counter": "0,1,2,3",
 -        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.PREFETCHES.L3_HIT",
+-        "EventName": "OCR.OTHER.L3_HIT.SNOOP_HIT_NO_FWD",
 -        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x3F803C27F0",
+-        "MSRValue": "0x4003C8000",
 -        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
 -        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 -        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
-     {
-         "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that hav=
-e any type of response.",
-         "Counter": "0,1,2,3",
-@@ -612,72 +480,48 @@
-         "UMask": "0x1"
-     },
-     {
--        "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that hit=
- in the L3 or were snooped from another core's caches on the same socket.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.READS_TO_CORE.L3_HIT",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x3F003C0477",
--        "Offcore": "1",
--        "PublicDescription": "Offcore response can be programmed only with=
- a specific pair of event select and counter MSR, and with specific event c=
-odes and predefine mask bit value in a dedicated MSR to specify attributes =
-of the offcore transaction.",
--        "SampleAfterValue": "100003",
+-        "Speculative": "1",
 -        "UMask": "0x1"
 -    },
 -    {
--        "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that res=
-ulted in a snoop hit a modified line in another core's caches which forward=
-ed the data.",
+-        "BriefDescription": "Counts miscellaneous requests, such as I/O an=
+d un-cacheable accesses that hit a cacheline in the L3 where a snoop was se=
+nt but no other cores had the data.",
+-        "CollectPEBSRecord": "2",
 -        "Counter": "0,1,2,3",
 -        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.READS_TO_CORE.L3_HIT.SNOOP_HITM",
+-        "EventName": "OCR.OTHER.L3_HIT.SNOOP_MISS",
 -        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10003C0477",
+-        "MSRValue": "0x2003C8000",
 -        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
 -        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 -        "SampleAfterValue": "100003",
+-        "Speculative": "1",
 -        "UMask": "0x1"
 -    },
 -    {
--        "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that res=
-ulted in a snoop that hit in another core, which did not forward the data."=
-,
-+        "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that wer=
-e supplied by DRAM attached to this socket, unless in Sub NUMA Cluster(SNC)=
- Mode.  In SNC Mode counts only those DRAM accesses that are controlled by =
-the close SNC Cluster.",
-         "Counter": "0,1,2,3",
-         "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.READS_TO_CORE.L3_HIT.SNOOP_HIT_NO_FWD",
-+        "EventName": "OCR.READS_TO_CORE.LOCAL_DRAM",
-         "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x4003C0477",
-+        "MSRValue": "0x104000477",
-         "Offcore": "1",
-         "PublicDescription": "Offcore response can be programmed only with=
- a specific pair of event select and counter MSR, and with specific event c=
-odes and predefine mask bit value in a dedicated MSR to specify attributes =
-of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-     {
--        "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that res=
-ulted in a snoop hit in another core's caches which forwarded the unmodifie=
-d data to the requesting core.",
-+        "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that wer=
-e supplied by PMM attached to this socket, unless in Sub NUMA Cluster(SNC) =
-Mode.  In SNC Mode counts only those PMM accesses that are controlled by th=
-e close SNC Cluster.",
-         "Counter": "0,1,2,3",
-         "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.READS_TO_CORE.L3_HIT.SNOOP_HIT_WITH_FWD",
-+        "EventName": "OCR.READS_TO_CORE.LOCAL_PMM",
-         "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x8003C0477",
-+        "MSRValue": "0x100400477",
-         "Offcore": "1",
-         "PublicDescription": "Offcore response can be programmed only with=
- a specific pair of event select and counter MSR, and with specific event c=
-odes and predefine mask bit value in a dedicated MSR to specify attributes =
-of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-     {
--        "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that the=
- DRAM attached to this socket supplied the request.",
-+        "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that wer=
-e supplied by DRAM attached to this socket, whether or not in Sub NUMA Clus=
-ter(SNC) Mode.  In SNC Mode counts DRAM accesses that are controlled by the=
- close or distant SNC Cluster.",
-         "Counter": "0,1,2,3",
-         "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.READS_TO_CORE.LOCAL_DRAM",
-+        "EventName": "OCR.READS_TO_CORE.LOCAL_SOCKET_DRAM",
-         "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x104000477",
-+        "MSRValue": "0x70C000477",
-         "Offcore": "1",
-         "PublicDescription": "Offcore response can be programmed only with=
- a specific pair of event select and counter MSR, and with specific event c=
-odes and predefine mask bit value in a dedicated MSR to specify attributes =
-of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-     {
--        "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that wer=
-e supplied by PMM attached to this socket.",
-+        "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that wer=
-e supplied by PMM attached to this socket, whether or not in Sub NUMA Clust=
-er(SNC) Mode.  In SNC Mode counts PMM accesses that are controlled by the c=
-lose or distant SNC Cluster.",
-         "Counter": "0,1,2,3",
-         "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.READS_TO_CORE.LOCAL_PMM",
-+        "EventName": "OCR.READS_TO_CORE.LOCAL_SOCKET_PMM",
-         "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x100400477",
-+        "MSRValue": "0x700C00477",
-         "Offcore": "1",
-         "PublicDescription": "Offcore response can be programmed only with=
- a specific pair of event select and counter MSR, and with specific event c=
-odes and predefine mask bit value in a dedicated MSR to specify attributes =
-of the offcore transaction.",
-         "SampleAfterValue": "100003",
-@@ -754,100 +598,5 @@
-         "PublicDescription": "Offcore response can be programmed only with=
- a specific pair of event select and counter MSR, and with specific event c=
-odes and predefine mask bit value in a dedicated MSR to specify attributes =
-of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts streaming stores that hit in the L3 or=
- were snooped from another core's caches on the same socket.",
+-        "BriefDescription": "Counts miscellaneous requests, such as I/O an=
+d un-cacheable accesses that hit a cacheline in the L3 where a snoop was no=
+t needed to satisfy the request.",
+-        "CollectPEBSRecord": "2",
 -        "Counter": "0,1,2,3",
 -        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.STREAMING_WR.L3_HIT",
+-        "EventName": "OCR.OTHER.L3_HIT.SNOOP_NOT_NEEDED",
 -        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x80080800",
+-        "MSRValue": "0x1003C8000",
 -        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
 -        "PublicDescription": "Offcore response can be programmed only with=
  a specific pair of event select and counter MSR, and with specific event c=
 odes and predefine mask bit value in a dedicated MSR to specify attributes =
 of the offcore transaction.",
 -        "SampleAfterValue": "100003",
+-        "Speculative": "1",
 -        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts miscellaneous requests, such as I/O an=
+d un-cacheable accesses that hit a cacheline in the L3 where a snoop was se=
+nt.",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.OTHER.L3_HIT.SNOOP_SENT",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x1E003C8000",
+-        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+-        "SampleAfterValue": "100003",
+-        "Speculative": "1",
+-        "UMask": "0x1"
+-    },
+     {
+         "BriefDescription": "Counts miscellaneous requests, such as I/O an=
+d un-cacheable accesses that DRAM supplied the request.",
+         "CollectPEBSRecord": "2",
+@@ -962,21 +392,6 @@
+         "Speculative": "1",
+         "UMask": "0x1"
+     },
+-    {
+-        "BriefDescription": "Counts streaming stores that hit a cacheline =
+in the L3 where a snoop was sent or not.",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0xB7, 0xBB",
+-        "EventName": "OCR.STREAMING_WR.L3_HIT.ANY",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x3FC03C0800",
+-        "Offcore": "1",
+-        "PEBScounters": "0,1,2,3",
+-        "PublicDescription": "Offcore response can be programmed only with=
+ a specific pair of event select and counter MSR, and with specific event c=
+odes and predefine mask bit value in a dedicated MSR to specify attributes =
+of the offcore transaction.",
+-        "SampleAfterValue": "100003",
+-        "Speculative": "1",
+-        "UMask": "0x1"
+-    },
+     {
+         "BriefDescription": "Counts streaming stores that DRAM supplied th=
+e request.",
+         "CollectPEBSRecord": "2",
+@@ -991,100 +406,5 @@
+         "SampleAfterValue": "100003",
+         "Speculative": "1",
+         "UMask": "0x1"
 -    },
 -    {
 -        "BriefDescription": "Number of PREFETCHNTA instructions executed."=
@@ -1136,6 +2097,22 @@ rces.",
 -        "UMask": "0x2"
 -    },
 -    {
+-        "BriefDescription": "TMA slots wasted due to incorrect speculation=
+ by branch mispredictions",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3,4,5,6,7",
+-        "EventCode": "0xa4",
+-        "EventName": "TOPDOWN.BR_MISPREDICT_SLOTS",
+-        "PEBScounters": "0,1,2,3,4,5,6,7",
+-        "PublicDescription": "Number of TMA slots that were wasted due to =
+incorrect speculation by branch mispredictions. This event estimates number=
+ of operations that were issued but not retired from the specualtive path a=
+s well as the out-of-order engine recovery past a branch misprediction.",
+-        "SampleAfterValue": "10000003",
+-        "Speculative": "1",
+-        "UMask": "0x8"
+-    },
+-    {
 -        "BriefDescription": "TMA slots available for an unhalted logical p=
 rocessor. Fixed counter - architectural event",
 -        "CollectPEBSRecord": "2",
@@ -1172,12 +2149,12 @@ ads) who share the same physical core.",
      }
  ]
 \ No newline at end of file
-diff --git a/tools/perf/pmu-events/arch/x86/icelakex/pipeline.json b/tools/=
-perf/pmu-events/arch/x86/icelakex/pipeline.json
-index 9a0b4907cb3a..068a3d46b443 100644
---- a/tools/perf/pmu-events/arch/x86/icelakex/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/icelakex/pipeline.json
-@@ -728,6 +728,41 @@
+diff --git a/tools/perf/pmu-events/arch/x86/icelake/pipeline.json b/tools/p=
+erf/pmu-events/arch/x86/icelake/pipeline.json
+index 2b305bdc8cfc..573ac7ac8879 100644
+--- a/tools/perf/pmu-events/arch/x86/icelake/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/icelake/pipeline.json
+@@ -730,6 +730,53 @@
          "Speculative": "1",
          "UMask": "0x1"
      },
@@ -1196,6 +2173,22 @@ rces.",
 +        "SampleAfterValue": "10000003",
 +        "Speculative": "1",
 +        "UMask": "0x2"
++    },
++    {
++        "BriefDescription": "TMA slots wasted due to incorrect speculation=
+ by branch mispredictions",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xa4",
++        "EventName": "TOPDOWN.BR_MISPREDICT_SLOTS",
++        "PEBScounters": "0,1,2,3,4,5,6,7",
++        "PublicDescription": "Number of TMA slots that were wasted due to =
+incorrect speculation by branch mispredictions. This event estimates number=
+ of operations that were issued but not retired from the specualtive path a=
+s well as the out-of-order engine recovery past a branch misprediction.",
++        "SampleAfterValue": "10000003",
++        "Speculative": "1",
++        "UMask": "0x8"
 +    },
 +    {
 +        "BriefDescription": "TMA slots available for an unhalted logical p=
