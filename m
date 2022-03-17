@@ -2,99 +2,139 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDB3C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Mar 2022 03:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC896C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Mar 2022 06:06:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348676AbiCQDL6 (ORCPT
+        id S229592AbiCQGHl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Mar 2022 23:11:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36982 "EHLO
+        Thu, 17 Mar 2022 02:07:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358521AbiCQDL5 (ORCPT
+        with ESMTP id S229830AbiCQGHa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Mar 2022 23:11:57 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4A4C21278
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Mar 2022 20:10:41 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id a1so4144077wrh.10
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Mar 2022 20:10:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=U4Cs871ryV3jskArlUJXNj/tgZDn1LSZklEa26kOZ1c=;
-        b=Mm0GSMqaQyv0EPiuAIPo+8UUsDKGk7BSCXjML4fwUhA7o4ncIZ/IfZzhYBRuOYKFFK
-         mfjjR6ySkLHqqr/lO3syWnnka1dSl6KWxCVDTKMXefWiOqKR1GiUx1vYTpw+v6SH5fCS
-         xocd+GVbstnngxmvzfazk+La1ldqjGMH4XNn2+fXSnjj9JbJeGKpjMpFa/Ec3/MfPICl
-         HnjA38IrgBYQAJ19rNjs7a42wqIDYaYZFi4zC+wiVSUSg+TdOpiKrQYih1rk/6k0BAE6
-         k8hrZeleEUsMgXP9gIm9Cd44dV8VN/F5u7R5kqKjZaQvBe2nR3r8i36n3RzOXmsT+g1x
-         4YXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U4Cs871ryV3jskArlUJXNj/tgZDn1LSZklEa26kOZ1c=;
-        b=XlTQSuqcbn/hFKFIAfei90k1OxS+g5/YMYPVNLQmzvKJXN2kLub5khsZqkTh0A6RdI
-         c/rwV4mc9iKlRSe4b9xot71efIafPGSw5ByiZpiDWfmrXXCA5MgZ8vqx7FigibBTM5s1
-         6mDAB4TDG7EZ0T2Z9lF6JZL8YrXbudCEWA/cjtkl7PcEe7jZ5mc+TIFCSRsxMhbdsvgT
-         oUt9dLTLhgVUHowtLJQ/IWzWP3f2ARd4ZKO0VYpBqHw70dyFDRqo74Pb2dxscST9XGyG
-         06P7mPzhwibNAHLAWsYt0T2B+Ej5BvQtUUFGDuQOBfzjE2s2J6Iqr1k+tgvKFB7MBC+I
-         9cqA==
-X-Gm-Message-State: AOAM531cpmbqW4tKyZHzN6bbf+piaKlT+cvEoK9aLSM+vEtczUQoWgUj
-        ap7GwgfXL1EF3N1JOOYFNjhStfkFUDfwRmUJsqmVGw==
-X-Google-Smtp-Source: ABdhPJxUEpbLmZwl6Sw1kWg+uL3XJMn9zOtRkxxlnIJ8gwPfHabGLQ0spsfin5WGxjTjObtVf2p60c7BcCBRX3yyX5U=
-X-Received: by 2002:a05:6000:11d0:b0:1f1:f6ea:f9a with SMTP id
- i16-20020a05600011d000b001f1f6ea0f9amr2226315wrx.40.1647486640162; Wed, 16
- Mar 2022 20:10:40 -0700 (PDT)
+        Thu, 17 Mar 2022 02:07:30 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7BC037B139;
+        Wed, 16 Mar 2022 22:41:55 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D8A571476;
+        Wed, 16 Mar 2022 22:41:54 -0700 (PDT)
+Received: from [10.163.32.135] (unknown [10.163.32.135])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2C4E93F7F5;
+        Wed, 16 Mar 2022 22:41:49 -0700 (PDT)
+Message-ID: <229defd6-657b-df65-187f-7eef9999e23a@arm.com>
+Date:   Thu, 17 Mar 2022 11:11:55 +0530
 MIME-Version: 1.0
-References: <20220316232452.53062-1-colin.i.king@gmail.com>
-In-Reply-To: <20220316232452.53062-1-colin.i.king@gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 16 Mar 2022 20:10:28 -0700
-Message-ID: <CAP-5=fWA=OGggwz730ScghTmUqeWGSG3hXv2swCRKGafOOSiDg@mail.gmail.com>
-Subject: Re: [PATCH] perf build-id: Fix spelling mistake "Cant" -> "Can't"
-To:     Colin Ian King <colin.i.king@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH V4 03/10] perf: Extend branch type classification
+Content-Language: en-US
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Robin Murphy <robin.murphy@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, Suzuki Poulose <suzuki.poulose@arm.com>,
+        James Clark <james.clark@arm.com>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <20220315053516.431515-1-anshuman.khandual@arm.com>
+ <20220315053516.431515-4-anshuman.khandual@arm.com>
+ <20220315112232.GF8939@worktop.programming.kicks-ass.net>
+ <0df5c352-1f0d-55f8-5d7f-e28ba33d623b@arm.com>
+ <YjHV8dJpEq/M8gHC@hirez.programming.kicks-ass.net>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <YjHV8dJpEq/M8gHC@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Mar 16, 2022 at 4:25 PM Colin Ian King <colin.i.king@gmail.com> wrote:
->
-> There is a spelling mistake in a pr_err message. Fix it.
->
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 
-Acked-by: Ian Rogers <irogers@google.com>
 
-Thanks,
-Ian
+On 3/16/22 17:50, Peter Zijlstra wrote:
+> On Tue, Mar 15, 2022 at 01:06:42PM +0000, Robin Murphy wrote:
+>> On 2022-03-15 11:22, Peter Zijlstra wrote:
+>>> On Tue, Mar 15, 2022 at 11:05:09AM +0530, Anshuman Khandual wrote:
+>>>> branch_entry.type now has ran out of space to accommodate more branch types
+>>>> classification. This will prevent perf branch stack implementation on arm64
+>>>> (via BRBE) to capture all available branch types. Extending this bit field
+>>>> i.e branch_entry.type [4 bits] is not an option as it will break user space
+>>>> ABI both for little and big endian perf tools.
+>>>>
+>>>> Extend branch classification with a new field branch_entry.new_type via a
+>>>> new branch type PERF_BR_EXTEND_ABI in branch_entry.type. Perf tools which
+>>>> could decode PERF_BR_EXTEND_ABI, will then parse branch_entry.new_type as
+>>>> well.
+>>>>
+>>>> branch_entry.new_type is a 4 bit field which can hold upto 16 branch types.
+>>>> The first three branch types will hold various generic page faults followed
+>>>> by five architecture specific branch types, which can be overridden by the
+>>>> platform for specific use cases. These architecture specific branch types
+>>>> gets overridden on arm64 platform for BRBE implementation.
+>>>
+>>>> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+>>>> index 26d8f0b5ac0d..d29280adc3c4 100644
+>>>> --- a/include/uapi/linux/perf_event.h
+>>>> +++ b/include/uapi/linux/perf_event.h
+>>>> @@ -255,9 +255,22 @@ enum {
+>>>>   	PERF_BR_IRQ		= 12,	/* irq */
+>>>>   	PERF_BR_SERROR		= 13,	/* system error */
+>>>>   	PERF_BR_NO_TX		= 14,	/* not in transaction */
+>>>> +	PERF_BR_EXTEND_ABI	= 15,	/* extend ABI */
+>>>>   	PERF_BR_MAX,
+>>>>   };
+>>>
+>>>
+>>>>   #define PERF_SAMPLE_BRANCH_PLM_ALL \
+>>>>   	(PERF_SAMPLE_BRANCH_USER|\
+>>>>   	 PERF_SAMPLE_BRANCH_KERNEL|\
+>>>> @@ -1372,7 +1385,8 @@ struct perf_branch_entry {
+>>>>   		abort:1,    /* transaction abort */
+>>>>   		cycles:16,  /* cycle count to last branch */
+>>>>   		type:4,     /* branch type */
+>>>> -		reserved:40;
+>>>> +		new_type:4, /* additional branch type */
+>>>> +		reserved:36;
+>>>>   };
+>>>
+>>> Hurmpf... this will effectively give us 5 bits of space for the cost of
+>>> 8, that seems... unfortunate.
+>>>
+>>> Would something like:
+>>>
+>>> 		type:4,
+>>> 		ext_type:4,
+>>> 		reserved:36;
+>>>
+>>> and have all software do:
+>>>
+>>> 	type = pbe->type | (pbe->ext_type << 4);
+>>>
+>>> Then old software will only know about the old types. New software on
+>>> old kernels will add 4 0's, which is harmless, while new software on new
+>>> kernels will get 8 bytes of type.
+>>>
+>>> Would that work?
+>>
+>> Depends how bad the effects of aliasing in existing software would be, I
+>> guess - e.g. new kernel outputs type 0x23 which software then interprets as
+>> 0x3 since it doesn't know about the extended bits. I'm guessing that's more
+>> likely "confusing to the user" than "catastrophically fatal", but it might
+>> still matter.
+>>
+>> If software had an explicit opt-in to receiving extended types when
+>> requesting branch sampling in the first place we could avoid that worry, but
+>> then we'd need some additional complexity to sanitise records depending on
+>> that option :/
+> 
+> Bah.. I see.. One option is PERF_SAMPLE_BRANCH_STACK2, but yes, yuck.
 
-> ---
->  tools/perf/util/build-id.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-> index 7a5821c87f94..82f3d46bea70 100644
-> --- a/tools/perf/util/build-id.c
-> +++ b/tools/perf/util/build-id.c
-> @@ -762,7 +762,7 @@ build_id_cache__add(const char *sbuild_id, const char *name, const char *realnam
->
->                 len = readlink(linkname, path, sizeof(path) - 1);
->                 if (len <= 0) {
-> -                       pr_err("Cant read link: %s\n", linkname);
-> +                       pr_err("Can't read link: %s\n", linkname);
->                         goto out_free;
->                 }
->                 path[len] = '\0';
-> --
-> 2.35.1
->
+Could you please elaborate on this ? Are you suggesting to add another perf
+sample flag i.e PERF_SAMPLE_BRANCH_STACK2 just to capture and process these
+new branch types ?
