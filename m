@@ -2,73 +2,103 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8699BC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Mar 2022 10:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 455E7C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Mar 2022 14:28:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234112AbiCRKyQ (ORCPT
+        id S237115AbiCRO3j (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 18 Mar 2022 06:54:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41168 "EHLO
+        Fri, 18 Mar 2022 10:29:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231610AbiCRKyP (ORCPT
+        with ESMTP id S236878AbiCRO3j (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 18 Mar 2022 06:54:15 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 048E027CE28;
-        Fri, 18 Mar 2022 03:52:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=oLvSw2t5Gik7RrQqyucAdo114MkDAZy96gLyodSGUTg=; b=nqsWO4HqKoLcyKzEO6AGJpgjpQ
-        2dSbDntUmrkIG5J7ZAxrFanDIdxMkpV0VBqkh84TO9gMPmCudQsIGdtH/9Rdvx4ekBPZKfGAkiMeN
-        TS/7ga1DuldRRpyFLITPIRf1MvxrlpQkjKD3RrngVta7T4H++TIAqgppn/XK5iCs+8r/yzHzy0OVV
-        FtMsikvtiwKoD6XtsOuoA7n85tVqloLm+xMgGLOJHC47bFwsffjyM5f3Mt57BNiDepjtBr9HXVW+b
-        ha7jire4r0bcBGlI6Pg2LudHd9QdC4gJ84dD7Edzt+D+/I6uhxi8IPAhV/niaGKug1FEQmZWlGeym
-        AcnRUZIg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nVADq-002BhC-5K; Fri, 18 Mar 2022 10:52:42 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7C0303001C7;
-        Fri, 18 Mar 2022 11:52:41 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5DE902D35E974; Fri, 18 Mar 2022 11:52:41 +0100 (CET)
-Date:   Fri, 18 Mar 2022 11:52:41 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sandipan Das <sandipan.das@amd.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        x86@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com,
-        acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        jolsa@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        pbonzini@redhat.com, jmattson@google.com, like.xu.linux@gmail.com,
-        eranian@google.com, ananth.narayan@amd.com, ravi.bangoria@amd.com,
-        santosh.shukla@amd.com
-Subject: Re: [PATCH 5/7] perf/x86/amd/core: Add PerfMonV2 counter control
-Message-ID: <YjRkeQ8C2CeMsUx6@hirez.programming.kicks-ass.net>
-References: <cover.1647498015.git.sandipan.das@amd.com>
- <7958e729c6be0f682379bec81f115b8cd7cca1ad.1647498015.git.sandipan.das@amd.com>
- <YjMfe7KyKp+a3Jkp@hirez.programming.kicks-ass.net>
- <ea39ef1d-44a3-478d-f6fb-2120be67e745@amd.com>
+        Fri, 18 Mar 2022 10:29:39 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC7BD108F;
+        Fri, 18 Mar 2022 07:28:19 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5774361A05;
+        Fri, 18 Mar 2022 14:28:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FA08C340E8;
+        Fri, 18 Mar 2022 14:28:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1647613698;
+        bh=EfCCn6hH8JAtyHAXhm+QKRSYBOclLCPgWjSBNZ1qSFQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lZtbMiymJvCoKKwO5Rz06UaDHKL2bxrReiCfZIM04OGHST93Rj205QI1ppxZ02Lkw
+         cJAQUq0i1ch0TM5bj9eNzPXh2nSM9cCT5KJ4+32GRRKG/ipt4eAkXGNCgISJ371qBO
+         dfi/+Ik+DOH+D8Pud+OSiFWkUiaNNjYKVqsbIEg+KMJ3FZH90QFli0Ytz11Yeco5rB
+         DQhBvvx3vuCPUsG+oYIgeg4x4ZNPyDagKDidkY1ZZYwaop3DUIzCVIUnlEK3wQndAK
+         kiGI0KaImI+/rj5j9Jygxm3MilksbeMK2rIP4tapZhRx4NyyMwF+rlKXLgqTesIxa1
+         mBy2ZfdfdFy7g==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 6A96340407; Fri, 18 Mar 2022 11:28:16 -0300 (-03)
+Date:   Fri, 18 Mar 2022 11:28:16 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>,
+        Caleb Biggers <caleb.biggers@intel.com>
+Subject: Re: [PATCH] perf parse-events: Ignore case in topdown.slots check
+Message-ID: <YjSXAFDJDbrPao6d@kernel.org>
+References: <20220317224309.543736-1-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ea39ef1d-44a3-478d-f6fb-2120be67e745@amd.com>
+In-Reply-To: <20220317224309.543736-1-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Mar 18, 2022 at 01:32:04PM +0530, Sandipan Das wrote:
-> On 3/17/2022 5:16 PM, Peter Zijlstra wrote:
+Em Thu, Mar 17, 2022 at 03:43:09PM -0700, Ian Rogers escreveu:
+> An issue with icelakex metrics:
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/pmu-events/arch/x86/icelakex/icx-metrics.json?h=perf/core&id=65eab2bc7dab326ee892ec5a4c749470b368b51a#n48
+> That causes the slots not to be first.
 
-> > First and foremost, *please* tell me your shiny new hardware fixed the
-> > terrible behaviour that requires the wait_on_overflow hacks in
-> > amd_pmu_disable_all().
+Thanks, applied.
+
+- Arnaldo
+
+ 
+> Fixes: 94dbfd6781a0 ("perf parse-events: Architecture specific leader override")
+> Reported-by: Caleb Biggers <caleb.biggers@intel.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/arch/x86/util/evlist.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Unfortunately, that workaround is still required.
+> diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
+> index f924246eff78..8d9b55959256 100644
+> --- a/tools/perf/arch/x86/util/evlist.c
+> +++ b/tools/perf/arch/x86/util/evlist.c
+> @@ -29,7 +29,7 @@ struct evsel *arch_evlist__leader(struct list_head *list)
+>  
+>  	__evlist__for_each_entry(list, evsel) {
+>  		if (evsel->pmu_name && !strcmp(evsel->pmu_name, "cpu") &&
+> -			evsel->name && strstr(evsel->name, "slots"))
+> +			evsel->name && strcasestr(evsel->name, "slots"))
+>  			return evsel;
+>  	}
+>  	return first;
+> -- 
+> 2.35.1.894.gb6a874cedc-goog
 
-So much sadness :-(
+-- 
+
+- Arnaldo
