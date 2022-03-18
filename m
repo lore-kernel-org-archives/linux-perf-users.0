@@ -2,174 +2,176 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAFFC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Mar 2022 09:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DAFC433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Mar 2022 10:42:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234555AbiCRJxi (ORCPT
+        id S233035AbiCRKns (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 18 Mar 2022 05:53:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43460 "EHLO
+        Fri, 18 Mar 2022 06:43:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229599AbiCRJxh (ORCPT
+        with ESMTP id S235609AbiCRKmt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 18 Mar 2022 05:53:37 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 924241788D2;
-        Fri, 18 Mar 2022 02:52:19 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id d10so15908084eje.10;
-        Fri, 18 Mar 2022 02:52:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=zWNux0d8POfNG97Taca8iGl1l4uzk03jUQlRNyo67CQ=;
-        b=b1LNRPwESqyEf0eMzmy3b3ykVpnpQJdetegCKLWV4vKQuZ/X9rJTS5AkiwD1Mjk9WM
-         2xZxqdZFTA4pMm/D85q2P+78buIUpBPUsGhmLBeSBelnuXTglcm8GWA7P5B15ZN2ZnO+
-         jSa3BeKFw6qbO+P0iLFW+L4hf4HzbTX+VlIg7q2pm+gVm+aSC3VAos7reLFJNcp09li1
-         TDeLVThzTbjabm91NjRdlTbyE7shALYQLa8aA3MlbE8HmU5kVsb45cjYZDO/48lkTnNq
-         NXz6McFBVLuPZCB69Eynt7OgZZ6pmdgiH2NoG3MyX9Rn2GJIxfDSblrsISr9alrdlirT
-         M+NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=zWNux0d8POfNG97Taca8iGl1l4uzk03jUQlRNyo67CQ=;
-        b=BaQnVcmVGIkHphvMRgtlGrg8jMsCQmVXYNVtWpa0oeZyMLRYYPUKD1wpVvfTpMDgbq
-         TLE7J/WVrMAf6810lZU3ZKx0Yf89hkoOlMVi6xWkvi8ZfWST4T846UEcCJUQM0vStr6V
-         jfZF1ufP76UNF9jFuV1wWpAdFxjD0BLkxuN3iIRbp++IYWvGucYBtK/WwwQlPMNLvFyc
-         o43eQCmElud8YgzkUbOPdbly4+k2e/wL0TQW/EfduF8kQxKG4k0CSgEzVrMbislCVnou
-         BCP0v9C+QAC1zUW043A0Agk0zrG1PWBLSD/u7gESE1IIQp1lqLZosZyU9f3hCwhdKaCG
-         9k5Q==
-X-Gm-Message-State: AOAM531wVuZMSXISJIxLRREXi5JGvDM2bde2njJnLq2fTo+vTi/LmXSp
-        sbNYT4i/aZ57AJsFQXfnQxY=
-X-Google-Smtp-Source: ABdhPJyXtWQnFcw50h3pDI3HF2vvgYkKWIL9vGM7MByOChHkFHfrSRGSAReUuM/+M9LyMYZon4/nJA==
-X-Received: by 2002:a17:906:f857:b0:6df:ae2d:73a0 with SMTP id ks23-20020a170906f85700b006dfae2d73a0mr3827763ejb.614.1647597137954;
-        Fri, 18 Mar 2022 02:52:17 -0700 (PDT)
-Received: from [192.168.1.10] ([95.87.219.163])
-        by smtp.gmail.com with ESMTPSA id d23-20020aa7d5d7000000b00418f7b2f1dbsm2402319eds.71.2022.03.18.02.52.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Mar 2022 02:52:17 -0700 (PDT)
-Message-ID: <eae0e1d8-ef40-b2eb-b08a-e233a4183373@gmail.com>
-Date:   Fri, 18 Mar 2022 11:52:16 +0200
+        Fri, 18 Mar 2022 06:42:49 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77D7E2E5189;
+        Fri, 18 Mar 2022 03:40:36 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id DE2A11F390;
+        Fri, 18 Mar 2022 10:40:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1647600034; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=eAuiFb+OsFON4yFjKLQAFK1dNFxRsTZb0OnrTTRn9u0=;
+        b=C32sGETYRNnx5Wr8LQxLIcbYrT0DnLCxlclsrJfisEggI2MYD0T8o8/CrHNpZcBjoK1VdT
+        IuD1+udT+EDwEVmHcfnZNIpGNuSCmV63GQW/SnEpa40zWyu7spaviICSz3zugBpPoOCc2r
+        PPqFl/cthhqlzZ1HPJOrpBbQGOKDa8k=
+Received: from suse.cz (unknown [10.100.224.162])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 46B10A3B8A;
+        Fri, 18 Mar 2022 10:40:34 +0000 (UTC)
+Date:   Fri, 18 Mar 2022 11:40:31 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Lecopzer Chen <lecopzer.chen@mediatek.com>
+Cc:     linux-kernel@vger.kernel.org, acme@kernel.org,
+        akpm@linux-foundation.org, alexander.shishkin@linux.intel.com,
+        catalin.marinas@arm.com, davem@davemloft.net, jolsa@redhat.com,
+        jthierry@redhat.com, keescook@chromium.org, kernelfans@gmail.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        masahiroy@kernel.org, matthias.bgg@gmail.com, maz@kernel.org,
+        mcgrof@kernel.org, mingo@redhat.com, namhyung@kernel.org,
+        nixiaoming@huawei.com, peterz@infradead.org,
+        sparclinux@vger.kernel.org, sumit.garg@linaro.org,
+        wangqing@vivo.com, will@kernel.org, yj.chiang@mediatek.com
+Subject: Re: [PATCH v2 4/5] kernel/watchdog: Adapt the watchdog_hld interface
+ for async model
+Message-ID: <YjRhnxg3L3cHUU/l@alley>
+References: <20220307154729.13477-1-lecopzer.chen@mediatek.com>
+ <20220307154729.13477-5-lecopzer.chen@mediatek.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [RFC PATCH 3/3] trace-cruncher: perf example
-Content-Language: en-US
-To:     "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>,
-        acme@kernel.org, olsajiri@gmail.com, irogers@google.com
-Cc:     rostedt@goodmis.org, linux-trace-devel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-References: <20220224163711.185308-1-tz.stoyanov@gmail.com>
- <20220224163711.185308-4-tz.stoyanov@gmail.com>
-From:   Yordan Karadzhov <y.karadz@gmail.com>
-In-Reply-To: <20220224163711.185308-4-tz.stoyanov@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220307154729.13477-5-lecopzer.chen@mediatek.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ceco,
+On Mon 2022-03-07 23:47:28, Lecopzer Chen wrote:
+> When lockup_detector_init()->watchdog_nmi_probe(), PMU may be not ready
+> yet. E.g. on arm64, PMU is not ready until
+> device_initcall(armv8_pmu_driver_init).  And it is deeply integrated
+> with the driver model and cpuhp. Hence it is hard to push this
+> initialization before smp_init().
 
-Thanks a lot!
+The above is clear.
 
-I really like the idea of have a perf sub-module in trace-cruncher and I think your RFC patch-set is a great starting point.
-
-Let's start with some discussion of the structure of the APIs that this module has to contain. See my comment bellow.
-
-On 24.02.22 г. 18:37 ч., Tzvetomir Stoyanov (VMware) wrote:
-> Example python program for using trace-cruncher to collect performance
-> statistics of a given process.
+> But it is easy to take an opposite approach by enabling watchdog_hld to
+> get the capability of PMU async.
 > 
-> Signed-off-by: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
-> ---
->   examples/perf_sampling.py | 51 +++++++++++++++++++++++++++++++++++++++
->   1 file changed, 51 insertions(+)
->   create mode 100755 examples/perf_sampling.py
-> 
-> diff --git a/examples/perf_sampling.py b/examples/perf_sampling.py
-> new file mode 100755
-> index 0000000..1b57f39
-> --- /dev/null
-> +++ b/examples/perf_sampling.py
-> @@ -0,0 +1,51 @@
-> +#!/usr/bin/env python3
+> The async model is achieved by expanding watchdog_nmi_probe() with
+> -EBUSY, and a re-initializing work_struct which waits on a wait_queue_head.
+
+These two paragraphs are a bit confusing to me. It might be just a
+problem with translation. I am not a native speaker. Anyway, I wonder
+if the following is more clear:
+
+<proposal>
+But it is easy to take an opposite approach and try to initialize
+the watchdog once again later.
+
+The delayed probe is called using workqueues. It need to allocate
+memory and must be proceed in a normal context.
+
+The delayed probe is queued only when the early one returns -EBUSY.
+It is the return code returned when PMU is not ready yet.
+</proposal>
+
+> --- a/kernel/watchdog.c
+> +++ b/kernel/watchdog.c
+> @@ -103,7 +103,11 @@ void __weak watchdog_nmi_disable(unsigned int cpu)
+>  	hardlockup_detector_perf_disable();
+>  }
+>  
+> -/* Return 0, if a NMI watchdog is available. Error code otherwise */
+> +/*
+> + * Arch specific API. Return 0, if a NMI watchdog is available. -EBUSY if not
+> + * ready, and arch code should wake up hld_detector_wait when ready. Other
+> + * negative value if not support.
+> + */
+
+I wonder if the following is slightly more clear:
+
+ /*
+ * Arch specific API.
+ *
+ * Return 0 when NMI watchdog is available, negative value otherwise.
+ * The error code -EBUSY is special. It means that a deferred probe
+ * might succeed later.
+ */
+
+>  int __weak __init watchdog_nmi_probe(void)
+>  {
+>  	return hardlockup_detector_perf_init();
+> @@ -839,16 +843,70 @@ static void __init watchdog_sysctl_init(void)
+>  #define watchdog_sysctl_init() do { } while (0)
+>  #endif /* CONFIG_SYSCTL */
+>  
+> +static void lockup_detector_delay_init(struct work_struct *work);
+> +bool lockup_detector_pending_init __initdata;
 > +
-> +"""
-> +SPDX-License-Identifier: CC-BY-4.0
+> +struct wait_queue_head hld_detector_wait __initdata =
+> +		__WAIT_QUEUE_HEAD_INITIALIZER(hld_detector_wait);
 > +
-> +Copyright 2022 VMware Inc, Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
-> +"""
+> +static struct work_struct detector_work __initdata =
+> +		__WORK_INITIALIZER(detector_work, lockup_detector_delay_init);
 > +
-> +import sys
-> +import time
-> +import signal
+> +static void __init lockup_detector_delay_init(struct work_struct *work)
+> +{
+> +	int ret;
 > +
-> +import tracecruncher.perfpy as perf
+> +	wait_event(hld_detector_wait,
+> +			lockup_detector_pending_init == false);
 > +
-> +def SortKey(sample):
-> +    return sample.time()
+> +	/*
+> +	 * Here, we know the PMU should be ready, so set pending to true to
+> +	 * inform watchdog_nmi_probe() that it shouldn't return -EBUSY again.
+> +	 */
+> +	lockup_detector_pending_init = true;
+
+This does not make sense to me. We are here only when:
+
+   1. lockup_detector_init() queued this work.
+
+   2. Someone cleared @lockup_detector_pending_init and woke the
+      worker via wait_queue. IT might be either PMU init code
+      or the late lockup_detector_check().
+
+watchdog_nmi_probe() might still return -EBUSY when PMU init failed.
+
+If you wanted to try the delayed probe once again (3rd attempt) from
+lockup_detector_check(), you would need to queue the work once again.
+But you need to be sure that lockup_detector_check() was not called
+yet. Otherwise, the 2nd work might wait forewer.
+
+IMHO, it is not worth the complexity.
+
+> +	ret = watchdog_nmi_probe();
+> +	if (ret) {
+> +		pr_info("Delayed init of the lockup detector failed: %d\n", ret);
+> +		pr_info("Perf NMI watchdog permanently disabled\n");
+> +		return;
+> +	}
 > +
-> +def perf_stop(sig, frame):
-> +    # Stop collection of performance traces
-> +    p.stop()
-> +
-> +if __name__ == "__main__":
-> +    if len(sys.argv) < 2:
-> +        print('Usage: ', sys.argv[0], ' [PROCESS]')
-> +        sys.exit(1)
-> +
-> +    # Create perf sample object for the given process
-> +    p = perf.sample(pid=int(sys.argv[1]), freq=99)
+> +	nmi_watchdog_available = true;
+> +	lockup_detector_setup();
+> +	lockup_detector_pending_init = false;
+> +}
 
-If you initiate the sampling using the PID of the process, you are limited to tracing only processes that are already 
-running. Hence, there will be no way to trace the very beginning of the process you are interested in. Let's keep the 
-current way of initializing (via PID), but make it optional and have a second option that will be to provide a process 
-name and arguments to be started internally (using fork–>exec).
+Otherwise, it looks good to me.
 
-Also we need a better name for this API. Something that is more coherent with the naming of the equivalent ftracepy APIs.
-
-> +    signal.signal(signal.SIGINT, perf_stop)
-
-I would prefer to have the signal handling done internally inside the C code and do not bother the Python user with this.
-
-> +    print('Start collecting performance data, press ctrl+c  to stop')
-> +    # Start collecting performance traces
-> +    p.start()
-
-I wonder what is the reason for having the constructor of the perf instance above and 'start()' as separate APIs? Do you 
-have in mind some use case in which we have to create the instance, do something important and only then start()?
-
-Also in the current implementation, the only way to stop the sampling is 'ctrl+c'. You have the 'stop()' API but the 
-user has no way of really calling it, since the execution is blocked inside 'start()' which will never return if the 
-sampling is running.
-
-But if the sampling runs on its own (started using fork->exec) then the stop() API will be indeed useful. Note that in 
-this case you will have to also provide 'destroy' method for the 'perf' object, because we have to guaranty that the 
-sampling will stop when the execution of the user script exits.
-
-cheers,
-Yordan
-
-> +    # wait for ctrl+c
-> +    signal.pause()
-> +    # Get collected samples
-> +    samples = p.get_samples()
-> +    # Sort the list based on the timestamp
-> +    samples.sort(key=SortKey)
-> +    time = 0
-> +    ip_count = 0
-> +    for s in samples:
-> +        # Print PID, TID, time and trace depth of each sample
-> +        if time == 0:
-> +            time = s.time()
-> +        print("{0} {1} ({2}), +{3}:".format(s.ip(), s.tid(), s.tid_comm(), s.time() - time))
-> +        ips = s.stack()
-> +        ip_count += len(ips)
-> +        for ip in reversed(ips):
-> +            # Print stack trace of the sample
-> +            print("\t{0}".format(ip))
-> +    print("\nCollected {0} samples, {1} ip traces".format(len(samples), ip_count))
-> \ No newline at end of file
+Best Regards,
+Petr
