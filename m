@@ -2,327 +2,596 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50AD8C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Mar 2022 08:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A260CC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Mar 2022 09:12:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233708AbiCRIUo (ORCPT
+        id S234263AbiCRJNl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 18 Mar 2022 04:20:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37644 "EHLO
+        Fri, 18 Mar 2022 05:13:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230352AbiCRIUm (ORCPT
+        with ESMTP id S232562AbiCRJNl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 18 Mar 2022 04:20:42 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2056.outbound.protection.outlook.com [40.107.93.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03A78222A6;
-        Fri, 18 Mar 2022 01:19:24 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W+KYv7SbbfJMQf8YGauhstYUwiuY+0adUoCZmksNeyad1YZ1pMcvz6BOKAgfrQw1Tsu/N9ESAeJNm/hIXhLAg16Dz/eLdkYDKqC9IhUTj/N4FvXa3oNqc1XHJ0JAsdJOFaTxPyOe2rjP4o6H7gzTBU+8NTVuL0qq0DjPwiKIKV41Q8F7oq0faRkBdmXnWlDYpjKnld6Zhb+ugQjRDmItUv9u815tGW/RVbikvfudoiqdiEchsM89bqPF3EIpoWDOHv8cNlVICGI7wuPT3sAtvNxufpsN6gFM0/yCMiQU8/gBv+d9uCA/YrrTgcMsCuNWlpvg6cZDwBBqX1wTeB+w+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QA8HFQcA0NfKOVxdL7DEUW4GazqF+U1l66ujgH//YVo=;
- b=C0sVrOp40fFenwmYD0Tqjmfe8dKDH4Lw8TKzVs+2q1MydRYQA+pqDhy29g/rE19CV/DhEJpOw8pLUyQkJRpqa1/S0eCPooXpybdQUo9QG/4pbB8pp4SEaq3xp9Xi498hSw3Sfhk5Ol/7PAQxQLtkx3iAM33tH4JtiMae0eUkLWgI/rlhMwo9Wi1lkbI9nF4CXI0E9HKGc0HQaw/tvPMfvaJNSdfXywGS4QaZvbulKgETFn6JWoEpin1kR8znLLMmhwTDAFAeW0DFGn6i8xd733h2vgM3N51d64wwWU/yCP/lZP1cLjNbWvyPBd56MLHKjCdKMt2vYs2G3Y9a1DnZhw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QA8HFQcA0NfKOVxdL7DEUW4GazqF+U1l66ujgH//YVo=;
- b=rcWcfGJD6LV0bDHSDNSO2akHjmMd0RAwmJHLf/IsMxZ8AsPHTRvCIXM74wiUxzVrrAyQNq/u3ljmIUUMMgtcJMmFqAC5eGQOgXYAcjhPiby9+HdA+Hg2mM2uaDpcxp+/jsgf0zchdPbOCdddqbaMGlPZF1F64OPpgCtqQdOWpiE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BN6PR1201MB0178.namprd12.prod.outlook.com
- (2603:10b6:405:55::20) by DM4PR12MB5961.namprd12.prod.outlook.com
- (2603:10b6:8:68::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5081.14; Fri, 18 Mar
- 2022 08:19:22 +0000
-Received: from BN6PR1201MB0178.namprd12.prod.outlook.com
- ([fe80::944e:aab8:facf:fd8]) by BN6PR1201MB0178.namprd12.prod.outlook.com
- ([fe80::944e:aab8:facf:fd8%8]) with mapi id 15.20.5081.018; Fri, 18 Mar 2022
- 08:19:21 +0000
-Message-ID: <8b8c0949-7677-94dc-4a8f-9fcf1b4d2f2d@amd.com>
-Date:   Fri, 18 Mar 2022 13:48:58 +0530
+        Fri, 18 Mar 2022 05:13:41 -0400
+Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BEE12C5433;
+        Fri, 18 Mar 2022 02:12:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1647594742; x=1679130742;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Me0Fezbbe+gbJZhEitD9VhzLftBh+k3c91S9F31AJ2Y=;
+  b=X2NF+GQjBqiwg3F0JndbztgTVS1OLdGyHiJAyh8T6QgQWGD388uNIwUJ
+   L5OyZphz1xWBk452tHuQa8gVHv89ifGDvviCK4Jd1wXleuP4L9h09M1D9
+   8dpCFrQzlD/YwkHsQqNStWVOfI6C9oCciNrGt9d3DHgdpA67LauC2CeNA
+   9SDunID1h5oR/2dvUyfKNnTmFw+7gkxM0vvVj4hA0HEtIzv1EAPmqyEW2
+   puorPU0AbE2k/lw00mvFiXUOGomhIoGcre8o75pE04Imz7rs64NA4Y/oJ
+   I0qpcYDXKQLbo38N4PDacIO36W/sQE27U8WmIgc9Px+K9LFLBDb1jaYgL
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10289"; a="317816728"
+X-IronPort-AV: E=Sophos;i="5.90,191,1643702400"; 
+   d="scan'208";a="317816728"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2022 02:12:21 -0700
+X-IronPort-AV: E=Sophos;i="5.90,191,1643702400"; 
+   d="scan'208";a="558337101"
+Received: from xingzhen-mobl.ccr.corp.intel.com (HELO [10.255.31.171]) ([10.255.31.171])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2022 02:12:17 -0700
+Message-ID: <07278c8f-e8af-d042-a0e2-7ba8a510ef78@linux.intel.com>
+Date:   Fri, 18 Mar 2022 17:12:15 +0800
+MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.7.0
-Subject: Re: [PATCH 6/7] perf/x86/amd/core: Add PerfMonV2 overflow handling
+Subject: Re: [PATCH 2/8] perf vendor events: Update events for Elkhartlake
 Content-Language: en-US
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        x86@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com,
-        acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        jolsa@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        pbonzini@redhat.com, jmattson@google.com, like.xu.linux@gmail.com,
-        eranian@google.com, ananth.narayan@amd.com, ravi.bangoria@amd.com,
-        santosh.shukla@amd.com
-References: <cover.1647498015.git.sandipan.das@amd.com>
- <7d43b4ba8a7c3c0833495f3fabfcfc6df8db3732.1647498015.git.sandipan.das@amd.com>
- <YjMjNvrGa7ZK/x3H@hirez.programming.kicks-ass.net>
-From:   Sandipan Das <sandipan.das@amd.com>
-In-Reply-To: <YjMjNvrGa7ZK/x3H@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
+To:     Ian Rogers <irogers@google.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>
+References: <20220317182858.484474-1-irogers@google.com>
+ <20220317182858.484474-2-irogers@google.com>
+From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
+In-Reply-To: <20220317182858.484474-2-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BM1PR01CA0096.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00::12)
- To BN6PR1201MB0178.namprd12.prod.outlook.com (2603:10b6:405:55::20)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d396611f-0649-4d16-c02b-08da08b800e5
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5961:EE_
-X-Microsoft-Antispam-PRVS: <DM4PR12MB59619B3BD892DD11609198998B139@DM4PR12MB5961.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: TxszL/xIvxkkY6KQq0EtUqYTvFsw1y1CHu5/hTUeL7xPsRYHmxHICYuOfjJU1vBPcknBnVS5RW00sndmaH94NWiAEAwyBoERgdj4cWak2065j1weql3Onl4lhEiEi2cHfi3o10hWYInEjiKcIL99pQQEbg0s3iQELoFv7zNoCWKndaOI6ALCifImuI5eCctyhhNYhGOlQGNjjQMvfg5WGvX3hszJ0m4mj6ZFmHS05DrcyLjEmoD3takKWdPIrzqwdzTrGI7sFwBYUp1BkC8QEaO2G0TvUYYckiP7zED/7i4e3gvBiJ2h7VXncnuTdJGacmgh2z6r3l4MlGC90xT9zHb+mR6doJXPsMqQKAjDulbaqeii1z8iPoZf1p8WENU8myHOwRv0baWR8lgPWx69A+HIUNWwxCYYCxAzP4K+Lm8pxA937IVqXNaEOe6U7BHQJCXhOrD7oh7qPwP6a3763MgtNOol1rHBXNg5e+O2EvXjzgx7FFQOpGGDM/9eBpqjeBCPrghOgxiEqy9lkFDjvofNqxWAStXqtFsjc/D8doTxwlPCmzO+sH/zbOM3l7JrZsbxhp7/vShhqbBk5aOub1Bd/etof9INd/Tp3R/a0hAZHM3YtHXFAOOZaYkK1O9H4Y+IJfqyUcOKmRya0ywNadF7nLCbM6MVI2lY0/g81F1LX254kmJ98lYPQBfgBioiO0id1X09V6XVl0/YNL2wcsq0ZcaNX+ow0PvbsgSpE9I=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR1201MB0178.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(66946007)(86362001)(66556008)(4326008)(66476007)(8676002)(83380400001)(2906002)(5660300002)(2616005)(186003)(26005)(6486002)(44832011)(36756003)(6916009)(7416002)(38100700002)(31686004)(8936002)(6506007)(508600001)(6512007)(53546011)(316002)(31696002)(6666004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bVBYTkFKa2Y0cmpoaXJOMWQ1T01aQ2JUK1VtS043NEpQU0V6VXlDQ3hsaU94?=
- =?utf-8?B?RUxtT0lZRUpuVmZvNmdHdXd6V2hNbEpQdnhHcm92M0ZLeWNlWjZMRDAyczZT?=
- =?utf-8?B?dmZLcU5WUkViR1ljdWsvZmxiT2JsbXIxemx3M2NrRDlrejFYY0VEblZTVllU?=
- =?utf-8?B?M3dLYzNvUU9GSnc4UWRKWW9McWI2N0dVQUFHQnRSVGVJbDljRi9PTHJkcXlm?=
- =?utf-8?B?NWlTZ1Z4M21rNmJEWmVsMmhoREREaVVWUnB2Rm01dkFVYmZrT3JGOHkwL2pZ?=
- =?utf-8?B?ZFNuWWd3cDVVYXd0WlVxVC9HQUlXbjdZMnd3V3pyQnV0UTBYWVYwWlVSdUda?=
- =?utf-8?B?djd1K1RHRG5nVDQrTGtsODhMeTFPWWp6V3RjSWE5aUkwVkErNzNSVTVUci95?=
- =?utf-8?B?Tmh4dGRNZUl0VG1OVWovcWlsUnl2dDhsSWhXdEJYRVBTTUtDdEppV095ZEVh?=
- =?utf-8?B?blV6RHJYQ1BHNXNFZXF0UThPSDdYZ1BhS05GMGZIOUR4SkVuMDMzaTlMRWdI?=
- =?utf-8?B?dDROTGlzOGc3NFBwakNFYWVadDcrRHBqSXB0bXVnNFE2SWZvWTJWbCtSSlJ3?=
- =?utf-8?B?bEU3MjNmV1NaYzhaMlR6azdvOUZQUmczN3EwQk9sbnNzRlRvVUdzWWdUM0Ry?=
- =?utf-8?B?VStZNmRuMzdwVTl2T0swcHBhMkF0b0M2bVdoS3YwTnpXZ0phd1Q5QWNYREF6?=
- =?utf-8?B?aTJZS2tlTlM5cUNDK1ZpVjZNOG5CNGtEa0tRaSt1eTFVekhOcGppU1dIZ0Jn?=
- =?utf-8?B?dmJuKzVaRFltQmpRaTdESnovSjd0RzZKbzVPR053dDBMOHZmWFlOa0hOU0g1?=
- =?utf-8?B?SzZ6c3B2NjNOaC8yYnR5aDloREVsd2dhYzVNTVhrZ2xjVTlXZThlT3dNaVd3?=
- =?utf-8?B?K08raTRvb2R6c2VaR0tBemZIQk4wZTVNN0Rmb2JVb2V0cy9lYmEvTDIvRjBU?=
- =?utf-8?B?M0pyclJmQ1VtbXN5ZXpZdHJuenRsOW01enh1MXhnbG83Q2NTYlYrVC9YNXZy?=
- =?utf-8?B?MG1QTXh1SWJYZ0tXMHFiVmI3bDlpRXJSVWEzTHlwbDdyeG9idnEvZHBJa2JY?=
- =?utf-8?B?c2hrbHRTUkUrSThxY203OVBqZzdaQUdvU05UdlJNZ3BPZ1k4T1N1MU4yMzJL?=
- =?utf-8?B?Zi9RcHpPMDRnMWw5SzRtTTlwR1RteVpGcDd3SHYra3lhaGRpNFd2bUVRdlVU?=
- =?utf-8?B?b0VrcFFLSkl1eHVIV28zdng1b3ZaVWViRTA2czc1L1R4V25ONWV2Rk5Qdk1Z?=
- =?utf-8?B?N2ljRldkMU5odEFNRXRjcWJwN2tXVGc5YUNjMkExZUl4UzJGdlQ2OHA0TXg5?=
- =?utf-8?B?aGo2VmdVU3ZldmlMbG9TNjUvK3BUZjc2b2oxWko0emt2M2YxUnFnOGo1c21t?=
- =?utf-8?B?RVdtdzNMT2ZOdG9lSjhRQXI3Ni9kMW4yb2hWQ1l2QW1VSUFaeGpLZyszeTh0?=
- =?utf-8?B?NmlndXdDcFYyNzY2Y0hnWG9vVUJxVVdkMHNkdjlXTUJOZk12WHhmTHkvQmZD?=
- =?utf-8?B?b2o3OVRWSEZncU5YWXY3Y0krSU1YcUp1SzJCbjlicExiaTVDd3E5L2V1NjlZ?=
- =?utf-8?B?UjJlSVIyYi9jV21xdm1heFlxM1hUc1dJVE5HQ2NoU3UvRkFkSW5TWnhOc3Jp?=
- =?utf-8?B?MGpZbW5MQ0swWFUwY2VOam0wamFuQ2ZzT28rUXlkenRZcUVSa1grcEluRGo0?=
- =?utf-8?B?WFExUXh6a1JpVmptUDlEZFhQa2FzWWdaUzNHQU1iUUJYdjRiSllYZ2NwbzBM?=
- =?utf-8?B?eWVsQlA3MENQa1lBVlRBUkdTU09qanMra2trUlJKVjdIcUp1MGRWQnMzL1ZW?=
- =?utf-8?B?N0g4MXpDTmRDUUlvQXFKaHg5RkprZWFvL052NHFaRlR1V3kzSG85RkttTExz?=
- =?utf-8?B?aW40NmJJSktVYjc4dldlWXppV2NwdkVheWVCSTYrT2hPNHNmVTA4bFFLRGQv?=
- =?utf-8?Q?rki+GLzj7LkNkseLF7s/cUPqqk0tnVr7?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d396611f-0649-4d16-c02b-08da08b800e5
-X-MS-Exchange-CrossTenant-AuthSource: BN6PR1201MB0178.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2022 08:19:21.1376
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XV6PrcitWEojDeoY92NV4N38cJPRllnimYEjml5z1F+aTP+r9RfGk2adxZC7A/ZI0vVASDSiM4as7DvF/lOy0A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5961
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
-On 3/17/2022 5:31 PM, Peter Zijlstra wrote:
-> On Thu, Mar 17, 2022 at 11:58:35AM +0530, Sandipan Das wrote:
-> 
->> +static inline u64 amd_pmu_get_global_overflow(void)
->> +{
->> +	u64 status;
->> +
->> +	/* PerfCntrGlobalStatus is read-only */
->> +	rdmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS, status);
->> +
->> +	return status & amd_pmu_global_cntr_mask;
->> +}
->> +
->> +static inline void amd_pmu_ack_global_overflow(u64 status)
->> +{
->> +	/*
->> +	 * PerfCntrGlobalStatus is read-only but an overflow acknowledgment
->> +	 * mechanism exists; writing 1 to a bit in PerfCntrGlobalStatusClr
->> +	 * clears the same bit in PerfCntrGlobalStatus
->> +	 */
->> +
->> +	/* Only allow modifications to PerfCntrGlobalStatus.PerfCntrOvfl */
->> +	status &= amd_pmu_global_cntr_mask;
->> +	wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR, status);
->> +}
->> +
->> +static bool amd_pmu_legacy_has_overflow(int idx)
->> +{
->> +	u64 counter;
->> +
->> +	rdmsrl(x86_pmu_event_addr(idx), counter);
->> +
->> +	return !(counter & BIT_ULL(x86_pmu.cntval_bits - 1));
->> +}
->> +
->> +static bool amd_pmu_global_has_overflow(int idx)
->> +{
->> +	return amd_pmu_get_global_overflow() & BIT_ULL(idx);
->> +}
->> +
->> +DEFINE_STATIC_CALL(amd_pmu_has_overflow, amd_pmu_legacy_has_overflow);
->> +
->>  /*
->>   * When a PMC counter overflows, an NMI is used to process the event and
->>   * reset the counter. NMI latency can result in the counter being updated
->> @@ -613,7 +653,6 @@ static inline void amd_pmu_set_global_ctl(u64 ctl)
->>  static void amd_pmu_wait_on_overflow(int idx)
->>  {
->>  	unsigned int i;
->> -	u64 counter;
->>  
->>  	/*
->>  	 * Wait for the counter to be reset if it has overflowed. This loop
->> @@ -621,8 +660,7 @@ static void amd_pmu_wait_on_overflow(int idx)
->>  	 * forever...
->>  	 */
->>  	for (i = 0; i < OVERFLOW_WAIT_COUNT; i++) {
->> -		rdmsrl(x86_pmu_event_addr(idx), counter);
->> -		if (counter & (1ULL << (x86_pmu.cntval_bits - 1)))
->> +		if (!static_call(amd_pmu_has_overflow)(idx))
->>  			break;
->>  
->>  		/* Might be in IRQ context, so can't sleep */
-> 
-> This scares me... please tell me you fixed that mess.
-> 
->> @@ -718,6 +756,83 @@ static void amd_pmu_enable_event(struct perf_event *event)
->>  	static_call(amd_pmu_enable_event)(event);
->>  }
->>  
->> +static int amd_pmu_global_handle_irq(struct pt_regs *regs)
->> +{
->> +	struct perf_sample_data data;
->> +	struct cpu_hw_events *cpuc;
->> +	struct hw_perf_event *hwc;
->> +	struct perf_event *event;
->> +	u64 val, status, mask;
->> +	int handled = 0, idx;
->> +
->> +	status = amd_pmu_get_global_overflow();
->> +
->> +	/* Check if any overflows are pending */
->> +	if (!status)
->> +		return 0;
->> +
->> +	/* Stop counting */
->> +	amd_pmu_global_disable_all();
-> 
-> 
-> This seems weird to me, I'd first disable it, then read status. MSR
-> access is expensive, you want to shut down the PMU asap.
-> 
-> Also, this is written like PMI would not be the primary NMI source,
-> which seems somewhat unlikely.
-> 
 
-Yes, PMI is the primary NMI source. Will fix this.
-
->> +
->> +	cpuc = this_cpu_ptr(&cpu_hw_events);
->> +
->> +	/*
->> +	 * Some chipsets need to unmask the LVTPC in a particular spot
->> +	 * inside the nmi handler.  As a result, the unmasking was
->> +	 * pushed into all the nmi handlers.
->> +	 *
->> +	 * This generic handler doesn't seem to have any issues where
->> +	 * the unmasking occurs so it was left at the top.
->> +	 *
->> +	 * N.B. Taken from x86_pmu_handle_irq()
->> +	 */
+On 3/18/2022 2:28 AM, Ian Rogers wrote:
+> The change:
+> https://github.com/intel/event-converter-for-linux-perf/commit/fc680410402e394eed6a1ebd909c9f649d3ed3ef
+> moved certain "other" type of events in to the pipeline topic. Update the
+> perf json files for this change.
 > 
-> Please write an AMD specific comment here. Note how 'recent' Intel chips
-> ended up pushing this to the end of the handler. Verify with your
-> hardware team where they want this and write as much of the rationale as
-> you're allowed to share in the comment.
+> Signed-off-by: Ian Rogers <irogers@google.com>
+
+Reviewed-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+
+> ---
+>   .../arch/x86/elkhartlake/other.json           | 241 ------------------
+>   .../arch/x86/elkhartlake/pipeline.json        | 241 ++++++++++++++++++
+>   2 files changed, 241 insertions(+), 241 deletions(-)
 > 
+> diff --git a/tools/perf/pmu-events/arch/x86/elkhartlake/other.json b/tools/perf/pmu-events/arch/x86/elkhartlake/other.json
+> index 627691404155..de55b199ba79 100644
+> --- a/tools/perf/pmu-events/arch/x86/elkhartlake/other.json
+> +++ b/tools/perf/pmu-events/arch/x86/elkhartlake/other.json
+> @@ -179,246 +179,5 @@
+>           "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
+>           "SampleAfterValue": "100003",
+>           "UMask": "0x1"
+> -    },
+> -    {
+> -        "BriefDescription": "Counts the total number of issue slots that were not consumed by the backend because allocation is stalled due to a mispredicted jump or a machine clear.",
+> -        "CollectPEBSRecord": "2",
+> -        "Counter": "0,1,2,3",
+> -        "EventCode": "0x73",
+> -        "EventName": "TOPDOWN_BAD_SPECULATION.ALL",
+> -        "PDIR_COUNTER": "na",
+> -        "PEBScounters": "0,1,2,3",
+> -        "PublicDescription": "Counts the total number of issue slots that were not consumed by the backend because allocation is stalled due to a mispredicted jump or a machine clear. Only issue slots wasted due to fast nukes such as memory ordering nukes are counted. Other nukes are not accounted for. Counts all issue slots blocked during this recovery window including relevant microcode flows and while uops are not yet available in the instruction queue (IQ). Also includes the issue slots that were consumed by the backend but were thrown away because they were younger than the mispredict or machine clear.",
+> -        "SampleAfterValue": "1000003",
+> -        "UMask": "0x6"
+> -    },
+> -    {
+> -        "BriefDescription": "Counts the number of issue slots every cycle that were not consumed by the backend due to fast nukes such as memory ordering and memory disambiguation machine clears.",
+> -        "Counter": "0,1,2,3",
+> -        "EventCode": "0x73",
+> -        "EventName": "TOPDOWN_BAD_SPECULATION.FASTNUKE",
+> -        "PDIR_COUNTER": "na",
+> -        "PEBScounters": "0,1,2,3",
+> -        "SampleAfterValue": "1000003",
+> -        "UMask": "0x2"
+> -    },
+> -    {
+> -        "BriefDescription": "Counts the total number of issue slots that were not consumed by the backend because allocation is stalled due to a machine clear (nuke) of any kind including memory ordering and memory disambiguation.",
+> -        "Counter": "0,1,2,3",
+> -        "EventCode": "0x73",
+> -        "EventName": "TOPDOWN_BAD_SPECULATION.MACHINE_CLEARS",
+> -        "PDIR_COUNTER": "na",
+> -        "PEBScounters": "0,1,2,3",
+> -        "SampleAfterValue": "1000003",
+> -        "UMask": "0x2"
+> -    },
+> -    {
+> -        "BriefDescription": "Counts the number of issue slots every cycle that were not consumed by the backend due to branch mispredicts.",
+> -        "CollectPEBSRecord": "2",
+> -        "Counter": "0,1,2,3",
+> -        "EventCode": "0x73",
+> -        "EventName": "TOPDOWN_BAD_SPECULATION.MISPREDICT",
+> -        "PDIR_COUNTER": "na",
+> -        "PEBScounters": "0,1,2,3",
+> -        "SampleAfterValue": "1000003",
+> -        "UMask": "0x4"
+> -    },
+> -    {
+> -        "BriefDescription": "This event is deprecated. Refer to new event TOPDOWN_BAD_SPECULATION.FASTNUKE",
+> -        "CollectPEBSRecord": "2",
+> -        "Counter": "0,1,2,3",
+> -        "EventCode": "0x73",
+> -        "EventName": "TOPDOWN_BAD_SPECULATION.MONUKE",
+> -        "PDIR_COUNTER": "na",
+> -        "PEBScounters": "0,1,2,3",
+> -        "SampleAfterValue": "1000003",
+> -        "UMask": "0x2"
+> -    },
+> -    {
+> -        "BriefDescription": "Counts the total number of issue slots every cycle that were not consumed by the backend due to backend stalls.",
+> -        "CollectPEBSRecord": "2",
+> -        "Counter": "0,1,2,3",
+> -        "EventCode": "0x74",
+> -        "EventName": "TOPDOWN_BE_BOUND.ALL",
+> -        "PDIR_COUNTER": "na",
+> -        "PEBScounters": "0,1,2,3",
+> -        "SampleAfterValue": "1000003"
+> -    },
+> -    {
+> -        "BriefDescription": "Counts the number of issue slots every cycle that were not consumed by the backend due to certain allocation restrictions.",
+> -        "CollectPEBSRecord": "2",
+> -        "Counter": "0,1,2,3",
+> -        "EventCode": "0x74",
+> -        "EventName": "TOPDOWN_BE_BOUND.ALLOC_RESTRICTIONS",
+> -        "PDIR_COUNTER": "na",
+> -        "PEBScounters": "0,1,2,3",
+> -        "SampleAfterValue": "1000003",
+> -        "UMask": "0x1"
+> -    },
+> -    {
+> -        "BriefDescription": "Counts the number of issue slots every cycle that were not consumed by the backend due to memory reservation stalls in which a scheduler is not able to accept uops.",
+> -        "CollectPEBSRecord": "2",
+> -        "Counter": "0,1,2,3",
+> -        "EventCode": "0x74",
+> -        "EventName": "TOPDOWN_BE_BOUND.MEM_SCHEDULER",
+> -        "PDIR_COUNTER": "na",
+> -        "PEBScounters": "0,1,2,3",
+> -        "SampleAfterValue": "1000003",
+> -        "UMask": "0x2"
+> -    },
+> -    {
+> -        "BriefDescription": "Counts the number of issue slots every cycle that were not consumed by the backend due to IEC or FPC RAT stalls, which can be due to FIQ or IEC reservation stalls in which the integer, floating point or SIMD scheduler is not able to accept uops.",
+> -        "CollectPEBSRecord": "2",
+> -        "Counter": "0,1,2,3",
+> -        "EventCode": "0x74",
+> -        "EventName": "TOPDOWN_BE_BOUND.NON_MEM_SCHEDULER",
+> -        "PDIR_COUNTER": "na",
+> -        "PEBScounters": "0,1,2,3",
+> -        "SampleAfterValue": "1000003",
+> -        "UMask": "0x8"
+> -    },
+> -    {
+> -        "BriefDescription": "Counts the number of issue slots every cycle that were not consumed by the backend due to the physical register file unable to accept an entry (marble stalls).",
+> -        "CollectPEBSRecord": "2",
+> -        "Counter": "0,1,2,3",
+> -        "EventCode": "0x74",
+> -        "EventName": "TOPDOWN_BE_BOUND.REGISTER",
+> -        "PDIR_COUNTER": "na",
+> -        "PEBScounters": "0,1,2,3",
+> -        "SampleAfterValue": "1000003",
+> -        "UMask": "0x20"
+> -    },
+> -    {
+> -        "BriefDescription": "Counts the number of issue slots every cycle that were not consumed by the backend due to the reorder buffer being full (ROB stalls).",
+> -        "CollectPEBSRecord": "2",
+> -        "Counter": "0,1,2,3",
+> -        "EventCode": "0x74",
+> -        "EventName": "TOPDOWN_BE_BOUND.REORDER_BUFFER",
+> -        "PDIR_COUNTER": "na",
+> -        "PEBScounters": "0,1,2,3",
+> -        "SampleAfterValue": "1000003",
+> -        "UMask": "0x40"
+> -    },
+> -    {
+> -        "BriefDescription": "Counts the number of issue slots every cycle that were not consumed by the backend due to scoreboards from the instruction queue (IQ), jump execution unit (JEU), or microcode sequencer (MS).",
+> -        "CollectPEBSRecord": "2",
+> -        "Counter": "0,1,2,3",
+> -        "EventCode": "0x74",
+> -        "EventName": "TOPDOWN_BE_BOUND.SERIALIZATION",
+> -        "PDIR_COUNTER": "na",
+> -        "PEBScounters": "0,1,2,3",
+> -        "SampleAfterValue": "1000003",
+> -        "UMask": "0x10"
+> -    },
+> -    {
+> -        "BriefDescription": "This event is deprecated.",
+> -        "CollectPEBSRecord": "2",
+> -        "Counter": "0,1,2,3",
+> -        "EventCode": "0x74",
+> -        "EventName": "TOPDOWN_BE_BOUND.STORE_BUFFER",
+> -        "PDIR_COUNTER": "na",
+> -        "PEBScounters": "0,1,2,3",
+> -        "SampleAfterValue": "1000003",
+> -        "UMask": "0x4"
+> -    },
+> -    {
+> -        "BriefDescription": "Counts the number of issue slots every cycle that were not consumed by the backend due to frontend stalls.",
+> -        "CollectPEBSRecord": "2",
+> -        "Counter": "0,1,2,3",
+> -        "EventCode": "0x71",
+> -        "EventName": "TOPDOWN_FE_BOUND.ALL",
+> -        "PDIR_COUNTER": "na",
+> -        "PEBScounters": "0,1,2,3",
+> -        "SampleAfterValue": "1000003"
+> -    },
+> -    {
+> -        "BriefDescription": "Counts the number of issue slots every cycle that were not delivered by the frontend due to BACLEARS.",
+> -        "CollectPEBSRecord": "2",
+> -        "Counter": "0,1,2,3",
+> -        "EventCode": "0x71",
+> -        "EventName": "TOPDOWN_FE_BOUND.BRANCH_DETECT",
+> -        "PDIR_COUNTER": "na",
+> -        "PEBScounters": "0,1,2,3",
+> -        "PublicDescription": "Counts the number of issue slots every cycle that were not delivered by the frontend due to BACLEARS, which occurs when the Branch Target Buffer (BTB) prediction or lack thereof, was corrected by a later branch predictor in the frontend. Includes BACLEARS due to all branch types including conditional and unconditional jumps, returns, and indirect branches.",
+> -        "SampleAfterValue": "1000003",
+> -        "UMask": "0x2"
+> -    },
+> -    {
+> -        "BriefDescription": "Counts the number of issue slots every cycle that were not delivered by the frontend due to BTCLEARS.",
+> -        "CollectPEBSRecord": "2",
+> -        "Counter": "0,1,2,3",
+> -        "EventCode": "0x71",
+> -        "EventName": "TOPDOWN_FE_BOUND.BRANCH_RESTEER",
+> -        "PDIR_COUNTER": "na",
+> -        "PEBScounters": "0,1,2,3",
+> -        "PublicDescription": "Counts the number of issue slots every cycle that were not delivered by the frontend due to BTCLEARS, which occurs when the Branch Target Buffer (BTB) predicts a taken branch.",
+> -        "SampleAfterValue": "1000003",
+> -        "UMask": "0x40"
+> -    },
+> -    {
+> -        "BriefDescription": "Counts the number of issue slots every cycle that were not delivered by the frontend due to the microcode sequencer (MS).",
+> -        "CollectPEBSRecord": "2",
+> -        "Counter": "0,1,2,3",
+> -        "EventCode": "0x71",
+> -        "EventName": "TOPDOWN_FE_BOUND.CISC",
+> -        "PDIR_COUNTER": "na",
+> -        "PEBScounters": "0,1,2,3",
+> -        "SampleAfterValue": "1000003",
+> -        "UMask": "0x1"
+> -    },
+> -    {
+> -        "BriefDescription": "Counts the number of issue slots every cycle that were not delivered by the frontend due to decode stalls.",
+> -        "CollectPEBSRecord": "2",
+> -        "Counter": "0,1,2,3",
+> -        "EventCode": "0x71",
+> -        "EventName": "TOPDOWN_FE_BOUND.DECODE",
+> -        "PDIR_COUNTER": "na",
+> -        "PEBScounters": "0,1,2,3",
+> -        "SampleAfterValue": "1000003",
+> -        "UMask": "0x8"
+> -    },
+> -    {
+> -        "BriefDescription": "Counts the number of issue slots every cycle that were not delivered by the frontend due to ITLB misses.",
+> -        "CollectPEBSRecord": "2",
+> -        "Counter": "0,1,2,3",
+> -        "EventCode": "0x71",
+> -        "EventName": "TOPDOWN_FE_BOUND.ITLB",
+> -        "PDIR_COUNTER": "na",
+> -        "PEBScounters": "0,1,2,3",
+> -        "PublicDescription": "Counts the number of issue slots every cycle that were not delivered by the frontend due to Instruction Table Lookaside Buffer (ITLB) misses.",
+> -        "SampleAfterValue": "1000003",
+> -        "UMask": "0x10"
+> -    },
+> -    {
+> -        "BriefDescription": "Counts the number of issue slots every cycle that were not delivered by the frontend due to other common frontend stalls not categorized.",
+> -        "CollectPEBSRecord": "2",
+> -        "Counter": "0,1,2,3",
+> -        "EventCode": "0x71",
+> -        "EventName": "TOPDOWN_FE_BOUND.OTHER",
+> -        "PDIR_COUNTER": "na",
+> -        "PEBScounters": "0,1,2,3",
+> -        "SampleAfterValue": "1000003",
+> -        "UMask": "0x80"
+> -    },
+> -    {
+> -        "BriefDescription": "Counts the number of issue slots every cycle that were not delivered by the frontend due to wrong predecodes.",
+> -        "CollectPEBSRecord": "2",
+> -        "Counter": "0,1,2,3",
+> -        "EventCode": "0x71",
+> -        "EventName": "TOPDOWN_FE_BOUND.PREDECODE",
+> -        "PDIR_COUNTER": "na",
+> -        "PEBScounters": "0,1,2,3",
+> -        "SampleAfterValue": "1000003",
+> -        "UMask": "0x4"
+> -    },
+> -    {
+> -        "BriefDescription": "Counts the total number of consumed retirement slots.",
+> -        "CollectPEBSRecord": "2",
+> -        "Counter": "0,1,2,3",
+> -        "EventCode": "0xc2",
+> -        "EventName": "TOPDOWN_RETIRING.ALL",
+> -        "PEBS": "1",
+> -        "PEBScounters": "0,1,2,3",
+> -        "SampleAfterValue": "1000003"
+>       }
+>   ]
+> \ No newline at end of file
+> diff --git a/tools/perf/pmu-events/arch/x86/elkhartlake/pipeline.json b/tools/perf/pmu-events/arch/x86/elkhartlake/pipeline.json
+> index 41e5dfad8f51..31816c6543a8 100644
+> --- a/tools/perf/pmu-events/arch/x86/elkhartlake/pipeline.json
+> +++ b/tools/perf/pmu-events/arch/x86/elkhartlake/pipeline.json
+> @@ -262,6 +262,247 @@
+>           "PEBScounters": "0,1,2,3",
+>           "SampleAfterValue": "20003"
+>       },
+> +    {
+> +        "BriefDescription": "Counts the total number of issue slots that were not consumed by the backend because allocation is stalled due to a mispredicted jump or a machine clear.",
+> +        "CollectPEBSRecord": "2",
+> +        "Counter": "0,1,2,3",
+> +        "EventCode": "0x73",
+> +        "EventName": "TOPDOWN_BAD_SPECULATION.ALL",
+> +        "PDIR_COUNTER": "na",
+> +        "PEBScounters": "0,1,2,3",
+> +        "PublicDescription": "Counts the total number of issue slots that were not consumed by the backend because allocation is stalled due to a mispredicted jump or a machine clear. Only issue slots wasted due to fast nukes such as memory ordering nukes are counted. Other nukes are not accounted for. Counts all issue slots blocked during this recovery window including relevant microcode flows and while uops are not yet available in the instruction queue (IQ). Also includes the issue slots that were consumed by the backend but were thrown away because they were younger than the mispredict or machine clear.",
+> +        "SampleAfterValue": "1000003",
+> +        "UMask": "0x6"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the number of issue slots every cycle that were not consumed by the backend due to fast nukes such as memory ordering and memory disambiguation machine clears.",
+> +        "Counter": "0,1,2,3",
+> +        "EventCode": "0x73",
+> +        "EventName": "TOPDOWN_BAD_SPECULATION.FASTNUKE",
+> +        "PDIR_COUNTER": "na",
+> +        "PEBScounters": "0,1,2,3",
+> +        "SampleAfterValue": "1000003",
+> +        "UMask": "0x2"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the total number of issue slots that were not consumed by the backend because allocation is stalled due to a machine clear (nuke) of any kind including memory ordering and memory disambiguation.",
+> +        "Counter": "0,1,2,3",
+> +        "EventCode": "0x73",
+> +        "EventName": "TOPDOWN_BAD_SPECULATION.MACHINE_CLEARS",
+> +        "PDIR_COUNTER": "na",
+> +        "PEBScounters": "0,1,2,3",
+> +        "SampleAfterValue": "1000003",
+> +        "UMask": "0x2"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the number of issue slots every cycle that were not consumed by the backend due to branch mispredicts.",
+> +        "CollectPEBSRecord": "2",
+> +        "Counter": "0,1,2,3",
+> +        "EventCode": "0x73",
+> +        "EventName": "TOPDOWN_BAD_SPECULATION.MISPREDICT",
+> +        "PDIR_COUNTER": "na",
+> +        "PEBScounters": "0,1,2,3",
+> +        "SampleAfterValue": "1000003",
+> +        "UMask": "0x4"
+> +    },
+> +    {
+> +        "BriefDescription": "This event is deprecated. Refer to new event TOPDOWN_BAD_SPECULATION.FASTNUKE",
+> +        "CollectPEBSRecord": "2",
+> +        "Counter": "0,1,2,3",
+> +        "EventCode": "0x73",
+> +        "EventName": "TOPDOWN_BAD_SPECULATION.MONUKE",
+> +        "PDIR_COUNTER": "na",
+> +        "PEBScounters": "0,1,2,3",
+> +        "SampleAfterValue": "1000003",
+> +        "UMask": "0x2"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the total number of issue slots every cycle that were not consumed by the backend due to backend stalls.",
+> +        "CollectPEBSRecord": "2",
+> +        "Counter": "0,1,2,3",
+> +        "EventCode": "0x74",
+> +        "EventName": "TOPDOWN_BE_BOUND.ALL",
+> +        "PDIR_COUNTER": "na",
+> +        "PEBScounters": "0,1,2,3",
+> +        "SampleAfterValue": "1000003"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the number of issue slots every cycle that were not consumed by the backend due to certain allocation restrictions.",
+> +        "CollectPEBSRecord": "2",
+> +        "Counter": "0,1,2,3",
+> +        "EventCode": "0x74",
+> +        "EventName": "TOPDOWN_BE_BOUND.ALLOC_RESTRICTIONS",
+> +        "PDIR_COUNTER": "na",
+> +        "PEBScounters": "0,1,2,3",
+> +        "SampleAfterValue": "1000003",
+> +        "UMask": "0x1"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the number of issue slots every cycle that were not consumed by the backend due to memory reservation stalls in which a scheduler is not able to accept uops.",
+> +        "CollectPEBSRecord": "2",
+> +        "Counter": "0,1,2,3",
+> +        "EventCode": "0x74",
+> +        "EventName": "TOPDOWN_BE_BOUND.MEM_SCHEDULER",
+> +        "PDIR_COUNTER": "na",
+> +        "PEBScounters": "0,1,2,3",
+> +        "SampleAfterValue": "1000003",
+> +        "UMask": "0x2"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the number of issue slots every cycle that were not consumed by the backend due to IEC or FPC RAT stalls, which can be due to FIQ or IEC reservation stalls in which the integer, floating point or SIMD scheduler is not able to accept uops.",
+> +        "CollectPEBSRecord": "2",
+> +        "Counter": "0,1,2,3",
+> +        "EventCode": "0x74",
+> +        "EventName": "TOPDOWN_BE_BOUND.NON_MEM_SCHEDULER",
+> +        "PDIR_COUNTER": "na",
+> +        "PEBScounters": "0,1,2,3",
+> +        "SampleAfterValue": "1000003",
+> +        "UMask": "0x8"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the number of issue slots every cycle that were not consumed by the backend due to the physical register file unable to accept an entry (marble stalls).",
+> +        "CollectPEBSRecord": "2",
+> +        "Counter": "0,1,2,3",
+> +        "EventCode": "0x74",
+> +        "EventName": "TOPDOWN_BE_BOUND.REGISTER",
+> +        "PDIR_COUNTER": "na",
+> +        "PEBScounters": "0,1,2,3",
+> +        "SampleAfterValue": "1000003",
+> +        "UMask": "0x20"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the number of issue slots every cycle that were not consumed by the backend due to the reorder buffer being full (ROB stalls).",
+> +        "CollectPEBSRecord": "2",
+> +        "Counter": "0,1,2,3",
+> +        "EventCode": "0x74",
+> +        "EventName": "TOPDOWN_BE_BOUND.REORDER_BUFFER",
+> +        "PDIR_COUNTER": "na",
+> +        "PEBScounters": "0,1,2,3",
+> +        "SampleAfterValue": "1000003",
+> +        "UMask": "0x40"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the number of issue slots every cycle that were not consumed by the backend due to scoreboards from the instruction queue (IQ), jump execution unit (JEU), or microcode sequencer (MS).",
+> +        "CollectPEBSRecord": "2",
+> +        "Counter": "0,1,2,3",
+> +        "EventCode": "0x74",
+> +        "EventName": "TOPDOWN_BE_BOUND.SERIALIZATION",
+> +        "PDIR_COUNTER": "na",
+> +        "PEBScounters": "0,1,2,3",
+> +        "SampleAfterValue": "1000003",
+> +        "UMask": "0x10"
+> +    },
+> +    {
+> +        "BriefDescription": "This event is deprecated.",
+> +        "CollectPEBSRecord": "2",
+> +        "Counter": "0,1,2,3",
+> +        "EventCode": "0x74",
+> +        "EventName": "TOPDOWN_BE_BOUND.STORE_BUFFER",
+> +        "PDIR_COUNTER": "na",
+> +        "PEBScounters": "0,1,2,3",
+> +        "SampleAfterValue": "1000003",
+> +        "UMask": "0x4"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the number of issue slots every cycle that were not consumed by the backend due to frontend stalls.",
+> +        "CollectPEBSRecord": "2",
+> +        "Counter": "0,1,2,3",
+> +        "EventCode": "0x71",
+> +        "EventName": "TOPDOWN_FE_BOUND.ALL",
+> +        "PDIR_COUNTER": "na",
+> +        "PEBScounters": "0,1,2,3",
+> +        "SampleAfterValue": "1000003"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the number of issue slots every cycle that were not delivered by the frontend due to BACLEARS.",
+> +        "CollectPEBSRecord": "2",
+> +        "Counter": "0,1,2,3",
+> +        "EventCode": "0x71",
+> +        "EventName": "TOPDOWN_FE_BOUND.BRANCH_DETECT",
+> +        "PDIR_COUNTER": "na",
+> +        "PEBScounters": "0,1,2,3",
+> +        "PublicDescription": "Counts the number of issue slots every cycle that were not delivered by the frontend due to BACLEARS, which occurs when the Branch Target Buffer (BTB) prediction or lack thereof, was corrected by a later branch predictor in the frontend. Includes BACLEARS due to all branch types including conditional and unconditional jumps, returns, and indirect branches.",
+> +        "SampleAfterValue": "1000003",
+> +        "UMask": "0x2"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the number of issue slots every cycle that were not delivered by the frontend due to BTCLEARS.",
+> +        "CollectPEBSRecord": "2",
+> +        "Counter": "0,1,2,3",
+> +        "EventCode": "0x71",
+> +        "EventName": "TOPDOWN_FE_BOUND.BRANCH_RESTEER",
+> +        "PDIR_COUNTER": "na",
+> +        "PEBScounters": "0,1,2,3",
+> +        "PublicDescription": "Counts the number of issue slots every cycle that were not delivered by the frontend due to BTCLEARS, which occurs when the Branch Target Buffer (BTB) predicts a taken branch.",
+> +        "SampleAfterValue": "1000003",
+> +        "UMask": "0x40"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the number of issue slots every cycle that were not delivered by the frontend due to the microcode sequencer (MS).",
+> +        "CollectPEBSRecord": "2",
+> +        "Counter": "0,1,2,3",
+> +        "EventCode": "0x71",
+> +        "EventName": "TOPDOWN_FE_BOUND.CISC",
+> +        "PDIR_COUNTER": "na",
+> +        "PEBScounters": "0,1,2,3",
+> +        "SampleAfterValue": "1000003",
+> +        "UMask": "0x1"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the number of issue slots every cycle that were not delivered by the frontend due to decode stalls.",
+> +        "CollectPEBSRecord": "2",
+> +        "Counter": "0,1,2,3",
+> +        "EventCode": "0x71",
+> +        "EventName": "TOPDOWN_FE_BOUND.DECODE",
+> +        "PDIR_COUNTER": "na",
+> +        "PEBScounters": "0,1,2,3",
+> +        "SampleAfterValue": "1000003",
+> +        "UMask": "0x8"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the number of issue slots every cycle that were not delivered by the frontend due to ITLB misses.",
+> +        "CollectPEBSRecord": "2",
+> +        "Counter": "0,1,2,3",
+> +        "EventCode": "0x71",
+> +        "EventName": "TOPDOWN_FE_BOUND.ITLB",
+> +        "PDIR_COUNTER": "na",
+> +        "PEBScounters": "0,1,2,3",
+> +        "PublicDescription": "Counts the number of issue slots every cycle that were not delivered by the frontend due to Instruction Table Lookaside Buffer (ITLB) misses.",
+> +        "SampleAfterValue": "1000003",
+> +        "UMask": "0x10"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the number of issue slots every cycle that were not delivered by the frontend due to other common frontend stalls not categorized.",
+> +        "CollectPEBSRecord": "2",
+> +        "Counter": "0,1,2,3",
+> +        "EventCode": "0x71",
+> +        "EventName": "TOPDOWN_FE_BOUND.OTHER",
+> +        "PDIR_COUNTER": "na",
+> +        "PEBScounters": "0,1,2,3",
+> +        "SampleAfterValue": "1000003",
+> +        "UMask": "0x80"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the number of issue slots every cycle that were not delivered by the frontend due to wrong predecodes.",
+> +        "CollectPEBSRecord": "2",
+> +        "Counter": "0,1,2,3",
+> +        "EventCode": "0x71",
+> +        "EventName": "TOPDOWN_FE_BOUND.PREDECODE",
+> +        "PDIR_COUNTER": "na",
+> +        "PEBScounters": "0,1,2,3",
+> +        "SampleAfterValue": "1000003",
+> +        "UMask": "0x4"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the total number of consumed retirement slots.",
+> +        "CollectPEBSRecord": "2",
+> +        "Counter": "0,1,2,3",
+> +        "EventCode": "0xc2",
+> +        "EventName": "TOPDOWN_RETIRING.ALL",
+> +        "PEBS": "1",
+> +        "PEBScounters": "0,1,2,3",
+> +        "SampleAfterValue": "1000003"
+> +    },
+>       {
+>           "BriefDescription": "Counts the number of uops that are from complex flows issued by the micro-sequencer (MS).",
+>           "CollectPEBSRecord": "2",
 
-Sure. I'll follow-up on this.
-
->> +	apic_write(APIC_LVTPC, APIC_DM_NMI);
->> +
->> +	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
->> +		if (!test_bit(idx, cpuc->active_mask))
->> +			continue;
->> +
->> +		event = cpuc->events[idx];
->> +		hwc = &event->hw;
->> +		val = x86_perf_event_update(event);
->> +		mask = BIT_ULL(idx);
->> +
->> +		if (!(status & mask))
->> +			continue;
->> +
->> +		/* Event overflow */
->> +		handled++;
->> +		perf_sample_data_init(&data, 0, hwc->last_period);
->> +
->> +		if (!x86_perf_event_set_period(event))
->> +			continue;
->> +
->> +		if (perf_event_overflow(event, &data, regs))
->> +			x86_pmu_stop(event, 0);
->> +
->> +		status &= ~mask;
->> +	}
->> +
->> +	/*
->> +	 * It should never be the case that some overflows are not handled as
->> +	 * the corresponding PMCs are expected to be inactive according to the
->> +	 * active_mask
->> +	 */
->> +	WARN_ON(status > 0);
->> +
->> +	/* Clear overflow bits */
->> +	amd_pmu_ack_global_overflow(~status);
->> +
->> +	inc_irq_stat(apic_perf_irqs);
->> +
->> +	/* Resume counting */
->> +	amd_pmu_global_enable_all(0);
-> 
-> I think this is broken vs perf_pmu_{dis,en}able(), note how
-> intel_pmu_handle_irq() saves/restores the enable state.
-> 
-
-Yes, it is. Will fix it.
-
->> +
->> +	return handled;
->> +}
->> +
->> +DEFINE_STATIC_CALL(amd_pmu_handle_irq, x86_pmu_handle_irq);
->> +
->>  /*
->>   * Because of NMI latency, if multiple PMC counters are active or other sources
->>   * of NMIs are received, the perf NMI handler can handle one or more overflowed
->> @@ -741,7 +856,7 @@ static int amd_pmu_handle_irq(struct pt_regs *regs)
->>  	int handled;
->>  
->>  	/* Process any counter overflows */
->> -	handled = x86_pmu_handle_irq(regs);
->> +	handled = static_call(amd_pmu_handle_irq)(regs);
->>  
->>  	/*
->>  	 * If a counter was handled, record a timestamp such that un-handled
->> @@ -1041,6 +1156,8 @@ static int __init amd_core_pmu_init(void)
->>  		static_call_update(amd_pmu_enable_all, amd_pmu_global_enable_all);
->>  		static_call_update(amd_pmu_disable_all, amd_pmu_global_disable_all);
->>  		static_call_update(amd_pmu_enable_event, amd_pmu_global_enable_event);
->> +		static_call_update(amd_pmu_has_overflow, amd_pmu_global_has_overflow);
->> +		static_call_update(amd_pmu_handle_irq, amd_pmu_global_handle_irq);
->>  	}
-> 
-> Same, all this static_call() stuff is misguided.
-> 
-> Also, if you feel like it, you can create amd_pmu_v2.
-
-Sure.
-
-- Sandipan
+-- 
+Zhengjun Xing
