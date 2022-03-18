@@ -2,103 +2,73 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 455E7C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Mar 2022 14:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC73C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Mar 2022 18:51:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237115AbiCRO3j (ORCPT
+        id S239479AbiCRSwR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 18 Mar 2022 10:29:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59470 "EHLO
+        Fri, 18 Mar 2022 14:52:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236878AbiCRO3j (ORCPT
+        with ESMTP id S231321AbiCRSwO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 18 Mar 2022 10:29:39 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC7BD108F;
-        Fri, 18 Mar 2022 07:28:19 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        Fri, 18 Mar 2022 14:52:14 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C12242DE7AC;
+        Fri, 18 Mar 2022 11:50:55 -0700 (PDT)
+Received: from zn.tnic (p2e55dff8.dip0.t-ipconnect.de [46.85.223.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5774361A05;
-        Fri, 18 Mar 2022 14:28:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FA08C340E8;
-        Fri, 18 Mar 2022 14:28:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1647613698;
-        bh=EfCCn6hH8JAtyHAXhm+QKRSYBOclLCPgWjSBNZ1qSFQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lZtbMiymJvCoKKwO5Rz06UaDHKL2bxrReiCfZIM04OGHST93Rj205QI1ppxZ02Lkw
-         cJAQUq0i1ch0TM5bj9eNzPXh2nSM9cCT5KJ4+32GRRKG/ipt4eAkXGNCgISJ371qBO
-         dfi/+Ik+DOH+D8Pud+OSiFWkUiaNNjYKVqsbIEg+KMJ3FZH90QFli0Ytz11Yeco5rB
-         DQhBvvx3vuCPUsG+oYIgeg4x4ZNPyDagKDidkY1ZZYwaop3DUIzCVIUnlEK3wQndAK
-         kiGI0KaImI+/rj5j9Jygxm3MilksbeMK2rIP4tapZhRx4NyyMwF+rlKXLgqTesIxa1
-         mBy2ZfdfdFy7g==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6A96340407; Fri, 18 Mar 2022 11:28:16 -0300 (-03)
-Date:   Fri, 18 Mar 2022 11:28:16 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        John Garry <john.garry@huawei.com>,
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B207B1EC05ED;
+        Fri, 18 Mar 2022 19:50:49 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1647629449;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=XFF50C0H+qNuzyfJ9gFvxt706SYnHaCYL4psuRE0jGU=;
+        b=R1j43DXNqSrw1JFndx3Q5Q8jRNpNQGD4sZF2femKLhhfDtZeiYLRygOY8Uu8GVGkP1T395
+        ZvMslOthL/CMVx46zK3GzRpK4uMZQCCydfI1ZAJ+So8u12iBcSi2seABfFgdiHm2s8DZxM
+        Nehk9VGbbEbb5GcldRSMeSp2W8VnNlo=
+Date:   Fri, 18 Mar 2022 19:50:45 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Dongli Si <kvmx86@gmail.com>
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        dave.hansen@linux.intel.com, hpa@zytor.com, joerg.roedel@amd.com,
+        jolsa@kernel.org, kim.phillips@amd.com, liam.merwick@oracle.com,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>,
-        Caleb Biggers <caleb.biggers@intel.com>
-Subject: Re: [PATCH] perf parse-events: Ignore case in topdown.slots check
-Message-ID: <YjSXAFDJDbrPao6d@kernel.org>
-References: <20220317224309.543736-1-irogers@google.com>
+        mark.rutland@arm.com, mingo@kernel.org, namhyung@kernel.org,
+        peterz@infradead.org, tglx@linutronix.de, x86@kernel.org
+Subject: Re: [PATCH v3] perf/x86/amd: Don't touch the Host-only bit inside
+ the guest hypervisor
+Message-ID: <YjTUhRLmpP3PQbKr@zn.tnic>
+References: <YjIspMR0lm6+W/Pp@zn.tnic>
+ <20220318030757.1706799-1-sidongli1997@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220317224309.543736-1-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20220318030757.1706799-1-sidongli1997@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Mar 17, 2022 at 03:43:09PM -0700, Ian Rogers escreveu:
-> An issue with icelakex metrics:
-> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/pmu-events/arch/x86/icelakex/icx-metrics.json?h=perf/core&id=65eab2bc7dab326ee892ec5a4c749470b368b51a#n48
-> That causes the slots not to be first.
-
-Thanks, applied.
-
-- Arnaldo
-
- 
-> Fixes: 94dbfd6781a0 ("perf parse-events: Architecture specific leader override")
-> Reported-by: Caleb Biggers <caleb.biggers@intel.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/arch/x86/util/evlist.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Fri, Mar 18, 2022 at 11:07:57AM +0800, Dongli Si wrote:
+> Hi Borislav, this is just to more clearly test if the current kernel is
+> running directly on the host.
 > 
-> diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
-> index f924246eff78..8d9b55959256 100644
-> --- a/tools/perf/arch/x86/util/evlist.c
-> +++ b/tools/perf/arch/x86/util/evlist.c
-> @@ -29,7 +29,7 @@ struct evsel *arch_evlist__leader(struct list_head *list)
->  
->  	__evlist__for_each_entry(list, evsel) {
->  		if (evsel->pmu_name && !strcmp(evsel->pmu_name, "cpu") &&
-> -			evsel->name && strstr(evsel->name, "slots"))
-> +			evsel->name && strcasestr(evsel->name, "slots"))
->  			return evsel;
->  	}
->  	return first;
-> -- 
-> 2.35.1.894.gb6a874cedc-goog
+> If this is redundant, I can remove this "wrapper" and resend the patch,
+> the v4 patch code will be the same as the v1 patch.
+
+Yes please. Using
+
+	hypervisor_is_type(X86_HYPER_NATIVE)
+
+directly is a lot more descriptive than "run_as_host".
+
+Thx.
 
 -- 
+Regards/Gruss,
+    Boris.
 
-- Arnaldo
+https://people.kernel.org/tglx/notes-about-netiquette
