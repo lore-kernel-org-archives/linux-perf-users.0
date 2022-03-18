@@ -2,51 +2,51 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF5C0C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Mar 2022 08:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50AD8C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Mar 2022 08:19:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233522AbiCRIDt (ORCPT
+        id S233708AbiCRIUo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 18 Mar 2022 04:03:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36896 "EHLO
+        Fri, 18 Mar 2022 04:20:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233202AbiCRIDr (ORCPT
+        with ESMTP id S230352AbiCRIUm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 18 Mar 2022 04:03:47 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2074.outbound.protection.outlook.com [40.107.220.74])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F7462C80BA;
-        Fri, 18 Mar 2022 01:02:29 -0700 (PDT)
+        Fri, 18 Mar 2022 04:20:42 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2056.outbound.protection.outlook.com [40.107.93.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03A78222A6;
+        Fri, 18 Mar 2022 01:19:24 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WBn4vIkMBBeovHySbTmi3Vj1cH8KDFLuIqlDpdNJgZzDH4hnHU1YQfOH9msyCO0mVynjQqfS9lk0vKKxXpE32BWbahvZl3uWk6Vl/Bcm49WKonmsSPKCa96Vxj0/2k1vcnTbzw3rQIMbxprjQosYTmncDaFgx8QB5OGwqgMVHlDDfvfYJQ4Q6LR+C94VsJTKOQ9N0c0bdchEFOYiUjul056raQkSIA9AWujl/IBy0cRZZflvyJ7c3vnT1zWRWCfsUPVrH0DU/gB4KKnQ90pUnX9m3xQgB5Jq+/GFeZ41ZGJJlbm8Wb45oZuHm0urhrtkvkzt838XPNSeR8cirnIHHw==
+ b=W+KYv7SbbfJMQf8YGauhstYUwiuY+0adUoCZmksNeyad1YZ1pMcvz6BOKAgfrQw1Tsu/N9ESAeJNm/hIXhLAg16Dz/eLdkYDKqC9IhUTj/N4FvXa3oNqc1XHJ0JAsdJOFaTxPyOe2rjP4o6H7gzTBU+8NTVuL0qq0DjPwiKIKV41Q8F7oq0faRkBdmXnWlDYpjKnld6Zhb+ugQjRDmItUv9u815tGW/RVbikvfudoiqdiEchsM89bqPF3EIpoWDOHv8cNlVICGI7wuPT3sAtvNxufpsN6gFM0/yCMiQU8/gBv+d9uCA/YrrTgcMsCuNWlpvg6cZDwBBqX1wTeB+w+w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VyU0RVad/RzcLDgtxMUx0YjA25CRR4+KvUtESFnm0nY=;
- b=GZEKO0MOmUBDn8hjZa8QUXevu3Iw04q0lwutusQPGinWmjggdeA+BXz9M0p8nEmUPlAyM2WgBqT0C59+XVK9y+OGyCn9/a2F7h934E2fSIkAS5yKtwHu0JanXBw3Qj1EYC2+mhEBSsu8pY55LjPVUDliNz5kYPeM6z/6s1CPbfsFKlzBZBVa5j033RNsBGcbzGS8wj9eVmrM/wnOxoRyY/cWTBTuzeKDdeY6GejOPjZLjO1B6KBlrTn5PHYbQfV7Nm2Uy0euoO3UBJQ50gvp5DXBLRf8cyZizXNFsnB7+FdXuHxa8U2QkiwBvGGE1mjI7t/4JfTJ3fq63I06XkTqyg==
+ bh=QA8HFQcA0NfKOVxdL7DEUW4GazqF+U1l66ujgH//YVo=;
+ b=C0sVrOp40fFenwmYD0Tqjmfe8dKDH4Lw8TKzVs+2q1MydRYQA+pqDhy29g/rE19CV/DhEJpOw8pLUyQkJRpqa1/S0eCPooXpybdQUo9QG/4pbB8pp4SEaq3xp9Xi498hSw3Sfhk5Ol/7PAQxQLtkx3iAM33tH4JtiMae0eUkLWgI/rlhMwo9Wi1lkbI9nF4CXI0E9HKGc0HQaw/tvPMfvaJNSdfXywGS4QaZvbulKgETFn6JWoEpin1kR8znLLMmhwTDAFAeW0DFGn6i8xd733h2vgM3N51d64wwWU/yCP/lZP1cLjNbWvyPBd56MLHKjCdKMt2vYs2G3Y9a1DnZhw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VyU0RVad/RzcLDgtxMUx0YjA25CRR4+KvUtESFnm0nY=;
- b=VURi/7F197yFSVZs8/A+5ozDtVjy+D3s8WXvXl0zQjT3WYPuqZQUc5RPohQ5x4BEOjRU6edhT/lSnCuAwya98O3w7YGdK4hEo2Vp3z9PMPMC1sR6iej3RUp0tTuhWtLquuX9Mvk3vEFJ2Zt9GGMSo99KttqIKL739syMsFlexKc=
+ bh=QA8HFQcA0NfKOVxdL7DEUW4GazqF+U1l66ujgH//YVo=;
+ b=rcWcfGJD6LV0bDHSDNSO2akHjmMd0RAwmJHLf/IsMxZ8AsPHTRvCIXM74wiUxzVrrAyQNq/u3ljmIUUMMgtcJMmFqAC5eGQOgXYAcjhPiby9+HdA+Hg2mM2uaDpcxp+/jsgf0zchdPbOCdddqbaMGlPZF1F64OPpgCtqQdOWpiE=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from BN6PR1201MB0178.namprd12.prod.outlook.com
- (2603:10b6:405:55::20) by DM6PR12MB2634.namprd12.prod.outlook.com
- (2603:10b6:5:49::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5061.24; Fri, 18 Mar
- 2022 08:02:27 +0000
+ (2603:10b6:405:55::20) by DM4PR12MB5961.namprd12.prod.outlook.com
+ (2603:10b6:8:68::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5081.14; Fri, 18 Mar
+ 2022 08:19:22 +0000
 Received: from BN6PR1201MB0178.namprd12.prod.outlook.com
  ([fe80::944e:aab8:facf:fd8]) by BN6PR1201MB0178.namprd12.prod.outlook.com
  ([fe80::944e:aab8:facf:fd8%8]) with mapi id 15.20.5081.018; Fri, 18 Mar 2022
- 08:02:26 +0000
-Message-ID: <ea39ef1d-44a3-478d-f6fb-2120be67e745@amd.com>
-Date:   Fri, 18 Mar 2022 13:32:04 +0530
+ 08:19:21 +0000
+Message-ID: <8b8c0949-7677-94dc-4a8f-9fcf1b4d2f2d@amd.com>
+Date:   Fri, 18 Mar 2022 13:48:58 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.7.0
-From:   Sandipan Das <sandipan.das@amd.com>
-Subject: Re: [PATCH 5/7] perf/x86/amd/core: Add PerfMonV2 counter control
+Subject: Re: [PATCH 6/7] perf/x86/amd/core: Add PerfMonV2 overflow handling
+Content-Language: en-US
 To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         x86@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com,
@@ -57,183 +57,272 @@ Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         eranian@google.com, ananth.narayan@amd.com, ravi.bangoria@amd.com,
         santosh.shukla@amd.com
 References: <cover.1647498015.git.sandipan.das@amd.com>
- <7958e729c6be0f682379bec81f115b8cd7cca1ad.1647498015.git.sandipan.das@amd.com>
- <YjMfe7KyKp+a3Jkp@hirez.programming.kicks-ass.net>
-Content-Language: en-US
-In-Reply-To: <YjMfe7KyKp+a3Jkp@hirez.programming.kicks-ass.net>
+ <7d43b4ba8a7c3c0833495f3fabfcfc6df8db3732.1647498015.git.sandipan.das@amd.com>
+ <YjMjNvrGa7ZK/x3H@hirez.programming.kicks-ass.net>
+From:   Sandipan Das <sandipan.das@amd.com>
+In-Reply-To: <YjMjNvrGa7ZK/x3H@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BM1PR01CA0106.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00::22)
+X-ClientProxiedBy: BM1PR01CA0096.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00::12)
  To BN6PR1201MB0178.namprd12.prod.outlook.com (2603:10b6:405:55::20)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f957b08a-4f71-4e1e-2454-08da08b5a3d6
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2634:EE_
-X-Microsoft-Antispam-PRVS: <DM6PR12MB2634EF9A78CCEC5324FDB6EB8B139@DM6PR12MB2634.namprd12.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: d396611f-0649-4d16-c02b-08da08b800e5
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5961:EE_
+X-Microsoft-Antispam-PRVS: <DM4PR12MB59619B3BD892DD11609198998B139@DM4PR12MB5961.namprd12.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qSP4neF0Rl/cMVtRnRLU0AEm4acuKiToD81GNecB4bskLh/oBA0GocGywtUPa5SrOW4sTm1ROESJluTScTmYiNXiIFBm5j9KUE+DLtAWuuUs+910NsfTHGleMjxOVWAkAegU9U96X0kzB3w9UNLirVe7O106oyRnyvZkQukoQmT5zeWdyh1SPRBLj+pAV2kGIXCfdeGmqH3SmpVhVK11Ma5QyDe4I/TwhkoC7pskJvLQj0TUMXi7EPgW2db+lruJ+r5coRCyqZjxWOaCTKSFHuZBav1kEUF3IKfU8NwcztljXhRDoI1T7EjacwSguSpdmFnSyt6oRic9rUdvfZn9wkn/u31JMqKmnayn+thuEmXxkMSAH+cPtzDzrqku9pRkAsqfMpNDHeU+dql67Flg3auSL83MlQeFQc4gIEpoQMJ1XHqGlRZLekwDuzx2wBuoygQL0aRJDA45MpDwEh6hKJ+WsQhS5ycyd5rE7XkpjWDyEwOXBpjsZy/JYpL0/hlwYtmEEg63Ox+1rQ5F0YHh3eA/y/m588A98pNIiUb1rhiGO3rQEzVMnO4nwJA7LSn3yr8YAFb4gVz5FnszClcluAXCkHPjx8Kdf1eWkDjAiFCO56mroQ0l4mMY6CiBS/AyOf2v+L/2ecTik92lmoxNrJpEHeFrZwMOgKoJIwyF5izkcqgC4DGfRKzAv/y1aqYds8A+WzPmRXqoBHD4rvuwxPYqISTwxlmOVy1Vve7GRk8=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR1201MB0178.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(31686004)(508600001)(6486002)(2906002)(36756003)(44832011)(5660300002)(186003)(26005)(2616005)(38100700002)(8676002)(316002)(66556008)(66946007)(66476007)(6506007)(6916009)(86362001)(31696002)(53546011)(7416002)(8936002)(6666004)(6512007)(83380400001)(4326008)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: TxszL/xIvxkkY6KQq0EtUqYTvFsw1y1CHu5/hTUeL7xPsRYHmxHICYuOfjJU1vBPcknBnVS5RW00sndmaH94NWiAEAwyBoERgdj4cWak2065j1weql3Onl4lhEiEi2cHfi3o10hWYInEjiKcIL99pQQEbg0s3iQELoFv7zNoCWKndaOI6ALCifImuI5eCctyhhNYhGOlQGNjjQMvfg5WGvX3hszJ0m4mj6ZFmHS05DrcyLjEmoD3takKWdPIrzqwdzTrGI7sFwBYUp1BkC8QEaO2G0TvUYYckiP7zED/7i4e3gvBiJ2h7VXncnuTdJGacmgh2z6r3l4MlGC90xT9zHb+mR6doJXPsMqQKAjDulbaqeii1z8iPoZf1p8WENU8myHOwRv0baWR8lgPWx69A+HIUNWwxCYYCxAzP4K+Lm8pxA937IVqXNaEOe6U7BHQJCXhOrD7oh7qPwP6a3763MgtNOol1rHBXNg5e+O2EvXjzgx7FFQOpGGDM/9eBpqjeBCPrghOgxiEqy9lkFDjvofNqxWAStXqtFsjc/D8doTxwlPCmzO+sH/zbOM3l7JrZsbxhp7/vShhqbBk5aOub1Bd/etof9INd/Tp3R/a0hAZHM3YtHXFAOOZaYkK1O9H4Y+IJfqyUcOKmRya0ywNadF7nLCbM6MVI2lY0/g81F1LX254kmJ98lYPQBfgBioiO0id1X09V6XVl0/YNL2wcsq0ZcaNX+ow0PvbsgSpE9I=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR1201MB0178.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(66946007)(86362001)(66556008)(4326008)(66476007)(8676002)(83380400001)(2906002)(5660300002)(2616005)(186003)(26005)(6486002)(44832011)(36756003)(6916009)(7416002)(38100700002)(31686004)(8936002)(6506007)(508600001)(6512007)(53546011)(316002)(31696002)(6666004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UnhmS2JjTi9CTVArTVBZNzNrSndIdFZRUUlNaVQ2bFNkRjBKMTB1NWlaZjc2?=
- =?utf-8?B?aEovN29wMFVkU1dnT1h2RTVnZTdKSjhUSXMrdDB2Q0cva2UvdHByOHRaV1Uv?=
- =?utf-8?B?ZkExdHJlbUZaZEVVaUR3ZUw3bUFVY0Z3a3JNZ282ZENIamdUN1B6Ynd2ODZH?=
- =?utf-8?B?WVdhUFNoREt5MnFxL2xzblcyM0R1YktDdlljeFhqTjhWSGdOR00wYUloUU43?=
- =?utf-8?B?NTNPZUJrQ3JaWlNLbWtjamZPMHFzRklFdEFUREtTalhrNmRrRy8wYUJFMDRz?=
- =?utf-8?B?YWl0N21WSURCVjBWWVdPdVBob2pDS1k3clRCQjd4UmgwVkExcXRkNUoxaE5j?=
- =?utf-8?B?YkhTWjAvdjhkQUJvSXBPQlIyNWJ6d2hFajQxMWZORHp5bWxObzRET2lTMlRV?=
- =?utf-8?B?UmlqdDk3Z1Erc3RnY2c4K3E3VmJkeDd1eWJYWFNpMmErWlEwOGdMUzdQRXl1?=
- =?utf-8?B?MHZWMEVPWlBJMVdhVTRBdmc5c1NRYk5Kay9QUmJCZjg5SXdTYktick83aXAz?=
- =?utf-8?B?SzNINnlCTGZIMWpPdFVTZFZlSlZkM0F0Zy9QTnllQmJnRVJTVVJOaXprODll?=
- =?utf-8?B?MFU2Szg0QkJYVlUwTG1RcWxlZExkTmtUb0F5b0tZWjdaVzRyUzk2ZW4xNlFF?=
- =?utf-8?B?U0J2NlhOWlVBci94RWJqeFNUSENBcEl4d0VQODV4NTQxd085c2hDRWVrN1Vn?=
- =?utf-8?B?dnQ4L2ZrUzVmSG03d2U5VkVUcGgrVFpiVlVCKzBmVVdld0tlZEMrZDJERnp6?=
- =?utf-8?B?RmRHQzFVVTJxL3poa0FOKzhNTVVUaFlLOWhjMUJuK3MvUUdvNG45S2dlUDk4?=
- =?utf-8?B?WlY0SWU3emU4MVh0V0d4RXRtclEvNHB3WEdjSkZkSTFIWVRqWkNjWnBxeU95?=
- =?utf-8?B?Q1d5ZWF6dmltUVFlK0lxU3ZHYktiK0xMN1NzR3RDY3lUczZCWGx0MTNrb1Zi?=
- =?utf-8?B?YjcrbHVmM05yWkcyMkg1SEhrNUZHZ2JzQlF0dkN2SkhJeFJYYUpHWE5Ed0VO?=
- =?utf-8?B?SEF5UHVHZE56UHBxNXVBMEFmaDlWSndxVEhxb25DZmp1L243SkxwRmp6VDRi?=
- =?utf-8?B?djNjbzhpU2VLUGZ5TytyeFFtSklsODlVOU9CaS9IYWNHT1IvZnNpb3RPaWxi?=
- =?utf-8?B?a00wR2Q4S0lYQ2VLWmhnUkFYT2tKZ1NOYURhelA4czJabmNidHJYR0JqNFBq?=
- =?utf-8?B?R05FYlJoTUhCTG9QM3BVVlN3OElNNXh4YkhEOFpZYUowdE9ISUxzNU9vL3RV?=
- =?utf-8?B?bjdNUUtlL25sZzBQV3ArWFVMZzlPT2cwcnRRY3ErS2NMakx1ZXR2VlQrNHBh?=
- =?utf-8?B?MXJCanF0TEZ1RmZpcGpJMVQrK24vb3Z3WlBGUFFoamViRzBGNG9zbWxBanZy?=
- =?utf-8?B?Qk53MC91OWxhREN4M3dlb1Y1dVBHUEdHU3RQdkJLaG4weWNFWkp3aDIxZlFQ?=
- =?utf-8?B?OFJRc09CZkJsQkVlNWkrREIyK2NPb0kxOXdVaXA2anFnVVlrU3lxNkRBcDRr?=
- =?utf-8?B?Y2ZVVlFLc2RHV0pJMCtnei9NUnpYQlhnaUkvMTVQMWtIb0V5RHdGU0lLeExn?=
- =?utf-8?B?K3Bkc2tyeHdpNkc1ZXRYcWR4VzEwaURVMllSandjckw3MFNtbVpDK29xdlFw?=
- =?utf-8?B?NWFnTGRQbTNyVXNhL3F5Mmo1Rm9aZjI5c1l5UVVpbEV4WGZtcWRBeVF4eVUr?=
- =?utf-8?B?STIrUExwb0gzdGI0ZGJlek5YZHVMcmFlSTk0K2ZxbjV0UGVZOFhLelRjbVFV?=
- =?utf-8?B?UkxZL3V1b01UYllIMlpPSXl5aDMvNzlnTHAvaGZENzhwQ0xzQjBUT2dKS1VQ?=
- =?utf-8?B?Y3puaUtWa3ZiU0Q2dXRnR2ZXV05uY3owNllJc3ZNWXo0aTBGS3NHQnlJOXdZ?=
- =?utf-8?B?dW5Wc1RORWtQSngrVGZ2UlV1b1NXNlV0V3cxRzZCR21DQXRQeWJKa0VsRlB4?=
- =?utf-8?Q?M3n8qGtVmZjCm9W3TwzKFucPK4EQyild?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bVBYTkFKa2Y0cmpoaXJOMWQ1T01aQ2JUK1VtS043NEpQU0V6VXlDQ3hsaU94?=
+ =?utf-8?B?RUxtT0lZRUpuVmZvNmdHdXd6V2hNbEpQdnhHcm92M0ZLeWNlWjZMRDAyczZT?=
+ =?utf-8?B?dmZLcU5WUkViR1ljdWsvZmxiT2JsbXIxemx3M2NrRDlrejFYY0VEblZTVllU?=
+ =?utf-8?B?M3dLYzNvUU9GSnc4UWRKWW9McWI2N0dVQUFHQnRSVGVJbDljRi9PTHJkcXlm?=
+ =?utf-8?B?NWlTZ1Z4M21rNmJEWmVsMmhoREREaVVWUnB2Rm01dkFVYmZrT3JGOHkwL2pZ?=
+ =?utf-8?B?ZFNuWWd3cDVVYXd0WlVxVC9HQUlXbjdZMnd3V3pyQnV0UTBYWVYwWlVSdUda?=
+ =?utf-8?B?djd1K1RHRG5nVDQrTGtsODhMeTFPWWp6V3RjSWE5aUkwVkErNzNSVTVUci95?=
+ =?utf-8?B?Tmh4dGRNZUl0VG1OVWovcWlsUnl2dDhsSWhXdEJYRVBTTUtDdEppV095ZEVh?=
+ =?utf-8?B?blV6RHJYQ1BHNXNFZXF0UThPSDdYZ1BhS05GMGZIOUR4SkVuMDMzaTlMRWdI?=
+ =?utf-8?B?dDROTGlzOGc3NFBwakNFYWVadDcrRHBqSXB0bXVnNFE2SWZvWTJWbCtSSlJ3?=
+ =?utf-8?B?bEU3MjNmV1NaYzhaMlR6azdvOUZQUmczN3EwQk9sbnNzRlRvVUdzWWdUM0Ry?=
+ =?utf-8?B?VStZNmRuMzdwVTl2T0swcHBhMkF0b0M2bVdoS3YwTnpXZ0phd1Q5QWNYREF6?=
+ =?utf-8?B?aTJZS2tlTlM5cUNDK1ZpVjZNOG5CNGtEa0tRaSt1eTFVekhOcGppU1dIZ0Jn?=
+ =?utf-8?B?dmJuKzVaRFltQmpRaTdESnovSjd0RzZKbzVPR053dDBMOHZmWFlOa0hOU0g1?=
+ =?utf-8?B?SzZ6c3B2NjNOaC8yYnR5aDloREVsd2dhYzVNTVhrZ2xjVTlXZThlT3dNaVd3?=
+ =?utf-8?B?K08raTRvb2R6c2VaR0tBemZIQk4wZTVNN0Rmb2JVb2V0cy9lYmEvTDIvRjBU?=
+ =?utf-8?B?M0pyclJmQ1VtbXN5ZXpZdHJuenRsOW01enh1MXhnbG83Q2NTYlYrVC9YNXZy?=
+ =?utf-8?B?MG1QTXh1SWJYZ0tXMHFiVmI3bDlpRXJSVWEzTHlwbDdyeG9idnEvZHBJa2JY?=
+ =?utf-8?B?c2hrbHRTUkUrSThxY203OVBqZzdaQUdvU05UdlJNZ3BPZ1k4T1N1MU4yMzJL?=
+ =?utf-8?B?Zi9RcHpPMDRnMWw5SzRtTTlwR1RteVpGcDd3SHYra3lhaGRpNFd2bUVRdlVU?=
+ =?utf-8?B?b0VrcFFLSkl1eHVIV28zdng1b3ZaVWViRTA2czc1L1R4V25ONWV2Rk5Qdk1Z?=
+ =?utf-8?B?N2ljRldkMU5odEFNRXRjcWJwN2tXVGc5YUNjMkExZUl4UzJGdlQ2OHA0TXg5?=
+ =?utf-8?B?aGo2VmdVU3ZldmlMbG9TNjUvK3BUZjc2b2oxWko0emt2M2YxUnFnOGo1c21t?=
+ =?utf-8?B?RVdtdzNMT2ZOdG9lSjhRQXI3Ni9kMW4yb2hWQ1l2QW1VSUFaeGpLZyszeTh0?=
+ =?utf-8?B?NmlndXdDcFYyNzY2Y0hnWG9vVUJxVVdkMHNkdjlXTUJOZk12WHhmTHkvQmZD?=
+ =?utf-8?B?b2o3OVRWSEZncU5YWXY3Y0krSU1YcUp1SzJCbjlicExiaTVDd3E5L2V1NjlZ?=
+ =?utf-8?B?UjJlSVIyYi9jV21xdm1heFlxM1hUc1dJVE5HQ2NoU3UvRkFkSW5TWnhOc3Jp?=
+ =?utf-8?B?MGpZbW5MQ0swWFUwY2VOam0wamFuQ2ZzT28rUXlkenRZcUVSa1grcEluRGo0?=
+ =?utf-8?B?WFExUXh6a1JpVmptUDlEZFhQa2FzWWdaUzNHQU1iUUJYdjRiSllYZ2NwbzBM?=
+ =?utf-8?B?eWVsQlA3MENQa1lBVlRBUkdTU09qanMra2trUlJKVjdIcUp1MGRWQnMzL1ZW?=
+ =?utf-8?B?N0g4MXpDTmRDUUlvQXFKaHg5RkprZWFvL052NHFaRlR1V3kzSG85RkttTExz?=
+ =?utf-8?B?aW40NmJJSktVYjc4dldlWXppV2NwdkVheWVCSTYrT2hPNHNmVTA4bFFLRGQv?=
+ =?utf-8?Q?rki+GLzj7LkNkseLF7s/cUPqqk0tnVr7?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f957b08a-4f71-4e1e-2454-08da08b5a3d6
+X-MS-Exchange-CrossTenant-Network-Message-Id: d396611f-0649-4d16-c02b-08da08b800e5
 X-MS-Exchange-CrossTenant-AuthSource: BN6PR1201MB0178.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2022 08:02:26.0294
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2022 08:19:21.1376
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5zZ4ZWkkLU642SrQjMU2zFhNdvg7YQJYzzrAjq/5DoxPMNlPZmg4B1tjo4YIWsQUkpbd6zdSw3I0eROmLywn6A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2634
+X-MS-Exchange-CrossTenant-UserPrincipalName: XV6PrcitWEojDeoY92NV4N38cJPRllnimYEjml5z1F+aTP+r9RfGk2adxZC7A/ZI0vVASDSiM4as7DvF/lOy0A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5961
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
-On 3/17/2022 5:16 PM, Peter Zijlstra wrote:
-> On Thu, Mar 17, 2022 at 11:58:34AM +0530, Sandipan Das wrote:
->> @@ -625,12 +630,32 @@ static void amd_pmu_wait_on_overflow(int idx)
->>  	}
->>  }
->>  
->> +static void amd_pmu_global_enable_all(int added)
+On 3/17/2022 5:31 PM, Peter Zijlstra wrote:
+> On Thu, Mar 17, 2022 at 11:58:35AM +0530, Sandipan Das wrote:
+> 
+>> +static inline u64 amd_pmu_get_global_overflow(void)
 >> +{
->> +	amd_pmu_set_global_ctl(amd_pmu_global_cntr_mask);
+>> +	u64 status;
+>> +
+>> +	/* PerfCntrGlobalStatus is read-only */
+>> +	rdmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS, status);
+>> +
+>> +	return status & amd_pmu_global_cntr_mask;
 >> +}
 >> +
->> +DEFINE_STATIC_CALL(amd_pmu_enable_all, x86_pmu_enable_all);
->> +
->> +static void amd_pmu_enable_all(int added)
+>> +static inline void amd_pmu_ack_global_overflow(u64 status)
 >> +{
->> +	static_call(amd_pmu_enable_all)(added);
+>> +	/*
+>> +	 * PerfCntrGlobalStatus is read-only but an overflow acknowledgment
+>> +	 * mechanism exists; writing 1 to a bit in PerfCntrGlobalStatusClr
+>> +	 * clears the same bit in PerfCntrGlobalStatus
+>> +	 */
+>> +
+>> +	/* Only allow modifications to PerfCntrGlobalStatus.PerfCntrOvfl */
+>> +	status &= amd_pmu_global_cntr_mask;
+>> +	wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR, status);
 >> +}
 >> +
->> +static void amd_pmu_global_disable_all(void)
+>> +static bool amd_pmu_legacy_has_overflow(int idx)
 >> +{
->> +	/* Disable all PMCs */
->> +	amd_pmu_set_global_ctl(0);
+>> +	u64 counter;
+>> +
+>> +	rdmsrl(x86_pmu_event_addr(idx), counter);
+>> +
+>> +	return !(counter & BIT_ULL(x86_pmu.cntval_bits - 1));
 >> +}
 >> +
->> +DEFINE_STATIC_CALL(amd_pmu_disable_all, x86_pmu_disable_all);
+>> +static bool amd_pmu_global_has_overflow(int idx)
+>> +{
+>> +	return amd_pmu_get_global_overflow() & BIT_ULL(idx);
+>> +}
 >> +
->>  static void amd_pmu_disable_all(void)
+>> +DEFINE_STATIC_CALL(amd_pmu_has_overflow, amd_pmu_legacy_has_overflow);
+>> +
+>>  /*
+>>   * When a PMC counter overflows, an NMI is used to process the event and
+>>   * reset the counter. NMI latency can result in the counter being updated
+>> @@ -613,7 +653,6 @@ static inline void amd_pmu_set_global_ctl(u64 ctl)
+>>  static void amd_pmu_wait_on_overflow(int idx)
 >>  {
->>  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->>  	int idx;
->>  
->> -	x86_pmu_disable_all();
->> +	static_call(amd_pmu_disable_all)();
+>>  	unsigned int i;
+>> -	u64 counter;
 >>  
 >>  	/*
->>  	 * This shouldn't be called from NMI context, but add a safeguard here
->> @@ -671,6 +696,28 @@ static void amd_pmu_disable_event(struct perf_event *event)
->>  	amd_pmu_wait_on_overflow(event->hw.idx);
+>>  	 * Wait for the counter to be reset if it has overflowed. This loop
+>> @@ -621,8 +660,7 @@ static void amd_pmu_wait_on_overflow(int idx)
+>>  	 * forever...
+>>  	 */
+>>  	for (i = 0; i < OVERFLOW_WAIT_COUNT; i++) {
+>> -		rdmsrl(x86_pmu_event_addr(idx), counter);
+>> -		if (counter & (1ULL << (x86_pmu.cntval_bits - 1)))
+>> +		if (!static_call(amd_pmu_has_overflow)(idx))
+>>  			break;
+>>  
+>>  		/* Might be in IRQ context, so can't sleep */
+> 
+> This scares me... please tell me you fixed that mess.
+> 
+>> @@ -718,6 +756,83 @@ static void amd_pmu_enable_event(struct perf_event *event)
+>>  	static_call(amd_pmu_enable_event)(event);
 >>  }
 >>  
->> +static void amd_pmu_global_enable_event(struct perf_event *event)
+>> +static int amd_pmu_global_handle_irq(struct pt_regs *regs)
 >> +{
->> +	struct hw_perf_event *hwc = &event->hw;
+>> +	struct perf_sample_data data;
+>> +	struct cpu_hw_events *cpuc;
+>> +	struct hw_perf_event *hwc;
+>> +	struct perf_event *event;
+>> +	u64 val, status, mask;
+>> +	int handled = 0, idx;
+>> +
+>> +	status = amd_pmu_get_global_overflow();
+>> +
+>> +	/* Check if any overflows are pending */
+>> +	if (!status)
+>> +		return 0;
+>> +
+>> +	/* Stop counting */
+>> +	amd_pmu_global_disable_all();
+> 
+> 
+> This seems weird to me, I'd first disable it, then read status. MSR
+> access is expensive, you want to shut down the PMU asap.
+> 
+> Also, this is written like PMI would not be the primary NMI source,
+> which seems somewhat unlikely.
+> 
+
+Yes, PMI is the primary NMI source. Will fix this.
+
+>> +
+>> +	cpuc = this_cpu_ptr(&cpu_hw_events);
 >> +
 >> +	/*
->> +	 * Testing cpu_hw_events.enabled should be skipped in this case unlike
->> +	 * in x86_pmu_enable_event().
+>> +	 * Some chipsets need to unmask the LVTPC in a particular spot
+>> +	 * inside the nmi handler.  As a result, the unmasking was
+>> +	 * pushed into all the nmi handlers.
 >> +	 *
->> +	 * Since cpu_hw_events.enabled is set only after returning from
->> +	 * x86_pmu_start(), the PMCs must be programmed and kept ready.
->> +	 * Counting starts only after x86_pmu_enable_all() is called.
+>> +	 * This generic handler doesn't seem to have any issues where
+>> +	 * the unmasking occurs so it was left at the top.
+>> +	 *
+>> +	 * N.B. Taken from x86_pmu_handle_irq()
 >> +	 */
->> +	__x86_pmu_enable_event(hwc, ARCH_PERFMON_EVENTSEL_ENABLE);
+> 
+> Please write an AMD specific comment here. Note how 'recent' Intel chips
+> ended up pushing this to the end of the handler. Verify with your
+> hardware team where they want this and write as much of the rationale as
+> you're allowed to share in the comment.
+> 
+
+Sure. I'll follow-up on this.
+
+>> +	apic_write(APIC_LVTPC, APIC_DM_NMI);
+>> +
+>> +	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
+>> +		if (!test_bit(idx, cpuc->active_mask))
+>> +			continue;
+>> +
+>> +		event = cpuc->events[idx];
+>> +		hwc = &event->hw;
+>> +		val = x86_perf_event_update(event);
+>> +		mask = BIT_ULL(idx);
+>> +
+>> +		if (!(status & mask))
+>> +			continue;
+>> +
+>> +		/* Event overflow */
+>> +		handled++;
+>> +		perf_sample_data_init(&data, 0, hwc->last_period);
+>> +
+>> +		if (!x86_perf_event_set_period(event))
+>> +			continue;
+>> +
+>> +		if (perf_event_overflow(event, &data, regs))
+>> +			x86_pmu_stop(event, 0);
+>> +
+>> +		status &= ~mask;
+>> +	}
+>> +
+>> +	/*
+>> +	 * It should never be the case that some overflows are not handled as
+>> +	 * the corresponding PMCs are expected to be inactive according to the
+>> +	 * active_mask
+>> +	 */
+>> +	WARN_ON(status > 0);
+>> +
+>> +	/* Clear overflow bits */
+>> +	amd_pmu_ack_global_overflow(~status);
+>> +
+>> +	inc_irq_stat(apic_perf_irqs);
+>> +
+>> +	/* Resume counting */
+>> +	amd_pmu_global_enable_all(0);
+> 
+> I think this is broken vs perf_pmu_{dis,en}able(), note how
+> intel_pmu_handle_irq() saves/restores the enable state.
+> 
+
+Yes, it is. Will fix it.
+
+>> +
+>> +	return handled;
 >> +}
 >> +
->> +DEFINE_STATIC_CALL(amd_pmu_enable_event, x86_pmu_enable_event);
->> +
->> +static void amd_pmu_enable_event(struct perf_event *event)
->> +{
->> +	static_call(amd_pmu_enable_event)(event);
->> +}
+>> +DEFINE_STATIC_CALL(amd_pmu_handle_irq, x86_pmu_handle_irq);
 >> +
 >>  /*
 >>   * Because of NMI latency, if multiple PMC counters are active or other sources
 >>   * of NMIs are received, the perf NMI handler can handle one or more overflowed
->> @@ -929,8 +976,8 @@ static __initconst const struct x86_pmu amd_pmu = {
->>  	.name			= "AMD",
->>  	.handle_irq		= amd_pmu_handle_irq,
->>  	.disable_all		= amd_pmu_disable_all,
->> -	.enable_all		= x86_pmu_enable_all,
->> -	.enable			= x86_pmu_enable_event,
->> +	.enable_all		= amd_pmu_enable_all,
->> +	.enable			= amd_pmu_enable_event,
->>  	.disable		= amd_pmu_disable_event,
->>  	.hw_config		= amd_pmu_hw_config,
->>  	.schedule_events	= x86_schedule_events,
->> @@ -989,6 +1036,11 @@ static int __init amd_core_pmu_init(void)
->>  		x86_pmu.num_counters = EXT_PERFMON_DEBUG_NUM_CORE_PMC(ebx);
+>> @@ -741,7 +856,7 @@ static int amd_pmu_handle_irq(struct pt_regs *regs)
+>>  	int handled;
 >>  
->>  		amd_pmu_global_cntr_mask = (1ULL << x86_pmu.num_counters) - 1;
->> +
->> +		/* Update PMC handling functions */
->> +		static_call_update(amd_pmu_enable_all, amd_pmu_global_enable_all);
->> +		static_call_update(amd_pmu_disable_all, amd_pmu_global_disable_all);
->> +		static_call_update(amd_pmu_enable_event, amd_pmu_global_enable_event);
+>>  	/* Process any counter overflows */
+>> -	handled = x86_pmu_handle_irq(regs);
+>> +	handled = static_call(amd_pmu_handle_irq)(regs);
+>>  
+>>  	/*
+>>  	 * If a counter was handled, record a timestamp such that un-handled
+>> @@ -1041,6 +1156,8 @@ static int __init amd_core_pmu_init(void)
+>>  		static_call_update(amd_pmu_enable_all, amd_pmu_global_enable_all);
+>>  		static_call_update(amd_pmu_disable_all, amd_pmu_global_disable_all);
+>>  		static_call_update(amd_pmu_enable_event, amd_pmu_global_enable_event);
+>> +		static_call_update(amd_pmu_has_overflow, amd_pmu_global_has_overflow);
+>> +		static_call_update(amd_pmu_handle_irq, amd_pmu_global_handle_irq);
 >>  	}
 > 
+> Same, all this static_call() stuff is misguided.
 > 
-> This makes no sense to me...
-> 
-> First and foremost, *please* tell me your shiny new hardware fixed the
-> terrible behaviour that requires the wait_on_overflow hacks in
-> amd_pmu_disable_all().
+> Also, if you feel like it, you can create amd_pmu_v2.
 
-Unfortunately, that workaround is still required.
-
-> 
-> Second, all these x86_pmu methods are already static_calls per
-> arch/x86/events/core.c. So what you want to do is something like:
-> 
-> 	x86_pmu = amd_pmu;
-> 	if (amd_v2) {
-> 		x86_pmu.disable_all = amd_v2_disable_all;
-> 		x86_pmu.enable_all  = amd_v2_enable_all;
-> 	}
-> 
-> And leave it at that.
-> 
-
-Sure. I'll clean this up.
+Sure.
 
 - Sandipan
