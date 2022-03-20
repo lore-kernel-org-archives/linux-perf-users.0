@@ -2,83 +2,122 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A1CC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat, 19 Mar 2022 19:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BEFC433F5
+	for <linux-perf-users@archiver.kernel.org>; Sun, 20 Mar 2022 00:23:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244019AbiCSTaZ (ORCPT
+        id S241217AbiCTAYd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 19 Mar 2022 15:30:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40562 "EHLO
+        Sat, 19 Mar 2022 20:24:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244017AbiCSTaY (ORCPT
+        with ESMTP id S236078AbiCTAYd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 19 Mar 2022 15:30:24 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 408C819A54E;
-        Sat, 19 Mar 2022 12:29:03 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A6477B80DC3;
-        Sat, 19 Mar 2022 19:29:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 35EA5C340EC;
-        Sat, 19 Mar 2022 19:29:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1647718140;
-        bh=iyImoKTScHJlBt06lG5E/IjfT5jttlXE1YkmwUr/2ak=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=Fd6r+soROehQ8MKXpcc38eR2SqZwnANijSDMw+U9+9mdZdZVoXHtRJNIYWMaRHCDe
-         K08PlxvGL7hzBmuLxN0MpblP3RWDWjyfPqJvc08zCuTH9+2sdQaIGOfTcm40oLZ0lH
-         7YxvTrQFAkRnKUYOKpJPgyRZ20OvLeIQuW4URdok8KKpTdM44mU6kyI6ZKOtzKQT+J
-         SpHYsNqmttvtTlgT4inJXgK0IyKksY9lbov38/sdp6dkvc2wbzV5BXN19e4FAzrd19
-         bod3ba9N2hr3yGoI35SUG5WUL0GS5mvGFLRehjq5LcpJA7rd943HC8dOzKZJjvxqUC
-         YtPsyv13ElHBA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 21583EAC09C;
-        Sat, 19 Mar 2022 19:29:00 +0000 (UTC)
-Subject: Re: [GIT PULL] perf tools fixes for v5.17: 5th batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20220319144446.93618-1-acme@kernel.org>
-References: <20220319144446.93618-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220319144446.93618-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.17-2022-03-19
-X-PR-Tracked-Commit-Id: 7bd1da15d211d439d96eb7cc8a35ce694b71d120
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 97e9c8eb4bb1dc57859acb1338dfddbd967d7484
-Message-Id: <164771814012.23927.9326460661515913850.pr-tracker-bot@kernel.org>
-Date:   Sat, 19 Mar 2022 19:29:00 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Weiguo Li <liwg06@foxmail.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        Sat, 19 Mar 2022 20:24:33 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AD8F396B1;
+        Sat, 19 Mar 2022 17:23:11 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id t22so9917712plo.0;
+        Sat, 19 Mar 2022 17:23:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aCcXyGBeuBGRSClxBYmQz/kYFQduE8YzmbZ0WJ5dI9k=;
+        b=hzuliQ2jyHeHq4tWhRO155WxnV56qXgAKOlM3KbxLfGAVyHXbZfS51P4zyc7S6FOOt
+         GJAJdgGpHr+b1FWy2JbLshI7FydKMwaSWWhQHVI7lzXnMuMtl9DPj+8LCRn5m7SsHD+a
+         /bN0d+tLPWTcqnvo+iKLAKqcu4nDl3LMWHWZIdWUPvAnrwoMQ90aky4CTpB8zH7tHagC
+         zzQdpJXS7ExGrsM/umFW5iwllEKyEz9ggTXf5ulxnWGSqQCjVsQd1iwsYp1ukQav3uEt
+         oyhXizGO4vTLCF5LQE2Noq8jH6hgUn4/Hg8Iik1EiumumY2hl1iuEWDBFtuz3nL8tuIG
+         uMRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aCcXyGBeuBGRSClxBYmQz/kYFQduE8YzmbZ0WJ5dI9k=;
+        b=3eox22ZtKUQ5T2OjLBEg+I0Qmg+HutaXpWeFAf+U4ifhxli/8q3Zc1YJslw10ubaU3
+         HGjnnNrZiTitoDoy+DvsP2UnP1QW9ZPS40Wujxv9D2HTILXL58S9eagLjeaW1trNfatH
+         gh/ktnRtXotB+HoaHJM5ctBS30tp59hOQdPOBtkUCg9cbSnTstaEqpbX6ehKgN5ZSu2Q
+         wFugleUeT76NGyWzeFsiWFPU8BCoTKkAdJ0GdrepSOjc/yPKUjvz5MTUnbl3dQ9SnlcP
+         m/VRf3Xi5xVUiR0YVadIYHZ7ElikCJegAMhk7a8All1JdRa3DbnGSmMFcUmgBBeVk5BQ
+         z8Fw==
+X-Gm-Message-State: AOAM530QepDITvuZ+lO2RTHYqB8TyFPMAKZT5zEUPyinWDonI/XMcMaq
+        3JBFBi67L4LQxhcaZlm3xRZy9yPF5zfhLg==
+X-Google-Smtp-Source: ABdhPJxngVVNgBsxeComoTsrpmNgd25f8wVVhAvOUOP66P5uYwokYda9lGwczTrIpDmehHxhfvs7pQ==
+X-Received: by 2002:a17:902:ecd0:b0:151:e180:56fb with SMTP id a16-20020a170902ecd000b00151e18056fbmr6202953plh.131.1647735788613;
+        Sat, 19 Mar 2022 17:23:08 -0700 (PDT)
+Received: from localhost.localdomain ([103.149.162.114])
+        by smtp.gmail.com with ESMTPSA id z16-20020a056a00241000b004f3a647ae89sm14442652pfh.174.2022.03.19.17.23.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 19 Mar 2022 17:23:08 -0700 (PDT)
+From:   Dongli Si <kvmx86@gmail.com>
+X-Google-Original-From: Dongli Si <sidongli1997@gmail.com>
+To:     peterz@infradead.org, joerg.roedel@amd.com
+Cc:     liam.merwick@oracle.com, kim.phillips@amd.com, mingo@kernel.org,
+        acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4] perf/x86/amd: Don't touch the Host-only bit inside the guest hypervisor
+Date:   Sun, 20 Mar 2022 08:21:06 +0800
+Message-Id: <20220320002106.1800166-1-sidongli1997@gmail.com>
+X-Mailer: git-send-email 2.32.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Sat, 19 Mar 2022 11:44:46 -0300:
+From: Dongli Si <sidongli1997@gmail.com>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.17-2022-03-19
+With nested virtualization on AMD Milan, if "perf record" is run in an
+L1 hypervisor with an L2 guest, the following warning is emitted in
+the L1 guest.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/97e9c8eb4bb1dc57859acb1338dfddbd967d7484
+[] unchecked MSR access error: WRMSR to 0xc0010200 (tried to write 0x0000020000510076)
+at rIP: 0xffffffff81003a50 (x86_pmu_enable_all+0x60/0x100)
+[] Call Trace:
+[]  <IRQ>
+[]  ? x86_pmu_enable+0x146/0x300
+[]  __perf_install_in_context+0x150/0x170
 
-Thank you!
+The AMD64_EVENTSEL_HOSTONLY bit is defined and used on the host (L0),
+while the L1 hypervisor Performance Monitor Unit should avoid such use.
 
+Fixes: 1018faa6cf23 ("perf/x86/kvm: Fix Host-Only/Guest-Only counting with SVM disabled")
+Signed-off-by: Dongli Si <sidongli1997@gmail.com>
+Tested-by: Liam Merwick <liam.merwick@oracle.com>
+Reviewed-by: Liam Merwick <liam.merwick@oracle.com>
+---
+v4: Remove my run_as_host function for better descriptive.
+v3: https://lore.kernel.org/all/20220314042254.1487836-1-sidongli1997@gmail.com/
+v2: https://lore.kernel.org/all/20220310183404.1291725-1-sidongli1997@gmail.com/
+v1: https://lore.kernel.org/all/20220227132640.3-1-sidongli1997@gmail.com/
+
+ arch/x86/events/amd/core.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index 9687a8aef01c..3fafd1e46ada 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -8,6 +8,7 @@
+ #include <linux/jiffies.h>
+ #include <asm/apicdef.h>
+ #include <asm/nmi.h>
++#include <asm/hypervisor.h>
+ 
+ #include "../perf_event.h"
+ 
+@@ -1027,7 +1028,8 @@ void amd_pmu_enable_virt(void)
+ {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 
+-	cpuc->perf_ctr_virt_mask = 0;
++	if (hypervisor_is_type(X86_HYPER_NATIVE))
++		cpuc->perf_ctr_virt_mask = 0;
+ 
+ 	/* Reload all events */
+ 	amd_pmu_disable_all();
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.32.0
