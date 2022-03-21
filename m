@@ -2,191 +2,292 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B351C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Mar 2022 20:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 104D0C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Mar 2022 21:11:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231517AbiCUUyX (ORCPT
+        id S229587AbiCUVMZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 21 Mar 2022 16:54:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59994 "EHLO
+        Mon, 21 Mar 2022 17:12:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229475AbiCUUyW (ORCPT
+        with ESMTP id S229496AbiCUVMZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 21 Mar 2022 16:54:22 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36608D63;
-        Mon, 21 Mar 2022 13:52:56 -0700 (PDT)
+        Mon, 21 Mar 2022 17:12:25 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF27721C044
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Mar 2022 14:10:58 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id ABD32B819E1;
-        Mon, 21 Mar 2022 20:52:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30816C340E8;
-        Mon, 21 Mar 2022 20:52:53 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5BE7E61249
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Mar 2022 21:10:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64B90C340E8;
+        Mon, 21 Mar 2022 21:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1647895973;
-        bh=RMHwF+upYOMgTMbO+pQMLcTl41MLqg+oxmrwPn97eaM=;
+        s=k20201202; t=1647897057;
+        bh=8rL7WNFYTt2rVHC2SY3ocLgPf0ulot3cfYFluZYWSZA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=s/GLssabZsc03oSZsONB+Xl4TIThhWoSwwpkIiw8nUfZFIBSF86YKRBhZTYQxBVD8
-         0e7WtnD/IX6C2sNWSRPGGkBbEVT8AGxzR7W1Y420eLf4id1DgKv9+O2ppwEBtADXja
-         fYc9zJZGRcSyNhvgWMkWf6TtfQDx9EdbqUg7kjuX3rzG9hA7WV3jQxewla6cMEqBx2
-         mULb1ET3Z4c2PrwAQkiFblv3hhwwxYaTyU5QooW+GzyaAZvYKMH4gtTlD5HGP5nqW2
-         oUl2fjzQwC8YVwbcd0+cUi6GQLqZBy0WdnejhzDTEEYcI5lLyPpsr0MSxkLeZcKF47
-         m3VVCa94IjeIw==
+        b=RxnYeJIwIv3Ge0ppPRqA4jH9ShzhbuauBZ/UPBHcxVD2yE3Bz6P9mPJV0lj6adUop
+         10rTyaKqY9r4wQuwfZHaYKFdOLCDi+CtwF4OSDhpJY4PUaHrW66asn3s36rRT18HtU
+         WLS4kafBIaxD9vqWEeVBi2W6YgwCoR0EZ86qylDOcCxvhJueEvxhEFR4rgsC956vtU
+         EedO1c/s0Oe1I94JPuynuFsX0a1TxtyIWzgj5+VrOnD72JRSQ1n+5m1i3FkzMRkvJi
+         mflc2NsLys8PM+PNld9zFMiltNbbxs7vMPX/54pMcLrvHQREtJkmKmBVWj16kJhg88
+         VP9fXcRps+2NQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 9DDAD40407; Mon, 21 Mar 2022 17:52:50 -0300 (-03)
-Date:   Mon, 21 Mar 2022 17:52:50 -0300
+        id 5343E40407; Mon, 21 Mar 2022 18:10:55 -0300 (-03)
+Date:   Mon, 21 Mar 2022 18:10:55 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     German Gomez <german.gomez@arm.com>
-Cc:     James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
-        namhyung@kernel.org, leo.yan@linaro.org, Alexandre.Truong@arm.com,
-        Jiri Olsa <jolsa@kernel.org>
-Subject: Re: [PATCH v2 1/1] perf test arm64: Test unwinding using
- fame-pointer (fp) mode
-Message-ID: <YjjlohvNAL8lKlV+@kernel.org>
-References: <20220316172015.98000-1-german.gomez@arm.com>
- <592a32d6-b618-951c-9db9-711d022ff85e@arm.com>
- <b2ff473a-f252-89c9-78b3-bacff2876869@arm.com>
+To:     Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Jiri Olsa <olsajiri@gmail.com>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2] libperf: Add API for allocating new thread map
+Message-ID: <Yjjp37EkI4sbNCx/@kernel.org>
+References: <20220221102628.43904-1-tz.stoyanov@gmail.com>
+ <YhPsKeK0UdjiDN1R@krava>
+ <YhV+LpjwXw3mai16@kernel.org>
+ <YhY3FV9s+pIJ4Z1v@krava>
+ <YhZTH+l+JJ8E4O5C@kernel.org>
+ <CAPpZLN4Nov2XGE1FQ4FAU7JKSmUfDK0+VdZcnCO-WkTAE-LoBA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b2ff473a-f252-89c9-78b3-bacff2876869@arm.com>
+In-Reply-To: <CAPpZLN4Nov2XGE1FQ4FAU7JKSmUfDK0+VdZcnCO-WkTAE-LoBA@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Mar 16, 2022 at 05:48:50PM +0000, German Gomez escreveu:
-> 
-> On 16/03/2022 17:30, James Clark wrote:
+Em Mon, Mar 21, 2022 at 01:10:49PM +0200, Tzvetomir Stoyanov escreveu:
+> On Wed, Feb 23, 2022 at 5:30 PM Arnaldo Carvalho de Melo
+> <arnaldo.melo@gmail.com> wrote:
 > >
-> > On 16/03/2022 17:20, German Gomez wrote:
-> >> Add a shell script to check that the call-graphs generated using frame
-> >> pointers (--call-graph fp) are complete and not missing leaf functions:
-> >>
-> >>   | $ perf test 88 -v
-> >>   |  88: Check Arm64 callgraphs are complete in fp mode                  :
-> >>   | --- start ---
-> >>   | test child forked, pid 8734
-> >>   |  + Compiling test program (/tmp/test_program.Cz3yL)...
-> >>   |  + Recording (PID=8749)...
-> >>   |  + Stopping perf-record...
-> >>   | test_program.Cz
-> >>   |                  728 leaf
-> >>   |                  753 parent
-> >>   |                  76c main
-> >>   | test child finished with 0
-> >>   | ---- end ----
-> >>   | Check Arm SPE callgraphs are complete in fp mode: Ok
-> >>
-> > Ran it on N1SDP and it passes, and it fails if b9f6fbb3b2c2 isn't applied.
+> > Em Wed, Feb 23, 2022 at 02:31:01PM +0100, Jiri Olsa escreveu:
+> > > On Tue, Feb 22, 2022 at 09:22:06PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > Em Mon, Feb 21, 2022 at 08:46:49PM +0100, Jiri Olsa escreveu:
+> > > > > On Mon, Feb 21, 2022 at 12:26:28PM +0200, Tzvetomir Stoyanov (VMware) wrote:
+> > > > > > The existing API perf_thread_map__new_dummy() allocates new thread map
+> > > > > > for one thread. I couldn't find a way to reallocate the map with more
+> > > > > > threads, or to allocate a new map for more than one thread. Having
+> > > > > > multiple threads in a thread map is essential for some use cases.
+> > > > > > That's why a new API is proposed, which allocates a new thread map
+> > > > > > for given number of threads:
+> > > > > >  perf_thread_map__new_array()
+> > > > > >
+> > > > > > Signed-off-by: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
+> > > > > > ---
+> > > > > > v2 changes:
+> > > > > >  - Changed the new API as Arnaldo suggested - get number of threads in the
+> > > > > >    map and array with initial values (optional).
+> > > > >
+> > > > > looks good, would you also find useful in your use case the comm support
+> > > >
+> > > > Is that an Acked-by? :-)
+> > >
+> > > yes, I wasn't sure about the previous args name changes,
+> > > this one is fine
+> > >
+> > > Acked-by: Jiri Olsa <jolsa@kernel.org>
+> >
+> > Ok, applying this one after applying the arg name changes one, please
+> > confirm if you agree with that one.
+> >
+> > - Arnaldo
 > 
-> I forgot to mention in the notes that it's supposed to work with both unwinders:
-> 
-> $ make                # for libunwind (default)
-> $ make NO_LIBUNWIND=1 # for libdw
+> ping
+> Please, can you merge this one, If there are no problems with the
+> code. We would like to use the new API perf_thread_map__new_array().
+> Thanks!
 
-I'll add it to the cset commit log, and also will fix this:
+Its there already, was merged one month ago:
 
-⬢[acme@toolbox perf]$        git am ./v2_20220316_german_gomez_perf_test_arm64_test_unwinding_using_fame_pointer_fp_mode.mbx
-Applying: perf test arm64: Test unwinding using fame-pointer (fp) mode
-.git/rebase-apply/patch:72: trailing whitespace.
-# program
-warning: 1 line adds whitespace errors.
-tools/perf/tests/shell/test_arm_callgraph_fp.sh:58: trailing whitespace.
-+# program
-⬢[acme@toolbox perf]$
+commit 56dce868198cd01b023e05d72bbbba7c87cc384d
+Author: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
+Date:   Mon Feb 21 12:26:28 2022 +0200
+
+    libperf: Add API for allocating new thread map array
+
+
+Its in perf/core, will go to Linus this week.
+
+- Arnaldo
  
+> > > thanks,
+> > > jirka
+> > >
+> > > >
+> > > > - Arnaldo
+> > > >
+> > > > > in thread_map? the thread_map__read_comms function? we could move it from
+> > > > > perf to libperf
+> > > > >
+> > > > > thanks,
+> > > > > jirka
+> > > > >
+> > > > > >
+> > > > > >  tools/lib/perf/Documentation/libperf.txt |  1 +
+> > > > > >  tools/lib/perf/include/perf/threadmap.h  |  1 +
+> > > > > >  tools/lib/perf/libperf.map               |  1 +
+> > > > > >  tools/lib/perf/tests/test-threadmap.c    | 41 ++++++++++++++++++++++++
+> > > > > >  tools/lib/perf/threadmap.c               | 24 ++++++++++----
+> > > > > >  5 files changed, 61 insertions(+), 7 deletions(-)
+> > > > > >
+> > > > > > diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
+> > > > > > index a21f733b95b1..a8f1a237931b 100644
+> > > > > > --- a/tools/lib/perf/Documentation/libperf.txt
+> > > > > > +++ b/tools/lib/perf/Documentation/libperf.txt
+> > > > > > @@ -62,6 +62,7 @@ SYNOPSIS
+> > > > > >    struct perf_thread_map;
+> > > > > >
+> > > > > >    struct perf_thread_map *perf_thread_map__new_dummy(void);
+> > > > > > +  struct perf_thread_map *perf_thread_map__new_array(int nr_threads, pid_t *array);
+> > > > > >
+> > > > > >    void perf_thread_map__set_pid(struct perf_thread_map *map, int idx, pid_t pid);
+> > > > > >    char *perf_thread_map__comm(struct perf_thread_map *map, int idx);
+> > > > > > diff --git a/tools/lib/perf/include/perf/threadmap.h b/tools/lib/perf/include/perf/threadmap.h
+> > > > > > index 58f7fbdce446..8b40e7777cea 100644
+> > > > > > --- a/tools/lib/perf/include/perf/threadmap.h
+> > > > > > +++ b/tools/lib/perf/include/perf/threadmap.h
+> > > > > > @@ -8,6 +8,7 @@
+> > > > > >  struct perf_thread_map;
+> > > > > >
+> > > > > >  LIBPERF_API struct perf_thread_map *perf_thread_map__new_dummy(void);
+> > > > > > +LIBPERF_API struct perf_thread_map *perf_thread_map__new_array(int nr_threads, pid_t *array);
+> > > > > >
+> > > > > >  LIBPERF_API void perf_thread_map__set_pid(struct perf_thread_map *map, int idx, pid_t pid);
+> > > > > >  LIBPERF_API char *perf_thread_map__comm(struct perf_thread_map *map, int idx);
+> > > > > > diff --git a/tools/lib/perf/libperf.map b/tools/lib/perf/libperf.map
+> > > > > > index 6fa0d651576b..190b56ae923a 100644
+> > > > > > --- a/tools/lib/perf/libperf.map
+> > > > > > +++ b/tools/lib/perf/libperf.map
+> > > > > > @@ -12,6 +12,7 @@ LIBPERF_0.0.1 {
+> > > > > >                 perf_cpu_map__empty;
+> > > > > >                 perf_cpu_map__max;
+> > > > > >                 perf_cpu_map__has;
+> > > > > > +               perf_thread_map__new_array;
+> > > > > >                 perf_thread_map__new_dummy;
+> > > > > >                 perf_thread_map__set_pid;
+> > > > > >                 perf_thread_map__comm;
+> > > > > > diff --git a/tools/lib/perf/tests/test-threadmap.c b/tools/lib/perf/tests/test-threadmap.c
+> > > > > > index 5e2a0291e94c..f728ad7002bb 100644
+> > > > > > --- a/tools/lib/perf/tests/test-threadmap.c
+> > > > > > +++ b/tools/lib/perf/tests/test-threadmap.c
+> > > > > > @@ -11,9 +11,43 @@ static int libperf_print(enum libperf_print_level level,
+> > > > > >         return vfprintf(stderr, fmt, ap);
+> > > > > >  }
+> > > > > >
+> > > > > > +static int test_threadmap_array(int nr, pid_t *array)
+> > > > > > +{
+> > > > > > +       struct perf_thread_map *threads;
+> > > > > > +       int i;
+> > > > > > +
+> > > > > > +       threads = perf_thread_map__new_array(nr, array);
+> > > > > > +       __T("Failed to allocate new thread map", threads);
+> > > > > > +
+> > > > > > +       __T("Unexpected number of threads", perf_thread_map__nr(threads) == nr);
+> > > > > > +
+> > > > > > +       for (i = 0; i < nr; i++) {
+> > > > > > +               __T("Unexpected initial value of thread",
+> > > > > > +                   perf_thread_map__pid(threads, i) == (array ? array[i] : -1));
+> > > > > > +       }
+> > > > > > +
+> > > > > > +       for (i = 1; i < nr; i++)
+> > > > > > +               perf_thread_map__set_pid(threads, i, i * 100);
+> > > > > > +
+> > > > > > +       __T("Unexpected value of thread 0",
+> > > > > > +           perf_thread_map__pid(threads, 0) == (array ? array[0] : -1));
+> > > > > > +
+> > > > > > +       for (i = 1; i < nr; i++) {
+> > > > > > +               __T("Unexpected thread value",
+> > > > > > +                   perf_thread_map__pid(threads, i) == i * 100);
+> > > > > > +       }
+> > > > > > +
+> > > > > > +       perf_thread_map__put(threads);
+> > > > > > +
+> > > > > > +       return 0;
+> > > > > > +}
+> > > > > > +
+> > > > > > +#define THREADS_NR     10
+> > > > > >  int test_threadmap(int argc, char **argv)
+> > > > > >  {
+> > > > > >         struct perf_thread_map *threads;
+> > > > > > +       pid_t thr_array[THREADS_NR];
+> > > > > > +       int i;
+> > > > > >
+> > > > > >         __T_START;
+> > > > > >
+> > > > > > @@ -27,6 +61,13 @@ int test_threadmap(int argc, char **argv)
+> > > > > >         perf_thread_map__put(threads);
+> > > > > >         perf_thread_map__put(threads);
+> > > > > >
+> > > > > > +       test_threadmap_array(THREADS_NR, NULL);
+> > > > > > +
+> > > > > > +       for (i = 0; i < THREADS_NR; i++)
+> > > > > > +               thr_array[i] = i + 100;
+> > > > > > +
+> > > > > > +       test_threadmap_array(THREADS_NR, thr_array);
+> > > > > > +
+> > > > > >         __T_END;
+> > > > > >         return tests_failed == 0 ? 0 : -1;
+> > > > > >  }
+> > > > > > diff --git a/tools/lib/perf/threadmap.c b/tools/lib/perf/threadmap.c
+> > > > > > index 84fa07c79d00..07968f3ea093 100644
+> > > > > > --- a/tools/lib/perf/threadmap.c
+> > > > > > +++ b/tools/lib/perf/threadmap.c
+> > > > > > @@ -42,18 +42,28 @@ char *perf_thread_map__comm(struct perf_thread_map *map, int idx)
+> > > > > >         return map->map[idx].comm;
+> > > > > >  }
+> > > > > >
+> > > > > > -struct perf_thread_map *perf_thread_map__new_dummy(void)
+> > > > > > +struct perf_thread_map *perf_thread_map__new_array(int nr_threads, pid_t *array)
+> > > > > >  {
+> > > > > > -       struct perf_thread_map *threads = thread_map__alloc(1);
+> > > > > > +       struct perf_thread_map *threads = thread_map__alloc(nr_threads);
+> > > > > > +       int i;
+> > > > > > +
+> > > > > > +       if (!threads)
+> > > > > > +               return NULL;
+> > > > > > +
+> > > > > > +       for (i = 0; i < nr_threads; i++)
+> > > > > > +               perf_thread_map__set_pid(threads, i, array ? array[i] : -1);
+> > > > > > +
+> > > > > > +       threads->nr = nr_threads;
+> > > > > > +       refcount_set(&threads->refcnt, 1);
+> > > > > >
+> > > > > > -       if (threads != NULL) {
+> > > > > > -               perf_thread_map__set_pid(threads, 0, -1);
+> > > > > > -               threads->nr = 1;
+> > > > > > -               refcount_set(&threads->refcnt, 1);
+> > > > > > -       }
+> > > > > >         return threads;
+> > > > > >  }
+> > > > > >
+> > > > > > +struct perf_thread_map *perf_thread_map__new_dummy(void)
+> > > > > > +{
+> > > > > > +       return perf_thread_map__new_array(1, NULL);
+> > > > > > +}
+> > > > > > +
+> > > > > >  static void perf_thread_map__delete(struct perf_thread_map *threads)
+> > > > > >  {
+> > > > > >         if (threads) {
+> > > > > > --
+> > > > > > 2.34.1
+> > > > > >
+> > > >
+> > > > --
+> > > >
+> > > > - Arnaldo
 > >
-> > Reviewed-by: James Clark <james.clark@arm.com>
+> > --
 > >
-> >> Fixes: b9f6fbb3b2c2 ("perf arm64: Inject missing frames when using 'perf record --call-graph=fp'")
-> >> Suggested-by: Jiri Olsa <jolsa@kernel.org>
-> >> Signed-off-by: German Gomez <german.gomez@arm.com>
-> >> ---
-> >> Changes since v1: https://lore.kernel.org/all/a6ba0ea8-f070-9f79-f018-f638ff677c7c@arm.com/
-> >>  - Add explicit '-g' flag to GCC command
-> >> ---
-> >>  .../perf/tests/shell/test_arm_callgraph_fp.sh | 68 +++++++++++++++++++
-> >>  1 file changed, 68 insertions(+)
-> >>  create mode 100755 tools/perf/tests/shell/test_arm_callgraph_fp.sh
-> >>
-> >> diff --git a/tools/perf/tests/shell/test_arm_callgraph_fp.sh b/tools/perf/tests/shell/test_arm_callgraph_fp.sh
-> >> new file mode 100755
-> >> index 000000000..ea1b4e6bb
-> >> --- /dev/null
-> >> +++ b/tools/perf/tests/shell/test_arm_callgraph_fp.sh
-> >> @@ -0,0 +1,68 @@
-> >> +#!/bin/sh
-> >> +# Check Arm64 callgraphs are complete in fp mode
-> >> +# SPDX-License-Identifier: GPL-2.0
-> >> +
-> >> +lscpu | grep -q "aarch64" || exit 2
-> >> +
-> >> +if ! [ -x "$(command -v cc)" ]; then
-> >> +	echo "failed: no compiler, install gcc"
-> >> +	exit 2
-> >> +fi
-> >> +
-> >> +PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-> >> +TEST_PROGRAM_SOURCE=$(mktemp /tmp/test_program.XXXXX.c)
-> >> +TEST_PROGRAM=$(mktemp /tmp/test_program.XXXXX)
-> >> +
-> >> +cleanup_files()
-> >> +{
-> >> +	rm -f $PERF_DATA
-> >> +	rm -f $TEST_PROGRAM_SOURCE
-> >> +	rm -f $TEST_PROGRAM
-> >> +}
-> >> +
-> >> +trap cleanup_files exit term int
-> >> +
-> >> +cat << EOF > $TEST_PROGRAM_SOURCE
-> >> +int a = 0;
-> >> +void leaf(void) {
-> >> +  for (;;)
-> >> +    a += a;
-> >> +}
-> >> +void parent(void) {
-> >> +  leaf();
-> >> +}
-> >> +int main(void) {
-> >> +  parent();
-> >> +  return 0;
-> >> +}
-> >> +EOF
-> >> +
-> >> +echo " + Compiling test program ($TEST_PROGRAM)..."
-> >> +
-> >> +CFLAGS="-g -O0 -fno-inline -fno-omit-frame-pointer"
-> >> +cc $CFLAGS $TEST_PROGRAM_SOURCE -o $TEST_PROGRAM || exit 1
-> >> +
-> >> +# Add a 1 second delay to skip samples that are not in the leaf() function
-> >> +perf record -o $PERF_DATA --call-graph fp -e cycles//u -D 1000 -- $TEST_PROGRAM 2> /dev/null &
-> >> +PID=$!
-> >> +
-> >> +echo " + Recording (PID=$PID)..."
-> >> +sleep 2
-> >> +echo " + Stopping perf-record..."
-> >> +
-> >> +kill $PID
-> >> +wait $PID
-> >> +
-> >> +# expected perf-script output:
-> >> +#
-> >> +# program 
-> >> +# 	728 leaf
-> >> +# 	753 parent
-> >> +# 	76c main
-> >> +# ...
-> >> +
-> >> +perf script -i $PERF_DATA -F comm,ip,sym | head -n4
-> >> +perf script -i $PERF_DATA -F comm,ip,sym | head -n4 | \
-> >> +	awk '{ if ($2 != "") sym[i++] = $2 } END { if (sym[0] != "leaf" ||
-> >> +						       sym[1] != "parent" ||
-> >> +						       sym[2] != "main") exit 1 }'
+> > - Arnaldo
+> 
+> 
+> 
+> --
+> Tzvetomir (Ceco) Stoyanov
+> VMware Open Source Technology Center
 
 -- 
 
