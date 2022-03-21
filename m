@@ -2,215 +2,140 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3D4C433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Mar 2022 14:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A88E6C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Mar 2022 16:58:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348788AbiCUOFO (ORCPT
+        id S1348279AbiCUQ7l (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 21 Mar 2022 10:05:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38088 "EHLO
+        Mon, 21 Mar 2022 12:59:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348803AbiCUODx (ORCPT
+        with ESMTP id S235324AbiCUQ7k (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 21 Mar 2022 10:03:53 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4401543480;
-        Mon, 21 Mar 2022 07:01:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647871274; x=1679407274;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=hIen9Z7wLd+Ry77Vwb3icZYihUovoSxjvkDO2KRoaVY=;
-  b=mT7UgVxIlxCv7wvTC6TyeGM7hNjy3+m2JwODO1nIv1EkFqMatyJCCPUN
-   REIpMwrvUjxlPgT7aKGvlyBYBiR20az+kCHb8K3ZbAyYYkHFGagx6FW6J
-   xtw9jyQLN/EXw7AaQ7pegfZMR/I4N9aOu50yV2F1SV1bg74AOrh5GaWDo
-   gcS341QLjJKgIRWH63NrYVBCCQeykhAubHxtmbsqpgLlTdeIedBY6To8a
-   HoLx6ZFsLQNdP5RGyYSN1OlgPwnpMAcUaiwzDf2+aSoMhhFpBtle2xBDP
-   Xji2HX+sjlSDmQAQCHmDchnBArzUiImc4X5OgRld93EIhO4j1lb+o0vAg
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10292"; a="255121571"
-X-IronPort-AV: E=Sophos;i="5.90,198,1643702400"; 
-   d="scan'208";a="255121571"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2022 07:01:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,198,1643702400"; 
-   d="scan'208";a="716506931"
-Received: from otc-lr-04.jf.intel.com ([10.54.39.41])
-  by orsmga005.jf.intel.com with ESMTP; 21 Mar 2022 07:01:08 -0700
-From:   kan.liang@linux.intel.com
-To:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     ak@linux.intel.com, ahmad.yasin@intel.com,
-        zhengjun.xing@linux.intel.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH] perf script: Add 'brstackinsnlen' for branch stacks
-Date:   Mon, 21 Mar 2022 07:00:12 -0700
-Message-Id: <1647871212-184070-1-git-send-email-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 21 Mar 2022 12:59:40 -0400
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BA973C738
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Mar 2022 09:58:14 -0700 (PDT)
+Received: by mail-wm1-x332.google.com with SMTP id p184-20020a1c29c1000000b0037f76d8b484so8719417wmp.5
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Mar 2022 09:58:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=XUH9WW10O8cDNlW6XWZHeYweS24CM22UwaJeFld/Gew=;
+        b=AIAMLnn9JL9cbEph7aE6F7EAkIdQuoJnrSd1XK7IfaokJWBkyiJuTHEG2xJqjXABRF
+         DfVJMYjKYth04hY+REgO247uCeJPFJotbqvL4x542Dzk+bgkZw1LF82BxIf3DUzks1g8
+         aqP3KX8gVsT1Qjjq8hoSepjjNyena6RRm7ZD95Nd/yTFa0nPu74ER7BdzpwvOrkFsv+2
+         lON1jO/96OqlDwfeSpES0X7Svof79236Ef4IcBOu2Pmj8vTW8UoZIh4PkAaiwkUczdTn
+         7bP7SnlAi24XglfKv2zZvVI99YeDMd5vG8PcusyrqL+vjxrhgvOpwPtiY3OfNRrdYu4W
+         eREQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=XUH9WW10O8cDNlW6XWZHeYweS24CM22UwaJeFld/Gew=;
+        b=rvZy43iuap3kMMZ9Cp6r9sE0Z3b0Rqh7Ax/rvKR8dVsyCfrcG25APaoP8RDVyXftRD
+         do/7ZdrNuobdu7B6Ne+/Y4YjXGwEuH65J0CMctRQ7+IRRGdK8c4jg+olALm8fRmYS8yA
+         gQH4SxI18YppaqRmSHzmbl9yWsxtfEGZG+wUM+jImhxRLkNchb2IU6wgmBywHNnyGlQU
+         0QWzuyglO5p6mUxrN5MudnxrSE+oo/wZly2bwZQm1NdYPuw0gxzn6luuEh62+EPKux0+
+         KgpAixgmLA3QgXmnnNKgrjMIuzvf3lzd/43NmQ7Dguvt0wwjWi7RhpdNnLih+WCUnyKq
+         3qOQ==
+X-Gm-Message-State: AOAM53347Do1C1fVfNqGk3MKpPDx60TfmP8gHiDjBj1KqKD49gf8kPUp
+        uKPlcvmJYKvn1gsaTHFB3amSBw==
+X-Google-Smtp-Source: ABdhPJwgI/lNEfCCsczpCw39SX//lh6xwO+7TI0RNrg77Mxku+B/7LkKfPrAokDRCbpTz7Sym1U5Tg==
+X-Received: by 2002:a05:600c:2188:b0:38c:9a21:9c95 with SMTP id e8-20020a05600c218800b0038c9a219c95mr17410wme.87.1647881892727;
+        Mon, 21 Mar 2022 09:58:12 -0700 (PDT)
+Received: from google.com (110.121.148.146.bc.googleusercontent.com. [146.148.121.110])
+        by smtp.gmail.com with ESMTPSA id az19-20020a05600c601300b0038cadf3aa69sm37767wmb.36.2022.03.21.09.58.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Mar 2022 09:58:11 -0700 (PDT)
+Date:   Mon, 21 Mar 2022 17:58:08 +0100
+From:   "Steinar H. Gunderson" <sesse@google.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf intel-pt: Synthesize cycle events
+Message-ID: <YjiuoEUL6jH32cBi@google.com>
+References: <YjBnet2813sEGjZY@google.com>
+ <c50bb87d-9fee-c4f9-a350-8729e503e43a@intel.com>
+ <YjDUO6bbyfGw/u0C@google.com>
+ <52903e58-e74c-5ea0-36b4-277ea3610af4@intel.com>
+ <YjGdoGy4Z2UUG9S9@google.com>
+ <ef780335-7dc6-3a23-54a8-b6fc9c8a2ed3@intel.com>
+ <YjHfGrZovk3N/H0f@google.com>
+ <371faf0d-f794-4a2e-0a1c-9d454d7c8b12@intel.com>
+ <YjhUjotmo+kYvoNP@google.com>
+ <ffa56520-09b5-9c5d-7733-6767d2f8e350@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ffa56520-09b5-9c5d-7733-6767d2f8e350@intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Mon, Mar 21, 2022 at 03:09:08PM +0200, Adrian Hunter wrote:
+> Yes, it can cross calls and returns.  'returns' due to "Return Compression"
+> which can be switched off at record time with config term noretcomp, but
+> that may cause more overflows / trace data loss.
+> 
+> To get accurate times for a single function there is Intel PT
+> address filtering.
+> 
+> Otherwise LBRs can have cycle times.
 
-When analyzing with the perf script, it's useful to understand the
-captured instruction and the next sequential instruction. To calculate
-the address of the next sequential instruction, the length of the
-captured instruction is required. For example, you can’t know the next
-sequential instruction after an unconditional branch unless you
-calculate that based on its length.
+Many interesting points, I'll be sure to look into them.
 
-For branch stacks, the current perf script only prints the instruction
-bytes with 'brstackinsn', but lack of instruction length.
+Meanwhile, should I send a new patch with your latest changes?
+It's more your patch than mine now, it seems, but I think we're
+converging on something useful.
 
-Add 'brstackinsnlen' to print the instruction length.
+>> By the way, I noticed that synthesized call stacks do not respect
+>> --inline; is that on purpose? The patch seems simple enough (just
+>> a call to add_inlines), although it exposes extreme slowness in libbfd
+>> when run over large binaries, which I'll have to look into.
+>> (10+ ms for each address-to-symbol lookup is rather expensive when you
+>> have 4M samples to churn through!)
+> No, not on purpose.
 
-$perf script -F ip,brstackinsn,brstackinsnlen --xed
-     7fa555be8f75
-        _start:
-        00007fa555be8090        mov %rsp, %rdi          ilen: 3
-        00007fa555be8093        callq  0x7fa555be8ea0   ilen: 5 # PRED
-102 cycles [102] 0.02 IPC
-        _dl_start+38:
-        00007fa555be8ec6        movq  %rdx,0x227853(%rip)       ilen: 7
-        00007fa555be8ecd        leaq  0x227f94(%rip),%rdx       ilen: 7
+The patch appears to be trivial:
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- tools/perf/builtin-script.c | 44 ++++++++++++++++++++++++++++++++------------
- 1 file changed, 32 insertions(+), 12 deletions(-)
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -44,6 +44,7 @@
+ #include <linux/zalloc.h>
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index fa478dd..5a7b2b0 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -124,6 +124,7 @@ enum perf_output_field {
- 	PERF_OUTPUT_DATA_PAGE_SIZE  = 1ULL << 33,
- 	PERF_OUTPUT_CODE_PAGE_SIZE  = 1ULL << 34,
- 	PERF_OUTPUT_INS_LAT         = 1ULL << 35,
-+	PERF_OUTPUT_BRSTACKINSNLEN  = 1ULL << 36,
- };
- 
- struct perf_script {
-@@ -191,6 +192,7 @@ struct output_option {
- 	{.str = "data_page_size", .field = PERF_OUTPUT_DATA_PAGE_SIZE},
- 	{.str = "code_page_size", .field = PERF_OUTPUT_CODE_PAGE_SIZE},
- 	{.str = "ins_lat", .field = PERF_OUTPUT_INS_LAT},
-+	{.str = "brstackinsnlen", .field = PERF_OUTPUT_BRSTACKINSNLEN},
- };
- 
- enum {
-@@ -488,7 +490,7 @@ static int evsel__check_attr(struct evsel *evsel, struct perf_session *session)
- 		       "selected. Hence, no address to lookup the source line number.\n");
- 		return -EINVAL;
- 	}
--	if (PRINT_FIELD(BRSTACKINSN) && !allow_user_set &&
-+	if ((PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN)) && !allow_user_set &&
- 	    !(evlist__combined_branch_type(session->evlist) & PERF_SAMPLE_BRANCH_ANY)) {
- 		pr_err("Display of branch stack assembler requested, but non all-branch filter set\n"
- 		       "Hint: run 'perf record -b ...'\n");
-@@ -1122,10 +1124,17 @@ static int print_srccode(struct thread *thread, u8 cpumode, uint64_t addr)
- 
- static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
- 			    struct perf_insn *x, u8 *inbuf, int len,
--			    int insn, FILE *fp, int *total_cycles)
-+			    int insn, FILE *fp, int *total_cycles,
-+			    struct perf_event_attr *attr)
+ static void __machine__remove_thread(struct machine *machine, struct thread *th, bool lock);
++static int append_inlines(struct callchain_cursor *cursor, struct map_symbol *ms, u64 ip);
+
+ static struct dso *machine__kernel_dso(struct machine *machine)
  {
--	int printed = fprintf(fp, "\t%016" PRIx64 "\t%-30s\t#%s%s%s%s", ip,
--			      dump_insn(x, ip, inbuf, len, NULL),
-+	int ilen = 0;
-+	int printed = fprintf(fp, "\t%016" PRIx64 "\t%-30s\t", ip,
-+			      dump_insn(x, ip, inbuf, len, &ilen));
+@@ -2217,6 +2218,10 @@ static int add_callchain_ip(struct thread *thread,
+ 	ms.maps = al.maps;
+ 	ms.map = al.map;
+ 	ms.sym = al.sym;
 +
-+	if (PRINT_FIELD(BRSTACKINSNLEN))
-+		printed += fprintf(fp, "ilen: %d\t", ilen);
++	if (append_inlines(cursor, &ms, ip) == 0)
++		return 0;
 +
-+	printed += fprintf(fp, "#%s%s%s%s",
- 			      en->flags.predicted ? " PRED" : "",
- 			      en->flags.mispred ? " MISPRED" : "",
- 			      en->flags.in_tx ? " INTX" : "",
-@@ -1211,7 +1220,8 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 		printed += ip__fprintf_sym(entries[nr - 1].from, thread,
- 					   x.cpumode, x.cpu, &lastsym, attr, fp);
- 		printed += ip__fprintf_jump(entries[nr - 1].from, &entries[nr - 1],
--					    &x, buffer, len, 0, fp, &total_cycles);
-+					    &x, buffer, len, 0, fp, &total_cycles,
-+					    attr);
- 		if (PRINT_FIELD(SRCCODE))
- 			printed += print_srccode(thread, x.cpumode, entries[nr - 1].from);
- 	}
-@@ -1242,14 +1252,17 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 			printed += ip__fprintf_sym(ip, thread, x.cpumode, x.cpu, &lastsym, attr, fp);
- 			if (ip == end) {
- 				printed += ip__fprintf_jump(ip, &entries[i], &x, buffer + off, len - off, ++insn, fp,
--							    &total_cycles);
-+							    &total_cycles, attr);
- 				if (PRINT_FIELD(SRCCODE))
- 					printed += print_srccode(thread, x.cpumode, ip);
- 				break;
- 			} else {
- 				ilen = 0;
--				printed += fprintf(fp, "\t%016" PRIx64 "\t%s\n", ip,
-+				printed += fprintf(fp, "\t%016" PRIx64 "\t%s", ip,
- 						   dump_insn(&x, ip, buffer + off, len - off, &ilen));
-+				if (PRINT_FIELD(BRSTACKINSNLEN))
-+					printed += fprintf(fp, "\tilen: %d", ilen);
-+				printed += fprintf(fp, "\n");
- 				if (ilen == 0)
- 					break;
- 				if (PRINT_FIELD(SRCCODE))
-@@ -1292,16 +1305,23 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 			      machine, thread, &x.is64bit, &x.cpumode, false);
- 		if (len <= 0)
- 			goto out;
--		printed += fprintf(fp, "\t%016" PRIx64 "\t%s\n", sample->ip,
--			dump_insn(&x, sample->ip, buffer, len, NULL));
-+		ilen = 0;
-+		printed += fprintf(fp, "\t%016" PRIx64 "\t%s", sample->ip,
-+			dump_insn(&x, sample->ip, buffer, len, &ilen));
-+		if (PRINT_FIELD(BRSTACKINSNLEN))
-+			printed += fprintf(fp, "\tilen: %d", ilen);
-+		printed += fprintf(fp, "\n");
- 		if (PRINT_FIELD(SRCCODE))
- 			print_srccode(thread, x.cpumode, sample->ip);
- 		goto out;
- 	}
- 	for (off = 0; off <= end - start; off += ilen) {
- 		ilen = 0;
--		printed += fprintf(fp, "\t%016" PRIx64 "\t%s\n", start + off,
-+		printed += fprintf(fp, "\t%016" PRIx64 "\t%s", start + off,
- 				   dump_insn(&x, start + off, buffer + off, len - off, &ilen));
-+		if (PRINT_FIELD(BRSTACKINSNLEN))
-+			printed += fprintf(fp, "\tilen: %d", ilen);
-+		printed += fprintf(fp, "\n");
- 		if (ilen == 0)
- 			break;
- 		if (arch_is_branch(buffer + off, len - off, x.is64bit) && start + off != sample->ip) {
-@@ -1459,7 +1479,7 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
- 		for (i = 0; i < sample->insn_len; i++)
- 			printed += fprintf(fp, " %02x", (unsigned char)sample->insn[i]);
- 	}
--	if (PRINT_FIELD(BRSTACKINSN))
-+	if (PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN))
- 		printed += perf_sample__fprintf_brstackinsn(sample, thread, attr, machine, fp);
- 
- 	return printed;
-@@ -3716,7 +3736,7 @@ int cmd_script(int argc, const char **argv)
- 		     "Valid types: hw,sw,trace,raw,synth. "
- 		     "Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,"
- 		     "addr,symoff,srcline,period,iregs,uregs,brstack,"
--		     "brstacksym,flags,bpf-output,brstackinsn,brstackoff,"
-+		     "brstacksym,flags,bpf-output,brstackinsn,brstackinsnlen,brstackoff,"
- 		     "callindent,insn,insnlen,synth,phys_addr,metric,misc,ipc,tod,"
- 		     "data_page_size,code_page_size,ins_lat",
- 		     parse_output_fields),
--- 
-2.7.4
+        srcline = callchain_srcline(&ms, al.addr);
+        return callchain_cursor_append(cursor, ip, &ms,
+                                       branch, flags, nr_loop_iter,
 
+but I'm seeing problems with “failing to process sample” when I go from
+10us to 1us, so I'll have to look into that.
+
+I've sent some libbfd patches try to help the slowness:
+
+  https://sourceware.org/git/?p=binutils-gdb.git;a=commitdiff;h=30cbd32aec30b4bc13427bbd87c4c63c739d4578
+  https://sourceware.org/pipermail/binutils/2022-March/120131.html
+  https://sourceware.org/pipermail/binutils/2022-March/120133.html
+
+/* Steinar */
