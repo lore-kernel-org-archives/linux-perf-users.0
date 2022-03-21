@@ -2,280 +2,132 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F87C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Mar 2022 11:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 123BEC433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Mar 2022 13:14:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245549AbiCULMg (ORCPT
+        id S235344AbiCUNQI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 21 Mar 2022 07:12:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53352 "EHLO
+        Mon, 21 Mar 2022 09:16:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345241AbiCULMf (ORCPT
+        with ESMTP id S1347691AbiCUNQI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 21 Mar 2022 07:12:35 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AA4E14FBBB
-        for <linux-perf-users@vger.kernel.org>; Mon, 21 Mar 2022 04:11:06 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id k6so5242713plg.12
-        for <linux-perf-users@vger.kernel.org>; Mon, 21 Mar 2022 04:11:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RPwweG7806X5qZn4WMYFAM6UEvOeIAIa+TUx0gcZXAo=;
-        b=KNvYPZYqJpYJuJx/yLP6D8+i3V66L6kyy6ICoyZ/k0p/ejfBMyyHR+NVf/yH/CiBeU
-         I2dmlAIj1gM/5D6r4UDW0mLkWQs7qFUSbTRGCGUu9+jTzknKYeVLAf6Hj+/hSUgEGDkH
-         80gJ1OingTwncEgePhLTaOT48xFvN3qUFMhZ4IALSJqJ3YT+EP3KkmG8KEsVaUO1ByML
-         szkKy4uTnTAq3FdLMCK9Z7WKJVsHSa1FRXtE3uD8zlORKu0zhQiNuzCoJYiB4dAjwOTt
-         qYrMy4cMsVn5mgwhT9Qm/dq5d21NmypIfnSdgJWLSGJ1Movd4dUZQ3DIJkEYvf93cfgO
-         bKbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RPwweG7806X5qZn4WMYFAM6UEvOeIAIa+TUx0gcZXAo=;
-        b=Udx9tgC9Bjf3QEz70aoJxBRR+cxqgSU8AnaK+/+LZshE0PpClMfQKKkITp6XXIe3g9
-         ZoFAkCT53VpRJYOmdha71wSaazNXiESlgDKv1zSq7YeDS7W4obMvlA135e54ezv7/Q4I
-         E6gm7GhpLN3rp75gUppMtgHptw+iPBT0XyVSVOFk9ZHXOCQaByaV5EnX+T4HU7G+V+cK
-         OU1KMNBTEtH183Ly07whvw8KHmIJbd8U88PjfV/rMyeihOjxuTWlJbaSG0tV+OJ78jJa
-         zNchTaxqrtADzjgQub26SzPfTJysmnBAA9Vay6hC4KDI1xAculjFrkoDvWmrnT9f2v2r
-         pkjg==
-X-Gm-Message-State: AOAM533s+WQBvxUam319GUKSYw73Jxeq90v4urFAk+WTpVAlotslx2J5
-        ROZkOMHWlWKFI9WWSj1aYLUeedpFPm+oHOhB+pTRm9lvN3E=
-X-Google-Smtp-Source: ABdhPJzKkqA/YazJ3KJ2xY4qg9i6zmLBz8cZYdkmhnenOKCnXtNygDUN7FL7BdiKT3l/TG2zV/F69b9gtvkWOPWsIhc=
-X-Received: by 2002:a17:903:285:b0:154:6770:ea77 with SMTP id
- j5-20020a170903028500b001546770ea77mr2389673plr.85.1647861065768; Mon, 21 Mar
- 2022 04:11:05 -0700 (PDT)
+        Mon, 21 Mar 2022 09:16:08 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66335286CC;
+        Mon, 21 Mar 2022 06:14:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1647868483; x=1679404483;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=sjb101FGT2qlwEkPfKE4XTwqZyBSG+Zqst7PnnvuPPg=;
+  b=TuZ6waQ2LlzSSDpH5/mq5+2n8mSu3poTTEcCzOHOY/yjoBHEXUnLrc5s
+   Iqzu/k0MYbg6keZWp/iIymwwBcUEkhFZHFGd6kmJdE7+ya8Fz5AfW++wh
+   6H0rjHisRHZl/JxthjZrhgKgKyJIVXZ+h92TUF7Av0xA8z14K8SyImuqz
+   Bsumnj4jPQP04YQtFW/sdK4QeepXQZtpU1TIquxqYOhV9Rcxmnz80xEYo
+   j/qY8y2Hsw30OvfOQUAr3//VyGqoCtLViwJkfvz6WiFsGX21zGwehNoly
+   GVsjpilZpG47nzANlVGiNnFCX+8LPFduF+V99+BMfn6gR9p215XkCk8ey
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10292"; a="238151931"
+X-IronPort-AV: E=Sophos;i="5.90,198,1643702400"; 
+   d="scan'208";a="238151931"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2022 06:09:18 -0700
+X-IronPort-AV: E=Sophos;i="5.90,198,1643702400"; 
+   d="scan'208";a="559862757"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.56.148])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2022 06:09:14 -0700
+Message-ID: <ffa56520-09b5-9c5d-7733-6767d2f8e350@intel.com>
+Date:   Mon, 21 Mar 2022 15:09:08 +0200
 MIME-Version: 1.0
-References: <20220221102628.43904-1-tz.stoyanov@gmail.com> <YhPsKeK0UdjiDN1R@krava>
- <YhV+LpjwXw3mai16@kernel.org> <YhY3FV9s+pIJ4Z1v@krava> <YhZTH+l+JJ8E4O5C@kernel.org>
-In-Reply-To: <YhZTH+l+JJ8E4O5C@kernel.org>
-From:   Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
-Date:   Mon, 21 Mar 2022 13:10:49 +0200
-Message-ID: <CAPpZLN4Nov2XGE1FQ4FAU7JKSmUfDK0+VdZcnCO-WkTAE-LoBA@mail.gmail.com>
-Subject: Re: [PATCH v2] libperf: Add API for allocating new thread map
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Jiri Olsa <olsajiri@gmail.com>, Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.5.0
+Subject: Re: [PATCH] perf intel-pt: Synthesize cycle events
+Content-Language: en-US
+To:     "Steinar H. Gunderson" <sesse@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <YiuKAk7SaXP7B7Ee@google.com>
+ <ba2c49da-22c5-06ea-e953-82211b953ca8@intel.com>
+ <YjBnet2813sEGjZY@google.com>
+ <c50bb87d-9fee-c4f9-a350-8729e503e43a@intel.com>
+ <YjDUO6bbyfGw/u0C@google.com>
+ <52903e58-e74c-5ea0-36b4-277ea3610af4@intel.com>
+ <YjGdoGy4Z2UUG9S9@google.com>
+ <ef780335-7dc6-3a23-54a8-b6fc9c8a2ed3@intel.com>
+ <YjHfGrZovk3N/H0f@google.com>
+ <371faf0d-f794-4a2e-0a1c-9d454d7c8b12@intel.com>
+ <YjhUjotmo+kYvoNP@google.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <YjhUjotmo+kYvoNP@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Feb 23, 2022 at 5:30 PM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
->
-> Em Wed, Feb 23, 2022 at 02:31:01PM +0100, Jiri Olsa escreveu:
-> > On Tue, Feb 22, 2022 at 09:22:06PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > Em Mon, Feb 21, 2022 at 08:46:49PM +0100, Jiri Olsa escreveu:
-> > > > On Mon, Feb 21, 2022 at 12:26:28PM +0200, Tzvetomir Stoyanov (VMware) wrote:
-> > > > > The existing API perf_thread_map__new_dummy() allocates new thread map
-> > > > > for one thread. I couldn't find a way to reallocate the map with more
-> > > > > threads, or to allocate a new map for more than one thread. Having
-> > > > > multiple threads in a thread map is essential for some use cases.
-> > > > > That's why a new API is proposed, which allocates a new thread map
-> > > > > for given number of threads:
-> > > > >  perf_thread_map__new_array()
-> > > > >
-> > > > > Signed-off-by: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
-> > > > > ---
-> > > > > v2 changes:
-> > > > >  - Changed the new API as Arnaldo suggested - get number of threads in the
-> > > > >    map and array with initial values (optional).
-> > > >
-> > > > looks good, would you also find useful in your use case the comm support
-> > >
-> > > Is that an Acked-by? :-)
-> >
-> > yes, I wasn't sure about the previous args name changes,
-> > this one is fine
-> >
-> > Acked-by: Jiri Olsa <jolsa@kernel.org>
->
-> Ok, applying this one after applying the arg name changes one, please
-> confirm if you agree with that one.
->
-> - Arnaldo
+On 21.3.2022 12.33, Steinar H. Gunderson wrote:
+> On Mon, Mar 21, 2022 at 11:16:56AM +0200, Adrian Hunter wrote:
+>> I had another look at this and it seemed *mostly* OK for me.  One change
+>> I would make is to subject the cycle period to the logic of the 'A' option
+>> (approximate IPC).
+>>
+>> So what does the 'A' option do.
+>>
+>> By default, IPC is output only when the exact number of cycles and
+>> instructions is known for the sample.  Decoding walks instructions
+>> to reconstruct the control flow, so the exact number of instructions
+>> is known, but the cycle count (CYC packet) is only produced with
+>> another packet, so only indirect/async branches or the first
+>> conditional branch of a TNT packet.
+> 
+> Ah, I hadn't thought of the fact that you only get the first branch per
+> packet. It's a bit unfortunate for (exact) cycle counts, since I guess
+> TNT packets can also easily cross functions?
 
-ping
-Please, can you merge this one, If there are no problems with the
-code. We would like to use the new API perf_thread_map__new_array().
-Thanks!
+Yes, it can cross calls and returns.  'returns' due to "Return Compression"
+which can be switched off at record time with config term noretcomp, but
+that may cause more overflows / trace data loss.
 
+To get accurate times for a single function there is Intel PT
+address filtering.
 
->
-> > thanks,
-> > jirka
-> >
-> > >
-> > > - Arnaldo
-> > >
-> > > > in thread_map? the thread_map__read_comms function? we could move it from
-> > > > perf to libperf
-> > > >
-> > > > thanks,
-> > > > jirka
-> > > >
-> > > > >
-> > > > >  tools/lib/perf/Documentation/libperf.txt |  1 +
-> > > > >  tools/lib/perf/include/perf/threadmap.h  |  1 +
-> > > > >  tools/lib/perf/libperf.map               |  1 +
-> > > > >  tools/lib/perf/tests/test-threadmap.c    | 41 ++++++++++++++++++++++++
-> > > > >  tools/lib/perf/threadmap.c               | 24 ++++++++++----
-> > > > >  5 files changed, 61 insertions(+), 7 deletions(-)
-> > > > >
-> > > > > diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
-> > > > > index a21f733b95b1..a8f1a237931b 100644
-> > > > > --- a/tools/lib/perf/Documentation/libperf.txt
-> > > > > +++ b/tools/lib/perf/Documentation/libperf.txt
-> > > > > @@ -62,6 +62,7 @@ SYNOPSIS
-> > > > >    struct perf_thread_map;
-> > > > >
-> > > > >    struct perf_thread_map *perf_thread_map__new_dummy(void);
-> > > > > +  struct perf_thread_map *perf_thread_map__new_array(int nr_threads, pid_t *array);
-> > > > >
-> > > > >    void perf_thread_map__set_pid(struct perf_thread_map *map, int idx, pid_t pid);
-> > > > >    char *perf_thread_map__comm(struct perf_thread_map *map, int idx);
-> > > > > diff --git a/tools/lib/perf/include/perf/threadmap.h b/tools/lib/perf/include/perf/threadmap.h
-> > > > > index 58f7fbdce446..8b40e7777cea 100644
-> > > > > --- a/tools/lib/perf/include/perf/threadmap.h
-> > > > > +++ b/tools/lib/perf/include/perf/threadmap.h
-> > > > > @@ -8,6 +8,7 @@
-> > > > >  struct perf_thread_map;
-> > > > >
-> > > > >  LIBPERF_API struct perf_thread_map *perf_thread_map__new_dummy(void);
-> > > > > +LIBPERF_API struct perf_thread_map *perf_thread_map__new_array(int nr_threads, pid_t *array);
-> > > > >
-> > > > >  LIBPERF_API void perf_thread_map__set_pid(struct perf_thread_map *map, int idx, pid_t pid);
-> > > > >  LIBPERF_API char *perf_thread_map__comm(struct perf_thread_map *map, int idx);
-> > > > > diff --git a/tools/lib/perf/libperf.map b/tools/lib/perf/libperf.map
-> > > > > index 6fa0d651576b..190b56ae923a 100644
-> > > > > --- a/tools/lib/perf/libperf.map
-> > > > > +++ b/tools/lib/perf/libperf.map
-> > > > > @@ -12,6 +12,7 @@ LIBPERF_0.0.1 {
-> > > > >                 perf_cpu_map__empty;
-> > > > >                 perf_cpu_map__max;
-> > > > >                 perf_cpu_map__has;
-> > > > > +               perf_thread_map__new_array;
-> > > > >                 perf_thread_map__new_dummy;
-> > > > >                 perf_thread_map__set_pid;
-> > > > >                 perf_thread_map__comm;
-> > > > > diff --git a/tools/lib/perf/tests/test-threadmap.c b/tools/lib/perf/tests/test-threadmap.c
-> > > > > index 5e2a0291e94c..f728ad7002bb 100644
-> > > > > --- a/tools/lib/perf/tests/test-threadmap.c
-> > > > > +++ b/tools/lib/perf/tests/test-threadmap.c
-> > > > > @@ -11,9 +11,43 @@ static int libperf_print(enum libperf_print_level level,
-> > > > >         return vfprintf(stderr, fmt, ap);
-> > > > >  }
-> > > > >
-> > > > > +static int test_threadmap_array(int nr, pid_t *array)
-> > > > > +{
-> > > > > +       struct perf_thread_map *threads;
-> > > > > +       int i;
-> > > > > +
-> > > > > +       threads = perf_thread_map__new_array(nr, array);
-> > > > > +       __T("Failed to allocate new thread map", threads);
-> > > > > +
-> > > > > +       __T("Unexpected number of threads", perf_thread_map__nr(threads) == nr);
-> > > > > +
-> > > > > +       for (i = 0; i < nr; i++) {
-> > > > > +               __T("Unexpected initial value of thread",
-> > > > > +                   perf_thread_map__pid(threads, i) == (array ? array[i] : -1));
-> > > > > +       }
-> > > > > +
-> > > > > +       for (i = 1; i < nr; i++)
-> > > > > +               perf_thread_map__set_pid(threads, i, i * 100);
-> > > > > +
-> > > > > +       __T("Unexpected value of thread 0",
-> > > > > +           perf_thread_map__pid(threads, 0) == (array ? array[0] : -1));
-> > > > > +
-> > > > > +       for (i = 1; i < nr; i++) {
-> > > > > +               __T("Unexpected thread value",
-> > > > > +                   perf_thread_map__pid(threads, i) == i * 100);
-> > > > > +       }
-> > > > > +
-> > > > > +       perf_thread_map__put(threads);
-> > > > > +
-> > > > > +       return 0;
-> > > > > +}
-> > > > > +
-> > > > > +#define THREADS_NR     10
-> > > > >  int test_threadmap(int argc, char **argv)
-> > > > >  {
-> > > > >         struct perf_thread_map *threads;
-> > > > > +       pid_t thr_array[THREADS_NR];
-> > > > > +       int i;
-> > > > >
-> > > > >         __T_START;
-> > > > >
-> > > > > @@ -27,6 +61,13 @@ int test_threadmap(int argc, char **argv)
-> > > > >         perf_thread_map__put(threads);
-> > > > >         perf_thread_map__put(threads);
-> > > > >
-> > > > > +       test_threadmap_array(THREADS_NR, NULL);
-> > > > > +
-> > > > > +       for (i = 0; i < THREADS_NR; i++)
-> > > > > +               thr_array[i] = i + 100;
-> > > > > +
-> > > > > +       test_threadmap_array(THREADS_NR, thr_array);
-> > > > > +
-> > > > >         __T_END;
-> > > > >         return tests_failed == 0 ? 0 : -1;
-> > > > >  }
-> > > > > diff --git a/tools/lib/perf/threadmap.c b/tools/lib/perf/threadmap.c
-> > > > > index 84fa07c79d00..07968f3ea093 100644
-> > > > > --- a/tools/lib/perf/threadmap.c
-> > > > > +++ b/tools/lib/perf/threadmap.c
-> > > > > @@ -42,18 +42,28 @@ char *perf_thread_map__comm(struct perf_thread_map *map, int idx)
-> > > > >         return map->map[idx].comm;
-> > > > >  }
-> > > > >
-> > > > > -struct perf_thread_map *perf_thread_map__new_dummy(void)
-> > > > > +struct perf_thread_map *perf_thread_map__new_array(int nr_threads, pid_t *array)
-> > > > >  {
-> > > > > -       struct perf_thread_map *threads = thread_map__alloc(1);
-> > > > > +       struct perf_thread_map *threads = thread_map__alloc(nr_threads);
-> > > > > +       int i;
-> > > > > +
-> > > > > +       if (!threads)
-> > > > > +               return NULL;
-> > > > > +
-> > > > > +       for (i = 0; i < nr_threads; i++)
-> > > > > +               perf_thread_map__set_pid(threads, i, array ? array[i] : -1);
-> > > > > +
-> > > > > +       threads->nr = nr_threads;
-> > > > > +       refcount_set(&threads->refcnt, 1);
-> > > > >
-> > > > > -       if (threads != NULL) {
-> > > > > -               perf_thread_map__set_pid(threads, 0, -1);
-> > > > > -               threads->nr = 1;
-> > > > > -               refcount_set(&threads->refcnt, 1);
-> > > > > -       }
-> > > > >         return threads;
-> > > > >  }
-> > > > >
-> > > > > +struct perf_thread_map *perf_thread_map__new_dummy(void)
-> > > > > +{
-> > > > > +       return perf_thread_map__new_array(1, NULL);
-> > > > > +}
-> > > > > +
-> > > > >  static void perf_thread_map__delete(struct perf_thread_map *threads)
-> > > > >  {
-> > > > >         if (threads) {
-> > > > > --
-> > > > > 2.34.1
-> > > > >
-> > >
-> > > --
-> > >
-> > > - Arnaldo
->
-> --
->
-> - Arnaldo
+Otherwise LBRs can have cycle times.
 
+> 
+>> So the cycle sample function looks like this:
+>>
+>> static int intel_pt_synth_cycle_sample(struct intel_pt_queue *ptq)
+>>
+>> [...]
+>>
+>> With regard to the results you got with perf report, please try:
+>>
+>> 	perf report --itrace=y0nse --show-total-period --stdio
+>>
+>> and see if the percentages and cycle counts for rarely executed
+>> functions make more sense.
+> 
+> I already run mostly with 0ns period, so I don't think that's it.
+> I tried your new version, and it's very similar to your previous one;
+> there are some small changes (largest is that one function goes from
+> 2.5% to 2.2% or so), but the general gist of it is the same.
+> I am increasingly leaning towards that my original version is wrong
+> somehow, though.
+> 
+> By the way, I noticed that synthesized call stacks do not respect
+> --inline; is that on purpose? The patch seems simple enough (just
+> a call to add_inlines), although it exposes extreme slowness in libbfd
+> when run over large binaries, which I'll have to look into.
+> (10+ ms for each address-to-symbol lookup is rather expensive when you
+> have 4M samples to churn through!)
 
-
---
-Tzvetomir (Ceco) Stoyanov
-VMware Open Source Technology Center
+No, not on purpose.
