@@ -2,122 +2,175 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BEFC433F5
-	for <linux-perf-users@archiver.kernel.org>; Sun, 20 Mar 2022 00:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD73C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Mar 2022 09:17:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241217AbiCTAYd (ORCPT
+        id S1345761AbiCUJSb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 19 Mar 2022 20:24:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60918 "EHLO
+        Mon, 21 Mar 2022 05:18:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236078AbiCTAYd (ORCPT
+        with ESMTP id S1345787AbiCUJSa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 19 Mar 2022 20:24:33 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AD8F396B1;
-        Sat, 19 Mar 2022 17:23:11 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id t22so9917712plo.0;
-        Sat, 19 Mar 2022 17:23:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aCcXyGBeuBGRSClxBYmQz/kYFQduE8YzmbZ0WJ5dI9k=;
-        b=hzuliQ2jyHeHq4tWhRO155WxnV56qXgAKOlM3KbxLfGAVyHXbZfS51P4zyc7S6FOOt
-         GJAJdgGpHr+b1FWy2JbLshI7FydKMwaSWWhQHVI7lzXnMuMtl9DPj+8LCRn5m7SsHD+a
-         /bN0d+tLPWTcqnvo+iKLAKqcu4nDl3LMWHWZIdWUPvAnrwoMQ90aky4CTpB8zH7tHagC
-         zzQdpJXS7ExGrsM/umFW5iwllEKyEz9ggTXf5ulxnWGSqQCjVsQd1iwsYp1ukQav3uEt
-         oyhXizGO4vTLCF5LQE2Noq8jH6hgUn4/Hg8Iik1EiumumY2hl1iuEWDBFtuz3nL8tuIG
-         uMRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aCcXyGBeuBGRSClxBYmQz/kYFQduE8YzmbZ0WJ5dI9k=;
-        b=3eox22ZtKUQ5T2OjLBEg+I0Qmg+HutaXpWeFAf+U4ifhxli/8q3Zc1YJslw10ubaU3
-         HGjnnNrZiTitoDoy+DvsP2UnP1QW9ZPS40Wujxv9D2HTILXL58S9eagLjeaW1trNfatH
-         gh/ktnRtXotB+HoaHJM5ctBS30tp59hOQdPOBtkUCg9cbSnTstaEqpbX6ehKgN5ZSu2Q
-         wFugleUeT76NGyWzeFsiWFPU8BCoTKkAdJ0GdrepSOjc/yPKUjvz5MTUnbl3dQ9SnlcP
-         m/VRf3Xi5xVUiR0YVadIYHZ7ElikCJegAMhk7a8All1JdRa3DbnGSmMFcUmgBBeVk5BQ
-         z8Fw==
-X-Gm-Message-State: AOAM530QepDITvuZ+lO2RTHYqB8TyFPMAKZT5zEUPyinWDonI/XMcMaq
-        3JBFBi67L4LQxhcaZlm3xRZy9yPF5zfhLg==
-X-Google-Smtp-Source: ABdhPJxngVVNgBsxeComoTsrpmNgd25f8wVVhAvOUOP66P5uYwokYda9lGwczTrIpDmehHxhfvs7pQ==
-X-Received: by 2002:a17:902:ecd0:b0:151:e180:56fb with SMTP id a16-20020a170902ecd000b00151e18056fbmr6202953plh.131.1647735788613;
-        Sat, 19 Mar 2022 17:23:08 -0700 (PDT)
-Received: from localhost.localdomain ([103.149.162.114])
-        by smtp.gmail.com with ESMTPSA id z16-20020a056a00241000b004f3a647ae89sm14442652pfh.174.2022.03.19.17.23.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Mar 2022 17:23:08 -0700 (PDT)
-From:   Dongli Si <kvmx86@gmail.com>
-X-Google-Original-From: Dongli Si <sidongli1997@gmail.com>
-To:     peterz@infradead.org, joerg.roedel@amd.com
-Cc:     liam.merwick@oracle.com, kim.phillips@amd.com, mingo@kernel.org,
-        acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4] perf/x86/amd: Don't touch the Host-only bit inside the guest hypervisor
-Date:   Sun, 20 Mar 2022 08:21:06 +0800
-Message-Id: <20220320002106.1800166-1-sidongli1997@gmail.com>
-X-Mailer: git-send-email 2.32.0
+        Mon, 21 Mar 2022 05:18:30 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 359C13525E;
+        Mon, 21 Mar 2022 02:16:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1647854221; x=1679390221;
+  h=message-id:date:mime-version:from:subject:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=Z6FoBmMzUj/h6G67RT14tpXv61lHjD9Rx9GsVyx6fFU=;
+  b=KrXmMZFvL6sejkhTqdg33Kp52/tGYhvTipetixX1CyZVDdvdlkZS8MMy
+   I4wJ3lER/r6D3dqNCskW3OTyqrxA7ymFGLLTQF7qik97/M/oN62YHMbHb
+   9eh6b9ZxpCZo5CxjCz2vA6s3NwDNdnsjKOqQffC7XHWWDQSLG5fxwxYUt
+   E84Z9XhRpNIQd4Icu7G61Xs71p5fQFBsIbEj4m5fje6ENSxXm1nSs2zX1
+   3lJRSKef1yrkhIGGYB2dTX1UFp67ajBGe5dZLE1egY20QYEfIWlwOsiCB
+   OxGLW8yPU+NVdpIT7+H0bGwAXReDaWgGyphfFT8a/iEIQ9FZqc+nStM+K
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10292"; a="257226115"
+X-IronPort-AV: E=Sophos;i="5.90,198,1643702400"; 
+   d="scan'208";a="257226115"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2022 02:16:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,198,1643702400"; 
+   d="scan'208";a="582800731"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.92]) ([10.237.72.92])
+  by orsmga001.jf.intel.com with ESMTP; 21 Mar 2022 02:16:57 -0700
+Message-ID: <371faf0d-f794-4a2e-0a1c-9d454d7c8b12@intel.com>
+Date:   Mon, 21 Mar 2022 11:16:56 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.5.0
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH] perf intel-pt: Synthesize cycle events
+To:     "Steinar H. Gunderson" <sesse@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220310093844.982656-1-sesse@google.com>
+ <586de5fc-858b-2693-1986-5c77e8c0e3d0@intel.com>
+ <YiuKAk7SaXP7B7Ee@google.com>
+ <ba2c49da-22c5-06ea-e953-82211b953ca8@intel.com>
+ <YjBnet2813sEGjZY@google.com>
+ <c50bb87d-9fee-c4f9-a350-8729e503e43a@intel.com>
+ <YjDUO6bbyfGw/u0C@google.com>
+ <52903e58-e74c-5ea0-36b4-277ea3610af4@intel.com>
+ <YjGdoGy4Z2UUG9S9@google.com>
+ <ef780335-7dc6-3a23-54a8-b6fc9c8a2ed3@intel.com>
+ <YjHfGrZovk3N/H0f@google.com>
+Content-Language: en-US
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <YjHfGrZovk3N/H0f@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Dongli Si <sidongli1997@gmail.com>
+On 16.3.2022 14.59, Steinar H. Gunderson wrote:
+> On Wed, Mar 16, 2022 at 01:19:46PM +0200, Adrian Hunter wrote:
+>>> I guess the good news is that the perf report coming out of your version
+>>> looks more likely to me; I have some functions that are around 1% that
+>>> shouldn't intuitively be that much (and, if I write some Perl to sum up
+>>> the cycles from the IPC lines in perf script, are more around 0.1%).
+>>> So perhaps we should stop chasing the difference? I don't know.
+>> That doesn't sound right.  I will look at it more closely in the next few days.
+> 
+> If you need, I can supply the perf.data and binaries, but we're talking
+> a couple of gigabytes of data (and I don't know immediately if there's
+> an easy way I can package up everything perf.data references) :-)
+> 
+> /* Steinar */
 
-With nested virtualization on AMD Milan, if "perf record" is run in an
-L1 hypervisor with an L2 guest, the following warning is emitted in
-the L1 guest.
+I had another look at this and it seemed *mostly* OK for me.  One change
+I would make is to subject the cycle period to the logic of the 'A' option
+(approximate IPC).
 
-[] unchecked MSR access error: WRMSR to 0xc0010200 (tried to write 0x0000020000510076)
-at rIP: 0xffffffff81003a50 (x86_pmu_enable_all+0x60/0x100)
-[] Call Trace:
-[]  <IRQ>
-[]  ? x86_pmu_enable+0x146/0x300
-[]  __perf_install_in_context+0x150/0x170
+So what does the 'A' option do.
 
-The AMD64_EVENTSEL_HOSTONLY bit is defined and used on the host (L0),
-while the L1 hypervisor Performance Monitor Unit should avoid such use.
+By default, IPC is output only when the exact number of cycles and
+instructions is known for the sample.  Decoding walks instructions
+to reconstruct the control flow, so the exact number of instructions
+is known, but the cycle count (CYC packet) is only produced with
+another packet, so only indirect/async branches or the first
+conditional branch of a TNT packet.
 
-Fixes: 1018faa6cf23 ("perf/x86/kvm: Fix Host-Only/Guest-Only counting with SVM disabled")
-Signed-off-by: Dongli Si <sidongli1997@gmail.com>
-Tested-by: Liam Merwick <liam.merwick@oracle.com>
-Reviewed-by: Liam Merwick <liam.merwick@oracle.com>
----
-v4: Remove my run_as_host function for better descriptive.
-v3: https://lore.kernel.org/all/20220314042254.1487836-1-sidongli1997@gmail.com/
-v2: https://lore.kernel.org/all/20220310183404.1291725-1-sidongli1997@gmail.com/
-v1: https://lore.kernel.org/all/20220227132640.3-1-sidongli1997@gmail.com/
+Reporting exact IPC makes sense when sampling every branch or
+instruction, but makes less sense when sampling less often.
 
- arch/x86/events/amd/core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+For example with:
 
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index 9687a8aef01c..3fafd1e46ada 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -8,6 +8,7 @@
- #include <linux/jiffies.h>
- #include <asm/apicdef.h>
- #include <asm/nmi.h>
-+#include <asm/hypervisor.h>
- 
- #include "../perf_event.h"
- 
-@@ -1027,7 +1028,8 @@ void amd_pmu_enable_virt(void)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 
--	cpuc->perf_ctr_virt_mask = 0;
-+	if (hypervisor_is_type(X86_HYPER_NATIVE))
-+		cpuc->perf_ctr_virt_mask = 0;
- 
- 	/* Reload all events */
- 	amd_pmu_disable_all();
--- 
-2.32.0
+$ perf record -e intel_pt/cyc/u uname
+Linux
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.218 MB perf.data ]
+
+Sampling every 50us, exact IPC is reported only twice:
+
+$ perf script --itrace=i50us -F+ipc
+           uname 2007962 [005] 2426597.185314:      91866 instructions:uH:      7f3feb913deb _dl_relocate_object+0x40b (/usr/lib/x86_64-linux-gnu/ld-2.31.so)
+           uname 2007962 [005] 2426597.185353:      21959 instructions:uH:      7f3feb91158f do_lookup_x+0xcf (/usr/lib/x86_64-linux-gnu/ld-2.31.so)
+           uname 2007962 [005] 2426597.185670:     129834 instructions:uH:      7f3feb72e05a read_alias_file+0x23a (/usr/lib/x86_64-linux-gnu/libc-2.31.so)
+           uname 2007962 [005] 2426597.185709:      39373 instructions:uH:      7f3feb72ed52 _nl_explode_name+0x52 (/usr/lib/x86_64-linux-gnu/libc-2.31.so)
+           uname 2007962 [005] 2426597.185947:     137486 instructions:uH:      7f3feb87e5f3 __strlen_avx2+0x13 (/usr/lib/x86_64-linux-gnu/libc-2.31.so)         IPC: 0.88 (420518/472789) 
+           uname 2007962 [005] 2426597.186026:      79196 instructions:uH:      7f3feb87e5f3 __strlen_avx2+0x13 (/usr/lib/x86_64-linux-gnu/libc-2.31.so)         IPC: 1.34 (79196/59092) 
+           uname 2007962 [005] 2426597.186066:      29855 instructions:uH:      7f3feb78dee6 _int_malloc+0x446 (/usr/lib/x86_64-linux-gnu/libc-2.31.so)
+
+But if we relax the requirement and just use the number of cycles
+counted so far, whether it is exactly correct or not, we can get
+approx IPC for every sample:
+
+$ perf script --itrace=i50usA -F+ipc
+           uname 2007962 [005] 2426597.185314:      91866 instructions:uH:      7f3feb913deb _dl_relocate_object+0x40b (/usr/lib/x86_64-linux-gnu/ld-2.31.so)    IPC: 0.74 (91866/122744) 
+           uname 2007962 [005] 2426597.185353:      21959 instructions:uH:      7f3feb91158f do_lookup_x+0xcf (/usr/lib/x86_64-linux-gnu/ld-2.31.so)     IPC: 0.92 (21959/23822) 
+           uname 2007962 [005] 2426597.185670:     129834 instructions:uH:      7f3feb72e05a read_alias_file+0x23a (/usr/lib/x86_64-linux-gnu/libc-2.31.so)      IPC: 0.77 (129834/167753) 
+           uname 2007962 [005] 2426597.185709:      39373 instructions:uH:      7f3feb72ed52 _nl_explode_name+0x52 (/usr/lib/x86_64-linux-gnu/libc-2.31.so)      IPC: 1.01 (39373/38881) 
+           uname 2007962 [005] 2426597.185947:     137486 instructions:uH:      7f3feb87e5f3 __strlen_avx2+0x13 (/usr/lib/x86_64-linux-gnu/libc-2.31.so)         IPC: 1.14 (137486/119589) 
+           uname 2007962 [005] 2426597.186026:      79196 instructions:uH:      7f3feb87e5f3 __strlen_avx2+0x13 (/usr/lib/x86_64-linux-gnu/libc-2.31.so)         IPC: 1.34 (79196/59092) 
+           uname 2007962 [005] 2426597.186066:      29855 instructions:uH:      7f3feb78dee6 _int_malloc+0x446 (/usr/lib/x86_64-linux-gnu/libc-2.31.so)          IPC: 1.33 (29855/22282) 
+
+
+So the cycle sample function looks like this:
+
+static int intel_pt_synth_cycle_sample(struct intel_pt_queue *ptq)
+{
+	struct intel_pt *pt = ptq->pt;
+	union perf_event *event = ptq->event_buf;
+	struct perf_sample sample = { .ip = 0, };
+	u64 period = 0;
+
+	if (ptq->sample_ipc)
+		period = ptq->ipc_cyc_cnt - ptq->last_cy_cyc_cnt;
+
+	if (!period || intel_pt_skip_event(pt))
+		return 0;
+
+	intel_pt_prep_sample(pt, ptq, event, &sample);
+
+	sample.id = ptq->pt->cycles_id;
+	sample.stream_id = ptq->pt->cycles_id;
+	sample.period = period;
+
+	sample.cyc_cnt = period;
+	sample.insn_cnt = ptq->ipc_insn_cnt - ptq->last_cy_insn_cnt;
+	ptq->last_cy_insn_cnt = ptq->ipc_insn_cnt;
+	ptq->last_cy_cyc_cnt = ptq->ipc_cyc_cnt;
+
+	return intel_pt_deliver_synth_event(pt, event, &sample, pt->cycles_sample_type);
+}
+
+
+With regard to the results you got with perf report, please try:
+
+	perf report --itrace=y0nse --show-total-period --stdio
+
+and see if the percentages and cycle counts for rarely executed
+functions make more sense.
