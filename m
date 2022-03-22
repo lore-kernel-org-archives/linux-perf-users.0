@@ -2,181 +2,114 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAA7C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 18:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A526C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 20:11:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229520AbiCVSyH (ORCPT
+        id S232953AbiCVUM5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Mar 2022 14:54:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38336 "EHLO
+        Tue, 22 Mar 2022 16:12:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbiCVSyG (ORCPT
+        with ESMTP id S232970AbiCVUMt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Mar 2022 14:54:06 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 422E18CDB9;
-        Tue, 22 Mar 2022 11:52:35 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7477152B;
-        Tue, 22 Mar 2022 11:52:34 -0700 (PDT)
-Received: from [10.57.73.89] (unknown [10.57.73.89])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 242D13F66F;
-        Tue, 22 Mar 2022 11:52:32 -0700 (PDT)
-Message-ID: <17215ebc-dbf2-81ca-7ef4-b4ebc3cb9d28@arm.com>
-Date:   Tue, 22 Mar 2022 18:52:31 +0000
+        Tue, 22 Mar 2022 16:12:49 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41E5142EE2;
+        Tue, 22 Mar 2022 13:11:21 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B2AB0616B4;
+        Tue, 22 Mar 2022 20:11:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E14A2C340EC;
+        Tue, 22 Mar 2022 20:11:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1647979880;
+        bh=cvZLjZSrlMWpzpNsliNWbCv6RnObT7KD71mdI7Ouk0o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=f3YK1mzA7uy9itbbNhbMTkbuxlPamacpjzK9EMmZYVohrjKtrHkljfsKYA2aIhIV4
+         nUh93fygLMFhTq9R5FS9rCRj0hTY0YTOjVBnNS1LROYIywEsmTjl/phIaXby9SL1iZ
+         sVpNKHB56OysJmWozm0TU4ZlLndbzKGj0DBneErLgA4qc6vpChVbnst9NVy4JBomyY
+         1iOr8gse8HboUGdejEeStUN1mP77fWXIVhK3Egs7jM1RhHc2dcgc8D72O2ATJ0gMYR
+         kJqhKB/rfbj1OXnZdbyk1Lt22fh8LZ0JzPf7sDyW54plr6wmD8Z4KmyT8ou+Zo9Rac
+         Tn2f80UxZb/Sg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 9DA0D40407; Tue, 22 Mar 2022 17:11:16 -0300 (-03)
+Date:   Tue, 22 Mar 2022 17:11:16 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     John Garry <john.garry@huawei.com>
+Cc:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: perf version issues
+Message-ID: <YjotZExyiwhnX6ev@kernel.org>
+References: <8a75f3b1-2b99-1233-3a70-070311b6ebc1@huawei.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.6.1
-Subject: Re: [PATCH 00/10] coresight: Add new API to allocate trace source ID
- values
-To:     Mike Leach <mike.leach@linaro.org>
-Cc:     coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org,
-        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        linux-perf-users@vger.kernel.org, leo.yan@linaro.org,
-        James Clark <James.Clark@arm.com>
-References: <20220308205000.27646-1-mike.leach@linaro.org>
- <e890feb0-9f90-c0f2-e5f0-10ed5dbe6d81@arm.com>
- <CAJ9a7VhzwMri1Lz5mtO5um3-tT9=GUpGN3cHJhkW5TTsbOKbgQ@mail.gmail.com>
- <639c902b-535e-8627-de04-9bcbbdc98ed5@arm.com>
- <CAJ9a7VhyFj9vcUFjrwtqn47LbdqHp+gQCvtDBNX69-=Y5-2iag@mail.gmail.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <CAJ9a7VhyFj9vcUFjrwtqn47LbdqHp+gQCvtDBNX69-=Y5-2iag@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8a75f3b1-2b99-1233-3a70-070311b6ebc1@huawei.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Mike
+Re-adding lkml and Ian, Jiri, as I found some strange behaviour with
+'git cherry-pick'.
 
-On 22/03/2022 14:27, Mike Leach wrote:
-> Hi Suzuki
+Em Mon, Mar 21, 2022 at 08:43:26AM +0000, John Garry escreveu:
+> Hi Arnaldo,
 > 
-> On Tue, 22 Mar 2022 at 12:35, Suzuki Kuruppassery Poulose
-> <suzuki.poulose@arm.com> wrote:
->>
->> On 22/03/2022 11:38, Mike Leach wrote:
->>> HI Suzuki,
->>>
->>> On Tue, 22 Mar 2022 at 10:43, Suzuki Kuruppassery Poulose
->>> <suzuki.poulose@arm.com> wrote:
->>>>
->>>> + Cc: James Clark
->>>>
->>>> Hi Mike,
->>>>
->>>> On 08/03/2022 20:49, Mike Leach wrote:
->>>>> The current method for allocating trace source ID values to sources is
->>>>> to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 0x10).
->>>>> The STM is allocated ID 0x1.
->>>>>
->>>>> This fixed algorithm is used in both the CoreSight driver code, and by
->>>>> perf when writing the trace metadata in the AUXTRACE_INFO record.
->>>>>
->>>>> The method needs replacing as currently:-
->>>>> 1. It is inefficient in using available IDs.
->>>>> 2. Does not scale to larger systems with many cores and the algorithm
->>>>> has no limits so will generate invalid trace IDs for cpu number > 44.
->>>>
->>>> Thanks for addressing this issue.
->>>>
->>>>>
->>>>> Additionally requirements to allocate additional system IDs on some
->>>>> systems have been seen.
->>>>>
->>>>> This patch set  introduces an API that allows the allocation of trace IDs
->>>>> in a dynamic manner.
->>>>>
->>>>> Architecturally reserved IDs are never allocated, and the system is
->>>>> limited to allocating only valid IDs.
->>>>>
->>>>> Each of the current trace sources ETM3.x, ETM4.x and STM is updated to use
->>>>> the new API.
->>>>>
->>>>> perf handling is changed so that the ID associated with the CPU is read
->>>>> from sysfs. The ID allocator is notified when perf events start and stop
->>>>> so CPU based IDs are kept constant throughout any perf session.
->>>>>
->>>>> For the ETMx.x devices IDs are allocated on certain events
->>>>> a) When using sysfs, an ID will be allocated on hardware enable, and freed
->>>>> when the sysfs reset is written.
->>>>> b) When using perf, ID is allocated on hardware enable, and freed on
->>>>> hardware disable.
->>>>>
->>>>> For both cases the ID is allocated when sysfs is read to get the current
->>>>> trace ID. This ensures that consistent decode metadata can be extracted
->>>>> from the system where this read occurs before device enable.
->>>>
->>>>
->>>>>
->>>>> Note: This patchset breaks backward compatibility for perf record.
->>>>> Because the method for generating the AUXTRACE_INFO meta data has
->>>>> changed, using an older perf record will result in metadata that
->>>>> does not match the trace IDs used in the recorded trace data.
->>>>> This mismatch will cause subsequent decode to fail. Older versions of
->>>>> perf will still be able to decode data generated by the updated system.
->>>>
->>>> I have some concerns over this and the future plans for the dynamic
->>>> allocation per sink. i.e., we are breaking/modifying the perf now to
->>>> accommodate the dynamic nature of the trace id of a given CPU/ETM.
->>>
->>> I don't beleive we have a choice for this - we cannot retain what is
->>> an essentially broken allocation mechanism.
->>>
->>
->> I completely agree and I am happy with the current step by step approach
->> of moving to a dynamic allocation scheme. Apologies, this wasn't
->> conveyed appropriately.
->>
->>>> The proposed approach of exposing this via sysfs may (am not sure if
->>>> this would be the case) break for the trace-id per sink change, as a
->>>> sink could assign different trace-id for a CPU depending.
->>>>
->>>
->>> If a path exists between a CPU and a sink - the current framework as
->>> far as I can tell would not allow for a new path to be set up between
->>> the cpu and another sink.
->>
->> e.g, if we have concurrent perf sessions, in the future with sink  based
->> allocation :
->>
->> perf record -e cs_etm/@sink1/... payload1
->> perf record -e cs_etm/@sink2/... payload2
->> perf record -e cs_etm// ...      payload3
->>
->> The trace id allocated for first session for CPU0 *could* be different
->> from that of the second or the third.
+> I have been finding that during my development that the output from "perf
+> -v" may be incorrect in certain circumstances. I sent some patches to fix it
+> up:
+> https://lore.kernel.org/linux-perf-users/1645449409-158238-1-git-send-email-john.garry@huawei.com/T/#mf7234d2e331a53370c148eb4a0633d405a5c6832
 > 
-> If these sessions run concurrently then the same Trace ID will be used
-> for CPU0 for all the sessions.
-> We ensure this by notifications that a cs_etm session is starting and
-> stopping - and keep a refcount.
+> Is there some issue that these cannot be processed?
 
-The scheme is fine now, with a global trace-id map. But with per-sink
-allocation, this could cause problems.
+So, while testing it I noticed that if we use 'git cherry-pick' it
+doesn't trigger a rebuild, even having a new head :-\
 
-e.g., there could be a situation where:
+I.e. with the two patches in at the HEAD, try:
 
-trace_id[CPU0][sink0] == trace_id[CPU1][sink1]
+  $ git log --oneline -2
+  cb66befccba18fac (HEAD -> perf/core) perf tools: Fix version kernel tag
+  4e666cdb06eede20 perf tools: Fix dependency for version file creation
+  $ make -C tools/perf O=/tmp/build/perf install-bin
+  $ perf -v
+  perf version 5.17.rc8.gcb66befccba1
 
-So if we have a session where both CPU0 and CPU1 trace to a common sink,
-we get the trace mixed with no way of splitting them. As the perf will
-read the trace-id for CPU0 from that of sink0 and CPU1 from sink1.
+Ok so far, now lets remove HEAD and leave just the first patch, that has
+the ORIG_HEAD dependency to trigger a rebuild:
 
-So my point is, we are changing the ABI for perf to grab the TraceID
-with your patches. And clearly this approach could break easily when
-we extend to sink-based idmap. So, lets make the ABI change for perf
-scalable and bullet proof (as far as we can) by exposing this
-information via the perf RECORD. That way any future changes in the
-scheme won't affect the perf as long as it has a reliable information
-within each "record".
+  $ git reset --hard HEAD~
+  HEAD is now at 4e666cdb06eede20 perf tools: Fix dependency for version file creation
+  $ make -C tools/perf O=/tmp/build/perf install-bin
+  $ perf -v
+  perf version 5.17.rc8.g4e666cdb06ee
 
+Ok, detected and rebuilt, perf -v works as expected.
 
-My point is, let us fix this once and for all, so that we don't
-need to change this again. I understand this involves more work
-in the perf tool. I believe that is for better
+Now lets try cherry picking your second patch:
 
-Thoughts ?
+$ git cherry-pick cb66befccba18fac
+  [perf/core 8ff6a6c06a90a362] perf tools: Fix version kernel tag
+   Author: John Garry <john.garry@huawei.com>
+   Date: Mon Feb 21 21:16:49 2022 +0800
+   1 file changed, 4 insertions(+), 9 deletions(-)
+  $ make -C tools/perf O=/tmp/build/perf install-bin
+  $ perf -v
+  perf version 5.17.rc8.g4e666cdb06ee
 
-Suzuki
+Now it doesn´t notice it and there is no automatic rebuild triggered, we
+stay with the cset from before the cherry-pick :-\
+
+$ git log --oneline -2
+8ff6a6c06a90a362 (HEAD -> perf/core) perf tools: Fix version kernel tag
+4e666cdb06eede20 perf tools: Fix dependency for version file creation
+$
+
+Anyway, your patch works for some cases, so its an improvement and I'll
+apply it, we can continue from there.
+
+- Arnaldo
