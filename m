@@ -2,241 +2,369 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EB4C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 21:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0BDFC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 21:18:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234850AbiCVVJ1 (ORCPT
+        id S235318AbiCVVTi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Mar 2022 17:09:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40948 "EHLO
+        Tue, 22 Mar 2022 17:19:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235160AbiCVVJ0 (ORCPT
+        with ESMTP id S235371AbiCVVTh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Mar 2022 17:09:26 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2BA83F31E;
-        Tue, 22 Mar 2022 14:07:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647983273; x=1679519273;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=LSZIPG3QqecyxBUyvisRky+n5Wp4qUXokU5u+AbMjKo=;
-  b=OqgozXe/fbxTHhZFlaFDp5xE9kDfM2BuG5QWkO35h7L1MfnHCi2s5f7H
-   AGiIoBdde4tgWzW+AfSy2tSGkm1fT3raOO8CAh1nIP4kwGbtG5wivXftQ
-   XFkLAOhvS5bWnAkqsfoAqXzROVXzhHf8C5MGX0IIBEAYW+x1d3OLIVOH3
-   9izJ19dbyUkjPH6djBID1sZLNJPCj8kqP6QRdW+S8I3lhMPcbM7qIdjJp
-   Rx0DwSNDZ9w/AfOLxZRJIyl03hCKq1b8TDXSVP6cO1g+/dYKZx6ZyDS1w
-   pIr/dmekx8eUFc4G337/PHtebHVgAhfCuhxfdnv6ndxYAj6FNbEdoEB1v
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10294"; a="344379853"
-X-IronPort-AV: E=Sophos;i="5.90,202,1643702400"; 
-   d="scan'208";a="344379853"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2022 14:07:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,202,1643702400"; 
-   d="scan'208";a="601047234"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 22 Mar 2022 14:07:53 -0700
-Received: from [10.209.120.44] (kliang2-MOBL.ccr.corp.intel.com [10.209.120.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 22 Mar 2022 17:19:37 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1F594CD68;
+        Tue, 22 Mar 2022 14:18:08 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 446B55807FC;
-        Tue, 22 Mar 2022 14:07:52 -0700 (PDT)
-Message-ID: <ce7bfbe6-81f8-b5d0-b1f3-c0d2b22abf10@linux.intel.com>
-Date:   Tue, 22 Mar 2022 17:07:51 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A05E361738;
+        Tue, 22 Mar 2022 21:18:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3A08C340EC;
+        Tue, 22 Mar 2022 21:18:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1647983887;
+        bh=qu1c7+Ii5BsYAa2sP4C74HSLagMCHKqz89qfsp7IEPM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rrl7fk/i2ZdfaY5TYB3n5sVUoWZtbfkfnIU60Em5Ara/n6pehOYBbtQrnavcnB5L7
+         ukY9e30NIm1xdNlQLBe4x/7nlC9yxKbLVJr8GgPxkX+bjSXPMw2e0inEYTqTUs8ajt
+         frf4UnPcVnw2knyqN0OmKgowzegSLa3sanxBLpEQ2dVB/c8S9KU6BBzVZwJ/cxRhPe
+         PLu/taGj1brKen7IFkvO4v1zkqeUWAQGMOCj9IfHqCfWjw+CW/exssEB87n9QstNBx
+         rod84+9ceDJmt8lR9Tn03cxk4Kl5YU2LhXwPo0qeigV2pUt66JGEDVRI3VsCDSe18y
+         qFuwN1Q7bLJBg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 447B240407; Tue, 22 Mar 2022 18:18:03 -0300 (-03)
+Date:   Tue, 22 Mar 2022 18:18:03 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ali Saidi <alisaidi@amazon.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, german.gomez@arm.com,
+        leo.yan@linaro.org, benh@kernel.crashing.org,
+        Nick.Forrington@arm.com, alexander.shishkin@linux.intel.com,
+        andrew.kilroy@arm.com, james.clark@arm.com, john.garry@huawei.com,
+        jolsa@kernel.org, kjain@linux.ibm.com, lihuafei1@huawei.com,
+        mark.rutland@arm.com, mathieu.poirier@linaro.org, mingo@redhat.com,
+        namhyung@kernel.org, peterz@infradead.org, will@kernel.org
+Subject: Re: [PATCH v3 1/3] perf arm-spe: Use SPE data source for neoverse
+ cores
+Message-ID: <Yjo9Czzg26a5OF5o@kernel.org>
+References: <20220318195913.17459-1-alisaidi@amazon.com>
+ <20220318195913.17459-2-alisaidi@amazon.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH] perf script: Add 'brstackinsnlen' for branch stacks
-Content-Language: en-US
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     mingo@redhat.com, peterz@infradead.org, jolsa@redhat.com,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, ak@linux.intel.com,
-        ahmad.yasin@intel.com, zhengjun.xing@linux.intel.com
-References: <1647871212-184070-1-git-send-email-kan.liang@linux.intel.com>
- <Yjo5GGbRUcnzRoGI@kernel.org>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <Yjo5GGbRUcnzRoGI@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220318195913.17459-2-alisaidi@amazon.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Em Fri, Mar 18, 2022 at 07:59:11PM +0000, Ali Saidi escreveu:
+> When synthesizing data from SPE, augment the type with source information
+> for Arm Neoverse cores. The field is IMPLDEF but the Neoverse cores all use
+> the same encoding. I can't find encoding information for any other SPE
+> implementations to unify their choices with Arm's thus that is left for
+> future work.
+> 
+> This change populates the mem_lvl_num for Neoverse cores instead of the
+> deprecated mem_lvl namespace.
+> 
+> Signed-off-by: Ali Saidi <alisaidi@amazon.com>
+> ---
+>  .../util/arm-spe-decoder/arm-spe-decoder.c    |   1 +
+>  .../util/arm-spe-decoder/arm-spe-decoder.h    |  12 ++
+>  tools/perf/util/arm-spe.c                     | 109 +++++++++++++++---
+>  3 files changed, 108 insertions(+), 14 deletions(-)
+> 
+> diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+> index 5e390a1a79ab..091987dd3966 100644
+> --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+> @@ -220,6 +220,7 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
+>  
+>  			break;
+>  		case ARM_SPE_DATA_SOURCE:
+> +			decoder->record.source = payload;
+>  			break;
+>  		case ARM_SPE_BAD:
+>  			break;
+> diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+> index 69b31084d6be..c81bf90c0996 100644
+> --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+> @@ -29,6 +29,17 @@ enum arm_spe_op_type {
+>  	ARM_SPE_ST		= 1 << 1,
+>  };
+>  
+> +enum arm_spe_neoverse_data_source {
+> +	ARM_SPE_NV_L1D        = 0x0,
+> +	ARM_SPE_NV_L2         = 0x8,
+> +	ARM_SPE_NV_PEER_CORE  = 0x9,
+> +	ARM_SPE_NV_LCL_CLSTR  = 0xa,
+> +	ARM_SPE_NV_SYS_CACHE  = 0xb,
+> +	ARM_SPE_NV_PEER_CLSTR = 0xc,
+> +	ARM_SPE_NV_REMOTE     = 0xd,
+> +	ARM_SPE_NV_DRAM       = 0xe,
+> +};
+> +
+>  struct arm_spe_record {
+>  	enum arm_spe_sample_type type;
+>  	int err;
+> @@ -40,6 +51,7 @@ struct arm_spe_record {
+>  	u64 virt_addr;
+>  	u64 phys_addr;
+>  	u64 context_id;
+> +	u16 source;
+>  };
+>  
+>  struct arm_spe_insn;
+> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+> index d2b64e3f588b..a45d638d2f06 100644
+> --- a/tools/perf/util/arm-spe.c
+> +++ b/tools/perf/util/arm-spe.c
+> @@ -34,6 +34,7 @@
+>  #include "arm-spe-decoder/arm-spe-decoder.h"
+>  #include "arm-spe-decoder/arm-spe-pkt-decoder.h"
+>  
+> +#include <../../../arch/arm64/include/asm/cputype.h>
+
+This isn't working for me:
+
+⬢[acme@toolbox perf]$ make BUILD_BPF_SKEL=1 CORESIGHT=1 PYTHON=python3 O=/tmp/build/perf -C tools/perf install-bin
+<SNIP>
+  CC      /tmp/build/perf/util/parse-events-flex.o
+  CC      /tmp/build/perf/util/expr-flex.o
+  CC      /tmp/build/perf/util/expr.o
+  LD      /tmp/build/perf/util/intel-pt-decoder/perf-in.o
+In file included from util/arm-spe.c:37:
+/var/home/acme/git/perf/tools/include/uapi/../../../arch/arm64/include/asm/cputype.h:173:10: fatal error: asm/sysreg.h: No such file or directory
+  173 | #include <asm/sysreg.h>
+      |          ^~~~~~~~~~~~~~
+compilation terminated.
+make[4]: *** [/var/home/acme/git/perf/tools/build/Makefile.build:96: /tmp/build/perf/util/arm-spe.o] Error 1
+make[4]: *** Waiting for unfinished jobs....
+make[3]: *** [/var/home/acme/git/perf/tools/build/Makefile.build:139: util] Error 2
+make[2]: *** [Makefile.perf:665: /tmp/build/perf/perf-in.o] Error 2
+make[1]: *** [Makefile.perf:240: sub-make] Error 2
+make: *** [Makefile:113: install-bin] Error 2
+make: Leaving directory '/var/home/acme/git/perf/tools/perf'
 
 
-On 3/22/2022 5:01 PM, Arnaldo Carvalho de Melo wrote:
-> Em Mon, Mar 21, 2022 at 07:00:12AM -0700, kan.liang@linux.intel.com escreveu:
->> From: Kan Liang <kan.liang@linux.intel.com>
->>
->> When analyzing with the perf script, it's useful to understand the
->> captured instruction and the next sequential instruction. To calculate
->> the address of the next sequential instruction, the length of the
->> captured instruction is required. For example, you can’t know the next
->> sequential instruction after an unconditional branch unless you
->> calculate that based on its length.
->>
->> For branch stacks, the current perf script only prints the instruction
->> bytes with 'brstackinsn', but lack of instruction length.
->>
->> Add 'brstackinsnlen' to print the instruction length.
->>
->> $perf script -F ip,brstackinsn,brstackinsnlen --xed
->>       7fa555be8f75
->>          _start:
->>          00007fa555be8090        mov %rsp, %rdi          ilen: 3
->>          00007fa555be8093        callq  0x7fa555be8ea0   ilen: 5 # PRED
->> 102 cycles [102] 0.02 IPC
->>          _dl_start+38:
->>          00007fa555be8ec6        movq  %rdx,0x227853(%rip)       ilen: 7
->>          00007fa555be8ecd        leaq  0x227f94(%rip),%rdx       ilen: 7
->>
->> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> 
-> You forgot to update tools/perf/Documentation/perf-script.txt, I added
-> it this time.
+Can you please take a look?
 
-Oh, right. Sorry for it.
-Thanks!
+What I have is in my tmp.perf/core branch, pending further tests to move
+to perf/core at git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
 
-Kan
-> 
-> Thanks, applied.
-> 
-> - Arnaldo
-> 
->> ---
->>   tools/perf/builtin-script.c | 44 ++++++++++++++++++++++++++++++++------------
->>   1 file changed, 32 insertions(+), 12 deletions(-)
->>
->> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
->> index fa478dd..5a7b2b0 100644
->> --- a/tools/perf/builtin-script.c
->> +++ b/tools/perf/builtin-script.c
->> @@ -124,6 +124,7 @@ enum perf_output_field {
->>   	PERF_OUTPUT_DATA_PAGE_SIZE  = 1ULL << 33,
->>   	PERF_OUTPUT_CODE_PAGE_SIZE  = 1ULL << 34,
->>   	PERF_OUTPUT_INS_LAT         = 1ULL << 35,
->> +	PERF_OUTPUT_BRSTACKINSNLEN  = 1ULL << 36,
->>   };
->>   
->>   struct perf_script {
->> @@ -191,6 +192,7 @@ struct output_option {
->>   	{.str = "data_page_size", .field = PERF_OUTPUT_DATA_PAGE_SIZE},
->>   	{.str = "code_page_size", .field = PERF_OUTPUT_CODE_PAGE_SIZE},
->>   	{.str = "ins_lat", .field = PERF_OUTPUT_INS_LAT},
->> +	{.str = "brstackinsnlen", .field = PERF_OUTPUT_BRSTACKINSNLEN},
->>   };
->>   
->>   enum {
->> @@ -488,7 +490,7 @@ static int evsel__check_attr(struct evsel *evsel, struct perf_session *session)
->>   		       "selected. Hence, no address to lookup the source line number.\n");
->>   		return -EINVAL;
->>   	}
->> -	if (PRINT_FIELD(BRSTACKINSN) && !allow_user_set &&
->> +	if ((PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN)) && !allow_user_set &&
->>   	    !(evlist__combined_branch_type(session->evlist) & PERF_SAMPLE_BRANCH_ANY)) {
->>   		pr_err("Display of branch stack assembler requested, but non all-branch filter set\n"
->>   		       "Hint: run 'perf record -b ...'\n");
->> @@ -1122,10 +1124,17 @@ static int print_srccode(struct thread *thread, u8 cpumode, uint64_t addr)
->>   
->>   static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
->>   			    struct perf_insn *x, u8 *inbuf, int len,
->> -			    int insn, FILE *fp, int *total_cycles)
->> +			    int insn, FILE *fp, int *total_cycles,
->> +			    struct perf_event_attr *attr)
->>   {
->> -	int printed = fprintf(fp, "\t%016" PRIx64 "\t%-30s\t#%s%s%s%s", ip,
->> -			      dump_insn(x, ip, inbuf, len, NULL),
->> +	int ilen = 0;
->> +	int printed = fprintf(fp, "\t%016" PRIx64 "\t%-30s\t", ip,
->> +			      dump_insn(x, ip, inbuf, len, &ilen));
->> +
->> +	if (PRINT_FIELD(BRSTACKINSNLEN))
->> +		printed += fprintf(fp, "ilen: %d\t", ilen);
->> +
->> +	printed += fprintf(fp, "#%s%s%s%s",
->>   			      en->flags.predicted ? " PRED" : "",
->>   			      en->flags.mispred ? " MISPRED" : "",
->>   			      en->flags.in_tx ? " INTX" : "",
->> @@ -1211,7 +1220,8 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
->>   		printed += ip__fprintf_sym(entries[nr - 1].from, thread,
->>   					   x.cpumode, x.cpu, &lastsym, attr, fp);
->>   		printed += ip__fprintf_jump(entries[nr - 1].from, &entries[nr - 1],
->> -					    &x, buffer, len, 0, fp, &total_cycles);
->> +					    &x, buffer, len, 0, fp, &total_cycles,
->> +					    attr);
->>   		if (PRINT_FIELD(SRCCODE))
->>   			printed += print_srccode(thread, x.cpumode, entries[nr - 1].from);
->>   	}
->> @@ -1242,14 +1252,17 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
->>   			printed += ip__fprintf_sym(ip, thread, x.cpumode, x.cpu, &lastsym, attr, fp);
->>   			if (ip == end) {
->>   				printed += ip__fprintf_jump(ip, &entries[i], &x, buffer + off, len - off, ++insn, fp,
->> -							    &total_cycles);
->> +							    &total_cycles, attr);
->>   				if (PRINT_FIELD(SRCCODE))
->>   					printed += print_srccode(thread, x.cpumode, ip);
->>   				break;
->>   			} else {
->>   				ilen = 0;
->> -				printed += fprintf(fp, "\t%016" PRIx64 "\t%s\n", ip,
->> +				printed += fprintf(fp, "\t%016" PRIx64 "\t%s", ip,
->>   						   dump_insn(&x, ip, buffer + off, len - off, &ilen));
->> +				if (PRINT_FIELD(BRSTACKINSNLEN))
->> +					printed += fprintf(fp, "\tilen: %d", ilen);
->> +				printed += fprintf(fp, "\n");
->>   				if (ilen == 0)
->>   					break;
->>   				if (PRINT_FIELD(SRCCODE))
->> @@ -1292,16 +1305,23 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
->>   			      machine, thread, &x.is64bit, &x.cpumode, false);
->>   		if (len <= 0)
->>   			goto out;
->> -		printed += fprintf(fp, "\t%016" PRIx64 "\t%s\n", sample->ip,
->> -			dump_insn(&x, sample->ip, buffer, len, NULL));
->> +		ilen = 0;
->> +		printed += fprintf(fp, "\t%016" PRIx64 "\t%s", sample->ip,
->> +			dump_insn(&x, sample->ip, buffer, len, &ilen));
->> +		if (PRINT_FIELD(BRSTACKINSNLEN))
->> +			printed += fprintf(fp, "\tilen: %d", ilen);
->> +		printed += fprintf(fp, "\n");
->>   		if (PRINT_FIELD(SRCCODE))
->>   			print_srccode(thread, x.cpumode, sample->ip);
->>   		goto out;
->>   	}
->>   	for (off = 0; off <= end - start; off += ilen) {
->>   		ilen = 0;
->> -		printed += fprintf(fp, "\t%016" PRIx64 "\t%s\n", start + off,
->> +		printed += fprintf(fp, "\t%016" PRIx64 "\t%s", start + off,
->>   				   dump_insn(&x, start + off, buffer + off, len - off, &ilen));
->> +		if (PRINT_FIELD(BRSTACKINSNLEN))
->> +			printed += fprintf(fp, "\tilen: %d", ilen);
->> +		printed += fprintf(fp, "\n");
->>   		if (ilen == 0)
->>   			break;
->>   		if (arch_is_branch(buffer + off, len - off, x.is64bit) && start + off != sample->ip) {
->> @@ -1459,7 +1479,7 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
->>   		for (i = 0; i < sample->insn_len; i++)
->>   			printed += fprintf(fp, " %02x", (unsigned char)sample->insn[i]);
->>   	}
->> -	if (PRINT_FIELD(BRSTACKINSN))
->> +	if (PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN))
->>   		printed += perf_sample__fprintf_brstackinsn(sample, thread, attr, machine, fp);
->>   
->>   	return printed;
->> @@ -3716,7 +3736,7 @@ int cmd_script(int argc, const char **argv)
->>   		     "Valid types: hw,sw,trace,raw,synth. "
->>   		     "Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,"
->>   		     "addr,symoff,srcline,period,iregs,uregs,brstack,"
->> -		     "brstacksym,flags,bpf-output,brstackinsn,brstackoff,"
->> +		     "brstacksym,flags,bpf-output,brstackinsn,brstackinsnlen,brstackoff,"
->>   		     "callindent,insn,insnlen,synth,phys_addr,metric,misc,ipc,tod,"
->>   		     "data_page_size,code_page_size,ins_lat",
->>   		     parse_output_fields),
->> -- 
->> 2.7.4
-> 
+I see:
+
+You're getting out of tools/
+
+⬢[acme@toolbox perf]$ realpath /var/home/acme/git/perf/tools/include/uapi/../../../arch/arm64/include/asm/cputype.h
+/var/home/acme/git/perf/arch/arm64/include/asm/cputype.h
+⬢[acme@toolbox perf]$
+
+You can't include things from outside tools/ into tools code. See this:
+
+-rw-r--r--. 1 acme acme 44506 Mar 14 17:55 tools/arch/arm64/include/asm/sysreg.h
+⬢[acme@toolbox perf]$ git log tools/arch/arm64/include/asm/sysreg.h
+commit 272a067df3c89f6f2176a350f88661625a2c8b3b
+Author: Raghavendra Rao Ananta <rananta@google.com>
+Date:   Thu Oct 7 23:34:26 2021 +0000
+
+    tools: arm64: Import sysreg.h
+
+    Bring-in the kernel's arch/arm64/include/asm/sysreg.h
+    into tools/ for arm64 to make use of all the standard
+    register definitions in consistence with the kernel.
+
+    Make use of the register read/write definitions from
+    sysreg.h, instead of the existing definitions. A syntax
+    correction is needed for the files that use write_sysreg()
+    to make it compliant with the new (kernel's) syntax.
+
+    Reviewed-by: Andrew Jones <drjones@redhat.com>
+    Reviewed-by: Oliver Upton <oupton@google.com>
+    Signed-off-by: Raghavendra Rao Ananta <rananta@google.com>
+    [maz: squashed two commits in order to keep the series bisectable]
+    Signed-off-by: Marc Zyngier <maz@kernel.org>
+    Link: https://lore.kernel.org/r/20211007233439.1826892-3-rananta@google.com
+    Link: https://lore.kernel.org/r/20211007233439.1826892-4-rananta@google.com
+⬢[acme@toolbox perf]$
+
+So we need to bring asm/cputype.h as well.
+
+Please try adding that one as a prep patch before these three and then
+test it and resubmit,
+
+Thanks,
+
+- Arnaldo
+
+>  #define MAX_TIMESTAMP (~0ULL)
+>  
+>  struct arm_spe {
+> @@ -45,6 +46,7 @@ struct arm_spe {
+>  	struct perf_session		*session;
+>  	struct machine			*machine;
+>  	u32				pmu_type;
+> +	u64				midr;
+>  
+>  	struct perf_tsc_conversion	tc;
+>  
+> @@ -399,33 +401,109 @@ static bool arm_spe__is_memory_event(enum arm_spe_sample_type type)
+>  	return false;
+>  }
+>  
+> -static u64 arm_spe__synth_data_source(const struct arm_spe_record *record)
+> +static const struct midr_range neoverse_spe[] = {
+> +	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N1),
+> +	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N2),
+> +	{},
+> +};
+> +
+> +
+> +static void arm_spe__synth_data_source_neoverse(const struct arm_spe_record *record,
+> +						union perf_mem_data_src *data_src)
+>  {
+> -	union perf_mem_data_src	data_src = { 0 };
+> +	/*
+> +	 * Even though four levels of cache hierarchy are possible, no known
+> +	 * production Neoverse systems currently include more than three levels
+> +	 * so for the time being we assume three exist. If a production system
+> +	 * is built with four the this function would have to be changed to
+> +	 * detect the number of levels for reporting.
+> +	 */
+>  
+> -	if (record->op == ARM_SPE_LD)
+> -		data_src.mem_op = PERF_MEM_OP_LOAD;
+> -	else
+> -		data_src.mem_op = PERF_MEM_OP_STORE;
+> +	switch (record->source) {
+> +	case ARM_SPE_NV_L1D:
+> +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
+> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L1;
+> +		break;
+> +	case ARM_SPE_NV_L2:
+> +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
+> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L2;
+> +		break;
+> +	case ARM_SPE_NV_PEER_CORE:
+> +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
+> +		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
+> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_ANY_CACHE;
+> +		break;
+> +	/*
+> +	 * We don't know if this is L1, L2 but we do know it was a cache-2-cache
+> +	 * transfer, so set SNOOP_HITM
+> +	 */
+> +	case ARM_SPE_NV_LCL_CLSTR:
+> +	case ARM_SPE_NV_PEER_CLSTR:
+> +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
+> +		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
+> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_ANY_CACHE;
+> +		break;
+> +	/*
+> +	 * System cache is assumed to be L3
+> +	 */
+> +	case ARM_SPE_NV_SYS_CACHE:
+> +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
+> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
+> +		break;
+> +	/*
+> +	 * We don't know what level it hit in, except it came from the other
+> +	 * socket
+> +	 */
+> +	case ARM_SPE_NV_REMOTE:
+> +		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
+> +		data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
+> +		break;
+> +	case ARM_SPE_NV_DRAM:
+> +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
+> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_RAM;
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +}
+>  
+> +static void arm_spe__synth_data_source_generic(const struct arm_spe_record *record,
+> +						union perf_mem_data_src *data_src)
+> +{
+>  	if (record->type & (ARM_SPE_LLC_ACCESS | ARM_SPE_LLC_MISS)) {
+> -		data_src.mem_lvl = PERF_MEM_LVL_L3;
+> +		data_src->mem_lvl = PERF_MEM_LVL_L3;
+>  
+>  		if (record->type & ARM_SPE_LLC_MISS)
+> -			data_src.mem_lvl |= PERF_MEM_LVL_MISS;
+> +			data_src->mem_lvl |= PERF_MEM_LVL_MISS;
+>  		else
+> -			data_src.mem_lvl |= PERF_MEM_LVL_HIT;
+> +			data_src->mem_lvl |= PERF_MEM_LVL_HIT;
+>  	} else if (record->type & (ARM_SPE_L1D_ACCESS | ARM_SPE_L1D_MISS)) {
+> -		data_src.mem_lvl = PERF_MEM_LVL_L1;
+> +		data_src->mem_lvl = PERF_MEM_LVL_L1;
+>  
+>  		if (record->type & ARM_SPE_L1D_MISS)
+> -			data_src.mem_lvl |= PERF_MEM_LVL_MISS;
+> +			data_src->mem_lvl |= PERF_MEM_LVL_MISS;
+>  		else
+> -			data_src.mem_lvl |= PERF_MEM_LVL_HIT;
+> +			data_src->mem_lvl |= PERF_MEM_LVL_HIT;
+>  	}
+>  
+>  	if (record->type & ARM_SPE_REMOTE_ACCESS)
+> -		data_src.mem_lvl |= PERF_MEM_LVL_REM_CCE1;
+> +		data_src->mem_lvl |= PERF_MEM_LVL_REM_CCE1;
+> +}
+> +
+> +static u64 arm_spe__synth_data_source(const struct arm_spe_record *record, u64 midr)
+> +{
+> +	union perf_mem_data_src	data_src = { 0 };
+> +	bool is_neoverse = is_midr_in_range(midr, neoverse_spe);
+> +
+> +	if (record->op & ARM_SPE_LD)
+> +		data_src.mem_op = PERF_MEM_OP_LOAD;
+> +	else
+> +		data_src.mem_op = PERF_MEM_OP_STORE;
+> +
+> +	if (is_neoverse)
+> +		arm_spe__synth_data_source_neoverse(record, &data_src);
+> +	else
+> +		arm_spe__synth_data_source_generic(record, &data_src);
+>  
+>  	if (record->type & (ARM_SPE_TLB_ACCESS | ARM_SPE_TLB_MISS)) {
+>  		data_src.mem_dtlb = PERF_MEM_TLB_WK;
+> @@ -446,7 +524,7 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
+>  	u64 data_src;
+>  	int err;
+>  
+> -	data_src = arm_spe__synth_data_source(record);
+> +	data_src = arm_spe__synth_data_source(record, spe->midr);
+>  
+>  	if (spe->sample_flc) {
+>  		if (record->type & ARM_SPE_L1D_MISS) {
+> @@ -1183,6 +1261,8 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
+>  	struct perf_record_auxtrace_info *auxtrace_info = &event->auxtrace_info;
+>  	size_t min_sz = sizeof(u64) * ARM_SPE_AUXTRACE_PRIV_MAX;
+>  	struct perf_record_time_conv *tc = &session->time_conv;
+> +	const char *cpuid = perf_env__cpuid(session->evlist->env);
+> +	u64 midr = strtol(cpuid, NULL, 16);
+>  	struct arm_spe *spe;
+>  	int err;
+>  
+> @@ -1202,6 +1282,7 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
+>  	spe->machine = &session->machines.host; /* No kvm support */
+>  	spe->auxtrace_type = auxtrace_info->type;
+>  	spe->pmu_type = auxtrace_info->priv[ARM_SPE_PMU_TYPE];
+> +	spe->midr = midr;
+>  
+>  	spe->timeless_decoding = arm_spe__is_timeless_decoding(spe);
+>  
+> -- 
+> 2.32.0
+
+-- 
+
+- Arnaldo
