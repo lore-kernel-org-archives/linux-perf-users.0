@@ -2,92 +2,140 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35991C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 07:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CBC6C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 07:13:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237196AbiCVHIs (ORCPT
+        id S237269AbiCVHPP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Mar 2022 03:08:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50676 "EHLO
+        Tue, 22 Mar 2022 03:15:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237233AbiCVHIo (ORCPT
+        with ESMTP id S237320AbiCVHPN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Mar 2022 03:08:44 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAAAF5A143;
-        Tue, 22 Mar 2022 00:07:16 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id w8so14685784pll.10;
-        Tue, 22 Mar 2022 00:07:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:organization:in-reply-to
-         :content-transfer-encoding;
-        bh=rYikdF40SXf7xi+HwkY/x3YoTFSrAuyc/7qiBvixRb4=;
-        b=GSEHR0RLh04Nz7yeZGkTfKjhwk+vUEXMSOxUTFD+XpigilckpbzkhnwweQjBcneuRm
-         7SOmwnszgKNT7AbNYdg/8SPXTwYI/P6tkFA7PeXh1jQtE57uAkLxNriozHNklQSs3LYP
-         I1r/ZEi3+n+fvfm/p/G/1ZvGbM9Uqg38l96T962cUrjCpItKlNkczdwWt6/bCfhfjuA7
-         VezHs+eaMxp7ypZ6vl8VCBe1xcEBPYhw1jg5osO+FEw0xnoIjJLx1SyLH8hdYfUTjKzy
-         7hcZ0y2y4lR+UM/ISw7VLZc50jKdRJ5a3WJcS32AvrnmLmH8YIcYVkUIvMTyHbIPjBLP
-         i70A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:organization:in-reply-to
-         :content-transfer-encoding;
-        bh=rYikdF40SXf7xi+HwkY/x3YoTFSrAuyc/7qiBvixRb4=;
-        b=PmN5yMM47jnzUmSfefE2lAa1DpR1xYhzyi9lRzcDIkqXwFhQB/aJk8yjkPco8bXkSl
-         UB1Be9BFYldScJAe5HISLuD/JGMLeXMj2YSqCSUF+WtKyLtIGF1NE5aO+7tfOiJBfvi7
-         LxTGlYuDPB1IkFb0BLz8t3+B5r9uj0XrFqoC42ysAy3B1zdlwgRt89/jbZr3yYDHYewv
-         mhdiW1K0RZp3SBYgouhIG2MUpmyu243i7/OAkyofSjEejJxxU25auY71AUqBG7Ergdt9
-         sdMYf6XF0fBsZyrTWgiigTb3cOgbXsmXQucqo2e9QSFwCRLBfE3yiEmvUeCf+lgmac+5
-         TN1Q==
-X-Gm-Message-State: AOAM531dpb0Qz9WNqdCn3O0goTh5KwiBW5eMJ3Ko8ksKRoSMbqz18zCT
-        9FiDF4NPr08lqShv4fEEJ2gDkG7+o4f+cg==
-X-Google-Smtp-Source: ABdhPJzMsUXrymkfFa2hfXPf1i775JeLSHHiUa7Acj12ZfZTZpnz6UgO9B9bugnEtqz0+OIyBvVAmA==
-X-Received: by 2002:a17:90b:3a8e:b0:1bf:7fb5:af06 with SMTP id om14-20020a17090b3a8e00b001bf7fb5af06mr3292555pjb.7.1647932836230;
-        Tue, 22 Mar 2022 00:07:16 -0700 (PDT)
-Received: from [192.168.255.10] ([203.205.141.118])
-        by smtp.gmail.com with ESMTPSA id fy9-20020a17090b020900b001c690bc05c4sm1574256pjb.0.2022.03.22.00.06.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Mar 2022 00:07:15 -0700 (PDT)
-Message-ID: <4bc9b537-f0de-5b75-5418-61c1d6dca849@gmail.com>
-Date:   Tue, 22 Mar 2022 15:06:49 +0800
+        Tue, 22 Mar 2022 03:15:13 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EB0336320;
+        Tue, 22 Mar 2022 00:13:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1647933226; x=1679469226;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Dgb3zGuH24ZT83Y0v1ZBxBUIyLa593GK3jKu3O8OKLY=;
+  b=Zohx89bqCoUxP3iXPP7lTFfG41o7vOolwoM7yrrI5EUoGgjHjVFZ1nWA
+   sBIyMkhDSIo26SlgMzG87PL/3URfFT+OlQDCdqQl7REUcBvoxNn5wJz3g
+   lS3tsvsns3QtKq8r91+t+yPqckyu2r5oamze+sn+JZPJAEYtVFInPac19
+   6CjcZhXCQ3IW7cp0sdlQtm08fj9OF5JO0dyWhDalsEjZict/dYS9r4bNt
+   VXBLWkDVq5UHR8PiHhrrfMjYxsUhzZEeZ9WXmV9dVqBfA3Nys8K2y/iKx
+   LZRtSRcY/5hMQAPbe3xVkUsqL+JTw4vZkgKLpcPZAFg9hE++1GZomi0ea
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10293"; a="344173871"
+X-IronPort-AV: E=Sophos;i="5.90,201,1643702400"; 
+   d="scan'208";a="344173871"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2022 00:13:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,201,1643702400"; 
+   d="scan'208";a="583156907"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.92]) ([10.237.72.92])
+  by orsmga001.jf.intel.com with ESMTP; 22 Mar 2022 00:13:43 -0700
+Message-ID: <e9126f11-177c-cc2f-7620-fdd7b3f363c0@intel.com>
+Date:   Tue, 22 Mar 2022 09:13:42 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.7.0
-Subject: Re: [PATCH 6/7] perf/x86/amd/core: Add PerfMonV2 overflow handling
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.5.0
+Subject: Re: [PATCH v2] perf intel-pt: Synthesize cycle events
 Content-Language: en-US
-To:     Sandipan Das <sandipan.das@amd.com>
-Cc:     peterz@infradead.org, bp@alien8.de, dave.hansen@linux.intel.com,
-        acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        jolsa@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        pbonzini@redhat.com, jmattson@google.com, eranian@google.com,
-        ananth.narayan@amd.com, ravi.bangoria@amd.com,
-        santosh.shukla@amd.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, x86@kernel.org
-References: <cover.1647498015.git.sandipan.das@amd.com>
- <7d43b4ba8a7c3c0833495f3fabfcfc6df8db3732.1647498015.git.sandipan.das@amd.com>
-From:   Like Xu <like.xu.linux@gmail.com>
-Organization: Tencent
-In-Reply-To: <7d43b4ba8a7c3c0833495f3fabfcfc6df8db3732.1647498015.git.sandipan.das@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To:     "Steinar H. Gunderson" <sesse@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220321181447.1323742-1-sesse@google.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20220321181447.1323742-1-sesse@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 17/3/2022 2:28 pm, Sandipan Das wrote:
-> +		val = x86_perf_event_update(event);
+On 21/03/2022 20:14, Steinar H. Gunderson wrote:
+> There is no good reason why we cannot synthesize "cycle" events
+> from Intel PT just as we can synthesize "instruction" events,
+> in particular when CYC packets are available. This enables using
+> PT to getting much more accurate cycle profiles than regular sampling
+> (record -e cycles) when the work last for very short periods (<10 ms).
+> Thus, add support for this, based off of the existing IPC calculation
+> framework. The new option to --itrace is "y" (for cYcles), as c was
+> taken for calls. Cycle and instruction events can be synthesized
+> together, and are by default.
+> 
+> The only real caveat is that CYC packets are only emitted whenever
+> some other packet is, which in practice is when a branch instruction
+> is encountered (and not even all branches). Thus, even at no subsampling
+> (e.g. --itrace=y0ns), it is impossible to get more accuracy than
+> a single basic block, and all cycles spent executing that block
+> will get attributed to the branch instruction that ends the packet.
+> Thus, one cannot know whether the cycles came from e.g. a specific load,
+> a mispredicted branch, or something else. When subsampling (which
+> is the default), the cycle events will get smeared out even more,
+> but will still be generally useful to attribute cycle counts to functions.
+> 
+> Signed-off-by: Steinar H. Gunderson <sesse@google.com>
+> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+> ---
+>  tools/perf/Documentation/itrace.txt        |  3 +-
+>  tools/perf/Documentation/perf-intel-pt.txt | 36 ++++++++----
+>  tools/perf/util/auxtrace.c                 |  9 ++-
+>  tools/perf/util/auxtrace.h                 |  7 ++-
+>  tools/perf/util/intel-pt.c                 | 68 ++++++++++++++++++++--
+>  5 files changed, 102 insertions(+), 21 deletions(-)
 
-The variable 'val' set but not used.
+Thanks for sending the patch.  There is one variable leftover from my
+earlier suggestions - see below.
 
-> +		mask = BIT_ULL(idx);
+> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+> index e8613cbda331..364fdfe59828 100644
+> --- a/tools/perf/util/intel-pt.c
+> +++ b/tools/perf/util/intel-pt.c
+> @@ -5,6 +5,7 @@
+>   */
+>  
+>  #include <inttypes.h>
+> +#include <linux/perf_event.h>
+>  #include <stdio.h>
+>  #include <stdbool.h>
+>  #include <errno.h>
+> @@ -89,6 +90,10 @@ struct intel_pt {
+>  	u64 instructions_sample_type;
+>  	u64 instructions_id;
+>  
+> +	bool sample_cycles;
+> +	u64 cycles_sample_type;
+> +	u64 cycles_id;
 > +
-> +		if (!(status & mask))
+>  	bool sample_branches;
+>  	u32 branches_filter;
+>  	u64 branches_sample_type;
+> @@ -191,10 +196,13 @@ struct intel_pt_queue {
+>  	u32 flags;
+>  	u16 insn_len;
+>  	u64 last_insn_cnt;
+> +	u64 last_cyc_cnt;
 
-Needed here ?
+last_cyc_cnt is an unused
 
-> +			continue;
+>  	u64 ipc_insn_cnt;
+>  	u64 ipc_cyc_cnt;
+>  	u64 last_in_insn_cnt;
+>  	u64 last_in_cyc_cnt;
+> +	u64 last_cy_insn_cnt;
+> +	u64 last_cy_cyc_cnt;
+>  	u64 last_br_insn_cnt;
+>  	u64 last_br_cyc_cnt;
+>  	unsigned int cbr_seen;
