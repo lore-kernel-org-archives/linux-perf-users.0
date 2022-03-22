@@ -2,63 +2,62 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37516C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 15:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2DCC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 16:34:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235709AbiCVPaX (ORCPT
+        id S236484AbiCVQfe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Mar 2022 11:30:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36294 "EHLO
+        Tue, 22 Mar 2022 12:35:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234225AbiCVPaW (ORCPT
+        with ESMTP id S233778AbiCVQfd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Mar 2022 11:30:22 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D68080223
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2022 08:28:55 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id w8so15734893pll.10
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2022 08:28:55 -0700 (PDT)
+        Tue, 22 Mar 2022 12:35:33 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37A9DBCD
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2022 09:34:06 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id p17so15914956plo.9
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2022 09:34:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language
-         :from:to:cc:references:in-reply-to:content-transfer-encoding;
-        bh=rNmQUGUX4iegT4ln3Ho9tZlmybJbnh/sFb9omQweIME=;
-        b=QBfZ+OpF6JMIpQazvukmHUlkfuIkFH4DGleUiBUV9YWAkacSyVDvh0pOZ78yoTD8no
-         GdWQ2Epf8/4SmiDbEgaMwjwrrUq6fXMxpy+ymUYV9N4L2SLnclk4LPW4VFf2js0ybxp1
-         EtoeZlLqaLrYRXc5ZZSjE3EZusMHv8p5AA1TaI0c7brUD9Cc7tZ7eF3jppowcsB+HyMj
-         nKZ9HhjfueLYa3egD+k6vOtrlpp/H8ggRthopnFz1H90Pd+khqutGvpfIiua5mBXqm7g
-         Q83x6W81Wpmk4Sa7nzPPuk2aofyrD3rqaXO8vZRYxIbRmvCE4ii6/lhn/er/wljlxGgS
-         n4fQ==
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=brcU2nO6QqDCnc/aKXyKE9+waR5SCKo3rxSe1BMuA1o=;
+        b=kiS1cCGL/REUt0zXeKlAJyrQljUCqBSXBlRoawnyoX2QZ4zSaq+sJGic9bWkowfZgq
+         v9qFMYULiQ9PJk0DPDmdVvuXBZ45Ph4HC+Dj2t4RebruXLVLcbWwixC5QMLFerdRlS4d
+         7CSd1BGXlwuMGR+Vhdf9qeuJbm70fKhq016LLnDZNkyRTdaltOEOQdfbxaoVJ0UoWAX0
+         y92Z5gbUxyq44KoBxb6dMh6Kl48MMbzHWsSXnrRE2hhYHchX1F9Jzn2z/FVIsB9UB4SM
+         lOUl+whpRZFKIuuBFJNa/4SImd6ANdsP2P7NZ9ZiyydfO39bVNoNsY+G2zowMvMojsw1
+         GIIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:from:to:cc:references:in-reply-to
+         :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=rNmQUGUX4iegT4ln3Ho9tZlmybJbnh/sFb9omQweIME=;
-        b=Do6mph0lV4Yfj/borccgpi1dyT6DCEhs4Kcyk+GmLM6uyN29NstrRLw39achaHtACY
-         vtl+xdz/ksdOcwYUAG+4rZE3ivPSR4Rz/4s0nv8pywKfg5x8FY9917akmZxd2pvdMbzW
-         OD4owZeJudKXgX8ALogL8gnV3UXn/dS5Lr76EqNhPpUzqtK1c4Asbxu4nZiHPqICZhyr
-         7r8Hw3VznW1KsOFxEozoyMyQF7OKQb3qyym5Eu1omyT2jXP4WCZEMolahZoiOpe5qBZd
-         VyiHsCxi53OlKB6phtrtETo7sH0Vr1/suY107gu4Ah5dpk9toiMqK4gMFMPOFxzyL2Vr
-         kLRA==
-X-Gm-Message-State: AOAM530hcJXzcYj6sqAB4GpraI1q0YSbMXtXGmlNJ2x7TC9g3yK1VsFi
-        qMl1GMNceQQdnv9roQQiXcueTA==
-X-Google-Smtp-Source: ABdhPJyJh6C78MwL4q2c9liWGTvFzMFdScUIAOg0OrH5sRT1BcKJFOL93R5xBUjWfTmKEXDaQtkv+w==
-X-Received: by 2002:a17:902:f64e:b0:14d:20db:8478 with SMTP id m14-20020a170902f64e00b0014d20db8478mr19224608plg.158.1647962934906;
-        Tue, 22 Mar 2022 08:28:54 -0700 (PDT)
+        bh=brcU2nO6QqDCnc/aKXyKE9+waR5SCKo3rxSe1BMuA1o=;
+        b=g+hUJj2KbQgyaS//T74qbpfN5XWIo2W6OFybsba4TADwzVwqOmmTnsIJaYN0SjPydO
+         DZhPbclKQpr5x1sEerS8A9D+GpF9jgRupLZ16ES+gIkjBm9Qy9g9LI7aXQo0CrrVeTTj
+         I49m4QHti0qJFYtPjy1XxnR4Pr0KggDGS8Bw8IWa6DeBTZtPGl+48z0iV8LW7ClpB2/+
+         H2uWSKW+xWHoQMu48Z4j43rSz2ERNrm8TGugr44aLdS4o+wcZPRGbj7KZQIRV2/gKnLG
+         ELvaAaBtphfJheZL2sY7V/4FDSsZ5fV0mBL344434EXEsDCWAsYrmg/mscpGygReURQi
+         JDlg==
+X-Gm-Message-State: AOAM533tq43bjGky+L6mi4lTPSgGMrnH2iTKNNVsqH0rhxqWmO1/TVkl
+        WgcCGGHOIAeLDPRXx+0omX+Y0xlxovf+7g==
+X-Google-Smtp-Source: ABdhPJwoMM9MGKG2rXVenoOC5R+VXbKPwEtztHPeW46UMwsmabaAwA7Rr0HVo7PJYSn7B44Usq7fbw==
+X-Received: by 2002:a17:902:8f94:b0:14f:d9b3:52c2 with SMTP id z20-20020a1709028f9400b0014fd9b352c2mr18826905plo.103.1647966845737;
+        Tue, 22 Mar 2022 09:34:05 -0700 (PDT)
 Received: from ?IPV6:2409:8a28:e62:3990:a113:6fc:a7b4:4226? ([2409:8a28:e62:3990:a113:6fc:a7b4:4226])
-        by smtp.gmail.com with ESMTPSA id om17-20020a17090b3a9100b001bf0fffee9bsm3230338pjb.52.2022.03.22.08.28.48
+        by smtp.gmail.com with ESMTPSA id u10-20020a63b54a000000b00380ea901cd2sm17584716pgo.6.2022.03.22.09.33.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Mar 2022 08:28:54 -0700 (PDT)
-Message-ID: <1c9f2383-ec9f-f819-d7be-23aed2bf121a@bytedance.com>
-Date:   Tue, 22 Mar 2022 23:28:41 +0800
+        Tue, 22 Mar 2022 09:34:05 -0700 (PDT)
+Message-ID: <0a7ebd49-cfdd-911e-3982-44f594320b0f@bytedance.com>
+Date:   Wed, 23 Mar 2022 00:33:51 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
  Gecko/20100101 Thunderbird/91.7.0
-Subject: Re: [External] Re: [PATCH v2 1/6] perf/core: Fix incosistency between
- cgroup sched_out and sched_in
+Subject: Re: [External] Re: [PATCH v2 2/6] perf/core: Introduce percpu
+ perf_cgroup
 Content-Language: en-US
-From:   Chengming Zhou <zhouchengming@bytedance.com>
 To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
         alexander.shishkin@linux.intel.com, jolsa@kernel.org,
@@ -66,114 +65,98 @@ Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         duanxiongchun@bytedance.com, songmuchun@bytedance.com
 References: <20220322120834.98637-1-zhouchengming@bytedance.com>
- <20220322120834.98637-2-zhouchengming@bytedance.com>
- <YjnIKCIRV+ePJVCN@hirez.programming.kicks-ass.net>
- <b55676c3-07da-f4f1-e4c8-252cd9d4fac2@bytedance.com>
- <YjnjHPuNjo8YTwiQ@hirez.programming.kicks-ass.net>
- <cdfb252e-9bfc-bee3-7ebe-b8ef401c85dd@bytedance.com>
-In-Reply-To: <cdfb252e-9bfc-bee3-7ebe-b8ef401c85dd@bytedance.com>
+ <20220322120834.98637-3-zhouchengming@bytedance.com>
+ <YjnIpn/PCM6wKpOC@hirez.programming.kicks-ass.net>
+From:   Chengming Zhou <zhouchengming@bytedance.com>
+In-Reply-To: <YjnIpn/PCM6wKpOC@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2022/3/22 11:16 下午, Chengming Zhou wrote:
-> Hi peter,
+On 2022/3/22 9:01 下午, Peter Zijlstra wrote:
+> On Tue, Mar 22, 2022 at 08:08:30PM +0800, Chengming Zhou wrote:
+>> Although we don't have incosistency problem any more, we can
+>> have other problem like:
+>>
+>> CPU1					CPU2
+>> (in context_switch)			(attach running task)
+>> 					prev->cgroups = cgrp2
+>> perf_cgroup_sched_switch(prev, next)
+>> 	cgrp2 == cgrp2 is True
+>>
 > 
-> On 2022/3/22 10:54 下午, Peter Zijlstra wrote:
->> On Tue, Mar 22, 2022 at 09:38:21PM +0800, Chengming Zhou wrote:
->>> On 2022/3/22 8:59 下午, Peter Zijlstra wrote:
->>>> On Tue, Mar 22, 2022 at 08:08:29PM +0800, Chengming Zhou wrote:
->>>>> There is a race problem that can trigger WARN_ON_ONCE(cpuctx->cgrp)
->>>>> in perf_cgroup_switch().
->>>>>
->>>>> CPU1					CPU2
->>>>> (in context_switch)			(attach running task)
->>>>> perf_cgroup_sched_out(prev, next)
->>>>> 	cgrp1 == cgrp2 is True
->>>>> 					next->cgroups = cgrp3
->>>>> 					perf_cgroup_attach()
->>>>> perf_cgroup_sched_in(prev, next)
->>>>> 	cgrp1 == cgrp3 is False
+> Again, I'm not following, how can you attach to a running task from
+> another CPU ?
 
-I see, you must have been misled by my wrong drawing above ;-)
-I'm sorry, perf_cgroup_attach() on the right should be put at the bottom.
+Hi Peter, I make a little testcase which can reproduce the race
+problem, on system with PSI disabled. Because when PSI enabled,
+cgroup_move_task() will hold rq lock to assign task->cgroups.
 
-CPU1						CPU2
-(in context_switch)				(attach running task)
-perf_cgroup_sched_out(prev, next)
-	cgrp1 == cgrp2 is True
-						next->cgroups = cgrp3
-perf_cgroup_sched_in(prev, next)
-	cgrp1 == cgrp3 is False
-						__perf_cgroup_move()
+```
+#!/bin/bash
+
+cd /sys/fs/cgroup/perf_event
+
+mkdir cg1
+mkdir cg2
+
+perf stat -e cycles --cgroup /cg1 &
+
+cg_run()
+{
+        cg=$1
+        shift
+        echo $BASHPID > $cg/cgroup.procs
+        $@
+}
+
+cg_run cg1 schbench -r 100 &
+cg_run cg2 schbench -r 100 &
+
+while true; do
+        for i in $(cat cg1/cgroup.procs); do
+                echo $i > cg2/cgroup.procs
+        done
+        for i in $(cat cg2/cgroup.procs); do
+                echo $i > cg1/cgroup.procs
+        done
+done
+```
+
+Some seconds later, dmesg will show the WARNING message:
+
+[   51.777830] WARNING: CPU: 2 PID: 1849 at kernel/events/core.c:869 perf_cgroup_switch+0x246/0x290
+[   51.779167] Modules linked in:
+[   51.779696] CPU: 2 PID: 1849 Comm: schbench Not tainted 5.17.0-rc8 #28
+[   51.780691] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+[   51.782353] RIP: 0010:perf_cgroup_switch+0x246/0x290
+[   51.783145] Code: 0f 0b e9 0b ff ff ff 48 83 7c 24 08 00 74 0c e8 00 7e f7 ff fb 66 0f 1f 44 00 00 48 83 c4 10 5b 5d 41 5c 41 5d 41 5e 41 5f c3 <0f> 0b e9 4f fe ff ff e8 be 7e f7 ff e8 a9 1f 93 00 89 c0 49 c7 c5
+[   51.785804] RSP: 0018:ffffba4440fcbd80 EFLAGS: 00010086
+[   51.786617] RAX: 0000000000000002 RBX: ffff8d78eb8b7200 RCX: 0000000000000000
+[   51.787696] RDX: 0000000000000000 RSI: ffffffffae1c83db RDI: ffffffffae185a69
+[   51.788777] RBP: ffff8d78eb8aad40 R08: 0000000000000001 R09: 0000000000000001
+[   51.789854] R10: 0000000000000000 R11: ffff8d78eb8b7220 R12: ffff8d78eb8b7208
+[   51.790929] R13: ffff8d78eb8aafa0 R14: ffff8d74cd6bb600 R15: 0000000000000000
+[   51.792006] FS:  00007fedaaffd700(0000) GS:ffff8d78eb880000(0000) knlGS:0000000000000000
+[   51.793223] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   51.794122] CR2: 000055e4bf2b696c CR3: 00000001128a2003 CR4: 0000000000370ee0
+[   51.795209] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   51.796292] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   51.797375] Call Trace:
+[   51.797828]  <TASK>
+[   51.798229]  __perf_event_task_sched_in+0x151/0x350
+[   51.799009]  ? lock_release+0x1ed/0x2e0
+[   51.799640]  finish_task_switch+0x1d3/0x2e0
+[   51.800328]  ? __switch_to+0x136/0x4b0
+[   51.800953]  __schedule+0x33e/0xae0
+[   51.801535]  schedule+0x4e/0xc0
+[   51.802080]  exit_to_user_mode_prepare+0x172/0x2a0
+[   51.802850]  ? asm_sysvec_apic_timer_interrupt+0xa/0x20
+[   51.803675]  irqentry_exit_to_user_mode+0x5/0x40
+[   51.804413]  sysvec_apic_timer_interrupt+0x5c/0xd0
+[   51.805183]  asm_sysvec_apic_timer_interrupt+0x12/0x20
 
 Thanks.
 
->>>>>
->>>>> The commit a8d757ef076f ("perf events: Fix slow and broken cgroup
->>>>> context switch code") would save cpuctx switch out/in when the
->>>>> perf_cgroup of "prev" and "next" are the same.
->>>>>
->>>>> But perf_cgroup of task can change in concurrent with context_switch.
->>>>
->>>> Can you clarify? IIRC then a task changes cgroup it goes throught the
->>>> whole ->attach() dance, and that serializes against the context switch
->>>> code.
->>>>
->>>
->>> task->cgroups changed before perf_cgroup_attach(), and is not serialized
->>> against the context switch, since task->cgroups can be changed without
->>> rq lock held. (cgroup v1 or cgroup v2 with PSI disabled)
->>>
->>> So perf_cgroup_sched_out() in perf_cgroup_switch() may see the old or
->>> new perf_cgroup when do context switch.
->>
->> __schedule()
->>   local_irq_disable();				<--- IRQ disable
->>   rq_lock();
->>
->>   ...
->>
->>   context_switch()
->>     prepare_task_switch()
->>       perf_event_task_sched_out()
->>         __perf_event_task_sched_out()
->> 	  perf_cgroup_sched_out();
-> 
-> here compare perf_cgroup_from_task(prev) and perf_cgroup_from_task(next)
-> 
->>
->>   switch_to()
->>   finish_task_switch()
->>     perf_event_task_sched_in()
->>       __perf_event_task_sched_in()
->>         perf_cgroup_sched_in();
-> 
-> here compare perf_cgroup_from_task(prev) and perf_cgroup_from_task(next)
-> 
->>     finish_lock_switch()
->>       raw_spin_irq_unlock_irq();		<--- IRQ enable
->>
->>
->> vs
->>
-> 
-> rcu_assign_pointer(p->cgroups, to)		<--- task perf_cgroup changed
-> 
-> task->cgroups has changed before sending IPI
-> 
->> perf_event_cgrp_subsys.attach = perf_cgroup_attach()
->>   cgroup_taskset_for_each()
->>     task_function_call(task, __perf_cgroup_move) <--- sends IPI
->>
->>
->> Please explain how this can interleave.
-> 
-> __perf_cgroup_move in IPI is of course serialized against context switch,
-> but the task->cgroups has changed before that, without rq lock held.
-> So perf_cgroup_from_task() may see the old or new perf_cgroup.
-> 
-> Thanks.
-> 
