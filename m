@@ -2,127 +2,87 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED9BC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 21:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD7BC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 21:54:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231455AbiCVViW (ORCPT
+        id S237087AbiCVVz0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Mar 2022 17:38:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37354 "EHLO
+        Tue, 22 Mar 2022 17:55:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229670AbiCVViW (ORCPT
+        with ESMTP id S230207AbiCVVz0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Mar 2022 17:38:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51D616252;
-        Tue, 22 Mar 2022 14:36:54 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DA67561749;
-        Tue, 22 Mar 2022 21:36:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17E01C340EC;
-        Tue, 22 Mar 2022 21:36:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1647985013;
-        bh=xsxczdu0hsS3aRebxYXBIx2vI0JCWxkg6df2LNuNEEQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HVcboc+Y6NhYdxSAJ0/p/RYHJqaE8j05xgeLLHuSoSGTnCG26IwvN+m60IZ879p2c
-         kKg/jtKi6Q7DmhW9H/fCV02qiW0cyDMQGz6aoLJxnRKFiyfjPYgr1r3zevtDfyiyYK
-         Rvx6UNJaH5Wn6q0PQgc7LU+IeuES9q/IPbUhhLZQ6rq6AwBxN6i0U3aU0TRFXLsoUA
-         fDrSqC5c47JKOHQSiqiOsrZ+GgVX88GgolGWhw+1B6nIYYpgepP/2f2PzXh8ljeT08
-         S7YanT8WulzBw0O+xw1NzmiShF7ncyj38zo7YsYNQC12eLaQJvt5kU6PSC2sq/JlEJ
-         61ege9VC5oQDg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 71A3240407; Tue, 22 Mar 2022 18:36:50 -0300 (-03)
-Date:   Tue, 22 Mar 2022 18:36:50 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     kajoljain <kjain@linux.ibm.com>
-Cc:     Kim Phillips <kim.phillips@amd.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Tue, 22 Mar 2022 17:55:26 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B3185F8DD
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2022 14:53:58 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id bg31-20020a05600c3c9f00b00381590dbb33so2737844wmb.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2022 14:53:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=NFZgSZlsMJ92K4ZsfQkNqEehB4rKg2VsDcu/AaRN3q0=;
+        b=kFcRmFoukS3hfat2xkguRcRqtzGASe1LE8sm1SP3/dtxwuk7sO63/bJIgCxoO18vSA
+         y9JgKTWcB/bof/nn2Ggc718WQXVkUY+8GVA1GKlBMTRcq02lbMX1iZPlE1/KyXKtVbT/
+         d/pTr/zuOiiBrz4J2BOeiq8QjBCrKjTDAUD8kxD9tzDo7oU+jsmFoLzJovq7LJr0qyhP
+         /aQdBwDrBiLQG8mUTxAFpQtvGOxGwSPyevvUhxoy5rBNP+mNytPadUIxL6BD/gDjCUzx
+         TIFSPBkVBaJ7OXN05TgsyrcHU7pBXMm5kJvFMCn1oQiVQOm+oJ11E9WIn9hlUZN+Gt3b
+         Trjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NFZgSZlsMJ92K4ZsfQkNqEehB4rKg2VsDcu/AaRN3q0=;
+        b=JjpGbhM+yojggN0WE/90ObwXfxiUhakLmXjfzdxcgBSS97pfbqFIP6Ii5+mulSFVNn
+         q4/iGkUYo3TL1ztntS2xjgQ6AXkts7toW6tHyF6n9rCLDlBwpAPWrWdsJGG6db/G6z+x
+         wlaOMCLF+/qzmdlB3M3z/4eXzuvlGXqDPZrOEZ0v+iBVWXIvyjAdlFAdxSPCR/E6s6b9
+         81QvkWbLntjZU6udF1Rdq7e2PFfScK3eWhKRnOPgbrDvq488P/+9zgdCbdwpBErOMAk/
+         M05RifSXoWxQVM/r6EmAalP8AqPVG2Fd7oWAvApRK3ec6iy8Pdng69sitQGhdc9NUOJC
+         4GIA==
+X-Gm-Message-State: AOAM530Au0Nknm0n9S5bIZhonS9eKzeTSHi1QoFgCQ+TWKV+yw5cF5li
+        8OKYZXHttMG5vBMZzzbjJV1yLw==
+X-Google-Smtp-Source: ABdhPJz9ag7to1Ba2g9ltxrje4ed9WpcWwoG6ffWynoEYXnKEX4v04WmfxAg7wCDdqEw8O8Q6c3wQQ==
+X-Received: by 2002:a05:600c:22c4:b0:38c:70f5:25a9 with SMTP id 4-20020a05600c22c400b0038c70f525a9mr5865344wmg.119.1647986036658;
+        Tue, 22 Mar 2022 14:53:56 -0700 (PDT)
+Received: from google.com (110.121.148.146.bc.googleusercontent.com. [146.148.121.110])
+        by smtp.gmail.com with ESMTPSA id g1-20020a1c4e01000000b003899c8053e1sm3725917wmh.41.2022.03.22.14.53.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Mar 2022 14:53:55 -0700 (PDT)
+Date:   Tue, 22 Mar 2022 22:53:52 +0100
+From:   "Steinar H. Gunderson" <sesse@google.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
-        Joao Martins <joao.m.martins@oracle.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Petlan <mpetlan@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Robert Richter <robert.richter@amd.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 1/2] perf evsel: Make evsel__env always return a valid env
-Message-ID: <YjpBch/kqSn3Bmfy@kernel.org>
-References: <20211004214114.188477-1-kim.phillips@amd.com>
- <00c83305-7654-132d-a734-1746dd9f34f2@linux.ibm.com>
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] perf intel-pt: Synthesize cycle events
+Message-ID: <YjpFcLiCTjHZWzzA@google.com>
+References: <20220322082452.1429091-1-sesse@google.com>
+ <YjpAYjdgHWwkid5N@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <00c83305-7654-132d-a734-1746dd9f34f2@linux.ibm.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <YjpAYjdgHWwkid5N@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Nov 23, 2021 at 01:56:38PM +0530, kajoljain escreveu:
-> 
-> 
-> On 10/5/21 3:11 AM, Kim Phillips wrote:
-> > It's possible to have an evsel and evsel->evlist populated without
-> > an evsel->evlist->env, when, e.g., cmd_record is in its error path.
-> > 
-> > Future patches will add support for evsel__open_strerror to be able
-> > to customize error messaging based on perf_env__{arch,cpuid}, so
-> > let's have evsel__env return &perf_env instead of NULL in that case.
-> > 
-> 
-> Patch looks good to me.
-> 
-> Reviewed-by: Kajol Jain<kjain@linux.ibm.com>
+On Tue, Mar 22, 2022 at 06:32:18PM -0300, Arnaldo Carvalho de Melo wrote:
+> I saw there was some issue, should I proceed and apply this v3 patch or
+> wait for some v4?
 
-Collecting this one now, found it thru the cracks.
+There are two issues in play:
 
-- Arnaldo
- 
-> Thanks,
-> Kajol Jain
-> 
-> > Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-> > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> > Cc: Ian Rogers <irogers@google.com>
-> > Cc: Ingo Molnar <mingo@redhat.com>
-> > Cc: Jiri Olsa <jolsa@redhat.com>
-> > Cc: Joao Martins <joao.m.martins@oracle.com>
-> > Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Michael Petlan <mpetlan@redhat.com>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Robert Richter <robert.richter@amd.com>
-> > Cc: Stephane Eranian <eranian@google.com>
-> > ---
-> >  tools/perf/util/evsel.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > index dbfeceb2546c..b915840690d4 100644
-> > --- a/tools/perf/util/evsel.c
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -2857,7 +2857,7 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
-> >  
-> >  struct perf_env *evsel__env(struct evsel *evsel)
-> >  {
-> > -	if (evsel && evsel->evlist)
-> > +	if (evsel && evsel->evlist && evsel->evlist->env)
-> >  		return evsel->evlist->env;
-> >  	return &perf_env;
-> >  }
-> > 
+ 1. PT event synth doesn't support reading inline information from DWARF
+    yet, and my patch to add it runs into some problems. This is not
+    relevant for this patch at all.
+ 2. The results from v3 don't quite match the ones from v1, and neither
+    of us are entirely sure why. My personal feeling is that the one
+    from v1 are the wrong ones, but it's up to Adrian to say whether we
+    want to try to investigate deeply here.
 
--- 
-
-- Arnaldo
+/* Steinar */
