@@ -2,157 +2,110 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D99CC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 11:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17580C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 11:57:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231818AbiCVLuU (ORCPT
+        id S234393AbiCVL7L (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Mar 2022 07:50:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33088 "EHLO
+        Tue, 22 Mar 2022 07:59:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231546AbiCVLuT (ORCPT
+        with ESMTP id S234018AbiCVL7L (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Mar 2022 07:50:19 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5A895DE70;
-        Tue, 22 Mar 2022 04:48:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647949731; x=1679485731;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=6QjCSLV5pHvUu+Co9Q8F1SIwOXRHIVGiCuCTzOhLowU=;
-  b=IiS5eOcSAbKAwXnij0pxHeEzhEKlnJHgJ1kq9d0fQ1FNXHGTVyzeHi9S
-   1BQWkYVpTXySqJgtqsLyxTKxmBrw5XuuN3O6xctY9PfSMQvgK7AtkWGw+
-   xWg+5Njj9u16/KELflLX9IC78Pn9P+EXBfKtm/201UjaYx20Rc7QZE8Jh
-   FAaB+JaGgWtqMsEo0qBu5mSR4svJUj6xtvvG5z9+4m05+Y48ddMIGzhzo
-   TMHutrOtrFL5Vk0DJy29/MydBLuGSa2TCIOYUy5E52lkonPg0zNm726/O
-   1HCSjc5A75Bg0DL4dKO6IhPxuczA4EteI/dDAzZV1k/sNgb8c83cprWNH
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10293"; a="239954907"
-X-IronPort-AV: E=Sophos;i="5.90,201,1643702400"; 
-   d="scan'208";a="239954907"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2022 04:48:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,201,1643702400"; 
-   d="scan'208";a="583228928"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 22 Mar 2022 04:48:51 -0700
-Received: from [10.209.120.44] (alwinma-MOBL2.amr.corp.intel.com [10.209.120.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id B9E53580A6C;
-        Tue, 22 Mar 2022 04:48:49 -0700 (PDT)
-Message-ID: <ffd440b7-fef9-a5ae-95b7-73c1f8a212ef@linux.intel.com>
-Date:   Tue, 22 Mar 2022 07:48:48 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH] perf parse-events: Move slots only with topdown
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Tue, 22 Mar 2022 07:59:11 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 246EE29818
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2022 04:57:44 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id bi13-20020a05600c3d8d00b0038c2c33d8f3so1922871wmb.4
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2022 04:57:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=hLtfvRdZCZE7DrPVlS8YfsRhGZmzIPo7skcuEYSO4hw=;
+        b=j+9e3zTSe7YMjvusq8VyhZY8Obm1Kcc84Veo/LfnBMvLWNPygsyrEsf+RY0OIJLaFq
+         2qrQXWhRsxbJStpyY1JXXNOpzqUs4y9+tbRNniXopvJSP4ZIKD4g4f/mg/fQV7uzARsQ
+         A6biV9wAj972M4YbMUVyHjZNliIG5QZI2oZNIGMV1waqfp2D5sNp1G5is4pS3hDHy0Wv
+         Ch/lV6rhzQxdqpDjOdf9zM3vMdVZuN29JoaNmAnD9i8HYWK/gYQHuBM+xRk9M84sLOK+
+         18oShMvbAI6J+YyNyMl4sFCFFVIzwl9a0MxmOjckbFGduxwz2vGqZuARwkxYRyZ1YqB9
+         0u3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=hLtfvRdZCZE7DrPVlS8YfsRhGZmzIPo7skcuEYSO4hw=;
+        b=5j8u8J1/7VKsfPFmOAbLH9+ZxHkfw2TTszH9e2mvpP3KBc30inQgUY4rL3BHSd+QOD
+         oGh14Ru8e73rlQghTwhAdL6XBOUvDpEhYCWcFxFUOyK0tfJTsFXS4cIP5ZWRCry8ow7Q
+         2Ag/Kpv6O2xJbAEv3zyr8Cx3qYd5UYw1MpcgaD6itxht5Fwi0UCI2olHFIhAbnitw5+v
+         w3GB91CmDepcCQxwChxo5i477eBBbb3L/ysy0gGeUgVq1EJHk/mbQSapuYujjoF1fidm
+         Bc2+j+odVWbsyGzSPdungfIQRqv9DTbEz5WniWfbaTWO/Ewz6xm4Yf2mDX+chimHBhBF
+         424A==
+X-Gm-Message-State: AOAM530xQKWLzlD5/3Vaf9FL8S3grk6xFGAWUrIAoSxVdHl8QSfKLBZE
+        DCp2goeKOcnMCqgSRFG1ZT7rrw==
+X-Google-Smtp-Source: ABdhPJyNqqUErWG52sDeu7pVzR3d0PgnXUIIgLZtllrYMoG+RJX1I7Iq+B2wvNyxlO0RIJXxVMt8TQ==
+X-Received: by 2002:a05:600c:3b86:b0:38c:afdf:66cd with SMTP id n6-20020a05600c3b8600b0038cafdf66cdmr3361285wms.198.1647950262573;
+        Tue, 22 Mar 2022 04:57:42 -0700 (PDT)
+Received: from google.com (110.121.148.146.bc.googleusercontent.com. [146.148.121.110])
+        by smtp.gmail.com with ESMTPSA id w5-20020a5d5445000000b00203f8c96bcesm9981236wrv.49.2022.03.22.04.57.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Mar 2022 04:57:41 -0700 (PDT)
+Date:   Tue, 22 Mar 2022 12:57:38 +0100
+From:   "Steinar H. Gunderson" <sesse@google.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>
-References: <20220321223344.1034479-1-irogers@google.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20220321223344.1034479-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf intel-pt: Synthesize cycle events
+Message-ID: <Yjm5stBpRC0g4G8s@google.com>
+References: <c50bb87d-9fee-c4f9-a350-8729e503e43a@intel.com>
+ <YjDUO6bbyfGw/u0C@google.com>
+ <52903e58-e74c-5ea0-36b4-277ea3610af4@intel.com>
+ <YjGdoGy4Z2UUG9S9@google.com>
+ <ef780335-7dc6-3a23-54a8-b6fc9c8a2ed3@intel.com>
+ <YjHfGrZovk3N/H0f@google.com>
+ <371faf0d-f794-4a2e-0a1c-9d454d7c8b12@intel.com>
+ <YjhUjotmo+kYvoNP@google.com>
+ <ffa56520-09b5-9c5d-7733-6767d2f8e350@intel.com>
+ <YjiuoEUL6jH32cBi@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <YjiuoEUL6jH32cBi@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Mon, Mar 21, 2022 at 05:58:08PM +0100, Steinar H. Gunderson wrote:
+> but I'm seeing problems with “failing to process sample” when I go from
+> 10us to 1us, so I'll have to look into that.
 
+I took a debug log from perf report; the last few lines are (I abridged
+some symbol names):
 
-On 3/21/2022 6:33 PM, Ian Rogers wrote:
-> If slots isn't with a topdown event then moving it is unnecessary. For
-> example {instructions, slots} is re-ordered:
-> 
-> $ perf stat -e '{instructions,slots}' -a sleep 1
-> 
->   Performance counter stats for 'system wide':
-> 
->         936,600,825      slots
->         144,440,968      instructions
-> 
->         1.006061423 seconds time elapsed
-> 
-> Which can break tools expecting the command line order to match the
-> printed order. It is necessary to move the slots event first when it
-> appears with topdown events. Add extra checking so that the slots event
-> is only moved in the case of there being a topdown event like:
-> 
-> $ perf stat -e '{instructions,slots,topdown-fe-bound}' -a sleep 1
-> 
->   Performance counter stats for 'system wide':
-> 
->          2427568570      slots
->           300927614      instructions
->           551021649      topdown-fe-bound
-> 
->         1.001771803 seconds time elapsed
-> 
-> Fixes: 94dbfd6781a0 ("perf parse-events: Architecture specific leader override")
-> Reported-by: Kan Liang <kan.liang@linux.intel.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
+symbol__new: cppgc::internal::MemberBase::GetRaw() const 0x6078a90-0x60792d0
+symbol__new: cppgc::internal::BasicMember<...>::Get() const 0x6078a90-0x60792d0
+symbol__new: cppgc::internal::BasicMember<...>::operator->() const 0x6078a90-0x60792d0
+__symbol__inc_addr_samples: addr=0x5561dc37cbf6
+__symbol__inc_addr_samples(896): ERANGE! sym->name=void blink::ElementRuleCollector::CollectMatchingRulesForList<...>(...), start=0x6074310, addr=0x6078bf6, end=0x6078a90
+problem adding hist entry, skipping event
+Intel PT: failed to deliver event, error -34
+0x5739a8 [0x8]: failed to process type: 68 [Numerical result out of range]
 
-Thanks Ian. The patch works well.
+and this is evidently fatal. So for whatever reason, the sample address
+is attributed to some symbol, and that symbol is assumed to have a
+single range (is this even necessarily true?), we refuse the event,
+and then we fail the entire report. (It doesn't happen with --stdio,
+though!)
 
-Tested-by: Kan Liang <kan.liang@linux.intel.com>
+I'm a bit at a loss how to debug this. It doesn't happen without the
+inlines being synthesized, but I don't know if there's something wrong
+with it, or if it's just the symptom (I've certainly seen “failed to
+process sample” without PT before).
 
-Thanks,
-Kan
-> ---
->   tools/perf/arch/x86/util/evlist.c | 18 ++++++++++++++----
->   1 file changed, 14 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
-> index 8d9b55959256..cfc208d71f00 100644
-> --- a/tools/perf/arch/x86/util/evlist.c
-> +++ b/tools/perf/arch/x86/util/evlist.c
-> @@ -20,17 +20,27 @@ int arch_evlist__add_default_attrs(struct evlist *evlist)
->   
->   struct evsel *arch_evlist__leader(struct list_head *list)
->   {
-> -	struct evsel *evsel, *first;
-> +	struct evsel *evsel, *first, *slots = NULL;
-> +	bool has_topdown = false;
->   
->   	first = list_first_entry(list, struct evsel, core.node);
->   
->   	if (!pmu_have_event("cpu", "slots"))
->   		return first;
->   
-> +	/* If there is a slots event and a topdown event then the slots event comes first. */
->   	__evlist__for_each_entry(list, evsel) {
-> -		if (evsel->pmu_name && !strcmp(evsel->pmu_name, "cpu") &&
-> -			evsel->name && strcasestr(evsel->name, "slots"))
-> -			return evsel;
-> +		if (evsel->pmu_name && !strcmp(evsel->pmu_name, "cpu") && evsel->name) {
-> +			if (strcasestr(evsel->name, "slots")) {
-> +				slots = evsel;
-> +				if (slots == first)
-> +					return first;
-> +			}
-> +			if (!strncasecmp(evsel->name, "topdown", 7))
-> +				has_topdown = true;
-> +			if (slots && has_topdown)
-> +				return slots;
-> +		}
->   	}
->   	return first;
->   }
+/* Steinar */
